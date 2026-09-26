@@ -80,7 +80,7 @@ func test_revive_logs_old_and_new_and_keeps_history() -> void:
 func test_set_role() -> void:
 	var s := Fixtures.play([Fixtures.start_manual(6, [1])] as Array[Command])
 	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "dorfbewohner"}), "no_change", "gleiche Rolle")
-	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "trugbilderwolf"}), "unknown_role", "Rolle außerhalb des Katalogs")
+	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "spiegelwolf"}), "unknown_role", "Rolle außerhalb des Katalogs")
 	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": ""}), "unknown_role", "leere Rolle")
 	var r := apply_ok(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "werwolf"}, "Karte vertauscht"), "Rollenkorrektur")
 	var p := r.state.players[2]

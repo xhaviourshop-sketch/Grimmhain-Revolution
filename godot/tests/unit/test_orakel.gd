@@ -288,7 +288,7 @@ func test_override_validation() -> void:
 	apply_rejected(s, _override("dorfbewohner", "x", false), "confirmation_required", "Bestätigung false")
 	apply_rejected(s, _override("dorfbewohner", ""), "reason_required", "ohne Begründung")
 	apply_rejected(s, _override("dorfbewohner", "   "), "reason_required", "leere Begründung")
-	for bad: String in ["test-sensentraeger", "trugbilderwolf", "unbekannt", ""]:
+	for bad: String in ["test-sensentraeger", "spiegelwolf", "unbekannt", ""]:
 		apply_rejected(s, _override(bad), "unknown_role", "gezeigter Wert '%s'" % bad)
 	apply_rejected(s, _override("werwolf"), "no_change", "gleicher Wert")
 	apply_rejected(s, _override("dorfbewohner", "x", true, 9), "prompt_mismatch", "falscher Prompt")
@@ -539,7 +539,7 @@ func test_corrupt_info_records_rejected() -> void:
 		"unbekanntes Ziel": func(st: Dictionary) -> void: st["info_records"][0]["target_id"] = 99,
 		"unbekannte Wahrheit": func(st: Dictionary) -> void: st["info_records"][0]["truth_role"] = "unbekannt",
 		"unbekannt ermittelt": func(st: Dictionary) -> void: st["info_records"][0]["determined_role"] = "",
-		"unbekannt gezeigt": func(st: Dictionary) -> void: st["info_records"][0]["shown_role"] = "trugbilderwolf",
+		"unbekannt gezeigt": func(st: Dictionary) -> void: st["info_records"][0]["shown_role"] = "spiegelwolf",
 		"Übersteuerung ohne Grund": func(st: Dictionary) -> void: st["info_records"][0]["overridden"] = true,
 	}
 	for label: String in cases:
