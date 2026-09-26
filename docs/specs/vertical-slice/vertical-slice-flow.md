@@ -44,7 +44,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 |---|---|---|---|
 | 1.1 | Namen erfassen (6 bis 24) | vergibt je Person eine stabile ID; prüft Anzahl | Personenliste |
 | 1.2 | Sitzreihenfolge per Drag-and-drop festlegen | – | `seat_order` |
-| 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen (`werwolf` 5, `dorfbewohner` 10, sonst 1; `setup.html` Rollen-Obergrenzen), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
+| 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen je Rolle nur, wo die Rolle eine eigene festlegt (`dorfbewohner` und `werwolf` haben keine, damit 6 bis 24 Personen allein mit ihnen spielbar sind; `DECISION-LOG.md` 26.09.2026; die Legacy-Grenzen aus `setup.html` gelten nicht), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
 | 1.4 | Verteilung wählen: zufällig oder manuell | zufällig: Ziehung über `SeededRng` | Seed, Zuordnung Person → Rolle |
 | 1.5 | Setup bestätigen → `StartGame` | friert `rules_version` ein, legt ersten Checkpoint an | vollständiger Anfangszustand |
 

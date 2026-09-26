@@ -50,7 +50,7 @@ Jede Pflichtmechanik ist durch mindestens eine Rolle abgedeckt. Fehlinformation 
 ## 3. Begründung je Rolle
 
 ### 3.1 `dorfbewohner`
-Ohne Fähigkeit. Nötig als Auffüllrolle (`max_copies` 10 laut `../../../setup.html`, Rollen-Obergrenzen) und als neutrale Referenz für Paritäts- und Siegtests. Einzige Dorfrolle, die Prompt 2 bereits im Core-Slice verlangt.
+Ohne Fähigkeit. Nötig als Auffüllrolle (ohne Obergrenze; die Legacy-Grenze 10 aus `../../../setup.html` gilt nach `DECISION-LOG.md` vom 26.09.2026 nicht) und als neutrale Referenz für Paritäts- und Siegtests. Einzige Dorfrolle, die Prompt 2 bereits im Core-Slice verlangt.
 
 ### 3.2 `werwolf`
 Kern jeder Partie. Deckt Wolfsangriff, Tod am Morgen (`NIGHT_KILL`) und die Paritätsprüfung ab. Legacy: `Werwolf`-Handler in `../../../js/core/abilities-roles-chunk.js`, Morgenauflösung `resolveDayKills` in `../../../js/core/night.js`, Parität `checkWinConditions` und `countLivingWolfPower` in `../../../js/ui/core.js`. Der Legacy-Fehler F2 (keine Wolfszeile, wenn kein „Werwolf" lebt; `WOLF_KILL_ROLES` in `rebuildOrder`, `night.js`) wird laut `../../godot-migration/07-open-questions.md` Q1 Teil 2 ohne Rückfrage behoben.

@@ -53,6 +53,7 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 | `tests/unit/test_corrupt_save.gd` | abgeschnitten, Byte geändert, falsches Format/Schema/Regelversion, Hash- und Replay-Widerspruch | AS-C08 |
 | `tests/unit/test_player_identity.gd` | Personen-ID getrennt vom Sitz, getrennte Rollenfelder | AS-C09 (Kernanteil), G-ID-2 |
 | `tests/unit/test_command_validation.gd` | Setup-Prüfungen, Phasenreihenfolge, abgelehnte Befehle ändern nichts | A-13, A-15 |
+| `tests/unit/test_player_count_range.gd` | jede Personenzahl 6–24 nur mit Dorfbewohnern und Werwölfen (16, 20, 24 ausdrücklich, manuell und zufällig), keine Rollenobergrenze, 5 und 25 abgelehnt, mindestens ein Werwolf und ein Dorfbewohner | DECISION-LOG „6 bis 24 Personen“ |
 | `tests/unit/test_seeded_rng.gd` | Seed, Ziehposition, Wiederaufnahme mitten in der Folge | A-18 |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |
 
@@ -96,7 +97,7 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 | `phase_machine.gd` | zulässige Befehle je Phase, Phasenwechsel mit Ereignis |
 | `kill_pipeline.gd` | Tötungs-Pipeline ohne Abfangregeln |
 | `win_rules.gd` | einzige Siegprüfung, erzeugt nur Kandidaten |
-| `role_catalog.gd` | Stammdaten `dorfbewohner`, `werwolf` inkl. Obergrenzen |
+| `role_catalog.gd` | Stammdaten `dorfbewohner`, `werwolf`; optionale Obergrenze `max_copies` je Rolle (Grundrollen ohne Grenze) |
 | `rule_context.gd` | Zustandskopie und Ereignissammlung während eines Befehls |
 | `command_result.gd`, `replay_result.gd` | Ergebnisobjekte |
 | **core/serialization/** | |
@@ -142,10 +143,11 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 2. **Offener Siegkandidat blockiert alle anderen Befehle** (`win_candidate_open`), bis `ConfirmWin` oder `RejectWin` erfolgt. So bleibt die Phase bis zur Entscheidung unverändert (AS-C01).
 3. **Kandidat erneut nur nach einem weiteren Tod** (AS-C04, „nach einer weiteren Zustandsänderung“ ist als Tod ausgelegt).
 4. **Tages-Unterzustand `ENDED`** zwischen `EndDay` und `StartNight`; `vertical-slice-flow.md` §8 führt beide Befehle getrennt.
-5. **Pflicht einer Einzelsiegrolle beim Setup** (DECISION-LOG) wird nicht geprüft, weil der Core-Slice keine solche Rolle besitzt. Geprüft werden 6–24 Personen, Rollenanzahl, Obergrenzen (`werwolf` 5, `dorfbewohner` 10) und je mindestens eine Wolfs- und Dorfrolle.
-6. **Selbstnominierung** ist nicht verboten, weil DR-03 sie nicht regelt.
-7. **`SeatDied` ist nur für den Spielleiter sichtbar**, solange DR-04 (öffentliche Information bei Tod) offen ist.
-8. **Seed** muss zwischen 0 und 2^53−1 liegen, damit er in JSON verlustfrei bleibt.
+5. **Pflicht einer Einzelsiegrolle beim Setup** (DECISION-LOG) wird nicht geprüft, weil der Core-Slice keine solche Rolle besitzt. Geprüft werden 6–24 Personen, Rollenanzahl und je mindestens eine Wolfs- und Dorfrolle.
+6. **Keine Obergrenze für `dorfbewohner` und `werwolf`** (Entscheidung vom 26.09.2026, `DECISION-LOG.md`). Nur so ist jede Personenzahl von 6 bis 24 mit den beiden Grundrollen spielbar. Der Katalog kennt weiterhin ein optionales `max_copies` für spätere Rollen; die konkrete Rollenkomposition legt das Setup in Phase 2 fest.
+7. **Selbstnominierung** ist nicht verboten, weil DR-03 sie nicht regelt.
+8. **`SeatDied` ist nur für den Spielleiter sichtbar**, solange DR-04 (öffentliche Information bei Tod) offen ist.
+9. **Seed** muss zwischen 0 und 2^53−1 liegen, damit er in JSON verlustfrei bleibt.
 
 ## Bekannte Lücken gegenüber der Spezifikation
 
