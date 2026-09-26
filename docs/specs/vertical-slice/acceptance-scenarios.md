@@ -204,7 +204,7 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_waldhexe.gd
 
 ### Orakel und Trugbilderwolf (DR-07, DR-08)
 
-Orakel im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_orakel.gd`): AS-R09, AS-R10 (Sonderwolf als direkt aufgebauter Testzustand mit `counts_as_wolf`), AS-R33, Übersteuerung des gezeigten Ergebnisses als Grundlage für AS-R12/AS-R13 und deterministisches Replay ohne Zufall als Grundlage für AS-R14. Die Scheinrolle wird mit einer vorhandenen Rolle über `appears_as` geprüft; der Trugbilderwolf selbst folgt später.
+Orakel im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_orakel.gd`): AS-R09, AS-R10 (Sonderwolf als direkt aufgebauter Testzustand mit `counts_as_wolf`), AS-R33, Übersteuerung des gezeigten Ergebnisses als Grundlage für AS-R12/AS-R13 und deterministisches Replay ohne Zufall als Grundlage für AS-R14. Trugbilderwolf im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_trugbilderwolf.gd`): AS-R11 (Scheinrolle aus dem Spielaufbau, manuell und zufällig gekoppelt), AS-R12 (Übersteuerung des gezeigten Ergebnisses), AS-R13 (Scheinrolle per Korrektur), AS-R14 (Replay ohne Zufall) und das Zusammenspiel mit AS-R09 und AS-R10.
 
 **AS-R09 · Wahre Information**
 - Given: B6, Nacht 1, D wählt F.

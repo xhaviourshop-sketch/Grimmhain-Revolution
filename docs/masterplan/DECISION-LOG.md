@@ -169,3 +169,11 @@ Diese Einträge ersetzen widersprechende ältere Formulierungen ausdrücklich.
 - Mit „Gezeigt“ entsteht ein Informationsdatensatz im Spielzustand. Der Spielleiter erhält alle drei Werte; das Orakel erhält ausschließlich das gezeigte Ergebnis in einem eigenen Ereignis. Öffentliche Ereignisse enthalten keine Orakelinformation.
 - Die Waldhexe erfährt nach einer Rettung weiterhin die tatsächliche Rolle und nutzt dieses Modell nicht.
 - Nachtpriorität persönlicher Schritte: Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6; bei gleicher Priorität nach Personen-ID.
+
+## Trugbilderwolf · Produktionsrolle und Scheinrolle im Setup · 26. September 2026
+
+- Der Trugbilderwolf gehört vollständig zu den Werwölfen, zählt als Wolf, hat keinen eigenen Nachtschritt und bildet allein oder mit anderen Wölfen das Rudel.
+- Seine Scheinrolle steht in `appears_as` und wird beim Spielaufbau für jede Instanz ausdrücklich festgelegt, nie zufällig. Zulässig ist jede bekannte Rolle, die nicht als Wolf zählt, auch wenn sie in der Partie nicht vorkommt.
+- Bei zufälliger Verteilung werden Rolle und Scheinrolle als Einheit gemischt (`role_entries`), damit jede Scheinrolle bei ihrer Instanz bleibt; nur die Verteilung nutzt den gespeicherten RNG.
+- Das Orakel ermittelt die Scheinrolle über die zentrale Informationsregel; die Waldhexe sieht bei einer Rettung die tatsächliche Rolle.
+- Eine Korrektur der Scheinrolle ist nur auf Nicht-Wolf-Rollen zulässig und wirkt auf spätere Prüfungen; abgeschlossene Informationen bleiben unverändert. Wer per Korrektur zum Trugbilderwolf wird, erhält Rolle und Scheinrolle gemeinsam; wer es nicht mehr ist, erhält die normale Erscheinung seiner neuen Rolle.

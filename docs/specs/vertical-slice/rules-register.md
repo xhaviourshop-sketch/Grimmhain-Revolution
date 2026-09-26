@@ -181,10 +181,10 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Nachtpriorität | keine eigene; Teil des Rudelschritts 2.0 |
 | Gültige Ziele | wie `werwolf` im Rudelschritt |
 | Dauer | Die beim Spielaufbau gewählte Scheinrolle wird gespeichert und bei jeder Orakel-Prüfung verwendet. Änderung nur per bestätigter Spielleiterkorrektur (`GmCorrection set_role_field`, Feld `appears_as`) mit Begründung und Protokoll von altem und neuem Wert. |
-| Auflösung | Setup: Ist ein `trugbilderwolf` im Rollenpool, verlangt der Spielaufbau die Scheinrolle (Auswahl: jede Rolle des Slice-Katalogs, die nicht als Wolf zählt). Orakel-Schritt ohne Zufallsziehung und ohne Rückfrage: ermitteltes Ergebnis = gespeicherte Scheinrolle; Wahrheit = `trugbilderwolf` |
+| Auflösung | Setup: Jede Instanz `trugbilderwolf` verlangt eine Scheinrolle: manuell über `appearances {"<Personen-ID>": Rolle}`, zufällig über `role_entries [{role_id, appears_as}]`, wobei Rolle und Scheinrolle als Einheit gemischt werden. Zulässig ist jede bekannte Rolle, die nicht als Wolf zählt (also weder `werwolf` noch `trugbilderwolf`), auch wenn sie in der Partie nicht vorkommt. Ohne, mit ungültiger oder mit überflüssiger Scheinrolle lehnt `StartGame` ab. Orakel-Schritt ohne Zufallsziehung und ohne Rückfrage: ermitteltes Ergebnis = gespeicherte Scheinrolle über die zentrale Informationsregel; Wahrheit = `trugbilderwolf`. Die Waldhexe sieht bei einer Rettung die tatsächliche Rolle |
 | Konflikte | Scheinrolle kann eine Rolle sein, die im Spiel lebend existiert (beabsichtigt, Code) |
 | Siegbezug | G-SIEG-2 |
-| Manuelle Übersteuerung | gespeicherte Scheinrolle korrigieren (`set_role_field appears_as`, G-GM-1); gezeigte Information abweichend setzen (G-INF-2) |
+| Manuelle Übersteuerung | gespeicherte Scheinrolle korrigieren (`set_role_field appears_as`, nur Nicht-Wolf-Rollen, G-GM-1; abgeschlossene Orakelinformationen bleiben unverändert); Person per `set_role` zum Trugbilderwolf machen nur mit Scheinrolle (`appears_as`); gezeigte Information abweichend setzen (G-INF-2) |
 | Legacy-Beleg | Beschreibung `"Trugbilderwolf"` in `roles.js`; Zufallsziehung `pool[Math.floor(Math.random()*pool.length)]` im `"Das Orakel"`-Handler, `abilities-roles-chunk.js`; `WOLF_ROLES_SET` und `WOLF_KILL_ROLES` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-08 Trugbilderwolf**
