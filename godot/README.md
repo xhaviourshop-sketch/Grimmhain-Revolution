@@ -1,6 +1,6 @@
 # Grimmhain · Godot-Projekt
 
-Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Dazu die technische UI-Grundlage der Tablet-App (App-Shell, Navigation, sechs Platzhalteransichten, Theme, DE/EN, Anwendungsschicht), beschrieben in `../docs/ui/README.md`; keine Assets, kein Audio, noch kein Spielablauf in der UI. Rollen: `dorfbewohner`, `werwolf` und die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` (siehe „Rollen“).
+Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Dazu die technische UI-Grundlage der Tablet-App (App-Shell, Navigation, Ansichten, Theme, DE/EN, Anwendungsschicht), beschrieben in `../docs/ui/README.md`, und der erste Setup-Schritt „Neue Partie“ (Personen erfassen und bestätigen, `../docs/ui/player-setup.md`); keine Assets, kein Audio, noch kein Spielablauf in der UI. Rollen: `dorfbewohner`, `werwolf` und die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` (siehe „Rollen“).
 
 ## Engine-Version (gepinnt)
 
@@ -23,7 +23,8 @@ Aus dem Repository-Wurzelordner:
 godot/tests/run_all.sh                     # alle Tests
 godot/tests/run_all.sh --filter=replay     # nur Testdateien, deren Name "replay" enthält
 godot/tests/run_all.sh --filter=reactions  # z. B. nur die Reaktionswarteschlange
-godot/tests/run_all.sh --filter=test_ui    # nur die UI-Tests (tests/ui/)
+godot/tests/run_all.sh --filter=test_ui    # nur die UI-Grundlage (tests/ui/test_ui_*)
+godot/tests/run_all.sh --filter=test_setup # nur das Spieler-Setup (tests/ui/test_setup_*)
 GODOT_BIN=/pfad/zu/godot godot/tests/run_all.sh   # eigene Godot-Binärdatei verwenden
 ```
 
@@ -84,6 +85,10 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 | `tests/ui/test_ui_layout.gd` | 1024×768, 1280×800 (DE und EN), 1920×1080, um 50 % verlängerte deutsche Texte: im Viewport, keine Überlappung, nichts abgeschnitten; Touchziele ≥ 48, Primär ≥ 64, Abstand im Dialog; sichere Fläche | UI-Auftrag 11–14 |
 | `tests/ui/test_ui_theme.gd` | Tokens vollständig, Button-Zustände unterscheidbar, Kontrast WCAG AA, keine Stilwerte außerhalb des Themes, keine Schriftdatei, reduzierte Bewegung schaltet Übergänge ab, Linkshänder-Grundlage, eigenes Schaltersymbol | UI-Auftrag 10 |
 | `tests/ui/test_ui_architecture.gd` | Core ohne UI-Bezug, UI ohne Zugriff auf GameState und Regelklassen, Sicht der Anwendungsschicht ist eine Kopie, Befehle laufen unverändert durch `RulesEngine` | UI-Auftrag 16–18 |
+| `tests/ui/test_setup_model.gd` | Setup-Modell und Anwendungsschicht: stabile IDs, Normalisierung, Länge 32, Steuerzeichen, 6 bis 24 Personen, Dubletten, Mehrfachimport atomar, Umbenennen, Entfernen, Bestätigungsstatus, keine Regelkern-Bezüge | Spieler-Setup 1–5, 8–29, 31, 33, 37–41, 45 |
+| `tests/ui/test_setup_screen.gd` | Setup-Ansicht: Einzeleingabe, Doppeltippen, Importmeldungen, Sperren bei 24, IDs über Sprachwechsel und Neuaufbau, kein GameState/StartGame, Bearbeiten, Entfernen, Verlassen mit drei Wahlmöglichkeiten, Neu beginnen | Spieler-Setup 6, 7, 17, 30, 32, 34–36, 38–45 |
+| `tests/ui/test_setup_layout.gd` | 0/6/12/18/24 Personen, EN, 1920×1080, lange Namen, Dubletten, offene Modi und Dialog, Scrollen, DE/EN-Schlüssel, keine festen Texte | Spieler-Setup 52–61 |
+| `tests/ui/test_dialog_focus.gd` | ConfirmDialog als Modal: Fokussperre (Tab, Shift+Tab, Pfeile), Hintergrund gesperrt, Escape, Fokus-Rückgabe, kein zweiter Dialog | Spieler-Setup 46–51 |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |
 
 ### Szenarioformat (`tests/scenarios/*.json`)
@@ -107,6 +112,7 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 |---|---|
 | `project.godot` | Projekteinstellungen, Typisierungswarnungen als Fehler, Hauptszene, Querformat, Streckung `canvas_items`/`expand`, Übersetzungen, `quit_on_go_back` aus, Version (zentrale Quelle) |
 | **app/**, **content/i18n/** | UI-Grundlage und UI-Texte; Szenen, Verantwortungen, Navigation, Tokens und Lokalisierung in `../docs/ui/README.md` |
+| **app/setup/** | Spieler-Setup ohne Regelkern: `PersonNameRules` (Grenzen, Namensregeln), `SetupPerson`, `SetupDraft`, `SetupResult`, `PlayerSetup` (Anwendungsschicht); siehe `../docs/ui/player-setup.md` |
 | `tools/capture_ui_screenshots.gd` | Prüf-Screenshots der UI (braucht Renderer, z. B. Xvfb) |
 | `tools/godot-version.txt`, `tools/install_godot.sh` | gepinnte Engine-Version, Download mit Prüfsumme |
 | **core/util/** | |
@@ -279,4 +285,4 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 
 ## Nicht enthalten
 
-Spielablauf in der UI (Setup, Spielernamen, Sitzkreis, Ansagekarte mit Inhalt), gespeicherte Einstellungen, Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoints auf Datenträger, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
+Spielablauf in der UI (Rollen, Sitzkreis, StartGame aus dem Setup, Ansagekarte mit Inhalt), gespeicherte Einstellungen und Spielerlisten, Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoints auf Datenträger, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
