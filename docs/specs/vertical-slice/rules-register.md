@@ -157,10 +157,10 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Nachtpriorität | 4.6 |
 | Gültige Ziele | jede andere lebende Person; Selbstwahl ist verboten |
 | Dauer | sofort, keine Zustandsänderung |
-| Auflösung | im Schritt: Wahrheit = aktuelle `role_id`; ermitteltes Ergebnis nach DR-07 und `trugbilderwolf`; gezeigtes Ergebnis nach Bestätigung „Gezeigt" (G-INF-1). Ereignis `InfoRevealed` mit Sichtbarkeit „nur handelnde Person" |
+| Auflösung | Pflichtschritt je lebendem Orakel nach allen Waldhexenschritten (mehrere nach Personen-ID), nie per `SkipStep` überspringbar, vor „Gezeigt“ per `CancelPrompt` vollständig verwerfbar. Stufe 1: genau eine andere lebende Person wählen; dabei werden Wahrheit (aktuelle `role_id`) und ermitteltes Ergebnis (`InformationRules.determine_role`: gespeicherte besondere Erscheinung `appears_as` ≠ `role_id`, sonst `werwolf` bei `counts_as_wolf`, sonst `role_id`) berechnet und als gezeigtes Ergebnis vorbelegt. Stufe 2: „Gezeigt“ bestätigen. Erst dann entstehen der Datensatz `InfoRecord`, das Audit `InfoRecorded` (nur Spielleiter, alle drei Werte) und `InfoRevealed` (nur das Orakel, nur das gezeigte Ergebnis) (G-INF-1). Keine Zufallsziehung |
 | Konflikte | Verwandeltes `wolfskind` und `lehrling` mit geerbter Rolle werden nach aktuellem Zustand ermittelt (Code: `isWolf`, `seat.role`) |
 | Siegbezug | Dorf |
-| Manuelle Übersteuerung | gezeigte Information abweichend setzen (Warnung, Protokoll mit ermitteltem und gezeigtem Wert) |
+| Manuelle Übersteuerung | gezeigte Information vor „Gezeigt“ abweichend setzen (`OverrideShownRole`: bekannte Rolle, Warnung, Begründung, Protokoll mit altem und neuem gezeigtem Wert); Wahrheit und ermitteltes Ergebnis bleiben unverändert, der Prompt bleibt offen |
 | Legacy-Beleg | `"Das Orakel"`-Handler in `abilities-roles-chunk.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-07 Orakel**
