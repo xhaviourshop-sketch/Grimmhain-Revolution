@@ -375,6 +375,32 @@ func test_save_load_and_replay() -> void:
 	assert_true(won != null and (_candidates(won, "confirmed")[0] as Dictionary)["beneficiary_ids"] == [3], "bestätigter Manipulator nach Replay")
 
 
+# --- AS-E01 Beispielrunde ------------------------------------------------------------------------------
+
+func test_as_e01_full_round() -> void:
+	# A werwolf, B trugbilderwolf (Scheinrolle schutzengel), C schutzengel, D das-orakel, E waldhexe, G sensentraeger, M manipulator.
+	var payload := Fixtures.start_roles(["werwolf", "trugbilderwolf", "schutzengel", "das-orakel", "waldhexe", "sensentraeger", "manipulator"], 4711).payload.duplicate(true)
+	payload["appearances"] = {"2": "schutzengel"}
+	var commands: Array[Command] = [Command.start_game(payload), Command.start_night(),
+		Command.answer_prompt(1, [4]),                                    # C schützt D
+		Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, [6]),  # Rudel wählt G
+		Command.begin_step("night:1:2:waldhexe:5"), Command.answer_choice(3, "heal", false), Command.answer_choice(3, "poison", false),
+		Command.answer_choice(3, "confirm", true),                        # E sieht G und verzichtet
+		Command.begin_step("night:1:3:das-orakel:4"), Command.answer_stage_targets(4, "target", [2]), Command.answer_choice(4, "shown", true),
+		Command.end_night(), Command.begin_step("reaction:1"), Command.answer_prompt(5, [1]),  # G stirbt, verflucht A
+		Command.nominate(4, 2), Command.decide_execution(2)]              # D nominiert B, Hinrichtung B
+	var run := _replay_ok(commands, "AS-E01")
+	if not run.ok:
+		return
+	var records: Array = run.state.to_dict()["info_records"]
+	assert_true(records.size() == 1 and str((records[0] as Dictionary)["shown_role"]) == "schutzengel", "D erhält die Scheinrolle")
+	assert_eq(run.state.alive_ids(), [3, 4, 5, 7] as Array[int], "C, D, E, M leben")
+	assert_eq(_describe(run.state), ["village:no_wolves_alive:[]"] as Array[String], "nur Dorf, kein Manipulator bei vier Lebenden")
+	var won := apply_ok(run.state, Command.confirm_win(int((_candidates(run.state)[0] as Dictionary)["id"])), "ConfirmWin")
+	assert_eq(String(won.state.phase), "GAME_OVER", "Spielende")
+	assert_eq(events_json(RulesEngine.replay(commands).events), events_json(run.events), "gleiche Eventliste bei Wiederholung")
+
+
 # --- 47–51 Beschädigte Zustände ---------------------------------------------------------------------------
 
 func _tampered(commands: Array[Command], mutate: Callable) -> LoadResult:
