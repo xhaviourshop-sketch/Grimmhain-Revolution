@@ -99,7 +99,9 @@ func test_multiple_pending_reactions_keep_order() -> void:
 func test_night_death_reacts_at_dawn() -> void:
 	# DR-09: Tod in der Nacht → Reaktion in der Morgenauflösung.
 	var run := RulesEngine.replay([Fixtures.start_reaper_game(), Command.start_night(),
-		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}), Command.answer_prompt(1, [])] as Array[Command])
+		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}),
+		# Die Korrektur bricht den offenen Rudel-Prompt ab (state_changed_by_gm_correction).
+		Command.begin_step("night:1:0:pack"), Command.answer_prompt(2, [])] as Array[Command])
 	assert_true(run.ok, "Nacht angenommen (%s @ %d)" % [run.error, run.failed_index])
 	if not run.ok:
 		return
