@@ -10,7 +10,7 @@ var role_id: StringName = &""
 var original_role_id: StringName = &""
 var faction: StringName = &""
 var counts_as_wolf: bool = false
-var appears_as: StringName = &""  ## für Informationsrollen; im Core-Slice ohne Nutzer
+var appears_as: StringName = &""  ## Erscheinung für Informationsrollen; beim Trugbilderwolf die Scheinrolle
 var alive: bool = true
 var death: KillEvent = null
 var ability_uses: Dictionary = {}  ## begrenzte Einsätze pro Person: "<rolle>:<fähigkeit>" → Anzahl (G-ID-3)
@@ -50,6 +50,9 @@ static func from_dict(d: Dictionary) -> Player:
 		p.death = KillEvent.from_dict(d["death"])
 		if p.death == null:
 			return null
-	if p.id < 1 or p.name.strip_edges() == "" or not RoleCatalog.has_role(p.role_id):
+	if p.id < 1 or p.name.strip_edges() == "" or not RoleCatalog.has_role(p.role_id) or not RoleCatalog.has_role(p.appears_as):
+		return null
+	# Eine Rolle mit Scheinrolle (Trugbilderwolf) braucht eine zulässige, nicht wölfische.
+	if RoleCatalog.requires_appearance(p.role_id) and not RoleCatalog.is_valid_appearance(p.appears_as):
 		return null
 	return p

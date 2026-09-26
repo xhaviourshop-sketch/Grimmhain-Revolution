@@ -76,6 +76,9 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 			var role := StringName(value)
 			if not RoleCatalog.has_role(role):
 				return &"invalid_value"
+			# Die Scheinrolle eines Trugbilderwolfs darf nie eine Wolfsrolle sein (DR-08).
+			if field == "appears_as" and RoleCatalog.requires_appearance(player.role_id) and not RoleCatalog.is_valid_appearance(role):
+				return &"invalid_value"
 			if role == player.get(field):
 				return &"no_change"
 		SET_ROLE:
@@ -84,6 +87,15 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 				return &"unknown_role"
 			if role == player.role_id:
 				return &"no_change"
+			# Rolle und Scheinrolle werden gemeinsam gesetzt: Pflicht nur beim Trugbilderwolf.
+			if RoleCatalog.requires_appearance(role):
+				if not p.has("appears_as"):
+					return &"appearance_required"
+				var appearance: Variant = p["appears_as"]
+				if not (appearance is String or appearance is StringName) or not RoleCatalog.is_valid_appearance(StringName(appearance)):
+					return &"invalid_appearance"
+			elif p.has("appears_as"):
+				return &"appearance_not_allowed"
 	return &""
 
 
@@ -213,7 +225,8 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			player.role_id = role
 			player.faction = RoleCatalog.faction_of(role)
 			player.counts_as_wolf = RoleCatalog.counts_as_wolf(role)
-			player.appears_as = RoleCatalog.appears_as(role)
+			# Scheinrolle aus dem Befehl beim Trugbilderwolf, sonst normale Erscheinung der neuen Rolle.
+			player.appears_as = StringName(DictRead.get_string(p, "appears_as")) if RoleCatalog.requires_appearance(role) else RoleCatalog.appears_as(role)
 			_log(ctx, kind, target, old, _role_fields(player), reason, false)
 			s.win_check_pending = true
 		DECLARE_WINNER:

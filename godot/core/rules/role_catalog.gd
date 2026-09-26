@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) sowie die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe` und `das-orakel`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) sowie die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel` und `trugbilderwolf`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -23,6 +23,10 @@ const WALDHEXE := &"waldhexe"
 ## Orakel / The Oracle (rules-register.md §4, DR-07): Dorf, Nachtschritt nach der
 ## Waldhexe, prüft eine andere lebende Person (OracleStep, InformationRules).
 const ORAKEL := &"das-orakel"
+## Trugbilderwolf / Decoy Wolf (rules-register.md §5, DR-08): Werwölfe, zählt als Wolf,
+## kein eigener Schritt (Teil des Rudels). Seine Scheinrolle steht in `Player.appears_as`,
+## wird beim Spielaufbau vom Spielleiter festgelegt und ist dort Pflicht.
+const TRUGBILDERWOLF := &"trugbilderwolf"
 
 ## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
 ## Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
@@ -34,6 +38,7 @@ const ROLES := {
 	SCHUTZENGEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZENGEL, "night_priority": 13},
 	WALDHEXE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDHEXE, "night_priority": 34},
 	ORAKEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ORAKEL, "night_priority": 46},
+	TRUGBILDERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": TRUGBILDERWOLF, "requires_appearance": true},
 	SENSENTRAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SENSENTRAEGER, "death_reaction": Reaction.KIND_CURSE},
 }
 
@@ -63,6 +68,17 @@ static func death_reaction(role_id: StringName) -> StringName:
 ## (vergleichbar mit PACK_PRIORITY) oder 0 ohne eigenen Nachtschritt.
 static func night_priority(role_id: StringName) -> int:
 	return (ROLES[role_id] as Dictionary).get("night_priority", 0)
+
+
+## true, wenn jede Instanz der Rolle eine vom Spielleiter festgelegte Scheinrolle braucht.
+static func requires_appearance(role_id: StringName) -> bool:
+	return (ROLES[role_id] as Dictionary).get("requires_appearance", false)
+
+
+## Zulässige Scheinrolle: eine bekannte Rolle, die nicht als Wolf zählt
+## (also weder `werwolf` noch `trugbilderwolf`); sie muss nicht in der Partie vorkommen.
+static func is_valid_appearance(role_id: StringName) -> bool:
+	return has_role(role_id) and not counts_as_wolf(role_id)
 
 
 ## Höchstzahl je Partie oder UNLIMITED, wenn die Rolle keine eigene Grenze hat.

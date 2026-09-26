@@ -112,30 +112,26 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 	if sorted_order != ids:
 		return &"invalid_seat_order"
 
-	var roles: Array[StringName] = []
-	match DictRead.get_string(p, "assignment"):
-		"manual":
-			var map := DictRead.get_dict(p, "roles")
-			if map.size() != ids.size():
-				return &"role_count_mismatch"
-			for id: int in ids:
-				if not map.has(str(id)):
-					return &"role_count_mismatch"
-				roles.append(StringName(str(map[str(id)])))
-		"random":
-			var pool := DictRead.get_array(p, "role_pool")
-			if pool.size() != ids.size():
-				return &"role_count_mismatch"
-			for r: Variant in pool:
-				roles.append(StringName(str(r)))
-		_:
-			return &"invalid_assignment"
-
+	var collected: Variant = _setup_entries(p, ids)
+	if collected is StringName:
+		return collected
+	var entries: Array = collected
 	var counts := {}
-	for r: StringName in roles:
+	for entry: Dictionary in entries:
+		var r: StringName = entry["role_id"]
 		if not RoleCatalog.has_role(r):
 			return &"unknown_role"
 		counts[r] = int(counts.get(r, 0)) + 1
+	# Scheinrolle je Rolleninstanz: Pflicht für den Trugbilderwolf, sonst unzulässig (DR-08).
+	for entry: Dictionary in entries:
+		if RoleCatalog.requires_appearance(entry["role_id"]):
+			if not entry["has_appearance"]:
+				return &"appearance_required"
+			var value: Variant = entry["appears_as"]
+			if not (value is String or value is StringName) or not RoleCatalog.is_valid_appearance(StringName(value)):
+				return &"invalid_appearance"
+		elif entry["has_appearance"]:
+			return &"appearance_not_allowed"
 	var has_wolf := false
 	var has_village := false
 	for r: StringName in counts:
@@ -151,6 +147,56 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 	if not has_village:
 		return &"missing_village_role"
 	return &""
+
+
+## Rolleninstanzen des Spielaufbaus als [{role_id, appears_as, has_appearance}]: manuell
+## in aufsteigender Personen-ID (`roles` plus optional `appearances` {"<id>": Scheinrolle}),
+## zufällig in Konfigurationsreihenfolge vor dem Mischen (`role_entries` [{role_id,
+## appears_as?}] oder `role_pool` ohne Scheinrollen). Rolle und Scheinrolle bleiben eine
+## Einheit, auch beim Mischen. Bei ungültiger Struktur ein Fehlergrund (StringName).
+static func _setup_entries(p: Dictionary, ids: Array[int]) -> Variant:
+	var entries: Array = []
+	match DictRead.get_string(p, "assignment"):
+		"manual":
+			if p.has("role_entries") or p.has("role_pool") or (p.has("appearances") and not p["appearances"] is Dictionary):
+				return &"invalid_assignment"
+			var map := DictRead.get_dict(p, "roles")
+			if map.size() != ids.size():
+				return &"role_count_mismatch"
+			var appearances := DictRead.get_dict(p, "appearances")
+			for key: Variant in appearances:
+				if not String(key).is_valid_int() or not ids.has(String(key).to_int()):
+					return &"appearance_not_allowed"
+			for id: int in ids:
+				if not map.has(str(id)):
+					return &"role_count_mismatch"
+				entries.append({"role_id": StringName(str(map[str(id)])), "appears_as": appearances.get(str(id)), "has_appearance": appearances.has(str(id))})
+		"random":
+			if p.has("appearances") or (p.has("role_entries") and p.has("role_pool")):
+				return &"invalid_assignment"
+			if p.has("role_entries"):
+				if not p["role_entries"] is Array:
+					return &"invalid_role_entry"
+				var list: Array = p["role_entries"]
+				if list.size() != ids.size():
+					return &"role_count_mismatch"
+				for item: Variant in list:
+					if not item is Dictionary or not ((item as Dictionary).get("role_id") is String):
+						return &"invalid_role_entry"
+					var e: Dictionary = item
+					for key: Variant in e:
+						if not ["role_id", "appears_as"].has(String(key)):
+							return &"invalid_role_entry"
+					entries.append({"role_id": StringName(e["role_id"]), "appears_as": e.get("appears_as"), "has_appearance": e.has("appears_as")})
+			else:
+				var pool := DictRead.get_array(p, "role_pool")
+				if pool.size() != ids.size():
+					return &"role_count_mismatch"
+				for r: Variant in pool:
+					entries.append({"role_id": StringName(str(r)), "appears_as": null, "has_appearance": false})
+		_:
+			return &"invalid_assignment"
+	return entries
 
 
 static func _validate_step(s: GameState, c: Command) -> StringName:
@@ -307,25 +353,23 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		names[int(entry["id"])] = DictRead.get_string(entry, "name").strip_edges()
 	ids.sort()
 
-	# Zuordnung Person → Rolle. Zufall ausschließlich über den gespeicherten Seed,
-	# Personen in aufsteigender ID-Reihenfolge (unabhängig von der Sitzreihenfolge).
-	var roles: Array = []
+	# Zuordnung Person → Rolleninstanz (Rolle plus Scheinrolle). Zufall ausschließlich über
+	# den gespeicherten Seed, Personen in aufsteigender ID-Reihenfolge (unabhängig von der
+	# Sitzreihenfolge). Die Scheinrolle selbst wird nie zufällig bestimmt.
+	var entries: Array = _setup_entries(p, ids)
 	if DictRead.get_string(p, "assignment") == "random":
-		roles = s.rng.shuffled(DictRead.get_array(p, "role_pool"))
-	else:
-		var map := DictRead.get_dict(p, "roles")
-		for id: int in ids:
-			roles.append(map[str(id)])
+		entries = s.rng.shuffled(entries)
 
 	for i: int in ids.size():
 		var player := Player.new()
 		player.id = ids[i]
 		player.name = names[ids[i]]
-		player.role_id = StringName(str(roles[i]))
+		var entry: Dictionary = entries[i]
+		player.role_id = entry["role_id"]
 		player.original_role_id = player.role_id
 		player.faction = RoleCatalog.faction_of(player.role_id)
 		player.counts_as_wolf = RoleCatalog.counts_as_wolf(player.role_id)
-		player.appears_as = RoleCatalog.appears_as(player.role_id)
+		player.appears_as = StringName(str(entry["appears_as"])) if RoleCatalog.requires_appearance(player.role_id) else RoleCatalog.appears_as(player.role_id)
 		s.players[player.id] = player
 	s.seat_order = DictRead.to_int_array(DictRead.get_array(p, "seat_order"))
 
