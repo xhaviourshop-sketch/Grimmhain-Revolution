@@ -228,6 +228,9 @@ static func from_dict(d: Dictionary) -> GameState:
 		s.win_candidate = WinCandidate.from_dict(d["win_candidate"])
 	if d.get("winner") is Dictionary:
 		s.winner = WinCandidate.from_dict(d["winner"])
+	# Ein Waldhexen-Prompt muss zum übrigen Zustand passen (WitchStep.matches_state).
+	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_WITCH and not WitchStep.matches_state(s, s.pending_prompt):
+		return null
 	s.command_count = DictRead.get_int(d, "command_count")
 	var next_ids := DictRead.get_dict(d, "next_ids")
 	s.next_event_index = DictRead.get_int(next_ids, "event", 1)

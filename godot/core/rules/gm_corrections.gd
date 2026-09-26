@@ -118,7 +118,7 @@ static func _validate_protection(s: GameState, p: Dictionary, kind: String) -> S
 
 
 ## Waldhexe: Trankstatus jederzeit; Rettung nur in der laufenden Nacht, erst nach
-## bestätigtem Waldhexenschritt und nur auf eine lebende Person. Nach der
+## bestätigtem Waldhexenschritt und nur auf das aktuelle lebende Rudelopfer. Nach der
 ## Morgenauflösung gibt es keine Rettungskorrektur, also keine rückwirkende Wiederbelebung.
 ## Gift wird nicht hierüber abgebildet, sondern über `kill`.
 static func _validate_witch(s: GameState, p: Dictionary, kind: String) -> StringName:
@@ -143,6 +143,10 @@ static func _validate_witch(s: GameState, p: Dictionary, kind: String) -> String
 	var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
 	if not s.players.has(target):
 		return &"unknown_player"
+	if s.pack_target_id == GameState.NO_TARGET:
+		return &"no_pack_target"
+	if target != s.pack_target_id:
+		return &"not_current_pack_target"
 	if not s.players[target].alive:
 		return &"player_dead"
 	if action.saved_id == target:

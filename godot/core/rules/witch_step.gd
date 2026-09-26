@@ -116,6 +116,28 @@ static func is_consistent(prompt: PendingPrompt) -> bool:
 	return prompt.kind == PendingPrompt.KIND_WITCH_CHAIN and prompt.stage == next_stage(partial)
 
 
+## Ladeprüfung gegen den übrigen Zustand: Der Prompt gehört zum erwarteten Nachtschritt
+## einer lebenden Waldhexe dieser Nacht, das gezeigte Opfer ist das aktuelle Rudelopfer,
+## Auswahl und Giftziel passen zu den lebenden Personen.
+static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
+	if s.phase != Phase.NIGHT or s.next_night_step >= s.night_plan.size():
+		return false
+	var key := s.night_plan[s.next_night_step]
+	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step) or StepQueue.step_role(key) != RoleCatalog.WALDHEXE:
+		return false
+	var witch: Player = s.players.get(prompt.actor_id)
+	if witch == null or StepQueue.step_actor(key) != witch.id or not witch.alive or witch.role_id != RoleCatalog.WALDHEXE:
+		return false
+	if DictRead.get_int(prompt.partial, "victim_id", -2) != victim_of(s):
+		return false
+	var alive := s.alive_ids()
+	if prompt.partial.has("poison_target_id") and not alive.has(DictRead.get_int(prompt.partial, "poison_target_id", -1)):
+		return false
+	if prompt.stage == STAGE_POISON_TARGET:
+		return prompt.allowed_ids == alive and prompt.min_count == 1 and prompt.max_count == 1
+	return prompt.allowed_ids.is_empty()
+
+
 static func _enter_stage(s: GameState, prompt: PendingPrompt) -> void:
 	prompt.stage = next_stage(prompt.partial)
 	if prompt.stage == STAGE_POISON_TARGET:

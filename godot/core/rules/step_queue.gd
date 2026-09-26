@@ -8,8 +8,10 @@ extends RefCounted
 ## Schritt-IDs: "night:<Nacht>:<Index>:<Schritt>" bzw. "reaction:<Reaktions-ID>".
 ## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" (je Lage nach
 ## Personen-ID) vor bzw. nach dem Rudelschritt "pack": Schutzengel → Rudel → Waldhexe.
-## Ein persönlicher Schritt, dessen Person inzwischen tot ist oder (Waldhexe) keine
-## Entscheidung mehr treffen kann, entfällt automatisch und protokolliert (`StepDropped`).
+## Der Nachtplan ist ein Snapshot bei StartNight: Rollenwechsel während der Nacht fügen
+## keine Schritte hinzu. Ein persönlicher Schritt entfällt automatisch und protokolliert
+## (`StepDropped`), wenn seine Person inzwischen tot ist, nicht mehr die geplante Rolle
+## hat oder (Waldhexe) keine Entscheidung mehr treffen kann.
 
 const PACK := &"pack"
 const STATUS_PENDING := &"pending"
@@ -20,6 +22,12 @@ const STEP_STATUSES: Array[StringName] = [STATUS_PENDING, STATUS_DONE, STATUS_SK
 
 static func personal_step_key(role_id: StringName, player_id: int) -> StringName:
 	return StringName("%s:%d" % [role_id, player_id])
+
+
+## Geplante Rolle eines persönlichen Nachtschritts oder &"" (Rudel).
+static func step_role(key: StringName) -> StringName:
+	var parts := String(key).split(":")
+	return StringName(parts[0]) if parts.size() == 2 else &""
 
 
 ## Handelnde Person eines persönlichen Nachtschritts oder -1 (Rudel).
@@ -112,7 +120,10 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	var actor := step_actor(key)
 	if not s.players.has(actor) or not s.players[actor].alive:
 		return &"actor_dead"
-	if String(key).begins_with(String(RoleCatalog.WALDHEXE) + ":") and not WitchStep.has_decision(s, actor):
+	# Nie die Fähigkeit einer inzwischen verlorenen Rolle ausführen (gilt für alle persönlichen Schritte).
+	if s.players[actor].role_id != step_role(key):
+		return &"actor_role_changed"
+	if step_role(key) == RoleCatalog.WALDHEXE and not WitchStep.has_decision(s, actor):
 		return &"no_decision"
 	return &""
 
