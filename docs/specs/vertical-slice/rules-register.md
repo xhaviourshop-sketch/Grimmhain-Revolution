@@ -132,11 +132,11 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Fraktion | Dorf. `counts_as_wolf` = nein. |
 | Nachtpriorität | 1.3 (vor dem Rudel) |
 | Gültige Ziele | jede lebende Person außer sich selbst („andere“ in DR-05 = nicht der Schutzengel selbst). Dieselbe Person in aufeinanderfolgenden Nächten ist erlaubt (Code: keine Sperre; DR-05 regelt keine Sperre). |
-| Dauer | Wahl bis zum Beginn des folgenden Tages |
-| Auflösung | Morgenauflösung: Ist das Wolfsopfer geschützt, stirbt es nicht; Ereignis `KillPrevented{by: schutzengel}` nur für den Spielleiter sichtbar |
+| Dauer | Wahl bis zum Beginn des folgenden Tages. Gespeichert wird beim Bestätigen: Schutzengel, geschützte Person, Nacht. Ein Schutz früherer Nächte wirkt nie erneut. Stirbt der Schutzengel nach bestätigter Wahl in derselben Nacht, bleibt der Schutz bestehen (DECISION-LOG, Schutzengel 26.09.2026) |
+| Auflösung | Pflichtauswahl je lebendem Schutzengel, Schritte vor dem Rudel, bei mehreren Schutzengeln nach Personen-ID. Morgenauflösung: Ist das Wolfsopfer (`NIGHT_KILL` durch das Rudel) in dieser Nacht geschützt, stirbt es nicht; genau ein Ereignis `KillPrevented` (Ziel, Ursache, Schutzquelle, Schutzengel-ID, Nacht) nur für den Spielleiter, kein Todesereignis, keine Todesreaktion, kein vorläufiger Siegstatus. Andere Todesursachen (`HUNTER_SHOT`, `WITCH_POISON`, `LYNCH`, `GM_CORRECTION`) verhindert der Schutz nicht. Stirbt die geschützte Person vorher aus anderem Grund, wird sie nicht wiederbelebt und das Rudel erhält kein neues Ziel |
 | Konflikte | Hexenrettung und Schutz auf demselben Opfer: das Opfer überlebt einmal; beide Wirkungen werden protokolliert. Entscheidung DR-05 (unten) |
 | Siegbezug | Dorf |
-| Manuelle Übersteuerung | Schutz nachträglich setzen oder entfernen (Warnung, Protokoll) |
+| Manuelle Übersteuerung | nur in der laufenden Nacht und nach erledigtem Schritt des Schutzengels: Schutz setzen, ändern oder entfernen (`GmCorrection set_protection` / `remove_protection`, Bestätigung, Begründung, alter und neuer Wert); Selbstschutz bleibt verboten |
 | Legacy-Beleg | `Schutzengel`-Handler (`protectedCount`, Filter `role!=="Schutzengel"`) und `Werwolf`-Handler in `abilities-roles-chunk.js`; Rücksetzen `flags.protected` in `onNightStart`, `night.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-05 Schutzengel**

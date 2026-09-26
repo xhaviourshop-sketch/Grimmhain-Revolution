@@ -156,6 +156,16 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 - Given: Schutzengel-Prompt.
 - Then: C ist nicht in `allowed_seats`.
 
+**AS-R42 · Schutzengel stirbt nach bestätigter Wahl**
+- Given: B6, Nacht 1: C schützt F und bestätigt; danach stirbt C durch eine Spielleiterkorrektur.
+- When: Rudel wählt F, Nacht endet.
+- Then: F lebt; `KillPrevented` mit Schutzengel C (DECISION-LOG, Schutzengel 26.09.2026).
+
+**AS-R43 · Zwei Schutzengel, dieselbe Person**
+- Given: zwei Schutzengel (niedrigere ID zuerst) schützen beide F.
+- When: Rudel wählt F.
+- Then: F lebt; genau ein `KillPrevented` mit beiden Schutzengel-IDs.
+
 **AS-R32 · Schutz wirkt nur gegen Wolfsangriff**
 - Given: B6, Nacht 1: C schützt F.
 - When: E vergiftet F.
@@ -516,7 +526,7 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. 
 | DR-03 Nominierung | Register G-TAG-2, G-TAG-4; Ablauf §6.1, §7.6 | AS-C11, AS-N01–AS-N05, AS-G03 |
 | DR-04 öffentliche Todesinformation | Register G-TOD-5; Ablauf §0.2, §1.5, §4 | AS-M01, AS-M02, AS-M03, AS-L05 |
 | Randfall bereits totes Rudelopfer (DL 26.09.2026) | Register §2; Ablauf §4 Schritt 2 | AS-R41 |
-| DR-05 Schutzengel | Register §3; Ablauf §3, §4, §8 | AS-R01–AS-R04, AS-R32 |
+| DR-05 Schutzengel | Register §3; Ablauf §3, §4, §8 | AS-R01–AS-R04, AS-R32, AS-R42, AS-R43 |
 | DR-06 Waldhexe | Register §6; Ablauf §3 | AS-R05–AS-R08, AS-R39 |
 | DR-07 Orakel | Register §4 | AS-R09, AS-R10, AS-R33 |
 | DR-08 Trugbilderwolf | Register §5, G-RNG-1, G-GM-3; Ablauf §1.5a, §3 | AS-R11–AS-R14, AS-G05 |
