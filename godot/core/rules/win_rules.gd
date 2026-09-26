@@ -40,11 +40,14 @@ static func record_provisional(ctx: RuleContext, death: KillEvent) -> void:
 	})
 
 
-## Am Ende jedes Befehls: verbindliche Prüfung, sobald sie aussteht und keine Reaktion offen ist.
-## Ein offener Kandidat oder ein bestätigter Sieger wird nie überschrieben.
+## Am Ende jedes Befehls: verbindliche Prüfung, sobald sie aussteht und weder eine
+## Reaktion noch ein Prompt offen ist. Ein offener Kandidat oder ein bestätigter Sieger
+## wird nie überschrieben.
 static func finalize_if_ready(ctx: RuleContext) -> void:
 	var s := ctx.state
-	if not s.win_check_pending or not s.reactions.is_empty() or s.winner != null or s.win_candidate != null:
+	if not s.win_check_pending or not s.reactions.is_empty() or s.pending_prompt != null:
+		return
+	if s.winner != null or s.win_candidate != null:
 		return
 	var results := evaluate(s)
 	s.win_check_pending = false
