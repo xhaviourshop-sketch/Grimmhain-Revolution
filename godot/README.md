@@ -1,6 +1,6 @@
 # Grimmhain · Godot-Projekt
 
-Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Keine UI, keine Szenen, keine Assets. Rollen: `dorfbewohner`, `werwolf` und die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` (siehe „Rollen“).
+Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Dazu die technische UI-Grundlage der Tablet-App (App-Shell, Navigation, sechs Platzhalteransichten, Theme, DE/EN, Anwendungsschicht), beschrieben in `../docs/ui/README.md`; keine Assets, kein Audio, noch kein Spielablauf in der UI. Rollen: `dorfbewohner`, `werwolf` und die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` (siehe „Rollen“).
 
 ## Engine-Version (gepinnt)
 
@@ -10,8 +10,8 @@ Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, det
 | Prüfsumme | SHA-512 der ZIP-Datei in `tools/install_godot.sh` (aus der offiziellen `SHA512-SUMS.txt`) |
 | Pin | `tools/godot-version.txt` |
 | Sprache | GDScript, statisch typisiert; `untyped_declaration` ist in `project.godot` als **Fehler** eingestellt |
-| Renderer | Compatibility (`gl_compatibility`), für den Kern ohne Bedeutung |
-| Testframework | eigener Minimalrunner (`tests/run_tests.gd`), keine Fremdabhängigkeit |
+| Renderer | Compatibility (`gl_compatibility`); für den Kern ohne Bedeutung, für die UI der Tablet-Renderer |
+| Testframework | eigener Minimalrunner (`tests/run_tests.gd`), keine Fremdabhängigkeit; UI-Tests warten Frames ab (`tests/ui_test_case.gd`) |
 
 Ein Versionswechsel erfolgt nur an einem Stop/Go-Punkt: `tools/godot-version.txt` und die Prüfsumme in `tools/install_godot.sh` gemeinsam ändern.
 
@@ -23,6 +23,7 @@ Aus dem Repository-Wurzelordner:
 godot/tests/run_all.sh                     # alle Tests
 godot/tests/run_all.sh --filter=replay     # nur Testdateien, deren Name "replay" enthält
 godot/tests/run_all.sh --filter=reactions  # z. B. nur die Reaktionswarteschlange
+godot/tests/run_all.sh --filter=test_ui    # nur die UI-Tests (tests/ui/)
 GODOT_BIN=/pfad/zu/godot godot/tests/run_all.sh   # eigene Godot-Binärdatei verwenden
 ```
 
@@ -35,7 +36,11 @@ godot --headless --path godot --import
 godot --headless --path godot -s res://tests/run_tests.gd
 ```
 
-CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei Änderungen unter `godot/` aus.
+CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei Änderungen unter `godot/` aus, also Regelkern- und UI-Tests.
+
+Der Runner läuft in `_initialize` (fertiger Szenenbaum) und wartet jede Testmethode mit `await` ab; synchrone Regelkern-Tests verhalten sich wie bisher. UI-Tests unter `tests/ui/` starten `app/main.tscn` in fester logischer Größe und prüfen Control-Geometrien, keine Pixel. Prüf-Screenshots und der lokale Start stehen in `../docs/ui/README.md`.
+
+App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder Projekt im Godot-4.7.2-Editor öffnen und F5 drücken.
 
 ### Testabdeckung
 
@@ -74,6 +79,11 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 | `tests/unit/test_gm_open_prompt.gd` | `kill`, `revive`, `set_role`, `set_role_field`, `execute` brechen offenen Prompt ab; keine toten Ziele; kein Kandidat neben offenem Prompt; `declare_winner` nur ohne Prompt; Save/Load, Replay | AS-G04, G-GM-3 |
 | `tests/unit/test_win_finalize_guard.gd` | kein Siegkandidat bei offenem Prompt oder offener Reaktion | DR-14, G-GM-3 |
 | `tests/unit/test_save_versions.gd` | Spielstände mit Schema 1 bis 9 werden mit klarer Meldung abgelehnt | Versionierung |
+| `tests/ui/test_ui_shell.gd` | Hauptszene, alle Szenen ladbar, Screen-IDs eindeutig, Navigation zu allen Ansichten und zurück, Escape und System-Zurück, Beenden-Rückfrage (Desktop) bzw. Verlassen (Mobil), keine doppelten Ansichten, Maus und Enter, Tastaturfokus, keine Spielereignisse aus Platzhaltern, Dialog und Statusmeldung | UI-Auftrag 1–6, 15, 19 |
+| `tests/ui/test_ui_i18n.gd` | DE/EN mit denselben Schlüsseln, keine festen Texte in Szenen und Skripten, alle verwendeten Schlüssel vorhanden, Sprachwechsel aktualisiert sichtbare Texte, nicht unterstützte Sprache abgelehnt | UI-Auftrag 7–9 |
+| `tests/ui/test_ui_layout.gd` | 1024×768, 1280×800 (DE und EN), 1920×1080, um 50 % verlängerte deutsche Texte: im Viewport, keine Überlappung, nichts abgeschnitten; Touchziele ≥ 48, Primär ≥ 64, Abstand im Dialog; sichere Fläche | UI-Auftrag 11–14 |
+| `tests/ui/test_ui_theme.gd` | Tokens vollständig, Button-Zustände unterscheidbar, Kontrast WCAG AA, keine Stilwerte außerhalb des Themes, keine Schriftdatei, reduzierte Bewegung schaltet Übergänge ab, Linkshänder-Grundlage, eigenes Schaltersymbol | UI-Auftrag 10 |
+| `tests/ui/test_ui_architecture.gd` | Core ohne UI-Bezug, UI ohne Zugriff auf GameState und Regelklassen, Sicht der Anwendungsschicht ist eine Kopie, Befehle laufen unverändert durch `RulesEngine` | UI-Auftrag 16–18 |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |
 
 ### Szenarioformat (`tests/scenarios/*.json`)
@@ -95,7 +105,9 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 
 | Datei | Verantwortung |
 |---|---|
-| `project.godot` | Projekteinstellungen, Typisierungswarnungen als Fehler |
+| `project.godot` | Projekteinstellungen, Typisierungswarnungen als Fehler, Hauptszene, Querformat, Streckung `canvas_items`/`expand`, Übersetzungen, `quit_on_go_back` aus, Version (zentrale Quelle) |
+| **app/**, **content/i18n/** | UI-Grundlage und UI-Texte; Szenen, Verantwortungen, Navigation, Tokens und Lokalisierung in `../docs/ui/README.md` |
+| `tools/capture_ui_screenshots.gd` | Prüf-Screenshots der UI (braucht Renderer, z. B. Xvfb) |
 | `tools/godot-version.txt`, `tools/install_godot.sh` | gepinnte Engine-Version, Download mit Prüfsumme |
 | **core/util/** | |
 | `canonical_json.gd` | kanonisches JSON (sortiert, Ganzzahlen normalisiert), SHA-256 |
@@ -267,4 +279,4 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 
 ## Nicht enthalten
 
-UI, Szenen, Autoloads, Assets, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoints auf Datenträger, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
+Spielablauf in der UI (Setup, Spielernamen, Sitzkreis, Ansagekarte mit Inhalt), gespeicherte Einstellungen, Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoints auf Datenträger, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
