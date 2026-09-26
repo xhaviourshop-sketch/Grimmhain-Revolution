@@ -3,7 +3,7 @@ extends TestCase
 
 
 func test_schema_v1_rejected_with_message() -> void:
-	for old: int in [1, 2, 3, 4]:
+	for old: int in [1, 2, 3, 4, 5]:
 		var commands: Array[Command] = [Fixtures.start_manual(6, [1]), Command.start_night()]
 		var state := RulesEngine.replay(commands).state
 		var doc: Dictionary = JSON.parse_string(StateCodec.encode(state, commands))
@@ -14,4 +14,4 @@ func test_schema_v1_rejected_with_message() -> void:
 		assert_false(result.ok, "Schema %d wird nicht geladen" % old)
 		assert_eq(String(result.error), "unsupported_schema_version", "Fehlergrund")
 		assert_true(result.detail.contains(str(old)) and result.detail.contains(str(GameState.SCHEMA_VERSION)), "Meldung nennt gefundene und erwartete Version: %s" % result.detail)
-	assert_eq(GameState.SCHEMA_VERSION, 5, "aktuelle Schemaversion")
+	assert_eq(GameState.SCHEMA_VERSION, 6, "aktuelle Schemaversion")
