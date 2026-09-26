@@ -124,6 +124,8 @@ func _quit() -> void:
 func _on_settings_changed(key: StringName) -> void:
 	if key == &"language":
 		propagate_notification(NOTIFICATION_TRANSLATION_CHANGED)
+	elif key == &"reduced_motion" and app_context.settings.reduced_motion:
+		_router.finish_transition()
 
 
 func _update_safe_area() -> void:
@@ -144,6 +146,8 @@ func _device_safe_rect() -> Rect2:
 
 
 func _apply_margins(rect: Rect2) -> void:
+	if not is_inside_tree():
+		return
 	var view := get_viewport_rect().size
 	var insets := [0.0, 0.0, 0.0, 0.0]
 	if rect.has_area():

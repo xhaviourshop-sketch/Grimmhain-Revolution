@@ -4,6 +4,9 @@ extends Control
 ## sofort aus dem Baum genommen), deshalb kann schnelles Tippen keine Ansicht doppelt stapeln;
 ## Navigation zur aktiven Ansicht wird ignoriert. Zurück führt zur Elternansicht aus ScreenIds.
 ## Wünsche der Ansichten (Zurück, Beenden, Statusmeldung) reicht der Router an die Shell weiter.
+## Übergang: kurzes Einblenden mit kleiner Aufwärtsbewegung (ThemeTokens.TRANSITION_SECONDS).
+## Bei reduzierter Bewegung erscheint die Ansicht sofort. Eingaben sind nie blockiert; eine
+## neue Navigation beendet einen laufenden Übergang.
 
 signal screen_changed(screen_id: StringName)
 signal back_requested
@@ -14,6 +17,7 @@ var context: AppContext
 
 var _current: BaseScreen = null
 var _current_id: StringName = &""
+var _tween: Tween = null
 
 
 func setup(p_context: AppContext) -> void:
@@ -26,6 +30,23 @@ func current_id() -> StringName:
 
 func current_screen() -> BaseScreen:
 	return _current
+
+
+## Dauer des Einblendens; 0 bei reduzierter Bewegung.
+func transition_duration() -> float:
+	if context != null and context.settings.reduced_motion:
+		return 0.0
+	return ThemeTokens.TRANSITION_SECONDS
+
+
+## Beendet einen laufenden Übergang sofort (z. B. wenn Bewegung reduziert wird).
+func finish_transition() -> void:
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+	_tween = null
+	if _current != null:
+		_current.modulate.a = 1.0
+		_current.position = Vector2.ZERO
 
 
 ## Ziel von Zurück oder &"" in der Wurzelansicht.
@@ -60,8 +81,19 @@ func navigate(id: StringName) -> bool:
 
 
 func _show(screen: BaseScreen) -> void:
-	screen.modulate.a = 1.0
-	screen.position = Vector2.ZERO
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+	_tween = null
+	var duration := transition_duration()
+	if duration <= 0.0:
+		screen.modulate.a = 1.0
+		screen.position = Vector2.ZERO
+		return
+	screen.modulate.a = 0.0
+	screen.position = Vector2(0.0, ThemeTokens.TRANSITION_OFFSET)
+	_tween = create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_tween.tween_property(screen, "modulate:a", 1.0, duration)
+	_tween.tween_property(screen, "position", Vector2.ZERO, duration)
 
 
 func _remove_current() -> void:

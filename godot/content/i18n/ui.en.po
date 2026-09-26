@@ -1,0 +1,165 @@
+# Grimmhain · UI-Texte (EN). Schlüssel = msgid, identisch in ui.de.po und ui.en.po.
+# Neue Schlüssel immer in beiden Dateien ergänzen (tests/ui/test_ui_i18n.gd).
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "app.title"
+msgstr "Grimmhain"
+
+msgid "ui.start.subtitle"
+msgstr "The game master's companion for werewolf rounds at the table"
+
+msgid "ui.start.enter"
+msgstr "Enter"
+
+msgid "ui.start.version"
+msgstr "Version {version}"
+
+msgid "ui.menu.title"
+msgstr "Main menu"
+
+msgid "ui.menu.new_game"
+msgstr "New game"
+
+msgid "ui.menu.continue"
+msgstr "Continue game"
+
+msgid "ui.menu.cockpit"
+msgstr "Game master cockpit"
+
+msgid "ui.menu.settings"
+msgstr "Settings"
+
+msgid "ui.menu.quit"
+msgstr "Quit"
+
+msgid "ui.common.back"
+msgstr "Back"
+
+msgid "ui.common.cancel"
+msgstr "Cancel"
+
+msgid "ui.dialog.quit.title"
+msgstr "Quit Grimmhain?"
+
+msgid "ui.dialog.quit.message"
+msgstr "The app will close. There is no running game yet that could be lost."
+
+msgid "ui.dialog.quit.confirm"
+msgstr "Quit"
+
+msgid "ui.new_game.title"
+msgstr "New game"
+
+msgid "ui.new_game.heading"
+msgstr "Setup coming next"
+
+msgid "ui.new_game.body"
+msgstr "Player names, roles and seating will be set up in the next work package."
+
+msgid "ui.new_game.hint"
+msgstr "This page does not create a game yet."
+
+msgid "ui.continue.title"
+msgstr "Continue game"
+
+msgid "ui.continue.empty"
+msgstr "No saved game"
+
+msgid "ui.continue.empty_hint"
+msgstr "Saved games will appear here once saving is available."
+
+msgid "ui.settings.title"
+msgstr "Settings"
+
+msgid "ui.settings.language.heading"
+msgstr "Language"
+
+msgid "ui.settings.language.german"
+msgstr "Deutsch"
+
+msgid "ui.settings.language.english"
+msgstr "English"
+
+msgid "ui.settings.language.active"
+msgstr "Active language: English"
+
+msgid "ui.settings.motion.heading"
+msgstr "Motion"
+
+msgid "ui.settings.motion.reduce"
+msgstr "Reduce motion"
+
+msgid "ui.settings.motion.hint"
+msgstr "Turns off screen transitions and fades."
+
+msgid "ui.settings.audio.heading"
+msgstr "Audio"
+
+msgid "ui.settings.audio.placeholder"
+msgstr "Volume and sounds follow in a later work package."
+
+msgid "ui.settings.display.heading"
+msgstr "Display"
+
+msgid "ui.settings.display.placeholder"
+msgstr "Font size, dark-room and left-handed mode follow later."
+
+msgid "ui.settings.toast.language"
+msgstr "Language changed"
+
+msgid "ui.settings.toast.motion_on"
+msgstr "Motion reduced"
+
+msgid "ui.settings.toast.motion_off"
+msgstr "Transitions on"
+
+msgid "ui.cockpit.title"
+msgstr "Game master cockpit"
+
+msgid "ui.cockpit.no_game"
+msgstr "No game active"
+
+msgid "ui.cockpit.phase.label"
+msgstr "Phase"
+
+msgid "ui.cockpit.instruction.heading"
+msgstr "Instruction card"
+
+msgid "ui.cockpit.instruction.no_game"
+msgstr "Start a new game from the main menu. The next step will then appear here."
+
+msgid "ui.cockpit.instruction.active"
+msgstr "A game is loaded. The guided flow follows in a later work package."
+
+msgid "ui.cockpit.seats.heading"
+msgstr "Seat circle"
+
+msgid "ui.cockpit.seats.placeholder"
+msgstr "The seat circle follows with player setup."
+
+msgid "ui.cockpit.actions.heading"
+msgstr "Actions"
+
+msgid "ui.cockpit.actions.placeholder"
+msgstr "Actions appear once a game is running."
+
+msgid "ui.phase.none"
+msgstr "No game"
+
+msgid "ui.phase.setup"
+msgstr "Setup"
+
+msgid "ui.phase.night"
+msgstr "Night"
+
+msgid "ui.phase.dawn_resolution"
+msgstr "Dawn"
+
+msgid "ui.phase.day"
+msgstr "Day"
+
+msgid "ui.phase.game_over"
+msgstr "Game over"

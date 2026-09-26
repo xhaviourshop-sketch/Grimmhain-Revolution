@@ -13,6 +13,7 @@ const SCREEN_IDS_SCRIPT := "res://app/navigation/screen_ids.gd"
 const THEME_TOKENS_SCRIPT := "res://app/theme/theme_tokens.gd"
 const PLATFORM_SCRIPT := "res://app/platform/app_platform.gd"
 const SESSION_SCRIPT := "res://app/session/game_session.gd"
+const CONTEXT_SCRIPT := "res://app/app_context.gd"
 const PO_DE := "res://content/i18n/ui.de.po"
 const PO_EN := "res://content/i18n/ui.en.po"
 
@@ -75,29 +76,41 @@ func spawn_shell(size: Vector2i = SIZE_16_10, locale: String = "de", reduced_mot
 	if scene == null:
 		fail("Hauptszene %s nicht ladbar" % MAIN_SCENE)
 		return null
-	var root := tree.root
-	root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
-	root.size = size
+	await resize(size)
 	var shell := scene.instantiate() as Control
 	if shell == null:
 		fail("Hauptszene ist kein Control")
 		return null
 	shell.set("quit_handler", func() -> void: quit_calls += 1)
-	root.add_child(shell)
+	# Einstellungen vor dem Start übergeben, damit schon die erste Ansicht sie beachtet.
+	var context_script := load_script(CONTEXT_SCRIPT)
+	if context_script != null:
+		var context: Object = context_script.new()
+		var s := context.get("settings") as Object
+		s.call("set_reduced_motion", reduced_motion)
+		s.call("set_language", locale)
+		shell.set("app_context", context)
+	tree.root.add_child(shell)
 	_spawned.append(shell)
-	var s := settings_of(shell)
-	if s == null:
+	if settings_of(shell) == null:
 		fail("App-Shell liefert keine Einstellungen")
-		return shell
-	s.call("set_reduced_motion", reduced_motion)
-	s.call("set_language", locale)
 	await frames(3)
 	return shell
 
 
+## Setzt die logische Größe des Root-Viewports ohne Skalierung. Headless setzt Godot die
+## Fenstergröße in den ersten Frames nach dem Start zurück; deshalb bis zur Übernahme wiederholen.
 func resize(size: Vector2i) -> void:
-	tree.root.size = size
-	await frames(3)
+	var root := tree.root
+	root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
+	for attempt: int in 10:
+		root.size = size
+		await frames(1)
+		if root.size == size and root.get_visible_rect().size == Vector2(size):
+			break
+	if root.get_visible_rect().size != Vector2(size):
+		fail("Viewportgröße %s nicht übernommen (%s)" % [size, root.get_visible_rect().size])
+	await frames(2)
 
 
 func context_of(shell: Control) -> Object:

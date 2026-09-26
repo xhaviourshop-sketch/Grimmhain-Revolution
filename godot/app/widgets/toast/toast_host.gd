@@ -2,12 +2,15 @@ class_name ToastHost
 extends Control
 ## Statusmeldungen: kurze, nicht blockierende Meldung am unteren Rand, verschwindet nach
 ## TOAST_VISIBLE_SECONDS. Fängt nie Eingaben ab. Text nur über Übersetzungsschlüssel.
+## Kurzes Einblenden, bei reduzierter Bewegung sofort sichtbar.
 
 var settings: AppSettings = null
 
 @onready var _panel: PanelContainer = %ToastPanel
 @onready var _label: GrimmLabel = %MessageLabel
 @onready var _timer: Timer = %HideTimer
+
+var _tween: Tween = null
 
 
 func _ready() -> void:
@@ -23,8 +26,23 @@ func _ready() -> void:
 func show_message(text_key: String) -> void:
 	_label.text_key = text_key
 	_panel.visible = true
-	_panel.modulate.a = 1.0
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+	var duration := fade_duration()
+	if duration > 0.0:
+		_panel.modulate.a = 0.0
+		_tween = create_tween()
+		_tween.tween_property(_panel, "modulate:a", 1.0, duration)
+	else:
+		_panel.modulate.a = 1.0
 	_timer.start()
+
+
+## Dauer des Einblendens; 0 bei reduzierter Bewegung.
+func fade_duration() -> float:
+	if settings != null and settings.reduced_motion:
+		return 0.0
+	return ThemeTokens.TOAST_FADE_SECONDS
 
 
 func hide_message() -> void:

@@ -1,0 +1,165 @@
+# Grimmhain · UI-Texte (DE). Schlüssel = msgid, identisch in ui.de.po und ui.en.po.
+# Neue Schlüssel immer in beiden Dateien ergänzen (tests/ui/test_ui_i18n.gd).
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: de\n"
+
+msgid "app.title"
+msgstr "Grimmhain"
+
+msgid "ui.start.subtitle"
+msgstr "Der Spielleiter-Assistent für Werwolf-Runden am Tisch"
+
+msgid "ui.start.enter"
+msgstr "Eintreten"
+
+msgid "ui.start.version"
+msgstr "Version {version}"
+
+msgid "ui.menu.title"
+msgstr "Hauptmenü"
+
+msgid "ui.menu.new_game"
+msgstr "Neue Partie"
+
+msgid "ui.menu.continue"
+msgstr "Partie fortsetzen"
+
+msgid "ui.menu.cockpit"
+msgstr "Spielleiter-Cockpit"
+
+msgid "ui.menu.settings"
+msgstr "Einstellungen"
+
+msgid "ui.menu.quit"
+msgstr "Beenden"
+
+msgid "ui.common.back"
+msgstr "Zurück"
+
+msgid "ui.common.cancel"
+msgstr "Abbrechen"
+
+msgid "ui.dialog.quit.title"
+msgstr "Grimmhain beenden?"
+
+msgid "ui.dialog.quit.message"
+msgstr "Die App wird geschlossen. Es gibt noch keine laufende Partie, die verloren gehen könnte."
+
+msgid "ui.dialog.quit.confirm"
+msgstr "Beenden"
+
+msgid "ui.new_game.title"
+msgstr "Neue Partie"
+
+msgid "ui.new_game.heading"
+msgstr "Einrichtung folgt"
+
+msgid "ui.new_game.body"
+msgstr "Spielernamen, Rollen und Sitzordnung werden im nächsten Arbeitspaket eingerichtet."
+
+msgid "ui.new_game.hint"
+msgstr "Diese Seite legt noch keine Partie an."
+
+msgid "ui.continue.title"
+msgstr "Partie fortsetzen"
+
+msgid "ui.continue.empty"
+msgstr "Kein Spielstand vorhanden"
+
+msgid "ui.continue.empty_hint"
+msgstr "Sobald Partien gespeichert werden, erscheinen sie hier."
+
+msgid "ui.settings.title"
+msgstr "Einstellungen"
+
+msgid "ui.settings.language.heading"
+msgstr "Sprache"
+
+msgid "ui.settings.language.german"
+msgstr "Deutsch"
+
+msgid "ui.settings.language.english"
+msgstr "English"
+
+msgid "ui.settings.language.active"
+msgstr "Aktive Sprache: Deutsch"
+
+msgid "ui.settings.motion.heading"
+msgstr "Bewegung"
+
+msgid "ui.settings.motion.reduce"
+msgstr "Bewegung reduzieren"
+
+msgid "ui.settings.motion.hint"
+msgstr "Schaltet Bildschirmübergänge und Einblendungen ab."
+
+msgid "ui.settings.audio.heading"
+msgstr "Audio"
+
+msgid "ui.settings.audio.placeholder"
+msgstr "Lautstärke und Klänge folgen in einem späteren Arbeitspaket."
+
+msgid "ui.settings.display.heading"
+msgstr "Anzeige"
+
+msgid "ui.settings.display.placeholder"
+msgstr "Schriftgröße, Dunkelraum- und Linkshändermodus folgen später."
+
+msgid "ui.settings.toast.language"
+msgstr "Sprache geändert"
+
+msgid "ui.settings.toast.motion_on"
+msgstr "Bewegung reduziert"
+
+msgid "ui.settings.toast.motion_off"
+msgstr "Übergänge aktiv"
+
+msgid "ui.cockpit.title"
+msgstr "Spielleiter-Cockpit"
+
+msgid "ui.cockpit.no_game"
+msgstr "Keine Partie aktiv"
+
+msgid "ui.cockpit.phase.label"
+msgstr "Phase"
+
+msgid "ui.cockpit.instruction.heading"
+msgstr "Ansagekarte"
+
+msgid "ui.cockpit.instruction.no_game"
+msgstr "Starte im Hauptmenü eine neue Partie. Hier erscheint dann der nächste Schritt."
+
+msgid "ui.cockpit.instruction.active"
+msgstr "Eine Partie ist geladen. Der geführte Ablauf folgt in einem späteren Arbeitspaket."
+
+msgid "ui.cockpit.seats.heading"
+msgstr "Sitzkreis"
+
+msgid "ui.cockpit.seats.placeholder"
+msgstr "Der Sitzkreis folgt mit der Einrichtung der Spieler."
+
+msgid "ui.cockpit.actions.heading"
+msgstr "Aktionen"
+
+msgid "ui.cockpit.actions.placeholder"
+msgstr "Aktionen erscheinen, sobald eine Partie läuft."
+
+msgid "ui.phase.none"
+msgstr "Keine Partie"
+
+msgid "ui.phase.setup"
+msgstr "Vorbereitung"
+
+msgid "ui.phase.night"
+msgstr "Nacht"
+
+msgid "ui.phase.dawn_resolution"
+msgstr "Morgen"
+
+msgid "ui.phase.day"
+msgstr "Tag"
+
+msgid "ui.phase.game_over"
+msgstr "Spielende"
