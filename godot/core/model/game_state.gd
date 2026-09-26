@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 7  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries)
-const RULES_VERSION := &"grimmhain-core-0.7"
+const SCHEMA_VERSION := 8  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children)
+const RULES_VERSION := &"grimmhain-core-0.8"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -28,6 +28,7 @@ var night_step_status: Array[StringName] = []  ## je Nachtschritt: pending | don
 var protections: Array[Protection] = []  ## bestätigte Schutzwahlen der laufenden Nacht
 var witch_actions: Array[WitchAction] = []  ## bestätigte Waldhexen-Entscheidungen der laufenden Nacht
 var info_records: Array[InfoRecord] = []    ## abgeschlossene Informationen der Partie (Orakel)
+var wolf_children: Array[WolfChildBond] = []  ## je aktuellem Wolfskind: Vorbild und Verwandlung
 var reactions: Array[Reaction] = []     ## offene Reaktionen, erste = nächste
 var provisional_win: Array = []         ## vorläufiger Siegstatus seit dem letzten Tod (DR-14)
 var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (DR-14)
@@ -109,6 +110,9 @@ func to_dict() -> Dictionary:
 	var witch_list: Array = []
 	for a: WitchAction in witch_actions:
 		witch_list.append(a.to_dict())
+	var wolf_list: Array = []
+	for b: WolfChildBond in wolf_children:
+		wolf_list.append(b.to_dict())
 	var info_list: Array = []
 	for r: InfoRecord in info_records:
 		info_list.append(r.to_dict())
@@ -131,6 +135,7 @@ func to_dict() -> Dictionary:
 		"protections": protection_list,
 		"witch_actions": witch_list,
 		"info_records": info_list,
+		"wolf_children": wolf_list,
 		"reactions": reaction_list,
 		"provisional_win": provisional_win.duplicate(true),
 		"win_check_pending": win_check_pending,
@@ -242,6 +247,17 @@ static func from_dict(d: Dictionary) -> GameState:
 		s.win_candidate = WinCandidate.from_dict(d["win_candidate"])
 	if d.get("winner") is Dictionary:
 		s.winner = WinCandidate.from_dict(d["winner"])
+	for item: Variant in DictRead.get_array(d, "wolf_children"):
+		if not item is Dictionary:
+			return null
+		var bond := WolfChildBond.from_dict(item)
+		if bond == null:
+			return null
+		s.wolf_children.append(bond)
+	if not WolfChildRules.state_is_consistent(s):
+		return null
+	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_WOLF_CHILD and not WolfChildRules.matches_prompt(s, s.pending_prompt):
+		return null
 	# Ein Waldhexen- oder Orakel-Prompt muss zum übrigen Zustand passen (matches_state).
 	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_WITCH and not WitchStep.matches_state(s, s.pending_prompt):
 		return null

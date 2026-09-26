@@ -371,6 +371,8 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		player.counts_as_wolf = RoleCatalog.counts_as_wolf(player.role_id)
 		player.appears_as = StringName(str(entry["appears_as"])) if RoleCatalog.requires_appearance(player.role_id) else RoleCatalog.appears_as(player.role_id)
 		s.players[player.id] = player
+		if player.role_id == RoleCatalog.WOLFSKIND:
+			WolfChildRules.create_bond(s, player.id)
 	s.seat_order = DictRead.to_int_array(DictRead.get_array(p, "seat_order"))
 
 	ctx.emit(GameEvent.GAME_STARTED, Visibility.GM, {
@@ -422,6 +424,10 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 		PendingPrompt.OWNER_GUARD:
 			Protections.set_protection(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_WOLF_CHILD:
+			WolfChildRules.bind(ctx, prompt.actor_id, target)
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_REACTION:

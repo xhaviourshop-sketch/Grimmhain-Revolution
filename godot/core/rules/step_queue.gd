@@ -72,6 +72,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SCHUTZENGEL: false,    # Pflichtauswahl (DR-05)
 	RoleCatalog.WALDHEXE: false,       # Verzicht auf beide Tränke ist eine Antwort im eigenen Prompt (DR-06)
 	RoleCatalog.ORAKEL: false,         # Pflichtprüfung einer anderen lebenden Person (DR-07)
+	RoleCatalog.WOLFSKIND: false,      # Pflichtwahl eines Vorbilds (DR-10)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -101,6 +102,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if p.role_id == RoleCatalog.WALDHEXE and not WitchStep.has_any_potion(p):
 			continue
+		if p.role_id == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, id):
+			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
@@ -126,6 +129,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"actor_role_changed"
 	if step_role(key) == RoleCatalog.WALDHEXE and not WitchStep.has_decision(s, actor):
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, actor):
+		return &"no_decision"  # Vorbild schon gesetzt oder verwandelt
 	if step_role(key) == RoleCatalog.ORAKEL and s.alive_ids().size() < 2:
 		return &"no_decision"  # niemand außer dem Orakel lebt
 	return &""
@@ -173,6 +178,13 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.ORAKEL:
 		# Orakel: Zielwahl, dann Bestätigung „Gezeigt“ (OracleStep).
 		OracleStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
+	elif step_kind(step_id) == RoleCatalog.WOLFSKIND:
+		# Wolfskind: Pflichtwahl genau einer anderen lebenden Person als Vorbild (DR-10).
+		prompt.owner = PendingPrompt.OWNER_WOLF_CHILD
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.allowed_ids.erase(prompt.actor_id)
+		prompt.min_count = 1
+		prompt.cancellable = true
 	elif s.night_plan[s.next_night_step] == PACK:
 		# Rudelschritt: 0 Ziele = ausdrücklich „kein Opfer“; jede lebende Person (rules-register §2).
 		prompt.owner = PendingPrompt.OWNER_PACK

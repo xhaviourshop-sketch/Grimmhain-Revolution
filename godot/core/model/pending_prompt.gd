@@ -13,6 +13,7 @@ const OWNER_GUARD := &"schutzengel"
 const OWNER_WITCH := &"waldhexe"
 const KIND_WITCH_CHAIN := &"witch_chain"
 const OWNER_ORACLE := &"das-orakel"
+const OWNER_WOLF_CHILD := &"wolfskind"
 const KIND_ORACLE_CHECK := &"oracle_check"
 
 var id: int = 0

@@ -18,6 +18,11 @@ const REMOVE_PROTECTION := "remove_protection"  ## Schutz der laufenden Nacht en
 const SET_WITCH_POTION := "set_witch_potion"    ## Heil- oder Gifttrank als verfügbar/verbraucht markieren
 const SET_RESCUE := "set_rescue"                ## bestätigte Rettung der laufenden Nacht setzen oder ändern
 const REMOVE_RESCUE := "remove_rescue"          ## bestätigte Rettung der laufenden Nacht entfernen
+const SET_WOLF_MODEL := "set_wolf_model"        ## Vorbild eines Wolfskinds setzen oder ändern
+const REMOVE_WOLF_MODEL := "remove_wolf_model"  ## Vorbild eines Wolfskinds entfernen
+const TRANSFORM_WOLF_CHILD := "transform_wolf_child"  ## Wolfskind verwandeln
+const REVERT_WOLF_CHILD := "revert_wolf_child"        ## Verwandlung zurücknehmen (Vorbild bleibt)
+const WOLF_CHILD_KINDS: Array[String] = [SET_WOLF_MODEL, REMOVE_WOLF_MODEL, TRANSFORM_WOLF_CHILD, REVERT_WOLF_CHILD]
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
 ## Informationsrollen, beim Trugbilderwolf die Scheinrolle (DR-08).
@@ -43,6 +48,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		return _validate_protection(s, p, kind)
 	if kind == SET_WITCH_POTION or kind == SET_RESCUE or kind == REMOVE_RESCUE:
 		return _validate_witch(s, p, kind)
+	if WOLF_CHILD_KINDS.has(kind):
+		return _validate_wolf_child(s, p, kind)
 	if not [KILL, EXECUTE, REVIVE, SET_ROLE, SET_ROLE_FIELD].has(kind):
 		return &"invalid_correction"
 	if kind == EXECUTE:
@@ -67,6 +74,9 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 			if player.alive:
 				return &"player_alive"
 		SET_ROLE_FIELD:
+			# Beim Wolfskind folgt die Erscheinung allein dem Verwandlungszustand.
+			if player.role_id == RoleCatalog.WOLFSKIND:
+				return &"field_not_correctable"
 			var field := DictRead.get_string(p, "field")
 			if not CORRECTABLE_ROLE_FIELDS.has(field):
 				return &"field_not_correctable"
@@ -166,6 +176,42 @@ static func _validate_witch(s: GameState, p: Dictionary, kind: String) -> String
 	return &""
 
 
+## Wolfskind: nur für eine Person mit aktueller Rolle `wolfskind`; Vorbild ist eine andere
+## lebende bekannte Person. Verwandlung und Rücknahme setzen die Rollenfelder atomar.
+static func _validate_wolf_child(s: GameState, p: Dictionary, kind: String) -> StringName:
+	var child := DictRead.get_int(p, "child_id", GameState.NO_TARGET)
+	if not s.players.has(child):
+		return &"unknown_player"
+	if s.players[child].role_id != RoleCatalog.WOLFSKIND:
+		return &"not_a_wolf_child"
+	var bond := WolfChildRules.bond_of(s, child)
+	match kind:
+		SET_WOLF_MODEL:
+			var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
+			if not s.players.has(target):
+				return &"unknown_player"
+			if target == child:
+				return &"invalid_target"
+			if not s.players[target].alive:
+				return &"player_dead"
+			if bond.model_id == target:
+				return &"no_change"
+		REMOVE_WOLF_MODEL:
+			if bond.model_id == GameState.NO_TARGET:
+				return &"no_change"
+		TRANSFORM_WOLF_CHILD:
+			if bond.transformed:
+				return &"no_change"
+		REVERT_WOLF_CHILD:
+			if not bond.transformed:
+				return &"no_change"
+	return &""
+
+
+static func _wolf_child_fields(player: Player, bond: WolfChildBond) -> Dictionary:
+	return {"transformed": bond.transformed, "faction": player.faction, "counts_as_wolf": player.counts_as_wolf, "appears_as": player.appears_as}
+
+
 static func execute(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	var kind := DictRead.get_string(p, "kind")
@@ -200,6 +246,30 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			var old := {"saved_id": action.saved_id}
 			action.saved_id = target if kind == SET_RESCUE else GameState.NO_TARGET
 			_log(ctx, kind, witch_id, old, {"saved_id": action.saved_id}, reason, false)
+		SET_WOLF_MODEL, REMOVE_WOLF_MODEL:
+			var child := DictRead.get_int(p, "child_id")
+			var bond := WolfChildRules.bond_of(s, child)
+			var old := {"model_id": bond.model_id}
+			if kind == SET_WOLF_MODEL:
+				bond.model_id = target
+				bond.bound_night = s.night_number
+				bond.bound_command = ctx.command_index
+			else:
+				bond.model_id = GameState.NO_TARGET
+				bond.bound_night = 0
+				bond.bound_command = -1
+			_log(ctx, kind, child, old, {"model_id": bond.model_id}, reason, false)
+		TRANSFORM_WOLF_CHILD, REVERT_WOLF_CHILD:
+			var child := DictRead.get_int(p, "child_id")
+			var bond := WolfChildRules.bond_of(s, child)
+			var player := s.players[child]
+			var old := _wolf_child_fields(player, bond)
+			if kind == TRANSFORM_WOLF_CHILD:
+				WolfChildRules.transform(ctx, bond, -1, "gm_correction")
+			else:
+				WolfChildRules.revert(bond, player)
+			_log(ctx, kind, child, old, _wolf_child_fields(player, bond), reason, false)
+			s.win_check_pending = true
 		EXECUTE:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
@@ -227,6 +297,10 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			player.counts_as_wolf = RoleCatalog.counts_as_wolf(role)
 			# Scheinrolle aus dem Befehl beim Trugbilderwolf, sonst normale Erscheinung der neuen Rolle.
 			player.appears_as = StringName(DictRead.get_string(p, "appears_as")) if RoleCatalog.requires_appearance(role) else RoleCatalog.appears_as(role)
+			# Wolfskind-Zustand gehört zur Rolle: beim Wechsel weg entfernt, beim Wechsel hin neu.
+			WolfChildRules.remove_bond(s, target)
+			if role == RoleCatalog.WOLFSKIND:
+				WolfChildRules.create_bond(s, target)
 			_log(ctx, kind, target, old, _role_fields(player), reason, false)
 			s.win_check_pending = true
 		DECLARE_WINNER:

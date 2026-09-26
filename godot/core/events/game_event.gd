@@ -35,6 +35,8 @@ const WITCH_ACTED := &"WitchActed"          ## bestätigte Entscheidung der Wald
 const INFO_OVERRIDDEN := &"InfoOverridden"    ## gezeigtes Ergebnis übersteuert (nur Spielleiter)
 const INFO_RECORDED := &"InfoRecorded"        ## vollständiger Informationsdatensatz (nur Spielleiter)
 const INFO_REVEALED := &"InfoRevealed"        ## gezeigtes Ergebnis für die handelnde Person (actor)
+const WOLF_CHILD_BOUND := &"WolfChildBound"              ## Vorbildwahl des Wolfskinds (nur Spielleiter)
+const WOLF_CHILD_TRANSFORMED := &"WolfChildTransformed"  ## Verwandlung des Wolfskinds (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie
