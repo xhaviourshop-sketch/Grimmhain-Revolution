@@ -6,7 +6,7 @@ func _commands_until_night_two() -> Array[Command]:
 	return [
 		Fixtures.start_manual(6, [1, 2], 99),
 		Command.start_night(),
-		Command.answer_prompt(1, [6]),
+		Command.answer_prompt(1, []),  # kein Opfer, damit keine Parität entsteht
 		Command.end_night(),
 		Command.nominate(3, 5),
 		Command.decide_execution(5),
@@ -62,4 +62,4 @@ func test_rng_position_survives_save() -> void:
 	var loaded := StateCodec.decode(StateCodec.encode(run.state, [start] as Array[Command]))
 	assert_true(loaded.ok, "Laden erfolgreich")
 	assert_eq(loaded.state.rng.draws, run.state.rng.draws, "Ziehposition")
-	assert_eq(loaded.state.rng.randi_range(0, 1000000), run.state.rng.randi_range(0, 1000000), "nächste Ziehung identisch")
+	assert_eq(loaded.state.rng.next_int(0, 1000000), run.state.rng.next_int(0, 1000000), "nächste Ziehung identisch")
