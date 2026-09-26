@@ -13,6 +13,8 @@ const REVIVE := "revive"
 const SET_ROLE := "set_role"
 const SET_ROLE_FIELD := "set_role_field"
 const DECLARE_WINNER := "declare_winner"
+const SET_PROTECTION := "set_protection"        ## Schutz der laufenden Nacht setzen oder ändern
+const REMOVE_PROTECTION := "remove_protection"  ## Schutz der laufenden Nacht entfernen
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
 ## Informationsrollen, beim Trugbilderwolf die Scheinrolle (DR-08).
@@ -34,6 +36,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		if not s.reactions.is_empty():
 			return &"reaction_open"
 		return &""
+	if kind == SET_PROTECTION or kind == REMOVE_PROTECTION:
+		return _validate_protection(s, p, kind)
 	if not [KILL, EXECUTE, REVIVE, SET_ROLE, SET_ROLE_FIELD].has(kind):
 		return &"invalid_correction"
 	if kind == EXECUTE:
@@ -78,6 +82,36 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 	return &""
 
 
+## Schutzkorrektur nur in der laufenden Nacht und erst nach erledigtem Schritt des
+## Schutzengels; Selbstschutz bleibt verboten.
+static func _validate_protection(s: GameState, p: Dictionary, kind: String) -> StringName:
+	if s.phase != Phase.NIGHT:
+		return &"wrong_phase"
+	var guardian := DictRead.get_int(p, "guardian_id", GameState.NO_TARGET)
+	if not s.players.has(guardian):
+		return &"unknown_player"
+	if s.players[guardian].role_id != RoleCatalog.SCHUTZENGEL:
+		return &"not_a_guardian"
+	var index := s.night_plan.find(StepQueue.personal_step_key(RoleCatalog.SCHUTZENGEL, guardian))
+	if index == -1:
+		return &"no_guard_step"
+	if index >= s.next_night_step:
+		return &"step_not_completed"
+	var current := Protections.of_guardian(s, guardian)
+	if kind == REMOVE_PROTECTION:
+		return &"no_change" if current == null else &""
+	var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
+	if not s.players.has(target):
+		return &"unknown_player"
+	if not s.players[target].alive:
+		return &"player_dead"
+	if target == guardian:
+		return &"invalid_target"
+	if current != null and current.target_id == target:
+		return &"no_change"
+	return &""
+
+
 static func execute(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	var kind := DictRead.get_string(p, "kind")
@@ -90,6 +124,15 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 		KILL:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, trigger_effects)
 			KillPipeline.request_kill(ctx, target, KillEvent.CAUSE_GM_CORRECTION, KillEvent.SOURCE_GM, -1, trigger_effects)
+		SET_PROTECTION, REMOVE_PROTECTION:
+			var guardian := DictRead.get_int(p, "guardian_id", GameState.NO_TARGET)
+			var current := Protections.of_guardian(s, guardian)
+			var old := {"protected_id": current.target_id if current != null else GameState.NO_TARGET}
+			if kind == SET_PROTECTION:
+				Protections.set_protection(s, guardian, target)
+			else:
+				Protections.remove_protection(s, guardian)
+			_log(ctx, kind, guardian, old, {"protected_id": target if kind == SET_PROTECTION else GameState.NO_TARGET}, reason, false)
 		EXECUTE:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED

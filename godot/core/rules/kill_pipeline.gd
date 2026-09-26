@@ -7,7 +7,7 @@ extends RefCounted
 ##   4. Todesfolgen: Reaktion der Rolle einreihen (nur mit trigger_effects, G-TOD-2)
 ##   5. vorläufiger Siegstatus (DR-14); die verbindliche Prüfung folgt am Befehlsende,
 ##      sobald keine Reaktion mehr offen ist
-## Abfangregeln (Schutz, Rettung, Spiegelung) kommen mit B-04.
+## Abfangregeln: Schutzengel (vor Schritt 2, nur Rudelangriff); Rettung und Spiegelung folgen.
 
 
 static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true) -> KillEvent:
@@ -17,6 +17,8 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		ctx.emit(GameEvent.KILL_IGNORED, Visibility.GM, {
 			"target_id": target_id, "cause": cause, "reason": "target_not_alive",
 		})
+		return null
+	if _prevented_by_protection(ctx, target_id, cause, source_kind):
 		return null
 	var record := KillEvent.new()
 	record.target_id = target_id
@@ -36,6 +38,21 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		_queue_reaction(ctx, target, record)
 	WinRules.record_provisional(ctx, record)
 	return record
+
+
+## Abfangstufe: Ein Schutz dieser Nacht verhindert ausschließlich den Rudelangriff
+## (`NIGHT_KILL`, Quelle Rudel). Kein Tod, keine Reaktion, kein vorläufiger Siegstatus.
+static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName) -> bool:
+	if cause != KillEvent.CAUSE_NIGHT_KILL or source_kind != KillEvent.SOURCE_PACK:
+		return false
+	var guardians := Protections.guardians_of(ctx.state, target_id, ctx.state.night_number)
+	if guardians.is_empty():
+		return false
+	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {
+		"target_id": target_id, "cause": cause, "source_kind": source_kind, "protection": RoleCatalog.SCHUTZENGEL,
+		"guardian_id": guardians[0], "guardian_ids": guardians, "night": ctx.state.night_number,
+	})
+	return true
 
 
 ## Reiht die Todesreaktion der Rolle ein (falls vorhanden). Reihenfolge = Einreihung.

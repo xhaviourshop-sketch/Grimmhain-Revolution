@@ -99,6 +99,7 @@ static func enter(ctx: RuleContext, to: StringName) -> bool:
 		Phase.DAY:
 			s.day_number += 1
 			s.day_step = Phase.DAY_DISCUSSION
+			s.protections.clear()  # Schutz endet bei Tagesbeginn (DR-05)
 		Phase.GAME_OVER:
 			s.day_step = Phase.DAY_NONE
 	ctx.emit(GameEvent.PHASE_CHANGED, Visibility.PUBLIC, {

@@ -82,8 +82,9 @@ static func cancel_prompt(prompt_id: int, reason: String) -> Command:
 
 
 ## payload: kind ("kill" | "execute" | "revive" | "set_role" | "set_role_field" |
-## "declare_winner"), target_id, trigger_effects (kill), role_id (set_role),
-## field + value (set_role_field), winner_kind (declare_winner),
+## "set_protection" | "remove_protection" | "declare_winner"), target_id,
+## trigger_effects (kill), role_id (set_role), field + value (set_role_field),
+## guardian_id (+ target_id) (set/remove_protection), winner_kind (declare_winner),
 ## reason (Pflicht), confirmed = true (Pflicht, bestätigte Warnung).
 static func gm_correction(p_payload: Dictionary) -> Command:
 	return create(GM_CORRECTION, p_payload)

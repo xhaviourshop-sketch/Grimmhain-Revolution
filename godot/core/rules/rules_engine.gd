@@ -335,6 +335,10 @@ static func _start_night(ctx: RuleContext) -> void:
 	s.pack_target_id = GameState.NO_TARGET
 	s.night_plan = StepQueue.build_night_plan(s)
 	s.next_night_step = 0
+	s.night_step_status.clear()
+	for _step: StringName in s.night_plan:
+		s.night_step_status.append(StepQueue.STATUS_PENDING)
+	s.protections.clear()
 	if s.night_plan.is_empty():
 		ctx.emit(GameEvent.NIGHT_STEP_SKIPPED, Visibility.GM, {"step": StepQueue.PACK, "reason": "no_living_wolf"})
 		return
@@ -352,6 +356,12 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 	match prompt.owner:
 		PendingPrompt.OWNER_PACK:
 			s.pack_target_id = target
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_GUARD:
+			Protections.set_protection(s, prompt.actor_id, target)
+			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_REACTION:
 			var reaction: Reaction = s.reactions.pop_front()

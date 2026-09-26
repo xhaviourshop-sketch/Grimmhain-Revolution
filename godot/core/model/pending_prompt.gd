@@ -7,6 +7,7 @@ extends RefCounted
 const KIND_PICK_PLAYERS := &"pick_players"
 const OWNER_PACK := &"pack"
 const OWNER_REACTION := &"reaction"
+const OWNER_GUARD := &"schutzengel"
 
 var id: int = 0
 var kind: StringName = KIND_PICK_PLAYERS

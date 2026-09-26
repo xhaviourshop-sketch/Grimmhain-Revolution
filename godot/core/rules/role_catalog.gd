@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) und als erste Vertical-Slice-Rolle `sensentraeger`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) sowie die Vertical-Slice-Rollen `sensentraeger` und `schutzengel`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -14,10 +14,14 @@ const WERWOLF := &"werwolf"
 ## Sensenträger / Reaper (rules-register.md §7, DR-09): Dorf, kein Nachtschritt,
 ## freiwillige Todesreaktion (Fluch auf eine lebende Person oder Verzicht).
 const SENSENTRAEGER := &"sensentraeger"
+## Schutzengel / Guardian Angel (rules-register.md §3, DR-05): Dorf, Nachtschritt vor
+## dem Rudel, schützt eine andere lebende Person nur vor dem Wolfsangriff dieser Nacht.
+const SCHUTZENGEL := &"schutzengel"
 
 const ROLES := {
 	DORFBEWOHNER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFBEWOHNER},
 	WERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": WERWOLF},
+	SCHUTZENGEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZENGEL, "night_step": true},
 	SENSENTRAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SENSENTRAEGER, "death_reaction": Reaction.KIND_CURSE},
 }
 
@@ -41,6 +45,11 @@ static func appears_as(role_id: StringName) -> StringName:
 ## Art der Todesreaktion oder &"" ohne Reaktion.
 static func death_reaction(role_id: StringName) -> StringName:
 	return (ROLES[role_id] as Dictionary).get("death_reaction", &"")
+
+
+## true, wenn jede lebende Person mit dieser Rolle einen eigenen Nachtschritt vor dem Rudel hat.
+static func has_night_step(role_id: StringName) -> bool:
+	return (ROLES[role_id] as Dictionary).get("night_step", false)
 
 
 ## Höchstzahl je Partie oder UNLIMITED, wenn die Rolle keine eigene Grenze hat.

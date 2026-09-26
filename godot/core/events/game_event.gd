@@ -28,6 +28,8 @@ const PROMPT_CANCELLED := &"PromptCancelled"
 const REACTION_QUEUED := &"ReactionQueued"
 const REACTION_RESOLVED := &"ReactionResolved"
 const GM_CORRECTED := &"GmCorrected"
+const PROTECTION_SET := &"ProtectionSet"    ## bestätigte Schutzwahl (nur Spielleiter)
+const KILL_PREVENTED := &"KillPrevented"    ## verhinderter Rudelangriff (nur Spielleiter)
 
 var index: int = 0          ## fortlaufend über die ganze Partie
 var command_index: int = 0  ## Index des auslösenden Befehls

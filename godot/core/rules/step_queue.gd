@@ -6,8 +6,24 @@ extends RefCounted
 ##   Morgenauflösung/Tag: erste offene Reaktion (Reaktionen aus der Nacht warten
 ##                        bis zur Morgenauflösung, DR-09)
 ## Schritt-IDs: "night:<Nacht>:<Index>:<Schritt>" bzw. "reaction:<Reaktions-ID>".
+## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" (nach Personen-ID)
+## vor dem Rudelschritt "pack".
 
 const PACK := &"pack"
+const STATUS_PENDING := &"pending"
+const STATUS_DONE := &"done"
+const STATUS_SKIPPED := &"skipped"
+const STEP_STATUSES: Array[StringName] = [STATUS_PENDING, STATUS_DONE, STATUS_SKIPPED]
+
+
+static func personal_step_key(role_id: StringName, player_id: int) -> StringName:
+	return StringName("%s:%d" % [role_id, player_id])
+
+
+## Handelnde Person eines persönlichen Nachtschritts oder -1 (Rudel).
+static func step_actor(key: StringName) -> int:
+	var parts := String(key).split(":")
+	return int(parts[1]) if parts.size() == 2 and parts[1].is_valid_int() else -1
 
 
 static func night_step_id(s: GameState, index: int) -> String:
@@ -36,9 +52,14 @@ static func is_reaction_step(step_id: String) -> bool:
 	return step_id.begins_with("reaction:")
 
 
-## Nachtplan: Rudelschritt, solange mindestens eine lebende Person als Wolf zählt (G-PH-6).
+## Nachtplan aus den zu Beginn der Nacht gültigen Rollen: persönliche Schritte lebender
+## Schutzengel nach Personen-ID, danach der Rudelschritt, solange mindestens eine lebende
+## Person als Wolf zählt (G-PH-6).
 static func build_night_plan(s: GameState) -> Array[StringName]:
 	var plan: Array[StringName] = []
+	for id: int in s.alive_ids():
+		if RoleCatalog.has_night_step(s.players[id].role_id):
+			plan.append(personal_step_key(s.players[id].role_id, id))
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
 			plan.append(PACK)
@@ -65,10 +86,17 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.actor_id = s.reactions[0].owner_id
 		prompt.allowed_ids.erase(prompt.actor_id)
 		prompt.cancellable = false
-	else:
+	elif s.night_plan[s.next_night_step] == PACK:
 		# Rudelschritt: 0 Ziele = ausdrücklich „kein Opfer“; jede lebende Person (rules-register §2).
 		prompt.owner = PendingPrompt.OWNER_PACK
 		prompt.actor_id = -1
+		prompt.cancellable = true
+	else:
+		# Schutzengel: Pflichtauswahl genau einer anderen lebenden Person (DR-05).
+		prompt.owner = PendingPrompt.OWNER_GUARD
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.allowed_ids.erase(prompt.actor_id)
+		prompt.min_count = 1
 		prompt.cancellable = true
 	s.pending_prompt = prompt
 	ctx.emit(GameEvent.PROMPT_OPENED, Visibility.GM, {"prompt": prompt.to_dict()})
@@ -81,6 +109,7 @@ static func skip(ctx: RuleContext, step_id: String, reason: String) -> void:
 		s.pending_prompt = null
 	if s.night_plan[s.next_night_step] == PACK:
 		s.pack_target_id = GameState.NO_TARGET
+	s.night_step_status[s.next_night_step] = STATUS_SKIPPED
 	s.next_night_step += 1
 	ctx.emit(GameEvent.STEP_SKIPPED, Visibility.GM, {"step_id": step_id, "reason": reason})
 

@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 3  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses
-const RULES_VERSION := &"grimmhain-core-0.3"
+const SCHEMA_VERSION := 4  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus
+const RULES_VERSION := &"grimmhain-core-0.4"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -24,6 +24,8 @@ var pending_prompt: PendingPrompt = null
 var pack_target_id: int = NO_TARGET  ## gewähltes Rudelopfer der laufenden Nacht
 var night_plan: Array[StringName] = []  ## Schritte der laufenden Nacht in Reihenfolge
 var next_night_step: int = 0            ## Index des nächsten nicht erledigten Nachtschritts
+var night_step_status: Array[StringName] = []  ## je Nachtschritt: pending | done | skipped
+var protections: Array[Protection] = []  ## bestätigte Schutzwahlen der laufenden Nacht
 var reactions: Array[Reaction] = []     ## offene Reaktionen, erste = nächste
 var provisional_win: Array = []         ## vorläufiger Siegstatus seit dem letzten Tod (DR-14)
 var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (DR-14)
@@ -95,6 +97,12 @@ func to_dict() -> Dictionary:
 	var plan: Array = []
 	for step: StringName in night_plan:
 		plan.append(String(step))
+	var status_list: Array = []
+	for status: StringName in night_step_status:
+		status_list.append(String(status))
+	var protection_list: Array = []
+	for p: Protection in protections:
+		protection_list.append(p.to_dict())
 	return {
 		"schema_version": schema_version,
 		"rules_version": String(rules_version),
@@ -110,6 +118,8 @@ func to_dict() -> Dictionary:
 		"pack_target_id": pack_target_id,
 		"night_plan": plan,
 		"next_night_step": next_night_step,
+		"night_step_status": status_list,
+		"protections": protection_list,
 		"reactions": reaction_list,
 		"provisional_win": provisional_win.duplicate(true),
 		"win_check_pending": win_check_pending,
@@ -176,6 +186,19 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.next_night_step = DictRead.get_int(d, "next_night_step")
 	if s.next_night_step < 0 or s.next_night_step > s.night_plan.size():
 		return null
+	for status: Variant in DictRead.get_array(d, "night_step_status"):
+		if not StepQueue.STEP_STATUSES.has(StringName(str(status))):
+			return null
+		s.night_step_status.append(StringName(str(status)))
+	if s.night_step_status.size() != s.night_plan.size():
+		return null
+	for item: Variant in DictRead.get_array(d, "protections"):
+		if not item is Dictionary:
+			return null
+		var protection := Protection.from_dict(item)
+		if protection == null:
+			return null
+		s.protections.append(protection)
 	for item: Variant in DictRead.get_array(d, "reactions"):
 		if not item is Dictionary:
 			return null
