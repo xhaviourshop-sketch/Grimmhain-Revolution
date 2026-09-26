@@ -303,3 +303,94 @@ func files_in(dir_path: String, ext: String) -> Array[String]:
 		result.append_array(files_in(dir_path.path_join(d), ext))
 	result.sort()
 	return result
+
+
+# --- Spieler-Setup --------------------------------------------------------------------------------
+
+func setup_of(shell: Control) -> Object:
+	var ctx := context_of(shell)
+	return ctx.get("setup") as Object if ctx != null else null
+
+
+## Hauptmenü → Neue Partie (wie ein Benutzer) und liefert die Ansicht.
+func open_new_game(shell: Control) -> Control:
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"new_game")
+	return current_screen(shell)
+
+
+## Personen direkt über die Anwendungsschicht anlegen (Vorbereitung, kein UI-Pfad).
+func seed_names(shell: Control, names: Array) -> void:
+	var s := setup_of(shell)
+	if s == null:
+		fail("Setup-Anwendungsschicht fehlt im Kontext")
+		return
+	for n: Variant in names:
+		s.call("add_person", str(n))
+	await frames(2)
+
+
+func numbered_names(count: int, prefix: String = "Person") -> Array[String]:
+	var out: Array[String] = []
+	for i: int in count:
+		out.append("%s %d" % [prefix, i + 1])
+	return out
+
+
+## Zulässige Namen mit genau 32 Zeichen, auch einer ohne Leerzeichen.
+func long_names(count: int) -> Array[String]:
+	var out: Array[String] = []
+	for i: int in count:
+		out.append("Wolfgangamadeusmozartsalieri%04d" % i if i % 3 == 0 else "Maximiliane-Friederike von Ho%03d" % i)
+	return out
+
+
+## Sichtbare Personenzeilen (Knoten mit `person_id`) in Listenreihenfolge.
+func person_rows(screen: Node) -> Array[Control]:
+	var out: Array[Control] = []
+	var list := find_node(screen, "PersonList")
+	if list == null:
+		return out
+	for child: Node in list.get_children():
+		if child is Control and child.get("person_id") != null and (child as Control).visible:
+			out.append(child as Control)
+	return out
+
+
+func row_ids(screen: Node) -> Array[int]:
+	var out: Array[int] = []
+	for row: Control in person_rows(screen):
+		out.append(int(row.get("person_id")))
+	return out
+
+
+func row_label(row: Node, label_name: String) -> String:
+	var label := find_node(row, label_name) as Label
+	return label.text if label != null else ""
+
+
+## Tippt Text in ein Eingabefeld, wie es die Tastatur tut (Signal `text_changed`).
+func type_text(field: Control, text: String) -> void:
+	if field is LineEdit:
+		(field as LineEdit).text = text
+		(field as LineEdit).text_changed.emit(text)
+	elif field is TextEdit:
+		(field as TextEdit).text = text
+		(field as TextEdit).text_changed.emit()
+	await frames(1)
+
+
+func key_mod(keycode: Key, shift: bool) -> void:
+	for pressed: bool in [true, false]:
+		var e := InputEventKey.new()
+		e.keycode = keycode
+		e.physical_keycode = keycode
+		e.shift_pressed = shift
+		e.pressed = pressed
+		tree.root.push_input(e)
+		await frames(1)
+	await frames(2)
+
+
+func focus_owner() -> Control:
+	return tree.root.gui_get_focus_owner()
