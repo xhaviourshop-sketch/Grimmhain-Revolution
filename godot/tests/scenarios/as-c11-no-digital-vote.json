@@ -1,0 +1,154 @@
+{
+  "id": "AS-C11",
+  "title": "Keine digitale Stimme",
+  "spec": "docs/specs/vertical-slice/acceptance-scenarios.md",
+  "steps": [
+    {
+      "cmd": {
+        "type": "StartGame",
+        "payload": {
+          "round_id": "as-c11",
+          "seed": 1,
+          "assignment": "manual",
+          "players": [
+            {
+              "id": 1,
+              "name": "A"
+            },
+            {
+              "id": 2,
+              "name": "B"
+            },
+            {
+              "id": 3,
+              "name": "C"
+            },
+            {
+              "id": 4,
+              "name": "D"
+            },
+            {
+              "id": 5,
+              "name": "E"
+            },
+            {
+              "id": 6,
+              "name": "F"
+            }
+          ],
+          "seat_order": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "roles": {
+            "1": "werwolf",
+            "2": "werwolf",
+            "3": "dorfbewohner",
+            "4": "dorfbewohner",
+            "5": "dorfbewohner",
+            "6": "dorfbewohner"
+          }
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 1,
+          "targets": []
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 1,
+          "nominee_id": 6
+        }
+      },
+      "expect": {
+        "nominations": [
+          {
+            "nominator_id": 1,
+            "nominee_id": 6,
+            "day": 1
+          }
+        ],
+        "events": [
+          {
+            "type": "NominationRecorded",
+            "visibility": "public",
+            "data": {
+              "nominator_id": 1,
+              "nominee_id": 6,
+              "day": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "DecideExecution",
+        "payload": {
+          "target_id": 6
+        }
+      },
+      "expect": {
+        "alive": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "events": [
+          {
+            "type": "ExecutionConfirmed",
+            "data": {
+              "target_id": 6,
+              "day": 1
+            }
+          },
+          {
+            "type": "SeatDied",
+            "data": {
+              "target_id": 6,
+              "cause": "LYNCH",
+              "source_kind": "village",
+              "phase": "DAY",
+              "phase_number": 1
+            }
+          }
+        ],
+        "forbidden_key_substrings": [
+          "vote",
+          "stimm",
+          "mehrheit",
+          "majority",
+          "ballot",
+          "poll",
+          "abstimm"
+        ]
+      }
+    }
+  ]
+}

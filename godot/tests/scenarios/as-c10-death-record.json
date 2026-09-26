@@ -1,0 +1,194 @@
+{
+  "id": "AS-C10",
+  "title": "Todesereignis vollständig",
+  "spec": "docs/specs/vertical-slice/acceptance-scenarios.md",
+  "steps": [
+    {
+      "cmd": {
+        "type": "StartGame",
+        "payload": {
+          "round_id": "as-c10",
+          "seed": 1,
+          "assignment": "manual",
+          "players": [
+            {
+              "id": 1,
+              "name": "A"
+            },
+            {
+              "id": 2,
+              "name": "B"
+            },
+            {
+              "id": 3,
+              "name": "C"
+            },
+            {
+              "id": 4,
+              "name": "D"
+            },
+            {
+              "id": 5,
+              "name": "E"
+            },
+            {
+              "id": 6,
+              "name": "F"
+            }
+          ],
+          "seat_order": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "roles": {
+            "1": "werwolf",
+            "2": "werwolf",
+            "3": "dorfbewohner",
+            "4": "dorfbewohner",
+            "5": "dorfbewohner",
+            "6": "dorfbewohner"
+          }
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      },
+      "expect": {
+        "phase": "NIGHT",
+        "night_number": 1,
+        "events": [
+          {
+            "type": "PromptOpened",
+            "data": {
+              "prompt": {
+                "id": 1,
+                "owner": "pack",
+                "min_count": 0,
+                "max_count": 1,
+                "allowed_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      },
+      "reject": "prompt_open",
+      "expect": {
+        "phase": "NIGHT"
+      }
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 1,
+          "targets": [
+            1,
+            6
+          ]
+        }
+      },
+      "reject": "invalid_target_count"
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 1,
+          "targets": [
+            9
+          ]
+        }
+      },
+      "reject": "invalid_target"
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 2,
+          "targets": [
+            6
+          ]
+        }
+      },
+      "reject": "prompt_mismatch"
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 1,
+          "targets": [
+            6
+          ]
+        }
+      },
+      "expect": {
+        "alive": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "no_event_types": [
+          "SeatDied"
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      },
+      "expect": {
+        "alive": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "phase": "DAY",
+        "day_number": 1,
+        "events": [
+          {
+            "type": "SeatDied",
+            "visibility": "gm",
+            "data": {
+              "target_id": 6,
+              "cause": "NIGHT_KILL",
+              "source_kind": "pack",
+              "source_id": -1,
+              "phase": "DAWN_RESOLUTION",
+              "phase_number": 1,
+              "order_index": 1,
+              "interception": "none"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "id": "AS-C12",
+  "title": "Keine Hinrichtung",
+  "spec": "docs/specs/vertical-slice/acceptance-scenarios.md",
+  "steps": [
+    {
+      "cmd": {
+        "type": "StartGame",
+        "payload": {
+          "round_id": "as-c12",
+          "seed": 1,
+          "assignment": "manual",
+          "players": [
+            {
+              "id": 1,
+              "name": "A"
+            },
+            {
+              "id": 2,
+              "name": "B"
+            },
+            {
+              "id": 3,
+              "name": "C"
+            },
+            {
+              "id": 4,
+              "name": "D"
+            },
+            {
+              "id": 5,
+              "name": "E"
+            },
+            {
+              "id": 6,
+              "name": "F"
+            }
+          ],
+          "seat_order": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "roles": {
+            "1": "werwolf",
+            "2": "werwolf",
+            "3": "dorfbewohner",
+            "4": "dorfbewohner",
+            "5": "dorfbewohner",
+            "6": "dorfbewohner"
+          }
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 1,
+          "targets": []
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndDay",
+        "payload": {}
+      },
+      "reject": "execution_not_decided"
+    },
+    {
+      "cmd": {
+        "type": "DecideExecution",
+        "payload": {
+          "target_id": -1
+        }
+      },
+      "expect": {
+        "alive": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "no_event_types": [
+          "SeatDied"
+        ],
+        "events": [
+          {
+            "type": "NoExecution",
+            "visibility": "public",
+            "data": {
+              "day": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "DecideExecution",
+        "payload": {
+          "target_id": -1
+        }
+      },
+      "reject": "execution_already_decided"
+    },
+    {
+      "cmd": {
+        "type": "EndDay",
+        "payload": {}
+      },
+      "expect": {
+        "phase": "DAY",
+        "events": [
+          {
+            "type": "DayEnded"
+          }
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      },
+      "expect": {
+        "phase": "NIGHT",
+        "night_number": 2
+      }
+    }
+  ]
+}

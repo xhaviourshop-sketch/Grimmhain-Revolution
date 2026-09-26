@@ -1,0 +1,215 @@
+{
+  "id": "AS-C04",
+  "title": "Siegbestätigung und Ablehnung",
+  "spec": "docs/specs/vertical-slice/acceptance-scenarios.md",
+  "steps": [
+    {
+      "cmd": {
+        "type": "StartGame",
+        "payload": {
+          "round_id": "as-c04",
+          "seed": 1,
+          "assignment": "manual",
+          "players": [
+            {
+              "id": 1,
+              "name": "A"
+            },
+            {
+              "id": 2,
+              "name": "B"
+            },
+            {
+              "id": 3,
+              "name": "C"
+            },
+            {
+              "id": 4,
+              "name": "D"
+            },
+            {
+              "id": 5,
+              "name": "E"
+            },
+            {
+              "id": 6,
+              "name": "F"
+            }
+          ],
+          "seat_order": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "roles": {
+            "1": "werwolf",
+            "2": "werwolf",
+            "3": "dorfbewohner",
+            "4": "dorfbewohner",
+            "5": "dorfbewohner",
+            "6": "dorfbewohner"
+          }
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 1,
+          "targets": [
+            6
+          ]
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 1,
+          "nominee_id": 3
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "DecideExecution",
+        "payload": {
+          "target_id": 3
+        }
+      },
+      "expect": {
+        "win_candidate": {
+          "id": 1,
+          "kind": "wolves",
+          "status": "open"
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "ConfirmWin",
+        "payload": {
+          "candidate_id": 7
+        }
+      },
+      "reject": "win_candidate_mismatch"
+    },
+    {
+      "cmd": {
+        "type": "RejectWin",
+        "payload": {
+          "candidate_id": 1,
+          "reason": ""
+        }
+      },
+      "reject": "reason_required"
+    },
+    {
+      "cmd": {
+        "type": "RejectWin",
+        "payload": {
+          "candidate_id": 1,
+          "reason": "Zählfehler"
+        }
+      },
+      "expect": {
+        "phase": "DAY",
+        "win_candidate": null,
+        "winner": null,
+        "events": [
+          {
+            "type": "WinRejected",
+            "data": {
+              "reason": "Zählfehler",
+              "candidate": {
+                "id": 1,
+                "kind": "wolves",
+                "status": "rejected"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndDay",
+        "payload": {}
+      },
+      "expect": {
+        "win_candidate": null,
+        "no_event_types": [
+          "WinDetected"
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "ConfirmWin",
+        "payload": {
+          "candidate_id": 1
+        }
+      },
+      "reject": "no_open_win_candidate"
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      },
+      "expect": {
+        "win_candidate": null
+      }
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 2,
+          "targets": [
+            4
+          ]
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      },
+      "expect": {
+        "alive": [
+          1,
+          2,
+          5
+        ],
+        "win_candidate": {
+          "id": 2,
+          "kind": "wolves",
+          "reason_args": {
+            "wolves": 2,
+            "non_wolves": 1
+          },
+          "status": "open"
+        }
+      }
+    }
+  ]
+}

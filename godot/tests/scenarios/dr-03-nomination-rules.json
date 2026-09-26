@@ -1,0 +1,276 @@
+{
+  "id": "DR-03",
+  "title": "Nominierungsregeln pro Tag, nur Lebende, Hinrichtung nur nach Nominierung",
+  "spec": "docs/masterplan/DECISION-LOG.md#dr-03",
+  "steps": [
+    {
+      "cmd": {
+        "type": "StartGame",
+        "payload": {
+          "round_id": "dr-03",
+          "seed": 1,
+          "assignment": "manual",
+          "players": [
+            {
+              "id": 1,
+              "name": "A"
+            },
+            {
+              "id": 2,
+              "name": "B"
+            },
+            {
+              "id": 3,
+              "name": "C"
+            },
+            {
+              "id": 4,
+              "name": "D"
+            },
+            {
+              "id": 5,
+              "name": "E"
+            },
+            {
+              "id": 6,
+              "name": "F"
+            }
+          ],
+          "seat_order": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "roles": {
+            "1": "werwolf",
+            "2": "werwolf",
+            "3": "dorfbewohner",
+            "4": "dorfbewohner",
+            "5": "dorfbewohner",
+            "6": "dorfbewohner"
+          }
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 1,
+          "nominee_id": 3
+        }
+      },
+      "reject": "wrong_phase"
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 1,
+          "targets": [
+            6
+          ]
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 6,
+          "nominee_id": 3
+        }
+      },
+      "reject": "player_dead"
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 3,
+          "nominee_id": 6
+        }
+      },
+      "reject": "player_dead"
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 3,
+          "nominee_id": 99
+        }
+      },
+      "reject": "unknown_player"
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 3,
+          "nominee_id": 1
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 3,
+          "nominee_id": 2
+        }
+      },
+      "reject": "already_nominated_today"
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 4,
+          "nominee_id": 1
+        }
+      },
+      "reject": "already_nominee_today"
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 4,
+          "nominee_id": 2
+        }
+      },
+      "expect": {
+        "nominations": [
+          {
+            "nominator_id": 3,
+            "nominee_id": 1,
+            "day": 1
+          },
+          {
+            "nominator_id": 4,
+            "nominee_id": 2,
+            "day": 1
+          }
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "DecideExecution",
+        "payload": {
+          "target_id": 5
+        }
+      },
+      "reject": "not_nominated_today"
+    },
+    {
+      "cmd": {
+        "type": "DecideExecution",
+        "payload": {
+          "target_id": 2
+        }
+      },
+      "expect": {
+        "alive": [
+          1,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 5,
+          "nominee_id": 4
+        }
+      },
+      "reject": "execution_already_decided"
+    },
+    {
+      "cmd": {
+        "type": "EndDay",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "StartNight",
+        "payload": {}
+      }
+    },
+    {
+      "cmd": {
+        "type": "AnswerPrompt",
+        "payload": {
+          "prompt_id": 2,
+          "targets": []
+        }
+      }
+    },
+    {
+      "cmd": {
+        "type": "EndNight",
+        "payload": {}
+      },
+      "expect": {
+        "day_number": 2
+      }
+    },
+    {
+      "cmd": {
+        "type": "DecideExecution",
+        "payload": {
+          "target_id": 1
+        }
+      },
+      "reject": "not_nominated_today"
+    },
+    {
+      "cmd": {
+        "type": "Nominate",
+        "payload": {
+          "nominator_id": 3,
+          "nominee_id": 1
+        }
+      },
+      "expect": {
+        "nominations": [
+          {
+            "nominator_id": 3,
+            "nominee_id": 1,
+            "day": 1
+          },
+          {
+            "nominator_id": 4,
+            "nominee_id": 2,
+            "day": 1
+          },
+          {
+            "nominator_id": 3,
+            "nominee_id": 1,
+            "day": 2
+          }
+        ]
+      }
+    }
+  ]
+}
