@@ -1,0 +1,21 @@
+; Grimmhain · Godot-Projekt (Phase 1: headless Regelkern)
+; Gepinnte Engine-Version: siehe README.md und tools/godot-version.txt
+
+config_version=5
+
+[application]
+
+config/name="Grimmhain"
+config/features=PackedStringArray("4.7")
+
+[debug]
+
+gdscript/warnings/untyped_declaration=2
+gdscript/warnings/unsafe_call_argument=1
+gdscript/warnings/unsafe_method_access=1
+gdscript/warnings/unsafe_property_access=1
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

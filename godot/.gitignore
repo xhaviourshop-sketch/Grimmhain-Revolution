@@ -1,0 +1,3 @@
+# Godot-Import-Cache und lokale Editor-Daten
+.godot/
+*.uid.tmp

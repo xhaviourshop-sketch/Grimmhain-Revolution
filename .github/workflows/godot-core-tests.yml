@@ -1,0 +1,19 @@
+name: Godot core tests
+
+on:
+  push:
+    paths:
+      - "godot/**"
+      - ".github/workflows/godot-core-tests.yml"
+  pull_request:
+    paths:
+      - "godot/**"
+      - ".github/workflows/godot-core-tests.yml"
+
+jobs:
+  headless-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Headless-Tests mit gepinnter Godot-Version
+        run: godot/tests/run_all.sh
