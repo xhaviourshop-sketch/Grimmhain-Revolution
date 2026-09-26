@@ -8,7 +8,7 @@ extends RefCounted
 ## Schritt-IDs: "night:<Nacht>:<Index>:<Schritt>" bzw. "reaction:<Reaktions-ID>".
 ## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" und der Rudelschritt
 ## "pack", sortiert nach Nachtpriorität (RoleCatalog), bei gleicher Priorität nach
-## Personen-ID: Schutzengel → Rudel → Waldhexe → Orakel.
+## Personen-ID: Wolfskind → Lehrling → Schutzengel → Rudel → Waldhexe → Orakel.
 ## Der Nachtplan ist ein Snapshot bei StartNight: Rollenwechsel während der Nacht fügen
 ## keine Schritte hinzu. Ein persönlicher Schritt entfällt automatisch und protokolliert
 ## (`StepDropped`), wenn seine Person inzwischen tot ist, nicht mehr die geplante Rolle
@@ -73,6 +73,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.WALDHEXE: false,       # Verzicht auf beide Tränke ist eine Antwort im eigenen Prompt (DR-06)
 	RoleCatalog.ORAKEL: false,         # Pflichtprüfung einer anderen lebenden Person (DR-07)
 	RoleCatalog.WOLFSKIND: false,      # Pflichtwahl eines Vorbilds (DR-10)
+	RoleCatalog.LEHRLING: false,       # Pflichtwahl eines Meisters (DR-11)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -92,7 +93,7 @@ static func is_skippable(step_id: String) -> bool:
 ## Nachtplan aus den zu Beginn der Nacht gültigen Rollen (Snapshot): persönliche Schritte
 ## lebender Rolleninhaber und der Rudelschritt, solange mindestens eine lebende Person als
 ## Wolf zählt (G-PH-6), sortiert nach Nachtpriorität und Personen-ID. Waldhexen nur mit
-## mindestens einem unverbrauchten Trank.
+## mindestens einem unverbrauchten Trank, Wolfskinder und Lehrlinge nur mit Auswahlbedarf.
 static func build_night_plan(s: GameState) -> Array[StringName]:
 	var entries: Array = []  # [Priorität, Personen-ID, Schritt]
 	for id: int in s.alive_ids():
@@ -103,6 +104,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		if p.role_id == RoleCatalog.WALDHEXE and not WitchStep.has_any_potion(p):
 			continue
 		if p.role_id == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, id):
+			continue
+		if p.role_id == RoleCatalog.LEHRLING and not ApprenticeRules.needs_selection(s, id):
 			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	for id: int in s.alive_ids():
@@ -131,6 +134,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, actor):
 		return &"no_decision"  # Vorbild schon gesetzt oder verwandelt
+	if step_role(key) == RoleCatalog.LEHRLING and not (ApprenticeRules.needs_selection(s, actor) and ApprenticeRules.can_select(s, actor)):
+		return &"no_decision"  # schon gebunden oder weniger als drei andere Lebende
 	if step_role(key) == RoleCatalog.ORAKEL and s.alive_ids().size() < 2:
 		return &"no_decision"  # niemand außer dem Orakel lebt
 	return &""
@@ -178,6 +183,9 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.ORAKEL:
 		# Orakel: Zielwahl, dann Bestätigung „Gezeigt“ (OracleStep).
 		OracleStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
+	elif step_kind(step_id) == RoleCatalog.LEHRLING:
+		# Lehrling: Kandidaten, Option, Bestätigung (ApprenticeRules).
+		ApprenticeRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
 	elif step_kind(step_id) == RoleCatalog.WOLFSKIND:
 		# Wolfskind: Pflichtwahl genau einer anderen lebenden Person als Vorbild (DR-10).
 		prompt.owner = PendingPrompt.OWNER_WOLF_CHILD

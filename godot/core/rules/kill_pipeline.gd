@@ -4,9 +4,11 @@ extends RefCounted
 ##   1. Ziel tot? → abbrechen (protokolliert)
 ##   2. Tod anwenden → KillEvent mit Ursache, Quelle, Ziel, Zeitpunkt, Abfangstatus
 ##   3. Ereignis SeatDied
-##   4. Todesfolgen (nur mit trigger_effects, G-TOD-2): zuerst unmittelbare Folgen ohne
-##      Entscheidung (Verwandlung von Wolfskindern, DR-10), dann Reaktion der Rolle einreihen
-##   5. vorläufiger Siegstatus (DR-14); die verbindliche Prüfung folgt am Befehlsende,
+##   4. eine aktive Bindung eines toten Lehrlings verfällt (immer, DR-11)
+##   5. Todesfolgen (nur mit trigger_effects, G-TOD-2): zuerst unmittelbare Folgen ohne
+##      Entscheidung (Verwandlung von Wolfskindern, DR-10; danach Erbe gebundener Lehrlinge,
+##      DR-11, stabil nach Personen-ID), dann Reaktion der Rolle einreihen
+##   6. vorläufiger Siegstatus (DR-14); die verbindliche Prüfung folgt am Befehlsende,
 ##      sobald keine Reaktion mehr offen ist
 ## Abfangregeln (vor Schritt 2, nur Rudelangriff): Schutzengel und Rettung der Waldhexe;
 ## Spiegelung folgt.
@@ -36,8 +38,10 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	ctx.deaths += 1
 	# Nur Spielleiter: Was öffentlich verkündet wird, entscheidet DR-04 (offen).
 	ctx.emit(GameEvent.SEAT_DIED, Visibility.GM, record.to_dict())
+	ApprenticeRules.on_own_death(s, target_id)
 	if trigger_effects:
 		WolfChildRules.on_death(ctx, record)
+		ApprenticeRules.on_master_death(ctx, record)
 		_queue_reaction(ctx, target, record)
 	WinRules.record_provisional(ctx, record)
 	return record

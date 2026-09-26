@@ -24,6 +24,11 @@ const TRANSFORM_WOLF_CHILD := "transform_wolf_child"  ## Wolfskind verwandeln
 const REVERT_WOLF_CHILD := "revert_wolf_child"        ## Verwandlung zurücknehmen (Vorbild bleibt)
 const SET_MIRROR := "set_mirror"  ## Spiegelung eines Spiegelwolfs als verfügbar/verbraucht markieren
 const SET_EVER_NOMINATED := "set_ever_nominated"  ## personenbezogenen Nominierungsstatus korrigieren (DR-12)
+const SET_APPRENTICE_MASTER := "set_apprentice_master"                    ## Bindung eines Lehrlings setzen oder ändern
+const REMOVE_APPRENTICE_MASTER := "remove_apprentice_master"              ## aktive Bindung entfernen
+const TRIGGER_APPRENTICE_INHERITANCE := "trigger_apprentice_inheritance"  ## Erbe manuell auslösen
+const REVERT_APPRENTICE_INHERITANCE := "revert_apprentice_inheritance"    ## Erbe exakt zurücknehmen
+const APPRENTICE_KINDS: Array[String] = [SET_APPRENTICE_MASTER, REMOVE_APPRENTICE_MASTER, TRIGGER_APPRENTICE_INHERITANCE, REVERT_APPRENTICE_INHERITANCE]
 const WOLF_CHILD_KINDS: Array[String] = [SET_WOLF_MODEL, REMOVE_WOLF_MODEL, TRANSFORM_WOLF_CHILD, REVERT_WOLF_CHILD]
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
@@ -52,6 +57,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		return _validate_witch(s, p, kind)
 	if WOLF_CHILD_KINDS.has(kind):
 		return _validate_wolf_child(s, p, kind)
+	if APPRENTICE_KINDS.has(kind):
+		return _validate_apprentice(s, p, kind)
 	if kind == SET_EVER_NOMINATED:
 		var person := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
 		if not s.players.has(person):
@@ -226,6 +233,51 @@ static func _validate_wolf_child(s: GameState, p: Dictionary, kind: String) -> S
 	return &""
 
 
+## Lehrling: Bindung nur für eine lebende Person mit Rolle `lehrling`, Meister ist eine andere
+## lebende bekannte Person. Rücknahme nur für den jüngsten Datensatz, solange die Person lebt
+## und noch die geerbte Rolle hat; sonst wäre der gespeicherte Zustand veraltet.
+static func _validate_apprentice(s: GameState, p: Dictionary, kind: String) -> StringName:
+	var apprentice := DictRead.get_int(p, "apprentice_id", GameState.NO_TARGET)
+	if not s.players.has(apprentice):
+		return &"unknown_player"
+	var player := s.players[apprentice]
+	if kind == REVERT_APPRENTICE_INHERITANCE:
+		var latest := ApprenticeRules.latest_of(s, apprentice)
+		if latest == null or latest.status != ApprenticeBond.STATUS_INHERITED:
+			return &"no_inheritance"
+		if not player.alive or player.role_id != latest.inherited_role:
+			return &"stale_inheritance"
+		return &""
+	if player.role_id != RoleCatalog.LEHRLING:
+		return &"not_an_apprentice"
+	if not player.alive:
+		return &"player_dead"
+	var active := ApprenticeRules.active_of(s, apprentice)
+	match kind:
+		SET_APPRENTICE_MASTER:
+			var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
+			if not s.players.has(target):
+				return &"unknown_player"
+			if target == apprentice:
+				return &"invalid_target"
+			if not s.players[target].alive:
+				return &"player_dead"
+			if active != null and active.master_id == target:
+				return &"no_change"
+		REMOVE_APPRENTICE_MASTER, TRIGGER_APPRENTICE_INHERITANCE:
+			if active == null:
+				return &"no_binding"
+	return &""
+
+
+static func _apprentice_fields(s: GameState, apprentice_id: int) -> Dictionary:
+	var player := s.players[apprentice_id]
+	var active := ApprenticeRules.active_of(s, apprentice_id)
+	var fields := _role_fields(player)
+	fields["master_id"] = active.master_id if active != null else GameState.NO_TARGET
+	return fields
+
+
 static func _wolf_child_fields(player: Player, bond: WolfChildBond) -> Dictionary:
 	return {"transformed": bond.transformed, "faction": player.faction, "counts_as_wolf": player.counts_as_wolf, "appears_as": player.appears_as}
 
@@ -304,6 +356,20 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 				WolfChildRules.revert(bond, player)
 			_log(ctx, kind, child, old, _wolf_child_fields(player, bond), reason, false)
 			s.win_check_pending = true
+		SET_APPRENTICE_MASTER, REMOVE_APPRENTICE_MASTER, TRIGGER_APPRENTICE_INHERITANCE, REVERT_APPRENTICE_INHERITANCE:
+			var apprentice := DictRead.get_int(p, "apprentice_id")
+			var old := _apprentice_fields(s, apprentice)
+			match kind:
+				SET_APPRENTICE_MASTER:
+					ApprenticeRules.set_master(ctx, apprentice, target)
+				REMOVE_APPRENTICE_MASTER:
+					ApprenticeRules.end_active(s, apprentice, ApprenticeBond.STATUS_REMOVED)
+				TRIGGER_APPRENTICE_INHERITANCE:
+					ApprenticeRules.inherit(ctx, ApprenticeRules.active_of(s, apprentice), -1, "gm_correction")
+				REVERT_APPRENTICE_INHERITANCE:
+					ApprenticeRules.revert(s, ApprenticeRules.latest_of(s, apprentice))
+					s.win_check_pending = true
+			_log(ctx, kind, apprentice, old, _apprentice_fields(s, apprentice), reason, false)
 		EXECUTE:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
@@ -325,16 +391,9 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 		SET_ROLE:
 			var player := s.players[target]
 			var old := _role_fields(player)
-			var role := StringName(DictRead.get_string(p, "role_id"))
-			player.role_id = role
-			player.faction = RoleCatalog.faction_of(role)
-			player.counts_as_wolf = RoleCatalog.counts_as_wolf(role)
-			# Scheinrolle aus dem Befehl beim Trugbilderwolf, sonst normale Erscheinung der neuen Rolle.
-			player.appears_as = StringName(DictRead.get_string(p, "appears_as")) if RoleCatalog.requires_appearance(role) else RoleCatalog.appears_as(role)
-			# Wolfskind-Zustand gehört zur Rolle: beim Wechsel weg entfernt, beim Wechsel hin neu.
-			WolfChildRules.remove_bond(s, target)
-			if role == RoleCatalog.WOLFSKIND:
-				WolfChildRules.create_bond(s, target)
+			# Zentraler Rollenwechsel: Scheinrolle aus dem Befehl beim Trugbilderwolf, sonst die
+			# normale Erscheinung; rollengebundener Zustand (Wolfskind, Lehrling) folgt der Rolle.
+			RoleTransition.change_role(s, target, StringName(DictRead.get_string(p, "role_id")), StringName(DictRead.get_string(p, "appears_as")))
 			_log(ctx, kind, target, old, _role_fields(player), reason, false)
 			s.win_check_pending = true
 		DECLARE_WINNER:

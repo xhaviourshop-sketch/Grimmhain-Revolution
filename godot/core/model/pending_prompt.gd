@@ -2,8 +2,8 @@ class_name PendingPrompt
 extends RefCounted
 ## Offene Eingabe als Teil des Spielstands (03 §5.5, A-10). Genutzt für die
 ## Opferwahl des Rudels, Schutzengel, Reaktionen und die mehrstufigen Prompts von
-## Waldhexe und Orakel (B-05): Dort stehen die bisherigen Teilantworten in `partial` und
-## die aktuelle Stufe in `stage` (WitchStep, OracleStep); einstufige Prompts haben
+## Waldhexe, Orakel und Lehrling (B-05): Dort stehen die bisherigen Teilantworten in `partial` und
+## die aktuelle Stufe in `stage` (WitchStep, OracleStep, ApprenticeRules); einstufige Prompts haben
 ## `stage` = &"". Den Bezug zum übrigen Zustand prüft GameState.from_dict.
 
 const KIND_PICK_PLAYERS := &"pick_players"
@@ -15,6 +15,8 @@ const KIND_WITCH_CHAIN := &"witch_chain"
 const OWNER_ORACLE := &"das-orakel"
 const OWNER_WOLF_CHILD := &"wolfskind"
 const KIND_ORACLE_CHECK := &"oracle_check"
+const OWNER_APPRENTICE := &"lehrling"
+const KIND_APPRENTICE_CHAIN := &"apprentice_choice"
 
 var id: int = 0
 var kind: StringName = KIND_PICK_PLAYERS
@@ -67,6 +69,9 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 			return null
 	elif p.owner == OWNER_ORACLE:
 		if not OracleStep.STAGES.has(p.stage):
+			return null
+	elif p.owner == OWNER_APPRENTICE:
+		if not ApprenticeRules.STAGES.has(p.stage):
 			return null
 	elif p.stage != &"":
 		return null

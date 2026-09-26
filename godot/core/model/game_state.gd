@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 9  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id)
-const RULES_VERSION := &"grimmhain-core-0.9"
+const SCHEMA_VERSION := 10  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice)
+const RULES_VERSION := &"grimmhain-core-0.10"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -29,6 +29,7 @@ var protections: Array[Protection] = []  ## bestätigte Schutzwahlen der laufend
 var witch_actions: Array[WitchAction] = []  ## bestätigte Waldhexen-Entscheidungen der laufenden Nacht
 var info_records: Array[InfoRecord] = []    ## abgeschlossene Informationen der Partie (Orakel)
 var wolf_children: Array[WolfChildBond] = []  ## je aktuellem Wolfskind: Vorbild und Verwandlung
+var apprentices: Array[ApprenticeBond] = []   ## alle Bindungen von Lehrlingen (einzige Quelle), nach ID
 var reactions: Array[Reaction] = []     ## offene Reaktionen, erste = nächste
 var provisional_win: Array = []         ## vorläufiger Siegstatus seit dem letzten Tod (DR-14)
 var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (DR-14)
@@ -42,6 +43,7 @@ var next_candidate_id: int = 1
 var next_death_order: int = 1
 var next_reaction_id: int = 1
 var next_info_id: int = 1
+var next_apprentice_id: int = 1
 
 
 func is_started() -> bool:
@@ -140,6 +142,9 @@ func to_dict() -> Dictionary:
 	var info_list: Array = []
 	for r: InfoRecord in info_records:
 		info_list.append(r.to_dict())
+	var apprentice_list: Array = []
+	for b: ApprenticeBond in apprentices:
+		apprentice_list.append(b.to_dict())
 	return {
 		"schema_version": schema_version,
 		"rules_version": String(rules_version),
@@ -160,6 +165,7 @@ func to_dict() -> Dictionary:
 		"witch_actions": witch_list,
 		"info_records": info_list,
 		"wolf_children": wolf_list,
+		"apprentices": apprentice_list,
 		"reactions": reaction_list,
 		"provisional_win": provisional_win.duplicate(true),
 		"win_check_pending": win_check_pending,
@@ -174,6 +180,7 @@ func to_dict() -> Dictionary:
 			"death_order": next_death_order,
 			"reaction": next_reaction_id,
 			"info": next_info_id,
+			"apprentice": next_apprentice_id,
 		},
 	}
 
@@ -295,6 +302,13 @@ static func from_dict(d: Dictionary) -> GameState:
 		return null
 	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_WOLF_CHILD and not WolfChildRules.matches_prompt(s, s.pending_prompt):
 		return null
+	for item: Variant in DictRead.get_array(d, "apprentices"):
+		if not item is Dictionary:
+			return null
+		var apprentice := ApprenticeBond.from_dict(item)
+		if apprentice == null:
+			return null
+		s.apprentices.append(apprentice)
 	# Ein Waldhexen- oder Orakel-Prompt muss zum übrigen Zustand passen (matches_state).
 	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_WITCH and not WitchStep.matches_state(s, s.pending_prompt):
 		return null
@@ -308,6 +322,12 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.next_death_order = DictRead.get_int(next_ids, "death_order", 1)
 	s.next_reaction_id = DictRead.get_int(next_ids, "reaction", 1)
 	s.next_info_id = DictRead.get_int(next_ids, "info", 1)
+	s.next_apprentice_id = DictRead.get_int(next_ids, "apprentice", 1)
+	# Bindungen und ein offener Auswahl-Prompt des Lehrlings müssen zum übrigen Zustand passen.
+	if not ApprenticeRules.state_is_consistent(s):
+		return null
+	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_APPRENTICE and not ApprenticeRules.matches_state(s, s.pending_prompt):
+		return null
 	if not WinRules.state_is_consistent(s):
 		return null
 	return s
