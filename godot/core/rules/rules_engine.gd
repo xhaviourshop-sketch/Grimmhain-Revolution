@@ -74,6 +74,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 				return &"reason_required"
 		Command.GM_CORRECTION:
 			return GmCorrections.validate(s, p)
+		Command.OVERRIDE_SHOWN_ROLE:
+			return OracleStep.validate_override(s, p)
 		Command.CONFIRM_WIN, Command.REJECT_WIN:
 			if s.win_candidate == null:
 				return &"no_open_win_candidate"
@@ -177,6 +179,8 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return &"prompt_mismatch"
 	if prompt.owner == PendingPrompt.OWNER_WITCH:
 		return WitchStep.validate_answer(s, prompt, p)
+	if prompt.owner == PendingPrompt.OWNER_ORACLE:
+		return OracleStep.validate_answer(s, prompt, p)
 	var targets: Variant = DictRead.to_int_array(DictRead.get_array(p, "targets"))
 	if targets == null or not p.get("targets") is Array:
 		return &"invalid_target"
@@ -238,6 +242,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 		Command.ANSWER_PROMPT:
 			if s.pending_prompt.owner == PendingPrompt.OWNER_WITCH:
 				WitchStep.answer(ctx, p)
+			elif s.pending_prompt.owner == PendingPrompt.OWNER_ORACLE:
+				OracleStep.answer(ctx, p)
 			else:
 				_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
 		Command.BEGIN_STEP:
@@ -248,6 +254,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			StepQueue.cancel_prompt(ctx, DictRead.get_string(p, "reason").strip_edges())
 		Command.GM_CORRECTION:
 			GmCorrections.execute(ctx, p)
+		Command.OVERRIDE_SHOWN_ROLE:
+			OracleStep.apply_override(ctx, p)
 		Command.END_NIGHT:
 			_resolve_dawn(ctx)
 		Command.NOMINATE:

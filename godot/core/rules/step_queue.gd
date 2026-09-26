@@ -6,8 +6,9 @@ extends RefCounted
 ##   Morgenauflösung/Tag: erste offene Reaktion (Reaktionen aus der Nacht warten
 ##                        bis zur Morgenauflösung, DR-09)
 ## Schritt-IDs: "night:<Nacht>:<Index>:<Schritt>" bzw. "reaction:<Reaktions-ID>".
-## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" (je Lage nach
-## Personen-ID) vor bzw. nach dem Rudelschritt "pack": Schutzengel → Rudel → Waldhexe.
+## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" und der Rudelschritt
+## "pack", sortiert nach Nachtpriorität (RoleCatalog), bei gleicher Priorität nach
+## Personen-ID: Schutzengel → Rudel → Waldhexe → Orakel.
 ## Der Nachtplan ist ein Snapshot bei StartNight: Rollenwechsel während der Nacht fügen
 ## keine Schritte hinzu. Ein persönlicher Schritt entfällt automatisch und protokolliert
 ## (`StepDropped`), wenn seine Person inzwischen tot ist, nicht mehr die geplante Rolle
@@ -70,6 +71,7 @@ const SKIPPABLE_BY_KIND := {
 	PACK: true,                        # Rudel: kein Angriff, nur mit Grund
 	RoleCatalog.SCHUTZENGEL: false,    # Pflichtauswahl (DR-05)
 	RoleCatalog.WALDHEXE: false,       # Verzicht auf beide Tränke ist eine Antwort im eigenen Prompt (DR-06)
+	RoleCatalog.ORAKEL: false,         # Pflichtprüfung einer anderen lebenden Person (DR-07)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -86,30 +88,29 @@ static func is_skippable(step_id: String) -> bool:
 	return SKIPPABLE_BY_KIND.get(step_kind(step_id), false)
 
 
-## Nachtplan aus den zu Beginn der Nacht gültigen Rollen: persönliche Schritte vor dem
-## Rudel (Schutzengel) nach Personen-ID, dann der Rudelschritt, solange mindestens eine
-## lebende Person als Wolf zählt (G-PH-6), dann persönliche Schritte nach dem Rudel
-## (Waldhexe, nur mit mindestens einem unverbrauchten Trank) nach Personen-ID.
+## Nachtplan aus den zu Beginn der Nacht gültigen Rollen (Snapshot): persönliche Schritte
+## lebender Rolleninhaber und der Rudelschritt, solange mindestens eine lebende Person als
+## Wolf zählt (G-PH-6), sortiert nach Nachtpriorität und Personen-ID. Waldhexen nur mit
+## mindestens einem unverbrauchten Trank.
 static func build_night_plan(s: GameState) -> Array[StringName]:
-	var plan := _personal_steps(s, RoleCatalog.BEFORE_PACK)
-	for id: int in s.alive_ids():
-		if s.players[id].counts_as_wolf:
-			plan.append(PACK)
-			break
-	plan.append_array(_personal_steps(s, RoleCatalog.AFTER_PACK))
-	return plan
-
-
-static func _personal_steps(s: GameState, slot: StringName) -> Array[StringName]:
-	var steps: Array[StringName] = []
+	var entries: Array = []  # [Priorität, Personen-ID, Schritt]
 	for id: int in s.alive_ids():
 		var p := s.players[id]
-		if RoleCatalog.night_step(p.role_id) != slot:
+		var priority := RoleCatalog.night_priority(p.role_id)
+		if priority == 0:
 			continue
 		if p.role_id == RoleCatalog.WALDHEXE and not WitchStep.has_any_potion(p):
 			continue
-		steps.append(personal_step_key(p.role_id, id))
-	return steps
+		entries.append([priority, id, personal_step_key(p.role_id, id)])
+	for id: int in s.alive_ids():
+		if s.players[id].counts_as_wolf:
+			entries.append([RoleCatalog.PACK_PRIORITY, 0, PACK])
+			break
+	entries.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and a[1] < b[1]))
+	var plan: Array[StringName] = []
+	for entry: Array in entries:
+		plan.append(entry[2])
+	return plan
 
 
 ## Grund, warum der Nachtschritt `index` entfällt, oder &"" wenn er auszuführen ist.
@@ -125,6 +126,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"actor_role_changed"
 	if step_role(key) == RoleCatalog.WALDHEXE and not WitchStep.has_decision(s, actor):
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.ORAKEL and s.alive_ids().size() < 2:
+		return &"no_decision"  # niemand außer dem Orakel lebt
 	return &""
 
 
@@ -167,6 +170,9 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.WALDHEXE:
 		# Waldhexe: mehrstufige, atomare Kette (WitchStep).
 		WitchStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
+	elif step_kind(step_id) == RoleCatalog.ORAKEL:
+		# Orakel: Zielwahl, dann Bestätigung „Gezeigt“ (OracleStep).
+		OracleStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == PACK:
 		# Rudelschritt: 0 Ziele = ausdrücklich „kein Opfer“; jede lebende Person (rules-register §2).
 		prompt.owner = PendingPrompt.OWNER_PACK

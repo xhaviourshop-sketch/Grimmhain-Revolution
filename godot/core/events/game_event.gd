@@ -32,6 +32,9 @@ const PROTECTION_SET := &"ProtectionSet"    ## bestätigte Schutzwahl (nur Spiel
 const KILL_PREVENTED := &"KillPrevented"    ## verhinderter Rudelangriff (nur Spielleiter)
 const PROMPT_STAGE_ANSWERED := &"PromptStageAnswered"  ## Teilantwort eines mehrstufigen Prompts (nur Spielleiter)
 const WITCH_ACTED := &"WitchActed"          ## bestätigte Entscheidung der Waldhexe (nur Spielleiter)
+const INFO_OVERRIDDEN := &"InfoOverridden"    ## gezeigtes Ergebnis übersteuert (nur Spielleiter)
+const INFO_RECORDED := &"InfoRecorded"        ## vollständiger Informationsdatensatz (nur Spielleiter)
+const INFO_REVEALED := &"InfoRevealed"        ## gezeigtes Ergebnis für die handelnde Person (actor)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

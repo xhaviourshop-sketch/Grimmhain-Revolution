@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 5  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe)
-const RULES_VERSION := &"grimmhain-core-0.5"
+const SCHEMA_VERSION := 6  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info)
+const RULES_VERSION := &"grimmhain-core-0.6"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -27,6 +27,7 @@ var next_night_step: int = 0            ## Index des nächsten nicht erledigten 
 var night_step_status: Array[StringName] = []  ## je Nachtschritt: pending | done | skipped
 var protections: Array[Protection] = []  ## bestätigte Schutzwahlen der laufenden Nacht
 var witch_actions: Array[WitchAction] = []  ## bestätigte Waldhexen-Entscheidungen der laufenden Nacht
+var info_records: Array[InfoRecord] = []    ## abgeschlossene Informationen der Partie (Orakel)
 var reactions: Array[Reaction] = []     ## offene Reaktionen, erste = nächste
 var provisional_win: Array = []         ## vorläufiger Siegstatus seit dem letzten Tod (DR-14)
 var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (DR-14)
@@ -39,6 +40,7 @@ var next_prompt_id: int = 1
 var next_candidate_id: int = 1
 var next_death_order: int = 1
 var next_reaction_id: int = 1
+var next_info_id: int = 1
 
 
 func is_started() -> bool:
@@ -107,6 +109,9 @@ func to_dict() -> Dictionary:
 	var witch_list: Array = []
 	for a: WitchAction in witch_actions:
 		witch_list.append(a.to_dict())
+	var info_list: Array = []
+	for r: InfoRecord in info_records:
+		info_list.append(r.to_dict())
 	return {
 		"schema_version": schema_version,
 		"rules_version": String(rules_version),
@@ -125,6 +130,7 @@ func to_dict() -> Dictionary:
 		"night_step_status": status_list,
 		"protections": protection_list,
 		"witch_actions": witch_list,
+		"info_records": info_list,
 		"reactions": reaction_list,
 		"provisional_win": provisional_win.duplicate(true),
 		"win_check_pending": win_check_pending,
@@ -138,6 +144,7 @@ func to_dict() -> Dictionary:
 			"candidate": next_candidate_id,
 			"death_order": next_death_order,
 			"reaction": next_reaction_id,
+			"info": next_info_id,
 		},
 	}
 
@@ -211,6 +218,13 @@ static func from_dict(d: Dictionary) -> GameState:
 		if action == null:
 			return null
 		s.witch_actions.append(action)
+	for item: Variant in DictRead.get_array(d, "info_records"):
+		if not item is Dictionary:
+			return null
+		var record := InfoRecord.from_dict(item)
+		if record == null or not s.players.has(record.oracle_id) or not s.players.has(record.target_id):
+			return null
+		s.info_records.append(record)
 	for item: Variant in DictRead.get_array(d, "reactions"):
 		if not item is Dictionary:
 			return null
@@ -228,8 +242,10 @@ static func from_dict(d: Dictionary) -> GameState:
 		s.win_candidate = WinCandidate.from_dict(d["win_candidate"])
 	if d.get("winner") is Dictionary:
 		s.winner = WinCandidate.from_dict(d["winner"])
-	# Ein Waldhexen-Prompt muss zum übrigen Zustand passen (WitchStep.matches_state).
+	# Ein Waldhexen- oder Orakel-Prompt muss zum übrigen Zustand passen (matches_state).
 	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_WITCH and not WitchStep.matches_state(s, s.pending_prompt):
+		return null
+	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_ORACLE and not OracleStep.matches_state(s, s.pending_prompt):
 		return null
 	s.command_count = DictRead.get_int(d, "command_count")
 	var next_ids := DictRead.get_dict(d, "next_ids")
@@ -238,4 +254,5 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.next_candidate_id = DictRead.get_int(next_ids, "candidate", 1)
 	s.next_death_order = DictRead.get_int(next_ids, "death_order", 1)
 	s.next_reaction_id = DictRead.get_int(next_ids, "reaction", 1)
+	s.next_info_id = DictRead.get_int(next_ids, "info", 1)
 	return s

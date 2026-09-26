@@ -31,7 +31,7 @@ func test_player_count_limits() -> void:
 
 
 func test_role_rules() -> void:
-	var unknown: Array = ["werwolf", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var unknown: Array = ["werwolf", "trugbilderwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
 	_expect_reject(GameState.new(), _players_with_roles(6, unknown), "unknown_role", "Rolle außerhalb des Core-Slice")
 	var no_wolf: Array = ["dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
 	_expect_reject(GameState.new(), _players_with_roles(6, no_wolf), "missing_wolf_role", "ohne Wolf")

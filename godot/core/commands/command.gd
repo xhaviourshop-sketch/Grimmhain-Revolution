@@ -16,6 +16,7 @@ const BEGIN_STEP := &"BeginStep"
 const SKIP_STEP := &"SkipStep"
 const CANCEL_PROMPT := &"CancelPrompt"
 const GM_CORRECTION := &"GmCorrection"
+const OVERRIDE_SHOWN_ROLE := &"OverrideShownRole"
 
 var type: StringName = &""
 var payload: Dictionary = {}
@@ -52,6 +53,12 @@ static func answer_choice(prompt_id: int, stage: String, choice: bool) -> Comman
 ## Mehrstufiger Prompt: Antwort auf eine Auswahlstufe (z. B. Giftziel).
 static func answer_stage_targets(prompt_id: int, stage: String, targets: Array) -> Command:
 	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "targets": targets})
+
+
+## Orakel-Prompt in der Stufe „Gezeigt“: gezeigtes Ergebnis übersteuern (Spielleiter,
+## bestätigte Warnung und Begründung). Wahrheit und ermitteltes Ergebnis bleiben unverändert.
+static func override_shown_role(prompt_id: int, shown_role: String, reason: String) -> Command:
+	return create(OVERRIDE_SHOWN_ROLE, {"prompt_id": prompt_id, "shown_role": shown_role, "reason": reason, "confirmed": true})
 
 
 static func end_night() -> Command:

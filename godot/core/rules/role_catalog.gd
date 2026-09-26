@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) sowie die Vertical-Slice-Rollen `sensentraeger`, `schutzengel` und `waldhexe`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) sowie die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe` und `das-orakel`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -20,16 +20,20 @@ const SCHUTZENGEL := &"schutzengel"
 ## Waldhexe / Forest Witch (rules-register.md §6, DR-06): Dorf, Nachtschritt nach dem
 ## Rudel, je ein Heil- und Gifttrank pro Person und Partie (WitchStep).
 const WALDHEXE := &"waldhexe"
+## Orakel / The Oracle (rules-register.md §4, DR-07): Dorf, Nachtschritt nach der
+## Waldhexe, prüft eine andere lebende Person (OracleStep, InformationRules).
+const ORAKEL := &"das-orakel"
 
-## Lage eines persönlichen Nachtschritts relativ zum Rudelschritt.
-const BEFORE_PACK := &"before_pack"
-const AFTER_PACK := &"after_pack"
+## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
+## Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
+const PACK_PRIORITY := 20
 
 const ROLES := {
 	DORFBEWOHNER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFBEWOHNER},
 	WERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": WERWOLF},
-	SCHUTZENGEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZENGEL, "night_step": BEFORE_PACK},
-	WALDHEXE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDHEXE, "night_step": AFTER_PACK},
+	SCHUTZENGEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZENGEL, "night_priority": 13},
+	WALDHEXE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDHEXE, "night_priority": 34},
+	ORAKEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ORAKEL, "night_priority": 46},
 	SENSENTRAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SENSENTRAEGER, "death_reaction": Reaction.KIND_CURSE},
 }
 
@@ -55,10 +59,10 @@ static func death_reaction(role_id: StringName) -> StringName:
 	return (ROLES[role_id] as Dictionary).get("death_reaction", &"")
 
 
-## Lage des eigenen Nachtschritts jeder lebenden Person mit dieser Rolle:
-## BEFORE_PACK, AFTER_PACK oder &"" ohne eigenen Nachtschritt.
-static func night_step(role_id: StringName) -> StringName:
-	return (ROLES[role_id] as Dictionary).get("night_step", &"")
+## Nachtpriorität des eigenen Schritts jeder lebenden Person mit dieser Rolle
+## (vergleichbar mit PACK_PRIORITY) oder 0 ohne eigenen Nachtschritt.
+static func night_priority(role_id: StringName) -> int:
+	return (ROLES[role_id] as Dictionary).get("night_priority", 0)
 
 
 ## Höchstzahl je Partie oder UNLIMITED, wenn die Rolle keine eigene Grenze hat.

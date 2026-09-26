@@ -62,7 +62,7 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 		Command.BEGIN_STEP, Command.SKIP_STEP:
 			if not [Phase.NIGHT, Phase.DAWN_RESOLUTION, Phase.DAY].has(state.phase):
 				return &"wrong_phase"
-		Command.CANCEL_PROMPT:
+		Command.CANCEL_PROMPT, Command.OVERRIDE_SHOWN_ROLE:
 			if state.pending_prompt == null:
 				return &"no_open_prompt"
 		Command.GM_CORRECTION:

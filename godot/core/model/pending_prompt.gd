@@ -1,9 +1,10 @@
 class_name PendingPrompt
 extends RefCounted
 ## Offene Eingabe als Teil des Spielstands (03 §5.5, A-10). Genutzt für die
-## Opferwahl des Rudels, Schutzengel, Reaktionen und die mehrstufige Kette der
-## Waldhexe (B-05): Dort stehen die bisherigen Teilantworten in `partial` und die
-## aktuelle Stufe in `stage` (WitchStep); einstufige Prompts haben `stage` = &"".
+## Opferwahl des Rudels, Schutzengel, Reaktionen und die mehrstufigen Prompts von
+## Waldhexe und Orakel (B-05): Dort stehen die bisherigen Teilantworten in `partial` und
+## die aktuelle Stufe in `stage` (WitchStep, OracleStep); einstufige Prompts haben
+## `stage` = &"". Den Bezug zum übrigen Zustand prüft GameState.from_dict.
 
 const KIND_PICK_PLAYERS := &"pick_players"
 const OWNER_PACK := &"pack"
@@ -11,6 +12,8 @@ const OWNER_REACTION := &"reaction"
 const OWNER_GUARD := &"schutzengel"
 const OWNER_WITCH := &"waldhexe"
 const KIND_WITCH_CHAIN := &"witch_chain"
+const OWNER_ORACLE := &"das-orakel"
+const KIND_ORACLE_CHECK := &"oracle_check"
 
 var id: int = 0
 var kind: StringName = KIND_PICK_PLAYERS
@@ -60,6 +63,9 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 	# Die Stufe muss zu den gespeicherten Teilantworten passen, sonst wäre die Fortsetzung mehrdeutig.
 	if p.owner == OWNER_WITCH:
 		if not WitchStep.is_consistent(p):
+			return null
+	elif p.owner == OWNER_ORACLE:
+		if not OracleStep.STAGES.has(p.stage):
 			return null
 	elif p.stage != &"":
 		return null

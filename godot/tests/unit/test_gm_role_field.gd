@@ -32,7 +32,7 @@ func test_only_allowed_fields_and_values() -> void:
 	var s := _setup()
 	for field: String in ["role_id", "faction", "counts_as_wolf", "alive", "original_role_id", "name", ""]:
 		apply_rejected(s, CorrectionFixtures.gm("set_role_field", {"target_id": 1, "field": field, "value": "dorfbewohner"}), "field_not_correctable", "Feld '%s'" % field)
-	apply_rejected(s, CorrectionFixtures.gm("set_role_field", {"target_id": 1, "field": "appears_as", "value": "das-orakel"}), "invalid_value", "unbekannte Rolle")
+	apply_rejected(s, CorrectionFixtures.gm("set_role_field", {"target_id": 1, "field": "appears_as", "value": "trugbilderwolf"}), "invalid_value", "unbekannte Rolle")
 	apply_rejected(s, CorrectionFixtures.gm("set_role_field", {"target_id": 1, "field": "appears_as", "value": ""}), "invalid_value", "leerer Wert")
 	apply_rejected(s, CorrectionFixtures.gm("set_role_field", {"target_id": 1, "field": "appears_as", "value": 7}), "invalid_value", "kein Text")
 	apply_rejected(s, CorrectionFixtures.gm("set_role_field", {"target_id": 1, "field": "appears_as", "value": "werwolf"}), "no_change", "gleicher Wert")
