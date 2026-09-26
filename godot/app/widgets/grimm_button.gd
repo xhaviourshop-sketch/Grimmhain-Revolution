@@ -5,12 +5,13 @@ extends Button
 ## `wrap` (Standard an) bricht lange Beschriftungen um statt sie abzuschneiden; nur für
 ## Buttons, deren Breite der Container vorgibt. Buttons mit Inhaltsbreite (Kopfzeile) ohne.
 
-enum Kind { PRIMARY, SECONDARY, DANGER }
+enum Kind { PRIMARY, SECONDARY, DANGER, COMPACT }
 
 const _VARIATIONS := {
 	Kind.PRIMARY: &"PrimaryButton",
 	Kind.SECONDARY: &"SecondaryButton",
 	Kind.DANGER: &"DangerButton",
+	Kind.COMPACT: &"CompactButton",  ## kleinere Schrift für Listenzeilen, weiterhin 48 hoch
 }
 
 @export var text_key: String = "":
@@ -55,4 +56,6 @@ func _apply_kind() -> void:
 	if kind == Kind.PRIMARY:
 		height = ThemeTokens.BUTTON_PRIMARY_HEIGHT
 		width = ThemeTokens.BUTTON_PRIMARY_MIN_WIDTH
+	elif kind == Kind.COMPACT:
+		height = ThemeTokens.TOUCH_MIN
 	custom_minimum_size = Vector2(width, height)

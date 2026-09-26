@@ -47,11 +47,17 @@ func _check(shell: Control, label: String) -> void:
 			for j: int in range(i + 1, buttons.size()):
 				assert_false(overlaps(rect_of(buttons[i]), rect_of(buttons[j])), "%s: %s und %s überlappen" % [label, buttons[i].name, buttons[j].name])
 		for c: Control in text_controls(root):
-			if c is BaseButton or (_inside_scroll(c, scroll) and not rect_of(c).intersects(rect_of(scroll))):
+			var text_rect := rect_of(c)
+			if _inside_scroll(c, scroll):
+				# Die Liste schneidet ihren Inhalt ab: nur der sichtbare Ausschnitt zählt.
+				if not text_rect.intersects(rect_of(scroll)):
+					continue
+				text_rect = text_rect.intersection(rect_of(scroll))
+			if c is BaseButton:
 				continue
 			for b: BaseButton in buttons:
 				if not b.is_ancestor_of(c):
-					assert_false(overlaps(rect_of(c), rect_of(b)), "%s: Text %s überdeckt %s" % [label, c.name, b.name])
+					assert_false(overlaps(text_rect, rect_of(b)), "%s: Text %s überdeckt %s" % [label, c.name, b.name])
 	# Kopfzeile und Bestätigungsbereich bleiben immer vollständig sichtbar.
 	for name: String in ["BackButton", "ConfirmPlayersButton", "RestartButton", "CountLabel"]:
 		var c := find_node(screen, name) as Control

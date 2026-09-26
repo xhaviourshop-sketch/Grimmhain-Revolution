@@ -19,6 +19,8 @@ static func build() -> Theme:
 	_toggles(theme)
 	_panels(theme)
 	_containers(theme)
+	_inputs(theme)
+	_scrolling(theme)
 	return theme
 
 
@@ -55,6 +57,11 @@ static func _labels(theme: Theme) -> void:
 		&"HeadingLabel": [ThemeTokens.FONT_HEADING, ThemeTokens.TEXT_PRIMARY],
 		&"MutedLabel": [ThemeTokens.FONT_BODY, ThemeTokens.TEXT_MUTED],
 		&"CaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.TEXT_MUTED],
+		&"ErrorLabel": [ThemeTokens.FONT_BODY, ThemeTokens.DANGER_TEXT],
+		&"WarningLabel": [ThemeTokens.FONT_BODY, ThemeTokens.WARNING_TEXT],
+		&"BadgeLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.WARNING_TEXT],
+		&"SectionLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_PRIMARY],
+		&"ErrorCaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.DANGER_TEXT],
 	}
 	for name: StringName in variations:
 		theme.set_type_variation(name, &"Label")
@@ -74,6 +81,14 @@ static func _buttons(theme: Theme) -> void:
 		if name != &"SecondaryButton":
 			theme.set_type_variation(name, &"Button")
 		_button_type(theme, name, p)
+	# Kompakter Sekundärbutton für Listenzeilen (48 hoch, kleinere Schrift, schmaler Innenrand).
+	theme.set_type_variation(&"CompactButton", &"Button")
+	_button_type(theme, &"CompactButton", palettes[&"SecondaryButton"])
+	theme.set_font_size("font_size", &"CompactButton", ThemeTokens.FONT_COMPACT)
+	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var box := theme.get_stylebox(state, &"CompactButton") as StyleBoxFlat
+		box.content_margin_left = ThemeTokens.SPACE_M
+		box.content_margin_right = ThemeTokens.SPACE_M
 	# Der Grundtyp Button entspricht dem Sekundärbutton.
 	theme.set_type_variation(&"SecondaryButton", &"Button")
 	_button_type(theme, &"Button", palettes[&"SecondaryButton"])
@@ -174,6 +189,9 @@ static func _panels(theme: Theme) -> void:
 		&"StatusBadge": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S),
 		&"DialogPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
 		&"ToastPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
+		&"PersonRowPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		&"WarningBadge": _panel(ThemeTokens.BG_APP, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_XS),
+		&"SummaryPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
 	}
 	for name: StringName in variations:
 		var base := &"Panel" if name == &"AppBackground" else &"PanelContainer"
@@ -199,3 +217,36 @@ static func _containers(theme: Theme) -> void:
 	theme.set_type_variation(&"ScreenMargin", &"MarginContainer")
 	for side: String in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
 		theme.set_constant(side, &"ScreenMargin", ThemeTokens.SCREEN_PADDING)
+
+
+## Texteingaben (LineEdit, TextEdit): dunkle Fläche, Goldrahmen im Fokus, gut lesbarer Platzhalter.
+static func _inputs(theme: Theme) -> void:
+	for type: StringName in [&"LineEdit", &"TextEdit"]:
+		theme.set_stylebox("normal", type, _box(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S))
+		theme.set_stylebox("focus", type, _box(ThemeTokens.BG_APP, ThemeTokens.FOCUS_RING, ThemeTokens.FOCUS_WIDTH, ThemeTokens.RADIUS_S))
+		theme.set_stylebox("read_only", type, _box(ThemeTokens.DISABLED_FILL, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S))
+		theme.set_color("font_color", type, ThemeTokens.TEXT_PRIMARY)
+		theme.set_color("font_readonly_color", type, ThemeTokens.TEXT_DISABLED)
+		theme.set_color("font_placeholder_color", type, ThemeTokens.TEXT_MUTED)
+		theme.set_color("caret_color", type, ThemeTokens.GOLD_BRIGHT)
+		theme.set_color("selection_color", type, Color(ThemeTokens.GOLD_DEEP, 0.55))
+		theme.set_font_size("font_size", type, ThemeTokens.FONT_BODY)
+
+
+## Scrollleiste breit genug für Touch-Rückmeldung; Tooltips im Grimmhain-Stil.
+static func _scrolling(theme: Theme) -> void:
+	var track := StyleBoxFlat.new()
+	track.bg_color = ThemeTokens.BG_APP
+	track.set_corner_radius_all(ThemeTokens.RADIUS_S)
+	track.content_margin_left = ThemeTokens.SCROLLBAR_WIDTH / 2.0
+	track.content_margin_right = ThemeTokens.SCROLLBAR_WIDTH / 2.0
+	theme.set_stylebox("scroll", "VScrollBar", track)
+	for state: Array in [["grabber", ThemeTokens.BORDER_SUBTLE], ["grabber_highlight", ThemeTokens.GOLD_DEEP], ["grabber_pressed", ThemeTokens.GOLD]]:
+		var grabber := StyleBoxFlat.new()
+		grabber.bg_color = state[1]
+		grabber.set_corner_radius_all(ThemeTokens.RADIUS_S)
+		theme.set_stylebox(state[0], "VScrollBar", grabber)
+	theme.set_constant("scrollbar_h_separation", "ScrollContainer", ThemeTokens.SPACE_S)
+	theme.set_stylebox("panel", "TooltipPanel", _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S))
+	theme.set_color("font_color", "TooltipLabel", ThemeTokens.TEXT_PRIMARY)
+	theme.set_font_size("font_size", "TooltipLabel", ThemeTokens.FONT_BODY)

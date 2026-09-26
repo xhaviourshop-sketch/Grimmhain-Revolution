@@ -2,6 +2,7 @@ class_name GrimmLabel
 extends Label
 ## Beschriftung nur über Übersetzungsschlüssel. `format_values` füllt Platzhalter wie
 ## `{version}`. Bricht Wörter um statt abzuschneiden und aktualisiert sich beim Sprachwechsel.
+## Ohne Schlüssel ist der Text leer (z. B. eine Meldungszeile ohne aktuelle Meldung).
 
 @export var text_key: String = "":
 	set(value):
@@ -34,6 +35,7 @@ func _notification(what: int) -> void:
 
 func refresh_text() -> void:
 	if text_key == "":
+		text = ""
 		return
 	var translated := tr(text_key)
 	text = translated.format(format_values) if not format_values.is_empty() else translated

@@ -163,3 +163,189 @@ msgstr "Tag"
 
 msgid "ui.phase.game_over"
 msgstr "Spielende"
+
+msgid "ui.setup.title"
+msgstr "Neue Partie · Spieler"
+
+msgid "ui.setup.entry.heading"
+msgstr "Spieler erfassen"
+
+msgid "ui.setup.entry.hint"
+msgstr "Einen Namen eingeben und mit Enter oder „Hinzufügen“ übernehmen."
+
+msgid "ui.setup.input.placeholder"
+msgstr "Name eingeben"
+
+msgid "ui.setup.add"
+msgstr "Hinzufügen"
+
+msgid "ui.setup.import.open"
+msgstr "Mehrere Namen einfügen"
+
+msgid "ui.setup.import.heading"
+msgstr "Mehrere Namen einfügen"
+
+msgid "ui.setup.import.hint"
+msgstr "Namen durch Zeilenumbruch, Komma oder Semikolon trennen. Leere Einträge werden ignoriert."
+
+msgid "ui.setup.import.placeholder"
+msgstr "Anna, Ben; Clara …"
+
+msgid "ui.setup.import.confirm"
+msgstr "Namen übernehmen"
+
+msgid "ui.setup.edit.heading"
+msgstr "Name bearbeiten"
+
+msgid "ui.setup.edit.person"
+msgstr "Spieler Nr. {number}"
+
+msgid "ui.setup.edit.placeholder"
+msgstr "Name"
+
+msgid "ui.setup.edit.save"
+msgstr "Speichern"
+
+msgid "ui.setup.list.heading"
+msgstr "Spielerliste"
+
+msgid "ui.setup.list.empty"
+msgstr "Noch keine Spieler. Namen links eingeben oder mehrere auf einmal einfügen."
+
+msgid "ui.setup.count"
+msgstr "{count} / {max} Spieler"
+
+msgid "ui.setup.hint.minimum"
+msgstr "Mindestens {min} Spieler sind nötig, es fehlen noch {missing}."
+
+msgid "ui.setup.hint.enough"
+msgstr "Mindestzahl erreicht. Weitere Spieler sind möglich."
+
+msgid "ui.setup.hint.full"
+msgstr "Höchstzahl von {max} Spielern erreicht. Weitere Namen sind nicht möglich."
+
+msgid "ui.setup.warning.duplicates_summary"
+msgstr "Hinweis: {count} Spieler tragen einen doppelten Namen. Das ist erlaubt; unterscheide sie über die Nummer."
+
+msgid "ui.setup.warning.duplicate_added"
+msgstr "Hinweis: „{name}“ gibt es bereits. Beide bleiben getrennte Spieler."
+
+msgid "ui.setup.warning.duplicate_renamed"
+msgstr "Hinweis: „{name}“ gibt es jetzt mehrfach. Beide bleiben getrennte Spieler."
+
+msgid "ui.setup.info.imported"
+msgstr "{count} Namen übernommen."
+
+msgid "ui.setup.info.imported_with_duplicates"
+msgstr "Hinweis: {count} Namen übernommen, darunter doppelte Namen."
+
+msgid "ui.setup.confirmed.heading"
+msgstr "Namensschritt vollständig"
+
+msgid "ui.setup.confirmed.body"
+msgstr "Die Spielerliste ist bestätigt. Die Rollenauswahl folgt in einem späteren Schritt. Jede Änderung hebt die Bestätigung wieder auf."
+
+msgid "ui.setup.restart"
+msgstr "Neu beginnen"
+
+msgid "ui.setup.confirm"
+msgstr "Spieler bestätigen"
+
+msgid "ui.setup.status.confirmed"
+msgstr "Bestätigt: {count} Spieler."
+
+msgid "ui.setup.status.ready"
+msgstr "Bereit zum Bestätigen."
+
+msgid "ui.setup.status.incomplete"
+msgstr "Noch {missing} Spieler bis zur Mindestzahl."
+
+msgid "ui.setup.toast.confirmed"
+msgstr "Spielerliste bestätigt"
+
+msgid "ui.setup.person.number"
+msgstr "{number}."
+
+msgid "ui.setup.person.duplicate"
+msgstr "Doppelter Name"
+
+msgid "ui.setup.person.edit"
+msgstr "Bearbeiten"
+
+msgid "ui.setup.person.remove"
+msgstr "Entfernen"
+
+msgid "ui.setup.error.empty_name"
+msgstr "Fehler: Bitte einen Namen eingeben."
+
+msgid "ui.setup.error.invalid_characters"
+msgstr "Fehler: Der Name enthält unzulässige Steuerzeichen (z. B. Tabulator)."
+
+msgid "ui.setup.error.name_too_long"
+msgstr "Fehler: Der Name ist zu lang ({length} Zeichen, höchstens {max})."
+
+msgid "ui.setup.error.too_many_persons"
+msgstr "Fehler: Höchstens {max} Spieler. Die Liste hat {current}, dazu kämen {incoming}. Es wurde nichts übernommen."
+
+msgid "ui.setup.error.too_few_persons"
+msgstr "Fehler: Es fehlen noch {missing} Spieler (mindestens {min})."
+
+msgid "ui.setup.error.unknown_person"
+msgstr "Fehler: Dieser Spieler ist nicht mehr in der Liste."
+
+msgid "ui.setup.error.import_empty"
+msgstr "Fehler: Keine Namen gefunden. Namen durch Zeilen, Kommas oder Semikolons trennen."
+
+msgid "ui.setup.error.invalid_entries"
+msgstr "Fehler: {count} Einträge sind ungültig. Es wurde nichts übernommen.\n{entries}"
+
+msgid "ui.setup.error.entry"
+msgstr "Eintrag {position} „{name}“: {reason}"
+
+msgid "ui.setup.error.entries_more"
+msgstr "… und {count} weitere"
+
+msgid "ui.setup.error.also_too_many"
+msgstr "Außerdem wären es mehr als {max} Spieler."
+
+msgid "ui.setup.reason.empty_name"
+msgstr "leer"
+
+msgid "ui.setup.reason.invalid_characters"
+msgstr "enthält Steuerzeichen"
+
+msgid "ui.setup.reason.name_too_long"
+msgstr "zu lang (höchstens {max_length} Zeichen)"
+
+msgid "ui.setup.dialog.leave.title"
+msgstr "Änderungen nicht bestätigt"
+
+msgid "ui.setup.dialog.leave.message"
+msgstr "Die Spielerliste hat unbestätigte Änderungen. Du kannst weiter bearbeiten, den Entwurf behalten oder ihn verwerfen."
+
+msgid "ui.setup.dialog.leave.continue"
+msgstr "Weiter bearbeiten"
+
+msgid "ui.setup.dialog.leave.keep"
+msgstr "Entwurf behalten"
+
+msgid "ui.setup.dialog.leave.discard"
+msgstr "Entwurf verwerfen"
+
+msgid "ui.setup.dialog.remove.title"
+msgstr "Spieler entfernen?"
+
+msgid "ui.setup.dialog.remove.message"
+msgstr "„{name}“ (Nr. {number}) wird aus der Liste entfernt."
+
+msgid "ui.setup.dialog.remove.confirm"
+msgstr "Entfernen"
+
+msgid "ui.setup.dialog.restart.title"
+msgstr "Neu beginnen?"
+
+msgid "ui.setup.dialog.restart.message"
+msgstr "Alle {count} Namen werden gelöscht. Die Nummerierung beginnt wieder bei 1."
+
+msgid "ui.setup.dialog.restart.confirm"
+msgstr "Alles löschen"

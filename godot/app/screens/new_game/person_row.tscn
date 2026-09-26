@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/new_game/person_row.gd" id="1_row"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+
+[node name="PersonRow" type="PanelContainer"]
+theme_type_variation = &"PersonRowPanel"
+script = ExtResource("1_row")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="NumberLabel" type="Label" parent="Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.setup.person.number"
+wrap = false
+
+[node name="NameBox" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="Row/NameBox" groups=["user_content"]]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 1
+autowrap_mode = 3
+
+[node name="DuplicateBadge" type="PanelContainer" parent="Row/NameBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"WarningBadge"
+
+[node name="DuplicateLabel" type="Label" parent="Row/NameBox/DuplicateBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.person.duplicate"
+wrap = false
+
+[node name="EditButton" type="Button" parent="Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.person.edit"
+kind = 3
+wrap = false
+
+[node name="RemoveButton" type="Button" parent="Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.person.remove"
+kind = 3
+wrap = false

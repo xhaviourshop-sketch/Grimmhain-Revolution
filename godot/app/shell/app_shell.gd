@@ -2,7 +2,7 @@ class_name AppShell
 extends Control
 ## App-Shell (Wurzel von main.tscn): Theme, Dienste (AppContext), sichere Fläche, Router,
 ## Dialog und Statusmeldungen. Einzige Stelle für Zurück: Button, Escape (ui_cancel) und
-## System-Zurück (Android) laufen über `go_back()`:
+## System-Zurück (Android) laufen über `go_back()` (Escape wird vor der GUI abgefangen):
 ##   1. offener Dialog → schließen
 ##   2. Ansicht erledigt Zurück selbst (`handle_back`)
 ##   3. Elternansicht vorhanden → dorthin
@@ -39,9 +39,11 @@ func _ready() -> void:
 	_router.navigate(ScreenIds.START)
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"ui_cancel"):
-		accept_event()
+## Escape vor der GUI behandeln: Textfelder (LineEdit) verbrauchen `ui_cancel` sonst selbst,
+## dann wäre Zurück aus einem fokussierten Eingabefeld unmöglich.
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.is_action_pressed(&"ui_cancel"):
+		get_viewport().set_input_as_handled()
 		go_back()
 
 

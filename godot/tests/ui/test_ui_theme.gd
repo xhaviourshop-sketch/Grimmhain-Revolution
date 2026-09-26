@@ -69,6 +69,8 @@ func test_text_contrast() -> void:
 		["TEXT_MUTED", "BG_SURFACE", 4.5], ["TEXT_MUTED", "BG_APP", 4.5], ["TEXT_ON_GOLD", "GOLD", 4.5],
 		["TEXT_ON_GOLD", "GOLD_BRIGHT", 4.5], ["TEXT_PRIMARY", "DANGER", 4.5], ["GOLD", "BG_SURFACE", 4.5],
 		["FOCUS_RING", "BG_APP", 3.0], ["FOCUS_RING", "BG_SURFACE", 3.0],
+		["DANGER_TEXT", "BG_SURFACE", 4.5], ["DANGER_TEXT", "BG_APP", 4.5], ["WARNING_TEXT", "BG_SURFACE", 4.5],
+		["WARNING_TEXT", "BG_APP", 4.5], ["TEXT_PRIMARY", "BG_SURFACE_RAISED", 4.5], ["TEXT_MUTED", "BG_SURFACE_RAISED", 4.5],
 	]
 	for pair: Array in pairs:
 		if not (c.get(pair[0]) is Color and c.get(pair[1]) is Color):
