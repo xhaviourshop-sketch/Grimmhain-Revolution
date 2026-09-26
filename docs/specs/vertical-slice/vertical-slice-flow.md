@@ -78,7 +78,7 @@ Keine Rolle erscheint im Cockpit, solange eine Spieleransicht aktiv ist. Wölfe 
 
 Regeln des Ablaufs:
 
-- Immer genau ein aktiver Schritt. Der Spielleiter kann einen Schritt mit Grund überspringen (`SkipStep`), das Ergebnis ist „keine Wirkung".
+- Immer genau ein aktiver Schritt. Der Spielleiter kann den Rudelschritt mit Grund überspringen (`SkipStep`), das Ergebnis ist „kein Angriff". Der Schutzengelschritt ist eine Pflichtauswahl und nie überspringbar; vor der Bestätigung kann er abgebrochen und erneut angeboten werden.
 - Ein Schritt eines inzwischen toten Rolleninhabers hat keine Wirkung und wird mit Grund „tot" angezeigt.
 - Ein offener Prompt (auch mitten in der Hexen- oder Lehrlingskette) blockiert `EndNight` und wird bei jedem Checkpoint mit allen Teilantworten gespeichert.
 - `CancelPrompt` stellt den Zustand vor dem Prompt exakt wieder her (gleicher fachlicher Hash).
