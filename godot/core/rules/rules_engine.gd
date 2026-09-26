@@ -121,7 +121,8 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 	var has_wolf := false
 	var has_village := false
 	for r: StringName in counts:
-		if int(counts[r]) > RoleCatalog.max_copies(r):
+		var limit := RoleCatalog.max_copies(r)
+		if limit != RoleCatalog.UNLIMITED and int(counts[r]) > limit:
 			return &"role_limit_exceeded"
 		has_wolf = has_wolf or RoleCatalog.counts_as_wolf(r)
 		has_village = has_village or RoleCatalog.faction_of(r) == Faction.VILLAGE
