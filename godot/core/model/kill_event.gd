@@ -5,18 +5,22 @@ extends RefCounted
 
 const CAUSE_NIGHT_KILL := &"NIGHT_KILL"
 const CAUSE_LYNCH := &"LYNCH"
-const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH]
+const CAUSE_HUNTER_SHOT := &"HUNTER_SHOT"      ## Fluch nach dem Tod (Sensenträger-Reaktion)
+const CAUSE_GM_CORRECTION := &"GM_CORRECTION"  ## Spielleiterkorrektur
+const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION]
 
 const SOURCE_PACK := &"pack"        ## Rudel (alle lebenden Wölfe gemeinsam)
 const SOURCE_VILLAGE := &"village"  ## Hinrichtung nach physischer Abstimmung
-const SOURCES: Array[StringName] = [SOURCE_PACK, SOURCE_VILLAGE]
+const SOURCE_PLAYER := &"player"    ## eine Person (source_id)
+const SOURCE_GM := &"gm"            ## Spielleiter
+const SOURCES: Array[StringName] = [SOURCE_PACK, SOURCE_VILLAGE, SOURCE_PLAYER, SOURCE_GM]
 
 const INTERCEPTION_NONE := &"none"
 
 var target_id: int = -1
 var cause: StringName = &""
 var source_kind: StringName = &""
-var source_id: int = -1  ## Person als Quelle; -1 bei Rudel/Dorf
+var source_id: int = -1  ## Person als Quelle; -1 bei Rudel/Dorf/Spielleiter
 var phase: StringName = &""
 var phase_number: int = 0  ## Nachtnummer in NIGHT/DAWN_RESOLUTION, sonst Tagesnummer
 var order_index: int = 0   ## fortlaufende Nummer aller Tode der Partie

@@ -11,10 +11,14 @@ const UNLIMITED := -1
 
 const DORFBEWOHNER := &"dorfbewohner"
 const WERWOLF := &"werwolf"
+## Nur für Tests (StartGame mit test_mode): minimaler Sensenträger, dessen Tod eine
+## Fluch-Reaktion einreiht. Keine Produktionsrolle.
+const TEST_SENSENTRAEGER := &"test-sensentraeger"
 
 const ROLES := {
 	DORFBEWOHNER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFBEWOHNER},
 	WERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": WERWOLF},
+	TEST_SENSENTRAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": TEST_SENSENTRAEGER, "death_reaction": Reaction.KIND_CURSE, "test_only": true},
 }
 
 
@@ -32,6 +36,15 @@ static func counts_as_wolf(role_id: StringName) -> bool:
 
 static func appears_as(role_id: StringName) -> StringName:
 	return ROLES[role_id]["appears_as"]
+
+
+## Art der Todesreaktion oder &"" ohne Reaktion.
+static func death_reaction(role_id: StringName) -> StringName:
+	return (ROLES[role_id] as Dictionary).get("death_reaction", &"")
+
+
+static func is_test_only(role_id: StringName) -> bool:
+	return (ROLES[role_id] as Dictionary).get("test_only", false)
 
 
 ## Höchstzahl je Partie oder UNLIMITED, wenn die Rolle keine eigene Grenze hat.

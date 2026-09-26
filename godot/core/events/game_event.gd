@@ -20,6 +20,14 @@ const DAY_ENDED := &"DayEnded"
 const WIN_DETECTED := &"WinDetected"
 const WIN_CONFIRMED := &"WinConfirmed"
 const WIN_REJECTED := &"WinRejected"
+const WIN_STATUS_PROVISIONAL := &"WinStatusProvisional"  ## DR-14: nach jedem Tod
+const WIN_STATUS_FINAL := &"WinStatusFinal"              ## DR-14: nach allen Reaktionen
+const STEP_BEGUN := &"StepBegun"
+const STEP_SKIPPED := &"StepSkipped"
+const PROMPT_CANCELLED := &"PromptCancelled"
+const REACTION_QUEUED := &"ReactionQueued"
+const REACTION_RESOLVED := &"ReactionResolved"
+const GM_CORRECTED := &"GmCorrected"
 
 var index: int = 0          ## fortlaufend über die ganze Partie
 var command_index: int = 0  ## Index des auslösenden Befehls

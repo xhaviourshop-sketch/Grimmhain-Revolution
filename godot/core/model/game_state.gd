@@ -4,8 +4,10 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 1
-const RULES_VERSION := &"grimmhain-core-0.1"
+const SCHEMA_VERSION := 2  ## 2: Nachtplan, Reaktionswarteschlange, vorläufiger Siegstatus
+const RULES_VERSION := &"grimmhain-core-0.2"
+## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
+const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
 
 var schema_version: int = SCHEMA_VERSION
@@ -20,6 +22,11 @@ var players: Dictionary[int, Player] = {}
 var seat_order: Array[int] = []  ## Personen-IDs im Uhrzeigersinn ab Sitz 0
 var pending_prompt: PendingPrompt = null
 var pack_target_id: int = NO_TARGET  ## gewähltes Rudelopfer der laufenden Nacht
+var night_plan: Array[StringName] = []  ## Schritte der laufenden Nacht in Reihenfolge
+var next_night_step: int = 0            ## Index des nächsten nicht erledigten Nachtschritts
+var reactions: Array[Reaction] = []     ## offene Reaktionen, erste = nächste
+var provisional_win: Array = []         ## vorläufiger Siegstatus seit dem letzten Tod (DR-14)
+var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (DR-14)
 var nominations: Array[Nomination] = []
 var win_candidate: WinCandidate = null  ## offener Kandidat
 var winner: WinCandidate = null         ## bestätigter Sieg
@@ -28,6 +35,7 @@ var next_event_index: int = 1
 var next_prompt_id: int = 1
 var next_candidate_id: int = 1
 var next_death_order: int = 1
+var next_reaction_id: int = 1
 
 
 func is_started() -> bool:
@@ -57,9 +65,14 @@ func nominations_on_day(day: int) -> Array[Nomination]:
 	return result
 
 
-## Fachlicher Hash (AS-C07): SHA-256 über die kanonische JSON-Darstellung.
+## Fachlicher Hash (AS-C07, AS-A02): SHA-256 über die kanonische JSON-Darstellung
+## ohne reine Zählfelder. Ein abgebrochener Schritt hinterlässt so denselben Hash
+## wie vor seinem Beginn. Replay- und Integritätsprüfung vergleichen den vollständigen Zustand.
 func content_hash() -> String:
-	return CanonicalJson.sha256(to_dict())
+	var d := to_dict()
+	for key: String in HASH_EXCLUDED_KEYS:
+		d.erase(key)
+	return CanonicalJson.sha256(d)
 
 
 func duplicate_state() -> GameState:
@@ -76,6 +89,12 @@ func to_dict() -> Dictionary:
 	var nomination_list: Array = []
 	for n: Nomination in nominations:
 		nomination_list.append(n.to_dict())
+	var reaction_list: Array = []
+	for r: Reaction in reactions:
+		reaction_list.append(r.to_dict())
+	var plan: Array = []
+	for step: StringName in night_plan:
+		plan.append(String(step))
 	return {
 		"schema_version": schema_version,
 		"rules_version": String(rules_version),
@@ -89,6 +108,11 @@ func to_dict() -> Dictionary:
 		"seat_order": seat_order.duplicate(),
 		"pending_prompt": pending_prompt.to_dict() if pending_prompt != null else null,
 		"pack_target_id": pack_target_id,
+		"night_plan": plan,
+		"next_night_step": next_night_step,
+		"reactions": reaction_list,
+		"provisional_win": provisional_win.duplicate(true),
+		"win_check_pending": win_check_pending,
 		"nominations": nomination_list,
 		"win_candidate": win_candidate.to_dict() if win_candidate != null else null,
 		"winner": winner.to_dict() if winner != null else null,
@@ -98,6 +122,7 @@ func to_dict() -> Dictionary:
 			"prompt": next_prompt_id,
 			"candidate": next_candidate_id,
 			"death_order": next_death_order,
+			"reaction": next_reaction_id,
 		},
 	}
 
@@ -144,6 +169,22 @@ static func from_dict(d: Dictionary) -> GameState:
 		if s.pending_prompt == null:
 			return null
 	s.pack_target_id = DictRead.get_int(d, "pack_target_id", NO_TARGET)
+	for step: Variant in DictRead.get_array(d, "night_plan"):
+		if not (step is String or step is StringName):
+			return null
+		s.night_plan.append(StringName(step))
+	s.next_night_step = DictRead.get_int(d, "next_night_step")
+	if s.next_night_step < 0 or s.next_night_step > s.night_plan.size():
+		return null
+	for item: Variant in DictRead.get_array(d, "reactions"):
+		if not item is Dictionary:
+			return null
+		var r := Reaction.from_dict(item)
+		if r == null:
+			return null
+		s.reactions.append(r)
+	s.provisional_win = DictRead.get_array(d, "provisional_win").duplicate(true)
+	s.win_check_pending = DictRead.get_bool(d, "win_check_pending")
 	for item: Variant in DictRead.get_array(d, "nominations"):
 		if not item is Dictionary:
 			return null
@@ -158,4 +199,5 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.next_prompt_id = DictRead.get_int(next_ids, "prompt", 1)
 	s.next_candidate_id = DictRead.get_int(next_ids, "candidate", 1)
 	s.next_death_order = DictRead.get_int(next_ids, "death_order", 1)
+	s.next_reaction_id = DictRead.get_int(next_ids, "reaction", 1)
 	return s

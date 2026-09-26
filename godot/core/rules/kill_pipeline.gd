@@ -4,11 +4,13 @@ extends RefCounted
 ##   1. Ziel tot? → abbrechen (protokolliert)
 ##   2. Tod anwenden → KillEvent mit Ursache, Quelle, Ziel, Zeitpunkt, Abfangstatus
 ##   3. Ereignis SeatDied
-## Die Siegprüfung folgt am Ende des Befehls (RulesEngine), sobald ein Tod eintrat.
-## Abfangregeln (Schutz, Rettung, Spiegelung) und Folgetode kommen mit B-04/B-06.
+##   4. Todesfolgen: Reaktion der Rolle einreihen (nur mit trigger_effects, G-TOD-2)
+##   5. vorläufiger Siegstatus (DR-14); die verbindliche Prüfung folgt am Befehlsende,
+##      sobald keine Reaktion mehr offen ist
+## Abfangregeln (Schutz, Rettung, Spiegelung) kommen mit B-04.
 
 
-static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1) -> KillEvent:
+static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true) -> KillEvent:
 	var s := ctx.state
 	var target: Player = s.players.get(target_id)
 	if target == null or not target.alive:
@@ -30,4 +32,23 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	ctx.deaths += 1
 	# Nur Spielleiter: Was öffentlich verkündet wird, entscheidet DR-04 (offen).
 	ctx.emit(GameEvent.SEAT_DIED, Visibility.GM, record.to_dict())
+	if trigger_effects:
+		_queue_reaction(ctx, target, record)
+	WinRules.record_provisional(ctx, record)
 	return record
+
+
+## Reiht die Todesreaktion der Rolle ein (falls vorhanden). Reihenfolge = Einreihung.
+static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent) -> void:
+	var kind := RoleCatalog.death_reaction(target.role_id)
+	if kind == &"":
+		return
+	var s := ctx.state
+	var reaction := Reaction.new()
+	reaction.id = s.next_reaction_id
+	s.next_reaction_id += 1
+	reaction.kind = kind
+	reaction.owner_id = target.id
+	reaction.trigger_order = record.order_index
+	s.reactions.append(reaction)
+	ctx.emit(GameEvent.REACTION_QUEUED, Visibility.GM, {"reaction": reaction.to_dict()})

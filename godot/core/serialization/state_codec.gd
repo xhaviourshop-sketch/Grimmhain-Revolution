@@ -39,11 +39,15 @@ static func decode(text: String) -> LoadResult:
 	var doc: Dictionary = data
 	if DictRead.get_string(doc, "format") != FORMAT:
 		return LoadResult.failed(&"wrong_format")
-	if DictRead.get_int(doc, "schema_version", -1) != GameState.SCHEMA_VERSION:
-		# Später: Migrationskette core/serialization/migrations/ (03 §6.2).
-		return LoadResult.failed(&"unsupported_schema_version")
+	var found_schema := DictRead.get_int(doc, "schema_version", -1)
+	if found_schema != GameState.SCHEMA_VERSION:
+		# Keine Migration: Schema 1 (Core-Slice ohne Reaktionen) kannte weder Nachtplan noch
+		# Reaktionswarteschlange; solche Stände werden mit klarer Meldung abgelehnt.
+		return LoadResult.failed(&"unsupported_schema_version",
+			"Spielstand-Schema %d wird nicht unterstützt, erwartet wird Schema %d." % [found_schema, GameState.SCHEMA_VERSION])
 	if DictRead.get_string(doc, "rules_version") != String(GameState.RULES_VERSION):
-		return LoadResult.failed(&"unsupported_rules_version")
+		return LoadResult.failed(&"unsupported_rules_version",
+			"Regelversion %s wird nicht unterstützt, erwartet wird %s." % [DictRead.get_string(doc, "rules_version"), GameState.RULES_VERSION])
 
 	var body := doc.duplicate(true)
 	body.erase("integrity")
@@ -64,7 +68,8 @@ static func decode(text: String) -> LoadResult:
 	var replayed := RulesEngine.replay(commands)
 	if not replayed.ok:
 		return LoadResult.failed(&"replay_rejected")
-	if replayed.state.content_hash() != state.content_hash():
+	# Vollständiger Vergleich (inklusive Zählfeldern, die der fachliche Hash auslässt).
+	if CanonicalJson.stringify(replayed.state.to_dict()) != CanonicalJson.stringify(state.to_dict()):
 		return LoadResult.failed(&"replay_mismatch")
 
 	var result := LoadResult.new()

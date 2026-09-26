@@ -1,15 +1,19 @@
 class_name WinRules
 extends RefCounted
-## Einzige Siegprüfung (A-17, G-SIEG-1/2/4). Erzeugt höchstens einen Kandidaten,
-## nie direkt einen Sieger.
+## Einzige Siegprüfung (A-17, G-SIEG-1/2/4) mit zwei Stufen nach DR-14:
+##   vorläufig:   nach jedem Tod (Ereignis WinStatusProvisional), beendet nichts
+##   verbindlich: erst wenn keine Reaktion mehr offen ist (WinStatusFinal);
+##                nur dann entsteht ein Kandidat zur Spielleiterbestätigung
+## Bedingungen:
 ##   Dorf:      kein lebender Mensch zählt als Wolf.
 ##   Werwölfe:  lebende Wölfe ≥ lebende Nicht-Wölfe.
-## Beide Bedingungen gelten nur gleichzeitig, wenn niemand lebt. Diesen Fall regelt
-## DR-02 (offen); bis dahin entsteht dort kein automatischer Kandidat.
+## DR-02: Sind mehrere Bedingungen zugleich erfüllt (im Core-Slice nur, wenn niemand
+## lebt), gibt es keine automatische Priorität und keinen automatischen Kandidaten;
+## der Spielleiter erklärt das Ergebnis per GmCorrection „declare_winner“.
 
 
-## Liefert {} oder {kind, reason_key, reason_args}.
-static func evaluate(state: GameState) -> Dictionary:
+## Alle erfüllten Siegbedingungen: [{kind, reason_key, reason_args}], stabil sortiert.
+static func evaluate(state: GameState) -> Array:
 	var wolves := 0
 	var non_wolves := 0
 	for id: int in state.alive_ids():
@@ -18,29 +22,44 @@ static func evaluate(state: GameState) -> Dictionary:
 		else:
 			non_wolves += 1
 	var args := {"wolves": wolves, "non_wolves": non_wolves}
-	if wolves + non_wolves == 0:
-		return {}
+	var results: Array = []
 	if wolves == 0:
-		return {"kind": Faction.VILLAGE, "reason_key": WinCandidate.REASON_NO_WOLVES_ALIVE, "reason_args": args}
+		results.append({"kind": String(Faction.VILLAGE), "reason_key": String(WinCandidate.REASON_NO_WOLVES_ALIVE), "reason_args": args.duplicate()})
 	if wolves >= non_wolves:
-		return {"kind": Faction.WOLVES, "reason_key": WinCandidate.REASON_WOLF_PARITY, "reason_args": args}
-	return {}
+		results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate()})
+	return results
 
 
-## Legt bei Bedarf einen offenen Kandidaten an. Ein offener Kandidat oder ein
-## bestätigter Sieger wird nie überschrieben.
-static func check(ctx: RuleContext) -> void:
+## Nach jedem Tod: vorläufigen Status berechnen und die verbindliche Prüfung vormerken.
+static func record_provisional(ctx: RuleContext, death: KillEvent) -> void:
 	var s := ctx.state
-	if s.win_candidate != null or s.winner != null:
+	s.provisional_win = evaluate(s)
+	s.win_check_pending = true
+	ctx.emit(GameEvent.WIN_STATUS_PROVISIONAL, Visibility.GM, {
+		"after_death": death.order_index, "living": s.alive_ids().size(), "results": s.provisional_win,
+	})
+
+
+## Am Ende jedes Befehls: verbindliche Prüfung, sobald sie aussteht und keine Reaktion offen ist.
+## Ein offener Kandidat oder ein bestätigter Sieger wird nie überschrieben.
+static func finalize_if_ready(ctx: RuleContext) -> void:
+	var s := ctx.state
+	if not s.win_check_pending or not s.reactions.is_empty() or s.winner != null or s.win_candidate != null:
 		return
-	var result := evaluate(s)
-	if result.is_empty():
+	var results := evaluate(s)
+	s.win_check_pending = false
+	s.provisional_win = []
+	ctx.emit(GameEvent.WIN_STATUS_FINAL, Visibility.GM, {
+		"living": s.alive_ids().size(), "results": results, "requires_gm_decision": results.size() > 1,
+	})
+	if results.size() != 1:
 		return
+	var result: Dictionary = results[0]
 	var candidate := WinCandidate.new()
 	candidate.id = s.next_candidate_id
 	s.next_candidate_id += 1
-	candidate.kind = result["kind"]
-	candidate.reason_key = result["reason_key"]
+	candidate.kind = StringName(result["kind"])
+	candidate.reason_key = StringName(result["reason_key"])
 	candidate.reason_args = result["reason_args"]
 	candidate.status = WinCandidate.STATUS_OPEN
 	candidate.detected_at_command = ctx.command_index

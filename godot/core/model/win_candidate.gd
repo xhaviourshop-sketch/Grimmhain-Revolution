@@ -9,6 +9,7 @@ const STATUS_REJECTED := &"rejected"
 
 const REASON_WOLF_PARITY := &"wolf_parity"          ## G-SIEG-2
 const REASON_NO_WOLVES_ALIVE := &"no_wolves_alive"  ## G-SIEG-1
+const REASON_GM_DECLARED := &"gm_declared"          ## Siegerklärung per GmCorrection (DR-02)
 
 var id: int = 0
 var kind: StringName = &""  ## Faction

@@ -1,11 +1,12 @@
 class_name PendingPrompt
 extends RefCounted
-## Offene Eingabe als Teil des Spielstands (03 §5.5, A-10). Im Core-Slice nur für
-## die Opferwahl des Rudels genutzt. `partial` nimmt später Teilantworten
+## Offene Eingabe als Teil des Spielstands (03 §5.5, A-10). Genutzt für die
+## Opferwahl des Rudels und für Reaktionen. `partial` nimmt später Teilantworten
 ## mehrstufiger Prompts auf (B-05).
 
 const KIND_PICK_PLAYERS := &"pick_players"
 const OWNER_PACK := &"pack"
+const OWNER_REACTION := &"reaction"
 
 var id: int = 0
 var kind: StringName = KIND_PICK_PLAYERS
@@ -16,6 +17,7 @@ var max_count: int = 0
 var allowed_ids: Array[int] = []
 var partial: Dictionary = {}
 var cancellable: bool = false
+var step_id: String = ""  ## Regelschritt, zu dem der Prompt gehört (BeginStep/SkipStep)
 
 
 func to_dict() -> Dictionary:
@@ -29,6 +31,7 @@ func to_dict() -> Dictionary:
 		"allowed_ids": allowed_ids.duplicate(),
 		"partial": partial.duplicate(true),
 		"cancellable": cancellable,
+		"step_id": step_id,
 	}
 
 
@@ -46,4 +49,5 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 	p.allowed_ids = ids
 	p.partial = DictRead.get_dict(d, "partial").duplicate(true)
 	p.cancellable = DictRead.get_bool(d, "cancellable")
+	p.step_id = DictRead.get_string(d, "step_id")
 	return p

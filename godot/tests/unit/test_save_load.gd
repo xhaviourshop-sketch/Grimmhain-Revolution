@@ -37,7 +37,7 @@ func test_save_contains_versions() -> void:
 	var run := RulesEngine.replay(commands)
 	var doc: Dictionary = JSON.parse_string(StateCodec.encode(run.state, commands))
 	assert_eq(String(doc["format"]), "grimmhain-save", "Formatkennung")
-	assert_eq(int(doc["schema_version"]), 1, "schema_version")
+	assert_eq(int(doc["schema_version"]), GameState.SCHEMA_VERSION, "schema_version")
 	assert_eq(String(doc["rules_version"]), String(GameState.RULES_VERSION), "rules_version")
 	assert_eq(String(doc["state_hash"]), run.state.content_hash(), "state_hash = fachlicher Hash")
 	assert_true(String(doc["integrity"]).begins_with("sha256:"), "Integritätsprüfsumme vorhanden")

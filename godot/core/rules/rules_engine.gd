@@ -18,10 +18,14 @@ static func apply(state: GameState, command: Command) -> CommandResult:
 	var next := state.duplicate_state()
 	var ctx := RuleContext.new(next, state.command_count)
 	_execute(ctx, command)
-	if ctx.deaths > 0:
-		WinRules.check(ctx)
+	WinRules.finalize_if_ready(ctx)
 	next.command_count += 1
 	return CommandResult.accepted(next, ctx.events)
+
+
+## Erwarteter nächster Regelschritt für BeginStep/SkipStep oder "" (siehe StepQueue).
+static func next_step_id(state: GameState) -> String:
+	return StepQueue.next_step_id(state)
 
 
 ## Wendet eine Befehlsliste auf einen frischen Zustand an (Replay, Laden).
@@ -58,6 +62,17 @@ static func _validate(s: GameState, c: Command) -> StringName:
 			return _validate_nominate(s, p)
 		Command.DECIDE_EXECUTION:
 			return _validate_execution(s, p)
+		Command.BEGIN_STEP, Command.SKIP_STEP:
+			return _validate_step(s, c)
+		Command.CANCEL_PROMPT:
+			if not DictRead.is_int_like(p.get("prompt_id")) or int(p["prompt_id"]) != s.pending_prompt.id:
+				return &"prompt_mismatch"
+			if not s.pending_prompt.cancellable:
+				return &"prompt_not_cancellable"
+			if DictRead.get_string(p, "reason").strip_edges() == "":
+				return &"reason_required"
+		Command.GM_CORRECTION:
+			return GmCorrections.validate(s, p)
 		Command.CONFIRM_WIN, Command.REJECT_WIN:
 			if s.win_candidate == null:
 				return &"no_open_win_candidate"
@@ -114,8 +129,10 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 			return &"invalid_assignment"
 
 	var counts := {}
+	var test_mode := p.get("test_mode") is bool and bool(p["test_mode"])
 	for r: StringName in roles:
-		if not RoleCatalog.has_role(r):
+		# Testrollen nur mit ausdrücklichem test_mode (headless Tests, keine Produktion).
+		if not RoleCatalog.has_role(r) or (RoleCatalog.is_test_only(r) and not test_mode):
 			return &"unknown_role"
 		counts[r] = int(counts.get(r, 0)) + 1
 	var has_wolf := false
@@ -132,6 +149,24 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 		return &"missing_wolf_role"
 	if not has_village:
 		return &"missing_village_role"
+	return &""
+
+
+static func _validate_step(s: GameState, c: Command) -> StringName:
+	var step_id := DictRead.get_string(c.payload, "step_id")
+	var expected := StepQueue.next_step_id(s)
+	if c.type == Command.BEGIN_STEP and s.pending_prompt != null:
+		return &"step_already_active"
+	if expected == "":
+		return &"no_pending_step"
+	if step_id != expected:
+		return &"step_out_of_order"
+	if c.type == Command.SKIP_STEP:
+		# Pflichtreaktionen werden beantwortet (auch mit Verzicht), nie übersprungen.
+		if StepQueue.is_reaction_step(step_id):
+			return &"step_not_skippable"
+		if DictRead.get_string(c.payload, "reason").strip_edges() == "":
+			return &"reason_required"
 	return &""
 
 
@@ -197,18 +232,17 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 		Command.START_GAME:
 			_start_game(ctx, p)
 		Command.START_NIGHT:
-			PhaseMachine.enter(ctx, Phase.NIGHT)
-			s.pack_target_id = GameState.NO_TARGET
-			_open_pack_prompt(ctx)
+			_start_night(ctx)
 		Command.ANSWER_PROMPT:
-			var prompt := s.pending_prompt
-			var targets: Array[int] = DictRead.to_int_array(p["targets"])
-			if prompt.owner == PendingPrompt.OWNER_PACK:
-				s.pack_target_id = targets[0] if targets.size() == 1 else GameState.NO_TARGET
-			s.pending_prompt = null
-			ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {
-				"prompt_id": prompt.id, "owner": prompt.owner, "targets": targets,
-			})
+			_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
+		Command.BEGIN_STEP:
+			StepQueue.begin(ctx, DictRead.get_string(p, "step_id"))
+		Command.SKIP_STEP:
+			StepQueue.skip(ctx, DictRead.get_string(p, "step_id"), DictRead.get_string(p, "reason").strip_edges())
+		Command.CANCEL_PROMPT:
+			StepQueue.cancel_prompt(ctx, DictRead.get_string(p, "reason").strip_edges())
+		Command.GM_CORRECTION:
+			GmCorrections.execute(ctx, p)
 		Command.END_NIGHT:
 			_resolve_dawn(ctx)
 		Command.NOMINATE:
@@ -294,32 +328,46 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		ctx.emit(GameEvent.ROLE_ASSIGNED, Visibility.ACTOR, {"player_id": id, "role_id": s.players[id].role_id}, id)
 
 
-## Rudelschritt (G-PH-6): existiert, solange mindestens eine lebende Person als Wolf zählt.
-static func _open_pack_prompt(ctx: RuleContext) -> void:
+## Nacht beginnen: Nachtplan berechnen und den ersten Schritt selbst beginnen.
+## Jeder weitere Schritt und jeder erneute Beginn nach CancelPrompt verlangt BeginStep.
+static func _start_night(ctx: RuleContext) -> void:
 	var s := ctx.state
-	var any_wolf := false
-	for id: int in s.alive_ids():
-		any_wolf = any_wolf or s.players[id].counts_as_wolf
-	if not any_wolf:
-		ctx.emit(GameEvent.NIGHT_STEP_SKIPPED, Visibility.GM, {"step": PendingPrompt.OWNER_PACK, "reason": "no_living_wolf"})
+	PhaseMachine.enter(ctx, Phase.NIGHT)
+	s.pack_target_id = GameState.NO_TARGET
+	s.night_plan = StepQueue.build_night_plan(s)
+	s.next_night_step = 0
+	if s.night_plan.is_empty():
+		ctx.emit(GameEvent.NIGHT_STEP_SKIPPED, Visibility.GM, {"step": StepQueue.PACK, "reason": "no_living_wolf"})
 		return
-	var prompt := PendingPrompt.new()
-	prompt.id = s.next_prompt_id
-	s.next_prompt_id += 1
-	prompt.kind = PendingPrompt.KIND_PICK_PLAYERS
-	prompt.owner = PendingPrompt.OWNER_PACK
-	prompt.actor_id = -1
-	prompt.min_count = 0  # 0 = ausdrücklich „kein Opfer“
-	prompt.max_count = 1
-	prompt.allowed_ids = s.alive_ids()  # jede lebende Person, auch ein Wolf (rules-register §2)
-	s.pending_prompt = prompt
-	ctx.emit(GameEvent.PROMPT_OPENED, Visibility.GM, {"prompt": prompt.to_dict()})
+	StepQueue.begin(ctx, StepQueue.night_step_id(s, 0))
 
 
-## Morgenauflösung (vertical-slice-flow.md §4, im Core-Slice ohne Schutz und Reaktionen):
-## NIGHT → DAWN_RESOLUTION → Wolfsopfer stirbt (NIGHT_KILL) → DAY.
-## Der Wechsel zu DAY erfolgt automatisch, weil es keine offenen Reaktionen gibt
-## und BeginDay erst mit B-11 kommt.
+static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
+	var s := ctx.state
+	var prompt := s.pending_prompt
+	s.pending_prompt = null
+	ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {
+		"prompt_id": prompt.id, "owner": prompt.owner, "targets": targets,
+	})
+	var target := targets[0] if targets.size() == 1 else GameState.NO_TARGET
+	match prompt.owner:
+		PendingPrompt.OWNER_PACK:
+			s.pack_target_id = target
+			s.next_night_step += 1
+		PendingPrompt.OWNER_REACTION:
+			var reaction: Reaction = s.reactions.pop_front()
+			ctx.emit(GameEvent.REACTION_RESOLVED, Visibility.GM, {
+				"reaction_id": reaction.id, "owner_id": reaction.owner_id, "target_id": target,
+			})
+			if target != GameState.NO_TARGET:
+				KillPipeline.request_kill(ctx, target, KillEvent.CAUSE_HUNTER_SHOT, KillEvent.SOURCE_PLAYER, reaction.owner_id)
+			_finish_dawn_if_ready(ctx)
+
+
+## Morgenauflösung (vertical-slice-flow.md §4, ohne Schutz):
+## NIGHT → DAWN_RESOLUTION → Wolfsopfer stirbt (NIGHT_KILL) → Reaktionen → DAY.
+## Solange Reaktionen offen sind, bleibt die Phase DAWN_RESOLUTION; der Wechsel zu
+## DAY erfolgt automatisch mit der letzten Reaktion (BeginDay folgt später).
 static func _resolve_dawn(ctx: RuleContext) -> void:
 	var s := ctx.state
 	PhaseMachine.enter(ctx, Phase.DAWN_RESOLUTION)
@@ -328,4 +376,10 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	else:
 		ctx.emit(GameEvent.NO_NIGHT_KILL, Visibility.GM, {"night_number": s.night_number})
 	s.pack_target_id = GameState.NO_TARGET
-	PhaseMachine.enter(ctx, Phase.DAY)
+	_finish_dawn_if_ready(ctx)
+
+
+static func _finish_dawn_if_ready(ctx: RuleContext) -> void:
+	var s := ctx.state
+	if s.phase == Phase.DAWN_RESOLUTION and s.reactions.is_empty() and s.pending_prompt == null:
+		PhaseMachine.enter(ctx, Phase.DAY)

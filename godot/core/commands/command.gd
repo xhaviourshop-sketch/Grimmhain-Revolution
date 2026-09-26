@@ -12,6 +12,10 @@ const DECIDE_EXECUTION := &"DecideExecution"
 const END_DAY := &"EndDay"
 const CONFIRM_WIN := &"ConfirmWin"
 const REJECT_WIN := &"RejectWin"
+const BEGIN_STEP := &"BeginStep"
+const SKIP_STEP := &"SkipStep"
+const CANCEL_PROMPT := &"CancelPrompt"
+const GM_CORRECTION := &"GmCorrection"
 
 var type: StringName = &""
 var payload: Dictionary = {}
@@ -62,6 +66,26 @@ static func confirm_win(candidate_id: int) -> Command:
 
 static func reject_win(candidate_id: int, reason: String) -> Command:
 	return create(REJECT_WIN, {"candidate_id": candidate_id, "reason": reason})
+
+
+## step_id: genau der erwartete nächste Schritt (RulesEngine.next_step_id).
+static func begin_step(step_id: String) -> Command:
+	return create(BEGIN_STEP, {"step_id": step_id})
+
+
+static func skip_step(step_id: String, reason: String) -> Command:
+	return create(SKIP_STEP, {"step_id": step_id, "reason": reason})
+
+
+static func cancel_prompt(prompt_id: int, reason: String) -> Command:
+	return create(CANCEL_PROMPT, {"prompt_id": prompt_id, "reason": reason})
+
+
+## payload: kind ("kill" | "revive" | "set_role" | "declare_winner"), target_id,
+## trigger_effects (kill), role_id (set_role), winner_kind (declare_winner),
+## reason (Pflicht), confirmed = true (Pflicht, bestätigte Warnung).
+static func gm_correction(p_payload: Dictionary) -> Command:
+	return create(GM_CORRECTION, p_payload)
 
 
 func to_dict() -> Dictionary:

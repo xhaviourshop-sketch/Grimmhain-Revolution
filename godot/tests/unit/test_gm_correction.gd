@@ -107,7 +107,7 @@ func test_blocked_while_win_candidate_open() -> void:
 func test_corrections_save_load_and_replay() -> void:
 	var commands: Array[Command] = [
 		Fixtures.start_reaper_game(4711), Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
-		CorrectionFixtures.gm("set_role", {"target_id": 4, "role_id": "werwolf"}),
+		CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "dorfbewohner"}),
 		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}),
 	]
 	var a := RulesEngine.replay(commands)
