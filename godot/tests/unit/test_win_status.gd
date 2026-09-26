@@ -25,7 +25,7 @@ func test_provisional_parity_is_lifted_by_reaction() -> void:
 	assert_true(provisional.size() >= 1, "vorläufiger Status nach dem Tod")
 	var last: Dictionary = provisional[provisional.size() - 1].data
 	assert_eq(String((last["results"] as Array)[0]["kind"]), "wolves", "vorläufig Werwölfe")
-	assert_true(s.win_candidate == null, "kein bestätigbarer Kandidat")
+	assert_true(sole_candidate(s) == null, "kein bestätigbarer Kandidat")
 	assert_eq(events_of_type(run.events, "WinDetected").size(), 0, "nichts zur Bestätigung vorgelegt")
 	assert_eq(String(s.phase), "DAWN_RESOLUTION", "Partie läuft weiter")
 	apply_rejected(s, Command.confirm_win(1), "reaction_open", "keine Bestätigung bei offener Reaktion")
@@ -37,7 +37,7 @@ func test_provisional_parity_is_lifted_by_reaction() -> void:
 	if final_status.size() == 1:
 		assert_eq((final_status[0].data["results"] as Array).size(), 0, "verbindlich kein Sieg")
 	assert_eq(events_of_type(cursed.events, "WinDetected").size(), 0, "kein Kandidat")
-	assert_true(cursed.state.win_candidate == null, "kein Kandidat im Zustand")
+	assert_true(sole_candidate(cursed.state) == null, "kein Kandidat im Zustand")
 	assert_eq(String(cursed.state.phase), "DAY", "Tag beginnt")
 
 
@@ -47,8 +47,8 @@ func test_provisional_confirmed_after_reaction() -> void:
 	var declined := apply_ok(begun, Command.answer_prompt(3, []), "Verzicht")
 	var detected := events_of_type(declined.events, "WinDetected")
 	assert_eq(detected.size(), 1, "erst jetzt Kandidat")
-	assert_true(declined.state.win_candidate != null and String(declined.state.win_candidate.kind) == "wolves", "Kandidat Werwölfe")
-	var confirmed := apply_ok(declined.state, Command.confirm_win(declined.state.win_candidate.id), "Bestätigung")
+	assert_true(sole_candidate(declined.state) != null and String(sole_candidate(declined.state).kind) == "wolves", "Kandidat Werwölfe")
+	var confirmed := apply_ok(declined.state, Command.confirm_win(sole_candidate(declined.state).id), "Bestätigung")
 	assert_eq(String(confirmed.state.phase), "GAME_OVER", "Spielende erst nach Bestätigung")
 
 
@@ -59,13 +59,13 @@ func test_nobody_alive_has_no_automatic_winner() -> void:
 	for target: int in [2, 3, 4, 5, 6]:
 		var r := apply_ok(state, CorrectionFixtures.gm("kill", {"target_id": target, "trigger_effects": false}), "Korrektur Tod %d" % target)
 		state = r.state
-		if state.win_candidate != null:
-			candidate_id = state.win_candidate.id
+		if sole_candidate(state) != null:
+			candidate_id = sole_candidate(state).id
 			state = apply_ok(state, Command.reject_win(candidate_id, "Spiel geht weiter"), "Ablehnung").state
 	assert_eq(state.alive_ids(), [1] as Array[int], "nur der Werwolf lebt")
 	var last := apply_ok(state, CorrectionFixtures.gm("kill", {"target_id": 1, "trigger_effects": false}), "letzter Tod")
 	assert_eq(last.state.alive_ids().size(), 0, "niemand lebt")
-	assert_true(last.state.win_candidate == null, "kein automatischer Kandidat")
+	assert_true(sole_candidate(last.state) == null, "kein automatischer Kandidat")
 	var final_status := events_of_type(last.events, "WinStatusFinal")
 	assert_eq(final_status.size(), 1, "verbindliche Prüfung erfolgt")
 	if final_status.size() == 1:
@@ -74,8 +74,8 @@ func test_nobody_alive_has_no_automatic_winner() -> void:
 	apply_rejected(last.state, Command.confirm_win(candidate_id), "no_open_win_candidate", "nichts zu bestätigen")
 	var declared := apply_ok(last.state, CorrectionFixtures.gm("declare_winner", {"winner_kind": "village"}, "Dorf hat moralisch gewonnen"), "Siegerklärung")
 	assert_eq(String(declared.state.phase), "GAME_OVER", "Spielende")
-	assert_eq(String(declared.state.winner.kind), "village", "erklärter Sieger")
-	assert_eq(String(declared.state.winner.reason_key), "gm_declared", "Grund: Spielleitererklärung")
+	assert_eq(String(declared.state.winner().kind), "village", "erklärter Sieger")
+	assert_eq(String(declared.state.winner().reason_key), "gm_declared", "Grund: Spielleitererklärung")
 
 
 func test_single_death_without_reaction_detects_immediately() -> void:

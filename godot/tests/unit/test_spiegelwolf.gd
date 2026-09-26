@@ -323,11 +323,11 @@ func test_parity_and_village_win() -> void:
 	# 35, 36
 	var parity := _replay_ok([_m6(), Command.start_night(), Command.answer_prompt(1, [6]), Command.end_night(), Command.nominate(3, 2), Command.decide_execution(2)] as Array[Command], "Parität")
 	if parity.ok:
-		assert_true(parity.state.win_candidate != null and String(parity.state.win_candidate.kind) == "wolves" and int(parity.state.win_candidate.reason_args["wolves"]) == 2, "Spiegelwolf zählt")
+		assert_true(sole_candidate(parity.state) != null and String(sole_candidate(parity.state).kind) == "wolves" and int(sole_candidate(parity.state).reason_args["wolves"]) == 2, "Spiegelwolf zählt")
 	var alone := Fixtures.start_roles(["spiegelwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
 	var village := _replay_ok([alone, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), _gm("execute", {"target_id": 1})] as Array[Command], "letzter Wolf")
 	if village.ok:
-		assert_true(village.state.win_candidate != null and String(village.state.win_candidate.kind) == "village", "Dorfsieg")
+		assert_true(sole_candidate(village.state) != null and String(sole_candidate(village.state).kind) == "village", "Dorfsieg")
 
 
 # --- 37–44 Save/Load, Replay, beschädigte Zustände ---------------------------------------------------------

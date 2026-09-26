@@ -35,7 +35,7 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 		return &"game_over"
 	if StepQueue.reactions_due(state) and not ALLOWED_WHILE_REACTION.has(type):
 		return &"reaction_open"
-	if state.win_candidate != null and type != Command.CONFIRM_WIN and type != Command.REJECT_WIN:
+	if not state.open_candidates().is_empty() and type != Command.CONFIRM_WIN and type != Command.REJECT_WIN:
 		return &"win_candidate_open"
 	match type:
 		Command.START_GAME:

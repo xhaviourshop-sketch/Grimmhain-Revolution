@@ -23,6 +23,7 @@ const REMOVE_WOLF_MODEL := "remove_wolf_model"  ## Vorbild eines Wolfskinds entf
 const TRANSFORM_WOLF_CHILD := "transform_wolf_child"  ## Wolfskind verwandeln
 const REVERT_WOLF_CHILD := "revert_wolf_child"        ## Verwandlung zurücknehmen (Vorbild bleibt)
 const SET_MIRROR := "set_mirror"  ## Spiegelung eines Spiegelwolfs als verfügbar/verbraucht markieren
+const SET_EVER_NOMINATED := "set_ever_nominated"  ## personenbezogenen Nominierungsstatus korrigieren (DR-12)
 const WOLF_CHILD_KINDS: Array[String] = [SET_WOLF_MODEL, REMOVE_WOLF_MODEL, TRANSFORM_WOLF_CHILD, REVERT_WOLF_CHILD]
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
@@ -51,6 +52,13 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		return _validate_witch(s, p, kind)
 	if WOLF_CHILD_KINDS.has(kind):
 		return _validate_wolf_child(s, p, kind)
+	if kind == SET_EVER_NOMINATED:
+		var person := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
+		if not s.players.has(person):
+			return &"unknown_player"
+		if not p.get("value") is bool:
+			return &"invalid_correction"
+		return &"no_change" if s.players[person].ever_nominated == bool(p["value"]) else &""
 	if kind == SET_MIRROR:
 		var mirror := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
 		if not s.players.has(mirror):
@@ -256,6 +264,13 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			var old := {"saved_id": action.saved_id}
 			action.saved_id = target if kind == SET_RESCUE else GameState.NO_TARGET
 			_log(ctx, kind, witch_id, old, {"saved_id": action.saved_id}, reason, false)
+		SET_EVER_NOMINATED:
+			# Nur der maßgebliche Personenstatus; gespeicherte Nominierungen bleiben unverändert.
+			var person := s.players[target]
+			var old := {"ever_nominated": person.ever_nominated}
+			person.ever_nominated = bool(p["value"])
+			_log(ctx, kind, target, old, {"ever_nominated": person.ever_nominated}, reason, false)
+			s.win_check_pending = true
 		SET_MIRROR:
 			# Reine Nutzungsänderung: keine Siegprüfung nötig.
 			var mirror := s.players[target]
@@ -332,7 +347,8 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			winner.detected_at_command = ctx.command_index
 			winner.resolved_at_command = ctx.command_index
 			_log(ctx, kind, GameState.NO_TARGET, {"winner": null}, {"winner": winner.to_dict()}, reason, false)
-			s.winner = winner
+			s.win_candidates.append(winner)
+			s.winner_id = winner.id
 			s.win_check_pending = false
 			s.provisional_win = []
 			ctx.emit(GameEvent.WIN_CONFIRMED, Visibility.PUBLIC, {"winner": winner.to_dict()})

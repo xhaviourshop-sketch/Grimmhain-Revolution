@@ -21,7 +21,7 @@ func test_no_candidate_while_prompt_open() -> void:
 	s.pending_prompt = prompt
 	var ctx := RuleContext.new(s, s.command_count)
 	WinRules.finalize_if_ready(ctx)
-	assert_true(s.win_candidate == null, "kein Kandidat bei offenem Prompt")
+	assert_true(sole_candidate(s) == null, "kein Kandidat bei offenem Prompt")
 	assert_true(s.win_check_pending, "Prüfung bleibt ausstehend")
 	assert_eq(events_of_type(ctx.events, "WinStatusFinal").size(), 0, "keine verbindliche Prüfung")
 
@@ -34,7 +34,7 @@ func test_no_candidate_while_reaction_open() -> void:
 	s.reactions.append(reaction)
 	var ctx := RuleContext.new(s, s.command_count)
 	WinRules.finalize_if_ready(ctx)
-	assert_true(s.win_candidate == null, "kein Kandidat bei offener Reaktion")
+	assert_true(sole_candidate(s) == null, "kein Kandidat bei offener Reaktion")
 	assert_true(s.win_check_pending, "Prüfung bleibt ausstehend")
 
 
@@ -42,5 +42,5 @@ func test_candidate_once_nothing_open() -> void:
 	var s := _winning_state()
 	var ctx := RuleContext.new(s, s.command_count)
 	WinRules.finalize_if_ready(ctx)
-	assert_true(s.win_candidate != null and String(s.win_candidate.kind) == "village", "Kandidat Dorf")
+	assert_true(sole_candidate(s) != null and String(sole_candidate(s).kind) == "village", "Kandidat Dorf")
 	assert_false(s.win_check_pending, "Prüfung erledigt")

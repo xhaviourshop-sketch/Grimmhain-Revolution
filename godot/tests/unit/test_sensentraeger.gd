@@ -199,13 +199,13 @@ func test_provisional_win_changed_by_curse() -> void:
 		return
 	var provisional := events_of_type(run.events, "WinStatusProvisional")
 	assert_eq(String((provisional[provisional.size() - 1].data["results"] as Array)[0]["kind"]), "wolves", "vorläufig Werwölfe")
-	assert_true(run.state.win_candidate == null, "kein Kandidat bei offener Reaktion")
+	assert_true(sole_candidate(run.state) == null, "kein Kandidat bei offener Reaktion")
 	apply_rejected(run.state, Command.confirm_win(1), "reaction_open", "keine Bestätigung")
 	var begun := apply_ok(run.state, Command.begin_step("reaction:1"), "Reaktion").state
 	var cursed := apply_ok(begun, Command.answer_prompt(3, [2]), "Fluch auf Werwolf")
 	var final_status := events_of_type(cursed.events, "WinStatusFinal")
 	assert_true(final_status.size() == 1 and (final_status[0].data["results"] as Array).is_empty(), "verbindlich kein Sieg")
-	assert_true(cursed.state.win_candidate == null, "kein Kandidat")
+	assert_true(sole_candidate(cursed.state) == null, "kein Kandidat")
 
 
 func test_no_final_candidate_while_chain_open() -> void:
@@ -215,7 +215,7 @@ func test_no_final_candidate_while_chain_open() -> void:
 	if not run.ok:
 		return
 	assert_eq(run.state.alive_ids(), [1, 2, 6, 7] as Array[int], "Parität 2:2")
-	assert_true(run.state.win_candidate == null, "kein Kandidat, solange Folgereaktion offen")
+	assert_true(sole_candidate(run.state) == null, "kein Kandidat, solange Folgereaktion offen")
 	assert_eq(events_of_type(run.events, "WinDetected").size(), 0, "nichts vorgelegt")
 	var begun := apply_ok(run.state, Command.begin_step("reaction:2"), "Folgereaktion").state
 	var declined := apply_ok(begun, Command.answer_prompt(3, []), "Verzicht")

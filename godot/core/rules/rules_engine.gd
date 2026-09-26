@@ -77,10 +77,15 @@ static func _validate(s: GameState, c: Command) -> StringName:
 		Command.OVERRIDE_SHOWN_ROLE:
 			return OracleStep.validate_override(s, p)
 		Command.CONFIRM_WIN, Command.REJECT_WIN:
-			if s.win_candidate == null:
+			var open := s.open_candidates()
+			if open.is_empty():
 				return &"no_open_win_candidate"
-			if not DictRead.is_int_like(p.get("candidate_id")) or int(p["candidate_id"]) != s.win_candidate.id:
-				return &"win_candidate_mismatch"
+			# ConfirmWin nennt genau einen offenen Kandidaten; RejectWin darf zur Kompatibilität
+			# einen offenen Kandidaten nennen, lehnt aber immer alle offenen ab.
+			if c.type == Command.CONFIRM_WIN or p.has("candidate_id"):
+				if not DictRead.is_int_like(p.get("candidate_id")) or s.candidate_by_id(int(p["candidate_id"])) == null \
+						or s.candidate_by_id(int(p["candidate_id"])).status != WinCandidate.STATUS_OPEN:
+					return &"win_candidate_mismatch"
 			if c.type == Command.REJECT_WIN and DictRead.get_string(p, "reason").strip_edges() == "":
 				return &"reason_required"
 	return &""
@@ -310,8 +315,12 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			n.nominee_id = int(p["nominee_id"])
 			n.day = s.day_number
 			s.nominations.append(n)
+			s.players[n.nominee_id].ever_nominated = true  # dauerhaft an der Person (DR-12)
 			s.day_step = Phase.DAY_NOMINATION
 			ctx.emit(GameEvent.NOMINATION_RECORDED, Visibility.PUBLIC, n.to_dict())
+			# Manipulator stirbt sofort bei seiner Nominierung; der Tag bleibt aktiv.
+			if s.players[n.nominee_id].role_id == RoleCatalog.MANIPULATOR:
+				KillPipeline.request_kill(ctx, n.nominee_id, KillEvent.CAUSE_MANIPULATOR_NOMINATED, KillEvent.SOURCE_PLAYER, n.nominator_id)
 		Command.DECIDE_EXECUTION:
 			var target := int(p["target_id"])
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
@@ -324,20 +333,28 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			s.day_step = Phase.DAY_ENDED
 			ctx.emit(GameEvent.DAY_ENDED, Visibility.PUBLIC, {"day": s.day_number})
 		Command.CONFIRM_WIN:
-			var winner := s.win_candidate
-			winner.status = WinCandidate.STATUS_CONFIRMED
-			winner.resolved_at_command = ctx.command_index
-			s.winner = winner
-			s.win_candidate = null
-			ctx.emit(GameEvent.WIN_CONFIRMED, Visibility.PUBLIC, {"winner": winner.to_dict()})
+			# Genau einer wird bestätigt; alle übrigen offenen gelten als nicht gewählt.
+			var chosen_id := int(p["candidate_id"])
+			var chosen: WinCandidate = null
+			for candidate: WinCandidate in s.open_candidates():
+				candidate.resolved_at_command = ctx.command_index
+				if candidate.id == chosen_id:
+					candidate.status = WinCandidate.STATUS_CONFIRMED
+					chosen = candidate
+				else:
+					candidate.status = WinCandidate.STATUS_NOT_CHOSEN
+					ctx.emit(GameEvent.WIN_REJECTED, Visibility.GM, {"candidate": candidate.to_dict(), "reason": String(WinCandidate.STATUS_NOT_CHOSEN)})
+			s.winner_id = chosen.id
+			ctx.emit(GameEvent.WIN_CONFIRMED, Visibility.PUBLIC, {"winner": chosen.to_dict()})
 			PhaseMachine.enter(ctx, Phase.GAME_OVER)
 		Command.REJECT_WIN:
-			var rejected := s.win_candidate
-			rejected.status = WinCandidate.STATUS_REJECTED
-			rejected.resolved_at_command = ctx.command_index
-			rejected.rejection_reason = DictRead.get_string(p, "reason").strip_edges()
-			s.win_candidate = null
-			ctx.emit(GameEvent.WIN_REJECTED, Visibility.GM, {"candidate": rejected.to_dict(), "reason": rejected.rejection_reason})
+			# Die gesamte offene Kandidatenmenge wird gemeinsam abgelehnt.
+			var reason := DictRead.get_string(p, "reason").strip_edges()
+			for candidate: WinCandidate in s.open_candidates():
+				candidate.status = WinCandidate.STATUS_REJECTED
+				candidate.resolved_at_command = ctx.command_index
+				candidate.rejection_reason = reason
+				ctx.emit(GameEvent.WIN_REJECTED, Visibility.GM, {"candidate": candidate.to_dict(), "reason": reason})
 
 
 static func _start_game(ctx: RuleContext, p: Dictionary) -> void:

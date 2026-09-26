@@ -61,12 +61,18 @@ func _check_expectations(where: String, state: GameState, step_events: Array[Gam
 		for v: Variant in expect["alive"]:
 			expected_alive.append(int(v))
 		assert_eq(state.alive_ids(), expected_alive, "%s: lebende Personen" % where)
+	# Szenarien kennen einen einzelnen offenen Kandidaten und den Sieger; beide leiten sich aus der Kandidatenmenge ab.
+	var sole := sole_candidate(state)
+	var derived := {
+		"win_candidate": sole.to_dict() if sole != null else null,
+		"winner": state.winner().to_dict() if state.winner() != null else null,
+	}
 	for key: String in ["win_candidate", "winner"]:
 		if expect.has(key):
 			if expect[key] == null:
-				assert_eq(sd[key], null, "%s: %s muss leer sein" % [where, key])
+				assert_eq(derived[key], null, "%s: %s muss leer sein" % [where, key])
 			else:
-				assert_true(_is_subset(expect[key], sd[key]), "%s: %s erwartet %s, erhalten %s" % [where, key, JSON.stringify(expect[key]), JSON.stringify(sd[key])])
+				assert_true(_is_subset(expect[key], derived[key]), "%s: %s erwartet %s, erhalten %s" % [where, key, JSON.stringify(expect[key]), JSON.stringify(derived[key])])
 	if expect.has("nominations"):
 		assert_true(_is_subset(expect["nominations"], sd["nominations"]) and (sd["nominations"] as Array).size() == (expect["nominations"] as Array).size(),
 			"%s: Nominierungen erwartet %s, erhalten %s" % [where, JSON.stringify(expect["nominations"]), JSON.stringify(sd["nominations"])])

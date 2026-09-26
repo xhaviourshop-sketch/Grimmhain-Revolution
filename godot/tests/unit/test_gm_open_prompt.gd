@@ -77,7 +77,7 @@ func test_win_from_correction_not_confirmable_with_open_prompt() -> void:
 	var s := _night_one()
 	var r1 := apply_ok(s, CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": false}), "Tod 3")
 	var r2 := apply_ok(r1.state, CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": false}), "Tod 4")
-	assert_true(r2.state.win_candidate != null, "Kandidat Werwölfe")
+	assert_true(sole_candidate(r2.state) != null, "Kandidat Werwölfe")
 	assert_true(r2.state.pending_prompt == null, "kein offener Prompt neben dem Kandidaten")
 	apply_rejected(r2.state, Command.begin_step(PACK_STEP), "win_candidate_open", "erst Kandidat entscheiden")
 

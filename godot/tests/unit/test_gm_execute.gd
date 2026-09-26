@@ -59,7 +59,7 @@ func test_execute_triggers_reaction_and_dr14() -> void:
 	var cursed := apply_ok(begun, Command.answer_prompt(begun.pending_prompt.id, [1]), "Fluch auf Werwolf")
 	var final_status := events_of_type(cursed.events, "WinStatusFinal")
 	assert_true(final_status.size() == 1 and (final_status[0].data["results"] as Array).is_empty(), "verbindlich kein Sieg")
-	assert_true(cursed.state.win_candidate == null, "kein Kandidat")
+	assert_true(sole_candidate(cursed.state) == null, "kein Kandidat")
 
 
 func test_execute_save_load_and_replay() -> void:

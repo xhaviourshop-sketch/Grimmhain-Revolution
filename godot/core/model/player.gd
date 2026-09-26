@@ -13,6 +13,7 @@ var counts_as_wolf: bool = false
 var appears_as: StringName = &""  ## Erscheinung für Informationsrollen; beim Trugbilderwolf die Scheinrolle
 var alive: bool = true
 var death: KillEvent = null
+var ever_nominated: bool = false  ## in der Partie jemals nominiert; haftet an der Person (DR-12)
 var ability_uses: Dictionary = {}  ## begrenzte Einsätze pro Person: "<rolle>:<fähigkeit>" → Anzahl (G-ID-3)
 
 
@@ -28,6 +29,7 @@ func to_dict() -> Dictionary:
 		"alive": alive,
 		"death": death.to_dict() if death != null else null,
 		"ability_uses": ability_uses.duplicate(),
+		"ever_nominated": ever_nominated,
 	}
 
 
@@ -41,6 +43,9 @@ static func from_dict(d: Dictionary) -> Player:
 	p.counts_as_wolf = DictRead.get_bool(d, "counts_as_wolf")
 	p.appears_as = StringName(DictRead.get_string(d, "appears_as"))
 	p.alive = DictRead.get_bool(d, "alive", true)
+	if not d.get("ever_nominated") is bool:
+		return null
+	p.ever_nominated = d["ever_nominated"]
 	for key: Variant in DictRead.get_dict(d, "ability_uses"):
 		var count: Variant = DictRead.get_dict(d, "ability_uses")[key]
 		# Nur bekannte Einsätze, jeweils 0 oder 1 (einmal pro Person und Partie).

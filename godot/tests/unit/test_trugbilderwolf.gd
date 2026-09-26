@@ -266,8 +266,8 @@ func test_parity_counts_decoy() -> void:
 		Command.nominate(4, 3), Command.decide_execution(3)]
 	var run := _replay_ok(night, "Parität")
 	if run.ok:
-		assert_true(run.state.win_candidate != null and String(run.state.win_candidate.kind) == "wolves", "Wolfssieg durch Parität")
-		assert_eq(int(run.state.win_candidate.reason_args["wolves"]), 2, "Trugbilderwolf zählt als Wolf")
+		assert_true(sole_candidate(run.state) != null and String(sole_candidate(run.state).kind) == "wolves", "Wolfssieg durch Parität")
+		assert_eq(int(sole_candidate(run.state).reason_args["wolves"]), 2, "Trugbilderwolf zählt als Wolf")
 
 
 func test_last_decoy_dies_village_wins() -> void:
@@ -276,7 +276,7 @@ func test_last_decoy_dies_village_wins() -> void:
 	var run := _replay_ok([start, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), Command.nominate(2, 1),
 		Command.decide_execution(1)] as Array[Command], "letzter Wolf")
 	if run.ok:
-		assert_true(run.state.win_candidate != null and String(run.state.win_candidate.kind) == "village", "Dorfsieg")
+		assert_true(sole_candidate(run.state) != null and String(sole_candidate(run.state).kind) == "village", "Dorfsieg")
 
 
 # --- 22–30 Korrekturen ----------------------------------------------------------------------------
@@ -345,7 +345,7 @@ func test_set_role_to_decoy() -> void:
 	var logged := events_of_type(r.events, "GmCorrected")
 	assert_true(logged.size() == 1 and str(logged[0].data["new"]["appears_as"]) == "das-orakel" and bool(logged[0].data["new"]["counts_as_wolf"]), "protokolliert")
 	# 30: 3 Wölfe gegen 3 Nicht-Wölfe → Paritätskandidat nach der Rollenänderung.
-	assert_true(r.state.win_candidate != null and String(r.state.win_candidate.kind) == "wolves", "Siegprüfung mit neuem Wolfsstatus")
+	assert_true(sole_candidate(r.state) != null and String(sole_candidate(r.state).kind) == "wolves", "Siegprüfung mit neuem Wolfsstatus")
 
 
 func test_set_role_away_from_decoy() -> void:
@@ -354,7 +354,7 @@ func test_set_role_away_from_decoy() -> void:
 	var r := apply_ok(Fixtures.play([start] as Array[Command]), CorrectionFixtures.gm("set_role", {"target_id": 1, "role_id": "dorfbewohner"}), "kein Trugbilderwolf mehr")
 	var p := r.state.players[1]
 	assert_true(p.role_id == &"dorfbewohner" and p.appears_as == &"dorfbewohner" and not p.counts_as_wolf and p.faction == &"village", "normale Erscheinung")
-	assert_true(r.state.win_candidate != null and String(r.state.win_candidate.kind) == "village", "kein Wolf mehr: Dorfsieg-Kandidat")
+	assert_true(sole_candidate(r.state) != null and String(sole_candidate(r.state).kind) == "village", "kein Wolf mehr: Dorfsieg-Kandidat")
 
 
 # --- 31–34 Save/Load und Replay ---------------------------------------------------------------------

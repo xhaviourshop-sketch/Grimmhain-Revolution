@@ -100,7 +100,7 @@ func test_set_role() -> void:
 func test_blocked_while_win_candidate_open() -> void:
 	var s := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
 		Command.nominate(2, 1), Command.decide_execution(1)] as Array[Command])
-	assert_true(s.win_candidate != null, "Kandidat offen")
+	assert_true(sole_candidate(s) != null, "Kandidat offen")
 	apply_rejected(s, CorrectionFixtures.gm("revive", {"target_id": 1}), "win_candidate_open", "Korrektur bei offenem Kandidaten")
 
 

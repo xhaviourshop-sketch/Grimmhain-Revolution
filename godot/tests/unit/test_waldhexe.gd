@@ -284,7 +284,7 @@ func test_poison_alone_kills_immediately() -> void:
 	var dawn := apply_ok(r.state, Command.end_night(), "Morgen")
 	assert_false(dawn.state.players[6].alive, "6 stirbt am Morgen")
 	assert_eq(String(dawn.state.players[6].death.cause), "NIGHT_KILL", "Rudelangriff")
-	assert_true(dawn.state.win_candidate == null, "kein Siegkandidat (1 Wolf gegen 3)")
+	assert_true(sole_candidate(dawn.state) == null, "kein Siegkandidat (1 Wolf gegen 3)")
 
 
 func test_heal_and_poison_same_night() -> void:

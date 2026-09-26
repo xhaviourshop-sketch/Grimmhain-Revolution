@@ -179,8 +179,8 @@ func test_execution_transforms_and_parity() -> void:
 	if not run.ok:
 		return
 	_expect_turned(run.state.players[6], "Hinrichtung")
-	assert_true(run.state.win_candidate != null and String(run.state.win_candidate.kind) == "wolves"
-		and int(run.state.win_candidate.reason_args["wolves"]) == 3, "Parität zählt das verwandelte Wolfskind sofort")
+	assert_true(sole_candidate(run.state) != null and String(sole_candidate(run.state).kind) == "wolves"
+		and int(sole_candidate(run.state).reason_args["wolves"]) == 3, "Parität zählt das verwandelte Wolfskind sofort")
 
 
 func test_curse_transforms() -> void:
@@ -251,7 +251,7 @@ func test_no_extra_pack_step_and_next_night() -> void:
 	if not day.ok:
 		return
 	_expect_turned(day.state.players[6], "Tag")
-	assert_true(day.state.win_candidate == null, "1 Wolf gegen 4: kein Kandidat")
+	assert_true(sole_candidate(day.state) == null, "1 Wolf gegen 4: kein Kandidat")
 	var n2 := _replay_ok(_concat(night, [Command.end_night(), Command.nominate(2, 1), Command.decide_execution(1), Command.end_day(), Command.start_night()] as Array[Command]), "Nacht 2")
 	if n2.ok:
 		assert_eq(n2.state.night_plan, [&"pack"] as Array[StringName], "verwandeltes Wolfskind allein erzeugt den Rudelschritt")
@@ -370,7 +370,7 @@ func test_gm_transform_and_revert() -> void:
 	# Parität: 1, 2 Werwölfe, 3 Wolfskind, 4–6 Dorf → nach Verwandlung 3:3.
 	var parity := Fixtures.play([Fixtures.start_roles(["werwolf", "werwolf", "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner"])] as Array[Command])
 	var p := apply_ok(parity, _gm("transform_wolf_child", {"child_id": 3}), "Parität")
-	assert_true(p.state.win_candidate != null and String(p.state.win_candidate.kind) == "wolves", "38: Kandidat mit neuem Wolfsstatus")
+	assert_true(sole_candidate(p.state) != null and String(sole_candidate(p.state).kind) == "wolves", "38: Kandidat mit neuem Wolfsstatus")
 
 
 # --- 39–45 Save/Load und Replay --------------------------------------------------------------------------

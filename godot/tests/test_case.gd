@@ -65,3 +65,9 @@ func events_json(events: Array[GameEvent]) -> String:
 	for e: GameEvent in events:
 		list.append(e.to_dict())
 	return CanonicalJson.stringify(list)
+
+
+## Der einzige offene Siegkandidat oder null (keiner oder mehrere offen).
+func sole_candidate(state: GameState) -> WinCandidate:
+	var open := state.open_candidates()
+	return open[0] if open.size() == 1 else null

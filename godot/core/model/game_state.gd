@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 8  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children)
-const RULES_VERSION := &"grimmhain-core-0.8"
+const SCHEMA_VERSION := 9  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id)
+const RULES_VERSION := &"grimmhain-core-0.9"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -33,8 +33,8 @@ var reactions: Array[Reaction] = []     ## offene Reaktionen, erste = nächste
 var provisional_win: Array = []         ## vorläufiger Siegstatus seit dem letzten Tod (DR-14)
 var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (DR-14)
 var nominations: Array[Nomination] = []
-var win_candidate: WinCandidate = null  ## offener Kandidat
-var winner: WinCandidate = null         ## bestätigter Sieg
+var win_candidates: Array[WinCandidate] = []  ## alle Siegkandidaten der Partie (einzige Quelle); offene haben Status `open`
+var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
 var next_prompt_id: int = 1
@@ -61,6 +61,27 @@ func alive_ids() -> Array[int]:
 ## Sitzindex einer Person oder -1.
 func seat_of(player_id: int) -> int:
 	return seat_order.find(player_id)
+
+
+## Offene Siegkandidaten in Erkennungsreihenfolge.
+func open_candidates() -> Array[WinCandidate]:
+	var out: Array[WinCandidate] = []
+	for c: WinCandidate in win_candidates:
+		if c.status == WinCandidate.STATUS_OPEN:
+			out.append(c)
+	return out
+
+
+func candidate_by_id(candidate_id: int) -> WinCandidate:
+	for c: WinCandidate in win_candidates:
+		if c.id == candidate_id:
+			return c
+	return null
+
+
+## Bestätigter Sieger oder null.
+func winner() -> WinCandidate:
+	return candidate_by_id(winner_id) if winner_id != -1 else null
 
 
 func nominations_on_day(day: int) -> Array[Nomination]:
@@ -98,6 +119,9 @@ func to_dict() -> Dictionary:
 	var reaction_list: Array = []
 	for r: Reaction in reactions:
 		reaction_list.append(r.to_dict())
+	var candidate_list: Array = []
+	for c: WinCandidate in win_candidates:
+		candidate_list.append(c.to_dict())
 	var plan: Array = []
 	for step: StringName in night_plan:
 		plan.append(String(step))
@@ -140,8 +164,8 @@ func to_dict() -> Dictionary:
 		"provisional_win": provisional_win.duplicate(true),
 		"win_check_pending": win_check_pending,
 		"nominations": nomination_list,
-		"win_candidate": win_candidate.to_dict() if win_candidate != null else null,
-		"winner": winner.to_dict() if winner != null else null,
+		"win_candidates": candidate_list,
+		"winner_id": winner_id,
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -252,10 +276,14 @@ static func from_dict(d: Dictionary) -> GameState:
 		var death := s.players[id].death
 		if death != null and death.source_kind == KillEvent.SOURCE_PLAYER and not s.players.has(death.source_id):
 			return null
-	if d.get("win_candidate") is Dictionary:
-		s.win_candidate = WinCandidate.from_dict(d["win_candidate"])
-	if d.get("winner") is Dictionary:
-		s.winner = WinCandidate.from_dict(d["winner"])
+	for item: Variant in DictRead.get_array(d, "win_candidates"):
+		if not item is Dictionary:
+			return null
+		var candidate := WinCandidate.from_dict(item)
+		if candidate == null:
+			return null
+		s.win_candidates.append(candidate)
+	s.winner_id = DictRead.get_int(d, "winner_id", -1)
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null
@@ -280,4 +308,6 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.next_death_order = DictRead.get_int(next_ids, "death_order", 1)
 	s.next_reaction_id = DictRead.get_int(next_ids, "reaction", 1)
 	s.next_info_id = DictRead.get_int(next_ids, "info", 1)
+	if not WinRules.state_is_consistent(s):
+		return null
 	return s
