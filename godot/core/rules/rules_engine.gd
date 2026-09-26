@@ -319,7 +319,7 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				ctx.emit(GameEvent.NO_EXECUTION, Visibility.PUBLIC, {"day": s.day_number})
 			else:
 				ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": false})
-				KillPipeline.request_kill(ctx, target, KillEvent.CAUSE_LYNCH, KillEvent.SOURCE_VILLAGE)
+				ExecutionRules.execute(ctx, target, KillEvent.SOURCE_VILLAGE)
 		Command.END_DAY:
 			s.day_step = Phase.DAY_ENDED
 			ctx.emit(GameEvent.DAY_ENDED, Visibility.PUBLIC, {"day": s.day_number})

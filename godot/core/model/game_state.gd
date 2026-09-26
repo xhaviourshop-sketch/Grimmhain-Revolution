@@ -242,7 +242,16 @@ static func from_dict(d: Dictionary) -> GameState:
 	for item: Variant in DictRead.get_array(d, "nominations"):
 		if not item is Dictionary:
 			return null
-		s.nominations.append(Nomination.from_dict(item))
+		var nomination := Nomination.from_dict(item)
+		# Nominierungen verweisen nur auf bekannte Personen und vergangene oder laufende Tage.
+		if not s.players.has(nomination.nominator_id) or not s.players.has(nomination.nominee_id) or nomination.day < 1 or nomination.day > s.day_number:
+			return null
+		s.nominations.append(nomination)
+	# Todesquelle einer Person muss eine bekannte Person sein.
+	for id: int in s.players:
+		var death := s.players[id].death
+		if death != null and death.source_kind == KillEvent.SOURCE_PLAYER and not s.players.has(death.source_id):
+			return null
 	if d.get("win_candidate") is Dictionary:
 		s.win_candidate = WinCandidate.from_dict(d["win_candidate"])
 	if d.get("winner") is Dictionary:

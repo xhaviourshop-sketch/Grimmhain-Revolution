@@ -37,6 +37,8 @@ const INFO_RECORDED := &"InfoRecorded"        ## vollständiger Informationsdate
 const INFO_REVEALED := &"InfoRevealed"        ## gezeigtes Ergebnis für die handelnde Person (actor)
 const WOLF_CHILD_BOUND := &"WolfChildBound"              ## Vorbildwahl des Wolfskinds (nur Spielleiter)
 const WOLF_CHILD_TRANSFORMED := &"WolfChildTransformed"  ## Verwandlung des Wolfskinds (nur Spielleiter)
+const EXECUTION_REDIRECTED := &"ExecutionRedirected"  ## Spiegelung einer Hinrichtung (nur Spielleiter)
+const MIRROR_NOT_TRIGGERED := &"MirrorNotTriggered"    ## Hinrichtung eines Spiegelwolfs ohne Spiegelung, mit Grund (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

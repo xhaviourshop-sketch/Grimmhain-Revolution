@@ -43,7 +43,8 @@ static func from_dict(d: Dictionary) -> Player:
 	p.alive = DictRead.get_bool(d, "alive", true)
 	for key: Variant in DictRead.get_dict(d, "ability_uses"):
 		var count: Variant = DictRead.get_dict(d, "ability_uses")[key]
-		if not DictRead.is_int_like(count):
+		# Nur bekannte Einsätze, jeweils 0 oder 1 (einmal pro Person und Partie).
+		if not RoleCatalog.ABILITY_USE_KEYS.has(String(key)) or not DictRead.is_int_like(count) or int(count) < 0 or int(count) > 1:
 			return null
 		p.ability_uses[String(key)] = int(count)
 	if d.get("death") is Dictionary:

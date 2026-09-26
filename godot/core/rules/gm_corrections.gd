@@ -22,6 +22,7 @@ const SET_WOLF_MODEL := "set_wolf_model"        ## Vorbild eines Wolfskinds setz
 const REMOVE_WOLF_MODEL := "remove_wolf_model"  ## Vorbild eines Wolfskinds entfernen
 const TRANSFORM_WOLF_CHILD := "transform_wolf_child"  ## Wolfskind verwandeln
 const REVERT_WOLF_CHILD := "revert_wolf_child"        ## Verwandlung zurücknehmen (Vorbild bleibt)
+const SET_MIRROR := "set_mirror"  ## Spiegelung eines Spiegelwolfs als verfügbar/verbraucht markieren
 const WOLF_CHILD_KINDS: Array[String] = [SET_WOLF_MODEL, REMOVE_WOLF_MODEL, TRANSFORM_WOLF_CHILD, REVERT_WOLF_CHILD]
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
@@ -50,6 +51,15 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		return _validate_witch(s, p, kind)
 	if WOLF_CHILD_KINDS.has(kind):
 		return _validate_wolf_child(s, p, kind)
+	if kind == SET_MIRROR:
+		var mirror := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
+		if not s.players.has(mirror):
+			return &"unknown_player"
+		if s.players[mirror].role_id != RoleCatalog.SPIEGELWOLF:
+			return &"not_a_mirror_wolf"
+		if not p.get("available") is bool:
+			return &"invalid_correction"
+		return &"no_change" if ExecutionRules.mirror_available(s.players[mirror]) == bool(p["available"]) else &""
 	if not [KILL, EXECUTE, REVIVE, SET_ROLE, SET_ROLE_FIELD].has(kind):
 		return &"invalid_correction"
 	if kind == EXECUTE:
@@ -246,6 +256,15 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			var old := {"saved_id": action.saved_id}
 			action.saved_id = target if kind == SET_RESCUE else GameState.NO_TARGET
 			_log(ctx, kind, witch_id, old, {"saved_id": action.saved_id}, reason, false)
+		SET_MIRROR:
+			# Reine Nutzungsänderung: keine Siegprüfung nötig.
+			var mirror := s.players[target]
+			var old := {"mirror_available": ExecutionRules.mirror_available(mirror)}
+			if bool(p["available"]):
+				mirror.ability_uses.erase(ExecutionRules.MIRROR_USE_KEY)
+			else:
+				mirror.ability_uses[ExecutionRules.MIRROR_USE_KEY] = 1
+			_log(ctx, kind, target, old, {"mirror_available": bool(p["available"])}, reason, false)
 		SET_WOLF_MODEL, REMOVE_WOLF_MODEL:
 			var child := DictRead.get_int(p, "child_id")
 			var bond := WolfChildRules.bond_of(s, child)
@@ -274,7 +293,7 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
 			ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": true})
-			KillPipeline.request_kill(ctx, target, KillEvent.CAUSE_LYNCH, KillEvent.SOURCE_GM)
+			ExecutionRules.execute(ctx, target, KillEvent.SOURCE_GM)
 		SET_ROLE_FIELD:
 			var player := s.players[target]
 			var field := DictRead.get_string(p, "field")
