@@ -672,10 +672,8 @@ func test_gm_rescue_corrections() -> void:
 	assert_eq(_uses(set.state, 5, "heal"), 0, "Trankstatus bleibt eigene Korrektur")
 	assert_true(apply_ok(set.state, Command.end_night(), "Morgen").state.players[4].alive, "gesetzte Rettung wirkt")
 	var saved := Fixtures.play(_night(2, 4, true, -1))
-	var changed := apply_ok(saved, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 6}, "falsches Opfer eingetragen"), "Rettung ändern")
-	var c2 := events_of_type(changed.events, "GmCorrected")
-	assert_true(c2.size() == 1 and c2[0].data["old"] == {"saved_id": 4} and c2[0].data["new"] == {"saved_id": 6}, "ändern: alter und neuer Wert")
-	assert_false(apply_ok(changed.state, Command.end_night(), "Morgen").state.players[4].alive, "4 nicht mehr gerettet")
+	# Ein anderes Ziel als das aktuelle Rudelopfer gibt es nicht (Entscheidung 2 der Korrekturrunde).
+	apply_rejected(saved, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 6}, "falsches Opfer eingetragen"), "not_current_pack_target", "Rettung auf andere Person")
 	var removed := apply_ok(saved, CorrectionFixtures.gm("remove_rescue", {"witch_id": 5}, "Rettung irrtümlich"), "Rettung entfernen")
 	var c3 := events_of_type(removed.events, "GmCorrected")
 	assert_true(c3.size() == 1 and c3[0].data["old"] == {"saved_id": 4} and c3[0].data["new"] == {"saved_id": -1}, "entfernen: alter und neuer Wert")
@@ -687,8 +685,8 @@ func test_gm_rescue_corrections() -> void:
 	apply_rejected(waived, CorrectionFixtures.gm("remove_rescue", {"witch_id": 5}), "no_change", "keine Rettung")
 	apply_rejected(saved, CorrectionFixtures.gm("set_rescue", {"witch_id": 3, "target_id": 6}), "not_a_witch", "keine Waldhexe")
 	apply_rejected(saved, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 99}), "unknown_player", "unbekanntes Ziel")
-	var dead := apply_ok(saved, CorrectionFixtures.gm("kill", {"target_id": 6, "trigger_effects": false}), "Vorbereitung").state
-	apply_rejected(dead, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 6}), "player_dead", "totes Ziel")
+	var dead := apply_ok(waived, CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": false}), "Vorbereitung").state
+	apply_rejected(dead, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 4}), "player_dead", "totes Rudelopfer")
 	# Keine rückwirkende Wiederbelebung: nach der Morgenauflösung keine Rettungskorrektur.
 	var day := apply_ok(waived, Command.end_night(), "Morgen").state
 	assert_false(day.players[4].alive, "4 gestorben")
@@ -703,7 +701,8 @@ func test_save_load_after_each_correction_kind() -> void:
 	var cases := {
 		"Trankstatus": _concat(_night(2, 4, false, -1), [CorrectionFixtures.gm("set_witch_potion", {"witch_id": 5, "potion": "poison", "available": false})] as Array[Command]),
 		"Rettung setzen": _concat(_night(2, 4, false, -1), [CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 4})] as Array[Command]),
-		"Rettung ändern": _concat(_night(2, 4, true, -1), [CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 6})] as Array[Command]),
+		"Rettung entfernen und neu setzen": _concat(_night(2, 4, true, -1), [CorrectionFixtures.gm("remove_rescue", {"witch_id": 5}),
+			CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 4})] as Array[Command]),
 		"Rettung entfernen": _concat(_night(2, 4, true, -1), [CorrectionFixtures.gm("remove_rescue", {"witch_id": 5})] as Array[Command]),
 	}
 	for label: String in cases:
@@ -715,6 +714,201 @@ func test_save_load_after_each_correction_kind() -> void:
 		var a := RulesEngine.replay(commands)
 		var b := RulesEngine.replay(commands)
 		assert_eq(events_json(a.events), events_json(b.events), "%s: Replay bytegleich" % label)
+
+
+# --- Korrekturrunde: Rettung nur für das aktuelle Rudelopfer --------------------------
+
+func test_set_rescue_only_current_pack_target() -> void:
+	var waived := Fixtures.play(_night(2, 4, false, -1))
+	var ok := apply_ok(waived, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 4}), "aktuelles lebendes Rudelopfer")
+	assert_eq(int(_actions(ok.state)[0]["saved_id"]) if _actions(ok.state).size() == 1 else -1, 4, "Rettung gesetzt")
+	assert_eq(_uses(ok.state, 5, "heal"), 0, "Trankstatus unverändert")
+	_expect_rejected_clean(waived, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 6}), "not_current_pack_target", "andere lebende Person")
+	_expect_rejected_clean(waived, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 5}), "not_current_pack_target", "Waldhexe selbst")
+	var no_victim := Fixtures.play(_concat(_to_witch(_w6(), 2, -1), _decide(false, -1, false)))
+	_expect_rejected_clean(no_victim, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 4}), "no_pack_target", "ohne Rudelopfer")
+	var dead := apply_ok(waived, CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": false}), "Rudelopfer stirbt vorher").state
+	_expect_rejected_clean(dead, CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 4}), "player_dead", "totes Rudelopfer")
+	assert_false(dead.players[4].alive, "keine Wiederbelebung")
+	var saved := Fixtures.play(_night(2, 4, true, -1))
+	var removed := apply_ok(saved, CorrectionFixtures.gm("remove_rescue", {"witch_id": 5}), "Entfernen bleibt zulässig")
+	assert_eq(_uses(removed.state, 5, "heal"), 1, "Heiltrank bleibt verbraucht")
+	# Save/Load und Replay des gültigen Ablaufs
+	var commands := _concat(_night(2, 4, false, -1), [CorrectionFixtures.gm("set_rescue", {"witch_id": 5, "target_id": 4}, "Rettung übersehen")] as Array[Command])
+	var loaded := _load_roundtrip(commands, "gültige Rettungskorrektur")
+	if loaded != null:
+		var end := _continue_both(Fixtures.play(commands), loaded.state, [Command.end_night()] as Array[Command], "gültige Rettungskorrektur")
+		assert_true(end != null and end.players[4].alive, "Rettung wirkt nach Laden")
+	var a := RulesEngine.replay(commands)
+	var b := RulesEngine.replay(commands)
+	assert_eq(events_json(a.events), events_json(b.events), "Replay bytegleich")
+	assert_eq(_json(a.state.to_dict()), _json(b.state.to_dict()), "Replay-Zustand bytegleich")
+
+
+## Ablehnung ohne Ereignisse und ohne Zustandsänderung.
+func _expect_rejected_clean(s: GameState, c: Command, error: String, label: String) -> void:
+	var r := RulesEngine.apply(s, c)
+	assert_true(r.events.is_empty(), "%s: keine Ereignisse" % label)
+	apply_rejected(s, c, error, label)
+
+
+# --- Korrekturrunde: tatsächliche Rolle bei Rettung ------------------------------------
+
+func test_rescue_reveals_true_role_not_appearance() -> void:
+	# Opfer 4 (dorfbewohner) erscheint per Scheinrollen-Korrektur als werwolf.
+	var start: Array[Command] = [_w6(), CorrectionFixtures.gm("set_role_field", {"target_id": 4, "field": "appears_as", "value": "werwolf"}, "Testaufbau Scheinrolle")]
+	var commands := _concat(start, _to_witch(_w6(), 2, 4).slice(1))
+	var s := Fixtures.play(commands)
+	assert_true(s != null and _stage(s) == "heal", "Rettungsentscheidung")
+	if s == null:
+		return
+	assert_eq(String(s.players[4].appears_as), "werwolf", "abweichende Erscheinung")
+	var yes := apply_ok(s, _choice("heal", true), "retten = ja").state
+	assert_eq(str(yes.pending_prompt.partial.get("victim_role", "")), "dorfbewohner", "tatsächliche Rolle offengelegt")
+	var run := _replay_ok(_concat(commands, _decide(true, -1)), "Rettung bestätigt")
+	if not run.ok:
+		return
+	var acted := events_of_type(run.events, "WitchActed")
+	assert_true(acted.size() == 1 and str(acted[0].data["saved_role"]) == "dorfbewohner", "tatsächliche Rolle im Ereignis")
+	assert_true(acted.size() == 1 and String(acted[0].visibility) == "gm", "nur Spielleiter")
+	for e: GameEvent in run.events:
+		if e.visibility == &"public":
+			assert_eq(_find_forbidden(e.data), "", "öffentliches %s ohne Rolle" % e.type)
+
+
+# --- Korrekturrunde: Nachtplan-Snapshot und Rollenwechsel --------------------------------
+
+## W6 bis nach der Rudelwahl (Rudel 4), Waldhexe noch nicht begonnen.
+func _before_witch() -> Array[Command]:
+	return _to_witch(_w6(), 2, 4).slice(0, 5)
+
+
+func test_witch_role_lost_before_step() -> void:
+	var commands := _before_witch()
+	var s := Fixtures.play(commands)
+	assert_true(s.night_plan.has(&"waldhexe:5"), "1: Waldhexe im Nachtplan")
+	var change := CorrectionFixtures.gm("set_role", {"target_id": 5, "role_id": "dorfbewohner"}, "Rolle falsch ausgeteilt")
+	var r := apply_ok(s, change, "2: Waldhexe wird Dorfbewohner")
+	var dropped := events_of_type(r.events, "StepDropped")
+	assert_true(dropped.size() == 1 and String(dropped[0].data["step_id"]) == WITCH_1
+		and String(dropped[0].data["reason"]) == "actor_role_changed", "3: Schritt entfällt mit actor_role_changed")
+	assert_eq(String(r.state.night_step_status[2]), "skipped", "3: Status")
+	assert_true(r.state.pending_prompt == null and events_of_type(r.events, "PromptOpened").is_empty(), "4: kein Waldhexen-Prompt")
+	apply_rejected(r.state, Command.begin_step(WITCH_1), "no_pending_step", "4: nicht beginnbar")
+	assert_eq(_uses(r.state, 5, "heal") + _uses(r.state, 5, "poison"), 0, "5: kein Trank verbraucht")
+	assert_true(_actions(r.state).is_empty(), "6: kein WitchAction-Datensatz")
+	assert_eq(RulesEngine.next_step_id(r.state), "", "7: kein weiterer Schritt")
+	var dawn := apply_ok(r.state, Command.end_night(), "7: Nacht endet regulär")
+	assert_false(dawn.state.players[4].alive, "keine Rettung durch frühere Rolle")
+	# 8: Save/Load vor dem Entfallen
+	var loaded := _load_roundtrip(commands, "vor dem Rollenwechsel")
+	if loaded != null:
+		_continue_both(s, loaded.state, [change, Command.end_night()] as Array[Command], "Rollenwechsel nach Laden")
+	# 9: Replay
+	var all := _concat(commands, [change, Command.end_night()] as Array[Command])
+	var a := RulesEngine.replay(all)
+	var b := RulesEngine.replay(all)
+	assert_true(a.ok and b.ok, "9: Replay angenommen")
+	assert_eq(events_json(a.events), events_json(b.events), "9: Replay bytegleich")
+	assert_eq(_json(a.state.to_dict()), _json(b.state.to_dict()), "9: Endzustand bytegleich")
+
+
+func test_witch_role_lost_with_open_prompt() -> void:
+	# Offener Prompt: Korrektur bricht ihn ab, danach entfällt der Schritt; keine Fähigkeit der früheren Rolle.
+	var s := Fixtures.play(_concat(_to_witch(_w6(), 2, 4), [_choice("heal", true)] as Array[Command]))
+	var r := apply_ok(s, CorrectionFixtures.gm("set_role", {"target_id": 5, "role_id": "dorfbewohner"}), "Rollenwechsel bei offenem Prompt")
+	assert_eq(events_of_type(r.events, "PromptCancelled").size(), 1, "Prompt abgebrochen")
+	assert_eq(events_of_type(r.events, "StepDropped").size(), 1, "Schritt entfällt")
+	assert_true(r.state.pending_prompt == null and _actions(r.state).is_empty(), "nichts angewandt")
+
+
+func test_guard_role_lost_before_step() -> void:
+	# Zwei Schutzengel; der zweite wird vor seinem Schritt Dorfbewohner.
+	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+		Command.start_night(), Command.answer_prompt(1, [6])] as Array[Command])
+	assert_eq(RulesEngine.next_step_id(s), "night:1:1:schutzengel:4", "zweiter Schutzengel wäre dran")
+	var r := apply_ok(s, CorrectionFixtures.gm("set_role", {"target_id": 4, "role_id": "dorfbewohner"}), "wird Dorfbewohner")
+	var dropped := events_of_type(r.events, "StepDropped")
+	assert_true(dropped.size() == 1 and String(dropped[0].data["reason"]) == "actor_role_changed", "Schritt entfällt")
+	assert_eq(RulesEngine.next_step_id(r.state), "night:1:2:pack", "nächster Schritt Rudel")
+	var night := apply_ok(r.state, Command.begin_step("night:1:2:pack"), "Rudel").state
+	var dawn := apply_ok(apply_ok(night, Command.answer_prompt(2, [5]), "Rudel wählt 5").state, Command.end_night(), "Morgen")
+	assert_false(dawn.state.players[5].alive, "kein Schutz durch frühere Rolle")
+
+
+func test_new_role_during_night_gets_no_step() -> void:
+	# Dorfbewohner 4 wird nachts Waldhexe bzw. Schutzengel: kein nachträglicher Schritt, erst in der nächsten Nacht.
+	for role: String in ["waldhexe", "schutzengel"]:
+		var s := Fixtures.play([_w6(), Command.start_night(), Command.answer_prompt(1, [6])] as Array[Command])
+		var plan_before := s.night_plan.duplicate()
+		var r := apply_ok(s, CorrectionFixtures.gm("set_role", {"target_id": 4, "role_id": role}), "%s: Dorfbewohner wird %s" % [role, role])
+		assert_eq(r.state.night_plan, plan_before, "%s: Nachtplan unverändert" % role)
+		var rest: Array[Command] = [Command.begin_step(PACK_1), Command.answer_prompt(2, [6]), Command.begin_step(WITCH_1)]
+		rest.append_array(_decide(false, -1, true, true, 3))
+		rest.append(Command.end_night())
+		var state := r.state
+		var ok := true
+		for c: Command in rest:
+			var step := RulesEngine.apply(state, c)
+			ok = ok and step.ok
+			if not step.ok:
+				assert_true(false, "%s: %s angenommen (%s)" % [role, c.type, step.error])
+				break
+			assert_false(RulesEngine.next_step_id(step.state).contains(":%s:4" % role), "%s: kein Schritt für 4 in dieser Nacht" % role)
+			state = step.state
+		if not ok:
+			continue
+		var next := apply_ok(apply_ok(state, Command.decide_execution(-1), "kein Urteil").state, Command.end_day(), "Tagesende").state
+		var n2 := apply_ok(next, Command.start_night(), "%s: Nacht 2" % role).state
+		assert_true(n2.night_plan.has(StringName("%s:4" % role)), "%s: Schritt ab der nächsten Nacht" % role)
+
+
+# --- Korrekturrunde: widersprüchliche Prompt-Stufen beim Laden -----------------------
+
+## Manipuliert den Zustand eines korrekt erzeugten Spielstands und erneuert fachlichen
+## Hash und Integritätswert, damit tatsächlich die Strukturprüfung greift.
+func _tampered(commands: Array[Command], mutate: Callable) -> LoadResult:
+	var state := Fixtures.play(commands)
+	var doc: Dictionary = CanonicalJson.normalize(JSON.parse_string(StateCodec.encode(state, commands)))
+	var body: Dictionary = doc["state"]
+	mutate.call(body)
+	var hashed := body.duplicate(true)
+	for key: String in GameState.HASH_EXCLUDED_KEYS:
+		hashed.erase(key)
+	doc["state_hash"] = CanonicalJson.sha256(hashed)
+	doc.erase("integrity")
+	doc["integrity"] = CanonicalJson.sha256(doc)
+	return StateCodec.decode(CanonicalJson.stringify(doc))
+
+
+func _expect_load_error(result: LoadResult, expected: String, label: String) -> void:
+	assert_false(result.ok, "%s: nicht geladen" % label)
+	assert_eq(String(result.error), expected, "%s: Fehlergrund" % label)
+	assert_true(result.state == null, "%s: kein teilweise geladener Zustand" % label)
+
+
+func test_inconsistent_witch_prompt_rejected_on_load() -> void:
+	var base := _to_witch(_w6(), 2, 6)
+	var paths := _stage_paths()
+	# Kontrolle: Eine strukturell gültige Manipulation passiert Hash und Integrität und scheitert erst am Replay.
+	_expect_load_error(_tampered(base, func(st: Dictionary) -> void: st["players"][0]["name"] = "Z"), "replay_mismatch", "Kontrolle")
+	var cases := {
+		"1 poison_target ohne Giftentscheidung": [_concat(base, paths["poison"]), func(st: Dictionary) -> void: st["pending_prompt"]["stage"] = "poison_target"],
+		"2 reveal ohne Heilentscheidung": [base, func(st: Dictionary) -> void: st["pending_prompt"]["stage"] = "reveal"],
+		"3 confirm mit Gift ohne Ziel": [_concat(base, paths["poison_target"]), func(st: Dictionary) -> void: st["pending_prompt"]["stage"] = "confirm"],
+		"4 Giftziel nicht erlaubt": [_concat(base, paths["confirm"]), func(st: Dictionary) -> void: st["pending_prompt"]["partial"]["poison_target_id"] = 99],
+		"5 unbekannte Waldhexe": [base, func(st: Dictionary) -> void: st["pending_prompt"]["actor_id"] = 99],
+		"6 Person nicht mehr Waldhexe": [base, func(st: Dictionary) -> void:
+			st["players"][4]["role_id"] = "dorfbewohner"
+			st["players"][4]["appears_as"] = "dorfbewohner"],
+		"7a Step-ID einer anderen Nacht": [base, func(st: Dictionary) -> void: st["pending_prompt"]["step_id"] = "night:2:2:waldhexe:5"],
+		"7b Nacht widerspricht Step-ID": [base, func(st: Dictionary) -> void: st["night_number"] = 2],
+		"7c Step-ID eines anderen Schritts": [base, func(st: Dictionary) -> void: st["pending_prompt"]["step_id"] = PACK_1],
+	}
+	for label: String in cases:
+		var commands: Array[Command] = []
+		commands.assign(cases[label][0])
+		_expect_load_error(_tampered(commands, cases[label][1]), "state_invalid", label)
 
 
 # --- 41 Sichtbarkeit -----------------------------------------------------------------------
