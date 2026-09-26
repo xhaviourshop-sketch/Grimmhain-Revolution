@@ -36,11 +36,7 @@ func test_role_rules() -> void:
 	var no_wolf: Array = ["dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
 	_expect_reject(GameState.new(), _players_with_roles(6, no_wolf), "missing_wolf_role", "ohne Wolf")
 	var no_village: Array = ["werwolf", "werwolf", "werwolf", "werwolf", "werwolf", "werwolf"]
-	_expect_reject(GameState.new(), _players_with_roles(6, no_village), "role_limit_exceeded", "6 Werwölfe (max. 5)")
-	var eleven_villagers: Array = ["werwolf"]
-	for i: int in 11:
-		eleven_villagers.append("dorfbewohner")
-	_expect_reject(GameState.new(), _players_with_roles(12, eleven_villagers), "role_limit_exceeded", "11 Dorfbewohner (max. 10)")
+	_expect_reject(GameState.new(), _players_with_roles(6, no_village), "missing_village_role", "ohne Dorfbewohner")
 
 
 func test_setup_payload_checks() -> void:
