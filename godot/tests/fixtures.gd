@@ -8,7 +8,7 @@ const NAMES := "ABCDEFGHIJKLMNOPQRSTUVWX"
 static func players(count: int) -> Array:
 	var result: Array = []
 	for i: int in count:
-		result.append({"id": i + 1, "name": NAMES[i]})
+		result.append({"id": i + 1, "name": NAMES[i] if i < NAMES.length() else "P%d" % (i + 1)})
 	return result
 
 
