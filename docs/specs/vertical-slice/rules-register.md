@@ -226,7 +226,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Regeltext EN | When the Reaper dies, they may, once per game, choose one living person or decline. The chosen person dies from their curse. After a death at night (including poison) the reaction happens during dawn resolution; after a death during the day it happens immediately. |
 | Fraktion | Dorf |
 | Nachtpriorität | keine; Reaktion (`reaction_queue`) |
-| Gültige Ziele | jede Person, die zum Zeitpunkt der Antwort lebt; der tote Sensenträger selbst ist damit ausgeschlossen (Code: `!x.flags.dead && x!==h`) |
+| Gültige Ziele | jede Person, die zum Zeitpunkt der Antwort lebt, außer dem Sensenträger selbst, auch wenn er inzwischen wiederbelebt wurde (Code: `!x.flags.dead && x!==h`; DECISION-LOG, Randfälle 26.09.2026) |
 | Dauer | Reaktion bleibt offen und persistent, bis sie beantwortet ist (Ziel oder ausdrücklicher Verzicht). Sie ist weder überspringbar (`SkipStep`) noch abbrechbar (`CancelPrompt`). Eine spätere Wiederbelebung entfernt eine bereits eingereihte Reaktion nicht (DECISION-LOG, Randfälle 26.09.2026) |
 | Auflösung | Tod des Sensenträgers → Reaktion einreihen → Prompt „verfluchen? → Ziel → bestätigen" → Tod mit Ursache `HUNTER_SHOT`, Quelle = Sensenträger; Verzicht erledigt die Reaktion ohne Tod (`ReactionResolved{outcome: declined}`). Genau eine Reaktion pro Tod und höchstens eine pro Person und Partie (Code: `meta.hunterShot`); ein erneuter Tod nach Wiederbelebung löst keine zweite aus |
 | Konflikte | Schutzengel schützt nicht (nur Wolfsangriff). Wird ein weiterer Sensenträger getroffen, entsteht eine weitere Reaktion. Siegprüfung: vorläufig nach jedem Tod, verbindlich erst nach Abarbeitung aller Reaktionen (G-SIEG-6, DR-14) |

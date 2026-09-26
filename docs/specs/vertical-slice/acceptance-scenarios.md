@@ -241,7 +241,7 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_sensentraeg
 **AS-R40 · Wiederbelebung entfernt keine eingereihte Reaktion**
 - Given: G `sensentraeger` ist gestorben, seine Reaktion ist eingereiht.
 - When: `GmCorrection(revive G)`.
-- Then: G lebt; die Reaktion bleibt offen und wird normal abgearbeitet; das frühere `SeatDied` bleibt unverändert im Protokoll. Stirbt G später erneut, entsteht keine zweite Reaktion (einmal pro Person).
+- Then: G lebt; die Reaktion bleibt offen und wird normal abgearbeitet; das frühere `SeatDied` bleibt unverändert im Protokoll. Beim Beginn der Reaktion ist G nicht wählbar; eine Antwort mit G als Ziel wird mit `invalid_target` abgelehnt, jede andere lebende Person ist zulässig. Stirbt G später erneut, entsteht keine zweite Reaktion (einmal pro Person).
 
 **AS-R41 · Bereits totes Rudelopfer**
 - Given: Nacht 1, das Rudel hat F bestätigt; danach stirbt F durch eine Spielleiterkorrektur.
