@@ -202,14 +202,14 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 - Given: Orakel-Prompt für D.
 - Then: D ist nicht in `allowed_seats`.
 
-**AS-R11 · Spielleiter wählt die Scheinrolle**
-- Given: B6, noch keine Scheinrolle gespeichert.
-- When: D wählt B; der Spielleiter wählt im Cockpit aus den angebotenen Nicht-Wolf-Rollen `waldhexe`.
-- Then: Wahrheit `trugbilderwolf`, ermittelt `waldhexe`; die Scheinrolle `waldhexe` ist gespeichert; keine Zufallsziehung, Seed-Ziehposition unverändert.
+**AS-R11 · Scheinrolle aus dem Spielaufbau**
+- Given: B6; beim Spielaufbau hat der Spielleiter aus den angebotenen Nicht-Wolf-Rollen die Scheinrolle `waldhexe` festgelegt.
+- When: D wählt B.
+- Then: Wahrheit `trugbilderwolf`, ermittelt `waldhexe`; keine Rückfrage an den Spielleiter; keine Zufallsziehung, Seed-Ziehposition unverändert. Ohne festgelegte Scheinrolle lehnt `StartGame` einen Pool mit `trugbilderwolf` ab.
 
 **AS-R12 · Wiederholte Prüfung**
 - Given: wie AS-R11; Nacht 2 prüft D erneut B.
-- Then: ermittelt erneut `waldhexe`; der Spielleiter wird nicht erneut gefragt.
+- Then: ermittelt erneut `waldhexe`; die Scheinrolle ist während der ganzen Partie unverändert, auch eine Spielleiterkorrektur bietet keine Änderung an.
 
 **AS-R13 · Übersteuerte Anzeige**
 - Given: ermittelt ist `waldhexe`.
@@ -218,8 +218,8 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 
 **AS-R14 · Replay und Undo ohne Zufall**
 - Given: AS-R11 abgeschlossen.
-- When: Undo des Orakel-Schritts, danach dieselbe Prüfung mit derselben Scheinrollenwahl; zusätzlich Replay der gesamten Befehlsliste.
-- Then: identisches Ergebnis; die Scheinrolle stammt aus dem gespeicherten Befehl, nicht aus dem Seed.
+- When: Undo des Orakel-Schritts, danach dieselbe Prüfung; zusätzlich Replay der gesamten Befehlsliste.
+- Then: identisches Ergebnis; die Scheinrolle stammt aus dem gespeicherten `StartGame`-Befehl, nicht aus dem Seed.
 
 ### Sensenträger (DR-09)
 
@@ -306,7 +306,7 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 **AS-L09 · Fraktion sofort, Fähigkeiten ab der folgenden Nacht**
 - Given: B9L; L hat in Nacht 1 `werwolf` gewählt (Bindung an A).
 - When: A wird an Tag 1 hingerichtet.
-- Then: L hat `role_id` `werwolf` und zählt sofort als Wolf; die Siegprüfung nach der Hinrichtung rechnet L als Wolf. Ab Nacht 2 wacht L mit dem Rudel.
+- Then: L hat `role_id` `werwolf`, Fraktion Werwölfe und zählt sofort als Wolf; die Siegprüfung nach der Hinrichtung rechnet L als Wolf. Die Nachtfähigkeit (Rudel) ist erstmals in Nacht 2 verfügbar.
 
 **AS-L10 · Vererbung des Wolfskinds**
 - Given: B9L; W hat in Nacht 1 F als Vorbild gewählt; L hat `wolfskind` gewählt (Bindung an W); F stirbt, W ist dadurch verwandelt.
@@ -469,8 +469,8 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 ## 8. Vollständige Beispielrunde (Stufe V)
 
 **AS-E01 · Setup bis Sieg**
-- Given: 7 Personen: A `werwolf`, B `trugbilderwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, G `sensentraeger`, M `manipulator`; Seed 4711; `reveal_role_on_death` = Nein.
-- When: Setup → Rollenanzeige → Nacht 1 (C schützt D, Rudel wählt G, E sieht „G" und verzichtet, D prüft B und der Spielleiter wählt die Scheinrolle `schutzengel`) → Morgen (G stirbt, Reaktion: G verflucht A) → Tag 1 (D nominiert B, Hinrichtung B).
+- Given: 7 Personen: A `werwolf`, B `trugbilderwolf` (Scheinrolle beim Spielaufbau: `schutzengel`), C `schutzengel`, D `das-orakel`, E `waldhexe`, G `sensentraeger`, M `manipulator`; Seed 4711; `reveal_role_on_death` = Nein.
+- When: Setup → Rollenanzeige → Nacht 1 (C schützt D, Rudel wählt G, E sieht „G" und verzichtet, D prüft B und erhält `schutzengel`) → Morgen (G stirbt, Reaktion: G verflucht A) → Tag 1 (D nominiert B, Hinrichtung B).
 - Then: Nach Tag 1 leben C, D, E, M; kein Wolf lebt → verbindlicher Siegkandidat „Dorf"; kein Manipulator-Kandidat, weil vier Personen leben (DR-12); nach `ConfirmWin` GAME_OVER. Wiederholung mit gleichem Seed und gleichen Befehlen erzeugt dieselbe Eventliste.
 
 ---
@@ -486,7 +486,7 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 | DR-05 Schutzengel | Register §3; Ablauf §3, §4, §8 | AS-R01–AS-R04, AS-R32 |
 | DR-06 Waldhexe | Register §6; Ablauf §3 | AS-R05–AS-R08, AS-R39 |
 | DR-07 Orakel | Register §4 | AS-R09, AS-R10, AS-R33 |
-| DR-08 Trugbilderwolf | Register §5, G-RNG-1; Ablauf §3 | AS-R11–AS-R14 |
+| DR-08 Trugbilderwolf | Register §5, G-RNG-1; Ablauf §1.5a, §3 | AS-R11–AS-R14 |
 | DR-09 Sensenträger | Register §7, G-TOD-4; Ablauf §4, §7.4 | AS-R15–AS-R17, AS-R37 |
 | DR-10 Wolfskind | Register §8, §2 (Rudel); Ablauf §8 | AS-R18–AS-R20, AS-R38 |
 | DR-11 Lehrling | Register §9, G-RNG-1; Ablauf §3, §8 | AS-L01–AS-L15 |

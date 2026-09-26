@@ -83,7 +83,7 @@ Erst nach Abnahme von A. Alle DR-Punkte sind entschieden (`decision-request.md`,
 | B-02 | Nachtplan mit Prioritäten, Einmalschritten, Rudelschritt nach G-PH-6, Überspringen mit Grund | `vertical-slice-flow.md` §3 |
 | B-03 | Effekt-Modell mit Quelle und Dauer (Schutz bis Tagesbeginn, Vorbildbindung, verdeckte Lehrling-Bindung, gespeicherte Scheinrolle) und `expire_effects` | `03` §5.2, DR-05, DR-08, DR-11 |
 | B-04 | Abfangregeln der Tötungs-Pipeline: Schutzengel, Hexenrettung, Spiegelung | `03` §5.4 |
-| B-05 | Mehrstufige Prompt-Kette mit persistenten Teilantworten und `CancelPrompt`: Waldhexe; Lehrling mit Spielleiterteil (drei Personen) und Lehrlingsteil (nur Rollen); Orakel mit Spielleiterwahl der Scheinrolle | `03` §5.5, DR-06, DR-08, DR-11 |
+| B-05 | Mehrstufige Prompt-Kette mit persistenten Teilantworten und `CancelPrompt`: Waldhexe; Lehrling mit Spielleiterteil (drei Personen) und Lehrlingsteil (nur Rollen); Setup mit Pflichtangabe der Scheinrolle bei `trugbilderwolf` | `03` §5.5, DR-06, DR-08, DR-11 |
 | B-06 | Persistente Reaktionswarteschlange (Sensenträger) | `03` §5.2 |
 | B-07 | Informationsmodell Wahrheit/ermittelt/gezeigt; Projektion für die handelnde Person ohne fremde Identitäten (Lehrling sieht nur Rollen) | G-INF-1, DR-07, DR-08, DR-11 |
 | B-08 | Rollen- und Fraktionswechsel mit `original_role_id`; Lehrling-Erbe nur bei lebendem Lehrling, Reset aller begrenzten Einsätze, Aktivierung ab folgender Nacht; geerbtes Wolfskind unverwandelt mit neuem Vorbild | DR-10, DR-11; AS-L01–AS-L15 |

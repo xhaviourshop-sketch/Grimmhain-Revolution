@@ -46,6 +46,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 | 1.2 | Sitzreihenfolge per Drag-and-drop festlegen | – | `seat_order` |
 | 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen je Rolle nur, wo die Rolle eine eigene festlegt (`dorfbewohner` und `werwolf` haben keine, damit 6 bis 24 Personen allein mit ihnen spielbar sind; `../../masterplan/DECISION-LOG.md` 26.09.2026; die Legacy-Grenzen aus `setup.html` gelten nicht), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"; der Core-Slice ohne Einzelsiegrolle verlangt nur Dorf und Werwölfe). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
 | 1.4 | Verteilung wählen: zufällig oder manuell | zufällig: Ziehung über `SeededRng` | Seed, Zuordnung Person → Rolle |
+| 1.5a | Ist `trugbilderwolf` im Rollenpool: Scheinrolle festlegen (DR-08) | bietet nur Rollen an, die nicht als Wolf zählen; die Scheinrolle bleibt während der Partie unverändert | Scheinrolle |
 | 1.5 | Option `Rolle beim Tod aufdecken: Ja/Nein` wählen (DR-04) | speichert die Option als Teil des Setups; sie gilt für die ganze Partie | `reveal_role_on_death` |
 | 1.6 | Setup bestätigen → `StartGame` | friert `rules_version` ein, legt ersten Checkpoint an | vollständiger Anfangszustand |
 
@@ -73,7 +74,7 @@ Keine Rolle erscheint im Cockpit, solange eine Spieleransicht aktiv ist. Wölfe 
 | 3 | 1.3 | `schutzengel` | 1 andere lebende Person wählen | Schutz nur für diese Nacht gegen Wolfsangriff; angewandt in der Morgenauflösung (DR-05) |
 | 4 | 2.0 | Rudel (alle, die zu Beginn der Nacht als Wolf zählen) | 1 Opfer oder „kein Opfer" | Wolfsziel für die Morgenauflösung |
 | 5 | 3.4 | `waldhexe` | Kette: Name des Opfers sehen → retten? (bei Ja zusätzlich Rolle des Opfers sehen) → vergiften? → Ziel → bestätigen | Rettung und/oder Gift, beide in derselben Nacht erlaubt (DR-06) |
-| 6 | 4.6 | `das-orakel` | 1 andere lebende Person wählen → (bei `trugbilderwolf` ohne gespeicherte Scheinrolle: Spielleiter wählt sie) → Ergebnis → „Gezeigt" | nur Information (Wahrheit, ermittelt, gezeigt); Sonderwölfe erscheinen als `werwolf`, Trugbilderwolf mit Scheinrolle (DR-07, DR-08) |
+| 6 | 4.6 | `das-orakel` | 1 andere lebende Person wählen → Ergebnis → „Gezeigt" | nur Information (Wahrheit, ermittelt, gezeigt); Sonderwölfe erscheinen als `werwolf`, Trugbilderwolf mit der beim Spielaufbau gespeicherten Scheinrolle (DR-07, DR-08) |
 
 Regeln des Ablaufs:
 
@@ -140,7 +141,7 @@ Gespeichert werden ausschließlich die bestätigte Todesaktion (Person, Aktion, 
 
 - Einmalschritte (`wolfskind`, `lehrling`) der ersten Nacht entfallen ab Nacht 2.
 - Ein verwandeltes Wolfskind nimmt ab der Nacht nach seiner Verwandlung am Rudelschritt teil (DR-10).
-- Hat der Lehrling seit der letzten Nacht eine Rolle geerbt, wird sie mit diesem `StartNight` aktiv (DR-11): Er erhält deren Nachtschritte und Fähigkeiten mit zurückgesetzten Einsätzen; eine geerbte Wolfsrolle wacht mit dem Rudel.
+- Hat der Lehrling seit der letzten Nacht eine Rolle geerbt, sind deren Nachtfähigkeiten ab diesem `StartNight` erstmals verfügbar (DR-11): Er erhält die Nachtschritte mit zurückgesetzten Einsätzen; eine geerbte Wolfsrolle wacht mit dem Rudel. Rolle, Fraktion und Siegberücksichtigung hatten bereits beim Erbe gewechselt.
 - Hat der Lehrling `wolfskind` geerbt, erhält er in dieser Nacht den Wolfskind-Schritt (0.9) und wählt ein neues Vorbild; er bleibt unverwandelt, bis dieses Vorbild stirbt.
 - Lebt kein `werwolf`, aber ein anderer Wolf, bleibt der Rudelschritt bestehen (`rules-register.md` G-PH-6).
 
