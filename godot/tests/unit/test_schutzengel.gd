@@ -146,12 +146,44 @@ func test_cancel_before_confirmation() -> void:
 	assert_true(_protection_of(done, 3) != null, "Schutz bleibt")
 
 
-func test_skip_guard_step_with_reason() -> void:
-	var s := Fixtures.play([_g6(), Command.start_night()] as Array[Command])
-	apply_rejected(s, Command.skip_step(GUARD_1, " "), "reason_required", "nicht still")
-	var r := apply_ok(s, Command.skip_step(GUARD_1, "Person schläft"), "Überspringen mit Grund")
-	assert_eq(String(r.state.night_step_status[0]), "skipped", "Status übersprungen")
-	assert_true(r.state.protections.is_empty(), "kein Schutz")
+func test_guard_step_not_skippable() -> void:
+	# Pflichtauswahl: SkipStep ist für den Schutzengelschritt nie zulässig, auch mit Grund.
+	var open := Fixtures.play([_g6(), Command.start_night()] as Array[Command])
+	assert_eq(RulesEngine.next_step_id(open), GUARD_1, "erwarteter Schutzengelschritt")
+	_expect_skip_rejected(open, GUARD_1, "bei geöffnetem Prompt")
+	var not_open := apply_ok(open, Command.cancel_prompt(1, "zu früh"), "Prompt abbrechen").state
+	assert_true(not_open.pending_prompt == null, "Prompt noch nicht geöffnet")
+	assert_eq(RulesEngine.next_step_id(not_open), GUARD_1, "Schritt weiterhin erwartet")
+	_expect_skip_rejected(not_open, GUARD_1, "vor dem Öffnen")
+	var reopened := apply_ok(not_open, Command.begin_step(GUARD_1), "erneut angeboten").state
+	assert_eq(reopened.pending_prompt.step_id, GUARD_1, "derselbe Schritt")
+
+
+func _expect_skip_rejected(s: GameState, step_id: String, label: String) -> void:
+	var before := CanonicalJson.stringify(s.to_dict())
+	for reason: String in ["Person schläft", ""]:
+		var r := RulesEngine.apply(s, Command.skip_step(step_id, reason))
+		assert_false(r.ok, "%s: SkipStep abgelehnt (Grund '%s')" % [label, reason])
+		assert_eq(String(r.error), "step_not_skippable", "%s: Fehlergrund" % label)
+		assert_true(r.events.is_empty(), "%s: keine Ereignisse" % label)
+	assert_eq(CanonicalJson.stringify(s.to_dict()), before, "%s: Zustand unverändert" % label)
+
+
+func test_pack_step_still_skippable() -> void:
+	# Regression: Der Rudelschritt bleibt mit nicht leerer Begründung überspringbar.
+	var s := Fixtures.play([_g6(), Command.start_night(), Command.answer_prompt(1, [6])] as Array[Command])
+	assert_eq(RulesEngine.next_step_id(s), PACK_1, "Rudelschritt erwartet")
+	apply_rejected(s, Command.skip_step(PACK_1, " "), "reason_required", "ohne Grund")
+	var r := apply_ok(s, Command.skip_step(PACK_1, "Rudel einigt sich nicht"), "Rudel überspringen")
+	assert_eq(events_of_type(r.events, "StepSkipped").size(), 1, "StepSkipped protokolliert")
+	assert_eq(String(r.state.night_step_status[1]), "skipped", "Status übersprungen")
+	apply_ok(r.state, Command.end_night(), "Nacht endet")
+
+
+func test_reaction_step_still_not_skippable() -> void:
+	var s := Fixtures.play(_concat(_night_one(_g6r(), 5, 4), [Command.end_night()] as Array[Command]))
+	assert_eq(RulesEngine.next_step_id(s), "reaction:1", "Reaktion erwartet")
+	apply_rejected(s, Command.skip_step("reaction:1", "egal"), "step_not_skippable", "Reaktion")
 
 
 # --- Abfangen -------------------------------------------------------------------
@@ -271,7 +303,9 @@ func test_two_guardians_same_target_one_prevention() -> void:
 
 func test_gm_set_protection() -> void:
 	# Zusatz 29
-	var s := Fixtures.play([_g6(), Command.start_night(), Command.skip_step(GUARD_1, "Person schläft"), Command.begin_step(PACK_1)] as Array[Command])
+	# Ohne Überspringen ist „kein Schutz nach erledigtem Schritt“ nur nach einer Entfernung erreichbar.
+	var s := Fixtures.play([_g6(), Command.start_night(), Command.answer_prompt(1, [5]),
+		CorrectionFixtures.gm("remove_protection", {"guardian_id": 3}), Command.begin_step(PACK_1)] as Array[Command])
 	var r := apply_ok(s, CorrectionFixtures.gm("set_protection", {"guardian_id": 3, "target_id": 6}, "Wahl übersehen"), "Schutz setzen")
 	var corrected := events_of_type(r.events, "GmCorrected")
 	assert_true(corrected.size() == 1 and corrected[0].data["old"] == {"protected_id": -1} and corrected[0].data["new"] == {"protected_id": 6}, "alter und neuer Wert")
@@ -322,6 +356,96 @@ func test_invalid_protection_corrections() -> void:
 	apply_rejected(removed, CorrectionFixtures.gm("remove_protection", {"guardian_id": 3}), "no_change", "kein Schutz vorhanden")
 	var day := Fixtures.play(_concat(_night_one(_g6(), 5, -1), [Command.end_night()] as Array[Command]))
 	apply_rejected(day, CorrectionFixtures.gm("set_protection", {"guardian_id": 3, "target_id": 6}), "wrong_phase", "vergangene Nacht")
+
+
+# --- Save/Load nach Schutzkorrekturen ---------------------------------------------
+
+## Befehlsfolgen bis einschließlich der Korrektur; erwarteter Schutz von Schutzengel 3 (-1 = keiner).
+func _correction_cases() -> Dictionary:
+	var base: Array[Command] = [_g6(4711), Command.start_night()]
+	return {
+		"A setzen": [_concat(base, [Command.answer_prompt(1, [5]), CorrectionFixtures.gm("remove_protection", {"guardian_id": 3}),
+			CorrectionFixtures.gm("set_protection", {"guardian_id": 3, "target_id": 6}, "Schutz nachgetragen")] as Array[Command]), 6],
+		"B ändern": [_concat(base, [Command.answer_prompt(1, [5]),
+			CorrectionFixtures.gm("set_protection", {"guardian_id": 3, "target_id": 6}, "Ziel falsch eingetragen")] as Array[Command]), 6],
+		"C entfernen": [_concat(base, [Command.answer_prompt(1, [6]),
+			CorrectionFixtures.gm("remove_protection", {"guardian_id": 3}, "Schutz irrtümlich")] as Array[Command]), -1],
+	}
+
+
+## Fortsetzung der Nacht: Rudel beginnen, 6 wählen, Nacht beenden.
+func _continue_night() -> Array[Command]:
+	return [Command.begin_step(PACK_1), Command.answer_prompt(2, [6]), Command.end_night()]
+
+
+func test_save_load_after_protection_corrections() -> void:
+	var cases := _correction_cases()
+	for label: String in cases:
+		var commands: Array[Command] = []
+		commands.assign(cases[label][0])
+		var expected_target: int = cases[label][1]
+		var run := _replay_ok(commands, label)
+		if not run.ok:
+			continue
+		var p := _protection_of(run.state, 3)
+		if expected_target < 0:
+			assert_true(p == null, "%s: kein Schutz" % label)
+		else:
+			assert_true(p != null and p.guardian_id == 3 and p.target_id == expected_target and p.night == 1, "%s: Schutzengel, Ziel, Nacht" % label)
+		assert_eq(String(run.state.night_step_status[0]), "done", "%s: Schutzengelschritt erledigt" % label)
+		assert_eq(String(run.state.night_step_status[1]), "pending", "%s: Rudelschritt offen" % label)
+		var loaded := StateCodec.decode(StateCodec.encode(run.state, commands))
+		assert_true(loaded.ok, "%s: Laden (%s)" % [label, loaded.error])
+		if not loaded.ok:
+			continue
+		assert_eq(CanonicalJson.stringify(loaded.state.to_dict()), CanonicalJson.stringify(run.state.to_dict()), "%s: vollständiger Zustand" % label)
+		assert_eq(loaded.state.content_hash(), run.state.content_hash(), "%s: State-Hash" % label)
+		var lp := _protection_of(loaded.state, 3)
+		assert_true((lp == null) == (p == null) and (lp == null or lp.to_dict() == p.to_dict()), "%s: Schutz nach Laden" % label)
+		assert_eq(loaded.state.night_step_status, run.state.night_step_status, "%s: Schrittstatus nach Laden" % label)
+		# Reguläre Fortsetzung auf beiden Zuständen.
+		var from_original := run.state
+		var from_loaded := loaded.state
+		var events_original: Array[GameEvent] = []
+		var events_loaded: Array[GameEvent] = []
+		for c: Command in _continue_night():
+			var a := RulesEngine.apply(from_original, c)
+			var b := RulesEngine.apply(from_loaded, c)
+			assert_true(a.ok and b.ok, "%s: %s angenommen (%s)" % [label, c.type, a.error])
+			if not (a.ok and b.ok):
+				break
+			from_original = a.state
+			from_loaded = b.state
+			events_original.append_array(a.events)
+			events_loaded.append_array(b.events)
+		assert_eq(events_json(events_loaded), events_json(events_original), "%s: identische Fortsetzungsereignisse" % label)
+		assert_eq(CanonicalJson.stringify(from_loaded.to_dict()), CanonicalJson.stringify(from_original.to_dict()), "%s: identischer Endzustand" % label)
+		var prevented := events_of_type(events_loaded, "KillPrevented")
+		if expected_target == 6:
+			# Randfall: korrigiertes Ziel wird Rudelopfer, Angriff bleibt nach Laden verhindert.
+			assert_true(from_loaded.players[6].alive, "%s: korrigierter Schutz wirkt nach Laden" % label)
+			assert_eq(prevented.size(), 1, "%s: KillPrevented" % label)
+			if prevented.size() == 1:
+				var d: Dictionary = prevented[0].data
+				assert_true(int(d["target_id"]) == 6 and int(d["guardian_id"]) == 3 and int(d["night"]) == 1
+					and String(d["cause"]) == "NIGHT_KILL" and String(d["protection"]) == "schutzengel", "%s: interne Daten" % label)
+				assert_eq(CanonicalJson.stringify(d), CanonicalJson.stringify(events_of_type(events_original, "KillPrevented")[0].data), "%s: gleiche Daten wie ohne Laden" % label)
+		else:
+			assert_false(from_loaded.players[6].alive, "%s: ohne Schutz stirbt 6" % label)
+			assert_eq(prevented.size(), 0, "%s: nichts verhindert" % label)
+
+
+func test_replay_of_protection_corrections() -> void:
+	var cases := _correction_cases()
+	for label: String in cases:
+		var commands: Array[Command] = []
+		commands.assign(cases[label][0])
+		commands.append_array(_continue_night())
+		var a := RulesEngine.replay(commands)
+		var b := RulesEngine.replay(commands)
+		assert_true(a.ok and b.ok, "%s: Replay angenommen (%s @ %d)" % [label, a.error, a.failed_index])
+		assert_eq(events_json(a.events), events_json(b.events), "%s: Ereignisse bytegleich" % label)
+		assert_eq(a.state.content_hash(), b.state.content_hash(), "%s: State-Hash gleich" % label)
 
 
 # --- Save/Load, Replay, Geheimhaltung ------------------------------------------
