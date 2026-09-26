@@ -412,6 +412,8 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. 
 
 ### Spiegelwolf (DR-13)
 
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_spiegelwolf.gd`): AS-R28 bis AS-R31 und DR-13 vollständig, dazu Selbstnominierung, `GmCorrection execute` mit und ohne Nominierung, Folgen über Sensenträger und Wolfskind und die reine Vorschau.
+
 **AS-R28 · Spiegelung**
 - Given: S `spiegelwolf`; Tag 1: F nominiert S.
 - When: Hinrichtung von S wird bestätigt.
@@ -425,7 +427,7 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. 
 **AS-R30 · Nominierende Person bereits tot**
 - Given: F nominiert S, F stirbt danach durch eine andere Ursache am selben Tag.
 - When: Hinrichtung von S.
-- Then: niemand stirbt; Spiegelung verbraucht.
+- Then: keine Spiegelung; S stirbt mit `LYNCH`; Spiegelung bleibt unverbraucht (endgültige Regel, DECISION-LOG „Spiegelwolf“).
 
 **AS-R31 · Hinrichtung ohne Nominierung**
 - Given: S wurde an diesem Tag nicht nominiert.
@@ -542,5 +544,5 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. 
 | DR-10 Wolfskind | Register §8, §2 (Rudel); Ablauf §8 | AS-R18–AS-R20, AS-R38 |
 | DR-11 Lehrling | Register §9, G-RNG-1; Ablauf §3, §8 | AS-L01–AS-L16 |
 | DR-12 Manipulator | Register §10; Ablauf §9.2 | AS-R25, AS-R26, AS-E01 |
-| DR-13 Spiegelwolf ohne Nominierung | Register §11; Ablauf §7.6 | AS-R31 |
+| DR-13 Spiegelwolf ohne Nominierung | Register §11; Ablauf §7.2, §7.3, §7.6 | AS-R28–AS-R31 |
 | DR-14 Siegprüfung und Reaktionen | Register G-SIEG-6; Ablauf §4 Schritt 5, §7.5, §9.1 | AS-R26, AS-R36, AS-A03 |

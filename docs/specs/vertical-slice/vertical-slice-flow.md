@@ -128,7 +128,7 @@ Regeln des Ablaufs:
 |---|---|
 | 7.1 | Der Spielleiter wählt die betroffene Person und die Todesaktion „Hinrichtung" (`DecideExecution(person)`) oder „Keine Hinrichtung heute" (`DecideExecution(none)`). |
 | 7.2 | Die App zeigt dem Spielleiter die Vorschau der Folge (z. B. „Spiegelwolf: stattdessen stirbt *Nominierende Person*") und verlangt Bestätigung. |
-| 7.3 | Bei Bestätigung läuft die Tötungs-Pipeline: Spiegelung (`spiegelwolf`, erste Hinrichtung, nur mit gespeicherter Nominierung), sonst Tod mit Ursache `LYNCH`, Quelle = Dorf/Hinrichtung. |
+| 7.3 | Bei Bestätigung entscheidet die zentrale Hinrichtungsauflösung (dieselbe Regel wie die Vorschau aus 7.2): Spiegelung (`spiegelwolf`, erste Hinrichtung, nur mit Nominierung dieses Tages durch eine lebende Person), sonst Tod mit Ursache `LYNCH`, Quelle = Dorf/Hinrichtung. Der Tod läuft durch die Tötungs-Pipeline. |
 | 7.4 | Folgen ohne Entscheidung (Wolfskind, Lehrling), dann Reaktionen sofort (Sensenträger, DR-09). |
 | 7.5 | Vorläufiger Siegstatus nach jedem Tod, verbindliche Prüfung nach allen Reaktionen (DR-14, Abschnitt 9). |
 | 7.6 | Eine Hinrichtung einer an diesem Tag nicht nominierten Person ist nur per Übersteuerung mit Warnung, Begründung und Protokoll möglich (DR-03, `GmCorrection execute`, Ursache `LYNCH`, Reaktionen und Siegprüfung normal). Trifft sie den Spiegelwolf, gibt es keine Spiegelung; er stirbt normal (DR-13). |

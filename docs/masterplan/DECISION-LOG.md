@@ -186,3 +186,14 @@ Diese Einträge ersetzen widersprechende ältere Formulierungen ausdrücklich.
 - Ein Tod per `GmCorrection kill` ohne Todesfolgen verwandelt nicht.
 - Das Orakel ermittelt vor der Verwandlung `wolfskind`, danach `werwolf`; die Waldhexe sieht immer die tatsächliche Rolle `wolfskind`.
 - Spielleiterkorrekturen: Vorbild setzen, ändern, entfernen; Verwandlung auslösen und zurücknehmen (das Vorbild bleibt). Die Erscheinung des Wolfskinds ist nicht einzeln korrigierbar.
+
+## Spiegelwolf · Produktionsrolle und Hinrichtungsauflösung · 26. September 2026
+
+Dieser Eintrag ersetzt für die tote nominierende Person die ältere Formulierung „niemand stirbt“ (Regelregister §11, AS-R30).
+
+- Der Spiegelwolf gehört zu den Werwölfen, zählt als Wolf, hat keinen eigenen Nachtschritt und ist Teil des Rudels.
+- Die erste bestätigte Hinrichtung (Ursache `LYNCH`) wird auf die Person umgeleitet, die ihn an diesem Tag nominiert hat: Sie stirbt mit `SPIEGELWOLF_RETALIATE`, Quelle Spiegelwolf; er überlebt, die Hinrichtung des Tages gilt als erfolgt. Die Spiegelung ist einmal pro Person und Partie und wird erst mit der bestätigten Hinrichtung verbraucht.
+- Keine Spiegelung und normaler Tod mit `LYNCH`, ohne Verbrauch: bei bereits verbrauchter Spiegelung, ohne Nominierung dieses Tages auf ihn und wenn die nominierende Person bei der Hinrichtung tot oder unbekannt ist.
+- Selbstnominierung: Die Spiegelung wird ausgelöst und verbraucht; er selbst stirbt mit `SPIEGELWOLF_RETALIATE`, genau ein Tod.
+- Reguläre Hinrichtung und `GmCorrection execute` nutzen dieselbe Auflösung; mit gültiger Nominierung spiegelt auch die Übersteuerung. Schutzengel und Hexenrettung verhindern die Spiegelung nicht. Folgen des Spiegelziels (Reaktion, Wolfskind) laufen normal.
+- Eine Wiederbelebung und ein Rollenwechsel setzen die Nutzung nicht zurück.

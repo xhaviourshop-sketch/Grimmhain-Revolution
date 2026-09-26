@@ -319,23 +319,23 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 | Feld | Inhalt |
 |---|---|
-| Regeltext DE | Der Spiegelwolf gehört zu den Wölfen und wacht mit dem Rudel. Bestätigt der Spielleiter zum ersten Mal in dieser Partie seine Hinrichtung und liegt eine gespeicherte Nominierung vor, überlebt er; stattdessen stirbt die nominierende Person. Lebt sie nicht mehr, stirbt niemand. Fehlt die Nominierung, findet keine Spiegelung statt und der Spiegelwolf stirbt normal. Ab der zweiten Hinrichtung stirbt er ebenfalls normal. |
-| Regeltext EN | The Mirror Wolf belongs to the wolves and wakes with the pack. The first time the game master confirms their execution, and a nomination is recorded, the Mirror Wolf survives and the nominating person dies instead. If that person is no longer alive, nobody dies. Without a recorded nomination, no reflection occurs and the Mirror Wolf dies normally. From the second execution onward, they also die normally. |
+| Regeltext DE | Der Spiegelwolf gehört zu den Wölfen und wacht mit dem Rudel. Bestätigt der Spielleiter zum ersten Mal in dieser Partie seine Hinrichtung und liegt eine gespeicherte Nominierung dieses Tages vor, überlebt er; stattdessen stirbt die nominierende Person. Lebt sie nicht mehr, findet keine Spiegelung statt und der Spiegelwolf stirbt normal. Fehlt die Nominierung, findet keine Spiegelung statt und der Spiegelwolf stirbt normal. Ab der zweiten Hinrichtung stirbt er ebenfalls normal. |
+| Regeltext EN | The Mirror Wolf belongs to the wolves and wakes with the pack. The first time the game master confirms their execution, and a nomination is recorded for that day, the Mirror Wolf survives and the nominating person dies instead. If that person is no longer alive, no reflection occurs and the Mirror Wolf dies normally. Without a recorded nomination, no reflection occurs and the Mirror Wolf dies normally. From the second execution onward, they also die normally. |
 | Fraktion | Werwölfe. `counts_as_wolf` = ja |
 | Nachtpriorität | keine eigene; Teil des Rudelschritts 2.0 |
 | Gültige Ziele | keine eigenen |
 | Dauer | Spiegelung einmal pro Person |
-| Auflösung | `DecideExecution(Spiegelwolf)` → Abfangregel „Spiegelung" → Tod der nominierenden Person mit Ursache `SPIEGELWOLF_RETALIATE`, Quelle = Spiegelwolf. Die Hinrichtung des Tages gilt als erfolgt (Code: `finalizeLynch` läuft) |
+| Auflösung | Zentrale Hinrichtungsauflösung `ExecutionRules` für `DecideExecution` und `GmCorrection execute`: Ist das Ziel ein Spiegelwolf mit unverbrauchter Spiegelung und liegt eine Nominierung dieses Tages auf ihn durch eine lebende Person vor, stirbt diese mit `SPIEGELWOLF_RETALIATE`, Quelle = Spiegelwolf, über die normale Tötungs-Pipeline; die Spiegelung ist verbraucht (`ability_uses`, einmal pro Person), die Hinrichtung des Tages gilt als erfolgt. Selbstnominierung: er selbst stirbt mit `SPIEGELWOLF_RETALIATE`, genau ein Tod. Sonst (verbraucht, keine passende Nominierung, nominierende Person tot) stirbt er mit `LYNCH` und verbraucht nichts. Schutz und Hexenrettung betreffen die Hinrichtung nicht. Eine reine Vorschau (`ExecutionRules.preview`) liefert dasselbe Ergebnis ohne Zustandsänderung |
 | Konflikte | Nominierende Person ist Sensenträger → Reaktion. Nominierende Person ist Manipulator → er stirbt durch die Spiegelung; sein Tod durch Nominierung betrifft nur den Fall, dass er selbst nominiert wird |
 | Siegbezug | G-SIEG-2 |
-| Manuelle Übersteuerung | Spiegelung als verbraucht/unverbraucht setzen; Spiegelziel abweichend wählen (Warnung, Protokoll) |
+| Manuelle Übersteuerung | Spiegelung als verbraucht/unverbraucht setzen (`GmCorrection set_mirror`, Warnung, Begründung, Protokoll). Ein abweichendes Spiegelziel ist nicht vorgesehen; stattdessen `GmCorrection kill` mit ausdrücklicher Ursache |
 | Legacy-Beleg | Zweig `target.role==="Spiegelwolf"` in `doLynchFlow` (`meta.spMirrorUsed`, Abfrage `mirrorWolfWhoNominated`, Filter `!x.flags.dead && x!==target`) in `../../../js/core/night.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-13 Spiegelwolf**
 
 | Punkt | Text sagt | Code tut | Entscheidung (DR-13) |
 |---|---|---|---|
-| fehlende Nominierung | „auf den Spieler, der ihn nominiert hat" | Nominierende werden nicht gespeichert; der Spielleiter wählt bei der Hinrichtung frei eine lebende Person | Tritt nur bei einer Hinrichtung per Übersteuerung auf (DR-03). Dann keine Spiegelung, der Spiegelwolf stirbt normal; die App fragt keine nominierende Person nachträglich ab |
+| fehlende Nominierung | „auf den Spieler, der ihn nominiert hat" | Nominierende werden nicht gespeichert; der Spielleiter wählt bei der Hinrichtung frei eine lebende Person | Tritt nur bei einer Hinrichtung per Übersteuerung auf (DR-03). Dann keine Spiegelung, der Spiegelwolf stirbt normal; die App fragt keine nominierende Person nachträglich ab. Gleiches gilt, wenn die nominierende Person bei der Hinrichtung nicht mehr lebt (Korrektur 26.09.2026) |
 
 ---
 
