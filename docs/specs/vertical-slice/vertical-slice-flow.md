@@ -1,6 +1,6 @@
 # Vertical Slice · Ablauf einer Partie
 
-**Stand:** 2026-09-26 · **Status:** Entwurf, abhängig von `decision-request.md`
+**Stand:** 2026-09-26 · **Status:** abgeglichen mit DR-01 bis DR-14 (`../../masterplan/DECISION-LOG.md`)
 **Regeln:** `rules-register.md` · **Rollen:** `role-selection.md` · **Architektur:** `../../godot-migration/03-godot-architecture.md`
 
 Pfade relativ zu `docs/specs/vertical-slice/`.
@@ -34,7 +34,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 |---|---|
 | **Spielleiter** (Cockpit) | vollständiger Zustand, alle Ereignisse |
 | **Handelnde Person** (gesicherte Tablet-Karte) | genau die Information oder Auswahl dieses Schritts |
-| **Öffentlich** (vorlesen, später öffentliche Anzeige) | Phase, Nummer, lebend/tot, Namen, Nominierungen, öffentliche Ansagen; Umfang bei Toden nach DR-04 |
+| **Öffentlich** (vorlesen, später öffentliche Anzeige) | Phase, Nummer, lebend/tot, Namen, Nominierungen, öffentliche Ansagen. Bei einem Tod: Name immer; Rolle nur, wenn im Setup `reveal_role_on_death` = Ja; Ursache nie (DR-04) |
 
 ---
 
@@ -44,9 +44,10 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 |---|---|---|---|
 | 1.1 | Namen erfassen (6 bis 24) | vergibt je Person eine stabile ID; prüft Anzahl | Personenliste |
 | 1.2 | Sitzreihenfolge per Drag-and-drop festlegen | – | `seat_order` |
-| 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen je Rolle nur, wo die Rolle eine eigene festlegt (`dorfbewohner` und `werwolf` haben keine, damit 6 bis 24 Personen allein mit ihnen spielbar sind; `DECISION-LOG.md` 26.09.2026; die Legacy-Grenzen aus `setup.html` gelten nicht), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
+| 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen je Rolle nur, wo die Rolle eine eigene festlegt (`dorfbewohner` und `werwolf` haben keine, damit 6 bis 24 Personen allein mit ihnen spielbar sind; `../../masterplan/DECISION-LOG.md` 26.09.2026; die Legacy-Grenzen aus `setup.html` gelten nicht), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"; der Core-Slice ohne Einzelsiegrolle verlangt nur Dorf und Werwölfe). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
 | 1.4 | Verteilung wählen: zufällig oder manuell | zufällig: Ziehung über `SeededRng` | Seed, Zuordnung Person → Rolle |
-| 1.5 | Setup bestätigen → `StartGame` | friert `rules_version` ein, legt ersten Checkpoint an | vollständiger Anfangszustand |
+| 1.5 | Option `Rolle beim Tod aufdecken: Ja/Nein` wählen (DR-04) | speichert die Option als Teil des Setups; sie gilt für die ganze Partie | `reveal_role_on_death` |
+| 1.6 | Setup bestätigen → `StartGame` | friert `rules_version` ein, legt ersten Checkpoint an | vollständiger Anfangszustand |
 
 Gleicher Seed, gleiche Personenliste und gleicher Rollenpool erzeugen dieselbe Zuordnung.
 
@@ -67,40 +68,40 @@ Keine Rolle erscheint im Cockpit, solange eine Spieleransicht aktiv ist. Wölfe 
 
 | Nr. | Priorität | Schritt | Prompt | Wirkung beim Bestätigen |
 |---|---|---|---|---|
-| 1 | 0.9 | `wolfskind` (nur Nacht 1) | Vorbild wählen | Bindung Wolfskind → Vorbild |
-| 2 | 1.1 | `lehrling` (nur Nacht 1) | Mentor wählen | Bindung Lehrling → Mentor |
-| 3 | 1.3 | `schutzengel` | 1 Person wählen | Schutz-Effekt mit Quelle und Dauer (DR-05) |
-| 4 | 2.0 | Rudel (`werwolf`, `trugbilderwolf`, `spiegelwolf`, ggf. verwandeltes `wolfskind`) | 1 Opfer oder „kein Opfer" | Wolfsziel für die Morgenauflösung |
-| 5 | 3.4 | `waldhexe` | Kette: Opfer sehen → retten? → vergiften? → Ziel → bestätigen | Rettung und/oder Gift (DR-06) |
-| 6 | 4.6 | `das-orakel` | 1 Person wählen → Ergebnis → „Gezeigt" | nur Information (Wahrheit, ermittelt, gezeigt) |
+| 1 | 0.9 | `wolfskind` (Nacht 1) | Vorbild wählen (andere lebende Person, nicht sich selbst) | Bindung Wolfskind → Vorbild |
+| 2 | 1.1 | `lehrling` (Nacht 1) | a) nur Cockpit: Spielleiter wählt drei geeignete lebende Personen außer dem Lehrling → b) gesicherte Karte: Lehrling sieht **nur drei Rollen**, keine Namen, und wählt eine → c) bestätigen | verdeckte Bindung Lehrling → Person der gewählten Rolle (nur Spielleiter sichtbar) |
+| 3 | 1.3 | `schutzengel` | 1 andere lebende Person wählen | Schutz nur für diese Nacht gegen Wolfsangriff; angewandt in der Morgenauflösung (DR-05) |
+| 4 | 2.0 | Rudel (alle, die zu Beginn der Nacht als Wolf zählen) | 1 Opfer oder „kein Opfer" | Wolfsziel für die Morgenauflösung |
+| 5 | 3.4 | `waldhexe` | Kette: Name des Opfers sehen → retten? (bei Ja zusätzlich Rolle des Opfers sehen) → vergiften? → Ziel → bestätigen | Rettung und/oder Gift, beide in derselben Nacht erlaubt (DR-06) |
+| 6 | 4.6 | `das-orakel` | 1 andere lebende Person wählen → (bei `trugbilderwolf` ohne gespeicherte Scheinrolle: Spielleiter wählt sie) → Ergebnis → „Gezeigt" | nur Information (Wahrheit, ermittelt, gezeigt); Sonderwölfe erscheinen als `werwolf`, Trugbilderwolf mit Scheinrolle (DR-07, DR-08) |
 
 Regeln des Ablaufs:
 
 - Immer genau ein aktiver Schritt. Der Spielleiter kann einen Schritt mit Grund überspringen (`SkipStep`), das Ergebnis ist „keine Wirkung".
 - Ein Schritt eines inzwischen toten Rolleninhabers hat keine Wirkung und wird mit Grund „tot" angezeigt.
-- Ein offener Prompt (auch mitten in der Hexenkette) blockiert `EndNight` und wird bei jedem Checkpoint mit allen Teilantworten gespeichert.
+- Ein offener Prompt (auch mitten in der Hexen- oder Lehrlingskette) blockiert `EndNight` und wird bei jedem Checkpoint mit allen Teilantworten gespeichert.
 - `CancelPrompt` stellt den Zustand vor dem Prompt exakt wieder her (gleicher fachlicher Hash).
-- Das Gift der Waldhexe wirkt nach DR-06c sofort oder am Morgen.
+- Das Gift der Waldhexe tötet sofort (DR-06). Spätere Nachtschritte der vergifteten Person entfallen; ihre Todesreaktionen werden in der Morgenauflösung abgearbeitet (DR-09).
+- Die gesicherte Karte des Lehrlings und alle Ereignisse mit Sichtbarkeit „handelnde Person" enthalten nur Rollen-IDs und Optionsnummern, niemals Personen-IDs, Namen oder Sitzplätze der drei Personen (`rules-register.md` §9).
 - Nach Schritt 6 bietet die App `EndNight` an, mit Hinweis auf übersprungene Schritte.
 
 ## 4. Morgenauflösung und Morgenbericht
 
 `EndNight` setzt Phase DAWN_RESOLUTION. Die Auflösung läuft deterministisch in dieser Reihenfolge:
 
-1. Wolfsziel prüfen: Rettung durch Waldhexe oder Schutz durch Schutzengel verhindert den Tod (`KillPrevented`, nur Spielleiter).
-2. Tod des Wolfsopfers mit Ursache `NIGHT_KILL` anwenden, sonst nichts.
-3. Hexengift anwenden, falls DR-06c „am Morgen" entscheidet.
-4. Unmittelbare Todesfolgen ohne Entscheidung: Verwandlung `wolfskind`, Rollenwechsel `lehrling`.
-5. Reaktionen mit Entscheidung nacheinander abfragen (Sensenträger), jeweils mit Grund. Jede Reaktion kann weitere Tode und Folgen auslösen; die Schleife endet, wenn die Warteschlange leer ist.
-6. Siegprüfung (Zeitpunkt nach DR-14). Bei einem Kandidaten siehe Abschnitt 9.
-7. Morgenbericht anzeigen:
+1. Wolfsziel prüfen: Rettung durch Waldhexe oder Schutz durch Schutzengel verhindert den Tod (`KillPrevented`, nur Spielleiter). Der Schutz endet danach (DR-05).
+2. Tod des Wolfsopfers mit Ursache `NIGHT_KILL` anwenden, sonst nichts. Nach jedem Tod: vorläufiger Siegstatus (DR-14).
+3. Unmittelbare Todesfolgen ohne Entscheidung, jeweils direkt beim Tod in der Pipeline: Verwandlung `wolfskind`, Erbe des `lehrling` (auch für Tode in der Nacht, z. B. durch Gift).
+4. Reaktionen mit Entscheidung nacheinander abfragen (Sensenträger, auch nach Gifttod in der Nacht), jeweils freiwillig (DR-09). Jede Reaktion kann weitere Tode und Folgen auslösen; die Schleife endet, wenn die Warteschlange leer ist.
+5. Verbindliche Siegprüfung erst jetzt, wenn keine Reaktion und kein Prompt mehr offen ist (DR-14). Kandidaten siehe Abschnitt 9.
+6. Morgenbericht anzeigen:
 
 | Teil | Inhalt |
 |---|---|
-| Öffentlich vorlesen | Namen der in der Nacht Gestorbenen oder „Niemand ist gestorben"; weitere Angaben nach DR-04 |
-| Nur für den Spielleiter | wer wen geschützt oder gerettet hat, wer vergiftet wurde, Ursachen, Verwandlungen, Rollenwechsel, Informationsergebnisse der Nacht |
+| Öffentlich vorlesen | Namen der in der Nacht Gestorbenen oder „Niemand ist gestorben"; Rolle der Gestorbenen nur bei `reveal_role_on_death` = Ja; keine Ursache (DR-04) |
+| Nur für den Spielleiter | wer wen geschützt oder gerettet hat, wer vergiftet wurde, Ursachen, Verwandlungen, Lehrling-Bindung und -Erbe, Informationsergebnisse der Nacht |
 
-8. `BeginDay` setzt Phase DAY (Unterzustand DISCUSSION) und den Tageszähler.
+7. `BeginDay` setzt Phase DAY (Unterzustand DISCUSSION) und den Tageszähler.
 
 ## 5. Tag
 
@@ -115,7 +116,7 @@ Regeln des Ablaufs:
 
 | Schritt | Spielleiter tut | App tut | Gespeichert |
 |---|---|---|---|
-| 6.1 | tippt nominierende Person, dann nominierte Person | prüft nach DR-03 (Standard: jede Person nominiert einmal und wird einmal nominiert) | `Nomination{nominator_id, nominee_id, day}` |
+| 6.1 | tippt nominierende Person, dann nominierte Person | prüft nach DR-03: beide leben; jede Person nominiert pro Tag einmal und wird pro Tag einmal nominiert; Abweichung nur als Übersteuerung mit Warnung, Begründung und Protokoll | `Nomination{nominator_id, nominee_id, day}` |
 | 6.2 | – | Ist die nominierte Person der Manipulator, stirbt er sofort (`MANIPULATOR_NOMINATED`, Quelle = nominierende Person); Folgen und Reaktionen laufen sofort | Tod mit Ursache, Quelle, Zeitpunkt |
 | 6.3 | Diskussion und Abstimmung finden am Tisch statt; der Spielleiter zählt physisch | **nichts**: kein Stimmfeld, keine Zählung, keine Mehrheitsberechnung | nichts |
 | 6.4 | Nominierung versehentlich erfasst | Undo des Befehls `Nominate` | – |
@@ -125,31 +126,32 @@ Regeln des Ablaufs:
 | Schritt | Ablauf |
 |---|---|
 | 7.1 | Der Spielleiter wählt die betroffene Person und die Todesaktion „Hinrichtung" (`DecideExecution(person)`) oder „Keine Hinrichtung heute" (`DecideExecution(none)`). |
-| 7.2 | Die App zeigt die Vorschau der Folge (z. B. „Spiegelwolf: stattdessen stirbt *Nominierende Person*") und verlangt Bestätigung. |
-| 7.3 | Bei Bestätigung läuft die Tötungs-Pipeline: Spiegelung (`spiegelwolf`), sonst Tod mit Ursache `LYNCH`, Quelle = Dorf/Hinrichtung. |
-| 7.4 | Folgen ohne Entscheidung (Wolfskind, Lehrling), dann Reaktionen (Sensenträger nach DR-09b). |
-| 7.5 | Siegprüfung (Abschnitt 9). |
-| 7.6 | Eine Hinrichtung einer nicht nominierten Person ist nach DR-03 entweder gesperrt oder nur per Übersteuerung mit Warnung möglich. |
+| 7.2 | Die App zeigt dem Spielleiter die Vorschau der Folge (z. B. „Spiegelwolf: stattdessen stirbt *Nominierende Person*") und verlangt Bestätigung. |
+| 7.3 | Bei Bestätigung läuft die Tötungs-Pipeline: Spiegelung (`spiegelwolf`, erste Hinrichtung, nur mit gespeicherter Nominierung), sonst Tod mit Ursache `LYNCH`, Quelle = Dorf/Hinrichtung. |
+| 7.4 | Folgen ohne Entscheidung (Wolfskind, Lehrling), dann Reaktionen sofort (Sensenträger, DR-09). |
+| 7.5 | Vorläufiger Siegstatus nach jedem Tod, verbindliche Prüfung nach allen Reaktionen (DR-14, Abschnitt 9). |
+| 7.6 | Eine Hinrichtung einer an diesem Tag nicht nominierten Person ist nur per Übersteuerung mit Warnung, Begründung und Protokoll möglich (DR-03). Trifft sie den Spiegelwolf, gibt es keine Spiegelung; er stirbt normal (DR-13). |
 
 Gespeichert werden ausschließlich die bestätigte Todesaktion (Person, Aktion, Ursache, Quelle, Zeitpunkt) und ihre Folgeereignisse. Andere Todesarten am Tag laufen als `GmCorrection` mit ausdrücklicher Ursache.
 
 ## 8. Nächste Nacht
 
-`EndDay` ist nur möglich, wenn kein Prompt und keine Reaktion offen ist. `StartNight` erhöht den Nachtzähler, lässt nachtgebundene Effekte auslaufen (Schutz nach DR-05a) und berechnet den Nachtplan neu:
+`EndDay` ist nur möglich, wenn kein Prompt und keine Reaktion offen ist. `StartNight` erhöht den Nachtzähler und berechnet den Nachtplan neu. Der Schutz der Vornacht ist bereits bei Tagesbeginn erloschen (DR-05).
 
-- Einmalschritte (`wolfskind`, `lehrling`) entfallen ab Nacht 2.
-- Ein verwandeltes Wolfskind nimmt nach DR-10b am Rudelschritt teil.
-- Ein Lehrling mit geerbter Rolle erhält deren Nachtschritt nach DR-11c.
+- Einmalschritte (`wolfskind`, `lehrling`) der ersten Nacht entfallen ab Nacht 2.
+- Ein verwandeltes Wolfskind nimmt ab der Nacht nach seiner Verwandlung am Rudelschritt teil (DR-10).
+- Hat der Lehrling seit der letzten Nacht eine Rolle geerbt, wird sie mit diesem `StartNight` aktiv (DR-11): Er erhält deren Nachtschritte und Fähigkeiten mit zurückgesetzten Einsätzen; eine geerbte Wolfsrolle wacht mit dem Rudel.
+- Hat der Lehrling `wolfskind` geerbt, erhält er in dieser Nacht den Wolfskind-Schritt (0.9) und wählt ein neues Vorbild; er bleibt unverwandelt, bis dieses Vorbild stirbt.
 - Lebt kein `werwolf`, aber ein anderer Wolf, bleibt der Rudelschritt bestehen (`rules-register.md` G-PH-6).
 
 ## 9. Möglicher Sieg
 
 | Schritt | Ablauf |
 |---|---|
-| 9.1 | Nach jedem zustandsändernden Befehl berechnet die eine Siegprüfung höchstens einen Kandidaten (Priorität nach DR-02, Zeitpunkt nach DR-14). |
-| 9.2 | Die App zeigt den Kandidaten mit Auslöser, z. B. „Wolfsparität: 2 Wölfe gegen 2 Nicht-Wölfe" oder „Manipulator lebt, 3 Lebende, nie nominiert". |
+| 9.1 | Nach jedem Tod berechnet die eine Siegprüfung einen vorläufigen Siegstatus. Offene Reaktionen und Fähigkeiten werden zuerst vollständig abgearbeitet; danach wird verbindlich geprüft (DR-14). Jede erfüllte Siegbedingung wird ein Kandidat. Sind mehrere gleichzeitig erfüllt, gibt es keine feste Priorität: Der Spielleiter bestätigt genau einen oder lehnt alle ab (DR-02). Lebt niemand mehr, entsteht kein Kandidat; der Spielleiter erklärt das Ergebnis nach 9.6. |
+| 9.2 | Die App zeigt jeden Kandidaten mit Auslöser, z. B. „Wolfsparität: 2 Wölfe gegen 2 Nicht-Wölfe" oder „Manipulator lebt, genau 3 Lebende, nie nominiert" (DR-12). |
 | 9.3 | `ConfirmWin` setzt Phase GAME_OVER und speichert Sieger, Grund und Befehlsindex. |
-| 9.4 | `RejectWin(reason)` protokolliert die Ablehnung; die Partie läuft weiter. Derselbe Kandidat wird erst nach einer weiteren Zustandsänderung erneut angeboten. |
+| 9.4 | `RejectWin(reason)` protokolliert die Ablehnung; die Partie läuft weiter. Ein Kandidat wird erst nach einem weiteren Tod erneut berechnet und angeboten. |
 | 9.5 | Undo hinter `ConfirmWin` ist erlaubt (Korrektur, `03` §6.3). |
 | 9.6 | Der Spielleiter kann jederzeit per Übersteuerung einen Sieger erklären (Warnung, Protokoll). |
 

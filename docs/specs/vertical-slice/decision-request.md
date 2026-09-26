@@ -11,8 +11,26 @@ Diese Datei dokumentiert die Fragen, Optionen und endgültigen Antworten. Verbin
 
 ## Übersicht
 
-| ID | Frage | Blockiert ab | Empfehlung |
-|---|---|---|---|
+Alle Fragen sind entschieden. Die Spalte „Empfehlung“ und die Optionstabellen unten zeigen den damaligen Vorschlag; verbindlich ist ausschließlich die Spalte „Entscheidung“ (identisch mit dem Antwortbogen und `../../masterplan/DECISION-LOG.md`).
+
+| ID | Frage | Blockierte ab | damalige Empfehlung | **Entscheidung** |
+|---|---|---|---|---|
+| DR-01 | Schema der technischen Rollen-IDs | Core-Slice | A | **A** · deutsches ASCII-kebab-case |
+| DR-03 | Nominierungsregeln | Core-Slice | A | **A** · pro Tag, nur Lebende, Hinrichtung nur nach Nominierung, sonst Übersteuerung |
+| DR-02 | Siegpriorität, „niemand lebt" | Vertical Slice | A | **C** · Spielleiter entscheidet gleichzeitige Siege; niemand lebt → kein automatischer Gewinner |
+| DR-14 | Siegprüfung bei offenen Reaktionen | Vertical Slice | A | **eigene** · nach jedem Tod vorläufig, Reaktionen abarbeiten, danach verbindlich prüfen |
+| DR-04 | Öffentliche Information bei Tod | Vertical Slice | A | **eigene** · Name öffentlich; Rolle nach Setup-Option `reveal_role_on_death`; Ursache privat |
+| DR-05 | Schutzengel: Dauer und Verbrauch | Vertical Slice | a A, b A | **a A, b A** |
+| DR-06 | Waldhexe: Tränke, Zeitpunkt, Anzeige | Vertical Slice | a A, b A, c A, d A | **a A, b A, c A, d eigene** · Name vor Entscheidung, Rolle nach Rettung |
+| DR-07 | Orakel: Ergebnis bei Wölfen, Selbstwahl | Vertical Slice | a A, c A | **a A, c A** |
+| DR-08 | Trugbilderwolf: Scheinrolle | Vertical Slice | B | **C** · Spielleiter wählt die Scheinrolle |
+| DR-09 | Sensenträger: Pflicht und Zeitpunkt | Vertical Slice | a A, b A | **a A, b A** |
+| DR-10 | Wolfskind: Selbstwahl, Rudelteilnahme | Vertical Slice | a A, b A | **a A, b A** |
+| DR-11 | Lehrling | Vertical Slice | a A, b A, c B, d A | **eigene** · drei verdeckt gebundene Rollen, Reset, aktiv ab folgender Nacht, Wolfskind mit neuem Vorbild |
+| DR-12 | Manipulator: „Final 3" | Vertical Slice | B | **A** · genau drei Lebende |
+| DR-13 | Spiegelwolf ohne gespeicherte Nominierung | Vertical Slice | A | **B** · keine Spiegelung, normaler Tod |
+
+---|---|---|---|
 | DR-01 | Schema der technischen Rollen-IDs | **Core-Slice** | A · deutsches kebab-case |
 | DR-03 | Nominierungsregeln | **Core-Slice** | A · pro Tag, nur Lebende, Hinrichtung nur nach Nominierung |
 | DR-02 | Siegpriorität, „niemand lebt" | Vertical Slice | A · Einzelsieg vor Werwölfen vor Dorf |

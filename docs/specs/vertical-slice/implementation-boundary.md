@@ -1,6 +1,6 @@
 # Vertical Slice · Umsetzungsgrenze
 
-**Stand:** 2026-09-26 · **Status:** Entwurf
+**Stand:** 2026-09-26 · **Status:** A ist umgesetzt (`../../../godot/README.md`); B ist mit DR-01 bis DR-14 vollständig spezifiziert
 **Bezug:** Prompt 2 in `../../masterplan/CLAUDE-PROMPTS.md`, Masterplan Phasen 1–3 in `../../../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`, `../../godot-migration/03-godot-architecture.md`
 
 Pfade relativ zu `docs/specs/vertical-slice/`. Diese Datei legt fest, **was der nächste Auftrag baut und was nicht**. Alles, was hier nicht unter A steht, ist für den Core-Slice verboten.
@@ -9,7 +9,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Diese Datei legt fest, **was der 
 
 ## A · Core-Slice (Prompt 2, Masterplan Phase 1)
 
-Voraussetzung: DR-01 und DR-03 sind entschieden (`decision-request.md`, Spalte „blockiert ab" = Core-Slice).
+Voraussetzung: DR-01 und DR-03 sind entschieden (`decision-request.md`). Der Core-Slice unterstützt 6 bis 24 Personen allein mit `dorfbewohner` und `werwolf`, ohne Obergrenze je Rolle (`../../masterplan/DECISION-LOG.md`, „Rollenanzahl der Grundrollen“).
 
 ### A.1 Projekt und Werkzeuge
 
@@ -41,7 +41,7 @@ Voraussetzung: DR-01 und DR-03 sind entschieden (`decision-request.md`, Spalte �
 | A-14 | Unveränderliche Ereignisse mit Sichtbarkeit (Spielleiter, öffentlich, handelnde Person) |
 | A-15 | Phasenmaschine: SETUP → NIGHT → DAWN_RESOLUTION → DAY → NIGHT …, GAME_OVER; Übergänge nur per Befehl; offener Prompt blockiert Übergang |
 | A-16 | Grundlegende Tötungs-Pipeline ohne Abfangregeln: Ziel tot? → Tod anwenden → Ereignis → Siegprüfung |
-| A-17 | Eine Siegprüfung für Dorf (G-SIEG-1) und Werwölfe (G-SIEG-2); Ergebnis nur als Kandidat. Beide Bedingungen gelten nur gleichzeitig, wenn niemand lebt; das ist im Core-Slice ohne Mehrfachtode und ohne Korrekturbefehl nicht erreichbar. Die Prioritätsregel aus DR-02 folgt in B-09 |
+| A-17 | Eine Siegprüfung für Dorf (G-SIEG-1) und Werwölfe (G-SIEG-2); Ergebnis nur als Kandidat. Solange jemand lebt, schließen sich beide Bedingungen aus. Lebt niemand mehr (nach abgelehnten Kandidaten erreichbar), entsteht kein Kandidat (DR-02); die Siegerklärung durch den Spielleiter folgt mit `GmCorrection` (B-11). Ohne Reaktionen fallen vorläufige und verbindliche Prüfung (DR-14) am Ende des Befehls zusammen |
 
 ### A.4 Determinismus und Speicherung
 
@@ -60,11 +60,12 @@ Voraussetzung: DR-01 und DR-03 sind entschieden (`decision-request.md`, Spalte �
 | Siegbestätigung/Ablehnung | AS-C04 |
 | identischer Replay mit gleichem Seed | AS-C05, AS-C06 |
 | Save/Load mit identischem fachlichem Hash | AS-C07 |
-| beschädigte Save-Datei | AS-C08 |
-| Personen-ID getrennt vom Sitz | AS-C09 |
+| beschädigte Save-Datei | AS-C08 (Erkennung; Rückfall auf älteren Checkpoint: B-13) |
+| Personen-ID getrennt vom Sitz | AS-C09 (Sitztausch per `ReorderSeats`: AS-S03, Stufe V) |
 | vollständiges Todesereignis | AS-C10 |
 | keine digitale Stimme | AS-C11 |
 | keine Hinrichtung | AS-C12 |
+| technische Rollen-IDs (DR-01) | AS-C13 |
 
 ### A.6 Im Core-Slice ausdrücklich nicht enthalten
 
@@ -74,19 +75,19 @@ Alle Punkte unter B, C und D; insbesondere keine UI, keine Assets, keine weitere
 
 ## B · Vertical Slice, Rest (Masterplan Phasen 2 und 3)
 
-Erst nach Abnahme von A und Entscheidung aller übrigen DR-Punkte.
+Erst nach Abnahme von A. Alle DR-Punkte sind entschieden (`decision-request.md`, Spalte „Entscheidung“).
 
 | Nr. | Umfang | Bezug |
 |---|---|---|
-| B-01 | Rollen `schutzengel`, `das-orakel`, `trugbilderwolf`, `waldhexe`, `sensentraeger`, `wolfskind`, `lehrling`, `manipulator`, `spiegelwolf` nach `rules-register.md` | DR-05 bis DR-13 |
+| B-01 | Rollen `schutzengel`, `das-orakel`, `trugbilderwolf`, `waldhexe`, `sensentraeger`, `wolfskind`, `lehrling`, `manipulator`, `spiegelwolf` nach `rules-register.md` | DR-05 bis DR-13 (entschieden) |
 | B-02 | Nachtplan mit Prioritäten, Einmalschritten, Rudelschritt nach G-PH-6, Überspringen mit Grund | `vertical-slice-flow.md` §3 |
-| B-03 | Effekt-Modell mit Quelle und Dauer (Schutz, Vorbild-/Mentorbindung) und `expire_effects` | `03` §5.2 |
+| B-03 | Effekt-Modell mit Quelle und Dauer (Schutz bis Tagesbeginn, Vorbildbindung, verdeckte Lehrling-Bindung, gespeicherte Scheinrolle) und `expire_effects` | `03` §5.2, DR-05, DR-08, DR-11 |
 | B-04 | Abfangregeln der Tötungs-Pipeline: Schutzengel, Hexenrettung, Spiegelung | `03` §5.4 |
-| B-05 | Mehrstufige Prompt-Kette mit persistenten Teilantworten und `CancelPrompt` (Waldhexe) | `03` §5.5 |
+| B-05 | Mehrstufige Prompt-Kette mit persistenten Teilantworten und `CancelPrompt`: Waldhexe; Lehrling mit Spielleiterteil (drei Personen) und Lehrlingsteil (nur Rollen); Orakel mit Spielleiterwahl der Scheinrolle | `03` §5.5, DR-06, DR-08, DR-11 |
 | B-06 | Persistente Reaktionswarteschlange (Sensenträger) | `03` §5.2 |
-| B-07 | Informationsmodell Wahrheit/ermittelt/gezeigt | G-INF-1 |
-| B-08 | Rollen- und Fraktionswechsel mit `original_role_id` | Lehrling, Wolfskind |
-| B-09 | Einzelsiegregel Manipulator und Prioritätsliste | DR-02, DR-12 |
+| B-07 | Informationsmodell Wahrheit/ermittelt/gezeigt; Projektion für die handelnde Person ohne fremde Identitäten (Lehrling sieht nur Rollen) | G-INF-1, DR-07, DR-08, DR-11 |
+| B-08 | Rollen- und Fraktionswechsel mit `original_role_id`; Lehrling-Erbe nur bei lebendem Lehrling, Reset aller begrenzten Einsätze, Aktivierung ab folgender Nacht; geerbtes Wolfskind unverwandelt mit neuem Vorbild | DR-10, DR-11; AS-L01–AS-L15 |
+| B-09 | Einzelsiegregel Manipulator (genau drei Lebende); mehrere gleichzeitige Kandidaten ohne Priorität, Spielleiter bestätigt einen; vorläufiger Siegstatus nach jedem Tod und verbindliche Prüfung nach allen Reaktionen | DR-02, DR-12, DR-14 |
 | B-10 | Zusätzliche Todesursachen `WITCH_POISON`, `HUNTER_SHOT`, `SPIEGELWOLF_RETALIATE`, `MANIPULATOR_NOMINATED`, `GM_CORRECTION` | G-TOD-3 |
 | B-11 | Befehle `BeginStep`, `SkipStep`, `CancelPrompt`, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, `GmCorrection` | `vertical-slice-flow.md` §0.1 |
 | B-12 | Undo/Redo als Befehlsstapel, über Neustart | AS-U01–U04 |
@@ -95,6 +96,7 @@ Erst nach Abnahme von A und Entscheidung aller übrigen DR-Punkte.
 | B-15 | Vorläufige, lizenzklare Tag-/Nacht-Gestaltung; Reduced-Motion-, Untertitel- und Lautstärkeregelung verdrahtet | Masterplan Phase 2 |
 | B-16 | DE- und EN-Texte aller Slice-Rollen aus `rules-register.md` als Übersetzungsschlüssel | DL |
 | B-17 | Nachweis auf echtem iPad | Masterplan Phase 2 Gate |
+| B-18 | Setup-Option `reveal_role_on_death`; öffentliche Todesmeldung mit Name, Rolle nur bei Ja, nie Ursache | DR-04 |
 
 ---
 

@@ -146,14 +146,14 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 5. **Pflicht einer Einzelsiegrolle beim Setup** (DECISION-LOG) wird nicht geprüft, weil der Core-Slice keine solche Rolle besitzt. Geprüft werden 6–24 Personen, Rollenanzahl und je mindestens eine Wolfs- und Dorfrolle.
 6. **Keine Obergrenze für `dorfbewohner` und `werwolf`** (Entscheidung vom 26.09.2026, `DECISION-LOG.md`). Nur so ist jede Personenzahl von 6 bis 24 mit den beiden Grundrollen spielbar. Der Katalog kennt weiterhin ein optionales `max_copies` für spätere Rollen; die konkrete Rollenkomposition legt das Setup in Phase 2 fest.
 7. **Selbstnominierung** ist nicht verboten, weil DR-03 sie nicht regelt.
-8. **`SeatDied` ist nur für den Spielleiter sichtbar**, solange DR-04 (öffentliche Information bei Tod) offen ist.
+8. **`SeatDied` ist nur für den Spielleiter sichtbar.** Nach DR-04 ist öffentlich nur der Name (Rolle je nach Setup-Option `reveal_role_on_death`, nie die Ursache); die öffentliche Todesmeldung entsteht mit den Projektionen (B-18).
 9. **Seed** muss zwischen 0 und 2^53−1 liegen, damit er in JSON verlustfrei bleibt.
 
-## Bekannte Lücken gegenüber der Spezifikation
+## Abgrenzung zu späteren Stufen
 
-- **AS-C09** verlangt `ReorderSeats`, der Befehl gehört laut `implementation-boundary.md` aber zu B-11. Getestet ist nur der Kernanteil (Zustand an Personen-ID, nicht triviale Sitzfolge).
-- **AS-C08** verlangt Rückfall auf den vorherigen Checkpoint und Nicht-Überschreiben der Datei. Der Kern erkennt die Beschädigung; Dateihandling und Rotation gehören zu B-13.
-- **Niemand lebt:** `implementation-boundary.md` A-17 nennt den Fall unerreichbar. Nach abgelehnten Kandidaten (`RejectWin`) ist er erreichbar. Bis DR-02 entschieden ist, entsteht dort kein automatischer Kandidat.
+- **AS-C09** ist in der Spezifikation auf den Kernanteil begrenzt (Zustand an Personen-ID, nicht triviale Sitzfolge); der Sitztausch per `ReorderSeats` ist AS-S03 (B-11).
+- **AS-C08:** Der Kern erkennt die Beschädigung (Stufe C); Rückfall auf den vorherigen Checkpoint, Nicht-Überschreiben und Rotation gehören zu B-13 (Stufe V).
+- **Niemand lebt:** Nach abgelehnten Kandidaten (`RejectWin`) erreichbar. Nach DR-02 entsteht kein automatischer Kandidat; die Siegerklärung durch den Spielleiter kommt mit `GmCorrection` (B-11).
 
 ## Nicht enthalten
 

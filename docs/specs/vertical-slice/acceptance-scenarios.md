@@ -1,26 +1,30 @@
 # Vertical Slice · Akzeptanzszenarien
 
-**Stand:** 2026-09-26 · **Status:** Entwurf
+**Stand:** 2026-09-26 · **Status:** abgeglichen mit DR-01 bis DR-14 (`../../masterplan/DECISION-LOG.md`)
 **Regeln:** `rules-register.md` · **Ablauf:** `vertical-slice-flow.md` · **Umfang:** `implementation-boundary.md`
 
 Pfade relativ zu `docs/specs/vertical-slice/`.
 
 ## Konventionen
 
-- Jedes Szenario wird später als headless Szenariotest umgesetzt (`03` §7: `tests/scenarios/*.json` mit Setup, Seed, Befehlen, erwarteten Ereignissen und Endzustand).
-- **Stufe** gibt an, wann das Szenario grün sein muss: **C** = Core-Slice (Prompt 2, Masterplan Phase 1), **V** = Vertical Slice (Phase 2/3).
-- **Hängt an** nennt offene Entscheidungen. Solange sie offen sind, ist das erwartete Ergebnis für jede Option angegeben oder das Szenario ist gesperrt.
+- Jedes Szenario wird als headless Szenariotest umgesetzt (`../../godot-migration/03-godot-architecture.md` §7; Format in `../../../godot/README.md`, Abschnitt „Szenarioformat“).
+- **Stufe** gibt an, wann das Szenario grün sein muss: **C** = Core-Slice (Masterplan Phase 1, umgesetzt), **V** = Vertical Slice (Phase 2/3).
+- Alle erwarteten Ergebnisse folgen den endgültigen Entscheidungen DR-01 bis DR-14. Es gibt keine Varianten je Option.
 - „Fachlicher Hash" = Hash über den Spielzustand ohne Anzeige- und Zeitwerte (`03` §6.3).
-- Standardbesetzung **B6**, sofern nicht anders angegeben: Personen A–F mit stabilen IDs 1–6, Sitzreihenfolge 1–6.
-  - A `werwolf`, B `trugbilderwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, F `dorfbewohner`.
+- „Projektion für X" = alle Daten, die die App der Person X zeigt oder an ihr Gerät sendet (gesicherte Tablet-Karte, später Smartphone).
 - Personen werden über Buchstaben benannt; die Sitzposition ist nur relevant, wo ausdrücklich genannt.
+
+### Standardbesetzungen
+
+- **B6**: Personen A–F, IDs 1–6, Sitzreihenfolge 1–6. A `werwolf`, B `trugbilderwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, F `dorfbewohner`. `reveal_role_on_death` = Nein.
+- **B9L**: Personen A–G, L, W, IDs 1–9, Sitzreihenfolge 1–9. A `werwolf`, B `werwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, F `dorfbewohner`, G `dorfbewohner`, L `lehrling` (ID 8), W `wolfskind` (ID 9). `reveal_role_on_death` = Nein. Nachtreihenfolge Nacht 1: W (0.9) → L (1.1) → C (1.3) → Rudel (2.0) → E (3.4) → D (4.6).
 
 ---
 
 ## 1. Kern (Stufe C)
 
 **AS-C01 · Wolfsparität**
-- Given: A `werwolf`, B `werwolf`, C, D, E `dorfbewohner`, alle lebend.
+- Given: 6 Personen, A und B `werwolf`, C–F `dorfbewohner`; F ist in Nacht 1 durch das Rudel gestorben; A–E leben (2 Wölfe, 3 Nicht-Wölfe).
 - When: Hinrichtung von C wird bestätigt (`LYNCH`).
 - Then: Es leben 2 Wölfe und 2 Nicht-Wölfe; genau ein Siegkandidat „Werwölfe" mit Grund „Parität 2:2" entsteht; Phase bleibt bis zur Bestätigung unverändert.
 
@@ -37,7 +41,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`.
 **AS-C04 · Siegbestätigung und Ablehnung**
 - Given: Siegkandidat „Werwölfe" liegt vor.
 - When: `RejectWin(reason="Zählfehler")`.
-- Then: Ereignis mit Grund im Protokoll; Phase unverändert; derselbe Kandidat wird ohne weitere Zustandsänderung nicht erneut angeboten.
+- Then: Ereignis mit Grund im Protokoll; Phase unverändert; ein Kandidat wird erst nach einem weiteren Tod erneut angeboten.
 
 **AS-C05 · Gleicher Seed, gleiche Partie**
 - Given: identische Personenliste, identischer Rollenpool, Seed 4711, zufällige Verteilung.
@@ -55,17 +59,18 @@ Pfade relativ zu `docs/specs/vertical-slice/`.
 - Then: fachlicher Hash vor und nach dem Laden identisch; `schema_version` und `rules_version` vorhanden.
 
 **AS-C08 · Beschädigter Spielstand**
-- Given: gültiger Spielstand mit mindestens zwei Checkpoints.
-- When: die jüngste Datei wird manipuliert (Byte geändert, JSON abgeschnitten).
-- Then: Laden erkennt den Fehler über den Hash, überschreibt die Datei nicht, meldet ihn und bietet den vorherigen gültigen Checkpoint an.
+- Given: gültiger Spielstand.
+- When: der Spielstand wird manipuliert (Byte geändert, JSON abgeschnitten).
+- Then (C): Laden erkennt den Fehler über Integritätsprüfsumme, fachlichen Hash oder Replay und liefert keinen Zustand; ein älterer gültiger Spielstand bleibt ladbar.
+- Then (V, B-13): Die beschädigte Datei wird nicht überschrieben, gemeldet und der vorherige gültige Checkpoint wird angeboten.
 
-**AS-C09 · Personen-ID getrennt vom Sitz**
-- Given: A (ID 1) auf Sitz 1, B (ID 2) auf Sitz 2; A ist tot.
-- When: `ReorderSeats` tauscht die Sitzplätze.
-- Then: ID 1 ist weiterhin tot und auf Sitz 2; ID 2 lebt und sitzt auf Sitz 1; kein anderes Feld ändert sich.
+**AS-C09 · Personen-ID getrennt vom Sitz** (Kernanteil)
+- Given: Sitzreihenfolge 4, 2, 6, 1, 3, 5 (nicht identisch mit der ID-Reihenfolge).
+- When: Das Rudel tötet ID 6.
+- Then: ID 6 ist tot, die Sitzreihenfolge ist unverändert; der Todesdatensatz und alle Ereignisse referenzieren ID 6; der Personendatensatz enthält kein Sitzfeld. Sitztausch per `ReorderSeats`: AS-S03.
 
 **AS-C10 · Todesereignis vollständig**
-- Given: B6, Nacht 1.
+- Given: 6 Personen, Nacht 1.
 - When: Rudel wählt F, Nacht endet.
 - Then: `SeatDied` für ID 6 enthält Ursache `NIGHT_KILL`, Quelle Rudel, Nacht 1, Reihenfolgeindex.
 
@@ -79,193 +84,298 @@ Pfade relativ zu `docs/specs/vertical-slice/`.
 - When: `DecideExecution(none)`.
 - Then: Ereignis „keine Hinrichtung" im Protokoll; niemand stirbt; `EndDay` ist möglich.
 
+**AS-C13 · Technische Rollen-IDs**
+- Given: Partie mit `werwolf` und `dorfbewohner`.
+- When: Spielstand wird serialisiert.
+- Then: Rollen stehen ausschließlich als deutsche ASCII-kebab-case-IDs im Zustand (`werwolf`, `dorfbewohner`); kein Anzeigename und kein englischer Bezeichner dient als ID (DR-01).
+
 ## 2. Undo, Redo, Abbruch (Stufe V)
 
-Undo/Redo gehört laut Masterplan in Phase 3 und ist nicht Teil der Pflichtliste von Prompt 2. Die Szenarien sind deshalb Stufe V, müssen aber schon mit dem Befehls-/Ereignismodell des Core-Slice umsetzbar sein.
+Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls-/Ereignismodell des Core-Slice umsetzbar.
 
-**AS-U01 · Undo eines Befehls** (V)
+**AS-U01 · Undo eines Befehls**
 - Given: Tag 1, Hinrichtung von F bestätigt.
 - When: Undo.
 - Then: F lebt; fachlicher Hash entspricht dem Zustand vor `DecideExecution`; Redo stellt den Tod mit identischem Ereignis wieder her.
 
-**AS-U02 · Undo über Neustart** (V)
+**AS-U02 · Undo über Neustart**
 - Given: drei bestätigte Befehle, App wird beendet und neu gestartet.
 - When: Undo.
 - Then: Zustand entspricht dem nach Befehl 2.
 
-**AS-U03 · Undo aller Befehle** (V)
+**AS-U03 · Undo aller Befehle**
 - Given: vollständige Beispielpartie bis Spielende.
 - When: Undo bis zum Anfang, dann Redo bis zum Ende.
 - Then: Anfangszustand exakt erreicht; Endzustand nach Redo hat denselben Hash wie vorher (Masterplan Phase 3 Gate).
 
-**AS-U04 · Neuer Befehl leert Redo** (V)
+**AS-U04 · Neuer Befehl leert Redo**
 - Given: Undo wurde ausgeführt.
 - When: anderer Befehl wird bestätigt.
 - Then: Redo ist nicht mehr möglich.
 
-**AS-A01 · App-Abbruch mitten in der Hexenkette** (V)
+**AS-A01 · App-Abbruch mitten in der Hexenkette**
 - Given: B6, Nacht 1, Rudel hat F gewählt; Waldhexe-Prompt: „retten = ja" beantwortet, Gift noch offen.
 - When: Prozess wird hart beendet und neu gestartet.
-- Then: Phase NIGHT, Schritt Waldhexe, offener Prompt mit gespeicherter Teilantwort „retten = ja"; die Rettung ist **noch nicht** angewandt; Rettung ist noch als unverbraucht gespeichert.
+- Then: Phase NIGHT, Schritt Waldhexe, offener Prompt mit gespeicherter Teilantwort „retten = ja"; die Rettung ist **noch nicht** angewandt und als unverbraucht gespeichert.
 
-**AS-A02 · Abbruch des Prompts** (V)
+**AS-A02 · Abbruch des Prompts**
 - Given: wie AS-A01, Teilantwort vorhanden.
 - When: `CancelPrompt`.
 - Then: fachlicher Hash entspricht dem Zustand vor Beginn des Hexenschritts.
 
-**AS-A03 · Abbruch während einer Reaktion** (V)
+**AS-A03 · Abbruch während einer Reaktion**
 - Given: Sensenträger ist gestorben, Reaktion offen.
 - When: Neustart.
-- Then: Reaktion ist weiterhin offen, Phasenwechsel ist blockiert.
+- Then: Reaktion ist weiterhin offen, Phasenwechsel und verbindliche Siegprüfung sind blockiert.
 
-**AS-A04 · Abbruch während der Rollenanzeige** (V)
+**AS-A04 · Abbruch während der Rollenanzeige**
 - Given: 3 von 6 Personen haben `ConfirmRoleShown`.
 - When: Neustart.
 - Then: Rollenanzeige setzt bei der vierten Person fort; keine Rolle ist im Cockpit sichtbar, bis der Spielleiter die Anzeige verlässt.
 
 ## 3. Rollen (Stufe V)
 
-### Schutzengel
+### Schutzengel (DR-05)
 
 **AS-R01 · Schutz hält**
 - Given: B6, Nacht 1: C schützt F.
 - When: Rudel wählt F, Nacht endet.
 - Then: F lebt; `KillPrevented{by: schutzengel}` nur für den Spielleiter; Morgenbericht öffentlich „Niemand ist gestorben".
 
-**AS-R02 · Zielwahl verbraucht keinen Schutz** — hängt an DR-05b
-- Given: C schützt F; Rudel wählt zuerst F.
-- When: Spielleiter korrigiert die Wolfswahl vor Bestätigung auf D und bestätigt.
-- Then (Empfehlung DR-05b): F bleibt geschützt; D stirbt am Morgen. Then (Legacy-Option): F wird ab Wolfswahl als ungeschützt geführt.
+**AS-R02 · Schutz wird erst in der Morgenauflösung angewandt**
+- Given: B6, Nacht 1: C schützt F.
+- When: Rudel wählt F; der Spielleiter korrigiert die Wolfswahl vor Bestätigung auf D und bestätigt; E sieht im Hexenschritt „D".
+- Then: Die erste Zielwahl verbraucht nichts; D stirbt am Morgen; die Hexe hat das Opfer unabhängig von einem Schutz gesehen.
 
-**AS-R03 · Schutz läuft ab** — hängt an DR-05a
+**AS-R03 · Schutz endet bei Tagesbeginn**
 - Given: C schützt F in Nacht 1; kein Angriff auf F.
-- When: Nacht 2, Rudel wählt F; C schützt D.
-- Then (Option „diese Nacht"): F stirbt. Then (Option „bis nächster Angriff"): F lebt.
+- When: Nacht 2, C schützt D, Rudel wählt F.
+- Then: F stirbt am Morgen; ein Schutz aus Nacht 1 existiert nach Beginn von Tag 1 nicht mehr.
 
 **AS-R04 · Kein Selbstschutz**
 - Given: Schutzengel-Prompt.
 - Then: C ist nicht in `allowed_seats`.
 
-### Waldhexe
+**AS-R32 · Schutz wirkt nur gegen Wolfsangriff**
+- Given: B6, Nacht 1: C schützt F.
+- When: E vergiftet F.
+- Then: F stirbt sofort mit `WITCH_POISON`; der Schutz verhindert das nicht.
+
+### Waldhexe (DR-06)
 
 **AS-R05 · Rettung**
 - Given: B6, Rudel wählt F.
 - When: E rettet F und verzichtet auf Gift.
-- Then: F lebt; Rettung für E verbraucht; Gift unverbraucht.
+- Then: F lebt; Heiltrank von E verbraucht; Gifttrank unverbraucht; nach der Rettung zeigt die Projektion für E zusätzlich die Rolle `dorfbewohner` von F.
 
-**AS-R06 · Gift** — hängt an DR-06c
+**AS-R06 · Gift tötet sofort**
 - Given: B6, Rudel wählt F.
 - When: E rettet nicht und vergiftet A.
-- Then: A stirbt mit `WITCH_POISON`, Quelle E (sofort oder am Morgen nach DR-06c); F stirbt am Morgen mit `NIGHT_KILL`; Siegkandidat nur nach G-SIEG-2 (hier: B ist noch Wolf, kein Kandidat).
+- Then: A stirbt sofort im Hexenschritt mit `WITCH_POISON`, Quelle E; F stirbt in der Morgenauflösung mit `NIGHT_KILL`; kein Siegkandidat (B lebt als Wolf, 1 Wolf gegen 3 Nicht-Wölfe).
 
-**AS-R07 · Einmal-Nutzung pro Person** — hängt an DR-06a
+**AS-R07 · Einmal-Nutzung pro Person**
 - Given: E hat in Nacht 1 gerettet.
 - When: Nacht 2, Rudel wählt F.
-- Then: Option „rettet" ist nicht verfügbar.
+- Then: Option „retten" ist nicht verfügbar; Option „vergiften" ist verfügbar.
 
-**AS-R08 · Hexe sieht nicht die Rolle** — hängt an DR-06d
+**AS-R08 · Hexe sieht vor der Entscheidung nur den Namen**
 - Given: Rudel wählt D (`das-orakel`).
-- Then: Die gesicherte Karte für E zeigt nur „D"; die Rolle von D erscheint nur im Spielleiterbereich.
+- When: Hexenschritt beginnt; E entscheidet „retten = nein".
+- Then: Die Projektion für E zeigt nur den Namen „D", keine Rolle. Variante „retten = ja": erst danach zeigt die Projektion zusätzlich `das-orakel`.
 
-### Orakel und Trugbilderwolf
+**AS-R39 · Beide Tränke in derselben Nacht**
+- Given: B6, Rudel wählt F.
+- When: E rettet F und vergiftet A in derselben Nacht.
+- Then: beide Wirkungen treten ein; beide Tränke sind verbraucht.
+
+### Orakel und Trugbilderwolf (DR-07, DR-08)
 
 **AS-R09 · Wahre Information**
 - Given: B6, Nacht 1, D wählt F.
 - Then: Wahrheit `dorfbewohner`, ermittelt `dorfbewohner`, nach „Gezeigt" gezeigt `dorfbewohner`; alle drei im Ereignis gespeichert, Sichtbarkeit „nur D".
 
-**AS-R10 · Wolf erscheint als Werwolf** — hängt an DR-07a
+**AS-R10 · Sonderwolf erscheint als Werwolf**
 - Given: A `spiegelwolf` statt `werwolf`; D wählt A.
-- Then (Empfehlung): ermittelt „Werwolf"; Wahrheit `spiegelwolf`.
+- Then: ermittelt `werwolf`; Wahrheit `spiegelwolf`.
 
-**AS-R11 · Falsche Information durch Trugbilderwolf**
-- Given: B6, Seed 4711, D wählt B.
-- Then: Wahrheit `trugbilderwolf`; ermittelt ist eine Rolle aus {`schutzengel`, `waldhexe`, `dorfbewohner`} (lebende Nicht-Wölfe ohne Orakel und Trugbilderwolf); die Auswahl ist bei gleichem Seed immer dieselbe.
+**AS-R33 · Keine Selbstprüfung**
+- Given: Orakel-Prompt für D.
+- Then: D ist nicht in `allowed_seats`.
 
-**AS-R12 · Wiederholte Prüfung** — hängt an DR-08
-- Given: wie AS-R11, Nacht 2 prüft D erneut B, alle Personen leben noch.
-- Then (Empfehlung): gleiche Scheinrolle wie in Nacht 1. Then (Legacy): neue Ziehung aus dem Seed.
+**AS-R11 · Spielleiter wählt die Scheinrolle**
+- Given: B6, noch keine Scheinrolle gespeichert.
+- When: D wählt B; der Spielleiter wählt im Cockpit aus den angebotenen Nicht-Wolf-Rollen `waldhexe`.
+- Then: Wahrheit `trugbilderwolf`, ermittelt `waldhexe`; die Scheinrolle `waldhexe` ist gespeichert; keine Zufallsziehung, Seed-Ziehposition unverändert.
+
+**AS-R12 · Wiederholte Prüfung**
+- Given: wie AS-R11; Nacht 2 prüft D erneut B.
+- Then: ermittelt erneut `waldhexe`; der Spielleiter wird nicht erneut gefragt.
 
 **AS-R13 · Übersteuerte Anzeige**
 - Given: ermittelt ist `waldhexe`.
 - When: Spielleiter setzt gezeigt auf `dorfbewohner` und bestätigt die Warnung.
 - Then: Ereignis enthält ermittelt `waldhexe`, gezeigt `dorfbewohner`, Übersteuerungsgrund.
 
-**AS-R14 · Undo erzeugt keinen neuen Zufall**
+**AS-R14 · Replay und Undo ohne Zufall**
 - Given: AS-R11 abgeschlossen.
-- When: Undo des Orakel-Schritts, gleiche Auswahl erneut bestätigt.
-- Then: dieselbe Scheinrolle (Seedposition wird mit dem Undo zurückgesetzt).
+- When: Undo des Orakel-Schritts, danach dieselbe Prüfung mit derselben Scheinrollenwahl; zusätzlich Replay der gesamten Befehlsliste.
+- Then: identisches Ergebnis; die Scheinrolle stammt aus dem gespeicherten Befehl, nicht aus dem Seed.
 
-### Sensenträger
+### Sensenträger (DR-09)
 
 **AS-R15 · Reaktion nach Nachttod**
 - Given: Sensenträger G wird nachts vom Rudel getötet.
 - When: Morgenauflösung.
 - Then: Reaktion „Sensenträger" erscheint vor dem Morgenbericht; G wählt A; A stirbt mit `HUNTER_SHOT`, Quelle G.
 
-**AS-R16 · Reaktion nach Hinrichtung** — hängt an DR-09b
-- Given: Sensenträger G wird hingerichtet.
-- Then (Empfehlung): Reaktion unmittelbar nach der Hinrichtung, vor `EndDay`. Then (Legacy): Reaktion erst am nächsten Morgen.
+**AS-R16 · Reaktion nach Hinrichtung sofort**
+- Given: Sensenträger G wird an Tag 1 hingerichtet.
+- Then: Die Reaktion wird unmittelbar nach der Hinrichtung abgefragt, vor `EndDay`.
 
-**AS-R17 · Verzicht** — hängt an DR-09a
+**AS-R17 · Verzicht**
 - When: G wählt „Überspringen".
-- Then (Option freiwillig): keine Tötung, Reaktion erledigt, protokolliert.
+- Then: keine Tötung, Reaktion erledigt, protokolliert.
 
-### Wolfskind
+**AS-R37 · Reaktion nach Gifttod**
+- Given: E vergiftet G in Nacht 1.
+- Then: G stirbt sofort; seine Reaktion wird in der Morgenauflösung abgefragt, nicht während der Nacht.
+
+### Wolfskind (DR-10)
 
 **AS-R18 · Verwandlung**
 - Given: Wolfskind W wählt F als Vorbild; ein Wolf A lebt; 4 Nicht-Wölfe inklusive W leben.
 - When: F stirbt.
-- Then: W zählt als Wolf (`counts_as_wolf` = ja), Rolle bleibt `wolfskind`; Siegprüfung rechnet mit 2 Wölfen; Orakel-Prüfung auf W ergibt „Werwolf".
+- Then: W zählt sofort als Wolf (`counts_as_wolf` = ja), Rolle bleibt `wolfskind`; die Siegprüfung rechnet mit 2 Wölfen; eine Orakel-Prüfung auf W ergibt `werwolf`.
 
 **AS-R19 · Totes Wolfskind verwandelt sich nicht**
 - Given: W ist tot, Vorbild F lebt.
 - When: F stirbt.
 - Then: keine Verwandlung.
 
-**AS-R20 · Rudelteilnahme** — hängt an DR-10b
-- Given: W verwandelt, A ist der einzige andere Wolf und stirbt.
-- Then (Empfehlung): Der Rudelschritt existiert weiter (G-PH-6), W wählt das Opfer.
+**AS-R20 · Rudelteilnahme ab der folgenden Nacht**
+- Given: F stirbt in Nacht 1 durch Gift; W ist dadurch verwandelt.
+- Then: Der Rudelschritt von Nacht 1 ist bereits vorbei; ab Nacht 2 wacht W mit dem Rudel. Stirbt A als einziger anderer Wolf, existiert der Rudelschritt weiter (G-PH-6) und W wählt das Opfer.
 
-### Lehrling
+**AS-R38 · Keine Selbstwahl**
+- Given: Wolfskind-Prompt für W.
+- Then: W ist nicht in `allowed_seats`.
 
-**AS-R21 · Rollenwechsel**
-- Given: Lehrling L wählt E (`waldhexe`) als Mentor; E hat bereits gerettet.
-- When: E stirbt.
-- Then: L hat `role_id` `waldhexe`, `original_role_id` `lehrling`; `RoleChanged` nur für den Spielleiter; Nutzungen von L nach DR-11b (Empfehlung: Rettung und Gift unverbraucht).
+### Lehrling (DR-11)
 
-**AS-R22 · Toter Lehrling erbt nicht**
-- Given: L ist tot, Mentor E lebt.
-- When: E stirbt.
-- Then: kein Rollenwechsel (Behebung Bug F5).
+Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. Grundlage: `rules-register.md` §9, Besetzung B9L.
 
-**AS-R23 · Wirkungsbeginn** — hängt an DR-11c, DR-06c
-- Given: L hat D (`das-orakel`) als Mentor.
-- When: Nacht 2, E vergiftet D im Hexenschritt (3.4, vor Orakel 4.6), Gift wirkt nach DR-06c sofort.
-- Then (Empfehlung DR-11c): L erhält den Orakel-Schritt erst ab Nacht 3. Then (Legacy): L erhält den Orakel-Schritt noch in Nacht 2.
+**AS-L01 · Verdeckte Auswahl der drei Personen**
+- Given: B9L, Nacht 1, Schritt Lehrling aktiv.
+- When: Der Spielleiter wählt im Cockpit C, E und F.
+- Then: Der offene Prompt speichert die Teilantwort `candidates = [3, 5, 6]` mit Sichtbarkeit nur Spielleiter. Abgelehnt werden: L selbst, eine tote Person, weniger oder mehr als drei Personen, eine Person doppelt.
 
-### Manipulator
+**AS-L02 · Anzeige ausschließlich der Rollen**
+- Given: AS-L01.
+- When: Die gesicherte Karte für L wird geöffnet.
+- Then: Sie zeigt genau drei Optionen: `dorfbewohner`, `schutzengel`, `waldhexe` (nach Rollen-ID sortiert). Negativtest über Projektion für L und alle Ereignisse mit Sichtbarkeit „handelnde Person": keine Personen-IDs 3, 5, 6, keine Namen C, E, F, keine Sitzpositionen, keine Porträts. Wäre eine gewählte Person ein verwandeltes Wolfskind, zeigte die Option nur `wolfskind`.
+
+**AS-L03 · Gleiche Rollen ohne Identitätshinweis**
+- Given: B9L, Nacht 1; der Spielleiter wählt C, F und G (F und G sind `dorfbewohner`).
+- Then: Die Karte zeigt `dorfbewohner`, `dorfbewohner`, `schutzengel`. Die Reihenfolge der beiden Dorfbewohner-Optionen stammt aus einer `SeededRng`-Ziehung, nicht aus Sitz- oder ID-Reihenfolge; bei gleichem Seed und gleichen Befehlen ist sie identisch.
+
+**AS-L04 · Geheime Bindung zwischen Rollenoption und Person**
+- Given: AS-L02.
+- When: L wählt `waldhexe`, Bestätigung.
+- Then: Intern gilt `apprentice_master_id = 5` (E); Ereignis `ApprenticeBound` nur für den Spielleiter. Die Projektion für L enthält nur „gewählt: `waldhexe`"; die öffentliche Projektion enthält nichts über den Lehrling. `role_id` von L bleibt `lehrling`.
+
+**AS-L05 · Tod der ausgewählten Person**
+- Given: AS-L04; Rudel wählt E in Nacht 1; niemand rettet.
+- When: Morgenauflösung.
+- Then: E stirbt (`NIGHT_KILL`); in derselben Pipeline-Ausführung `RoleChanged{from: lehrling, to: waldhexe, by: master_death}` nur für den Spielleiter. L hat `role_id` `waldhexe`, `original_role_id` `lehrling`. Der öffentliche Morgenbericht nennt nur „E" (DR-04), nichts über L.
+
+**AS-L06 · Tod des Lehrlings vor der Vererbung**
+- Given: AS-L04; L stirbt in Nacht 1 durch das Rudel.
+- When: E stirbt an Tag 1 durch Hinrichtung.
+- Then: kein Rollenwechsel; L bleibt tot mit `role_id` `lehrling`; die Bindung ist erloschen (Bugfix F5).
+
+**AS-L07 · Zurücksetzen verbrauchter Fähigkeiten**
+- Given: AS-L04; E hat in Nacht 1 F gerettet (Heiltrank verbraucht).
+- When: E wird an Tag 1 hingerichtet.
+- Then: L erbt `waldhexe`; für L sind Heil- und Gifttrank unverbraucht. Die Verbrauchsdaten von E bleiben unverändert bei E gespeichert (G-ID-3).
+
+**AS-L08 · Aktivierung erst in der folgenden Nacht**
+- Given: B9L; L hat in Nacht 1 `das-orakel` gewählt (Bindung an D).
+- When: Nacht 2: E vergiftet D im Hexenschritt (3.4).
+- Then: L erbt `das-orakel` sofort, erhält in Nacht 2 aber keinen Orakel-Schritt; der Orakel-Schritt von D wird mit Grund „tot" angezeigt. In Nacht 3 erhält L den Orakel-Schritt mit voller Nutzung.
+
+**AS-L09 · Fraktion sofort, Fähigkeiten ab der folgenden Nacht**
+- Given: B9L; L hat in Nacht 1 `werwolf` gewählt (Bindung an A).
+- When: A wird an Tag 1 hingerichtet.
+- Then: L hat `role_id` `werwolf` und zählt sofort als Wolf; die Siegprüfung nach der Hinrichtung rechnet L als Wolf. Ab Nacht 2 wacht L mit dem Rudel.
+
+**AS-L10 · Vererbung des Wolfskinds**
+- Given: B9L; W hat in Nacht 1 F als Vorbild gewählt; L hat `wolfskind` gewählt (Bindung an W); F stirbt, W ist dadurch verwandelt.
+- When: W stirbt an Tag 2.
+- Then: L erbt `wolfskind` und zählt **nicht** als Wolf, obwohl W verwandelt war. L übernimmt kein Vorbild von W.
+
+**AS-L11 · Neues Wolfskind-Vorbild**
+- Given: AS-L10.
+- When: Nacht 3 beginnt.
+- Then: L erhält den Wolfskind-Schritt (0.9); L ist nicht in `allowed_seats`; L wählt G als neues Vorbild. Weitere Tode anderer Personen verwandeln L nicht. Stirbt G, während L lebt, zählt L ab sofort als Wolf und wacht ab der folgenden Nacht mit dem Rudel.
+
+**AS-L12 · Speichern und Laden während der offenen Lehrlingswahl**
+- Given: AS-L01 (drei Personen gewählt, L hat noch nicht gewählt).
+- When: speichern, Prozess hart beenden, neu starten, laden.
+- Then: fachlicher Hash identisch; Phase NIGHT, Schritt Lehrling, offener Prompt mit `candidates = [3, 5, 6]` und identischer Optionsreihenfolge; keine Bindung existiert; `EndNight` bleibt blockiert.
+
+**AS-L13 · Speichern und Laden bei gebundener, noch nicht vollzogener Vererbung**
+- Given: AS-L04 (L an E gebunden, E lebt).
+- When: speichern, laden; danach stirbt E.
+- Then: fachlicher Hash nach dem Laden identisch; die Bindung ist vorhanden und nur im Spielleiterteil sichtbar; nach dem Tod von E erbt L genau wie ohne Speichern (identische Ereignisse).
+
+**AS-L14 · Speichern und Laden zwischen Erbe und Aktivierung**
+- Given: AS-L07 (L hat an Tag 1 `waldhexe` geerbt, Nacht 2 noch nicht begonnen).
+- When: speichern, laden, `StartNight`.
+- Then: fachlicher Hash nach dem Laden identisch; in Nacht 2 erhält L den Waldhexe-Schritt mit beiden Tränken, genau wie ohne Speichern.
+
+**AS-L15 · Deterministisches Replay und Undo des Lehrling-Ablaufs**
+- Given: B9L, Seed 4711; Befehlsliste mit Spielleiterauswahl (C, F, G), Lehrlingswahl, Tod der gebundenen Person, Erbe, Aktivierung in der folgenden Nacht.
+- When: Die Befehlsliste wird zweimal auf frischem Zustand ausgeführt; zusätzlich Undo der Lehrlingswahl und erneute gleiche Wahl.
+- Then: Eventlisten und Endzustände bytegleich, einschließlich Optionsreihenfolge, `ApprenticeBound` und `RoleChanged`. Nach Undo ist die Seed-Ziehposition zurückgesetzt; die erneute Wahl ergibt dieselbe Reihenfolge und dieselbe Bindung.
+
+### Manipulator und Siegprüfung (DR-02, DR-12, DR-14)
 
 **AS-R24 · Tod durch Nominierung**
 - Given: Tag 1, M `manipulator` lebt.
 - When: F nominiert M.
 - Then: `Nomination{F→M}` gespeichert; M stirbt sofort mit `MANIPULATOR_NOMINATED`, Quelle F; Tagesphase bleibt aktiv, weitere Nominierungen sind möglich.
 
-**AS-R25 · Solo-Sieg** — hängt an DR-12a, DR-02
+**AS-R25 · Solo-Sieg bei genau drei Lebenden**
 - Given: Es leben M (nie nominiert), A `werwolf`, F `dorfbewohner`, C `schutzengel`.
 - When: C stirbt.
-- Then: Es leben 3; Siegkandidat „Manipulator".
+- Then: Es leben genau 3 (M, A, F); Siegkandidat „Manipulator"; keine Wolfsparität (1 Wolf gegen 2 Nicht-Wölfe).
 
-**AS-R26 · Sprung von 4 auf 2** — hängt an DR-12a, DR-14, DR-02
+**AS-R26 · Sprung von vier auf zwei, vorläufig und verbindlich**
 - Given: Es leben M (nie nominiert), A `werwolf`, G `sensentraeger`, F `dorfbewohner`.
-- When: Hinrichtung von G wird bestätigt; G verflucht in seiner Reaktion (sofort nach DR-09b-Empfehlung) F.
-- Then: Es leben M und A. Option „höchstens drei": Kandidaten Manipulator und Werwölfe (Parität 1:1) konkurrieren, Auflösung nach DR-02. Option „genau drei" mit DR-14 „erst nach Reaktionen": nur Kandidat Werwölfe. Option „genau drei" mit Legacy-Zeitpunkt (sofort nach jedem Tod): nach dem Tod von G leben genau drei, Kandidat Manipulator entsteht vor der Reaktion.
+- When: Hinrichtung von G wird bestätigt; G verflucht in seiner sofortigen Reaktion F.
+- Then: Nach dem Tod von G leben genau drei: vorläufiger Siegstatus „Manipulator", nicht bestätigbar, weil die Reaktion offen ist (DR-14). Nach der Reaktion leben M und A: verbindliche Prüfung ergibt nur „Werwölfe" (Parität 1:1); kein Manipulator-Kandidat, weil nicht genau drei leben (DR-12).
+
+**AS-R34 · Gleichzeitige Siege**
+- Given: Es leben M (nie nominiert), A `werwolf`, B `werwolf`, C `schutzengel`.
+- When: C stirbt.
+- Then: Kandidaten „Manipulator" (genau drei) und „Werwölfe" (Parität 2:1) liegen gleichzeitig vor; keine automatische Priorität. Der Spielleiter bestätigt genau einen (`ConfirmWin`) oder lehnt beide mit Grund ab (DR-02).
+
+**AS-R35 · Niemand lebt**
+- Given: Nach abgelehnten Kandidaten lebt nur noch A `werwolf`.
+- When: A stirbt.
+- Then: kein automatischer Siegkandidat; der Spielleiter erklärt das Ergebnis per Übersteuerung mit Warnung und Protokoll (DR-02, G-GM-1).
+
+**AS-R36 · Reaktion hebt vorläufigen Sieg auf**
+- Given: Es leben A, B `werwolf`, G `sensentraeger`, F, H `dorfbewohner`.
+- When: Rudel tötet G in Nacht 2; in der Morgenauflösung verflucht G A.
+- Then: Nach dem Tod von G vorläufig „Werwölfe" (2:2), nicht bestätigbar. Nach der Reaktion leben B, F, H (1:2): die verbindliche Prüfung ergibt keinen Kandidaten; der Spielleiter wird nicht zur Bestätigung aufgefordert.
 
 **AS-R27 · Nominierung durch Undo zurückgenommen**
 - Given: AS-R24.
 - When: Undo.
 - Then: M lebt, Nominierung entfernt, Status „nie nominiert" wiederhergestellt.
 
-### Spiegelwolf
+### Spiegelwolf (DR-13)
 
 **AS-R28 · Spiegelung**
 - Given: S `spiegelwolf`; Tag 1: F nominiert S.
@@ -282,26 +392,36 @@ Undo/Redo gehört laut Masterplan in Phase 3 und ist nicht Teil der Pflichtliste
 - When: Hinrichtung von S.
 - Then: niemand stirbt; Spiegelung verbraucht.
 
-**AS-R31 · Hinrichtung ohne Nominierung** — hängt an DR-03, DR-13
+**AS-R31 · Hinrichtung ohne Nominierung**
 - Given: S wurde an diesem Tag nicht nominiert.
-- Then (Empfehlung DR-03): Hinrichtung nur per Übersteuerung; dabei fragt die App die nominierende Person ab (DR-13).
+- When: Der Spielleiter richtet S per Übersteuerung mit Warnung und Begründung hin (DR-03).
+- Then: keine Spiegelung; S stirbt mit `LYNCH`; die App fragt keine nominierende Person nachträglich ab (DR-13); die Übersteuerung ist mit Grund protokolliert.
 
-## 4. Nominierung (Stufe V)
+## 4. Nominierung (Stufe V, Validierung bereits in C)
 
-**AS-N01 · Einmal nominieren** — hängt an DR-03
+**AS-N01 · Einmal nominieren**
 - Given: Tag 1, A hat bereits nominiert.
 - When: A nominiert erneut.
-- Then: abgelehnt mit Grund; per Übersteuerung mit Warnung möglich.
+- Then: abgelehnt mit Grund; nur per Übersteuerung mit Warnung, Begründung und Protokoll möglich.
 
-**AS-N02 · Einmal nominiert werden** — hängt an DR-03
+**AS-N02 · Einmal nominiert werden**
 - Given: F ist an Tag 1 nominiert.
 - When: B nominiert F.
 - Then: abgelehnt mit Grund.
 
-**AS-N03 · Neuer Tag** — hängt an DR-03
+**AS-N03 · Neuer Tag**
 - Given: A hat an Tag 1 nominiert.
 - When: Tag 2, A nominiert.
-- Then (Empfehlung „pro Tag"): erlaubt.
+- Then: erlaubt.
+
+**AS-N04 · Nur Lebende**
+- When: Eine tote Person nominiert oder wird nominiert.
+- Then: abgelehnt mit Grund.
+
+**AS-N05 · Hinrichtung nur nach Nominierung**
+- Given: F wurde an diesem Tag nicht nominiert.
+- When: `DecideExecution(F)`.
+- Then: abgelehnt mit Grund; per Übersteuerung mit Warnung, Begründung und Protokoll möglich.
 
 ## 5. Sitztausch (Stufe V)
 
@@ -311,20 +431,29 @@ Undo/Redo gehört laut Masterplan in Phase 3 und ist nicht Teil der Pflichtliste
 - Then: E stirbt am Morgen; F bleibt geschützt; alle Ereignisse referenzieren Personen-IDs.
 
 **AS-S02 · Tausch während offenem Prompt**
-- Given: Waldhexe-Prompt offen.
+- Given: Waldhexe- oder Lehrling-Prompt offen.
 - When: `ReorderSeats`.
-- Then: Prompt bleibt offen; `allowed_seats` referenzieren weiterhin dieselben Personen-IDs.
+- Then: Prompt bleibt offen; `allowed_seats`, `candidates` und Bindungen referenzieren weiterhin dieselben Personen-IDs; die Optionsreihenfolge des Lehrlings ändert sich nicht.
 
-## 6. Morgenbericht und Geheimhaltung (Stufe V)
+**AS-S03 · Sitztausch mit Toten**
+- Given: A (ID 1) auf Sitz 1, B (ID 2) auf Sitz 2; A ist tot.
+- When: `ReorderSeats` tauscht die Sitzplätze.
+- Then: ID 1 ist weiterhin tot und auf Sitz 2; ID 2 lebt und sitzt auf Sitz 1; kein anderes Feld ändert sich.
 
-**AS-M01 · Trennung öffentlich/privat** — hängt an DR-04
-- Given: Nacht mit Schutz auf F, Angriff auf F, Gift auf A.
-- Then: Öffentlicher Teil nennt nur A (und nach DR-04 ggf. Ursache/Rolle); privater Teil nennt Schutz, Angriff, Gift und Ursachen.
+## 6. Morgenbericht und Geheimhaltung (Stufe V, DR-04)
+
+**AS-M01 · Öffentlich nur der Name**
+- Given: `reveal_role_on_death` = Nein; Nacht mit Schutz auf F, Angriff auf F, Gift auf A.
+- Then: Der öffentliche Teil nennt nur „A"; keine Rolle, keine Ursache. Der private Teil nennt Schutz, Angriff, Gift und Ursachen.
+
+**AS-M03 · Rolle bei Tod aufdecken**
+- Given: `reveal_role_on_death` = Ja; wie AS-M01.
+- Then: Der öffentliche Teil nennt „A" und `werwolf`; weiterhin keine Ursache.
 
 **AS-M02 · Keine Geheimnisse in öffentlicher Projektion**
 - Given: beliebiger Zustand.
 - When: öffentliche Projektion wird erzeugt.
-- Then: keine Rollen lebender Personen, keine Effekte, keine Nachtziele, keine Informationsergebnisse enthalten (Negativtest über alle Felder).
+- Then: keine Rollen lebender Personen, keine Rollen Toter bei `reveal_role_on_death` = Nein, keine Todesursachen, keine Effekte, keine Nachtziele, keine Lehrling-Bindungen, keine Informationsergebnisse (Negativtest über alle Felder).
 
 ## 7. Übersteuerung (Stufe V)
 
@@ -340,6 +469,27 @@ Undo/Redo gehört laut Masterplan in Phase 3 und ist nicht Teil der Pflichtliste
 ## 8. Vollständige Beispielrunde (Stufe V)
 
 **AS-E01 · Setup bis Sieg**
-- Given: 7 Personen: A `werwolf`, B `trugbilderwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, G `sensentraeger`, M `manipulator`; Seed 4711.
-- When: Setup → Rollenanzeige → Nacht 1 (C schützt D, Rudel wählt G, E verzichtet, D prüft B) → Morgen (G stirbt, Reaktion: G verflucht A) → Tag 1 (D nominiert B, Hinrichtung B) → Siegprüfung.
-- Then: Nach Tag 1 leben C, D, E, M; kein Wolf lebt → Siegkandidat „Dorf" (unter DR-02 Empfehlung und DR-12 „höchstens drei" kein Manipulator-Kandidat, da 4 Lebende); nach `ConfirmWin` GAME_OVER. Wiederholung mit gleichem Seed und gleichen Befehlen erzeugt dieselbe Eventliste.
+- Given: 7 Personen: A `werwolf`, B `trugbilderwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, G `sensentraeger`, M `manipulator`; Seed 4711; `reveal_role_on_death` = Nein.
+- When: Setup → Rollenanzeige → Nacht 1 (C schützt D, Rudel wählt G, E sieht „G" und verzichtet, D prüft B und der Spielleiter wählt die Scheinrolle `schutzengel`) → Morgen (G stirbt, Reaktion: G verflucht A) → Tag 1 (D nominiert B, Hinrichtung B).
+- Then: Nach Tag 1 leben C, D, E, M; kein Wolf lebt → verbindlicher Siegkandidat „Dorf"; kein Manipulator-Kandidat, weil vier Personen leben (DR-12); nach `ConfirmWin` GAME_OVER. Wiederholung mit gleichem Seed und gleichen Befehlen erzeugt dieselbe Eventliste.
+
+---
+
+## 9. Rückverfolgbarkeit der Entscheidungen
+
+| Entscheidung | Regelabschnitt (`rules-register.md`, `vertical-slice-flow.md`) | Akzeptanzszenario |
+|---|---|---|
+| DR-01 Rollen-IDs | Register §1–§11 (IDs in Überschriften), §12 | AS-C13 |
+| DR-02 gleichzeitige Siege, niemand lebt | Register G-SIEG-5; Ablauf §9.1, §9.6 | AS-R34, AS-R35 |
+| DR-03 Nominierung | Register G-TAG-2, G-TAG-4; Ablauf §6.1, §7.6 | AS-C11, AS-N01–AS-N05 |
+| DR-04 öffentliche Todesinformation | Register G-TOD-5; Ablauf §0.2, §1.5, §4 | AS-M01, AS-M02, AS-M03, AS-L05 |
+| DR-05 Schutzengel | Register §3; Ablauf §3, §4, §8 | AS-R01–AS-R04, AS-R32 |
+| DR-06 Waldhexe | Register §6; Ablauf §3 | AS-R05–AS-R08, AS-R39 |
+| DR-07 Orakel | Register §4 | AS-R09, AS-R10, AS-R33 |
+| DR-08 Trugbilderwolf | Register §5, G-RNG-1; Ablauf §3 | AS-R11–AS-R14 |
+| DR-09 Sensenträger | Register §7, G-TOD-4; Ablauf §4, §7.4 | AS-R15–AS-R17, AS-R37 |
+| DR-10 Wolfskind | Register §8, §2 (Rudel); Ablauf §8 | AS-R18–AS-R20, AS-R38 |
+| DR-11 Lehrling | Register §9, G-RNG-1; Ablauf §3, §8 | AS-L01–AS-L15 |
+| DR-12 Manipulator | Register §10; Ablauf §9.2 | AS-R25, AS-R26, AS-E01 |
+| DR-13 Spiegelwolf ohne Nominierung | Register §11; Ablauf §7.6 | AS-R31 |
+| DR-14 Siegprüfung und Reaktionen | Register G-SIEG-6; Ablauf §4 Schritt 5, §7.5, §9.1 | AS-R26, AS-R36, AS-A03 |

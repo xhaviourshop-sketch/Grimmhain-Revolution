@@ -8,7 +8,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 ## Lesehilfe
 
 - **Regeltext DE** ist der verbindliche Text. **Regeltext EN** beschreibt dasselbe Verhalten und wird bei jeder Änderung mitgeführt.
-- Die Tabellen „Entscheidungsgrundlage“ dokumentieren frühere Konflikte zwischen Text und Legacy-Code. Verbindlich sind der aktuelle Regeltext und `../../masterplan/DECISION-LOG.md`.
+- Die Tabellen „Entscheidungsgrundlage“ dokumentieren, welcher Konflikt zwischen Text und Legacy-Code bestand und wie DR-01 bis DR-14 ihn entschieden haben. Verbindlich sind der aktuelle Regeltext und `../../masterplan/DECISION-LOG.md`. Offene Alternativen gibt es nicht mehr.
 - **Quelle** nennt, woher eine entschiedene Aussage stammt: `Text` (Rollenbeschreibung in `../../../js/core/roles.js`, Objekt der DE-Beschreibungen und EN-Pendant), `Code` (Legacy-Verhalten), `DL` (`../../masterplan/DECISION-LOG.md`), `07-T2` (Bugliste „ohne Rückfrage behoben" in `../../godot-migration/07-open-questions.md`, Q1 Teil 2), `03` (`../../godot-migration/03-godot-architecture.md`).
 - Legacy-Bugs sind keine Referenz (DL, Abschnitt Regeln).
 - **Nachtpriorität** = `tier` aus `ORDER_BASE` in `../../../js/core/roles.js`. Kleinere Zahl zuerst.
@@ -37,7 +37,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 | Regel | Inhalt | Quelle |
 |---|---|---|
-| G-RNG-1 | Jede Zufallsentscheidung (Rollenverteilung, Scheinrolle des Trugbilderwolfs) läuft über den gespeicherten Seed. Seed und Ziehposition sind Teil des Spielstands. | Masterplan §4 Regel 4 |
+| G-RNG-1 | Jede Zufallsentscheidung läuft über den gespeicherten Seed. Seed und Ziehposition sind Teil des Spielstands. Im Slice sind das die zufällige Rollenverteilung und die Anzeigereihenfolge gleicher Rollen im Lehrling-Schritt (§9). Die Scheinrolle des Trugbilderwolfs ist **keine** Zufallsentscheidung, sondern wird vom Spielleiter gewählt (DR-08). | Masterplan §4 Regel 4; DR-08; DR-11 |
 
 ### 0.4 Phasen und Nacht
 
@@ -113,7 +113,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Regeltext DE | Jede Nacht wählen alle lebenden Wölfe gemeinsam genau eine lebende Person als Opfer oder verzichten ausdrücklich. Das Opfer stirbt in der Morgenauflösung durch Wolfsangriff, sofern kein Schutz greift. |
 | Regeltext EN | Each night all living wolves jointly choose exactly one living person as their victim or explicitly choose no one. The victim dies during the dawn resolution from a wolf attack unless a protection applies. |
 | Fraktion | Werwölfe. `counts_as_wolf` = ja. `appears_as` = Wolf. |
-| Nachtpriorität | 2.0 (Rudelschritt). Der Schritt existiert nach G-PH-6, solange irgendein Wolf lebt. Es wachen alle lebenden Personen mit `counts_as_wolf` = ja, im Slice: `werwolf`, `trugbilderwolf`, `spiegelwolf` und ein verwandeltes `wolfskind`. |
+| Nachtpriorität | 2.0 (Rudelschritt). Der Schritt existiert nach G-PH-6, solange irgendein Wolf lebt. Es wachen alle lebenden Personen, die zu Beginn dieser Nacht (`StartNight`) als Wolf zählen, im Slice: `werwolf`, `trugbilderwolf`, `spiegelwolf`, ein verwandeltes `wolfskind` (DR-10) und ein Lehrling mit geerbter Wolfsrolle (DR-11). Wer erst während der Nacht oder später als Wolf zu zählen beginnt, wacht ab der folgenden Nacht. |
 | Gültige Ziele | jede lebende Person, auch ein Wolf (Code: Filter `!x.flags.dead`) |
 | Dauer | Zielwahl gilt bis zur Morgenauflösung dieser Nacht |
 | Auflösung | Morgenauflösung: Schutz prüfen (siehe `schutzengel`, `waldhexe`), sonst Tod mit Ursache `NIGHT_KILL`, Quelle = Rudel |
@@ -130,21 +130,21 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Regeltext EN | Each night the Guardian Angel chooses another living person. That person is protected from wolf attacks during this night. Protection is evaluated during dawn resolution and ends when day begins. It does not protect against other causes of death. |
 | Fraktion | Dorf. `counts_as_wolf` = nein. |
 | Nachtpriorität | 1.3 (vor dem Rudel) |
-| Gültige Ziele | jede lebende Person außer sich selbst. Dieselbe Person in aufeinanderfolgenden Nächten ist erlaubt (Code: keine Sperre; Text schweigt). |
+| Gültige Ziele | jede lebende Person außer sich selbst („andere“ in DR-05 = nicht der Schutzengel selbst). Dieselbe Person in aufeinanderfolgenden Nächten ist erlaubt (Code: keine Sperre; DR-05 regelt keine Sperre). |
 | Dauer | Wahl bis zum Beginn des folgenden Tages |
 | Auflösung | Morgenauflösung: Ist das Wolfsopfer geschützt, stirbt es nicht; Ereignis `KillPrevented{by: schutzengel}` nur für den Spielleiter sichtbar |
-| Konflikte | DR-05 (unten) |
+| Konflikte | Hexenrettung und Schutz auf demselben Opfer: das Opfer überlebt einmal; beide Wirkungen werden protokolliert. Entscheidung DR-05 (unten) |
 | Siegbezug | Dorf |
 | Manuelle Übersteuerung | Schutz nachträglich setzen oder entfernen (Warnung, Protokoll) |
 | Legacy-Beleg | `Schutzengel`-Handler (`protectedCount`, Filter `role!=="Schutzengel"`) und `Werwolf`-Handler in `abilities-roles-chunk.js`; Rücksetzen `flags.protected` in `onNightStart`, `night.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-05 Schutzengel**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-05) |
 |---|---|---|---|
-| a · Dauer | „schütze diesen vor dem **nächsten** Werwolfangriff" (`roles.js`) | Schutz wird zu Beginn jeder Nacht zurückgesetzt, gilt also nur in der Nacht der Wahl (`onNightStart`) | Code: gilt nur in dieser Nacht (`04` A-11 formuliert ebenso) |
-| b · Verbrauch | schweigt | Wolfs-Zielwahl auf geschützte Person verbraucht den Schutz sofort und setzt kein Ziel (`Werwolf`-Handler) | Verbrauch erst in der Morgenauflösung (`07` Q1 Tabelle; G-PH-4) |
-| c · Sicht der Waldhexe | schweigt | Folge von b: Die Hexe sieht bei geschütztem Ziel „Kein Opfer gesetzt" und erfährt so vom Schutz | Folgt aus b: Die Hexe sieht das gewählte Opfer, unabhängig vom Schutz |
+| a · Dauer | „schütze diesen vor dem **nächsten** Werwolfangriff" (`roles.js`) | Schutz wird zu Beginn jeder Nacht zurückgesetzt (`onNightStart`) | gilt nur in dieser Nacht und endet bei Tagesbeginn |
+| b · Verbrauch | schweigt | Wolfs-Zielwahl auf geschützte Person verbraucht den Schutz sofort (`Werwolf`-Handler) | wird erst in der Morgenauflösung angewandt |
+| c · Sicht der Waldhexe | schweigt | Folge von b: Die Hexe sieht bei geschütztem Ziel „Kein Opfer gesetzt" | folgt aus b: Die Hexe sieht das gewählte Opfer, unabhängig vom Schutz |
 
 ## 4. `das-orakel` · Das Orakel / The Oracle
 
@@ -164,23 +164,23 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-07 Orakel**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-07) |
 |---|---|---|---|
-| a · Ergebnis bei Wölfen | „erfahre die Rolle eines Spielers" | Jeder Wolf außer Trugbilderwolf erscheint als „Werwolf" | Code (`04` A-8 als verifiziert eingestuft; schützt Sonderwölfe vor Enttarnung ihrer Fähigkeit) |
-| b · Ergebnis bei Nicht-Wölfen | tatsächliche Rolle | tatsächliche Rolle | keine Abweichung |
-| c · sich selbst wählen | schweigt | erlaubt (Filter nur `!dead` über `startPick`) | ausschließen, weil ergebnislos |
+| a · Ergebnis bei Wölfen | „erfahre die Rolle eines Spielers" | Jeder Wolf außer Trugbilderwolf erscheint als „Werwolf" | jede Person, die als Wolf zählt, erscheint als `werwolf`; Ausnahme Trugbilderwolf (DR-08) |
+| b · Ergebnis bei Nicht-Wölfen | tatsächliche Rolle | tatsächliche Rolle | tatsächliche aktuelle Rolle |
+| c · sich selbst wählen | schweigt | erlaubt (Filter nur `!dead` über `startPick`) | verboten |
 
 ## 5. `trugbilderwolf` · Trugbilderwolf / Decoy Wolf
 
 | Feld | Inhalt |
 |---|---|
-| Regeltext DE | Der Trugbilderwolf gehört zu den Wölfen und wacht mit dem Rudel. Der Spielleiter legt seine Scheinrolle fest. Prüft ihn das Orakel, erhält es diese Scheinrolle statt „Werwolf“. |
-| Regeltext EN | The Decoy Wolf belongs to the wolves and wakes with the pack. The game master defines their decoy role. When the Oracle checks them, it receives that decoy role instead of "Werewolf". |
+| Regeltext DE | Der Trugbilderwolf gehört zu den Wölfen und wacht mit dem Rudel. Der Spielleiter legt seine Scheinrolle fest, spätestens wenn das Orakel ihn zum ersten Mal prüft. Prüft ihn das Orakel, erhält es diese Scheinrolle statt „Werwolf“. |
+| Regeltext EN | The Decoy Wolf belongs to the wolves and wakes with the pack. The game master defines their decoy role, at the latest when the Oracle checks them for the first time. When the Oracle checks them, it receives that decoy role instead of "Werewolf". |
 | Fraktion | Werwölfe. `counts_as_wolf` = ja. `appears_as` = Scheinrolle (nur gegenüber Informationsrollen) |
 | Nachtpriorität | keine eigene; Teil des Rudelschritts 2.0 |
 | Gültige Ziele | wie `werwolf` im Rudelschritt |
-| Dauer | Die gewählte Scheinrolle bleibt bestehen, bis der Spielleiter sie regelkonform ändert. |
-| Auflösung | im Orakel-Schritt ohne Zufallsziehung. Ermitteltes Ergebnis = Scheinrolle; Wahrheit = `trugbilderwolf` |
+| Dauer | Die gewählte Scheinrolle wird gespeichert und bei jeder weiteren Orakel-Prüfung wieder verwendet. Eine Änderung ist nur als Spielleiter-Übersteuerung mit Warnung und Protokoll möglich (G-GM-1). |
+| Auflösung | im Orakel-Schritt ohne Zufallsziehung. Ist noch keine Scheinrolle gespeichert, verlangt der Schritt zuerst die Wahl des Spielleiters (Auswahl: jede Rolle des Slice-Katalogs, die nicht als Wolf zählt; die App bietet diese an). Ermitteltes Ergebnis = Scheinrolle; Wahrheit = `trugbilderwolf` |
 | Konflikte | Scheinrolle kann eine Rolle sein, die im Spiel lebend existiert (beabsichtigt, Code) |
 | Siegbezug | G-SIEG-2 |
 | Manuelle Übersteuerung | gezeigte Scheinrolle abweichend setzen (G-INF-2) |
@@ -188,9 +188,9 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-08 Trugbilderwolf**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-08) |
 |---|---|---|---|
-| Ziehungszeitpunkt | „zufällige Nicht-Wolf-Rolle" | bei jeder Prüfung neu (`Math.random`) | einmal pro Partie ziehen und beibehalten; ist die Scheinrolle bei einer späteren Prüfung nicht mehr gültig, neu ziehen. Sonst verrät eine zweite Prüfung mit anderem Ergebnis die Täuschung |
+| Herkunft der Scheinrolle | „zufällige Nicht-Wolf-Rolle" | bei jeder Prüfung neu zufällig (`Math.random`) | Der Spielleiter wählt die Scheinrolle; kein Zufall. Sie bleibt gespeichert, damit eine zweite Prüfung dasselbe Ergebnis liefert |
 
 ## 6. `waldhexe` · Waldhexe / Witch of the Woods
 
@@ -203,19 +203,19 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Gültige Ziele | Rettung: nur das aktuelle Wolfsopfer dieser Nacht, auch sie selbst (Code). Gift: jede lebende Person, auch sie selbst und das Wolfsopfer (Code: Filter `!x.flags.dead`) |
 | Dauer | Rettung gilt für den Wolfsangriff dieser Nacht. Einmal-Nutzungen gelten pro Person und Fähigkeit für die ganze Partie (G-ID-3) |
 | Auflösung | Mehrstufiger Prompt, **eine** Prompt-Kette (03 §5.5): 1 Opfer anzeigen → 2 retten ja/nein (nur wenn Opfer vorhanden und Rettung verfügbar) → 3 vergiften ja/nein (nur wenn Gift verfügbar) → 4 Giftziel wählen → 5 bestätigen. Erst Schritt 5 erzeugt Ereignisse. Abbruch löscht den Prompt ohne Teilwirkung |
-| Konflikte | Rettung eines geschützten Opfers: siehe DR-05c. Gift und Wolfsopfer auf derselben Person: eine Person stirbt nur einmal; die erste angewandte Ursache gilt (G-TOD-1). Gift auf Sensenträger: löst dessen Reaktion aus (G-TOD-4) |
+| Konflikte | Rettung eines geschützten Opfers: Die Hexe sieht das Opfer unabhängig vom Schutz (DR-05, Punkt c) und darf es retten; ihr Heiltrank ist damit verbraucht. Gift und Wolfsopfer auf derselben Person: eine Person stirbt nur einmal; die erste angewandte Ursache gilt (G-TOD-1). Gift auf Sensenträger: löst dessen Reaktion aus (G-TOD-4) |
 | Siegbezug | Dorf |
 | Manuelle Übersteuerung | Nutzungen zurücksetzen oder als verbraucht markieren; Giftopfer per Korrektur wiederbeleben (Warnung, Protokoll) |
 | Legacy-Beleg | `Waldhexe`-Handler (`WaldhexeL`, `WaldhexeD`, Anzeige `v.role`) in `abilities-roles-chunk.js`; `hexeAskDeath` und `witchDeadlyFatePick` (`applyKill(s,"WITCH_POISON")` sofort) in `../../../js/core/abilities-helpers.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-06 Waldhexe**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-06) |
 |---|---|---|---|
-| a · Anzahl Tränke | DE: „Einmalig kannst du diesen … bewahren **oder** einen anderen Spieler in eine tödliche Zukunft weisen." EN: „once per game you can spare them **or** doom another player" | zwei getrennte Einmal-Fähigkeiten (`WaldhexeL`, `WaldhexeD`) | Code: je einmal retten und einmal vergiften; Text anpassen |
-| b · beides in einer Nacht | schweigt | erlaubt (nach Rettung folgt `hexeAskDeath`) | Code: erlaubt |
-| c · Todeszeitpunkt Gift | schweigt | sofort in der Nacht; spätere Nachtschritte der vergifteten Person entfallen | sofort (Code), Folgereaktionen nach DR-09 |
-| d · Was die Hexe sieht | „Sieht jede Nacht die Zukunft des Opfers" | Spielleiterdialog zeigt die **Rolle** des Opfers | Der Spielleiter sieht Name und Rolle; der Hexe wird nur die Person gezeigt. Die Rolle des Opfers ist keine Hexeninformation |
+| a · Anzahl Tränke | DE: „Einmalig kannst du diesen … bewahren **oder** einen anderen Spieler in eine tödliche Zukunft weisen." EN: „once per game you can spare them **or** doom another player" | zwei getrennte Einmal-Fähigkeiten (`WaldhexeL`, `WaldhexeD`) | je ein Heil- und ein Gifttrank pro Partie; Text ist angepasst |
+| b · beides in einer Nacht | schweigt | erlaubt (nach Rettung folgt `hexeAskDeath`) | erlaubt |
+| c · Todeszeitpunkt Gift | schweigt | sofort in der Nacht; spätere Nachtschritte der vergifteten Person entfallen | sofort; Folgereaktionen nach DR-09 in der Morgenauflösung |
+| d · Was die Hexe sieht | „Sieht jede Nacht die Zukunft des Opfers" | Spielleiterdialog zeigt die **Rolle** des Opfers | Vor ihrer Entscheidung sieht die Hexe nur den Namen des Wolfsopfers. Rettet sie es, erfährt sie zusätzlich dessen Rolle |
 
 ## 7. `sensentraeger` · Sensenträger / Reaper
 
@@ -228,27 +228,27 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Gültige Ziele | jede lebende Person (Code: `!x.flags.dead && x!==h`) |
 | Dauer | Reaktion bleibt offen und persistent, bis sie beantwortet oder bewusst übersprungen ist |
 | Auflösung | Tod des Sensenträgers → Reaktion einreihen → Prompt „verfluchen? → Ziel → bestätigen" → Tod mit Ursache `HUNTER_SHOT`, Quelle = Sensenträger. Einmal pro Person (Code: `meta.hunterShot`) |
-| Konflikte | Schutzengel schützt nicht (nur Wolfsangriff). Wird ein weiterer Sensenträger getroffen, entsteht eine weitere Reaktion. Siegprüfung vor/nach Reaktion: DR-14 |
+| Konflikte | Schutzengel schützt nicht (nur Wolfsangriff). Wird ein weiterer Sensenträger getroffen, entsteht eine weitere Reaktion. Siegprüfung: vorläufig nach jedem Tod, verbindlich erst nach Abarbeitung aller Reaktionen (G-SIEG-6, DR-14) |
 | Siegbezug | Dorf |
 | Manuelle Übersteuerung | Reaktion überspringen oder nachträglich auslösen (Warnung, Protokoll) |
 | Legacy-Beleg | `window.__queueHunterOnDeath`, `processQueue` (`if(state.dark) return;`), Schlüssel `hunterCurseQueuedAsk` in `../../../game.html`; Einreihung in `postDeathHooks`, `js/ui/core.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-09 Sensenträger**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-09) |
 |---|---|---|---|
-| a · Pflicht oder freiwillig | „erntet eine letzte Seele seiner Wahl" | freiwillig (Knopf „Überspringen") | Code: freiwillig |
-| b · Zeitpunkt nach Tod am Tag | „Beim Tod" | Warteschlange wird nur am Tag verarbeitet; nach Tageslynch in der Praxis erst nach der nächsten Nacht (`04` A-6) | sofort nach der Hinrichtung (`07` Q1 Tabelle) |
-| c · Zeitpunkt nach Tod in der Nacht | „Beim Tod" | am folgenden Morgen | Morgenauflösung (`07` Q1: „alle Reaktionen am Morgen") |
+| a · Pflicht oder freiwillig | „erntet eine letzte Seele seiner Wahl" | freiwillig (Knopf „Überspringen") | freiwillig, Verzicht möglich |
+| b · Zeitpunkt nach Tod am Tag | „Beim Tod" | nach Tageslynch in der Praxis erst nach der nächsten Nacht (`04` A-6) | sofort |
+| c · Zeitpunkt nach Tod in der Nacht | „Beim Tod" | am folgenden Morgen | während der Morgenauflösung |
 
 ## 8. `wolfskind` · Wolfskind / Wolf Child
 
 | Feld | Inhalt |
 |---|---|
-| Regeltext DE | In der ersten Nacht wählt das Wolfskind eine andere lebende Person als Vorbild. Stirbt das Vorbild, während das Wolfskind lebt, zählt das Wolfskind ab sofort als Wolf und gewinnt mit den Werwölfen. Seine Rolle bleibt Wolfskind. Ab der folgenden Nacht wacht es mit dem Rudel. |
-| Regeltext EN | In the first night the Wolf Child chooses another living person as their role model. If that role model dies while the Wolf Child lives, the Wolf Child counts as a wolf and wins with the werewolves. Their role remains Wolf Child. From the following night onward they wake with the pack. |
+| Regeltext DE | In seiner ersten Nacht wählt das Wolfskind eine andere lebende Person als Vorbild. Stirbt das Vorbild, während das Wolfskind lebt, zählt das Wolfskind ab sofort als Wolf und gewinnt mit den Werwölfen. Seine Rolle bleibt Wolfskind. Ab der folgenden Nacht wacht es mit dem Rudel. Für einen Lehrling, der `wolfskind` geerbt hat, gilt als erste Nacht seine nächste Nacht mit aktiver geerbter Rolle (§9). |
+| Regeltext EN | In their first night the Wolf Child chooses another living person as their role model. If that role model dies while the Wolf Child lives, the Wolf Child counts as a wolf and wins with the werewolves. Their role remains Wolf Child. From the following night onward they wake with the pack. For an Apprentice who inherited Wolf Child, their first night is their next night with the inherited role active (§9). |
 | Fraktion | Dorf; nach Verwandlung Werwölfe. `counts_as_wolf` = nein, danach ja. `appears_as` folgt `counts_as_wolf` (Orakel: „Werwolf" nach Verwandlung, Code `isWolf`) |
-| Nachtpriorität | 0.9, nur Nacht 1, einmalig |
+| Nachtpriorität | 0.9, einmalig: in Nacht 1, bei geerbtem `wolfskind` in der ersten Nacht nach dem Erbe |
 | Gültige Ziele | jede andere lebende Person; Selbstwahl ist verboten |
 | Dauer | Vorbildbindung für die ganze Partie; Verwandlung dauerhaft |
 | Auflösung | Tod des Vorbilds (jede Ursache) → in derselben Pipeline-Ausführung `RoleChanged`/Fraktionswechsel-Ereignis, nur für den Spielleiter sichtbar; danach Siegprüfung |
@@ -259,36 +259,37 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-10 Wolfskind**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-10) |
 |---|---|---|---|
-| a · sich selbst wählen | DE „einen Feind", EN „an enemy" | erlaubt (Filter nur `!dead`); Prompt nennt es „Vorbild" | ausschließen; Begriff „Vorbild" in beiden Sprachen vereinheitlichen |
-| b · Rudelteilnahme | „zählst fortan als Wolf" | nur `flags.werewolf`; `wolfskind` fehlt in `WOLF_KILL_ROLES` | wacht ab der folgenden Nacht mit dem Rudel und wählt mit |
+| a · sich selbst wählen | DE „einen Feind", EN „an enemy" | erlaubt (Filter nur `!dead`); Prompt nennt es „Vorbild" | verboten; Begriff „Vorbild" in beiden Sprachen |
+| b · Rudelteilnahme | „zählst fortan als Wolf" | nur `flags.werewolf`; `wolfskind` fehlt in `WOLF_KILL_ROLES` | wacht nach der Verwandlung ab der folgenden Nacht mit dem Rudel und wählt mit |
 
 ## 9. `lehrling` · Lehrling / Apprentice
 
 | Feld | Inhalt |
 |---|---|
-| Regeltext DE | Beim Nachtschritt des Lehrlings wählt der Spielleiter drei geeignete lebende Personen aus. Die App zeigt dem Lehrling nur deren drei Rollen, nicht die Personen. Der Lehrling wählt eine Rolle; die zugehörige Person wird verdeckt als Meister gespeichert. Stirbt der Meister, während der Lehrling lebt, erbt der Lehrling dessen Rolle mit vollständig zurückgesetzten Fähigkeiten. Die geerbte Rolle wirkt ab der folgenden Nacht. Erbt er Wolfskind, wählt er bei seinem nächsten Nachtschritt ein neues Vorbild und verwandelt sich erst nach dessen Tod. |
-| Regeltext EN | During the Apprentice's night step, the game master selects three eligible living people. The app shows the Apprentice only their three roles, not the people. The Apprentice chooses a role; the linked person is stored secretly as their master. If the master dies while the Apprentice lives, the Apprentice inherits that role with all ability uses reset. The inherited role becomes active from the following night. If they inherit Wolf Child, they choose a new role model on their next night step and transform only after that role model dies. |
-| Fraktion | Dorf; nach Erbe die Fraktion der geerbten Rolle |
+| Regeltext DE | Ist der Lehrling in der ersten Nacht an der Reihe, bestimmt der Spielleiter verdeckt drei geeignete lebende Personen. Der Lehrling sieht ausschließlich die drei Rollen dieser Personen, niemals ihre Namen oder Identitäten. Jede angezeigte Rolle bleibt intern und geheim mit ihrer Person verknüpft. Der Lehrling wählt eine der drei Rollen. Stirbt die damit verknüpfte Person, während der Lehrling lebt, erbt der Lehrling deren Rolle. Alle begrenzten Fähigkeitseinsätze der geerbten Rolle beginnen für ihn neu. Die geerbte Rolle wird ab der folgenden Nacht aktiv. Erbt der Lehrling `wolfskind`, bleibt er zunächst unverwandelt, wählt bei seinem nächsten Nachtschritt ein neues Vorbild und verwandelt sich erst, wenn dieses neue Vorbild stirbt. |
+| Regeltext EN | When the Apprentice's turn comes in the first night, the game master secretly selects three eligible living people. The Apprentice sees only the three roles of these people, never their names or identities. Each displayed role stays internally and secretly linked to its person. The Apprentice chooses one of the three roles. If the linked person dies while the Apprentice is alive, the Apprentice inherits that role. All limited ability uses of the inherited role start fresh for them. The inherited role becomes active from the following night. If the Apprentice inherits Wolf Child, they initially remain untransformed, choose a new role model on their next night step and transform only when that new role model dies. |
+| Fraktion | Dorf; nach dem Erbe Fraktion und Wolfszählung der geerbten Rolle (siehe Auflösung, Schritt 6) |
 | Nachtpriorität | 1.1, nur Nacht 1, einmalig |
-| Gültige Ziele | drei vom Spielleiter ausgewählte geeignete lebende Personen; angezeigt werden ausschließlich deren Rollen. Die gewählte Option bindet den Lehrling verdeckt an die zugehörige Person. |
-| Dauer | Mentorbindung für die ganze Partie; Rollenwechsel dauerhaft |
-| Auflösung | Tod des Mentors → `RoleChanged{from: lehrling, to: <Rolle>, by: mentor_death}` (nur Spielleiter), `original_role_id` bleibt `lehrling`, danach Siegprüfung |
-| Konflikte | Erbt der Lehrling `manipulator`, gilt dessen Status „nie nominiert" für die Person des Lehrlings. Erbt er `wolfskind`, übernimmt er keinen bestehenden Wolfsstatus, sondern wählt ein neues Vorbild. Doppelte angezeigte Rollen müssen im Setup eindeutig als getrennte verdeckte Optionen behandelt werden. |
+| Gültige Ziele | Geeignet ist jede lebende Person außer dem Lehrling selbst. Der Spielleiter wählt genau drei verschiedene Personen; die App prüft nur Lebendigkeit, Verschiedenheit und Anzahl. Der Lehrling wählt anschließend genau eine der drei angezeigten Rollen. |
+| Dauer | Bindung an die gewählte Person bis zu deren Tod oder bis zum Tod des Lehrlings; Rollenwechsel dauerhaft |
+| Auflösung | Mehrstufige, persistente Prompt-Kette (03 §5.5):<br>1. **Spielleiterteil (nur Cockpit):** Der Spielleiter wählt drei geeignete Personen. Teilantwort `candidates = [Person-IDs]` wird im offenen Prompt gespeichert.<br>2. **Lehrlingsteil (gesicherte Karte):** Angezeigt werden nur drei Optionen mit Rollennamen (aktuelle `role_id` der Person). Keine Namen, Sitzplätze, Porträts, IDs oder Reihenfolgen, aus denen die Person erkennbar wäre. Reihenfolge: nach Rollen-ID sortiert; gleiche Rollen werden über eine `SeededRng`-Ziehung geordnet, die mit dem Prompt gespeichert wird (G-RNG-1).<br>3. **Bestätigen:** Die gewählte Option wird intern an ihre Person gebunden (`apprentice_master_id`). Ereignis `ApprenticeBound` nur für den Spielleiter; die Projektion für den Lehrling enthält nur die gewählte Rolle.<br>4. **Tod der gebundenen Person** (jede Ursache) bei lebendem Lehrling: in derselben Pipeline-Ausführung `RoleChanged{from: lehrling, to: <Rolle der Person im Todeszeitpunkt>, by: master_death}`, nur für den Spielleiter. `original_role_id` bleibt `lehrling`. Alle `ability_uses` der geerbten Rolle stehen für den Lehrling auf null (G-ID-3).<br>5. **Tod des Lehrlings vor dem Erbe:** Die Bindung erlischt; es findet nie ein Erbe statt (Bugfix F5).<br>6. **Wirksamkeit:** Rolle, Fraktion und Wolfszählung wechseln mit dem Erbe; die Siegprüfung rechnet sofort damit (wie die Verwandlung des Wolfskinds, §8). Nachtschritte, Reaktionen und passive Fähigkeiten der geerbten Rolle wirken erst ab Beginn der folgenden Nacht (`StartNight`). Bis dahin besitzt der Lehrling die Rolle ohne Fähigkeit.<br>7. **Geerbtes `wolfskind`:** Der Lehrling zählt nicht als Wolf, auch wenn die verstorbene Person ein verwandeltes Wolfskind war. In seiner nächsten Nacht erhält er den Wolfskind-Schritt (0.9) und wählt ein neues Vorbild (nicht sich selbst). Erst der Tod dieses neuen Vorbilds verwandelt ihn nach §8. |
+| Konflikte | Erbt der Lehrling `manipulator`, gilt dessen Status „nie nominiert“ für die Person des Lehrlings. Doppelte Rollen unter den drei Optionen erscheinen als getrennte Optionen mit gleichem Rollennamen; jede ist an eine andere Person gebunden. Stirbt die gebundene Person und der Lehrling in derselben Befehlsausführung, entscheidet die Reihenfolge der Tode (`order_index`): Nur wenn der Lehrling zum Todeszeitpunkt der Person noch lebt, erbt er. |
 | Siegbezug | Fraktion der aktuellen Rolle |
-| Manuelle Übersteuerung | Mentor setzen, Erbe auslösen oder rückgängig machen (Warnung, Protokoll) |
-| Legacy-Beleg | `Lehrling`-Handler (Filter `!x.flags.dead&&!isWolf(x)`, Prompt „wähle Mentor (Dorfbewohner)") in `abilities-roles-chunk.js`; Erbe und `resetOnceForInheritedRole` in `postDeathHooks`, `js/ui/core.js` |
+| Manuelle Übersteuerung | Bindung setzen oder ändern, Erbe auslösen oder rückgängig machen (Warnung, Protokoll) |
+| Legacy-Beleg | `Lehrling`-Handler (Filter `!x.flags.dead&&!isWolf(x)`, Prompt „wähle Mentor (Dorfbewohner)“) in `abilities-roles-chunk.js`; Erbe und `resetOnceForInheritedRole` in `postDeathHooks`, `js/ui/core.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-11 Lehrling**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-11) |
 |---|---|---|---|
-| a · erlaubte Mentoren | „Wählt einen Mentor" | Filter: lebend und kein Wolf (Einzelsiegrollen und sich selbst erlaubt); Prompt-Text sagt „Dorfbewohner" | eine andere lebende Person, die kein Wolf ist (Filter, ohne Selbstwahl) |
-| b · Nutzungen der geerbten Rolle | schweigt | Einmal-Flags werden zurückgesetzt, Fähigkeiten also frisch | Code: frisch, weil Nutzungen pro Person gezählt werden (G-ID-3) |
-| c · Wirkungsbeginn | schweigt | sofort; `rebuildOrder` nimmt die Rolle in die laufende Nacht auf | ab der nächsten Nacht; verhindert doppelte Nachtaktion derselben Rolle in einer Nacht |
-| d · Mentor ist verwandeltes Wolfskind | schweigt | Lehrling wird `wolfskind` und Wolf | Code übernehmen; im Slice als Randfall testen |
-| – · toter Lehrling erbt | „übernimmt die Rolle" | erbt auch tot (Bug F5) | bereits entschieden: behoben (07-T2) |
+| Auswahl | „Wählt einen Mentor“ | Lehrling wählt offen eine Person (lebend, kein Wolf) | Spielleiter wählt drei Personen; der Lehrling sieht nur deren Rollen und wählt eine Rolle |
+| Identität | schweigt | Lehrling kennt seinen Mentor | Der Lehrling erfährt nie, welche Person an seine Rolle gebunden ist |
+| Nutzungen der geerbten Rolle | schweigt | Einmal-Flags werden zurückgesetzt | alle begrenzten Einsätze zurückgesetzt |
+| Wirkungsbeginn | schweigt | sofort; `rebuildOrder` nimmt die Rolle in die laufende Nacht auf | ab der folgenden Nacht |
+| Erbe von `wolfskind` | schweigt | Lehrling wird `wolfskind` und übernimmt den Wolfsstatus | unverwandelt; neues Vorbild im nächsten Nachtschritt; Verwandlung erst nach dessen Tod |
+| toter Lehrling erbt | „übernimmt die Rolle“ | erbt auch tot (Bug F5) | kein Erbe (07-T2) |
 
 ## 10. `manipulator` · Manipulator / Manipulator
 
@@ -301,17 +302,17 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Gültige Ziele | keine |
 | Dauer | Status „nie nominiert" gilt für die ganze Partie und haftet an der Person |
 | Auflösung | Befehl `Nominate(nominierende, Manipulator)` wird gespeichert und löst in derselben Befehlsausführung den Tod mit Ursache `MANIPULATOR_NOMINATED`, Quelle = nominierende Person, aus. Die Tagesphase läuft danach weiter |
-| Konflikte | Gleichzeitig mit Wolfsparität oder Dorfsieg: DR-02. Hinrichtung ohne Nominierung (falls DR-03 sie erlaubt) löst keinen Manipulator-Tod aus, weil keine Nominierung vorliegt |
+| Konflikte | Gleichzeitig mit Wolfsparität oder Dorfsieg: Der Spielleiter entscheidet (G-SIEG-5, DR-02). Eine Hinrichtung ohne Nominierung (nur per Übersteuerung, DR-03) löst keinen Manipulator-Tod aus, weil keine Nominierung vorliegt |
 | Siegbezug | eigener Siegkandidat; zählt als Nicht-Wolf in G-SIEG-2 |
 | Manuelle Übersteuerung | Nominierung zurücknehmen = Undo des Befehls; Status „nie nominiert" korrigieren (Warnung, Protokoll) |
 | Legacy-Beleg | `openPop` in `../../../game.html` (Chip `nominated`, `ManipulatorWasNominated`, `applyKill(currentSeat,"MANIPULATOR_NOMINATED")`); `checkWinConditions` (`alive.length===3`) in `js/ui/core.js`; `isWolf` Ausschlussliste |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-12 Manipulator**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung |
 |---|---|---|---|
-| a · „Final 3" | „bis in die Final 3 schafft" | genau 3 Lebende; springt die Zahl von 4 auf 2, gewinnt er nie | höchstens drei Lebende |
-| b · Vorrang vor Werwölfen | schweigt | Wolfsparität wird vor dem Manipulator geprüft; Dorfsieg ebenfalls | siehe DR-02 |
+| a · „Final 3" | „bis in die Final 3 schafft" | genau 3 Lebende | genau drei Lebende (DR-12); springt die Zahl über drei hinweg, entsteht kein Manipulator-Kandidat |
+| b · Vorrang vor Werwölfen | schweigt | Wolfsparität wird vor dem Manipulator geprüft; Dorfsieg ebenfalls | keine feste Priorität; bei Gleichzeitigkeit entscheidet der Spielleiter (DR-02) |
 
 ## 11. `spiegelwolf` · Spiegelwolf / Mirror Wolf
 
@@ -331,20 +332,29 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-13 Spiegelwolf**
 
-| Punkt | Text sagt | Code tut | Empfehlung |
+| Punkt | Text sagt | Code tut | Entscheidung (DR-13) |
 |---|---|---|---|
-| fehlende Nominierung | „auf den Spieler, der ihn nominiert hat" | Nominierende werden nicht gespeichert; der Spielleiter wählt bei der Hinrichtung frei eine lebende Person | Nur relevant, wenn DR-03 Hinrichtungen ohne Nominierung erlaubt. Dann fragt die App die nominierende Person als Pflichtschritt ab und speichert sie nachträglich |
+| fehlende Nominierung | „auf den Spieler, der ihn nominiert hat" | Nominierende werden nicht gespeichert; der Spielleiter wählt bei der Hinrichtung frei eine lebende Person | Tritt nur bei einer Hinrichtung per Übersteuerung auf (DR-03). Dann keine Spiegelung, der Spiegelwolf stirbt normal; die App fragt keine nominierende Person nachträglich ab |
 
 ---
 
-## 12. Zusammenfassung der entschiedenen Konflikte
+## 12. Zusammenfassung der Entscheidungen
 
-| ID | Thema | Text | Code | Empfehlung |
-|---|---|---|---|---|
-| DR-01 | Technische Rollen-IDs | `../../masterplan/RULE-MIGRATION-MATRIX.md`: `villager`, `werewolf` | `03` §5.1 und `04`: `dorfbewohner`, `werwolf`; Legacy nutzt deutsche Anzeigenamen als ID | deutsches ASCII-kebab-case nach `03` §5.1 |
-| DR-02 | Siegpriorität und „niemand lebt" | `07` Q4 schlug eine feste Priorität vor | Legacy-Prüfer widersprechen sich | Bei Gleichzeitigkeit entscheidet der Spielleiter; niemand lebt → kein automatischer Sieger |
-| DR-03 | Nominierungsregeln | DL: jede Person nominiert standardmäßig einmal und wird einmal nominiert | nur Chip `nominated` ohne Nominierende, Rücksetzen bei Nachtbeginn (`onNightStart`) | pro Tag; nur Lebende nominieren und werden nominiert; Hinrichtung nur für an diesem Tag nominierte Personen, sonst Übersteuerung |
-| DR-04 | Öffentliche Todesinformation | DL: „Tagsüber werden nur öffentliche Informationen gezeigt" | Todes-Overlay zeigt Name und Ursache (`_renderDeathGroups`, `_deathLabel` in `../../../js/ui/ui.js`) | Name öffentlich; Rolle gemäß Setup-Option; Ursache intern |
-| DR-14 | Siegprüfung und offene Reaktionen | schweigt | Legacy löst Sieg nach jedem Tod sofort aus | nach Tod vorläufig prüfen, Reaktionen abarbeiten, danach final prüfen |
+| ID | Thema | Entscheidung | Regelabschnitt |
+|---|---|---|---|
+| DR-01 | Technische Rollen-IDs | deutsches ASCII-kebab-case (`dorfbewohner`, `werwolf`, `das-orakel`) | §1 bis §11 (Überschriften) |
+| DR-02 | gleichzeitige Siege, niemand lebt | Spielleiter entscheidet; niemand lebt → kein automatischer Gewinner | G-SIEG-5 |
+| DR-03 | Nominierung | pro Tag, nur Lebende, je einmal nominieren und nominiert werden; Hinrichtung nur nach Nominierung, sonst Übersteuerung | G-TAG-2, G-TAG-4 |
+| DR-04 | öffentliche Todesinformation | Name öffentlich; Rolle nach Setup-Option `reveal_role_on_death`; Ursache privat | G-TOD-5 |
+| DR-05 | Schutzengel | andere lebende Person; nur diese Nacht gegen Wolfsangriff; Anwendung in der Morgenauflösung; Ende bei Tagesbeginn | §3 |
+| DR-06 | Waldhexe | je ein Heil- und Gifttrank, beide in einer Nacht erlaubt; Gift sofort; Name vor Entscheidung, Rolle nach Rettung | §6 |
+| DR-07 | Orakel | Sonderwölfe erscheinen als `werwolf`; Selbstprüfung verboten | §4 |
+| DR-08 | Trugbilderwolf | Spielleiter wählt die Scheinrolle; kein Zufall | §5, G-RNG-1 |
+| DR-09 | Sensenträger | freiwillig; Tag sofort, Nacht in der Morgenauflösung | §7, G-TOD-4 |
+| DR-10 | Wolfskind | keine Selbstwahl; nach Verwandlung Rudel ab folgender Nacht | §8 |
+| DR-11 | Lehrling | drei verdeckt gebundene Rollen; Erbe bei Tod der Person; Reset; aktiv ab folgender Nacht; Wolfskind mit neuem Vorbild | §9 |
+| DR-12 | Manipulator | genau drei Lebende | §10 |
+| DR-13 | Spiegelwolf ohne Nominierung | keine Spiegelung, normaler Tod | §11 |
+| DR-14 | Siegprüfung und Reaktionen | nach jedem Tod vorläufig; Reaktionen vollständig abarbeiten; danach verbindlich prüfen; dann Spielleiterbestätigung | G-SIEG-6 |
 
-Details, Optionen und Auswirkungen: `decision-request.md`.
+Fragen, Optionen und Antwortbogen: `decision-request.md`.
