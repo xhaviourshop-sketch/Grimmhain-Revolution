@@ -1,11 +1,11 @@
 # Vertical Slice · Entscheidungsanfrage an den Product Owner
 
-**Stand:** 2026-09-26 · **Status:** DR-01 und DR-03 entschieden; übrige Fragen vor dem vollständigen Vertical Slice offen
-**Bezug:** `rules-register.md` (Abschnitte „DECISION REQUIRED"), `acceptance-scenarios.md`, `implementation-boundary.md`
+**Stand:** 2026-09-26 · **Status:** alle Entscheidungen beantwortet
+**Bezug:** `rules-register.md`, `acceptance-scenarios.md`, `implementation-boundary.md`
 
 Pfade relativ zu `docs/specs/vertical-slice/`.
 
-Diese Datei enthält **nur** Entscheidungen, ohne die der Core-Slice oder der Vertical Slice nicht regelkonform gebaut werden kann. Jede Empfehlung ist ein Vorschlag, keine Entscheidung. Nach der Entscheidung werden die Ergebnisse in `../../masterplan/DECISION-LOG.md` eingetragen und die `⟨DR-xx⟩`-Stellen in `rules-register.md` ersetzt.
+Diese Datei dokumentiert die Fragen, Optionen und endgültigen Antworten. Verbindlich sind der ausgefüllte Antwortbogen, das aktuelle `rules-register.md` und `../../masterplan/DECISION-LOG.md`.
 
 **Nicht gefragt**, weil bereits entschieden: Legacy-Bugs aus `../../godot-migration/07-open-questions.md` Q1 Teil 2 werden behoben (u. a. fehlende Wolfszeile F2, toter Lehrling erbt F5, zwei Siegprüfer F7, manueller Tod ohne Folgen F6). Grundlage: `DECISION-LOG.md` „Offensichtliche Bugs werden nicht als Referenzverhalten portiert."
 
@@ -183,16 +183,16 @@ Nur nötig, wenn DR-03 eine Hinrichtung ohne Nominierung zulässt (Option B oder
 | ID | Entscheidung (A/B/C bzw. je Punkt) | Datum | Notiz |
 |---|---|---|---|
 | DR-01 | A | 2026-09-26 | deutsches ASCII-kebab-case |
-| DR-02 | | | |
+| DR-02 | C; niemand lebt: kein automatischer Sieger | 2026-09-26 | Spielleiter entscheidet gleichzeitige Siege |
 | DR-03 | A | 2026-09-26 | pro Tag, nur Lebende; andere Hinrichtung nur als protokollierte Übersteuerung |
-| DR-04 | | | |
-| DR-05 | a: · b: | | |
-| DR-06 | a: · b: · c: · d: | | |
-| DR-07 | a: · c: | | |
-| DR-08 | | | |
-| DR-09 | a: · b: | | |
-| DR-10 | a: · b: | | |
-| DR-11 | a: · b: · c: · d: | | |
-| DR-12 | | | |
-| DR-13 | | | |
-| DR-14 | | | |
+| DR-04 | benutzerdefiniert | 2026-09-26 | Name öffentlich; Rolle gemäß Setup-Option Reveal Role |
+| DR-05 | a: A · b: A | 2026-09-26 | nur diese Nacht gegen Wolfsangriff; Ende bei Tagesbeginn |
+| DR-06 | a: A · b: A · c: A · d: benutzerdefiniert | 2026-09-26 | Name vor Entscheidung; Rolle zusätzlich nach Rettung |
+| DR-07 | a: A · c: A | 2026-09-26 | Sonderwölfe als Werwolf; keine Selbstwahl |
+| DR-08 | C | 2026-09-26 | Spielleiter wählt Scheinrolle |
+| DR-09 | a: A · b: A | 2026-09-26 | freiwillig; am Tag sofort |
+| DR-10 | a: A · b: A | 2026-09-26 | keine Selbstwahl; Rudel ab folgender Nacht |
+| DR-11 | benutzerdefiniert | 2026-09-26 | drei verdeckt an Personen gebundene Rollen; Reset; Wirkung nächste Nacht; Wolfskind wählt neues Vorbild |
+| DR-12 | A | 2026-09-26 | genau drei Lebende |
+| DR-13 | B | 2026-09-26 | ohne Nominierung keine Spiegelung |
+| DR-14 | benutzerdefiniert | 2026-09-26 | sofort vorläufig prüfen, Reaktionen abarbeiten, danach final prüfen |
