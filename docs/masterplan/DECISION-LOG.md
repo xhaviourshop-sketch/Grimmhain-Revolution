@@ -85,3 +85,13 @@
 - schwaches Android-Referenztablet,
 - endgültiger Produktpreis,
 - finale Auswahl der 20 bis 30 Rollen nach Regelregister.
+
+## Vertical Slice · entschiedene Detailfragen
+
+### DR-01 · Technische Rollen-IDs · 26. September 2026
+
+Stabile technische Rollen-IDs verwenden deutsches ASCII-`kebab-case`, beispielsweise `dorfbewohner`, `werwolf` und `das-orakel`. Anzeigenamen bleiben vollständig lokalisiert.
+
+### DR-03 · Nominierungsregeln · 26. September 2026
+
+Nominierungsrechte werden pro Tag zurückgesetzt. Nur lebende Personen dürfen nominieren oder nominiert werden. Standardmäßig darf jede Person einmal pro Tag nominieren und einmal pro Tag nominiert werden. Eine normale Hinrichtung ist nur für eine an diesem Tag nominierte Person zulässig. Abweichungen sind ausschließlich als Spielleiter-Übersteuerung mit Warnung, Begründung und Protokolleintrag möglich.

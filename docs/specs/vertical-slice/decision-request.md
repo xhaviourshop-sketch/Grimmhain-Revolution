@@ -1,6 +1,6 @@
 # Vertical Slice · Entscheidungsanfrage an den Product Owner
 
-**Stand:** 2026-09-26 · **Status:** offen
+**Stand:** 2026-09-26 · **Status:** DR-01 und DR-03 entschieden; übrige Fragen vor dem vollständigen Vertical Slice offen
 **Bezug:** `rules-register.md` (Abschnitte „DECISION REQUIRED"), `acceptance-scenarios.md`, `implementation-boundary.md`
 
 Pfade relativ zu `docs/specs/vertical-slice/`.
@@ -182,9 +182,9 @@ Nur nötig, wenn DR-03 eine Hinrichtung ohne Nominierung zulässt (Option B oder
 
 | ID | Entscheidung (A/B/C bzw. je Punkt) | Datum | Notiz |
 |---|---|---|---|
-| DR-01 | | | |
+| DR-01 | A | 2026-09-26 | deutsches ASCII-kebab-case |
 | DR-02 | | | |
-| DR-03 | | | |
+| DR-03 | A | 2026-09-26 | pro Tag, nur Lebende; andere Hinrichtung nur als protokollierte Übersteuerung |
 | DR-04 | | | |
 | DR-05 | a: · b: | | |
 | DR-06 | a: · b: · c: · d: | | |

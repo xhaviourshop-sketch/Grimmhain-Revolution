@@ -66,9 +66,9 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Regel | Inhalt | Quelle |
 |---|---|---|
 | G-TAG-1 | Diskussion und Abstimmung finden physisch statt. Stimmen werden **nicht** digital erfasst, gespeichert oder gezählt. | DL Abschnitt Regeln |
-| G-TAG-2 | Gespeichert werden je Nominierung: nominierende Person, nominierte Person, Tag. Standardmäßig nominiert jede Person einmal und wird einmal nominiert. Bezugszeitraum und Berechtigungen: ⟨DR-03⟩. | DL |
+| G-TAG-2 | Gespeichert werden je Nominierung: nominierende Person, nominierte Person und Tag. Pro Tag darf jede lebende Person einmal nominieren und einmal nominiert werden. Die Rechte werden beim nächsten Tag zurückgesetzt. | DL, DR-03 |
 | G-TAG-3 | Der Spielleiter bestätigt nach der physischen Abstimmung genau eine Todesaktion auf einer Person oder ausdrücklich „keine Hinrichtung". | DL; `04` E-6; 03 §5.6 `DecideExecution(seat|none)` |
-| G-TAG-4 | Ob eine Hinrichtung ohne gespeicherte Nominierung möglich ist: ⟨DR-03⟩. | – |
+| G-TAG-4 | Eine normale Hinrichtung ist nur für eine an diesem Tag nominierte Person zulässig. Eine andere Person kann ausschließlich über eine Spielleiter-Übersteuerung mit Warnung, Begründung und Protokolleintrag hingerichtet werden. | DR-03, G-GM-1 |
 
 ### 0.7 Sieg
 

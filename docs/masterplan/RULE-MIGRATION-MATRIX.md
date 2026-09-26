@@ -17,8 +17,8 @@ Die vollständige Bestandsanalyse steht in `../godot-migration/04-rules-migratio
 
 | ID | Anzeigename DE/EN | Fraktion | Charge | Legacy-Status | Verbindliche Regel | Nachtpriorität | Siegbezug | Automationsstatus | Tests | PO-Freigabe |
 |---|---|---|---|---|---|---:|---|---|---|---|
-| villager | Dorfbewohner / Villager | Dorf | Core | verifiziert | keine Nachtaktion | – | Dorf | approved | core victory | offen |
-| werewolf | Werwolf / Werewolf | Wolf | Core | verifiziert | wählt nachts Opfer | Wolfsphase | Wolf | approved | attack, parity | offen |
+| dorfbewohner | Dorfbewohner / Villager | Dorf | Core | verifiziert | keine Nachtaktion | – | Dorf | approved | core victory | bestätigt 2026-09-26 |
+| werwolf | Werwolf / Werewolf | Wolf | Core | verifiziert | wählt nachts Opfer | Wolfsphase | Wolf | approved | attack, parity | bestätigt 2026-09-26 |
 
 ## Auswahlverfahren für Vertical Slice
 
