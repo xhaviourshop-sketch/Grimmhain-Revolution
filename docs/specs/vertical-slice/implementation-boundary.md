@@ -79,16 +79,16 @@ Erst nach Abnahme von A. Alle DR-Punkte sind entschieden (`decision-request.md`,
 
 | Nr. | Umfang | Bezug |
 |---|---|---|
-| B-01 | Rollen `schutzengel` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_schutzengel.gd`), `das-orakel`, `trugbilderwolf`, `waldhexe`, `sensentraeger` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_sensentraeger.gd`), `wolfskind`, `lehrling`, `manipulator`, `spiegelwolf` nach `rules-register.md` | DR-05 bis DR-13 (entschieden) |
+| B-01 | Rollen `schutzengel` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_schutzengel.gd`), `das-orakel`, `trugbilderwolf`, `waldhexe` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_waldhexe.gd`), `sensentraeger` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_sensentraeger.gd`), `wolfskind`, `lehrling`, `manipulator`, `spiegelwolf` nach `rules-register.md` | DR-05 bis DR-13 (entschieden) |
 | B-02 | Nachtplan mit Prioritäten, Einmalschritten, Rudelschritt nach G-PH-6, Überspringen mit Grund | `vertical-slice-flow.md` §3 |
 | B-03 | Effekt-Modell mit Quelle und Dauer (Schutz bis Tagesbeginn, Vorbildbindung, verdeckte Lehrling-Bindung, gespeicherte Scheinrolle) und `expire_effects` | `03` §5.2, DR-05, DR-08, DR-11 |
-| B-04 | Abfangregeln der Tötungs-Pipeline: Schutzengel, Hexenrettung, Spiegelung | `03` §5.4 |
-| B-05 | Mehrstufige Prompt-Kette mit persistenten Teilantworten und `CancelPrompt`: Waldhexe; Lehrling mit Spielleiterteil (drei Personen) und Lehrlingsteil (nur Rollen); Setup mit Pflichtangabe der Scheinrolle bei `trugbilderwolf` | `03` §5.5, DR-06, DR-08, DR-11 |
+| B-04 | Abfangregeln der Tötungs-Pipeline: Schutzengel, Hexenrettung (beide im Regelkern umgesetzt), Spiegelung | `03` §5.4 |
+| B-05 | Mehrstufige Prompt-Kette mit persistenten Teilantworten und `CancelPrompt`: Waldhexe (im Regelkern umgesetzt); Lehrling mit Spielleiterteil (drei Personen) und Lehrlingsteil (nur Rollen); Setup mit Pflichtangabe der Scheinrolle bei `trugbilderwolf` | `03` §5.5, DR-06, DR-08, DR-11 |
 | B-06 | Persistente Reaktionswarteschlange (Sensenträger) | `03` §5.2 |
 | B-07 | Informationsmodell Wahrheit/ermittelt/gezeigt; Projektion für die handelnde Person ohne fremde Identitäten (Lehrling sieht nur Rollen) | G-INF-1, DR-07, DR-08, DR-11 |
 | B-08 | Rollen- und Fraktionswechsel mit `original_role_id`; Lehrling-Erbe nur bei lebendem Lehrling, Reset aller begrenzten Einsätze, Aktivierung aktiver Nachtfähigkeiten ab folgender Nacht; geerbtes Wolfskind unverwandelt mit neuem Vorbild | DR-10, DR-11; AS-L01–AS-L15 |
 | B-09 | Einzelsiegregel Manipulator (genau drei Lebende); mehrere gleichzeitige Kandidaten ohne Priorität, Spielleiter bestätigt einen; vorläufiger Siegstatus nach jedem Tod und verbindliche Prüfung nach allen Reaktionen | DR-02, DR-12, DR-14 |
-| B-10 | Zusätzliche Todesursachen `WITCH_POISON`, `HUNTER_SHOT`, `SPIEGELWOLF_RETALIATE`, `MANIPULATOR_NOMINATED`, `GM_CORRECTION` | G-TOD-3 |
+| B-10 | Zusätzliche Todesursachen `WITCH_POISON` (umgesetzt), `HUNTER_SHOT` (umgesetzt), `SPIEGELWOLF_RETALIATE`, `MANIPULATOR_NOMINATED`, `GM_CORRECTION` | G-TOD-3 |
 | B-11 | Befehle `BeginStep`, `SkipStep`, `CancelPrompt`, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, `GmCorrection` | `vertical-slice-flow.md` §0.1 |
 | B-12 | Undo/Redo als Befehlsstapel, über Neustart | AS-U01–U04 |
 | B-13 | Checkpoint nach jeder bestätigten Aktion, atomisches Schreiben, Backup, Wiederaufnahme nach Prozessabbruch | Masterplan Phase 1 und 2 |

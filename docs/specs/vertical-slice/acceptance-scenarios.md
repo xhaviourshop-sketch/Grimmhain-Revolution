@@ -137,7 +137,7 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 
 ### Schutzengel (DR-05)
 
-Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_schutzengel.gd`): AS-R01 bis AS-R04, AS-R32, AS-R42, AS-R43. AS-R32 prüft Fluch, Hinrichtung und Spielleitertod; Gift folgt mit der Waldhexe.
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_schutzengel.gd`): AS-R01 bis AS-R04, AS-R32, AS-R42, AS-R43. AS-R32 prüft Fluch, Hinrichtung und Spielleitertod; Gift prüft `../../../godot/tests/unit/test_waldhexe.gd`.
 
 **AS-R01 · Schutz hält**
 - Given: B6, Nacht 1: C schützt F.
@@ -174,6 +174,8 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_schutzengel
 - Then: F stirbt sofort mit `WITCH_POISON`; der Schutz verhindert das nicht.
 
 ### Waldhexe (DR-06)
+
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_waldhexe.gd`): AS-R05 bis AS-R08, AS-R39, AS-R32 mit Gift, AS-R37 mit echtem Gifttod, AS-A01, AS-A02. Die Testbesetzung entspricht B6 mit `dorfbewohner` statt `trugbilderwolf` (als zweiter `werwolf`) und `das-orakel`, bis diese Rollen umgesetzt sind; AS-R08 prüft die Rollenoffenlegung am Opfer C (`schutzengel`). „Projektion für E“ ist im Kern der offene Prompt und das Ereignis `WitchActed` (nur Spielleiter).
 
 **AS-R05 · Rettung**
 - Given: B6, Rudel wählt F.
@@ -235,7 +237,7 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_schutzengel
 
 ### Sensenträger (DR-09)
 
-Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_sensentraeger.gd`): AS-R15, AS-R16, AS-R17, AS-R37, AS-R40, AS-R41, AS-G01, AS-G02. AS-R37 nutzt bis zur Waldhexe einen Nachttod per Spielleiterkorrektur statt Gift.
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_sensentraeger.gd`): AS-R15, AS-R16, AS-R17, AS-R37, AS-R40, AS-R41, AS-G01, AS-G02. AS-R37 nutzt dort einen Nachttod per Spielleiterkorrektur; den echten Gifttod prüft `../../../godot/tests/unit/test_waldhexe.gd`.
 
 **AS-R15 · Reaktion nach Nachttod**
 - Given: Sensenträger G wird nachts vom Rudel getötet.
