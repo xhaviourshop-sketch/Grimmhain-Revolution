@@ -56,15 +56,12 @@ theme_type_variation = &"CaptionLabel"
 script = ExtResource("3_label")
 text_key = "ui.setup.entry.hint"
 
-[node name="InputRow" type="HBoxContainer" parent="Layout/Body/SideColumn/EntryCard/Column"]
-layout_mode = 2
-
-[node name="NameInput" type="LineEdit" parent="Layout/Body/SideColumn/EntryCard/Column/InputRow"]
+[node name="NameInput" type="LineEdit" parent="Layout/Body/SideColumn/EntryCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AddButton" type="Button" parent="Layout/Body/SideColumn/EntryCard/Column/InputRow"]
+[node name="AddButton" type="Button" parent="Layout/Body/SideColumn/EntryCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_button")
@@ -113,24 +110,21 @@ theme_type_variation = &"ErrorCaptionLabel"
 script = ExtResource("3_label")
 text_key = ""
 
-[node name="ImportButtons" type="HBoxContainer" parent="Layout/Body/SideColumn/ImportCard/Column"]
+[node name="ImportButtons" type="VBoxContainer" parent="Layout/Body/SideColumn/ImportCard/Column"]
 layout_mode = 2
-theme_type_variation = &"ButtonRow"
-
-[node name="ImportCancelButton" type="Button" parent="Layout/Body/SideColumn/ImportCard/Column/ImportButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-script = ExtResource("2_button")
-text_key = "ui.common.cancel"
-kind = 1
 
 [node name="ImportConfirmButton" type="Button" parent="Layout/Body/SideColumn/ImportCard/Column/ImportButtons"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.setup.import.confirm"
+kind = 1
+
+[node name="ImportCancelButton" type="Button" parent="Layout/Body/SideColumn/ImportCard/Column/ImportButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.common.cancel"
 kind = 1
 
 [node name="EditCard" type="PanelContainer" parent="Layout/Body/SideColumn"]

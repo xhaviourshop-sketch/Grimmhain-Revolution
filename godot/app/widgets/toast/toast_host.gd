@@ -17,6 +17,8 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.custom_minimum_size.x = ThemeTokens.TOAST_WIDTH
+	# Über einer Fußzeile mit Primäraktion schweben, nicht auf ihr.
+	(%Bottom as Control).offset_bottom = -ThemeTokens.TOAST_BOTTOM_OFFSET
 	_panel.visible = false
 	_timer.one_shot = true
 	_timer.wait_time = ThemeTokens.TOAST_VISIBLE_SECONDS

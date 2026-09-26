@@ -66,6 +66,7 @@ const IMPORT_TEXT_MIN_HEIGHT := 96    ## mehrzeiliges Importfeld
 const PERSON_NUMBER_WIDTH := 44       ## Listennummer in der Personenzeile
 const SCROLLBAR_WIDTH := 12
 const TOAST_WIDTH := 420
+const TOAST_BOTTOM_OFFSET := 88       ## Abstand der Statusmeldung vom unteren Rand (über einer Fußzeile)
 const SWITCH_WIDTH := 64              ## Schaltersymbol (Bewegung reduzieren)
 const SWITCH_HEIGHT := 32
 const DIALOG_WIDTH := 560

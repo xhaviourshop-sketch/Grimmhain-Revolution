@@ -81,7 +81,7 @@ func _notification(what: int) -> void:
 
 
 func default_focus() -> Control:
-	return _name_input
+	return _name_input if bool(_setup_view()["can_add"]) else _confirm
 
 
 ## Zurück, Escape und System-Zurück: offenen Modus schließen, sonst bei unbestätigten
@@ -150,6 +150,8 @@ func _render(view: Dictionary) -> void:
 	_update_controls(view)
 	if focus_row_id != -1:
 		_focus_row(focus_row_id)
+	elif not bool(view["can_add"]) and _name_input.has_focus():
+		_confirm.grab_focus()  # volle Liste: Eingabe gesperrt, nächster sinnvoller Schritt
 
 
 func _update_controls(view: Dictionary) -> void:
