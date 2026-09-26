@@ -3,7 +3,7 @@ extends Control
 ## Screen-Router: hält genau eine aktive Ansicht. Navigation ersetzt sie (die alte wird
 ## sofort aus dem Baum genommen), deshalb kann schnelles Tippen keine Ansicht doppelt stapeln;
 ## Navigation zur aktiven Ansicht wird ignoriert. Zurück führt zur Elternansicht aus ScreenIds.
-## Wünsche der Ansichten (Zurück, Beenden, Statusmeldung) reicht der Router an die Shell weiter.
+## Wünsche der Ansichten (Zurück, Beenden, Statusmeldung, Rückfrage) reicht der Router an die Shell weiter.
 ## Übergang: kurzes Einblenden mit kleiner Aufwärtsbewegung (ThemeTokens.TRANSITION_SECONDS).
 ## Bei reduzierter Bewegung erscheint die Ansicht sofort. Eingaben sind nie blockiert; eine
 ## neue Navigation beendet einen laufenden Übergang.
@@ -12,6 +12,7 @@ signal screen_changed(screen_id: StringName)
 signal back_requested
 signal quit_requested
 signal status_message_requested(text_key: String)
+signal dialog_requested(request: DialogRequest)
 
 var context: AppContext
 
@@ -70,6 +71,7 @@ func navigate(id: StringName) -> bool:
 	screen.back_requested.connect(back_requested.emit)
 	screen.quit_requested.connect(quit_requested.emit)
 	screen.status_message_requested.connect(status_message_requested.emit)
+	screen.dialog_requested.connect(dialog_requested.emit)
 	_current = screen
 	_current_id = id
 	_show(screen)

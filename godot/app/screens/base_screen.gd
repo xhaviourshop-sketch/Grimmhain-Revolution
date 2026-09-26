@@ -10,6 +10,7 @@ signal navigate_requested(screen_id: StringName)
 signal back_requested
 signal quit_requested
 signal status_message_requested(text_key: String)
+signal dialog_requested(request: DialogRequest)  ## Rückfrage über den Dialog der Shell
 
 @export var screen_id: StringName = &""
 

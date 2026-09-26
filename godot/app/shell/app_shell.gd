@@ -32,7 +32,7 @@ func _ready() -> void:
 	_router.back_requested.connect(go_back)
 	_router.quit_requested.connect(request_quit)
 	_router.status_message_requested.connect(_toast.show_message)
-	_dialog.confirmed.connect(_quit)
+	_router.dialog_requested.connect(_dialog.open_request)
 	get_viewport().size_changed.connect(_update_safe_area)
 	_update_safe_area()
 	_apply_window_limits()
@@ -102,7 +102,7 @@ func request_quit() -> void:
 	if AppPlatform.is_mobile():
 		_quit()
 		return
-	_dialog.open("ui.dialog.quit.title", "ui.dialog.quit.message", "ui.dialog.quit.confirm")
+	_dialog.open_request(DialogRequest.create("ui.dialog.quit.title", "ui.dialog.quit.message", "ui.dialog.quit.confirm", _quit))
 
 
 ## Sichere Fläche in Viewport-Koordinaten; leeres Rechteck = keine Geräteangabe.
