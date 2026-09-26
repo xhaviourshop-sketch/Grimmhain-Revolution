@@ -137,6 +137,8 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 
 ### Schutzengel (DR-05)
 
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_schutzengel.gd`): AS-R01 bis AS-R04, AS-R32, AS-R42, AS-R43. AS-R32 prüft Fluch, Hinrichtung und Spielleitertod; Gift folgt mit der Waldhexe.
+
 **AS-R01 · Schutz hält**
 - Given: B6, Nacht 1: C schützt F.
 - When: Rudel wählt F, Nacht endet.

@@ -79,7 +79,7 @@ Erst nach Abnahme von A. Alle DR-Punkte sind entschieden (`decision-request.md`,
 
 | Nr. | Umfang | Bezug |
 |---|---|---|
-| B-01 | Rollen `schutzengel`, `das-orakel`, `trugbilderwolf`, `waldhexe`, `sensentraeger` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_sensentraeger.gd`), `wolfskind`, `lehrling`, `manipulator`, `spiegelwolf` nach `rules-register.md` | DR-05 bis DR-13 (entschieden) |
+| B-01 | Rollen `schutzengel` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_schutzengel.gd`), `das-orakel`, `trugbilderwolf`, `waldhexe`, `sensentraeger` (im Regelkern umgesetzt, `../../../godot/tests/unit/test_sensentraeger.gd`), `wolfskind`, `lehrling`, `manipulator`, `spiegelwolf` nach `rules-register.md` | DR-05 bis DR-13 (entschieden) |
 | B-02 | Nachtplan mit Prioritäten, Einmalschritten, Rudelschritt nach G-PH-6, Überspringen mit Grund | `vertical-slice-flow.md` §3 |
 | B-03 | Effekt-Modell mit Quelle und Dauer (Schutz bis Tagesbeginn, Vorbildbindung, verdeckte Lehrling-Bindung, gespeicherte Scheinrolle) und `expire_effects` | `03` §5.2, DR-05, DR-08, DR-11 |
 | B-04 | Abfangregeln der Tötungs-Pipeline: Schutzengel, Hexenrettung, Spiegelung | `03` §5.4 |

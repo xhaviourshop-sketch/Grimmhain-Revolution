@@ -1,6 +1,6 @@
 # Grimmhain · Godot-Projekt
 
-Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Keine UI, keine Szenen, keine Assets. Rollen: `dorfbewohner`, `werwolf` und als erste Vertical-Slice-Rolle `sensentraeger` (siehe „Rollen“).
+Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Keine UI, keine Szenen, keine Assets. Rollen: `dorfbewohner`, `werwolf` und die Vertical-Slice-Rollen `sensentraeger` und `schutzengel` (siehe „Rollen“).
 
 ## Engine-Version (gepinnt)
 
@@ -57,6 +57,7 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 | `tests/unit/test_player_count_range.gd` | jede Personenzahl 6–24 nur mit Dorfbewohnern und Werwölfen (16, 20, 24 ausdrücklich, manuell und zufällig), keine Rollenobergrenze, 5 und 25 abgelehnt, mindestens ein Werwolf und ein Dorfbewohner | DECISION-LOG „6 bis 24 Personen“ |
 | `tests/unit/test_seeded_rng.gd` | Seed, Ziehposition, Wiederaufnahme mitten in der Folge | A-18 |
 | `tests/unit/test_steps.gd` | `BeginStep` nur für den erwarteten Schritt, `SkipStep` mit Grund, `CancelPrompt` ohne Teilwirkung, Pflichtschritt nicht still übersprungen, Save/Load, Replay | AS-A02 (Kernanteil), B-11 |
+| `tests/unit/test_schutzengel.gd` | Produktionsrolle, Schritt vor dem Rudel, Pflichtauswahl, kein Selbstschutz, Schutz nur gegen Rudelangriff derselben Nacht, `KillPrevented` ohne Tod/Reaktion/Siegstatus, Schutzengel stirbt nach Bestätigung, zwei Schutzengel, `CancelPrompt`/`SkipStep`, Schutzkorrekturen, Save/Load an vier Punkten, Replay, Leak-Test | AS-R01–AS-R04, AS-R32, AS-R42, AS-R43, DR-05 |
 | `tests/unit/test_sensentraeger.gd` | Produktionsrolle: Rudel-, Hinrichtungs-, GM- und Nachttod, Verzicht, lebende Ziele zum Antwortzeitpunkt, einmal pro Person, Kette zweier Sensenträger, DR-14, Wiederbelebung, totes Rudelopfer, Save/Load, Replay, keine Geheimnisse in öffentlichen Ereignissen | AS-R15, AS-R16, AS-R17, AS-R37, AS-R40, AS-R41, AS-G01, AS-G02 |
 | `tests/unit/test_reactions.gd` | Reaktion eingereiht, blockiert andere Befehle, nicht überspringbar/abbrechbar, Verzicht, Fluch-Tod, Kettenreaktion und stabile Reihenfolge, Nachttod reagiert am Morgen, Save/Load mit offener Reaktion, Replay | AS-A03, B-06, DR-09 |
 | `tests/unit/test_win_status.gd` | vorläufiger Status nach jedem Tod, verbindliche Prüfung erst nach allen Reaktionen, `ConfirmWin` bei offener Reaktion abgelehnt, niemand lebt ohne automatischen Gewinner, Save/Load, Replay | AS-R35, AS-R36, DR-02, DR-14 |
@@ -98,6 +99,7 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 | `player.gd` | Person mit stabiler ID; Rolle, Fraktion, `counts_as_wolf`, `appears_as` getrennt; begrenzte Einsätze `ability_uses`; kein Sitzfeld |
 | `kill_event.gd` | Todesdatensatz: Ursache (`NIGHT_KILL`, `LYNCH`), Quelle, Ziel, Zeitpunkt, Abfangstatus |
 | `reaction.gd` | offene Todesreaktion (Besitzer, auslösender Tod), Teil des Spielstands |
+| `protection.gd` | bestätigter Schutz: Schutzengel, geschützte Person, Nacht |
 | `nomination.gd` | Nominierende, Nominierte, Tag; kein Stimmfeld |
 | `pending_prompt.gd` | offene Eingabe als Teil des Spielstands (Rudelwahl, Reaktion) mit zugehöriger Schritt-ID und Abbrechbarkeit |
 | `win_candidate.gd` | Siegkandidat mit Status offen/bestätigt/abgelehnt |
@@ -107,11 +109,12 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 | **core/rules/** | |
 | `rules_engine.gd` | `apply` (validieren → auf Kopie ausführen → Ereignisse), `replay` |
 | `phase_machine.gd` | zulässige Befehle je Phase, Phasenwechsel mit Ereignis |
-| `kill_pipeline.gd` | Tötungs-Pipeline ohne Abfangregeln; reiht Todesreaktionen ein und berechnet den vorläufigen Siegstatus |
-| `step_queue.gd` | erwarteter nächster Schritt (Nachtplan, Reaktionen), Beginn, Überspringen, Prompt-Abbruch |
+| `kill_pipeline.gd` | Tötungs-Pipeline mit Abfangstufe Schutzengel (nur Rudelangriff); reiht Todesreaktionen ein und berechnet den vorläufigen Siegstatus |
+| `protections.gd` | Schutz der laufenden Nacht lesen, setzen, entfernen, Schutzengel eines Ziels |
+| `step_queue.gd` | Nachtplan (persönliche Rollenschritte vor dem Rudel), Schrittstatus, erwarteter nächster Schritt, Beginn, Überspringen, Prompt-Abbruch |
 | `gm_corrections.gd` | Spielleiterkorrektur: Prüfung, Ausführung, Protokoll mit altem und neuem Wert |
 | `win_rules.gd` | einzige Siegprüfung: vorläufig nach jedem Tod, verbindlich nach allen Reaktionen; erzeugt nur Kandidaten |
-| `role_catalog.gd` | Stammdaten `dorfbewohner`, `werwolf`, `sensentraeger`; optionale Obergrenze `max_copies`, Todesreaktion `death_reaction` |
+| `role_catalog.gd` | Stammdaten `dorfbewohner`, `werwolf`, `sensentraeger`, `schutzengel`; Nachtschritt `night_step`, optionale Obergrenze `max_copies`, Todesreaktion `death_reaction` |
 | `rule_context.gd` | Zustandskopie und Ereignissammlung während eines Befehls |
 | `command_result.gd`, `replay_result.gd` | Ergebnisobjekte |
 | **core/serialization/** | |
@@ -137,13 +140,13 @@ Abhängigkeitsregel: `core/` benutzt nur sich selbst und Godot-Grundtypen (`RefC
 | `BeginStep` | `step_id` | beginnt genau den erwarteten nächsten Schritt (`RulesEngine.next_step_id`) und öffnet dessen Prompt. Fehler: `step_already_active`, `no_pending_step`, `step_out_of_order` |
 | `SkipStep` | `step_id`, `reason` (Pflicht) | überspringt den erwarteten Nachtschritt (begonnen oder nicht), Rudel = kein Angriff. Reaktionen: `step_not_skippable` |
 | `CancelPrompt` | `prompt_id`, `reason` (Pflicht) | schließt einen abbrechbaren Prompt; der Schritt gilt als nicht begonnen. Reaktions-Prompt: `prompt_not_cancellable` |
-| `GmCorrection` | `kind`, `target_id`, `reason` (Pflicht), `confirmed: true` (Pflicht) und je Art `trigger_effects` (kill), `role_id` (set_role), `field` + `value` (set_role_field), `winner_kind` (declare_winner) | `kill` (Ursache `GM_CORRECTION`, Folgen ausdrücklich gewählt); `execute` (nur am Tag vor Tagesende, ohne Nominierung, Ursache `LYNCH`, Quelle `gm`, `ExecutionConfirmed.gm_override = true`, Reaktionen und DR-14 normal); `revive`; `set_role`; `set_role_field` (nur Felder aus `CORRECTABLE_ROLE_FIELDS`, derzeit `appears_as` = Scheinrolle; Fehler `field_not_correctable`, `invalid_value`); `declare_winner` (village, wolves, solo, none → GAME_OVER, nur ohne offenen Prompt und ohne offene Reaktion). Jede Art außer `declare_winner` bricht einen offenen Prompt mit Grund `state_changed_by_gm_correction` ab |
+| `GmCorrection` | `kind`, `target_id`, `reason` (Pflicht), `confirmed: true` (Pflicht) und je Art `trigger_effects` (kill), `role_id` (set_role), `field` + `value` (set_role_field), `guardian_id` + `target_id` (set_protection), `guardian_id` (remove_protection), `winner_kind` (declare_winner) | `kill` (Ursache `GM_CORRECTION`, Folgen ausdrücklich gewählt); `execute` (nur am Tag vor Tagesende, ohne Nominierung, Ursache `LYNCH`, Quelle `gm`, `ExecutionConfirmed.gm_override = true`, Reaktionen und DR-14 normal); `revive`; `set_role`; `set_role_field` (nur Felder aus `CORRECTABLE_ROLE_FIELDS`, derzeit `appears_as` = Scheinrolle; Fehler `field_not_correctable`, `invalid_value`); `set_protection`/`remove_protection` (nur nachts, erst nach erledigtem Schritt des Schutzengels; Fehler `not_a_guardian`, `no_guard_step`, `step_not_completed`, `invalid_target` bei Selbstschutz; GM-Protokoll `{protected_id}` alt/neu); `declare_winner` (village, wolves, solo, none → GAME_OVER, nur ohne offenen Prompt und ohne offene Reaktion). Jede Art außer `declare_winner` bricht einen offenen Prompt mit Grund `state_changed_by_gm_correction` ab |
 
-Schritt-IDs: `night:<Nacht>:<Index>:<Schritt>` (z. B. `night:1:0:pack`) und `reaction:<Reaktions-ID>`.
+Schritt-IDs: `night:<Nacht>:<Index>:<Schritt>` (z. B. `night:1:0:schutzengel:3`, `night:1:1:pack`) und `reaction:<Reaktions-ID>`. Persönliche Nachtschritte heißen `<rolle>:<Personen-ID>` und liegen nach Personen-ID sortiert vor dem Rudelschritt.
 
 Entsprechung zu den Namen im Masterplan (Phase 1): `SubmitAction` → `AnswerPrompt`, `ResolveMorning` → Teil von `EndNight`, `ExecutePlayer` → `DecideExecution`, `DeclareWinner` → `ConfirmWin`/`RejectWin`. Die Namen folgen `docs/godot-migration/03-godot-architecture.md` §5.6 und `implementation-boundary.md` A-12.
 
-Ereignisse: `GameStarted` (gm), `RoleAssigned` (actor), `PhaseChanged` (public), `PromptOpened`/`PromptAnswered` (gm), `NightStepSkipped` (gm), `NoNightKill` (gm), `SeatDied` (gm), `KillIgnored` (gm), `NominationRecorded` (public), `ExecutionConfirmed`/`NoExecution` (public), `DayEnded` (public), `WinDetected` (gm), `WinConfirmed` (public), `WinRejected` (gm), `StepBegun`/`StepSkipped` (gm, mit `step_id` und Grund), `PromptCancelled` (gm, `prompt_id`, `step_id`, `reason`), `ReactionQueued` (gm), `ReactionResolved` (gm, `outcome` = `cursed` oder `declined`, `target_id` = −1 bei Verzicht), `GmCorrected` (gm, `kind`, `target_id`, `old`, `new`, `reason`, `trigger_effects`), `WinStatusProvisional` (gm, nach jedem Tod), `WinStatusFinal` (gm, `results`, `requires_gm_decision`).
+Ereignisse: `GameStarted` (gm), `RoleAssigned` (actor), `PhaseChanged` (public), `PromptOpened`/`PromptAnswered` (gm), `NightStepSkipped` (gm), `NoNightKill` (gm), `SeatDied` (gm), `KillIgnored` (gm), `NominationRecorded` (public), `ExecutionConfirmed`/`NoExecution` (public), `DayEnded` (public), `WinDetected` (gm), `WinConfirmed` (public), `WinRejected` (gm), `StepBegun`/`StepSkipped` (gm, mit `step_id` und Grund), `PromptCancelled` (gm, `prompt_id`, `step_id`, `reason`), `ReactionQueued` (gm), `ReactionResolved` (gm, `outcome` = `cursed` oder `declined`, `target_id` = −1 bei Verzicht), `GmCorrected` (gm, `kind`, `target_id`, `old`, `new`, `reason`, `trigger_effects`), `WinStatusProvisional` (gm, nach jedem Tod), `WinStatusFinal` (gm, `results`, `requires_gm_decision`), `ProtectionSet` (gm), `KillPrevented` (gm).
 
 ## Rollen
 
@@ -152,6 +155,9 @@ Ereignisse: `GameStarted` (gm), `RoleAssigned` (actor), `PhaseChanged` (public),
 | `dorfbewohner` | Dorfbewohner / Villager | village | nein | `dorfbewohner` | – | – |
 | `werwolf` | Werwolf / Werewolf | wolves | ja | `werwolf` | Rudel (`pack`) | – |
 | `sensentraeger` | Sensenträger / Reaper | village | nein | `sensentraeger` | – | Fluch (`curse`), freiwillig |
+| `schutzengel` | Schutzengel / Guardian Angel | village | nein | `schutzengel` | eigener Schritt vor dem Rudel | – |
+
+**Schutzengel** (`rules-register.md` §3, DR-05): Jeder lebende Schutzengel erhält in jeder Nacht einen eigenen Pflichtschritt vor dem Rudel (mehrere nach Personen-ID). Er wählt genau eine andere lebende Person (`min_count = max_count = 1`, Selbstwahl nicht in `allowed_ids`, manipuliert `invalid_target`). Beim Bestätigen wird `Protection{guardian_id, target_id, night}` gespeichert (`ProtectionSet`, nur Spielleiter), der Schrittstatus wird `done`. `CancelPrompt` vor der Bestätigung bietet den Schritt erneut an; `SkipStep` nur mit Grund (Status `skipped`, kein Schutz). In der Morgenauflösung prüft die Abfangstufe der `KillPipeline` nur `NIGHT_KILL` durch das Rudel gegen den Schutz dieser Nacht: Das Ziel überlebt, genau ein `KillPrevented{target_id, cause, source_kind, protection, guardian_id, guardian_ids, night}` (nur Spielleiter), kein `SeatDied`, keine Reaktion, kein vorläufiger Siegstatus. Alle anderen Ursachen wirken trotz Schutz. Der Schutz bleibt bestehen, wenn der Schutzengel nach seiner Bestätigung stirbt, und wird beim Tagesbeginn verworfen. Stirbt die geschützte Person vorher, gilt der Randfall „totes Rudelopfer“ (`KillIgnored`).
 
 **Sensenträger** (`rules-register.md` §7, DR-09): Stirbt er mit Folgen (Rudel, Hinrichtung, `GmCorrection kill` mit `trigger_effects`, `GmCorrection execute`), reiht die `KillPipeline` genau eine Reaktion ein, höchstens eine pro Person und Partie (`Player.ability_uses["sensentraeger:death_reaction"]`); ein erneuter Tod nach Wiederbelebung löst keine zweite aus. Die Reaktion ist nach einem Tod am Tag sofort fällig, nach einem Tod in der Nacht (auch durch Gift) in der Morgenauflösung. Wählbar ist jede Person, die zum Zeitpunkt der Antwort lebt, außer dem Besitzer der Reaktion selbst, auch nach seiner Wiederbelebung (`StepQueue.begin` entfernt `reaction.owner_id` aus `allowed_ids`; der Rudel-Prompt ist davon nicht betroffen); das Ziel stirbt mit `HUNTER_SHOT`, Quelle der Sensenträger. Verzicht = `AnswerPrompt` ohne Ziel. Die Reaktion ist weder überspringbar noch abbrechbar; eine Wiederbelebung entfernt eine eingereihte Reaktion nicht. Schutz gegen den Fluch gibt es nicht (Abfangregeln betreffen nur den Wolfsangriff, B-04).
 
@@ -166,14 +172,14 @@ Ereignisse: `GameStarted` (gm), `RoleAssigned` (actor), `PhaseChanged` (public),
 ## Spielstand
 
 ```json
-{ "format": "grimmhain-save", "schema_version": 3, "rules_version": "grimmhain-core-0.3",
+{ "format": "grimmhain-save", "schema_version": 4, "rules_version": "grimmhain-core-0.4",
   "round_id": "…", "commands": [ … ], "state": { … },
   "state_hash": "sha256:…", "integrity": "sha256:…" }
 ```
 
 `state_hash` ist der fachliche Hash: kanonisches JSON des Zustands ohne die reinen Zählfelder `command_count` und `next_ids` (so hinterlässt ein abgebrochener Schritt denselben Hash wie vor seinem Beginn, AS-A02). `integrity` deckt alle übrigen Felder ab. Beim Laden wird die Befehlsliste erneut abgespielt; ihr Ergebnis muss dem gespeicherten Zustand vollständig (inklusive Zählfeldern) gleichen.
 
-Schema 2 ergänzte `night_plan`, `next_night_step`, `reactions`, `provisional_win`, `win_check_pending`, `next_ids.reaction`, `pending_prompt.step_id`; Schema 3 ergänzt `players[].ability_uses`. Spielstände mit Schema 1 oder 2 werden nicht migriert, sondern mit `unsupported_schema_version` und einer Meldung wie „Spielstand-Schema 2 wird nicht unterstützt, erwartet wird Schema 3.“ abgelehnt (`LoadResult.detail`); eine abweichende Regelversion ebenso mit `unsupported_rules_version`. Zeitstempel und `app_version` aus `03` §6.1 fügt später der SaveService außerhalb des Kerns hinzu, weil der Kern keine Uhr kennt.
+Schema 2 ergänzte `night_plan`, `next_night_step`, `reactions`, `provisional_win`, `win_check_pending`, `next_ids.reaction`, `pending_prompt.step_id`; Schema 3 ergänzte `players[].ability_uses`; Schema 4 ergänzt `night_step_status` und `protections`. Spielstände mit Schema 1 bis 3 werden nicht migriert, sondern mit `unsupported_schema_version` und einer Meldung wie „Spielstand-Schema 3 wird nicht unterstützt, erwartet wird Schema 4.“ abgelehnt (`LoadResult.detail`); eine abweichende Regelversion ebenso mit `unsupported_rules_version`. Zeitstempel und `app_version` aus `03` §6.1 fügt später der SaveService außerhalb des Kerns hinzu, weil der Kern keine Uhr kennt.
 
 ## Umsetzungsentscheidungen innerhalb der Spezifikation
 
