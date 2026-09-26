@@ -236,6 +236,16 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 - When: G wählt „Überspringen".
 - Then: keine Tötung, Reaktion erledigt, protokolliert.
 
+**AS-R40 · Wiederbelebung entfernt keine eingereihte Reaktion**
+- Given: G `sensentraeger` ist gestorben, seine Reaktion ist eingereiht.
+- When: `GmCorrection(revive G)`.
+- Then: G lebt; die Reaktion bleibt offen und wird normal abgearbeitet; das frühere `SeatDied` bleibt unverändert im Protokoll. Stirbt G später erneut, entsteht keine zweite Reaktion (einmal pro Person).
+
+**AS-R41 · Bereits totes Rudelopfer**
+- Given: Nacht 1, das Rudel hat F bestätigt; danach stirbt F durch eine Spielleiterkorrektur.
+- When: Nacht endet.
+- Then: kein weiterer Rudelangriff (`KillIgnored`, nur Spielleiter), die Rudelwahl wird nicht erneut geöffnet, der Tag beginnt.
+
 **AS-R37 · Reaktion nach Gifttod**
 - Given: E vergiftet G in Nacht 1.
 - Then: G stirbt sofort; seine Reaktion wird in der Morgenauflösung abgefragt, nicht während der Nacht.
@@ -503,11 +513,12 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. 
 | DR-02 gleichzeitige Siege, niemand lebt | Register G-SIEG-5; Ablauf §9.1, §9.6 | AS-R34, AS-R35 |
 | DR-03 Nominierung | Register G-TAG-2, G-TAG-4; Ablauf §6.1, §7.6 | AS-C11, AS-N01–AS-N05, AS-G03 |
 | DR-04 öffentliche Todesinformation | Register G-TOD-5; Ablauf §0.2, §1.5, §4 | AS-M01, AS-M02, AS-M03, AS-L05 |
+| Randfall bereits totes Rudelopfer (DL 26.09.2026) | Register §2; Ablauf §4 Schritt 2 | AS-R41 |
 | DR-05 Schutzengel | Register §3; Ablauf §3, §4, §8 | AS-R01–AS-R04, AS-R32 |
 | DR-06 Waldhexe | Register §6; Ablauf §3 | AS-R05–AS-R08, AS-R39 |
 | DR-07 Orakel | Register §4 | AS-R09, AS-R10, AS-R33 |
 | DR-08 Trugbilderwolf | Register §5, G-RNG-1, G-GM-3; Ablauf §1.5a, §3 | AS-R11–AS-R14, AS-G05 |
-| DR-09 Sensenträger | Register §7, G-TOD-4; Ablauf §4, §7.4 | AS-R15–AS-R17, AS-R37 |
+| DR-09 Sensenträger | Register §7, G-TOD-4; Ablauf §4, §7.4 | AS-R15–AS-R17, AS-R37, AS-R40 |
 | DR-10 Wolfskind | Register §8, §2 (Rudel); Ablauf §8 | AS-R18–AS-R20, AS-R38 |
 | DR-11 Lehrling | Register §9, G-RNG-1; Ablauf §3, §8 | AS-L01–AS-L16 |
 | DR-12 Manipulator | Register §10; Ablauf §9.2 | AS-R25, AS-R26, AS-E01 |

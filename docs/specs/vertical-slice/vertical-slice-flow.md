@@ -91,7 +91,7 @@ Regeln des Ablaufs:
 `EndNight` setzt Phase DAWN_RESOLUTION. Die Auflösung läuft deterministisch in dieser Reihenfolge:
 
 1. Wolfsziel prüfen: Rettung durch Waldhexe oder Schutz durch Schutzengel verhindert den Tod (`KillPrevented`, nur Spielleiter). Der Schutz endet danach (DR-05).
-2. Tod des Wolfsopfers mit Ursache `NIGHT_KILL` anwenden, sonst nichts. Nach jedem Tod: vorläufiger Siegstatus (DR-14).
+2. Tod des Wolfsopfers mit Ursache `NIGHT_KILL` anwenden, sonst nichts. Ist das bestätigte Opfer bereits tot (z. B. durch eine Spielleiterkorrektur in der Nacht), findet kein Angriff statt und die Rudelwahl wird nicht erneut geöffnet. Nach jedem Tod: vorläufiger Siegstatus (DR-14).
 3. Unmittelbare Todesfolgen ohne Entscheidung, jeweils direkt beim Tod in der Pipeline: Verwandlung `wolfskind`, Erbe des `lehrling` (auch für Tode in der Nacht, z. B. durch Gift).
 4. Reaktionen mit Entscheidung nacheinander abfragen (Sensenträger, auch nach Gifttod in der Nacht), jeweils freiwillig (DR-09). Jede Reaktion kann weitere Tode und Folgen auslösen; die Schleife endet, wenn die Warteschlange leer ist.
 5. Verbindliche Siegprüfung erst jetzt, wenn keine Reaktion und kein Prompt mehr offen ist (DR-14). Kandidaten siehe Abschnitt 9.

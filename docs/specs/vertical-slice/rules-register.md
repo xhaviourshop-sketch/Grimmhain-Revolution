@@ -117,7 +117,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Nachtpriorität | 2.0 (Rudelschritt). Der Schritt existiert nach G-PH-6, solange irgendein Wolf lebt. Es wachen alle lebenden Personen, die zu Beginn dieser Nacht (`StartNight`) als Wolf zählen, im Slice: `werwolf`, `trugbilderwolf`, `spiegelwolf`, ein verwandeltes `wolfskind` (DR-10) und ein Lehrling mit geerbter Wolfsrolle (DR-11). Wer erst während der Nacht oder später als Wolf zu zählen beginnt, wacht ab der folgenden Nacht. |
 | Gültige Ziele | jede lebende Person, auch ein Wolf (Code: Filter `!x.flags.dead`) |
 | Dauer | Zielwahl gilt bis zur Morgenauflösung dieser Nacht |
-| Auflösung | Morgenauflösung: Schutz prüfen (siehe `schutzengel`, `waldhexe`), sonst Tod mit Ursache `NIGHT_KILL`, Quelle = Rudel |
+| Auflösung | Morgenauflösung: Schutz prüfen (siehe `schutzengel`, `waldhexe`), sonst Tod mit Ursache `NIGHT_KILL`, Quelle = Rudel. Ist das bestätigte Opfer bis zur Morgenauflösung bereits tot, findet kein Angriff statt; die Rudelwahl wird nicht erneut geöffnet (Ereignis `KillIgnored`, nur Spielleiter; DECISION-LOG, Randfälle 26.09.2026) |
 | Konflikte | Wolfsziel und Hexenrettung, Wolfsziel und Schutzengel: siehe dort |
 | Siegbezug | G-SIEG-2 |
 | Manuelle Übersteuerung | Ziel ändern oder entfernen, bevor die Nacht endet; Schritt überspringen = kein Angriff (protokolliert) |
@@ -222,16 +222,16 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 | Feld | Inhalt |
 |---|---|
-| Regeltext DE | Stirbt der Sensenträger, darf er eine lebende Person wählen oder verzichten. Die gewählte Person stirbt durch seinen Fluch. Nach einem Tod in der Nacht erfolgt die Reaktion in der Morgenauflösung, nach einem Tod am Tag sofort. |
-| Regeltext EN | When the Reaper dies, they may choose one living person or decline. The chosen person dies from their curse. After a death at night the reaction happens during dawn resolution; after a death during the day it happens immediately. |
+| Regeltext DE | Stirbt der Sensenträger, darf er einmal pro Partie eine lebende Person wählen oder verzichten. Die gewählte Person stirbt durch seinen Fluch. Nach einem Tod in der Nacht (auch durch Gift) erfolgt die Reaktion in der Morgenauflösung, nach einem Tod am Tag sofort. |
+| Regeltext EN | When the Reaper dies, they may, once per game, choose one living person or decline. The chosen person dies from their curse. After a death at night (including poison) the reaction happens during dawn resolution; after a death during the day it happens immediately. |
 | Fraktion | Dorf |
 | Nachtpriorität | keine; Reaktion (`reaction_queue`) |
-| Gültige Ziele | jede lebende Person (Code: `!x.flags.dead && x!==h`) |
-| Dauer | Reaktion bleibt offen und persistent, bis sie beantwortet oder bewusst übersprungen ist |
-| Auflösung | Tod des Sensenträgers → Reaktion einreihen → Prompt „verfluchen? → Ziel → bestätigen" → Tod mit Ursache `HUNTER_SHOT`, Quelle = Sensenträger. Einmal pro Person (Code: `meta.hunterShot`) |
+| Gültige Ziele | jede Person, die zum Zeitpunkt der Antwort lebt; der tote Sensenträger selbst ist damit ausgeschlossen (Code: `!x.flags.dead && x!==h`) |
+| Dauer | Reaktion bleibt offen und persistent, bis sie beantwortet ist (Ziel oder ausdrücklicher Verzicht). Sie ist weder überspringbar (`SkipStep`) noch abbrechbar (`CancelPrompt`). Eine spätere Wiederbelebung entfernt eine bereits eingereihte Reaktion nicht (DECISION-LOG, Randfälle 26.09.2026) |
+| Auflösung | Tod des Sensenträgers → Reaktion einreihen → Prompt „verfluchen? → Ziel → bestätigen" → Tod mit Ursache `HUNTER_SHOT`, Quelle = Sensenträger; Verzicht erledigt die Reaktion ohne Tod (`ReactionResolved{outcome: declined}`). Genau eine Reaktion pro Tod und höchstens eine pro Person und Partie (Code: `meta.hunterShot`); ein erneuter Tod nach Wiederbelebung löst keine zweite aus |
 | Konflikte | Schutzengel schützt nicht (nur Wolfsangriff). Wird ein weiterer Sensenträger getroffen, entsteht eine weitere Reaktion. Siegprüfung: vorläufig nach jedem Tod, verbindlich erst nach Abarbeitung aller Reaktionen (G-SIEG-6, DR-14) |
 | Siegbezug | Dorf |
-| Manuelle Übersteuerung | Reaktion überspringen oder nachträglich auslösen (Warnung, Protokoll) |
+| Manuelle Übersteuerung | Tod ohne Folgen per `GmCorrection kill` mit `trigger_effects = false` (keine Reaktion); die Reaktion selbst wird nicht übersprungen (Warnung, Protokoll) |
 | Legacy-Beleg | `window.__queueHunterOnDeath`, `processQueue` (`if(state.dark) return;`), Schlüssel `hunterCurseQueuedAsk` in `../../../game.html`; Einreihung in `postDeathHooks`, `js/ui/core.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-09 Sensenträger**
