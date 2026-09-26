@@ -6,20 +6,20 @@ func test_same_seed_same_sequence() -> void:
 	var a := SeededRng.new(4711)
 	var b := SeededRng.new(4711)
 	for i: int in 50:
-		assert_eq(a.randi_range(0, 99), b.randi_range(0, 99), "Ziehung %d" % i)
+		assert_eq(a.next_int(0, 99), b.next_int(0, 99), "Ziehung %d" % i)
 	assert_eq(a.draws, 50, "Ziehposition gezählt")
 
 
 func test_restore_mid_sequence() -> void:
 	var a := SeededRng.new(123456789)
 	for i: int in 17:
-		a.randi_range(0, 1000)
+		a.next_int(0, 1000)
 	var b := SeededRng.from_dict(JSON.parse_string(JSON.stringify(a.to_dict())))
 	assert_true(b != null, "aus JSON wiederhergestellt")
 	assert_eq(b.seed_value, 123456789, "Seed")
 	assert_eq(b.draws, 17, "Ziehposition")
 	for i: int in 20:
-		assert_eq(b.randi_range(0, 1000), a.randi_range(0, 1000), "Folgeziehung %d" % i)
+		assert_eq(b.next_int(0, 1000), a.next_int(0, 1000), "Folgeziehung %d" % i)
 
 
 func test_shuffle_is_deterministic_and_complete() -> void:
