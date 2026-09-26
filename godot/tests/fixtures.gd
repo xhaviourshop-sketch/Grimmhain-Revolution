@@ -52,3 +52,28 @@ static func start_random(count: int, wolves: int, seed_value: int) -> Command:
 static func play(commands: Array[Command]) -> GameState:
 	var result := RulesEngine.replay(commands)
 	return result.state if result.ok else null
+
+
+## Start mit freier Rollenliste: roles[i] gehört Person i + 1.
+## test_mode erlaubt reine Testrollen wie `test-sensentraeger`.
+static func start_roles(roles: Array, seed_value: int = 1, test_mode: bool = false) -> Command:
+	var map := {}
+	for i: int in roles.size():
+		map[str(i + 1)] = roles[i]
+	var payload := {
+		"round_id": "test-round",
+		"seed": seed_value,
+		"assignment": "manual",
+		"players": players(roles.size()),
+		"seat_order": identity_order(roles.size()),
+		"roles": map,
+	}
+	if test_mode:
+		payload["test_mode"] = true
+	return Command.start_game(payload)
+
+
+## Standardbesetzung für Reaktionstests: 1, 2 Werwölfe; 3 Test-Sensenträger; 4–6 Dorfbewohner.
+static func start_reaper_game(seed_value: int = 1) -> Command:
+	return start_roles(["werwolf", "werwolf", "test-sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], seed_value, true)
+
