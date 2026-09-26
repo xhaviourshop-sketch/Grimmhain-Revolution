@@ -111,6 +111,47 @@ static func _toggles(theme: Theme) -> void:
 	theme.set_color("font_disabled_color", type, ThemeTokens.TEXT_DISABLED)
 	theme.set_font_size("font_size", type, ThemeTokens.FONT_BUTTON)
 	theme.set_constant("h_separation", type, ThemeTokens.SPACE_M)
+	# Eigener Schalter statt Engine-Symbol: an = goldene Bahn, Knopf rechts; aus = Rahmen, Knopf links.
+	theme.set_icon("checked", type, _switch_icon(true, false))
+	theme.set_icon("unchecked", type, _switch_icon(false, false))
+	theme.set_icon("checked_disabled", type, _switch_icon(true, true))
+	theme.set_icon("unchecked_disabled", type, _switch_icon(false, true))
+	theme.set_icon("checked_mirrored", type, _switch_icon(true, false))
+	theme.set_icon("unchecked_mirrored", type, _switch_icon(false, false))
+	theme.set_icon("checked_disabled_mirrored", type, _switch_icon(true, true))
+	theme.set_icon("unchecked_disabled_mirrored", type, _switch_icon(false, true))
+
+
+## Schaltersymbol aus einfachen Formen (keine Bilddatei): Bahn als Pille, runder Knopf.
+static func _switch_icon(on: bool, disabled: bool) -> ImageTexture:
+	var w := ThemeTokens.SWITCH_WIDTH
+	var h := ThemeTokens.SWITCH_HEIGHT
+	var image := Image.create_empty(w, h, false, Image.FORMAT_RGBA8)
+	var track := ThemeTokens.GOLD if on else ThemeTokens.BG_APP
+	var outline := ThemeTokens.GOLD if on else ThemeTokens.TEXT_MUTED
+	var knob := ThemeTokens.TEXT_ON_GOLD if on else ThemeTokens.TEXT_MUTED
+	if disabled:
+		track = ThemeTokens.DISABLED_FILL
+		outline = ThemeTokens.DISABLED_BORDER
+		knob = ThemeTokens.TEXT_DISABLED
+	var r := h / 2.0
+	var knob_center := Vector2(w - r if on else r, r)
+	var knob_radius := r - ThemeTokens.SPACE_XS - ThemeTokens.BORDER_THICK
+	for y: int in h:
+		for x: int in w:
+			var p := Vector2(x + 0.5, y + 0.5)
+			# Abstand zur Pille (Rechteck mit Halbkreisen).
+			var cx := clampf(p.x, r, w - r)
+			var d := p.distance_to(Vector2(cx, r))
+			var color := Color(0, 0, 0, 0)
+			if d <= r:
+				color = outline if d > r - ThemeTokens.BORDER_THICK else track
+				color.a *= clampf(r - d + 0.5, 0.0, 1.0)
+			var dk := p.distance_to(knob_center)
+			if dk <= knob_radius + 0.5:
+				color = color.blend(Color(knob, clampf(knob_radius - dk + 0.5, 0.0, 1.0)))
+			image.set_pixelv(Vector2i(x, y), color)
+	return ImageTexture.create_from_image(image)
 
 
 static func _panel(color: Color, border: Color, border_width: int, radius: int, padding: int) -> StyleBoxFlat:

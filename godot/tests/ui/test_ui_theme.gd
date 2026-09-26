@@ -155,3 +155,19 @@ func test_settings_foundation_for_left_handed_mode() -> void:
 	s.connect("changed", func(k: StringName) -> void: changes.append(String(k)))
 	s.call("set_left_handed", true)
 	assert_true(bool(s.get("left_handed")) and changes.has("left_handed"), "Zustand änderbar und gemeldet")
+
+
+func test_switch_icon_is_themed() -> void:
+	# Nachträglich ergänzt: Schalter „Bewegung reduzieren“ nutzt kein Engine-Standardsymbol.
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var theme := shell.theme
+	for icon: String in ["checked", "unchecked", "checked_disabled", "unchecked_disabled"]:
+		assert_true(theme.has_icon(icon, &"CheckButton"), "Schaltersymbol %s im Theme" % icon)
+	var on := theme.get_icon("checked", &"CheckButton").get_image()
+	var off := theme.get_icon("unchecked", &"CheckButton").get_image()
+	assert_true(on != null and off != null and on.get_size() == off.get_size(), "gleiche Größe an/aus")
+	if on != null and off != null:
+		assert_ne(on.get_data(), off.get_data(), "an und aus unterscheiden sich")
+		assert_true(on.get_height() >= 24, "Schalter gut erkennbar (%d px hoch)" % on.get_height())
