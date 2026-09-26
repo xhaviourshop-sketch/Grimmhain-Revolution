@@ -327,3 +327,52 @@ func _match(text: String) -> String:
 		if text.to_lower().contains(bad):
 			return "%s (%s)" % [text, bad]
 	return ""
+
+
+# --- Regression: kein Selbstziel nach Wiederbelebung ------------------------------
+
+## Tag 1: Sensenträger (3) hingerichtet, per Korrektur wiederbelebt, Reaktion begonnen.
+func _revived_with_open_reaction() -> Array[Command]:
+	return _concat(_executed(), [CorrectionFixtures.gm("revive", {"target_id": 3}), Command.begin_step("reaction:1")] as Array[Command])
+
+
+func test_revived_reaper_cannot_target_himself() -> void:
+	var commands := _revived_with_open_reaction()
+	var run := _replay_ok(commands, "Wiederbelebung mit offener Reaktion")
+	if not run.ok:
+		return
+	var s := run.state
+	assert_true(s.players[3].alive, "Sensenträger lebt wieder")
+	assert_false(s.pending_prompt.allowed_ids.has(3), "Besitzer nicht in allowed_ids")
+	assert_eq(s.pending_prompt.allowed_ids, [1, 2, 4, 5, 6] as Array[int], "alle anderen Lebenden wählbar")
+	var events_before := events_json(run.events)
+	apply_rejected(s, Command.answer_prompt(s.pending_prompt.id, [3]), "invalid_target", "manipulierte Antwort auf sich selbst")
+	var rejected := RulesEngine.apply(s, Command.answer_prompt(s.pending_prompt.id, [3]))
+	assert_true(rejected.events.is_empty(), "keine Ereignisse durch die Ablehnung")
+	assert_eq(events_json(run.events), events_before, "Ereignisliste unverändert")
+	var ok := apply_ok(s, Command.answer_prompt(s.pending_prompt.id, [1]), "andere lebende Person")
+	var died := events_of_type(ok.events, "SeatDied")
+	assert_true(died.size() == 1 and int(died[0].data["target_id"]) == 1 and int(died[0].data["source_id"]) == 3, "Fluch trifft das andere Ziel")
+
+
+func test_revived_reaper_save_load_and_replay() -> void:
+	var commands := _revived_with_open_reaction()
+	var a := RulesEngine.replay(commands)
+	var b := RulesEngine.replay(commands)
+	assert_true(a.ok and b.ok, "Replay angenommen (%s)" % a.error)
+	if not a.ok:
+		return
+	assert_eq(events_json(a.events), events_json(b.events), "Replay bytegleich")
+	assert_eq(a.state.content_hash(), b.state.content_hash(), "State-Hash gleich")
+	var loaded := StateCodec.decode(StateCodec.encode(a.state, commands))
+	assert_true(loaded.ok, "Laden (%s)" % loaded.error)
+	if not loaded.ok:
+		return
+	assert_eq(loaded.state.content_hash(), a.state.content_hash(), "Hash nach Laden")
+	assert_eq(loaded.state.pending_prompt.to_dict(), a.state.pending_prompt.to_dict(), "offener Reaktions-Prompt geladen")
+	assert_false(loaded.state.pending_prompt.allowed_ids.has(3), "Besitzer auch nach Laden nicht wählbar")
+	apply_rejected(loaded.state, Command.answer_prompt(loaded.state.pending_prompt.id, [3]), "invalid_target", "Selbstziel nach Laden")
+	var x := RulesEngine.apply(a.state, Command.answer_prompt(2, [4]))
+	var y := RulesEngine.apply(loaded.state, Command.answer_prompt(2, [4]))
+	assert_true(x.ok and y.ok, "Fortsetzung angenommen")
+	assert_eq(events_json(y.events), events_json(x.events), "identische Fortsetzung")
