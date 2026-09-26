@@ -1,0 +1,6 @@
+* text=auto
+
+# Legacy game-logic mirror (js/) is copied verbatim from the LF Grimmhain
+# source by scripts/sync-legacy.mjs. Pin LF for store AND checkout so a re-sync
+# never shows pure CRLF/LF diffs.
+js/**/*.js text eol=lf

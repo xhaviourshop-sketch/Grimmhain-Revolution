@@ -1,0 +1,40 @@
+# Vercel
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.claude/settings.local.json
+
+# Backups
+*.bak
+*.tmp
+*~
+
+# Node
+node_modules/
+
+# Capacitor: schlanker Web-Build (Artefakt, ~500 MB) + native Build-Outputs
+dist/
+android/app/build/
+android/build/
+android/.gradle/
+android/app/src/main/assets/public/
+ios/App/Pods/
+ios/App/App/public/
+ios/App/build/
+*.keystore
+*.jks
+
+# Logs
+*.log
+npm-debug.log*
+
+.vercel

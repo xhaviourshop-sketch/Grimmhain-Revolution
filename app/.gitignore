@@ -1,0 +1,5 @@
+node_modules/
+dist/
+public/legacy/
+public/legacy-setup/
+public/assets/cards/

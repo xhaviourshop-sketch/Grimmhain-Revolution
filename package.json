@@ -1,0 +1,22 @@
+{
+  "name": "grimmhain-werwolf",
+  "private": true,
+  "description": "Lokaler Smoke-Test für Kern-Invarianten (optional: npm test)",
+  "scripts": {
+    "test": "node tests/smoke.js",
+    "build": "node tools/copy-dist.js",
+    "sync": "node tools/copy-dist.js && cap sync",
+    "android": "node tools/copy-dist.js && cap sync android && cap open android",
+    "ios": "node tools/copy-dist.js && cap sync ios && cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.4",
+    "@capacitor/core": "^8.3.4",
+    "@capacitor/ios": "^8.3.4",
+    "puppeteer": "^24.40.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.3.4"
+  }
+}
