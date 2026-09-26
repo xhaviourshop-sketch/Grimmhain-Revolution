@@ -151,8 +151,8 @@ Gespeichert werden ausschließlich die bestätigte Todesaktion (Person, Aktion, 
 |---|---|
 | 9.1 | Nach jedem Tod berechnet die eine Siegprüfung einen vorläufigen Siegstatus. Offene Reaktionen und Fähigkeiten werden zuerst vollständig abgearbeitet; danach wird verbindlich geprüft (DR-14). Jede erfüllte Siegbedingung wird ein Kandidat. Sind mehrere gleichzeitig erfüllt, gibt es keine feste Priorität: Der Spielleiter bestätigt genau einen oder lehnt alle ab (DR-02). Lebt niemand mehr, entsteht kein Kandidat; der Spielleiter erklärt das Ergebnis nach 9.6. |
 | 9.2 | Die App zeigt jeden Kandidaten mit Auslöser, z. B. „Wolfsparität: 2 Wölfe gegen 2 Nicht-Wölfe" oder „Manipulator lebt, genau 3 Lebende, nie nominiert" (DR-12). |
-| 9.3 | `ConfirmWin` setzt Phase GAME_OVER und speichert Sieger, Grund und Befehlsindex. |
-| 9.4 | `RejectWin(reason)` protokolliert die Ablehnung; die Partie läuft weiter. Ein Kandidat wird erst nach einem weiteren Tod erneut berechnet und angeboten. |
+| 9.3 | `ConfirmWin(candidate_id)` bestätigt genau einen offenen Kandidaten (bei Manipulator mit der begünstigten Person), markiert alle übrigen offenen als nicht gewählt, setzt Phase GAME_OVER und speichert Sieger, Grund und Befehlsindex. |
+| 9.4 | `RejectWin(reason)` lehnt alle offenen Kandidaten gemeinsam mit Grund ab; die Partie läuft weiter. Kandidaten werden erst nach einer weiteren relevanten Zustandsänderung (Tod, Wiederbelebung, Rollen- oder Statuskorrektur) erneut berechnet und angeboten. |
 | 9.5 | Undo hinter `ConfirmWin` ist erlaubt (Korrektur, `03` §6.3). |
 | 9.6 | Der Spielleiter kann per Übersteuerung einen Sieger erklären (Warnung, Protokoll), sofern kein Prompt und keine Reaktion offen ist. |
 | 9.7 | Jede Spielleiterkorrektur am Zustand einer Person bricht einen offenen Prompt mit Grund `state_changed_by_gm_correction` ab; der Schritt kann danach neu begonnen werden. Ein Siegkandidat entsteht nie neben einem offenen Prompt oder einer offenen Reaktion (`rules-register.md` G-GM-3). |

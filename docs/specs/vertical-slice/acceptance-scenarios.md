@@ -375,6 +375,8 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. 
 
 ### Manipulator und Siegprüfung (DR-02, DR-12, DR-14)
 
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_manipulator.gd`): AS-R24, AS-R25, AS-R26 (Tod des Sensenträgers per Spielleiterkorrektur statt Hinrichtung, gleiche Reaktionskette), AS-R34 (erreicht über eine Reaktionskette, weil vier Lebende mit zwei Wölfen bereits Parität wären), AS-R35, AS-R36 (`test_win_status.gd`), AS-E01 vollständig ohne UI; AS-R27 bis Undo nur als deterministisches Replay der Nominierung.
+
 **AS-R24 · Tod durch Nominierung**
 - Given: Tag 1, M `manipulator` lebt.
 - When: F nominiert M.
@@ -543,6 +545,6 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_spiegelwolf
 | DR-09 Sensenträger | Register §7, G-TOD-4; Ablauf §4, §7.4 | AS-R15–AS-R17, AS-R37, AS-R40 |
 | DR-10 Wolfskind | Register §8, §2 (Rudel); Ablauf §8 | AS-R18–AS-R20, AS-R38 |
 | DR-11 Lehrling | Register §9, G-RNG-1; Ablauf §3, §8 | AS-L01–AS-L16 |
-| DR-12 Manipulator | Register §10; Ablauf §9.2 | AS-R25, AS-R26, AS-E01 |
+| DR-12 Manipulator | Register §10; Ablauf §9.2 | AS-R24, AS-R25, AS-R26, AS-R34, AS-E01 |
 | DR-13 Spiegelwolf ohne Nominierung | Register §11; Ablauf §7.2, §7.3, §7.6 | AS-R28–AS-R31 |
 | DR-14 Siegprüfung und Reaktionen | Register G-SIEG-6; Ablauf §4 Schritt 5, §7.5, §9.1 | AS-R26, AS-R36, AS-A03 |

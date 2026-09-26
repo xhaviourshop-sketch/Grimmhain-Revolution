@@ -76,7 +76,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 |---|---|---|
 | G-SIEG-1 | **Dorf**: Kein lebender Mensch zählt als Wolf. | `checkWinConditions` in `../../../js/ui/core.js`; `04` D-1 |
 | G-SIEG-2 | **Werwölfe**: Anzahl lebender Wölfe ≥ Anzahl lebender Nicht-Wölfe. Einzelsiegrollen zählen als Nicht-Wölfe. Im Slice zählt jeder Wolf einfach (Siegreicher Wolf ist nicht enthalten). | `countLivingWolfPower`, `checkWinConditions`; `04` D-2 |
-| G-SIEG-3 | Ein erkannter Sieg ist ein **Siegkandidat**. Er wird erst durch den Spielleiter bestätigt. Ablehnung wird mit Grund protokolliert; die Partie läuft weiter. | DL „Mögliche Siege werden erkannt, aber erst durch den Spielleiter bestätigt" |
+| G-SIEG-3 | Ein erkannter Sieg ist ein **Siegkandidat**. Alle gleichzeitig erfüllten Bedingungen bilden eine Kandidatenmenge (je Manipulator ein personenbezogener Kandidat). Der Spielleiter bestätigt genau einen Kandidaten (die übrigen gelten als nicht gewählt) oder lehnt alle offenen gemeinsam mit Grund ab; die Partie läuft dann weiter. | DL „Mögliche Siege werden erkannt, aber erst durch den Spielleiter bestätigt", DR-02 |
 | G-SIEG-4 | Es gibt genau eine Siegprüfung. Ein bestätigter Sieg wird nicht überschrieben. | 07-T2 „zwei Siegprüfer" (Bug F7) |
 | G-SIEG-5 | Bei gleichzeitig erfüllten Siegbedingungen entscheidet der Spielleiter. Leben keine Personen mehr, entsteht kein automatischer Gewinner. | DR-02 |
 | G-SIEG-6 | Nach jedem Tod wird vorläufig geprüft. Offene Todesreaktionen und Fähigkeiten werden vollständig abgearbeitet; danach erfolgt die erneute verbindliche Prüfung vor der Spielleiterbestätigung. | DR-14 |
@@ -302,10 +302,10 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Nachtpriorität | keine |
 | Gültige Ziele | keine |
 | Dauer | Status „nie nominiert" gilt für die ganze Partie und haftet an der Person |
-| Auflösung | Befehl `Nominate(nominierende, Manipulator)` wird gespeichert und löst in derselben Befehlsausführung den Tod mit Ursache `MANIPULATOR_NOMINATED`, Quelle = nominierende Person, aus. Die Tagesphase läuft danach weiter |
+| Auflösung | Befehl `Nominate(nominierende, Manipulator)`: Nominierung speichern, Personenstatus `ever_nominated` setzen (für jede nominierte Person, unabhängig von der Rolle), öffentliches Nominierungsereignis, dann in derselben Befehlsausführung Tod über die Tötungs-Pipeline mit Ursache `MANIPULATOR_NOMINATED`, Quelle = nominierende Person (Folgen wie Wolfskind-Verwandlung normal). Die Tagesphase läuft danach weiter. Eine Hinrichtung ist immer `LYNCH`. Siegkandidat genau dann, wenn genau drei Personen leben, er lebt, aktuelle Rolle `manipulator` und `ever_nominated` nein; erst aus dem endgültigen Zustand nach allen Reaktionen (DR-14) |
 | Konflikte | Gleichzeitig mit Wolfsparität oder Dorfsieg: Der Spielleiter entscheidet (G-SIEG-5, DR-02). Eine Hinrichtung ohne Nominierung (nur per Übersteuerung, DR-03) löst keinen Manipulator-Tod aus, weil keine Nominierung vorliegt |
 | Siegbezug | eigener Siegkandidat; zählt als Nicht-Wolf in G-SIEG-2 |
-| Manuelle Übersteuerung | Nominierung zurücknehmen = Undo des Befehls; Status „nie nominiert" korrigieren (Warnung, Protokoll) |
+| Manuelle Übersteuerung | Nominierung zurücknehmen = Undo des Befehls (später); Status „nie nominiert" korrigieren per `GmCorrection set_ever_nominated` (Warnung, Begründung, Protokoll; gespeicherte Nominierungen bleiben unverändert, Siegprüfung wird angestoßen) |
 | Legacy-Beleg | `openPop` in `../../../game.html` (Chip `nominated`, `ManipulatorWasNominated`, `applyKill(currentSeat,"MANIPULATOR_NOMINATED")`); `checkWinConditions` (`alive.length===3`) in `js/ui/core.js`; `isWolf` Ausschlussliste |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-12 Manipulator**

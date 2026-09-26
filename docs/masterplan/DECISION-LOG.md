@@ -197,3 +197,10 @@ Dieser Eintrag ersetzt für die tote nominierende Person die ältere Formulierun
 - Selbstnominierung: Die Spiegelung wird ausgelöst und verbraucht; er selbst stirbt mit `SPIEGELWOLF_RETALIATE`, genau ein Tod.
 - Reguläre Hinrichtung und `GmCorrection execute` nutzen dieselbe Auflösung; mit gültiger Nominierung spiegelt auch die Übersteuerung. Schutzengel und Hexenrettung verhindern die Spiegelung nicht. Folgen des Spiegelziels (Reaktion, Wolfskind) laufen normal.
 - Eine Wiederbelebung und ein Rollenwechsel setzen die Nutzung nicht zurück.
+
+## Manipulator und Kandidatenmenge · 26. September 2026
+
+- Der Manipulator gehört zur Einzelsiegfraktion, zählt nicht als Wolf und hat keinen Nachtschritt. Wird er nominiert, wird zuerst die Nominierung gespeichert, dann stirbt er sofort mit `MANIPULATOR_NOMINATED`, Quelle die nominierende Person; der Tag bleibt aktiv. Eine Hinrichtung ist immer `LYNCH`.
+- „Jemals nominiert“ ist ein dauerhafter Personenstatus (`ever_nominated`), gesetzt bei jeder Nominierung unabhängig von der Rolle; Wiederbelebung und Rollenwechsel ändern ihn nicht. Er ist nur per Spielleiterkorrektur änderbar; gespeicherte Nominierungen bleiben dabei unverändert.
+- Siegkandidat des Manipulators genau dann, wenn exakt drei Personen leben, er lebt und nie nominiert wurde; mehrere Manipulatoren sind getrennte personenbezogene Kandidaten.
+- Alle gleichzeitig erfüllten Siegbedingungen bilden eine Kandidatenmenge ohne Priorität, erst aus dem endgültigen Zustand nach allen Reaktionen (DR-14). Der Spielleiter bestätigt genau einen (die übrigen gelten als nicht gewählt) oder lehnt alle gemeinsam mit Grund ab. Lebt niemand, entsteht kein Kandidat.
