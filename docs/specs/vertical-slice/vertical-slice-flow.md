@@ -65,7 +65,7 @@ Keine Rolle erscheint im Cockpit, solange eine Spieleransicht aktiv ist. Wölfe 
 
 ## 3. Erste Nacht
 
-`StartNight` setzt Phase NIGHT, Nachtzähler 1 und berechnet den Nachtplan aus den lebenden Rolleninhabern.
+`StartNight` setzt Phase NIGHT, Nachtzähler 1 und berechnet den Nachtplan aus den lebenden Rolleninhabern. Der Nachtplan ist ein Snapshot: Rollenwechsel und wieder verfügbar gemachte Fähigkeiten während der Nacht fügen keine Schritte hinzu, sie gelten ab der nächsten Nacht.
 
 | Nr. | Priorität | Schritt | Prompt | Wirkung beim Bestätigen |
 |---|---|---|---|---|
@@ -79,7 +79,7 @@ Keine Rolle erscheint im Cockpit, solange eine Spieleransicht aktiv ist. Wölfe 
 Regeln des Ablaufs:
 
 - Immer genau ein aktiver Schritt. Der Spielleiter kann den Rudelschritt mit Grund überspringen (`SkipStep`), das Ergebnis ist „kein Angriff". Schutzengel- und Waldhexenschritt sind nie überspringbar; vor der Bestätigung können sie abgebrochen und erneut angeboten werden. Die Waldhexe verzichtet ausdrücklich in ihrem Prompt.
-- Ein Schritt eines inzwischen toten Rolleninhabers entfällt automatisch und wird mit Grund „tot" protokolliert (`StepDropped`). Ebenso entfällt ein Waldhexenschritt ohne mögliche Entscheidung; sind beide Tränke verbraucht, erscheint er gar nicht im Nachtplan.
+- Ein geplanter persönlicher Schritt entfällt automatisch mit Protokolleintrag (`StepDropped`), wenn seine Person inzwischen tot ist (Grund „tot") oder nicht mehr die geplante Rolle hat (Grund „Rolle gewechselt"); die Fähigkeit einer verlorenen Rolle wird nie ausgeführt. Ebenso entfällt ein Waldhexenschritt ohne mögliche Entscheidung; sind beide Tränke verbraucht, erscheint er gar nicht im Nachtplan.
 - Ein offener Prompt (auch mitten in der Hexen- oder Lehrlingskette) blockiert `EndNight` und wird bei jedem Checkpoint mit allen Teilantworten gespeichert.
 - `CancelPrompt` stellt den Zustand vor dem Prompt exakt wieder her (gleicher fachlicher Hash).
 - Das Gift der Waldhexe tötet sofort (DR-06). Spätere Nachtschritte der vergifteten Person entfallen; ihre Todesreaktionen werden in der Morgenauflösung abgearbeitet (DR-09).
