@@ -177,3 +177,12 @@ Diese Einträge ersetzen widersprechende ältere Formulierungen ausdrücklich.
 - Bei zufälliger Verteilung werden Rolle und Scheinrolle als Einheit gemischt (`role_entries`), damit jede Scheinrolle bei ihrer Instanz bleibt; nur die Verteilung nutzt den gespeicherten RNG.
 - Das Orakel ermittelt die Scheinrolle über die zentrale Informationsregel; die Waldhexe sieht bei einer Rettung die tatsächliche Rolle.
 - Eine Korrektur der Scheinrolle ist nur auf Nicht-Wolf-Rollen zulässig und wirkt auf spätere Prüfungen; abgeschlossene Informationen bleiben unverändert. Wer per Korrektur zum Trugbilderwolf wird, erhält Rolle und Scheinrolle gemeinsam; wer es nicht mehr ist, erhält die normale Erscheinung seiner neuen Rolle.
+
+## Wolfskind · Produktionsrolle und Verwandlung · 26. September 2026
+
+- Das Wolfskind beginnt im Dorf (`counts_as_wolf` nein, Erscheinung `wolfskind`). Einen Auswahl-Schritt mit Priorität 0.9 erhält es in jeder neu berechneten Nacht, solange es lebt, unverwandelt ist und kein Vorbild hat; ein regulär gestartetes Wolfskind handelt damit in Nacht 1. Es wählt genau eine andere lebende Person; `SkipStep` ist nie zulässig.
+- Stirbt das Vorbild mit Todesfolgen, während das Wolfskind lebt, verwandelt es sich sofort und vor der vorläufigen Siegprüfung dieses Todes: Rolle bleibt `wolfskind`, Fraktion Werwölfe, zählt als Wolf, Erscheinung `werwolf`. Mehrere Wolfskinder mit demselben Vorbild verwandeln sich nach Personen-ID.
+- Der laufende Nachtplan bleibt unverändert; am Rudel nimmt es ab der folgenden Nacht teil. Ein totes Wolfskind verwandelt sich für diesen Tod nie, auch nicht nach Wiederbelebung; ein erneuter Tod des wiederbelebten Vorbilds kann verwandeln.
+- Ein Tod per `GmCorrection kill` ohne Todesfolgen verwandelt nicht.
+- Das Orakel ermittelt vor der Verwandlung `wolfskind`, danach `werwolf`; die Waldhexe sieht immer die tatsächliche Rolle `wolfskind`.
+- Spielleiterkorrekturen: Vorbild setzen, ändern, entfernen; Verwandlung auslösen und zurücknehmen (das Vorbild bleibt). Die Erscheinung des Wolfskinds ist nicht einzeln korrigierbar.

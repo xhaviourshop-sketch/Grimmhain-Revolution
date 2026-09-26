@@ -252,10 +252,10 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | Nachtpriorität | 0.9, einmalig: in Nacht 1, bei geerbtem `wolfskind` in der ersten Nacht nach dem Erbe |
 | Gültige Ziele | jede andere lebende Person; Selbstwahl ist verboten |
 | Dauer | Vorbildbindung für die ganze Partie; Verwandlung dauerhaft |
-| Auflösung | Tod des Vorbilds (jede Ursache) → in derselben Pipeline-Ausführung `RoleChanged`/Fraktionswechsel-Ereignis, nur für den Spielleiter sichtbar; danach Siegprüfung |
+| Auflösung | Auswahl-Schritt (Pflicht, nie per `SkipStep`, vor Bestätigung per `CancelPrompt` verwerfbar) in jeder neu berechneten Nacht, solange das Wolfskind lebt, unverwandelt ist und kein Vorbild hat (zustandsbasiert, damit auch ein späteres Erbe greift); mehrere nach Personen-ID. Tod des Vorbilds (jede Ursache mit Todesfolgen) → in derselben Pipeline-Ausführung direkt nach dem Tod und vor der vorläufigen Siegprüfung Verwandlung aller lebenden, unverwandelten Wolfskinder dieses Vorbilds nach Personen-ID (`WolfChildTransformed`, nur Spielleiter): Rolle bleibt `wolfskind`, Fraktion `wolves`, `counts_as_wolf` ja, `appears_as` `werwolf`. Der laufende Nachtplan bleibt unverändert; Rudelteilnahme ab der folgenden Nacht. Tote Wolfskinder verwandeln sich für diesen Tod nie, auch nicht nach späterer Wiederbelebung; ein erneuter Tod des wiederbelebten Vorbilds kann verwandeln |
 | Konflikte | Stirbt das Vorbild, während das Wolfskind tot ist: keine Verwandlung (Code: `mogli` nur lebend). Wächter am Tor nicht im Slice |
 | Siegbezug | vor Verwandlung Dorf, danach G-SIEG-2 |
-| Manuelle Übersteuerung | Vorbild nachträglich setzen, Verwandlung auslösen oder rückgängig machen (Warnung, Protokoll) |
+| Manuelle Übersteuerung | Vorbild setzen, ändern oder entfernen (`set_wolf_model`, `remove_wolf_model`), Verwandlung auslösen oder zurücknehmen (`transform_wolf_child`, `revert_wolf_child`; Rücknahme behält das Vorbild) mit Warnung, Begründung und Protokoll. `appears_as` ist beim Wolfskind nicht einzeln korrigierbar, es folgt der Verwandlung. `set_role` zum Wolfskind beginnt unverwandelt ohne Vorbild, weg vom Wolfskind entfernt den Zustand |
 | Legacy-Beleg | `Wolfskind`-Handler (`MogliVorbildId`, Filter `!x.flags.dead`) in `abilities-roles-chunk.js`; Verwandlung `mogli.flags.werewolf=true` in `postDeathHooks`, `js/ui/core.js`; Beschreibung `"Wolfskind"` in `roles.js` |
 
 **ENTSCHEIDUNGSGRUNDLAGE · DR-10 Wolfskind**

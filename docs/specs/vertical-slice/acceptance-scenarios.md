@@ -270,6 +270,8 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_sensentraeg
 
 ### Wolfskind (DR-10)
 
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_wolfskind.gd`): AS-R18, AS-R19, AS-R20, AS-R38 sowie der zustandsbasierte Auswahlbedarf als Grundlage für AS-L10 und AS-L11 (ohne Lehrling). AS-R20 wird mit Hinrichtung des Vorbilds geprüft, weil Gift auf das Vorbild eine eigene Testbesetzung braucht; der Gifttod verwandelt ebenfalls (eigener Test).
+
 **AS-R18 · Verwandlung**
 - Given: Wolfskind W wählt F als Vorbild; ein Wolf A lebt; 4 Nicht-Wölfe inklusive W leben.
 - When: F stirbt.
