@@ -294,6 +294,8 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_wolfskind.g
 
 Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. Grundlage: `rules-register.md` §9, Besetzung B9L.
 
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_lehrling.gd`) mit der kleineren Besetzung LS (1 `werwolf`, 2 und 3 `dorfbewohner`, 4 `sensentraeger`, 5 wechselnde Rolle, 6 `lehrling`): AS-L01 bis AS-L05, AS-L09 bis AS-L14, AS-L16. Abweichungen: AS-L06 und AS-L08 lösen die Tode per `GmCorrection kill` aus statt über Rudel oder Gift (gleiche Pipeline); AS-L07 markiert den Heiltrank per `set_witch_potion` als verbraucht statt über eine Rettung; AS-L15 bis Undo nur als bytegleiches Replay und als Abbruch vor der Bestätigung (Hash und RNG wie vor dem Schritt). Die Bindung heißt im Zustand `apprentices[].master_id` statt `apprentice_master_id`.
+
 **AS-L01 · Verdeckte Auswahl der drei Personen**
 - Given: B9L, Nacht 1, Schritt Lehrling aktiv.
 - When: Der Spielleiter wählt im Cockpit C, E und F.

@@ -70,7 +70,7 @@ Keine Rolle erscheint im Cockpit, solange eine Spieleransicht aktiv ist. Wölfe 
 | Nr. | Priorität | Schritt | Prompt | Wirkung beim Bestätigen |
 |---|---|---|---|---|
 | 1 | 0.9 | `wolfskind` (Nacht 1) | Vorbild wählen (andere lebende Person, nicht sich selbst) | Bindung Wolfskind → Vorbild |
-| 2 | 1.1 | `lehrling` (Nacht 1) | a) nur Cockpit: Spielleiter wählt drei geeignete lebende Personen außer dem Lehrling → b) gesicherte Karte: Lehrling sieht **nur drei Rollen**, keine Namen, und wählt eine → c) bestätigen | verdeckte Bindung Lehrling → Person der gewählten Rolle (nur Spielleiter sichtbar) |
+| 2 | 1.1 | `lehrling` (erste verfügbare Nacht ohne aktive Bindung) | a) nur Cockpit: Spielleiter wählt drei geeignete lebende Personen außer dem Lehrling → b) gesicherte Karte: Lehrling sieht **nur drei Rollen**, keine Namen, und wählt eine → c) bestätigen | verdeckte Bindung Lehrling → Person der gewählten Rolle (nur Spielleiter sichtbar) |
 | 3 | 1.3 | `schutzengel` | 1 andere lebende Person wählen | Schutz nur für diese Nacht gegen Wolfsangriff; angewandt in der Morgenauflösung (DR-05) |
 | 4 | 2.0 | Rudel (alle, die zu Beginn der Nacht als Wolf zählen) | 1 Opfer oder „kein Opfer" | Wolfsziel für die Morgenauflösung |
 | 5 | 3.4 | `waldhexe` | Kette: Name des Opfers sehen → retten? (bei Ja zusätzlich Rolle des Opfers sehen) → vergiften? → Ziel → bestätigen | Rettung und/oder Gift, beide in derselben Nacht erlaubt (DR-06) |
@@ -92,7 +92,7 @@ Regeln des Ablaufs:
 
 1. Wolfsziel prüfen: Rettung durch Waldhexe oder Schutz durch Schutzengel verhindert den Tod (`KillPrevented`, nur Spielleiter). Der Schutz endet danach (DR-05).
 2. Tod des Wolfsopfers mit Ursache `NIGHT_KILL` anwenden, sonst nichts. Ist das bestätigte Opfer bereits tot (z. B. durch eine Spielleiterkorrektur in der Nacht), findet kein Angriff statt und die Rudelwahl wird nicht erneut geöffnet. Nach jedem Tod: vorläufiger Siegstatus (DR-14).
-3. Unmittelbare Todesfolgen ohne Entscheidung, jeweils direkt beim Tod in der Pipeline und vor dessen vorläufiger Siegprüfung: Verwandlung `wolfskind` (umgesetzt), Erbe des `lehrling` (auch für Tode in der Nacht, z. B. durch Gift).
+3. Unmittelbare Todesfolgen ohne Entscheidung, jeweils direkt beim Tod in der Pipeline und vor dessen vorläufiger Siegprüfung: Verwandlung `wolfskind` (umgesetzt), Erbe des `lehrling` (umgesetzt, nach der Verwandlung; auch für Tode in der Nacht, z. B. durch Gift).
 4. Reaktionen mit Entscheidung nacheinander abfragen (Sensenträger, auch nach Gifttod in der Nacht), jeweils freiwillig (DR-09). Jede Reaktion kann weitere Tode und Folgen auslösen; die Schleife endet, wenn die Warteschlange leer ist.
 5. Verbindliche Siegprüfung erst jetzt, wenn keine Reaktion und kein Prompt mehr offen ist (DR-14). Kandidaten siehe Abschnitt 9.
 6. Morgenbericht anzeigen:
@@ -139,7 +139,7 @@ Gespeichert werden ausschließlich die bestätigte Todesaktion (Person, Aktion, 
 
 `EndDay` ist nur möglich, wenn kein Prompt und keine Reaktion offen ist. `StartNight` erhöht den Nachtzähler und berechnet den Nachtplan neu. Der Schutz der Vornacht ist bereits bei Tagesbeginn erloschen (DR-05).
 
-- Einmalschritte (`wolfskind`, `lehrling`) der ersten Nacht entfallen ab Nacht 2.
+- Auswahlschritte (`wolfskind`, `lehrling`) sind zustandsbasiert: Sie erscheinen nur, solange eine Auswahl fehlt (Wolfskind ohne Vorbild, Lehrling ohne aktive Bindung), auch in späteren Nächten nach einem Rollenwechsel.
 - Ein verwandeltes Wolfskind nimmt ab der Nacht nach seiner Verwandlung am Rudelschritt teil (DR-10).
 - Hat der Lehrling seit der letzten Nacht eine Rolle geerbt, sind deren aktiv auszuführende Nachtfähigkeiten ab diesem `StartNight` erstmals verfügbar (DR-11): Er erhält die Nachtschritte mit zurückgesetzten Einsätzen; eine geerbte Wolfsrolle wacht mit dem Rudel. Rolle, Fraktion, passive Eigenschaften, Siegbedingungen und Todesreaktionen galten bereits ab dem Erbe.
 - Hat der Lehrling `wolfskind` geerbt, erhält er in dieser Nacht den Wolfskind-Schritt (0.9) und wählt ein neues Vorbild; er bleibt unverwandelt, bis dieses Vorbild stirbt.
