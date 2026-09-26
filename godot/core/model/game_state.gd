@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 2  ## 2: Nachtplan, Reaktionswarteschlange, vorläufiger Siegstatus
-const RULES_VERSION := &"grimmhain-core-0.2"
+const SCHEMA_VERSION := 3  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses
+const RULES_VERSION := &"grimmhain-core-0.3"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1

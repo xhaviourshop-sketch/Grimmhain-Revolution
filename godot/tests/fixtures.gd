@@ -55,8 +55,7 @@ static func play(commands: Array[Command]) -> GameState:
 
 
 ## Start mit freier Rollenliste: roles[i] gehört Person i + 1.
-## test_mode erlaubt reine Testrollen wie `test-sensentraeger`.
-static func start_roles(roles: Array, seed_value: int = 1, test_mode: bool = false) -> Command:
+static func start_roles(roles: Array, seed_value: int = 1) -> Command:
 	var map := {}
 	for i: int in roles.size():
 		map[str(i + 1)] = roles[i]
@@ -68,12 +67,10 @@ static func start_roles(roles: Array, seed_value: int = 1, test_mode: bool = fal
 		"seat_order": identity_order(roles.size()),
 		"roles": map,
 	}
-	if test_mode:
-		payload["test_mode"] = true
 	return Command.start_game(payload)
 
 
-## Standardbesetzung für Reaktionstests: 1, 2 Werwölfe; 3 Test-Sensenträger; 4–6 Dorfbewohner.
+## Standardbesetzung für Reaktionstests: 1, 2 Werwölfe; 3 Sensenträger; 4–6 Dorfbewohner.
 static func start_reaper_game(seed_value: int = 1) -> Command:
-	return start_roles(["werwolf", "werwolf", "test-sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], seed_value, true)
+	return start_roles(["werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], seed_value)
 

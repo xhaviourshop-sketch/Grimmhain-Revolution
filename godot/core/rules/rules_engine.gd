@@ -129,10 +129,8 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 			return &"invalid_assignment"
 
 	var counts := {}
-	var test_mode := p.get("test_mode") is bool and bool(p["test_mode"])
 	for r: StringName in roles:
-		# Testrollen nur mit ausdrücklichem test_mode (headless Tests, keine Produktion).
-		if not RoleCatalog.has_role(r) or (RoleCatalog.is_test_only(r) and not test_mode):
+		if not RoleCatalog.has_role(r):
 			return &"unknown_role"
 		counts[r] = int(counts.get(r, 0)) + 1
 	var has_wolf := false
@@ -184,7 +182,8 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return &"invalid_target_count"
 	var seen: Array[int] = []
 	for t: int in list:
-		if not prompt.allowed_ids.has(t) or seen.has(t):
+		# Nur zum Zeitpunkt der Antwort lebende Personen sind gültige Ziele.
+		if not prompt.allowed_ids.has(t) or seen.has(t) or not s.players.has(t) or not s.players[t].alive:
 			return &"invalid_target"
 		seen.append(t)
 	return &""
@@ -358,6 +357,7 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			var reaction: Reaction = s.reactions.pop_front()
 			ctx.emit(GameEvent.REACTION_RESOLVED, Visibility.GM, {
 				"reaction_id": reaction.id, "owner_id": reaction.owner_id, "target_id": target,
+				"outcome": "declined" if target == GameState.NO_TARGET else "cursed",
 			})
 			if target != GameState.NO_TARGET:
 				KillPipeline.request_kill(ctx, target, KillEvent.CAUSE_HUNTER_SHOT, KillEvent.SOURCE_PLAYER, reaction.owner_id)

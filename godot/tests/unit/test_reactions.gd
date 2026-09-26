@@ -1,7 +1,6 @@
 extends TestCase
-## Persistente Reaktionswarteschlange mit minimalem Test-Sensenträger
-## (`test-sensentraeger`, nur mit test_mode). Besetzung: 1, 2 Werwölfe;
-## 3 Test-Sensenträger; 4–6 Dorfbewohner.
+## Persistente Reaktionswarteschlange am Beispiel des Sensenträgers
+## (`sensentraeger`). Besetzung: 1, 2 Werwölfe; 3 Sensenträger; 4–6 Dorfbewohner.
 
 
 ## Nacht 1: Das Rudel tötet den Test-Sensenträger (ID 3). Ergebnis: Morgenauflösung mit offener Reaktion.
@@ -66,7 +65,7 @@ func test_reaction_can_be_declined() -> void:
 
 
 func test_chained_reactions_in_fifo_order() -> void:
-	var start := Fixtures.start_roles(["werwolf", "werwolf", "test-sensentraeger", "test-sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1, true)
+	var start := Fixtures.start_roles(["werwolf", "werwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1)
 	var run := RulesEngine.replay([start, Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
 		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command])
 	assert_true(run.ok, "Kette angenommen (%s @ %d)" % [run.error, run.failed_index])
@@ -82,7 +81,7 @@ func test_chained_reactions_in_fifo_order() -> void:
 
 func test_multiple_pending_reactions_keep_order() -> void:
 	# Zwei Tode während einer offenen Reaktion: stabile Reihenfolge nach Einreihung.
-	var start := Fixtures.start_roles(["werwolf", "werwolf", "test-sensentraeger", "test-sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1, true)
+	var start := Fixtures.start_roles(["werwolf", "werwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1)
 	var run := RulesEngine.replay([start, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
 		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}),
 		CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command])
@@ -155,7 +154,3 @@ func test_reaction_replay_is_deterministic() -> void:
 	assert_eq(events_json(a.events), events_json(b.events), "Ereignisse bytegleich")
 	assert_eq(a.state.content_hash(), b.state.content_hash(), "State-Hash gleich")
 
-
-func test_test_role_requires_test_mode() -> void:
-	var cmd := Fixtures.start_roles(["werwolf", "werwolf", "test-sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1, false)
-	apply_rejected(GameState.new(), cmd, "unknown_role", "Testrolle ohne test_mode")

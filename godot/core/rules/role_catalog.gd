@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten des Core-Slice. Nur `dorfbewohner` und `werwolf` (A-06).
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) und als erste Vertical-Slice-Rolle `sensentraeger`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -11,14 +11,14 @@ const UNLIMITED := -1
 
 const DORFBEWOHNER := &"dorfbewohner"
 const WERWOLF := &"werwolf"
-## Nur für Tests (StartGame mit test_mode): minimaler Sensenträger, dessen Tod eine
-## Fluch-Reaktion einreiht. Keine Produktionsrolle.
-const TEST_SENSENTRAEGER := &"test-sensentraeger"
+## Sensenträger / Reaper (rules-register.md §7, DR-09): Dorf, kein Nachtschritt,
+## freiwillige Todesreaktion (Fluch auf eine lebende Person oder Verzicht).
+const SENSENTRAEGER := &"sensentraeger"
 
 const ROLES := {
 	DORFBEWOHNER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFBEWOHNER},
 	WERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": WERWOLF},
-	TEST_SENSENTRAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": TEST_SENSENTRAEGER, "death_reaction": Reaction.KIND_CURSE, "test_only": true},
+	SENSENTRAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SENSENTRAEGER, "death_reaction": Reaction.KIND_CURSE},
 }
 
 
@@ -41,10 +41,6 @@ static func appears_as(role_id: StringName) -> StringName:
 ## Art der Todesreaktion oder &"" ohne Reaktion.
 static func death_reaction(role_id: StringName) -> StringName:
 	return (ROLES[role_id] as Dictionary).get("death_reaction", &"")
-
-
-static func is_test_only(role_id: StringName) -> bool:
-	return (ROLES[role_id] as Dictionary).get("test_only", false)
 
 
 ## Höchstzahl je Partie oder UNLIMITED, wenn die Rolle keine eigene Grenze hat.

@@ -65,13 +65,13 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 			if not (value is String or value is StringName):
 				return &"invalid_value"
 			var role := StringName(value)
-			if not RoleCatalog.has_role(role) or RoleCatalog.is_test_only(role):
+			if not RoleCatalog.has_role(role):
 				return &"invalid_value"
 			if role == player.get(field):
 				return &"no_change"
 		SET_ROLE:
 			var role := StringName(DictRead.get_string(p, "role_id"))
-			if not RoleCatalog.has_role(role) or RoleCatalog.is_test_only(role):
+			if not RoleCatalog.has_role(role):
 				return &"unknown_role"
 			if role == player.role_id:
 				return &"no_change"

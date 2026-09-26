@@ -90,7 +90,7 @@ func test_execution_reacts_immediately() -> void:
 	assert_eq(RulesEngine.next_step_id(run.state), "reaction:1", "Reaktion sofort fällig")
 	apply_rejected(run.state, Command.end_day(), "reaction_open", "Tagesende erst nach der Reaktion")
 	var begun := apply_ok(run.state, Command.begin_step("reaction:1"), "Reaktion").state
-	var done := apply_ok(begun, Command.answer_prompt(2, [5]), "Fluch").state
+	var done := apply_ok(begun, Command.answer_prompt(2, [1]), "Fluch auf Werwolf").state
 	apply_ok(done, Command.end_day(), "Tagesende")
 
 
@@ -165,7 +165,7 @@ func test_resolved_reaction_cannot_run_again() -> void:
 	# Zusatz 10
 	var s := RulesEngine.replay(_killed_by_pack()).state
 	var begun := apply_ok(s, Command.begin_step("reaction:1"), "Reaktion").state
-	var done := apply_ok(begun, Command.answer_prompt(2, [4]), "Fluch").state
+	var done := apply_ok(begun, Command.answer_prompt(2, [1]), "Fluch auf Werwolf").state
 	apply_rejected(done, Command.begin_step("reaction:1"), "no_pending_step", "Reaktion erneut beginnen")
 	apply_rejected(done, Command.answer_prompt(2, [5]), "wrong_phase", "alten Prompt erneut beantworten")
 	# Einmal pro Person: Wiederbelebung und erneuter Tod lösen keine zweite Reaktion aus.

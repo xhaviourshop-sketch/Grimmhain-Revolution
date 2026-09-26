@@ -13,6 +13,7 @@ var counts_as_wolf: bool = false
 var appears_as: StringName = &""  ## für Informationsrollen; im Core-Slice ohne Nutzer
 var alive: bool = true
 var death: KillEvent = null
+var ability_uses: Dictionary = {}  ## begrenzte Einsätze pro Person: "<rolle>:<fähigkeit>" → Anzahl (G-ID-3)
 
 
 func to_dict() -> Dictionary:
@@ -26,6 +27,7 @@ func to_dict() -> Dictionary:
 		"appears_as": String(appears_as),
 		"alive": alive,
 		"death": death.to_dict() if death != null else null,
+		"ability_uses": ability_uses.duplicate(),
 	}
 
 
@@ -39,6 +41,11 @@ static func from_dict(d: Dictionary) -> Player:
 	p.counts_as_wolf = DictRead.get_bool(d, "counts_as_wolf")
 	p.appears_as = StringName(DictRead.get_string(d, "appears_as"))
 	p.alive = DictRead.get_bool(d, "alive", true)
+	for key: Variant in DictRead.get_dict(d, "ability_uses"):
+		var count: Variant = DictRead.get_dict(d, "ability_uses")[key]
+		if not DictRead.is_int_like(count):
+			return null
+		p.ability_uses[String(key)] = int(count)
 	if d.get("death") is Dictionary:
 		p.death = KillEvent.from_dict(d["death"])
 		if p.death == null:

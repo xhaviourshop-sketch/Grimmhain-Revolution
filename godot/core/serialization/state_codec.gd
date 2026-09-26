@@ -41,8 +41,8 @@ static func decode(text: String) -> LoadResult:
 		return LoadResult.failed(&"wrong_format")
 	var found_schema := DictRead.get_int(doc, "schema_version", -1)
 	if found_schema != GameState.SCHEMA_VERSION:
-		# Keine Migration: Schema 1 (Core-Slice ohne Reaktionen) kannte weder Nachtplan noch
-		# Reaktionswarteschlange; solche Stände werden mit klarer Meldung abgelehnt.
+		# Keine Migration: Ältere Schemata (1: ohne Reaktionen, 2: ohne ability_uses) werden
+		# mit klarer Meldung abgelehnt.
 		return LoadResult.failed(&"unsupported_schema_version",
 			"Spielstand-Schema %d wird nicht unterstützt, erwartet wird Schema %d." % [found_schema, GameState.SCHEMA_VERSION])
 	if DictRead.get_string(doc, "rules_version") != String(GameState.RULES_VERSION):

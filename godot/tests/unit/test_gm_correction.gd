@@ -81,7 +81,7 @@ func test_set_role() -> void:
 	var s := Fixtures.play([Fixtures.start_manual(6, [1])] as Array[Command])
 	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "dorfbewohner"}), "no_change", "gleiche Rolle")
 	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "das-orakel"}), "unknown_role", "Rolle außerhalb des Katalogs")
-	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "test-sensentraeger"}), "unknown_role", "Testrolle")
+	apply_rejected(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": ""}), "unknown_role", "leere Rolle")
 	var r := apply_ok(s, CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "werwolf"}, "Karte vertauscht"), "Rollenkorrektur")
 	var p := r.state.players[2]
 	assert_eq(String(p.role_id), "werwolf", "neue Rolle")

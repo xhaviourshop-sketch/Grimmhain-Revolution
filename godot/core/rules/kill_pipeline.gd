@@ -39,10 +39,15 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 
 
 ## Reiht die Todesreaktion der Rolle ein (falls vorhanden). Reihenfolge = Einreihung.
+## Höchstens eine Todesreaktion pro Person und Rolle in der Partie (`ability_uses`).
 static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent) -> void:
 	var kind := RoleCatalog.death_reaction(target.role_id)
 	if kind == &"":
 		return
+	var use_key := "%s:death_reaction" % target.role_id
+	if int(target.ability_uses.get(use_key, 0)) >= 1:
+		return
+	target.ability_uses[use_key] = int(target.ability_uses.get(use_key, 0)) + 1
 	var s := ctx.state
 	var reaction := Reaction.new()
 	reaction.id = s.next_reaction_id
