@@ -59,9 +59,11 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	prompt.max_count = 1
 	prompt.allowed_ids = s.alive_ids()
 	if is_reaction_step(step_id):
-		# Pflichtreaktion: 0 Ziele = Verzicht (DR-09); nicht abbrechbar.
+		# Pflichtreaktion: 0 Ziele = Verzicht (DR-09); nicht abbrechbar. Der Besitzer ist
+		# nie Ziel seiner eigenen Reaktion, auch nicht nach einer Wiederbelebung.
 		prompt.owner = PendingPrompt.OWNER_REACTION
 		prompt.actor_id = s.reactions[0].owner_id
+		prompt.allowed_ids.erase(prompt.actor_id)
 		prompt.cancellable = false
 	else:
 		# Rudelschritt: 0 Ziele = ausdrücklich „kein Opfer“; jede lebende Person (rules-register §2).
