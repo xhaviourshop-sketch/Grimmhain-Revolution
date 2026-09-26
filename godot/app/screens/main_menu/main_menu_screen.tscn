@@ -1,0 +1,78 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/main_menu/main_menu_screen.gd" id="1_screen"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+
+[node name="MainMenuScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_screen")
+screen_id = &"main_menu"
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Column" type="VBoxContainer" parent="Center"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ScreenColumn"
+
+[node name="TitleLabel" type="Label" parent="Center/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.menu.title"
+
+[node name="Actions" type="VBoxContainer" parent="Center/Column"]
+layout_mode = 2
+
+[node name="NewGameButton" type="Button" parent="Center/Column/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.new_game"
+kind = 0
+
+[node name="ContinueButton" type="Button" parent="Center/Column/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.continue"
+
+[node name="CockpitButton" type="Button" parent="Center/Column/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.cockpit"
+
+[node name="SettingsButton" type="Button" parent="Center/Column/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.settings"
+
+[node name="QuitGroup" type="VBoxContainer" parent="Center/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ScreenColumn"
+
+[node name="QuitSeparator" type="HSeparator" parent="Center/Column/QuitGroup"]
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="Center/Column/QuitGroup"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.quit"

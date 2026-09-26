@@ -1,0 +1,144 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/cockpit/cockpit_screen.gd" id="1_screen"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+[ext_resource type="PackedScene" path="res://app/widgets/header_bar/header_bar.tscn" id="4_header"]
+
+[node name="CockpitScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_screen")
+screen_id = &"cockpit"
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeaderBar" parent="Layout" instance=ExtResource("4_header")]
+unique_name_in_owner = true
+layout_mode = 2
+title_key = "ui.cockpit.title"
+
+[node name="StatusRow" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="PhaseArea" type="PanelContainer" parent="Layout/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="Row" type="HBoxContainer" parent="Layout/StatusRow/PhaseArea"]
+layout_mode = 2
+
+[node name="PhaseCaption" type="Label" parent="Layout/StatusRow/PhaseArea/Row"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+vertical_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.cockpit.phase.label"
+wrap = false
+
+[node name="PhaseValueLabel" type="Label" parent="Layout/StatusRow/PhaseArea/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeadingLabel"
+vertical_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.phase.none"
+
+[node name="NoGameBadge" type="PanelContainer" parent="Layout/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"StatusBadge"
+
+[node name="NoGameLabel" type="Label" parent="Layout/StatusRow/NoGameBadge"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.cockpit.no_game"
+wrap = false
+
+[node name="Body" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SeatRingArea" type="PanelContainer" parent="Layout/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PlaceholderPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/Body/SeatRingArea"]
+layout_mode = 2
+alignment = 1
+
+[node name="SeatsHeading" type="Label" parent="Layout/Body/SeatRingArea/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.cockpit.seats.heading"
+
+[node name="SeatsPlaceholder" type="Label" parent="Layout/Body/SeatRingArea/Column"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.cockpit.seats.placeholder"
+
+[node name="SideColumn" type="VBoxContainer" parent="Layout/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InstructionCard" type="PanelContainer" parent="Layout/Body/SideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"CardPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/Body/SideColumn/InstructionCard"]
+layout_mode = 2
+
+[node name="InstructionHeading" type="Label" parent="Layout/Body/SideColumn/InstructionCard/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.cockpit.instruction.heading"
+
+[node name="InstructionLabel" type="Label" parent="Layout/Body/SideColumn/InstructionCard/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_label")
+text_key = "ui.cockpit.instruction.no_game"
+
+[node name="ActionsArea" type="PanelContainer" parent="Layout/Body/SideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PlaceholderPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/Body/SideColumn/ActionsArea"]
+layout_mode = 2
+
+[node name="ActionsHeading" type="Label" parent="Layout/Body/SideColumn/ActionsArea/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.cockpit.actions.heading"
+
+[node name="ActionsPlaceholder" type="Label" parent="Layout/Body/SideColumn/ActionsArea/Column"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+text_key = "ui.cockpit.actions.placeholder"

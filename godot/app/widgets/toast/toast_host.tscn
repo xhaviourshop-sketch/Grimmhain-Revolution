@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/widgets/toast/toast_host.gd" id="1_toast"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="2_label"]
+
+[node name="ToastHost" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_toast")
+
+[node name="Bottom" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 2
+
+[node name="ToastPanel" type="PanelContainer" parent="Bottom"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_type_variation = &"ToastPanel"
+
+[node name="MessageLabel" type="Label" parent="Bottom/ToastPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+script = ExtResource("2_label")
+
+[node name="HideTimer" type="Timer" parent="."]
+unique_name_in_owner = true

@@ -1,0 +1,154 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/settings/settings_screen.gd" id="1_screen"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+[ext_resource type="PackedScene" path="res://app/widgets/header_bar/header_bar.tscn" id="4_header"]
+[ext_resource type="Script" path="res://app/widgets/grimm_toggle.gd" id="5_toggle"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_language"]
+
+[node name="SettingsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_screen")
+screen_id = &"settings"
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenColumn"
+
+[node name="HeaderBar" parent="Layout" instance=ExtResource("4_header")]
+unique_name_in_owner = true
+layout_mode = 2
+title_key = "ui.settings.title"
+
+[node name="Columns" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ButtonRow"
+
+[node name="Primary" type="VBoxContainer" parent="Layout/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ScreenColumn"
+
+[node name="LanguageCard" type="PanelContainer" parent="Layout/Columns/Primary"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/Columns/Primary/LanguageCard"]
+layout_mode = 2
+
+[node name="LanguageHeading" type="Label" parent="Layout/Columns/Primary/LanguageCard/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.language.heading"
+
+[node name="LanguageButtons" type="HBoxContainer" parent="Layout/Columns/Primary/LanguageCard/Column"]
+layout_mode = 2
+
+[node name="LanguageGermanButton" type="Button" parent="Layout/Columns/Primary/LanguageCard/Column/LanguageButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_language")
+script = ExtResource("2_button")
+text_key = "ui.settings.language.german"
+
+[node name="LanguageEnglishButton" type="Button" parent="Layout/Columns/Primary/LanguageCard/Column/LanguageButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_language")
+script = ExtResource("2_button")
+text_key = "ui.settings.language.english"
+
+[node name="LanguageStatusLabel" type="Label" parent="Layout/Columns/Primary/LanguageCard/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.language.active"
+
+[node name="MotionCard" type="PanelContainer" parent="Layout/Columns/Primary"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/Columns/Primary/MotionCard"]
+layout_mode = 2
+
+[node name="MotionHeading" type="Label" parent="Layout/Columns/Primary/MotionCard/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.motion.heading"
+
+[node name="ReducedMotionToggle" type="CheckButton" parent="Layout/Columns/Primary/MotionCard/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("5_toggle")
+text_key = "ui.settings.motion.reduce"
+
+[node name="MotionHint" type="Label" parent="Layout/Columns/Primary/MotionCard/Column"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.motion.hint"
+
+[node name="Secondary" type="VBoxContainer" parent="Layout/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ScreenColumn"
+
+[node name="AudioCard" type="PanelContainer" parent="Layout/Columns/Secondary"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PlaceholderPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/Columns/Secondary/AudioCard"]
+layout_mode = 2
+
+[node name="AudioHeading" type="Label" parent="Layout/Columns/Secondary/AudioCard/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.audio.heading"
+
+[node name="AudioPlaceholder" type="Label" parent="Layout/Columns/Secondary/AudioCard/Column"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.audio.placeholder"
+
+[node name="DisplayCard" type="PanelContainer" parent="Layout/Columns/Secondary"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PlaceholderPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/Columns/Secondary/DisplayCard"]
+layout_mode = 2
+
+[node name="DisplayHeading" type="Label" parent="Layout/Columns/Secondary/DisplayCard/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.display.heading"
+
+[node name="DisplayPlaceholder" type="Label" parent="Layout/Columns/Secondary/DisplayCard/Column"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.display.placeholder"
