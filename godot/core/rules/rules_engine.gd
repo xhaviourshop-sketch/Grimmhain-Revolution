@@ -18,6 +18,7 @@ static func apply(state: GameState, command: Command) -> CommandResult:
 	var next := state.duplicate_state()
 	var ctx := RuleContext.new(next, state.command_count)
 	_execute(ctx, command)
+	StepQueue.drop_unactionable(ctx)
 	WinRules.finalize_if_ready(ctx)
 	next.command_count += 1
 	return CommandResult.accepted(next, ctx.events)
@@ -174,6 +175,8 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return &"no_open_prompt"
 	if not DictRead.is_int_like(p.get("prompt_id")) or int(p["prompt_id"]) != prompt.id:
 		return &"prompt_mismatch"
+	if prompt.owner == PendingPrompt.OWNER_WITCH:
+		return WitchStep.validate_answer(s, prompt, p)
 	var targets: Variant = DictRead.to_int_array(DictRead.get_array(p, "targets"))
 	if targets == null or not p.get("targets") is Array:
 		return &"invalid_target"
@@ -233,7 +236,10 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 		Command.START_NIGHT:
 			_start_night(ctx)
 		Command.ANSWER_PROMPT:
-			_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
+			if s.pending_prompt.owner == PendingPrompt.OWNER_WITCH:
+				WitchStep.answer(ctx, p)
+			else:
+				_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
 		Command.BEGIN_STEP:
 			StepQueue.begin(ctx, DictRead.get_string(p, "step_id"))
 		Command.SKIP_STEP:
@@ -339,10 +345,13 @@ static func _start_night(ctx: RuleContext) -> void:
 	for _step: StringName in s.night_plan:
 		s.night_step_status.append(StepQueue.STATUS_PENDING)
 	s.protections.clear()
+	s.witch_actions.clear()
 	if s.night_plan.is_empty():
 		ctx.emit(GameEvent.NIGHT_STEP_SKIPPED, Visibility.GM, {"step": StepQueue.PACK, "reason": "no_living_wolf"})
 		return
-	StepQueue.begin(ctx, StepQueue.night_step_id(s, 0))
+	StepQueue.drop_unactionable(ctx)
+	if s.next_night_step < s.night_plan.size():
+		StepQueue.begin(ctx, StepQueue.night_step_id(s, s.next_night_step))
 
 
 static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:

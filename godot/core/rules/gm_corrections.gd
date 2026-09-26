@@ -15,6 +15,9 @@ const SET_ROLE_FIELD := "set_role_field"
 const DECLARE_WINNER := "declare_winner"
 const SET_PROTECTION := "set_protection"        ## Schutz der laufenden Nacht setzen oder ändern
 const REMOVE_PROTECTION := "remove_protection"  ## Schutz der laufenden Nacht entfernen
+const SET_WITCH_POTION := "set_witch_potion"    ## Heil- oder Gifttrank als verfügbar/verbraucht markieren
+const SET_RESCUE := "set_rescue"                ## bestätigte Rettung der laufenden Nacht setzen oder ändern
+const REMOVE_RESCUE := "remove_rescue"          ## bestätigte Rettung der laufenden Nacht entfernen
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
 ## Informationsrollen, beim Trugbilderwolf die Scheinrolle (DR-08).
@@ -38,6 +41,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		return &""
 	if kind == SET_PROTECTION or kind == REMOVE_PROTECTION:
 		return _validate_protection(s, p, kind)
+	if kind == SET_WITCH_POTION or kind == SET_RESCUE or kind == REMOVE_RESCUE:
+		return _validate_witch(s, p, kind)
 	if not [KILL, EXECUTE, REVIVE, SET_ROLE, SET_ROLE_FIELD].has(kind):
 		return &"invalid_correction"
 	if kind == EXECUTE:
@@ -112,6 +117,39 @@ static func _validate_protection(s: GameState, p: Dictionary, kind: String) -> S
 	return &""
 
 
+## Waldhexe: Trankstatus jederzeit; Rettung nur in der laufenden Nacht, erst nach
+## bestätigtem Waldhexenschritt und nur auf eine lebende Person. Nach der
+## Morgenauflösung gibt es keine Rettungskorrektur, also keine rückwirkende Wiederbelebung.
+## Gift wird nicht hierüber abgebildet, sondern über `kill`.
+static func _validate_witch(s: GameState, p: Dictionary, kind: String) -> StringName:
+	var witch := DictRead.get_int(p, "witch_id", GameState.NO_TARGET)
+	if not s.players.has(witch):
+		return &"unknown_player"
+	if s.players[witch].role_id != RoleCatalog.WALDHEXE:
+		return &"not_a_witch"
+	if kind == SET_WITCH_POTION:
+		var potion := DictRead.get_string(p, "potion")
+		if not WitchStep.POTIONS.has(potion) or not p.get("available") is bool:
+			return &"invalid_correction"
+		return &"no_change" if WitchStep.potion_available(s.players[witch], potion) == bool(p["available"]) else &""
+	if s.phase != Phase.NIGHT:
+		return &"wrong_phase"
+	var action := WitchStep.action_of(s, witch)
+	if action == null:
+		var index := s.night_plan.find(StepQueue.personal_step_key(RoleCatalog.WALDHEXE, witch))
+		return &"step_not_completed" if index >= s.next_night_step else &"no_witch_step"
+	if kind == REMOVE_RESCUE:
+		return &"no_change" if action.saved_id == GameState.NO_TARGET else &""
+	var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
+	if not s.players.has(target):
+		return &"unknown_player"
+	if not s.players[target].alive:
+		return &"player_dead"
+	if action.saved_id == target:
+		return &"no_change"
+	return &""
+
+
 static func execute(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	var kind := DictRead.get_string(p, "kind")
@@ -133,6 +171,19 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			else:
 				Protections.remove_protection(s, guardian)
 			_log(ctx, kind, guardian, old, {"protected_id": target if kind == SET_PROTECTION else GameState.NO_TARGET}, reason, false)
+		SET_WITCH_POTION:
+			var witch := s.players[DictRead.get_int(p, "witch_id")]
+			var potion := DictRead.get_string(p, "potion")
+			var old := {"potion": potion, "available": WitchStep.potion_available(witch, potion)}
+			WitchStep.set_potion_available(witch, potion, bool(p["available"]))
+			_log(ctx, kind, witch.id, old, {"potion": potion, "available": bool(p["available"])}, reason, false)
+		SET_RESCUE, REMOVE_RESCUE:
+			# Nur die Rettung; der Trankstatus bleibt eine eigene Korrektur (SET_WITCH_POTION).
+			var witch_id := DictRead.get_int(p, "witch_id")
+			var action := WitchStep.action_of(s, witch_id)
+			var old := {"saved_id": action.saved_id}
+			action.saved_id = target if kind == SET_RESCUE else GameState.NO_TARGET
+			_log(ctx, kind, witch_id, old, {"saved_id": action.saved_id}, reason, false)
 		EXECUTE:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED

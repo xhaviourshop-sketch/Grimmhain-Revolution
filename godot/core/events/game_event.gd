@@ -30,6 +30,9 @@ const REACTION_RESOLVED := &"ReactionResolved"
 const GM_CORRECTED := &"GmCorrected"
 const PROTECTION_SET := &"ProtectionSet"    ## bestätigte Schutzwahl (nur Spielleiter)
 const KILL_PREVENTED := &"KillPrevented"    ## verhinderter Rudelangriff (nur Spielleiter)
+const PROMPT_STAGE_ANSWERED := &"PromptStageAnswered"  ## Teilantwort eines mehrstufigen Prompts (nur Spielleiter)
+const WITCH_ACTED := &"WitchActed"          ## bestätigte Entscheidung der Waldhexe (nur Spielleiter)
+const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie
 var command_index: int = 0  ## Index des auslösenden Befehls

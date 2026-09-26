@@ -7,7 +7,8 @@ const CAUSE_NIGHT_KILL := &"NIGHT_KILL"
 const CAUSE_LYNCH := &"LYNCH"
 const CAUSE_HUNTER_SHOT := &"HUNTER_SHOT"      ## Fluch nach dem Tod (Sensenträger-Reaktion)
 const CAUSE_GM_CORRECTION := &"GM_CORRECTION"  ## Spielleiterkorrektur
-const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION]
+const CAUSE_WITCH_POISON := &"WITCH_POISON"    ## Gifttrank der Waldhexe, sofort im Waldhexenschritt
+const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON]
 
 const SOURCE_PACK := &"pack"        ## Rudel (alle lebenden Wölfe gemeinsam)
 const SOURCE_VILLAGE := &"village"  ## Hinrichtung nach physischer Abstimmung

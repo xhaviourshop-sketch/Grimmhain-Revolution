@@ -7,7 +7,8 @@ extends RefCounted
 ##   4. Todesfolgen: Reaktion der Rolle einreihen (nur mit trigger_effects, G-TOD-2)
 ##   5. vorläufiger Siegstatus (DR-14); die verbindliche Prüfung folgt am Befehlsende,
 ##      sobald keine Reaktion mehr offen ist
-## Abfangregeln: Schutzengel (vor Schritt 2, nur Rudelangriff); Rettung und Spiegelung folgen.
+## Abfangregeln (vor Schritt 2, nur Rudelangriff): Schutzengel und Rettung der Waldhexe;
+## Spiegelung folgt.
 
 
 static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true) -> KillEvent:
@@ -40,17 +41,28 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	return record
 
 
-## Abfangstufe: Ein Schutz dieser Nacht verhindert ausschließlich den Rudelangriff
-## (`NIGHT_KILL`, Quelle Rudel). Kein Tod, keine Reaktion, kein vorläufiger Siegstatus.
+## Abfangstufe: Schutz eines Schutzengels und Rettung einer Waldhexe dieser Nacht
+## verhindern ausschließlich den Rudelangriff (`NIGHT_KILL`, Quelle Rudel). Greifen beide,
+## entsteht genau ein `KillPrevented` mit beiden Quellen (`sources`, `guardian_ids`,
+## `rescuer_ids`); `protection` nennt die erste Quelle. Kein Tod, keine Reaktion, kein
+## vorläufiger Siegstatus.
 static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName) -> bool:
 	if cause != KillEvent.CAUSE_NIGHT_KILL or source_kind != KillEvent.SOURCE_PACK:
 		return false
-	var guardians := Protections.guardians_of(ctx.state, target_id, ctx.state.night_number)
-	if guardians.is_empty():
+	var night := ctx.state.night_number
+	var guardians := Protections.guardians_of(ctx.state, target_id, night)
+	var rescuers := WitchStep.rescuers_of(ctx.state, target_id, night)
+	if guardians.is_empty() and rescuers.is_empty():
 		return false
+	var sources: Array[StringName] = []
+	if not guardians.is_empty():
+		sources.append(RoleCatalog.SCHUTZENGEL)
+	if not rescuers.is_empty():
+		sources.append(RoleCatalog.WALDHEXE)
 	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {
-		"target_id": target_id, "cause": cause, "source_kind": source_kind, "protection": RoleCatalog.SCHUTZENGEL,
-		"guardian_id": guardians[0], "guardian_ids": guardians, "night": ctx.state.night_number,
+		"target_id": target_id, "cause": cause, "source_kind": source_kind, "protection": sources[0], "sources": sources,
+		"guardian_id": guardians[0] if not guardians.is_empty() else GameState.NO_TARGET, "guardian_ids": guardians,
+		"rescuer_ids": rescuers, "night": night,
 	})
 	return true
 

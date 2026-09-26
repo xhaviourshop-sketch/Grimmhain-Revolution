@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 4  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus
-const RULES_VERSION := &"grimmhain-core-0.4"
+const SCHEMA_VERSION := 5  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe)
+const RULES_VERSION := &"grimmhain-core-0.5"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -26,6 +26,7 @@ var night_plan: Array[StringName] = []  ## Schritte der laufenden Nacht in Reihe
 var next_night_step: int = 0            ## Index des nächsten nicht erledigten Nachtschritts
 var night_step_status: Array[StringName] = []  ## je Nachtschritt: pending | done | skipped
 var protections: Array[Protection] = []  ## bestätigte Schutzwahlen der laufenden Nacht
+var witch_actions: Array[WitchAction] = []  ## bestätigte Waldhexen-Entscheidungen der laufenden Nacht
 var reactions: Array[Reaction] = []     ## offene Reaktionen, erste = nächste
 var provisional_win: Array = []         ## vorläufiger Siegstatus seit dem letzten Tod (DR-14)
 var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (DR-14)
@@ -103,6 +104,9 @@ func to_dict() -> Dictionary:
 	var protection_list: Array = []
 	for p: Protection in protections:
 		protection_list.append(p.to_dict())
+	var witch_list: Array = []
+	for a: WitchAction in witch_actions:
+		witch_list.append(a.to_dict())
 	return {
 		"schema_version": schema_version,
 		"rules_version": String(rules_version),
@@ -120,6 +124,7 @@ func to_dict() -> Dictionary:
 		"next_night_step": next_night_step,
 		"night_step_status": status_list,
 		"protections": protection_list,
+		"witch_actions": witch_list,
 		"reactions": reaction_list,
 		"provisional_win": provisional_win.duplicate(true),
 		"win_check_pending": win_check_pending,
@@ -199,6 +204,13 @@ static func from_dict(d: Dictionary) -> GameState:
 		if protection == null:
 			return null
 		s.protections.append(protection)
+	for item: Variant in DictRead.get_array(d, "witch_actions"):
+		if not item is Dictionary:
+			return null
+		var action := WitchAction.from_dict(item)
+		if action == null:
+			return null
+		s.witch_actions.append(action)
 	for item: Variant in DictRead.get_array(d, "reactions"):
 		if not item is Dictionary:
 			return null

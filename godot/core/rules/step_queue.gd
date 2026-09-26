@@ -6,8 +6,10 @@ extends RefCounted
 ##   Morgenauflösung/Tag: erste offene Reaktion (Reaktionen aus der Nacht warten
 ##                        bis zur Morgenauflösung, DR-09)
 ## Schritt-IDs: "night:<Nacht>:<Index>:<Schritt>" bzw. "reaction:<Reaktions-ID>".
-## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" (nach Personen-ID)
-## vor dem Rudelschritt "pack".
+## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" (je Lage nach
+## Personen-ID) vor bzw. nach dem Rudelschritt "pack": Schutzengel → Rudel → Waldhexe.
+## Ein persönlicher Schritt, dessen Person inzwischen tot ist oder (Waldhexe) keine
+## Entscheidung mehr treffen kann, entfällt automatisch und protokolliert (`StepDropped`).
 
 const PACK := &"pack"
 const STATUS_PENDING := &"pending"
@@ -59,6 +61,7 @@ const KIND_REACTION := &"reaction"
 const SKIPPABLE_BY_KIND := {
 	PACK: true,                        # Rudel: kein Angriff, nur mit Grund
 	RoleCatalog.SCHUTZENGEL: false,    # Pflichtauswahl (DR-05)
+	RoleCatalog.WALDHEXE: false,       # Verzicht auf beide Tränke ist eine Antwort im eigenen Prompt (DR-06)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -75,19 +78,60 @@ static func is_skippable(step_id: String) -> bool:
 	return SKIPPABLE_BY_KIND.get(step_kind(step_id), false)
 
 
-## Nachtplan aus den zu Beginn der Nacht gültigen Rollen: persönliche Schritte lebender
-## Schutzengel nach Personen-ID, danach der Rudelschritt, solange mindestens eine lebende
-## Person als Wolf zählt (G-PH-6).
+## Nachtplan aus den zu Beginn der Nacht gültigen Rollen: persönliche Schritte vor dem
+## Rudel (Schutzengel) nach Personen-ID, dann der Rudelschritt, solange mindestens eine
+## lebende Person als Wolf zählt (G-PH-6), dann persönliche Schritte nach dem Rudel
+## (Waldhexe, nur mit mindestens einem unverbrauchten Trank) nach Personen-ID.
 static func build_night_plan(s: GameState) -> Array[StringName]:
-	var plan: Array[StringName] = []
-	for id: int in s.alive_ids():
-		if RoleCatalog.has_night_step(s.players[id].role_id):
-			plan.append(personal_step_key(s.players[id].role_id, id))
+	var plan := _personal_steps(s, RoleCatalog.BEFORE_PACK)
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
 			plan.append(PACK)
 			break
+	plan.append_array(_personal_steps(s, RoleCatalog.AFTER_PACK))
 	return plan
+
+
+static func _personal_steps(s: GameState, slot: StringName) -> Array[StringName]:
+	var steps: Array[StringName] = []
+	for id: int in s.alive_ids():
+		var p := s.players[id]
+		if RoleCatalog.night_step(p.role_id) != slot:
+			continue
+		if p.role_id == RoleCatalog.WALDHEXE and not WitchStep.has_any_potion(p):
+			continue
+		steps.append(personal_step_key(p.role_id, id))
+	return steps
+
+
+## Grund, warum der Nachtschritt `index` entfällt, oder &"" wenn er auszuführen ist.
+static func drop_reason(s: GameState, index: int) -> StringName:
+	var key := s.night_plan[index]
+	if key == PACK:
+		return &""
+	var actor := step_actor(key)
+	if not s.players.has(actor) or not s.players[actor].alive:
+		return &"actor_dead"
+	if String(key).begins_with(String(RoleCatalog.WALDHEXE) + ":") and not WitchStep.has_decision(s, actor):
+		return &"no_decision"
+	return &""
+
+
+## Lässt nicht ausführbare Nachtschritte am Anfang der Warteschlange deterministisch
+## entfallen (Status `skipped`, Ereignis `StepDropped`). Läuft nach jedem Befehl und vor
+## dem ersten Schritt der Nacht, nie bei offenem Prompt.
+static func drop_unactionable(ctx: RuleContext) -> void:
+	var s := ctx.state
+	if s.phase != Phase.NIGHT or s.pending_prompt != null:
+		return
+	while s.next_night_step < s.night_plan.size():
+		var reason := drop_reason(s, s.next_night_step)
+		if reason == &"":
+			return
+		var step_id := night_step_id(s, s.next_night_step)
+		s.night_step_status[s.next_night_step] = STATUS_SKIPPED
+		s.next_night_step += 1
+		ctx.emit(GameEvent.STEP_DROPPED, Visibility.GM, {"step_id": step_id, "reason": reason})
 
 
 ## Beginnt den (bereits validierten) erwarteten Schritt und öffnet seinen Prompt.
@@ -109,6 +153,9 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.actor_id = s.reactions[0].owner_id
 		prompt.allowed_ids.erase(prompt.actor_id)
 		prompt.cancellable = false
+	elif step_kind(step_id) == RoleCatalog.WALDHEXE:
+		# Waldhexe: mehrstufige, atomare Kette (WitchStep).
+		WitchStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == PACK:
 		# Rudelschritt: 0 Ziele = ausdrücklich „kein Opfer“; jede lebende Person (rules-register §2).
 		prompt.owner = PendingPrompt.OWNER_PACK

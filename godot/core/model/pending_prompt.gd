@@ -1,13 +1,16 @@
 class_name PendingPrompt
 extends RefCounted
 ## Offene Eingabe als Teil des Spielstands (03 §5.5, A-10). Genutzt für die
-## Opferwahl des Rudels und für Reaktionen. `partial` nimmt später Teilantworten
-## mehrstufiger Prompts auf (B-05).
+## Opferwahl des Rudels, Schutzengel, Reaktionen und die mehrstufige Kette der
+## Waldhexe (B-05): Dort stehen die bisherigen Teilantworten in `partial` und die
+## aktuelle Stufe in `stage` (WitchStep); einstufige Prompts haben `stage` = &"".
 
 const KIND_PICK_PLAYERS := &"pick_players"
 const OWNER_PACK := &"pack"
 const OWNER_REACTION := &"reaction"
 const OWNER_GUARD := &"schutzengel"
+const OWNER_WITCH := &"waldhexe"
+const KIND_WITCH_CHAIN := &"witch_chain"
 
 var id: int = 0
 var kind: StringName = KIND_PICK_PLAYERS
@@ -19,6 +22,7 @@ var allowed_ids: Array[int] = []
 var partial: Dictionary = {}
 var cancellable: bool = false
 var step_id: String = ""  ## Regelschritt, zu dem der Prompt gehört (BeginStep/SkipStep)
+var stage: StringName = &""  ## aktuelle Stufe eines mehrstufigen Prompts
 
 
 func to_dict() -> Dictionary:
@@ -33,6 +37,7 @@ func to_dict() -> Dictionary:
 		"partial": partial.duplicate(true),
 		"cancellable": cancellable,
 		"step_id": step_id,
+		"stage": String(stage),
 	}
 
 
@@ -51,4 +56,11 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 	p.partial = DictRead.get_dict(d, "partial").duplicate(true)
 	p.cancellable = DictRead.get_bool(d, "cancellable")
 	p.step_id = DictRead.get_string(d, "step_id")
+	p.stage = StringName(DictRead.get_string(d, "stage"))
+	# Die Stufe muss zu den gespeicherten Teilantworten passen, sonst wäre die Fortsetzung mehrdeutig.
+	if p.owner == OWNER_WITCH:
+		if not WitchStep.is_consistent(p):
+			return null
+	elif p.stage != &"":
+		return null
 	return p

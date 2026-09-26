@@ -43,6 +43,17 @@ static func answer_prompt(prompt_id: int, targets: Array) -> Command:
 	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "targets": targets})
 
 
+## Mehrstufiger Prompt (Waldhexe): Antwort auf die aktuelle Stufe `stage` mit Ja/Nein
+## bzw. Bestätigung (`choice`).
+static func answer_choice(prompt_id: int, stage: String, choice: bool) -> Command:
+	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "choice": choice})
+
+
+## Mehrstufiger Prompt: Antwort auf eine Auswahlstufe (z. B. Giftziel).
+static func answer_stage_targets(prompt_id: int, stage: String, targets: Array) -> Command:
+	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "targets": targets})
+
+
 static func end_night() -> Command:
 	return create(END_NIGHT)
 
@@ -82,9 +93,11 @@ static func cancel_prompt(prompt_id: int, reason: String) -> Command:
 
 
 ## payload: kind ("kill" | "execute" | "revive" | "set_role" | "set_role_field" |
-## "set_protection" | "remove_protection" | "declare_winner"), target_id,
-## trigger_effects (kill), role_id (set_role), field + value (set_role_field),
-## guardian_id (+ target_id) (set/remove_protection), winner_kind (declare_winner),
+## "set_protection" | "remove_protection" | "set_witch_potion" | "set_rescue" |
+## "remove_rescue" | "declare_winner"), target_id, trigger_effects (kill), role_id
+## (set_role), field + value (set_role_field), guardian_id (+ target_id)
+## (set/remove_protection), witch_id + potion + available (set_witch_potion),
+## witch_id (+ target_id) (set/remove_rescue), winner_kind (declare_winner),
 ## reason (Pflicht), confirmed = true (Pflicht, bestätigte Warnung).
 static func gm_correction(p_payload: Dictionary) -> Command:
 	return create(GM_CORRECTION, p_payload)
