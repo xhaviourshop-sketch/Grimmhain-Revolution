@@ -152,7 +152,7 @@ Dauer = sichtbarer Kern; Eingaben sind immer sofort möglich. „Diskret" = Effe
 
 ## 7. Asset-Produktionsliste
 
-Priorität: **P0** = Platzhalter-MVP spielbar, **P1** = Version 1.0, **P2** = danach. Alle Namen ASCII-kebab-case. Herkunft jedes Assets wird in `assets/PROVENANCE.md` protokolliert (Werkzeug, Datum, Autor, Lizenz, Quelle).
+Priorität: **P0** = Platzhalter-MVP spielbar, **P1** = Version 1.0, **P2** = danach. Alle Namen ASCII-kebab-case. Herkunft jedes Assets wird im Assetregister `../masterplan/asset-register.csv` protokolliert (Werkzeug, Datum, Autor, Lizenz, Quelle); Ablauf und Wellen in `../assets/PRODUCTION-PLAN.md`.
 
 | # | Asset | Anzahl | Spezifikation | Prio | Quelle |
 |---|---|---|---|---|---|

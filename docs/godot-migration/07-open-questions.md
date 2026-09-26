@@ -141,6 +141,8 @@ Priorität bei Gleichzeitigkeit, Vorschlag: **Solo vor Wölfen vor Dorf**; inner
 
 Zur Nachtmusik: Liegt eine Lizenz vor? Falls nein, wird sie für den MVP durch eine lizenzfreie oder beauftragte Schleife ersetzt.
 
+**Antwort zur Nachtmusik (PO, 2026-09-26):** Kein belastbarer Lizenz- oder Herkunftsnachweis; die Datei bleibt gesperrt und wird ersetzt (`../masterplan/DECISION-LOG.md`). Die Grundsatzfrage A/B/C ist weiter offen; Bestandsaufnahme in `../assets/INVENTORY.md`.
+
 **Empfehlung: B.**
 
 ---
