@@ -1,14 +1,18 @@
 extends SceneTree
-## Headless-Testrunner. Lädt alle Skripte tests/unit/test_*.gd, ruft deren
-## `test_*`-Methoden auf und beendet Godot mit Exit-Code 0 (grün) oder 1 (rot).
+## Headless-Testrunner. Lädt alle Skripte tests/unit/test_*.gd (Regelkern) und
+## tests/ui/test_*.gd (UI), ruft deren `test_*`-Methoden auf und beendet Godot mit
+## Exit-Code 0 (grün) oder 1 (rot).
+## Läuft in `_initialize`, also mit fertigem Szenenbaum: UI-Tests dürfen Frames abwarten
+## (`await`); synchrone Regelkern-Tests laufen unverändert. UI-Tests erhalten den Baum
+## über `attach_tree` und räumen nach jedem Test über `after_each` auf.
 ##
 ## Aufruf:  godot --headless --path godot -s res://tests/run_tests.gd
 ## Optional: -- --filter=<teilstring>   (nur passende Testdateien)
 
-const UNIT_DIR := "res://tests/unit"
+const TEST_DIRS: Array[String] = ["res://tests/unit", "res://tests/ui"]
 
 
-func _init() -> void:
+func _initialize() -> void:
 	var filter := ""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--filter="):
@@ -33,7 +37,11 @@ func _init() -> void:
 		methods.sort()
 		for method: String in methods:
 			var instance: TestCase = script.new()
-			instance.call(method)
+			if instance.has_method("attach_tree"):
+				instance.call("attach_tree", self)
+			await instance.call(method)
+			if instance.has_method("after_each"):
+				await instance.call("after_each")
 			total += 1
 			var label := "%s::%s" % [path.get_file().get_basename(), method]
 			if instance.assertions == 0:
@@ -54,11 +62,14 @@ func _init() -> void:
 
 func _collect_test_files(filter: String) -> Array[String]:
 	var result: Array[String] = []
-	var dir := DirAccess.open(UNIT_DIR)
-	if dir == null:
-		return result
-	for file: String in dir.get_files():
-		if file.begins_with("test_") and file.ends_with(".gd") and (filter == "" or file.contains(filter)):
-			result.append(UNIT_DIR.path_join(file))
-	result.sort()
+	for test_dir: String in TEST_DIRS:
+		var dir := DirAccess.open(test_dir)
+		if dir == null:
+			continue
+		var files: Array[String] = []
+		for file: String in dir.get_files():
+			if file.begins_with("test_") and file.ends_with(".gd") and (filter == "" or file.contains(filter)):
+				files.append(test_dir.path_join(file))
+		files.sort()
+		result.append_array(files)
 	return result
