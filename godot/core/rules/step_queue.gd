@@ -52,6 +52,29 @@ static func is_reaction_step(step_id: String) -> bool:
 	return step_id.begins_with("reaction:")
 
 
+## Schrittarten und ob `SkipStep` sie überspringen darf. Unbekannte Arten sind nie
+## überspringbar. Pflichtentscheidungen (Schutzengel, Reaktionen) werden beantwortet,
+## nicht übersprungen; `CancelPrompt` bleibt davon unberührt.
+const KIND_REACTION := &"reaction"
+const SKIPPABLE_BY_KIND := {
+	PACK: true,                        # Rudel: kein Angriff, nur mit Grund
+	RoleCatalog.SCHUTZENGEL: false,    # Pflichtauswahl (DR-05)
+	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
+}
+
+
+## Art eines Schritts aus seiner ID: "reaction", "pack" oder die Rolle eines persönlichen Schritts.
+static func step_kind(step_id: String) -> StringName:
+	if is_reaction_step(step_id):
+		return KIND_REACTION
+	var parts := step_id.split(":")
+	return StringName(parts[3]) if parts.size() >= 4 and parts[0] == "night" else &""
+
+
+static func is_skippable(step_id: String) -> bool:
+	return SKIPPABLE_BY_KIND.get(step_kind(step_id), false)
+
+
 ## Nachtplan aus den zu Beginn der Nacht gültigen Rollen: persönliche Schritte lebender
 ## Schutzengel nach Personen-ID, danach der Rudelschritt, solange mindestens eine lebende
 ## Person als Wolf zählt (G-PH-6).

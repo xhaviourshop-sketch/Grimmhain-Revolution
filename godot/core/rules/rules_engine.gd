@@ -160,8 +160,8 @@ static func _validate_step(s: GameState, c: Command) -> StringName:
 	if step_id != expected:
 		return &"step_out_of_order"
 	if c.type == Command.SKIP_STEP:
-		# Pflichtreaktionen werden beantwortet (auch mit Verzicht), nie übersprungen.
-		if StepQueue.is_reaction_step(step_id):
+		# Überspringbarkeit ist je Schrittart zentral in StepQueue festgelegt.
+		if not StepQueue.is_skippable(step_id):
 			return &"step_not_skippable"
 		if DictRead.get_string(c.payload, "reason").strip_edges() == "":
 			return &"reason_required"
