@@ -60,6 +60,10 @@ CI: `.github/workflows/godot-core-tests.yml` führt `godot/tests/run_all.sh` bei
 | `tests/unit/test_reactions.gd` | Reaktion eingereiht, blockiert andere Befehle, nicht überspringbar/abbrechbar, Verzicht, Fluch-Tod, Kettenreaktion und stabile Reihenfolge, Nachttod reagiert am Morgen, Save/Load mit offener Reaktion, Replay | AS-A03, B-06, DR-09 |
 | `tests/unit/test_win_status.gd` | vorläufiger Status nach jedem Tod, verbindliche Prüfung erst nach allen Reaktionen, `ConfirmWin` bei offener Reaktion abgelehnt, niemand lebt ohne automatischen Gewinner, Save/Load, Replay | AS-R35, AS-R36, DR-02, DR-14 |
 | `tests/unit/test_gm_correction.gd` | Bestätigung und Begründung Pflicht, alter/neuer Wert, Tod mit und ohne Folgen, Wiederbelebung, Rollenkorrektur, kein Undo, Save/Load, Replay | AS-G01, AS-G02, G-GM-1 |
+| `tests/unit/test_gm_execute.gd` | `execute` ohne Nominierung, Ursache `LYNCH`, Übersteuerung protokolliert, Validierung, Reaktion und DR-14, Save/Load, Replay | AS-G03, AS-N05, DR-03 |
+| `tests/unit/test_gm_role_field.gd` | nur `appears_as` korrigierbar, alter/neuer Wert, unbekannte Felder und ungültige Werte abgelehnt, Save/Load, Replay | AS-G05, DR-08 |
+| `tests/unit/test_gm_open_prompt.gd` | `kill`, `revive`, `set_role`, `set_role_field`, `execute` brechen offenen Prompt ab; keine toten Ziele; kein Kandidat neben offenem Prompt; `declare_winner` nur ohne Prompt; Save/Load, Replay | AS-G04, G-GM-3 |
+| `tests/unit/test_win_finalize_guard.gd` | kein Siegkandidat bei offenem Prompt oder offener Reaktion | DR-14, G-GM-3 |
 | `tests/unit/test_save_versions.gd` | Spielstand mit Schema 1 wird mit klarer Meldung abgelehnt | Versionierung |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |
 
@@ -132,7 +136,7 @@ Abhängigkeitsregel: `core/` benutzt nur sich selbst und Godot-Grundtypen (`RefC
 | `BeginStep` | `step_id` | beginnt genau den erwarteten nächsten Schritt (`RulesEngine.next_step_id`) und öffnet dessen Prompt. Fehler: `step_already_active`, `no_pending_step`, `step_out_of_order` |
 | `SkipStep` | `step_id`, `reason` (Pflicht) | überspringt den erwarteten Nachtschritt (begonnen oder nicht), Rudel = kein Angriff. Reaktionen: `step_not_skippable` |
 | `CancelPrompt` | `prompt_id`, `reason` (Pflicht) | schließt einen abbrechbaren Prompt; der Schritt gilt als nicht begonnen. Reaktions-Prompt: `prompt_not_cancellable` |
-| `GmCorrection` | `kind`, `target_id`, `reason` (Pflicht), `confirmed: true` (Pflicht) und je Art `trigger_effects` (kill), `role_id` (set_role), `winner_kind` (declare_winner) | `kill` (Ursache `GM_CORRECTION`, Folgen ausdrücklich gewählt), `revive`, `set_role`, `declare_winner` (village, wolves, solo, none → GAME_OVER) |
+| `GmCorrection` | `kind`, `target_id`, `reason` (Pflicht), `confirmed: true` (Pflicht) und je Art `trigger_effects` (kill), `role_id` (set_role), `field` + `value` (set_role_field), `winner_kind` (declare_winner) | `kill` (Ursache `GM_CORRECTION`, Folgen ausdrücklich gewählt); `execute` (nur am Tag vor Tagesende, ohne Nominierung, Ursache `LYNCH`, Quelle `gm`, `ExecutionConfirmed.gm_override = true`, Reaktionen und DR-14 normal); `revive`; `set_role`; `set_role_field` (nur Felder aus `CORRECTABLE_ROLE_FIELDS`, derzeit `appears_as` = Scheinrolle; Fehler `field_not_correctable`, `invalid_value`); `declare_winner` (village, wolves, solo, none → GAME_OVER, nur ohne offenen Prompt und ohne offene Reaktion). Jede Art außer `declare_winner` bricht einen offenen Prompt mit Grund `state_changed_by_gm_correction` ab |
 
 Schritt-IDs: `night:<Nacht>:<Index>:<Schritt>` (z. B. `night:1:0:pack`) und `reaction:<Reaktions-ID>`.
 
@@ -146,7 +150,7 @@ Ereignisse: `GameStarted` (gm), `RoleAssigned` (actor), `PhaseChanged` (public),
 2. Nach jedem Tod: vorläufiger Siegstatus (`WinStatusProvisional`, `provisional_win`), `win_check_pending = true`. Er beendet nichts.
 3. Fällig sind Reaktionen in `DAWN_RESOLUTION` und `DAY`; Reaktionen aus der Nacht warten bis zur Morgenauflösung (DR-09). Solange eine fällig ist, sind nur `BeginStep`, `AnswerPrompt`, `SkipStep`/`CancelPrompt` (beide mit klarem Fehler) und `GmCorrection` zulässig; alles andere, auch `ConfirmWin`, liefert `reaction_open`.
 4. `BeginStep("reaction:<id>")` öffnet den Prompt der ersten Reaktion; `AnswerPrompt` mit Ziel tötet (`HUNTER_SHOT`, Quelle = Besitzer), leer = Verzicht. Folgetode reihen weitere Reaktionen hinten ein.
-5. Ist die Warteschlange leer, wechselt die Morgenauflösung zu `DAY`. Am Ende des Befehls folgt die verbindliche Prüfung (`WinStatusFinal`). Genau eine erfüllte Bedingung → Kandidat (`WinDetected`) zur Bestätigung. Mehrere gleichzeitig (im Core-Slice nur, wenn niemand lebt) → kein Kandidat, `requires_gm_decision = true`; der Spielleiter erklärt das Ergebnis per `GmCorrection declare_winner` (DR-02).
+5. Ist die Warteschlange leer, wechselt die Morgenauflösung zu `DAY`. Am Ende des Befehls folgt die verbindliche Prüfung (`WinStatusFinal`), aber nur, wenn weder eine Reaktion noch ein Prompt offen ist. Genau eine erfüllte Bedingung → Kandidat (`WinDetected`) zur Bestätigung. Mehrere gleichzeitig (im Core-Slice nur, wenn niemand lebt) → kein Kandidat, `requires_gm_decision = true`; der Spielleiter erklärt das Ergebnis per `GmCorrection declare_winner` (DR-02).
 
 ## Spielstand
 
@@ -175,7 +179,9 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 9. **Seed** muss zwischen 0 und 2^53−1 liegen, damit er in JSON verlustfrei bleibt.
 10. **`StartNight` beginnt den ersten Nachtschritt selbst**, damit bestehende Befehlsfolgen gültig bleiben. Jeder weitere Schritt, jede Reaktion und jeder erneute Beginn nach `CancelPrompt` verlangt `BeginStep`.
 11. **Abbrechbar** ist der Rudel-Prompt; Reaktions-Prompts sind Pflichtentscheidungen und weder abbrechbar noch überspringbar (Verzicht ist eine Antwort).
-12. **`GmCorrection` ist während fälliger Reaktionen erlaubt** (Spielleiterautorität, G-GM-1), aber nicht bei offenem Siegkandidaten: erst `ConfirmWin` oder `RejectWin`. `revive` und `set_role` stoßen ebenfalls eine verbindliche Siegprüfung an. `set_role` bietet keine Testrollen an; die Scheinrolle des Trugbilderwolfs ist nicht korrigierbar (DECISION-LOG).
+12. **`GmCorrection` ist während fälliger Reaktionen erlaubt** (Spielleiterautorität, G-GM-1), aber nicht bei offenem Siegkandidaten: erst `ConfirmWin` oder `RejectWin`. `revive` und `set_role` stoßen ebenfalls eine verbindliche Siegprüfung an. `set_role` und `set_role_field` bieten keine Testrollen an.
+14. **Korrektur und offener Prompt** (DECISION-LOG, Korrekturrunde): Jede Korrektur am Zustand einer Person bricht einen offenen Prompt ab (`PromptCancelled`, Grund `state_changed_by_gm_correction`), auch einen Reaktions-Prompt; die Reaktion bleibt offen, der Schritt ist wieder der erwartete Schritt und wird mit `BeginStep` neu begonnen. So enthält kein Prompt veraltete Ziele. Eine bereits bestätigte Rudelwahl (`pack_target_id`) wird dagegen nicht zurückgesetzt; trifft sie eine inzwischen tote Person, protokolliert die Morgenauflösung `KillIgnored`.
+15. **`execute` am Tag** setzt den Tag auf „Hinrichtung erfolgt“, auch nach einer bereits bestätigten Hinrichtung (Korrekturfall); nach `EndDay` ist sie nicht mehr möglich.
 13. **Testrolle `test-sensentraeger`** (Fraktion Dorf, Fluch-Reaktion) ist nur mit `StartGame.test_mode = true` zulässig und keine Produktionsversion des Sensenträgers.
 
 ## Abgrenzung zu späteren Stufen

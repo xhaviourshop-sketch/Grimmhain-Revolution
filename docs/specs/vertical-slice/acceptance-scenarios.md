@@ -209,7 +209,7 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 
 **AS-R12 · Wiederholte Prüfung**
 - Given: wie AS-R11; Nacht 2 prüft D erneut B.
-- Then: ermittelt erneut `waldhexe`; die Scheinrolle ist während der ganzen Partie unverändert, auch eine Spielleiterkorrektur bietet keine Änderung an.
+- Then: ermittelt erneut `waldhexe`; ohne Spielleiterkorrektur bleibt die Scheinrolle während der ganzen Partie unverändert (Korrektur: AS-G05).
 
 **AS-R13 · Übersteuerte Anzeige**
 - Given: ermittelt ist `waldhexe`.
@@ -262,7 +262,7 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 
 ### Lehrling (DR-11)
 
-Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. Grundlage: `rules-register.md` §9, Besetzung B9L.
+Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L16 ersetzt. Grundlage: `rules-register.md` §9, Besetzung B9L.
 
 **AS-L01 · Verdeckte Auswahl der drei Personen**
 - Given: B9L, Nacht 1, Schritt Lehrling aktiv.
@@ -303,7 +303,7 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 - When: Nacht 2: E vergiftet D im Hexenschritt (3.4).
 - Then: L erbt `das-orakel` sofort, erhält in Nacht 2 aber keinen Orakel-Schritt; der Orakel-Schritt von D wird mit Grund „tot" angezeigt. In Nacht 3 erhält L den Orakel-Schritt mit voller Nutzung.
 
-**AS-L09 · Fraktion sofort, Fähigkeiten ab der folgenden Nacht**
+**AS-L09 · Fraktion sofort, aktive Nachtfähigkeit ab der folgenden Nacht**
 - Given: B9L; L hat in Nacht 1 `werwolf` gewählt (Bindung an A).
 - When: A wird an Tag 1 hingerichtet.
 - Then: L hat `role_id` `werwolf`, Fraktion Werwölfe und zählt sofort als Wolf; die Siegprüfung nach der Hinrichtung rechnet L als Wolf. Die Nachtfähigkeit (Rudel) ist erstmals in Nacht 2 verfügbar.
@@ -332,6 +332,11 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 - Given: AS-L07 (L hat an Tag 1 `waldhexe` geerbt, Nacht 2 noch nicht begonnen).
 - When: speichern, laden, `StartNight`.
 - Then: fachlicher Hash nach dem Laden identisch; in Nacht 2 erhält L den Waldhexe-Schritt mit beiden Tränken, genau wie ohne Speichern.
+
+**AS-L16 · Todesreaktion der geerbten Rolle gilt sofort**
+- Given: B9L mit G als `sensentraeger` statt `dorfbewohner`; L hat in Nacht 1 `sensentraeger` gewählt (Bindung an G).
+- When: G wird an Tag 1 hingerichtet (L erbt `sensentraeger`); G reagiert und verflucht L; L stirbt noch an Tag 1, vor Nacht 2.
+- Then: Der Tod von L reiht sofort eine eigene Sensenträger-Reaktion für L ein; sie wird noch an Tag 1 abgefragt (DR-09). Die geerbte Todesreaktion gilt ab dem Erbe, nicht erst ab der folgenden Nacht.
 
 **AS-L15 · Deterministisches Replay und Undo des Lehrling-Ablaufs**
 - Given: B9L, Seed 4711; Befehlsliste mit Spielleiterauswahl (C, F, G), Lehrlingswahl, Tod der gebundenen Person, Erbe, Aktivierung in der folgenden Nacht.
@@ -394,7 +399,7 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 
 **AS-R31 · Hinrichtung ohne Nominierung**
 - Given: S wurde an diesem Tag nicht nominiert.
-- When: Der Spielleiter richtet S per Übersteuerung mit Warnung und Begründung hin (DR-03).
+- When: Der Spielleiter richtet S per `GmCorrection execute` mit Bestätigung und Begründung hin (DR-03).
 - Then: keine Spiegelung; S stirbt mit `LYNCH`; die App fragt keine nominierende Person nachträglich ab (DR-13); die Übersteuerung ist mit Grund protokolliert.
 
 ## 4. Nominierung (Stufe V, Validierung bereits in C)
@@ -421,7 +426,7 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 **AS-N05 · Hinrichtung nur nach Nominierung**
 - Given: F wurde an diesem Tag nicht nominiert.
 - When: `DecideExecution(F)`.
-- Then: abgelehnt mit Grund; per Übersteuerung mit Warnung, Begründung und Protokoll möglich.
+- Then: abgelehnt mit Grund; per `GmCorrection execute` mit Bestätigung, Begründung und Protokoll möglich (AS-G03).
 
 ## 5. Sitztausch (Stufe V)
 
@@ -466,6 +471,21 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 - When: wie AS-G01 mit `trigger_effects=false`.
 - Then: G stirbt; keine Reaktion; Protokoll vermerkt „ohne Folgen".
 
+**AS-G03 · Hinrichtung ohne Nominierung per Übersteuerung** (Kern umgesetzt)
+- Given: Tag 1, G `sensentraeger` lebt und wurde nicht nominiert; 2 Wölfe, 3 Nicht-Wölfe inklusive G.
+- When: `GmCorrection(execute G)` mit Bestätigung und Begründung.
+- Then: G stirbt mit `LYNCH`, Quelle Spielleiter; `GmCorrected{kind: execute}` und `ExecutionConfirmed{gm_override: true}` protokolliert; die Hinrichtung des Tages gilt als erfolgt. Die Reaktion von G wird eingereiht, vorläufiger Siegstatus „Werwölfe“ (2:2), verbindliche Prüfung erst nach der Reaktion (DR-14).
+
+**AS-G04 · Korrektur bei offenem Prompt** (Kern umgesetzt)
+- Given: Nacht 1, Rudel-Prompt offen, F ist wählbar.
+- When: `GmCorrection(kill F)` (ebenso `revive`, `set_role`, `set_role_field`, am Tag `execute` bei offenem Reaktions-Prompt).
+- Then: Der offene Prompt wird mit Grund `state_changed_by_gm_correction` abgebrochen; der Rudelschritt ist erneut der erwartete Schritt; der neu begonnene Prompt enthält F nicht mehr. Ein durch die Korrektur ausgelöster Siegkandidat existiert nie neben einem offenen Prompt.
+
+**AS-G05 · Scheinrolle korrigieren** (Kern: Mechanik am Feld `appears_as`)
+- Given: B6, Scheinrolle von B ist `waldhexe`.
+- When: `GmCorrection(set_role_field B, field=appears_as, value=schutzengel)` mit Bestätigung und Begründung.
+- Then: Scheinrolle ist `schutzengel`; Protokoll mit altem und neuem Wert. Andere Felder (`role_id`, `faction`, `counts_as_wolf`, …) und ungültige Werte werden abgelehnt.
+
 ## 8. Vollständige Beispielrunde (Stufe V)
 
 **AS-E01 · Setup bis Sieg**
@@ -481,15 +501,15 @@ Die früheren Szenarien AS-R21 bis AS-R23 sind durch AS-L01 bis AS-L15 ersetzt. 
 |---|---|---|
 | DR-01 Rollen-IDs | Register §1–§11 (IDs in Überschriften), §12 | AS-C13 |
 | DR-02 gleichzeitige Siege, niemand lebt | Register G-SIEG-5; Ablauf §9.1, §9.6 | AS-R34, AS-R35 |
-| DR-03 Nominierung | Register G-TAG-2, G-TAG-4; Ablauf §6.1, §7.6 | AS-C11, AS-N01–AS-N05 |
+| DR-03 Nominierung | Register G-TAG-2, G-TAG-4; Ablauf §6.1, §7.6 | AS-C11, AS-N01–AS-N05, AS-G03 |
 | DR-04 öffentliche Todesinformation | Register G-TOD-5; Ablauf §0.2, §1.5, §4 | AS-M01, AS-M02, AS-M03, AS-L05 |
 | DR-05 Schutzengel | Register §3; Ablauf §3, §4, §8 | AS-R01–AS-R04, AS-R32 |
 | DR-06 Waldhexe | Register §6; Ablauf §3 | AS-R05–AS-R08, AS-R39 |
 | DR-07 Orakel | Register §4 | AS-R09, AS-R10, AS-R33 |
-| DR-08 Trugbilderwolf | Register §5, G-RNG-1; Ablauf §1.5a, §3 | AS-R11–AS-R14 |
+| DR-08 Trugbilderwolf | Register §5, G-RNG-1, G-GM-3; Ablauf §1.5a, §3 | AS-R11–AS-R14, AS-G05 |
 | DR-09 Sensenträger | Register §7, G-TOD-4; Ablauf §4, §7.4 | AS-R15–AS-R17, AS-R37 |
 | DR-10 Wolfskind | Register §8, §2 (Rudel); Ablauf §8 | AS-R18–AS-R20, AS-R38 |
-| DR-11 Lehrling | Register §9, G-RNG-1; Ablauf §3, §8 | AS-L01–AS-L15 |
+| DR-11 Lehrling | Register §9, G-RNG-1; Ablauf §3, §8 | AS-L01–AS-L16 |
 | DR-12 Manipulator | Register §10; Ablauf §9.2 | AS-R25, AS-R26, AS-E01 |
 | DR-13 Spiegelwolf ohne Nominierung | Register §11; Ablauf §7.6 | AS-R31 |
 | DR-14 Siegprüfung und Reaktionen | Register G-SIEG-6; Ablauf §4 Schritt 5, §7.5, §9.1 | AS-R26, AS-R36, AS-A03 |

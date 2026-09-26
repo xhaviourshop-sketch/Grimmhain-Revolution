@@ -46,7 +46,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 | 1.2 | Sitzreihenfolge per Drag-and-drop festlegen | – | `seat_order` |
 | 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen je Rolle nur, wo die Rolle eine eigene festlegt (`dorfbewohner` und `werwolf` haben keine, damit 6 bis 24 Personen allein mit ihnen spielbar sind; `../../masterplan/DECISION-LOG.md` 26.09.2026; die Legacy-Grenzen aus `setup.html` gelten nicht), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"; der Core-Slice ohne Einzelsiegrolle verlangt nur Dorf und Werwölfe). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
 | 1.4 | Verteilung wählen: zufällig oder manuell | zufällig: Ziehung über `SeededRng` | Seed, Zuordnung Person → Rolle |
-| 1.5a | Ist `trugbilderwolf` im Rollenpool: Scheinrolle festlegen (DR-08) | bietet nur Rollen an, die nicht als Wolf zählen; die Scheinrolle bleibt während der Partie unverändert | Scheinrolle |
+| 1.5a | Ist `trugbilderwolf` im Rollenpool: Scheinrolle festlegen (DR-08) | bietet nur Rollen an, die nicht als Wolf zählen; die Scheinrolle ändert sich danach nur per bestätigter Spielleiterkorrektur | Scheinrolle |
 | 1.5 | Option `Rolle beim Tod aufdecken: Ja/Nein` wählen (DR-04) | speichert die Option als Teil des Setups; sie gilt für die ganze Partie | `reveal_role_on_death` |
 | 1.6 | Setup bestätigen → `StartGame` | friert `rules_version` ein, legt ersten Checkpoint an | vollständiger Anfangszustand |
 
@@ -131,7 +131,7 @@ Regeln des Ablaufs:
 | 7.3 | Bei Bestätigung läuft die Tötungs-Pipeline: Spiegelung (`spiegelwolf`, erste Hinrichtung, nur mit gespeicherter Nominierung), sonst Tod mit Ursache `LYNCH`, Quelle = Dorf/Hinrichtung. |
 | 7.4 | Folgen ohne Entscheidung (Wolfskind, Lehrling), dann Reaktionen sofort (Sensenträger, DR-09). |
 | 7.5 | Vorläufiger Siegstatus nach jedem Tod, verbindliche Prüfung nach allen Reaktionen (DR-14, Abschnitt 9). |
-| 7.6 | Eine Hinrichtung einer an diesem Tag nicht nominierten Person ist nur per Übersteuerung mit Warnung, Begründung und Protokoll möglich (DR-03). Trifft sie den Spiegelwolf, gibt es keine Spiegelung; er stirbt normal (DR-13). |
+| 7.6 | Eine Hinrichtung einer an diesem Tag nicht nominierten Person ist nur per Übersteuerung mit Warnung, Begründung und Protokoll möglich (DR-03, `GmCorrection execute`, Ursache `LYNCH`, Reaktionen und Siegprüfung normal). Trifft sie den Spiegelwolf, gibt es keine Spiegelung; er stirbt normal (DR-13). |
 
 Gespeichert werden ausschließlich die bestätigte Todesaktion (Person, Aktion, Ursache, Quelle, Zeitpunkt) und ihre Folgeereignisse. Andere Todesarten am Tag laufen als `GmCorrection` mit ausdrücklicher Ursache.
 
@@ -141,7 +141,7 @@ Gespeichert werden ausschließlich die bestätigte Todesaktion (Person, Aktion, 
 
 - Einmalschritte (`wolfskind`, `lehrling`) der ersten Nacht entfallen ab Nacht 2.
 - Ein verwandeltes Wolfskind nimmt ab der Nacht nach seiner Verwandlung am Rudelschritt teil (DR-10).
-- Hat der Lehrling seit der letzten Nacht eine Rolle geerbt, sind deren Nachtfähigkeiten ab diesem `StartNight` erstmals verfügbar (DR-11): Er erhält die Nachtschritte mit zurückgesetzten Einsätzen; eine geerbte Wolfsrolle wacht mit dem Rudel. Rolle, Fraktion und Siegberücksichtigung hatten bereits beim Erbe gewechselt.
+- Hat der Lehrling seit der letzten Nacht eine Rolle geerbt, sind deren aktiv auszuführende Nachtfähigkeiten ab diesem `StartNight` erstmals verfügbar (DR-11): Er erhält die Nachtschritte mit zurückgesetzten Einsätzen; eine geerbte Wolfsrolle wacht mit dem Rudel. Rolle, Fraktion, passive Eigenschaften, Siegbedingungen und Todesreaktionen galten bereits ab dem Erbe.
 - Hat der Lehrling `wolfskind` geerbt, erhält er in dieser Nacht den Wolfskind-Schritt (0.9) und wählt ein neues Vorbild; er bleibt unverwandelt, bis dieses Vorbild stirbt.
 - Lebt kein `werwolf`, aber ein anderer Wolf, bleibt der Rudelschritt bestehen (`rules-register.md` G-PH-6).
 
@@ -154,7 +154,8 @@ Gespeichert werden ausschließlich die bestätigte Todesaktion (Person, Aktion, 
 | 9.3 | `ConfirmWin` setzt Phase GAME_OVER und speichert Sieger, Grund und Befehlsindex. |
 | 9.4 | `RejectWin(reason)` protokolliert die Ablehnung; die Partie läuft weiter. Ein Kandidat wird erst nach einem weiteren Tod erneut berechnet und angeboten. |
 | 9.5 | Undo hinter `ConfirmWin` ist erlaubt (Korrektur, `03` §6.3). |
-| 9.6 | Der Spielleiter kann jederzeit per Übersteuerung einen Sieger erklären (Warnung, Protokoll). |
+| 9.6 | Der Spielleiter kann per Übersteuerung einen Sieger erklären (Warnung, Protokoll), sofern kein Prompt und keine Reaktion offen ist. |
+| 9.7 | Jede Spielleiterkorrektur am Zustand einer Person bricht einen offenen Prompt mit Grund `state_changed_by_gm_correction` ab; der Schritt kann danach neu begonnen werden. Ein Siegkandidat entsteht nie neben einem offenen Prompt oder einer offenen Reaktion (`rules-register.md` G-GM-3). |
 
 ## 10. Unterbrechung und Wiederaufnahme
 
