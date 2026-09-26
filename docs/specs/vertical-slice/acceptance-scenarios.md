@@ -223,6 +223,8 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 
 ### Sensenträger (DR-09)
 
+Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_sensentraeger.gd`): AS-R15, AS-R16, AS-R17, AS-R37, AS-R40, AS-R41, AS-G01, AS-G02. AS-R37 nutzt bis zur Waldhexe einen Nachttod per Spielleiterkorrektur statt Gift.
+
 **AS-R15 · Reaktion nach Nachttod**
 - Given: Sensenträger G wird nachts vom Rudel getötet.
 - When: Morgenauflösung.
