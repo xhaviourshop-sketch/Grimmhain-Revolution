@@ -461,6 +461,12 @@ msgstr "Spiegelwolf"
 msgid "ui.role.spiegelwolf.short"
 msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die nominierende Person."
 
+msgid "ui.role.siegreicher_wolf.name"
+msgstr "Siegreicher Wolf"
+
+msgid "ui.role.siegreicher_wolf.short"
+msgstr "Wolf im Rudel, zählt lebend für den Wolfssieg wie zwei Wölfe."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06) sowie die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie `siegreicher-wolf` (Rollenaudit).
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -39,6 +39,10 @@ const MANIPULATOR := &"manipulator"
 ## Lehrling / Apprentice (rules-register.md §9, DR-11): beginnt im Dorf, wählt verdeckt einen
 ## Meister aus drei Rollenoptionen und erbt dessen Rolle bei dessen Tod (ApprenticeRules).
 const LEHRLING := &"lehrling"
+## Siegreicher Wolf / Victorious Wolf (Rollentext, docs/role-migration/10-next-decisions.md):
+## Werwölfe, zählt als Wolf, kein eigener Schritt (Teil des Rudels); zählt, solange er lebt,
+## in der Wolfsparität wie zwei Wölfe (`parity_weight`, WinRules).
+const SIEGREICHER_WOLF := &"siegreicher-wolf"
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
 const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhexe:heal", "waldhexe:poison", "spiegelwolf:mirror"]
@@ -59,6 +63,7 @@ const ROLES := {
 	SPIEGELWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SPIEGELWOLF},
 	TRUGBILDERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": TRUGBILDERWOLF, "requires_appearance": true},
 	SENSENTRAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SENSENTRAEGER, "death_reaction": Reaction.KIND_CURSE},
+	SIEGREICHER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SIEGREICHER_WOLF, "parity_weight": 2},
 }
 
 
@@ -98,6 +103,12 @@ static func requires_appearance(role_id: StringName) -> bool:
 ## (also weder `werwolf` noch `trugbilderwolf`); sie muss nicht in der Partie vorkommen.
 static func is_valid_appearance(role_id: StringName) -> bool:
 	return has_role(role_id) and not counts_as_wolf(role_id)
+
+
+## Gewicht einer lebenden Person dieser Rolle in der Wolfsparität (G-SIEG-2), sonst 1.
+## Nur für Rollen, die als Wolf zählen; Personenzählungen (DR-12) nutzen es nie.
+static func parity_weight(role_id: StringName) -> int:
+	return (ROLES[role_id] as Dictionary).get("parity_weight", 1)
 
 
 ## Höchstzahl je Partie oder UNLIMITED, wenn die Rolle keine eigene Grenze hat.

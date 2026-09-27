@@ -6,7 +6,7 @@ extends RefCounted
 ##                dann entsteht aus dem endgültigen Zustand die gesamte Kandidatenmenge
 ## Bedingungen (stabile Reihenfolge: Dorf, Werwölfe, Manipulatoren nach Personen-ID):
 ##   Dorf:        kein lebender Mensch zählt als Wolf.
-##   Werwölfe:    lebende Wölfe ≥ lebende Nicht-Wölfe.
+##   Werwölfe:    Paritätswert lebender Wölfe ≥ lebende Nicht-Wölfe (Siegreicher Wolf zählt 2).
 ##   Manipulator: genau drei Personen leben, er lebt und wurde in der Partie nie nominiert;
 ##                je Manipulator ein eigener personenbezogener Kandidat.
 ## DR-02: Mehrere gleichzeitige Kandidaten ohne automatische Priorität; der Spielleiter
@@ -17,16 +17,19 @@ extends RefCounted
 ## Alle erfüllten Siegbedingungen: [{kind, reason_key, reason_args, beneficiary_ids}].
 static func evaluate(state: GameState) -> Array:
 	var alive := state.alive_ids()
-	var wolves := 0
+	var living_wolves := 0
+	var wolves := 0  # Paritätswert: Siegreicher Wolf zählt doppelt (RoleCatalog.parity_weight)
 	var non_wolves := 0
 	for id: int in alive:
-		if state.players[id].counts_as_wolf:
-			wolves += 1
+		var p: Player = state.players[id]
+		if p.counts_as_wolf:
+			living_wolves += 1
+			wolves += RoleCatalog.parity_weight(p.role_id)
 		else:
 			non_wolves += 1
 	var args := {"wolves": wolves, "non_wolves": non_wolves}
 	var results: Array = []
-	if wolves == 0:
+	if living_wolves == 0:
 		results.append({"kind": String(Faction.VILLAGE), "reason_key": String(WinCandidate.REASON_NO_WOLVES_ALIVE), "reason_args": args.duplicate(), "beneficiary_ids": []})
 	if wolves >= non_wolves:
 		results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})

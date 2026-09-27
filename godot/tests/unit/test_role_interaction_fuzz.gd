@@ -13,8 +13,8 @@ extends TestCase
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger"]
-const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf"]
+	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf"]
+const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 70
 const MAX_COMMANDS := 160

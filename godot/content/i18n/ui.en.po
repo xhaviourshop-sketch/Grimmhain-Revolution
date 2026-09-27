@@ -461,6 +461,12 @@ msgstr "Mirror Wolf"
 msgid "ui.role.spiegelwolf.short"
 msgstr "Pack wolf that once turns an execution onto the nominator."
 
+msgid "ui.role.siegreicher_wolf.name"
+msgstr "Victorious Wolf"
+
+msgid "ui.role.siegreicher_wolf.short"
+msgstr "Pack wolf that counts as two wolves toward the wolf win while alive."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

@@ -3,7 +3,7 @@ extends UiTestCase
 ## 86 bis 89). Bedienung über Buttons wie Maus und Touch; Vorbereitung über die Anwendungsschicht.
 
 const ROLE_IDS: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf"]
+		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf"]
 
 
 func _dialog(shell: Control) -> Control:
@@ -173,7 +173,7 @@ func test_role_rows_show_catalog_data() -> void:
 		return
 	var screen := await _to_roles(shell)
 	var rows := _role_rows(screen)
-	assert_eq(rows.size(), 11, "elf Rollenzeilen")
+	assert_eq(rows.size(), RoleCatalog.ROLES.size(), "eine Zeile je Katalogrolle")
 	var seen: Array[String] = []
 	var faction_order: Array[String] = []
 	for row: Control in rows:
@@ -194,7 +194,7 @@ func test_role_rows_show_catalog_data() -> void:
 	seen.sort()
 	var expected := ROLE_IDS.duplicate()
 	expected.sort()
-	assert_eq(seen, expected, "genau die elf Katalogrollen")
+	assert_eq(seen, expected, "genau die Katalogrollen")
 	assert_eq(faction_order, ["village", "wolves", "solo"] as Array[String], "Gruppen Dorf, Werwölfe, Einzelsieg")
 	for faction: String in faction_order:
 		var heading := find_node(screen, "FactionHeading_%s" % faction) as Label
@@ -356,7 +356,7 @@ func test_role_list_scrolls_completely() -> void:
 	var screen := await _to_roles(shell)
 	var scroll := find_node(screen, "RoleScroll") as ScrollContainer
 	var rows := _role_rows(screen)
-	if scroll == null or rows.size() != 11:
+	if scroll == null or rows.size() != RoleCatalog.ROLES.size():
 		fail("Rollenliste fehlt")
 		return
 	scroll.scroll_vertical = 0
