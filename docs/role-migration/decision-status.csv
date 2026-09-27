@@ -3,7 +3,7 @@ RM-DR-001;nein;alle;E;"rules-register G-ID-3; DECISION-LOG Lehrling (frische Ein
 RM-DR-002.1;ja;Informationsrollen mit Rollenergebnis;E;"DR-07; DECISION-LOG Orakel (Informationsmodell)";Erscheinung -> werwolf bei counts_as_wolf -> Rolle
 RM-DR-002.2;ja;Siegzählung;E;"rules-register G-SIEG-1, G-SIEG-2; G-ID-2";Sieg zählt counts_as_wolf, nicht Erscheinung
 RM-DR-002.3;ja;andere Informationsarten und Wirkungen;S;;erst mit K2, K3, K7
-RM-DR-003;nein;Sitznachbarschaft;S;G-ID-1 legt nur Trennung Person/Sitz fest;erst mit K3
+RM-DR-003;nein;Sitznachbarschaft;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn links und rechts
 RM-DR-004;nein;Wolfsangriff;S;DR-05 gilt nur für den Schutzengel;erst mit K4, K5, K11
 RM-DR-005;nein;Durchdringung;S;;erst mit K5, K11
 RM-DR-006;nein;fehlende Siegbedingungen;S;07 Q4 offen;erst mit K9, K10, K11, K15
@@ -23,7 +23,7 @@ RM-DR-016.1;ja;Setup-Obergrenze je Rolle;S;DECISION-LOG Core-Slice Rollenanzahl:
 RM-DR-016.2;ja;Kopien während der Partie und Zustand je Person;T;"G-ID-3; DR-11; GmCorrection set_role";"Mehrfachkopien entstehen unabhängig vom Setup; Verhalten folgt aus bestehenden Regeln"
 RM-DR-017;nein;nächste Rolleneinheit;E;"Auftrag des Nutzers 27.09.2026 (alle 72 Rollen prüfen)";Auftrag Rollenaudit: alle 72 Rollen
 RM-DR-101.1;ja;loki;S;;
-RM-DR-102.1;ja;nachtwaechter;S;;
+RM-DR-102.1;ja;nachtwaechter;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
 RM-DR-103.1;ja;rattenfaenger;S;;
 RM-DR-103.2;ja;rattenfaenger;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
 RM-DR-104.1;ja;die-ewigen;S;;
@@ -59,7 +59,7 @@ RM-DR-114.4;ja;der-weise;S;;
 RM-DR-115.1;ja;verdammniswaechter;S;;
 RM-DR-115.2;ja;verdammniswaechter;S;;
 RM-DR-115.3;ja;verdammniswaechter;S;;
-RM-DR-116.1;ja;wahnsinniger-kutscher;S;;
+RM-DR-116.1;ja;wahnsinniger-kutscher;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
 RM-DR-117.1;ja;korrupter-richter;S;;
 RM-DR-117.2;ja;korrupter-richter;S;;
 RM-DR-117.3;ja;korrupter-richter;S;;
@@ -144,13 +144,13 @@ RM-DR-143.2;ja;kartenschlucker;S;;
 RM-DR-144.1;ja;hades;S;;
 RM-DR-144.2;ja;hades;S;;
 RM-DR-144.3;ja;hades;S;;
-RM-DR-145.1;ja;doktor;S;;
+RM-DR-145.1;ja;doktor;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";Einzelsieg ist ein Team
 RM-DR-145.2;ja;doktor;E;"rules-register G-ID-2; DR-10; DECISION-LOG Lehrling (Fraktion wechselt sofort)";Siegfraktion ist ein aktueller Personenwert
 RM-DR-146.1;ja;faehrtenleser;Q;;„links“ am Tisch gegenüber Bildschirm ist ohne Gerät nicht prüfbar
 RM-DR-146.2;ja;faehrtenleser;S;;
 RM-DR-146.3;ja;faehrtenleser;S;;
-RM-DR-147.1;ja;waldlaeufer;S;;
-RM-DR-147.2;ja;waldlaeufer;S;;
+RM-DR-147.1;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";jede Nacht
+RM-DR-147.2;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";lebende Personen mit counts_as_wolf, einfach
 RM-DR-148.1;ja;schutzgeist;S;;
 RM-DR-148.2;ja;schutzgeist;S;;
 RM-DR-148.3;ja;schutzgeist;S;Konflikt mit rules-register G-PH-2 (nur lebende Rolleninhaber handeln);bei Umsetzung ausdrücklich als Ausnahme entscheiden

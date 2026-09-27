@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 4 | 20 |
+| entschieden | 9 | 26 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 65 | 161 |
+| später | 60 | 155 |
 | quellenprüfung | 4 | 4 |
 | **gesamt** | **75** | **188** |
 
@@ -291,7 +291,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `nachtwaechter`; Wechselwirkung laut Dossier: alle Wolfs- und Solorollen; Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Wolfskind (verwandelt), Doppelspion (Solo, …
 - **Belege:** [Dossier](dossiers/village-1.md#nachtwaechter); RM-C-085 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003.
-- **RM-DR-102.1 · Nachbarbegriff** · Status: später (K3)
+- **RM-DR-102.1 · Nachbarbegriff** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: nächster lebender Sitz
   - Option B: direkter Sitz
   - Auswirkung: Balance: leicht; Umsetzung: Sitznachbarschafts-Funktion
@@ -597,7 +597,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `wahnsinniger-kutscher`; Wechselwirkung laut Dossier: Loki (Kette), Sensenträger/Besessener Wolf (Folgereaktionen), Rudelvater/Nekromant/Kartenschlucker/Hades/Parasit (Schilde), Henker (`finalizeLynch`), Feuerteufel/Voodoo-Priester/Kopfgeldjäger (ausgelassene …
 - **Belege:** [Dossier](dossiers/village-1.md#wahnsinniger-kutscher); RM-C-103 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-003.
-- **RM-DR-116.1 · Nachbarbegriff** · Status: später (K3)
+- **RM-DR-116.1 · Nachbarbegriff** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: direkte Sitze (DE, Code)
   - Option B: nächste Lebende (EN, 07)
   - Auswirkung: Balance: B tötet spät im Spiel zuverlässiger zwei; Umsetzung: gleiche Sitznachbarschafts-Funktion wie Nachtwächter
@@ -1297,7 +1297,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `doktor`; Wechselwirkung laut Dossier: Wolfskind, Lehrling, Seelentauscher, Dämonischer Wolf, alle Solo-Rollen, Doppelspion, Trugbilderwolf (Erscheinung vs. Fraktion), Rotkäppchen …
 - **Belege:** [Dossier](dossiers/village-3.md#doktor); RM-C-151, RM-C-152 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-145.1 · Zwei Solo-Rollen** · Status: später (K2)
+- **RM-DR-145.1 · Zwei Solo-Rollen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: Solos bilden kein Team (immer "verschieden", auch mit sich selbst)
   - Option B: "Solo" ist ein Team
   - Auswirkung: Balance: A verhindert Fehlschluss; Umsetzung: Vergleich über Siegpartei statt Fraktionskonstante
@@ -1340,12 +1340,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `waldlaeufer`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf, Wolfskind/Lehrling, Siegreicher Wolf (Zählweise), Doppelspion, Waldhexe/Hades (sofortige Nachttode vor dem …
 - **Belege:** [Dossier](dossiers/village-3.md#waldlaeufer); RM-C-157, RM-C-158 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-147.1 · Häufigkeit** · Status: später (K2)
+- **RM-DR-147.1 · Häufigkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: jede Nacht
   - Option B: einmal (z. B. Nacht 1)
   - Auswirkung: Balance: jede Nacht ist stark in Akt IV; Umsetzung: Schritt jede Nacht vs. Einmal-Einsatz
   - Empfehlung: entscheiden und in Text aufnehmen
-- **RM-DR-147.2 · Verfluchte zählen** · Status: später (K2)
+- **RM-DR-147.2 · Verfluchte zählen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: nur `counts_as_wolf`
   - Option B: auch Erscheinung
   - Auswirkung: Balance: hängt an Q1; Umsetzung: Zählung über `counts_as_wolf`
