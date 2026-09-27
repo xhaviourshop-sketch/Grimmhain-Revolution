@@ -2,7 +2,7 @@
 
 Stand: 27.09.2026 (Korrekturrunde DR-08) · Godot 4.7.2 · Projekt `godot/`
 
-„Neue Partie“ ist ein Wizard mit drei Schritten: **Spieler → Rollen → Verteilung**. Nach dem bestätigten Namensschritt (`player-setup.md`) stellt der Spielleiter einen Rollenpool für genau diese Personenzahl zusammen, verteilt ihn zufällig und reproduzierbar oder manuell und bestätigt die Verteilung. Das Ergebnis bleibt ein Entwurf im Speicher. Es entsteht weder `StartGame` noch ein `GameState`, und der Regelkern bleibt unverändert.
+„Neue Partie“ ist ein Wizard mit vier Schritten: **Spieler → Rollen → Verteilung → Sitzordnung** (Sitzordnung: `seating-setup.md`). Nach dem bestätigten Namensschritt (`player-setup.md`) stellt der Spielleiter einen Rollenpool für genau diese Personenzahl zusammen, verteilt ihn zufällig und reproduzierbar oder manuell und bestätigt die Verteilung. Das Ergebnis bleibt ein Entwurf im Speicher. Es entsteht weder `StartGame` noch ein `GameState`, und der Regelkern bleibt unverändert.
 
 ## Schichten
 
@@ -200,7 +200,7 @@ Der Spielleiter legt die Scheinrolle jeder Trugbilderwolf-Kopie ausdrücklich fe
 - **Spieler → Rollen:** nur mit bestätigter, gültiger Liste über „Weiter zu den Rollen“ in der Bestätigungskarte.
 - **Rollen → Verteilung:** nur über „Rollen bestätigen“ mit gültigem Pool.
 - **Schrittwechsel:** `PlayerSetup.go_to_step()` prüft die Vorbedingungen (`players_not_confirmed`, `roles_not_confirmed`). Schritte haben keine eigenen Screen-IDs, ein Doppelklick überspringt nichts, und kein Wechsel erzeugt einen Befehl.
-- **Zurück, Escape, System-Zurück:** Verteilung → Rollen → Spieler. Im Spielerschritt gilt die bestehende Rückfrage „Weiter bearbeiten / Entwurf behalten / Entwurf verwerfen“. Sie erscheint jetzt auch bei unbestätigter Rollenwahl oder unbestätigter Zuordnung.
+- **Zurück, Escape, System-Zurück:** Sitzordnung → Verteilung → Rollen → Spieler. Im Spielerschritt gilt die bestehende Rückfrage „Weiter bearbeiten / Entwurf behalten / Entwurf verwerfen“. Sie erscheint jetzt auch bei unbestätigter Rollenwahl oder unbestätigter Zuordnung.
 - **Erneutes Öffnen:** Der Wizard öffnet im zuletzt aktiven Schritt.
 
 ## Bestätigungen
@@ -212,7 +212,7 @@ Der Spielleiter legt die Scheinrolle jeder Trugbilderwolf-Kopie ausdrücklich fe
 **„Verteilung bestätigen“:**
 - nur bei vollständiger Zuordnung
 - setzt `distribution.confirmed`
-- zeigt die Karte „Bereit für Sitzordnung“: Personen, Rollen nach Fraktion, Modus und Seed
+- zeigt die Karte „Bereit für Sitzordnung“: Personen, Rollen nach Fraktion, Modus und Seed, dazu „Weiter zur Sitzordnung“
 
 Beide Bestätigungen erzeugen kein `StartGame`, keinen `GameState` und keinen Befehl; `GameSession` bleibt unberührt, was Tests belegen. Jede spätere passende Änderung hebt die Bestätigung auf.
 
@@ -264,7 +264,6 @@ Prüf-Screenshots: `docs/evidence/role-setup/`.
 
 ## Bewusst noch nicht enthalten
 
-- Sitzordnung, Sitzkreis, Drag-and-drop
 - Rollenübergabe an Spieler, öffentliche Rollenanzeige
 - `StartGame`-Integration (Abbildung siehe „Trugbilderwolf-Scheinrolle“)
 - Speichern des Entwurfs, gespeicherte Gruppen, Undo/Redo

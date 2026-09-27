@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://app/screens/new_game/player_step.tscn" id="4_players"]
 [ext_resource type="PackedScene" path="res://app/screens/new_game/role_step.tscn" id="5_roles"]
 [ext_resource type="PackedScene" path="res://app/screens/new_game/distribution_step.tscn" id="6_distribution"]
+[ext_resource type="PackedScene" path="res://app/screens/new_game/seating_step.tscn" id="7_seating"]
 
 [node name="NewGameScreen" type="Control"]
 layout_mode = 3
@@ -46,6 +47,12 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="DistributionStep" parent="Layout" instance=ExtResource("6_distribution")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SeatingStep" parent="Layout" instance=ExtResource("7_seating")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

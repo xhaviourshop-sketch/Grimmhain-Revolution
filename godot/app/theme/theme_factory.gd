@@ -89,6 +89,24 @@ static func _buttons(theme: Theme) -> void:
 		var box := theme.get_stylebox(state, &"CompactButton") as StyleBoxFlat
 		box.content_margin_left = ThemeTokens.SPACE_M
 		box.content_margin_right = ThemeTokens.SPACE_M
+	# Platzsymbole der Sitzordnung: normal (wie Sekundärbutton), ausgewählt (Gold, wie Primäraktion)
+	# und Ablageziel beim Ziehen (angehobene Fläche mit hellem Goldrahmen). Kompaktschrift, schmaler
+	# Innenrand, damit Namen auch bei 24 Plätzen auf 1024×768 möglichst vollständig lesbar bleiben.
+	var seat_palettes := {
+		&"SeatButton": palettes[&"SecondaryButton"],
+		&"SeatSelectedButton": palettes[&"PrimaryButton"],
+		&"SeatTargetButton": [ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.GOLD_BRIGHT, ThemeTokens.GOLD_BRIGHT],
+	}
+	for name: StringName in seat_palettes:
+		theme.set_type_variation(name, &"Button")
+		_button_type(theme, name, seat_palettes[name])
+		theme.set_font_size("font_size", name, ThemeTokens.FONT_COMPACT)
+		for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+			var box := theme.get_stylebox(state, name) as StyleBoxFlat
+			box.content_margin_left = ThemeTokens.SPACE_S
+			box.content_margin_right = ThemeTokens.SPACE_S
+			if name != &"SeatButton" and state != "disabled":
+				box.set_border_width_all(ThemeTokens.FOCUS_WIDTH)
 	# Der Grundtyp Button entspricht dem Sekundärbutton.
 	theme.set_type_variation(&"SecondaryButton", &"Button")
 	_button_type(theme, &"Button", palettes[&"SecondaryButton"])

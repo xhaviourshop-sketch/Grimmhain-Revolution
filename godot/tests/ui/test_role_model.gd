@@ -208,7 +208,7 @@ func test_wizard_steps_are_guarded() -> void:
 	_rejected(s, s.call("go_to_step", &"irgendwas"), "unknown_step", "unbekannter Schritt", before)
 	_ok(s.call("go_to_step", &"players"), "zurück zu Spielern")
 	var steps: Array = (s.call("view") as Dictionary)["steps"]
-	assert_eq(steps.size(), 3, "drei Schritte")
+	assert_eq(steps.size(), 4, "vier Schritte (mit Sitzordnung)")
 	assert_true(String(steps[0]["id"]) == "players" and String(steps[0]["state"]) == "done", "Spieler erledigt")
 	assert_true(String(steps[1]["state"]) == "open" and String(steps[2]["state"]) == "open", "Rollen und Verteilung offen")
 

@@ -1,7 +1,8 @@
 class_name PlayerSetup
 extends RefCounted
-## Anwendungsschicht des Setups „Neue Partie“ (Spieler → Rollen → Verteilung): einzige
-## Wahrheit über Personen, IDs, Rollenwahl, Verteilung, Wizard-Schritt und Bestätigungen.
+## Anwendungsschicht des Setups „Neue Partie“ (Spieler → Rollen → Verteilung → Sitzordnung):
+## einzige Wahrheit über Personen, IDs, Rollenwahl, Verteilung, Sitzordnung, Wizard-Schritt und
+## Bestätigungen.
 ## Die UI stellt nur dar und ruft die Operationen auf. Jede Operation ist atomar: bei
 ## Ablehnung bleibt der Entwurf unverändert. Rollen- und Verteilungslogik liegt in
 ## RoleSetup, RolePoolDraft, DistributionDraft und RoleDistribution.
@@ -116,7 +117,8 @@ func needs_leave_confirmation() -> bool:
 		return false
 	var open_roles := _draft.roles.total() > 0 and not _draft.roles.confirmed
 	var open_distribution := _draft.distribution.has_assignment() and not _draft.distribution.confirmed
-	return _draft.has_unconfirmed_changes or open_roles or open_distribution
+	var open_seating := not _draft.seating.confirmed and _draft.seating.order != _draft.person_ids()
+	return _draft.has_unconfirmed_changes or open_roles or open_distribution or open_seating
 
 
 # --- Wizard -----------------------------------------------------------------------------------------
@@ -213,6 +215,41 @@ func confirm_distribution() -> SetupResult:
 	return _apply(RoleSetup.confirm_distribution(_draft))
 
 
+# --- Sitzordnung ------------------------------------------------------------------------------------
+
+## Tauscht die Plätze zweier Personen. Nur die Anordnung ändert sich; Name, Rolle und alle anderen
+## Daten bleiben an der Personen-ID. Hebt die Bestätigung der Sitzordnung auf.
+func swap_seats(first_id: int, second_id: int) -> SetupResult:
+	var details := {"person_ids": [first_id, second_id]}
+	var error := _step_block(SetupDraft.STEP_SEATING)
+	if error == &"" and (_draft.index_of(first_id) == -1 or _draft.index_of(second_id) == -1):
+		error = &"unknown_person"
+	if error == &"" and first_id == second_id:
+		error = &"same_person"
+	if error != &"":
+		return SetupResult.failure(error, view(), details)
+	_draft.seating.swap(first_id, second_id)
+	_draft.seating.confirmed = false
+	_draft.seating.invalidated = &""
+	var v := view()
+	changed.emit(v)
+	return SetupResult.success(v, [first_id, second_id] as Array[int])
+
+
+## Bestätigt die Sitzordnung: Der Setup-Entwurf ist vollständig. Kein Befehl, kein GameState.
+func confirm_seating() -> SetupResult:
+	var error := _step_block(SetupDraft.STEP_SEATING)
+	if error != &"":
+		return SetupResult.failure(error, view())
+	if _draft.seating.confirmed:
+		return SetupResult.success(view())
+	_draft.seating.confirmed = true
+	_draft.seating.invalidated = &""
+	var v := view()
+	changed.emit(v)
+	return SetupResult.success(v)
+
+
 # --- Sicht ------------------------------------------------------------------------------------------
 
 ## Sicht für die Darstellung (immer eine neue Kopie).
@@ -241,6 +278,7 @@ func view() -> Dictionary:
 		"steps": _steps_view(),
 		"roles": _roles_view(),
 		"distribution": SetupDistributionView.build(_draft),
+		"seating": _seating_view(),
 	}
 
 
@@ -260,6 +298,7 @@ func _commit(ids: Array[int], warnings: Array[StringName], count_changed: bool =
 	_draft.has_unconfirmed_changes = true
 	if count_changed:
 		RoleSetup.persons_changed(_draft)
+	_sync_seating(count_changed)
 	_clamp_step()
 	var v := view()
 	changed.emit(v)
@@ -274,6 +313,7 @@ func _name_details(name: String) -> Dictionary:
 func _apply(error: StringName, details: Dictionary = {}) -> SetupResult:
 	if error != &"":
 		return SetupResult.failure(error, view(), details)
+	_sync_seating(false)
 	_clamp_step()
 	var v := view()
 	changed.emit(v)
@@ -286,8 +326,10 @@ func _step_block(step: StringName) -> StringName:
 		return &""
 	if not _draft.confirmed:
 		return &"players_not_confirmed"
-	if step == SetupDraft.STEP_DISTRIBUTION and not _draft.roles.confirmed:
+	if step != SetupDraft.STEP_ROLES and not _draft.roles.confirmed:
 		return &"roles_not_confirmed"
+	if step == SetupDraft.STEP_SEATING and not _draft.distribution.confirmed:
+		return &"distribution_not_confirmed"
 	return &""
 
 
@@ -303,6 +345,7 @@ func _steps_view() -> Array:
 		SetupDraft.STEP_PLAYERS: _state(_draft.confirmed, _draft.players_invalidated),
 		SetupDraft.STEP_ROLES: _state(_draft.roles.confirmed, _draft.roles.invalidated != &""),
 		SetupDraft.STEP_DISTRIBUTION: _state(_draft.distribution.confirmed, _draft.distribution.invalidated != &""),
+		SetupDraft.STEP_SEATING: _state(_draft.seating.confirmed, _draft.seating.invalidated != &""),
 	}
 	for i: int in SetupDraft.STEPS.size():
 		var id := SetupDraft.STEPS[i]
@@ -314,6 +357,40 @@ static func _state(done: bool, invalid: bool) -> String:
 	if done:
 		return "done"
 	return "invalid" if invalid else "open"
+
+
+## Sitzordnung an Personen angleichen. Hinzufügen/Entfernen passt die Reihenfolge an und hebt eine
+## Bestätigung auf (person_count_changed); ist ein früherer Schritt nicht mehr bestätigt, fällt nur
+## die Bestätigung weg (setup_changed). Die Reihenfolge selbst bleibt erhalten.
+func _sync_seating(count_changed: bool) -> void:
+	var seating := _draft.seating
+	if count_changed and seating.sync(_draft.person_ids()) and (seating.confirmed or seating.invalidated != &""):
+		seating.confirmed = false
+		seating.invalidated = SeatingDraft.INVALIDATED_PERSONS
+	if _step_block(SetupDraft.STEP_SEATING) != &"":
+		seating.lift(SeatingDraft.INVALIDATED_SETUP)
+
+
+## Sicht der Sitzordnung: nur Platznummer, Personen-ID und Name. Enthält bewusst keine Rolle,
+## Scheinrolle oder Kopie; die Verteilung bleibt privat.
+func _seating_view() -> Dictionary:
+	var seating := _draft.seating
+	var names := {}
+	for p: SetupPerson in _draft.persons:
+		names[p.person_id] = p.name
+	var seats: Array = []
+	for i: int in seating.order.size():
+		var id := seating.order[i]
+		seats.append({"seat": i + 1, "person_id": id, "name": names.get(id, "")})
+	var reachable := _step_block(SetupDraft.STEP_SEATING) == &""
+	return {
+		"seats": seats,
+		"person_count": seats.size(),
+		"confirmed": seating.confirmed,
+		"can_confirm": reachable and not seating.confirmed,
+		"invalidated": String(seating.invalidated),
+		"ready": reachable and seating.confirmed,
+	}
 
 
 func _roles_view() -> Dictionary:

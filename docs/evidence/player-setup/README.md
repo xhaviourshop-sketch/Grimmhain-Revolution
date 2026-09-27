@@ -23,4 +23,6 @@ Bewusst so belassen: Die Statusmeldung verdeckt 2,5 s lang den unteren Listenber
 
 Am 27.09.2026 mit dem Setup-Wizard neu erzeugt: Die Aufnahmen zeigen jetzt zusätzlich die Schrittanzeige „Schritt 1 von 3“, `08` die Schaltfläche „Weiter zu den Rollen“ mit Fokus.
 
+Hinweis (27.09.2026): Die Aufnahmen zeigen den Stand vor dem Sitzordnungsschritt („Schritt … von 3“); sie wurden bewusst nicht neu erzeugt.
+
 Neu erzeugen: siehe `docs/ui/player-setup.md`, Abschnitt „Tests und Screenshots“.

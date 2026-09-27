@@ -1,0 +1,132 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/new_game/seating_step.gd" id="1_step"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+[ext_resource type="Script" path="res://app/screens/new_game/seat_circle.gd" id="4_circle"]
+
+[node name="SeatingStep" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_step")
+
+[node name="SeatCircle" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("4_circle")
+
+[node name="TableCenter" type="PanelContainer" parent="SeatCircle"]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 1
+theme_type_variation = &"CardPanel"
+
+[node name="Column" type="VBoxContainer" parent="SeatCircle/TableCenter"]
+layout_mode = 2
+alignment = 1
+
+[node name="SeatingHeading" type="Label" parent="SeatCircle/TableCenter/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.setup.seating.heading"
+
+[node name="SeatingCountsLabel" type="Label" parent="SeatCircle/TableCenter/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+
+[node name="SeatingInvalidatedLabel" type="Label" parent="SeatCircle/TableCenter/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+
+[node name="SeatingHintLabel" type="Label" parent="SeatCircle/TableCenter/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.setup.seating.hint"
+
+[node name="SelectionLabel" type="Label" parent="SeatCircle/TableCenter/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+
+[node name="CancelSelectionButton" type="Button" parent="SeatCircle/TableCenter/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.seating.cancel_selection"
+kind = 1
+wrap = false
+
+[node name="SeatingSummary" type="PanelContainer" parent="SeatCircle/TableCenter/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"SummaryPanel"
+
+[node name="Column" type="VBoxContainer" parent="SeatCircle/TableCenter/Column/SeatingSummary"]
+layout_mode = 2
+
+[node name="SeatingSummaryHeading" type="Label" parent="SeatCircle/TableCenter/Column/SeatingSummary/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.seating.summary.heading"
+
+[node name="SeatingSummaryBody" type="Label" parent="SeatCircle/TableCenter/Column/SeatingSummary/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_label")
+
+[node name="SeatingSummaryNext" type="Label" parent="SeatCircle/TableCenter/Column/SeatingSummary/Column"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.seating.summary.next"
+
+[node name="Footer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="EditDistributionButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.seating.edit_distribution"
+kind = 1
+wrap = false
+
+[node name="SeatingStatusLabel" type="Label" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+vertical_alignment = 1
+script = ExtResource("3_label")
+
+[node name="ConfirmSeatingButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.setup.seating.confirm"
+kind = 0
+wrap = false

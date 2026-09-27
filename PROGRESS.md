@@ -180,3 +180,11 @@ Verifiziert (Windows, Godot 4.7.2): 438 Godot-Tests grün, Register 299/299, 20 
 Details und offene Punkte: `docs/development/CLOUD-TO-LOCAL-HANDOFF.md` §0.
 Masterplan-Status (Kopf, Phasen 0/1/2/4) und Gate A in PHASE-CHECKLISTS.md am 27.09. nach Belegen aktualisiert. OFL-Whitespace als Ausnahme in .gitattributes/FONTS.md dokumentiert.
 Nächster Schritt: Sitzordnung im Setup (Phase 2), danach StartGame-Anbindung.
+
+---
+
+## 2026-09-27 — Setup-Schritt Sitzordnung (Branch `feature/setup-seating`)
+Status: UMGESETZT auf dem Branch, PR offen, nicht nach main gemergt
+Inhalt: vierter Wizard-Schritt nach bestätigter Verteilung; `SeatingDraft` in `SetupDraft` (Personen-IDs im Uhrzeigersinn), `PlayerSetup.swap_seats`/`confirm_seating`; Sitzkreis mit Drag-and-drop und Tauschen per Antippen; „Sitzordnung fertig“ ohne StartGame/GameState. Details: `docs/ui/seating-setup.md`.
+Verifiziert (Windows, Godot 4.7.2): 456 Godot-Tests grün (438 + 10 Modell + 8 UI), Register 308/308, 20 Node-Tests grün, Rollenprüfer ohne Befund, `git diff --check` Exit 0. Grafisch: 9 Aufnahmen `docs/evidence/seating-setup/` (lokal, AMD-Renderer), angesehen. Drag-and-drop mit simulierten Mausereignissen, keine Handbedienung, keine Touch- oder Tablet-Prüfung.
+Nächster Schritt: StartGame aus dem bestätigten Setup-Entwurf bauen (`seat_order`, `roles`, `appearances`), ohne neue Regeln.
