@@ -140,11 +140,17 @@ msgstr "Seat circle"
 msgid "ui.cockpit.seats.placeholder"
 msgstr "The seat circle follows with player setup."
 
+msgid "ui.cockpit.seats.placeholder_active"
+msgstr "The seat circle of the running game follows in a later work package."
+
 msgid "ui.cockpit.actions.heading"
 msgstr "Actions"
 
 msgid "ui.cockpit.actions.placeholder"
 msgstr "Actions appear once a game is running."
+
+msgid "ui.cockpit.actions.placeholder_active"
+msgstr "Night and day actions follow in a later work package."
 
 msgid "ui.phase.none"
 msgstr "No game"
@@ -834,7 +840,7 @@ msgid "ui.setup.seating.summary.body"
 msgstr "{count} people are seated. Players, roles, distribution and seating are confirmed."
 
 msgid "ui.setup.seating.summary.next"
-msgstr "Starting the game follows in a later step."
+msgstr "Check the seats once more. “Start game” begins the game with this seating."
 
 msgid "ui.setup.seating.edit_distribution"
 msgstr "Edit distribution"
@@ -865,3 +871,18 @@ msgstr "Seats swapped"
 
 msgid "ui.setup.seating.toast.confirmed"
 msgstr "Seating confirmed"
+
+msgid "ui.setup.seating.start"
+msgstr "Start game"
+
+msgid "ui.setup.seating.toast.started"
+msgstr "Game started"
+
+msgid "ui.setup.seating.status.start_failed.game_already_started"
+msgstr "Start rejected: a game is already running. Nothing was changed."
+
+msgid "ui.setup.seating.status.start_failed.setup_incomplete"
+msgstr "Start rejected: the setup is not fully confirmed. Nothing was changed."
+
+msgid "ui.setup.seating.status.start_failed.other"
+msgstr "Start rejected (code {code}). Nothing was changed."

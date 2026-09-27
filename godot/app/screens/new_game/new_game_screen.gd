@@ -4,7 +4,8 @@ extends BaseScreen
 ## nur der Host: Kopfzeile, Schrittanzeige und genau ein sichtbarer Schritt (PlayerStep, RoleStep,
 ## DistributionStep, SeatingStep). Welcher Schritt gilt und ob er erreichbar ist, entscheidet PlayerSetup
 ## (`go_to_step`); Schritte haben keine eigenen Screen-IDs und lassen sich nicht überspringen.
-## Kein Schrittwechsel erzeugt einen Befehl, eine Partie oder einen GameState.
+## Kein Schrittwechsel erzeugt einen Befehl, eine Partie oder einen GameState; nur „Partie starten“
+## in der Sitzordnung startet über GameStart die Partie und öffnet danach das Cockpit.
 
 const TITLE_KEYS := {
 	&"players": "ui.setup.title",
@@ -31,6 +32,7 @@ func _setup() -> void:
 	_distribution_step.roles_requested.connect(_go_to.bind(&"roles"))
 	_distribution_step.seating_requested.connect(_go_to.bind(&"seating"))
 	_seating_step.distribution_requested.connect(_go_to.bind(&"distribution"))
+	_seating_step.start_requested.connect(_on_start_requested)
 	_player_step.start(context.setup)
 	_role_step.start(context.setup)
 	_distribution_step.start(context.setup)
@@ -98,9 +100,25 @@ func _on_setup_changed(view: Dictionary) -> void:
 	if not first and is_inside_tree():
 		var target := default_focus()
 		if target != null:
-			target.grab_focus.call_deferred()
+			_focus_later.call_deferred(target)
+
+
+## Verzögerter Fokus nur, solange das Ziel noch angezeigt wird (nach dem Spielstart verlässt die
+## Ansicht den Baum, bevor der Aufruf ausgeführt wird).
+func _focus_later(target: Control) -> void:
+	if is_instance_valid(target) and target.is_inside_tree():
+		target.grab_focus()
 
 
 func _discard_and_leave() -> void:
 	context.setup.reset()
 	navigate_requested.emit(ScreenIds.MAIN_MENU)
+
+
+func _on_start_requested() -> void:
+	var result := GameStart.start(context.session, context.setup)
+	if not bool(result["ok"]):
+		_seating_step.show_start_failed(result["error"])
+		return
+	status_message_requested.emit("ui.setup.seating.toast.started")
+	navigate_requested.emit(ScreenIds.COCKPIT)

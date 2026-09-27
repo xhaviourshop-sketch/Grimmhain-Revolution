@@ -130,3 +130,12 @@ script = ExtResource("2_button")
 text_key = "ui.setup.seating.confirm"
 kind = 0
 wrap = false
+
+[node name="StartGameButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.setup.seating.start"
+kind = 0
+wrap = false

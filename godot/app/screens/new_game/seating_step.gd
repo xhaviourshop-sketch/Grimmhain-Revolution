@@ -2,12 +2,15 @@ class_name SeatingStep
 extends VBoxContainer
 ## Wizard-Schritt 4 „Sitzordnung“: Sitzkreis mit allen Personen, Tauschen per Drag-and-drop oder
 ## durch zweimaliges Antippen (erste Person auswählen, dann Zielplatz). Zeigt nur Platznummer und
-## Namen, nie Rollen. „Sitzordnung bestätigen“ schließt das Setup ab; es entsteht weder ein Befehl
-## noch ein GameState. Alle Daten und Regeln kommen aus PlayerSetup.
+## Namen, nie Rollen. „Sitzordnung bestätigen“ schließt nur das Setup ab; danach steht an seiner
+## Stelle „Partie starten“, das den Spielstart beim Host anfordert (`start_requested`). Jede Änderung
+## hebt die Bestätigung auf und bringt „Sitzordnung bestätigen“ zurück. Alle Daten und Regeln
+## kommen aus PlayerSetup.
 
 signal dialog_requested(request: DialogRequest)
 signal status_message_requested(text_key: String)
 signal distribution_requested  ## „Verteilung bearbeiten“
+signal start_requested  ## „Partie starten“; der Host startet und meldet eine Ablehnung zurück
 
 var _setup: PlayerSetup = null
 var _selected_id: int = 0
@@ -24,6 +27,7 @@ var _last_view: Dictionary = {}
 @onready var _edit_distribution: GrimmButton = %EditDistributionButton
 @onready var _status: GrimmLabel = %SeatingStatusLabel
 @onready var _confirm: GrimmButton = %ConfirmSeatingButton
+@onready var _start: GrimmButton = %StartGameButton
 
 
 ## Wird vom Host einmal nach `_ready` aufgerufen.
@@ -37,6 +41,7 @@ func start(setup: PlayerSetup) -> void:
 	_cancel_selection.pressed.connect(_select.bind(0))
 	_edit_distribution.pressed.connect(distribution_requested.emit)
 	_confirm.pressed.connect(_on_confirm_pressed)
+	_start.pressed.connect(_on_start_pressed)
 	visibility_changed.connect(_on_visibility_changed)
 	_setup.changed.connect(_render)
 	_render(_setup.view())
@@ -48,7 +53,19 @@ func _notification(what: int) -> void:
 
 
 func default_focus() -> Control:
+	if _start.is_visible_in_tree():
+		return _start
 	return _confirm if not _confirm.disabled else _edit_distribution
+
+
+## Ablehnung des Spielstarts anzeigen (Setup und Sitzung sind unverändert).
+func show_start_failed(error: StringName) -> void:
+	var reason := "other"
+	if error == &"game_already_started":
+		reason = "game_already_started"
+	elif String(error).ends_with("_not_confirmed"):
+		reason = "setup_incomplete"
+	_set_status("ui.setup.seating.status.start_failed.%s" % reason, {"code": String(error)})
 
 
 ## Zurück hebt zuerst eine Auswahl auf; sonst entscheidet der Host (zur Verteilung).
@@ -82,6 +99,10 @@ func _render(view: Dictionary) -> void:
 		_summary_body.format_values = {"count": seating["person_count"]}
 		_summary_body.text_key = "ui.setup.seating.summary.body"
 	_confirm.disabled = not bool(seating["can_confirm"])
+	var startable := bool(seating["ready"])
+	_start.visible = startable
+	_start.disabled = not startable
+	_confirm.visible = not startable
 	if confirmed:
 		_set_status("ui.setup.seating.status.confirmed")
 	elif _status.text_key == "ui.setup.seating.status.confirmed":
@@ -155,7 +176,16 @@ func _on_confirm_pressed() -> void:
 	_select(0)
 	if _setup.confirm_seating().ok:
 		status_message_requested.emit("ui.setup.seating.toast.confirmed")
-		_edit_distribution.grab_focus()
+		_start.grab_focus()
+
+
+## Nur bei startbereitem Entwurf; ein zweites Tippen nach einem angenommenen Start findet den
+## verbrauchten Entwurf vor und sendet nichts.
+func _on_start_pressed() -> void:
+	if _start.disabled or not bool((_last_view["seating"] as Dictionary)["ready"]):
+		return
+	_select(0)
+	start_requested.emit()
 
 
 func _seat_of(person_id: int) -> int:

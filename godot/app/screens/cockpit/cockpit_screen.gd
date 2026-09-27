@@ -7,6 +7,8 @@ extends BaseScreen
 @onready var _badge: Control = %NoGameBadge
 @onready var _phase: GrimmLabel = %PhaseValueLabel
 @onready var _instruction: GrimmLabel = %InstructionLabel
+@onready var _seats: GrimmLabel = %SeatsPlaceholder
+@onready var _actions: GrimmLabel = %ActionsPlaceholder
 
 
 func _setup() -> void:
@@ -20,3 +22,5 @@ func _refresh(view: Dictionary) -> void:
 	_badge.visible = not active
 	_phase.text_key = "ui.phase.%s" % str(view.get("phase", "")).to_lower() if active else "ui.phase.none"
 	_instruction.text_key = "ui.cockpit.instruction.active" if active else "ui.cockpit.instruction.no_game"
+	_seats.text_key = "ui.cockpit.seats.placeholder_active" if active else "ui.cockpit.seats.placeholder"
+	_actions.text_key = "ui.cockpit.actions.placeholder_active" if active else "ui.cockpit.actions.placeholder"
