@@ -188,7 +188,7 @@ func _render_summary(dist: Dictionary) -> void:
 		"wolves": factions.get(String(Faction.WOLVES), 0),
 		"solo": factions.get(String(Faction.SOLO), 0),
 		"mode": tr("ui.setup.distribution.mode.%s" % str(dist["mode"])),
-		"seed": dist["seed"],
+		"seed": dist["seed"] if bool(dist["has_seed"]) else tr("ui.setup.distribution.summary.no_seed"),
 	}
 	_summary_body.text_key = "ui.setup.distribution.summary.body"
 
@@ -243,12 +243,15 @@ func _on_choose_requested(person_id: int) -> void:
 	var entry := _entry_for(dist, person_id)
 	if entry.is_empty():
 		return
-	var current := str(entry["role"])
+	var current := _unit_of(entry)
 	var remaining: Dictionary = dist["remaining"]
 	var request := DialogRequest.create("ui.setup.distribution.picker.title", "ui.setup.distribution.picker.message", "")
 	request.title_values = {"number": entry["number"]}
 	request.message_values = {"name": entry["name"]}
 	for role: StringName in RolePresentation.sorted_roles():
+		if SetupRoleCatalog.requires_appearance(role):
+			_add_copy_options(request, dist, role, person_id, current)
+			continue
 		var free := int(remaining.get(String(role), 0))
 		if free > 0 and String(role) != current:
 			var values := {"name": tr(RolePresentation.name_key(role)), "count": free}
@@ -258,12 +261,31 @@ func _on_choose_requested(person_id: int) -> void:
 	var swaps: Array[DialogOption] = []
 	for other: Variant in dist["assignment"]:
 		var o: Dictionary = other
-		if int(o["person_id"]) != person_id and str(o["role"]) != "" and str(o["role"]) != current:
+		if int(o["person_id"]) != person_id and _unit_of(o) != "" and _unit_of(o) != current:
 			swaps.append(DialogOption.create("Swap_%d" % int(o["person_id"]), "ui.setup.distribution.picker.swap_option", {"number": o["number"], "name": o["name"]}, _swap.bind(person_id, int(o["person_id"]))))
 	if not swaps.is_empty():
 		request.options.append(DialogOption.header("ui.setup.distribution.picker.swap_heading"))
 		request.options.append_array(swaps)
 	dialog_requested.emit(request)
+
+
+## Jede freie Kopie einer Rolle mit Scheinrolle einzeln: „Trugbilderwolf 2 · Scheinrolle: …“.
+func _add_copy_options(request: DialogRequest, dist: Dictionary, role: StringName, person_id: int, current: String) -> void:
+	for c: Variant in dist["remaining_copies"]:
+		var copy: Dictionary = c
+		if str(copy["role_id"]) != String(role) or str(copy["key"]) == current:
+			continue
+		var values := {
+			"copy": tr("ui.setup.decoy.copy").format({"number": copy["number"]}),
+			"appearance": tr(RolePresentation.name_key(StringName(str(copy["appears_as"])))),
+		}
+		var node_name := "Pick_%s_%s" % [String(role), str(copy["key"]).get_slice(RoleCopy.KEY_SEPARATOR, 1)]
+		request.options.append(DialogOption.create(node_name, "ui.setup.distribution.picker.copy_option", values, _assign.bind(person_id, StringName(str(copy["key"])))))
+
+
+## Verteilungseinheit eines Eintrags: Kopien-Schlüssel oder Rollen-ID ("" = nicht zugewiesen).
+static func _unit_of(entry: Dictionary) -> String:
+	return str(entry["copy_key"]) if str(entry["copy_key"]) != "" else str(entry["role"])
 
 
 func _entry_for(dist: Dictionary, person_id: int) -> Dictionary:

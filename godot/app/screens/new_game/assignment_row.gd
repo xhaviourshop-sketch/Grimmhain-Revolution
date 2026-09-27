@@ -2,7 +2,7 @@ class_name AssignmentRow
 extends PanelContainer
 ## Eine Personenzeile der Verteilung: Listennummer, Name (Nutzerdaten), öffentlicher Zustand
 ## („zugewiesen“ / „nicht zugewiesen“) und nur im geöffneten Spielleiterbereich Rolle und
-## vorläufige Scheinrolle. Im manuellen Modus „Rolle zuweisen“ bzw. „Rolle ändern“.
+## vom Spielleiter gewählte Scheinrolle der zugewiesenen Kopie. Im manuellen Modus „Rolle zuweisen“ bzw. „Rolle ändern“.
 ## Wird bei Änderungen nur aktualisiert, nicht neu gebaut (Fokus bleibt erhalten).
 
 signal choose_requested(person_id: int)

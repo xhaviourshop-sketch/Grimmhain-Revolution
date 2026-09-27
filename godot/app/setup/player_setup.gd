@@ -137,9 +137,26 @@ func go_to_step(step: StringName) -> SetupResult:
 
 # --- Rollenwahl -------------------------------------------------------------------------------------
 
+## Anzahl setzen. Eine konfigurierte Trugbilderwolf-Kopie fällt dabei nie stillschweigend weg:
+## dann `confirmation_required` mit `copy_id` und `number` der betroffenen Kopie.
 func set_role_count(role: StringName, count: int) -> SetupResult:
 	var current: int = _draft.roles.counts.get(role, 0)
-	return _apply(RoleSetup.set_role_count(_draft, role, count), {"role": role, "count": count, "current": current})
+	var details := {"role": role, "count": count, "current": current}
+	var blocking := RoleSetup.copy_blocking_decrease(_draft, role)
+	if blocking != null:
+		details["copy_id"] = blocking.copy_id
+		details["number"] = _draft.roles.copy_number(blocking)
+	return _apply(RoleSetup.set_role_count(_draft, role, count), details)
+
+
+## Scheinrolle einer Trugbilderwolf-Kopie ausdrücklich festlegen (DR-08).
+func set_decoy_appearance(copy_id: int, appearance: StringName) -> SetupResult:
+	return _apply(RoleSetup.set_copy_appearance(_draft, copy_id, appearance), {"copy_id": copy_id, "appearance": appearance})
+
+
+## Eine bestimmte Kopie entfernen; übrige Kopien und ihre Scheinrollen bleiben.
+func remove_decoy_copy(copy_id: int) -> SetupResult:
+	return _apply(RoleSetup.remove_copy(_draft, copy_id), {"copy_id": copy_id})
 
 
 func change_role_count(role: StringName, delta: int) -> SetupResult:
@@ -179,8 +196,9 @@ func reshuffle() -> SetupResult:
 	return _apply(RoleSetup.reshuffle(_draft))
 
 
-func assign_role(person_id: int, role: StringName) -> SetupResult:
-	return _apply(RoleSetup.assign_role(_draft, person_id, role, seed_source), {"person_id": person_id, "role": role})
+## `unit`: Rollen-ID oder, bei Trugbilderwolf, der Schlüssel einer konkreten Kopie.
+func assign_role(person_id: int, unit: StringName) -> SetupResult:
+	return _apply(RoleSetup.assign_role(_draft, person_id, unit), {"person_id": person_id, "unit": unit})
 
 
 func unassign_role(person_id: int) -> SetupResult:
@@ -188,7 +206,7 @@ func unassign_role(person_id: int) -> SetupResult:
 
 
 func swap_roles(first_id: int, second_id: int) -> SetupResult:
-	return _apply(RoleSetup.swap_roles(_draft, first_id, second_id, seed_source), {"person_ids": [first_id, second_id]})
+	return _apply(RoleSetup.swap_roles(_draft, first_id, second_id), {"person_ids": [first_id, second_id]})
 
 
 func confirm_distribution() -> SetupResult:

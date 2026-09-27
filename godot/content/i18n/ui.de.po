@@ -648,7 +648,7 @@ msgid "ui.setup.distribution.unassigned"
 msgstr "nicht zugewiesen"
 
 msgid "ui.setup.distribution.appearance"
-msgstr "Scheinrolle: {role} (vorläufig)"
+msgstr "Scheinrolle: {role}"
 
 msgid "ui.setup.distribution.choose"
 msgstr "Rolle zuweisen"
@@ -736,3 +736,60 @@ msgstr "Die Verteilung ist noch unvollständig."
 
 msgid "ui.setup.error.no_copy_available"
 msgstr "Von dieser Rolle ist keine Kopie mehr frei."
+
+msgid "ui.setup.roles.issue.missing_appearance"
+msgstr "Scheinrolle fehlt"
+
+msgid "ui.setup.decoy.status"
+msgstr "Scheinrollen festgelegt: {configured} von {total}"
+
+msgid "ui.setup.decoy.reveal"
+msgstr "Scheinrollen festlegen"
+
+msgid "ui.setup.decoy.hide"
+msgstr "Scheinrollen verbergen"
+
+msgid "ui.setup.decoy.hint"
+msgstr "Lege für jede Kopie fest, als welche Rolle sie bei einer Prüfung erscheint. Erlaubt ist jede Rolle, die nicht als Wolf zählt."
+
+msgid "ui.setup.decoy.copy"
+msgstr "Trugbilderwolf {number}"
+
+msgid "ui.setup.decoy.missing"
+msgstr "Scheinrolle fehlt"
+
+msgid "ui.setup.decoy.chosen"
+msgstr "Scheinrolle: {role}"
+
+msgid "ui.setup.decoy.choose"
+msgstr "Scheinrolle wählen"
+
+msgid "ui.setup.decoy.change"
+msgstr "Scheinrolle ändern"
+
+msgid "ui.setup.decoy.remove"
+msgstr "Entfernen"
+
+msgid "ui.setup.decoy.picker.title"
+msgstr "Scheinrolle wählen"
+
+msgid "ui.setup.decoy.picker.message"
+msgstr "Trugbilderwolf {number}: Als welche Rolle erscheint diese Kopie bei einer Prüfung?"
+
+msgid "ui.setup.decoy.picker.current"
+msgstr "{name} · aktuell"
+
+msgid "ui.setup.dialog.remove_copy.title"
+msgstr "Kopie entfernen?"
+
+msgid "ui.setup.dialog.remove_copy.message"
+msgstr "{copy} wird mit seiner festgelegten Scheinrolle entfernt. Die übrigen Kopien bleiben unverändert."
+
+msgid "ui.setup.dialog.remove_copy.confirm"
+msgstr "Kopie entfernen"
+
+msgid "ui.setup.distribution.picker.copy_option"
+msgstr "{copy} · Scheinrolle: {appearance}"
+
+msgid "ui.setup.distribution.summary.no_seed"
+msgstr "keiner"

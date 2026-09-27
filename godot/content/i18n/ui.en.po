@@ -648,7 +648,7 @@ msgid "ui.setup.distribution.unassigned"
 msgstr "not assigned"
 
 msgid "ui.setup.distribution.appearance"
-msgstr "Decoy role: {role} (provisional)"
+msgstr "Decoy role: {role}"
 
 msgid "ui.setup.distribution.choose"
 msgstr "Assign role"
@@ -736,3 +736,60 @@ msgstr "The distribution is not complete yet."
 
 msgid "ui.setup.error.no_copy_available"
 msgstr "No copy of this role is left."
+
+msgid "ui.setup.roles.issue.missing_appearance"
+msgstr "decoy role missing"
+
+msgid "ui.setup.decoy.status"
+msgstr "Decoy roles set: {configured} of {total}"
+
+msgid "ui.setup.decoy.reveal"
+msgstr "Set decoy roles"
+
+msgid "ui.setup.decoy.hide"
+msgstr "Hide decoy roles"
+
+msgid "ui.setup.decoy.hint"
+msgstr "Choose for each copy which role it shows when checked. Any role that does not count as a wolf is allowed."
+
+msgid "ui.setup.decoy.copy"
+msgstr "Decoy Wolf {number}"
+
+msgid "ui.setup.decoy.missing"
+msgstr "Decoy role missing"
+
+msgid "ui.setup.decoy.chosen"
+msgstr "Decoy role: {role}"
+
+msgid "ui.setup.decoy.choose"
+msgstr "Choose decoy role"
+
+msgid "ui.setup.decoy.change"
+msgstr "Change decoy role"
+
+msgid "ui.setup.decoy.remove"
+msgstr "Remove"
+
+msgid "ui.setup.decoy.picker.title"
+msgstr "Choose decoy role"
+
+msgid "ui.setup.decoy.picker.message"
+msgstr "Decoy Wolf {number}: which role does this copy show when checked?"
+
+msgid "ui.setup.decoy.picker.current"
+msgstr "{name} · current"
+
+msgid "ui.setup.dialog.remove_copy.title"
+msgstr "Remove copy?"
+
+msgid "ui.setup.dialog.remove_copy.message"
+msgstr "{copy} is removed together with its chosen decoy role. The other copies stay unchanged."
+
+msgid "ui.setup.dialog.remove_copy.confirm"
+msgstr "Remove copy"
+
+msgid "ui.setup.distribution.picker.copy_option"
+msgstr "{copy} · decoy role: {appearance}"
+
+msgid "ui.setup.distribution.summary.no_seed"
+msgstr "none"

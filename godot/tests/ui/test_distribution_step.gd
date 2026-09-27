@@ -38,10 +38,10 @@ func _to_distribution(shell: Control, count: int = 8, counts: Dictionary = {}) -
 	else:
 		for role: Variant in counts:
 			s.call("set_role_count", StringName(str(role)), int(counts[role]))
-		# DR-08: jede Trugbilderwolf-Kopie erhält ausdrücklich eine Scheinrolle.
-		for d: Variant in (s.call("view") as Dictionary)["roles"].get("decoys", []):
-			s.call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"waldhexe")
-		await frames(2)
+	# DR-08: jede Trugbilderwolf-Kopie (auch aus dem Vorschlag) erhält ausdrücklich eine Scheinrolle.
+	for d: Variant in (s.call("view") as Dictionary)["roles"].get("decoys", []):
+		s.call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"waldhexe")
+	await frames(2)
 	await press(find_button(screen, "ConfirmRolesButton"))
 	return screen
 

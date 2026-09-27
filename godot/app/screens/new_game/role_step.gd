@@ -5,16 +5,19 @@ extends VBoxContainer
 ## Vorschlag und Zurücksetzen. Rechts: scrollbare Rollenliste nach Fraktion gruppiert.
 ## Fußzeile: Zurück zu Spielern, Status, Rollen bestätigen. Alle Daten und Regeln kommen aus
 ## PlayerSetup (Validierung) und SetupRoleCatalog (Fraktion); die Zeilen werden einmal gebaut
-## und bei Änderungen nur aktualisiert.
+## und bei Änderungen nur aktualisiert. Unter einer Rolle mit Pflicht-Scheinrolle liegt ihr
+## geheimer Scheinrollen-Bereich (DecoySection); er schließt, sobald der Schritt verlassen wird.
 
 signal dialog_requested(request: DialogRequest)
 signal status_message_requested(text_key: String)
 signal players_requested  ## „Zurück zu Spielern“
 
 const ROW_SCENE := preload("res://app/screens/new_game/role_row.tscn")
+const DECOY_SCENE := preload("res://app/screens/new_game/decoy_section.tscn")
 
 var _setup: PlayerSetup = null
 var _rows: Dictionary[StringName, RoleRow] = {}
+var _decoy_sections: Array[DecoySection] = []
 var _last_view: Dictionary = {}
 
 @onready var _selection: GrimmLabel = %RoleSelectionCountLabel
@@ -45,6 +48,7 @@ func start(setup: PlayerSetup) -> void:
 	_back.pressed.connect(players_requested.emit)
 	_confirm.pressed.connect(_on_confirm_pressed)
 	_setup.changed.connect(_render)
+	visibility_changed.connect(_on_visibility_changed)
 	_render(_setup.view())
 
 
@@ -78,6 +82,12 @@ func _build_rows() -> void:
 		row.show_role(role)
 		row.change_requested.connect(_on_change_requested)
 		_rows[role] = row
+		if SetupRoleCatalog.requires_appearance(role):
+			var section := DECOY_SCENE.instantiate() as DecoySection
+			_list.add_child(section)
+			section.start(_setup, role)
+			section.dialog_requested.connect(dialog_requested.emit)
+			_decoy_sections.append(section)
 
 
 func _render(view: Dictionary) -> void:
@@ -87,6 +97,8 @@ func _render(view: Dictionary) -> void:
 	for role: StringName in _rows:
 		var key := String(role)
 		_rows[role].show_count(int(counts[key]), bool(roles["can_decrease"][key]), bool(roles["can_increase"][key]))
+	for section: DecoySection in _decoy_sections:
+		section.render(roles)
 	var persons := int(roles["persons"])
 	var total := int(roles["total"])
 	var free := int(roles["free"])
@@ -132,8 +144,22 @@ func _render_issues(roles: Dictionary) -> void:
 	_invalidated.text_key = "ui.setup.roles.invalidated.%s" % reason if _invalidated.visible else ""
 
 
+## Minus auf einer Rolle, deren letzte Kopie schon eine Scheinrolle hat: erst nachfragen,
+## welche Kopie samt Auswahl entfällt.
 func _on_change_requested(role: StringName, delta: int) -> void:
-	_setup.change_role_count(role, delta)
+	var result := _setup.change_role_count(role, delta)
+	if result.ok or result.error != &"confirmation_required" or not result.details.has("copy_id"):
+		return
+	for section: DecoySection in _decoy_sections:
+		if section.decoy_role == role:
+			dialog_requested.emit(section.removal_request(int(result.details["copy_id"]), int(result.details["number"])))
+
+
+## Beim Verlassen des Schritts schließen sich die geheimen Bereiche.
+func _on_visibility_changed() -> void:
+	if not visible:
+		for section: DecoySection in _decoy_sections:
+			section.close()
 
 
 func _on_suggest_pressed() -> void:

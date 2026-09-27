@@ -1,7 +1,9 @@
 class_name DistributionDraft
 extends RefCounted
-## Rollenverteilung im Setup-Entwurf: Modus, Zuordnung Personen-ID → Rollen-ID, vorbereitete
-## Scheinrollen, Setup-Seed, Zahl der bewussten Neumischungen und Bestätigung.
+## Rollenverteilung im Setup-Entwurf: Modus, Zuordnung Personen-ID → Verteilungseinheit
+## (Rollen-ID oder Schlüssel einer Kopie mit Scheinrolle, siehe RoleCopy), Setup-Seed, Zahl
+## der bewussten Neumischungen und Bestätigung. Scheinrollen stehen nur an ihrer Kopie im
+## Rollenpool, nie hier.
 ## Nur RoleSetup verändert den Entwurf; alle Werte sind reine, speicherbare Daten.
 
 const RANDOM := &"random"
@@ -11,12 +13,11 @@ const INVALIDATED_PERSONS := &"person_count_changed"   ## Personen geändert, Zu
 const NO_SEED := -1
 
 var mode: StringName = RANDOM
-var assignment: Dictionary[int, StringName] = {}   ## Personen-ID → Rollen-ID
-var appearances: Dictionary[int, StringName] = {}  ## Personen-ID → vorbereitete Scheinrolle (nur Pflicht-Scheinrollen)
+var assignment: Dictionary[int, StringName] = {}   ## Personen-ID → Verteilungseinheit
 var confirmed: bool = false
 var base_seed: int = NO_SEED     ## beim ersten bewussten Verteilen gesetzt, danach gespeichert
 var shuffle_count: int = 0       ## bewusste Neumischungen seit dem ersten Seed
-var pool: Array[StringName] = [] ## Pool, für den die Zuordnung gilt (kanonisch)
+var pool: Array[StringName] = [] ## Verteilungseinheiten, für die die Zuordnung gilt (kanonisch)
 var invalidated: StringName = &""
 
 
@@ -32,17 +33,16 @@ func has_assignment() -> bool:
 	return not assignment.is_empty()
 
 
-## Verwirft Zuordnung, Scheinrollen und Bestätigung; Seed und Mischzähler bleiben.
+## Verwirft Zuordnung und Bestätigung; Seed und Mischzähler bleiben.
 func clear(reason: StringName = &"") -> void:
 	if has_assignment() and reason != &"":
 		invalidated = reason
 	assignment.clear()
-	appearances.clear()
 	pool.clear()
 	confirmed = false
 
 
-## Noch nicht vergebene Kopien je Rolle für den Pool `for_pool`.
+## Noch nicht vergebene Einheiten je Schlüssel für die Einheiten `for_pool`.
 func remaining(for_pool: Array[StringName]) -> Dictionary[StringName, int]:
 	var left: Dictionary[StringName, int] = {}
 	for id: StringName in for_pool:
