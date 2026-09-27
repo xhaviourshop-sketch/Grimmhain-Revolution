@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 28 | 62 |
+| entschieden | 33 | 73 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 43 | 121 |
+| später | 38 | 110 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -793,17 +793,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `fenrir`; Wechselwirkung laut Dossier: Ritter, Henker (LynchCount), Feuerteufel (Brand), Lehrling/Seelentauscher/Frankenstein (Rollenerwerb mit alter Stufe), alle …
 - **Belege:** [Dossier](dossiers/wolves-b.md#fenrir); RM-C-029, RM-C-030, RM-C-031 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-011.
-- **RM-DR-125.1 · Umfang des Überlebens** · Status: später (K4)
+- **RM-DR-125.1 · Umfang des Überlebens** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: jede Todesursache, einmal
   - Option B: nur Hinrichtung
   - Auswirkung: Balance: hoch: Nachtangriffe kann Wolf-Team nicht wählen, aber Witwe/Hexe/Hades sehr wohl; Umsetzung: Abfangregel in KillPipeline vs. ExecutionRules
   - Empfehlung: jede Ursache (Text)
-- **RM-DR-125.2 · Zählung** · Status: später (K4)
+- **RM-DR-125.2 · Zählung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: +1 am Morgen nach überlebter Nacht
   - Option B: +1 bei Nachtbeginn
   - Auswirkung: Balance: gering (eine Nacht früher Stufe 3); Umsetzung: Zeitpunkt DAWN vs. NIGHT_START
   - Empfehlung: +1 am Morgen, wenn Fenrir lebt
-- **RM-DR-125.3 · Ritter** · Status: später (K4)
+- **RM-DR-125.3 · Ritter** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Teil von "jeder Tod" (einmal)
   - Option B: Sonderimmunität
   - Auswirkung: Balance: mittel; Umsetzung: Ritter-Zielauswahl
@@ -907,17 +907,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Status des Eintrags:** später (ab Charge K4).
 - **Betroffene Rollen:** `henker`; Wechselwirkung laut Dossier: alle Lynch-Sonderzweige (Wahnsinniger Kutscher, Voodoo, Der Weise, Selbstmörder, Spiegelwolf, Dämonischer Wolf, Fenrir, Cerberus, Rudelvater), Rudelvater/Nekromant/Hades/Kartenschlucker/Parasit …
 - **Belege:** [Dossier](dossiers/village-2.md#henker); RM-C-129, RM-C-130, RM-C-131 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
-- **RM-DR-130.1 · Blockierter Lynch (Fenrir/Cerberus)** · Status: später (K4)
+- **RM-DR-130.1 · Blockierter Lynch (Fenrir/Cerberus)** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: blockierter Lynch zählt als Lynch
   - Option B: zählt nicht (kein Tod)
   - Auswirkung: Balance: beeinflusst Aktivierung und Markierten; Umsetzung: ExecutionRules-Ergebnis "verhindert"
   - Empfehlung: PO bestätigen, 07 geht von A aus
-- **RM-DR-130.2 · Zählbasis** · Status: später (K4)
+- **RM-DR-130.2 · Zählbasis** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Vorgänge
   - Option B: nur Lynch-Tote
   - Auswirkung: Balance: Spiegelwolf/Voodoo-Tage; Umsetzung: Zähler-Definition
   - Empfehlung: Vorgänge, i18n anpassen
-- **RM-DR-130.3 · Henker tot** · Status: später (K4)
+- **RM-DR-130.3 · Henker tot** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: wirkt weiter
   - Option B: verfällt mit Henker
   - Auswirkung: Balance: gering; Umsetzung: Bindung Markierung↔Henker
@@ -1031,12 +1031,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Status des Eintrags:** später (ab Charge K4).
 - **Betroffene Rollen:** `cerberus`; Wechselwirkung laut Dossier: Waldhexe (Trank), Henker (LynchCount), Feuerteufel (Brand beim Lynch), Kopfgeldjäger (Lynch eines Wolfs), Spiegelwolf/Voodoo/Der Weise (Reihenfolge der Lynch-Sonderzweige …
 - **Belege:** [Dossier](dossiers/wolves-b.md#cerberus); RM-C-037, RM-C-038 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
-- **RM-DR-135.1 · Wahl oder Automatik** · Status: später (K4)
+- **RM-DR-135.1 · Wahl oder Automatik** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Cerberus entscheidet (Prompt)
   - Option B: automatisch
   - Auswirkung: Balance: mittel: Wahl erlaubt Bluff/Aufsparen; Umsetzung: Prompt in ExecutionRules
   - Empfehlung: Prompt an SL "Cerberus wehrt ab?"
-- **RM-DR-135.2 · Hexengift** · Status: später (K4)
+- **RM-DR-135.2 · Hexengift** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: nur Lynch
   - Option B: jede Hinrichtung/gezielte Tötung
   - Auswirkung: Balance: mittel; Umsetzung: zusätzliche Abfangregel
@@ -1060,7 +1060,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: alles, was als Wolf zählt
   - Auswirkung: Balance: A schützt Verfluchte; Umsetzung: Ziel über `counts_as_wolf` statt `appears_as`
   - Empfehlung: hängt an Q1 Dämonischer Wolf; bei "nur Erscheinung" nur echte Wölfe
-- **RM-DR-136.3 · Fenrir ab Stufe 3** · Status: später (K3)
+- **RM-DR-136.3 · Fenrir ab Stufe 3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Fenrir-Immunität gilt auch gegen Ritter
   - Option B: Ritter trifft Fenrir normal
   - Auswirkung: Balance: gering; Umsetzung: Sonderregel im Zielfinder
@@ -1113,7 +1113,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: inklusive eigenem Tod
   - Auswirkung: Balance: B einen Tod früher; Umsetzung: Zählpunkt
   - Empfehlung: A, DE-Text präzisieren
-- **RM-DR-138.2 · Hinrichtungsarten** · Status: später; Quelle: DECISION-LOG Korrekturrunde 4: Spielleiter-Hinrichtung bleibt LYNCH (dieser Teil entschieden); Rest betrifft nur den noch fehlenden Henker (K4)
+- **RM-DR-138.2 · Hinrichtungsarten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: nur Hauptziel des Lynchs
   - Option B: auch Henker-Hinrichtung
   - Auswirkung: Balance: –; Umsetzung: ExecutionRules
@@ -1326,7 +1326,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: beide Richtungen nennen / SL wählt
   - Auswirkung: Balance: gering; Umsetzung: Regel im Rechner
   - Empfehlung: entscheiden
-- **RM-DR-146.3 · Fenrir Stufe 3** · Status: später (K3)
+- **RM-DR-146.3 · Fenrir Stufe 3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: gleiche Wolfsdefinition wie Ritter
   - Option B: unterschiedlich
   - Auswirkung: Balance: gering; Umsetzung: eine gemeinsame Zielfunktion

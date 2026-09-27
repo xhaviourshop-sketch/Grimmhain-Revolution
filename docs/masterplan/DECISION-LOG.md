@@ -352,3 +352,13 @@ Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit
 - **Giftwolf, Ablauf:** A. Eigener Nachtschritt nach dem Rudel, freiwillig; zwei Ladungen je Leben.
 - **Rudelvater (RM-DR-112):** A. Nach seinem Lynch gibt es in der folgenden Nacht direkt nach dem Rudel einen zweiten Rudelschritt; dessen Opfer stirbt am Morgen und durchdringt Schutz (Liste RM-DR-005). Den ersten Tod, der weder Rudelangriff noch Lynch ist, überlebt er einmal (je Leben); Spielleitertötungen sind immer wirksam.
 - **Seuchenwolf (RM-DR-108):** A. Nach seinem Tod durchdringt der nächste tatsächliche Rudelangriff Schutz (Liste RM-DR-005) und verbraucht die Wirkung, egal ob Schutz bestand; eine Nacht ohne Rudelopfer verbraucht nichts; mehrere tote Seuchenwölfe stapeln nicht.
+
+## Rollenaudit · Fenrir, Cerberus, Henker · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet.
+
+- **Fenrir (RM-DR-125):** A. Stufe +1 in jeder Morgenauflösung, in der er lebt; ab Stufe 3 überlebt er einmal jeden Tod außer Spielleiterkorrekturen (auch Lynch und Ritter). Eine Wiederbelebung setzt Stufe und Schutz zurück.
+- **Cerberus (RM-DR-135):** A. +1 Kopf in jeder Morgenauflösung, in der er lebt (höchstens 3). Wird er mit 3 Köpfen hingerichtet, fragt die App „abwehren?“: Ja → er überlebt, Köpfe auf 0, die Hinrichtung des Tages gilt als erfolgt. Nur Hinrichtungen.
+- **Henker, Zählung (RM-DR-130.1/.2):** A. Jede bestätigte Hinrichtung der Partie zählt, auch ohne Tod (Spiegelung, Cerberus-Abwehr, Parasit), auch vor dem Rollenerwerb.
+- **Henker, Markierung (RM-DR-130.3):** A. Ab drei Hinrichtungen markiert er jede Nacht freiwillig eine Person; sie stirbt zusätzlich bei der Hinrichtung des folgenden Tages, wenn der Henker dabei lebt; sonst verfällt die Markierung.
+- **Selbstmörder und Henker (RM-DR-138.2):** A. Nur die Hinrichtung der Person selbst zählt; ein zusätzlicher Henker-Tod ist keine Hinrichtung des Selbstmörders.

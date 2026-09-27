@@ -82,9 +82,9 @@ RM-DR-123.1;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";
 RM-DR-123.2;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";ab Nacht 1, einmal je Leben
 RM-DR-123.3;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Nachtschritte (RM-DR-010)
 RM-DR-124.1;ja;besessener-wolf;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";Lebende inkl. ihm vor dem Tod
-RM-DR-125.1;ja;fenrir;S;;
-RM-DR-125.2;ja;fenrir;S;;
-RM-DR-125.3;ja;fenrir;S;;
+RM-DR-125.1;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";jede Ursache außer Korrektur, einmal
+RM-DR-125.2;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";+1 je überlebter Nacht
+RM-DR-125.3;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Teil des Einmal-Schutzes
 RM-DR-126.1;ja;kutscher;S;;
 RM-DR-126.2;ja;kutscher;S;;
 RM-DR-126.3;ja;kutscher;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
@@ -96,9 +96,9 @@ RM-DR-128.2;ja;blutpriester;S;;
 RM-DR-129.1;ja;traumdeuter;S;;
 RM-DR-129.2;ja;traumdeuter;S;;
 RM-DR-129.3;ja;traumdeuter;S;;
-RM-DR-130.1;ja;henker;S;;
-RM-DR-130.2;ja;henker;S;;
-RM-DR-130.3;ja;henker;S;;
+RM-DR-130.1;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";blockierte Hinrichtung zählt
+RM-DR-130.2;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";jede bestätigte Hinrichtung
+RM-DR-130.3;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";verfällt, wirkt nur mit lebendem Henker am Folgetag
 RM-DR-131.1;ja;feuerteufel;S;;
 RM-DR-131.2;ja;feuerteufel;S;;
 RM-DR-131.3;ja;feuerteufel;S;;
@@ -112,18 +112,18 @@ RM-DR-133.1;ja;blutwolf;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis 
 RM-DR-134.1;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";jede Person, Wirkung nur auf Dorf
 RM-DR-134.2;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur die Person
 RM-DR-134.3;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Blocker zuerst
-RM-DR-135.1;ja;cerberus;S;;
-RM-DR-135.2;ja;cerberus;S;;
+RM-DR-135.1;ja;cerberus;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Spielleiter fragt abwehren?
+RM-DR-135.2;ja;cerberus;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";nur Hinrichtung
 RM-DR-136.1;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur Wolfsangriff
 RM-DR-136.2;ja;ritter;S;;
-RM-DR-136.3;ja;ritter;S;;
+RM-DR-136.3;ja;ritter;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Fenrir-Einmalschutz gilt auch gegen Ritter
 RM-DR-137.1;ja;rotkaeppchen;S;;
 RM-DR-137.2;ja;rotkaeppchen;S;;
 RM-DR-137.3;ja;rotkaeppchen;S;;
 RM-DR-137.4;ja;rotkaeppchen;S;;
 RM-DR-137.5;ja;rotkaeppchen;S;;
 RM-DR-138.1;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";Toten vor der Hinrichtung, ab 5
-RM-DR-138.2;ja;selbstmoerder;S;DECISION-LOG Korrekturrunde 4: Spielleiter-Hinrichtung bleibt LYNCH (dieser Teil entschieden);Rest betrifft nur den noch fehlenden Henker (K4)
+RM-DR-138.2;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";nur eigene Hinrichtung
 RM-DR-139.1;ja;kopfgeldjaeger;S;;
 RM-DR-139.2;ja;kopfgeldjaeger;S;;
 RM-DR-139.3;ja;kopfgeldjaeger;S;;
@@ -148,7 +148,7 @@ RM-DR-145.1;ja;doktor;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";Einzelsieg
 RM-DR-145.2;ja;doktor;E;"rules-register G-ID-2; DR-10; DECISION-LOG Lehrling (Fraktion wechselt sofort)";Siegfraktion ist ein aktueller Personenwert
 RM-DR-146.1;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person (Tablet-Gegenprüfung offen)
 RM-DR-146.2;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";gleich weit melden
-RM-DR-146.3;ja;faehrtenleser;S;;
+RM-DR-146.3;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";gleiche Wolfsdefinition (counts_as_wolf)
 RM-DR-147.1;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";jede Nacht
 RM-DR-147.2;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";lebende Personen mit counts_as_wolf, einfach
 RM-DR-148.1;ja;schutzgeist;S;;
