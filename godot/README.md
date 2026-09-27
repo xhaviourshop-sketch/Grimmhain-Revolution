@@ -94,6 +94,8 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 | `tests/ui/test_role_model.gd` | Katalogadapter gegen `RoleCatalog`, Darstellungsschlüssel DE/EN, Rollenpool (Plus/Minus, Grenzen, Validierung, kanonisch), Schrittsperren, Vorschlag 6–24, Überschreiben nur mit Bestätigung, Personenänderungen, kein Zufall/keine Uhr im Setup | Rollen-Setup 1–36, 47, 73, 74 |
 | `tests/ui/test_role_step.gd` | Wizard (Schrittanzeige, Sperren, Doppelklick, Zurück, Verlassen), Rollenwahl-Oberfläche, Überschreib-Dialog, kein GameState/StartGame, Layout, Scrollen, Schlüssel | Rollen-Setup 22, 23, 33, 73–83, 86–89 |
 | `tests/ui/test_distribution_model.gd` | zufällige und manuelle Verteilung, Reproduzierbarkeit, Neu mischen, Moduswechsel, Invalidierung, Trugbilderwolf-Scheinrollen | Rollen-Setup 37–71 |
+| `tests/ui/test_decoy_model.gd` | Trugbilderwolf-Scheinrolle nach DR-08: keine Vorbelegung, Validierung, Kopien, Verteilung als Einheit, Invalidierung | Korrekturrunde DR-08 |
+| `tests/ui/test_decoy_step.gd` | geheimer Scheinrollen-Bereich, modale Wahl, Kopien in der Verteilung, Geheimhaltung, Layout | Korrekturrunde DR-08 |
 | `tests/ui/test_distribution_step.gd` | Verteilungs-Oberfläche, Geheimhaltung, modale Rollenauswahl, Zusammenfassung ohne Partie, Layout | Rollen-Setup 44, 53–57, 63, 64, 72, 74, 80, 81, 84–91 |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |
 
@@ -118,7 +120,7 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 |---|---|
 | `project.godot` | Projekteinstellungen, Typisierungswarnungen als Fehler, Hauptszene, Querformat, Streckung `canvas_items`/`expand`, Übersetzungen, `quit_on_go_back` aus, Version (zentrale Quelle) |
 | **app/**, **content/i18n/** | UI-Grundlage und UI-Texte; Szenen, Verantwortungen, Navigation, Tokens und Lokalisierung in `../docs/ui/README.md` |
-| **app/setup/** | Setup ohne Regelkern: `PersonNameRules` (Grenzen, Namensregeln), `SetupPerson`, `SetupDraft`, `SetupResult`, `PlayerSetup` (Anwendungsschicht); Rollen über den lesenden Adapter `SetupRoleCatalog`, dazu `RolePresentation`, `RolePoolDraft`, `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView`; siehe `../docs/ui/player-setup.md` und `../docs/ui/role-setup.md` |
+| **app/setup/** | Setup ohne Regelkern: `PersonNameRules` (Grenzen, Namensregeln), `SetupPerson`, `SetupDraft`, `SetupResult`, `PlayerSetup` (Anwendungsschicht); Rollen über den lesenden Adapter `SetupRoleCatalog`, dazu `RolePresentation`, `RolePoolDraft`, `RoleCopy` (Trugbilderwolf-Kopie mit ausdrücklich gewählter Scheinrolle, DR-08), `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView`; siehe `../docs/ui/player-setup.md` und `../docs/ui/role-setup.md` |
 | `tools/capture_ui_screenshots.gd` | Prüf-Screenshots der UI (braucht Renderer, z. B. Xvfb) |
 | `tools/godot-version.txt`, `tools/install_godot.sh` | gepinnte Engine-Version, Download mit Prüfsumme |
 | **core/util/** | |

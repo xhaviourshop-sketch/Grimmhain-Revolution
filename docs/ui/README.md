@@ -39,7 +39,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/screens/base_screen.gd` | Basis jeder Ansicht: Signale statt Router-Zugriff, Kopfzeile verdrahten, Standardfokus |
 | `app/screens/start/` | Titel, Untertitel, „Eintreten“, Version |
 | `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Einstellungen, Beenden (nur Desktop, abgesetzt) |
-| `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
+| `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `decoy_section` mit `decoy_copy_row` (geheime Trugbilderwolf-Scheinrollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
 | `app/screens/continue/` | leerer Zustand „Kein Spielstand vorhanden“, Bereich `SaveSlotList` |
 | `app/screens/settings/` | Sprache DE/EN, Bewegung reduzieren, Platzhalter Audio und Anzeige |
 | `app/screens/cockpit/` | Kopfzeile, Phasenbereich, Ansagekarte, Sitzkreisbereich, Aktionsbereich, Kennzeichen „Keine Partie aktiv“ |
@@ -54,7 +54,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Linkshänder-Grundlage; nur im Speicher |
 | `app/platform/app_platform.gd` | Desktop/Mobil, Beenden erlaubt, Version aus `project.godot` |
 | `app/session/game_session.gd` | Anwendungsschicht zum Regelkern |
-| `app/setup/*.gd` | Anwendungsschicht und Modell des Setups ohne Regelkern: `PlayerSetup`, `SetupDraft`, `SetupPerson`, `SetupResult`, `PersonNameRules`; Rollen: `SetupRoleCatalog` (lesender Katalogadapter), `RolePresentation`, `RolePoolDraft`, `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView` |
+| `app/setup/*.gd` | Anwendungsschicht und Modell des Setups ohne Regelkern: `PlayerSetup`, `SetupDraft`, `SetupPerson`, `SetupResult`, `PersonNameRules`; Rollen: `SetupRoleCatalog` (lesender Katalogadapter), `RolePresentation`, `RolePoolDraft`, `RoleCopy`, `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView` |
 | `app/app_context.gd` | Einstellungen, Sitzung und Setup-Entwurf für die Ansichten |
 | `content/i18n/ui.de.po`, `ui.en.po` | UI-Texte |
 | `tools/capture_ui_screenshots.gd` | Prüf-Screenshots (nicht Teil der App) |
@@ -130,7 +130,7 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 ## Lokalisierung
 
 - Dateien: `godot/content/i18n/ui.de.po` und `ui.en.po`, registriert unter `internationalization/locale/translations`, Rückfall `en`. Godot lädt `.po` direkt, ohne Importschritt.
-- Schlüssel sind `msgid`s nach dem Muster `app.*` und `ui.<bereich>.<element>` (244 Schlüssel, davon 166 `ui.setup.*` sowie 22 `ui.role.*` und 3 `ui.faction.*`, identisch in beiden Dateien).
+- Schlüssel sind `msgid`s nach dem Muster `app.*` und `ui.<bereich>.<element>` (263 Schlüssel, davon 185 `ui.setup.*` sowie 22 `ui.role.*` und 3 `ui.faction.*`, identisch in beiden Dateien).
 - Szenen setzen nur `text_key`. Kein sichtbarer Text steht in Szenen oder Skripten (`test_no_literal_texts_in_scenes_or_scripts`).
 - `GrimmButton`, `GrimmLabel` und `GrimmToggle` übersetzen selbst (`tr(text_key)`) und aktualisieren sich bei `NOTIFICATION_TRANSLATION_CHANGED`. Die automatische Übersetzung der Engine ist für sie abgeschaltet, damit der sichtbare Text in `text` steht und prüfbar ist.
 - Sprachwechsel: `AppSettings.set_language("de"|"en")` setzt die Locale; die Shell verteilt die Änderung sofort an alle Knoten. Andere Sprachen werden abgelehnt. Die Wahl wird noch nicht gespeichert.
