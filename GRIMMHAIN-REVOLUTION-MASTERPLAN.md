@@ -1,8 +1,10 @@
 # Grimmhain Revolution · Verbindlicher Masterplan
 
-**Stand:** 26. September 2026
+**Stand:** 26. September 2026; Umsetzungsstand aktualisiert 27. September 2026 (main `1bc8016`)
 
-**Status:** Produktrichtung bestätigt; Analyse abgeschlossen; Umsetzung noch nicht begonnen
+**Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen und Verteilung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Keine Tablet-Abnahme, kein Sitzkreis, keine spielbare Partie über die Oberfläche.
+
+**Stufen im Umsetzungsstand:** *implementiert* (Code vorhanden) · *automatisch getestet* (headless Godot-Suite, lokal und CI: 438 Tests grün) · *grafisch geprüft* (lokal mit echtem Renderer, skriptgesteuert über echte Buttons, keine Handbedienung) · *Tablet-abgenommen* (von Hand auf dem Zielgerät; bisher für keinen Punkt erfolgt). Ein Haken bedeutet: Punkt im Wortlaut erfüllt.
 
 **Primärziel:** Hochwertige, offlinefähige Spielleiter-App für physische Social-Deduction-Runden auf Tablets
 
@@ -123,14 +125,14 @@ Godot Tablet/PC
 **Ziel:** Die offenen Regeln der ersten Rollencharge und die Werkzeugkette festziehen.
 
 - [ ] Cloud-Analyse auf `main` übernehmen und als unveränderliche Baseline markieren.
-- [ ] Godot-Version anhand stabiler 4.x-Version und Exportunterstützung festlegen; Version in `godot/README.md` und CI pinnen.
+- [x] Godot-Version anhand stabiler 4.x-Version und Exportunterstützung festlegen; Version in `godot/README.md` und CI pinnen. *(Stand 27.09.2026: 4.7.2-stable in `godot/tools/godot-version.txt`, README und CI.)*
 - [ ] Entwicklungswerkzeuge inventarisieren: Godot, Git, Android SDK/JDK, Xcode auf MacBook, Browser-Testgeräte.
 - [ ] iPad-Modell, Betriebssystemstände und späteres Android-Referenzgerät im Testregister erfassen.
 - [ ] `07-open-questions.md` mit dem bestätigten Decision Log abgleichen.
-- [ ] 20 bis 30 Kandidaten für 1.0 auswählen; erste 8 bis 12 für den Vertical Slice markieren.
+- [ ] 20 bis 30 Kandidaten für 1.0 auswählen; erste 8 bis 12 für den Vertical Slice markieren. *(Stand 27.09.2026: 11 Vertical-Slice-Rollen implementiert; Auswahl für 1.0 nicht freigegeben, Optionen in `docs/role-migration/05-v1-role-options.md`.)*
 - [ ] Für diese Rollen jede widersprüchliche Zeile der Migrationsmatrix entscheiden.
-- [ ] Nachtmusik bis zum Herkunftsnachweis sperren.
-- [ ] `ASSET-REGISTER.md` für alle künftig verwendeten Assets verpflichtend machen.
+- [x] Nachtmusik bis zum Herkunftsnachweis sperren. *(Stand 27.09.2026: Status `gesperrt` im Assetregister.)*
+- [x] `ASSET-REGISTER.md` für alle künftig verwendeten Assets verpflichtend machen. *(Stand 27.09.2026: `tools/check-asset-register.js` und CI „Asset register“ bei jedem Push.)*
 - [ ] Branch `phase/00-foundation` anlegen.
 
 **Gate:** Keine offene Regelentscheidung blockiert den Vertical Slice. Toolchain kann ein leeres Godot-Projekt headless starten und für mindestens eine vorhandene Plattform exportieren.
@@ -139,16 +141,16 @@ Godot Tablet/PC
 
 **Ziel:** Eine UI-freie Partie Werwolf gegen Dorf ist reproduzierbar spielbar.
 
-- [ ] Projekt unter `godot/` anlegen; statisch typisiertes GDScript verwenden.
-- [ ] `GameState`, `Player`, `SeatOrder`, `RoleAssignment`, `Faction`, `Effect`, `Prompt` und `GameEvent` definieren.
-- [ ] Command-Bus für `StartGame`, `StartNight`, `SubmitAction`, `ResolveMorning`, `Nominate`, `ExecutePlayer`, `StartNight` und `DeclareWinner` bauen.
-- [ ] Phasenmaschine für Setup, Nacht, Morgenbericht, Tag und Spielende implementieren.
-- [ ] Gespeicherten Seed und `SeededRng` implementieren.
-- [ ] Grundlegende Kill-Pipeline mit Ursache, Quelle, Ziel, Zeitpunkt und Abfangstatus implementieren.
-- [ ] Eine einzige Siegprüfung für Dorf und Werwölfe implementieren; Ergebnis verlangt Spielleiterbestätigung.
-- [ ] JSON-Codec mit `schema_version`, `rules_version`, atomischem Schreiben und vorherigem Backup implementieren.
-- [ ] Headless-Test-Runner und Szenarioformat erstellen.
-- [ ] Tests für Wolfsparität, Tod des letzten Wolfs, identischen Replay, Save/Load-Hash und beschädigten Spielstand schreiben.
+- [x] Projekt unter `godot/` anlegen; statisch typisiertes GDScript verwenden.
+- [ ] `GameState`, `Player`, `SeatOrder`, `RoleAssignment`, `Faction`, `Effect`, `Prompt` und `GameEvent` definieren. *(Stand 27.09.2026: `GameState`, `Player`, `Faction`, `PendingPrompt`, `GameEvent` implementiert; eigene `SeatOrder`-, `RoleAssignment`- und `Effect`-Typen fehlen.)*
+- [x] Command-Bus für `StartGame`, `StartNight`, `SubmitAction`, `ResolveMorning`, `Nominate`, `ExecutePlayer`, `StartNight` und `DeclareWinner` bauen. *(Stand 27.09.2026: implementiert und automatisch getestet als `StartGame`, `StartNight`, `AnswerPrompt`, `EndNight`, `Nominate`, `DecideExecution`, `ConfirmWin`/`RejectWin`; die Oberfläche ruft `StartGame` noch nicht auf.)*
+- [x] Phasenmaschine für Setup, Nacht, Morgenbericht, Tag und Spielende implementieren. *(Stand 27.09.2026: `phase_machine.gd`, über Szenario- und Schrittests automatisch getestet.)*
+- [x] Gespeicherten Seed und `SeededRng` implementieren. *(Stand 27.09.2026: automatisch getestet, `test_seeded_rng.gd`.)*
+- [x] Grundlegende Kill-Pipeline mit Ursache, Quelle, Ziel, Zeitpunkt und Abfangstatus implementieren. *(Stand 27.09.2026: `kill_pipeline.gd`, `KillEvent`, automatisch getestet.)*
+- [x] Eine einzige Siegprüfung für Dorf und Werwölfe implementieren; Ergebnis verlangt Spielleiterbestätigung. *(Stand 27.09.2026: `win_rules.gd`, Szenarien `as-c01` bis `as-c04`.)*
+- [ ] JSON-Codec mit `schema_version`, `rules_version`, atomischem Schreiben und vorherigem Backup implementieren. *(Stand 27.09.2026: Codec mit `schema_version`/`rules_version` implementiert und getestet; atomisches Schreiben in eine Datei und Backup fehlen.)*
+- [x] Headless-Test-Runner und Szenarioformat erstellen.
+- [x] Tests für Wolfsparität, Tod des letzten Wolfs, identischen Replay, Save/Load-Hash und beschädigten Spielstand schreiben.
 
 **Gate:** Dieselbe Command-Liste mit gleichem Seed erzeugt bytegleich dieselbe Eventliste. Save/Load verändert den fachlichen Hash nicht.
 
@@ -156,13 +158,13 @@ Godot Tablet/PC
 
 **Ziel:** Setup → erste Nacht → Morgen → Tag → Nominierung → Hinrichtung → neue Nacht funktioniert auf einem echten iPad.
 
-- [ ] Start-, Setup- und Wiederaufnahmescreen bauen.
-- [ ] Namen einzeln erfassen, gespeicherte Gruppe anbieten und 6 bis 24 Personen validieren.
+- [ ] Start-, Setup- und Wiederaufnahmescreen bauen. *(Stand 27.09.2026: Start und Setup (Spieler, Rollen, Verteilung) implementiert, automatisch getestet, grafisch geprüft; Wiederaufnahme fehlt; nicht Tablet-abgenommen.)*
+- [ ] Namen einzeln erfassen, gespeicherte Gruppe anbieten und 6 bis 24 Personen validieren. *(Stand 27.09.2026: Einzelerfassung, Textimport und 6-bis-24-Prüfung implementiert, automatisch getestet, grafisch geprüft; gespeicherte Gruppe fehlt; nicht Tablet-abgenommen.)*
 - [ ] Sitzkreis mit stabiler Personen-ID und Drag-and-drop der Sitzreihenfolge bauen.
 - [ ] Cockpit mit Phase, Runde, Timer, nächstem Schritt, Warnungen, Log und Undo bauen.
 - [ ] Sichere Ansagekarte mit privaten, vorlesbaren und zeigbaren Bereichen bauen.
 - [ ] Tag- und Nacht-Theme mit vorläufigen, lizenzklaren Assets erstellen.
-- [ ] Rollencharge mit Schutz, Information, Angriff, Nominierungsreaktion, Todeseffekt und Fehlinformation implementieren.
+- [ ] Rollencharge mit Schutz, Information, Angriff, Nominierungsreaktion, Todeseffekt und Fehlinformation implementieren. *(Stand 27.09.2026: 11 Rollen im Regelkern implementiert und automatisch getestet; in der Oberfläche nur Rollenwahl und Verteilung, keine Nacht- oder Tagführung.)*
 - [ ] Nominierung `Quelle → Ziel` und getrennte Buttons für Lynch, Nachtangriff und andere Todesursachen bauen.
 - [ ] Checkpoint nach jeder bestätigten Aktion und Wiederaufnahme nach Prozessabbruch testen.
 - [ ] Reduced-Motion-, Untertitel- und Lautstärkeregelung von Anfang an verdrahten.
@@ -190,7 +192,7 @@ Godot Tablet/PC
 **Ziel:** Eine echte Gruppe kann ohne Entwicklerhilfe eine vollständige Runde spielen.
 
 - [ ] 17 bis 20 priorisierte Rollen vollständig automatisieren; weitere Inhalte nur klar als manuell geführt anbieten.
-- [ ] Automatische, manuelle und szenariobasierte Rollenwahl implementieren.
+- [ ] Automatische, manuelle und szenariobasierte Rollenwahl implementieren. *(Stand 27.09.2026: Vorschlag, manuelle Rollenwahl sowie zufällige und manuelle Verteilung implementiert, automatisch getestet, grafisch geprüft; szenariobasierte Wahl fehlt.)*
 - [ ] Geführten Modus mit nächster Aktion, Regelgrund und Vorlesetext fertigstellen.
 - [ ] Expertenmodus mit kompaktem Ablauf und direkter Korrektur fertigstellen.
 - [ ] Rollenanzeige ohne Smartphone als sichere Tablet-Karte ermöglichen.

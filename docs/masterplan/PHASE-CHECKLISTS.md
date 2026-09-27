@@ -25,10 +25,12 @@
 
 ### Gate A · Core
 
-- [ ] Deterministisches Replay.
-- [ ] Save/Load-Hash identisch.
-- [ ] Sieg erst nach Bestätigung.
-- [ ] Beschädigter Save wird erkannt.
+Stand 27.09.2026 (main `1bc8016`): die vier Punkte sind automatisch getestet (headless, lokal und CI). Gate B bis E: nichts erfüllt, keine Tablet-Abnahme.
+
+- [x] Deterministisches Replay. (`test_replay.gd`)
+- [x] Save/Load-Hash identisch. (`test_save_load.gd`)
+- [x] Sieg erst nach Bestätigung. (Szenario `as-c04-confirm-reject-win`)
+- [x] Beschädigter Save wird erkannt. (`test_corrupt_save.gd`)
 
 ### Gate B · Vertical Slice
 
