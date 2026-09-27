@@ -4,7 +4,7 @@ extends UiTestCase
 
 const FIXED_SEED := 777001
 const ROLE_IDS: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf"]
+		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf", "doppelspion"]
 
 
 func _dialog(shell: Control) -> Control:

@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 12 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 12 |
+| im RoleCatalog vorhandene Rollen | 13 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 13 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 10 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 11 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -59,6 +59,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 10 | `manipulator` | Manipulator / Manipulator | solo | nein | – | `rules_engine.gd` (Tod bei `Nominate`), `win_rules.gd` (`manipulator_wins`), `win_candidate.gd` | `test_manipulator.gd` (18) | Register §10, DR-12 | `implemented-and-tested` | `automatic` | `legacy-broken` (Richter-Nominierung tötet nicht) |
 | 11 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | wolves | ja | – (Teil des Rudels) | `execution_rules.gd` (`preview`, `execute`), `gm_corrections.gd` (`set_mirror`) | `test_spiegelwolf.gd` (20) | Register §11, DR-13 | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 12 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `role_catalog.gd` (`parity_weight`), `win_rules.gd` (`evaluate`) | `test_siegreicher_wolf.gd` (10), `test_role_interaction_fuzz.gd` | Rollentext, [`10`](10-next-decisions.md) „Zur Kenntnis“, G-SIEG-2 | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 13 | `doppelspion` | Doppelspion / Double Agent (Rollentext) | solo | nein | – | `role_catalog.gd`, `win_rules.gd` (`double_agent_wins`, Kandidatenmenge), `win_candidate.gd` (`double_agent_no_wolves`) | `test_doppelspion.gd` (11), `test_role_interaction_fuzz.gd` | RM-DR-155.1–.5, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -131,6 +132,11 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-27):** Wolfsfraktion ohne eigenen Schritt, Teil des Rudels (G-PH-6). `RoleCatalog.parity_weight` = 2; `WinRules.evaluate` zählt ihn, solange er lebt, in der Wolfsparität doppelt (`reason_args.wolves` ist der Paritätswert). Die Dorfbedingung zählt weiter lebende Wolfspersonen, der Manipulator weiter Personen.
 - **Tests:** `test_siegreicher_wolf.gd` (10): Rudel allein, Orakel `werwolf`, Parität 2 gegen 2, tot zählt 0, Dorfsieg erst ohne lebenden Wolf, zwei Kopien, Wiederbelebung, Lehrling-Erbe mit sofortiger Doppelzählung, Rollenkorrektur, Manipulator zählt Personen, Save/Load, Replay, Leak; zusätzlich im Fuzztest.
 - **Grenzen:** Regelquelle ist der widerspruchsfreie Rollentext (Legacy gleich) mit der Auslegung aus [`10`](10-next-decisions.md) „Zur Kenntnis“; keine eigene Decision-Log-Zeile.
+
+### 4.13 `doppelspion`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Einzelsieg, zählt nicht als Wolf (Parität, RM-DR-155.2), kein eigener Schritt. Lebt kein Wolf, entsteht je lebendem Doppelspion ein Kandidat `double_agent_no_wolves`; der Dorfkandidat entfällt dann (RM-DR-155.3). Tot gewinnt er nicht (RM-DR-155.1). Aufwachen mit dem Rudel ist nur Ansage ohne Rollennennung (RM-DR-155.4/.5). Orakel: tatsächliche Rolle (DR-07). Ladeprüfung wie beim Manipulator.
+- **Tests:** `test_doppelspion.gd` (11): Rolle, Hinrichtung des letzten Wolfs, tot → Dorf, zwei Kopien, einer tot, Parität, mit Manipulator gleichzeitig, Lehrling-Erbe, erneuter Vorschlag nach Ablehnung, beschädigter Kandidat, Leak; Fuzztest.
+- **Grenzen:** „Der Angriff des Rachsüchtigen Wolfs verpufft an ihm“ folgt mit `rachsuechtiger-wolf`.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

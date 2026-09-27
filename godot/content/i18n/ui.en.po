@@ -467,6 +467,12 @@ msgstr "Victorious Wolf"
 msgid "ui.role.siegreicher_wolf.short"
 msgstr "Pack wolf that counts as two wolves toward the wolf win while alive."
 
+msgid "ui.role.doppelspion.name"
+msgstr "Double Agent"
+
+msgid "ui.role.doppelspion.short"
+msgstr "Wakes with the pack, wins alone if alive once no wolf is left."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

@@ -467,6 +467,12 @@ msgstr "Siegreicher Wolf"
 msgid "ui.role.siegreicher_wolf.short"
 msgstr "Wolf im Rudel, zählt lebend für den Wolfssieg wie zwei Wölfe."
 
+msgid "ui.role.doppelspion.name"
+msgstr "Doppelspion"
+
+msgid "ui.role.doppelspion.short"
+msgstr "Wacht mit dem Rudel, gewinnt allein, wenn er lebt und kein Wolf mehr lebt."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

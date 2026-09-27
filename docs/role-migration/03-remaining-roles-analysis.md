@@ -6,7 +6,7 @@ Dieses Dokument fasst je fehlender Rolle die belegten Kernaussagen zusammen. Die
 
 Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier „Text DE/EN“), **Legacy-Code tut** (Dossier „Legacy-Codeverhalten“), **React-Version tut** (Dossier „React-Version“; für keine der 61 Rollen eigenes Regelverhalten), **Dokumentation empfiehlt** (Dossier „Bisherige Doku“), **neuer Godot-Kern tut** (für alle 61: nichts, keine Rolle ist im RoleCatalog), **noch unentschieden** (Entscheidungen unten).
 
-**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt; sein Abschnitt steht jetzt in [`02`](02-implemented-roles-audit.md) §4.12, der aktuelle Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md). Diese Datei behandelt damit 60 fehlende Rollen.
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt (später weitere Rollen, siehe `11`); sein Abschnitt steht jetzt in [`02`](02-implemented-roles-audit.md) §4.12, der aktuelle Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md). Diese Datei behandelt damit 60 fehlende Rollen.
 
 **Lesehilfe:** In übernommenen Zellen bezeichnen `01` bis `07` ohne Pfad die älteren Dokumente unter `docs/godot-migration/`; Pfadkürzel wie in [`04`](04-rule-conflicts.md) §3.
 
@@ -72,7 +72,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`kriegerin-des-lichts`](#kriegerin-des-lichts) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Einmalfähigkeit, Tötung | S / mittel | K7 | – |
 | [`detektiv`](#detektiv) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Informationsrolle | Todesreaktion, Sitzpositionsmechanik, Zufallsmechanik | M / hoch | K3 | – |
 | [`dorfschmied`](#dorfschmied) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Wolfsangriff-Modifikation | Schutz, Tötung, Zufallsmechanik | M / mittel | K5 | – |
-| [`doppelspion`](#doppelspion) | Einzelsieg | `decision-required` | `legacy-verified` | `automatic` | Einzelsieg | Wolfsangriff-Modifikation | S / mittel | K1 | A |
 | [`grabraeuber`](#grabraeuber) | Einzelsieg | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | Einzelsieg, sonstige Spezialmechanik | XL / hoch | K15 | – |
 | [`parasit`](#parasit) | Einzelsieg | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | Schutz, Todesreaktion, Einzelsieg | M / mittel | K10 | C |
 | [`todesprediger`](#todesprediger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | Einmalfähigkeit | M / mittel | K15 | – |
@@ -1258,27 +1257,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K5 / in keiner Option |
 | Belegsicherheit | hoch für Code; mittel für den Nacht-1-Startweg (nicht im Browser geprüft). --- ## Gruppenübergreifende Beobachtungen 1. Globale Einmal-Flags statt sitzbezogener Zustände: Zeitwächter, Kriegerin (`Used["role_..."]`), Dorfchronistin (`ChroniclerShown`), … |
 | Detail | [Dossier](dossiers/village-4.md#dorfschmied) |
-
-### `doppelspion`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Doppelspion / Double Agent |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / III / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Sieg und Immunität gegen den Rachsüchtigen Wolf sind nachvollziehbar umgesetzt; das Aufwachen ist eine Tischregel ohne Codebedarf. |
-| DE/EN-Vergleich | JA, semantisch gleich. Nur Namensabweichung „Revenge Wolf" statt EN-Rollenname „Lone Wolf". |
-| Automationsziel | `automatic`: (Sieg und Wolfsstatus); Aufwachen als Hinweis im Rudelschritt. |
-| Mechanik | primär: Einzelsieg; sekundär: Wolfsangriff-Modifikation |
-| Größe / Risiko | S / mittel. Einfach, aber Siegkonkurrenz mit Dorf und Paritätsfrage. |
-| Vorhandene Godot-Systeme | WinRules/WinCandidate, StepQueue (Hinweis im Rudelschritt), appears_as (falls er dem Orakel als Wolf erscheinen soll; Legacy: nein), Ereignis-Sichtbarkeit, StateCodec, Replay. |
-| Neue Systeme | zusätzliche Siegbedingungen (Doppelspion ersetzt Dorfsieg); Immunität gegen Rachsüchtigen Wolf als Zielfilter. |
-| Abhängigkeiten | Rachsüchtiger Wolf, Dämonischer Wolf (Fluch wirkungslos), Wolfskind/Lehrling (Wolfszählung), Orakel/Doktor/Spürhund (Erscheinung/Fraktion), Die Ewigen, Dorfchronistin. |
-| Widersprüche | RM-C-063 Muss er leben?; RM-C-064 Parität; RM-C-065 Aufwachen |
-| Entscheidungen | RM-DR-155 (Rolle); übergreifend RM-DR-002, RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K1 / ab Option A |
-| Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. **Fünf Siegstellen statt zwei.** Für diese Gruppe setzen `checkWinConditions`, `checkTeamWin`, `checkPestWin`, `checkFluteWin` und der Selbstmörder-Zweig den Sieger. Nur die ersten beiden laufen nach jedem … |
-| Detail | [Dossier](dossiers/solos-a.md#doppelspion) |
 
 ### `grabraeuber`
 

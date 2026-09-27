@@ -9,6 +9,7 @@ extends RefCounted
 ##   Werwölfe:    Paritätswert lebender Wölfe ≥ lebende Nicht-Wölfe (Siegreicher Wolf zählt 2).
 ##   Manipulator: genau drei Personen leben, er lebt und wurde in der Partie nie nominiert;
 ##                je Manipulator ein eigener personenbezogener Kandidat.
+##   Doppelspion: kein Wolf lebt und er lebt; je Person ein Kandidat, der Dorfsieg entfällt dann (RM-DR-155).
 ## DR-02: Mehrere gleichzeitige Kandidaten ohne automatische Priorität; der Spielleiter
 ## bestätigt genau einen oder lehnt alle ab. Lebt niemand, entsteht kein Kandidat; der
 ## Spielleiter erklärt das Ergebnis per GmCorrection „declare_winner“.
@@ -30,7 +31,15 @@ static func evaluate(state: GameState) -> Array:
 	var args := {"wolves": wolves, "non_wolves": non_wolves}
 	var results: Array = []
 	if living_wolves == 0:
-		results.append({"kind": String(Faction.VILLAGE), "reason_key": String(WinCandidate.REASON_NO_WOLVES_ALIVE), "reason_args": args.duplicate(), "beneficiary_ids": []})
+		# RM-DR-155.3: Lebt ein Doppelspion, wird statt des Dorfsiegs nur sein Sieg je Person vorgeschlagen.
+		var agents: Array[int] = []
+		for id: int in alive:
+			if double_agent_wins(state, id):
+				agents.append(id)
+		if agents.is_empty():
+			results.append({"kind": String(Faction.VILLAGE), "reason_key": String(WinCandidate.REASON_NO_WOLVES_ALIVE), "reason_args": args.duplicate(), "beneficiary_ids": []})
+		for id: int in agents:
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DOUBLE_AGENT), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
 	if wolves >= non_wolves:
 		results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
 	for id: int in alive:
@@ -43,6 +52,17 @@ static func evaluate(state: GameState) -> Array:
 static func manipulator_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
 	return p != null and p.alive and p.role_id == RoleCatalog.MANIPULATOR and not p.ever_nominated and state.alive_ids().size() == 3
+
+
+## Einzelsieg des Doppelspions für Person `id` (RM-DR-155.1): er lebt und kein Wolf lebt.
+static func double_agent_wins(state: GameState, id: int) -> bool:
+	var p: Player = state.players.get(id)
+	if p == null or not p.alive or p.role_id != RoleCatalog.DOPPELSPION:
+		return false
+	for other: int in state.alive_ids():
+		if state.players[other].counts_as_wolf:
+			return false
+	return true
 
 
 ## Nach jedem Tod: vorläufigen Status berechnen und die verbindliche Prüfung vormerken.
@@ -110,6 +130,9 @@ static func state_is_consistent(s: GameState) -> bool:
 		# Offene und bestätigte Manipulator-Kandidaten müssen zum Zustand passen (danach ändert sich nichts).
 		if c.reason_key == WinCandidate.REASON_MANIPULATOR and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not manipulator_wins(s, c.beneficiary_ids[0]):
+				return false
+		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not double_agent_wins(s, c.beneficiary_ids[0]):
 				return false
 	if confirmed.size() > 1:
 		return false
