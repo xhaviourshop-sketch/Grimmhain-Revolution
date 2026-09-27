@@ -35,21 +35,21 @@ RM-DR-106.2;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.3;ja;rachsuechtiger-wolf;S;;
 RM-DR-107.1;ja;koenig-lykaon;S;;
 RM-DR-107.2;ja;koenig-lykaon;S;;
-RM-DR-108.1;ja;seuchenwolf;S;;
-RM-DR-108.2;ja;seuchenwolf;S;;
-RM-DR-108.3;ja;seuchenwolf;S;;
+RM-DR-108.1;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
+RM-DR-108.2;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nächster tatsächlicher Rudelangriff
+RM-DR-108.3;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Rudelangriff
 RM-DR-109.1;ja;schicksalswolf;S;;
 RM-DR-109.2;ja;schicksalswolf;S;;
 RM-DR-109.3;ja;schicksalswolf;S;;
 RM-DR-110.1;ja;schattenwanderer;S;;
 RM-DR-110.2;ja;schattenwanderer;S;;
-RM-DR-111.1;ja;giftwolf;S;;
-RM-DR-111.2;ja;giftwolf;S;;
-RM-DR-111.3;ja;giftwolf;S;;
-RM-DR-112.1;ja;rudelvater;S;;
-RM-DR-112.2;ja;rudelvater;S;;
-RM-DR-112.3;ja;rudelvater;S;;
-RM-DR-112.4;ja;rudelvater;S;;
+RM-DR-111.1;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";höchstens eine pro Nacht
+RM-DR-111.2;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";sofort privat
+RM-DR-111.3;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Morgen nach Nacht N+2
+RM-DR-112.1;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Rudelangriff (RM-DR-004)
+RM-DR-112.2;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Hinrichtung (LYNCH)
+RM-DR-112.3;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
+RM-DR-112.4;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";zweiter Rudelschritt
 RM-DR-113.1;ja;schwarze-witwe;S;;
 RM-DR-113.2;ja;schwarze-witwe;S;;
 RM-DR-114.1;ja;der-weise;S;;
@@ -78,9 +78,9 @@ RM-DR-121.3;ja;prophet-des-untergangs;S;;
 RM-DR-122.1;ja;daemonischer-wolf;S;;
 RM-DR-122.2;ja;daemonischer-wolf;S;;
 RM-DR-122.3;ja;daemonischer-wolf;S;;
-RM-DR-123.1;ja;schattenhund;S;;
-RM-DR-123.2;ja;schattenhund;S;;
-RM-DR-123.3;ja;schattenhund;S;;
+RM-DR-123.1;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Dorf (RM-DR-010)
+RM-DR-123.2;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";ab Nacht 1, einmal je Leben
+RM-DR-123.3;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Nachtschritte (RM-DR-010)
 RM-DR-124.1;ja;besessener-wolf;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";Lebende inkl. ihm vor dem Tod
 RM-DR-125.1;ja;fenrir;S;;
 RM-DR-125.2;ja;fenrir;S;;
@@ -109,9 +109,9 @@ RM-DR-132.2;ja;voodoo-priester;S;;
 RM-DR-132.3;ja;voodoo-priester;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
 RM-DR-132.4;ja;voodoo-priester;S;;
 RM-DR-133.1;ja;blutwolf;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis für den Spielleiter (RM-DR-008)
-RM-DR-134.1;ja;albtraumwolf;S;;
-RM-DR-134.2;ja;albtraumwolf;S;;
-RM-DR-134.3;ja;albtraumwolf;S;;
+RM-DR-134.1;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";jede Person, Wirkung nur auf Dorf
+RM-DR-134.2;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur die Person
+RM-DR-134.3;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Blocker zuerst
 RM-DR-135.1;ja;cerberus;S;;
 RM-DR-135.2;ja;cerberus;S;;
 RM-DR-136.1;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur Wolfsangriff

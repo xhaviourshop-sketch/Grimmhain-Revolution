@@ -338,3 +338,17 @@ Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit
 - **Parasit, Unverwundbarkeit:** A. Mit lebendem Wirt überlebt er jede Todesursache; nur der Tod des Wirts tötet ihn; Spielleiterkorrekturen bleiben möglich. Ohne lebenden Wirt ist er normal verwundbar (A).
 - **Parasit, Wirtwechsel:** A. Jede Nacht darf er einen neuen Wirt wählen oder beim alten bleiben.
 - **Setup-Regel für Einzelsiegrollen:** Antwort „Setup auf später verschieben, dafür aber alle Rollen miteinander abgleichen und logische Konsequenz ziehen, welche Rollen nie in einer gleichen Runde sein sollten.“ Die Setup-Einschränkung ist vertagt; eine Analyse unverträglicher Rollenkombinationen wird als Vorschlag erstellt. Die bisherige Entscheidung „mehrere Manipulatoren sind getrennte Kandidaten“ bleibt bis dahin bestehen.
+
+## Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit Auslegung. Es gelten die Querschnittsentscheidungen (Wolfsangriff = Rudelangriff, Durchdringungsliste, Blockade nur aktiver Dorf-Nachtschritte).
+
+- **Schattenhund (RM-DR-123):** A. Jede Nacht „jetzt blockieren?“, bis er es einmal genutzt hat (je Leben), auch in Nacht 1; blockiert alle Dorf-Nachtschritte dieser Nacht.
+- **Reihenfolge der Blocker (RM-DR-134.3):** A. Schattenhund und Albtraumwolf handeln ganz am Anfang der Nacht vor allen Dorfrollen; die Blockade gilt für die ganze Nacht.
+- **Albtraumwolf, Ziel (RM-DR-134.1/.2):** A. Jede Nacht freiwillig eine lebende Person (Wirkung nur auf Dorf-Nachtschritte dieser Person) oder Verzicht; dieselbe Person auch in aufeinanderfolgenden Nächten.
+- **Giftwolf, Mitteilung (RM-DR-111.2):** Antwort „Sobald Clara vergiftet wurde, erfährt sie davon.“ Das Ziel erhält sofort eine private Mitteilung.
+- **Giftwolf, Tod (RM-DR-111.3):** A. Vergiftet in Nacht N, stirbt sie in der Morgenauflösung nach Nacht N+2.
+- **Giftwolf, Regeln (RM-DR-111.1):** B. Höchstens eine Giftpranke pro Nacht; nichts hebt das Gift auf außer dem früheren Tod des Ziels.
+- **Giftwolf, Ablauf:** A. Eigener Nachtschritt nach dem Rudel, freiwillig; zwei Ladungen je Leben.
+- **Rudelvater (RM-DR-112):** A. Nach seinem Lynch gibt es in der folgenden Nacht direkt nach dem Rudel einen zweiten Rudelschritt; dessen Opfer stirbt am Morgen und durchdringt Schutz (Liste RM-DR-005). Den ersten Tod, der weder Rudelangriff noch Lynch ist, überlebt er einmal (je Leben); Spielleitertötungen sind immer wirksam.
+- **Seuchenwolf (RM-DR-108):** A. Nach seinem Tod durchdringt der nächste tatsächliche Rudelangriff Schutz (Liste RM-DR-005) und verbraucht die Wirkung, egal ob Schutz bestand; eine Nacht ohne Rudelopfer verbraucht nichts; mehrere tote Seuchenwölfe stapeln nicht.

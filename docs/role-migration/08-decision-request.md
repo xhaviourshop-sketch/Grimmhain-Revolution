@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 23 | 46 |
+| entschieden | 28 | 62 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 48 | 137 |
+| später | 43 | 121 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -405,17 +405,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `seuchenwolf`; Wechselwirkung laut Dossier: Werwolf, Schutzengel, Schutzgeist, Dorfwache, Der Weise, Waldhexe, Nekromant, Kartenschlucker, Hades, Dorfschmied, Märtyrerin, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (gemeinsames …
 - **Belege:** [Dossier](dossiers/wolves-a.md#seuchenwolf); RM-C-006, RM-C-007, RM-C-008 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005, RM-DR-009, RM-DR-011.
-- **RM-DR-108.1 · Umfang "alle Schutzeffekte"** · Status: später (K11)
+- **RM-DR-108.1 · Umfang "alle Schutzeffekte"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: wirklich alles, was einen Rudelkill verhindert
   - Option B: nur Schutzrollen (Schutzengel, Dorfwache, Der Weise), keine Schilde/Rettungen
   - Auswirkung: Balance: A deutlich stärker; Umsetzung: Liste der durchdrungenen Abfangregeln in KillPipeline festlegen
   - Empfehlung: Einheitliche Liste mit Rudelvater teilen
-- **RM-DR-108.2 · Verbrauch** · Status: später (K11)
+- **RM-DR-108.2 · Verbrauch** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nächster Angriff, auch wenn er scheitert
   - Option B: nächster erfolgreiche Kill
   - Auswirkung: Balance: A kann durch Hexe verpuffen; Umsetzung: Verbrauchszeitpunkt
   - Empfehlung: A (Text)
-- **RM-DR-108.3 · Welche Angriffe** · Status: später (K11)
+- **RM-DR-108.3 · Welche Angriffe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Rudelangriff
   - Option B: jeder Wolfskill
   - Auswirkung: Balance: gering; Umsetzung: Ursachen-Attribut
@@ -472,17 +472,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `giftwolf`; Wechselwirkung laut Dossier: Rudelvater (keine Rettung), Ritter (Vergeltung), Schattenwanderer, Nekromant/Kartenschlucker/Hades (Schilde), Zeitwächter (Morgenzähler), Frankenstein/Kutscher (Wiederbelebung), Orakel (sieht …
 - **Belege:** [Dossier](dossiers/wolves-a.md#giftwolf); RM-C-012, RM-C-013, RM-C-014 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-011.
-- **RM-DR-111.1 · Zwei Ladungen in einer Nacht** · Status: später (K11)
+- **RM-DR-111.1 · Zwei Ladungen in einer Nacht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: beide sofort erlaubt
   - Option B: max 1 pro Nacht
   - Auswirkung: Balance: A erlaubt Doppelschlag; Umsetzung: Schrittbedingung
   - Empfehlung: B (07)
-- **RM-DR-111.2 · "erfährt davon"** · Status: später (K11)
+- **RM-DR-111.2 · "erfährt davon"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: öffentlich/Ansage an Ziel in der Nacht
   - Option B: SL flüstert am Morgen
   - Auswirkung: Balance: Informationsvorteil fürs Ziel; Umsetzung: InfoRecord actor=Ziel
   - Empfehlung: A als Actor-Ereignis
-- **RM-DR-111.3 · Zeitpunkt "zwei Tage später"** · Status: später (K11)
+- **RM-DR-111.3 · Zeitpunkt "zwei Tage später"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: Morgen von Tag N+1
   - Option B: Ende von Tag N+1
   - Auswirkung: Balance: gering; Umsetzung: Termin in `day_number`
@@ -496,22 +496,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `rudelvater`; Wechselwirkung laut Dossier: Werwolf (Rudel), Seuchenwolf (gemeinsame Durchdringung), Giftwolf, Schattenwanderer, Nekromant/Kartenschlucker/Hades, Dorfwache, Der Weise, Dorfschmied, Voodoo-Priester, Märtyrerin, Albtraumwolf, Sensenträger, …
 - **Belege:** [Dossier](dossiers/wolves-a.md#rudelvater); RM-C-015, RM-C-016, RM-C-017, RM-C-018 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005.
-- **RM-DR-112.1 · Was ist "Wolfsangriff"** · Status: später (K11)
+- **RM-DR-112.1 · Was ist "Wolfsangriff"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: jede Tötung durch eine Wolfsrolle
   - Option B: nur Rudel-/Wolfsnachtangriff
   - Auswirkung: Balance: A macht ihn verwundbarer; Umsetzung: Ursachen-Attribut `wolf_source`
   - Empfehlung: A oder Liste
-- **RM-DR-112.2 · Was ist "Lynch"** · Status: später (K11)
+- **RM-DR-112.2 · Was ist "Lynch"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur die Hinrichtung selbst
   - Option B: alles, was aus einer Hinrichtung folgt
   - Auswirkung: Balance: gering; Umsetzung: Ursachen-Attribut execution vs. execution_side
   - Empfehlung: nur Hinrichtung (Code)
-- **RM-DR-112.3 · "alle Schutzfähigkeiten"** · Status: später (K11)
+- **RM-DR-112.3 · "alle Schutzfähigkeiten"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: wirklich alle Abfangregeln
   - Option B: nur Schutzrollen und Schilde
   - Auswirkung: Balance: gering; Umsetzung: gemeinsame Durchdringungsliste mit Seuchenwolf
   - Empfehlung: eine Liste für beide
-- **RM-DR-112.4 · Wer wählt wann** · Status: später (K11)
+- **RM-DR-112.4 · Wer wählt wann** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: eigener Rudelschritt in der Nacht
   - Option B: Pick bei Morgenauflösung
   - Auswirkung: Balance: kein, aber Ablauf/Ansage; Umsetzung: zweiter Rudel-Prompt in StepQueue
@@ -755,17 +755,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schattenhund`; Wechselwirkung laut Dossier: alle Dorf-Nachtrollen; Wolfskind und Lehrling (Begründung der Nacht-1-Sperre); Albtraumwolf, Zeitwächter, Der Weise (gleiche …
 - **Belege:** [Dossier](dossiers/wolves-b.md#schattenhund); RM-C-025, RM-C-026, RM-C-027 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-010, RM-DR-014.
-- **RM-DR-123.1 · Betroffene Rollen** · Status: später (K8)
+- **RM-DR-123.1 · Betroffene Rollen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Fraktion Dorf
   - Option B: alle Nicht-Wölfe
   - Auswirkung: Balance: mittel: Solos werden mitblockiert; Umsetzung: Filter über Fraktion statt "nicht Wolf"
   - Empfehlung: nur Dorf
-- **RM-DR-123.2 · Nacht 1** · Status: später (K8)
+- **RM-DR-123.2 · Nacht 1** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: Einsatz ab Nacht 1
   - Option B: ab Nacht 2
   - Auswirkung: Balance: gering; Umsetzung: Verfügbarkeitsbedingung des Schritts
   - Empfehlung: ab Nacht 2, Text ergänzen
-- **RM-DR-123.3 · Nicht-Nachtschritt-Effekte** · Status: später (K8)
+- **RM-DR-123.3 · Nicht-Nachtschritt-Effekte** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Nachtschritte
   - Option B: auch Reaktionen/passive Effekte dieser Nacht
   - Auswirkung: Balance: mittel; Umsetzung: Blockade als Schritt-Status oder als globale Regel
@@ -1008,17 +1008,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `albtraumwolf`; Wechselwirkung laut Dossier: alle Nicht-Wolf-Nachtrollen mit tier > 2.1; Schattenhund/Zeitwächter/Der Weise (gleiche Blockadefamilie); Dämonischer Wolf (Verfluchte nicht wählbar); Rudel …
 - **Belege:** [Dossier](dossiers/wolves-b.md#albtraumwolf); RM-C-033, RM-C-034, RM-C-036 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-010.
-- **RM-DR-134.1 · Ziele** · Status: später (K8)
+- **RM-DR-134.1 · Ziele** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Fraktion Dorf
   - Option B: alle Nicht-Wölfe
   - Auswirkung: Balance: mittel; Umsetzung: Zielfilter
   - Empfehlung: alle Nicht-Wölfe (Solos sind Gegner der Wölfe), Text anpassen
-- **RM-DR-134.2 · Umfang** · Status: später (K8)
+- **RM-DR-134.2 · Umfang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur die gewählte Person
   - Option B: alle Personen der Rolle
   - Auswirkung: Balance: mittel bei Mehrfachrollen; Umsetzung: Blockade pro Person vs. pro Rolle
   - Empfehlung: nur die Person
-- **RM-DR-134.3 · Späte Wirkung** · Status: später (K8)
+- **RM-DR-134.3 · Späte Wirkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: Albtraumwolf handelt vor Dorfrollen
   - Option B: Blockade nur für spätere Schritte
   - Auswirkung: Balance: mittel: Schutzengel nie blockierbar; Umsetzung: Nachtreihenfolge
