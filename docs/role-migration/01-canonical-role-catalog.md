@@ -3,6 +3,8 @@
 **Stand:** 2026-09-26 · Basiscommit `4673b0b` · nur Analyse
 **Statuswerte:** ausschließlich nach [`00-method-and-sources.md`](00-method-and-sources.md) §3. **IDs:** DR-01 (deutsches ASCII-kebab-case), abgeleitet aus dem Legacy-Namen (ä→ae, ö→oe, ü→ue, ß→ss, Punkt entfällt, Leerzeichen→Bindestrich). Die 11 Godot-IDs folgen exakt diesem Schema.
 
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist im Regelkern umgesetzt und getestet; aktueller Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md).
+
 ## 1. Nachgewiesene Gesamtzahl
 
 Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutige Namen; `ROLE_DESCRIPTIONS`, `ROLE_NAMES_EN`, `ROLE_DESCRIPTIONS_EN`, `ROLE_ABILITIES` (`js/core/role-abilities.js`), die Vereinigung der vier Akte (`js/core/akte.js`), die Kartenbilder (je 72 plus Rückseite unter `assets/cards/de` und `assets/cards/en`) und die 72 Zeilen von [`../godot-migration/04-rules-migration-matrix.md`](../godot-migration/04-rules-migration-matrix.md) enthalten dieselbe Menge. Einzige Quelle mit anderer Zahl: `ROADMAP.md` (Zeilen 45, 153, 265) nennt „75+ Rollen“; das ist durch keine Code-, Daten- oder Assetquelle belegt. Details: [`00-method-and-sources.md`](00-method-and-sources.md) §5 und [`dossiers/inventory.md`](dossiers/inventory.md).
@@ -11,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 11 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 12 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
-| fehlend, Regel ausreichend klar (`documented-only`) | 3 |
+| fehlend, Regel ausreichend klar (`documented-only`) | 2 |
 | fehlend, Entscheidung nötig (`decision-required`) | 58 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 61 fehlende) | 19 |
-| Legacy-Befund `legacy-contradictory` (nur 61 fehlende) | 27 |
-| Legacy-Befund `legacy-broken` (nur 61 fehlende) | 11 |
-| Legacy-Befund `not-found` (nur 61 fehlende) | 4 |
+| Legacy-Befund `legacy-verified` (nur 60 fehlende) | 18 |
+| Legacy-Befund `legacy-contradictory` (nur 60 fehlende) | 27 |
+| Legacy-Befund `legacy-broken` (nur 60 fehlende) | 11 |
+| Legacy-Befund `not-found` (nur 60 fehlende) | 4 |
 
-<!-- check:counts total=72 implemented=11 remaining=61 -->
+<!-- check:counts total=72 implemented=12 remaining=60 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -48,7 +50,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 12 | `werwolf` | Werwolf / Werewolf | Wölfe | I, II, III, IV | 2.0 | `implemented-and-tested` | `legacy-verified` | `automatic` | Tötung | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 13 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Wölfe | I, II, III, IV | 2.2 | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | M / hoch | K11 | – | [03](03-remaining-roles-analysis.md#rachsuechtiger-wolf) · [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf) |
 | 14 | `koenig-lykaon` | König Lykaon / King Lycaon | Wölfe | I | 2.4 (once) | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | M / mittel | K12 | C | [03](03-remaining-roles-analysis.md#koenig-lykaon) · [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
-| 15 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | Wölfe | IV | – | `documented-only` | `legacy-verified` | `automatic` | sonstige Spezialmechanik | S / niedrig | K1 | A | [03](03-remaining-roles-analysis.md#siegreicher-wolf) · [Dossier](dossiers/wolves-a.md#siegreicher-wolf) |
+| 15 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | Wölfe | IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | sonstige Spezialmechanik | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#siegreicher-wolf) |
 | 16 | `seuchenwolf` | Seuchenwolf / Blight Wolf | Wölfe | IV | – | `decision-required` | `legacy-contradictory` | `automatic` | Wolfsangriff-Modifikation | M / mittel | K11 | – | [03](03-remaining-roles-analysis.md#seuchenwolf) · [Dossier](dossiers/wolves-a.md#seuchenwolf) |
 | 17 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Wölfe | IV | 2.5 | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | M / mittel | K11 | – | [03](03-remaining-roles-analysis.md#schicksalswolf) · [Dossier](dossiers/wolves-a.md#schicksalswolf) |
 | 18 | `schattenwanderer` | Schattenwanderer / Shadowwalker | Wölfe | II | 2.6 (once) | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | M / hoch | K6 | – | [03](03-remaining-roles-analysis.md#schattenwanderer) · [Dossier](dossiers/wolves-a.md#schattenwanderer) |

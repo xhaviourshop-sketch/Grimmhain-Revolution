@@ -6,6 +6,8 @@ Dieses Dokument fasst je fehlender Rolle die belegten Kernaussagen zusammen. Die
 
 Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier „Text DE/EN“), **Legacy-Code tut** (Dossier „Legacy-Codeverhalten“), **React-Version tut** (Dossier „React-Version“; für keine der 61 Rollen eigenes Regelverhalten), **Dokumentation empfiehlt** (Dossier „Bisherige Doku“), **neuer Godot-Kern tut** (für alle 61: nichts, keine Rolle ist im RoleCatalog), **noch unentschieden** (Entscheidungen unten).
 
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt; sein Abschnitt steht jetzt in [`02`](02-implemented-roles-audit.md) §4.12, der aktuelle Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md). Diese Datei behandelt damit 60 fehlende Rollen.
+
 **Lesehilfe:** In übernommenen Zellen bezeichnen `01` bis `07` ohne Pfad die älteren Dokumente unter `docs/godot-migration/`; Pfadkürzel wie in [`04`](04-rule-conflicts.md) §3.
 
 **Konsolidierung 2026-09-27:** Der Status jeder Entscheidung steht in [`08`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv); die Spalten „Charge“ und „1.0“ sind Planung, keine Freigabe.
@@ -22,7 +24,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`spuerhund`](#spuerhund) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Fehlinformation, Zufallsmechanik | M / mittel | K7 | – |
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`koenig-lykaon`](#koenig-lykaon) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | Fraktionswechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit | M / mittel | K12 | C |
-| [`siegreicher-wolf`](#siegreicher-wolf) | Wölfe | `documented-only` | `legacy-verified` | `automatic` | sonstige Spezialmechanik | globale Regeländerung | S / niedrig | K1 | A |
 | [`seuchenwolf`](#seuchenwolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Wolfsangriff-Modifikation | Todesreaktion, globale Regeländerung | M / mittel | K11 | – |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
 | [`schattenwanderer`](#schattenwanderer) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | Zielumleitung, Einmalfähigkeit | M / hoch | K6 | – |
@@ -249,27 +250,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K12 / ab Option C |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeitverhalten der hartkodierten Prompts in EN. |
 | Detail | [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
-
-### `siegreicher-wolf`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Siegreicher Wolf / Victorious Wolf |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / IV / – |
-| Migrationsstatus | `documented-only` |
-| Legacy-Befund | `legacy-verified`.  |
-| DE/EN-Vergleich | JA, semantisch gleich. |
-| Automationsziel | `automatic` |
-| Mechanik | primär: sonstige Spezialmechanik; sekundär: globale Regeländerung |
-| Größe / Risiko | S / niedrig |
-| Vorhandene Godot-Systeme | WinRules/WinCandidate (Gewicht pro Person), Nachtplan (Rudelschritt nach counts_as_wolf). |
-| Neue Systeme | keines außer einem Paritätsgewicht in WinRules (kleine Erweiterung). |
-| Abhängigkeiten | Werwolf (Rudelschritt), alle Siegregeln, Doppelspion (Sieg bei 0 Wölfen). |
-| Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K1 / ab Option A |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/wolves-a.md#siegreicher-wolf) |
 
 ### `seuchenwolf`
 

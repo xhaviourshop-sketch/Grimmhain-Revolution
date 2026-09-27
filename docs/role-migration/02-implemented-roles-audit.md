@@ -1,9 +1,11 @@
-# 02 · Audit der 11 umgesetzten Godot-Rollen
+# 02 · Audit der umgesetzten Godot-Rollen (11 Vertical-Slice-Rollen, Nachtrag `siegreicher-wolf`)
 
 **Stand:** 2026-09-26 · Basiscommit `4673b0b` · nur Analyse, kein Code geändert
 **Statuswerte:** ausschließlich aus [`00-method-and-sources.md`](00-method-and-sources.md) §3.
 
 Pfade sind relativ zu `docs/role-migration/`. Der Auftrag nennt 11 Rollen als umgesetzt. Diese Liste wurde nicht übernommen, sondern gegen RoleCatalog, Produktionscode, Tests, README und Regelregister geprüft.
+
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist im Regelkern umgesetzt und getestet; aktueller Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md).
 
 ## 1. Ergebnis in einem Satz
 
@@ -11,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 11 |
-| davon Migrationsstatus `implemented-and-tested` | 11 |
+| im RoleCatalog vorhandene Rollen | 12 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 12 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 9 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 10 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -56,6 +58,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 9 | `lehrling` | Lehrling / Apprentice | village, nach Erbe die der Rolle | nein, nach Erbe die der Rolle | 11 | `apprentice_rules.gd`, `apprentice_bond.gd`, `role_transition.gd`, `kill_pipeline.gd`, `gm_corrections.gd` | `test_lehrling.gd` (23) | Register §9, DR-11 und Korrekturrunden | `implemented-and-tested` | `automatic` | `legacy-broken` (Bug F5, toter Lehrling erbt) |
 | 10 | `manipulator` | Manipulator / Manipulator | solo | nein | – | `rules_engine.gd` (Tod bei `Nominate`), `win_rules.gd` (`manipulator_wins`), `win_candidate.gd` | `test_manipulator.gd` (18) | Register §10, DR-12 | `implemented-and-tested` | `automatic` | `legacy-broken` (Richter-Nominierung tötet nicht) |
 | 11 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | wolves | ja | – (Teil des Rudels) | `execution_rules.gd` (`preview`, `execute`), `gm_corrections.gd` (`set_mirror`) | `test_spiegelwolf.gd` (20) | Register §11, DR-13 | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 12 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `role_catalog.gd` (`parity_weight`), `win_rules.gd` (`evaluate`) | `test_siegreicher_wolf.gd` (10), `test_role_interaction_fuzz.gd` | Rollentext, [`10`](10-next-decisions.md) „Zur Kenntnis“, G-SIEG-2 | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -123,6 +126,11 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt:** zentrale Hinrichtungsauflösung `ExecutionRules.preview`/`execute`, Spiegelung auf die nominierende Person einmal pro Person, Selbstnominierung, `set_mirror`.
 - **Tests:** 20 Testfunktionen.
 - **Grenzen:** `ExecutionRules` kennt nur die Spiegelung. Weitere Hinrichtungsreaktionen (`wahnsinniger-kutscher`, `fenrir`, `cerberus`, `voodoo-priester`, `selbstmoerder`, `henker`, `rudelvater`, `der-weise`, `feuerteufel`) brauchen eine geordnete Liste von Hinrichtungsregeln mit fester Reihenfolge (Legacy-Reihenfolge `doLynchFlow`, `js/core/night.js:421-504`).
+
+### 4.12 `siegreicher-wolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Wolfsfraktion ohne eigenen Schritt, Teil des Rudels (G-PH-6). `RoleCatalog.parity_weight` = 2; `WinRules.evaluate` zählt ihn, solange er lebt, in der Wolfsparität doppelt (`reason_args.wolves` ist der Paritätswert). Die Dorfbedingung zählt weiter lebende Wolfspersonen, der Manipulator weiter Personen.
+- **Tests:** `test_siegreicher_wolf.gd` (10): Rudel allein, Orakel `werwolf`, Parität 2 gegen 2, tot zählt 0, Dorfsieg erst ohne lebenden Wolf, zwei Kopien, Wiederbelebung, Lehrling-Erbe mit sofortiger Doppelzählung, Rollenkorrektur, Manipulator zählt Personen, Save/Load, Replay, Leak; zusätzlich im Fuzztest.
+- **Grenzen:** Regelquelle ist der widerspruchsfreie Rollentext (Legacy gleich) mit der Auslegung aus [`10`](10-next-decisions.md) „Zur Kenntnis“; keine eigene Decision-Log-Zeile.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

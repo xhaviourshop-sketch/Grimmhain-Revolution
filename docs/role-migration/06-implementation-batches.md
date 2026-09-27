@@ -8,7 +8,7 @@ Alle 61 fehlenden Rollen sind genau einer von 16 Chargen zugeordnet. Die Chargen
 
 | Charge | Name | Rollen | davon 1.0 (Option B) | Größe | Risiko |
 |---|---|---:|---|---|---|
-| K1 | Sieg- und Zählregeln | 3 | `siegreicher-wolf`, `selbstmoerder`, `doppelspion` | M bis L | mittel |
+| K1 | Sieg- und Zählregeln | 2 (+1 umgesetzt) | `selbstmoerder`, `doppelspion` (umgesetzt: `siegreicher-wolf`) | M bis L | mittel |
 | K2 | Informationsmodell | 4 | `waldlaeufer`, `doktor` | M | niedrig |
 | K3 | Sitznachbarschaft | 5 | `wahnsinniger-kutscher`, `ritter` | M | mittel |
 | K4 | Todes- und Hinrichtungsreaktionen | 4 | `besessener-wolf`, `cerberus` | M | mittel |
@@ -76,7 +76,9 @@ Nicht als neues System geplant: Stimmsystem (ausgeschlossen, RM-DR-008), Besuchs
 
 ## 3. Charge K1 · Sieg- und Zählregeln und die nächste Einheit
 
-**Rollen Charge K1 (3):** `siegreicher-wolf`, `selbstmoerder`, `doppelspion`
+**Rollen Charge K1 (2):** `selbstmoerder`, `doppelspion`
+
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)); die Bewertung unten bleibt als Planungsstand erhalten.
 
 **Konsolidierung 2026-09-27:** Die frühere Fassung dieses Abschnitts nannte K1 als Ganzes die erste Einheit, schätzte „S bis M, Risiko niedrig“, legte die nächste Schemanummer fest und nannte RM-DR-007 und RM-DR-016 als Blocker. Diese Punkte sind korrigiert: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig, eine Schemanummer wird nicht vorab festgelegt, und die Größe ist unten neu begründet. Die Auswahl der Rollen ist eine Produktentscheidung (RM-DR-017) und nicht freigegeben.
 
