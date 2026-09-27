@@ -6,6 +6,8 @@ Dieses Dokument fasst je fehlender Rolle die belegten Kernaussagen zusammen. Die
 
 Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier „Text DE/EN“), **Legacy-Code tut** (Dossier „Legacy-Codeverhalten“), **React-Version tut** (Dossier „React-Version“; für keine der 61 Rollen eigenes Regelverhalten), **Dokumentation empfiehlt** (Dossier „Bisherige Doku“), **neuer Godot-Kern tut** (für alle 61: nichts, keine Rolle ist im RoleCatalog), **noch unentschieden** (Entscheidungen unten).
 
+**Lesehilfe:** In übernommenen Zellen bezeichnen `01` bis `07` ohne Pfad die älteren Dokumente unter `docs/godot-migration/`; Pfadkürzel wie in [`04`](04-rule-conflicts.md) §3.
+
 ## 1. Übersicht
 
 | ID | Fraktion | Godot | Legacy | Auto | Mechanik (primär) | sekundär | Größe / Risiko | Charge | 1.0 |
@@ -1358,4 +1360,3 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / 1.0 | K15 / in keiner Option |
 | Belegsicherheit | hoch für Zählerpositionen und Vergleich. Mittel für die angezeigte Tagesnummer: der Phasenzähler liest `window.state` (F8) und zeigt im Normalbetrieb vermutlich dauerhaft "Tag 1"; die Protokoll-Labels (`gamelog.js`) sind die belastbare Anzeigequelle. --- ## … |
 | Detail | [Dossier](dossiers/solos-b.md#todesprediger) |
-

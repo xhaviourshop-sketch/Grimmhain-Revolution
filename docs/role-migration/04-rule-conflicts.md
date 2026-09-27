@@ -36,6 +36,8 @@ Widersprüche bleiben offen stehen. Die Spalte „Empfehlung“ ist ein Vorschla
 
 Je Rolle eine Tabelle. Spalten wie im Auftrag; „PO“ = Product-Owner-Entscheidung erforderlich. Die Spalten Legacy-Code, React und Doku fassen den Befund zusammen, die Fundstellen stehen im Dossier. Rollen ohne Eintrag haben keinen belegten Text-/Code-Widerspruch.
 
+**Lesehilfe:** In übernommenen Zellen und Bugtexten bezeichnen `01` bis `07` ohne Pfad die älteren Dokumente unter `docs/godot-migration/` (nicht die Dokumente dieses Ordners); Pfadkürzel: `roles` = `js/core/roles.js`, `chunk` = `js/core/abilities-roles-chunk.js`, `ab` = `js/core/abilities.js`, `help` = `js/core/abilities-helpers.js`, `night` = `js/core/night.js`, `core` = `js/ui/core.js`, `ui` = `js/ui/ui.js`, `state` = `js/core/state.js`, `gh` = `game.html`.
+
 ### `loki`
 
 Dossier: [village-1.md](dossiers/village-1.md#loki) · Entscheidung: RM-DR-101
