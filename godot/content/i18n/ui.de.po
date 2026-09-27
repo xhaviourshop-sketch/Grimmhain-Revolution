@@ -586,3 +586,153 @@ msgstr "Zurücksetzen"
 
 msgid "ui.setup.distribution.edit_roles"
 msgstr "Rollen bearbeiten"
+
+msgid "ui.setup.distribution.heading"
+msgstr "Rollen verteilen"
+
+msgid "ui.setup.distribution.counts"
+msgstr "{persons} Personen · {roles} Rollen"
+
+msgid "ui.setup.distribution.secret_warning"
+msgstr "Rollen sind geheim. Zeige diesen Bildschirm keinen Mitspielenden."
+
+msgid "ui.setup.distribution.mode.heading"
+msgstr "Verteilungsmodus"
+
+msgid "ui.setup.distribution.mode.random"
+msgstr "Zufällig"
+
+msgid "ui.setup.distribution.mode.manual"
+msgstr "Manuell"
+
+msgid "ui.setup.distribution.mode.active"
+msgstr "Aktiv: {mode}"
+
+msgid "ui.setup.distribution.mode.random_hint"
+msgstr "Reproduzierbar über einen gespeicherten Seed."
+
+msgid "ui.setup.distribution.mode.manual_hint"
+msgstr "Du weist jeder Person selbst eine Rolle zu."
+
+msgid "ui.setup.distribution.distribute"
+msgstr "Zufällig verteilen"
+
+msgid "ui.setup.distribution.reshuffle"
+msgstr "Neu mischen"
+
+msgid "ui.setup.distribution.confirm"
+msgstr "Verteilung bestätigen"
+
+msgid "ui.setup.distribution.seed"
+msgstr "Seed {seed} · Mischung {count}"
+
+msgid "ui.setup.distribution.seed_none"
+msgstr "Seed: noch keiner"
+
+msgid "ui.setup.distribution.list_heading"
+msgstr "Personen"
+
+msgid "ui.setup.distribution.reveal"
+msgstr "Geheime Zuordnung zeigen"
+
+msgid "ui.setup.distribution.hide"
+msgstr "Zuordnung verbergen"
+
+msgid "ui.setup.distribution.secret_heading"
+msgstr "Geheim · nur für die Spielleitung"
+
+msgid "ui.setup.distribution.assigned"
+msgstr "zugewiesen"
+
+msgid "ui.setup.distribution.unassigned"
+msgstr "nicht zugewiesen"
+
+msgid "ui.setup.distribution.appearance"
+msgstr "Scheinrolle: {role} (vorläufig)"
+
+msgid "ui.setup.distribution.choose"
+msgstr "Rolle zuweisen"
+
+msgid "ui.setup.distribution.change"
+msgstr "Rolle ändern"
+
+msgid "ui.setup.distribution.remaining_count"
+msgstr "Noch {count} Rollen offen"
+
+msgid "ui.setup.distribution.remaining_none"
+msgstr "Alle Rollen vergeben"
+
+msgid "ui.setup.distribution.remaining_pool"
+msgstr "Verbleibende Rollen: {roles}"
+
+msgid "ui.setup.distribution.remaining_item"
+msgstr "{name} ×{count}"
+
+msgid "ui.setup.distribution.status.none"
+msgstr "Noch nicht verteilt."
+
+msgid "ui.setup.distribution.status.partial"
+msgstr "Verteilung unvollständig: {assigned} von {persons} zugewiesen."
+
+msgid "ui.setup.distribution.status.complete"
+msgstr "Alle zugewiesen. Bereit zum Bestätigen."
+
+msgid "ui.setup.distribution.status.confirmed"
+msgstr "Verteilung bestätigt."
+
+msgid "ui.setup.distribution.invalidated.person_count_changed"
+msgstr "Personen geändert: die bisherige Verteilung wurde verworfen."
+
+msgid "ui.setup.distribution.invalidated.roles_changed"
+msgstr "Rollen geändert: die bisherige Verteilung wurde verworfen."
+
+msgid "ui.setup.distribution.summary.heading"
+msgstr "Bereit für Sitzordnung"
+
+msgid "ui.setup.distribution.summary.body"
+msgstr "{persons} Personen · Dorf {village} · Werwölfe {wolves} · Einzelsieg {solo} · Modus {mode} · Seed {seed}"
+
+msgid "ui.setup.distribution.summary.next"
+msgstr "Die Sitzordnung folgt in einem späteren Schritt."
+
+msgid "ui.setup.distribution.toast.distributed"
+msgstr "Rollen verteilt"
+
+msgid "ui.setup.distribution.toast.reshuffled"
+msgstr "Neu gemischt"
+
+msgid "ui.setup.distribution.toast.confirmed"
+msgstr "Verteilung bestätigt"
+
+msgid "ui.setup.distribution.picker.title"
+msgstr "Rolle für Nr. {number}"
+
+msgid "ui.setup.distribution.picker.message"
+msgstr "{name} · Wähle eine noch freie Rolle."
+
+msgid "ui.setup.distribution.picker.option"
+msgstr "{name} · {count} frei"
+
+msgid "ui.setup.distribution.picker.unassign"
+msgstr "Zuweisung entfernen"
+
+msgid "ui.setup.distribution.picker.swap_heading"
+msgstr "Rolle tauschen mit"
+
+msgid "ui.setup.distribution.picker.swap_option"
+msgstr "Nr. {number} · {name}"
+
+msgid "ui.setup.dialog.mode.title"
+msgstr "Verteilungsmodus wechseln?"
+
+msgid "ui.setup.dialog.mode.message"
+msgstr "Die bisherige Zuordnung wird verworfen."
+
+msgid "ui.setup.dialog.mode.confirm"
+msgstr "Modus wechseln"
+
+msgid "ui.setup.error.distribution_incomplete"
+msgstr "Die Verteilung ist noch unvollständig."
+
+msgid "ui.setup.error.no_copy_available"
+msgstr "Von dieser Rolle ist keine Kopie mehr frei."

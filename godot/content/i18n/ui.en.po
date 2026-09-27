@@ -586,3 +586,153 @@ msgstr "Reset"
 
 msgid "ui.setup.distribution.edit_roles"
 msgstr "Edit roles"
+
+msgid "ui.setup.distribution.heading"
+msgstr "Distribute roles"
+
+msgid "ui.setup.distribution.counts"
+msgstr "{persons} players · {roles} roles"
+
+msgid "ui.setup.distribution.secret_warning"
+msgstr "Roles are secret. Do not show this screen to players."
+
+msgid "ui.setup.distribution.mode.heading"
+msgstr "Distribution mode"
+
+msgid "ui.setup.distribution.mode.random"
+msgstr "Random"
+
+msgid "ui.setup.distribution.mode.manual"
+msgstr "Manual"
+
+msgid "ui.setup.distribution.mode.active"
+msgstr "Active: {mode}"
+
+msgid "ui.setup.distribution.mode.random_hint"
+msgstr "Reproducible from a stored seed."
+
+msgid "ui.setup.distribution.mode.manual_hint"
+msgstr "You assign a role to each player yourself."
+
+msgid "ui.setup.distribution.distribute"
+msgstr "Distribute randomly"
+
+msgid "ui.setup.distribution.reshuffle"
+msgstr "Reshuffle"
+
+msgid "ui.setup.distribution.confirm"
+msgstr "Confirm distribution"
+
+msgid "ui.setup.distribution.seed"
+msgstr "Seed {seed} · shuffle {count}"
+
+msgid "ui.setup.distribution.seed_none"
+msgstr "Seed: none yet"
+
+msgid "ui.setup.distribution.list_heading"
+msgstr "Players"
+
+msgid "ui.setup.distribution.reveal"
+msgstr "Show secret assignment"
+
+msgid "ui.setup.distribution.hide"
+msgstr "Hide assignment"
+
+msgid "ui.setup.distribution.secret_heading"
+msgstr "Secret · game master only"
+
+msgid "ui.setup.distribution.assigned"
+msgstr "assigned"
+
+msgid "ui.setup.distribution.unassigned"
+msgstr "not assigned"
+
+msgid "ui.setup.distribution.appearance"
+msgstr "Decoy role: {role} (provisional)"
+
+msgid "ui.setup.distribution.choose"
+msgstr "Assign role"
+
+msgid "ui.setup.distribution.change"
+msgstr "Change role"
+
+msgid "ui.setup.distribution.remaining_count"
+msgstr "{count} roles left"
+
+msgid "ui.setup.distribution.remaining_none"
+msgstr "All roles assigned"
+
+msgid "ui.setup.distribution.remaining_pool"
+msgstr "Remaining roles: {roles}"
+
+msgid "ui.setup.distribution.remaining_item"
+msgstr "{name} ×{count}"
+
+msgid "ui.setup.distribution.status.none"
+msgstr "Not distributed yet."
+
+msgid "ui.setup.distribution.status.partial"
+msgstr "Distribution incomplete: {assigned} of {persons} assigned."
+
+msgid "ui.setup.distribution.status.complete"
+msgstr "All assigned. Ready to confirm."
+
+msgid "ui.setup.distribution.status.confirmed"
+msgstr "Distribution confirmed."
+
+msgid "ui.setup.distribution.invalidated.person_count_changed"
+msgstr "Players changed: the previous distribution was discarded."
+
+msgid "ui.setup.distribution.invalidated.roles_changed"
+msgstr "Roles changed: the previous distribution was discarded."
+
+msgid "ui.setup.distribution.summary.heading"
+msgstr "Ready for seating"
+
+msgid "ui.setup.distribution.summary.body"
+msgstr "{persons} players · Village {village} · Werewolves {wolves} · Solo {solo} · Mode {mode} · Seed {seed}"
+
+msgid "ui.setup.distribution.summary.next"
+msgstr "Seating follows in a later step."
+
+msgid "ui.setup.distribution.toast.distributed"
+msgstr "Roles distributed"
+
+msgid "ui.setup.distribution.toast.reshuffled"
+msgstr "Reshuffled"
+
+msgid "ui.setup.distribution.toast.confirmed"
+msgstr "Distribution confirmed"
+
+msgid "ui.setup.distribution.picker.title"
+msgstr "Role for no. {number}"
+
+msgid "ui.setup.distribution.picker.message"
+msgstr "{name} · Pick a role that is still free."
+
+msgid "ui.setup.distribution.picker.option"
+msgstr "{name} · {count} free"
+
+msgid "ui.setup.distribution.picker.unassign"
+msgstr "Remove assignment"
+
+msgid "ui.setup.distribution.picker.swap_heading"
+msgstr "Swap role with"
+
+msgid "ui.setup.distribution.picker.swap_option"
+msgstr "No. {number} · {name}"
+
+msgid "ui.setup.dialog.mode.title"
+msgstr "Change distribution mode?"
+
+msgid "ui.setup.dialog.mode.message"
+msgstr "The current assignment will be discarded."
+
+msgid "ui.setup.dialog.mode.confirm"
+msgstr "Change mode"
+
+msgid "ui.setup.error.distribution_incomplete"
+msgstr "The distribution is not complete yet."
+
+msgid "ui.setup.error.no_copy_available"
+msgstr "No copy of this role is left."

@@ -73,6 +73,7 @@ const SWITCH_WIDTH := 64              ## Schaltersymbol (Bewegung reduzieren)
 const SWITCH_HEIGHT := 32
 const DIALOG_WIDTH := 560
 const DIALOG_WIDE_WIDTH := 720       ## Dialog mit drei Aktionen
+const DIALOG_LIST_RESERVED_HEIGHT := 300  ## Fensterhöhe für Titel, Text, Aktionen und Rand neben einer Auswahlliste
 const WINDOW_MIN_WIDTH := 1024        ## Desktop-Mindestfenster (03 §8.2: 1024×640)
 const WINDOW_MIN_HEIGHT := 640
 

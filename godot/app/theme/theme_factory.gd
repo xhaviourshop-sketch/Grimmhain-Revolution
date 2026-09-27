@@ -192,6 +192,8 @@ static func _panels(theme: Theme) -> void:
 		&"PersonRowPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		&"WarningBadge": _panel(ThemeTokens.BG_APP, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_XS),
 		&"SummaryPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
+		&"ListPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		&"SecretPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 	}
 	for name: StringName in variations:
 		var base := &"Panel" if name == &"AppBackground" else &"PanelContainer"
