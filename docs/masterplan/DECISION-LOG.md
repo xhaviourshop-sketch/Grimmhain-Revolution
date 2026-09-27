@@ -308,3 +308,16 @@ Vom Product Owner in der Claude-Code-Sitzung beantwortet. Der erste Punkt ersetz
 - **Richtung „links“ (RM-DR-146.1, RM-DR-153.4):** A. Aus Sicht der Person am Tisch: links ist der nächste Platz im Uhrzeigersinn des App-Sitzkreises. Gegenprüfung am Tablet, ob die Sitzansicht im Uhrzeigersinn läuft, bleibt offen.
 - **Fährtenleser, Gleichstand (RM-DR-146.2):** A. Abstand wie beim Ritter; bei Gleichstand erfährt er „beide Seiten gleich weit“.
 - **Fährtenleser, Ablauf:** B. Jede Nacht ein Schritt „jetzt nutzen?“ bis zur Nutzung; danach kein Schritt mehr.
+
+## Rollenaudit · Querschnittsfragen · 27. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit Auslegung.
+
+- **Wolfsangriff (RM-DR-004):** A. Wolfsangriff ist ausschließlich der Rudelangriff (Rudelopfer, einschließlich weiterer Rudelopfer derselben Art wie beim Rudelvater). Einzeltötungen einzelner Wolfsrollen haben eigene Ursachen und sind keine Wolfsangriffe.
+- **Durchdringung (RM-DR-005):** A. „Ignoriert Schutz“ durchdringt Schutzengel, Waldhexenrettung, Dorfwache-Immunität und die Rettung des Weisen; nicht die persönlichen Schilde der Einzelsiegrollen, nicht Umlenkungen und Ersatzopfer.
+- **Rollenblockierung (RM-DR-010):** A. Eine Blockade lässt nur aktive Nachtschritte von Dorfrollen in der betroffenen Nacht entfallen (protokolliert); Todesreaktionen und passive Fähigkeiten wirken weiter.
+- **Bindungen nach Wiederbelebung (RM-DR-011.2):** A. Eine durch einen Tod ausgelöste oder beendete Bindung (Liebespaar, Kette, Wirt) bleibt beendet; ein erneuter Tod löst sie nicht noch einmal aus. (Begrenzte Einsätze setzt die Wiederbelebung dagegen zurück, Eintrag „Wiederbelebung …“.)
+- **Zufall oder Spielleiterwahl (RM-DR-015.2):** Antwort „Es gibt ein Wählen & ein Random Button.“ Auslegung: Bei Rollen mit zufälligem Ergebnis kann der Spielleiter selbst wählen oder eine Zufallsziehung auslösen; die Ziehung läuft über den gespeicherten Seed (G-RNG-1) und wird erst mit der Bestätigung übernommen.
+- **Einzelsiegrollen ohne klare Siegbedingung (RM-DR-006):** A. Die Siegbedingung wird je Rolle jetzt festgelegt (Rollenfragen folgen).
+- **Stimmbezug (RM-DR-008):** Antwort „Ein Reminder Text, der klar sichtbar auf dem Bildschirm des Spielleiters ist, damit er das mit einberechnen kann, da Stimmwahl physisch in der realen Welt in der ersten Version zählt und der Spielleiter das selber draufrechnen muss.“ Auslegung: Stimmboni werden nicht gezählt; der Regelkern liefert einen Hinweis, den die Spielleiteransicht deutlich anzeigt.
+- **Nominierung durch den Korrupten Richter (RM-DR-012):** A. Seine Markierung ist eine normale Nominierung mit dem Richter als Nominierendem (Tageslimit, Manipulator-Tod, Spiegelung wie sonst).

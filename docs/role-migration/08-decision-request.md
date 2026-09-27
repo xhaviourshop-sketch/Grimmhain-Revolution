@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 10 | 31 |
+| entschieden | 18 | 39 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 61 | 152 |
+| später | 53 | 144 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 

@@ -4,21 +4,21 @@ RM-DR-002.1;ja;Informationsrollen mit Rollenergebnis;E;"DR-07; DECISION-LOG Orak
 RM-DR-002.2;ja;Siegzählung;E;"rules-register G-SIEG-1, G-SIEG-2; G-ID-2";Sieg zählt counts_as_wolf, nicht Erscheinung
 RM-DR-002.3;ja;andere Informationsarten und Wirkungen;S;;erst mit K2, K3, K7
 RM-DR-003;nein;Sitznachbarschaft;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn links und rechts
-RM-DR-004;nein;Wolfsangriff;S;DR-05 gilt nur für den Schutzengel;erst mit K4, K5, K11
-RM-DR-005;nein;Durchdringung;S;;erst mit K5, K11
-RM-DR-006;nein;fehlende Siegbedingungen;S;07 Q4 offen;erst mit K9, K10, K11, K15
+RM-DR-004;nein;Wolfsangriff;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";nur Rudelangriff
+RM-DR-005;nein;Durchdringung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Schutz ja, Schilde/Umlenkung/Ersatz nein
+RM-DR-006;nein;fehlende Siegbedingungen;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";je Rolle festlegen
 RM-DR-007;nein;Grundregel Siegkandidaten;E;"rules-register G-SIEG-1 bis G-SIEG-6; DR-02; DR-14; DECISION-LOG Manipulator und Kandidatenmenge";"Kandidatenmenge ohne Priorität; eine rollenspezifische Ausnahme ist nur beim Doppelspion offen und wird als RM-DR-155.3 geführt"
-RM-DR-008;nein;Stimmbezug;S;implementation-boundary D schließt digitale Stimmen und Stimmgewichte aus;Restfrage erst mit K14, K15
+RM-DR-008;nein;Stimmbezug;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Hinweistext für den Spielleiter, keine Zählung
 RM-DR-009.1;ja;Todesreaktionen mit Entscheidung;E;"rules-register G-TOD-4; DR-09";Tag sofort, Nacht in der Morgenauflösung, persistente Warteschlange
 RM-DR-009.2;ja;Todesfolgen ohne Entscheidung;T;DECISION-LOG Wolfskind und Lehrling (sofort, vor vorläufiger Siegprüfung);"Verallgemeinerung technisch; Rollenregel je Rolle"
-RM-DR-010;nein;Rollenblockierung;S;;erst mit K8
+RM-DR-010;nein;Rollenblockierung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";nur aktive Nachtschritte von Dorfrollen
 RM-DR-011.1;ja;bereits geregelte Wiederbelebungsfälle;E;DECISION-LOG Randfälle 2 (Reaktion bleibt), Waldhexe, Spiegelwolf, Lehrling (kein zweites Erbe), Wolfskind;
-RM-DR-011.2;ja;Bindungen und Marker nach Wiederbelebung;S;;erst mit K6, K10, K13
-RM-DR-012;nein;Richter-Nominierung;S;DR-03 lässt Abweichungen durch Regeln zu;erst mit K14
+RM-DR-011.2;ja;Bindungen und Marker nach Wiederbelebung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Bindung bleibt beendet
+RM-DR-012;nein;Richter-Nominierung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";normale Nominierung durch den Richter
 RM-DR-013;nein;Totenkarten;S;07 Q3 offen;erst mit K13, K15
 RM-DR-014;nein;einmalig / erste Nacht;E;"DECISION-LOG Rollenaudit 27.09.2026";strikt Nacht 1
 RM-DR-015.1;ja;Zufall über Seed;E;rules-register G-RNG-1;jede Zufallsentscheidung über gespeicherten Seed
-RM-DR-015.2;ja;Zufall oder Spielleiterwahl je Rolle;S;DR-08 als Präzedenzfall;je Rolle ab K3
+RM-DR-015.2;ja;Zufall oder Spielleiterwahl je Rolle;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Spielleiter wählt oder Zufallsknopf (Seed)
 RM-DR-016.1;ja;Setup-Obergrenze je Rolle;S;DECISION-LOG Core-Slice Rollenanzahl: keine feste Komposition, einzelne Rollen dürfen eine Obergrenze erhalten;"keine globale Grenze nötig; nur je Rolle aus Spielgründen"
 RM-DR-016.2;ja;Kopien während der Partie und Zustand je Person;T;"G-ID-3; DR-11; GmCorrection set_role";"Mehrfachkopien entstehen unabhängig vom Setup; Verhalten folgt aus bestehenden Regeln"
 RM-DR-017;nein;nächste Rolleneinheit;E;"Auftrag des Nutzers 27.09.2026 (alle 72 Rollen prüfen)";Auftrag Rollenaudit: alle 72 Rollen
