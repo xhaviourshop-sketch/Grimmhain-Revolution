@@ -1,0 +1,20 @@
+name: Asset register
+
+# Jede versionierte Mediendatei braucht eine Registerzeile (docs/masterplan/ASSET-REGISTER.md).
+# Läuft ohne Pfadfilter, weil neue Medien überall im Repository landen können; der Lauf dauert Sekunden.
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Regressionstests des Prüfwerkzeugs
+        run: node --test tests/check-asset-register.test.js
+      - name: Assetregister gegen den Git-Index prüfen
+        run: node tools/check-asset-register.js
