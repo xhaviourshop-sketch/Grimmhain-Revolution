@@ -376,4 +376,3 @@ func _prepare_decoy_random_open(shell: AppShell) -> void:
 	await _press(shell, "DistributeButton")
 	await _press(shell, "RevealButton")
 	shell.get_toast().hide_message()
-
