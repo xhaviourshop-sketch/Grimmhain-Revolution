@@ -11,7 +11,7 @@ Prüfartefakte, keine Produktionsassets. Erzeugt am 27.09.2026 lokal unter Windo
 | `05-selected-1280x800-de.png` | Platz 3 zum Tauschen ausgewählt, Hinweis und „Auswahl aufheben“ in der Tischmitte | 1280×800 | DE |
 | `06-dragging-1280x800-de.png` | Ziehen von Platz 1 auf Platz 7: Quelle abgeblendet, Vorschau am Zeiger, Ziel hervorgehoben | 1280×800 | DE |
 | `07-swapped-1280x800-de.png` | Ben und Hanna haben die Plätze getauscht, Rückmeldung in der Fußzeile | 1280×800 | DE |
-| `08-confirmed-1280x800-de.png` | Karte „Sitzordnung fertig“, Bestätigen gesperrt | 1280×800 | DE |
+| `08-confirmed-1280x800-de.png` | Karte „Sitzordnung fertig“, in der Fußzeile „Partie starten“ statt „Sitzordnung bestätigen“ (am 27.09.2026 mit dem Spielstart neu erzeugt) | 1280×800 | DE |
 | `09-long-names-1024x768-en.png` | 24 Namen mit 32 Zeichen: Namen mit Auslassungszeichen gekürzt | 1024×768 | EN |
 
 Beim Ansehen gefunden und behoben: Bei 24 Personen und 1024×768 wurde „17 · Quentin“ gekürzt; Platzsymbole haben jetzt einen schmaleren Innenrand (`SeatButton`). Die erste Aufnahme von `06` zeigte kein Ziehen, weil dem Werkzeug `global_position` und `relative` der Mausereignisse fehlten.

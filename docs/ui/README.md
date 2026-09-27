@@ -2,7 +2,7 @@
 
 Stand: 26.09.2026 · Godot 4.7.2-stable · Projekt `godot/`
 
-Technisches Fundament der Tablet-App: App-Shell, Navigation, sechs Ansichten als Platzhalter, Theme, Lokalisierung DE/EN und eine schmale Anwendungsschicht zum Regelkern. Keine Spiellogik, keine Assets, kein Audio. Darauf aufgebaut ist der Setup-Wizard „Neue Partie“ (Spieler → Rollen → Verteilung → Sitzordnung, `player-setup.md`, `role-setup.md` und `seating-setup.md`); der Spielablauf folgt in eigenen Arbeitspaketen.
+Technisches Fundament der Tablet-App: App-Shell, Navigation, sechs Ansichten als Platzhalter, Theme, Lokalisierung DE/EN und eine schmale Anwendungsschicht zum Regelkern. Keine Spiellogik, keine Assets, kein Audio. Darauf aufgebaut ist der Setup-Wizard „Neue Partie“ (Spieler → Rollen → Verteilung → Sitzordnung, `player-setup.md`, `role-setup.md` und `seating-setup.md`) mit „Partie starten“ (`game-start.md`); der Spielablauf nach dem Start folgt in eigenen Arbeitspaketen.
 
 ## Schichten
 
