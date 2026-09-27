@@ -18,6 +18,9 @@
 //  8. Relative Markdown-Links zeigen auf existierende Dateien.
 //  9. Rollenzahlen in 01 (Summenzeile) stimmen mit dem Katalog überein.
 // 10. In Backticks zitierte Repository-Pfade (auch in dossiers/) existieren.
+// 11. decision-status.csv: gültige IDs und Status, „entschieden“ nur mit Quelle, deckungsgleich mit
+//     den Einträgen und Teilfragen in 08; Statustabelle in 08 stimmt; Fragerunde in 10 enthält nur
+//     Produktentscheidungen, und jede offene Produktentscheidung ist in 10 genannt.
 
 "use strict";
 const fs = require("fs");
@@ -180,6 +183,94 @@ const drs = idCheck("RM-DR", "08", /RM-DR-\d{3}/g, /^## (RM-DR-\d{3})\b/gm);
 const cs = idCheck("RM-C", "04", /RM-C-\d{3}/g, /^\| (RM-C-\d{3}) \|/gm);
 notes.push(`Entscheidungen: ${drs.length}, Konflikte: ${cs.length}`);
 
+// --- 6b. Entscheidungsstatus (decision-status.csv, Konsolidierung) --------------
+// Jede Zeile: id;teilfrage;rolle;status;quelle;hinweis. Status-Kürzel: E P T S Q.
+const STATUS_NAMES = { E: "entschieden", P: "produktentscheidung", T: "technisch", S: "später", Q: "quellenprüfung" };
+const csvPath = path.join(DOCS, "decision-status.csv");
+const csvRows = [];
+if (!fs.existsSync(csvPath)) err("decision-status.csv fehlt");
+else {
+  const lines = fs.readFileSync(csvPath, "utf8").trim().split("\n");
+  if (lines[0] !== "id;teilfrage;rolle;status;quelle;hinweis") err("decision-status.csv: unerwarteter Kopf");
+  for (const line of lines.slice(1)) {
+    const cells = [];
+    let cur = "", q = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (q) { if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (ch === '"') q = false; else cur += ch; }
+      else if (ch === '"') q = true; else if (ch === ";") { cells.push(cur); cur = ""; } else cur += ch;
+    }
+    cells.push(cur);
+    const [id, sub, role, status, src] = cells;
+    if (!/^RM-DR-\d{3}(\.\d+)?$/.test(id)) err(`decision-status.csv: ungültige ID ${id}`);
+    if (!STATUS_NAMES[status]) err(`decision-status.csv: ${id} hat unbekannten Status ${status}`);
+    if (status === "E" && !src) err(`decision-status.csv: ${id} ist „entschieden“ ohne Quelle`);
+    if ((sub === "ja") !== id.includes(".")) err(`decision-status.csv: ${id} Spalte teilfrage passt nicht zur ID`);
+    csvRows.push({ id, sub: sub === "ja", role, status });
+  }
+  const dupCsv = csvRows.map((r) => r.id).filter((x, i, a) => a.indexOf(x) !== i);
+  if (dupCsv.length) err(`decision-status.csv: doppelte IDs ${dupCsv.join(", ")}`);
+  const csvIds = new Set(csvRows.map((r) => r.id));
+  const entryIds = new Set(csvRows.map((r) => r.id.split(".")[0]));
+  for (const d of drs) if (!entryIds.has(d)) err(`decision-status.csv: Eintrag ${d} aus 08 fehlt`);
+  for (const d of entryIds) if (!drs.includes(d)) err(`decision-status.csv: ${d} hat keinen Abschnitt in 08`);
+  // Teilfragen in 08: „- **RM-DR-155.3 · Titel** · Status: <name>…“
+  const t08 = need("08");
+  const subs08 = [...t08.matchAll(/^- \*\*(RM-DR-\d{3}\.\d+) · [^\n]*?\*\* · Status: ([a-zäöüß]+)/gm)];
+  for (const m of subs08) {
+    const row = csvRows.find((r) => r.id === m[1]);
+    if (!row) err(`08: Teilfrage ${m[1]} fehlt in decision-status.csv`);
+    else if (STATUS_NAMES[row.status] !== m[2]) err(`08: ${m[1]} Status „${m[2]}“, CSV „${STATUS_NAMES[row.status]}“`);
+  }
+  const roleSubsCsv = csvRows.filter((r) => r.sub && Number(r.id.slice(6, 9)) >= 100).map((r) => r.id);
+  for (const id of roleSubsCsv) if (!subs08.some((m) => m[1] === id)) err(`08: Teilfrage ${id} aus decision-status.csv fehlt in 08`);
+  // Zitierte Unter-IDs existieren
+  for (const [f, t] of Object.entries(docs)) {
+    for (const m of t.matchAll(/RM-DR-\d{3}\.\d+/g)) if (!csvIds.has(m[0])) err(`${f}: zitiert unbekannte Teilfrage ${m[0]}`);
+  }
+  // Statustabelle in 08 stimmt mit der CSV überein
+  const PRIO = { P: 5, Q: 4, S: 3, T: 2, E: 1 };
+  const entries = {};
+  for (const r of csvRows) {
+    const e = r.id.split(".")[0];
+    if (!entries[e] || PRIO[r.status] > PRIO[entries[e]]) entries[e] = r.status;
+  }
+  const countE = {}, countQ = {};
+  for (const s of Object.values(entries)) countE[s] = (countE[s] || 0) + 1;
+  for (const r of csvRows) countQ[r.status] = (countQ[r.status] || 0) + 1;
+  const tbl = t08.slice(t08.indexOf("<!-- check:decision-status -->"));
+  if (!t08.includes("<!-- check:decision-status -->")) err("08: Marke <!-- check:decision-status --> fehlt");
+  for (const [k, name] of Object.entries(STATUS_NAMES)) {
+    const m = tbl.match(new RegExp("^\\| " + name + " \\| (\\d+) \\| (\\d+) \\|", "m"));
+    if (!m) err(`08: Statuszeile „${name}“ fehlt`);
+    else if (Number(m[1]) !== (countE[k] || 0) || Number(m[2]) !== (countQ[k] || 0)) err(`08: Statuszeile „${name}“ ${m[1]}/${m[2]}, CSV ${countE[k] || 0}/${countQ[k] || 0}`);
+  }
+  const tot = tbl.match(/^\| \*\*gesamt\*\* \| \*\*(\d+)\*\* \| \*\*(\d+)\*\* \|/m);
+  if (!tot || Number(tot[1]) !== Object.keys(entries).length || Number(tot[2]) !== csvRows.length) err("08: Gesamtzeile der Statustabelle passt nicht zur CSV");
+  // Erste Fragerunde in 10
+  const f10 = docFiles.find((x) => x.startsWith("10"));
+  if (!f10) err("10-next-decisions.md fehlt");
+  else {
+    const t10 = docs[f10];
+    const mk = t10.match(/<!-- check:next-round ([^>]+) -->/);
+    if (!mk) err("10: Marke <!-- check:next-round … --> fehlt");
+    else {
+      const ids = mk[1].trim().split(/\s+/);
+      for (const id of ids) {
+        const row = csvRows.find((r) => r.id === id) || csvRows.find((r) => r.id === id && !r.sub);
+        if (!row) err(`10: ${id} nicht in decision-status.csv`);
+        else if (row.status !== "P") err(`10: ${id} steht in der Fragerunde, ist aber nicht „produktentscheidung“`);
+        if (!new RegExp("^### " + id.replace(/\./g, "\\.") + " · ", "m").test(t10)) err(`10: Abschnitt für ${id} fehlt`);
+      }
+      for (const r of csvRows.filter((x) => x.status === "P")) {
+        if (!ids.includes(r.id) && !t10.includes(r.id)) err(`10: offene Produktentscheidung ${r.id} weder in der Fragerunde noch unter „Später“ genannt`);
+      }
+      notes.push(`nächste Fragerunde: ${ids.length} Fragen`);
+    }
+  }
+  notes.push(`Entscheidungsstatus: ${Object.keys(entries).length} Einträge, ${csvRows.length} Fragen`);
+}
+
 // --- 7. Statuswerte ---------------------------------------------------------
 for (const [f, t] of Object.entries(docs)) {
   for (const m of t.matchAll(/`((?:implemented|legacy|documented|decision|not|deferred)[a-z-]*)`/g)) {
@@ -210,6 +301,13 @@ if (fs.existsSync(dossierDir)) {
   }
 }
 const BARE_DIRS = ["docs/masterplan", "docs/godot-migration", "docs/specs/vertical-slice", "docs/role-migration"];
+// Zitierte Dateien der Parallelarbeit (UI-Branch, neuerer main) werden nur lesend per git geprüft.
+const OTHER_REFS = ["origin/main", "origin/claude/sleepy-babbage-u2o0i2"];
+const { execFileSync } = require("child_process");
+const gitHas = (ref, rel) => {
+  try { execFileSync("git", ["-C", ROOT, "cat-file", "-e", `${ref}:${rel}`], { stdio: "ignore" }); return true; } catch (e) { return false; }
+};
+const foundInRefs = new Set();
 let checkedPaths = 0;
 for (const [f, t] of Object.entries(pathDocs)) {
   for (const m of t.matchAll(/`((?:js|godot|docs|app|tools|tests|assets)\/[^`\s:*]+|[A-Za-z0-9_.-]+\.(?:md|html))(?::[\d,\- ]+)?`/g)) {
@@ -219,10 +317,15 @@ for (const [f, t] of Object.entries(pathDocs)) {
     const candidates = [path.join(ROOT, rel), path.resolve(path.dirname(path.join(DOCS, f)), rel)];
     // Kurzform ohne Ordner (z. B. `DECISION-LOG.md`): in den Dokumentordnern suchen.
     if (!rel.includes("/")) for (const d of BARE_DIRS) candidates.push(path.join(ROOT, d, rel));
-    if (!candidates.some((c) => fs.existsSync(c))) err(`${f}: zitierter Pfad existiert nicht: ${rel}`);
+    if (candidates.some((c) => fs.existsSync(c))) continue;
+    // Nicht im Arbeitsbaum: nur lesend in den Referenzen der Parallelarbeit suchen.
+    const ref = rel.includes("/") ? OTHER_REFS.find((r) => gitHas(r, rel)) : null;
+    if (ref) { foundInRefs.add(`${rel} (${ref})`); continue; }
+    err(`${f}: zitierter Pfad existiert nicht: ${rel}`);
   }
 }
 notes.push(`zitierte Repository-Pfade geprüft: ${checkedPaths}`);
+for (const x of foundInRefs) notes.push(`nur außerhalb des Arbeitsbaums vorhanden: ${x}`);
 
 // --- Ausgabe ------------------------------------------------------------------
 for (const n of notes) console.log("info  " + n);
