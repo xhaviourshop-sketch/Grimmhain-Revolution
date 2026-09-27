@@ -4,6 +4,7 @@ extends Button
 ## Gefahr) über Theme-Variation, Mindestgröße aus ThemeTokens, immer fokussierbar.
 ## `wrap` (Standard an) bricht lange Beschriftungen um statt sie abzuschneiden; nur für
 ## Buttons, deren Breite der Container vorgibt. Buttons mit Inhaltsbreite (Kopfzeile) ohne.
+## `format_values` füllt Platzhalter wie `{name}` (z. B. Auswahloptionen eines Dialogs).
 
 enum Kind { PRIMARY, SECONDARY, DANGER, COMPACT }
 
@@ -27,6 +28,11 @@ const _VARIATIONS := {
 		wrap = value
 		autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if value else TextServer.AUTOWRAP_OFF
 
+var format_values: Dictionary = {}:
+	set(value):
+		format_values = value
+		refresh_text()
+
 
 func _init() -> void:
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
@@ -46,7 +52,8 @@ func _notification(what: int) -> void:
 
 func refresh_text() -> void:
 	if text_key != "":
-		text = tr(text_key)
+		var translated := tr(text_key)
+		text = translated.format(format_values) if not format_values.is_empty() else translated
 
 
 func _apply_kind() -> void:
