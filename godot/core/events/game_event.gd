@@ -43,6 +43,7 @@ const APPRENTICE_OPTIONS_SHOWN := &"ApprenticeOptionsShown"        ## Rollenopti
 const APPRENTICE_CHOICE_CONFIRMED := &"ApprenticeChoiceConfirmed"  ## bestätigte Wahl für den Lehrling (actor, nur Rollen)
 const APPRENTICE_BOUND := &"ApprenticeBound"  ## vollständige Bindung des Lehrlings (nur Spielleiter)
 const ROLE_CHANGED := &"RoleChanged"          ## Rollenwechsel durch Erbe des Lehrlings (nur Spielleiter)
+const DEATH_SEEKER_FULFILLED := &"DeathSeekerFulfilled"  ## Selbstmörder bei mindestens 5 Toten hingerichtet (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

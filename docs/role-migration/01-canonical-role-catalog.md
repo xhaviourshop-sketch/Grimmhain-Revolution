@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 13 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 14 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 2 |
-| fehlend, Entscheidung nötig (`decision-required`) | 57 |
+| fehlend, Entscheidung nötig (`decision-required`) | 56 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 59 fehlende) | 17 |
-| Legacy-Befund `legacy-contradictory` (nur 59 fehlende) | 27 |
-| Legacy-Befund `legacy-broken` (nur 59 fehlende) | 11 |
-| Legacy-Befund `not-found` (nur 59 fehlende) | 4 |
+| Legacy-Befund `legacy-verified` (nur 58 fehlende) | 16 |
+| Legacy-Befund `legacy-contradictory` (nur 58 fehlende) | 27 |
+| Legacy-Befund `legacy-broken` (nur 58 fehlende) | 11 |
+| Legacy-Befund `not-found` (nur 58 fehlende) | 4 |
 
-<!-- check:counts total=72 implemented=13 remaining=59 -->
+<!-- check:counts total=72 implemented=14 remaining=58 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -84,7 +84,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 46 | `cerberus` | Cerberus / Cerberus | Wölfe | IV | – | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | S / mittel | K4 | B | [03](03-remaining-roles-analysis.md#cerberus) · [Dossier](dossiers/wolves-b.md#cerberus) |
 | 47 | `ritter` | Ritter / Knight | Dorf | I | – | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | M / mittel | K3 | A | [03](03-remaining-roles-analysis.md#ritter) · [Dossier](dossiers/village-3.md#ritter) |
 | 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | III | 7.4 | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | L / hoch | K10 | – | [03](03-remaining-roles-analysis.md#rotkaeppchen) · [Dossier](dossiers/village-3.md#rotkaeppchen) |
-| 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | I | – | `decision-required` | `legacy-verified` | `automatic` | Einzelsieg | S / niedrig | K1 | A | [03](03-remaining-roles-analysis.md#selbstmoerder) · [Dossier](dossiers/solos-a.md#selbstmoerder) |
+| 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | I | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Einzelsieg | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#selbstmoerder) |
 | 50 | `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter | Dorf | IV | 3.2 | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | M / mittel | K7 | B | [03](03-remaining-roles-analysis.md#kopfgeldjaeger) · [Dossier](dossiers/village-3.md#kopfgeldjaeger) |
 | 51 | `koenig` | König / King | Dorf | III, IV | 4.4 | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | S / mittel | K7 | – | [03](03-remaining-roles-analysis.md#koenig) · [Dossier](dossiers/village-3.md#koenig) |
 | 52 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Dorf | II | 3.6 | `decision-required` | `legacy-broken` | `assisted` | Wiederbelebung | L / hoch | K13 | – | [03](03-remaining-roles-analysis.md#dr-victor-frankenstein) · [Dossier](dossiers/village-3.md#dr-victor-frankenstein) |

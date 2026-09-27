@@ -9,6 +9,7 @@ extends RefCounted
 ##   Werwölfe:    Paritätswert lebender Wölfe ≥ lebende Nicht-Wölfe (Siegreicher Wolf zählt 2).
 ##   Manipulator: genau drei Personen leben, er lebt und wurde in der Partie nie nominiert;
 ##                je Manipulator ein eigener personenbezogener Kandidat.
+##   Selbstmörder: bei seiner Hinrichtung waren mindestens 5 Personen tot (gespeichert, gilt fort; RM-DR-138).
 ##   Doppelspion: kein Wolf lebt und er lebt; je Person ein Kandidat, der Dorfsieg entfällt dann (RM-DR-155).
 ## DR-02: Mehrere gleichzeitige Kandidaten ohne automatische Priorität; der Spielleiter
 ## bestätigt genau einen oder lehnt alle ab. Lebt niemand, entsteht kein Kandidat; der
@@ -42,6 +43,9 @@ static func evaluate(state: GameState) -> Array:
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DOUBLE_AGENT), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
 	if wolves >= non_wolves:
 		results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
+	# RM-DR-138.4, F-11: ein erfüllter Selbstmörder-Sieg wird bei jeder Prüfung vorgeschlagen.
+	for id: int in state.death_seeker_wins:
+		results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DEATH_SEEKER), "reason_args": {"min_dead": DEATH_SEEKER_MIN_DEAD}, "beneficiary_ids": [id]})
 	for id: int in alive:
 		if manipulator_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_MANIPULATOR), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
@@ -52,6 +56,22 @@ static func evaluate(state: GameState) -> Array:
 static func manipulator_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
 	return p != null and p.alive and p.role_id == RoleCatalog.MANIPULATOR and not p.ever_nominated and state.alive_ids().size() == 3
+
+
+## Mindestzahl Toter unmittelbar vor der Hinrichtung des Selbstmörders (Rollentext „5+ Tote“, RM-DR-138.1).
+const DEATH_SEEKER_MIN_DEAD := 5
+
+
+## Hält den erfüllten Sieg fest, wenn ein Selbstmörder hingerichtet wird (Ursache LYNCH, auch
+## per Spielleiter), während mindestens 5 Personen tot sind; er selbst zählt nicht mit.
+static func record_death_seeker(ctx: RuleContext, target: Player, record: KillEvent, dead_before: int) -> void:
+	var s := ctx.state
+	if record.cause != KillEvent.CAUSE_LYNCH or target.role_id != RoleCatalog.SELBSTMOERDER or dead_before < DEATH_SEEKER_MIN_DEAD:
+		return
+	if not s.death_seeker_wins.has(target.id):
+		s.death_seeker_wins.append(target.id)
+		s.death_seeker_wins.sort()
+	ctx.emit(GameEvent.DEATH_SEEKER_FULFILLED, Visibility.GM, {"player_id": target.id, "dead_before": dead_before, "order_index": record.order_index})
 
 
 ## Einzelsieg des Doppelspions für Person `id` (RM-DR-155.1): er lebt und kein Wolf lebt.
@@ -130,6 +150,9 @@ static func state_is_consistent(s: GameState) -> bool:
 		# Offene und bestätigte Manipulator-Kandidaten müssen zum Zustand passen (danach ändert sich nichts).
 		if c.reason_key == WinCandidate.REASON_MANIPULATOR and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not manipulator_wins(s, c.beneficiary_ids[0]):
+				return false
+		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not double_agent_wins(s, c.beneficiary_ids[0]):

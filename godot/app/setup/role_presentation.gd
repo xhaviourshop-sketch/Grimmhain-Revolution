@@ -11,7 +11,7 @@ const FACTION_ORDER: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Facti
 const ROLE_ORDER: Array[StringName] = [
 	&"dorfbewohner", &"schutzengel", &"das-orakel", &"waldhexe", &"sensentraeger", &"wolfskind", &"lehrling",
 	&"werwolf", &"spiegelwolf", &"trugbilderwolf", &"siegreicher-wolf",
-	&"manipulator", &"doppelspion",
+	&"manipulator", &"doppelspion", &"selbstmoerder",
 ]
 
 

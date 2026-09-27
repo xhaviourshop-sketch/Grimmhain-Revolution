@@ -473,6 +473,12 @@ msgstr "Double Agent"
 msgid "ui.role.doppelspion.short"
 msgstr "Wakes with the pack, wins alone if alive once no wolf is left."
 
+msgid "ui.role.selbstmoerder.name"
+msgstr "Death Seeker"
+
+msgid "ui.role.selbstmoerder.short"
+msgstr "Wins if executed while at least five people are dead."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

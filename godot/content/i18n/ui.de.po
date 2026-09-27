@@ -473,6 +473,12 @@ msgstr "Doppelspion"
 msgid "ui.role.doppelspion.short"
 msgstr "Wacht mit dem Rudel, gewinnt allein, wenn er lebt und kein Wolf mehr lebt."
 
+msgid "ui.role.selbstmoerder.name"
+msgstr "Selbstmörder"
+
+msgid "ui.role.selbstmoerder.short"
+msgstr "Gewinnt, wenn er hingerichtet wird, während mindestens fünf Personen tot sind."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

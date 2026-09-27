@@ -24,6 +24,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		return null
 	if _prevented_by_protection(ctx, target_id, cause, source_kind):
 		return null
+	var dead_before := s.players.size() - s.alive_ids().size()  # nur aktuell Tote (RM-DR-138.3)
 	var record := KillEvent.new()
 	record.target_id = target_id
 	record.cause = cause
@@ -43,6 +44,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		WolfChildRules.on_death(ctx, record)
 		ApprenticeRules.on_master_death(ctx, record)
 		_queue_reaction(ctx, target, record)
+	WinRules.record_death_seeker(ctx, target, record, dead_before)
 	WinRules.record_provisional(ctx, record)
 	return record
 

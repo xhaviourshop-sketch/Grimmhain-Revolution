@@ -3,7 +3,7 @@ extends UiTestCase
 ## 86 bis 89). Bedienung über Buttons wie Maus und Touch; Vorbereitung über die Anwendungsschicht.
 
 const ROLE_IDS: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf", "doppelspion"]
+		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf", "doppelspion", "selbstmoerder"]
 
 
 func _dialog(shell: Control) -> Control:
@@ -364,12 +364,12 @@ func test_role_list_scrolls_completely() -> void:
 	assert_true(inside(rect_of(rows[0]), rect_of(scroll)), "erste Rolle sichtbar")
 	scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
 	await frames(2)
-	assert_true(inside(rect_of(rows[10]), rect_of(scroll)), "letzte Rolle nach Scrollen vollständig sichtbar")
+	assert_true(inside(rect_of(rows[rows.size() - 1]), rect_of(scroll)), "letzte Rolle nach Scrollen vollständig sichtbar")
 	scroll.scroll_vertical = 0
 	await frames(2)
-	find_button(rows[10], "PlusButton").grab_focus()
+	find_button(rows[rows.size() - 1], "PlusButton").grab_focus()
 	await frames(3)
-	assert_true(inside(rect_of(find_button(rows[10], "PlusButton")), rect_of(scroll)), "Tastaturfokus scrollt die Rollenliste mit")
+	assert_true(inside(rect_of(find_button(rows[rows.size() - 1], "PlusButton")), rect_of(scroll)), "Tastaturfokus scrollt die Rollenliste mit")
 
 
 func test_role_step_texts_are_keys() -> void:

@@ -76,7 +76,9 @@ Nicht als neues System geplant: Stimmsystem (ausgeschlossen, RM-DR-008), Besuchs
 
 ## 3. Charge K1 · Sieg- und Zählregeln und die nächste Einheit
 
-**Rollen Charge K1 (1):** `selbstmoerder`
+**Rollen Charge K1 (0):** –
+
+**Nachtrag Rollenaudit:** `selbstmoerder` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `doppelspion` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

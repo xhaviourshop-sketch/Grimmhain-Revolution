@@ -16,7 +16,8 @@ const REASON_NO_WOLVES_ALIVE := &"no_wolves_alive"            ## G-SIEG-1
 const REASON_MANIPULATOR := &"manipulator_three_alive"        ## DR-12: genau drei Lebende, nie nominiert
 const REASON_GM_DECLARED := &"gm_declared"                    ## Siegerklärung per GmCorrection (DR-02)
 const REASON_DOUBLE_AGENT := &"double_agent_no_wolves"        ## RM-DR-155: lebender Doppelspion, kein Wolf lebt
-const REASONS: Array[StringName] = [REASON_WOLF_PARITY, REASON_NO_WOLVES_ALIVE, REASON_MANIPULATOR, REASON_GM_DECLARED, REASON_DOUBLE_AGENT]
+const REASON_DEATH_SEEKER := &"death_seeker_lynched"          ## RM-DR-138: Selbstmörder bei mindestens 5 Toten hingerichtet
+const REASONS: Array[StringName] = [REASON_WOLF_PARITY, REASON_NO_WOLVES_ALIVE, REASON_MANIPULATOR, REASON_GM_DECLARED, REASON_DOUBLE_AGENT, REASON_DEATH_SEEKER]
 const KINDS: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Faction.SOLO, &"none"]
 
 var id: int = 0

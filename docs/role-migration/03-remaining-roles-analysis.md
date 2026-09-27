@@ -54,7 +54,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`cerberus`](#cerberus) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik | S / mittel | K4 | B |
 | [`ritter`](#ritter) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Tötung | M / mittel | K3 | A |
 | [`rotkaeppchen`](#rotkaeppchen) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik | L / hoch | K10 | – |
-| [`selbstmoerder`](#selbstmoerder) | Einzelsieg | `decision-required` | `legacy-verified` | `automatic` | Einzelsieg | Hinrichtungsreaktion | S / niedrig | K1 | A |
 | [`kopfgeldjaeger`](#kopfgeldjaeger) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | Hinrichtungsreaktion, Zufallsmechanik | M / mittel | K7 | B |
 | [`koenig`](#koenig) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Zufallsmechanik | S / mittel | K7 | – |
 | [`dr-victor-frankenstein`](#dr-victor-frankenstein) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Wiederbelebung | Rollenwechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit, Totenkarten-Interaktion | L / hoch | K13 | – |
@@ -879,27 +878,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch für Kette und Apfel-Mechanik (statisch belegt). Nicht zur Laufzeit geprüft: Zusammenspiel `startConfirm`-Overlay mit gleichzeitigem `center` anderer Rollen. --- |
 | Detail | [Dossier](dossiers/village-3.md#rotkaeppchen) |
-
-### `selbstmoerder`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Selbstmörder / Death Seeker |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / I / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Code setzt den Text (EN-Lesart) nachvollziehbar um; die Bugs betreffen nur Randfälle der Sieger-Konkurrenz. |
-| DE/EN-Vergleich | NEIN (feiner Unterschied). EN „already dead" legt fest, dass 5 Tote vor dem Lynch zählen; DE „sobald 5+ Tote sind" ist mehrdeutig (zählt sein eigener Tod mit?). EN lässt „am Tage" weg (Lynch ist ohnehin Tagesaktion). Code = EN-Lesart. |
-| Automationsziel | `automatic` |
-| Mechanik | primär: Einzelsieg; sekundär: Hinrichtungsreaktion |
-| Größe / Risiko | S / niedrig |
-| Vorhandene Godot-Systeme | ExecutionRules, KillPipeline (`LYNCH`), WinRules/WinCandidate, Nominations, GmCorrections (`execute`), StateCodec, Replay. |
-| Neue Systeme | zusätzliche Siegbedingungen (Selbstmörder-Kandidat bei Hinrichtung); sonst keine. |
-| Abhängigkeiten | Feuerteufel (Brand vor Siegprüfung), Henker (Nebenhinrichtung), Voodoo (Puppe), alle Tötungsrollen (Totenzahl), Die Ewigen. |
-| Widersprüche | RM-C-061 Zählbasis; RM-C-062 Hinrichtungsarten |
-| Entscheidungen | RM-DR-138 (Rolle); übergreifend RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K1 / ab Option A |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/solos-a.md#selbstmoerder) |
 
 ### `kopfgeldjaeger`
 

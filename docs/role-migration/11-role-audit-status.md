@@ -15,16 +15,16 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=13 open=2 blocked=57 -->
+<!-- check:audit-counts total=72 green=14 open=2 blocked=56 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
-| **GRÜN** | **13** |
+| **GRÜN** | **14** |
 | **OFFEN** | **2** |
-| **BLOCKIERT** | **57** |
+| **BLOCKIERT** | **56** |
 
-72/72 ist **nicht** erreicht. Die 57 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
+72/72 ist **nicht** erreicht. Die 56 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
 
 ## 3. Übersicht
 
@@ -80,7 +80,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 46 | `cerberus` | Cerberus / Cerberus | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-135.1, RM-DR-135.2 | fehlt | – | [03](03-remaining-roles-analysis.md#cerberus) | **BLOCKIERT** |
 | 47 | `ritter` | Ritter / Knight | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-136.1, RM-DR-136.2, RM-DR-136.3, RM-DR-002, RM-DR-003, RM-DR-004, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#ritter) | **BLOCKIERT** |
 | 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-137.1, RM-DR-137.2, RM-DR-137.3, RM-DR-137.4, RM-DR-137.5, RM-DR-009, RM-DR-011 | fehlt | – | [03](03-remaining-roles-analysis.md#rotkaeppchen) | **BLOCKIERT** |
-| 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-138.2 | fehlt | – | [03](03-remaining-roles-analysis.md#selbstmoerder) | **BLOCKIERT** |
+| 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | Rollentext; RM-DR-138.1/.3/.4/.5, F-11 (Decision Log „Rollenaudit“) | Sieg erfüllt, wenn er bei mindestens 5 aktuell Toten hingerichtet wird (LYNCH, auch Spielleiter); wird danach immer wieder vorgeschlagen, auch nach Wiederbelebung | – | umgesetzt | test_selbstmoerder (13), fuzz | Spiegelwolf, Lehrling, Wiederbelebung, Dorfsieg, Kandidatenmenge; RM-DR-138.2 folgt mit Henker | **GRÜN** |
 | 50 | `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-139.1, RM-DR-139.2, RM-DR-139.3, RM-DR-139.4, RM-DR-002, RM-DR-015 | fehlt | – | [03](03-remaining-roles-analysis.md#kopfgeldjaeger) | **BLOCKIERT** |
 | 51 | `koenig` | König / King | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-140.1, RM-DR-140.2, RM-DR-002, RM-DR-015 | fehlt | – | [03](03-remaining-roles-analysis.md#koenig) | **BLOCKIERT** |
 | 52 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-141.1, RM-DR-141.2, RM-DR-141.4, RM-DR-011, RM-DR-013 | fehlt | – | [03](03-remaining-roles-analysis.md#dr-victor-frankenstein) | **BLOCKIERT** |

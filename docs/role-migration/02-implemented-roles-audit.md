@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 13 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 13 |
+| im RoleCatalog vorhandene Rollen | 14 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 14 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 11 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 12 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -60,6 +60,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 11 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | wolves | ja | – (Teil des Rudels) | `execution_rules.gd` (`preview`, `execute`), `gm_corrections.gd` (`set_mirror`) | `test_spiegelwolf.gd` (20) | Register §11, DR-13 | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 12 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `role_catalog.gd` (`parity_weight`), `win_rules.gd` (`evaluate`) | `test_siegreicher_wolf.gd` (10), `test_role_interaction_fuzz.gd` | Rollentext, [`10`](10-next-decisions.md) „Zur Kenntnis“, G-SIEG-2 | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 13 | `doppelspion` | Doppelspion / Double Agent (Rollentext) | solo | nein | – | `role_catalog.gd`, `win_rules.gd` (`double_agent_wins`, Kandidatenmenge), `win_candidate.gd` (`double_agent_no_wolves`) | `test_doppelspion.gd` (11), `test_role_interaction_fuzz.gd` | RM-DR-155.1–.5, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 14 | `selbstmoerder` | Selbstmörder / Death Seeker (Rollentext) | solo | nein | – | `kill_pipeline.gd`, `win_rules.gd` (`record_death_seeker`, Kandidat `death_seeker_lynched`), `game_state.gd` (`death_seeker_wins`) | `test_selbstmoerder.gd` (13), `test_role_interaction_fuzz.gd` | RM-DR-138.1/.3/.4/.5, F-11, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -137,6 +138,11 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-27):** Einzelsieg, zählt nicht als Wolf (Parität, RM-DR-155.2), kein eigener Schritt. Lebt kein Wolf, entsteht je lebendem Doppelspion ein Kandidat `double_agent_no_wolves`; der Dorfkandidat entfällt dann (RM-DR-155.3). Tot gewinnt er nicht (RM-DR-155.1). Aufwachen mit dem Rudel ist nur Ansage ohne Rollennennung (RM-DR-155.4/.5). Orakel: tatsächliche Rolle (DR-07). Ladeprüfung wie beim Manipulator.
 - **Tests:** `test_doppelspion.gd` (11): Rolle, Hinrichtung des letzten Wolfs, tot → Dorf, zwei Kopien, einer tot, Parität, mit Manipulator gleichzeitig, Lehrling-Erbe, erneuter Vorschlag nach Ablehnung, beschädigter Kandidat, Leak; Fuzztest.
 - **Grenzen:** „Der Angriff des Rachsüchtigen Wolfs verpufft an ihm“ folgt mit `rachsuechtiger-wolf`.
+
+### 4.14 `selbstmoerder`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Einzelsieg, zählt nicht als Wolf, kein Schritt. Stirbt er mit Ursache `LYNCH` (auch `GmCorrection execute`), während unmittelbar vorher mindestens 5 Personen tot sind (nur aktuell Tote), wird der Sieg in `GameState.death_seeker_wins` festgehalten (Ereignis `DeathSeekerFulfilled`, nur Spielleiter). Ab dann schlägt jede Siegprüfung ihn vor, auch nach Ablehnung und nach Wiederbelebung (RM-DR-138.4, F-11). Spiegelung, Nacht-, Gift- und Korrektur-Tötung zählen nicht.
+- **Tests:** `test_selbstmoerder.gd` (13): 5 und 4 Tote, Wiederbelebte zählen nicht, Spielleiter-Hinrichtung, andere Todesarten, Spiegelung, erneuter Vorschlag nach Ablehnung und Wiederbelebung, gleichzeitig mit Dorfsieg, zwei Kopien, Lehrling-Erbe, 6 Personen (niemand lebt), Ladeprüfung.
+- **Grenzen:** RM-DR-138.2 (zählt eine Henker-Hinrichtung?) folgt mit `henker`. Sound bei 5 Toten ist eine Oberflächenanforderung (Decision Log), nicht Regelkern.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 
