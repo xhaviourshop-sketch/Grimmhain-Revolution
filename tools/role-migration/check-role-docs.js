@@ -151,6 +151,8 @@ function roleLists(text, file) {
   }
   return out;
 }
+const baseIds = [...cat.matchAll(/^\| \d+ \| `([a-z0-9-]+)` \|.*\| Basis \| [^|]+ \|$/gm)].map((m) => m[1]);
+if (baseIds.length !== 11) err(`01: ${baseIds.length} statt 11 Basisrollen (Spalte 1.0)`);
 const f05 = docFiles.find((x) => x.startsWith("05"));
 const opts = f05 ? roleLists(docs[f05], f05) : [];
 for (const [name, size] of [["Option A", 20], ["Option B", 25], ["Option C", 30]]) {
@@ -158,7 +160,9 @@ for (const [name, size] of [["Option A", 20], ["Option B", 25], ["Option C", 30]
   if (!o) err(`05: Rollenliste „${name}“ fehlt`);
   else {
     if (o.ids.length !== size) err(`05: ${name} hat ${o.ids.length} statt ${size} Rollen`);
-    for (const id of godotIds) if (!o.ids.includes(id)) err(`05: ${name} enthält die umgesetzte Rolle ${id} nicht`);
+    // Nur die Basisrollen (Spalte „1.0“ = Basis in 01) gehören sicher in jede Option. Später im
+    // Rollenaudit umgesetzte Rollen ändern die nicht freigegebene 1.0-Auswahl nicht.
+    for (const id of baseIds) if (!o.ids.includes(id)) err(`05: ${name} enthält die Basisrolle ${id} nicht`);
   }
 }
 const oa = opts.find((x) => x.label === "Option A");
