@@ -762,10 +762,10 @@ msgid "ui.setup.decoy.chosen"
 msgstr "Decoy role: {role}"
 
 msgid "ui.setup.decoy.choose"
-msgstr "Choose decoy role"
+msgstr "Choose"
 
 msgid "ui.setup.decoy.change"
-msgstr "Change decoy role"
+msgstr "Change"
 
 msgid "ui.setup.decoy.remove"
 msgstr "Remove"

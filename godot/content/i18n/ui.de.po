@@ -762,10 +762,10 @@ msgid "ui.setup.decoy.chosen"
 msgstr "Scheinrolle: {role}"
 
 msgid "ui.setup.decoy.choose"
-msgstr "Scheinrolle wählen"
+msgstr "Wählen"
 
 msgid "ui.setup.decoy.change"
-msgstr "Scheinrolle ändern"
+msgstr "Ändern"
 
 msgid "ui.setup.decoy.remove"
 msgstr "Entfernen"
