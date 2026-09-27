@@ -2,7 +2,7 @@
 
 Stand: 26.09.2026 · Godot 4.7.2-stable · Projekt `godot/`
 
-Technisches Fundament der Tablet-App: App-Shell, Navigation, sechs Ansichten als Platzhalter, Theme, Lokalisierung DE/EN und eine schmale Anwendungsschicht zum Regelkern. Keine Spiellogik, keine Assets, kein Audio. Spielernamen, Setup, Sitzkreis und Spielablauf folgen in eigenen Arbeitspaketen.
+Technisches Fundament der Tablet-App: App-Shell, Navigation, sechs Ansichten als Platzhalter, Theme, Lokalisierung DE/EN und eine schmale Anwendungsschicht zum Regelkern. Keine Spiellogik, keine Assets, kein Audio. Darauf aufgebaut ist der Setup-Wizard „Neue Partie“ (Spieler → Rollen → Verteilung, `player-setup.md` und `role-setup.md`); Sitzkreis und Spielablauf folgen in eigenen Arbeitspaketen.
 
 ## Schichten
 
@@ -39,7 +39,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/screens/base_screen.gd` | Basis jeder Ansicht: Signale statt Router-Zugriff, Kopfzeile verdrahten, Standardfokus |
 | `app/screens/start/` | Titel, Untertitel, „Eintreten“, Version |
 | `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Einstellungen, Beenden (nur Desktop, abgesetzt) |
-| `app/screens/new_game/` | Spieler-Setup, Namensschritt: Eingabe, Mehrfachimport, Bearbeiten, Liste (`person_row.tscn`), Bestätigen; Details in `player-setup.md` |
+| `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
 | `app/screens/continue/` | leerer Zustand „Kein Spielstand vorhanden“, Bereich `SaveSlotList` |
 | `app/screens/settings/` | Sprache DE/EN, Bewegung reduzieren, Platzhalter Audio und Anzeige |
 | `app/screens/cockpit/` | Kopfzeile, Phasenbereich, Ansagekarte, Sitzkreisbereich, Aktionsbereich, Kennzeichen „Keine Partie aktiv“ |
@@ -47,14 +47,14 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/widgets/grimm_label.gd` | Beschriftung mit Übersetzungsschlüssel und Platzhaltern (`{version}`) |
 | `app/widgets/grimm_toggle.gd` | Umschalter mit Übersetzungsschlüssel |
 | `app/widgets/header_bar/` | Kopfzeile: Zurück, Titel, Platz `%Actions` für spätere Aktionen |
-| `app/widgets/confirm_dialog/` | Modal für Rückfragen (`DialogRequest`): Abbrechen links mit Fokus, optionale Alternative, Bestätigen rechts, 32 px Abstand, optional rot; Fokussperre und Fokus-Rückgabe |
+| `app/widgets/confirm_dialog/` | Modal für Rückfragen (`DialogRequest`): Abbrechen links mit Fokus, optionale Alternative, Bestätigen rechts, 32 px Abstand, optional rot; optional scrollbare Auswahlliste (`DialogOption`); Fokussperre und Fokus-Rückgabe |
 | `app/widgets/toast/` | Statusmeldung am unteren Rand, 2,5 s sichtbar |
 | `app/theme/theme_tokens.gd` | alle Farben, Abstände, Radien, Rahmen, Schriftgrößen, Mindestgrößen, Zeiten |
 | `app/theme/theme_factory.gd` | baut das Theme aus den Tokens (kein `.tres`) |
 | `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Linkshänder-Grundlage; nur im Speicher |
 | `app/platform/app_platform.gd` | Desktop/Mobil, Beenden erlaubt, Version aus `project.godot` |
 | `app/session/game_session.gd` | Anwendungsschicht zum Regelkern |
-| `app/setup/*.gd` | Anwendungsschicht und Modell des Spieler-Setups ohne Regelkern (`PlayerSetup`, `SetupDraft`, `SetupPerson`, `SetupResult`, `PersonNameRules`) |
+| `app/setup/*.gd` | Anwendungsschicht und Modell des Setups ohne Regelkern: `PlayerSetup`, `SetupDraft`, `SetupPerson`, `SetupResult`, `PersonNameRules`; Rollen: `SetupRoleCatalog` (lesender Katalogadapter), `RolePresentation`, `RolePoolDraft`, `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView` |
 | `app/app_context.gd` | Einstellungen, Sitzung und Setup-Entwurf für die Ansichten |
 | `content/i18n/ui.de.po`, `ui.en.po` | UI-Texte |
 | `tools/capture_ui_screenshots.gd` | Prüf-Screenshots (nicht Teil der App) |
@@ -92,6 +92,7 @@ Szenen enthalten keine Stilwerte (keine Farben, `theme_override_*`, Mindestgrö�
 - Nach dem Schließen erhält das vorher fokussierte Control den Fokus zurück, sofern es noch sichtbar ist. Erst danach läuft der Rückruf, der den Fokus neu setzen darf (z. B. nach dem Entfernen auf die nächste Zeile).
 - Solange ein Dialog offen ist, liefert `open_request()` für weitere Anfragen `false`; es entsteht nie ein zweiter Dialog.
 - Drei Aktionen nutzen die breitere Karte (`DIALOG_WIDE_WIDTH`).
+- Auswahlliste: `DialogRequest.options` (`DialogOption` mit Knotenname, Schlüssel, Platzhaltern, Rückruf; `DialogOption.header()` für Zwischenüberschriften) erscheint scrollbar über den Aktionen, höchstens Fensterhöhe − `DIALOG_LIST_RESERVED_HEIGHT`. Die erste Option erhält den Fokus, alle Optionen gehören zur Fokussperre, eine gewählte Option schließt den Dialog und ruft ihren Rückruf. Ohne `confirm_key` entfällt die Bestätigungsaktion. `title_values` füllt Platzhalter im Titel. Genutzt von der manuellen Rollenauswahl.
 
 ## Theme-Tokens
 
@@ -114,12 +115,13 @@ Szenen enthalten keine Stilwerte (keine Farben, `theme_override_*`, Mindestgrö�
 | Layout | `SAFE_MARGIN` · `SCREEN_PADDING` · `MENU_COLUMN_WIDTH` · `CONTENT_MAX_WIDTH` · `SIDE_COLUMN_WIDTH` | 16 · 24 · 480 · 880 · 360 |
 | Overlays | `TOAST_WIDTH` · `TOAST_BOTTOM_OFFSET` · `DIALOG_WIDTH` · `DIALOG_WIDE_WIDTH` · `SWITCH_WIDTH`×`SWITCH_HEIGHT` | 420 · 88 · 560 · 720 · 64×32 |
 | Setup | `SETUP_SIDE_WIDTH` · `INPUT_HEIGHT` · `IMPORT_TEXT_MIN_HEIGHT` · `PERSON_NUMBER_WIDTH` · `SCROLLBAR_WIDTH` | 360 · 56 · 96 · 44 · 12 |
+| Rollen-Setup | `ROLE_COUNT_WIDTH` · `ASSIGNMENT_STATE_WIDTH` · `ROLE_LIST_MIN_HEIGHT` · `DIALOG_LIST_RESERVED_HEIGHT` | 56 · 200 · 240 · 300 |
 | Fenster | `WINDOW_MIN_WIDTH`×`WINDOW_MIN_HEIGHT` | 1024×640 (nur Desktop) |
 | Bewegung | `TRANSITION_SECONDS` · `TRANSITION_OFFSET` · `TOAST_FADE_SECONDS` · `TOAST_VISIBLE_SECONDS` | 0,2 s · 12 px · 0,15 s · 2,5 s |
 
 Kontraste (WCAG, geprüft in `test_text_contrast`): Text auf Flächen ≥ 4,5:1 (`TEXT_PRIMARY` auf `BG_SURFACE` 14,2:1, `TEXT_MUTED` auf `BG_SURFACE` 7,0:1, `GOLD` auf `BG_SURFACE` 7,7:1, `TEXT_ON_GOLD` auf `GOLD` 8,2:1, `TEXT_PRIMARY` auf `DANGER` 5,6:1), Fokusrahmen ≥ 3:1 (`FOCUS_RING` auf `BG_SURFACE` 13,2:1). Meldungsfarben auf `BG_SURFACE`: `DANGER_TEXT` 8,3:1, `WARNING_TEXT` 10,1:1.
 
-Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schrift 18), Labels `SectionLabel`, `ErrorLabel`, `ErrorCaptionLabel`, `WarningLabel`, `BadgeLabel`, Panels `PersonRowPanel`, `WarningBadge`, `SummaryPanel`; dazu Stile für `LineEdit`/`TextEdit` (Goldrahmen im Fokus, gesperrt gedämpft), `VScrollBar` und Tooltips.
+Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schrift 18), Labels `SectionLabel`, `ErrorLabel`, `ErrorCaptionLabel`, `WarningLabel`, `BadgeLabel`, Panels `PersonRowPanel`, `WarningBadge`, `SummaryPanel`, `ListPanel` (Zuordnungsliste) und `SecretPanel` (geöffneter Spielleiterbereich, Hinweisrahmen); dazu Stile für `LineEdit`/`TextEdit` (Goldrahmen im Fokus, gesperrt gedämpft), `VScrollBar` und Tooltips.
 
 **Zustände.** Jede Button-Variation (`PrimaryButton`, `SecondaryButton`, `DangerButton`) hat eigene StyleBoxen für normal, hover, pressed, focus und disabled. Primär ist gold gefüllt, sekundär eine dunkle Fläche mit Rahmen, Gefahr gedämpftes Rot. Gedrückt hat einen dickeren Rahmen, deaktiviert einen dünneren Rahmen und schwächeren Text. Fokus ist ein separater heller Rahmen außerhalb des Buttons. Umschalter zeigen den Zustand über die Knopfposition (Theme-Symbol aus einfachen Formen), die Sprachwahl zusätzlich als Textzeile „Aktive Sprache: …“. Information hängt damit nie allein an Farbe.
 
@@ -128,7 +130,7 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 ## Lokalisierung
 
 - Dateien: `godot/content/i18n/ui.de.po` und `ui.en.po`, registriert unter `internationalization/locale/translations`, Rückfall `en`. Godot lädt `.po` direkt, ohne Importschritt.
-- Schlüssel sind `msgid`s nach dem Muster `app.*` und `ui.<bereich>.<element>` (115 Schlüssel, davon 62 `ui.setup.*`, identisch in beiden Dateien).
+- Schlüssel sind `msgid`s nach dem Muster `app.*` und `ui.<bereich>.<element>` (244 Schlüssel, davon 166 `ui.setup.*` sowie 22 `ui.role.*` und 3 `ui.faction.*`, identisch in beiden Dateien).
 - Szenen setzen nur `text_key`. Kein sichtbarer Text steht in Szenen oder Skripten (`test_no_literal_texts_in_scenes_or_scripts`).
 - `GrimmButton`, `GrimmLabel` und `GrimmToggle` übersetzen selbst (`tr(text_key)`) und aktualisieren sich bei `NOTIFICATION_TRANSLATION_CHANGED`. Die automatische Übersetzung der Engine ist für sie abgeschaltet, damit der sichtbare Text in `text` steht und prüfbar ist.
 - Sprachwechsel: `AppSettings.set_language("de"|"en")` setzt die Locale; die Shell verteilt die Änderung sofort an alle Knoten. Andere Sprachen werden abgelehnt. Die Wahl wird noch nicht gespeichert.
@@ -150,6 +152,8 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 godot/tests/run_all.sh                      # Regelkern und UI, Exit 0 = grün
 godot/tests/run_all.sh --filter=test_ui     # nur UI-Grundlage
 godot/tests/run_all.sh --filter=test_setup  # nur Spieler-Setup (siehe player-setup.md)
+godot/tests/run_all.sh --filter=test_role   # Rollenwahl (siehe role-setup.md)
+godot/tests/run_all.sh --filter=test_distribution  # Verteilung und Geheimhaltung
 ```
 
 UI-Tests liegen unter `godot/tests/ui/` und erben von `tests/ui_test_case.gd`. Sie starten `app/main.tscn` im Root-Viewport in genau 1024×768, 1280×800 oder 1920×1080 logischen Pixeln ohne Skalierung. Das ist der ungünstigste Fall: Auf einem echten 1024×768-Gerät skaliert Godot die Basis 1280×800 herunter.
@@ -165,10 +169,10 @@ Prüf-Screenshots (brauchen einen echten Renderer, headless gibt es kein Bild):
 
 ```bash
 xvfb-run -a -s "-screen 0 1920x1080x24" <godot-4.7.2> --path godot --rendering-driver opengl3 \
-  --audio-driver Dummy -s res://tools/capture_ui_screenshots.gd [-- --only=player-setup]
+  --audio-driver Dummy -s res://tools/capture_ui_screenshots.gd [-- --only=role-setup]
 ```
 
-Ergebnis: `docs/evidence/ui-foundation/*.png` und `docs/evidence/player-setup/*.png`. Mit `--only=<Teilstring>` nur passende Aufnahmen. Die Bilder sind Prüfartefakte, keine Produktionsassets.
+Ergebnis: `docs/evidence/ui-foundation/*.png`, `docs/evidence/player-setup/*.png` und `docs/evidence/role-setup/*.png`. Mit `--only=<Teilstring>` nur passende Aufnahmen. Die Bilder sind Prüfartefakte, keine Produktionsassets.
 
 ## Lokal starten (Godot 4.7.2)
 

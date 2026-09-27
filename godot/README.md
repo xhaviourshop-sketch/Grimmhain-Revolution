@@ -1,6 +1,6 @@
 # Grimmhain · Godot-Projekt
 
-Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Dazu die technische UI-Grundlage der Tablet-App (App-Shell, Navigation, Ansichten, Theme, DE/EN, Anwendungsschicht), beschrieben in `../docs/ui/README.md`, und der erste Setup-Schritt „Neue Partie“ (Personen erfassen und bestätigen, `../docs/ui/player-setup.md`); keine Assets, kein Audio, noch kein Spielablauf in der UI. Rollen: `dorfbewohner`, `werwolf` und die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` (siehe „Rollen“).
+Phase 1 des Masterplans (`../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`): headless, deterministischer Regelkern für Dorf gegen Werwölfe. Umfang nach `../docs/specs/vertical-slice/implementation-boundary.md` Abschnitt A, ergänzt um die Grundlagen B-06, B-11 (ohne `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`) und DR-14: Regelschritte, Prompt-Abbruch, Spielleiterkorrektur, persistente Reaktionswarteschlange, vorläufige und verbindliche Siegprüfung. Dazu die technische UI-Grundlage der Tablet-App (App-Shell, Navigation, Ansichten, Theme, DE/EN, Anwendungsschicht), beschrieben in `../docs/ui/README.md`, und der Setup-Wizard „Neue Partie“ (Personen erfassen, Rollen auswählen, Rollen verteilen; `../docs/ui/player-setup.md`, `../docs/ui/role-setup.md`), noch ohne Sitzordnung und `StartGame`; keine Assets, kein Audio, noch kein Spielablauf in der UI. Rollen: `dorfbewohner`, `werwolf` und die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` (siehe „Rollen“).
 
 ## Engine-Version (gepinnt)
 
@@ -25,6 +25,8 @@ godot/tests/run_all.sh --filter=replay     # nur Testdateien, deren Name "replay
 godot/tests/run_all.sh --filter=reactions  # z. B. nur die Reaktionswarteschlange
 godot/tests/run_all.sh --filter=test_ui    # nur die UI-Grundlage (tests/ui/test_ui_*)
 godot/tests/run_all.sh --filter=test_setup # nur das Spieler-Setup (tests/ui/test_setup_*)
+godot/tests/run_all.sh --filter=test_role  # Rollenwahl und Wizard (tests/ui/test_role_*)
+godot/tests/run_all.sh --filter=test_distribution # Rollenverteilung und Geheimhaltung
 GODOT_BIN=/pfad/zu/godot godot/tests/run_all.sh   # eigene Godot-Binärdatei verwenden
 ```
 
@@ -89,6 +91,10 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 | `tests/ui/test_setup_screen.gd` | Setup-Ansicht: Einzeleingabe, Doppeltippen, Importmeldungen, Sperren bei 24, IDs über Sprachwechsel und Neuaufbau, kein GameState/StartGame, Bearbeiten, Entfernen, Verlassen mit drei Wahlmöglichkeiten, Neu beginnen | Spieler-Setup 6, 7, 17, 30, 32, 34–36, 38–45 |
 | `tests/ui/test_setup_layout.gd` | 0/6/12/18/24 Personen, EN, 1920×1080, lange Namen, Dubletten, offene Modi und Dialog, Scrollen, DE/EN-Schlüssel, keine festen Texte | Spieler-Setup 52–61 |
 | `tests/ui/test_dialog_focus.gd` | ConfirmDialog als Modal: Fokussperre (Tab, Shift+Tab, Pfeile), Hintergrund gesperrt, Escape, Fokus-Rückgabe, kein zweiter Dialog | Spieler-Setup 46–51 |
+| `tests/ui/test_role_model.gd` | Katalogadapter gegen `RoleCatalog`, Darstellungsschlüssel DE/EN, Rollenpool (Plus/Minus, Grenzen, Validierung, kanonisch), Schrittsperren, Vorschlag 6–24, Überschreiben nur mit Bestätigung, Personenänderungen, kein Zufall/keine Uhr im Setup | Rollen-Setup 1–36, 47, 73, 74 |
+| `tests/ui/test_role_step.gd` | Wizard (Schrittanzeige, Sperren, Doppelklick, Zurück, Verlassen), Rollenwahl-Oberfläche, Überschreib-Dialog, kein GameState/StartGame, Layout, Scrollen, Schlüssel | Rollen-Setup 22, 23, 33, 73–83, 86–89 |
+| `tests/ui/test_distribution_model.gd` | zufällige und manuelle Verteilung, Reproduzierbarkeit, Neu mischen, Moduswechsel, Invalidierung, Trugbilderwolf-Scheinrollen | Rollen-Setup 37–71 |
+| `tests/ui/test_distribution_step.gd` | Verteilungs-Oberfläche, Geheimhaltung, modale Rollenauswahl, Zusammenfassung ohne Partie, Layout | Rollen-Setup 44, 53–57, 63, 64, 72, 74, 80, 81, 84–91 |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |
 
 ### Szenarioformat (`tests/scenarios/*.json`)
@@ -112,7 +118,7 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 |---|---|
 | `project.godot` | Projekteinstellungen, Typisierungswarnungen als Fehler, Hauptszene, Querformat, Streckung `canvas_items`/`expand`, Übersetzungen, `quit_on_go_back` aus, Version (zentrale Quelle) |
 | **app/**, **content/i18n/** | UI-Grundlage und UI-Texte; Szenen, Verantwortungen, Navigation, Tokens und Lokalisierung in `../docs/ui/README.md` |
-| **app/setup/** | Spieler-Setup ohne Regelkern: `PersonNameRules` (Grenzen, Namensregeln), `SetupPerson`, `SetupDraft`, `SetupResult`, `PlayerSetup` (Anwendungsschicht); siehe `../docs/ui/player-setup.md` |
+| **app/setup/** | Setup ohne Regelkern: `PersonNameRules` (Grenzen, Namensregeln), `SetupPerson`, `SetupDraft`, `SetupResult`, `PlayerSetup` (Anwendungsschicht); Rollen über den lesenden Adapter `SetupRoleCatalog`, dazu `RolePresentation`, `RolePoolDraft`, `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView`; siehe `../docs/ui/player-setup.md` und `../docs/ui/role-setup.md` |
 | `tools/capture_ui_screenshots.gd` | Prüf-Screenshots der UI (braucht Renderer, z. B. Xvfb) |
 | `tools/godot-version.txt`, `tools/install_godot.sh` | gepinnte Engine-Version, Download mit Prüfsumme |
 | **core/util/** | |
@@ -247,7 +253,7 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 2. **Offene Siegkandidaten blockieren alle anderen Befehle** (`win_candidate_open`), bis `ConfirmWin` oder `RejectWin` erfolgt. So bleibt die Phase bis zur Entscheidung unverändert (AS-C01).
 3. **Kandidaten erneut nur nach einer weiteren relevanten Zustandsänderung** (Tod, Wiederbelebung, Rollen- oder Statuskorrektur; AS-C04).
 4. **Tages-Unterzustand `ENDED`** zwischen `EndDay` und `StartNight`; `vertical-slice-flow.md` §8 führt beide Befehle getrennt.
-5. **Pflicht einer Einzelsiegrolle beim Setup** (DECISION-LOG) wird nicht geprüft, weil der Core-Slice keine solche Rolle besitzt. Geprüft werden 6–24 Personen, Rollenanzahl und je mindestens eine Wolfs- und Dorfrolle.
+5. **Pflicht einer Einzelsiegrolle beim Setup** (DECISION-LOG) wird nicht geprüft, weil der Core-Slice keine solche Rolle besitzt. Geprüft werden 6–24 Personen, Rollenanzahl und je mindestens eine Wolfs- und Dorfrolle. Das App-Setup (`app/setup/`, `../docs/ui/role-setup.md`) verlangt sie bereits vor der Verteilung; der Kern bleibt unverändert.
 6. **Keine Obergrenze für `dorfbewohner` und `werwolf`** (Entscheidung vom 26.09.2026, `DECISION-LOG.md`). Nur so ist jede Personenzahl von 6 bis 24 mit den beiden Grundrollen spielbar. Der Katalog kennt weiterhin ein optionales `max_copies` für spätere Rollen; die konkrete Rollenkomposition legt das Setup in Phase 2 fest.
 7. **Selbstnominierung** ist nicht verboten, weil DR-03 sie nicht regelt.
 8. **`SeatDied` ist nur für den Spielleiter sichtbar.** Nach DR-04 ist öffentlich nur der Name (Rolle je nach Setup-Option `reveal_role_on_death`, nie die Ursache); die öffentliche Todesmeldung entsteht mit den Projektionen (B-18).
@@ -285,4 +291,4 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 
 ## Nicht enthalten
 
-Spielablauf in der UI (Rollen, Sitzkreis, StartGame aus dem Setup, Ansagekarte mit Inhalt), gespeicherte Einstellungen und Spielerlisten, Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoints auf Datenträger, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
+Spielablauf in der UI (Sitzordnung, Sitzkreis, Rollenübergabe, StartGame aus dem Setup, Ansagekarte mit Inhalt), gespeicherte Einstellungen und Spielerlisten, Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoints auf Datenträger, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
