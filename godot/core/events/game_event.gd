@@ -48,6 +48,12 @@ const CHRONICLE_RECORDED := &"ChronicleRecorded"  ## Zahl der Einzelsiegpersonen
 const CHRONICLE_REVEALED := &"ChronicleRevealed"  ## dieselbe Zahl für die Chronistin (actor)
 const BOUND_RECORDED := &"BoundRecorded"          ## lebende Gebundene in Nacht 1 (nur Spielleiter)
 const BOUND_REVEALED := &"BoundRevealed"          ## die anderen lebenden Gebundenen für eine Gebundene (actor)
+const RANGER_RECORDED := &"RangerRecorded"      ## Wolfszahl für den Waldläufer (nur Spielleiter)
+const RANGER_REVEALED := &"RangerRevealed"      ## dieselbe Zahl für den Waldläufer (actor)
+const DOCTOR_RECORDED := &"DoctorRecorded"      ## Blutprobe des Doktors (nur Spielleiter)
+const DOCTOR_REVEALED := &"DoctorRevealed"      ## Ergebnis „gleiches Team“ für den Doktor (actor)
+const ALARM_BELLS := &"AlarmBells"              ## Glocken des Nachtwächters (öffentlich, ohne Namen)
+const ALARM_BELLS_DETAIL := &"AlarmBellsDetail"  ## auslösende Nachtwächter und Nachbarn (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

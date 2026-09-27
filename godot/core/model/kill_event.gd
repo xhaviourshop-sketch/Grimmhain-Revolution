@@ -6,11 +6,12 @@ extends RefCounted
 const CAUSE_NIGHT_KILL := &"NIGHT_KILL"
 const CAUSE_LYNCH := &"LYNCH"
 const CAUSE_HUNTER_SHOT := &"HUNTER_SHOT"      ## Fluch nach dem Tod (Sensenträger-Reaktion)
+const CAUSE_COACHMAN_CRASH := &"COACHMAN_CRASH"  ## Nachbar des gelynchten Wahnsinnigen Kutschers (Rollenaudit)
 const CAUSE_GM_CORRECTION := &"GM_CORRECTION"  ## Spielleiterkorrektur
-const CAUSE_WITCH_POISON := &"WITCH_POISON"    ## Gifttrank der Waldhexe, sofort im Waldhexenschritt
+const CAUSE_WITCH_POISON := &"WITCH_POISON"    ## Gifttrank der Waldhexe, in der Morgenauflösung (Todesmarkierung)
 const CAUSE_SPIEGELWOLF_RETALIATE := &"SPIEGELWOLF_RETALIATE"  ## gespiegelte Hinrichtung, Quelle Spiegelwolf
 const CAUSE_MANIPULATOR_NOMINATED := &"MANIPULATOR_NOMINATED"  ## Tod des Manipulators bei seiner Nominierung
-const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON, CAUSE_SPIEGELWOLF_RETALIATE, CAUSE_MANIPULATOR_NOMINATED]
+const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON, CAUSE_SPIEGELWOLF_RETALIATE, CAUSE_MANIPULATOR_NOMINATED, CAUSE_COACHMAN_CRASH]
 
 const SOURCE_PACK := &"pack"        ## Rudel (alle lebenden Wölfe gemeinsam)
 const SOURCE_VILLAGE := &"village"  ## Hinrichtung nach physischer Abstimmung

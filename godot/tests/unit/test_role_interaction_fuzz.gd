@@ -13,7 +13,7 @@ extends TestCase
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen"]
+	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 120
@@ -135,7 +135,7 @@ func _start_command(g: int, count: int) -> Command:
 		roles[j] = tmp
 	var map := {}
 	var appearances := {}
-	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen"]
+	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache"]
 	for i: int in count:
 		map[str(i + 1)] = roles[i]
 		if roles[i] == "trugbilderwolf":
@@ -343,7 +343,12 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 			if _rng.randf() < 0.1 and _override_allowed(p):
 				return Command.override_shown_role(p.id, "dorfbewohner", "Fuzz: Übersteuerung")
 			return Command.answer_choice(p.id, String(p.stage), true)
-		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND:
+		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR:
+			if p.stage == InfoSteps.STAGE_TARGETS:
+				var pool2 := _alive_in(s, p.allowed_ids, p.actor_id)
+				var a: int = _pick(pool2)
+				pool2.erase(a)
+				return Command.answer_stage_targets(p.id, String(p.stage), [a, _pick(pool2)])
 			return Command.answer_choice(p.id, String(p.stage), true)
 		PendingPrompt.OWNER_APPRENTICE:
 			match p.stage:

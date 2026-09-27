@@ -352,8 +352,7 @@ static func from_dict(d: Dictionary) -> GameState:
 	# Bindungen und ein offener Auswahl-Prompt des Lehrlings müssen zum übrigen Zustand passen.
 	if not ApprenticeRules.state_is_consistent(s):
 		return null
-	if s.pending_prompt != null and (s.pending_prompt.owner == PendingPrompt.OWNER_CHRONICLER or s.pending_prompt.owner == PendingPrompt.OWNER_BOUND) \
-			and not NightOneInfo.matches_state(s, s.pending_prompt):
+	if s.pending_prompt != null and InfoSteps.OWNERS.has(s.pending_prompt.owner) and not InfoSteps.matches_state(s, s.pending_prompt):
 		return null
 	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_APPRENTICE and not ApprenticeRules.matches_state(s, s.pending_prompt):
 		return null

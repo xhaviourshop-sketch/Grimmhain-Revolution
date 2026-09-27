@@ -19,7 +19,9 @@ const OWNER_APPRENTICE := &"lehrling"
 const KIND_APPRENTICE_CHAIN := &"apprentice_choice"
 const OWNER_CHRONICLER := &"dorfchronistin"
 const OWNER_BOUND := &"die-gebundenen"
-const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (NightOneInfo)
+const OWNER_RANGER := &"waldlaeufer"
+const OWNER_DOCTOR := &"doktor"
+const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0
 var kind: StringName = KIND_PICK_PLAYERS
@@ -76,8 +78,8 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 	elif p.owner == OWNER_APPRENTICE:
 		if not ApprenticeRules.STAGES.has(p.stage):
 			return null
-	elif p.owner == OWNER_CHRONICLER or p.owner == OWNER_BOUND:
-		if not NightOneInfo.STAGES.has(p.stage):
+	elif InfoSteps.OWNERS.has(p.owner):
+		if not InfoSteps.STAGES.has(p.stage):
 			return null
 	elif p.stage != &"":
 		return null

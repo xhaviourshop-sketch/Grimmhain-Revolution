@@ -45,6 +45,8 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		ApprenticeRules.on_master_death(ctx, record)
 		_queue_reaction(ctx, target, record)
 	WinRules.record_death_seeker(ctx, target, record, dead_before)
+	if trigger_effects:
+		_coachman_crash(ctx, target, record)
 	WinRules.record_provisional(ctx, record)
 	return record
 
@@ -60,9 +62,13 @@ static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: St
 	var night := ctx.state.night_number
 	var guardians := Protections.guardians_of(ctx.state, target_id, night)
 	var rescuers := WitchStep.rescuers_of(ctx.state, target_id, night)
-	if guardians.is_empty() and rescuers.is_empty():
+	# Dorfwache: der Rudelangriff tötet sie nicht (RM-DR-119, Rollentext); sonst keine Wirkung.
+	var immune := ctx.state.players[target_id].role_id == RoleCatalog.DORFWACHE
+	if guardians.is_empty() and rescuers.is_empty() and not immune:
 		return false
 	var sources: Array[StringName] = []
+	if immune:
+		sources.append(RoleCatalog.DORFWACHE)
 	if not guardians.is_empty():
 		sources.append(RoleCatalog.SCHUTZENGEL)
 	if not rescuers.is_empty():
@@ -73,6 +79,15 @@ static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: St
 		"rescuer_ids": rescuers, "night": night,
 	})
 	return true
+
+
+## Wahnsinniger Kutscher: Stirbt er durch Hinrichtung (LYNCH), sterben seine nächsten lebenden
+## Nachbarn mit (im Uhrzeigersinn zuerst), Ursache `COACHMAN_CRASH`, Quelle der Kutscher.
+static func _coachman_crash(ctx: RuleContext, target: Player, record: KillEvent) -> void:
+	if record.cause != KillEvent.CAUSE_LYNCH or target.role_id != RoleCatalog.WAHNSINNIGER_KUTSCHER:
+		return
+	for id: int in Seats.living_neighbours(ctx.state, target.id):
+		request_kill(ctx, id, KillEvent.CAUSE_COACHMAN_CRASH, KillEvent.SOURCE_PLAYER, target.id)
 
 
 ## Reiht die Todesreaktion der Rolle ein (falls vorhanden). Reihenfolge = Einreihung.

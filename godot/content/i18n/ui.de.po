@@ -491,6 +491,36 @@ msgstr "Die Gebundenen"
 msgid "ui.role.die_gebundenen.short"
 msgstr "Lernen sich in Nacht 1 gegenseitig kennen."
 
+msgid "ui.role.waldlaeufer.name"
+msgstr "Waldläufer"
+
+msgid "ui.role.waldlaeufer.short"
+msgstr "Erfährt jede Nacht, wie viele Wölfe leben."
+
+msgid "ui.role.doktor.name"
+msgstr "Doktor"
+
+msgid "ui.role.doktor.short"
+msgstr "Prüft jede Nacht, ob zwei Personen zum selben Team gehören."
+
+msgid "ui.role.nachtwaechter.name"
+msgstr "Nachtwächter"
+
+msgid "ui.role.nachtwaechter.short"
+msgstr "Läutet morgens Alarm, wenn neben ihm jemand nicht zum Dorf gehört."
+
+msgid "ui.role.dorfwache.name"
+msgstr "Dorfwache"
+
+msgid "ui.role.dorfwache.short"
+msgstr "Überlebt den Angriff der Werwölfe."
+
+msgid "ui.role.wahnsinniger_kutscher.name"
+msgstr "Wahnsinniger Kutscher"
+
+msgid "ui.role.wahnsinniger_kutscher.short"
+msgstr "Wird er hingerichtet, sterben seine Nachbarn mit."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

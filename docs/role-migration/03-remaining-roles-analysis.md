@@ -17,7 +17,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | ID | Fraktion | Godot | Legacy | Auto | Mechanik (primär) | sekundär | Größe / Risiko | Charge | 1.0 |
 |---|---|---|---|---|---|---|---|---|---|
 | [`loki`](#loki) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Einmalfähigkeit, Todesreaktion | M / mittel | K6 | B |
-| [`nachtwaechter`](#nachtwaechter) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Informationsrolle | Sitzpositionsmechanik, passive Dorfrolle | S / niedrig | K3 | C |
 | [`rattenfaenger`](#rattenfaenger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | mehrstufige Nachtfähigkeit | M / mittel | K9 | B |
 | [`die-ewigen`](#die-ewigen) | Dorf | `decision-required` | `not-found` | `assisted` | Informationsrolle | Einzelsieg | M / mittel | K9 | – |
 | [`spuerhund`](#spuerhund) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Fehlinformation, Zufallsmechanik | M / mittel | K7 | – |
@@ -31,10 +30,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`schwarze-witwe`](#schwarze-witwe) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Tötung | M / mittel | K6 | – |
 | [`der-weise`](#der-weise) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Wolfsangriff-Modifikation | Hinrichtungsreaktion, globale Regeländerung | M / hoch | K8 | C |
 | [`verdammniswaechter`](#verdammniswaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Zielumleitung | Tötung, Zufallsmechanik | M / hoch | K11 | – |
-| [`wahnsinniger-kutscher`](#wahnsinniger-kutscher) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | Sitzpositionsmechanik, Tötung | S / mittel | K3 | A |
 | [`korrupter-richter`](#korrupter-richter) | Dorf | `decision-required` | `not-found` | `assisted` | Nominierungsreaktion | Tagfähigkeit | S / mittel | K14 | – |
 | [`maertyrerin`](#maertyrerin) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Einmalfähigkeit | M / mittel | K5 | – |
-| [`dorfwache`](#dorfwache) | Dorf | `decision-required` | `legacy-verified` | `automatic` | passive Dorfrolle | Schutz | S / niedrig | K5 | A |
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
 | [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
@@ -59,9 +56,7 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
-| [`doktor`](#doktor) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | mehrstufige Nachtfähigkeit | S / niedrig | K2 | A |
 | [`faehrtenleser`](#faehrtenleser) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Sitzpositionsmechanik, Einmalfähigkeit | S / mittel | K3 | – |
-| [`waldlaeufer`](#waldlaeufer) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | passive Dorfrolle | S / niedrig | K2 | A |
 | [`schutzgeist`](#schutzgeist) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Schutz | Todesreaktion, Informationsrolle | M / mittel | K5 | – |
 | [`waechter-am-tor`](#waechter-am-tor) | Dorf | `decision-required` | `legacy-verified` | `automatic` | globale Regeländerung | Rollenwechsel | M / hoch | K12 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
@@ -99,27 +94,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K6 / ab Option B |
 | Belegsicherheit | hoch für Code; nicht im Browser verifiziert, ob React-Overlay-Spiegelung den Dialog vollständig bedient. |
 | Detail | [Dossier](dossiers/village-1.md#loki) |
-
-### `nachtwaechter`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Nachtwächter / Night Warden |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / I / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Die Erkennung existiert, aber die einzige Ausgabe (SFX) ist ein No-op; die Kernfunktion "öffentlicher Alarm" findet nie statt. (Nicht not-found, weil die Mechanik im Code vorhanden ist.) |
-| DE/EN-Vergleich | JA. Beide ohne Zeitpunkt, beide "öffentlich", beide "ein Nachbar". |
-| Automationsziel | `automatic`: Rein zustandsbasiert berechenbar. |
-| Mechanik | primär: Informationsrolle; sekundär: Sitzpositionsmechanik, passive Dorfrolle |
-| Größe / Risiko | S / niedrig. Offen ist nur der Zeitpunkt. |
-| Vorhandene Godot-Systeme | Ereignis-Sichtbarkeit (public), InfoRecord, Phasenübergang Morgen, Replay, StateCodec. |
-| Neue Systeme | Sitznachbarschaft (nächster lebender Nachbar nach Sitzreihenfolge, nicht nach ID; DECISION-LOG Z.31-32: Sitze tauschbar). |
-| Abhängigkeiten | alle Wolfs- und Solorollen; Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Wolfskind (verwandelt), Doppelspion (Solo, Nicht-Wolf). |
-| Widersprüche | RM-C-084 Öffentlicher Alarm; RM-C-085 Nachbarbegriff; RM-C-086 Solo zählt |
-| Entscheidungen | RM-DR-102 (Rolle); übergreifend RM-DR-002, RM-DR-003; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K3 / ab Option C |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/village-1.md#nachtwaechter) |
 
 ### `rattenfaenger`
 
@@ -394,27 +368,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-1.md#verdammniswaechter) |
 
-### `wahnsinniger-kutscher`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Wahnsinniger Kutscher / Mad Coachman |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Code setzt den DE-Text um, EN-Text und 07-Vorschlag widersprechen; kein Defekt der Kernfunktion. |
-| DE/EN-Vergleich | NEIN. DE "direkten Nachbarn" (Sitz daneben, auch wenn tot), EN "living neighbors" (nächste lebende Nachbarn). Bei einem toten direkten Nachbarn stirbt nach DE niemand auf dieser Seite, nach EN der nächste Lebende. |
-| Automationsziel | `automatic` |
-| Mechanik | primär: Hinrichtungsreaktion; sekundär: Sitzpositionsmechanik, Tötung |
-| Größe / Risiko | S / mittel. Einfach, aber Nachbarschaft und Ursachenmodell müssen stimmen. |
-| Vorhandene Godot-Systeme | ExecutionRules (Hinrichtungsreaktion wie Spiegelwolf-Umlenkung), KillPipeline, Reaktionswarteschlange, WinRules/WinCandidate (DR-14), Nominations (nicht nötig, aber Hinrichtung setzt sie voraus), Ereignis-Sichtbarkeit, GmCorrections, StateCodec, Replay. |
-| Neue Systeme | Sitznachbarschaft (direkt oder nächster Lebender, nach Sitzreihenfolge). |
-| Abhängigkeiten | Loki (Kette), Sensenträger/Besessener Wolf (Folgereaktionen), Rudelvater/Nekromant/Kartenschlucker/Hades/Parasit (Schilde), Henker (`finalizeLynch`), Feuerteufel/Voodoo-Priester/Kopfgeldjäger (ausgelassene Sonderzweige). |
-| Widersprüche | RM-C-103 Nachbarbegriff; RM-C-104 Todesursache Kutscher |
-| Entscheidungen | RM-DR-116 (Rolle); übergreifend RM-DR-003; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K3 / ab Option A |
-| Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. Uneinheitliche Wolf-/Solo-Abfrage innerhalb der Gruppe: Nachtwächter nutzt `isWolf` + Solo-Name (`night:557-558`), Spürhund nur `getRoleFaction(role)` (`chunk:268`), Die Ewigen nur Solo-Name (`chunk:255`), … |
-| Detail | [Dossier](dossiers/village-1.md#wahnsinniger-kutscher) |
-
 ### `korrupter-richter`
 
 | Feld | Inhalt |
@@ -456,27 +409,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K5 / in keiner Option |
 | Belegsicherheit | hoch (Code vollständig gelesen); Recap-Lücke aus Bericht nicht erneut geprüft. |
 | Detail | [Dossier](dossiers/village-2.md#maertyrerin) |
-
-### `dorfwache`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Dorfwache / Village Guard |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Rudelangriffe töten die Dorfwache nachvollziehbar nicht; Randfälle (Giftwolf, Pierce) sind Regelfragen, keine Fehlfunktion. |
-| DE/EN-Vergleich | semantisch gleich JA. |
-| Automationsziel | `automatic`: Rein passive Immunität in der KillPipeline. |
-| Mechanik | primär: passive Dorfrolle; sekundär: Schutz |
-| Größe / Risiko | S / niedrig |
-| Vorhandene Godot-Systeme | KillPipeline (Ursache `NIGHT_KILL`, Abfangstatus), Protections-Filter `is_wolf_attack` bzw. Ursachenfilter, InfoRecord nicht nötig, StateCodec, Replay. |
-| Neue Systeme | Immunitätsregel mit Ursachenfilter und "durchdringt Immunität"-Kennzeichen am Angriff (Seuchenwolf, Rudelvater). Protections deckt heute nur Schutzengel ab. |
-| Abhängigkeiten | Werwolf/Rudel, Seuchenwolf, Rudelvater, Giftwolf, Schicksalswolf, Rachsüchtiger Wolf, Schutzengel, Märtyrerin, Seelentauscher (Rollenwechsel in der Nacht). |
-| Widersprüche | RM-C-112 Giftwolf; RM-C-113 Seuchenwolf/Rudelvater |
-| Entscheidungen | RM-DR-119 (Rolle); übergreifend RM-DR-004, RM-DR-005; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K5 / ab Option A |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/village-2.md#dorfwache) |
 
 ### `pestbringerin`
 
@@ -982,27 +914,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. Nicht verifiziert: ob irgendwo außerhalb von `js/`, `game.html`, `app/` Stimmen gewichtet werden (rg über das ganze Repo fand nur die Definition `ui:18`). --- |
 | Detail | [Dossier](dossiers/solos-b.md#hades) |
 
-### `doktor`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Doktor / Doctor |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / 5.0 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Mechanik läuft zuverlässig, aber "demselben Team" wird bei Solos und Verwandlungen anders beantwortet, als der Text nahelegt. |
-| DE/EN-Vergleich | JA. Zeitpunkt (jede Nacht), Anzahl (zwei), Ergebnis (gleiches Team ja/nein) identisch. |
-| Automationsziel | `automatic`: Spieler wählt zwei Personen (SL tippt), Ergebnis berechnet der Kern. |
-| Mechanik | primär: Informationsrolle; sekundär: mehrstufige Nachtfähigkeit |
-| Größe / Risiko | S / niedrig. Einfache Zweierwahl, nur die Teamdefinition ist zu klären. |
-| Vorhandene Godot-Systeme | PendingPrompt (2 Ziele, `min_count=max_count=2`), StepQueue, InfoRecord (Wahrheit/ermittelt/gezeigt, Übersteuerung), Ereignis-Sichtbarkeit, StateCodec, Replay. |
-| Neue Systeme | Informationsregel "gleiches Team" (Siegpartei-Vergleich) in `information_rules.gd`; InfoRecord-Variante für Paarvergleich. |
-| Abhängigkeiten | Wolfskind, Lehrling, Seelentauscher, Dämonischer Wolf, alle Solo-Rollen, Doppelspion, Trugbilderwolf (Erscheinung vs. Fraktion), Rotkäppchen (Apfel). |
-| Widersprüche | RM-C-151 Zwei Solo-Rollen; RM-C-152 Verwandlung / Fluch |
-| Entscheidungen | RM-DR-145 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K2 / ab Option A |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/village-3.md#doktor) |
-
 ### `faehrtenleser`
 
 | Feld | Inhalt |
@@ -1023,27 +934,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K3 / in keiner Option |
 | Belegsicherheit | hoch für Berechnung; die Zuordnung Bildschirm-Uhrzeigersinn zu "links aus Spielersicht" ist abgeleitet (Winkel `field-pixi.js:544-548`), nicht am Tisch geprüft. --- |
 | Detail | [Dossier](dossiers/village-3.md#faehrtenleser) |
-
-### `waldlaeufer`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Waldläufer / Ranger |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / 5.4 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Code setzt den Text direkt um; offen sind nur die im Text fehlende Häufigkeit und die globale Wolf-Definition. |
-| DE/EN-Vergleich | JA. Beide ohne Zeit- und Häufigkeitsangabe, Ergebnis Anzahl lebender Werwölfe. |
-| Automationsziel | `automatic`: Keine Eingabe, reine Zählung, Ergebnis als InfoRecord. |
-| Mechanik | primär: Informationsrolle; sekundär: passive Dorfrolle |
-| Größe / Risiko | S / niedrig |
-| Vorhandene Godot-Systeme | StepQueue, InfoRecord, Ereignis-Sichtbarkeit, StateCodec, Replay. |
-| Neue Systeme | InfoRecord-Variante "Anzahl" (sonst keine). |
-| Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf, Wolfskind/Lehrling, Siegreicher Wolf (Zählweise), Doppelspion, Waldhexe/Hades (sofortige Nachttode vor dem Schritt). |
-| Widersprüche | RM-C-157 Häufigkeit; RM-C-158 Verfluchte zählen |
-| Entscheidungen | RM-DR-147 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K2 / ab Option A |
-| Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. Zwei widersprüchliche Richtungsdefinitionen: Der Fährtenleser nennt die höhere Sitznummer "links" (`chunk:478-483`), der Ritter-Zielfinder prüft bei Gleichstand zuerst `L` = niedrigere Sitznummer … |
-| Detail | [Dossier](dossiers/village-3.md#waldlaeufer) |
 
 ### `schutzgeist`
 

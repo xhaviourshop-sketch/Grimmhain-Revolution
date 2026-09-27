@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 16 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 16 |
+| im RoleCatalog vorhandene Rollen | 21 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 21 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 14 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 19 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -63,6 +63,11 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 14 | `selbstmoerder` | Selbstmörder / Death Seeker (Rollentext) | solo | nein | – | `kill_pipeline.gd`, `win_rules.gd` (`record_death_seeker`, Kandidat `death_seeker_lynched`), `game_state.gd` (`death_seeker_wins`) | `test_selbstmoerder.gd` (13), `test_role_interaction_fuzz.gd` | RM-DR-138.1/.3/.4/.5, F-11, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 15 | `dorfchronistin` | Dorfchronistin / Village Chronicler (Rollentext) | village | nein | 3 (nur Nacht 1) | `night_one_info.gd`, `step_queue.gd`, `role_catalog.gd` (`first_night_only`) | `test_dorfchronistin.gd` (8), `test_role_interaction_fuzz.gd` | RM-DR-014 = B, F-09, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 16 | `die-gebundenen` | Die Gebundenen / The Bound (Rollentext) | village | nein | 5 (gemeinsamer Schritt, nur Nacht 1) | `night_one_info.gd`, `step_queue.gd` (`BOUND`) | `test_die_gebundenen.gd` (8), `test_role_interaction_fuzz.gd` | RM-DR-014 = B, F-08, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 17 | `waldlaeufer` | Waldläufer / Ranger (Rollentext) | village | nein | 54 | `info_steps.gd` | `test_waldlaeufer_doktor.gd`, fuzz | RM-DR-147.1/.2, DECISION-LOG „Rollenaudit · Waldläufer, Doktor, Sitznachbarn …“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 18 | `doktor` | Doktor / Doctor (Rollentext) | village | nein | 50 | `info_steps.gd` (`same_team`) | `test_waldlaeufer_doktor.gd`, fuzz | RM-DR-145.1/.2, DECISION-LOG „Rollenaudit · Waldläufer, Doktor, Sitznachbarn …“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 19 | `wahnsinniger-kutscher` | Wahnsinniger Kutscher / Mad Coachman (Rollentext) | village | nein | – | `kill_pipeline.gd` (`_coachman_crash`), `seats.gd` | `test_seat_roles.gd`, fuzz | RM-DR-003, RM-DR-116.1, DECISION-LOG „Rollenaudit · Waldläufer, Doktor, Sitznachbarn …“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 20 | `nachtwaechter` | Nachtwächter / Night Warden (Rollentext) | village | nein | – | `rules_engine.gd` (`_ring_alarm_bells`), `seats.gd` | `test_seat_roles.gd`, fuzz | RM-DR-003, RM-DR-102.1, DECISION-LOG „Rollenaudit · Waldläufer, Doktor, Sitznachbarn …“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 21 | `dorfwache` | Dorfwache / Village Guard (Rollentext) | village | nein | – | `kill_pipeline.gd` (`_prevented_by_protection`) | `test_seat_roles.gd`, fuzz | Rollentext; RM-DR-119 folgt mit Giftwolf/Seuchenwolf/Rudelvater | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -155,6 +160,31 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-27):** Dorf; ein gemeinsamer Schritt `die-gebundenen` mit Priorität 5, nur in Nacht 1, solange eine Gebundene lebt (RM-DR-014 = B). Der Prompt zeigt dem Spielleiter die lebenden Gebundenen; „Gezeigt“ erzeugt `BoundRecorded` (Spielleiter) und je lebender Gebundener `BoundRevealed` mit den anderen lebenden (F-08; allein: leere Liste). Abbrechbar, nicht überspringbar, entfällt ohne lebende Gebundene.
 - **Tests:** `test_die_gebundenen.gd` (8): Rolle und Plan, tote Gebundene ausgeschlossen, allein, nur Nacht 1, alle tot, Abbruch und beschädigter Prompt, 24 Personen mit sechs Gebundenen, Leak.
 - **Grenzen:** Blockaden in Nacht 1 folgen mit Schattenhund und Albtraumwolf.
+
+### 4.17 `waldlaeufer`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Informationsschritt jede Nacht (Priorität 54): Anzahl der Personen, die bei seinem Schritt leben und als Wolf zählen, jede einmal; ein Rudelopfer dieser Nacht lebt noch (RM-DR-147). „Gezeigt“ erzeugt `RangerRecorded` und `RangerRevealed` (nur er). Vergiftet schläft er (`marked_for_death`).
+- **Tests:** `test_waldlaeufer_doktor.gd`: Plan, Zählung mit Siegreichem Wolf und verwandeltem Wolfskind, jede Nacht, Gift, Ladeprüfung, nicht überspringbar, Leak.
+- **Grenzen:** „Verfluchte“ des Dämonischen Wolfs folgen mit dieser Rolle.
+
+### 4.18 `doktor`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Pflichtschritt jede Nacht (Priorität 50): genau zwei verschiedene andere Lebende (Stufe `targets`), Ergebnis gleiche aktuelle Fraktion; zwei Einzelsiegpersonen gelten als gleiches Team (RM-DR-145.1 = B), Trugbilderwolf mit wahrer Fraktion. „Gezeigt“ erzeugt `DoctorRecorded` und `DoctorRevealed` (nur er). Abbrechbar, entfällt mit weniger als zwei anderen Lebenden.
+- **Tests:** `test_waldlaeufer_doktor.gd`: Teamregeln (Dorf, Wolf, Solo, Trugbild, Wolfskind vor/nach Verwandlung), ungültige Ziele, Abbruch, Ladeprüfung, Leak.
+- **Grenzen:** Wechselwirkung mit Dämonischem Wolf, Seelentauscher und Rotkäppchen folgt mit diesen Rollen.
+
+### 4.19 `wahnsinniger-kutscher`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Stirbt er durch Hinrichtung (LYNCH, auch Spielleiter-Hinrichtung), sterben seine nächsten lebenden Nachbarn im Sitzkreis mit (`COACHMAN_CRASH`, Quelle Kutscher, im Uhrzeigersinn zuerst); Spiegelung, Rudel und Korrektur-Tötung lösen nicht aus. Nachbarfolgen (Reaktion, Verwandlung, Siegprüfung) laufen normal.
+- **Tests:** `test_seat_roles.gd`: nächste Lebende, Sitzfolge statt ID, Spielleiter-Hinrichtung, andere Todesarten, Spiegelung, Sensenträger-Nachbar, nur ein anderer Lebender.
+- **Grenzen:** Schilde späterer Rollen (Rudelvater, Nekromant, Hades …) folgen mit diesen.
+
+### 4.20 `nachtwaechter`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Bei jedem Tagesbeginn nach vollständiger Morgenauflösung: sitzt neben einem lebenden Nachtwächter (nächste Lebende) jemand mit Fraktion ungleich Dorf, entsteht genau ein öffentliches `AlarmBells` ohne Namen und Seite; Einzelheiten `AlarmBellsDetail` nur für den Spielleiter.
+- **Tests:** `test_seat_roles.gd`: Wolf, Einzelsieg, nur Dorf, tote Plätze, toter Nachtwächter, zwei Nachtwächter und jeder Morgen, Save/Load.
+- **Grenzen:** Dämonischer-Wolf-Fluch folgt mit dieser Rolle.
+
+### 4.21 `dorfwache`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Der Rudelangriff tötet sie nicht: `KillPrevented` mit Quelle `dorfwache` (nur Spielleiter), zusammen mit Schutzengel und Waldhexenrettung genau ein Abfangen. Gift, Hinrichtung und Korrekturen töten sie. Die Waldhexe sieht sie als Opfer und darf (verbrauchend) heilen. Lehrling-Erbe wirkt sofort.
+- **Tests:** `test_seat_roles.gd`: Rudel, Lynch, Gift, Heilung, Lehrling-Erbe.
+- **Grenzen:** RM-DR-119.1/.2 (Giftwolf, Seuchenwolf, Rudelvater) betreffen Rollen, die noch fehlen; im heutigen Kern gibt es keinen anderen Wolfsangriff.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin` und `die-gebundenen`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter` und `dorfwache`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -52,12 +52,23 @@ const DOPPELSPION := &"doppelspion"
 ## sein Sieg erfüllt (`GameState.death_seeker_wins`, KillPipeline) und wird fortan vorgeschlagen.
 const SELBSTMOERDER := &"selbstmoerder"
 ## Dorfchronistin / Village Chronicler (DECISION-LOG „Rollenaudit“, RM-DR-014 = B, F-09): Dorf;
-## persönlicher Informationsschritt nur in Nacht 1 (NightOneInfo).
+## persönlicher Informationsschritt nur in Nacht 1 (InfoSteps).
 const DORFCHRONISTIN := &"dorfchronistin"
 ## Die Gebundenen / The Bound (DECISION-LOG „Rollenaudit“, RM-DR-014 = B, F-08): Dorf; ein
-## gemeinsamer Informationsschritt aller Gebundenen nur in Nacht 1 (StepQueue.BOUND, NightOneInfo).
+## gemeinsamer Informationsschritt aller Gebundenen nur in Nacht 1 (StepQueue.BOUND, InfoSteps).
 const DIE_GEBUNDENEN := &"die-gebundenen"
 ## Priorität des gemeinsamen Schritts der Gebundenen (Legacy-Stufe 0.5).
+## Waldläufer / Ranger (RM-DR-147): Dorf, Informationsschritt jede Nacht (InfoSteps).
+const WALDLAEUFER := &"waldlaeufer"
+## Doktor / Doctor (RM-DR-145): Dorf, Blutprobe zweier anderer Lebender jede Nacht (InfoSteps).
+const DOKTOR := &"doktor"
+## Wahnsinniger Kutscher / Mad Coachman (RM-DR-116): Dorf; wird er gelyncht, sterben seine nächsten
+## lebenden Nachbarn mit (`COACHMAN_CRASH`, KillPipeline).
+const WAHNSINNIGER_KUTSCHER := &"wahnsinniger-kutscher"
+## Nachtwächter / Night Warden (RM-DR-102): Dorf; öffentliche Glocken bei Tagesbeginn (RulesEngine).
+const NACHTWAECHTER := &"nachtwaechter"
+## Dorfwache / Village Guard (RM-DR-119): Dorf; der Rudelangriff tötet sie nicht (KillPipeline).
+const DORFWACHE := &"dorfwache"
 const BOUND_PRIORITY := 5
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
@@ -84,6 +95,11 @@ const ROLES := {
 	SELBSTMOERDER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": SELBSTMOERDER},
 	DORFCHRONISTIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFCHRONISTIN, "night_priority": 3, "first_night_only": true},
 	DIE_GEBUNDENEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_GEBUNDENEN},
+	WALDLAEUFER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDLAEUFER, "night_priority": 54},
+	DOKTOR: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DOKTOR, "night_priority": 50},
+	WAHNSINNIGER_KUTSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WAHNSINNIGER_KUTSCHER},
+	NACHTWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": NACHTWAECHTER},
+	DORFWACHE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFWACHE},
 }
 
 

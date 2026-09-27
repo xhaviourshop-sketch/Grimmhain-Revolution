@@ -234,8 +234,8 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return OracleStep.validate_answer(s, prompt, p)
 	if prompt.owner == PendingPrompt.OWNER_APPRENTICE:
 		return ApprenticeRules.validate_answer(s, prompt, p)
-	if prompt.owner == PendingPrompt.OWNER_CHRONICLER or prompt.owner == PendingPrompt.OWNER_BOUND:
-		return NightOneInfo.validate_answer(prompt, p)
+	if InfoSteps.OWNERS.has(prompt.owner):
+		return InfoSteps.validate_answer(s, prompt, p)
 	var targets: Variant = DictRead.to_int_array(DictRead.get_array(p, "targets"))
 	if targets == null or not p.get("targets") is Array:
 		return &"invalid_target"
@@ -301,8 +301,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				OracleStep.answer(ctx, p)
 			elif s.pending_prompt.owner == PendingPrompt.OWNER_APPRENTICE:
 				ApprenticeRules.answer(ctx, p)
-			elif s.pending_prompt.owner == PendingPrompt.OWNER_CHRONICLER or s.pending_prompt.owner == PendingPrompt.OWNER_BOUND:
-				NightOneInfo.answer(ctx)
+			elif InfoSteps.OWNERS.has(s.pending_prompt.owner):
+				InfoSteps.answer(ctx, p)
 			else:
 				_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
 		Command.BEGIN_STEP:
@@ -491,3 +491,28 @@ static func _finish_dawn_if_ready(ctx: RuleContext) -> void:
 	var s := ctx.state
 	if s.phase == Phase.DAWN_RESOLUTION and s.reactions.is_empty() and s.pending_prompt == null:
 		PhaseMachine.enter(ctx, Phase.DAY)
+		_ring_alarm_bells(ctx)
+
+
+## Nachtwächter (DECISION-LOG „Rollenaudit · … Nachtwächter“): nach der vollständigen
+## Morgenauflösung prüft jeder lebende Nachtwächter seine nächsten lebenden Nachbarn; gehört einer
+## nicht zum Dorf (Wolf oder Einzelsieg), läuten öffentlich die Glocken, einmal pro Morgen und
+## ohne Namen oder Seite. Die Einzelheiten erhält nur der Spielleiter.
+static func _ring_alarm_bells(ctx: RuleContext) -> void:
+	var s := ctx.state
+	var watchmen: Array[int] = []
+	var suspects: Array[int] = []
+	for id: int in s.alive_ids():
+		if s.players[id].role_id != RoleCatalog.NACHTWAECHTER:
+			continue
+		for n: int in Seats.living_neighbours(s, id):
+			if s.players[n].faction != Faction.VILLAGE:
+				if not watchmen.has(id):
+					watchmen.append(id)
+				if not suspects.has(n):
+					suspects.append(n)
+	if watchmen.is_empty():
+		return
+	suspects.sort()
+	ctx.emit(GameEvent.ALARM_BELLS_DETAIL, Visibility.GM, {"watchman_ids": watchmen, "neighbour_ids": suspects, "day": s.day_number})
+	ctx.emit(GameEvent.ALARM_BELLS, Visibility.PUBLIC, {"day": s.day_number})

@@ -491,6 +491,36 @@ msgstr "The Bound"
 msgid "ui.role.die_gebundenen.short"
 msgstr "Get to know each other in night 1."
 
+msgid "ui.role.waldlaeufer.name"
+msgstr "Ranger"
+
+msgid "ui.role.waldlaeufer.short"
+msgstr "Learns each night how many wolves are alive."
+
+msgid "ui.role.doktor.name"
+msgstr "Doctor"
+
+msgid "ui.role.doktor.short"
+msgstr "Checks each night whether two people are on the same team."
+
+msgid "ui.role.nachtwaechter.name"
+msgstr "Night Warden"
+
+msgid "ui.role.nachtwaechter.short"
+msgstr "Rings the alarm in the morning if a neighbour is not village."
+
+msgid "ui.role.dorfwache.name"
+msgstr "Village Guard"
+
+msgid "ui.role.dorfwache.short"
+msgstr "Survives the werewolf attack."
+
+msgid "ui.role.wahnsinniger_kutscher.name"
+msgstr "Mad Coachman"
+
+msgid "ui.role.wahnsinniger_kutscher.short"
+msgstr "If executed, his neighbours die with him."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

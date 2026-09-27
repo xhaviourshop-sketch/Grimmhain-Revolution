@@ -78,6 +78,8 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.LEHRLING: false,       # Pflichtwahl eines Meisters (DR-11)
 	RoleCatalog.DORFCHRONISTIN: false, # Pflichtinformation Nacht 1 (wie Orakel)
 	BOUND: false,                      # Pflichtinformation Nacht 1 (wie Orakel)
+	RoleCatalog.WALDLAEUFER: false,    # Pflichtinformation (wie Orakel)
+	RoleCatalog.DOKTOR: false,         # Pflichtprüfung (wie Orakel)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -118,7 +120,7 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		if s.players[id].counts_as_wolf:
 			entries.append([RoleCatalog.PACK_PRIORITY, 0, PACK])
 			break
-	if s.night_number == 1 and not NightOneInfo.living_bound(s).is_empty():
+	if s.night_number == 1 and not InfoSteps.living_bound(s).is_empty():
 		entries.append([RoleCatalog.BOUND_PRIORITY, 0, BOUND])
 	entries.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and a[1] < b[1]))
 	var plan: Array[StringName] = []
@@ -131,7 +133,7 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 static func drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
 	if key == BOUND:
-		return &"" if not NightOneInfo.living_bound(s).is_empty() else &"no_decision"
+		return &"" if not InfoSteps.living_bound(s).is_empty() else &"no_decision"
 	if key == PACK:
 		# G-PH-6 mit Decision Log „Rollenaudit“ (F-10): Das Rudel dieser Nacht sind die Personen,
 		# die bei StartNight als Wolf zählten; lebt keine von ihnen mehr, entfällt der Schritt.
@@ -156,6 +158,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # schon gebunden oder weniger als drei andere Lebende
 	if step_role(key) == RoleCatalog.ORAKEL and s.alive_ids().size() < 2:
 		return &"no_decision"  # niemand außer dem Orakel lebt
+	if step_role(key) == RoleCatalog.DOKTOR and s.alive_ids().size() < 3:
+		return &"no_decision"  # keine zwei anderen Lebenden
 	return &""
 
 
@@ -204,10 +208,10 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.LEHRLING:
 		# Lehrling: Kandidaten, Option, Bestätigung (ApprenticeRules).
 		ApprenticeRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
-	elif step_kind(step_id) == RoleCatalog.DORFCHRONISTIN:
-		NightOneInfo.open(s, prompt, PendingPrompt.OWNER_CHRONICLER, step_actor(s.night_plan[s.next_night_step]))
+	elif [RoleCatalog.DORFCHRONISTIN, RoleCatalog.WALDLAEUFER, RoleCatalog.DOKTOR].has(step_kind(step_id)):
+		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == BOUND:
-		NightOneInfo.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
+		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
 	elif step_kind(step_id) == RoleCatalog.WOLFSKIND:
 		# Wolfskind: Pflichtwahl genau einer anderen lebenden Person als Vorbild (DR-10).
 		prompt.owner = PendingPrompt.OWNER_WOLF_CHILD

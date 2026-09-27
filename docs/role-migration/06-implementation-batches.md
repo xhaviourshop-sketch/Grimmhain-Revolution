@@ -191,7 +191,11 @@ Siehe §3.
 
 ### K2 · Informationsmodell
 
-**Rollen Charge K2 (2):** `waldlaeufer`, `doktor`
+**Rollen Charge K2 (0):** –
+
+**Nachtrag Rollenaudit:** `doktor` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `waldlaeufer` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `die-gebundenen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -208,7 +212,11 @@ Siehe §3.
 
 ### K3 · Sitznachbarschaft
 
-**Rollen Charge K3 (5):** `wahnsinniger-kutscher`, `ritter`, `nachtwaechter`, `faehrtenleser`, `detektiv`
+**Rollen Charge K3 (3):** `ritter`, `faehrtenleser`, `detektiv`
+
+**Nachtrag Rollenaudit:** `nachtwaechter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `wahnsinniger-kutscher` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Wirkungen und Informationen, die von der Sitzlage abhängen.
 - **Neue Systeme:** N-05, N-06 (Ritter-Vergeltung als Todesfolge), N-07 (Kutscher-Nebentode), N-04; nach 1.0 N-18 (öffentliche Ansage für Nachtwächter und Detektiv).
@@ -234,7 +242,9 @@ Siehe §3.
 
 ### K5 · Abfangregeln und Schutz
 
-**Rollen Charge K5 (4):** `dorfwache`, `maertyrerin`, `schutzgeist`, `dorfschmied`
+**Rollen Charge K5 (3):** `maertyrerin`, `schutzgeist`, `dorfschmied`
+
+**Nachtrag Rollenaudit:** `dorfwache` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Regeln, die einen Tod verhindern, ersetzen oder in einen anderen Tod umwandeln.
 - **Neue Systeme:** N-03, N-04.
