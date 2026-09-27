@@ -38,6 +38,9 @@ func _to_distribution(shell: Control, count: int = 8, counts: Dictionary = {}) -
 	else:
 		for role: Variant in counts:
 			s.call("set_role_count", StringName(str(role)), int(counts[role]))
+		# DR-08: jede Trugbilderwolf-Kopie erhält ausdrücklich eine Scheinrolle.
+		for d: Variant in (s.call("view") as Dictionary)["roles"].get("decoys", []):
+			s.call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"waldhexe")
 		await frames(2)
 	await press(find_button(screen, "ConfirmRolesButton"))
 	return screen
@@ -136,7 +139,7 @@ func test_random_distribution_keeps_roles_hidden() -> void:
 		if role == "trugbilderwolf":
 			var appearance := _label(_assignment_rows(screen)[i], "AppearanceLabel")
 			var expected := tr("ui.role.%s.name" % str((entries[i] as Dictionary)["appearance"]).replace("-", "_"))
-			assert_true(appearance.contains(expected), "Scheinrolle geheim sichtbar: %s" % appearance)
+			assert_true(appearance.contains(expected) and str((entries[i] as Dictionary)["appearance"]) == "waldhexe", "gewählte Scheinrolle geheim sichtbar: %s" % appearance)
 	await _assert_public_texts_secret(shell, "geöffnet")
 	settings_of(shell).call("set_language", "en")
 	await frames(3)

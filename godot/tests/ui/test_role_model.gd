@@ -249,7 +249,13 @@ func test_suggestion_for_every_person_count() -> void:
 		assert_eq(JSON.stringify(counts), JSON.stringify(suggestion.call("for_count", n)), "%d: deterministisch" % n)
 		var s := _make(n)
 		s.call("apply_suggestion")
-		assert_true(bool(_roles(s)["valid"]), "%d: Vorschlag ist ein gültiger Pool" % n)
+		# DR-08: Trugbilderwolf-Kopien des Vorschlags brauchen eine ausdrückliche Scheinrolle.
+		var decoys: Array = _roles(s).get("decoys", [])
+		var expected_issues: Array = ["missing_appearance"] if int(counts.get("trugbilderwolf", 0)) > 0 else []
+		assert_eq(_roles(s)["issues"], expected_issues, "%d: Vorschlag gültig bis auf offene Scheinrollen" % n)
+		for d: Variant in decoys:
+			s.call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"dorfbewohner")
+		assert_true(bool(_roles(s)["valid"]), "%d: Vorschlag mit gewählten Scheinrollen ist ein gültiger Pool" % n)
 
 
 func test_suggestion_overwrites_only_after_confirmation() -> void:

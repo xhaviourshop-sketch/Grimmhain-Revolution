@@ -10,7 +10,8 @@ const FIXED_SEED := 424242
 
 ## Setup mit `count` bestätigten Personen, bestätigtem Pool `counts` (sonst Vorschlag) und
 ## fester Seed-Quelle; `calls[0]` zählt die Aufrufe der Seed-Quelle.
-func _ready_setup(count: int = 8, counts: Dictionary = {}, seed_value: int = FIXED_SEED, calls: Array = [0]) -> Object:
+## `appearances`: ausdrücklich gewählte Scheinrollen der Trugbilderwolf-Kopien (DR-08), der Reihe nach.
+func _ready_setup(count: int = 8, counts: Dictionary = {}, seed_value: int = FIXED_SEED, calls: Array = [0], appearances: Array = []) -> Object:
 	var script := load_script(SETUP_SCRIPT)
 	if script == null:
 		return null
@@ -26,6 +27,9 @@ func _ready_setup(count: int = 8, counts: Dictionary = {}, seed_value: int = FIX
 	else:
 		for role: Variant in counts:
 			s.call("set_role_count", StringName(str(role)), int(counts[role]))
+	var decoys: Array = (s.call("view") as Dictionary)["roles"].get("decoys", [])
+	for i: int in mini(decoys.size(), appearances.size()):
+		s.call("set_decoy_appearance", int((decoys[i] as Dictionary)["copy_id"]), StringName(str(appearances[i])))
 	var r: Object = s.call("confirm_roles")
 	assert_true(r != null and bool(r.get("ok")), "Vorbereitung: Rollen bestätigt")
 	return s
@@ -122,7 +126,7 @@ func test_assignment_depends_on_person_id_not_order() -> void:
 
 
 func test_rerender_language_and_rename_keep_assignment() -> void:
-	var s := _ready_setup(10, {"trugbilderwolf": 1, "werwolf": 1, "manipulator": 1, "dorfbewohner": 7})
+	var s := _ready_setup(10, {"trugbilderwolf": 1, "werwolf": 1, "manipulator": 1, "dorfbewohner": 7}, FIXED_SEED, [0], ["waldhexe"])
 	if s == null:
 		return
 	s.call("distribute_randomly")
@@ -281,51 +285,43 @@ func test_mode_switch_requires_confirmation() -> void:
 
 # --- Trugbilderwolf (65 bis 71) ---------------------------------------------------------------------------
 
-func _check_appearances(s: Object, label: String) -> void:
-	var catalog := load_script(CATALOG_SCRIPT)
+## DR-08: Jede Trugbilderwolf-Person trägt genau die ausdrücklich gewählte Scheinrolle ihrer Kopie.
+func _check_appearances(s: Object, chosen: Array, label: String) -> void:
 	var a := _assignment(s)
 	var app := _appearances(s)
-	var decoys := 0
+	var shown: Array = []
 	for person: Variant in a:
 		if str(a[person]) == "trugbilderwolf":
-			decoys += 1
-			var shown := str(app.get(person, ""))
-			assert_true(shown != "", "%s: Scheinrolle nicht leer (Person %s)" % [label, person])
-			assert_true(RoleCatalog.has_role(StringName(shown)), "%s: Scheinrolle existiert (%s)" % [label, shown])
-			assert_false(RoleCatalog.counts_as_wolf(StringName(shown)), "%s: Scheinrolle zählt nicht als Wolf (%s)" % [label, shown])
-			if catalog != null:
-				assert_true((catalog.call("appearance_options") as Array).has(StringName(shown)), "%s: zulässige Option" % label)
+			shown.append(str(app.get(person, "")))
 		else:
 			assert_false(app.has(person), "%s: andere Rollen ohne Scheinrolle" % label)
-	assert_eq(decoys, 3, "%s: drei Trugbilderwölfe" % label)
+	shown.sort()
+	var expected := chosen.duplicate()
+	expected.sort()
+	assert_eq(shown, expected, "%s: genau die gewählten Scheinrollen" % label)
 
 
 func test_decoy_wolf_appearances() -> void:
+	# Angepasst an DR-08: früher zufällig aus dem Seed abgeleitet, jetzt ausdrücklich gewählt.
 	var counts := {"trugbilderwolf": 3, "manipulator": 1, "dorfbewohner": 6}
-	var s := _ready_setup(10, counts)
+	var chosen := ["lehrling", "waldhexe", "waldhexe"]
+	var s := _ready_setup(10, counts, FIXED_SEED, [0], chosen)
 	if s == null:
 		return
 	s.call("distribute_randomly")
-	_check_appearances(s, "zufällig")
+	_check_appearances(s, chosen, "zufällig")
 	var app := _appearances(s)
-	var twin := _ready_setup(10, counts)
+	var twin := _ready_setup(10, counts, FIXED_SEED, [0], chosen)
 	twin.call("distribute_randomly")
-	assert_eq(_appearances(twin), app, "gleicher Seed, gleiche Scheinrollen")
+	assert_eq(_appearances(twin), app, "gleicher Seed, gleiche Einträge: gleiche Scheinrollen je Person")
 	s.call("rename_person", _ids(s)[0], "Umbenannt")
 	assert_eq(_appearances(s), app, "Namensänderung erhält die Scheinrolle")
 	s.call("reshuffle")
-	_check_appearances(s, "neu gemischt")
-	var manual := _ready_setup(10, counts)
+	_check_appearances(s, chosen, "neu gemischt")
+	var manual := _ready_setup(10, counts, FIXED_SEED, [0], chosen)
 	manual.call("set_distribution_mode", &"manual")
-	var roles: Array = (manual.call("view") as Dictionary)["roles"]["pool"]
+	var entries: Array = (manual.call("view") as Dictionary)["roles"]["entries"]
 	var ids := _ids(manual)
-	for i: int in ids.size() - 1:
-		manual.call("assign_role", ids[i], StringName(str(roles[i])))
-	assert_true(_appearances(manual).is_empty(), "unvollständig: noch keine Scheinrolle")
-	manual.call("assign_role", ids[-1], StringName(str(roles[-1])))
-	_check_appearances(manual, "manuell")
-	var manual_twin := _ready_setup(10, counts)
-	manual_twin.call("set_distribution_mode", &"manual")
 	for i: int in ids.size():
-		manual_twin.call("assign_role", ids[i], StringName(str(roles[i])))
-	assert_eq(_appearances(manual_twin), _appearances(manual), "manuell: deterministisch")
+		manual.call("assign_role", ids[i], StringName(str((entries[i] as Dictionary)["key"])))
+	_check_appearances(manual, chosen, "manuell")
