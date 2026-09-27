@@ -157,8 +157,6 @@ func _render(view: Dictionary) -> void:
 		_focus_row(focus_row_id)
 	elif not bool(view["can_add"]) and _name_input.has_focus():
 		_confirm.grab_focus()  # volle Liste: Eingabe gesperrt, nächster sinnvoller Schritt
-	elif bool(view["confirmed"]) and _confirm.has_focus():
-		_to_roles.grab_focus()  # bestätigt: nächster sinnvoller Schritt
 
 
 func _update_controls(view: Dictionary) -> void:
@@ -422,6 +420,7 @@ func _on_confirm_pressed() -> void:
 		return
 	_show_feedback("")
 	status_message_requested.emit("ui.setup.toast.confirmed")
+	_to_roles.grab_focus()  # nächster sinnvoller Schritt
 
 
 

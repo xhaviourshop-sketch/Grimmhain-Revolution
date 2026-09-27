@@ -57,26 +57,26 @@ layout_mode = 2
 theme_type_variation = &"WarningLabel"
 script = ExtResource("3_label")
 
-[node name="ModeRandomButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+[node name="ModeRow" type="HBoxContainer" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+layout_mode = 2
+
+[node name="ModeRandomButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn/ModeRow"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.setup.distribution.mode.random"
-kind = 0
+size_flags_horizontal = 3
+kind = 1
 
-[node name="ModeManualButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+[node name="ModeManualButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn/ModeRow"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.setup.distribution.mode.manual"
+size_flags_horizontal = 3
 kind = 1
 
 [node name="ModeStateLabel" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("3_label")
-
-[node name="ModeHintLabel" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CaptionLabel"
@@ -217,3 +217,4 @@ layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.setup.distribution.confirm"
 kind = 0
+wrap = false

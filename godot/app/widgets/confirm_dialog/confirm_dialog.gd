@@ -55,6 +55,7 @@ func open_request(request: DialogRequest) -> bool:
 	_request = request
 	var focused := get_viewport().gui_get_focus_owner()
 	_return_focus = focused if focused != null and not is_ancestor_of(focused) else null
+	_title.format_values = request.title_values
 	_title.text_key = request.title_key
 	_message.format_values = request.message_values
 	_message.text_key = request.message_key

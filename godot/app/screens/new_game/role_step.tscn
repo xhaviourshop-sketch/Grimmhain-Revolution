@@ -128,3 +128,4 @@ layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.setup.roles.confirm"
 kind = 0
+wrap = false

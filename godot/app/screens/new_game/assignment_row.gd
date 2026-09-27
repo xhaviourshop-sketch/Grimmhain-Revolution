@@ -21,6 +21,7 @@ var number: int = 0
 
 func _ready() -> void:
 	_number.custom_minimum_size.x = ThemeTokens.PERSON_NUMBER_WIDTH
+	(%StateBox as Control).custom_minimum_size.x = ThemeTokens.ASSIGNMENT_STATE_WIDTH
 	_choose.pressed.connect(func() -> void: choose_requested.emit(person_id))
 
 

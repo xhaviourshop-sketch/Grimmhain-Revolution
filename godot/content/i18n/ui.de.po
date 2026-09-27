@@ -594,7 +594,7 @@ msgid "ui.setup.distribution.counts"
 msgstr "{persons} Personen · {roles} Rollen"
 
 msgid "ui.setup.distribution.secret_warning"
-msgstr "Rollen sind geheim. Zeige diesen Bildschirm keinen Mitspielenden."
+msgstr "Rollen sind geheim: nicht vor Mitspielenden zeigen."
 
 msgid "ui.setup.distribution.mode.heading"
 msgstr "Verteilungsmodus"
@@ -606,7 +606,7 @@ msgid "ui.setup.distribution.mode.manual"
 msgstr "Manuell"
 
 msgid "ui.setup.distribution.mode.active"
-msgstr "Aktiv: {mode}"
+msgstr "Aktiv: {mode}. {hint}"
 
 msgid "ui.setup.distribution.mode.random_hint"
 msgstr "Reproduzierbar über einen gespeicherten Seed."

@@ -24,7 +24,6 @@ var _last_view: Dictionary = {}
 @onready var _mode_random: GrimmButton = %ModeRandomButton
 @onready var _mode_manual: GrimmButton = %ModeManualButton
 @onready var _mode_state: GrimmLabel = %ModeStateLabel
-@onready var _mode_hint: GrimmLabel = %ModeHintLabel
 @onready var _distribute: GrimmButton = %DistributeButton
 @onready var _reshuffle: GrimmButton = %ReshuffleButton
 @onready var _seed: GrimmLabel = %SeedLabel
@@ -71,7 +70,7 @@ func _notification(what: int) -> void:
 func default_focus() -> Control:
 	if not _confirm.disabled:
 		return _confirm
-	return _distribute if _distribute.visible and not _distribute.disabled else _mode_random
+	return _distribute if _distribute.visible else _mode_random
 
 
 func handle_back() -> bool:
@@ -99,10 +98,8 @@ func _render(view: Dictionary) -> void:
 	_invalidated.visible = reason != "" and not has_assignment
 	_invalidated.text_key = "ui.setup.distribution.invalidated.%s" % reason if _invalidated.visible else ""
 	_render_mode(manual)
-	_distribute.visible = not manual
-	_distribute.disabled = has_assignment
-	_reshuffle.visible = not manual
-	_reshuffle.disabled = not has_assignment
+	_distribute.visible = not manual and not has_assignment
+	_reshuffle.visible = not manual and has_assignment
 	if bool(dist["has_seed"]):
 		_seed.format_values = {"seed": dist["seed"], "count": dist["shuffle_count"]}
 		_seed.text_key = "ui.setup.distribution.seed"
@@ -129,13 +126,14 @@ func _render(view: Dictionary) -> void:
 		_status.text_key = "ui.setup.distribution.status.none"
 
 
-## Aktiver Modus als Primärbutton und zusätzlich als Text (nicht nur Farbe).
+## Aktiver Modus in Primärfarbe und zusätzlich als Text (nicht nur Farbe). Beide Buttons
+## behalten die Größe eines Sekundärbuttons, damit sie nebeneinander passen.
 func _render_mode(manual: bool) -> void:
-	_mode_random.kind = GrimmButton.Kind.SECONDARY if manual else GrimmButton.Kind.PRIMARY
-	_mode_manual.kind = GrimmButton.Kind.PRIMARY if manual else GrimmButton.Kind.SECONDARY
-	_mode_state.format_values = {"mode": tr("ui.setup.distribution.mode.%s" % ("manual" if manual else "random"))}
+	_mode_random.theme_type_variation = &"SecondaryButton" if manual else &"PrimaryButton"
+	_mode_manual.theme_type_variation = &"PrimaryButton" if manual else &"SecondaryButton"
+	var mode := "manual" if manual else "random"
+	_mode_state.format_values = {"mode": tr("ui.setup.distribution.mode.%s" % mode), "hint": tr("ui.setup.distribution.mode.%s_hint" % mode)}
 	_mode_state.text_key = "ui.setup.distribution.mode.active"
-	_mode_hint.text_key = "ui.setup.distribution.mode.manual_hint" if manual else "ui.setup.distribution.mode.random_hint"
 
 
 ## Restbestand mit Rollennamen nur im geöffneten Spielleiterbereich.
@@ -211,7 +209,7 @@ func _force_mode(mode: StringName) -> void:
 
 
 func _on_distribute_pressed() -> void:
-	if _distribute.disabled:
+	if not _distribute.visible:
 		return
 	if _setup.distribute_randomly().ok:
 		status_message_requested.emit("ui.setup.distribution.toast.distributed")
@@ -219,7 +217,7 @@ func _on_distribute_pressed() -> void:
 
 
 func _on_reshuffle_pressed() -> void:
-	if _reshuffle.disabled:
+	if not _reshuffle.visible:
 		return
 	if _setup.reshuffle().ok:
 		status_message_requested.emit("ui.setup.distribution.toast.reshuffled")
@@ -248,7 +246,8 @@ func _on_choose_requested(person_id: int) -> void:
 	var current := str(entry["role"])
 	var remaining: Dictionary = dist["remaining"]
 	var request := DialogRequest.create("ui.setup.distribution.picker.title", "ui.setup.distribution.picker.message", "")
-	request.message_values = {"name": entry["name"], "number": entry["number"]}
+	request.title_values = {"number": entry["number"]}
+	request.message_values = {"name": entry["name"]}
 	for role: StringName in RolePresentation.sorted_roles():
 		var free := int(remaining.get(String(role), 0))
 		if free > 0 and String(role) != current:

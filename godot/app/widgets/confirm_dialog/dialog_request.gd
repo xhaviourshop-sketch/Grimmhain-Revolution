@@ -12,6 +12,7 @@ extends RefCounted
 var title_key: String = ""
 var message_key: String = ""
 var message_values: Dictionary = {}
+var title_values: Dictionary = {}  ## Platzhalter im Titel (z. B. Listennummer); nie eine Rolle
 var confirm_key: String = ""
 var cancel_key: String = "ui.common.cancel"
 var alternative_key: String = ""
