@@ -32,7 +32,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | # | ID | DE / EN (Regelregister) | Fraktion (Katalog) | `counts_as_wolf` | Nachtpriorität (Katalog ×10) | Produktionscode (Hauptdateien) | Tests (`func test_`) | Spezifikation | Migrationsstatus | Automation | Legacy-Status (Befund aus `04`, hier nachgeprüft) |
 |---|---|---|---|---|---:|---|---|---|---|---|---|
 | 1 | `dorfbewohner` | Dorfbewohner / Villager | village | nein | – | `role_catalog.gd`, `win_rules.gd` (`evaluate`) | keine eigene Datei; `test_player_count_range.gd` (5), Szenarien `as-c01` bis `as-c04`, Fixture in fast allen Rollentests | Register §1 | `implemented-and-tested` | `automatic` | `legacy-verified` |
-| 2 | `werwolf` | Werwolf / Werewolf | wolves | ja | Rudel 20 (`PACK_PRIORITY`) | `step_queue.gd` (Rudelschritt `pack`), `kill_pipeline.gd`, `win_rules.gd`, `information_rules.gd` | keine eigene Datei; `test_steps.gd` (7), `test_replay.gd` (4), `test_save_load.gd` (4), Szenarien `as-c01` bis `as-c03`, `as-c10` | Register §2, G-PH-6 | `implemented-and-tested` | `automatic` | `legacy-broken` (Bug F2, siehe §5) |
+| 2 | `werwolf` | Werwolf / Werewolf | wolves | ja | Rudel 20 (`PACK_PRIORITY`) | `step_queue.gd` (Rudelschritt `pack`), `kill_pipeline.gd`, `win_rules.gd`, `information_rules.gd` | keine eigene Datei; `test_steps.gd` (7), `test_replay.gd` (4), `test_save_load.gd` (4), Szenarien `as-c01` bis `as-c03`, `as-c10` | Register §2, G-PH-6 | `implemented-and-tested` | `automatic` | `legacy-verified` (Rolle selbst korrekt; der Rudel-Bug F2 trifft andere Wolfsrollen, siehe §4.2) |
 | 3 | `schutzengel` | Schutzengel / Guardian Angel | village | nein | 13 | `step_queue.gd`, `protections.gd`, `kill_pipeline.gd` (`_prevented_by_protection`), `gm_corrections.gd` | `test_schutzengel.gd` (29) | Register §3, DR-05 | `implemented-and-tested` | `automatic` | `legacy-broken` (Schutz wird beim Antippen verbraucht) |
 | 4 | `waldhexe` | Waldhexe / Witch of the Woods | village | nein | 34 | `witch_step.gd`, `kill_pipeline.gd`, `step_queue.gd`, `gm_corrections.gd` | `test_waldhexe.gd` (43) | Register §6, DR-06 | `implemented-and-tested` | `automatic` | `legacy-verified` (Text mehrdeutig; Tränke technisch global statt je Person) |
 | 5 | `das-orakel` | Das Orakel / The Oracle | village | nein | 46 | `oracle_step.gd`, `information_rules.gd`, `info_record.gd` | `test_orakel.gd` (28) | Register §4, DR-07 | `implemented-and-tested` | `automatic` | `legacy-verified` |
@@ -63,29 +63,29 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Tests:** 29 Testfunktionen, u.a. zwei Schutzengel, Tod nach Bestätigung, Korrekturen, Leak-Test.
 - **Legacy-Bug behoben:** Legacy verbraucht den Schutz beim Antippen des Wolfsziels (`Werwolf`-Handler, `js/core/abilities-roles-chunk.js:162`, `protectedCount` wird schon bei der Zielwahl reduziert). Zusätzlich schließt der Legacy-Filter jede Person mit Rolle `Schutzengel` aus (`abilities-roles-chunk.js:157-161`, `(x.role||"")!=="Schutzengel"`), nicht nur sich selbst; Godot erlaubt einen anderen Schutzengel als Ziel.
 - **Abweichung zum Legacy-Text (gewollt, DR-05):** Text „vor dem nächsten Werwolfangriff“; Godot: nur in dieser Nacht.
-- **Grenzen:** Das Schutzsystem kennt genau zwei Quellen (Schutzengel, Waldhexe). Für `dorfwache`, `der-weise`, `dorfschmied`, `schutzgeist`, `seuchenwolf` (Durchbruch) und `rudelvater` (Zusatzopfer ohne Schutz) muss die Abfangstufe verallgemeinert werden (siehe `06` §3).
+- **Grenzen:** Das Schutzsystem kennt genau zwei Quellen (Schutzengel, Waldhexe). Für `dorfwache`, `der-weise`, `dorfschmied`, `schutzgeist`, `seuchenwolf` (Durchbruch) und `rudelvater` (Zusatzopfer ohne Schutz) muss die Abfangstufe verallgemeinert werden (siehe [`06`](06-implementation-batches.md) §2).
 
 ### 4.4 `waldhexe`
 - **Belegt umgesetzt:** mehrstufige, persistente Prompt-Kette `witch_chain`, Tränke je Person (`ability_uses`), Rettung nur gegen das aktuelle Rudelopfer, Gift sofort `WITCH_POISON`, Reaktionen am Morgen.
 - **Tests:** 43 Testfunktionen, umfangreichste Rollendatei.
 - **Legacy-Abweichungen (gewollt):** Legacy speichert die Tränke global (`state.once.WaldhexeL`/`WaldhexeD`), nicht je Person. DR-06 legt beide Tränke in einer Nacht fest.
-- **Dokumentinkonsistenz (nicht geändert, siehe `09` Abschnitt „Spätere Dokumentänderungen“):** EN-Name im Regelregister und in der Legacy „Witch of the Woods“, in [`../../godot/README.md`](../../godot/README.md) Rollentabelle, im Kommentar von `role_catalog.gd` und in `test_waldhexe.gd` „Forest Witch“. Der Anzeigename liegt noch in keiner Godot-Übersetzungsdatei.
+- **Dokumentinkonsistenz (nicht geändert, siehe [`09`](09-executive-summary.md) §8):** EN-Name im Regelregister und in der Legacy „Witch of the Woods“, in [`../../godot/README.md`](../../godot/README.md) Rollentabelle, im Kommentar von `role_catalog.gd` und in `test_waldhexe.gd` „Forest Witch“. Der Anzeigename liegt noch in keiner Godot-Übersetzungsdatei.
 
 ### 4.5 `das-orakel`
 - **Belegt umgesetzt:** Schritt nach allen Waldhexen, keine Selbst- oder Totwahl, `InformationRules.determine_role` (Erscheinung → `werwolf` bei `counts_as_wolf` → Rolle), `InfoRecord` mit Wahrheit/ermittelt/gezeigt, Übersteuerung `OverrideShownRole`, getrennte GM- und Actor-Ereignisse.
 - **Tests:** 28 Testfunktionen einschließlich ACTOR- und PUBLIC-Leak-Tests.
-- **Grenzen:** `InfoRecord` ist auf das Orakel zugeschnitten (Feld `oracle_id`, Ergebnis ist immer eine Rolle). Weitere Informationsrollen mit anderem Ergebnistyp (Anzahl, Richtung, ja/nein, Namensliste) brauchen ein allgemeineres Informationsmodell (siehe `06` §3).
+- **Grenzen:** `InfoRecord` ist auf das Orakel zugeschnitten (Feld `oracle_id`, Ergebnis ist immer eine Rolle). Weitere Informationsrollen mit anderem Ergebnistyp (Anzahl, Richtung, ja/nein, Namensliste) brauchen ein allgemeineres Informationsmodell (siehe [`06`](06-implementation-batches.md) §2).
 
 ### 4.6 `trugbilderwolf`
 - **Belegt umgesetzt:** Wolfsfraktion ohne eigenen Schritt, Pflicht-Scheinrolle `appears_as` beim Setup (`requires_appearance`), zufällige Verteilung über `role_entries`, Korrektur per `set_role_field`.
 - **Tests:** 23 Testfunktionen plus `test_gm_role_field.gd`.
-- **Legacy-Abweichung (gewollt, DR-08):** Legacy zieht die Scheinrolle im Orakel-Handler per `Math.random` (siehe `04` A-33). Der Legacy-Text „Täuscht das Orakel mit zufälliger Nicht-Wolf-Rolle“ widerspricht damit dem neuen Verhalten; der Text muss für Godot neu formuliert werden.
-- **Abhängigkeit:** `koenig-lykaon` erzeugt in Legacy Trugbilderwölfe während der Partie; dafür fehlt in Godot eine Regel, welche Scheinrolle ein nachträglich entstandener Trugbilderwolf erhält (siehe `04` RM-C-Einträge zu `koenig-lykaon`).
+- **Legacy-Abweichung (gewollt, DR-08):** Legacy zieht die Scheinrolle im Orakel-Handler per `Math.random` (siehe `docs/godot-migration/04-rules-migration-matrix.md` A-33). Der Legacy-Text „Täuscht das Orakel mit zufälliger Nicht-Wolf-Rolle“ widerspricht damit dem neuen Verhalten; der Text muss für Godot neu formuliert werden.
+- **Abhängigkeit:** `koenig-lykaon` erzeugt in Legacy Trugbilderwölfe während der Partie; dafür fehlt in Godot eine Regel, welche Scheinrolle ein nachträglich entstandener Trugbilderwolf erhält (siehe [`04`](04-rule-conflicts.md) RM-C-004 und RM-DR-107).
 
 ### 4.7 `sensentraeger`
 - **Belegt umgesetzt:** freiwillige Todesreaktion `curse` (einzige Reaktionsart `Reaction.KIND_CURSE`), einmal pro Person, Tod `HUNTER_SHOT`, am Tag sofort, nachts in der Morgenauflösung, kein Selbstziel.
 - **Tests:** 21 Rollentests und 9 Tests der Reaktionswarteschlange.
-- **Legacy-Abweichung (gewollt, DR-09):** Legacy arbeitet die Warteschlange nach einem Tageslynch erst nach der nächsten Nacht ab (`04` A-6).
+- **Legacy-Abweichung (gewollt, DR-09):** Legacy arbeitet die Warteschlange nach einem Tageslynch erst nach der nächsten Nacht ab (`docs/godot-migration/04-rules-migration-matrix.md` A-6).
 - **Grenzen:** Die Reaktionswarteschlange kennt nur `curse`. `ritter` (automatische Vergeltung), `besessener-wolf` (Mitnahme), `daemonischer-wolf` (Fluch als Markierung) und `feuerteufel` (Nachbarn brennen) brauchen weitere Reaktionsarten.
 
 ### 4.8 `wolfskind`
@@ -98,12 +98,12 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Tests:** 23 Testfunktionen einschließlich Erbe jeder Slice-Rolle.
 - **Legacy-Bug F5 behoben:** `postDeathHooks` sucht den Lehrling ohne Totprüfung (`js/ui/core.js:389`, `state.seats.find(s=>s.role==="Lehrling")`), ein toter Lehrling erbt.
 - **Legacy-Abweichung (gewollt):** Legacy wählt den Mentor direkt als Person und nur in Nacht 1 (`ORDER_BASE` Tier 1.1 `once`); DR-11 ändert das Verfahren grundlegend.
-- **Grenzen:** Jede neue Rolle, die geerbt werden kann, braucht einen Test „Lehrling erbt X“. Das ist ein wiederkehrender Aufwand pro Charge (siehe `07` §3).
+- **Grenzen:** Jede neue Rolle, die geerbt werden kann, braucht einen Test „Lehrling erbt X“. Das ist ein wiederkehrender Aufwand pro Charge (siehe [`07`](07-test-strategy.md) §3).
 
 ### 4.10 `manipulator`
 - **Belegt umgesetzt:** Tod `MANIPULATOR_NOMINATED` direkt nach gespeicherter Nominierung, `ever_nominated` als Personenstatus, Siegkandidat bei exakt drei Lebenden, mehrere Manipulatoren getrennt.
 - **Tests:** 18 Testfunktionen.
-- **Legacy-Bug:** Die Nominierung durch den Korrupten Richter setzt in Legacy keine Manipulator-Folge (`04` A-26, A-67). Im Godot-Kern gibt es den Richter noch nicht; sobald `korrupter-richter` kommt, muss dessen Markierung als echte Nominierung laufen oder die Wechselwirkung ausdrücklich entschieden werden (siehe `08` RM-DR-012).
+- **Legacy-Bug:** Die Nominierung durch den Korrupten Richter setzt in Legacy keine Manipulator-Folge (`docs/godot-migration/04-rules-migration-matrix.md` A-26, A-67). Im Godot-Kern gibt es den Richter noch nicht; sobald `korrupter-richter` kommt, muss dessen Markierung als echte Nominierung laufen oder die Wechselwirkung ausdrücklich entschieden werden (siehe [`08`](08-decision-request.md) RM-DR-012).
 
 ### 4.11 `spiegelwolf`
 - **Belegt umgesetzt:** zentrale Hinrichtungsauflösung `ExecutionRules.preview`/`execute`, Spiegelung auf die nominierende Person einmal pro Person, Selbstnominierung, `set_mirror`.
@@ -127,5 +127,5 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 
 Für [`../masterplan/RULE-MIGRATION-MATRIX.md`](../masterplan/RULE-MIGRATION-MATRIX.md) ist nachweisbar:
 
-- 11 Rollen: Core-Verhalten vorhanden und getestet. Das entspricht dort dem Status `implemented`.
-- `verified` verlangt laut Matrix zusätzlich „Tests und echte Runde bestanden“ sowie Undo-Tests. Eine echte Runde und Undo existieren nicht. Deshalb erhält keine Rolle dort `verified`.
+- 11 Rollen: Core-Verhalten vorhanden und getestet. Das entspricht dort dem Status „implemented“.
+- `verified` verlangt laut Matrix zusätzlich „Tests und echte Runde bestanden“ sowie Undo-Tests. Eine echte Runde und Undo existieren nicht. Deshalb erhält keine Rolle dort „verified“.
