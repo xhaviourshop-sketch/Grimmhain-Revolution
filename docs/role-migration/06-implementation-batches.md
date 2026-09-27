@@ -233,7 +233,13 @@ Siehe §3.
 
 ### K4 · Todes- und Hinrichtungsreaktionen
 
-**Rollen Charge K4 (3):** `cerberus`, `fenrir`, `henker`
+**Rollen Charge K4 (0):** –
+
+**Nachtrag Rollenaudit:** `henker` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `cerberus` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `fenrir` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `besessener-wolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

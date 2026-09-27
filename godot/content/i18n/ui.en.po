@@ -599,6 +599,24 @@ msgstr "Blight Wolf"
 msgid "ui.role.seuchenwolf.short"
 msgstr "Pack wolf; after his death the next attack pierces all protection."
 
+msgid "ui.role.fenrir.name"
+msgstr "Fenrir"
+
+msgid "ui.role.fenrir.short"
+msgstr "Pack wolf, grows each night and survives once from stage three."
+
+msgid "ui.role.cerberus.name"
+msgstr "Cerberus"
+
+msgid "ui.role.cerberus.short"
+msgstr "Pack wolf, gathers heads and can fend off an execution with three."
+
+msgid "ui.role.henker.name"
+msgstr "Executioner"
+
+msgid "ui.role.henker.short"
+msgstr "After three executions marks someone at night who dies with the next one."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

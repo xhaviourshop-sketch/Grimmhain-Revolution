@@ -30,15 +30,12 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
 | [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
-| [`fenrir`](#fenrir) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik, Einmalfähigkeit | M / mittel | K4 | – |
 | [`kutscher`](#kutscher) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | Rollenwechsel, Zufallsmechanik | L / hoch | K13 | – |
 | [`seelentauscher`](#seelentauscher) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | Einmalfähigkeit, Fraktionswechsel | L / kritisch | K12 | – |
 | [`blutpriester`](#blutpriester) | Dorf | `decision-required` | `legacy-verified` | `assisted` | Informationsrolle | Tötung, Einmalfähigkeit, Zufallsmechanik | M / mittel | K7 | – |
 | [`traumdeuter`](#traumdeuter) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Zufallsmechanik | S / niedrig | K7 | – |
-| [`henker`](#henker) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | Tötung | M / mittel | K4 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
-| [`cerberus`](#cerberus) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik | S / mittel | K4 | B |
 | [`rotkaeppchen`](#rotkaeppchen) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik | L / hoch | K10 | – |
 | [`kopfgeldjaeger`](#kopfgeldjaeger) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | Hinrichtungsreaktion, Zufallsmechanik | M / mittel | K7 | B |
 | [`koenig`](#koenig) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Zufallsmechanik | S / mittel | K7 | – |
@@ -355,27 +352,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch für Auslösepfade und `isWolf`-Nutzung. Nicht verifiziert: Laufzeitverhalten des Abbruchs (nur aus Code abgeleitet); Godot-Reaktionsarten (nur Doku gelesen). --- |
 | Detail | [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
 
-### `fenrir`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Fenrir / Fenrir |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / IV / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Der Code ist nicht offensichtlich defekt, setzt aber eine deutlich engere Regel um (nur Lynch, Zählung bei Nachtbeginn, zusätzliche Ritter-Immunität); F15 ist ein Nebenfehler. |
-| DE/EN-Vergleich | JA, semantisch gleich (überlebte Nacht, Stufe 3, einmalig, jeder Tod). |
-| Automationsziel | `automatic`: (nach PO-Entscheidung). |
-| Mechanik | primär: Hinrichtungsreaktion; sekundär: sonstige Spezialmechanik, Einmalfähigkeit |
-| Größe / Risiko | M / mittel. Eine Abfangregel plus Zähler; Risiko in der Reihenfolge mit anderen Schilden. |
-| Vorhandene Godot-Systeme | KillPipeline (Abfangregel mit Verbrauch), ExecutionRules (falls nur Lynch), Reaktionswarteschlange (Ritter-Zielauswahl), InfoRecord/Ereignis (gm), StateCodec, Replay, GmCorrections (Stufe setzen). |
-| Neue Systeme | mehrere Leben / Einmal-Überleben als persistenter Marker; Nachtzähler pro Person (Stufe). |
-| Abhängigkeiten | Ritter, Henker (LynchCount), Feuerteufel (Brand), Lehrling/Seelentauscher/Frankenstein (Rollenerwerb mit alter Stufe), alle Tötungsrollen. |
-| Widersprüche | RM-C-029 Umfang des Überlebens; RM-C-030 Zählung; RM-C-031 Ritter; RM-C-032 Stufe pro Rolle vs. global |
-| Entscheidungen | RM-DR-125 (Rolle); übergreifend RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K4 / in keiner Option |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/wolves-b.md#fenrir) |
-
 ### `kutscher`
 
 | Feld | Inhalt |
@@ -460,27 +436,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-2.md#traumdeuter) |
 
-### `henker`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Henker / Executioner |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III / 7.8 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Aktivierung nach 3 Lynchungen, nächtliche Markierung und Zusatztod beim nächsten Lynch sind nachvollziehbar umgesetzt; F15 ist ein Randfall mit offener Regel. |
-| DE/EN-Vergleich | semantisch gleich NEIN (geringfügig). EN präzisiert "after the next lynch"; DE sagt nur "nach Lynchung" (offen, ob nächste oder irgendeine). Aktivierung (3 Lynchungen) und Häufigkeit (jede Nacht) gleich. |
-| Automationsziel | `automatic`: Markierung per Prompt, Vollstreckung automatisch in ExecutionRules. |
-| Mechanik | primär: Hinrichtungsreaktion; sekundär: Tötung |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | StepQueue (bedingter Schritt), PendingPrompt, ExecutionRules (Folgetod nach Hinrichtung), KillPipeline, Reaktionswarteschlange (Folgereaktionen des Markierten), WinRules, StateCodec, Replay, GmCorrections, Ereignis-Sichtbarkeit. |
-| Neue Systeme | dauerhafter Statusmarker mit Besitzer (Henker-Markierung bis zum nächsten Lynch), Lynch-Zähler im Spielstand (zeitlich verzögerter Effekt an Hinrichtung gekoppelt). |
-| Abhängigkeiten | alle Lynch-Sonderzweige (Wahnsinniger Kutscher, Voodoo, Der Weise, Selbstmörder, Spiegelwolf, Dämonischer Wolf, Fenrir, Cerberus, Rudelvater), Rudelvater/Nekromant/Hades/Kartenschlucker/Parasit (Todesabfang). |
-| Widersprüche | RM-C-128 Welcher Lynch; RM-C-129 Blockierter Lynch (Fenrir/Cerberus); RM-C-130 Zählbasis; RM-C-131 Henker tot |
-| Entscheidungen | RM-DR-130 (Rolle); Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K4 / in keiner Option |
-| Belegsicherheit | hoch. ## Gruppenübergreifende Beobachtungen 1. Globale Einmaligkeit statt pro Person: `markOnceUsed`/`isOnceUsed` (`night:3-5`) speichert den Verbrauch pro Rollenname (`once.Used.role_<Name>`); Märtyrerin (`MaertyUsed`) und Kutscher (`KutscherUsed`) nutzen … |
-| Detail | [Dossier](dossiers/village-2.md#henker) |
-
 ### `feuerteufel`
 
 | Feld | Inhalt |
@@ -522,27 +477,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch; Ursachenliste per `rg "VOODOO_PUPPET"` vollständig (`night:255,442`, `help:265`, `gh:2426`, `ui:407`). |
 | Detail | [Dossier](dossiers/solos-a.md#voodoo-priester) |
-
-### `cerberus`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Cerberus / Cerberus |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / IV / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Kopfaufbau und Lynch-Abwehr funktionieren, aber Wahlfreiheit ("kann"), Zusatzwirkung gegen Hexe und F15 weichen vom Text ab; 04 "verifiziert" ist zu optimistisch. |
-| DE/EN-Vergleich | JA, semantisch gleich (bis 3 Köpfe, bei 3 eine Lynchung abwehren, "kann"/"can"). |
-| Automationsziel | `automatic`: (mit optionalem Bestätigungsprompt, falls "kann" als Wahl gilt). |
-| Mechanik | primär: Hinrichtungsreaktion; sekundär: sonstige Spezialmechanik |
-| Größe / Risiko | S / mittel |
-| Vorhandene Godot-Systeme | ExecutionRules (Abfangregel vor Hinrichtung), Nominations/Execution-Ereignisse, PendingPrompt (falls Wahl), StateCodec, Replay, GmCorrections (Köpfe setzen), Ereignis-Sichtbarkeit. |
-| Neue Systeme | dauerhafte Statusmarker bzw. Zähler pro Person (Köpfe, mit Aufladung bei Phasenwechsel). |
-| Abhängigkeiten | Waldhexe (Trank), Henker (LynchCount), Feuerteufel (Brand beim Lynch), Kopfgeldjäger (Lynch eines Wolfs), Spiegelwolf/Voodoo/Der Weise (Reihenfolge der Lynch-Sonderzweige `night:425-501`). |
-| Widersprüche | RM-C-037 Wahl oder Automatik; RM-C-038 Hexengift; RM-C-039 Aufbau |
-| Entscheidungen | RM-DR-135 (Rolle); Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K4 / ab Option B |
-| Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. **Nur drei der acht Rollen haben einen Nachtschritt** (Schattenhund 0.7 once, Albtraumwolf 2.1, Schwarze Witwe 2.8). Dämonischer Wolf und Besessener Wolf sind reine Todesreaktionen, Fenrir und Cerberus reine … |
-| Detail | [Dossier](dossiers/wolves-b.md#cerberus) |
 
 ### `rotkaeppchen`
 

@@ -281,6 +281,8 @@ static func _validate_execution(s: GameState, p: Dictionary) -> StringName:
 		return &"unknown_player"
 	if not s.players[target].alive:
 		return &"player_dead"
+	if ExecutionRules.needs_cerberus_decision(s, target) and not p.get("cerberus_defend") is bool:
+		return &"cerberus_decision_required"
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if n.nominee_id == target:
 			return &""
@@ -332,7 +334,7 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				ctx.emit(GameEvent.NO_EXECUTION, Visibility.PUBLIC, {"day": s.day_number})
 			else:
 				ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": false})
-				ExecutionRules.execute(ctx, target, KillEvent.SOURCE_VILLAGE)
+				ExecutionRules.execute(ctx, target, KillEvent.SOURCE_VILLAGE, DictRead.get_bool(p, "cerberus_defend"))
 		Command.END_DAY:
 			s.day_step = Phase.DAY_ENDED
 			ctx.emit(GameEvent.DAY_ENDED, Visibility.PUBLIC, {"day": s.day_number})
@@ -467,6 +469,7 @@ static func _start_night(ctx: RuleContext) -> void:
 	s.night_plan = StepQueue.build_night_plan(s)
 	s.pack_bonus_pending = false  # in den Plan übernommen (Rudelvater)
 	s.judge_marks.clear()  # Markierungen gelten nur für den folgenden Tag
+	s.hangman_marks.clear()
 	s.village_blocked = false
 	s.blocked_ids.clear()
 	s.pack_extra_target_id = GameState.NO_TARGET
@@ -504,6 +507,12 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 		PendingPrompt.OWNER_GUARD:
 			Protections.set_protection(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_HANGMAN:
+			if target != GameState.NO_TARGET:
+				s.hangman_marks.append({"hangman_id": prompt.actor_id, "target_id": target})
+			ctx.emit(GameEvent.HANGMAN_MARKED, Visibility.GM, {"hangman_id": prompt.actor_id, "target_id": target, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_PACK2:
@@ -583,6 +592,12 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true)
 	s.pack_target_id = GameState.NO_TARGET
 	s.pack_extra_target_id = GameState.NO_TARGET
+	# Fenrir und Cerberus wachsen in jeder Morgenauflösung, die sie lebend erreichen.
+	for id: int in s.alive_ids():
+		var role := s.players[id].role_id
+		if role == RoleCatalog.FENRIR or (role == RoleCatalog.CERBERUS and int(s.growth.get(id, 0)) < RoleCatalog.CERBERUS_MAX_HEADS):
+			s.growth[id] = int(s.growth.get(id, 0)) + 1
+			ctx.emit(GameEvent.GROWTH_CHANGED, Visibility.GM, {"player_id": id, "role_id": String(role), "value": s.growth[id]})
 	_finish_dawn_if_ready(ctx)
 
 

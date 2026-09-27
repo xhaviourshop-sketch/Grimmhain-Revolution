@@ -29,6 +29,8 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		return null
 	if _packfather_survives(ctx, target, cause, source_kind):
 		return null
+	if _fenrir_survives(ctx, target, cause, source_kind):
+		return null
 	var dead_before := s.players.size() - s.alive_ids().size()  # nur aktuell Tote (RM-DR-138.3)
 	var record := KillEvent.new()
 	record.target_id = target_id
@@ -106,6 +108,20 @@ static func _packfather_survives(ctx: RuleContext, target: Player, cause: String
 	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {
 		"target_id": target.id, "cause": cause, "source_kind": source_kind, "protection": RoleCatalog.RUDELVATER,
 		"sources": [RoleCatalog.RUDELVATER], "night": ctx.state.night_number,
+	})
+	return true
+
+
+## Fenrir (RM-DR-125): ab Stufe 3 überlebt er einmal je Leben jeden Tod außer Spielleiterkorrekturen.
+static func _fenrir_survives(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
+	if target.role_id != RoleCatalog.FENRIR or source_kind == KillEvent.SOURCE_GM or target.ability_uses.has("fenrir:survive"):
+		return false
+	if int(ctx.state.growth.get(target.id, 0)) < RoleCatalog.FENRIR_SHIELD_STAGE:
+		return false
+	target.ability_uses["fenrir:survive"] = 1
+	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {
+		"target_id": target.id, "cause": cause, "source_kind": source_kind, "protection": RoleCatalog.FENRIR,
+		"sources": [RoleCatalog.FENRIR], "night": ctx.state.night_number,
 	})
 	return true
 

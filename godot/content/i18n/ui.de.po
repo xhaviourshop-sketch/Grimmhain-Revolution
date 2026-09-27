@@ -599,6 +599,24 @@ msgstr "Seuchenwolf"
 msgid "ui.role.seuchenwolf.short"
 msgstr "Wolf im Rudel; nach seinem Tod durchbricht der nächste Angriff jeden Schutz."
 
+msgid "ui.role.fenrir.name"
+msgstr "Fenrir"
+
+msgid "ui.role.fenrir.short"
+msgstr "Wolf im Rudel, wird jede Nacht stärker und überlebt ab Stufe 3 einmal."
+
+msgid "ui.role.cerberus.name"
+msgstr "Cerberus"
+
+msgid "ui.role.cerberus.short"
+msgstr "Wolf im Rudel, sammelt Köpfe und wehrt mit drei eine Hinrichtung ab."
+
+msgid "ui.role.henker.name"
+msgstr "Henker"
+
+msgid "ui.role.henker.short"
+msgstr "Ab drei Hinrichtungen markiert er nachts jemanden, der bei der nächsten mitstirbt."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

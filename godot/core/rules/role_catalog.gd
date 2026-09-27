@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater` und `seuchenwolf`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus` und `henker`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -100,12 +100,21 @@ const GIFTWOLF := &"giftwolf"
 const RUDELVATER := &"rudelvater"
 ## Seuchenwolf / Blight Wolf (RM-DR-108): Wölfe; nach seinem Tod durchdringt der nächste Rudelangriff Schutz.
 const SEUCHENWOLF := &"seuchenwolf"
+## Fenrir (RM-DR-125): Wölfe; Stufe je überlebter Nacht, ab Stufe 3 überlebt er einmal jeden Tod.
+const FENRIR := &"fenrir"
+## Cerberus (RM-DR-135): Wölfe; Köpfe je überlebter Nacht (max. 3), bei 3 kann er eine Hinrichtung abwehren.
+const CERBERUS := &"cerberus"
+const CERBERUS_MAX_HEADS := 3
+const FENRIR_SHIELD_STAGE := 3
+## Henker / Executioner (RM-DR-130): Dorf; ab 3 Hinrichtungen nachts markieren, Zusatztod bei der nächsten Hinrichtung.
+const HENKER := &"henker"
+const HANGMAN_MIN_EXECUTIONS := 3
 const BOUND_PRIORITY := 5
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
 const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhexe:heal", "waldhexe:poison", "spiegelwolf:mirror",
 	"besessener-wolf:death_reaction", "ritter:death_reaction", "faehrtenleser:track", "spuerhund:lost",
-	"schattenhund:block", "giftwolf:paw1", "giftwolf:paw2", "rudelvater:survive"]
+	"schattenhund:block", "giftwolf:paw1", "giftwolf:paw2", "rudelvater:survive", "fenrir:survive"]
 
 ## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
 ## Wolfskind 0.9 (nur mit Auswahlbedarf), Lehrling 1.1 (nur mit Auswahlbedarf), Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
@@ -146,6 +155,9 @@ const ROLES := {
 	GIFTWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": GIFTWOLF, "night_priority": 27},
 	RUDELVATER: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": RUDELVATER},
 	SEUCHENWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SEUCHENWOLF},
+	FENRIR: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": FENRIR},
+	CERBERUS: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": CERBERUS},
+	HENKER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": HENKER, "night_priority": 78},
 }
 
 

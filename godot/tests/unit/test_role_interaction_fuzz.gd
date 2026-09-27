@@ -13,8 +13,8 @@ extends TestCase
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf"]
-const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf"]
+	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker"]
+const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 120
 const MAX_COMMANDS := 160
@@ -135,7 +135,7 @@ func _start_command(g: int, count: int) -> Command:
 		roles[j] = tmp
 	var map := {}
 	var appearances := {}
-	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "korrupter-richter", "waechter-am-tor", "spuerhund", "parasit"]
+	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "korrupter-richter", "waechter-am-tor", "spuerhund", "parasit", "henker"]
 	for i: int in count:
 		map[str(i + 1)] = roles[i]
 		if roles[i] == "trugbilderwolf":
@@ -294,14 +294,21 @@ func _day_command(s: GameState) -> Command:
 	if roll < 0.5:
 		var alive := s.alive_ids()
 		if not alive.is_empty():
-			return CorrectionFixtures.gm("execute", {"target_id": _pick(alive)}, "Fuzz: Hinrichtung ohne Nominierung")
+			var exec_target: int = _pick(alive)
+			var fields := {"target_id": exec_target}
+			if ExecutionRules.needs_cerberus_decision(s, exec_target):
+				fields["cerberus_defend"] = _rng.randf() < 0.5
+			return CorrectionFixtures.gm("execute", fields, "Fuzz: Hinrichtung ohne Nominierung")
 	var nominees: Array[int] = []
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if s.players[n.nominee_id].alive:
 			nominees.append(n.nominee_id)
 	if nominees.is_empty() or _rng.randf() < 0.2:
 		return Command.decide_execution(-1)
-	return Command.decide_execution(_pick(nominees))
+	var chosen: int = _pick(nominees)
+	if ExecutionRules.needs_cerberus_decision(s, chosen):
+		return Command.create(Command.DECIDE_EXECUTION, {"target_id": chosen, "cerberus_defend": _rng.randf() < 0.5})
+	return Command.decide_execution(chosen)
 
 
 func _random_nomination(s: GameState) -> Command:

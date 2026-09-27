@@ -9,13 +9,14 @@ const CAUSE_HUNTER_SHOT := &"HUNTER_SHOT"      ## Fluch nach dem Tod (Sensenträ
 const CAUSE_POSSESSED_DRAG := &"POSSESSED_DRAG"  ## vom Besessenen Wolf mitgerissen (Rollenaudit)
 const CAUSE_KNIGHT_STRIKE := &"KNIGHT_STRIKE"    ## Schlag des sterbenden Ritters (Rollenaudit)
 const CAUSE_WOLF_POISON := &"WOLF_POISON"  ## Giftpranke des Giftwolfs, zwei Nächte später (Rollenaudit)
+const CAUSE_HANGMAN_EXTRA := &"HANGMAN_EXTRA"  ## vom Henker markiert, stirbt bei der Hinrichtung mit (Rollenaudit)
 const CAUSE_PARASITE_HOST := &"PARASITE_HOST"  ## Parasit stirbt mit seinem Wirt (Rollenaudit)
 const CAUSE_COACHMAN_CRASH := &"COACHMAN_CRASH"  ## Nachbar des gelynchten Wahnsinnigen Kutschers (Rollenaudit)
 const CAUSE_GM_CORRECTION := &"GM_CORRECTION"  ## Spielleiterkorrektur
 const CAUSE_WITCH_POISON := &"WITCH_POISON"    ## Gifttrank der Waldhexe, in der Morgenauflösung (Todesmarkierung)
 const CAUSE_SPIEGELWOLF_RETALIATE := &"SPIEGELWOLF_RETALIATE"  ## gespiegelte Hinrichtung, Quelle Spiegelwolf
 const CAUSE_MANIPULATOR_NOMINATED := &"MANIPULATOR_NOMINATED"  ## Tod des Manipulators bei seiner Nominierung
-const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON, CAUSE_SPIEGELWOLF_RETALIATE, CAUSE_MANIPULATOR_NOMINATED, CAUSE_COACHMAN_CRASH, CAUSE_POSSESSED_DRAG, CAUSE_KNIGHT_STRIKE, CAUSE_PARASITE_HOST, CAUSE_WOLF_POISON]
+const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON, CAUSE_SPIEGELWOLF_RETALIATE, CAUSE_MANIPULATOR_NOMINATED, CAUSE_COACHMAN_CRASH, CAUSE_POSSESSED_DRAG, CAUSE_KNIGHT_STRIKE, CAUSE_PARASITE_HOST, CAUSE_WOLF_POISON, CAUSE_HANGMAN_EXTRA]
 
 const SOURCE_PACK := &"pack"        ## Rudel (alle lebenden Wölfe gemeinsam)
 const SOURCE_VILLAGE := &"village"  ## Hinrichtung nach physischer Abstimmung

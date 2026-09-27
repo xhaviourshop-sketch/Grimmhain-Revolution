@@ -15,16 +15,16 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=34 open=0 blocked=38 -->
+<!-- check:audit-counts total=72 green=37 open=0 blocked=35 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
-| **GRÜN** | **34** |
+| **GRÜN** | **37** |
 | **OFFEN** | **0** |
-| **BLOCKIERT** | **38** |
+| **BLOCKIERT** | **35** |
 
-72/72 ist **nicht** erreicht. Die 38 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
+72/72 ist **nicht** erreicht. Die 35 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
 
 ## 3. Übersicht
 
@@ -67,17 +67,17 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 33 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Wölfe | DR-08, Korrekturrunde 1, Eintrag Trugbilderwolf | Scheinrolle im Setup je Instanz, nie Wolfsrolle, Korrektur nur bestätigt | – | umgesetzt | test_trugbilderwolf (23), test_gm_role_field, fuzz | Orakel, Waldhexe, Lehrling | **GRÜN** |
 | 34 | `schattenhund` | Schattenhund / Shadow Hound | Wölfe | Rollentext; RM-DR-123, RM-DR-010 (Decision Log) | einmal je Leben alle Dorf-Nachtschritte einer Nacht blockieren; handelt zuerst | – | umgesetzt | test_wolf_specials, fuzz | Schutzengel, Orakel, Waldläufer, Gebundene | **GRÜN** |
 | 35 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Wölfe | Rollentext; RM-DR-124.1 (Decision Log „Rollenaudit · Wiederbelebung …“) | Mitnahme als Reaktion bei mindestens 5 Lebenden inkl. ihm; Verzicht möglich; einmal je Leben | – | umgesetzt | test_ritter_besessener_faehrtenleser, fuzz | Lynch, Rudel, Wiederbelebung, Parität; Schilde folgen | **GRÜN** |
-| 36 | `fenrir` | Fenrir / Fenrir | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-125.1, RM-DR-125.2, RM-DR-125.3 | fehlt | – | [03](03-remaining-roles-analysis.md#fenrir) | **BLOCKIERT** |
+| 36 | `fenrir` | Fenrir / Fenrir | Wölfe | Rollentext; RM-DR-125 (Decision Log) | Stufe je überlebter Nacht; ab 3 überlebt er einmal jeden Tod außer Korrektur | – | umgesetzt | test_fenrir_cerberus_henker, fuzz | Lynch, Ritter, Wiederbelebung | **GRÜN** |
 | 37 | `kutscher` | Kutscher / Coachman | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-126.1, RM-DR-126.2, RM-DR-013 | fehlt | – | [03](03-remaining-roles-analysis.md#kutscher) | **BLOCKIERT** |
 | 38 | `seelentauscher` | Seelentauscher / Soul Swapper | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-127.1, RM-DR-127.2, RM-DR-127.3 | fehlt | – | [03](03-remaining-roles-analysis.md#seelentauscher) | **BLOCKIERT** |
 | 39 | `blutpriester` | Blutpriester / Blood Priest | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-128.1, RM-DR-128.2, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#blutpriester) | **BLOCKIERT** |
 | 40 | `traumdeuter` | Traumdeuter / Dreamer | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-129.1, RM-DR-129.2, RM-DR-129.3, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#traumdeuter) | **BLOCKIERT** |
-| 41 | `henker` | Henker / Executioner | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-130.1, RM-DR-130.2, RM-DR-130.3 | fehlt | – | [03](03-remaining-roles-analysis.md#henker) | **BLOCKIERT** |
+| 41 | `henker` | Henker / Executioner | Dorf | Rollentext; RM-DR-130, RM-DR-138.2 (Decision Log) | ab 3 Hinrichtungen nachts markieren; Zusatztod bei der Hinrichtung des Folgetags | – | umgesetzt | test_fenrir_cerberus_henker, fuzz | Selbstmörder, Cerberus, Spiegelwolf | **GRÜN** |
 | 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-131.1, RM-DR-131.2, RM-DR-131.3, RM-DR-131.4, RM-DR-131.5, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#feuerteufel) | **BLOCKIERT** |
 | 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-132.1, RM-DR-132.2, RM-DR-132.3, RM-DR-132.4 | fehlt | – | [03](03-remaining-roles-analysis.md#voodoo-priester) | **BLOCKIERT** |
 | 44 | `blutwolf` | Blutwolf / Blood Wolf | Wölfe | Rollentext; RM-DR-133.1, RM-DR-008 (Decision Log) | Wolf im Rudel; Stimmbonus nur als Hinweis (+1 je direkt toten Nachbarplatz) | – | umgesetzt | test_richter_waechter_blutwolf, fuzz | Wiederbelebung, Sitzkreis; Anzeige folgt mit UI | **GRÜN** |
 | 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | Rollentext; RM-DR-134, RM-DR-010 (Decision Log) | jede Nacht freiwillig eine Person blockieren; handelt zuerst | – | umgesetzt | test_wolf_specials, fuzz | Orakel, Gebundene, Dorf-Nachtschritte | **GRÜN** |
-| 46 | `cerberus` | Cerberus / Cerberus | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-135.1, RM-DR-135.2 | fehlt | – | [03](03-remaining-roles-analysis.md#cerberus) | **BLOCKIERT** |
+| 46 | `cerberus` | Cerberus / Cerberus | Wölfe | Rollentext; RM-DR-135 (Decision Log) | Köpfe je Nacht (max 3); bei 3 Hinrichtung mit Spielleiterfrage abwehrbar | – | umgesetzt | test_fenrir_cerberus_henker, fuzz | Henker-Zählung, Spielleiter-Hinrichtung | **GRÜN** |
 | 47 | `ritter` | Ritter / Knight | Dorf | Rollentext; RM-DR-136.1 (Decision Log) | bei Tod durch Wolfsangriff stirbt der nächste Wolf (tote Plätze zählen); Gleichstand: Spielleiter wählt; einmal je Leben | – | umgesetzt | test_ritter_besessener_faehrtenleser, fuzz | Rudel, Gift, Lynch, Wiederbelebung; Verfluchte/Fenrir folgen | **GRÜN** |
 | 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-137.1, RM-DR-137.2, RM-DR-137.3, RM-DR-137.4, RM-DR-137.5, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#rotkaeppchen) | **BLOCKIERT** |
 | 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | Rollentext; RM-DR-138.1/.3/.4/.5, F-11 (Decision Log „Rollenaudit“) | Sieg erfüllt, wenn er bei mindestens 5 aktuell Toten hingerichtet wird (LYNCH, auch Spielleiter); wird danach immer wieder vorgeschlagen, auch nach Wiederbelebung | – | umgesetzt | test_selbstmoerder (13), fuzz | Spiegelwolf, Lehrling, Wiederbelebung, Dorfsieg, Kandidatenmenge; RM-DR-138.2 folgt mit Henker | **GRÜN** |

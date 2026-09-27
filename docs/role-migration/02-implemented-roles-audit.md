@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 34 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 34 |
+| im RoleCatalog vorhandene Rollen | 37 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 37 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 32 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 35 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -81,6 +81,9 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 32 | `giftwolf` | Giftwolf / Poison Wolf (Rollentext) | wolves | ja | 27 | `rules_engine.gd` (`wolf_poisons`), `kill_pipeline.gd` | `test_wolf_specials.gd`, fuzz | RM-DR-111, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 33 | `rudelvater` | Rudelvater / Packfather (Rollentext) | wolves | ja | – (Teil des Rudels) | `kill_pipeline.gd` (`_packfather_survives`), `step_queue.gd` (`pack2`) | `test_wolf_specials.gd`, fuzz | RM-DR-112, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 34 | `seuchenwolf` | Seuchenwolf / Blight Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `kill_pipeline.gd`, `rules_engine.gd` (`plague_pierce_pending`) | `test_wolf_specials.gd`, fuzz | RM-DR-108, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 35 | `fenrir` | Fenrir (Rollentext) | wolves | ja | – (Teil des Rudels) | `rules_engine.gd` (Wachstum), `kill_pipeline.gd` (`_fenrir_survives`) | `test_fenrir_cerberus_henker.gd`, fuzz | RM-DR-125, DECISION-LOG „Rollenaudit · Fenrir, Cerberus, Henker“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 36 | `cerberus` | Cerberus (Rollentext) | wolves | ja | – (Teil des Rudels) | `execution_rules.gd` (`needs_cerberus_decision`), `rules_engine.gd` | `test_fenrir_cerberus_henker.gd`, fuzz | RM-DR-135, DECISION-LOG „Rollenaudit · Fenrir, Cerberus, Henker“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 37 | `henker` | Henker / Executioner (Rollentext) | village | nein | 78 | `execution_rules.gd` (`_hangman_extras`), `rules_engine.gd` | `test_fenrir_cerberus_henker.gd`, fuzz | RM-DR-130, RM-DR-138.2, DECISION-LOG „Rollenaudit · Fenrir, Cerberus, Henker“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -262,6 +265,21 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 ### 4.34 `seuchenwolf`
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nach seinem Tod (mit Folgen) durchdringt der nächste tatsächliche Rudelangriff Schutz und verbraucht die Wirkung; Nächte ohne Rudelopfer verbrauchen nichts; keine Stapelung.
 - **Tests:** Nacht ohne Opfer, Durchdringung, danach wieder Schutz.
+- **Grenzen:** –
+
+### 4.35 `fenrir`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Stufe `growth` +1 je Morgen, den er lebend erreicht; ab Stufe 3 überlebt er einmal je Leben jeden Tod außer Korrektur (auch Lynch, Ritter). Wiederbelebung und Rollenwechsel setzen Stufe und Schutz zurück.
+- **Tests:** Wachstum, Überleben, zweite Hinrichtung, Stufe 1 stirbt, Wiederbelebung.
+- **Grenzen:** –
+
+### 4.36 `cerberus`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Köpfe +1 je Morgen (max. 3). Hinrichtung mit 3 Köpfen verlangt `cerberus_defend` (auch bei Spielleiter-Hinrichtung); Ja: überlebt, Köpfe 0, Hinrichtung gilt als erfolgt und zählt.
+- **Tests:** Köpfe, Pflichtentscheidung, Abwehr, Annahme, Obergrenze.
+- **Grenzen:** Eingabe „abwehren?“ in der Oberfläche folgt mit dem Spielablauf-UI.
+
+### 4.37 `henker`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** `executions_count` zählt jede bestätigte Hinrichtung der Partie. Ab 3 markiert er nachts (Priorität 78) freiwillig eine andere Person; bei der Hinrichtung des Folgetags stirbt sie zusätzlich (`HANGMAN_EXTRA`), wenn er dann lebt; sonst verfällt die Markierung bei Nachtbeginn.
+- **Tests:** Aktivierung, Zusatztod, kein Selbstmörder-Sieg, Verfall, toter Henker.
 - **Grenzen:** –
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen

@@ -76,6 +76,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SCHATTENHUND: false,   # Verzicht ist eine Antwort
 	RoleCatalog.ALBTRAUMWOLF: false,   # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.GIFTWOLF: false,       # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.HENKER: false,         # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.SCHUTZENGEL: false,    # Pflichtauswahl (DR-05)
 	RoleCatalog.WALDHEXE: false,       # Verzicht auf beide Tränke ist eine Antwort im eigenen Prompt (DR-06)
 	RoleCatalog.ORAKEL: false,         # Pflichtprüfung einer anderen lebenden Person (DR-07)
@@ -129,6 +130,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		if p.role_id == RoleCatalog.SCHATTENHUND and p.ability_uses.has("schattenhund:block"):
 			continue
 		if p.role_id == RoleCatalog.GIFTWOLF and p.ability_uses.has("giftwolf:paw2"):
+			continue
+		if p.role_id == RoleCatalog.HENKER and s.executions_count < RoleCatalog.HANGMAN_MIN_EXECUTIONS:
 			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	for id: int in s.alive_ids():
@@ -250,6 +253,11 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
 		prompt.stage = &"use"
 		prompt.allowed_ids = []
+		prompt.cancellable = true
+	elif step_kind(step_id) == RoleCatalog.HENKER:
+		prompt.owner = PendingPrompt.OWNER_HANGMAN
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.allowed_ids.erase(prompt.actor_id)
 		prompt.cancellable = true
 	elif step_kind(step_id) == RoleCatalog.ALBTRAUMWOLF or step_kind(step_id) == RoleCatalog.GIFTWOLF:
 		# Albtraumwolf blockiert, Giftwolf vergiftet: freiwillig eine andere lebende Person.

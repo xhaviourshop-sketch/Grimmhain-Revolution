@@ -67,6 +67,9 @@ const PARASITE_ATTACHED := &"ParasiteAttached"  ## Wirtwahl des Parasiten (nur S
 const NIGHT_BLOCKED := &"NightBlocked"          ## Blockade durch Schattenhund oder Albtraumwolf (nur Spielleiter)
 const WOLF_POISONED := &"WolfPoisoned"          ## Giftpranke des Giftwolfs (nur Spielleiter)
 const WOLF_POISON_NOTICE := &"WolfPoisonNotice"  ## private Mitteilung an das vergiftete Ziel (actor)
+const GROWTH_CHANGED := &"GrowthChanged"        ## Fenrir-Stufe oder Cerberus-Köpfe (nur Spielleiter)
+const EXECUTION_DEFENDED := &"ExecutionDefended"  ## Cerberus wehrt eine Hinrichtung ab (nur Spielleiter)
+const HANGMAN_MARKED := &"HangmanMarked"        ## Markierung des Henkers (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

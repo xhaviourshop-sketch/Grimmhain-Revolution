@@ -45,6 +45,9 @@ var wolf_poisons: Array = []        ## Giftwolf: [{target_id, source_id, due_nig
 var pack_bonus_pending: bool = false  ## Rudelvater gelyncht: nächste Nacht zweiter Rudelschritt
 var pack_extra_target_id: int = NO_TARGET  ## Opfer des zweiten Rudelschritts dieser Nacht
 var plague_pierce_pending: bool = false  ## Seuchenwolf tot: nächster Rudelangriff durchdringt Schutz
+var growth: Dictionary = {}          ## Fenrir-Stufe bzw. Cerberus-Köpfe je Person-ID
+var executions_count: int = 0        ## bestätigte Hinrichtungen der Partie (Henker)
+var hangman_marks: Array = []        ## Markierungen der Henker dieser Nacht [{hangman_id, target_id}]
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -112,6 +115,13 @@ func content_hash() -> String:
 	for key: String in HASH_EXCLUDED_KEYS:
 		d.erase(key)
 	return CanonicalJson.sha256(d)
+
+
+func _growth_to_dict() -> Dictionary:
+	var out := {}
+	for id: int in growth:
+		out[str(id)] = growth[id]
+	return out
 
 
 func duplicate_state() -> GameState:
@@ -192,6 +202,9 @@ func to_dict() -> Dictionary:
 		"pack_bonus_pending": pack_bonus_pending,
 		"pack_extra_target_id": pack_extra_target_id,
 		"plague_pierce_pending": plague_pierce_pending,
+		"growth": _growth_to_dict(),
+		"executions_count": executions_count,
+		"hangman_marks": hangman_marks.duplicate(true),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -371,6 +384,22 @@ static func from_dict(d: Dictionary) -> GameState:
 		if not s.players.has(poisoned) or not s.players.has(source) or due < 1:
 			return null
 		s.wolf_poisons.append({"target_id": poisoned, "source_id": source, "due_night": due})
+	var growth := DictRead.get_dict(d, "growth")
+	for key: Variant in growth:
+		if not String(key).is_valid_int() or not s.players.has(String(key).to_int()) or not DictRead.is_int_like(growth[key]) or int(growth[key]) < 0:
+			return null
+		s.growth[String(key).to_int()] = int(growth[key])
+	s.executions_count = DictRead.get_int(d, "executions_count")
+	if s.executions_count < 0:
+		return null
+	for item: Variant in DictRead.get_array(d, "hangman_marks"):
+		if not item is Dictionary:
+			return null
+		var hangman := DictRead.get_int(item, "hangman_id", -1)
+		var marked_by_hangman := DictRead.get_int(item, "target_id", -1)
+		if not s.players.has(hangman) or not s.players.has(marked_by_hangman):
+			return null
+		s.hangman_marks.append({"hangman_id": hangman, "target_id": marked_by_hangman})
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null

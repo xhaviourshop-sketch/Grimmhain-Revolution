@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 34 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 37 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 38 |
+| fehlend, Entscheidung nötig (`decision-required`) | 35 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 38 fehlende) | 7 |
-| Legacy-Befund `legacy-contradictory` (nur 38 fehlende) | 20 |
-| Legacy-Befund `legacy-broken` (nur 38 fehlende) | 8 |
-| Legacy-Befund `not-found` (nur 38 fehlende) | 3 |
+| Legacy-Befund `legacy-verified` (nur 35 fehlende) | 6 |
+| Legacy-Befund `legacy-contradictory` (nur 35 fehlende) | 18 |
+| Legacy-Befund `legacy-broken` (nur 35 fehlende) | 8 |
+| Legacy-Befund `not-found` (nur 35 fehlende) | 3 |
 
-<!-- check:counts total=72 implemented=34 remaining=38 -->
+<!-- check:counts total=72 implemented=37 remaining=35 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -71,17 +71,17 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 33 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Fehlinformation | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 34 | `schattenhund` | Schattenhund / Shadow Hound | Wölfe | III | 0.7 (once) | `implemented-and-tested` | `legacy-contradictory` | `automatic` | globale Regeländerung | S / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#schattenhund) |
 | 35 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Todesreaktion | M / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#besessener-wolf) |
-| 36 | `fenrir` | Fenrir / Fenrir | Wölfe | IV | – | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | M / mittel | K4 | – | [03](03-remaining-roles-analysis.md#fenrir) · [Dossier](dossiers/wolves-b.md#fenrir) |
+| 36 | `fenrir` | Fenrir / Fenrir | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#fenrir) |
 | 37 | `kutscher` | Kutscher / Coachman | Dorf | II | 3.8 | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | L / hoch | K13 | – | [03](03-remaining-roles-analysis.md#kutscher) · [Dossier](dossiers/village-2.md#kutscher) |
 | 38 | `seelentauscher` | Seelentauscher / Soul Swapper | Dorf | II | 8.0 (once) | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | L / kritisch | K12 | – | [03](03-remaining-roles-analysis.md#seelentauscher) · [Dossier](dossiers/village-2.md#seelentauscher) |
 | 39 | `blutpriester` | Blutpriester / Blood Priest | Dorf | II | 8.2 (once) | `decision-required` | `legacy-verified` | `assisted` | Informationsrolle | M / mittel | K7 | – | [03](03-remaining-roles-analysis.md#blutpriester) · [Dossier](dossiers/village-2.md#blutpriester) |
 | 40 | `traumdeuter` | Traumdeuter / Dreamer | Dorf | III | 7.0 | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | S / niedrig | K7 | – | [03](03-remaining-roles-analysis.md#traumdeuter) · [Dossier](dossiers/village-2.md#traumdeuter) |
-| 41 | `henker` | Henker / Executioner | Dorf | III | 7.8 | `decision-required` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | M / mittel | K4 | – | [03](03-remaining-roles-analysis.md#henker) · [Dossier](dossiers/village-2.md#henker) |
+| 41 | `henker` | Henker / Executioner | Dorf | III | 7.8 | `implemented-and-tested` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#henker) |
 | 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | IV | 7.6 | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | M / hoch | K9 | – | [03](03-remaining-roles-analysis.md#feuerteufel) · [Dossier](dossiers/solos-a.md#feuerteufel) |
 | 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | II | 8.4 | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | L / hoch | K10 | – | [03](03-remaining-roles-analysis.md#voodoo-priester) · [Dossier](dossiers/solos-a.md#voodoo-priester) |
 | 44 | `blutwolf` | Blutwolf / Blood Wolf | Wölfe | II | – | `implemented-and-tested` | `legacy-verified` | `assisted` | sonstige Spezialmechanik | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#blutwolf) |
 | 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | III, IV | 2.1 | `implemented-and-tested` | `legacy-broken` | `automatic` | sonstige Spezialmechanik | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#albtraumwolf) |
-| 46 | `cerberus` | Cerberus / Cerberus | Wölfe | IV | – | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | S / mittel | K4 | B | [03](03-remaining-roles-analysis.md#cerberus) · [Dossier](dossiers/wolves-b.md#cerberus) |
+| 46 | `cerberus` | Cerberus / Cerberus | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | S / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#cerberus) |
 | 47 | `ritter` | Ritter / Knight | Dorf | I | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Todesreaktion | M / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#ritter) |
 | 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | III | 7.4 | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | L / hoch | K10 | – | [03](03-remaining-roles-analysis.md#rotkaeppchen) · [Dossier](dossiers/village-3.md#rotkaeppchen) |
 | 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | I | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Einzelsieg | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#selbstmoerder) |

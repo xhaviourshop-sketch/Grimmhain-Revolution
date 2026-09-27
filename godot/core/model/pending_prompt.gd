@@ -29,6 +29,7 @@ const OWNER_PACK2 := &"pack2"
 const OWNER_SHADOW := &"schattenhund"
 const OWNER_NIGHTMARE := &"albtraumwolf"
 const OWNER_POISON_WOLF := &"giftwolf"
+const OWNER_HANGMAN := &"henker"
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0
