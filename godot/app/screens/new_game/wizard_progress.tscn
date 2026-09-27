@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/new_game/wizard_progress.gd" id="1_progress"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="2_label"]
+
+[node name="WizardProgress" type="HFlowContainer"]
+script = ExtResource("1_progress")
+
+[node name="StepLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+vertical_alignment = 1
+script = ExtResource("2_label")
+wrap = false
+
+[node name="StepChip_players" type="Label" parent="."]
+layout_mode = 2
+vertical_alignment = 1
+script = ExtResource("2_label")
+wrap = false
+
+[node name="StepChip_roles" type="Label" parent="."]
+layout_mode = 2
+vertical_alignment = 1
+script = ExtResource("2_label")
+wrap = false
+
+[node name="StepChip_distribution" type="Label" parent="."]
+layout_mode = 2
+vertical_alignment = 1
+script = ExtResource("2_label")
+wrap = false

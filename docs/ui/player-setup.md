@@ -2,7 +2,7 @@
 
 Stand: 26.09.2026 · Godot 4.7.2 · Projekt `godot/`
 
-Erster echter Setup-Schritt: Der Spielleiter legt 6 bis 24 Personen an, bearbeitet und entfernt sie und bestätigt die Liste als Setup-Entwurf. Rollen, Sitzordnung und `StartGame` folgen in späteren Arbeitspaketen.
+Schritt 1 des Setup-Wizards „Neue Partie“ (Spieler → Rollen → Verteilung): Der Spielleiter legt 6 bis 24 Personen an, bearbeitet und entfernt sie und bestätigt die Liste als Setup-Entwurf. Rollenwahl und Verteilung beschreibt `role-setup.md`; Sitzordnung und `StartGame` folgen in späteren Arbeitspaketen.
 
 ## Schichten
 
@@ -10,7 +10,7 @@ Erster echter Setup-Schritt: Der Spielleiter legt 6 bis 24 Personen an, bearbeit
 |---|---|---|
 | Modell | `app/setup/person_name_rules.gd`, `setup_person.gd`, `setup_draft.gd`, `setup_result.gd` | Grenzen, Namensregeln, Personen, Entwurf, strukturierte Ergebnisse |
 | Anwendungsschicht | `app/setup/player_setup.gd` (`AppContext.setup`) | einzige Wahrheit über Personen, IDs und Bestätigung; alle Operationen atomar |
-| UI | `app/screens/new_game/new_game_screen.*`, `person_row.*` | Darstellung, Eingabe, Rückfragen; ruft nur `PlayerSetup` auf |
+| UI | `app/screens/new_game/player_step.*` (Schritt im Wizard-Host `new_game_screen.*`), `person_row.*` | Darstellung, Eingabe, Rückfragen; ruft nur `PlayerSetup` auf |
 
 `app/setup/` kennt weder `GameState` noch `RulesEngine`, `Command`, `StartGame` oder `GameSession`; ein Test prüft das statisch.
 
@@ -100,17 +100,18 @@ Alle Grenzen stehen nur in `PersonNameRules`: `MIN_PERSONS = 6`, `MAX_PERSONS = 
 | 24 | Bestätigen frei; Feld, „Hinzufügen“ und Import gesperrt, Hinweis „Höchstzahl erreicht“, Fokus auf „Spieler bestätigen“ |
 | 25. Person | `too_many_persons`, Zustand unverändert |
 
-- **Bestätigen:** Setzt `confirmed` und leert `has_unconfirmed_changes`. Es erscheinen der Status „Bestätigt: N Spieler.“, eine Statusmeldung und die Karte „Namensschritt vollständig“.
+- **Bestätigen:** Setzt `confirmed` und leert `has_unconfirmed_changes`. Es erscheinen der Status „Bestätigt: N Spieler.“, eine Statusmeldung und die Karte „Namensschritt vollständig“ mit „Weiter zu den Rollen“ (erhält den Fokus). Erst dieser Button wechselt zum Rollenschritt.
 - **Keine Partie:** Bestätigen erzeugt keinen `GameState`, keinen Befehl und keine Rollen. `GameSession` bleibt unberührt, per Test mit Befehlszähler 0 und ohne Ereignisse.
-- **Erneute Änderung:** Jede spätere Änderung (hinzufügen, importieren, umbenennen, entfernen) hebt die Bestätigung auf.
+- **Erneute Änderung:** Jede spätere Änderung (hinzufügen, importieren, umbenennen, entfernen) hebt die Bestätigung auf. Hinzufügen und Entfernen verwerfen zusätzlich eine Rollenverteilung und heben die Bestätigung eines nicht mehr passenden Rollenpools auf; Umbenennen erhält beides (`role-setup.md`).
 
 ## Verlassen und erneutes Öffnen
 
-- Zurück-Button, Escape und System-Zurück laufen über `NewGameScreen.handle_back()`:
+- Zurück-Button, Escape und System-Zurück laufen über `NewGameScreen.handle_back()`; im Rollen- bzw. Verteilungsschritt führen sie einen Schritt zurück, im Spielerschritt gilt:
   1. offener Import- oder Bearbeitungsmodus → schließen
-  2. unbestätigte Änderungen an einer nicht leeren Liste → Rückfrage mit „Weiter bearbeiten“ (Fokus, Escape), „Entwurf behalten“ (zum Hauptmenü) und „Entwurf verwerfen“ (rot, setzt zurück, zum Hauptmenü)
+  2. unbestätigte Änderungen an einer nicht leeren Liste, eine unbestätigte Rollenwahl oder eine unbestätigte Zuordnung → Rückfrage mit „Weiter bearbeiten“ (Fokus, Escape), „Entwurf behalten“ (zum Hauptmenü) und „Entwurf verwerfen“ (rot, setzt zurück, zum Hauptmenü)
   3. sonst normales Zurück
 - Ein bestätigter oder leerer Entwurf verlässt die Seite ohne Rückfrage.
+- Beim erneuten Öffnen erscheint der zuletzt aktive Wizard-Schritt.
 - Programmgesteuerte Navigation fragt nicht nach, der Entwurf bleibt dabei erhalten.
 - Beim erneuten Öffnen erscheinen dieselben Namen, IDs und derselbe Status.
 - „Neu beginnen“ (Fußzeile) setzt nach einer roten Rückfrage alles zurück.
@@ -139,7 +140,6 @@ Prüf-Screenshots: `docs/evidence/player-setup/`.
 
 ## Bewusst noch nicht enthalten
 
-- Rollen, Rollenanzahl und Rollenverteilung
 - Sitzordnung und Sitzkreis, Drag-and-drop, manuelle Umordnung der Liste
 - `StartGame` und eine echte Partie
 - Speichern auf Datenträger, Autosave, gespeicherte Gruppen, Dateiimport und -export

@@ -1,0 +1,220 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/new_game/distribution_step.gd" id="1_step"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+
+[node name="DistributionStep" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_step")
+
+[node name="Body" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DistributionSideScroll" type="ScrollContainer" parent="Body"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DistributionSideColumn" type="VBoxContainer" parent="Body/DistributionSideScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DistributionCard" type="PanelContainer" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Column" type="VBoxContainer" parent="Body/DistributionSideScroll/DistributionSideColumn/DistributionCard"]
+layout_mode = 2
+
+[node name="DistributionHeading" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn/DistributionCard/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.distribution.heading"
+
+[node name="DistributionCountsLabel" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn/DistributionCard/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_label")
+
+[node name="SecretWarningLabel" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn/DistributionCard/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.distribution.secret_warning"
+
+[node name="DistributionInvalidatedLabel" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn/DistributionCard/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
+[node name="ModeRow" type="HBoxContainer" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+layout_mode = 2
+
+[node name="ModeRandomButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn/ModeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.setup.distribution.mode.random"
+size_flags_horizontal = 3
+kind = 1
+
+[node name="ModeManualButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn/ModeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.setup.distribution.mode.manual"
+size_flags_horizontal = 3
+kind = 1
+
+[node name="ModeStateLabel" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+
+[node name="DistributeButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.setup.distribution.distribute"
+kind = 1
+
+[node name="ReshuffleButton" type="Button" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.setup.distribution.reshuffle"
+kind = 1
+
+[node name="SeedLabel" type="Label" parent="Body/DistributionSideScroll/DistributionSideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+
+[node name="ListColumn" type="VBoxContainer" parent="Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ListHeader" type="HBoxContainer" parent="Body/ListColumn"]
+layout_mode = 2
+
+[node name="ListHeading" type="Label" parent="Body/ListColumn/ListHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.distribution.list_heading"
+
+[node name="RevealButton" type="Button" parent="Body/ListColumn/ListHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.distribution.reveal"
+kind = 1
+wrap = false
+
+[node name="RemainingCountLabel" type="Label" parent="Body/ListColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+
+[node name="DistributionSummary" type="PanelContainer" parent="Body/ListColumn"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"SummaryPanel"
+
+[node name="Column" type="VBoxContainer" parent="Body/ListColumn/DistributionSummary"]
+layout_mode = 2
+
+[node name="SummaryHeading" type="Label" parent="Body/ListColumn/DistributionSummary/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.distribution.summary.heading"
+
+[node name="SummaryBody" type="Label" parent="Body/ListColumn/DistributionSummary/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_label")
+
+[node name="SummaryNext" type="Label" parent="Body/ListColumn/DistributionSummary/Column"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.distribution.summary.next"
+
+[node name="AssignmentPanel" type="PanelContainer" parent="Body/ListColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ListPanel"
+
+[node name="Column" type="VBoxContainer" parent="Body/ListColumn/AssignmentPanel"]
+layout_mode = 2
+
+[node name="SecretHeading" type="Label" parent="Body/ListColumn/AssignmentPanel/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.distribution.secret_heading"
+
+[node name="RemainingPoolLabel" type="Label" parent="Body/ListColumn/AssignmentPanel/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+
+[node name="AssignmentScroll" type="ScrollContainer" parent="Body/ListColumn/AssignmentPanel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AssignmentList" type="VBoxContainer" parent="Body/ListColumn/AssignmentPanel/Column/AssignmentScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Footer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="EditRolesButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.distribution.edit_roles"
+kind = 1
+wrap = false
+
+[node name="DistributionStatusLabel" type="Label" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+vertical_alignment = 1
+script = ExtResource("3_label")
+
+[node name="ConfirmDistributionButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.setup.distribution.confirm"
+kind = 0
+wrap = false

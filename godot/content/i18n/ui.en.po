@@ -243,7 +243,7 @@ msgid "ui.setup.confirmed.heading"
 msgstr "Names step complete"
 
 msgid "ui.setup.confirmed.body"
-msgstr "The player list is confirmed. Role selection follows in a later step. Any change removes the confirmation again."
+msgstr "The player list is confirmed. Role selection comes next. Any change removes the confirmation again."
 
 msgid "ui.setup.restart"
 msgstr "Start over"
@@ -349,3 +349,447 @@ msgstr "All {count} names will be deleted. Numbering starts again at 1."
 
 msgid "ui.setup.dialog.restart.confirm"
 msgstr "Delete all"
+
+msgid "ui.setup.title.roles"
+msgstr "New game · Roles"
+
+msgid "ui.setup.title.distribution"
+msgstr "New game · Distribution"
+
+msgid "ui.setup.wizard.progress"
+msgstr "Step {current} of {total}: {name}"
+
+msgid "ui.setup.wizard.step.players"
+msgstr "Players"
+
+msgid "ui.setup.wizard.step.roles"
+msgstr "Roles"
+
+msgid "ui.setup.wizard.step.distribution"
+msgstr "Distribution"
+
+msgid "ui.setup.wizard.chip"
+msgstr "{number}. {name} · {state}"
+
+msgid "ui.setup.wizard.state.done"
+msgstr "done"
+
+msgid "ui.setup.wizard.state.open"
+msgstr "open"
+
+msgid "ui.setup.wizard.state.invalid"
+msgstr "check again"
+
+msgid "ui.setup.wizard.state.current"
+msgstr "current"
+
+msgid "ui.setup.to_roles"
+msgstr "Continue to roles"
+
+msgid "ui.faction.village"
+msgstr "Village"
+
+msgid "ui.faction.wolves"
+msgstr "Werewolves"
+
+msgid "ui.faction.solo"
+msgstr "Solo"
+
+msgid "ui.role.dorfbewohner.name"
+msgstr "Villager"
+
+msgid "ui.role.dorfbewohner.short"
+msgstr "No ability. Helps the village find the werewolves."
+
+msgid "ui.role.werwolf.name"
+msgstr "Werewolf"
+
+msgid "ui.role.werwolf.short"
+msgstr "Chooses a victim with the pack at night."
+
+msgid "ui.role.schutzengel.name"
+msgstr "Guardian Angel"
+
+msgid "ui.role.schutzengel.short"
+msgstr "Protects another person from the wolf attack at night."
+
+msgid "ui.role.waldhexe.name"
+msgstr "Witch of the Woods"
+
+msgid "ui.role.waldhexe.short"
+msgstr "Has one healing potion and one poison potion."
+
+msgid "ui.role.das_orakel.name"
+msgstr "The Oracle"
+
+msgid "ui.role.das_orakel.short"
+msgstr "Checks another person at night."
+
+msgid "ui.role.trugbilderwolf.name"
+msgstr "Decoy Wolf"
+
+msgid "ui.role.trugbilderwolf.short"
+msgstr "Pack wolf that shows a decoy role when checked."
+
+msgid "ui.role.sensentraeger.name"
+msgstr "Reaper"
+
+msgid "ui.role.sensentraeger.short"
+msgstr "May curse a living person upon death."
+
+msgid "ui.role.wolfskind.name"
+msgstr "Wolf Child"
+
+msgid "ui.role.wolfskind.short"
+msgstr "Picks a role model and turns into a wolf when it dies."
+
+msgid "ui.role.lehrling.name"
+msgstr "Apprentice"
+
+msgid "ui.role.lehrling.short"
+msgstr "Picks a master and inherits their role when they die."
+
+msgid "ui.role.manipulator.name"
+msgstr "Manipulator"
+
+msgid "ui.role.manipulator.short"
+msgstr "Wins alone with exactly three alive, dies when nominated."
+
+msgid "ui.role.spiegelwolf.name"
+msgstr "Mirror Wolf"
+
+msgid "ui.role.spiegelwolf.short"
+msgstr "Pack wolf that once turns an execution onto the nominator."
+
+msgid "ui.setup.roles.heading"
+msgstr "Choose roles"
+
+msgid "ui.setup.roles.hint"
+msgstr "Pick exactly as many roles as there are players."
+
+msgid "ui.setup.roles.selected"
+msgstr "{count} of {persons} roles chosen"
+
+msgid "ui.setup.roles.free"
+msgstr "{count} still open"
+
+msgid "ui.setup.roles.too_many"
+msgstr "{count} too many"
+
+msgid "ui.setup.roles.exact"
+msgstr "Exact match"
+
+msgid "ui.setup.roles.factions"
+msgstr "Village {village} · Werewolves {wolves} · Solo {solo}"
+
+msgid "ui.setup.roles.issues"
+msgstr "Not valid yet: {issues}"
+
+msgid "ui.setup.roles.issue.too_few_roles"
+msgstr "too few roles"
+
+msgid "ui.setup.roles.issue.too_many_roles"
+msgstr "more roles than players"
+
+msgid "ui.setup.roles.issue.missing_village"
+msgstr "no village role"
+
+msgid "ui.setup.roles.issue.missing_wolf"
+msgstr "no wolf role"
+
+msgid "ui.setup.roles.issue.missing_solo"
+msgstr "no solo role"
+
+msgid "ui.setup.roles.issue.above_maximum"
+msgstr "a role exceeds its maximum"
+
+msgid "ui.setup.roles.issue.negative_count"
+msgstr "negative count"
+
+msgid "ui.setup.roles.issue.unknown_role"
+msgstr "unknown role"
+
+msgid "ui.setup.roles.suggest"
+msgstr "Use suggestion"
+
+msgid "ui.setup.roles.suggest_hint"
+msgstr "The suggestion is a starting point, not a guaranteed fair setup."
+
+msgid "ui.setup.roles.is_suggestion"
+msgstr "Selection matches the suggestion."
+
+msgid "ui.setup.roles.reset"
+msgstr "Reset selection"
+
+msgid "ui.setup.roles.confirm"
+msgstr "Confirm roles"
+
+msgid "ui.setup.roles.back"
+msgstr "Back to players"
+
+msgid "ui.setup.roles.decrease"
+msgstr "−"
+
+msgid "ui.setup.roles.increase"
+msgstr "+"
+
+msgid "ui.setup.roles.limit"
+msgstr "Maximum reached"
+
+msgid "ui.setup.roles.status.invalid"
+msgstr "Role selection not valid yet."
+
+msgid "ui.setup.roles.status.ready"
+msgstr "Ready to confirm."
+
+msgid "ui.setup.roles.status.confirmed"
+msgstr "Roles confirmed."
+
+msgid "ui.setup.roles.invalidated.person_count_changed"
+msgstr "The number of players changed. Please check and confirm the roles again."
+
+msgid "ui.setup.roles.invalidated.roles_changed"
+msgstr "Role selection changed. Please confirm again."
+
+msgid "ui.setup.roles.toast.confirmed"
+msgstr "Roles confirmed"
+
+msgid "ui.setup.error.players_not_confirmed"
+msgstr "Please confirm the player list first."
+
+msgid "ui.setup.error.roles_not_confirmed"
+msgstr "Please confirm the roles first."
+
+msgid "ui.setup.error.roles_invalid"
+msgstr "The role selection is not valid yet."
+
+msgid "ui.setup.error.above_maximum"
+msgstr "No more copies of this role are possible."
+
+msgid "ui.setup.dialog.suggest.title"
+msgstr "Use suggestion?"
+
+msgid "ui.setup.dialog.suggest.message"
+msgstr "Your selection ({count} roles) will be replaced by the suggestion for {persons} players."
+
+msgid "ui.setup.dialog.suggest.confirm"
+msgstr "Use suggestion"
+
+msgid "ui.setup.dialog.reset_roles.title"
+msgstr "Reset selection?"
+
+msgid "ui.setup.dialog.reset_roles.message"
+msgstr "All role counts will be set to 0."
+
+msgid "ui.setup.dialog.reset_roles.confirm"
+msgstr "Reset"
+
+msgid "ui.setup.distribution.edit_roles"
+msgstr "Edit roles"
+
+msgid "ui.setup.distribution.heading"
+msgstr "Distribute roles"
+
+msgid "ui.setup.distribution.counts"
+msgstr "{persons} players · {roles} roles"
+
+msgid "ui.setup.distribution.secret_warning"
+msgstr "Roles are secret: keep this screen away from players."
+
+msgid "ui.setup.distribution.mode.heading"
+msgstr "Distribution mode"
+
+msgid "ui.setup.distribution.mode.random"
+msgstr "Random"
+
+msgid "ui.setup.distribution.mode.manual"
+msgstr "Manual"
+
+msgid "ui.setup.distribution.mode.active"
+msgstr "Active: {mode}. {hint}"
+
+msgid "ui.setup.distribution.mode.random_hint"
+msgstr "Reproducible from a stored seed."
+
+msgid "ui.setup.distribution.mode.manual_hint"
+msgstr "You assign a role to each player yourself."
+
+msgid "ui.setup.distribution.distribute"
+msgstr "Distribute randomly"
+
+msgid "ui.setup.distribution.reshuffle"
+msgstr "Reshuffle"
+
+msgid "ui.setup.distribution.confirm"
+msgstr "Confirm distribution"
+
+msgid "ui.setup.distribution.seed"
+msgstr "Seed {seed} · shuffle {count}"
+
+msgid "ui.setup.distribution.seed_none"
+msgstr "Seed: none yet"
+
+msgid "ui.setup.distribution.list_heading"
+msgstr "Players"
+
+msgid "ui.setup.distribution.reveal"
+msgstr "Show secret assignment"
+
+msgid "ui.setup.distribution.hide"
+msgstr "Hide assignment"
+
+msgid "ui.setup.distribution.secret_heading"
+msgstr "Secret · game master only"
+
+msgid "ui.setup.distribution.assigned"
+msgstr "assigned"
+
+msgid "ui.setup.distribution.unassigned"
+msgstr "not assigned"
+
+msgid "ui.setup.distribution.appearance"
+msgstr "Decoy role: {role}"
+
+msgid "ui.setup.distribution.choose"
+msgstr "Assign role"
+
+msgid "ui.setup.distribution.change"
+msgstr "Change role"
+
+msgid "ui.setup.distribution.remaining_count"
+msgstr "{count} roles left"
+
+msgid "ui.setup.distribution.remaining_none"
+msgstr "All roles assigned"
+
+msgid "ui.setup.distribution.remaining_pool"
+msgstr "Remaining roles: {roles}"
+
+msgid "ui.setup.distribution.remaining_item"
+msgstr "{name} ×{count}"
+
+msgid "ui.setup.distribution.status.none"
+msgstr "Not distributed yet."
+
+msgid "ui.setup.distribution.status.partial"
+msgstr "Distribution incomplete: {assigned} of {persons} assigned."
+
+msgid "ui.setup.distribution.status.complete"
+msgstr "All assigned. Ready to confirm."
+
+msgid "ui.setup.distribution.status.confirmed"
+msgstr "Distribution confirmed."
+
+msgid "ui.setup.distribution.invalidated.person_count_changed"
+msgstr "Players changed: the previous distribution was discarded."
+
+msgid "ui.setup.distribution.invalidated.roles_changed"
+msgstr "Roles changed: the previous distribution was discarded."
+
+msgid "ui.setup.distribution.summary.heading"
+msgstr "Ready for seating"
+
+msgid "ui.setup.distribution.summary.body"
+msgstr "{persons} players · Village {village} · Werewolves {wolves} · Solo {solo} · Mode {mode} · Seed {seed}"
+
+msgid "ui.setup.distribution.summary.next"
+msgstr "Seating follows in a later step."
+
+msgid "ui.setup.distribution.toast.distributed"
+msgstr "Roles distributed"
+
+msgid "ui.setup.distribution.toast.reshuffled"
+msgstr "Reshuffled"
+
+msgid "ui.setup.distribution.toast.confirmed"
+msgstr "Distribution confirmed"
+
+msgid "ui.setup.distribution.picker.title"
+msgstr "Role for no. {number}"
+
+msgid "ui.setup.distribution.picker.message"
+msgstr "{name} · Pick a role that is still free."
+
+msgid "ui.setup.distribution.picker.option"
+msgstr "{name} · {count} free"
+
+msgid "ui.setup.distribution.picker.unassign"
+msgstr "Remove assignment"
+
+msgid "ui.setup.distribution.picker.swap_heading"
+msgstr "Swap role with"
+
+msgid "ui.setup.distribution.picker.swap_option"
+msgstr "No. {number} · {name}"
+
+msgid "ui.setup.dialog.mode.title"
+msgstr "Change distribution mode?"
+
+msgid "ui.setup.dialog.mode.message"
+msgstr "The current assignment will be discarded."
+
+msgid "ui.setup.dialog.mode.confirm"
+msgstr "Change mode"
+
+msgid "ui.setup.error.distribution_incomplete"
+msgstr "The distribution is not complete yet."
+
+msgid "ui.setup.error.no_copy_available"
+msgstr "No copy of this role is left."
+
+msgid "ui.setup.roles.issue.missing_appearance"
+msgstr "decoy role missing"
+
+msgid "ui.setup.decoy.status"
+msgstr "Decoy roles set: {configured} of {total}"
+
+msgid "ui.setup.decoy.reveal"
+msgstr "Set decoy roles"
+
+msgid "ui.setup.decoy.hide"
+msgstr "Hide decoy roles"
+
+msgid "ui.setup.decoy.hint"
+msgstr "Choose for each copy which role it shows when checked. Any role that does not count as a wolf is allowed."
+
+msgid "ui.setup.decoy.copy"
+msgstr "Decoy Wolf {number}"
+
+msgid "ui.setup.decoy.missing"
+msgstr "Decoy role missing"
+
+msgid "ui.setup.decoy.chosen"
+msgstr "Decoy role: {role}"
+
+msgid "ui.setup.decoy.choose"
+msgstr "Choose"
+
+msgid "ui.setup.decoy.change"
+msgstr "Change"
+
+msgid "ui.setup.decoy.remove"
+msgstr "Remove"
+
+msgid "ui.setup.decoy.picker.title"
+msgstr "Choose decoy role"
+
+msgid "ui.setup.decoy.picker.message"
+msgstr "Decoy Wolf {number}: which role does this copy show when checked?"
+
+msgid "ui.setup.decoy.picker.current"
+msgstr "{name} · current"
+
+msgid "ui.setup.dialog.remove_copy.title"
+msgstr "Remove copy?"
+
+msgid "ui.setup.dialog.remove_copy.message"
+msgstr "{copy} is removed together with its chosen decoy role. The other copies stay unchanged."
+
+msgid "ui.setup.dialog.remove_copy.confirm"
+msgstr "Remove copy"
+
+msgid "ui.setup.distribution.picker.copy_option"
+msgstr "{copy} · decoy role: {appearance}"
+
+msgid "ui.setup.distribution.summary.no_seed"
+msgstr "none"

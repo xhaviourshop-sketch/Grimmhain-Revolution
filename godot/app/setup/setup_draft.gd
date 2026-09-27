@@ -1,14 +1,24 @@
 class_name SetupDraft
 extends RefCounted
-## Setup-Entwurf des Namensschritts: Personen in Listenreihenfolge, nächster ID-Zähler,
-## Bearbeitungsstatus und Bestätigung. Das Validierungsergebnis wird bei Bedarf aus der
-## Personenliste berechnet (`validation()`), nicht getrennt gespeichert.
-## Nur PlayerSetup verändert den Entwurf.
+## Setup-Entwurf „Neue Partie“: Personen in Listenreihenfolge, nächster ID-Zähler,
+## Bearbeitungsstatus und Bestätigung des Namensschritts, aktueller Wizard-Schritt sowie
+## Rollenwahl (`roles`) und Rollenverteilung (`distribution`). Das Validierungsergebnis wird
+## bei Bedarf aus der Personenliste berechnet (`validation()`), nicht getrennt gespeichert.
+## Nur PlayerSetup und RoleSetup verändern den Entwurf.
+
+const STEP_PLAYERS := &"players"
+const STEP_ROLES := &"roles"
+const STEP_DISTRIBUTION := &"distribution"
+const STEPS: Array[StringName] = [STEP_PLAYERS, STEP_ROLES, STEP_DISTRIBUTION]
 
 var persons: Array[SetupPerson] = []
 var next_person_id: int = 1       ## nächste zu vergebende ID; sinkt nie (außer beim Verwerfen)
 var confirmed: bool = false       ## Namensschritt bestätigt
 var has_unconfirmed_changes: bool = false  ## Änderungen seit der letzten Bestätigung bzw. dem Neubeginn
+var players_invalidated: bool = false  ## Personenliste nach einer Bestätigung geändert
+var current_step: StringName = STEP_PLAYERS
+var roles: RolePoolDraft = RolePoolDraft.new()
+var distribution: DistributionDraft = DistributionDraft.new()
 
 
 func index_of(person_id: int) -> int:
@@ -52,3 +62,11 @@ func validation() -> Dictionary:
 		"missing": maxi(0, PersonNameRules.MIN_PERSONS - count),
 		"at_maximum": count >= PersonNameRules.MAX_PERSONS,
 	}
+
+
+## Personen-IDs in Listenreihenfolge.
+func person_ids() -> Array[int]:
+	var out: Array[int] = []
+	for p: SetupPerson in persons:
+		out.append(p.person_id)
+	return out

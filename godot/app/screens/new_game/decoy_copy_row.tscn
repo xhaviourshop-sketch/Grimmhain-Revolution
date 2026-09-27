@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/new_game/decoy_copy_row.gd" id="1_row"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+
+[node name="DecoyCopyRow" type="PanelContainer"]
+theme_type_variation = &"PersonRowPanel"
+script = ExtResource("1_row")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Info" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="DecoyCopyLabel" type="Label" parent="Row/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_label")
+wrap = false
+
+[node name="DecoyAppearanceLabel" type="Label" parent="Row/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_label")
+
+[node name="ChooseAppearanceButton" type="Button" parent="Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.decoy.choose"
+kind = 3
+wrap = false
+
+[node name="RemoveCopyButton" type="Button" parent="Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.setup.decoy.remove"
+kind = 3
+wrap = false

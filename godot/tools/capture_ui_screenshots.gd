@@ -26,7 +26,27 @@ const SHOTS := [
 	["player-setup", "06-edit-mode-1280x800-en.png", Vector2i(1280, 800), "en", &"new_game", "_prepare_edit"],
 	["player-setup", "07-remove-dialog-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_remove"],
 	["player-setup", "08-confirmed-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_confirmed"],
+	["role-setup", "01-roles-suggestion-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_roles_suggestion"],
+	["role-setup", "02-roles-too-few-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_roles_too_few"],
+	["role-setup", "03-roles-valid-manual-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_roles_valid"],
+	["role-setup", "04-roles-1280x800-en.png", Vector2i(1280, 800), "en", &"new_game", "_prepare_roles_suggestion"],
+	["role-setup", "05-suggestion-overwrite-dialog-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_roles_overwrite"],
+	["role-setup", "06-distribution-mode-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_distribution_mode"],
+	["role-setup", "07-random-hidden-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_random_hidden"],
+	["role-setup", "08-secret-open-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_secret_open"],
+	["role-setup", "09-manual-partial-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_manual_partial"],
+	["role-setup", "10-manual-picker-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_manual_picker"],
+	["role-setup", "11-manual-complete-1280x800-en.png", Vector2i(1280, 800), "en", &"new_game", "_prepare_manual_complete"],
+	["role-setup", "12-confirmed-ready-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_distribution_confirmed"],
+	["role-setup", "13-decoy-wolf-secret-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_decoy_secret"],
+	["role-setup", "14-decoy-missing-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_decoy_missing"],
+	["role-setup", "15-decoy-chosen-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_decoy_chosen"],
+	["role-setup", "16-decoy-two-copies-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_decoy_two"],
+	["role-setup", "17-decoy-manual-picker-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_decoy_manual_picker"],
+	["role-setup", "18-decoy-random-closed-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_decoy_random_closed"],
+	["role-setup", "19-decoy-random-open-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_decoy_random_open"],
 ]
+const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
 
 
 func _initialize() -> void:
@@ -152,3 +172,207 @@ func _prepare_confirmed(shell: AppShell) -> void:
 	await _add_names(shell, NAMES.slice(0, 8))
 	(_node(shell, "ConfirmPlayersButton") as Button).pressed.emit()
 	await process_frame
+
+
+# --- Vorbereitungen Rollen-Setup ---------------------------------------------------------------------
+
+func _press(shell: AppShell, node_name: String) -> void:
+	(_node(shell, node_name) as BaseButton).pressed.emit()
+	for i: int in 3:
+		await process_frame
+
+
+## Personen anlegen, bestätigen und per Button zum Rollenschritt.
+func _to_roles(shell: AppShell, count: int) -> void:
+	shell.get_app_context().setup.seed_source = func() -> int: return SCREENSHOT_SEED
+	await _add_names(shell, NAMES.slice(0, count))
+	await _press(shell, "ConfirmPlayersButton")
+	await _press(shell, "ToRolesButton")
+	shell.get_toast().hide_message()  # Meldung des vorigen Schritts nicht über den neuen legen
+
+
+func _set_counts(shell: AppShell, counts: Dictionary) -> void:
+	for role: Variant in counts:
+		shell.get_app_context().setup.set_role_count(StringName(str(role)), int(counts[role]))
+	await process_frame
+
+
+## Wie `_to_roles`, dann Pool (leer = Vorschlag) bestätigen und zur Verteilung.
+func _to_distribution(shell: AppShell, count: int, counts: Dictionary = {}) -> void:
+	await _to_roles(shell, count)
+	if counts.is_empty():
+		await _press(shell, "SuggestButton")
+	else:
+		await _set_counts(shell, counts)
+	await _choose_decoys(shell, [&"waldhexe", &"das-orakel"])
+	await _press(shell, "ConfirmRolesButton")
+	shell.get_toast().hide_message()
+
+
+## DR-08: Scheinrollen der Trugbilderwolf-Kopien ausdrücklich wählen (der Reihe nach).
+func _choose_decoys(shell: AppShell, roles: Array) -> void:
+	var setup := shell.get_app_context().setup
+	var decoys: Array = setup.view()["roles"]["decoys"]
+	for i: int in mini(decoys.size(), roles.size()):
+		setup.set_decoy_appearance(int((decoys[i] as Dictionary)["copy_id"]), roles[i])
+	await process_frame
+
+
+## Scheinrollen-Bereich öffnen und die Rollenliste dorthin scrollen.
+func _open_decoys(shell: AppShell) -> void:
+	await _press(shell, "DecoyRevealButton")
+	for i: int in 3:
+		await process_frame
+	var scroll := _node(shell, "RoleScroll") as ScrollContainer
+	var section := _node(shell, "DecoySection") as Control
+	scroll.scroll_vertical = int(section.position.y + section.size.y - scroll.size.y + 16.0)
+
+
+func _assignment_rows(shell: AppShell) -> Array[AssignmentRow]:
+	var out: Array[AssignmentRow] = []
+	for child: Node in _node(shell, "AssignmentList").get_children():
+		if child is AssignmentRow:
+			out.append(child as AssignmentRow)
+	return out
+
+
+## Manuell: die ersten `count` Personen der Reihe nach mit dem Pool belegen.
+func _assign_first(shell: AppShell, count: int) -> void:
+	var setup := shell.get_app_context().setup
+	var view := setup.view()
+	var pool: Array = view["roles"]["pool"]
+	var persons: Array = view["persons"]
+	var order := [9, 0, 5, 2, 7, 1, 11, 3, 10, 4, 8, 6]  # gemischte Poolpositionen, damit es nicht sortiert aussieht
+	for i: int in count:
+		setup.assign_role(int((persons[i] as Dictionary)["person_id"]), StringName(str(pool[order[i] % pool.size()])))
+	await process_frame
+
+
+func _prepare_roles_suggestion(shell: AppShell) -> void:
+	await _to_roles(shell, 12)
+	await _press(shell, "SuggestButton")
+
+
+func _prepare_roles_too_few(shell: AppShell) -> void:
+	await _to_roles(shell, 12)
+	await _set_counts(shell, {"werwolf": 2, "dorfbewohner": 6})
+
+
+func _prepare_roles_valid(shell: AppShell) -> void:
+	await _to_roles(shell, 10)
+	await _set_counts(shell, {"werwolf": 1, "trugbilderwolf": 1, "schutzengel": 1, "das-orakel": 1, "manipulator": 1, "dorfbewohner": 5})
+	await _choose_decoys(shell, [&"waldhexe"])
+
+
+func _prepare_roles_overwrite(shell: AppShell) -> void:
+	await _to_roles(shell, 12)
+	await _set_counts(shell, {"werwolf": 2, "dorfbewohner": 3})
+	await _press(shell, "SuggestButton")
+
+
+func _prepare_distribution_mode(shell: AppShell) -> void:
+	await _to_distribution(shell, 12)
+
+
+func _prepare_random_hidden(shell: AppShell) -> void:
+	await _to_distribution(shell, 12)
+	await _press(shell, "DistributeButton")
+
+
+func _prepare_secret_open(shell: AppShell) -> void:
+	await _to_distribution(shell, 12)
+	await _press(shell, "DistributeButton")
+	await _press(shell, "RevealButton")
+
+
+func _prepare_manual_partial(shell: AppShell) -> void:
+	await _to_distribution(shell, 12)
+	await _press(shell, "ModeManualButton")
+	await _assign_first(shell, 5)
+	await _press(shell, "RevealButton")
+
+
+func _prepare_manual_picker(shell: AppShell) -> void:
+	await _to_distribution(shell, 12)
+	await _press(shell, "ModeManualButton")
+	await _assign_first(shell, 5)
+	var choose := _assignment_rows(shell)[1].choose_button()
+	choose.grab_focus()
+	choose.pressed.emit()
+	await process_frame
+
+
+func _prepare_manual_complete(shell: AppShell) -> void:
+	await _to_distribution(shell, 12)
+	await _press(shell, "ModeManualButton")
+	await _assign_first(shell, 12)
+	await _press(shell, "RevealButton")
+
+
+func _prepare_distribution_confirmed(shell: AppShell) -> void:
+	await _to_distribution(shell, 12)
+	await _press(shell, "DistributeButton")
+	await _press(shell, "ConfirmDistributionButton")
+
+
+func _prepare_decoy_secret(shell: AppShell) -> void:
+	await _to_distribution(shell, 10, {"werwolf": 1, "trugbilderwolf": 2, "manipulator": 1, "schutzengel": 1, "dorfbewohner": 5})
+	await _press(shell, "DistributeButton")
+	await _press(shell, "RevealButton")
+	shell.get_toast().hide_message()
+	for i: int in 3:
+		await process_frame
+	var entries: Array = shell.get_app_context().setup.view()["distribution"]["assignment"]
+	var rows := _assignment_rows(shell)
+	for i: int in entries.size():
+		if str((entries[i] as Dictionary)["role"]) == "trugbilderwolf":
+			(_node(shell, "AssignmentScroll") as ScrollContainer).ensure_control_visible(rows[mini(i + 1, rows.size() - 1)])
+			break
+
+
+# --- Vorbereitungen Trugbilderwolf-Scheinrolle (DR-08) --------------------------------------------------
+
+const DECOY_COUNTS := {"werwolf": 1, "trugbilderwolf": 2, "manipulator": 1, "schutzengel": 1, "dorfbewohner": 5}
+
+
+func _prepare_decoy_missing(shell: AppShell) -> void:
+	await _to_roles(shell, 10)
+	await _set_counts(shell, DECOY_COUNTS)
+	await _choose_decoys(shell, [&"waldhexe"])
+	await _open_decoys(shell)
+
+
+func _prepare_decoy_chosen(shell: AppShell) -> void:
+	await _to_roles(shell, 9)
+	await _set_counts(shell, {"werwolf": 1, "trugbilderwolf": 1, "manipulator": 1, "schutzengel": 1, "dorfbewohner": 5})
+	await _choose_decoys(shell, [&"lehrling"])
+	await _open_decoys(shell)
+
+
+func _prepare_decoy_two(shell: AppShell) -> void:
+	await _to_roles(shell, 10)
+	await _set_counts(shell, DECOY_COUNTS)
+	await _choose_decoys(shell, [&"waldhexe", &"das-orakel"])
+	await _open_decoys(shell)
+
+
+func _prepare_decoy_manual_picker(shell: AppShell) -> void:
+	await _to_distribution(shell, 10, DECOY_COUNTS)
+	await _press(shell, "ModeManualButton")
+	var choose := _assignment_rows(shell)[0].choose_button()
+	choose.grab_focus()
+	choose.pressed.emit()
+	await process_frame
+
+
+func _prepare_decoy_random_closed(shell: AppShell) -> void:
+	await _to_distribution(shell, 10, DECOY_COUNTS)
+	await _press(shell, "DistributeButton")
+	shell.get_toast().hide_message()
+
+
+func _prepare_decoy_random_open(shell: AppShell) -> void:
+	await _to_distribution(shell, 10, DECOY_COUNTS)
+	await _press(shell, "DistributeButton")
+	await _press(shell, "RevealButton")
+	shell.get_toast().hide_message()

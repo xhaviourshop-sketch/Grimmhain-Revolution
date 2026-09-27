@@ -1,12 +1,18 @@
 class_name PlayerSetup
 extends RefCounted
-## Anwendungsschicht des Namensschritts „Neue Partie“: einzige Wahrheit über Personen, IDs
-## und Bestätigung. Die UI stellt nur dar und ruft die Operationen auf. Jede Operation ist
-## atomar: bei Ablehnung bleiben Personen, ID-Zähler und Status unverändert.
-## Erzeugt keinen GameState, keinen Befehl und keine Rollen; das Ergebnis bleibt ein Entwurf
-## im Speicher (AppContext), bis ein späterer Schritt daraus StartGame baut.
+## Anwendungsschicht des Setups „Neue Partie“ (Spieler → Rollen → Verteilung): einzige
+## Wahrheit über Personen, IDs, Rollenwahl, Verteilung, Wizard-Schritt und Bestätigungen.
+## Die UI stellt nur dar und ruft die Operationen auf. Jede Operation ist atomar: bei
+## Ablehnung bleibt der Entwurf unverändert. Rollen- und Verteilungslogik liegt in
+## RoleSetup, RolePoolDraft, DistributionDraft und RoleDistribution.
+## Erzeugt keinen GameState und keinen Befehl; das Ergebnis bleibt ein Entwurf im Speicher
+## (AppContext), bis ein späterer Schritt daraus den Spielaufbau baut.
 
-signal changed(view: Dictionary)  ## nach jeder angenommenen Änderung (auch Bestätigen, Verwerfen)
+signal changed(view: Dictionary)  ## nach jeder angenommenen Änderung (auch Schrittwechsel, Verwerfen)
+
+## Quelle des ersten Setup-Seeds (nur beim ersten bewussten Verteilen gerufen). Standard:
+## AppPlatform.initial_seed() (Systemzeit und Laufzeitzähler); Tests setzen einen festen Wert.
+var seed_source: Callable = func() -> int: return AppPlatform.initial_seed()
 
 var _draft: SetupDraft = SetupDraft.new()
 
@@ -24,7 +30,7 @@ func add_person(raw_name: String) -> SetupResult:
 	if _draft.has_duplicate_of(name):
 		warnings.append(&"duplicate_name")
 	var id := _create(name)
-	return _commit([id], warnings)
+	return _commit([id], warnings, true)
 
 
 ## Mehrfachimport: alle Einträge oder keiner.
@@ -50,7 +56,7 @@ func import_names(raw_text: String) -> SetupResult:
 		if _draft.has_duplicate_of(name) and not warnings.has(&"duplicate_name"):
 			warnings.append(&"duplicate_name")
 		ids.append(_create(name))
-	var result := _commit(ids, warnings)
+	var result := _commit(ids, warnings, true)
 	result.details = {"imported": ids.size()}
 	return result
 
@@ -79,7 +85,7 @@ func remove_person(person_id: int) -> SetupResult:
 		return SetupResult.failure(&"unknown_person", view(), {"person_id": person_id})
 	_draft.persons.remove_at(index)
 	var ids: Array[int] = [person_id]
-	return _commit(ids, [])
+	return _commit(ids, [], true)
 
 
 ## Bestätigt den Namensschritt (6 bis 24 Personen; Dubletten erlaubt).
@@ -91,6 +97,7 @@ func confirm() -> SetupResult:
 		return SetupResult.success(view())
 	_draft.confirmed = true
 	_draft.has_unconfirmed_changes = false
+	_draft.players_invalidated = false
 	var v := view()
 	changed.emit(v)
 	return SetupResult.success(v)
@@ -102,9 +109,108 @@ func reset() -> void:
 	changed.emit(view())
 
 
-## Verlassen braucht eine Rückfrage: unbestätigte Änderungen an einer nicht leeren Liste.
+## Verlassen braucht eine Rückfrage: unbestätigte Änderungen an einer nicht leeren Liste,
+## eine unbestätigte Rollenwahl oder eine unbestätigte Zuordnung.
 func needs_leave_confirmation() -> bool:
-	return _draft.has_unconfirmed_changes and not _draft.persons.is_empty()
+	if _draft.persons.is_empty():
+		return false
+	var open_roles := _draft.roles.total() > 0 and not _draft.roles.confirmed
+	var open_distribution := _draft.distribution.has_assignment() and not _draft.distribution.confirmed
+	return _draft.has_unconfirmed_changes or open_roles or open_distribution
+
+
+# --- Wizard -----------------------------------------------------------------------------------------
+
+## Wechselt den Setup-Schritt, nur wenn alle Vorbedingungen erfüllt sind. Kein Befehl, keine
+## Datenänderung; ein Doppelklick kann keinen Schritt überspringen.
+func go_to_step(step: StringName) -> SetupResult:
+	if not SetupDraft.STEPS.has(step):
+		return SetupResult.failure(&"unknown_step", view(), {"step": step})
+	var error := _step_block(step)
+	if error != &"":
+		return SetupResult.failure(error, view(), {"step": step})
+	if _draft.current_step != step:
+		_draft.current_step = step
+		changed.emit(view())
+	return SetupResult.success(view())
+
+
+# --- Rollenwahl -------------------------------------------------------------------------------------
+
+## Anzahl setzen. Eine konfigurierte Trugbilderwolf-Kopie fällt dabei nie stillschweigend weg:
+## dann `confirmation_required` mit `copy_id` und `number` der betroffenen Kopie.
+func set_role_count(role: StringName, count: int) -> SetupResult:
+	var current: int = _draft.roles.counts.get(role, 0)
+	var details := {"role": role, "count": count, "current": current}
+	var blocking := RoleSetup.copy_blocking_decrease(_draft, role)
+	if blocking != null:
+		details["copy_id"] = blocking.copy_id
+		details["number"] = _draft.roles.copy_number(blocking)
+	return _apply(RoleSetup.set_role_count(_draft, role, count), details)
+
+
+## Scheinrolle einer Trugbilderwolf-Kopie ausdrücklich festlegen (DR-08).
+func set_decoy_appearance(copy_id: int, appearance: StringName) -> SetupResult:
+	return _apply(RoleSetup.set_copy_appearance(_draft, copy_id, appearance), {"copy_id": copy_id, "appearance": appearance})
+
+
+## Eine bestimmte Kopie entfernen; übrige Kopien und ihre Scheinrollen bleiben.
+func remove_decoy_copy(copy_id: int) -> SetupResult:
+	return _apply(RoleSetup.remove_copy(_draft, copy_id), {"copy_id": copy_id})
+
+
+func change_role_count(role: StringName, delta: int) -> SetupResult:
+	if not SetupRoleCatalog.has_role(role):
+		return SetupResult.failure(&"unknown_role", view(), {"role": role})
+	return set_role_count(role, _draft.roles.counts.get(role, 0) + delta)
+
+
+func reset_roles() -> SetupResult:
+	return _apply(RoleSetup.reset_roles(_draft))
+
+
+## Übernimmt den Vorschlag. Eine abweichende Auswahl wird nur mit `force` überschrieben
+## (sonst `confirmation_required`, die UI fragt nach).
+func apply_suggestion(force: bool = false) -> SetupResult:
+	return _apply(RoleSetup.apply_suggestion(_draft, force))
+
+
+## Bestätigt einen gültigen Pool und wechselt zur Verteilung.
+func confirm_roles() -> SetupResult:
+	var issues := _draft.roles.issues(_draft.persons.size())
+	return _apply(RoleSetup.confirm_roles(_draft), {"issues": issues})
+
+
+# --- Verteilung -------------------------------------------------------------------------------------
+
+## Moduswechsel; eine bestehende Zuordnung wird nur mit `force` verworfen.
+func set_distribution_mode(mode: StringName, force: bool = false) -> SetupResult:
+	return _apply(RoleSetup.set_mode(_draft, mode, force), {"mode": mode})
+
+
+func distribute_randomly() -> SetupResult:
+	return _apply(RoleSetup.distribute_randomly(_draft, seed_source))
+
+
+func reshuffle() -> SetupResult:
+	return _apply(RoleSetup.reshuffle(_draft))
+
+
+## `unit`: Rollen-ID oder, bei Trugbilderwolf, der Schlüssel einer konkreten Kopie.
+func assign_role(person_id: int, unit: StringName) -> SetupResult:
+	return _apply(RoleSetup.assign_role(_draft, person_id, unit), {"person_id": person_id, "unit": unit})
+
+
+func unassign_role(person_id: int) -> SetupResult:
+	return _apply(RoleSetup.unassign_role(_draft, person_id), {"person_id": person_id})
+
+
+func swap_roles(first_id: int, second_id: int) -> SetupResult:
+	return _apply(RoleSetup.swap_roles(_draft, first_id, second_id), {"person_ids": [first_id, second_id]})
+
+
+func confirm_distribution() -> SetupResult:
+	return _apply(RoleSetup.confirm_distribution(_draft))
 
 
 # --- Sicht ------------------------------------------------------------------------------------------
@@ -131,6 +237,10 @@ func view() -> Dictionary:
 		"duplicate_count": dup.size(),
 		"next_person_id": _draft.next_person_id,
 		"validation": validation,
+		"step": String(_draft.current_step),
+		"steps": _steps_view(),
+		"roles": _roles_view(),
+		"distribution": SetupDistributionView.build(_draft),
 	}
 
 
@@ -143,9 +253,14 @@ func _create(name: String) -> int:
 	return id
 
 
-func _commit(ids: Array[int], warnings: Array[StringName]) -> SetupResult:
+func _commit(ids: Array[int], warnings: Array[StringName], count_changed: bool = false) -> SetupResult:
+	if _draft.confirmed:
+		_draft.players_invalidated = true
 	_draft.confirmed = false
 	_draft.has_unconfirmed_changes = true
+	if count_changed:
+		RoleSetup.persons_changed(_draft)
+	_clamp_step()
 	var v := view()
 	changed.emit(v)
 	return SetupResult.success(v, ids, warnings)
@@ -153,3 +268,56 @@ func _commit(ids: Array[int], warnings: Array[StringName]) -> SetupResult:
 
 func _name_details(name: String) -> Dictionary:
 	return {"name": name, "length": name.length(), "max": PersonNameRules.MAX_NAME_LENGTH}
+
+
+## Ergebnis einer RoleSetup-Operation: bei Erfolg Schritt prüfen und Änderung melden.
+func _apply(error: StringName, details: Dictionary = {}) -> SetupResult:
+	if error != &"":
+		return SetupResult.failure(error, view(), details)
+	_clamp_step()
+	var v := view()
+	changed.emit(v)
+	return SetupResult.success(v)
+
+
+## Grund, warum `step` nicht erreichbar ist (&"" = erreichbar).
+func _step_block(step: StringName) -> StringName:
+	if step == SetupDraft.STEP_PLAYERS:
+		return &""
+	if not _draft.confirmed:
+		return &"players_not_confirmed"
+	if step == SetupDraft.STEP_DISTRIBUTION and not _draft.roles.confirmed:
+		return &"roles_not_confirmed"
+	return &""
+
+
+## Fällt auf den letzten erreichbaren Schritt zurück, wenn eine Änderung den aktuellen sperrt.
+func _clamp_step() -> void:
+	while _step_block(_draft.current_step) != &"":
+		_draft.current_step = SetupDraft.STEPS[SetupDraft.STEPS.find(_draft.current_step) - 1]
+
+
+func _steps_view() -> Array:
+	var out: Array = []
+	var states := {
+		SetupDraft.STEP_PLAYERS: _state(_draft.confirmed, _draft.players_invalidated),
+		SetupDraft.STEP_ROLES: _state(_draft.roles.confirmed, _draft.roles.invalidated != &""),
+		SetupDraft.STEP_DISTRIBUTION: _state(_draft.distribution.confirmed, _draft.distribution.invalidated != &""),
+	}
+	for i: int in SetupDraft.STEPS.size():
+		var id := SetupDraft.STEPS[i]
+		out.append({"id": String(id), "number": i + 1, "state": states[id], "current": id == _draft.current_step, "reachable": _step_block(id) == &""})
+	return out
+
+
+static func _state(done: bool, invalid: bool) -> String:
+	if done:
+		return "done"
+	return "invalid" if invalid else "open"
+
+
+func _roles_view() -> Dictionary:
+	var v := _draft.roles.view(_draft.persons.size())
+	v["can_confirm"] = bool(v["valid"]) and _draft.confirmed
+	v["is_suggestion"] = RoleSetup.is_suggestion(_draft)
+	return v
