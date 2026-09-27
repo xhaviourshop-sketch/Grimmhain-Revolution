@@ -163,6 +163,8 @@ Auf dem noch nicht gemergten Branch `origin/claude/sleepy-babbage-u2o0i2` (Stand
 - `RolePresentation.ROLE_ORDER` legt die Reihenfolge in der Oberfläche fest; ohne Eintrag steht eine neue Rolle am Ende ihrer Gruppe.
 - Der Setup-Vorschlag setzt heute genau einen Manipulator als Einzelsiegrolle; ein Doppelspion wäre eine zweite wählbare Einzelsiegrolle.
 
+Historischer Stand: Diese Übergabe bezieht sich auf `7837809`. Dort war die Scheinrolle des Trugbilderwolfs noch vorbelegt; seit `fd25fff` (Branchstand `53a3c7d`) wählt sie ausdrücklich der Spielleiter (DR-08). Der Test auf „exakt elf produktive Rollen“ gilt unverändert.
+
 Keine dieser Dateien gehört zum Bereich von Grimmhain-2. Die Rollenumsetzung sollte deshalb erst nach Abstimmung mit Grimmhain-1 in den Katalog gehen.
 
 ### 3.8 Teststrategie

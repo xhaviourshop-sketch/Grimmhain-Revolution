@@ -7,7 +7,7 @@ Die vollständige Bestandsanalyse steht in `../godot-migration/04-rules-migratio
 - `candidate`: für eine Charge vorgeschlagen
 - `decision-needed`: Text, Code oder gewünschte Regel widersprechen sich
 - `approved`: Regeltext und Verhalten durch Product Owner bestätigt
-- `implemented`: Core-Verhalten vorhanden
+- `implemented`: Core-Verhalten vorhanden (reiner Regelkernstatus mit headless Tests; keine Aussage über vollständige Bedienbarkeit, eine echte Runde oder eine Tablet-Abnahme)
 - `verified`: Tests und echte Runde bestanden
 - `manual-guide`: App führt den Spielleiter, automatisiert die Regel aber nicht
 - `deferred`: nicht Teil des aktuellen Releases

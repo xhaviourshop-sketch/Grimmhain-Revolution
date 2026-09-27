@@ -25,7 +25,7 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 |---|---|---|
 | Regelkern implementiert | ja | `godot/core/rules/role_catalog.gd` und die in §3 genannten Regeldateien |
 | Verhalten durch automatisierte Tests belegt | ja, headless | `godot/tests/run_all.sh` am Basiscommit `4673b0b`: 351 Tests, 0 fehlgeschlagen; Rollentests unter `godot/tests/unit/` |
-| über die aktuelle Oberfläche bedienbar | **nein** | `main` enthält nur die Erfassung der Spielernamen (`docs/ui/player-setup.md`: „Rollen, Sitzordnung und `StartGame` folgen in späteren Arbeitspaketen“). Ein Rollen-Setup mit Verteilung existiert nur auf dem nicht gemergten Branch `claude/sleepy-babbage-u2o0i2` und erzeugt dort ausdrücklich kein `StartGame` |
+| über die aktuelle Oberfläche bedienbar | **nein** | `main` enthält nur die Erfassung der Spielernamen (`docs/ui/player-setup.md`: „Rollen, Sitzordnung und `StartGame` folgen in späteren Arbeitspaketen“). Ein Rollen-Setup mit Verteilung existiert nur auf dem nicht gemergten Branch `claude/sleepy-babbage-u2o0i2` und erzeugt dort ausdrücklich kein `StartGame`. Nachtrag 27.09.2026: im lokalen Integrationsbranch `integration/cloud-to-local-20260927` zusammengeführt (Stand `53a3c7d`), weiterhin ohne `StartGame` und ohne Tablet-Abnahme |
 | im vollständigen Spielablauf geprüft | **nein** | nur headless Befehlsfolgen (Szenarien `godot/tests/scenarios/`, Unit-Tests); keine vollständige Runde über die Oberfläche |
 | auf einem echten Tablet geprüft | **nein** | kein Gerätenachweis im Repository; Masterplan Phase 2 Gate offen |
 
@@ -91,7 +91,7 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Grenzen:** `InfoRecord` ist auf das Orakel zugeschnitten (Feld `oracle_id`, Ergebnis ist immer eine Rolle). Weitere Informationsrollen mit anderem Ergebnistyp (Anzahl, Richtung, ja/nein, Namensliste) brauchen ein allgemeineres Informationsmodell (siehe [`06`](06-implementation-batches.md) §2).
 
 ### 4.6 `trugbilderwolf`
-- **Belegt umgesetzt:** Wolfsfraktion ohne eigenen Schritt, Pflicht-Scheinrolle `appears_as` beim Setup (`requires_appearance`), zufällige Verteilung über `role_entries`, Korrektur per `set_role_field`.
+- **Belegt umgesetzt:** Wolfsfraktion ohne eigenen Schritt, Pflicht-Scheinrolle `appears_as` beim Setup (`requires_appearance`), zufällige Rollenverteilung über `role_entries` (die Scheinrolle je Kopie wählt ausdrücklich der Spielleiter, DR-08; sie wird nicht ausgelost), Korrektur per `set_role_field`.
 - **Tests:** 23 Testfunktionen plus `test_gm_role_field.gd`.
 - **Legacy-Abweichung (gewollt, DR-08):** Legacy zieht die Scheinrolle im Orakel-Handler per `Math.random` (siehe `docs/godot-migration/04-rules-migration-matrix.md` A-33). Der Legacy-Text „Täuscht das Orakel mit zufälliger Nicht-Wolf-Rolle“ widerspricht damit dem neuen Verhalten; der Text muss für Godot neu formuliert werden.
 - **Abhängigkeit:** `koenig-lykaon` erzeugt in Legacy Trugbilderwölfe während der Partie; dafür fehlt in Godot eine Regel, welche Scheinrolle ein nachträglich entstandener Trugbilderwolf erhält (siehe [`04`](04-rule-conflicts.md) RM-C-004 und RM-DR-107).
