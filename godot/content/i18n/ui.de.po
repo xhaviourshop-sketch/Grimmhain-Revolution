@@ -583,3 +583,6 @@ msgstr "Alle Rollenanzahlen werden auf 0 gesetzt."
 
 msgid "ui.setup.dialog.reset_roles.confirm"
 msgstr "Zurücksetzen"
+
+msgid "ui.setup.distribution.edit_roles"
+msgstr "Rollen bearbeiten"
