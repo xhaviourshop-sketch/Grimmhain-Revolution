@@ -153,3 +153,20 @@ Rest — ERLEDIGT + verifiziert (DE/EN, echte Klicks):
 Komfort-Nachzug (erledigt + verifiziert): Rückgängig wird jetzt zusätzlich als ↩️-Eintrag ins Protokoll geschrieben und dort markiert (nicht nur Toast). Verifiziert: „↩️ Undone: death of Dora reverted." nach Lynch+Undo.
 Commit: <s.u.>  Deploy: grimmhain-spiel.vercel.app
 BLOCKER: keiner.
+
+---
+
+## 2026-09-27 — Claude-Arbeitsstack (Godot-Neuentwicklung)
+Hinweis: Die Phasen oben betreffen die Legacy-React-App. Aktive Entwicklung ist `godot/` (siehe `CLAUDE.md`).
+Status: ERLEDIGT
+Commit: `6af60d4` (main, gepusht nach origin/main)
+Inhalt:
+- `CLAUDE.md` als Arbeitsvertrag neu gefasst; `DECISIONS.md` und `LESSONS.md` angelegt.
+- Projekt-Skills unter `.claude/skills/` (grimmhain-core/-tablet-ui/-assets/-handoff, godot-gdscript/-ui-control/-animation/-audio, art-bible, performance-optimization, verify-and-stop).
+- `docs/development/`: `CLAUDE-STACK.md`, `CLOUD-TO-LOCAL-HANDOFF.md`, `SKILLS-SH-AUSWAHL.md`, Cloud-Berichte 2026-09-27, Skill-Quellen mit Lizenzen und Lock-Datei.
+- `godot/project.godot`: Editor-Neuspeicherung (Schlüssel umsortiert, Kopfkommentar entfernt, `emulate_mouse_from_touch=true` und `locale/fallback="en"` entfernt; beides Godot-Standardwerte).
+Verifiziert: `git diff --cached --check` Exit 0; Push Exit 0. Keine Godot-Tests ausgeführt (keine Code-Änderung).
+Nächste Schritte:
+- Einmal `bash godot/tests/run_all.sh` bzw. Windows-Checks laufen lassen, um die `project.godot`-Neuspeicherung zu bestätigen (Touch-Emulation, EN-Fallback).
+- Die drei Cloud-Berichte (`docs/development/cloud-reports/2026-09-27/`) gegen tatsächliche Commitstände abgleichen (`grimmhain-handoff`).
+BLOCKER: keiner.
