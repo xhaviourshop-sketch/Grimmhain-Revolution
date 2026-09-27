@@ -35,17 +35,17 @@ Es gibt keine Pfad-Ausnahme: Jede neue Mediendatei braucht eine Registerzeile im
 | `ki-nachgewiesen` | KI-Herkunft per C2PA belegt; Tarif, Prompt, Bedingungen oder Freigabe fehlen | nein, höchstens Entwicklungsbuild |
 | `lizenz-belegt` | Lizenz belegt und vorgeschriebener Lizenztext liegt bei; Product-Owner-Freigabe steht aus | nein, erst nach Freigabe |
 | `lizenz-belegt-datei-fehlt` | Lizenz aus der Datei ablesbar, vorgeschriebener Lizenztext liegt nicht bei | nein |
-| `ungeklärt` | keine belastbare Herkunft | nein |
-| `gesperrt` | ausdrücklich gesperrt | nein |
+| `ungeklärt` | Herkunftsnachweis fehlt; Nutzung nicht freigegeben (keine Aussage über rechtliche Zulässigkeit) | nein, solange nicht freigegeben |
+| `gesperrt` | ausdrücklich gesperrt, mit Beleg für die Sperre (z. B. Masterplan Phase 0 für die Nachtmusik) | nein |
 | `prüfartefakt` | eigener Screenshot für Dokumentation | nein, nie |
 
 Nur der Product Owner setzt `freigegeben`. Claude trägt diesen Status nie selbst ein.
 
-Stand 2026-09-27: 274 Dateien, **0 freigegeben**, 219 ungeklärt, 24 ki-nachgewiesen, 10 gesperrt, 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 17 prüfartefakt.
+Stand 2026-09-27: 274 Dateien, **0 freigegeben**, 228 ungeklärt, 24 ki-nachgewiesen, 1 gesperrt (Nachtmusik), 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 17 prüfartefakt. Die neun kurzen Legacy-Sounds standen bis zur Korrektur vom 27.09. ohne Beleg auf `gesperrt`.
 
 | Asset-ID | Datei | Zweck | Ersteller/Dienst | Erstellungsdatum | Tarif/Modell | Lizenzquelle | Bearbeitung | Releasefreigabe | Ersatz nötig |
 |---|---|---|---|---|---|---|---|---|---|
-| legacy-night-music | `assets/sounds/Nachtmusik.mp3` | Nachtmusik | unbekannt | unbekannt | unbekannt | **ungeklärt**; Product Owner 2026-09-26: kein belastbarer Lizenz- oder Herkunftsnachweis | unbekannt | gesperrt | ja (`music-night`, Produktionsplan §6.2) |
+| legacy-night-music | `assets/sounds/Nachtmusik.mp3` | Nachtmusik | unbekannt | unbekannt | unbekannt | **ungeklärt**; Nutzer 2026-09-26: kein belastbarer Lizenz- oder Herkunftsnachweis, nicht für Veröffentlichung freigegeben | unbekannt | gesperrt (Masterplan Phase 0) | Empfehlung (`music-night`, Produktionsplan §6.2) |
 
 ## Pflichtregeln
 

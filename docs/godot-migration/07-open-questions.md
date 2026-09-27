@@ -141,11 +141,11 @@ Priorität bei Gleichzeitigkeit, Vorschlag: **Solo vor Wölfen vor Dorf**; inner
 
 Zur Nachtmusik: Liegt eine Lizenz vor? Falls nein, wird sie für den MVP durch eine lizenzfreie oder beauftragte Schleife ersetzt.
 
-**Antwort zur Nachtmusik (PO, 2026-09-26):** Kein belastbarer Lizenz- oder Herkunftsnachweis; die Datei bleibt gesperrt und wird ersetzt (`../masterplan/DECISION-LOG.md`). Die Grundsatzfrage A/B/C ist weiter offen; Bestandsaufnahme in `../assets/INVENTORY.md`.
+**Antwort zur Nachtmusik (Nutzer, 2026-09-26):** Kein belastbarer Lizenz- oder Herkunftsnachweis; die Datei als ungeklärt behandeln, nicht für eine Veröffentlichung freigegeben. Sperre bis zum Nachweis laut Masterplan Phase 0; ein Ersatz ist Empfehlung (`../masterplan/DECISION-LOG.md`). Die Grundsatzfrage A/B/C ist weiter offen; Bestandsaufnahme in `../assets/INVENTORY.md`.
 
 **Empfehlung: B.**
 
-**Entschieden (PO, 2026-09-27): Option B.** Siehe `../masterplan/DECISION-LOG.md`, Eintrag „Assetstrategie, Budget und Legacy-Medien“.
+**Status (korrigiert am 2026-09-27): offen, Empfehlung B.** Ein zuvor hier stehender Vermerk „Entschieden (PO, 2026-09-27): Option B“ beruhte auf einem Arbeitsauftrag, nicht auf einer belegten Nutzerentscheidung. Bestätigt ist nur der Planungsrahmen bis 500 € und die grundsätzliche Nutzung kostenpflichtiger KI-Werkzeuge. Siehe `../masterplan/DECISION-LOG.md`, „Korrektur: Assetentscheidungen ohne belegte Nutzerzustimmung“.
 
 ---
 

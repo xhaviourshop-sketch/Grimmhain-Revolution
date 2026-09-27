@@ -10,11 +10,11 @@
 
 1. **Nur registrierte Assets.** Jede Datei bekommt ihre Registerzeile, bevor sie ins Repository kommt. In `godot/` liegt nur, was `freigegeben` ist (`node tools/check-asset-register.js`).
 2. **Herkunft bei der Erstellung sichern, nicht nachträglich.** Prompt, Werkzeug, Tarif, Datum, Rechnung und die zum Datum geltenden Nutzungsbedingungen werden sofort archiviert. Der Bestand zeigt, dass Nachträge kaum gelingen (208 Dateien ohne Nachweis).
-3. **Strategie Q8 Option B (entschieden 2026-09-27, Decision Log):** KI oder freie Bibliotheken für Platzhalter und Nebenelemente; Schlüsselassets (Porträts der 1.0-Rollen, Nachtmusik, Kern-Cues, Erzählerstimme) beauftragt, selbst erstellt oder mit belegtem kommerziellem Tarif erzeugt und nachbearbeitet.
+3. **Strategie Q8 Option B (Empfehlung; Entscheidung offen, siehe Decision Log „Korrektur …“ vom 2026-09-27):** KI oder freie Bibliotheken für Platzhalter und Nebenelemente; Schlüsselassets (Porträts der 1.0-Rollen, Nachtmusik, Kern-Cues, Erzählerstimme) beauftragt, selbst erstellt oder mit belegtem kommerziellem Tarif erzeugt und nachbearbeitet.
 4. **Kein Text im Bild.** Beschriftungen rendert Godot aus Übersetzungsschlüsseln. Das betrifft auch Karten und Tableaus.
-5. **Geheimhaltung vor Wirkung.** Kein Asset und kein Cue darf verraten, wen ein Ereignis betrifft, bevor der Spielleiter es verkündet (`05` §1 Regel 3).
-6. **Eigenständige Gestaltung.** Keine Elemente, Begriffe oder Formen aus Blood on the Clocktower (`05` §2.4). Jeder Auftrag enthält diesen Satz.
-7. **Budget.** Höchstens 500 € für externe KI-, Audio-, Sprecher-, Grafik- und Lizenzwerkzeuge (Decision Log 2026-09-27). Geplant sind konservativ 300 €, kostenlose Werkzeuge haben Vorrang. Claude kauft nichts und schließt keine Abonnements ab (Abschnitt 8).
+5. **Geheimhaltung vor Wirkung.** Kein Asset und kein Cue darf ein geheimes Ereignis verraten, weder wen es betrifft noch dass es stattfand, bevor der Spielleiter es verkündet (`05` §1 Regel 3, Schnittstellenanforderungen in Abschnitt 6.4).
+6. **Eigenständige Gestaltung.** Keine Elemente, Begriffe oder Formen aus Blood on the Clocktower (Empfehlung aus `05` §2.4 und `01` §6.2). Vorschlag: jeder Auftrag enthält diesen Satz.
+7. **Budget.** Bestätigt ist ein Planungsrahmen bis 500 € (Decision Log „Gestaltung, Audio und Assets“). Kein Einzelkauf und kein Abonnement ist genehmigt. Die Aufteilung in Abschnitt 8 (zusammen 300 €) ist ein Vorschlag; kostenlose Werkzeuge haben Vorrang. Claude kauft nichts und schließt keine Abonnements ab.
 
 ## 2. Ablauf je Asset
 
@@ -47,7 +47,7 @@ Brief (ID, Zweck, Spezifikation, Referenz, Verbote)
 |---|---|---|---|
 | **W0 · Vorbereitung** | jetzt, parallel zu Phase 2 | Formalien und Grundlagen, ohne die keine Produktion sinnvoll startet | 0 € |
 | **W1 · Vertical Slice** | Phase 2 („Tag- und Nacht-Theme mit vorläufigen, lizenzklaren Assets") | Slice auf dem iPad mit minimalen, freigegebenen Assets; Audio stumm oder mit freien Cues | 0 € |
-| **W2 · Stiltest** | nach bestandenem Phase-2-Gate | ein kleiner Satz echter Schlüsselassets als Stil- und Pipeline-Probe | ≤ 60 € |
+| **W2 · Stiltest** | nach bestandenem Phase-2-Gate | ein kleiner Satz echter Schlüsselassets als Stil- und Pipeline-Probe | Vorschlag ≤ 60 € |
 | **W3 · Präsentationsqualität** | Phase 6 | P1-Assets aus `05` §7 für die Slice-Rollen, alle Kern-Cues, Musik, Erzähler | Rest des Rahmens |
 | **W4 · 1.0-Inhalt** | Phase 7 | übrige 1.0-Rollen (20–30), Szenarien, Totenkarten-Motive | neue Budgetfreigabe |
 | **W5 · Nachweisabschluss** | Phase 9 | jede ausgelieferte Datei `freigegeben`, Lizenzseite in der App, KI-Offenlegung für Stores | 0 € |
@@ -61,8 +61,8 @@ Brief (ID, Zweck, Spezifikation, Referenz, Verbote)
 | W0-3 | Art Bible, 2–3 Seiten: Farbpalette (`05` §2.1), Licht, Formensprache, Motivregeln, Verbote, 6–8 freigegebene Stilreferenzen aus dem Bestand | `docs/assets/ART-BIBLE.md` | PO-Freigabe |
 | W0-4 | Cue-Liste aus `05` §4 finalisieren: IDs, Länge, Bus, Priorität, stumme Alternative (Abschnitt 6.3) | Tabelle in diesem Dokument freigegeben | PO-Freigabe |
 | W0-5 | Sprechertexte DE/EN finalisieren und die offenen Fragen in `NARRATOR-SCRIPT.md` §6 entscheiden | freigegebene Texttabelle | PO-Freigabe, Probelesung am Tisch |
-| W0-6 | PO beantwortet die Herkunftsfragen aus `INVENTORY.md` §6 | **erledigt 2026-09-27:** kein zusätzlicher Nachweis; Legacy bleibt Referenz (Decision Log) | `node tools/check-asset-register.js` grün |
-| W0-7 | Q8 entscheiden | **erledigt 2026-09-27:** Option B | – |
+| W0-6 | PO beantwortet die Herkunftsfragen aus `INVENTORY.md` §6 | Stand laut Arbeitsauftrag 2026-09-27: kein zusätzlicher Nachweis bekannt; Nutzung der Legacy-Medien nicht freigegeben | `node tools/check-asset-register.js` grün |
+| W0-7 | Q8 entscheiden | **offen** (Empfehlung B; ein Vermerk „entschieden“ wurde am 2026-09-27 korrigiert) | Eintrag des Nutzers im Decision Log |
 
 ### W1 · Vertical Slice (lizenzklar, ohne Kosten)
 
@@ -70,7 +70,7 @@ Ziel ist ein vollständig spielbarer Slice ohne ein einziges ungeklärtes Asset.
 
 | Bereich | Lösung für W1 |
 |---|---|
-| Hintergrund Tag/Nacht | Farbverlauf + Vignette als Shader aus den Farb-Tokens (`05` §2.1). Die vorhandenen `bg-village-*.webp` bleiben Referenz (keine Herkunft, Decision Log 2026-09-27). |
+| Hintergrund Tag/Nacht | Farbverlauf + Vignette als Shader aus den Farb-Tokens (`05` §2.1). Die vorhandenen `bg-village-*.webp` dienen als Referenz: Herkunftsnachweis fehlt, Nutzung nicht freigegeben. |
 | Token, Ringe, Sitznummer | im Code gezeichnet (heute schon Spezifikation, `tablet-asset-spec.md` §3–4) |
 | Fraktions- und Phasensymbole | einfache eigene Vektorsymbole (Wolfskopf, Haus, Stern, Mond, Sonne, Schild, Sanduhr, Siegel) als SVG, selbst gezeichnet; alternativ freie Sammlung mit geprüfter Lizenz (z. B. CC0; bei CC BY Namensnennung in der Lizenzseite) |
 | Porträts | keine; Token zeigen Initialen und Fraktionssymbol |
@@ -78,7 +78,7 @@ Ziel ist ein vollständig spielbarer Slice ohne ein einziges ungeklärtes Asset.
 | Audio | alle Busse und Regler verdrahtet (Masterplan Phase 2), Standard stumm; optional 5 Kern-Cues aus freier Bibliothek mit archivierter Lizenz |
 | Erzähler | keiner; Vorlesetext steht auf der Ansagekarte |
 
-### W2 · Stiltest (≤ 60 €)
+### W2 · Stiltest (vorgeschlagenes Teilbudget ≤ 60 €)
 
 Ein kleiner, vollständiger Durchstich, der Stil, Werkzeuge, Nachweisablage und Godot-Import gemeinsam prüft, bevor Geld in Masse fließt:
 
@@ -152,7 +152,7 @@ Busse: `Master` → `Music`, `Ambience`, `Cues`, `UI`, zusätzlich `Voice` für 
 
 | ID | Inhalt | Länge | Welle | Quelle |
 |---|---|---|---|---|
-| `music-night` | Nachtmusik, ersetzt `legacy-night-music` | Schleife 3–5 min | W2 (Probe), W3 | beauftragt, eigene Produktion oder KI-Musikdienst mit kommerziellem Tarif; Bedingungen zum Kaufdatum archivieren |
+| `music-night` | Nachtmusik, empfohlener Ersatz für `legacy-night-music` | Schleife 3–5 min | W2 (Probe), W3 | beauftragt, eigene Produktion oder KI-Musikdienst mit kommerziellem Tarif; Bedingungen zum Kaufdatum archivieren |
 | `ambience-night` | Wind, entfernte Eule, Grillen | 60–90 s | W3 | freie Bibliothek mit archivierter Lizenz oder Feldaufnahme |
 | `ambience-day` | Dorfgemurmel leise, Vögel | 60–90 s | W3 | wie oben |
 | `fanfare-{wolves,village,solo,draw}` | Spielende | 4–6 s | W3 | mit `music-night` aus einer Hand |
@@ -161,33 +161,45 @@ Die 60-Minuten-Datei `Nachtmusik.mp3` wird nicht ersetzt, sondern abgelöst: Ein
 
 ### 6.3 Cues
 
-Aus `05` §4 abgeleitet. Priorität: höhere Zahl unterbricht niedrigere. Jeder Cue hat eine stumme Alternative, weil „Stumm im Spiel" jederzeit möglich ist.
+Aus `05` §4 abgeleitet. Priorität: höhere Zahl unterbricht niedrigere. Jeder Cue hat eine stumme Alternative, weil „Stumm im Spiel" jederzeit möglich ist. Spalte „Auslöser“ nach den Schnittstellenanforderungen in 6.4: Nur öffentliche Phasenübergänge und ausdrückliche öffentliche Verkündungen erzeugen automatisch hörbaren Klang.
 
-| ID | Ereignis | Klang | Bus | Prio | Welle | Stumme Alternative |
-|---|---|---|---|---:|---|---|
-| `cue-night-begin` | Nachtbeginn | tiefer Glockenschlag | Cues | 3 | W2 | Animation `fx-night-begin` |
-| `cue-dawn` | Morgengrauen | Hahn fern, Vogelchor | Cues | 3 | W2 | `fx-dawn` |
-| `cue-step-start` | Rollenzug beginnt | Seitenrascheln | UI | 1 | W3 | Karte blättert |
-| `cue-target-select` | Ziel gewählt | Holzklick | UI | 1 | W3 | Goldring |
-| `cue-protect` | Schutz gesetzt | gläserner Ton, sehr leise | Cues | 2 | W3 | Siegel |
-| `cue-attack` | Wolfswahl | gedämpftes Knurren | Cues | 2 | W3 | Kratzspuren |
-| `cue-kill-prevented` | Schutz greift | weiches Glasklirren | Cues | 2 | W3 | Siegel zerspringt |
-| `cue-death` | Tod beim Verkünden | tiefer Gong, Windhauch | Cues | 4 | W2 | Kerze erlischt |
-| `cue-chain-death` | Folgetod | reißende Saite | Cues | 4 | W3 | Faden reißt |
-| `cue-timer-tick` | letzte 10 s Diskussion | Uhrticken | UI | 1 | W3 | pulsierender Ring |
-| `cue-timer-end` | Timer abgelaufen | Glocke (ersetzt `Ruhe.mp3`) | Cues | 3 | W3 | Ring + Hinweiszeile |
-| `cue-nomination` | Nominierung | Holzhammer dumpf | Cues | 2 | W3 | Siegel fällt |
-| `cue-execution` | Hinrichtung bestätigt | Trommelschlag, Menge verstummt | Cues | 4 | W3 | `fx-execution` |
-| `cue-special-rescue` | Sonderrettung | metallisches Reißen | Cues | 4 | W3 | Kette zerspringt |
-| `cue-role-change` | Rollenwechsel (privat) | Chorhauch | Cues | 2 | W3 | Münzdrehung |
-| `cue-undo` | Undo | Rückspul-Wisch leise | UI | 1 | W3 | Flirren |
-| `ui-confirm` | Bestätigen | kurzer Holzton | UI | 1 | W2 | Button-Rückmeldung |
-| `ui-error` | Befehl abgelehnt | tiefer Holzklopfer | UI | 1 | W2 | Schütteln + Grundzeile |
-| `ui-tap` | allgemeiner Tap | sehr leiser Klick | UI | 0 | W3 | – |
+| ID | Ereignis | Klang | Bus | Prio | Welle | Stumme Alternative | Auslöser |
+|---|---|---|---|---:|---|---|---|
+| `cue-night-begin` | Nachtbeginn | tiefer Glockenschlag | Cues | 3 | W2 | Animation `fx-night-begin` | freigegebener Phasenübergang |
+| `cue-dawn` | Morgengrauen | Hahn fern, Vogelchor | Cues | 3 | W2 | `fx-dawn` | freigegebener Phasenübergang |
+| `cue-step-start` | Rollenzug beginnt | Seitenrascheln | UI | 1 | W3 | Karte blättert | keiner automatisch; nur wenn auch Tarnaufrufe identisch klingen |
+| `cue-target-select` | Ziel gewählt | Holzklick | UI | 1 | W3 | Goldring | keiner (geheime Eingabe) |
+| `cue-protect` | Schutz gesetzt | gläserner Ton, sehr leise | Cues | 2 | W3 | Siegel | keiner (geheimes Ereignis) |
+| `cue-attack` | Wolfswahl | gedämpftes Knurren | Cues | 2 | W3 | Kratzspuren | keiner (geheimes Ereignis) |
+| `cue-kill-prevented` | Schutz greift | weiches Glasklirren | Cues | 2 | W3 | Siegel zerspringt | keiner (geheimes Ereignis) |
+| `cue-death` | Tod beim Verkünden | tiefer Gong, Windhauch | Cues | 4 | W2 | Kerze erlischt | öffentliche Verkündung des Todes, nie der interne Tod |
+| `cue-chain-death` | Folgetod | reißende Saite | Cues | 4 | W3 | Faden reißt | öffentliche Verkündung |
+| `cue-timer-tick` | letzte 10 s Diskussion | Uhrticken | UI | 1 | W3 | pulsierender Ring | öffentlicher Tagestimer |
+| `cue-timer-end` | Timer abgelaufen | Glocke (ersetzt `Ruhe.mp3`) | Cues | 3 | W3 | Ring + Hinweiszeile | öffentlicher Tagestimer |
+| `cue-nomination` | Nominierung | Holzhammer dumpf | Cues | 2 | W3 | Siegel fällt | öffentlich erfasste Nominierung |
+| `cue-execution` | Hinrichtung bestätigt | Trommelschlag, Menge verstummt | Cues | 4 | W3 | `fx-execution` | öffentliche Verkündung |
+| `cue-special-rescue` | Sonderrettung | metallisches Reißen | Cues | 4 | W3 | Kette zerspringt | öffentliche Verkündung |
+| `cue-role-change` | Rollenwechsel (privat) | Chorhauch | Cues | 2 | W3 | Münzdrehung | keiner (geheimes Ereignis) |
+| `cue-undo` | Undo | Rückspul-Wisch leise | UI | 1 | W3 | Flirren | Eingabe; in geheimen Schritten stumm |
+| `ui-confirm` | Bestätigen | kurzer Holzton | UI | 1 | W2 | Button-Rückmeldung | Eingabe; in geheimen Schritten stumm |
+| `ui-error` | Befehl abgelehnt | tiefer Holzklopfer | UI | 1 | W2 | Schütteln + Grundzeile | Eingabe; in geheimen Schritten stumm |
+| `ui-tap` | allgemeiner Tap | sehr leiser Klick | UI | 0 | W3 | – | Eingabe; in geheimen Schritten stumm |
 
 19 Cues für den Slice. Totenkarten-Cues (6) folgen in W4 mit dem Totenkarten-System. Rollen-Leittöne (`05` §4, „optional") sind nicht eingeplant.
 
 **Abnahme Audio:** Lautheitsmessung je Datei (Protokoll im Archiv); Schleifen ohne hörbaren Sprung bei 10 Durchläufen; Hörtest am Tisch mit Tablet-Lautsprecher bei 50 % Lautstärke; kein Cue verrät ein privates Ereignis vor der Verkündung.
+
+### 6.4 Schnittstellenanforderungen an das spätere Audio-System
+
+Nur Anforderungen; es gibt noch keinen `AudioDirector` und keine Anbindung an den Regelkern. Hintergrund: Das Tablet steht offen auf dem Tisch. Auch ein Todes-, Schutz- oder Fehlerklang ohne Personenbezug kann verraten, dass ein geheimes Ereignis stattfand.
+
+1. **Geheime Kernereignisse lösen keinen öffentlichen Klang aus.** Ereignisse mit Sichtbarkeit Spielleiter oder handelnde Person (`rules-register.md` G-INF-3), etwa `ProtectionSet`, `KillPrevented`, `WitchActed`, `RoleChanged`, `SeatDied` während der Nacht, sind für das Audio-System keine Auslöser.
+2. **Ein Todesklang gehört zur ausdrücklichen öffentlichen Verkündung,** also zu der Spielleiter-Aktion, mit der ein Tod öffentlich gemacht wird (Morgenbericht, bestätigte Hinrichtung), nicht zum internen Ereignis `SeatDied`.
+3. **Öffentliche Phasenklänge folgen freigegebenen Phasenübergängen,** also nur öffentlichen `PhaseChanged`-Ereignissen, nicht internen Zwischenständen.
+4. **Öffentliche Erzählertexte enthalten keine geheimen Namen, Rollen oder Ergebnisse** (Regeln in `NARRATOR-SCRIPT.md` §1).
+5. **Bedienklänge (Bestätigen, Fehler, Tap, Undo) sind in geheimen Schritten stumm;** die Rückmeldung ist dort rein visuell.
+6. **Fehlende oder nicht ladbare Audiodateien blockieren die Bedienung nie.** Ein fehlender Cue wird still übersprungen und höchstens im Entwicklerprotokoll vermerkt; kein Dialog, keine Wartezeit.
+7. Undo und Replay spielen keine Ereignisklänge erneut ab (`05` §3).
 
 ## 7. Sprechertexte und Erzählerstimme
 
@@ -207,9 +219,9 @@ Aus `05` §4 abgeleitet. Priorität: höhere Zahl unterbricht niedrigere. Jeder 
 
 ## 8. Budget
 
-Rahmen aus `BUDGET.md`; die Beträge sind Obergrenzen, keine Zusagen. Jede Ausgabe durchläuft die dortige Kaufcheckliste und wird in der Registerzeile verknüpft.
+Bestätigter Planungsrahmen: bis 500 €. Die Beträge unten sind **vorgeschlagene Teilbudgets**, keine Zusagen und keine genehmigten Käufe. Jede Ausgabe durchläuft die dortige Kaufcheckliste und wird in der Registerzeile verknüpft.
 
-| Posten | Welle | Obergrenze |
+| Posten | Welle | Vorschlag |
 |---|---|---:|
 | W0, W1 | – | 0 € |
 | W2 Stiltest (Bild- oder Musikdienst für einen Monat) | W2 | 60 € |

@@ -220,10 +220,14 @@ Dieser Eintrag ersetzt „nur Nacht 1, einmalig“ (Regelregister §9, Nachtprio
 
 ## Nachtmusik und Assetregister · 26. September 2026
 
+> **Teilweise korrigiert** durch den Eintrag „Korrektur: Assetentscheidungen ohne belegte Nutzerzustimmung · 27. September 2026“ weiter unten. Der ursprüngliche Wortlaut bleibt zur Nachvollziehbarkeit unverändert stehen.
+
 - Für `assets/sounds/Nachtmusik.mp3` liegt dem Product Owner kein belastbarer Lizenz- oder Herkunftsnachweis vor. Die Datei gilt als ungeklärt, bleibt gesperrt und wird für Version 1.0 durch eine neue Nachtmusik ersetzt (`../assets/PRODUCTION-PLAN.md` §6.2).
 - Das Assetregister wird maschinenlesbar in `asset-register.csv` geführt und mit `node tools/check-asset-register.js` geprüft. Nur der Product Owner setzt den Status `freigegeben`.
 
 ## Assetstrategie, Budget und Legacy-Medien · 27. September 2026
+
+> **Korrigiert** durch den Eintrag „Korrektur: Assetentscheidungen ohne belegte Nutzerzustimmung · 27. September 2026“ weiter unten. Dieser Eintrag beruhte auf Vorgaben eines Arbeitsauftrags, nicht auf einer belegten persönlichen Entscheidung des Nutzers. Der ursprüngliche Wortlaut bleibt zur Nachvollziehbarkeit unverändert stehen; maßgeblich ist die Korrektur.
 
 Dieser Eintrag entscheidet Q8 (`../godot-migration/07-open-questions.md`) mit **Option B** und präzisiert den Eintrag „Gestaltung, Audio und Assets".
 
@@ -236,3 +240,22 @@ Dieser Eintrag entscheidet Q8 (`../godot-migration/07-open-questions.md`) mit **
 - Für Rollenkarten, UI-Grafiken, Statussiegel, Dorfplatz-Hintergründe, kurze Legacy-Sounds und die Nachtmusik liegt kein zusätzlicher Herkunftsnachweis vor. Sie bleiben `ungeklärt` beziehungsweise `gesperrt`, sind nicht releasefähig, dienen höchstens als visuelle oder akustische Referenz und werden nicht nach Godot übernommen.
 - Die zehn OpenAI-Porträts (C2PA belegt die Plattform; Tarif, Prompts und Kontohistorie fehlen) bleiben `ki-nachgewiesen`, ohne Releasefreigabe. Sie sind als Stilreferenz und Entwicklungsplatzhalter dokumentierbar und werden nicht nach Godot kopiert.
 - Schriften: Die ursprüngliche Downloadquelle ist unbekannt. Familie und SIL OFL 1.1 werden über die eingebetteten Font-Metadaten belegt, ergänzt um die heutige offizielle Referenzquelle (`../assets/FONTS.md`). Eine Downloadhistorie wird nicht rekonstruiert oder behauptet.
+
+## Korrektur: Assetentscheidungen ohne belegte Nutzerzustimmung · 27. September 2026
+
+**Anlass.** Der Nutzer hat klargestellt: Er hat einen Gesamtrahmen bis 500 € und die grundsätzliche Nutzung kostenpflichtiger KI-Werkzeuge genannt. Daraus folgt keine ausdrückliche Freigabe für Q8 Option B, für eine bestimmte Produktionsmethode oder für konkrete Käufe. Die beiden vorangehenden Asset-Einträge haben Vorgaben aus Arbeitsaufträgen als persönliche Product-Owner-Entscheidungen eingetragen. Diese Korrektur ersetzt sie, soweit sie widersprechen.
+
+| Aussage | bisher eingetragen als | gilt jetzt als | Beleg |
+|---|---|---|---|
+| Budget bis 500 € | Entscheidung, Obergrenze für externe Werkzeuge | **bestätigter Planungsrahmen**; kein Einzelkauf, kein Abonnement und keine bezahlte Generierung ist genehmigt | Eintrag „Gestaltung, Audio und Assets" („Budget bis 500 €"), Klarstellung des Nutzers |
+| Q8 Option B | entschieden | **Empfehlung**, Entscheidung offen | `07-open-questions.md` Q8 |
+| KI für Konzept, Platzhalter, Stilentwicklung | entschieden | grundsätzliche Nutzung kostenpflichtiger KI-Werkzeuge ist vom Nutzer genannt; Umfang und Methode sind nicht entschieden. Für finale KI-Assets gilt weiter der Eintrag „Gestaltung, Audio und Assets" (Herkunft, Lizenzprüfung, Qualitätsprüfung, PO-Freigabe) | Eintrag „Gestaltung, Audio und Assets", Klarstellung des Nutzers |
+| 60 € für die erste Welle, 300 € Gesamtplanung | Obergrenzen | **vorgeschlagene Teilbudgets** | `../assets/PRODUCTION-PLAN.md` §8 (Vorschlag) |
+| Legacy-Rollenkarten, UI-Grafiken, Statussiegel, Dorfplatz, kurze Sounds | „nicht releasefähig", „werden nicht nach Godot übernommen" | **Herkunftsnachweis fehlt; Nutzung ist nicht freigegeben.** Keine Aussage über rechtliche Unzulässigkeit. Registerstatus `ungeklärt` | Registerbefund, `../assets/INVENTORY.md` |
+| Kurze Legacy-Sounds | Status `gesperrt` | Status `ungeklärt`; für eine ausdrückliche Sperre gibt es keinen Beleg | Register korrigiert am 27. September 2026 |
+| Nachtmusik | „bleibt gesperrt und wird ersetzt" | Nutzeraussage vom 26. September 2026: kein belastbarer Nachweis, als ungeklärt behandeln, nicht für eine Veröffentlichung freigegeben. Status `gesperrt` folgt aus dem Masterplan (Phase 0: „Nachtmusik bis zum Herkunftsnachweis sperren"). Ein Ersatz ist **Empfehlung**, nicht entschieden | Antwort des Nutzers 26.09., Masterplan Phase 0 |
+| OpenAI-Porträts | „werden nicht nach Godot kopiert" | C2PA belegt die Plattform; Tarif, Prompts und Kontohistorie sind nicht dokumentiert. Status `ki-nachgewiesen`, **nicht freigegeben**; eine Übernahme ist nicht freigegeben | Registerbefund |
+| Ursprüngliche Bezugsquelle der Schriften unbekannt | Aussage des Product Owners | Angabe aus dem Arbeitsauftrag vom 27. September 2026; im Repository gibt es ebenfalls keinen Beleg | `../assets/FONTS.md` |
+| Nur der Product Owner setzt `freigegeben` | Entscheidung | Verfahrensregel aus dem Masterplan §9 („Claude darf … keinen unbekannten Assetstatus als freigegeben markieren") | Masterplan §9 |
+
+Unverändert gilt: Jede finale Datei braucht nachvollziehbare Herkunft, Nutzungsrecht und Product-Owner-Freigabe (Eintrag „Gestaltung, Audio und Assets", Masterplan §2 und Phase 9). Offene Entscheidungen des Nutzers: Q8, Teilbudget der ersten Welle, Porträtstil und Figurenvorgaben (`../assets/BRIEFING-WAVE-1.md` §11).
