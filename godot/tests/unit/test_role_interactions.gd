@@ -453,3 +453,37 @@ func test_pack_dropped_when_only_newly_transformed_wolf_lives() -> void:
 	if s != null:
 		assert_true(s.night_plan.has(&"pack"), "verwandeltes Wolfskind bildet ab Nacht 3 das Rudel")
 	_roundtrip_and_replay(s, log, ev, "Rudel-Snapshot")
+
+
+# --- Wiederbelebung setzt Fähigkeiten zurück (Decision Log „Rollenaudit · Wiederbelebung …“) -------------
+
+## Jede Wiederbelebung setzt alle begrenzten Einsätze der Person zurück (Tränke, Spiegelung,
+## Todesreaktion); Nominierungsstatus bleibt.
+func test_revive_resets_all_limited_abilities() -> void:
+	# 1 Werwolf; 2 Waldhexe; 3 Spiegelwolf; 4 Sensenträger; 5–8 Dorfbewohner.
+	var s := _do(GameState.new(), _start(["werwolf", "waldhexe", "spiegelwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), [], [], "Start")
+	for c: Command in [_gm("set_witch_potion", {"witch_id": 2, "potion": "heal", "available": false}),
+			_gm("set_witch_potion", {"witch_id": 2, "potion": "poison", "available": false}),
+			_gm("set_mirror", {"target_id": 3, "available": false}), _gm("set_ever_nominated", {"target_id": 4, "value": true})]:
+		s = apply_ok(s, c, "Einsätze verbraucht").state
+	for c: Command in [Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()]:
+		s = apply_ok(s, c, "bis zum Tag").state
+	var log: Array[Command] = []
+	var ev: Array[GameEvent] = []
+	for id: int in [2, 3]:
+		s = _do(s, _gm("kill", {"target_id": id, "trigger_effects": false}), log, ev, "Tod %d" % id)
+		s = _do(s, _gm("revive", {"target_id": id}), log, ev, "Wiederbelebung %d" % id)
+	if s == null:
+		return
+	assert_true(WitchStep.potion_available(s.players[2], "heal") and WitchStep.potion_available(s.players[2], "poison"), "Tränke wieder verfügbar")
+	assert_true(ExecutionRules.mirror_available(s.players[3]), "Spiegelung wieder verfügbar")
+	# Sensenträger: Fluch nach erstem Tod eingelöst, Wiederbelebung, zweiter Tod → erneute Reaktion.
+	s = _do(s, _gm("kill", {"target_id": 4, "trigger_effects": true}), log, ev, "Sensenträger stirbt")
+	s = _do(s, Command.begin_step(RulesEngine.next_step_id(s)), log, ev, "Reaktion")
+	s = _do(s, Command.answer_prompt(s.pending_prompt.id, []), log, ev, "Verzicht")
+	s = _do(s, _gm("revive", {"target_id": 4}), log, ev, "Wiederbelebung Sensenträger")
+	s = _do(s, _gm("kill", {"target_id": 4, "trigger_effects": true}), log, ev, "zweiter Tod")
+	if s == null:
+		return
+	assert_eq(s.reactions.size(), 1, "Todesreaktion nach Wiederbelebung erneut")
+	assert_true(s.players[4].ever_nominated, "Nominierungsstatus bleibt")

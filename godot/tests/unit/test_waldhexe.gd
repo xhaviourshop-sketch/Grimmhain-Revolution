@@ -419,16 +419,17 @@ func test_used_poison_not_offered_again() -> void:
 	apply_rejected(no, _choice("poison", true, 6), "stage_mismatch", "manipuliertes Gift")
 
 
-func test_revive_does_not_reset_potions() -> void:
-	# 24: Rettung von 4 und Gift auf sich selbst, danach Wiederbelebung.
+func test_revive_resets_potions() -> void:
+	# 24, ersetzt durch Decision Log „Rollenaudit · Wiederbelebung …“: Rettung von 4 und Gift auf
+	# sich selbst, danach Wiederbelebung → beide Tränke wieder verfügbar, Schritt in der nächsten Nacht.
 	var commands := _concat(_night(2, 4, true, 5), [Command.end_night(),
 		CorrectionFixtures.gm("revive", {"target_id": 5}), Command.decide_execution(-1), Command.end_day(), Command.start_night()] as Array[Command])
 	var run := _replay_ok(commands, "Wiederbelebung")
 	if not run.ok:
 		return
 	assert_true(run.state.players[5].alive, "Waldhexe lebt")
-	assert_eq(_uses(run.state, 5, "heal") + _uses(run.state, 5, "poison"), 2, "Tränke bleiben verbraucht")
-	assert_false(run.state.night_plan.has(&"waldhexe:5"), "kein Schritt")
+	assert_eq(_uses(run.state, 5, "heal") + _uses(run.state, 5, "poison"), 0, "Tränke zurückgesetzt")
+	assert_true(run.state.night_plan.has(&"waldhexe:5"), "Schritt in der nächsten Nacht")
 
 
 ## Befehle innerhalb des Waldhexen-Prompts bis zur jeweiligen Stufe (W6, Rudel wählt 6).

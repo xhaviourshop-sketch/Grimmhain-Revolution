@@ -168,10 +168,12 @@ func test_resolved_reaction_cannot_run_again() -> void:
 	var done := apply_ok(begun, Command.answer_prompt(2, [1]), "Fluch auf Werwolf").state
 	apply_rejected(done, Command.begin_step("reaction:1"), "no_pending_step", "Reaktion erneut beginnen")
 	apply_rejected(done, Command.answer_prompt(2, [5]), "wrong_phase", "alten Prompt erneut beantworten")
-	# Einmal pro Person: Wiederbelebung und erneuter Tod lösen keine zweite Reaktion aus.
+	# Einmal pro Leben: ohne Wiederbelebung keine zweite Reaktion; eine Wiederbelebung setzt den
+	# Einsatz zurück (Decision Log „Rollenaudit · Wiederbelebung …“), der erneute Tod reagiert wieder.
+	assert_eq(int(done.players[3].ability_uses.get("sensentraeger:death_reaction", 0)), 1, "Einsatz verbraucht")
 	var revived := apply_ok(done, CorrectionFixtures.gm("revive", {"target_id": 3}), "Wiederbelebung").state
 	var again := apply_ok(revived, CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}), "erneuter Tod")
-	assert_eq(events_of_type(again.events, "ReactionQueued").size(), 0, "keine zweite Reaktion")
+	assert_eq(events_of_type(again.events, "ReactionQueued").size(), 1, "neue Reaktion nach Wiederbelebung")
 
 
 # --- Ketten und DR-14 -------------------------------------------------------------

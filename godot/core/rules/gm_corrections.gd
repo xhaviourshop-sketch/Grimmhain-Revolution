@@ -382,11 +382,14 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			player.set(field, StringName(DictRead.get_string(p, "value")))
 			_log(ctx, kind, target, old, {field: player.get(field)}, reason, false)
 		REVIVE:
+			# Decision Log „Rollenaudit · Wiederbelebung …“: jede Wiederbelebung setzt alle begrenzten
+			# Einsätze der Person zurück; Nominierungsstatus, Bindungen und eingereihte Reaktionen bleiben.
 			var player := s.players[target]
-			var old := {"alive": false, "death": player.death.to_dict() if player.death != null else null}
+			var old := {"alive": false, "death": player.death.to_dict() if player.death != null else null, "ability_uses": player.ability_uses.duplicate()}
 			player.alive = true
 			player.death = null
-			_log(ctx, kind, target, old, {"alive": true, "death": null}, reason, false)
+			player.ability_uses.clear()
+			_log(ctx, kind, target, old, {"alive": true, "death": null, "ability_uses": {}}, reason, false)
 			s.win_check_pending = true
 		SET_ROLE:
 			var player := s.players[target]
