@@ -220,6 +220,8 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 			var bound: Array = DictRead.to_int_array(DictRead.get_array(prompt.partial, "bound_ids"))
 			ctx.emit(GameEvent.BOUND_RECORDED, Visibility.GM, {"bound_ids": bound.duplicate(), "night": night})
 			for id: int in bound:
+				if s.blocked_ids.has(id):
+					continue  # Albtraumwolf: diese Gebundene erfährt in dieser Nacht nichts
 				var others: Array = []
 				for other: int in bound:
 					if other != id:

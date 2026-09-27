@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 29 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 29 |
+| im RoleCatalog vorhandene Rollen | 34 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 34 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 27 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 32 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -76,6 +76,11 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 27 | `waechter-am-tor` | Wächter am Tor / Gatewarden (Rollentext) | village | nein | – | `gatewarden.gd`, `wolf_child_rules.gd`, `apprentice_rules.gd` | `test_richter_waechter_blutwolf.gd`, fuzz | RM-DR-149, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor …“ und „Querschnittsfragen“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 28 | `spuerhund` | Spürhund / Scent Hound (Rollentext, vom PO präzisiert) | village | nein | 68 | `info_steps.gd` (`hound_hit`) | `test_spuerhund_parasit.gd`, fuzz | RM-DR-105.1, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor, Spürhund, Parasit“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 29 | `parasit` | Parasit / Parasite (Rollentext) | solo | nein | 62 | `kill_pipeline.gd` (`_parasite_immune`, `_end_parasite_bonds`), `win_rules.gd` (`parasite_wins`) | `test_spuerhund_parasit.gd`, fuzz | RM-DR-157.1, RM-DR-011.2, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor, Spürhund, Parasit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 30 | `schattenhund` | Schattenhund / Shadow Hound (Rollentext) | wolves | ja | 1 | `rules_engine.gd` (`_answer_shadow`), `step_queue.gd` (Blockade) | `test_wolf_specials.gd`, fuzz | RM-DR-123, RM-DR-010, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 31 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf (Rollentext) | wolves | ja | 2 | `step_queue.gd` (Blockade), `rules_engine.gd` | `test_wolf_specials.gd`, fuzz | RM-DR-134, RM-DR-010, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 32 | `giftwolf` | Giftwolf / Poison Wolf (Rollentext) | wolves | ja | 27 | `rules_engine.gd` (`wolf_poisons`), `kill_pipeline.gd` | `test_wolf_specials.gd`, fuzz | RM-DR-111, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 33 | `rudelvater` | Rudelvater / Packfather (Rollentext) | wolves | ja | – (Teil des Rudels) | `kill_pipeline.gd` (`_packfather_survives`), `step_queue.gd` (`pack2`) | `test_wolf_specials.gd`, fuzz | RM-DR-112, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 34 | `seuchenwolf` | Seuchenwolf / Blight Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `kill_pipeline.gd`, `rules_engine.gd` (`plague_pierce_pending`) | `test_wolf_specials.gd`, fuzz | RM-DR-108, DECISION-LOG „Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -233,6 +238,31 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nachtschritt (Priorität 62): freiwillig einen anderen lebenden Wirt wählen, sonst bleibt der bisherige (`parasite_hosts`). Mit lebendem Wirt verhindert er jeden Tod außer Spielleiterkorrekturen (`KillPrevented`, Quelle `parasit`); stirbt der Wirt mit Folgen, stirbt er mit (`PARASITE_HOST`); Bindung endet mit dem Tod. Sieg `parasite_final_three` bei höchstens drei Lebenden, wenn er lebt; gleichzeitig mit anderen Siegen.
 - **Tests:** Rudel, Lynch, Korrektur, Wirtstod, ohne Wirt, Wechsel, Behalten, Sieg bei drei Lebenden, Save/Load.
 - **Grenzen:** Setup-Einschränkungen für Einzelsiegrollen sind vertagt (Decision Log).
+
+### 4.30 `schattenhund`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Rudel; Schritt ganz am Anfang der Nacht (Priorität 1) „jetzt blockieren?“ bis zur Nutzung (je Leben). Ja: alle aktiven Dorf-Nachtschritte dieser Nacht entfallen (`blocked`), auch der Gebundenen-Schritt; Todesreaktionen und passive Fähigkeiten wirken weiter.
+- **Tests:** Blockade, Rudel unberührt, einmalig, nur eine Nacht, Verzicht.
+- **Grenzen:** –
+
+### 4.31 `albtraumwolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Rudel; jede Nacht (Priorität 2) freiwillig eine andere lebende Person; deren aktiver Dorf-Nachtschritt dieser Nacht entfällt (`blocked`); Gebundene erhalten dann keine Information.
+- **Tests:** blockiertes Orakel, anderes Orakel handelt.
+- **Grenzen:** –
+
+### 4.32 `giftwolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Rudel; eigener Schritt nach dem Rudel (Priorität 27), freiwillig eine andere lebende Person, zwei Ladungen je Leben. Das Ziel erhält sofort `WolfPoisonNotice` und stirbt in der Morgenauflösung nach Nacht N+2 (`WOLF_POISON`), unaufhaltbar durch Schutz; ein früherer Tod beendet das Gift.
+- **Tests:** privater Hinweis, Tod nach Nacht 3 trotz Schutz, eine pro Nacht, zwei Ladungen, Ladbarkeit.
+- **Grenzen:** Parasit-Schild und Rudelvater-Überleben wirken nach ihren eigenen Regeln.
+
+### 4.33 `rudelvater`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Überlebt einmal je Leben einen Tod, der weder Rudelangriff noch Lynch noch Korrektur ist (`KillPrevented`, Quelle `rudelvater`). Nach seinem Lynch folgt in der nächsten Nacht direkt nach dem Rudel ein zweiter Rudelschritt (`pack2`), dessen Opfer am Morgen stirbt und Schutzengel, Waldhexenrettung und Dorfwache durchdringt.
+- **Tests:** Überleben von Gift, Korrektur tötet, zweiter Rudelschritt, Durchdringung, nur eine Nacht; Gegenprobe ohne Durchdringung wird rot.
+- **Grenzen:** –
+
+### 4.34 `seuchenwolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nach seinem Tod (mit Folgen) durchdringt der nächste tatsächliche Rudelangriff Schutz und verbraucht die Wirkung; Nächte ohne Rudelopfer verbrauchen nichts; keine Stapelung.
+- **Tests:** Nacht ohne Opfer, Durchdringung, danach wieder Schutz.
+- **Grenzen:** –
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

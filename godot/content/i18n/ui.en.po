@@ -569,6 +569,36 @@ msgstr "Parasite"
 msgid "ui.role.parasit.short"
 msgstr "Attaches to a host and dies only with it; wins among the final three."
 
+msgid "ui.role.schattenhund.name"
+msgstr "Shadow Hound"
+
+msgid "ui.role.schattenhund.short"
+msgstr "Pack wolf, once blocks all village abilities for a night."
+
+msgid "ui.role.albtraumwolf.name"
+msgstr "Nightmare Wolf"
+
+msgid "ui.role.albtraumwolf.short"
+msgstr "Pack wolf, blocks one person's ability each night."
+
+msgid "ui.role.giftwolf.name"
+msgstr "Poison Wolf"
+
+msgid "ui.role.giftwolf.short"
+msgstr "Pack wolf, poisons twice; the target dies two nights later."
+
+msgid "ui.role.rudelvater.name"
+msgstr "Packfather"
+
+msgid "ui.role.rudelvater.short"
+msgstr "Pack wolf, survives once; his lynching grants an extra victim."
+
+msgid "ui.role.seuchenwolf.name"
+msgstr "Blight Wolf"
+
+msgid "ui.role.seuchenwolf.short"
+msgstr "Pack wolf; after his death the next attack pierces all protection."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

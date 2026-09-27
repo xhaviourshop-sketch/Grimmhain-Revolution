@@ -25,6 +25,10 @@ const OWNER_TRACKER := &"faehrtenleser"
 const OWNER_JUDGE := &"korrupter-richter"
 const OWNER_HOUND := &"spuerhund"
 const OWNER_PARASITE := &"parasit"
+const OWNER_PACK2 := &"pack2"
+const OWNER_SHADOW := &"schattenhund"
+const OWNER_NIGHTMARE := &"albtraumwolf"
+const OWNER_POISON_WOLF := &"giftwolf"
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0
@@ -81,6 +85,9 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 			return null
 	elif p.owner == OWNER_APPRENTICE:
 		if not ApprenticeRules.STAGES.has(p.stage):
+			return null
+	elif p.owner == OWNER_SHADOW:
+		if p.stage != &"use":
 			return null
 	elif InfoSteps.OWNERS.has(p.owner):
 		if not InfoSteps.STAGES.has(p.stage):

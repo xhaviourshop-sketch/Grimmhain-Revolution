@@ -236,6 +236,10 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return ApprenticeRules.validate_answer(s, prompt, p)
 	if InfoSteps.OWNERS.has(prompt.owner):
 		return InfoSteps.validate_answer(s, prompt, p)
+	if prompt.owner == PendingPrompt.OWNER_SHADOW:
+		if DictRead.get_string(p, "stage") != "use":
+			return &"stage_mismatch"
+		return &"" if (not p.has("targets") and p.get("choice") is bool) else &"invalid_answer"
 	var targets: Variant = DictRead.to_int_array(DictRead.get_array(p, "targets"))
 	if targets == null or not p.get("targets") is Array:
 		return &"invalid_target"
@@ -303,6 +307,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				ApprenticeRules.answer(ctx, p)
 			elif InfoSteps.OWNERS.has(s.pending_prompt.owner):
 				InfoSteps.answer(ctx, p)
+			elif s.pending_prompt.owner == PendingPrompt.OWNER_SHADOW:
+				_answer_shadow(ctx, bool(p["choice"]))
 			else:
 				_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
 		Command.BEGIN_STEP:
@@ -379,6 +385,20 @@ static func _record_nomination(ctx: RuleContext, nominator: int, nominee: int, b
 
 ## Bei Tagesbeginn: jede Markierung eines lebenden Richters auf eine lebende Person wird zu seiner
 ## Nominierung, sofern beide heute noch frei sind (nach Personen-ID des Richters).
+## Schattenhund: „jetzt blockieren?“; Ja blockiert alle Dorf-Nachtschritte dieser Nacht (einmal je Leben).
+static func _answer_shadow(ctx: RuleContext, use: bool) -> void:
+	var s := ctx.state
+	var prompt := s.pending_prompt
+	s.pending_prompt = null
+	ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {"prompt_id": prompt.id, "owner": prompt.owner, "stage": "use", "choice": use})
+	if use:
+		s.village_blocked = true
+		s.players[prompt.actor_id].ability_uses["schattenhund:block"] = 1
+		ctx.emit(GameEvent.NIGHT_BLOCKED, Visibility.GM, {"by": String(RoleCatalog.SCHATTENHUND), "blocker_id": prompt.actor_id, "target_id": -1, "night": s.night_number})
+	s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+	s.next_night_step += 1
+
+
 static func _judge_nominations(ctx: RuleContext) -> void:
 	var s := ctx.state
 	for mark: Dictionary in s.judge_marks:
@@ -445,7 +465,11 @@ static func _start_night(ctx: RuleContext) -> void:
 	PhaseMachine.enter(ctx, Phase.NIGHT)
 	s.pack_target_id = GameState.NO_TARGET
 	s.night_plan = StepQueue.build_night_plan(s)
+	s.pack_bonus_pending = false  # in den Plan übernommen (Rudelvater)
 	s.judge_marks.clear()  # Markierungen gelten nur für den folgenden Tag
+	s.village_blocked = false
+	s.blocked_ids.clear()
+	s.pack_extra_target_id = GameState.NO_TARGET
 	s.night_wolf_ids.clear()
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
@@ -480,6 +504,25 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 		PendingPrompt.OWNER_GUARD:
 			Protections.set_protection(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_PACK2:
+			s.pack_extra_target_id = target
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_NIGHTMARE:
+			if target != GameState.NO_TARGET and not s.blocked_ids.has(target):
+				s.blocked_ids.append(target)
+			ctx.emit(GameEvent.NIGHT_BLOCKED, Visibility.GM, {"by": String(RoleCatalog.ALBTRAUMWOLF), "blocker_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_POISON_WOLF:
+			if target != GameState.NO_TARGET:
+				var wolf := s.players[prompt.actor_id]
+				wolf.ability_uses["giftwolf:paw1" if not wolf.ability_uses.has("giftwolf:paw1") else "giftwolf:paw2"] = 1
+				s.wolf_poisons.append({"target_id": target, "source_id": prompt.actor_id, "due_night": s.night_number + 2})
+				ctx.emit(GameEvent.WOLF_POISONED, Visibility.GM, {"wolf_id": prompt.actor_id, "target_id": target, "due_night": s.night_number + 2})
+				ctx.emit(GameEvent.WOLF_POISON_NOTICE, Visibility.ACTOR, {"due_night": s.night_number + 2}, target)
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_PARASITE:
@@ -524,11 +567,22 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	PhaseMachine.enter(ctx, Phase.DAWN_RESOLUTION)
 	# Gift vor dem Rudelangriff: Ursache und Reihenfolge wie beim früheren Sofort-Tod.
 	WitchStep.apply_poisons(ctx)
+	# Giftwolf: fällige Vergiftungen (zwei Nächte nach der Giftpranke), unaufhaltbar.
+	for entry: Dictionary in s.wolf_poisons.duplicate():
+		if int(entry["due_night"]) == s.night_number:
+			s.wolf_poisons.erase(entry)
+			KillPipeline.request_kill(ctx, int(entry["target_id"]), KillEvent.CAUSE_WOLF_POISON, KillEvent.SOURCE_PLAYER, int(entry["source_id"]))
 	if s.pack_target_id != GameState.NO_TARGET:
-		KillPipeline.request_kill(ctx, s.pack_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK)
+		# Seuchenwolf: der nächste tatsächliche Rudelangriff durchdringt Schutz und verbraucht die Wirkung.
+		var pierce := s.plague_pierce_pending
+		s.plague_pierce_pending = false
+		KillPipeline.request_kill(ctx, s.pack_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, pierce)
 	else:
 		ctx.emit(GameEvent.NO_NIGHT_KILL, Visibility.GM, {"night_number": s.night_number})
+	if s.pack_extra_target_id != GameState.NO_TARGET:
+		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true)
 	s.pack_target_id = GameState.NO_TARGET
+	s.pack_extra_target_id = GameState.NO_TARGET
 	_finish_dawn_if_ready(ctx)
 
 

@@ -21,11 +21,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`die-ewigen`](#die-ewigen) | Dorf | `decision-required` | `not-found` | `assisted` | Informationsrolle | Einzelsieg | M / mittel | K9 | – |
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`koenig-lykaon`](#koenig-lykaon) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | Fraktionswechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit | M / mittel | K12 | C |
-| [`seuchenwolf`](#seuchenwolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Wolfsangriff-Modifikation | Todesreaktion, globale Regeländerung | M / mittel | K11 | – |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
 | [`schattenwanderer`](#schattenwanderer) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | Zielumleitung, Einmalfähigkeit | M / hoch | K6 | – |
-| [`giftwolf`](#giftwolf) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Tötung | Einmalfähigkeit, sonstige Spezialmechanik | M / mittel | K11 | – |
-| [`rudelvater`](#rudelvater) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Wolfsangriff-Modifikation | Hinrichtungsreaktion, Schutz, Einmalfähigkeit | M / mittel | K11 | – |
 | [`schwarze-witwe`](#schwarze-witwe) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Tötung | M / mittel | K6 | – |
 | [`der-weise`](#der-weise) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Wolfsangriff-Modifikation | Hinrichtungsreaktion, globale Regeländerung | M / hoch | K8 | C |
 | [`verdammniswaechter`](#verdammniswaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Zielumleitung | Tötung, Zufallsmechanik | M / hoch | K11 | – |
@@ -33,7 +30,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
 | [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
-| [`schattenhund`](#schattenhund) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | globale Regeländerung | Einmalfähigkeit | S / mittel | K8 | B |
 | [`fenrir`](#fenrir) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik, Einmalfähigkeit | M / mittel | K4 | – |
 | [`kutscher`](#kutscher) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | Rollenwechsel, Zufallsmechanik | L / hoch | K13 | – |
 | [`seelentauscher`](#seelentauscher) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | Einmalfähigkeit, Fraktionswechsel | L / kritisch | K12 | – |
@@ -42,7 +38,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`henker`](#henker) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | Tötung | M / mittel | K4 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
-| [`albtraumwolf`](#albtraumwolf) | Wölfe | `decision-required` | `legacy-broken` | `automatic` | sonstige Spezialmechanik | globale Regeländerung | S / mittel | K8 | – |
 | [`cerberus`](#cerberus) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik | S / mittel | K4 | B |
 | [`rotkaeppchen`](#rotkaeppchen) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik | L / hoch | K10 | – |
 | [`kopfgeldjaeger`](#kopfgeldjaeger) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | Hinrichtungsreaktion, Zufallsmechanik | M / mittel | K7 | B |
@@ -171,27 +166,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeitverhalten der hartkodierten Prompts in EN. |
 | Detail | [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
 
-### `seuchenwolf`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Seuchenwolf / Blight Wolf |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / IV / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Kernidee funktioniert, aber der Umfang ("alle Schutzeffekte") und der Verbrauch weichen vom Text ab, und der Code behandelt zwei "ignoriert Schutz"-Regeln (Seuchenwolf, Rudelvater) unterschiedlich. |
-| DE/EN-Vergleich | JA, semantisch gleich. |
-| Automationsziel | `automatic`: (nach Festlegung der Liste). |
-| Mechanik | primär: Wolfsangriff-Modifikation; sekundär: Todesreaktion, globale Regeländerung |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | KillPipeline (Abfangstufe mit Filter), Protections (derzeit nur Schutzengel gegen Rudel-NIGHT_KILL), Reaktionswarteschlange nicht nötig (passiver Effekt). |
-| Neue Systeme | globaler Modifikator "nächster Rudelangriff durchdringt" (persistiert, mit Verbrauchsregel); Attribut `pierces` pro Angriff. |
-| Abhängigkeiten | Werwolf, Schutzengel, Schutzgeist, Dorfwache, Der Weise, Waldhexe, Nekromant, Kartenschlucker, Hades, Dorfschmied, Märtyrerin, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (gemeinsames Durchdringungskonzept). |
-| Widersprüche | RM-C-006 Umfang "alle Schutzeffekte"; RM-C-007 Verbrauch; RM-C-008 Welche Angriffe |
-| Entscheidungen | RM-DR-108 (Rolle); übergreifend RM-DR-004, RM-DR-005, RM-DR-009, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/wolves-a.md#seuchenwolf) |
-
 ### `schicksalswolf`
 
 | Feld | Inhalt |
@@ -233,48 +207,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K6 / in keiner Option |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/wolves-a.md#schattenwanderer) |
-
-### `giftwolf`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Giftwolf / Poison Wolf |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / II / 2.7 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Text wird umgesetzt; offene Punkte sind Regelpräzisierungen, die Bugs betreffen den Rundenwechsel |
-| DE/EN-Vergleich | JA, semantisch gleich. |
-| Automationsziel | `automatic`: für Termin und Tod; assisted für "Ziel erfährt davon" (Actor-Information). |
-| Mechanik | primär: Tötung; sekundär: Einmalfähigkeit, sonstige Spezialmechanik |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt, KillPipeline (Ursache mit Attribut wolf_ability, dawn), Ereignis-Sichtbarkeit (actor-Ereignis an Ziel), InfoRecord, StateCodec, Reaktionswarteschlange (Folgen am Morgen). |
-| Neue Systeme | zeitlich verzögerte Effekte (Termin an Tages-/Morgenzähler, persistiert, partiegebunden); dauerhafte Statusmarker (vergiftet); Ladungszähler pro Person. |
-| Abhängigkeiten | Rudelvater (keine Rettung), Ritter (Vergeltung), Schattenwanderer, Nekromant/Kartenschlucker/Hades (Schilde), Zeitwächter (Morgenzähler), Frankenstein/Kutscher (Wiederbelebung), Orakel (sieht "Werwolf"). |
-| Widersprüche | RM-C-012 Zwei Ladungen in einer Nacht; RM-C-013 "erfährt davon"; RM-C-014 Zeitpunkt "zwei Tage später" |
-| Entscheidungen | RM-DR-111 (Rolle); übergreifend RM-DR-004, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/wolves-a.md#giftwolf) |
-
-### `rudelvater`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Rudelvater / Packfather |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / II / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Rettung mit Ursachenfilter und Zusatzopfer nach Lynch sind umgesetzt; Abweichungen betreffen Ablaufdetails und Begriffsabgrenzung |
-| DE/EN-Vergleich | JA, semantisch gleich ("zusätzliches Opfer" = "second target", "alle Schutzfähigkeiten" = "all protection"). |
-| Automationsziel | `automatic`: für Rettung; assisted für Zusatzopfer (Rudel-Prompt mit SL-Bestätigung). |
-| Mechanik | primär: Wolfsangriff-Modifikation; sekundär: Hinrichtungsreaktion, Schutz, Einmalfähigkeit |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | KillPipeline (Einmal-Schild mit Ursachenfilter, Durchdringung), ExecutionRules (Hook bei Hinrichtung), StepQueue/PendingPrompt (zweiter Rudelschritt), Protections, Ereignis-Sichtbarkeit. |
-| Neue Systeme | zeitlich verzögerter Effekt "nächste Nacht zusätzliches Rudelopfer" (persistiert); Ursachen-Taxonomie (wolf_attack, execution) als Attribute; Einmal-Schild pro Person (mehrere Leben light). |
-| Abhängigkeiten | Werwolf (Rudel), Seuchenwolf (gemeinsame Durchdringung), Giftwolf, Schattenwanderer, Nekromant/Kartenschlucker/Hades, Dorfwache, Der Weise, Dorfschmied, Voodoo-Priester, Märtyrerin, Albtraumwolf, Sensenträger, Ritter. |
-| Widersprüche | RM-C-015 Was ist "Wolfsangriff"; RM-C-016 Was ist "Lynch"; RM-C-017 "alle Schutzfähigkeiten"; RM-C-018 Wer wählt wann |
-| Entscheidungen | RM-DR-112 (Rolle); übergreifend RM-DR-004, RM-DR-005; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
-| Belegsicherheit | hoch; nicht verifiziert: EN-Laufzeitdarstellung des hartkodierten Prompts. --- ## Gruppenübergreifende Beobachtungen 1. F2 bestätigt und in Tragweite größer als in `01:263` beschrieben: 6 der 8 Rollen (Siegreicher Wolf, Seuchenwolf, Schicksalswolf, … |
-| Detail | [Dossier](dossiers/wolves-a.md#rudelvater) |
 
 ### `schwarze-witwe`
 
@@ -422,27 +354,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K12 / in keiner Option |
 | Belegsicherheit | hoch für Auslösepfade und `isWolf`-Nutzung. Nicht verifiziert: Laufzeitverhalten des Abbruchs (nur aus Code abgeleitet); Godot-Reaktionsarten (nur Doku gelesen). --- |
 | Detail | [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
-
-### `schattenhund`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Schattenhund / Shadow Hound |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / III / 0.7 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Kernfunktion (einmalige Blockade einer Nacht) funktioniert; Zielgruppe (Solo) und Nacht-1-Sperre weichen vom Text ab. |
-| DE/EN-Vergleich | JA, semantisch gleich (einmalig/once, alle Dorf-Fähigkeiten/all village abilities, eine Nacht/one night). |
-| Automationsziel | `automatic` |
-| Mechanik | primär: globale Regeländerung; sekundär: Einmalfähigkeit |
-| Größe / Risiko | S / mittel. Einfache Flag-Logik; Risiko in der genauen Abgrenzung, welche Effekte blockiert sind. |
-| Vorhandene Godot-Systeme | StepQueue (Schritt-Status "blockiert mit Grund", 04 B-6), PendingPrompt (Ja/Nein), `ability_uses`, Ereignis-Sichtbarkeit, StateCodec, Replay, GmCorrections. |
-| Neue Systeme | Rollenblockierung (globaler Nacht-Modifikator mit Fraktionsfilter und Ablauf bei Nachtende). |
-| Abhängigkeiten | alle Dorf-Nachtrollen; Wolfskind und Lehrling (Begründung der Nacht-1-Sperre); Albtraumwolf, Zeitwächter, Der Weise (gleiche Blockadefamilie). |
-| Widersprüche | RM-C-025 Betroffene Rollen; RM-C-026 Nacht 1; RM-C-027 Nicht-Nachtschritt-Effekte |
-| Entscheidungen | RM-DR-123 (Rolle); übergreifend RM-DR-010, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K8 / ab Option B |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/wolves-b.md#schattenhund) |
 
 ### `fenrir`
 
@@ -611,27 +522,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch; Ursachenliste per `rg "VOODOO_PUPPET"` vollständig (`night:255,442`, `help:265`, `gh:2426`, `ui:407`). |
 | Detail | [Dossier](dossiers/solos-a.md#voodoo-priester) |
-
-### `albtraumwolf`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Albtraumwolf / Nightmare Wolf |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / III, IV / 2.1 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. F3 verfälscht die Kernwirkung: die Blockade wird zum Schutz gegen das eigene Rudel. |
-| DE/EN-Vergleich | JA, semantisch gleich (jede Nacht, eine Person, Dorfbewohner/villager). |
-| Automationsziel | `automatic` |
-| Mechanik | primär: sonstige Spezialmechanik; sekundär: globale Regeländerung |
-| Größe / Risiko | S / mittel |
-| Vorhandene Godot-Systeme | StepQueue (Schritt-Status `blocked(reason)`), PendingPrompt, Ereignis-Sichtbarkeit, StateCodec, Replay, GmCorrections. |
-| Neue Systeme | Rollenblockierung (pro Person, mit Ablauf zum Nachtende). |
-| Abhängigkeiten | alle Nicht-Wolf-Nachtrollen mit tier > 2.1; Schattenhund/Zeitwächter/Der Weise (gleiche Blockadefamilie); Dämonischer Wolf (Verfluchte nicht wählbar); Rudel (F3). |
-| Widersprüche | RM-C-033 Ziele; RM-C-034 Umfang; RM-C-035 Anzahl pro Nacht; RM-C-036 Späte Wirkung |
-| Entscheidungen | RM-DR-134 (Rolle); übergreifend RM-DR-010; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K8 / in keiner Option |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/wolves-b.md#albtraumwolf) |
 
 ### `cerberus`
 

@@ -64,6 +64,9 @@ const NEW_WOLF_BLOCKED_NOTICE := &"NewWolfBlockedNotice"  ## private Mitteilung 
 const HOUND_RECORDED := &"HoundRecorded"      ## Prüfung des Spürhunds (nur Spielleiter)
 const HOUND_REVEALED := &"HoundRevealed"      ## Ergebnis ✓/✗ für den Spürhund (actor)
 const PARASITE_ATTACHED := &"ParasiteAttached"  ## Wirtwahl des Parasiten (nur Spielleiter)
+const NIGHT_BLOCKED := &"NightBlocked"          ## Blockade durch Schattenhund oder Albtraumwolf (nur Spielleiter)
+const WOLF_POISONED := &"WolfPoisoned"          ## Giftpranke des Giftwolfs (nur Spielleiter)
+const WOLF_POISON_NOTICE := &"WolfPoisonNotice"  ## private Mitteilung an das vergiftete Ziel (actor)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

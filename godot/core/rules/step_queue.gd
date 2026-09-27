@@ -16,6 +16,7 @@ extends RefCounted
 ## wenn keine Person mehr lebt, die bei StartNight als Wolf zählte (`night_wolf_ids`).
 
 const PACK := &"pack"
+const PACK2 := &"pack2"  ## zweiter Rudelschritt nach dem Lynch eines Rudelvaters (RM-DR-112)
 const BOUND := &"die-gebundenen"  ## gemeinsamer Schritt aller Gebundenen, nur Nacht 1
 const STATUS_PENDING := &"pending"
 const STATUS_DONE := &"done"
@@ -71,6 +72,10 @@ static func is_reaction_step(step_id: String) -> bool:
 const KIND_REACTION := &"reaction"
 const SKIPPABLE_BY_KIND := {
 	PACK: true,                        # Rudel: kein Angriff, nur mit Grund
+	PACK2: true,                       # zweiter Rudelschritt wie das Rudel
+	RoleCatalog.SCHATTENHUND: false,   # Verzicht ist eine Antwort
+	RoleCatalog.ALBTRAUMWOLF: false,   # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.GIFTWOLF: false,       # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.SCHUTZENGEL: false,    # Pflichtauswahl (DR-05)
 	RoleCatalog.WALDHEXE: false,       # Verzicht auf beide Tränke ist eine Antwort im eigenen Prompt (DR-06)
 	RoleCatalog.ORAKEL: false,         # Pflichtprüfung einer anderen lebenden Person (DR-07)
@@ -121,10 +126,16 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if p.role_id == RoleCatalog.FAEHRTENLESER and InfoSteps.tracker_used(p):
 			continue
+		if p.role_id == RoleCatalog.SCHATTENHUND and p.ability_uses.has("schattenhund:block"):
+			continue
+		if p.role_id == RoleCatalog.GIFTWOLF and p.ability_uses.has("giftwolf:paw2"):
+			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
 			entries.append([RoleCatalog.PACK_PRIORITY, 0, PACK])
+			if s.pack_bonus_pending:
+				entries.append([RoleCatalog.PACK_PRIORITY, 1, PACK2])
 			break
 	if s.night_number == 1 and not InfoSteps.living_bound(s).is_empty():
 		entries.append([RoleCatalog.BOUND_PRIORITY, 0, BOUND])
@@ -140,7 +151,9 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
 	if key == BOUND:
 		return &"" if not InfoSteps.living_bound(s).is_empty() else &"no_decision"
-	if key == PACK:
+	if key == BOUND and s.village_blocked:
+		return &"blocked"
+	if key == PACK or key == PACK2:
 		# G-PH-6 mit Decision Log „Rollenaudit“ (F-10): Das Rudel dieser Nacht sind die Personen,
 		# die bei StartNight als Wolf zählten; lebt keine von ihnen mehr, entfällt der Schritt.
 		for id: int in s.night_wolf_ids:
@@ -153,6 +166,9 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	# Vergiftete Personen wachen in dieser Nacht nicht mehr auf (Decision Log „Nachttode“).
 	if WitchStep.is_marked(s, actor):
 		return &"marked_for_death"
+	# Blockade (RM-DR-010): nur aktive Nachtschritte von Dorfrollen.
+	if s.players[actor].faction == Faction.VILLAGE and (s.village_blocked or s.blocked_ids.has(actor)):
+		return &"blocked"
 	# Nie die Fähigkeit einer inzwischen verlorenen Rolle ausführen (gilt für alle persönlichen Schritte).
 	if s.players[actor].role_id != step_role(key):
 		return &"actor_role_changed"
@@ -224,6 +240,23 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == BOUND:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
+	elif s.night_plan[s.next_night_step] == PACK2:
+		# Zweiter Rudelschritt (Rudelvater): wie das Rudel, Opfer durchdringt Schutz.
+		prompt.owner = PendingPrompt.OWNER_PACK2
+		prompt.actor_id = -1
+		prompt.cancellable = true
+	elif step_kind(step_id) == RoleCatalog.SCHATTENHUND:
+		prompt.owner = PendingPrompt.OWNER_SHADOW
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.stage = &"use"
+		prompt.allowed_ids = []
+		prompt.cancellable = true
+	elif step_kind(step_id) == RoleCatalog.ALBTRAUMWOLF or step_kind(step_id) == RoleCatalog.GIFTWOLF:
+		# Albtraumwolf blockiert, Giftwolf vergiftet: freiwillig eine andere lebende Person.
+		prompt.owner = PendingPrompt.OWNER_NIGHTMARE if step_kind(step_id) == RoleCatalog.ALBTRAUMWOLF else PendingPrompt.OWNER_POISON_WOLF
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.allowed_ids.erase(prompt.actor_id)
+		prompt.cancellable = true
 	elif step_kind(step_id) == RoleCatalog.PARASIT:
 		# Parasit: freiwillig einen anderen lebenden Wirt wählen; 0 Ziele = bisherigen Wirt behalten.
 		prompt.owner = PendingPrompt.OWNER_PARASITE

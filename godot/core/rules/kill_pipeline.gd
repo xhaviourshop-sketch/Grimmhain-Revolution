@@ -14,7 +14,8 @@ extends RefCounted
 ## Spiegelung folgt.
 
 
-static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true) -> KillEvent:
+## `pierce`: Angriff durchdringt Schutzengel, Waldhexenrettung und Dorfwache (RM-DR-005), keine Schilde.
+static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true, pierce: bool = false) -> KillEvent:
 	var s := ctx.state
 	var target: Player = s.players.get(target_id)
 	if target == null or not target.alive:
@@ -22,9 +23,11 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 			"target_id": target_id, "cause": cause, "reason": "target_not_alive",
 		})
 		return null
-	if _prevented_by_protection(ctx, target_id, cause, source_kind):
+	if not pierce and _prevented_by_protection(ctx, target_id, cause, source_kind):
 		return null
 	if _parasite_immune(ctx, target, cause, source_kind):
+		return null
+	if _packfather_survives(ctx, target, cause, source_kind):
 		return null
 	var dead_before := s.players.size() - s.alive_ids().size()  # nur aktuell Tote (RM-DR-138.3)
 	var record := KillEvent.new()
@@ -48,6 +51,11 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		_queue_reaction(ctx, target, record, s.players.size() - dead_before)
 		_knight_strike(ctx, target, record)
 	_end_parasite_bonds(ctx, target, trigger_effects)
+	s.wolf_poisons = s.wolf_poisons.filter(func(e: Dictionary) -> bool: return int(e["target_id"]) != target.id)
+	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
+		s.pack_bonus_pending = true
+	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:
+		s.plague_pierce_pending = true
 	WinRules.record_death_seeker(ctx, target, record, dead_before)
 	if trigger_effects:
 		_coachman_crash(ctx, target, record)
@@ -81,6 +89,23 @@ static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: St
 		"target_id": target_id, "cause": cause, "source_kind": source_kind, "protection": sources[0], "sources": sources,
 		"guardian_id": guardians[0] if not guardians.is_empty() else GameState.NO_TARGET, "guardian_ids": guardians,
 		"rescuer_ids": rescuers, "night": night,
+	})
+	return true
+
+
+## Rudelvater (RM-DR-112): überlebt einmal je Leben einen Tod, der weder Rudelangriff noch Lynch
+## noch Spielleiterkorrektur ist.
+static func _packfather_survives(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
+	if target.role_id != RoleCatalog.RUDELVATER or source_kind == KillEvent.SOURCE_GM or cause == KillEvent.CAUSE_LYNCH:
+		return false
+	if cause == KillEvent.CAUSE_NIGHT_KILL and source_kind == KillEvent.SOURCE_PACK:
+		return false
+	if target.ability_uses.has("rudelvater:survive"):
+		return false
+	target.ability_uses["rudelvater:survive"] = 1
+	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {
+		"target_id": target.id, "cause": cause, "source_kind": source_kind, "protection": RoleCatalog.RUDELVATER,
+		"sources": [RoleCatalog.RUDELVATER], "night": ctx.state.night_number,
 	})
 	return true
 

@@ -569,6 +569,36 @@ msgstr "Parasit"
 msgid "ui.role.parasit.short"
 msgstr "Heftet sich an einen Wirt, stirbt nur mit ihm; gewinnt unter den letzten drei."
 
+msgid "ui.role.schattenhund.name"
+msgstr "Schattenhund"
+
+msgid "ui.role.schattenhund.short"
+msgstr "Wolf im Rudel, blockiert einmal alle Dorf-Fähigkeiten einer Nacht."
+
+msgid "ui.role.albtraumwolf.name"
+msgstr "Albtraumwolf"
+
+msgid "ui.role.albtraumwolf.short"
+msgstr "Wolf im Rudel, blockiert jede Nacht die Fähigkeit einer Person."
+
+msgid "ui.role.giftwolf.name"
+msgstr "Giftwolf"
+
+msgid "ui.role.giftwolf.short"
+msgstr "Wolf im Rudel, vergiftet zweimal; das Ziel stirbt zwei Nächte später."
+
+msgid "ui.role.rudelvater.name"
+msgstr "Rudelvater"
+
+msgid "ui.role.rudelvater.short"
+msgstr "Wolf im Rudel, überlebt einmal; nach seinem Lynch ein zusätzliches Opfer."
+
+msgid "ui.role.seuchenwolf.name"
+msgstr "Seuchenwolf"
+
+msgid "ui.role.seuchenwolf.short"
+msgstr "Wolf im Rudel; nach seinem Tod durchbricht der nächste Angriff jeden Schutz."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

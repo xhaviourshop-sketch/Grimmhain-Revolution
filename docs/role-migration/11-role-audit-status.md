@@ -15,16 +15,16 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=29 open=0 blocked=43 -->
+<!-- check:audit-counts total=72 green=34 open=0 blocked=38 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
-| **GRÜN** | **29** |
+| **GRÜN** | **34** |
 | **OFFEN** | **0** |
-| **BLOCKIERT** | **43** |
+| **BLOCKIERT** | **38** |
 
-72/72 ist **nicht** erreicht. Die 43 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
+72/72 ist **nicht** erreicht. Die 38 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
 
 ## 3. Übersicht
 
@@ -47,11 +47,11 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 13 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-106.1, RM-DR-106.2, RM-DR-106.3, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#rachsuechtiger-wolf) | **BLOCKIERT** |
 | 14 | `koenig-lykaon` | König Lykaon / King Lycaon | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-107.1, RM-DR-107.2, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#koenig-lykaon) | **BLOCKIERT** |
 | 15 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | Wölfe | Rollentext DE/EN = Legacy-Code; Auslegung 10-next-decisions „Zur Kenntnis“ | zählt lebend in der Wolfsparität doppelt; nicht bei „kein Wolf lebt“ und nicht bei Personenzählungen | – | umgesetzt | test_siegreicher_wolf (10), fuzz | Lehrling, Manipulator, Orakel, Wiederbelebung, Rollenkorrektur | **GRÜN** |
-| 16 | `seuchenwolf` | Seuchenwolf / Blight Wolf | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-108.1, RM-DR-108.2, RM-DR-108.3, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#seuchenwolf) | **BLOCKIERT** |
+| 16 | `seuchenwolf` | Seuchenwolf / Blight Wolf | Wölfe | Rollentext; RM-DR-108 (Decision Log) | nach seinem Tod durchdringt der nächste tatsächliche Rudelangriff Schutz | – | umgesetzt | test_wolf_specials, fuzz | Schutzengel, Dorfwache, Waldhexe | **GRÜN** |
 | 17 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-109.1, RM-DR-109.2, RM-DR-109.3 | fehlt | – | [03](03-remaining-roles-analysis.md#schicksalswolf) | **BLOCKIERT** |
 | 18 | `schattenwanderer` | Schattenwanderer / Shadowwalker | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-110.1, RM-DR-110.2, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#schattenwanderer) | **BLOCKIERT** |
-| 19 | `giftwolf` | Giftwolf / Poison Wolf | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-111.1, RM-DR-111.2, RM-DR-111.3 | fehlt | – | [03](03-remaining-roles-analysis.md#giftwolf) | **BLOCKIERT** |
-| 20 | `rudelvater` | Rudelvater / Packfather | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-112.1, RM-DR-112.2, RM-DR-112.3, RM-DR-112.4 | fehlt | – | [03](03-remaining-roles-analysis.md#rudelvater) | **BLOCKIERT** |
+| 19 | `giftwolf` | Giftwolf / Poison Wolf | Wölfe | Rollentext; RM-DR-111 (Decision Log) | zwei Giftpranken je Leben, eine pro Nacht; Tod nach N+2, sofortiger privater Hinweis, unaufhaltbar | – | umgesetzt | test_wolf_specials, fuzz | Schutzengel, früherer Tod, Parasit, Rudelvater | **GRÜN** |
+| 20 | `rudelvater` | Rudelvater / Packfather | Wölfe | Rollentext; RM-DR-112 (Decision Log) | überlebt einmal Nicht-Rudel/Nicht-Lynch; nach Lynch zweiter, durchdringender Rudelschritt | – | umgesetzt | test_wolf_specials, fuzz | Waldhexe, Schutzengel, Dorfwache, Korrektur | **GRÜN** |
 | 21 | `schwarze-witwe` | Schwarze Witwe / Black Widow | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-113.1, RM-DR-113.2 | fehlt | – | [03](03-remaining-roles-analysis.md#schwarze-witwe) | **BLOCKIERT** |
 | 22 | `der-weise` | Der Weise / The Elder | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-114.1, RM-DR-114.2, RM-DR-114.3, RM-DR-114.4, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#der-weise) | **BLOCKIERT** |
 | 23 | `verdammniswaechter` | Verdammniswächter / Doom Warden | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-115.1, RM-DR-115.2, RM-DR-115.3, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#verdammniswaechter) | **BLOCKIERT** |
@@ -65,7 +65,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 31 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | Wölfe | DR-13, Eintrag Spiegelwolf | erste Hinrichtung auf Nominierende umgelenkt, einmal pro Person | – | umgesetzt | test_spiegelwolf (20), test_role_interactions, fuzz | Wolfskind, Lehrling, Sensenträger, Schutz | **GRÜN** |
 | 32 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-122.1, RM-DR-122.2, RM-DR-122.3, RM-DR-002, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#daemonischer-wolf) | **BLOCKIERT** |
 | 33 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Wölfe | DR-08, Korrekturrunde 1, Eintrag Trugbilderwolf | Scheinrolle im Setup je Instanz, nie Wolfsrolle, Korrektur nur bestätigt | – | umgesetzt | test_trugbilderwolf (23), test_gm_role_field, fuzz | Orakel, Waldhexe, Lehrling | **GRÜN** |
-| 34 | `schattenhund` | Schattenhund / Shadow Hound | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-123.1, RM-DR-123.2, RM-DR-123.3 | fehlt | – | [03](03-remaining-roles-analysis.md#schattenhund) | **BLOCKIERT** |
+| 34 | `schattenhund` | Schattenhund / Shadow Hound | Wölfe | Rollentext; RM-DR-123, RM-DR-010 (Decision Log) | einmal je Leben alle Dorf-Nachtschritte einer Nacht blockieren; handelt zuerst | – | umgesetzt | test_wolf_specials, fuzz | Schutzengel, Orakel, Waldläufer, Gebundene | **GRÜN** |
 | 35 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Wölfe | Rollentext; RM-DR-124.1 (Decision Log „Rollenaudit · Wiederbelebung …“) | Mitnahme als Reaktion bei mindestens 5 Lebenden inkl. ihm; Verzicht möglich; einmal je Leben | – | umgesetzt | test_ritter_besessener_faehrtenleser, fuzz | Lynch, Rudel, Wiederbelebung, Parität; Schilde folgen | **GRÜN** |
 | 36 | `fenrir` | Fenrir / Fenrir | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-125.1, RM-DR-125.2, RM-DR-125.3 | fehlt | – | [03](03-remaining-roles-analysis.md#fenrir) | **BLOCKIERT** |
 | 37 | `kutscher` | Kutscher / Coachman | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-126.1, RM-DR-126.2, RM-DR-013 | fehlt | – | [03](03-remaining-roles-analysis.md#kutscher) | **BLOCKIERT** |
@@ -76,7 +76,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-131.1, RM-DR-131.2, RM-DR-131.3, RM-DR-131.4, RM-DR-131.5, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#feuerteufel) | **BLOCKIERT** |
 | 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-132.1, RM-DR-132.2, RM-DR-132.3, RM-DR-132.4 | fehlt | – | [03](03-remaining-roles-analysis.md#voodoo-priester) | **BLOCKIERT** |
 | 44 | `blutwolf` | Blutwolf / Blood Wolf | Wölfe | Rollentext; RM-DR-133.1, RM-DR-008 (Decision Log) | Wolf im Rudel; Stimmbonus nur als Hinweis (+1 je direkt toten Nachbarplatz) | – | umgesetzt | test_richter_waechter_blutwolf, fuzz | Wiederbelebung, Sitzkreis; Anzeige folgt mit UI | **GRÜN** |
-| 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-134.1, RM-DR-134.2, RM-DR-134.3 | fehlt | – | [03](03-remaining-roles-analysis.md#albtraumwolf) | **BLOCKIERT** |
+| 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | Rollentext; RM-DR-134, RM-DR-010 (Decision Log) | jede Nacht freiwillig eine Person blockieren; handelt zuerst | – | umgesetzt | test_wolf_specials, fuzz | Orakel, Gebundene, Dorf-Nachtschritte | **GRÜN** |
 | 46 | `cerberus` | Cerberus / Cerberus | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-135.1, RM-DR-135.2 | fehlt | – | [03](03-remaining-roles-analysis.md#cerberus) | **BLOCKIERT** |
 | 47 | `ritter` | Ritter / Knight | Dorf | Rollentext; RM-DR-136.1 (Decision Log) | bei Tod durch Wolfsangriff stirbt der nächste Wolf (tote Plätze zählen); Gleichstand: Spielleiter wählt; einmal je Leben | – | umgesetzt | test_ritter_besessener_faehrtenleser, fuzz | Rudel, Gift, Lynch, Wiederbelebung; Verfluchte/Fenrir folgen | **GRÜN** |
 | 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-137.1, RM-DR-137.2, RM-DR-137.3, RM-DR-137.4, RM-DR-137.5, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#rotkaeppchen) | **BLOCKIERT** |

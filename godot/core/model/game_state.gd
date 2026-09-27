@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts)
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -39,6 +39,12 @@ var win_candidates: Array[WinCandidate] = []  ## alle Siegkandidaten der Partie 
 var death_seeker_wins: Array[int] = []  ## Selbstmörder mit erfüllter Siegbedingung bei ihrer Hinrichtung, aufsteigend
 var judge_marks: Array = []  ## Markierungen der Korrupten Richter dieser Nacht [{judge_id, target_id}], nach judge_id
 var parasite_hosts: Array = []  ## aktive Wirte der Parasiten [{parasite_id, host_id}], nach parasite_id
+var village_blocked: bool = false   ## Schattenhund: alle Dorf-Nachtschritte dieser Nacht blockiert
+var blocked_ids: Array[int] = []    ## Albtraumwolf: blockierte Personen dieser Nacht
+var wolf_poisons: Array = []        ## Giftwolf: [{target_id, source_id, due_night}]
+var pack_bonus_pending: bool = false  ## Rudelvater gelyncht: nächste Nacht zweiter Rudelschritt
+var pack_extra_target_id: int = NO_TARGET  ## Opfer des zweiten Rudelschritts dieser Nacht
+var plague_pierce_pending: bool = false  ## Seuchenwolf tot: nächster Rudelangriff durchdringt Schutz
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -180,6 +186,12 @@ func to_dict() -> Dictionary:
 		"death_seeker_wins": death_seeker_wins.duplicate(),
 		"judge_marks": judge_marks.duplicate(true),
 		"parasite_hosts": parasite_hosts.duplicate(true),
+		"village_blocked": village_blocked,
+		"blocked_ids": blocked_ids.duplicate(),
+		"wolf_poisons": wolf_poisons.duplicate(true),
+		"pack_bonus_pending": pack_bonus_pending,
+		"pack_extra_target_id": pack_extra_target_id,
+		"plague_pierce_pending": plague_pierce_pending,
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -337,6 +349,28 @@ static func from_dict(d: Dictionary) -> GameState:
 		if not s.players.has(parasite) or not s.players.has(host) or parasite == host:
 			return null
 		s.parasite_hosts.append({"parasite_id": parasite, "host_id": host})
+	s.village_blocked = DictRead.get_bool(d, "village_blocked")
+	s.pack_bonus_pending = DictRead.get_bool(d, "pack_bonus_pending")
+	s.plague_pierce_pending = DictRead.get_bool(d, "plague_pierce_pending")
+	s.pack_extra_target_id = DictRead.get_int(d, "pack_extra_target_id", NO_TARGET)
+	if s.pack_extra_target_id != NO_TARGET and not s.players.has(s.pack_extra_target_id):
+		return null
+	var blocked: Variant = DictRead.to_int_array(DictRead.get_array(d, "blocked_ids"))
+	if blocked == null:
+		return null
+	s.blocked_ids = blocked
+	for id: int in s.blocked_ids:
+		if not s.players.has(id):
+			return null
+	for item: Variant in DictRead.get_array(d, "wolf_poisons"):
+		if not item is Dictionary:
+			return null
+		var poisoned := DictRead.get_int(item, "target_id", -1)
+		var source := DictRead.get_int(item, "source_id", -1)
+		var due := DictRead.get_int(item, "due_night", -1)
+		if not s.players.has(poisoned) or not s.players.has(source) or due < 1:
+			return null
+		s.wolf_poisons.append({"target_id": poisoned, "source_id": source, "due_night": due})
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null

@@ -291,7 +291,11 @@ Siehe §3.
 
 ### K8 · Rollenblockierung
 
-**Rollen Charge K8 (3):** `schattenhund`, `albtraumwolf`, `der-weise`
+**Rollen Charge K8 (1):** `der-weise`
+
+**Nachtrag Rollenaudit:** `albtraumwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `schattenhund` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Fähigkeiten anderer entfallen für eine oder mehrere Nächte.
 - **Neue Systeme:** N-11; für `der-weise` zusätzlich N-12 (Dauer) und N-03 (Einmalrettung).
@@ -331,7 +335,13 @@ Siehe §3.
 
 ### K11 · Wolfsangriff-Modifikation, Durchdringung, verzögerte Tode
 
-**Rollen Charge K11 (6):** `giftwolf`, `rudelvater`, `seuchenwolf`, `schicksalswolf`, `rachsuechtiger-wolf`, `verdammniswaechter`
+**Rollen Charge K11 (3):** `schicksalswolf`, `rachsuechtiger-wolf`, `verdammniswaechter`
+
+**Nachtrag Rollenaudit:** `seuchenwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `rudelvater` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `giftwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** zusätzliche oder veränderte Wolfsangriffe, Durchdringung, Tod zu einem späteren Zeitpunkt.
 - **Neue Systeme:** N-12, N-04 (Attribut `pierces` mit fester Liste), zusätzliche Rudelopfer.
