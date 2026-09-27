@@ -56,6 +56,11 @@ const ALARM_BELLS := &"AlarmBells"              ## Glocken des Nachtwächters (�
 const ALARM_BELLS_DETAIL := &"AlarmBellsDetail"  ## auslösende Nachtwächter und Nachbarn (nur Spielleiter)
 const TRACKER_RECORDED := &"TrackerRecorded"  ## Richtung für den Fährtenleser (nur Spielleiter)
 const TRACKER_REVEALED := &"TrackerRevealed"  ## dieselbe Richtung für den Fährtenleser (actor)
+const JUDGE_MARKED := &"JudgeMarked"              ## Markierung des Korrupten Richters (nur Spielleiter)
+const JUDGE_NOMINATED := &"JudgeNominated"        ## Nominierung aus der Markierung, mit Richter (nur Spielleiter)
+const JUDGE_NOMINATION_PUBLIC := &"JudgeNominationRecorded"  ## dieselbe Nominierung öffentlich, ohne Nominierenden
+const NEW_WOLF_BLOCKED := &"NewWolfBlocked"        ## Wächter am Tor verhindert einen neuen Wolf (nur Spielleiter)
+const NEW_WOLF_BLOCKED_NOTICE := &"NewWolfBlockedNotice"  ## private Mitteilung an die betroffene Person (actor)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

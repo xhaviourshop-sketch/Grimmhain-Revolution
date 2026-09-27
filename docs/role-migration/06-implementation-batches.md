@@ -339,7 +339,9 @@ Siehe §3.
 
 ### K12 · Rollen- und Fraktionswechsel
 
-**Rollen Charge K12 (4):** `koenig-lykaon`, `waechter-am-tor`, `daemonischer-wolf`, `seelentauscher`
+**Rollen Charge K12 (3):** `koenig-lykaon`, `daemonischer-wolf`, `seelentauscher`
+
+**Nachtrag Rollenaudit:** `waechter-am-tor` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Rolle, Fraktion oder Erscheinung ändern sich während der Partie.
 - **Neue Systeme:** N-17.
@@ -364,7 +366,11 @@ Siehe §3.
 
 ### K14 · Tag, Nominierung, Stimmbezug
 
-**Rollen Charge K14 (3):** `korrupter-richter`, `amalia`, `blutwolf`
+**Rollen Charge K14 (1):** `amalia`
+
+**Nachtrag Rollenaudit:** `korrupter-richter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `blutwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Wirkungen am Tag, auf Nominierungen oder als Hinweis zur physischen Abstimmung.
 - **Neue Systeme:** N-14; für `blutwolf` N-05.

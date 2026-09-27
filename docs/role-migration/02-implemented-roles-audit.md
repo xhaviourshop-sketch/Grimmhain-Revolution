@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 24 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 24 |
+| im RoleCatalog vorhandene Rollen | 27 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 27 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 22 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 25 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -71,6 +71,9 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 22 | `besessener-wolf` | Besessener Wolf / Possessed Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `kill_pipeline.gd` (`_queue_reaction`), `reaction.gd` (`possessed`) | `test_ritter_besessener_faehrtenleser.gd`, fuzz | RM-DR-124.1, DECISION-LOG „Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 23 | `ritter` | Ritter / Knight (Rollentext) | village | nein | – | `kill_pipeline.gd` (`_knight_strike`), `seats.gd` (`closest_wolves`) | `test_ritter_besessener_faehrtenleser.gd`, fuzz | RM-DR-136.1, DECISION-LOG „Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 24 | `faehrtenleser` | Fährtenleser / Tracker (Rollentext) | village | nein | 52 | `info_steps.gd` (Stufe `use`), `seats.gd` (`wolf_direction`) | `test_ritter_besessener_faehrtenleser.gd`, fuzz | RM-DR-146.1/.2, DECISION-LOG „Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 25 | `blutwolf` | Blutwolf / Blood Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `role_catalog.gd`, `vote_hints.gd` | `test_richter_waechter_blutwolf.gd`, fuzz | RM-DR-133.1, RM-DR-008, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor …“ und „Querschnittsfragen“ | `implemented-and-tested` | `assisted` | `legacy-verified` |
+| 26 | `korrupter-richter` | Korrupter Richter / Corrupt Judge (Rollentext) | village | nein | 15 | `rules_engine.gd` (`_judge_nominations`, `_record_nomination`), `vote_hints.gd` | `test_richter_waechter_blutwolf.gd`, fuzz | RM-DR-117, RM-DR-012, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor …“ und „Querschnittsfragen“ | `implemented-and-tested` | `automatic` | `not-found` |
+| 27 | `waechter-am-tor` | Wächter am Tor / Gatewarden (Rollentext) | village | nein | – | `gatewarden.gd`, `wolf_child_rules.gd`, `apprentice_rules.gd` | `test_richter_waechter_blutwolf.gd`, fuzz | RM-DR-149, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor …“ und „Querschnittsfragen“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -203,6 +206,21 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-27):** Jede Nacht „jetzt nutzen?“ (Priorität 52) bis zur Nutzung, danach kein Schritt; Wiederbelebung setzt zurück. Richtung des nächsten Wolfs: `left` = Uhrzeigersinn aus Sicht der Person, `right`, `equal` bei Gleichstand; Abstand einschließlich toter Plätze. `TrackerRevealed` nur an ihn.
 - **Tests:** links/rechts/gleich weit, tote Plätze, Verzicht und erneute Frage, keine Frage nach Nutzung, Wiederbelebung, Ladeprüfung.
 - **Grenzen:** Gegenprüfung am Tablet, ob die Sitzansicht im Uhrzeigersinn läuft (RM-DR-146.1).
+
+### 4.25 `blutwolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Wolfsfraktion, Rudel. Kein Stimmsystem: `VoteHints.hints` liefert dem Spielleiter „+1 je direkt benachbartem toten Platz“, solange er lebt (live berechnet).
+- **Tests:** Hinweis 0/1/2, nur direkte Nachbarn, Wiederbelebung, toter Blutwolf.
+- **Grenzen:** Anzeige des Hinweises in der Oberfläche folgt mit dem Spielablauf-UI.
+
+### 4.26 `korrupter-richter`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nachtschritt (Priorität 15): freiwillig eine lebende Person markieren (auch sich selbst). Bei Tagesbeginn wird die Markierte, wenn Richter und Ziel leben und frei sind, als Nominierung des Richters gespeichert (Tageslimit, Manipulator-Tod, Spiegelung wie sonst); öffentlich nur `JudgeNominationRecorded` ohne Richter, `JudgeNominated` für den Spielleiter; `VoteHints` +1. Markierung wird bei Nachtbeginn gelöscht (`judge_marks`).
+- **Tests:** verdeckte Nominierung, Hinweis, Limits, Verzicht, Selbstmarkierung, Löschen, Manipulator, Spiegelwolf, tote Beteiligte, Save/Load.
+- **Grenzen:** –
+
+### 4.27 `waechter-am-tor`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Solange ein Wächter lebt, wird eine Wolfskind-Verwandlung durch Tod des Vorbilds und ein Lehrling-Erbe einer Wolfsrolle durch Tod des Meisters blockiert: die Person wird Dorfbewohner (frische Einsätze), `NewWolfBlocked` für den Spielleiter, `NewWolfBlockedNotice` privat. Spielleiterkorrekturen bleiben unberührt.
+- **Tests:** Wolfskind, toter Wächter, Lehrling-Erbe mit Save/Load, Korrekturen.
+- **Grenzen:** König Lykaon, Seelentauscher und der Fluch des Dämonischen Wolfs folgen mit diesen Rollen.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

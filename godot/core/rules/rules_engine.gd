@@ -318,17 +318,7 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 		Command.END_NIGHT:
 			_resolve_dawn(ctx)
 		Command.NOMINATE:
-			var n := Nomination.new()
-			n.nominator_id = int(p["nominator_id"])
-			n.nominee_id = int(p["nominee_id"])
-			n.day = s.day_number
-			s.nominations.append(n)
-			s.players[n.nominee_id].ever_nominated = true  # dauerhaft an der Person (DR-12)
-			s.day_step = Phase.DAY_NOMINATION
-			ctx.emit(GameEvent.NOMINATION_RECORDED, Visibility.PUBLIC, n.to_dict())
-			# Manipulator stirbt sofort bei seiner Nominierung; der Tag bleibt aktiv.
-			if s.players[n.nominee_id].role_id == RoleCatalog.MANIPULATOR:
-				KillPipeline.request_kill(ctx, n.nominee_id, KillEvent.CAUSE_MANIPULATOR_NOMINATED, KillEvent.SOURCE_PLAYER, n.nominator_id)
+			_record_nomination(ctx, int(p["nominator_id"]), int(p["nominee_id"]), false)
 		Command.DECIDE_EXECUTION:
 			var target := int(p["target_id"])
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
@@ -363,6 +353,42 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				candidate.resolved_at_command = ctx.command_index
 				candidate.rejection_reason = reason
 				ctx.emit(GameEvent.WIN_REJECTED, Visibility.GM, {"candidate": candidate.to_dict(), "reason": reason})
+
+
+## Speichert eine Nominierung (DR-03, DR-12) und löst ihre Folgen aus. Eine Richter-Nominierung
+## (RM-DR-012) ist intern normal, öffentlich erscheint nur die nominierte Person.
+static func _record_nomination(ctx: RuleContext, nominator: int, nominee: int, by_judge: bool) -> void:
+	var s := ctx.state
+	var n := Nomination.new()
+	n.nominator_id = nominator
+	n.nominee_id = nominee
+	n.day = s.day_number
+	n.by_judge = by_judge
+	s.nominations.append(n)
+	s.players[n.nominee_id].ever_nominated = true  # dauerhaft an der Person (DR-12)
+	s.day_step = Phase.DAY_NOMINATION
+	if by_judge:
+		ctx.emit(GameEvent.JUDGE_NOMINATED, Visibility.GM, {"judge_id": nominator, "nominee_id": nominee, "day": n.day})
+		ctx.emit(GameEvent.JUDGE_NOMINATION_PUBLIC, Visibility.PUBLIC, {"nominee_id": nominee, "day": n.day})
+	else:
+		ctx.emit(GameEvent.NOMINATION_RECORDED, Visibility.PUBLIC, n.to_dict())
+	# Manipulator stirbt sofort bei seiner Nominierung; der Tag bleibt aktiv.
+	if s.players[n.nominee_id].role_id == RoleCatalog.MANIPULATOR:
+		KillPipeline.request_kill(ctx, n.nominee_id, KillEvent.CAUSE_MANIPULATOR_NOMINATED, KillEvent.SOURCE_PLAYER, n.nominator_id)
+
+
+## Bei Tagesbeginn: jede Markierung eines lebenden Richters auf eine lebende Person wird zu seiner
+## Nominierung, sofern beide heute noch frei sind (nach Personen-ID des Richters).
+static func _judge_nominations(ctx: RuleContext) -> void:
+	var s := ctx.state
+	for mark: Dictionary in s.judge_marks:
+		var judge := int(mark["judge_id"])
+		var target := int(mark["target_id"])
+		if not s.players[judge].alive or s.players[judge].role_id != RoleCatalog.KORRUPTER_RICHTER or not s.players[target].alive:
+			continue
+		if _validate_nominate(s, {"nominator_id": judge, "nominee_id": target}) != &"":
+			continue
+		_record_nomination(ctx, judge, target, true)
 
 
 static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
@@ -419,6 +445,7 @@ static func _start_night(ctx: RuleContext) -> void:
 	PhaseMachine.enter(ctx, Phase.NIGHT)
 	s.pack_target_id = GameState.NO_TARGET
 	s.night_plan = StepQueue.build_night_plan(s)
+	s.judge_marks.clear()  # Markierungen gelten nur für den folgenden Tag
 	s.night_wolf_ids.clear()
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
@@ -453,6 +480,14 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 		PendingPrompt.OWNER_GUARD:
 			Protections.set_protection(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_JUDGE:
+			s.judge_marks = s.judge_marks.filter(func(m: Dictionary) -> bool: return int(m["judge_id"]) != prompt.actor_id)
+			if target != GameState.NO_TARGET:
+				s.judge_marks.append({"judge_id": prompt.actor_id, "target_id": target})
+				s.judge_marks.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["judge_id"]) < int(b["judge_id"]))
+			ctx.emit(GameEvent.JUDGE_MARKED, Visibility.GM, {"judge_id": prompt.actor_id, "target_id": target, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_WOLF_CHILD:
@@ -494,6 +529,7 @@ static func _finish_dawn_if_ready(ctx: RuleContext) -> void:
 	if s.phase == Phase.DAWN_RESOLUTION and s.reactions.is_empty() and s.pending_prompt == null:
 		PhaseMachine.enter(ctx, Phase.DAY)
 		_ring_alarm_bells(ctx)
+		_judge_nominations(ctx)
 
 
 ## Nachtwächter (DECISION-LOG „Rollenaudit · … Nachtwächter“): nach der vollständigen

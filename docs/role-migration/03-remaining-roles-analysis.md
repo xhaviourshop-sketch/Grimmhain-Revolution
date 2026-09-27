@@ -30,7 +30,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`schwarze-witwe`](#schwarze-witwe) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Tötung | M / mittel | K6 | – |
 | [`der-weise`](#der-weise) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Wolfsangriff-Modifikation | Hinrichtungsreaktion, globale Regeländerung | M / hoch | K8 | C |
 | [`verdammniswaechter`](#verdammniswaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Zielumleitung | Tötung, Zufallsmechanik | M / hoch | K11 | – |
-| [`korrupter-richter`](#korrupter-richter) | Dorf | `decision-required` | `not-found` | `assisted` | Nominierungsreaktion | Tagfähigkeit | S / mittel | K14 | – |
 | [`maertyrerin`](#maertyrerin) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Einmalfähigkeit | M / mittel | K5 | – |
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
@@ -44,7 +43,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`henker`](#henker) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | Tötung | M / mittel | K4 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
-| [`blutwolf`](#blutwolf) | Wölfe | `decision-required` | `legacy-verified` | `assisted` | sonstige Spezialmechanik | Sitzpositionsmechanik | S / niedrig | K14 | – |
 | [`albtraumwolf`](#albtraumwolf) | Wölfe | `decision-required` | `legacy-broken` | `automatic` | sonstige Spezialmechanik | globale Regeländerung | S / mittel | K8 | – |
 | [`cerberus`](#cerberus) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik | S / mittel | K4 | B |
 | [`rotkaeppchen`](#rotkaeppchen) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik | L / hoch | K10 | – |
@@ -55,7 +53,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
 | [`schutzgeist`](#schutzgeist) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Schutz | Todesreaktion, Informationsrolle | M / mittel | K5 | – |
-| [`waechter-am-tor`](#waechter-am-tor) | Dorf | `decision-required` | `legacy-verified` | `automatic` | globale Regeländerung | Rollenwechsel | M / hoch | K12 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
 | [`amalia`](#amalia) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Einmalfähigkeit, Tagfähigkeit | M / mittel | K14 | – |
 | [`kriegerin-des-lichts`](#kriegerin-des-lichts) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Einmalfähigkeit, Tötung | S / mittel | K7 | – |
@@ -365,27 +362,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-1.md#verdammniswaechter) |
 
-### `korrupter-richter`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Korrupter Richter / Corrupt Judge |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 1.5 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `not-found`. Die versprochene Kernmechanik "+1 Stimme" existiert im Code nicht; vorhanden ist nur ein Nominierungs-Marker ohne Wirkung auf den Lynch, zusätzlich Manipulator-Bug. |
-| DE/EN-Vergleich | semantisch gleich JA (Markierung für den Tag, automatische Nominierung, +1 Stimme; kein Unterschied in Zeitpunkt/Häufigkeit/Ziel). |
-| Automationsziel | `assisted`: Markierung und Nominierungsdatensatz automatisch; Stimmzählung bleibt laut DECISION-LOG physisch, App zeigt nur "+1". |
-| Mechanik | primär: Nominierungsreaktion; sekundär: Tagfähigkeit |
-| Größe / Risiko | S / mittel |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (Ja/Nein + Ziel, abbrechbar), Nominations (inkl. `ever_nominated`, Manipulator-Tod über KillPipeline), Ereignis-Sichtbarkeit (öffentliche Nominierung), StateCodec, Replay, GmCorrections. |
-| Neue Systeme | Nominierungsquelle "Rolle/System" im Nominations-Modell (nachweislich nötig, weil Spiegelwolf und Nominierungslimit eine Quelle brauchen); Anzeige eines Stimmbonus (kein Stimmsystem, nur Hinweis-Modifikator am Tag). Kein volles Stimmsystem. |
-| Abhängigkeiten | Manipulator, Spiegelwolf, Nominations-Limit, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise (Blockaden), Hades (Stimme x3) und Blutwolf nur konzeptionell (weitere Stimmrollen). |
-| Widersprüche | RM-C-105 +1 Stimme; RM-C-106 Wer ist Nominierender?; RM-C-107 Zählt gegen "einmal nominiert werden"? |
-| Entscheidungen | RM-DR-117 (Rolle); übergreifend RM-DR-008, RM-DR-012; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K14 / in keiner Option |
-| Belegsicherheit | hoch für Code; mittel für EN-Laufzeitübersetzung des Dialogs (nicht im Browser geprüft). |
-| Detail | [Dossier](dossiers/village-2.md#korrupter-richter) |
-
 ### `maertyrerin`
 
 | Feld | Inhalt |
@@ -659,27 +635,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch; Ursachenliste per `rg "VOODOO_PUPPET"` vollständig (`night:255,442`, `help:265`, `gh:2426`, `ui:407`). |
 | Detail | [Dossier](dossiers/solos-a.md#voodoo-priester) |
 
-### `blutwolf`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Blutwolf / Blood Wolf |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / II / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Der Code setzt die Rechenregel des Textes nachvollziehbar als SL-Anzeige um; das Fehlen einer digitalen Abstimmung ist eine globale Produktentscheidung, keine Rollenlücke. |
-| DE/EN-Vergleich | JA, semantisch gleich (+1 je direkt benachbartem Toten). |
-| Automationsziel | `assisted`: (Gewicht anzeigen; Zählen bleibt physisch laut DECISION-LOG). |
-| Mechanik | primär: sonstige Spezialmechanik; sekundär: Sitzpositionsmechanik |
-| Größe / Risiko | S / niedrig |
-| Vorhandene Godot-Systeme | `seat_order` (Sitzreihenfolge aus `StartGame`), InfoRecord/Ereignis (gm-Hinweis), StateCodec. |
-| Neue Systeme | Sitznachbarschaft als abgeleitete Abfrage (links/rechts in `seat_order`, auch über Tote); Stimmsystem nur, falls 07 Q2 Option B gewählt wird. |
-| Abhängigkeiten | alle Tötungen neben dem Blutwolf; indirekt Korrupter Richter und Hades (gleiche Stimmfamilie). |
-| Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | RM-DR-133 (Rolle); übergreifend RM-DR-003, RM-DR-008; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K14 / in keiner Option |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/wolves-b.md#blutwolf) |
-
 ### `albtraumwolf`
 
 | Feld | Inhalt |
@@ -889,27 +844,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K5 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: Verhalten, falls ein SL den Schritt über einen anderen Weg (Konsole) auslöst. --- |
 | Detail | [Dossier](dossiers/village-4.md#schutzgeist) |
-
-### `waechter-am-tor`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Wächter am Tor / Gatewarden |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Alle genannten Verwandlungswege sind abgefangen; offene Punkte sind Randfälle und eine Regelfrage. |
-| DE/EN-Vergleich | JA, semantisch gleich ("neu entstehende" = "new"). |
-| Automationsziel | `automatic`: Reine Regel im zentralen Rollenwechsel. |
-| Mechanik | primär: globale Regeländerung; sekundär: Rollenwechsel |
-| Größe / Risiko | M / hoch. Einfache Regel, aber berührt jeden Verwandlungsweg; Fehler erzeugen falsche Wolfszahl und damit falsche Siege. |
-| Vorhandene Godot-Systeme | RoleTransition (zentrale Abfangregel vor Übernahme), WolfChildBond, ApprenticeBond, appears_as (Abgrenzung Fluch), Ereignis-Sichtbarkeit (gm), GmCorrections, StateCodec, Replay. |
-| Neue Systeme | keine; RoleTransition braucht nur einen Abfang-Haken. |
-| Abhängigkeiten | Wolfskind, Lehrling, König Lykaon/Trugbilderwolf, Seelentauscher, Dr. Victor Frankenstein, Kutscher, Dämonischer Wolf (Regelfrage), Grabräuber (manuell). |
-| Widersprüche | RM-C-163 Gilt der Dämonische-Wolf-Fluch als "neu entstehender Werwolf"? |
-| Entscheidungen | RM-DR-149 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K12 / in keiner Option |
-| Belegsicherheit | hoch. Nicht verifiziert: ob weitere, nicht über Rollennamen auffindbare Wege `flags.werewolf=true` setzen (grep nach `werewolf=true` ergab nur die genannten Stellen). --- |
-| Detail | [Dossier](dossiers/village-4.md#waechter-am-tor) |
 
 ### `zeitwaechter`
 

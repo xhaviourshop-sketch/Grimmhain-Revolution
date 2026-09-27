@@ -539,6 +539,24 @@ msgstr "Besessener Wolf"
 msgid "ui.role.besessener_wolf.short"
 msgstr "Wolf im Rudel, reißt bei seinem Tod eine Person mit."
 
+msgid "ui.role.korrupter_richter.name"
+msgstr "Korrupter Richter"
+
+msgid "ui.role.korrupter_richter.short"
+msgstr "Markiert nachts eine Person, die am Tag als nominiert gilt."
+
+msgid "ui.role.waechter_am_tor.name"
+msgstr "Wächter am Tor"
+
+msgid "ui.role.waechter_am_tor.short"
+msgstr "Solange er lebt, wird kein neuer Wolf; stattdessen Dorfbewohner."
+
+msgid "ui.role.blutwolf.name"
+msgstr "Blutwolf"
+
+msgid "ui.role.blutwolf.short"
+msgstr "Wolf im Rudel, Stimme +1 je totem direkten Nachbarn."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

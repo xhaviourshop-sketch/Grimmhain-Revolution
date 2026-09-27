@@ -81,6 +81,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.WALDLAEUFER: false,    # Pflichtinformation (wie Orakel)
 	RoleCatalog.DOKTOR: false,         # Pflichtprüfung (wie Orakel)
 	RoleCatalog.FAEHRTENLESER: false,  # Verzicht ist eine Antwort im Prompt
+	RoleCatalog.KORRUPTER_RICHTER: false,  # Verzicht ist eine Antwort (0 Ziele)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -221,6 +222,11 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == BOUND:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
+	elif step_kind(step_id) == RoleCatalog.KORRUPTER_RICHTER:
+		# Korrupter Richter: freiwillig eine lebende Person markieren (auch sich selbst) oder verzichten.
+		prompt.owner = PendingPrompt.OWNER_JUDGE
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.cancellable = true
 	elif step_kind(step_id) == RoleCatalog.WOLFSKIND:
 		# Wolfskind: Pflichtwahl genau einer anderen lebenden Person als Vorbild (DR-10).
 		prompt.owner = PendingPrompt.OWNER_WOLF_CHILD

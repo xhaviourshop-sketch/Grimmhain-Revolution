@@ -13,8 +13,8 @@ extends TestCase
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf"]
-const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf"]
+	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf"]
+const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 120
 const MAX_COMMANDS := 160
@@ -135,7 +135,7 @@ func _start_command(g: int, count: int) -> Command:
 		roles[j] = tmp
 	var map := {}
 	var appearances := {}
-	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser"]
+	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "korrupter-richter", "waechter-am-tor"]
 	for i: int in count:
 		map[str(i + 1)] = roles[i]
 		if roles[i] == "trugbilderwolf":
@@ -441,7 +441,7 @@ func _check_prompt_actor(s: GameState, prompt: Dictionary, label: String) -> voi
 	var role := StepQueue.step_kind(step)
 	assert_true(s.players[actor].alive, "%s: %s nur für Lebende" % [label, step])
 	assert_eq(s.players[actor].role_id, role, "%s: %s nur mit geplanter Rolle" % [label, step])
-	assert_false((prompt["allowed_ids"] as Array).has(actor) and role != RoleCatalog.WALDHEXE, "%s: %s ohne Selbstwahl" % [label, step])
+	assert_false((prompt["allowed_ids"] as Array).has(actor) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER].has(role), "%s: %s ohne Selbstwahl" % [label, step])
 
 
 func _check_codec(s: GameState, log: Array[Command], label: String) -> void:

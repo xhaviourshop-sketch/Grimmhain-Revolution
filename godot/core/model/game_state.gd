@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins)
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -37,6 +37,7 @@ var win_check_pending: bool = false     ## verbindliche Siegprüfung steht aus (
 var nominations: Array[Nomination] = []
 var win_candidates: Array[WinCandidate] = []  ## alle Siegkandidaten der Partie (einzige Quelle); offene haben Status `open`
 var death_seeker_wins: Array[int] = []  ## Selbstmörder mit erfüllter Siegbedingung bei ihrer Hinrichtung, aufsteigend
+var judge_marks: Array = []  ## Markierungen der Korrupten Richter dieser Nacht [{judge_id, target_id}], nach judge_id
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -176,6 +177,7 @@ func to_dict() -> Dictionary:
 		"win_candidates": candidate_list,
 		"winner_id": winner_id,
 		"death_seeker_wins": death_seeker_wins.duplicate(),
+		"judge_marks": judge_marks.duplicate(true),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -317,6 +319,14 @@ static func from_dict(d: Dictionary) -> GameState:
 	for id: int in s.death_seeker_wins:
 		if not s.players.has(id) or s.death_seeker_wins.count(id) > 1:
 			return null
+	for item: Variant in DictRead.get_array(d, "judge_marks"):
+		if not item is Dictionary:
+			return null
+		var judge := DictRead.get_int(item, "judge_id", -1)
+		var marked := DictRead.get_int(item, "target_id", -1)
+		if not s.players.has(judge) or not s.players.has(marked):
+			return null
+		s.judge_marks.append({"judge_id": judge, "target_id": marked})
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null

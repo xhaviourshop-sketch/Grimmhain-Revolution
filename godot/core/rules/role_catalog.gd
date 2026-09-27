@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter` und `faehrtenleser`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter` und `waechter-am-tor`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -77,6 +77,13 @@ const POSSESSED_MIN_LIVING := 5
 const RITTER := &"ritter"
 ## Fährtenleser / Tracker (RM-DR-146): Dorf; einmal (je Leben) die Richtung des nächsten Wolfs (InfoSteps).
 const FAEHRTENLESER := &"faehrtenleser"
+## Blutwolf / Blood Wolf (RM-DR-133, RM-DR-008): Wölfe, Rudel; Stimmbonus nur als Hinweis (VoteHints).
+const BLUTWOLF := &"blutwolf"
+## Korrupter Richter / Corrupt Judge (RM-DR-117, RM-DR-012): Dorf; markiert nachts eine Person, die
+## bei Tagesbeginn als von ihm nominiert gilt (verdeckt), +1 Stimme als Hinweis.
+const KORRUPTER_RICHTER := &"korrupter-richter"
+## Wächter am Tor / Gatewarden (RM-DR-149): Dorf; blockiert neu entstehende Wölfe (Gatewarden).
+const WAECHTER_AM_TOR := &"waechter-am-tor"
 const BOUND_PRIORITY := 5
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
@@ -112,6 +119,9 @@ const ROLES := {
 	BESESSENER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": BESESSENER_WOLF, "death_reaction": Reaction.KIND_POSSESSED},
 	RITTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": RITTER},
 	FAEHRTENLESER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": FAEHRTENLESER, "night_priority": 52},
+	BLUTWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": BLUTWOLF},
+	KORRUPTER_RICHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KORRUPTER_RICHTER, "night_priority": 15},
+	WAECHTER_AM_TOR: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WAECHTER_AM_TOR},
 }
 
 

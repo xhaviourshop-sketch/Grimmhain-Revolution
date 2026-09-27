@@ -4,7 +4,7 @@ extends UiTestCase
 
 const FIXED_SEED := 818181
 const ROLE_IDS: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf"]
+		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf"]
 
 
 func _dialog(shell: Control) -> Control:
@@ -148,7 +148,7 @@ func test_missing_appearance_is_shown_and_blocks() -> void:
 			options.append(String(b.name).trim_prefix("Appear_"))
 			assert_eq(b.text, tr("ui.role.%s.name" % String(b.name).trim_prefix("Appear_").replace("-", "_")), "lokalisierter Name")
 	options.sort()
-	assert_eq(options, ["das-orakel", "die-gebundenen", "doktor", "doppelspion", "dorfbewohner", "dorfchronistin", "dorfwache", "faehrtenleser", "lehrling", "manipulator", "nachtwaechter", "ritter", "schutzengel", "selbstmoerder", "sensentraeger", "wahnsinniger-kutscher", "waldhexe", "waldlaeufer", "wolfskind"] as Array[String], "nur Nicht-Wolf-Rollen, auch außerhalb des Pools")
+	assert_eq(options, ["das-orakel", "die-gebundenen", "doktor", "doppelspion", "dorfbewohner", "dorfchronistin", "dorfwache", "faehrtenleser", "korrupter-richter", "lehrling", "manipulator", "nachtwaechter", "ritter", "schutzengel", "selbstmoerder", "sensentraeger", "waechter-am-tor", "wahnsinniger-kutscher", "waldhexe", "waldlaeufer", "wolfskind"] as Array[String], "nur Nicht-Wolf-Rollen, auch außerhalb des Pools")
 	for i: int in 10:
 		await key(KEY_TAB)
 		assert_true(dialog.is_ancestor_of(focus_owner()), "Fokus bleibt im Dialog (%d)" % i)
