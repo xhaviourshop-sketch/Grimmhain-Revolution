@@ -1,0 +1,102 @@
+`origin/main` steht unverändert auf `5eb5f2a`, mein Branch ist sauber. Ich schaue kurz, was die parallelen Branches anfassen, um Konflikte früh zu sehen.
+
+Grimmhain-2 ergänzt `theme_tokens.gd` nur additiv, die Konstanten, die ich lesen will, bleiben stabil. Jetzt suche ich die zu korrigierenden Stellen.
+
+Ich prüfe jetzt die tatsächlichen Maße, auf die sich das Briefing beziehen muss: Stretch-Einstellungen in `project.godot` und die Herkunft der Seitenverhältnisse 1,71 und 2,03.
+
+Ich habe herausgefunden, dass die Formate 1,71:1 und 2,03:1 aus `tablet-asset-spec.md` §1 stammen und die gemessene Bühnenfläche der Legacy-React-App (ohne Nachtleiste und Phasenleiste) beschreiben, nicht den ganzen Bildschirm – der Godot-Stand nutzt dagegen 1280×800 mit `expand` und hat noch keine endgültige Spielfeldfläche. Ich korrigiere jetzt die Dokumente entsprechend.
+
+Zuerst Decision Log und offene Fragen: sichtbarer Hinweis an den alten Einträgen, dann ein Korrektureintrag, ohne den ursprünglichen Wortlaut zu löschen.
+
+Jetzt Register und Bestandsaufnahme: Die kurzen Sounds waren ohne Beleg `gesperrt`, das wird `ungeklärt`.
+
+Jetzt INVENTORY und FONTS (Zuordnung der Aussagen) sowie der Produktionsplan.
+
+Jetzt das Briefing: Quellen und Vorschläge kennzeichnen, Formate und Audio-Geheimhaltung korrigieren.
+
+Korrekturen stehen, `git diff --check` ist sauber. Ich committe diesen Teil.
+
+Jetzt das Schriftmuster. Vorher prüfe ich, welche Godot-Tests Regeln über das ganze Projekt durchsetzen (Farben, Texte, Schriften), damit die Demo keine bestehenden Tests bricht.
+
+Ich habe festgestellt, dass `test_no_unlicensed_fonts_embedded` keine `.ttf`-Dateien im Godot-Projekt zulässt, weshalb eine Kopie nach `godot/asset_lab/` den Test und die Registerregel brechen würde. Stattdessen lade ich die Schriften zur Laufzeit direkt aus `assets/fonts/` und richte jetzt Godot und Xvfb ein.
+
+Der Plan steht: Ich baue die Szene auf, lade das bestehende Theme über `ThemeFactory.build()`, hole die Schriften zur Laufzeit aus `assets/fonts/` mit SHA-256-Abgleich gegen das Register und falle bei Abweichung sichtbar auf die Standardschrift zurück. Zusätzlich erstelle ich ein Prüfskript, das beide Größen auf abgeschnittenen Text testet und Screenshots erzeugt.
+
+Ich schreibe jetzt die Demo-Szene unter `godot/asset_lab/font_specimen/`.
+
+Jetzt erstelle ich das Prüf- und Screenshot-Skript, das in beiden Größen jede Beschriftung auf Abschneiden und Viewport-Grenzen misst, prüft, ob die Seite ohne Scrollen passt, und Bilder nur bei echtem Renderer speichert.
+
+Erster Lauf: Import und headless Prüfung.
+
+Headless: 6 Ansichten, 0 Befunde, alle vier Schriften geladen, SHA-256 passt. Jetzt mit echtem Renderer unter Xvfb, dazu Screenshots.
+
+Ich habe festgestellt, dass Cinzel „ß“ als „SS“ darstellt (z. B. „Großkreutz“ wird zu „GROSSKREUTZ“), was bei Spielernamen relevant ist. Als Nächstes prüfe ich die Erklärungsseite sowie eine 1280er-Ansicht.
+
+Screenshots sind brauchbar, nichts ist abgeschnitten. Jetzt Registrierung der sechs Bilder (mit korrigierter Herkunftsangabe) und die Anleitungen.
+
+Jetzt die beiden READMEs (Start-Anleitung und Screenshot-Beschreibung) und ein Nachtrag in `FONTS.md` zum ß-Befund.
+
+Nachtrag in `FONTS.md` zur Vorschau-Nutzung, dann laufen die komplette Godot-Testsuite und alle Prüfungen.
+
+Alles grün: Godot-Suite 387/387, Register 280/280, 17 Regressionstests, Smoke-Test, `diff --check`. Commit und Push.
+
+Ich prüfe noch die CI-Läufe für den neuen HEAD.
+
+Alles ist umgesetzt und auf `claude/wizardly-maxwell-kay292` gepusht. Die Schriftmuster-Szene läuft ohne abgeschnittenen Text in 1024×768 und 1280×800, und alle lokalen Prüfungen sind grün. Die GitHub-CI für den neuen Stand war beim Abschluss noch nicht sichtbar; der letzte gemeldete Lauf (auf `c46c9e4`) war grün.
+
+**1. Stand**
+- Branch `claude/wizardly-maxwell-kay292`, Ausgangs-Commit `c46c9e4`, neuer HEAD `55ad4d5`.
+- `origin/main` steht unverändert auf `5eb5f2a`. Kein Merge, kein Force-Push.
+
+**2. Commits (22 Dateien)**
+- `33fb208` Dokumentkorrekturen: `DECISION-LOG.md`, `07-open-questions.md`, `05-visual-audio-direction.md` (ein Nachtrag zu Audio-Auslösern), `PRODUCTION-PLAN.md`, `BRIEFING-WAVE-1.md`, `INVENTORY.md`, `FONTS.md`, `ASSET-REGISTER.md`, `asset-register.csv`.
+- `55ad4d5` Schriftmuster: `godot/asset_lab/` (Szene, Skript, Prüfskript, README), 6 Screenshots mit README, Registerzeilen, ein Nachtrag in `FONTS.md`.
+
+**3. Korrigierte vermeintliche Nutzerentscheidungen** (umgesetzt)
+
+Der alte Wortlaut im Decision Log bleibt stehen. Er trägt jetzt einen sichtbaren Korrekturhinweis, und ein neuer Eintrag führt die Korrekturen als Tabelle mit Beleg auf.
+- **Budget:** Bis 500 € ist ein bestätigter Planungsrahmen, kein genehmigter Kauf.
+- **Q8 Option B:** wieder als Empfehlung geführt, die Entscheidung ist offen.
+- **Teilbudgets:** Die 60 € für die erste Welle und die 300 € Gesamtplanung sind Vorschläge.
+- **Legacy-Medien:** Die belegbare Aussage ist jetzt „Nachweis fehlt, Nutzung nicht freigegeben“, keine Aussage über rechtliche Unzulässigkeit.
+- **Kurze Sounds:** Die neun kurzen Legacy-Sounds standen ohne Beleg auf `gesperrt` und sind jetzt `ungeklärt`.
+- **Nachtmusik:** Sie bleibt gesperrt, gestützt auf den Masterplan (Phase 0). Ein Ersatz ist nur Empfehlung.
+- **Schriftquelle:** „Bezugsquelle unbekannt“ ist jetzt als Angabe aus dem Arbeitsauftrag gekennzeichnet, nicht als Aussage des Product Owners.
+- **Briefing:** Stil, Figuren, Licht und Motivverbote sind mit Quelle versehen oder als [Vorschlag] markiert.
+
+**4. Technische Korrekturen im Briefing** (umgesetzt)
+- **Seitenverhältnisse:** 1,71:1 und 2,03:1 waren die Bühnenfläche der alten React-App, nicht der Bildschirm. Neu stehen dort 4:3 (iPad) und 16:10. Bei einem 16:10-Hintergrund bleiben auf 4:3 nur die mittleren 83 % der Breite sichtbar.
+- **Sicherer Bildbereich:** ausdrücklich als vorläufig markiert, weil das Cockpit-Layout in Godot noch nicht feststeht.
+- **Audio-Geheimhaltung:** Die fünf Anforderungen aus deinem Auftrag stehen in `PRODUCTION-PLAN.md` §6.4. Die Cue-Tabelle hat dazu eine Spalte „Auslöser“. Zusätzlich festgehalten, als Ergänzung zu deinen Vorgaben: Bestätigen-, Fehler- und Tipp-Klänge bleiben in geheimen Schritten stumm. Es ist nur die Schnittstelle dokumentiert, kein AudioDirector gebaut.
+
+**5. Schriften in der Demo**
+- Verwendet werden Cinzel Regular/Bold, IM FELL English Regular und zum Vergleich die eingebaute Godot-Schrift (Open Sans SemiBold).
+- **Nachweise:** Die SIL-OFL-1.1-Lizenz steht in den Dateien selbst, die Lizenztexte liegen bei, Registerstatus `lizenz-belegt`.
+- **Offener Zweifel:** Die Dateien sind nicht bytegleich mit den offiziellen Referenzen. Versionsgleichheit beweist also nicht, dass es unveränderte Originale sind.
+- **Keine Kopie in `godot/`:** Der bestehende Test `test_no_unlicensed_fonts_embedded` verbietet Schriftdateien dort; eine Kopie hätte ihn gebrochen. Die Szene lädt die Schriften deshalb zur Laufzeit aus `assets/fonts/` und prüft vorher den Hash gegen das Register. Weicht eine Datei ab, zeigt sie sichtbar die Standardschrift als Ersatz.
+- **Wichtigster Befund:** Cinzel zeigt „ß“ als „SS“; „Großkreutz“ erscheint als GROSSKREUTZ.
+
+**6. Starten**
+
+Szene: `godot/asset_lab/font_specimen/font_specimen.tscn`. Ordner `godot/` in Godot 4.7.2 öffnen, die Szene doppelklicken und F6 („Aktuelle Szene starten“) drücken, nicht F5. Die Seiten wechselst du über die drei Buttons oben rechts. Die Szene funktioniert nur beim Start aus dem Repository, nicht in einem exportierten Build.
+
+**7. Prüfungen**
+- Godot-Suite: 387 Tests, 0 Fehler.
+- Import ohne Fehler, Szene startet headless ohne Fehler.
+- Layoutprüfung: 6 Ansichten, 0 Befunde, headless und unter Xvfb.
+- Assetregister: 280 von 280 Dateien, grün.
+- 17 Regressionstests und Smoke-Test grün, `git diff --check` sauber.
+- **Nicht geprüft:** Gerätetest auf einem echten Tablet und das CI-Ergebnis für `55ad4d5`.
+
+**8. Screenshots**
+
+Tatsächlich erstellt: 6 Bilder unter Xvfb mit Software-Rendering, abgelegt in `docs/evidence/asset-lab/font-specimen/` und als `prüfartefakt` registriert. Ich habe sie angesehen, das ersetzt keine Abnahme am Gerät.
+
+**9. Verbleibende Probleme**
+- **Konflikt mit Grimmhain-2:** Der Branch `sleepy-babbage` erzeugt die Setup-Screenshots neu und fügt Rollen-Setup-Screenshots hinzu. Beim Merge wird die Registerprüfung dort rot; die Registerzeilen müssen dann nach dem dokumentierten Ablauf nachgezogen werden.
+- **Grimmhain-2, Theme:** Die Theme-Tokens ändert er nur additiv, die Demo ist davon nicht betroffen.
+- **Grimmhain-1:** keine Überschneidung gefunden.
+
+**10. Nächster Schritt (Vorschlag)**
+
+Schau dir das Muster fünf Minuten auf einem echten Tablet im gedimmten Raum an und entscheide dann nur eines: Cinzel für Titel ja oder nein, mit Blick auf den ß-Befund. Danach kann `FONTS.md` §5 (Freigabe der vier Registerzeilen) abgeschlossen werden.

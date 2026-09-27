@@ -1,171 +1,65 @@
-# CLAUDE.md – Grimmhain: Werewolf Reckoning
+# Grimmhain Revolution: Arbeitsvertrag
 
----
+## Ziel und Quellen
+- Aktive Neuentwicklung: `godot/`, typisiertes GDScript, Tablet zuerst; später PC/Steam und Online. HTML/JS/React sind Legacy und nur bei konkretem Bedarf zu untersuchen.
+- Engine-Pin: `godot/tools/godot-version.txt`. Kein eigenmächtiger Versionswechsel.
+- Produktentscheidungen: `docs/masterplan/DECISION-LOG.md`; konkrete Regeln: `docs/specs/vertical-slice/`; Gesamtplan: `GRIMMHAIN-REVOLUTION-MASTERPLAN.md`. Nur relevante Abschnitte laden.
+- Umsetzung/Testbefehle: `godot/README.md`; UI: `docs/ui/`; Medien: `docs/assets/` und `docs/masterplan/ASSET-REGISTER.md`.
+- Empfehlungen, Legacy-Verhalten und Implementierungsberichte sind keine Nutzerfreigaben. Widersprüche benennen; bereits entschiedene Fragen nicht erneut eröffnen.
 
-## ⚡ BEIM START EINER NEUEN SESSION — IMMER ZUERST LESEN
+## Arbeitsweise und Kontextbudget
+- Zu Beginn `git status --short`, Branch und HEAD feststellen. Danach Auftrag und betroffene Dateien eingrenzen. Keine automatische Vollanalyse aller Dokumente oder Nachbarprojekte.
+- Ein Umsetzungsauftrag autorisiert erforderliche lokale Änderungen. Nicht jeden Schritt erneut bestätigen lassen. Bei offenen Spielregeln/erheblichen Umfangsänderungen gezielt nachfragen; unabhängige Arbeit fortsetzen.
+- `rg` und begrenzte Ausschnitte nutzen. Bekannte Dateien nur bei Änderung oder neuer konkreter Frage erneut lesen. Keine ganzen Logs, Dateibäume oder Dossiers in den Chat kopieren.
+- Eine abgegrenzte Aufgabe pro Abschnitt. Vorhandenen Plan fortsetzen; nicht mehrere Planungsframeworks laden. Kleiner Fix braucht keinen neuen Masterplan.
+- Standard: ein Agent. Weitere Agenten nur bei ausdrücklich beauftragter Parallelität mit getrennten Aufgaben/Dateien. Delegierte Arbeit nicht parallel selbst wiederholen.
+- Lange Testausgaben in temporäre Logs schreiben; Zusammenfassung und Fehler lesen. Keine Fehler ausblenden. Grüne Prüfungen nur bei Änderungen oder neuem Risiko wiederholen.
+- Kein routinemäßiges `/clear`, Modellwechsel oder Tool-Umschalten während zusammenhängender Arbeit. Bei Themenwechsel/knappem Kontext zuerst Übergabe sichern, dann neue Sitzung oder `/compact`.
 
-**Lies `ROADMAP.md` im Hauptordner `Werwolf/` bevor du anfängst.**
-Die Roadmap enthält den vollständigen Projektstand, alle erledigten Aufgaben und die priorisierten nächsten Schritte. Starte dort weiter wo die letzte Session aufgehört hat.
+## Skills bei passenden Aufgaben automatisch verwenden
+Beschreibung verfügbar halten; vollständigen Skill nur bei Bedarf laden. Kein vollständiger Stack pro Nachricht.
 
-```
-Werwolf/ROADMAP.md  ← Immer zuerst öffnen
-```
+| Aufgabe | Skill |
+|---|---|
+| GDScript-Regeln, Rollen, Speichern, Replay, Core-Tests | `grimmhain-core` |
+| Godot-Tablet-UI, Layout, visuelle Qualität, Animation | `grimmhain-tablet-ui` |
+| Grafik, Audio, Assetproduktion, Herkunftsnachweise | `grimmhain-assets` |
+| Abschluss, Wiederaufnahme, Cloud-Berichte übernehmen | `grimmhain-handoff` |
+| Unerklärter Fehler oder roter Test | vorhandener `systematic-debugging`, gezielt |
 
-Wenn Marcus keine konkrete Aufgabe nennt → nächsten offenen Punkt aus der Roadmap vorschlagen.
-Wenn eine Aufgabe abgeschlossen wird → Checkbox in ROADMAP.md von `[ ]` auf `[x]` setzen.
+Installierte Fachskills zusätzlich nur beim konkreten Bedarf laden:
 
----
+| Anlass | Fachskill |
+|---|---|
+| Nichttriviale GDScript-Implementierung, Typen-/Lifecycle-/Signalproblem | `godot-gdscript` |
+| Control-/Container-Layout, Theme oder Fokus einer Godot-Ansicht | `godot-ui-control` |
+| AnimationPlayer, Tween oder animierter Phasen-/Dialogübergang | `godot-animation` |
+| Audio-Busse, Wiedergabe, Stumm/Lautstärke oder Musikübergang | `godot-audio` |
+| Reproduzierbares Leistungsproblem oder beauftragte Performanceprüfung | `performance-optimization` |
+| Erste Grafikserie, ausdrückliche Stiländerung oder Stilbruch | `art-bible` |
+| Konkrete Abschluss-/Abnahmeprüfung | `verify-and-stop` |
 
-## Arbeitsregeln für Claude
+Normalfall: ein Grimmhain-Skill plus der nötige Fachskill, keine Kette aller verwandten Skills. Bereits geladene Anleitungen nicht erneut lesen. Referenzen nur zur konkreten Frage öffnen. Statusfragen brauchen keinen Fachskill.
+Die Fachskills sind allgemeine Anleitungen: bestehende Architektur/Tests/Briefings haben Vorrang. Keine Node-Beispiele in den Regelkern, keine zusätzliche Testarchitektur, keine zweite Art Bible. Engine-neutrale Beispiele auf Godot prüfen. Kosmetischer Audio-Zufall darf weder den Regelgenerator verbrauchen noch den Core verändern. Verweise auf fremde Agents/Commands installieren oder starten nichts automatisch.
+`verify-and-stop` nutzt nur noch gültige Nachweise für denselben relevanten Zustand; erforderliche Tests nach Änderungen bleiben Pflicht. Nicht zusätzlich einen konkurrierenden Verifikationsworkflow laden.
 
-- **Immer fragen, bevor Änderungen gemacht werden.** Keine Datei verändern ohne explizite Bestätigung.
-- Claude hat vollen Lese- und Schreibzugriff auf alle Dateien innerhalb des `Werwolf/`-Ordners.
-- Vorschläge klar und verständlich formulieren — der Entwickler ist kein erfahrener Programmierer.
-- Bei Fehlern oder Bugs: erst analysieren, dann Lösung vorschlagen, dann warten auf Freigabe.
-- Code soll sauber, lesbar und kommentiert bleiben (Deutsch oder Englisch).
+Vorhandene `writing-plans`/`executing-plans` nur für tatsächlich komplexe Planung bzw. beauftragte Planausführung; `docs-write-concisely` für größere redaktionelle Aufgaben. Keine automatische Delegation aus generischen Workflows ableiten. `frontend-design`/Playwright sind für Web-Aufgaben, kein Ersatz für Godot-UI-Prüfungen.
 
----
+## Qualitätsgrenzen
+- Regelkern bleibt unabhängig von Szenen, UI, Audio und Dateizugriff. Vorhandene Befehle/Ereignisse und Anwendungsschicht verwenden; keine zweite Regelimplementierung in der UI.
+- Personen-ID ist Identität, Sitzplatz nur Anordnung. Zufall ausschließlich über den gespeicherten Generator. Öffentliche Ansichten/Audio dürfen keine geheimen Ereignisse verraten.
+- Verhaltensänderungen mit aussagekräftigen Tests, Bugs mit reproduzierendem Regressionstest. Headless-grün ist keine visuelle oder Tablet-Abnahme.
+- DE/EN-Lokalisierung und Theme-Tokens verwenden. Medien mit dokumentiertem Status einbinden; Budget ist keine Kauf- oder Releasefreigabe.
+- Keine Rollenbeschränkungen aus Bequemlichkeit erfinden. Entscheidungslücken nicht durch vermeintlich plausible Defaults verdecken.
 
-## Projektvision
+## Passende Prüfungen
+- Godot Linux/WSL: `bash godot/tests/run_all.sh`, gezielt etwa `--filter=replay`; Windows: `.claude/skills/grimmhain-core/windows-checks.md`.
+- Medien: `node tools/check-asset-register.js`; zusätzliche Prüfer/Regressionstests nur, wenn im Checkout vorhanden.
+- Legacy: `node tests/smoke.js` und `node tools/compare-i18n.js` nur bei entsprechenden Änderungen. Diese prüfen keine Godot-Spielregeln.
+- Abschluss: `git diff --check`, beauftragten Diff prüfen, Ergebnisse und ausgelassene Prüfungen ehrlich nennen.
 
-**Grimmhain – Werewolf Reckoning** ist ein digitaler Spielleiter-Assistent für das Werwolf/Mafia-Kartenspiel.
-
-### Ziele (in Reihenfolge):
-1. **Aktuelle Web-App** stabilisieren, optimieren und bugfrei machen (PWA)
-2. **Cross-Platform App** bauen: iOS, Android, Windows/Mac/Linux Desktop
-   - Geplante Technologie: [Capacitor](https://capacitorjs.com/) (für Mobile) + [Tauri](https://tauri.app/) oder Electron (für Desktop/Steam)
-3. **Vorlage für Online-Version** vorbereiten: Multiplayer, Standalone-Release, Steam
-   - Die `js/core/`-Schicht ist die Grundlage dafür — DOM-frei halten!
-
-### Wichtig für alle Entscheidungen:
-- Änderungen sollen die spätere App-Portierung nicht erschweren
-- `js/core/` darf **kein DOM** enthalten — das ist die portable Spiellogik
-- `js/ui/` ist der Web-Layer — wird später durch React Native / native Layer ersetzt
-
----
-
-## Projekt starten
-
-Kein Build-System erforderlich. Statisch serven:
-
-```bash
-python -m http.server 8080
-# oder
-npx serve .
-# oder index.html direkt im Browser öffnen
-```
-
-Übersetzungsschlüssel prüfen:
-```bash
-node tools/compare-i18n.js
-```
-
----
-
-## Dateistruktur
-
-```
-Werwolf/
-├── index.html          ← Startseite (Spielerzahl + Sprache)
-├── setup.html          ← Namenseingabe, Rollenzuweisung, Review
-├── game.html           ← Hauptinterface des Spielleiters
-├── css/
-│   ├── tokens.css      ← Design-Tokens (Farben, Fonts)
-│   ├── main.css        ← CSS Grid Layout (5 Spalten)
-│   └── screens.css     ← Screen-spezifische Styles
-├── js/
-│   ├── core/           ← PORTABLE Spiellogik (Ziel: kein DOM — aktuell noch verletzt, s.u.)
-│   │   ├── state.js    ← GameState, localStorage (Key: uw_custom_v16), Migration, Undo-Snapshot
-│   │   ├── roles.js    ← 72 Rollen, WOLF_ROLES_SET/SOLO_WIN_ROLES (autoritativ), Beschreibungen DE/EN
-│   │   ├── abilities.js← Merge-Punkt + onOrderClick + Suche (~120 Zeilen)
-│   │   ├── abilities-helpers.js ← Totenkarten-UI, Sensenträger, Waldhexe-Flow (~290 Zeilen)
-│   │   ├── abilities-roles-chunk.js ← Fähigkeits-Handler der meisten Rollen (~860 Zeilen, Refactoring-Kandidat)
-│   │   ├── role-abilities.js ← Fähigkeitstexte (DE) als Nachschlage-Objekt
-│   │   ├── cards.js    ← Totenkarten-System (80 Karten, Post-Tod-Buffs)
-│   │   ├── night.js    ← Nacht/Tag-Ablauf, Lynch (finalizeLynch), Order, SL-Assistent
-│   │   ├── akte.js     ← Kuratierte Rollen-Sets / Akte (nur in setup.html geladen)
-│   │   └── i18n.js     ← Übersetzungen DE/EN + Runtime-Übersetzung (translateRuntimeText/Observer)
-│   └── ui/             ← Web-spezifischer Layer (DOM erlaubt)
-│       ├── core.js     ← isWolf (autoritativ), applyKill, Tod-Hooks, Siegbedingungen
-│       ├── ui.js       ← Rendering-Naht, SVG-Fallback, Pick-Bar, Tod-Overlays
-│       ├── field-viewmodel.js ← ViewModel des Spielfelds (reine Daten)
-│       ├── field-pixi.js ← PixiJS-Spielfeld-Renderer (bevorzugt)
-│       ├── audio.js    ← Nachtmusik, Timer (Rollen-SFX deaktiviert, queueSfxKey = No-op)
-│       ├── touch-tooltips.js ← Tap/Long-Press-Tooltips
-│       └── gamelog.js  ← Recap-Spielprotokoll (gefiltert)
-├── assets/             ← Fonts, Sounds, Icons (strukturiert)
-├── tools/
-│   └── compare-i18n.js ← Fehlende Übersetzungsschlüssel finden
-└── docs/
-    └── README.md
-```
-
----
-
-## State-Schema (localStorage `uw_custom_v16`)
-
-```js
-{
-  seats: [{
-    id, name, role,
-    flags: { dead, protected, targeted, inlove, rival, werewolf,
-             nominated, charmed, poisoned, burned, puppet, hmark },
-    meta:  { cerbHeads, killedTonight, cursedWolfAura, rivalId,
-             loverId, unholy, blockedTonight }
-  }],
-  once:       { /* Einmalige Spielzustände, Totenkarten-Mapping, Rollendaten */ },
-  dark:       boolean,   // false = Tag, true = Nacht
-  nightCount: number,
-  layout:     { scale, ratio, offx, offy },
-  files:      { nightAudio, alarmAudio }
-}
-```
-
----
-
-## Konventionen
-
-| Thema | Regel |
-|-------|-------|
-| Neue Rolle | In `roles.js` definieren (inkl. `WOLF_ROLES_SET`/`SOLO_WIN_ROLES` falls Wolf/Solo!) → Handler in `abilities-roles-chunk.js` → Nacht-Reihenfolge (`ORDER_BASE` in roles.js) |
-| Wolf-Zugehörigkeit | NUR über `WOLF_ROLES_SET` + `flags.werewolf` (isWolf in `js/ui/core.js`). Keine Namens-Regex, keine Inline-Listen |
-| Übersetzung | Schlüssel in beide Objekte (`de` + `en`) in `i18n.js` eintragen |
-| Todes-Effekte | Vor Implementierung `cards.js` prüfen — könnte bereits behandelt werden |
-| Styling | Design-Tokens aus `tokens.css` verwenden (Goldton: `#C9A84C`) |
-| Mobile | Landscape-only, Safe-Area-Insets beachten |
-| Fonts | Cinzel (Überschriften), IM Fell English (Fließtext) |
-
----
-
-## Bekannte Schwachstellen / Aufgaben
-
-- ~~`abilities.js` ist mit ~1150 Zeilen sehr groß~~ → ✅ längst gesplittet (abilities.js ~120 Z. + helpers + roles-chunk); `abilities-roles-chunk.js` (~860 Z.) bleibt Refactoring-Kandidat
-- ~~Doppelte Asset-Ordner (`/icons` + `/assets/icons`, `/Sounds` + `/assets/sounds`)~~ → ✅ erledigt (2026-05-30): Root-Duplikate existieren nicht mehr, Assets nur unter `/assets/`
-- `js/core/` ist NICHT DOM-frei (night.js rendert Order, abilities-* nutzen Overlays) → blockiert Portierung, großes Refactoring
-- `game.html` enthält viele historische Inline-Patch-Schichten (3 konkurrierende Kreis-Verschiebe-Tools, Dynamic-Circle-Panel) → Aufräum-Lauf geplant
-- Rollen-SFX deaktiviert (2026-06-12, `queueSfxKey` = No-op) → saubere Wiedereinbindung später; Aufruf-Stellen sind erhalten
-- Totenkarten-EN fehlt (80 Karten nur DE) → separater Übersetzungslauf geplant
-- Mobile-Unterstützung: aktuell nur Landscape → Portrait-Modus prüfen
-- Kein echtes automatisches Testing (nur Datei-Grep-Smoketest `npm test`)
-- Aktueller verifizierter Audit: `GRIMMHAIN_ANALYSE_2026-06-12.md`
-
----
-
-## Cross-Platform Roadmap (Referenz)
-
-```
-Phase 1: Web-PWA (aktuell)
-  └─ Vanilla HTML/CSS/JS, läuft im Browser
-
-Phase 2: Mobile App
-  └─ Capacitor um bestehenden Web-Code wrappen
-     → iOS App Store + Google Play
-
-Phase 3: Desktop App
-  └─ Tauri (empfohlen, klein) oder Electron
-     → Windows, macOS, Linux + Steam
-
-Phase 4: Online-Version
-  └─ Backend hinzufügen (Node.js / Supabase)
-     → Multiplayer, Accounts, Lobbys
-```
+## Git und Übergabe
+- Fremde/uncommittete Änderungen erhalten, insbesondere Editoränderungen an `godot/project.godot` nicht beiläufig normalisieren.
+- Kein Commit, Push, Merge oder Kauf ohne Auftrag. Cloud-Branches nicht automatisch integrieren. Drei Claude-Berichte gegen tatsächliche Commitstände abgleichen.
+- Abschluss: Ergebnis, Branch/HEAD, Dateien, Prüfungen mit Exit-Code, echte offene Punkte, nächster Schritt. Details bei Fehlern, Regelentscheidungen oder ausdrücklichem Wunsch.
+- Ausführliche Setup-Hinweise: `docs/development/CLAUDE-STACK.md`, nur bei Bedarf lesen.

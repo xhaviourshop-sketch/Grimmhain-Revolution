@@ -1,0 +1,156 @@
+{
+  "skills": [
+    {
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "d4b0e35550c55ae70bdfcab4ef5a0e94610438a9",
+      "license": "Apache-2.0",
+      "upstreamUnmodified": true,
+      "files": [
+        {
+          "sha256": "b2625f5651fc9373e057ea47b5e2372319c4ed027fffc958f8a91d25cdea5a39",
+          "gitBlob": "2609eb9f18e0046bf5ce5a07283f224e940320d0",
+          "path": "SKILL.md"
+        },
+        {
+          "sha256": "f1cea898e0346be3fac816093b577b30ef0f112d83cc2c1472c44d4a936700b3",
+          "gitBlob": "7261650cdffc87da032909ad8c08104dcb8788ef",
+          "path": "references/annotations-and-typing.md"
+        }
+      ],
+      "sourcePath": "skills/godot/godot-gdscript",
+      "destination": ".claude/skills/godot-gdscript",
+      "licenseDirectory": "docs/development/skill-sources/gamedev-skills--awesome-gamedev-agent-skills",
+      "name": "godot-gdscript"
+    },
+    {
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "d4b0e35550c55ae70bdfcab4ef5a0e94610438a9",
+      "license": "Apache-2.0",
+      "upstreamUnmodified": true,
+      "files": [
+        {
+          "sha256": "9ac89920e74bbf8d939b4d565e350d53b07c9afbe0970345c97d4122f590cfd5",
+          "gitBlob": "2623bd31cf09ede0cf5853edc617f72313668cb4",
+          "path": "SKILL.md"
+        },
+        {
+          "sha256": "2b5a7d64f00709640385adda215aa3f9a839c2d461c53c886ba9c320723a9f3d",
+          "gitBlob": "972e05db7b070170f8ab3fc4ce298e41c9ac2be1",
+          "path": "references/layout-and-theming.md"
+        }
+      ],
+      "sourcePath": "skills/godot/godot-ui-control",
+      "destination": ".claude/skills/godot-ui-control",
+      "licenseDirectory": "docs/development/skill-sources/gamedev-skills--awesome-gamedev-agent-skills",
+      "name": "godot-ui-control"
+    },
+    {
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "d4b0e35550c55ae70bdfcab4ef5a0e94610438a9",
+      "license": "Apache-2.0",
+      "upstreamUnmodified": true,
+      "files": [
+        {
+          "sha256": "9d32ef721eaa227494180b6ffb0208624a76e93217a2e39c2286eb0b5701e8e5",
+          "gitBlob": "bc92f03dfb8584a74348d23c2d2999e69767d275",
+          "path": "SKILL.md"
+        },
+        {
+          "sha256": "455ef0e15357428f250035fd5b0c587500b9d565f3bbcc33f95f378a986380a6",
+          "gitBlob": "923e6ef3f9a95316a025ab340f635f4452d0d188",
+          "path": "references/animation-tree-and-tween.md"
+        }
+      ],
+      "sourcePath": "skills/godot/godot-animation",
+      "destination": ".claude/skills/godot-animation",
+      "licenseDirectory": "docs/development/skill-sources/gamedev-skills--awesome-gamedev-agent-skills",
+      "name": "godot-animation"
+    },
+    {
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "d4b0e35550c55ae70bdfcab4ef5a0e94610438a9",
+      "license": "Apache-2.0",
+      "upstreamUnmodified": true,
+      "files": [
+        {
+          "sha256": "b75829c3c47539f4e1fa2b623ebfce6fa4f5eef2ddc950d00265c27cfae2e0db",
+          "gitBlob": "06d9c0385a9c4bd5d088d129385371fc6255b051",
+          "path": "SKILL.md"
+        },
+        {
+          "sha256": "da6a33ae46b21f3526e74c5e383781e02f1f6ca0bd755475b21e14f124a52526",
+          "gitBlob": "24d9acd4890b26a63744a55317c0382f06e5b55d",
+          "path": "references/buses-and-effects.md"
+        }
+      ],
+      "sourcePath": "skills/godot/godot-audio",
+      "destination": ".claude/skills/godot-audio",
+      "licenseDirectory": "docs/development/skill-sources/gamedev-skills--awesome-gamedev-agent-skills",
+      "name": "godot-audio"
+    },
+    {
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "d4b0e35550c55ae70bdfcab4ef5a0e94610438a9",
+      "license": "Apache-2.0",
+      "upstreamUnmodified": true,
+      "files": [
+        {
+          "sha256": "ddfc68c927f9a482d78cc0e103edb2e2711bc876a5965ff53eabd9a7d308dfab",
+          "gitBlob": "37d589a9d6fbfee04be44c759f0683131b116af9",
+          "path": "SKILL.md"
+        },
+        {
+          "sha256": "fb161af3797b364c5a9032dc3836bc25f05762508f2831f6a19a6aa416811dd8",
+          "gitBlob": "17025f4ffa801f81067d0bbcc981d253d8f84d57",
+          "path": "references/profiling-and-budgets.md"
+        }
+      ],
+      "sourcePath": "skills/disciplines/performance-optimization",
+      "destination": ".claude/skills/performance-optimization",
+      "licenseDirectory": "docs/development/skill-sources/gamedev-skills--awesome-gamedev-agent-skills",
+      "name": "performance-optimization"
+    },
+    {
+      "repository": "juliusbrussee/caveman",
+      "commit": "2fd153c67988e980fb0b2455c90832159a6a5a25",
+      "license": "MIT (skills directory)",
+      "upstreamUnmodified": true,
+      "files": [
+        {
+          "sha256": "3d5599f49771b864eba94f27f456fda295c48c1a37fa6ba2f65fdcb13cc32acb",
+          "gitBlob": "58a9cd7bbf500bc2905260f908dbcd03f107fa93",
+          "path": "SKILL.md"
+        },
+        {
+          "sha256": "9efaaae6ffe812827c1c70af326ebc58b75455f99512f11dc3afccd0298cb45d",
+          "gitBlob": "bf3a9261d09db5a01157643537519347dbf0f4ce",
+          "path": "agents/openai.yaml"
+        }
+      ],
+      "sourcePath": "skills/verify-and-stop",
+      "destination": ".claude/skills/verify-and-stop",
+      "licenseDirectory": "docs/development/skill-sources/juliusbrussee--caveman",
+      "name": "verify-and-stop"
+    },
+    {
+      "repository": "mrcalderon3d/everything-game-dev-code",
+      "commit": "623a9963a96baf3cafaf1d4bfc478853c48db38d",
+      "license": "MIT",
+      "upstreamUnmodified": true,
+      "files": [
+        {
+          "sha256": "2a3e95364ec725fc1752fbc2d8834d9fc4c1b5a780a6319cd3bc8dd9aefbcff6",
+          "gitBlob": "dbc4e41ef0855f49c3650d9be4858d6672039baa",
+          "path": "SKILL.md"
+        }
+      ],
+      "sourcePath": "skills/art-audio-content/art-bible",
+      "destination": ".claude/skills/art-bible",
+      "licenseDirectory": "docs/development/skill-sources/mrcalderon3d--everything-game-dev-code",
+      "name": "art-bible"
+    }
+  ],
+  "scope": "project-local Claude Code",
+  "installedAt": "2026-09-27",
+  "installer": "Codex skill-installer with explicit --dest"
+}

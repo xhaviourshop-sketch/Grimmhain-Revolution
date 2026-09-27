@@ -1,5 +1,10 @@
-; Grimmhain · Godot-Projekt (Phase 1: headless Regelkern, UI-Grundlage)
-; Gepinnte Engine-Version: siehe README.md und tools/godot-version.txt
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -8,15 +13,15 @@ config_version=5
 config/name="Grimmhain"
 config/version="0.1.0"
 run/main_scene="res://app/main.tscn"
-config/features=PackedStringArray("4.7")
 config/quit_on_go_back=false
+config/features=PackedStringArray("4.7")
 
 [debug]
 
 gdscript/warnings/untyped_declaration=2
-gdscript/warnings/unsafe_call_argument=1
-gdscript/warnings/unsafe_method_access=1
 gdscript/warnings/unsafe_property_access=1
+gdscript/warnings/unsafe_method_access=1
+gdscript/warnings/unsafe_call_argument=1
 
 [display]
 
@@ -26,14 +31,9 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=4
 
-[input_devices]
-
-pointing/emulate_mouse_from_touch=true
-
 [internationalization]
 
 locale/translations=PackedStringArray("res://content/i18n/ui.de.po", "res://content/i18n/ui.en.po")
-locale/fallback="en"
 
 [rendering]
 

@@ -1,0 +1,143 @@
+Ausgangslage geprüft: HEAD `7837809` (enthält den Abschlusscommit), origin/main `5eb5f2a` (Assets-Merge von Grimmhain-3, ohne meinen Branch). Jetzt die Fundstellen der zufälligen Scheinrolle.
+
+Die Ursache liegt in `RoleDistribution.appearance_for/appearances_for`, das die Scheinrolle aus dem Seed ableitet und über `RoleSetup._random_fill/_manual_changed` pro Person in `DistributionDraft.appearances` speichert; `AssignmentRow` zeigt sie als „vorläufig“. Jetzt führe ich die Regressionstests durch.
+
+Regressionstests stehen: 18 rot (15 neue, 3 angepasste), 420 übrige grün. Commit, dann der Fix.
+
+Modell anpassen: Rollenkopie mit eigener ID und Scheinrolle.
+
+Modell grün (alle 44 Modelltests). Jetzt die Oberfläche: Scheinrollen-Bereich im Rollenschritt, Kopienwahl in der Verteilung.
+
+Fix grün (438/438). Commit, dann Screenshots.
+
+Jetzt das Screenshot-Werkzeug um die sechs Scheinrollen-Aufnahmen erweitern.
+
+Bilder passen (einzige Korrektur: kürzere Buttons „Wählen/Ändern“ in der Kopienzeile, damit die Scheinrolle bei 1024×768 einzeilig bleibt). Tests erneut, dann Doku und Medienliste.
+
+Medienliste mit 27 Dateien erstellt. Commits für Layoutkorrektur/Werkzeug und Doku, dann Prüfung.
+
+Ein Leerzeilenfehler am Dateiende; kleiner Nachfix.
+
+CI-Lauf für den finalen Commit läuft noch; ich prüfe gleich erneut.
+
+Die Trugbilderwolf-Scheinrolle entsteht nicht mehr zufällig: Der Spielleiter wählt sie jetzt für jede Kopie selbst, wie DR-08 es verlangt. Alle 438 Tests laufen lokal und in der CI grün, alles ist gepusht, kein Pull Request. Offen bleibt die Aufnahme der Screenshots ins gemeinsame Assetregister durch Grimmhain-3 (Punkt 13).
+
+**1. Branch und Commits**
+- Branch `claude/sleepy-babbage-u2o0i2`. Er enthält `7837809` und wurde weder zurückgesetzt noch per Force-Push überschrieben.
+- Branchbasis `250d3d2`, HEAD `53a3c7d`.
+- `origin/main` steht auf `5eb5f2a` (Asset-Merge von Grimmhain-3) und enthält meinen Branch nicht. Davon habe ich nichts übernommen.
+- Neue Commits:
+  - `4203465`: Regressionstests (rot)
+  - `fd25fff`: Korrektur
+  - `54b3fb9`: Screenshot-Werkzeug und kürzere Buttons
+  - `b1c743e`: Dokumentation, Screenshots und Medienliste
+  - `53a3c7d`: überzählige Leerzeile am Dateiende entfernt
+
+**2. Ursache und Korrektur**
+- Ursache: Ich hatte die fehlerhafte Vorgabe umgesetzt.
+  - `RoleDistribution.appearance_for/appearances_for` leitete die Scheinrolle aus Seed und Personen-ID ab.
+  - `RoleSetup._random_fill/_manual_changed` speicherte sie pro Person in `DistributionDraft.appearances`.
+  - `AssignmentRow` zeigte sie als „vorläufig“.
+- Korrektur:
+  - Diese Ableitung ist vollständig entfernt.
+  - Jede Trugbilderwolf-Kopie ist jetzt ein eigener Eintrag mit einer ausdrücklich gewählten Scheinrolle.
+  - Es gibt keine Vorbelegung, und ohne Wahl lässt sich der Rollenpool nicht bestätigen.
+
+**3. Dateien**
+
+| Datei | Verantwortung |
+|---|---|
+| `role_copy.gd` (neu) | eine Kopie: `copy_id`, `role_id`, `appears_as` |
+| `role_pool_draft.gd` | Kopien, Verteilungseinheiten, Fehler `missing_appearance`, Sicht |
+| `role_setup.gd` | Anlegen und Entfernen von Kopien, Scheinrolle setzen, Invalidierung, Verteilung von Einheiten |
+| `player_setup.gd` | neu: `set_decoy_appearance`, `remove_decoy_copy`; Rückfrage-Details beim Minus |
+| `role_distribution.gd`, `distribution_draft.gd`, `setup_distribution_view.gd` | Zuordnung Person → Einheit statt Person → Scheinrolle |
+| `decoy_section.*`, `decoy_copy_row.*` (neu) | geheimer Scheinrollen-Bereich im Rollenschritt |
+| `role_step.gd` | bindet den Bereich ein, Minus-Rückfrage, schließt beim Verlassen |
+| `distribution_step.gd`, `assignment_row.gd` | Kopienwahl im Auswahldialog, Anzeige ohne „vorläufig“ |
+| PO-Dateien | 19 neue Schlüssel, 3 geänderte Texte |
+| Screenshot-Werkzeug | Scheinrollen werden ausdrücklich gewählt, 6 neue Aufnahmen |
+| Dokumentation | `role-setup.md`, `docs/ui/README.md`, `godot/README.md`, Screenshot-README, `asset-handoff.md` |
+
+**4. Datenmodell**
+- `RolePoolDraft.copies` ist eine Liste von `RoleCopy` mit stabiler `copy_id` (ab 1, nie wiederverwendet), `role_id` und `appears_as` (leer bedeutet: noch nicht gewählt).
+- Für den Trugbilderwolf gilt immer: `counts[trugbilderwolf]` entspricht der Zahl seiner Kopien.
+- `entries()` liefert die Verteilungseinheiten als `{key, role_id, appears_as}`.
+  - Normale Rollen haben ihre Rollen-ID als Schlüssel.
+  - Eine Kopie hat einen eigenen Schlüssel, z. B. `trugbilderwolf#2`.
+  - Das entspricht direkt dem Core-Format `role_entries`.
+- `DistributionDraft.assignment` ordnet jeder Person-ID eine solche Einheit zu. Die Scheinrolle steht nur an der Kopie, nie an der Person.
+
+**5. Beispiel**
+- Kopie A (`trugbilderwolf#1`, Waldhexe) und Kopie B (`trugbilderwolf#2`, Das Orakel).
+- Nach dem Verteilen hält Person 1 die Kopie B und erscheint damit als Orakel. Person 2 hält Kopie A und erscheint als Waldhexe.
+
+**6. Verhalten im Beispiel**
+- **Neu mischen:** Die Personen können andere Kopien erhalten. A bleibt aber immer Waldhexe und B immer Orakel.
+- **Tauschen von Person 1 und 2:** Die Scheinrollen wandern mit ihren Kopien.
+- **Kopie A entfernen:** Kopie B behält ID und Scheinrolle und wird als „Trugbilderwolf 1“ neu nummeriert. Rollenbestätigung und Verteilung fallen weg.
+- **Zuweisung aufheben:** Es wird genau die gehaltene Kopie wieder frei.
+
+**7. Invalidierungsregeln**
+- **Scheinrolle ändern, Kopie hinzufügen oder entfernen, Vorschlag, Zurücksetzen:**
+  - Die Rollenbestätigung wird aufgehoben (`roles_changed`) und die Verteilung verworfen.
+  - Dieselbe Scheinrolle erneut zu wählen ändert nichts.
+- **Minus:** entfernt ohne Rückfrage nur unkonfigurierte Kopien. Sonst kommt eine Rückfrage, die die Kopie nennt.
+- **Vorschlag:** behält vorhandene Kopien samt Scheinrolle.
+- **Zurücksetzen:** entfernt alle Kopien.
+- **Name ändern, Sprache wechseln, Navigation:** Alles bleibt erhalten.
+- **Personen:** Alle bisherigen Regeln gelten unverändert.
+
+**8. Geheimhaltung und Bedienung**
+- Öffentlich steht nur „Scheinrollen festgelegt: 1 von 2“.
+- Kopien und Scheinrollen erscheinen erst im bewusst geöffneten Bereich „Geheim · nur für die Spielleitung“.
+- Beim Schließen oder Verlassen des Schritts wird der Bereich ausgeblendet; lag der Fokus darin, wandert er auf „Scheinrollen festlegen“.
+- Die Wahl läuft über einen modalen Dialog mit Fokussperre, Escape bricht ab.
+- Statusmeldungen, Fortschrittsanzeige, Dialogtitel und verdeckte Verteilungszeilen nennen keine Rollen. Die Tests prüfen das nach jeder Aktion.
+
+**9. Tests**
+- Im Commit `4203465` waren 18 Tests rot:
+  - die 15 neuen Tests in `test_decoy_model` und `test_decoy_step`
+  - drei angepasste Tests (unten)
+- 420 Tests waren vorher schon grün, darunter `test_rerender_language_and_rename_keep_assignment`.
+- Angepasste Tests (vorher wurde eine zufällige Scheinrolle vorausgesetzt):
+  - `test_distribution_model::test_decoy_wolf_appearances`: prüft jetzt die gewählten Scheinrollen.
+  - Vorbereitung in `test_distribution_model` und `test_distribution_step`: setzt die Scheinrolle ausdrücklich. In `test_distribution_step` habe ich das nach dem roten Commit zusätzlich auf Kopien aus dem Vorschlag ausgeweitet, weil der Vorschlag für 24 Personen eine unkonfigurierte Kopie enthält.
+  - `test_role_model::test_suggestion_for_every_person_count`: verlangt jetzt exakt `["missing_appearance"]`, solange eine Kopie offen ist, und danach einen gültigen Pool.
+
+**10. Testergebnisse**
+- Vorher 423 Tests, nachher 438.
+- `godot/tests/run_all.sh`: Exit 0, 438 Tests, 0 Fehler, auch am finalen Commit.
+- Projektimport: Exit 0.
+- `test_all_scenes_load` lädt alle Szenen, einschließlich der beiden neuen.
+- `git diff --check 7837809..HEAD`: sauber.
+
+**11. CI**
+- Run 36299937570 für Commit `53a3c7d`: erfolgreich, im Log „438 Tests, 0 fehlgeschlagen“.
+- Der vorherige Commit `b1c743e` lief ebenfalls grün (Run 36299878766).
+
+**12. Screenshots**
+- Neu: `14` bis `19` in `docs/evidence/role-setup/` (fehlende Wahl, gewählte Scheinrolle, zwei Kopien, manuelle Kopienwahl, zufällige Verteilung geschlossen und geöffnet).
+- Neu erzeugt: `03`, `11` und `13`.
+- Gefundener Mangel: Bei 1024×768 brach „Scheinrolle: Waldhexe“ um. Die Buttons heißen jetzt kurz „Wählen“ bzw. „Ändern“.
+- Belassen: Die Statuszeile bricht bei 1024×768 in zwei Zeilen um.
+
+**13. Medienliste und Assetregister**
+- Die Liste liegt unter `docs/evidence/role-setup/asset-handoff.md`: 27 PNG-Dateien (19 neu, 8 verändert) mit SHA-256, Größe, Zweck und Status.
+- **Offen:** Die Aufnahme ins gemeinsame Assetregister muss Grimmhain-3 übernehmen. Register, Prüfwerkzeug und CI habe ich nicht angefasst.
+
+**14. Offen und ungetestet**
+- Keine offenen Fehler bekannt.
+- Nicht getestet sind echte Geräte, echtes Touch-Scrollen im Scheinrollen-Bereich, Screenreader und die Android-Zurück-Taste.
+- Technische Grenze: Die Kopienlogik gilt für alle Rollen, die laut Katalog eine Scheinrolle brauchen; das ist derzeit nur der Trugbilderwolf. Die Texte „Trugbilderwolf N“ sind dagegen fest auf diese Rolle zugeschnitten.
+
+**15. Core und Regeln**
+- `godot/core/`, `docs/assets/`, `docs/role-migration/`, `tools/` und `.github/` sind unverändert.
+- DR-08 und das DECISION-LOG sind unverändert.
+- Es entsteht kein StartGame und kein GameState.
+
+**16. Bereitschaft**
+Der korrigierte Stand ist bereit für Prüfung und Integration.
+
+**17. Empfohlener nächster Auftrag**
+Wizard-Schritt 4 „Sitzordnung“ (Reihenfolge der Personen-IDs im Entwurf, ohne Sitzkreis-Grafik und ohne StartGame).

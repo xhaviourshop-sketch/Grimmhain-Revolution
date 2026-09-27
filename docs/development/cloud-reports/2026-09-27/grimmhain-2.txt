@@ -1,0 +1,155 @@
+Ich habe geprüft: `origin/main` enthält seither nur UI-Setup, Assets und eine Nachtmusik-Entscheidung, keine Regel- oder Kernänderung. Jetzt gleiche ich meine Entscheidungen mit den verbindlichen Regeln ab.
+
+Wichtiger Fund: Grimmhain-1 baut in einem ungemergten Branch ein Rollen-Setup mit einem Test, der genau 11 Katalogrollen erwartet – jede zusätzliche Rolle würde kollidieren. Ich klassifiziere jetzt alle 160 Teilfragen.
+
+Die Nachprüfung zeigt, dass RM-DR-007, 001 und 009 sowie die Doppelspion-Paritätsfrage bereits durch bestehende Entscheidungen abgedeckt sind, während RM-DR-016 nur ein Vorschlag und kein Blocker für K1 ist. Jetzt lege ich die Statuszuordnung aller Einträge als prüfbare Datendatei an.
+
+Jetzt baue ich die Entscheidungsanfrage (08) um: neuer Kopf mit Statusübersicht, Statuszeilen je Eintrag, korrigierte RM-DR-016 und neue RM-DR-017.
+
+Jetzt die kurze Entscheidungsvorlage `10-next-decisions.md`.
+
+Jetzt überarbeite ich die Chargenplanung (06) §3: Bewertung der nächsten Einheit, vollständige Abhängigkeitsliste, neu begründeter Aufwand ohne feste Schemanummer.
+
+Ich korrigiere die Optionen (05): Risikoaussage, Status „nicht freigegeben“ und die Voraussetzungen nach der Konsolidierung.
+
+Jetzt die Zusammenfassung (09) neu, mit präzisem Status und korrigierten Aussagen.
+
+Jetzt präzisiere ich den Status der 11 Rollen in 02 (Geltungsbereich je Ebene) sowie 00 und 01.
+
+Jetzt erweitere ich das Prüfskript um die neue Struktur (Statusdatei, Unter-IDs, Statuszählung, erste Fragerunde).
+
+Die vier gemeldeten Pfade existieren nur auf `origin/main` bzw. dem UI-Branch, nicht in meinem Arbeitsbaum. Ich passe das Prüfskript an, um sie stattdessen lesend per `git cat-file` gegen diese Referenzen zu prüfen, anstatt main zu mergen.
+
+Grün. Kurzer Mutationstest der neuen Prüfungen:
+
+Prüfungen greifen. Jetzt suche ich veraltete Aussagen in allen Dokumenten.
+
+Alles konsistent. Commit und Push in zwei fachlichen Schritten:
+
+Die Konsolidierung ist fertig und liegt auf `claude/happy-bell-dhgkod`. Statt 74 Einträgen mit 160 Teilfragen musst du jetzt **vier Fragen** beantworten; der Rest ist entschieden, technisch oder erst bei späteren Rollen dran.
+
+## 1. Stand
+- **Branch:** `claude/happy-bell-dhgkod`, ohne Merge, ohne Force-Push, keine fremden Branches übernommen.
+- **Ursprünglicher HEAD:** `62e01c8`.
+- **Geprüfter `origin/main`:** `5eb5f2a`. Seit meiner Analysebasis `4673b0b` sind Regelkern, Regeltests, Spezifikationen und die Regelabschnitte des Decision Logs unverändert. Neu sind nur das Spieler-Setup der Oberfläche, Asset-Dokumente und die Entscheidung zur Nachtmusik.
+- **Nur gelesen, nicht verbindlich:** der UI-Branch von Grimmhain-1 (`sleepy-babbage`, `7837809`) und der Asset-Branch von Grimmhain-3 (`wizardly-maxwell`, `c46c9e4`).
+- **Neuer HEAD:** `fc38043`, gepusht.
+
+## 2. Commits und Dateien
+- `775a404`: Entscheidungsstatus, kurze Fragerunde, Prüfskript.
+- `fc38043`: Korrekturen zu Status, Risiko und K1-Aufwand.
+- **Neu:** `10-next-decisions.md`, `decision-status.csv`.
+- **Geändert:** `00` bis `09` in `docs/role-migration/` und `tools/role-migration/check-role-docs.js`. Außerhalb dieser beiden Ordner habe ich nichts geändert.
+
+## 3. Korrigierte Aussagen
+- **„Vollständig umgesetzt“** galt nur für Regelkern und headless Tests. Keine der 11 Rollen ist über die Oberfläche bedienbar, in einer vollen Runde geprüft oder auf einem Tablet getestet (`02` §1a).
+- **RM-DR-007 und RM-DR-016 als K1-Blocker:** falsch.
+  - RM-DR-007 ist durch G-SIEG-1 bis 6, DR-02 und DR-14 entschieden.
+  - RM-DR-016 war nur mein Vorschlag, begründet mit weniger Tests. Diese Ersparnis tritt nicht ein, weil der Lehrling und Spielleiterkorrekturen ohnehin mehrere Personen mit derselben Rolle erzeugen. Die Empfehlung ist zurückgezogen.
+- **„Option B hat keine Rolle mit hohem Risiko“:** Das stimmt pro Rolle, verschweigt aber etwas. B braucht drei neue Grundsysteme aus Chargen mit hohem Risiko: Bindungen für Loki, Blockaden für den Schattenhund, Markierungen für den Rattenfänger (`05` §5a).
+- **K1 „klein bis mittel, niedriges Risiko“:** zu optimistisch. Neu geschätzt: mittel bis groß, Risiko mittel. Die Wolfszählung wirkt in jeder Siegprüfung, und ein Sieg, der an einer vergangenen Hinrichtung hängt, verträgt sich nicht mit der bestehenden Ablehnungslogik.
+- **Feste Schemanummer „11“:** gestrichen, die Nummer ergibt sich erst bei der Umsetzung.
+- **„Dorfsieg bei lebenden Einzelsiegrollen ist ungeregelt“:** falsch, G-SIEG-1 regelt das bereits.
+
+## 4. Zählung je Status
+
+| Status | Einträge | Fragen |
+|---|---:|---:|
+| entschieden | 2 | 12 |
+| Produktentscheidung | 3 | 7 |
+| technisch | 1 | 3 |
+| später | 65 | 162 |
+| Quellenprüfung | 4 | 4 |
+| **gesamt** | **75** | **188** |
+
+Die Zahlen sind höher als vorher, weil ich RM-DR-017 neu angelegt, einige Einträge in Unterfragen aufgeteilt und fünf neue Teilfragen ergänzt habe.
+
+## 5. Vermeintliche Blocker, die schon beantwortet sind
+- **RM-DR-001** (Fähigkeiten zählen je Person): G-ID-3 sowie die Decision-Log-Einträge zu Lehrling, Waldhexe und Spiegelwolf.
+- **RM-DR-007** (mehrere Sieger gleichzeitig): G-SIEG-1 bis 6, DR-02, DR-14, Eintrag „Manipulator und Kandidatenmenge“.
+- **RM-DR-009.1** (Zeitpunkt von Todesreaktionen mit Entscheidung): G-TOD-4 und DR-09.
+- **RM-DR-155.2** (Doppelspion zählt in der Wolfsparität als Nicht-Wolf): G-SIEG-2.
+- **RM-DR-002.1 und .2** (Wolfsbegriff für Orakel und Siegprüfung): DR-07, G-SIEG-1/2.
+- **RM-DR-138.5** (Tod durch Spiegelung ist keine Hinrichtung des Selbstmörders): G-TOD-3.
+- **Hinrichtung durch dich zählt als Hinrichtung:** Korrekturrunde 4.
+- **RM-DR-015.1** (Zufall läuft über den gespeicherten Seed): G-RNG-1.
+- **RM-DR-126.3 und RM-DR-141.3** (Einmal-Fähigkeiten je Person): G-ID-3.
+- **Setup-Obergrenzen:** Es gibt keine feste Rollenzusammenstellung; einzelne Rollen dürfen eine eigene Grenze bekommen (Decision Log, Rollenanzahl der Grundrollen).
+
+## 6. Die Fragerunde aus `10-next-decisions.md`
+
+**RM-DR-017 · Welche Rollen sollen als Nächstes spezifiziert werden?**
+- A: Siegreicher Wolf und Doppelspion.
+- B: nur Siegreicher Wolf.
+- C: dazu auch der Selbstmörder.
+- **Empfehlung A.** Beide ändern nur die Siegprüfung. Der Selbstmörder bringt eine neue Art von Sieg und braucht drei eigene Antworten.
+- Ohne Antwort ist jede weitere Rollenspezifikation blockiert.
+
+**RM-DR-155.1 · Muss der Doppelspion leben, um zu gewinnen?**
+- Beispiel: Ben (Doppelspion) wird in Nacht 2 gefressen. Am Tag 3 wird Anna, die letzte Werwölfin, hingerichtet.
+- A: Ja, Ben ist tot, also gewinnt das Dorf.
+- B: Nein, Ben gewinnt auch tot.
+- **Empfehlung A.** So verhält sich die alte App, und dieselbe Bedingung gilt beim Manipulator.
+- Ohne Antwort ist die Spezifikation des Doppelspions blockiert.
+
+**RM-DR-155.3 · Wird das Dorf zusätzlich als Sieger vorgeschlagen, wenn der Doppelspion gewinnt?**
+- Beispiel: Anna, die letzte Werwölfin, wird hingerichtet. Ben (Doppelspion), Clara und David leben.
+- Schon klar: Bestätigst du Bens Sieg, gewinnt nur Ben. Offen ist nur, was die App dir anbietet.
+- A: Die App schlägt nur „Ben gewinnt allein“ vor. Du kannst trotzdem ablehnen und selbst einen Sieger erklären.
+- B: Die App schlägt Dorf und Ben vor, du wählst.
+- C: wie B, aber Bens Sieg ist als die laut Rollentext zutreffende Wahl markiert.
+- **Empfehlung A.** Der Rollentext beschreibt genau diesen Moment; mit B wäre ein Fehlgriff ein falscher Sieger. Andere Siege, etwa der Manipulator, werden weiter gleichzeitig vorgeschlagen.
+- Ohne Antwort ist die Spezifikation des Doppelspions blockiert.
+
+**RM-DR-155.4 · Was erfahren die Werwölfe, wenn der Doppelspion mit ihnen aufwacht?**
+- Beispiel: Nacht 1, du weckst die Werwölfe Anna und Emil; Ben wacht mit auf.
+- A: Du nennst keine Rolle; Anna und Emil halten Ben vielleicht für einen Wolf.
+- B: Du sagst ihnen, dass Ben der Doppelspion ist.
+- C: Nur Ben sieht die Wölfe, sie sehen ihn nicht.
+- **Empfehlung A**, mit geringer Sicherheit: Weder Rollentext noch alte App regeln das.
+- Blockiert sind nur Regeltext und Ansage, nicht die Siegprüfung.
+
+**Zur Kenntnis, keine Frage:** Der Siegreiche Wolf zählt nur in der Wolfsparität doppelt und nur, solange er lebt. Beispiel: Emil (Siegreicher Wolf), Clara und David leben, also sind die Wölfe Siegkandidat. Wenn du das anders willst, sag es.
+
+**Später:** Für den Selbstmörder brauche ich RM-DR-138.1 (zählen 5 Tote vor oder einschließlich ihm), RM-DR-138.3 (zählen auch Wiederbelebte) und RM-DR-138.4 (verfällt ein abgelehnter Sieg endgültig). Bei Antwort C auf RM-DR-017 gehören sie sofort in die Runde.
+
+## 7. Empfehlung für die nächste Einheit
+**K1a = Siegreicher Wolf und Doppelspion**, danach der Selbstmörder als eigene Einheit K1b. Fallback, falls die Doppelspion-Fragen warten müssen: nur der Siegreiche Wolf, ohne offene Frage.
+- **Größe und Risiko** (Schätzung): K1a mittel, Risiko mittel. Siegreicher Wolf allein klein, Risiko niedrig bis mittel.
+- **Belegte Risiken:**
+  - Die neue Wolfszählung greift nach jedem Tod.
+  - Drei bestehende Szenarien prüfen die Wolfszahlen in den Siegmeldungen; ihre Bedeutung darf sich nicht verschieben.
+  - Jeder neue Siegkandidat braucht eine eigene Prüfung beim Laden.
+  - Gibst du bei RM-DR-155.3 Antwort A, braucht die Siegprüfung eine neue Ausnahme für den Dorfsieg.
+- **Voraussetzungen:** deine vier Antworten und eine Abstimmung mit Grimmhain-1 (siehe Punkt 10).
+
+## 8. Offene Widersprüche und unsichere Befunde
+- G-PH-2 (nur lebende Rolleninhaber handeln) widerspricht dem Rollentext des Schutzgeists, der nach seinem Tod handelt.
+- DR-08 legt die Scheinrolle des Trugbilderwolfs beim Spielaufbau fest; König Lykaon und eine Totenkarte erzeugen Trugbilderwölfe aber mitten in der Partie.
+- Frage Q4 in `07-open-questions.md` (Siegpriorität) ist durch DR-02 überholt.
+- **Vier Quellenprüfungen:**
+  - Zwei brauchen einen Test am Gerät, weil „links“ am Tisch und auf dem Bildschirm verschieden sein kann (RM-DR-146.1 Fährtenleser, RM-DR-153.4 Detektiv).
+  - Bei zwei ist unklar, ob eine Wechselwirkung der alten App gewollt war (RM-DR-103.2, RM-DR-132.3).
+- Grimmhain-1 notiert selbst einen offenen Widerspruch zwischen seiner Vorbelegung der Scheinrolle und DR-08. Das liegt in seinem Bereich.
+- Die Legacy-Befunde bleiben Code-Lektüre ohne Test im Browser.
+
+## 9. Prüfungen
+- **Konsistenzprüfer:** 0 Fehler, Exit 0.
+  - Zählt 75 Einträge, 188 Fragen und 4 Fragen in der aktuellen Runde.
+  - Die neue Prüfung gleicht Statusdatei und Entscheidungsdokument ab, prüft Unter-IDs, die Statustabelle und die Fragerunde.
+  - Pfade, die nur in `origin/main` oder im UI-Branch existieren, prüft er lesend per git.
+  - Ein Mutationstest mit fünf eingebauten Fehlern hat alle erkannt.
+- `git diff --check 62e01c8 HEAD`: sauber.
+- **Godot-Tests:** diesmal nicht ausgeführt, weil ich keinen Code geändert habe. Der letzte Lauf (`4673b0b`, 351 grün) belegt nur den Regelkern.
+- Die inhaltliche Widerspruchsfreiheit zwischen den Dokumenten habe ich von Hand geprüft; automatisch belegt sind nur IDs, Zählungen, Links und Pfade.
+
+## 10. Überschneidungen mit Grimmhain-1 und Grimmhain-3
+- **Grimmhain-1:** Der Test `test_role_model.gd` auf dessen Branch verlangt „exakt elf produktive Rollen“ und wird rot, sobald eine Rolle in den Rollenkatalog kommt.
+  - Jede neue Rolle braucht außerdem Übersetzungsschlüssel für Name und Kurztext in `godot/content/i18n/` und einen Eintrag in `RolePresentation.ROLE_ORDER`.
+  - Ein Doppelspion wäre im Setup-Vorschlag die zweite Einzelsiegrolle.
+  - Übergabe in `06` §3.7.
+- **Grimmhain-3:** keine Überschneidung.
+- **Außerhalb meines Bereichs, als Übergabe notiert:** In `RULE-MIGRATION-MATRIX.md` sollte stehen, dass „implemented“ nur den Regelkern meint.
+
+## 11. Folgeauftrag nach deinen Antworten
+Grimmhain-2 spezifiziert die gewählte Einheit unter `docs/specs/<einheit>/`: Regelregister DE/EN, Akzeptanzszenarien mit den Fällen aus `06` §3.3, Umsetzungsgrenze. Die Antworten kommen zuerst in einen Eintrag für das Decision Log, die Katalogerweiterung wird mit Grimmhain-1 abgestimmt. Noch kein Godot-Code.
