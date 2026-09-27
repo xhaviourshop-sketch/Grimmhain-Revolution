@@ -45,6 +45,15 @@ const SHOTS := [
 	["role-setup", "17-decoy-manual-picker-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_decoy_manual_picker"],
 	["role-setup", "18-decoy-random-closed-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_decoy_random_closed"],
 	["role-setup", "19-decoy-random-open-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_decoy_random_open"],
+	["seating-setup", "01-six-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_seating_six"],
+	["seating-setup", "02-twentyfour-1024x768-de.png", Vector2i(1024, 768), "de", &"new_game", "_prepare_seating_full"],
+	["seating-setup", "03-twelve-1280x800-en.png", Vector2i(1280, 800), "en", &"new_game", "_prepare_seating_twelve"],
+	["seating-setup", "04-twentyfour-1920x1080-de.png", Vector2i(1920, 1080), "de", &"new_game", "_prepare_seating_full"],
+	["seating-setup", "05-selected-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_seating_selected"],
+	["seating-setup", "06-dragging-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_seating_dragging"],
+	["seating-setup", "07-swapped-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_seating_swapped"],
+	["seating-setup", "08-confirmed-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_seating_confirmed"],
+	["seating-setup", "09-long-names-1024x768-en.png", Vector2i(1024, 768), "en", &"new_game", "_prepare_seating_long_names"],
 ]
 const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
 
@@ -104,6 +113,11 @@ func _capture(path: String, size: Vector2i, locale: String, screen: StringName, 
 	if ok:
 		ok = image.save_png(path) == OK
 	print("%s  %s  %s %s" % ["ok  " if ok else "FAIL", path.get_file(), size, image.get_size() if image != null else "kein Bild"])
+	if root.gui_is_dragging():  # Aufnahme mitten im Ziehen: Ziehen beenden, Maustaste lösen
+		root.gui_cancel_drag()
+		var up := InputEventMouseButton.new()
+		up.button_index = MOUSE_BUTTON_LEFT
+		root.push_input(up)
 	root.remove_child(shell)
 	shell.free()
 	return ok
@@ -376,3 +390,88 @@ func _prepare_decoy_random_open(shell: AppShell) -> void:
 	await _press(shell, "DistributeButton")
 	await _press(shell, "RevealButton")
 	shell.get_toast().hide_message()
+
+
+# --- Vorbereitungen Sitzordnung ----------------------------------------------------------------------
+
+## Personen `names`, Vorschlag, Zufallsverteilung bestätigt, dann über „Weiter zur Sitzordnung“.
+func _to_seating(shell: AppShell, names: Array) -> void:
+	shell.get_app_context().setup.seed_source = func() -> int: return SCREENSHOT_SEED
+	await _add_names(shell, names)
+	await _press(shell, "ConfirmPlayersButton")
+	await _press(shell, "ToRolesButton")
+	await _press(shell, "SuggestButton")
+	await _choose_decoys(shell, [&"waldhexe", &"das-orakel"])
+	await _press(shell, "ConfirmRolesButton")
+	await _press(shell, "DistributeButton")
+	await _press(shell, "ConfirmDistributionButton")
+	await _press(shell, "ToSeatingButton")
+	shell.get_toast().hide_message()
+
+
+func _seat(shell: AppShell, index: int) -> SeatToken:
+	return (_node(shell, "SeatCircle") as SeatCircle).tokens()[index]
+
+
+func _prepare_seating_six(shell: AppShell) -> void:
+	await _to_seating(shell, NAMES.slice(0, 6))
+
+
+func _prepare_seating_twelve(shell: AppShell) -> void:
+	await _to_seating(shell, NAMES.slice(0, 12))
+
+
+func _prepare_seating_full(shell: AppShell) -> void:
+	await _to_seating(shell, NAMES.slice(0, 24))
+
+
+func _prepare_seating_selected(shell: AppShell) -> void:
+	await _to_seating(shell, NAMES.slice(0, 12))
+	_seat(shell, 2).grab_focus()
+	_seat(shell, 2).pressed.emit()
+
+
+## Echtes Ziehen über den Viewport ohne Loslassen: Vorschau, abgeblendete Quelle, hervorgehobenes Ziel.
+func _prepare_seating_dragging(shell: AppShell) -> void:
+	await _to_seating(shell, NAMES.slice(0, 12))
+	var start := _seat(shell, 0).get_global_rect().get_center()
+	var goal := _seat(shell, 6).get_global_rect().get_center()
+	var down := InputEventMouseButton.new()
+	down.button_index = MOUSE_BUTTON_LEFT
+	down.pressed = true
+	down.position = start
+	down.global_position = start
+	root.push_input(down)
+	await process_frame
+	var last := start
+	for i: int in range(1, 11):
+		var move := InputEventMouseMotion.new()
+		move.button_mask = MOUSE_BUTTON_MASK_LEFT
+		move.position = start.lerp(goal, i / 10.0)
+		move.global_position = move.position
+		move.relative = move.position - last
+		last = move.position
+		root.push_input(move)
+		await process_frame
+
+
+func _prepare_seating_swapped(shell: AppShell) -> void:
+	await _to_seating(shell, NAMES.slice(0, 12))
+	_seat(shell, 1).pressed.emit()
+	await process_frame
+	_seat(shell, 7).pressed.emit()
+	await process_frame
+	shell.get_toast().hide_message()
+
+
+func _prepare_seating_confirmed(shell: AppShell) -> void:
+	await _prepare_seating_swapped(shell)
+	await _press(shell, "ConfirmSeatingButton")
+	shell.get_toast().hide_message()
+
+
+func _prepare_seating_long_names(shell: AppShell) -> void:
+	var names: Array = []
+	for i: int in 24:
+		names.append("Wolfgangamadeusmozartsalieri%04d" % i if i % 3 == 0 else "Maximiliane-Friederike von Ho%03d" % i)
+	await _to_seating(shell, names)

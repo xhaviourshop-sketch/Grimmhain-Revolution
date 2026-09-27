@@ -13,10 +13,10 @@ signal dropped(source_id: int, target_id: int)
 const DRAG_KEY := "seat_person_id"
 const DRAGGING_ALPHA := 0.45
 const STATE_VARIATIONS := {
-	&"normal": &"CompactButton",
+	&"normal": &"SeatButton",
 	&"selected": &"SeatSelectedButton",
 	&"target": &"SeatTargetButton",
-	&"dragging": &"CompactButton",
+	&"dragging": &"SeatButton",
 }
 
 var person_id: int = 0
@@ -24,7 +24,7 @@ var seat_number: int = 0
 var state: StringName = &"normal":
 	set(value):
 		state = value
-		theme_type_variation = STATE_VARIATIONS.get(value, &"CompactButton")
+		theme_type_variation = STATE_VARIATIONS.get(value, &"SeatButton")
 		modulate.a = DRAGGING_ALPHA if value == &"dragging" else 1.0
 
 

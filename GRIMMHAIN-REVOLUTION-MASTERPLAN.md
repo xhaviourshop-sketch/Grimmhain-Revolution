@@ -2,7 +2,7 @@
 
 **Stand:** 26. September 2026; Umsetzungsstand aktualisiert 27. September 2026 (main `1bc8016`)
 
-**Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen und Verteilung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Keine Tablet-Abnahme, kein Sitzkreis, keine spielbare Partie über die Oberfläche.
+**Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen, Verteilung und Sitzordnung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Keine Tablet-Abnahme, kein Spielstart (`StartGame`), keine spielbare Partie über die Oberfläche.
 
 **Stufen im Umsetzungsstand:** *implementiert* (Code vorhanden) · *automatisch getestet* (headless Godot-Suite, lokal und CI: 438 Tests grün) · *grafisch geprüft* (lokal mit echtem Renderer, skriptgesteuert über echte Buttons, keine Handbedienung) · *Tablet-abgenommen* (von Hand auf dem Zielgerät; bisher für keinen Punkt erfolgt). Ein Haken bedeutet: Punkt im Wortlaut erfüllt.
 
@@ -158,9 +158,9 @@ Godot Tablet/PC
 
 **Ziel:** Setup → erste Nacht → Morgen → Tag → Nominierung → Hinrichtung → neue Nacht funktioniert auf einem echten iPad.
 
-- [ ] Start-, Setup- und Wiederaufnahmescreen bauen. *(Stand 27.09.2026: Start und Setup (Spieler, Rollen, Verteilung) implementiert, automatisch getestet, grafisch geprüft; Wiederaufnahme fehlt; nicht Tablet-abgenommen.)*
+- [ ] Start-, Setup- und Wiederaufnahmescreen bauen. *(Stand 27.09.2026: Start und Setup (Spieler, Rollen, Verteilung, Sitzordnung) implementiert, automatisch getestet, grafisch geprüft; Wiederaufnahme fehlt; nicht Tablet-abgenommen.)*
 - [ ] Namen einzeln erfassen, gespeicherte Gruppe anbieten und 6 bis 24 Personen validieren. *(Stand 27.09.2026: Einzelerfassung, Textimport und 6-bis-24-Prüfung implementiert, automatisch getestet, grafisch geprüft; gespeicherte Gruppe fehlt; nicht Tablet-abgenommen.)*
-- [ ] Sitzkreis mit stabiler Personen-ID und Drag-and-drop der Sitzreihenfolge bauen.
+- [x] Sitzkreis mit stabiler Personen-ID und Drag-and-drop der Sitzreihenfolge bauen. *(Stand 27.09.2026: Setup-Schritt Sitzordnung implementiert, automatisch getestet, grafisch geprüft; Drag-and-drop nur mit Maus bzw. simulierten Mausereignissen, nicht Tablet-abgenommen; siehe `docs/ui/seating-setup.md`.)*
 - [ ] Cockpit mit Phase, Runde, Timer, nächstem Schritt, Warnungen, Log und Undo bauen.
 - [ ] Sichere Ansagekarte mit privaten, vorlesbaren und zeigbaren Bereichen bauen.
 - [ ] Tag- und Nacht-Theme mit vorläufigen, lizenzklaren Assets erstellen.

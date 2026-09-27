@@ -36,4 +36,6 @@ Korrekturrunde DR-08 (27.09.2026): Die zufällige Scheinrolle ist entfernt. `03`
 
 Bewusst so belassen: Die Statusmeldung einer Aktion (`07`, `12`) verdeckt 2,5 s den unteren Listenbereich. Die Fraktion steht in jeder Rollenzeile, obwohl sie auch als Gruppenüberschrift erscheint, damit sie nie nur aus der Position folgt. Die Bilder ersetzen keine Prüfung auf einem echten Tablet.
 
+Hinweis (27.09.2026): Die Aufnahmen zeigen den Stand vor dem Sitzordnungsschritt („Schritt … von 3“); sie wurden bewusst nicht neu erzeugt.
+
 Neu erzeugen: siehe `docs/ui/role-setup.md`, Abschnitt „Tests und Screenshots“.
