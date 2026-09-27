@@ -191,7 +191,11 @@ Siehe §3.
 
 ### K2 · Informationsmodell
 
-**Rollen Charge K2 (4):** `waldlaeufer`, `doktor`, `die-gebundenen`, `dorfchronistin`
+**Rollen Charge K2 (2):** `waldlaeufer`, `doktor`
+
+**Nachtrag Rollenaudit:** `die-gebundenen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `dorfchronistin` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Informationen, die eine Person nachts erhält, ohne Zustand zu ändern: Anzahl lebender Wölfe, gleiche Siegseite zweier Personen, Mitglieder der eigenen Gruppe, Anzahl der Einzelsiegrollen.
 - **Neue Systeme:** N-02.

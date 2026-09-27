@@ -479,6 +479,18 @@ msgstr "Selbstmörder"
 msgid "ui.role.selbstmoerder.short"
 msgstr "Gewinnt, wenn er hingerichtet wird, während mindestens fünf Personen tot sind."
 
+msgid "ui.role.dorfchronistin.name"
+msgstr "Dorfchronistin"
+
+msgid "ui.role.dorfchronistin.short"
+msgstr "Erfährt in Nacht 1, wie viele Personen eine Einzelsiegrolle haben."
+
+msgid "ui.role.die_gebundenen.name"
+msgstr "Die Gebundenen"
+
+msgid "ui.role.die_gebundenen.short"
+msgstr "Lernen sich in Nacht 1 gegenseitig kennen."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

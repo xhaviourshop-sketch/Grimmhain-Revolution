@@ -479,6 +479,18 @@ msgstr "Death Seeker"
 msgid "ui.role.selbstmoerder.short"
 msgstr "Wins if executed while at least five people are dead."
 
+msgid "ui.role.dorfchronistin.name"
+msgstr "Village Chronicler"
+
+msgid "ui.role.dorfchronistin.short"
+msgstr "Learns in night 1 how many people hold a solo role."
+
+msgid "ui.role.die_gebundenen.name"
+msgstr "The Bound"
+
+msgid "ui.role.die_gebundenen.short"
+msgstr "Get to know each other in night 1."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

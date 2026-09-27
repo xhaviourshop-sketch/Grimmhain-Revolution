@@ -44,6 +44,10 @@ const APPRENTICE_CHOICE_CONFIRMED := &"ApprenticeChoiceConfirmed"  ## bestätigt
 const APPRENTICE_BOUND := &"ApprenticeBound"  ## vollständige Bindung des Lehrlings (nur Spielleiter)
 const ROLE_CHANGED := &"RoleChanged"          ## Rollenwechsel durch Erbe des Lehrlings (nur Spielleiter)
 const DEATH_SEEKER_FULFILLED := &"DeathSeekerFulfilled"  ## Selbstmörder bei mindestens 5 Toten hingerichtet (nur Spielleiter)
+const CHRONICLE_RECORDED := &"ChronicleRecorded"  ## Zahl der Einzelsiegpersonen für die Chronistin (nur Spielleiter)
+const CHRONICLE_REVEALED := &"ChronicleRevealed"  ## dieselbe Zahl für die Chronistin (actor)
+const BOUND_RECORDED := &"BoundRecorded"          ## lebende Gebundene in Nacht 1 (nur Spielleiter)
+const BOUND_REVEALED := &"BoundRevealed"          ## die anderen lebenden Gebundenen für eine Gebundene (actor)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

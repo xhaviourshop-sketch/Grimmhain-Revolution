@@ -135,7 +135,7 @@ func test_appearance_choices_are_validated_atomically() -> void:
 	_rejected(s, s.call("set_decoy_appearance", copy, &""), "empty_appearance", "leere Rolle", before)
 	_rejected(s, s.call("set_decoy_appearance", copy + 999, &"waldhexe"), "unknown_copy", "unbekannte Kopie", before)
 	var options: Array = _roles(s).get("appearance_options", [])
-	var expected := ["das-orakel", "doppelspion", "dorfbewohner", "lehrling", "manipulator", "schutzengel", "selbstmoerder", "sensentraeger", "waldhexe", "wolfskind"]
+	var expected := ["das-orakel", "die-gebundenen", "doppelspion", "dorfbewohner", "dorfchronistin", "lehrling", "manipulator", "schutzengel", "selbstmoerder", "sensentraeger", "waldhexe", "wolfskind"]
 	var sorted := options.duplicate()
 	sorted.sort()
 	assert_eq(sorted, expected, "angeboten: alle Nicht-Wolf-Rollen des Katalogs")

@@ -18,7 +18,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 |---|---|---|---|---|---|---|---|---|---|
 | [`loki`](#loki) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Einmalfähigkeit, Todesreaktion | M / mittel | K6 | B |
 | [`nachtwaechter`](#nachtwaechter) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Informationsrolle | Sitzpositionsmechanik, passive Dorfrolle | S / niedrig | K3 | C |
-| [`die-gebundenen`](#die-gebundenen) | Dorf | `documented-only` | `legacy-verified` | `automatic` | Informationsrolle | Einmalfähigkeit | S / niedrig | K2 | C |
 | [`rattenfaenger`](#rattenfaenger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | mehrstufige Nachtfähigkeit | M / mittel | K9 | B |
 | [`die-ewigen`](#die-ewigen) | Dorf | `decision-required` | `not-found` | `assisted` | Informationsrolle | Einzelsieg | M / mittel | K9 | – |
 | [`spuerhund`](#spuerhund) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Fehlinformation, Zufallsmechanik | M / mittel | K7 | – |
@@ -64,7 +63,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`faehrtenleser`](#faehrtenleser) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Sitzpositionsmechanik, Einmalfähigkeit | S / mittel | K3 | – |
 | [`waldlaeufer`](#waldlaeufer) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | passive Dorfrolle | S / niedrig | K2 | A |
 | [`schutzgeist`](#schutzgeist) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Schutz | Todesreaktion, Informationsrolle | M / mittel | K5 | – |
-| [`dorfchronistin`](#dorfchronistin) | Dorf | `documented-only` | `legacy-verified` | `automatic` | Informationsrolle | Einmalfähigkeit | S / niedrig | K2 | – |
 | [`waechter-am-tor`](#waechter-am-tor) | Dorf | `decision-required` | `legacy-verified` | `automatic` | globale Regeländerung | Rollenwechsel | M / hoch | K12 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
 | [`amalia`](#amalia) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Einmalfähigkeit, Tagfähigkeit | M / mittel | K14 | – |
@@ -122,27 +120,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K3 / ab Option C |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-1.md#nachtwaechter) |
-
-### `die-gebundenen`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Die Gebundenen / The Bound |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / I / 0.5 (once) |
-| Migrationsstatus | `documented-only` |
-| Legacy-Befund | `legacy-verified`. Code zeigt die Gebundenen einmalig an; Abweichungen nur bei SL-Versäumnis. |
-| DE/EN-Vergleich | JA. Zeitpunkt Nacht 1, Ziel alle anderen Gebundenen in beiden. (DE Singular "Wacht", EN Plural-Imperativ: ohne Bedeutungsunterschied.) |
-| Automationsziel | `automatic` |
-| Mechanik | primär: Informationsrolle; sekundär: Einmalfähigkeit |
-| Größe / Risiko | S / niedrig |
-| Vorhandene Godot-Systeme | StepQueue (nur Nacht 1), InfoRecord, Ereignis-Sichtbarkeit (actor), StateCodec, Replay. |
-| Neue Systeme | keine; falls `max_copies` in Godot noch fehlt, Mehrfachrollen in RoleDef (in `03` bereits vorgesehen, `03:199`). |
-| Abhängigkeiten | Schattenhund/Albtraumwolf (Blockade in Nacht 1), Lehrling (erbt "Die Gebundenen" nach Nacht 1: sieht nie jemanden). |
-| Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; übergreifend RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K2 / ab Option C |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/village-1.md#die-gebundenen) |
 
 ### `rattenfaenger`
 
@@ -1088,27 +1065,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K5 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: Verhalten, falls ein SL den Schritt über einen anderen Weg (Konsole) auslöst. --- |
 | Detail | [Dossier](dossiers/village-4.md#schutzgeist) |
-
-### `dorfchronistin`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Dorfchronistin / Village Chronicler |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III / 0.3 (once) |
-| Migrationsstatus | `documented-only` |
-| Legacy-Befund | `legacy-verified`. Die Kernfunktion (einmalige Solo-Zählung) funktioniert; die Fehler betreffen Zeilenanzeige und Rundenreset. |
-| DE/EN-Vergleich | JA, semantisch gleich (Zeitpunkt, Inhalt, Gegenstand identisch). |
-| Automationsziel | `automatic`: Reine Zählung aus dem Zustand. |
-| Mechanik | primär: Informationsrolle; sekundär: Einmalfähigkeit |
-| Größe / Risiko | S / niedrig. Eine Zählung, ein Einmalschritt. |
-| Vorhandene Godot-Systeme | StepQueue (Nacht-1-Einmalschritt), InfoRecord (Wahrheit/gezeigt), Ereignis-Sichtbarkeit (actor), Fraktionsabfrage aus Rollendaten, StateCodec, Replay. |
-| Neue Systeme | keine. |
-| Abhängigkeiten | alle Solo-Rollen (SOLO_ROLES_SET), Doppelspion (zählt als Solo), Rollen mit Rollenwechsel in Nacht 1 vor tier 0.3 (Loki 0.1: kein Rollenwechsel) nicht relevant. |
-| Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; übergreifend RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K2 / in keiner Option |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/village-4.md#dorfchronistin) |
 
 ### `waechter-am-tor`
 

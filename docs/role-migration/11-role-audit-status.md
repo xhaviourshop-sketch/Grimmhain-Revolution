@@ -15,13 +15,13 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=14 open=2 blocked=56 -->
+<!-- check:audit-counts total=72 green=16 open=0 blocked=56 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
-| **GRÜN** | **14** |
-| **OFFEN** | **2** |
+| **GRÜN** | **16** |
+| **OFFEN** | **0** |
 | **BLOCKIERT** | **56** |
 
 72/72 ist **nicht** erreicht. Die 56 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
@@ -34,7 +34,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 |---:|---|---|---|---|---|---|---|---|---|---|
 | 1 | `loki` | Loki / Loki | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-101.1, RM-DR-009, RM-DR-011 | fehlt | – | [03](03-remaining-roles-analysis.md#loki) | **BLOCKIERT** |
 | 2 | `nachtwaechter` | Nachtwächter / Night Warden | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-102.1, RM-DR-002, RM-DR-003 | fehlt | – | [03](03-remaining-roles-analysis.md#nachtwaechter) | **BLOCKIERT** |
-| 3 | `die-gebundenen` | Die Gebundenen / The Bound | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | Regelfragen entschieden (Decision Log „Rollenaudit“) | – | fehlt | – | [03](03-remaining-roles-analysis.md#die-gebundenen) | **OFFEN** |
+| 3 | `die-gebundenen` | Die Gebundenen / The Bound | Dorf | Rollentext; RM-DR-014 = B, F-08 (Decision Log „Rollenaudit“) | nur Nacht 1, gemeinsamer Schritt; jede lebende Gebundene erfährt die anderen lebenden | – | umgesetzt | test_die_gebundenen (8), fuzz | Chronistin, Wolfskind, Tod vor dem Schritt, 24 Personen; Blockaden folgen | **GRÜN** |
 | 4 | `waldhexe` | Waldhexe / Witch of the Woods | Dorf | DR-06, Einträge Waldhexe und Korrekturrunde | atomare Kette, je 1 Heil-/Gifttrank pro Person, Gift sofort, Rettung nur aktuelles Rudelopfer | – | umgesetzt | test_waldhexe (43), test_role_interactions, fuzz | Schutzengel, Sensenträger, Wolfskind, Lehrling, Trugbilderwolf | **GRÜN** |
 | 5 | `rattenfaenger` | Rattenfänger / Pied Piper | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-103.1, RM-DR-103.2 | fehlt | – | [03](03-remaining-roles-analysis.md#rattenfaenger) | **BLOCKIERT** |
 | 6 | `sensentraeger` | Sensenträger / Reaper | Dorf | DR-09, Randfälle 26.09. | freiwillige Reaktion, Tag sofort, Nacht am Morgen, kein Selbstziel, einmal pro Person | – | umgesetzt | test_sensentraeger (21), test_reactions, test_role_interactions (Kette mit Erbe), fuzz | Lehrling, Wolfskind, Spiegelwolf, Schutz, DR-14 | **GRÜN** |
@@ -91,7 +91,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 57 | `faehrtenleser` | Fährtenleser / Tracker | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-146.1, RM-DR-146.2, RM-DR-146.3, RM-DR-002, RM-DR-003 | fehlt | – | [03](03-remaining-roles-analysis.md#faehrtenleser) | **BLOCKIERT** |
 | 58 | `waldlaeufer` | Waldläufer / Ranger | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-147.1, RM-DR-147.2, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#waldlaeufer) | **BLOCKIERT** |
 | 59 | `schutzgeist` | Schutzgeist / Guardian Spirit | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-148.1, RM-DR-148.2, RM-DR-148.3, RM-DR-148.4, RM-DR-002, RM-DR-004, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#schutzgeist) | **BLOCKIERT** |
-| 60 | `dorfchronistin` | Dorfchronistin / Village Chronicler | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | Regelfragen entschieden (Decision Log „Rollenaudit“) | – | fehlt | – | [03](03-remaining-roles-analysis.md#dorfchronistin) | **OFFEN** |
+| 60 | `dorfchronistin` | Dorfchronistin / Village Chronicler | Dorf | Rollentext; RM-DR-014 = B, F-09 (Decision Log „Rollenaudit“) | nur Nacht 1; Anzahl Personen mit Einzelsiegrolle, lebend und tot; jede Chronistin für sich | – | umgesetzt | test_dorfchronistin (8), fuzz | Manipulator, Doppelspion, Selbstmörder, Rollenkorrektur, Lehrling; Blockaden folgen | **GRÜN** |
 | 61 | `waechter-am-tor` | Wächter am Tor / Gatewarden | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-149.1, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#waechter-am-tor) | **BLOCKIERT** |
 | 62 | `zeitwaechter` | Zeitwächter / Time Warden | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-150.1, RM-DR-150.2, RM-DR-150.3, RM-DR-150.4, RM-DR-010 | fehlt | – | [03](03-remaining-roles-analysis.md#zeitwaechter) | **BLOCKIERT** |
 | 63 | `amalia` | Amalia / Amalia | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-151.1, RM-DR-151.2, RM-DR-151.3, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#amalia) | **BLOCKIERT** |

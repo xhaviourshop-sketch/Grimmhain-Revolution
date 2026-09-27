@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 14 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 14 |
+| im RoleCatalog vorhandene Rollen | 16 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 16 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 12 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 14 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -61,6 +61,8 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 12 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `role_catalog.gd` (`parity_weight`), `win_rules.gd` (`evaluate`) | `test_siegreicher_wolf.gd` (10), `test_role_interaction_fuzz.gd` | Rollentext, [`10`](10-next-decisions.md) „Zur Kenntnis“, G-SIEG-2 | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 13 | `doppelspion` | Doppelspion / Double Agent (Rollentext) | solo | nein | – | `role_catalog.gd`, `win_rules.gd` (`double_agent_wins`, Kandidatenmenge), `win_candidate.gd` (`double_agent_no_wolves`) | `test_doppelspion.gd` (11), `test_role_interaction_fuzz.gd` | RM-DR-155.1–.5, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 14 | `selbstmoerder` | Selbstmörder / Death Seeker (Rollentext) | solo | nein | – | `kill_pipeline.gd`, `win_rules.gd` (`record_death_seeker`, Kandidat `death_seeker_lynched`), `game_state.gd` (`death_seeker_wins`) | `test_selbstmoerder.gd` (13), `test_role_interaction_fuzz.gd` | RM-DR-138.1/.3/.4/.5, F-11, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 15 | `dorfchronistin` | Dorfchronistin / Village Chronicler (Rollentext) | village | nein | 3 (nur Nacht 1) | `night_one_info.gd`, `step_queue.gd`, `role_catalog.gd` (`first_night_only`) | `test_dorfchronistin.gd` (8), `test_role_interaction_fuzz.gd` | RM-DR-014 = B, F-09, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 16 | `die-gebundenen` | Die Gebundenen / The Bound (Rollentext) | village | nein | 5 (gemeinsamer Schritt, nur Nacht 1) | `night_one_info.gd`, `step_queue.gd` (`BOUND`) | `test_die_gebundenen.gd` (8), `test_role_interaction_fuzz.gd` | RM-DR-014 = B, F-08, DECISION-LOG „Rollenaudit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -143,6 +145,16 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-27):** Einzelsieg, zählt nicht als Wolf, kein Schritt. Stirbt er mit Ursache `LYNCH` (auch `GmCorrection execute`), während unmittelbar vorher mindestens 5 Personen tot sind (nur aktuell Tote), wird der Sieg in `GameState.death_seeker_wins` festgehalten (Ereignis `DeathSeekerFulfilled`, nur Spielleiter). Ab dann schlägt jede Siegprüfung ihn vor, auch nach Ablehnung und nach Wiederbelebung (RM-DR-138.4, F-11). Spiegelung, Nacht-, Gift- und Korrektur-Tötung zählen nicht.
 - **Tests:** `test_selbstmoerder.gd` (13): 5 und 4 Tote, Wiederbelebte zählen nicht, Spielleiter-Hinrichtung, andere Todesarten, Spiegelung, erneuter Vorschlag nach Ablehnung und Wiederbelebung, gleichzeitig mit Dorfsieg, zwei Kopien, Lehrling-Erbe, 6 Personen (niemand lebt), Ladeprüfung.
 - **Grenzen:** RM-DR-138.2 (zählt eine Henker-Hinrichtung?) folgt mit `henker`. Sound bei 5 Toten ist eine Oberflächenanforderung (Decision Log), nicht Regelkern.
+
+### 4.15 `dorfchronistin`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Dorf; persönlicher Schritt `dorfchronistin:<id>` mit Priorität 3, nur in Nacht 1 (RM-DR-014 = B). Der Prompt zeigt dem Spielleiter die Anzahl der Personen mit Einzelsiegrolle, lebend und tot (F-09); „Gezeigt“ erzeugt `ChronicleRecorded` (Spielleiter) und `ChronicleRevealed` (nur die Chronistin). Abbrechbar, nicht überspringbar; Ladeprüfung vergleicht die Zahl mit dem Zustand.
+- **Tests:** `test_dorfchronistin.gd` (8): Rolle und Plan, Zählung inklusive Toter, nur Nacht 1, zwei Chronistinnen, tote Chronistin, Abbruch und Rollenkorrektur, ungültige Antworten und beschädigter Prompt, Leak.
+- **Grenzen:** Blockaden in Nacht 1 (Schattenhund, Albtraumwolf) folgen mit diesen Rollen; ein Lehrling-Erbe nach Nacht 1 gibt keinen Schritt.
+
+### 4.16 `die-gebundenen`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Dorf; ein gemeinsamer Schritt `die-gebundenen` mit Priorität 5, nur in Nacht 1, solange eine Gebundene lebt (RM-DR-014 = B). Der Prompt zeigt dem Spielleiter die lebenden Gebundenen; „Gezeigt“ erzeugt `BoundRecorded` (Spielleiter) und je lebender Gebundener `BoundRevealed` mit den anderen lebenden (F-08; allein: leere Liste). Abbrechbar, nicht überspringbar, entfällt ohne lebende Gebundene.
+- **Tests:** `test_die_gebundenen.gd` (8): Rolle und Plan, tote Gebundene ausgeschlossen, allein, nur Nacht 1, alle tot, Abbruch und beschädigter Prompt, 24 Personen mit sechs Gebundenen, Leak.
+- **Grenzen:** Blockaden in Nacht 1 folgen mit Schattenhund und Albtraumwolf.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

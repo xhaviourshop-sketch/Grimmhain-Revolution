@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 14 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 16 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
-| fehlend, Regel ausreichend klar (`documented-only`) | 2 |
+| fehlend, Regel ausreichend klar (`documented-only`) | 0 |
 | fehlend, Entscheidung nötig (`decision-required`) | 56 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 58 fehlende) | 16 |
-| Legacy-Befund `legacy-contradictory` (nur 58 fehlende) | 27 |
-| Legacy-Befund `legacy-broken` (nur 58 fehlende) | 11 |
-| Legacy-Befund `not-found` (nur 58 fehlende) | 4 |
+| Legacy-Befund `legacy-verified` (nur 56 fehlende) | 14 |
+| Legacy-Befund `legacy-contradictory` (nur 56 fehlende) | 27 |
+| Legacy-Befund `legacy-broken` (nur 56 fehlende) | 11 |
+| Legacy-Befund `not-found` (nur 56 fehlende) | 4 |
 
-<!-- check:counts total=72 implemented=14 remaining=58 -->
+<!-- check:counts total=72 implemented=16 remaining=56 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -38,7 +38,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 |---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 1 | `loki` | Loki / Loki | Dorf | I, II, III, IV | 0.1 (once) | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | M / mittel | K6 | B | [03](03-remaining-roles-analysis.md#loki) · [Dossier](dossiers/village-1.md#loki) |
 | 2 | `nachtwaechter` | Nachtwächter / Night Warden | Dorf | I | – | `decision-required` | `legacy-broken` | `automatic` | Informationsrolle | S / niedrig | K3 | C | [03](03-remaining-roles-analysis.md#nachtwaechter) · [Dossier](dossiers/village-1.md#nachtwaechter) |
-| 3 | `die-gebundenen` | Die Gebundenen / The Bound | Dorf | I | 0.5 (once) | `documented-only` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | K2 | C | [03](03-remaining-roles-analysis.md#die-gebundenen) · [Dossier](dossiers/village-1.md#die-gebundenen) |
+| 3 | `die-gebundenen` | Die Gebundenen / The Bound | Dorf | I | 0.5 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#die-gebundenen) |
 | 4 | `waldhexe` | Waldhexe / Witch of the Woods | Dorf | I, II | 3.4 | `implemented-and-tested` | `legacy-verified` | `automatic` | mehrstufige Nachtfähigkeit | L / hoch | – | Basis | [02](02-implemented-roles-audit.md) |
 | 5 | `rattenfaenger` | Rattenfänger / Pied Piper | Einzelsieg | I | 4.2 | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | M / mittel | K9 | B | [03](03-remaining-roles-analysis.md#rattenfaenger) · [Dossier](dossiers/solos-a.md#rattenfaenger) |
 | 6 | `sensentraeger` | Sensenträger / Reaper | Dorf | I, II, III, IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Todesreaktion | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
@@ -95,7 +95,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 57 | `faehrtenleser` | Fährtenleser / Tracker | Dorf | III | 5.2 | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | S / mittel | K3 | – | [03](03-remaining-roles-analysis.md#faehrtenleser) · [Dossier](dossiers/village-3.md#faehrtenleser) |
 | 58 | `waldlaeufer` | Waldläufer / Ranger | Dorf | IV | 5.4 | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | K2 | A | [03](03-remaining-roles-analysis.md#waldlaeufer) · [Dossier](dossiers/village-3.md#waldlaeufer) |
 | 59 | `schutzgeist` | Schutzgeist / Guardian Spirit | Dorf | II | 5.6 | `decision-required` | `legacy-broken` | `automatic` | Schutz | M / mittel | K5 | – | [03](03-remaining-roles-analysis.md#schutzgeist) · [Dossier](dossiers/village-4.md#schutzgeist) |
-| 60 | `dorfchronistin` | Dorfchronistin / Village Chronicler | Dorf | III | 0.3 (once) | `documented-only` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | K2 | – | [03](03-remaining-roles-analysis.md#dorfchronistin) · [Dossier](dossiers/village-4.md#dorfchronistin) |
+| 60 | `dorfchronistin` | Dorfchronistin / Village Chronicler | Dorf | III | 0.3 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#dorfchronistin) |
 | 61 | `waechter-am-tor` | Wächter am Tor / Gatewarden | Dorf | IV | – | `decision-required` | `legacy-verified` | `automatic` | globale Regeländerung | M / hoch | K12 | – | [03](03-remaining-roles-analysis.md#waechter-am-tor) · [Dossier](dossiers/village-4.md#waechter-am-tor) |
 | 62 | `zeitwaechter` | Zeitwächter / Time Warden | Dorf | III | 9.5 (once) | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | XL / kritisch | K16 | – | [03](03-remaining-roles-analysis.md#zeitwaechter) · [Dossier](dossiers/village-4.md#zeitwaechter) |
 | 63 | `amalia` | Amalia / Amalia | Dorf | IV | 5.8 | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | M / mittel | K14 | – | [03](03-remaining-roles-analysis.md#amalia) · [Dossier](dossiers/village-4.md#amalia) |

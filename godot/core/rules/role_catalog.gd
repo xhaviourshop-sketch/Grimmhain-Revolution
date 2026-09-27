@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion` und `selbstmoerder`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin` und `die-gebundenen`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -51,6 +51,14 @@ const DOPPELSPION := &"doppelspion"
 ## Wolf, kein Schritt; wird er hingerichtet (LYNCH), während mindestens 5 Personen tot sind, ist
 ## sein Sieg erfüllt (`GameState.death_seeker_wins`, KillPipeline) und wird fortan vorgeschlagen.
 const SELBSTMOERDER := &"selbstmoerder"
+## Dorfchronistin / Village Chronicler (DECISION-LOG „Rollenaudit“, RM-DR-014 = B, F-09): Dorf;
+## persönlicher Informationsschritt nur in Nacht 1 (NightOneInfo).
+const DORFCHRONISTIN := &"dorfchronistin"
+## Die Gebundenen / The Bound (DECISION-LOG „Rollenaudit“, RM-DR-014 = B, F-08): Dorf; ein
+## gemeinsamer Informationsschritt aller Gebundenen nur in Nacht 1 (StepQueue.BOUND, NightOneInfo).
+const DIE_GEBUNDENEN := &"die-gebundenen"
+## Priorität des gemeinsamen Schritts der Gebundenen (Legacy-Stufe 0.5).
+const BOUND_PRIORITY := 5
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
 const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhexe:heal", "waldhexe:poison", "spiegelwolf:mirror"]
@@ -74,6 +82,8 @@ const ROLES := {
 	SIEGREICHER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SIEGREICHER_WOLF, "parity_weight": 2},
 	DOPPELSPION: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": DOPPELSPION},
 	SELBSTMOERDER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": SELBSTMOERDER},
+	DORFCHRONISTIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFCHRONISTIN, "night_priority": 3, "first_night_only": true},
+	DIE_GEBUNDENEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_GEBUNDENEN},
 }
 
 
@@ -102,6 +112,11 @@ static func death_reaction(role_id: StringName) -> StringName:
 ## (vergleichbar mit PACK_PRIORITY) oder 0 ohne eigenen Nachtschritt.
 static func night_priority(role_id: StringName) -> int:
 	return (ROLES[role_id] as Dictionary).get("night_priority", 0)
+
+
+## true, wenn der persönliche Schritt der Rolle nur in Nacht 1 stattfindet (RM-DR-014 = B).
+static func first_night_only(role_id: StringName) -> bool:
+	return (ROLES[role_id] as Dictionary).get("first_night_only", false)
 
 
 ## true, wenn jede Instanz der Rolle eine vom Spielleiter festgelegte Scheinrolle braucht.

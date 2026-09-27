@@ -234,6 +234,8 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return OracleStep.validate_answer(s, prompt, p)
 	if prompt.owner == PendingPrompt.OWNER_APPRENTICE:
 		return ApprenticeRules.validate_answer(s, prompt, p)
+	if prompt.owner == PendingPrompt.OWNER_CHRONICLER or prompt.owner == PendingPrompt.OWNER_BOUND:
+		return NightOneInfo.validate_answer(prompt, p)
 	var targets: Variant = DictRead.to_int_array(DictRead.get_array(p, "targets"))
 	if targets == null or not p.get("targets") is Array:
 		return &"invalid_target"
@@ -299,6 +301,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				OracleStep.answer(ctx, p)
 			elif s.pending_prompt.owner == PendingPrompt.OWNER_APPRENTICE:
 				ApprenticeRules.answer(ctx, p)
+			elif s.pending_prompt.owner == PendingPrompt.OWNER_CHRONICLER or s.pending_prompt.owner == PendingPrompt.OWNER_BOUND:
+				NightOneInfo.answer(ctx)
 			else:
 				_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
 		Command.BEGIN_STEP:

@@ -13,7 +13,7 @@ extends TestCase
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder"]
+	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 120
@@ -135,7 +135,7 @@ func _start_command(g: int, count: int) -> Command:
 		roles[j] = tmp
 	var map := {}
 	var appearances := {}
-	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder"]
+	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen"]
 	for i: int in count:
 		map[str(i + 1)] = roles[i]
 		if roles[i] == "trugbilderwolf":
@@ -331,6 +331,9 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				WitchStep.STAGE_HEAL, WitchStep.STAGE_POISON:
 					return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.5)
 				WitchStep.STAGE_POISON_TARGET:
+					# Öfter das Rudelopfer: erzeugt „Gift vor Rudel, Angriff auf Tote“ (KillIgnored).
+					if s.pack_target_id != -1 and s.players[s.pack_target_id].alive and _rng.randf() < 0.4:
+						return Command.answer_stage_targets(p.id, String(p.stage), [s.pack_target_id])
 					return Command.answer_stage_targets(p.id, String(p.stage), [_pick(_alive_in(s, p.allowed_ids))])
 				_:
 					return Command.answer_choice(p.id, String(p.stage), true)
@@ -339,6 +342,8 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				return Command.answer_stage_targets(p.id, String(p.stage), [_pick(_alive_in(s, p.allowed_ids, p.actor_id))])
 			if _rng.randf() < 0.1 and _override_allowed(p):
 				return Command.override_shown_role(p.id, "dorfbewohner", "Fuzz: Übersteuerung")
+			return Command.answer_choice(p.id, String(p.stage), true)
+		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND:
 			return Command.answer_choice(p.id, String(p.stage), true)
 		PendingPrompt.OWNER_APPRENTICE:
 			match p.stage:
