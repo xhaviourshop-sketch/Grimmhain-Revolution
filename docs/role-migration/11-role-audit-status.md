@@ -118,7 +118,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 
 | Bereich | Nachweis |
 |---|---|
-| Alle Katalogrollen gemischt, 6–24 Personen, Mehrfachkopien, Abbruch offener Prompts, Überspringen, Nominierung, Hinrichtung, Spielleitertötung mit/ohne Folgen, Wiederbelebung, Siegbestätigung und -ablehnung | `test_role_interaction_fuzz` (70 feste Zufallspartien). Invarianten nach jedem Befehl: verlustfreies Laden inklusive aller Ladeprüfungen; Save/Load über `StateCodec` alle 20 Befehle und am Ende; Replay bytegleich; keine Rollen-, Ursachen- oder Informationsfelder in öffentlichen Ereignissen; persönliche Schritte nur für lebende Rolleninhaber; kein doppelter Tod; Rollenfelder passend. Abdeckungsnachweis: jede Todesursache und jede relevante Ereignisart kommt vor. Gegenprobe: ein absichtlich eingebauter Rollenwechselfehler wird erkannt. |
+| Alle Katalogrollen gemischt, 6–24 Personen, Mehrfachkopien, Abbruch offener Prompts, Überspringen, Nominierung, Hinrichtung, Spielleitertötung mit/ohne Folgen, Wiederbelebung, Siegbestätigung und -ablehnung, zufällige Spielleiterkorrekturen aller Arten (auch Rollenwechsel mitten in der Nacht) | `test_role_interaction_fuzz` (120 feste Zufallspartien; abgelehnte Zufallskorrekturen müssen Zustand und Ereignisse unverändert lassen, A-13; einmalig zusätzlich 4 × 120 Partien mit anderen Seeds ohne Invariantenverletzung). Invarianten nach jedem Befehl: verlustfreies Laden inklusive aller Ladeprüfungen; Save/Load über `StateCodec` alle 20 Befehle und am Ende; Replay bytegleich; keine Rollen-, Ursachen- oder Informationsfelder in öffentlichen Ereignissen; persönliche Schritte nur für lebende Rolleninhaber; kein doppelter Tod; Rollenfelder passend. Abdeckungsnachweis: jede Todesursache und jede relevante Ereignisart kommt vor. Gegenprobe: ein absichtlich eingebauter Rollenwechselfehler wird erkannt. |
 | Ein Tod mit Wolfskind-Verwandlung, Lehrling-Erbe und Reaktion des Meisters; geerbte Reaktion sofort; Kandidat erst nach der Kette | `test_role_interactions::test_one_death_transforms_inherits_and_reacts_in_order` |
 | Spiegelung trifft die nominierende Person mit Wolfskind und Lehrling; Wolfskind des Spiegelwolfs bleibt unverwandelt | `test_role_interactions::test_mirror_death_triggers_child_and_apprentice_of_nominator_only` |
 | Nominierter Manipulator vererbt die Rolle ohne Nominierungsstatus; der Erbe gewinnt bei drei Lebenden | `test_role_interactions::test_nominated_manipulator_passes_role_to_unnominated_apprentice` |
@@ -136,7 +136,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 
 ## 5. Testnachweis
 
-Windows, Godot `4.7.2.stable.official.ed1daf0bf` (Console-EXE), nur `--headless` (kein Fenster), Ablauf nach `.claude/skills/grimmhain-core/windows-checks.md`: Import ohne `SCRIPT ERROR`, `Parse Error` oder `Failed to load script`, danach `res://tests/run_tests.gd`. Zahlen und Exit-Codes des letzten Laufs stehen im Abschlussbericht der Sitzung und in den Commit-Nachrichten.
+Windows, Godot `4.7.2.stable.official.ed1daf0bf` (Console-EXE), nur `--headless` (kein Fenster), Ablauf nach `.claude/skills/grimmhain-core/windows-checks.md`: Import ohne `SCRIPT ERROR`, `Parse Error` oder `Failed to load script`, danach `res://tests/run_tests.gd`. Letzter vollständiger Lauf: 473 Tests, 0 fehlgeschlagen, 0 Testdateien nicht ladbar, Exit-Code 0. `node tools/role-migration/check-role-docs.js`: keine Fehler, Exit-Code 0.
 
 ## 6. Offene Fragen an den Product Owner (nächste Chargen)
 
