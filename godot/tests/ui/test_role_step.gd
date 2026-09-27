@@ -90,7 +90,7 @@ func test_wizard_progress_and_gating() -> void:
 	var screen := await open_new_game(shell)
 	var step_label := find_node(screen, "StepLabel") as Label
 	assert_true(step_label != null and step_label.is_visible_in_tree(), "Schrittanzeige sichtbar")
-	assert_true(_label(screen, "StepLabel").contains("1") and _label(screen, "StepLabel").contains("3"), "1 von 3: %s" % _label(screen, "StepLabel"))
+	assert_true(_label(screen, "StepLabel").contains("1") and _label(screen, "StepLabel").contains("4"), "1 von 4: %s" % _label(screen, "StepLabel"))
 	for id: String in ["players", "roles", "distribution"]:
 		var chip := find_node(screen, "StepChip_%s" % id) as Label
 		assert_true(chip != null and chip.is_visible_in_tree() and chip.text != "", "Schrittname %s sichtbar" % id)

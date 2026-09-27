@@ -2,14 +2,15 @@ class_name SetupDraft
 extends RefCounted
 ## Setup-Entwurf „Neue Partie“: Personen in Listenreihenfolge, nächster ID-Zähler,
 ## Bearbeitungsstatus und Bestätigung des Namensschritts, aktueller Wizard-Schritt sowie
-## Rollenwahl (`roles`) und Rollenverteilung (`distribution`). Das Validierungsergebnis wird
+## Rollenwahl (`roles`), Rollenverteilung (`distribution`) und Sitzordnung (`seating`). Das Validierungsergebnis wird
 ## bei Bedarf aus der Personenliste berechnet (`validation()`), nicht getrennt gespeichert.
 ## Nur PlayerSetup und RoleSetup verändern den Entwurf.
 
 const STEP_PLAYERS := &"players"
 const STEP_ROLES := &"roles"
 const STEP_DISTRIBUTION := &"distribution"
-const STEPS: Array[StringName] = [STEP_PLAYERS, STEP_ROLES, STEP_DISTRIBUTION]
+const STEP_SEATING := &"seating"
+const STEPS: Array[StringName] = [STEP_PLAYERS, STEP_ROLES, STEP_DISTRIBUTION, STEP_SEATING]
 
 var persons: Array[SetupPerson] = []
 var next_person_id: int = 1       ## nächste zu vergebende ID; sinkt nie (außer beim Verwerfen)
@@ -19,6 +20,7 @@ var players_invalidated: bool = false  ## Personenliste nach einer Bestätigung 
 var current_step: StringName = STEP_PLAYERS
 var roles: RolePoolDraft = RolePoolDraft.new()
 var distribution: DistributionDraft = DistributionDraft.new()
+var seating: SeatingDraft = SeatingDraft.new()
 
 
 func index_of(person_id: int) -> int:
