@@ -3,6 +3,14 @@
 **Stand:** 2026-09-27 · Branch `audit/all-72-roles` (Basis `main` `f09cd08`) · dauerhaft gepflegte Übersicht.
 Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterplan/DECISION-LOG.md` und `docs/specs/vertical-slice/rules-register.md`.
 
+## 0. Übergabe für die nächste Sitzung (Stand 28.09.2026)
+
+- Branch `audit/all-72-roles`, Worktree `C:/Users/Marku/Desktop/Grimmhain/grimmhain-audit-72-roles`, gepusht.
+- Letzter vollständiger Lauf: 580 Tests, 0 fehlgeschlagen, Exit 0; `node tools/role-migration/check-role-docs.js` Exit 0.
+- Vorgehen je Charge: Fragen per Auswahl-Popup mit zitiertem Rollentext → Decision Log, `decision-status.csv`, `08` → Tests zuerst → Umsetzung → UI-Namen, Reihenfolge, UI-Testlisten → Rollenliste des Fuzztests → Migrationsdokumente (`promote_role.py`, Tabellen-Generator; Scratchpad-Hilfsskripte, bei Bedarf neu schreiben) → Commit und Push.
+- Nächste offene Gruppen: Informationsrollen (Traumdeuter, König, Kopfgeldjäger, Kriegerin des Lichts, Blutpriester, Amalia, Detektiv, Die Ewigen); Schutz (Der Weise, Märtyrerin, Schutzgeist, Dorfschmied, Verdammniswächter); Bindungen (Loki, Schwarze Witwe, Rotkäppchen, Schattenwanderer); Verwandlung (König Lykaon, Seelentauscher, Dämonischer Wolf); Wiederbelebung (Kutscher, Dr. Victor Frankenstein); Einzelsiege (Rattenfänger, Pestbringerin, Prophet des Untergangs, Feuerteufel, Voodoo-Priester, Nekromant, Kartenschlucker, Hades, Grabräuber, Todesprediger); Zeitwächter; Rachsüchtiger Wolf; Schicksalswolf.
+- Offen außerhalb des Kerns: Analyse unverträglicher Rollenkombinationen (vom PO gewünscht, Setup-Regel vertagt); Tablet-Gegenprüfung „links = Uhrzeigersinn“; Sound bei 5 Toten nur mit Selbstmörder im Spiel.
+
 ## 1. Statusdefinition
 
 | Status | Bedeutung |
