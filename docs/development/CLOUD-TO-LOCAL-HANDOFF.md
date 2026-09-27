@@ -2,6 +2,37 @@
 
 Stand geprüft: 27.09.2026. Dies ist eine Integrationsübergabe, keine Abnahme aller Spielregeln und kein bereits erfolgter Merge.
 
+## 0. Ergebnis der lokalen Integration (27.09.2026)
+
+Die Abschnitte 1 bis 7 beschreiben den Auftrag vor der Integration. Dieser Abschnitt ist der aktuelle Stand. Abweichend von §2 und §4.A lagen CLAUDE.md, Skills, `docs/development/` und die Editor-Neuspeicherung von `godot/project.godot` bereits auf `main` (`cb7c394`); nichts musste kopiert werden.
+
+- Worktree: `C:/Users/Marku/Desktop/Grimmhain/grimmhain-integration-20260927`, Branch `integration/cloud-to-local-20260927` ab `main` `cb7c394`. Nicht gepusht, nicht nach `main` gemergt.
+- Integriert (Fetch am 27.09.: keine neueren Commits): Assets `55ad4d5`, UI `53a3c7d`, Rollenplanung `fc38043`. Alle drei Merges ohne Konflikt; keine Datei gelöscht.
+- Integrationskorrekturen:
+  - `tools/role-migration/check-role-docs.js`: CSV-Zeilen über `csvLines()` (`/\r?\n/`) statt `split("\n")`; Regressionstest `tests/check-role-docs.test.js` (LF, CRLF, BOM) war vorher rot.
+  - `docs/masterplan/asset-register.csv`: 19 Rollen-Setup-Screenshots ergänzt, 8 Spieler-Setup-Zeilen (Hash, Größe, Datum laut Screenshot-README) aktualisiert; alle 27 Dateien stimmen mit `docs/evidence/role-setup/asset-handoff.md` überein; Status `prüfartefakt`, keine Freigabe. Zählzeile in `ASSET-REGISTER.md` auf Werkzeugausgabe gebracht.
+  - Dokumentkonsistenz: Scheinrolle des Trugbilderwolfs wählt der Spielleiter (DR-08), alter Übergabehinweis zu `7837809` als historisch markiert; `implemented` in `RULE-MIGRATION-MATRIX.md` ist reiner Regelkernstatus.
+- Schriftmuster: Die vier SHA-256-Werte in `font_specimen.gd`, die Dateien unter `assets/fonts/` und das Register stimmen überein. Die Demo lädt `../assets/fonts` außerhalb des Godot-Projekts; sie funktioniert nur aus dem Repository, nicht im Export. Keine Schriftfreigabe; Cinzel-ß bleibt offene Gestaltungsfrage.
+
+### Lokale Prüfungen (Windows, Godot `4.7.2.stable.official.ed1daf0bf` = Pin)
+
+| Prüfung | Ergebnis |
+|---|---|
+| Godot-Import (`windows-checks.md`) | Exit 0 |
+| Godot-Suite `res://tests/run_tests.gd` | 438 Tests, 0 fehlgeschlagen, 0 nicht ladbar, Exit 0 |
+| `node tools/check-asset-register.js` | 299 Zeilen / 299 Dateien, Exit 0 |
+| `node --test tests/check-asset-register.test.js tests/check-role-docs.test.js` | 20 Tests, 0 fehlgeschlagen, Exit 0 |
+| `node tools/role-migration/check-role-docs.js` (CRLF-Checkout) | keine Fehler, Exit 0 (vor Korrektur: „unerwarteter Kopf“, Exit 1) |
+| Schriftmuster `check_font_specimen.gd` headless | 6 Ansichten, 0 Befunde, Exit 0 |
+| `git diff --check main HEAD` | 2 Befunde: Leerzeichen am Zeilenende in `assets/fonts/OFL-Cinzel.txt:22` und `OFL-IMFellEnglish.txt:21` (wörtliche Lizenztexte, bewusst nicht geändert) |
+
+Grafisch (lokaler Bildschirm, OpenGL 3.3 Compatibility, AMD Radeon RX 6700 XT): App mit `--path godot --quit-after 600` gestartet, Exit 0, keine Fehler im Log. Setup-Ablauf mit `godot/tools/capture_ui_screenshots.gd -- --out=<Scratchpad>` gefahren (skriptgesteuert über echte Buttons, keine Handbedienung): 32 Aufnahmen, 0 Fehler; Stichproben Rollenwahl, fehlende Scheinrolle, verborgene Verteilung, „Bereit für Sitzordnung“ entsprechen den Cloud-Aufnahmen. Registrierte Screenshots wurden nicht neu erzeugt. Keine Tablet- oder Touchprüfung.
+
+### Offen
+
+- Blockierend für die Übernahme nach `main`: keine bekannten Prüffehler. Offen ist nur die Nutzerentscheidung, den Branch zu mergen und zu pushen.
+- Später: Tablet-/Touchabnahme des Setups (auch `emulate_mouse_from_touch` nach Editor-Neuspeicherung); vier Fragen aus `docs/role-migration/10-next-decisions.md`; Test auf exakt elf Rollen vor Katalogerweiterung; Exportweg für Schriften; „Scheinrollen festgelegt: 1 von 2“ bricht bei 1024×768 um (bekannt, belassen); `StartGame`/Sitzordnung fehlt.
+
 ## 1. Eindeutiger Ausgangsstand
 
 Repo: `C:/Users/Marku/Desktop/Grimmhain/Grimmhain - Revolution`.

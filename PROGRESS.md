@@ -170,3 +170,12 @@ Nächste Schritte:
 - Einmal `bash godot/tests/run_all.sh` bzw. Windows-Checks laufen lassen, um die `project.godot`-Neuspeicherung zu bestätigen (Touch-Emulation, EN-Fallback).
 - Die drei Cloud-Berichte (`docs/development/cloud-reports/2026-09-27/`) gegen tatsächliche Commitstände abgleichen (`grimmhain-handoff`).
 BLOCKER: keiner.
+
+---
+
+## 2026-09-27 — Cloud-zu-lokal-Integration (Branch `integration/cloud-to-local-20260927`)
+Status: INTEGRIERT, nicht nach main gemergt, nicht gepusht
+Quellen: Assets `55ad4d5`, UI `53a3c7d`, Rollenplanung `fc38043`; Korrekturen: CRLF im Rollenprüfer, 27 Screenshots im Register, Dokumentkonsistenz.
+Verifiziert (Windows, Godot 4.7.2): 438 Godot-Tests grün, Register 299/299, 20 Node-Tests grün, Rollenprüfer und Schriftmuster ohne Befund; grafischer Start und skriptgesteuerter Setup-Ablauf ohne Fehler. Keine Tablet-Abnahme.
+Details und offene Punkte: `docs/development/CLOUD-TO-LOCAL-HANDOFF.md` §0.
+Nächster Schritt: Nutzerentscheidung Merge nach main; danach Setup-Sitzordnung.
