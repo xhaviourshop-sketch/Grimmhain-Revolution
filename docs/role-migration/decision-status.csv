@@ -16,12 +16,12 @@ RM-DR-011.1;ja;bereits geregelte Wiederbelebungsfälle;E;DECISION-LOG Randfälle
 RM-DR-011.2;ja;Bindungen und Marker nach Wiederbelebung;S;;erst mit K6, K10, K13
 RM-DR-012;nein;Richter-Nominierung;S;DR-03 lässt Abweichungen durch Regeln zu;erst mit K14
 RM-DR-013;nein;Totenkarten;S;07 Q3 offen;erst mit K13, K15
-RM-DR-014;nein;einmalig / erste Nacht;S;DR-10, DR-11 regeln nur Wolfskind und Lehrling;erst mit K2, K6, K7, K8, K11, K12, K15
+RM-DR-014;nein;einmalig / erste Nacht;E;"DECISION-LOG Rollenaudit 27.09.2026";strikt Nacht 1
 RM-DR-015.1;ja;Zufall über Seed;E;rules-register G-RNG-1;jede Zufallsentscheidung über gespeicherten Seed
 RM-DR-015.2;ja;Zufall oder Spielleiterwahl je Rolle;S;DR-08 als Präzedenzfall;je Rolle ab K3
 RM-DR-016.1;ja;Setup-Obergrenze je Rolle;S;DECISION-LOG Core-Slice Rollenanzahl: keine feste Komposition, einzelne Rollen dürfen eine Obergrenze erhalten;"keine globale Grenze nötig; nur je Rolle aus Spielgründen"
 RM-DR-016.2;ja;Kopien während der Partie und Zustand je Person;T;"G-ID-3; DR-11; GmCorrection set_role";"Mehrfachkopien entstehen unabhängig vom Setup; Verhalten folgt aus bestehenden Regeln"
-RM-DR-017;nein;nächste Rolleneinheit;P;;neu: Umfang der nächsten Spezifikation
+RM-DR-017;nein;nächste Rolleneinheit;E;"Auftrag des Nutzers 27.09.2026 (alle 72 Rollen prüfen)";Auftrag Rollenaudit: alle 72 Rollen
 RM-DR-101.1;ja;loki;S;;
 RM-DR-102.1;ja;nachtwaechter;S;;
 RM-DR-103.1;ja;rattenfaenger;S;;
@@ -122,7 +122,7 @@ RM-DR-137.2;ja;rotkaeppchen;S;;
 RM-DR-137.3;ja;rotkaeppchen;S;;
 RM-DR-137.4;ja;rotkaeppchen;S;;
 RM-DR-137.5;ja;rotkaeppchen;S;;
-RM-DR-138.1;ja;selbstmoerder;P;;Selbstmörder: Zählbasis
+RM-DR-138.1;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";Toten vor der Hinrichtung, ab 5
 RM-DR-138.2;ja;selbstmoerder;S;DECISION-LOG Korrekturrunde 4: Spielleiter-Hinrichtung bleibt LYNCH (dieser Teil entschieden);Rest betrifft nur den noch fehlenden Henker (K4)
 RM-DR-139.1;ja;kopfgeldjaeger;S;;
 RM-DR-139.2;ja;kopfgeldjaeger;S;;
@@ -173,17 +173,17 @@ RM-DR-153.4;ja;detektiv;Q;;"Richtungskonvention; zusätzlich widersprüchlich zu
 RM-DR-154.1;ja;dorfschmied;S;;
 RM-DR-154.2;ja;dorfschmied;S;;
 RM-DR-154.3;ja;dorfschmied;S;;
-RM-DR-155.1;ja;doppelspion;P;;Doppelspion: muss er leben
+RM-DR-155.1;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur lebend gewinnt
 RM-DR-155.2;ja;doppelspion;E;rules-register G-SIEG-2: Einzelsiegrollen zählen als Nicht-Wölfe;
-RM-DR-155.3;ja;doppelspion;P;;Doppelspion: gleichzeitige Kandidaten
+RM-DR-155.3;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur Doppelspion-Kandidat, kein Dorfkandidat
 RM-DR-156.1;ja;grabraeuber;S;;
 RM-DR-156.2;ja;grabraeuber;S;;
 RM-DR-157.1;ja;parasit;S;DR-02 schließt eine feste Siegpriorität aus (Teil „Team-Siege zuerst“ entschieden);Restfrage höchstens drei oder genau drei Lebende
 RM-DR-158.1;ja;todesprediger;S;;
 RM-DR-158.2;ja;todesprediger;S;;
 RM-DR-158.3;ja;todesprediger;S;;
-RM-DR-138.3;ja;selbstmoerder;P;;neu: wer zählt als tot (Wiederbelebung)
-RM-DR-138.4;ja;selbstmoerder;P;;neu: abgelehnter Kandidat
+RM-DR-138.3;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";nur aktuell Tote
+RM-DR-138.4;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";erneut nach jeder Zustandsänderung
 RM-DR-138.5;ja;selbstmoerder;E;"rules-register G-TOD-3; DECISION-LOG Spiegelwolf";Tod durch Spiegelung ist keine Hinrichtung des Selbstmörders
-RM-DR-155.4;ja;doppelspion;P;;neu: was erfahren die Wölfe
+RM-DR-155.4;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";keine Rollennennung
 RM-DR-155.5;ja;doppelspion;T;rules-register §2: nur Wölfe wählen das Rudelopfer;Hinweis im Rudelschritt, keine Teilnahme an der gespeicherten Wahl

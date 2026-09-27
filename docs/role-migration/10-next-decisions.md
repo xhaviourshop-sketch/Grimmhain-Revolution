@@ -24,7 +24,9 @@ Diese Punkte musst du nicht noch einmal beantworten. Sie stehen schon im Decisio
 
 Vier Fragen. Jede Frage steht für sich; bitte jede einzeln beantworten.
 
-<!-- check:next-round RM-DR-017 RM-DR-155.1 RM-DR-155.3 RM-DR-155.4 -->
+<!-- check:next-round none -->
+
+**Nachtrag 27.09.2026:** Alle vier Fragen dieser Runde sowie RM-DR-138.1, .3, .4 und RM-DR-014 sind beantwortet (`../masterplan/DECISION-LOG.md`, Eintrag „Rollenaudit“; RM-DR-017 durch den Auftrag „alle 72 Rollen“). Aktueller Stand: [`11-role-audit-status.md`](11-role-audit-status.md).
 
 ### RM-DR-017 · Welche Rollen sollen als Nächstes spezifiziert werden?
 

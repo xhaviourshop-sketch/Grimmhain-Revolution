@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 2 | 12 |
-| produktentscheidung | 3 | 7 |
-| technisch | 1 | 3 |
-| später | 65 | 162 |
+| entschieden | 4 | 20 |
+| produktentscheidung | 0 | 0 |
+| technisch | 2 | 3 |
+| später | 65 | 161 |
 | quellenprüfung | 4 | 4 |
 | **gesamt** | **75** | **188** |
 
@@ -222,7 +222,7 @@ Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017
 
 ## RM-DR-014 · Bedeutung von „einmalig“ und „erste Nacht“
 
-- **Status:** später. Für Wolfskind und Lehrling bereits entschieden (DR-10, DR-11: erste verfügbare Nacht).
+- **Status:** entschieden (Option B, strikt Nacht 1; DECISION-LOG Rollenaudit 27.09.2026). Vorher: später. Für Wolfskind und Lehrling bereits entschieden (DR-10, DR-11: erste verfügbare Nacht).
 - **Betroffene Rollen:** 14, u. a. `loki`, `die-gebundenen`, `schattenhund`, `koenig-lykaon`, `schicksalswolf`, `schattenwanderer`, `dorfchronistin`, `kriegerin-des-lichts`, `faehrtenleser`.
 - **Problem:** Legacy `once:true` heißt „einmal pro Partie“, nicht „nur Nacht 1“; einige Handler prüfen zusätzlich `nightCount===1` und verbrauchen die Fähigkeit bei späterem Klick. Texte sagen teils „in der ersten Nacht“.
 - **Belege:** [`04`](04-rule-conflicts.md) §2 Zeile 13; DR-10/DR-11 entschieden „erste verfügbare Nacht“ für Wolfskind und Lehrling.
@@ -1108,7 +1108,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `selbstmoerder`; Wechselwirkung laut Dossier: Feuerteufel (Brand vor Siegprüfung), Henker (Nebenhinrichtung), Voodoo (Puppe), alle Tötungsrollen (Totenzahl), Die …
 - **Belege:** [Dossier](dossiers/solos-a.md#selbstmoerder); RM-C-061, RM-C-062 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-007.
-- **RM-DR-138.1 · Zählbasis** · Status: produktentscheidung; Selbstmörder: Zählbasis
+- **RM-DR-138.1 · Zählbasis** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; Selbstmörder: Zählbasis
   - Option A: vorher (Code/EN)
   - Option B: inklusive eigenem Tod
   - Auswirkung: Balance: B einen Tod früher; Umsetzung: Zählpunkt
@@ -1118,12 +1118,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: auch Henker-Hinrichtung
   - Auswirkung: Balance: –; Umsetzung: ExecutionRules
   - Empfehlung: A
-- **RM-DR-138.3 · Wer zählt als tot, wenn Personen wiederbelebt wurden?** · Status: produktentscheidung; neu: wer zählt als tot (Wiederbelebung)
+- **RM-DR-138.3 · Wer zählt als tot, wenn Personen wiederbelebt wurden?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; neu: wer zählt als tot (Wiederbelebung)
   - Option A: alle Personen, die zum Zeitpunkt der Hinrichtung tot sind (Legacy zählt tote Sitze)
   - Option B: alle Todesfälle der Partie, auch wenn die Person inzwischen wieder lebt
   - Auswirkung: Balance: B macht den Sieg nach Wiederbelebungen leichter; Umsetzung: A: Zählung aus dem Zustand; B: Zählung aus dem Todesprotokoll
   - Empfehlung: A (entspricht Legacy und Text „sobald 5+ Tote sind“)
-- **RM-DR-138.4 · Was geschieht mit einem abgelehnten Selbstmörder-Kandidaten?** · Status: produktentscheidung; neu: abgelehnter Kandidat
+- **RM-DR-138.4 · Was geschieht mit einem abgelehnten Selbstmörder-Kandidaten?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; neu: abgelehnter Kandidat
   - Option A: Er verfällt endgültig; nur eine erneute Hinrichtung derselben Person (nach Wiederbelebung) kann ihn wieder auslösen
   - Option B: Er wird nach jeder späteren Zustandsänderung erneut angeboten
   - Option C: Er bleibt als Hinweis sichtbar, entsteht aber nicht neu; der Spielleiter kann später per `declare_winner` entscheiden
@@ -1532,7 +1532,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `doppelspion`; Wechselwirkung laut Dossier: Rachsüchtiger Wolf, Dämonischer Wolf (Fluch wirkungslos), Wolfskind/Lehrling (Wolfszählung), Orakel/Doktor/Spürhund (Erscheinung/Fraktion), Die Ewigen, …
 - **Belege:** [Dossier](dossiers/solos-a.md#doppelspion); RM-C-063, RM-C-064 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-007.
-- **RM-DR-155.1 · Muss er leben?** · Status: produktentscheidung; Doppelspion: muss er leben
+- **RM-DR-155.1 · Muss er leben?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; Doppelspion: muss er leben
   - Option A: nur lebend (Code)
   - Option B: auch tot
   - Auswirkung: Balance: B macht ihn stärker; Umsetzung: WinCandidate
@@ -1542,13 +1542,13 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: neutral (zählt für keine Seite)
   - Auswirkung: Balance: A lässt Wölfe schwerer gewinnen; Umsetzung: `counts_as_wolf=false`
   - Empfehlung: A
-- **RM-DR-155.3 · Verhältnis zum Dorfsieg: welche anderen Kandidaten werden gleichzeitig angeboten?** · Status: produktentscheidung; Doppelspion: gleichzeitige Kandidaten
+- **RM-DR-155.3 · Verhältnis zum Dorfsieg: welche anderen Kandidaten werden gleichzeitig angeboten?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; Doppelspion: gleichzeitige Kandidaten
   - Option A: Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, wird der Dorfkandidat nicht angeboten; nur Doppelspion-Kandidaten (je Person) entstehen. Rollenspezifische Ausnahme zu G-SIEG-1/G-SIEG-3; Legacy `core:227-230` verhält sich so
   - Option B: Dorf- und Doppelspion-Kandidat entstehen gemeinsam; der Spielleiter wählt nach dem Rollentext (bestehende Regel G-SIEG-3 ohne Ausnahme)
   - Option C: wie B, die App kennzeichnet den Doppelspion-Kandidaten als die nach Rollentext zutreffende Wahl
   - Auswirkung: Balance: A setzt die Rolle einheitlich durch; B und C hängen vom Spielleiter ab; Umsetzung: A: `WinRules` unterdrückt einen Kandidaten (neue Ausnahme, eigene Tests); B: nur ein weiterer Kandidat; C: B plus Kennzeichnung
   - Empfehlung: A. Der Text „gewinnt alleine, wenn alle Werwölfe tot sind“ beschreibt genau den Fall, in dem sonst das Dorf gewinnt; B würde bei jedem solchen Ende eine fehleranfällige Wahl verlangen. Der Spielleiter kann über `RejectWin` und `declare_winner` weiterhin anders entscheiden (G-GM-1). Wer bei Bestätigung gewinnt, ist davon unabhängig schon festgelegt: nur die begünstigte Person des Kandidaten
-- **RM-DR-155.4 · Was erfahren die Werwölfe über den Doppelspion, wenn er mit ihnen aufwacht?** · Status: produktentscheidung; neu: was erfahren die Wölfe
+- **RM-DR-155.4 · Was erfahren die Werwölfe über den Doppelspion, wenn er mit ihnen aufwacht?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; neu: was erfahren die Wölfe
   - Option A: Der Spielleiter nennt keine Rolle; die Wölfe sehen eine weitere wache Person und können ihn für einen Wolf halten
   - Option B: Der Spielleiter stellt ihn den Wölfen als Doppelspion vor
   - Option C: Er wacht nur zum Beobachten auf; die Wölfe sehen ihn nicht

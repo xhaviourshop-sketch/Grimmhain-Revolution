@@ -259,3 +259,18 @@ Dieser Eintrag entscheidet Q8 (`../godot-migration/07-open-questions.md`) mit **
 | Nur der Product Owner setzt `freigegeben` | Entscheidung | Verfahrensregel aus dem Masterplan §9 („Claude darf … keinen unbekannten Assetstatus als freigegeben markieren") | Masterplan §9 |
 
 Unverändert gilt: Jede finale Datei braucht nachvollziehbare Herkunft, Nutzungsrecht und Product-Owner-Freigabe (Eintrag „Gestaltung, Audio und Assets", Masterplan §2 und Phase 9). Offene Entscheidungen des Nutzers: Q8, Teilbudget der ersten Welle, Porträtstil und Figurenvorgaben (`../assets/BRIEFING-WAVE-1.md` §11).
+
+## Rollenaudit · Doppelspion, Selbstmörder, Einmalfähigkeiten, Gebundene, Chronistin, Rudel · 27. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen F-01 bis F-10, `../role-migration/11-role-audit-status.md` §6). Freitextantworten sind wörtlich zitiert und ihre Auslegung ist genannt.
+
+- **Doppelspion muss leben (RM-DR-155.1):** Antwort „Das Dorf, er verliert, weil er alleine gewinnen will“. Auslegung: Nur ein lebender Doppelspion gewinnt; ist er tot, wenn der letzte Wolf stirbt, gewinnt das Dorf.
+- **Doppelspion und Dorfsieg (RM-DR-155.3):** A. Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, wird nur der Doppelspion-Sieg (je Person) vorgeschlagen, nicht der Dorfsieg. Ablehnen und `declare_winner` bleiben möglich.
+- **Doppelspion beim Rudel (RM-DR-155.4):** A. Der Spielleiter nennt keine Rolle; die Wölfe sehen eine weitere wache Person.
+- **Selbstmörder, Zählbasis (RM-DR-138.1):** Antwort „Sie wär die 6. Tote und es wird bei 5 toten Personen ein Sound ertönen“. Auslegung: Gezählt werden die Toten vor seiner Hinrichtung; bei mindestens 5 gewinnt er. Zusätzlich gewünscht: ein Sound, sobald 5 Personen tot sind (Audio-Anforderung; ob er nur bei einem Selbstmörder im Spiel und öffentlich ertönt, ist noch offen, weil er sonst dessen Anwesenheit verraten kann).
+- **Selbstmörder, Wiederbelebte (RM-DR-138.3):** A. Es zählen nur Personen, die bei der Hinrichtung tot sind.
+- **Selbstmörder, abgelehnter Sieg (RM-DR-138.4):** B. Ein abgelehnter Selbstmörder-Sieg wird nach jeder späteren Zustandsänderung erneut vorgeschlagen.
+- **„Einmalig“ und „erste Nacht“ (RM-DR-014):** B. Fähigkeiten „zu Beginn des Spiels“ bzw. „in der ersten Nacht“ gelten strikt nur in Nacht 1 der Partie; wer dann nicht handelt oder die Rolle später erhält, hat sie nicht mehr. Wolfskind und Lehrling bleiben bei ihrer eigenen Entscheidung (DR-10, DR-11).
+- **Die Gebundenen:** A. Jede lebende Gebundene sieht alle anderen lebenden Gebundenen; lebt nur eine, erfährt sie „keine anderen“.
+- **Dorfchronistin:** A. Anzahl der Personen mit Einzelsiegrolle, lebend und tot; mehrere Chronistinnen erhalten die Information jeweils für sich.
+- **Rudel nach Verwandlung in derselben Nacht:** A. Der Rudelschritt entfällt, wenn niemand mehr lebt, der zu Beginn der Nacht als Wolf zählte; ein in dieser Nacht verwandeltes Wolfskind wacht erst ab der folgenden Nacht.
