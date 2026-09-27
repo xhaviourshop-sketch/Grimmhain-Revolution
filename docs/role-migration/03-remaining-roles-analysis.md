@@ -8,6 +8,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 
 **Lesehilfe:** In übernommenen Zellen bezeichnen `01` bis `07` ohne Pfad die älteren Dokumente unter `docs/godot-migration/`; Pfadkürzel wie in [`04`](04-rule-conflicts.md) §3.
 
+**Konsolidierung 2026-09-27:** Der Status jeder Entscheidung steht in [`08`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv); die Spalten „Charge“ und „1.0“ sind Planung, keine Freigabe.
+
 ## 1. Übersicht
 
 | ID | Fraktion | Godot | Legacy | Auto | Mechanik (primär) | sekundär | Größe / Risiko | Charge | 1.0 |
@@ -96,8 +98,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Liebes-/Bindungsmodell (Paar-Bindung mit Typ love/rival, analog WolfChildBond/ApprenticeBond, inkl. Verhalten bei Wiederbelebung); dauerhafte Statusmarker für Rivalen. |
 | Abhängigkeiten | Schwarze Witwe (Pflichtpaar, liest Bindung), Dr. Victor Frankenstein/Kutscher (Wiederbelebung), Lehrling (Erbe), Nekromant/Kartenschlucker/Hades (Schilde in `applyKill`). |
 | Widersprüche | RM-C-082 Rivalen-Wirkung; RM-C-083 Nacht-1 vs. einmal |
-| Entscheidungen | RM-DR-101 (Rolle); übergreifend RM-DR-009, RM-DR-011, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K6 / ab Option B |
+| Entscheidungen | RM-DR-101 (Rolle); übergreifend RM-DR-009, RM-DR-011, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K6 / ab Option B |
 | Belegsicherheit | hoch für Code; nicht im Browser verifiziert, ob React-Overlay-Spiegelung den Dialog vollständig bedient. |
 | Detail | [Dossier](dossiers/village-1.md#loki) |
 
@@ -117,8 +119,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Sitznachbarschaft (nächster lebender Nachbar nach Sitzreihenfolge, nicht nach ID; DECISION-LOG Z.31-32: Sitze tauschbar). |
 | Abhängigkeiten | alle Wolfs- und Solorollen; Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Wolfskind (verwandelt), Doppelspion (Solo, Nicht-Wolf). |
 | Widersprüche | RM-C-084 Öffentlicher Alarm; RM-C-085 Nachbarbegriff; RM-C-086 Solo zählt |
-| Entscheidungen | RM-DR-102 (Rolle); übergreifend RM-DR-002, RM-DR-003; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K3 / ab Option C |
+| Entscheidungen | RM-DR-102 (Rolle); übergreifend RM-DR-002, RM-DR-003; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K3 / ab Option C |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-1.md#nachtwaechter) |
 
@@ -138,8 +140,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keine; falls `max_copies` in Godot noch fehlt, Mehrfachrollen in RoleDef (in `03` bereits vorgesehen, `03:199`). |
 | Abhängigkeiten | Schattenhund/Albtraumwolf (Blockade in Nacht 1), Lehrling (erbt "Die Gebundenen" nach Nacht 1: sieht nie jemanden). |
 | Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; übergreifend RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K2 / ab Option C |
+| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; übergreifend RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K2 / ab Option C |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-1.md#die-gebundenen) |
 
@@ -159,8 +161,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (Verzauberung), zusätzliche Siegbedingungen (Rattenfänger-Kandidat). |
 | Abhängigkeiten | Voodoo-Priester (hebt Verzauberung auf), Lehrling/Seelentauscher (Rollenwechsel), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (Doppelaktion), Die Ewigen (Solo-Erkennung), Wölfe/Dorf (konkurrierender Sieg). |
 | Widersprüche | RM-C-040 Siegzeitpunkt; RM-C-041 Zählt er selbst; RM-C-042 Anzahl pro Nacht; RM-C-043 Verzauberung durch Puppe aufgehoben |
-| Entscheidungen | RM-DR-103 (Rolle); übergreifend RM-DR-007; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K9 / ab Option B |
+| Entscheidungen | RM-DR-103 (Rolle); übergreifend RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K9 / ab Option B |
 | Belegsicherheit | hoch. Nicht zur Laufzeit getestet; alle Aussagen aus Code-Lektüre. |
 | Detail | [Dossier](dossiers/solos-a.md#rattenfaenger) |
 
@@ -180,8 +182,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | zusätzliche Siegbedingungen (Mitsieg-Kandidaten); Besuchs-/Zielhistorie (welche Solos wurden gefunden), falls der Mitsieg an einen gefundenen Solo gebunden wird. |
 | Abhängigkeiten | alle 14 Solo-Rollen (`roles:399-403`), insbesondere solche ohne Siegcode (Prophet, Feuerteufel, Voodoo, Grabräuber: 07 Q4); Lehrling/Seelentauscher (Solo-Rolle wechselt Person). |
 | Widersprüche | RM-C-087 Mitsieg; RM-C-088 Info-Umfang; RM-C-089 Siegseite der Ewigen |
-| Entscheidungen | RM-DR-104 (Rolle); übergreifend RM-DR-002, RM-DR-006; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K9 / in keiner Option |
+| Entscheidungen | RM-DR-104 (Rolle); übergreifend RM-DR-002, RM-DR-006; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
 | Belegsicherheit | hoch für Code; Mitsieg-Regel nicht bestimmbar. |
 | Detail | [Dossier](dossiers/village-1.md#die-ewigen) |
 
@@ -201,8 +203,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (falsche Spur, pro Person, Quelle Spürhund). |
 | Abhängigkeiten | Wolfskind, Dämonischer Wolf (Fluch), Trugbilderwolf (Wolfsrolle), alle Solos, Lehrling/Seelentauscher (Rollenname wechselt). |
 | Widersprüche | RM-C-090 Wer wird falsche Spur; RM-C-091 Was ist "Wolf" |
-| Entscheidungen | RM-DR-105 (Rolle); übergreifend RM-DR-002, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K7 / in keiner Option |
+| Entscheidungen | RM-DR-105 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
 | Belegsicherheit | hoch für Handler; Anzeige der Markierung im Pixi-Feld nicht verifiziert. |
 | Detail | [Dossier](dossiers/village-1.md#spuerhund) |
 
@@ -222,8 +224,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Abklingzeit-Zähler pro Person (Einsatzhistorie mit Nachtnummer); zusätzliche Siegbedingung (Einzelsieg eines Wolfsfraktionsmitglieds), falls Text gilt. |
 | Abhängigkeiten | Werwolf (Rudel, synthetische Zeile), Doppelspion (Zielausschluss, Textbezug), Dämonischer Wolf (verfluchte Ziele), Schutzengel/Dorfwache, Seuchenwolf, Waldhexe, Verdammniswächter, Die Ewigen, Nachtwächter (Wolf-Erkennung). |
 | Widersprüche | RM-C-001 Siegziel; RM-C-002 Rhythmus; RM-C-003 Zeitpunkt der ersten Nutzung |
-| Entscheidungen | RM-DR-106 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-006; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K11 / in keiner Option |
+| Entscheidungen | RM-DR-106 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-006; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch für Code; nicht im Browser ausgeführt. |
 | Detail | [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf) |
 
@@ -243,8 +245,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Wächter-am-Tor-Blockade als zentrale Regel in RoleTransition (für alle Verwandlungswege); optional "Scheinschritt" (Tarnzeile für verschwundene Rolle) in der Nachtplanung. |
 | Abhängigkeiten | Trugbilderwolf, Wächter am Tor, Orakel, Lehrling (Erbe), Werwolf (synthetische Rudelzeile), Totenkarte wende_11. |
 | Widersprüche | RM-C-004 Scheinrolle des erzeugten Trugbilderwolfs; RM-C-005 "Dorfbewohner" |
-| Entscheidungen | RM-DR-107 (Rolle); übergreifend RM-DR-002, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K12 / ab Option C |
+| Entscheidungen | RM-DR-107 (Rolle); übergreifend RM-DR-002, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K12 / ab Option C |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeitverhalten der hartkodierten Prompts in EN. |
 | Detail | [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
 
@@ -264,8 +266,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keines außer einem Paritätsgewicht in WinRules (kleine Erweiterung). |
 | Abhängigkeiten | Werwolf (Rudelschritt), alle Siegregeln, Doppelspion (Sieg bei 0 Wölfen). |
 | Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K1 / ab Option A |
+| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K1 / ab Option A |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/wolves-a.md#siegreicher-wolf) |
 
@@ -285,8 +287,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | globaler Modifikator "nächster Rudelangriff durchdringt" (persistiert, mit Verbrauchsregel); Attribut `pierces` pro Angriff. |
 | Abhängigkeiten | Werwolf, Schutzengel, Schutzgeist, Dorfwache, Der Weise, Waldhexe, Nekromant, Kartenschlucker, Hades, Dorfschmied, Märtyrerin, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (gemeinsames Durchdringungskonzept). |
 | Widersprüche | RM-C-006 Umfang "alle Schutzeffekte"; RM-C-007 Verbrauch; RM-C-008 Welche Angriffe |
-| Entscheidungen | RM-DR-108 (Rolle); übergreifend RM-DR-004, RM-DR-005, RM-DR-009, RM-DR-011; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K11 / in keiner Option |
+| Entscheidungen | RM-DR-108 (Rolle); übergreifend RM-DR-004, RM-DR-005, RM-DR-009, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/wolves-a.md#seuchenwolf) |
 
@@ -306,8 +308,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (Markierungen, nur SL sichtbar); Todesreihenfolge-Historie (erste drei Tote, persistiert); Zusatzopfer-Liste für die Morgenauflösung. |
 | Abhängigkeiten | Werwolf (Rudelopfer, Deduplizierung), Schutzengel, Dorfwache, Der Weise, Märtyrerin, Zeitwächter (eingefrorene Nacht zählt nicht, `night:323-331` erhöht `nightCount` nicht), Frankenstein/Kutscher (Wiederbelebung), Seuchenwolf (NIGHT_KILL verbraucht Durchdringung). |
 | Widersprüche | RM-C-009 Zeitfenster; RM-C-010 Schutz gegen Zusatzopfer; RM-C-011 Zählung der ersten drei Toten |
-| Entscheidungen | RM-DR-109 (Rolle); übergreifend RM-DR-004, RM-DR-005, RM-DR-011, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K11 / in keiner Option |
+| Entscheidungen | RM-DR-109 (Rolle); übergreifend RM-DR-004, RM-DR-005, RM-DR-011, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeit der `startMulti`-Abbruchpfade. |
 | Detail | [Dossier](dossiers/wolves-a.md#schicksalswolf) |
 
@@ -327,8 +329,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Bindungsmodell (Paar mit Richtung, Aktivstatus, Partie-gebunden); Umlenkungsregel mit eigener Ursache/Quelle. |
 | Abhängigkeiten | Rudelvater (Reihenfolge), Parasit, Nekromant/Kartenschlucker/Hades (Schilde beim Partner), Werwolf, Lynch/ExecutionRules, Frankenstein/Kutscher (Wiederbelebung), Dämonischer Wolf, Kopfgeldjäger, Henker. |
 | Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | RM-DR-110 (Rolle); übergreifend RM-DR-009, RM-DR-011, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K6 / in keiner Option |
+| Entscheidungen | RM-DR-110 (Rolle); übergreifend RM-DR-009, RM-DR-011, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K6 / in keiner Option |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/wolves-a.md#schattenwanderer) |
 
@@ -348,8 +350,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | zeitlich verzögerte Effekte (Termin an Tages-/Morgenzähler, persistiert, partiegebunden); dauerhafte Statusmarker (vergiftet); Ladungszähler pro Person. |
 | Abhängigkeiten | Rudelvater (keine Rettung), Ritter (Vergeltung), Schattenwanderer, Nekromant/Kartenschlucker/Hades (Schilde), Zeitwächter (Morgenzähler), Frankenstein/Kutscher (Wiederbelebung), Orakel (sieht "Werwolf"). |
 | Widersprüche | RM-C-012 Zwei Ladungen in einer Nacht; RM-C-013 "erfährt davon"; RM-C-014 Zeitpunkt "zwei Tage später" |
-| Entscheidungen | RM-DR-111 (Rolle); übergreifend RM-DR-004, RM-DR-011; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K11 / in keiner Option |
+| Entscheidungen | RM-DR-111 (Rolle); übergreifend RM-DR-004, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/wolves-a.md#giftwolf) |
 
@@ -369,8 +371,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | zeitlich verzögerter Effekt "nächste Nacht zusätzliches Rudelopfer" (persistiert); Ursachen-Taxonomie (wolf_attack, execution) als Attribute; Einmal-Schild pro Person (mehrere Leben light). |
 | Abhängigkeiten | Werwolf (Rudel), Seuchenwolf (gemeinsame Durchdringung), Giftwolf, Schattenwanderer, Nekromant/Kartenschlucker/Hades, Dorfwache, Der Weise, Dorfschmied, Voodoo-Priester, Märtyrerin, Albtraumwolf, Sensenträger, Ritter. |
 | Widersprüche | RM-C-015 Was ist "Wolfsangriff"; RM-C-016 Was ist "Lynch"; RM-C-017 "alle Schutzfähigkeiten"; RM-C-018 Wer wählt wann |
-| Entscheidungen | RM-DR-112 (Rolle); übergreifend RM-DR-004, RM-DR-005; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K11 / in keiner Option |
+| Entscheidungen | RM-DR-112 (Rolle); übergreifend RM-DR-004, RM-DR-005; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch; nicht verifiziert: EN-Laufzeitdarstellung des hartkodierten Prompts. --- ## Gruppenübergreifende Beobachtungen 1. F2 bestätigt und in Tragweite größer als in `01:263` beschrieben: 6 der 8 Rollen (Siegreicher Wolf, Seuchenwolf, Schicksalswolf, … |
 | Detail | [Dossier](dossiers/wolves-a.md#rudelvater) |
 
@@ -390,8 +392,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Liebes-/Bindungsmodell (Loki-Paare Liebe/Rivalen als persistente Bindung, nicht nur Flags); zeitlich verzögerte Effekte (Tod zum nächsten Morgen, persistiert). |
 | Abhängigkeiten | Loki (Pflicht, liefert Paare), Zeitwächter (Reihenfolge), Ritter (Vergeltung bei `BLACK_WIDOW`), Rudelvater/Nekromant/Kartenschlucker/Hades/Schattenwanderer/Parasit (Schilde in `applyKill`), Besessener Wolf (siehe Gruppenbeobachtung zur Morgen-Drain-Kollision). |
 | Widersprüche | RM-C-019 Loki "automatisch gewählt"; RM-C-020 Todeszeitpunkt; RM-C-021 Zeitwächter-Einfrieren |
-| Entscheidungen | RM-DR-113 (Rolle); übergreifend RM-DR-004; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K6 / in keiner Option |
+| Entscheidungen | RM-DR-113 (Rolle); übergreifend RM-DR-004; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K6 / in keiner Option |
 | Belegsicherheit | hoch für Handler, Morgenreihenfolge, Setup-Pflicht, `loverId`-Lücke. Nicht verifiziert: tatsächliches Laufzeitverhalten (nicht ausgeführt); ob Nutzer `clearRolesNewRound` in der Praxis vor einer neuen Runde verwenden. --- |
 | Detail | [Dossier](dossiers/wolves-b.md#schwarze-witwe) |
 
@@ -411,8 +413,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Rollenblockierung (Fraktionsfilter), zeitlich verzögerte Effekte / globale Modifikatoren (Zähler über n Nächte/Tage); ggf. Tagesaktionswarteschlange mit Blockprüfung, falls "Tage" gelten. |
 | Abhängigkeiten | Werwolf, Rachsüchtiger Wolf, Schicksalswolf, Seuchenwolf, Rudelvater (Durchschlag), Schutzengel/Schutzgeist (Stapelung), Albtraumwolf (Blockade entfernt Ziel), Märtyrerin, Verdammniswächter (umgeht Rettung), Waldhexe; Debuff betrifft alle Nicht-Wolf-Rollen. |
 | Widersprüche | RM-C-092 Anzahl Rettungen; RM-C-093 Wer verliert Fähigkeiten; RM-C-094 Dauer "Nächte und Tage"; RM-C-095 Wer wählt 1-3; RM-C-096 Durchschlag; RM-C-097 Passive Fähigkeiten im Debuff |
-| Entscheidungen | RM-DR-114 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-010; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K8 / ab Option C |
+| Entscheidungen | RM-DR-114 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-010; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K8 / ab Option C |
 | Belegsicherheit | hoch. Nicht im Browser verifiziert, ob React-Pfad heute alle Spielstarts über `startGame` führt. |
 | Detail | [Dossier](dossiers/village-1.md#der-weise) |
 
@@ -432,8 +434,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keines zwingend; KillPipeline braucht eine Option "ignoriert alle Schutzeffekte und Schilde" und ggf. zeitlich verzögerte Effekte, falls der Tod am Morgen erfolgt. |
 | Abhängigkeiten | Werwolf/Rudel (liefert Nachtopfer), Rachsüchtiger Wolf (Zusatzziel), Schutzengel/Dorfwache, Der Weise, Märtyrerin, Waldhexe, Voodoo-Priester, Nekromant, Kartenschlucker, Hades, Rudelvater, Ritter, Seuchenwolf. |
 | Widersprüche | RM-C-098 "umgeht alle Schutzfähigkeiten"; RM-C-099 Todeszeitpunkt; RM-C-100 Zufallskandidat; RM-C-101 role-abilities-Text; RM-C-102 Fraktion vs. Phase |
-| Entscheidungen | RM-DR-115 (Rolle); übergreifend RM-DR-002, RM-DR-005, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K11 / in keiner Option |
+| Entscheidungen | RM-DR-115 (Rolle); übergreifend RM-DR-002, RM-DR-005, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-1.md#verdammniswaechter) |
 
@@ -453,8 +455,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Sitznachbarschaft (direkt oder nächster Lebender, nach Sitzreihenfolge). |
 | Abhängigkeiten | Loki (Kette), Sensenträger/Besessener Wolf (Folgereaktionen), Rudelvater/Nekromant/Kartenschlucker/Hades/Parasit (Schilde), Henker (`finalizeLynch`), Feuerteufel/Voodoo-Priester/Kopfgeldjäger (ausgelassene Sonderzweige). |
 | Widersprüche | RM-C-103 Nachbarbegriff; RM-C-104 Todesursache Kutscher |
-| Entscheidungen | RM-DR-116 (Rolle); übergreifend RM-DR-003; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K3 / ab Option A |
+| Entscheidungen | RM-DR-116 (Rolle); übergreifend RM-DR-003; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K3 / ab Option A |
 | Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. Uneinheitliche Wolf-/Solo-Abfrage innerhalb der Gruppe: Nachtwächter nutzt `isWolf` + Solo-Name (`night:557-558`), Spürhund nur `getRoleFaction(role)` (`chunk:268`), Die Ewigen nur Solo-Name (`chunk:255`), … |
 | Detail | [Dossier](dossiers/village-1.md#wahnsinniger-kutscher) |
 
@@ -474,8 +476,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Nominierungsquelle "Rolle/System" im Nominations-Modell (nachweislich nötig, weil Spiegelwolf und Nominierungslimit eine Quelle brauchen); Anzeige eines Stimmbonus (kein Stimmsystem, nur Hinweis-Modifikator am Tag). Kein volles Stimmsystem. |
 | Abhängigkeiten | Manipulator, Spiegelwolf, Nominations-Limit, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise (Blockaden), Hades (Stimme x3) und Blutwolf nur konzeptionell (weitere Stimmrollen). |
 | Widersprüche | RM-C-105 +1 Stimme; RM-C-106 Wer ist Nominierender?; RM-C-107 Zählt gegen "einmal nominiert werden"? |
-| Entscheidungen | RM-DR-117 (Rolle); übergreifend RM-DR-008, RM-DR-012; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K14 / in keiner Option |
+| Entscheidungen | RM-DR-117 (Rolle); übergreifend RM-DR-008, RM-DR-012; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K14 / in keiner Option |
 | Belegsicherheit | hoch für Code; mittel für EN-Laufzeitübersetzung des Dialogs (nicht im Browser geprüft). |
 | Detail | [Dossier](dossiers/village-2.md#korrupter-richter) |
 
@@ -495,8 +497,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Ersatzopfer-Abfangregel in der Morgenauflösung (vor der Todesverarbeitung, nach Schutz/Zeitwächter). Keine weiteren. |
 | Abhängigkeiten | Werwolf/Rudel, Rudelvater (Extraopfer), Schicksalswolf, Dorfwache, Voodoo-Priester, Zeitwächter, Der Weise, Dorfschmied, Albtraumwolf, Nekromant (Schild), Schutzengel. |
 | Widersprüche | RM-C-108 Rettung vs. Zeitpunkt; RM-C-109 Welches Opfer bei mehreren; RM-C-110 Einmaligkeit; RM-C-111 Blockaden |
-| Entscheidungen | RM-DR-118 (Rolle); übergreifend RM-DR-004; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K5 / in keiner Option |
+| Entscheidungen | RM-DR-118 (Rolle); übergreifend RM-DR-004; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K5 / in keiner Option |
 | Belegsicherheit | hoch (Code vollständig gelesen); Recap-Lücke aus Bericht nicht erneut geprüft. |
 | Detail | [Dossier](dossiers/village-2.md#maertyrerin) |
 
@@ -516,8 +518,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Immunitätsregel mit Ursachenfilter und "durchdringt Immunität"-Kennzeichen am Angriff (Seuchenwolf, Rudelvater). Protections deckt heute nur Schutzengel ab. |
 | Abhängigkeiten | Werwolf/Rudel, Seuchenwolf, Rudelvater, Giftwolf, Schicksalswolf, Rachsüchtiger Wolf, Schutzengel, Märtyrerin, Seelentauscher (Rollenwechsel in der Nacht). |
 | Widersprüche | RM-C-112 Giftwolf; RM-C-113 Seuchenwolf/Rudelvater |
-| Entscheidungen | RM-DR-119 (Rolle); übergreifend RM-DR-004, RM-DR-005; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K5 / ab Option A |
+| Entscheidungen | RM-DR-119 (Rolle); übergreifend RM-DR-004, RM-DR-005; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K5 / ab Option A |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-2.md#dorfwache) |
 
@@ -537,8 +539,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (Seuche), Sitznachbarschaft (Nachbarberechnung, lebend/direkt), zeitlich verzögerte Effekte (Ausbreitung bei Morgenauflösung), zusätzliche Siegbedingungen; bei Interpretation B zusätzlich verzögerte Tode. |
 | Abhängigkeiten | Zeitwächter (friert Ausbreitung ein), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (zweiter Einsatz pro Nacht), Die Ewigen, Wolfsparität (konkurrierender Sieg). |
 | Widersprüche | RM-C-044 Tödlichkeit; RM-C-045 Häufigkeit; RM-C-046 Siegbedingung; RM-C-047 Ausbreitung |
-| Entscheidungen | RM-DR-120 (Rolle); übergreifend RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K9 / in keiner Option |
+| Entscheidungen | RM-DR-120 (Rolle); übergreifend RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
 | Belegsicherheit | hoch für Code; Zufallsverteilung nicht zur Laufzeit geprüft. |
 | Detail | [Dossier](dossiers/solos-a.md#pestbringerin) |
 
@@ -558,8 +560,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (unheilig, Markierungsliste pro Prophet), zusätzliche Siegbedingungen. |
 | Abhängigkeiten | alle Tötungsrollen (Freischaltung), Kutscher/Frankenstein (Wiederbelebung), Lehrling/Seelentauscher (Erbe des globalen Zustands), Rotkäppchen (zwei Tötungen), Schilde (Nekromant, Hades, Kartenschlucker, Rudelvater), Die Ewigen. |
 | Widersprüche | RM-C-048 Einzelsieg; RM-C-049 Freischaltung dauerhaft; RM-C-050 Selbstmarkierung |
-| Entscheidungen | RM-DR-121 (Rolle); übergreifend RM-DR-006, RM-DR-007, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K9 / in keiner Option |
+| Entscheidungen | RM-DR-121 (Rolle); übergreifend RM-DR-006, RM-DR-007, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
 | Belegsicherheit | hoch; Sieg-Abwesenheit per `rg` über `js/`, `game.html`, `app/src` belegt. |
 | Detail | [Dossier](dossiers/solos-a.md#prophet-des-untergangs) |
 
@@ -579,8 +581,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (Fluch als persistenter Marker mit Quelle), falls nicht vollständig über `appears_as` abbildbar. |
 | Abhängigkeiten | Orakel, Blutpriester, Waldläufer, Doktor, Detektiv, Kopfgeldjäger, Ritter, Dorfschmied, Traumdeuter (alle `isWolf`-Leser); Seelentauscher und Wächter am Tor (löschen Fluch); Nekromant (F14-Fall). |
 | Widersprüche | RM-C-022 Auslöser; RM-C-023 Wirkung des Fluchs; RM-C-024 Todespfade |
-| Entscheidungen | RM-DR-122 (Rolle); übergreifend RM-DR-002, RM-DR-009; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K12 / in keiner Option |
+| Entscheidungen | RM-DR-122 (Rolle); übergreifend RM-DR-002, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K12 / in keiner Option |
 | Belegsicherheit | hoch für Auslösepfade und `isWolf`-Nutzung. Nicht verifiziert: Laufzeitverhalten des Abbruchs (nur aus Code abgeleitet); Godot-Reaktionsarten (nur Doku gelesen). --- |
 | Detail | [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
 
@@ -600,8 +602,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Rollenblockierung (globaler Nacht-Modifikator mit Fraktionsfilter und Ablauf bei Nachtende). |
 | Abhängigkeiten | alle Dorf-Nachtrollen; Wolfskind und Lehrling (Begründung der Nacht-1-Sperre); Albtraumwolf, Zeitwächter, Der Weise (gleiche Blockadefamilie). |
 | Widersprüche | RM-C-025 Betroffene Rollen; RM-C-026 Nacht 1; RM-C-027 Nicht-Nachtschritt-Effekte |
-| Entscheidungen | RM-DR-123 (Rolle); übergreifend RM-DR-010, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K8 / ab Option B |
+| Entscheidungen | RM-DR-123 (Rolle); übergreifend RM-DR-010, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K8 / ab Option B |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/wolves-b.md#schattenhund) |
 
@@ -621,8 +623,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keine über die Reaktionsart hinaus (Warteschlange existiert). |
 | Abhängigkeiten | Loki (Liebeskummer-Pfad), Schwarze Witwe und Giftwolf (Morgen-Tode), Dämonischer Wolf (Reihenfolge), Rudelvater, Nekromant, Kartenschlucker, Hades, Schattenwanderer, Parasit (Schilde). |
 | Widersprüche | RM-C-028 Schwelle "≥5 Spieler" |
-| Entscheidungen | RM-DR-124 (Rolle); übergreifend RM-DR-004, RM-DR-009; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K4 / ab Option A |
+| Entscheidungen | RM-DR-124 (Rolle); übergreifend RM-DR-004, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K4 / ab Option A |
 | Belegsicherheit | hoch für Bedingung, Reihenfolge, F12. Mittel für Bug 3 und 4 (aus Codefluss abgeleitet, nicht im Browser ausgeführt). --- |
 | Detail | [Dossier](dossiers/wolves-b.md#besessener-wolf) |
 
@@ -642,8 +644,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | mehrere Leben / Einmal-Überleben als persistenter Marker; Nachtzähler pro Person (Stufe). |
 | Abhängigkeiten | Ritter, Henker (LynchCount), Feuerteufel (Brand), Lehrling/Seelentauscher/Frankenstein (Rollenerwerb mit alter Stufe), alle Tötungsrollen. |
 | Widersprüche | RM-C-029 Umfang des Überlebens; RM-C-030 Zählung; RM-C-031 Ritter; RM-C-032 Stufe pro Rolle vs. global |
-| Entscheidungen | RM-DR-125 (Rolle); übergreifend RM-DR-011; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K4 / in keiner Option |
+| Entscheidungen | RM-DR-125 (Rolle); übergreifend RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K4 / in keiner Option |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/wolves-b.md#fenrir) |
 
@@ -663,8 +665,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Wiederbelebungsmodell (Tod aufheben, Status/Bindungen zurücksetzen, Totenkarten-Status, Ereignis `REVIVE`), Rollenpool-Regel (Akt/Fraktion) für neu vergebene Rollen, Totenkarten-Effektmodell für die revive-gebundenen Karten. |
 | Abhängigkeiten | Wächter am Tor, Werwolf/Rudel, alle Rollen im Pool, Totenkarten (4 revive-Karten), Prophet des Untergangs (Ziele), Schicksalswolf (`FirstThreeDeadIds`), Seelentauscher/Lehrling (Rollenerbe). |
 | Widersprüche | RM-C-114 Rollen der Wiederbelebten; RM-C-115 Wer wählt die Toten; RM-C-116 Optional; RM-C-117 Einmaligkeit |
-| Entscheidungen | RM-DR-126 (Rolle); übergreifend RM-DR-011, RM-DR-013, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K13 / in keiner Option |
+| Entscheidungen | RM-DR-126 (Rolle); übergreifend RM-DR-011, RM-DR-013, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K13 / in keiner Option |
 | Belegsicherheit | hoch für Code; mittel für Totenkarten-Wirkung (Karteninhalte nicht im Detail geprüft). |
 | Detail | [Dossier](dossiers/village-2.md#kutscher) |
 
@@ -684,8 +686,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Regel "Rollenzustand wandert mit" (Verbrauchszähler/Bindungen je Rolle vs. je Person) als Teil von RoleTransition; kein eigenes neues System, sofern RoleTransition zwei gleichzeitige Wechsel atomar kann (nicht verifiziert). |
 | Abhängigkeiten | alle Rollen (tauschbar), insbesondere Wolfsrollen, Wächter am Tor, Wolfskind/Lehrling (Bindungen), Loki/Rotkäppchen/Parasit (Sitz-Bindungen), Dorfwache/Märtyrerin (Rollenprüfung am Morgen), Kutscher/Blutpriester (Einmaligkeit). |
 | Widersprüche | RM-C-118 Wolfsstatus nach Tausch; RM-C-119 Was wandert mit; RM-C-120 Toter erhält Wolfsrolle; RM-C-121 Information der Betroffenen |
-| Entscheidungen | RM-DR-127 (Rolle); übergreifend RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K12 / in keiner Option |
+| Entscheidungen | RM-DR-127 (Rolle); übergreifend RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K12 / in keiner Option |
 | Belegsicherheit | hoch für F4 und Einmaligkeitslogik (Code vollständig verfolgt); Querbezüge zu Wolfskind/Lehrling nur gelesen, nicht durchgespielt. |
 | Detail | [Dossier](dossiers/village-2.md#seelentauscher) |
 
@@ -705,8 +707,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keine nachweislich (Sofort-Tod in der Nacht und Reaktionszeitpunkt sind Teil von KillPipeline/Reaktionswarteschlange, 04 B-10). |
 | Abhängigkeiten | Rudelvater, Nekromant, Hades, Kartenschlucker, Parasit, Schattenwanderer (Todesabfang), Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Doppelspion (nicht Wolf), Sensenträger (Reaktion auf Opfer), Seelentauscher (Einmaligkeit). |
 | Widersprüche | RM-C-122 Anzahl 0–3; RM-C-123 Wer sieht das Ergebnis; RM-C-124 Opfer: Pflicht? |
-| Entscheidungen | RM-DR-128 (Rolle); übergreifend RM-DR-002, RM-DR-014, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K7 / in keiner Option |
+| Entscheidungen | RM-DR-128 (Rolle); übergreifend RM-DR-002, RM-DR-014, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
 | Belegsicherheit | hoch für Code; Overlay-Überschreibung aus Codefluss abgeleitet, nicht im Browser beobachtet. |
 | Detail | [Dossier](dossiers/village-2.md#blutpriester) |
 
@@ -726,8 +728,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keine. |
 | Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (Fluch), Trugbilderwolf (Erscheinung), Doppelspion, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise (Blockaden). |
 | Widersprüche | RM-C-125 Inhalt der Vision; RM-C-126 Selbst in der Vision; RM-C-127 Verfluchte als Wolf |
-| Entscheidungen | RM-DR-129 (Rolle); übergreifend RM-DR-002, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K7 / in keiner Option |
+| Entscheidungen | RM-DR-129 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/village-2.md#traumdeuter) |
 
@@ -747,8 +749,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafter Statusmarker mit Besitzer (Henker-Markierung bis zum nächsten Lynch), Lynch-Zähler im Spielstand (zeitlich verzögerter Effekt an Hinrichtung gekoppelt). |
 | Abhängigkeiten | alle Lynch-Sonderzweige (Wahnsinniger Kutscher, Voodoo, Der Weise, Selbstmörder, Spiegelwolf, Dämonischer Wolf, Fenrir, Cerberus, Rudelvater), Rudelvater/Nekromant/Hades/Kartenschlucker/Parasit (Todesabfang). |
 | Widersprüche | RM-C-128 Welcher Lynch; RM-C-129 Blockierter Lynch (Fenrir/Cerberus); RM-C-130 Zählbasis; RM-C-131 Henker tot |
-| Entscheidungen | RM-DR-130 (Rolle); immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K4 / in keiner Option |
+| Entscheidungen | RM-DR-130 (Rolle); Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K4 / in keiner Option |
 | Belegsicherheit | hoch. ## Gruppenübergreifende Beobachtungen 1. Globale Einmaligkeit statt pro Person: `markOnceUsed`/`isOnceUsed` (`night:3-5`) speichert den Verbrauch pro Rollenname (`once.Used.role_<Name>`); Märtyrerin (`MaertyUsed`) und Kutscher (`KutscherUsed`) nutzen … |
 | Detail | [Dossier](dossiers/village-2.md#henker) |
 
@@ -768,8 +770,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Sitznachbarschaft, dauerhafte Statusmarker (Brandmarke mit Ablauf), ggf. zusätzliche Siegbedingungen. |
 | Abhängigkeiten | Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Albtraumwolf (Blockade), Der Weise, Dorfschmied, Nekromant, Waldhexe, Märtyrerin, Voodoo-Priester, Dorfwache (Überleben/Entfernen aus Zielen), Fenrir, Cerberus, Spiegelwolf, Wahnsinniger Kutscher (Lynch-Zweige), Ritter (Vergeltung bei … |
 | Widersprüche | RM-C-051 Auslöser; RM-C-052 Dauer der Markierung; RM-C-053 Nachbarn; RM-C-054 Feuerteufel als Nachbar; RM-C-055 Siegbedingung |
-| Entscheidungen | RM-DR-131 (Rolle); übergreifend RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-009; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K9 / in keiner Option |
+| Entscheidungen | RM-DR-131 (Rolle); übergreifend RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
 | Belegsicherheit | hoch für Code-Pfade; nicht zur Laufzeit geprüft. |
 | Detail | [Dossier](dossiers/solos-a.md#feuerteufel) |
 
@@ -789,8 +791,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Liebes-/Bindungsmodell (Priester-Puppe-Bindung), dauerhafte Statusmarker (Puppe), zeitlich verzögerte Effekte (Abklingzeit), ggf. zusätzliche Siegbedingungen. |
 | Abhängigkeiten | Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Waldhexe (Gift), Märtyrerin, Der Weise, Dorfschmied, Nekromant (Reihenfolge der Abfangregeln), Rattenfänger (Verzauberung), Feuerteufel (Brand entfällt bei Umlenkung), Hades/Kartenschlucker/Nekromant/Rudelvater (Schilde der Puppe), Henker. |
 | Widersprüche | RM-C-056 Ursachen der Umlenkung; RM-C-057 Abklingzeit; RM-C-058 Verzauberung löschen; RM-C-059 Siegbedingung; RM-C-060 Bezeichnung |
-| Entscheidungen | RM-DR-132 (Rolle); übergreifend RM-DR-006, RM-DR-007; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K10 / in keiner Option |
+| Entscheidungen | RM-DR-132 (Rolle); übergreifend RM-DR-006, RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch; Ursachenliste per `rg "VOODOO_PUPPET"` vollständig (`night:255,442`, `help:265`, `gh:2426`, `ui:407`). |
 | Detail | [Dossier](dossiers/solos-a.md#voodoo-priester) |
 
@@ -810,8 +812,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Sitznachbarschaft als abgeleitete Abfrage (links/rechts in `seat_order`, auch über Tote); Stimmsystem nur, falls 07 Q2 Option B gewählt wird. |
 | Abhängigkeiten | alle Tötungen neben dem Blutwolf; indirekt Korrupter Richter und Hades (gleiche Stimmfamilie). |
 | Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | RM-DR-133 (Rolle); übergreifend RM-DR-003, RM-DR-008; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K14 / in keiner Option |
+| Entscheidungen | RM-DR-133 (Rolle); übergreifend RM-DR-003, RM-DR-008; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K14 / in keiner Option |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/wolves-b.md#blutwolf) |
 
@@ -831,8 +833,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Rollenblockierung (pro Person, mit Ablauf zum Nachtende). |
 | Abhängigkeiten | alle Nicht-Wolf-Nachtrollen mit tier > 2.1; Schattenhund/Zeitwächter/Der Weise (gleiche Blockadefamilie); Dämonischer Wolf (Verfluchte nicht wählbar); Rudel (F3). |
 | Widersprüche | RM-C-033 Ziele; RM-C-034 Umfang; RM-C-035 Anzahl pro Nacht; RM-C-036 Späte Wirkung |
-| Entscheidungen | RM-DR-134 (Rolle); übergreifend RM-DR-010; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K8 / in keiner Option |
+| Entscheidungen | RM-DR-134 (Rolle); übergreifend RM-DR-010; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K8 / in keiner Option |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/wolves-b.md#albtraumwolf) |
 
@@ -852,8 +854,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker bzw. Zähler pro Person (Köpfe, mit Aufladung bei Phasenwechsel). |
 | Abhängigkeiten | Waldhexe (Trank), Henker (LynchCount), Feuerteufel (Brand beim Lynch), Kopfgeldjäger (Lynch eines Wolfs), Spiegelwolf/Voodoo/Der Weise (Reihenfolge der Lynch-Sonderzweige `night:425-501`). |
 | Widersprüche | RM-C-037 Wahl oder Automatik; RM-C-038 Hexengift; RM-C-039 Aufbau |
-| Entscheidungen | RM-DR-135 (Rolle); immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K4 / ab Option B |
+| Entscheidungen | RM-DR-135 (Rolle); Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K4 / ab Option B |
 | Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. **Nur drei der acht Rollen haben einen Nachtschritt** (Schattenhund 0.7 once, Albtraumwolf 2.1, Schwarze Witwe 2.8). Dämonischer Wolf und Besessener Wolf sind reine Todesreaktionen, Fenrir und Cerberus reine … |
 | Detail | [Dossier](dossiers/wolves-b.md#cerberus) |
 
@@ -873,8 +875,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Sitznachbarschaft (Abstands-/Richtungsfunktion über `GameState.seat_order`, das es bereits gibt, `godot/core/model/game_state.gd:22,64`), Ursachen-Attribut `triggers_knight`, einmaliger Verbrauch pro Person (`ability_uses` existiert, Schlüssel neu). |
 | Abhängigkeiten | Dämonischer Wolf (Verfluchte), Fenrir, Rudelvater (Ersttod-Rettung, PACKFATHER_KILL), Schattenwanderer (Umlenkung), Zeitwächter, Waldhexe, Hades, Schwarze Witwe, Giftwolf, Feuerteufel, Kartenschlucker, Nekromant-Schild, Frankenstein/Kutscher (Wiederbelebung), Rotkäppchen/Loki (Kettentode). |
 | Widersprüche | RM-C-132 Welche Nachttode lösen aus; RM-C-133 Verfluchter Dorfbewohner als Ziel; RM-C-134 Fenrir ab Stufe 3 |
-| Entscheidungen | RM-DR-136 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-004, RM-DR-009; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K3 / ab Option A |
+| Entscheidungen | RM-DR-136 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-004, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K3 / ab Option A |
 | Belegsicherheit | hoch. Nicht ausgeführt (nur statisch gelesen): tatsächliche Laufzeitreihenfolge von Protokolleinträgen; Wirkung der doppelten Protokollierung (`gh:2408-2433` patcht `applyKill`, `core:445` loggt zusätzlich) nicht geprüft. --- |
 | Detail | [Dossier](dossiers/village-3.md#ritter) |
 
@@ -894,8 +896,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Bindungsmodell (Paarbindung mit Gültigkeit, analog Liebespaar), dauerhafter Statusmarker "Apfel" mit Verbrauchsregel, "repeat step"/Doppel-Ausführung in StepQueue, ggf. Zielhistorie. |
 | Abhängigkeiten | alle Rollen mit Nachtfähigkeit (Apfel), König/Frankenstein/Dorfschmied/Pestbringerin/Prophet (`APPLE_RESET_FLAGS`), Seelentauscher, Parasit, Kartenschlucker/Hades/Nekromant (Schilde), Ritter (Kettentod löst keine Vergeltung aus), Loki (zweites Bindungssystem). |
 | Widersprüche | RM-C-135 Wölfe als Zuflucht; RM-C-136 Apfel-Wirkung; RM-C-137 Dauer der Kette; RM-C-138 Ablehnung; RM-C-139 Mehrfache Zuflucht beim Selben |
-| Entscheidungen | RM-DR-137 (Rolle); übergreifend RM-DR-009, RM-DR-011; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K10 / in keiner Option |
+| Entscheidungen | RM-DR-137 (Rolle); übergreifend RM-DR-009, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch für Kette und Apfel-Mechanik (statisch belegt). Nicht zur Laufzeit geprüft: Zusammenspiel `startConfirm`-Overlay mit gleichzeitigem `center` anderer Rollen. --- |
 | Detail | [Dossier](dossiers/village-3.md#rotkaeppchen) |
 
@@ -915,8 +917,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | zusätzliche Siegbedingungen (Selbstmörder-Kandidat bei Hinrichtung); sonst keine. |
 | Abhängigkeiten | Feuerteufel (Brand vor Siegprüfung), Henker (Nebenhinrichtung), Voodoo (Puppe), alle Tötungsrollen (Totenzahl), Die Ewigen. |
 | Widersprüche | RM-C-061 Zählbasis; RM-C-062 Hinrichtungsarten |
-| Entscheidungen | RM-DR-138 (Rolle); übergreifend RM-DR-007; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K1 / ab Option A |
+| Entscheidungen | RM-DR-138 (Rolle); übergreifend RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K1 / ab Option A |
 | Belegsicherheit | hoch. |
 | Detail | [Dossier](dossiers/solos-a.md#selbstmoerder) |
 
@@ -936,8 +938,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Aktivierungszähler pro Person/Rolle (Erweiterung `ability_uses` oder Rollenzustand), bedingte Schrittverfügbarkeit ("nur wenn aktiv") in StepQueue; InfoRecord für Namenslisten statt einer Rolle. |
 | Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (Verfluchte), Spiegelwolf/Fenrir/Cerberus (kein Tod beim Lynch), Der Weise, Lehrling/Seelentauscher, Schattenhund/Albtraumwolf/Zeitwächter (Blockade), Doppelspion (zählt als Nicht-Wolf). |
 | Widersprüche | RM-C-140 Wiederholung; RM-C-141 Selbst unter den drei; RM-C-142 Aktivierung durch Erbe; RM-C-143 Verfluchter als "Werwolf" |
-| Entscheidungen | RM-DR-139 (Rolle); übergreifend RM-DR-002, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K7 / ab Option B |
+| Entscheidungen | RM-DR-139 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K7 / ab Option B |
 | Belegsicherheit | hoch. Nicht verifiziert: ob der Der-Weise-Zweig praktisch je einen Wolf trifft (nur bei verfluchtem Weisen). --- |
 | Detail | [Dossier](dossiers/village-3.md#kopfgeldjaeger) |
 
@@ -957,8 +959,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | bedingte Schrittverfügbarkeit nach Zählbedingung (Tote > Lebende), ggf. Einsatzzähler; InfoRecord-Variante "Person + Rolle". |
 | Abhängigkeiten | Wolfskind, Lehrling, Dämonischer Wolf (Verfluchte), Seelentauscher, Rotkäppchen (Apfel), Frankenstein/Kutscher (Wiederbelebung verändert Tote/Lebende). |
 | Widersprüche | RM-C-144 Häufigkeit; RM-C-145 Wer wird gezeigt; RM-C-146 Umfang der Info |
-| Entscheidungen | RM-DR-140 (Rolle); übergreifend RM-DR-002, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K7 / in keiner Option |
+| Entscheidungen | RM-DR-140 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/village-3.md#koenig) |
 
@@ -978,8 +980,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Wiederbelebungsmodell im Kern (Reset-Liste für Marker/Bindungen, Totenkarten-Status), Totenkarten-Effektmodell (Tag-Aktivierung), Regel "Wächter am Tor blockiert neue Wölfe" als Prüfung in RoleTransition, Neuberechnung des Nachtplans nach Rollenwechsel in der Nacht (Nachtplan ist heute Snapshot, `godot/README.md` Wolfskind-Abschnitt). |
 | Abhängigkeiten | Wächter am Tor, Loki (Liebende), Rotkäppchen (Apfel/Kette), Sensenträger (`hunterShot`/`hunterQueued`), Ritter, Lehrling/Seelentauscher (Erbe), Kutscher (zweite Wiederbelebungsrolle), Totenkarten `segen_08`, `wende_04`, `wende_07`, `loki_10`, Hades (Lichter zählen Tode), alle Rollen als mögliche neue Rolle. |
 | Widersprüche | RM-C-147 Rollenpool; RM-C-148 Zustand des Wiederbelebten; RM-C-149 Einmaligkeit bei Erbe; RM-C-150 Totenkarten-Aktivierung nach Verbrauch |
-| Entscheidungen | RM-DR-141 (Rolle); übergreifend RM-DR-011, RM-DR-013; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K13 / in keiner Option |
+| Entscheidungen | RM-DR-141 (Rolle); übergreifend RM-DR-011, RM-DR-013; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K13 / in keiner Option |
 | Belegsicherheit | hoch für `game.html`-Pfad; React-Verhalten (erste Rolle) aus Code und SPECIAL-ROLE-FLOW-REPORT abgeleitet, nicht selbst ausgeführt. --- |
 | Detail | [Dossier](dossiers/village-3.md#dr-victor-frankenstein) |
 
@@ -999,8 +1001,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker an toten Personen (Stimme geopfert), globale Modifikatoren (Schild bis Beginn nächster Nacht, zeitlich verzögerter Verfall), Zielumleitung für Nacht-Rudelangriff (vorhanden nur für Hinrichtung, Spiegelwolf), Tagesaktionswarteschlange (Benennung), zusätzliche Siegbedingung. |
 | Abhängigkeiten | Werwolf-Rudel (Angriff als Auslöser), Schicksalswolf/Rudelvater (Zusatzziele, `PACKFATHER_KILL` durchbricht Schild), Dämonischer Wolf (`cursedWolfAura` zählt bei Benennung als Wolf, Nekromant selbst kann verflucht werden), Doppelspion (zählt nicht als Wolf), Parasit/Rudelvater/Schattenwanderer (vor dem Schild … |
 | Widersprüche | RM-C-066 Wen schützt der Schild; RM-C-067 Umlenkung optional oder Pflicht; RM-C-068 Ressource der Toten; RM-C-069 Siegversuche; RM-C-070 Übungs-Enthüllung |
-| Entscheidungen | RM-DR-142 (Rolle); übergreifend RM-DR-002, RM-DR-005, RM-DR-007, RM-DR-008; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K15 / in keiner Option |
+| Entscheidungen | RM-DR-142 (Rolle); übergreifend RM-DR-002, RM-DR-005, RM-DR-007, RM-DR-008; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch für Schild, Verfall, Umlenkung, Sieg. Nicht verifiziert: tatsächliches Verhalten im Browser beim Abbruch (nur Codelesung); ob `center()`-Meldungen die Pick-Leiste verdecken. --- |
 | Detail | [Dossier](dossiers/solos-b.md#nekromant) |
 
@@ -1020,8 +1022,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Totenkarten-Effektmodell (mindestens Ziehen, Tauschen, Ausspielen, Zustand je Toter), Ressourcenzähler als dauerhafter Statusmarker, zusätzliche Siegbedingung; bei Beibehaltung der Code-Kräfte: persönlicher, jede Nacht erneuerter Schild. |
 | Abhängigkeiten | alle Rollen, die Tote erzeugen (mehr Tote = mehr Tauschgelegenheiten), Totenkarten-System (`cards`), Frankenstein/Kutscher (Wiederbelebung ermöglicht erneuten Tausch), Nekromant/Hades/Parasit/Rudelvater (Abfangregeln in `applyKill` vor bzw. nach dem Schild), Albtraumwolf/Schattenhund/Zeitwächter (blockieren den … |
 | Widersprüche | RM-C-071 Zusatzkräfte Kill/Schild/Ansage; RM-C-072 Wer darf tauschen |
-| Entscheidungen | RM-DR-143 (Rolle); übergreifend RM-DR-005, RM-DR-007, RM-DR-013; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K15 / in keiner Option |
+| Entscheidungen | RM-DR-143 (Rolle); übergreifend RM-DR-005, RM-DR-007, RM-DR-013; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: ob die Ansage (`center`) und der gleichzeitig geöffnete Kill-Pick im Browser kollidieren (Code öffnet beide synchron, `chunk:227,234`). --- |
 | Detail | [Dossier](dossiers/solos-b.md#kartenschlucker) |
 
@@ -1041,8 +1043,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Ressourcenzähler als dauerhafter Statusmarker, persönlicher Schild mit Kaufbedingung, dauerhafter Statusmarker "Stimme x3" (Anzeige, kein Stimmsystem), zusätzliche Siegbedingung. |
 | Abhängigkeiten | jede tötende Rolle (Lichterquelle), Nekromant (Schild fängt Hades-Kill ab, Lichter trotzdem weg), Rudelvater (`PACKFATHER_KILL` durchbricht Barriere), Ritter (Vergeltung bei `HADES_KILL`, `core:431`), Kutscher/Frankenstein (Rollenvergabe), Totenkarten mit Stimmbezug. |
 | Widersprüche | RM-C-073 Sieg automatisch oder eingelöst; RM-C-074 Zählen eigene Kills; RM-C-075 Stimme x3 |
-| Entscheidungen | RM-DR-144 (Rolle); übergreifend RM-DR-005, RM-DR-007, RM-DR-008; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K15 / in keiner Option |
+| Entscheidungen | RM-DR-144 (Rolle); übergreifend RM-DR-005, RM-DR-007, RM-DR-008; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: ob irgendwo außerhalb von `js/`, `game.html`, `app/` Stimmen gewichtet werden (rg über das ganze Repo fand nur die Definition `ui:18`). --- |
 | Detail | [Dossier](dossiers/solos-b.md#hades) |
 
@@ -1062,8 +1064,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Informationsregel "gleiches Team" (Siegpartei-Vergleich) in `information_rules.gd`; InfoRecord-Variante für Paarvergleich. |
 | Abhängigkeiten | Wolfskind, Lehrling, Seelentauscher, Dämonischer Wolf, alle Solo-Rollen, Doppelspion, Trugbilderwolf (Erscheinung vs. Fraktion), Rotkäppchen (Apfel). |
 | Widersprüche | RM-C-151 Zwei Solo-Rollen; RM-C-152 Verwandlung / Fluch |
-| Entscheidungen | RM-DR-145 (Rolle); übergreifend RM-DR-002; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K2 / ab Option A |
+| Entscheidungen | RM-DR-145 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K2 / ab Option A |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/village-3.md#doktor) |
 
@@ -1083,8 +1085,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Sitznachbarschaft (Abstand und Richtung über `GameState.seat_order`), InfoRecord-Variante "Richtung". |
 | Abhängigkeiten | alle Wolfsrollen, Fenrir, Dämonischer Wolf (Verfluchte), Wolfskind/Lehrling (Verwandlung), Doppelspion, Ritter (gemeinsame Richtungsdefinition), Blockaderollen. |
 | Widersprüche | RM-C-153 Freiwilligkeit; RM-C-154 Richtungsdefinition; RM-C-155 Gleichstand; RM-C-156 Fenrir Stufe 3 |
-| Entscheidungen | RM-DR-146 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K3 / in keiner Option |
+| Entscheidungen | RM-DR-146 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K3 / in keiner Option |
 | Belegsicherheit | hoch für Berechnung; die Zuordnung Bildschirm-Uhrzeigersinn zu "links aus Spielersicht" ist abgeleitet (Winkel `field-pixi.js:544-548`), nicht am Tisch geprüft. --- |
 | Detail | [Dossier](dossiers/village-3.md#faehrtenleser) |
 
@@ -1104,8 +1106,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | InfoRecord-Variante "Anzahl" (sonst keine). |
 | Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf, Wolfskind/Lehrling, Siegreicher Wolf (Zählweise), Doppelspion, Waldhexe/Hades (sofortige Nachttode vor dem Schritt). |
 | Widersprüche | RM-C-157 Häufigkeit; RM-C-158 Verfluchte zählen |
-| Entscheidungen | RM-DR-147 (Rolle); übergreifend RM-DR-002; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K2 / ab Option A |
+| Entscheidungen | RM-DR-147 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K2 / ab Option A |
 | Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. Zwei widersprüchliche Richtungsdefinitionen: Der Fährtenleser nennt die höhere Sitznummer "links" (`chunk:478-483`), der Ritter-Zielfinder prüft bei Gleichstand zuerst `L` = niedrigere Sitznummer … |
 | Detail | [Dossier](dossiers/village-3.md#waldlaeufer) |
 
@@ -1125,8 +1127,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (Schild mit Lebensdauer "bis zum nächsten Wolfsangriff", falls Interpretation A); Protections muss mehrere Quellen und Lebensdauer kennen. |
 | Abhängigkeiten | Werwolf/Rudel (Angriff), Rachsüchtiger Wolf (Zusatzangriff), Seuchenwolf (Durchbohren ignoriert Schutz beim Pick, chunk:162) und Rudelvater (Zusatzopfer am Morgen ohne Schutzprüfung, night:269-280), Dämonischer Wolf (verfluchter Sitz löst Wolfsmeldung aus), Dr. Victor Frankenstein (Wiederbelebung), Seelentauscher … |
 | Widersprüche | RM-C-159 Dauer/Wirkung des Schilds; RM-C-160 Schutzart; RM-C-161 Zeitpunkt; RM-C-162 Wolf-Meldung |
-| Entscheidungen | RM-DR-148 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-009; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K5 / in keiner Option |
+| Entscheidungen | RM-DR-148 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K5 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: Verhalten, falls ein SL den Schritt über einen anderen Weg (Konsole) auslöst. --- |
 | Detail | [Dossier](dossiers/village-4.md#schutzgeist) |
 
@@ -1146,8 +1148,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keine. |
 | Abhängigkeiten | alle Solo-Rollen (SOLO_ROLES_SET), Doppelspion (zählt als Solo), Rollen mit Rollenwechsel in Nacht 1 vor tier 0.3 (Loki 0.1: kein Rollenwechsel) nicht relevant. |
 | Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; übergreifend RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K2 / in keiner Option |
+| Entscheidungen | keine rollenspezifische; Standardauslegung siehe Dossier; übergreifend RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K2 / in keiner Option |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/village-4.md#dorfchronistin) |
 
@@ -1167,8 +1169,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keine; RoleTransition braucht nur einen Abfang-Haken. |
 | Abhängigkeiten | Wolfskind, Lehrling, König Lykaon/Trugbilderwolf, Seelentauscher, Dr. Victor Frankenstein, Kutscher, Dämonischer Wolf (Regelfrage), Grabräuber (manuell). |
 | Widersprüche | RM-C-163 Gilt der Dämonische-Wolf-Fluch als "neu entstehender Werwolf"? |
-| Entscheidungen | RM-DR-149 (Rolle); übergreifend RM-DR-002; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K12 / in keiner Option |
+| Entscheidungen | RM-DR-149 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K12 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: ob weitere, nicht über Rollennamen auffindbare Wege `flags.werewolf=true` setzen (grep nach `werewolf=true` ergab nur die genannten Stellen). --- |
 | Detail | [Dossier](dossiers/village-4.md#waechter-am-tor) |
 
@@ -1188,8 +1190,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | globale Modifikatoren (Nacht eingefroren), Rollenblockierung (alle folgenden Schritte), Nacht-Transaktionsbegriff mit Schnappschuss und Zähler-Rücknahme (zeitlich verzögerte Effekte müssen ebenfalls verworfen werden: Witwe, Giftwolf). |
 | Abhängigkeiten | praktisch alle Nachtrollen; besonders Schwarze Witwe, Giftwolf, Märtyrerin, Voodoo-Priester, Rudelvater, Seuchenwolf, Waldhexe, Hades, Amalia, Kriegerin, Dorfschmied, Der Weise, Fenrir, Cerberus, Todesprediger, Schattenhund/Albtraumwolf/Der Weise (blockieren den Zeitwächter selbst). |
 | Widersprüche | RM-C-164 Umfang des Abbruchs; RM-C-165 Zeitpunkt der Entscheidung; RM-C-166 Zähler; RM-C-167 Wolfsrollen |
-| Entscheidungen | RM-DR-150 (Rolle); übergreifend RM-DR-010; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K16 / in keiner Option |
+| Entscheidungen | RM-DR-150 (Rolle); übergreifend RM-DR-010; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K16 / in keiner Option |
 | Belegsicherheit | hoch für die Codeanalyse. Nicht verifiziert: Sichtbarkeit/Anklickbarkeit der Nachtliste am Tag (CSS/Layout nicht im Browser geprüft). --- |
 | Detail | [Dossier](dossiers/village-4.md#zeitwaechter) |
 
@@ -1209,8 +1211,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Tagesaktionswarteschlange (falls Tagesaktion); Freitext-Eingabe im Prompt. |
 | Abhängigkeiten | alle Wolfsrollen (Schwelle), Dämonischer Wolf (Verfluchte zählen im Code mit), Doppelspion (zählt nicht), Nekromant (Globalschild verhindert Opfer), Zeitwächter (Opfer bleibt trotz Einfrieren). |
 | Widersprüche | RM-C-168 Zeitpunkt; RM-C-169 Frage und Antwort; RM-C-170 Schwelle |
-| Entscheidungen | RM-DR-151 (Rolle); übergreifend RM-DR-002; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K14 / in keiner Option |
+| Entscheidungen | RM-DR-151 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K14 / in keiner Option |
 | Belegsicherheit | hoch für Code; mittel für Zweck der verwaisten Schlüssel (Historie nicht verfügbar). --- |
 | Detail | [Dossier](dossiers/village-4.md#amalia) |
 
@@ -1230,8 +1232,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | keine. |
 | Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (verfluchter Sitz: Wolf oder nicht?), Trugbilderwolf/Erscheinungsrollen, Doppelspion, Rudelvater (erste Sonderfähigkeitstötung überlebt, falls Treffer tötet), Nekromant-Globalschild. |
 | Widersprüche | RM-C-171 Stirbt ein getroffener Wolf?; RM-C-172 Wahrheitsquelle; RM-C-173 Öffentlichkeit |
-| Entscheidungen | RM-DR-152 (Rolle); übergreifend RM-DR-002, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K7 / in keiner Option |
+| Entscheidungen | RM-DR-152 (Rolle); übergreifend RM-DR-002, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/village-4.md#kriegerin-des-lichts) |
 
@@ -1251,8 +1253,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Sitznachbarschaft (einheitliche Links/Rechts-Konvention, lebend/tot überspringen). |
 | Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (Verfluchte lösen aus), Wolfskind/Lehrling (verwandelte Wölfe), Doppelspion (ausgenommen), Dorfschmied (Wolfstod durch Waffe), Fährtenleser (Richtungskonvention). |
 | Widersprüche | RM-C-174 Muss der Detektiv leben?; RM-C-175 Mindestens 2 lebende Wölfe; RM-C-176 Hinweisinhalt; RM-C-177 Richtung links/rechts |
-| Entscheidungen | RM-DR-153 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-009, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K3 / in keiner Option |
+| Entscheidungen | RM-DR-153 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-009, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K3 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: tatsächliche Darstellung, wenn Nacht-Todesübersicht (ui:470-477) und Center-Modal gleichzeitig offen sind (nur Code gelesen). --- |
 | Detail | [Dossier](dossiers/village-4.md#detektiv) |
 
@@ -1272,8 +1274,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | dauerhafte Statusmarker (Waffe am Sitz über Nächte), Zähler für zeitlich verzögerte Freischaltung (Schmiedezähler). |
 | Abhängigkeiten | Werwolf/Rudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater, Seuchenwolf, Schutzengel, Der Weise, Nekromant, Rudelvater (Erstrettung), Dämonischer Wolf, Detektiv (Hinweis bei Waffentod), Zeitwächter, Verdammniswächter (umgeht Waffe), Rotkäppchen (Apfel: zweite Waffe). |
 | Widersprüche | RM-C-178 Welche Nächte zählen; RM-C-179 Nur Nacht 6 oder ab Nacht 6; RM-C-180 Welche Angriffe |
-| Entscheidungen | RM-DR-154 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-015; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K5 / in keiner Option |
+| Entscheidungen | RM-DR-154 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K5 / in keiner Option |
 | Belegsicherheit | hoch für Code; mittel für den Nacht-1-Startweg (nicht im Browser geprüft). --- ## Gruppenübergreifende Beobachtungen 1. Globale Einmal-Flags statt sitzbezogener Zustände: Zeitwächter, Kriegerin (`Used["role_..."]`), Dorfchronistin (`ChroniclerShown`), … |
 | Detail | [Dossier](dossiers/village-4.md#dorfschmied) |
 
@@ -1293,8 +1295,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | zusätzliche Siegbedingungen (Doppelspion ersetzt Dorfsieg); Immunität gegen Rachsüchtigen Wolf als Zielfilter. |
 | Abhängigkeiten | Rachsüchtiger Wolf, Dämonischer Wolf (Fluch wirkungslos), Wolfskind/Lehrling (Wolfszählung), Orakel/Doktor/Spürhund (Erscheinung/Fraktion), Die Ewigen, Dorfchronistin. |
 | Widersprüche | RM-C-063 Muss er leben?; RM-C-064 Parität; RM-C-065 Aufwachen |
-| Entscheidungen | RM-DR-155 (Rolle); übergreifend RM-DR-002, RM-DR-007; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K1 / ab Option A |
+| Entscheidungen | RM-DR-155 (Rolle); übergreifend RM-DR-002, RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K1 / ab Option A |
 | Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. **Fünf Siegstellen statt zwei.** Für diese Gruppe setzen `checkWinConditions`, `checkTeamWin`, `checkPestWin`, `checkFluteWin` und der Selbstmörder-Zweig den Sieger. Nur die ersten beiden laufen nach jedem … |
 | Detail | [Dossier](dossiers/solos-a.md#doppelspion) |
 
@@ -1314,8 +1316,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Fähigkeitsübertragung/-kopie (Rolle bleibt, Fähigkeit wird zusätzlich ausgeführt; kein Punkt der Vorgabeliste, daher "sonstige"), zusätzliche Siegbedingung; ggf. zusätzlicher Nachtschritt für geerbte Fähigkeit. |
 | Abhängigkeiten | potenziell jede Rolle mit Nachtfähigkeit (Ziel des Diebstahls); Einmalrollen (bereits verbraucht?); Totenkarte `solo_05` (ähnliche Vererbung). |
 | Widersprüche | RM-C-076 Was bedeutet "Fähigkeit stehlen"; RM-C-077 Siegbedingung |
-| Entscheidungen | RM-DR-156 (Rolle); übergreifend RM-DR-006, RM-DR-007, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K15 / in keiner Option |
+| Entscheidungen | RM-DR-156 (Rolle); übergreifend RM-DR-006, RM-DR-007, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch (Fehlen per rg über gesamtes Repo ohne Markdown und node_modules bestätigt). --- |
 | Detail | [Dossier](dossiers/solos-b.md#grabraeuber) |
 
@@ -1335,8 +1337,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | Bindungsmodell Parasit-Wirt (Verknüpfte Personen, pro Nacht änderbar), zusätzliche Siegbedingung (Final 3). |
 | Abhängigkeiten | jede tötende Rolle (Immunität), Rudelvater (`PACKFATHER_KILL` durchbricht Immunität NICHT, da Parasit-Prüfung zuerst), Nekromant-Schild (kann den Kettentod abfangen), Manipulator (gleichzeitiger Final-3-Sieg), Henker (`finalizeLynch`), Rotkäppchen/Schattenwanderer (weitere Ketten). |
 | Widersprüche | RM-C-078 "Final 3" und Siegvorrang |
-| Entscheidungen | RM-DR-157 (Rolle); übergreifend RM-DR-007, RM-DR-009, RM-DR-011; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K10 / ab Option C |
+| Entscheidungen | RM-DR-157 (Rolle); übergreifend RM-DR-007, RM-DR-009, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K10 / ab Option C |
 | Belegsicherheit | hoch. Nicht verifiziert: Verhalten von `clearRolesNewRound` für `meta.parasiteHostId` im Browser (Code `gh:517` überschreibt `meta` per `Object.assign` mit Teilobjekt, das `parasiteHostId` nicht enthält, das Feld bleibt also erhalten; ohne Rolle Parasit aber … |
 | Detail | [Dossier](dossiers/solos-b.md#parasit) |
 
@@ -1356,7 +1358,7 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Neue Systeme | zusätzliche Siegbedingung; dauerhafter Statusmarker (gespeicherte Vorhersage). Voraussetzung: eindeutige Phasenzuordnung jedes Todes (Teil des Phasenmodells, B-9). |
 | Abhängigkeiten | alle tötenden Rollen; Zeitwächter (Frost, Nachtzählung), Lynch/Hinrichtung, Parasit-ähnliche Immunitäten und Schilde (verschieben Todeszeitpunkt), Frankenstein/Kutscher (Wiederbelebung und erneuter Tod). |
 | Widersprüche | RM-C-079 Öffentlich oder geheim; RM-C-080 Zeitpunkt der Vorhersage; RM-C-081 Zählbasis Tag/Nacht |
-| Entscheidungen | RM-DR-158 (Rolle); übergreifend RM-DR-007, RM-DR-011, RM-DR-014; immer RM-DR-001, RM-DR-016 |
-| Charge / 1.0 | K15 / in keiner Option |
+| Entscheidungen | RM-DR-158 (Rolle); übergreifend RM-DR-007, RM-DR-011, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
+| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch für Zählerpositionen und Vergleich. Mittel für die angezeigte Tagesnummer: der Phasenzähler liest `window.state` (F8) und zeigt im Normalbetrieb vermutlich dauerhaft "Tag 1"; die Protokoll-Labels (`gamelog.js`) sind die belastbare Anzeigequelle. --- ## … |
 | Detail | [Dossier](dossiers/solos-b.md#todesprediger) |

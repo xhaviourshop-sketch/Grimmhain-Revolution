@@ -1,6 +1,6 @@
 # 05 · Optionen für den Rollenumfang von Version 1.0
 
-**Stand:** 2026-09-26 · Basiscommit `4673b0b` · **Status:** Vorschlag, Product-Owner-Entscheidung offen
+**Stand:** 2026-09-26 · Basiscommit `4673b0b` · konsolidiert 2026-09-27 · **Status:** Vorschlag, nicht freigegeben. Welche Rollen als Nächstes spezifiziert werden, fragt RM-DR-017 ([`10`](10-next-decisions.md)).
 
 Alle Optionen enthalten die 11 umgesetzten Rollen. Die Optionen bauen aufeinander auf (A ⊂ B ⊂ C), damit eine spätere Erweiterung keine Arbeit verwirft. Entscheidungs-IDs verweisen auf [`08`](08-decision-request.md), Chargen auf [`06`](06-implementation-batches.md).
 
@@ -32,7 +32,7 @@ Nicht ausschlaggebend war die Nachtpriorität und nicht, wie interessant eine Ro
 | Neue Kernsysteme | Siegregel-Erweiterung, allgemeines Informationsmodell, Abfangregel-Liste in der `KillPipeline`, Sitznachbarschaft, weitere Todesfolgen und Reaktionsart, Liste von Hinrichtungsregeln (6, siehe [`06`](06-implementation-batches.md) §2) |
 | Technische Risiken | Reihenfolge von Hinrichtungsregeln (Spiegelwolf vor oder nach Kutscher), Sitzrichtung (RM-DR-003), Doppelspion gegen Dorfkandidat (RM-DR-155) |
 | Relativer Umfang | Referenz 1,0 (Anteile der Chargen K1 bis K5) |
-| Abhängigkeiten | RM-DR-001, -002, -003, -004, -007, -009, -016; Rollen: RM-DR-116, -119, -124, -136, -138, -145, -147, -155 |
+| Abhängigkeiten | offen: RM-DR-002.3, -003, -004; Rollen: RM-DR-116, -119, -124, -136, -138, -145, -147, -155. Bereits entschieden: RM-DR-001, -007, -009.1; nicht nötig: RM-DR-016 |
 | Eignung für neue Spielleiter | hoch: fast alles passiv oder automatisch, wenige Eingaben |
 | Wiederspielwert | niedrig bis mittel: 5 Wölfe mit kaum eigenem Nachtspiel, nur 3 Einzelsiegrollen |
 | Testaufwand | niedrig bis mittel: 9 Rollen, davon 7 ohne eigenen Nachtschritt |
@@ -50,9 +50,9 @@ Nicht ausschlaggebend war die Nachtpriorität und nicht, wie interessant eine Ro
 | Neue Mechaniken (zu A) | verknüpfte Personen mit Kettentod (Loki), bedingte und zufallsgestützte Information (Kopfgeldjäger), Hinrichtungsabwehr mit Zähler (Cerberus), Rollenblockierung (Schattenhund), dauerhafte Marker und zustandsbasierter Einzelsieg (Rattenfänger) |
 | Fehlende Mechaniken | Wiederbelebung, verzögerte Tode, Zielumleitung durch Rollen außer Spiegelwolf, Tagfähigkeiten, Totenkarten, Durchdringung |
 | Neue Kernsysteme | die 6 aus A plus Bindungsmodell, bedingte Schrittverfügbarkeit, Rollenblockierung, dauerhafte Statusmarker, Zähler je Person (11) |
-| Technische Risiken | Kettentod und Wiederbelebung (RM-DR-011), Blockade und Nachtplan-Snapshot, Rattenfänger-Sieg nach Toden (Legacy-Bug), Cerberus gegen Hexengift (RM-DR-135) |
+| Technische Risiken | Kettentod und Wiederbelebung (RM-DR-011.2), Blockade und Nachtplan-Snapshot, Rattenfänger-Sieg nach Toden (Legacy-Bug), Cerberus gegen Hexengift (RM-DR-135). Keine Rolle ist einzeln mit „hoch“ bewertet, aber B verlangt den Aufbau von drei Grundsystemen in Chargen mit Risiko „hoch“: Bindungsmodell (K6, für `loki`), Rollenblockierung (K8, für `schattenhund`), Statusmarker mit Einzelsiegen (K9, für `rattenfaenger`); siehe §5a |
 | Relativer Umfang | etwa 1,6 bis 1,9 × Option A (5 weitere Rollen, 5 weitere Systeme, die aber je nur eine Rolle der Option tragen, später aber 8 weitere) |
-| Abhängigkeiten | wie A plus RM-DR-010, -011, -014, -015; Rollen: RM-DR-101, -103, -123, -135, -139 |
+| Abhängigkeiten | wie A plus RM-DR-010, -011.2, -014, -015.2; Rollen: RM-DR-101, -103, -123, -135, -139 |
 | Eignung für neue Spielleiter | hoch bis mittel: Loki und Rattenfänger sind bekannt; Schattenhund braucht eine klare Anzeige der blockierten Schritte |
 | Wiederspielwert | mittel bis hoch: 7 Wölfe mit Nachtspiel (Schattenhund) und Tagspiel (Cerberus), 4 unterschiedliche Einzelsiege |
 | Testaufwand | mittel: Kettentod, Blockade und Marker brauchen Kombinationstests ([`07`](07-test-strategy.md) §4) |
@@ -85,22 +85,33 @@ Nicht ausschlaggebend war die Nachtpriorität und nicht, wie interessant eine Ro
 |---|---|---|---|
 | Dorf / Wölfe / Einzelsieg | 12 / 5 / 3 | 14 / 7 / 4 | 17 / 8 / 5 |
 | Neue Kernsysteme (ca.) | 6 | 11 | 15 |
-| Offene Entscheidungen bis 1.0 (Querschnitt + Rolle) | 7 + 8 | 11 + 13 | 11 + 17 |
+| Offene Einträge nach Konsolidierung (Querschnitt + Rolle) | 3 + 8 | 7 + 13 | 7 + 17 |
 | Relativer Umfang | 1,0 | 1,6 bis 1,9 | 2,4 bis 2,8 |
-| Rollen mit Risiko „hoch“ | 0 | 0 | 1 (`der-weise`) |
+| Rollen mit Rollenrisiko „hoch“ | 0 | 0 | 1 (`der-weise`) |
+| Benötigte Chargen mit Chargenrisiko „hoch“ | 0 | 3 (K6, K8, K9) | 3 (K6, K8, K9); K12 „kritisch“ nur wegen `seelentauscher`, nicht wegen `koenig-lykaon` |
 | Eignung für neue Spielleiter | hoch | hoch bis mittel | mittel |
 | Wiederspielwert | niedrig bis mittel | mittel bis hoch | hoch |
 | Akt-I-Abdeckung | 9/17 | 11/17 | 15/17 |
 | Rollen ohne eigenen Nachtschritt unter den neuen | 7 von 9 | 8 von 14 | 10 von 19 |
 
+## 5a. Rollenrisiko, Chargenrisiko und Systemrisiko
+
+Die frühere Aussage „Option B enthält keine Rolle mit hohem Risiko“ war richtig, aber zu pauschal, weil drei Maßstäbe vermischt wurden:
+
+- **Rollenrisiko** ([`01`](01-canonical-role-catalog.md), [`03`](03-remaining-roles-analysis.md)): Fehlerrisiko der einzelnen Rolle. In B höchstens „mittel“.
+- **Chargenrisiko** ([`06`](06-implementation-batches.md) §1): Risiko der ganzen Charge einschließlich aller späteren Rollen und des neuen Kernsystems. K6, K8 und K9 sind „hoch“, weil sie ein Grundsystem einführen und Rollen mit hohem Rollenrisiko enthalten (`schattenwanderer` in K6, `der-weise` in K8, `feuerteufel` in K9).
+- **Systemrisiko:** Fehler in einem neuen Grundsystem (Bindungsmodell, Rollenblockierung, Statusmarker) treffen später jede Rolle, die es nutzt. Wer `loki`, `schattenhund` oder `rattenfaenger` in 1.0 aufnimmt, baut diese Systeme vor 1.0.
+
+Für B heißt das: Die gewählten Rollen sind einzeln beherrschbar, aber drei der neuen Kernsysteme stammen aus Hochrisiko-Chargen. Dieses Risiko lässt sich nur verringern, indem die Systeme zuerst nur für die B-Rolle gebaut und mit deren Tests abgesichert werden. Option A braucht keines dieser drei Systeme.
+
 ## 6. Empfehlung
 
 **Option B (25 Rollen).**
 
-- Sie erfüllt das Ziel „20 bis 30 geprüfte Rollen“ mit Reserve, ohne eine Rolle mit hohem oder kritischem Risiko.
+- Sie erfüllt das Ziel „20 bis 30 geprüfte Rollen“ mit Reserve. Keine Rolle hat einzeln ein hohes Risiko; drei der dafür nötigen Kernsysteme stammen aber aus Chargen mit hohem Risiko (§5a).
 - Alle drei Fraktionen wachsen spürbar; die Wolfsseite erhält erstmals eigene Nacht- und Tagesmechaniken (Schattenhund, Cerberus, Besessener Wolf).
 - Jedes neue Kernsystem wird in B eingeführt und trägt nach 1.0 weitere Rollen: Bindungsmodell (`schattenwanderer`, `schwarze-witwe`, `parasit`, `rotkaeppchen`, `voodoo-priester`), Rollenblockierung (`albtraumwolf`, `der-weise`, `zeitwaechter`), Marker (`pestbringerin`, `feuerteufel`, `prophet-des-untergangs`), Sitznachbarschaft (`nachtwaechter`, `faehrtenleser`, `detektiv`), Informationsmodell (`die-gebundenen`, `dorfchronistin`, `koenig`, `traumdeuter`, `spuerhund`, `blutpriester`, `kriegerin-des-lichts` und weitere).
-- Keine Rolle hängt an Totenkarten, Stimmen oder Wiederbelebung, deren Grundsatzfragen (`07` Q2, Q3) offen sind.
+- Keine Rolle braucht Totenkarten oder Stimmen (`07` Q2, Q3 offen), und keine führt selbst Wiederbelebungen aus. `loki` hängt allerdings an der offenen Frage, was eine Wiederbelebung mit Bindungen macht (RM-DR-011.2).
 - Option C bleibt als direkte Erweiterung möglich, weil sie nur B ergänzt.
 
-**Voraussetzung:** Die elf Querschnittsentscheidungen, die 1.0 blockieren (RM-DR-001 bis -004, -007, -009, -010, -011, -014, -015, -016), und die 13 Rollenentscheidungen der Option B.
+**Voraussetzung (nach Konsolidierung):** RM-DR-001, RM-DR-007 und RM-DR-009.1 sind bereits entschieden; RM-DR-016 ist nicht nötig. Offen bleiben für B die Querschnittsfragen RM-DR-002.3, -003, -004, -010, -011.2, -014 und -015.2 sowie die 13 Rollenentscheidungen der Option B. Die Empfehlung ist keine Freigabe; die nächste Einheit wird mit RM-DR-017 entschieden.

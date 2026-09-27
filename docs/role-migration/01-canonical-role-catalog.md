@@ -11,7 +11,7 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Kern umgesetzt und getestet (`implemented-and-tested`) | 11 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 11 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 3 |
 | fehlend, Entscheidung nötig (`decision-required`) | 58 |
@@ -30,7 +30,7 @@ Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration
 
 ## 2. Haupttabelle
 
-Spalten: Godot = Migrationsstatus; Legacy = Befund des Legacy-Codes; Auto = Automationsziel; Größe/Risiko = relative Umsetzungsgröße und Fehlerrisiko; Charge = Implementierungscharge aus [`06`](06-implementation-batches.md) (`–` = bereits umgesetzt); 1.0 = kleinste Option aus [`05`](05-v1-role-options.md), in der die Rolle enthalten ist (`–` = in keiner Option). Nachtpriorität = `ORDER_BASE`-Tier der Legacy-App (`once` = Legacy-Einmalzeile), nicht die Godot-Priorität.
+Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-implemented-roles-audit.md) §1a); Legacy = Befund des Legacy-Codes; Auto = Automationsziel; Größe/Risiko = relative Umsetzungsgröße und Fehlerrisiko; Charge = Implementierungscharge aus [`06`](06-implementation-batches.md) (`–` = bereits umgesetzt); 1.0 = kleinste Option aus [`05`](05-v1-role-options.md), in der die Rolle enthalten ist (`–` = in keiner Option). Nachtpriorität = `ORDER_BASE`-Tier der Legacy-App (`once` = Legacy-Einmalzeile), nicht die Godot-Priorität.
 
 | # | ID | DE / EN | Fraktion | Akte | Nachtpriorität (Legacy) | Godot | Legacy | Auto | Mechanik (primär) | Größe / Risiko | Charge | 1.0 | Detail |
 |---:|---|---|---|---|---|---|---|---|---|---|---|---|---|

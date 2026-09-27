@@ -18,7 +18,7 @@
 | ungültiges Ziel | abgelehnte Eingabe ändert weder Zustand noch Ereignisse |
 | tote Person | tote Handelnde, tote Ziele, Tod vor dem eigenen Schritt (`StepDropped`) |
 | Selbstwahl | erlaubt oder abgelehnt laut Regel |
-| mehrere Kopien | je Person getrennt, Reihenfolge nach Personen-ID; entfällt bei `max_copies = 1` (RM-DR-016) |
+| mehrere Kopien | je Person getrennt, Reihenfolge nach Personen-ID; bleibt auch bei einer Setup-Obergrenze nötig, weil Lehrling-Erbe und `set_role` weitere Personen mit derselben Rolle erzeugen (RM-DR-016) |
 | Wiederbelebung | Zustand und Einsätze nach `revive` laut RM-DR-011 |
 | Rollenwechsel | Lehrling-Erbe, `set_role`, später Seelentauscher; frische Einsätze (RM-DR-001) |
 | Save/Load | an jeder Prompt-Stufe und nach jeder Wirkung, fachlicher Hash gleich |
@@ -167,7 +167,7 @@ Spaltenkürzel: Norm = Normalfall, Ziel = ungültiges Ziel, tot = tote Person, s
 | `parasit` | K10 | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | [Dossier](dossiers/solos-b.md#parasit) |
 | `todesprediger` | K15 | ● | ● | ● | – | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | [Dossier](dossiers/solos-b.md#todesprediger) |
 
-Summe: 784 relevante und 131 ausdrücklich nicht relevante Testgruppen über 61 Rollen. Bei `max_copies = 1` (RM-DR-016, Empfehlung A) entfällt die Gruppe „mehrere Kopien“ für alle neuen Sonderrollen außer `die-gebundenen`.
+Summe: 784 relevante und 131 ausdrücklich nicht relevante Testgruppen über 61 Rollen. Die Gruppe „mehrere Kopien“ bleibt auch bei einer Setup-Obergrenze nötig, weil Lehrling-Erbe und Spielleiterkorrekturen mehrere Personen mit derselben Rolle erzeugen können (RM-DR-016, korrigiert am 2026-09-27).
 
 ## 7. Umgesetzte Rollen
 

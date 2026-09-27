@@ -2,13 +2,13 @@
 
 **Stand:** 2026-09-26 · Basiscommit `4673b0b` · **Status:** Planung, nichts implementiert
 
-Alle 61 fehlenden Rollen sind genau einer von 16 Chargen zugeordnet. Eine Charge bündelt Rollen, die dasselbe neue oder erweiterte Kernsystem brauchen. Innerhalb jeder Charge kommen die Rollen der empfohlenen Option B aus [`05`](05-v1-role-options.md) zuerst („1.0-Anteil“); die übrigen Rollen derselben Charge folgen nach 1.0 und nutzen dann das bereits gebaute System.
+Alle 61 fehlenden Rollen sind genau einer von 16 Chargen zugeordnet. Die Chargen sind eine technische Planung; welche Rollen tatsächlich umgesetzt werden, entscheidet der Product Owner (Optionen in `05` nicht freigegeben, nächste Einheit RM-DR-017). Eine Charge bündelt Rollen, die dasselbe neue oder erweiterte Kernsystem brauchen. Innerhalb jeder Charge kommen die Rollen der empfohlenen Option B aus [`05`](05-v1-role-options.md) zuerst („1.0-Anteil“); die übrigen Rollen derselben Charge folgen nach 1.0 und nutzen dann das bereits gebaute System.
 
 ## 1. Übersicht
 
 | Charge | Name | Rollen | davon 1.0 (Option B) | Größe | Risiko |
 |---|---|---:|---|---|---|
-| K1 | Sieg- und Zählregeln | 3 | `siegreicher-wolf`, `selbstmoerder`, `doppelspion` | S bis M | niedrig |
+| K1 | Sieg- und Zählregeln | 3 | `siegreicher-wolf`, `selbstmoerder`, `doppelspion` | M bis L | mittel |
 | K2 | Informationsmodell | 4 | `waldlaeufer`, `doktor` | M | niedrig |
 | K3 | Sitznachbarschaft | 5 | `wahnsinniger-kutscher`, `ritter` | M | mittel |
 | K4 | Todes- und Hinrichtungsreaktionen | 4 | `besessener-wolf`, `cerberus` | M | mittel |
@@ -74,75 +74,108 @@ Größe: S/M/L/XL relativ ([`00`](00-method-and-sources.md) §3.4). Die Größe 
 
 Nicht als neues System geplant: Stimmsystem (ausgeschlossen, RM-DR-008), Besuchs- oder Zielhistorie (keine Rolle belegt sie zwingend; `die-ewigen` nur bei einer bestimmten Auslegung von RM-DR-104), Stummschaltung (keine Rolle).
 
-## 3. Erste empfohlene Charge: K1 · Sieg- und Zählregeln
+## 3. Charge K1 · Sieg- und Zählregeln und die nächste Einheit
 
 **Rollen Charge K1 (3):** `siegreicher-wolf`, `selbstmoerder`, `doppelspion`
 
-### 3.1 Warum diese Charge zuerst
+**Konsolidierung 2026-09-27:** Die frühere Fassung dieses Abschnitts nannte K1 als Ganzes die erste Einheit, schätzte „S bis M, Risiko niedrig“, legte die nächste Schemanummer fest und nannte RM-DR-007 und RM-DR-016 als Blocker. Diese Punkte sind korrigiert: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig, eine Schemanummer wird nicht vorab festgelegt, und die Größe ist unten neu begründet. Die Auswahl der Rollen ist eine Produktentscheidung (RM-DR-017) und nicht freigegeben.
 
-- **Gemeinsames technisches Thema:** alle drei ändern ausschließlich die Siegprüfung (`WinRules`), eine davon zusätzlich den Todesdatensatz bei Hinrichtung. Keine Rolle hat einen eigenen Nachtschritt, keine braucht einen Prompt.
-- **Wenig neue Grundarchitektur:** nur N-01, eine kleine Erweiterung eines Systems, das mit Kandidatenmenge, DR-02 und DR-14 bereits vollständig getestet ist.
-- **Vollständig automatisierbar:** alle drei `automatic`.
-- **Erweitert 1.0 sinnvoll:** zwei Einzelsiegrollen (heute nur der Manipulator) und die erste Wolfsrolle mit Siegbezug; Voraussetzung für jede spätere Einzelsiegrolle.
-- **Klare Legacy-Basis:** alle drei `legacy-verified`; die Legacy-Fehler betreffen nur das Überschreiben von Siegern, das der Godot-Kern bereits verhindert.
+### 3.1 Bewertung: K1 zusammen oder eine kleinere Einheit?
+
+| Kriterium | nur `siegreicher-wolf` | `siegreicher-wolf` + `doppelspion` (K1a) | alle drei (K1) |
+|---|---|---|---|
+| Wiederverwendung vorhandener Systeme | nur `WinRules.evaluate` und `RoleCatalog` | zusätzlich `WinCandidate` mit personenbezogenem Einzelsiegkandidaten nach dem Muster des Manipulators | zusätzlich `ExecutionRules` und ein am Todeszeitpunkt festgehaltener Umstand |
+| Neue ungeklärte Regeln (produktentscheidung) | 0 | 3 (RM-DR-155.1, .3, .4) | 6 (zusätzlich RM-DR-138.1, .3, .4) |
+| Neues Konzept | Gewicht in der Paritätsprüfung | Ausnahme von „alle erfüllten Siege werden vorgeschlagen“ (nur falls RM-DR-155.3 = A) | zusätzlich Sieg, der an einem vergangenen Ereignis hängt; Verhalten nach Ablehnung neu |
+| Wechselwirkungen | Parität, Lehrling-Erbe, Orakel | zusätzlich Dorfkandidat, Manipulator, Kandidatenprüfung beim Laden | zusätzlich Hinrichtung, Spiegelwolf, Sensenträger-Reaktion vor der verbindlichen Prüfung, Wiederbelebung |
+| Späterer Nutzen | Gewichtung für spätere Zählungen | Vorlage für jede weitere Einzelsiegrolle mit Zustandsbedingung (Rattenfänger, Parasit) | Vorlage für ereignisabhängige Siege (Todesprediger) |
+| Wirkung auf die parallele Oberfläche | eine neue Rolle im Setup (siehe §3.7) | zwei neue Rollen, eine zweite Einzelsiegrolle für die Pflicht „mindestens eine Einzelsiegrolle“ | drei neue Rollen |
+
+**Empfehlung (keine Entscheidung):** K1a, also `siegreicher-wolf` und `doppelspion` als nächste Spezifikationseinheit; `selbstmoerder` als eigene Folgeeinheit K1b. Begründung: Beide Rollen sind zustandsbasiert und nutzen vorhandene Muster. Der Selbstmörder führt als einzige ein neues Siegkonzept ein, dessen Ablehnungsverhalten erst entschieden werden muss (RM-DR-138.4). Falls die Doppelspion-Fragen nicht rechtzeitig beantwortet werden, ist `siegreicher-wolf` allein eine sinnvolle, sehr kleine Einheit.
 
 ### 3.2 Rollen und Standardauslegung
 
 | Rolle | Kernregel laut Legacy (Beleg) | Offene Punkte |
 |---|---|---|
-| `siegreicher-wolf` | zählt lebend in der Wolfsparität als zwei Wölfe; nicht bei „kein Wolf lebt“, nicht bei Zählungen anderer Rollen (`js/ui/core.js:21-29`, `:311-312`, [Dossier](dossiers/wolves-a.md#siegreicher-wolf)) | keine blockierende; Standard: Gewicht nur in der Paritätsprüfung (Legacy) |
-| `doppelspion` | zählt nie als Wolf; lebt er, wenn kein Wolf mehr lebt, gewinnt er statt des Dorfs (`js/ui/core.js:13`, `:227-230`, `:314-320`, [Dossier](dossiers/solos-a.md#doppelspion)); „wacht mit den Werwölfen auf“ ist eine Tischregel ohne App-Schritt | RM-DR-155 (muss er leben, Parität, ersetzt er den Dorfkandidaten), RM-DR-002 (Erscheinung beim Orakel) |
-| `selbstmoerder` | wird er gelyncht, während vorher mindestens 5 Personen tot sind, gewinnt er (`js/core/night.js:421-423`, `:474-482`, [Dossier](dossiers/solos-a.md#selbstmoerder)) | RM-DR-138 (Zählbasis, welche Hinrichtungen zählen) |
+| `siegreicher-wolf` | zählt lebend in der Wolfsparität als zwei Wölfe; nicht bei „kein Wolf lebt“, nicht bei Zählungen anderer Rollen (`js/ui/core.js:21-29`, `:311-312`, [Dossier](dossiers/wolves-a.md#siegreicher-wolf)); das Regelregister sieht die Ausnahme bereits vor (G-SIEG-2: „Siegreicher Wolf ist nicht enthalten“) | keine Produktentscheidung |
+| `doppelspion` | zählt nie als Wolf; lebt er, wenn kein Wolf mehr lebt, gewinnt er statt des Dorfs (`js/ui/core.js:13`, `:227-230`, `:314-320`, [Dossier](dossiers/solos-a.md#doppelspion)); „wacht mit den Werwölfen auf“ ist eine Tischregel ohne App-Schritt | RM-DR-155.1, .3, .4 |
+| `selbstmoerder` | wird er gelyncht, während vorher mindestens 5 Personen tot sind, gewinnt er (`js/core/night.js:421-423`, `:474-482`, [Dossier](dossiers/solos-a.md#selbstmoerder)) | RM-DR-138.1, .3, .4; RM-DR-138.2 nur für den späteren Henker |
 
-### 3.3 Benötigte vorhandene Systeme
+### 3.3 Vollständige Abhängigkeitsliste
 
-`WinRules.evaluate` und `finalize_if_ready`, `WinCandidate` (Art, Grund, begünstigte Personen), `KillPipeline` (Todeszeitpunkt, Totenzahl), `ExecutionRules.execute` (Ursache `LYNCH`, auch `GmCorrection execute`), `RoleCatalog` (Fraktion, `counts_as_wolf`), `InformationRules` (Erscheinung des Doppelspions), `GmCorrections` (`set_role`, `revive`, `declare_winner`), `StateCodec` und Replay.
+Legende: **bestehend** = durch eine verbindliche Quelle beantwortet (Quelle genannt); **neu** = Produktentscheidung (ID); **technisch** = folgt aus bestehenden Regeln, die Spezifikation legt nur die Umsetzung fest; **–** = nicht anwendbar.
 
-### 3.4 Benötigte neue Systeme
+| Frage | `siegreicher-wolf` | `doppelspion` | `selbstmoerder` |
+|---|---|---|---|
+| Grundregel mehrerer Siege | bestehend: G-SIEG-3, DR-02 | bestehend: G-SIEG-3, DR-02; Ausnahme für den Dorfkandidaten **neu** RM-DR-155.3 | bestehend: G-SIEG-3, DR-02 |
+| Muss die Person leben? | bestehend: Rollentext „solange er lebt“ | **neu** RM-DR-155.1 | – (gewinnt durch seinen Tod) |
+| Zählung in der Parität | Gewicht 2, nur Parität: Standardauslegung ohne Widerspruch (G-SIEG-2 sieht sie vor) | bestehend: zählt als Nicht-Wolf (G-SIEG-2) | bestehend: Nicht-Wolf (G-SIEG-2) |
+| Bedingung | technisch: aus dem Zustand berechnet | bestehend: „kein Wolf lebt“ = G-SIEG-1 (`counts_as_wolf`) | **neu** RM-DR-138.1 (vor oder einschließlich), RM-DR-138.3 (wer zählt als tot) |
+| Welche Hinrichtung zählt? | – | – | bestehend: Hinrichtung `LYNCH`, auch per Spielleiterkorrektur (Korrekturrunde 4); Tod durch Spiegelung zählt nicht (G-TOD-3, RM-DR-138.5); Henker später (RM-DR-138.2) |
+| Ablehnung durch den Spielleiter | bestehend: erneutes Angebot nur nach relevanter Zustandsänderung (Umsetzungsentscheidung 3 der README, AS-C04) | bestehend wie links | **neu** RM-DR-138.4: Die heutige Prüfung würde einen am Hinrichtungsmoment hängenden Sieg nach jedem weiteren Tod erneut anbieten |
+| Wiederbelebung und erneuter Tod | technisch: tot zählt 0, wiederbelebt wieder 2 (G-SIEG-2 zählt lebende Wölfe) | technisch, abhängig von RM-DR-155.1 | **neu** über RM-DR-138.3 und .4; erneute Hinrichtung nach Wiederbelebung ist ein neues Ereignis |
+| Gleichzeitige Kandidaten | bestehend: Wolfskandidat neben Manipulator usw. (G-SIEG-3) | **neu** nur für das Dorf (RM-DR-155.3); Manipulator bleibt bestehend | bestehend: z. B. Wolfsparität durch seinen Tod plus Selbstmörder-Kandidat (G-SIEG-3) |
+| Lehrling erbt die Rolle | bestehend: Gewicht sofort (Korrekturrunde Regelkern 2) | bestehend: Fraktion und Siegbedingung sofort | bestehend: Siegbedingung sofort; Erbe beim Tod des Meisters läuft vor der Siegprüfung (DECISION-LOG Lehrling) |
+| Mehrere Personen mit der Rolle (Setup oder Erbe) | technisch: jede zählt 2 | technisch: je Person ein Kandidat (Muster G-SIEG-3 „je Manipulator“) | technisch: je Person ein Kandidat |
+| Spielleiterkorrekturen | bestehend: `set_role`, `revive`, `kill` stoßen die Siegprüfung an (README Umsetzungsentscheidung 12) | bestehend wie links; `declare_winner` bleibt immer möglich (G-GM-1, DR-02) | bestehend: `execute` zählt als Hinrichtung; `kill` (Ursache `GM_CORRECTION`) ist keine Hinrichtung |
+| Speichern und Laden | technisch: Gewicht ist Katalogwissen, wird nicht gespeichert | technisch: neuer Kandidatengrund in Spielstand und Ladeprüfung | technisch: der Umstand zum Hinrichtungszeitpunkt muss gespeichert werden, weil Reaktionen die Totenzahl bis zur verbindlichen Prüfung ändern können |
+| Orakel und Waldhexe | bestehend: Orakel sieht `werwolf` (DR-07), Waldhexe die echte Rolle | bestehend: Orakel sieht `doppelspion` (keine besondere Erscheinung, DR-07) | bestehend: echte Rolle |
+| Tischablauf | – | **neu** RM-DR-155.4 (was die Wölfe erfahren); technisch: Hinweis im Rudelschritt, keine Teilnahme an der gespeicherten Rudelwahl (Regelregister §2, RM-DR-155.5) | – |
+| Obergrenze im Setup | nicht nötig (RM-DR-016) | nicht nötig | nicht nötig |
 
-Nur N-01, in drei Teilen:
-1. **Paritätsgewicht** im `RoleCatalog` (Standard 1, `siegreicher-wolf` 2), ausschließlich in der Paritätsprüfung von `WinRules` verwendet.
-2. **Einzelsiegregeln als Liste** statt Einzelfall `manipulator_wins`; der Manipulator wird ohne Verhaltensänderung überführt (Regressionstests vorhanden).
-3. **Ereignisbasierter Sieg:** Die Bedingung des Selbstmörders hängt am Zeitpunkt der Hinrichtung. Die Totenzahl vor der Hinrichtung wird im Todesdatensatz gespeichert, damit Replay, Save/Load und ein erneutes Angebot nach `RejectWin` eindeutig bleiben. Wie ein abgelehnter ereignisbasierter Kandidat später behandelt wird, muss die Spezifikation zur Charge festlegen (AS-C04 bezieht sich auf zustandsbasierte Kandidaten).
+### 3.4 Benötigte vorhandene Systeme
 
-Schemaänderung: neue Rollen im Katalog und ein Feld im Todesdatensatz, also Schema 11 und neue Regelversion.
+`WinRules.evaluate`, `record_provisional`, `finalize_if_ready` und `state_is_consistent`; `WinCandidate` (Art, Grund, begünstigte Personen, `REASONS`); `KillPipeline` (Todeszeitpunkt); `ExecutionRules.execute` (nur Selbstmörder); `RoleCatalog`; `InformationRules`; `GmCorrections` (`set_role`, `revive`, `declare_winner`); `StateCodec` und Replay.
 
-### 3.5 Reihenfolge innerhalb der Charge
+### 3.5 Technische Fakten und Schätzung
 
-1. `siegreicher-wolf` (nur Gewicht; prüft die Erweiterung ohne neue Kandidatenart),
-2. `doppelspion` (erste zusätzliche zustandsbasierte Einzelsiegregel; berührt den Dorfkandidaten),
-3. `selbstmoerder` (erste ereignisbasierte Siegregel; berührt `ExecutionRules`).
+**Belegte technische Tatsachen (aus dem Code am Basiscommit, `godot/core/` bis `5eb5f2a` unverändert):**
+- `WinRules.evaluate` wird nach **jedem** Tod (vorläufiger Status) und bei jeder verbindlichen Prüfung aufgerufen (`win_rules.gd`, `kill_pipeline.gd:46`, `rules_engine.gd:22`). Eine geänderte Paritätsrechnung wirkt damit auf jede Partie mit dieser Rolle und auf die Ereignisse `WinStatusProvisional` und `WinStatusFinal`.
+- Die Ereignisargumente `wolves` und `non_wolves` werden in drei Szenarien geprüft (`as-c01`, `as-c03`, `as-c04`). Die Spezifikation muss festlegen, ob diese Zahlen Köpfe oder Gewicht bedeuten, ohne die bestehenden Szenarien umzudeuten.
+- `WinCandidate.REASONS` ist eine feste Liste, und `state_is_consistent` prüft offene und bestätigte Manipulator-Kandidaten beim Laden gegen den Zustand. Jeder neue Kandidatengrund braucht eine eigene Ladeprüfung.
+- Offene Kandidaten verhindern die nächste Prüfung, und nach `RejectWin` wird erst nach einem weiteren Tod oder einer Korrektur neu geprüft (`finalize_if_ready`, README Umsetzungsentscheidungen 2 und 3). Ein Sieg, der an einem vergangenen Ereignis hängt, würde dabei erneut entstehen, solange nichts anderes festgelegt ist.
+- `KillEvent` speichert heute Ursache, Quelle, Ziel, Phase, Nummer und Reihenfolge, aber keine Totenzahl. Für den Selbstmörder ist also eine Änderung gespeicherter Daten nötig, für den Siegreichen Wolf voraussichtlich nicht; für den Doppelspion nur der neue Kandidatengrund.
+- Jede Änderung am Regelverhalten erhöht die Regelversion; eine Änderung gespeicherter Felder erhöht zusätzlich die Schemaversion. **Welche Nummer** folgt, ergibt sich erst aus dem dann aktuellen Stand (andere Arbeiten können vorher eine Version belegen) und wird hier nicht festgelegt.
+- Die Rollen erscheinen automatisch im Rollen-Setup von Grimmhain-1, sobald sie im `RoleCatalog` stehen (§3.7).
 
-### 3.6 Blocker und Entscheidungen
+**Schätzung (keine Tatsache):**
 
-| Entscheidung | Frage | Empfehlung |
-|---|---|---|
-| RM-DR-007 | Dorf-/Wolfskandidat bei lebenden Einzelsiegrollen | A: unverändert, Kandidatenmenge |
-| RM-DR-016 | Obergrenze gleicher Sonderrollen | A: je 1 |
-| RM-DR-155 | Doppelspion: lebend, Parität, Verhältnis zum Dorfsieg | Code/Text: nur lebend, Nicht-Wolf, ersetzt Dorfkandidaten |
-| RM-DR-138 | Selbstmörder: Zählbasis, Hinrichtungsarten | vorher 5 Tote, nur Hauptziel einer Hinrichtung (`LYNCH`, auch per Korrektur) |
-| RM-DR-002 | Erscheinung des Doppelspions beim Orakel | nur für den Orakel-Test nötig; Legacy zeigt die echte Rolle |
+| Einheit | Größe | Risiko | Begründung |
+|---|---|---|---|
+| nur `siegreicher-wolf` | S | niedrig bis mittel | eine Rechenregel, aber in jeder Siegprüfung wirksam; Ereignisargumente und bestehende Szenarien müssen stabil bleiben |
+| K1a (`siegreicher-wolf`, `doppelspion`) | M | mittel | zusätzlich ein neuer Kandidatengrund mit Ladeprüfung und, bei RM-DR-155.3 = A, eine Ausnahme in der Kandidatenerzeugung, die Dorf-, Manipulator- und Paritätsfälle berührt |
+| K1 gesamt | M bis L | mittel | zusätzlich ein neues Siegkonzept mit gespeichertem Ereignisumstand, eigenem Ablehnungsverhalten und Bezug zu Hinrichtung und Reaktionswarteschlange |
 
-Weitere Blocker: keine. Die Charge braucht keine UI und berührt keine Datei unter `godot/app/`.
+Die frühere Angabe „S bis M, Risiko niedrig“ für K1 gesamt war zu optimistisch: Sie übersah, dass die Paritätsrechnung in jeder Siegprüfung wirkt und dass ein ereignisabhängiger Sieg mit der bestehenden Ablehnungslogik kollidiert.
 
-### 3.7 Teststrategie
+### 3.6 Reihenfolge
 
-Tests zuerst (rot), dann Umsetzung, wie in den bisherigen Rollenaufträgen. Mindestens:
+1. `siegreicher-wolf` (prüft die Gewichtung, ohne eine neue Kandidatenart),
+2. `doppelspion` (erste zusätzliche zustandsbasierte Einzelsiegregel),
+3. später `selbstmoerder` als K1b (erste ereignisabhängige Siegregel).
 
-- **Siegreicher Wolf:** 1 Siegreicher + 2 Dorf → Wolfskandidat; + 3 Dorf → kein Kandidat; tot zählt 0; zwei Siegreiche; Lehrling erbt Siegreicher (Gewicht sofort); Wolfskind-Verwandlung und Parität zusammen; `set_role` stößt Prüfung an; Waldläufer-Zählung bleibt einfach (sobald K2 existiert).
-- **Doppelspion:** letzter Wolf stirbt, Doppelspion lebt → nur Doppelspion-Kandidat (nach RM-DR-155); Doppelspion tot → Dorfkandidat; Parität zählt ihn als Nicht-Wolf; mit Manipulator bei drei Lebenden → zwei Einzelsiegkandidaten; Sensenträger-Reaktion vor der verbindlichen Prüfung (DR-14); Orakel-Ergebnis; Wiederbelebung nach Wolfstod.
-- **Selbstmörder:** Hinrichtung mit 5 Toten vorher → Kandidat; mit 4 → kein Kandidat; `GmCorrection execute` → Kandidat; Spiegelwolf lenkt nicht auf ihn um (keine Wechselwirkung, aber Reihenfolge prüfen); Nachttod → kein Kandidat; Wiederbelebung vor der Hinrichtung senkt die Zahl; gleichzeitig Dorf- oder Wolfskandidat; `RejectWin` und späteres Verhalten.
-- **Querschnitt:** Save/Load mit offenem Kandidaten jeder Art; bytegleiches Replay; beschädigte Stände (Gewicht, fehlendes Feld im Todesdatensatz, Doppelspion mit `counts_as_wolf = true`); keine Kandidaten bei offenem Prompt oder offener Reaktion; Leak-Test: kein Einzelsiegkandidat in öffentlichen Ereignissen vor `ConfirmWin`; alle 351 bestehenden Tests bleiben grün.
+### 3.7 Übergabe an Grimmhain-1 (nicht umgesetzt)
 
-### 3.8 Größe, Risiko, Abnahme
+Auf dem noch nicht gemergten Branch `origin/claude/sleepy-babbage-u2o0i2` (Stand `7837809`) baut Grimmhain-1 ein Rollen-Setup, das Rollen, Fraktion, `counts_as_wolf`, Nachtpriorität und `max_copies` aus dem `RoleCatalog` liest (`docs/ui/role-setup.md` dort). Folgen für jede neue Rolle:
 
-- **Größe:** S bis M. Drei Rollen, ein erweitertes System, eine Schemaänderung, keine Nachtschritte.
-- **Risiko:** niedrig; mittel nur für die Semantik ereignisbasierter Kandidaten.
-- **Abnahmekriterium:** Die Entscheidungen RM-DR-007, -016, -138, -155 sind im Decision Log; ein Regelregister für K1 mit DE- und EN-Text ist freigegeben; alle neuen und alle bestehenden headless Tests sind grün; `godot/README.md` (Rollentabelle, Testabdeckung, Schema) ist aktualisiert; kein Nachtplan und kein bestehendes Ereignis hat sich verändert.
+- `godot/tests/ui/test_role_model.gd` prüft dort „exakt elf produktive Rollen“ (`test_catalog_adapter_matches_rule_catalog`). Der Test wird rot, sobald eine Rolle im Katalog hinzukommt. Die Zahl muss dann gemeinsam angepasst oder aus dem Katalog abgeleitet werden.
+- Anzeigenamen und Kurztexte brauchen Schlüssel `ui.role.<id>.name` und `ui.role.<id>.short` in `godot/content/i18n/` (Bereich Grimmhain-1).
+- `RolePresentation.ROLE_ORDER` legt die Reihenfolge in der Oberfläche fest; ohne Eintrag steht eine neue Rolle am Ende ihrer Gruppe.
+- Der Setup-Vorschlag setzt heute genau einen Manipulator als Einzelsiegrolle; ein Doppelspion wäre eine zweite wählbare Einzelsiegrolle.
+
+Keine dieser Dateien gehört zum Bereich von Grimmhain-2. Die Rollenumsetzung sollte deshalb erst nach Abstimmung mit Grimmhain-1 in den Katalog gehen.
+
+### 3.8 Teststrategie
+
+Tests zuerst (rot), dann Umsetzung. Mindestens für jede gewählte Rolle die Zeilen der Tabelle in §3.3, jeweils mit Speichern/Laden und bytegleichem Replay, dazu: Leak-Test (kein Einzelsiegkandidat in öffentlichen Ereignissen vor `ConfirmWin`), keine Kandidaten bei offenem Prompt oder offener Reaktion (G-GM-3), beschädigte Spielstände mit unpassendem Kandidatengrund, alle bestehenden Tests unverändert grün. Weil mehrere Personen derselben Rolle durch Lehrling oder Korrektur immer möglich sind, gehören Tests mit zwei Personen derselben Rolle dazu, unabhängig von einer Setup-Grenze.
+
+### 3.9 Abnahmekriterium
+
+Die gewählten Rollen und die zugehörigen Produktentscheidungen stehen im Decision Log; ein Regelregister mit DE- und EN-Text ist freigegeben; alle neuen und bestehenden headless Tests sind grün; die Abstimmung mit Grimmhain-1 (§3.7) ist erfolgt; `godot/README.md` ist aktualisiert. Headless-Tests belegen dabei nur den Regelkern, keine Bedienung über die Oberfläche.
 
 ## 4. Alle Chargen
 
-Format je Charge: Rollen, gemeinsame Mechanik, neue Systeme, wiederverwendbare Systeme, Reihenfolge, Blocker und Entscheidungen, Teststrategie, Größe, Risiko, Abnahmekriterium.
+Format je Charge: Rollen, gemeinsame Mechanik, neue Systeme, wiederverwendbare Systeme, Reihenfolge, Blocker und Entscheidungen, Teststrategie, Größe, Risiko, Abnahmekriterium. Genannte Entscheidungen mit Status „entschieden“ (RM-DR-001, RM-DR-007, RM-DR-009.1 u. a., siehe [`08`](08-decision-request.md)) sind nur noch Verweise auf die geltende Regel, keine Blocker. „1.0“ bezieht sich auf die nicht freigegebene Option B.
 
 ### K1 · Sieg- und Zählregeln
 
@@ -155,8 +188,8 @@ Siehe §3.
 - **Mechanik:** Informationen, die eine Person nachts erhält, ohne Zustand zu ändern: Anzahl lebender Wölfe, gleiche Siegseite zweier Personen, Mitglieder der eigenen Gruppe, Anzahl der Einzelsiegrollen.
 - **Neue Systeme:** N-02.
 - **Wiederverwendbar:** `StepQueue`, `PendingPrompt`, `InformationRules`, Ereignissichtbarkeit, Leak-Tests des Orakels.
-- **Reihenfolge:** `waldlaeufer` (1.0) → `doktor` (1.0) → `dorfchronistin` → `die-gebundenen` (braucht die `max_copies`-Ausnahme).
-- **Entscheidungen:** RM-DR-002, RM-DR-014, RM-DR-016; RM-DR-145 (`doktor`), RM-DR-147 (`waldlaeufer`).
+- **Reihenfolge:** `waldlaeufer` (1.0) → `doktor` (1.0) → `dorfchronistin` → `die-gebundenen` (mehrere Personen mit dieser Rolle sind ihr Kern).
+- **Entscheidungen:** RM-DR-002.3, RM-DR-014, RM-DR-016.1 (nur falls `die-gebundenen` eine Grenze bekommen soll); RM-DR-145 (`doktor`), RM-DR-147 (`waldlaeufer`).
 - **Tests:** Ergebnis je Wolfsart (verwandelt, Trugbild), Übersteuerung des gezeigten Ergebnisses, Actor- und Public-Leak, Save/Load mit offenem Prompt, Replay, Tote und Selbstwahl.
 - **Größe / Risiko:** M / niedrig.
 - **Abnahme:** Orakel-Tests unverändert grün, alle vier Rollen nutzen dasselbe Informationsmodell.
@@ -247,7 +280,7 @@ Siehe §3.
 - **Neue Systeme:** N-09, N-01 (weitere Einzelsiege), N-05 (Nachbarn), N-12 (Ausbreitung).
 - **Wiederverwendbar:** `WinCandidate`, `KillPipeline`.
 - **Reihenfolge:** `rattenfaenger` (1.0) → `pestbringerin` → `feuerteufel` → `prophet-des-untergangs` → `die-ewigen`.
-- **Entscheidungen:** RM-DR-006, RM-DR-007, RM-DR-003; RM-DR-103, RM-DR-120, RM-DR-131, RM-DR-121, RM-DR-104.
+- **Entscheidungen:** RM-DR-006, RM-DR-003 (Grundregel der Siegkandidaten ist entschieden, RM-DR-007); RM-DR-103, RM-DR-120, RM-DR-131, RM-DR-121, RM-DR-104.
 - **Tests:** Sieg auch nach Tod der letzten unmarkierten Person (Legacy-Bug), Marker über Wiederbelebung, gleichzeitige Kandidaten.
 - **Größe / Risiko:** L / hoch.
 - **Abnahme:** jede Einzelsiegbedingung nach jeder relevanten Änderung geprüft, nicht nur nach eigener Aktion.
@@ -338,6 +371,7 @@ Siehe §3.
 
 ## 5. Empfohlene Reihenfolge
 
-1. **Bis Version 1.0 (Option B):** 1.0-Anteile von K1 → K2 → K3 → K4 → K5 → K6 → K7 → K8 → K9. Jede Charge beginnt mit dem Umbau ihres Kernsystems ohne Verhaltensänderung, dann folgen die Rollen. Option C ergänzt danach `nachtwaechter` (K3), `die-gebundenen` (K2), `der-weise` (K8), `koenig-lykaon` (K12, setzt N-17 voraus), `parasit` (K10).
+0. **Nächste Einheit (Empfehlung, RM-DR-017):** K1a (`siegreicher-wolf`, `doppelspion`), danach K1b (`selbstmoerder`).
+1. **Falls Option B gewählt wird (nicht freigegeben):** 1.0-Anteile von K1 → K2 → K3 → K4 → K5 → K6 → K7 → K8 → K9. Jede Charge beginnt mit dem Umbau ihres Kernsystems ohne Verhaltensänderung, dann folgen die Rollen. Option C ergänzt danach `nachtwaechter` (K3), `die-gebundenen` (K2), `der-weise` (K8), `koenig-lykaon` (K12, setzt N-17 voraus), `parasit` (K10).
 2. **Nach 1.0:** Restrollen von K2 bis K9, dann K10, K12, K11, K14, K13, K15, K16. K13 und K15 hängen an `07` Q3 (Totenkarten), K16 an Undo/Redo.
 3. **Nicht vor einer Charge beginnen,** solange ihre Entscheidungen offen sind (Masterplan: „keine neue Charge vor Abnahme“).

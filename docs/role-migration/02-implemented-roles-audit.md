@@ -17,6 +17,20 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 | Rollen mit eigener Unit-Testdatei | 9 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
+## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
+
+`implemented-and-tested` gilt **nur für den Regelkern**. Geprüft gegen `origin/main` `5eb5f2a`; seit dem Basiscommit hat sich `godot/core/` nicht geändert, neu sind nur UI-Setup (Spielernamen), Asset- und Audiodokumente.
+
+| Ebene | Stand für alle 11 Rollen | Beleg |
+|---|---|---|
+| Regelkern implementiert | ja | `godot/core/rules/role_catalog.gd` und die in §3 genannten Regeldateien |
+| Verhalten durch automatisierte Tests belegt | ja, headless | `godot/tests/run_all.sh` am Basiscommit `4673b0b`: 351 Tests, 0 fehlgeschlagen; Rollentests unter `godot/tests/unit/` |
+| über die aktuelle Oberfläche bedienbar | **nein** | `main` enthält nur die Erfassung der Spielernamen (`docs/ui/player-setup.md`: „Rollen, Sitzordnung und `StartGame` folgen in späteren Arbeitspaketen“). Ein Rollen-Setup mit Verteilung existiert nur auf dem nicht gemergten Branch `claude/sleepy-babbage-u2o0i2` und erzeugt dort ausdrücklich kein `StartGame` |
+| im vollständigen Spielablauf geprüft | **nein** | nur headless Befehlsfolgen (Szenarien `godot/tests/scenarios/`, Unit-Tests); keine vollständige Runde über die Oberfläche |
+| auf einem echten Tablet geprüft | **nein** | kein Gerätenachweis im Repository; Masterplan Phase 2 Gate offen |
+
+Frühere Formulierungen „vollständig umgesetzt“ bzw. „vollständig implementiert“ (auch im Abschlussbericht der Analyse) meinen ausschließlich die ersten beiden Zeilen.
+
 ## 2. Prüfmethode
 
 1. `RoleCatalog.ROLES` in [`../../godot/core/rules/role_catalog.gd`](../../godot/core/rules/role_catalog.gd) gelesen: genau 11 Schlüssel.

@@ -1,6 +1,7 @@
 # 00 · Methode, Quellen und Statusmodell
 
 **Stand:** 2026-09-26 · **Branch:** `claude/happy-bell-dhgkod` · **Basiscommit:** `4673b0b` (= `origin/main` zum Arbeitsbeginn, per `git fetch origin` und `git merge-base` geprüft)
+**Konsolidierung:** 2026-09-27, Aussagen geprüft bis `origin/main` `5eb5f2a` (Änderungen seit `4673b0b` per gezieltem Diff gelesen: Regelkern, Regeltests, Spezifikationen und Regelabschnitte des Decision Logs unverändert; neu sind UI-Setup, Asset-/Audiodokumente und die Entscheidung zur Nachtmusik). Zusätzlich gelesen, aber nicht verbindlich: der nicht gemergte UI-Branch `origin/claude/sleepy-babbage-u2o0i2` (`7837809`) und der Asset-Branch `origin/claude/wizardly-maxwell-kay292` (`c46c9e4`).
 **Art:** reine Dokumentation und Analyse. Kein Produktionscode, keine Spielregel, keine UI-, Asset-, Audio- oder Projektdatei wurde geändert.
 
 ## 1. Zweck und Dokumente
@@ -18,6 +19,8 @@ Diese Planung beantwortet, welche Rollen es gibt, welche im Godot-Kern umgesetzt
 | [`07-test-strategy.md`](07-test-strategy.md) | Testgruppen je Rolle, Kombinationsmatrix, Golden-Szenarien |
 | [`08-decision-request.md`](08-decision-request.md) | Entscheidungen `RM-DR-###` |
 | [`09-executive-summary.md`](09-executive-summary.md) | Kurzfassung |
+| [`10-next-decisions.md`](10-next-decisions.md) | kurze Vorlage der nächsten Entscheidungen |
+| [`decision-status.csv`](decision-status.csv) | Status jedes Entscheidungseintrags und jeder Teilfrage mit Quelle |
 | [`dossiers/`](dossiers/) | Belegdossiers: vollständige Code-Lektüre je Rollengruppe |
 | `../../tools/role-migration/check-role-docs.js` | Konsistenzprüfung dieser Dokumente (nur lesend) |
 
@@ -39,7 +42,7 @@ Es werden ausschließlich diese Werte verwendet. Jede Rolle hat genau einen **Mi
 
 | Wert | Bedeutung |
 |---|---|
-| `implemented-and-tested` | Rolle im `RoleCatalog`, Regeln im Kern umgesetzt, eigene oder gleichwertige headless Tests grün |
+| `implemented-and-tested` | Rolle im `RoleCatalog`, Regeln im Kern umgesetzt, eigene oder gleichwertige headless Tests grün. **Gilt nur für den Regelkern**, nicht für Bedienbarkeit, vollständige Runde oder Gerät ([`02`](02-implemented-roles-audit.md) §1a) |
 | `implemented-partial` | Teile im Kern vorhanden, Kernverhalten unvollständig oder ungetestet |
 | `documented-only` | nicht im Kern; Regel ausreichend belegt, Standardauslegung ohne blockierende Product-Owner-Frage beschrieben |
 | `decision-required` | nicht im Kern; mindestens eine Product-Owner-Entscheidung blockiert eine verbindliche Regel |
