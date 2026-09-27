@@ -9,8 +9,8 @@ const FACTION_ORDER: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Facti
 
 ## Reihenfolge innerhalb einer Gruppe (Grundrolle zuerst, dann Nachtschritte, dann übrige).
 const ROLE_ORDER: Array[StringName] = [
-	&"dorfbewohner", &"schutzengel", &"das-orakel", &"waldhexe", &"sensentraeger", &"wolfskind", &"lehrling", &"dorfchronistin", &"die-gebundenen", &"waldlaeufer", &"doktor", &"nachtwaechter", &"dorfwache", &"wahnsinniger-kutscher",
-	&"werwolf", &"spiegelwolf", &"trugbilderwolf", &"siegreicher-wolf",
+	&"dorfbewohner", &"schutzengel", &"das-orakel", &"waldhexe", &"sensentraeger", &"wolfskind", &"lehrling", &"dorfchronistin", &"die-gebundenen", &"waldlaeufer", &"doktor", &"nachtwaechter", &"dorfwache", &"wahnsinniger-kutscher", &"ritter", &"faehrtenleser",
+	&"werwolf", &"spiegelwolf", &"trugbilderwolf", &"siegreicher-wolf", &"besessener-wolf",
 	&"manipulator", &"doppelspion", &"selbstmoerder",
 ]
 

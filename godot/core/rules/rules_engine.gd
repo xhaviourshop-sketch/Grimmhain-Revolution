@@ -461,12 +461,14 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			s.next_night_step += 1
 		PendingPrompt.OWNER_REACTION:
 			var reaction: Reaction = s.reactions.pop_front()
+			var cause: StringName = {Reaction.KIND_CURSE: KillEvent.CAUSE_HUNTER_SHOT, Reaction.KIND_POSSESSED: KillEvent.CAUSE_POSSESSED_DRAG,
+				Reaction.KIND_KNIGHT: KillEvent.CAUSE_KNIGHT_STRIKE}[reaction.kind]
 			ctx.emit(GameEvent.REACTION_RESOLVED, Visibility.GM, {
-				"reaction_id": reaction.id, "owner_id": reaction.owner_id, "target_id": target,
-				"outcome": "declined" if target == GameState.NO_TARGET else "cursed",
+				"reaction_id": reaction.id, "owner_id": reaction.owner_id, "target_id": target, "kind": reaction.kind,
+				"outcome": "declined" if target == GameState.NO_TARGET else ("cursed" if reaction.kind == Reaction.KIND_CURSE else "killed"),
 			})
 			if target != GameState.NO_TARGET:
-				KillPipeline.request_kill(ctx, target, KillEvent.CAUSE_HUNTER_SHOT, KillEvent.SOURCE_PLAYER, reaction.owner_id)
+				KillPipeline.request_kill(ctx, target, cause, KillEvent.SOURCE_PLAYER, reaction.owner_id)
 			_finish_dawn_if_ready(ctx)
 
 

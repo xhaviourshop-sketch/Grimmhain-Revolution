@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 21 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 21 |
+| im RoleCatalog vorhandene Rollen | 24 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 24 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 19 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 22 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -68,6 +68,9 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 19 | `wahnsinniger-kutscher` | Wahnsinniger Kutscher / Mad Coachman (Rollentext) | village | nein | – | `kill_pipeline.gd` (`_coachman_crash`), `seats.gd` | `test_seat_roles.gd`, fuzz | RM-DR-003, RM-DR-116.1, DECISION-LOG „Rollenaudit · Waldläufer, Doktor, Sitznachbarn …“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 20 | `nachtwaechter` | Nachtwächter / Night Warden (Rollentext) | village | nein | – | `rules_engine.gd` (`_ring_alarm_bells`), `seats.gd` | `test_seat_roles.gd`, fuzz | RM-DR-003, RM-DR-102.1, DECISION-LOG „Rollenaudit · Waldläufer, Doktor, Sitznachbarn …“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 21 | `dorfwache` | Dorfwache / Village Guard (Rollentext) | village | nein | – | `kill_pipeline.gd` (`_prevented_by_protection`) | `test_seat_roles.gd`, fuzz | Rollentext; RM-DR-119 folgt mit Giftwolf/Seuchenwolf/Rudelvater | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 22 | `besessener-wolf` | Besessener Wolf / Possessed Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `kill_pipeline.gd` (`_queue_reaction`), `reaction.gd` (`possessed`) | `test_ritter_besessener_faehrtenleser.gd`, fuzz | RM-DR-124.1, DECISION-LOG „Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 23 | `ritter` | Ritter / Knight (Rollentext) | village | nein | – | `kill_pipeline.gd` (`_knight_strike`), `seats.gd` (`closest_wolves`) | `test_ritter_besessener_faehrtenleser.gd`, fuzz | RM-DR-136.1, DECISION-LOG „Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 24 | `faehrtenleser` | Fährtenleser / Tracker (Rollentext) | village | nein | 52 | `info_steps.gd` (Stufe `use`), `seats.gd` (`wolf_direction`) | `test_ritter_besessener_faehrtenleser.gd`, fuzz | RM-DR-146.1/.2, DECISION-LOG „Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -185,6 +188,21 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-27):** Der Rudelangriff tötet sie nicht: `KillPrevented` mit Quelle `dorfwache` (nur Spielleiter), zusammen mit Schutzengel und Waldhexenrettung genau ein Abfangen. Gift, Hinrichtung und Korrekturen töten sie. Die Waldhexe sieht sie als Opfer und darf (verbrauchend) heilen. Lehrling-Erbe wirkt sofort.
 - **Tests:** `test_seat_roles.gd`: Rudel, Lynch, Gift, Heilung, Lehrling-Erbe.
 - **Grenzen:** RM-DR-119.1/.2 (Giftwolf, Seuchenwolf, Rudelvater) betreffen Rollen, die noch fehlen; im heutigen Kern gibt es keinen anderen Wolfsangriff.
+
+### 4.22 `besessener-wolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Wolfsfraktion, Rudel. Stirbt er mit Folgen, während unmittelbar vorher mindestens 5 Personen leben (er eingeschlossen), wird die Reaktion `possessed` eingereiht: eine andere lebende Person (auch ein Wolf) mitreißen (`POSSESSED_DRAG`) oder verzichten; Tag sofort, Nacht am Morgen; einmal je Leben.
+- **Tests:** Lynch mit Wahl, Schwelle 5/4, Nachttod, Verzicht, Wiederbelebung.
+- **Grenzen:** Schilde späterer Rollen folgen mit diesen.
+
+### 4.23 `ritter`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Stirbt er durch den Rudelangriff, stirbt sofort der nächste Wolf (Abstand in Sitzen einschließlich toter Plätze, `KNIGHT_STRIKE`); bei Gleichstand Reaktion `knight` mit Pflichtwahl des Spielleiters unter den gleich nahen Wölfen; einmal je Leben.
+- **Tests:** tote Plätze zählen, Gleichstand, Gift und Lynch lösen nicht aus, Wiederbelebung.
+- **Grenzen:** RM-DR-136.2/.3 (Verfluchte, Fenrir) folgen mit diesen Rollen.
+
+### 4.24 `faehrtenleser`
+- **Belegt umgesetzt (Rollenaudit 2026-09-27):** Jede Nacht „jetzt nutzen?“ (Priorität 52) bis zur Nutzung, danach kein Schritt; Wiederbelebung setzt zurück. Richtung des nächsten Wolfs: `left` = Uhrzeigersinn aus Sicht der Person, `right`, `equal` bei Gleichstand; Abstand einschließlich toter Plätze. `TrackerRevealed` nur an ihn.
+- **Tests:** links/rechts/gleich weit, tote Plätze, Verzicht und erneute Frage, keine Frage nach Nutzung, Wiederbelebung, Ladeprüfung.
+- **Grenzen:** Gegenprüfung am Tablet, ob die Sitzansicht im Uhrzeigersinn läuft (RM-DR-146.1).
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

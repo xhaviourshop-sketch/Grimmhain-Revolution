@@ -521,6 +521,24 @@ msgstr "Wahnsinniger Kutscher"
 msgid "ui.role.wahnsinniger_kutscher.short"
 msgstr "Wird er hingerichtet, sterben seine Nachbarn mit."
 
+msgid "ui.role.ritter.name"
+msgstr "Ritter"
+
+msgid "ui.role.ritter.short"
+msgstr "Stirbt er durch die Werwölfe, stirbt der nächste Wolf mit."
+
+msgid "ui.role.faehrtenleser.name"
+msgstr "Fährtenleser"
+
+msgid "ui.role.faehrtenleser.short"
+msgstr "Erfährt einmal, auf welcher Seite der nächste Wolf sitzt."
+
+msgid "ui.role.besessener_wolf.name"
+msgstr "Besessener Wolf"
+
+msgid "ui.role.besessener_wolf.short"
+msgstr "Wolf im Rudel, reißt bei seinem Tod eine Person mit."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

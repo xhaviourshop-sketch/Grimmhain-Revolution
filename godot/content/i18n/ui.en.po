@@ -521,6 +521,24 @@ msgstr "Mad Coachman"
 msgid "ui.role.wahnsinniger_kutscher.short"
 msgstr "If executed, his neighbours die with him."
 
+msgid "ui.role.ritter.name"
+msgstr "Knight"
+
+msgid "ui.role.ritter.short"
+msgstr "If killed by the werewolves, the nearest wolf dies too."
+
+msgid "ui.role.faehrtenleser.name"
+msgstr "Tracker"
+
+msgid "ui.role.faehrtenleser.short"
+msgstr "Learns once on which side the nearest wolf sits."
+
+msgid "ui.role.besessener_wolf.name"
+msgstr "Possessed Wolf"
+
+msgid "ui.role.besessener_wolf.short"
+msgstr "Pack wolf that drags one person along when dying."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

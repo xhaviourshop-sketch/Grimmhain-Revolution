@@ -43,7 +43,8 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	if trigger_effects:
 		WolfChildRules.on_death(ctx, record)
 		ApprenticeRules.on_master_death(ctx, record)
-		_queue_reaction(ctx, target, record)
+		_queue_reaction(ctx, target, record, s.players.size() - dead_before)
+		_knight_strike(ctx, target, record)
 	WinRules.record_death_seeker(ctx, target, record, dead_before)
 	if trigger_effects:
 		_coachman_crash(ctx, target, record)
@@ -92,20 +93,45 @@ static func _coachman_crash(ctx: RuleContext, target: Player, record: KillEvent)
 
 ## Reiht die Todesreaktion der Rolle ein (falls vorhanden). Reihenfolge = Einreihung.
 ## Höchstens eine Todesreaktion pro Person und Rolle in der Partie (`ability_uses`).
-static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent) -> void:
+## `alive_before`: Lebende unmittelbar vor diesem Tod, die Person eingeschlossen (Besessener Wolf).
+static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent, alive_before: int) -> void:
 	var kind := RoleCatalog.death_reaction(target.role_id)
 	if kind == &"":
+		return
+	if kind == Reaction.KIND_POSSESSED and alive_before < RoleCatalog.POSSESSED_MIN_LIVING:
 		return
 	var use_key := "%s:death_reaction" % target.role_id
 	if int(target.ability_uses.get(use_key, 0)) >= 1:
 		return
 	target.ability_uses[use_key] = int(target.ability_uses.get(use_key, 0)) + 1
+	_enqueue(ctx, target.id, kind, record.order_index)
+
+
+## Ritter: stirbt er durch den Rudelangriff, stirbt sofort der nächste Wolf (Abstand in Sitzen
+## einschließlich toter Plätze); bei Gleichstand wählt der Spielleiter (Reaktion). Einmal je Leben.
+static func _knight_strike(ctx: RuleContext, target: Player, record: KillEvent) -> void:
+	if target.role_id != RoleCatalog.RITTER or record.cause != KillEvent.CAUSE_NIGHT_KILL:
+		return
+	var use_key := "ritter:death_reaction"
+	if int(target.ability_uses.get(use_key, 0)) >= 1:
+		return
+	var wolves := Seats.closest_wolves(ctx.state, target.id)
+	if wolves.is_empty():
+		return
+	target.ability_uses[use_key] = 1
+	if wolves.size() == 1:
+		request_kill(ctx, wolves[0], KillEvent.CAUSE_KNIGHT_STRIKE, KillEvent.SOURCE_PLAYER, target.id)
+	else:
+		_enqueue(ctx, target.id, Reaction.KIND_KNIGHT, record.order_index)
+
+
+static func _enqueue(ctx: RuleContext, owner_id: int, kind: StringName, trigger_order: int) -> void:
 	var s := ctx.state
 	var reaction := Reaction.new()
 	reaction.id = s.next_reaction_id
 	s.next_reaction_id += 1
 	reaction.kind = kind
-	reaction.owner_id = target.id
-	reaction.trigger_order = record.order_index
+	reaction.owner_id = owner_id
+	reaction.trigger_order = trigger_order
 	s.reactions.append(reaction)
 	ctx.emit(GameEvent.REACTION_QUEUED, Visibility.GM, {"reaction": reaction.to_dict()})

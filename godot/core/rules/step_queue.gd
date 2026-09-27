@@ -80,6 +80,7 @@ const SKIPPABLE_BY_KIND := {
 	BOUND: false,                      # Pflichtinformation Nacht 1 (wie Orakel)
 	RoleCatalog.WALDLAEUFER: false,    # Pflichtinformation (wie Orakel)
 	RoleCatalog.DOKTOR: false,         # Pflichtprüfung (wie Orakel)
+	RoleCatalog.FAEHRTENLESER: false,  # Verzicht ist eine Antwort im Prompt
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -114,6 +115,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		if p.role_id == RoleCatalog.LEHRLING and not ApprenticeRules.needs_selection(s, id):
 			continue
 		if RoleCatalog.first_night_only(p.role_id) and s.night_number != 1:
+			continue
+		if p.role_id == RoleCatalog.FAEHRTENLESER and InfoSteps.tracker_used(p):
 			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	for id: int in s.alive_ids():
@@ -156,8 +159,10 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # Vorbild schon gesetzt oder verwandelt
 	if step_role(key) == RoleCatalog.LEHRLING and not (ApprenticeRules.needs_selection(s, actor) and ApprenticeRules.can_select(s, actor)):
 		return &"no_decision"  # schon gebunden oder weniger als drei andere Lebende
-	if step_role(key) == RoleCatalog.ORAKEL and s.alive_ids().size() < 2:
-		return &"no_decision"  # niemand außer dem Orakel lebt
+	if [RoleCatalog.ORAKEL, RoleCatalog.SCHUTZENGEL, RoleCatalog.WOLFSKIND].has(step_role(key)) and s.alive_ids().size() < 2:
+		return &"no_decision"  # Pflichtwahl einer anderen lebenden Person unmöglich
+	if step_role(key) == RoleCatalog.FAEHRTENLESER and InfoSteps.tracker_used(s.players[actor]):
+		return &"no_decision"  # in diesem Leben schon genutzt
 	if step_role(key) == RoleCatalog.DOKTOR and s.alive_ids().size() < 3:
 		return &"no_decision"  # keine zwei anderen Lebenden
 	return &""
@@ -199,6 +204,10 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.actor_id = s.reactions[0].owner_id
 		prompt.allowed_ids.erase(prompt.actor_id)
 		prompt.cancellable = false
+		if s.reactions[0].kind == Reaction.KIND_KNIGHT:
+			# Ritter bei Gleichstand: Pflichtwahl unter den jetzt gleich nahen Wölfen.
+			prompt.allowed_ids = Seats.closest_wolves(s, prompt.actor_id)
+			prompt.min_count = 1 if not prompt.allowed_ids.is_empty() else 0
 	elif step_kind(step_id) == RoleCatalog.WALDHEXE:
 		# Waldhexe: mehrstufige, atomare Kette (WitchStep).
 		WitchStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
@@ -208,7 +217,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.LEHRLING:
 		# Lehrling: Kandidaten, Option, Bestätigung (ApprenticeRules).
 		ApprenticeRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
-	elif [RoleCatalog.DORFCHRONISTIN, RoleCatalog.WALDLAEUFER, RoleCatalog.DOKTOR].has(step_kind(step_id)):
+	elif [RoleCatalog.DORFCHRONISTIN, RoleCatalog.WALDLAEUFER, RoleCatalog.DOKTOR, RoleCatalog.FAEHRTENLESER].has(step_kind(step_id)):
 		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == BOUND:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)

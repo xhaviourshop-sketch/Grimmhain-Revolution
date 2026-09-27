@@ -54,6 +54,8 @@ const DOCTOR_RECORDED := &"DoctorRecorded"      ## Blutprobe des Doktors (nur Sp
 const DOCTOR_REVEALED := &"DoctorRevealed"      ## Ergebnis „gleiches Team“ für den Doktor (actor)
 const ALARM_BELLS := &"AlarmBells"              ## Glocken des Nachtwächters (öffentlich, ohne Namen)
 const ALARM_BELLS_DETAIL := &"AlarmBellsDetail"  ## auslösende Nachtwächter und Nachbarn (nur Spielleiter)
+const TRACKER_RECORDED := &"TrackerRecorded"  ## Richtung für den Fährtenleser (nur Spielleiter)
+const TRACKER_REVEALED := &"TrackerRevealed"  ## dieselbe Richtung für den Fährtenleser (actor)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

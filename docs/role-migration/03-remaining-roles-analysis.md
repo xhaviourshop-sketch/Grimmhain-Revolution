@@ -36,7 +36,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
 | [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
 | [`schattenhund`](#schattenhund) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | globale Regeländerung | Einmalfähigkeit | S / mittel | K8 | B |
-| [`besessener-wolf`](#besessener-wolf) | Wölfe | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Tötung | M / mittel | K4 | A |
 | [`fenrir`](#fenrir) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik, Einmalfähigkeit | M / mittel | K4 | – |
 | [`kutscher`](#kutscher) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | Rollenwechsel, Zufallsmechanik | L / hoch | K13 | – |
 | [`seelentauscher`](#seelentauscher) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | Einmalfähigkeit, Fraktionswechsel | L / kritisch | K12 | – |
@@ -48,7 +47,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`blutwolf`](#blutwolf) | Wölfe | `decision-required` | `legacy-verified` | `assisted` | sonstige Spezialmechanik | Sitzpositionsmechanik | S / niedrig | K14 | – |
 | [`albtraumwolf`](#albtraumwolf) | Wölfe | `decision-required` | `legacy-broken` | `automatic` | sonstige Spezialmechanik | globale Regeländerung | S / mittel | K8 | – |
 | [`cerberus`](#cerberus) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | sonstige Spezialmechanik | S / mittel | K4 | B |
-| [`ritter`](#ritter) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Tötung | M / mittel | K3 | A |
 | [`rotkaeppchen`](#rotkaeppchen) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik | L / hoch | K10 | – |
 | [`kopfgeldjaeger`](#kopfgeldjaeger) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | Hinrichtungsreaktion, Zufallsmechanik | M / mittel | K7 | B |
 | [`koenig`](#koenig) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Zufallsmechanik | S / mittel | K7 | – |
@@ -56,7 +54,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
-| [`faehrtenleser`](#faehrtenleser) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Sitzpositionsmechanik, Einmalfähigkeit | S / mittel | K3 | – |
 | [`schutzgeist`](#schutzgeist) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Schutz | Todesreaktion, Informationsrolle | M / mittel | K5 | – |
 | [`waechter-am-tor`](#waechter-am-tor) | Dorf | `decision-required` | `legacy-verified` | `automatic` | globale Regeländerung | Rollenwechsel | M / hoch | K12 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
@@ -494,27 +491,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. --- |
 | Detail | [Dossier](dossiers/wolves-b.md#schattenhund) |
 
-### `besessener-wolf`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Besessener Wolf / Possessed Wolf |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / III / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Normalpfad (einzelner Tod ohne Abbruch) ist korrekt, aber belegte Fehler verhindern die Mitnahme dauerhaft nach einem Abbruch, verschieben sie bei Liebeskummer in einen falschen Zeitpunkt und zeigen bei jedem Einsatz einen Rohschlüssel. Ein 1:1-Golden-Test würde Fehler festschreiben. |
-| DE/EN-Vergleich | JA, semantisch gleich; beide lassen offen, ob "≥5 Spieler" lebende oder alle Spieler meint. |
-| Automationsziel | `automatic`: (Reaktion mit Pflicht-Prompt). |
-| Mechanik | primär: Todesreaktion; sekundär: Tötung |
-| Größe / Risiko | M / mittel. Mechanik einfach, Legacy zeigt aber, dass Reaktionsreihenfolge und Unterbrechbarkeit fehleranfällig sind. |
-| Vorhandene Godot-Systeme | Reaktionswarteschlange (neue Reaktionsart "drag", persistiert, nicht abbrechbar oder mit Verzicht), PendingPrompt, KillPipeline (Ursache `BESESSENER_WOLF`, Schilde), StateCodec (offene Reaktion speichern), Replay, Ereignis-Sichtbarkeit, WinRules. |
-| Neue Systeme | keine über die Reaktionsart hinaus (Warteschlange existiert). |
-| Abhängigkeiten | Loki (Liebeskummer-Pfad), Schwarze Witwe und Giftwolf (Morgen-Tode), Dämonischer Wolf (Reihenfolge), Rudelvater, Nekromant, Kartenschlucker, Hades, Schattenwanderer, Parasit (Schilde). |
-| Widersprüche | RM-C-028 Schwelle "≥5 Spieler" |
-| Entscheidungen | RM-DR-124 (Rolle); übergreifend RM-DR-004, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K4 / ab Option A |
-| Belegsicherheit | hoch für Bedingung, Reihenfolge, F12. Mittel für Bug 3 und 4 (aus Codefluss abgeleitet, nicht im Browser ausgeführt). --- |
-| Detail | [Dossier](dossiers/wolves-b.md#besessener-wolf) |
-
 ### `fenrir`
 
 | Feld | Inhalt |
@@ -746,27 +722,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. --- ## Gruppenübergreifende Beobachtungen 1. **Nur drei der acht Rollen haben einen Nachtschritt** (Schattenhund 0.7 once, Albtraumwolf 2.1, Schwarze Witwe 2.8). Dämonischer Wolf und Besessener Wolf sind reine Todesreaktionen, Fenrir und Cerberus reine … |
 | Detail | [Dossier](dossiers/wolves-b.md#cerberus) |
 
-### `ritter`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Ritter / Knight |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / I / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Der Kernfall (Rudel tötet Ritter, nächster Wolf stirbt) ist korrekt umgesetzt, der Text verspricht aber jeden Nachttod, der Code nur eine Whitelist; Zielmenge über `cursedWolfAura` und Fenrir-Ausnahme sind nicht im Text. |
-| DE/EN-Vergleich | JA. Zeitpunkt (Nacht), Ziel (nächstliegender Werwolf), Häufigkeit (nicht genannt) identisch. |
-| Automationsziel | `automatic`: Keine Entscheidung des Spielers, Ziel deterministisch aus Sitzordnung; SL sollte das Ergebnis vor der Veröffentlichung sehen (Vorschau im Morgen). |
-| Mechanik | primär: Todesreaktion; sekundär: Sitzpositionsmechanik, Tötung |
-| Größe / Risiko | M / mittel. Automatik ist einfach, aber Ursachenliste, Zielbestimmung (Wolf-Definition, Gleichstand, Richtung) und Reihenfolge in der Morgenauflösung sind fehleranfällig. |
-| Vorhandene Godot-Systeme | KillPipeline (Ursache, Quelle), Reaktionswarteschlange (Morgenauflösung), WinRules/WinCandidate, Ereignis-Sichtbarkeit, StateCodec, Replay, GmCorrections (kill mit/ohne `trigger_effects`). |
-| Neue Systeme | Sitznachbarschaft (Abstands-/Richtungsfunktion über `GameState.seat_order`, das es bereits gibt, `godot/core/model/game_state.gd:22,64`), Ursachen-Attribut `triggers_knight`, einmaliger Verbrauch pro Person (`ability_uses` existiert, Schlüssel neu). |
-| Abhängigkeiten | Dämonischer Wolf (Verfluchte), Fenrir, Rudelvater (Ersttod-Rettung, PACKFATHER_KILL), Schattenwanderer (Umlenkung), Zeitwächter, Waldhexe, Hades, Schwarze Witwe, Giftwolf, Feuerteufel, Kartenschlucker, Nekromant-Schild, Frankenstein/Kutscher (Wiederbelebung), Rotkäppchen/Loki (Kettentode). |
-| Widersprüche | RM-C-132 Welche Nachttode lösen aus; RM-C-133 Verfluchter Dorfbewohner als Ziel; RM-C-134 Fenrir ab Stufe 3 |
-| Entscheidungen | RM-DR-136 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-004, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K3 / ab Option A |
-| Belegsicherheit | hoch. Nicht ausgeführt (nur statisch gelesen): tatsächliche Laufzeitreihenfolge von Protokolleinträgen; Wirkung der doppelten Protokollierung (`gh:2408-2433` patcht `applyKill`, `core:445` loggt zusätzlich) nicht geprüft. --- |
-| Detail | [Dossier](dossiers/village-3.md#ritter) |
-
 ### `rotkaeppchen`
 
 | Feld | Inhalt |
@@ -913,27 +868,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch. Nicht verifiziert: ob irgendwo außerhalb von `js/`, `game.html`, `app/` Stimmen gewichtet werden (rg über das ganze Repo fand nur die Definition `ui:18`). --- |
 | Detail | [Dossier](dossiers/solos-b.md#hades) |
-
-### `faehrtenleser`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Fährtenleser / Tracker |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III / 5.2 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Die Richtungsberechnung ist korrekt umgesetzt, aber die freiwillige Einmalnutzung ("darf") ist nicht abgebildet und der Assistent verbraucht sie automatisch. |
-| DE/EN-Vergleich | JA. Weckung (jede Nacht), Optionalität ("darf"/"may"), Häufigkeit (einmal im Spiel), Ergebnis (links/rechts) identisch. |
-| Automationsziel | `assisted`: Spieler entscheidet ob; Richtung berechnet der Kern. |
-| Mechanik | primär: Informationsrolle; sekundär: Sitzpositionsmechanik, Einmalfähigkeit |
-| Größe / Risiko | S / mittel. Berechnung einfach, Richtungsdefinition am Tisch fehleranfällig. |
-| Vorhandene Godot-Systeme | PendingPrompt (Ja/Nein, abbrechbar), StepQueue, InfoRecord, `ability_uses`, StateCodec, Replay, Ereignis-Sichtbarkeit. |
-| Neue Systeme | Sitznachbarschaft (Abstand und Richtung über `GameState.seat_order`), InfoRecord-Variante "Richtung". |
-| Abhängigkeiten | alle Wolfsrollen, Fenrir, Dämonischer Wolf (Verfluchte), Wolfskind/Lehrling (Verwandlung), Doppelspion, Ritter (gemeinsame Richtungsdefinition), Blockaderollen. |
-| Widersprüche | RM-C-153 Freiwilligkeit; RM-C-154 Richtungsdefinition; RM-C-155 Gleichstand; RM-C-156 Fenrir Stufe 3 |
-| Entscheidungen | RM-DR-146 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K3 / in keiner Option |
-| Belegsicherheit | hoch für Berechnung; die Zuordnung Bildschirm-Uhrzeigersinn zu "links aus Spielersicht" ist abgeleitet (Winkel `field-pixi.js:544-548`), nicht am Tisch geprüft. --- |
-| Detail | [Dossier](dossiers/village-3.md#faehrtenleser) |
 
 ### `schutzgeist`
 

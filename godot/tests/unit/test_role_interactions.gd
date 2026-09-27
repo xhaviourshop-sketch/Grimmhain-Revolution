@@ -487,3 +487,20 @@ func test_revive_resets_all_limited_abilities() -> void:
 		return
 	assert_eq(s.reactions.size(), 1, "Todesreaktion nach Wiederbelebung erneut")
 	assert_true(s.players[4].ever_nominated, "Nominierungsstatus bleibt")
+
+
+## Regression (Fuzztest): Lebt außer Schutzengel bzw. Wolfskind niemand mehr, kann ihr Pflichtschritt
+## („eine andere lebende Person“) nicht beantwortet werden; er entfällt protokolliert wie beim Orakel
+## (Decision Log: „Ein … Schritt ohne mögliche Entscheidung entfällt ebenso“), statt die Nacht zu blockieren.
+func test_guard_and_wolf_child_without_other_living_are_dropped() -> void:
+	for role: String in ["schutzengel", "wolfskind"]:
+		var s := _do(GameState.new(), _start(["werwolf", role, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), [], [], "Start")
+		for id: int in [1, 3, 4, 5, 6]:
+			s = apply_ok(s, _gm("kill", {"target_id": id, "trigger_effects": false}), "%s: Tod %d" % [role, id]).state
+			if not s.open_candidates().is_empty():
+				s = apply_ok(s, Command.create(Command.REJECT_WIN, {"reason": "weiter"}), "Ablehnung").state
+		var night := apply_ok(s, Command.start_night(), "%s: Nacht allein" % role)
+		assert_eq(RulesEngine.next_step_id(night.state), "", "%s: kein unbeantwortbarer Schritt" % role)
+		var dropped := events_of_type(night.events, "StepDropped")
+		assert_true(dropped.size() == 1 and String(dropped[0].data["reason"]) == "no_decision", "%s: protokolliert entfallen" % role)
+		apply_ok(night.state, Command.end_night(), "%s: Nacht endet" % role)

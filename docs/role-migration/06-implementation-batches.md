@@ -212,7 +212,11 @@ Siehe §3.
 
 ### K3 · Sitznachbarschaft
 
-**Rollen Charge K3 (3):** `ritter`, `faehrtenleser`, `detektiv`
+**Rollen Charge K3 (1):** `detektiv`
+
+**Nachtrag Rollenaudit:** `faehrtenleser` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `ritter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `nachtwaechter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -229,7 +233,9 @@ Siehe §3.
 
 ### K4 · Todes- und Hinrichtungsreaktionen
 
-**Rollen Charge K4 (4):** `besessener-wolf`, `cerberus`, `fenrir`, `henker`
+**Rollen Charge K4 (3):** `cerberus`, `fenrir`, `henker`
+
+**Nachtrag Rollenaudit:** `besessener-wolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Wirkung beim eigenen Tod oder bei einer Hinrichtung.
 - **Neue Systeme:** N-06 (Reaktionsart „Mitnahme“), N-07 (Abwehr einer Hinrichtung), N-10 (Köpfe, Stufen).

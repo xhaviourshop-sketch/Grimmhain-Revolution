@@ -21,6 +21,7 @@ const OWNER_CHRONICLER := &"dorfchronistin"
 const OWNER_BOUND := &"die-gebundenen"
 const OWNER_RANGER := &"waldlaeufer"
 const OWNER_DOCTOR := &"doktor"
+const OWNER_TRACKER := &"faehrtenleser"
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0

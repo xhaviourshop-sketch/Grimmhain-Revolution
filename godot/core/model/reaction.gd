@@ -5,6 +5,9 @@ extends RefCounted
 ## Reihenfolge: nach Einreihung (aufsteigende `id`).
 
 const KIND_CURSE := &"curse"  ## eine lebende Person verfluchen oder verzichten (Sensenträger-Muster)
+const KIND_POSSESSED := &"possessed"  ## Besessener Wolf: eine andere lebende Person mitreißen oder verzichten
+const KIND_KNIGHT := &"knight"        ## Ritter bei Gleichstand: einen der gleich nahen Wölfe wählen (Pflicht)
+const KINDS: Array[StringName] = [KIND_CURSE, KIND_POSSESSED, KIND_KNIGHT]
 
 var id: int = 0
 var kind: StringName = KIND_CURSE
@@ -22,6 +25,6 @@ static func from_dict(d: Dictionary) -> Reaction:
 	r.kind = StringName(DictRead.get_string(d, "kind"))
 	r.owner_id = DictRead.get_int(d, "owner_id", -1)
 	r.trigger_order = DictRead.get_int(d, "trigger_order")
-	if r.id < 1 or r.kind != KIND_CURSE or r.owner_id < 1:
+	if r.id < 1 or not KINDS.has(r.kind) or r.owner_id < 1:
 		return null
 	return r

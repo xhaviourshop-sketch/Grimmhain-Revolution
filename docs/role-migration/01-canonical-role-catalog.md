@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 21 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 24 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 51 |
+| fehlend, Entscheidung nötig (`decision-required`) | 48 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 51 fehlende) | 12 |
-| Legacy-Befund `legacy-contradictory` (nur 51 fehlende) | 25 |
-| Legacy-Befund `legacy-broken` (nur 51 fehlende) | 10 |
-| Legacy-Befund `not-found` (nur 51 fehlende) | 4 |
+| Legacy-Befund `legacy-verified` (nur 48 fehlende) | 12 |
+| Legacy-Befund `legacy-contradictory` (nur 48 fehlende) | 23 |
+| Legacy-Befund `legacy-broken` (nur 48 fehlende) | 9 |
+| Legacy-Befund `not-found` (nur 48 fehlende) | 4 |
 
-<!-- check:counts total=72 implemented=21 remaining=51 -->
+<!-- check:counts total=72 implemented=24 remaining=48 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -70,7 +70,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 32 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Wölfe | II | – | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | M / hoch | K12 | – | [03](03-remaining-roles-analysis.md#daemonischer-wolf) · [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
 | 33 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Fehlinformation | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 34 | `schattenhund` | Schattenhund / Shadow Hound | Wölfe | III | 0.7 (once) | `decision-required` | `legacy-contradictory` | `automatic` | globale Regeländerung | S / mittel | K8 | B | [03](03-remaining-roles-analysis.md#schattenhund) · [Dossier](dossiers/wolves-b.md#schattenhund) |
-| 35 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Wölfe | III | – | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | M / mittel | K4 | A | [03](03-remaining-roles-analysis.md#besessener-wolf) · [Dossier](dossiers/wolves-b.md#besessener-wolf) |
+| 35 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Todesreaktion | M / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#besessener-wolf) |
 | 36 | `fenrir` | Fenrir / Fenrir | Wölfe | IV | – | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | M / mittel | K4 | – | [03](03-remaining-roles-analysis.md#fenrir) · [Dossier](dossiers/wolves-b.md#fenrir) |
 | 37 | `kutscher` | Kutscher / Coachman | Dorf | II | 3.8 | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | L / hoch | K13 | – | [03](03-remaining-roles-analysis.md#kutscher) · [Dossier](dossiers/village-2.md#kutscher) |
 | 38 | `seelentauscher` | Seelentauscher / Soul Swapper | Dorf | II | 8.0 (once) | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | L / kritisch | K12 | – | [03](03-remaining-roles-analysis.md#seelentauscher) · [Dossier](dossiers/village-2.md#seelentauscher) |
@@ -82,7 +82,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 44 | `blutwolf` | Blutwolf / Blood Wolf | Wölfe | II | – | `decision-required` | `legacy-verified` | `assisted` | sonstige Spezialmechanik | S / niedrig | K14 | – | [03](03-remaining-roles-analysis.md#blutwolf) · [Dossier](dossiers/wolves-b.md#blutwolf) |
 | 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | III, IV | 2.1 | `decision-required` | `legacy-broken` | `automatic` | sonstige Spezialmechanik | S / mittel | K8 | – | [03](03-remaining-roles-analysis.md#albtraumwolf) · [Dossier](dossiers/wolves-b.md#albtraumwolf) |
 | 46 | `cerberus` | Cerberus / Cerberus | Wölfe | IV | – | `decision-required` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | S / mittel | K4 | B | [03](03-remaining-roles-analysis.md#cerberus) · [Dossier](dossiers/wolves-b.md#cerberus) |
-| 47 | `ritter` | Ritter / Knight | Dorf | I | – | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | M / mittel | K3 | A | [03](03-remaining-roles-analysis.md#ritter) · [Dossier](dossiers/village-3.md#ritter) |
+| 47 | `ritter` | Ritter / Knight | Dorf | I | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Todesreaktion | M / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#ritter) |
 | 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | III | 7.4 | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | L / hoch | K10 | – | [03](03-remaining-roles-analysis.md#rotkaeppchen) · [Dossier](dossiers/village-3.md#rotkaeppchen) |
 | 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | I | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Einzelsieg | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#selbstmoerder) |
 | 50 | `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter | Dorf | IV | 3.2 | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | M / mittel | K7 | B | [03](03-remaining-roles-analysis.md#kopfgeldjaeger) · [Dossier](dossiers/village-3.md#kopfgeldjaeger) |
@@ -92,7 +92,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 54 | `kartenschlucker` | Kartenschlucker / The Collector | Einzelsieg | III, IV | 4.0 | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | L / hoch | K15 | – | [03](03-remaining-roles-analysis.md#kartenschlucker) · [Dossier](dossiers/solos-b.md#kartenschlucker) |
 | 55 | `hades` | Hades / Hades | Einzelsieg | IV | 9.9 | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | M / mittel | K15 | – | [03](03-remaining-roles-analysis.md#hades) · [Dossier](dossiers/solos-b.md#hades) |
 | 56 | `doktor` | Doktor / Doctor | Dorf | IV | 5.0 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#doktor) |
-| 57 | `faehrtenleser` | Fährtenleser / Tracker | Dorf | III | 5.2 | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | S / mittel | K3 | – | [03](03-remaining-roles-analysis.md#faehrtenleser) · [Dossier](dossiers/village-3.md#faehrtenleser) |
+| 57 | `faehrtenleser` | Fährtenleser / Tracker | Dorf | III | 5.2 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Informationsrolle | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#faehrtenleser) |
 | 58 | `waldlaeufer` | Waldläufer / Ranger | Dorf | IV | 5.4 | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#waldlaeufer) |
 | 59 | `schutzgeist` | Schutzgeist / Guardian Spirit | Dorf | II | 5.6 | `decision-required` | `legacy-broken` | `automatic` | Schutz | M / mittel | K5 | – | [03](03-remaining-roles-analysis.md#schutzgeist) · [Dossier](dossiers/village-4.md#schutzgeist) |
 | 60 | `dorfchronistin` | Dorfchronistin / Village Chronicler | Dorf | III | 0.3 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#dorfchronistin) |
