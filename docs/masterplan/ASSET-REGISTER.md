@@ -41,7 +41,7 @@ Es gibt keine Pfad-Ausnahme: Jede neue Mediendatei braucht eine Registerzeile im
 
 Nur der Product Owner setzt `freigegeben`. Claude trägt diesen Status nie selbst ein.
 
-Stand 2026-09-27: 274 Dateien, **0 freigegeben**, 228 ungeklärt, 24 ki-nachgewiesen, 1 gesperrt (Nachtmusik), 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 17 prüfartefakt. Die neun kurzen Legacy-Sounds standen bis zur Korrektur vom 27.09. ohne Beleg auf `gesperrt`.
+Stand 2026-09-27 (lokale Integration, Werkzeugausgabe): 299 Dateien, **0 freigegeben**, 228 ungeklärt, 24 ki-nachgewiesen, 1 gesperrt (Nachtmusik), 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 42 prüfartefakt. Die neun kurzen Legacy-Sounds standen bis zur Korrektur vom 27.09. ohne Beleg auf `gesperrt`.
 
 | Asset-ID | Datei | Zweck | Ersteller/Dienst | Erstellungsdatum | Tarif/Modell | Lizenzquelle | Bearbeitung | Releasefreigabe | Ersatz nötig |
 |---|---|---|---|---|---|---|---|---|---|

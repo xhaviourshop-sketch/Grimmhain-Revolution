@@ -2,6 +2,8 @@
 
 Übergabe an Grimmhain-3 für die spätere Aufnahme in das gemeinsame Assetregister. Dieser Branch ändert das Register, sein Prüfwerkzeug und dessen CI nicht; die Integration ist offen.
 
+Integriert am 27.09.2026 im lokalen Branch `integration/cloud-to-local-20260927`: alle 27 Dateien gegen SHA-256 und Größe dieser Liste geprüft (identisch), 19 Registerzeilen ergänzt, 8 aktualisiert; Status weiterhin `prüfartefakt`, keine Freigabe.
+
 - Branch: `claude/sleepy-babbage-u2o0i2`
 - Vergleichsbasis: `250d3d2` (Branchbasis; `origin/main` enthält diese Dateien noch nicht)
 - Umfang: alle gegenüber der Basis neuen oder veränderten Mediendateien (nur PNG; keine Audio-, Schrift- oder Grafikassets)
