@@ -159,7 +159,7 @@ BLOCKER: keiner.
 ## 2026-09-27 — Claude-Arbeitsstack (Godot-Neuentwicklung)
 Hinweis: Die Phasen oben betreffen die Legacy-React-App. Aktive Entwicklung ist `godot/` (siehe `CLAUDE.md`).
 Status: ERLEDIGT
-Commit: `6af60d4` (main, gepusht nach origin/main)
+Commit: `6af60d4` (main, gepusht nach origin/main); Doku-Nachtrag `a9fbf07` (PROGRESS/LESSONS, gepusht)
 Inhalt:
 - `CLAUDE.md` als Arbeitsvertrag neu gefasst; `DECISIONS.md` und `LESSONS.md` angelegt.
 - Projekt-Skills unter `.claude/skills/` (grimmhain-core/-tablet-ui/-assets/-handoff, godot-gdscript/-ui-control/-animation/-audio, art-bible, performance-optimization, verify-and-stop).
