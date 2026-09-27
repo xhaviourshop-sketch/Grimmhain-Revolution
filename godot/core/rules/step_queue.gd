@@ -12,7 +12,8 @@ extends RefCounted
 ## Der Nachtplan ist ein Snapshot bei StartNight: Rollenwechsel während der Nacht fügen
 ## keine Schritte hinzu. Ein persönlicher Schritt entfällt automatisch und protokolliert
 ## (`StepDropped`), wenn seine Person inzwischen tot ist, nicht mehr die geplante Rolle
-## hat oder (Waldhexe) keine Entscheidung mehr treffen kann.
+## hat oder (Waldhexe) keine Entscheidung mehr treffen kann. Der Rudelschritt entfällt,
+## wenn keine lebende Person mehr als Wolf zählt (G-PH-6).
 
 const PACK := &"pack"
 const STATUS_PENDING := &"pending"
@@ -123,7 +124,11 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 static func drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
 	if key == PACK:
-		return &""
+		# G-PH-6: ohne lebende Person, die als Wolf zählt, gibt es keinen Rudelschritt.
+		for id: int in s.alive_ids():
+			if s.players[id].counts_as_wolf:
+				return &""
+		return &"no_living_wolf"
 	var actor := step_actor(key)
 	if not s.players.has(actor) or not s.players[actor].alive:
 		return &"actor_dead"
