@@ -78,7 +78,7 @@ Kennzeichnung: **[B]** Beobachtung aus Datei oder Code, **[S]** Schlussfolgerung
 | `Cinzel-Regular.ttf`, `Cinzel-Bold.ttf` | 2020 The Cinzel Project Authors (github.com/NDISCOVER/Cinzel), Natanael Gama | SIL OFL 1.1 | Version 2.000 |
 | `IMFellEnglish-Regular.ttf`, `-Italic.ttf` | 2007 Igino Marini, **Reserved Font Name** „IM FELL English Roman/Italic" | SIL OFL 1.1 | Version 3.00 |
 
-- Die OFL verlangt, den Lizenztext mit der Schrift weiterzugeben. `OFL.txt` fehlt für beide Familien.
+- Die OFL verlangt, den Lizenztext mit der Schrift weiterzugeben. `OFL.txt` fehlt für beide Familien. **Nachtrag 2026-09-27:** Lizenztexte aus den offiziellen Projektquellen liegen jetzt bei (`assets/fonts/OFL-*.txt`), Registerstatus `lizenz-belegt`; Details in [`FONTS.md`](FONTS.md).
 - [S] Wegen des Reserved Font Name darf eine veränderte Fassung (z. B. Subset mit neuen Glyphen oder umbenannt) nicht unter „IM FELL" weitergegeben werden. Unverändert einbetten ist unkritisch.
 - Außerhalb des Repositorys: `app/index.html:16-21` lädt Cinzel Decorative, `game.html:13-15` Cinzel und Fondamento vom Google-Fonts-CDN. Für eine Offline-App müssen diese lokal und mit Lizenzdatei vorliegen, oder entfallen.
 - Eine Lesetextschrift für Bedientext fehlt (`05-visual-audio-direction.md` §2.3).

@@ -33,6 +33,7 @@ Es gibt keine Pfad-Ausnahme: Jede neue Mediendatei braucht eine Registerzeile im
 |---|---|---|
 | `freigegeben` | Herkunft, Lizenz und Tarif belegt, Product Owner hat nach Sicht- oder Hörprüfung freigegeben (`po_freigabe` = Datum und Name) | ja |
 | `ki-nachgewiesen` | KI-Herkunft per C2PA belegt; Tarif, Prompt, Bedingungen oder Freigabe fehlen | nein, höchstens Entwicklungsbuild |
+| `lizenz-belegt` | Lizenz belegt und vorgeschriebener Lizenztext liegt bei; Product-Owner-Freigabe steht aus | nein, erst nach Freigabe |
 | `lizenz-belegt-datei-fehlt` | Lizenz aus der Datei ablesbar, vorgeschriebener Lizenztext liegt nicht bei | nein |
 | `ungeklärt` | keine belastbare Herkunft | nein |
 | `gesperrt` | ausdrücklich gesperrt | nein |
@@ -40,7 +41,7 @@ Es gibt keine Pfad-Ausnahme: Jede neue Mediendatei braucht eine Registerzeile im
 
 Nur der Product Owner setzt `freigegeben`. Claude trägt diesen Status nie selbst ein.
 
-Stand 2026-09-27: 274 Dateien, **0 freigegeben**, 219 ungeklärt, 24 ki-nachgewiesen, 10 gesperrt, 4 lizenz-belegt-datei-fehlt, 17 prüfartefakt.
+Stand 2026-09-27: 274 Dateien, **0 freigegeben**, 219 ungeklärt, 24 ki-nachgewiesen, 10 gesperrt, 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 17 prüfartefakt.
 
 | Asset-ID | Datei | Zweck | Ersteller/Dienst | Erstellungsdatum | Tarif/Modell | Lizenzquelle | Bearbeitung | Releasefreigabe | Ersatz nötig |
 |---|---|---|---|---|---|---|---|---|---|

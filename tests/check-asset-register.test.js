@@ -128,3 +128,12 @@ test("Vorschlag für sonstige Medien bleibt ungeklärt und ist nicht prüfungsf�
   const check = checkRegister(rows, [rows[0].datei], hashes({ [rows[0].datei]: SHA }));
   assert.ok(check.problems.some((p) => /kebab-case/.test(p)), "TODO-Kennung muss auffallen");
 });
+
+test("lizenz-belegt verlangt eine vorhandene Lizenzdatei", () => {
+  const ok = row({ datei: "assets/fonts/A.ttf", status: "lizenz-belegt", lizenzquelle: "SIL OFL 1.1, Lizenztext assets/fonts/OFL-A.txt" });
+  const missing = row({ asset_id: "font-b", datei: "assets/fonts/B.ttf", status: "lizenz-belegt", lizenzquelle: "SIL OFL 1.1, Lizenztext assets/fonts/OFL-B.txt" });
+  const { rows } = parseRegister(`${HEADER}\n${ok}\n${missing}\n`);
+  const map = { "assets/fonts/A.ttf": SHA, "assets/fonts/B.ttf": SHA, "assets/fonts/OFL-A.txt": "c" };
+  const { problems } = checkRegister(rows, ["assets/fonts/A.ttf", "assets/fonts/B.ttf"], hashes(map));
+  assert.deepEqual(problems, ['Zeile 3 (assets/fonts/B.ttf): Lizenzdatei assets/fonts/OFL-B.txt fehlt']);
+});

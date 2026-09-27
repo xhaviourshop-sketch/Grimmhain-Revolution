@@ -16,9 +16,10 @@
 //     gleich viele Spalten, Zellen enthalten keine unsichtbaren Steuerzeichen.
 //     Zeilenenden LF und CRLF sind beide gültig (Windows-Checkout mit text=auto).
 //  4. Pflichtfelder sind gefüllt, der Status stammt aus der erlaubten Liste.
-//  5. Status "freigegeben" verlangt eine eingetragene Product-Owner-Freigabe und
+//  5. Status "lizenz-belegt" verlangt eine vorhandene Lizenzdatei (Pfad in lizenzquelle).
+//  6. Status "freigegeben" verlangt eine eingetragene Product-Owner-Freigabe und
 //     eine geklärte Lizenzquelle.
-//  6. Im Godot-Projekt (godot/) liegt nur, was "freigegeben" ist.
+//  7. Im Godot-Projekt (godot/) liegt nur, was "freigegeben" ist.
 
 const fs = require("fs");
 const path = require("path");
@@ -43,6 +44,7 @@ const STATUS = new Set([
   "freigegeben",               // alle Nachweise vorhanden, PO hat nach Sicht-/Hörprüfung freigegeben
   "ki-nachgewiesen",           // KI-Herkunft per C2PA belegt, Bedingungen/Prompt/PO-Freigabe fehlen
   "lizenz-belegt-datei-fehlt", // Lizenz aus der Datei ablesbar, Lizenztext liegt nicht bei
+  "lizenz-belegt",             // Lizenz belegt und Lizenztext liegt bei, PO-Freigabe steht aus
   "ungeklärt",                 // keine belastbare Herkunft
   "gesperrt",                  // ausdrücklich gesperrt, darf in keinen Build
   "prüfartefakt",              // eigener Screenshot für Dokumentation, nie in Builds
@@ -116,6 +118,11 @@ function checkRegister(rows, media, hashOf) {
     if (row.status === "freigegeben") {
       if (!row.po_freigabe) problems.push(`${where}: "freigegeben" ohne Eintrag in po_freigabe`);
       if (/ungeklärt|unbekannt/i.test(row.lizenzquelle)) problems.push(`${where}: "freigegeben" mit ungeklärter Lizenzquelle`);
+    }
+    if (row.status === "lizenz-belegt") {
+      const licenseFile = (row.lizenzquelle.match(/\b([\w./-]+\.(?:txt|md))\b/) || [])[1];
+      if (!licenseFile) problems.push(`${where}: "lizenz-belegt" ohne Pfad zur Lizenzdatei in lizenzquelle`);
+      else if (hashOf(licenseFile) === null) problems.push(`${where}: Lizenzdatei ${licenseFile} fehlt`);
     }
     if (row.status === "prüfartefakt" && !EVIDENCE_DIRS.some((d) => row.datei.startsWith(d))) {
       problems.push(`${where}: "prüfartefakt" ist nur unter ${EVIDENCE_DIRS.join(" oder ")} zulässig`);
