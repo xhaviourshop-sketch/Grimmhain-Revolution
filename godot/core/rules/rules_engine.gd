@@ -462,13 +462,15 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			_finish_dawn_if_ready(ctx)
 
 
-## Morgenauflösung (vertical-slice-flow.md §4, ohne Schutz):
-## NIGHT → DAWN_RESOLUTION → Wolfsopfer stirbt (NIGHT_KILL) → Reaktionen → DAY.
+## Morgenauflösung (vertical-slice-flow.md §4):
+## NIGHT → DAWN_RESOLUTION → Gifttode (WITCH_POISON) → Wolfsopfer (NIGHT_KILL, Schutz/Rettung) → Reaktionen → DAY.
 ## Solange Reaktionen offen sind, bleibt die Phase DAWN_RESOLUTION; der Wechsel zu
 ## DAY erfolgt automatisch mit der letzten Reaktion (BeginDay folgt später).
 static func _resolve_dawn(ctx: RuleContext) -> void:
 	var s := ctx.state
 	PhaseMachine.enter(ctx, Phase.DAWN_RESOLUTION)
+	# Gift vor dem Rudelangriff: Ursache und Reihenfolge wie beim früheren Sofort-Tod.
+	WitchStep.apply_poisons(ctx)
 	if s.pack_target_id != GameState.NO_TARGET:
 		KillPipeline.request_kill(ctx, s.pack_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK)
 	else:

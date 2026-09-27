@@ -201,9 +201,9 @@ func test_nominated_manipulator_passes_role_to_unnominated_apprentice() -> void:
 # --- Schutz, Gift und Verwandlung in derselben Nacht --------------------------------------------------
 
 ## Schutzengel schützt das Vorbild vor dem Rudel, die Waldhexe vergiftet es: Gift wirkt trotz
-## Schutz sofort (Waldhexe-Eintrag), das Wolfskind verwandelt sich noch in der Nacht, der
-## Rudelangriff am Morgen trifft einen Toten und wird ignoriert (genau ein Tod, erste Ursache).
-func test_protected_model_poisoned_transforms_once_at_night() -> void:
+## Schutz, als Todesmarkierung erst am Morgen (Decision Log „Nachttode“) und vor dem Rudelangriff;
+## das Wolfskind verwandelt sich dann, der Rudelangriff trifft einen Toten (genau ein Tod, erste Ursache).
+func test_protected_model_poisoned_transforms_once_at_dawn() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1, 2 Werwolf; 3 Schutzengel; 4 Waldhexe; 5 Wolfskind → 6; 6, 7, 8 Dorfbewohner
@@ -223,15 +223,16 @@ func test_protected_model_poisoned_transforms_once_at_night() -> void:
 	s = _do(s, Command.answer_choice(w, "confirm", true), log, ev, "bestätigen")
 	if s == null:
 		return
-	assert_eq(_deaths(ev.slice(before)), [[6, "WITCH_POISON"]], "Gift tötet trotz Schutz sofort")
+	assert_eq(_deaths(ev.slice(before)), [], "in der Nacht nur Markierung")
 	assert_eq(String(s.phase), "NIGHT", "noch Nacht")
-	assert_true(s.players[5].counts_as_wolf, "Wolfskind verwandelt sich sofort")
+	assert_false(s.players[5].counts_as_wolf, "Wolfskind noch unverwandelt")
 	before = ev.size()
 	s = _do(s, Command.end_night(), log, ev, "Morgen")
 	if s == null:
 		return
 	var dawn := ev.slice(before)
-	assert_eq(_deaths(dawn), [], "kein zweiter Tod am Morgen")
+	assert_eq(_deaths(dawn), [[6, "WITCH_POISON"]], "Gift trotz Schutz, genau ein Tod")
+	assert_true(s.players[5].counts_as_wolf, "Wolfskind verwandelt sich am Morgen")
 	assert_eq(_types(dawn, ["KillIgnored", "KillPrevented"]), ["KillIgnored"] as Array[String], "Rudelangriff auf Toten ignoriert, kein Schutzverbrauch")
 	_roundtrip_and_replay(s, log, ev, "Schutz und Gift")
 
@@ -352,3 +353,66 @@ func test_pack_step_dropped_when_last_wolf_died_during_night() -> void:
 		assert_eq(String(dropped[0].data["reason"]), "no_living_wolf", "Grund")
 	s = _do(s, Command.end_night(), log, ev, "Morgen ohne Angriff")
 	_roundtrip_and_replay(s, log, ev, "Rudel ohne Wolf")
+
+
+# --- Gift als Todesmarkierung (Decision Log „Nachfragen … Nachttode“) ------------------------------
+
+## Eine vergiftete Person stirbt erst in der Morgenauflösung, wacht aber in dieser Nacht nicht
+## mehr auf: ihr späterer Orakelschritt entfällt mit Grund `marked_for_death`. Das Rudelopfer ist
+## nachts nicht sicher tot (Rettung möglich) und prüft als Orakel weiter.
+func test_poisoned_person_loses_later_step_pack_victim_keeps_it() -> void:
+	var log: Array[Command] = []
+	var ev: Array[GameEvent] = []
+	# 1, 2 Werwolf; 3 Waldhexe; 4 Orakel (vergiftet); 5 Orakel (Rudelopfer); 6–8 Dorfbewohner
+	var s := _do(GameState.new(), _start(["werwolf", "werwolf", "waldhexe", "das-orakel", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
+	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [5]), log, ev, "Rudel auf Orakel 5")
+	s = _begin(s, log, ev)
+	var w := s.pending_prompt.id
+	s = _do(s, Command.answer_choice(w, "heal", false), log, ev, "nicht heilen")
+	s = _do(s, Command.answer_choice(w, "poison", true), log, ev, "vergiften")
+	s = _do(s, Command.answer_stage_targets(w, "poison_target", [4]), log, ev, "Giftziel Orakel 4")
+	var before := ev.size()
+	s = _do(s, Command.answer_choice(w, "confirm", true), log, ev, "bestätigen")
+	if s == null:
+		return
+	assert_eq(_deaths(ev.slice(before)), [], "Gift tötet nicht in der Nacht")
+	assert_true(s.players[4].alive, "vergiftetes Orakel lebt bis zum Morgen")
+	var dropped := events_of_type(ev.slice(before), "StepDropped")
+	assert_eq(dropped.size(), 1, "Schritt des vergifteten Orakels entfällt")
+	if dropped.size() == 1:
+		assert_eq(String(dropped[0].data["step_id"]), "night:1:2:das-orakel:4", "entfallener Schritt")
+		assert_eq(String(dropped[0].data["reason"]), "marked_for_death", "Grund")
+	assert_eq(RulesEngine.next_step_id(s), "night:1:3:das-orakel:5", "Rudelopfer prüft weiter")
+	s = _begin(s, log, ev)
+	s = _do(s, Command.answer_stage_targets(s.pending_prompt.id, "target", [1]), log, ev, "Orakel 5 prüft 1")
+	s = _do(s, Command.answer_choice(s.pending_prompt.id, "shown", true), log, ev, "gezeigt")
+	before = ev.size()
+	s = _do(s, Command.end_night(), log, ev, "Morgen")
+	if s == null:
+		return
+	assert_eq(_deaths(ev.slice(before)), [[4, "WITCH_POISON"], [5, "NIGHT_KILL"]], "am Morgen: erst Gift, dann Rudel")
+	var poison_death := s.players[4].death
+	assert_eq(String(poison_death.phase), "DAWN_RESOLUTION", "Gifttod in der Morgenauflösung")
+	assert_eq(poison_death.source_id, 3, "Quelle Waldhexe")
+	_roundtrip_and_replay(s, log, ev, "Giftmarkierung")
+
+
+## Stirbt die Waldhexe nach ihrer Bestätigung noch in der Nacht, bleibt ihr Gift bestehen
+## (Decision Log Schutzengel: bestätigte Aktionen bleiben).
+func test_poison_mark_survives_witch_death() -> void:
+	var log: Array[Command] = []
+	var ev: Array[GameEvent] = []
+	var s := _do(GameState.new(), _start(["werwolf", "werwolf", "waldhexe", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
+	s = _do(s, Command.skip_step(RulesEngine.next_step_id(s), "kein Opfer"), log, ev, "Rudel ohne Opfer")
+	s = _begin(s, log, ev)
+	var w := s.pending_prompt.id
+	s = _do(s, Command.answer_choice(w, "poison", true), log, ev, "vergiften")
+	s = _do(s, Command.answer_stage_targets(w, "poison_target", [4]), log, ev, "Giftziel 4")
+	s = _do(s, Command.answer_choice(w, "confirm", true), log, ev, "bestätigen")
+	s = _do(s, _gm("kill", {"target_id": 3, "trigger_effects": true}), log, ev, "Waldhexe stirbt")
+	var before := ev.size()
+	s = _do(s, Command.end_night(), log, ev, "Morgen")
+	if s != null:
+		assert_eq(_deaths(ev.slice(before)), [[4, "WITCH_POISON"]], "Gift wirkt trotzdem")

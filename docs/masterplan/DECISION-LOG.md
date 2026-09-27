@@ -274,3 +274,11 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen F-0
 - **Die Gebundenen:** A. Jede lebende Gebundene sieht alle anderen lebenden Gebundenen; lebt nur eine, erfährt sie „keine anderen“.
 - **Dorfchronistin:** A. Anzahl der Personen mit Einzelsiegrolle, lebend und tot; mehrere Chronistinnen erhalten die Information jeweils für sich.
 - **Rudel nach Verwandlung in derselben Nacht:** A. Der Rudelschritt entfällt, wenn niemand mehr lebt, der zu Beginn der Nacht als Wolf zählte; ein in dieser Nacht verwandeltes Wolfskind wacht erst ab der folgenden Nacht.
+
+## Rollenaudit · Nachfragen Spielende, Nachttode, Sound · 27. September 2026
+
+Diese Einträge ersetzen widersprechende ältere Formulierungen ausdrücklich (insbesondere DR-06 „Gift tötet sofort“ und die Bestätigungsreihenfolge im Eintrag „Waldhexe · Produktionsrolle im Regelkern“).
+
+- **Spielende (Nachfrage zu F-11):** A. Die App schlägt einen erkannten Sieg vor, der Spielleiter bestätigt mit einem Tipp, danach folgt ein großer Siegbildschirm. Ablehnen bleibt als Fehlerkorrektur. Ein einmal erfüllter Sieg wird nach einer Ablehnung weiter vorgeschlagen, auch der Selbstmörder-Sieg nach einer Wiederbelebung (F-11 = B).
+- **Nachttode (Nachfrage zu F-04):** Antwort „C, sollte ein Marker gesetzt sein und die Person zu 100 % sterben, wacht sie die Nacht nicht auf, weil sie eh ihre Info am Tag nicht teilen kann“. Gift setzt eine Todesmarkierung; die Person stirbt erst in der Morgenauflösung (dann Verwandlung, Erbe, Reaktionen, Siegprüfung), verliert aber sofort ihre übrigen persönlichen Nachtschritte dieser Nacht. Ein Rudelopfer ist nachts noch nicht sicher tot (Rettung möglich) und behält seine Schritte.
+- **Sound bei 5 Toten:** ertönt, sobald die fünfte Person ihren Totenmarker erhält (öffentlich, am Tag), und nur, wenn ein Selbstmörder in der Partie ist. Oberflächen-/Audio-Anforderung, nicht Regelkern.

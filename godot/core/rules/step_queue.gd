@@ -132,6 +132,9 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	var actor := step_actor(key)
 	if not s.players.has(actor) or not s.players[actor].alive:
 		return &"actor_dead"
+	# Vergiftete Personen wachen in dieser Nacht nicht mehr auf (Decision Log „Nachttode“).
+	if WitchStep.is_marked(s, actor):
+		return &"marked_for_death"
 	# Nie die Fähigkeit einer inzwischen verlorenen Rolle ausführen (gilt für alle persönlichen Schritte).
 	if s.players[actor].role_id != step_role(key):
 		return &"actor_role_changed"
