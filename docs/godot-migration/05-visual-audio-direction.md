@@ -106,6 +106,8 @@ Dauer = sichtbarer Kern; Eingaben sind immer sofort möglich. „Diskret" = Effe
 | **Undo** | Kurzes Zurückspulen-Flirren über der Ansagekarte | Band-Rückspul-Wisch, leise | 0,3 s | – |
 | **Fehler/gesperrt** | Karte schüttelt 3 px, Grund erscheint als Zeile | tiefer Holzklopfer | 0,2 s | – |
 
+**Nachtrag 2026-09-27:** Die Audio-Spalte oben ist Klangbeschreibung, keine Auslöseregel. Geheime Ereignisse (Schutz, Angriff, Schutz greift, Rollenwechsel, Tod vor der Verkündung) erzeugen keinen automatischen hörbaren Klang; siehe Schnittstellenanforderungen in `../assets/PRODUCTION-PLAN.md` §6.4.
+
 **Audio-Busse [E]:** `Master` → `Music`, `Ambience`, `Cues`, `UI`. Ducking: `Cues` senkt `Music` um 6 dB für 1 s. Alle Busse einzeln regelbar; „Stumm im Spiel" als Schnellschalter in der Kopfzeile.
 
 **Vorleseunterstützung (P2):** optionale gesprochene Ansagen per aufgenommener Stimme; nie Text-to-Speech als Pflicht.

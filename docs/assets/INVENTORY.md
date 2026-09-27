@@ -9,8 +9,8 @@ Kennzeichnung: **[B]** Beobachtung aus Datei oder Code, **[S]** Schlussfolgerung
 
 ## 1. Ergebnis in fünf Sätzen
 
-1. Keine einzige Mediendatei ist heute für einen öffentlichen Build freigabefähig. Für 219 Dateien fehlt jede belastbare Herkunft, 24 sind per C2PA als KI-Ausgabe von OpenAI belegt, die 10 Audiodateien sind gesperrt. [B]
-2. Die Nachtmusik (60 min) hat laut Product Owner keinen Lizenz- oder Herkunftsnachweis. Sie bleibt gesperrt und wird ersetzt. [B, PO 2026-09-26]
+1. Keine Mediendatei ist heute für eine Veröffentlichung freigegeben. Für 228 Dateien fehlt ein Herkunftsnachweis, 24 sind per C2PA als KI-Ausgabe von OpenAI belegt, die Nachtmusik ist bis zum Nachweis gesperrt (Masterplan Phase 0). „Nachweis fehlt“ heißt: Nutzung nicht freigegeben, nicht: rechtlich unzulässig. [B, Stand nach Korrektur 2026-09-27]
+2. Für die Nachtmusik (60 min) liegt laut Nutzer kein belastbarer Lizenz- oder Herkunftsnachweis vor; sie ist nicht für eine Veröffentlichung freigegeben. Ein Ersatz ist Empfehlung. [B, Nutzer 2026-09-26]
 3. Die vier Schriftdateien stehen laut ihrer eigenen Namenstabelle unter der SIL Open Font License 1.1. Es fehlt nur die mitzuliefernde Lizenzdatei. Das ist der einzige Bereich, der sich ohne Neuproduktion heilen lässt. [B]
 4. Das Godot-Projekt enthält keine Mediendatei. Die Übernahme ist damit eine freie Entscheidung, keine Altlast. [B]
 5. Für Version 1.0 ist bei Grafik und Audio praktisch eine Neuproduktion oder eine nachträgliche Herkunftsdokumentation nötig. Die vorhandenen Bilder taugen als Stil- und Maßreferenz. [S]
@@ -41,7 +41,7 @@ Kennzeichnung: **[B]** Beobachtung aus Datei oder Code, **[S]** Schlussfolgerung
 | Spiel-Icons | `assets/icons/game/` | 6 | 12,0 MB | PNG bis 1536×1024 | 5× C2PA ChatGPT | Legacy | gemischt |
 | Setup-Hintergründe | `assets/icons/setup/` | 11 | 27,3 MB | PNG, 2× JPEG mit Endung `.png` | 6× C2PA ChatGPT | Legacy (4), unbenutzt (7) | gemischt |
 | Schriften | `assets/fonts/` | 4 | 0,5 MB | TTF Cinzel Regular/Bold, IM Fell English Regular/Italic | **SIL OFL 1.1 laut Namenstabelle** | Legacy | lizenz-belegt-datei-fehlt |
-| Audio | `assets/sounds/` | 10 | 58,9 MB | MP3, uneinheitlich 64–320 kbps, 44,1/48 kHz | keine | Legacy (Nachtmusik, `Ruhe.mp3`), sonst stumm oder unbenutzt | **gesperrt** |
+| Audio | `assets/sounds/` | 10 | 58,9 MB | MP3, uneinheitlich 64–320 kbps, 44,1/48 kHz | keine | Legacy (Nachtmusik, `Ruhe.mp3`), sonst stumm oder unbenutzt | Nachtmusik **gesperrt**, 9 Sounds ungeklärt |
 | Prüfartefakte | `docs/evidence/`, `docs/screenshots/` | 9 | 4,6 MB | PNG-Screenshots | eigene App | Dokumentation | prüfartefakt |
 | **Summe** | | **266** | **186 MB** | | | | **0 freigegeben** |
 
@@ -67,7 +67,7 @@ Kennzeichnung: **[B]** Beobachtung aus Datei oder Code, **[S]** Schlussfolgerung
 | `Amor.mp3`, `Bärenführer.mp3`, `Richter.mp3`, `Spiegel.mp3` | 3,4–11 s | 64–320 kbps, teils 48 kHz | nur Encoder | stumm |
 | `Prophet 1.mp3`, `Prophet 2.mp3` | 8 s / 20 s | 96 / 64 kbps | „Prophet 2": Genre „Blues" | unbenutzt |
 
-[S] „Neue Aufnahme 66" deutet auf eine eigene Sprachmemo-Aufnahme, „FL Studio 20" auf eine eigene Produktion. Das ist ein Hinweis, kein Nachweis. Der Product Owner hat am 2026-09-26 bestätigt, dass für die Nachtmusik kein belastbarer Nachweis vorliegt. Die übrigen Dateien bleiben bis zu einer Aussage des Product Owners gesperrt.
+[S] „Neue Aufnahme 66" deutet auf eine eigene Sprachmemo-Aufnahme, „FL Studio 20" auf eine eigene Produktion. Das ist ein Hinweis, kein Nachweis. Der Nutzer hat am 2026-09-26 bestätigt, dass für die Nachtmusik kein belastbarer Nachweis vorliegt. Die übrigen neun Dateien sind `ungeklärt` (bis zur Korrektur vom 2026-09-27 ohne Beleg als `gesperrt` geführt).
 
 [B] `INSTALL.md:105-108` nennt für die Nachtmusik 83 MB und einen `.gitignore`-Eintrag. Beides stimmt nicht: Die Datei ist mit 57,7 MB versioniert.
 
@@ -78,7 +78,7 @@ Kennzeichnung: **[B]** Beobachtung aus Datei oder Code, **[S]** Schlussfolgerung
 | `Cinzel-Regular.ttf`, `Cinzel-Bold.ttf` | 2020 The Cinzel Project Authors (github.com/NDISCOVER/Cinzel), Natanael Gama | SIL OFL 1.1 | Version 2.000 |
 | `IMFellEnglish-Regular.ttf`, `-Italic.ttf` | 2007 Igino Marini, **Reserved Font Name** „IM FELL English Roman/Italic" | SIL OFL 1.1 | Version 3.00 |
 
-- Die OFL verlangt, den Lizenztext mit der Schrift weiterzugeben. `OFL.txt` fehlt für beide Familien.
+- Die OFL verlangt, den Lizenztext mit der Schrift weiterzugeben. `OFL.txt` fehlt für beide Familien. **Nachtrag 2026-09-27:** Lizenztexte aus den offiziellen Projektquellen liegen jetzt bei (`assets/fonts/OFL-*.txt`), Registerstatus `lizenz-belegt`; Details in [`FONTS.md`](FONTS.md).
 - [S] Wegen des Reserved Font Name darf eine veränderte Fassung (z. B. Subset mit neuen Glyphen oder umbenannt) nicht unter „IM FELL" weitergegeben werden. Unverändert einbetten ist unkritisch.
 - Außerhalb des Repositorys: `app/index.html:16-21` lädt Cinzel Decorative, `game.html:13-15` Cinzel und Fondamento vom Google-Fonts-CDN. Für eine Offline-App müssen diese lokal und mit Lizenzdatei vorliegen, oder entfallen.
 - Eine Lesetextschrift für Bedientext fehlt (`05-visual-audio-direction.md` §2.3).
@@ -102,14 +102,14 @@ Keine Datei trägt Namen, Symbole oder Texte aus Blood on the Clocktower (Befund
 
 | Gruppe | Empfehlung | Begründung |
 |---|---|---|
-| Schriften Cinzel, IM Fell English | **übernehmen**, sobald `OFL.txt` beiliegt und die Bezugsquelle eingetragen ist | Lizenz aus Datei belegt; nur Formalie offen |
+| Schriften Cinzel, IM Fell English | **übernehmen möglich** nach Product-Owner-Freigabe; Lizenztexte liegen seit 2026-09-27 bei | Lizenz aus Datei belegt; Bezugsquelle unbekannt (`FONTS.md`) |
 | Dorfplatz Tag/Nacht | **Referenz**, Übernahme erst nach Herkunftsklärung | Maße passen, Herkunft fehlt |
 | Statussiegel | **Referenz**, Übernahme erst nach Herkunftsklärung | Stil passt, Maße uneinheitlich |
 | Archetyp-Porträts | **Platzhalter im Entwicklungsbuild** möglich, nicht im Release | KI-Herkunft belegt; Prompt, Tarif und PO-Freigabe fehlen |
 | Rollenkarten | **Referenz für Motiv und Stil** | Text eingebacken, Herkunft nicht belegbar |
-| UI-Bitmaps | **nicht übernehmen** | Godot baut Rahmen als Theme/NinePatch (`05` §2.4) |
-| Legacy-Hintergründe, Spiel- und Setup-Icons | **aussortieren** | eingebackener Text, alter Stil (`05` §7) |
-| Audio | **nicht übernehmen, ersetzen** | gesperrt, uneinheitlich |
+| UI-Bitmaps | **nicht übernehmen empfohlen** | Godot baut Rahmen als Theme/NinePatch (`05` §2.4) |
+| Legacy-Hintergründe, Spiel- und Setup-Icons | **aussortieren empfohlen** | eingebackener Text, alter Stil (`05` §7) |
+| Audio | **ersetzen empfohlen** | Nachweis fehlt, Nutzung nicht freigegeben, technisch uneinheitlich |
 
 Die Übernahme selbst ist ein eigenes Arbeitspaket. Jede Übernahme setzt voraus, dass die Registerzeile auf `freigegeben` steht; `tools/check-asset-register.js` meldet jede Datei unter `godot/`, die das nicht erfüllt.
 
@@ -119,4 +119,4 @@ Die Übernahme selbst ist ein eigenes Arbeitspaket. Jede Übernahme setzt voraus
 2. **Archetyp-Porträts (C2PA 2026-06-14):** Welcher Tarif (ChatGPT Plus/Team oder API) wurde genutzt? Prompts vorhanden?
 3. **Kurze Sounds:** Sind `Ritter.mp3` (FL Studio) und `Selbstmörder.mp3` („Neue Aufnahme 66") eigene Aufnahmen? Falls ja, können sie als eigenes Werk eingetragen werden; für 1.0 werden sie trotzdem durch einheitliche Cues ersetzt.
 4. **Bezugsquelle der Schriften:** Google Fonts oder GitHub-Repository der Projekte? (Nötig für die Registerzeile, nicht für die Lizenz selbst.)
-5. **Q8 aus `07-open-questions.md`:** Soll Option B (KI für Platzhalter, Schlüsselassets beauftragt oder selbst erstellt) verbindlich werden? Der Produktionsplan rechnet mit Option B.
+5. **Q8 aus `07-open-questions.md`:** Soll Option B (KI für Platzhalter, Schlüsselassets beauftragt oder selbst erstellt) verbindlich werden? Weiterhin offen (Korrektur im Decision Log, 2026-09-27); der Produktionsplan rechnet mit Option B als Empfehlung.

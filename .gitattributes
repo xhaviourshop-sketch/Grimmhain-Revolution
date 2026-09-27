@@ -4,3 +4,7 @@
 # source by scripts/sync-legacy.mjs. Pin LF for store AND checkout so a re-sync
 # never shows pure CRLF/LF diffs.
 js/**/*.js text eol=lf
+
+# Assetregister: immer LF, auch auf Windows-Checkouts. Das Prüfwerkzeug
+# akzeptiert CRLF ebenfalls; die feste Regel hält die versionierte Datei kanonisch.
+docs/masterplan/asset-register.csv text eol=lf
