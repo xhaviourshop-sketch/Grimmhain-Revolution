@@ -295,3 +295,16 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet.
 - **Sitznachbarn (RM-DR-003, RM-DR-102.1, RM-DR-116.1):** A. Nachbarn sind die nächsten lebenden Personen links und rechts im Sitzkreis; tote Plätze werden übersprungen.
 - **Nachtwächter:** A. Jeden Morgen nach der Morgenauflösung: sitzt neben einem lebenden Nachtwächter jemand, der nicht zum Dorf gehört (Wolf oder Einzelsieg), läuten öffentlich die Glocken, ohne Seite oder Namen.
 - **Wahnsinniger Kutscher und Spiegelung:** A. Nur ein echter Lynch des Kutschers lässt die Nachbarn mitsterben; eine Spiegelung auf ihn ist keine Hinrichtung.
+
+## Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser · 27. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet. Der erste Punkt ersetzt ausdrücklich ältere Formulierungen („eine Wiederbelebung setzt nichts zurück“ in G-ID-3-Erläuterungen, Waldhexe: „eine Wiederbelebung setzt sie nicht zurück“, Spiegelwolf: „Eine Wiederbelebung … setzt die Nutzung nicht zurück“, Sensenträger: „einmal pro Person und Partie“ gilt jetzt je Leben).
+
+- **Wiederbelebung setzt Fähigkeiten zurück:** Antwort „Jede Wiederbelebung = Reset der Fähigkeit“, auf Nachfrage B „Alle Fähigkeiten“. Jede Wiederbelebung setzt alle begrenzten Einsätze der Person zurück (Tränke, Spiegelung, Todesreaktionen, einmalige Fähigkeiten). Unverändert bleiben Zustände, die keine Fähigkeit sind: Nominierungsstatus (`ever_nominated`), Wolfskind-Vorbild und -Verwandlung, Lehrling-Bindung und Erbe, erfüllte Siege, bereits eingereihte Reaktionen.
+- **Besessener Wolf, Schwelle (RM-DR-124.1):** A. Mindestens 5 Lebende unmittelbar vor seinem Tod, er eingeschlossen.
+- **Besessener Wolf, Mitnahme:** A. Nach seinem Tod wählt er eine andere lebende Person (auch einen Wolf) oder verzichtet; Tag sofort, Nacht in der Morgenauflösung (wie Sensenträger).
+- **Ritter, Auslöser (RM-DR-136.1):** A. Nur ein Tod durch Wolfsangriff (Rudel; spätere Wolfsangriffe) löst aus, Gift nicht.
+- **Ritter, Ziel:** A. Nächste lebende Person, die als Wolf zählt, Abstand in Sitzen einschließlich toter Plätze; bei Gleichstand wählt der Spielleiter.
+- **Richtung „links“ (RM-DR-146.1, RM-DR-153.4):** A. Aus Sicht der Person am Tisch: links ist der nächste Platz im Uhrzeigersinn des App-Sitzkreises. Gegenprüfung am Tablet, ob die Sitzansicht im Uhrzeigersinn läuft, bleibt offen.
+- **Fährtenleser, Gleichstand (RM-DR-146.2):** A. Abstand wie beim Ritter; bei Gleichstand erfährt er „beide Seiten gleich weit“.
+- **Fährtenleser, Ablauf:** B. Jede Nacht ein Schritt „jetzt nutzen?“ bis zur Nutzung; danach kein Schritt mehr.

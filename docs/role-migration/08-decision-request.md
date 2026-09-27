@@ -23,11 +23,11 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 9 | 26 |
+| entschieden | 10 | 31 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 60 | 155 |
-| quellenprüfung | 4 | 4 |
+| später | 61 | 152 |
+| quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
@@ -779,7 +779,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `besessener-wolf`; Wechselwirkung laut Dossier: Loki (Liebeskummer-Pfad), Schwarze Witwe und Giftwolf (Morgen-Tode), Dämonischer Wolf (Reihenfolge), Rudelvater, Nekromant, Kartenschlucker, Hades, Schattenwanderer, Parasit …
 - **Belege:** [Dossier](dossiers/wolves-b.md#besessener-wolf); RM-C-028 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-009.
-- **RM-DR-124.1 · Schwelle "≥5 Spieler"** · Status: später (K4)
+- **RM-DR-124.1 · Schwelle "≥5 Spieler"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026
   - Option A: 5 Lebende inkl. ihm im Todesmoment
   - Option B: 5 Spieler bei Spielbeginn
   - Auswirkung: Balance: mittel im Endspiel; Umsetzung: Prüfzeitpunkt (Tod vs. Abarbeitung)
@@ -1050,7 +1050,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `ritter`; Wechselwirkung laut Dossier: Dämonischer Wolf (Verfluchte), Fenrir, Rudelvater (Ersttod-Rettung, PACKFATHER_KILL), Schattenwanderer (Umlenkung), Zeitwächter, Waldhexe, Hades, Schwarze Witwe, Giftwolf, Feuerteufel, Kartenschlucker, Nekromant-Schild, …
 - **Belege:** [Dossier](dossiers/village-3.md#ritter); RM-C-132, RM-C-133, RM-C-134 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003, RM-DR-004, RM-DR-009.
-- **RM-DR-136.1 · Welche Nachttode lösen aus** · Status: später (K3)
+- **RM-DR-136.1 · Welche Nachttode lösen aus** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026
   - Option A: jeder Tod in der Nacht löst aus
   - Option B: nur Tode durch feindliche Nachtangriffe (Liste, ggf. erweitert um PACKFATHER_KILL)
   - Auswirkung: Balance: A stärkt das Dorf deutlich (auch Kettentode schlagen zurück); Umsetzung: Ursachen-Attribut `triggers_knight` in beiden Fällen nötig, nur Belegung unterscheidet sich
@@ -1316,12 +1316,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `faehrtenleser`; Wechselwirkung laut Dossier: alle Wolfsrollen, Fenrir, Dämonischer Wolf (Verfluchte), Wolfskind/Lehrling (Verwandlung), Doppelspion, Ritter (gemeinsame Richtungsdefinition), …
 - **Belege:** [Dossier](dossiers/village-3.md#faehrtenleser); RM-C-154, RM-C-155, RM-C-156 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003, RM-DR-014.
-- **RM-DR-146.1 · Richtungsdefinition** · Status: quellenprüfung; „links“ am Tisch gegenüber Bildschirm ist ohne Gerät nicht prüfbar
+- **RM-DR-146.1 · Richtungsdefinition** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026; „links“ am Tisch gegenüber Bildschirm ist ohne Gerät nicht prüfbar
   - Option A: aus Sicht des Spielers am Tisch
   - Option B: aus Sicht des SL-Bildschirms
   - Auswirkung: Balance: Fehlinfo bei falscher Deutung; Umsetzung: Richtung relativ zu `seat_order` (Uhrzeigersinn) festlegen
   - Empfehlung: am Tisch prüfen und festschreiben
-- **RM-DR-146.2 · Gleichstand** · Status: später (K3)
+- **RM-DR-146.2 · Gleichstand** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026
   - Option A: fest links
   - Option B: beide Richtungen nennen / SL wählt
   - Auswirkung: Balance: gering; Umsetzung: Regel im Rechner
@@ -1494,7 +1494,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: Hinweis enttarnt Wolf w indirekt (Code)
   - Auswirkung: Balance: B deutlich stärker, A moderat; Umsetzung: Anker und Richtungsregel
   - Empfehlung: A, und Parität nur wenn wahr
-- **RM-DR-153.4 · Richtung links/rechts** · Status: quellenprüfung; Richtungskonvention; zusätzlich widersprüchlich zu Fährtenleser und Ritter
+- **RM-DR-153.4 · Richtung links/rechts** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026; Richtungskonvention; zusätzlich widersprüchlich zu Fährtenleser und Ritter
   - Option A: einheitlich id-1
   - Option B: einheitlich id+1
   - Auswirkung: Balance: keine; Umsetzung: Sitznachbarschaft mit einer Konvention

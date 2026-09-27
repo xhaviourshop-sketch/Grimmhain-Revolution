@@ -81,7 +81,7 @@ RM-DR-122.3;ja;daemonischer-wolf;S;;
 RM-DR-123.1;ja;schattenhund;S;;
 RM-DR-123.2;ja;schattenhund;S;;
 RM-DR-123.3;ja;schattenhund;S;;
-RM-DR-124.1;ja;besessener-wolf;S;;
+RM-DR-124.1;ja;besessener-wolf;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";Lebende inkl. ihm vor dem Tod
 RM-DR-125.1;ja;fenrir;S;;
 RM-DR-125.2;ja;fenrir;S;;
 RM-DR-125.3;ja;fenrir;S;;
@@ -114,7 +114,7 @@ RM-DR-134.2;ja;albtraumwolf;S;;
 RM-DR-134.3;ja;albtraumwolf;S;;
 RM-DR-135.1;ja;cerberus;S;;
 RM-DR-135.2;ja;cerberus;S;;
-RM-DR-136.1;ja;ritter;S;;
+RM-DR-136.1;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur Wolfsangriff
 RM-DR-136.2;ja;ritter;S;;
 RM-DR-136.3;ja;ritter;S;;
 RM-DR-137.1;ja;rotkaeppchen;S;;
@@ -146,8 +146,8 @@ RM-DR-144.2;ja;hades;S;;
 RM-DR-144.3;ja;hades;S;;
 RM-DR-145.1;ja;doktor;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";Einzelsieg ist ein Team
 RM-DR-145.2;ja;doktor;E;"rules-register G-ID-2; DR-10; DECISION-LOG Lehrling (Fraktion wechselt sofort)";Siegfraktion ist ein aktueller Personenwert
-RM-DR-146.1;ja;faehrtenleser;Q;;„links“ am Tisch gegenüber Bildschirm ist ohne Gerät nicht prüfbar
-RM-DR-146.2;ja;faehrtenleser;S;;
+RM-DR-146.1;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person (Tablet-Gegenprüfung offen)
+RM-DR-146.2;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";gleich weit melden
 RM-DR-146.3;ja;faehrtenleser;S;;
 RM-DR-147.1;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";jede Nacht
 RM-DR-147.2;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";lebende Personen mit counts_as_wolf, einfach
@@ -169,7 +169,7 @@ RM-DR-152.3;ja;kriegerin-des-lichts;S;;
 RM-DR-153.1;ja;detektiv;S;;
 RM-DR-153.2;ja;detektiv;S;;
 RM-DR-153.3;ja;detektiv;S;;
-RM-DR-153.4;ja;detektiv;Q;;"Richtungskonvention; zusätzlich widersprüchlich zu Fährtenleser und Ritter"
+RM-DR-153.4;ja;detektiv;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person
 RM-DR-154.1;ja;dorfschmied;S;;
 RM-DR-154.2;ja;dorfschmied;S;;
 RM-DR-154.3;ja;dorfschmied;S;;
