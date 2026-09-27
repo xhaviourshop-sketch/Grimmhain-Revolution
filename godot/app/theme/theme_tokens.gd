@@ -67,6 +67,7 @@ const PERSON_NUMBER_WIDTH := 44       ## Listennummer in der Personenzeile
 const ROLE_COUNT_WIDTH := 56          ## Anzahl zwischen Minus und Plus in der Rollenzeile
 const ASSIGNMENT_STATE_WIDTH := 200   ## Spalte „zugewiesen“ bzw. Rolle und Scheinrolle in der Zuordnungszeile
 const ROLE_LIST_MIN_HEIGHT := 240     ## Rollen- und Zuordnungsliste behalten mindestens so viel Höhe
+const SEAT_CIRCLE_MIN_HEIGHT := 360   ## Sitzkreis: Mindesthöhe für zwei Reihen und die Tischmitte
 const SCROLLBAR_WIDTH := 12
 const TOAST_WIDTH := 420
 const TOAST_BOTTOM_OFFSET := 88       ## Abstand der Statusmeldung vom unteren Rand (über einer Fußzeile)

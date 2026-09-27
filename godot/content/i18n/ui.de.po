@@ -693,7 +693,7 @@ msgid "ui.setup.distribution.summary.body"
 msgstr "{persons} Personen · Dorf {village} · Werwölfe {wolves} · Einzelsieg {solo} · Modus {mode} · Seed {seed}"
 
 msgid "ui.setup.distribution.summary.next"
-msgstr "Die Sitzordnung folgt in einem späteren Schritt."
+msgstr "Als Nächstes legst du die Sitzordnung fest."
 
 msgid "ui.setup.distribution.toast.distributed"
 msgstr "Rollen verteilt"
@@ -793,3 +793,75 @@ msgstr "{copy} · Scheinrolle: {appearance}"
 
 msgid "ui.setup.distribution.summary.no_seed"
 msgstr "keiner"
+
+msgid "ui.setup.title.seating"
+msgstr "Neue Partie · Sitzordnung"
+
+msgid "ui.setup.wizard.step.seating"
+msgstr "Sitzordnung"
+
+msgid "ui.setup.distribution.to_seating"
+msgstr "Weiter zur Sitzordnung"
+
+msgid "ui.setup.seating.seat"
+msgstr "{number} · {name}"
+
+msgid "ui.setup.seating.heading"
+msgstr "Sitzordnung festlegen"
+
+msgid "ui.setup.seating.counts"
+msgstr "{count} Plätze · im Uhrzeigersinn ab Platz 1"
+
+msgid "ui.setup.seating.hint"
+msgstr "Ziehe eine Person auf einen anderen Platz, um zu tauschen. Oder tippe nacheinander zwei Personen an."
+
+msgid "ui.setup.seating.selection"
+msgstr "Ausgewählt: {name} (Platz {seat}). Tippe auf den Platz zum Tauschen."
+
+msgid "ui.setup.seating.cancel_selection"
+msgstr "Auswahl aufheben"
+
+msgid "ui.setup.seating.invalidated.person_count_changed"
+msgstr "Personen wurden geändert: Sitzordnung bitte prüfen."
+
+msgid "ui.setup.seating.invalidated.setup_changed"
+msgstr "Ein früherer Schritt wurde geändert: Sitzordnung erneut bestätigen."
+
+msgid "ui.setup.seating.summary.heading"
+msgstr "Sitzordnung fertig"
+
+msgid "ui.setup.seating.summary.body"
+msgstr "{count} Personen sitzen fest. Spieler, Rollen, Verteilung und Sitzordnung sind bestätigt."
+
+msgid "ui.setup.seating.summary.next"
+msgstr "Der Spielbeginn folgt in einem späteren Schritt."
+
+msgid "ui.setup.seating.edit_distribution"
+msgstr "Verteilung bearbeiten"
+
+msgid "ui.setup.seating.confirm"
+msgstr "Sitzordnung bestätigen"
+
+msgid "ui.setup.seating.status.ready"
+msgstr "Plätze tauschen oder bestätigen."
+
+msgid "ui.setup.seating.status.selected"
+msgstr "{name} ausgewählt."
+
+msgid "ui.setup.seating.status.selection_cleared"
+msgstr "Auswahl aufgehoben, nichts geändert."
+
+msgid "ui.setup.seating.status.swapped"
+msgstr "{first} und {second} haben die Plätze getauscht."
+
+msgid "ui.setup.seating.status.drag_cancelled"
+msgstr "Ziehen abgebrochen: {name} bleibt auf dem Platz."
+
+msgid "ui.setup.seating.status.confirmed"
+msgstr "Sitzordnung fertig."
+
+msgid "ui.setup.seating.toast.swapped"
+msgstr "Plätze getauscht"
+
+msgid "ui.setup.seating.toast.confirmed"
+msgstr "Sitzordnung bestätigt"

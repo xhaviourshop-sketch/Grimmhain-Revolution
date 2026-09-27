@@ -31,3 +31,9 @@ layout_mode = 2
 vertical_alignment = 1
 script = ExtResource("2_label")
 wrap = false
+
+[node name="StepChip_seating" type="Label" parent="."]
+layout_mode = 2
+vertical_alignment = 1
+script = ExtResource("2_label")
+wrap = false

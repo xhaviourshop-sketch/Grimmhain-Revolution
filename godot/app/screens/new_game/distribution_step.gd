@@ -11,6 +11,7 @@ extends VBoxContainer
 signal dialog_requested(request: DialogRequest)
 signal status_message_requested(text_key: String)
 signal roles_requested  ## „Rollen bearbeiten“
+signal seating_requested  ## „Weiter zur Sitzordnung“ in der Karte „Bereit für Sitzordnung“
 
 const ROW_SCENE := preload("res://app/screens/new_game/assignment_row.tscn")
 
@@ -39,6 +40,7 @@ var _last_view: Dictionary = {}
 @onready var _edit_roles: GrimmButton = %EditRolesButton
 @onready var _status: GrimmLabel = %DistributionStatusLabel
 @onready var _confirm: GrimmButton = %ConfirmDistributionButton
+@onready var _to_seating: GrimmButton = %ToSeatingButton
 
 
 ## Wird vom Host einmal nach `_ready` aufgerufen.
@@ -56,6 +58,7 @@ func start(setup: PlayerSetup) -> void:
 	_reshuffle.pressed.connect(_on_reshuffle_pressed)
 	_reveal.pressed.connect(_on_reveal_pressed)
 	_edit_roles.pressed.connect(roles_requested.emit)
+	_to_seating.pressed.connect(seating_requested.emit)
 	_confirm.pressed.connect(_on_confirm_pressed)
 	visibility_changed.connect(_on_visibility_changed)
 	_setup.changed.connect(_render)
@@ -68,6 +71,8 @@ func _notification(what: int) -> void:
 
 
 func default_focus() -> Control:
+	if _to_seating.is_visible_in_tree():
+		return _to_seating
 	if not _confirm.disabled:
 		return _confirm
 	return _distribute if _distribute.visible else _mode_random
@@ -233,7 +238,7 @@ func _on_confirm_pressed() -> void:
 		return
 	if _setup.confirm_distribution().ok:
 		status_message_requested.emit("ui.setup.distribution.toast.confirmed")
-		_edit_roles.grab_focus()
+		_to_seating.grab_focus()
 
 
 # --- Manuelle Rollenauswahl (modaler Dialog) ---------------------------------------------------------
