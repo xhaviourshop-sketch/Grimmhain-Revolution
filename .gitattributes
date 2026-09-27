@@ -8,3 +8,7 @@ js/**/*.js text eol=lf
 # Assetregister: immer LF, auch auf Windows-Checkouts. Das Prüfwerkzeug
 # akzeptiert CRLF ebenfalls; die feste Regel hält die versionierte Datei kanonisch.
 docs/masterplan/asset-register.csv text eol=lf
+
+# OFL-Lizenztexte sind wörtliche Upstream-Kopien (siehe docs/assets/FONTS.md) und enthalten
+# Leerzeichen am Zeilenende. Nicht bereinigen; git diff --check prüft sie deshalb nicht.
+assets/fonts/OFL-*.txt -whitespace

@@ -16,6 +16,8 @@
 | Abgleich mit der Referenzdatei | gleiche Version und gleicher PostScript-Name, **nicht bytegleich**; unsere Datei enthält eine STAT-Tabelle, die Repository-Datei nicht | gleiche Version und gleicher PostScript-Name, **nicht bytegleich** (191 256 statt 194 992 Byte) |
 | **Ursprüngliche Bezugsquelle** | **unbekannt** (Angabe im Arbeitsauftrag vom 2026-09-27; im Repository kein Beleg) | **unbekannt** (wie links) |
 
+**Whitespace-Ausnahme (27.09.2026).** Beide Lizenztexte enthalten je eine Zeile mit Leerzeichen am Zeilenende (`OFL-Cinzel.txt` Z. 22, `OFL-IMFellEnglish.txt` Z. 21). Geprüft: Die versionierten Dateien sind bytegleich mit `NDISCOVER/Cinzel@dd598495` bzw. nach CRLF→LF identisch mit `librefonts/imfellenglish@4cc24726`. Der Text bleibt wörtlich; `.gitattributes` nimmt `assets/fonts/OFL-*.txt` von `git diff --check` aus.
+
 **Einordnung.** Die Lizenz ergibt sich aus der Schriftdatei selbst. Die OFL gilt für jede Kopie der Font Software, unabhängig davon, wo sie heruntergeladen wurde. Die unbekannte Bezugsquelle ist deshalb eine Dokumentationslücke, keine Lizenzlücke. Die Byte-Abweichung passt zu einer von Google Fonts ausgelieferten, aufbereiteten Fassung (bei Cinzel etwa eine aus der variablen Schrift erzeugte statische Datei). Das ist ein Hinweis, kein Beleg; eine Downloadhistorie wird nicht behauptet.
 
 **Hinweis zum Copyright-Kopf von IM FELL.** Der offizielle `OFL.txt` nennt „Copyright (c) 2010, Igino Marini", die Schriftdatei „© 2007 … With Reserved Font Name IM FELL English Roman/Italic". Der Lizenztext wurde unverändert übernommen. Maßgeblich für den Reserved Font Name ist die Angabe in der Schriftdatei, die mit der Datei weitergegeben wird.
