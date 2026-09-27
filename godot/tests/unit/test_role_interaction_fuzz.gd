@@ -16,7 +16,7 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
-const GAMES := 70
+const GAMES := 120
 const MAX_COMMANDS := 160
 const CODEC_EVERY := 20
 const FORBIDDEN_PUBLIC_KEYS: Array[String] = ["role_id", "appears_as", "cause", "faction", "shown_role", "truth_role",
@@ -33,6 +33,9 @@ const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SH
 var _rng := RandomNumberGenerator.new()
 var _game_label := ""
 var _seen := {}
+var _probe := false  ## letzter Befehl ist eine zufällige Korrektur, Ablehnung erlaubt
+var _probe_rejected := 0
+var _probe_accepted := 0
 
 
 func test_random_games_keep_invariants() -> void:
@@ -57,7 +60,10 @@ func test_random_games_keep_invariants() -> void:
 		assert_true(int(_seen.get(type, 0)) > 0, "Ereignis %s kam vor" % type)
 	for cause: String in REQUIRED_CAUSES:
 		assert_true(int(_seen.get("cause:" + cause, 0)) > 0, "Todesursache %s kam vor" % cause)
+	assert_true(_probe_accepted > GAMES, "genügend angenommene Zufallskorrekturen (%d)" % _probe_accepted)
+	assert_true(_probe_rejected > 0, "abgelehnte Zufallskorrekturen geprüft (%d)" % _probe_rejected)
 	print("      Abdeckung: %s" % CanonicalJson.stringify(_seen))
+	print("      Zufallskorrekturen: %d angenommen, %d abgelehnt" % [_probe_accepted, _probe_rejected])
 
 
 func _play_game(g: int, count: int) -> Dictionary:
@@ -81,7 +87,16 @@ func _play_game(g: int, count: int) -> Dictionary:
 			fail("%s @%d: kein Befehl erzeugbar (Phase %s, Schritt %s)" % [_game_label, i, state.phase, RulesEngine.next_step_id(state)])
 			break
 		var before := state
+		var before_json := CanonicalJson.stringify(state.to_dict())
 		var res := RulesEngine.apply(state, c)
+		if not res.ok and _probe:
+			# A-13: abgelehnte Befehle ändern nichts und erzeugen keine Ereignisse.
+			_probe_rejected += 1
+			assert_eq(CanonicalJson.stringify(state.to_dict()), before_json, "%s @%d: Ablehnung %s lässt Zustand unverändert" % [_game_label, i, res.error])
+			assert_true(res.events.is_empty() and String(res.error) != "", "%s @%d: Ablehnung ohne Ereignisse, mit Grund" % [_game_label, i])
+			continue
+		if _probe:
+			_probe_accepted += 1
 		if not res.ok:
 			fail("%s @%d: gültig erzeugter Befehl abgelehnt: %s → %s (Phase %s, Schritt %s)" % [_game_label, i,
 				CanonicalJson.stringify(c.to_dict()), res.error, state.phase, RulesEngine.next_step_id(state)])
@@ -174,6 +189,7 @@ func _gm_revive(s: GameState) -> Command:
 
 
 func _next_command(s: GameState) -> Command:
+	_probe = false
 	var open := s.open_candidates()
 	if not open.is_empty():
 		if _rng.randf() < 0.6:
@@ -181,6 +197,10 @@ func _next_command(s: GameState) -> Command:
 		return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: weiterspielen"})
 	var roll := _rng.randf()
 	# Spielleitereingriffe jederzeit (auch mit offenem Prompt oder offener Reaktion).
+	if roll < 0.06:
+		_probe = true
+		return _random_correction(s)
+	roll = _rng.randf()
 	if roll < 0.03:
 		var kill := _gm_kill(s)
 		if kill != null:
@@ -206,6 +226,59 @@ func _next_command(s: GameState) -> Command:
 				return Command.begin_step(RulesEngine.next_step_id(s))
 			return _day_command(s)
 	return null
+
+
+## Beliebige Spielleiterkorrektur mit plausiblen, aber nicht garantiert gültigen Feldern.
+func _random_correction(s: GameState) -> Command:
+	var ids: Array[int] = []
+	for id: int in s.players:
+		ids.append(id)
+	ids.sort()
+	var any: int = _pick(ids)
+	var other: int = _pick(ids)
+	var holders := func(role: StringName) -> Array[int]:
+		var out: Array[int] = []
+		for id: int in ids:
+			if s.players[id].role_id == role:
+				out.append(id)
+		return out if not out.is_empty() else ids
+	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger"]
+	match _rng.randi_range(0, 15):
+		0:
+			var role: String = _pick(ROLES)
+			var fields := {"target_id": any, "role_id": role}
+			if role == "trugbilderwolf":
+				fields["appears_as"] = _pick(non_wolf)
+			return CorrectionFixtures.gm("set_role", fields, "Fuzz")
+		1:
+			return CorrectionFixtures.gm("set_role_field", {"target_id": any, "field": "appears_as", "value": _pick(non_wolf)}, "Fuzz")
+		2:
+			return CorrectionFixtures.gm("set_protection", {"guardian_id": _pick(holders.call(RoleCatalog.SCHUTZENGEL)), "target_id": other}, "Fuzz")
+		3:
+			return CorrectionFixtures.gm("remove_protection", {"guardian_id": _pick(holders.call(RoleCatalog.SCHUTZENGEL))}, "Fuzz")
+		4:
+			return CorrectionFixtures.gm("set_witch_potion", {"witch_id": _pick(holders.call(RoleCatalog.WALDHEXE)), "potion": _pick(["heal", "poison"]), "available": _rng.randf() < 0.5}, "Fuzz")
+		5:
+			return CorrectionFixtures.gm("set_rescue", {"witch_id": _pick(holders.call(RoleCatalog.WALDHEXE)), "target_id": s.pack_target_id if s.pack_target_id != -1 else other}, "Fuzz")
+		6:
+			return CorrectionFixtures.gm("remove_rescue", {"witch_id": _pick(holders.call(RoleCatalog.WALDHEXE))}, "Fuzz")
+		7:
+			return CorrectionFixtures.gm("set_wolf_model", {"child_id": _pick(holders.call(RoleCatalog.WOLFSKIND)), "target_id": other}, "Fuzz")
+		8:
+			return CorrectionFixtures.gm(_pick(["remove_wolf_model", "transform_wolf_child", "revert_wolf_child"]), {"child_id": _pick(holders.call(RoleCatalog.WOLFSKIND))}, "Fuzz")
+		9:
+			return CorrectionFixtures.gm("set_apprentice_master", {"apprentice_id": _pick(holders.call(RoleCatalog.LEHRLING)), "target_id": other}, "Fuzz")
+		10:
+			return CorrectionFixtures.gm(_pick(["remove_apprentice_master", "trigger_apprentice_inheritance", "revert_apprentice_inheritance"]), {"apprentice_id": any if _rng.randf() < 0.3 else _pick(holders.call(RoleCatalog.LEHRLING))}, "Fuzz")
+		11:
+			return CorrectionFixtures.gm("set_mirror", {"target_id": _pick(holders.call(RoleCatalog.SPIEGELWOLF)), "available": _rng.randf() < 0.5}, "Fuzz")
+		12:
+			return CorrectionFixtures.gm("set_ever_nominated", {"target_id": any, "value": _rng.randf() < 0.5}, "Fuzz")
+		13:
+			return CorrectionFixtures.gm("kill", {"target_id": any, "trigger_effects": _rng.randf() < 0.5}, "Fuzz")
+		14:
+			return CorrectionFixtures.gm("revive", {"target_id": any}, "Fuzz")
+	return CorrectionFixtures.gm("execute", {"target_id": any}, "Fuzz")
 
 
 func _day_command(s: GameState) -> Command:
@@ -330,9 +403,10 @@ func _check_after(before: GameState, s: GameState, events: Array[GameEvent], lab
 		else:
 			assert_eq(p.faction, RoleCatalog.faction_of(p.role_id), "%s: Fraktion passt zur Rolle (%d)" % [label, id])
 			assert_eq(p.counts_as_wolf, RoleCatalog.counts_as_wolf(p.role_id), "%s: Wolfszählung passt zur Rolle (%d)" % [label, id])
-			if not RoleCatalog.requires_appearance(p.role_id):
-				assert_eq(p.appears_as, RoleCatalog.appears_as(p.role_id), "%s: Erscheinung passt zur Rolle (%d)" % [label, id])
-			else:
+			# Die Erscheinung ist per `set_role_field` korrigierbar; sie bleibt eine bekannte Rolle,
+			# beim Trugbilderwolf nie eine Wolfsrolle (DR-08).
+			assert_true(RoleCatalog.has_role(p.appears_as), "%s: Erscheinung ist eine bekannte Rolle (%d)" % [label, id])
+			if RoleCatalog.requires_appearance(p.role_id):
 				assert_true(RoleCatalog.is_valid_appearance(p.appears_as), "%s: Scheinrolle gültig (%d)" % [label, id])
 	return deaths
 
