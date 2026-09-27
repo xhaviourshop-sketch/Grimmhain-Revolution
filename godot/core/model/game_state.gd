@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 10  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice)
-const RULES_VERSION := &"grimmhain-core-0.10"
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids)
+const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -25,6 +25,7 @@ var pack_target_id: int = NO_TARGET  ## gewähltes Rudelopfer der laufenden Nach
 var night_plan: Array[StringName] = []  ## Schritte der laufenden Nacht in Reihenfolge
 var next_night_step: int = 0            ## Index des nächsten nicht erledigten Nachtschritts
 var night_step_status: Array[StringName] = []  ## je Nachtschritt: pending | done | skipped
+var night_wolf_ids: Array[int] = []  ## wer bei StartNight als Wolf zählte (Rudel dieser Nacht), aufsteigend
 var protections: Array[Protection] = []  ## bestätigte Schutzwahlen der laufenden Nacht
 var witch_actions: Array[WitchAction] = []  ## bestätigte Waldhexen-Entscheidungen der laufenden Nacht
 var info_records: Array[InfoRecord] = []    ## abgeschlossene Informationen der Partie (Orakel)
@@ -159,6 +160,7 @@ func to_dict() -> Dictionary:
 		"pending_prompt": pending_prompt.to_dict() if pending_prompt != null else null,
 		"pack_target_id": pack_target_id,
 		"night_plan": plan,
+		"night_wolf_ids": night_wolf_ids.duplicate(),
 		"next_night_step": next_night_step,
 		"night_step_status": status_list,
 		"protections": protection_list,
@@ -240,6 +242,17 @@ static func from_dict(d: Dictionary) -> GameState:
 		s.night_step_status.append(StringName(str(status)))
 	if s.night_step_status.size() != s.night_plan.size():
 		return null
+	var wolf_ids: Variant = DictRead.to_int_array(DictRead.get_array(d, "night_wolf_ids"))
+	if wolf_ids == null:
+		return null
+	s.night_wolf_ids = wolf_ids
+	var sorted_wolves := s.night_wolf_ids.duplicate()
+	sorted_wolves.sort()
+	if sorted_wolves != s.night_wolf_ids:
+		return null
+	for id: int in s.night_wolf_ids:
+		if not s.players.has(id) or s.night_wolf_ids.count(id) > 1:
+			return null
 	for item: Variant in DictRead.get_array(d, "protections"):
 		if not item is Dictionary:
 			return null

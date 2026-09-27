@@ -416,3 +416,40 @@ func test_poison_mark_survives_witch_death() -> void:
 	s = _do(s, Command.end_night(), log, ev, "Morgen")
 	if s != null:
 		assert_eq(_deaths(ev.slice(before)), [[4, "WITCH_POISON"]], "Gift wirkt trotzdem")
+
+
+## Decision Log „Rollenaudit“ (F-10): Der Rudelschritt entfällt, wenn niemand mehr lebt, der zu
+## Beginn der Nacht als Wolf zählte. Ein in dieser Nacht verwandeltes Wolfskind wacht erst in der
+## folgenden Nacht mit dem Rudel.
+func test_pack_dropped_when_only_newly_transformed_wolf_lives() -> void:
+	var log: Array[Command] = []
+	var ev: Array[GameEvent] = []
+	# 1 Werwolf; 2 Wolfskind → 3; 3–7 Dorfbewohner. Nacht 2: Korrektur tötet 1 und 3 vor dem Rudel.
+	var s := _do(GameState.new(), _start(["werwolf", "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
+	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [3]), log, ev, "Vorbild 3")
+	s = _do(s, Command.skip_step(RulesEngine.next_step_id(s), "kein Opfer"), log, ev, "Rudel ohne Opfer")
+	s = _do(s, Command.end_night(), log, ev, "Morgen")
+	s = _do(s, Command.decide_execution(-1), log, ev, "keine Hinrichtung")
+	s = _do(s, Command.end_day(), log, ev, "Tagesende")
+	s = _do(s, Command.start_night(), log, ev, "Nacht 2")
+	if s == null:
+		return
+	assert_eq(RulesEngine.next_step_id(s), "night:2:0:pack", "Rudelschritt geplant")
+	s = _do(s, _gm("kill", {"target_id": 3, "trigger_effects": true}), log, ev, "Vorbild stirbt, Wolfskind verwandelt sich")
+	s = _do(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), log, ev, "letzter Wolf vom Nachtbeginn stirbt")
+	if s == null:
+		return
+	assert_true(s.players[2].counts_as_wolf, "Wolfskind zählt als Wolf")
+	if not s.open_candidates().is_empty():
+		s = _do(s, Command.create(Command.REJECT_WIN, {"reason": "weiter"}), log, ev, "Siegvorschlag abgelehnt")
+	assert_eq(RulesEngine.next_step_id(s), "", "kein Rudelschritt in dieser Nacht")
+	var dropped := events_of_type(ev, "StepDropped")
+	assert_true(not dropped.is_empty() and String(dropped[-1].data["step_id"]) == "night:2:0:pack" and String(dropped[-1].data["reason"]) == "no_living_wolf", "protokolliert")
+	s = _do(s, Command.end_night(), log, ev, "Morgen ohne Angriff")
+	s = _do(s, Command.decide_execution(-1), log, ev, "keine Hinrichtung")
+	s = _do(s, Command.end_day(), log, ev, "Tagesende")
+	s = _do(s, Command.start_night(), log, ev, "Nacht 3")
+	if s != null:
+		assert_true(s.night_plan.has(&"pack"), "verwandeltes Wolfskind bildet ab Nacht 3 das Rudel")
+	_roundtrip_and_replay(s, log, ev, "Rudel-Snapshot")

@@ -13,7 +13,7 @@ extends RefCounted
 ## keine Schritte hinzu. Ein persönlicher Schritt entfällt automatisch und protokolliert
 ## (`StepDropped`), wenn seine Person inzwischen tot ist, nicht mehr die geplante Rolle
 ## hat oder (Waldhexe) keine Entscheidung mehr treffen kann. Der Rudelschritt entfällt,
-## wenn keine lebende Person mehr als Wolf zählt (G-PH-6).
+## wenn keine Person mehr lebt, die bei StartNight als Wolf zählte (`night_wolf_ids`).
 
 const PACK := &"pack"
 const STATUS_PENDING := &"pending"
@@ -124,9 +124,10 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 static func drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
 	if key == PACK:
-		# G-PH-6: ohne lebende Person, die als Wolf zählt, gibt es keinen Rudelschritt.
-		for id: int in s.alive_ids():
-			if s.players[id].counts_as_wolf:
+		# G-PH-6 mit Decision Log „Rollenaudit“ (F-10): Das Rudel dieser Nacht sind die Personen,
+		# die bei StartNight als Wolf zählten; lebt keine von ihnen mehr, entfällt der Schritt.
+		for id: int in s.night_wolf_ids:
+			if s.players[id].alive:
 				return &""
 		return &"no_living_wolf"
 	var actor := step_actor(key)

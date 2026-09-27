@@ -415,6 +415,10 @@ static func _start_night(ctx: RuleContext) -> void:
 	PhaseMachine.enter(ctx, Phase.NIGHT)
 	s.pack_target_id = GameState.NO_TARGET
 	s.night_plan = StepQueue.build_night_plan(s)
+	s.night_wolf_ids.clear()
+	for id: int in s.alive_ids():
+		if s.players[id].counts_as_wolf:
+			s.night_wolf_ids.append(id)
 	s.next_night_step = 0
 	s.night_step_status.clear()
 	for _step: StringName in s.night_plan:
