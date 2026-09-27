@@ -48,3 +48,12 @@ Das betrifft nur die Legacy-Web-App. Für Godot werden Schriften ausschließlich
 1. Product Owner sieht Lizenztexte und diese Seite durch.
 2. Product Owner trägt in den vier Registerzeilen `po_freigabe` (Datum, Name) ein und setzt den Status auf `freigegeben`. Claude setzt diesen Status nicht.
 3. Erst danach können die Schriften in einem eigenen Arbeitspaket in `godot/` übernommen werden, zusammen mit den Lizenztexten und einem Test, der ihr Vorhandensein prüft (Vorbild: `test_no_unlicensed_fonts_embedded`).
+
+## 6. Nutzung im internen Schriftmuster (2026-09-27)
+
+`godot/asset_lab/font_specimen/` zeigt Cinzel und IM FELL English als interne Vorschau. Einschätzung vor der Nutzung:
+
+- **Vertretbar für eine interne Vorschau:** Familie, Version und SIL OFL 1.1 stehen in den Dateien selbst; die Lizenztexte liegen bei. Die OFL erlaubt Nutzung und Weitergabe jeder Kopie.
+- **Offener Zweifel zur Dateiidentität:** Die Dateien sind nicht bytegleich mit den heutigen Referenzdateien. Versionsgleichheit beweist nicht, dass es unveränderte Originaldateien sind. Konkrete Hinweise auf eine fehlerhafte Lizenzzuordnung gibt es nicht.
+- **Keine Kopie ins Godot-Projekt:** Die Szene lädt die Dateien zur Laufzeit aus `assets/fonts/` und prüft vorher den SHA-256 gegen das Register. Der Registerstatus bleibt `lizenz-belegt`; die Vorschau ist keine Freigabe.
+- **Beobachtung:** Cinzel stellt ß als „SS" dar (Kapitälchenschrift). Für Spielernamen ist das bei der Schriftwahl zu berücksichtigen. Screenshots: `docs/evidence/asset-lab/font-specimen/`.
