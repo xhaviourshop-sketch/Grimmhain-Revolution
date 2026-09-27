@@ -31,3 +31,12 @@ static func can_quit_from_menu() -> bool:
 ## Zentrale Versionsquelle: `application/config/version` in project.godot.
 static func app_version() -> String:
 	return str(ProjectSettings.get_setting("application/config/version", "0.0.0"))
+
+
+## Quelle des ersten Setup-Seeds: Systemzeit in Mikrosekunden gemischt mit dem
+## Laufzeitzähler, auf den JSON-sicheren Bereich 1 … MAX_SAFE_INT gebracht. Wird nur beim
+## ersten bewussten Verteilen gerufen; danach gilt ausschließlich der gespeicherte Seed.
+static func initial_seed() -> int:
+	var micros := int(Time.get_unix_time_from_system() * 1000000.0)
+	var mixed: int = micros ^ (Time.get_ticks_usec() << 20)
+	return posmod(mixed, CanonicalJson.MAX_SAFE_INT) + 1

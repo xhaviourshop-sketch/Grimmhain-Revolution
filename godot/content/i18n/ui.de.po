@@ -243,7 +243,7 @@ msgid "ui.setup.confirmed.heading"
 msgstr "Namensschritt vollständig"
 
 msgid "ui.setup.confirmed.body"
-msgstr "Die Spielerliste ist bestätigt. Die Rollenauswahl folgt in einem späteren Schritt. Jede Änderung hebt die Bestätigung wieder auf."
+msgstr "Die Spielerliste ist bestätigt. Als Nächstes folgt die Rollenwahl. Jede Änderung hebt die Bestätigung wieder auf."
 
 msgid "ui.setup.restart"
 msgstr "Neu beginnen"
@@ -349,3 +349,237 @@ msgstr "Alle {count} Namen werden gelöscht. Die Nummerierung beginnt wieder bei
 
 msgid "ui.setup.dialog.restart.confirm"
 msgstr "Alles löschen"
+
+msgid "ui.setup.title.roles"
+msgstr "Neue Partie · Rollen"
+
+msgid "ui.setup.title.distribution"
+msgstr "Neue Partie · Verteilung"
+
+msgid "ui.setup.wizard.progress"
+msgstr "Schritt {current} von {total}: {name}"
+
+msgid "ui.setup.wizard.step.players"
+msgstr "Spieler"
+
+msgid "ui.setup.wizard.step.roles"
+msgstr "Rollen"
+
+msgid "ui.setup.wizard.step.distribution"
+msgstr "Verteilung"
+
+msgid "ui.setup.wizard.chip"
+msgstr "{number}. {name} · {state}"
+
+msgid "ui.setup.wizard.state.done"
+msgstr "erledigt"
+
+msgid "ui.setup.wizard.state.open"
+msgstr "offen"
+
+msgid "ui.setup.wizard.state.invalid"
+msgstr "neu prüfen"
+
+msgid "ui.setup.wizard.state.current"
+msgstr "aktuell"
+
+msgid "ui.setup.to_roles"
+msgstr "Weiter zu den Rollen"
+
+msgid "ui.faction.village"
+msgstr "Dorf"
+
+msgid "ui.faction.wolves"
+msgstr "Werwölfe"
+
+msgid "ui.faction.solo"
+msgstr "Einzelsieg"
+
+msgid "ui.role.dorfbewohner.name"
+msgstr "Dorfbewohner"
+
+msgid "ui.role.dorfbewohner.short"
+msgstr "Keine Fähigkeit. Sucht mit dem Dorf die Werwölfe."
+
+msgid "ui.role.werwolf.name"
+msgstr "Werwolf"
+
+msgid "ui.role.werwolf.short"
+msgstr "Wählt nachts mit dem Rudel ein Opfer."
+
+msgid "ui.role.schutzengel.name"
+msgstr "Schutzengel"
+
+msgid "ui.role.schutzengel.short"
+msgstr "Schützt nachts eine andere Person vor dem Wolfsangriff."
+
+msgid "ui.role.waldhexe.name"
+msgstr "Waldhexe"
+
+msgid "ui.role.waldhexe.short"
+msgstr "Hat je einmal einen Heiltrank und einen Gifttrank."
+
+msgid "ui.role.das_orakel.name"
+msgstr "Das Orakel"
+
+msgid "ui.role.das_orakel.short"
+msgstr "Prüft nachts eine andere Person."
+
+msgid "ui.role.trugbilderwolf.name"
+msgstr "Trugbilderwolf"
+
+msgid "ui.role.trugbilderwolf.short"
+msgstr "Wolf im Rudel, erscheint bei Prüfungen mit einer Scheinrolle."
+
+msgid "ui.role.sensentraeger.name"
+msgstr "Sensenträger"
+
+msgid "ui.role.sensentraeger.short"
+msgstr "Darf bei seinem Tod eine lebende Person verfluchen."
+
+msgid "ui.role.wolfskind.name"
+msgstr "Wolfskind"
+
+msgid "ui.role.wolfskind.short"
+msgstr "Wählt ein Vorbild und wird bei dessen Tod zum Wolf."
+
+msgid "ui.role.lehrling.name"
+msgstr "Lehrling"
+
+msgid "ui.role.lehrling.short"
+msgstr "Wählt einen Meister und erbt bei dessen Tod die Rolle."
+
+msgid "ui.role.manipulator.name"
+msgstr "Manipulator"
+
+msgid "ui.role.manipulator.short"
+msgstr "Gewinnt allein bei genau drei Lebenden, stirbt bei Nominierung."
+
+msgid "ui.role.spiegelwolf.name"
+msgstr "Spiegelwolf"
+
+msgid "ui.role.spiegelwolf.short"
+msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die nominierende Person."
+
+msgid "ui.setup.roles.heading"
+msgstr "Rollen auswählen"
+
+msgid "ui.setup.roles.hint"
+msgstr "Stelle genau so viele Rollen zusammen, wie Personen mitspielen."
+
+msgid "ui.setup.roles.selected"
+msgstr "{count} von {persons} Rollen gewählt"
+
+msgid "ui.setup.roles.free"
+msgstr "Noch {count} frei"
+
+msgid "ui.setup.roles.too_many"
+msgstr "{count} zu viele"
+
+msgid "ui.setup.roles.exact"
+msgstr "Passt genau"
+
+msgid "ui.setup.roles.factions"
+msgstr "Dorf {village} · Werwölfe {wolves} · Einzelsieg {solo}"
+
+msgid "ui.setup.roles.issues"
+msgstr "Noch nicht gültig: {issues}"
+
+msgid "ui.setup.roles.issue.too_few_roles"
+msgstr "zu wenige Rollen"
+
+msgid "ui.setup.roles.issue.too_many_roles"
+msgstr "mehr Rollen als Personen"
+
+msgid "ui.setup.roles.issue.missing_village"
+msgstr "keine Dorfrolle"
+
+msgid "ui.setup.roles.issue.missing_wolf"
+msgstr "keine Wolfsrolle"
+
+msgid "ui.setup.roles.issue.missing_solo"
+msgstr "keine Einzelsiegrolle"
+
+msgid "ui.setup.roles.issue.above_maximum"
+msgstr "Höchstzahl einer Rolle überschritten"
+
+msgid "ui.setup.roles.issue.negative_count"
+msgstr "negative Anzahl"
+
+msgid "ui.setup.roles.issue.unknown_role"
+msgstr "unbekannte Rolle"
+
+msgid "ui.setup.roles.suggest"
+msgstr "Vorschlag verwenden"
+
+msgid "ui.setup.roles.suggest_hint"
+msgstr "Der Vorschlag ist eine Starthilfe, keine garantiert ausgewogene Besetzung."
+
+msgid "ui.setup.roles.is_suggestion"
+msgstr "Auswahl entspricht dem Vorschlag."
+
+msgid "ui.setup.roles.reset"
+msgstr "Auswahl zurücksetzen"
+
+msgid "ui.setup.roles.confirm"
+msgstr "Rollen bestätigen"
+
+msgid "ui.setup.roles.back"
+msgstr "Zurück zu Spielern"
+
+msgid "ui.setup.roles.decrease"
+msgstr "−"
+
+msgid "ui.setup.roles.increase"
+msgstr "+"
+
+msgid "ui.setup.roles.limit"
+msgstr "Höchstzahl erreicht"
+
+msgid "ui.setup.roles.status.invalid"
+msgstr "Rollenwahl noch nicht gültig."
+
+msgid "ui.setup.roles.status.ready"
+msgstr "Bereit zum Bestätigen."
+
+msgid "ui.setup.roles.status.confirmed"
+msgstr "Rollen bestätigt."
+
+msgid "ui.setup.roles.invalidated.person_count_changed"
+msgstr "Die Personenzahl hat sich geändert. Bitte Rollen prüfen und neu bestätigen."
+
+msgid "ui.setup.roles.invalidated.roles_changed"
+msgstr "Rollenwahl geändert. Bitte neu bestätigen."
+
+msgid "ui.setup.roles.toast.confirmed"
+msgstr "Rollen bestätigt"
+
+msgid "ui.setup.error.players_not_confirmed"
+msgstr "Bitte zuerst die Spielerliste bestätigen."
+
+msgid "ui.setup.error.roles_not_confirmed"
+msgstr "Bitte zuerst die Rollen bestätigen."
+
+msgid "ui.setup.error.roles_invalid"
+msgstr "Die Rollenwahl ist noch nicht gültig."
+
+msgid "ui.setup.error.above_maximum"
+msgstr "Mehr Kopien dieser Rolle sind nicht möglich."
+
+msgid "ui.setup.dialog.suggest.title"
+msgstr "Vorschlag übernehmen?"
+
+msgid "ui.setup.dialog.suggest.message"
+msgstr "Deine Auswahl ({count} Rollen) wird durch den Vorschlag für {persons} Personen ersetzt."
+
+msgid "ui.setup.dialog.suggest.confirm"
+msgstr "Vorschlag übernehmen"
+
+msgid "ui.setup.dialog.reset_roles.title"
+msgstr "Auswahl zurücksetzen?"
+
+msgid "ui.setup.dialog.reset_roles.message"
+msgstr "Alle Rollenanzahlen werden auf 0 gesetzt."
+
+msgid "ui.setup.dialog.reset_roles.confirm"
+msgstr "Zurücksetzen"
