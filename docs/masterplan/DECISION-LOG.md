@@ -321,3 +321,20 @@ Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit
 - **Einzelsiegrollen ohne klare Siegbedingung (RM-DR-006):** A. Die Siegbedingung wird je Rolle jetzt festgelegt (Rollenfragen folgen).
 - **Stimmbezug (RM-DR-008):** Antwort „Ein Reminder Text, der klar sichtbar auf dem Bildschirm des Spielleiters ist, damit er das mit einberechnen kann, da Stimmwahl physisch in der realen Welt in der ersten Version zählt und der Spielleiter das selber draufrechnen muss.“ Auslegung: Stimmboni werden nicht gezählt; der Regelkern liefert einen Hinweis, den die Spielleiteransicht deutlich anzeigt.
 - **Nominierung durch den Korrupten Richter (RM-DR-012):** A. Seine Markierung ist eine normale Nominierung mit dem Richter als Nominierendem (Tageslimit, Manipulator-Tod, Spiegelung wie sonst).
+
+## Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor, Spürhund, Parasit · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit Auslegung.
+
+- **Blutwolf (RM-DR-133.1):** folgt aus RM-DR-008: Die Spielleiteransicht zeigt als Hinweis „+1 Stimme je direkt benachbartem toten Platz“, solange er lebt; nichts wird gezählt.
+- **Korrupter Richter, Zeitpunkt:** Antwort „Jede Nacht am Ende des Tages bzw. zu Beginn der Nacht wird die alte Markierung gelöscht, so dass immer maximal 1 Spieler nominiert ist durch den Richter.“ Auslegung: Nachtschritt (Legacy-Stufe 1.5), freiwillig eine lebende Person markieren; bei Tagesbeginn gilt sie als vom Richter nominiert; bei Nachtbeginn wird die Markierung gelöscht.
+- **Korrupter Richter, Selbstmarkierung:** B. Erlaubt.
+- **Korrupter Richter, Geheimhaltung:** A. Öffentlich erscheint nur die Nominierung der markierten Person, nicht der Richter; intern ist er der Nominierende (RM-DR-012, Spiegelwolf).
+- **Wächter am Tor, Umfang (RM-DR-149):** A. Jeder Weg, auf dem eine Person während der Partie zum Wolf würde (Wolfskind-Verwandlung, Lehrling erbt eine Wolfsrolle, später König Lykaon und Seelentauscher), wird blockiert; die Person wird Dorfbewohner. Spielleiterkorrekturen nicht.
+- **Wächter am Tor, Mitteilung:** A. Nur die betroffene Person erfährt privat, dass sie jetzt Dorfbewohner ist.
+- **Spürhund:** Antwort „Die Fähigkeit wurde falsch verstanden – Wähle 3 Spieler, sollte einer ein Wolf oder Solo-Spieler sein, kriegt er einen Haken, ist es keiner, kriegt er ein X und wird zwar weiterhin aufgerufen, aber kann seine Fähigkeit nicht mehr einsetzen.“ Auslegung: Er wählt drei Personen; ist eine davon Wolf oder Einzelsieg, erhält er ✓; sonst ✗ und verliert die Fähigkeit, wird aber weiter jede Nacht aufgerufen. Keine „falsche Spur“.
+- **Spürhund, Häufigkeit:** C. Jede Nacht, freiwillig (Verzicht möglich), drei verschiedene andere lebende Personen.
+- **Parasit, Sieg (RM-DR-157.1):** Antwort „Wenn 3 oder weniger Spieler am Leben sind und er darunter ist, also er + 2 andere, egal ob Wolf oder Dorf.“ Siegkandidat bei höchstens drei Lebenden, wenn er lebt; andere gleichzeitige Siege werden mit vorgeschlagen (DR-02).
+- **Parasit, Unverwundbarkeit:** A. Mit lebendem Wirt überlebt er jede Todesursache; nur der Tod des Wirts tötet ihn; Spielleiterkorrekturen bleiben möglich. Ohne lebenden Wirt ist er normal verwundbar (A).
+- **Parasit, Wirtwechsel:** A. Jede Nacht darf er einen neuen Wirt wählen oder beim alten bleiben.
+- **Setup-Regel für Einzelsiegrollen:** Antwort „Setup auf später verschieben, dafür aber alle Rollen miteinander abgleichen und logische Konsequenz ziehen, welche Rollen nie in einer gleichen Runde sein sollten.“ Die Setup-Einschränkung ist vertagt; eine Analyse unverträglicher Rollenkombinationen wird als Vorschlag erstellt. Die bisherige Entscheidung „mehrere Manipulatoren sind getrennte Kandidaten“ bleibt bis dahin bestehen.

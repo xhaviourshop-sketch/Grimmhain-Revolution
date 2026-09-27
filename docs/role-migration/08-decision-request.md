@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 18 | 39 |
+| entschieden | 23 | 46 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 53 | 144 |
+| später | 48 | 137 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -348,7 +348,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `spuerhund`; Wechselwirkung laut Dossier: Wolfskind, Dämonischer Wolf (Fluch), Trugbilderwolf (Wolfsrolle), alle Solos, Lehrling/Seelentauscher (Rollenname …
 - **Belege:** [Dossier](dossiers/village-1.md#spuerhund); RM-C-090 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-105.1 · Wer wird falsche Spur** · Status: später (K7)
+- **RM-DR-105.1 · Wer wird falsche Spur** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Zufall (SeededRng)
   - Option B: SL wählt
   - Auswirkung: Balance: Zufall kann Spürhund selbst oder echte Wölfe treffen (dann wirkungslos); Umsetzung: Rng-Aufruf vs. Prompt
@@ -611,17 +611,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `korrupter-richter`; Wechselwirkung laut Dossier: Manipulator, Spiegelwolf, Nominations-Limit, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise (Blockaden), Hades (Stimme x3) und Blutwolf nur konzeptionell (weitere …
 - **Belege:** [Dossier](dossiers/village-2.md#korrupter-richter); RM-C-105, RM-C-106, RM-C-107 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-008, RM-DR-012.
-- **RM-DR-117.1 · +1 Stimme** · Status: später (K14)
+- **RM-DR-117.1 · +1 Stimme** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: SL-Hinweis "zählt +1 Stimme" am nominierten Sitz
   - Option B: Rolle verliert "+1 Stimme", Text anpassen
   - Auswirkung: Balance: ohne Hinweis wirkungslos, Rolle nahezu leer; Umsetzung: A: nur Anzeige in Nomination-Ansicht; B: nur Text
   - Empfehlung: A (Hinweis + Protokoll)
-- **RM-DR-117.2 · Wer ist Nominierender?** · Status: später (K14)
+- **RM-DR-117.2 · Wer ist Nominierender?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Richter ist Nominierender (Spiegelwolf trifft Richter)
   - Option B: anonyme System-Nominierung (Spiegelwolf ohne Ziel)
   - Auswirkung: Balance: Spiegelwolf-Gefahr für Richter; Umsetzung: Nominations braucht Quelle `system`/`role`
   - Empfehlung: PO klärt
-- **RM-DR-117.3 · Zählt gegen "einmal nominiert werden"?** · Status: später (K14)
+- **RM-DR-117.3 · Zählt gegen "einmal nominiert werden"?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: zählt
   - Option B: zählt nicht
   - Auswirkung: Balance: Richter kann reguläre Nominierung blockieren; Umsetzung: Nominations-Regeloption
@@ -994,7 +994,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `blutwolf`; Wechselwirkung laut Dossier: alle Tötungen neben dem Blutwolf; indirekt Korrupter Richter und Hades (gleiche …
 - **Belege:** [Dossier](dossiers/wolves-b.md#blutwolf). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-003, RM-DR-008.
-- **RM-DR-133.1 · Umsetzung ohne Stimmsystem** · Status: später (K14)
+- **RM-DR-133.1 · Umsetzung ohne Stimmsystem** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Gewicht als Hinweis für die physische Zählung anzeigen (Legacy-Marker „V<n>“)
   - Option B: Rolle bis zu einem Stimmsystem zurückstellen
   - Auswirkung: Balance: –; Umsetzung: A: Sitznachbarschaft (RM-DR-003) und Anzeige
@@ -1388,7 +1388,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `waechter-am-tor`; Wechselwirkung laut Dossier: Wolfskind, Lehrling, König Lykaon/Trugbilderwolf, Seelentauscher, Dr. Victor Frankenstein, Kutscher, Dämonischer Wolf (Regelfrage), Grabräuber …
 - **Belege:** [Dossier](dossiers/village-4.md#waechter-am-tor); RM-C-163 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-149.1 · Gilt der Dämonische-Wolf-Fluch als "neu entstehender Werwolf"?** · Status: später (K12)
+- **RM-DR-149.1 · Gilt der Dämonische-Wolf-Fluch als "neu entstehender Werwolf"?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Fluch ist nur Erscheinung, Wächter irrelevant
   - Option B: Fluch erzeugt echten Wolf, Wächter muss abfangen
   - Auswirkung: Balance: bei B stärker für Dorf; Umsetzung: A: appears_as; B: zusätzlicher Abfangpunkt
@@ -1587,7 +1587,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `parasit`; Wechselwirkung laut Dossier: jede tötende Rolle (Immunität), Rudelvater (`PACKFATHER_KILL` durchbricht Immunität NICHT, da Parasit-Prüfung zuerst), Nekromant-Schild (kann den Kettentod abfangen), Manipulator (gleichzeitiger Final-3-Sieg), Henker …
 - **Belege:** [Dossier](dossiers/solos-b.md#parasit); RM-C-078 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-007, RM-DR-009, RM-DR-011.
-- **RM-DR-157.1 · "Final 3" und Siegvorrang** · Status: später; Quelle: DR-02 schließt eine feste Siegpriorität aus (Teil „Team-Siege zuerst“ entschieden); Restfrage höchstens drei oder genau drei Lebende
+- **RM-DR-157.1 · "Final 3" und Siegvorrang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Parasit gewinnt bei <=3 Lebenden immer (ggf. gemeinsam mit anderen)
   - Option B: wie Code, Team-Siege zuerst
   - Auswirkung: Balance: Code: Parasit + 2 Dorf ohne Wölfe => Dorfsieg; Parasit + 2 Wölfe => Wolfssieg; Umsetzung: Siegpriorität in WinRules (Q4)

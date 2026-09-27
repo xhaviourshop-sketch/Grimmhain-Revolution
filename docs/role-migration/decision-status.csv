@@ -29,7 +29,7 @@ RM-DR-103.2;ja;rattenfaenger;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, i
 RM-DR-104.1;ja;die-ewigen;S;;
 RM-DR-104.2;ja;die-ewigen;S;;
 RM-DR-104.3;ja;die-ewigen;S;;
-RM-DR-105.1;ja;spuerhund;S;;
+RM-DR-105.1;ja;spuerhund;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";keine falsche Spur; ✗ verliert die Fähigkeit
 RM-DR-106.1;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.2;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.3;ja;rachsuechtiger-wolf;S;;
@@ -60,9 +60,9 @@ RM-DR-115.1;ja;verdammniswaechter;S;;
 RM-DR-115.2;ja;verdammniswaechter;S;;
 RM-DR-115.3;ja;verdammniswaechter;S;;
 RM-DR-116.1;ja;wahnsinniger-kutscher;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
-RM-DR-117.1;ja;korrupter-richter;S;;
-RM-DR-117.2;ja;korrupter-richter;S;;
-RM-DR-117.3;ja;korrupter-richter;S;;
+RM-DR-117.1;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis +1 Stimme
+RM-DR-117.2;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Richter ist Nominierender (RM-DR-012)
+RM-DR-117.3;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";zählt als normale Nominierung
 RM-DR-118.1;ja;maertyrerin;S;;
 RM-DR-118.2;ja;maertyrerin;S;;
 RM-DR-118.3;ja;maertyrerin;S;;
@@ -108,7 +108,7 @@ RM-DR-132.1;ja;voodoo-priester;S;;
 RM-DR-132.2;ja;voodoo-priester;S;;
 RM-DR-132.3;ja;voodoo-priester;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
 RM-DR-132.4;ja;voodoo-priester;S;;
-RM-DR-133.1;ja;blutwolf;S;;
+RM-DR-133.1;ja;blutwolf;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis für den Spielleiter (RM-DR-008)
 RM-DR-134.1;ja;albtraumwolf;S;;
 RM-DR-134.2;ja;albtraumwolf;S;;
 RM-DR-134.3;ja;albtraumwolf;S;;
@@ -155,7 +155,7 @@ RM-DR-148.1;ja;schutzgeist;S;;
 RM-DR-148.2;ja;schutzgeist;S;;
 RM-DR-148.3;ja;schutzgeist;S;Konflikt mit rules-register G-PH-2 (nur lebende Rolleninhaber handeln);bei Umsetzung ausdrücklich als Ausnahme entscheiden
 RM-DR-148.4;ja;schutzgeist;S;;
-RM-DR-149.1;ja;waechter-am-tor;S;;
+RM-DR-149.1;ja;waechter-am-tor;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";jeder Weg ins Rudel wird blockiert; Fluch folgt mit Dämonischem Wolf
 RM-DR-150.1;ja;zeitwaechter;S;;
 RM-DR-150.2;ja;zeitwaechter;S;;
 RM-DR-150.3;ja;zeitwaechter;S;;
@@ -178,7 +178,7 @@ RM-DR-155.2;ja;doppelspion;E;rules-register G-SIEG-2: Einzelsiegrollen zählen a
 RM-DR-155.3;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur Doppelspion-Kandidat, kein Dorfkandidat
 RM-DR-156.1;ja;grabraeuber;S;;
 RM-DR-156.2;ja;grabraeuber;S;;
-RM-DR-157.1;ja;parasit;S;DR-02 schließt eine feste Siegpriorität aus (Teil „Team-Siege zuerst“ entschieden);Restfrage höchstens drei oder genau drei Lebende
+RM-DR-157.1;ja;parasit;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";höchstens drei Lebende inkl. ihm, mit anderen Siegen
 RM-DR-158.1;ja;todesprediger;S;;
 RM-DR-158.2;ja;todesprediger;S;;
 RM-DR-158.3;ja;todesprediger;S;;
