@@ -222,3 +222,17 @@ Dieser Eintrag ersetzt „nur Nacht 1, einmalig“ (Regelregister §9, Nachtprio
 
 - Für `assets/sounds/Nachtmusik.mp3` liegt dem Product Owner kein belastbarer Lizenz- oder Herkunftsnachweis vor. Die Datei gilt als ungeklärt, bleibt gesperrt und wird für Version 1.0 durch eine neue Nachtmusik ersetzt (`../assets/PRODUCTION-PLAN.md` §6.2).
 - Das Assetregister wird maschinenlesbar in `asset-register.csv` geführt und mit `node tools/check-asset-register.js` geprüft. Nur der Product Owner setzt den Status `freigegeben`.
+
+## Assetstrategie, Budget und Legacy-Medien · 27. September 2026
+
+Dieser Eintrag entscheidet Q8 (`../godot-migration/07-open-questions.md`) mit **Option B** und präzisiert den Eintrag „Gestaltung, Audio und Assets".
+
+- KI-generierte Medien sind für Konzept, Platzhalter und Stilentwicklung erlaubt.
+- Zentrale Schlüsselassets werden später gezielt neu produziert, selbst erstellt, beauftragt oder mit eindeutig dokumentierten kommerziellen Nutzungsrechten erzeugt.
+- Kein Legacy-Asset gilt allein wegen guter Optik als releasefähig.
+- Jede finale Datei braucht nachvollziehbare Herkunft, Lizenz beziehungsweise Nutzungsrecht und Product-Owner-Freigabe (Registerstatus `freigegeben`).
+- KI-Verwendung wird je Asset transparent dokumentiert (Werkzeug, Tarif, Datum, Prompt, Nachbearbeitung) und für Stores offengelegt.
+- Budget für externe KI-, Audio-, Sprecher-, Grafik- oder Lizenzwerkzeuge: höchstens 500 € gesamt. Konservativ planen, kostenlose Werkzeuge bevorzugen, wenn die Qualität genügt. Claude löst keine Käufe oder Abonnements aus und dokumentiert nur Empfehlungen und Kostenrahmen.
+- Für Rollenkarten, UI-Grafiken, Statussiegel, Dorfplatz-Hintergründe, kurze Legacy-Sounds und die Nachtmusik liegt kein zusätzlicher Herkunftsnachweis vor. Sie bleiben `ungeklärt` beziehungsweise `gesperrt`, sind nicht releasefähig, dienen höchstens als visuelle oder akustische Referenz und werden nicht nach Godot übernommen.
+- Die zehn OpenAI-Porträts (C2PA belegt die Plattform; Tarif, Prompts und Kontohistorie fehlen) bleiben `ki-nachgewiesen`, ohne Releasefreigabe. Sie sind als Stilreferenz und Entwicklungsplatzhalter dokumentierbar und werden nicht nach Godot kopiert.
+- Schriften: Die ursprüngliche Downloadquelle ist unbekannt. Familie und SIL OFL 1.1 werden über die eingebetteten Font-Metadaten belegt, ergänzt um die heutige offizielle Referenzquelle (`../assets/FONTS.md`). Eine Downloadhistorie wird nicht rekonstruiert oder behauptet.

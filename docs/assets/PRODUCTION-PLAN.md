@@ -2,7 +2,7 @@
 
 **Stand:** 2026-09-26 · **Status:** Entwurf zur Product-Owner-Freigabe. Nichts davon ist beauftragt, gekauft oder in Godot eingebaut.
 **Grundlagen:** [`INVENTORY.md`](INVENTORY.md), [`../godot-migration/05-visual-audio-direction.md`](../godot-migration/05-visual-audio-direction.md) (Leitbild, Cue-Tabelle, Budgets), [`../architecture/tablet-asset-spec.md`](../architecture/tablet-asset-spec.md), [`../masterplan/ASSET-REGISTER.md`](../masterplan/ASSET-REGISTER.md), [`../masterplan/BUDGET.md`](../masterplan/BUDGET.md), [`../../GRIMMHAIN-REVOLUTION-MASTERPLAN.md`](../../GRIMMHAIN-REVOLUTION-MASTERPLAN.md) Phasen 2, 6, 7, 9.
-**Sprechertexte:** [`NARRATOR-SCRIPT.md`](NARRATOR-SCRIPT.md)
+**Sprechertexte:** [`NARRATOR-SCRIPT.md`](NARRATOR-SCRIPT.md) · **Briefing erste Welle:** [`BRIEFING-WAVE-1.md`](BRIEFING-WAVE-1.md)
 
 ---
 
@@ -10,11 +10,11 @@
 
 1. **Nur registrierte Assets.** Jede Datei bekommt ihre Registerzeile, bevor sie ins Repository kommt. In `godot/` liegt nur, was `freigegeben` ist (`node tools/check-asset-register.js`).
 2. **Herkunft bei der Erstellung sichern, nicht nachträglich.** Prompt, Werkzeug, Tarif, Datum, Rechnung und die zum Datum geltenden Nutzungsbedingungen werden sofort archiviert. Der Bestand zeigt, dass Nachträge kaum gelingen (208 Dateien ohne Nachweis).
-3. **Strategie Q8 Option B (Empfehlung, noch nicht entschieden):** KI oder freie Bibliotheken für Platzhalter und Nebenelemente; Schlüsselassets (Porträts der 1.0-Rollen, Nachtmusik, Kern-Cues, Erzählerstimme) beauftragt, selbst erstellt oder mit belegtem kommerziellem Tarif erzeugt und nachbearbeitet.
+3. **Strategie Q8 Option B (entschieden 2026-09-27, Decision Log):** KI oder freie Bibliotheken für Platzhalter und Nebenelemente; Schlüsselassets (Porträts der 1.0-Rollen, Nachtmusik, Kern-Cues, Erzählerstimme) beauftragt, selbst erstellt oder mit belegtem kommerziellem Tarif erzeugt und nachbearbeitet.
 4. **Kein Text im Bild.** Beschriftungen rendert Godot aus Übersetzungsschlüsseln. Das betrifft auch Karten und Tableaus.
 5. **Geheimhaltung vor Wirkung.** Kein Asset und kein Cue darf verraten, wen ein Ereignis betrifft, bevor der Spielleiter es verkündet (`05` §1 Regel 3).
 6. **Eigenständige Gestaltung.** Keine Elemente, Begriffe oder Formen aus Blood on the Clocktower (`05` §2.4). Jeder Auftrag enthält diesen Satz.
-7. **Budget.** Bis zur nächsten Freigabe höchstens 500 € gesamt, davon Plattformkosten reserviert (Abschnitt 8).
+7. **Budget.** Höchstens 500 € für externe KI-, Audio-, Sprecher-, Grafik- und Lizenzwerkzeuge (Decision Log 2026-09-27). Geplant sind konservativ 300 €, kostenlose Werkzeuge haben Vorrang. Claude kauft nichts und schließt keine Abonnements ab (Abschnitt 8).
 
 ## 2. Ablauf je Asset
 
@@ -56,13 +56,13 @@ Brief (ID, Zweck, Spezifikation, Referenz, Verbote)
 
 | # | Aufgabe | Ergebnis | Abnahme |
 |---|---|---|---|
-| W0-1 | OFL-Lizenztexte für Cinzel und IM Fell English aus der Originalquelle beschaffen, Bezugsquelle eintragen | `OFL.txt` je Familie, Registerzeilen vervollständigt | PO-Freigabe → Status `freigegeben` |
+| W0-1 | OFL-Lizenztexte für Cinzel und IM Fell English aus der Originalquelle beschaffen, Bezugsquelle eintragen | **erledigt 2026-09-27:** `assets/fonts/OFL-*.txt`, `FONTS.md`, Status `lizenz-belegt` | PO-Freigabe → Status `freigegeben` |
 | W0-2 | Lesetextschrift wählen (Vorschlag `05` §2.3: Source Sans 3 oder Alegreya Sans, beide OFL) | Entscheidung + Lizenzdatei | Lesbarkeit 14–20 sp auf 1024×768 |
 | W0-3 | Art Bible, 2–3 Seiten: Farbpalette (`05` §2.1), Licht, Formensprache, Motivregeln, Verbote, 6–8 freigegebene Stilreferenzen aus dem Bestand | `docs/assets/ART-BIBLE.md` | PO-Freigabe |
 | W0-4 | Cue-Liste aus `05` §4 finalisieren: IDs, Länge, Bus, Priorität, stumme Alternative (Abschnitt 6.3) | Tabelle in diesem Dokument freigegeben | PO-Freigabe |
 | W0-5 | Sprechertexte DE/EN finalisieren und die offenen Fragen in `NARRATOR-SCRIPT.md` §6 entscheiden | freigegebene Texttabelle | PO-Freigabe, Probelesung am Tisch |
-| W0-6 | PO beantwortet die Herkunftsfragen aus `INVENTORY.md` §6 | Registerzeilen aktualisiert | `node tools/check-asset-register.js` grün |
-| W0-7 | Q8 entscheiden | Eintrag im Decision Log | – |
+| W0-6 | PO beantwortet die Herkunftsfragen aus `INVENTORY.md` §6 | **erledigt 2026-09-27:** kein zusätzlicher Nachweis; Legacy bleibt Referenz (Decision Log) | `node tools/check-asset-register.js` grün |
+| W0-7 | Q8 entscheiden | **erledigt 2026-09-27:** Option B | – |
 
 ### W1 · Vertical Slice (lizenzklar, ohne Kosten)
 
@@ -70,7 +70,7 @@ Ziel ist ein vollständig spielbarer Slice ohne ein einziges ungeklärtes Asset.
 
 | Bereich | Lösung für W1 |
 |---|---|
-| Hintergrund Tag/Nacht | Farbverlauf + Vignette als Shader aus den Farb-Tokens (`05` §2.1). Die vorhandenen `bg-village-*.webp` nur, wenn W0-6 ihre Herkunft klärt. |
+| Hintergrund Tag/Nacht | Farbverlauf + Vignette als Shader aus den Farb-Tokens (`05` §2.1). Die vorhandenen `bg-village-*.webp` bleiben Referenz (keine Herkunft, Decision Log 2026-09-27). |
 | Token, Ringe, Sitznummer | im Code gezeichnet (heute schon Spezifikation, `tablet-asset-spec.md` §3–4) |
 | Fraktions- und Phasensymbole | einfache eigene Vektorsymbole (Wolfskopf, Haus, Stern, Mond, Sonne, Schild, Sanduhr, Siegel) als SVG, selbst gezeichnet; alternativ freie Sammlung mit geprüfter Lizenz (z. B. CC0; bei CC BY Namensnennung in der Lizenzseite) |
 | Porträts | keine; Token zeigen Initialen und Fraktionssymbol |
@@ -235,7 +235,7 @@ Nicht enthalten: Option B für den Erzähler, beauftragte Illustration der 20–
 
 ## 10. Nächste einzelne Arbeitspakete
 
-1. **W0-1 Schriftlizenzen:** OFL-Texte beilegen, Registerzeilen auf `freigegeben` bringen (nach PO-Freigabe). Kleinster Schritt mit sofortiger Wirkung.
+1. **W0-1 Schriftlizenzen:** Lizenztexte liegen bei; offen ist nur die PO-Freigabe der vier Registerzeilen (`FONTS.md` §5).
 2. **W0-5 Sprechertexte:** offene Fragen in `NARRATOR-SCRIPT.md` §6 entscheiden, Texte freigeben.
 3. **W0-3 Art Bible** schreiben.
 4. **W1 Audio-Technik in Godot:** `AudioDirector`, Busse, Regler, stummer Standard, Cue-Katalog als Daten, Tests zuerst. Keine Mediendateien nötig.

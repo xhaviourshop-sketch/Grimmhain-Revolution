@@ -145,6 +145,8 @@ Zur Nachtmusik: Liegt eine Lizenz vor? Falls nein, wird sie für den MVP durch e
 
 **Empfehlung: B.**
 
+**Entschieden (PO, 2026-09-27): Option B.** Siehe `../masterplan/DECISION-LOG.md`, Eintrag „Assetstrategie, Budget und Legacy-Medien“.
+
 ---
 
 ## Q9 · Was passiert mit der Web-App während der Migration?
