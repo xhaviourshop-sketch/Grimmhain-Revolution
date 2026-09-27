@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 27 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 29 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 45 |
+| fehlend, Entscheidung nötig (`decision-required`) | 43 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 45 fehlende) | 10 |
-| Legacy-Befund `legacy-contradictory` (nur 45 fehlende) | 23 |
-| Legacy-Befund `legacy-broken` (nur 45 fehlende) | 9 |
-| Legacy-Befund `not-found` (nur 45 fehlende) | 3 |
+| Legacy-Befund `legacy-verified` (nur 43 fehlende) | 9 |
+| Legacy-Befund `legacy-contradictory` (nur 43 fehlende) | 22 |
+| Legacy-Befund `legacy-broken` (nur 43 fehlende) | 9 |
+| Legacy-Befund `not-found` (nur 43 fehlende) | 3 |
 
-<!-- check:counts total=72 implemented=27 remaining=45 -->
+<!-- check:counts total=72 implemented=29 remaining=43 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -45,7 +45,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 7 | `wolfskind` | Wolfskind / Wolf Child | Dorf | I | 0.9 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Fraktionswechsel | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 8 | `das-orakel` | Das Orakel / The Oracle | Dorf | I | 4.6 | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 9 | `die-ewigen` | Die Ewigen / The Eternal Ones | Dorf | II | 4.8 | `decision-required` | `not-found` | `assisted` | Informationsrolle | M / mittel | K9 | – | [03](03-remaining-roles-analysis.md#die-ewigen) · [Dossier](dossiers/village-1.md#die-ewigen) |
-| 10 | `spuerhund` | Spürhund / Scent Hound | Dorf | I | 6.8 | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | M / mittel | K7 | – | [03](03-remaining-roles-analysis.md#spuerhund) · [Dossier](dossiers/village-1.md#spuerhund) |
+| 10 | `spuerhund` | Spürhund / Scent Hound | Dorf | I | 6.8 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#spuerhund) |
 | 11 | `schutzengel` | Schutzengel / Guardian Angel | Dorf | I | 1.3 | `implemented-and-tested` | `legacy-broken` | `automatic` | Schutz | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 12 | `werwolf` | Werwolf / Werewolf | Wölfe | I, II, III, IV | 2.0 | `implemented-and-tested` | `legacy-verified` | `automatic` | Tötung | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 13 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Wölfe | I, II, III, IV | 2.2 | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | M / hoch | K11 | – | [03](03-remaining-roles-analysis.md#rachsuechtiger-wolf) · [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf) |
@@ -105,7 +105,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 67 | `manipulator` | Manipulator / Manipulator | Einzelsieg | III | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Nominierungsreaktion | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 68 | `doppelspion` | Doppelspion / Double Agent | Einzelsieg | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Einzelsieg | S / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#doppelspion) |
 | 69 | `grabraeuber` | Grabräuber / Grave Robber | Einzelsieg | II | 6.4 (once) | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | XL / hoch | K15 | – | [03](03-remaining-roles-analysis.md#grabraeuber) · [Dossier](dossiers/solos-b.md#grabraeuber) |
-| 70 | `parasit` | Parasit / Parasite | Einzelsieg | III | 6.2 | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | M / mittel | K10 | C | [03](03-remaining-roles-analysis.md#parasit) · [Dossier](dossiers/solos-b.md#parasit) |
+| 70 | `parasit` | Parasit / Parasite | Einzelsieg | III | 6.2 | `implemented-and-tested` | `legacy-verified` | `automatic` | Verknüpfte Personen | M / mittel | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-b.md#parasit) |
 | 71 | `todesprediger` | Todesprediger / Death Prophet | Einzelsieg | II | 6.6 (once) | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | M / mittel | K15 | – | [03](03-remaining-roles-analysis.md#todesprediger) · [Dossier](dossiers/solos-b.md#todesprediger) |
 | 72 | `dorfbewohner` | Dorfbewohner / Villager | Dorf | I, II, III, IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | passive Dorfrolle | S / niedrig | – | Basis | [02](02-implemented-roles-audit.md) |
 

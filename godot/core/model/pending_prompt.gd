@@ -23,6 +23,8 @@ const OWNER_RANGER := &"waldlaeufer"
 const OWNER_DOCTOR := &"doktor"
 const OWNER_TRACKER := &"faehrtenleser"
 const OWNER_JUDGE := &"korrupter-richter"
+const OWNER_HOUND := &"spuerhund"
+const OWNER_PARASITE := &"parasit"
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0

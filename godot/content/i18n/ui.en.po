@@ -557,6 +557,18 @@ msgstr "Blood Wolf"
 msgid "ui.role.blutwolf.short"
 msgstr "Pack wolf, vote +1 per dead direct neighbour."
 
+msgid "ui.role.spuerhund.name"
+msgstr "Scent Hound"
+
+msgid "ui.role.spuerhund.short"
+msgstr "Checks three people at night for wolf or solo; a miss costs the ability."
+
+msgid "ui.role.parasit.name"
+msgstr "Parasite"
+
+msgid "ui.role.parasit.short"
+msgstr "Attaches to a host and dies only with it; wins among the final three."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

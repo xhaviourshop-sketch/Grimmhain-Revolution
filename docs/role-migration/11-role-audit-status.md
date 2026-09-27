@@ -15,16 +15,16 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=27 open=0 blocked=45 -->
+<!-- check:audit-counts total=72 green=29 open=0 blocked=43 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
-| **GRÜN** | **27** |
+| **GRÜN** | **29** |
 | **OFFEN** | **0** |
-| **BLOCKIERT** | **45** |
+| **BLOCKIERT** | **43** |
 
-72/72 ist **nicht** erreicht. Die 45 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
+72/72 ist **nicht** erreicht. Die 43 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
 
 ## 3. Übersicht
 
@@ -41,7 +41,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 7 | `wolfskind` | Wolfskind / Wolf Child | Dorf | DR-10, Eintrag Wolfskind | Vorbildwahl 0.9, Verwandlung als Todesfolge vor Siegprüfung, Rudel ab Folgenacht | – | umgesetzt | test_wolfskind (24), test_role_interactions, fuzz | Lehrling, Spiegelwolf, Manipulator, Waldhexe, Sensenträger | **GRÜN** |
 | 8 | `das-orakel` | Das Orakel / The Oracle | Dorf | DR-07, Eintrag Orakel | Pflichtschritt 4.6, Informationsmodell Wahrheit/ermittelt/gezeigt, Übersteuerung nur gezeigt | – | umgesetzt | test_orakel (28), fuzz | Trugbilderwolf, Wolfskind, Sonderwölfe, Lehrling | **GRÜN** |
 | 9 | `die-ewigen` | Die Ewigen / The Eternal Ones | Dorf | Rollentext `js/core/roles.js`; Legacy `not-found` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-104.1, RM-DR-104.2, RM-DR-104.3, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#die-ewigen) | **BLOCKIERT** |
-| 10 | `spuerhund` | Spürhund / Scent Hound | Dorf | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#spuerhund) | **BLOCKIERT** |
+| 10 | `spuerhund` | Spürhund / Scent Hound | Dorf | Rollentext, vom PO präzisiert; RM-DR-105.1 (Decision Log) | jede Nacht freiwillig 3 andere; ✓ bei Wolf/Solo, ✗ kostet die Fähigkeit (Aufruf bleibt) | – | umgesetzt | test_spuerhund_parasit, fuzz | Trugbilderwolf, Manipulator, Wiederbelebung; Dämonischer Wolf folgt | **GRÜN** |
 | 11 | `schutzengel` | Schutzengel / Guardian Angel | Dorf | DR-05, Eintrag Schutzengel | Pflichtschritt 1.3, andere lebende Person, nur gegen Rudelangriff dieser Nacht, bleibt nach eigenem Tod | – | umgesetzt | test_schutzengel (29), test_role_interactions (Gift trotz Schutz), fuzz | Waldhexe, Sensenträger, Spiegelwolf, Wolfskind | **GRÜN** |
 | 12 | `werwolf` | Werwolf / Werewolf | Wölfe | Register §2, G-PH-6 | Rudelschritt 2.0 solange ein Wolf lebt; Opfer jede lebende Person; überspringbar mit Grund; entfällt ohne lebenden Wolf (Audit-Fix) | – | umgesetzt | test_steps, test_replay, test_save_load, test_role_interactions (Rudel ohne Wolf), fuzz | Schutz, Rettung, Gift, Reaktion, Verwandlung, Erbe | **GRÜN** |
 | 13 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Wölfe | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-106.1, RM-DR-106.2, RM-DR-106.3, RM-DR-002 | fehlt | – | [03](03-remaining-roles-analysis.md#rachsuechtiger-wolf) | **BLOCKIERT** |
@@ -101,7 +101,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 67 | `manipulator` | Manipulator / Manipulator | Einzelsieg | DR-12, Eintrag Manipulator | stirbt bei Nominierung, gewinnt bei genau 3 Lebenden ohne je nominiert | – | umgesetzt | test_manipulator (18), test_role_interactions, test_siegreicher_wolf, fuzz | Wolfskind, Lehrling, Siegreicher Wolf, Kandidatenmenge | **GRÜN** |
 | 68 | `doppelspion` | Doppelspion / Double Agent | Einzelsieg | Rollentext; RM-DR-155.1–.5 (Decision Log „Rollenaudit“) | gewinnt allein, wenn er lebt und kein Wolf lebt; dann kein Dorfkandidat; Parität Nicht-Wolf; Rudel-Aufwachen nur Ansage | – | umgesetzt | test_doppelspion (11), fuzz | Manipulator, Lehrling, Orakel, Dorfsieg, Wiederbelebung; Rachsüchtiger Wolf folgt | **GRÜN** |
 | 69 | `grabraeuber` | Grabräuber / Grave Robber | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `not-found` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-156.1, RM-DR-156.2 | fehlt | – | [03](03-remaining-roles-analysis.md#grabraeuber) | **BLOCKIERT** |
-| 70 | `parasit` | Parasit / Parasite | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-verified` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#parasit) | **BLOCKIERT** |
+| 70 | `parasit` | Parasit / Parasite | Einzelsieg | Rollentext; RM-DR-157.1, RM-DR-011.2 (Decision Log) | Wirt wählbar; mit lebendem Wirt unverwundbar (außer Korrektur); stirbt mit dem Wirt; Sieg bei ≤3 Lebenden | – | umgesetzt | test_spuerhund_parasit, fuzz | Rudel, Lynch, Gift, Korrekturen, Kandidatenmenge | **GRÜN** |
 | 71 | `todesprediger` | Todesprediger / Death Prophet | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-158.1, RM-DR-158.2, RM-DR-158.3 | fehlt | – | [03](03-remaining-roles-analysis.md#todesprediger) | **BLOCKIERT** |
 | 72 | `dorfbewohner` | Dorfbewohner / Villager | Dorf | Register §1; Core-Slice Rollenanzahl | keine Fähigkeit, keine Obergrenze | – | umgesetzt | test_player_count_range, Szenarien as-c01–c04, test_role_interaction_fuzz | Parität, alle Siege | **GRÜN** |
 

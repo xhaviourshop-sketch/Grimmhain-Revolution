@@ -24,6 +24,8 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		return null
 	if _prevented_by_protection(ctx, target_id, cause, source_kind):
 		return null
+	if _parasite_immune(ctx, target, cause, source_kind):
+		return null
 	var dead_before := s.players.size() - s.alive_ids().size()  # nur aktuell Tote (RM-DR-138.3)
 	var record := KillEvent.new()
 	record.target_id = target_id
@@ -45,6 +47,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		ApprenticeRules.on_master_death(ctx, record)
 		_queue_reaction(ctx, target, record, s.players.size() - dead_before)
 		_knight_strike(ctx, target, record)
+	_end_parasite_bonds(ctx, target, trigger_effects)
 	WinRules.record_death_seeker(ctx, target, record, dead_before)
 	if trigger_effects:
 		_coachman_crash(ctx, target, record)
@@ -80,6 +83,48 @@ static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: St
 		"rescuer_ids": rescuers, "night": night,
 	})
 	return true
+
+
+static func host_of(s: GameState, parasite_id: int) -> int:
+	for b: Dictionary in s.parasite_hosts:
+		if int(b["parasite_id"]) == parasite_id:
+			return int(b["host_id"])
+	return GameState.NO_TARGET
+
+
+## Parasit (RM-DR-157): Mit lebendem Wirt verhindert er jeden Tod außer Spielleiterkorrekturen
+## (Quelle `gm`) und dem Tod durch seinen Wirt (`PARASITE_HOST`).
+static func _parasite_immune(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
+	if target.role_id != RoleCatalog.PARASIT or source_kind == KillEvent.SOURCE_GM or cause == KillEvent.CAUSE_PARASITE_HOST:
+		return false
+	var host := host_of(ctx.state, target.id)
+	if host == GameState.NO_TARGET or not ctx.state.players[host].alive:
+		return false
+	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {
+		"target_id": target.id, "cause": cause, "source_kind": source_kind, "protection": RoleCatalog.PARASIT,
+		"sources": [RoleCatalog.PARASIT], "host_id": host, "night": ctx.state.night_number,
+	})
+	return true
+
+
+## Tod einer Person beendet ihre Parasit-Bindungen (RM-DR-011.2): stirbt der Parasit, verliert er
+## den Wirt; stirbt ein Wirt (mit Folgen), stirbt sein Parasit mit.
+static func _end_parasite_bonds(ctx: RuleContext, target: Player, trigger_effects: bool) -> void:
+	var s := ctx.state
+	var orphans: Array[int] = []
+	var kept: Array = []
+	for b: Dictionary in s.parasite_hosts:
+		if int(b["parasite_id"]) == target.id:
+			continue
+		if int(b["host_id"]) == target.id:
+			orphans.append(int(b["parasite_id"]))
+			continue
+		kept.append(b)
+	s.parasite_hosts = kept
+	if not trigger_effects:
+		return
+	for id: int in orphans:
+		request_kill(ctx, id, KillEvent.CAUSE_PARASITE_HOST, KillEvent.SOURCE_PLAYER, target.id)
 
 
 ## Wahnsinniger Kutscher: Stirbt er durch Hinrichtung (LYNCH), sterben seine nächsten lebenden

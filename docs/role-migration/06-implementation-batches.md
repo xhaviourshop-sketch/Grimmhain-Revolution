@@ -276,7 +276,9 @@ Siehe §3.
 
 ### K7 · Bedingte und zufallsgestützte Information
 
-**Rollen Charge K7 (6):** `kopfgeldjaeger`, `koenig`, `traumdeuter`, `spuerhund`, `kriegerin-des-lichts`, `blutpriester`
+**Rollen Charge K7 (5):** `kopfgeldjaeger`, `koenig`, `traumdeuter`, `kriegerin-des-lichts`, `blutpriester`
+
+**Nachtrag Rollenaudit:** `spuerhund` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Informationen, die an eine Bedingung gebunden sind oder zufällig ausgewählt werden; teils mit Tod.
 - **Neue Systeme:** N-10 (Verfügbarkeit), Erweiterung N-02 (Namensliste), N-09 (falsche Spur des Spürhunds).
@@ -315,7 +317,9 @@ Siehe §3.
 
 ### K10 · Bindungsmodell II
 
-**Rollen Charge K10 (3):** `parasit`, `rotkaeppchen`, `voodoo-priester`
+**Rollen Charge K10 (2):** `rotkaeppchen`, `voodoo-priester`
+
+**Nachtrag Rollenaudit:** `parasit` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Bindungen mit Schutz- oder Umlenkwirkung.
 - **Neue Systeme:** keine neuen; N-08 und N-03 werden kombiniert; Rotkäppchen-Apfel braucht eine Wiederholung eines Nachtschritts (Erweiterung `StepQueue`).

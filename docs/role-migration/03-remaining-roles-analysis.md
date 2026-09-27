@@ -19,7 +19,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`loki`](#loki) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Einmalfähigkeit, Todesreaktion | M / mittel | K6 | B |
 | [`rattenfaenger`](#rattenfaenger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | mehrstufige Nachtfähigkeit | M / mittel | K9 | B |
 | [`die-ewigen`](#die-ewigen) | Dorf | `decision-required` | `not-found` | `assisted` | Informationsrolle | Einzelsieg | M / mittel | K9 | – |
-| [`spuerhund`](#spuerhund) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Fehlinformation, Zufallsmechanik | M / mittel | K7 | – |
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`koenig-lykaon`](#koenig-lykaon) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | Fraktionswechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit | M / mittel | K12 | C |
 | [`seuchenwolf`](#seuchenwolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Wolfsangriff-Modifikation | Todesreaktion, globale Regeländerung | M / mittel | K11 | – |
@@ -59,7 +58,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`detektiv`](#detektiv) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Informationsrolle | Todesreaktion, Sitzpositionsmechanik, Zufallsmechanik | M / hoch | K3 | – |
 | [`dorfschmied`](#dorfschmied) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Wolfsangriff-Modifikation | Schutz, Tötung, Zufallsmechanik | M / mittel | K5 | – |
 | [`grabraeuber`](#grabraeuber) | Einzelsieg | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | Einzelsieg, sonstige Spezialmechanik | XL / hoch | K15 | – |
-| [`parasit`](#parasit) | Einzelsieg | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | Schutz, Todesreaktion, Einzelsieg | M / mittel | K10 | C |
 | [`todesprediger`](#todesprediger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | Einmalfähigkeit | M / mittel | K15 | – |
 
 **Mechanikfamilien:** Jede Rolle hat genau eine primäre Familie, nach der sie einer Charge zugeordnet ist. Wo die technische Charge von der primären Familie abweicht (z. B. `detektiv`: Informationsrolle, aber Charge Sitznachbarschaft), bestimmt die überwiegend neu zu bauende Kernfunktion die Charge.
@@ -130,27 +128,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K9 / in keiner Option |
 | Belegsicherheit | hoch für Code; Mitsieg-Regel nicht bestimmbar. |
 | Detail | [Dossier](dossiers/village-1.md#die-ewigen) |
-
-### `spuerhund`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Spürhund / Scent Hound |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / I / 6.8 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Normalfall setzt den Text um; die Wolf-Definition weicht vom autoritativen `isWolf` ab und die Markierungsregel ist offen (DE/EN verschieden). |
-| DE/EN-Vergleich | NEIN (gering). EN sagt "a random player", DE nur "ein Spieler" (Auswahlverfahren offen, z.B. SL-Wahl). Sonst gleich (3 Ziele, Kriterien, geheim). |
-| Automationsziel | `automatic`: (mit SeededRng). |
-| Mechanik | primär: Informationsrolle; sekundär: Fehlinformation, Zufallsmechanik |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (3 Ziele), SeededRng, InfoRecord, appears_as (falls Erscheinung zählen soll), StateCodec, Replay. |
-| Neue Systeme | dauerhafte Statusmarker (falsche Spur, pro Person, Quelle Spürhund). |
-| Abhängigkeiten | Wolfskind, Dämonischer Wolf (Fluch), Trugbilderwolf (Wolfsrolle), alle Solos, Lehrling/Seelentauscher (Rollenname wechselt). |
-| Widersprüche | RM-C-090 Wer wird falsche Spur; RM-C-091 Was ist "Wolf" |
-| Entscheidungen | RM-DR-105 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
-| Belegsicherheit | hoch für Handler; Anzeige der Markierung im Pixi-Feld nicht verifiziert. |
-| Detail | [Dossier](dossiers/village-1.md#spuerhund) |
 
 ### `rachsuechtiger-wolf`
 
@@ -970,27 +947,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch (Fehlen per rg über gesamtes Repo ohne Markdown und node_modules bestätigt). --- |
 | Detail | [Dossier](dossiers/solos-b.md#grabraeuber) |
-
-### `parasit`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Parasit / Parasite |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / III / 6.2 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Wirtwahl, Immunität, Kettentod und Sieg bei drei Lebenden setzen den Text nachvollziehbar um; Lücken betreffen Randfälle (Lynch-Protokoll, Siegpriorität). |
-| DE/EN-Vergleich | semantisch gleich JA (geprüft: jede Nacht, optional "kann/may", lebender Spieler, stirbt nur mit Wirt, Final 3). Keiner der Texte sagt "alleine". |
-| Automationsziel | `automatic`: (Wirtwahl als Eingabe, Immunität, Kettentod und Siegkandidat vollautomatisch mit SL-Bestätigung). |
-| Mechanik | primär: Verknüpfte Personen; sekundär: Schutz, Todesreaktion, Einzelsieg |
-| Größe / Risiko | M / mittel. Einfache Bindung, aber Eingriff an der ersten Stelle der Kill-Pipeline und Siegpriorität. |
-| Vorhandene Godot-Systeme | KillPipeline (Immunitätsstufe, Kettentod als Folgetod), StepQueue, PendingPrompt, Reaktionswarteschlange (Kettentod), WinRules/WinCandidate, ExecutionRules (Hinrichtung ohne Wirkung), StateCodec, Replay, Ereignis-Sichtbarkeit. |
-| Neue Systeme | Bindungsmodell Parasit-Wirt (Verknüpfte Personen, pro Nacht änderbar), zusätzliche Siegbedingung (Final 3). |
-| Abhängigkeiten | jede tötende Rolle (Immunität), Rudelvater (`PACKFATHER_KILL` durchbricht Immunität NICHT, da Parasit-Prüfung zuerst), Nekromant-Schild (kann den Kettentod abfangen), Manipulator (gleichzeitiger Final-3-Sieg), Henker (`finalizeLynch`), Rotkäppchen/Schattenwanderer (weitere Ketten). |
-| Widersprüche | RM-C-078 "Final 3" und Siegvorrang |
-| Entscheidungen | RM-DR-157 (Rolle); übergreifend RM-DR-007, RM-DR-009, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K10 / ab Option C |
-| Belegsicherheit | hoch. Nicht verifiziert: Verhalten von `clearRolesNewRound` für `meta.parasiteHostId` im Browser (Code `gh:517` überschreibt `meta` per `Object.assign` mit Teilobjekt, das `parasiteHostId` nicht enthält, das Feld bleibt also erhalten; ohne Rolle Parasit aber … |
-| Detail | [Dossier](dossiers/solos-b.md#parasit) |
 
 ### `todesprediger`
 

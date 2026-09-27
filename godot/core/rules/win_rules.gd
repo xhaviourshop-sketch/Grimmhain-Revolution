@@ -47,6 +47,9 @@ static func evaluate(state: GameState) -> Array:
 	for id: int in state.death_seeker_wins:
 		results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DEATH_SEEKER), "reason_args": {"min_dead": DEATH_SEEKER_MIN_DEAD}, "beneficiary_ids": [id]})
 	for id: int in alive:
+		if parasite_wins(state, id):
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_PARASITE), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+	for id: int in alive:
 		if manipulator_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_MANIPULATOR), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
 	return results
@@ -56,6 +59,12 @@ static func evaluate(state: GameState) -> Array:
 static func manipulator_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
 	return p != null and p.alive and p.role_id == RoleCatalog.MANIPULATOR and not p.ever_nominated and state.alive_ids().size() == 3
+
+
+## Parasit (RM-DR-157): er lebt und höchstens drei Personen leben.
+static func parasite_wins(state: GameState, id: int) -> bool:
+	var p: Player = state.players.get(id)
+	return p != null and p.alive and p.role_id == RoleCatalog.PARASIT and state.alive_ids().size() <= 3
 
 
 ## Mindestzahl Toter unmittelbar vor der Hinrichtung des Selbstmörders (Rollentext „5+ Tote“, RM-DR-138.1).
@@ -150,6 +159,9 @@ static func state_is_consistent(s: GameState) -> bool:
 		# Offene und bestätigte Manipulator-Kandidaten müssen zum Zustand passen (danach ändert sich nichts).
 		if c.reason_key == WinCandidate.REASON_MANIPULATOR and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not manipulator_wins(s, c.beneficiary_ids[0]):
+				return false
+		if c.reason_key == WinCandidate.REASON_PARASITE and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not parasite_wins(s, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not s.death_seeker_wins.has(c.beneficiary_ids[0]):

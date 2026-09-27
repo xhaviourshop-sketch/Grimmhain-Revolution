@@ -557,6 +557,18 @@ msgstr "Blutwolf"
 msgid "ui.role.blutwolf.short"
 msgstr "Wolf im Rudel, Stimme +1 je totem direkten Nachbarn."
 
+msgid "ui.role.spuerhund.name"
+msgstr "Spürhund"
+
+msgid "ui.role.spuerhund.short"
+msgstr "Prüft nachts drei Personen auf Wolf oder Einzelsieg; ein Fehlgriff kostet die Fähigkeit."
+
+msgid "ui.role.parasit.name"
+msgstr "Parasit"
+
+msgid "ui.role.parasit.short"
+msgstr "Heftet sich an einen Wirt, stirbt nur mit ihm; gewinnt unter den letzten drei."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

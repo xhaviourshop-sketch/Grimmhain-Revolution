@@ -82,6 +82,8 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.DOKTOR: false,         # Pflichtprüfung (wie Orakel)
 	RoleCatalog.FAEHRTENLESER: false,  # Verzicht ist eine Antwort im Prompt
 	RoleCatalog.KORRUPTER_RICHTER: false,  # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.SPUERHUND: false,      # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.PARASIT: false,        # Behalten ist eine Antwort (0 Ziele)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -218,10 +220,16 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.LEHRLING:
 		# Lehrling: Kandidaten, Option, Bestätigung (ApprenticeRules).
 		ApprenticeRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
-	elif [RoleCatalog.DORFCHRONISTIN, RoleCatalog.WALDLAEUFER, RoleCatalog.DOKTOR, RoleCatalog.FAEHRTENLESER].has(step_kind(step_id)):
+	elif [RoleCatalog.DORFCHRONISTIN, RoleCatalog.WALDLAEUFER, RoleCatalog.DOKTOR, RoleCatalog.FAEHRTENLESER, RoleCatalog.SPUERHUND].has(step_kind(step_id)):
 		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == BOUND:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
+	elif step_kind(step_id) == RoleCatalog.PARASIT:
+		# Parasit: freiwillig einen anderen lebenden Wirt wählen; 0 Ziele = bisherigen Wirt behalten.
+		prompt.owner = PendingPrompt.OWNER_PARASITE
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.allowed_ids.erase(prompt.actor_id)
+		prompt.cancellable = true
 	elif step_kind(step_id) == RoleCatalog.KORRUPTER_RICHTER:
 		# Korrupter Richter: freiwillig eine lebende Person markieren (auch sich selbst) oder verzichten.
 		prompt.owner = PendingPrompt.OWNER_JUDGE

@@ -61,6 +61,9 @@ const JUDGE_NOMINATED := &"JudgeNominated"        ## Nominierung aus der Markier
 const JUDGE_NOMINATION_PUBLIC := &"JudgeNominationRecorded"  ## dieselbe Nominierung öffentlich, ohne Nominierenden
 const NEW_WOLF_BLOCKED := &"NewWolfBlocked"        ## Wächter am Tor verhindert einen neuen Wolf (nur Spielleiter)
 const NEW_WOLF_BLOCKED_NOTICE := &"NewWolfBlockedNotice"  ## private Mitteilung an die betroffene Person (actor)
+const HOUND_RECORDED := &"HoundRecorded"      ## Prüfung des Spürhunds (nur Spielleiter)
+const HOUND_REVEALED := &"HoundRevealed"      ## Ergebnis ✓/✗ für den Spürhund (actor)
+const PARASITE_ATTACHED := &"ParasiteAttached"  ## Wirtwahl des Parasiten (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

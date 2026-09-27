@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter` und `waechter-am-tor`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund` und `parasit`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -84,11 +84,16 @@ const BLUTWOLF := &"blutwolf"
 const KORRUPTER_RICHTER := &"korrupter-richter"
 ## Wächter am Tor / Gatewarden (RM-DR-149): Dorf; blockiert neu entstehende Wölfe (Gatewarden).
 const WAECHTER_AM_TOR := &"waechter-am-tor"
+## Spürhund / Scent Hound (RM-DR-105): Dorf; jede Nacht freiwillig drei Personen prüfen, ✗ kostet die Fähigkeit (InfoSteps).
+const SPUERHUND := &"spuerhund"
+## Parasit / Parasite (RM-DR-157): Einzelsieg; Wirt jede Nacht wählbar, mit lebendem Wirt unverwundbar,
+## stirbt mit dem Wirt; Sieg bei höchstens drei Lebenden (KillPipeline, WinRules).
+const PARASIT := &"parasit"
 const BOUND_PRIORITY := 5
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
 const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhexe:heal", "waldhexe:poison", "spiegelwolf:mirror",
-	"besessener-wolf:death_reaction", "ritter:death_reaction", "faehrtenleser:track"]
+	"besessener-wolf:death_reaction", "ritter:death_reaction", "faehrtenleser:track", "spuerhund:lost"]
 
 ## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
 ## Wolfskind 0.9 (nur mit Auswahlbedarf), Lehrling 1.1 (nur mit Auswahlbedarf), Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
@@ -122,6 +127,8 @@ const ROLES := {
 	BLUTWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": BLUTWOLF},
 	KORRUPTER_RICHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KORRUPTER_RICHTER, "night_priority": 15},
 	WAECHTER_AM_TOR: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WAECHTER_AM_TOR},
+	SPUERHUND: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SPUERHUND, "night_priority": 68},
+	PARASIT: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PARASIT, "night_priority": 62},
 }
 
 

@@ -482,6 +482,14 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
+		PendingPrompt.OWNER_PARASITE:
+			if target != GameState.NO_TARGET:
+				s.parasite_hosts = s.parasite_hosts.filter(func(b: Dictionary) -> bool: return int(b["parasite_id"]) != prompt.actor_id)
+				s.parasite_hosts.append({"parasite_id": prompt.actor_id, "host_id": target})
+				s.parasite_hosts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["parasite_id"]) < int(b["parasite_id"]))
+			ctx.emit(GameEvent.PARASITE_ATTACHED, Visibility.GM, {"parasite_id": prompt.actor_id, "host_id": KillPipeline.host_of(s, prompt.actor_id), "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
 		PendingPrompt.OWNER_JUDGE:
 			s.judge_marks = s.judge_marks.filter(func(m: Dictionary) -> bool: return int(m["judge_id"]) != prompt.actor_id)
 			if target != GameState.NO_TARGET:

@@ -13,7 +13,7 @@ extends TestCase
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf"]
+	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 120
@@ -135,7 +135,7 @@ func _start_command(g: int, count: int) -> Command:
 		roles[j] = tmp
 	var map := {}
 	var appearances := {}
-	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "korrupter-richter", "waechter-am-tor"]
+	var non_wolf: Array[String] = ["dorfbewohner", "schutzengel", "waldhexe", "das-orakel", "wolfskind", "manipulator", "lehrling", "sensentraeger", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "korrupter-richter", "waechter-am-tor", "spuerhund", "parasit"]
 	for i: int in count:
 		map[str(i + 1)] = roles[i]
 		if roles[i] == "trugbilderwolf":
@@ -343,9 +343,19 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 			if _rng.randf() < 0.1 and _override_allowed(p):
 				return Command.override_shown_role(p.id, "dorfbewohner", "Fuzz: Übersteuerung")
 			return Command.answer_choice(p.id, String(p.stage), true)
-		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER:
+		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER, PendingPrompt.OWNER_HOUND:
 			if p.stage == InfoSteps.STAGE_USE:
 				return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.5)
+			if p.stage == InfoSteps.STAGE_TARGETS and p.owner == PendingPrompt.OWNER_HOUND:
+				var pool3 := _alive_in(s, p.allowed_ids, p.actor_id)
+				if pool3.size() < 3 or _rng.randf() < 0.2:
+					return Command.answer_stage_targets(p.id, String(p.stage), [])
+				var picks: Array = []
+				while picks.size() < 3:
+					var t: int = _pick(pool3)
+					if not picks.has(t):
+						picks.append(t)
+				return Command.answer_stage_targets(p.id, String(p.stage), picks)
 			if p.stage == InfoSteps.STAGE_TARGETS:
 				var pool2 := _alive_in(s, p.allowed_ids, p.actor_id)
 				var a: int = _pick(pool2)

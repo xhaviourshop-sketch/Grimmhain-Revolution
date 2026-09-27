@@ -6,6 +6,7 @@ extends RefCounted
 ##   Waldläufer (jede Nacht): Anzahl lebender Personen, die als Wolf zählen (RM-DR-147).
 ##   Doktor (jede Nacht): zwei andere Lebende, gleiche aktuelle Fraktion ja/nein (RM-DR-145).
 ##   Fährtenleser (jede Nacht bis zur Nutzung, je Leben einmal): Stufe „use“ (ja/nein), dann Richtung (RM-DR-146).
+##   Spürhund (jede Nacht): drei andere Lebende oder Verzicht; ✓ bei Wolf/Einzelsieg, ✗ kostet die Fähigkeit.
 ## Prompt mit Stufe „Gezeigt“ (nur Ja), beim Doktor vorher „targets“. Abbrechbar, nicht
 ## überspringbar. Der Spielleiter sieht die Information im Prompt; mit „Gezeigt“ erhält jede
 ## betroffene Person ein eigenes ACTOR-Ereignis, der Spielleiter einen Datensatz.
@@ -13,9 +14,10 @@ extends RefCounted
 const STAGE_TARGETS := &"targets"
 const STAGE_USE := &"use"
 const TRACKER_USE_KEY := "faehrtenleser:track"
+const HOUND_LOST_KEY := "spuerhund:lost"
 const STAGE_SHOWN := &"shown"
 const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_USE, STAGE_SHOWN]
-const OWNERS: Array[StringName] = [PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER]
+const OWNERS: Array[StringName] = [PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER, PendingPrompt.OWNER_HOUND]
 const FIRST_NIGHT_OWNERS: Array[StringName] = [PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND]
 
 
@@ -52,6 +54,18 @@ static func tracker_used(p: Player) -> bool:
 	return int(p.ability_uses.get(TRACKER_USE_KEY, 0)) >= 1
 
 
+static func hound_lost(p: Player) -> bool:
+	return int(p.ability_uses.get(HOUND_LOST_KEY, 0)) >= 1
+
+
+## Spürhund: ✓, wenn eine der Personen (wahre aktuelle Fraktion) Wolf oder Einzelsieg ist.
+static func hound_hit(s: GameState, ids: Array) -> bool:
+	for id: Variant in ids:
+		if s.players[int(id)].faction != Faction.VILLAGE:
+			return true
+	return false
+
+
 static func _others_alive(s: GameState, actor_id: int) -> Array[int]:
 	var allowed := s.alive_ids()
 	allowed.erase(actor_id)
@@ -69,6 +83,17 @@ static func open(s: GameState, prompt: PendingPrompt, owner: StringName, actor_i
 		prompt.allowed_ids = _others_alive(s, actor_id)
 		prompt.min_count = 2
 		prompt.max_count = 2
+		prompt.partial = {}
+		return
+	if owner == PendingPrompt.OWNER_HOUND:
+		if hound_lost(s.players[actor_id]):
+			_enter_shown(prompt)
+			prompt.partial = {"lost": true}
+			return
+		prompt.stage = STAGE_TARGETS
+		prompt.allowed_ids = _others_alive(s, actor_id)
+		prompt.min_count = 0
+		prompt.max_count = 3
 		prompt.partial = {}
 		return
 	if owner == PendingPrompt.OWNER_TRACKER:
@@ -113,7 +138,8 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 			if t == prompt.actor_id or seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t) or not s.players[t].alive:
 				return &"invalid_target"
 			seen.append(t)
-		if list.size() != 2:
+		var needed := 3 if prompt.owner == PendingPrompt.OWNER_HOUND else 2
+		if list.size() != needed and not (prompt.owner == PendingPrompt.OWNER_HOUND and list.is_empty()):
 			return &"invalid_target_count"
 		return &""
 	if prompt.stage == STAGE_USE:
@@ -126,6 +152,21 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	var prompt := s.pending_prompt
+	if prompt.stage == STAGE_TARGETS and prompt.owner == PendingPrompt.OWNER_HOUND:
+		var picks: Array[int] = DictRead.to_int_array(p["targets"])
+		if picks.is_empty():
+			# Verzicht in dieser Nacht: keine Information, nichts verloren.
+			s.pending_prompt = null
+			ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {"prompt_id": prompt.id, "owner": prompt.owner, "stage": STAGE_TARGETS, "declined": true})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+			return
+		prompt.partial = {"target_ids": [picks[0], picks[1], picks[2]], "hit": hound_hit(s, picks)}
+		_enter_shown(prompt)
+		ctx.emit(GameEvent.PROMPT_STAGE_ANSWERED, Visibility.GM, {
+			"prompt_id": prompt.id, "step_id": prompt.step_id, "stage": STAGE_TARGETS, "answer": {"targets": picks.duplicate()}, "next_stage": STAGE_SHOWN,
+		})
+		return
 	if prompt.stage == STAGE_TARGETS:
 		var targets: Array[int] = DictRead.to_int_array(p["targets"])
 		prompt.partial = {"target_ids": [targets[0], targets[1]], "same_team": same_team(s, targets[0], targets[1])}
@@ -154,6 +195,15 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 			var wolves := DictRead.get_int(prompt.partial, "wolf_count")
 			ctx.emit(GameEvent.RANGER_RECORDED, Visibility.GM, {"ranger_id": prompt.actor_id, "wolf_count": wolves, "night": night})
 			ctx.emit(GameEvent.RANGER_REVEALED, Visibility.ACTOR, {"wolf_count": wolves, "night": night}, prompt.actor_id)
+		PendingPrompt.OWNER_HOUND:
+			# Ohne Fähigkeit nur aufgerufen; sonst Ergebnis an ihn, ✗ kostet die Fähigkeit (bis zur Wiederbelebung).
+			if not DictRead.get_bool(prompt.partial, "lost"):
+				var ids: Array = DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))
+				var hit := DictRead.get_bool(prompt.partial, "hit")
+				if not hit:
+					s.players[prompt.actor_id].ability_uses[HOUND_LOST_KEY] = 1
+				ctx.emit(GameEvent.HOUND_RECORDED, Visibility.GM, {"hound_id": prompt.actor_id, "target_ids": ids.duplicate(), "hit": hit, "night": night})
+				ctx.emit(GameEvent.HOUND_REVEALED, Visibility.ACTOR, {"target_ids": ids.duplicate(), "hit": hit, "night": night}, prompt.actor_id)
 		PendingPrompt.OWNER_TRACKER:
 			# Verzicht („use“ = nein) verbraucht nichts; „Gezeigt“ verbraucht die Nutzung dieses Lebens.
 			if answered == STAGE_SHOWN:
@@ -198,6 +248,18 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 		return false
 	if actor == null or not actor.alive or actor.role_id != prompt.owner:
 		return false
+	if prompt.owner == PendingPrompt.OWNER_HOUND:
+		if hound_lost(actor):
+			return prompt.stage == STAGE_SHOWN and prompt.allowed_ids.is_empty() and prompt.partial == {"lost": true}
+		if prompt.stage == STAGE_TARGETS:
+			return prompt.partial.is_empty() and prompt.allowed_ids == _others_alive(s, actor.id) and prompt.min_count == 0 and prompt.max_count == 3
+		var picks: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))
+		if picks == null or (picks as Array).size() != 3 or not prompt.allowed_ids.is_empty():
+			return false
+		for t: int in picks:
+			if t == actor.id or not s.players.has(t) or not s.players[t].alive or (picks as Array).count(t) > 1:
+				return false
+		return prompt.partial.get("hit") is bool and bool(prompt.partial["hit"]) == hound_hit(s, picks)
 	if prompt.owner == PendingPrompt.OWNER_TRACKER:
 		if tracker_used(actor) or not prompt.allowed_ids.is_empty():
 			return false

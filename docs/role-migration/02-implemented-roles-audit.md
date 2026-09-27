@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 27 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 27 |
+| im RoleCatalog vorhandene Rollen | 29 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 29 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 25 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 27 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -74,6 +74,8 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 25 | `blutwolf` | Blutwolf / Blood Wolf (Rollentext) | wolves | ja | – (Teil des Rudels) | `role_catalog.gd`, `vote_hints.gd` | `test_richter_waechter_blutwolf.gd`, fuzz | RM-DR-133.1, RM-DR-008, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor …“ und „Querschnittsfragen“ | `implemented-and-tested` | `assisted` | `legacy-verified` |
 | 26 | `korrupter-richter` | Korrupter Richter / Corrupt Judge (Rollentext) | village | nein | 15 | `rules_engine.gd` (`_judge_nominations`, `_record_nomination`), `vote_hints.gd` | `test_richter_waechter_blutwolf.gd`, fuzz | RM-DR-117, RM-DR-012, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor …“ und „Querschnittsfragen“ | `implemented-and-tested` | `automatic` | `not-found` |
 | 27 | `waechter-am-tor` | Wächter am Tor / Gatewarden (Rollentext) | village | nein | – | `gatewarden.gd`, `wolf_child_rules.gd`, `apprentice_rules.gd` | `test_richter_waechter_blutwolf.gd`, fuzz | RM-DR-149, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor …“ und „Querschnittsfragen“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 28 | `spuerhund` | Spürhund / Scent Hound (Rollentext, vom PO präzisiert) | village | nein | 68 | `info_steps.gd` (`hound_hit`) | `test_spuerhund_parasit.gd`, fuzz | RM-DR-105.1, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor, Spürhund, Parasit“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 29 | `parasit` | Parasit / Parasite (Rollentext) | solo | nein | 62 | `kill_pipeline.gd` (`_parasite_immune`, `_end_parasite_bonds`), `win_rules.gd` (`parasite_wins`) | `test_spuerhund_parasit.gd`, fuzz | RM-DR-157.1, RM-DR-011.2, DECISION-LOG „Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor, Spürhund, Parasit“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -221,6 +223,16 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Solange ein Wächter lebt, wird eine Wolfskind-Verwandlung durch Tod des Vorbilds und ein Lehrling-Erbe einer Wolfsrolle durch Tod des Meisters blockiert: die Person wird Dorfbewohner (frische Einsätze), `NewWolfBlocked` für den Spielleiter, `NewWolfBlockedNotice` privat. Spielleiterkorrekturen bleiben unberührt.
 - **Tests:** Wolfskind, toter Wächter, Lehrling-Erbe mit Save/Load, Korrekturen.
 - **Grenzen:** König Lykaon, Seelentauscher und der Fluch des Dämonischen Wolfs folgen mit diesen Rollen.
+
+### 4.28 `spuerhund`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht (Priorität 68) freiwillig drei verschiedene andere Lebende oder Verzicht; ✓, wenn eine davon (wahre aktuelle Fraktion) Wolf oder Einzelsieg ist, sonst ✗ und `spuerhund:lost`. Danach wird er weiter aufgerufen (nur „Gezeigt“, ohne Information). Wiederbelebung setzt zurück. Ergebnis nur an ihn.
+- **Tests:** ✓ bei Wolf, Einzelsieg, Trugbilderwolf; ✗ und Verlust, Aufruf ohne Fähigkeit, Wiederbelebung, Verzicht, ungültige Ziele, Ladeprüfung.
+- **Grenzen:** Fluch des Dämonischen Wolfs folgt mit dieser Rolle.
+
+### 4.29 `parasit`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nachtschritt (Priorität 62): freiwillig einen anderen lebenden Wirt wählen, sonst bleibt der bisherige (`parasite_hosts`). Mit lebendem Wirt verhindert er jeden Tod außer Spielleiterkorrekturen (`KillPrevented`, Quelle `parasit`); stirbt der Wirt mit Folgen, stirbt er mit (`PARASITE_HOST`); Bindung endet mit dem Tod. Sieg `parasite_final_three` bei höchstens drei Lebenden, wenn er lebt; gleichzeitig mit anderen Siegen.
+- **Tests:** Rudel, Lynch, Korrektur, Wirtstod, ohne Wirt, Wechsel, Behalten, Sieg bei drei Lebenden, Save/Load.
+- **Grenzen:** Setup-Einschränkungen für Einzelsiegrollen sind vertagt (Decision Log).
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 
