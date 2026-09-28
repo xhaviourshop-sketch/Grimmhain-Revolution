@@ -102,6 +102,9 @@ const LYCAON_CONVERTED := &"LycaonConverted"    ## Wahl des Königs Lykaon mit V
 const LYCAON_NOTICE := &"LycaonNotice"          ## neue Rolle für die verwandelte Person (actor)
 const SOULS_SWAPPED := &"SoulsSwapped"          ## Rollentausch des Seelentauschers (nur Spielleiter)
 const SOUL_SWAP_REVEALED := &"SoulSwapRevealed"  ## neue Rolle für eine lebende betroffene Person (actor)
+const REVIVED_BY_ROLE := &"RevivedByRole"      ## Wiederbelebung durch Kutscher oder Frankenstein (nur Spielleiter)
+const REVIVAL_NOTICE := &"RevivalNotice"        ## Rolle der wiederbelebten Person (actor)
+const PLAYER_REVIVED := &"PlayerRevived"        ## Wiederbelebung, öffentlich am Morgen (ohne Rolle)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

@@ -8,17 +8,57 @@ extends RefCounted
 ##   König Lykaon (bis zur Nutzung): „ally“ (ein anderer lebender Wolf; höchstens dreimal 0 = verschieben),
 ##     dann „targets“ (eine lebende Dorfperson) → Trugbilderwolf mit alter Rolle als Scheinrolle.
 ##   Seelentauscher (bis zur Nutzung): „targets“ (0 oder zwei verschiedene Personen, lebend oder tot).
+##   Kutscher (ab 10 Toten, bis zur Nutzung): „targets“ (0 oder drei Tote), dann „wolf“ (einer davon).
+##   Dr. Victor Frankenstein (bis zur Nutzung): „targets“ (0 oder ein Toter), dann „role“ (Index in `options`).
 ## Abbrechbar, nicht überspringbar; bestätigte Stufen bleiben bis zur letzten Antwort im Prompt.
 
 const STAGE_TARGETS := &"targets"
 const STAGE_MODE := &"mode"
 const STAGE_GRANT := &"grant"
 const STAGE_ALLY := &"ally"
-const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY]
-const OWNERS: Array[StringName] = [PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER]
+const STAGE_WOLF := &"wolf"
+const STAGE_ROLE := &"role"
+const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY, STAGE_WOLF, STAGE_ROLE]
+const OWNERS: Array[StringName] = [PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER,
+	PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN]
+## Rollen, deren erste Stufe Tote auswählt.
+const REVIVERS: Array[StringName] = [PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN]
 const LOKI_USE_KEY := "loki:bind"
 const LYCAON_USE_KEY := "koenig-lykaon:convert"
 const SWAP_USE_KEY := "seelentauscher:swap"
+
+
+static func _revive_key(role: StringName) -> String:
+	return "%s:revive" % role
+
+
+static func dead_ids(s: GameState) -> Array[int]:
+	return _all_ids(s).filter(func(id: int) -> bool: return not s.players[id].alive)
+
+
+## Kutscher (ab 10 Toten, mindestens drei Tote) und Frankenstein (mindestens ein Toter), je Leben einmal.
+static func can_revive(s: GameState, p: Player) -> bool:
+	if not p.alive or p.ability_uses.has(_revive_key(p.role_id)):
+		return false
+	var dead := dead_ids(s).size()
+	if p.role_id == RoleCatalog.KUTSCHER:
+		return dead >= RoleCatalog.COACH_MIN_DEAD and dead >= RoleCatalog.COACH_REVIVALS
+	return p.role_id == RoleCatalog.FRANKENSTEIN and dead >= 1
+
+
+## Frankenstein (W-04): Rollen, die gerade niemand hat (lebend oder tot), Dorfbewohner immer, keine Wolfsrolle.
+static func frankenstein_options(s: GameState) -> Array[String]:
+	var taken := {}
+	for id: int in s.players:
+		taken[s.players[id].role_id] = true
+	var out: Array[String] = []
+	for role: StringName in RoleCatalog.ROLES:
+		if RoleCatalog.counts_as_wolf(role) or RoleCatalog.requires_appearance(role):
+			continue
+		if role == RoleCatalog.DORFBEWOHNER or not taken.has(role):
+			out.append(String(role))
+	out.sort()
+	return out
 
 
 static func lycaon_skips(p: Player) -> int:
@@ -62,6 +102,10 @@ static func _first_stage_shape(s: GameState, owner: StringName, actor_id: int) -
 		PendingPrompt.OWNER_LYKAON:
 			var must := lycaon_skips(s.players[actor_id]) >= RoleCatalog.LYCAON_MAX_SKIPS
 			return [lycaon_allies(s, actor_id), 1 if must else 0, 1]
+	if owner == PendingPrompt.OWNER_COACH:
+		return [dead_ids(s), 0, RoleCatalog.COACH_REVIVALS]
+	if owner == PendingPrompt.OWNER_FRANKENSTEIN:
+		return [dead_ids(s), 0, 1]
 	return [_all_ids(s), 0, 2]
 
 
@@ -83,6 +127,11 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 		return &"stage_mismatch"
 	if prompt.stage == STAGE_MODE or prompt.stage == STAGE_GRANT:
 		return &"" if (not p.has("targets") and p.get("choice") is bool) else &"invalid_answer"
+	if prompt.stage == STAGE_ROLE:
+		var options: Array = DictRead.get_array(prompt.partial, "options")
+		if p.has("targets") or not DictRead.is_int_like(p.get("option")) or int(p["option"]) < 0 or int(p["option"]) >= options.size():
+			return &"invalid_answer"
+		return &""
 	if p.has("choice") or not p.get("targets") is Array:
 		return &"invalid_answer"
 	var targets: Variant = DictRead.to_int_array(p["targets"])
@@ -90,15 +139,18 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 		return &"invalid_target"
 	var seen: Array[int] = []
 	var dead_allowed := prompt.owner == PendingPrompt.OWNER_SWAPPER
+	var dead_only := REVIVERS.has(prompt.owner)
 	for t: int in targets:
-		if seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t) or (not dead_allowed and not s.players[t].alive):
+		if seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t):
+			return &"invalid_target"
+		if (dead_only and s.players[t].alive) or (not dead_only and not dead_allowed and not s.players[t].alive):
 			return &"invalid_target"
 		seen.append(t)
 	var n := seen.size()
 	if n < prompt.min_count or n > prompt.max_count:
 		return &"invalid_target_count"
-	if prompt.max_count == 2 and n == 1:
-		return &"invalid_target_count"  # Loki und Seelentauscher: keiner oder zwei
+	if prompt.stage == STAGE_TARGETS and prompt.max_count > 1 and n != 0 and n != prompt.max_count:
+		return &"invalid_target_count"  # Loki, Seelentauscher, Kutscher: keiner oder alle
 	return &""
 
 
@@ -128,7 +180,14 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	if prompt.stage == STAGE_MODE or prompt.stage == STAGE_GRANT:
 		_answer_choice(ctx, prompt, bool(p["choice"]))
 		return
+	if prompt.stage == STAGE_ROLE:
+		var options: Array = DictRead.get_array(prompt.partial, "options")
+		_revive_frankenstein(ctx, prompt, DictRead.get_int(prompt.partial, "target_id"), StringName(options[int(p["option"])]))
+		return
 	var chosen: Array[int] = DictRead.to_int_array(p["targets"])
+	if prompt.stage == STAGE_WOLF:
+		_revive_coach(ctx, prompt, chosen[0])
+		return
 	if prompt.stage == STAGE_ALLY:
 		if chosen.is_empty():
 			# Lykaon verschiebt (höchstens dreimal, V-08/V-09).
@@ -148,6 +207,15 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	chosen.sort()
 	if prompt.owner == PendingPrompt.OWNER_SWAPPER:
 		_swap(ctx, prompt, chosen[0], chosen[1])
+		return
+	if prompt.owner == PendingPrompt.OWNER_COACH:
+		prompt.partial = {"target_ids": chosen.duplicate()}
+		_next_stage(ctx, prompt, STAGE_TARGETS, chosen, STAGE_WOLF, chosen.duplicate(), 1)
+		return
+	if prompt.owner == PendingPrompt.OWNER_FRANKENSTEIN:
+		prompt.partial = {"target_id": chosen[0], "options": frankenstein_options(s)}
+		var none_left: Array[int] = []
+		_next_stage(ctx, prompt, STAGE_TARGETS, chosen, STAGE_ROLE, none_left, 0)
 		return
 	prompt.partial = {"target_ids": chosen.duplicate()}
 	var none: Array[int] = []
@@ -212,6 +280,40 @@ static func _swap(ctx: RuleContext, prompt: PendingPrompt, a: int, b: int) -> vo
 	_finish(ctx, prompt, STAGE_TARGETS)
 
 
+## Wiederbelebte Person: frische Einsätze, neue Rolle, private Mitteilung; öffentlich am Morgen (W-04).
+static func _revived(ctx: RuleContext, id: int, role: StringName, by: StringName) -> void:
+	var s := ctx.state
+	RoleTransition.revive(s, id)
+	if role != s.players[id].role_id:
+		RoleTransition.change_role(s, id, role, &"", true)
+	if not s.revived_tonight.has(id):
+		s.revived_tonight.append(id)
+	ctx.emit(GameEvent.REVIVAL_NOTICE, Visibility.ACTOR, {"role_id": String(s.players[id].role_id)}, id)
+	ctx.emit(GameEvent.REVIVED_BY_ROLE, Visibility.GM, {"player_id": id, "role_id": String(s.players[id].role_id), "by": String(by), "night": s.night_number})
+
+
+## Kutscher (W-02, W-03): drei Tote leben wieder, `wolf` wird Werwolf (Wächter am Tor blockiert).
+static func _revive_coach(ctx: RuleContext, prompt: PendingPrompt, wolf: int) -> void:
+	var s := ctx.state
+	s.players[prompt.actor_id].ability_uses[_revive_key(RoleCatalog.KUTSCHER)] = 1
+	var warden := Gatewarden.active(s)
+	for id: Variant in DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids")):
+		var role := s.players[int(id)].role_id
+		if int(id) == wolf and not RoleCatalog.counts_as_wolf(role):
+			role = RoleCatalog.DORFBEWOHNER if warden else RoleCatalog.WERWOLF
+		_revived(ctx, int(id), role, RoleCatalog.KUTSCHER)
+	if warden and not RoleCatalog.counts_as_wolf(s.players[wolf].role_id):
+		ctx.emit(GameEvent.NEW_WOLF_BLOCKED, Visibility.GM, {"player_id": wolf, "from": String(s.players[wolf].role_id), "would_be": String(RoleCatalog.WERWOLF), "source": "coachman"})
+	_finish(ctx, prompt, STAGE_WOLF)
+
+
+## Frankenstein (W-04): eine tote Person lebt wieder mit der gewählten freien Rolle.
+static func _revive_frankenstein(ctx: RuleContext, prompt: PendingPrompt, target: int, role: StringName) -> void:
+	ctx.state.players[prompt.actor_id].ability_uses[_revive_key(RoleCatalog.FRANKENSTEIN)] = 1
+	_revived(ctx, target, role, RoleCatalog.FRANKENSTEIN)
+	_finish(ctx, prompt, STAGE_ROLE)
+
+
 ## Ladeprüfung: Der Prompt gehört zum erwarteten Schritt und passt zum Zustand.
 static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if s.phase != Phase.NIGHT or s.next_night_step >= s.night_plan.size() or prompt.kind != PendingPrompt.KIND_BOND:
@@ -230,6 +332,14 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 		return prompt.stage == STAGE_TARGETS and lycaon_allies(s, actor.id).has(ally) and prompt.allowed_ids == lycaon_targets(s) and prompt.min_count == 1 and prompt.max_count == 1
 	if prompt.owner == PendingPrompt.OWNER_SWAPPER:
 		return false  # einstufig
+	if prompt.owner == PendingPrompt.OWNER_COACH:
+		var picked: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))
+		return prompt.stage == STAGE_WOLF and picked != null and (picked as Array).size() == RoleCatalog.COACH_REVIVALS \
+			and prompt.allowed_ids == Array(picked) and (picked as Array).all(func(id: int) -> bool: return s.players.has(id) and not s.players[id].alive)
+	if prompt.owner == PendingPrompt.OWNER_FRANKENSTEIN:
+		var dead := DictRead.get_int(prompt.partial, "target_id", -1)
+		return prompt.stage == STAGE_ROLE and s.players.has(dead) and not s.players[dead].alive and prompt.allowed_ids.is_empty() \
+			and DictRead.get_array(prompt.partial, "options") == Array(frankenstein_options(s))
 	if prompt.stage != (STAGE_MODE if prompt.owner == PendingPrompt.OWNER_LOKI else STAGE_GRANT) or not prompt.allowed_ids.is_empty():
 		return false
 	var ids: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))

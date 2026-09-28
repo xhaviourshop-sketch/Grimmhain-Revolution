@@ -676,6 +676,10 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	for i: int in s.ghost_alerts:
 		ctx.emit(GameEvent.GHOST_WOLF_ALERT, Visibility.PUBLIC, {"night": s.night_number})
 	s.ghost_alerts = 0
+	# Wiederbelebungen durch Kutscher und Frankenstein werden am Morgen sichtbar (W-04).
+	for id: int in s.revived_tonight:
+		ctx.emit(GameEvent.PLAYER_REVIVED, Visibility.PUBLIC, {"player_id": id, "night": s.night_number})
+	s.revived_tonight.clear()
 	# Gift vor dem Rudelangriff: Ursache und Reihenfolge wie beim früheren Sofort-Tod.
 	WitchStep.apply_poisons(ctx)
 	# Todesmarkierungen aus Nachtschritten (Kriegerin des Lichts, Blutpriester), in Reihenfolge der Markierung.

@@ -737,6 +737,18 @@ msgstr "König Lykaon"
 msgid "ui.role.koenig_lykaon.short"
 msgstr "Wolf im Rudel; macht mit einem Verbündeten einen Dorfbewohner zum Trugbilderwolf."
 
+msgid "ui.role.kutscher.name"
+msgstr "Kutscher"
+
+msgid "ui.role.kutscher.short"
+msgstr "Ab zehn Toten holt er einmal drei Tote zurück; einer davon wird Wolf."
+
+msgid "ui.role.dr_victor_frankenstein.name"
+msgstr "Dr. Victor Frankenstein"
+
+msgid "ui.role.dr_victor_frankenstein.short"
+msgstr "Belebt einmal einen Toten mit einer freien Rolle wieder."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

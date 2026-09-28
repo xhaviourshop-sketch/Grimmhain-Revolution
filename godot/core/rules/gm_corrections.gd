@@ -389,12 +389,8 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			# Einsätze der Person zurück; Nominierungsstatus, Bindungen und eingereihte Reaktionen bleiben.
 			var player := s.players[target]
 			var old := {"alive": false, "death": player.death.to_dict() if player.death != null else null, "ability_uses": player.ability_uses.duplicate()}
-			player.alive = true
-			player.death = null
-			player.ability_uses.clear()
-			s.growth.erase(target)  # Fenrir-Stufe und Cerberus-Köpfe beginnen neu
+			RoleTransition.revive(s, target)
 			_log(ctx, kind, target, old, {"alive": true, "death": null, "ability_uses": {}}, reason, false)
-			s.win_check_pending = true
 		SET_ROLE:
 			var player := s.players[target]
 			var old := _role_fields(player)

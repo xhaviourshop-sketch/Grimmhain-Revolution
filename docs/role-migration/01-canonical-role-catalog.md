@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 57 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 59 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 15 |
+| fehlend, Entscheidung nötig (`decision-required`) | 13 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 15 fehlende) | 1 |
-| Legacy-Befund `legacy-contradictory` (nur 15 fehlende) | 8 |
-| Legacy-Befund `legacy-broken` (nur 15 fehlende) | 4 |
-| Legacy-Befund `not-found` (nur 15 fehlende) | 2 |
+| Legacy-Befund `legacy-verified` (nur 13 fehlende) | 1 |
+| Legacy-Befund `legacy-contradictory` (nur 13 fehlende) | 7 |
+| Legacy-Befund `legacy-broken` (nur 13 fehlende) | 3 |
+| Legacy-Befund `not-found` (nur 13 fehlende) | 2 |
 
-<!-- check:counts total=72 implemented=57 remaining=15 -->
+<!-- check:counts total=72 implemented=59 remaining=13 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -72,7 +72,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 34 | `schattenhund` | Schattenhund / Shadow Hound | Wölfe | III | 0.7 (once) | `implemented-and-tested` | `legacy-contradictory` | `automatic` | globale Regeländerung | S / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#schattenhund) |
 | 35 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Todesreaktion | M / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#besessener-wolf) |
 | 36 | `fenrir` | Fenrir / Fenrir | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#fenrir) |
-| 37 | `kutscher` | Kutscher / Coachman | Dorf | II | 3.8 | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | L / hoch | K13 | – | [03](03-remaining-roles-analysis.md#kutscher) · [Dossier](dossiers/village-2.md#kutscher) |
+| 37 | `kutscher` | Kutscher / Coachman | Dorf | II | 3.8 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Wiederbelebung | L / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#kutscher) |
 | 38 | `seelentauscher` | Seelentauscher / Soul Swapper | Dorf | II | 8.0 (once) | `implemented-and-tested` | `legacy-broken` | `assisted` | Rollenwechsel | L / kritisch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#seelentauscher) |
 | 39 | `blutpriester` | Blutpriester / Blood Priest | Dorf | II | 8.2 (once) | `implemented-and-tested` | `legacy-verified` | `assisted` | Informationsrolle | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#blutpriester) |
 | 40 | `traumdeuter` | Traumdeuter / Dreamer | Dorf | III | 7.0 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#traumdeuter) |
@@ -87,7 +87,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | I | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Einzelsieg | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#selbstmoerder) |
 | 50 | `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter | Dorf | IV | 3.2 | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | M / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#kopfgeldjaeger) |
 | 51 | `koenig` | König / King | Dorf | III, IV | 4.4 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#koenig) |
-| 52 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Dorf | II | 3.6 | `decision-required` | `legacy-broken` | `assisted` | Wiederbelebung | L / hoch | K13 | – | [03](03-remaining-roles-analysis.md#dr-victor-frankenstein) · [Dossier](dossiers/village-3.md#dr-victor-frankenstein) |
+| 52 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Dorf | II | 3.6 | `implemented-and-tested` | `legacy-broken` | `assisted` | Wiederbelebung | L / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#dr-victor-frankenstein) |
 | 53 | `nekromant` | Nekromant / Necromancer | Einzelsieg | II | 3.0 | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | L / hoch | K15 | – | [03](03-remaining-roles-analysis.md#nekromant) · [Dossier](dossiers/solos-b.md#nekromant) |
 | 54 | `kartenschlucker` | Kartenschlucker / The Collector | Einzelsieg | III, IV | 4.0 | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | L / hoch | K15 | – | [03](03-remaining-roles-analysis.md#kartenschlucker) · [Dossier](dossiers/solos-b.md#kartenschlucker) |
 | 55 | `hades` | Hades / Hades | Einzelsieg | IV | 9.9 | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | M / mittel | K15 | – | [03](03-remaining-roles-analysis.md#hades) · [Dossier](dossiers/solos-b.md#hades) |

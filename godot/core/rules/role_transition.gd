@@ -31,6 +31,17 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 		ApprenticeRules.end_active(s, player_id, ApprenticeBond.STATUS_REMOVED)
 
 
+## Wiederbelebung (Decision Log „Rollenaudit · Wiederbelebung …“): lebt wieder, Todesdatensatz weg, alle
+## begrenzten Einsätze frisch; Nominierungsstatus, Bindungen und eingereihte Reaktionen bleiben.
+static func revive(s: GameState, player_id: int) -> void:
+	var p := s.players[player_id]
+	p.alive = true
+	p.death = null
+	p.ability_uses.clear()
+	s.growth.erase(player_id)  # Fenrir-Stufe und Cerberus-Köpfe beginnen neu
+	s.win_check_pending = true
+
+
 ## Stellt einen gespeicherten Rollenzustand exakt wieder her (Rücknahme eines Erbes).
 static func restore(s: GameState, player_id: int, snapshot: Dictionary) -> void:
 	var p := s.players[player_id]

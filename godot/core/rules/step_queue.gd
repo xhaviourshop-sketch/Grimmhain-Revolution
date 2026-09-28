@@ -107,6 +107,8 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SCHATTENWANDERER: false,  # „noch nicht“ ist eine Antwort (0 Ziele)
 	RoleCatalog.KOENIG_LYKAON: false,  # Verschieben ist eine Antwort (0 Ziele, höchstens dreimal)
 	RoleCatalog.SEELENTAUSCHER: false,  # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.KUTSCHER: false,       # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.FRANKENSTEIN: false,   # Verzicht ist eine Antwort (0 Ziele)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -167,6 +169,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		if p.role_id == RoleCatalog.KOENIG_LYKAON and p.ability_uses.has(BondSteps.LYCAON_USE_KEY):
 			continue
 		if p.role_id == RoleCatalog.SEELENTAUSCHER and p.ability_uses.has(BondSteps.SWAP_USE_KEY):
+			continue
+		if (p.role_id == RoleCatalog.KUTSCHER or p.role_id == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, p):
 			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
@@ -268,6 +272,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	if step_role(key) == RoleCatalog.KOENIG_LYKAON and (s.players[actor].ability_uses.has(BondSteps.LYCAON_USE_KEY) or BondSteps.lycaon_allies(s, actor).is_empty() or BondSteps.lycaon_targets(s).is_empty()):
 		return &"no_decision"  # ohne lebenden Verbündeten zählt die Nacht nicht (V-09)
 	if step_role(key) == RoleCatalog.SEELENTAUSCHER and s.players[actor].ability_uses.has(BondSteps.SWAP_USE_KEY):
+		return &"no_decision"
+	if (step_role(key) == RoleCatalog.KUTSCHER or step_role(key) == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, s.players[actor]):
 		return &"no_decision"
 	return &""
 

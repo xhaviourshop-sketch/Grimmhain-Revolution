@@ -135,7 +135,7 @@ func test_appearance_choices_are_validated_atomically() -> void:
 	_rejected(s, s.call("set_decoy_appearance", copy, &""), "empty_appearance", "leere Rolle", before)
 	_rejected(s, s.call("set_decoy_appearance", copy + 999, &"waldhexe"), "unknown_copy", "unbekannte Kopie", before)
 	var options: Array = _roles(s).get("appearance_options", [])
-	var expected := ["amalia", "blutpriester", "das-orakel", "der-weise", "detektiv", "die-ewigen", "die-gebundenen", "doktor", "doppelspion", "dorfbewohner", "dorfchronistin", "dorfschmied", "dorfwache", "faehrtenleser", "henker", "koenig", "kopfgeldjaeger", "korrupter-richter", "kriegerin-des-lichts", "lehrling", "loki", "maertyrerin", "manipulator", "nachtwaechter", "parasit", "ritter", "rotkaeppchen", "schutzengel", "schutzgeist", "seelentauscher", "selbstmoerder", "sensentraeger", "spuerhund", "traumdeuter", "verdammniswaechter", "waechter-am-tor", "wahnsinniger-kutscher", "waldhexe", "waldlaeufer", "wolfskind"]
+	var expected := ["amalia", "blutpriester", "das-orakel", "der-weise", "detektiv", "die-ewigen", "die-gebundenen", "doktor", "doppelspion", "dorfbewohner", "dorfchronistin", "dorfschmied", "dorfwache", "dr-victor-frankenstein", "faehrtenleser", "henker", "koenig", "kopfgeldjaeger", "korrupter-richter", "kriegerin-des-lichts", "kutscher", "lehrling", "loki", "maertyrerin", "manipulator", "nachtwaechter", "parasit", "ritter", "rotkaeppchen", "schutzengel", "schutzgeist", "seelentauscher", "selbstmoerder", "sensentraeger", "spuerhund", "traumdeuter", "verdammniswaechter", "waechter-am-tor", "wahnsinniger-kutscher", "waldhexe", "waldlaeufer", "wolfskind"]
 	var sorted := options.duplicate()
 	sorted.sort()
 	assert_eq(sorted, expected, "angeboten: alle Nicht-Wolf-Rollen des Katalogs")

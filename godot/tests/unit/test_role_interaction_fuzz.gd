@@ -16,7 +16,7 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker",
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
-	"seelentauscher", "daemonischer-wolf", "koenig-lykaon"]
+	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 160
@@ -32,7 +32,7 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"StepDropped", "PromptCancelled", "KillIgnored", "WinConfirmed", "WinRejected", "GmCorrected", "StepSkipped",
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
-	"DemonCursed", "LycaonConverted", "SoulsSwapped"]
+	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
 	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN"]
 
@@ -208,7 +208,7 @@ func _next_command(s: GameState) -> Command:
 		return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: weiterspielen"})
 	var roll := _rng.randf()
 	# Spielleitereingriffe jederzeit (auch mit offenem Prompt oder offener Reaktion).
-	if roll < 0.06:
+	if roll < 0.08:
 		_probe = true
 		return _random_correction(s)
 	roll = _rng.randf()
@@ -307,6 +307,11 @@ func _day_command(s: GameState) -> Command:
 		var nomination := _random_nomination(s)
 		if nomination != null:
 			return nomination
+	if roll < 0.47:
+		# Gezielt: lebender Spiegelwolf ohne Nominierung hingerichtet (keine Spiegelung, MirrorNotTriggered).
+		for id: int in s.alive_ids():
+			if s.players[id].role_id == RoleCatalog.SPIEGELWOLF:
+				return CorrectionFixtures.gm("execute", _execution_fields(s, id), "Fuzz: Spiegelwolf ohne Nominierung")
 	if roll < 0.5:
 		var alive := s.alive_ids()
 		if not alive.is_empty():
@@ -410,11 +415,15 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				if not chosen.has(t):
 					chosen.append(t)
 			return Command.answer_stage_targets(p.id, String(p.stage), chosen)
-		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER:
+		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN:
 			if p.stage == BondSteps.STAGE_MODE or p.stage == BondSteps.STAGE_GRANT:
 				return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.6)
-			# Seelentauscher darf auch Tote wählen.
-			var bond_pool: Array[int] = p.allowed_ids.duplicate() if p.owner == PendingPrompt.OWNER_SWAPPER else _alive_in(s, p.allowed_ids)
+			if p.stage == BondSteps.STAGE_ROLE:
+				var role_options: Array = p.partial.get("options", [])
+				return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "option": _rng.randi_range(0, role_options.size() - 1)})
+			# Seelentauscher, Kutscher und Frankenstein wählen (auch) Tote.
+			var dead_choice := [PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN].has(p.owner)
+			var bond_pool: Array[int] = p.allowed_ids.duplicate() if dead_choice else _alive_in(s, p.allowed_ids)
 			var bond_picks: Array = []
 			var wanted := p.max_count if (p.min_count > 0 or _rng.randf() < 0.8) else 0
 			while bond_picks.size() < wanted and bond_picks.size() < bond_pool.size():

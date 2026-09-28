@@ -64,6 +64,7 @@ var shadow_links: Array = []         ## aktive Verknüpfungen [{walker_id, partn
 var red_chains: Array = []           ## Todesketten [{red_id, partner_id}], je Rotkäppchen höchstens eine
 var apples: Dictionary = {}          ## Apfel je Person-ID: Nacht, in der er gilt
 var apple_steps: Array[int] = []     ## Indizes der durch einen Apfel eingefügten Nachtschritte dieser Nacht
+var revived_tonight: Array[int] = []  ## in dieser Nacht durch Rollen Wiederbelebte, öffentlich am Morgen
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -241,6 +242,7 @@ func to_dict() -> Dictionary:
 		"red_chains": red_chains.duplicate(true),
 		"apples": _int_keys_to_dict(apples),
 		"apple_steps": apple_steps.duplicate(),
+		"revived_tonight": revived_tonight.duplicate(),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -530,6 +532,13 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.apple_steps = extra_steps
 	for i: int in s.apple_steps:
 		if i < 1 or i >= s.night_plan.size() or s.night_plan[i] != s.night_plan[i - 1]:
+			return null
+	var revived: Variant = DictRead.to_int_array(DictRead.get_array(d, "revived_tonight"))
+	if revived == null:
+		return null
+	s.revived_tonight = revived
+	for id: int in s.revived_tonight:
+		if not s.players.has(id):
 			return null
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:

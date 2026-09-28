@@ -46,6 +46,8 @@ const OWNER_WIDOW := &"schwarze-witwe"
 const OWNER_SHADOWWALKER := &"schattenwanderer"
 const OWNER_LYKAON := &"koenig-lykaon"
 const OWNER_SWAPPER := &"seelentauscher"
+const OWNER_COACH := &"kutscher"
+const OWNER_FRANKENSTEIN := &"dr-victor-frankenstein"
 const KIND_BOND := &"bond_choice"  ## Bindungsschritt mit Stufen (BondSteps)
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 

@@ -737,6 +737,18 @@ msgstr "King Lycaon"
 msgid "ui.role.koenig_lykaon.short"
 msgstr "Werewolf in the pack; with an ally turns a villager into a decoy wolf."
 
+msgid "ui.role.kutscher.name"
+msgstr "Coachman"
+
+msgid "ui.role.kutscher.short"
+msgstr "From ten dead he once brings back three dead; one of them becomes a werewolf."
+
+msgid "ui.role.dr_victor_frankenstein.name"
+msgstr "Dr. Victor Frankenstein"
+
+msgid "ui.role.dr_victor_frankenstein.short"
+msgstr "Once revives a dead person with an unused role."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

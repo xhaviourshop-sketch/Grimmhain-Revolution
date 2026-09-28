@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 57 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 57 |
+| im RoleCatalog vorhandene Rollen | 59 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 59 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 55 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 57 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -104,6 +104,8 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 55 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf (Rollentext) | wolves | ja | – (Todesreaktion) | `rules_engine.gd` (Reaktion `demon`), `information_rules.gd` (`Player.cursed`) | `test_transform_roles.gd`, fuzz | RM-DR-122, V-01, V-02, V-07, DECISION-LOG „Rollenaudit · Verwandlungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 56 | `koenig-lykaon` | König Lykaon / King Lycaon (Rollentext) | wolves | ja | 24 | `bond_steps.gd` (Stufen ally/targets, `_convert`) | `test_transform_roles.gd`, fuzz | RM-DR-107, V-03, V-08, V-09, DECISION-LOG „Rollenaudit · Verwandlungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 57 | `seelentauscher` | Seelentauscher / Soul Swapper (Rollentext) | village | nein | 80 | `bond_steps.gd` (`_swap`), `role_transition.gd`, `gatewarden.gd` | `test_transform_roles.gd`, fuzz | RM-DR-127, V-04 bis V-06, DECISION-LOG „Rollenaudit · Verwandlungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 58 | `kutscher` | Kutscher / Coachman (Rollentext) | village | nein | 38 | `bond_steps.gd` (Stufen targets/wolf, `_revive_coach`), `role_transition.gd` (`revive`) | `test_revival_roles.gd`, fuzz | RM-DR-126, RM-DR-013, W-01 bis W-03, DECISION-LOG „Rollenaudit · Wiederbelebungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 59 | `dr-victor-frankenstein` | Dr. Victor Frankenstein (Rollentext) | village | nein | 36 | `bond_steps.gd` (Stufen targets/role, `frankenstein_options`) | `test_revival_roles.gd`, fuzz | RM-DR-141.1/.2, RM-DR-013, W-01, W-04, DECISION-LOG „Rollenaudit · Wiederbelebungsrollen“ | `implemented-and-tested` | `assisted` | `legacy-broken` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -401,6 +403,16 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht bis zur Nutzung (Priorität 80): 0 oder zwei verschiedene Personen, lebend oder tot, er selbst erlaubt. Beide erhalten die Rolle der anderen wie beim Lehrling-Erbe (frische Einsätze, Wolfskind ohne Vorbild, Lehrlingsbindung endet, Scheinrolle des Trugbilderwolfs wandert mit); lebende Betroffene erfahren ihre Rolle privat. Würde jemand (auch tot) neu Wolf, macht ein lebender Wächter am Tor ihn zum Dorfbewohner.
 - **Tests:** Tausch mit frischen Rollen, private Mitteilung, Tote, Selbsttausch, Wächter bei Lebenden und Toten.
 - **Grenzen:** Rollenschritte der Getauschten in derselben Nacht entfallen (Nachtplan-Schnappschuss).
+
+### 4.58 `kutscher`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Ab einer Nacht mit mindestens 10 Toten (Priorität 38), freiwillig, einmal je Leben: drei Tote wählen, dann einen davon als Wolf. Alle drei leben sofort wieder mit frischen Einsätzen (`RoleTransition.revive`), zwei behalten ihre Rolle, der gewählte wird Werwolf (Wächter am Tor: Dorfbewohner). Private Mitteilung, Handeln ab der Folgenacht, öffentliches `PlayerRevived` am Morgen.
+- **Tests:** Schwelle, nur Tote, genau drei, Wolfswahl, Rudel ab Folgenacht, Wächter, Verzicht.
+- **Grenzen:** Totenkarten-Bedingungen folgen mit dem Assistenten (W-01).
+
+### 4.59 `dr-victor-frankenstein`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht bis zur Nutzung (Priorität 36), freiwillig: ein Toter, dann eine Rolle aus `frankenstein_options` (Rollen, die gerade niemand hat, Dorfbewohner immer, keine Wolfsrolle, keine Pflicht-Scheinrolle). Die Person lebt sofort wieder mit dieser Rolle und frischen Einsätzen, erfährt sie privat, handelt ab der Folgenacht; am Morgen öffentlich sichtbar.
+- **Tests:** Nur Tote, Rollenangebot, private Mitteilung, Folgenacht, einmal je Leben, Save/Load der Rollenwahl.
+- **Grenzen:** Totenkarten-Bedingung RM-DR-141.4 folgt mit dem Assistenten (W-01).
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

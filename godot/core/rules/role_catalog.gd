@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen` und die Schutzrollen `der-weise`, `maertyrerin`, `schutzgeist`, `dorfschmied` und `verdammniswaechter` und die Bindungsrollen `loki`, `schwarze-witwe`, `rotkaeppchen` und `schattenwanderer` sowie `daemonischer-wolf`, `koenig-lykaon` und `seelentauscher`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen` und die Schutzrollen `der-weise`, `maertyrerin`, `schutzgeist`, `dorfschmied` und `verdammniswaechter` und die Bindungsrollen `loki`, `schwarze-witwe`, `rotkaeppchen` und `schattenwanderer` sowie `daemonischer-wolf`, `koenig-lykaon`, `seelentauscher`, `kutscher` und `dr-victor-frankenstein`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -154,6 +154,12 @@ const KOENIG_LYKAON := &"koenig-lykaon"
 const LYCAON_MAX_SKIPS := 3
 ## Seelentauscher / Soul Swapper (V-04 bis V-06): Dorf; tauscht einmal die Rollen zweier Personen (BondSteps).
 const SEELENTAUSCHER := &"seelentauscher"
+## Kutscher / Coachman (W-02, W-03): Dorf; ab 10 Toten einmal drei Tote wiederbeleben, einer wird Werwolf (BondSteps).
+const KUTSCHER := &"kutscher"
+const COACH_MIN_DEAD := 10
+const COACH_REVIVALS := 3
+## Dr. Victor Frankenstein (W-04): Dorf; einmal einen Toten mit einer freien Nicht-Wolf-Rolle wiederbeleben (BondSteps).
+const FRANKENSTEIN := &"dr-victor-frankenstein"
 ## Rollen, deren eigener Nachtschritt jede Nacht stattfindet und durch einen Apfel verdoppelt wird (R-02, R-04);
 ## ausgenommen Rollen mit nur einem Ergebnis (Richter, Parasit, Verdammniswächter, Rotkäppchen).
 const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUMWOLF, HENKER, WALDLAEUFER, DOKTOR, TRAUMDEUTER, SCHWARZE_WITWE]
@@ -166,7 +172,8 @@ const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhe
 	"schattenhund:block", "giftwolf:paw1", "giftwolf:paw2", "rudelvater:survive", "fenrir:survive",
 	"koenig:learn", "kriegerin-des-lichts:attack", "blutpriester:sacrifice", "der-weise:survive", "schutzgeist:shield",
 	"dorfschmied:weapon", "loki:bind", "schattenwanderer:link", "daemonischer-wolf:death_reaction", "koenig-lykaon:convert",
-	"koenig-lykaon:skip1", "koenig-lykaon:skip2", "koenig-lykaon:skip3", "seelentauscher:swap"]
+	"koenig-lykaon:skip1", "koenig-lykaon:skip2", "koenig-lykaon:skip3", "seelentauscher:swap", "kutscher:revive",
+	"dr-victor-frankenstein:revive"]
 
 ## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
 ## Wolfskind 0.9 (nur mit Auswahlbedarf), Lehrling 1.1 (nur mit Auswahlbedarf), Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
@@ -230,6 +237,8 @@ const ROLES := {
 	DAEMONISCHER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": DAEMONISCHER_WOLF, "death_reaction": Reaction.KIND_DEMON},
 	KOENIG_LYKAON: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": KOENIG_LYKAON, "night_priority": 24},
 	SEELENTAUSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SEELENTAUSCHER, "night_priority": 80},
+	KUTSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KUTSCHER, "night_priority": 38},
+	FRANKENSTEIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": FRANKENSTEIN, "night_priority": 36},
 }
 
 

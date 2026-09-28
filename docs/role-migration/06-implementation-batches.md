@@ -412,7 +412,11 @@ Siehe §3.
 
 ### K13 · Wiederbelebung
 
-**Rollen Charge K13 (2):** `dr-victor-frankenstein`, `kutscher`
+**Rollen Charge K13 (0):** –
+
+**Nachtrag Rollenaudit:** `dr-victor-frankenstein` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `kutscher` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Tote kehren zurück, teils mit neuer Rolle.
 - **Neue Systeme:** N-13; bei Kartenbezug N-15.

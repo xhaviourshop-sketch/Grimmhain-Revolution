@@ -21,10 +21,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
-| [`kutscher`](#kutscher) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | Rollenwechsel, Zufallsmechanik | L / hoch | K13 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
-| [`dr-victor-frankenstein`](#dr-victor-frankenstein) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Wiederbelebung | Rollenwechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit, Totenkarten-Interaktion | L / hoch | K13 | – |
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
@@ -143,27 +141,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch; Sieg-Abwesenheit per `rg` über `js/`, `game.html`, `app/src` belegt. |
 | Detail | [Dossier](dossiers/solos-a.md#prophet-des-untergangs) |
 
-### `kutscher`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Kutscher / Coachman |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 3.8 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Code ist funktional (keine Fehlfunktion der Kernmechanik gefunden), weicht aber in Rollenvergabe und Auswahlverfahren vom Text ab; 04 "verifiziert" ist zu optimistisch. |
-| DE/EN-Vergleich | semantisch gleich NEIN (geringfügig). DE "kann" = optional; EN "revives" klingt verpflichtend/automatisch. Schwelle (10), Anzahl (3) und Wolf (1) gleich. Beide sagen nichts über Einmaligkeit, Auswahl der Toten oder neue Rollen. |
-| Automationsziel | `assisted`: Bedingung und Verbrauch automatisch; Auswahl/Rollen hängen an PO-Entscheidung, Ergebnis braucht SL-Bestätigung wegen großer Wirkung. |
-| Mechanik | primär: Wiederbelebung; sekundär: Rollenwechsel, Zufallsmechanik |
-| Größe / Risiko | L / hoch |
-| Vorhandene Godot-Systeme | StepQueue (bedingter Schritt), PendingPrompt, SeededRng, RoleTransition (Rollenzuweisung mit Schnappschuss, Wächter-am-Tor-Umleitung), WinRules/WinCandidate, StateCodec, Replay, GmCorrections, Ereignis-Sichtbarkeit. |
-| Neue Systeme | Wiederbelebungsmodell (Tod aufheben, Status/Bindungen zurücksetzen, Totenkarten-Status, Ereignis `REVIVE`), Rollenpool-Regel (Akt/Fraktion) für neu vergebene Rollen, Totenkarten-Effektmodell für die revive-gebundenen Karten. |
-| Abhängigkeiten | Wächter am Tor, Werwolf/Rudel, alle Rollen im Pool, Totenkarten (4 revive-Karten), Prophet des Untergangs (Ziele), Schicksalswolf (`FirstThreeDeadIds`), Seelentauscher/Lehrling (Rollenerbe). |
-| Widersprüche | RM-C-114 Rollen der Wiederbelebten; RM-C-115 Wer wählt die Toten; RM-C-116 Optional; RM-C-117 Einmaligkeit |
-| Entscheidungen | RM-DR-126 (Rolle); übergreifend RM-DR-011, RM-DR-013, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K13 / in keiner Option |
-| Belegsicherheit | hoch für Code; mittel für Totenkarten-Wirkung (Karteninhalte nicht im Detail geprüft). |
-| Detail | [Dossier](dossiers/village-2.md#kutscher) |
-
 ### `feuerteufel`
 
 | Feld | Inhalt |
@@ -205,27 +182,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch; Ursachenliste per `rg "VOODOO_PUPPET"` vollständig (`night:255,442`, `help:265`, `gh:2426`, `ui:407`). |
 | Detail | [Dossier](dossiers/solos-a.md#voodoo-priester) |
-
-### `dr-victor-frankenstein`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Dr. Victor Frankenstein / Dr. Victor Frankenstein |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 3.6 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. In der React-Oberfläche verfälscht der fehlende Dropdown die Kernfunktion (Rolle wird nicht gewählt), in `game.html` ist die Aktion nicht atomar (Teilzustand bei fehlenden Rollen) und der Apfel-Pfad verliert die Rollenvergabe. Der Normalfall in `game.html` funktioniert. |
-| DE/EN-Vergleich | JA mit Nuance. Häufigkeit (einmal), Ziel (ein Toter), Wirkung (neue Rolle) gleich. DE "Kann" macht die Nutzung ausdrücklich freiwillig, EN nicht ausdrücklich. "brand new role" könnte als "Rolle, die noch nicht im Spiel ist" gelesen werden (entspricht zufällig `chunk:64`), DE "neue Rolle" nur als … |
-| Automationsziel | `assisted`: Spieler entscheidet (ob, wen, welche Rolle), der Kern führt die Prompt-Kette und wendet atomar an. |
-| Mechanik | primär: Wiederbelebung; sekundär: Rollenwechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit, Totenkarten-Interaktion |
-| Größe / Risiko | L / hoch. Mehrstufiger Prompt, Rollenwechsel mit Fraktionswechsel, Siegprüfung, viele Seiteneffekte auf Bindungen. |
-| Vorhandene Godot-Systeme | PendingPrompt (Ja/Nein → Toter → Rolle → Bestätigung, abbrechbar), RoleTransition (Rolle, Fraktion, `counts_as_wolf`, frische Einsätze, Schnappschuss), StepQueue, WinRules/WinCandidate, GmCorrections (`revive`, `set_role` existieren), StateCodec, Replay, Ereignis-Sichtbarkeit. |
-| Neue Systeme | Wiederbelebungsmodell im Kern (Reset-Liste für Marker/Bindungen, Totenkarten-Status), Totenkarten-Effektmodell (Tag-Aktivierung), Regel "Wächter am Tor blockiert neue Wölfe" als Prüfung in RoleTransition, Neuberechnung des Nachtplans nach Rollenwechsel in der Nacht (Nachtplan ist heute Snapshot, `godot/README.md` Wolfskind-Abschnitt). |
-| Abhängigkeiten | Wächter am Tor, Loki (Liebende), Rotkäppchen (Apfel/Kette), Sensenträger (`hunterShot`/`hunterQueued`), Ritter, Lehrling/Seelentauscher (Erbe), Kutscher (zweite Wiederbelebungsrolle), Totenkarten `segen_08`, `wende_04`, `wende_07`, `loki_10`, Hades (Lichter zählen Tode), alle Rollen als mögliche neue Rolle. |
-| Widersprüche | RM-C-147 Rollenpool; RM-C-148 Zustand des Wiederbelebten; RM-C-149 Einmaligkeit bei Erbe; RM-C-150 Totenkarten-Aktivierung nach Verbrauch |
-| Entscheidungen | RM-DR-141 (Rolle); übergreifend RM-DR-011, RM-DR-013; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K13 / in keiner Option |
-| Belegsicherheit | hoch für `game.html`-Pfad; React-Verhalten (erste Rolle) aus Code und SPECIAL-ROLE-FLOW-REPORT abgeleitet, nicht selbst ausgeführt. --- |
-| Detail | [Dossier](dossiers/village-3.md#dr-victor-frankenstein) |
 
 ### `nekromant`
 
