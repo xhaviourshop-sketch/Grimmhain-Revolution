@@ -362,3 +362,23 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet.
 - **Henker, Zählung (RM-DR-130.1/.2):** A. Jede bestätigte Hinrichtung der Partie zählt, auch ohne Tod (Spiegelung, Cerberus-Abwehr, Parasit), auch vor dem Rollenerwerb.
 - **Henker, Markierung (RM-DR-130.3):** A. Ab drei Hinrichtungen markiert er jede Nacht freiwillig eine Person; sie stirbt zusätzlich bei der Hinrichtung des folgenden Tages, wenn der Henker dabei lebt; sonst verfällt die Markierung.
 - **Selbstmörder und Henker (RM-DR-138.2):** A. Nur die Hinrichtung der Person selbst zählt; ein zusätzlicher Henker-Tod ist keine Hinrichtung des Selbstmörders.
+
+## Rollenaudit · Informationsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs I-01 bis I-15). Freitext wörtlich mit Auslegung. Es gelten die Querschnittsentscheidungen (Blockade nur aktiver Dorf-Nachtschritte, Wiederbelebung setzt begrenzte Einsätze zurück, Nachttode in der Morgenauflösung mit sofortigem Verlust weiterer Nachtschritte).
+
+- **Traumdeuter (I-01, RM-DR-129.1/.2):** Antwort „Der Spielleiter wählt die 3 Personen aus, hat aber einen Reminder, mindestens 1 Wolf zu wählen. Anzeige wird erst freigegeben, wenn mindestens 1 Wolf drunter ist und insgesamt 3 Spieler.“ Auslegung: Jede Nacht wählt der Spielleiter genau drei andere lebende Personen; die Bestätigung ist erst möglich, wenn mindestens eine davon als Wolf zählt.
+- **Traumdeuter, Anzeige (I-05):** A. Zwei oder drei Wölfe sind zulässig; der Traumdeuter erfährt nur „unter diesen dreien ist mindestens ein Wolf“, keine Anzahl.
+- **Wolfsbegriff von Traumdeuter und Kopfgeldjäger (I-02, RM-DR-129.3, RM-DR-139.4):** A. Es zählt die wahre Wolfszählung (`counts_as_wolf`); die Scheinrolle des Trugbilderwolfs täuscht nur Rollenauskünfte. Verfluchte des Dämonischen Wolfs werden mit dessen Entscheidung geklärt.
+- **König (I-03, RM-DR-140.1/.2):** A. Einmal je Leben in der ersten Nacht, in der strikt mehr Personen tot sind als leben; er erfährt eine andere lebende Person der aktuellen Fraktion Dorf mit ihrer wahren Rolle; der Spielleiter wählt sie aus.
+- **Kopfgeldjäger (I-04, RM-DR-139.1/.2/.3):** A. Jeder Lynch-Tod einer Person, die als Wolf zählt, während er lebt und die Rolle hat, ergibt eine Liste in einer folgenden Nacht (Zähler). Spiegelung und Cerberus-Abwehr sind kein Lynch-Tod eines Wolfs. Er selbst ist nie in der Liste. Reichen die Ziele nicht, verfällt die Liste mit Hinweis.
+- **Kopfgeldjäger, Liste (I-06):** A. Wie beim Traumdeuter: der Spielleiter wählt drei andere lebende Personen, Freigabe ab mindestens einem Wolf, Anzeige „mindestens ein Wolf“.
+- **Kriegerin des Lichts (I-07, RM-DR-152):** A. Einmal je Leben, freiwillig, Ziel eine andere lebende Person; die App prüft die wahre Wolfszählung und nur die Kriegerin erfährt das Ergebnis. Der getroffene Wolf überlebt. Ist das Ziel kein Wolf, stirbt die Kriegerin in der Morgenauflösung.
+- **Blutpriester (I-08, RM-DR-128):** A. Einmal je Leben, freiwillig; das Opfer stirbt in der Morgenauflösung (kein Wolfsangriff, Schutzengel wirkt nicht). Der Spielleiter wählt 0 bis 3 lebende Wölfe, deren Namen nur der Blutpriester erfährt.
+- **Blutpriester, Opfer (I-13):** A. Nur eine andere lebende Person (auch ein Wolf).
+- **Amalia (I-09, RM-DR-151):** A. Tagesaktion, solange mindestens drei lebende Personen als Wolf zählen; sie stirbt sofort, der Spielleiter beantwortet ihre öffentliche Frage wahrheitsgemäß mit Ja oder Nein, die App protokolliert die Antwort.
+- **Detektiv (I-10, RM-DR-153.1–.3):** A. Stirbt eine Person, die als Wolf zählt, während ein Detektiv lebt, und lebt danach mindestens ein anderer Wolf, wird öffentlich verkündet, in welcher Richtung vom Platz des Toten der nächste lebende Wolf sitzt (Abstand einschließlich toter Plätze, links = Uhrzeigersinn, bei Gleichstand „beide Seiten gleich weit“). Tag sofort, nachts in der Morgenauflösung; ein Hinweis je Wolfstod, unabhängig von der Zahl der Detektive.
+- **Detektiv und Wolfskind (I-14):** A. Maßgeblich ist der Zustand direkt nach den unmittelbaren Todesfolgen: ein durch denselben Tod verwandeltes Wolfskind zählt als anderer Wolf.
+- **Die Ewigen, Prüfung (I-11, RM-DR-104.2):** A. Jede Nacht ein gemeinsamer Schritt aller lebenden Ewigen; sie prüfen eine andere lebende Person und erfahren nur Ja (Einzelsiegrolle) oder Nein.
+- **Die Ewigen, Mitsieg (I-12, RM-DR-104.1/.3):** A. Sie bleiben Dorf. Gewinnt eine von ihnen mit Ja geprüfte Person einen Einzelsieg, gewinnen alle Ewigen mit, lebend oder tot.
+- **Die Ewigen, Bindung (I-15):** A. Der Mitsieg gilt nur der mit Ja geprüften Person, nicht deren Rolle.

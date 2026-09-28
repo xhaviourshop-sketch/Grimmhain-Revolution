@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 33 | 73 |
+| entschieden | 41 | 96 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 38 | 110 |
+| später | 30 | 87 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -324,17 +324,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `die-ewigen`; Wechselwirkung laut Dossier: alle 14 Solo-Rollen (`roles:399-403`), insbesondere solche ohne Siegcode (Prophet, Feuerteufel, Voodoo, Grabräuber: 07 Q4); Lehrling/Seelentauscher (Solo-Rolle wechselt …
 - **Belege:** [Dossier](dossiers/village-1.md#die-ewigen); RM-C-087, RM-C-088, RM-C-089 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-006.
-- **RM-DR-104.1 · Mitsieg** · Status: später (K9)
+- **RM-DR-104.1 · Mitsieg** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Ewige gewinnen mit jedem gefundenen Solo, wenn dieser gewinnt
   - Option B: Ewige gewinnen mit dem Solo, den sie zuletzt/zuerst gefunden haben
   - Auswirkung: Balance: hoch (Dorfrolle wechselt faktisch Siegseite); Umsetzung: WinCandidate muss Mitsieger tragen; widerspricht "genau ein Kandidat"
   - Empfehlung: Regel festlegen, Mitsieg als Zusatz-Gewinner am Kandidaten
-- **RM-DR-104.2 · Info-Umfang** · Status: später (K9)
+- **RM-DR-104.2 · Info-Umfang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur Ja/Nein
   - Option B: Ja + Rolle
   - Auswirkung: Balance: Rollenname ist Orakel-starke Info; Umsetzung: InfoRecord-Inhalt
   - Empfehlung: nur Ja/Nein
-- **RM-DR-104.3 · Siegseite der Ewigen** · Status: später (K9)
+- **RM-DR-104.3 · Siegseite der Ewigen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Ewige bleiben Dorf und gewinnen zusätzlich mit Solo
   - Option B: Ewige verlassen das Dorf, sobald Solo gefunden
   - Auswirkung: Balance: mittel; Umsetzung: Fraktionswechsel oder Zusatzsieg
@@ -865,12 +865,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `blutpriester`; Wechselwirkung laut Dossier: Rudelvater, Nekromant, Hades, Kartenschlucker, Parasit, Schattenwanderer (Todesabfang), Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Doppelspion (nicht Wolf), Sensenträger (Reaktion auf Opfer), Seelentauscher …
 - **Belege:** [Dossier](dossiers/village-2.md#blutpriester); RM-C-122, RM-C-123 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-014, RM-DR-015.
-- **RM-DR-128.1 · Anzahl 0–3** · Status: später (K7)
+- **RM-DR-128.1 · Anzahl 0–3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: SL entscheidet
   - Option B: Anzahl aus Regel (z. B. Zufall oder Rolle des Opfers)
   - Auswirkung: Balance: SL-Willkür vs. Planbarkeit; Umsetzung: Prompt vs. RNG
   - Empfehlung: PO; Legacy (SL wählt) beibehalten ist einfach
-- **RM-DR-128.2 · Wer sieht das Ergebnis** · Status: später (K7)
+- **RM-DR-128.2 · Wer sieht das Ergebnis** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: öffentlich (aufdecken)
   - Option B: nur Blutpriester
   - Auswirkung: Balance: groß (öffentliche Wolfsnennung); Umsetzung: Ereignis-Sichtbarkeit public vs. actor
@@ -884,17 +884,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `traumdeuter`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (Fluch), Trugbilderwolf (Erscheinung), Doppelspion, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise …
 - **Belege:** [Dossier](dossiers/village-2.md#traumdeuter); RM-C-125, RM-C-126, RM-C-127 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-129.1 · Inhalt der Vision** · Status: später (K7)
+- **RM-DR-129.1 · Inhalt der Vision** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Code übernehmen, Text präzisieren
   - Option B: eigene Mechanik (Rollen/Zustände)
   - Auswirkung: Balance: Code: starke Info jede Nacht; Umsetzung: A: kleiner Aufwand; B: neue Spezifikation
   - Empfehlung: A mit Textanpassung
-- **RM-DR-129.2 · Selbst in der Vision** · Status: später (K7)
+- **RM-DR-129.2 · Selbst in der Vision** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: ausschließen
   - Option B: erlaubt
   - Auswirkung: Balance: Selbstnennung ist verschwendete Info; Umsetzung: Filter
   - Empfehlung: ausschließen
-- **RM-DR-129.3 · Verfluchte als Wolf** · Status: später (K7)
+- **RM-DR-129.3 · Verfluchte als Wolf** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Erscheinung zählt (Fehlinformation)
   - Option B: nur echte Wölfe
   - Auswirkung: Balance: beeinflusst Dämonischen Wolf; Umsetzung: InformationRules.determine
@@ -1143,22 +1143,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `kopfgeldjaeger`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (Verfluchte), Spiegelwolf/Fenrir/Cerberus (kein Tod beim Lynch), Der Weise, Lehrling/Seelentauscher, Schattenhund/Albtraumwolf/Zeitwächter (Blockade), Doppelspion (zählt als …
 - **Belege:** [Dossier](dossiers/village-3.md#kopfgeldjaeger); RM-C-140, RM-C-141, RM-C-142, RM-C-143 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-139.1 · Wiederholung** · Status: später (K7)
+- **RM-DR-139.1 · Wiederholung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: eine Info pro Wolfs-Lynch (Zähler)
   - Option B: eine Info in der Nacht nach einem Wolfs-Lynch
   - Auswirkung: Balance: A minimal stärker; Umsetzung: Zähler statt bool
   - Empfehlung: A (Zähler), Texte angleichen
-- **RM-DR-139.2 · Selbst unter den drei** · Status: später (K7)
+- **RM-DR-139.2 · Selbst unter den drei** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: drei andere Spieler
   - Option B: beliebige lebende
   - Auswirkung: Balance: A gibt mehr Info; Umsetzung: Filter `id != actor`
   - Empfehlung: A
-- **RM-DR-139.3 · Aktivierung durch Erbe** · Status: später (K7)
+- **RM-DR-139.3 · Aktivierung durch Erbe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur Lynch aktiviert
   - Option B: Erbe startet aktiv
   - Auswirkung: Balance: B schenkt Info; Umsetzung: Rollenwechsel mit frischen Einsätzen ohne Aktivierung
   - Empfehlung: A
-- **RM-DR-139.4 · Verfluchter als "Werwolf"** · Status: später (K7)
+- **RM-DR-139.4 · Verfluchter als "Werwolf"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur echte Wölfe
   - Option B: Erscheinung zählt
   - Auswirkung: Balance: hängt an Q1; Umsetzung: `counts_as_wolf` vs `appears_as`
@@ -1172,12 +1172,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `koenig`; Wechselwirkung laut Dossier: Wolfskind, Lehrling, Dämonischer Wolf (Verfluchte), Seelentauscher, Rotkäppchen (Apfel), Frankenstein/Kutscher (Wiederbelebung verändert …
 - **Belege:** [Dossier](dossiers/village-3.md#koenig); RM-C-144, RM-C-145 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-140.1 · Häufigkeit** · Status: später (K7)
+- **RM-DR-140.1 · Häufigkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: einmal im Spiel
   - Option B: jede Nacht, solange Bedingung gilt
   - Auswirkung: Balance: B ist in der Endphase sehr stark; Umsetzung: Einsatzzähler vs. Nachtbedingung
   - Empfehlung: 07-Vorschlag übernehmen oder A; Texte angleichen
-- **RM-DR-140.2 · Wer wird gezeigt** · Status: später (K7)
+- **RM-DR-140.2 · Wer wird gezeigt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: SL/Zufall wählt echten Dorf-Angehörigen (Fraktion aktuell)
   - Option B: rollenbasiert (Legacy)
   - Auswirkung: Balance: A verhindert Fehlinfo bei Wolfskind; Umsetzung: `faction` aktuell statt Katalog
@@ -1431,17 +1431,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `amalia`; Wechselwirkung laut Dossier: alle Wolfsrollen (Schwelle), Dämonischer Wolf (Verfluchte zählen im Code mit), Doppelspion (zählt nicht), Nekromant (Globalschild verhindert Opfer), Zeitwächter (Opfer bleibt trotz …
 - **Belege:** [Dossier](dossiers/village-4.md#amalia); RM-C-168, RM-C-169, RM-C-170 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-151.1 · Zeitpunkt** · Status: später (K14)
+- **RM-DR-151.1 · Zeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Tagesaktion (öffentlich, alle wach)
   - Option B: Nachtschritt, Frage wird am Morgen verkündet
   - Auswirkung: Balance: A: Frage wirkt sofort in Diskussion; Umsetzung: A: Tagesaktionswarteschlange; B: verzögertes Ereignis
   - Empfehlung: A
-- **RM-DR-151.2 · Frage und Antwort** · Status: später (K14)
+- **RM-DR-151.2 · Frage und Antwort** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: SL beantwortet wahrheitsgemäß, App protokolliert Frage und Antwort
   - Option B: Frage rein mündlich, App nur Opfer
   - Auswirkung: Balance: A: nachvollziehbar; Umsetzung: A: PendingPrompt mit Freitext + Ja/Nein; InfoRecord
   - Empfehlung: A
-- **RM-DR-151.3 · Schwelle** · Status: später (K14)
+- **RM-DR-151.3 · Schwelle** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: >2 lebende echte Wölfe
   - Option B: >=2 (Alttext) oder inkl. toter ("im Spiel")
   - Auswirkung: Balance: Verfügbarkeit; Umsetzung: Zählung über Fraktion, ohne Erscheinung
@@ -1455,17 +1455,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `kriegerin-des-lichts`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (verfluchter Sitz: Wolf oder nicht?), Trugbilderwolf/Erscheinungsrollen, Doppelspion, Rudelvater (erste Sonderfähigkeitstötung überlebt, falls Treffer tötet), …
 - **Belege:** [Dossier](dossiers/village-4.md#kriegerin-des-lichts); RM-C-171, RM-C-172, RM-C-173 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-014.
-- **RM-DR-152.1 · Stirbt ein getroffener Wolf?** · Status: später (K7)
+- **RM-DR-152.1 · Stirbt ein getroffener Wolf?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Angriff tötet den Wolf
   - Option B: Angriff ist nur Test, Wolf wird nur erkannt
   - Auswirkung: Balance: A sehr stark (sicherer Wolfskill mit Risiko); Umsetzung: A: KillPipeline-Ursache, Reaktionen
   - Empfehlung: Entscheidung nötig; 04 korrigieren
-- **RM-DR-152.2 · Wahrheitsquelle** · Status: später (K7)
+- **RM-DR-152.2 · Wahrheitsquelle** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: App prüft Fraktion automatisch
   - Option B: SL entscheidet (kann Erscheinung berücksichtigen)
   - Auswirkung: Balance: A verhindert SL-Fehler; Umsetzung: A: Fraktion oder appears_as
   - Empfehlung: A mit Wahrheit, appears_as nur falls gewünscht
-- **RM-DR-152.3 · Öffentlichkeit** · Status: später (K7)
+- **RM-DR-152.3 · Öffentlichkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: geheim an Kriegerin
   - Option B: öffentlich
   - Auswirkung: Balance: B starke Dorfinfo; Umsetzung: Sichtbarkeit actor vs public
@@ -1479,17 +1479,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `detektiv`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (Verfluchte lösen aus), Wolfskind/Lehrling (verwandelte Wölfe), Doppelspion (ausgenommen), Dorfschmied (Wolfstod durch Waffe), Fährtenleser …
 - **Belege:** [Dossier](dossiers/village-4.md#detektiv); RM-C-174, RM-C-175, RM-C-176, RM-C-177 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003, RM-DR-009, RM-DR-015.
-- **RM-DR-153.1 · Muss der Detektiv leben?** · Status: später (K3)
+- **RM-DR-153.1 · Muss der Detektiv leben?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur lebend
   - Option B: auch tot
   - Auswirkung: Balance: B stärker; Umsetzung: Bedingung am Hook
   - Empfehlung: A (Code)
-- **RM-DR-153.2 · Mindestens 2 lebende Wölfe** · Status: später (K3)
+- **RM-DR-153.2 · Mindestens 2 lebende Wölfe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: ≥1 anderer lebender Wolf genügt
   - Option B: ≥2 (Code)
   - Auswirkung: Balance: bei A Hinweis auf letzten Wolf, sehr stark; Umsetzung: Schwelle
   - Empfehlung: nach PO
-- **RM-DR-153.3 · Hinweisinhalt** · Status: später (K3)
+- **RM-DR-153.3 · Hinweisinhalt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Hinweis bezieht sich auf den toten Wolf (Sitz des Toten als Anker)
   - Option B: Hinweis enttarnt Wolf w indirekt (Code)
   - Auswirkung: Balance: B deutlich stärker, A moderat; Umsetzung: Anker und Richtungsregel

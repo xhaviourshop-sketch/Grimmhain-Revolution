@@ -26,9 +26,9 @@ RM-DR-101.1;ja;loki;S;;
 RM-DR-102.1;ja;nachtwaechter;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
 RM-DR-103.1;ja;rattenfaenger;S;;
 RM-DR-103.2;ja;rattenfaenger;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
-RM-DR-104.1;ja;die-ewigen;S;;
-RM-DR-104.2;ja;die-ewigen;S;;
-RM-DR-104.3;ja;die-ewigen;S;;
+RM-DR-104.1;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Mitsieg mit geprüfter Person (I-12, I-15)
+RM-DR-104.2;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Ja/Nein, gemeinsamer Schritt (I-11)
+RM-DR-104.3;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";bleiben Dorf, zusätzlicher Mitsieg (I-12)
 RM-DR-105.1;ja;spuerhund;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";keine falsche Spur; ✗ verliert die Fähigkeit
 RM-DR-106.1;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.2;ja;rachsuechtiger-wolf;S;;
@@ -91,11 +91,11 @@ RM-DR-126.3;ja;kutscher;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person u
 RM-DR-127.1;ja;seelentauscher;S;;
 RM-DR-127.2;ja;seelentauscher;S;;
 RM-DR-127.3;ja;seelentauscher;S;;
-RM-DR-128.1;ja;blutpriester;S;;
-RM-DR-128.2;ja;blutpriester;S;;
-RM-DR-129.1;ja;traumdeuter;S;;
-RM-DR-129.2;ja;traumdeuter;S;;
-RM-DR-129.3;ja;traumdeuter;S;;
+RM-DR-128.1;ja;blutpriester;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL wählt 0-3 lebende Wölfe (I-08)
+RM-DR-128.2;ja;blutpriester;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Blutpriester (I-08)
+RM-DR-129.1;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL wählt 3, mindestens 1 Wolf (I-01, I-05)
+RM-DR-129.2;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur andere Personen (I-01)
+RM-DR-129.3;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";wahre Wolfszählung (I-02)
 RM-DR-130.1;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";blockierte Hinrichtung zählt
 RM-DR-130.2;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";jede bestätigte Hinrichtung
 RM-DR-130.3;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";verfällt, wirkt nur mit lebendem Henker am Folgetag
@@ -124,12 +124,12 @@ RM-DR-137.4;ja;rotkaeppchen;S;;
 RM-DR-137.5;ja;rotkaeppchen;S;;
 RM-DR-138.1;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";Toten vor der Hinrichtung, ab 5
 RM-DR-138.2;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";nur eigene Hinrichtung
-RM-DR-139.1;ja;kopfgeldjaeger;S;;
-RM-DR-139.2;ja;kopfgeldjaeger;S;;
-RM-DR-139.3;ja;kopfgeldjaeger;S;;
-RM-DR-139.4;ja;kopfgeldjaeger;S;;
-RM-DR-140.1;ja;koenig;S;;
-RM-DR-140.2;ja;koenig;S;;
+RM-DR-139.1;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Zähler je Wolfs-Lynch (I-04)
+RM-DR-139.2;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";drei andere (I-04)
+RM-DR-139.3;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Lynch aktiviert (I-04)
+RM-DR-139.4;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";wahre Wolfszählung (I-02)
+RM-DR-140.1;ja;koenig;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";einmal je Leben (I-03)
+RM-DR-140.2;ja;koenig;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";aktuelle Fraktion Dorf, SL wählt (I-03)
 RM-DR-141.1;ja;dr-victor-frankenstein;S;;
 RM-DR-141.2;ja;dr-victor-frankenstein;S;;
 RM-DR-141.3;ja;dr-victor-frankenstein;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
@@ -160,15 +160,15 @@ RM-DR-150.1;ja;zeitwaechter;S;;
 RM-DR-150.2;ja;zeitwaechter;S;;
 RM-DR-150.3;ja;zeitwaechter;S;;
 RM-DR-150.4;ja;zeitwaechter;S;;
-RM-DR-151.1;ja;amalia;S;;
-RM-DR-151.2;ja;amalia;S;;
-RM-DR-151.3;ja;amalia;S;;
-RM-DR-152.1;ja;kriegerin-des-lichts;S;;
-RM-DR-152.2;ja;kriegerin-des-lichts;S;;
-RM-DR-152.3;ja;kriegerin-des-lichts;S;;
-RM-DR-153.1;ja;detektiv;S;;
-RM-DR-153.2;ja;detektiv;S;;
-RM-DR-153.3;ja;detektiv;S;;
+RM-DR-151.1;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Tagesaktion (I-09)
+RM-DR-151.2;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL antwortet wahr, App protokolliert (I-09)
+RM-DR-151.3;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";mindestens 3 lebende Wölfe (I-09)
+RM-DR-152.1;ja;kriegerin-des-lichts;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Wolf überlebt (I-07)
+RM-DR-152.2;ja;kriegerin-des-lichts;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";App, wahre Wolfszählung (I-07)
+RM-DR-152.3;ja;kriegerin-des-lichts;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";geheim an Kriegerin (I-07)
+RM-DR-153.1;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Detektiv muss leben (I-10)
+RM-DR-153.2;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";ab 1 anderem lebenden Wolf (I-10, I-14)
+RM-DR-153.3;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Richtung vom Platz des toten Wolfs (I-10)
 RM-DR-153.4;ja;detektiv;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person
 RM-DR-154.1;ja;dorfschmied;S;;
 RM-DR-154.2;ja;dorfschmied;S;;
