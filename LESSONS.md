@@ -2,6 +2,11 @@
 
 Neue Einträge oben einfügen. Nur bewiesene, wiederverwendbare Erkenntnisse aufnehmen.
 
+## 2026-09-29: Laufzeitfehler nach bestandener Prüfung galten als grün
+- Symptom: Ein Test mit `SCRIPT ERROR` nach der ersten Prüfung meldete „ok“; nur die Log-Suche fand den Fehler.
+- Lösung: `tests/error_logger.gd` (Godot-`Logger`) im Runner; jeder Engine- oder Skriptfehler während eines Tests macht ihn rot.
+- Folgen für neuen Code: erwartbar ungültige Eingaben ohne Engine-Fehler behandeln (`JSON.new().parse()` statt `JSON.parse_string()`), Hilfsfunktionen in Testdateien nie mit `test_` beginnen (der Runner führt sie als Tests aus), Lambdas mit `self` nicht an Signale langlebiger Objekte hängen (Referenzzyklus, Leckmeldung beim Beenden).
+
 ## 2026-09-27: Rule-15-Hook blockierte trotz aktueller Doku
 - Fehler: `~/.claude/hooks/rule15-enforcer.js` erkannte Doku nur bei Edit/Write auf die Zustandsdatei (nicht per Shell) und wertete jeden Commit als neue, ungedokumentierte Änderung. Behoben: Inhalts-Hash statt Werkzeug, Commits mit `PROGRESS.md` gelten als dokumentiert, Doku-Dateien zählen nicht als Code (Backup: `rule15-enforcer.js.bak`).
 
