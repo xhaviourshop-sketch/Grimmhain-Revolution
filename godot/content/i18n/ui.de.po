@@ -617,6 +617,54 @@ msgstr "Henker"
 msgid "ui.role.henker.short"
 msgstr "Ab drei Hinrichtungen markiert er nachts jemanden, der bei der nächsten mitstirbt."
 
+msgid "ui.role.traumdeuter.name"
+msgstr "Traumdeuter"
+
+msgid "ui.role.traumdeuter.short"
+msgstr "Sieht jede Nacht drei Namen, darunter mindestens einen Wolf."
+
+msgid "ui.role.kopfgeldjaeger.name"
+msgstr "Kopfgeldjäger"
+
+msgid "ui.role.kopfgeldjaeger.short"
+msgstr "Nach jedem gelynchten Wolf drei Namen, darunter mindestens ein Wolf."
+
+msgid "ui.role.koenig.name"
+msgstr "König"
+
+msgid "ui.role.koenig.short"
+msgstr "Sobald mehr Tote als Lebende: einmal eine Dorfperson mit ihrer Rolle."
+
+msgid "ui.role.kriegerin_des_lichts.name"
+msgstr "Kriegerin des Lichts"
+
+msgid "ui.role.kriegerin_des_lichts.short"
+msgstr "Prüft einmal nachts, ob jemand ein Wolf ist; irrt sie, stirbt sie."
+
+msgid "ui.role.blutpriester.name"
+msgstr "Blutpriester"
+
+msgid "ui.role.blutpriester.short"
+msgstr "Opfert einmal eine Person und erfährt bis zu drei Wölfe."
+
+msgid "ui.role.amalia.name"
+msgstr "Amalia"
+
+msgid "ui.role.amalia.short"
+msgstr "Bei mindestens drei Wölfen: opfert sich am Tag für eine öffentliche Ja/Nein-Frage."
+
+msgid "ui.role.detektiv.name"
+msgstr "Detektiv"
+
+msgid "ui.role.detektiv.short"
+msgstr "Stirbt ein Wolf, wird öffentlich die Richtung des nächsten Wolfs verkündet."
+
+msgid "ui.role.die_ewigen.name"
+msgstr "Die Ewigen"
+
+msgid "ui.role.die_ewigen.short"
+msgstr "Prüfen jede Nacht gemeinsam, ob jemand allein gewinnt, und gewinnen mit ihm."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

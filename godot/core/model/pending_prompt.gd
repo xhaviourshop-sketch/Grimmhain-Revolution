@@ -30,6 +30,12 @@ const OWNER_SHADOW := &"schattenhund"
 const OWNER_NIGHTMARE := &"albtraumwolf"
 const OWNER_POISON_WOLF := &"giftwolf"
 const OWNER_HANGMAN := &"henker"
+const OWNER_DREAMER := &"traumdeuter"
+const OWNER_BOUNTY := &"kopfgeldjaeger"
+const OWNER_KING := &"koenig"
+const OWNER_WARRIOR := &"kriegerin-des-lichts"
+const OWNER_BLOOD := &"blutpriester"
+const OWNER_ETERNAL := &"die-ewigen"
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0

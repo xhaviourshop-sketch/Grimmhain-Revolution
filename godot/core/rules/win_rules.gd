@@ -11,6 +11,8 @@ extends RefCounted
 ##                je Manipulator ein eigener personenbezogener Kandidat.
 ##   Selbstmörder: bei seiner Hinrichtung waren mindestens 5 Personen tot (gespeichert, gilt fort; RM-DR-138).
 ##   Doppelspion: kein Wolf lebt und er lebt; je Person ein Kandidat, der Dorfsieg entfällt dann (RM-DR-155).
+## Die Ewigen (I-12, I-15): Ist die begünstigte Person eines Einzelsiegs von den Ewigen mit Ja geprüft,
+## stehen alle Personen mit der Rolle Die Ewigen (lebend oder tot) nach ihr in `beneficiary_ids`.
 ## DR-02: Mehrere gleichzeitige Kandidaten ohne automatische Priorität; der Spielleiter
 ## bestätigt genau einen oder lehnt alle ab. Lebt niemand, entsteht kein Kandidat; der
 ## Spielleiter erklärt das Ergebnis per GmCorrection „declare_winner“.
@@ -52,7 +54,24 @@ static func evaluate(state: GameState) -> Array:
 	for id: int in alive:
 		if manipulator_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_MANIPULATOR), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+	for result: Dictionary in results:
+		if result["kind"] == String(Faction.SOLO):
+			(result["beneficiary_ids"] as Array).append_array(eternal_co_winners(state, int(result["beneficiary_ids"][0])))
 	return results
+
+
+## Mitsieger eines Einzelsiegs von `beneficiary`: alle Ewigen, wenn sie ihn mit Ja geprüft haben.
+static func eternal_co_winners(state: GameState, beneficiary: int) -> Array[int]:
+	var out: Array[int] = []
+	if not state.eternal_finds.has(beneficiary):
+		return out
+	var ids: Array[int] = []
+	ids.assign(state.players.keys())
+	ids.sort()
+	for id: int in ids:
+		if id != beneficiary and state.players[id].role_id == RoleCatalog.DIE_EWIGEN:
+			out.append(id)
+	return out
 
 
 ## Einzelsiegbedingung des Manipulators für Person `id` (DR-12): exakt drei Lebende.
@@ -136,6 +155,11 @@ static func finalize_if_ready(ctx: RuleContext) -> void:
 		ctx.emit(GameEvent.WIN_DETECTED, Visibility.GM, {"candidate": candidate.to_dict()})
 
 
+## Einzelsieg: erste Person begünstigt, danach genau ihre Mitsieger (Die Ewigen).
+static func _beneficiaries_ok(s: GameState, c: WinCandidate) -> bool:
+	return not c.beneficiary_ids.is_empty() and c.beneficiary_ids.slice(1) == eternal_co_winners(s, c.beneficiary_ids[0])
+
+
 ## Ladeprüfung der Kandidatenmenge gegen den übrigen Zustand.
 static func state_is_consistent(s: GameState) -> bool:
 	var ids := {}
@@ -158,16 +182,16 @@ static func state_is_consistent(s: GameState) -> bool:
 			open_keys[c.semantic_key()] = true
 		# Offene und bestätigte Manipulator-Kandidaten müssen zum Zustand passen (danach ändert sich nichts).
 		if c.reason_key == WinCandidate.REASON_MANIPULATOR and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
-			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not manipulator_wins(s, c.beneficiary_ids[0]):
+			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not manipulator_wins(s, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_PARASITE and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
-			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not parasite_wins(s, c.beneficiary_ids[0]):
+			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not parasite_wins(s, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
-			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
+			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
-			if c.kind != Faction.SOLO or c.beneficiary_ids.size() != 1 or not double_agent_wins(s, c.beneficiary_ids[0]):
+			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not double_agent_wins(s, c.beneficiary_ids[0]):
 				return false
 	if confirmed.size() > 1:
 		return false

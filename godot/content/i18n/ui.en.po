@@ -617,6 +617,54 @@ msgstr "Executioner"
 msgid "ui.role.henker.short"
 msgstr "After three executions marks someone at night who dies with the next one."
 
+msgid "ui.role.traumdeuter.name"
+msgstr "Dreamer"
+
+msgid "ui.role.traumdeuter.short"
+msgstr "Sees three names each night, at least one of them a werewolf."
+
+msgid "ui.role.kopfgeldjaeger.name"
+msgstr "Bounty Hunter"
+
+msgid "ui.role.kopfgeldjaeger.short"
+msgstr "After each lynched werewolf, three names with at least one werewolf."
+
+msgid "ui.role.koenig.name"
+msgstr "King"
+
+msgid "ui.role.koenig.short"
+msgstr "Once more are dead than alive: learns one villager and their role, once."
+
+msgid "ui.role.kriegerin_des_lichts.name"
+msgstr "Warrior of Light"
+
+msgid "ui.role.kriegerin_des_lichts.short"
+msgstr "Once at night checks whether someone is a werewolf; if wrong, she dies."
+
+msgid "ui.role.blutpriester.name"
+msgstr "Blood Priest"
+
+msgid "ui.role.blutpriester.short"
+msgstr "Once sacrifices someone and learns up to three werewolves."
+
+msgid "ui.role.amalia.name"
+msgstr "Amalia"
+
+msgid "ui.role.amalia.short"
+msgstr "With at least three werewolves: sacrifices herself by day for a public yes/no question."
+
+msgid "ui.role.detektiv.name"
+msgstr "Detective"
+
+msgid "ui.role.detektiv.short"
+msgstr "When a werewolf dies, the direction of the nearest werewolf is announced."
+
+msgid "ui.role.die_ewigen.name"
+msgstr "The Eternal Ones"
+
+msgid "ui.role.die_ewigen.short"
+msgstr "Each night check together whether someone wins alone, and win with them."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

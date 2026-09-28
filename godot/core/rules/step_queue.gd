@@ -18,6 +18,7 @@ extends RefCounted
 const PACK := &"pack"
 const PACK2 := &"pack2"  ## zweiter Rudelschritt nach dem Lynch eines Rudelvaters (RM-DR-112)
 const BOUND := &"die-gebundenen"  ## gemeinsamer Schritt aller Gebundenen, nur Nacht 1
+const ETERNAL := &"die-ewigen"  ## gemeinsamer Schritt aller Ewigen, jede Nacht (I-11)
 const STATUS_PENDING := &"pending"
 const STATUS_DONE := &"done"
 const STATUS_SKIPPED := &"skipped"
@@ -90,6 +91,12 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.KORRUPTER_RICHTER: false,  # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.SPUERHUND: false,      # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.PARASIT: false,        # Behalten ist eine Antwort (0 Ziele)
+	RoleCatalog.TRAUMDEUTER: false,    # Pflichtinformation (Spielleiter wählt drei Personen)
+	RoleCatalog.KOPFGELDJAEGER: false, # Pflichtinformation je offener Liste
+	RoleCatalog.KOENIG: false,         # Pflichtinformation
+	RoleCatalog.KRIEGERIN: false,      # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.BLUTPRIESTER: false,   # Verzicht ist eine Antwort (0 Ziele)
+	ETERNAL: false,                    # Pflichtprüfung der Ewigen
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -133,6 +140,14 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if p.role_id == RoleCatalog.HENKER and s.executions_count < RoleCatalog.HANGMAN_MIN_EXECUTIONS:
 			continue
+		if p.role_id == RoleCatalog.KOPFGELDJAEGER and int(s.bounty_credits.get(id, 0)) < 1:
+			continue
+		if p.role_id == RoleCatalog.KOENIG and (InfoSteps.used(p, InfoSteps.KING_USE_KEY) or not InfoSteps.king_condition(s)):
+			continue
+		if p.role_id == RoleCatalog.KRIEGERIN and InfoSteps.used(p, InfoSteps.WARRIOR_USE_KEY):
+			continue
+		if p.role_id == RoleCatalog.BLUTPRIESTER and InfoSteps.used(p, InfoSteps.BLOOD_USE_KEY):
+			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
@@ -142,6 +157,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			break
 	if s.night_number == 1 and not InfoSteps.living_bound(s).is_empty():
 		entries.append([RoleCatalog.BOUND_PRIORITY, 0, BOUND])
+	if not InfoSteps.living_eternal(s).is_empty():
+		entries.append([RoleCatalog.ETERNAL_PRIORITY, 0, ETERNAL])
 	entries.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and a[1] < b[1]))
 	var plan: Array[StringName] = []
 	for entry: Array in entries:
@@ -153,9 +170,13 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 static func drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
 	if key == BOUND:
-		return &"" if not InfoSteps.living_bound(s).is_empty() else &"no_decision"
-	if key == BOUND and s.village_blocked:
-		return &"blocked"
+		if InfoSteps.living_bound(s).is_empty():
+			return &"no_decision"
+		return &"blocked" if s.village_blocked else &""  # Blockade gemeinsamer Dorfschritte (RM-DR-010)
+	if key == ETERNAL:
+		if InfoSteps.living_eternal(s).is_empty() or InfoSteps.eternal_targets(s).is_empty():
+			return &"no_decision"
+		return &"blocked" if s.village_blocked or InfoSteps.awake_eternal(s).is_empty() else &""
 	if key == PACK or key == PACK2:
 		# G-PH-6 mit Decision Log „Rollenaudit“ (F-10): Das Rudel dieser Nacht sind die Personen,
 		# die bei StartNight als Wolf zählten; lebt keine von ihnen mehr, entfällt der Schritt.
@@ -166,8 +187,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	var actor := step_actor(key)
 	if not s.players.has(actor) or not s.players[actor].alive:
 		return &"actor_dead"
-	# Vergiftete Personen wachen in dieser Nacht nicht mehr auf (Decision Log „Nachttode“).
-	if WitchStep.is_marked(s, actor):
+	# Vergiftete oder geopferte Personen wachen in dieser Nacht nicht mehr auf (Decision Log „Nachttode“).
+	if is_marked(s, actor):
 		return &"marked_for_death"
 	# Blockade (RM-DR-010): nur aktive Nachtschritte von Dorfrollen.
 	if s.players[actor].faction == Faction.VILLAGE and (s.village_blocked or s.blocked_ids.has(actor)):
@@ -187,7 +208,22 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # in diesem Leben schon genutzt
 	if step_role(key) == RoleCatalog.DOKTOR and s.alive_ids().size() < 3:
 		return &"no_decision"  # keine zwei anderen Lebenden
+	if (step_role(key) == RoleCatalog.TRAUMDEUTER or step_role(key) == RoleCatalog.KOPFGELDJAEGER) and not InfoSteps.triple_possible(s, actor):
+		return &"no_decision"  # keine drei anderen Lebenden mit mindestens einem Wolf
+	if step_role(key) == RoleCatalog.KOPFGELDJAEGER and int(s.bounty_credits.get(actor, 0)) < 1:
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.KOENIG and (InfoSteps.used(s.players[actor], InfoSteps.KING_USE_KEY) or not InfoSteps.king_condition(s) or InfoSteps.king_candidates(s, actor).is_empty()):
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.KRIEGERIN and (InfoSteps.used(s.players[actor], InfoSteps.WARRIOR_USE_KEY) or s.alive_ids().size() < 2):
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.BLUTPRIESTER and (InfoSteps.used(s.players[actor], InfoSteps.BLOOD_USE_KEY) or s.alive_ids().size() < 2):
+		return &"no_decision"
 	return &""
+
+
+## Todesmarkierung dieser Nacht: Gifttrank der Waldhexe oder Tod am Morgen aus einem Nachtschritt.
+static func is_marked(s: GameState, id: int) -> bool:
+	return WitchStep.is_marked(s, id) or s.death_marks.any(func(m: Dictionary) -> bool: return int(m["target_id"]) == id)
 
 
 ## Lässt nicht ausführbare Nachtschritte am Anfang der Warteschlange deterministisch
@@ -202,6 +238,9 @@ static func drop_unactionable(ctx: RuleContext) -> void:
 		if reason == &"":
 			return
 		var step_id := night_step_id(s, s.next_night_step)
+		var key := s.night_plan[s.next_night_step]
+		if reason == &"no_decision" and step_role(key) == RoleCatalog.KOPFGELDJAEGER and int(s.bounty_credits.get(step_actor(key), 0)) >= 1:
+			InfoSteps.expire_bounty(ctx, step_actor(key))  # zu wenige Ziele: Liste verfällt mit Hinweis (I-04)
 		s.night_step_status[s.next_night_step] = STATUS_SKIPPED
 		s.next_night_step += 1
 		ctx.emit(GameEvent.STEP_DROPPED, Visibility.GM, {"step_id": step_id, "reason": reason})
@@ -239,10 +278,12 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.LEHRLING:
 		# Lehrling: Kandidaten, Option, Bestätigung (ApprenticeRules).
 		ApprenticeRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
-	elif [RoleCatalog.DORFCHRONISTIN, RoleCatalog.WALDLAEUFER, RoleCatalog.DOKTOR, RoleCatalog.FAEHRTENLESER, RoleCatalog.SPUERHUND].has(step_kind(step_id)):
-		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == BOUND:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
+	elif s.night_plan[s.next_night_step] == ETERNAL:
+		InfoSteps.open(s, prompt, PendingPrompt.OWNER_ETERNAL, -1)
+	elif InfoSteps.OWNERS.has(step_kind(step_id)):
+		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == PACK2:
 		# Zweiter Rudelschritt (Rudelvater): wie das Rudel, Opfer durchdringt Schutz.
 		prompt.owner = PendingPrompt.OWNER_PACK2

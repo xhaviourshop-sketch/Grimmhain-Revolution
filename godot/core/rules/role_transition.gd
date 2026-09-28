@@ -22,6 +22,7 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 			if key.begins_with("%s:" % role):
 				p.ability_uses.erase(key)
 	s.growth.erase(player_id)  # Fenrir-Stufe und Cerberus-Köpfe hängen an der Rolle
+	s.bounty_credits.erase(player_id)  # offene Listen gehören dem bisherigen Kopfgeldjäger
 	WolfChildRules.remove_bond(s, player_id)
 	if role == RoleCatalog.WOLFSKIND:
 		WolfChildRules.create_bond(s, player_id)

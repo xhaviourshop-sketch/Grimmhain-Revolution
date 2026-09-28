@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus` und `henker`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -109,12 +109,31 @@ const FENRIR_SHIELD_STAGE := 3
 ## Henker / Executioner (RM-DR-130): Dorf; ab 3 Hinrichtungen nachts markieren, Zusatztod bei der nächsten Hinrichtung.
 const HENKER := &"henker"
 const HANGMAN_MIN_EXECUTIONS := 3
+## Traumdeuter / Dreamer (Rollenaudit I-01, I-05): Dorf; jede Nacht drei andere Lebende, mindestens ein Wolf (InfoSteps).
+const TRAUMDEUTER := &"traumdeuter"
+## Kopfgeldjäger / Bounty Hunter (I-04, I-06): Dorf; je Wolfs-Lynch eine Liste wie beim Traumdeuter (InfoSteps).
+const KOPFGELDJAEGER := &"kopfgeldjaeger"
+## König / King (I-03): Dorf; einmal je Leben, sobald mehr Tote als Lebende, eine Dorfperson mit Rolle (InfoSteps).
+const KOENIG := &"koenig"
+## Kriegerin des Lichts / Warrior of Light (I-07): Dorf; einmal je Leben Wolf? prüfen, bei Irrtum Tod am Morgen.
+const KRIEGERIN := &"kriegerin-des-lichts"
+## Blutpriester / Blood Priest (I-08, I-13): Dorf; einmal je Leben eine andere Person opfern, 0–3 Wölfe erfahren.
+const BLUTPRIESTER := &"blutpriester"
+## Amalia (I-09): Dorf; Tagesaktion bei mindestens drei lebenden Wölfen: Selbstopfer mit öffentlicher Antwort.
+const AMALIA := &"amalia"
+const AMALIA_MIN_WOLVES := 3
+## Detektiv / Detective (I-10, I-14): Dorf; öffentlicher Richtungshinweis nach jedem Wolfstod (KillPipeline).
+const DETEKTIV := &"detektiv"
+## Die Ewigen / The Eternal Ones (I-11, I-12, I-15): Dorf; gemeinsame Prüfung „Einzelsieg?“, Mitsieg (WinRules).
+const DIE_EWIGEN := &"die-ewigen"
 const BOUND_PRIORITY := 5
+const ETERNAL_PRIORITY := 48  ## gemeinsamer Schritt der Ewigen (Legacy-Stufe 4.8)
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
 const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhexe:heal", "waldhexe:poison", "spiegelwolf:mirror",
 	"besessener-wolf:death_reaction", "ritter:death_reaction", "faehrtenleser:track", "spuerhund:lost",
-	"schattenhund:block", "giftwolf:paw1", "giftwolf:paw2", "rudelvater:survive", "fenrir:survive"]
+	"schattenhund:block", "giftwolf:paw1", "giftwolf:paw2", "rudelvater:survive", "fenrir:survive",
+	"koenig:learn", "kriegerin-des-lichts:attack", "blutpriester:sacrifice"]
 
 ## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
 ## Wolfskind 0.9 (nur mit Auswahlbedarf), Lehrling 1.1 (nur mit Auswahlbedarf), Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
@@ -158,6 +177,14 @@ const ROLES := {
 	FENRIR: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": FENRIR},
 	CERBERUS: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": CERBERUS},
 	HENKER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": HENKER, "night_priority": 78},
+	TRAUMDEUTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": TRAUMDEUTER, "night_priority": 70},
+	KOPFGELDJAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KOPFGELDJAEGER, "night_priority": 32},
+	KOENIG: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KOENIG, "night_priority": 44},
+	KRIEGERIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KRIEGERIN, "night_priority": 60},
+	BLUTPRIESTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": BLUTPRIESTER, "night_priority": 82},
+	AMALIA: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": AMALIA},
+	DETEKTIV: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DETEKTIV},
+	DIE_EWIGEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_EWIGEN},
 }
 
 

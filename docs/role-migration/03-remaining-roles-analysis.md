@@ -18,7 +18,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 |---|---|---|---|---|---|---|---|---|---|
 | [`loki`](#loki) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Einmalfähigkeit, Todesreaktion | M / mittel | K6 | B |
 | [`rattenfaenger`](#rattenfaenger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | mehrstufige Nachtfähigkeit | M / mittel | K9 | B |
-| [`die-ewigen`](#die-ewigen) | Dorf | `decision-required` | `not-found` | `assisted` | Informationsrolle | Einzelsieg | M / mittel | K9 | – |
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`koenig-lykaon`](#koenig-lykaon) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | Fraktionswechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit | M / mittel | K12 | C |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
@@ -32,22 +31,15 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
 | [`kutscher`](#kutscher) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | Rollenwechsel, Zufallsmechanik | L / hoch | K13 | – |
 | [`seelentauscher`](#seelentauscher) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | Einmalfähigkeit, Fraktionswechsel | L / kritisch | K12 | – |
-| [`blutpriester`](#blutpriester) | Dorf | `decision-required` | `legacy-verified` | `assisted` | Informationsrolle | Tötung, Einmalfähigkeit, Zufallsmechanik | M / mittel | K7 | – |
-| [`traumdeuter`](#traumdeuter) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Zufallsmechanik | S / niedrig | K7 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
 | [`rotkaeppchen`](#rotkaeppchen) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik | L / hoch | K10 | – |
-| [`kopfgeldjaeger`](#kopfgeldjaeger) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Informationsrolle | Hinrichtungsreaktion, Zufallsmechanik | M / mittel | K7 | B |
-| [`koenig`](#koenig) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Informationsrolle | Zufallsmechanik | S / mittel | K7 | – |
 | [`dr-victor-frankenstein`](#dr-victor-frankenstein) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Wiederbelebung | Rollenwechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit, Totenkarten-Interaktion | L / hoch | K13 | – |
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
 | [`schutzgeist`](#schutzgeist) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Schutz | Todesreaktion, Informationsrolle | M / mittel | K5 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
-| [`amalia`](#amalia) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Einmalfähigkeit, Tagfähigkeit | M / mittel | K14 | – |
-| [`kriegerin-des-lichts`](#kriegerin-des-lichts) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Informationsrolle | Einmalfähigkeit, Tötung | S / mittel | K7 | – |
-| [`detektiv`](#detektiv) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Informationsrolle | Todesreaktion, Sitzpositionsmechanik, Zufallsmechanik | M / hoch | K3 | – |
 | [`dorfschmied`](#dorfschmied) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Wolfsangriff-Modifikation | Schutz, Tötung, Zufallsmechanik | M / mittel | K5 | – |
 | [`grabraeuber`](#grabraeuber) | Einzelsieg | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | Einzelsieg, sonstige Spezialmechanik | XL / hoch | K15 | – |
 | [`todesprediger`](#todesprediger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | Einmalfähigkeit | M / mittel | K15 | – |
@@ -99,27 +91,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K9 / ab Option B |
 | Belegsicherheit | hoch. Nicht zur Laufzeit getestet; alle Aussagen aus Code-Lektüre. |
 | Detail | [Dossier](dossiers/solos-a.md#rattenfaenger) |
-
-### `die-ewigen`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Die Ewigen / The Eternal Ones |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 4.8 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `not-found`. Die Prüfung existiert, aber die definierende Mechanik "gewinnen gemeinsam" existiert im Code nicht. |
-| DE/EN-Vergleich | JA. Häufigkeit (jede Nacht), Ziel (ein Spieler), Mitsieg in beiden. |
-| Automationsziel | `assisted`: Info automatisch; Mitsieg erst nach PO-Regel, bis dahin SL bestätigt. |
-| Mechanik | primär: Informationsrolle; sekundär: Einzelsieg |
-| Größe / Risiko | M / mittel. Info trivial, Mitsieg berührt WinRules. |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt, InfoRecord, WinRules/WinCandidate, Ereignis-Sichtbarkeit, StateCodec, Replay. |
-| Neue Systeme | zusätzliche Siegbedingungen (Mitsieg-Kandidaten); Besuchs-/Zielhistorie (welche Solos wurden gefunden), falls der Mitsieg an einen gefundenen Solo gebunden wird. |
-| Abhängigkeiten | alle 14 Solo-Rollen (`roles:399-403`), insbesondere solche ohne Siegcode (Prophet, Feuerteufel, Voodoo, Grabräuber: 07 Q4); Lehrling/Seelentauscher (Solo-Rolle wechselt Person). |
-| Widersprüche | RM-C-087 Mitsieg; RM-C-088 Info-Umfang; RM-C-089 Siegseite der Ewigen |
-| Entscheidungen | RM-DR-104 (Rolle); übergreifend RM-DR-002, RM-DR-006; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
-| Belegsicherheit | hoch für Code; Mitsieg-Regel nicht bestimmbar. |
-| Detail | [Dossier](dossiers/village-1.md#die-ewigen) |
 
 ### `rachsuechtiger-wolf`
 
@@ -394,48 +365,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch für F4 und Einmaligkeitslogik (Code vollständig verfolgt); Querbezüge zu Wolfskind/Lehrling nur gelesen, nicht durchgespielt. |
 | Detail | [Dossier](dossiers/village-2.md#seelentauscher) |
 
-### `blutpriester`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Blutpriester / Blood Priest |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 8.2 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Opfer und Aufdeckung von 0 bis 3 Wölfen sind nachvollziehbar umgesetzt; offene Punkte sind Regelpräzisierungen. |
-| DE/EN-Vergleich | semantisch gleich JA. |
-| Automationsziel | `assisted`: Tod automatisch; Anzahl durch SL, Auswahl per SeededRng, Ergebnis als InfoRecord. |
-| Mechanik | primär: Informationsrolle; sekundär: Tötung, Einmalfähigkeit, Zufallsmechanik |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (Ziel, dann Anzahl), KillPipeline (Sofort-Tod in der Nacht), SeededRng, InfoRecord (Wahrheit/ermittelt/gezeigt), Ereignis-Sichtbarkeit, `ability_uses`, WinRules, StateCodec, Replay. |
-| Neue Systeme | keine nachweislich (Sofort-Tod in der Nacht und Reaktionszeitpunkt sind Teil von KillPipeline/Reaktionswarteschlange, 04 B-10). |
-| Abhängigkeiten | Rudelvater, Nekromant, Hades, Kartenschlucker, Parasit, Schattenwanderer (Todesabfang), Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Doppelspion (nicht Wolf), Sensenträger (Reaktion auf Opfer), Seelentauscher (Einmaligkeit). |
-| Widersprüche | RM-C-122 Anzahl 0–3; RM-C-123 Wer sieht das Ergebnis; RM-C-124 Opfer: Pflicht? |
-| Entscheidungen | RM-DR-128 (Rolle); übergreifend RM-DR-002, RM-DR-014, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
-| Belegsicherheit | hoch für Code; Overlay-Überschreibung aus Codefluss abgeleitet, nicht im Browser beobachtet. |
-| Detail | [Dossier](dossiers/village-2.md#blutpriester) |
-
-### `traumdeuter`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Traumdeuter / Dreamer |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III / 7.0 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Der Text ist vage, der Code liefert eine konkrete, andere Mechanik (Wolf unter drei); 04 "unklar" ist inhaltlich gleichbedeutend. |
-| DE/EN-Vergleich | semantisch gleich JA. |
-| Automationsziel | `automatic`: (bei Übernahme des Codes: Auswahl per SeededRng, Anzeige an Traumdeuter); sonst unknown. |
-| Mechanik | primär: Informationsrolle; sekundär: Zufallsmechanik |
-| Größe / Risiko | S / niedrig |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (Anzeige/Bestätigung "gezeigt"), SeededRng, InfoRecord, appears_as/InformationRules, Ereignis-Sichtbarkeit (actor), StateCodec, Replay. |
-| Neue Systeme | keine. |
-| Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (Fluch), Trugbilderwolf (Erscheinung), Doppelspion, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise (Blockaden). |
-| Widersprüche | RM-C-125 Inhalt der Vision; RM-C-126 Selbst in der Vision; RM-C-127 Verfluchte als Wolf |
-| Entscheidungen | RM-DR-129 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/village-2.md#traumdeuter) |
-
 ### `feuerteufel`
 
 | Feld | Inhalt |
@@ -498,48 +427,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch für Kette und Apfel-Mechanik (statisch belegt). Nicht zur Laufzeit geprüft: Zusammenspiel `startConfirm`-Overlay mit gleichzeitigem `center` anderer Rollen. --- |
 | Detail | [Dossier](dossiers/village-3.md#rotkaeppchen) |
-
-### `kopfgeldjaeger`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Kopfgeldjäger / Bounty Hunter |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / 3.2 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Kernfunktion (nach Wolfs-Lynch in der Folgenacht drei Namen, genau ein Wolf) ist nachvollziehbar umgesetzt; Abweichungen betreffen Randfälle (Selbstanzeige, Zähler, Erbe). |
-| DE/EN-Vergleich | NEIN (Nuance). DE "Sobald ... gelyncht wird" liest sich als Auslöser je Lynch; EN "Once a werewolf has been lynched" kann auch "ab dem ersten Wolfs-Lynch (danach dauerhaft)" bedeuten. Sonst gleich: drei Spieler/Namen, einer davon Werwolf; beide lassen offen, ob "genau einer". |
-| Automationsziel | `automatic`: Keine Spielerentscheidung; Auswahl über SeededRng, SL sieht das Ergebnis vor dem Zeigen (InfoRecord). |
-| Mechanik | primär: Informationsrolle; sekundär: Hinrichtungsreaktion, Zufallsmechanik |
-| Größe / Risiko | M / mittel. Zufall muss seed-stabil sein, Auslöser hängt an allen Hinrichtungszweigen. |
-| Vorhandene Godot-Systeme | ExecutionRules (Auslöser nach Hinrichtung), StepQueue (bedingter Schritt), SeededRng, InfoRecord (Wahrheit/ermittelt/gezeigt), Ereignis-Sichtbarkeit, StateCodec, Replay, RoleTransition. |
-| Neue Systeme | Aktivierungszähler pro Person/Rolle (Erweiterung `ability_uses` oder Rollenzustand), bedingte Schrittverfügbarkeit ("nur wenn aktiv") in StepQueue; InfoRecord für Namenslisten statt einer Rolle. |
-| Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (Verfluchte), Spiegelwolf/Fenrir/Cerberus (kein Tod beim Lynch), Der Weise, Lehrling/Seelentauscher, Schattenhund/Albtraumwolf/Zeitwächter (Blockade), Doppelspion (zählt als Nicht-Wolf). |
-| Widersprüche | RM-C-140 Wiederholung; RM-C-141 Selbst unter den drei; RM-C-142 Aktivierung durch Erbe; RM-C-143 Verfluchter als "Werwolf" |
-| Entscheidungen | RM-DR-139 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K7 / ab Option B |
-| Belegsicherheit | hoch. Nicht verifiziert: ob der Der-Weise-Zweig praktisch je einen Wolf trifft (nur bei verfluchtem Weisen). --- |
-| Detail | [Dossier](dossiers/village-3.md#kopfgeldjaeger) |
-
-### `koenig`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | König / King |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III, IV / 4.4 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Code (jede Nacht) und Text (DE einmalig "in dieser Nacht") widersprechen sich, 04/07 führen es bereits als offene Regel. |
-| DE/EN-Vergleich | NEIN. (1) Häufigkeit: DE "Sobald ... in dieser Nacht" legt ein einmaliges Ereignis in der Nacht des Umschlagens nahe; EN "When ..." kann "jedes Mal, wenn" bedeuten. (2) EN sagt ausdrücklich "living", DE nicht. (3) DE "einen Dorfbewohner (und dessen Rolle)" nennt Rolle ausdrücklich; EN "identity" … |
-| Automationsziel | `automatic`: Bedingung und Auswahl sind ohne Spielerentscheidung berechenbar (SeededRng), Ergebnis als InfoRecord. |
-| Mechanik | primär: Informationsrolle; sekundär: Zufallsmechanik |
-| Größe / Risiko | S / mittel. Einfache Berechnung, aber Fraktionsdefinition und Häufigkeit müssen entschieden sein. |
-| Vorhandene Godot-Systeme | StepQueue (bedingter Schritt, StepDropped), SeededRng, InfoRecord, Ereignis-Sichtbarkeit, StateCodec, Replay. |
-| Neue Systeme | bedingte Schrittverfügbarkeit nach Zählbedingung (Tote > Lebende), ggf. Einsatzzähler; InfoRecord-Variante "Person + Rolle". |
-| Abhängigkeiten | Wolfskind, Lehrling, Dämonischer Wolf (Verfluchte), Seelentauscher, Rotkäppchen (Apfel), Frankenstein/Kutscher (Wiederbelebung verändert Tote/Lebende). |
-| Widersprüche | RM-C-144 Häufigkeit; RM-C-145 Wer wird gezeigt; RM-C-146 Umfang der Info |
-| Entscheidungen | RM-DR-140 (Rolle); übergreifend RM-DR-002, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/village-3.md#koenig) |
 
 ### `dr-victor-frankenstein`
 
@@ -666,69 +553,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K16 / in keiner Option |
 | Belegsicherheit | hoch für die Codeanalyse. Nicht verifiziert: Sichtbarkeit/Anklickbarkeit der Nachtliste am Tag (CSS/Layout nicht im Browser geprüft). --- |
 | Detail | [Dossier](dossiers/village-4.md#zeitwaechter) |
-
-### `amalia`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Amalia / Amalia |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / 5.8 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Das Opfer funktioniert, die öffentliche Frage ist nicht modelliert und als Nachtschritt zeitlich widersprüchlich. |
-| DE/EN-Vergleich | JA, semantisch gleich (Schwelle "mehr als zwei" = "more than two", Opfer, öffentliche Ja/Nein-Frage). |
-| Automationsziel | `assisted`: Die Frage ist sozial; App erfasst Opfer, Frage und SL-Antwort. |
-| Mechanik | primär: Informationsrolle; sekundär: Einmalfähigkeit, Tagfähigkeit |
-| Größe / Risiko | M / mittel. Einfacher Tod, aber neue Tagesaktion und Freitext. |
-| Vorhandene Godot-Systeme | PendingPrompt (Bestätigung, Frage, Antwort, abbrechbar), KillPipeline (Ursache Opfer), Reaktionswarteschlange, WinRules/WinCandidate, InfoRecord + Ereignis-Sichtbarkeit (public), StateCodec, Replay, GmCorrections. |
-| Neue Systeme | Tagesaktionswarteschlange (falls Tagesaktion); Freitext-Eingabe im Prompt. |
-| Abhängigkeiten | alle Wolfsrollen (Schwelle), Dämonischer Wolf (Verfluchte zählen im Code mit), Doppelspion (zählt nicht), Nekromant (Globalschild verhindert Opfer), Zeitwächter (Opfer bleibt trotz Einfrieren). |
-| Widersprüche | RM-C-168 Zeitpunkt; RM-C-169 Frage und Antwort; RM-C-170 Schwelle |
-| Entscheidungen | RM-DR-151 (Rolle); übergreifend RM-DR-002; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K14 / in keiner Option |
-| Belegsicherheit | hoch für Code; mittel für Zweck der verwaisten Schlüssel (Historie nicht verfügbar). --- |
-| Detail | [Dossier](dossiers/village-4.md#amalia) |
-
-### `kriegerin-des-lichts`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Kriegerin des Lichts / Warrior of Light |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / 6.0 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Code ist lauffähig; Text ("greift an"), Code (kein Treffer-Tod) und Doku 04 ("er stirbt") widersprechen sich. |
-| DE/EN-Vergleich | weitgehend JA. Nuance: "sagt" (DE, Empfänger offen) vs. "reveals" (EN, legt eher öffentliche Offenlegung nahe). Sonst gleich (einmalig, nachts, ein Spieler, Selbsttod bei Nicht-Wolf). |
-| Automationsziel | `assisted`: Zielwahl und Fraktionsprüfung automatisch, Ergebnis mit SL-Bestätigung bis zur Entscheidung über Wahrheit/Erscheinung. |
-| Mechanik | primär: Informationsrolle; sekundär: Einmalfähigkeit, Tötung |
-| Größe / Risiko | S / mittel. Einfacher Ablauf, aber Regelentscheidung mit großer Balancewirkung. |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (zweistufig: Ziel, Ergebnis), InfoRecord (Wahrheit/ermittelt/gezeigt), appears_as, KillPipeline (WARRIOR_WRONG, ggf. Treffer), Reaktionswarteschlange, WinRules/WinCandidate, Ereignis-Sichtbarkeit, StateCodec, Replay, GmCorrections. |
-| Neue Systeme | keine. |
-| Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (verfluchter Sitz: Wolf oder nicht?), Trugbilderwolf/Erscheinungsrollen, Doppelspion, Rudelvater (erste Sonderfähigkeitstötung überlebt, falls Treffer tötet), Nekromant-Globalschild. |
-| Widersprüche | RM-C-171 Stirbt ein getroffener Wolf?; RM-C-172 Wahrheitsquelle; RM-C-173 Öffentlichkeit |
-| Entscheidungen | RM-DR-152 (Rolle); übergreifend RM-DR-002, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K7 / in keiner Option |
-| Belegsicherheit | hoch. --- |
-| Detail | [Dossier](dossiers/village-4.md#kriegerin-des-lichts) |
-
-### `detektiv`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Detektiv / Detective |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Der Hinweis wird ausgelöst, ist aber durch den Platzhalterfehler inhaltsleer bzw. beim Paritätsfall möglicherweise falsch. |
-| DE/EN-Vergleich | JA, semantisch gleich. |
-| Automationsziel | `automatic`: Auslöser und Hinweis sind aus dem Zustand berechenbar (mit SeededRng). |
-| Mechanik | primär: Informationsrolle; sekundär: Todesreaktion, Sitzpositionsmechanik, Zufallsmechanik |
-| Größe / Risiko | M / hoch. Öffentliche Information mit Zufall und Sitzlogik; Fehler erzeugen öffentliche Falschinformation. |
-| Vorhandene Godot-Systeme | Reaktionswarteschlange (auf Wolfstod), SeededRng, InfoRecord (Wahrheit/gezeigt), Ereignis-Sichtbarkeit (public), KillPipeline-Ereignisse, appears_as (Abgrenzung Fluch), StateCodec, Replay, GmCorrections. |
-| Neue Systeme | Sitznachbarschaft (einheitliche Links/Rechts-Konvention, lebend/tot überspringen). |
-| Abhängigkeiten | alle Wolfsrollen, Dämonischer Wolf (Verfluchte lösen aus), Wolfskind/Lehrling (verwandelte Wölfe), Doppelspion (ausgenommen), Dorfschmied (Wolfstod durch Waffe), Fährtenleser (Richtungskonvention). |
-| Widersprüche | RM-C-174 Muss der Detektiv leben?; RM-C-175 Mindestens 2 lebende Wölfe; RM-C-176 Hinweisinhalt; RM-C-177 Richtung links/rechts |
-| Entscheidungen | RM-DR-153 (Rolle); übergreifend RM-DR-002, RM-DR-003, RM-DR-009, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K3 / in keiner Option |
-| Belegsicherheit | hoch. Nicht verifiziert: tatsächliche Darstellung, wenn Nacht-Todesübersicht (ui:470-477) und Center-Modal gleichzeitig offen sind (nur Code gelesen). --- |
-| Detail | [Dossier](dossiers/village-4.md#detektiv) |
 
 ### `dorfschmied`
 

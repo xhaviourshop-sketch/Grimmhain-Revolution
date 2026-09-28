@@ -212,7 +212,9 @@ Siehe §3.
 
 ### K3 · Sitznachbarschaft
 
-**Rollen Charge K3 (1):** `detektiv`
+**Rollen Charge K3 (0):** –
+
+**Nachtrag Rollenaudit:** `detektiv` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `faehrtenleser` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -282,7 +284,17 @@ Siehe §3.
 
 ### K7 · Bedingte und zufallsgestützte Information
 
-**Rollen Charge K7 (5):** `kopfgeldjaeger`, `koenig`, `traumdeuter`, `kriegerin-des-lichts`, `blutpriester`
+**Rollen Charge K7 (0):** –
+
+**Nachtrag Rollenaudit:** `blutpriester` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `kriegerin-des-lichts` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `koenig` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `kopfgeldjaeger` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `traumdeuter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `spuerhund` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -314,7 +326,9 @@ Siehe §3.
 
 ### K9 · Marker und Einzelsiege
 
-**Rollen Charge K9 (5):** `rattenfaenger`, `pestbringerin`, `feuerteufel`, `prophet-des-untergangs`, `die-ewigen`
+**Rollen Charge K9 (4):** `rattenfaenger`, `pestbringerin`, `feuerteufel`, `prophet-des-untergangs`
+
+**Nachtrag Rollenaudit:** `die-ewigen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** dauerhafte Markierungen, aus denen Einzelsiege oder Folgetode entstehen.
 - **Neue Systeme:** N-09, N-01 (weitere Einzelsiege), N-05 (Nachbarn), N-12 (Ausbreitung).
@@ -386,7 +400,9 @@ Siehe §3.
 
 ### K14 · Tag, Nominierung, Stimmbezug
 
-**Rollen Charge K14 (1):** `amalia`
+**Rollen Charge K14 (0):** –
+
+**Nachtrag Rollenaudit:** `amalia` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `korrupter-richter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

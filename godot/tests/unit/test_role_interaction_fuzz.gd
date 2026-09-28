@@ -13,7 +13,8 @@ extends TestCase
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker"]
+	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker",
+	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 120
@@ -26,9 +27,10 @@ const FORBIDDEN_PUBLIC_KEYS: Array[String] = ["role_id", "appears_as", "cause", 
 ## die Wechselwirkungen tatsächlich durchlaufen wurden (Abdeckungsnachweis des Generators).
 const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoRecorded", "InfoOverridden", "WolfChildBound",
 	"WolfChildTransformed", "ApprenticeBound", "RoleChanged", "ExecutionRedirected", "MirrorNotTriggered", "ReactionResolved",
-	"StepDropped", "PromptCancelled", "KillIgnored", "WinConfirmed", "WinRejected", "GmCorrected", "StepSkipped"]
+	"StepDropped", "PromptCancelled", "KillIgnored", "WinConfirmed", "WinRejected", "GmCorrected", "StepSkipped",
+	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
-	"MANIPULATOR_NOMINATED", "GM_CORRECTION"]
+	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE"]
 
 var _rng := RandomNumberGenerator.new()
 var _game_label := ""
@@ -287,6 +289,11 @@ func _day_command(s: GameState) -> Command:
 	if s.day_step == Phase.DAY_EXECUTION_DECIDED:
 		return Command.end_day()
 	var roll := _rng.randf()
+	if roll < 0.05:
+		for id: int in s.alive_ids():
+			if s.players[id].role_id == RoleCatalog.AMALIA:
+				_probe = true  # bei zu wenigen Wölfen abgelehnt
+				return Command.amalia_sacrifice(id, _rng.randf() < 0.5)
 	if roll < 0.45:
 		var nomination := _random_nomination(s)
 		if nomination != null:
@@ -369,6 +376,26 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				pool2.erase(a)
 				return Command.answer_stage_targets(p.id, String(p.stage), [a, _pick(pool2)])
 			return Command.answer_choice(p.id, String(p.stage), true)
+		PendingPrompt.OWNER_DREAMER, PendingPrompt.OWNER_BOUNTY, PendingPrompt.OWNER_KING, PendingPrompt.OWNER_WARRIOR, PendingPrompt.OWNER_BLOOD, PendingPrompt.OWNER_ETERNAL:
+			if p.stage == InfoSteps.STAGE_SHOWN:
+				return Command.answer_choice(p.id, String(p.stage), true)
+			var pool := _alive_in(s, p.allowed_ids, p.actor_id)
+			if p.stage == InfoSteps.STAGE_REVEAL or (p.min_count == 0 and _rng.randf() < 0.3):
+				var k := 0 if p.stage == InfoSteps.STAGE_TARGETS else _rng.randi_range(0, mini(p.max_count, pool.size()))
+				return Command.answer_stage_targets(p.id, String(p.stage), pool.slice(0, k))
+			var chosen: Array = []
+			if InfoSteps.TRIPLE_OWNERS.has(p.owner):
+				# Meist gültig (ein Wolf dabei), manchmal ohne Wolf: Ablehnung muss folgenlos bleiben.
+				var wolves := pool.filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)
+				if not wolves.is_empty() and _rng.randf() < 0.9:
+					chosen.append(_pick(wolves))
+				else:
+					_probe = true  # ohne gezielten Wolf darf die Auswahl abgelehnt werden
+			while chosen.size() < p.max_count and chosen.size() < pool.size():
+				var t: int = _pick(pool)
+				if not chosen.has(t):
+					chosen.append(t)
+			return Command.answer_stage_targets(p.id, String(p.stage), chosen)
 		PendingPrompt.OWNER_SHADOW:
 			return Command.answer_choice(p.id, "use", _rng.randf() < 0.3)
 		PendingPrompt.OWNER_APPRENTICE:

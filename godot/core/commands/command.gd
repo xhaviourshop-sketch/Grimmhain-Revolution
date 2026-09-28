@@ -17,6 +17,7 @@ const SKIP_STEP := &"SkipStep"
 const CANCEL_PROMPT := &"CancelPrompt"
 const GM_CORRECTION := &"GmCorrection"
 const OVERRIDE_SHOWN_ROLE := &"OverrideShownRole"
+const AMALIA_SACRIFICE := &"AmaliaSacrifice"
 
 var type: StringName = &""
 var payload: Dictionary = {}
@@ -76,6 +77,11 @@ static func decide_execution(target_id: int) -> Command:
 
 static func end_day() -> Command:
 	return create(END_DAY)
+
+
+## Amalia opfert sich am Tag; `answer` ist die wahrheitsgemäße Ja/Nein-Antwort des Spielleiters (I-09).
+static func amalia_sacrifice(player_id: int, answer: bool) -> Command:
+	return create(AMALIA_SACRIFICE, {"player_id": player_id, "answer": answer})
 
 
 static func confirm_win(candidate_id: int) -> Command:

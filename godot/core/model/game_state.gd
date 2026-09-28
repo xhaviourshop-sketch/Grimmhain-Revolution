@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand)
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informationsrollen)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -48,6 +48,10 @@ var plague_pierce_pending: bool = false  ## Seuchenwolf tot: nächster Rudelangr
 var growth: Dictionary = {}          ## Fenrir-Stufe bzw. Cerberus-Köpfe je Person-ID
 var executions_count: int = 0        ## bestätigte Hinrichtungen der Partie (Henker)
 var hangman_marks: Array = []        ## Markierungen der Henker dieser Nacht [{hangman_id, target_id}]
+var bounty_credits: Dictionary = {}  ## Kopfgeldjäger: offene Listen je Person-ID (je Wolfs-Lynch eine)
+var death_marks: Array = []          ## Tode am Morgen aus Nachtschritten [{target_id, source_id, cause}] (Kriegerin, Blutpriester)
+var detective_hints: Array = []      ## nachts entstandene Detektiv-Hinweise [{anchor_id, direction}], öffentlich am Morgen
+var eternal_finds: Array[int] = []   ## Die Ewigen: mit Ja geprüfte Personen, aufsteigend
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -118,9 +122,13 @@ func content_hash() -> String:
 
 
 func _growth_to_dict() -> Dictionary:
+	return _int_keys_to_dict(growth)
+
+
+static func _int_keys_to_dict(d: Dictionary) -> Dictionary:
 	var out := {}
-	for id: int in growth:
-		out[str(id)] = growth[id]
+	for id: int in d:
+		out[str(id)] = d[id]
 	return out
 
 
@@ -205,6 +213,10 @@ func to_dict() -> Dictionary:
 		"growth": _growth_to_dict(),
 		"executions_count": executions_count,
 		"hangman_marks": hangman_marks.duplicate(true),
+		"bounty_credits": _int_keys_to_dict(bounty_credits),
+		"death_marks": death_marks.duplicate(true),
+		"detective_hints": detective_hints.duplicate(true),
+		"eternal_finds": eternal_finds.duplicate(),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -400,6 +412,39 @@ static func from_dict(d: Dictionary) -> GameState:
 		if not s.players.has(hangman) or not s.players.has(marked_by_hangman):
 			return null
 		s.hangman_marks.append({"hangman_id": hangman, "target_id": marked_by_hangman})
+	var credits := DictRead.get_dict(d, "bounty_credits")
+	for key: Variant in credits:
+		if not String(key).is_valid_int() or not s.players.has(String(key).to_int()) or not DictRead.is_int_like(credits[key]) or int(credits[key]) < 1:
+			return null
+		s.bounty_credits[String(key).to_int()] = int(credits[key])
+	for item: Variant in DictRead.get_array(d, "death_marks"):
+		if not item is Dictionary:
+			return null
+		var marked_target := DictRead.get_int(item, "target_id", -1)
+		var marked_source := DictRead.get_int(item, "source_id", -1)
+		var mark_cause := StringName(DictRead.get_string(item, "cause"))
+		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE].has(mark_cause):
+			return null
+		s.death_marks.append({"target_id": marked_target, "source_id": marked_source, "cause": String(mark_cause)})
+	for item: Variant in DictRead.get_array(d, "detective_hints"):
+		if not item is Dictionary:
+			return null
+		var anchor := DictRead.get_int(item, "anchor_id", -1)
+		var direction := DictRead.get_string(item, "direction")
+		if not s.players.has(anchor) or not ["left", "right", "equal"].has(direction):
+			return null
+		s.detective_hints.append({"anchor_id": anchor, "direction": direction})
+	var finds: Variant = DictRead.to_int_array(DictRead.get_array(d, "eternal_finds"))
+	if finds == null:
+		return null
+	s.eternal_finds = finds
+	var sorted_finds := s.eternal_finds.duplicate()
+	sorted_finds.sort()
+	if sorted_finds != s.eternal_finds:
+		return null
+	for id: int in s.eternal_finds:
+		if not s.players.has(id) or s.eternal_finds.count(id) > 1:
+			return null
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null

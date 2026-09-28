@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 37 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 37 |
+| im RoleCatalog vorhandene Rollen | 45 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 45 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 35 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 43 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -84,6 +84,14 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 35 | `fenrir` | Fenrir (Rollentext) | wolves | ja | – (Teil des Rudels) | `rules_engine.gd` (Wachstum), `kill_pipeline.gd` (`_fenrir_survives`) | `test_fenrir_cerberus_henker.gd`, fuzz | RM-DR-125, DECISION-LOG „Rollenaudit · Fenrir, Cerberus, Henker“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 36 | `cerberus` | Cerberus (Rollentext) | wolves | ja | – (Teil des Rudels) | `execution_rules.gd` (`needs_cerberus_decision`), `rules_engine.gd` | `test_fenrir_cerberus_henker.gd`, fuzz | RM-DR-135, DECISION-LOG „Rollenaudit · Fenrir, Cerberus, Henker“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 37 | `henker` | Henker / Executioner (Rollentext) | village | nein | 78 | `execution_rules.gd` (`_hangman_extras`), `rules_engine.gd` | `test_fenrir_cerberus_henker.gd`, fuzz | RM-DR-130, RM-DR-138.2, DECISION-LOG „Rollenaudit · Fenrir, Cerberus, Henker“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 38 | `traumdeuter` | Traumdeuter / Dreamer (Rollentext) | village | nein | 70 | `info_steps.gd` (Auswahl von drei, `no_wolf_selected`) | `test_info_roles.gd`, fuzz | RM-DR-129, I-01, I-02, I-05, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `assisted` | `legacy-contradictory` |
+| 39 | `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter (Rollentext) | village | nein | 32 | `kill_pipeline.gd` (`bounty_credits`), `info_steps.gd`, `step_queue.gd` (Verfall) | `test_info_roles.gd`, fuzz | RM-DR-139, I-02, I-04, I-06, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `assisted` | `legacy-verified` |
+| 40 | `koenig` | König / King (Rollentext) | village | nein | 44 | `info_steps.gd` (`king_condition`, `king_candidates`) | `test_info_roles.gd`, fuzz | RM-DR-140, I-03, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `assisted` | `legacy-contradictory` |
+| 41 | `kriegerin-des-lichts` | Kriegerin des Lichts / Warrior of Light (Rollentext) | village | nein | 60 | `info_steps.gd`, `rules_engine.gd` (`death_marks`) | `test_info_roles.gd`, fuzz | RM-DR-152, I-07, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 42 | `blutpriester` | Blutpriester / Blood Priest (Rollentext) | village | nein | 82 | `info_steps.gd` (Stufe `reveal`), `rules_engine.gd` (`death_marks`) | `test_info_roles.gd`, fuzz | RM-DR-128, I-08, I-13, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `assisted` | `legacy-verified` |
+| 43 | `amalia` | Amalia (Rollentext) | village | nein | – (Tagesaktion) | `rules_engine.gd` (`AmaliaSacrifice`), `phase_machine.gd` | `test_info_roles.gd`, fuzz | RM-DR-151, I-09, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `assisted` | `legacy-contradictory` |
+| 44 | `detektiv` | Detektiv / Detective (Rollentext) | village | nein | – (Todesfolge) | `kill_pipeline.gd` (`_detective_hint`), `rules_engine.gd` (`detective_hints`) | `test_info_roles.gd`, fuzz | RM-DR-153, I-10, I-14, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 45 | `die-ewigen` | Die Ewigen / The Eternal Ones (Rollentext) | village | nein | 48 (gemeinsam) | `info_steps.gd` (`eternal_finds`), `win_rules.gd` (`eternal_co_winners`) | `test_info_roles.gd`, fuzz | RM-DR-104, I-11, I-12, I-15, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `automatic` | `not-found` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -280,6 +288,46 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 ### 4.37 `henker`
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** `executions_count` zählt jede bestätigte Hinrichtung der Partie. Ab 3 markiert er nachts (Priorität 78) freiwillig eine andere Person; bei der Hinrichtung des Folgetags stirbt sie zusätzlich (`HANGMAN_EXTRA`), wenn er dann lebt; sonst verfällt die Markierung bei Nachtbeginn.
 - **Tests:** Aktivierung, Zusatztod, kein Selbstmörder-Sieg, Verfall, toter Henker.
+- **Grenzen:** –
+
+### 4.38 `traumdeuter`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht (Priorität 70) wählt der Spielleiter genau drei andere Lebende; die Bestätigung ist erst mit mindestens einer Person möglich, die als Wolf zählt (`no_wolf_selected`); zwei oder drei Wölfe sind zulässig. Der Traumdeuter erhält nur die drei Namen („mindestens ein Wolf“), der Spielleiter-Datensatz nennt die Wölfe. Ohne drei andere Lebende mit einem Wolf entfällt der Schritt.
+- **Tests:** Auswahlregeln, Anzeige ohne Anzahl, Trugbilderwolf zählt als Wolf, Entfall, Save/Load offener Stufen.
+- **Grenzen:** Die Erinnerung „mindestens ein Wolf“ ist eine Oberflächenaufgabe.
+
+### 4.39 `kopfgeldjaeger`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jeder Lynch-Tod (`LYNCH`) einer Person, die als Wolf zählt, gibt jedem lebenden Kopfgeldjäger eine Liste (`bounty_credits`). Je Nacht mit Guthaben ein Schritt (Priorität 32) wie beim Traumdeuter. Blockiert bleibt das Guthaben; ohne drei andere Lebende mit Wolf verfällt eine Liste mit privatem Hinweis (`BountyExpired`). Ein Rollenwechsel löscht das Guthaben.
+- **Tests:** Zähler, Nicht-Wolf-Lynch, Korrektur-Tod, toter Kopfgeldjäger, Blockade, Verfall.
+- **Grenzen:** Mehrere Listen aus einem Tag (nur per Korrektur möglich) werden in aufeinanderfolgenden Nächten gezeigt.
+
+### 4.40 `koenig`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Einmal je Leben (`koenig:learn`), in der ersten Nacht mit strikt mehr Toten als Lebenden (Plan und Schrittbeginn); der Spielleiter wählt eine andere lebende Person der aktuellen Fraktion Dorf; der König erfährt sie mit wahrer Rolle.
+- **Tests:** Gleichstand, Auswahl nur Dorf, wahre Rolle, einmal, Wiederbelebung setzt zurück.
+- **Grenzen:** –
+
+### 4.41 `kriegerin-des-lichts`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Einmal je Leben (`kriegerin-des-lichts:attack`), Priorität 60, freiwillig; Ziel eine andere Lebende; das Ergebnis (wahre Wolfszählung) nur an sie. Kein Wolf: Todesmarkierung, sie stirbt in der Morgenauflösung (`WARRIOR_WRONG`) und wacht nicht mehr auf. Ein Wolf überlebt.
+- **Tests:** Treffer, Irrtum mit Tod am Morgen, Verzicht verbraucht nichts, einmal je Leben, Save/Load.
+- **Grenzen:** –
+
+### 4.42 `blutpriester`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Einmal je Leben (`blutpriester:sacrifice`), Priorität 82, freiwillig: Opfer eine andere Lebende, dann nennt der Spielleiter 0–3 lebende Wölfe (Stufe `reveal`), nur an ihn. Das Opfer erhält eine Todesmarkierung und stirbt am Morgen (`BLOOD_SACRIFICE`); Schutzengel wirkt nicht, Rudelvater und andere Schilde schon.
+- **Tests:** Opferregeln, Aufdeckung nur Wölfe, Schutzengel wirkungslos, Rudelvater überlebt, Opfer wacht nicht mehr auf.
+- **Grenzen:** –
+
+### 4.43 `amalia`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Befehl `AmaliaSacrifice` am Tag (vor Tagesende, ohne offenen Prompt) bei mindestens drei lebenden Wolfspersonen: öffentliches Ereignis `AmaliaAnswered` mit der Ja/Nein-Antwort des Spielleiters, danach sofort Tod `AMALIA_SACRIFICE` mit allen Folgen.
+- **Tests:** Antwort Pflicht, nur Amalia, nur lebend, nur am Tag, Schwelle.
+- **Grenzen:** Die Frage selbst wird mündlich gestellt und nicht gespeichert.
+
+### 4.44 `detektiv`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Todesfolge: Stirbt mit Folgen eine Person, die als Wolf zählt, während ein Detektiv lebt, und lebt nach Verwandlung und Erbe ein anderer Wolf, wird die Richtung vom Platz des Toten zum nächsten lebenden Wolf öffentlich (`DetectiveHint`: links/rechts/gleich weit). Nachts vorgemerkt (`detective_hints`), in der Morgenauflösung verkündet. Ein Hinweis je Tod.
+- **Tests:** Richtung, Gleichstand, Bedingungen, Korrektur ohne Folgen, Nachttod, verwandeltes Wolfskind.
+- **Grenzen:** Öffentliche Ansage und Richtungsdarstellung am Tablet folgen mit der Oberfläche.
+
+### 4.45 `die-ewigen`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Gemeinsamer Schritt `die-ewigen` in jeder Nacht mit lebenden Ewigen (Priorität 48): eine lebende Person außerhalb der Ewigen prüfen, nur Ja (Einzelsieg) oder Nein an jede wache Ewige. Ja-Personen stehen in `eternal_finds`; gewinnt eine davon einen Einzelsieg, stehen alle Ewigen (lebend oder tot) als Mitsieger in `beneficiary_ids`. Schattenhund und Albtraumwolf blockieren.
+- **Tests:** Prüfung, Nein ohne Speicherung, Mitsieg nur mit geprüfter Person, Blockade.
 - **Grenzen:** –
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen

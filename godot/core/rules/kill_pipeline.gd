@@ -50,10 +50,13 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	if trigger_effects:
 		WolfChildRules.on_death(ctx, record)
 		ApprenticeRules.on_master_death(ctx, record)
+		_bounty_credit(ctx, target, record)
+		_detective_hint(ctx, target)
 		_queue_reaction(ctx, target, record, s.players.size() - dead_before)
 		_knight_strike(ctx, target, record)
 	_end_parasite_bonds(ctx, target, trigger_effects)
 	s.wolf_poisons = s.wolf_poisons.filter(func(e: Dictionary) -> bool: return int(e["target_id"]) != target.id)
+	s.death_marks = s.death_marks.filter(func(m: Dictionary) -> bool: return int(m["target_id"]) != target.id)
 	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
 	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:
@@ -166,6 +169,34 @@ static func _end_parasite_bonds(ctx: RuleContext, target: Player, trigger_effect
 		return
 	for id: int in orphans:
 		request_kill(ctx, id, KillEvent.CAUSE_PARASITE_HOST, KillEvent.SOURCE_PLAYER, target.id)
+
+
+## Kopfgeldjäger (I-04): jeder Lynch-Tod einer Person, die als Wolf zählt, gibt jedem lebenden
+## Kopfgeldjäger eine Liste für eine folgende Nacht.
+static func _bounty_credit(ctx: RuleContext, target: Player, record: KillEvent) -> void:
+	if record.cause != KillEvent.CAUSE_LYNCH or not target.counts_as_wolf:
+		return
+	var s := ctx.state
+	for id: int in s.alive_ids():
+		if s.players[id].role_id == RoleCatalog.KOPFGELDJAEGER:
+			s.bounty_credits[id] = int(s.bounty_credits.get(id, 0)) + 1
+
+
+## Detektiv (I-10, I-14): Stirbt eine Person, die als Wolf zählt, während ein Detektiv lebt, und lebt
+## danach (nach Verwandlungen und Erbe) ein anderer Wolf, wird die Richtung vom Platz des Toten zum
+## nächsten lebenden Wolf öffentlich; nachts erst in der Morgenauflösung. Ein Hinweis je Tod.
+static func _detective_hint(ctx: RuleContext, target: Player) -> void:
+	var s := ctx.state
+	if not target.counts_as_wolf or not s.alive_ids().any(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.DETEKTIV):
+		return
+	var direction := Seats.wolf_direction(s, target.id)
+	if direction == "none":
+		return
+	ctx.emit(GameEvent.DETECTIVE_RECORDED, Visibility.GM, {"anchor_id": target.id, "direction": direction})
+	if s.phase == Phase.NIGHT:
+		s.detective_hints.append({"anchor_id": target.id, "direction": direction})
+	else:
+		ctx.emit(GameEvent.DETECTIVE_HINT, Visibility.PUBLIC, {"anchor_id": target.id, "direction": direction})
 
 
 ## Wahnsinniger Kutscher: Stirbt er durch Hinrichtung (LYNCH), sterben seine nächsten lebenden

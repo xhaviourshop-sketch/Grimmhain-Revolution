@@ -76,6 +76,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 			return GmCorrections.validate(s, p)
 		Command.OVERRIDE_SHOWN_ROLE:
 			return OracleStep.validate_override(s, p)
+		Command.AMALIA_SACRIFICE:
+			return _validate_amalia(s, p)
 		Command.CONFIRM_WIN, Command.REJECT_WIN:
 			var open := s.open_candidates()
 			if open.is_empty():
@@ -255,6 +257,22 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 	return &""
 
 
+## Amalia (I-09): lebende Amalia am Tag, mindestens drei lebende Wölfe, Antwort Ja/Nein.
+static func _validate_amalia(s: GameState, p: Dictionary) -> StringName:
+	var id := DictRead.get_int(p, "player_id", GameState.NO_TARGET)
+	if not s.players.has(id):
+		return &"unknown_player"
+	if not s.players[id].alive:
+		return &"player_dead"
+	if s.players[id].role_id != RoleCatalog.AMALIA:
+		return &"not_amalia"
+	if not p.get("answer") is bool:
+		return &"invalid_answer"
+	if InfoSteps.living_wolf_count(s) < RoleCatalog.AMALIA_MIN_WOLVES:
+		return &"too_few_wolves"
+	return &""
+
+
 static func _validate_nominate(s: GameState, p: Dictionary) -> StringName:
 	var nominator := DictRead.get_int(p, "nominator_id", GameState.NO_TARGET)
 	var nominee := DictRead.get_int(p, "nominee_id", GameState.NO_TARGET)
@@ -323,6 +341,11 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			GmCorrections.execute(ctx, p)
 		Command.OVERRIDE_SHOWN_ROLE:
 			OracleStep.apply_override(ctx, p)
+		Command.AMALIA_SACRIFICE:
+			# Öffentliche Frage mit Antwort des Spielleiters, danach stirbt Amalia sofort mit allen Folgen.
+			var amalia := int(p["player_id"])
+			ctx.emit(GameEvent.AMALIA_ANSWERED, Visibility.PUBLIC, {"player_id": amalia, "answer": bool(p["answer"]), "day": s.day_number})
+			KillPipeline.request_kill(ctx, amalia, KillEvent.CAUSE_AMALIA_SACRIFICE, KillEvent.SOURCE_PLAYER, amalia)
 		Command.END_NIGHT:
 			_resolve_dawn(ctx)
 		Command.NOMINATE:
@@ -574,8 +597,17 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 static func _resolve_dawn(ctx: RuleContext) -> void:
 	var s := ctx.state
 	PhaseMachine.enter(ctx, Phase.DAWN_RESOLUTION)
+	# Detektiv: nachts entstandene Hinweise werden jetzt öffentlich (I-10).
+	for hint: Dictionary in s.detective_hints:
+		ctx.emit(GameEvent.DETECTIVE_HINT, Visibility.PUBLIC, {"anchor_id": int(hint["anchor_id"]), "direction": String(hint["direction"])})
+	s.detective_hints.clear()
 	# Gift vor dem Rudelangriff: Ursache und Reihenfolge wie beim früheren Sofort-Tod.
 	WitchStep.apply_poisons(ctx)
+	# Todesmarkierungen aus Nachtschritten (Kriegerin des Lichts, Blutpriester), in Reihenfolge der Markierung.
+	var marks := s.death_marks.duplicate(true)
+	s.death_marks.clear()
+	for mark: Dictionary in marks:
+		KillPipeline.request_kill(ctx, int(mark["target_id"]), StringName(mark["cause"]), KillEvent.SOURCE_PLAYER, int(mark["source_id"]))
 	# Giftwolf: fällige Vergiftungen (zwei Nächte nach der Giftpranke), unaufhaltbar.
 	for entry: Dictionary in s.wolf_poisons.duplicate():
 		if int(entry["due_night"]) == s.night_number:
