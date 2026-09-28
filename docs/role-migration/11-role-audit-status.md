@@ -3,7 +3,7 @@
 **Stand:** 2026-09-28 · Branch `audit/all-72-roles` (Basis `main` `f09cd08`) · dauerhaft gepflegte Übersicht.
 Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterplan/DECISION-LOG.md` und `docs/specs/vertical-slice/rules-register.md`.
 
-## 0. Übergabe für die nächste Sitzung (Stand 28.09.2026)
+## 0. Übergabe für die nächste Sitzung (Stand 28.09.2026, letzter Code-Commit `153746b`)
 
 - Branch `audit/all-72-roles`, Worktree `C:/Users/Marku/Desktop/Grimmhain/grimmhain-audit-72-roles`, gepusht.
 - Letzter vollständiger Lauf: 648 Tests, 0 fehlgeschlagen, keine `SCRIPT ERROR`, Exit 0; `node tools/role-migration/check-role-docs.js` Exit 0. Zusätzlich je Charge einmalig 480 Fuzzpartien mit anderen Seeds (Seed-Formel `104729 * (g + 1) + 17`, temporäre Kopie des Fuzztests) ohne Invariantenverletzung.
@@ -15,6 +15,7 @@ Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterpl
 - Verwandlungsrollen (Dämonischer Wolf, König Lykaon, Seelentauscher) sind entschieden (V-01 bis V-09) und grün. Der Fuzztest nimmt je Partie reihum eine Fokusrolle auf; seltene Pflichtereignisse (Amalia, Apfel, Spiegelwolf ohne Spiegelung) kommen trotzdem nur 1 bis 2 Mal vor und können bei Generatoränderungen wegfallen.
 - Wiederbelebungsrollen (Kutscher, Dr. Victor Frankenstein) sind entschieden (W-01 bis W-04) und grün; Totenkarten (RM-DR-013) nur für Kartenschlucker und RM-DR-141.4 offen. Der Fuzztest richtet gelegentlich einen lebenden Spiegelwolf ohne Nominierung hin und fragt öfter Korrekturen ab, damit seine Pflichtabdeckung stabil bleibt.
 - Einzelsiege Teil 1 (Rattenfänger, Pestbringerin, Prophet des Untergangs, Todesprediger) sind entschieden (E-01 bis E-04) und grün.
+- **Unterbrochen (28.09.2026, auf Wunsch des PO vor `/compact`):** Fragerunde Einzelsiege Teil 2 gestellt, aber unbeantwortet: E-05 Feuerteufel-Wirkung (Empfehlung A: jede Nacht eine andere Lebende markieren, gilt bis zur nächsten Nacht; stirbt sie mit Todesfolgen, sterben ihre nächsten lebenden Nachbarn mit, Feuerteufel verschont), E-06 Siegbedingung Feuerteufel und Voodoo-Priester (Empfehlung: lebend bei höchstens drei Lebenden wie Parasit), E-07 Voodoo-Puppe (Empfehlung A: jeder Tod außer Korrektur trifft die Puppe, danach sofort neu vergebbar, Verzauberung bleibt), E-08 Nekromant-Schild (Empfehlung A: global für den nächsten Tod irgendeiner Person bis zur nächsten Nacht, gemeinsamer Vorrat „geopferter“ Toter). Nächster Schritt: diese vier Fragen erneut stellen, danach Runde 2 (Nekromant-Umlenkung und Siegversuche RM-DR-142.2/.4/.5, Hades RM-DR-144, Grabräuber RM-DR-156), dann Zeitwächter, Rachsüchtiger Wolf, Schicksalswolf; Kartenschlucker wartet auf den Totenkarten-Assistenten (W-01).
 - Nächste offene Gruppen: Einzelsiege Teil 2 (Feuerteufel, Voodoo-Priester, Nekromant, Hades, Grabräuber; Kartenschlucker wartet auf den Totenkarten-Assistenten); Zeitwächter; Rachsüchtiger Wolf; Schicksalswolf.
 - Offen außerhalb des Kerns: Zufallsknopf nach RM-DR-015.2 (Ziehung über den gespeicherten Seed) ist noch in keiner Rolle umgesetzt; König, Traumdeuter, Kopfgeldjäger und Blutpriester nutzen die Spielleiterwahl.
 - Weiter offen außerhalb des Kerns: Analyse unverträglicher Rollenkombinationen (vom PO gewünscht, Setup-Regel vertagt); Tablet-Gegenprüfung „links = Uhrzeigersinn“; Sound bei 5 Toten nur mit Selbstmörder im Spiel.
