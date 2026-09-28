@@ -18,7 +18,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 |---|---|---|---|---|---|---|---|---|---|
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
-| [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
@@ -72,27 +71,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeit der `startMulti`-Abbruchpfade. |
 | Detail | [Dossier](dossiers/wolves-a.md#schicksalswolf) |
-
-### `voodoo-priester`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Voodoo-Priester / Voodoo Priest |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / II / 8.4 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Die Umlenkung funktioniert für die Hauptursachen, widerspricht aber dem allgemeinen Text („bei seinem Tod") und enthält eine undokumentierte Abklingzeit; die belegten Bugs betreffen Nebenpfade. |
-| DE/EN-Vergleich | JA mit Nuance. EN „If he would die" macht das Überleben des Priesters ausdrücklich; DE „Solange eine Puppe aktiv ist" fehlt in EN. Keine Unterschiede bei Zeitpunkt, Häufigkeit, Zahlen; beide schweigen zu Abklingzeit, Ursachen und Häufigkeit des Vergebens. |
-| Automationsziel | `automatic`: Umlenkung ist eine deterministische Abfangregel in der KillPipeline, sobald der Ursachenfilter feststeht. |
-| Mechanik | primär: Zielumleitung; sekundär: Verknüpfte Personen, Hinrichtungsreaktion |
-| Größe / Risiko | L / hoch. Abfangreihenfolge, Ursachenfilter, Abklingzeit und Hinrichtungspfad. |
-| Vorhandene Godot-Systeme | KillPipeline (Abfangregel/Umlenkung), ExecutionRules (Hinrichtungsumlenkung, analog Spiegelwolf-Umlenkung), StepQueue, PendingPrompt, Protections (Abgrenzung), StateCodec, Replay, GmCorrections, Ereignis-Sichtbarkeit. |
-| Neue Systeme | Liebes-/Bindungsmodell (Priester-Puppe-Bindung), dauerhafte Statusmarker (Puppe), zeitlich verzögerte Effekte (Abklingzeit), ggf. zusätzliche Siegbedingungen. |
-| Abhängigkeiten | Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Waldhexe (Gift), Märtyrerin, Der Weise, Dorfschmied, Nekromant (Reihenfolge der Abfangregeln), Rattenfänger (Verzauberung), Feuerteufel (Brand entfällt bei Umlenkung), Hades/Kartenschlucker/Nekromant/Rudelvater (Schilde der Puppe), Henker. |
-| Widersprüche | RM-C-056 Ursachen der Umlenkung; RM-C-057 Abklingzeit; RM-C-058 Verzauberung löschen; RM-C-059 Siegbedingung; RM-C-060 Bezeichnung |
-| Entscheidungen | RM-DR-132 (Rolle); übergreifend RM-DR-006, RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K10 / in keiner Option |
-| Belegsicherheit | hoch; Ursachenliste per `rg "VOODOO_PUPPET"` vollständig (`night:255,442`, `help:265`, `gh:2426`, `ui:407`). |
-| Detail | [Dossier](dossiers/solos-a.md#voodoo-priester) |
 
 ### `nekromant`
 

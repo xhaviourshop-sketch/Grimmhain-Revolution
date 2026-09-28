@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 64 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 64 |
+| im RoleCatalog vorhandene Rollen | 65 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 65 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 62 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 63 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -111,6 +111,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 62 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom (Rollentext) | solo | nein | 86 | `solo_rules.gd` (`prophet_marks`, `prophet_unlocked`), `win_rules.gd` | `test_solo_roles_a.gd`, fuzz | RM-DR-121, E-03, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `not-found` |
 | 63 | `todesprediger` | Todesprediger / Death Prophet (Rollentext) | solo | nein | 66 (nur Nacht 1) | `bond_steps.gd` (Stufe prediction), `solo_rules.gd` (`preacher_wins`) | `test_solo_roles_a.gd`, fuzz | RM-DR-158, E-04, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 64 | `feuerteufel` | Feuerteufel / Pyromaniac (Rollentext) | solo | nein | 76 | `solo_rules.gd` (`fire_marks`, `fire_on_death`), `kill_pipeline.gd`, `win_rules.gd` (`co_winner_ids`) | `test_fire_devil.gd`, fuzz | RM-DR-131, E-05 bis E-11, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 2 (Feuerteufel)“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 65 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest (Rollentext) | solo | nein | 84 | `kill_pipeline.gd` (Umlenkung, Kette `chain`), `solo_rules.gd` (`voodoo_dolls`), `win_rules.gd` | `test_voodoo_priest.gd`, fuzz | RM-DR-132, E-12 bis E-15, E-20 bis E-23, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 3“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -443,6 +444,11 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht (Priorität 76, nicht blockierbar) markiert er eine andere lebende Person neu oder behält seine Markierung (0 Ziele); höchstens eine aktive Markierung je Feuerteufel (`fire_marks`). Sie erlischt mit dem Tod des Ziels und mit Tod oder Rollenverlust des Feuerteufels. Jeder tatsächliche Tod eines markierten Ziels mit Todesfolgen verbrennt genau einmal dessen nächste lebende Nachbarn ohne Feuerteufel (`BURN`, im Uhrzeigersinn zuerst, Kettenbrand möglich); Rudelschutz wirkt nicht, persönliche Schilde schon. Lebende Feuerteufel stehen bei jedem erkannten Sieg als Mitsieger in `co_winner_ids`; kein eigener Sieg.
 - **Tests:** Ziele, Behalten und Ersetzen, Brand bei Rudel, Hinrichtung und Korrektur mit Folgen, kein Brand ohne Folgen oder bei Überleben, tote Plätze, Feuerteufel verschont, zwei Feuerteufel, Kettenbrand, Schutzengel und Rudelvater, Tod und Rollenverlust, Mitsieg bei Dorf-, Wolfs- und Einzelsieg, Ladeprüfung; Fuzz mit Pflichtabdeckung `FireMarked`, `FireBurned`, `BURN`.
 - **Grenzen:** Siegerklärung durch den Spielleiter nennt keine Mitsieger (der Spielleiter entscheidet dort selbst).
+
+### 4.65 `voodoo-priester`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** In jeder Nacht ohne lebende Puppe (Priorität 84, nicht blockierbar, kein Apfel) darf er einer anderen lebenden Person geheim eine Puppe geben oder verzichten (`voodoo_dolls`, eine je Priester). Jeder tatsächliche Tod außer Spielleiterkorrektur trifft nach allen Schutzwirkungen stattdessen die Puppe (Ursache und Quelle bleiben); die Puppe ist dabei verbraucht, keine Abklingzeit. Die eigene Puppe wirkt vor einer Schattenwanderer-Verknüpfung (E-23); Umlenkungsketten treffen jede Person höchstens einmal (E-20, gilt auch für den Schattenwanderer). Tod oder Rollenverlust des Priesters und Tod der Puppe beenden die Puppe. Sieg allein, wenn er lebt und höchstens drei Personen leben.
+- **Tests:** freiwillige geheime Vergabe, Selbstwahl abgelehnt (ohne Ereignisse), Umlenkung bei Rudel, Hinrichtung und Brand, keine bei Korrektur, Schutz vor der Umlenkung, eigener Schutz der Puppe, tote Puppe und Neuvergabe, gegenseitige Puppen, Kette, gemeinsame Puppe, Vorrang vor dem Schattenwanderer ohne Rückweg, Rollenverlust und Seelentausch, Sieg mit Feuerteufel als Mitsieger, Speichern bei offenem Prompt, Ladeprüfung.
+- **Grenzen:** Zusammenspiel mit dem Nekromanten folgt mit dessen Umsetzung.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

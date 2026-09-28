@@ -363,7 +363,9 @@ Siehe §3.
 
 ### K10 · Bindungsmodell II
 
-**Rollen Charge K10 (1):** `voodoo-priester`
+**Rollen Charge K10 (0):** –
+
+**Nachtrag Rollenaudit:** `voodoo-priester` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `rotkaeppchen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

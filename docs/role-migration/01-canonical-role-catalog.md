@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 64 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 65 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 8 |
+| fehlend, Entscheidung nötig (`decision-required`) | 7 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 8 fehlende) | 1 |
-| Legacy-Befund `legacy-contradictory` (nur 8 fehlende) | 6 |
-| Legacy-Befund `legacy-broken` (nur 8 fehlende) | 0 |
-| Legacy-Befund `not-found` (nur 8 fehlende) | 1 |
+| Legacy-Befund `legacy-verified` (nur 7 fehlende) | 1 |
+| Legacy-Befund `legacy-contradictory` (nur 7 fehlende) | 5 |
+| Legacy-Befund `legacy-broken` (nur 7 fehlende) | 0 |
+| Legacy-Befund `not-found` (nur 7 fehlende) | 1 |
 
-<!-- check:counts total=72 implemented=64 remaining=8 -->
+<!-- check:counts total=72 implemented=65 remaining=7 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -78,7 +78,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 40 | `traumdeuter` | Traumdeuter / Dreamer | Dorf | III | 7.0 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#traumdeuter) |
 | 41 | `henker` | Henker / Executioner | Dorf | III | 7.8 | `implemented-and-tested` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#henker) |
 | 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | IV | 7.6 | `implemented-and-tested` | `legacy-broken` | `automatic` | Todesreaktion | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#feuerteufel) |
-| 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | II | 8.4 | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | L / hoch | K10 | – | [03](03-remaining-roles-analysis.md#voodoo-priester) · [Dossier](dossiers/solos-a.md#voodoo-priester) |
+| 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | II | 8.4 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Zielumleitung | L / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#voodoo-priester) |
 | 44 | `blutwolf` | Blutwolf / Blood Wolf | Wölfe | II | – | `implemented-and-tested` | `legacy-verified` | `assisted` | sonstige Spezialmechanik | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#blutwolf) |
 | 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | III, IV | 2.1 | `implemented-and-tested` | `legacy-broken` | `automatic` | sonstige Spezialmechanik | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#albtraumwolf) |
 | 46 | `cerberus` | Cerberus / Cerberus | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | S / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#cerberus) |
