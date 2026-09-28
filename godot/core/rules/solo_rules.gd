@@ -13,7 +13,11 @@ extends RefCounted
 ##   ohne Feuerteufel (`CAUSE_BURN`); Mitsieg lebender Feuerteufel bei jedem erkannten Sieg (WinRules).
 ## Voodoo-Priester (Teil 3, E-12 bis E-15, E-20 bis E-23): höchstens eine lebende Puppe je Priester (`voodoo_dolls`);
 ##   die Umlenkung selbst steht in KillPipeline; Sieg allein lebend bei höchstens drei Lebenden.
+## Grabräuber (Teil 4, E-32 bis E-34): `grave_thefts`; `ability_role` ist die Rolle, deren Nachtschritt eine Person
+##   ausführt (beim Grabräuber nach dem Diebstahl die gestohlene), `has_ability` prüft Wirkungen dieses Schritts.
 ## Einzelsiegrollen sind weder blockierbar (RM-DR-010) noch vom Fluch des Weisen betroffen.
+
+const GRAVE_USE_KEY := "grabraeuber:steal"
 
 
 static func _others_alive(s: GameState, id: int) -> Array[int]:
@@ -181,7 +185,7 @@ static func fire_on_death(ctx: RuleContext, target: Player, trigger_effects: boo
 	s.fire_marks = s.fire_marks.filter(func(m: Dictionary) -> bool: return int(m["target_id"]) != target.id)
 	if not trigger_effects:
 		return
-	var victims := Seats.living_neighbours(s, target.id).filter(func(id: int) -> bool: return s.players[id].role_id != RoleCatalog.FEUERTEUFEL)
+	var victims := Seats.living_neighbours(s, target.id).filter(func(id: int) -> bool: return not has_ability(s, id, RoleCatalog.FEUERTEUFEL))
 	ctx.emit(GameEvent.FIRE_BURNED, Visibility.GM, {"target_id": target.id, "devil_ids": devils, "victim_ids": victims})
 	for id: int in victims:
 		KillPipeline.request_kill(ctx, id, KillEvent.CAUSE_BURN, KillEvent.SOURCE_PLAYER, devils[0])
@@ -369,7 +373,7 @@ static func hades_act(ctx: RuleContext, id: int, kill: int, barrier: bool) -> vo
 ## Barriere (E-31): verhindert den nächsten Tod außer Korrektur; persönlicher Schild.
 static func hades_barrier_prevents(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
 	var s := ctx.state
-	if target.role_id != RoleCatalog.HADES or source_kind == KillEvent.SOURCE_GM or not s.hades_barriers.has(target.id):
+	if not has_ability(s, target.id, RoleCatalog.HADES) or source_kind == KillEvent.SOURCE_GM or not s.hades_barriers.has(target.id):
 		return false
 	s.hades_barriers.erase(target.id)
 	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": target.id, "cause": cause, "source_kind": source_kind,
@@ -385,7 +389,7 @@ static func hades_on_death(ctx: RuleContext, target: Player, source_kind: String
 	if source_kind == KillEvent.SOURCE_GM:
 		return
 	for id: int in s.alive_ids():
-		if s.players[id].role_id == RoleCatalog.HADES:
+		if has_ability(s, id, RoleCatalog.HADES):
 			_set_lights(s, id, hades_light_count(s, id) + 1)
 			ctx.emit(GameEvent.HADES_LIGHT, Visibility.GM, {"hades_id": id, "from_id": target.id, "lights": hades_light_count(s, id)})
 
@@ -398,3 +402,51 @@ static func hades_drop(s: GameState, id: int) -> void:
 static func hades_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
 	return p != null and p.alive and p.role_id == RoleCatalog.HADES and hades_light_count(s, id) >= RoleCatalog.HADES_WIN_LIGHTS
+
+
+# --- Grabräuber -----------------------------------------------------------------------------------
+
+## Gestohlene Rolle eines Grabräubers oder &"".
+static func stolen_role(s: GameState, id: int) -> StringName:
+	for t: Dictionary in s.grave_thefts:
+		if int(t["robber_id"]) == id:
+			return StringName(t["role_id"])
+	return &""
+
+
+## Rolle, deren Nachtschritt die Person ausführt: die gestohlene beim Grabräuber, sonst die eigene.
+static func ability_role(s: GameState, id: int) -> StringName:
+	var stolen := stolen_role(s, id)
+	return stolen if stolen != &"" else s.players[id].role_id
+
+
+## true, wenn die Person die Nachtfähigkeit `role` hat (eigene Rolle oder vom Grabräuber gestohlen).
+static func has_ability(s: GameState, id: int, role: StringName) -> bool:
+	return s.players.has(id) and (s.players[id].role_id == role or stolen_role(s, id) == role)
+
+
+## Tote mit stehlbarer Rolle (E-34), aufsteigend.
+static func grave_targets(s: GameState, robber_id: int) -> Array[int]:
+	var out: Array[int] = []
+	for id: int in s.players:
+		if id != robber_id and not s.players[id].alive and RoleCatalog.stealable(s.players[id].role_id):
+			out.append(id)
+	out.sort()
+	return out
+
+
+## Einmaliger Diebstahl (E-32): die Rolle der toten Person zum jetzigen Zeitpunkt; eigener Schritt ab der nächsten Nacht.
+static func grave_steal(ctx: RuleContext, robber_id: int, target_id: int) -> void:
+	var s := ctx.state
+	var role := s.players[target_id].role_id
+	s.players[robber_id].ability_uses[GRAVE_USE_KEY] = 1
+	grave_drop(s, robber_id)
+	s.grave_thefts.append({"robber_id": robber_id, "target_id": target_id, "role_id": String(role)})
+	s.grave_thefts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["robber_id"]) < int(b["robber_id"]))
+	ctx.emit(GameEvent.GRAVE_ROBBED, Visibility.GM, {"robber_id": robber_id, "target_id": target_id, "role_id": String(role), "night": s.night_number})
+	ctx.emit(GameEvent.GRAVE_ROBBER_NOTICE, Visibility.ACTOR, {"role_id": String(role)}, robber_id)
+
+
+## Die gestohlene Fähigkeit endet mit Tod oder Rollenverlust des Grabräubers (abgeleitet wie E-27).
+static func grave_drop(s: GameState, robber_id: int) -> void:
+	s.grave_thefts = s.grave_thefts.filter(func(t: Dictionary) -> bool: return int(t["robber_id"]) != robber_id)

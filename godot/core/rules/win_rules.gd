@@ -57,6 +57,9 @@ static func evaluate(state: GameState) -> Array:
 		if SoloRules.voodoo_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_VOODOO), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
 	for id: int in alive:
+		if grave_robber_wins(state, id):
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_GRAVE_ROBBER), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+	for id: int in alive:
 		if parasite_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_PARASITE), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
 	for id: int in alive:
@@ -108,6 +111,12 @@ static func manipulator_wins(state: GameState, id: int) -> bool:
 static func parasite_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
 	return p != null and p.alive and p.role_id == RoleCatalog.PARASIT and state.alive_ids().size() <= 3
+
+
+## Grabräuber (E-33): er lebt und höchstens drei Personen leben.
+static func grave_robber_wins(state: GameState, id: int) -> bool:
+	var p: Player = state.players.get(id)
+	return p != null and p.alive and p.role_id == RoleCatalog.GRABRAEUBER and state.alive_ids().size() <= RoleCatalog.GRAVE_ROBBER_MAX_LIVING
 
 
 ## Mindestzahl Toter unmittelbar vor der Hinrichtung des Selbstmörders (Rollentext „5+ Tote“, RM-DR-138.1).
@@ -200,6 +209,8 @@ static func _solo_holds(s: GameState, reason: StringName, id: int) -> bool:
 			return s.necro_wins.has(id)
 		WinCandidate.REASON_HADES:
 			return SoloRules.hades_wins(s, id)
+		WinCandidate.REASON_GRAVE_ROBBER:
+			return grave_robber_wins(s, id)
 	return s.preacher_wins.has(id)
 
 
@@ -244,7 +255,7 @@ static func state_is_consistent(s: GameState) -> bool:
 		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
 				return false
-		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO, WinCandidate.REASON_NECROMANCER, WinCandidate.REASON_HADES].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO, WinCandidate.REASON_NECROMANCER, WinCandidate.REASON_HADES, WinCandidate.REASON_GRAVE_ROBBER].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not _solo_holds(s, c.reason_key, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):

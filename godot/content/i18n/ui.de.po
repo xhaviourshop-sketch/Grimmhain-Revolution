@@ -797,6 +797,12 @@ msgstr "Hades"
 msgid "ui.role.hades.short"
 msgstr "Erhält für jeden Tod ein Licht; tötet für 2, kauft für 3 eine Barriere; gewinnt lebend mit 10 Lichtern."
 
+msgid "ui.role.grabraeuber.name"
+msgstr "Grabräuber"
+
+msgid "ui.role.grabraeuber.short"
+msgstr "Stiehlt einmal die Nachtfähigkeit einer toten Person und nutzt sie fortan; gewinnt lebend bei höchstens drei Lebenden."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

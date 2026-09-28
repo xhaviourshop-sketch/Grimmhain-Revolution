@@ -143,7 +143,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step) or StepQueue.step_role(key) != RoleCatalog.WALDHEXE:
 		return false
 	var witch: Player = s.players.get(prompt.actor_id)
-	if witch == null or StepQueue.step_actor(key) != witch.id or not witch.alive or witch.role_id != RoleCatalog.WALDHEXE:
+	if witch == null or StepQueue.step_actor(key) != witch.id or not witch.alive or SoloRules.ability_role(s, witch.id) != RoleCatalog.WALDHEXE:
 		return false
 	if DictRead.get_int(prompt.partial, "victim_id", -2) != victim_of(s):
 		return false

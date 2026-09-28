@@ -453,7 +453,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	var actor: Player = s.players.get(prompt.actor_id)
 	if StepQueue.step_role(key) != prompt.owner or StepQueue.step_actor(key) != prompt.actor_id:
 		return false
-	if actor == null or not actor.alive or actor.role_id != prompt.owner:
+	if actor == null or not actor.alive or SoloRules.ability_role(s, actor.id) != prompt.owner:
 		return false
 	if prompt.owner == PendingPrompt.OWNER_HOUND:
 		if hound_lost(actor):

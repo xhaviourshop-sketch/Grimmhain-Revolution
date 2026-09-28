@@ -74,7 +74,7 @@ static func ghost_can_act(s: GameState, p: Player) -> bool:
 
 
 static func smith_can_give(s: GameState, p: Player) -> bool:
-	return p.alive and p.role_id == RoleCatalog.DORFSCHMIED and not p.ability_uses.has(SMITH_USE_KEY) and s.night_number >= RoleCatalog.SMITH_FIRST_NIGHT
+	return p.alive and SoloRules.ability_role(s, p.id) == RoleCatalog.DORFSCHMIED and not p.ability_uses.has(SMITH_USE_KEY) and s.night_number >= RoleCatalog.SMITH_FIRST_NIGHT
 
 
 ## Erstes Rudelopfer dieser Nacht, wenn es lebt, sonst −1.

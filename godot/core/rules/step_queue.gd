@@ -9,6 +9,7 @@ extends RefCounted
 ## Nachtschritte: persönliche Rollenschritte "<rolle>:<Personen-ID>" und der Rudelschritt
 ## "pack", sortiert nach Nachtpriorität (RoleCatalog), bei gleicher Priorität nach
 ## Personen-ID: Wolfskind → Lehrling → Schutzengel → Rudel → Waldhexe → Orakel.
+## Ein Grabräuber plant nach dem Diebstahl den Schritt der gestohlenen Rolle (SoloRules.ability_role).
 ## Der Nachtplan ist ein Snapshot bei StartNight: Rollenwechsel während der Nacht fügen
 ## keine Schritte hinzu. Ein persönlicher Schritt entfällt automatisch und protokolliert
 ## (`StepDropped`), wenn seine Person inzwischen tot ist, nicht mehr die geplante Rolle
@@ -117,6 +118,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.VOODOO: false,         # Verzicht ist eine Antwort (0 Ziele, E-21)
 	RoleCatalog.NEKROMANT: false,      # Verzicht ist eine Antwort (0 Tote)
 	RoleCatalog.HADES: false,          # Verzicht ist eine Antwort (0 Ziele, keine Barriere)
+	RoleCatalog.GRABRAEUBER: false,    # Verzicht ist eine Antwort (0 Tote)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -141,54 +143,57 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 	var entries: Array = []  # [Priorität, Personen-ID, Schritt]
 	for id: int in s.alive_ids():
 		var p := s.players[id]
-		var priority := RoleCatalog.night_priority(p.role_id)
+		var role := SoloRules.ability_role(s, id)  # Grabräuber: gestohlene Nachtfähigkeit (E-32)
+		var priority := RoleCatalog.night_priority(role)
 		if priority == 0:
 			continue
-		if p.role_id == RoleCatalog.WALDHEXE and not WitchStep.has_any_potion(p):
+		if role == RoleCatalog.WALDHEXE and not WitchStep.has_any_potion(p):
 			continue
-		if p.role_id == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, id):
+		if role == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, id):
 			continue
-		if p.role_id == RoleCatalog.LEHRLING and not ApprenticeRules.needs_selection(s, id):
+		if role == RoleCatalog.LEHRLING and not ApprenticeRules.needs_selection(s, id):
 			continue
-		if RoleCatalog.first_night_only(p.role_id) and s.night_number != 1:
+		if RoleCatalog.first_night_only(role) and s.night_number != 1:
 			continue
-		if p.role_id == RoleCatalog.FAEHRTENLESER and InfoSteps.tracker_used(p):
+		if role == RoleCatalog.FAEHRTENLESER and InfoSteps.tracker_used(p):
 			continue
-		if p.role_id == RoleCatalog.SCHATTENHUND and p.ability_uses.has("schattenhund:block"):
+		if role == RoleCatalog.SCHATTENHUND and p.ability_uses.has("schattenhund:block"):
 			continue
-		if p.role_id == RoleCatalog.GIFTWOLF and p.ability_uses.has("giftwolf:paw2"):
+		if role == RoleCatalog.GIFTWOLF and p.ability_uses.has("giftwolf:paw2"):
 			continue
-		if p.role_id == RoleCatalog.HENKER and s.executions_count < RoleCatalog.HANGMAN_MIN_EXECUTIONS:
+		if role == RoleCatalog.HENKER and s.executions_count < RoleCatalog.HANGMAN_MIN_EXECUTIONS:
 			continue
-		if p.role_id == RoleCatalog.KOPFGELDJAEGER and int(s.bounty_credits.get(id, 0)) < 1:
+		if role == RoleCatalog.KOPFGELDJAEGER and int(s.bounty_credits.get(id, 0)) < 1:
 			continue
-		if p.role_id == RoleCatalog.KOENIG and (InfoSteps.used(p, InfoSteps.KING_USE_KEY) or not InfoSteps.king_condition(s)):
+		if role == RoleCatalog.KOENIG and (InfoSteps.used(p, InfoSteps.KING_USE_KEY) or not InfoSteps.king_condition(s)):
 			continue
-		if p.role_id == RoleCatalog.KRIEGERIN and InfoSteps.used(p, InfoSteps.WARRIOR_USE_KEY):
+		if role == RoleCatalog.KRIEGERIN and InfoSteps.used(p, InfoSteps.WARRIOR_USE_KEY):
 			continue
-		if p.role_id == RoleCatalog.BLUTPRIESTER and InfoSteps.used(p, InfoSteps.BLOOD_USE_KEY):
+		if role == RoleCatalog.BLUTPRIESTER and InfoSteps.used(p, InfoSteps.BLOOD_USE_KEY):
 			continue
-		if p.role_id == RoleCatalog.DORFSCHMIED and not GuardRoles.smith_can_give(s, p):
+		if role == RoleCatalog.DORFSCHMIED and not GuardRoles.smith_can_give(s, p):
 			continue
-		if p.role_id == RoleCatalog.SCHUTZGEIST:
+		if role == RoleCatalog.SCHUTZGEIST:
 			continue  # handelt nur tot (unten)
-		if p.role_id == RoleCatalog.SCHATTENWANDERER and p.ability_uses.has("schattenwanderer:link"):
+		if role == RoleCatalog.SCHATTENWANDERER and p.ability_uses.has("schattenwanderer:link"):
 			continue
-		if p.role_id == RoleCatalog.KOENIG_LYKAON and p.ability_uses.has(BondSteps.LYCAON_USE_KEY):
+		if role == RoleCatalog.KOENIG_LYKAON and p.ability_uses.has(BondSteps.LYCAON_USE_KEY):
 			continue
-		if p.role_id == RoleCatalog.SEELENTAUSCHER and p.ability_uses.has(BondSteps.SWAP_USE_KEY):
+		if role == RoleCatalog.SEELENTAUSCHER and p.ability_uses.has(BondSteps.SWAP_USE_KEY):
 			continue
-		if (p.role_id == RoleCatalog.KUTSCHER or p.role_id == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, p):
+		if (role == RoleCatalog.KUTSCHER or role == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, p):
 			continue
-		if p.role_id == RoleCatalog.PROPHET and not (SoloRules.prophet_marking(s, id) or s.prophet_unlocked.has(id)):
+		if role == RoleCatalog.PROPHET and not (SoloRules.prophet_marking(s, id) or s.prophet_unlocked.has(id)):
 			continue
-		if p.role_id == RoleCatalog.TODESPREDIGER and not SoloRules.prophecy_of(s, id).is_empty():
+		if role == RoleCatalog.TODESPREDIGER and not SoloRules.prophecy_of(s, id).is_empty():
 			continue
-		if p.role_id == RoleCatalog.VOODOO and SoloRules.doll_of(s, id) != GameState.NO_TARGET:
+		if role == RoleCatalog.VOODOO and SoloRules.doll_of(s, id) != GameState.NO_TARGET:
 			continue  # nur ohne lebende Puppe (E-13)
-		if p.role_id == RoleCatalog.HADES and SoloRules.hades_light_count(s, id) < RoleCatalog.HADES_KILL_COST:
+		if role == RoleCatalog.GRABRAEUBER and p.ability_uses.has(SoloRules.GRAVE_USE_KEY):
+			continue  # nur einmal stehlen (E-32)
+		if role == RoleCatalog.HADES and SoloRules.hades_light_count(s, id) < RoleCatalog.HADES_KILL_COST:
 			continue  # ohne 2 Lichter nichts zu kaufen (E-30, E-31)
-		entries.append([priority, id, personal_step_key(p.role_id, id)])
+		entries.append([priority, id, personal_step_key(role, id)])
 	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
 	for id: int in s.players:
 		if GuardRoles.ghost_can_act(s, s.players[id]):
@@ -251,7 +256,7 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	if GuardRoles.silenced(s, actor):
 		return &"cursed"
 	# Nie die Fähigkeit einer inzwischen verlorenen Rolle ausführen (gilt für alle persönlichen Schritte).
-	if s.players[actor].role_id != step_role(key):
+	if SoloRules.ability_role(s, actor) != step_role(key):
 		return &"actor_role_changed"
 	if step_role(key) == RoleCatalog.WALDHEXE and not WitchStep.has_decision(s, actor):
 		return &"no_decision"
@@ -302,6 +307,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	if step_role(key) == RoleCatalog.NEKROMANT and SoloRules.necro_pool(s).size() < RoleCatalog.NECRO_SACRIFICE:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.HADES and not SoloRules.hades_has_decision(s, actor):
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.GRABRAEUBER and (s.players[actor].ability_uses.has(SoloRules.GRAVE_USE_KEY) or SoloRules.grave_targets(s, actor).is_empty()):
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.PROPHET:
 		if SoloRules.prophet_marking(s, actor):

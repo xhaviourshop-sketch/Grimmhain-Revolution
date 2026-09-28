@@ -442,7 +442,7 @@ static func _judge_nominations(ctx: RuleContext) -> void:
 	for mark: Dictionary in s.judge_marks:
 		var judge := int(mark["judge_id"])
 		var target := int(mark["target_id"])
-		if not s.players[judge].alive or s.players[judge].role_id != RoleCatalog.KORRUPTER_RICHTER or not s.players[target].alive or GuardRoles.silenced(s, judge):
+		if not s.players[judge].alive or not SoloRules.has_ability(s, judge, RoleCatalog.KORRUPTER_RICHTER) or not s.players[target].alive or GuardRoles.silenced(s, judge):
 			continue
 		if _validate_nominate(s, {"nominator_id": judge, "nominee_id": target}) != &"":
 			continue

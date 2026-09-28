@@ -157,7 +157,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step) or StepQueue.step_role(key) != RoleCatalog.ORAKEL:
 		return false
 	var oracle: Player = s.players.get(prompt.actor_id)
-	if oracle == null or StepQueue.step_actor(key) != oracle.id or not oracle.alive or oracle.role_id != RoleCatalog.ORAKEL:
+	if oracle == null or StepQueue.step_actor(key) != oracle.id or not oracle.alive or SoloRules.ability_role(s, oracle.id) != RoleCatalog.ORAKEL:
 		return false
 	if prompt.stage == STAGE_TARGET:
 		var allowed := s.alive_ids()

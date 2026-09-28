@@ -250,3 +250,81 @@ func test_burn_hits_martyr_shadow_walker_link_and_eternal() -> void:
 	s = _dawn(_state([W, FT, D, "die-ewigen", D, D, D, D]), {"feuerteufel:2@": [5]})
 	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
 	assert_eq(_deaths(r.events) if r != null else [], [[5, "GM_CORRECTION"], [6, "BURN"], [4, "BURN"]], "Ewige verbrennt")
+
+
+# --- Interaktionslücken (Rollenaudit 28.09.2026) -----------------------------------------------------
+
+func test_necro_redirects_packfather_extra_victim_piercing() -> void:
+	# Zusatzopfer des Rudelvaters (pack2) ist der Nekromant 2: er lenkt auf 6 um. Der Angriff bleibt durchdringend,
+	# der Schutzengel 5 auf 6 hilft nicht (RM-DR-005, RM-DR-112); ausgelöst wird der zweite Rudelschritt.
+	var s := _state([W, NK, D, D, SE, D, D, D, D, D], [8, 9, 10])
+	if s == null:
+		return
+	s.pack_bonus_pending = true  # wie nach dem Lynch eines Rudelvaters
+	var log: Array[GameEvent] = []
+	s = _dawn(s, {"schutzengel:5@": [6], "pack2@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [6]}, log)
+	if s == null:
+		return
+	var redirected := events_of_type(log, "NecroRedirected")
+	assert_true(redirected.size() == 1 and String(redirected[0].data["slot"]) == "pack2" and int(redirected[0].data["target_id"]) == 6, "Umlenkung des Zusatzopfers")
+	assert_eq(_deaths(log), [[6, "NIGHT_KILL"]], "neues Ziel stirbt trotz Schutzengel (durchdringend)")
+	assert_eq(String(s.players[6].death.source_kind), "pack", "Rudelangriff")
+	assert_true(s.players[2].alive, "Nekromant lebt")
+
+
+func test_necro_attacked_by_pack_and_packfather_redirects_first_only() -> void:
+	# Beide Rudelangriffe treffen den Nekromanten: er entscheidet einmal (sein Schritt), für den ersten Angriff, der ihn
+	# töten würde (Rudel); das Zusatzopfer trifft ihn danach und tötet ihn.
+	var s := _state([W, NK, D, D, D, D, D, D, D, D], [8, 9, 10])
+	if s == null:
+		return
+	s.pack_bonus_pending = true
+	var log: Array[GameEvent] = []
+	s = _dawn(s, {"pack@": [2], "pack2@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [5]}, log)
+	var redirected := events_of_type(log, "NecroRedirected")
+	assert_true(redirected.size() == 1 and String(redirected[0].data["slot"]) == "pack", "Umlenkung des ersten Angriffs")
+	assert_eq(_deaths(log), [[5, "NIGHT_KILL"], [2, "NIGHT_KILL"]], "5 statt des Nekromanten, dann das Zusatzopfer")
+
+
+func test_doom_warden_judges_necro_who_redirects_back_to_original_victim() -> void:
+	# Vollständiger Ablauf: Rudel wählt 4; der Verdammniswächter 3 (23) erhält das einzige mögliche Angebot, den
+	# Nekromanten 2, und wählt ihn; der Nekromant (30) würde sterben und lenkt auf 4 um. Das Urteil bestimmt das
+	# Rudelopfer und ist kein Kettenglied (E-20 nennt Puppe, Schattenwanderer, Nekromant): 4 darf Ziel sein.
+	var s := _state([W, NK, "verdammniswaechter", D, D, D, D, D, D, D], [5, 6, 7, 8, 9, 10])
+	var log: Array[GameEvent] = []
+	s = _dawn(s, {"pack@": [4], "verdammniswaechter:3@": [2], "nekromant:2@targets": [5, 6, 7], "nekromant:2@redirect": [4]}, log)
+	if s == null:
+		return
+	var judged := events_of_type(log, "DoomJudged")
+	assert_true(judged.size() == 1 and int(judged[0].data["offer_id"]) == 2 and int(judged[0].data["chosen_id"]) == 2, "Urteil auf den Nekromanten")
+	assert_eq(_types(log, ["DoomJudged", "NecroRedirected", "SeatDied"]), ["DoomJudged", "NecroRedirected", "SeatDied"], "Reihenfolge")
+	assert_eq(_deaths(log), [[4, "NIGHT_KILL"]], "ursprüngliches Opfer stirbt doch")
+	assert_true(s.players[2].alive and s.players[3].alive, "Nekromant und Wächter leben")
+	_codec_same(s, "nach Urteil und Umlenkung")
+
+
+func test_necro_redirect_through_two_priests_to_second_doll() -> void:
+	# Priester 3 hat Priester 4 als Puppe, 4 hat 5. Rudel → Nekromant 2 → 3 → 4 → 5: 5 stirbt, beide Puppen verbraucht.
+	var s := _dawn(_state([W, NK, VP, VP, D, D, D, D, D, D], [8, 9, 10]), {"voodoo-priester:3@": [4], "voodoo-priester:4@": [5]})
+	var log: Array[GameEvent] = []
+	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [3]}, log)
+	if s == null:
+		return
+	assert_eq(_deaths(log), [[5, "NIGHT_KILL"]], "Ende der Kette stirbt")
+	var hops: Array = []
+	for e: GameEvent in events_of_type(log, "KillPrevented"):
+		hops.append([int(e.data["target_id"]), int(e.data.get("redirected_to", -1))])
+	assert_eq(hops, [[3, 4], [4, 5]], "Puppe von 3, dann Puppe von 4")
+	assert_eq(s.voodoo_dolls, [], "beide Puppen verbraucht")
+
+
+func test_necro_redirect_through_two_priests_never_returns_to_necro() -> void:
+	# Priester 4 hat den Nekromanten 2 als Puppe: Kette 2 → 3 → 4, 2 ist schon betroffen (E-20) → 4 stirbt.
+	var s := _dawn(_state([W, NK, VP, VP, D, D, D, D, D, D], [8, 9, 10]), {"voodoo-priester:3@": [4], "voodoo-priester:4@": [2]})
+	var log: Array[GameEvent] = []
+	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [3]}, log)
+	if s == null:
+		return
+	assert_eq(_deaths(log), [[4, "NIGHT_KILL"]], "zweiter Priester stirbt, keine Rückkehr")
+	assert_true(s.players[2].alive and s.players[3].alive, "Nekromant und erster Priester leben")
+	assert_eq(s.voodoo_dolls, [], "Puppe von 3 verbraucht, Puppe von 4 endet mit seinem Tod")

@@ -25,8 +25,9 @@ const REASON_DEATH_PREACHER := &"death_preacher_prophecy"     ## E-04: Tod zum v
 const REASON_VOODOO := &"voodoo_final_three"                  ## E-15: Voodoo-Priester lebt, höchstens drei Lebende
 const REASON_NECROMANCER := &"necromancer_named_wolf"          ## E-19: lebenden Wolf am Tag korrekt benannt
 const REASON_HADES := &"hades_ten_lights"                     ## E-29: Hades lebt mit mindestens 10 Lichtern
+const REASON_GRAVE_ROBBER := &"grave_robber_final_three"      ## E-33: Grabräuber lebt, höchstens drei Lebende
 const REASONS: Array[StringName] = [REASON_WOLF_PARITY, REASON_NO_WOLVES_ALIVE, REASON_MANIPULATOR, REASON_GM_DECLARED, REASON_DOUBLE_AGENT, REASON_DEATH_SEEKER, REASON_PARASITE,
-	REASON_PIED_PIPER, REASON_PLAGUE, REASON_PROPHET, REASON_DEATH_PREACHER, REASON_VOODOO, REASON_NECROMANCER, REASON_HADES]
+	REASON_PIED_PIPER, REASON_PLAGUE, REASON_PROPHET, REASON_DEATH_PREACHER, REASON_VOODOO, REASON_NECROMANCER, REASON_HADES, REASON_GRAVE_ROBBER]
 const KINDS: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Faction.SOLO, &"none"]
 
 var id: int = 0

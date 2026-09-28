@@ -101,5 +101,5 @@ static func _hangman_extras(ctx: RuleContext) -> void:
 	s.hangman_marks.clear()
 	for mark: Dictionary in marks:
 		var hangman: Player = s.players[int(mark["hangman_id"])]
-		if hangman.alive and hangman.role_id == RoleCatalog.HENKER and not GuardRoles.silenced(s, hangman.id):
+		if hangman.alive and SoloRules.has_ability(s, hangman.id, RoleCatalog.HENKER) and not GuardRoles.silenced(s, hangman.id):
 			KillPipeline.request_kill(ctx, int(mark["target_id"]), KillEvent.CAUSE_HANGMAN_EXTRA, KillEvent.SOURCE_PLAYER, hangman.id)

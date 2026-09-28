@@ -40,7 +40,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	var next_chain: Array[int] = chain.duplicate()
 	next_chain.append(target_id)
 	# Voodoo-Priester (E-12, E-23): Die eigene Puppe wirkt vor einer fremden Verknüpfung; die Puppe ist verbraucht.
-	var doll := SoloRules.doll_of(s, target_id) if target.role_id == RoleCatalog.VOODOO and source_kind != KillEvent.SOURCE_GM else GameState.NO_TARGET
+	var doll := SoloRules.doll_of(s, target_id) if SoloRules.has_ability(s, target_id, RoleCatalog.VOODOO) and source_kind != KillEvent.SOURCE_GM else GameState.NO_TARGET
 	if doll != GameState.NO_TARGET and s.players[doll].alive and not next_chain.has(doll):
 		SoloRules.drop_priest_doll(s, target_id)
 		ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": target_id, "cause": cause, "source_kind": source_kind,
@@ -83,6 +83,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	SoloRules.voodoo_on_death(s, target.id)
 	SoloRules.necro_drop_shields(s, target.id)
 	SoloRules.hades_on_death(ctx, target, source_kind)
+	SoloRules.grave_drop(s, target.id)
 	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
 	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:
@@ -183,9 +184,9 @@ static func _use_one_time_protection(ctx: RuleContext, target_id: int, kind: Str
 ## true, wenn die Person einen Rudelangriff jetzt durch einen persönlichen Schild überlebt (Parasit mit
 ## lebendem Wirt, Fenrir ab Stufe 3, Barriere des Hades); für die Frage der Märtyrerin.
 static func survives_any_death(s: GameState, p: Player) -> bool:
-	if p.role_id == RoleCatalog.HADES:
-		return s.hades_barriers.has(p.id)
-	if p.role_id == RoleCatalog.PARASIT:
+	if s.hades_barriers.has(p.id):
+		return true
+	if SoloRules.has_ability(s, p.id, RoleCatalog.PARASIT):
 		var host := host_of(s, p.id)
 		return host != GameState.NO_TARGET and s.players[host].alive
 	return p.role_id == RoleCatalog.FENRIR and not p.ability_uses.has("fenrir:survive") and int(s.growth.get(p.id, 0)) >= RoleCatalog.FENRIR_SHIELD_STAGE
@@ -232,7 +233,7 @@ static func host_of(s: GameState, parasite_id: int) -> int:
 ## Parasit (RM-DR-157): Mit lebendem Wirt verhindert er jeden Tod außer Spielleiterkorrekturen
 ## (Quelle `gm`) und dem Tod durch seinen Wirt (`PARASITE_HOST`).
 static func _parasite_immune(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
-	if target.role_id != RoleCatalog.PARASIT or source_kind == KillEvent.SOURCE_GM or cause == KillEvent.CAUSE_PARASITE_HOST:
+	if not SoloRules.has_ability(ctx.state, target.id, RoleCatalog.PARASIT) or source_kind == KillEvent.SOURCE_GM or cause == KillEvent.CAUSE_PARASITE_HOST:
 		return false
 	var host := host_of(ctx.state, target.id)
 	if host == GameState.NO_TARGET or not ctx.state.players[host].alive:
@@ -271,7 +272,7 @@ static func _bounty_credit(ctx: RuleContext, target: Player, record: KillEvent) 
 		return
 	var s := ctx.state
 	for id: int in s.alive_ids():
-		if s.players[id].role_id == RoleCatalog.KOPFGELDJAEGER and not GuardRoles.silenced(s, id):
+		if SoloRules.has_ability(s, id, RoleCatalog.KOPFGELDJAEGER) and not GuardRoles.silenced(s, id):
 			s.bounty_credits[id] = int(s.bounty_credits.get(id, 0)) + 1
 
 

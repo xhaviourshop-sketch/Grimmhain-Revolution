@@ -37,6 +37,8 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 		SoloRules.necro_drop_shields(s, player_id)  # Schild erlischt mit der Rolle (RM-DR-142.9)
 	if role != RoleCatalog.HADES or previous != RoleCatalog.HADES:
 		SoloRules.hades_drop(s, player_id)  # Lichter und Barriere gehören der bisherigen Rolle
+	if role != RoleCatalog.GRABRAEUBER or previous != RoleCatalog.GRABRAEUBER:
+		SoloRules.grave_drop(s, player_id)  # gestohlene Fähigkeit endet mit der Rolle
 
 
 ## Wiederbelebung (Decision Log „Rollenaudit · Wiederbelebung …“): lebt wieder, Todesdatensatz weg, alle
@@ -67,6 +69,8 @@ static func restore(s: GameState, player_id: int, snapshot: Dictionary) -> void:
 		SoloRules.necro_drop_shields(s, player_id)
 	if p.role_id != RoleCatalog.HADES:
 		SoloRules.hades_drop(s, player_id)
+	if p.role_id != RoleCatalog.GRABRAEUBER:
+		SoloRules.grave_drop(s, player_id)
 
 
 static func snapshot_of(p: Player) -> Dictionary:

@@ -120,6 +120,8 @@ const NECRO_REDIRECTED := &"NecroRedirected"    ## Rudelangriff auf den Nekroman
 const NECRO_NAMED := &"NecroNamed"              ## Nekromant hat einen Wolf benannt, mit Treffer (nur Spielleiter)
 const HADES_LIGHT := &"HadesLight"              ## Hades erhält ein Licht aus einem Tod (nur Spielleiter)
 const HADES_ACTED := &"HadesActed"              ## Hades tötet und/oder kauft die Barriere (nur Spielleiter)
+const GRAVE_ROBBED := &"GraveRobbed"            ## Grabräuber übernimmt die Nachtfähigkeit einer toten Person (nur Spielleiter)
+const GRAVE_ROBBER_NOTICE := &"GraveRobberNotice"  ## private Mitteilung der übernommenen Fähigkeit an den Grabräuber
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

@@ -6,7 +6,7 @@ extends TestCase
 ## gelten Invarianten, die unabhängig von der einzelnen Rolle beobachtbar sind:
 ##   - Zustand übersteht to_dict/from_dict unverändert (inkl. Ladeprüfungen aller Rollen)
 ##   - öffentliche Ereignisse enthalten keine Rollen-, Ursachen- oder Informationsdaten
-##   - persönliche Nachtschritte öffnen nur für lebende Personen mit der geplanten Rolle
+##   - persönliche Nachtschritte öffnen nur für lebende Personen mit der geplanten Rolle (Grabräuber: gestohlene Fähigkeit)
 ##   - niemand stirbt zweimal; Tote tragen einen Todesdatensatz, Lebende keinen
 ##   - Rollenfelder passen zur Rolle (Wolfskind: zum Verwandlungszustand)
 ##   - Save/Load (StateCodec) und Replay liefern denselben Zustand und dieselben Ereignisse
@@ -17,7 +17,7 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
 	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein",
-	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades"]
+	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 ## Volle Fokusrunden: jede Rolle ist gleich oft Fokusrolle, auch wenn der Rollenpool wächst.
@@ -35,7 +35,7 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
 	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived",
-	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed"]
+	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed", "GraveRobbed", "StolenStepOpened"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
 	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN", "HADES_KILL"]
 
@@ -436,7 +436,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				if not chosen.has(t):
 					chosen.append(t)
 			return Command.answer_stage_targets(p.id, String(p.stage), chosen)
-		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO, PendingPrompt.OWNER_HADES:
+		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO, PendingPrompt.OWNER_HADES, PendingPrompt.OWNER_GRAVE:
 			# Apfel (R-02) ist selten: Rotkäppchen-Fokuspartien wählen eine Person mit Jede-Nacht-Schritt und gewähren Zuflucht.
 			if p.owner == PendingPrompt.OWNER_RED and _focus == "rotkaeppchen":
 				if p.stage == BondSteps.STAGE_GRANT:
@@ -454,7 +454,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				var role_options: Array = p.partial.get("options", [])
 				return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "option": _rng.randi_range(0, role_options.size() - 1)})
 			# Seelentauscher, Kutscher und Frankenstein wählen (auch) Tote.
-			var dead_choice := [PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN].has(p.owner) or (p.owner == PendingPrompt.OWNER_NECRO and p.stage == BondSteps.STAGE_TARGETS)
+			var dead_choice := [PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_GRAVE].has(p.owner) or (p.owner == PendingPrompt.OWNER_NECRO and p.stage == BondSteps.STAGE_TARGETS)
 			var bond_pool: Array[int] = p.allowed_ids.duplicate() if dead_choice else _alive_in(s, p.allowed_ids)
 			var bond_picks: Array = []
 			var wanted := p.max_count if (p.min_count > 0 or _rng.randf() < 0.8) else 0
@@ -557,9 +557,11 @@ func _check_prompt_actor(s: GameState, prompt: Dictionary, label: String) -> voi
 	if not step.begins_with("night:") or actor == -1:
 		return
 	var role := StepQueue.step_kind(step)
+	if s.players[actor].role_id == RoleCatalog.GRABRAEUBER and role != RoleCatalog.GRABRAEUBER:
+		_seen["StolenStepOpened"] = int(_seen.get("StolenStepOpened", 0)) + 1  # Grabräuber nutzt die gestohlene Fähigkeit
 	# Ausnahme zu G-PH-2: der Schutzgeist handelt in der ersten Nacht nach seinem Tod (S-04).
 	assert_true(s.players[actor].alive != (role == RoleCatalog.SCHUTZGEIST), "%s: %s nur für Lebende (Schutzgeist: nur tot)" % [label, step])
-	assert_eq(s.players[actor].role_id, role, "%s: %s nur mit geplanter Rolle" % [label, step])
+	assert_eq(SoloRules.ability_role(s, actor), role, "%s: %s nur mit geplanter Rolle oder gestohlener Fähigkeit" % [label, step])
 	assert_false((prompt["allowed_ids"] as Array).has(actor) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER, RoleCatalog.LOKI, RoleCatalog.SEELENTAUSCHER].has(role), "%s: %s ohne Selbstwahl" % [label, step])
 
 
