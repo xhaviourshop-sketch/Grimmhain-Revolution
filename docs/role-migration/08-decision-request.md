@@ -23,12 +23,12 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 59 | 153 |
+| entschieden | 59 | 156 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
 | später | 14 | 32 |
 | quellenprüfung | 0 | 0 |
-| **gesamt** | **75** | **188** |
+| **gesamt** | **75** | **191** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
 
@@ -956,6 +956,24 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: Fraktion ändern (Dorf-Chaos-Rolle)
   - Auswirkung: Balance: –; Umsetzung: WinRules
   - Empfehlung: PO
+- **RM-DR-131.6 · Wahl je Nacht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
+  - Option A: neu wählen oder behalten, nie sich selbst
+  - Option B: jede Nacht Pflicht zur Neuwahl
+  - Option C: wie A, Selbstwahl erlaubt
+  - Auswirkung: Balance: C erlaubt gezielten Selbstbrand; Umsetzung: Nachtschritt mit optionaler Wahl
+  - Empfehlung: A
+- **RM-DR-131.7 · Markierung nach Tod oder Rollenverlust** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
+  - Option A: erlischt sofort
+  - Option B: bleibt bis zum Tod des Ziels
+  - Option C: bleibt nach Tod, erlischt bei Rollenverlust
+  - Auswirkung: Balance: B erlaubt Brand nach dem Tod; Umsetzung: Markierung an Person und Rolle
+  - Empfehlung: A
+- **RM-DR-131.8 · Mehrere Feuerteufel, gleiches Ziel** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
+  - Option A: ein Brand, alle Markierungen verbraucht
+  - Option B: ein Brand je Markierung
+  - Option C: Doppelmarkierung verboten
+  - Auswirkung: Balance: B bis zu vier Tote; Umsetzung: Markierungsliste je Feuerteufel
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** (1) Brand bei jedem Tod des Ziels oder nur Nacht/Hinrichtung? (2) Wie lange gilt die Markierung? (3) Direkte oder lebende Nachbarn? (4) Stirbt der Feuerteufel, wenn er Nachbar ist? (5) Welche Siegbedingung, oder gehört die Rolle nicht zur Einzelsiegfraktion? (6) Kettenbrand, wenn ein verbrannter Nachbar selbst markiert ist?
 - **Charge:** K9. **In Option (nicht freigegeben):** keiner.
 

@@ -104,6 +104,9 @@ RM-DR-131.2;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 2
 RM-DR-131.3;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026 (RM-DR-003)";nächste lebende Nachbarn
 RM-DR-131.4;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";immer verschont, kein Ersatz (E-07)
 RM-DR-131.5;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";Mitsieg, wenn lebend (E-08)
+RM-DR-131.6;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";jede Nacht neu wählen oder behalten, nie sich selbst (E-09)
+RM-DR-131.7;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";erlischt bei Tod oder Rollenverlust (E-10)
+RM-DR-131.8;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";ein Brand je Tod, alle Markierungen verbraucht (E-11)
 RM-DR-132.1;ja;voodoo-priester;S;;
 RM-DR-132.2;ja;voodoo-priester;S;;
 RM-DR-132.3;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Puppe hebt Verzauberung nicht auf (E-01, wie RM-DR-103.2)
