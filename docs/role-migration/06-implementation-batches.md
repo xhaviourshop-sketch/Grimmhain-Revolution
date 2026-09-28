@@ -456,7 +456,9 @@ Siehe §3.
 
 ### K15 · Ressourcen und Totenkarten
 
-**Rollen Charge K15 (3):** `hades`, `kartenschlucker`, `grabraeuber`
+**Rollen Charge K15 (1):** `kartenschlucker`
+
+**Nachtrag Rollenaudit:** `hades` und `grabraeuber` sind umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `nekromant` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

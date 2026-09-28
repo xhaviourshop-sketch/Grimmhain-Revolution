@@ -6,7 +6,7 @@ Dieses Dokument fasst je fehlender Rolle die belegten Kernaussagen zusammen. Die
 
 Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier „Text DE/EN“), **Legacy-Code tut** (Dossier „Legacy-Codeverhalten“), **React-Version tut** (Dossier „React-Version“; für keine der 61 Rollen eigenes Regelverhalten), **Dokumentation empfiehlt** (Dossier „Bisherige Doku“), **neuer Godot-Kern tut** (für alle 61: nichts, keine Rolle ist im RoleCatalog), **noch unentschieden** (Entscheidungen unten).
 
-**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt (später weitere Rollen, siehe `11`); sein Abschnitt steht jetzt in [`02`](02-implemented-roles-audit.md) §4.12, der aktuelle Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md). Diese Datei behandelt damit 60 fehlende Rollen; umgesetzte Rollen sind inzwischen entfernt (Stand 28.09.2026: 8 verbleibend, `feuerteufel` jetzt in [`02`](02-implemented-roles-audit.md) §4.64).
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt (später weitere Rollen, siehe `11`); sein Abschnitt steht jetzt in [`02`](02-implemented-roles-audit.md) §4.12, der aktuelle Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md). Diese Datei behandelt damit 60 fehlende Rollen; umgesetzte Rollen sind inzwischen entfernt (Stand 28.09.2026: 4 verbleibend; `hades` und `grabraeuber` jetzt in [`02`](02-implemented-roles-audit.md) §4.67 und §4.68).
 
 **Lesehilfe:** In übernommenen Zellen bezeichnen `01` bis `07` ohne Pfad die älteren Dokumente unter `docs/godot-migration/`; Pfadkürzel wie in [`04`](04-rule-conflicts.md) §3.
 
@@ -19,9 +19,7 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
-| [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
-| [`grabraeuber`](#grabraeuber) | Einzelsieg | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | Einzelsieg, sonstige Spezialmechanik | XL / hoch | K15 | – |
 
 **Mechanikfamilien:** Jede Rolle hat genau eine primäre Familie, nach der sie einer Charge zugeordnet ist. Wo die technische Charge von der primären Familie abweicht (z. B. `detektiv`: Informationsrolle, aber Charge Sitznachbarschaft), bestimmt die überwiegend neu zu bauende Kernfunktion die Charge.
 
@@ -92,27 +90,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. Nicht verifiziert: ob die Ansage (`center`) und der gleichzeitig geöffnete Kill-Pick im Browser kollidieren (Code öffnet beide synchron, `chunk:227,234`). --- |
 | Detail | [Dossier](dossiers/solos-b.md#kartenschlucker) |
 
-### `hades`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Hades / Hades |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / IV / 9.9 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Der knappe Text (Lichter von Toten, Fähigkeiten kaufen, Sieg bei 10) ist nachvollziehbar umgesetzt; Preise und Fähigkeiten sind nur im Code definiert. Der wirkungslose Stimmbonus und der doppelte Siegpfad sind Nebenfunktionen, nicht die Kernfunktion. |
-| DE/EN-Vergleich | semantisch gleich JA (geprüft: Quelle "von Toten"/"from the dead", "Kauft Fähigkeiten"/"Buys abilities", Zahl 10). Beide nennen weder Preise noch Fähigkeiten. |
-| Automationsziel | `assisted`: Lichter, Kill, Barriere und Sieg automatisch; Stimmbonus nur als Hinweis (Stimmen physisch laut DECISION-LOG). |
-| Mechanik | primär: Einzelsieg; sekundär: Tötung, Schutz, sonstige Spezialmechanik |
-| Größe / Risiko | M / mittel. Klare Ökonomie, aber globaler Todeszähler und Wechselwirkung mit allen Abfangregeln. |
-| Vorhandene Godot-Systeme | KillPipeline (Tod-Ereignis als Lichterquelle, Barriere als Abfangstufe, `HADES_KILL`), StepQueue, PendingPrompt (mehrstufiges Kaufmenü, abbrechbar), WinRules/WinCandidate, Reaktionswarteschlange (Folgen des Sofort-Kills), StateCodec, Replay, GmCorrections. |
-| Neue Systeme | Ressourcenzähler als dauerhafter Statusmarker, persönlicher Schild mit Kaufbedingung, dauerhafter Statusmarker "Stimme x3" (Anzeige, kein Stimmsystem), zusätzliche Siegbedingung. |
-| Abhängigkeiten | jede tötende Rolle (Lichterquelle), Nekromant (Schild fängt Hades-Kill ab, Lichter trotzdem weg), Rudelvater (`PACKFATHER_KILL` durchbricht Barriere), Ritter (Vergeltung bei `HADES_KILL`, `core:431`), Kutscher/Frankenstein (Rollenvergabe), Totenkarten mit Stimmbezug. |
-| Widersprüche | RM-C-073 Sieg automatisch oder eingelöst; RM-C-074 Zählen eigene Kills; RM-C-075 Stimme x3 |
-| Entscheidungen | RM-DR-144 (Rolle); übergreifend RM-DR-005, RM-DR-007, RM-DR-008; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
-| Belegsicherheit | hoch. Nicht verifiziert: ob irgendwo außerhalb von `js/`, `game.html`, `app/` Stimmen gewichtet werden (rg über das ganze Repo fand nur die Definition `ui:18`). --- |
-| Detail | [Dossier](dossiers/solos-b.md#hades) |
-
 ### `zeitwaechter`
 
 | Feld | Inhalt |
@@ -133,24 +110,3 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K16 / in keiner Option |
 | Belegsicherheit | hoch für die Codeanalyse. Nicht verifiziert: Sichtbarkeit/Anklickbarkeit der Nachtliste am Tag (CSS/Layout nicht im Browser geprüft). --- |
 | Detail | [Dossier](dossiers/village-4.md#zeitwaechter) |
-
-### `grabraeuber`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Grabräuber / Grave Robber |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / II / 6.4 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `not-found`. Der Text verspricht das Stehlen einer Fähigkeit und einen Solo-Sieg; der Code speichert nur den Rollennamen, überträgt keine Fähigkeit und enthält keinen Siegcode. |
-| DE/EN-Vergleich | semantisch gleich JA (einmalig/once, Fähigkeit eines toten Spielers, gewinnt alleine). Beide nennen keine Siegbedingung. |
-| Automationsziel | `manual-only`: (bis zur PO-Festlegung). Danach je nach Regel assisted. |
-| Mechanik | primär: Einmalfähigkeit; sekundär: Einzelsieg, sonstige Spezialmechanik |
-| Größe / Risiko | XL / hoch. kritisch (automatisch, da Wechselwirkung mit allen Rollen). |
-| Vorhandene Godot-Systeme | StepQueue (einmaliger Schritt), PendingPrompt (tote Ziele), Player `ability_uses` (Einmalnutzung), InfoRecord (gestohlene Rolle), GmCorrections, StateCodec, Replay. |
-| Neue Systeme | Fähigkeitsübertragung/-kopie (Rolle bleibt, Fähigkeit wird zusätzlich ausgeführt; kein Punkt der Vorgabeliste, daher "sonstige"), zusätzliche Siegbedingung; ggf. zusätzlicher Nachtschritt für geerbte Fähigkeit. |
-| Abhängigkeiten | potenziell jede Rolle mit Nachtfähigkeit (Ziel des Diebstahls); Einmalrollen (bereits verbraucht?); Totenkarte `solo_05` (ähnliche Vererbung). |
-| Widersprüche | RM-C-076 Was bedeutet "Fähigkeit stehlen"; RM-C-077 Siegbedingung |
-| Entscheidungen | RM-DR-156 (Rolle); übergreifend RM-DR-006, RM-DR-007, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
-| Belegsicherheit | hoch (Fehlen per rg über gesamtes Repo ohne Markdown und node_modules bestätigt). --- |
-| Detail | [Dossier](dossiers/solos-b.md#grabraeuber) |
