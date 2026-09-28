@@ -23,11 +23,11 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 58 | 147 |
+| entschieden | 59 | 153 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 14 | 37 |
-| quellenprüfung | 1 | 1 |
+| später | 14 | 32 |
+| quellenprüfung | 0 | 0 |
 | **gesamt** | **75** | **188** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
@@ -931,27 +931,27 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `feuerteufel`; Wechselwirkung laut Dossier: Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Albtraumwolf (Blockade), Der Weise, Dorfschmied, Nekromant, Waldhexe, Märtyrerin, Voodoo-Priester, Dorfwache (Überleben/Entfernen aus Zielen), …
 - **Belege:** [Dossier](dossiers/solos-a.md#feuerteufel); RM-C-051, RM-C-052, RM-C-053, RM-C-054, RM-C-055 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-009.
-- **RM-DR-131.1 · Auslöser** · Status: später (K9)
+- **RM-DR-131.1 · Auslöser** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: jeder tatsächliche Tod, jede Ursache
   - Option B: nur Wolfsangriff und Hinrichtung, aber nur bei Tod
   - Auswirkung: Balance: A stärker; Umsetzung: Todesreaktion in KillPipeline
   - Empfehlung: A oder B, jeweils nur bei Tod
-- **RM-DR-131.2 · Dauer der Markierung** · Status: später (K9)
+- **RM-DR-131.2 · Dauer der Markierung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: bis Ziel stirbt
   - Option B: nur diese Nacht
   - Auswirkung: Balance: A viel stärker; Umsetzung: Statusmarker mit Ablauf
   - Empfehlung: PO
-- **RM-DR-131.3 · Nachbarn** · Status: später (K9)
+- **RM-DR-131.3 · Nachbarn** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026 (RM-DR-003, nächste lebende Nachbarn)
   - Option A: direkte Sitze
   - Option B: nächste Lebende
   - Auswirkung: Balance: B tötet immer 2; Umsetzung: Sitznachbarschaft
   - Empfehlung: analog Wahnsinniger Kutscher
-- **RM-DR-131.4 · Feuerteufel als Nachbar** · Status: später (K9)
+- **RM-DR-131.4 · Feuerteufel als Nachbar** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: immer verschont
   - Option B: nie verschont
   - Auswirkung: Balance: –; Umsetzung: Filter
   - Empfehlung: einheitlich
-- **RM-DR-131.5 · Siegbedingung** · Status: später (K9)
+- **RM-DR-131.5 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: Einzelsieg definieren
   - Option B: Fraktion ändern (Dorf-Chaos-Rolle)
   - Auswirkung: Balance: –; Umsetzung: WinRules
@@ -975,7 +975,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: keine Abklingzeit
   - Auswirkung: Balance: ohne Abklingzeit endloser Schutz; Umsetzung: Zähler
   - Empfehlung: Code
-- **RM-DR-132.3 · Verzauberung löschen** · Status: quellenprüfung; ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
+- **RM-DR-132.3 · Verzauberung löschen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026 (E-01, wie RM-DR-103.2: Puppe hebt nichts auf)
   - Option A: Altlast
   - Option B: gewollt
   - Auswirkung: Balance: Rattenfänger-Konter; Umsetzung: –

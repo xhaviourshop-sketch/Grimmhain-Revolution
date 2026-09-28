@@ -449,3 +449,12 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 - **Pestbringerin (E-02, RM-DR-120.1–.4):** A. Nicht tödlich. Jede Nacht infiziert sie eine andere lebende, noch gesunde Person; zu Beginn jeder Morgenauflösung steckt jede lebende Infizierte einen zufällig gezogenen nächsten lebenden Nachbarn an (gespeicherter Seed, tote Plätze übersprungen). Sie gewinnt, wenn sie lebt und alle anderen Lebenden infiziert sind.
 - **Prophet des Untergangs (E-03, RM-DR-121.1–.3):** C. In Nacht 1 markiert er drei andere Lebende; sind alle drei tot, ist er dauerhaft freigeschaltet und darf jede Nacht freiwillig eine Person töten (Tod am Morgen, eigene Ursache, Rudelschutz wirkt nicht, persönliche Schilde schon). Lebt er freigeschaltet, wenn kein Wolf mehr lebt, gewinnt er allein statt des Dorfes.
 - **Todesprediger (E-04, RM-DR-158.1–.3):** A. Nur in Nacht 1 legt er geheim beim Spielleiter eine künftige Nacht oder einen Tag fest (Tag N folgt auf Nacht N; Tode der Morgenauflösung zählen zur Nacht N). Stirbt er genau dann (jede Todesart außer Korrektur ohne Todesfolgen), ist sein Sieg erfüllt und wird wie beim Selbstmörder fortan vorgeschlagen.
+
+## Rollenaudit · Einzelsiegrollen, Teil 2 (Feuerteufel) · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-05 bis E-08, jeweils die Empfehlung). Es gelten weiter: nächste lebende Nachbarn links und rechts (RM-DR-003, damit ist RM-DR-131.3 entschieden), „Wolfsangriff“ heißt nur Rudelangriff (RM-DR-004), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02).
+
+- **Feuerteufel, Auslöser (E-05, RM-DR-131.1):** A. Jeder tatsächliche Tod des markierten Ziels löst den Brand aus, gleich welche Ursache (Rudel, Hinrichtung, Gift, Brand, andere Rollen, Spielleiterkorrektur mit Todesfolgen); nicht bei Korrektur ohne Todesfolgen. Überlebt das Ziel, brennt nichts (Legacy-Fehler entfällt). Es verbrennen die nächsten lebenden Nachbarn links und rechts.
+- **Feuerteufel, Dauer (E-06, RM-DR-131.2):** A. Jeder Feuerteufel hat höchstens eine aktive Markierung; sie gilt, bis er ein neues Ziel wählt oder das Ziel stirbt.
+- **Feuerteufel als Nachbar (E-07, RM-DR-131.4):** A. Jeder Feuerteufel (auch weitere Kopien) wird als Nachbar immer verschont; auf dieser Seite brennt niemand, kein Ersatz.
+- **Feuerteufel, Sieg (E-08, RM-DR-131.5):** A. Lebt er, wenn ein Sieg erfüllt ist, gewinnt er zusätzlich zur siegreichen Seite (Mitsieg wie bei den Ewigen); kein Alleinsieg, keine eigene Siegprüfung.

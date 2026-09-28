@@ -99,14 +99,14 @@ RM-DR-129.3;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.
 RM-DR-130.1;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";blockierte Hinrichtung zählt
 RM-DR-130.2;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";jede bestätigte Hinrichtung
 RM-DR-130.3;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";verfällt, wirkt nur mit lebendem Henker am Folgetag
-RM-DR-131.1;ja;feuerteufel;S;;
-RM-DR-131.2;ja;feuerteufel;S;;
-RM-DR-131.3;ja;feuerteufel;S;;
-RM-DR-131.4;ja;feuerteufel;S;;
-RM-DR-131.5;ja;feuerteufel;S;;
+RM-DR-131.1;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";jeder tatsächliche Tod, jede Ursache (E-05)
+RM-DR-131.2;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";bis neue Wahl oder Tod des Ziels (E-06)
+RM-DR-131.3;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026 (RM-DR-003)";nächste lebende Nachbarn
+RM-DR-131.4;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";immer verschont, kein Ersatz (E-07)
+RM-DR-131.5;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";Mitsieg, wenn lebend (E-08)
 RM-DR-132.1;ja;voodoo-priester;S;;
 RM-DR-132.2;ja;voodoo-priester;S;;
-RM-DR-132.3;ja;voodoo-priester;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
+RM-DR-132.3;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Puppe hebt Verzauberung nicht auf (E-01, wie RM-DR-103.2)
 RM-DR-132.4;ja;voodoo-priester;S;;
 RM-DR-133.1;ja;blutwolf;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis für den Spielleiter (RM-DR-008)
 RM-DR-134.1;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";jede Person, Wirkung nur auf Dorf
