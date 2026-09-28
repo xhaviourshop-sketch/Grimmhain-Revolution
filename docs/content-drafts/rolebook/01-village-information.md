@@ -18,7 +18,7 @@ Enthalten: `dorfbewohner`, `das-orakel`, `dorfchronistin`, `die-gebundenen`, `wa
 | Ziele / Targets | Keine. | None. |
 | Ausnahmen / Exceptions | Keine. | None. |
 | Sieg / Win | Das Dorf gewinnt, wenn keine lebende Person mehr als Wolf zählt. | The village wins when no living person counts as a wolf. |
-| Beispiel 1 / Example 1 | Anna ist Dorfbewohnerin. Anna schläft in der Nacht durch und berät am Tag mit den anderen. | Anna is a Villager. Anna sleeps through the night and joins the discussion during the day. |
+| Beispiel 1 / Example 1 | Anna hat die Rolle Dorfbewohner. Anna schläft in der Nacht durch und berät am Tag mit den anderen. | Anna is a Villager. Anna sleeps through the night and joins the discussion during the day. |
 | Beispiel 2 / Example 2 | Die letzte Wolfsperson wird hingerichtet. Das Dorf, und damit Anna, gewinnt. | The last wolf is executed. The village, and with it Anna, wins. |
 | Spielleitung / Game master | Wird nie aufgerufen. Mit `dorfbewohner` und `werwolf` allein ist jede Personenzahl von 6 bis 24 spielbar. | Is never called. With `dorfbewohner` and `werwolf` alone any group size from 6 to 24 is playable. |
 
