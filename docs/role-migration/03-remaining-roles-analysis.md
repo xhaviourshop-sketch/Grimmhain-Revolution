@@ -220,4 +220,3 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K15 / in keiner Option |
 | Belegsicherheit | hoch (Fehlen per rg über gesamtes Repo ohne Markdown und node_modules bestätigt). --- |
 | Detail | [Dossier](dossiers/solos-b.md#grabraeuber) |
-
