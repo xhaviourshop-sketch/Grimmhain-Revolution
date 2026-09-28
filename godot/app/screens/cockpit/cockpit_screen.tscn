@@ -1,8 +1,11 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://app/screens/cockpit/cockpit_screen.gd" id="1_screen"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
 [ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
 [ext_resource type="PackedScene" path="res://app/widgets/header_bar/header_bar.tscn" id="4_header"]
+[ext_resource type="Script" path="res://app/widgets/seat_ring/game_seat_ring.gd" id="5_ring"]
+[ext_resource type="Script" path="res://app/screens/cockpit/action_card.gd" id="6_card"]
 
 [node name="CockpitScreen" type="Control"]
 layout_mode = 3
@@ -15,6 +18,7 @@ script = ExtResource("1_screen")
 screen_id = &"cockpit"
 
 [node name="Layout" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,7 +38,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"HeaderPanel"
 
 [node name="Row" type="HBoxContainer" parent="Layout/StatusRow/PhaseArea"]
 layout_mode = 2
@@ -50,11 +54,27 @@ wrap = false
 [node name="PhaseValueLabel" type="Label" parent="Layout/StatusRow/PhaseArea/Row"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"HeadingLabel"
+theme_type_variation = &"SectionLabel"
 vertical_alignment = 1
 script = ExtResource("3_label")
 text_key = "ui.phase.none"
+wrap = false
+
+[node name="RoundLabel" type="Label" parent="Layout/StatusRow/PhaseArea/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"MutedLabel"
+vertical_alignment = 1
+script = ExtResource("3_label")
+
+[node name="AliveLabel" type="Label" parent="Layout/StatusRow/PhaseArea/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+vertical_alignment = 1
+script = ExtResource("3_label")
+wrap = false
 
 [node name="NoGameBadge" type="PanelContainer" parent="Layout/StatusRow"]
 unique_name_in_owner = true
@@ -70,7 +90,15 @@ script = ExtResource("3_label")
 text_key = "ui.cockpit.no_game"
 wrap = false
 
+[node name="WarningsLabel" type="Label" parent="Layout"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
 [node name="Body" type="HBoxContainer" parent="Layout"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -78,20 +106,34 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"PlaceholderPanel"
+theme_type_variation = &"ListPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Body/SeatRingArea"]
+[node name="SeatRing" type="Control" parent="Layout/Body/SeatRingArea"]
+unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("5_ring")
+
+[node name="RingCenter" type="VBoxContainer" parent="Layout/Body/SeatRingArea/SeatRing"]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 2
 alignment = 1
 
-[node name="SeatsHeading" type="Label" parent="Layout/Body/SeatRingArea/Column"]
+[node name="SeatsHeading" type="Label" parent="Layout/Body/SeatRingArea/SeatRing/RingCenter"]
 layout_mode = 2
-theme_type_variation = &"HeadingLabel"
+theme_type_variation = &"CaptionLabel"
 horizontal_alignment = 1
 script = ExtResource("3_label")
 text_key = "ui.cockpit.seats.heading"
 
-[node name="SeatsPlaceholder" type="Label" parent="Layout/Body/SeatRingArea/Column"]
+[node name="CenterPhaseLabel" type="Label" parent="Layout/Body/SeatRingArea/SeatRing/RingCenter"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+
+[node name="CenterHintLabel" type="Label" parent="Layout/Body/SeatRingArea/SeatRing/RingCenter"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
@@ -109,38 +151,56 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"CardPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Body/SideColumn/InstructionCard"]
-layout_mode = 2
-
-[node name="InstructionHeading" type="Label" parent="Layout/Body/SideColumn/InstructionCard/Column"]
-layout_mode = 2
-theme_type_variation = &"HeadingLabel"
-script = ExtResource("3_label")
-text_key = "ui.cockpit.instruction.heading"
-
-[node name="InstructionLabel" type="Label" parent="Layout/Body/SideColumn/InstructionCard/Column"]
+[node name="Scroll" type="ScrollContainer" parent="Layout/Body/SideColumn/InstructionCard"]
 unique_name_in_owner = true
 layout_mode = 2
-script = ExtResource("3_label")
-text_key = "ui.cockpit.instruction.no_game"
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="ActionCard" type="VBoxContainer" parent="Layout/Body/SideColumn/InstructionCard/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("6_card")
 
 [node name="ActionsArea" type="PanelContainer" parent="Layout/Body/SideColumn"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"PlaceholderPanel"
+theme_type_variation = &"CardPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Body/SideColumn/ActionsArea"]
+[node name="Tools" type="HFlowContainer" parent="Layout/Body/SideColumn/ActionsArea"]
 layout_mode = 2
 
-[node name="ActionsHeading" type="Label" parent="Layout/Body/SideColumn/ActionsArea/Column"]
-layout_mode = 2
-theme_type_variation = &"HeadingLabel"
-script = ExtResource("3_label")
-text_key = "ui.cockpit.actions.heading"
-
-[node name="ActionsPlaceholder" type="Label" parent="Layout/Body/SideColumn/ActionsArea/Column"]
+[node name="LogButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
-script = ExtResource("3_label")
-text_key = "ui.cockpit.actions.placeholder"
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.log"
+kind = 3
+
+[node name="PrivateButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.private"
+kind = 3
+
+[node name="CoverButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.cover"
+kind = 3
+
+[node name="OverlayHost" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

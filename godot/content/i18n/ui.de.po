@@ -131,26 +131,11 @@ msgstr "Ansagekarte"
 msgid "ui.cockpit.instruction.no_game"
 msgstr "Starte im Hauptmenü eine neue Partie. Hier erscheint dann der nächste Schritt."
 
-msgid "ui.cockpit.instruction.active"
-msgstr "Eine Partie ist geladen. Der geführte Ablauf folgt in einem späteren Arbeitspaket."
-
 msgid "ui.cockpit.seats.heading"
 msgstr "Sitzkreis"
 
 msgid "ui.cockpit.seats.placeholder"
-msgstr "Der Sitzkreis folgt mit der Einrichtung der Spieler."
-
-msgid "ui.cockpit.seats.placeholder_active"
-msgstr "Der Sitzkreis der laufenden Partie folgt in einem späteren Arbeitspaket."
-
-msgid "ui.cockpit.actions.heading"
-msgstr "Aktionen"
-
-msgid "ui.cockpit.actions.placeholder"
-msgstr "Aktionen erscheinen, sobald eine Partie läuft."
-
-msgid "ui.cockpit.actions.placeholder_active"
-msgstr "Aktionen für Nacht und Tag folgen in einem späteren Arbeitspaket."
+msgstr "Starte im Hauptmenü eine neue Partie. Dann erscheint hier der Sitzkreis."
 
 msgid "ui.phase.none"
 msgstr "Keine Partie"
@@ -1246,3 +1231,627 @@ msgstr "Start abgelehnt: Das Setup ist nicht vollständig bestätigt. Nichts wur
 
 msgid "ui.setup.seating.status.start_failed.other"
 msgstr "Start abgelehnt (Code {code}). Nichts wurde geändert."
+
+msgid "ui.common.yes"
+msgstr "Ja"
+
+msgid "ui.common.no"
+msgstr "Nein"
+
+msgid "ui.cockpit.round.night"
+msgstr "Nacht {number} · Schritt {done} von {total} erledigt"
+
+msgid "ui.cockpit.round.day"
+msgstr "Tag {number}"
+
+msgid "ui.cockpit.round.dawn"
+msgstr "Morgen nach Nacht {number}"
+
+msgid "ui.cockpit.alive"
+msgstr "{alive} von {total} leben"
+
+msgid "ui.cockpit.seat.alive"
+msgstr "{number} · {name}"
+
+msgid "ui.cockpit.seat.dead"
+msgstr "{number} · † {name}"
+
+msgid "ui.cockpit.seat.nominated"
+msgstr "{number} · {name} (N)"
+
+msgid "ui.cockpit.tools.log"
+msgstr "Protokoll"
+
+msgid "ui.cockpit.tools.private"
+msgstr "Rollen"
+
+msgid "ui.cockpit.tools.cover"
+msgstr "Verbergen"
+
+msgid "ui.cockpit.leave.title"
+msgstr "Cockpit verlassen?"
+
+msgid "ui.cockpit.leave.message"
+msgstr "Die Partie bleibt erhalten. Über „Cockpit“ im Hauptmenü geht es an derselben Stelle weiter."
+
+msgid "ui.cockpit.leave.confirm"
+msgstr "Zum Hauptmenü"
+
+msgid "ui.cockpit.status.selection_full"
+msgstr "Hinweis: Die Höchstzahl ist erreicht. Tippe eine gewählte Person an, um sie abzuwählen."
+
+msgid "ui.cockpit.secret.heading"
+msgstr "Nur für die Spielleitung"
+
+msgid "ui.cockpit.secret.step"
+msgstr "Der nächste Schritt enthält geheime Informationen. Zeige ihn erst an, wenn niemand mitliest."
+
+msgid "ui.cockpit.secret.win"
+msgstr "Eine Siegbedingung ist erfüllt. Die Einzelheiten sind geheim, bis du sie anzeigst."
+
+msgid "ui.cockpit.secret.reveal"
+msgstr "Anzeigen"
+
+msgid "ui.cockpit.card.none"
+msgstr "Kein Schritt offen"
+
+msgid "ui.cockpit.card.say_now"
+msgstr "Sag jetzt"
+
+msgid "ui.cockpit.card.prompt.caption"
+msgstr "Tu jetzt"
+
+msgid "ui.cockpit.card.start_night.heading"
+msgstr "Nacht {number} beginnen"
+
+msgid "ui.cockpit.card.start_night.do"
+msgstr "Alle schließen die Augen. Danach führt dich die App Schritt für Schritt durch die Nacht."
+
+msgid "ui.cockpit.card.start_night.do_next"
+msgstr "Der Tag ist beendet. Beginne die nächste Nacht, wenn alle die Augen geschlossen haben."
+
+msgid "ui.cockpit.card.step.caption"
+msgstr "Nächster Schritt · {index} von {total}"
+
+msgid "ui.cockpit.card.reaction.caption"
+msgstr "Reaktion · {count} offen"
+
+msgid "ui.cockpit.card.role_title"
+msgstr "{role}"
+
+msgid "ui.cockpit.card.actors"
+msgstr "Handelnd: {names}"
+
+msgid "ui.cockpit.card.borrowed_ability"
+msgstr "Eigene Rolle: {role}. Die Fähigkeit wurde übernommen."
+
+msgid "ui.cockpit.card.repeat"
+msgstr "Zweiter Durchgang durch den Apfel des Rotkäppchens."
+
+msgid "ui.cockpit.card.info_line"
+msgstr "{label}: {value}"
+
+msgid "ui.cockpit.card.selection.none"
+msgstr "Noch niemand gewählt. Tippe im Sitzkreis auf eine Person."
+
+msgid "ui.cockpit.card.selection.some"
+msgstr "Gewählt: {names}"
+
+msgid "ui.cockpit.card.prediction.value"
+msgstr "Vorhersage: {when} {number}"
+
+msgid "ui.cockpit.card.prediction.night"
+msgstr "Nacht"
+
+msgid "ui.cockpit.card.prediction.day"
+msgstr "Tag"
+
+msgid "ui.cockpit.card.prediction.minus"
+msgstr "Eins früher"
+
+msgid "ui.cockpit.card.prediction.plus"
+msgstr "Eins später"
+
+msgid "ui.cockpit.card.end_night.heading"
+msgstr "Nacht abschließen"
+
+msgid "ui.cockpit.card.end_night.skipped"
+msgstr "Hinweis: {count} Schritte sind in dieser Nacht entfallen oder wurden übersprungen. Details im Protokoll."
+
+msgid "ui.cockpit.card.end_night.do"
+msgstr "Alle Nachtschritte sind erledigt. Die App wertet jetzt die Nacht aus."
+
+msgid "ui.cockpit.card.win.heading"
+msgstr "Mögliches Spielende"
+
+msgid "ui.cockpit.card.win.do"
+msgstr "Prüfe die Siegbedingung am Tisch. Bestätige genau einen Sieg oder lehne alle mit Begründung ab."
+
+msgid "ui.cockpit.card.win.candidate"
+msgstr "{side}: {reason} {names}"
+
+msgid "ui.cockpit.card.game_over.heading"
+msgstr "Die Partie ist beendet"
+
+msgid "ui.cockpit.action.start_night"
+msgstr "Nacht beginnen"
+
+msgid "ui.cockpit.action.begin_step"
+msgstr "Schritt beginnen"
+
+msgid "ui.cockpit.action.skip_step"
+msgstr "Überspringen …"
+
+msgid "ui.cockpit.action.yes"
+msgstr "Ja"
+
+msgid "ui.cockpit.action.no"
+msgstr "Nein"
+
+msgid "ui.cockpit.action.ack.confirm"
+msgstr "Bestätigen"
+
+msgid "ui.cockpit.action.ack.shown"
+msgstr "Gezeigt"
+
+msgid "ui.cockpit.action.ack.reveal"
+msgstr "Zur Kenntnis genommen"
+
+msgid "ui.cockpit.action.option"
+msgstr "Option {number}: {role}"
+
+msgid "ui.cockpit.action.show_card"
+msgstr "Karte zeigen"
+
+msgid "ui.cockpit.action.override_shown"
+msgstr "Gezeigtes Ergebnis ändern …"
+
+msgid "ui.cockpit.action.cancel_prompt"
+msgstr "Schritt abbrechen …"
+
+msgid "ui.cockpit.action.confirm_targets"
+msgstr "Auswahl bestätigen"
+
+msgid "ui.cockpit.action.decline"
+msgstr "Niemand / verzichten"
+
+msgid "ui.cockpit.action.clear_selection"
+msgstr "Auswahl leeren"
+
+msgid "ui.cockpit.action.confirm_prediction"
+msgstr "Vorhersage bestätigen"
+
+msgid "ui.cockpit.action.end_night"
+msgstr "Nacht abschließen"
+
+msgid "ui.cockpit.action.confirm_win"
+msgstr "Sieg bestätigen: {side}"
+
+msgid "ui.cockpit.action.reject_win"
+msgstr "Alle ablehnen …"
+
+msgid "ui.cockpit.win.kind.village"
+msgstr "Dorf"
+
+msgid "ui.cockpit.win.kind.wolves"
+msgstr "Werwölfe"
+
+msgid "ui.cockpit.win.kind.solo"
+msgstr "Einzelsieg"
+
+msgid "ui.cockpit.win.kind.none"
+msgstr "Kein Sieger"
+
+msgid "ui.cockpit.win.reason.generic"
+msgstr "Siegbedingung erfüllt."
+
+msgid "ui.cockpit.win.reason.wolf_parity"
+msgstr "Die Wölfe sind mindestens so viele wie alle anderen Lebenden."
+
+msgid "ui.cockpit.win.reason.no_wolves_alive"
+msgstr "Es lebt kein Wolf mehr."
+
+msgid "ui.cockpit.win.reason.manipulator_three_alive"
+msgstr "Genau drei leben und der Manipulator wurde nie nominiert."
+
+msgid "ui.cockpit.win.reason.gm_declared"
+msgstr "Von der Spielleitung erklärt."
+
+msgid "ui.cockpit.win.reason.double_agent_no_wolves"
+msgstr "Der Doppelspion lebt und kein Wolf lebt mehr."
+
+msgid "ui.cockpit.win.reason.death_seeker_lynched"
+msgstr "Der Selbstmörder wurde bei mindestens fünf Toten hingerichtet."
+
+msgid "ui.cockpit.win.reason.parasite_final_three"
+msgstr "Höchstens drei leben und der Parasit lebt."
+
+msgid "ui.cockpit.win.reason.pied_piper_all_charmed"
+msgstr "Alle anderen Lebenden sind verzaubert."
+
+msgid "ui.cockpit.win.reason.plague_all_infected"
+msgstr "Alle anderen Lebenden sind infiziert."
+
+msgid "ui.cockpit.win.reason.prophet_no_wolves"
+msgstr "Der freigeschaltete Prophet lebt und kein Wolf lebt mehr."
+
+msgid "ui.cockpit.win.reason.death_preacher_prophecy"
+msgstr "Die Vorhersage des Todespredigers ist eingetreten."
+
+msgid "ui.cockpit.win.reason.voodoo_final_three"
+msgstr "Höchstens drei leben und der Voodoo-Priester lebt."
+
+msgid "ui.cockpit.win.reason.necromancer_named_wolf"
+msgstr "Der Nekromant hat einen lebenden Wolf richtig benannt."
+
+msgid "ui.cockpit.win.reason.hades_ten_lights"
+msgstr "Hades lebt mit mindestens zehn Lichtern."
+
+msgid "ui.cockpit.win.reason.grave_robber_final_three"
+msgstr "Höchstens drei leben und der Grabräuber lebt."
+
+msgid "ui.cockpit.win.reason.lone_wolf_last_wolf"
+msgstr "Wolfsparität und der Rachsüchtige Wolf ist der einzige lebende Wolf."
+
+msgid "ui.cockpit.private.heading"
+msgstr "Rollen · nur Spielleitung"
+
+msgid "ui.cockpit.private.warning"
+msgstr "Hinweis: Dieser Bereich zeigt alle Rollen. Schließe ihn, bevor jemand mitliest."
+
+msgid "ui.cockpit.private.row"
+msgstr "{seat} · {name}: {role} ({faction})"
+
+msgid "ui.cockpit.private.row_dead"
+msgstr "{seat} · † {name}: {role} ({faction})"
+
+msgid "ui.cockpit.private.original_role"
+msgstr "Ursprüngliche Rolle: {role}"
+
+msgid "ui.cockpit.private.appears_as"
+msgstr "Erscheint bei Prüfungen als: {role}"
+
+msgid "ui.cockpit.private.dependency.dead_cards"
+msgstr "Hinweis: Die Totenkarten-Bedingung dieser Rolle ist noch nicht entschieden und wird nicht geprüft."
+
+msgid "ui.cockpit.log.heading"
+msgstr "Protokoll · nur Spielleitung"
+
+msgid "ui.cockpit.log.empty"
+msgstr "Noch keine Einträge."
+
+msgid "ui.log.event.generic"
+msgstr "#{index} {type} ({visibility})"
+
+msgid "ui.log.visibility.gm"
+msgstr "Spielleitung"
+
+msgid "ui.log.visibility.public"
+msgstr "öffentlich"
+
+msgid "ui.log.visibility.actor"
+msgstr "handelnde Person"
+
+msgid "ui.cockpit.show.heading"
+msgstr "{role}"
+
+msgid "ui.cockpit.show.value"
+msgstr "{value}"
+
+msgid "ui.cockpit.show.close"
+msgstr "Zurück zur Spielleitung"
+
+msgid "ui.cockpit.cover.heading"
+msgstr "Sichtschutz"
+
+msgid "ui.cockpit.cover.message"
+msgstr "Das Cockpit ist verborgen. Die Partie läuft unverändert weiter."
+
+msgid "ui.cockpit.cover.resume"
+msgstr "Cockpit wieder anzeigen"
+
+msgid "ui.cockpit.layer.close"
+msgstr "Schließen"
+
+msgid "ui.cockpit.group.pack"
+msgstr "Die Werwölfe"
+
+msgid "ui.cockpit.group.bound"
+msgstr "Die Gebundenen"
+
+msgid "ui.cockpit.group.eternal"
+msgstr "Die Ewigen"
+
+msgid "ui.cockpit.warning.reactions_open"
+msgstr "Hinweis: {count} Reaktion(en) offen. Erst danach geht es weiter."
+
+msgid "ui.cockpit.warning.steps_skipped"
+msgstr "Hinweis: {count} Nachtschritte sind entfallen oder wurden übersprungen."
+
+msgid "ui.cockpit.warning.nobody_alive"
+msgstr "Hinweis: Niemand lebt mehr. Erkläre das Ergebnis über die Spielleitung."
+
+msgid "ui.cockpit.dialog.reason_placeholder"
+msgstr "Begründung (Pflicht)"
+
+msgid "ui.cockpit.dialog.skip.title"
+msgstr "Schritt überspringen?"
+
+msgid "ui.cockpit.dialog.skip.message"
+msgstr "Der Schritt wird ohne Wirkung übersprungen und mit Begründung protokolliert."
+
+msgid "ui.cockpit.dialog.skip.confirm"
+msgstr "Überspringen"
+
+msgid "ui.cockpit.dialog.cancel.title"
+msgstr "Schritt abbrechen?"
+
+msgid "ui.cockpit.dialog.cancel.message"
+msgstr "Alle bisherigen Angaben dieses Schritts werden verworfen. Danach kann er neu begonnen werden."
+
+msgid "ui.cockpit.dialog.cancel.confirm"
+msgstr "Abbrechen und verwerfen"
+
+msgid "ui.cockpit.dialog.reject_win.title"
+msgstr "Alle Siege ablehnen?"
+
+msgid "ui.cockpit.dialog.reject_win.message"
+msgstr "Die Partie läuft weiter. Ein Sieg wird erst nach der nächsten relevanten Änderung erneut geprüft."
+
+msgid "ui.cockpit.dialog.reject_win.confirm"
+msgstr "Ablehnen"
+
+msgid "ui.cockpit.dialog.confirm_win.title"
+msgstr "Sieg bestätigen?"
+
+msgid "ui.cockpit.dialog.confirm_win.message"
+msgstr "Die Partie endet mit diesem Sieger. Alle übrigen Kandidaten gelten als nicht gewählt."
+
+msgid "ui.cockpit.dialog.confirm_win.confirm"
+msgstr "Sieg bestätigen"
+
+msgid "ui.cockpit.dialog.override.title"
+msgstr "Gezeigtes Ergebnis ändern"
+
+msgid "ui.cockpit.dialog.override.message"
+msgstr "Wähle die Rolle, die gezeigt werden soll. Wahrheit und ermitteltes Ergebnis bleiben gespeichert."
+
+msgid "ui.cockpit.dialog.override_reason.title"
+msgstr "Änderung begründen"
+
+msgid "ui.cockpit.dialog.override_reason.message"
+msgstr "Die Änderung wird mit Begründung protokolliert."
+
+msgid "ui.cockpit.dialog.override_reason.confirm"
+msgstr "Ändern"
+
+msgid "ui.cockpit.error.generic"
+msgstr "Fehler: Die Aktion wurde abgelehnt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.invalid_target"
+msgstr "Fehler: Diese Person ist hier nicht wählbar. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.invalid_target_count"
+msgstr "Fehler: Die Anzahl der gewählten Personen passt nicht. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_wolf_selected"
+msgstr "Fehler: Unter den Gewählten muss mindestens ein Wolf sein. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.reason_required"
+msgstr "Fehler: Eine Begründung ist Pflicht. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.step_not_skippable"
+msgstr "Fehler: Dieser Schritt kann nicht übersprungen werden. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.prompt_mismatch"
+msgstr "Fehler: Der Schritt hat sich inzwischen geändert. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_open_prompt"
+msgstr "Fehler: Kein Schritt ist offen. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.stage_mismatch"
+msgstr "Fehler: Der Schritt ist schon weiter. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.invalid_answer"
+msgstr "Fehler: Diese Antwort ist hier nicht möglich. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.invalid_prediction"
+msgstr "Fehler: Dieser Zeitpunkt ist nicht möglich. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_change"
+msgstr "Fehler: Das ist bereits das gezeigte Ergebnis. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.step_already_active"
+msgstr "Fehler: Der Schritt läuft bereits. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.wrong_phase"
+msgstr "Fehler: Das ist in dieser Phase nicht möglich. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.reaction_open"
+msgstr "Fehler: Zuerst muss die offene Reaktion bearbeitet werden. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.win_candidate_open"
+msgstr "Fehler: Zuerst muss über den möglichen Sieg entschieden werden. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.game_over"
+msgstr "Fehler: Die Partie ist beendet. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.night_steps_open"
+msgstr "Fehler: Es sind noch Nachtschritte offen. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.prompt_open"
+msgstr "Fehler: Ein Schritt ist noch offen. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.player_dead"
+msgstr "Fehler: Diese Person ist tot. Nichts wurde geändert."
+
+msgid "ui.call.generic"
+msgstr "„{role}, erwache.“"
+
+msgid "ui.call.night_falls"
+msgstr "„Die Nacht bricht herein. Das ganze Dorf schließt die Augen.“"
+
+msgid "ui.call.pack"
+msgstr "„Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“"
+
+msgid "ui.call.schutzengel"
+msgstr "„Schutzengel, erwache. Zeige auf die Person, die du heute Nacht beschützen willst.“"
+
+msgid "ui.call.waldhexe"
+msgstr "„Waldhexe, erwache. Ich zeige dir das Opfer der Nacht. Willst du einen Trank nutzen?“"
+
+msgid "ui.call.das_orakel"
+msgstr "„Orakel, erwache. Zeige auf die Person, deren Wesen du schauen willst.“"
+
+msgid "ui.call.wolfskind"
+msgstr "„Wolfskind, erwache. Zeige auf die Person, die dein Vorbild sein soll.“"
+
+msgid "ui.call.lehrling"
+msgstr "„Lehrling, erwache. Ich zeige dir gleich drei Rollen. Wähle deinen Meister.“"
+
+msgid "ui.prompt.generic.targets"
+msgstr "Wähle im Sitzkreis mindestens {min} und höchstens {max} Personen und bestätige."
+
+msgid "ui.prompt.generic.choice"
+msgstr "Frage die handelnde Person und tippe ihre Antwort."
+
+msgid "ui.prompt.generic.ack"
+msgstr "Zeige oder nenne das Ergebnis und bestätige danach."
+
+msgid "ui.prompt.generic.option"
+msgstr "Zeige die Optionen und tippe die gewählte an."
+
+msgid "ui.prompt.generic.prediction"
+msgstr "Stelle den vorhergesagten Zeitpunkt ein und bestätige."
+
+msgid "ui.prompt.schutzengel.pick"
+msgstr "Tippe die Person an, auf die der Schutzengel zeigt, und bestätige. Er darf sich nicht selbst schützen."
+
+msgid "ui.prompt.pack.pick"
+msgstr "Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“."
+
+msgid "ui.prompt.pack2.pick"
+msgstr "Zweites Opfer des Rudels: Tippe die Person an und bestätige. Es durchdringt Schutz."
+
+msgid "ui.prompt.waldhexe.heal"
+msgstr "Zeige der Waldhexe das Opfer. Nutzt sie den Heiltrank?"
+
+msgid "ui.prompt.waldhexe.reveal"
+msgstr "Die Waldhexe rettet. Zeige ihr jetzt die Rolle des Opfers."
+
+msgid "ui.prompt.waldhexe.poison"
+msgstr "Nutzt die Waldhexe den Gifttrank?"
+
+msgid "ui.prompt.waldhexe.poison_target"
+msgstr "Tippe die Person an, die die Waldhexe vergiftet, und bestätige."
+
+msgid "ui.prompt.waldhexe.confirm"
+msgstr "Prüfe die Zusammenfassung. Erst „Bestätigen“ wendet die Tränke an."
+
+msgid "ui.prompt.das_orakel.target"
+msgstr "Tippe die Person an, auf die das Orakel zeigt, und bestätige."
+
+msgid "ui.prompt.das_orakel.shown"
+msgstr "Zeige dem Orakel das Ergebnis, zum Beispiel über „Karte zeigen“. Danach „Gezeigt“."
+
+msgid "ui.prompt.wolfskind.pick"
+msgstr "Tippe das gewählte Vorbild an und bestätige."
+
+msgid "ui.prompt.lehrling.candidates"
+msgstr "Nur für dich: Wähle drei andere lebende Personen, deren Rollen der Lehrling zur Wahl bekommt."
+
+msgid "ui.prompt.lehrling.option"
+msgstr "Zeige dem Lehrling die drei Rollen (ohne Namen) und tippe seine Wahl an."
+
+msgid "ui.prompt.lehrling.confirm"
+msgstr "Bestätige die Wahl des Lehrlings. Erst jetzt entsteht die Bindung."
+
+msgid "ui.prompt.value.nobody"
+msgstr "niemand"
+
+msgid "ui.prompt.direction.left"
+msgstr "links"
+
+msgid "ui.prompt.direction.right"
+msgstr "rechts"
+
+msgid "ui.prompt.direction.equal"
+msgstr "gleich weit"
+
+msgid "ui.prompt.direction.none"
+msgstr "kein Wolf"
+
+msgid "ui.prompt.info.generic"
+msgstr "Angabe"
+
+msgid "ui.prompt.info.victim_id"
+msgstr "Opfer"
+
+msgid "ui.prompt.info.victim_role"
+msgstr "Rolle des Opfers"
+
+msgid "ui.prompt.info.target_id"
+msgstr "Gewählte Person"
+
+msgid "ui.prompt.info.target_ids"
+msgstr "Gewählte Personen"
+
+msgid "ui.prompt.info.truth_role"
+msgstr "Wahre Rolle"
+
+msgid "ui.prompt.info.determined_role"
+msgstr "Ermitteltes Ergebnis"
+
+msgid "ui.prompt.info.shown_role"
+msgstr "Zu zeigendes Ergebnis"
+
+msgid "ui.prompt.info.overridden"
+msgstr "Von der Spielleitung geändert"
+
+msgid "ui.prompt.info.heal"
+msgstr "Heiltrank genutzt"
+
+msgid "ui.prompt.info.poison"
+msgstr "Gifttrank genutzt"
+
+msgid "ui.prompt.info.poison_target_id"
+msgstr "Giftziel"
+
+msgid "ui.prompt.info.solo_count"
+msgstr "Personen mit Einzelsiegrolle"
+
+msgid "ui.prompt.info.wolf_count"
+msgstr "Lebende Wölfe"
+
+msgid "ui.prompt.info.bound_ids"
+msgstr "Lebende Gebundene"
+
+msgid "ui.prompt.info.same_team"
+msgstr "Gleiches Team"
+
+msgid "ui.prompt.info.direction"
+msgstr "Richtung"
+
+msgid "ui.prompt.info.hit"
+msgstr "Treffer"
+
+msgid "ui.prompt.info.lost"
+msgstr "Fähigkeit verloren"
+
+msgid "ui.prompt.info.is_wolf"
+msgstr "Wolf"
+
+msgid "ui.prompt.info.solo"
+msgstr "Einzelsieg"
+
+msgid "ui.prompt.info.role_id"
+msgstr "Rolle"
+
+msgid "ui.prompt.info.revealed_ids"
+msgstr "Genannte Wölfe"
+
+msgid "ui.prompt.info.ally_id"
+msgstr "Verbündeter"
+
+msgid "ui.prompt.info.dead_ids"
+msgstr "Gewählte Tote"

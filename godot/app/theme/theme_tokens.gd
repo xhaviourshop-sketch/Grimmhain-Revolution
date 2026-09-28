@@ -27,6 +27,10 @@ const TEXT_DISABLED := Color("#6b675f")      ## deaktiviert (bewusst schwächer)
 const FOCUS_RING := Color("#f3de9f")         ## Tastaturfokus
 const DISABLED_FILL := Color("#181b23")
 const DISABLED_BORDER := Color("#262a35")
+const NIGHT_SURFACE := Color("#121a33")      ## Cockpit in der Nacht: tiefes Blau
+const NIGHT_ACCENT := Color("#8fa8e0")       ## Mondlicht: Rahmen der Nachtflächen, handelnde Person
+const DAY_SURFACE := Color("#2a2112")        ## Cockpit am Tag und Morgen: warmes Dämmerbraun
+const DAY_ACCENT := Color("#e0b060")         ## Sonnengold: Rahmen der Tagflächen
 
 # --- Abstände, Radien, Rahmen --------------------------------------------------------------------
 const SPACE_XS := 4
@@ -49,6 +53,7 @@ const FONT_BUTTON := 22
 const FONT_HEADING := 30
 const FONT_SUBTITLE := 24
 const FONT_TITLE := 64
+const FONT_SHOW := 48                 ## gezeigte Karte: Ergebnis groß für die handelnde Person
 
 # --- Bedienflächen und Layout --------------------------------------------------------------------
 const TOUCH_MIN := 48                 ## Mindestgröße jeder Bedienfläche
@@ -60,6 +65,8 @@ const SCREEN_PADDING := 24            ## Innenrand jeder Ansicht
 const MENU_COLUMN_WIDTH := 480        ## Breite der Menüspalte (wächst auf breiten Fenstern nicht)
 const CONTENT_MAX_WIDTH := 880        ## Textkarten auf breiten Fenstern
 const SIDE_COLUMN_WIDTH := 360        ## Cockpit: Ansagekarte und Aktionen
+const SIDE_COLUMN_WIDE_WIDTH := 440   ## Cockpit ab 1600 px Fensterbreite
+const DRAWER_WIDTH := 520             ## Cockpit: Schublade für Protokoll und Spielleiterbereich
 const SETUP_SIDE_WIDTH := 360        ## Spieler-Setup: Spalte für Eingabe, Import, Bearbeiten
 const INPUT_HEIGHT := 56              ## Texteingabefelder
 const IMPORT_TEXT_MIN_HEIGHT := 96    ## mehrzeiliges Importfeld

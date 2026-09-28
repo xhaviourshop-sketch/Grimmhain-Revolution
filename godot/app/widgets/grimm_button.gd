@@ -4,7 +4,8 @@ extends Button
 ## Gefahr) über Theme-Variation, Mindestgröße aus ThemeTokens, immer fokussierbar.
 ## `wrap` (Standard an) bricht lange Beschriftungen um statt sie abzuschneiden; nur für
 ## Buttons, deren Breite der Container vorgibt. Buttons mit Inhaltsbreite (Kopfzeile) ohne.
-## `format_values` füllt Platzhalter wie `{name}` (z. B. Auswahloptionen eines Dialogs).
+## `format_values` füllt Platzhalter wie `{name}` (z. B. Auswahloptionen eines Dialogs); Werte vom
+## Typ StringName gelten als Übersetzungsschlüssel.
 
 enum Kind { PRIMARY, SECONDARY, DANGER, COMPACT }
 
@@ -53,7 +54,7 @@ func _notification(what: int) -> void:
 func refresh_text() -> void:
 	if text_key != "":
 		var translated := tr(text_key)
-		text = translated.format(format_values) if not format_values.is_empty() else translated
+		text = translated.format(GrimmLabel.translated_values(self, format_values)) if not format_values.is_empty() else translated
 
 
 func _apply_kind() -> void:

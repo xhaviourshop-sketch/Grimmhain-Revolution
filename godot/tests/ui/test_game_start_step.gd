@@ -126,11 +126,11 @@ func test_start_opens_cockpit_with_active_game() -> void:
 	var cockpit := current_screen(shell)
 	var badge := find_node(cockpit, "NoGameBadge") as Control
 	assert_true(badge != null and not badge.is_visible_in_tree(), "kein Hinweis „Keine Partie aktiv“")
-	var instruction := find_node(cockpit, "InstructionLabel") as Label
-	assert_true(instruction != null and instruction.text.contains("späteren"), "Cockpit verspricht keinen spielbaren Ablauf: %s" % (instruction.text if instruction != null else ""))
-	for node_name: String in ["SeatsPlaceholder", "ActionsPlaceholder"]:
-		var placeholder := find_node(cockpit, node_name) as Label
-		assert_true(placeholder != null and placeholder.text.contains("späteren"), "%s ohne Widerspruch zur aktiven Partie: %s" % [node_name, placeholder.text if placeholder != null else ""])
+	# Das Cockpit zeigt die gestartete Partie: sechs Plätze und als nächsten Schritt „Nacht beginnen“.
+	var ring := find_node(cockpit, "SeatRing")
+	assert_eq(ring.call("tokens").size() if ring != null else 0, 6, "Sitzkreis mit sechs Plätzen")
+	var start_night := find_node(cockpit, "StartNightButton") as BaseButton
+	assert_true(start_night != null and start_night.is_visible_in_tree(), "nächster Schritt: Nacht beginnen")
 	assert_eq(_toast_text(shell), "Partie gestartet", "Statusmeldung")
 	_assert_no_roles_visible(shell, "Cockpit")
 	# Der Entwurf ist verbraucht: „Neue Partie“ beginnt leer.

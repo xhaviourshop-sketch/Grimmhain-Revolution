@@ -1,0 +1,206 @@
+class_name CockpitView
+extends RefCounted
+## Liest den Spielstand für das Cockpit und liefert nur einfache Werte (Dictionary, Array, int,
+## String). Keine Regel: Phase, nächster Schritt, Prompt und Kandidaten kommen unverändert aus dem
+## Regelkern (StepQueue, PendingPrompt, WinCandidate). Die Sicht ist in zwei Teile getrennt:
+##   build()          Sitzkreis und Ablauf ohne Rollen. Karten mit geheimem Inhalt tragen
+##                    `secret = true`; die Oberfläche zeigt sie außerhalb der Nacht erst nach
+##                    einer bewussten Aktion.
+##   private_seats()  Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
+
+const GROUP_PACK := &"pack"
+const GROUP_BOUND := &"die-gebundenen"
+const GROUP_ETERNAL := &"die-ewigen"
+
+## Rollen, deren Regel noch an einem nicht entschiedenen System hängt (Totenkarten, RM-DR-013).
+## Nur im privaten Bereich als Hinweis, weil die Nennung die Rolle verrät.
+const OPEN_DEPENDENCIES := {
+	&"dr-victor-frankenstein": "ui.cockpit.private.dependency.dead_cards",
+}
+
+
+## Öffentliche Cockpit-Sicht (ohne Rollen im Sitzkreis).
+static func build(s: GameState) -> Dictionary:
+	if not s.is_started():
+		return {"has_game": false}
+	return {
+		"has_game": true,
+		"phase": String(s.phase),
+		"day_step": String(s.day_step),
+		"night_number": s.night_number,
+		"day_number": s.day_number,
+		"seats": seats(s),
+		"alive_count": s.alive_ids().size(),
+		"player_count": s.players.size(),
+		"night_progress": night_progress(s),
+		"next": next_action(s),
+		"warnings": warnings(s),
+	}
+
+
+## Sitzkreis in Sitzreihenfolge: Personen-ID, Platz (ab 1), Name, lebend, heute nominiert.
+## Nominierungen sind öffentlich (DR-03); eine Richter-Nominierung nennt keinen Nominierenden.
+static func seats(s: GameState) -> Array:
+	var nominated := {}
+	var nominators := {}
+	if s.phase == Phase.DAY:
+		for n: Nomination in s.nominations_on_day(s.day_number):
+			nominated[n.nominee_id] = true
+			if not n.by_judge:
+				nominators[n.nominator_id] = true
+	var out: Array = []
+	for i: int in s.seat_order.size():
+		var id := s.seat_order[i]
+		var p := s.players[id]
+		out.append({
+			"person_id": id,
+			"seat": i + 1,
+			"name": p.name,
+			"alive": p.alive,
+			"nominated_today": nominated.has(id),
+			"nominated_someone_today": nominators.has(id),
+		})
+	return out
+
+
+static func night_progress(s: GameState) -> Dictionary:
+	if s.phase != Phase.NIGHT:
+		return {"done": 0, "total": 0}
+	return {"done": s.next_night_step, "total": s.night_plan.size()}
+
+
+## Nächste erforderliche Handlung in derselben Rangfolge wie die Phasenmaschine:
+## Spielende → offener Siegkandidat → offener Prompt → erwarteter Schritt → Phasenwechsel.
+static func next_action(s: GameState) -> Dictionary:
+	if s.phase == Phase.GAME_OVER:
+		return {"kind": "game_over", "secret": false, "winner": _candidate(s, s.winner()) if s.winner() != null else {}}
+	var open := s.open_candidates()
+	if not open.is_empty():
+		var list: Array = []
+		for c: WinCandidate in open:
+			list.append(_candidate(s, c))
+		return {"kind": "win_decision", "secret": true, "candidates": list}
+	if s.pending_prompt != null:
+		var prompt := PromptView.build(s, s.pending_prompt)
+		prompt["kind"] = "prompt"
+		prompt["secret"] = true
+		return prompt
+	var step_id := RulesEngine.next_step_id(s)
+	if step_id != "":
+		return step_announcement(s, step_id)
+	match s.phase:
+		Phase.SETUP:
+			return {"kind": "start_night", "secret": false, "first": true}
+		Phase.NIGHT:
+			return {"kind": "end_night", "secret": false, "skipped": _skipped_count(s)}
+		Phase.DAY:
+			if s.day_step == Phase.DAY_ENDED:
+				return {"kind": "start_night", "secret": false, "first": false}
+			if s.day_step == Phase.DAY_EXECUTION_DECIDED:
+				return {"kind": "end_day", "secret": false}
+			return {"kind": "day", "secret": false, "day_step": String(s.day_step), "nominations": nominations_today(s)}
+	return {"kind": "none", "secret": false}
+
+
+## Ankündigung des erwarteten, noch nicht begonnenen Schritts (Nachtschritt oder Reaktion).
+static func step_announcement(s: GameState, step_id: String) -> Dictionary:
+	var out := {"kind": "begin_step", "secret": true, "step_id": step_id, "skippable": StepQueue.is_skippable(step_id)}
+	if StepQueue.is_reaction_step(step_id):
+		var r := s.reactions[0]
+		out["step_kind"] = "reaction"
+		out["reaction_kind"] = String(r.kind)
+		out["role_id"] = String(s.players[r.owner_id].role_id)
+		out["actor_ids"] = [r.owner_id]
+		out["reactions_open"] = s.reactions.size()
+		return out
+	var key := s.night_plan[s.next_night_step]
+	out["step_kind"] = String(StepQueue.step_kind(step_id))
+	out["index"] = s.next_night_step + 1
+	out["total"] = s.night_plan.size()
+	out["repeat"] = s.apple_steps.has(s.next_night_step)
+	match key:
+		StepQueue.PACK, StepQueue.PACK2:
+			out["role_id"] = String(GROUP_PACK)
+			out["actor_ids"] = s.night_wolf_ids.filter(func(id: int) -> bool: return s.players[id].alive)
+		StepQueue.BOUND:
+			out["role_id"] = String(GROUP_BOUND)
+			out["actor_ids"] = InfoSteps.living_bound(s)
+		StepQueue.ETERNAL:
+			out["role_id"] = String(GROUP_ETERNAL)
+			out["actor_ids"] = InfoSteps.living_eternal(s)
+		_:
+			var actor := StepQueue.step_actor(key)
+			out["role_id"] = String(StepQueue.step_role(key))
+			out["actor_ids"] = [actor]
+			# Grabräuber: gestohlene Fähigkeit einer anderen Rolle (nur privat sichtbar).
+			out["own_role_id"] = String(s.players[actor].role_id)
+	return out
+
+
+static func nominations_today(s: GameState) -> Array:
+	var out: Array = []
+	for n: Nomination in s.nominations_on_day(s.day_number):
+		out.append({"nominator_id": -1 if n.by_judge else n.nominator_id, "nominee_id": n.nominee_id})
+	return out
+
+
+## Hinweise ohne Geheimnis: offene Reaktionen (Anzahl), übersprungene Nachtschritte, Tote ohne Rolle.
+static func warnings(s: GameState) -> Array:
+	var out: Array = []
+	if StepQueue.reactions_due(s):
+		out.append({"key": "ui.cockpit.warning.reactions_open", "values": {"count": s.reactions.size()}})
+	if s.phase == Phase.NIGHT and s.next_night_step >= s.night_plan.size() and _skipped_count(s) > 0:
+		out.append({"key": "ui.cockpit.warning.steps_skipped", "values": {"count": _skipped_count(s)}})
+	if s.alive_ids().is_empty():
+		out.append({"key": "ui.cockpit.warning.nobody_alive", "values": {}})
+	return out
+
+
+## Privater Spielleiterbereich: Rolle, Fraktion und Zusatzhinweise je Person (Sitzreihenfolge).
+static func private_seats(s: GameState) -> Array:
+	var out: Array = []
+	for i: int in s.seat_order.size():
+		var p := s.players[s.seat_order[i]]
+		var notes: Array = []
+		if p.role_id != p.original_role_id:
+			notes.append({"key": "ui.cockpit.private.original_role", "role_id": String(p.original_role_id)})
+		if p.appears_as != p.role_id and RoleCatalog.requires_appearance(p.role_id):
+			notes.append({"key": "ui.cockpit.private.appears_as", "role_id": String(p.appears_as)})
+		if OPEN_DEPENDENCIES.has(p.role_id):
+			notes.append({"key": OPEN_DEPENDENCIES[p.role_id], "role_id": ""})
+		out.append({
+			"person_id": p.id,
+			"seat": i + 1,
+			"name": p.name,
+			"alive": p.alive,
+			"role_id": String(p.role_id),
+			"faction": String(p.faction),
+			"counts_as_wolf": p.counts_as_wolf,
+			"notes": notes,
+		})
+	return out
+
+
+static func _skipped_count(s: GameState) -> int:
+	var n := 0
+	for status: StringName in s.night_step_status:
+		if status == StepQueue.STATUS_SKIPPED:
+			n += 1
+	return n
+
+
+static func _candidate(s: GameState, c: WinCandidate) -> Dictionary:
+	var names := func(ids: Array[int]) -> Array:
+		var out: Array = []
+		for id: int in ids:
+			out.append(s.players[id].name if s.players.has(id) else str(id))
+		return out
+	return {
+		"id": c.id,
+		"kind": String(c.kind),
+		"reason_key": String(c.reason_key),
+		"reason_args": c.reason_args.duplicate(true),
+		"beneficiaries": names.call(c.beneficiary_ids),
+		"co_winners": names.call(c.co_winner_ids),
+		"status": String(c.status),
+	}

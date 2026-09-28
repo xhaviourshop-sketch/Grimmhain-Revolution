@@ -62,6 +62,8 @@ static func _labels(theme: Theme) -> void:
 		&"BadgeLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.WARNING_TEXT],
 		&"SectionLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_PRIMARY],
 		&"ErrorCaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.DANGER_TEXT],
+		&"ReadAloudLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_PRIMARY],
+		&"ShowValueLabel": [ThemeTokens.FONT_SHOW, ThemeTokens.GOLD_BRIGHT],
 	}
 	for name: StringName in variations:
 		theme.set_type_variation(name, &"Label")
@@ -96,6 +98,9 @@ static func _buttons(theme: Theme) -> void:
 		&"SeatButton": palettes[&"SecondaryButton"],
 		&"SeatSelectedButton": palettes[&"PrimaryButton"],
 		&"SeatTargetButton": [ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.GOLD_BRIGHT, ThemeTokens.GOLD_BRIGHT],
+		# Cockpit: tote Person (gedämpft, Text trägt zusätzlich „†“) und handelnde Person (Mondlicht).
+		&"SeatDeadButton": [ThemeTokens.BG_APP, ThemeTokens.BG_SURFACE, ThemeTokens.BG_APP, ThemeTokens.TEXT_MUTED, ThemeTokens.TEXT_MUTED, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_SUBTLE],
+		&"SeatActorButton": [ThemeTokens.NIGHT_SURFACE, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.NIGHT_SURFACE, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.NIGHT_ACCENT, ThemeTokens.NIGHT_ACCENT],
 	}
 	for name: StringName in seat_palettes:
 		theme.set_type_variation(name, &"Button")
@@ -105,7 +110,7 @@ static func _buttons(theme: Theme) -> void:
 			var box := theme.get_stylebox(state, name) as StyleBoxFlat
 			box.content_margin_left = ThemeTokens.SPACE_S
 			box.content_margin_right = ThemeTokens.SPACE_S
-			if name != &"SeatButton" and state != "disabled":
+			if not [&"SeatButton", &"SeatDeadButton"].has(name) and state != "disabled":
 				box.set_border_width_all(ThemeTokens.FOCUS_WIDTH)
 	# Der Grundtyp Button entspricht dem Sekundärbutton.
 	theme.set_type_variation(&"SecondaryButton", &"Button")
@@ -212,6 +217,12 @@ static func _panels(theme: Theme) -> void:
 		&"SummaryPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
 		&"ListPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		&"SecretPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		# Cockpit: Phasenleiste und Ansagekarte je Tageszeit, Schublade, Sichtschutz, gezeigte Karte.
+		&"NightPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.NIGHT_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		&"DayPanel": _panel(ThemeTokens.DAY_SURFACE, ThemeTokens.DAY_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		&"DrawerPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_M),
+		&"CoverPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
+		&"ShowPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
 	}
 	for name: StringName in variations:
 		var base := &"Panel" if name == &"AppBackground" else &"PanelContainer"

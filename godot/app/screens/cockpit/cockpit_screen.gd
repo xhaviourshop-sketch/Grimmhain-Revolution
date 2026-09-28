@@ -1,26 +1,337 @@
 class_name CockpitScreen
 extends BaseScreen
-## Struktureller Platzhalter des Spielleiter-Cockpits (02 §4.1): Kopfzeile, Phasenbereich,
-## Ansagekarte, Sitzkreisbereich, Aktionsbereich. Liest nur die Sicht der Anwendungsschicht;
-## ohne Partie zeigt es deutlich „Keine Partie aktiv“ und keine Rollen- oder Spielinformation.
+## Spielleiter-Cockpit (02 §4.1): Phasenleiste, Sitzkreis der laufenden Partie, Ansagekarte mit
+## der nächsten Handlung und Werkzeuge (Protokoll, privater Spielleiterbereich, Sichtschutz).
+## Liest nur Sichten der Anwendungsschicht (GameSession.cockpit_view) und sendet Befehle über deren
+## Bausteine; eigene Zustände sind nur flüchtige Bedienzustände (Auswahl, aufgedeckte Karte).
+##
+## Geheimhaltung:
+##   - Sitzkreis und Phasenleiste zeigen nie Rollen.
+##   - Geheime Karten (Schritte, Prompts, Siegkandidaten) erscheinen außerhalb der Nacht verdeckt
+##     und erst nach „Anzeigen“; mit der nächsten Handlung sind sie wieder verdeckt.
+##   - Rollen, Protokoll und die gezeigte Karte entstehen erst beim Öffnen als eigene Ebene und
+##     werden beim Schließen, beim Sichtschutz und beim Verlassen der Ansicht entfernt.
 
+const GROUP_CARD_WIDTH_BREAKPOINT := 1600.0
+
+var _view: Dictionary = {}
+var _next_id: String = ""
+var _selection: Array = []
+var _revealed_id: String = ""
+var _prediction := {"kind": "night", "number": 0}
+var _error_key: String = ""
+var _covered: bool = false
+var _layer: Control = null
+var _layer_kind: StringName = &""
+
+@onready var _layout: Control = %Layout
 @onready var _badge: Control = %NoGameBadge
+@onready var _phase_area: PanelContainer = %PhaseArea
 @onready var _phase: GrimmLabel = %PhaseValueLabel
-@onready var _instruction: GrimmLabel = %InstructionLabel
-@onready var _seats: GrimmLabel = %SeatsPlaceholder
-@onready var _actions: GrimmLabel = %ActionsPlaceholder
+@onready var _round: GrimmLabel = %RoundLabel
+@onready var _alive: GrimmLabel = %AliveLabel
+@onready var _warnings: GrimmLabel = %WarningsLabel
+@onready var _ring: GameSeatRing = %SeatRing
+@onready var _center_phase: GrimmLabel = %CenterPhaseLabel
+@onready var _center_hint: GrimmLabel = %CenterHintLabel
+@onready var _card: ActionCard = %ActionCard
+@onready var _side: Control = %SideColumn
+@onready var _overlay_host: Control = %OverlayHost
 
 
 func _setup() -> void:
-	(%SideColumn as Control).custom_minimum_size.x = ThemeTokens.SIDE_COLUMN_WIDTH
-	context.session.view_changed.connect(_refresh)
-	_refresh(context.session.view())
+	_update_side_width()
+	resized.connect(_update_side_width)
+	context.session.view_changed.connect(_on_session_changed)
+	context.session.command_rejected.connect(_on_rejected)
+	_ring.seat_tapped.connect(_on_seat_tapped)
+	_card.requested.connect(_on_card_requested)
+	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
+	(%PrivateButton as GrimmButton).pressed.connect(open_layer.bind(&"private"))
+	(%CoverButton as GrimmButton).pressed.connect(cover)
+	_refresh()
 
 
-func _refresh(view: Dictionary) -> void:
-	var active := bool(view.get("has_game", false))
+## Zurück: offene Ebene schließen, Sichtschutz aufheben oder (mit laufender Partie) nachfragen.
+func handle_back() -> bool:
+	if _layer != null:
+		close_layer()
+		return true
+	if _covered:
+		uncover()
+		return true
+	if bool(_view.get("has_game", false)):
+		var r := DialogRequest.create("ui.cockpit.leave.title", "ui.cockpit.leave.message", "ui.cockpit.leave.confirm",
+			func() -> void: navigate_requested.emit(ScreenIds.MAIN_MENU))
+		dialog_requested.emit(r)
+		return true
+	return false
+
+
+func default_focus() -> Control:
+	var first := _card.find_children("*", "BaseButton", true, false)
+	return first[0] as Control if not first.is_empty() else super.default_focus()
+
+
+# --- Sicht -------------------------------------------------------------------------------------------
+
+func _on_session_changed(_v: Dictionary) -> void:
+	_error_key = ""
+	_refresh()
+
+
+func _refresh() -> void:
+	_view = context.session.cockpit_view()
+	var active := bool(_view.get("has_game", false))
 	_badge.visible = not active
-	_phase.text_key = "ui.phase.%s" % str(view.get("phase", "")).to_lower() if active else "ui.phase.none"
-	_instruction.text_key = "ui.cockpit.instruction.active" if active else "ui.cockpit.instruction.no_game"
-	_seats.text_key = "ui.cockpit.seats.placeholder_active" if active else "ui.cockpit.seats.placeholder"
-	_actions.text_key = "ui.cockpit.actions.placeholder_active" if active else "ui.cockpit.actions.placeholder"
+	for tool: String in ["LogButton", "PrivateButton", "CoverButton"]:
+		(find_child(tool, true, false) as BaseButton).disabled = not active
+	var next: Dictionary = _view.get("next", {})
+	var identity := _identity(next)
+	if identity != _next_id:
+		_next_id = identity
+		_selection.clear()
+		_revealed_id = ""
+		_prediction = {"kind": "night", "number": 0}
+	_update_status(active)
+	_ring.show_seats(_view.get("seats", []))
+	_render()
+
+
+func _update_status(active: bool) -> void:
+	var phase := str(_view.get("phase", ""))
+	_phase.text_key = "ui.phase.%s" % phase.to_lower() if active else "ui.phase.none"
+	_phase_area.theme_type_variation = &"NightPanel" if phase == "NIGHT" else (&"DayPanel" if phase in ["DAY", "DAWN_RESOLUTION"] else &"HeaderPanel")
+	if active:
+		var progress: Dictionary = _view.get("night_progress", {})
+		if phase == "NIGHT":
+			_round.format_values = {"number": int(_view["night_number"]), "done": int(progress.get("done", 0)), "total": int(progress.get("total", 0))}
+			_round.text_key = "ui.cockpit.round.night"
+		elif phase in ["DAY", "DAWN_RESOLUTION"]:
+			_round.format_values = {"number": int(_view["day_number"]) if phase == "DAY" else int(_view["night_number"])}
+			_round.text_key = "ui.cockpit.round.day" if phase == "DAY" else "ui.cockpit.round.dawn"
+		else:
+			_round.text_key = ""
+		_alive.format_values = {"alive": int(_view["alive_count"]), "total": int(_view["player_count"])}
+		_alive.text_key = "ui.cockpit.alive"
+		_center_phase.text_key = "ui.phase.%s" % phase.to_lower()
+		_center_hint.text_key = ""
+	else:
+		_round.text_key = ""
+		_alive.text_key = ""
+		_center_phase.text_key = ""
+		_center_hint.text_key = "ui.cockpit.seats.placeholder"
+	var warnings: Array = _view.get("warnings", [])
+	_warnings.visible = not warnings.is_empty()
+	if not warnings.is_empty():
+		_warnings.format_values = (warnings[0] as Dictionary).get("values", {})
+		_warnings.text_key = str((warnings[0] as Dictionary)["key"])
+
+
+func _render() -> void:
+	var next: Dictionary = _view.get("next", {})
+	var phase := str(_view.get("phase", ""))
+	var visible_secret := not bool(next.get("secret", false)) or phase == "NIGHT" or _revealed_id == _next_id
+	if not bool(_view.get("has_game", false)):
+		_card.render({"kind": "no_game"}, {})
+		_ring.clear_marking()
+		return
+	var kind := str(next.get("kind"))
+	if kind == "prompt" and str(next.get("answer")) == "targets" and visible_secret:
+		_ring.set_marking(true, next.get("allowed_ids", []), _selection, next.get("actor_ids", []))
+	elif (kind == "prompt" or kind == "begin_step") and visible_secret:
+		_ring.set_marking(false, [], [], next.get("actor_ids", []))
+	else:
+		_ring.clear_marking()
+	_card.render(next, {
+		"phase": phase, "seats": _view.get("seats", []), "selection": _selection, "revealed": _revealed_id == _next_id,
+		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
+		"prediction_number": _prediction["number"], "error_key": _error_key,
+	})
+
+
+## Kennung der nächsten Handlung: wechselt sie, verfallen Auswahl und Aufdecken.
+func _identity(next: Dictionary) -> String:
+	match str(next.get("kind")):
+		"prompt":
+			return "prompt:%d:%s" % [int(next.get("prompt_id", 0)), str(next.get("stage"))]
+		"begin_step":
+			return "step:%s" % str(next.get("step_id"))
+		"win_decision":
+			return "win:%s" % str((next.get("candidates", []) as Array).map(func(c: Dictionary) -> int: return int(c["id"])))
+	return str(next.get("kind"))
+
+
+func _update_side_width() -> void:
+	if _side != null:
+		_side.custom_minimum_size.x = ThemeTokens.SIDE_COLUMN_WIDE_WIDTH if size.x >= GROUP_CARD_WIDTH_BREAKPOINT else ThemeTokens.SIDE_COLUMN_WIDTH
+
+
+# --- Bedienung --------------------------------------------------------------------------------------
+
+func _on_seat_tapped(person_id: int) -> void:
+	var next: Dictionary = _view.get("next", {})
+	if str(next.get("kind")) != "prompt" or str(next.get("answer")) != "targets":
+		return
+	var high := int(next.get("max", 0))
+	if _selection.has(person_id):
+		_selection.erase(person_id)
+	elif high == 1:
+		_selection = [person_id]
+	elif _selection.size() < high:
+		_selection.append(person_id)
+	else:
+		status_message_requested.emit("ui.cockpit.status.selection_full")
+		return
+	_render()
+
+
+func _on_card_requested(action: StringName, payload: Dictionary) -> void:
+	var s := context.session
+	match action:
+		&"reveal":
+			_revealed_id = _next_id
+			_render()
+		&"start_night":
+			_submit(s.start_night)
+		&"begin_step":
+			_submit(s.begin_next_step)
+		&"skip_step":
+			_ask_reason("ui.cockpit.dialog.skip.title", "ui.cockpit.dialog.skip.message", "ui.cockpit.dialog.skip.confirm",
+				func(reason: String) -> void: _submit(s.skip_next_step.bind(reason)))
+		&"cancel_prompt":
+			_ask_reason("ui.cockpit.dialog.cancel.title", "ui.cockpit.dialog.cancel.message", "ui.cockpit.dialog.cancel.confirm",
+				func(reason: String) -> void: _submit(s.cancel_prompt.bind(reason)))
+		&"confirm_targets":
+			_submit(s.answer_targets.bind(_selection.duplicate()))
+		&"decline":
+			_submit(s.answer_targets.bind([]))
+		&"clear_selection":
+			_selection.clear()
+			_render()
+		&"choice":
+			_submit(s.answer_choice.bind(bool(payload["choice"])))
+		&"option":
+			_submit(s.answer_option.bind(int(payload["index"])))
+		&"prediction_kind":
+			_prediction["kind"] = str(payload["kind"])
+			_prediction["number"] = 0
+			_render()
+		&"prediction_number":
+			_prediction["number"] = int(payload["number"])
+			_render()
+		&"prediction":
+			_submit(s.answer_prediction.bind(str(payload["kind"]), int(payload["number"])))
+		&"show_card":
+			open_layer(&"show")
+		&"override_shown":
+			_ask_override()
+		&"end_night":
+			_submit(s.end_night)
+		&"confirm_win":
+			var r := DialogRequest.create("ui.cockpit.dialog.confirm_win.title", "ui.cockpit.dialog.confirm_win.message", "ui.cockpit.dialog.confirm_win.confirm",
+				func() -> void: _submit(s.confirm_win.bind(int(payload["candidate_id"]))))
+			dialog_requested.emit(r)
+		&"reject_win":
+			_ask_reason("ui.cockpit.dialog.reject_win.title", "ui.cockpit.dialog.reject_win.message", "ui.cockpit.dialog.reject_win.confirm",
+				func(reason: String) -> void: _submit(s.reject_win.bind(reason)))
+
+
+## Sendet genau einen Befehl; die Karte ist bis zur neuen Sicht gesperrt (Mehrfachtippen).
+func _submit(action: Callable) -> void:
+	_card.lock()
+	var result: CommandResult = action.call()
+	if result == null or not result.ok:
+		_render()
+
+
+func _on_rejected(error: StringName) -> void:
+	var key := "ui.cockpit.error.%s" % String(error)
+	_error_key = key if CockpitText.has_key(key) else "ui.cockpit.error.generic"
+	status_message_requested.emit(_error_key)
+
+
+func _ask_reason(title_key: String, message_key: String, confirm_key: String, on_text: Callable) -> void:
+	dialog_requested.emit(DialogRequest.with_input(title_key, message_key, confirm_key, "ui.cockpit.dialog.reason_placeholder", on_text))
+
+
+func _ask_override() -> void:
+	var request := DialogRequest.create("ui.cockpit.dialog.override.title", "ui.cockpit.dialog.override.message", "")
+	for role: StringName in RolePresentation.sorted_roles():
+		var option := DialogOption.new()
+		option.node_name = "Role_%s" % CockpitText.key_part(String(role))
+		option.text_key = RolePresentation.name_key(role)
+		option.on_select = func() -> void:
+			_ask_reason.call_deferred("ui.cockpit.dialog.override_reason.title", "ui.cockpit.dialog.override_reason.message", "ui.cockpit.dialog.override_reason.confirm",
+				func(reason: String) -> void: _submit(context.session.override_shown_role.bind(String(role), reason)))
+		request.options.append(option)
+	dialog_requested.emit(request)
+
+
+# --- Ebenen: Protokoll, privater Bereich, gezeigte Karte, Sichtschutz -------------------------------
+
+## Öffnet genau eine Ebene; ihr Inhalt entsteht erst jetzt aus der Anwendungsschicht.
+func open_layer(kind: StringName) -> void:
+	close_layer()
+	if not bool(_view.get("has_game", false)):
+		return
+	match kind:
+		&"private":
+			_layer = CockpitLayers.private_drawer(context.session.private_seats())
+		&"log":
+			_layer = CockpitLayers.log_drawer(context.session.event_log(), _view.get("seats", []))
+		&"show":
+			_layer = CockpitLayers.show_card(_view.get("next", {}))
+			_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
+	if _layer == null:
+		_layout.visible = true
+		return
+	_layer_kind = kind
+	_overlay_host.add_child(_layer)
+	var close := _layer.find_child("CloseLayerButton", true, false) as BaseButton
+	if close != null:
+		close.pressed.connect(close_layer)
+		close.grab_focus()
+
+
+func close_layer() -> void:
+	if _layer != null:
+		_overlay_host.remove_child(_layer)
+		_layer.queue_free()
+	_layer = null
+	_layer_kind = &""
+	_layout.visible = not _covered
+
+
+func layer_kind() -> StringName:
+	return _layer_kind
+
+
+## Sichtschutz: entfernt alle Ebenen, verdeckt Karten wieder und blendet das Cockpit aus.
+func cover() -> void:
+	if not bool(_view.get("has_game", false)):
+		return
+	close_layer()
+	_revealed_id = ""
+	_covered = true
+	_layout.visible = false
+	_layer = CockpitLayers.cover_panel()
+	_layer_kind = &"cover"
+	_overlay_host.add_child(_layer)
+	var resume := _layer.find_child("UncoverButton", true, false) as BaseButton
+	resume.pressed.connect(uncover)
+	resume.grab_focus()
+
+
+func uncover() -> void:
+	_covered = false
+	close_layer()
+	_render()
+
+
+func is_covered() -> bool:
+	return _covered
+
+
+func _exit_tree() -> void:
+	close_layer()

@@ -35,7 +35,7 @@ func test_ui_does_not_touch_game_state() -> void:
 			var code := lines[n].split("#")[0]
 			assert_true(pattern.search(code) == null, "%s:%d greift am Regelkern vorbei zu: %s" % [path, n + 1, code.strip_edges()])
 	session_files.sort()
-	assert_eq(session_files, ["game_session.gd", "game_start.gd"] as Array[String], "nur Sitzung und Start-Builder in der Anwendungsschicht")
+	assert_eq(session_files, ["cockpit_view.gd", "game_session.gd", "game_start.gd", "prompt_view.gd"] as Array[String], "nur Sitzung, Start-Builder und Sichten in der Anwendungsschicht")
 
 
 func test_session_exposes_no_mutable_state() -> void:
