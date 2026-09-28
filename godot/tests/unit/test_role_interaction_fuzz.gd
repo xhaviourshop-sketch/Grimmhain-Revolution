@@ -17,10 +17,11 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
 	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein",
-	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger"]
+	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
-const GAMES := 160
+## Volle Fokusrunden: jede Rolle ist gleich oft Fokusrolle, auch wenn der Rollenpool wächst.
+const FOCUS_ROUNDS := 3
 const MAX_COMMANDS := 160
 const CODEC_EVERY := 20
 const FORBIDDEN_PUBLIC_KEYS: Array[String] = ["role_id", "appears_as", "cause", "faction", "shown_role", "truth_role",
@@ -34,19 +35,21 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
 	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived",
-	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet"]
+	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
-	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN"]
+	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN"]
 
 var _rng := RandomNumberGenerator.new()
 var _game_label := ""
 var _seen := {}
+var _focus := ""  ## Fokusrolle der laufenden Partie
 var _probe := false  ## letzter Befehl ist eine zufällige Korrektur, Ablehnung erlaubt
 var _probe_rejected := 0
 var _probe_accepted := 0
 
 
 func test_random_games_keep_invariants() -> void:
+	var GAMES := FOCUS_ROUNDS * ROLES.size()
 	var games_over := 0
 	var total_commands := 0
 	var deaths := 0
@@ -131,6 +134,7 @@ func _start_command(g: int, count: int) -> Command:
 	var roles: Array[String] = []
 	# Fokusrolle: jede Katalogrolle ist reihum sicher in mehreren Partien (Abdeckung wächst mit dem Pool).
 	var focus: String = ROLES[g % ROLES.size()]
+	_focus = focus
 	var wolves := 1 + _rng.randi_range(0, maxi(0, count / 5))
 	if focus == "amalia":
 		wolves = maxi(wolves, RoleCatalog.AMALIA_MIN_WOLVES)  # ihre Tagesaktion braucht drei Wölfe
@@ -205,6 +209,9 @@ func _next_command(s: GameState) -> Command:
 	_probe = false
 	var open := s.open_candidates()
 	if not open.is_empty():
+		# Der König handelt erst bei mehr Toten als Lebenden: seine Fokuspartien laufen bis dahin weiter.
+		if _focus == "koenig" and not InfoSteps.king_condition(s):
+			return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: Königsbedingung abwarten"})
 		if _rng.randf() < 0.6:
 			return Command.confirm_win((_pick(open) as WinCandidate).id)
 		return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: weiterspielen"})

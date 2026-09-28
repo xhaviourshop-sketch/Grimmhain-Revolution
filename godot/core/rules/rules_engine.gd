@@ -568,6 +568,13 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 				s.death_marks.append({"target_id": target, "source_id": prompt.actor_id, "cause": String(KillEvent.CAUSE_PROPHET_KILL)})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
+		PendingPrompt.OWNER_FIRE:
+			if target != GameState.NO_TARGET:
+				SoloRules.set_fire_mark(s, prompt.actor_id, target)
+			ctx.emit(GameEvent.FIRE_MARKED, Visibility.GM, {"devil_id": prompt.actor_id, "target_id": SoloRules.fire_mark_of(s, prompt.actor_id),
+				"kept": target == GameState.NO_TARGET, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
 		PendingPrompt.OWNER_WIDOW:
 			# Schwarze Witwe (B-03, B-06): lebendes Paar des Loki → beide sterben am Morgen.
 			var partners := BondRules.living_partners(s, target)

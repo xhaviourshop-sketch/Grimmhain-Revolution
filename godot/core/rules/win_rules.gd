@@ -13,6 +13,8 @@ extends RefCounted
 ##   Doppelspion: kein Wolf lebt und er lebt; je Person ein Kandidat, der Dorfsieg entfällt dann (RM-DR-155).
 ## Die Ewigen (I-12, I-15): Ist die begünstigte Person eines Einzelsiegs von den Ewigen mit Ja geprüft,
 ## stehen alle Personen mit der Rolle Die Ewigen (lebend oder tot) nach ihr in `beneficiary_ids`.
+## Feuerteufel (RM-DR-131.5): Jeder erkannte Sieg nennt alle lebenden Feuerteufel in `co_winner_ids`
+## (nicht bei einer Siegerklärung durch den Spielleiter); sie haben keine eigene Siegbedingung.
 ## DR-02: Mehrere gleichzeitige Kandidaten ohne automatische Priorität; der Spielleiter
 ## bestätigt genau einen oder lehnt alle ab. Lebt niemand, entsteht kein Kandidat; der
 ## Spielleiter erklärt das Ergebnis per GmCorrection „declare_winner“.
@@ -67,6 +69,10 @@ static func evaluate(state: GameState) -> Array:
 	for result: Dictionary in results:
 		if result["kind"] == String(Faction.SOLO):
 			(result["beneficiary_ids"] as Array).append_array(eternal_co_winners(state, int(result["beneficiary_ids"][0])))
+	var devils := SoloRules.fire_co_winners(state)
+	if not devils.is_empty():
+		for result: Dictionary in results:
+			result["co_winner_ids"] = devils.duplicate()
 	return results
 
 
@@ -159,6 +165,7 @@ static func finalize_if_ready(ctx: RuleContext) -> void:
 		candidate.reason_key = StringName(result["reason_key"])
 		candidate.reason_args = result["reason_args"]
 		candidate.beneficiary_ids.assign(result["beneficiary_ids"])
+		candidate.co_winner_ids.assign(result.get("co_winner_ids", []))
 		candidate.status = WinCandidate.STATUS_OPEN
 		candidate.detected_at_command = ctx.command_index
 		s.win_candidates.append(candidate)
@@ -192,8 +199,19 @@ static func state_is_consistent(s: GameState) -> bool:
 		if ids.has(c.id) or c.id >= s.next_candidate_id:
 			return false
 		ids[c.id] = true
-		for b: int in c.beneficiary_ids:
+		for b: int in c.beneficiary_ids + c.co_winner_ids:
 			if not s.players.has(b):
+				return false
+		var sorted_co := c.co_winner_ids.duplicate()
+		sorted_co.sort()
+		if sorted_co != c.co_winner_ids or c.co_winner_ids.any(func(b: int) -> bool: return c.beneficiary_ids.has(b) or c.co_winner_ids.count(b) > 1):
+			return false
+		# Offene und bestätigte erkannte Siege nennen genau die lebenden Feuerteufel (Zustand ist dann eingefroren).
+		if (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+			var expected: Array[int] = []
+			if c.reason_key != WinCandidate.REASON_GM_DECLARED:
+				expected = SoloRules.fire_co_winners(s)
+			if c.co_winner_ids != expected:
 				return false
 		if c.status == WinCandidate.STATUS_CONFIRMED:
 			confirmed.append(c)

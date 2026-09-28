@@ -7,6 +7,10 @@ extends RefCounted
 ##   Prophet des Untergangs: Markierungen in Nacht 1 (`prophet_marks`), dauerhaft freigeschaltet, sobald alle
 ##     tot sind (`prophet_unlocked`); Sieg statt des Dorfes (WinRules).
 ##   Todesprediger: Vorhersage (`prophecies`); Tod zur vorhergesagten Phase → `preacher_wins`.
+## Feuerteufel (Teil 2, E-05 bis E-11): höchstens eine Markierung je Feuerteufel (`fire_marks`), jede Nacht neu
+##   oder behalten; sie erlischt mit dem Tod des Ziels, dem Tod oder Rollenverlust des Feuerteufels. Jeder
+##   tatsächliche Tod eines markierten Ziels (mit Todesfolgen) verbrennt einmal dessen nächste lebende Nachbarn
+##   ohne Feuerteufel (`CAUSE_BURN`); Mitsieg lebender Feuerteufel bei jedem erkannten Sieg (WinRules).
 ## Einzelsiegrollen sind weder blockierbar (RM-DR-010) noch vom Fluch des Weisen betroffen.
 
 
@@ -123,3 +127,59 @@ static func on_death(ctx: RuleContext, target: Player, record: KillEvent, trigge
 		s.preacher_wins.append(target.id)
 		s.preacher_wins.sort()
 		ctx.emit(GameEvent.PREACHER_FULFILLED, Visibility.GM, {"player_id": target.id, "kind": kind, "number": record.phase_number})
+
+# --- Feuerteufel ----------------------------------------------------------------------------------
+
+## Andere Lebende, die ein Feuerteufel markieren kann (RM-DR-131.6).
+static func fire_targets(s: GameState, devil_id: int) -> Array[int]:
+	return _others_alive(s, devil_id)
+
+
+static func fire_mark_of(s: GameState, devil_id: int) -> int:
+	for m: Dictionary in s.fire_marks:
+		if int(m["devil_id"]) == devil_id:
+			return int(m["target_id"])
+	return GameState.NO_TARGET
+
+
+## Setzt die einzige Markierung eines Feuerteufels (ersetzt eine bestehende), aufsteigend nach devil_id.
+static func set_fire_mark(s: GameState, devil_id: int, target_id: int) -> void:
+	drop_fire_mark(s, devil_id)
+	s.fire_marks.append({"devil_id": devil_id, "target_id": target_id})
+	s.fire_marks.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["devil_id"]) < int(b["devil_id"]))
+
+
+## Markierung eines Feuerteufels erlischt (Tod oder Rollenverlust, RM-DR-131.7).
+static func drop_fire_mark(s: GameState, devil_id: int) -> void:
+	s.fire_marks = s.fire_marks.filter(func(m: Dictionary) -> bool: return int(m["devil_id"]) != devil_id)
+
+
+## Lebende Feuerteufel als Mitsieger jedes erkannten Siegs (RM-DR-131.5), aufsteigend.
+static func fire_co_winners(s: GameState) -> Array[int]:
+	var out: Array[int] = []
+	for id: int in s.alive_ids():
+		if s.players[id].role_id == RoleCatalog.FEUERTEUFEL:
+			out.append(id)
+	out.sort()
+	return out
+
+
+## Nach jedem Tod: Die Markierung des Toten als Feuerteufel erlischt; alle Markierungen auf ihm sind verbraucht.
+## Nur mit Todesfolgen brennt es genau einmal (RM-DR-131.1, .8): die nächsten lebenden Nachbarn ohne Feuerteufel
+## (RM-DR-131.3, .4), im Uhrzeigersinn zuerst; Quelle ist der Feuerteufel mit der kleinsten ID.
+static func fire_on_death(ctx: RuleContext, target: Player, trigger_effects: bool) -> void:
+	var s := ctx.state
+	drop_fire_mark(s, target.id)
+	var devils: Array[int] = []
+	for m: Dictionary in s.fire_marks:
+		if int(m["target_id"]) == target.id:
+			devils.append(int(m["devil_id"]))
+	if devils.is_empty():
+		return
+	s.fire_marks = s.fire_marks.filter(func(m: Dictionary) -> bool: return int(m["target_id"]) != target.id)
+	if not trigger_effects:
+		return
+	var victims := Seats.living_neighbours(s, target.id).filter(func(id: int) -> bool: return s.players[id].role_id != RoleCatalog.FEUERTEUFEL)
+	ctx.emit(GameEvent.FIRE_BURNED, Visibility.GM, {"target_id": target.id, "devil_ids": devils, "victim_ids": victims})
+	for id: int in victims:
+		KillPipeline.request_kill(ctx, id, KillEvent.CAUSE_BURN, KillEvent.SOURCE_PLAYER, devils[0])

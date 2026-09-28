@@ -169,10 +169,13 @@ const PROPHET := &"prophet-des-untergangs"
 const PROPHET_MARKS := 3
 ## Todesprediger / Death Prophet (E-04): Einzelsieg; geheime Vorhersage des eigenen Todes (BondSteps).
 const TODESPREDIGER := &"todesprediger"
+## Feuerteufel / Pyromaniac (E-05 bis E-11): Einzelsieg; eine Markierung, beim Tod des Ziels brennen dessen
+## nächste lebende Nachbarn (Feuerteufel verschont); Mitsieg lebend (SoloRules, WinRules).
+const FEUERTEUFEL := &"feuerteufel"
 ## Rollen, deren eigener Nachtschritt jede Nacht stattfindet und durch einen Apfel verdoppelt wird (R-02, R-04);
 ## ausgenommen Rollen mit nur einem Ergebnis (Richter, Parasit, Verdammniswächter, Rotkäppchen).
 const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUMWOLF, HENKER, WALDLAEUFER, DOKTOR, TRAUMDEUTER, SCHWARZE_WITWE,
-	RATTENFAENGER, PESTBRINGERIN, PROPHET]  ## Prophet nur freigeschaltet (Tötung jede Nacht)
+	RATTENFAENGER, PESTBRINGERIN, PROPHET, FEUERTEUFEL]  ## Prophet nur freigeschaltet (Tötung jede Nacht)
 const BOUND_PRIORITY := 5
 const ETERNAL_PRIORITY := 48  ## gemeinsamer Schritt der Ewigen (Legacy-Stufe 4.8)
 
@@ -253,6 +256,7 @@ const ROLES := {
 	PESTBRINGERIN: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PESTBRINGERIN, "night_priority": 72},
 	PROPHET: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PROPHET, "night_priority": 86},
 	TODESPREDIGER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": TODESPREDIGER, "night_priority": 66, "first_night_only": true},
+	FEUERTEUFEL: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": FEUERTEUFEL, "night_priority": 76},
 }
 
 

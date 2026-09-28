@@ -31,6 +31,7 @@ var kind: StringName = &""  ## Faction oder "none"
 var reason_key: StringName = &""
 var reason_args: Dictionary = {}
 var beneficiary_ids: Array[int] = []  ## begünstigte Personen bei personenbezogenen Siegen (Manipulator)
+var co_winner_ids: Array[int] = []    ## zusätzliche Mitsieger jedes Siegs: lebende Feuerteufel (RM-DR-131.5), aufsteigend
 var status: StringName = STATUS_OPEN
 var detected_at_command: int = -1
 var resolved_at_command: int = -1
@@ -39,11 +40,11 @@ var rejection_reason: String = ""
 
 ## Gleiche Bedingung für dieselben Personen (für die Duplikatprüfung).
 func semantic_key() -> String:
-	return "%s|%s|%s" % [kind, reason_key, str(beneficiary_ids)]
+	return "%s|%s|%s|%s" % [kind, reason_key, str(beneficiary_ids), str(co_winner_ids)]
 
 
 func to_dict() -> Dictionary:
-	return {
+	var d := {
 		"id": id,
 		"kind": String(kind),
 		"reason_key": String(reason_key),
@@ -54,6 +55,10 @@ func to_dict() -> Dictionary:
 		"resolved_at_command": resolved_at_command,
 		"rejection_reason": rejection_reason,
 	}
+	# Nur gespeichert, wenn vorhanden: Spielstände ohne Feuerteufel bleiben unverändert.
+	if not co_winner_ids.is_empty():
+		d["co_winner_ids"] = co_winner_ids.duplicate()
+	return d
 
 
 static func from_dict(d: Dictionary) -> WinCandidate:
@@ -66,6 +71,11 @@ static func from_dict(d: Dictionary) -> WinCandidate:
 	if ids == null or not d.get("beneficiary_ids") is Array:
 		return null
 	w.beneficiary_ids = ids
+	if d.has("co_winner_ids"):
+		var co: Variant = DictRead.to_int_array(DictRead.get_array(d, "co_winner_ids"))
+		if co == null or not d.get("co_winner_ids") is Array or (co as Array).is_empty():
+			return null
+		w.co_winner_ids = co
 	w.status = StringName(DictRead.get_string(d, "status"))
 	w.detected_at_command = DictRead.get_int(d, "detected_at_command", -1)
 	w.resolved_at_command = DictRead.get_int(d, "resolved_at_command", -1)

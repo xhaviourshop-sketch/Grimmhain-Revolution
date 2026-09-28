@@ -113,6 +113,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.PESTBRINGERIN: false,  # Pflichtwahl
 	RoleCatalog.PROPHET: false,        # Markieren Pflicht, Töten mit Verzicht (0 Ziele)
 	RoleCatalog.TODESPREDIGER: false,  # Pflichtvorhersage
+	RoleCatalog.FEUERTEUFEL: false,    # Behalten ist eine Antwort (0 Ziele)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -287,6 +288,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.PESTBRINGERIN and SoloRules.pest_targets(s, actor).is_empty():
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.FEUERTEUFEL and SoloRules.fire_targets(s, actor).is_empty():
+		return &"no_decision"
 	if step_role(key) == RoleCatalog.PROPHET:
 		if SoloRules.prophet_marking(s, actor):
 			return &"no_decision" if s.alive_ids().size() - 1 < RoleCatalog.PROPHET_MARKS else &""
@@ -361,7 +364,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
 	elif BondSteps.OWNERS.has(step_kind(step_id)):
 		BondSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
-	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET].has(step_kind(step_id)):
+	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET, RoleCatalog.FEUERTEUFEL].has(step_kind(step_id)):
 		var solo_actor := step_actor(s.night_plan[s.next_night_step])
 		prompt.owner = step_kind(step_id)
 		prompt.actor_id = solo_actor
@@ -379,6 +382,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 				if SoloRules.prophet_marking(s, solo_actor):
 					prompt.min_count = RoleCatalog.PROPHET_MARKS
 					prompt.max_count = RoleCatalog.PROPHET_MARKS
+			RoleCatalog.FEUERTEUFEL:  # eine andere Lebende neu markieren oder behalten (0 Ziele)
+				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
 	elif step_kind(step_id) == RoleCatalog.SCHWARZE_WITWE or step_kind(step_id) == RoleCatalog.SCHATTENWANDERER:
 		# Witwe: Pflichtwahl einer anderen lebenden Person; Schattenwanderer: eine andere oder „noch nicht“.
 		prompt.owner = step_kind(step_id)

@@ -773,6 +773,12 @@ msgstr "Todesprediger"
 msgid "ui.role.todesprediger.short"
 msgstr "Sagt in der ersten Nacht geheim seinen Todeszeitpunkt voraus; trifft er, gewinnt er."
 
+msgid "ui.role.feuerteufel.name"
+msgstr "Feuerteufel"
+
+msgid "ui.role.feuerteufel.short"
+msgstr "Markiert jede Nacht eine Person; stirbt sie, verbrennen ihre Nachbarn. Gewinnt lebend mit."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

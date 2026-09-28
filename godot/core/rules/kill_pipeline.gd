@@ -72,6 +72,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	WinRules.record_death_seeker(ctx, target, record, dead_before)
 	if trigger_effects:
 		_coachman_crash(ctx, target, record)
+	SoloRules.fire_on_death(ctx, target, trigger_effects)
 	WinRules.record_provisional(ctx, record)
 	return record
 

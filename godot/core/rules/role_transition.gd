@@ -29,6 +29,8 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 		WolfChildRules.create_bond(s, player_id)
 	if previous == RoleCatalog.LEHRLING and role != RoleCatalog.LEHRLING:
 		ApprenticeRules.end_active(s, player_id, ApprenticeBond.STATUS_REMOVED)
+	if role != RoleCatalog.FEUERTEUFEL:
+		SoloRules.drop_fire_mark(s, player_id)  # Markierung erlischt mit der Rolle (RM-DR-131.7)
 
 
 ## Wiederbelebung (Decision Log „Rollenaudit · Wiederbelebung …“): lebt wieder, Todesdatensatz weg, alle
@@ -51,6 +53,8 @@ static func restore(s: GameState, player_id: int, snapshot: Dictionary) -> void:
 	p.appears_as = StringName(DictRead.get_string(snapshot, "appears_as"))
 	p.ability_uses = DictRead.get_dict(snapshot, "ability_uses").duplicate()
 	WolfChildRules.remove_bond(s, player_id)
+	if p.role_id != RoleCatalog.FEUERTEUFEL:
+		SoloRules.drop_fire_mark(s, player_id)
 
 
 static func snapshot_of(p: Player) -> Dictionary:

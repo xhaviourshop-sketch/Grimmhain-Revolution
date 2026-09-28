@@ -773,6 +773,12 @@ msgstr "Death Prophet"
 msgid "ui.role.todesprediger.short"
 msgstr "Secretly predicts the time of his death in the first night; if right, he wins."
 
+msgid "ui.role.feuerteufel.name"
+msgstr "Pyromaniac"
+
+msgid "ui.role.feuerteufel.short"
+msgstr "Marks one person each night; when that person dies, their neighbours burn. Wins alongside while alive."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 
