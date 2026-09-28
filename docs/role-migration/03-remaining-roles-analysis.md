@@ -6,7 +6,7 @@ Dieses Dokument fasst je fehlender Rolle die belegten Kernaussagen zusammen. Die
 
 Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier „Text DE/EN“), **Legacy-Code tut** (Dossier „Legacy-Codeverhalten“), **React-Version tut** (Dossier „React-Version“; für keine der 61 Rollen eigenes Regelverhalten), **Dokumentation empfiehlt** (Dossier „Bisherige Doku“), **neuer Godot-Kern tut** (für alle 61: nichts, keine Rolle ist im RoleCatalog), **noch unentschieden** (Entscheidungen unten).
 
-**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt (später weitere Rollen, siehe `11`); sein Abschnitt steht jetzt in [`02`](02-implemented-roles-audit.md) §4.12, der aktuelle Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md). Diese Datei behandelt damit 60 fehlende Rollen.
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt (später weitere Rollen, siehe `11`); sein Abschnitt steht jetzt in [`02`](02-implemented-roles-audit.md) §4.12, der aktuelle Prüfstatus aller Rollen in [`11-role-audit-status.md`](11-role-audit-status.md). Diese Datei behandelt damit 60 fehlende Rollen; umgesetzte Rollen sind inzwischen entfernt (Stand 28.09.2026: 8 verbleibend, `feuerteufel` jetzt in [`02`](02-implemented-roles-audit.md) §4.64).
 
 **Lesehilfe:** In übernommenen Zellen bezeichnen `01` bis `07` ohne Pfad die älteren Dokumente unter `docs/godot-migration/`; Pfadkürzel wie in [`04`](04-rule-conflicts.md) §3.
 
@@ -18,7 +18,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 |---|---|---|---|---|---|---|---|---|---|
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
-| [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
@@ -73,27 +72,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeit der `startMulti`-Abbruchpfade. |
 | Detail | [Dossier](dossiers/wolves-a.md#schicksalswolf) |
-
-### `feuerteufel`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Feuerteufel / Pyromaniac |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / IV / 7.6 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Die Kernfunktion „beim Tod des Ziels" wird durch belegte Fehler verfälscht (Brand ohne Tod, kein Brand bei Tod durch andere Ursachen). |
-| DE/EN-Vergleich | JA, semantisch gleich. Beide ohne Häufigkeit, Dauer, Nachbardefinition, Siegbedingung. |
-| Automationsziel | `automatic`: nach Regelfestlegung; der Brand ist eine deterministische Todesreaktion. |
-| Mechanik | primär: Todesreaktion; sekundär: Sitzpositionsmechanik, Hinrichtungsreaktion |
-| Größe / Risiko | M / hoch. Viele Wechselwirkungen in Nachtauflösung und Hinrichtung. |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt, KillPipeline (Kettenschritt), Reaktionswarteschlange, ExecutionRules, WinRules, StateCodec, Replay, GmCorrections, Ereignis-Sichtbarkeit. |
-| Neue Systeme | Sitznachbarschaft, dauerhafte Statusmarker (Brandmarke mit Ablauf), ggf. zusätzliche Siegbedingungen. |
-| Abhängigkeiten | Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Albtraumwolf (Blockade), Der Weise, Dorfschmied, Nekromant, Waldhexe, Märtyrerin, Voodoo-Priester, Dorfwache (Überleben/Entfernen aus Zielen), Fenrir, Cerberus, Spiegelwolf, Wahnsinniger Kutscher (Lynch-Zweige), Ritter (Vergeltung bei … |
-| Widersprüche | RM-C-051 Auslöser; RM-C-052 Dauer der Markierung; RM-C-053 Nachbarn; RM-C-054 Feuerteufel als Nachbar; RM-C-055 Siegbedingung |
-| Entscheidungen | RM-DR-131 (Rolle); übergreifend RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
-| Belegsicherheit | hoch für Code-Pfade; nicht zur Laufzeit geprüft. |
-| Detail | [Dossier](dossiers/solos-a.md#feuerteufel) |
 
 ### `voodoo-priester`
 

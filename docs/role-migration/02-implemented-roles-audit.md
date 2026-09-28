@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 63 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 63 |
+| im RoleCatalog vorhandene Rollen | 64 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 64 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 61 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 62 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -110,6 +110,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 61 | `pestbringerin` | Pestbringerin / Plague Bringer (Rollentext) | solo | nein | 72 | `solo_rules.gd` (`infected`, `spread`, Seed) | `test_solo_roles_a.gd`, fuzz | RM-DR-120, E-02, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 62 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom (Rollentext) | solo | nein | 86 | `solo_rules.gd` (`prophet_marks`, `prophet_unlocked`), `win_rules.gd` | `test_solo_roles_a.gd`, fuzz | RM-DR-121, E-03, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `not-found` |
 | 63 | `todesprediger` | Todesprediger / Death Prophet (Rollentext) | solo | nein | 66 (nur Nacht 1) | `bond_steps.gd` (Stufe prediction), `solo_rules.gd` (`preacher_wins`) | `test_solo_roles_a.gd`, fuzz | RM-DR-158, E-04, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 64 | `feuerteufel` | Feuerteufel / Pyromaniac (Rollentext) | solo | nein | 76 | `solo_rules.gd` (`fire_marks`, `fire_on_death`), `kill_pipeline.gd`, `win_rules.gd` (`co_winner_ids`) | `test_fire_devil.gd`, fuzz | RM-DR-131, E-05 bis E-11, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 2 (Feuerteufel)“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -437,6 +438,11 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nur Nacht 1 (Priorität 66): geheime Vorhersage `{kind: night|day, number}` einer künftigen Phase (Tag N nach Nacht N; laufende Nacht nicht). Stirbt er mit Todesfolgen genau in dieser Phase (Morgentode zählen zur Nacht), steht er in `preacher_wins` und wird fortan vorgeschlagen.
 - **Tests:** Ungültige Vorhersagen, geheim, Treffer am Tag, falsche Phase.
 - **Grenzen:** –
+
+### 4.64 `feuerteufel`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht (Priorität 76, nicht blockierbar) markiert er eine andere lebende Person neu oder behält seine Markierung (0 Ziele); höchstens eine aktive Markierung je Feuerteufel (`fire_marks`). Sie erlischt mit dem Tod des Ziels und mit Tod oder Rollenverlust des Feuerteufels. Jeder tatsächliche Tod eines markierten Ziels mit Todesfolgen verbrennt genau einmal dessen nächste lebende Nachbarn ohne Feuerteufel (`BURN`, im Uhrzeigersinn zuerst, Kettenbrand möglich); Rudelschutz wirkt nicht, persönliche Schilde schon. Lebende Feuerteufel stehen bei jedem erkannten Sieg als Mitsieger in `co_winner_ids`; kein eigener Sieg.
+- **Tests:** Ziele, Behalten und Ersetzen, Brand bei Rudel, Hinrichtung und Korrektur mit Folgen, kein Brand ohne Folgen oder bei Überleben, tote Plätze, Feuerteufel verschont, zwei Feuerteufel, Kettenbrand, Schutzengel und Rudelvater, Tod und Rollenverlust, Mitsieg bei Dorf-, Wolfs- und Einzelsieg, Ladeprüfung; Fuzz mit Pflichtabdeckung `FireMarked`, `FireBurned`, `BURN`.
+- **Grenzen:** Siegerklärung durch den Spielleiter nennt keine Mitsieger (der Spielleiter entscheidet dort selbst).
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

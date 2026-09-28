@@ -340,7 +340,9 @@ Siehe §3.
 
 ### K9 · Marker und Einzelsiege
 
-**Rollen Charge K9 (1):** `feuerteufel`
+**Rollen Charge K9 (0):** –
+
+**Nachtrag Rollenaudit:** `feuerteufel` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `prophet-des-untergangs` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

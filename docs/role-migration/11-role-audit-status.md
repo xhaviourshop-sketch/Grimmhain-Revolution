@@ -6,7 +6,7 @@ Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterpl
 ## 0. Übergabe für die nächste Sitzung (Stand 28.09.2026, letzter Code-Commit `153746b`)
 
 - Branch `audit/all-72-roles`, Worktree `C:/Users/Marku/Desktop/Grimmhain/grimmhain-audit-72-roles`, gepusht.
-- Letzter vollständiger Lauf: 648 Tests, 0 fehlgeschlagen, keine `SCRIPT ERROR`, Exit 0; `node tools/role-migration/check-role-docs.js` Exit 0. Zusätzlich je Charge einmalig 480 Fuzzpartien mit anderen Seeds (Seed-Formel `104729 * (g + 1) + 17`, temporäre Kopie des Fuzztests) ohne Invariantenverletzung.
+- Letzter vollständiger Lauf (28.09.2026, nach Feuerteufel): 662 Tests, 0 fehlgeschlagen, 0 nicht ladbar, keine `SCRIPT ERROR`/`Parse Error`, Import- und Runner-Exit 0 (strenge Auswertung ohne Pipe, siehe §5); `node tools/role-migration/check-role-docs.js` Exit 0. Zusätzlich je Charge einmalig 480 Fuzzpartien mit anderen Seeds (Seed-Formel `104729 * (g + 1) + 17`, temporäre Kopie des Fuzztests, danach gelöscht) ohne Invariantenverletzung; für den Feuerteufel am 28.09. ausgeführt.
 - Prüfhinweis: Der Testrunner zählt einen Test als grün, wenn er nach mindestens einer Prüfung durch einen Laufzeitfehler abbricht. Deshalb ist jede `SCRIPT ERROR`-Zeile im Testlog ein Fehlschlag (so auch `.claude/skills/grimmhain-core/windows-checks.md`).
 - Vorgehen je Charge: Fragen per Auswahl-Popup mit zitiertem Rollentext → Decision Log, `decision-status.csv`, `08` → Tests zuerst → Umsetzung → UI-Namen, Reihenfolge, UI-Testlisten → Rollenliste des Fuzztests → Migrationsdokumente (`promote_role.py`, Tabellen-Generator; Scratchpad-Hilfsskripte, bei Bedarf neu schreiben) → Commit und Push.
 - Informationsrollen (Traumdeuter, König, Kopfgeldjäger, Kriegerin des Lichts, Blutpriester, Amalia, Detektiv, Die Ewigen) sind entschieden (I-01 bis I-15) und grün.
@@ -15,7 +15,8 @@ Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterpl
 - Verwandlungsrollen (Dämonischer Wolf, König Lykaon, Seelentauscher) sind entschieden (V-01 bis V-09) und grün. Der Fuzztest nimmt je Partie reihum eine Fokusrolle auf; seltene Pflichtereignisse (Amalia, Apfel, Spiegelwolf ohne Spiegelung) kommen trotzdem nur 1 bis 2 Mal vor und können bei Generatoränderungen wegfallen.
 - Wiederbelebungsrollen (Kutscher, Dr. Victor Frankenstein) sind entschieden (W-01 bis W-04) und grün; Totenkarten (RM-DR-013) nur für Kartenschlucker und RM-DR-141.4 offen. Der Fuzztest richtet gelegentlich einen lebenden Spiegelwolf ohne Nominierung hin und fragt öfter Korrekturen ab, damit seine Pflichtabdeckung stabil bleibt.
 - Einzelsiege Teil 1 (Rattenfänger, Pestbringerin, Prophet des Untergangs, Todesprediger) sind entschieden (E-01 bis E-04) und grün.
-- **Einzelsiege Teil 2 (Stand 28.09.2026):** Nur noch eine Sitzung arbeitet am Audit. Feuerteufel entschieden (RM-DR-131.1–.5 über E-05 bis E-08, vom PO in einem eigenen Fenster ausdrücklich bestätigt; Ergänzungen RM-DR-131.6–.8 über E-09 bis E-11) und OFFEN (Umsetzung folgt testgetrieben). E-05 bis E-08 bezeichnen nur diese Feuerteufel-Fragen; die früher so benannten, nie beantworteten Fragen zu Voodoo und Nekromant sind im Decision Log als historischer Hinweis vermerkt. Offen (neue IDs ab E-12): Voodoo-Priester (RM-DR-132.1, .2, .4; Selbstwahl, Wissen des Puppenträgers, Reihenfolge der Abfangregeln) und Nekromant (RM-DR-142.1–.5). RM-DR-132.3 ist durch E-01 entschieden. Danach Hades (RM-DR-144), Grabräuber (RM-DR-156), Zeitwächter, Rachsüchtiger Wolf, Schicksalswolf; Kartenschlucker wartet auf den Totenkarten-Assistenten (W-01).
+- **Einzelsiege Teil 2 (Stand 28.09.2026):** Nur noch eine Sitzung arbeitet am Audit. Feuerteufel entschieden (RM-DR-131.1–.5 über E-05 bis E-08, vom PO in einem eigenen Fenster ausdrücklich bestätigt; Ergänzungen RM-DR-131.6–.8 über E-09 bis E-11) und **GRÜN** (`test_fire_devil`, Fuzz). E-05 bis E-08 bezeichnen nur diese Feuerteufel-Fragen; die früher so benannten, nie beantworteten Fragen zu Voodoo und Nekromant sind im Decision Log als historischer Hinweis vermerkt. Offen (Frage-IDs ab E-12): Voodoo-Priester (RM-DR-132.1, .2, .4; Selbstwahl, Wissen des Puppenträgers, Reihenfolge der Abfangregeln) und Nekromant (RM-DR-142.1–.5). RM-DR-132.3 ist durch E-01 entschieden. Danach Hades (RM-DR-144), Grabräuber (RM-DR-156), Zeitwächter, Rachsüchtiger Wolf, Schicksalswolf; Kartenschlucker wartet auf den Totenkarten-Assistenten (W-01).
+- Fuzz-Generator: Die Partienzahl ist jetzt `FOCUS_ROUNDS * ROLES.size()` (jede Rolle gleich oft Fokusrolle), und Partien mit Fokusrolle König lehnen Siege ab, bis mehr Tote als Lebende da sind. Anlass: Mit der 64. Rolle verschob sich die Zufallsfolge, und `KingRevealed` kam nicht mehr vor, weil Königspartien vorher durch bestätigte Siege endeten (Diagnose mit temporärer Kopie, gelöscht). Seltene Pflichtereignisse bleiben generatorabhängig.
 - Nächste offene Gruppen: Einzelsiege Teil 2 (Feuerteufel entschieden, nicht umgesetzt; Voodoo-Priester, Nekromant, Hades, Grabräuber; Kartenschlucker wartet auf den Totenkarten-Assistenten); Zeitwächter; Rachsüchtiger Wolf; Schicksalswolf.
 - Offen außerhalb des Kerns: Zufallsknopf nach RM-DR-015.2 (Ziehung über den gespeicherten Seed) ist noch in keiner Rolle umgesetzt; König, Traumdeuter, Kopfgeldjäger und Blutpriester nutzen die Spielleiterwahl.
 - Weiter offen außerhalb des Kerns: Analyse unverträglicher Rollenkombinationen (vom PO gewünscht, Setup-Regel vertagt); Tablet-Gegenprüfung „links = Uhrzeigersinn“; Sound bei 5 Toten nur mit Selbstmörder im Spiel.
@@ -32,16 +33,16 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=63 open=1 blocked=8 -->
+<!-- check:audit-counts total=72 green=64 open=0 blocked=8 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
-| **GRÜN** | **63** |
-| **OFFEN** | **1** |
+| **GRÜN** | **64** |
+| **OFFEN** | **0** |
 | **BLOCKIERT** | **8** |
 
-72/72 ist **nicht** erreicht. Der Feuerteufel ist entschieden, aber noch nicht umgesetzt (OFFEN). Die 8 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
+72/72 ist **nicht** erreicht. Die 8 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
 
 ## 3. Übersicht
 
@@ -90,7 +91,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 39 | `blutpriester` | Blutpriester / Blood Priest | Dorf | Rollentext; RM-DR-128, I-08, I-13 (Decision Log „Rollenaudit · Informationsrollen“) | einmal je Leben: andere Lebende opfern (Tod am Morgen, wacht nicht mehr auf), Spielleiter nennt ihm 0–3 lebende Wölfe | – | umgesetzt | test_info_roles, fuzz | Schutzengel (wirkungslos), Rudelvater (überlebt), zweiter Blutpriester (Markierung) | **GRÜN** |
 | 40 | `traumdeuter` | Traumdeuter / Dreamer | Dorf | Rollentext; RM-DR-129, I-01, I-02, I-05 (Decision Log „Rollenaudit · Informationsrollen“) | jede Nacht drei andere Lebende vom Spielleiter, Freigabe ab einem Wolf; Anzeige „mindestens ein Wolf“ | – | umgesetzt | test_info_roles, fuzz | Trugbilderwolf (wahre Wolfszählung); Dämonischer Wolf folgt | **GRÜN** |
 | 41 | `henker` | Henker / Executioner | Dorf | Rollentext; RM-DR-130, RM-DR-138.2 (Decision Log) | ab 3 Hinrichtungen nachts markieren; Zusatztod bei der Hinrichtung des Folgetags | – | umgesetzt | test_fenrir_cerberus_henker, fuzz | Selbstmörder, Cerberus, Spiegelwolf | **GRÜN** |
-| 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | Rollentext; RM-DR-131.1–.8, RM-DR-003 (Decision Log „Einzelsiegrollen, Teil 2 (Feuerteufel)“) | jede Nacht neue andere lebende Person markieren oder behalten; eine aktive Markierung je Feuerteufel, erlischt bei Tod des Ziels, Tod oder Rollenverlust des Feuerteufels; jeder tatsächliche Tod des Ziels verbrennt einmal die nächsten lebenden Nachbarn, Feuerteufel verschont; Mitsieg lebend | – | fehlt | – | [03](03-remaining-roles-analysis.md#feuerteufel) | **OFFEN** |
+| 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | Rollentext; RM-DR-131.1–.8, RM-DR-003 (Decision Log „Einzelsiegrollen, Teil 2 (Feuerteufel)“) | jede Nacht neue andere lebende Person markieren oder behalten; eine aktive Markierung je Feuerteufel, erlischt bei Tod des Ziels, Tod oder Rollenverlust des Feuerteufels; jeder tatsächliche Tod des Ziels verbrennt einmal die nächsten lebenden Nachbarn, Feuerteufel verschont; Mitsieg lebend | – | umgesetzt | test_fire_devil (14), fuzz | Todesketten (Kettenbrand), tote Plätze, mehrere Feuerteufel, Schutzengel, Rudelvater, Wiederbelebung, Rollenverlust, Mitsieg mit Dorf-, Wolfs- und Einzelsieg | **GRÜN** |
 | 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-132.1, RM-DR-132.2, RM-DR-132.4 | fehlt | – | [03](03-remaining-roles-analysis.md#voodoo-priester) | **BLOCKIERT** |
 | 44 | `blutwolf` | Blutwolf / Blood Wolf | Wölfe | Rollentext; RM-DR-133.1, RM-DR-008 (Decision Log) | Wolf im Rudel; Stimmbonus nur als Hinweis (+1 je direkt toten Nachbarplatz) | – | umgesetzt | test_richter_waechter_blutwolf, fuzz | Wiederbelebung, Sitzkreis; Anzeige folgt mit UI | **GRÜN** |
 | 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | Rollentext; RM-DR-134, RM-DR-010 (Decision Log) | jede Nacht freiwillig eine Person blockieren; handelt zuerst | – | umgesetzt | test_wolf_specials, fuzz | Orakel, Gebundene, Dorf-Nachtschritte | **GRÜN** |
@@ -151,6 +152,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | Bindungsrollen: Liebeskummer, Witwe mit Liebe/Rivalen und markiertem Partner, Umlenkung nur bei echtem Tod (Schutzengel, Lynch, Korrektur), Todeskette, Apfel (Orakel, Schutzengel, Richter wirkungslos, Verfall), Liebeskummer im Fluch | `test_bond_roles` (11); Fuzz mit Pflichtabdeckung der Bindungsereignisse |
 | Schutzrollen: Reihenfolge Schutzengel/Waldhexe/Dorfwache → Waffe → Schild → Weiser, Durchdringung, Märtyrerin nach Umlenkung, Fluch des Weisen gegen Orakel, Dorfwache, Nachtwächter, Sensenträger, Amalia, Wolfskind, Lehrling | `test_protection_roles` (15); Fuzz mit Fluchdauer bei Hinrichtungen und totem Schutzgeist als erlaubter Ausnahme |
 | Informationsrollen mit Albtraumwolf, Schattenhund, Schutzengel, Rudelvater, Trugbilderwolf, Wolfskind, Wiederbelebung, Todesmarkierung und Mitsieg (Manipulator) | `test_info_roles` (21); Fuzz-Pflichtabdeckung aller neuen Ereignisse und Todesursachen |
+| Feuerteufel: Brand bei jedem Tod mit Folgen (Rudel, Hinrichtung, Korrektur), nicht ohne Folgen oder bei Überleben (Schutzengel), tote Plätze, verschonte Feuerteufel ohne Ersatz, zwei Feuerteufel auf demselben Ziel (ein Brand), Kettenbrand, Schutzengel auf dem Nachbarn (brennt), Rudelvater (überlebt), Tod, Rollenverlust und Wiederbelebung des Feuerteufels, Mitsieg bei Dorf-, Wolfs- und Manipulator-Sieg, zwei Mitsieger, Ladeprüfung | `test_fire_devil` (14); Fuzz mit Pflichtabdeckung `FireMarked`, `FireBurned`, `BURN` |
 | Einzelrollen und Paare aus dem Vertical Slice | bestehende Rollentests, siehe `godot/README.md` (Testtabelle) und [`02`](02-implemented-roles-audit.md) |
 
 ### 4.3 Bewusst nicht einzeln kombiniert (mit Begründung)
@@ -162,7 +164,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 
 ## 5. Testnachweis
 
-Windows, Godot `4.7.2.stable.official.ed1daf0bf` (Console-EXE), nur `--headless` (kein Fenster), Ablauf nach `.claude/skills/grimmhain-core/windows-checks.md`: Import ohne `SCRIPT ERROR`, `Parse Error` oder `Failed to load script`, danach `res://tests/run_tests.gd`. Letzter vollständiger Lauf: 648 Tests, 0 fehlgeschlagen, 0 Testdateien nicht ladbar, keine `SCRIPT ERROR`, Exit-Code 0. `node tools/role-migration/check-role-docs.js`: keine Fehler, Exit-Code 0.
+Windows, Godot `4.7.2.stable.official.ed1daf0bf` (Console-EXE), nur `--headless` (kein Fenster), Ablauf nach `.claude/skills/grimmhain-core/windows-checks.md`: Import ohne `SCRIPT ERROR`, `Parse Error` oder `Failed to load script`, danach `res://tests/run_tests.gd`. Letzter vollständiger Lauf (28.09.2026): 662 Tests, 0 fehlgeschlagen, 0 Testdateien nicht ladbar, keine Zeile mit `SCRIPT ERROR`, `Parse Error`, `Failed to load script`, „nicht ladbar“ oder `FAIL`, Import- und Runner-Exit-Code 0 (Exitcodes direkt ausgewertet, ohne Pipe). `node tools/role-migration/check-role-docs.js`: keine Fehler, Exit-Code 0.
 
 ## 6. Offene Fragen an den Product Owner (nächste Chargen)
 
