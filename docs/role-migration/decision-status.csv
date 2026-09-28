@@ -15,7 +15,7 @@ RM-DR-010;nein;Rollenblockierung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2
 RM-DR-011.1;ja;bereits geregelte Wiederbelebungsfälle;E;DECISION-LOG Randfälle 2 (Reaktion bleibt), Waldhexe, Spiegelwolf, Lehrling (kein zweites Erbe), Wolfskind;
 RM-DR-011.2;ja;Bindungen und Marker nach Wiederbelebung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Bindung bleibt beendet
 RM-DR-012;nein;Richter-Nominierung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";normale Nominierung durch den Richter
-RM-DR-013;nein;Totenkarten;S;07 Q3 offen;erst mit K13, K15
+RM-DR-013;nein;Totenkarten;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";ohne Karten für Kutscher/Frankenstein; Kartenschlucker und Kartenbedingungen mit dem Assistenten (W-01)
 RM-DR-014;nein;einmalig / erste Nacht;E;"DECISION-LOG Rollenaudit 27.09.2026";strikt Nacht 1
 RM-DR-015.1;ja;Zufall über Seed;E;rules-register G-RNG-1;jede Zufallsentscheidung über gespeicherten Seed
 RM-DR-015.2;ja;Zufall oder Spielleiterwahl je Rolle;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Spielleiter wählt oder Zufallsknopf (Seed)
@@ -85,8 +85,8 @@ RM-DR-124.1;ja;besessener-wolf;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";L
 RM-DR-125.1;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";jede Ursache außer Korrektur, einmal
 RM-DR-125.2;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";+1 je überlebter Nacht
 RM-DR-125.3;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Teil des Einmal-Schutzes
-RM-DR-126.1;ja;kutscher;S;;
-RM-DR-126.2;ja;kutscher;S;;
+RM-DR-126.1;ja;kutscher;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";Rolle bleibt, einer wird Werwolf (W-02)
+RM-DR-126.2;ja;kutscher;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";Kutscher wählt Tote und Wolf (W-03)
 RM-DR-126.3;ja;kutscher;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
 RM-DR-127.1;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";frische Rolle wie Lehrling-Erbe (V-04)
 RM-DR-127.2;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Wächter prüft auch Tote (V-06)
@@ -130,10 +130,10 @@ RM-DR-139.3;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.
 RM-DR-139.4;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";wahre Wolfszählung (I-02)
 RM-DR-140.1;ja;koenig;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";einmal je Leben (I-03)
 RM-DR-140.2;ja;koenig;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";aktuelle Fraktion Dorf, SL wählt (I-03)
-RM-DR-141.1;ja;dr-victor-frankenstein;S;;
-RM-DR-141.2;ja;dr-victor-frankenstein;S;;
+RM-DR-141.1;ja;dr-victor-frankenstein;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";nur nicht vergebene Rollen, keine Wölfe, Dorfbewohner immer (W-04)
+RM-DR-141.2;ja;dr-victor-frankenstein;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";frischer Start (W-04)
 RM-DR-141.3;ja;dr-victor-frankenstein;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
-RM-DR-141.4;ja;dr-victor-frankenstein;S;;
+RM-DR-141.4;ja;kartenschlucker;S;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";Kartenbedingung; mit dem Totenkarten-Assistenten (W-01)
 RM-DR-142.1;ja;nekromant;S;;
 RM-DR-142.2;ja;nekromant;S;;
 RM-DR-142.3;ja;nekromant;S;;

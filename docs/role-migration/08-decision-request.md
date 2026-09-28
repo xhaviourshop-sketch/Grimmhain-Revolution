@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 52 | 130 |
+| entschieden | 54 | 135 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 19 | 53 |
+| später | 17 | 48 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -211,7 +211,7 @@ Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017
 
 ## RM-DR-013 · Rollen mit Totenkarten-Abhängigkeit
 
-- **Status:** später (K13, K15); `07` Q3 offen.
+- **Status:** entschieden für Kutscher und Frankenstein (ohne Karten, DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026); Totenkarten-Assistent und Kartenschlucker später (K15).
 - **Betroffene Rollen:** `kartenschlucker` (Kernmechanik), `kutscher`, `dr-victor-frankenstein` (Kartenbedingungen über Rollen-Tags).
 - **Problem:** Totenkarten sind in Godot nicht umgesetzt; `07` Q3 (Automatisierungsgrad, Ziehungszeitpunkt) ist offen.
 - **Belege:** `js/core/cards.js:573`; [`dossiers/solos-b.md`](dossiers/solos-b.md#kartenschlucker).
@@ -817,12 +817,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `kutscher`; Wechselwirkung laut Dossier: Wächter am Tor, Werwolf/Rudel, alle Rollen im Pool, Totenkarten (4 revive-Karten), Prophet des Untergangs (Ziele), Schicksalswolf (`FirstThreeDeadIds`), Seelentauscher/Lehrling …
 - **Belege:** [Dossier](dossiers/village-2.md#kutscher); RM-C-114, RM-C-115, RM-C-117 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-011, RM-DR-013, RM-DR-015.
-- **RM-DR-126.1 · Rollen der Wiederbelebten** · Status: später (K13)
+- **RM-DR-126.1 · Rollen der Wiederbelebten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: echte Wiederbelebung, alte Rolle bleibt (außer Wolf)
   - Option B: "Nachbardorf" bringt neue Personen mit neuen Rollen (Code, Dialogtext)
   - Auswirkung: Balance: neue Solo-Rollen mitten im Spiel können Sieglage kippen; Umsetzung: Rollenpool, Fraktionszuordnung, Siegbedingungen neuer Solos
   - Empfehlung: PO; wenn Code: Pool auf Dorfrollen des Akts begrenzen
-- **RM-DR-126.2 · Wer wählt die Toten** · Status: später (K13)
+- **RM-DR-126.2 · Wer wählt die Toten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: Kutscher/SL wählt
   - Option B: Zufall (SeededRng)
   - Auswirkung: Balance: Wahl macht Rolle stärker; Umsetzung: Prompt vs. RNG
@@ -1191,12 +1191,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `dr-victor-frankenstein`; Wechselwirkung laut Dossier: Wächter am Tor, Loki (Liebende), Rotkäppchen (Apfel/Kette), Sensenträger (`hunterShot`/`hunterQueued`), Ritter, Lehrling/Seelentauscher (Erbe), Kutscher (zweite Wiederbelebungsrolle), Totenkarten `segen_08`, `wende_04`, …
 - **Belege:** [Dossier](dossiers/village-3.md#dr-victor-frankenstein); RM-C-147, RM-C-148, RM-C-149, RM-C-150 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-011, RM-DR-013.
-- **RM-DR-141.1 · Rollenpool** · Status: später (K13)
+- **RM-DR-141.1 · Rollenpool** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: jede Rolle außer der bisherigen
   - Option B: nur nicht im Spiel befindliche Rollen
   - Auswirkung: Balance: Wolfsrolle stärkt ggf. Wölfe (Tag `creates-wolf`); Umsetzung: Katalogfilter, `max_copies`
   - Empfehlung: B mit ausdrücklich erlaubtem Dorfbewohner; Wolfsrollen nur nach Entscheidung
-- **RM-DR-141.2 · Zustand des Wiederbelebten** · Status: später (K13)
+- **RM-DR-141.2 · Zustand des Wiederbelebten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: vollständiger Neustart des Sitzes (wie Kutscher)
   - Option B: Bindungen bleiben
   - Auswirkung: Balance: A verhindert Sofort-Tod durch Liebeskummer; Umsetzung: Wiederbelebungsmodell mit Reset-Liste
@@ -1206,7 +1206,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: einmal pro Rolle im Spiel
   - Auswirkung: Balance: A erlaubt 2 Wiederbelebungen; Umsetzung: `ability_uses` pro Person
   - Empfehlung: A (Godot-Standard)
-- **RM-DR-141.4 · Totenkarten-Aktivierung nach Verbrauch** · Status: später (K13)
+- **RM-DR-141.4 · Totenkarten-Aktivierung nach Verbrauch** · Status: später (mit dem Totenkarten-Assistenten, W-01)
   - Option A: nur solange Wiederbelebung noch möglich
   - Option B: solange die Rolle lebt
   - Auswirkung: Balance: gering bis mittel; Umsetzung: Tag-Abfrage mit Verbrauchszustand

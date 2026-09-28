@@ -431,3 +431,12 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 - **Seelentauscher, Zustand (V-04, RM-DR-127.1):** A. Beide erhalten die neue Rolle wie beim Lehrling-Erbe: frische Einsätze, keine übernommenen Bindungen (Wolfskind ohne Vorbild, Lehrlingsbindung endet); eine Pflicht-Scheinrolle (Trugbilderwolf) wandert mit.
 - **Seelentauscher, Ablauf (V-05, RM-DR-127.3):** A. Jede Nacht bis zur Nutzung (einmal je Leben) zwei verschiedene Personen, lebend oder tot, er selbst erlaubt; lebende Betroffene erfahren ihre neue Rolle sofort privat.
 - **Seelentauscher und Wächter am Tor (V-06, RM-DR-127.2):** A. Auch eine tote Person, die eine Wolfsrolle erhielte, wird Dorfbewohner, solange ein Wächter am Tor lebt.
+
+## Rollenaudit · Wiederbelebungsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs W-01 bis W-04). Es gelten: Wiederbelebung setzt alle begrenzten Einsätze zurück, durch Tod beendete Bindungen bleiben beendet (RM-DR-011.2), Einmal-Fähigkeiten gelten je Person (RM-DR-126.3, RM-DR-141.3), Wächter am Tor blockiert neue Wölfe (RM-DR-149).
+
+- **Totenkarten (W-01, RM-DR-013):** A. Kutscher und Dr. Victor Frankenstein werden ohne Kartenbezug umgesetzt; Kartenbedingungen (RM-DR-141.4) und der Kartenschlucker folgen mit dem Totenkarten-Assistenten.
+- **Kutscher, Rollen (W-02, RM-DR-126.1):** A. Die Wiederbelebten behalten ihre Rolle mit frischen Einsätzen; einer von ihnen wird Werwolf (ein lebender Wächter am Tor macht ihn zum Dorfbewohner).
+- **Kutscher, Wahl (W-03, RM-DR-126.2):** A. Der Kutscher wählt die drei Toten und bestimmt, wer davon Wolf wird. Freiwillig, einmal je Leben, ab einer Nacht mit mindestens 10 Toten (alle zählen).
+- **Dr. Victor Frankenstein (W-04, RM-DR-141.1/.2):** B. Jede Nacht bis zur Nutzung (freiwillig, einmal je Leben) belebt er eine tote Person wieder und gibt ihr eine Rolle, die gerade niemand hat (Dorfbewohner immer), keine Wolfsrolle. Die Person startet frisch, erfährt ihre Rolle privat, handelt ab der folgenden Nacht; die Wiederbelebung wird am Morgen öffentlich sichtbar. Dieselben Zeitpunkte gelten für die Wiederbelebten des Kutschers.
