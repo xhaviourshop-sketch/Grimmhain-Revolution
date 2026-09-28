@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 41 | 96 |
+| entschieden | 46 | 113 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 30 | 87 |
+| später | 25 | 70 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -544,22 +544,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `der-weise`; Wechselwirkung laut Dossier: Werwolf, Rachsüchtiger Wolf, Schicksalswolf, Seuchenwolf, Rudelvater (Durchschlag), Schutzengel/Schutzgeist (Stapelung), Albtraumwolf (Blockade entfernt Ziel), Märtyrerin, Verdammniswächter (umgeht Rettung), Waldhexe; …
 - **Belege:** [Dossier](dossiers/village-1.md#der-weise); RM-C-093, RM-C-094, RM-C-096, RM-C-097 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-010.
-- **RM-DR-114.1 · Wer verliert Fähigkeiten** · Status: später (K8)
+- **RM-DR-114.1 · Wer verliert Fähigkeiten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Dorf-Fraktion
   - Option B: alle Nicht-Wölfe
   - Auswirkung: Balance: Solos werden mitbestraft; Umsetzung: FactionQuery-Filter
   - Empfehlung: nur Dorf
-- **RM-DR-114.2 · Dauer "Nächte und Tage"** · Status: später (K8)
+- **RM-DR-114.2 · Dauer "Nächte und Tage"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Sperre gilt auch für Tagfähigkeiten
   - Option B: nur Nächte
   - Auswirkung: Balance: gering bis mittel; Umsetzung: Tagesaktionen brauchen Blockprüfung
   - Empfehlung: Nacht und Tag
-- **RM-DR-114.3 · Durchschlag** · Status: später (K8)
+- **RM-DR-114.3 · Durchschlag** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Durchschlag tötet
   - Option B: Rettung greift trotzdem
   - Auswirkung: Balance: gering; Umsetzung: Filter in Protections
   - Empfehlung: wie Code
-- **RM-DR-114.4 · Passive Fähigkeiten im Debuff** · Status: später (K8)
+- **RM-DR-114.4 · Passive Fähigkeiten im Debuff** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: auch passive (Nachtwächter, Kutscher)
   - Option B: nur aktive
   - Auswirkung: Balance: mittel; Umsetzung: Blockmarker in Reaktionen
@@ -573,17 +573,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `verdammniswaechter`; Wechselwirkung laut Dossier: Werwolf/Rudel (liefert Nachtopfer), Rachsüchtiger Wolf (Zusatzziel), Schutzengel/Dorfwache, Der Weise, Märtyrerin, Waldhexe, Voodoo-Priester, Nekromant, Kartenschlucker, Hades, Rudelvater, Ritter, …
 - **Belege:** [Dossier](dossiers/village-1.md#verdammniswaechter); RM-C-098, RM-C-099, RM-C-100 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-005, RM-DR-015.
-- **RM-DR-115.1 · "umgeht alle Schutzfähigkeiten"** · Status: später (K11)
+- **RM-DR-115.1 · "umgeht alle Schutzfähigkeiten"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: wirklich alle (auch Schilde, Schutzengel)
   - Option B: nur Schutz gegen das Nachtopfer
   - Auswirkung: Balance: mittel; Umsetzung: KillPipeline-Option `ignore_protections` + Auslösung auch bei geschütztem Opfer
   - Empfehlung: A (07-Vorschlag)
-- **RM-DR-115.2 · Todeszeitpunkt** · Status: später (K11)
+- **RM-DR-115.2 · Todeszeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: sofort
   - Option B: Morgen
   - Auswirkung: Balance: hoch (Hexe, spätere Rollen); Umsetzung: IMMEDIATE vs. Morgenkill
   - Empfehlung: Morgen (07)
-- **RM-DR-115.3 · Zufallskandidat** · Status: später (K11)
+- **RM-DR-115.3 · Zufallskandidat** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: jeder andere Lebende
   - Option B: nur Nicht-Wölfe
   - Auswirkung: Balance: Pool ohne Wölfe schützt das Rudel; Umsetzung: Rng-Menge
@@ -635,17 +635,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `maertyrerin`; Wechselwirkung laut Dossier: Werwolf/Rudel, Rudelvater (Extraopfer), Schicksalswolf, Dorfwache, Voodoo-Priester, Zeitwächter, Der Weise, Dorfschmied, Albtraumwolf, Nekromant (Schild), …
 - **Belege:** [Dossier](dossiers/village-2.md#maertyrerin); RM-C-108, RM-C-109, RM-C-111 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004.
-- **RM-DR-118.1 · Rettung vs. Zeitpunkt** · Status: später (K5)
+- **RM-DR-118.1 · Rettung vs. Zeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Ersatzopfer für ein Nachtopfer (Code)
   - Option B: Opfer ohne garantierte Rettung (EN wörtlich)
   - Auswirkung: Balance: B macht die Rolle fast nutzlos; Umsetzung: A: Abfangregel in Morgenauflösung
   - Empfehlung: A, EN-Text angleichen
-- **RM-DR-118.2 · Welches Opfer bei mehreren** · Status: später (K5)
+- **RM-DR-118.2 · Welches Opfer bei mehreren** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: SL/Märtyrerin wählt eines
   - Option B: nur Rudelopfer
   - Auswirkung: Balance: Rudelvater-/Schicksalswolf-Nächte; Umsetzung: Auswahlprompt statt fester Index
   - Empfehlung: Auswahl unter Todeskandidaten
-- **RM-DR-118.3 · Blockaden** · Status: später (K5)
+- **RM-DR-118.3 · Blockaden** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Reaktion ist blockierbar
   - Option B: nicht blockierbar
   - Auswirkung: Balance: gering; Umsetzung: Blockadeprüfung in Reaktion
@@ -1359,22 +1359,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schutzgeist`; Wechselwirkung laut Dossier: Werwolf/Rudel (Angriff), Rachsüchtiger Wolf (Zusatzangriff), Seuchenwolf (Durchbohren ignoriert Schutz beim Pick, chunk:162) und Rudelvater (Zusatzopfer am Morgen ohne Schutzprüfung, night:269-280), Dämonischer Wolf …
 - **Belege:** [Dossier](dossiers/village-4.md#schutzgeist); RM-C-159, RM-C-160, RM-C-161, RM-C-162 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-009.
-- **RM-DR-148.1 · Dauer/Wirkung des Schilds** · Status: später (K5)
+- **RM-DR-148.1 · Dauer/Wirkung des Schilds** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Schild hält bis zum nächsten Wolfsangriff (auch spätere Nächte)
   - Option B: Schild gilt nur für die aktuelle Nacht, Schritt muss dann vor dem Rudel liegen
   - Auswirkung: Balance: A stärker, B ohne Umordnung wirkungslos; Umsetzung: A: dauerhafter Marker; B: Schrittposition vor Rudel
   - Empfehlung: A (deckt Alttext, macht Rolle spielbar)
-- **RM-DR-148.2 · Schutzart** · Status: später (K5)
+- **RM-DR-148.2 · Schutzart** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Wolfsangriff
   - Option B: jeder Tod
   - Auswirkung: Balance: A schwächer; Umsetzung: A nutzt vorhandene Protections
   - Empfehlung: A
-- **RM-DR-148.3 · Zeitpunkt** · Status: später; Quelle: Konflikt mit rules-register G-PH-2 (nur lebende Rolleninhaber handeln); bei Umsetzung ausdrücklich als Ausnahme entscheiden
+- **RM-DR-148.3 · Zeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: frühestens nächste Nacht
   - Option B: sobald tot, auch dieselbe Nacht
   - Auswirkung: Balance: gering; Umsetzung: Schrittfreigabe mit Nachtindex
   - Empfehlung: A (Textwortlaut)
-- **RM-DR-148.4 · Wolf-Meldung** · Status: später (K5)
+- **RM-DR-148.4 · Wolf-Meldung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Tatsache, ohne Namen, echte Fraktion
   - Option B: mit Namen / nach Erscheinung (`appears_as`)
   - Auswirkung: Balance: Name wäre starke Info; Umsetzung: InfoRecord public, Quelle Wahrheit oder Erscheinung
@@ -1508,17 +1508,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `dorfschmied`; Wechselwirkung laut Dossier: Werwolf/Rudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater, Seuchenwolf, Schutzengel, Der Weise, Nekromant, Rudelvater (Erstrettung), Dämonischer Wolf, Detektiv (Hinweis bei Waffentod), Zeitwächter, Verdammniswächter …
 - **Belege:** [Dossier](dossiers/village-4.md#dorfschmied); RM-C-178, RM-C-179, RM-C-180 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-015.
-- **RM-DR-154.1 · Welche Nächte zählen** · Status: später (K5)
+- **RM-DR-154.1 · Welche Nächte zählen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: globale Nachtnummer 6
   - Option B: eigene Schmiedenächte
   - Auswirkung: Balance: gering; Umsetzung: Zähler vs. Nachtnummer
   - Empfehlung: A (einfach, eindeutig)
-- **RM-DR-154.2 · Nur Nacht 6 oder ab Nacht 6** · Status: später (K5)
+- **RM-DR-154.2 · Nur Nacht 6 oder ab Nacht 6** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Nacht 6
   - Option B: ab Nacht 6
   - Auswirkung: Balance: A strenger; Umsetzung: Schrittfreigabe
   - Empfehlung: B (Code)
-- **RM-DR-154.3 · Welche Angriffe** · Status: später (K5)
+- **RM-DR-154.3 · Welche Angriffe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: alle Wolfsangriffe inkl. durchbohrend
   - Option B: durchbohrende ausgenommen
   - Auswirkung: Balance: gering; Umsetzung: Filter `is_wolf_attack`

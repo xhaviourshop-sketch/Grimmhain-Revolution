@@ -52,20 +52,20 @@ RM-DR-112.3;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Li
 RM-DR-112.4;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";zweiter Rudelschritt
 RM-DR-113.1;ja;schwarze-witwe;S;;
 RM-DR-113.2;ja;schwarze-witwe;S;;
-RM-DR-114.1;ja;der-weise;S;;
-RM-DR-114.2;ja;der-weise;S;;
-RM-DR-114.3;ja;der-weise;S;;
-RM-DR-114.4;ja;der-weise;S;;
-RM-DR-115.1;ja;verdammniswaechter;S;;
-RM-DR-115.2;ja;verdammniswaechter;S;;
-RM-DR-115.3;ja;verdammniswaechter;S;;
+RM-DR-114.1;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Fraktion Dorf (S-01)
+RM-DR-114.2;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Nächte und Tage, SL wählt 0-3 (S-01)
+RM-DR-114.3;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Durchschlag tötet (RM-DR-005, S-02)
+RM-DR-114.4;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";alles ruht, entfällt endgültig (S-05, S-09)
+RM-DR-115.1;ja;verdammniswaechter;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";kein Umgehen, gilt als Rudelangriff (S-07)
+RM-DR-115.2;ja;verdammniswaechter;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Morgen wie Rudelangriff (S-07)
+RM-DR-115.3;ja;verdammniswaechter;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nur Nicht-Wölfe, Seed (S-08)
 RM-DR-116.1;ja;wahnsinniger-kutscher;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
 RM-DR-117.1;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis +1 Stimme
 RM-DR-117.2;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Richter ist Nominierender (RM-DR-012)
 RM-DR-117.3;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";zählt als normale Nominierung
-RM-DR-118.1;ja;maertyrerin;S;;
-RM-DR-118.2;ja;maertyrerin;S;;
-RM-DR-118.3;ja;maertyrerin;S;;
+RM-DR-118.1;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Ersatzopfer, nur wenn Opfer stürbe (S-03)
+RM-DR-118.2;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nur erstes Rudelopfer (S-14)
+RM-DR-118.3;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nicht blockierbar, Fluch schon (S-03, S-05)
 RM-DR-119.1;ja;dorfwache;S;;
 RM-DR-119.2;ja;dorfwache;S;;
 RM-DR-120.1;ja;pestbringerin;S;;
@@ -151,10 +151,10 @@ RM-DR-146.2;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";gle
 RM-DR-146.3;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";gleiche Wolfsdefinition (counts_as_wolf)
 RM-DR-147.1;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";jede Nacht
 RM-DR-147.2;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";lebende Personen mit counts_as_wolf, einfach
-RM-DR-148.1;ja;schutzgeist;S;;
-RM-DR-148.2;ja;schutzgeist;S;;
-RM-DR-148.3;ja;schutzgeist;S;Konflikt mit rules-register G-PH-2 (nur lebende Rolleninhaber handeln);bei Umsetzung ausdrücklich als Ausnahme entscheiden
-RM-DR-148.4;ja;schutzgeist;S;;
+RM-DR-148.1;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";bis zum nächsten Rudelangriff (S-04)
+RM-DR-148.2;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nur Rudelangriff (S-04)
+RM-DR-148.3;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";erste Nacht nach dem Tod, Ausnahme G-PH-2 (S-04)
+RM-DR-148.4;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";öffentlich ohne Namen, wahre Zählung (S-04)
 RM-DR-149.1;ja;waechter-am-tor;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";jeder Weg ins Rudel wird blockiert; Fluch folgt mit Dämonischem Wolf
 RM-DR-150.1;ja;zeitwaechter;S;;
 RM-DR-150.2;ja;zeitwaechter;S;;
@@ -170,9 +170,9 @@ RM-DR-153.1;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.202
 RM-DR-153.2;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";ab 1 anderem lebenden Wolf (I-10, I-14)
 RM-DR-153.3;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Richtung vom Platz des toten Wolfs (I-10)
 RM-DR-153.4;ja;detektiv;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person
-RM-DR-154.1;ja;dorfschmied;S;;
-RM-DR-154.2;ja;dorfschmied;S;;
-RM-DR-154.3;ja;dorfschmied;S;;
+RM-DR-154.1;ja;dorfschmied;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";globale Nachtnummer (S-06)
+RM-DR-154.2;ja;dorfschmied;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";ab Nacht 6 bis zur Vergabe (S-06)
+RM-DR-154.3;ja;dorfschmied;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";alle Rudelangriffe inkl. Durchdringung (S-06)
 RM-DR-155.1;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur lebend gewinnt
 RM-DR-155.2;ja;doppelspion;E;rules-register G-SIEG-2: Einzelsiegrollen zählen als Nicht-Wölfe;
 RM-DR-155.3;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur Doppelspion-Kandidat, kein Dorfkandidat
