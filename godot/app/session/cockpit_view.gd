@@ -97,7 +97,7 @@ static func next_action(s: GameState) -> Dictionary:
 			if s.day_step == Phase.DAY_ENDED:
 				return {"kind": "start_night", "secret": false, "first": false}
 			if s.day_step == Phase.DAY_EXECUTION_DECIDED:
-				return {"kind": "end_day", "secret": false}
+				return {"kind": "end_day", "secret": false, "nominations": nominations_today(s)}
 			return {"kind": "day", "secret": false, "day_step": String(s.day_step), "nominations": nominations_today(s),
 				"execution_candidates": _execution_candidates(s)}
 	return {"kind": "none", "secret": false}

@@ -53,6 +53,11 @@ func morning_report() -> Dictionary:
 	return MorningReport.build(_state, _events)
 
 
+## Öffentliche Tode des laufenden Tages (Namen, Rolle nur mit der Setup-Option).
+func day_deaths() -> Array:
+	return MorningReport.day_deaths(_state, _events)
+
+
 ## Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
 func private_seats() -> Array:
 	return CockpitView.private_seats(_state) if _state.is_started() else []

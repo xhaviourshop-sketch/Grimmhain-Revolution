@@ -42,7 +42,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `decoy_section` mit `decoy_copy_row` (geheime Trugbilderwolf-Scheinrollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
 | `app/screens/continue/` | leerer Zustand „Kein Spielstand vorhanden“, Bereich `SaveSlotList` |
 | `app/screens/settings/` | Sprache DE/EN, Bewegung reduzieren, Platzhalter Audio und Anzeige |
-| `app/screens/cockpit/` | Kopfzeile, Phasenbereich, Ansagekarte, Sitzkreisbereich, Aktionsbereich, Kennzeichen „Keine Partie aktiv“ |
+| `app/screens/cockpit/` | Geführte Partie: Phasenleiste, Sitzkreis, Ansagekarte für Nacht, Morgen, Tag und Sieg, Ebenen für Rollen, Protokoll und gezeigte Karten, Sichtschutz; Details in `cockpit.md` |
 | `app/widgets/grimm_button.gd` | Button mit Übersetzungsschlüssel, Art primär/sekundär/Gefahr, Mindestgröße, Fokus, Umbruch |
 | `app/widgets/grimm_label.gd` | Beschriftung mit Übersetzungsschlüssel und Platzhaltern (`{version}`) |
 | `app/widgets/grimm_toggle.gd` | Umschalter mit Übersetzungsschlüssel |
@@ -80,7 +80,7 @@ Szenen enthalten keine Stilwerte (keine Farben, `theme_override_*`, Mindestgrö�
   3. Elternansicht → dorthin
   4. Start → Desktop: Rückfrage „Grimmhain beenden?“, Mobilgerät: App verlassen
 - `application/config/quit_on_go_back=false`: Android-Zurück beendet die App nicht automatisch, sondern läuft über dieselbe Logik.
-- Späteres Cockpit mit laufender Partie: Zurück darf die Runde nicht ohne Rückfrage verlassen (`02` §4). Dafür ist `handle_back()` vorgesehen.
+- Cockpit mit laufender Partie: Zurück schließt zuerst eine offene Ebene oder den Sichtschutz und fragt sonst vor dem Verlassen nach; die Partie bleibt erhalten (`cockpit.md`).
 - Rückfragen: Ansichten senden `BaseScreen.dialog_requested(DialogRequest)`, der Router reicht sie an die Shell, die Shell öffnet `ConfirmDialog.open_request()`. Jede Aktion hat einen eigenen Rückruf; Beenden nutzt denselben Weg.
 
 ## Dialog als Modal
@@ -190,4 +190,4 @@ Ergebnis: `docs/evidence/ui-foundation/*.png`, `docs/evidence/player-setup/*.png
 - Kein Portrait-Layout (`window/handheld/orientation = sensor_landscape`).
 - Keine CI-Screenshots; die Bilder entstehen lokal oder in der Cloud mit Xvfb.
 - Die Statusmeldung schwebt 88 px über dem unteren Rand und verdeckt dabei 2,5 s lang den unteren Listenbereich (fängt keine Eingaben ab).
-- Die Pfeiltasten im Dialog wechseln die Aktion wie Tab; in einem späteren Dialog mit Eingabefeld müsste das angepasst werden.
+- Die Pfeiltasten im Dialog wechseln die Aktion wie Tab; im Begründungsfeld bewegen links/rechts den Cursor.

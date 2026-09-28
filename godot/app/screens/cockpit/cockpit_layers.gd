@@ -11,10 +11,20 @@ extends RefCounted
 ## Jede Ebene hat einen `CloseLayerButton` (bzw. `UncoverButton`); die Ansicht verbindet ihn.
 
 
-static func private_drawer(seats: Array) -> Control:
+## `actions`: geheime Tagesaktionen [{action, player_id, name, seat}] als Buttons `SecretAction_*`
+## (Metadaten action und player_id); die Ansicht verbindet sie.
+static func private_drawer(seats: Array, actions: Array = []) -> Control:
 	var drawer := _drawer("PrivateLayer", "ui.cockpit.private.heading")
 	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer
 	_label(list, "ui.cockpit.private.warning", {}, &"WarningLabel")
+	if not actions.is_empty():
+		_label(list, "ui.cockpit.private.actions", {}, &"CaptionLabel")
+		for a: Dictionary in actions:
+			var b := _button("SecretAction_%s_%d" % [str(a["action"]), int(a["player_id"])], "ui.cockpit.private.action.%s" % str(a["action"]), GrimmButton.Kind.SECONDARY)
+			b.format_values = {"name": CockpitText.person(a)}
+			b.set_meta("action", str(a["action"]))
+			b.set_meta("player_id", int(a["player_id"]))
+			list.add_child(b)
 	for seat: Dictionary in seats:
 		var row := VBoxContainer.new()
 		row.name = "PrivateRow_%d" % int(seat["person_id"])

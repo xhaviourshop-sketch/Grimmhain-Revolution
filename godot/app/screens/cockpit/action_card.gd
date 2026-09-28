@@ -46,6 +46,10 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_end_night(next)
 		"morning":
 			_morning(next)
+		"day":
+			_day(next, context)
+		"end_day":
+			_end_day(next, context)
 		"win_decision":
 			_win_decision(next)
 		"game_over":
@@ -190,6 +194,134 @@ func _morning(next: Dictionary) -> void:
 		_button("ShowAnnouncementButton", "ui.cockpit.action.show_announcement", GrimmButton.Kind.SECONDARY, &"show_announcement"),
 		_button("MorningDetailsButton", "ui.cockpit.action.morning_details", GrimmButton.Kind.SECONDARY, &"morning_details"),
 	])
+
+
+## Tag: Nominierungen (öffentlich), heutige Tode, Aktionen. Unterzustände der Bedienung kommen aus
+## `context.day_mode` (Nominierung in zwei Schritten, Hinrichtung wählen, verdeckte Prüfung).
+func _day(next: Dictionary, context: Dictionary) -> void:
+	match str(context.get("day_mode", "")):
+		"nominate_from", "nominate_to":
+			_day_nominate(context)
+			return
+		"execute":
+			_day_pick(context, "ui.cockpit.card.day.execute.heading", "ui.cockpit.card.day.execute.do", "ConfirmExecutionTargetButton", "ui.cockpit.action.check_execution", &"check_execution")
+			return
+		"name_wolf":
+			_day_pick(context, "ui.cockpit.card.day.name_wolf.heading", "ui.cockpit.card.day.name_wolf.do", "ConfirmNameWolfButton", "ui.cockpit.action.confirm_name_wolf", &"confirm_name_wolf")
+			return
+		"execution_check":
+			_execution_check(context)
+			return
+	_heading("ui.cockpit.card.day.heading", {"number": int(context.get("day_number", 0))})
+	_day_public(next, context)
+	_text("ui.cockpit.card.day.do", {}, &"MutedLabel")
+	var execute := _button("ExecuteButton", "ui.cockpit.action.execute", GrimmButton.Kind.PRIMARY, &"start_execute")
+	execute.disabled = (next.get("execution_candidates", []) as Array).is_empty()
+	_actions([
+		_button("NominateButton", "ui.cockpit.action.nominate", GrimmButton.Kind.SECONDARY, &"start_nominate"),
+		execute,
+		_button("NoExecutionButton", "ui.cockpit.action.no_execution", GrimmButton.Kind.SECONDARY, &"no_execution"),
+	])
+
+
+func _day_public(next: Dictionary, context: Dictionary) -> void:
+	var nominations: Array = next.get("nominations", [])
+	if nominations.is_empty():
+		_text("ui.cockpit.card.day.no_nominations", {}, &"MutedLabel")
+	else:
+		_caption("ui.cockpit.card.day.nominations")
+		var seats: Array = context.get("seats", [])
+		for n: Dictionary in nominations:
+			var nominee := CockpitText.names_of([int(n["nominee_id"])], seats)
+			if int(n["nominator_id"]) == -1:
+				_text("ui.cockpit.card.day.nomination_hidden", {"nominee": nominee}, &"SectionLabel")
+			else:
+				_text("ui.cockpit.card.day.nomination", {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}, &"SectionLabel")
+	var deaths: Array = context.get("day_deaths", [])
+	if not deaths.is_empty():
+		_caption("ui.cockpit.card.say_now")
+		_text("ui.cockpit.card.day.deaths", {"names": CockpitText.spoken_names(deaths)}, &"ReadAloudLabel")
+
+
+func _day_nominate(context: Dictionary) -> void:
+	var seats: Array = context.get("seats", [])
+	var from := int(context.get("nominator", -1))
+	_heading("ui.cockpit.card.day.nominate.heading")
+	if str(context.get("day_mode")) == "nominate_from":
+		_text("ui.cockpit.card.day.nominate.from", {}, &"SectionLabel")
+		_actions([_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
+		return
+	_text("ui.cockpit.card.day.nominate.to", {"nominator": CockpitText.names_of([from], seats)}, &"SectionLabel")
+	var selection: Array = context.get("selection", [])
+	if not selection.is_empty():
+		_text("ui.cockpit.card.day.nominate.summary", {"nominator": CockpitText.names_of([from], seats), "nominee": CockpitText.names_of(selection, seats)}, &"SectionLabel")
+	var confirm := _button("ConfirmNominationButton", "ui.cockpit.action.confirm_nomination", GrimmButton.Kind.PRIMARY, &"confirm_nomination")
+	confirm.disabled = selection.is_empty()
+	_actions([confirm, _button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
+
+
+func _day_pick(context: Dictionary, heading: String, instruction: String, confirm_name: String, confirm_key: String, action: StringName) -> void:
+	_heading(heading)
+	_text(instruction, {}, &"MutedLabel")
+	var selection: Array = context.get("selection", [])
+	if selection.is_empty():
+		_text("ui.cockpit.card.selection.none", {}, &"MutedLabel")
+	else:
+		_text("ui.cockpit.card.selection.some", {"names": CockpitText.names_of(selection, context.get("seats", []))}, &"SectionLabel")
+	var confirm := _button(confirm_name, confirm_key, GrimmButton.Kind.PRIMARY, action)
+	confirm.disabled = selection.is_empty()
+	_actions([confirm, _button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
+
+
+## Verdeckte Prüfung jeder Hinrichtung: Vorschau des Regelkerns und seine Pflichtfragen. Verdeckt,
+## bis die Spielleitung aufdeckt, damit ihr Auftauchen nichts über die Rolle verrät.
+func _execution_check(context: Dictionary) -> void:
+	var seats: Array = context.get("seats", [])
+	var preview: Dictionary = context.get("preview", {})
+	var target := CockpitText.names_of([int(preview.get("target_id", -1))], seats)
+	_heading("ui.cockpit.card.day.check.heading", {"name": target})
+	if not bool(context.get("revealed", false)):
+		_text("ui.cockpit.card.day.check.covered", {}, &"MutedLabel")
+		_actions([_button("RevealButton", "ui.cockpit.secret.reveal", GrimmButton.Kind.PRIMARY, &"reveal"),
+			_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
+		return
+	var extra: Dictionary = context.get("exec_extra", {})
+	var ready := true
+	var buttons: Array[Control] = []
+	if bool(preview.get("redirected", false)):
+		_text("ui.cockpit.card.day.check.redirected", {"name": CockpitText.names_of([int(preview["death_target_id"])], seats)}, &"WarningLabel")
+	elif not bool(preview.get("needs_cerberus", false)) and not bool(preview.get("needs_sage", false)):
+		_text("ui.cockpit.card.day.check.plain", {"name": target}, &"MutedLabel")
+	if bool(preview.get("needs_cerberus", false)):
+		_text("ui.cockpit.card.day.check.cerberus", {}, &"WarningLabel")
+		ready = ready and extra.has("cerberus_defend")
+		for choice: bool in [true, false]:
+			var b := _button("CerberusDefend%s" % ("Yes" if choice else "No"), "ui.cockpit.action.cerberus.%s" % ("yes" if choice else "no"),
+				GrimmButton.Kind.SECONDARY, &"exec_extra", {"field": "cerberus_defend", "value": choice})
+			if extra.get("cerberus_defend") == choice:
+				b.kind = GrimmButton.Kind.PRIMARY
+			buttons.append(b)
+	if bool(preview.get("needs_sage", false)):
+		_text("ui.cockpit.card.day.check.sage", {"max": int(preview.get("sage_max", 0))}, &"WarningLabel")
+		ready = ready and extra.has("sage_curse")
+		for n: int in int(preview.get("sage_max", 0)) + 1:
+			var b := _button("SageCurse%d" % n, "ui.cockpit.action.sage_curse", GrimmButton.Kind.SECONDARY, &"exec_extra", {"field": "sage_curse", "value": n})
+			b.format_values = {"count": n}
+			if extra.has("sage_curse") and int(extra["sage_curse"]) == n:
+				b.kind = GrimmButton.Kind.PRIMARY
+			buttons.append(b)
+	var confirm := _button("ConfirmExecutionButton", "ui.cockpit.action.confirm_execution", GrimmButton.Kind.PRIMARY, &"confirm_execution")
+	confirm.disabled = not ready
+	buttons.append(confirm)
+	buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))
+	_actions(buttons)
+
+
+func _end_day(next: Dictionary, context: Dictionary) -> void:
+	_heading("ui.cockpit.card.end_day.heading", {"number": int(context.get("day_number", 0))})
+	_day_public(next, context)
+	_text("ui.cockpit.card.end_day.do", {}, &"MutedLabel")
+	_actions([_button("EndDayButton", "ui.cockpit.action.end_day", GrimmButton.Kind.PRIMARY, &"end_day")])
 
 
 func _win_decision(next: Dictionary) -> void:

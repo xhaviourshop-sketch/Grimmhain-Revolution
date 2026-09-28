@@ -2461,3 +2461,186 @@ msgstr "Nominierung des Manipulators"
 
 msgid "ui.setup.roles.reveal_role"
 msgstr "Rolle beim Tod öffentlich aufdecken"
+
+msgid "ui.cockpit.card.day.heading"
+msgstr "Tag {number}"
+
+msgid "ui.cockpit.card.day.do"
+msgstr "Diskussion und Abstimmung finden am Tisch statt. Du zählst die Stimmen selbst und erfasst nur Nominierungen und das Ergebnis."
+
+msgid "ui.cockpit.card.day.no_nominations"
+msgstr "Heute noch keine Nominierung."
+
+msgid "ui.cockpit.card.day.nominations"
+msgstr "Nominierungen heute"
+
+msgid "ui.cockpit.card.day.nomination"
+msgstr "{nominator} nominiert {nominee}"
+
+msgid "ui.cockpit.card.day.nomination_hidden"
+msgstr "{nominee} gilt als nominiert"
+
+msgid "ui.cockpit.card.day.deaths"
+msgstr "„Heute gestorben: {names}.“"
+
+msgid "ui.cockpit.card.day.nominate.heading"
+msgstr "Nominierung erfassen"
+
+msgid "ui.cockpit.card.day.nominate.from"
+msgstr "Tippe im Sitzkreis die Person an, die nominiert."
+
+msgid "ui.cockpit.card.day.nominate.to"
+msgstr "{nominator} nominiert. Tippe jetzt die nominierte Person an."
+
+msgid "ui.cockpit.card.day.nominate.summary"
+msgstr "{nominator} nominiert {nominee}"
+
+msgid "ui.cockpit.card.day.execute.heading"
+msgstr "Hinrichtung"
+
+msgid "ui.cockpit.card.day.execute.do"
+msgstr "Tippe die Person an, die nach eurer Abstimmung hingerichtet wird. Wählbar sind nur heute Nominierte."
+
+msgid "ui.cockpit.card.day.name_wolf.heading"
+msgstr "Nekromant benennt einen Wolf"
+
+msgid "ui.cockpit.card.day.name_wolf.do"
+msgstr "Tippe die Person an, die der Nekromant geheim als Wolf benennt."
+
+msgid "ui.cockpit.card.day.check.heading"
+msgstr "Hinrichtung prüfen: {name}"
+
+msgid "ui.cockpit.card.day.check.covered"
+msgstr "Diese Prüfung ist nur für die Spielleitung. Zeige sie an, wenn niemand mitliest."
+
+msgid "ui.cockpit.card.day.check.redirected"
+msgstr "Achtung: Die Hinrichtung wird gespiegelt. Stattdessen stirbt {name}."
+
+msgid "ui.cockpit.card.day.check.plain"
+msgstr "Keine Besonderheit: {name} stirbt durch die Hinrichtung."
+
+msgid "ui.cockpit.card.day.check.cerberus"
+msgstr "Cerberus kann die Hinrichtung abwehren. Frage die Person geheim: Wehrt sie ab?"
+
+msgid "ui.cockpit.card.day.check.sage"
+msgstr "Der Weise verflucht das Dorf. Frage die Person: Wie viele Tage (0 bis {max})?"
+
+msgid "ui.cockpit.card.end_day.heading"
+msgstr "Tag {number}: Entscheidung gefallen"
+
+msgid "ui.cockpit.card.end_day.do"
+msgstr "Beende den Tag, wenn alle Ansagen gemacht sind."
+
+msgid "ui.cockpit.action.nominate"
+msgstr "Nominierung erfassen"
+
+msgid "ui.cockpit.action.execute"
+msgstr "Hinrichtung …"
+
+msgid "ui.cockpit.action.no_execution"
+msgstr "Keine Hinrichtung heute …"
+
+msgid "ui.cockpit.action.confirm_nomination"
+msgstr "Nominierung bestätigen"
+
+msgid "ui.cockpit.action.check_execution"
+msgstr "Weiter zur Prüfung"
+
+msgid "ui.cockpit.action.confirm_execution"
+msgstr "Hinrichtung bestätigen"
+
+msgid "ui.cockpit.action.cerberus.yes"
+msgstr "Wehrt ab"
+
+msgid "ui.cockpit.action.cerberus.no"
+msgstr "Wehrt nicht ab"
+
+msgid "ui.cockpit.action.sage_curse"
+msgstr "{count} Tage"
+
+msgid "ui.cockpit.action.confirm_name_wolf"
+msgstr "Benennung bestätigen"
+
+msgid "ui.cockpit.action.end_day"
+msgstr "Tag beenden"
+
+msgid "ui.cockpit.dialog.execute.title"
+msgstr "Hinrichtung bestätigen?"
+
+msgid "ui.cockpit.dialog.execute.message"
+msgstr "{name} wird hingerichtet. Die Stimmen wurden am Tisch gezählt."
+
+msgid "ui.cockpit.dialog.execute.confirm"
+msgstr "Hinrichten"
+
+msgid "ui.cockpit.dialog.no_execution.title"
+msgstr "Keine Hinrichtung heute?"
+
+msgid "ui.cockpit.dialog.no_execution.message"
+msgstr "Heute stirbt niemand durch Hinrichtung. Danach kann der Tag beendet werden."
+
+msgid "ui.cockpit.dialog.no_execution.confirm"
+msgstr "Keine Hinrichtung"
+
+msgid "ui.cockpit.dialog.amalia.title"
+msgstr "Amalia opfert sich"
+
+msgid "ui.cockpit.dialog.amalia.message"
+msgstr "Beantworte Amalias Frage wahrheitsgemäß mit Ja oder Nein. Danach stirbt Amalia sofort."
+
+msgid "ui.cockpit.dialog.amalia.yes"
+msgstr "Antwort: Ja"
+
+msgid "ui.cockpit.dialog.amalia.no"
+msgstr "Antwort: Nein"
+
+msgid "ui.cockpit.status.saved_secretly"
+msgstr "Gespeichert. Das Ergebnis steht nur im Protokoll."
+
+msgid "ui.cockpit.private.actions"
+msgstr "Geheime Tagesaktionen"
+
+msgid "ui.cockpit.private.action.amalia"
+msgstr "{name}: Amalia opfert sich …"
+
+msgid "ui.cockpit.private.action.name_wolf"
+msgstr "{name}: Nekromant benennt einen Wolf …"
+
+msgid "ui.cockpit.error.already_nominated_today"
+msgstr "Fehler: Diese Person hat heute schon nominiert. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.already_nominee_today"
+msgstr "Fehler: Diese Person wurde heute schon nominiert. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.not_nominated_today"
+msgstr "Fehler: Hinrichten geht nur mit Nominierung von heute (sonst Spielleiterkorrektur). Nichts wurde geändert."
+
+msgid "ui.cockpit.error.execution_already_decided"
+msgstr "Fehler: Über die Hinrichtung ist heute schon entschieden. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.execution_not_decided"
+msgstr "Fehler: Erst über die Hinrichtung entscheiden, dann den Tag beenden. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.day_not_ended"
+msgstr "Fehler: Der Tag ist noch nicht beendet. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.day_already_ended"
+msgstr "Fehler: Der Tag ist bereits beendet. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.cerberus_decision_required"
+msgstr "Fehler: Die Abwehrfrage des Cerberus fehlt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.sage_curse_required"
+msgstr "Fehler: Die Fluchdauer des Weisen fehlt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.too_few_wolves"
+msgstr "Fehler: Amalia kann sich erst bei mindestens drei lebenden Wölfen opfern. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.cursed"
+msgstr "Fehler: Die Fähigkeit ruht durch den Fluch des Weisen. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.already_named_today"
+msgstr "Fehler: Der Nekromant hat heute schon benannt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.unknown_player"
+msgstr "Fehler: Diese Person gibt es nicht. Nichts wurde geändert."

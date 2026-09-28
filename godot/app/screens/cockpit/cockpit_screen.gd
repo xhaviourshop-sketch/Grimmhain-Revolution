@@ -24,6 +24,13 @@ var _covered: bool = false
 var _layer: Control = null
 var _layer_kind: StringName = &""
 var _morning_done_day: int = -1  ## Tag, dessen Morgenbericht die Spielleitung weitergeschaltet hat (nur Bedienzustand)
+## Bedienzustand am Tag: "" | nominate_from | nominate_to | execute | execution_check | name_wolf
+var _day_mode: String = ""
+var _nominator: int = -1
+var _necromancer: int = -1
+var _preview: Dictionary = {}
+var _exec_extra: Dictionary = {}
+var _check_revealed: bool = false
 
 @onready var _layout: Control = %Layout
 @onready var _badge: Control = %NoGameBadge
@@ -142,17 +149,49 @@ func _render() -> void:
 		next = {"kind": "morning", "secret": false, "public": context.session.morning_report().get("public", {}),
 			"night_number": int(_view.get("night_number", 0))}
 		kind = "morning"
-	if kind == "prompt" and str(next.get("answer")) == "targets" and visible_secret:
+	if kind == "day" and _day_mode != "":
+		_mark_day_mode(next)
+	elif kind == "prompt" and str(next.get("answer")) == "targets" and visible_secret:
 		_ring.set_marking(true, next.get("allowed_ids", []), _selection, next.get("actor_ids", []))
 	elif (kind == "prompt" or kind == "begin_step") and visible_secret:
 		_ring.set_marking(false, [], [], next.get("actor_ids", []))
 	else:
 		_ring.clear_marking()
 	_card.render(next, {
-		"phase": phase, "seats": _view.get("seats", []), "selection": _selection, "revealed": _revealed_id == _next_id,
+		"phase": phase, "seats": _view.get("seats", []), "selection": _selection,
+		"revealed": _check_revealed if _day_mode == "execution_check" else _revealed_id == _next_id,
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
+		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
+		"preview": _preview, "exec_extra": _exec_extra, "day_deaths": context.session.day_deaths() if bool(_view.get("has_game")) else [],
 	})
+
+
+## Ringmarkierung im Tagesmodus: wer im aktuellen Schritt antippbar ist (nur Lebende, bei der
+## Hinrichtung nur heute Nominierte). Die Regelprüfung selbst bleibt beim Regelkern.
+func _mark_day_mode(next: Dictionary) -> void:
+	var alive: Array = (_view.get("seats", []) as Array).filter(func(s: Dictionary) -> bool: return bool(s["alive"])).map(func(s: Dictionary) -> int: return int(s["person_id"]))
+	match _day_mode:
+		"nominate_from":
+			_ring.set_marking(true, alive, [], [])
+		"nominate_to":
+			_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != _nominator), _selection, [_nominator])
+		"execute":
+			_ring.set_marking(true, next.get("execution_candidates", []), _selection, [])
+		"name_wolf":
+			_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != _necromancer), _selection, [])
+		"execution_check":
+			_ring.set_marking(false, [], [], [])
+
+
+func _reset_day_mode() -> void:
+	_day_mode = ""
+	_nominator = -1
+	_necromancer = -1
+	_preview = {}
+	_exec_extra = {}
+	_check_revealed = false
+	_selection.clear()
 
 
 ## Der Morgenbericht steht vor den Tagesaktionen, bis die Spielleitung weiterschaltet oder am Tag
@@ -183,6 +222,16 @@ func _update_side_width() -> void:
 
 func _on_seat_tapped(person_id: int) -> void:
 	var next: Dictionary = _view.get("next", {})
+	if str(next.get("kind")) == "day" and _day_mode != "":
+		match _day_mode:
+			"nominate_from":
+				_nominator = person_id
+				_day_mode = "nominate_to"
+				_selection.clear()
+			"nominate_to", "execute", "name_wolf":
+				_selection = [] if _selection.has(person_id) else [person_id]
+		_render()
+		return
 	if str(next.get("kind")) != "prompt" or str(next.get("answer")) != "targets":
 		return
 	var high := int(next.get("max", 0))
@@ -202,8 +251,58 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 	var s := context.session
 	match action:
 		&"reveal":
-			_revealed_id = _next_id
+			if _day_mode == "execution_check":
+				_check_revealed = true
+			else:
+				_revealed_id = _next_id
 			_render()
+		&"start_nominate":
+			_reset_day_mode()
+			_day_mode = "nominate_from"
+			_render()
+		&"start_execute":
+			_reset_day_mode()
+			_day_mode = "execute"
+			_render()
+		&"cancel_mode":
+			_reset_day_mode()
+			_render()
+		&"confirm_nomination":
+			var nominee := int(_selection[0])
+			var from := _nominator
+			_reset_day_mode()
+			_submit(s.nominate.bind(from, nominee))
+		&"check_execution":
+			var target := int(_selection[0])
+			_reset_day_mode()
+			_preview = s.execution_preview(target)
+			_day_mode = "execution_check"
+			_render()
+		&"exec_extra":
+			_exec_extra[str(payload["field"])] = payload["value"]
+			_render()
+		&"confirm_execution":
+			var target := int(_preview.get("target_id", -1))
+			var extra := _exec_extra.duplicate()
+			var r := DialogRequest.create("ui.cockpit.dialog.execute.title", "ui.cockpit.dialog.execute.message", "ui.cockpit.dialog.execute.confirm",
+				func() -> void:
+					_reset_day_mode()
+					_submit(s.decide_execution.bind(target, extra)), true)
+			r.message_values = {"name": CockpitText.names_of([target], _view.get("seats", []))}
+			dialog_requested.emit(r)
+		&"no_execution":
+			dialog_requested.emit(DialogRequest.create("ui.cockpit.dialog.no_execution.title", "ui.cockpit.dialog.no_execution.message",
+				"ui.cockpit.dialog.no_execution.confirm", func() -> void:
+					_reset_day_mode()
+					_submit(s.decide_execution.bind(-1))))
+		&"confirm_name_wolf":
+			var necro := _necromancer
+			var named := int(_selection[0])
+			_reset_day_mode()
+			_submit(s.name_wolf.bind(necro, named))
+			status_message_requested.emit("ui.cockpit.status.saved_secretly")
+		&"end_day":
+			_submit(s.end_day)
 		&"start_night":
 			_submit(s.start_night)
 		&"begin_step":
@@ -296,7 +395,7 @@ func open_layer(kind: StringName) -> void:
 		return
 	match kind:
 		&"private":
-			_layer = CockpitLayers.private_drawer(context.session.private_seats())
+			_layer = CockpitLayers.private_drawer(context.session.private_seats(), context.session.secret_day_actions())
 		&"log":
 			_layer = CockpitLayers.log_drawer(context.session.event_log(), _view.get("seats", []))
 		&"show":
@@ -316,6 +415,25 @@ func open_layer(kind: StringName) -> void:
 	if close != null:
 		close.pressed.connect(close_layer)
 		close.grab_focus()
+	for b: Node in _layer.find_children("SecretAction_*", "BaseButton", true, false):
+		(b as BaseButton).pressed.connect(_on_secret_action.bind(str(b.get_meta("action")), int(b.get_meta("player_id"))))
+
+
+## Geheime Tagesaktionen aus dem privaten Bereich (Amalia, Nekromant). Der Bereich schließt zuerst.
+func _on_secret_action(action: String, player_id: int) -> void:
+	close_layer()
+	match action:
+		"amalia":
+			var r := DialogRequest.create("ui.cockpit.dialog.amalia.title", "ui.cockpit.dialog.amalia.message", "ui.cockpit.dialog.amalia.yes",
+				func() -> void: _submit(context.session.amalia_sacrifice.bind(player_id, true)))
+			r.alternative_key = "ui.cockpit.dialog.amalia.no"
+			r.on_alternative = func() -> void: _submit(context.session.amalia_sacrifice.bind(player_id, false))
+			dialog_requested.emit(r)
+		"name_wolf":
+			_reset_day_mode()
+			_necromancer = player_id
+			_day_mode = "name_wolf"
+			_render()
 
 
 func close_layer() -> void:

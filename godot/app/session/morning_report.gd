@@ -47,6 +47,31 @@ static func build(s: GameState, events: Array[GameEvent]) -> Dictionary:
 	}
 
 
+## Öffentliche Tode des laufenden Tages (nach dem Befehl, mit dem der Tag begann): Name, Platz und
+## Rolle nur mit der Setup-Option. Für die Ansage nach Nominierung, Hinrichtung oder Reaktion.
+static func day_deaths(s: GameState, events: Array[GameEvent]) -> Array:
+	if s.phase != Phase.DAY:
+		return []
+	var start := -1
+	for i: int in range(events.size() - 1, -1, -1):
+		if events[i].type == GameEvent.PHASE_CHANGED and StringName(str(events[i].data.get("to"))) == Phase.DAY:
+			start = i
+			break
+	if start == -1:
+		return []
+	var day_command := events[start].command_index
+	var out: Array = []
+	for i: int in range(start + 1, events.size()):
+		var e := events[i]
+		if e.command_index == day_command or e.type != GameEvent.SEAT_DIED:
+			continue
+		var id := int(e.data["target_id"])
+		var entry := _person(s, id)
+		entry["role_id"] = String(s.players[id].role_id) if s.reveal_role_on_death else ""
+		out.append(entry)
+	return out
+
+
 static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 	var deaths: Array = []
 	var revived: Array = []

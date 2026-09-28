@@ -2461,3 +2461,186 @@ msgstr "Manipulator nominated"
 
 msgid "ui.setup.roles.reveal_role"
 msgstr "Reveal role publicly on death"
+
+msgid "ui.cockpit.card.day.heading"
+msgstr "Day {number}"
+
+msgid "ui.cockpit.card.day.do"
+msgstr "Discussion and voting happen at the table. You count the votes yourself and record only nominations and the result."
+
+msgid "ui.cockpit.card.day.no_nominations"
+msgstr "No nomination yet today."
+
+msgid "ui.cockpit.card.day.nominations"
+msgstr "Nominations today"
+
+msgid "ui.cockpit.card.day.nomination"
+msgstr "{nominator} nominates {nominee}"
+
+msgid "ui.cockpit.card.day.nomination_hidden"
+msgstr "{nominee} counts as nominated"
+
+msgid "ui.cockpit.card.day.deaths"
+msgstr "“Died today: {names}.”"
+
+msgid "ui.cockpit.card.day.nominate.heading"
+msgstr "Record a nomination"
+
+msgid "ui.cockpit.card.day.nominate.from"
+msgstr "Tap the person in the seating circle who nominates."
+
+msgid "ui.cockpit.card.day.nominate.to"
+msgstr "{nominator} nominates. Now tap the nominated person."
+
+msgid "ui.cockpit.card.day.nominate.summary"
+msgstr "{nominator} nominates {nominee}"
+
+msgid "ui.cockpit.card.day.execute.heading"
+msgstr "Execution"
+
+msgid "ui.cockpit.card.day.execute.do"
+msgstr "Tap the person who is executed after your vote. Only people nominated today can be chosen."
+
+msgid "ui.cockpit.card.day.name_wolf.heading"
+msgstr "Necromancer names a wolf"
+
+msgid "ui.cockpit.card.day.name_wolf.do"
+msgstr "Tap the person the Necromancer secretly names as a wolf."
+
+msgid "ui.cockpit.card.day.check.heading"
+msgstr "Check execution: {name}"
+
+msgid "ui.cockpit.card.day.check.covered"
+msgstr "This check is for the game master only. Show it when nobody can read along."
+
+msgid "ui.cockpit.card.day.check.redirected"
+msgstr "Attention: The execution is mirrored. {name} dies instead."
+
+msgid "ui.cockpit.card.day.check.plain"
+msgstr "Nothing special: {name} dies by execution."
+
+msgid "ui.cockpit.card.day.check.cerberus"
+msgstr "Cerberus can repel the execution. Ask the person secretly: do they repel it?"
+
+msgid "ui.cockpit.card.day.check.sage"
+msgstr "The Sage curses the village. Ask the person: how many days (0 to {max})?"
+
+msgid "ui.cockpit.card.end_day.heading"
+msgstr "Day {number}: decision made"
+
+msgid "ui.cockpit.card.end_day.do"
+msgstr "End the day once all announcements are made."
+
+msgid "ui.cockpit.action.nominate"
+msgstr "Record nomination"
+
+msgid "ui.cockpit.action.execute"
+msgstr "Execution …"
+
+msgid "ui.cockpit.action.no_execution"
+msgstr "No execution today …"
+
+msgid "ui.cockpit.action.confirm_nomination"
+msgstr "Confirm nomination"
+
+msgid "ui.cockpit.action.check_execution"
+msgstr "Continue to check"
+
+msgid "ui.cockpit.action.confirm_execution"
+msgstr "Confirm execution"
+
+msgid "ui.cockpit.action.cerberus.yes"
+msgstr "Repels"
+
+msgid "ui.cockpit.action.cerberus.no"
+msgstr "Does not repel"
+
+msgid "ui.cockpit.action.sage_curse"
+msgstr "{count} days"
+
+msgid "ui.cockpit.action.confirm_name_wolf"
+msgstr "Confirm naming"
+
+msgid "ui.cockpit.action.end_day"
+msgstr "End day"
+
+msgid "ui.cockpit.dialog.execute.title"
+msgstr "Confirm the execution?"
+
+msgid "ui.cockpit.dialog.execute.message"
+msgstr "{name} is executed. The votes were counted at the table."
+
+msgid "ui.cockpit.dialog.execute.confirm"
+msgstr "Execute"
+
+msgid "ui.cockpit.dialog.no_execution.title"
+msgstr "No execution today?"
+
+msgid "ui.cockpit.dialog.no_execution.message"
+msgstr "Nobody dies by execution today. The day can then be ended."
+
+msgid "ui.cockpit.dialog.no_execution.confirm"
+msgstr "No execution"
+
+msgid "ui.cockpit.dialog.amalia.title"
+msgstr "Amalia sacrifices herself"
+
+msgid "ui.cockpit.dialog.amalia.message"
+msgstr "Answer Amalia’s question truthfully with yes or no. Amalia then dies immediately."
+
+msgid "ui.cockpit.dialog.amalia.yes"
+msgstr "Answer: yes"
+
+msgid "ui.cockpit.dialog.amalia.no"
+msgstr "Answer: no"
+
+msgid "ui.cockpit.status.saved_secretly"
+msgstr "Saved. The result is only in the log."
+
+msgid "ui.cockpit.private.actions"
+msgstr "Secret day actions"
+
+msgid "ui.cockpit.private.action.amalia"
+msgstr "{name}: Amalia sacrifices herself …"
+
+msgid "ui.cockpit.private.action.name_wolf"
+msgstr "{name}: Necromancer names a wolf …"
+
+msgid "ui.cockpit.error.already_nominated_today"
+msgstr "Error: This person has already nominated today. Nothing was changed."
+
+msgid "ui.cockpit.error.already_nominee_today"
+msgstr "Error: This person has already been nominated today. Nothing was changed."
+
+msgid "ui.cockpit.error.not_nominated_today"
+msgstr "Error: Execution requires a nomination today (otherwise a game master correction). Nothing was changed."
+
+msgid "ui.cockpit.error.execution_already_decided"
+msgstr "Error: Today’s execution has already been decided. Nothing was changed."
+
+msgid "ui.cockpit.error.execution_not_decided"
+msgstr "Error: Decide the execution first, then end the day. Nothing was changed."
+
+msgid "ui.cockpit.error.day_not_ended"
+msgstr "Error: The day has not ended yet. Nothing was changed."
+
+msgid "ui.cockpit.error.day_already_ended"
+msgstr "Error: The day has already ended. Nothing was changed."
+
+msgid "ui.cockpit.error.cerberus_decision_required"
+msgstr "Error: The Cerberus defence question is missing. Nothing was changed."
+
+msgid "ui.cockpit.error.sage_curse_required"
+msgstr "Error: The Sage’s curse length is missing. Nothing was changed."
+
+msgid "ui.cockpit.error.too_few_wolves"
+msgstr "Error: Amalia can only sacrifice herself with at least three living wolves. Nothing was changed."
+
+msgid "ui.cockpit.error.cursed"
+msgstr "Error: The ability is suspended by the Sage’s curse. Nothing was changed."
+
+msgid "ui.cockpit.error.already_named_today"
+msgstr "Error: The Necromancer has already named someone today. Nothing was changed."
+
+msgid "ui.cockpit.error.unknown_player"
+msgstr "Error: This person does not exist. Nothing was changed."
