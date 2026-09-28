@@ -23,12 +23,12 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 59 | 156 |
+| entschieden | 61 | 165 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 14 | 32 |
+| später | 12 | 24 |
 | quellenprüfung | 0 | 0 |
-| **gesamt** | **75** | **191** |
+| **gesamt** | **75** | **192** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
 
@@ -983,12 +983,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `voodoo-priester`; Wechselwirkung laut Dossier: Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Waldhexe (Gift), Märtyrerin, Der Weise, Dorfschmied, Nekromant (Reihenfolge der Abfangregeln), Rattenfänger (Verzauberung), Feuerteufel (Brand …
 - **Belege:** [Dossier](dossiers/solos-a.md#voodoo-priester); RM-C-056, RM-C-057, RM-C-058, RM-C-059 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-006, RM-DR-007.
-- **RM-DR-132.1 · Ursachen der Umlenkung** · Status: später (K10)
+- **RM-DR-132.1 · Ursachen der Umlenkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: jede Todesursache
   - Option B: nur Angriffe (Wolf, Hinrichtung, Gift)
   - Auswirkung: Balance: A macht ihn sehr robust; Umsetzung: Umlenkungsregel mit Ursachenfilter in KillPipeline
   - Empfehlung: PO
-- **RM-DR-132.2 · Abklingzeit** · Status: später (K10)
+- **RM-DR-132.2 · Abklingzeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: Code übernehmen, Text ergänzen
   - Option B: keine Abklingzeit
   - Auswirkung: Balance: ohne Abklingzeit endloser Schutz; Umsetzung: Zähler
@@ -998,11 +998,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: gewollt
   - Auswirkung: Balance: Rattenfänger-Konter; Umsetzung: –
   - Empfehlung: streichen
-- **RM-DR-132.4 · Siegbedingung** · Status: später (K10)
+- **RM-DR-132.4 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: Einzelsieg definieren
   - Option B: Fraktion ändern
   - Auswirkung: Balance: –; Umsetzung: WinRules
   - Empfehlung: PO
+- **RM-DR-132.5 · Vergabe der Puppe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: andere lebende Person, geheim
+  - Option B: andere lebende Person, die Puppe erfährt es privat
+  - Option C: auch sich selbst, geheim
+  - Auswirkung: Balance: B gibt der Puppe Wissen über den Priester; Umsetzung: Zielfilter, Sichtbarkeit
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** (1) Welche Todesursachen lenkt die Puppe um? (2) Abklingzeit übernehmen, wie lang, auch nach normalem Tod der Puppe? (3) Darf der Priester sich selbst die Puppe geben? (4) Verliert der Puppenträger Verzauberung? (5) Weiß der Puppenträger von der Puppe? (6) Siegbedingung oder Fraktionswechsel? (7) Umlenkung vor oder nach Märtyrerin/Der Weise/Schmied?
 - **Charge:** K10. **In Option (nicht freigegeben):** keiner.
 
@@ -1238,27 +1244,27 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `nekromant`; Wechselwirkung laut Dossier: Werwolf-Rudel (Angriff als Auslöser), Schicksalswolf/Rudelvater (Zusatzziele, `PACKFATHER_KILL` durchbricht Schild), Dämonischer Wolf (`cursedWolfAura` zählt bei Benennung als Wolf, Nekromant selbst kann verflucht …
 - **Belege:** [Dossier](dossiers/solos-b.md#nekromant); RM-C-066, RM-C-067, RM-C-068, RM-C-069, RM-C-070 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-005, RM-DR-007, RM-DR-008.
-- **RM-DR-142.1 · Wen schützt der Schild** · Status: später (K15)
+- **RM-DR-142.1 · Wen schützt der Schild** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: globaler Schild für die nächste Tötung irgendwo
   - Option B: Schild nur für den Nekromanten, jede Todesart
   - Auswirkung: Balance: global: Nekromant kann Wolfskill auf beliebige Person verhindern (Dorf-nahe Macht), auch Lynch am Tag; Umsetzung: global braucht globalen Modifikator in der KillPipeline; selbst passt in Protections
   - Empfehlung: PO entscheidet; Text so oder so präzisieren
-- **RM-DR-142.2 · Umlenkung optional oder Pflicht** · Status: später (K15)
+- **RM-DR-142.2 · Umlenkung optional oder Pflicht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: optional (Text)
   - Option B: Pflicht (Code)
   - Auswirkung: Balance: Pflicht zwingt Nekromanten, einen Mitspieler zu töten; Umsetzung: PendingPrompt mit "nicht umlenken"
   - Empfehlung: Text gilt: optional mit Verzicht
-- **RM-DR-142.3 · Ressource der Toten** · Status: später (K15)
+- **RM-DR-142.3 · Ressource der Toten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: ein gemeinsamer Vorrat "Stimme der Toten"
   - Option B: zwei getrennte Vorräte
   - Auswirkung: Balance: getrennt: doppelte Nutzung derselben Toten; Umsetzung: Statusmarker pro Toter: ein oder zwei Felder
   - Empfehlung: ein gemeinsamer Marker "geopfert"
-- **RM-DR-142.4 · Siegversuche** · Status: später (K15)
+- **RM-DR-142.4 · Siegversuche** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: beliebig viele Versuche
   - Option B: ein Versuch pro Tag oder pro Spiel, evtl. mit Strafe
   - Auswirkung: Balance: unbegrenzt: Solo-Sieg praktisch sicher durch Durchprobieren; Umsetzung: Versuchszähler und Tagesaktion
   - Empfehlung: Begrenzung festlegen
-- **RM-DR-142.5 · Übungs-Enthüllung** · Status: später (K15)
+- **RM-DR-142.5 · Übungs-Enthüllung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: streichen
   - Option B: als Regel übernehmen und Text ergänzen
   - Auswirkung: Balance: unklar, derzeit nur Hinweis; Umsetzung: eigener Tagesbefehl

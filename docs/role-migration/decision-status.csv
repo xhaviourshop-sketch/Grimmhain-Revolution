@@ -107,10 +107,11 @@ RM-DR-131.5;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 2
 RM-DR-131.6;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";jede Nacht neu wählen oder behalten, nie sich selbst (E-09)
 RM-DR-131.7;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";erlischt bei Tod oder Rollenverlust (E-10)
 RM-DR-131.8;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";ein Brand je Tod, alle Markierungen verbraucht (E-11)
-RM-DR-132.1;ja;voodoo-priester;S;;
-RM-DR-132.2;ja;voodoo-priester;S;;
+RM-DR-132.1;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";jeder Tod außer Korrektur, nach Schutz (E-12)
+RM-DR-132.2;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";keine Abklingzeit, eine lebende Puppe, Neuvergabe nächste Nacht (E-13)
 RM-DR-132.3;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Puppe hebt Verzauberung nicht auf (E-01, wie RM-DR-103.2)
-RM-DR-132.4;ja;voodoo-priester;S;;
+RM-DR-132.4;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";allein, lebend bei höchstens drei Lebenden (E-15)
+RM-DR-132.5;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";andere lebende Person, geheim (E-14)
 RM-DR-133.1;ja;blutwolf;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis für den Spielleiter (RM-DR-008)
 RM-DR-134.1;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";jede Person, Wirkung nur auf Dorf
 RM-DR-134.2;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur die Person
@@ -137,11 +138,11 @@ RM-DR-141.1;ja;dr-victor-frankenstein;E;"DECISION-LOG Rollenaudit Wiederbelebung
 RM-DR-141.2;ja;dr-victor-frankenstein;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";frischer Start (W-04)
 RM-DR-141.3;ja;dr-victor-frankenstein;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
 RM-DR-141.4;ja;kartenschlucker;S;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";Kartenbedingung; mit dem Totenkarten-Assistenten (W-01)
-RM-DR-142.1;ja;nekromant;S;;
-RM-DR-142.2;ja;nekromant;S;;
-RM-DR-142.3;ja;nekromant;S;;
-RM-DR-142.4;ja;nekromant;S;;
-RM-DR-142.5;ja;nekromant;S;;
+RM-DR-142.1;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";global, nächster Tod jeder Ursache, bis nächste Nacht (E-16)
+RM-DR-142.2;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";freiwillig, nur Rudelangriff, jedes andere lebende Ziel (E-17)
+RM-DR-142.3;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";gemeinsamer Vorrat, jede tote Person einmal (E-18)
+RM-DR-142.4;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";einmal je Tag, geheim, counts_as_wolf (E-19)
+RM-DR-142.5;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Übungsenthüllung entfällt (E-19)
 RM-DR-143.1;ja;kartenschlucker;S;;
 RM-DR-143.2;ja;kartenschlucker;S;;
 RM-DR-144.1;ja;hades;S;;

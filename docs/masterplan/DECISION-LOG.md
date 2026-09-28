@@ -465,3 +465,16 @@ Es gelten weiter: nächste lebende Nachbarn links und rechts (RM-DR-003, damit i
 - **Feuerteufel, Wahl je Nacht (E-09, RM-DR-131.6):** A. Jede Nacht darf er ein neues Ziel wählen oder die bestehende Markierung behalten; Ziel ist immer eine andere lebende Person, nie er selbst. (Ergänzungsfrage nach der Bestätigung von E-05 bis E-08.)
 - **Feuerteufel, Nachwirkung (E-10, RM-DR-131.7):** A. Stirbt der Feuerteufel oder verliert er die Rolle (Seelentausch, Korrektur, andere Rollenwechsel), erlischt seine Markierung sofort.
 - **Mehrere Feuerteufel, gleiches Ziel (E-11, RM-DR-131.8):** A. Der Tod einer mehrfach markierten Person löst genau einen Brand aus; alle Markierungen auf ihr sind verbraucht.
+
+## Rollenaudit · Einzelsiegrollen, Teil 3 (Voodoo-Priester, Nekromant) · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-12 bis E-19, jeweils die Empfehlung). Die Antworten gelten nur für die genannte Rolle. Es gelten weiter: „Wolfsangriff“ heißt nur Rudelangriff (RM-DR-004), Durchdringung (RM-DR-005), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02), ein erfüllter Sieg wird nach Ablehnung weiter vorgeschlagen (F-11), Spielleiterkorrekturen sind von Schutz- und Umlenkregeln ausgenommen. RM-DR-132.3 ist durch E-01 entschieden (die Puppe hebt keine Verzauberung auf).
+
+- **Voodoo-Priester, Umlenkung (E-12, RM-DR-132.1):** A. Jeder tatsächliche Tod des Priesters außer Spielleiterkorrektur trifft stattdessen die lebende Puppe (Rudel, Hinrichtung, Gift, Brand und alle übrigen Ursachen). Umgelenkt wird nur, wenn er tatsächlich stürbe, also nach allen Schutzwirkungen, wie beim Schattenwanderer (B-04, B-07).
+- **Voodoo-Priester, Neuvergabe (E-13, RM-DR-132.2):** A. Keine Abklingzeit. Höchstens eine lebende Puppe je Priester; ist keine mehr da, darf er in der nächsten Nacht eine neue vergeben. Ohne lebende Puppe stirbt er selbst.
+- **Voodoo-Priester, Vergabe (E-14, RM-DR-132.5):** A. Die Puppe ist eine andere lebende Person, nie er selbst. Geheim: nur der Spielleiter weiß es; die Puppe erfährt es nicht vorab.
+- **Voodoo-Priester, Sieg (E-15, RM-DR-132.4):** A. Er gewinnt allein, wenn er lebt und höchstens drei Personen leben (wie der Parasit).
+- **Nekromant, Schild (E-16, RM-DR-142.1):** A. Mit mindestens drei geopferten Toten (E-18) errichtet er nachts einen globalen Schild: Er verhindert den nächsten Tod irgendeiner Person, gleich welche Ursache, auch eine Hinrichtung, und verfällt ungenutzt mit Beginn der nächsten Nacht.
+- **Nekromant, Umlenkung (E-17, RM-DR-142.2):** A. Nur beim Rudelangriff auf ihn darf er freiwillig drei Tote opfern und den Angriff auf eine andere lebende Person umlenken, auch auf einen Wolf; für das neue Ziel gilt es als Rudelangriff (dessen Schutz wirkt). Verzicht: Er stirbt.
+- **Nekromant, Vorrat (E-18, RM-DR-142.3):** A. Jede tote Person kann insgesamt nur einmal geopfert werden, für Schild oder Umlenkung (gemeinsamer Vorrat).
+- **Nekromant, Wolf benennen (E-19, RM-DR-142.4, RM-DR-142.5):** A. Höchstens ein Versuch pro Tag, geheim beim Spielleiter; ein Treffer ist jede lebende Person, die als Wolf zählt (`counts_as_wolf`, RM-DR-002.2; der Fluch des Dämonischen Wolfs betrifft nur Rollenauskünfte). Dann ist sein Alleinsieg erfüllt. Ein Fehlversuch hat keine Folgen. Die Legacy-Übungsenthüllung entfällt (RM-DR-142.5).
