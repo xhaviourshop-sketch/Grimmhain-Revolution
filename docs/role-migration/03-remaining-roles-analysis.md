@@ -23,9 +23,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
 | [`schattenwanderer`](#schattenwanderer) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | Zielumleitung, Einmalfähigkeit | M / hoch | K6 | – |
 | [`schwarze-witwe`](#schwarze-witwe) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Tötung | M / mittel | K6 | – |
-| [`der-weise`](#der-weise) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Wolfsangriff-Modifikation | Hinrichtungsreaktion, globale Regeländerung | M / hoch | K8 | C |
-| [`verdammniswaechter`](#verdammniswaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Zielumleitung | Tötung, Zufallsmechanik | M / hoch | K11 | – |
-| [`maertyrerin`](#maertyrerin) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Einmalfähigkeit | M / mittel | K5 | – |
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
 | [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
@@ -38,9 +35,7 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
-| [`schutzgeist`](#schutzgeist) | Dorf | `decision-required` | `legacy-broken` | `automatic` | Schutz | Todesreaktion, Informationsrolle | M / mittel | K5 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
-| [`dorfschmied`](#dorfschmied) | Dorf | `decision-required` | `legacy-verified` | `automatic` | Wolfsangriff-Modifikation | Schutz, Tötung, Zufallsmechanik | M / mittel | K5 | – |
 | [`grabraeuber`](#grabraeuber) | Einzelsieg | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | Einzelsieg, sonstige Spezialmechanik | XL / hoch | K15 | – |
 | [`todesprediger`](#todesprediger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | Einmalfähigkeit | M / mittel | K15 | – |
 
@@ -196,69 +191,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K6 / in keiner Option |
 | Belegsicherheit | hoch für Handler, Morgenreihenfolge, Setup-Pflicht, `loverId`-Lücke. Nicht verifiziert: tatsächliches Laufzeitverhalten (nicht ausgeführt); ob Nutzer `clearRolesNewRound` in der Praxis vor einer neuen Runde verwenden. --- |
 | Detail | [Dossier](dossiers/wolves-b.md#schwarze-witwe) |
-
-### `der-weise`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Der Weise / The Elder |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / I, II, III, IV / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Ein belegter Codefehler (Doppelschutz über `flags.protected`, in React immer aktiv; dazu Schutz-Persistenz) verfälscht die Kernfunktion "überlebt den ersten Werwolfangriff". |
-| DE/EN-Vergleich | JA. Erster Werwolfangriff, Lynch durch Dorf, 1-3 Nächte und Tage, "diese"/"they" = das Dorf. |
-| Automationsziel | `automatic`: (Rettung und Debuff-Zähler); Dauerwahl als SL-Prompt. |
-| Mechanik | primär: Wolfsangriff-Modifikation; sekundär: Hinrichtungsreaktion, globale Regeländerung |
-| Größe / Risiko | M / hoch. Viele Interaktionen, Legacy-Verhalten hängt vom Vergabeweg ab. |
-| Vorhandene Godot-Systeme | Protections (Filter: nur Rudel-NIGHT_KILL, einmalig), KillPipeline, ExecutionRules (Hinrichtungsreaktion), PendingPrompt (1-3), StepQueue (Schritte überspringen mit Grund), Ereignis-Sichtbarkeit, GmCorrections, StateCodec, Replay. |
-| Neue Systeme | Rollenblockierung (Fraktionsfilter), zeitlich verzögerte Effekte / globale Modifikatoren (Zähler über n Nächte/Tage); ggf. Tagesaktionswarteschlange mit Blockprüfung, falls "Tage" gelten. |
-| Abhängigkeiten | Werwolf, Rachsüchtiger Wolf, Schicksalswolf, Seuchenwolf, Rudelvater (Durchschlag), Schutzengel/Schutzgeist (Stapelung), Albtraumwolf (Blockade entfernt Ziel), Märtyrerin, Verdammniswächter (umgeht Rettung), Waldhexe; Debuff betrifft alle Nicht-Wolf-Rollen. |
-| Widersprüche | RM-C-092 Anzahl Rettungen; RM-C-093 Wer verliert Fähigkeiten; RM-C-094 Dauer "Nächte und Tage"; RM-C-095 Wer wählt 1-3; RM-C-096 Durchschlag; RM-C-097 Passive Fähigkeiten im Debuff |
-| Entscheidungen | RM-DR-114 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-010; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K8 / ab Option C |
-| Belegsicherheit | hoch. Nicht im Browser verifiziert, ob React-Pfad heute alle Spielstarts über `startGame` führt. |
-| Detail | [Dossier](dossiers/village-1.md#der-weise) |
-
-### `verdammniswaechter`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Verdammniswächter / Doom Warden |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II, IV / 2.3 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Code funktioniert als Zwei-Knopf-Urteil, widerspricht aber Text (Schutzumfang, Zeitpunkt, Kandidatenmenge) ohne offensichtlichen Defekt. |
-| DE/EN-Vergleich | JA (geringfügig). DE "anderer Spieler", EN "a randomly offered player ... instead" (das "anderer" steckt in "instead"). DE Imperativ, EN dritte Person: ohne Bedeutungsunterschied. |
-| Automationsziel | `assisted`: bis Q1 entschieden ist; danach automatic mit SeededRng. |
-| Mechanik | primär: Zielumleitung; sekundär: Tötung, Zufallsmechanik |
-| Größe / Risiko | M / hoch. Zeitpunkt- und Schutzfragen verändern viele andere Rollen. |
-| Vorhandene Godot-Systeme | StepQueue (nach Rudel), PendingPrompt (2 Optionen, abbrechbar), SeededRng, KillPipeline, Protections, Reaktionswarteschlange, InfoRecord, StateCodec, Replay, GmCorrections. |
-| Neue Systeme | keines zwingend; KillPipeline braucht eine Option "ignoriert alle Schutzeffekte und Schilde" und ggf. zeitlich verzögerte Effekte, falls der Tod am Morgen erfolgt. |
-| Abhängigkeiten | Werwolf/Rudel (liefert Nachtopfer), Rachsüchtiger Wolf (Zusatzziel), Schutzengel/Dorfwache, Der Weise, Märtyrerin, Waldhexe, Voodoo-Priester, Nekromant, Kartenschlucker, Hades, Rudelvater, Ritter, Seuchenwolf. |
-| Widersprüche | RM-C-098 "umgeht alle Schutzfähigkeiten"; RM-C-099 Todeszeitpunkt; RM-C-100 Zufallskandidat; RM-C-101 role-abilities-Text; RM-C-102 Fraktion vs. Phase |
-| Entscheidungen | RM-DR-115 (Rolle); übergreifend RM-DR-002, RM-DR-005, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K11 / in keiner Option |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/village-1.md#verdammniswaechter) |
-
-### `maertyrerin`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Märtyrerin / Martyr |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 9.0 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Kernfunktion (einmaliges Ersatzopfer am Morgen) funktioniert; DE und EN widersprechen sich, Zeitwächter-Reihenfolge ist fehlerhaft, verfälscht die Kernfunktion aber nur im Randfall. |
-| DE/EN-Vergleich | semantisch gleich NEIN. DE nennt den Zweck (Nachtopfer retten), aber keinen Zeitpunkt. EN nennt einen Zeitpunkt ("before the night victim is announced"), aber nicht, dass das Opfer gerettet wird. Beide nennen keine Einmaligkeit. |
-| Automationsziel | `assisted`: Die App erkennt Todeskandidaten und bietet das Opfer an; die Entscheidung trifft die Märtyrerin (Ja/Nein am Tablet). |
-| Mechanik | primär: Schutz; sekundär: Einmalfähigkeit |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | KillPipeline (Abfangstatus in `kill_event`), PendingPrompt (Ja/Nein + ggf. Opferwahl), Reaktionswarteschlange bzw. Morgenauflösung (`DAWN_RESOLUTION`), `ability_uses`, WinRules, StateCodec, Replay, Ereignis-Sichtbarkeit. |
-| Neue Systeme | Ersatzopfer-Abfangregel in der Morgenauflösung (vor der Todesverarbeitung, nach Schutz/Zeitwächter). Keine weiteren. |
-| Abhängigkeiten | Werwolf/Rudel, Rudelvater (Extraopfer), Schicksalswolf, Dorfwache, Voodoo-Priester, Zeitwächter, Der Weise, Dorfschmied, Albtraumwolf, Nekromant (Schild), Schutzengel. |
-| Widersprüche | RM-C-108 Rettung vs. Zeitpunkt; RM-C-109 Welches Opfer bei mehreren; RM-C-110 Einmaligkeit; RM-C-111 Blockaden |
-| Entscheidungen | RM-DR-118 (Rolle); übergreifend RM-DR-004; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K5 / in keiner Option |
-| Belegsicherheit | hoch (Code vollständig gelesen); Recap-Lücke aus Bericht nicht erneut geprüft. |
-| Detail | [Dossier](dossiers/village-2.md#maertyrerin) |
 
 ### `pestbringerin`
 
@@ -512,27 +444,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch. Nicht verifiziert: ob irgendwo außerhalb von `js/`, `game.html`, `app/` Stimmen gewichtet werden (rg über das ganze Repo fand nur die Definition `ui:18`). --- |
 | Detail | [Dossier](dossiers/solos-b.md#hades) |
 
-### `schutzgeist`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Schutzgeist / Guardian Spirit |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 5.6 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Code für die Fähigkeit existiert, aber F1 verhindert die Auslösung vollständig, und die Wirkung wäre wegen Reihenfolge/Reset null. |
-| DE/EN-Vergleich | JA. Nur Pronomenwechsel "their"/"she" im EN. Die in GRIMMHAIN_ANALYSE_2026-06-12.md:219 (E3) gemeldete fehlende Wolf-Offenbarung im EN ist inzwischen behoben (roles:272 enthält sie). |
-| Automationsziel | `automatic`: Klarer Auslöser (eigener Tod), ein Ziel, deterministische Wirkung nach PO-Entscheidung. |
-| Mechanik | primär: Schutz; sekundär: Todesreaktion, Informationsrolle |
-| Größe / Risiko | M / mittel. Einfacher Handler, aber Schrittfreigabe für Tote und Schilddauer sind neu. |
-| Vorhandene Godot-Systeme | StepQueue (Schritt für toten Akteur), PendingPrompt, Protections (neue Quelle), Reaktionswarteschlange oder Todes-Hook zum Freischalten, InfoRecord + Ereignis-Sichtbarkeit (public), appears_as (falls Meldung nach Erscheinung), StateCodec, Replay, GmCorrections. |
-| Neue Systeme | dauerhafte Statusmarker (Schild mit Lebensdauer "bis zum nächsten Wolfsangriff", falls Interpretation A); Protections muss mehrere Quellen und Lebensdauer kennen. |
-| Abhängigkeiten | Werwolf/Rudel (Angriff), Rachsüchtiger Wolf (Zusatzangriff), Seuchenwolf (Durchbohren ignoriert Schutz beim Pick, chunk:162) und Rudelvater (Zusatzopfer am Morgen ohne Schutzprüfung, night:269-280), Dämonischer Wolf (verfluchter Sitz löst Wolfsmeldung aus), Dr. Victor Frankenstein (Wiederbelebung), Seelentauscher … |
-| Widersprüche | RM-C-159 Dauer/Wirkung des Schilds; RM-C-160 Schutzart; RM-C-161 Zeitpunkt; RM-C-162 Wolf-Meldung |
-| Entscheidungen | RM-DR-148 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K5 / in keiner Option |
-| Belegsicherheit | hoch. Nicht verifiziert: Verhalten, falls ein SL den Schritt über einen anderen Weg (Konsole) auslöst. --- |
-| Detail | [Dossier](dossiers/village-4.md#schutzgeist) |
-
 ### `zeitwaechter`
 
 | Feld | Inhalt |
@@ -553,27 +464,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K16 / in keiner Option |
 | Belegsicherheit | hoch für die Codeanalyse. Nicht verifiziert: Sichtbarkeit/Anklickbarkeit der Nachtliste am Tag (CSS/Layout nicht im Browser geprüft). --- |
 | Detail | [Dossier](dossiers/village-4.md#zeitwaechter) |
-
-### `dorfschmied`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Dorfschmied / Village Blacksmith |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / IV / 1.7 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Kernfunktion (Schmieden, Vergabe, Abwehr, zufälliger Wolfstod) funktioniert; Randfälle betreffen Meldung und Zählerstart. |
-| DE/EN-Vergleich | JA, semantisch gleich (5 Nächte, sechste Nacht, ein Spieler, ein Angriff, zufälliger Wolf). |
-| Automationsziel | `automatic`: Zähler, Vergabe und Abwehr sind zustandsbasiert; Zufall über SeededRng. |
-| Mechanik | primär: Wolfsangriff-Modifikation; sekundär: Schutz, Tötung, Zufallsmechanik |
-| Größe / Risiko | M / mittel. Mehrere Interaktionen in der Kill-Pipeline und Zufall. |
-| Vorhandene Godot-Systeme | StepQueue (Schritt mit Freigabebedingung), PendingPrompt, KillPipeline (Abfangregel vor NIGHT_KILL mit Filter Wolfsangriff), Protections (Reihenfolge zu Schutzengel), SeededRng, Reaktionswarteschlange (Tod des zufälligen Wolfs), WinRules, InfoRecord/Sichtbarkeit (gm, ggf. public), StateCodec, Replay, GmCorrections. |
-| Neue Systeme | dauerhafte Statusmarker (Waffe am Sitz über Nächte), Zähler für zeitlich verzögerte Freischaltung (Schmiedezähler). |
-| Abhängigkeiten | Werwolf/Rudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater, Seuchenwolf, Schutzengel, Der Weise, Nekromant, Rudelvater (Erstrettung), Dämonischer Wolf, Detektiv (Hinweis bei Waffentod), Zeitwächter, Verdammniswächter (umgeht Waffe), Rotkäppchen (Apfel: zweite Waffe). |
-| Widersprüche | RM-C-178 Welche Nächte zählen; RM-C-179 Nur Nacht 6 oder ab Nacht 6; RM-C-180 Welche Angriffe |
-| Entscheidungen | RM-DR-154 (Rolle); übergreifend RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K5 / in keiner Option |
-| Belegsicherheit | hoch für Code; mittel für den Nacht-1-Startweg (nicht im Browser geprüft). --- ## Gruppenübergreifende Beobachtungen 1. Globale Einmal-Flags statt sitzbezogener Zustände: Zeitwächter, Kriegerin (`Used["role_..."]`), Dorfchronistin (`ChroniclerShown`), … |
-| Detail | [Dossier](dossiers/village-4.md#dorfschmied) |
 
 ### `grabraeuber`
 

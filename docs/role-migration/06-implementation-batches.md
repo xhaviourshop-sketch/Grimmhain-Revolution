@@ -256,7 +256,13 @@ Siehe §3.
 
 ### K5 · Abfangregeln und Schutz
 
-**Rollen Charge K5 (3):** `maertyrerin`, `schutzgeist`, `dorfschmied`
+**Rollen Charge K5 (0):** –
+
+**Nachtrag Rollenaudit:** `dorfschmied` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `schutzgeist` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `maertyrerin` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `dorfwache` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -309,7 +315,9 @@ Siehe §3.
 
 ### K8 · Rollenblockierung
 
-**Rollen Charge K8 (1):** `der-weise`
+**Rollen Charge K8 (0):** –
+
+**Nachtrag Rollenaudit:** `der-weise` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `albtraumwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -355,7 +363,9 @@ Siehe §3.
 
 ### K11 · Wolfsangriff-Modifikation, Durchdringung, verzögerte Tode
 
-**Rollen Charge K11 (3):** `schicksalswolf`, `rachsuechtiger-wolf`, `verdammniswaechter`
+**Rollen Charge K11 (2):** `schicksalswolf`, `rachsuechtiger-wolf`
+
+**Nachtrag Rollenaudit:** `verdammniswaechter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `seuchenwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

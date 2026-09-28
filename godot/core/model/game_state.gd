@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informationsrollen)
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations- und Schutzrollen)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -52,6 +52,13 @@ var bounty_credits: Dictionary = {}  ## Kopfgeldjäger: offene Listen je Person-
 var death_marks: Array = []          ## Tode am Morgen aus Nachtschritten [{target_id, source_id, cause}] (Kriegerin, Blutpriester)
 var detective_hints: Array = []      ## nachts entstandene Detektiv-Hinweise [{anchor_id, direction}], öffentlich am Morgen
 var eternal_finds: Array[int] = []   ## Die Ewigen: mit Ja geprüfte Personen, aufsteigend
+var sage_curse_from: int = 0         ## Fluch des Weisen: erste betroffene Nacht- bzw. Tagesnummer (0 = kein Fluch)
+var sage_curse_to: int = 0           ## letzte betroffene Nacht- bzw. Tagesnummer
+var shields: Array = []              ## Schilde des Schutzgeists [{holder_id, source_id, night}], wirksam ab night + 1
+var weapons: Array = []              ## Waffen des Dorfschmieds [{holder_id, smith_id}]
+var martyr_saves: Array = []         ## Märtyrerin dieser Nacht [{martyr_id, victim_id}]
+var doom_offers: Dictionary = {}     ## Verdammniswächter: gezogenes Angebot dieser Nacht je Wächter-ID
+var ghost_alerts: int = 0            ## Schutzgeist hat in dieser Nacht einen Wolf gewählt (Anzahl, öffentlich am Morgen)
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -217,6 +224,13 @@ func to_dict() -> Dictionary:
 		"death_marks": death_marks.duplicate(true),
 		"detective_hints": detective_hints.duplicate(true),
 		"eternal_finds": eternal_finds.duplicate(),
+		"sage_curse_from": sage_curse_from,
+		"sage_curse_to": sage_curse_to,
+		"shields": shields.duplicate(true),
+		"weapons": weapons.duplicate(true),
+		"martyr_saves": martyr_saves.duplicate(true),
+		"doom_offers": _int_keys_to_dict(doom_offers),
+		"ghost_alerts": ghost_alerts,
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -445,6 +459,36 @@ static func from_dict(d: Dictionary) -> GameState:
 	for id: int in s.eternal_finds:
 		if not s.players.has(id) or s.eternal_finds.count(id) > 1:
 			return null
+	s.sage_curse_from = DictRead.get_int(d, "sage_curse_from")
+	s.sage_curse_to = DictRead.get_int(d, "sage_curse_to")
+	if s.sage_curse_from < 0 or s.sage_curse_to < 0 or (s.sage_curse_to > 0 and s.sage_curse_from > s.sage_curse_to):
+		return null
+	for item: Variant in DictRead.get_array(d, "shields"):
+		var holder := DictRead.get_int(item, "holder_id", -1) if item is Dictionary else -1
+		var spirit := DictRead.get_int(item, "source_id", -1) if item is Dictionary else -1
+		if not s.players.has(holder) or not s.players.has(spirit) or DictRead.get_int(item, "night", -1) < 0:
+			return null
+		s.shields.append({"holder_id": holder, "source_id": spirit, "night": DictRead.get_int(item, "night")})
+	for item: Variant in DictRead.get_array(d, "weapons"):
+		var bearer := DictRead.get_int(item, "holder_id", -1) if item is Dictionary else -1
+		var smith := DictRead.get_int(item, "smith_id", -1) if item is Dictionary else -1
+		if not s.players.has(bearer) or not s.players.has(smith):
+			return null
+		s.weapons.append({"holder_id": bearer, "smith_id": smith})
+	for item: Variant in DictRead.get_array(d, "martyr_saves"):
+		var martyr := DictRead.get_int(item, "martyr_id", -1) if item is Dictionary else -1
+		var saved := DictRead.get_int(item, "victim_id", -1) if item is Dictionary else -1
+		if not s.players.has(martyr) or not s.players.has(saved) or martyr == saved:
+			return null
+		s.martyr_saves.append({"martyr_id": martyr, "victim_id": saved})
+	var offers := DictRead.get_dict(d, "doom_offers")
+	for key: Variant in offers:
+		if not String(key).is_valid_int() or not s.players.has(String(key).to_int()) or not DictRead.is_int_like(offers[key]) or not s.players.has(int(offers[key])):
+			return null
+		s.doom_offers[String(key).to_int()] = int(offers[key])
+	s.ghost_alerts = DictRead.get_int(d, "ghost_alerts")
+	if s.ghost_alerts < 0:
+		return null
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null

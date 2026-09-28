@@ -97,6 +97,7 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 				return &"player_dead"
 			if ExecutionRules.needs_cerberus_decision(s, target) and not p.get("cerberus_defend") is bool:
 				return &"cerberus_decision_required"
+			return GuardRoles.validate_curse_field(s, target, p)
 		REVIVE:
 			if player.alive:
 				return &"player_alive"
@@ -376,7 +377,7 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
 			ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": true})
-			ExecutionRules.execute(ctx, target, KillEvent.SOURCE_GM, DictRead.get_bool(p, "cerberus_defend"))
+			ExecutionRules.execute(ctx, target, KillEvent.SOURCE_GM, DictRead.get_bool(p, "cerberus_defend"), DictRead.get_int(p, "sage_curse"))
 		SET_ROLE_FIELD:
 			var player := s.players[target]
 			var field := DictRead.get_string(p, "field")

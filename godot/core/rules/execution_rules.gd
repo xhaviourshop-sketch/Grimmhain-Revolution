@@ -67,7 +67,7 @@ static func needs_cerberus_decision(s: GameState, target_id: int) -> bool:
 
 ## Führt die (bereits bestätigte) Hinrichtung nach der Vorschau aus. Zählt jede Hinrichtung (Henker),
 ## lässt Cerberus bei Wunsch abwehren und vollzieht danach Henker-Markierungen.
-static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, cerberus_defend: bool = false) -> void:
+static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, cerberus_defend: bool = false, sage_curse: int = 0) -> void:
 	var s := ctx.state
 	s.executions_count += 1
 	if cerberus_defend and needs_cerberus_decision(s, target_id):
@@ -75,6 +75,7 @@ static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, c
 		ctx.emit(GameEvent.EXECUTION_DEFENDED, Visibility.GM, {"target_id": target_id, "by": String(RoleCatalog.CERBERUS), "day": s.day_number})
 		_hangman_extras(ctx)
 		return
+	var sage := GuardRoles.needs_sage_decision(s, target_id)  # vor dem Verbrauch einer Spiegelung
 	var r := preview(s, target_id, source_kind)
 	var target: Player = s.players[target_id]
 	if bool(r["redirected"]):
@@ -87,7 +88,9 @@ static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, c
 		ctx.emit(GameEvent.MIRROR_NOT_TRIGGERED, Visibility.GM, {
 			"target_id": target_id, "nominator_id": r["nominator_id"], "reason": r["reason"],
 		})
-	KillPipeline.request_kill(ctx, int(r["death_target_id"]), StringName(r["cause"]), StringName(r["source_kind"]), int(r["source_id"]))
+	var record := KillPipeline.request_kill(ctx, int(r["death_target_id"]), StringName(r["cause"]), StringName(r["source_kind"]), int(r["source_id"]))
+	if sage and record != null:
+		GuardRoles.start_curse(ctx, record.target_id, sage_curse)
 	_hangman_extras(ctx)
 
 
@@ -98,5 +101,5 @@ static func _hangman_extras(ctx: RuleContext) -> void:
 	s.hangman_marks.clear()
 	for mark: Dictionary in marks:
 		var hangman: Player = s.players[int(mark["hangman_id"])]
-		if hangman.alive and hangman.role_id == RoleCatalog.HENKER:
+		if hangman.alive and hangman.role_id == RoleCatalog.HENKER and not GuardRoles.silenced(s, hangman.id):
 			KillPipeline.request_kill(ctx, int(mark["target_id"]), KillEvent.CAUSE_HANGMAN_EXTRA, KillEvent.SOURCE_PLAYER, hangman.id)

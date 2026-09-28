@@ -665,6 +665,36 @@ msgstr "The Eternal Ones"
 msgid "ui.role.die_ewigen.short"
 msgstr "Each night check together whether someone wins alone, and win with them."
 
+msgid "ui.role.der_weise.name"
+msgstr "The Elder"
+
+msgid "ui.role.der_weise.short"
+msgstr "Survives one werewolf attack; if lynched, the village loses its abilities for a while."
+
+msgid "ui.role.maertyrerin.name"
+msgstr "Martyr"
+
+msgid "ui.role.maertyrerin.short"
+msgstr "Can sacrifice herself so the night victim survives."
+
+msgid "ui.role.schutzgeist.name"
+msgstr "Guardian Spirit"
+
+msgid "ui.role.schutzgeist.short"
+msgstr "In the night after her death gives someone a shield against the next werewolf attack."
+
+msgid "ui.role.dorfschmied.name"
+msgstr "Village Blacksmith"
+
+msgid "ui.role.dorfschmied.short"
+msgstr "From the sixth night a weapon that blocks one werewolf attack and kills a werewolf."
+
+msgid "ui.role.verdammniswaechter.name"
+msgstr "Doom Warden"
+
+msgid "ui.role.verdammniswaechter.short"
+msgstr "Each night may redirect the werewolf attack to another offered person."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

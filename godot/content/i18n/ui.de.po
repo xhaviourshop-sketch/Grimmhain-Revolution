@@ -665,6 +665,36 @@ msgstr "Die Ewigen"
 msgid "ui.role.die_ewigen.short"
 msgstr "Prüfen jede Nacht gemeinsam, ob jemand allein gewinnt, und gewinnen mit ihm."
 
+msgid "ui.role.der_weise.name"
+msgstr "Der Weise"
+
+msgid "ui.role.der_weise.short"
+msgstr "Überlebt einmal einen Wolfsangriff; wird er gelyncht, ruhen die Fähigkeiten des Dorfes."
+
+msgid "ui.role.maertyrerin.name"
+msgstr "Märtyrerin"
+
+msgid "ui.role.maertyrerin.short"
+msgstr "Kann sich opfern, damit das Nachtopfer überlebt."
+
+msgid "ui.role.schutzgeist.name"
+msgstr "Schutzgeist"
+
+msgid "ui.role.schutzgeist.short"
+msgstr "Gibt in der Nacht nach ihrem Tod jemandem ein Schild gegen den nächsten Wolfsangriff."
+
+msgid "ui.role.dorfschmied.name"
+msgstr "Dorfschmied"
+
+msgid "ui.role.dorfschmied.short"
+msgstr "Ab der sechsten Nacht eine Waffe, die einen Wolfsangriff abwehrt und einen Wolf tötet."
+
+msgid "ui.role.verdammniswaechter.name"
+msgstr "Verdammniswächter"
+
+msgid "ui.role.verdammniswaechter.short"
+msgstr "Lenkt jede Nacht den Wolfsangriff wahlweise auf eine angebotene andere Person."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

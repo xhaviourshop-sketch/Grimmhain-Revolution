@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 45 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 45 |
+| im RoleCatalog vorhandene Rollen | 50 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 50 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 43 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 48 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -92,6 +92,11 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 43 | `amalia` | Amalia (Rollentext) | village | nein | – (Tagesaktion) | `rules_engine.gd` (`AmaliaSacrifice`), `phase_machine.gd` | `test_info_roles.gd`, fuzz | RM-DR-151, I-09, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `assisted` | `legacy-contradictory` |
 | 44 | `detektiv` | Detektiv / Detective (Rollentext) | village | nein | – (Todesfolge) | `kill_pipeline.gd` (`_detective_hint`), `rules_engine.gd` (`detective_hints`) | `test_info_roles.gd`, fuzz | RM-DR-153, I-10, I-14, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 45 | `die-ewigen` | Die Ewigen / The Eternal Ones (Rollentext) | village | nein | 48 (gemeinsam) | `info_steps.gd` (`eternal_finds`), `win_rules.gd` (`eternal_co_winners`) | `test_info_roles.gd`, fuzz | RM-DR-104, I-11, I-12, I-15, DECISION-LOG „Rollenaudit · Informationsrollen“ | `implemented-and-tested` | `automatic` | `not-found` |
+| 46 | `der-weise` | Der Weise / The Elder (Rollentext) | village | nein | – | `guard_roles.gd` (Fluch, `silenced`), `kill_pipeline.gd` (`pack_protection`), `execution_rules.gd` | `test_protection_roles.gd`, fuzz | RM-DR-114, S-01, S-02, S-05, S-09, S-10, S-11, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 47 | `maertyrerin` | Märtyrerin / Martyr (Rollentext) | village | nein | 90 | `guard_roles.gd` (`martyr_victim`), `rules_engine.gd` (Morgenauflösung) | `test_protection_roles.gd`, fuzz | RM-DR-118, S-03, S-14, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 48 | `schutzgeist` | Schutzgeist / Guardian Spirit (Rollentext) | village | nein | 56 (tot) | `step_queue.gd` (Ausnahme G-PH-2), `kill_pipeline.gd`, `rules_engine.gd` (`shields`, Meldung) | `test_protection_roles.gd`, fuzz | RM-DR-148, S-04, S-10, S-11, S-12, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 49 | `dorfschmied` | Dorfschmied / Village Blacksmith (Rollentext) | village | nein | 17 | `kill_pipeline.gd` (`weapons`, Reaktion `smith`), `rules_engine.gd` | `test_protection_roles.gd`, fuzz | RM-DR-154, S-06, S-10, S-11, S-12, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `assisted` | `legacy-verified` |
+| 50 | `verdammniswaechter` | Verdammniswächter / Doom Warden (Rollentext) | village | nein | 23 | `guard_roles.gd` (`doom_offer`, Seed), `rules_engine.gd` | `test_protection_roles.gd`, fuzz | RM-DR-115, S-07, S-08, S-13, S-15, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -329,6 +334,31 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Gemeinsamer Schritt `die-ewigen` in jeder Nacht mit lebenden Ewigen (Priorität 48): eine lebende Person außerhalb der Ewigen prüfen, nur Ja (Einzelsieg) oder Nein an jede wache Ewige. Ja-Personen stehen in `eternal_finds`; gewinnt eine davon einen Einzelsieg, stehen alle Ewigen (lebend oder tot) als Mitsieger in `beneficiary_ids`. Schattenhund und Albtraumwolf blockieren.
 - **Tests:** Prüfung, Nein ohne Speicherung, Mitsieg nur mit geprüfter Person, Blockade.
 - **Grenzen:** –
+
+### 4.46 `der-weise`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Rettung (`der-weise:survive`, einmal je Leben) nur, wenn der Rudelangriff ihn sonst töten würde; Durchdringung tötet. Sein Lynch-Tod verlangt `sage_curse` 0–3 bei `DecideExecution` und Spielleiter-Hinrichtung; danach ruhen in so vielen folgenden Nächten und Tagen alle Fähigkeiten aller Dorfpersonen (`GuardRoles.silenced`): Nacht- und Tagesschritte (`cursed`), passive Wirkungen, Todesreaktionen, Wolfskind-Verwandlung und Lehrling-Erbe; ausgelöste Wirkungen entfallen endgültig. Ein ruhender Weiser löst keinen Fluch aus.
+- **Tests:** Rettung nur wenn nötig, Durchdringung, Fluch mit Orakel/Dorfwache/Nachtwächter/Sensenträger/Amalia, Verwandlung und Erbe entfallen, 0 = kein Fluch, ruhender Weiser.
+- **Grenzen:** Bindungen von Wolfskind und Lehrling bleiben an das tote Vorbild bzw. den toten Meister geknüpft; eine spätere Wiederbelebung und ein erneuter Tod lösen sie aus.
+
+### 4.47 `maertyrerin`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Schritt am Ende der Nacht (Priorität 90), nur wenn das erste Rudelopfer ohne sie tatsächlich stürbe (`martyr_victim`: kein Schutz, keine Markierung, kein persönlicher Schild); nicht blockierbar, aber vom Fluch betroffen. Opfert sie sich, stirbt sie am Morgen (`MARTYR_SACRIFICE`) statt des Opfers, auch gegen Durchdringung.
+- **Tests:** Verzicht, Opfer, geschütztes Opfer ohne Frage, Blockade wirkungslos, Save/Load.
+- **Grenzen:** Die Frage liegt technisch als letzter Nachtschritt vor der Morgenauflösung.
+
+### 4.48 `schutzgeist`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Tote Schutzgeister handeln in der ersten Nacht nach ihrem Tod (Priorität 56, Ausnahme zu G-PH-2): Pflichtwahl einer lebenden Person. Das Schild wirkt ab der folgenden Nacht bis zum nächsten Rudelangriff und bricht bei Durchdringung. Ein gewählter Wolf wird am Morgen öffentlich ohne Namen gemeldet (`GhostWolfAlert`).
+- **Tests:** Schritt nur in der ersten Nacht, Wirkung ab Folgenacht, Verbrauch, öffentliche Meldung ohne Namen.
+- **Grenzen:** –
+
+### 4.49 `dorfschmied`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Ab Nacht 6 der Partie (Priorität 17) „jetzt geben?“ bis zur Vergabe (einmal je Leben) an eine andere lebende Person. Die Waffe wehrt den nächsten Rudelangriff auf den Träger ab, auch einen durchdringenden, und reiht eine Pflichtreaktion ein, in der der Spielleiter den sterbenden Wolf wählt (`SMITH_WEAPON`). Gaben bleiben nach dem Tod des Gebers und wirken im Fluch.
+- **Tests:** Nacht 6, Vergabe, Durchdringung, Tod des Schmieds, Reihenfolge Waffe → Schild → Weiser.
+- **Grenzen:** Ein Zufallsknopf für die Wolfswahl (RM-DR-015.2) folgt mit der Oberfläche.
+
+### 4.50 `verdammniswaechter`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht nach dem Rudel (Priorität 23), wenn ein erstes Rudelopfer lebt, das nicht er selbst ist: die App zieht einmal je Nacht über den Seed ein Angebot aus lebenden Nicht-Wölfen außer Opfer und ihm (`doom_offers`); er wählt Opfer oder Angebot. Die gewählte Person wird zum Rudelopfer; alle Regeln des Rudelangriffs gelten.
+- **Tests:** Angebot, gleiche Ziehung nach Abbruch, Umlenkung, Schutz bleibt, Wächter als Opfer.
+- **Grenzen:** Der Rollentext „umgeht alle Schutzfähigkeiten“ gilt nach S-07 nicht.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

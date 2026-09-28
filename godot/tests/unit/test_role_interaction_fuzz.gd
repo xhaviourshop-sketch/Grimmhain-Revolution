@@ -14,7 +14,8 @@ extends TestCase
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
 	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker",
-	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen"]
+	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
+	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const GAMES := 120
@@ -28,9 +29,10 @@ const FORBIDDEN_PUBLIC_KEYS: Array[String] = ["role_id", "appears_as", "cause", 
 const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoRecorded", "InfoOverridden", "WolfChildBound",
 	"WolfChildTransformed", "ApprenticeBound", "RoleChanged", "ExecutionRedirected", "MirrorNotTriggered", "ReactionResolved",
 	"StepDropped", "PromptCancelled", "KillIgnored", "WinConfirmed", "WinRejected", "GmCorrected", "StepSkipped",
-	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered"]
+	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
+	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
-	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE"]
+	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE"]
 
 var _rng := RandomNumberGenerator.new()
 var _game_label := ""
@@ -302,10 +304,7 @@ func _day_command(s: GameState) -> Command:
 		var alive := s.alive_ids()
 		if not alive.is_empty():
 			var exec_target: int = _pick(alive)
-			var fields := {"target_id": exec_target}
-			if ExecutionRules.needs_cerberus_decision(s, exec_target):
-				fields["cerberus_defend"] = _rng.randf() < 0.5
-			return CorrectionFixtures.gm("execute", fields, "Fuzz: Hinrichtung ohne Nominierung")
+			return CorrectionFixtures.gm("execute", _execution_fields(s, exec_target), "Fuzz: Hinrichtung ohne Nominierung")
 	var nominees: Array[int] = []
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if s.players[n.nominee_id].alive:
@@ -313,9 +312,17 @@ func _day_command(s: GameState) -> Command:
 	if nominees.is_empty() or _rng.randf() < 0.2:
 		return Command.decide_execution(-1)
 	var chosen: int = _pick(nominees)
-	if ExecutionRules.needs_cerberus_decision(s, chosen):
-		return Command.create(Command.DECIDE_EXECUTION, {"target_id": chosen, "cerberus_defend": _rng.randf() < 0.5})
-	return Command.decide_execution(chosen)
+	return Command.create(Command.DECIDE_EXECUTION, _execution_fields(s, chosen))
+
+
+## Pflichtfelder einer Hinrichtung: Cerberus-Abwehr und Fluchdauer des Weisen (0–3).
+func _execution_fields(s: GameState, target: int) -> Dictionary:
+	var fields := {"target_id": target}
+	if ExecutionRules.needs_cerberus_decision(s, target):
+		fields["cerberus_defend"] = _rng.randf() < 0.5
+	if GuardRoles.needs_sage_decision(s, target):
+		fields["sage_curse"] = _rng.randi_range(0, RoleCatalog.SAGE_MAX_CURSE)
+	return fields
 
 
 func _random_nomination(s: GameState) -> Command:
@@ -485,7 +492,8 @@ func _check_prompt_actor(s: GameState, prompt: Dictionary, label: String) -> voi
 	if not step.begins_with("night:") or actor == -1:
 		return
 	var role := StepQueue.step_kind(step)
-	assert_true(s.players[actor].alive, "%s: %s nur für Lebende" % [label, step])
+	# Ausnahme zu G-PH-2: der Schutzgeist handelt in der ersten Nacht nach seinem Tod (S-04).
+	assert_true(s.players[actor].alive != (role == RoleCatalog.SCHUTZGEIST), "%s: %s nur für Lebende (Schutzgeist: nur tot)" % [label, step])
 	assert_eq(s.players[actor].role_id, role, "%s: %s nur mit geplanter Rolle" % [label, step])
 	assert_false((prompt["allowed_ids"] as Array).has(actor) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER].has(role), "%s: %s ohne Selbstwahl" % [label, step])
 

@@ -86,6 +86,12 @@ const DETECTIVE_RECORDED := &"DetectiveRecorded"  ## Detektiv-Hinweis mit Urspru
 const DETECTIVE_HINT := &"DetectiveHint"        ## Richtung vom Platz des toten Wolfs (öffentlich)
 const ETERNAL_RECORDED := &"EternalRecorded"    ## Prüfung der Ewigen (nur Spielleiter)
 const ETERNAL_REVEALED := &"EternalRevealed"    ## Ja/Nein für jede wache Ewige (actor)
+const SAGE_CURSED := &"SageCursed"              ## Fluch des Weisen mit Dauer (nur Spielleiter)
+const WEAPON_GIVEN := &"WeaponGiven"            ## Waffe des Dorfschmieds vergeben (nur Spielleiter)
+const SHIELD_GIVEN := &"ShieldGiven"            ## Schild des Schutzgeists vergeben (nur Spielleiter)
+const GHOST_WOLF_ALERT := &"GhostWolfAlert"     ## Schutzgeist hat einen Wolf gewählt (öffentlich, ohne Namen)
+const DOOM_JUDGED := &"DoomJudged"              ## Urteil des Verdammniswächters (nur Spielleiter)
+const MARTYR_CHOSEN := &"MartyrChosen"          ## Märtyrerin opfert sich für das Rudelopfer (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

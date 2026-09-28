@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen` und die Schutzrollen `der-weise`, `maertyrerin`, `schutzgeist`, `dorfschmied` und `verdammniswaechter`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -126,6 +126,19 @@ const AMALIA_MIN_WOLVES := 3
 const DETEKTIV := &"detektiv"
 ## Die Ewigen / The Eternal Ones (I-11, I-12, I-15): Dorf; gemeinsame Prüfung „Einzelsieg?“, Mitsieg (WinRules).
 const DIE_EWIGEN := &"die-ewigen"
+## Der Weise / The Elder (Rollenaudit S-01, S-02, S-05, S-09): Dorf; überlebt einmal einen tödlichen Rudelangriff;
+## sein Lynch lässt 0–3 Nächte und Tage alle Fähigkeiten der Dorfpersonen ruhen (SageCurse).
+const DER_WEISE := &"der-weise"
+const SAGE_MAX_CURSE := 3
+## Märtyrerin / Martyr (S-03, S-14): Dorf; am Ende der Nacht Ersatzopfer für das erste Rudelopfer.
+const MAERTYRERIN := &"maertyrerin"
+## Schutzgeist / Guardian Spirit (S-04): Dorf; in der ersten Nacht nach ihrem Tod ein Schild vergeben.
+const SCHUTZGEIST := &"schutzgeist"
+## Dorfschmied / Village Blacksmith (S-06): Dorf; ab Nacht 6 eine Waffe vergeben (einmal je Leben).
+const DORFSCHMIED := &"dorfschmied"
+const SMITH_FIRST_NIGHT := 6
+## Verdammniswächter / Doom Warden (S-07, S-08, S-13): Dorf; lenkt den ersten Rudelangriff wahlweise um.
+const VERDAMMNISWAECHTER := &"verdammniswaechter"
 const BOUND_PRIORITY := 5
 const ETERNAL_PRIORITY := 48  ## gemeinsamer Schritt der Ewigen (Legacy-Stufe 4.8)
 
@@ -133,7 +146,8 @@ const ETERNAL_PRIORITY := 48  ## gemeinsamer Schritt der Ewigen (Legacy-Stufe 4.
 const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhexe:heal", "waldhexe:poison", "spiegelwolf:mirror",
 	"besessener-wolf:death_reaction", "ritter:death_reaction", "faehrtenleser:track", "spuerhund:lost",
 	"schattenhund:block", "giftwolf:paw1", "giftwolf:paw2", "rudelvater:survive", "fenrir:survive",
-	"koenig:learn", "kriegerin-des-lichts:attack", "blutpriester:sacrifice"]
+	"koenig:learn", "kriegerin-des-lichts:attack", "blutpriester:sacrifice", "der-weise:survive", "schutzgeist:shield",
+	"dorfschmied:weapon"]
 
 ## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
 ## Wolfskind 0.9 (nur mit Auswahlbedarf), Lehrling 1.1 (nur mit Auswahlbedarf), Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
@@ -185,6 +199,11 @@ const ROLES := {
 	AMALIA: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": AMALIA},
 	DETEKTIV: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DETEKTIV},
 	DIE_EWIGEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_EWIGEN},
+	DER_WEISE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DER_WEISE},
+	MAERTYRERIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": MAERTYRERIN, "night_priority": 90},
+	SCHUTZGEIST: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZGEIST, "night_priority": 56},
+	DORFSCHMIED: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFSCHMIED, "night_priority": 17},
+	VERDAMMNISWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": VERDAMMNISWAECHTER, "night_priority": 23},
 }
 
 

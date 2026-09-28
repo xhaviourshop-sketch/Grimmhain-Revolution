@@ -270,6 +270,8 @@ static func _validate_amalia(s: GameState, p: Dictionary) -> StringName:
 		return &"invalid_answer"
 	if InfoSteps.living_wolf_count(s) < RoleCatalog.AMALIA_MIN_WOLVES:
 		return &"too_few_wolves"
+	if GuardRoles.silenced(s, id):
+		return &"cursed"
 	return &""
 
 
@@ -301,6 +303,9 @@ static func _validate_execution(s: GameState, p: Dictionary) -> StringName:
 		return &"player_dead"
 	if ExecutionRules.needs_cerberus_decision(s, target) and not p.get("cerberus_defend") is bool:
 		return &"cerberus_decision_required"
+	var curse_error := GuardRoles.validate_curse_field(s, target, p)
+	if curse_error != &"":
+		return curse_error
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if n.nominee_id == target:
 			return &""
@@ -357,7 +362,7 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				ctx.emit(GameEvent.NO_EXECUTION, Visibility.PUBLIC, {"day": s.day_number})
 			else:
 				ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": false})
-				ExecutionRules.execute(ctx, target, KillEvent.SOURCE_VILLAGE, DictRead.get_bool(p, "cerberus_defend"))
+				ExecutionRules.execute(ctx, target, KillEvent.SOURCE_VILLAGE, DictRead.get_bool(p, "cerberus_defend"), DictRead.get_int(p, "sage_curse"))
 		Command.END_DAY:
 			s.day_step = Phase.DAY_ENDED
 			ctx.emit(GameEvent.DAY_ENDED, Visibility.PUBLIC, {"day": s.day_number})
@@ -429,7 +434,7 @@ static func _judge_nominations(ctx: RuleContext) -> void:
 	for mark: Dictionary in s.judge_marks:
 		var judge := int(mark["judge_id"])
 		var target := int(mark["target_id"])
-		if not s.players[judge].alive or s.players[judge].role_id != RoleCatalog.KORRUPTER_RICHTER or not s.players[target].alive:
+		if not s.players[judge].alive or s.players[judge].role_id != RoleCatalog.KORRUPTER_RICHTER or not s.players[target].alive or GuardRoles.silenced(s, judge):
 			continue
 		if _validate_nominate(s, {"nominator_id": judge, "nominee_id": target}) != &"":
 			continue
@@ -489,6 +494,7 @@ static func _start_night(ctx: RuleContext) -> void:
 	var s := ctx.state
 	PhaseMachine.enter(ctx, Phase.NIGHT)
 	s.pack_target_id = GameState.NO_TARGET
+	s.martyr_saves.clear()  # vor dem Plan: die Frage der Märtyrerin hängt von dieser Nacht ab
 	s.night_plan = StepQueue.build_night_plan(s)
 	s.pack_bonus_pending = false  # in den Plan übernommen (Rudelvater)
 	s.judge_marks.clear()  # Markierungen gelten nur für den folgenden Tag
@@ -506,6 +512,7 @@ static func _start_night(ctx: RuleContext) -> void:
 		s.night_step_status.append(StepQueue.STATUS_PENDING)
 	s.protections.clear()
 	s.witch_actions.clear()
+	s.doom_offers.clear()
 	if s.night_plan.is_empty():
 		ctx.emit(GameEvent.NIGHT_STEP_SKIPPED, Visibility.GM, {"step": StepQueue.PACK, "reason": "no_living_wolf"})
 		return
@@ -530,6 +537,35 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 		PendingPrompt.OWNER_GUARD:
 			Protections.set_protection(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_SMITH:
+			if target != GameState.NO_TARGET:
+				s.weapons.append({"holder_id": target, "smith_id": prompt.actor_id})
+				s.players[prompt.actor_id].ability_uses[GuardRoles.SMITH_USE_KEY] = 1
+			ctx.emit(GameEvent.WEAPON_GIVEN, Visibility.GM, {"smith_id": prompt.actor_id, "holder_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_GHOST:
+			s.shields.append({"holder_id": target, "source_id": prompt.actor_id, "night": s.night_number})
+			s.players[prompt.actor_id].ability_uses[GuardRoles.GHOST_USE_KEY] = 1
+			if s.players[target].counts_as_wolf:
+				s.ghost_alerts += 1  # öffentlich am Morgen, ohne Namen
+			ctx.emit(GameEvent.SHIELD_GIVEN, Visibility.GM, {"spirit_id": prompt.actor_id, "holder_id": target, "is_wolf": s.players[target].counts_as_wolf, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_DOOM:
+			# Urteil (S-07): die gewählte Person wird statt des Rudelopfers vom Rudel angegriffen.
+			var victim := s.pack_target_id
+			ctx.emit(GameEvent.DOOM_JUDGED, Visibility.GM, {"warden_id": prompt.actor_id, "victim_id": victim,
+				"offer_id": int(s.doom_offers.get(prompt.actor_id, -1)), "chosen_id": target, "night": s.night_number})
+			s.pack_target_id = target
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_MARTYR:
+			if target != GameState.NO_TARGET:
+				s.martyr_saves.append({"martyr_id": prompt.actor_id, "victim_id": target})
+				ctx.emit(GameEvent.MARTYR_CHOSEN, Visibility.GM, {"martyr_id": prompt.actor_id, "victim_id": target, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_HANGMAN:
@@ -580,7 +616,7 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 		PendingPrompt.OWNER_REACTION:
 			var reaction: Reaction = s.reactions.pop_front()
 			var cause: StringName = {Reaction.KIND_CURSE: KillEvent.CAUSE_HUNTER_SHOT, Reaction.KIND_POSSESSED: KillEvent.CAUSE_POSSESSED_DRAG,
-				Reaction.KIND_KNIGHT: KillEvent.CAUSE_KNIGHT_STRIKE}[reaction.kind]
+				Reaction.KIND_KNIGHT: KillEvent.CAUSE_KNIGHT_STRIKE, Reaction.KIND_SMITH: KillEvent.CAUSE_SMITH_WEAPON}[reaction.kind]
 			ctx.emit(GameEvent.REACTION_RESOLVED, Visibility.GM, {
 				"reaction_id": reaction.id, "owner_id": reaction.owner_id, "target_id": target, "kind": reaction.kind,
 				"outcome": "declined" if target == GameState.NO_TARGET else ("cursed" if reaction.kind == Reaction.KIND_CURSE else "killed"),
@@ -601,6 +637,10 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	for hint: Dictionary in s.detective_hints:
 		ctx.emit(GameEvent.DETECTIVE_HINT, Visibility.PUBLIC, {"anchor_id": int(hint["anchor_id"]), "direction": String(hint["direction"])})
 	s.detective_hints.clear()
+	# Schutzgeist hat einen Wolf gewählt: öffentlich, ohne Namen (S-04).
+	for i: int in s.ghost_alerts:
+		ctx.emit(GameEvent.GHOST_WOLF_ALERT, Visibility.PUBLIC, {"night": s.night_number})
+	s.ghost_alerts = 0
 	# Gift vor dem Rudelangriff: Ursache und Reihenfolge wie beim früheren Sofort-Tod.
 	WitchStep.apply_poisons(ctx)
 	# Todesmarkierungen aus Nachtschritten (Kriegerin des Lichts, Blutpriester), in Reihenfolge der Markierung.
@@ -617,9 +657,17 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 		# Seuchenwolf: der nächste tatsächliche Rudelangriff durchdringt Schutz und verbraucht die Wirkung.
 		var pierce := s.plague_pierce_pending
 		s.plague_pierce_pending = false
-		KillPipeline.request_kill(ctx, s.pack_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, pierce)
+		var martyr := GuardRoles.martyr_for(s, s.pack_target_id) if s.players[s.pack_target_id].alive else GameState.NO_TARGET
+		if martyr != GameState.NO_TARGET:
+			# Märtyrerin (S-03): Ersatzopfer, auch gegen Durchdringung (RM-DR-005).
+			ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": s.pack_target_id, "cause": KillEvent.CAUSE_NIGHT_KILL, "source_kind": KillEvent.SOURCE_PACK,
+				"protection": RoleCatalog.MAERTYRERIN, "sources": [RoleCatalog.MAERTYRERIN], "martyr_id": martyr, "night": s.night_number})
+			KillPipeline.request_kill(ctx, martyr, KillEvent.CAUSE_MARTYR_SACRIFICE, KillEvent.SOURCE_PLAYER, martyr)
+		else:
+			KillPipeline.request_kill(ctx, s.pack_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, pierce)
 	else:
 		ctx.emit(GameEvent.NO_NIGHT_KILL, Visibility.GM, {"night_number": s.night_number})
+	s.martyr_saves.clear()
 	if s.pack_extra_target_id != GameState.NO_TARGET:
 		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true)
 	s.pack_target_id = GameState.NO_TARGET
@@ -650,7 +698,7 @@ static func _ring_alarm_bells(ctx: RuleContext) -> void:
 	var watchmen: Array[int] = []
 	var suspects: Array[int] = []
 	for id: int in s.alive_ids():
-		if s.players[id].role_id != RoleCatalog.NACHTWAECHTER:
+		if s.players[id].role_id != RoleCatalog.NACHTWAECHTER or GuardRoles.silenced(s, id):
 			continue
 		for n: int in Seats.living_neighbours(s, id):
 			if s.players[n].faction != Faction.VILLAGE:

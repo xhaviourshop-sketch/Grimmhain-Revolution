@@ -36,6 +36,10 @@ const OWNER_KING := &"koenig"
 const OWNER_WARRIOR := &"kriegerin-des-lichts"
 const OWNER_BLOOD := &"blutpriester"
 const OWNER_ETERNAL := &"die-ewigen"
+const OWNER_SMITH := &"dorfschmied"
+const OWNER_GHOST := &"schutzgeist"
+const OWNER_DOOM := &"verdammniswaechter"
+const OWNER_MARTYR := &"maertyrerin"
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0

@@ -84,7 +84,7 @@ static func on_death(ctx: RuleContext, record: KillEvent) -> void:
 	var blocked: Array[int] = []
 	for b: WolfChildBond in s.wolf_children:  # nach child_id sortiert
 		var child: Player = s.players.get(b.child_id)
-		if b.model_id == record.target_id and not b.transformed and child != null and child.alive and child.role_id == RoleCatalog.WOLFSKIND:
+		if b.model_id == record.target_id and not b.transformed and child != null and child.alive and child.role_id == RoleCatalog.WOLFSKIND and not GuardRoles.silenced(s, child.id):
 			if Gatewarden.active(s):
 				blocked.append(b.child_id)
 			else:

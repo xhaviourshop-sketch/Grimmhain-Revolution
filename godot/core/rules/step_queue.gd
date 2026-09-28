@@ -97,6 +97,10 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.KRIEGERIN: false,      # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.BLUTPRIESTER: false,   # Verzicht ist eine Antwort (0 Ziele)
 	ETERNAL: false,                    # Pflichtprüfung der Ewigen
+	RoleCatalog.DORFSCHMIED: false,    # „noch nicht“ ist eine Antwort (0 Ziele)
+	RoleCatalog.SCHUTZGEIST: false,    # Pflichtwahl einer lebenden Person
+	RoleCatalog.VERDAMMNISWAECHTER: false,  # Pflichturteil zwischen zwei Personen
+	RoleCatalog.MAERTYRERIN: false,    # Verzicht ist eine Antwort (0 Ziele)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -148,7 +152,15 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if p.role_id == RoleCatalog.BLUTPRIESTER and InfoSteps.used(p, InfoSteps.BLOOD_USE_KEY):
 			continue
+		if p.role_id == RoleCatalog.DORFSCHMIED and not GuardRoles.smith_can_give(s, p):
+			continue
+		if p.role_id == RoleCatalog.SCHUTZGEIST:
+			continue  # handelt nur tot (unten)
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
+	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
+	for id: int in s.players:
+		if GuardRoles.ghost_can_act(s, s.players[id]):
+			entries.append([RoleCatalog.night_priority(RoleCatalog.SCHUTZGEIST), id, personal_step_key(RoleCatalog.SCHUTZGEIST, id)])
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
 			entries.append([RoleCatalog.PACK_PRIORITY, 0, PACK])
@@ -172,11 +184,15 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	if key == BOUND:
 		if InfoSteps.living_bound(s).is_empty():
 			return &"no_decision"
-		return &"blocked" if s.village_blocked else &""  # Blockade gemeinsamer Dorfschritte (RM-DR-010)
+		if s.village_blocked:
+			return &"blocked"  # Blockade gemeinsamer Dorfschritte (RM-DR-010)
+		return &"cursed" if GuardRoles.curse_active(s) else &""
 	if key == ETERNAL:
 		if InfoSteps.living_eternal(s).is_empty() or InfoSteps.eternal_targets(s).is_empty():
 			return &"no_decision"
-		return &"blocked" if s.village_blocked or InfoSteps.awake_eternal(s).is_empty() else &""
+		if s.village_blocked or InfoSteps.awake_eternal(s).is_empty():
+			return &"blocked"
+		return &"cursed" if GuardRoles.curse_active(s) else &""
 	if key == PACK or key == PACK2:
 		# G-PH-6 mit Decision Log „Rollenaudit“ (F-10): Das Rudel dieser Nacht sind die Personen,
 		# die bei StartNight als Wolf zählten; lebt keine von ihnen mehr, entfällt der Schritt.
@@ -185,14 +201,23 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 				return &""
 		return &"no_living_wolf"
 	var actor := step_actor(key)
+	if step_role(key) == RoleCatalog.SCHUTZGEIST:
+		if not s.players.has(actor) or not GuardRoles.ghost_can_act(s, s.players[actor]):
+			return &"no_decision"
+		if s.players[actor].faction == Faction.VILLAGE and s.village_blocked:
+			return &"blocked"
+		return &"cursed" if GuardRoles.silenced(s, actor) else &""
 	if not s.players.has(actor) or not s.players[actor].alive:
 		return &"actor_dead"
 	# Vergiftete oder geopferte Personen wachen in dieser Nacht nicht mehr auf (Decision Log „Nachttode“).
 	if is_marked(s, actor):
 		return &"marked_for_death"
-	# Blockade (RM-DR-010): nur aktive Nachtschritte von Dorfrollen.
-	if s.players[actor].faction == Faction.VILLAGE and (s.village_blocked or s.blocked_ids.has(actor)):
+	# Blockade (RM-DR-010): nur aktive Nachtschritte von Dorfrollen; die Märtyrerin ist nicht blockierbar (S-03).
+	if s.players[actor].faction == Faction.VILLAGE and (s.village_blocked or s.blocked_ids.has(actor)) and step_role(key) != RoleCatalog.MAERTYRERIN:
 		return &"blocked"
+	# Fluch des Weisen: alle Fähigkeiten der Dorfpersonen ruhen (S-01, S-05).
+	if GuardRoles.silenced(s, actor):
+		return &"cursed"
 	# Nie die Fähigkeit einer inzwischen verlorenen Rolle ausführen (gilt für alle persönlichen Schritte).
 	if s.players[actor].role_id != step_role(key):
 		return &"actor_role_changed"
@@ -218,6 +243,12 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.BLUTPRIESTER and (InfoSteps.used(s.players[actor], InfoSteps.BLOOD_USE_KEY) or s.alive_ids().size() < 2):
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.DORFSCHMIED and (not GuardRoles.smith_can_give(s, s.players[actor]) or s.alive_ids().size() < 2):
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.VERDAMMNISWAECHTER and (GuardRoles.pack_victim(s) in [GameState.NO_TARGET, actor] or GuardRoles.doom_pool(s, actor).is_empty()):
+		return &"no_decision"  # kein Rudelopfer, er selbst ist das Opfer (S-15) oder kein Angebot möglich
+	if step_role(key) == RoleCatalog.MAERTYRERIN and GuardRoles.martyr_victim(s, actor) == GameState.NO_TARGET:
+		return &"no_decision"  # das Rudelopfer stirbt nicht (oder ist sie selbst)
 	return &""
 
 
@@ -269,6 +300,10 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 			# Ritter bei Gleichstand: Pflichtwahl unter den jetzt gleich nahen Wölfen.
 			prompt.allowed_ids = Seats.closest_wolves(s, prompt.actor_id)
 			prompt.min_count = 1 if not prompt.allowed_ids.is_empty() else 0
+		elif s.reactions[0].kind == Reaction.KIND_SMITH:
+			# Schmiedewaffe: der Spielleiter wählt einen lebenden Wolf, der stirbt (S-06).
+			prompt.allowed_ids = prompt.allowed_ids.filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)
+			prompt.min_count = 1 if not prompt.allowed_ids.is_empty() else 0
 	elif step_kind(step_id) == RoleCatalog.WALDHEXE:
 		# Waldhexe: mehrstufige, atomare Kette (WitchStep).
 		WitchStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
@@ -295,6 +330,23 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.stage = &"use"
 		prompt.allowed_ids = []
 		prompt.cancellable = true
+	elif [RoleCatalog.DORFSCHMIED, RoleCatalog.SCHUTZGEIST, RoleCatalog.VERDAMMNISWAECHTER, RoleCatalog.MAERTYRERIN].has(step_kind(step_id)):
+		var guard_actor := step_actor(s.night_plan[s.next_night_step])
+		prompt.owner = step_kind(step_id)
+		prompt.actor_id = guard_actor
+		prompt.cancellable = true
+		match step_kind(step_id):
+			RoleCatalog.DORFSCHMIED:  # Waffe jetzt einer anderen lebenden Person geben oder noch nicht
+				prompt.allowed_ids.erase(guard_actor)
+			RoleCatalog.SCHUTZGEIST:  # Pflichtwahl einer lebenden Person
+				prompt.min_count = 1
+			RoleCatalog.VERDAMMNISWAECHTER:  # Rudelopfer oder gezogenes Angebot
+				var offered := [GuardRoles.pack_victim(s), GuardRoles.doom_offer(s, guard_actor)]
+				offered.sort()
+				prompt.allowed_ids.assign(offered)
+				prompt.min_count = 1
+			RoleCatalog.MAERTYRERIN:  # sich für das Rudelopfer opfern oder nicht
+				prompt.allowed_ids = [GuardRoles.martyr_victim(s, guard_actor)] as Array[int]
 	elif step_kind(step_id) == RoleCatalog.HENKER:
 		prompt.owner = PendingPrompt.OWNER_HANGMAN
 		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])

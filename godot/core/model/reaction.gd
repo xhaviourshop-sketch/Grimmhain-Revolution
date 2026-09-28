@@ -7,7 +7,8 @@ extends RefCounted
 const KIND_CURSE := &"curse"  ## eine lebende Person verfluchen oder verzichten (Sensenträger-Muster)
 const KIND_POSSESSED := &"possessed"  ## Besessener Wolf: eine andere lebende Person mitreißen oder verzichten
 const KIND_KNIGHT := &"knight"        ## Ritter bei Gleichstand: einen der gleich nahen Wölfe wählen (Pflicht)
-const KINDS: Array[StringName] = [KIND_CURSE, KIND_POSSESSED, KIND_KNIGHT]
+const KIND_SMITH := &"smith"          ## Schmiedewaffe: Spielleiter wählt den lebenden Wolf, der stirbt (Pflicht)
+const KINDS: Array[StringName] = [KIND_CURSE, KIND_POSSESSED, KIND_KNIGHT, KIND_SMITH]
 
 var id: int = 0
 var kind: StringName = KIND_CURSE

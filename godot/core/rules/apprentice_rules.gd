@@ -233,7 +233,7 @@ static func on_master_death(ctx: RuleContext, record: KillEvent) -> void:
 	heirs.sort_custom(func(a: ApprenticeBond, c: ApprenticeBond) -> bool: return a.apprentice_id < c.apprentice_id)
 	for b: ApprenticeBond in heirs:
 		var heir: Player = ctx.state.players.get(b.apprentice_id)
-		if heir != null and heir.alive and heir.role_id == RoleCatalog.LEHRLING:
+		if heir != null and heir.alive and heir.role_id == RoleCatalog.LEHRLING and not GuardRoles.silenced(ctx.state, heir.id):
 			inherit(ctx, b, record.order_index, "master_death")
 
 
