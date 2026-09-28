@@ -105,6 +105,13 @@ const SOUL_SWAP_REVEALED := &"SoulSwapRevealed"  ## neue Rolle für eine lebende
 const REVIVED_BY_ROLE := &"RevivedByRole"      ## Wiederbelebung durch Kutscher oder Frankenstein (nur Spielleiter)
 const REVIVAL_NOTICE := &"RevivalNotice"        ## Rolle der wiederbelebten Person (actor)
 const PLAYER_REVIVED := &"PlayerRevived"        ## Wiederbelebung, öffentlich am Morgen (ohne Rolle)
+const CHARMED := &"Charmed"                    ## Verzauberung des Rattenfängers (nur Spielleiter)
+const INFECTED := &"Infected"                  ## Infektion durch die Pestbringerin (nur Spielleiter)
+const PLAGUE_SPREAD := &"PlagueSpread"          ## Ausbreitung der Seuche am Morgen (nur Spielleiter)
+const PROPHET_MARKED := &"ProphetMarked"        ## Markierungen des Propheten (nur Spielleiter)
+const PROPHET_UNLOCKED := &"ProphetUnlocked"    ## Prophet freigeschaltet (nur Spielleiter)
+const PROPHECY_SET := &"ProphecySet"            ## Vorhersage des Todespredigers (nur Spielleiter)
+const PREACHER_FULFILLED := &"PreacherFulfilled"  ## Vorhersage des Todespredigers erfüllt (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

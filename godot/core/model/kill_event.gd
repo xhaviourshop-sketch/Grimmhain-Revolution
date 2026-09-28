@@ -20,13 +20,14 @@ const CAUSE_MARTYR_SACRIFICE := &"MARTYR_SACRIFICE"  ## Märtyrerin stirbt statt
 const CAUSE_LOVER_HEARTBREAK := &"LOVER_HEARTBREAK"  ## Liebeskummer eines Loki-Paars (Rollenaudit)
 const CAUSE_BLACK_WIDOW := &"BLACK_WIDOW"  ## Opfer der Schwarzen Witwe am Morgen (Rollenaudit)
 const CAUSE_RED_CHAIN := &"RED_CHAIN"  ## Todeskette des Rotkäppchens (Rollenaudit)
+const CAUSE_PROPHET_KILL := &"PROPHET_KILL"  ## Tötung des freigeschalteten Propheten des Untergangs (Rollenaudit)
 const CAUSE_GM_CORRECTION := &"GM_CORRECTION"  ## Spielleiterkorrektur
 const CAUSE_WITCH_POISON := &"WITCH_POISON"    ## Gifttrank der Waldhexe, in der Morgenauflösung (Todesmarkierung)
 const CAUSE_SPIEGELWOLF_RETALIATE := &"SPIEGELWOLF_RETALIATE"  ## gespiegelte Hinrichtung, Quelle Spiegelwolf
 const CAUSE_MANIPULATOR_NOMINATED := &"MANIPULATOR_NOMINATED"  ## Tod des Manipulators bei seiner Nominierung
 const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON, CAUSE_SPIEGELWOLF_RETALIATE, CAUSE_MANIPULATOR_NOMINATED, CAUSE_COACHMAN_CRASH, CAUSE_POSSESSED_DRAG, CAUSE_KNIGHT_STRIKE, CAUSE_PARASITE_HOST, CAUSE_WOLF_POISON, CAUSE_HANGMAN_EXTRA,
 	CAUSE_WARRIOR_WRONG, CAUSE_BLOOD_SACRIFICE, CAUSE_AMALIA_SACRIFICE, CAUSE_SMITH_WEAPON, CAUSE_MARTYR_SACRIFICE,
-	CAUSE_LOVER_HEARTBREAK, CAUSE_BLACK_WIDOW, CAUSE_RED_CHAIN]
+	CAUSE_LOVER_HEARTBREAK, CAUSE_BLACK_WIDOW, CAUSE_RED_CHAIN, CAUSE_PROPHET_KILL]
 
 const SOURCE_PACK := &"pack"        ## Rudel (alle lebenden Wölfe gemeinsam)
 const SOURCE_VILLAGE := &"village"  ## Hinrichtung nach physischer Abstimmung

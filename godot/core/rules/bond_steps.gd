@@ -18,9 +18,10 @@ const STAGE_GRANT := &"grant"
 const STAGE_ALLY := &"ally"
 const STAGE_WOLF := &"wolf"
 const STAGE_ROLE := &"role"
-const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY, STAGE_WOLF, STAGE_ROLE]
+const STAGE_PREDICTION := &"prediction"  ## Todesprediger: {"kind": "night"|"day", "number": n}
+const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY, STAGE_WOLF, STAGE_ROLE, STAGE_PREDICTION]
 const OWNERS: Array[StringName] = [PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER,
-	PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN]
+	PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER]
 ## Rollen, deren erste Stufe Tote auswählt.
 const REVIVERS: Array[StringName] = [PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN]
 const LOKI_USE_KEY := "loki:bind"
@@ -87,6 +88,8 @@ static func _all_ids(s: GameState) -> Array[int]:
 
 
 static func _first_stage(owner: StringName) -> StringName:
+	if owner == PendingPrompt.OWNER_PREACHER:
+		return STAGE_PREDICTION
 	return STAGE_ALLY if owner == PendingPrompt.OWNER_LYKAON else STAGE_TARGETS
 
 
@@ -106,6 +109,8 @@ static func _first_stage_shape(s: GameState, owner: StringName, actor_id: int) -
 		return [dead_ids(s), 0, RoleCatalog.COACH_REVIVALS]
 	if owner == PendingPrompt.OWNER_FRANKENSTEIN:
 		return [dead_ids(s), 0, 1]
+	if owner == PendingPrompt.OWNER_PREACHER:
+		return [[], 0, 0]
 	return [_all_ids(s), 0, 2]
 
 
@@ -127,6 +132,8 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 		return &"stage_mismatch"
 	if prompt.stage == STAGE_MODE or prompt.stage == STAGE_GRANT:
 		return &"" if (not p.has("targets") and p.get("choice") is bool) else &"invalid_answer"
+	if prompt.stage == STAGE_PREDICTION:
+		return &"" if (not p.has("targets") and SoloRules.validate_prediction(s, p.get("prediction"))) else &"invalid_prediction"
 	if prompt.stage == STAGE_ROLE:
 		var options: Array = DictRead.get_array(prompt.partial, "options")
 		if p.has("targets") or not DictRead.is_int_like(p.get("option")) or int(p["option"]) < 0 or int(p["option"]) >= options.size():
@@ -179,6 +186,14 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	var prompt := s.pending_prompt
 	if prompt.stage == STAGE_MODE or prompt.stage == STAGE_GRANT:
 		_answer_choice(ctx, prompt, bool(p["choice"]))
+		return
+	if prompt.stage == STAGE_PREDICTION:
+		var q: Dictionary = p["prediction"]
+		var prophecy := {"preacher_id": prompt.actor_id, "kind": DictRead.get_string(q, "kind"), "number": DictRead.get_int(q, "number")}
+		s.prophecies.append(prophecy)
+		s.players[prompt.actor_id].ability_uses["todesprediger:predict"] = 1
+		ctx.emit(GameEvent.PROPHECY_SET, Visibility.GM, prophecy.duplicate())
+		_finish(ctx, prompt, STAGE_PREDICTION)
 		return
 	if prompt.stage == STAGE_ROLE:
 		var options: Array = DictRead.get_array(prompt.partial, "options")

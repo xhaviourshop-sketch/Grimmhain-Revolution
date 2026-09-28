@@ -6,7 +6,7 @@ Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterpl
 ## 0. Übergabe für die nächste Sitzung (Stand 28.09.2026)
 
 - Branch `audit/all-72-roles`, Worktree `C:/Users/Marku/Desktop/Grimmhain/grimmhain-audit-72-roles`, gepusht.
-- Letzter vollständiger Lauf: 640 Tests, 0 fehlgeschlagen, keine `SCRIPT ERROR`, Exit 0; `node tools/role-migration/check-role-docs.js` Exit 0. Zusätzlich je Charge einmalig 480 Fuzzpartien mit anderen Seeds (Seed-Formel `104729 * (g + 1) + 17`, temporäre Kopie des Fuzztests) ohne Invariantenverletzung.
+- Letzter vollständiger Lauf: 648 Tests, 0 fehlgeschlagen, keine `SCRIPT ERROR`, Exit 0; `node tools/role-migration/check-role-docs.js` Exit 0. Zusätzlich je Charge einmalig 480 Fuzzpartien mit anderen Seeds (Seed-Formel `104729 * (g + 1) + 17`, temporäre Kopie des Fuzztests) ohne Invariantenverletzung.
 - Prüfhinweis: Der Testrunner zählt einen Test als grün, wenn er nach mindestens einer Prüfung durch einen Laufzeitfehler abbricht. Deshalb ist jede `SCRIPT ERROR`-Zeile im Testlog ein Fehlschlag (so auch `.claude/skills/grimmhain-core/windows-checks.md`).
 - Vorgehen je Charge: Fragen per Auswahl-Popup mit zitiertem Rollentext → Decision Log, `decision-status.csv`, `08` → Tests zuerst → Umsetzung → UI-Namen, Reihenfolge, UI-Testlisten → Rollenliste des Fuzztests → Migrationsdokumente (`promote_role.py`, Tabellen-Generator; Scratchpad-Hilfsskripte, bei Bedarf neu schreiben) → Commit und Push.
 - Informationsrollen (Traumdeuter, König, Kopfgeldjäger, Kriegerin des Lichts, Blutpriester, Amalia, Detektiv, Die Ewigen) sind entschieden (I-01 bis I-15) und grün.
@@ -14,7 +14,8 @@ Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterpl
 - Bindungsrollen (Loki, Schwarze Witwe, Rotkäppchen, Schattenwanderer) sind entschieden (B-01 bis B-08, R-01 bis R-04) und grün; RM-DR-113.2 ist dem Zeitwächter zugeordnet. Der Fuzztest läuft jetzt mit 160 Partien, weil der größere Rollenpool sonst die Pflichtabdeckung „MirrorNotTriggered“ verliert.
 - Verwandlungsrollen (Dämonischer Wolf, König Lykaon, Seelentauscher) sind entschieden (V-01 bis V-09) und grün. Der Fuzztest nimmt je Partie reihum eine Fokusrolle auf; seltene Pflichtereignisse (Amalia, Apfel, Spiegelwolf ohne Spiegelung) kommen trotzdem nur 1 bis 2 Mal vor und können bei Generatoränderungen wegfallen.
 - Wiederbelebungsrollen (Kutscher, Dr. Victor Frankenstein) sind entschieden (W-01 bis W-04) und grün; Totenkarten (RM-DR-013) nur für Kartenschlucker und RM-DR-141.4 offen. Der Fuzztest richtet gelegentlich einen lebenden Spiegelwolf ohne Nominierung hin und fragt öfter Korrekturen ab, damit seine Pflichtabdeckung stabil bleibt.
-- Nächste offene Gruppen: Einzelsiege (Rattenfänger, Pestbringerin, Prophet des Untergangs, Feuerteufel, Voodoo-Priester, Nekromant, Kartenschlucker, Hades, Grabräuber, Todesprediger); Zeitwächter; Rachsüchtiger Wolf; Schicksalswolf.
+- Einzelsiege Teil 1 (Rattenfänger, Pestbringerin, Prophet des Untergangs, Todesprediger) sind entschieden (E-01 bis E-04) und grün.
+- Nächste offene Gruppen: Einzelsiege Teil 2 (Feuerteufel, Voodoo-Priester, Nekromant, Hades, Grabräuber; Kartenschlucker wartet auf den Totenkarten-Assistenten); Zeitwächter; Rachsüchtiger Wolf; Schicksalswolf.
 - Offen außerhalb des Kerns: Zufallsknopf nach RM-DR-015.2 (Ziehung über den gespeicherten Seed) ist noch in keiner Rolle umgesetzt; König, Traumdeuter, Kopfgeldjäger und Blutpriester nutzen die Spielleiterwahl.
 - Weiter offen außerhalb des Kerns: Analyse unverträglicher Rollenkombinationen (vom PO gewünscht, Setup-Regel vertagt); Tablet-Gegenprüfung „links = Uhrzeigersinn“; Sound bei 5 Toten nur mit Selbstmörder im Spiel.
 
@@ -30,16 +31,16 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=59 open=0 blocked=13 -->
+<!-- check:audit-counts total=72 green=63 open=0 blocked=9 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
-| **GRÜN** | **59** |
+| **GRÜN** | **63** |
 | **OFFEN** | **0** |
-| **BLOCKIERT** | **13** |
+| **BLOCKIERT** | **9** |
 
-72/72 ist **nicht** erreicht. Die 13 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
+72/72 ist **nicht** erreicht. Die 9 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
 
 ## 3. Übersicht
 
@@ -51,7 +52,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 2 | `nachtwaechter` | Nachtwächter / Night Warden | Dorf | Rollentext; RM-DR-003, 102.1 (Decision Log) | jeden Morgen öffentliche Glocken, wenn ein nächster lebender Nachbar nicht zum Dorf gehört | – | umgesetzt | test_seat_roles, fuzz | Wölfe, Einzelsieg, tote Plätze; Dämonischer Wolf folgt | **GRÜN** |
 | 3 | `die-gebundenen` | Die Gebundenen / The Bound | Dorf | Rollentext; RM-DR-014 = B, F-08 (Decision Log „Rollenaudit“) | nur Nacht 1, gemeinsamer Schritt; jede lebende Gebundene erfährt die anderen lebenden | – | umgesetzt | test_die_gebundenen (8), fuzz | Chronistin, Wolfskind, Tod vor dem Schritt, 24 Personen, Schattenhund-Blockade (Regressionstest) | **GRÜN** |
 | 4 | `waldhexe` | Waldhexe / Witch of the Woods | Dorf | DR-06, Einträge Waldhexe und Korrekturrunde | atomare Kette, je 1 Heil-/Gifttrank pro Person, Gift sofort, Rettung nur aktuelles Rudelopfer | – | umgesetzt | test_waldhexe (43), test_role_interactions, fuzz | Schutzengel, Sensenträger, Wolfskind, Lehrling, Trugbilderwolf | **GRÜN** |
-| 5 | `rattenfaenger` | Rattenfänger / Pied Piper | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-103.1, RM-DR-103.2 | fehlt | – | [03](03-remaining-roles-analysis.md#rattenfaenger) | **BLOCKIERT** |
+| 5 | `rattenfaenger` | Rattenfänger / Pied Piper | Einzelsieg | Rollentext; RM-DR-103, E-01 (Decision Log „Rollenaudit · Einzelsiegrollen, Teil 1“) | jede Nacht 1–2 andere Unverzauberte; Sieg lebend, wenn alle anderen Lebenden verzaubert sind (jede Siegprüfung) | – | umgesetzt | test_solo_roles_a, fuzz | Lynch, Wolf verzaubert, Dorfsieg gleichzeitig (DR-02), Ewige-Mitsieg | **GRÜN** |
 | 6 | `sensentraeger` | Sensenträger / Reaper | Dorf | DR-09, Randfälle 26.09. | freiwillige Reaktion, Tag sofort, Nacht am Morgen, kein Selbstziel, einmal pro Person | – | umgesetzt | test_sensentraeger (21), test_reactions, test_role_interactions (Kette mit Erbe), fuzz | Lehrling, Wolfskind, Spiegelwolf, Schutz, DR-14 | **GRÜN** |
 | 7 | `wolfskind` | Wolfskind / Wolf Child | Dorf | DR-10, Eintrag Wolfskind | Vorbildwahl 0.9, Verwandlung als Todesfolge vor Siegprüfung, Rudel ab Folgenacht | – | umgesetzt | test_wolfskind (24), test_role_interactions, fuzz | Lehrling, Spiegelwolf, Manipulator, Waldhexe, Sensenträger | **GRÜN** |
 | 8 | `das-orakel` | Das Orakel / The Oracle | Dorf | DR-07, Eintrag Orakel | Pflichtschritt 4.6, Informationsmodell Wahrheit/ermittelt/gezeigt, Übersteuerung nur gezeigt | – | umgesetzt | test_orakel (28), fuzz | Trugbilderwolf, Wolfskind, Sonderwölfe, Lehrling | **GRÜN** |
@@ -75,8 +76,8 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 26 | `korrupter-richter` | Korrupter Richter / Corrupt Judge | Dorf | Rollentext; RM-DR-117, RM-DR-012 (Decision Log) | nachts freiwillig markieren (auch selbst); Tagesbeginn: verdeckte Nominierung durch ihn; +1 als Hinweis | – | umgesetzt | test_richter_waechter_blutwolf, fuzz | Manipulator, Spiegelwolf, Nominierungslimits | **GRÜN** |
 | 27 | `maertyrerin` | Märtyrerin / Martyr | Dorf | Rollentext; RM-DR-118, S-03, S-14 (Decision Log „Rollenaudit · Schutzrollen“) | am Ende der Nacht Ersatzopfer für das erste Rudelopfer, nur wenn es sonst stürbe; nicht blockierbar | – | umgesetzt | test_protection_roles, fuzz | Schutzengel, Albtraumwolf, Verdammniswächter (umgelenktes Opfer), Fluch | **GRÜN** |
 | 28 | `dorfwache` | Dorfwache / Village Guard | Dorf | Rollentext (widerspruchsfrei mit Legacy) | Rudelangriff tötet sie nicht; sonst normal | – | umgesetzt | test_seat_roles, fuzz | Schutzengel, Waldhexe, Lehrling; RM-DR-119 folgt mit Giftwolf/Seuchenwolf/Rudelvater | **GRÜN** |
-| 29 | `pestbringerin` | Pestbringerin / Plague Bringer | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-120.1, RM-DR-120.2, RM-DR-120.3, RM-DR-120.4 | fehlt | – | [03](03-remaining-roles-analysis.md#pestbringerin) | **BLOCKIERT** |
-| 30 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `not-found` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-121.1, RM-DR-121.2, RM-DR-121.3 | fehlt | – | [03](03-remaining-roles-analysis.md#prophet-des-untergangs) | **BLOCKIERT** |
+| 29 | `pestbringerin` | Pestbringerin / Plague Bringer | Einzelsieg | Rollentext; RM-DR-120, E-02 (Decision Log „Rollenaudit · Einzelsiegrollen, Teil 1“) | jede Nacht eine Infektion, Ausbreitung am Morgen per Seed auf nächste lebende Nachbarn; Sieg lebend bei Totalinfektion | – | umgesetzt | test_solo_roles_a, fuzz | Sitznachbarn, tote Plätze, Seed/Replay, Ewige-Mitsieg | **GRÜN** |
+| 30 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Einzelsieg | Rollentext; RM-DR-121, E-03 (Decision Log „Rollenaudit · Einzelsiegrollen, Teil 1“) | Nacht 1 drei markieren; alle tot → dauerhaft freigeschaltet, jede Nacht töten; lebend ohne Wolf: Sieg statt Dorf | – | umgesetzt | test_solo_roles_a, fuzz | Schutzengel, Wiederbelebung, Doppelspion (beide ersetzen den Dorfsieg), Apfel nur freigeschaltet | **GRÜN** |
 | 31 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | Wölfe | DR-13, Eintrag Spiegelwolf | erste Hinrichtung auf Nominierende umgelenkt, einmal pro Person | – | umgesetzt | test_spiegelwolf (20), test_role_interactions, fuzz | Wolfskind, Lehrling, Sensenträger, Schutz | **GRÜN** |
 | 32 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Wölfe | Rollentext; RM-DR-122, V-01, V-02, V-07 (Decision Log „Rollenaudit · Verwandlungsrollen“) | Todesreaktion bei jedem Tod: eine andere Person verfluchen; nur Rollenauskünfte zeigen „Werwolf“; bis zum Rollenwechsel | – | umgesetzt | test_transform_roles, fuzz | Orakel, Waldläufer, Traumdeuter/Kopfgeldjäger (wahr, I-02), Wiederbelebung, Rollenwechsel | **GRÜN** |
 | 33 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Wölfe | DR-08, Korrekturrunde 1, Eintrag Trugbilderwolf | Scheinrolle im Setup je Instanz, nie Wolfsrolle, Korrektur nur bestätigt | – | umgesetzt | test_trugbilderwolf (23), test_gm_role_field, fuzz | Orakel, Waldhexe, Lehrling | **GRÜN** |
@@ -117,7 +118,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 68 | `doppelspion` | Doppelspion / Double Agent | Einzelsieg | Rollentext; RM-DR-155.1–.5 (Decision Log „Rollenaudit“) | gewinnt allein, wenn er lebt und kein Wolf lebt; dann kein Dorfkandidat; Parität Nicht-Wolf; Rudel-Aufwachen nur Ansage | – | umgesetzt | test_doppelspion (11), fuzz | Manipulator, Lehrling, Orakel, Dorfsieg, Wiederbelebung; Rachsüchtiger Wolf folgt | **GRÜN** |
 | 69 | `grabraeuber` | Grabräuber / Grave Robber | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `not-found` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-156.1, RM-DR-156.2 | fehlt | – | [03](03-remaining-roles-analysis.md#grabraeuber) | **BLOCKIERT** |
 | 70 | `parasit` | Parasit / Parasite | Einzelsieg | Rollentext; RM-DR-157.1, RM-DR-011.2 (Decision Log) | Wirt wählbar; mit lebendem Wirt unverwundbar (außer Korrektur); stirbt mit dem Wirt; Sieg bei ≤3 Lebenden | – | umgesetzt | test_spuerhund_parasit, fuzz | Rudel, Lynch, Gift, Korrekturen, Kandidatenmenge | **GRÜN** |
-| 71 | `todesprediger` | Todesprediger / Death Prophet | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-158.1, RM-DR-158.2, RM-DR-158.3 | fehlt | – | [03](03-remaining-roles-analysis.md#todesprediger) | **BLOCKIERT** |
+| 71 | `todesprediger` | Todesprediger / Death Prophet | Einzelsieg | Rollentext; RM-DR-158, E-04 (Decision Log „Rollenaudit · Einzelsiegrollen, Teil 1“) | Nacht 1 geheime Vorhersage einer künftigen Nacht oder eines Tages; Tod genau dann → Sieg erfüllt, fortan vorgeschlagen | – | umgesetzt | test_solo_roles_a, fuzz | Lynch, Morgentode, Korrektur ohne Folgen | **GRÜN** |
 | 72 | `dorfbewohner` | Dorfbewohner / Villager | Dorf | Register §1; Core-Slice Rollenanzahl | keine Fähigkeit, keine Obergrenze | – | umgesetzt | test_player_count_range, Szenarien as-c01–c04, test_role_interaction_fuzz | Parität, alle Siege | **GRÜN** |
 
 ## 4. Prüfung der Godot-Rollen und Wechselwirkungen
@@ -143,6 +144,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | Schutz, Rudel und Gift auf dasselbe Vorbild: genau ein Tod (Gift), Verwandlung in der Nacht, Rudelangriff ignoriert | `test_role_interactions::test_protected_model_poisoned_transforms_once_at_night` |
 | 24 Personen, alle Nachtrollen doppelt: Nachtplan nach Priorität und Personen-ID, Nacht 2 ohne erledigte Auswahlschritte, Save/Load nach jedem Befehl | `test_role_interactions::test_24_players_multiple_copies_night_plan_and_save_load` |
 | Siegreicher Wolf mit Lehrling, Manipulator, Orakel, Wiederbelebung, Rollenkorrektur, Kopien | `test_siegreicher_wolf` |
+| Einzelsiege Teil 1: Verzauberung und Sieg nach Lynch, Infektion mit Seed-Ausbreitung, Prophet-Freischaltung und -Tötung mit Sieg statt Dorf, Vorhersage mit Treffer und Fehlschlag | `test_solo_roles_a` (8); Fuzz mit Vorhersagen |
 | Wiederbelebungsrollen: Schwelle, drei Tote, Wolfswahl, Wächter, Frankenstein-Rollenangebot, private und öffentliche Mitteilung, Folgenacht | `test_revival_roles` (4); Fuzz mit Toten-Auswahl |
 | Verwandlungsrollen: Fluch nur für Rollenauskünfte, Fluchdauer, Lykaon mit Verbündetem, Verschieben und Wächter, Seelentausch mit frischen Rollen, Toten und Wächter | `test_transform_roles` (9); Fuzz mit Fokusrolle je Partie |
 | Bindungsrollen: Liebeskummer, Witwe mit Liebe/Rivalen und markiertem Partner, Umlenkung nur bei echtem Tod (Schutzengel, Lynch, Korrektur), Todeskette, Apfel (Orakel, Schutzengel, Richter wirkungslos, Verfall), Liebeskummer im Fluch | `test_bond_roles` (11); Fuzz mit Pflichtabdeckung der Bindungsereignisse |
@@ -159,7 +161,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 
 ## 5. Testnachweis
 
-Windows, Godot `4.7.2.stable.official.ed1daf0bf` (Console-EXE), nur `--headless` (kein Fenster), Ablauf nach `.claude/skills/grimmhain-core/windows-checks.md`: Import ohne `SCRIPT ERROR`, `Parse Error` oder `Failed to load script`, danach `res://tests/run_tests.gd`. Letzter vollständiger Lauf: 640 Tests, 0 fehlgeschlagen, 0 Testdateien nicht ladbar, keine `SCRIPT ERROR`, Exit-Code 0. `node tools/role-migration/check-role-docs.js`: keine Fehler, Exit-Code 0.
+Windows, Godot `4.7.2.stable.official.ed1daf0bf` (Console-EXE), nur `--headless` (kein Fenster), Ablauf nach `.claude/skills/grimmhain-core/windows-checks.md`: Import ohne `SCRIPT ERROR`, `Parse Error` oder `Failed to load script`, danach `res://tests/run_tests.gd`. Letzter vollständiger Lauf: 648 Tests, 0 fehlgeschlagen, 0 Testdateien nicht ladbar, keine `SCRIPT ERROR`, Exit-Code 0. `node tools/role-migration/check-role-docs.js`: keine Fehler, Exit-Code 0.
 
 ## 6. Offene Fragen an den Product Owner (nächste Chargen)
 

@@ -109,6 +109,10 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SEELENTAUSCHER: false,  # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.KUTSCHER: false,       # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.FRANKENSTEIN: false,   # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.RATTENFAENGER: false,  # Pflichtwahl 1–2
+	RoleCatalog.PESTBRINGERIN: false,  # Pflichtwahl
+	RoleCatalog.PROPHET: false,        # Markieren Pflicht, Töten mit Verzicht (0 Ziele)
+	RoleCatalog.TODESPREDIGER: false,  # Pflichtvorhersage
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -171,6 +175,10 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		if p.role_id == RoleCatalog.SEELENTAUSCHER and p.ability_uses.has(BondSteps.SWAP_USE_KEY):
 			continue
 		if (p.role_id == RoleCatalog.KUTSCHER or p.role_id == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, p):
+			continue
+		if p.role_id == RoleCatalog.PROPHET and not (SoloRules.prophet_marking(s, id) or s.prophet_unlocked.has(id)):
+			continue
+		if p.role_id == RoleCatalog.TODESPREDIGER and not SoloRules.prophecy_of(s, id).is_empty():
 			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
@@ -275,6 +283,14 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"
 	if (step_role(key) == RoleCatalog.KUTSCHER or step_role(key) == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, s.players[actor]):
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.RATTENFAENGER and SoloRules.charm_targets(s, actor).is_empty():
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.PESTBRINGERIN and SoloRules.pest_targets(s, actor).is_empty():
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.PROPHET:
+		if SoloRules.prophet_marking(s, actor):
+			return &"no_decision" if s.alive_ids().size() - 1 < RoleCatalog.PROPHET_MARKS else &""
+		return &"" if s.prophet_unlocked.has(actor) and s.alive_ids().size() >= 2 else &"no_decision"
 	return &""
 
 
@@ -345,6 +361,24 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
 	elif BondSteps.OWNERS.has(step_kind(step_id)):
 		BondSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
+	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET].has(step_kind(step_id)):
+		var solo_actor := step_actor(s.night_plan[s.next_night_step])
+		prompt.owner = step_kind(step_id)
+		prompt.actor_id = solo_actor
+		prompt.cancellable = true
+		match step_kind(step_id):
+			RoleCatalog.RATTENFAENGER:  # 1 oder 2 noch unverzauberte andere Lebende
+				prompt.allowed_ids = SoloRules.charm_targets(s, solo_actor)
+				prompt.min_count = 1
+				prompt.max_count = mini(2, prompt.allowed_ids.size())
+			RoleCatalog.PESTBRINGERIN:  # eine noch gesunde andere Lebende
+				prompt.allowed_ids = SoloRules.pest_targets(s, solo_actor)
+				prompt.min_count = 1
+			RoleCatalog.PROPHET:  # Nacht 1: drei andere markieren; freigeschaltet: eine andere töten oder verzichten
+				prompt.allowed_ids.erase(solo_actor)
+				if SoloRules.prophet_marking(s, solo_actor):
+					prompt.min_count = RoleCatalog.PROPHET_MARKS
+					prompt.max_count = RoleCatalog.PROPHET_MARKS
 	elif step_kind(step_id) == RoleCatalog.SCHWARZE_WITWE or step_kind(step_id) == RoleCatalog.SCHATTENWANDERER:
 		# Witwe: Pflichtwahl einer anderen lebenden Person; Schattenwanderer: eine andere oder „noch nicht“.
 		prompt.owner = step_kind(step_id)
@@ -438,6 +472,8 @@ static func _apply_apple(ctx: RuleContext) -> void:
 	var actor := step_actor(key)
 	if actor == -1 or s.apple_steps.has(index) or int(s.apples.get(actor, 0)) != s.night_number or not RoleCatalog.APPLE_ROLES.has(step_role(key)):
 		return
+	if step_role(key) == RoleCatalog.PROPHET and not s.prophet_unlocked.has(actor):
+		return  # das Markieren in Nacht 1 ist kein Jede-Nacht-Schritt
 	s.apples.erase(actor)
 	for i: int in s.apple_steps.size():
 		if s.apple_steps[i] > index:

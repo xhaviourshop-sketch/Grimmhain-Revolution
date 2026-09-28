@@ -64,6 +64,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	s.wolf_poisons = s.wolf_poisons.filter(func(e: Dictionary) -> bool: return int(e["target_id"]) != target.id)
 	s.death_marks = s.death_marks.filter(func(m: Dictionary) -> bool: return int(m["target_id"]) != target.id)
 	BondRules.on_death(ctx, target, trigger_effects)
+	SoloRules.on_death(ctx, target, record, trigger_effects)
 	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
 	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:

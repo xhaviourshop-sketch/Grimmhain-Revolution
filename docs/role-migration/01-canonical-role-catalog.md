@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 59 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 63 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 13 |
+| fehlend, Entscheidung nötig (`decision-required`) | 9 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 13 fehlende) | 1 |
-| Legacy-Befund `legacy-contradictory` (nur 13 fehlende) | 7 |
-| Legacy-Befund `legacy-broken` (nur 13 fehlende) | 3 |
-| Legacy-Befund `not-found` (nur 13 fehlende) | 2 |
+| Legacy-Befund `legacy-verified` (nur 9 fehlende) | 1 |
+| Legacy-Befund `legacy-contradictory` (nur 9 fehlende) | 6 |
+| Legacy-Befund `legacy-broken` (nur 9 fehlende) | 1 |
+| Legacy-Befund `not-found` (nur 9 fehlende) | 1 |
 
-<!-- check:counts total=72 implemented=59 remaining=13 -->
+<!-- check:counts total=72 implemented=63 remaining=9 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -40,7 +40,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 2 | `nachtwaechter` | Nachtwächter / Night Warden | Dorf | I | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Informationsrolle | S / niedrig | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#nachtwaechter) |
 | 3 | `die-gebundenen` | Die Gebundenen / The Bound | Dorf | I | 0.5 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#die-gebundenen) |
 | 4 | `waldhexe` | Waldhexe / Witch of the Woods | Dorf | I, II | 3.4 | `implemented-and-tested` | `legacy-verified` | `automatic` | mehrstufige Nachtfähigkeit | L / hoch | – | Basis | [02](02-implemented-roles-audit.md) |
-| 5 | `rattenfaenger` | Rattenfänger / Pied Piper | Einzelsieg | I | 4.2 | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | M / mittel | K9 | B | [03](03-remaining-roles-analysis.md#rattenfaenger) · [Dossier](dossiers/solos-a.md#rattenfaenger) |
+| 5 | `rattenfaenger` | Rattenfänger / Pied Piper | Einzelsieg | I | 4.2 | `implemented-and-tested` | `legacy-broken` | `automatic` | Einzelsieg | M / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#rattenfaenger) |
 | 6 | `sensentraeger` | Sensenträger / Reaper | Dorf | I, II, III, IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Todesreaktion | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 7 | `wolfskind` | Wolfskind / Wolf Child | Dorf | I | 0.9 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Fraktionswechsel | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 8 | `das-orakel` | Das Orakel / The Oracle | Dorf | I | 4.6 | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
@@ -64,8 +64,8 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 26 | `korrupter-richter` | Korrupter Richter / Corrupt Judge | Dorf | II | 1.5 | `implemented-and-tested` | `not-found` | `assisted` | Nominierungsreaktion | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#korrupter-richter) |
 | 27 | `maertyrerin` | Märtyrerin / Martyr | Dorf | II | 9.0 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Schutz | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#maertyrerin) |
 | 28 | `dorfwache` | Dorfwache / Village Guard | Dorf | IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | passive Dorfrolle | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#dorfwache) |
-| 29 | `pestbringerin` | Pestbringerin / Plague Bringer | Einzelsieg | II | 7.2 | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | M / mittel | K9 | – | [03](03-remaining-roles-analysis.md#pestbringerin) · [Dossier](dossiers/solos-a.md#pestbringerin) |
-| 30 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Einzelsieg | III, IV | 8.6 | `decision-required` | `not-found` | `assisted` | Tötung | M / mittel | K9 | – | [03](03-remaining-roles-analysis.md#prophet-des-untergangs) · [Dossier](dossiers/solos-a.md#prophet-des-untergangs) |
+| 29 | `pestbringerin` | Pestbringerin / Plague Bringer | Einzelsieg | II | 7.2 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Einzelsieg | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#pestbringerin) |
+| 30 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Einzelsieg | III, IV | 8.6 | `implemented-and-tested` | `not-found` | `assisted` | Tötung | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#prophet-des-untergangs) |
 | 31 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 32 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Wölfe | II | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Todesreaktion | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
 | 33 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Fehlinformation | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
@@ -106,7 +106,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 68 | `doppelspion` | Doppelspion / Double Agent | Einzelsieg | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Einzelsieg | S / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#doppelspion) |
 | 69 | `grabraeuber` | Grabräuber / Grave Robber | Einzelsieg | II | 6.4 (once) | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | XL / hoch | K15 | – | [03](03-remaining-roles-analysis.md#grabraeuber) · [Dossier](dossiers/solos-b.md#grabraeuber) |
 | 70 | `parasit` | Parasit / Parasite | Einzelsieg | III | 6.2 | `implemented-and-tested` | `legacy-verified` | `automatic` | Verknüpfte Personen | M / mittel | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-b.md#parasit) |
-| 71 | `todesprediger` | Todesprediger / Death Prophet | Einzelsieg | II | 6.6 (once) | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | M / mittel | K15 | – | [03](03-remaining-roles-analysis.md#todesprediger) · [Dossier](dossiers/solos-b.md#todesprediger) |
+| 71 | `todesprediger` | Todesprediger / Death Prophet | Einzelsieg | II | 6.6 (once) | `implemented-and-tested` | `legacy-broken` | `automatic` | Einzelsieg | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-b.md#todesprediger) |
 | 72 | `dorfbewohner` | Dorfbewohner / Villager | Dorf | I, II, III, IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | passive Dorfrolle | S / niedrig | – | Basis | [02](02-implemented-roles-audit.md) |
 
 ## 3. Aliase, Altnamen, entfernte Rollen und Duplikate

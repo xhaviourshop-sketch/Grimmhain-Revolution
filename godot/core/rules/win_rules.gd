@@ -35,14 +35,17 @@ static func evaluate(state: GameState) -> Array:
 	var results: Array = []
 	if living_wolves == 0:
 		# RM-DR-155.3: Lebt ein Doppelspion, wird statt des Dorfsiegs nur sein Sieg je Person vorgeschlagen.
-		var agents: Array[int] = []
+		# Freigeschaltete Propheten (E-03) ersetzen den Dorfsieg wie der Doppelspion.
+		var agents: Array = []
 		for id: int in alive:
 			if double_agent_wins(state, id):
-				agents.append(id)
+				agents.append([id, WinCandidate.REASON_DOUBLE_AGENT])
+			elif SoloRules.prophet_wins(state, id):
+				agents.append([id, WinCandidate.REASON_PROPHET])
 		if agents.is_empty():
 			results.append({"kind": String(Faction.VILLAGE), "reason_key": String(WinCandidate.REASON_NO_WOLVES_ALIVE), "reason_args": args.duplicate(), "beneficiary_ids": []})
-		for id: int in agents:
-			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DOUBLE_AGENT), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+		for agent: Array in agents:
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(agent[1]), "reason_args": {"living": alive.size()}, "beneficiary_ids": [agent[0]]})
 	if wolves >= non_wolves:
 		results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
 	# RM-DR-138.4, F-11: ein erfüllter Selbstmörder-Sieg wird bei jeder Prüfung vorgeschlagen.
@@ -51,6 +54,13 @@ static func evaluate(state: GameState) -> Array:
 	for id: int in alive:
 		if parasite_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_PARASITE), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+	for id: int in state.preacher_wins:
+		results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DEATH_PREACHER), "reason_args": {}, "beneficiary_ids": [id]})
+	for id: int in alive:
+		if SoloRules.piper_wins(state, id):
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_PIED_PIPER), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+		if SoloRules.pest_wins(state, id):
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_PLAGUE), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
 	for id: int in alive:
 		if manipulator_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_MANIPULATOR), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
@@ -160,6 +170,18 @@ static func _beneficiaries_ok(s: GameState, c: WinCandidate) -> bool:
 	return not c.beneficiary_ids.is_empty() and c.beneficiary_ids.slice(1) == eternal_co_winners(s, c.beneficiary_ids[0])
 
 
+## Einzelsiege aus Teil 1 (E-01 bis E-04): gilt die Bedingung für `id` noch?
+static func _solo_holds(s: GameState, reason: StringName, id: int) -> bool:
+	match reason:
+		WinCandidate.REASON_PIED_PIPER:
+			return SoloRules.piper_wins(s, id)
+		WinCandidate.REASON_PLAGUE:
+			return SoloRules.pest_wins(s, id)
+		WinCandidate.REASON_PROPHET:
+			return SoloRules.prophet_wins(s, id)
+	return s.preacher_wins.has(id)
+
+
 ## Ladeprüfung der Kandidatenmenge gegen den übrigen Zustand.
 static func state_is_consistent(s: GameState) -> bool:
 	var ids := {}
@@ -189,6 +211,9 @@ static func state_is_consistent(s: GameState) -> bool:
 				return false
 		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
+				return false
+		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not _solo_holds(s, c.reason_key, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not double_agent_wins(s, c.beneficiary_ids[0]):

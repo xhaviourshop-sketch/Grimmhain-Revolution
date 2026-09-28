@@ -18,7 +18,12 @@ const REASON_GM_DECLARED := &"gm_declared"                    ## Siegerklärung 
 const REASON_DOUBLE_AGENT := &"double_agent_no_wolves"        ## RM-DR-155: lebender Doppelspion, kein Wolf lebt
 const REASON_DEATH_SEEKER := &"death_seeker_lynched"          ## RM-DR-138: Selbstmörder bei mindestens 5 Toten hingerichtet
 const REASON_PARASITE := &"parasite_final_three"               ## RM-DR-157: höchstens drei Lebende, Parasit lebt
-const REASONS: Array[StringName] = [REASON_WOLF_PARITY, REASON_NO_WOLVES_ALIVE, REASON_MANIPULATOR, REASON_GM_DECLARED, REASON_DOUBLE_AGENT, REASON_DEATH_SEEKER, REASON_PARASITE]
+const REASON_PIED_PIPER := &"pied_piper_all_charmed"          ## E-01: alle anderen Lebenden verzaubert
+const REASON_PLAGUE := &"plague_all_infected"                 ## E-02: alle anderen Lebenden infiziert
+const REASON_PROPHET := &"prophet_no_wolves"                  ## E-03: freigeschaltet, kein Wolf lebt
+const REASON_DEATH_PREACHER := &"death_preacher_prophecy"     ## E-04: Tod zum vorhergesagten Zeitpunkt
+const REASONS: Array[StringName] = [REASON_WOLF_PARITY, REASON_NO_WOLVES_ALIVE, REASON_MANIPULATOR, REASON_GM_DECLARED, REASON_DOUBLE_AGENT, REASON_DEATH_SEEKER, REASON_PARASITE,
+	REASON_PIED_PIPER, REASON_PLAGUE, REASON_PROPHET, REASON_DEATH_PREACHER]
 const KINDS: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Faction.SOLO, &"none"]
 
 var id: int = 0

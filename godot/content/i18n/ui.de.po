@@ -749,6 +749,30 @@ msgstr "Dr. Victor Frankenstein"
 msgid "ui.role.dr_victor_frankenstein.short"
 msgstr "Belebt einmal einen Toten mit einer freien Rolle wieder."
 
+msgid "ui.role.rattenfaenger.name"
+msgstr "Rattenfänger"
+
+msgid "ui.role.rattenfaenger.short"
+msgstr "Verzaubert jede Nacht ein oder zwei Personen; sind alle anderen verzaubert, gewinnt er."
+
+msgid "ui.role.pestbringerin.name"
+msgstr "Pestbringerin"
+
+msgid "ui.role.pestbringerin.short"
+msgstr "Infiziert jede Nacht jemanden; die Seuche springt auf Nachbarn über. Alle anderen krank: Sieg."
+
+msgid "ui.role.prophet_des_untergangs.name"
+msgstr "Prophet des Untergangs"
+
+msgid "ui.role.prophet_des_untergangs.short"
+msgstr "Markiert drei Personen; sind alle tot, tötet er nachts und gewinnt statt des Dorfes."
+
+msgid "ui.role.todesprediger.name"
+msgstr "Todesprediger"
+
+msgid "ui.role.todesprediger.short"
+msgstr "Sagt in der ersten Nacht geheim seinen Todeszeitpunkt voraus; trifft er, gewinnt er."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

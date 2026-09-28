@@ -48,6 +48,10 @@ const OWNER_LYKAON := &"koenig-lykaon"
 const OWNER_SWAPPER := &"seelentauscher"
 const OWNER_COACH := &"kutscher"
 const OWNER_FRANKENSTEIN := &"dr-victor-frankenstein"
+const OWNER_PIPER := &"rattenfaenger"
+const OWNER_PEST := &"pestbringerin"
+const OWNER_PROPHET := &"prophet-des-untergangs"
+const OWNER_PREACHER := &"todesprediger"
 const KIND_BOND := &"bond_choice"  ## Bindungsschritt mit Stufen (BondSteps)
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 

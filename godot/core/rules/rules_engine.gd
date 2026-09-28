@@ -547,6 +547,27 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
+		PendingPrompt.OWNER_PIPER:
+			for id: int in targets:
+				s.charms.append({"piper_id": prompt.actor_id, "target_id": id})
+			ctx.emit(GameEvent.CHARMED, Visibility.GM, {"piper_id": prompt.actor_id, "target_ids": targets.duplicate(), "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_PEST:
+			SoloRules.infect(s, target)
+			ctx.emit(GameEvent.INFECTED, Visibility.GM, {"pest_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_PROPHET:
+			if prompt.min_count == RoleCatalog.PROPHET_MARKS:
+				for id: int in targets:
+					s.prophet_marks.append({"prophet_id": prompt.actor_id, "target_id": id})
+				ctx.emit(GameEvent.PROPHET_MARKED, Visibility.GM, {"prophet_id": prompt.actor_id, "target_ids": targets.duplicate()})
+			elif target != GameState.NO_TARGET:
+				# Tötung des freigeschalteten Propheten: Tod am Morgen (Markierung), eigene Ursache.
+				s.death_marks.append({"target_id": target, "source_id": prompt.actor_id, "cause": String(KillEvent.CAUSE_PROPHET_KILL)})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
 		PendingPrompt.OWNER_WIDOW:
 			# Schwarze Witwe (B-03, B-06): lebendes Paar des Loki → beide sterben am Morgen.
 			var partners := BondRules.living_partners(s, target)
@@ -676,6 +697,8 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	for i: int in s.ghost_alerts:
 		ctx.emit(GameEvent.GHOST_WOLF_ALERT, Visibility.PUBLIC, {"night": s.night_number})
 	s.ghost_alerts = 0
+	# Pestbringerin (E-02): Ausbreitung zu Beginn der Morgenauflösung.
+	SoloRules.spread(ctx)
 	# Wiederbelebungen durch Kutscher und Frankenstein werden am Morgen sichtbar (W-04).
 	for id: int in s.revived_tonight:
 		ctx.emit(GameEvent.PLAYER_REVIVED, Visibility.PUBLIC, {"player_id": id, "night": s.night_number})

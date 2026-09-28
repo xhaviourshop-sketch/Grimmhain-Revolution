@@ -749,6 +749,30 @@ msgstr "Dr. Victor Frankenstein"
 msgid "ui.role.dr_victor_frankenstein.short"
 msgstr "Once revives a dead person with an unused role."
 
+msgid "ui.role.rattenfaenger.name"
+msgstr "Pied Piper"
+
+msgid "ui.role.rattenfaenger.short"
+msgstr "Charms one or two people each night; once all others are charmed, he wins."
+
+msgid "ui.role.pestbringerin.name"
+msgstr "Plague Bringer"
+
+msgid "ui.role.pestbringerin.short"
+msgstr "Infects someone each night; the plague spreads to neighbours. All others sick: victory."
+
+msgid "ui.role.prophet_des_untergangs.name"
+msgstr "Prophet of Doom"
+
+msgid "ui.role.prophet_des_untergangs.short"
+msgstr "Marks three people; once all are dead he kills at night and wins instead of the village."
+
+msgid "ui.role.todesprediger.name"
+msgstr "Death Prophet"
+
+msgid "ui.role.todesprediger.short"
+msgstr "Secretly predicts the time of his death in the first night; if right, he wins."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

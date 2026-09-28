@@ -16,11 +16,8 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 
 | ID | Fraktion | Godot | Legacy | Auto | Mechanik (primär) | sekundär | Größe / Risiko | Charge | 1.0 |
 |---|---|---|---|---|---|---|---|---|---|
-| [`rattenfaenger`](#rattenfaenger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | mehrstufige Nachtfähigkeit | M / mittel | K9 | B |
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
-| [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
-| [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
@@ -28,34 +25,12 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
 | [`grabraeuber`](#grabraeuber) | Einzelsieg | `decision-required` | `not-found` | `manual-only` | Einmalfähigkeit | Einzelsieg, sonstige Spezialmechanik | XL / hoch | K15 | – |
-| [`todesprediger`](#todesprediger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | Einmalfähigkeit | M / mittel | K15 | – |
 
 **Mechanikfamilien:** Jede Rolle hat genau eine primäre Familie, nach der sie einer Charge zugeordnet ist. Wo die technische Charge von der primären Familie abweicht (z. B. `detektiv`: Informationsrolle, aber Charge Sitznachbarschaft), bestimmt die überwiegend neu zu bauende Kernfunktion die Charge.
 
 **Automation:** Der Wert ist das Ziel nach Klärung der Entscheidungen. `assisted` heißt: App führt, rechnet und protokolliert, eine Spielleitereingabe bleibt Teil der Regel (z. B. Tischfrage, freie Zahl). `manual-only` heißt: bis zur Regelfestlegung nur Notiz und Hinweis.
 
 ## 2. Rollen im Einzelnen
-
-### `rattenfaenger`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Rattenfänger / Pied Piper |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / I / 4.2 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Die Siegbedingung („Sobald ...") ist die Kernfunktion und wird bei Toden belegbar nicht ausgewertet (Bug 1). |
-| DE/EN-Vergleich | NEIN. EN nennt keine Anzahl (DE: 1 oder 2), EN „Wins when" ohne „Sobald"-Betonung (gleichwertig), beide sagen „alle lebenden Spieler" (wörtlich inklusive des Rattenfängers selbst; Code schließt ihn aus). |
-| Automationsziel | `automatic`: Regeln sind klar, Ziele deterministisch, Sieg als WinCandidate. |
-| Mechanik | primär: Einzelsieg; sekundär: mehrstufige Nachtfähigkeit |
-| Größe / Risiko | M / mittel. Einfacher Marker, aber Siegzeitpunkt und Konkurrenz mit Parität. |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (mehrstufig, abbrechbar), WinRules/WinCandidate, StateCodec, Replay, GmCorrections, Ereignis-Sichtbarkeit (gm). |
-| Neue Systeme | dauerhafte Statusmarker (Verzauberung), zusätzliche Siegbedingungen (Rattenfänger-Kandidat). |
-| Abhängigkeiten | Voodoo-Priester (hebt Verzauberung auf), Lehrling/Seelentauscher (Rollenwechsel), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (Doppelaktion), Die Ewigen (Solo-Erkennung), Wölfe/Dorf (konkurrierender Sieg). |
-| Widersprüche | RM-C-040 Siegzeitpunkt; RM-C-041 Zählt er selbst; RM-C-042 Anzahl pro Nacht; RM-C-043 Verzauberung durch Puppe aufgehoben |
-| Entscheidungen | RM-DR-103 (Rolle); übergreifend RM-DR-007; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K9 / ab Option B |
-| Belegsicherheit | hoch. Nicht zur Laufzeit getestet; alle Aussagen aus Code-Lektüre. |
-| Detail | [Dossier](dossiers/solos-a.md#rattenfaenger) |
 
 ### `rachsuechtiger-wolf`
 
@@ -98,48 +73,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeit der `startMulti`-Abbruchpfade. |
 | Detail | [Dossier](dossiers/wolves-a.md#schicksalswolf) |
-
-### `pestbringerin`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Pestbringerin / Plague Bringer |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / II / 7.2 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Code ist in sich schlüssig und lauffähig, widerspricht aber Rollentext (tötet nie, 2 Einsätze) und React-Legende. |
-| DE/EN-Vergleich | JA, semantisch gleich (jede Nacht, tödlich, breitet sich aus). Beide nennen keine Siegbedingung und keine Begrenzung. |
-| Automationsziel | `automatic`: sofern PO die Code-Mechanik bestätigt (Ausbreitung per SeededRng, Sieg als WinCandidate). |
-| Mechanik | primär: Einzelsieg; sekundär: Sitzpositionsmechanik, Zufallsmechanik |
-| Größe / Risiko | M / mittel. Zufall und Sitznachbarschaft müssen deterministisch replaybar sein. |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt, SeededRng, WinRules/WinCandidate, StateCodec, Replay, GmCorrections, Ereignis-Sichtbarkeit. |
-| Neue Systeme | dauerhafte Statusmarker (Seuche), Sitznachbarschaft (Nachbarberechnung, lebend/direkt), zeitlich verzögerte Effekte (Ausbreitung bei Morgenauflösung), zusätzliche Siegbedingungen; bei Interpretation B zusätzlich verzögerte Tode. |
-| Abhängigkeiten | Zeitwächter (friert Ausbreitung ein), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (zweiter Einsatz pro Nacht), Die Ewigen, Wolfsparität (konkurrierender Sieg). |
-| Widersprüche | RM-C-044 Tödlichkeit; RM-C-045 Häufigkeit; RM-C-046 Siegbedingung; RM-C-047 Ausbreitung |
-| Entscheidungen | RM-DR-120 (Rolle); übergreifend RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-015; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
-| Belegsicherheit | hoch für Code; Zufallsverteilung nicht zur Laufzeit geprüft. |
-| Detail | [Dossier](dossiers/solos-a.md#pestbringerin) |
-
-### `prophet-des-untergangs`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Prophet des Untergangs / Prophet of Doom |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / III, IV / 8.6 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `not-found`. Der Text verspricht einen Einzelsieg, der im Code nicht existiert. Markieren und Töten sind implementiert und funktionieren; der Status bezieht sich auf die fehlende Siegmechanik. |
-| DE/EN-Vergleich | JA, semantisch gleich (3 Markierungen, Freischaltung bei Tod aller drei, jede Nacht töten, Einzelsieg ohne Bedingung). |
-| Automationsziel | `assisted`: Markieren und Töten automatisch; Sieg mangels Regel als SL-bestätigter Kandidat bzw. „Sieg erklären". |
-| Mechanik | primär: Tötung; sekundär: Einzelsieg, Einmalfähigkeit |
-| Größe / Risiko | M / mittel. Mechanik klar, Sieg undefiniert. |
-| Vorhandene Godot-Systeme | StepQueue (bedingter Schritt), PendingPrompt, KillPipeline (`PROPHET_KILL`, sofort), Reaktionswarteschlange, WinRules/WinCandidate, GmCorrections (`declare_winner`), StateCodec, Replay, Ereignis-Sichtbarkeit. |
-| Neue Systeme | dauerhafte Statusmarker (unheilig, Markierungsliste pro Prophet), zusätzliche Siegbedingungen. |
-| Abhängigkeiten | alle Tötungsrollen (Freischaltung), Kutscher/Frankenstein (Wiederbelebung), Lehrling/Seelentauscher (Erbe des globalen Zustands), Rotkäppchen (zwei Tötungen), Schilde (Nekromant, Hades, Kartenschlucker, Rudelvater), Die Ewigen. |
-| Widersprüche | RM-C-048 Einzelsieg; RM-C-049 Freischaltung dauerhaft; RM-C-050 Selbstmarkierung |
-| Entscheidungen | RM-DR-121 (Rolle); übergreifend RM-DR-006, RM-DR-007, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K9 / in keiner Option |
-| Belegsicherheit | hoch; Sieg-Abwesenheit per `rg` über `js/`, `game.html`, `app/src` belegt. |
-| Detail | [Dossier](dossiers/solos-a.md#prophet-des-untergangs) |
 
 ### `feuerteufel`
 
@@ -288,23 +221,3 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch (Fehlen per rg über gesamtes Repo ohne Markdown und node_modules bestätigt). --- |
 | Detail | [Dossier](dossiers/solos-b.md#grabraeuber) |
 
-### `todesprediger`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Todesprediger / Death Prophet |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / II / 6.6 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Die Kernfunktion (Sieg bei korrekt vorhergesagtem Todeszeitpunkt) wird für Tagesvorhersagen durch die überlappende Zählung und den Versatz zur angezeigten Tagesnummer verfälscht (Bugs 1 und 2, beide mit Zeilenbeleg). Nachtvorhersagen funktionieren. |
-| DE/EN-Vergleich | semantisch gleich NEIN (leichte Unterschiede): (1) DE "Kündigt an" kann eine öffentliche Ankündigung bedeuten, EN "Predicts" ist neutral. (2) EN betont "exact", DE nicht. Beide nennen keinen Zeitpunkt der Vorhersage (Nacht 1?) und keine Zählbasis. Siegteil gleich. |
-| Automationsziel | `automatic`: (nach PO-Festlegung der Zählbasis): Vorhersage als Eingabe, Treffer beim Todesereignis deterministisch, WinCandidate mit SL-Bestätigung. |
-| Mechanik | primär: Einzelsieg; sekundär: Einmalfähigkeit |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (Eingabe Phase + Zahl, abbrechbar), KillPipeline (Todesereignis mit Phase), WinRules/WinCandidate, Ereignis-Sichtbarkeit, InfoRecord, StateCodec, Replay, GmCorrections. |
-| Neue Systeme | zusätzliche Siegbedingung; dauerhafter Statusmarker (gespeicherte Vorhersage). Voraussetzung: eindeutige Phasenzuordnung jedes Todes (Teil des Phasenmodells, B-9). |
-| Abhängigkeiten | alle tötenden Rollen; Zeitwächter (Frost, Nachtzählung), Lynch/Hinrichtung, Parasit-ähnliche Immunitäten und Schilde (verschieben Todeszeitpunkt), Frankenstein/Kutscher (Wiederbelebung und erneuter Tod). |
-| Widersprüche | RM-C-079 Öffentlich oder geheim; RM-C-080 Zeitpunkt der Vorhersage; RM-C-081 Zählbasis Tag/Nacht |
-| Entscheidungen | RM-DR-158 (Rolle); übergreifend RM-DR-007, RM-DR-011, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
-| Belegsicherheit | hoch für Zählerpositionen und Vergleich. Mittel für die angezeigte Tagesnummer: der Phasenzähler liest `window.state` (F8) und zeigt im Normalbetrieb vermutlich dauerhaft "Tag 1"; die Protokoll-Labels (`gamelog.js`) sind die belastbare Anzeigequelle. --- ## … |
-| Detail | [Dossier](dossiers/solos-b.md#todesprediger) |

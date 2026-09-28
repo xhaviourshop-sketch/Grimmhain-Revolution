@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 59 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 59 |
+| im RoleCatalog vorhandene Rollen | 63 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 63 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 57 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 61 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -106,6 +106,10 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 57 | `seelentauscher` | Seelentauscher / Soul Swapper (Rollentext) | village | nein | 80 | `bond_steps.gd` (`_swap`), `role_transition.gd`, `gatewarden.gd` | `test_transform_roles.gd`, fuzz | RM-DR-127, V-04 bis V-06, DECISION-LOG „Rollenaudit · Verwandlungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 58 | `kutscher` | Kutscher / Coachman (Rollentext) | village | nein | 38 | `bond_steps.gd` (Stufen targets/wolf, `_revive_coach`), `role_transition.gd` (`revive`) | `test_revival_roles.gd`, fuzz | RM-DR-126, RM-DR-013, W-01 bis W-03, DECISION-LOG „Rollenaudit · Wiederbelebungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 59 | `dr-victor-frankenstein` | Dr. Victor Frankenstein (Rollentext) | village | nein | 36 | `bond_steps.gd` (Stufen targets/role, `frankenstein_options`) | `test_revival_roles.gd`, fuzz | RM-DR-141.1/.2, RM-DR-013, W-01, W-04, DECISION-LOG „Rollenaudit · Wiederbelebungsrollen“ | `implemented-and-tested` | `assisted` | `legacy-broken` |
+| 60 | `rattenfaenger` | Rattenfänger / Pied Piper (Rollentext) | solo | nein | 42 | `solo_rules.gd` (`charms`, `piper_wins`), `rules_engine.gd` | `test_solo_roles_a.gd`, fuzz | RM-DR-103, E-01, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
+| 61 | `pestbringerin` | Pestbringerin / Plague Bringer (Rollentext) | solo | nein | 72 | `solo_rules.gd` (`infected`, `spread`, Seed) | `test_solo_roles_a.gd`, fuzz | RM-DR-120, E-02, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 62 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom (Rollentext) | solo | nein | 86 | `solo_rules.gd` (`prophet_marks`, `prophet_unlocked`), `win_rules.gd` | `test_solo_roles_a.gd`, fuzz | RM-DR-121, E-03, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `not-found` |
+| 63 | `todesprediger` | Todesprediger / Death Prophet (Rollentext) | solo | nein | 66 (nur Nacht 1) | `bond_steps.gd` (Stufe prediction), `solo_rules.gd` (`preacher_wins`) | `test_solo_roles_a.gd`, fuzz | RM-DR-158, E-04, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -413,6 +417,26 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht bis zur Nutzung (Priorität 36), freiwillig: ein Toter, dann eine Rolle aus `frankenstein_options` (Rollen, die gerade niemand hat, Dorfbewohner immer, keine Wolfsrolle, keine Pflicht-Scheinrolle). Die Person lebt sofort wieder mit dieser Rolle und frischen Einsätzen, erfährt sie privat, handelt ab der Folgenacht; am Morgen öffentlich sichtbar.
 - **Tests:** Nur Tote, Rollenangebot, private Mitteilung, Folgenacht, einmal je Leben, Save/Load der Rollenwahl.
 - **Grenzen:** Totenkarten-Bedingung RM-DR-141.4 folgt mit dem Assistenten (W-01).
+
+### 4.60 `rattenfaenger`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht (Priorität 42) Pflichtwahl von 1 oder 2 anderen lebenden, von ihm noch unverzauberten Personen (`charms`, dauerhaft, auch nach Wiederbelebung). Siegkandidat bei jeder Siegprüfung, wenn er lebt und alle anderen Lebenden verzaubert sind.
+- **Tests:** Auswahl, Verzauberung auch des Wolfs, Sieg nach Lynch der Letzten, toter Rattenfänger, Save/Load.
+- **Grenzen:** –
+
+### 4.61 `pestbringerin`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht (Priorität 72) Pflichtwahl einer anderen gesunden Lebenden (`infected`, gemeinsam). Zu Beginn jeder Morgenauflösung steckt jede lebende Infizierte einen per Seed gezogenen nächsten lebenden Nachbarn an (`PlagueSpread`). Sieg lebend bei Totalinfektion der anderen.
+- **Tests:** Infektion, Ausbreitung auf Nachbarn, Seed-Reproduzierbarkeit, Sieg.
+- **Grenzen:** Die Ausbreitung läuft auch ohne lebende Pestbringerin weiter (ohne Wirkung).
+
+### 4.62 `prophet-des-untergangs`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nacht 1: Pflichtmarkierung von drei anderen Lebenden (`prophet_marks`). Sind alle drei tot (jede Ursache), dauerhaft freigeschaltet (`prophet_unlocked`, auch nach Wiederbelebung eines Markierten); dann jede Nacht freiwillig eine andere Person töten (Todesmarkierung, `PROPHET_KILL` am Morgen, Rudelschutz wirkungslos). Lebt er freigeschaltet und kein Wolf, ersetzt sein Sieg den Dorfsieg.
+- **Tests:** Markieren, Freischalten, dauerhaft, Tötung trotz Schutzengel, Sieg statt Dorf.
+- **Grenzen:** –
+
+### 4.63 `todesprediger`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nur Nacht 1 (Priorität 66): geheime Vorhersage `{kind: night|day, number}` einer künftigen Phase (Tag N nach Nacht N; laufende Nacht nicht). Stirbt er mit Todesfolgen genau in dieser Phase (Morgentode zählen zur Nacht), steht er in `preacher_wins` und wird fortan vorgeschlagen.
+- **Tests:** Ungültige Vorhersagen, geheim, Treffer am Tag, falsche Phase.
+- **Grenzen:** –
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

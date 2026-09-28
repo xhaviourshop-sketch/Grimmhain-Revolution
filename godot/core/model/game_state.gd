@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz- und Bindungsrollen)
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -65,6 +65,12 @@ var red_chains: Array = []           ## Todesketten [{red_id, partner_id}], je R
 var apples: Dictionary = {}          ## Apfel je Person-ID: Nacht, in der er gilt
 var apple_steps: Array[int] = []     ## Indizes der durch einen Apfel eingefügten Nachtschritte dieser Nacht
 var revived_tonight: Array[int] = []  ## in dieser Nacht durch Rollen Wiederbelebte, öffentlich am Morgen
+var charms: Array = []                ## Rattenfänger: [{piper_id, target_id}]
+var infected: Array[int] = []         ## Pestbringerin: infizierte Personen, aufsteigend
+var prophet_marks: Array = []         ## Prophet des Untergangs: [{prophet_id, target_id}]
+var prophet_unlocked: Array[int] = []  ## dauerhaft freigeschaltete Propheten, aufsteigend
+var prophecies: Array = []            ## Todesprediger: [{preacher_id, kind: night|day, number}]
+var preacher_wins: Array[int] = []    ## Todesprediger mit erfüllter Vorhersage, aufsteigend
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -243,6 +249,12 @@ func to_dict() -> Dictionary:
 		"apples": _int_keys_to_dict(apples),
 		"apple_steps": apple_steps.duplicate(),
 		"revived_tonight": revived_tonight.duplicate(),
+		"charms": charms.duplicate(true),
+		"infected": infected.duplicate(),
+		"prophet_marks": prophet_marks.duplicate(true),
+		"prophet_unlocked": prophet_unlocked.duplicate(),
+		"prophecies": prophecies.duplicate(true),
+		"preacher_wins": preacher_wins.duplicate(),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -449,7 +461,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var marked_target := DictRead.get_int(item, "target_id", -1)
 		var marked_source := DictRead.get_int(item, "source_id", -1)
 		var mark_cause := StringName(DictRead.get_string(item, "cause"))
-		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW].has(mark_cause):
+		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW, KillEvent.CAUSE_PROPHET_KILL].has(mark_cause):
 			return null
 		s.death_marks.append({"target_id": marked_target, "source_id": marked_source, "cause": String(mark_cause)})
 	for item: Variant in DictRead.get_array(d, "detective_hints"):
@@ -540,6 +552,39 @@ static func from_dict(d: Dictionary) -> GameState:
 	for id: int in s.revived_tonight:
 		if not s.players.has(id):
 			return null
+	for item: Variant in DictRead.get_array(d, "charms"):
+		var piper := DictRead.get_int(item, "piper_id", -1) if item is Dictionary else -1
+		var charmed := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1
+		if not s.players.has(piper) or not s.players.has(charmed) or piper == charmed:
+			return null
+		s.charms.append({"piper_id": piper, "target_id": charmed})
+	for item: Variant in DictRead.get_array(d, "prophet_marks"):
+		var prophet := DictRead.get_int(item, "prophet_id", -1) if item is Dictionary else -1
+		var marked_one := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1
+		if not s.players.has(prophet) or not s.players.has(marked_one) or prophet == marked_one:
+			return null
+		s.prophet_marks.append({"prophet_id": prophet, "target_id": marked_one})
+	for item: Variant in DictRead.get_array(d, "prophecies"):
+		if not item is Dictionary:
+			return null
+		var preacher := DictRead.get_int(item, "preacher_id", -1)
+		var phase_kind := DictRead.get_string(item, "kind")
+		var phase_no := DictRead.get_int(item, "number", -1)
+		if not s.players.has(preacher) or not ["night", "day"].has(phase_kind) or phase_no < 1:
+			return null
+		s.prophecies.append({"preacher_id": preacher, "kind": phase_kind, "number": phase_no})
+	for key: String in ["infected", "prophet_unlocked", "preacher_wins"]:
+		var listed: Variant = DictRead.to_int_array(DictRead.get_array(d, key))
+		if listed == null:
+			return null
+		var sorted_ids := (listed as Array).duplicate()
+		sorted_ids.sort()
+		if sorted_ids != listed:
+			return null
+		for id: int in listed:
+			if not s.players.has(id) or (listed as Array).count(id) > 1:
+				return null
+		s.set(key, listed)
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null

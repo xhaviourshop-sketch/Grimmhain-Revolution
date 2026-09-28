@@ -340,7 +340,13 @@ Siehe §3.
 
 ### K9 · Marker und Einzelsiege
 
-**Rollen Charge K9 (4):** `rattenfaenger`, `pestbringerin`, `feuerteufel`, `prophet-des-untergangs`
+**Rollen Charge K9 (1):** `feuerteufel`
+
+**Nachtrag Rollenaudit:** `prophet-des-untergangs` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `pestbringerin` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `rattenfaenger` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `die-ewigen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -446,7 +452,9 @@ Siehe §3.
 
 ### K15 · Ressourcen und Totenkarten
 
-**Rollen Charge K15 (5):** `todesprediger`, `hades`, `nekromant`, `kartenschlucker`, `grabraeuber`
+**Rollen Charge K15 (4):** `hades`, `nekromant`, `kartenschlucker`, `grabraeuber`
+
+**Nachtrag Rollenaudit:** `todesprediger` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Ressourcen aus Toden oder Karten, persönliche Schilde, Einzelsiege.
 - **Neue Systeme:** N-15, N-14, N-01, N-03.
