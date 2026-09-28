@@ -98,7 +98,7 @@ Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 3" (E-16 bis E-19, E
 | Sieg / Win | Er gewinnt allein, solange er lebt und mindestens 10 Lichter hat. Kein Einlösen, der Sieg wird bei jeder Prüfung vorgeschlagen. | The Hades wins alone as long as they are alive and have at least 10 lights. No cashing in, the win is proposed at every check. |
 | Beispiel 1 / Example 1 | Hades hat 2 Lichter und tötet Ben. Die Lichter fallen auf 0, mit Bens Tod am Morgen erhält Hades 1 Licht. | Hades has 2 lights and kills Ben. The lights drop to 0, with Ben's death in the morning Hades gains 1 light. |
 | Beispiel 2 / Example 2 | Hades lebt mit 10 Lichtern. Sein Alleinsieg ist Kandidat. | Hades is alive with 10 lights. Their solo win is a candidate. |
-| Spielleitung / Game master | Die Lichter sind ein Vorrat je Hades, sichtbar nur für dich und den Hades. Ein Abbruch vor der letzten Antwort kostet nichts. | The lights are a stock per Hades, visible only to you and the Hades. Cancelling before the last answer costs nothing. |
+| Spielleitung / Game master | Die Lichter sind ein eigener Vorrat je Hades. Ein Abbruch vor der letzten Antwort kostet nichts. | The lights are a separate stock per Hades. Cancelling before the last answer costs nothing. |
 
 Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 4" (E-28 bis E-31; RM-DR-144.1 bis .4); "Hades und Grabräuber, abgeleitete Präzisierungen" (DA-01 bis DA-05).
 
