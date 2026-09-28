@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 65 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 65 |
+| im RoleCatalog vorhandene Rollen | 66 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 66 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 63 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 64 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -112,6 +112,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 63 | `todesprediger` | Todesprediger / Death Prophet (Rollentext) | solo | nein | 66 (nur Nacht 1) | `bond_steps.gd` (Stufe prediction), `solo_rules.gd` (`preacher_wins`) | `test_solo_roles_a.gd`, fuzz | RM-DR-158, E-04, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 1“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 64 | `feuerteufel` | Feuerteufel / Pyromaniac (Rollentext) | solo | nein | 76 | `solo_rules.gd` (`fire_marks`, `fire_on_death`), `kill_pipeline.gd`, `win_rules.gd` (`co_winner_ids`) | `test_fire_devil.gd`, fuzz | RM-DR-131, E-05 bis E-11, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 2 (Feuerteufel)“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 65 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest (Rollentext) | solo | nein | 84 | `kill_pipeline.gd` (Umlenkung, Kette `chain`), `solo_rules.gd` (`voodoo_dolls`), `win_rules.gd` | `test_voodoo_priest.gd`, fuzz | RM-DR-132, E-12 bis E-15, E-20 bis E-23, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 3“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 66 | `nekromant` | Nekromant / Necromancer (Rollentext) | solo | nein | 30 | `bond_steps.gd` (Stufen targets/redirect), `solo_rules.gd` (`necro_*`), `kill_pipeline.gd` (Schild), `rules_engine.gd` (`NameWolf`, Kette) | `test_necromancer.gd`, `test_solo_combinations.gd`, fuzz | RM-DR-142, E-16 bis E-19, E-24 bis E-26, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 3“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -449,6 +450,11 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** In jeder Nacht ohne lebende Puppe (Priorität 84, nicht blockierbar, kein Apfel) darf er einer anderen lebenden Person geheim eine Puppe geben oder verzichten (`voodoo_dolls`, eine je Priester). Jeder tatsächliche Tod außer Spielleiterkorrektur trifft nach allen Schutzwirkungen stattdessen die Puppe (Ursache und Quelle bleiben); die Puppe ist dabei verbraucht, keine Abklingzeit. Die eigene Puppe wirkt vor einer Schattenwanderer-Verknüpfung (E-23); Umlenkungsketten treffen jede Person höchstens einmal (E-20, gilt auch für den Schattenwanderer). Tod oder Rollenverlust des Priesters und Tod der Puppe beenden die Puppe. Sieg allein, wenn er lebt und höchstens drei Personen leben.
 - **Tests:** freiwillige geheime Vergabe, Selbstwahl abgelehnt (ohne Ereignisse), Umlenkung bei Rudel, Hinrichtung und Brand, keine bei Korrektur, Schutz vor der Umlenkung, eigener Schutz der Puppe, tote Puppe und Neuvergabe, gegenseitige Puppen, Kette, gemeinsame Puppe, Vorrang vor dem Schattenwanderer ohne Rückweg, Rollenverlust und Seelentausch, Sieg mit Feuerteufel als Mitsieger, Speichern bei offenem Prompt, Ladeprüfung.
 - **Grenzen:** Zusammenspiel mit dem Nekromanten folgt mit dessen Umsetzung.
+
+### 4.66 `nekromant`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nachtschritt jede Nacht (Priorität 30: nach Verdammniswächter, vor Märtyrerin), sofern mindestens drei ungeopferte Tote vorhanden sind: keine oder genau drei Tote opfern (gemeinsamer Vorrat `necro_sacrificed`, jede Person einmal, auch nach Wiederbelebung). Ohne Angriff entsteht ein globaler Schild (`necro_shields`): er verhindert den nächsten Tod irgendeiner Person außer Korrekturen, auch eine Hinrichtung, wirkt nach Schutz und persönlichen Schilden und vor Puppe und Schattenwanderer, jeder Schild einen Tod, verfällt mit der nächsten Nacht. Ist er Rudelopfer (auch Zusatzopfer) und stürbe sonst, kann er stattdessen umlenken (neues Ziel = Rudelangriff mit dessen Schutz; Kette ohne Rückweg, E-20) oder verzichten (dann Schild). Tagesbefehl `NameWolf`: einmal je Tag geheim; ein Treffer (`counts_as_wolf`) erfüllt dauerhaft den Alleinsieg.
+- **Tests:** Schild für jede Person, Verbrauch, Hinrichtung, Ablauf, gemeinsamer Vorrat, ungültige Opferzahl ohne Ereignisse, zwei Nekromanten, Umlenkung (Schutz des neuen Ziels, Verzicht → Schild), keine Umlenkung bei Schutz oder aktivem Schild, Märtyrerin sieht das neue Opfer, Benennen (Fehlversuch, zweiter Versuch, Treffer, Fluch, nachts), Kette zum Priester ohne Rückweg, Brand nach Umlenkung, Schild vor Puppe und nach persönlichem Schild, Kette Nekromant → Priester → Puppe → Brand → Dorfsieg mit Mitsieger, Ladeprüfung inklusive offener Stufe `redirect`.
+- **Grenzen:** Ein ungenutzter Schild erlischt mit Tod oder Rollenverlust des Nekromanten (E-27, RM-DR-142.9). Siegerklärungen durch den Spielleiter sind nicht betroffen.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

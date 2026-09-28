@@ -456,7 +456,9 @@ Siehe §3.
 
 ### K15 · Ressourcen und Totenkarten
 
-**Rollen Charge K15 (4):** `hades`, `nekromant`, `kartenschlucker`, `grabraeuber`
+**Rollen Charge K15 (3):** `hades`, `kartenschlucker`, `grabraeuber`
+
+**Nachtrag Rollenaudit:** `nekromant` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `todesprediger` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

@@ -18,7 +18,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 |---|---|---|---|---|---|---|---|---|---|
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
-| [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
 | [`hades`](#hades) | Einzelsieg | `decision-required` | `legacy-verified` | `assisted` | Einzelsieg | Tötung, Schutz, sonstige Spezialmechanik | M / mittel | K15 | – |
 | [`zeitwaechter`](#zeitwaechter) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | Einmalfähigkeit | XL / kritisch | K16 | – |
@@ -71,27 +70,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeit der `startMulti`-Abbruchpfade. |
 | Detail | [Dossier](dossiers/wolves-a.md#schicksalswolf) |
-
-### `nekromant`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Nekromant / Necromancer |
-| Fraktion / Akte / Legacy-Nachtpriorität | Einzelsieg / II / 3.0 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Schild, Umlenkung und Sieg sind implementiert und funktionieren im Normalfall; Text und Code widersprechen sich in Optionalität der Umlenkung, Reichweite des Schildes, Ressourcenmodell und Versuchsgrenze. Der Abbruch-Bug betrifft nur den Nebenpfad. |
-| DE/EN-Vergleich | semantisch gleich NEIN (geringe, aber reale Unterschiede): (1) DE "die nächste Tötung (beliebig)" vs EN "the next death of any kind": DE spricht von Tötung, EN von Tod; beide lassen offen, ob der Schild nur den Nekromanten oder jede Person schützt. (2) DE "drei Tote wählen" vs EN "sacrifice three … |
-| Automationsziel | `assisted`: Schild, Verfall, Umlenkungsangebot und Wolfsprüfung sind deterministisch automatisierbar; Benennung am Tag braucht einen SL-Befehl, Sieg per WinCandidate mit SL-Bestätigung. |
-| Mechanik | primär: Schutz; sekundär: Zielumleitung, Einzelsieg, Tagfähigkeit |
-| Größe / Risiko | L / hoch. Globaler Schild im Kill-Pfad, mehrstufiger Pflicht-/Optionalprompt in der Morgenauflösung, zwei Ressourcenlisten, Tages-Siegbefehl. |
-| Vorhandene Godot-Systeme | KillPipeline (Abfangstufe für globalen Schild), StepQueue (Nachtschritt), PendingPrompt (Auswahl 3 Tote, Umlenkziel, abbrechbar), WinRules/WinCandidate, InfoRecord (Benennungsergebnis), GmCorrections, StateCodec, Replay, Ereignis-Sichtbarkeit. |
-| Neue Systeme | dauerhafte Statusmarker an toten Personen (Stimme geopfert), globale Modifikatoren (Schild bis Beginn nächster Nacht, zeitlich verzögerter Verfall), Zielumleitung für Nacht-Rudelangriff (vorhanden nur für Hinrichtung, Spiegelwolf), Tagesaktionswarteschlange (Benennung), zusätzliche Siegbedingung. |
-| Abhängigkeiten | Werwolf-Rudel (Angriff als Auslöser), Schicksalswolf/Rudelvater (Zusatzziele, `PACKFATHER_KILL` durchbricht Schild), Dämonischer Wolf (`cursedWolfAura` zählt bei Benennung als Wolf, Nekromant selbst kann verflucht werden), Doppelspion (zählt nicht als Wolf), Parasit/Rudelvater/Schattenwanderer (vor dem Schild … |
-| Widersprüche | RM-C-066 Wen schützt der Schild; RM-C-067 Umlenkung optional oder Pflicht; RM-C-068 Ressource der Toten; RM-C-069 Siegversuche; RM-C-070 Übungs-Enthüllung |
-| Entscheidungen | RM-DR-142 (Rolle); übergreifend RM-DR-002, RM-DR-005, RM-DR-007, RM-DR-008; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K15 / in keiner Option |
-| Belegsicherheit | hoch für Schild, Verfall, Umlenkung, Sieg. Nicht verifiziert: tatsächliches Verhalten im Browser beim Abbruch (nur Codelesung); ob `center()`-Meldungen die Pick-Leiste verdecken. --- |
-| Detail | [Dossier](dossiers/solos-b.md#nekromant) |
 
 ### `kartenschlucker`
 

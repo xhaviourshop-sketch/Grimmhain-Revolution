@@ -23,12 +23,12 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 63 | 175 |
+| entschieden | 63 | 176 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
 | später | 10 | 21 |
 | quellenprüfung | 0 | 0 |
-| **gesamt** | **75** | **199** |
+| **gesamt** | **75** | **200** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
 
@@ -1303,6 +1303,11 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option A: nur wenn er sonst stürbe
   - Option B: immer, wenn das Rudel ihn wählt
   - Option C: bei eigenem Schild darf er wählen
+  - Empfehlung: A
+- **RM-DR-142.9 · Schild nach Rollenverlust oder Tod** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: erlischt
+  - Option B: bleibt bestehen
+  - Option C: nur der Tod beendet ihn
   - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** 1. Schützt der Schild jede Person oder nur den Nekromanten? Gilt er gegen Lynch? 2. Ist die Umlenkung optional? Darf auf Wölfe umgelenkt werden? Gelten Schutz/Der Weise für das Umlenkziel? 3. Gibt es einen gemeinsamen Vorrat "Stimme der Toten" für Schild und Umlenkung? 4. Wie oft darf der Nekromant einen Wolf benennen (pro Tag, pro Spiel), und hat ein Fehlversuch Folgen? Ist die Benennung öffentlich? 5. Zählt ein verfluchter Nicht-Wolf (`cursedWolfAura`) als korrekt benannter Werwolf? 6. Bleibt die Übungs-Enthüllung als Regel erhalten?
 - **Charge:** K15. **In Option (nicht freigegeben):** keiner.
