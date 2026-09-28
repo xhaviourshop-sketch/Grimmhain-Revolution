@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 49 | 122 |
+| entschieden | 52 | 130 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 22 | 61 |
+| später | 19 | 53 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -386,12 +386,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `koenig-lykaon`; Wechselwirkung laut Dossier: Trugbilderwolf, Wächter am Tor, Orakel, Lehrling (Erbe), Werwolf (synthetische Rudelzeile), Totenkarte …
 - **Belege:** [Dossier](dossiers/wolves-a.md#koenig-lykaon); RM-C-004, RM-C-005 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-014.
-- **RM-DR-107.1 · Scheinrolle des erzeugten Trugbilderwolfs** · Status: später (K12)
+- **RM-DR-107.1 · Scheinrolle des erzeugten Trugbilderwolfs** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Scheinrolle = alte Rolle der Person
   - Option B: SL wählt bei Verwandlung
   - Auswirkung: Balance: A passt zur Tarnzeile und ist logisch stark; Umsetzung: `appears_as` muss bei RoleTransition gesetzt werden
   - Empfehlung: A, mit SL-Korrektur
-- **RM-DR-107.2 · "Dorfbewohner"** · Status: später (K12)
+- **RM-DR-107.2 · "Dorfbewohner"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: nur Dorffraktion
   - Option B: jede Nicht-Wolf-Person
   - Auswirkung: Balance: B kann Solo-Rollen neutralisieren; Umsetzung: Zielfilter `faction==village` vs `!counts_as_wolf`
@@ -731,17 +731,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `daemonischer-wolf`; Wechselwirkung laut Dossier: Orakel, Blutpriester, Waldläufer, Doktor, Detektiv, Kopfgeldjäger, Ritter, Dorfschmied, Traumdeuter (alle `isWolf`-Leser); Seelentauscher und Wächter am Tor (löschen Fluch); Nekromant …
 - **Belege:** [Dossier](dossiers/wolves-b.md#daemonischer-wolf); RM-C-022, RM-C-023, RM-C-024 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-009.
-- **RM-DR-122.1 · Auslöser** · Status: später (K12)
+- **RM-DR-122.1 · Auslöser** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Die Opfer des Rudels werden verflucht (dann sind sie aber tot)
   - Option B: Beim eigenen Tod verflucht er ein Opfer seiner Wahl
   - Auswirkung: Balance: hoch: laufender Fluch vs. einmaliger Todesfluch; Umsetzung: Nachtschritt vs. Todesreaktion
   - Empfehlung: Todesreaktion (Code) übernehmen, Text präzisieren
-- **RM-DR-122.2 · Wirkung des Fluchs** · Status: später (K12)
+- **RM-DR-122.2 · Wirkung des Fluchs** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: nur `appears_as` (Informationsrollen)
   - Option B: echter Fraktionswechsel für Parität
   - Auswirkung: Balance: sehr hoch: Dorf kann ohne echten Wolf nicht gewinnen; Umsetzung: Godot `appears_as` vs. `counts_as_wolf`
   - Empfehlung: nur `appears_as`
-- **RM-DR-122.3 · Todespfade** · Status: später (K12)
+- **RM-DR-122.3 · Todespfade** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: jeder Tod löst Fluch aus
   - Option B: nur Wolfsangriff und Lynch
   - Auswirkung: Balance: mittel; Umsetzung: Reaktion an KillPipeline für alle Ursachen
@@ -841,17 +841,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `seelentauscher`; Wechselwirkung laut Dossier: alle Rollen (tauschbar), insbesondere Wolfsrollen, Wächter am Tor, Wolfskind/Lehrling (Bindungen), Loki/Rotkäppchen/Parasit (Sitz-Bindungen), Dorfwache/Märtyrerin (Rollenprüfung am Morgen), Kutscher/Blutpriester …
 - **Belege:** [Dossier](dossiers/village-2.md#seelentauscher); RM-C-119, RM-C-120, RM-C-121 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-014.
-- **RM-DR-127.1 · Was wandert mit** · Status: später (K12)
+- **RM-DR-127.1 · Was wandert mit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Rolle inkl. Rollenzustand (Verbrauch, Bindungen) wandert
   - Option B: nur Rollenname, Zustand bleibt
   - Auswirkung: Balance: Tausch von verbrauchten Rollen; Umsetzung: RoleTransition-Schnappschuss definiert
   - Empfehlung: PO
-- **RM-DR-127.2 · Toter erhält Wolfsrolle** · Status: später (K12)
+- **RM-DR-127.2 · Toter erhält Wolfsrolle** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: erlaubt
   - Option B: Wächter-Prüfung auch für Tote
   - Auswirkung: Balance: gering (tot), relevant bei Wiederbelebung; Umsetzung: Wächter-Regel auf alle Rollenwechsel
   - Empfehlung: Wächter-Prüfung auch bei Wiederbelebung
-- **RM-DR-127.3 · Information der Betroffenen** · Status: später (K12)
+- **RM-DR-127.3 · Information der Betroffenen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Betroffene erfahren neue Rolle
   - Option B: geheim
   - Auswirkung: Balance: hoch (Spieler kennt eigene Rolle nicht); Umsetzung: InfoRecord an Betroffene

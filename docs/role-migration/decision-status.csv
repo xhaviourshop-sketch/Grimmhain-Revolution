@@ -33,8 +33,8 @@ RM-DR-105.1;ja;spuerhund;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";keine f
 RM-DR-106.1;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.2;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.3;ja;rachsuechtiger-wolf;S;;
-RM-DR-107.1;ja;koenig-lykaon;S;;
-RM-DR-107.2;ja;koenig-lykaon;S;;
+RM-DR-107.1;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Scheinrolle = alte Rolle (V-03)
+RM-DR-107.2;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";nur Fraktion Dorf (V-03)
 RM-DR-108.1;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
 RM-DR-108.2;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nächster tatsächlicher Rudelangriff
 RM-DR-108.3;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Rudelangriff
@@ -75,9 +75,9 @@ RM-DR-120.4;ja;pestbringerin;S;;
 RM-DR-121.1;ja;prophet-des-untergangs;S;;
 RM-DR-121.2;ja;prophet-des-untergangs;S;;
 RM-DR-121.3;ja;prophet-des-untergangs;S;;
-RM-DR-122.1;ja;daemonischer-wolf;S;;
-RM-DR-122.2;ja;daemonischer-wolf;S;;
-RM-DR-122.3;ja;daemonischer-wolf;S;;
+RM-DR-122.1;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Todesreaktion (V-01)
+RM-DR-122.2;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";nur Rollenauskünfte (V-02)
+RM-DR-122.3;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";jeder Tod mit Folgen (V-01)
 RM-DR-123.1;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Dorf (RM-DR-010)
 RM-DR-123.2;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";ab Nacht 1, einmal je Leben
 RM-DR-123.3;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Nachtschritte (RM-DR-010)
@@ -88,9 +88,9 @@ RM-DR-125.3;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026"
 RM-DR-126.1;ja;kutscher;S;;
 RM-DR-126.2;ja;kutscher;S;;
 RM-DR-126.3;ja;kutscher;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
-RM-DR-127.1;ja;seelentauscher;S;;
-RM-DR-127.2;ja;seelentauscher;S;;
-RM-DR-127.3;ja;seelentauscher;S;;
+RM-DR-127.1;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";frische Rolle wie Lehrling-Erbe (V-04)
+RM-DR-127.2;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Wächter prüft auch Tote (V-06)
+RM-DR-127.3;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Lebende erfahren privat (V-05)
 RM-DR-128.1;ja;blutpriester;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL wählt 0-3 lebende Wölfe (I-08)
 RM-DR-128.2;ja;blutpriester;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Blutpriester (I-08)
 RM-DR-129.1;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL wählt 3, mindestens 1 Wolf (I-01, I-05)

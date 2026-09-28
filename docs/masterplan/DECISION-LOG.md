@@ -418,3 +418,15 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 - **Rotkäppchen, Apfeldauer (R-03):** A. Der Apfel gilt nur in der folgenden Nacht; ungenutzt verfällt er; höchstens ein Apfel je Person.
 - **Apfel bei Rollen mit nur einem Ergebnis (R-04):** A. Für Korrupten Richter, Parasit, Verdammniswächter und Rotkäppchen ist der Apfel wirkungslos.
 - **Bindungen im Fluch des Weisen (B-08):** A. Liebeskummer und Rotkäppchens Todeskette wirken wie Gaben (S-12) auch während des Fluchs.
+
+## Rollenaudit · Verwandlungsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs V-01 bis V-07). Es gelten: Wächter am Tor blockiert jeden Weg zu einem neuen Wolf außer Korrekturen (RM-DR-149), Scheinrollen täuschen nur Rollenauskünfte (Doktor, I-02), Todesreaktionen über die Warteschlange (DR-09), Rollenwechsel mit frischen Einsätzen wie beim Lehrling.
+
+- **Dämonischer Wolf, Auslöser (V-01, RM-DR-122.1/.3):** A. Todesreaktion bei jedem Tod mit Todesfolgen: er wählt eine andere lebende Person (auch einen Wolf) oder verzichtet; einmal je Leben.
+- **Dämonischer Wolf, Wirkung (V-02, RM-DR-122.2):** A. Nur Rollenauskünfte (Orakel) zeigen die verfluchte Person als Werwolf; Zählungen, Ja/Nein-Prüfungen, Wirkungen und Siege bleiben wahr.
+- **Dämonischer Wolf, Dauer (V-07):** A. Der Fluch bleibt, bis die Person ihre Rolle wechselt (Erbe, Tausch, Lykaon, Korrektur); eine Wiederbelebung löscht ihn nicht.
+- **König Lykaon (V-03, RM-DR-107.1/.2):** A. Nur in Nacht 1, nur wenn ein anderer Wolf lebt: er nennt einen verbündeten lebenden Wolf (wird protokolliert) und wählt eine lebende Person der Fraktion Dorf; sie wird Trugbilderwolf mit ihrer alten Rolle als Scheinrolle und wacht ab der folgenden Nacht mit dem Rudel. Ein lebender Wächter am Tor macht sie stattdessen zum Dorfbewohner.
+- **Seelentauscher, Zustand (V-04, RM-DR-127.1):** A. Beide erhalten die neue Rolle wie beim Lehrling-Erbe: frische Einsätze, keine übernommenen Bindungen (Wolfskind ohne Vorbild, Lehrlingsbindung endet); eine Pflicht-Scheinrolle (Trugbilderwolf) wandert mit.
+- **Seelentauscher, Ablauf (V-05, RM-DR-127.3):** A. Jede Nacht bis zur Nutzung (einmal je Leben) zwei verschiedene Personen, lebend oder tot, er selbst erlaubt; lebende Betroffene erfahren ihre neue Rolle sofort privat.
+- **Seelentauscher und Wächter am Tor (V-06, RM-DR-127.2):** A. Auch eine tote Person, die eine Wolfsrolle erhielte, wird Dorfbewohner, solange ein Wächter am Tor lebt.
