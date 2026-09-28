@@ -238,6 +238,8 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return ApprenticeRules.validate_answer(s, prompt, p)
 	if InfoSteps.OWNERS.has(prompt.owner):
 		return InfoSteps.validate_answer(s, prompt, p)
+	if BondSteps.OWNERS.has(prompt.owner):
+		return BondSteps.validate_answer(s, prompt, p)
 	if prompt.owner == PendingPrompt.OWNER_SHADOW:
 		if DictRead.get_string(p, "stage") != "use":
 			return &"stage_mismatch"
@@ -332,6 +334,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				ApprenticeRules.answer(ctx, p)
 			elif InfoSteps.OWNERS.has(s.pending_prompt.owner):
 				InfoSteps.answer(ctx, p)
+			elif BondSteps.OWNERS.has(s.pending_prompt.owner):
+				BondSteps.answer(ctx, p)
 			elif s.pending_prompt.owner == PendingPrompt.OWNER_SHADOW:
 				_answer_shadow(ctx, bool(p["choice"]))
 			else:
@@ -513,6 +517,7 @@ static func _start_night(ctx: RuleContext) -> void:
 	s.protections.clear()
 	s.witch_actions.clear()
 	s.doom_offers.clear()
+	s.apple_steps.clear()
 	if s.night_plan.is_empty():
 		ctx.emit(GameEvent.NIGHT_STEP_SKIPPED, Visibility.GM, {"step": StepQueue.PACK, "reason": "no_living_wolf"})
 		return
@@ -535,8 +540,27 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_GUARD:
-			Protections.set_protection(s, prompt.actor_id, target)
+			if s.apple_steps.has(s.next_night_step):
+				Protections.add_extra(s, prompt.actor_id, target)  # zweiter Schutz durch einen Apfel
+			else:
+				Protections.set_protection(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.PROTECTION_SET, Visibility.GM, {"guardian_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_WIDOW:
+			# Schwarze Witwe (B-03, B-06): lebendes Paar des Loki → beide sterben am Morgen.
+			var partners := BondRules.living_partners(s, target)
+			if not partners.is_empty():
+				for id: int in [target] + partners:
+					s.death_marks.append({"target_id": id, "source_id": prompt.actor_id, "cause": String(KillEvent.CAUSE_BLACK_WIDOW)})
+			ctx.emit(GameEvent.WIDOW_STRUCK, Visibility.GM, {"widow_id": prompt.actor_id, "target_id": target, "partner_ids": partners, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_SHADOWWALKER:
+			if target != GameState.NO_TARGET:
+				s.shadow_links.append({"walker_id": prompt.actor_id, "partner_id": target})
+				s.players[prompt.actor_id].ability_uses["schattenwanderer:link"] = 1
+			ctx.emit(GameEvent.SHADOW_LINKED, Visibility.GM, {"walker_id": prompt.actor_id, "partner_id": target, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_SMITH:
@@ -644,10 +668,11 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	# Gift vor dem Rudelangriff: Ursache und Reihenfolge wie beim früheren Sofort-Tod.
 	WitchStep.apply_poisons(ctx)
 	# Todesmarkierungen aus Nachtschritten (Kriegerin des Lichts, Blutpriester), in Reihenfolge der Markierung.
-	var marks := s.death_marks.duplicate(true)
-	s.death_marks.clear()
-	for mark: Dictionary in marks:
+	# Die Liste bleibt bis zum Ende bestehen: noch markierte Personen sterben an ihrer eigenen Markierung
+	# (z. B. beide Partner der Schwarzen Witwe), nicht an einer Todesfolge davor.
+	for mark: Dictionary in s.death_marks.duplicate(true):
 		KillPipeline.request_kill(ctx, int(mark["target_id"]), StringName(mark["cause"]), KillEvent.SOURCE_PLAYER, int(mark["source_id"]))
+	s.death_marks.clear()
 	# Giftwolf: fällige Vergiftungen (zwei Nächte nach der Giftpranke), unaufhaltbar.
 	for entry: Dictionary in s.wolf_poisons.duplicate():
 		if int(entry["due_night"]) == s.night_number:
@@ -668,6 +693,10 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	else:
 		ctx.emit(GameEvent.NO_NIGHT_KILL, Visibility.GM, {"night_number": s.night_number})
 	s.martyr_saves.clear()
+	# Äpfel gelten nur in der Nacht nach der Zuflucht (R-03).
+	for holder: int in s.apples.keys():
+		if int(s.apples[holder]) <= s.night_number:
+			s.apples.erase(holder)
 	if s.pack_extra_target_id != GameState.NO_TARGET:
 		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true)
 	s.pack_target_id = GameState.NO_TARGET

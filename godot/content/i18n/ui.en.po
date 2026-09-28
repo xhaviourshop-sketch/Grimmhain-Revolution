@@ -695,6 +695,30 @@ msgstr "Doom Warden"
 msgid "ui.role.verdammniswaechter.short"
 msgstr "Each night may redirect the werewolf attack to another offered person."
 
+msgid "ui.role.loki.name"
+msgstr "Loki"
+
+msgid "ui.role.loki.short"
+msgstr "In the first night binds two people as lovers or rivals."
+
+msgid "ui.role.rotkaeppchen.name"
+msgstr "Little Red Riding Hood"
+
+msgid "ui.role.rotkaeppchen.short"
+msgstr "Seeks refuge each night; whoever grants it gets an apple and a death chain."
+
+msgid "ui.role.schwarze_witwe.name"
+msgstr "Black Widow"
+
+msgid "ui.role.schwarze_witwe.short"
+msgstr "Werewolf in the pack; if she finds one of Loki's pairs, both die at dawn."
+
+msgid "ui.role.schattenwanderer.name"
+msgstr "Shadowwalker"
+
+msgid "ui.role.schattenwanderer.short"
+msgstr "Werewolf in the pack; links once, then the other one dies instead."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

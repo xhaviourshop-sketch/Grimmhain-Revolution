@@ -101,6 +101,10 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SCHUTZGEIST: false,    # Pflichtwahl einer lebenden Person
 	RoleCatalog.VERDAMMNISWAECHTER: false,  # Pflichturteil zwischen zwei Personen
 	RoleCatalog.MAERTYRERIN: false,    # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.LOKI: false,           # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.ROTKAEPPCHEN: false,   # Pflichtfrage nach Zuflucht
+	RoleCatalog.SCHWARZE_WITWE: false, # Pflichtwahl
+	RoleCatalog.SCHATTENWANDERER: false,  # „noch nicht“ ist eine Antwort (0 Ziele)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -156,6 +160,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if p.role_id == RoleCatalog.SCHUTZGEIST:
 			continue  # handelt nur tot (unten)
+		if p.role_id == RoleCatalog.SCHATTENWANDERER and p.ability_uses.has("schattenwanderer:link"):
+			continue
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
 	for id: int in s.players:
@@ -249,6 +255,10 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # kein Rudelopfer, er selbst ist das Opfer (S-15) oder kein Angebot möglich
 	if step_role(key) == RoleCatalog.MAERTYRERIN and GuardRoles.martyr_victim(s, actor) == GameState.NO_TARGET:
 		return &"no_decision"  # das Rudelopfer stirbt nicht (oder ist sie selbst)
+	if [RoleCatalog.ROTKAEPPCHEN, RoleCatalog.SCHWARZE_WITWE, RoleCatalog.SCHATTENWANDERER, RoleCatalog.LOKI].has(step_role(key)) and s.alive_ids().size() < 2:
+		return &"no_decision"  # keine andere lebende Person
+	if step_role(key) == RoleCatalog.SCHATTENWANDERER and s.players[actor].ability_uses.has("schattenwanderer:link"):
+		return &"no_decision"
 	return &""
 
 
@@ -281,6 +291,8 @@ static func drop_unactionable(ctx: RuleContext) -> void:
 static func begin(ctx: RuleContext, step_id: String) -> void:
 	var s := ctx.state
 	ctx.emit(GameEvent.STEP_BEGUN, Visibility.GM, {"step_id": step_id})
+	if not is_reaction_step(step_id):
+		_apply_apple(ctx)
 	var prompt := PendingPrompt.new()
 	prompt.id = s.next_prompt_id
 	s.next_prompt_id += 1
@@ -315,6 +327,15 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		ApprenticeRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == BOUND:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
+	elif BondSteps.OWNERS.has(step_kind(step_id)):
+		BondSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
+	elif step_kind(step_id) == RoleCatalog.SCHWARZE_WITWE or step_kind(step_id) == RoleCatalog.SCHATTENWANDERER:
+		# Witwe: Pflichtwahl einer anderen lebenden Person; Schattenwanderer: eine andere oder „noch nicht“.
+		prompt.owner = step_kind(step_id)
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.allowed_ids.erase(prompt.actor_id)
+		prompt.min_count = 1 if step_kind(step_id) == RoleCatalog.SCHWARZE_WITWE else 0
+		prompt.cancellable = true
 	elif s.night_plan[s.next_night_step] == ETERNAL:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_ETERNAL, -1)
 	elif InfoSteps.OWNERS.has(step_kind(step_id)):
@@ -390,6 +411,26 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.cancellable = true
 	s.pending_prompt = prompt
 	ctx.emit(GameEvent.PROMPT_OPENED, Visibility.GM, {"prompt": prompt.to_dict()})
+
+
+## Apfel (Rotkäppchen, R-02/R-03): Beginnt der erste Jede-Nacht-Schritt einer Person mit gültigem Apfel,
+## wird derselbe Schritt direkt danach ein zweites Mal eingeplant; der Apfel ist damit verbraucht.
+static func _apply_apple(ctx: RuleContext) -> void:
+	var s := ctx.state
+	var index := s.next_night_step
+	var key := s.night_plan[index]
+	var actor := step_actor(key)
+	if actor == -1 or s.apple_steps.has(index) or int(s.apples.get(actor, 0)) != s.night_number or not RoleCatalog.APPLE_ROLES.has(step_role(key)):
+		return
+	s.apples.erase(actor)
+	for i: int in s.apple_steps.size():
+		if s.apple_steps[i] > index:
+			s.apple_steps[i] += 1
+	s.night_plan.insert(index + 1, key)
+	s.night_step_status.insert(index + 1, STATUS_PENDING)
+	s.apple_steps.append(index + 1)
+	s.apple_steps.sort()
+	ctx.emit(GameEvent.APPLE_USED, Visibility.GM, {"player_id": actor, "step": String(key), "night": s.night_number})
 
 
 ## Überspringt den (bereits validierten, überspringbaren) erwarteten Nachtschritt.

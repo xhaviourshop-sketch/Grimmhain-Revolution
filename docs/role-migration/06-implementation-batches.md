@@ -277,7 +277,13 @@ Siehe §3.
 
 ### K6 · Bindungsmodell I
 
-**Rollen Charge K6 (3):** `loki`, `schwarze-witwe`, `schattenwanderer`
+**Rollen Charge K6 (0):** –
+
+**Nachtrag Rollenaudit:** `schattenwanderer` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `schwarze-witwe` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `loki` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** zwei Personen, deren Tode gekoppelt sind.
 - **Neue Systeme:** N-08, N-06 (Kettentod als Todesfolge).
@@ -349,7 +355,9 @@ Siehe §3.
 
 ### K10 · Bindungsmodell II
 
-**Rollen Charge K10 (2):** `rotkaeppchen`, `voodoo-priester`
+**Rollen Charge K10 (1):** `voodoo-priester`
+
+**Nachtrag Rollenaudit:** `rotkaeppchen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `parasit` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

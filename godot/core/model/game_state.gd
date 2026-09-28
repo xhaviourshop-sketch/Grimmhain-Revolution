@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations- und Schutzrollen)
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz- und Bindungsrollen)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -59,6 +59,11 @@ var weapons: Array = []              ## Waffen des Dorfschmieds [{holder_id, smi
 var martyr_saves: Array = []         ## Märtyrerin dieser Nacht [{martyr_id, victim_id}]
 var doom_offers: Dictionary = {}     ## Verdammniswächter: gezogenes Angebot dieser Nacht je Wächter-ID
 var ghost_alerts: int = 0            ## Schutzgeist hat in dieser Nacht einen Wolf gewählt (Anzahl, öffentlich am Morgen)
+var loki_pairs: Array = []           ## Paare des Loki [{loki_id, a, b, kind: love|rival, ended}]
+var shadow_links: Array = []         ## aktive Verknüpfungen [{walker_id, partner_id}]
+var red_chains: Array = []           ## Todesketten [{red_id, partner_id}], je Rotkäppchen höchstens eine
+var apples: Dictionary = {}          ## Apfel je Person-ID: Nacht, in der er gilt
+var apple_steps: Array[int] = []     ## Indizes der durch einen Apfel eingefügten Nachtschritte dieser Nacht
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -231,6 +236,11 @@ func to_dict() -> Dictionary:
 		"martyr_saves": martyr_saves.duplicate(true),
 		"doom_offers": _int_keys_to_dict(doom_offers),
 		"ghost_alerts": ghost_alerts,
+		"loki_pairs": loki_pairs.duplicate(true),
+		"shadow_links": shadow_links.duplicate(true),
+		"red_chains": red_chains.duplicate(true),
+		"apples": _int_keys_to_dict(apples),
+		"apple_steps": apple_steps.duplicate(),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -437,7 +447,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var marked_target := DictRead.get_int(item, "target_id", -1)
 		var marked_source := DictRead.get_int(item, "source_id", -1)
 		var mark_cause := StringName(DictRead.get_string(item, "cause"))
-		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE].has(mark_cause):
+		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW].has(mark_cause):
 			return null
 		s.death_marks.append({"target_id": marked_target, "source_id": marked_source, "cause": String(mark_cause)})
 	for item: Variant in DictRead.get_array(d, "detective_hints"):
@@ -489,6 +499,38 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.ghost_alerts = DictRead.get_int(d, "ghost_alerts")
 	if s.ghost_alerts < 0:
 		return null
+	for item: Variant in DictRead.get_array(d, "loki_pairs"):
+		if not item is Dictionary:
+			return null
+		var pair := {"loki_id": DictRead.get_int(item, "loki_id", -1), "a": DictRead.get_int(item, "a", -1), "b": DictRead.get_int(item, "b", -1),
+			"kind": DictRead.get_string(item, "kind"), "ended": DictRead.get_bool(item, "ended")}
+		if not s.players.has(int(pair["loki_id"])) or not s.players.has(int(pair["a"])) or not s.players.has(int(pair["b"])) or pair["a"] == pair["b"] or not ["love", "rival"].has(pair["kind"]):
+			return null
+		s.loki_pairs.append(pair)
+	for item: Variant in DictRead.get_array(d, "shadow_links"):
+		var walker := DictRead.get_int(item, "walker_id", -1) if item is Dictionary else -1
+		var linked := DictRead.get_int(item, "partner_id", -1) if item is Dictionary else -1
+		if not s.players.has(walker) or not s.players.has(linked) or walker == linked:
+			return null
+		s.shadow_links.append({"walker_id": walker, "partner_id": linked})
+	for item: Variant in DictRead.get_array(d, "red_chains"):
+		var red := DictRead.get_int(item, "red_id", -1) if item is Dictionary else -1
+		var chained := DictRead.get_int(item, "partner_id", -1) if item is Dictionary else -1
+		if not s.players.has(red) or not s.players.has(chained) or red == chained:
+			return null
+		s.red_chains.append({"red_id": red, "partner_id": chained})
+	var apple_map := DictRead.get_dict(d, "apples")
+	for key: Variant in apple_map:
+		if not String(key).is_valid_int() or not s.players.has(String(key).to_int()) or not DictRead.is_int_like(apple_map[key]) or int(apple_map[key]) < 1:
+			return null
+		s.apples[String(key).to_int()] = int(apple_map[key])
+	var extra_steps: Variant = DictRead.to_int_array(DictRead.get_array(d, "apple_steps"))
+	if extra_steps == null:
+		return null
+	s.apple_steps = extra_steps
+	for i: int in s.apple_steps:
+		if i < 1 or i >= s.night_plan.size() or s.night_plan[i] != s.night_plan[i - 1]:
+			return null
 	for item: Variant in DictRead.get_array(d, "wolf_children"):
 		if not item is Dictionary:
 			return null
@@ -525,6 +567,8 @@ static func from_dict(d: Dictionary) -> GameState:
 	if not ApprenticeRules.state_is_consistent(s):
 		return null
 	if s.pending_prompt != null and InfoSteps.OWNERS.has(s.pending_prompt.owner) and not InfoSteps.matches_state(s, s.pending_prompt):
+		return null
+	if s.pending_prompt != null and BondSteps.OWNERS.has(s.pending_prompt.owner) and not BondSteps.matches_state(s, s.pending_prompt):
 		return null
 	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_APPRENTICE and not ApprenticeRules.matches_state(s, s.pending_prompt):
 		return null

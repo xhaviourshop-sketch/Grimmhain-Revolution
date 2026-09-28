@@ -92,6 +92,11 @@ const SHIELD_GIVEN := &"ShieldGiven"            ## Schild des Schutzgeists verge
 const GHOST_WOLF_ALERT := &"GhostWolfAlert"     ## Schutzgeist hat einen Wolf gewählt (öffentlich, ohne Namen)
 const DOOM_JUDGED := &"DoomJudged"              ## Urteil des Verdammniswächters (nur Spielleiter)
 const MARTYR_CHOSEN := &"MartyrChosen"          ## Märtyrerin opfert sich für das Rudelopfer (nur Spielleiter)
+const LOKI_BOUND := &"LokiBound"                ## Paar des Loki (nur Spielleiter)
+const RED_REFUGE := &"RedRefuge"                ## Zuflucht des Rotkäppchens, gewährt oder nicht (nur Spielleiter)
+const WIDOW_STRUCK := &"WidowStruck"            ## Wahl der Schwarzen Witwe mit gefundenem Paar (nur Spielleiter)
+const SHADOW_LINKED := &"ShadowLinked"          ## Verknüpfung des Schattenwanderers (nur Spielleiter)
+const APPLE_USED := &"AppleUsed"                ## Apfel verdoppelt einen Nachtschritt (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

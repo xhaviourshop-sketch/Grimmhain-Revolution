@@ -31,6 +31,12 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		return null
 	if _fenrir_survives(ctx, target, cause, source_kind):
 		return null
+	# Schattenwanderer (B-04, B-07): ein tatsächlicher Tod trifft stattdessen die verknüpfte Person.
+	var swapped := BondRules.shadow_partner(s, target_id, source_kind)
+	if swapped != GameState.NO_TARGET:
+		ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": target_id, "cause": cause, "source_kind": source_kind,
+			"protection": RoleCatalog.SCHATTENWANDERER, "sources": [RoleCatalog.SCHATTENWANDERER], "redirected_to": swapped, "night": s.night_number})
+		return request_kill(ctx, swapped, cause, source_kind, source_id, trigger_effects, pierce)
 	var dead_before := s.players.size() - s.alive_ids().size()  # nur aktuell Tote (RM-DR-138.3)
 	var record := KillEvent.new()
 	record.target_id = target_id
@@ -57,6 +63,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	_end_parasite_bonds(ctx, target, trigger_effects)
 	s.wolf_poisons = s.wolf_poisons.filter(func(e: Dictionary) -> bool: return int(e["target_id"]) != target.id)
 	s.death_marks = s.death_marks.filter(func(m: Dictionary) -> bool: return int(m["target_id"]) != target.id)
+	BondRules.on_death(ctx, target, trigger_effects)
 	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
 	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:

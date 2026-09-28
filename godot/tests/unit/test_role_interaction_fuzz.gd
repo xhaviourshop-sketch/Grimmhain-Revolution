@@ -15,10 +15,10 @@ extends TestCase
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
 	"wolfskind", "spiegelwolf", "manipulator", "lehrling", "sensentraeger", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker",
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
-	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter"]
-const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus"]
+	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer"]
+const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
-const GAMES := 120
+const GAMES := 160
 const MAX_COMMANDS := 160
 const CODEC_EVERY := 20
 const FORBIDDEN_PUBLIC_KEYS: Array[String] = ["role_id", "appears_as", "cause", "faction", "shown_role", "truth_role",
@@ -30,9 +30,9 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"WolfChildTransformed", "ApprenticeBound", "RoleChanged", "ExecutionRedirected", "MirrorNotTriggered", "ReactionResolved",
 	"StepDropped", "PromptCancelled", "KillIgnored", "WinConfirmed", "WinRejected", "GmCorrected", "StepSkipped",
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
-	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen"]
+	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
-	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE"]
+	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN"]
 
 var _rng := RandomNumberGenerator.new()
 var _game_label := ""
@@ -403,6 +403,17 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				if not chosen.has(t):
 					chosen.append(t)
 			return Command.answer_stage_targets(p.id, String(p.stage), chosen)
+		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED:
+			if p.stage != BondSteps.STAGE_TARGETS:
+				return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.6)
+			var bond_pool := _alive_in(s, p.allowed_ids)
+			var bond_picks: Array = []
+			var wanted := p.max_count if (p.min_count > 0 or _rng.randf() < 0.8) else 0
+			while bond_picks.size() < wanted and bond_picks.size() < bond_pool.size():
+				var b: int = _pick(bond_pool)
+				if not bond_picks.has(b):
+					bond_picks.append(b)
+			return Command.answer_stage_targets(p.id, String(p.stage), bond_picks)
 		PendingPrompt.OWNER_SHADOW:
 			return Command.answer_choice(p.id, "use", _rng.randf() < 0.3)
 		PendingPrompt.OWNER_APPRENTICE:
@@ -495,7 +506,7 @@ func _check_prompt_actor(s: GameState, prompt: Dictionary, label: String) -> voi
 	# Ausnahme zu G-PH-2: der Schutzgeist handelt in der ersten Nacht nach seinem Tod (S-04).
 	assert_true(s.players[actor].alive != (role == RoleCatalog.SCHUTZGEIST), "%s: %s nur für Lebende (Schutzgeist: nur tot)" % [label, step])
 	assert_eq(s.players[actor].role_id, role, "%s: %s nur mit geplanter Rolle" % [label, step])
-	assert_false((prompt["allowed_ids"] as Array).has(actor) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER].has(role), "%s: %s ohne Selbstwahl" % [label, step])
+	assert_false((prompt["allowed_ids"] as Array).has(actor) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER, RoleCatalog.LOKI].has(role), "%s: %s ohne Selbstwahl" % [label, step])
 
 
 func _check_codec(s: GameState, log: Array[Command], label: String) -> void:

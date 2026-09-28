@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 50 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 54 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 22 |
+| fehlend, Entscheidung nötig (`decision-required`) | 18 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 22 fehlende) | 3 |
-| Legacy-Befund `legacy-contradictory` (nur 22 fehlende) | 12 |
-| Legacy-Befund `legacy-broken` (nur 22 fehlende) | 5 |
-| Legacy-Befund `not-found` (nur 22 fehlende) | 2 |
+| Legacy-Befund `legacy-verified` (nur 18 fehlende) | 2 |
+| Legacy-Befund `legacy-contradictory` (nur 18 fehlende) | 9 |
+| Legacy-Befund `legacy-broken` (nur 18 fehlende) | 5 |
+| Legacy-Befund `not-found` (nur 18 fehlende) | 2 |
 
-<!-- check:counts total=72 implemented=50 remaining=22 -->
+<!-- check:counts total=72 implemented=54 remaining=18 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -36,7 +36,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 
 | # | ID | DE / EN | Fraktion | Akte | Nachtpriorität (Legacy) | Godot | Legacy | Auto | Mechanik (primär) | Größe / Risiko | Charge | 1.0 | Detail |
 |---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `loki` | Loki / Loki | Dorf | I, II, III, IV | 0.1 (once) | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | M / mittel | K6 | B | [03](03-remaining-roles-analysis.md#loki) · [Dossier](dossiers/village-1.md#loki) |
+| 1 | `loki` | Loki / Loki | Dorf | I, II, III, IV | 0.1 (once) | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | M / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#loki) |
 | 2 | `nachtwaechter` | Nachtwächter / Night Warden | Dorf | I | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Informationsrolle | S / niedrig | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#nachtwaechter) |
 | 3 | `die-gebundenen` | Die Gebundenen / The Bound | Dorf | I | 0.5 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#die-gebundenen) |
 | 4 | `waldhexe` | Waldhexe / Witch of the Woods | Dorf | I, II | 3.4 | `implemented-and-tested` | `legacy-verified` | `automatic` | mehrstufige Nachtfähigkeit | L / hoch | – | Basis | [02](02-implemented-roles-audit.md) |
@@ -53,10 +53,10 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 15 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | Wölfe | IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | sonstige Spezialmechanik | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#siegreicher-wolf) |
 | 16 | `seuchenwolf` | Seuchenwolf / Blight Wolf | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Wolfsangriff-Modifikation | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#seuchenwolf) |
 | 17 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Wölfe | IV | 2.5 | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | M / mittel | K11 | – | [03](03-remaining-roles-analysis.md#schicksalswolf) · [Dossier](dossiers/wolves-a.md#schicksalswolf) |
-| 18 | `schattenwanderer` | Schattenwanderer / Shadowwalker | Wölfe | II | 2.6 (once) | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | M / hoch | K6 | – | [03](03-remaining-roles-analysis.md#schattenwanderer) · [Dossier](dossiers/wolves-a.md#schattenwanderer) |
+| 18 | `schattenwanderer` | Schattenwanderer / Shadowwalker | Wölfe | II | 2.6 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Verknüpfte Personen | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#schattenwanderer) |
 | 19 | `giftwolf` | Giftwolf / Poison Wolf | Wölfe | II | 2.7 | `implemented-and-tested` | `legacy-verified` | `automatic` | Tötung | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#giftwolf) |
 | 20 | `rudelvater` | Rudelvater / Packfather | Wölfe | II | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Wolfsangriff-Modifikation | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#rudelvater) |
-| 21 | `schwarze-witwe` | Schwarze Witwe / Black Widow | Wölfe | IV | 2.8 | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | M / mittel | K6 | – | [03](03-remaining-roles-analysis.md#schwarze-witwe) · [Dossier](dossiers/wolves-b.md#schwarze-witwe) |
+| 21 | `schwarze-witwe` | Schwarze Witwe / Black Widow | Wölfe | IV | 2.8 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#schwarze-witwe) |
 | 22 | `der-weise` | Der Weise / The Elder | Dorf | I, II, III, IV | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Wolfsangriff-Modifikation | M / hoch | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#der-weise) |
 | 23 | `verdammniswaechter` | Verdammniswächter / Doom Warden | Dorf | II, IV | 2.3 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Zielumleitung | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#verdammniswaechter) |
 | 24 | `lehrling` | Lehrling / Apprentice | Dorf | II, III | 1.1 (once) | `implemented-and-tested` | `legacy-broken` | `automatic` | Rollenwechsel | L / hoch | – | Basis | [02](02-implemented-roles-audit.md) |
@@ -83,7 +83,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | III, IV | 2.1 | `implemented-and-tested` | `legacy-broken` | `automatic` | sonstige Spezialmechanik | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#albtraumwolf) |
 | 46 | `cerberus` | Cerberus / Cerberus | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | S / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#cerberus) |
 | 47 | `ritter` | Ritter / Knight | Dorf | I | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Todesreaktion | M / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#ritter) |
-| 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | III | 7.4 | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | L / hoch | K10 | – | [03](03-remaining-roles-analysis.md#rotkaeppchen) · [Dossier](dossiers/village-3.md#rotkaeppchen) |
+| 48 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Dorf | III | 7.4 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | L / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#rotkaeppchen) |
 | 49 | `selbstmoerder` | Selbstmörder / Death Seeker | Einzelsieg | I | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Einzelsieg | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-a.md#selbstmoerder) |
 | 50 | `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter | Dorf | IV | 3.2 | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | M / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#kopfgeldjaeger) |
 | 51 | `koenig` | König / King | Dorf | III, IV | 4.4 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#koenig) |

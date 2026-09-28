@@ -16,13 +16,10 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 
 | ID | Fraktion | Godot | Legacy | Auto | Mechanik (primär) | sekundär | Größe / Risiko | Charge | 1.0 |
 |---|---|---|---|---|---|---|---|---|---|
-| [`loki`](#loki) | Dorf | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Einmalfähigkeit, Todesreaktion | M / mittel | K6 | B |
 | [`rattenfaenger`](#rattenfaenger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | mehrstufige Nachtfähigkeit | M / mittel | K9 | B |
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
 | [`koenig-lykaon`](#koenig-lykaon) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | Fraktionswechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit | M / mittel | K12 | C |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
-| [`schattenwanderer`](#schattenwanderer) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Verknüpfte Personen | Zielumleitung, Einmalfähigkeit | M / hoch | K6 | – |
-| [`schwarze-witwe`](#schwarze-witwe) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Verknüpfte Personen | Tötung | M / mittel | K6 | – |
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
 | [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
@@ -30,7 +27,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | [`seelentauscher`](#seelentauscher) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | Einmalfähigkeit, Fraktionswechsel | L / kritisch | K12 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
-| [`rotkaeppchen`](#rotkaeppchen) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Verknüpfte Personen | Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik | L / hoch | K10 | – |
 | [`dr-victor-frankenstein`](#dr-victor-frankenstein) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Wiederbelebung | Rollenwechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit, Totenkarten-Interaktion | L / hoch | K13 | – |
 | [`nekromant`](#nekromant) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Schutz | Zielumleitung, Einzelsieg, Tagfähigkeit | L / hoch | K15 | – |
 | [`kartenschlucker`](#kartenschlucker) | Einzelsieg | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | Einzelsieg, Tötung, Schutz | L / hoch | K15 | – |
@@ -44,27 +40,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 **Automation:** Der Wert ist das Ziel nach Klärung der Entscheidungen. `assisted` heißt: App führt, rechnet und protokolliert, eine Spielleitereingabe bleibt Teil der Regel (z. B. Tischfrage, freie Zahl). `manual-only` heißt: bis zur Regelfestlegung nur Notiz und Hinweis.
 
 ## 2. Rollen im Einzelnen
-
-### `loki`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Loki / Loki |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / I, II, III, IV / 0.1 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Liebeskette funktioniert wie beschrieben; die Rivalen-Option verspricht einen Fluch ohne eigene Wirkung (Text/Code-Lücke, kein Defekt). |
-| DE/EN-Vergleich | JA. "einmalig" = "Once per game"; Ziele je zwei; Rivalen als Fluch in beiden. EN lässt nur den Flavor-Satz "Eros und Eris leihen dir ihre Kraft" weg. |
-| Automationsziel | `automatic`: Wahl wird vom SL eingegeben, Bindung und Liebeskummer-Kette sind deterministisch. |
-| Mechanik | primär: Verknüpfte Personen; sekundär: Einmalfähigkeit, Todesreaktion |
-| Größe / Risiko | M / mittel. Kettenfixpunkt und Wiederbelebung sind die Fehlerquellen. |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (Modus + 2 Ziele, abbrechbar), KillPipeline (Folgetod als Kette), Reaktionswarteschlange, Ereignis-Sichtbarkeit (gm), StateCodec, Replay, GmCorrections. |
-| Neue Systeme | Liebes-/Bindungsmodell (Paar-Bindung mit Typ love/rival, analog WolfChildBond/ApprenticeBond, inkl. Verhalten bei Wiederbelebung); dauerhafte Statusmarker für Rivalen. |
-| Abhängigkeiten | Schwarze Witwe (Pflichtpaar, liest Bindung), Dr. Victor Frankenstein/Kutscher (Wiederbelebung), Lehrling (Erbe), Nekromant/Kartenschlucker/Hades (Schilde in `applyKill`). |
-| Widersprüche | RM-C-082 Rivalen-Wirkung; RM-C-083 Nacht-1 vs. einmal |
-| Entscheidungen | RM-DR-101 (Rolle); übergreifend RM-DR-009, RM-DR-011, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K6 / ab Option B |
-| Belegsicherheit | hoch für Code; nicht im Browser verifiziert, ob React-Overlay-Spiegelung den Dialog vollständig bedient. |
-| Detail | [Dossier](dossiers/village-1.md#loki) |
 
 ### `rattenfaenger`
 
@@ -149,48 +124,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch; nicht verifiziert: Laufzeit der `startMulti`-Abbruchpfade. |
 | Detail | [Dossier](dossiers/wolves-a.md#schicksalswolf) |
-
-### `schattenwanderer`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Schattenwanderer / Shadowwalker |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / II / 2.6 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Kernumlenkung entspricht dem Text innerhalb einer Partie; der Rundenwechsel-Bug liegt außerhalb der Partie |
-| DE/EN-Vergleich | JA, semantisch gleich. |
-| Automationsziel | `automatic` |
-| Mechanik | primär: Verknüpfte Personen; sekundär: Zielumleitung, Einmalfähigkeit |
-| Größe / Risiko | M / hoch |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt, KillPipeline (Umlenkungsstufe vor Schilden), Ereignis-Sichtbarkeit, StateCodec, GmCorrections. |
-| Neue Systeme | Bindungsmodell (Paar mit Richtung, Aktivstatus, Partie-gebunden); Umlenkungsregel mit eigener Ursache/Quelle. |
-| Abhängigkeiten | Rudelvater (Reihenfolge), Parasit, Nekromant/Kartenschlucker/Hades (Schilde beim Partner), Werwolf, Lynch/ExecutionRules, Frankenstein/Kutscher (Wiederbelebung), Dämonischer Wolf, Kopfgeldjäger, Henker. |
-| Widersprüche | keine belegten Text-/Code-Widersprüche |
-| Entscheidungen | RM-DR-110 (Rolle); übergreifend RM-DR-009, RM-DR-011, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K6 / in keiner Option |
-| Belegsicherheit | hoch. |
-| Detail | [Dossier](dossiers/wolves-a.md#schattenwanderer) |
-
-### `schwarze-witwe`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Schwarze Witwe / Black Widow |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / IV / 2.8 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Kernmechanik (Paar finden, beide sterben am Morgen) ist nachvollziehbar umgesetzt; Text verspricht automatische Loki-Wahl, Code verlangt Pflichtwahl; EN-Text ohne Zeitpunkt. Die Bugs betreffen Randpfade (Rundenwechsel) bzw. die allgemeine Werwolf-Zeile. |
-| DE/EN-Vergleich | NEIN. EN fehlt der Zeitpunkt "am folgenden Tag" (EN lässt offen, ob sofort oder später gestorben wird). Übrige Teile (automatische Loki-Wahl, jede Nacht ein Spieler, Verliebter oder Verhasster, beide sterben) gleich. |
-| Automationsziel | `automatic`: Ziel wählt der SL per Prompt, Paarprüfung und Morgen-Tod sind deterministisch. |
-| Mechanik | primär: Verknüpfte Personen; sekundär: Tötung |
-| Größe / Risiko | M / mittel. Braucht Bindungsmodell und verzögerten Tod; Reihenfolge im Morgen muss mit Zeitwächter, Märtyrerin, Schutz sauber definiert sein. |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt, KillPipeline (Ursache `BLACK_WIDOW`, zeitlich DAWN), InfoRecord (SL-Info "Paar gefunden/kein Paar"), Ereignis-Sichtbarkeit (gm), Reaktionswarteschlange (Ritter-Vergeltung als Folge), StateCodec, Replay, WinRules. |
-| Neue Systeme | Liebes-/Bindungsmodell (Loki-Paare Liebe/Rivalen als persistente Bindung, nicht nur Flags); zeitlich verzögerte Effekte (Tod zum nächsten Morgen, persistiert). |
-| Abhängigkeiten | Loki (Pflicht, liefert Paare), Zeitwächter (Reihenfolge), Ritter (Vergeltung bei `BLACK_WIDOW`), Rudelvater/Nekromant/Kartenschlucker/Hades/Schattenwanderer/Parasit (Schilde in `applyKill`), Besessener Wolf (siehe Gruppenbeobachtung zur Morgen-Drain-Kollision). |
-| Widersprüche | RM-C-019 Loki "automatisch gewählt"; RM-C-020 Todeszeitpunkt; RM-C-021 Zeitwächter-Einfrieren |
-| Entscheidungen | RM-DR-113 (Rolle); übergreifend RM-DR-004; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K6 / in keiner Option |
-| Belegsicherheit | hoch für Handler, Morgenreihenfolge, Setup-Pflicht, `loverId`-Lücke. Nicht verifiziert: tatsächliches Laufzeitverhalten (nicht ausgeführt); ob Nutzer `clearRolesNewRound` in der Praxis vor einer neuen Runde verwenden. --- |
-| Detail | [Dossier](dossiers/wolves-b.md#schwarze-witwe) |
 
 ### `pestbringerin`
 
@@ -338,27 +271,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K10 / in keiner Option |
 | Belegsicherheit | hoch; Ursachenliste per `rg "VOODOO_PUPPET"` vollständig (`night:255,442`, `help:265`, `gh:2426`, `ui:407`). |
 | Detail | [Dossier](dossiers/solos-a.md#voodoo-priester) |
-
-### `rotkaeppchen`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Rotkäppchen / Little Red Riding Hood |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / III / 7.4 |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Kette und Zuflucht funktionieren; der Apfel wirkt nur für einen Teil der Rollen, und Zielbeschränkung/Dauer weichen vom Text ab bzw. sind dort nicht geregelt. |
-| DE/EN-Vergleich | JA. Beide lassen gleichermaßen offen, ob die Todeskette nur bei gewährter Zuflucht entsteht ("Außerdem"/"also"), wie lange sie gilt und ob "anderen Spieler" "nicht sie selbst" oder "jede Nacht ein anderer" bedeutet. |
-| Automationsziel | `assisted`: Zuflucht und Zustimmung sind Entscheidungen am Tisch (SL tippt), Kette und Apfel-Verfall kann der Kern automatisch führen. |
-| Mechanik | primär: Verknüpfte Personen; sekundär: Todesreaktion, mehrstufige Nachtfähigkeit, sonstige Spezialmechanik |
-| Größe / Risiko | L / hoch. Zwei gekoppelte Mechaniken (Kette + Apfel), Apfel berührt jede Nachtfähigkeit, Kettenrekursion in der KillPipeline. |
-| Vorhandene Godot-Systeme | PendingPrompt (Ziel → Zustimmung → Bestätigung), StepQueue, KillPipeline (Folgetod mit eigener Ursache, `03` Zeile 230), Reaktionswarteschlange, RoleTransition (Kette bei Rollenwechsel), StateCodec, Replay, Ereignis-Sichtbarkeit, GmCorrections. |
-| Neue Systeme | Bindungsmodell (Paarbindung mit Gültigkeit, analog Liebespaar), dauerhafter Statusmarker "Apfel" mit Verbrauchsregel, "repeat step"/Doppel-Ausführung in StepQueue, ggf. Zielhistorie. |
-| Abhängigkeiten | alle Rollen mit Nachtfähigkeit (Apfel), König/Frankenstein/Dorfschmied/Pestbringerin/Prophet (`APPLE_RESET_FLAGS`), Seelentauscher, Parasit, Kartenschlucker/Hades/Nekromant (Schilde), Ritter (Kettentod löst keine Vergeltung aus), Loki (zweites Bindungssystem). |
-| Widersprüche | RM-C-135 Wölfe als Zuflucht; RM-C-136 Apfel-Wirkung; RM-C-137 Dauer der Kette; RM-C-138 Ablehnung; RM-C-139 Mehrfache Zuflucht beim Selben |
-| Entscheidungen | RM-DR-137 (Rolle); übergreifend RM-DR-009, RM-DR-011; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K10 / in keiner Option |
-| Belegsicherheit | hoch für Kette und Apfel-Mechanik (statisch belegt). Nicht zur Laufzeit geprüft: Zusammenspiel `startConfirm`-Overlay mit gleichzeitigem `center` anderer Rollen. --- |
-| Detail | [Dossier](dossiers/village-3.md#rotkaeppchen) |
 
 ### `dr-victor-frankenstein`
 

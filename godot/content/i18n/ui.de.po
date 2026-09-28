@@ -695,6 +695,30 @@ msgstr "Verdammniswächter"
 msgid "ui.role.verdammniswaechter.short"
 msgstr "Lenkt jede Nacht den Wolfsangriff wahlweise auf eine angebotene andere Person."
 
+msgid "ui.role.loki.name"
+msgstr "Loki"
+
+msgid "ui.role.loki.short"
+msgstr "Verbindet in der ersten Nacht zwei Personen als Liebende oder Rivalen."
+
+msgid "ui.role.rotkaeppchen.name"
+msgstr "Rotkäppchen"
+
+msgid "ui.role.rotkaeppchen.short"
+msgstr "Sucht jede Nacht Zuflucht; wer sie gewährt, erhält einen Apfel und eine Todeskette."
+
+msgid "ui.role.schwarze_witwe.name"
+msgstr "Schwarze Witwe"
+
+msgid "ui.role.schwarze_witwe.short"
+msgstr "Wolf im Rudel; trifft sie ein Paar des Loki, sterben beide am Morgen."
+
+msgid "ui.role.schattenwanderer.name"
+msgstr "Schattenwanderer"
+
+msgid "ui.role.schattenwanderer.short"
+msgstr "Wolf im Rudel; verknüpft sich einmal, dann stirbt statt eines von beiden der andere."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

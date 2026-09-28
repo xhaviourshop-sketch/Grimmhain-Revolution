@@ -6,9 +6,19 @@ extends RefCounted
 ## Schutz eines Schutzengels für diese Nacht oder null.
 static func of_guardian(s: GameState, guardian_id: int) -> Protection:
 	for p: Protection in s.protections:
-		if p.guardian_id == guardian_id and p.night == s.night_number:
+		if p.guardian_id == guardian_id and p.night == s.night_number and not p.extra:
 			return p
 	return null
+
+
+## Zweiter Schutz desselben Engels in dieser Nacht (verdoppelter Schritt durch einen Apfel).
+static func add_extra(s: GameState, guardian_id: int, target_id: int) -> void:
+	var p := Protection.new()
+	p.guardian_id = guardian_id
+	p.target_id = target_id
+	p.night = s.night_number
+	p.extra = true
+	s.protections.append(p)
 
 
 ## Setzt oder ersetzt den Schutz eines Schutzengels für die laufende Nacht.

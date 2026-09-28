@@ -40,6 +40,11 @@ const OWNER_SMITH := &"dorfschmied"
 const OWNER_GHOST := &"schutzgeist"
 const OWNER_DOOM := &"verdammniswaechter"
 const OWNER_MARTYR := &"maertyrerin"
+const OWNER_LOKI := &"loki"
+const OWNER_RED := &"rotkaeppchen"
+const OWNER_WIDOW := &"schwarze-witwe"
+const OWNER_SHADOWWALKER := &"schattenwanderer"
+const KIND_BOND := &"bond_choice"  ## Bindungsschritt mit Stufen (BondSteps)
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0
@@ -102,6 +107,9 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 			return null
 	elif InfoSteps.OWNERS.has(p.owner):
 		if not InfoSteps.STAGES.has(p.stage):
+			return null
+	elif BondSteps.OWNERS.has(p.owner):
+		if not BondSteps.STAGES.has(p.stage):
 			return null
 	elif p.stage != &"":
 		return null

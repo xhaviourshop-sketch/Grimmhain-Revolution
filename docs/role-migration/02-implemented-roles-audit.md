@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 50 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 50 |
+| im RoleCatalog vorhandene Rollen | 54 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 54 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 48 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 52 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -97,6 +97,10 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 48 | `schutzgeist` | Schutzgeist / Guardian Spirit (Rollentext) | village | nein | 56 (tot) | `step_queue.gd` (Ausnahme G-PH-2), `kill_pipeline.gd`, `rules_engine.gd` (`shields`, Meldung) | `test_protection_roles.gd`, fuzz | RM-DR-148, S-04, S-10, S-11, S-12, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 | 49 | `dorfschmied` | Dorfschmied / Village Blacksmith (Rollentext) | village | nein | 17 | `kill_pipeline.gd` (`weapons`, Reaktion `smith`), `rules_engine.gd` | `test_protection_roles.gd`, fuzz | RM-DR-154, S-06, S-10, S-11, S-12, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `assisted` | `legacy-verified` |
 | 50 | `verdammniswaechter` | Verdammniswächter / Doom Warden (Rollentext) | village | nein | 23 | `guard_roles.gd` (`doom_offer`, Seed), `rules_engine.gd` | `test_protection_roles.gd`, fuzz | RM-DR-115, S-07, S-08, S-13, S-15, DECISION-LOG „Rollenaudit · Schutzrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 51 | `loki` | Loki (Rollentext) | village | nein | 4 (nur Nacht 1) | `bond_steps.gd` (Stufen targets/mode), `bond_rules.gd` (Liebeskummer) | `test_bond_roles.gd`, fuzz | RM-DR-101, B-01, B-02, B-05, B-08, DECISION-LOG „Rollenaudit · Bindungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 52 | `schwarze-witwe` | Schwarze Witwe / Black Widow (Rollentext) | wolves | ja | 28 | `rules_engine.gd` (Todesmarkierung), `bond_rules.gd` (`living_partners`) | `test_bond_roles.gd`, fuzz | RM-DR-113.1, B-03, B-06, DECISION-LOG „Rollenaudit · Bindungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 53 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood (Rollentext) | village | nein | 74 | `bond_steps.gd` (Stufen targets/grant), `bond_rules.gd` (Kette), `step_queue.gd` (Apfel) | `test_bond_roles.gd`, fuzz | RM-DR-137, R-01 bis R-04, B-08, DECISION-LOG „Rollenaudit · Bindungsrollen“ | `implemented-and-tested` | `assisted` | `legacy-contradictory` |
+| 54 | `schattenwanderer` | Schattenwanderer / Shadowwalker (Rollentext) | wolves | ja | 26 | `bond_rules.gd` (`shadow_partner`), `kill_pipeline.gd` | `test_bond_roles.gd`, fuzz | RM-DR-110, B-04, B-07, DECISION-LOG „Rollenaudit · Bindungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -359,6 +363,26 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht nach dem Rudel (Priorität 23), wenn ein erstes Rudelopfer lebt, das nicht er selbst ist: die App zieht einmal je Nacht über den Seed ein Angebot aus lebenden Nicht-Wölfen außer Opfer und ihm (`doom_offers`); er wählt Opfer oder Angebot. Die gewählte Person wird zum Rudelopfer; alle Regeln des Rudelangriffs gelten.
 - **Tests:** Angebot, gleiche Ziehung nach Abbruch, Umlenkung, Schutz bleibt, Wächter als Opfer.
 - **Grenzen:** Der Rollentext „umgeht alle Schutzfähigkeiten“ gilt nach S-07 nicht.
+
+### 4.51 `loki`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nur in Nacht 1 (Priorität 4, nach den Blockern), freiwillig: zwei verschiedene Lebende (er selbst erlaubt), dann Liebende oder Rivalen (`loki_pairs`). Stirbt ein Liebender mit Todesfolgen, stirbt der andere sofort (`LOVER_HEARTBREAK`), außer er ist in dieser Nacht ohnehin todesmarkiert; jeder Tod beendet das Paar. Rivalen sind nur Marker.
+- **Tests:** Nacht 1, Selbstwahl, Liebeskummer, beendetes Paar nach Wiederbelebung, Rivalen, Fluch.
+- **Grenzen:** –
+
+### 4.52 `schwarze-witwe`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Wolf im Rudel mit eigenem Schritt (Priorität 28): Pflichtwahl einer anderen Lebenden; gehört sie zu einem lebenden, nicht beendeten Loki-Paar, erhalten Ziel und Partner eine Todesmarkierung und sterben am Morgen (`BLACK_WIDOW`).
+- **Tests:** Paar, Rivalen, kein Paar, markierte Person wacht nicht auf, Partner stirbt durch die Witwe.
+- **Grenzen:** RM-DR-113.2 (Zeitwächter) folgt mit dem Zeitwächter; die Setup-Pflicht „Loki im Spiel“ folgt mit der Setup-Prüfung.
+
+### 4.53 `rotkaeppchen`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht (Priorität 74) Pflichtfrage an eine andere Lebende; gewährt sie Zuflucht, ersetzt die neue Todeskette die alte (`red_chains`) und sie erhält einen Apfel für die folgende Nacht (`apples`). Der Apfel plant den ersten Jede-Nacht-Schritt der Person (`RoleCatalog.APPLE_ROLES`) direkt ein zweites Mal ein (`apple_steps`); beim Schutzengel entsteht ein zusätzlicher Schutz (`Protection.extra`). Kettentod `RED_CHAIN`.
+- **Tests:** Kette, Ablehnung, Kettentod, Apfel beim Orakel, Schutzengel doppelt, Richter wirkungslos, Verfall.
+- **Grenzen:** Der Apfel verlängert den gespeicherten Nachtplan um einen Schritt; das ist die einzige Planänderung während der Nacht.
+
+### 4.54 `schattenwanderer`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Wolf im Rudel mit eigenem Schritt (Priorität 26), jede Nacht bis zur Nutzung (`schattenwanderer:link`): eine andere Lebende oder „noch nicht“. Stirbt eine Seite tatsächlich (nach allen Schutzwirkungen und Schilden, nicht bei Korrektur), stirbt stattdessen die andere mit derselben Ursache und Quelle; die Verknüpfung ist verbraucht.
+- **Tests:** Schutz verhindert Umlenkung, Rudelangriff umgelenkt, Lynch umgelenkt und gezählt, Korrektur nicht.
+- **Grenzen:** Ein umgelenkter Lynch des Weisen löst keinen Fluch aus.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 
