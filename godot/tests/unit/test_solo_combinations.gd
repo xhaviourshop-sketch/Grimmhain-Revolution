@@ -1,7 +1,8 @@
 extends TestCase
 ## Kombinationen der Einzelsiegrollen Teil 2/3 (Feuerteufel, Voodoo-Priester, Nekromant) mit Schattenwanderer und
 ## persönlichen Schilden: vollständig aufgelöste Ketten mit Ursache, Quelle, Ziel, Ereignisreihenfolge und
-## Siegprüfung erst nach der ganzen Kette (DR-14).
+## Siegprüfung erst nach der ganzen Kette (DR-14). Dazu gezielte Feuerteufel-Regressionen für seltene Mechaniken
+## (Apfel, Lehrling-Erbe, Seelentausch, Brand an Märtyrerin, Schattenwanderer und Ewigen).
 
 const NK := "nekromant"
 const D := "dorfbewohner"
@@ -60,7 +61,9 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			var p := s.pending_prompt
 			var key := p.step_id.get_slice(":", 3) + (":" + p.step_id.get_slice(":", 4) if p.step_id.get_slice_count(":") > 4 else "")
 			var staged := "%s@%s" % [key, p.stage]
-			if answers.has(staged):
+			if answers.has(staged) and answers[staged] is Callable:
+				cmd = (answers[staged] as Callable).call(p)
+			elif answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK:
 				cmd = Command.answer_prompt(p.id, [])
@@ -179,3 +182,71 @@ func test_shield_before_shadow_link_and_after_personal_shield() -> void:
 	assert_eq(_deaths(r.events), [[3, "GM_CORRECTION"]], "nur das Ziel stirbt")
 	var prevented := events_of_type(r.events, "KillPrevented")
 	assert_eq(prevented.map(func(e: GameEvent) -> String: return String(e.data["protection"])), ["rudelvater", "nekromant"], "erst persönlicher Schild (4), dann globaler Schild (2)")
+
+
+# --- Feuerteufel-Regressionen ------------------------------------------------------------------------
+
+func test_fire_devil_apple_doubles_step_one_mark_remains() -> void:
+	var s := _dawn(_state([W, FT, D, D, D, D, D]), {"feuerteufel:2@": [4]})
+	if s == null:
+		return
+	s.apples[2] = 2  # Apfel für Nacht 2 (R-02, R-03)
+	var picks := [5, 6]
+	var log: Array[GameEvent] = []
+	s = _night(s, {"feuerteufel:2@": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [picks.pop_front()])}, log)
+	if s == null:
+		return
+	assert_eq(s.night_plan.count(&"feuerteufel:2"), 2, "Schritt verdoppelt")
+	assert_eq(events_of_type(log, "AppleUsed").size(), 1, "Apfel verbraucht")
+	assert_eq(events_of_type(log, "FireMarked").size(), 2, "zwei Wahlen")
+	assert_eq(s.fire_marks, [{"devil_id": 2, "target_id": 6}], "höchstens eine Markierung: die zweite Wahl gilt (E-06)")
+
+
+func test_fire_devil_inherited_by_apprentice_starts_without_mark() -> void:
+	# Lehrling 3 bindet an Feuerteufel 2; Feuerteufel markiert 6, stirbt am Tag; 3 erbt ohne Markierung.
+	var candidates := func(p: PendingPrompt) -> Command: return Command.answer_stage_targets(p.id, "candidates", [2, 4, 5])
+	var option := func(p: PendingPrompt) -> Command: return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "option", "option": (p.partial["options"] as Array).find(FT)})
+	var confirm := func(p: PendingPrompt) -> Command: return Command.answer_choice(p.id, "confirm", true)
+	var s := _dawn(_state([W, FT, "lehrling", D, D, D, D, D]), {"lehrling:3@candidates": candidates, "lehrling:3@option": option, "lehrling:3@confirm": confirm, "feuerteufel:2@": [6]})
+	if s == null:
+		return
+	assert_eq(s.fire_marks, [{"devil_id": 2, "target_id": 6}], "Meister hat markiert")
+	s = _ok(s, Command.nominate(4, 2), "Nominierung")
+	s = _ok(s, Command.decide_execution(2), "Feuerteufel hingerichtet")
+	if s == null:
+		return
+	assert_eq(String(s.players[3].role_id), FT, "Lehrling erbt die Rolle")
+	assert_eq(s.fire_marks, [], "Markierung des Meisters erloschen, Erbe ohne Markierung (E-10)")
+	var r := apply_ok(s, _gm("kill", {"target_id": 6, "trigger_effects": true}), "altes Ziel stirbt")
+	assert_eq(events_of_type(r.events, "FireBurned").size(), 0, "kein Brand aus der alten Markierung")
+	s = _dawn(r.state, {"feuerteufel:3@": [5]})
+	assert_eq(s.fire_marks if s != null else [], [{"devil_id": 3, "target_id": 5}], "Erbe markiert selbst")
+
+
+func test_fire_devil_soul_swap_removes_mark() -> void:
+	# Feuerteufel 2 (76) markiert 5, danach tauscht der Seelentauscher 3 (80) die Rollen von 2 und 4.
+	var s := _dawn(_state([W, FT, "seelentauscher", D, D, D, D, D]), {"feuerteufel:2@": [5], "seelentauscher:3@targets": [2, 4]})
+	if s == null:
+		return
+	assert_eq(String(s.players[4].role_id), FT, "4 ist jetzt Feuerteufel")
+	assert_eq(s.fire_marks, [], "Markierung mit dem Rollenverlust erloschen (E-10)")
+	var r := apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "früheres Ziel stirbt")
+	assert_eq(events_of_type(r.events, "FireBurned").size(), 0, "kein Brand")
+
+
+func test_burn_hits_martyr_shadow_walker_link_and_eternal() -> void:
+	# Märtyrerin 4 neben dem Ziel 5 verbrennt.
+	var s := _dawn(_state([W, FT, D, "maertyrerin", D, D, D, D]), {"feuerteufel:2@": [5]})
+	var r := apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
+	assert_eq(_deaths(r.events) if r != null else [], [[5, "GM_CORRECTION"], [6, "BURN"], [4, "BURN"]], "Märtyrerin verbrennt")
+	# Schattenwanderer 6 (verknüpft mit 4) neben dem Ziel 5: sein Brandtod trifft 4 (B-04), Quelle bleibt der Feuerteufel.
+	s = _dawn(_state([W, FT, D, D, D, "schattenwanderer", D, D]), {"schattenwanderer:6@": [4], "feuerteufel:2@": [5]})
+	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
+	if r != null:
+		assert_eq(_deaths(r.events), [[5, "GM_CORRECTION"], [4, "BURN"]], "Umlenkung auf 4; 4 ist danach schon tot")
+		assert_eq(r.state.players[4].death.source_id, 2, "Quelle Feuerteufel")
+		assert_true(r.state.players[6].alive, "Schattenwanderer lebt")
+	# Die Ewigen 4 neben dem Ziel 5 verbrennen.
+	s = _dawn(_state([W, FT, D, "die-ewigen", D, D, D, D]), {"feuerteufel:2@": [5]})
+	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
+	assert_eq(_deaths(r.events) if r != null else [], [[5, "GM_CORRECTION"], [6, "BURN"], [4, "BURN"]], "Ewige verbrennt")

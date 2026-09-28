@@ -250,6 +250,11 @@ static func necro_redirect_targets(s: GameState, necro_id: int) -> Array[int]:
 	return _others_alive(s, necro_id)
 
 
+## Ungenutzte Schilde eines Nekromanten erlöschen mit seinem Tod oder Rollenverlust (E-27).
+static func necro_drop_shields(s: GameState, necro_id: int) -> void:
+	s.necro_shields = s.necro_shields.filter(func(sh: Dictionary) -> bool: return int(sh["necro_id"]) != necro_id)
+
+
 static func necro_sacrifice(s: GameState, dead: Array[int]) -> void:
 	for id: int in dead:
 		if not s.necro_sacrificed.has(id):

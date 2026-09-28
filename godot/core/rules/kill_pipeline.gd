@@ -79,6 +79,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	BondRules.on_death(ctx, target, trigger_effects)
 	SoloRules.on_death(ctx, target, record, trigger_effects)
 	SoloRules.voodoo_on_death(s, target.id)
+	SoloRules.necro_drop_shields(s, target.id)
 	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
 	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:

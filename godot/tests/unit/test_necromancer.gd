@@ -221,6 +221,24 @@ func test_two_necromancers_share_pool_and_shields_count() -> void:
 	assert_eq(_shield_saves(r.events) if r != null else [], [5] as Array[int], "zweiter Schild")
 
 
+func test_shield_ends_with_role_loss_or_death() -> void:
+	# E-27 (RM-DR-142.9): Seelentausch in derselben Nacht nach dem Schild (Seelentauscher 80 > Nekromant 30).
+	var s := _state([W, NK, "seelentauscher", D, D, D, D, D, D, D], [8, 9, 10])
+	var log: Array[GameEvent] = []
+	s = _dawn(s, {"nekromant:2@targets": [8, 9, 10], "seelentauscher:3@targets": [2, 4], "pack@": [5]}, log)
+	if s == null:
+		return
+	assert_eq(String(s.players[2].role_id), D, "2 hat die Rolle verloren")
+	assert_eq(_deaths(log), [[5, "NIGHT_KILL"]], "Schild erloschen, Rudelopfer stirbt")
+	# Tod des Nekromanten per Korrektur.
+	s = _state([W, NK, D, D, D, D, D, D, D, D], [8, 9, 10])
+	s = _night(s, {"nekromant:2@targets": [8, 9, 10], "pack@": [5]})
+	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Nekromant stirbt")
+	assert_eq(s.necro_shields if s != null else [0], [], "Schild erloschen")
+	var r := apply_ok(s, Command.end_night(), "Morgen") if s != null else null
+	assert_eq(_deaths(r.events) if r != null else [], [[5, "NIGHT_KILL"]], "kein Schutz mehr")
+
+
 # --- Umlenkung ------------------------------------------------------------------------------------
 
 func test_redirect_pack_attack_to_another_person() -> void:
