@@ -2,7 +2,7 @@
 
 **Stand:** 26. September 2026; Umsetzungsstand aktualisiert 27. September 2026 (main `1bc8016`)
 
-**Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen, Verteilung und Sitzordnung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Spielstart (`StartGame`) aus dem bestätigten Setup auf Branch `feature/start-game` umgesetzt (PR offen). Keine Tablet-Abnahme, keine spielbare Partie (Nacht/Tag) über die Oberfläche.
+**Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen, Verteilung und Sitzordnung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Spielstart (`StartGame`) aus dem bestätigten Setup umgesetzt und automatisch getestet (PR #2). Keine Tablet-Abnahme, keine spielbare Partie (Nacht/Tag) über die Oberfläche.
 
 **Stufen im Umsetzungsstand:** *implementiert* (Code vorhanden) · *automatisch getestet* (headless Godot-Suite, lokal und CI: 438 Tests grün) · *grafisch geprüft* (lokal mit echtem Renderer, skriptgesteuert über echte Buttons, keine Handbedienung) · *Tablet-abgenommen* (von Hand auf dem Zielgerät; bisher für keinen Punkt erfolgt). Ein Haken bedeutet: Punkt im Wortlaut erfüllt.
 
@@ -143,7 +143,7 @@ Godot Tablet/PC
 
 - [x] Projekt unter `godot/` anlegen; statisch typisiertes GDScript verwenden.
 - [ ] `GameState`, `Player`, `SeatOrder`, `RoleAssignment`, `Faction`, `Effect`, `Prompt` und `GameEvent` definieren. *(Stand 27.09.2026: `GameState`, `Player`, `Faction`, `PendingPrompt`, `GameEvent` implementiert; eigene `SeatOrder`-, `RoleAssignment`- und `Effect`-Typen fehlen.)*
-- [x] Command-Bus für `StartGame`, `StartNight`, `SubmitAction`, `ResolveMorning`, `Nominate`, `ExecutePlayer`, `StartNight` und `DeclareWinner` bauen. *(Stand 27.09.2026: implementiert und automatisch getestet als `StartGame`, `StartNight`, `AnswerPrompt`, `EndNight`, `Nominate`, `DecideExecution`, `ConfirmWin`/`RejectWin`; die Oberfläche sendet `StartGame` über „Partie starten“ (Branch `feature/start-game`, PR offen), weitere Befehle noch nicht.)*
+- [x] Command-Bus für `StartGame`, `StartNight`, `SubmitAction`, `ResolveMorning`, `Nominate`, `ExecutePlayer`, `StartNight` und `DeclareWinner` bauen. *(Stand 27.09.2026: implementiert und automatisch getestet als `StartGame`, `StartNight`, `AnswerPrompt`, `EndNight`, `Nominate`, `DecideExecution`, `ConfirmWin`/`RejectWin`; die Oberfläche sendet `StartGame` über „Partie starten“ (PR #2), weitere Befehle noch nicht.)*
 - [x] Phasenmaschine für Setup, Nacht, Morgenbericht, Tag und Spielende implementieren. *(Stand 27.09.2026: `phase_machine.gd`, über Szenario- und Schrittests automatisch getestet.)*
 - [x] Gespeicherten Seed und `SeededRng` implementieren. *(Stand 27.09.2026: automatisch getestet, `test_seeded_rng.gd`.)*
 - [x] Grundlegende Kill-Pipeline mit Ursache, Quelle, Ziel, Zeitpunkt und Abfangstatus implementieren. *(Stand 27.09.2026: `kill_pipeline.gd`, `KillEvent`, automatisch getestet.)*

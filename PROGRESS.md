@@ -192,8 +192,8 @@ Nächster Schritt: StartGame aus dem bestätigten Setup-Entwurf bauen (`seat_ord
 ---
 
 ## 2026-09-27 — Spielstart aus dem Setup (Branch `feature/start-game`)
-Status: UMGESETZT auf dem Branch, PR offen, nicht nach main gemergt
+Status: ERLEDIGT, über PR #2 (Merge-Commit auf main, 28.09.2026) nach main übernommen
 Inhalt: „Sitzordnung bestätigen“ beendet nur das Setup; danach steht in der Fußzeile „Partie starten“. Erst dieser Button sendet genau einen `StartGame` (manuelle Zuordnung aus der festen Verteilung, kein erneutes Mischen, Scheinrollen unverändert, Seed aus `PlayerSetup.seed_source`, `round_id` per SHA-256 aus dem Seed) über `GameStart` → `GameSession`. Nach Annahme ist der Entwurf verbraucht, das Cockpit öffnet sich als aktive Partie. Ablehnung lässt Setup und Sitzung unverändert und meldet den Grund. Details: `docs/ui/game-start.md`.
 Verifiziert (Windows, Godot 4.7.2): 470 Godot-Tests grün (456 + 8 Modell + 6 UI), keine SCRIPT-ERROR- oder ERROR-Zeilen, Register 313/313, `git diff --check` Exit 0. Grafisch: 5 Aufnahmen `docs/evidence/game-start/` und neu `seating-setup/08` (lokal, AMD-Renderer), angesehen; dabei Layoutfehler (Tischmitte bei 24 Personen/1024×768) und widersprüchliche Cockpit-Hinweise gefunden und behoben. Keine Touch- oder Tablet-Prüfung.
 Nicht enthalten: Speichern der Partie, Nacht-/Tagablauf in der Oberfläche, Beenden/Verwerfen einer laufenden Partie.
-Nächster Schritt: nach Review und Merge Cockpit-Sitzkreis mit der gestarteten Partie (öffentliche Sicht aus `GameSession`, ohne Rollen) oder `StartNight` über das Cockpit, je nach Priorität.
+Nächster Schritt: Cockpit-Sitzkreis mit der gestarteten Partie (öffentliche Sicht aus `GameSession`, ohne Rollen) oder `StartNight` über das Cockpit, je nach Priorität.
