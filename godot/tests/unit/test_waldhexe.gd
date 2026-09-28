@@ -120,7 +120,8 @@ func test_night_order_guard_pack_witch() -> void:
 
 
 func test_multiple_witches_by_id() -> void:
-	# 3: stabile Reihenfolge; Gift der ersten Hexe auf die zweite lässt deren Schritt entfallen.
+	# 3: stabile Reihenfolge; Gift der ersten Hexe auf die zweite lässt deren Schritt entfallen
+	# (Todesmarkierung, Decision Log „Nachttode“: Tod erst am Morgen, kein weiterer Nachtschritt).
 	var run := _replay_ok([_w2h(), Command.start_night()] as Array[Command], "zwei Waldhexen")
 	if not run.ok:
 		return
@@ -135,13 +136,14 @@ func test_multiple_witches_by_id() -> void:
 		if not r.ok:
 			return
 		s = r.state
-	assert_false(s.players[5].alive, "zweite Waldhexe tot")
+	assert_true(s.players[5].alive, "zweite Waldhexe lebt bis zum Morgen")
 	var dropped := events_of_type(r.events, "StepDropped")
 	assert_true(dropped.size() == 1 and String(dropped[0].data["step_id"]) == "night:1:2:waldhexe:5"
-		and String(dropped[0].data["reason"]) == "actor_dead", "Schritt der toten Waldhexe entfällt protokolliert")
+		and String(dropped[0].data["reason"]) == "marked_for_death", "Schritt der vergifteten Waldhexe entfällt protokolliert")
 	assert_eq(String(s.night_step_status[2]), "skipped", "Status")
 	assert_eq(RulesEngine.next_step_id(s), "", "kein weiterer Schritt")
-	apply_ok(s, Command.end_night(), "Nacht endet")
+	var dawn := apply_ok(s, Command.end_night(), "Nacht endet")
+	assert_true(not dawn.state.players[5].alive and String(dawn.state.players[5].death.cause) == "WITCH_POISON", "zweite Waldhexe stirbt am Morgen an Gift")
 
 
 func test_no_step_without_living_witch() -> void:
@@ -210,8 +212,9 @@ func test_no_victim_poison_available() -> void:
 	apply_rejected(s, _choice("heal", true), "stage_mismatch", "Rettung ohne Opfer")
 	var run := _replay_ok(_concat(_to_witch(_w6(), 6, -1), _decide(false, 1, false)), "Gift ohne Rudelopfer")
 	if run.ok:
-		assert_false(run.state.players[1].alive, "Gift wirkt")
 		assert_eq(_uses(run.state, 5, "heal"), 0, "Heiltrank nicht verbraucht")
+		var dawn := apply_ok(run.state, Command.end_night(), "Morgen")
+		assert_false(dawn.state.players[1].alive, "Gift wirkt am Morgen")
 
 
 # --- 9–16 Rettung, Gift, Offenlegung -------------------------------------------------
@@ -269,19 +272,22 @@ func test_heal_alone_prevents_pack_attack() -> void:
 	assert_true(_actions(dawn.state).is_empty(), "Rettung endet mit Tagesbeginn")
 
 
-func test_poison_alone_kills_immediately() -> void:
-	# 12, AS-R06
+func test_poison_alone_marks_and_kills_at_dawn() -> void:
+	# 12, AS-R06; Decision Log „Nachttode“: Gift markiert, Tod erst in der Morgenauflösung.
 	var commands := _concat(_to_witch(_w6(), 2, 6), _decide(false, 1))
 	var before := Fixtures.play(commands.slice(0, commands.size() - 1))
 	var r := apply_ok(before, commands[commands.size() - 1], "Bestätigung")
-	assert_false(r.state.players[1].alive, "1 stirbt sofort")
-	var died := events_of_type(r.events, "SeatDied")
-	assert_true(died.size() == 1 and String(died[0].data["cause"]) == "WITCH_POISON" and String(died[0].data["source_kind"]) == "player"
-		and int(died[0].data["source_id"]) == 5 and String(died[0].data["phase"]) == "NIGHT", "Gifttod mit Quelle Waldhexe")
+	assert_true(r.state.players[1].alive, "1 lebt bis zum Morgen")
+	assert_eq(events_of_type(r.events, "SeatDied").size(), 0, "kein Tod in der Nacht")
 	assert_eq(String(r.state.phase), "NIGHT", "noch Nacht")
 	assert_eq(_uses(r.state, 5, "poison"), 1, "Gifttrank verbraucht")
 	assert_eq(_uses(r.state, 5, "heal"), 0, "Heiltrank unverbraucht")
 	var dawn := apply_ok(r.state, Command.end_night(), "Morgen")
+	assert_false(dawn.state.players[1].alive, "1 stirbt am Morgen")
+	var died := events_of_type(dawn.events, "SeatDied")
+	assert_true(died.size() == 2 and String(died[0].data["cause"]) == "WITCH_POISON" and String(died[0].data["source_kind"]) == "player"
+		and int(died[0].data["source_id"]) == 5 and String(died[0].data["phase"]) == "DAWN_RESOLUTION" and int(died[0].data["target_id"]) == 1,
+		"zuerst Gifttod mit Quelle Waldhexe")
 	assert_false(dawn.state.players[6].alive, "6 stirbt am Morgen")
 	assert_eq(String(dawn.state.players[6].death.cause), "NIGHT_KILL", "Rudelangriff")
 	assert_true(sole_candidate(dawn.state) == null, "kein Siegkandidat (1 Wolf gegen 3)")
@@ -298,7 +304,7 @@ func test_heal_and_poison_same_night() -> void:
 
 
 func test_heal_and_poison_same_person() -> void:
-	# 14: Gift tötet sofort, die Rettung läuft am Morgen ins Leere.
+	# 14: Gift wirkt am Morgen vor dem Rudelangriff, die Rettung läuft ins Leere.
 	var run := _replay_ok(_concat(_night(2, 6, true, 6), [Command.end_night()] as Array[Command]), "gleiche Person")
 	if not run.ok:
 		return
@@ -311,13 +317,12 @@ func test_heal_and_poison_same_person() -> void:
 
 func test_poison_self() -> void:
 	# 15
-	var run := _replay_ok(_concat(_to_witch(_w6(), 6, -1), _decide(false, 5, false)), "Gift auf sich selbst")
+	var run := _replay_ok(_concat(_concat(_to_witch(_w6(), 6, -1), _decide(false, 5, false)), [Command.end_night()] as Array[Command]), "Gift auf sich selbst")
 	if not run.ok:
 		return
 	assert_false(run.state.players[5].alive, "Waldhexe tot")
 	assert_eq(int(run.state.players[5].death.source_id), 5, "Quelle sie selbst")
 	assert_eq(String(run.state.night_step_status[2]), "done", "Schritt erledigt")
-	apply_ok(run.state, Command.end_night(), "Nacht endet")
 
 
 func test_poison_reaper_reacts_at_dawn() -> void:
@@ -328,12 +333,17 @@ func test_poison_reaper_reacts_at_dawn() -> void:
 	var types: Array[String] = []
 	for e: GameEvent in r.events:
 		types.append(String(e.type))
-	assert_eq(types, ["PromptAnswered", "WitchActed", "SeatDied", "ReactionQueued", "WinStatusProvisional"] as Array[String], "Ereignisreihenfolge")
-	assert_eq(r.state.reactions.size(), 1, "Reaktion eingereiht")
+	assert_eq(types, ["PromptAnswered", "WitchActed"] as Array[String], "Ereignisreihenfolge: nur Markierung in der Nacht")
+	assert_eq(r.state.reactions.size(), 0, "noch keine Reaktion")
 	assert_eq(String(r.state.phase), "NIGHT", "noch Nacht")
 	assert_eq(RulesEngine.next_step_id(r.state), "", "keine Reaktion in der Nacht")
 	apply_rejected(r.state, Command.begin_step("reaction:1"), "no_pending_step", "nicht mitten in der Nacht")
 	var dawn := apply_ok(r.state, Command.end_night(), "Morgen")
+	var dawn_types: Array[String] = []
+	for e: GameEvent in dawn.events:
+		if ["SeatDied", "ReactionQueued", "WinStatusProvisional"].has(String(e.type)):
+			dawn_types.append(String(e.type))
+	assert_eq(dawn_types.slice(0, 3), ["SeatDied", "ReactionQueued", "WinStatusProvisional"] as Array[String], "Gifttod und Reaktion am Morgen")
 	assert_eq(String(dawn.state.phase), "DAWN_RESOLUTION", "Morgenauflösung wartet")
 	assert_eq(RulesEngine.next_step_id(dawn.state), "reaction:1", "Reaktion jetzt fällig")
 	var again := RulesEngine.apply(before, commands[commands.size() - 1])
@@ -344,7 +354,7 @@ func test_poison_reaper_reacts_at_dawn() -> void:
 
 func test_guard_does_not_prevent_poison() -> void:
 	# 17, AS-R32
-	var run := _replay_ok(_concat(_to_witch(_w6(), 6, -1), _decide(false, 6, false)), "Gift auf Geschützten")
+	var run := _replay_ok(_concat(_concat(_to_witch(_w6(), 6, -1), _decide(false, 6, false)), [Command.end_night()] as Array[Command]), "Gift auf Geschützten")
 	if not run.ok:
 		return
 	assert_false(run.state.players[6].alive, "Schutz verhindert Gift nicht")
@@ -409,16 +419,17 @@ func test_used_poison_not_offered_again() -> void:
 	apply_rejected(no, _choice("poison", true, 6), "stage_mismatch", "manipuliertes Gift")
 
 
-func test_revive_does_not_reset_potions() -> void:
-	# 24: Rettung von 4 und Gift auf sich selbst, danach Wiederbelebung.
+func test_revive_resets_potions() -> void:
+	# 24, ersetzt durch Decision Log „Rollenaudit · Wiederbelebung …“: Rettung von 4 und Gift auf
+	# sich selbst, danach Wiederbelebung → beide Tränke wieder verfügbar, Schritt in der nächsten Nacht.
 	var commands := _concat(_night(2, 4, true, 5), [Command.end_night(),
 		CorrectionFixtures.gm("revive", {"target_id": 5}), Command.decide_execution(-1), Command.end_day(), Command.start_night()] as Array[Command])
 	var run := _replay_ok(commands, "Wiederbelebung")
 	if not run.ok:
 		return
 	assert_true(run.state.players[5].alive, "Waldhexe lebt")
-	assert_eq(_uses(run.state, 5, "heal") + _uses(run.state, 5, "poison"), 2, "Tränke bleiben verbraucht")
-	assert_false(run.state.night_plan.has(&"waldhexe:5"), "kein Schritt")
+	assert_eq(_uses(run.state, 5, "heal") + _uses(run.state, 5, "poison"), 0, "Tränke zurückgesetzt")
+	assert_true(run.state.night_plan.has(&"waldhexe:5"), "Schritt in der nächsten Nacht")
 
 
 ## Befehle innerhalb des Waldhexen-Prompts bis zur jeweiligen Stufe (W6, Rudel wählt 6).
@@ -532,12 +543,12 @@ func test_save_load_after_confirmed_rescue() -> void:
 
 func test_save_load_after_poison_with_open_reaction() -> void:
 	# 29
-	var commands := _concat(_to_witch(_w7r(), 6, 4), _decide(false, 7))
+	var commands := _concat(_concat(_to_witch(_w7r(), 6, 4), _decide(false, 7)), [Command.end_night()] as Array[Command])
 	var loaded := _load_roundtrip(commands, "Gifttod Sensenträger")
 	if loaded == null:
 		return
 	assert_eq(loaded.state.reactions.size(), 1, "Reaktion offen")
-	_continue_both(Fixtures.play(commands), loaded.state, [Command.end_night(), Command.begin_step("reaction:1"),
+	_continue_both(Fixtures.play(commands), loaded.state, [Command.begin_step("reaction:1"),
 		Command.answer_prompt(4, [2])] as Array[Command], "Reaktion am Morgen")
 
 

@@ -3,187 +3,201 @@ RM-DR-001;nein;alle;E;"rules-register G-ID-3; DECISION-LOG Lehrling (frische Ein
 RM-DR-002.1;ja;Informationsrollen mit Rollenergebnis;E;"DR-07; DECISION-LOG Orakel (Informationsmodell)";Erscheinung -> werwolf bei counts_as_wolf -> Rolle
 RM-DR-002.2;ja;Siegzählung;E;"rules-register G-SIEG-1, G-SIEG-2; G-ID-2";Sieg zählt counts_as_wolf, nicht Erscheinung
 RM-DR-002.3;ja;andere Informationsarten und Wirkungen;S;;erst mit K2, K3, K7
-RM-DR-003;nein;Sitznachbarschaft;S;G-ID-1 legt nur Trennung Person/Sitz fest;erst mit K3
-RM-DR-004;nein;Wolfsangriff;S;DR-05 gilt nur für den Schutzengel;erst mit K4, K5, K11
-RM-DR-005;nein;Durchdringung;S;;erst mit K5, K11
-RM-DR-006;nein;fehlende Siegbedingungen;S;07 Q4 offen;erst mit K9, K10, K11, K15
+RM-DR-003;nein;Sitznachbarschaft;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn links und rechts
+RM-DR-004;nein;Wolfsangriff;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";nur Rudelangriff
+RM-DR-005;nein;Durchdringung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Schutz ja, Schilde/Umlenkung/Ersatz nein
+RM-DR-006;nein;fehlende Siegbedingungen;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";je Rolle festlegen
 RM-DR-007;nein;Grundregel Siegkandidaten;E;"rules-register G-SIEG-1 bis G-SIEG-6; DR-02; DR-14; DECISION-LOG Manipulator und Kandidatenmenge";"Kandidatenmenge ohne Priorität; eine rollenspezifische Ausnahme ist nur beim Doppelspion offen und wird als RM-DR-155.3 geführt"
-RM-DR-008;nein;Stimmbezug;S;implementation-boundary D schließt digitale Stimmen und Stimmgewichte aus;Restfrage erst mit K14, K15
+RM-DR-008;nein;Stimmbezug;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Hinweistext für den Spielleiter, keine Zählung
 RM-DR-009.1;ja;Todesreaktionen mit Entscheidung;E;"rules-register G-TOD-4; DR-09";Tag sofort, Nacht in der Morgenauflösung, persistente Warteschlange
 RM-DR-009.2;ja;Todesfolgen ohne Entscheidung;T;DECISION-LOG Wolfskind und Lehrling (sofort, vor vorläufiger Siegprüfung);"Verallgemeinerung technisch; Rollenregel je Rolle"
-RM-DR-010;nein;Rollenblockierung;S;;erst mit K8
+RM-DR-010;nein;Rollenblockierung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";nur aktive Nachtschritte von Dorfrollen
 RM-DR-011.1;ja;bereits geregelte Wiederbelebungsfälle;E;DECISION-LOG Randfälle 2 (Reaktion bleibt), Waldhexe, Spiegelwolf, Lehrling (kein zweites Erbe), Wolfskind;
-RM-DR-011.2;ja;Bindungen und Marker nach Wiederbelebung;S;;erst mit K6, K10, K13
-RM-DR-012;nein;Richter-Nominierung;S;DR-03 lässt Abweichungen durch Regeln zu;erst mit K14
-RM-DR-013;nein;Totenkarten;S;07 Q3 offen;erst mit K13, K15
-RM-DR-014;nein;einmalig / erste Nacht;S;DR-10, DR-11 regeln nur Wolfskind und Lehrling;erst mit K2, K6, K7, K8, K11, K12, K15
+RM-DR-011.2;ja;Bindungen und Marker nach Wiederbelebung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Bindung bleibt beendet
+RM-DR-012;nein;Richter-Nominierung;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";normale Nominierung durch den Richter
+RM-DR-013;nein;Totenkarten;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";ohne Karten für Kutscher/Frankenstein; Kartenschlucker und Kartenbedingungen mit dem Assistenten (W-01)
+RM-DR-014;nein;einmalig / erste Nacht;E;"DECISION-LOG Rollenaudit 27.09.2026";strikt Nacht 1
 RM-DR-015.1;ja;Zufall über Seed;E;rules-register G-RNG-1;jede Zufallsentscheidung über gespeicherten Seed
-RM-DR-015.2;ja;Zufall oder Spielleiterwahl je Rolle;S;DR-08 als Präzedenzfall;je Rolle ab K3
+RM-DR-015.2;ja;Zufall oder Spielleiterwahl je Rolle;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Spielleiter wählt oder Zufallsknopf (Seed)
 RM-DR-016.1;ja;Setup-Obergrenze je Rolle;S;DECISION-LOG Core-Slice Rollenanzahl: keine feste Komposition, einzelne Rollen dürfen eine Obergrenze erhalten;"keine globale Grenze nötig; nur je Rolle aus Spielgründen"
 RM-DR-016.2;ja;Kopien während der Partie und Zustand je Person;T;"G-ID-3; DR-11; GmCorrection set_role";"Mehrfachkopien entstehen unabhängig vom Setup; Verhalten folgt aus bestehenden Regeln"
-RM-DR-017;nein;nächste Rolleneinheit;P;;neu: Umfang der nächsten Spezifikation
-RM-DR-101.1;ja;loki;S;;
-RM-DR-102.1;ja;nachtwaechter;S;;
-RM-DR-103.1;ja;rattenfaenger;S;;
-RM-DR-103.2;ja;rattenfaenger;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
-RM-DR-104.1;ja;die-ewigen;S;;
-RM-DR-104.2;ja;die-ewigen;S;;
-RM-DR-104.3;ja;die-ewigen;S;;
-RM-DR-105.1;ja;spuerhund;S;;
-RM-DR-106.1;ja;rachsuechtiger-wolf;S;;
-RM-DR-106.2;ja;rachsuechtiger-wolf;S;;
-RM-DR-106.3;ja;rachsuechtiger-wolf;S;;
-RM-DR-107.1;ja;koenig-lykaon;S;;
-RM-DR-107.2;ja;koenig-lykaon;S;;
-RM-DR-108.1;ja;seuchenwolf;S;;
-RM-DR-108.2;ja;seuchenwolf;S;;
-RM-DR-108.3;ja;seuchenwolf;S;;
-RM-DR-109.1;ja;schicksalswolf;S;;
-RM-DR-109.2;ja;schicksalswolf;S;;
-RM-DR-109.3;ja;schicksalswolf;S;;
-RM-DR-110.1;ja;schattenwanderer;S;;
-RM-DR-110.2;ja;schattenwanderer;S;;
-RM-DR-111.1;ja;giftwolf;S;;
-RM-DR-111.2;ja;giftwolf;S;;
-RM-DR-111.3;ja;giftwolf;S;;
-RM-DR-112.1;ja;rudelvater;S;;
-RM-DR-112.2;ja;rudelvater;S;;
-RM-DR-112.3;ja;rudelvater;S;;
-RM-DR-112.4;ja;rudelvater;S;;
-RM-DR-113.1;ja;schwarze-witwe;S;;
-RM-DR-113.2;ja;schwarze-witwe;S;;
-RM-DR-114.1;ja;der-weise;S;;
-RM-DR-114.2;ja;der-weise;S;;
-RM-DR-114.3;ja;der-weise;S;;
-RM-DR-114.4;ja;der-weise;S;;
-RM-DR-115.1;ja;verdammniswaechter;S;;
-RM-DR-115.2;ja;verdammniswaechter;S;;
-RM-DR-115.3;ja;verdammniswaechter;S;;
-RM-DR-116.1;ja;wahnsinniger-kutscher;S;;
-RM-DR-117.1;ja;korrupter-richter;S;;
-RM-DR-117.2;ja;korrupter-richter;S;;
-RM-DR-117.3;ja;korrupter-richter;S;;
-RM-DR-118.1;ja;maertyrerin;S;;
-RM-DR-118.2;ja;maertyrerin;S;;
-RM-DR-118.3;ja;maertyrerin;S;;
-RM-DR-119.1;ja;dorfwache;S;;
-RM-DR-119.2;ja;dorfwache;S;;
-RM-DR-120.1;ja;pestbringerin;S;;
-RM-DR-120.2;ja;pestbringerin;S;;
-RM-DR-120.3;ja;pestbringerin;S;;
-RM-DR-120.4;ja;pestbringerin;S;;
-RM-DR-121.1;ja;prophet-des-untergangs;S;;
-RM-DR-121.2;ja;prophet-des-untergangs;S;;
-RM-DR-121.3;ja;prophet-des-untergangs;S;;
-RM-DR-122.1;ja;daemonischer-wolf;S;;
-RM-DR-122.2;ja;daemonischer-wolf;S;;
-RM-DR-122.3;ja;daemonischer-wolf;S;;
-RM-DR-123.1;ja;schattenhund;S;;
-RM-DR-123.2;ja;schattenhund;S;;
-RM-DR-123.3;ja;schattenhund;S;;
-RM-DR-124.1;ja;besessener-wolf;S;;
-RM-DR-125.1;ja;fenrir;S;;
-RM-DR-125.2;ja;fenrir;S;;
-RM-DR-125.3;ja;fenrir;S;;
-RM-DR-126.1;ja;kutscher;S;;
-RM-DR-126.2;ja;kutscher;S;;
+RM-DR-017;nein;nächste Rolleneinheit;E;"Auftrag des Nutzers 27.09.2026 (alle 72 Rollen prüfen)";Auftrag Rollenaudit: alle 72 Rollen
+RM-DR-101.1;ja;loki;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Rivalen nur Marker (B-02)
+RM-DR-102.1;ja;nachtwaechter;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
+RM-DR-103.1;ja;rattenfaenger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";alle anderen Lebenden, er selbst nicht (E-01)
+RM-DR-103.2;ja;rattenfaenger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Puppe hebt nichts auf (E-01)
+RM-DR-104.1;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Mitsieg mit geprüfter Person (I-12, I-15)
+RM-DR-104.2;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Ja/Nein, gemeinsamer Schritt (I-11)
+RM-DR-104.3;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";bleiben Dorf, zusätzlicher Mitsieg (I-12)
+RM-DR-105.1;ja;spuerhund;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";keine falsche Spur; ✗ verliert die Fähigkeit
+RM-DR-106.1;ja;rachsuechtiger-wolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";Alleinsieg als einziger lebender Wolf statt Wolfssieg (E-35)
+RM-DR-106.2;ja;rachsuechtiger-wolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";feste Nächte 3, 6, 9 (DA-16)
+RM-DR-106.3;ja;rachsuechtiger-wolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";erste Nutzung Nacht 3 (DA-16)
+RM-DR-107.1;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Scheinrolle = alte Rolle (V-03), bis zu 3 Verzichte (V-08, V-09)
+RM-DR-107.2;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";nur Fraktion Dorf (V-03)
+RM-DR-108.1;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
+RM-DR-108.2;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nächster tatsächlicher Rudelangriff
+RM-DR-108.3;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Rudelangriff
+RM-DR-109.1;ja;schicksalswolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";nur Nacht 4 (DA-11)
+RM-DR-109.2;ja;schicksalswolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";Rudelangriff mit Schutz (DA-13)
+RM-DR-109.3;ja;schicksalswolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";erste drei verschiedenen Toten, jede Ursache (DA-12)
+RM-DR-110.1;ja;schattenwanderer;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";stattdessen (B-04)
+RM-DR-110.2;ja;schattenwanderer;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";einmal je Leben, nur echter Tod (B-04, B-07)
+RM-DR-111.1;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";höchstens eine pro Nacht
+RM-DR-111.2;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";sofort privat
+RM-DR-111.3;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Morgen nach Nacht N+2
+RM-DR-112.1;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Rudelangriff (RM-DR-004)
+RM-DR-112.2;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Hinrichtung (LYNCH)
+RM-DR-112.3;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
+RM-DR-112.4;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";zweiter Rudelschritt
+RM-DR-113.1;ja;schwarze-witwe;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Setup-Pflicht später, Kern wirkt nur mit lebendem Paar (B-06)
+RM-DR-113.2;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";Witwen-Wahl entfällt in eingefrorener Nacht (E-36)
+RM-DR-114.1;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Fraktion Dorf (S-01)
+RM-DR-114.2;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Nächte und Tage, SL wählt 0-3 (S-01)
+RM-DR-114.3;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Durchschlag tötet (RM-DR-005, S-02)
+RM-DR-114.4;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";alles ruht, entfällt endgültig (S-05, S-09)
+RM-DR-115.1;ja;verdammniswaechter;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";kein Umgehen, gilt als Rudelangriff (S-07)
+RM-DR-115.2;ja;verdammniswaechter;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Morgen wie Rudelangriff (S-07)
+RM-DR-115.3;ja;verdammniswaechter;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nur Nicht-Wölfe, Seed (S-08)
+RM-DR-116.1;ja;wahnsinniger-kutscher;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
+RM-DR-117.1;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis +1 Stimme
+RM-DR-117.2;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Richter ist Nominierender (RM-DR-012)
+RM-DR-117.3;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";zählt als normale Nominierung
+RM-DR-118.1;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Ersatzopfer, nur wenn Opfer stürbe (S-03)
+RM-DR-118.2;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nur erstes Rudelopfer (S-14)
+RM-DR-118.3;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nicht blockierbar, Fluch schon (S-03, S-05)
+RM-DR-119.1;ja;dorfwache;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";nicht immun: Giftpranke ist kein Wolfsangriff (RM-DR-004)
+RM-DR-119.2;ja;dorfwache;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Durchdringung durchdringt die Immunität (RM-DR-005)
+RM-DR-120.1;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nicht tödlich, Siegrennen (E-02)
+RM-DR-120.2;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";jede Nacht eine Infektion (E-02)
+RM-DR-120.3;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur lebend (E-02)
+RM-DR-120.4;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nächste lebende Nachbarn, Seed (E-02)
+RM-DR-121.1;ja;prophet-des-untergangs;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";statt Dorfsieg, wenn freigeschaltet und kein Wolf lebt (E-03)
+RM-DR-121.2;ja;prophet-des-untergangs;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";dauerhaft (E-03)
+RM-DR-121.3;ja;prophet-des-untergangs;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur andere (E-03)
+RM-DR-122.1;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Todesreaktion (V-01)
+RM-DR-122.2;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";nur Rollenauskünfte (V-02)
+RM-DR-122.3;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";jeder Tod mit Folgen (V-01)
+RM-DR-123.1;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Dorf (RM-DR-010)
+RM-DR-123.2;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";ab Nacht 1, einmal je Leben
+RM-DR-123.3;ja;schattenhund;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Nachtschritte (RM-DR-010)
+RM-DR-124.1;ja;besessener-wolf;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";Lebende inkl. ihm vor dem Tod
+RM-DR-125.1;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";jede Ursache außer Korrektur, einmal
+RM-DR-125.2;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";+1 je überlebter Nacht
+RM-DR-125.3;ja;fenrir;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Teil des Einmal-Schutzes
+RM-DR-126.1;ja;kutscher;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";Rolle bleibt, einer wird Werwolf (W-02)
+RM-DR-126.2;ja;kutscher;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";Kutscher wählt Tote und Wolf (W-03)
 RM-DR-126.3;ja;kutscher;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
-RM-DR-127.1;ja;seelentauscher;S;;
-RM-DR-127.2;ja;seelentauscher;S;;
-RM-DR-127.3;ja;seelentauscher;S;;
-RM-DR-128.1;ja;blutpriester;S;;
-RM-DR-128.2;ja;blutpriester;S;;
-RM-DR-129.1;ja;traumdeuter;S;;
-RM-DR-129.2;ja;traumdeuter;S;;
-RM-DR-129.3;ja;traumdeuter;S;;
-RM-DR-130.1;ja;henker;S;;
-RM-DR-130.2;ja;henker;S;;
-RM-DR-130.3;ja;henker;S;;
-RM-DR-131.1;ja;feuerteufel;S;;
-RM-DR-131.2;ja;feuerteufel;S;;
-RM-DR-131.3;ja;feuerteufel;S;;
-RM-DR-131.4;ja;feuerteufel;S;;
-RM-DR-131.5;ja;feuerteufel;S;;
-RM-DR-132.1;ja;voodoo-priester;S;;
-RM-DR-132.2;ja;voodoo-priester;S;;
-RM-DR-132.3;ja;voodoo-priester;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
-RM-DR-132.4;ja;voodoo-priester;S;;
-RM-DR-133.1;ja;blutwolf;S;;
-RM-DR-134.1;ja;albtraumwolf;S;;
-RM-DR-134.2;ja;albtraumwolf;S;;
-RM-DR-134.3;ja;albtraumwolf;S;;
-RM-DR-135.1;ja;cerberus;S;;
-RM-DR-135.2;ja;cerberus;S;;
-RM-DR-136.1;ja;ritter;S;;
-RM-DR-136.2;ja;ritter;S;;
-RM-DR-136.3;ja;ritter;S;;
-RM-DR-137.1;ja;rotkaeppchen;S;;
-RM-DR-137.2;ja;rotkaeppchen;S;;
-RM-DR-137.3;ja;rotkaeppchen;S;;
-RM-DR-137.4;ja;rotkaeppchen;S;;
-RM-DR-137.5;ja;rotkaeppchen;S;;
-RM-DR-138.1;ja;selbstmoerder;P;;Selbstmörder: Zählbasis
-RM-DR-138.2;ja;selbstmoerder;S;DECISION-LOG Korrekturrunde 4: Spielleiter-Hinrichtung bleibt LYNCH (dieser Teil entschieden);Rest betrifft nur den noch fehlenden Henker (K4)
-RM-DR-139.1;ja;kopfgeldjaeger;S;;
-RM-DR-139.2;ja;kopfgeldjaeger;S;;
-RM-DR-139.3;ja;kopfgeldjaeger;S;;
-RM-DR-139.4;ja;kopfgeldjaeger;S;;
-RM-DR-140.1;ja;koenig;S;;
-RM-DR-140.2;ja;koenig;S;;
-RM-DR-141.1;ja;dr-victor-frankenstein;S;;
-RM-DR-141.2;ja;dr-victor-frankenstein;S;;
+RM-DR-127.1;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";frische Rolle wie Lehrling-Erbe (V-04)
+RM-DR-127.2;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Wächter prüft auch Tote (V-06)
+RM-DR-127.3;ja;seelentauscher;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Lebende erfahren privat (V-05)
+RM-DR-128.1;ja;blutpriester;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL wählt 0-3 lebende Wölfe (I-08)
+RM-DR-128.2;ja;blutpriester;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Blutpriester (I-08)
+RM-DR-129.1;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL wählt 3, mindestens 1 Wolf (I-01, I-05)
+RM-DR-129.2;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur andere Personen (I-01)
+RM-DR-129.3;ja;traumdeuter;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";wahre Wolfszählung (I-02)
+RM-DR-130.1;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";blockierte Hinrichtung zählt
+RM-DR-130.2;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";jede bestätigte Hinrichtung
+RM-DR-130.3;ja;henker;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";verfällt, wirkt nur mit lebendem Henker am Folgetag
+RM-DR-131.1;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";jeder tatsächliche Tod, jede Ursache (E-05)
+RM-DR-131.2;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";bis neue Wahl oder Tod des Ziels (E-06)
+RM-DR-131.3;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026 (RM-DR-003)";nächste lebende Nachbarn
+RM-DR-131.4;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";immer verschont, kein Ersatz (E-07)
+RM-DR-131.5;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";Mitsieg, wenn lebend (E-08)
+RM-DR-131.6;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";jede Nacht neu wählen oder behalten, nie sich selbst (E-09)
+RM-DR-131.7;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";erlischt bei Tod oder Rollenverlust (E-10)
+RM-DR-131.8;ja;feuerteufel;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026";ein Brand je Tod, alle Markierungen verbraucht (E-11)
+RM-DR-132.1;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";jeder Tod außer Korrektur, nach Schutz (E-12)
+RM-DR-132.2;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";keine Abklingzeit, eine lebende Puppe, Neuvergabe nächste Nacht (E-13)
+RM-DR-132.3;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Puppe hebt Verzauberung nicht auf (E-01, wie RM-DR-103.2)
+RM-DR-132.4;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";allein, lebend bei höchstens drei Lebenden (E-15)
+RM-DR-132.5;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";andere lebende Person, geheim (E-14)
+RM-DR-132.6;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Ketten: jede Person höchstens einmal, Umlenkung verbraucht (E-20)
+RM-DR-132.7;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Vergabe freiwillig in jeder Nacht ohne Puppe (E-21)
+RM-DR-132.8;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Puppe endet mit dem Rollenverlust (E-22)
+RM-DR-132.9;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";eigene Puppe vor fremder Verknüpfung (E-23)
+RM-DR-133.1;ja;blutwolf;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis für den Spielleiter (RM-DR-008)
+RM-DR-134.1;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";jede Person, Wirkung nur auf Dorf
+RM-DR-134.2;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur die Person
+RM-DR-134.3;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Blocker zuerst
+RM-DR-135.1;ja;cerberus;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Spielleiter fragt abwehren?
+RM-DR-135.2;ja;cerberus;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";nur Hinrichtung
+RM-DR-136.1;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur Wolfsangriff
+RM-DR-136.2;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur wer als Wolf zählt; Fluch nur für Rollenauskünfte (V-01/V-02)
+RM-DR-136.3;ja;ritter;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Fenrir-Einmalschutz gilt auch gegen Ritter
+RM-DR-137.1;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";jede andere lebende Person (R-01)
+RM-DR-137.2;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";nur Jede-Nacht-Schritte doppelt (R-02, R-04)
+RM-DR-137.3;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";bis zur nächsten gewährten Zuflucht (R-01)
+RM-DR-137.4;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Ablehnung löst nichts (R-01)
+RM-DR-137.5;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Wiederholung erlaubt (R-01)
+RM-DR-138.1;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";Toten vor der Hinrichtung, ab 5
+RM-DR-138.2;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";nur eigene Hinrichtung
+RM-DR-139.1;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Zähler je Wolfs-Lynch (I-04)
+RM-DR-139.2;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";drei andere (I-04)
+RM-DR-139.3;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Lynch aktiviert (I-04)
+RM-DR-139.4;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";wahre Wolfszählung (I-02)
+RM-DR-140.1;ja;koenig;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";einmal je Leben (I-03)
+RM-DR-140.2;ja;koenig;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";aktuelle Fraktion Dorf, SL wählt (I-03)
+RM-DR-141.1;ja;dr-victor-frankenstein;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";nur nicht vergebene Rollen, keine Wölfe, Dorfbewohner immer (W-04)
+RM-DR-141.2;ja;dr-victor-frankenstein;E;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";frischer Start (W-04)
 RM-DR-141.3;ja;dr-victor-frankenstein;E;rules-register G-ID-3;Einmal-Fähigkeiten pro Person und Rolle
-RM-DR-141.4;ja;dr-victor-frankenstein;S;;
-RM-DR-142.1;ja;nekromant;S;;
-RM-DR-142.2;ja;nekromant;S;;
-RM-DR-142.3;ja;nekromant;S;;
-RM-DR-142.4;ja;nekromant;S;;
-RM-DR-142.5;ja;nekromant;S;;
+RM-DR-141.4;ja;kartenschlucker;S;"DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026";Kartenbedingung; mit dem Totenkarten-Assistenten (W-01)
+RM-DR-142.1;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";global, nächster Tod jeder Ursache, bis nächste Nacht (E-16)
+RM-DR-142.2;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";freiwillig, nur Rudelangriff, jedes andere lebende Ziel (E-17)
+RM-DR-142.3;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";gemeinsamer Vorrat, jede tote Person einmal (E-18)
+RM-DR-142.4;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";einmal je Tag, geheim, counts_as_wolf (E-19)
+RM-DR-142.5;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Übungsenthüllung entfällt (E-19)
+RM-DR-142.6;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";ein Vorrat für alle, jeder Schild verhindert einen Tod (E-24)
+RM-DR-142.7;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";nach dem Verdammniswächter, vor der Märtyrerin (E-25)
+RM-DR-142.8;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";nur wenn er sonst stürbe (E-26)
+RM-DR-142.9;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Schild erlischt mit Tod oder Rollenverlust (E-27)
 RM-DR-143.1;ja;kartenschlucker;S;;
 RM-DR-143.2;ja;kartenschlucker;S;;
-RM-DR-144.1;ja;hades;S;;
-RM-DR-144.2;ja;hades;S;;
-RM-DR-144.3;ja;hades;S;;
-RM-DR-145.1;ja;doktor;S;;
+RM-DR-144.1;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";Sieg automatisch, solange er lebt und mindestens 10 Lichter hat (E-29)
+RM-DR-144.2;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";jeder tatsächliche Tod außer Korrektur, auch eigene Tötungen (E-28)
+RM-DR-144.3;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";Barriere für 3 Lichter, Stimme x3 gestrichen (E-31)
+RM-DR-144.4;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";Tötung für 2 Lichter, einmal je Nacht, Tod am Morgen (E-30)
+RM-DR-145.1;ja;doktor;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";Einzelsieg ist ein Team
 RM-DR-145.2;ja;doktor;E;"rules-register G-ID-2; DR-10; DECISION-LOG Lehrling (Fraktion wechselt sofort)";Siegfraktion ist ein aktueller Personenwert
-RM-DR-146.1;ja;faehrtenleser;Q;;„links“ am Tisch gegenüber Bildschirm ist ohne Gerät nicht prüfbar
-RM-DR-146.2;ja;faehrtenleser;S;;
-RM-DR-146.3;ja;faehrtenleser;S;;
-RM-DR-147.1;ja;waldlaeufer;S;;
-RM-DR-147.2;ja;waldlaeufer;S;;
-RM-DR-148.1;ja;schutzgeist;S;;
-RM-DR-148.2;ja;schutzgeist;S;;
-RM-DR-148.3;ja;schutzgeist;S;Konflikt mit rules-register G-PH-2 (nur lebende Rolleninhaber handeln);bei Umsetzung ausdrücklich als Ausnahme entscheiden
-RM-DR-148.4;ja;schutzgeist;S;;
-RM-DR-149.1;ja;waechter-am-tor;S;;
-RM-DR-150.1;ja;zeitwaechter;S;;
-RM-DR-150.2;ja;zeitwaechter;S;;
-RM-DR-150.3;ja;zeitwaechter;S;;
-RM-DR-150.4;ja;zeitwaechter;S;;
-RM-DR-151.1;ja;amalia;S;;
-RM-DR-151.2;ja;amalia;S;;
-RM-DR-151.3;ja;amalia;S;;
-RM-DR-152.1;ja;kriegerin-des-lichts;S;;
-RM-DR-152.2;ja;kriegerin-des-lichts;S;;
-RM-DR-152.3;ja;kriegerin-des-lichts;S;;
-RM-DR-153.1;ja;detektiv;S;;
-RM-DR-153.2;ja;detektiv;S;;
-RM-DR-153.3;ja;detektiv;S;;
-RM-DR-153.4;ja;detektiv;Q;;"Richtungskonvention; zusätzlich widersprüchlich zu Fährtenleser und Ritter"
-RM-DR-154.1;ja;dorfschmied;S;;
-RM-DR-154.2;ja;dorfschmied;S;;
-RM-DR-154.3;ja;dorfschmied;S;;
-RM-DR-155.1;ja;doppelspion;P;;Doppelspion: muss er leben
+RM-DR-146.1;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person (Tablet-Gegenprüfung offen)
+RM-DR-146.2;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";gleich weit melden
+RM-DR-146.3;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";gleiche Wolfsdefinition (counts_as_wolf)
+RM-DR-147.1;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";jede Nacht
+RM-DR-147.2;ja;waldlaeufer;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";lebende Personen mit counts_as_wolf, einfach
+RM-DR-148.1;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";bis zum nächsten Rudelangriff (S-04)
+RM-DR-148.2;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nur Rudelangriff (S-04)
+RM-DR-148.3;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";erste Nacht nach dem Tod, Ausnahme G-PH-2 (S-04)
+RM-DR-148.4;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";öffentlich ohne Namen, wahre Zählung (S-04)
+RM-DR-149.1;ja;waechter-am-tor;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";jeder Weg ins Rudel wird blockiert; Fluch folgt mit Dämonischem Wolf
+RM-DR-150.1;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";Entscheidung zu Nachtbeginn, keine Tode dieser Nacht (E-36)
+RM-DR-150.2;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";allererster Nachtschritt (E-36)
+RM-DR-150.3;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";kein Wachstum, Nachtnummer läuft, frühere fällige Wirkungen treten ein (E-36)
+RM-DR-150.4;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";alle Rollen einschließlich Wölfe (E-36)
+RM-DR-151.1;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Tagesaktion (I-09)
+RM-DR-151.2;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL antwortet wahr, App protokolliert (I-09)
+RM-DR-151.3;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";mindestens 3 lebende Wölfe (I-09)
+RM-DR-152.1;ja;kriegerin-des-lichts;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Wolf überlebt (I-07)
+RM-DR-152.2;ja;kriegerin-des-lichts;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";App, wahre Wolfszählung (I-07)
+RM-DR-152.3;ja;kriegerin-des-lichts;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";geheim an Kriegerin (I-07)
+RM-DR-153.1;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Detektiv muss leben (I-10)
+RM-DR-153.2;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";ab 1 anderem lebenden Wolf (I-10, I-14)
+RM-DR-153.3;ja;detektiv;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Richtung vom Platz des toten Wolfs (I-10)
+RM-DR-153.4;ja;detektiv;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person
+RM-DR-154.1;ja;dorfschmied;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";globale Nachtnummer (S-06)
+RM-DR-154.2;ja;dorfschmied;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";ab Nacht 6 bis zur Vergabe (S-06)
+RM-DR-154.3;ja;dorfschmied;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";alle Rudelangriffe inkl. Durchdringung (S-06)
+RM-DR-155.1;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur lebend gewinnt
 RM-DR-155.2;ja;doppelspion;E;rules-register G-SIEG-2: Einzelsiegrollen zählen als Nicht-Wölfe;
-RM-DR-155.3;ja;doppelspion;P;;Doppelspion: gleichzeitige Kandidaten
-RM-DR-156.1;ja;grabraeuber;S;;
-RM-DR-156.2;ja;grabraeuber;S;;
-RM-DR-157.1;ja;parasit;S;DR-02 schließt eine feste Siegpriorität aus (Teil „Team-Siege zuerst“ entschieden);Restfrage höchstens drei oder genau drei Lebende
-RM-DR-158.1;ja;todesprediger;S;;
-RM-DR-158.2;ja;todesprediger;S;;
-RM-DR-158.3;ja;todesprediger;S;;
-RM-DR-138.3;ja;selbstmoerder;P;;neu: wer zählt als tot (Wiederbelebung)
-RM-DR-138.4;ja;selbstmoerder;P;;neu: abgelehnter Kandidat
+RM-DR-155.3;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur Doppelspion-Kandidat, kein Dorfkandidat
+RM-DR-156.1;ja;grabraeuber;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";dauerhafte Fähigkeit, bleibt Grabräuber (E-32)
+RM-DR-156.2;ja;grabraeuber;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";allein, lebend bei höchstens drei Lebenden (E-33)
+RM-DR-156.3;ja;grabraeuber;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";jede tote Person mit eigenem Nachtschritt, frische Einsätze (E-34)
+RM-DR-157.1;ja;parasit;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";höchstens drei Lebende inkl. ihm, mit anderen Siegen
+RM-DR-158.1;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";geheim (E-04)
+RM-DR-158.2;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur Nacht 1 (E-04)
+RM-DR-158.3;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Tag N nach Nacht N, Morgentode zur Nacht (E-04)
+RM-DR-138.3;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";nur aktuell Tote
+RM-DR-138.4;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";erneut nach jeder Zustandsänderung
 RM-DR-138.5;ja;selbstmoerder;E;"rules-register G-TOD-3; DECISION-LOG Spiegelwolf";Tod durch Spiegelung ist keine Hinrichtung des Selbstmörders
-RM-DR-155.4;ja;doppelspion;P;;neu: was erfahren die Wölfe
+RM-DR-155.4;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";keine Rollennennung
 RM-DR-155.5;ja;doppelspion;T;rules-register §2: nur Wölfe wählen das Rudelopfer;Hinweis im Rudelschritt, keine Teilnahme an der gespeicherten Wahl

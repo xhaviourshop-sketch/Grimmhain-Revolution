@@ -168,8 +168,15 @@ func test_poison_transforms() -> void:
 	var run := _replay_ok([_k8(), Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step("night:1:1:schutzengel:3"),
 		Command.answer_prompt(2, [7]), Command.begin_step("night:1:2:pack"), Command.answer_prompt(3, []), Command.begin_step("night:1:3:waldhexe:5"),
 		Command.answer_choice(4, "poison", true), Command.answer_stage_targets(4, "poison_target", [6]), Command.answer_choice(4, "confirm", true)] as Array[Command], "Gift")
-	if run.ok:
-		_expect_turned(run.state.players[8], "Gifttod")
+	if not run.ok:
+		return
+	# Decision Log „Nachttode“: Gift markiert nur; Tod und Verwandlung in der Morgenauflösung.
+	_expect_unturned(run.state.players[8], "Gift markiert, noch nicht verwandelt")
+	var s := run.state
+	for c: Command in [Command.begin_step("night:1:4:das-orakel:4"), Command.answer_stage_targets(5, "target", [1]), Command.answer_choice(5, "shown", true)]:
+		s = apply_ok(s, c, "Orakel").state
+	var dawn := apply_ok(s, Command.end_night(), "Morgen")
+	_expect_turned(dawn.state.players[8], "Gifttod")
 
 
 func test_execution_transforms_and_parity() -> void:

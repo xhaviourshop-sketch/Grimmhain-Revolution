@@ -65,7 +65,7 @@ func test_revive_logs_old_and_new_and_keeps_history() -> void:
 		var d: Dictionary = corrected[0].data
 		assert_eq(bool((d["old"] as Dictionary)["alive"]), false, "alter Wert tot")
 		assert_eq(String(((d["old"] as Dictionary)["death"] as Dictionary)["cause"]), "NIGHT_KILL", "alter Todesdatensatz protokolliert")
-		assert_eq(d["new"], {"alive": true, "death": null}, "neuer Wert")
+		assert_eq(d["new"], {"alive": true, "death": null, "ability_uses": {}}, "neuer Wert (Einsätze zurückgesetzt, Decision Log „Wiederbelebung“)")
 	else:
 		fail("genau ein GmCorrected-Ereignis erwartet")
 	# Kein Undo: Befehl wird angehängt, frühere Ereignisse bleiben bytegleich.

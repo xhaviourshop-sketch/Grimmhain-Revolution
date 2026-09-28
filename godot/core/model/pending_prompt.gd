@@ -17,6 +17,51 @@ const OWNER_WOLF_CHILD := &"wolfskind"
 const KIND_ORACLE_CHECK := &"oracle_check"
 const OWNER_APPRENTICE := &"lehrling"
 const KIND_APPRENTICE_CHAIN := &"apprentice_choice"
+const OWNER_CHRONICLER := &"dorfchronistin"
+const OWNER_BOUND := &"die-gebundenen"
+const OWNER_RANGER := &"waldlaeufer"
+const OWNER_DOCTOR := &"doktor"
+const OWNER_TRACKER := &"faehrtenleser"
+const OWNER_JUDGE := &"korrupter-richter"
+const OWNER_HOUND := &"spuerhund"
+const OWNER_PARASITE := &"parasit"
+const OWNER_PACK2 := &"pack2"
+const OWNER_SHADOW := &"schattenhund"
+const OWNER_NIGHTMARE := &"albtraumwolf"
+const OWNER_POISON_WOLF := &"giftwolf"
+const OWNER_HANGMAN := &"henker"
+const OWNER_DREAMER := &"traumdeuter"
+const OWNER_BOUNTY := &"kopfgeldjaeger"
+const OWNER_KING := &"koenig"
+const OWNER_WARRIOR := &"kriegerin-des-lichts"
+const OWNER_BLOOD := &"blutpriester"
+const OWNER_ETERNAL := &"die-ewigen"
+const OWNER_SMITH := &"dorfschmied"
+const OWNER_GHOST := &"schutzgeist"
+const OWNER_DOOM := &"verdammniswaechter"
+const OWNER_MARTYR := &"maertyrerin"
+const OWNER_LOKI := &"loki"
+const OWNER_RED := &"rotkaeppchen"
+const OWNER_WIDOW := &"schwarze-witwe"
+const OWNER_SHADOWWALKER := &"schattenwanderer"
+const OWNER_LYKAON := &"koenig-lykaon"
+const OWNER_SWAPPER := &"seelentauscher"
+const OWNER_COACH := &"kutscher"
+const OWNER_FRANKENSTEIN := &"dr-victor-frankenstein"
+const OWNER_PIPER := &"rattenfaenger"
+const OWNER_PEST := &"pestbringerin"
+const OWNER_PROPHET := &"prophet-des-untergangs"
+const OWNER_FIRE := &"feuerteufel"
+const OWNER_VOODOO := &"voodoo-priester"
+const OWNER_NECRO := &"nekromant"
+const OWNER_HADES := &"hades"
+const OWNER_GRAVE := &"grabraeuber"
+const OWNER_FATE := &"schicksalswolf"
+const OWNER_LONE := &"rachsuechtiger-wolf"
+const OWNER_TIME := &"zeitwaechter"
+const OWNER_PREACHER := &"todesprediger"
+const KIND_BOND := &"bond_choice"  ## Bindungsschritt mit Stufen (BondSteps)
+const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
 var id: int = 0
 var kind: StringName = KIND_PICK_PLAYERS
@@ -72,6 +117,15 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 			return null
 	elif p.owner == OWNER_APPRENTICE:
 		if not ApprenticeRules.STAGES.has(p.stage):
+			return null
+	elif p.owner == OWNER_SHADOW or p.owner == OWNER_TIME:
+		if p.stage != &"use":
+			return null
+	elif InfoSteps.OWNERS.has(p.owner):
+		if not InfoSteps.STAGES.has(p.stage):
+			return null
+	elif BondSteps.OWNERS.has(p.owner):
+		if not BondSteps.STAGES.has(p.stage):
 			return null
 	elif p.stage != &"":
 		return null

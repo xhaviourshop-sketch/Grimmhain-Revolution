@@ -259,3 +259,277 @@ Dieser Eintrag entscheidet Q8 (`../godot-migration/07-open-questions.md`) mit **
 | Nur der Product Owner setzt `freigegeben` | Entscheidung | Verfahrensregel aus dem Masterplan §9 („Claude darf … keinen unbekannten Assetstatus als freigegeben markieren") | Masterplan §9 |
 
 Unverändert gilt: Jede finale Datei braucht nachvollziehbare Herkunft, Nutzungsrecht und Product-Owner-Freigabe (Eintrag „Gestaltung, Audio und Assets", Masterplan §2 und Phase 9). Offene Entscheidungen des Nutzers: Q8, Teilbudget der ersten Welle, Porträtstil und Figurenvorgaben (`../assets/BRIEFING-WAVE-1.md` §11).
+
+## Rollenaudit · Doppelspion, Selbstmörder, Einmalfähigkeiten, Gebundene, Chronistin, Rudel · 27. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen F-01 bis F-10, `../role-migration/11-role-audit-status.md` §6). Freitextantworten sind wörtlich zitiert und ihre Auslegung ist genannt.
+
+- **Doppelspion muss leben (RM-DR-155.1):** Antwort „Das Dorf, er verliert, weil er alleine gewinnen will“. Auslegung: Nur ein lebender Doppelspion gewinnt; ist er tot, wenn der letzte Wolf stirbt, gewinnt das Dorf.
+- **Doppelspion und Dorfsieg (RM-DR-155.3):** A. Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, wird nur der Doppelspion-Sieg (je Person) vorgeschlagen, nicht der Dorfsieg. Ablehnen und `declare_winner` bleiben möglich.
+- **Doppelspion beim Rudel (RM-DR-155.4):** A. Der Spielleiter nennt keine Rolle; die Wölfe sehen eine weitere wache Person.
+- **Selbstmörder, Zählbasis (RM-DR-138.1):** Antwort „Sie wär die 6. Tote und es wird bei 5 toten Personen ein Sound ertönen“. Auslegung: Gezählt werden die Toten vor seiner Hinrichtung; bei mindestens 5 gewinnt er. Zusätzlich gewünscht: ein Sound, sobald 5 Personen tot sind (Audio-Anforderung; ob er nur bei einem Selbstmörder im Spiel und öffentlich ertönt, ist noch offen, weil er sonst dessen Anwesenheit verraten kann).
+- **Selbstmörder, Wiederbelebte (RM-DR-138.3):** A. Es zählen nur Personen, die bei der Hinrichtung tot sind.
+- **Selbstmörder, abgelehnter Sieg (RM-DR-138.4):** B. Ein abgelehnter Selbstmörder-Sieg wird nach jeder späteren Zustandsänderung erneut vorgeschlagen.
+- **„Einmalig“ und „erste Nacht“ (RM-DR-014):** B. Fähigkeiten „zu Beginn des Spiels“ bzw. „in der ersten Nacht“ gelten strikt nur in Nacht 1 der Partie; wer dann nicht handelt oder die Rolle später erhält, hat sie nicht mehr. Wolfskind und Lehrling bleiben bei ihrer eigenen Entscheidung (DR-10, DR-11).
+- **Die Gebundenen:** A. Jede lebende Gebundene sieht alle anderen lebenden Gebundenen; lebt nur eine, erfährt sie „keine anderen“.
+- **Dorfchronistin:** A. Anzahl der Personen mit Einzelsiegrolle, lebend und tot; mehrere Chronistinnen erhalten die Information jeweils für sich.
+- **Rudel nach Verwandlung in derselben Nacht:** A. Der Rudelschritt entfällt, wenn niemand mehr lebt, der zu Beginn der Nacht als Wolf zählte; ein in dieser Nacht verwandeltes Wolfskind wacht erst ab der folgenden Nacht.
+
+## Rollenaudit · Nachfragen Spielende, Nachttode, Sound · 27. September 2026
+
+Diese Einträge ersetzen widersprechende ältere Formulierungen ausdrücklich (insbesondere DR-06 „Gift tötet sofort“ und die Bestätigungsreihenfolge im Eintrag „Waldhexe · Produktionsrolle im Regelkern“).
+
+- **Spielende (Nachfrage zu F-11):** A. Die App schlägt einen erkannten Sieg vor, der Spielleiter bestätigt mit einem Tipp, danach folgt ein großer Siegbildschirm. Ablehnen bleibt als Fehlerkorrektur. Ein einmal erfüllter Sieg wird nach einer Ablehnung weiter vorgeschlagen, auch der Selbstmörder-Sieg nach einer Wiederbelebung (F-11 = B).
+- **Nachttode (Nachfrage zu F-04):** Antwort „C, sollte ein Marker gesetzt sein und die Person zu 100 % sterben, wacht sie die Nacht nicht auf, weil sie eh ihre Info am Tag nicht teilen kann“. Gift setzt eine Todesmarkierung; die Person stirbt erst in der Morgenauflösung (dann Verwandlung, Erbe, Reaktionen, Siegprüfung), verliert aber sofort ihre übrigen persönlichen Nachtschritte dieser Nacht. Ein Rudelopfer ist nachts noch nicht sicher tot (Rettung möglich) und behält seine Schritte.
+- **Sound bei 5 Toten:** ertönt, sobald die fünfte Person ihren Totenmarker erhält (öffentlich, am Tag), und nur, wenn ein Selbstmörder in der Partie ist. Oberflächen-/Audio-Anforderung, nicht Regelkern.
+
+## Rollenaudit · Waldläufer, Doktor, Sitznachbarn, Nachtwächter, Kutscher · 27. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet.
+
+- **Waldläufer, Häufigkeit (RM-DR-147.1):** A. Eigener Schritt in jeder Nacht, solange er lebt.
+- **Waldläufer, Zählung (RM-DR-147.2):** A. Gezählt werden Personen, die zum Zeitpunkt seines Schritts leben und als Wolf zählen; der Siegreiche Wolf zählt einmal, ein Rudelopfer dieser Nacht lebt noch.
+- **Doktor, zwei Einzelsiegrollen (RM-DR-145.1):** B. „Einzelsieg“ gilt als ein Team; zwei Personen mit Einzelsiegrolle sind „gleich“.
+- **Doktor, Trugbilderwolf:** A. Es zählt die wahre aktuelle Fraktion; die Scheinrolle täuscht nur Rollen-Informationen.
+- **Doktor, Ziele:** A. Genau zwei verschiedene andere lebende Personen.
+- **Sitznachbarn (RM-DR-003, RM-DR-102.1, RM-DR-116.1):** A. Nachbarn sind die nächsten lebenden Personen links und rechts im Sitzkreis; tote Plätze werden übersprungen.
+- **Nachtwächter:** A. Jeden Morgen nach der Morgenauflösung: sitzt neben einem lebenden Nachtwächter jemand, der nicht zum Dorf gehört (Wolf oder Einzelsieg), läuten öffentlich die Glocken, ohne Seite oder Namen.
+- **Wahnsinniger Kutscher und Spiegelung:** A. Nur ein echter Lynch des Kutschers lässt die Nachbarn mitsterben; eine Spiegelung auf ihn ist keine Hinrichtung.
+
+## Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser · 27. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet. Der erste Punkt ersetzt ausdrücklich ältere Formulierungen („eine Wiederbelebung setzt nichts zurück“ in G-ID-3-Erläuterungen, Waldhexe: „eine Wiederbelebung setzt sie nicht zurück“, Spiegelwolf: „Eine Wiederbelebung … setzt die Nutzung nicht zurück“, Sensenträger: „einmal pro Person und Partie“ gilt jetzt je Leben).
+
+- **Wiederbelebung setzt Fähigkeiten zurück:** Antwort „Jede Wiederbelebung = Reset der Fähigkeit“, auf Nachfrage B „Alle Fähigkeiten“. Jede Wiederbelebung setzt alle begrenzten Einsätze der Person zurück (Tränke, Spiegelung, Todesreaktionen, einmalige Fähigkeiten). Unverändert bleiben Zustände, die keine Fähigkeit sind: Nominierungsstatus (`ever_nominated`), Wolfskind-Vorbild und -Verwandlung, Lehrling-Bindung und Erbe, erfüllte Siege, bereits eingereihte Reaktionen.
+- **Besessener Wolf, Schwelle (RM-DR-124.1):** A. Mindestens 5 Lebende unmittelbar vor seinem Tod, er eingeschlossen.
+- **Besessener Wolf, Mitnahme:** A. Nach seinem Tod wählt er eine andere lebende Person (auch einen Wolf) oder verzichtet; Tag sofort, Nacht in der Morgenauflösung (wie Sensenträger).
+- **Ritter, Auslöser (RM-DR-136.1):** A. Nur ein Tod durch Wolfsangriff (Rudel; spätere Wolfsangriffe) löst aus, Gift nicht.
+- **Ritter, Ziel:** A. Nächste lebende Person, die als Wolf zählt, Abstand in Sitzen einschließlich toter Plätze; bei Gleichstand wählt der Spielleiter.
+- **Richtung „links“ (RM-DR-146.1, RM-DR-153.4):** A. Aus Sicht der Person am Tisch: links ist der nächste Platz im Uhrzeigersinn des App-Sitzkreises. Gegenprüfung am Tablet, ob die Sitzansicht im Uhrzeigersinn läuft, bleibt offen.
+- **Fährtenleser, Gleichstand (RM-DR-146.2):** A. Abstand wie beim Ritter; bei Gleichstand erfährt er „beide Seiten gleich weit“.
+- **Fährtenleser, Ablauf:** B. Jede Nacht ein Schritt „jetzt nutzen?“ bis zur Nutzung; danach kein Schritt mehr.
+
+## Rollenaudit · Querschnittsfragen · 27. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit Auslegung.
+
+- **Wolfsangriff (RM-DR-004):** A. Wolfsangriff ist ausschließlich der Rudelangriff (Rudelopfer, einschließlich weiterer Rudelopfer derselben Art wie beim Rudelvater). Einzeltötungen einzelner Wolfsrollen haben eigene Ursachen und sind keine Wolfsangriffe.
+- **Durchdringung (RM-DR-005):** A. „Ignoriert Schutz“ durchdringt Schutzengel, Waldhexenrettung, Dorfwache-Immunität und die Rettung des Weisen; nicht die persönlichen Schilde der Einzelsiegrollen, nicht Umlenkungen und Ersatzopfer.
+- **Rollenblockierung (RM-DR-010):** A. Eine Blockade lässt nur aktive Nachtschritte von Dorfrollen in der betroffenen Nacht entfallen (protokolliert); Todesreaktionen und passive Fähigkeiten wirken weiter.
+- **Bindungen nach Wiederbelebung (RM-DR-011.2):** A. Eine durch einen Tod ausgelöste oder beendete Bindung (Liebespaar, Kette, Wirt) bleibt beendet; ein erneuter Tod löst sie nicht noch einmal aus. (Begrenzte Einsätze setzt die Wiederbelebung dagegen zurück, Eintrag „Wiederbelebung …“.)
+- **Zufall oder Spielleiterwahl (RM-DR-015.2):** Antwort „Es gibt ein Wählen & ein Random Button.“ Auslegung: Bei Rollen mit zufälligem Ergebnis kann der Spielleiter selbst wählen oder eine Zufallsziehung auslösen; die Ziehung läuft über den gespeicherten Seed (G-RNG-1) und wird erst mit der Bestätigung übernommen.
+- **Einzelsiegrollen ohne klare Siegbedingung (RM-DR-006):** A. Die Siegbedingung wird je Rolle jetzt festgelegt (Rollenfragen folgen).
+- **Stimmbezug (RM-DR-008):** Antwort „Ein Reminder Text, der klar sichtbar auf dem Bildschirm des Spielleiters ist, damit er das mit einberechnen kann, da Stimmwahl physisch in der realen Welt in der ersten Version zählt und der Spielleiter das selber draufrechnen muss.“ Auslegung: Stimmboni werden nicht gezählt; der Regelkern liefert einen Hinweis, den die Spielleiteransicht deutlich anzeigt.
+- **Nominierung durch den Korrupten Richter (RM-DR-012):** A. Seine Markierung ist eine normale Nominierung mit dem Richter als Nominierendem (Tageslimit, Manipulator-Tod, Spiegelung wie sonst).
+
+## Rollenaudit · Blutwolf, Korrupter Richter, Wächter am Tor, Spürhund, Parasit · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit Auslegung.
+
+- **Blutwolf (RM-DR-133.1):** folgt aus RM-DR-008: Die Spielleiteransicht zeigt als Hinweis „+1 Stimme je direkt benachbartem toten Platz“, solange er lebt; nichts wird gezählt.
+- **Korrupter Richter, Zeitpunkt:** Antwort „Jede Nacht am Ende des Tages bzw. zu Beginn der Nacht wird die alte Markierung gelöscht, so dass immer maximal 1 Spieler nominiert ist durch den Richter.“ Auslegung: Nachtschritt (Legacy-Stufe 1.5), freiwillig eine lebende Person markieren; bei Tagesbeginn gilt sie als vom Richter nominiert; bei Nachtbeginn wird die Markierung gelöscht.
+- **Korrupter Richter, Selbstmarkierung:** B. Erlaubt.
+- **Korrupter Richter, Geheimhaltung:** A. Öffentlich erscheint nur die Nominierung der markierten Person, nicht der Richter; intern ist er der Nominierende (RM-DR-012, Spiegelwolf).
+- **Wächter am Tor, Umfang (RM-DR-149):** A. Jeder Weg, auf dem eine Person während der Partie zum Wolf würde (Wolfskind-Verwandlung, Lehrling erbt eine Wolfsrolle, später König Lykaon und Seelentauscher), wird blockiert; die Person wird Dorfbewohner. Spielleiterkorrekturen nicht.
+- **Wächter am Tor, Mitteilung:** A. Nur die betroffene Person erfährt privat, dass sie jetzt Dorfbewohner ist.
+- **Spürhund:** Antwort „Die Fähigkeit wurde falsch verstanden – Wähle 3 Spieler, sollte einer ein Wolf oder Solo-Spieler sein, kriegt er einen Haken, ist es keiner, kriegt er ein X und wird zwar weiterhin aufgerufen, aber kann seine Fähigkeit nicht mehr einsetzen.“ Auslegung: Er wählt drei Personen; ist eine davon Wolf oder Einzelsieg, erhält er ✓; sonst ✗ und verliert die Fähigkeit, wird aber weiter jede Nacht aufgerufen. Keine „falsche Spur“.
+- **Spürhund, Häufigkeit:** C. Jede Nacht, freiwillig (Verzicht möglich), drei verschiedene andere lebende Personen.
+- **Parasit, Sieg (RM-DR-157.1):** Antwort „Wenn 3 oder weniger Spieler am Leben sind und er darunter ist, also er + 2 andere, egal ob Wolf oder Dorf.“ Siegkandidat bei höchstens drei Lebenden, wenn er lebt; andere gleichzeitige Siege werden mit vorgeschlagen (DR-02).
+- **Parasit, Unverwundbarkeit:** A. Mit lebendem Wirt überlebt er jede Todesursache; nur der Tod des Wirts tötet ihn; Spielleiterkorrekturen bleiben möglich. Ohne lebenden Wirt ist er normal verwundbar (A).
+- **Parasit, Wirtwechsel:** A. Jede Nacht darf er einen neuen Wirt wählen oder beim alten bleiben.
+- **Setup-Regel für Einzelsiegrollen:** Antwort „Setup auf später verschieben, dafür aber alle Rollen miteinander abgleichen und logische Konsequenz ziehen, welche Rollen nie in einer gleichen Runde sein sollten.“ Die Setup-Einschränkung ist vertagt; eine Analyse unverträglicher Rollenkombinationen wird als Vorschlag erstellt. Die bisherige Entscheidung „mehrere Manipulatoren sind getrennte Kandidaten“ bleibt bis dahin bestehen.
+
+## Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung beantwortet; Freitext wörtlich mit Auslegung. Es gelten die Querschnittsentscheidungen (Wolfsangriff = Rudelangriff, Durchdringungsliste, Blockade nur aktiver Dorf-Nachtschritte).
+
+- **Schattenhund (RM-DR-123):** A. Jede Nacht „jetzt blockieren?“, bis er es einmal genutzt hat (je Leben), auch in Nacht 1; blockiert alle Dorf-Nachtschritte dieser Nacht.
+- **Reihenfolge der Blocker (RM-DR-134.3):** A. Schattenhund und Albtraumwolf handeln ganz am Anfang der Nacht vor allen Dorfrollen; die Blockade gilt für die ganze Nacht.
+- **Albtraumwolf, Ziel (RM-DR-134.1/.2):** A. Jede Nacht freiwillig eine lebende Person (Wirkung nur auf Dorf-Nachtschritte dieser Person) oder Verzicht; dieselbe Person auch in aufeinanderfolgenden Nächten.
+- **Giftwolf, Mitteilung (RM-DR-111.2):** Antwort „Sobald Clara vergiftet wurde, erfährt sie davon.“ Das Ziel erhält sofort eine private Mitteilung.
+- **Giftwolf, Tod (RM-DR-111.3):** A. Vergiftet in Nacht N, stirbt sie in der Morgenauflösung nach Nacht N+2.
+- **Giftwolf, Regeln (RM-DR-111.1):** B. Höchstens eine Giftpranke pro Nacht; nichts hebt das Gift auf außer dem früheren Tod des Ziels.
+- **Giftwolf, Ablauf:** A. Eigener Nachtschritt nach dem Rudel, freiwillig; zwei Ladungen je Leben.
+- **Rudelvater (RM-DR-112):** A. Nach seinem Lynch gibt es in der folgenden Nacht direkt nach dem Rudel einen zweiten Rudelschritt; dessen Opfer stirbt am Morgen und durchdringt Schutz (Liste RM-DR-005). Den ersten Tod, der weder Rudelangriff noch Lynch ist, überlebt er einmal (je Leben); Spielleitertötungen sind immer wirksam.
+- **Seuchenwolf (RM-DR-108):** A. Nach seinem Tod durchdringt der nächste tatsächliche Rudelangriff Schutz (Liste RM-DR-005) und verbraucht die Wirkung, egal ob Schutz bestand; eine Nacht ohne Rudelopfer verbraucht nichts; mehrere tote Seuchenwölfe stapeln nicht.
+
+## Rollenaudit · Fenrir, Cerberus, Henker · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet.
+
+- **Fenrir (RM-DR-125):** A. Stufe +1 in jeder Morgenauflösung, in der er lebt; ab Stufe 3 überlebt er einmal jeden Tod außer Spielleiterkorrekturen (auch Lynch und Ritter). Eine Wiederbelebung setzt Stufe und Schutz zurück.
+- **Cerberus (RM-DR-135):** A. +1 Kopf in jeder Morgenauflösung, in der er lebt (höchstens 3). Wird er mit 3 Köpfen hingerichtet, fragt die App „abwehren?“: Ja → er überlebt, Köpfe auf 0, die Hinrichtung des Tages gilt als erfolgt. Nur Hinrichtungen.
+- **Henker, Zählung (RM-DR-130.1/.2):** A. Jede bestätigte Hinrichtung der Partie zählt, auch ohne Tod (Spiegelung, Cerberus-Abwehr, Parasit), auch vor dem Rollenerwerb.
+- **Henker, Markierung (RM-DR-130.3):** A. Ab drei Hinrichtungen markiert er jede Nacht freiwillig eine Person; sie stirbt zusätzlich bei der Hinrichtung des folgenden Tages, wenn der Henker dabei lebt; sonst verfällt die Markierung.
+- **Selbstmörder und Henker (RM-DR-138.2):** A. Nur die Hinrichtung der Person selbst zählt; ein zusätzlicher Henker-Tod ist keine Hinrichtung des Selbstmörders.
+
+## Rollenaudit · Informationsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs I-01 bis I-15). Freitext wörtlich mit Auslegung. Es gelten die Querschnittsentscheidungen (Blockade nur aktiver Dorf-Nachtschritte, Wiederbelebung setzt begrenzte Einsätze zurück, Nachttode in der Morgenauflösung mit sofortigem Verlust weiterer Nachtschritte).
+
+- **Traumdeuter (I-01, RM-DR-129.1/.2):** Antwort „Der Spielleiter wählt die 3 Personen aus, hat aber einen Reminder, mindestens 1 Wolf zu wählen. Anzeige wird erst freigegeben, wenn mindestens 1 Wolf drunter ist und insgesamt 3 Spieler.“ Auslegung: Jede Nacht wählt der Spielleiter genau drei andere lebende Personen; die Bestätigung ist erst möglich, wenn mindestens eine davon als Wolf zählt.
+- **Traumdeuter, Anzeige (I-05):** A. Zwei oder drei Wölfe sind zulässig; der Traumdeuter erfährt nur „unter diesen dreien ist mindestens ein Wolf“, keine Anzahl.
+- **Wolfsbegriff von Traumdeuter und Kopfgeldjäger (I-02, RM-DR-129.3, RM-DR-139.4):** A. Es zählt die wahre Wolfszählung (`counts_as_wolf`); die Scheinrolle des Trugbilderwolfs täuscht nur Rollenauskünfte. Verfluchte des Dämonischen Wolfs werden mit dessen Entscheidung geklärt.
+- **König (I-03, RM-DR-140.1/.2):** A. Einmal je Leben in der ersten Nacht, in der strikt mehr Personen tot sind als leben; er erfährt eine andere lebende Person der aktuellen Fraktion Dorf mit ihrer wahren Rolle; der Spielleiter wählt sie aus.
+- **Kopfgeldjäger (I-04, RM-DR-139.1/.2/.3):** A. Jeder Lynch-Tod einer Person, die als Wolf zählt, während er lebt und die Rolle hat, ergibt eine Liste in einer folgenden Nacht (Zähler). Spiegelung und Cerberus-Abwehr sind kein Lynch-Tod eines Wolfs. Er selbst ist nie in der Liste. Reichen die Ziele nicht, verfällt die Liste mit Hinweis.
+- **Kopfgeldjäger, Liste (I-06):** A. Wie beim Traumdeuter: der Spielleiter wählt drei andere lebende Personen, Freigabe ab mindestens einem Wolf, Anzeige „mindestens ein Wolf“.
+- **Kriegerin des Lichts (I-07, RM-DR-152):** A. Einmal je Leben, freiwillig, Ziel eine andere lebende Person; die App prüft die wahre Wolfszählung und nur die Kriegerin erfährt das Ergebnis. Der getroffene Wolf überlebt. Ist das Ziel kein Wolf, stirbt die Kriegerin in der Morgenauflösung.
+- **Blutpriester (I-08, RM-DR-128):** A. Einmal je Leben, freiwillig; das Opfer stirbt in der Morgenauflösung (kein Wolfsangriff, Schutzengel wirkt nicht). Der Spielleiter wählt 0 bis 3 lebende Wölfe, deren Namen nur der Blutpriester erfährt.
+- **Blutpriester, Opfer (I-13):** A. Nur eine andere lebende Person (auch ein Wolf).
+- **Amalia (I-09, RM-DR-151):** A. Tagesaktion, solange mindestens drei lebende Personen als Wolf zählen; sie stirbt sofort, der Spielleiter beantwortet ihre öffentliche Frage wahrheitsgemäß mit Ja oder Nein, die App protokolliert die Antwort.
+- **Detektiv (I-10, RM-DR-153.1–.3):** A. Stirbt eine Person, die als Wolf zählt, während ein Detektiv lebt, und lebt danach mindestens ein anderer Wolf, wird öffentlich verkündet, in welcher Richtung vom Platz des Toten der nächste lebende Wolf sitzt (Abstand einschließlich toter Plätze, links = Uhrzeigersinn, bei Gleichstand „beide Seiten gleich weit“). Tag sofort, nachts in der Morgenauflösung; ein Hinweis je Wolfstod, unabhängig von der Zahl der Detektive.
+- **Detektiv und Wolfskind (I-14):** A. Maßgeblich ist der Zustand direkt nach den unmittelbaren Todesfolgen: ein durch denselben Tod verwandeltes Wolfskind zählt als anderer Wolf.
+- **Die Ewigen, Prüfung (I-11, RM-DR-104.2):** A. Jede Nacht ein gemeinsamer Schritt aller lebenden Ewigen; sie prüfen eine andere lebende Person und erfahren nur Ja (Einzelsiegrolle) oder Nein.
+- **Die Ewigen, Mitsieg (I-12, RM-DR-104.1/.3):** A. Sie bleiben Dorf. Gewinnt eine von ihnen mit Ja geprüfte Person einen Einzelsieg, gewinnen alle Ewigen mit, lebend oder tot.
+- **Die Ewigen, Bindung (I-15):** A. Der Mitsieg gilt nur der mit Ja geprüften Person, nicht deren Rolle.
+
+## Rollenaudit · Schutzrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs S-01 bis S-14). Freitext wörtlich mit Auslegung. Es gelten die Querschnittsentscheidungen: Wolfsangriff = Rudelangriff einschließlich zweitem Rudelschritt (RM-DR-004), Durchdringung durchdringt Schutzengel, Waldhexenrettung, Dorfwache und die Rettung des Weisen, nicht Ersatzopfer (RM-DR-005), Wiederbelebung setzt begrenzte Einsätze zurück.
+
+- **Der Weise, Fluch (S-01, RM-DR-114.1/.2):** Antwort „Alle Dorfbewohner Fähigkeiten Tag und Nacht und Spielleiter wählt 0–3 aus basierend nach seinem Ermessen.“ Auslegung: Wird der Weise gelyncht, legt der Spielleiter bei der Hinrichtung 0 bis 3 fest; so viele folgende Nächte und Tage (ab der folgenden Nacht) haben alle Personen der Fraktion Dorf keine Fähigkeiten. 0 bedeutet kein Fluch. Nur ein Lynch-Tod des Weisen löst aus.
+- **Der Weise, Umfang (S-05, RM-DR-114.4):** B. Wirklich alles ruht: aktive Nacht- und Tagesfähigkeiten, passive Fähigkeiten (z. B. Dorfwache, Nachtwächter, Detektiv, Wahnsinniger Kutscher, Wächter am Tor, Rettung des Weisen), Todesreaktionen (Sensenträger, Ritter) und auch Wolfskind-Verwandlung und Lehrling-Erbe von Dorfpersonen.
+- **Der Weise, ausgelöste Wirkungen im Fluch (S-09):** A. Sie entfallen endgültig und werden nicht nachgeholt.
+- **Der Weise, erster Angriff (S-02, RM-DR-114.3):** A. Seine Rettung wird nur verbraucht, wenn der Rudelangriff ihn sonst getötet hätte; still, nur der Spielleiter erfährt es; einmal je Leben. Durchdringung tötet ihn (RM-DR-005).
+- **Mehrere Schutzwirkungen (S-10):** Antwort „Es gibt eine Rangfolge: einmalige Schutzschilde lösen nach wiederholten aus, z. B. würde erst der Schutz des Schutzengels brechen, bevor der der Waffe oder die Passive des Weisen.“ Auslegung: Wiederholbare Schutzwirkungen (Schutzengel, Waldhexenrettung, Dorfwache) greifen zuerst und verbrauchen keine einmalige Wirkung; nur wenn keine greift, rettet genau eine einmalige Wirkung.
+- **Reihenfolge einmaliger Schutzwirkungen (S-11):** A. Schmiedewaffe, dann Schild des Schutzgeists, zuletzt die Rettung des Weisen.
+- **Märtyrerin (S-03, RM-DR-118.1/.3):** A. Sie wird am Ende der Nacht gefragt, nur wenn das Rudelopfer tatsächlich stürbe; opfert sie sich, stirbt sie statt des Opfers (Ersatzopfer). Blockaden verhindern das nicht; der Fluch des Weisen schon (S-05).
+- **Märtyrerin, mehrere Opfer (S-14, RM-DR-118.2):** B. Nur das erste Rudelopfer (erster Rudelschritt) ist rettbar.
+- **Schutzgeist (S-04, RM-DR-148.1–.4):** A. In der ersten Nacht nach ihrem Tod (ausdrückliche Ausnahme zu G-PH-2) wählt sie eine lebende Person; das Schild wirkt ab der folgenden Nacht bis zum nächsten Rudelangriff auf diese Person, nur gegen Rudelangriffe, und bricht bei Durchdringung wie der Schutzengel. Wählt sie einen Wolf (wahre Wolfszählung), wird am Morgen öffentlich ohne Namen verkündet, dass sie einen Wolf gewählt hat.
+- **Dorfschmied (S-06, RM-DR-154.1–.3):** A. Ab der 6. Nacht der Partie wird er jede Nacht gefragt, ob er die Waffe jetzt einer anderen lebenden Person gibt, bis er sie gegeben hat (einmal je Leben). Die Waffe wehrt den nächsten Rudelangriff auf den Träger ab, auch einen durchdringenden, und der Spielleiter wählt einen lebenden Wolf, der dabei stirbt.
+- **Gaben (S-12):** A. Schild und Waffe bleiben nach dem Tod des Gebers bestehen und wirken auch während des Fluchs des Weisen.
+- **Verdammniswächter, Wirkung (S-07, RM-DR-115.1/.2):** Antwort „Es wird trotzdem als Rudelangriff behandelt; auch wenn er die andere Person wählen würde: ist auf dieser der Schutz des Schutzengels oder ist er der Weise, überlebt er.“ Auslegung: Das Urteil lenkt den Rudelangriff um. Wählt er die angebotene Person, wird sie statt des Rudelopfers vom Rudel angegriffen; alle Regeln des Rudelangriffs gelten (Schutz, Durchdringung, Ritter, Märtyrerin, Tod am Morgen). Der Rollentext „umgeht alle Schutzfähigkeiten“ gilt damit nicht.
+- **Verdammniswächter, Angebot (S-08, RM-DR-115.3):** B. Die App zieht über den gespeicherten Seed eine lebende Person, die nicht als Wolf zählt, außer dem Rudelopfer und ihm selbst.
+- **Verdammniswächter, zwei Rudelopfer (S-13):** A. Das Urteil betrifft nur das erste Rudelopfer.
+- **Verdammniswächter als Rudelopfer (S-15, durch den Fuzztest gefunden):** B. Ist er selbst das Rudelopfer, entfällt sein Urteil in dieser Nacht; der Angriff trifft ihn.
+
+## Rollenaudit · Bindungsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs B-01 bis B-08, R-01 bis R-04). Es gelten: Todesfolgen ohne Entscheidung wirken sofort (RM-DR-009.1 = A), eine durch einen Tod beendete Bindung bleibt nach Wiederbelebung beendet (RM-DR-011.2), Nachttode mit Markierung in der Morgenauflösung.
+
+- **Loki, Zeitpunkt (B-01):** B. Nur in Nacht 1 der Partie (wie RM-DR-014); verpasst er sie, verfällt die Fähigkeit.
+- **Loki, Wahl (B-05):** B. Freiwillig; wählt er, dann zwei verschiedene lebende Personen, er selbst erlaubt, als Liebende oder Rivalen. Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache; Schutz gegen den Rudelangriff hilft nicht, persönliche Schilde schon).
+- **Loki, Rivalen (B-02, RM-DR-101.1):** A. Rivalen haben keine eigene Wirkung; sie zählen nur für die Schwarze Witwe.
+- **Schwarze Witwe, Wirkung (B-03):** A. Jede Nacht wählt sie eine andere lebende Person; gehört diese zu einem lebenden Liebes- oder Rivalenpaar, erhalten beide eine Todesmarkierung und sterben in der Morgenauflösung (Ursache Schwarze Witwe); sie wachen in dieser Nacht nicht mehr auf.
+- **Schwarze Witwe, Setup und Paar (B-06, RM-DR-113.1):** A. Die Pflicht „Loki im Spiel“ kommt mit der vertagten Setup-Prüfung; im Regelkern wirkt ihre Wahl nur, wenn Ziel und Partner leben. RM-DR-113.2 (Zeitwächter) wird mit dem Zeitwächter entschieden.
+- **Schattenwanderer (B-04, B-07, RM-DR-110):** A. Jede Nacht bis zur Nutzung (einmal je Leben) verknüpft er sich mit einer anderen lebenden Person. Stirbt einer von beiden tatsächlich (nach allen Schutzwirkungen und persönlichen Schilden), stirbt stattdessen der andere mit der ursprünglichen Ursache und Quelle; danach ist die Verknüpfung verbraucht. Spielleiterkorrekturen werden nicht umgelenkt.
+- **Rotkäppchen, Zuflucht und Kette (R-01, RM-DR-137.1/.3/.4/.5):** A. Jede Nacht fragt sie eine andere lebende Person (auch Wölfe, die ablehnen dürfen); gewährt die Person Zuflucht, erhält sie einen Apfel und ist mit Rotkäppchen verkettet: stirbt eine von beiden, stirbt die andere sofort mit. Die Kette gilt bis zur nächsten gewährten Zuflucht; eine Ablehnung löst nichts; dieselbe Person darf wieder gefragt werden.
+- **Rotkäppchen, Apfel (R-02, RM-DR-137.2):** B. Der nächste eigene Nachtschritt, den die Rolle jede Nacht hat, läuft direkt ein zweites Mal. Einmal- und Ladungsfähigkeiten und passive Rollen: der Apfel ist wirkungslos.
+- **Rotkäppchen, Apfeldauer (R-03):** A. Der Apfel gilt nur in der folgenden Nacht; ungenutzt verfällt er; höchstens ein Apfel je Person.
+- **Apfel bei Rollen mit nur einem Ergebnis (R-04):** A. Für Korrupten Richter, Parasit, Verdammniswächter und Rotkäppchen ist der Apfel wirkungslos.
+- **Bindungen im Fluch des Weisen (B-08):** A. Liebeskummer und Rotkäppchens Todeskette wirken wie Gaben (S-12) auch während des Fluchs.
+
+## Rollenaudit · Verwandlungsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs V-01 bis V-07). Es gelten: Wächter am Tor blockiert jeden Weg zu einem neuen Wolf außer Korrekturen (RM-DR-149), Scheinrollen täuschen nur Rollenauskünfte (Doktor, I-02), Todesreaktionen über die Warteschlange (DR-09), Rollenwechsel mit frischen Einsätzen wie beim Lehrling.
+
+- **Dämonischer Wolf, Auslöser (V-01, RM-DR-122.1/.3):** A. Todesreaktion bei jedem Tod mit Todesfolgen: er wählt eine andere lebende Person (auch einen Wolf) oder verzichtet; einmal je Leben.
+- **Dämonischer Wolf, Wirkung (V-02, RM-DR-122.2):** A. Nur Rollenauskünfte (Orakel) zeigen die verfluchte Person als Werwolf; Zählungen, Ja/Nein-Prüfungen, Wirkungen und Siege bleiben wahr.
+- **Dämonischer Wolf, Dauer (V-07):** A. Der Fluch bleibt, bis die Person ihre Rolle wechselt (Erbe, Tausch, Lykaon, Korrektur); eine Wiederbelebung löscht ihn nicht.
+- **König Lykaon (V-03, RM-DR-107.1/.2):** A (Zeitpunkt ersetzt durch V-08/V-09). Nur wenn ein anderer Wolf lebt: er nennt einen verbündeten lebenden Wolf (wird protokolliert) und wählt eine lebende Person der Fraktion Dorf; sie wird Trugbilderwolf mit ihrer alten Rolle als Scheinrolle und wacht ab der folgenden Nacht mit dem Rudel. Ein lebender Wächter am Tor macht sie stattdessen zum Dorfbewohner.
+- **König Lykaon, Verzicht (V-08, V-09):** Antwort „Neue Regelung: er darf bis zu 3x verzichten und es verschieben.“ Auslegung mit V-09 = A: Ab Nacht 1 wird er jede Nacht gefragt, bis er verwandelt hat (einmal je Leben); er darf höchstens dreimal verzichten, bei seiner vierten Gelegenheit muss er wählen. Eine Nacht, in der sein Schritt mangels lebendem Verbündeten entfällt, zählt nicht.
+- **Seelentauscher, Zustand (V-04, RM-DR-127.1):** A. Beide erhalten die neue Rolle wie beim Lehrling-Erbe: frische Einsätze, keine übernommenen Bindungen (Wolfskind ohne Vorbild, Lehrlingsbindung endet); eine Pflicht-Scheinrolle (Trugbilderwolf) wandert mit.
+- **Seelentauscher, Ablauf (V-05, RM-DR-127.3):** A. Jede Nacht bis zur Nutzung (einmal je Leben) zwei verschiedene Personen, lebend oder tot, er selbst erlaubt; lebende Betroffene erfahren ihre neue Rolle sofort privat.
+- **Seelentauscher und Wächter am Tor (V-06, RM-DR-127.2):** A. Auch eine tote Person, die eine Wolfsrolle erhielte, wird Dorfbewohner, solange ein Wächter am Tor lebt.
+
+## Rollenaudit · Wiederbelebungsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs W-01 bis W-04). Es gelten: Wiederbelebung setzt alle begrenzten Einsätze zurück, durch Tod beendete Bindungen bleiben beendet (RM-DR-011.2), Einmal-Fähigkeiten gelten je Person (RM-DR-126.3, RM-DR-141.3), Wächter am Tor blockiert neue Wölfe (RM-DR-149).
+
+- **Totenkarten (W-01, RM-DR-013):** A. Kutscher und Dr. Victor Frankenstein werden ohne Kartenbezug umgesetzt; Kartenbedingungen (RM-DR-141.4) und der Kartenschlucker folgen mit dem Totenkarten-Assistenten.
+- **Kutscher, Rollen (W-02, RM-DR-126.1):** A. Die Wiederbelebten behalten ihre Rolle mit frischen Einsätzen; einer von ihnen wird Werwolf (ein lebender Wächter am Tor macht ihn zum Dorfbewohner).
+- **Kutscher, Wahl (W-03, RM-DR-126.2):** A. Der Kutscher wählt die drei Toten und bestimmt, wer davon Wolf wird. Freiwillig, einmal je Leben, ab einer Nacht mit mindestens 10 Toten (alle zählen).
+- **Dr. Victor Frankenstein (W-04, RM-DR-141.1/.2):** B. Jede Nacht bis zur Nutzung (freiwillig, einmal je Leben) belebt er eine tote Person wieder und gibt ihr eine Rolle, die gerade niemand hat (Dorfbewohner immer), keine Wolfsrolle. Die Person startet frisch, erfährt ihre Rolle privat, handelt ab der folgenden Nacht; die Wiederbelebung wird am Morgen öffentlich sichtbar. Dieselben Zeitpunkte gelten für die Wiederbelebten des Kutschers.
+
+## Rollenaudit · Einzelsiegrollen, Teil 1 · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-01 bis E-04). Es gelten: Siegbedingung je Rolle (RM-DR-006 = A), gleichzeitige Siege werden gemeinsam vorgeschlagen (DR-02), ein erfüllter Sieg wird nach Ablehnung weiter vorgeschlagen (F-11), Blockaden treffen nur Dorfrollen (RM-DR-010), Zustände ohne Fähigkeitscharakter bleiben bei Wiederbelebung, der Apfel verdoppelt Jede-Nacht-Schritte (R-02).
+
+- **Rattenfänger (E-01, RM-DR-103.1/.2):** A. Jede Nacht verzaubert er 1 oder 2 andere lebende, noch unverzauberte Personen; die Verzauberung bleibt dauerhaft, eine Voodoo-Puppe hebt nichts auf. Er gewinnt, wenn er lebt und alle anderen Lebenden verzaubert sind, bei jeder Siegprüfung (auch nach einem Tod).
+- **Pestbringerin (E-02, RM-DR-120.1–.4):** A. Nicht tödlich. Jede Nacht infiziert sie eine andere lebende, noch gesunde Person; zu Beginn jeder Morgenauflösung steckt jede lebende Infizierte einen zufällig gezogenen nächsten lebenden Nachbarn an (gespeicherter Seed, tote Plätze übersprungen). Sie gewinnt, wenn sie lebt und alle anderen Lebenden infiziert sind.
+- **Prophet des Untergangs (E-03, RM-DR-121.1–.3):** C. In Nacht 1 markiert er drei andere Lebende; sind alle drei tot, ist er dauerhaft freigeschaltet und darf jede Nacht freiwillig eine Person töten (Tod am Morgen, eigene Ursache, Rudelschutz wirkt nicht, persönliche Schilde schon). Lebt er freigeschaltet, wenn kein Wolf mehr lebt, gewinnt er allein statt des Dorfes.
+- **Todesprediger (E-04, RM-DR-158.1–.3):** A. Nur in Nacht 1 legt er geheim beim Spielleiter eine künftige Nacht oder einen Tag fest (Tag N folgt auf Nacht N; Tode der Morgenauflösung zählen zur Nacht N). Stirbt er genau dann (jede Todesart außer Korrektur ohne Todesfolgen), ist sein Sieg erfüllt und wird wie beim Selbstmörder fortan vorgeschlagen.
+
+## Rollenaudit · Einzelsiegrollen, Teil 2 (Feuerteufel) · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-05 bis E-08, jeweils die Empfehlung) und am selben Tag in einem eigenen Auswahlfenster ausdrücklich als beabsichtigte Entscheidungen bestätigt. Verbindlich sind die stabilen IDs RM-DR-131.1 bis .5; die Antworten gelten nur für den Feuerteufel, nicht für Voodoo-Priester oder Nekromant.
+
+*Historischer Hinweis zu den Frage-IDs:* Eine abgebrochene frühere Sitzung hatte E-05 bis E-08 anders zugeschnitten vorbereitet (E-05 Feuerteufel-Wirkung, E-06 Sieg von Feuerteufel und Voodoo-Priester, E-07 Voodoo-Puppe, E-08 Nekromant-Schild). Diese Fragen wurden nie beantwortet. Ab hier bezeichnen E-05 bis E-08 ausschließlich die folgenden Feuerteufel-Fragen; Voodoo und Nekromant folgen ab E-12 (E-09 bis E-11 sind Ergänzungsfragen zum Feuerteufel).
+
+Es gelten weiter: nächste lebende Nachbarn links und rechts (RM-DR-003, damit ist RM-DR-131.3 entschieden), „Wolfsangriff“ heißt nur Rudelangriff (RM-DR-004), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02).
+
+- **Feuerteufel, Auslöser (E-05, RM-DR-131.1):** A. Jeder tatsächliche Tod des markierten Ziels löst den Brand aus, gleich welche Ursache (Rudel, Hinrichtung, Gift, Brand, andere Rollen, Spielleiterkorrektur mit Todesfolgen); nicht bei Korrektur ohne Todesfolgen. Überlebt das Ziel, brennt nichts (Legacy-Fehler entfällt). Es verbrennen die nächsten lebenden Nachbarn links und rechts.
+- **Feuerteufel, Dauer (E-06, RM-DR-131.2):** A. Jeder Feuerteufel hat höchstens eine aktive Markierung; sie gilt, bis er ein neues Ziel wählt oder das Ziel stirbt.
+- **Feuerteufel als Nachbar (E-07, RM-DR-131.4):** A. Jeder Feuerteufel (auch weitere Kopien) wird als Nachbar immer verschont; auf dieser Seite brennt niemand, kein Ersatz.
+- **Feuerteufel, Sieg (E-08, RM-DR-131.5):** A. Lebt er, wenn ein Sieg erfüllt ist, gewinnt er zusätzlich zur siegreichen Seite (Mitsieg wie bei den Ewigen); kein Alleinsieg, keine eigene Siegprüfung.
+- **Feuerteufel, Wahl je Nacht (E-09, RM-DR-131.6):** A. Jede Nacht darf er ein neues Ziel wählen oder die bestehende Markierung behalten; Ziel ist immer eine andere lebende Person, nie er selbst. (Ergänzungsfrage nach der Bestätigung von E-05 bis E-08.)
+- **Feuerteufel, Nachwirkung (E-10, RM-DR-131.7):** A. Stirbt der Feuerteufel oder verliert er die Rolle (Seelentausch, Korrektur, andere Rollenwechsel), erlischt seine Markierung sofort.
+- **Mehrere Feuerteufel, gleiches Ziel (E-11, RM-DR-131.8):** A. Der Tod einer mehrfach markierten Person löst genau einen Brand aus; alle Markierungen auf ihr sind verbraucht.
+
+## Rollenaudit · Einzelsiegrollen, Teil 3 (Voodoo-Priester, Nekromant) · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-12 bis E-19, jeweils die Empfehlung). Die Antworten gelten nur für die genannte Rolle. Es gelten weiter: „Wolfsangriff“ heißt nur Rudelangriff (RM-DR-004), Durchdringung (RM-DR-005), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02), ein erfüllter Sieg wird nach Ablehnung weiter vorgeschlagen (F-11), Spielleiterkorrekturen sind von Schutz- und Umlenkregeln ausgenommen. RM-DR-132.3 ist durch E-01 entschieden (die Puppe hebt keine Verzauberung auf).
+
+- **Voodoo-Priester, Umlenkung (E-12, RM-DR-132.1):** A. Jeder tatsächliche Tod des Priesters außer Spielleiterkorrektur trifft stattdessen die lebende Puppe (Rudel, Hinrichtung, Gift, Brand und alle übrigen Ursachen). Umgelenkt wird nur, wenn er tatsächlich stürbe, also nach allen Schutzwirkungen, wie beim Schattenwanderer (B-04, B-07).
+- **Voodoo-Priester, Neuvergabe (E-13, RM-DR-132.2):** A. Keine Abklingzeit. Höchstens eine lebende Puppe je Priester; ist keine mehr da, darf er in der nächsten Nacht eine neue vergeben. Ohne lebende Puppe stirbt er selbst.
+- **Voodoo-Priester, Vergabe (E-14, RM-DR-132.5):** A. Die Puppe ist eine andere lebende Person, nie er selbst. Geheim: nur der Spielleiter weiß es; die Puppe erfährt es nicht vorab.
+- **Voodoo-Priester, Sieg (E-15, RM-DR-132.4):** A. Er gewinnt allein, wenn er lebt und höchstens drei Personen leben (wie der Parasit).
+- **Nekromant, Schild (E-16, RM-DR-142.1):** A. Mit mindestens drei geopferten Toten (E-18) errichtet er nachts einen globalen Schild: Er verhindert den nächsten Tod irgendeiner Person, gleich welche Ursache, auch eine Hinrichtung, und verfällt ungenutzt mit Beginn der nächsten Nacht.
+- **Nekromant, Umlenkung (E-17, RM-DR-142.2):** A. Nur beim Rudelangriff auf ihn darf er freiwillig drei Tote opfern und den Angriff auf eine andere lebende Person umlenken, auch auf einen Wolf; für das neue Ziel gilt es als Rudelangriff (dessen Schutz wirkt). Verzicht: Er stirbt.
+- **Nekromant, Vorrat (E-18, RM-DR-142.3):** A. Jede tote Person kann insgesamt nur einmal geopfert werden, für Schild oder Umlenkung (gemeinsamer Vorrat).
+- **Nekromant, Wolf benennen (E-19, RM-DR-142.4, RM-DR-142.5):** A. Höchstens ein Versuch pro Tag, geheim beim Spielleiter; ein Treffer ist jede lebende Person, die als Wolf zählt (`counts_as_wolf`, RM-DR-002.2; der Fluch des Dämonischen Wolfs betrifft nur Rollenauskünfte). Dann ist sein Alleinsieg erfüllt. Ein Fehlversuch hat keine Folgen. Die Legacy-Übungsenthüllung entfällt (RM-DR-142.5).
+- **Umlenkungsketten (E-20, RM-DR-132.6):** A. Gilt für alle Umlenkungen (Voodoo-Puppe, Schattenwanderer, Nekromant). Eine Kette leitet weiter, aber nie auf eine Person, die in dieser Kette schon betroffen war; dann stirbt die aktuelle Person. Jede ausgeführte Umlenkung verbraucht ihre Verknüpfung. (Ergänzungsfrage bei der Umsetzung.)
+- **Voodoo-Priester, Vergabe freiwillig (E-21, RM-DR-132.7):** A. In jeder Nacht ohne lebende Puppe darf er eine andere lebende Person wählen oder verzichten.
+- **Voodoo-Priester, Rollenverlust (E-22, RM-DR-132.8):** A. Verliert der Priester die Rolle, endet seine Puppe sofort; ein neuer Priester beginnt ohne Puppe.
+- **Vorrang zweier Umlenkungen (E-23, RM-DR-132.9):** A. Die eigene Fähigkeit der sterbenden Person wirkt vor einer fremden Verknüpfung: Ist ein Priester zugleich mit einem Schattenwanderer verknüpft, stirbt zuerst seine Puppe; die Verknüpfung bleibt bestehen.
+- **Nekromant, Mehrere Nekromanten (E-24, RM-DR-142.6):** A. Jede tote Person kann in der ganzen Partie nur einmal geopfert werden, gleich von welchem Nekromanten; jeder errichtete Schild verhindert genau einen Tod (zwei Schilde, zwei verhinderte Tode). (Ergänzungsfrage bei der Umsetzung.)
+- **Nekromant, Reihenfolge der Umlenkung (E-25, RM-DR-142.7):** A. Der Nekromant entscheidet nach dem Urteil des Verdammniswächters und vor der Märtyrerin (Legacy-Stufe 3.0); die Märtyrerin sieht das endgültige Rudelopfer. (Ergänzungsfrage bei der Umsetzung.)
+- **Nekromant, Anlass der Umlenkung (E-26, RM-DR-142.8):** A. Gefragt wird nur, wenn der Rudelangriff ihn sonst töten würde; greift ein Schutz, ein persönlicher Schild oder ein aktiver Nekromanten-Schild, gibt es keine Umlenkung. (Ergänzungsfrage bei der Umsetzung.)
+- **Nekromant, Schild nach Rollenverlust oder Tod (E-27, RM-DR-142.9):** A. Verliert der Nekromant die Rolle oder stirbt er, erlischt sein noch ungenutzter Schild sofort (wie Markierung E-10 und Puppe E-22). (Ergänzungsfrage bei der Umsetzung.)
+
+## Rollenaudit · Einzelsiegrollen, Teil 4 (Hades, Grabräuber) · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-28 bis E-34, jeweils die Empfehlung). Die Antworten gelten nur für die genannte Rolle. Es gelten weiter: Spielleiterkorrekturen sind von Rollenwirkungen ausgenommen, Stimmen werden nicht digital gezählt (RM-DR-008), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02), ein erfüllter Sieg wird weiter vorgeschlagen (F-11).
+
+- **Hades, Lichter (E-28, RM-DR-144.2):** A. Jeder tatsächliche Tod einer anderen Person außer Spielleiterkorrektur gibt jedem lebenden Hades 1 Licht (eigener Vorrat je Person), auch seine eigenen Tötungen; abgefangene Tode geben nichts.
+- **Hades, Sieg (E-29, RM-DR-144.1):** A. Lebt er mit mindestens 10 Lichtern, ist sein Alleinsieg erfüllt und wird bei jeder Siegprüfung vorgeschlagen (F-11); kein Einlösen.
+- **Hades, Tötung (E-30, RM-DR-144.4):** A. Für 2 Lichter höchstens einmal je Nacht eine andere lebende Person töten: Tod am Morgen mit eigener Ursache (wie Prophet des Untergangs), Rudelschutz wirkt nicht, persönliche Schilde schon; die Lichter sind auch bei abgefangenem Tod verbraucht.
+- **Hades, Barriere (E-31, RM-DR-144.3):** A. Barriere für 3 Lichter: höchstens eine aktive, verhindert seinen nächsten Tod jeder Ursache außer Korrektur (auch Hinrichtung), kein Verfall, danach neu kaufbar. „Stimme x3“ entfällt (Stimmen werden nicht digital gezählt, RM-DR-008).
+- **Grabräuber, Stehlen (E-32, RM-DR-156.1):** A. Einmalig wählt er nachts eine tote Person; ab der nächsten Nacht hat er dauerhaft deren Nachtfähigkeit (eigener Schritt, frische Einsätze) und bleibt Grabräuber mit eigener Siegbedingung.
+- **Grabräuber, Sieg (E-33, RM-DR-156.2):** A. Er gewinnt allein, wenn er lebt und höchstens drei Personen leben (wie Parasit und Voodoo-Priester).
+- **Grabräuber, Umfang (E-34, RM-DR-156.3):** A. Wählbar ist jede tote Person mit eigenem Nachtschritt, auch Wolfs- und Einzelsiegrollen; er beginnt mit frischen Einsätzen, ohne Zähler oder Zustände der Toten. Rollen ohne eigenen Nachtschritt sind nicht wählbar.
+
+## Rollenaudit · Hades und Grabräuber, abgeleitete Präzisierungen · 28. September 2026
+
+Technisch/fachlich abgeleitet unter delegierter Autorisierung (Auftrag vom 28.09.2026: kleinere Regellücken selbst entscheiden, zentrale Idee erhalten). Der Product Owner hat zu diesen Punkten **keine** Auswahlfrage beantwortet. Keine frühere Entscheidung wird ersetzt. Nachweise: `godot/tests/unit/test_hades.gd`, `test_grave_robber.gd`, `test_solo_combinations.gd`, Fuzztest.
+
+- **DA-01 Hades, Zeitpunkt:** vorher offen (nur Legacy-Stufe 9.9); jetzt: Hades handelt als letzter Nachtschritt (Priorität 99). Begründung: Legacy-Reihenfolge, keine Wechselwirkung mit Schritten nach ihm.
+- **DA-02 Hades, Tötung und Barriere in einer Nacht:** vorher offen; jetzt: in seinem Schritt zuerst keine oder eine Tötung, danach, wenn mit den übrigen Lichtern möglich und keine Barriere aktiv ist, die Frage nach der Barriere. Bezahlt wird erst mit der letzten Antwort; ein Abbruch kostet nichts. Begründung: E-30 begrenzt nur die Tötung (einmal je Nacht), E-31 nur die Zahl aktiver Barrieren.
+- **DA-03 Hades, Tod und Rollenverlust:** vorher offen; jetzt: Lichter und Barriere erlöschen mit Tod oder Rollenverlust; ein neuer Hades (Lehrling, Seelentausch, Korrektur) beginnt mit 0 Lichtern. Begründung: gleiche Regel wie Markierung (E-10), Puppe (E-22) und Schild (E-27); „frische Einsätze“ (W-03).
+- **DA-04 Hades, „außer Korrektur“:** jede Tötung mit Quelle Spielleiter gibt kein Licht und wird von der Barriere nicht verhindert, auch eine Spielleiter-Hinrichtung. Begründung: dieselbe Abgrenzung wie bei Voodoo-Puppe und Nekromanten-Schild.
+- **DA-05 Hades, Barriere als persönlicher Schild:** Reihenfolge nach Parasit, Rudelvater und Fenrir, vor dem Nekromanten-Schild und den Umlenkungen; zählt für Märtyrerin und Nekromant als „stirbt nicht“; hält auch das durchdringende Zusatzopfer des Rudelvaters ab (E-31 „jede Ursache“; das Legacy-Verhalten `PACKFATHER_KILL` durchbricht die Barriere wird nicht übernommen). Eine von einem anderen Hades markierte Person wacht in dieser Nacht nicht mehr auf (bestehende Regel „Nachttode“), auch ein Hades.
+- **DA-06 Grabräuber, stehlbare Rollen:** vorher E-34 „jede tote Person mit eigenem Nachtschritt“; präzisiert: Rollen mit wiederkehrendem eigenem Nachtschritt einer lebenden Person. Nicht wählbar: Nur-Nacht-1-Rollen (Loki, Dorfchronistin, Todesprediger) und der Prophet (markiert nur in Nacht 1), weil der Schritt nie wieder stattfände; der Schutzgeist, weil er nur tot handelt; Wolfskind und Lehrling, weil ihre Fähigkeit ein eigener Rollenwechsel ist und E-32 „bleibt Grabräuber“ widerspräche; der Grabräuber selbst (keine Schleife). Gemeinsame Schritte (Gebundene, Ewige, Rudel) sind keine eigenen Schritte. Maßgeblich ist die Rolle der toten Person zum Zeitpunkt des Diebstahls.
+- **DA-07 Grabräuber, Umfang der Fähigkeit:** übernommen werden der Nachtschritt und alle Wirkungen, die er erzeugt (Puppe, Feuermarkierung samt Verschonung beim Brand, Wirt samt Immunität und Mit-Tod, Nekromanten-Schild und Umlenkung, Hades-Lichter und Barriere, Kopfgeld-Listen, Henker- und Richtermarkierung). Nicht übernommen: Siegbedingungen und Mitsiege, Fraktion, Wolfszählung, Erscheinung, Todesreaktionen und Tagesaktionen (z. B. Wolf benennen). Hades-Lichter sammelt er ab dem Diebstahl (ohne Lichter wäre der Schritt wertlos). Begründung: E-32 „Nachtfähigkeit, bleibt Grabräuber mit eigener Siegbedingung“.
+- **DA-08 Grabräuber, Blockade und Fluch:** richten sich nach der handelnden Person: als Einzelsiegperson ist er weder blockierbar (RM-DR-010) noch vom Fluch des Weisen betroffen, auch mit gestohlener Dorffähigkeit. Begründung: beide Regeln sind personenbezogen formuliert („Dorfpersonen“).
+- **DA-09 Grabräuber, Zeitpunkt, Tod, Rollenverlust:** der Diebstahl gilt sofort (der eigene Schritt folgt planmäßig ab der nächsten Nacht); der Grabräuber erfährt die Rolle privat. Die Fähigkeit endet mit seinem Tod oder Rollenverlust; nach einer Wiederbelebung darf er frisch erneut stehlen (frische Einsätze, W-03). Mehrere Grabräuber stehlen unabhängig, auch dieselbe Rolle.
+- **DA-10 Verdammniswächter → Nekromant:** Das Urteil des Verdammniswächters bestimmt das Rudelopfer und ist kein Glied einer Umlenkungskette (E-20 nennt Puppe, Schattenwanderer, Nekromant). Wählt er den Nekromanten und würde dieser sterben, darf der Nekromant auch auf das ursprüngliche Rudelopfer umlenken. Werden Rudel- und Zusatzopfer beide auf den Nekromanten gelegt, entscheidet er einmal (sein Schritt) für den ersten Angriff, der ihn töten würde; das Zusatzopfer trifft ihn danach. Beides ist bestehendes Verhalten, jetzt durch Tests festgehalten.
+
+## Rollenaudit · Rest-Wölfe und Zeitwächter (Rachsüchtiger Wolf, Schicksalswolf, Zeitwächter) · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (jeweils die Empfehlung):
+
+- **Rachsüchtiger Wolf, Siegziel (E-35, RM-DR-106.1):** A. Er zählt als Wolf (Parität, Dorfsieg). Ist er beim Wolfssieg der einzige lebende Wolf, wird statt des Wolfssiegs sein Alleinsieg vorgeschlagen; leben andere Wölfe, gewinnen die Werwölfe ohne ihn.
+- **Zeitwächter, Einfrieren (E-36, RM-DR-150.1–.4, RM-DR-113.2):** A. Er entscheidet als allererster Nachtschritt. Ja: alle Nachtschritte dieser Nacht entfallen für alle Rollen (auch Wölfe, Einzelsieg, Schwarze Witwe), am Morgen keine Tode aus dieser Nacht, Fenrir und Cerberus wachsen nicht. Fällige Wirkungen früherer Nächte (Giftpranke, Pest-Ausbreitung) treten ein; die Nachtnummer zählt weiter; öffentliche Meldung am Morgen.
+
+Technisch/fachlich abgeleitet unter delegierter Autorisierung (keine Auswahlfrage des PO; Nachweise `test_fate_wolf.gd`, `test_lone_wolf_and_time_warden.gd`, `test_protection_roles.gd`, Fuzztest):
+
+- **DA-11 Schicksalswolf, Zeitfenster (RM-DR-109.1):** vorher offen (Rollentext „in Nacht 4“, Legacy „ab Nacht 4“); jetzt: nur Nacht 4, danach verfallen (Rollentext).
+- **DA-12 Schicksalswolf, erste drei Toten (RM-DR-109.3):** die ersten drei verschiedenen Personen der Partie, die sterben, jede Ursache (auch Korrektur), auch vor der Markierung; Wiederbelebte behalten ihren Platz und belegen keinen zweiten (behebt die Legacy-Doppelzählung).
+- **DA-13 Schicksalswolf, Zusatzopfer (RM-DR-109.2):** Rudelangriffe am Morgen nach Rudelopfer und Zusatzopfer des Rudelvaters: Schutz wirkt, sie durchdringen nicht, der Ritter schlägt zurück, der Nekromant darf umlenken (E-17 „Rudelangriff“). Märtyrerin und Verdammniswächter betreffen weiter nur das erste Rudelopfer (S-13, S-14); die Durchdringung des Seuchenwolfs verbraucht nur das erste Rudelopfer.
+- **DA-14 Schicksalswolf, Markierung und Auswahl:** nur in Nacht 1 genau drei **andere** lebende Personen (auch Wölfe; Legacy erlaubte sich selbst), eigene Markierungen je Schicksalswolf; sie erlöschen mit seinem Tod oder Rollenverlust. In Nacht 4 wählt er bis zu so viele Zusatzopfer, wie Markierte unter den ersten drei Toten sind (Verzicht möglich; Legacy verlangte genau so viele).
+- **DA-15 Grabräuber:** Der Schicksalswolf ist nicht stehlbar (markiert nur in Nacht 1, wie der Prophet); Rachsüchtiger Wolf und Zeitwächter sind stehlbar.
+- **DA-16 Rachsüchtiger Wolf, Rhythmus (RM-DR-106.2/.3):** vorher offen (Rollentext „jede dritte Nacht“, Legacy Abklingzeit); jetzt: feste Nächte 3, 6, 9 … (Rollentext), erste Nutzung in Nacht 3.
+- **DA-17 Rachsüchtiger Wolf, Angriff:** freiwillig eine andere lebende Person, die als Wolf zählt; Tod am Morgen mit eigener Ursache `LONE_WOLF_KILL` (kein Rudelangriff: Schutzengel wirkt nicht, persönliche Schilde schon).
+- **DA-18 Rachsüchtiger Wolf, mehrere:** Leben nur noch Rachsüchtige Wölfe als Wölfe (zwei oder mehr), gewinnt noch niemand; jeder will allein gewinnen.
+- **DA-19 Zeitwächter, Einzelheiten:** einmal je Leben (Verzicht behält die Fähigkeit); als Dorfrolle ruht er im Fluch des Weisen; das Zusatzopfer eines gelynchten Rudelvaters gehört zur eingefrorenen Nacht und entfällt; Äpfel dieser Nacht verfallen; eine ausstehende Durchdringung des Seuchenwolfs bleibt bestehen; die öffentliche Meldung nennt keinen Namen.
+- **DA-20 Schutzgeist ohne Lebende (Fehlerbehebung):** vorher öffnete der Schritt der toten Schutzgeist ohne lebende Person eine unbeantwortbare Pflichtwahl; jetzt entfällt er mit „no_decision“ wie jede Pflichtwahl ohne Ziel (Fuzzbefund, Regressionstest).

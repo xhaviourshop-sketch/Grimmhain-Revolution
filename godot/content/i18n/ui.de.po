@@ -467,6 +467,366 @@ msgstr "Spiegelwolf"
 msgid "ui.role.spiegelwolf.short"
 msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die nominierende Person."
 
+msgid "ui.role.siegreicher_wolf.name"
+msgstr "Siegreicher Wolf"
+
+msgid "ui.role.siegreicher_wolf.short"
+msgstr "Wolf im Rudel, zählt lebend für den Wolfssieg wie zwei Wölfe."
+
+msgid "ui.role.doppelspion.name"
+msgstr "Doppelspion"
+
+msgid "ui.role.doppelspion.short"
+msgstr "Wacht mit dem Rudel, gewinnt allein, wenn er lebt und kein Wolf mehr lebt."
+
+msgid "ui.role.selbstmoerder.name"
+msgstr "Selbstmörder"
+
+msgid "ui.role.selbstmoerder.short"
+msgstr "Gewinnt, wenn er hingerichtet wird, während mindestens fünf Personen tot sind."
+
+msgid "ui.role.dorfchronistin.name"
+msgstr "Dorfchronistin"
+
+msgid "ui.role.dorfchronistin.short"
+msgstr "Erfährt in Nacht 1, wie viele Personen eine Einzelsiegrolle haben."
+
+msgid "ui.role.die_gebundenen.name"
+msgstr "Die Gebundenen"
+
+msgid "ui.role.die_gebundenen.short"
+msgstr "Lernen sich in Nacht 1 gegenseitig kennen."
+
+msgid "ui.role.waldlaeufer.name"
+msgstr "Waldläufer"
+
+msgid "ui.role.waldlaeufer.short"
+msgstr "Erfährt jede Nacht, wie viele Wölfe leben."
+
+msgid "ui.role.doktor.name"
+msgstr "Doktor"
+
+msgid "ui.role.doktor.short"
+msgstr "Prüft jede Nacht, ob zwei Personen zum selben Team gehören."
+
+msgid "ui.role.nachtwaechter.name"
+msgstr "Nachtwächter"
+
+msgid "ui.role.nachtwaechter.short"
+msgstr "Läutet morgens Alarm, wenn neben ihm jemand nicht zum Dorf gehört."
+
+msgid "ui.role.dorfwache.name"
+msgstr "Dorfwache"
+
+msgid "ui.role.dorfwache.short"
+msgstr "Überlebt den Angriff der Werwölfe."
+
+msgid "ui.role.wahnsinniger_kutscher.name"
+msgstr "Wahnsinniger Kutscher"
+
+msgid "ui.role.wahnsinniger_kutscher.short"
+msgstr "Wird er hingerichtet, sterben seine Nachbarn mit."
+
+msgid "ui.role.ritter.name"
+msgstr "Ritter"
+
+msgid "ui.role.ritter.short"
+msgstr "Stirbt er durch die Werwölfe, stirbt der nächste Wolf mit."
+
+msgid "ui.role.faehrtenleser.name"
+msgstr "Fährtenleser"
+
+msgid "ui.role.faehrtenleser.short"
+msgstr "Erfährt einmal, auf welcher Seite der nächste Wolf sitzt."
+
+msgid "ui.role.besessener_wolf.name"
+msgstr "Besessener Wolf"
+
+msgid "ui.role.besessener_wolf.short"
+msgstr "Wolf im Rudel, reißt bei seinem Tod eine Person mit."
+
+msgid "ui.role.korrupter_richter.name"
+msgstr "Korrupter Richter"
+
+msgid "ui.role.korrupter_richter.short"
+msgstr "Markiert nachts eine Person, die am Tag als nominiert gilt."
+
+msgid "ui.role.waechter_am_tor.name"
+msgstr "Wächter am Tor"
+
+msgid "ui.role.waechter_am_tor.short"
+msgstr "Solange er lebt, wird kein neuer Wolf; stattdessen Dorfbewohner."
+
+msgid "ui.role.blutwolf.name"
+msgstr "Blutwolf"
+
+msgid "ui.role.blutwolf.short"
+msgstr "Wolf im Rudel, Stimme +1 je totem direkten Nachbarn."
+
+msgid "ui.role.spuerhund.name"
+msgstr "Spürhund"
+
+msgid "ui.role.spuerhund.short"
+msgstr "Prüft nachts drei Personen auf Wolf oder Einzelsieg; ein Fehlgriff kostet die Fähigkeit."
+
+msgid "ui.role.parasit.name"
+msgstr "Parasit"
+
+msgid "ui.role.parasit.short"
+msgstr "Heftet sich an einen Wirt, stirbt nur mit ihm; gewinnt unter den letzten drei."
+
+msgid "ui.role.schattenhund.name"
+msgstr "Schattenhund"
+
+msgid "ui.role.schattenhund.short"
+msgstr "Wolf im Rudel, blockiert einmal alle Dorf-Fähigkeiten einer Nacht."
+
+msgid "ui.role.albtraumwolf.name"
+msgstr "Albtraumwolf"
+
+msgid "ui.role.albtraumwolf.short"
+msgstr "Wolf im Rudel, blockiert jede Nacht die Fähigkeit einer Person."
+
+msgid "ui.role.giftwolf.name"
+msgstr "Giftwolf"
+
+msgid "ui.role.giftwolf.short"
+msgstr "Wolf im Rudel, vergiftet zweimal; das Ziel stirbt zwei Nächte später."
+
+msgid "ui.role.rudelvater.name"
+msgstr "Rudelvater"
+
+msgid "ui.role.rudelvater.short"
+msgstr "Wolf im Rudel, überlebt einmal; nach seinem Lynch ein zusätzliches Opfer."
+
+msgid "ui.role.seuchenwolf.name"
+msgstr "Seuchenwolf"
+
+msgid "ui.role.seuchenwolf.short"
+msgstr "Wolf im Rudel; nach seinem Tod durchbricht der nächste Angriff jeden Schutz."
+
+msgid "ui.role.fenrir.name"
+msgstr "Fenrir"
+
+msgid "ui.role.fenrir.short"
+msgstr "Wolf im Rudel, wird jede Nacht stärker und überlebt ab Stufe 3 einmal."
+
+msgid "ui.role.cerberus.name"
+msgstr "Cerberus"
+
+msgid "ui.role.cerberus.short"
+msgstr "Wolf im Rudel, sammelt Köpfe und wehrt mit drei eine Hinrichtung ab."
+
+msgid "ui.role.henker.name"
+msgstr "Henker"
+
+msgid "ui.role.henker.short"
+msgstr "Ab drei Hinrichtungen markiert er nachts jemanden, der bei der nächsten mitstirbt."
+
+msgid "ui.role.traumdeuter.name"
+msgstr "Traumdeuter"
+
+msgid "ui.role.traumdeuter.short"
+msgstr "Sieht jede Nacht drei Namen, darunter mindestens einen Wolf."
+
+msgid "ui.role.kopfgeldjaeger.name"
+msgstr "Kopfgeldjäger"
+
+msgid "ui.role.kopfgeldjaeger.short"
+msgstr "Nach jedem gelynchten Wolf drei Namen, darunter mindestens ein Wolf."
+
+msgid "ui.role.koenig.name"
+msgstr "König"
+
+msgid "ui.role.koenig.short"
+msgstr "Sobald mehr Tote als Lebende: einmal eine Dorfperson mit ihrer Rolle."
+
+msgid "ui.role.kriegerin_des_lichts.name"
+msgstr "Kriegerin des Lichts"
+
+msgid "ui.role.kriegerin_des_lichts.short"
+msgstr "Prüft einmal nachts, ob jemand ein Wolf ist; irrt sie, stirbt sie."
+
+msgid "ui.role.blutpriester.name"
+msgstr "Blutpriester"
+
+msgid "ui.role.blutpriester.short"
+msgstr "Opfert einmal eine Person und erfährt bis zu drei Wölfe."
+
+msgid "ui.role.amalia.name"
+msgstr "Amalia"
+
+msgid "ui.role.amalia.short"
+msgstr "Bei mindestens drei Wölfen: opfert sich am Tag für eine öffentliche Ja/Nein-Frage."
+
+msgid "ui.role.detektiv.name"
+msgstr "Detektiv"
+
+msgid "ui.role.detektiv.short"
+msgstr "Stirbt ein Wolf, wird öffentlich die Richtung des nächsten Wolfs verkündet."
+
+msgid "ui.role.die_ewigen.name"
+msgstr "Die Ewigen"
+
+msgid "ui.role.die_ewigen.short"
+msgstr "Prüfen jede Nacht gemeinsam, ob jemand allein gewinnt, und gewinnen mit ihm."
+
+msgid "ui.role.der_weise.name"
+msgstr "Der Weise"
+
+msgid "ui.role.der_weise.short"
+msgstr "Überlebt einmal einen Wolfsangriff; wird er gelyncht, ruhen die Fähigkeiten des Dorfes."
+
+msgid "ui.role.maertyrerin.name"
+msgstr "Märtyrerin"
+
+msgid "ui.role.maertyrerin.short"
+msgstr "Kann sich opfern, damit das Nachtopfer überlebt."
+
+msgid "ui.role.schutzgeist.name"
+msgstr "Schutzgeist"
+
+msgid "ui.role.schutzgeist.short"
+msgstr "Gibt in der Nacht nach ihrem Tod jemandem ein Schild gegen den nächsten Wolfsangriff."
+
+msgid "ui.role.dorfschmied.name"
+msgstr "Dorfschmied"
+
+msgid "ui.role.dorfschmied.short"
+msgstr "Ab der sechsten Nacht eine Waffe, die einen Wolfsangriff abwehrt und einen Wolf tötet."
+
+msgid "ui.role.verdammniswaechter.name"
+msgstr "Verdammniswächter"
+
+msgid "ui.role.verdammniswaechter.short"
+msgstr "Lenkt jede Nacht den Wolfsangriff wahlweise auf eine angebotene andere Person."
+
+msgid "ui.role.loki.name"
+msgstr "Loki"
+
+msgid "ui.role.loki.short"
+msgstr "Verbindet in der ersten Nacht zwei Personen als Liebende oder Rivalen."
+
+msgid "ui.role.rotkaeppchen.name"
+msgstr "Rotkäppchen"
+
+msgid "ui.role.rotkaeppchen.short"
+msgstr "Sucht jede Nacht Zuflucht; wer sie gewährt, erhält einen Apfel und eine Todeskette."
+
+msgid "ui.role.schwarze_witwe.name"
+msgstr "Schwarze Witwe"
+
+msgid "ui.role.schwarze_witwe.short"
+msgstr "Wolf im Rudel; trifft sie ein Paar des Loki, sterben beide am Morgen."
+
+msgid "ui.role.schattenwanderer.name"
+msgstr "Schattenwanderer"
+
+msgid "ui.role.schattenwanderer.short"
+msgstr "Wolf im Rudel; verknüpft sich einmal, dann stirbt statt eines von beiden der andere."
+
+msgid "ui.role.seelentauscher.name"
+msgstr "Seelentauscher"
+
+msgid "ui.role.seelentauscher.short"
+msgstr "Tauscht einmal die Rollen zweier Personen, lebend oder tot."
+
+msgid "ui.role.daemonischer_wolf.name"
+msgstr "Dämonischer Wolf"
+
+msgid "ui.role.daemonischer_wolf.short"
+msgstr "Wolf im Rudel; bei seinem Tod verflucht er jemanden, der dem Orakel als Werwolf erscheint."
+
+msgid "ui.role.koenig_lykaon.name"
+msgstr "König Lykaon"
+
+msgid "ui.role.koenig_lykaon.short"
+msgstr "Wolf im Rudel; macht mit einem Verbündeten einen Dorfbewohner zum Trugbilderwolf."
+
+msgid "ui.role.kutscher.name"
+msgstr "Kutscher"
+
+msgid "ui.role.kutscher.short"
+msgstr "Ab zehn Toten holt er einmal drei Tote zurück; einer davon wird Wolf."
+
+msgid "ui.role.dr_victor_frankenstein.name"
+msgstr "Dr. Victor Frankenstein"
+
+msgid "ui.role.dr_victor_frankenstein.short"
+msgstr "Belebt einmal einen Toten mit einer freien Rolle wieder."
+
+msgid "ui.role.rattenfaenger.name"
+msgstr "Rattenfänger"
+
+msgid "ui.role.rattenfaenger.short"
+msgstr "Verzaubert jede Nacht ein oder zwei Personen; sind alle anderen verzaubert, gewinnt er."
+
+msgid "ui.role.pestbringerin.name"
+msgstr "Pestbringerin"
+
+msgid "ui.role.pestbringerin.short"
+msgstr "Infiziert jede Nacht jemanden; die Seuche springt auf Nachbarn über. Alle anderen krank: Sieg."
+
+msgid "ui.role.prophet_des_untergangs.name"
+msgstr "Prophet des Untergangs"
+
+msgid "ui.role.prophet_des_untergangs.short"
+msgstr "Markiert drei Personen; sind alle tot, tötet er nachts und gewinnt statt des Dorfes."
+
+msgid "ui.role.todesprediger.name"
+msgstr "Todesprediger"
+
+msgid "ui.role.todesprediger.short"
+msgstr "Sagt in der ersten Nacht geheim seinen Todeszeitpunkt voraus; trifft er, gewinnt er."
+
+msgid "ui.role.feuerteufel.name"
+msgstr "Feuerteufel"
+
+msgid "ui.role.feuerteufel.short"
+msgstr "Markiert jede Nacht eine Person; stirbt sie, verbrennen ihre Nachbarn. Gewinnt lebend mit."
+
+msgid "ui.role.voodoo_priester.name"
+msgstr "Voodoo-Priester"
+
+msgid "ui.role.voodoo_priester.short"
+msgstr "Gibt nachts einer anderen Person eine geheime Puppe; stirbt er, stirbt stattdessen die Puppe. Gewinnt allein unter den letzten drei."
+
+msgid "ui.role.nekromant.name"
+msgstr "Nekromant"
+
+msgid "ui.role.nekromant.short"
+msgstr "Opfert drei Tote für einen Schild gegen den nächsten Tod oder lenkt einen Angriff um; benennt er einen Wolf, gewinnt er."
+
+msgid "ui.role.hades.name"
+msgstr "Hades"
+
+msgid "ui.role.hades.short"
+msgstr "Erhält für jeden Tod ein Licht; tötet für 2, kauft für 3 eine Barriere; gewinnt lebend mit 10 Lichtern."
+
+msgid "ui.role.grabraeuber.name"
+msgstr "Grabräuber"
+
+msgid "ui.role.grabraeuber.short"
+msgstr "Stiehlt einmal die Nachtfähigkeit einer toten Person und nutzt sie fortan; gewinnt lebend bei höchstens drei Lebenden."
+
+msgid "ui.role.schicksalswolf.name"
+msgstr "Schicksalswolf"
+
+msgid "ui.role.schicksalswolf.short"
+msgstr "Markiert in Nacht 1 drei Personen; für jede unter den ersten drei Toten reißt er in Nacht 4 ein zusätzliches Opfer."
+
+msgid "ui.role.rachsuechtiger_wolf.name"
+msgstr "Rachsüchtiger Wolf"
+
+msgid "ui.role.rachsuechtiger_wolf.short"
+msgstr "Wacht mit dem Rudel und in jeder dritten Nacht zusätzlich auf, um einen anderen Wolf zu reißen; gewinnt allein als letzter Wolf."
+
+msgid "ui.role.zeitwaechter.name"
+msgstr "Zeitwächter"
+
+msgid "ui.role.zeitwaechter.short"
+msgstr "Kann einmal zu Beginn einer Nacht die Nacht einfrieren: alle Nachtaktionen entfallen, niemand stirbt in dieser Nacht."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

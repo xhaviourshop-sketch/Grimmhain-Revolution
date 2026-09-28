@@ -95,6 +95,9 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		EXECUTE:
 			if not player.alive:
 				return &"player_dead"
+			if ExecutionRules.needs_cerberus_decision(s, target) and not p.get("cerberus_defend") is bool:
+				return &"cerberus_decision_required"
+			return GuardRoles.validate_curse_field(s, target, p)
 		REVIVE:
 			if player.alive:
 				return &"player_alive"
@@ -374,7 +377,7 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
 			ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": true})
-			ExecutionRules.execute(ctx, target, KillEvent.SOURCE_GM)
+			ExecutionRules.execute(ctx, target, KillEvent.SOURCE_GM, DictRead.get_bool(p, "cerberus_defend"), DictRead.get_int(p, "sage_curse"))
 		SET_ROLE_FIELD:
 			var player := s.players[target]
 			var field := DictRead.get_string(p, "field")
@@ -382,12 +385,12 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			player.set(field, StringName(DictRead.get_string(p, "value")))
 			_log(ctx, kind, target, old, {field: player.get(field)}, reason, false)
 		REVIVE:
+			# Decision Log „Rollenaudit · Wiederbelebung …“: jede Wiederbelebung setzt alle begrenzten
+			# Einsätze der Person zurück; Nominierungsstatus, Bindungen und eingereihte Reaktionen bleiben.
 			var player := s.players[target]
-			var old := {"alive": false, "death": player.death.to_dict() if player.death != null else null}
-			player.alive = true
-			player.death = null
-			_log(ctx, kind, target, old, {"alive": true, "death": null}, reason, false)
-			s.win_check_pending = true
+			var old := {"alive": false, "death": player.death.to_dict() if player.death != null else null, "ability_uses": player.ability_uses.duplicate()}
+			RoleTransition.revive(s, target)
+			_log(ctx, kind, target, old, {"alive": true, "death": null, "ability_uses": {}}, reason, false)
 		SET_ROLE:
 			var player := s.players[target]
 			var old := _role_fields(player)

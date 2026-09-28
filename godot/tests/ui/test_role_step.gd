@@ -3,7 +3,7 @@ extends UiTestCase
 ## 86 bis 89). Bedienung über Buttons wie Maus und Touch; Vorbereitung über die Anwendungsschicht.
 
 const ROLE_IDS: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf"]
+		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker", "traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen", "der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer", "seelentauscher", "daemonischer-wolf", "koenig-lykaon", "schicksalswolf", "kutscher", "dr-victor-frankenstein", "rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber", "rachsuechtiger-wolf", "zeitwaechter"]
 
 
 func _dialog(shell: Control) -> Control:
@@ -173,7 +173,7 @@ func test_role_rows_show_catalog_data() -> void:
 		return
 	var screen := await _to_roles(shell)
 	var rows := _role_rows(screen)
-	assert_eq(rows.size(), 11, "elf Rollenzeilen")
+	assert_eq(rows.size(), RoleCatalog.ROLES.size(), "eine Zeile je Katalogrolle")
 	var seen: Array[String] = []
 	var faction_order: Array[String] = []
 	for row: Control in rows:
@@ -194,7 +194,7 @@ func test_role_rows_show_catalog_data() -> void:
 	seen.sort()
 	var expected := ROLE_IDS.duplicate()
 	expected.sort()
-	assert_eq(seen, expected, "genau die elf Katalogrollen")
+	assert_eq(seen, expected, "genau die Katalogrollen")
 	assert_eq(faction_order, ["village", "wolves", "solo"] as Array[String], "Gruppen Dorf, Werwölfe, Einzelsieg")
 	for faction: String in faction_order:
 		var heading := find_node(screen, "FactionHeading_%s" % faction) as Label
@@ -356,7 +356,7 @@ func test_role_list_scrolls_completely() -> void:
 	var screen := await _to_roles(shell)
 	var scroll := find_node(screen, "RoleScroll") as ScrollContainer
 	var rows := _role_rows(screen)
-	if scroll == null or rows.size() != 11:
+	if scroll == null or rows.size() != RoleCatalog.ROLES.size():
 		fail("Rollenliste fehlt")
 		return
 	scroll.scroll_vertical = 0
@@ -364,12 +364,12 @@ func test_role_list_scrolls_completely() -> void:
 	assert_true(inside(rect_of(rows[0]), rect_of(scroll)), "erste Rolle sichtbar")
 	scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
 	await frames(2)
-	assert_true(inside(rect_of(rows[10]), rect_of(scroll)), "letzte Rolle nach Scrollen vollständig sichtbar")
+	assert_true(inside(rect_of(rows[rows.size() - 1]), rect_of(scroll)), "letzte Rolle nach Scrollen vollständig sichtbar")
 	scroll.scroll_vertical = 0
 	await frames(2)
-	find_button(rows[10], "PlusButton").grab_focus()
+	find_button(rows[rows.size() - 1], "PlusButton").grab_focus()
 	await frames(3)
-	assert_true(inside(rect_of(find_button(rows[10], "PlusButton")), rect_of(scroll)), "Tastaturfokus scrollt die Rollenliste mit")
+	assert_true(inside(rect_of(find_button(rows[rows.size() - 1], "PlusButton")), rect_of(scroll)), "Tastaturfokus scrollt die Rollenliste mit")
 
 
 func test_role_step_texts_are_keys() -> void:

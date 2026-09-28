@@ -467,6 +467,366 @@ msgstr "Mirror Wolf"
 msgid "ui.role.spiegelwolf.short"
 msgstr "Pack wolf that once turns an execution onto the nominator."
 
+msgid "ui.role.siegreicher_wolf.name"
+msgstr "Victorious Wolf"
+
+msgid "ui.role.siegreicher_wolf.short"
+msgstr "Pack wolf that counts as two wolves toward the wolf win while alive."
+
+msgid "ui.role.doppelspion.name"
+msgstr "Double Agent"
+
+msgid "ui.role.doppelspion.short"
+msgstr "Wakes with the pack, wins alone if alive once no wolf is left."
+
+msgid "ui.role.selbstmoerder.name"
+msgstr "Death Seeker"
+
+msgid "ui.role.selbstmoerder.short"
+msgstr "Wins if executed while at least five people are dead."
+
+msgid "ui.role.dorfchronistin.name"
+msgstr "Village Chronicler"
+
+msgid "ui.role.dorfchronistin.short"
+msgstr "Learns in night 1 how many people hold a solo role."
+
+msgid "ui.role.die_gebundenen.name"
+msgstr "The Bound"
+
+msgid "ui.role.die_gebundenen.short"
+msgstr "Get to know each other in night 1."
+
+msgid "ui.role.waldlaeufer.name"
+msgstr "Ranger"
+
+msgid "ui.role.waldlaeufer.short"
+msgstr "Learns each night how many wolves are alive."
+
+msgid "ui.role.doktor.name"
+msgstr "Doctor"
+
+msgid "ui.role.doktor.short"
+msgstr "Checks each night whether two people are on the same team."
+
+msgid "ui.role.nachtwaechter.name"
+msgstr "Night Warden"
+
+msgid "ui.role.nachtwaechter.short"
+msgstr "Rings the alarm in the morning if a neighbour is not village."
+
+msgid "ui.role.dorfwache.name"
+msgstr "Village Guard"
+
+msgid "ui.role.dorfwache.short"
+msgstr "Survives the werewolf attack."
+
+msgid "ui.role.wahnsinniger_kutscher.name"
+msgstr "Mad Coachman"
+
+msgid "ui.role.wahnsinniger_kutscher.short"
+msgstr "If executed, his neighbours die with him."
+
+msgid "ui.role.ritter.name"
+msgstr "Knight"
+
+msgid "ui.role.ritter.short"
+msgstr "If killed by the werewolves, the nearest wolf dies too."
+
+msgid "ui.role.faehrtenleser.name"
+msgstr "Tracker"
+
+msgid "ui.role.faehrtenleser.short"
+msgstr "Learns once on which side the nearest wolf sits."
+
+msgid "ui.role.besessener_wolf.name"
+msgstr "Possessed Wolf"
+
+msgid "ui.role.besessener_wolf.short"
+msgstr "Pack wolf that drags one person along when dying."
+
+msgid "ui.role.korrupter_richter.name"
+msgstr "Corrupt Judge"
+
+msgid "ui.role.korrupter_richter.short"
+msgstr "Marks someone at night who counts as nominated next day."
+
+msgid "ui.role.waechter_am_tor.name"
+msgstr "Gatewarden"
+
+msgid "ui.role.waechter_am_tor.short"
+msgstr "While alive, no new wolves arise; they become villagers."
+
+msgid "ui.role.blutwolf.name"
+msgstr "Blood Wolf"
+
+msgid "ui.role.blutwolf.short"
+msgstr "Pack wolf, vote +1 per dead direct neighbour."
+
+msgid "ui.role.spuerhund.name"
+msgstr "Scent Hound"
+
+msgid "ui.role.spuerhund.short"
+msgstr "Checks three people at night for wolf or solo; a miss costs the ability."
+
+msgid "ui.role.parasit.name"
+msgstr "Parasite"
+
+msgid "ui.role.parasit.short"
+msgstr "Attaches to a host and dies only with it; wins among the final three."
+
+msgid "ui.role.schattenhund.name"
+msgstr "Shadow Hound"
+
+msgid "ui.role.schattenhund.short"
+msgstr "Pack wolf, once blocks all village abilities for a night."
+
+msgid "ui.role.albtraumwolf.name"
+msgstr "Nightmare Wolf"
+
+msgid "ui.role.albtraumwolf.short"
+msgstr "Pack wolf, blocks one person's ability each night."
+
+msgid "ui.role.giftwolf.name"
+msgstr "Poison Wolf"
+
+msgid "ui.role.giftwolf.short"
+msgstr "Pack wolf, poisons twice; the target dies two nights later."
+
+msgid "ui.role.rudelvater.name"
+msgstr "Packfather"
+
+msgid "ui.role.rudelvater.short"
+msgstr "Pack wolf, survives once; his lynching grants an extra victim."
+
+msgid "ui.role.seuchenwolf.name"
+msgstr "Blight Wolf"
+
+msgid "ui.role.seuchenwolf.short"
+msgstr "Pack wolf; after his death the next attack pierces all protection."
+
+msgid "ui.role.fenrir.name"
+msgstr "Fenrir"
+
+msgid "ui.role.fenrir.short"
+msgstr "Pack wolf, grows each night and survives once from stage three."
+
+msgid "ui.role.cerberus.name"
+msgstr "Cerberus"
+
+msgid "ui.role.cerberus.short"
+msgstr "Pack wolf, gathers heads and can fend off an execution with three."
+
+msgid "ui.role.henker.name"
+msgstr "Executioner"
+
+msgid "ui.role.henker.short"
+msgstr "After three executions marks someone at night who dies with the next one."
+
+msgid "ui.role.traumdeuter.name"
+msgstr "Dreamer"
+
+msgid "ui.role.traumdeuter.short"
+msgstr "Sees three names each night, at least one of them a werewolf."
+
+msgid "ui.role.kopfgeldjaeger.name"
+msgstr "Bounty Hunter"
+
+msgid "ui.role.kopfgeldjaeger.short"
+msgstr "After each lynched werewolf, three names with at least one werewolf."
+
+msgid "ui.role.koenig.name"
+msgstr "King"
+
+msgid "ui.role.koenig.short"
+msgstr "Once more are dead than alive: learns one villager and their role, once."
+
+msgid "ui.role.kriegerin_des_lichts.name"
+msgstr "Warrior of Light"
+
+msgid "ui.role.kriegerin_des_lichts.short"
+msgstr "Once at night checks whether someone is a werewolf; if wrong, she dies."
+
+msgid "ui.role.blutpriester.name"
+msgstr "Blood Priest"
+
+msgid "ui.role.blutpriester.short"
+msgstr "Once sacrifices someone and learns up to three werewolves."
+
+msgid "ui.role.amalia.name"
+msgstr "Amalia"
+
+msgid "ui.role.amalia.short"
+msgstr "With at least three werewolves: sacrifices herself by day for a public yes/no question."
+
+msgid "ui.role.detektiv.name"
+msgstr "Detective"
+
+msgid "ui.role.detektiv.short"
+msgstr "When a werewolf dies, the direction of the nearest werewolf is announced."
+
+msgid "ui.role.die_ewigen.name"
+msgstr "The Eternal Ones"
+
+msgid "ui.role.die_ewigen.short"
+msgstr "Each night check together whether someone wins alone, and win with them."
+
+msgid "ui.role.der_weise.name"
+msgstr "The Elder"
+
+msgid "ui.role.der_weise.short"
+msgstr "Survives one werewolf attack; if lynched, the village loses its abilities for a while."
+
+msgid "ui.role.maertyrerin.name"
+msgstr "Martyr"
+
+msgid "ui.role.maertyrerin.short"
+msgstr "Can sacrifice herself so the night victim survives."
+
+msgid "ui.role.schutzgeist.name"
+msgstr "Guardian Spirit"
+
+msgid "ui.role.schutzgeist.short"
+msgstr "In the night after her death gives someone a shield against the next werewolf attack."
+
+msgid "ui.role.dorfschmied.name"
+msgstr "Village Blacksmith"
+
+msgid "ui.role.dorfschmied.short"
+msgstr "From the sixth night a weapon that blocks one werewolf attack and kills a werewolf."
+
+msgid "ui.role.verdammniswaechter.name"
+msgstr "Doom Warden"
+
+msgid "ui.role.verdammniswaechter.short"
+msgstr "Each night may redirect the werewolf attack to another offered person."
+
+msgid "ui.role.loki.name"
+msgstr "Loki"
+
+msgid "ui.role.loki.short"
+msgstr "In the first night binds two people as lovers or rivals."
+
+msgid "ui.role.rotkaeppchen.name"
+msgstr "Little Red Riding Hood"
+
+msgid "ui.role.rotkaeppchen.short"
+msgstr "Seeks refuge each night; whoever grants it gets an apple and a death chain."
+
+msgid "ui.role.schwarze_witwe.name"
+msgstr "Black Widow"
+
+msgid "ui.role.schwarze_witwe.short"
+msgstr "Werewolf in the pack; if she finds one of Loki's pairs, both die at dawn."
+
+msgid "ui.role.schattenwanderer.name"
+msgstr "Shadowwalker"
+
+msgid "ui.role.schattenwanderer.short"
+msgstr "Werewolf in the pack; links once, then the other one dies instead."
+
+msgid "ui.role.seelentauscher.name"
+msgstr "Soul Swapper"
+
+msgid "ui.role.seelentauscher.short"
+msgstr "Once swaps the roles of two people, alive or dead."
+
+msgid "ui.role.daemonischer_wolf.name"
+msgstr "Demonic Wolf"
+
+msgid "ui.role.daemonischer_wolf.short"
+msgstr "Werewolf in the pack; on death he curses someone who appears as a werewolf to the oracle."
+
+msgid "ui.role.koenig_lykaon.name"
+msgstr "King Lycaon"
+
+msgid "ui.role.koenig_lykaon.short"
+msgstr "Werewolf in the pack; with an ally turns a villager into a decoy wolf."
+
+msgid "ui.role.kutscher.name"
+msgstr "Coachman"
+
+msgid "ui.role.kutscher.short"
+msgstr "From ten dead he once brings back three dead; one of them becomes a werewolf."
+
+msgid "ui.role.dr_victor_frankenstein.name"
+msgstr "Dr. Victor Frankenstein"
+
+msgid "ui.role.dr_victor_frankenstein.short"
+msgstr "Once revives a dead person with an unused role."
+
+msgid "ui.role.rattenfaenger.name"
+msgstr "Pied Piper"
+
+msgid "ui.role.rattenfaenger.short"
+msgstr "Charms one or two people each night; once all others are charmed, he wins."
+
+msgid "ui.role.pestbringerin.name"
+msgstr "Plague Bringer"
+
+msgid "ui.role.pestbringerin.short"
+msgstr "Infects someone each night; the plague spreads to neighbours. All others sick: victory."
+
+msgid "ui.role.prophet_des_untergangs.name"
+msgstr "Prophet of Doom"
+
+msgid "ui.role.prophet_des_untergangs.short"
+msgstr "Marks three people; once all are dead he kills at night and wins instead of the village."
+
+msgid "ui.role.todesprediger.name"
+msgstr "Death Prophet"
+
+msgid "ui.role.todesprediger.short"
+msgstr "Secretly predicts the time of his death in the first night; if right, he wins."
+
+msgid "ui.role.feuerteufel.name"
+msgstr "Pyromaniac"
+
+msgid "ui.role.feuerteufel.short"
+msgstr "Marks one person each night; when that person dies, their neighbours burn. Wins alongside while alive."
+
+msgid "ui.role.voodoo_priester.name"
+msgstr "Voodoo Priest"
+
+msgid "ui.role.voodoo_priester.short"
+msgstr "Secretly gives another person a doll at night; if he would die, the doll dies instead. Wins alone among the last three."
+
+msgid "ui.role.nekromant.name"
+msgstr "Necromancer"
+
+msgid "ui.role.nekromant.short"
+msgstr "Sacrifices three dead for a shield against the next death or redirects an attack; naming a wolf wins."
+
+msgid "ui.role.hades.name"
+msgstr "Hades"
+
+msgid "ui.role.hades.short"
+msgstr "Gains a light for every death; kills for 2, buys a barrier for 3; wins alive with 10 lights."
+
+msgid "ui.role.grabraeuber.name"
+msgstr "Grave Robber"
+
+msgid "ui.role.grabraeuber.short"
+msgstr "Once steals the night ability of a dead person and keeps using it; wins alive with at most three living."
+
+msgid "ui.role.schicksalswolf.name"
+msgstr "Fate Wolf"
+
+msgid "ui.role.schicksalswolf.short"
+msgstr "Marks three people in night 1; for each among the first three dead he kills one additional victim in night 4."
+
+msgid "ui.role.rachsuechtiger_wolf.name"
+msgstr "Lone Wolf"
+
+msgid "ui.role.rachsuechtiger_wolf.short"
+msgstr "Wakes with the pack and, every third night, also to kill another wolf; wins alone as the last wolf."
+
+msgid "ui.role.zeitwaechter.name"
+msgstr "Time Warden"
+
+msgid "ui.role.zeitwaechter.short"
+msgstr "Once, at the start of a night, may freeze it: all night actions are cancelled and nobody dies that night."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

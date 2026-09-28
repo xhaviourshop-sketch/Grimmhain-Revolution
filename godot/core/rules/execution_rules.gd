@@ -59,9 +59,23 @@ static func preview(s: GameState, target_id: int, source_kind: StringName) -> Di
 	return result
 
 
-## Führt die (bereits bestätigte) Hinrichtung nach der Vorschau aus.
-static func execute(ctx: RuleContext, target_id: int, source_kind: StringName) -> void:
+## true, wenn die Hinrichtung von `target_id` eine Entscheidung „abwehren?“ verlangt (Cerberus mit 3 Köpfen).
+static func needs_cerberus_decision(s: GameState, target_id: int) -> bool:
+	var p: Player = s.players.get(target_id)
+	return p != null and p.alive and p.role_id == RoleCatalog.CERBERUS and int(s.growth.get(target_id, 0)) >= RoleCatalog.CERBERUS_MAX_HEADS
+
+
+## Führt die (bereits bestätigte) Hinrichtung nach der Vorschau aus. Zählt jede Hinrichtung (Henker),
+## lässt Cerberus bei Wunsch abwehren und vollzieht danach Henker-Markierungen.
+static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, cerberus_defend: bool = false, sage_curse: int = 0) -> void:
 	var s := ctx.state
+	s.executions_count += 1
+	if cerberus_defend and needs_cerberus_decision(s, target_id):
+		s.growth[target_id] = 0
+		ctx.emit(GameEvent.EXECUTION_DEFENDED, Visibility.GM, {"target_id": target_id, "by": String(RoleCatalog.CERBERUS), "day": s.day_number})
+		_hangman_extras(ctx)
+		return
+	var sage := GuardRoles.needs_sage_decision(s, target_id)  # vor dem Verbrauch einer Spiegelung
 	var r := preview(s, target_id, source_kind)
 	var target: Player = s.players[target_id]
 	if bool(r["redirected"]):
@@ -74,4 +88,18 @@ static func execute(ctx: RuleContext, target_id: int, source_kind: StringName) -
 		ctx.emit(GameEvent.MIRROR_NOT_TRIGGERED, Visibility.GM, {
 			"target_id": target_id, "nominator_id": r["nominator_id"], "reason": r["reason"],
 		})
-	KillPipeline.request_kill(ctx, int(r["death_target_id"]), StringName(r["cause"]), StringName(r["source_kind"]), int(r["source_id"]))
+	var record := KillPipeline.request_kill(ctx, int(r["death_target_id"]), StringName(r["cause"]), StringName(r["source_kind"]), int(r["source_id"]))
+	if sage and record != null:
+		GuardRoles.start_curse(ctx, record.target_id, sage_curse)
+	_hangman_extras(ctx)
+
+
+## Henker (RM-DR-130): Markierte sterben bei der Hinrichtung des Tages mit, wenn ihr Henker jetzt lebt.
+static func _hangman_extras(ctx: RuleContext) -> void:
+	var s := ctx.state
+	var marks := s.hangman_marks.duplicate()
+	s.hangman_marks.clear()
+	for mark: Dictionary in marks:
+		var hangman: Player = s.players[int(mark["hangman_id"])]
+		if hangman.alive and SoloRules.has_ability(s, hangman.id, RoleCatalog.HENKER) and not GuardRoles.silenced(s, hangman.id):
+			KillPipeline.request_kill(ctx, int(mark["target_id"]), KillEvent.CAUSE_HANGMAN_EXTRA, KillEvent.SOURCE_PLAYER, hangman.id)

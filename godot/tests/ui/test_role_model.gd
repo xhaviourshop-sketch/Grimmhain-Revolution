@@ -61,7 +61,7 @@ func test_catalog_adapter_matches_rule_catalog() -> void:
 	expected.sort()
 	var sorted_ids := ids.duplicate()
 	sorted_ids.sort()
-	assert_eq(ids.size(), 11, "exakt elf produktive Rollen")
+	assert_eq(ids.size(), RoleCatalog.ROLES.size(), "alle produktiven Rollen")
 	assert_eq(sorted_ids, expected, "dieselben IDs wie RoleCatalog")
 	for id: Variant in ids:
 		var role := StringName(id)
@@ -114,7 +114,7 @@ func test_plus_minus_and_limits() -> void:
 	var s := _make(8)
 	if s == null:
 		return
-	assert_true(_roles(s).has("counts") and (_roles(s)["counts"] as Dictionary).size() == 11, "jede Rolle mit Anzahl")
+	assert_true(_roles(s).has("counts") and (_roles(s)["counts"] as Dictionary).size() == RoleCatalog.ROLES.size(), "jede Rolle mit Anzahl")
 	assert_eq(_count(s, "werwolf"), 0, "Start bei 0")
 	_ok(s.call("change_role_count", &"werwolf", 1), "Plus")
 	assert_eq(_count(s, "werwolf"), 1, "Plus erhöht um eins")

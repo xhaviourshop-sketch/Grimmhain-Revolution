@@ -8,7 +8,7 @@ Alle 61 fehlenden Rollen sind genau einer von 16 Chargen zugeordnet. Die Chargen
 
 | Charge | Name | Rollen | davon 1.0 (Option B) | Größe | Risiko |
 |---|---|---:|---|---|---|
-| K1 | Sieg- und Zählregeln | 3 | `siegreicher-wolf`, `selbstmoerder`, `doppelspion` | M bis L | mittel |
+| K1 | Sieg- und Zählregeln | 2 (+1 umgesetzt) | `selbstmoerder`, `doppelspion` (umgesetzt: `siegreicher-wolf`) | M bis L | mittel |
 | K2 | Informationsmodell | 4 | `waldlaeufer`, `doktor` | M | niedrig |
 | K3 | Sitznachbarschaft | 5 | `wahnsinniger-kutscher`, `ritter` | M | mittel |
 | K4 | Todes- und Hinrichtungsreaktionen | 4 | `besessener-wolf`, `cerberus` | M | mittel |
@@ -76,7 +76,13 @@ Nicht als neues System geplant: Stimmsystem (ausgeschlossen, RM-DR-008), Besuchs
 
 ## 3. Charge K1 · Sieg- und Zählregeln und die nächste Einheit
 
-**Rollen Charge K1 (3):** `siegreicher-wolf`, `selbstmoerder`, `doppelspion`
+**Rollen Charge K1 (0):** –
+
+**Nachtrag Rollenaudit:** `selbstmoerder` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `doppelspion` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit 2026-09-27:** `siegreicher-wolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)); die Bewertung unten bleibt als Planungsstand erhalten.
 
 **Konsolidierung 2026-09-27:** Die frühere Fassung dieses Abschnitts nannte K1 als Ganzes die erste Einheit, schätzte „S bis M, Risiko niedrig“, legte die nächste Schemanummer fest und nannte RM-DR-007 und RM-DR-016 als Blocker. Diese Punkte sind korrigiert: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig, eine Schemanummer wird nicht vorab festgelegt, und die Größe ist unten neu begründet. Die Auswahl der Rollen ist eine Produktentscheidung (RM-DR-017) und nicht freigegeben.
 
@@ -185,7 +191,15 @@ Siehe §3.
 
 ### K2 · Informationsmodell
 
-**Rollen Charge K2 (4):** `waldlaeufer`, `doktor`, `die-gebundenen`, `dorfchronistin`
+**Rollen Charge K2 (0):** –
+
+**Nachtrag Rollenaudit:** `doktor` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `waldlaeufer` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `die-gebundenen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `dorfchronistin` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Informationen, die eine Person nachts erhält, ohne Zustand zu ändern: Anzahl lebender Wölfe, gleiche Siegseite zweier Personen, Mitglieder der eigenen Gruppe, Anzahl der Einzelsiegrollen.
 - **Neue Systeme:** N-02.
@@ -198,7 +212,17 @@ Siehe §3.
 
 ### K3 · Sitznachbarschaft
 
-**Rollen Charge K3 (5):** `wahnsinniger-kutscher`, `ritter`, `nachtwaechter`, `faehrtenleser`, `detektiv`
+**Rollen Charge K3 (0):** –
+
+**Nachtrag Rollenaudit:** `detektiv` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `faehrtenleser` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `ritter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `nachtwaechter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `wahnsinniger-kutscher` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Wirkungen und Informationen, die von der Sitzlage abhängen.
 - **Neue Systeme:** N-05, N-06 (Ritter-Vergeltung als Todesfolge), N-07 (Kutscher-Nebentode), N-04; nach 1.0 N-18 (öffentliche Ansage für Nachtwächter und Detektiv).
@@ -211,7 +235,15 @@ Siehe §3.
 
 ### K4 · Todes- und Hinrichtungsreaktionen
 
-**Rollen Charge K4 (4):** `besessener-wolf`, `cerberus`, `fenrir`, `henker`
+**Rollen Charge K4 (0):** –
+
+**Nachtrag Rollenaudit:** `henker` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `cerberus` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `fenrir` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `besessener-wolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Wirkung beim eigenen Tod oder bei einer Hinrichtung.
 - **Neue Systeme:** N-06 (Reaktionsart „Mitnahme“), N-07 (Abwehr einer Hinrichtung), N-10 (Köpfe, Stufen).
@@ -224,7 +256,15 @@ Siehe §3.
 
 ### K5 · Abfangregeln und Schutz
 
-**Rollen Charge K5 (4):** `dorfwache`, `maertyrerin`, `schutzgeist`, `dorfschmied`
+**Rollen Charge K5 (0):** –
+
+**Nachtrag Rollenaudit:** `dorfschmied` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `schutzgeist` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `maertyrerin` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `dorfwache` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Regeln, die einen Tod verhindern, ersetzen oder in einen anderen Tod umwandeln.
 - **Neue Systeme:** N-03, N-04.
@@ -237,7 +277,13 @@ Siehe §3.
 
 ### K6 · Bindungsmodell I
 
-**Rollen Charge K6 (3):** `loki`, `schwarze-witwe`, `schattenwanderer`
+**Rollen Charge K6 (0):** –
+
+**Nachtrag Rollenaudit:** `schattenwanderer` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `schwarze-witwe` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `loki` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** zwei Personen, deren Tode gekoppelt sind.
 - **Neue Systeme:** N-08, N-06 (Kettentod als Todesfolge).
@@ -250,7 +296,19 @@ Siehe §3.
 
 ### K7 · Bedingte und zufallsgestützte Information
 
-**Rollen Charge K7 (6):** `kopfgeldjaeger`, `koenig`, `traumdeuter`, `spuerhund`, `kriegerin-des-lichts`, `blutpriester`
+**Rollen Charge K7 (0):** –
+
+**Nachtrag Rollenaudit:** `blutpriester` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `kriegerin-des-lichts` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `koenig` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `kopfgeldjaeger` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `traumdeuter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `spuerhund` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Informationen, die an eine Bedingung gebunden sind oder zufällig ausgewählt werden; teils mit Tod.
 - **Neue Systeme:** N-10 (Verfügbarkeit), Erweiterung N-02 (Namensliste), N-09 (falsche Spur des Spürhunds).
@@ -263,7 +321,13 @@ Siehe §3.
 
 ### K8 · Rollenblockierung
 
-**Rollen Charge K8 (3):** `schattenhund`, `albtraumwolf`, `der-weise`
+**Rollen Charge K8 (0):** –
+
+**Nachtrag Rollenaudit:** `der-weise` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `albtraumwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `schattenhund` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Fähigkeiten anderer entfallen für eine oder mehrere Nächte.
 - **Neue Systeme:** N-11; für `der-weise` zusätzlich N-12 (Dauer) und N-03 (Einmalrettung).
@@ -276,7 +340,17 @@ Siehe §3.
 
 ### K9 · Marker und Einzelsiege
 
-**Rollen Charge K9 (5):** `rattenfaenger`, `pestbringerin`, `feuerteufel`, `prophet-des-untergangs`, `die-ewigen`
+**Rollen Charge K9 (0):** –
+
+**Nachtrag Rollenaudit:** `feuerteufel` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `prophet-des-untergangs` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `pestbringerin` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `rattenfaenger` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `die-ewigen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** dauerhafte Markierungen, aus denen Einzelsiege oder Folgetode entstehen.
 - **Neue Systeme:** N-09, N-01 (weitere Einzelsiege), N-05 (Nachbarn), N-12 (Ausbreitung).
@@ -289,7 +363,13 @@ Siehe §3.
 
 ### K10 · Bindungsmodell II
 
-**Rollen Charge K10 (3):** `parasit`, `rotkaeppchen`, `voodoo-priester`
+**Rollen Charge K10 (0):** –
+
+**Nachtrag Rollenaudit:** `voodoo-priester` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `rotkaeppchen` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `parasit` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Bindungen mit Schutz- oder Umlenkwirkung.
 - **Neue Systeme:** keine neuen; N-08 und N-03 werden kombiniert; Rotkäppchen-Apfel braucht eine Wiederholung eines Nachtschritts (Erweiterung `StepQueue`).
@@ -301,7 +381,17 @@ Siehe §3.
 
 ### K11 · Wolfsangriff-Modifikation, Durchdringung, verzögerte Tode
 
-**Rollen Charge K11 (6):** `giftwolf`, `rudelvater`, `seuchenwolf`, `schicksalswolf`, `rachsuechtiger-wolf`, `verdammniswaechter`
+**Rollen Charge K11 (0):** –
+
+**Nachtrag Rollenaudit:** `schicksalswolf` und `rachsuechtiger-wolf` sind umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `verdammniswaechter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `seuchenwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `rudelvater` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `giftwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** zusätzliche oder veränderte Wolfsangriffe, Durchdringung, Tod zu einem späteren Zeitpunkt.
 - **Neue Systeme:** N-12, N-04 (Attribut `pierces` mit fester Liste), zusätzliche Rudelopfer.
@@ -313,7 +403,15 @@ Siehe §3.
 
 ### K12 · Rollen- und Fraktionswechsel
 
-**Rollen Charge K12 (4):** `koenig-lykaon`, `waechter-am-tor`, `daemonischer-wolf`, `seelentauscher`
+**Rollen Charge K12 (0):** –
+
+**Nachtrag Rollenaudit:** `seelentauscher` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `koenig-lykaon` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `daemonischer-wolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `waechter-am-tor` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Rolle, Fraktion oder Erscheinung ändern sich während der Partie.
 - **Neue Systeme:** N-17.
@@ -326,7 +424,11 @@ Siehe §3.
 
 ### K13 · Wiederbelebung
 
-**Rollen Charge K13 (2):** `dr-victor-frankenstein`, `kutscher`
+**Rollen Charge K13 (0):** –
+
+**Nachtrag Rollenaudit:** `dr-victor-frankenstein` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `kutscher` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Tote kehren zurück, teils mit neuer Rolle.
 - **Neue Systeme:** N-13; bei Kartenbezug N-15.
@@ -338,7 +440,13 @@ Siehe §3.
 
 ### K14 · Tag, Nominierung, Stimmbezug
 
-**Rollen Charge K14 (3):** `korrupter-richter`, `amalia`, `blutwolf`
+**Rollen Charge K14 (0):** –
+
+**Nachtrag Rollenaudit:** `amalia` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `korrupter-richter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `blutwolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Wirkungen am Tag, auf Nominierungen oder als Hinweis zur physischen Abstimmung.
 - **Neue Systeme:** N-14; für `blutwolf` N-05.
@@ -350,7 +458,13 @@ Siehe §3.
 
 ### K15 · Ressourcen und Totenkarten
 
-**Rollen Charge K15 (5):** `todesprediger`, `hades`, `nekromant`, `kartenschlucker`, `grabraeuber`
+**Rollen Charge K15 (1):** `kartenschlucker`
+
+**Nachtrag Rollenaudit:** `hades` und `grabraeuber` sind umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `nekromant` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `todesprediger` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** Ressourcen aus Toden oder Karten, persönliche Schilde, Einzelsiege.
 - **Neue Systeme:** N-15, N-14, N-01, N-03.
@@ -362,7 +476,9 @@ Siehe §3.
 
 ### K16 · Nacht-Transaktion
 
-**Rollen Charge K16 (1):** `zeitwaechter`
+**Rollen Charge K16 (0):** –
+
+**Nachtrag Rollenaudit:** `zeitwaechter` ist umgesetzt (Entscheidung zu Nachtbeginn, E-36; keine Nacht-Transaktion nötig) ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** eine ganze Nacht gilt als nicht geschehen.
 - **Neue Systeme:** N-16 (baut auf Undo/Redo aus Masterplan Phase 3 auf).

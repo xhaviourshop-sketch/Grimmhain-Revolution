@@ -81,10 +81,17 @@ static func revert(b: WolfChildBond, p: Player) -> void:
 ## verwandeln sich für diesen Tod auch später nicht.
 static func on_death(ctx: RuleContext, record: KillEvent) -> void:
 	var s := ctx.state
+	var blocked: Array[int] = []
 	for b: WolfChildBond in s.wolf_children:  # nach child_id sortiert
 		var child: Player = s.players.get(b.child_id)
-		if b.model_id == record.target_id and not b.transformed and child != null and child.alive and child.role_id == RoleCatalog.WOLFSKIND:
-			transform(ctx, b, record.order_index, "model_death")
+		if b.model_id == record.target_id and not b.transformed and child != null and child.alive and child.role_id == RoleCatalog.WOLFSKIND and not GuardRoles.silenced(s, child.id):
+			if Gatewarden.active(s):
+				blocked.append(b.child_id)
+			else:
+				transform(ctx, b, record.order_index, "model_death")
+	# Wächter am Tor: nach der Schleife, weil der Rollenwechsel den Wolfskind-Datensatz entfernt.
+	for id: int in blocked:
+		Gatewarden.block(ctx, id, RoleCatalog.WERWOLF, "wolf_child")
 
 
 # --- Ladeprüfung ---------------------------------------------------------------------------------

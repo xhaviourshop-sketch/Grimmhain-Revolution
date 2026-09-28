@@ -141,7 +141,7 @@ func test_mirror_on_execution() -> void:
 	apply_ok(r.state, Command.end_day(), "Tag endet")
 
 
-func test_second_execution_after_revive_is_normal() -> void:
+func test_revive_resets_mirror() -> void:
 	# 12, 13, 32, AS-R29
 	var commands := _concat(_day1(4, 2), [Command.decide_execution(2), Command.end_day(), Command.start_night(), Command.answer_prompt(2, []),
 		Command.end_night(), Command.nominate(3, 2), Command.decide_execution(2)] as Array[Command])
@@ -154,10 +154,11 @@ func test_second_execution_after_revive_is_normal() -> void:
 	var before := _replay_ok(commands, "nach Wiederbelebung")
 	if not before.ok:
 		return
-	assert_eq(_uses(before.state, 2), 1, "32: Wiederbelebung setzt nicht zurück")
+	# Decision Log „Rollenaudit · Wiederbelebung …“ ersetzt Punkt 32: die Wiederbelebung setzt die Spiegelung zurück.
+	assert_eq(_uses(before.state, 2), 0, "Wiederbelebung setzt die Spiegelung zurück")
 	var r := apply_ok(before.state, Command.decide_execution(2), "dritte Hinrichtung")
-	_expect_lynched(r.state, "nach Wiederbelebung")
-	assert_eq(events_of_type(r.events, "ExecutionRedirected").size(), 0, "keine Spiegelung")
+	assert_true(r.state.players[2].alive and not r.state.players[5].alive, "nach Wiederbelebung spiegelt er erneut auf die nominierende Person")
+	assert_eq(events_of_type(r.events, "ExecutionRedirected").size(), 1, "Spiegelung")
 
 
 # --- 14–22 Fälle ohne Spiegelung, Selbstnominierung, GM -----------------------------------------------

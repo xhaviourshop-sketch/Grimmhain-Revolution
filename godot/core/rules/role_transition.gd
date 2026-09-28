@@ -21,11 +21,37 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 		for key: String in p.ability_uses.keys():
 			if key.begins_with("%s:" % role):
 				p.ability_uses.erase(key)
+	s.growth.erase(player_id)  # Fenrir-Stufe und Cerberus-Köpfe hängen an der Rolle
+	s.bounty_credits.erase(player_id)  # offene Listen gehören dem bisherigen Kopfgeldjäger
+	p.cursed = false  # neue Rolle, neue Erscheinung (V-07)
 	WolfChildRules.remove_bond(s, player_id)
 	if role == RoleCatalog.WOLFSKIND:
 		WolfChildRules.create_bond(s, player_id)
 	if previous == RoleCatalog.LEHRLING and role != RoleCatalog.LEHRLING:
 		ApprenticeRules.end_active(s, player_id, ApprenticeBond.STATUS_REMOVED)
+	if role != RoleCatalog.FEUERTEUFEL:
+		SoloRules.drop_fire_mark(s, player_id)  # Markierung erlischt mit der Rolle (RM-DR-131.7)
+	if role != RoleCatalog.VOODOO:
+		SoloRules.drop_priest_doll(s, player_id)  # Puppe endet mit der Rolle (RM-DR-132.8)
+	if role != RoleCatalog.NEKROMANT:
+		SoloRules.necro_drop_shields(s, player_id)  # Schild erlischt mit der Rolle (RM-DR-142.9)
+	if role != RoleCatalog.HADES or previous != RoleCatalog.HADES:
+		SoloRules.hades_drop(s, player_id)  # Lichter und Barriere gehören der bisherigen Rolle
+	if role != RoleCatalog.SCHICKSALSWOLF or previous != RoleCatalog.SCHICKSALSWOLF:
+		SoloRules.fate_drop(s, player_id)  # Markierungen gehören der bisherigen Rolle
+	if role != RoleCatalog.GRABRAEUBER or previous != RoleCatalog.GRABRAEUBER:
+		SoloRules.grave_drop(s, player_id)  # gestohlene Fähigkeit endet mit der Rolle
+
+
+## Wiederbelebung (Decision Log „Rollenaudit · Wiederbelebung …“): lebt wieder, Todesdatensatz weg, alle
+## begrenzten Einsätze frisch; Nominierungsstatus, Bindungen und eingereihte Reaktionen bleiben.
+static func revive(s: GameState, player_id: int) -> void:
+	var p := s.players[player_id]
+	p.alive = true
+	p.death = null
+	p.ability_uses.clear()
+	s.growth.erase(player_id)  # Fenrir-Stufe und Cerberus-Köpfe beginnen neu
+	s.win_check_pending = true
 
 
 ## Stellt einen gespeicherten Rollenzustand exakt wieder her (Rücknahme eines Erbes).
@@ -37,6 +63,18 @@ static func restore(s: GameState, player_id: int, snapshot: Dictionary) -> void:
 	p.appears_as = StringName(DictRead.get_string(snapshot, "appears_as"))
 	p.ability_uses = DictRead.get_dict(snapshot, "ability_uses").duplicate()
 	WolfChildRules.remove_bond(s, player_id)
+	if p.role_id != RoleCatalog.FEUERTEUFEL:
+		SoloRules.drop_fire_mark(s, player_id)
+	if p.role_id != RoleCatalog.VOODOO:
+		SoloRules.drop_priest_doll(s, player_id)
+	if p.role_id != RoleCatalog.NEKROMANT:
+		SoloRules.necro_drop_shields(s, player_id)
+	if p.role_id != RoleCatalog.HADES:
+		SoloRules.hades_drop(s, player_id)
+	if p.role_id != RoleCatalog.GRABRAEUBER:
+		SoloRules.grave_drop(s, player_id)
+	if p.role_id != RoleCatalog.SCHICKSALSWOLF:
+		SoloRules.fate_drop(s, player_id)
 
 
 static func snapshot_of(p: Player) -> Dictionary:

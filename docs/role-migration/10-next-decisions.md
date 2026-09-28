@@ -11,7 +11,7 @@ Diese Punkte musst du nicht noch einmal beantworten. Sie stehen schon im Decisio
 - **Mehrere Sieger gleichzeitig:** Die App schlägt alle erfüllten Siege vor, ohne feste Reihenfolge. Du bestätigst einen oder lehnst alle ab. Geprüft wird erst, wenn alle Todesreaktionen abgearbeitet sind. Lebt niemand mehr, gibt es keinen automatischen Sieger. (DR-02, DR-14, Regelregister G-SIEG-1 bis G-SIEG-6)
 - **Dorfsieg:** Das Dorf ist Kandidat, sobald keine lebende Person mehr als Wolf zählt. (G-SIEG-1)
 - **Wolfssieg:** Die Wölfe sind Kandidat, sobald sie mindestens so viele sind wie alle anderen. Einzelsiegrollen zählen dabei zu „allen anderen“. (G-SIEG-2)
-- **Fähigkeiten gehören der Person:** Einsätze und Zustände zählen je Person und Rolle. Wer eine Rolle erbt, beginnt mit frischen Einsätzen; eine Wiederbelebung setzt nichts zurück. (G-ID-3, Lehrling, Waldhexe, Spiegelwolf)
+- **Fähigkeiten gehören der Person:** Einsätze und Zustände zählen je Person und Rolle. Wer eine Rolle erbt, beginnt mit frischen Einsätzen; eine Wiederbelebung setzt nichts zurück. *(Ersetzt am 27.09.2026: jede Wiederbelebung setzt alle begrenzten Einsätze zurück, Decision Log „Rollenaudit · Wiederbelebung …“.)* (G-ID-3, Lehrling, Waldhexe, Spiegelwolf)
 - **Erbe wirkt sofort:** Erbt der Lehrling eine Rolle, gelten deren Fraktion, passive Eigenschaften und Siegbedingung sofort. (Korrekturrunde Regelkern 2)
 - **Hinrichtung durch dich:** Eine Hinrichtung per Spielleiterkorrektur ist eine normale Hinrichtung („Lynch“). (Korrekturrunde Regelkern 4)
 - **Todesreaktionen mit Entscheidung:** Nach einem Tod am Tag sofort, nach einem Tod in der Nacht in der Morgenauflösung. (G-TOD-4, DR-09)
@@ -24,7 +24,9 @@ Diese Punkte musst du nicht noch einmal beantworten. Sie stehen schon im Decisio
 
 Vier Fragen. Jede Frage steht für sich; bitte jede einzeln beantworten.
 
-<!-- check:next-round RM-DR-017 RM-DR-155.1 RM-DR-155.3 RM-DR-155.4 -->
+<!-- check:next-round none -->
+
+**Nachtrag 27.09.2026:** Alle vier Fragen dieser Runde sowie RM-DR-138.1, .3, .4 und RM-DR-014 sind beantwortet (`../masterplan/DECISION-LOG.md`, Eintrag „Rollenaudit“; RM-DR-017 durch den Auftrag „alle 72 Rollen“). Aktueller Stand: [`11-role-audit-status.md`](11-role-audit-status.md).
 
 ### RM-DR-017 · Welche Rollen sollen als Nächstes spezifiziert werden?
 

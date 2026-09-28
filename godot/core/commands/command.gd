@@ -17,6 +17,8 @@ const SKIP_STEP := &"SkipStep"
 const CANCEL_PROMPT := &"CancelPrompt"
 const GM_CORRECTION := &"GmCorrection"
 const OVERRIDE_SHOWN_ROLE := &"OverrideShownRole"
+const AMALIA_SACRIFICE := &"AmaliaSacrifice"
+const NAME_WOLF := &"NameWolf"  ## Nekromant benennt am Tag geheim einen Wolf (E-19)
 
 var type: StringName = &""
 var payload: Dictionary = {}
@@ -78,6 +80,11 @@ static func end_day() -> Command:
 	return create(END_DAY)
 
 
+## Amalia opfert sich am Tag; `answer` ist die wahrheitsgemäße Ja/Nein-Antwort des Spielleiters (I-09).
+static func amalia_sacrifice(player_id: int, answer: bool) -> Command:
+	return create(AMALIA_SACRIFICE, {"player_id": player_id, "answer": answer})
+
+
 static func confirm_win(candidate_id: int) -> Command:
 	return create(CONFIRM_WIN, {"candidate_id": candidate_id})
 
@@ -116,3 +123,8 @@ func to_dict() -> Dictionary:
 
 static func from_dict(d: Dictionary) -> Command:
 	return create(StringName(DictRead.get_string(d, "type")), DictRead.get_dict(d, "payload"))
+
+
+## Nekromant `player_id` benennt am Tag `target_id` als Werwolf (höchstens einmal je Tag, geheim).
+static func name_wolf(player_id: int, target_id: int) -> Command:
+	return create(NAME_WOLF, {"player_id": player_id, "target_id": target_id})

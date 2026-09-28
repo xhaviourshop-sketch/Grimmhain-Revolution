@@ -6,11 +6,31 @@ extends RefCounted
 const CAUSE_NIGHT_KILL := &"NIGHT_KILL"
 const CAUSE_LYNCH := &"LYNCH"
 const CAUSE_HUNTER_SHOT := &"HUNTER_SHOT"      ## Fluch nach dem Tod (Sensenträger-Reaktion)
+const CAUSE_POSSESSED_DRAG := &"POSSESSED_DRAG"  ## vom Besessenen Wolf mitgerissen (Rollenaudit)
+const CAUSE_KNIGHT_STRIKE := &"KNIGHT_STRIKE"    ## Schlag des sterbenden Ritters (Rollenaudit)
+const CAUSE_WOLF_POISON := &"WOLF_POISON"  ## Giftpranke des Giftwolfs, zwei Nächte später (Rollenaudit)
+const CAUSE_HANGMAN_EXTRA := &"HANGMAN_EXTRA"  ## vom Henker markiert, stirbt bei der Hinrichtung mit (Rollenaudit)
+const CAUSE_PARASITE_HOST := &"PARASITE_HOST"  ## Parasit stirbt mit seinem Wirt (Rollenaudit)
+const CAUSE_COACHMAN_CRASH := &"COACHMAN_CRASH"  ## Nachbar des gelynchten Wahnsinnigen Kutschers (Rollenaudit)
+const CAUSE_WARRIOR_WRONG := &"WARRIOR_WRONG"  ## Kriegerin des Lichts traf keinen Wolf (Rollenaudit)
+const CAUSE_BLOOD_SACRIFICE := &"BLOOD_SACRIFICE"  ## Opfer des Blutpriesters (Rollenaudit)
+const CAUSE_AMALIA_SACRIFICE := &"AMALIA_SACRIFICE"  ## Selbstopfer Amalias am Tag (Rollenaudit)
+const CAUSE_SMITH_WEAPON := &"SMITH_WEAPON"  ## Wolf stirbt durch die Waffe des Dorfschmieds (Rollenaudit)
+const CAUSE_MARTYR_SACRIFICE := &"MARTYR_SACRIFICE"  ## Märtyrerin stirbt statt des Rudelopfers (Rollenaudit)
+const CAUSE_LOVER_HEARTBREAK := &"LOVER_HEARTBREAK"  ## Liebeskummer eines Loki-Paars (Rollenaudit)
+const CAUSE_BLACK_WIDOW := &"BLACK_WIDOW"  ## Opfer der Schwarzen Witwe am Morgen (Rollenaudit)
+const CAUSE_RED_CHAIN := &"RED_CHAIN"  ## Todeskette des Rotkäppchens (Rollenaudit)
+const CAUSE_PROPHET_KILL := &"PROPHET_KILL"  ## Tötung des freigeschalteten Propheten des Untergangs (Rollenaudit)
+const CAUSE_BURN := &"BURN"  ## Nachbar eines markierten Ziels des Feuerteufels verbrennt (Rollenaudit)
+const CAUSE_HADES_KILL := &"HADES_KILL"  ## Tötung durch Hades am Morgen (Rollenaudit, E-30)
+const CAUSE_LONE_WOLF_KILL := &"LONE_WOLF_KILL"  ## Rachsüchtiger Wolf reißt einen anderen Wolf, Tod am Morgen (Rollenaudit, DA-17)
 const CAUSE_GM_CORRECTION := &"GM_CORRECTION"  ## Spielleiterkorrektur
-const CAUSE_WITCH_POISON := &"WITCH_POISON"    ## Gifttrank der Waldhexe, sofort im Waldhexenschritt
+const CAUSE_WITCH_POISON := &"WITCH_POISON"    ## Gifttrank der Waldhexe, in der Morgenauflösung (Todesmarkierung)
 const CAUSE_SPIEGELWOLF_RETALIATE := &"SPIEGELWOLF_RETALIATE"  ## gespiegelte Hinrichtung, Quelle Spiegelwolf
 const CAUSE_MANIPULATOR_NOMINATED := &"MANIPULATOR_NOMINATED"  ## Tod des Manipulators bei seiner Nominierung
-const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON, CAUSE_SPIEGELWOLF_RETALIATE, CAUSE_MANIPULATOR_NOMINATED]
+const CAUSES: Array[StringName] = [CAUSE_NIGHT_KILL, CAUSE_LYNCH, CAUSE_HUNTER_SHOT, CAUSE_GM_CORRECTION, CAUSE_WITCH_POISON, CAUSE_SPIEGELWOLF_RETALIATE, CAUSE_MANIPULATOR_NOMINATED, CAUSE_COACHMAN_CRASH, CAUSE_POSSESSED_DRAG, CAUSE_KNIGHT_STRIKE, CAUSE_PARASITE_HOST, CAUSE_WOLF_POISON, CAUSE_HANGMAN_EXTRA,
+	CAUSE_WARRIOR_WRONG, CAUSE_BLOOD_SACRIFICE, CAUSE_AMALIA_SACRIFICE, CAUSE_SMITH_WEAPON, CAUSE_MARTYR_SACRIFICE,
+	CAUSE_LOVER_HEARTBREAK, CAUSE_BLACK_WIDOW, CAUSE_RED_CHAIN, CAUSE_PROPHET_KILL, CAUSE_BURN, CAUSE_HADES_KILL, CAUSE_LONE_WOLF_KILL]
 
 const SOURCE_PACK := &"pack"        ## Rudel (alle lebenden Wölfe gemeinsam)
 const SOURCE_VILLAGE := &"village"  ## Hinrichtung nach physischer Abstimmung
