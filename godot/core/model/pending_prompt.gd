@@ -57,6 +57,8 @@ const OWNER_NECRO := &"nekromant"
 const OWNER_HADES := &"hades"
 const OWNER_GRAVE := &"grabraeuber"
 const OWNER_FATE := &"schicksalswolf"
+const OWNER_LONE := &"rachsuechtiger-wolf"
+const OWNER_TIME := &"zeitwaechter"
 const OWNER_PREACHER := &"todesprediger"
 const KIND_BOND := &"bond_choice"  ## Bindungsschritt mit Stufen (BondSteps)
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
@@ -116,7 +118,7 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 	elif p.owner == OWNER_APPRENTICE:
 		if not ApprenticeRules.STAGES.has(p.stage):
 			return null
-	elif p.owner == OWNER_SHADOW:
+	elif p.owner == OWNER_SHADOW or p.owner == OWNER_TIME:
 		if p.stage != &"use":
 			return null
 	elif InfoSteps.OWNERS.has(p.owner):

@@ -6,6 +6,7 @@ extends RefCounted
 
 const MIN_PLAYERS := 6   ## DECISION-LOG: 6 bis 24 Personen
 const MAX_PLAYERS := 24
+const TIME_USE_KEY := "zeitwaechter:freeze"  ## Zeitwächter: einmal je Leben (E-36)
 
 
 static func apply(state: GameState, command: Command) -> CommandResult:
@@ -242,7 +243,7 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return InfoSteps.validate_answer(s, prompt, p)
 	if BondSteps.OWNERS.has(prompt.owner):
 		return BondSteps.validate_answer(s, prompt, p)
-	if prompt.owner == PendingPrompt.OWNER_SHADOW:
+	if prompt.owner == PendingPrompt.OWNER_SHADOW or prompt.owner == PendingPrompt.OWNER_TIME:
 		if DictRead.get_string(p, "stage") != "use":
 			return &"stage_mismatch"
 		return &"" if (not p.has("targets") and p.get("choice") is bool) else &"invalid_answer"
@@ -340,6 +341,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				BondSteps.answer(ctx, p)
 			elif s.pending_prompt.owner == PendingPrompt.OWNER_SHADOW:
 				_answer_shadow(ctx, bool(p["choice"]))
+			elif s.pending_prompt.owner == PendingPrompt.OWNER_TIME:
+				_answer_time(ctx, bool(p["choice"]))
 			else:
 				_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
 		Command.BEGIN_STEP:
@@ -437,6 +440,20 @@ static func _answer_shadow(ctx: RuleContext, use: bool) -> void:
 	s.next_night_step += 1
 
 
+## Zeitwächter (E-36): „Nacht einfrieren?“; Ja lässt alle weiteren Nachtschritte dieser Nacht entfallen (einmal je Leben).
+static func _answer_time(ctx: RuleContext, use: bool) -> void:
+	var s := ctx.state
+	var prompt := s.pending_prompt
+	s.pending_prompt = null
+	ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {"prompt_id": prompt.id, "owner": prompt.owner, "stage": "use", "choice": use})
+	if use:
+		s.night_frozen = true
+		s.players[prompt.actor_id].ability_uses[TIME_USE_KEY] = 1
+		ctx.emit(GameEvent.NIGHT_FREEZE_USED, Visibility.GM, {"warden_id": prompt.actor_id, "night": s.night_number})
+	s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+	s.next_night_step += 1
+
+
 static func _judge_nominations(ctx: RuleContext) -> void:
 	var s := ctx.state
 	for mark: Dictionary in s.judge_marks:
@@ -512,6 +529,7 @@ static func _start_night(ctx: RuleContext) -> void:
 	s.blocked_ids.clear()
 	s.pack_extra_target_id = GameState.NO_TARGET
 	s.fate_kills.clear()
+	s.night_frozen = false
 	s.night_wolf_ids.clear()
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
@@ -585,6 +603,12 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			if target != GameState.NO_TARGET:
 				SoloRules.give_doll(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.VOODOO_DOLL_GIVEN, Visibility.GM, {"priest_id": prompt.actor_id, "doll_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_LONE:
+			if target != GameState.NO_TARGET:
+				s.death_marks.append({"target_id": target, "source_id": prompt.actor_id, "cause": String(KillEvent.CAUSE_LONE_WOLF_KILL)})
+			ctx.emit(GameEvent.LONE_WOLF_STRUCK, Visibility.GM, {"wolf_id": prompt.actor_id, "target_id": target, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_FATE:
@@ -775,12 +799,16 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	s.pack_extra_target_id = GameState.NO_TARGET
 	s.pack_redirect_from = -1
 	s.pack_extra_redirect_from = -1
-	# Fenrir und Cerberus wachsen in jeder Morgenauflösung, die sie lebend erreichen.
-	for id: int in s.alive_ids():
+	# Zeitwächter (E-36): öffentliche Meldung; die eingefrorene Nacht zählt nicht als überlebte Nacht.
+	if s.night_frozen:
+		ctx.emit(GameEvent.NIGHT_FROZEN, Visibility.PUBLIC, {"night": s.night_number})
+	# Fenrir und Cerberus wachsen in jeder Morgenauflösung, die sie lebend erreichen (nicht nach einer eingefrorenen Nacht).
+	for id: int in (s.alive_ids() if not s.night_frozen else [] as Array[int]):
 		var role := s.players[id].role_id
 		if role == RoleCatalog.FENRIR or (role == RoleCatalog.CERBERUS and int(s.growth.get(id, 0)) < RoleCatalog.CERBERUS_MAX_HEADS):
 			s.growth[id] = int(s.growth.get(id, 0)) + 1
 			ctx.emit(GameEvent.GROWTH_CHANGED, Visibility.GM, {"player_id": id, "role_id": String(role), "value": s.growth[id]})
+	s.night_frozen = false
 	_finish_dawn_if_ready(ctx)
 
 

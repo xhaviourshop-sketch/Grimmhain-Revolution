@@ -49,7 +49,13 @@ static func evaluate(state: GameState) -> Array:
 		for agent: Array in agents:
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(agent[1]), "reason_args": {"living": alive.size()}, "beneficiary_ids": [agent[0]]})
 	if wolves >= non_wolves:
-		results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
+		# E-35: Ist der einzige lebende Wolf ein Rachsüchtiger Wolf, ersetzt sein Alleinsieg den Wolfssieg; leben nur
+		# Rachsüchtige Wölfe (mehrere), gewinnt noch niemand (DA-18); sonst gewinnen die Werwölfe ohne sie.
+		var lone: Array[int] = alive.filter(func(id: int) -> bool: return state.players[id].counts_as_wolf and state.players[id].role_id == RoleCatalog.RACHSUECHTIGER_WOLF)
+		if lone.is_empty() or lone.size() < living_wolves:
+			results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
+		elif lone.size() == 1:
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_LONE_WOLF), "reason_args": args.duplicate(), "beneficiary_ids": [lone[0]]})
 	# RM-DR-138.4, F-11: ein erfüllter Selbstmörder-Sieg wird bei jeder Prüfung vorgeschlagen.
 	for id: int in state.death_seeker_wins:
 		results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DEATH_SEEKER), "reason_args": {"min_dead": DEATH_SEEKER_MIN_DEAD}, "beneficiary_ids": [id]})
@@ -211,6 +217,8 @@ static func _solo_holds(s: GameState, reason: StringName, id: int) -> bool:
 			return SoloRules.hades_wins(s, id)
 		WinCandidate.REASON_GRAVE_ROBBER:
 			return grave_robber_wins(s, id)
+		WinCandidate.REASON_LONE_WOLF:
+			return SoloRules.lone_wolf_wins(s, id)
 	return s.preacher_wins.has(id)
 
 
@@ -255,7 +263,7 @@ static func state_is_consistent(s: GameState) -> bool:
 		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
 				return false
-		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO, WinCandidate.REASON_NECROMANCER, WinCandidate.REASON_HADES, WinCandidate.REASON_GRAVE_ROBBER].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO, WinCandidate.REASON_NECROMANCER, WinCandidate.REASON_HADES, WinCandidate.REASON_GRAVE_ROBBER, WinCandidate.REASON_LONE_WOLF].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not _solo_holds(s, c.reason_key, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):

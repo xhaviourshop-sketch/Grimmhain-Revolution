@@ -1,6 +1,6 @@
 class_name RoleCatalog
 extends RefCounted
-## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen` und die Schutzrollen `der-weise`, `maertyrerin`, `schutzgeist`, `dorfschmied` und `verdammniswaechter` und die Bindungsrollen `loki`, `schwarze-witwe`, `rotkaeppchen` und `schattenwanderer` sowie `daemonischer-wolf`, `koenig-lykaon`, `seelentauscher`, `kutscher` und `dr-victor-frankenstein` sowie `rattenfaenger`, `pestbringerin`, `prophet-des-untergangs` und `todesprediger` sowie `feuerteufel`, `voodoo-priester`, `nekromant`, `hades` und `grabraeuber` sowie `schicksalswolf`.
+## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen` und die Schutzrollen `der-weise`, `maertyrerin`, `schutzgeist`, `dorfschmied` und `verdammniswaechter` und die Bindungsrollen `loki`, `schwarze-witwe`, `rotkaeppchen` und `schattenwanderer` sowie `daemonischer-wolf`, `koenig-lykaon`, `seelentauscher`, `kutscher` und `dr-victor-frankenstein` sowie `rattenfaenger`, `pestbringerin`, `prophet-des-untergangs` und `todesprediger` sowie `feuerteufel`, `voodoo-priester`, `nekromant`, `hades` und `grabraeuber` sowie `schicksalswolf`, `rachsuechtiger-wolf` und `zeitwaechter`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
 ## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
 ## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
@@ -194,6 +194,12 @@ const GRAVE_ROBBER_MAX_LIVING := 3
 const SCHICKSALSWOLF := &"schicksalswolf"
 const FATE_MARKS := 3
 const FATE_NIGHT := 4
+## Rachsüchtiger Wolf / Lone Wolf (E-35, DA-16 bis DA-18): Rudel; in den Nächten 3, 6, 9 … einen anderen Wolf reißen;
+## Alleinsieg statt des Wolfssiegs, wenn er der einzige lebende Wolf ist.
+const RACHSUECHTIGER_WOLF := &"rachsuechtiger-wolf"
+const LONE_WOLF_EVERY := 3
+## Zeitwächter / Time Warden (E-36, DA-19, DA-20): einmal je Leben als allererster Nachtschritt die Nacht einfrieren.
+const ZEITWAECHTER := &"zeitwaechter"
 ## Rollen, deren eigener Nachtschritt jede Nacht stattfindet und durch einen Apfel verdoppelt wird (R-02, R-04);
 ## ausgenommen Rollen mit nur einem Ergebnis (Richter, Parasit, Verdammniswächter, Rotkäppchen).
 const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUMWOLF, HENKER, WALDLAEUFER, DOKTOR, TRAUMDEUTER, SCHWARZE_WITWE,
@@ -208,7 +214,7 @@ const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhe
 	"koenig:learn", "kriegerin-des-lichts:attack", "blutpriester:sacrifice", "der-weise:survive", "schutzgeist:shield",
 	"dorfschmied:weapon", "loki:bind", "schattenwanderer:link", "daemonischer-wolf:death_reaction", "koenig-lykaon:convert",
 	"koenig-lykaon:skip1", "koenig-lykaon:skip2", "koenig-lykaon:skip3", "seelentauscher:swap", "kutscher:revive",
-	"dr-victor-frankenstein:revive", "todesprediger:predict", "grabraeuber:steal"]
+	"dr-victor-frankenstein:revive", "todesprediger:predict", "grabraeuber:steal", "zeitwaechter:freeze"]
 
 ## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
 ## Wolfskind 0.9 (nur mit Auswahlbedarf), Lehrling 1.1 (nur mit Auswahlbedarf), Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
@@ -281,6 +287,8 @@ const ROLES := {
 	FEUERTEUFEL: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": FEUERTEUFEL, "night_priority": 76},
 	VOODOO: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": VOODOO, "night_priority": 84},
 	NEKROMANT: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": NEKROMANT, "night_priority": 30},
+	RACHSUECHTIGER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": RACHSUECHTIGER_WOLF, "night_priority": 22},  ## Legacy-Stufe 2.2
+	ZEITWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ZEITWAECHTER, "night_priority": 95},  ## Legacy-Stufe 9.5; E-36: im Nachtplan zuerst
 	SCHICKSALSWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHICKSALSWOLF, "night_priority": 25},  ## Legacy-Stufe 2.5
 	GRABRAEUBER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": GRABRAEUBER, "night_priority": 64},  ## Legacy-Stufe 6.4
 	HADES: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": HADES, "night_priority": 99},  ## Legacy-Stufe 9.9: zuletzt

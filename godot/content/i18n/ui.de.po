@@ -809,6 +809,18 @@ msgstr "Schicksalswolf"
 msgid "ui.role.schicksalswolf.short"
 msgstr "Markiert in Nacht 1 drei Personen; für jede unter den ersten drei Toten reißt er in Nacht 4 ein zusätzliches Opfer."
 
+msgid "ui.role.rachsuechtiger_wolf.name"
+msgstr "Rachsüchtiger Wolf"
+
+msgid "ui.role.rachsuechtiger_wolf.short"
+msgstr "Wacht mit dem Rudel und in jeder dritten Nacht zusätzlich auf, um einen anderen Wolf zu reißen; gewinnt allein als letzter Wolf."
+
+msgid "ui.role.zeitwaechter.name"
+msgstr "Zeitwächter"
+
+msgid "ui.role.zeitwaechter.short"
+msgstr "Kann einmal zu Beginn einer Nacht die Nacht einfrieren: alle Nachtaktionen entfallen, niemand stirbt in dieser Nacht."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

@@ -79,6 +79,7 @@ var necro_named: Dictionary = {}       ## Nekromant: Tag des letzten Benennens j
 var necro_wins: Array[int] = []        ## Nekromanten mit Treffer beim Benennen, aufsteigend
 var hades_lights: Dictionary = {}      ## Hades: Lichter je lebender Hades-Person (nur Werte ≥ 1, E-28)
 var hades_barriers: Array[int] = []   ## Hades mit aktiver Barriere, aufsteigend (E-31)
+var night_frozen: bool = false        ## Zeitwächter: diese Nacht ist eingefroren (nur während der Nacht, E-36)
 var fate_marks: Array = []            ## Schicksalswolf: [{wolf_id, target_id}] aus Nacht 1, nach wolf_id und Wahl
 var fate_first_dead: Array[int] = []  ## die ersten drei verschiedenen Toten der Partie in Todesreihenfolge
 var fate_kills: Array = []            ## Zusatzopfer dieser Nacht 4 [{wolf_id, target_id, redirect_from}]
@@ -278,6 +279,7 @@ func to_dict() -> Dictionary:
 		"hades_lights": _int_keys_to_dict(hades_lights),
 		"hades_barriers": hades_barriers.duplicate(),
 		"grave_thefts": grave_thefts.duplicate(true),
+		"night_frozen": night_frozen,
 		"fate_marks": fate_marks.duplicate(true),
 		"fate_first_dead": fate_first_dead.duplicate(),
 		"fate_kills": fate_kills.duplicate(true),
@@ -504,7 +506,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var marked_target := DictRead.get_int(item, "target_id", -1)
 		var marked_source := DictRead.get_int(item, "source_id", -1)
 		var mark_cause := StringName(DictRead.get_string(item, "cause"))
-		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW, KillEvent.CAUSE_PROPHET_KILL, KillEvent.CAUSE_HADES_KILL].has(mark_cause):
+		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW, KillEvent.CAUSE_PROPHET_KILL, KillEvent.CAUSE_HADES_KILL, KillEvent.CAUSE_LONE_WOLF_KILL].has(mark_cause):
 			return null
 		s.death_marks.append({"target_id": marked_target, "source_id": marked_source, "cause": String(mark_cause)})
 	for item: Variant in DictRead.get_array(d, "detective_hints"):
@@ -650,6 +652,9 @@ static func from_dict(d: Dictionary) -> GameState:
 		s.set(key, from)
 	# Schicksalswolf (DA-11 bis DA-15): Markierungen anderer Personen je lebendem Schicksalswolf, höchstens drei verschiedene
 	# erste Tote, Zusatzopfer nur während Nacht 4.
+	s.night_frozen = DictRead.get_bool(d, "night_frozen")
+	if s.night_frozen and s.phase != Phase.NIGHT and s.phase != Phase.GAME_OVER:
+		return null  # nur während der Nacht (oder eingefroren beim Spielende mitten in der Nacht)
 	for item: Variant in DictRead.get_array(d, "fate_marks"):
 		var fate_wolf := DictRead.get_int(item, "wolf_id", -1) if item is Dictionary else -1
 		var fate_target := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1
@@ -668,7 +673,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var killer := DictRead.get_int(item, "wolf_id", -1) if item is Dictionary else -1
 		var fated := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1
 		var fate_from := DictRead.get_int(item, "redirect_from", -1) if item is Dictionary else -2
-		if s.phase != Phase.NIGHT or s.night_number != RoleCatalog.FATE_NIGHT or not s.players.has(killer) or not s.players.has(fated) or killer == fated:
+		if not (s.phase == Phase.NIGHT or s.phase == Phase.GAME_OVER) or s.night_number != RoleCatalog.FATE_NIGHT or not s.players.has(killer) or not s.players.has(fated) or killer == fated:
 			return null
 		if fate_from != -1 and (not s.players.has(fate_from) or not SoloRules.has_ability(s, fate_from, RoleCatalog.NEKROMANT)):
 			return null

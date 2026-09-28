@@ -809,6 +809,18 @@ msgstr "Fate Wolf"
 msgid "ui.role.schicksalswolf.short"
 msgstr "Marks three people in night 1; for each among the first three dead he kills one additional victim in night 4."
 
+msgid "ui.role.rachsuechtiger_wolf.name"
+msgstr "Lone Wolf"
+
+msgid "ui.role.rachsuechtiger_wolf.short"
+msgstr "Wakes with the pack and, every third night, also to kill another wolf; wins alone as the last wolf."
+
+msgid "ui.role.zeitwaechter.name"
+msgstr "Time Warden"
+
+msgid "ui.role.zeitwaechter.short"
+msgstr "Once, at the start of a night, may freeze it: all night actions are cancelled and nobody dies that night."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

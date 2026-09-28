@@ -269,3 +269,22 @@ func test_two_fate_wolves_own_marks_and_load_checks() -> void:
 		var d := s.to_dict()
 		d[bad[0]] = bad[1]
 		assert_true(GameState.from_dict(d) == null, "abgelehnt: %s" % str(bad))
+
+
+func test_win_confirmed_after_fate_kills_chosen_still_loads() -> void:
+	# Regressionstest: Zusatzopfer gewählt, dann Sieg noch in Nacht 4 bestätigt → Spielende bleibt ladbar.
+	var s := _state([FW, W, D, D, D, D, D, D, D, D])
+	s = _dawn(s, {"schicksalswolf:1@": [4, 5, 6], "pack@": [4]})
+	s = _dawn(s)
+	s = _dawn(s)
+	s = _night(s, {"schicksalswolf:1@": [7]})
+	if s == null or s.fate_kills.is_empty():
+		fail("Zusatzopfer erwartet")
+		return
+	for id: int in [1, 2]:
+		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": false}), "Wolf %d stirbt" % id)
+	if s == null or s.open_candidates().is_empty():
+		fail("Dorfsieg erwartet")
+		return
+	s = _ok(s, Command.confirm_win(s.open_candidates()[0].id), "Sieg bestätigt")
+	_codec_same(s, "Spielende mit gewählten Zusatzopfern")

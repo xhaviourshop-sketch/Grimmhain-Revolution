@@ -120,6 +120,8 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.HADES: false,          # Verzicht ist eine Antwort (0 Ziele, keine Barriere)
 	RoleCatalog.GRABRAEUBER: false,    # Verzicht ist eine Antwort (0 Tote)
 	RoleCatalog.SCHICKSALSWOLF: false,  # Markieren Pflicht, Zusatzopfer mit Verzicht (0 Ziele)
+	RoleCatalog.RACHSUECHTIGER_WOLF: false,  # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.ZEITWAECHTER: false,   # Nein ist eine Antwort
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -190,12 +192,18 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if role == RoleCatalog.VOODOO and SoloRules.doll_of(s, id) != GameState.NO_TARGET:
 			continue  # nur ohne lebende Puppe (E-13)
+		if role == RoleCatalog.RACHSUECHTIGER_WOLF and not SoloRules.lone_night(s):
+			continue  # nur jede dritte Nacht (DA-16)
+		if role == RoleCatalog.ZEITWAECHTER and p.ability_uses.has(RulesEngine.TIME_USE_KEY):
+			continue  # einmal je Leben (E-36)
 		if role == RoleCatalog.SCHICKSALSWOLF and not (SoloRules.fate_marking(s, id) or SoloRules.fate_killing(s, id)):
 			continue  # nur Nacht 1 (markieren) und Nacht 4 (Zusatzopfer)
 		if role == RoleCatalog.GRABRAEUBER and p.ability_uses.has(SoloRules.GRAVE_USE_KEY):
 			continue  # nur einmal stehlen (E-32)
 		if role == RoleCatalog.HADES and SoloRules.hades_light_count(s, id) < RoleCatalog.HADES_KILL_COST:
 			continue  # ohne 2 Lichter nichts zu kaufen (E-30, E-31)
+		if role == RoleCatalog.ZEITWAECHTER:
+			priority = 0  # E-36: Entscheidung als allererster Nachtschritt
 		entries.append([priority, id, personal_step_key(role, id)])
 	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
 	for id: int in s.players:
@@ -221,6 +229,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 ## Grund, warum der Nachtschritt `index` entfällt, oder &"" wenn er auszuführen ist.
 static func drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
+	if s.night_frozen:
+		return &"frozen"  # Zeitwächter (E-36): alle Nachtschritte dieser Nacht entfallen
 	if key == BOUND:
 		if InfoSteps.living_bound(s).is_empty():
 			return &"no_decision"
@@ -311,6 +321,10 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.HADES and not SoloRules.hades_has_decision(s, actor):
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.RACHSUECHTIGER_WOLF and SoloRules.lone_targets(s, actor).is_empty():
+		return &"no_decision"  # kein anderer lebender Wolf
+	if step_role(key) == RoleCatalog.ZEITWAECHTER and s.players[actor].ability_uses.has(RulesEngine.TIME_USE_KEY):
+		return &"no_decision"
 	if step_role(key) == RoleCatalog.SCHICKSALSWOLF:
 		if SoloRules.fate_marking(s, actor):
 			return &"no_decision" if s.alive_ids().size() - 1 < RoleCatalog.FATE_MARKS else &""
@@ -391,7 +405,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
 	elif BondSteps.OWNERS.has(step_kind(step_id)):
 		BondSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
-	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET, RoleCatalog.FEUERTEUFEL, RoleCatalog.VOODOO, RoleCatalog.SCHICKSALSWOLF].has(step_kind(step_id)):
+	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET, RoleCatalog.FEUERTEUFEL, RoleCatalog.VOODOO, RoleCatalog.SCHICKSALSWOLF, RoleCatalog.RACHSUECHTIGER_WOLF].has(step_kind(step_id)):
 		var solo_actor := step_actor(s.night_plan[s.next_night_step])
 		prompt.owner = step_kind(step_id)
 		prompt.actor_id = solo_actor
@@ -413,6 +427,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
 			RoleCatalog.VOODOO:  # Puppe: eine andere Lebende oder verzichten (E-14, E-21)
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
+			RoleCatalog.RACHSUECHTIGER_WOLF:  # einen anderen lebenden Wolf reißen oder verzichten (DA-17)
+				prompt.allowed_ids = SoloRules.lone_targets(s, solo_actor)
 			RoleCatalog.SCHICKSALSWOLF:  # Nacht 1: genau drei andere markieren; Nacht 4: bis zu so viele Zusatzopfer
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
 				if SoloRules.fate_marking(s, solo_actor):
@@ -436,8 +452,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.owner = PendingPrompt.OWNER_PACK2
 		prompt.actor_id = -1
 		prompt.cancellable = true
-	elif step_kind(step_id) == RoleCatalog.SCHATTENHUND:
-		prompt.owner = PendingPrompt.OWNER_SHADOW
+	elif step_kind(step_id) == RoleCatalog.SCHATTENHUND or step_kind(step_id) == RoleCatalog.ZEITWAECHTER:
+		prompt.owner = PendingPrompt.OWNER_SHADOW if step_kind(step_id) == RoleCatalog.SCHATTENHUND else PendingPrompt.OWNER_TIME
 		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
 		prompt.stage = &"use"
 		prompt.allowed_ids = []

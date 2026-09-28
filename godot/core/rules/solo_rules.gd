@@ -494,3 +494,24 @@ static func fate_record_death(s: GameState, dead_id: int) -> void:
 
 static func fate_drop(s: GameState, wolf_id: int) -> void:
 	s.fate_marks = s.fate_marks.filter(func(m: Dictionary) -> bool: return int(m["wolf_id"]) != wolf_id)
+
+
+# --- Rachsüchtiger Wolf (Wölfe; Siegprüfung wie die Einzelsiege hier) --------------------------------
+
+## Opfer: andere Lebende, die als Wolf zählen (DA-17).
+static func lone_targets(s: GameState, wolf_id: int) -> Array[int]:
+	return _others_alive(s, wolf_id).filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)
+
+
+## Schritt nur in den Nächten 3, 6, 9 … (DA-16, Rollentext „jede dritte Nacht“).
+static func lone_night(s: GameState) -> bool:
+	return s.night_number % RoleCatalog.LONE_WOLF_EVERY == 0
+
+
+## E-35: Wolfsparität ist erfüllt und er ist der einzige lebende Wolf.
+static func lone_wolf_wins(s: GameState, id: int) -> bool:
+	var p: Player = s.players.get(id)
+	if p == null or not p.alive or p.role_id != RoleCatalog.RACHSUECHTIGER_WOLF:
+		return false
+	var others := _others_alive(s, id)
+	return not others.any(func(o: int) -> bool: return s.players[o].counts_as_wolf) and RoleCatalog.parity_weight(p.role_id) >= others.size()

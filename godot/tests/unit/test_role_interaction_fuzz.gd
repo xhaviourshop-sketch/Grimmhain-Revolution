@@ -17,8 +17,8 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
 	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein",
-	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber", "schicksalswolf"]
-const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon", "schicksalswolf"]
+	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber", "schicksalswolf", "rachsuechtiger-wolf", "zeitwaechter"]
+const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon", "schicksalswolf", "rachsuechtiger-wolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 ## Volle Fokusrunden: jede Rolle ist gleich oft Fokusrolle, auch wenn der Rollenpool wächst.
 const FOCUS_ROUNDS := 3
@@ -35,9 +35,9 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
 	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived",
-	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed", "GraveRobbed", "StolenStepOpened", "FateMarked", "FateKillsChosen"]
+	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed", "GraveRobbed", "StolenStepOpened", "FateMarked", "FateKillsChosen", "LoneWolfStruck", "NightFrozen"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
-	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN", "HADES_KILL"]
+	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN", "HADES_KILL", "LONE_WOLF_KILL"]
 
 var _rng := RandomNumberGenerator.new()
 var _game_label := ""
@@ -468,7 +468,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				if not bond_picks.has(b):
 					bond_picks.append(b)
 			return Command.answer_stage_targets(p.id, String(p.stage), bond_picks)
-		PendingPrompt.OWNER_SHADOW:
+		PendingPrompt.OWNER_SHADOW, PendingPrompt.OWNER_TIME:
 			return Command.answer_choice(p.id, "use", _rng.randf() < 0.3)
 		PendingPrompt.OWNER_APPRENTICE:
 			match p.stage:
