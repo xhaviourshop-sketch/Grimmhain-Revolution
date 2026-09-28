@@ -33,7 +33,7 @@ RM-DR-105.1;ja;spuerhund;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";keine f
 RM-DR-106.1;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.2;ja;rachsuechtiger-wolf;S;;
 RM-DR-106.3;ja;rachsuechtiger-wolf;S;;
-RM-DR-107.1;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Scheinrolle = alte Rolle (V-03)
+RM-DR-107.1;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Scheinrolle = alte Rolle (V-03), bis zu 3 Verzichte (V-08, V-09)
 RM-DR-107.2;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";nur Fraktion Dorf (V-03)
 RM-DR-108.1;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
 RM-DR-108.2;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nächster tatsächlicher Rudelangriff
