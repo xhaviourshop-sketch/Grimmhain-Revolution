@@ -803,6 +803,12 @@ msgstr "Grave Robber"
 msgid "ui.role.grabraeuber.short"
 msgstr "Once steals the night ability of a dead person and keeps using it; wins alive with at most three living."
 
+msgid "ui.role.schicksalswolf.name"
+msgstr "Fate Wolf"
+
+msgid "ui.role.schicksalswolf.short"
+msgstr "Marks three people in night 1; for each among the first three dead he kills one additional victim in night 4."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

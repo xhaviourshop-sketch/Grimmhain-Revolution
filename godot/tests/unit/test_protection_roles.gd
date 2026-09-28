@@ -348,6 +348,28 @@ func test_guardian_spirit_shield_from_next_night() -> void:
 	assert_eq(_died(r.events, 3) if r != null else "", "NIGHT_KILL", "Schild verbraucht")
 
 
+func test_guardian_spirit_step_dropped_without_living_person() -> void:
+	# Regressionstest (Fuzz, 28.09.2026): Leben keine Personen mehr, öffnete der Schritt der toten Schutzgeist eine
+	# Pflichtwahl ohne mögliches Ziel. Wie jede Pflichtwahl ohne Ziel entfällt er mit „no_decision“.
+	var r := _dawn(_state([W, SG, D, D, D, D, D, D]), -1)
+	if r == null:
+		return
+	var s := _ok(r.state, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Schutzgeist stirbt am Tag 1")
+	for id: int in [3, 4, 5, 6, 7, 8, 1]:
+		if s != null and not s.open_candidates().is_empty():
+			s = _ok(s, Command.create(Command.REJECT_WIN, {"reason": "Test"}), "weiter")
+		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": false}), "Toter %d" % id)
+	if s == null:
+		return
+	assert_eq(s.alive_ids(), [] as Array[int], "niemand lebt")
+	s = _ok(_ok(s, Command.decide_execution(-1), "keine"), Command.end_day(), "Ende")
+	var started := apply_ok(s, Command.start_night(), "Nacht 2") if s != null else null
+	if started == null:
+		return
+	assert_eq(_dropped_reason(started.events, "schutzgeist:2"), "no_decision", "Schritt entfällt")
+	assert_true(started.state.pending_prompt == null, "keine unbeantwortbare Pflichtwahl")
+
+
 func test_guardian_spirit_announces_wolf_without_name() -> void:
 	var s := _state([W, SG, D, D, D, D, D, D])
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Schutzgeist tot vor Nacht 1")

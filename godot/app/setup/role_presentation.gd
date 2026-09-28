@@ -10,7 +10,7 @@ const FACTION_ORDER: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Facti
 ## Reihenfolge innerhalb einer Gruppe (Grundrolle zuerst, dann Nachtschritte, dann übrige).
 const ROLE_ORDER: Array[StringName] = [
 	&"dorfbewohner", &"schutzengel", &"das-orakel", &"waldhexe", &"sensentraeger", &"wolfskind", &"lehrling", &"dorfchronistin", &"die-gebundenen", &"waldlaeufer", &"doktor", &"nachtwaechter", &"dorfwache", &"wahnsinniger-kutscher", &"ritter", &"faehrtenleser", &"korrupter-richter", &"waechter-am-tor", &"spuerhund", &"henker", &"traumdeuter", &"kopfgeldjaeger", &"koenig", &"kriegerin-des-lichts", &"blutpriester", &"amalia", &"detektiv", &"die-ewigen", &"der-weise", &"maertyrerin", &"schutzgeist", &"dorfschmied", &"verdammniswaechter", &"loki", &"rotkaeppchen", &"seelentauscher", &"kutscher", &"dr-victor-frankenstein",
-	&"werwolf", &"spiegelwolf", &"trugbilderwolf", &"siegreicher-wolf", &"besessener-wolf", &"blutwolf", &"schattenhund", &"albtraumwolf", &"giftwolf", &"rudelvater", &"seuchenwolf", &"fenrir", &"cerberus", &"schwarze-witwe", &"schattenwanderer", &"daemonischer-wolf", &"koenig-lykaon",
+	&"werwolf", &"spiegelwolf", &"trugbilderwolf", &"siegreicher-wolf", &"besessener-wolf", &"blutwolf", &"schattenhund", &"albtraumwolf", &"giftwolf", &"rudelvater", &"seuchenwolf", &"fenrir", &"cerberus", &"schwarze-witwe", &"schattenwanderer", &"daemonischer-wolf", &"koenig-lykaon", &"schicksalswolf",
 	&"manipulator", &"doppelspion", &"selbstmoerder", &"parasit", &"rattenfaenger", &"pestbringerin", &"prophet-des-untergangs", &"todesprediger", &"feuerteufel", &"voodoo-priester", &"nekromant", &"hades", &"grabraeuber",
 ]
 

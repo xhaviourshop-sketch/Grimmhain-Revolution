@@ -803,6 +803,12 @@ msgstr "Grabräuber"
 msgid "ui.role.grabraeuber.short"
 msgstr "Stiehlt einmal die Nachtfähigkeit einer toten Person und nutzt sie fortan; gewinnt lebend bei höchstens drei Lebenden."
 
+msgid "ui.role.schicksalswolf.name"
+msgstr "Schicksalswolf"
+
+msgid "ui.role.schicksalswolf.short"
+msgstr "Markiert in Nacht 1 drei Personen; für jede unter den ersten drei Toten reißt er in Nacht 4 ein zusätzliches Opfer."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

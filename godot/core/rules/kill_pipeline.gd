@@ -67,6 +67,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	ctx.deaths += 1
 	# Nur Spielleiter: Was öffentlich verkündet wird, entscheidet DR-04 (offen).
 	ctx.emit(GameEvent.SEAT_DIED, Visibility.GM, record.to_dict())
+	SoloRules.fate_record_death(s, target_id)
 	ApprenticeRules.on_own_death(s, target_id)
 	if trigger_effects:
 		WolfChildRules.on_death(ctx, record)

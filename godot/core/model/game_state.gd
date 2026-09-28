@@ -79,6 +79,9 @@ var necro_named: Dictionary = {}       ## Nekromant: Tag des letzten Benennens j
 var necro_wins: Array[int] = []        ## Nekromanten mit Treffer beim Benennen, aufsteigend
 var hades_lights: Dictionary = {}      ## Hades: Lichter je lebender Hades-Person (nur Werte ≥ 1, E-28)
 var hades_barriers: Array[int] = []   ## Hades mit aktiver Barriere, aufsteigend (E-31)
+var fate_marks: Array = []            ## Schicksalswolf: [{wolf_id, target_id}] aus Nacht 1, nach wolf_id und Wahl
+var fate_first_dead: Array[int] = []  ## die ersten drei verschiedenen Toten der Partie in Todesreihenfolge
+var fate_kills: Array = []            ## Zusatzopfer dieser Nacht 4 [{wolf_id, target_id, redirect_from}]
 var grave_thefts: Array = []          ## Grabräuber: [{robber_id, target_id, role_id}], eine je lebendem Grabräuber, nach robber_id
 var pack_redirect_from: int = -1       ## Nekromant, der den Rudelangriff dieser Nacht umgelenkt hat (Kette, E-20)
 var pack_extra_redirect_from: int = -1  ## dasselbe für das Zusatzopfer des Rudelvaters
@@ -275,6 +278,9 @@ func to_dict() -> Dictionary:
 		"hades_lights": _int_keys_to_dict(hades_lights),
 		"hades_barriers": hades_barriers.duplicate(),
 		"grave_thefts": grave_thefts.duplicate(true),
+		"fate_marks": fate_marks.duplicate(true),
+		"fate_first_dead": fate_first_dead.duplicate(),
+		"fate_kills": fate_kills.duplicate(true),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -642,6 +648,31 @@ static func from_dict(d: Dictionary) -> GameState:
 		if from != -1 and (not s.players.has(from) or not SoloRules.has_ability(s, from, RoleCatalog.NEKROMANT)):
 			return null
 		s.set(key, from)
+	# Schicksalswolf (DA-11 bis DA-15): Markierungen anderer Personen je lebendem Schicksalswolf, höchstens drei verschiedene
+	# erste Tote, Zusatzopfer nur während Nacht 4.
+	for item: Variant in DictRead.get_array(d, "fate_marks"):
+		var fate_wolf := DictRead.get_int(item, "wolf_id", -1) if item is Dictionary else -1
+		var fate_target := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1
+		if not s.players.has(fate_wolf) or not s.players.has(fate_target) or fate_wolf == fate_target or not s.players[fate_wolf].alive \
+				or s.players[fate_wolf].role_id != RoleCatalog.SCHICKSALSWOLF:
+			return null
+		s.fate_marks.append({"wolf_id": fate_wolf, "target_id": fate_target})
+	var first_dead: Variant = DictRead.to_int_array(DictRead.get_array(d, "fate_first_dead"))
+	if first_dead == null or (first_dead as Array).size() > RoleCatalog.FATE_MARKS:
+		return null
+	for id: int in first_dead:
+		if not s.players.has(id) or (first_dead as Array).count(id) > 1:
+			return null
+	s.fate_first_dead = first_dead
+	for item: Variant in DictRead.get_array(d, "fate_kills"):
+		var killer := DictRead.get_int(item, "wolf_id", -1) if item is Dictionary else -1
+		var fated := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1
+		var fate_from := DictRead.get_int(item, "redirect_from", -1) if item is Dictionary else -2
+		if s.phase != Phase.NIGHT or s.night_number != RoleCatalog.FATE_NIGHT or not s.players.has(killer) or not s.players.has(fated) or killer == fated:
+			return null
+		if fate_from != -1 and (not s.players.has(fate_from) or not SoloRules.has_ability(s, fate_from, RoleCatalog.NEKROMANT)):
+			return null
+		s.fate_kills.append({"wolf_id": killer, "target_id": fated, "redirect_from": fate_from})
 	for item: Variant in DictRead.get_array(d, "voodoo_dolls"):
 		var priest := DictRead.get_int(item, "priest_id", -1) if item is Dictionary else -1
 		var doll := DictRead.get_int(item, "doll_id", -1) if item is Dictionary else -1

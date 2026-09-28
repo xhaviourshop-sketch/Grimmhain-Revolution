@@ -511,6 +511,7 @@ static func _start_night(ctx: RuleContext) -> void:
 	s.village_blocked = false
 	s.blocked_ids.clear()
 	s.pack_extra_target_id = GameState.NO_TARGET
+	s.fate_kills.clear()
 	s.night_wolf_ids.clear()
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
@@ -584,6 +585,17 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			if target != GameState.NO_TARGET:
 				SoloRules.give_doll(s, prompt.actor_id, target)
 			ctx.emit(GameEvent.VOODOO_DOLL_GIVEN, Visibility.GM, {"priest_id": prompt.actor_id, "doll_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
+		PendingPrompt.OWNER_FATE:
+			if SoloRules.fate_marking(s, prompt.actor_id):
+				for id: int in targets:
+					s.fate_marks.append({"wolf_id": prompt.actor_id, "target_id": id})
+				ctx.emit(GameEvent.FATE_MARKED, Visibility.GM, {"wolf_id": prompt.actor_id, "target_ids": targets.duplicate()})
+			else:
+				for id: int in targets:
+					s.fate_kills.append({"wolf_id": prompt.actor_id, "target_id": id, "redirect_from": -1})
+				ctx.emit(GameEvent.FATE_KILLS_CHOSEN, Visibility.GM, {"wolf_id": prompt.actor_id, "target_ids": targets.duplicate(), "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_WIDOW:
@@ -755,6 +767,10 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 			s.apples.erase(holder)
 	if s.pack_extra_target_id != GameState.NO_TARGET:
 		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true, _redirect_chain(s.pack_extra_redirect_from))
+	# Schicksalswolf (RM-DR-109.2 A): Zusatzopfer sind Rudelangriffe nach Rudel und Zusatzopfer des Rudelvaters.
+	for fate: Dictionary in s.fate_kills.duplicate(true):
+		KillPipeline.request_kill(ctx, int(fate["target_id"]), KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, false, _redirect_chain(int(fate["redirect_from"])))
+	s.fate_kills.clear()
 	s.pack_target_id = GameState.NO_TARGET
 	s.pack_extra_target_id = GameState.NO_TARGET
 	s.pack_redirect_from = -1

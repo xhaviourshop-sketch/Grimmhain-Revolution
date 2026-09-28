@@ -119,6 +119,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.NEKROMANT: false,      # Verzicht ist eine Antwort (0 Tote)
 	RoleCatalog.HADES: false,          # Verzicht ist eine Antwort (0 Ziele, keine Barriere)
 	RoleCatalog.GRABRAEUBER: false,    # Verzicht ist eine Antwort (0 Tote)
+	RoleCatalog.SCHICKSALSWOLF: false,  # Markieren Pflicht, Zusatzopfer mit Verzicht (0 Ziele)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -189,6 +190,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if role == RoleCatalog.VOODOO and SoloRules.doll_of(s, id) != GameState.NO_TARGET:
 			continue  # nur ohne lebende Puppe (E-13)
+		if role == RoleCatalog.SCHICKSALSWOLF and not (SoloRules.fate_marking(s, id) or SoloRules.fate_killing(s, id)):
+			continue  # nur Nacht 1 (markieren) und Nacht 4 (Zusatzopfer)
 		if role == RoleCatalog.GRABRAEUBER and p.ability_uses.has(SoloRules.GRAVE_USE_KEY):
 			continue  # nur einmal stehlen (E-32)
 		if role == RoleCatalog.HADES and SoloRules.hades_light_count(s, id) < RoleCatalog.HADES_KILL_COST:
@@ -239,8 +242,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_living_wolf"
 	var actor := step_actor(key)
 	if step_role(key) == RoleCatalog.SCHUTZGEIST:
-		if not s.players.has(actor) or not GuardRoles.ghost_can_act(s, s.players[actor]):
-			return &"no_decision"
+		if not s.players.has(actor) or not GuardRoles.ghost_can_act(s, s.players[actor]) or s.alive_ids().is_empty():
+			return &"no_decision"  # Pflichtwahl einer lebenden Person unmöglich
 		if s.players[actor].faction == Faction.VILLAGE and s.village_blocked:
 			return &"blocked"
 		return &"cursed" if GuardRoles.silenced(s, actor) else &""
@@ -308,6 +311,10 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.HADES and not SoloRules.hades_has_decision(s, actor):
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.SCHICKSALSWOLF:
+		if SoloRules.fate_marking(s, actor):
+			return &"no_decision" if s.alive_ids().size() - 1 < RoleCatalog.FATE_MARKS else &""
+		return &"" if SoloRules.fate_killing(s, actor) and s.alive_ids().size() >= 2 else &"no_decision"
 	if step_role(key) == RoleCatalog.GRABRAEUBER and (s.players[actor].ability_uses.has(SoloRules.GRAVE_USE_KEY) or SoloRules.grave_targets(s, actor).is_empty()):
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.PROPHET:
@@ -384,7 +391,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
 	elif BondSteps.OWNERS.has(step_kind(step_id)):
 		BondSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
-	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET, RoleCatalog.FEUERTEUFEL, RoleCatalog.VOODOO].has(step_kind(step_id)):
+	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET, RoleCatalog.FEUERTEUFEL, RoleCatalog.VOODOO, RoleCatalog.SCHICKSALSWOLF].has(step_kind(step_id)):
 		var solo_actor := step_actor(s.night_plan[s.next_night_step])
 		prompt.owner = step_kind(step_id)
 		prompt.actor_id = solo_actor
@@ -406,6 +413,13 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
 			RoleCatalog.VOODOO:  # Puppe: eine andere Lebende oder verzichten (E-14, E-21)
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
+			RoleCatalog.SCHICKSALSWOLF:  # Nacht 1: genau drei andere markieren; Nacht 4: bis zu so viele Zusatzopfer
+				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
+				if SoloRules.fate_marking(s, solo_actor):
+					prompt.min_count = RoleCatalog.FATE_MARKS
+					prompt.max_count = RoleCatalog.FATE_MARKS
+				else:
+					prompt.max_count = mini(SoloRules.fate_bonus(s, solo_actor), prompt.allowed_ids.size())
 	elif step_kind(step_id) == RoleCatalog.SCHWARZE_WITWE or step_kind(step_id) == RoleCatalog.SCHATTENWANDERER:
 		# Witwe: Pflichtwahl einer anderen lebenden Person; Schattenwanderer: eine andere oder „noch nicht“.
 		prompt.owner = step_kind(step_id)

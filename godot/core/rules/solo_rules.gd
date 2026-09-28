@@ -233,10 +233,13 @@ static func necro_pool(s: GameState) -> Array[int]:
 	return out
 
 
-## Rudelangriff dieser Nacht auf den Nekromanten, der ihn sonst töten würde (E-17, E-26): "pack", "pack2" oder "".
+## Rudelangriff dieser Nacht auf den Nekromanten, der ihn sonst töten würde (E-17, E-26): "pack", "pack2", "fate:<i>" oder "".
 static func necro_attack_slot(s: GameState, necro_id: int) -> String:
 	var p := s.players[necro_id]
-	for slot: Array in [["pack", s.pack_target_id, s.plague_pierce_pending], ["pack2", s.pack_extra_target_id, true]]:
+	var slots: Array = [["pack", s.pack_target_id, s.plague_pierce_pending], ["pack2", s.pack_extra_target_id, true]]
+	for i: int in s.fate_kills.size():
+		slots.append(["fate:%d" % i, int(s.fate_kills[i]["target_id"]), false])  # Zusatzopfer des Schicksalswolfs (DA-14)
+	for slot: Array in slots:
 		if int(slot[1]) != necro_id:
 			continue
 		if KillPipeline.pack_protection(s, necro_id, bool(slot[2])) != &"" or KillPipeline.survives_any_death(s, p):
@@ -277,7 +280,11 @@ static func necro_redirect(ctx: RuleContext, necro_id: int, dead: Array[int], ta
 	var s := ctx.state
 	necro_sacrifice(s, dead)
 	var slot := necro_attack_slot(s, necro_id)
-	if slot == "pack2":
+	if slot.begins_with("fate:"):
+		var entry: Dictionary = s.fate_kills[slot.get_slice(":", 1).to_int()]
+		entry["target_id"] = target_id
+		entry["redirect_from"] = necro_id
+	elif slot == "pack2":
 		s.pack_extra_target_id = target_id
 		s.pack_extra_redirect_from = necro_id
 	else:
@@ -450,3 +457,40 @@ static func grave_steal(ctx: RuleContext, robber_id: int, target_id: int) -> voi
 ## Die gestohlene Fähigkeit endet mit Tod oder Rollenverlust des Grabräubers (abgeleitet wie E-27).
 static func grave_drop(s: GameState, robber_id: int) -> void:
 	s.grave_thefts = s.grave_thefts.filter(func(t: Dictionary) -> bool: return int(t["robber_id"]) != robber_id)
+
+
+# --- Schicksalswolf (Wölfe; hier wegen der gemeinsamen Rudelangriffs-Slots des Nekromanten) ---------
+
+static func fate_marks_of(s: GameState, wolf_id: int) -> Array[int]:
+	var out: Array[int] = []
+	for m: Dictionary in s.fate_marks:
+		if int(m["wolf_id"]) == wolf_id:
+			out.append(int(m["target_id"]))
+	return out
+
+
+## Nacht 1 ohne Markierungen: drei andere Lebende markieren (RM-DR-014 = B).
+static func fate_marking(s: GameState, wolf_id: int) -> bool:
+	return s.night_number == 1 and fate_marks_of(s, wolf_id).is_empty()
+
+
+## Zahl der Zusatzopfer: eigene Markierungen unter den ersten drei verschiedenen Toten (RM-DR-109.3 A).
+static func fate_bonus(s: GameState, wolf_id: int) -> int:
+	return fate_marks_of(s, wolf_id).filter(func(id: int) -> bool: return s.fate_first_dead.has(id)).size()
+
+
+## Schritt in Nacht 4 (RM-DR-109.1 A): nur mit mindestens einem Zusatzopfer.
+static func fate_killing(s: GameState, wolf_id: int) -> bool:
+	return s.night_number == RoleCatalog.FATE_NIGHT and fate_bonus(s, wolf_id) > 0
+
+
+## Jeder Tod (auch Korrektur): die ersten drei verschiedenen Toten der Partie; ein Schicksalswolf verliert mit seinem
+## Tod seine Markierungen (wie E-10, E-22, E-27).
+static func fate_record_death(s: GameState, dead_id: int) -> void:
+	if s.fate_first_dead.size() < RoleCatalog.FATE_MARKS and not s.fate_first_dead.has(dead_id):
+		s.fate_first_dead.append(dead_id)
+	fate_drop(s, dead_id)
+
+
+static func fate_drop(s: GameState, wolf_id: int) -> void:
+	s.fate_marks = s.fate_marks.filter(func(m: Dictionary) -> bool: return int(m["wolf_id"]) != wolf_id)

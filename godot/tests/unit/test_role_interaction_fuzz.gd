@@ -17,8 +17,8 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
 	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein",
-	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber"]
-const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon"]
+	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber", "schicksalswolf"]
+const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon", "schicksalswolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 ## Volle Fokusrunden: jede Rolle ist gleich oft Fokusrolle, auch wenn der Rollenpool wächst.
 const FOCUS_ROUNDS := 3
@@ -35,7 +35,7 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
 	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived",
-	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed", "GraveRobbed", "StolenStepOpened"]
+	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed", "GraveRobbed", "StolenStepOpened", "FateMarked", "FateKillsChosen"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
 	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN", "HADES_KILL"]
 
@@ -43,7 +43,7 @@ var _rng := RandomNumberGenerator.new()
 var _game_label := ""
 var _seen := {}
 var _focus := ""  ## Fokusrolle der laufenden Partie
-var _focus_goal_met := false  ## seltene Mechanik der Fokusrolle in dieser Partie schon erreicht (Nekromant: Umlenkung)
+var _focus_goal_met := false  ## seltene Mechanik der Fokusrolle in dieser Partie schon erreicht (Nekromant: Umlenkung, König: Enthüllung)
 var _probe := false  ## letzter Befehl ist eine zufällige Korrektur, Ablehnung erlaubt
 var _probe_rejected := 0
 var _probe_accepted := 0
@@ -116,7 +116,7 @@ func _play_game(g: int, count: int) -> Dictionary:
 		state = res.state
 		log.append(c)
 		events.append_array(res.events)
-		if res.events.any(func(e: GameEvent) -> bool: return e.type == GameEvent.NECRO_REDIRECTED):
+		if res.events.any(func(e: GameEvent) -> bool: return e.type == GameEvent.NECRO_REDIRECTED or e.type == GameEvent.KING_REVEALED):
 			_focus_goal_met = true
 		deaths += _check_after(before, state, res.events, "%s @%d %s" % [_game_label, i, c.type])
 		if log.size() % CODEC_EVERY == 0:
@@ -213,9 +213,9 @@ func _next_command(s: GameState) -> Command:
 	_probe = false
 	var open := s.open_candidates()
 	if not open.is_empty():
-		# Der König handelt erst bei mehr Toten als Lebenden: seine Fokuspartien laufen bis dahin weiter.
-		if _focus == "koenig" and not InfoSteps.king_condition(s):
-			return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: Königsbedingung abwarten"})
+		# Der König handelt erst bei mehr Toten als Lebenden: seine Fokuspartien laufen bis zu seiner ersten Enthüllung weiter.
+		if _focus == "koenig" and not _focus_goal_met and s.alive_ids().any(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.KOENIG):
+			return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: Enthüllung des Königs abwarten"})
 		# Nekromant: weiterspielen, bis er einmal umgelenkt hat (braucht drei Tote und einen Rudelangriff auf ihn).
 		if _focus == "nekromant" and not _focus_goal_met and s.alive_ids().any(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.NEKROMANT):
 			return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: Umlenkung des Nekromanten abwarten"})
@@ -324,6 +324,11 @@ func _day_command(s: GameState) -> Command:
 			if s.players[id].role_id == RoleCatalog.NEKROMANT:
 				_probe = true  # zweiter Versuch am selben Tag abgelehnt
 				return Command.name_wolf(id, _pick(s.alive_ids()))
+	# Spiegelwolf-Fokus: öfter gezielt ohne Nominierung hinrichten (seltene Pflichtabdeckung MirrorNotTriggered).
+	if _focus == "spiegelwolf" and roll < 0.25:
+		for id: int in s.alive_ids():
+			if s.players[id].role_id == RoleCatalog.SPIEGELWOLF:
+				return CorrectionFixtures.gm("execute", _execution_fields(s, id), "Fuzz: Spiegelwolf ohne Nominierung")
 	if roll < 0.45:
 		var nomination := _random_nomination(s)
 		if nomination != null:
@@ -481,6 +486,11 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				_:
 					return Command.answer_choice(p.id, String(p.stage), true)
 	var pool := _alive_in(s, p.allowed_ids)
+	# König-Fokus: das Rudel verschont den König, damit er die Bedingung „mehr Tote als Lebende“ erlebt (KingRevealed).
+	if p.owner == PendingPrompt.OWNER_PACK and _focus == "koenig":
+		var spared := pool.filter(func(id: int) -> bool: return s.players[id].role_id != RoleCatalog.KOENIG)
+		if not spared.is_empty():
+			pool = spared
 	# Die Umlenkung des Nekromanten ist selten: in seinen Fokuspartien wählt das Rudel ihn oft, sobald drei Tote bereitliegen.
 	if p.owner == PendingPrompt.OWNER_PACK and _focus == "nekromant" and SoloRules.necro_pool(s).size() >= RoleCatalog.NECRO_SACRIFICE and _rng.randf() < 0.6:
 		var necros := pool.filter(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.NEKROMANT)
