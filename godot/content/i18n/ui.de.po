@@ -140,11 +140,17 @@ msgstr "Sitzkreis"
 msgid "ui.cockpit.seats.placeholder"
 msgstr "Der Sitzkreis folgt mit der Einrichtung der Spieler."
 
+msgid "ui.cockpit.seats.placeholder_active"
+msgstr "Der Sitzkreis der laufenden Partie folgt in einem späteren Arbeitspaket."
+
 msgid "ui.cockpit.actions.heading"
 msgstr "Aktionen"
 
 msgid "ui.cockpit.actions.placeholder"
 msgstr "Aktionen erscheinen, sobald eine Partie läuft."
+
+msgid "ui.cockpit.actions.placeholder_active"
+msgstr "Aktionen für Nacht und Tag folgen in einem späteren Arbeitspaket."
 
 msgid "ui.phase.none"
 msgstr "Keine Partie"
@@ -834,7 +840,7 @@ msgid "ui.setup.seating.summary.body"
 msgstr "{count} Personen sitzen fest. Spieler, Rollen, Verteilung und Sitzordnung sind bestätigt."
 
 msgid "ui.setup.seating.summary.next"
-msgstr "Der Spielbeginn folgt in einem späteren Schritt."
+msgstr "Prüfe die Plätze noch einmal. „Partie starten“ beginnt die Partie mit dieser Sitzordnung."
 
 msgid "ui.setup.seating.edit_distribution"
 msgstr "Verteilung bearbeiten"
@@ -865,3 +871,18 @@ msgstr "Plätze getauscht"
 
 msgid "ui.setup.seating.toast.confirmed"
 msgstr "Sitzordnung bestätigt"
+
+msgid "ui.setup.seating.start"
+msgstr "Partie starten"
+
+msgid "ui.setup.seating.toast.started"
+msgstr "Partie gestartet"
+
+msgid "ui.setup.seating.status.start_failed.game_already_started"
+msgstr "Start abgelehnt: Es läuft bereits eine Partie. Nichts wurde geändert."
+
+msgid "ui.setup.seating.status.start_failed.setup_incomplete"
+msgstr "Start abgelehnt: Das Setup ist nicht vollständig bestätigt. Nichts wurde geändert."
+
+msgid "ui.setup.seating.status.start_failed.other"
+msgstr "Start abgelehnt (Code {code}). Nichts wurde geändert."

@@ -250,6 +250,31 @@ func confirm_seating() -> SetupResult:
 	return SetupResult.success(v)
 
 
+## Reine Startdaten des vollständig bestätigten Entwurfs in `details` (keine Änderung):
+## players [{id, name}] in Listenreihenfolge, seat_order [id…] ab Platz 1, roles {"<id>": Rolle}
+## aus der festen Zuordnung und appearances {"<id>": Scheinrolle} nur für Kopien mit Pflicht-
+## Scheinrolle. Fehler: Vorbedingungen der Sitzordnung oder `seating_not_confirmed`.
+func start_data() -> SetupResult:
+	var error := _step_block(SetupDraft.STEP_SEATING)
+	if error == &"" and not _draft.seating.confirmed:
+		error = &"seating_not_confirmed"
+	if error != &"":
+		return SetupResult.failure(error, view())
+	var players: Array = []
+	var roles := {}
+	var appearances := {}
+	for p: SetupPerson in _draft.persons:
+		players.append({"id": p.person_id, "name": p.name})
+		var unit: StringName = _draft.distribution.assignment[p.person_id]
+		roles[str(p.person_id)] = String(RoleCopy.role_of(unit))
+		var copy := _draft.roles.copy_by_key(unit) if RoleCopy.is_copy_key(unit) else null
+		if copy != null:
+			appearances[str(p.person_id)] = String(copy.appears_as)
+	var result := SetupResult.success(view())
+	result.details = {"players": players, "seat_order": _draft.seating.order.duplicate(), "roles": roles, "appearances": appearances}
+	return result
+
+
 # --- Sicht ------------------------------------------------------------------------------------------
 
 ## Sicht für die Darstellung (immer eine neue Kopie).

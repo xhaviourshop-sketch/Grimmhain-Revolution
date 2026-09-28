@@ -184,7 +184,16 @@ Nächster Schritt: Sitzordnung im Setup (Phase 2), danach StartGame-Anbindung.
 ---
 
 ## 2026-09-27 — Setup-Schritt Sitzordnung (Branch `feature/setup-seating`)
-Status: UMGESETZT auf dem Branch, PR offen, nicht nach main gemergt
+Status: ERLEDIGT, PR #1 am 27.09.2026 mit Merge-Commit `f09cd08` nach main gemergt (CI auf main grün)
 Inhalt: vierter Wizard-Schritt nach bestätigter Verteilung; `SeatingDraft` in `SetupDraft` (Personen-IDs im Uhrzeigersinn), `PlayerSetup.swap_seats`/`confirm_seating`; Sitzkreis mit Drag-and-drop und Tauschen per Antippen; „Sitzordnung fertig“ ohne StartGame/GameState. Details: `docs/ui/seating-setup.md`.
 Verifiziert (Windows, Godot 4.7.2): 456 Godot-Tests grün (438 + 10 Modell + 8 UI), Register 308/308, 20 Node-Tests grün, Rollenprüfer ohne Befund, `git diff --check` Exit 0. Grafisch: 9 Aufnahmen `docs/evidence/seating-setup/` (lokal, AMD-Renderer), angesehen. Drag-and-drop mit simulierten Mausereignissen, keine Handbedienung, keine Touch- oder Tablet-Prüfung.
 Nächster Schritt: StartGame aus dem bestätigten Setup-Entwurf bauen (`seat_order`, `roles`, `appearances`), ohne neue Regeln.
+
+---
+
+## 2026-09-27 — Spielstart aus dem Setup (Branch `feature/start-game`)
+Status: ERLEDIGT, über PR #2 (Merge-Commit auf main, 28.09.2026) nach main übernommen
+Inhalt: „Sitzordnung bestätigen“ beendet nur das Setup; danach steht in der Fußzeile „Partie starten“. Erst dieser Button sendet genau einen `StartGame` (manuelle Zuordnung aus der festen Verteilung, kein erneutes Mischen, Scheinrollen unverändert, Seed aus `PlayerSetup.seed_source`, `round_id` per SHA-256 aus dem Seed) über `GameStart` → `GameSession`. Nach Annahme ist der Entwurf verbraucht, das Cockpit öffnet sich als aktive Partie. Ablehnung lässt Setup und Sitzung unverändert und meldet den Grund. Details: `docs/ui/game-start.md`.
+Verifiziert (Windows, Godot 4.7.2): 470 Godot-Tests grün (456 + 8 Modell + 6 UI), keine SCRIPT-ERROR- oder ERROR-Zeilen, Register 313/313, `git diff --check` Exit 0. Grafisch: 5 Aufnahmen `docs/evidence/game-start/` und neu `seating-setup/08` (lokal, AMD-Renderer), angesehen; dabei Layoutfehler (Tischmitte bei 24 Personen/1024×768) und widersprüchliche Cockpit-Hinweise gefunden und behoben. Keine Touch- oder Tablet-Prüfung.
+Nicht enthalten: Speichern der Partie, Nacht-/Tagablauf in der Oberfläche, Beenden/Verwerfen einer laufenden Partie.
+Nächster Schritt: Cockpit-Sitzkreis mit der gestarteten Partie (öffentliche Sicht aus `GameSession`, ohne Rollen) oder `StartNight` über das Cockpit, je nach Priorität.

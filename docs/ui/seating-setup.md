@@ -2,12 +2,12 @@
 
 Stand: 27.09.2026 · Godot 4.7.2 · Projekt `godot/`
 
-Nach der bestätigten Rollenverteilung legt der Spielleiter die Sitzordnung für 6 bis 24 Personen fest. Grundlage im Decision Log („Personen, Sitze und Darstellung“): Zustände haften an der stabilen Personen-ID, nicht am Sitzplatz; Sitzplätze lassen sich per Drag-and-drop tauschen. Das Ergebnis bleibt ein Entwurf im Speicher: kein `StartGame`, kein `GameState`, kein Befehl.
+Nach der bestätigten Rollenverteilung legt der Spielleiter die Sitzordnung für 6 bis 24 Personen fest. Grundlage im Decision Log („Personen, Sitze und Darstellung“): Zustände haften an der stabilen Personen-ID, nicht am Sitzplatz; Sitzplätze lassen sich per Drag-and-drop tauschen. Das Bestätigen erzeugt keinen Befehl. Erst „Partie starten“ danach sendet `StartGame` (`game-start.md`).
 
 ## Zustand und Invalidierung
 
 `SetupDraft.seating` (`app/setup/seating_draft.gd`, `SeatingDraft`):
-- `order: Array[int]`: Personen-IDs im Uhrzeigersinn ab Platz 1; entspricht später `seat_order` im StartGame
+- `order: Array[int]`: Personen-IDs im Uhrzeigersinn ab Platz 1; wird unverändert `seat_order` im StartGame
 - `confirmed`, `invalidated` (`""`, `person_count_changed`, `setup_changed`)
 
 Nur `PlayerSetup` verändert den Zustand. Die Personen, ihre Namen und die Verteilung bleiben unverändert an der Personen-ID; der Tausch ändert ausschließlich `order`.
@@ -41,7 +41,7 @@ Sicht `view()["seating"]`: `seats` [`seat`, `person_id`, `name`], `person_count`
 - **Tauschen per Drag-and-drop:** Person auf einen anderen Platz ziehen. Während des Ziehens ist die Quelle abgeblendet, eine goldene Vorschau folgt dem Zeiger, das Ziel unter dem Zeiger ist hervorgehoben. Loslassen außerhalb eines Platzes bricht ab: nichts ändert sich, die Fußzeile meldet „Ziehen abgebrochen“.
 - **Tauschen per Antippen:** erste Person antippen (goldene Markierung, Hinweis „Ausgewählt: Anna (Platz 3)…“ und „Auswahl aufheben“ in der Tischmitte), dann den Zielplatz. Dieselbe Person erneut, „Auswahl aufheben“ oder Zurück/Escape heben die Auswahl auf.
 - **Rückmeldung:** Fußzeile „Ben und Hanna haben die Plätze getauscht.“, kurze Statusmeldung „Plätze getauscht“ ohne Namen oder Rollen.
-- **Bestätigen:** „Sitzordnung bestätigen“ zeigt in der Tischmitte „Sitzordnung fertig“ und sperrt den Button. Der Entwurf (Personen, Rollen, Verteilung, Sitzordnung) ist vollständig.
+- **Bestätigen:** „Sitzordnung bestätigen“ zeigt in der Tischmitte „Sitzordnung fertig“. In der Fußzeile steht an seiner Stelle „Partie starten“ (`game-start.md`). Der Entwurf (Personen, Rollen, Verteilung, Sitzordnung) ist vollständig. Eine spätere Änderung bringt „Sitzordnung bestätigen“ zurück.
 - **Theme:** Variationen `SeatButton` (normal, schmaler Innenrand), `SeatSelectedButton` (Gold) und `SeatTargetButton` (angehobene Fläche, heller Goldrahmen); Mindesthöhe des Kreises `ThemeTokens.SEAT_CIRCLE_MIN_HEIGHT`.
 
 ## Tests und Screenshots
@@ -66,4 +66,4 @@ Prüf-Screenshots: `docs/evidence/seating-setup/`.
 - Touchbedienung ist nur über die Mausemulation von Godot abgedeckt, nicht auf einem Tablet geprüft.
 - Nur Tauschen, kein Einfügen (Verschieben mit Nachrücken) und keine Drehung des ganzen Kreises.
 - Bei vielen Plätzen werden sehr lange Namen gekürzt; der volle Name steht in der Auswahl.
-- Kein `StartGame`: Die Abbildung auf `seat_order` sowie `roles`/`appearances` (siehe `role-setup.md`) folgt im nächsten Arbeitspaket.
+- Spielstart und Abbildung auf `StartGame`: siehe `game-start.md`.

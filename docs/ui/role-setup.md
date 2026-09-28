@@ -2,7 +2,7 @@
 
 Stand: 27.09.2026 (Korrekturrunde DR-08) · Godot 4.7.2 · Projekt `godot/`
 
-„Neue Partie“ ist ein Wizard mit vier Schritten: **Spieler → Rollen → Verteilung → Sitzordnung** (Sitzordnung: `seating-setup.md`). Nach dem bestätigten Namensschritt (`player-setup.md`) stellt der Spielleiter einen Rollenpool für genau diese Personenzahl zusammen, verteilt ihn zufällig und reproduzierbar oder manuell und bestätigt die Verteilung. Das Ergebnis bleibt ein Entwurf im Speicher. Es entsteht weder `StartGame` noch ein `GameState`, und der Regelkern bleibt unverändert.
+„Neue Partie“ ist ein Wizard mit vier Schritten: **Spieler → Rollen → Verteilung → Sitzordnung** (Sitzordnung: `seating-setup.md`). Nach dem bestätigten Namensschritt (`player-setup.md`) stellt der Spielleiter einen Rollenpool für genau diese Personenzahl zusammen, verteilt ihn zufällig und reproduzierbar oder manuell und bestätigt die Verteilung. Das Ergebnis bleibt ein Entwurf im Speicher. Erst „Partie starten“ nach der Sitzordnung erzeugt `StartGame` (`game-start.md`); die Schritte hier ändern den Regelkern nicht.
 
 ## Schichten
 
@@ -184,7 +184,7 @@ Der Spielleiter legt die Scheinrolle jeder Trugbilderwolf-Kopie ausdrücklich fe
 - Schließen oder Verlassen des Schritts blendet den Bereich aus; liegt der Fokus darin, wandert er auf „Scheinrollen festlegen“.
 - In der Verteilung zeigt der geöffnete Spielleiterbereich „Scheinrolle: …“.
 
-**StartGame-Abbildung (noch nicht gebaut):** `entries()` entspricht `role_entries`. Um die im Setup bestätigte Zuordnung unverändert zu übernehmen, eignet sich der manuelle Aufbau: `roles {"<Personen-ID>": role_id}` und `appearances {"<Personen-ID>": appears_as}` aus Zuordnung und Kopie. Ein zweiter Zufallsalgorithmus entsteht nicht.
+**StartGame-Abbildung (gebaut, `game-start.md`):** Die im Setup bestätigte Zuordnung wird unverändert als manueller Aufbau übernommen: `roles {"<Personen-ID>": role_id}` und `appearances {"<Personen-ID>": appears_as}` aus Zuordnung und Kopie. Beim Start wird nicht erneut gemischt; ein zweiter Zufallsalgorithmus entsteht nicht.
 
 ## Geheimhaltung
 
@@ -265,5 +265,4 @@ Prüf-Screenshots: `docs/evidence/role-setup/`.
 ## Bewusst noch nicht enthalten
 
 - Rollenübergabe an Spieler, öffentliche Rollenanzeige
-- `StartGame`-Integration (Abbildung siehe „Trugbilderwolf-Scheinrolle“)
 - Speichern des Entwurfs, gespeicherte Gruppen, Undo/Redo

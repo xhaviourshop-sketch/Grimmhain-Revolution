@@ -25,16 +25,17 @@ func test_ui_does_not_touch_game_state() -> void:
 	var pattern := RegEx.create_from_string(CORE_STATE_NAMES)
 	var files := files_in("res://app", ".gd")
 	assert_true(files.size() >= 10, "UI-Skripte gefunden (%d)" % files.size())
-	var session_files := 0
+	var session_files: Array[String] = []
 	for path: String in files:
 		if path.begins_with("res://app/session/"):
-			session_files += 1
+			session_files.append(path.get_file())
 			continue
 		var lines := FileAccess.get_file_as_string(path).split("\n")
 		for n: int in lines.size():
 			var code := lines[n].split("#")[0]
 			assert_true(pattern.search(code) == null, "%s:%d greift am Regelkern vorbei zu: %s" % [path, n + 1, code.strip_edges()])
-	assert_eq(session_files, 1, "genau eine Datei der Anwendungsschicht")
+	session_files.sort()
+	assert_eq(session_files, ["game_session.gd", "game_start.gd"] as Array[String], "nur Sitzung und Start-Builder in der Anwendungsschicht")
 
 
 func test_session_exposes_no_mutable_state() -> void:

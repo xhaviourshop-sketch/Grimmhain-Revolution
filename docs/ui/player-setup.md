@@ -2,7 +2,7 @@
 
 Stand: 26.09.2026 · Godot 4.7.2 · Projekt `godot/`
 
-Schritt 1 des Setup-Wizards „Neue Partie“ (Spieler → Rollen → Verteilung): Der Spielleiter legt 6 bis 24 Personen an, bearbeitet und entfernt sie und bestätigt die Liste als Setup-Entwurf. Rollenwahl und Verteilung beschreibt `role-setup.md`; Sitzordnung und `StartGame` folgen in späteren Arbeitspaketen.
+Schritt 1 des Setup-Wizards „Neue Partie“ (Spieler → Rollen → Verteilung): Der Spielleiter legt 6 bis 24 Personen an, bearbeitet und entfernt sie und bestätigt die Liste als Setup-Entwurf. Rollenwahl und Verteilung beschreibt `role-setup.md`; Sitzordnung beschreibt `seating-setup.md`, den Spielstart `game-start.md`.
 
 ## Schichten
 

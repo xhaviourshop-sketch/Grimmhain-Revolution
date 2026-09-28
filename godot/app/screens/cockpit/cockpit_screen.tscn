@@ -92,6 +92,7 @@ script = ExtResource("3_label")
 text_key = "ui.cockpit.seats.heading"
 
 [node name="SeatsPlaceholder" type="Label" parent="Layout/Body/SeatRingArea/Column"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 horizontal_alignment = 1
@@ -138,6 +139,7 @@ script = ExtResource("3_label")
 text_key = "ui.cockpit.actions.heading"
 
 [node name="ActionsPlaceholder" type="Label" parent="Layout/Body/SideColumn/ActionsArea/Column"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 script = ExtResource("3_label")

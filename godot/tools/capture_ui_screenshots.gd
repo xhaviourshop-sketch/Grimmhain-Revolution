@@ -54,6 +54,11 @@ const SHOTS := [
 	["seating-setup", "07-swapped-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_seating_swapped"],
 	["seating-setup", "08-confirmed-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_seating_confirmed"],
 	["seating-setup", "09-long-names-1024x768-en.png", Vector2i(1024, 768), "en", &"new_game", "_prepare_seating_long_names"],
+	["game-start", "01-ready-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_seating_confirmed"],
+	["game-start", "02-ready-twentyfour-1024x768-en.png", Vector2i(1024, 768), "en", &"new_game", "_prepare_start_ready_full"],
+	["game-start", "03-cockpit-started-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_start_started"],
+	["game-start", "04-cockpit-started-1024x768-en.png", Vector2i(1024, 768), "en", &"new_game", "_prepare_start_started"],
+	["game-start", "05-rejected-running-1280x800-de.png", Vector2i(1280, 800), "de", &"new_game", "_prepare_start_rejected"],
 ]
 const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
 
@@ -475,3 +480,29 @@ func _prepare_seating_long_names(shell: AppShell) -> void:
 	for i: int in 24:
 		names.append("Wolfgangamadeusmozartsalieri%04d" % i if i % 3 == 0 else "Maximiliane-Friederike von Ho%03d" % i)
 	await _to_seating(shell, names)
+
+
+# --- Vorbereitungen Spielstart -----------------------------------------------------------------------
+
+func _prepare_start_ready_full(shell: AppShell) -> void:
+	await _to_seating(shell, NAMES.slice(0, 24))
+	await _press(shell, "ConfirmSeatingButton")
+	shell.get_toast().hide_message()
+
+
+## „Partie starten“ über den echten Button: Cockpit mit aktiver Partie und Statusmeldung.
+func _prepare_start_started(shell: AppShell) -> void:
+	await _prepare_seating_confirmed(shell)
+	await _press(shell, "StartGameButton")
+
+
+## Echter Ablauf: eine Partie starten, dann erneut „Neue Partie“ bis zum Start. Der Regelkern lehnt
+## den zweiten Start ab; die Fußzeile meldet es, Setup und Sitzung bleiben unverändert.
+func _prepare_start_rejected(shell: AppShell) -> void:
+	await _prepare_start_started(shell)
+	shell.navigate(&"main_menu")
+	shell.navigate(&"new_game")
+	for i: int in 4:
+		await process_frame
+	await _prepare_seating_confirmed(shell)
+	await _press(shell, "StartGameButton")
