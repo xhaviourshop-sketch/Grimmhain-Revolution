@@ -227,6 +227,33 @@ static func secret_day_actions(s: GameState) -> Array:
 	return out
 
 
+## Lesbare Beschreibung eines Befehls im Zustand `before` (vor dem Befehl): Art, betroffene Personen
+## und bei Antworten die Rolle und Stufe des Prompts. Nur für den Spielleiterbereich.
+static func command_info(before: GameState, c: Command) -> Dictionary:
+	var p := c.payload
+	var info := {"type": String(c.type), "role_id": "", "stage": "", "persons": [], "kind": ""}
+	var person := func(key: String) -> void:
+		if p.has(key) and DictRead.is_int_like(p[key]) and before.players.has(int(p[key])):
+			(info["persons"] as Array).append(PromptView.person_label(before, int(p[key])))
+	match c.type:
+		Command.ANSWER_PROMPT, Command.CANCEL_PROMPT, Command.OVERRIDE_SHOWN_ROLE:
+			if before.pending_prompt != null:
+				info["role_id"] = PromptView.role_of(before, before.pending_prompt)
+				info["stage"] = String(before.pending_prompt.stage)
+		Command.BEGIN_STEP, Command.SKIP_STEP:
+			var step := DictRead.get_string(p, "step_id")
+			info["role_id"] = MorningReport._step_role(step)
+		Command.NOMINATE:
+			person.call("nominator_id")
+			person.call("nominee_id")
+		Command.DECIDE_EXECUTION, Command.GM_CORRECTION:
+			person.call("target_id")
+			info["kind"] = DictRead.get_string(p, "kind")
+		Command.AMALIA_SACRIFICE, Command.NAME_WOLF:
+			person.call("player_id")
+	return info
+
+
 static func _skipped_count(s: GameState) -> int:
 	var n := 0
 	for status: StringName in s.night_step_status:

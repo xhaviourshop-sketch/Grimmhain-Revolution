@@ -2701,3 +2701,303 @@ msgstr "Die Partie verschwindet aus der Liste. Die Dateien werden nur umbenannt,
 
 msgid "ui.continue.discard_dialog.confirm"
 msgstr "Verwerfen"
+
+msgid "ui.cockpit.tools.gm"
+msgstr "Spielleitung"
+
+msgid "ui.cockpit.gm.heading"
+msgstr "Spielleitung · Korrekturen und Verlauf"
+
+msgid "ui.cockpit.gm.last_change"
+msgstr "Letzte Korrektur: das hat sich geändert"
+
+msgid "ui.cockpit.gm.history"
+msgstr "Verlauf"
+
+msgid "ui.cockpit.gm.undo"
+msgstr "Rückgängig: {what}"
+
+msgid "ui.cockpit.gm.redo"
+msgstr "Wiederholen: {what}"
+
+msgid "ui.cockpit.gm.corrections"
+msgstr "Korrekturen (mit Begründung, protokolliert)"
+
+msgid "ui.cockpit.gm.start.kill"
+msgstr "Person töten …"
+
+msgid "ui.cockpit.gm.start.revive"
+msgstr "Person wiederbeleben …"
+
+msgid "ui.cockpit.gm.start.set_role"
+msgstr "Rolle ändern …"
+
+msgid "ui.cockpit.gm.start.execute"
+msgstr "Hinrichten ohne Nominierung …"
+
+msgid "ui.cockpit.gm.start.declare_winner"
+msgstr "Sieger erklären …"
+
+msgid "ui.cockpit.gm.game"
+msgstr "Partie"
+
+msgid "ui.cockpit.gm.leave"
+msgstr "Zum Hauptmenü (Partie bleibt gespeichert)"
+
+msgid "ui.cockpit.gm.discard"
+msgstr "Partie beenden und verwerfen …"
+
+msgid "ui.gm.kind.kill"
+msgstr "Person töten"
+
+msgid "ui.gm.kind.execute"
+msgstr "Hinrichten ohne Nominierung"
+
+msgid "ui.gm.kind.revive"
+msgstr "Person wiederbeleben"
+
+msgid "ui.gm.kind.set_role"
+msgstr "Rolle ändern"
+
+msgid "ui.gm.kind.set_role_field"
+msgstr "Erscheinung ändern"
+
+msgid "ui.gm.kind.declare_winner"
+msgstr "Sieger erklären"
+
+msgid "ui.gm.kind.set_protection"
+msgstr "Schutz setzen"
+
+msgid "ui.gm.kind.remove_protection"
+msgstr "Schutz entfernen"
+
+msgid "ui.gm.kind.set_witch_potion"
+msgstr "Trank der Waldhexe ändern"
+
+msgid "ui.gm.kind.set_rescue"
+msgstr "Rettung setzen"
+
+msgid "ui.gm.kind.remove_rescue"
+msgstr "Rettung entfernen"
+
+msgid "ui.gm.kind.set_wolf_model"
+msgstr "Vorbild des Wolfskinds setzen"
+
+msgid "ui.gm.kind.remove_wolf_model"
+msgstr "Vorbild des Wolfskinds entfernen"
+
+msgid "ui.gm.kind.transform_wolf_child"
+msgstr "Wolfskind verwandeln"
+
+msgid "ui.gm.kind.revert_wolf_child"
+msgstr "Verwandlung des Wolfskinds zurücknehmen"
+
+msgid "ui.gm.kind.set_mirror"
+msgstr "Spiegelung ändern"
+
+msgid "ui.gm.kind.set_ever_nominated"
+msgstr "Nominierungsstatus ändern"
+
+msgid "ui.gm.kind.set_apprentice_master"
+msgstr "Meister des Lehrlings setzen"
+
+msgid "ui.gm.kind.remove_apprentice_master"
+msgstr "Meister des Lehrlings entfernen"
+
+msgid "ui.gm.kind.trigger_apprentice_inheritance"
+msgstr "Erbe des Lehrlings auslösen"
+
+msgid "ui.gm.kind.revert_apprentice_inheritance"
+msgstr "Erbe des Lehrlings zurücknehmen"
+
+msgid "ui.cockpit.card.gm.heading"
+msgstr "Korrektur: {kind}"
+
+msgid "ui.cockpit.card.gm.warning"
+msgstr "Hinweis: Eine Korrektur übersteuert den normalen Ablauf. Sie wird mit Begründung protokolliert und lässt sich rückgängig machen."
+
+msgid "ui.cockpit.card.gm.pick_alive"
+msgstr "Tippe die betroffene lebende Person im Sitzkreis an."
+
+msgid "ui.cockpit.card.gm.pick_dead"
+msgstr "Tippe die tote Person an, die zurückkehrt."
+
+msgid "ui.cockpit.card.gm.winner"
+msgstr "Welche Seite gewinnt?"
+
+msgid "ui.cockpit.card.gm.effects.yes"
+msgstr "Mit Todesfolgen (Reaktionen, Erbe, Verwandlung)"
+
+msgid "ui.cockpit.card.gm.effects.no"
+msgstr "Ohne Todesfolgen"
+
+msgid "ui.cockpit.card.gm.new_role"
+msgstr "Neue Rolle: {role}"
+
+msgid "ui.cockpit.card.gm.choose_role"
+msgstr "Rolle wählen …"
+
+msgid "ui.cockpit.card.gm.confirm"
+msgstr "Korrektur prüfen …"
+
+msgid "ui.cockpit.dialog.gm.title"
+msgstr "Spielleiterkorrektur ausführen?"
+
+msgid "ui.cockpit.dialog.gm.message"
+msgstr "{what}: Diese Änderung übersteuert die Regeln und wird mit Begründung protokolliert."
+
+msgid "ui.cockpit.dialog.gm.confirm"
+msgstr "Korrektur ausführen"
+
+msgid "ui.cockpit.dialog.gm_role.title"
+msgstr "Neue Rolle wählen"
+
+msgid "ui.cockpit.dialog.gm_role.message"
+msgstr "Die Person erhält diese Rolle sofort."
+
+msgid "ui.cockpit.dialog.undo.title"
+msgstr "Rückgängig machen?"
+
+msgid "ui.cockpit.dialog.undo.message"
+msgstr "Zurückgenommen wird: {what}. „Wiederholen“ stellt es wieder her."
+
+msgid "ui.cockpit.dialog.undo.confirm"
+msgstr "Rückgängig"
+
+msgid "ui.cockpit.dialog.redo.title"
+msgstr "Wiederholen?"
+
+msgid "ui.cockpit.dialog.redo.message"
+msgstr "Erneut angewendet wird: {what}."
+
+msgid "ui.cockpit.dialog.redo.confirm"
+msgstr "Wiederholen"
+
+msgid "ui.cockpit.dialog.discard.title"
+msgstr "Partie beenden und verwerfen?"
+
+msgid "ui.cockpit.dialog.discard.message"
+msgstr "Die Partie wird geschlossen und aus „Fortsetzen“ entfernt. Die Dateien werden nur umbenannt, nicht gelöscht."
+
+msgid "ui.cockpit.dialog.discard.confirm"
+msgstr "Beenden und verwerfen"
+
+msgid "ui.cockpit.status.corrected"
+msgstr "Korrektur gespeichert. Die Änderung steht unter „Spielleitung“."
+
+msgid "ui.cockpit.status.undone"
+msgstr "Rückgängig gemacht."
+
+msgid "ui.cockpit.status.redone"
+msgstr "Wiederholt."
+
+msgid "ui.gm.command.none"
+msgstr "nichts"
+
+msgid "ui.gm.command.generic"
+msgstr "{type}"
+
+msgid "ui.gm.command.start_night"
+msgstr "Nacht beginnen"
+
+msgid "ui.gm.command.begin_step"
+msgstr "Schritt beginnen: {role}"
+
+msgid "ui.gm.command.skip_step"
+msgstr "Schritt übersprungen: {role}"
+
+msgid "ui.gm.command.answer_prompt"
+msgstr "Antwort im Schritt {role} ({stage})"
+
+msgid "ui.gm.command.cancel_prompt"
+msgstr "Schritt abgebrochen: {role}"
+
+msgid "ui.gm.command.end_night"
+msgstr "Nacht abschließen"
+
+msgid "ui.gm.command.nominate"
+msgstr "Nominierung: {names}"
+
+msgid "ui.gm.command.decide_execution"
+msgstr "Entscheidung zur Hinrichtung: {names}"
+
+msgid "ui.gm.command.end_day"
+msgstr "Tag beenden"
+
+msgid "ui.gm.command.confirm_win"
+msgstr "Siegbestätigung"
+
+msgid "ui.gm.command.reject_win"
+msgstr "Ablehnung eines Siegs"
+
+msgid "ui.gm.command.gm_correction"
+msgstr "Korrektur: {kind} {names}"
+
+msgid "ui.gm.command.override_shown_role"
+msgstr "Gezeigtes Ergebnis geändert: {role}"
+
+msgid "ui.gm.command.amalia_sacrifice"
+msgstr "Selbstopfer Amalias: {names}"
+
+msgid "ui.gm.command.name_wolf"
+msgstr "Nekromant benennt: {names}"
+
+msgid "ui.gm.command.answer_prompt_single"
+msgstr "Antwort im Schritt {role}"
+
+msgid "ui.gm.stage.heal"
+msgstr "Heiltrank"
+
+msgid "ui.gm.stage.reveal"
+msgstr "Kenntnisnahme"
+
+msgid "ui.gm.stage.poison"
+msgstr "Gifttrank"
+
+msgid "ui.gm.stage.poison_target"
+msgstr "Giftziel"
+
+msgid "ui.gm.stage.confirm"
+msgstr "Bestätigung"
+
+msgid "ui.gm.stage.target"
+msgstr "Ziel"
+
+msgid "ui.gm.stage.shown"
+msgstr "Gezeigt"
+
+msgid "ui.gm.stage.candidates"
+msgstr "Kandidaten"
+
+msgid "ui.gm.stage.option"
+msgstr "Wahl"
+
+msgid "ui.gm.stage.targets"
+msgstr "Auswahl"
+
+msgid "ui.gm.stage.use"
+msgstr "Einsatz"
+
+msgid "ui.gm.stage.mode"
+msgstr "Art der Bindung"
+
+msgid "ui.gm.stage.grant"
+msgstr "Zuflucht"
+
+msgid "ui.gm.stage.ally"
+msgstr "Verbündeter"
+
+msgid "ui.gm.stage.wolf"
+msgstr "Wolf"
+
+msgid "ui.gm.stage.role"
+msgstr "Rolle"
+
+msgid "ui.gm.stage.prediction"
+msgstr "Vorhersage"
+
+msgid "ui.gm.stage.redirect"
+msgstr "Umlenkung"
+
+msgid "ui.gm.stage.barrier"
+msgstr "Barriere"

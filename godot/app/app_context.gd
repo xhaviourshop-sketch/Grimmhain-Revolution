@@ -16,6 +16,7 @@ func _init(p_settings: AppSettings = null, p_session: GameSession = null) -> voi
 	setup = PlayerSetup.new()
 	saves = SaveService.new()
 	session.events_applied.connect(_on_events_applied)
+	session.state_replaced.connect(autosave)
 
 
 func _on_events_applied(_events: Array[GameEvent]) -> void:

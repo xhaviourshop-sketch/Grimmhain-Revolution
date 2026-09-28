@@ -2701,3 +2701,303 @@ msgstr "The game disappears from the list. The files are only renamed, not delet
 
 msgid "ui.continue.discard_dialog.confirm"
 msgstr "Discard"
+
+msgid "ui.cockpit.tools.gm"
+msgstr "Game master"
+
+msgid "ui.cockpit.gm.heading"
+msgstr "Game master · corrections and history"
+
+msgid "ui.cockpit.gm.last_change"
+msgstr "Last correction: what changed"
+
+msgid "ui.cockpit.gm.history"
+msgstr "History"
+
+msgid "ui.cockpit.gm.undo"
+msgstr "Undo: {what}"
+
+msgid "ui.cockpit.gm.redo"
+msgstr "Redo: {what}"
+
+msgid "ui.cockpit.gm.corrections"
+msgstr "Corrections (with reason, logged)"
+
+msgid "ui.cockpit.gm.start.kill"
+msgstr "Kill a person …"
+
+msgid "ui.cockpit.gm.start.revive"
+msgstr "Revive a person …"
+
+msgid "ui.cockpit.gm.start.set_role"
+msgstr "Change a role …"
+
+msgid "ui.cockpit.gm.start.execute"
+msgstr "Execute without nomination …"
+
+msgid "ui.cockpit.gm.start.declare_winner"
+msgstr "Declare the winner …"
+
+msgid "ui.cockpit.gm.game"
+msgstr "Game"
+
+msgid "ui.cockpit.gm.leave"
+msgstr "To main menu (game stays saved)"
+
+msgid "ui.cockpit.gm.discard"
+msgstr "End and discard the game …"
+
+msgid "ui.gm.kind.kill"
+msgstr "Kill a person"
+
+msgid "ui.gm.kind.execute"
+msgstr "Execute without nomination"
+
+msgid "ui.gm.kind.revive"
+msgstr "Revive a person"
+
+msgid "ui.gm.kind.set_role"
+msgstr "Change a role"
+
+msgid "ui.gm.kind.set_role_field"
+msgstr "Change appearance"
+
+msgid "ui.gm.kind.declare_winner"
+msgstr "Declare the winner"
+
+msgid "ui.gm.kind.set_protection"
+msgstr "Set protection"
+
+msgid "ui.gm.kind.remove_protection"
+msgstr "Remove protection"
+
+msgid "ui.gm.kind.set_witch_potion"
+msgstr "Change a Forest Witch potion"
+
+msgid "ui.gm.kind.set_rescue"
+msgstr "Set rescue"
+
+msgid "ui.gm.kind.remove_rescue"
+msgstr "Remove rescue"
+
+msgid "ui.gm.kind.set_wolf_model"
+msgstr "Set the Wolf Child’s model"
+
+msgid "ui.gm.kind.remove_wolf_model"
+msgstr "Remove the Wolf Child’s model"
+
+msgid "ui.gm.kind.transform_wolf_child"
+msgstr "Transform the Wolf Child"
+
+msgid "ui.gm.kind.revert_wolf_child"
+msgstr "Revert the Wolf Child’s transformation"
+
+msgid "ui.gm.kind.set_mirror"
+msgstr "Change the mirror"
+
+msgid "ui.gm.kind.set_ever_nominated"
+msgstr "Change nomination status"
+
+msgid "ui.gm.kind.set_apprentice_master"
+msgstr "Set the Apprentice’s master"
+
+msgid "ui.gm.kind.remove_apprentice_master"
+msgstr "Remove the Apprentice’s master"
+
+msgid "ui.gm.kind.trigger_apprentice_inheritance"
+msgstr "Trigger the Apprentice’s inheritance"
+
+msgid "ui.gm.kind.revert_apprentice_inheritance"
+msgstr "Revert the Apprentice’s inheritance"
+
+msgid "ui.cockpit.card.gm.heading"
+msgstr "Correction: {kind}"
+
+msgid "ui.cockpit.card.gm.warning"
+msgstr "Note: A correction overrides the normal flow. It is logged with a reason and can be undone."
+
+msgid "ui.cockpit.card.gm.pick_alive"
+msgstr "Tap the affected living person in the seating circle."
+
+msgid "ui.cockpit.card.gm.pick_dead"
+msgstr "Tap the dead person who returns."
+
+msgid "ui.cockpit.card.gm.winner"
+msgstr "Which side wins?"
+
+msgid "ui.cockpit.card.gm.effects.yes"
+msgstr "With death effects (reactions, inheritance, transformation)"
+
+msgid "ui.cockpit.card.gm.effects.no"
+msgstr "Without death effects"
+
+msgid "ui.cockpit.card.gm.new_role"
+msgstr "New role: {role}"
+
+msgid "ui.cockpit.card.gm.choose_role"
+msgstr "Choose role …"
+
+msgid "ui.cockpit.card.gm.confirm"
+msgstr "Review correction …"
+
+msgid "ui.cockpit.dialog.gm.title"
+msgstr "Apply the game master correction?"
+
+msgid "ui.cockpit.dialog.gm.message"
+msgstr "{what}: This change overrides the rules and is logged with the reason."
+
+msgid "ui.cockpit.dialog.gm.confirm"
+msgstr "Apply correction"
+
+msgid "ui.cockpit.dialog.gm_role.title"
+msgstr "Choose the new role"
+
+msgid "ui.cockpit.dialog.gm_role.message"
+msgstr "The person receives this role immediately."
+
+msgid "ui.cockpit.dialog.undo.title"
+msgstr "Undo?"
+
+msgid "ui.cockpit.dialog.undo.message"
+msgstr "This is taken back: {what}. “Redo” restores it."
+
+msgid "ui.cockpit.dialog.undo.confirm"
+msgstr "Undo"
+
+msgid "ui.cockpit.dialog.redo.title"
+msgstr "Redo?"
+
+msgid "ui.cockpit.dialog.redo.message"
+msgstr "This is applied again: {what}."
+
+msgid "ui.cockpit.dialog.redo.confirm"
+msgstr "Redo"
+
+msgid "ui.cockpit.dialog.discard.title"
+msgstr "End and discard the game?"
+
+msgid "ui.cockpit.dialog.discard.message"
+msgstr "The game is closed and removed from “Continue”. The files are only renamed, not deleted."
+
+msgid "ui.cockpit.dialog.discard.confirm"
+msgstr "End and discard"
+
+msgid "ui.cockpit.status.corrected"
+msgstr "Correction saved. The change is listed under “Game master”."
+
+msgid "ui.cockpit.status.undone"
+msgstr "Undone."
+
+msgid "ui.cockpit.status.redone"
+msgstr "Redone."
+
+msgid "ui.gm.command.none"
+msgstr "nothing"
+
+msgid "ui.gm.command.generic"
+msgstr "{type}"
+
+msgid "ui.gm.command.start_night"
+msgstr "Begin night"
+
+msgid "ui.gm.command.begin_step"
+msgstr "Begin step: {role}"
+
+msgid "ui.gm.command.skip_step"
+msgstr "Step skipped: {role}"
+
+msgid "ui.gm.command.answer_prompt"
+msgstr "Answer in step {role} ({stage})"
+
+msgid "ui.gm.command.cancel_prompt"
+msgstr "Step cancelled: {role}"
+
+msgid "ui.gm.command.end_night"
+msgstr "End night"
+
+msgid "ui.gm.command.nominate"
+msgstr "Nomination: {names}"
+
+msgid "ui.gm.command.decide_execution"
+msgstr "Execution decision: {names}"
+
+msgid "ui.gm.command.end_day"
+msgstr "End day"
+
+msgid "ui.gm.command.confirm_win"
+msgstr "Win confirmation"
+
+msgid "ui.gm.command.reject_win"
+msgstr "Win rejection"
+
+msgid "ui.gm.command.gm_correction"
+msgstr "Correction: {kind} {names}"
+
+msgid "ui.gm.command.override_shown_role"
+msgstr "Shown result changed: {role}"
+
+msgid "ui.gm.command.amalia_sacrifice"
+msgstr "Amalia’s sacrifice: {names}"
+
+msgid "ui.gm.command.name_wolf"
+msgstr "Necromancer names: {names}"
+
+msgid "ui.gm.command.answer_prompt_single"
+msgstr "Answer in step {role}"
+
+msgid "ui.gm.stage.heal"
+msgstr "healing potion"
+
+msgid "ui.gm.stage.reveal"
+msgstr "acknowledgement"
+
+msgid "ui.gm.stage.poison"
+msgstr "poison potion"
+
+msgid "ui.gm.stage.poison_target"
+msgstr "poison target"
+
+msgid "ui.gm.stage.confirm"
+msgstr "confirmation"
+
+msgid "ui.gm.stage.target"
+msgstr "target"
+
+msgid "ui.gm.stage.shown"
+msgstr "shown"
+
+msgid "ui.gm.stage.candidates"
+msgstr "candidates"
+
+msgid "ui.gm.stage.option"
+msgstr "choice"
+
+msgid "ui.gm.stage.targets"
+msgstr "selection"
+
+msgid "ui.gm.stage.use"
+msgstr "use"
+
+msgid "ui.gm.stage.mode"
+msgstr "kind of bond"
+
+msgid "ui.gm.stage.grant"
+msgstr "refuge"
+
+msgid "ui.gm.stage.ally"
+msgstr "ally"
+
+msgid "ui.gm.stage.wolf"
+msgstr "wolf"
+
+msgid "ui.gm.stage.role"
+msgstr "role"
+
+msgid "ui.gm.stage.prediction"
+msgstr "prediction"
+
+msgid "ui.gm.stage.redirect"
+msgstr "redirect"
+
+msgid "ui.gm.stage.barrier"
+msgstr "barrier"

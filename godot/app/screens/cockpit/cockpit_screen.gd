@@ -31,6 +31,11 @@ var _necromancer: int = -1
 var _preview: Dictionary = {}
 var _exec_extra: Dictionary = {}
 var _check_revealed: bool = false
+var _gm_execute: bool = false  ## Prüfkarte gehört zu einer Hinrichtung ohne Nominierung (Korrektur)
+## Geführte Korrektur: "" | kill | revive | set_role | execute | declare_winner
+var _gm_mode: String = ""
+var _gm_effects: Variant = null
+var _gm_role: String = ""
 
 @onready var _layout: Control = %Layout
 @onready var _badge: Control = %NoGameBadge
@@ -59,6 +64,7 @@ func _setup() -> void:
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
 	(%PrivateButton as GrimmButton).pressed.connect(open_layer.bind(&"private"))
 	(%CoverButton as GrimmButton).pressed.connect(cover)
+	(%GmButton as GrimmButton).pressed.connect(open_layer.bind(&"gm"))
 	_refresh()
 
 
@@ -94,7 +100,7 @@ func _refresh() -> void:
 	_view = context.session.cockpit_view()
 	var active := bool(_view.get("has_game", false))
 	_badge.visible = not active
-	for tool: String in ["LogButton", "PrivateButton", "CoverButton"]:
+	for tool: String in ["LogButton", "PrivateButton", "GmButton", "CoverButton"]:
 		(find_child(tool, true, false) as BaseButton).disabled = not active
 	var next: Dictionary = _view.get("next", {})
 	var identity := _identity(next)
@@ -164,11 +170,17 @@ func _render() -> void:
 		_ring.clear_marking()
 		return
 	var kind := str(next.get("kind"))
-	if kind == "day" and _morning_pending():
+	if _gm_mode != "":
+		next = {"kind": "gm", "secret": false}
+		kind = "gm"
+		_mark_gm_mode()
+	elif kind == "day" and _morning_pending():
 		next = {"kind": "morning", "secret": false, "public": context.session.morning_report().get("public", {}),
 			"night_number": int(_view.get("night_number", 0))}
 		kind = "morning"
-	if kind == "day" and _day_mode != "":
+	if kind == "gm":
+		pass
+	elif kind == "day" and _day_mode != "":
 		_mark_day_mode(next)
 	elif kind == "prompt" and str(next.get("answer")) == "targets" and visible_secret:
 		_ring.set_marking(true, next.get("allowed_ids", []), _selection, next.get("actor_ids", []))
@@ -181,6 +193,7 @@ func _render() -> void:
 		"revealed": _check_revealed if _day_mode == "execution_check" else _revealed_id == _next_id,
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
+		"gm_mode": _gm_mode, "gm_effects": _gm_effects, "gm_role": _gm_role,
 		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
 		"preview": _preview, "exec_extra": _exec_extra, "day_deaths": context.session.day_deaths() if bool(_view.get("has_game")) else [],
 	})
@@ -201,6 +214,21 @@ func _mark_day_mode(next: Dictionary) -> void:
 			_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != _necromancer), _selection, [])
 		"execution_check":
 			_ring.set_marking(false, [], [], [])
+
+
+func _mark_gm_mode() -> void:
+	var ids: Array = []
+	for seat: Dictionary in _view.get("seats", []):
+		if bool(seat["alive"]) != (_gm_mode == "revive"):
+			ids.append(int(seat["person_id"]))
+	_ring.set_marking(_gm_mode != "declare_winner", ids, _selection, [])
+
+
+func _reset_gm_mode() -> void:
+	_gm_mode = ""
+	_gm_effects = null
+	_gm_role = ""
+	_gm_execute = false
 
 
 func _reset_day_mode() -> void:
@@ -241,6 +269,10 @@ func _update_side_width() -> void:
 
 func _on_seat_tapped(person_id: int) -> void:
 	var next: Dictionary = _view.get("next", {})
+	if _gm_mode != "" and _gm_mode != "declare_winner":
+		_selection = [] if _selection.has(person_id) else [person_id]
+		_render()
+		return
 	if str(next.get("kind")) == "day" and _day_mode != "":
 		match _day_mode:
 			"nominate_from":
@@ -285,7 +317,17 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_render()
 		&"cancel_mode":
 			_reset_day_mode()
+			_reset_gm_mode()
 			_render()
+		&"gm_effects":
+			_gm_effects = bool(payload["value"])
+			_render()
+		&"gm_choose_role":
+			_ask_gm_role()
+		&"gm_winner":
+			_ask_correction({"kind": "declare_winner", "winner_kind": str(payload["kind"])})
+		&"gm_confirm":
+			_confirm_gm_mode()
 		&"confirm_nomination":
 			var nominee := int(_selection[0])
 			var from := _nominator
@@ -300,6 +342,12 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"exec_extra":
 			_exec_extra[str(payload["field"])] = payload["value"]
 			_render()
+		&"confirm_execution" when _gm_execute:
+			var payload_gm := {"kind": "execute", "target_id": int(_preview.get("target_id", -1))}
+			payload_gm.merge(_exec_extra)
+			_reset_day_mode()
+			_reset_gm_mode()
+			_ask_correction(payload_gm)
 		&"confirm_execution":
 			var target := int(_preview.get("target_id", -1))
 			var extra := _exec_extra.duplicate()
@@ -415,6 +463,12 @@ func open_layer(kind: StringName) -> void:
 	match kind:
 		&"private":
 			_layer = CockpitLayers.private_drawer(context.session.private_seats(), context.session.secret_day_actions())
+		&"gm":
+			var undo := context.session.undo_info()
+			_layer = CockpitLayers.gm_drawer({"undo": undo, "redo": context.session.redo_info(),
+				"day": str((_view.get("next", {}) as Dictionary).get("kind")) == "day",
+				"last_change": context.session.last_command_events().filter(func(e: Dictionary) -> bool: return str(e["type"]) != "PromptCancelled")
+					if str(undo.get("type", "")) == "GmCorrection" else []}, _view.get("seats", []))
 		&"log":
 			_layer = CockpitLayers.log_drawer(context.session.event_log(), _view.get("seats", []))
 		&"show":
@@ -434,8 +488,114 @@ func open_layer(kind: StringName) -> void:
 	if close != null:
 		close.pressed.connect(close_layer)
 		close.grab_focus()
+	for b: Node in _layer.find_children("GmKind_*", "BaseButton", true, false):
+		(b as BaseButton).pressed.connect(_start_gm_mode.bind(str(b.get_meta("gm_kind"))))
+	for pair: Array in [["UndoButton", _ask_undo], ["RedoButton", _ask_redo], ["LeaveGameButton", _leave_game], ["DiscardGameButton", _ask_discard_game]]:
+		var node := _layer.find_child(pair[0], true, false) as BaseButton
+		if node != null:
+			node.pressed.connect(pair[1])
 	for b: Node in _layer.find_children("SecretAction_*", "BaseButton", true, false):
 		(b as BaseButton).pressed.connect(_on_secret_action.bind(str(b.get_meta("action")), int(b.get_meta("player_id"))))
+
+
+# --- Spielleitung: Korrekturen, Rückgängig, Partie beenden ---------------------------------------
+
+func _start_gm_mode(kind: String) -> void:
+	close_layer()
+	_reset_day_mode()
+	_reset_gm_mode()
+	if kind == "execute":
+		# Hinrichtung ohne Nominierung: jede lebende Person, dann dieselbe Prüfkarte wie am Tag.
+		_gm_execute = true
+	_gm_mode = kind
+	_render()
+
+
+func _confirm_gm_mode() -> void:
+	var target := int(_selection[0]) if not _selection.is_empty() else -1
+	match _gm_mode:
+		"kill":
+			_ask_correction({"kind": "kill", "target_id": target, "trigger_effects": bool(_gm_effects)})
+		"revive":
+			_ask_correction({"kind": "revive", "target_id": target})
+		"set_role":
+			_ask_correction({"kind": "set_role", "target_id": target, "role_id": _gm_role})
+		"execute":
+			_gm_mode = ""
+			_preview = context.session.execution_preview(target)
+			_day_mode = "execution_check"
+			_check_revealed = true  # die Spielleitung hat die Korrektur bewusst geöffnet
+			_render()
+
+
+func _ask_gm_role() -> void:
+	var request := DialogRequest.create("ui.cockpit.dialog.gm_role.title", "ui.cockpit.dialog.gm_role.message", "")
+	for role: StringName in RolePresentation.sorted_roles():
+		var option := DialogOption.new()
+		option.node_name = "Role_%s" % CockpitText.key_part(String(role))
+		option.text_key = RolePresentation.name_key(role)
+		option.on_select = func() -> void:
+			_gm_role = String(role)
+			_render()
+		request.options.append(option)
+	dialog_requested.emit(request)
+
+
+## Warnung mit Pflichtbegründung; erst dann geht die Korrektur an den Regelkern. Danach zeigt die
+## Ebene „Spielleitung“, was sich geändert hat.
+func _ask_correction(payload: Dictionary) -> void:
+	var request := DialogRequest.with_input("ui.cockpit.dialog.gm.title", "ui.cockpit.dialog.gm.message", "ui.cockpit.dialog.gm.confirm",
+		"ui.cockpit.dialog.reason_placeholder", func(reason: String) -> void:
+			var p := payload.duplicate()
+			p["reason"] = reason
+			_reset_gm_mode()
+			_reset_day_mode()
+			_card.lock()
+			var result := context.session.gm_correction(p)
+			if result.ok:
+				status_message_requested.emit("ui.cockpit.status.corrected")
+				open_layer(&"gm")
+			else:
+				_render(), true)
+	request.message_values = {"what": StringName("ui.gm.kind.%s" % str(payload["kind"]))}
+	dialog_requested.emit(request)
+
+
+func _ask_undo() -> void:
+	var label := CockpitText.command_label(context.session.undo_info())
+	var r := DialogRequest.create("ui.cockpit.dialog.undo.title", "ui.cockpit.dialog.undo.message", "ui.cockpit.dialog.undo.confirm", func() -> void:
+		close_layer()
+		if context.session.undo():
+			status_message_requested.emit("ui.cockpit.status.undone"))
+	r.message_values = {"what": CockpitLayers._format(label)}
+	close_layer()
+	dialog_requested.emit(r)
+
+
+func _ask_redo() -> void:
+	var label := CockpitText.command_label(context.session.redo_info())
+	var r := DialogRequest.create("ui.cockpit.dialog.redo.title", "ui.cockpit.dialog.redo.message", "ui.cockpit.dialog.redo.confirm", func() -> void:
+		if context.session.redo():
+			status_message_requested.emit("ui.cockpit.status.redone"))
+	r.message_values = {"what": CockpitLayers._format(label)}
+	close_layer()
+	dialog_requested.emit(r)
+
+
+func _leave_game() -> void:
+	close_layer()
+	navigate_requested.emit(ScreenIds.MAIN_MENU)
+
+
+## Beenden und verwerfen: Rückfrage (rot); die Dateien werden nur umbenannt, die Sitzung geleert.
+func _ask_discard_game() -> void:
+	close_layer()
+	dialog_requested.emit(DialogRequest.create("ui.cockpit.dialog.discard.title", "ui.cockpit.dialog.discard.message", "ui.cockpit.dialog.discard.confirm",
+		func() -> void:
+			context.saves.discard(context.session.round_id())
+			context.session.reset()
+			status_message_requested.emit("ui.continue.status.discarded")
+			navigate_requested.emit(ScreenIds.MAIN_MENU), true))
 
 
 ## Geheime Tagesaktionen aus dem privaten Bereich (Amalia, Nekromant). Der Bereich schließt zuerst.

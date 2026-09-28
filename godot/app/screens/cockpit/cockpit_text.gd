@@ -112,6 +112,27 @@ static func spoken_names(people: Array) -> String:
 	return ", ".join(names)
 
 
+## Beschreibung eines Befehls (CockpitView.command_info) als {key, values} für Rückgängig/Wiederholen.
+static func command_label(info: Dictionary) -> Dictionary:
+	if info.is_empty():
+		return {"key": "ui.gm.command.none", "values": {}}
+	var type := str(info["type"])
+	var snake := ""
+	for i: int in type.length():
+		var ch := type[i]
+		snake += ("_" if i > 0 and ch == ch.to_upper() and ch != ch.to_lower() else "") + ch.to_lower()
+	var names: Array = []
+	for p: Dictionary in info.get("persons", []):
+		names.append(person(p))
+	if snake == "answer_prompt" and str(info.get("stage", "")) == "":
+		snake = "answer_prompt_single"
+	var key := "ui.gm.command.%s" % snake
+	return {"key": key if has_key(key) else "ui.gm.command.generic", "values": {
+		"type": type, "role": role_name(str(info["role_id"])) if str(info.get("role_id", "")) != "" else "",
+		"stage": StringName("ui.gm.stage.%s" % str(info["stage"])) if has_key("ui.gm.stage.%s" % str(info.get("stage", ""))) else str(info.get("stage", "")), "names": ", ".join(names) if not names.is_empty() else "–",
+		"kind": StringName("ui.gm.kind.%s" % str(info["kind"])) if str(info.get("kind", "")) != "" else ""}}
+
+
 ## Personen-IDs als „3 · Anna, 5 · Ben“ aus den öffentlichen Sitzdaten.
 static func names_of(ids: Array, seats: Array) -> String:
 	var names: Array = []

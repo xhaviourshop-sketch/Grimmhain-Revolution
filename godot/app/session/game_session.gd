@@ -10,10 +10,12 @@ extends RefCounted
 signal events_applied(events: Array[GameEvent])  ## nach jedem angenommenen Befehl
 signal command_rejected(error: StringName)        ## Befehl abgelehnt, Zustand unverändert
 signal view_changed(view: Dictionary)             ## neue Sicht nach Annahme, Laden oder Reset
+signal state_replaced                             ## Zustand durch Rückgängig/Wiederholen ersetzt (danach speichern)
 
 var _state: GameState = GameState.new()
 var _commands: Array[Command] = []
 var _events: Array[GameEvent] = []
+var _redo: Array[Command] = []  ## zurückgenommene Befehle, letzter zuerst wiederholbar
 
 
 ## Reicht den Befehl an den Regelkern weiter und übernimmt bei Annahme den neuen Zustand.
@@ -25,6 +27,7 @@ func submit(command: Command) -> CommandResult:
 	_state = result.state
 	_commands.append(command)
 	_events.append_array(result.events)
+	_redo.clear()  # ein neuer Befehl verwirft zurückgenommene
 	events_applied.emit(result.events)
 	view_changed.emit(view())
 	return result
@@ -95,6 +98,7 @@ func load_text(text: String) -> StringName:
 	_state = loaded.state
 	_commands = loaded.commands.duplicate()
 	_events = loaded.events.duplicate()
+	_redo.clear()
 	view_changed.emit(view())
 	return &""
 
@@ -121,7 +125,79 @@ func reset() -> void:
 	_state = GameState.new()
 	_commands.clear()
 	_events.clear()
+	_redo.clear()
 	view_changed.emit(view())
+
+
+# --- Rückgängig und Wiederholen -------------------------------------------------------------------
+# Grundlage ist die Befehlsfolge: Rückgängig spielt alle Befehle bis auf den letzten erneut ab
+# (RulesEngine.replay, deterministisch über den gespeicherten Seed); Wiederholen wendet den
+# zurückgenommenen Befehl erneut über den Regelkern an. Genau ein Befehl je Schritt (Vertical
+# Slice §10); StartGame ist nicht rücknehmbar. Keine eigene Regel, kein Sonderzustand.
+
+func can_undo() -> bool:
+	return _commands.size() > 1
+
+
+func can_redo() -> bool:
+	return not _redo.is_empty()
+
+
+func undo() -> bool:
+	if not can_undo():
+		return false
+	var prefix: Array[Command] = _commands.slice(0, _commands.size() - 1)
+	var replayed := RulesEngine.replay(prefix)
+	if not replayed.ok:
+		return false  # kann bei einer angenommenen Befehlsfolge nicht eintreten; dann nichts ändern
+	_redo.append(_commands.back())
+	_state = replayed.state
+	_commands = prefix
+	_events = replayed.events
+	view_changed.emit(view())
+	state_replaced.emit()
+	return true
+
+
+func redo() -> bool:
+	if _redo.is_empty():
+		return false
+	var command: Command = _redo.back()
+	var result := RulesEngine.apply(_state, command)
+	if not result.ok:
+		_redo.clear()
+		command_rejected.emit(result.error)
+		return false
+	_redo.pop_back()
+	_state = result.state
+	_commands.append(command)
+	_events.append_array(result.events)
+	view_changed.emit(view())
+	state_replaced.emit()
+	return true
+
+
+## Beschreibung des Befehls, den Rückgängig zurücknähme (nur für den Spielleiterbereich).
+func undo_info() -> Dictionary:
+	if not can_undo():
+		return {}
+	var prefix: Array[Command] = _commands.slice(0, _commands.size() - 1)
+	return CockpitView.command_info(RulesEngine.replay(prefix).state, _commands.back())
+
+
+## Beschreibung des Befehls, den Wiederholen erneut anwendete.
+func redo_info() -> Dictionary:
+	return CockpitView.command_info(_state, _redo.back()) if can_redo() else {}
+
+
+## Ereignisse des letzten angenommenen Befehls (für die Anzeige „Was hat sich geändert“).
+func last_command_events() -> Array:
+	var out: Array = []
+	var last := _commands.size() - 1
+	for e: GameEvent in _events:
+		if e.command_index == last:
+			out.append(e.to_dict())
+	return out
 
 
 # --- Befehlsbausteine für die Oberfläche --------------------------------------------------------

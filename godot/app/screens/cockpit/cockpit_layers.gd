@@ -146,6 +146,44 @@ static func morning_drawer(report: Dictionary, seats: Array) -> Control:
 	return drawer
 
 
+## Spielleitung: Rückgängig/Wiederholen mit Klartext, Korrekturen, Partie verlassen oder verwerfen,
+## Änderungen der letzten Korrektur. `options`: {undo, redo, day (bool), last_change (Ereignisse)}.
+static func gm_drawer(options: Dictionary, seats: Array) -> Control:
+	var drawer := _drawer("GmLayer", "ui.cockpit.gm.heading")
+	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer
+	_label(list, "ui.cockpit.private.warning", {}, &"WarningLabel")
+	var change: Array = options.get("last_change", [])
+	if not change.is_empty():
+		_label(list, "ui.cockpit.gm.last_change", {}, &"CaptionLabel")
+		for e: Dictionary in change:
+			_label(list, "ui.morning.private.other", {"type": str(e["type"]), "details": _details(e.get("data", {}), seats)}, &"SectionLabel")
+	_label(list, "ui.cockpit.gm.history", {}, &"CaptionLabel")
+	for pair: Array in [["UndoButton", "undo", "ui.cockpit.gm.undo"], ["RedoButton", "redo", "ui.cockpit.gm.redo"]]:
+		var label := CockpitText.command_label(options.get(pair[1], {}))
+		var b := _button(pair[0], pair[2], GrimmButton.Kind.SECONDARY)
+		b.format_values = {"what": _format(label)}
+		b.disabled = (options.get(pair[1], {}) as Dictionary).is_empty()
+		list.add_child(b)
+	_label(list, "ui.cockpit.gm.corrections", {}, &"CaptionLabel")
+	var kinds: Array = ["kill", "revive", "set_role", "declare_winner"]
+	if bool(options.get("day", false)):
+		kinds.insert(3, "execute")
+	for kind: String in kinds:
+		var b := _button("GmKind_%s" % kind, "ui.cockpit.gm.start.%s" % kind, GrimmButton.Kind.SECONDARY)
+		b.set_meta("gm_kind", kind)
+		list.add_child(b)
+	_label(list, "ui.cockpit.gm.game", {}, &"CaptionLabel")
+	list.add_child(_button("LeaveGameButton", "ui.cockpit.gm.leave", GrimmButton.Kind.SECONDARY))
+	list.add_child(_button("DiscardGameButton", "ui.cockpit.gm.discard", GrimmButton.Kind.DANGER))
+	return drawer
+
+
+## Text einer Beschreibung {key, values} (für Platzhalter in Buttons; Rollen übersetzt).
+static func _format(label: Dictionary) -> String:
+	var values := GrimmLabel.translated_values(Engine.get_main_loop().root, label["values"])
+	return TranslationServer.translate(str(label["key"])).format(values)
+
+
 static func cover_panel() -> Control:
 	var root := _full_rect("CoverLayer")
 	var panel := PanelContainer.new()

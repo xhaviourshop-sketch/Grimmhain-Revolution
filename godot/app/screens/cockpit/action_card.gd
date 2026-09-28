@@ -46,6 +46,8 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_end_night(next)
 		"morning":
 			_morning(next)
+		"gm":
+			_gm(context)
 		"day":
 			_day(next, context)
 		"end_day":
@@ -311,6 +313,44 @@ func _execution_check(context: Dictionary) -> void:
 				b.kind = GrimmButton.Kind.PRIMARY
 			buttons.append(b)
 	var confirm := _button("ConfirmExecutionButton", "ui.cockpit.action.confirm_execution", GrimmButton.Kind.PRIMARY, &"confirm_execution")
+	confirm.disabled = not ready
+	buttons.append(confirm)
+	buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))
+	_actions(buttons)
+
+
+## Geführte Spielleiterkorrektur: Person wählen, Pflichtangaben, dann Rückfrage mit Begründung.
+func _gm(context: Dictionary) -> void:
+	var mode := str(context.get("gm_mode", ""))
+	_heading("ui.cockpit.card.gm.heading", {"kind": StringName("ui.gm.kind.%s" % mode)})
+	_text("ui.cockpit.card.gm.warning", {}, &"WarningLabel")
+	var buttons: Array[Control] = []
+	if mode == "declare_winner":
+		_text("ui.cockpit.card.gm.winner", {}, &"MutedLabel")
+		for kind: String in ["village", "wolves", "solo", "none"]:
+			buttons.append(_button("GmWinner_%s" % kind, "ui.cockpit.win.kind.%s" % kind, GrimmButton.Kind.SECONDARY, &"gm_winner", {"kind": kind}))
+		buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))
+		_actions(buttons)
+		return
+	_text("ui.cockpit.card.gm.pick_dead" if mode == "revive" else "ui.cockpit.card.gm.pick_alive", {}, &"MutedLabel")
+	var selection: Array = context.get("selection", [])
+	if not selection.is_empty():
+		_text("ui.cockpit.card.selection.some", {"names": CockpitText.names_of(selection, context.get("seats", []))}, &"SectionLabel")
+	var ready := not selection.is_empty()
+	if mode == "kill":
+		var effects: Variant = context.get("gm_effects")
+		for choice: bool in [true, false]:
+			var b := _button("GmEffects%s" % ("Yes" if choice else "No"), "ui.cockpit.card.gm.effects.%s" % ("yes" if choice else "no"),
+				GrimmButton.Kind.PRIMARY if effects is bool and effects == choice else GrimmButton.Kind.SECONDARY, &"gm_effects", {"value": choice})
+			buttons.append(b)
+		ready = ready and effects is bool
+	if mode == "set_role":
+		var role := str(context.get("gm_role", ""))
+		if role != "":
+			_text("ui.cockpit.card.gm.new_role", {"role": CockpitText.role_name(role)}, &"SectionLabel")
+		buttons.append(_button("GmChooseRoleButton", "ui.cockpit.card.gm.choose_role", GrimmButton.Kind.SECONDARY, &"gm_choose_role"))
+		ready = ready and role != ""
+	var confirm := _button("GmConfirmButton", "ui.cockpit.card.gm.confirm", GrimmButton.Kind.DANGER, &"gm_confirm")
 	confirm.disabled = not ready
 	buttons.append(confirm)
 	buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))

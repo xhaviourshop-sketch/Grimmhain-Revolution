@@ -15,7 +15,7 @@ Erreichbar: Hauptmenü → „Neue Partie“ → Setup bis „Partie starten“,
 | Hinweiszeile | offene Reaktionen, übersprungene Schritte, niemand lebt (ohne Rollen) |
 | Sitzkreis | Plätze der Partie im Uhrzeigersinn: Platznummer, Name, „†“ für Tote, „(N)“ für heute Nominierte. Nie eine Rolle. Bei 13 bis 24 Personen kompakte Plätze (48 px hoch, 96 bis 120 px breit) |
 | Ansagekarte | nächste Handlung aus dem Regelkern: Kontext, „Sag jetzt“ (Vorlesetext), „Tu jetzt“ (Anweisung), Auswahl, Aktionen |
-| Werkzeuge | Protokoll, Rollen (privater Bereich), Verbergen (Sichtschutz); ohne Partie deaktiviert |
+| Werkzeuge | Protokoll, Rollen (privater Bereich), Spielleitung (Korrekturen, Rückgängig, Partie beenden), Verbergen (Sichtschutz); ohne Partie deaktiviert |
 
 ## Geheimhaltung
 
@@ -53,6 +53,16 @@ Mehrfachtippen: Jede Aktion sperrt die Karte bis zur neuen Sicht; Tippen auf ein
 | `app/widgets/seat_ring/` | Sitzkreis des Cockpits (Anordnung aus `SeatCircle.layout`) |
 
 Texte: `ui.call.<rolle>` (Vorlesetext), `ui.prompt.<besitzer>.<stufe>` (Anweisung), `ui.cockpit.action.<aktion>.<besitzer>.<stufe>` (rollenspezifische Beschriftung, etwa Loki „Liebende“/„Rivalen“), `ui.prompt.reaction.<art>`, `ui.morning.*`, `ui.cause.*` (nur privat). Alle Nachtrollen haben eigene Vorlesetexte und Anweisungen; `test_prompt_coverage` prüft das.
+
+## Spielleitung: Korrekturen, Rückgängig, Partie beenden
+
+Werkzeug „Spielleitung“ öffnet eine private Ebene:
+
+- **Verlauf:** „Rückgängig: …“ und „Wiederholen: …“ mit Klartext des Befehls (etwa „Antwort im Schritt Waldhexe (Heiltrank)“) und Rückfrage. Grundlage ist die gespeicherte Befehlsfolge: Rückgängig spielt alle Befehle bis auf den letzten erneut ab (deterministisches Replay), Wiederholen wendet den zurückgenommenen Befehl erneut über den Regelkern an. Genau ein Befehl je Schritt, wie in Vertical Slice §10 festgelegt; mehrstufige Aktionen gehen Stufe für Stufe zurück. `StartGame` ist nicht rücknehmbar, ein neuer Befehl verwirft Wiederholbares, nach Rückgängig/Wiederholen wird gespeichert, und Rückgängig funktioniert auch nach einem Neustart.
+- **Korrekturen:** Person töten (mit oder ohne Todesfolgen, Pflichtwahl), Person wiederbeleben, Rolle ändern, Hinrichten ohne Nominierung (nur während der Tagesaktionen, mit derselben Prüfkarte wie die normale Hinrichtung) und Sieger erklären. Ablauf: Art wählen → Person im Sitzkreis → Pflichtangaben → Warnung mit Pflichtbegründung → Befehl `GmCorrection`. Danach zeigt die Ebene „Letzte Korrektur: das hat sich geändert“ mit den Ereignissen dieses Befehls; das Protokoll enthält Begründung, alten und neuen Wert.
+- **Partie:** „Zum Hauptmenü“ (Partie bleibt gespeichert) und „Partie beenden und verwerfen …“ (rote Rückfrage; Dateien werden nur umbenannt).
+
+Weitere Korrekturarten des Regelkerns (Erscheinung, Schutz, Rettung, Trank der Waldhexe, Wolfskind, Lehrling, Spiegelung, Nominierungsstatus) haben noch keine eigene Oberfläche; ihre Wirkung lässt sich bis dahin nur über die vorhandenen Arten oder Rückgängig erreichen.
 
 ## Setup-Option „Rolle beim Tod öffentlich aufdecken“
 
@@ -156,5 +166,7 @@ Offene Abhängigkeiten, die nicht als fertig gelten:
 | `test_morning_report` | Positivliste, private Ursachen und Rettungen, Rollenaufdeckung |
 | `test_cockpit_day` | Nominierung, Hinrichtung mit Prüfkarte, Spiegelwolf, Weiser, Amalia, Nekromant, keine Hinrichtung, Sieg |
 | `test_full_round_ui` | vollständige Partie nur über Buttons bis zum bestätigten Sieg |
+| `test_undo` | Rückgängig = Replay der verkürzten Folge, Wiederholen gleicher Hash, mehrstufige Prompts, bestätigter Sieg, Speichern |
+| `test_cockpit_gm` | Korrekturen mit Warnung, Begründung, Protokoll und Änderungsanzeige, Rückgängig/Wiederholen mit Klartext, Hinrichtung ohne Nominierung, Sieger erklären, Verwerfen |
 
 Nicht geprüft: Darstellung auf echten Geräten, Schriftbild, Touch-Treffsicherheit, Lesbarkeit im Dunkeln, Übergänge. Diese Abnahme erfolgt gemeinsam am Tablet.
