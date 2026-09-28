@@ -359,3 +359,70 @@ func after_each_shell(shell: Control) -> void:
 	_spawned.erase(shell)
 	shell.get_parent().remove_child(shell)
 	shell.free()
+
+
+# --- Morgenbericht ------------------------------------------------------------------------------------
+
+## Nacht über die Anwendungsschicht: Schutz 7, Rudel reißt 7 (gerettet), Waldhexe vergiftet 5 (Orakel).
+func _night_with_poison(shell: Control) -> void:
+	var s := session_of(shell)
+	s.call("start_night")
+	s.call("answer_targets", [7])
+	s.call("begin_next_step")
+	s.call("answer_targets", [7])
+	s.call("begin_next_step")
+	s.call("answer_choice", false)
+	s.call("answer_choice", true)
+	s.call("answer_targets", [5])
+	s.call("answer_choice", true)
+	s.call("begin_next_step")
+	s.call("answer_targets", [1])
+	s.call("answer_choice", true)
+	s.call("end_night")
+	await frames(3)
+
+
+func test_morning_report_public_and_private_parts() -> void:
+	var shell := await _cockpit()
+	if shell == null:
+		return
+	await _night_with_poison(shell)
+	var screen := _screen(shell)
+	assert_eq(str((session_of(shell).call("view") as Dictionary)["phase"]), "DAY", "Tag")
+	assert_true(find_button(screen, "ContinueDayButton").is_visible_in_tree(), "Morgenbericht vor den Tagesaktionen")
+	var texts := _visible_texts(shell)
+	assert_true(texts.contains("In dieser Nacht ist gestorben: E."), "Vorlesetext nennt die Tote: %s" % texts)
+	_assert_no_roles(shell, "Morgenkarte")
+	assert_false(texts.contains("Gift"), "keine Ursache in der Karte")
+	await _press(shell, "ShowAnnouncementButton")
+	assert_true(find_node(screen, "AnnouncementLayer") != null, "Ansagekarte offen")
+	assert_false((find_node(screen, "Layout") as Control).is_visible_in_tree(), "Cockpit ersetzt")
+	_assert_no_roles(shell, "Ansagekarte")
+	assert_false(_visible_texts(shell).contains("Gift"), "Ansagekarte ohne Ursache")
+	assert_false(_visible_texts(shell).contains("gerettet"), "Ansagekarte ohne Rettung")
+	await _press(shell, "CloseLayerButton")
+	await frames(2)
+	await _press(shell, "MorningDetailsButton")
+	var details := _visible_texts(shell)
+	assert_true(details.contains("Gifttrank der Waldhexe"), "private Ursache: %s" % details)
+	assert_true(details.contains("wurde gerettet durch: Schutzengel"), "private Rettung")
+	await _press(shell, "CloseLayerButton")
+	await frames(2)
+	assert_true(find_node(screen, "MorningLayer") == null, "private Details entfernt")
+	await _press(shell, "ContinueDayButton")
+	assert_true(find_node(screen, "ContinueDayButton") == null, "Tagesaktionen nach dem Morgenbericht")
+
+
+func test_morning_report_reveals_role_only_with_setup_option() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var cmd := _start_command(ROLES, SEATS)
+	var payload := cmd.payload.duplicate(true)
+	payload["reveal_role_on_death"] = true
+	assert_true((session_of(shell).call("submit", Command.start_game(payload)) as CommandResult).ok, "Start mit Option")
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	await _night_with_poison(shell)
+	assert_true(_visible_texts(shell).contains("E (Das Orakel)"), "Rolle der Toten öffentlich: %s" % _visible_texts(shell))
+	_assert_no_roles(shell, "nur die Rolle der Toten", ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "sensentraeger"])

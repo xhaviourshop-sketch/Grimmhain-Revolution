@@ -2272,3 +2272,192 @@ msgstr "The Demonic Wolf curses someone as they die. Tap the person or “Declin
 
 msgid "ui.prompt.info.lights"
 msgstr "Lights"
+
+msgid "ui.cockpit.group.reaction"
+msgstr "Reaction"
+
+msgid "ui.cockpit.card.morning.caption"
+msgstr "Morning after night {number}"
+
+msgid "ui.cockpit.card.morning.heading"
+msgstr "Morning report"
+
+msgid "ui.cockpit.action.continue_day"
+msgstr "Continue to the day"
+
+msgid "ui.cockpit.action.show_announcement"
+msgstr "Show announcement card"
+
+msgid "ui.cockpit.action.morning_details"
+msgstr "Private details …"
+
+msgid "ui.cockpit.announcement.heading"
+msgstr "Morning after night {number}"
+
+msgid "ui.cockpit.morning.heading"
+msgstr "Morning report · game master only"
+
+msgid "ui.morning.read.intro"
+msgstr "“The sun rises. The village wakes up.”"
+
+msgid "ui.morning.read.nobody"
+msgstr "“Nobody died this night.”"
+
+msgid "ui.morning.read.deaths_one"
+msgstr "“This night, one person died: {names}.”"
+
+msgid "ui.morning.read.deaths_many"
+msgstr "“This night, these people died: {names}.”"
+
+msgid "ui.morning.read.revived"
+msgstr "“Back among the living: {names}.”"
+
+msgid "ui.morning.name_with_role"
+msgstr "{name} ({role})"
+
+msgid "ui.morning.notice.detective"
+msgstr "“A clue: from {name}’s seat, the nearest wolf is {direction}.”"
+
+msgid "ui.morning.notice.ghost"
+msgstr "“A guardian spirit touched a wolf this night.”"
+
+msgid "ui.morning.notice.frozen"
+msgstr "“Time stood still this night.”"
+
+msgid "ui.morning.notice.bells"
+msgstr "“The night watchman’s bells are ringing.”"
+
+msgid "ui.morning.notice.judge"
+msgstr "“{name} counts as nominated today.”"
+
+msgid "ui.morning.private.death"
+msgstr "{name} died: {cause}. Role: {role}."
+
+msgid "ui.morning.private.saved"
+msgstr "{name} was saved by: {role}."
+
+msgid "ui.morning.private.no_attack"
+msgstr "The pack attacked nobody."
+
+msgid "ui.morning.private.step_skipped"
+msgstr "Skipped: {role}. Reason: {reason}"
+
+msgid "ui.morning.private.step_dropped"
+msgstr "Dropped: {role} ({drop})."
+
+msgid "ui.morning.private.reaction.declined"
+msgstr "{name}: reaction without target (declined)."
+
+msgid "ui.morning.private.reaction.killed"
+msgstr "{name} took {target} along in death."
+
+msgid "ui.morning.private.reaction.cursed"
+msgstr "{name} cursed {target}."
+
+msgid "ui.morning.private.role_changed"
+msgstr "{name} now has the role: {role}."
+
+msgid "ui.morning.private.other"
+msgstr "{type}: {details}"
+
+msgid "ui.morning.drop.frozen"
+msgstr "night frozen"
+
+msgid "ui.morning.drop.no_decision"
+msgstr "no decision possible"
+
+msgid "ui.morning.drop.blocked"
+msgstr "blocked"
+
+msgid "ui.morning.drop.cursed"
+msgstr "curse of the Sage"
+
+msgid "ui.morning.drop.actor_dead"
+msgstr "person dead"
+
+msgid "ui.morning.drop.marked_for_death"
+msgstr "person dies in the morning"
+
+msgid "ui.morning.drop.actor_role_changed"
+msgstr "role changed"
+
+msgid "ui.morning.drop.no_living_wolf"
+msgstr "no wolf alive"
+
+msgid "ui.cause.night_kill"
+msgstr "werewolf attack"
+
+msgid "ui.cause.lynch"
+msgstr "execution"
+
+msgid "ui.cause.hunter_shot"
+msgstr "dying curse (Scythe Bearer)"
+
+msgid "ui.cause.possessed_drag"
+msgstr "dragged along by the Possessed Wolf"
+
+msgid "ui.cause.knight_strike"
+msgstr "strike of the dying Knight"
+
+msgid "ui.cause.wolf_poison"
+msgstr "Poison Wolf’s poison"
+
+msgid "ui.cause.hangman_extra"
+msgstr "marked by the Hangman"
+
+msgid "ui.cause.parasite_host"
+msgstr "host died (Parasite)"
+
+msgid "ui.cause.coachman_crash"
+msgstr "Mad Coachman’s crash"
+
+msgid "ui.cause.warrior_wrong"
+msgstr "Warrior of Light’s mistake"
+
+msgid "ui.cause.blood_sacrifice"
+msgstr "Blood Priest’s sacrifice"
+
+msgid "ui.cause.amalia_sacrifice"
+msgstr "Amalia’s self-sacrifice"
+
+msgid "ui.cause.smith_weapon"
+msgstr "Village Smith’s weapon"
+
+msgid "ui.cause.martyr_sacrifice"
+msgstr "Martyr’s sacrifice"
+
+msgid "ui.cause.lover_heartbreak"
+msgstr "heartbreak (Loki)"
+
+msgid "ui.cause.black_widow"
+msgstr "Black Widow"
+
+msgid "ui.cause.red_chain"
+msgstr "death chain (Little Red Riding Hood)"
+
+msgid "ui.cause.prophet_kill"
+msgstr "Prophet of Doom"
+
+msgid "ui.cause.burn"
+msgstr "burned (Fire Devil)"
+
+msgid "ui.cause.hades_kill"
+msgstr "taken by Hades"
+
+msgid "ui.cause.lone_wolf_kill"
+msgstr "torn by the Vengeful Wolf"
+
+msgid "ui.cause.gm_correction"
+msgstr "game master correction"
+
+msgid "ui.cause.witch_poison"
+msgstr "Forest Witch’s poison"
+
+msgid "ui.cause.spiegelwolf_retaliate"
+msgstr "mirrored execution (Mirror Wolf)"
+
+msgid "ui.cause.manipulator_nominated"
+msgstr "Manipulator nominated"
+
+msgid "ui.setup.roles.reveal_role"
+msgstr "Reveal role publicly on death"

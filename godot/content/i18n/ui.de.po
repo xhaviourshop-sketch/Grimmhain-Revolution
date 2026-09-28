@@ -2272,3 +2272,192 @@ msgstr "Der Dämonische Wolf verflucht im Sterben jemanden. Tippe die Person an 
 
 msgid "ui.prompt.info.lights"
 msgstr "Lichter"
+
+msgid "ui.cockpit.group.reaction"
+msgstr "Reaktion"
+
+msgid "ui.cockpit.card.morning.caption"
+msgstr "Morgen nach Nacht {number}"
+
+msgid "ui.cockpit.card.morning.heading"
+msgstr "Morgenbericht"
+
+msgid "ui.cockpit.action.continue_day"
+msgstr "Weiter zum Tag"
+
+msgid "ui.cockpit.action.show_announcement"
+msgstr "Ansagekarte zeigen"
+
+msgid "ui.cockpit.action.morning_details"
+msgstr "Private Details …"
+
+msgid "ui.cockpit.announcement.heading"
+msgstr "Morgen nach Nacht {number}"
+
+msgid "ui.cockpit.morning.heading"
+msgstr "Morgenbericht · nur Spielleitung"
+
+msgid "ui.morning.read.intro"
+msgstr "„Die Sonne geht auf. Das Dorf erwacht.“"
+
+msgid "ui.morning.read.nobody"
+msgstr "„In dieser Nacht ist niemand gestorben.“"
+
+msgid "ui.morning.read.deaths_one"
+msgstr "„In dieser Nacht ist gestorben: {names}.“"
+
+msgid "ui.morning.read.deaths_many"
+msgstr "„In dieser Nacht sind gestorben: {names}.“"
+
+msgid "ui.morning.read.revived"
+msgstr "„Zurück unter den Lebenden: {names}.“"
+
+msgid "ui.morning.name_with_role"
+msgstr "{name} ({role})"
+
+msgid "ui.morning.notice.detective"
+msgstr "„Ein Hinweis: Vom Platz von {name} aus liegt der nächste Wolf {direction}.“"
+
+msgid "ui.morning.notice.ghost"
+msgstr "„Ein Schutzgeist hat in dieser Nacht einen Wolf berührt.“"
+
+msgid "ui.morning.notice.frozen"
+msgstr "„In dieser Nacht stand die Zeit still.“"
+
+msgid "ui.morning.notice.bells"
+msgstr "„Die Glocken des Nachtwächters läuten.“"
+
+msgid "ui.morning.notice.judge"
+msgstr "„{name} gilt heute als nominiert.“"
+
+msgid "ui.morning.private.death"
+msgstr "{name} ist gestorben: {cause}. Rolle: {role}."
+
+msgid "ui.morning.private.saved"
+msgstr "{name} wurde gerettet durch: {role}."
+
+msgid "ui.morning.private.no_attack"
+msgstr "Das Rudel hat niemanden angegriffen."
+
+msgid "ui.morning.private.step_skipped"
+msgstr "Übersprungen: {role}. Begründung: {reason}"
+
+msgid "ui.morning.private.step_dropped"
+msgstr "Entfallen: {role} ({drop})."
+
+msgid "ui.morning.private.reaction.declined"
+msgstr "{name}: Reaktion ohne Ziel (verzichtet)."
+
+msgid "ui.morning.private.reaction.killed"
+msgstr "{name} hat {target} mit in den Tod gerissen."
+
+msgid "ui.morning.private.reaction.cursed"
+msgstr "{name} hat {target} verflucht."
+
+msgid "ui.morning.private.role_changed"
+msgstr "{name} hat jetzt die Rolle: {role}."
+
+msgid "ui.morning.private.other"
+msgstr "{type}: {details}"
+
+msgid "ui.morning.drop.frozen"
+msgstr "Nacht eingefroren"
+
+msgid "ui.morning.drop.no_decision"
+msgstr "keine Entscheidung möglich"
+
+msgid "ui.morning.drop.blocked"
+msgstr "blockiert"
+
+msgid "ui.morning.drop.cursed"
+msgstr "Fluch des Weisen"
+
+msgid "ui.morning.drop.actor_dead"
+msgstr "Person tot"
+
+msgid "ui.morning.drop.marked_for_death"
+msgstr "Person stirbt am Morgen"
+
+msgid "ui.morning.drop.actor_role_changed"
+msgstr "Rolle gewechselt"
+
+msgid "ui.morning.drop.no_living_wolf"
+msgstr "kein Wolf lebt"
+
+msgid "ui.cause.night_kill"
+msgstr "Angriff der Werwölfe"
+
+msgid "ui.cause.lynch"
+msgstr "Hinrichtung"
+
+msgid "ui.cause.hunter_shot"
+msgstr "Fluch im Sterben (Sensenträger)"
+
+msgid "ui.cause.possessed_drag"
+msgstr "vom Besessenen Wolf mitgerissen"
+
+msgid "ui.cause.knight_strike"
+msgstr "Schlag des sterbenden Ritters"
+
+msgid "ui.cause.wolf_poison"
+msgstr "Gift des Giftwolfs"
+
+msgid "ui.cause.hangman_extra"
+msgstr "vom Henker markiert"
+
+msgid "ui.cause.parasite_host"
+msgstr "Wirt gestorben (Parasit)"
+
+msgid "ui.cause.coachman_crash"
+msgstr "Unfall des Wahnsinnigen Kutschers"
+
+msgid "ui.cause.warrior_wrong"
+msgstr "Fehlgriff der Kriegerin des Lichts"
+
+msgid "ui.cause.blood_sacrifice"
+msgstr "Opfer des Blutpriesters"
+
+msgid "ui.cause.amalia_sacrifice"
+msgstr "Selbstopfer Amalias"
+
+msgid "ui.cause.smith_weapon"
+msgstr "Waffe des Dorfschmieds"
+
+msgid "ui.cause.martyr_sacrifice"
+msgstr "Opfer der Märtyrerin"
+
+msgid "ui.cause.lover_heartbreak"
+msgstr "Liebeskummer (Loki)"
+
+msgid "ui.cause.black_widow"
+msgstr "Schwarze Witwe"
+
+msgid "ui.cause.red_chain"
+msgstr "Todeskette (Rotkäppchen)"
+
+msgid "ui.cause.prophet_kill"
+msgstr "Prophet des Untergangs"
+
+msgid "ui.cause.burn"
+msgstr "verbrannt (Feuerteufel)"
+
+msgid "ui.cause.hades_kill"
+msgstr "von Hades geholt"
+
+msgid "ui.cause.lone_wolf_kill"
+msgstr "vom Rachsüchtigen Wolf gerissen"
+
+msgid "ui.cause.gm_correction"
+msgstr "Spielleiterkorrektur"
+
+msgid "ui.cause.witch_poison"
+msgstr "Gifttrank der Waldhexe"
+
+msgid "ui.cause.spiegelwolf_retaliate"
+msgstr "gespiegelte Hinrichtung (Spiegelwolf)"
+
+msgid "ui.cause.manipulator_nominated"
+msgstr "Nominierung des Manipulators"
+
+msgid "ui.setup.roles.reveal_role"
+msgstr "Rolle beim Tod öffentlich aufdecken"

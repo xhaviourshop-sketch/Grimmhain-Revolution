@@ -23,6 +23,7 @@ var _error_key: String = ""
 var _covered: bool = false
 var _layer: Control = null
 var _layer_kind: StringName = &""
+var _morning_done_day: int = -1  ## Tag, dessen Morgenbericht die Spielleitung weitergeschaltet hat (nur Bedienzustand)
 
 @onready var _layout: Control = %Layout
 @onready var _badge: Control = %NoGameBadge
@@ -137,6 +138,10 @@ func _render() -> void:
 		_ring.clear_marking()
 		return
 	var kind := str(next.get("kind"))
+	if kind == "day" and _morning_pending():
+		next = {"kind": "morning", "secret": false, "public": context.session.morning_report().get("public", {}),
+			"night_number": int(_view.get("night_number", 0))}
+		kind = "morning"
 	if kind == "prompt" and str(next.get("answer")) == "targets" and visible_secret:
 		_ring.set_marking(true, next.get("allowed_ids", []), _selection, next.get("actor_ids", []))
 	elif (kind == "prompt" or kind == "begin_step") and visible_secret:
@@ -148,6 +153,13 @@ func _render() -> void:
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
 	})
+
+
+## Der Morgenbericht steht vor den Tagesaktionen, bis die Spielleitung weiterschaltet oder am Tag
+## schon etwas geschehen ist (Nominierung, Entscheidung).
+func _morning_pending() -> bool:
+	var day := int(_view.get("day_number", 0))
+	return _morning_done_day != day and str(_view.get("day_step", "")) == "DISCUSSION" 		and (_view.get("next", {}).get("nominations", []) as Array).is_empty() and not context.session.morning_report().is_empty()
 
 
 ## Kennung der nächsten Handlung: wechselt sie, verfallen Auswahl und Aufdecken.
@@ -224,6 +236,13 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_submit(s.answer_prediction.bind(str(payload["kind"]), int(payload["number"])))
 		&"show_card":
 			open_layer(&"show")
+		&"continue_day":
+			_morning_done_day = int(_view.get("day_number", 0))
+			_render()
+		&"show_announcement":
+			open_layer(&"announcement")
+		&"morning_details":
+			open_layer(&"morning")
 		&"override_shown":
 			_ask_override()
 		&"end_night":
@@ -283,6 +302,11 @@ func open_layer(kind: StringName) -> void:
 		&"show":
 			_layer = CockpitLayers.show_card(_view.get("next", {}))
 			_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
+		&"announcement":
+			_layer = CockpitLayers.announcement(context.session.morning_report())
+			_layout.visible = false
+		&"morning":
+			_layer = CockpitLayers.morning_drawer(context.session.morning_report(), _view.get("seats", []))
 	if _layer == null:
 		_layout.visible = true
 		return

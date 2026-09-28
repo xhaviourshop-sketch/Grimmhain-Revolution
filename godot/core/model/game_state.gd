@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades, Grabräuber)
+const SCHEMA_VERSION := 12  ## 12: Setup-Option reveal_role_on_death (DR-04); 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades, Grabräuber)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -13,6 +13,7 @@ const NO_TARGET := -1
 var schema_version: int = SCHEMA_VERSION
 var rules_version: StringName = RULES_VERSION
 var round_id: String = ""
+var reveal_role_on_death: bool = false  ## Setup-Option DR-04: Rolle einer gestorbenen Person öffentlich (nur Anzeige)
 var rng: SeededRng = SeededRng.new(0)
 var phase: StringName = Phase.SETUP
 var day_step: StringName = Phase.DAY_NONE
@@ -211,6 +212,7 @@ func to_dict() -> Dictionary:
 		"schema_version": schema_version,
 		"rules_version": String(rules_version),
 		"round_id": round_id,
+		"reveal_role_on_death": reveal_role_on_death,
 		"rng": rng.to_dict(),
 		"phase": String(phase),
 		"day_step": String(day_step),
@@ -309,6 +311,9 @@ static func from_dict(d: Dictionary) -> GameState:
 	if s.schema_version != SCHEMA_VERSION or s.rules_version != RULES_VERSION:
 		return null
 	s.round_id = DictRead.get_string(d, "round_id")
+	if not d.get("reveal_role_on_death") is bool:
+		return null
+	s.reveal_role_on_death = bool(d["reveal_role_on_death"])
 	s.rng = SeededRng.from_dict(DictRead.get_dict(d, "rng"))
 	if s.rng == null:
 		return null

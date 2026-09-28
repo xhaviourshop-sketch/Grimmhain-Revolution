@@ -48,6 +48,11 @@ func cockpit_view() -> Dictionary:
 	return CockpitView.build(_state)
 
 
+## Morgenbericht der letzten Nacht (öffentlicher und privater Teil getrennt), siehe MorningReport.
+func morning_report() -> Dictionary:
+	return MorningReport.build(_state, _events)
+
+
 ## Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
 func private_seats() -> Array:
 	return CockpitView.private_seats(_state) if _state.is_started() else []

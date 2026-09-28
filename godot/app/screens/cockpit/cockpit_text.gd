@@ -8,7 +8,7 @@ extends RefCounted
 ##                       Rückfall ui.prompt.generic.<antwortart>
 ##   Teilantwort         ui.prompt.info.<feld> (Rückfall ui.prompt.info.generic)
 
-const GROUPS := {"pack": "ui.cockpit.group.pack", "die-gebundenen": "ui.cockpit.group.bound", "die-ewigen": "ui.cockpit.group.eternal"}
+const GROUPS := {"pack": "ui.cockpit.group.pack", "die-gebundenen": "ui.cockpit.group.bound", "die-ewigen": "ui.cockpit.group.eternal", "reaction": "ui.cockpit.group.reaction"}
 
 
 static func key_part(id: String) -> String:
@@ -76,6 +76,40 @@ static func info_value(line: Dictionary) -> Variant:
 		"direction":
 			return StringName("ui.prompt.direction.%s" % str(value))
 	return str(value)
+
+
+## Vorlesezeilen des öffentlichen Morgenberichts [{key, values}] (nur Werte der Positivliste).
+## Namen ohne Platznummer, mit Rolle nur, wenn der Bericht sie enthält (Setup-Option).
+static func morning_lines(pub: Dictionary) -> Array:
+	var out: Array = [{"key": "ui.morning.read.intro", "values": {}}]
+	var deaths: Array = pub.get("deaths", [])
+	if deaths.is_empty():
+		out.append({"key": "ui.morning.read.nobody", "values": {}})
+	else:
+		out.append({"key": "ui.morning.read.deaths_one" if deaths.size() == 1 else "ui.morning.read.deaths_many", "values": {"names": spoken_names(deaths)}})
+	var revived: Array = pub.get("revived", [])
+	if not revived.is_empty():
+		out.append({"key": "ui.morning.read.revived", "values": {"names": spoken_names(revived)}})
+	for n: Dictionary in pub.get("notices", []):
+		var values := {}
+		if n.has("person"):
+			values["name"] = str((n["person"] as Dictionary).get("name", ""))
+		if n.has("direction"):
+			values["direction"] = StringName("ui.prompt.direction.%s" % str(n["direction"]))
+		out.append({"key": str(n["key"]), "values": values})
+	return out
+
+
+## „Anna, Ben (Werwolf)“: Rolle nur, wenn der Eintrag eine öffentliche Rolle trägt.
+static func spoken_names(people: Array) -> String:
+	var names: Array = []
+	for p: Dictionary in people:
+		var role := str(p.get("role_id", ""))
+		if role == "":
+			names.append(str(p["name"]))
+		else:
+			names.append(TranslationServer.translate("ui.morning.name_with_role").format({"name": str(p["name"]), "role": TranslationServer.translate(role_name(role))}))
+	return ", ".join(names)
 
 
 ## Personen-IDs als „3 · Anna, 5 · Ben“ aus den öffentlichen Sitzdaten.

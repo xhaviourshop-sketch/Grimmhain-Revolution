@@ -11,10 +11,20 @@ extends VBoxContainer
 signal requested(action: StringName, payload: Dictionary)
 
 var _busy: bool = false
+var _last_next: Dictionary = {}
+var _last_context: Dictionary = {}
+
+
+## Sprachwechsel: Karte mit denselben Daten neu aufbauen (zusammengesetzte Texte).
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and not _last_next.is_empty() and is_inside_tree():
+		render.call_deferred(_last_next, _last_context)
 
 
 ## Baut die Karte neu. `context` = {phase, seats, selection, revealed, night_number, day_number}.
 func render(next: Dictionary, context: Dictionary) -> void:
+	_last_next = next
+	_last_context = context
 	_busy = false
 	for child: Node in get_children():
 		remove_child(child)
@@ -34,6 +44,8 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_prompt(next, context)
 		"end_night":
 			_end_night(next)
+		"morning":
+			_morning(next)
 		"win_decision":
 			_win_decision(next)
 		"game_over":
@@ -164,6 +176,20 @@ func _end_night(next: Dictionary) -> void:
 		_text("ui.cockpit.card.end_night.skipped", {"count": int(next["skipped"])}, &"WarningLabel")
 	_text("ui.cockpit.card.end_night.do")
 	_actions([_button("EndNightButton", "ui.cockpit.action.end_night", GrimmButton.Kind.PRIMARY, &"end_night")])
+
+
+## Morgenbericht: Vorlesetext aus dem öffentlichen Teil, zeigbare Ansagekarte, private Details.
+func _morning(next: Dictionary) -> void:
+	_caption("ui.cockpit.card.morning.caption", {"number": int(next.get("night_number", 0))})
+	_heading("ui.cockpit.card.morning.heading")
+	_caption("ui.cockpit.card.say_now")
+	for line: Dictionary in CockpitText.morning_lines(next.get("public", {})):
+		_text(str(line["key"]), line["values"], &"ReadAloudLabel")
+	_actions([
+		_button("ContinueDayButton", "ui.cockpit.action.continue_day", GrimmButton.Kind.PRIMARY, &"continue_day"),
+		_button("ShowAnnouncementButton", "ui.cockpit.action.show_announcement", GrimmButton.Kind.SECONDARY, &"show_announcement"),
+		_button("MorningDetailsButton", "ui.cockpit.action.morning_details", GrimmButton.Kind.SECONDARY, &"morning_details"),
+	])
 
 
 func _win_decision(next: Dictionary) -> void:

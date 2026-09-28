@@ -188,3 +188,40 @@ func test_start_messages_show_no_roles_de_en() -> void:
 		assert_ne(_toast_text(shell), "", "%s: Statusmeldung sichtbar" % locale)
 		_assert_no_roles_visible(shell, "%s gestartet" % locale)
 		await after_each()
+
+
+func test_reveal_role_option_is_sent_with_start_game() -> void:
+	for on: bool in [false, true]:
+		var shell := await spawn_shell()
+		if shell == null:
+			return
+		if on:
+			# Option im Rollenschritt setzen, danach bis zur Sitzordnung wie sonst.
+			var roles_screen := await open_new_game(shell)
+			await seed_names(shell, numbered_names(6))
+			await press(find_button(roles_screen, "ConfirmPlayersButton"))
+			await press(find_button(roles_screen, "ToRolesButton"))
+			var toggle := find_node(roles_screen, "RevealRoleToggle") as BaseButton
+			assert_true(toggle != null and toggle.is_visible_in_tree(), "Option im Rollenschritt sichtbar")
+			assert_false(toggle.button_pressed, "Standard: Rolle nicht aufdecken")
+			assert_eq(toggle.text, "Rolle beim Tod öffentlich aufdecken", "Beschriftung")
+			await press(toggle)
+			assert_true(bool((setup_of(shell).call("view") as Dictionary)["reveal_role_on_death"]), "Option im Entwurf")
+			setup_of(shell).call("reset")
+			await navigate(shell, &"main_menu")
+			# Die Option gilt je Entwurf; nach dem Verwerfen wieder Standard, deshalb erneut setzen.
+		var screen := await _to_confirmed_seating(shell, 6)
+		if on:
+			setup_of(shell).call("set_reveal_role_on_death", true)
+			await frames(2)
+		assert_true(_start_button(screen).is_visible_in_tree(), "Option hebt die Bestätigung nicht auf")
+		await press(_start_button(screen))
+		var commands: Array = session_of(shell).call("commands")
+		assert_eq(bool((commands[0] as Command).payload.get("reveal_role_on_death")), on, "StartGame überträgt die Option (%s)" % on)
+		after_each_shell(shell)
+
+
+func after_each_shell(shell: Control) -> void:
+	_spawned.erase(shell)
+	shell.get_parent().remove_child(shell)
+	shell.free()

@@ -278,7 +278,8 @@ func test_start_data_is_plain_and_only_when_ready() -> void:
 	var result: Object = s.call("start_data")
 	_ok(result, "Startdaten")
 	var data: Dictionary = result.get("details")
-	assert_eq(data.keys().size(), 4, "nur players, seat_order, roles, appearances")
+	assert_eq(data.keys().size(), 5, "nur players, seat_order, roles, appearances, reveal_role_on_death")
+	assert_eq(data["reveal_role_on_death"], false, "Setup-Option DR-04, Standard Nein")
 	for key: String in ["players", "seat_order", "roles", "appearances"]:
 		assert_true(data.has(key), "Startdaten enthalten %s" % key)
 	assert_eq(data["seat_order"], _order(s), "Sitzreihenfolge")

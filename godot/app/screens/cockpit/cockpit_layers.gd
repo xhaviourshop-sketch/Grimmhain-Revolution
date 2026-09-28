@@ -6,6 +6,8 @@ extends RefCounted
 ##   log_drawer      Protokoll aller Ereignisse
 ##   show_card       Karte für die handelnde Person: nur die Positivliste des Prompts (`show`)
 ##   cover_panel     Sichtschutz über dem ganzen Cockpit
+##   announcement    zeigbare Ansagekarte des Morgens: nur der öffentliche Teil des Berichts
+##   morning_drawer  private Details des Morgenberichts (Ursachen, Rettungen, entfallene Schritte)
 ## Jede Ebene hat einen `CloseLayerButton` (bzw. `UncoverButton`); die Ansicht verbindet ihn.
 
 
@@ -83,6 +85,55 @@ static func show_card(next: Dictionary) -> Control:
 	var close := _button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY)
 	column.add_child(close)
 	return root
+
+
+## Zeigbare Ansagekarte: ausschließlich die Vorlesezeilen aus dem öffentlichen Teil des Berichts.
+static func announcement(report: Dictionary) -> Control:
+	if report.is_empty():
+		return null
+	var root := _full_rect("AnnouncementLayer")
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(center)
+	var panel := PanelContainer.new()
+	panel.theme_type_variation = &"ShowPanel"
+	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
+	center.add_child(panel)
+	var column := VBoxContainer.new()
+	column.theme_type_variation = &"ScreenColumn"
+	panel.add_child(column)
+	_label(column, "ui.cockpit.announcement.heading", {"number": int(report.get("night_number", 0))}, &"HeadingLabel")
+	for line: Dictionary in CockpitText.morning_lines(report.get("public", {})):
+		_label(column, str(line["key"]), line["values"], &"ReadAloudLabel")
+	column.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
+	return root
+
+
+static func morning_drawer(report: Dictionary, seats: Array) -> Control:
+	var drawer := _drawer("MorningLayer", "ui.cockpit.morning.heading")
+	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer
+	var lines: Array = report.get("private", [])
+	if lines.is_empty():
+		_label(list, "ui.cockpit.log.empty", {}, &"MutedLabel")
+	for line: Dictionary in lines:
+		if str(line.get("key", "")) == "":
+			_label(list, "ui.morning.private.other", {"type": str(line["type"]), "details": _details(line.get("data", {}), seats)}, &"CaptionLabel")
+			continue
+		var values := {}
+		if line.has("person"):
+			values["name"] = CockpitText.person(line["person"])
+		if line.has("target"):
+			values["target"] = CockpitText.person(line["target"]) if not (line["target"] as Dictionary).is_empty() else ""
+		if line.has("role_id"):
+			values["role"] = CockpitText.role_name(str(line["role_id"])) if str(line["role_id"]) != "" else ""
+		if line.has("cause"):
+			values["cause"] = StringName("ui.cause.%s" % str(line["cause"]).to_lower())
+		if line.has("reason"):
+			values["reason"] = str(line["reason"])
+		if line.has("drop"):
+			values["drop"] = StringName("ui.morning.drop.%s" % str(line["drop"]))
+		_label(list, str(line["key"]), values, &"SectionLabel")
+	return drawer
 
 
 static func cover_panel() -> Control:

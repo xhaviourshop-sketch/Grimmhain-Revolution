@@ -97,6 +97,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 
 
 static func _validate_start_game(p: Dictionary) -> StringName:
+	if p.has("reveal_role_on_death") and not p["reveal_role_on_death"] is bool:
+		return &"invalid_reveal_setting"  # DR-04: optional, nur Ja/Nein
 	if not DictRead.is_int_like(p.get("seed")) or int(p["seed"]) < 0 or int(p["seed"]) > CanonicalJson.MAX_SAFE_INT:
 		return &"invalid_seed"
 	var players := DictRead.get_array(p, "players")
@@ -469,6 +471,7 @@ static func _judge_nominations(ctx: RuleContext) -> void:
 static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	s.round_id = DictRead.get_string(p, "round_id")
+	s.reveal_role_on_death = DictRead.get_bool(p, "reveal_role_on_death")
 	s.rng = SeededRng.new(int(p["seed"]))
 
 	var names := {}
@@ -508,6 +511,7 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		"player_ids": ids,
 		"seat_order": s.seat_order,
 		"assignment": DictRead.get_string(p, "assignment"),
+		"reveal_role_on_death": s.reveal_role_on_death,
 	})
 	for id: int in ids:
 		ctx.emit(GameEvent.ROLE_ASSIGNED, Visibility.ACTOR, {"player_id": id, "role_id": s.players[id].role_id}, id)
