@@ -98,7 +98,8 @@ static func next_action(s: GameState) -> Dictionary:
 				return {"kind": "start_night", "secret": false, "first": false}
 			if s.day_step == Phase.DAY_EXECUTION_DECIDED:
 				return {"kind": "end_day", "secret": false}
-			return {"kind": "day", "secret": false, "day_step": String(s.day_step), "nominations": nominations_today(s)}
+			return {"kind": "day", "secret": false, "day_step": String(s.day_step), "nominations": nominations_today(s),
+				"execution_candidates": _execution_candidates(s)}
 	return {"kind": "none", "secret": false}
 
 
@@ -134,6 +135,15 @@ static func step_announcement(s: GameState, step_id: String) -> Dictionary:
 			out["actor_ids"] = [actor]
 			# Grabräuber: gestohlene Fähigkeit einer anderen Rolle (nur privat sichtbar).
 			out["own_role_id"] = String(s.players[actor].role_id)
+	return out
+
+
+## Heute nominierte, lebende Personen: reguläre Hinrichtungsziele (DR-03).
+static func _execution_candidates(s: GameState) -> Array:
+	var out: Array = []
+	for n: Nomination in s.nominations_on_day(s.day_number):
+		if s.players[n.nominee_id].alive and not out.has(n.nominee_id):
+			out.append(n.nominee_id)
 	return out
 
 
@@ -178,6 +188,42 @@ static func private_seats(s: GameState) -> Array:
 			"counts_as_wolf": p.counts_as_wolf,
 			"notes": notes,
 		})
+	return out
+
+
+## Vorschau der Hinrichtung von `target_id` aus ExecutionRules (Spiegelung) und die Pflichtfelder
+## des Befehls (Cerberus-Abwehr, Fluchdauer des Weisen). Geheim: nennt die tatsächlich sterbende Person.
+static func execution_preview(s: GameState, target_id: int) -> Dictionary:
+	if not s.players.has(target_id):
+		return {}
+	var r := ExecutionRules.preview(s, target_id, KillEvent.SOURCE_VILLAGE)
+	var dying := int(r["death_target_id"])
+	return {
+		"target_id": target_id,
+		"death_target_id": dying,
+		"redirected": bool(r["redirected"]),
+		"needs_cerberus": ExecutionRules.needs_cerberus_decision(s, target_id),
+		"needs_sage": GuardRoles.needs_sage_decision(s, target_id),
+		"sage_max": RoleCatalog.SAGE_MAX_CURSE,
+		"secret": bool(r["redirected"]) or ExecutionRules.needs_cerberus_decision(s, target_id) or GuardRoles.needs_sage_decision(s, target_id),
+	}
+
+
+## Tagesaktionen, die an einer Rolle hängen und deshalb nur im privaten Bereich erscheinen:
+## Amalia (Selbstopfer mit Ja/Nein-Antwort) und Nekromant (Wolf benennen). Ob sie gelten,
+## entscheidet der Regelkern beim Senden.
+static func secret_day_actions(s: GameState) -> Array:
+	var out: Array = []
+	if s.phase != Phase.DAY or s.day_step == Phase.DAY_ENDED or s.pending_prompt != null:
+		return out
+	for id: int in s.seat_order:
+		var p := s.players[id]
+		if not p.alive:
+			continue
+		if p.role_id == RoleCatalog.AMALIA:
+			out.append({"action": "amalia", "player_id": id, "name": p.name, "seat": s.seat_of(id) + 1})
+		elif p.role_id == RoleCatalog.NEKROMANT and int(s.necro_named.get(id, 0)) != s.day_number:
+			out.append({"action": "name_wolf", "player_id": id, "name": p.name, "seat": s.seat_of(id) + 1})
 	return out
 
 

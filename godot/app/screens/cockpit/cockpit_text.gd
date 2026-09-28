@@ -36,6 +36,13 @@ static func instruction_key(owner: String, stage: String, answer: String) -> Str
 	return key if has_key(key) else "ui.prompt.generic.%s" % answer
 
 
+## Beschriftung einer Aktion mit rollenspezifischer Variante, z. B. Loki „Liebende“ statt „Ja“:
+## ui.cockpit.action.<aktion>.<besitzer>.<stufe>, sonst ui.cockpit.action.<aktion>.
+static func action_key(action: String, owner: String, stage: String) -> String:
+	var key := "ui.cockpit.action.%s.%s.%s" % [action, key_part(owner), stage if stage != "" else "pick"]
+	return key if has_key(key) else "ui.cockpit.action.%s" % action
+
+
 static func reaction_key(kind: String) -> String:
 	var key := "ui.prompt.reaction.%s" % kind
 	return key if has_key(key) else "ui.prompt.generic.targets"

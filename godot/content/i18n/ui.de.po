@@ -1855,3 +1855,420 @@ msgstr "Verbündeter"
 
 msgid "ui.prompt.info.dead_ids"
 msgstr "Gewählte Tote"
+
+msgid "ui.prompt.info.wolves_available_ids"
+msgstr "Wölfe unter den Wählbaren (mindestens einen wählen)"
+
+msgid "ui.cockpit.action.decline.pack.pick"
+msgstr "Kein Opfer"
+
+msgid "ui.cockpit.action.decline.pack2.pick"
+msgstr "Kein zweites Opfer"
+
+msgid "ui.cockpit.action.yes.loki.mode"
+msgstr "Liebende"
+
+msgid "ui.cockpit.action.no.loki.mode"
+msgstr "Rivalen"
+
+msgid "ui.cockpit.action.yes.rotkaeppchen.grant"
+msgstr "Zuflucht gewährt"
+
+msgid "ui.cockpit.action.no.rotkaeppchen.grant"
+msgstr "Keine Zuflucht"
+
+msgid "ui.cockpit.action.yes.hades.barrier"
+msgstr "Barriere kaufen"
+
+msgid "ui.cockpit.action.no.hades.barrier"
+msgstr "Keine Barriere"
+
+msgid "ui.cockpit.action.yes.schattenhund.use"
+msgstr "Jetzt blockieren"
+
+msgid "ui.cockpit.action.no.schattenhund.use"
+msgstr "Nicht in dieser Nacht"
+
+msgid "ui.cockpit.action.yes.zeitwaechter.use"
+msgstr "Nacht einfrieren"
+
+msgid "ui.cockpit.action.no.zeitwaechter.use"
+msgstr "Nicht einfrieren"
+
+msgid "ui.cockpit.action.yes.faehrtenleser.use"
+msgstr "Fährte jetzt lesen"
+
+msgid "ui.cockpit.action.no.faehrtenleser.use"
+msgstr "Noch nicht"
+
+msgid "ui.cockpit.action.yes.waldhexe.heal"
+msgstr "Heiltrank nutzen"
+
+msgid "ui.cockpit.action.no.waldhexe.heal"
+msgstr "Nicht heilen"
+
+msgid "ui.cockpit.action.yes.waldhexe.poison"
+msgstr "Gifttrank nutzen"
+
+msgid "ui.cockpit.action.no.waldhexe.poison"
+msgstr "Nicht vergiften"
+
+msgid "ui.cockpit.action.decline.nekromant.redirect"
+msgstr "Schild statt Umlenkung"
+
+msgid "ui.cockpit.action.decline.nekromant.targets"
+msgstr "Keine Toten opfern"
+
+msgid "ui.cockpit.action.decline.dorfschmied.pick"
+msgstr "Noch nicht vergeben"
+
+msgid "ui.cockpit.action.decline.schattenwanderer.pick"
+msgstr "Noch nicht verknüpfen"
+
+msgid "ui.cockpit.action.decline.koenig_lykaon.ally"
+msgstr "Verschieben"
+
+msgid "ui.cockpit.action.decline.feuerteufel.pick"
+msgstr "Markierung behalten"
+
+msgid "ui.cockpit.action.decline.parasit.pick"
+msgstr "Wirt behalten"
+
+msgid "ui.cockpit.action.decline.maertyrerin.pick"
+msgstr "Opfert sich nicht"
+
+msgid "ui.cockpit.action.decline.blutpriester.targets"
+msgstr "Kein Opfer in dieser Nacht"
+
+msgid "ui.cockpit.action.decline.blutpriester.reveal"
+msgstr "Keinen Wolf nennen"
+
+msgid "ui.cockpit.action.decline.kriegerin_des_lichts.targets"
+msgstr "Kein Angriff in dieser Nacht"
+
+msgid "ui.cockpit.action.decline.spuerhund.targets"
+msgstr "Heute nicht schnüffeln"
+
+msgid "ui.cockpit.action.decline.reaction.pick"
+msgstr "Verzichtet"
+
+msgid "ui.call.albtraumwolf"
+msgstr "„Albtraumwolf, erwache. Zeige auf die Person, deren Fähigkeit du heute Nacht blockierst.“"
+
+msgid "ui.call.blutpriester"
+msgstr "„Blutpriester, erwache. Willst du heute ein Opfer bringen? Zeige darauf oder schüttle den Kopf.“"
+
+msgid "ui.call.die_ewigen"
+msgstr "„Ewige, erwacht. Zeigt gemeinsam auf die Person, die ihr prüfen wollt.“"
+
+msgid "ui.call.die_gebundenen"
+msgstr "„Gebundene, erwacht und seht einander an.“"
+
+msgid "ui.call.doktor"
+msgstr "„Doktor, erwache. Zeige auf zwei Personen, deren Blut du vergleichen willst.“"
+
+msgid "ui.call.dorfchronistin"
+msgstr "„Dorfchronistin, erwache. Ich zeige dir, wie viele Einzelgänger im Dorf sind.“"
+
+msgid "ui.call.dorfschmied"
+msgstr "„Dorfschmied, erwache. Willst du deine Waffe jetzt vergeben? Zeige auf die Person.“"
+
+msgid "ui.call.dr_victor_frankenstein"
+msgstr "„Doktor Frankenstein, erwache. Willst du einen Toten zurückholen? Zeige auf ihn.“"
+
+msgid "ui.call.faehrtenleser"
+msgstr "„Fährtenleser, erwache. Willst du heute die Fährte lesen?“"
+
+msgid "ui.call.feuerteufel"
+msgstr "„Feuerteufel, erwache. Zeige auf die Person, die du markieren willst.“"
+
+msgid "ui.call.giftwolf"
+msgstr "„Giftwolf, erwache. Willst du jemanden vergiften? Zeige auf die Person.“"
+
+msgid "ui.call.grabraeuber"
+msgstr "„Grabräuber, erwache. Willst du das Grab eines Toten plündern? Zeige auf ihn.“"
+
+msgid "ui.call.hades"
+msgstr "„Hades, erwache. Willst du mit deinen Lichtern jemanden holen? Zeige auf die Person.“"
+
+msgid "ui.call.henker"
+msgstr "„Henker, erwache. Zeige auf die Person, die bei der nächsten Hinrichtung mit stirbt.“"
+
+msgid "ui.call.koenig_lykaon"
+msgstr "„König Lykaon, erwache. Wähle einen Verbündeten und ein Opfer deiner Verwandlung.“"
+
+msgid "ui.call.koenig"
+msgstr "„König, erwache. Zeige auf eine Person aus dem Dorf, deren Rolle du erfahren willst.“"
+
+msgid "ui.call.kopfgeldjaeger"
+msgstr "„Kopfgeldjäger, erwache. Hier ist deine Liste.“"
+
+msgid "ui.call.korrupter_richter"
+msgstr "„Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“"
+
+msgid "ui.call.kriegerin_des_lichts"
+msgstr "„Kriegerin des Lichts, erwache. Willst du heute angreifen? Zeige auf die Person.“"
+
+msgid "ui.call.kutscher"
+msgstr "„Kutscher, erwache. Willst du drei Tote zurückholen? Zeige auf sie.“"
+
+msgid "ui.call.loki"
+msgstr "„Loki, erwache. Zeige auf zwei Personen, die du miteinander verbinden willst.“"
+
+msgid "ui.call.maertyrerin"
+msgstr "„Märtyrerin, erwache. Willst du dich für das Opfer der Nacht opfern?“"
+
+msgid "ui.call.nekromant"
+msgstr "„Nekromant, erwache. Willst du Tote opfern? Zeige auf drei von ihnen.“"
+
+msgid "ui.call.parasit"
+msgstr "„Parasit, erwache. Willst du einen neuen Wirt wählen? Zeige auf die Person.“"
+
+msgid "ui.call.pestbringerin"
+msgstr "„Pestbringerin, erwache. Zeige auf die Person, die du infizieren willst.“"
+
+msgid "ui.call.prophet_des_untergangs"
+msgstr "„Prophet des Untergangs, erwache. Zeige auf die Personen deiner Prophezeiung.“"
+
+msgid "ui.call.rachsuechtiger_wolf"
+msgstr "„Rachsüchtiger Wolf, erwache. Willst du einen anderen Wolf reißen? Zeige auf ihn.“"
+
+msgid "ui.call.rattenfaenger"
+msgstr "„Rattenfänger, erwache. Zeige auf eine oder zwei Personen, die du verzaubern willst.“"
+
+msgid "ui.call.rotkaeppchen"
+msgstr "„Rotkäppchen, erwache. Zeige auf die Person, bei der du Zuflucht suchst.“"
+
+msgid "ui.call.schattenhund"
+msgstr "„Schattenhund, erwache. Willst du das Dorf heute Nacht blockieren?“"
+
+msgid "ui.call.schattenwanderer"
+msgstr "„Schattenwanderer, erwache. Willst du dich mit jemandem verknüpfen? Zeige auf die Person.“"
+
+msgid "ui.call.schicksalswolf"
+msgstr "„Schicksalswolf, erwache. Zeige auf die Personen, die das Schicksal treffen soll.“"
+
+msgid "ui.call.schutzgeist"
+msgstr "„Schutzgeist, erwache. Zeige auf die Person, der du deinen Schild schenkst.“"
+
+msgid "ui.call.schwarze_witwe"
+msgstr "„Schwarze Witwe, erwache. Zeige auf die Person, die du umgarnen willst.“"
+
+msgid "ui.call.seelentauscher"
+msgstr "„Seelentauscher, erwache. Willst du zwei Seelen tauschen? Zeige auf die beiden.“"
+
+msgid "ui.call.spuerhund"
+msgstr "„Spürhund, erwache. Zeige auf drei Personen, an denen du schnüffeln willst.“"
+
+msgid "ui.call.todesprediger"
+msgstr "„Todesprediger, erwache. Sag mir leise, wann du sterben wirst.“"
+
+msgid "ui.call.traumdeuter"
+msgstr "„Traumdeuter, erwache. Ich zeige dir die Namen aus deinem Traum.“"
+
+msgid "ui.call.verdammniswaechter"
+msgstr "„Verdammniswächter, erwache. Wen soll der Angriff der Wölfe treffen?“"
+
+msgid "ui.call.voodoo_priester"
+msgstr "„Voodoo-Priester, erwache. Zeige auf die Person, die deine Puppe erhält.“"
+
+msgid "ui.call.waldlaeufer"
+msgstr "„Waldläufer, erwache. Ich zeige dir, wie viele Wölfe noch leben.“"
+
+msgid "ui.call.zeitwaechter"
+msgstr "„Zeitwächter, erwache. Willst du diese Nacht einfrieren?“"
+
+msgid "ui.prompt.albtraumwolf.pick"
+msgstr "Tippe die Person an, die der Albtraumwolf blockiert. Ohne Wahl: „Niemand / verzichten“."
+
+msgid "ui.prompt.blutpriester.targets"
+msgstr "Tippe das Opfer des Blutpriesters an. Es stirbt am Morgen. Ohne Opfer: verzichten."
+
+msgid "ui.prompt.blutpriester.reveal"
+msgstr "Nur für dich: Wähle bis zu drei lebende Wölfe, die du dem Blutpriester nennst."
+
+msgid "ui.prompt.blutpriester.shown"
+msgstr "Nenne dem Blutpriester die gewählten Wölfe. Danach „Gezeigt“."
+
+msgid "ui.prompt.die_ewigen.targets"
+msgstr "Tippe die Person an, die die Ewigen prüfen, und bestätige."
+
+msgid "ui.prompt.die_ewigen.shown"
+msgstr "Zeige den Ewigen, ob die Person allein gewinnen kann. Danach „Gezeigt“."
+
+msgid "ui.prompt.die_gebundenen.shown"
+msgstr "Die Gebundenen sehen einander. Danach „Gezeigt“."
+
+msgid "ui.prompt.doktor.targets"
+msgstr "Tippe die zwei Personen an, auf die der Doktor zeigt, und bestätige."
+
+msgid "ui.prompt.doktor.shown"
+msgstr "Zeige dem Doktor, ob beide zum selben Team gehören. Danach „Gezeigt“."
+
+msgid "ui.prompt.dorfchronistin.shown"
+msgstr "Zeige der Dorfchronistin die Zahl. Danach „Gezeigt“."
+
+msgid "ui.prompt.dorfschmied.pick"
+msgstr "Tippe die Person an, die die Waffe erhält. Sonst „Noch nicht vergeben“."
+
+msgid "ui.prompt.dr_victor_frankenstein.targets"
+msgstr "Tippe den Toten an, den Frankenstein zurückholt. Ohne Wahl: verzichten."
+
+msgid "ui.prompt.dr_victor_frankenstein.role"
+msgstr "Wähle die freie Rolle, mit der die Person zurückkehrt."
+
+msgid "ui.prompt.faehrtenleser.use"
+msgstr "Liest der Fährtenleser heute die Fährte?"
+
+msgid "ui.prompt.faehrtenleser.shown"
+msgstr "Zeige dem Fährtenleser die Richtung. Danach „Gezeigt“."
+
+msgid "ui.prompt.feuerteufel.pick"
+msgstr "Tippe die neu markierte Person an. Sonst „Markierung behalten“."
+
+msgid "ui.prompt.giftwolf.pick"
+msgstr "Tippe die Person an, die der Giftwolf vergiftet. Sie stirbt zwei Nächte später. Ohne Wahl: verzichten."
+
+msgid "ui.prompt.grabraeuber.targets"
+msgstr "Tippe die tote Person an, deren Nachtfähigkeit der Grabräuber stiehlt. Ohne Wahl: verzichten."
+
+msgid "ui.prompt.hades.targets"
+msgstr "Tippe das Opfer des Hades an (kostet Lichter). Ohne Opfer: verzichten."
+
+msgid "ui.prompt.hades.barrier"
+msgstr "Kauft Hades zusätzlich eine Barriere?"
+
+msgid "ui.prompt.henker.pick"
+msgstr "Tippe die Person an, die der Henker markiert. Ohne Wahl: verzichten."
+
+msgid "ui.prompt.koenig_lykaon.ally"
+msgstr "Tippe den verbündeten Wolf an. „Verschieben“ ist höchstens dreimal möglich."
+
+msgid "ui.prompt.koenig_lykaon.targets"
+msgstr "Tippe die Dorfperson an, die zum Trugbilderwolf wird, und bestätige."
+
+msgid "ui.prompt.koenig.targets"
+msgstr "Tippe die Dorfperson an, auf die der König zeigt, und bestätige."
+
+msgid "ui.prompt.koenig.shown"
+msgstr "Zeige dem König die Rolle der Person. Danach „Gezeigt“."
+
+msgid "ui.prompt.kopfgeldjaeger.targets"
+msgstr "Nur für dich: Wähle drei andere Lebende mit mindestens einem Wolf für die Liste."
+
+msgid "ui.prompt.kopfgeldjaeger.shown"
+msgstr "Zeige dem Kopfgeldjäger die drei Namen. Danach „Gezeigt“."
+
+msgid "ui.prompt.korrupter_richter.pick"
+msgstr "Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten."
+
+msgid "ui.prompt.kriegerin_des_lichts.targets"
+msgstr "Tippe die Person an, die die Kriegerin angreift. Ohne Angriff: verzichten."
+
+msgid "ui.prompt.kriegerin_des_lichts.shown"
+msgstr "Zeige der Kriegerin, ob sie einen Wolf getroffen hat. Danach „Gezeigt“."
+
+msgid "ui.prompt.kutscher.targets"
+msgstr "Tippe genau drei Tote an, die zurückkehren, oder verzichte ganz."
+
+msgid "ui.prompt.kutscher.wolf"
+msgstr "Tippe an, wer von den dreien als Wolf zurückkehrt."
+
+msgid "ui.prompt.loki.targets"
+msgstr "Tippe genau zwei Personen an (Loki darf sich selbst wählen) oder verzichte ganz."
+
+msgid "ui.prompt.loki.mode"
+msgstr "Werden die beiden Liebende oder Rivalen?"
+
+msgid "ui.prompt.maertyrerin.pick"
+msgstr "Opfert sich die Märtyrerin für diese Person? Dann Person antippen und bestätigen."
+
+msgid "ui.prompt.nekromant.targets"
+msgstr "Tippe genau drei ungeopferte Tote an oder verzichte ganz."
+
+msgid "ui.prompt.nekromant.redirect"
+msgstr "Lenkt der Nekromant den Angriff um? Tippe das neue Ziel an, sonst „Schild statt Umlenkung“."
+
+msgid "ui.prompt.parasit.pick"
+msgstr "Tippe den neuen Wirt an. Sonst „Wirt behalten“."
+
+msgid "ui.prompt.pestbringerin.pick"
+msgstr "Tippe die Person an, die die Pestbringerin infiziert, und bestätige."
+
+msgid "ui.prompt.prophet_des_untergangs.pick"
+msgstr "In Nacht 1 genau drei Personen markieren, später eine Person töten oder verzichten."
+
+msgid "ui.prompt.rachsuechtiger_wolf.pick"
+msgstr "Tippe den Wolf an, den der Rachsüchtige Wolf reißt. Er stirbt am Morgen. Ohne Wahl: verzichten."
+
+msgid "ui.prompt.rattenfaenger.pick"
+msgstr "Tippe eine oder zwei Personen an, die der Rattenfänger verzaubert, und bestätige."
+
+msgid "ui.prompt.rotkaeppchen.targets"
+msgstr "Tippe die Person an, bei der Rotkäppchen Zuflucht sucht, und bestätige."
+
+msgid "ui.prompt.rotkaeppchen.grant"
+msgstr "Wecke die Person kurz. Gewährt sie Zuflucht?"
+
+msgid "ui.prompt.schattenhund.use"
+msgstr "Blockiert der Schattenhund in dieser Nacht alle Dorffähigkeiten?"
+
+msgid "ui.prompt.schattenwanderer.pick"
+msgstr "Tippe die Person an, mit der sich der Schattenwanderer verknüpft. Sonst „Noch nicht verknüpfen“."
+
+msgid "ui.prompt.schicksalswolf.pick"
+msgstr "In Nacht 1 genau drei Personen markieren, in Nacht 4 bis zur angezeigten Zahl Zusatzopfer wählen."
+
+msgid "ui.prompt.schutzgeist.pick"
+msgstr "Tippe die Person an, die den Schild des Schutzgeists erhält, und bestätige."
+
+msgid "ui.prompt.schwarze_witwe.pick"
+msgstr "Tippe die Person an, auf die die Schwarze Witwe zeigt, und bestätige."
+
+msgid "ui.prompt.seelentauscher.targets"
+msgstr "Tippe genau zwei Personen an (auch Tote) oder verzichte ganz."
+
+msgid "ui.prompt.spuerhund.targets"
+msgstr "Tippe genau drei Personen an oder verzichte ganz."
+
+msgid "ui.prompt.spuerhund.shown"
+msgstr "Zeige dem Spürhund das Ergebnis. Danach „Gezeigt“."
+
+msgid "ui.prompt.todesprediger.prediction"
+msgstr "Stelle Nacht oder Tag und die Nummer ein, die der Todesprediger nennt, und bestätige."
+
+msgid "ui.prompt.traumdeuter.targets"
+msgstr "Nur für dich: Wähle drei andere Lebende mit mindestens einem Wolf für den Traum."
+
+msgid "ui.prompt.traumdeuter.shown"
+msgstr "Zeige dem Traumdeuter die drei Namen. Danach „Gezeigt“."
+
+msgid "ui.prompt.verdammniswaechter.pick"
+msgstr "Wähle, wen der Angriff trifft: das Opfer der Wölfe oder die angebotene Person."
+
+msgid "ui.prompt.voodoo_priester.pick"
+msgstr "Tippe die Person an, die die Puppe erhält. Ohne Wahl: verzichten."
+
+msgid "ui.prompt.waldlaeufer.shown"
+msgstr "Zeige dem Waldläufer die Zahl. Danach „Gezeigt“."
+
+msgid "ui.prompt.zeitwaechter.use"
+msgstr "Friert der Zeitwächter diese Nacht ein? Dann entfallen alle weiteren Nachtschritte."
+
+msgid "ui.prompt.reaction.curse"
+msgstr "Die Person darf im Sterben jemanden verfluchen. Tippe die Person an oder „Verzichtet“."
+
+msgid "ui.prompt.reaction.possessed"
+msgstr "Der Besessene Wolf reißt jemanden mit. Tippe die Person an oder „Verzichtet“."
+
+msgid "ui.prompt.reaction.knight"
+msgstr "Der Ritter trifft den nächsten Wolf. Mehrere sind gleich nah: Tippe den getroffenen Wolf an."
+
+msgid "ui.prompt.reaction.smith"
+msgstr "Die Waffe des Schmieds wehrt den Angriff ab. Tippe den Wolf an, der stirbt."
+
+msgid "ui.prompt.reaction.demon"
+msgstr "Der Dämonische Wolf verflucht im Sterben jemanden. Tippe die Person an oder „Verzichtet“."
+
+msgid "ui.prompt.info.lights"
+msgstr "Lichter"

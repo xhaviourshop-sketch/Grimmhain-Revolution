@@ -115,6 +115,10 @@ static func role_of(s: GameState, p: PendingPrompt) -> String:
 
 static func info_lines(s: GameState, p: PendingPrompt) -> Array:
 	var out: Array = []
+	# Traumdeuter und Kopfgeldjäger: Die Spielleitung wählt drei Personen mit mindestens einem Wolf
+	# (I-01). Hinweis, wer unter den Wählbaren als Wolf zählt; die Prüfung bleibt im Regelkern.
+	if InfoSteps.TRIPLE_OWNERS.has(p.owner) and p.stage == InfoSteps.STAGE_TARGETS:
+		out.append(_line(s, "wolves_available_ids", p.allowed_ids.filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)))
 	var keys := p.partial.keys()
 	keys.sort()
 	for k: Variant in keys:

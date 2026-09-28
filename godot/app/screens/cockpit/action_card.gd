@@ -106,8 +106,10 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 		"targets":
 			_targets_part(next, context, buttons)
 		"choice":
-			buttons.append(_button("YesButton", "ui.cockpit.action.yes", GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
-			buttons.append(_button("NoButton", "ui.cockpit.action.no", GrimmButton.Kind.SECONDARY, &"choice", {"choice": false}))
+			var owner := str(next.get("owner"))
+			var stage := str(next.get("stage"))
+			buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, stage), GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
+			buttons.append(_button("NoButton", CockpitText.action_key("no", owner, stage), GrimmButton.Kind.SECONDARY, &"choice", {"choice": false}))
 		"ack":
 			buttons.append(_button("AckButton", "ui.cockpit.action.ack.%s" % str(next.get("stage")), GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
 		"option":
@@ -139,7 +141,7 @@ func _targets_part(next: Dictionary, context: Dictionary, buttons: Array[Control
 	confirm.disabled = selection.is_empty() or selection.size() < low or selection.size() > high
 	buttons.append(confirm)
 	if low == 0:
-		buttons.append(_button("DeclineButton", "ui.cockpit.action.decline", GrimmButton.Kind.SECONDARY, &"decline"))
+		buttons.append(_button("DeclineButton", CockpitText.action_key("decline", str(next.get("owner")), str(next.get("stage"))), GrimmButton.Kind.SECONDARY, &"decline"))
 	if not selection.is_empty():
 		buttons.append(_button("ClearSelectionButton", "ui.cockpit.action.clear_selection", GrimmButton.Kind.SECONDARY, &"clear_selection"))
 

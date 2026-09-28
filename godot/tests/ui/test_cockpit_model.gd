@@ -176,3 +176,47 @@ func test_skip_requires_reason() -> void:
 	assert_false(session.skip_next_step("  ").ok, "ohne Grund abgelehnt")
 	assert_true(session.skip_next_step("Rudel schläft").ok, "mit Grund")
 	assert_eq(str(session.cockpit_view()["next"]["role_id"]), "waldhexe", "weiter mit der Waldhexe")
+
+
+## Gestohlene Fähigkeit (Grabräuber): Die Ankündigung nennt die übernommene Rolle und die eigene.
+func test_stolen_ability_is_announced_with_own_role() -> void:
+	var session := GameSession.new()
+	session.submit(Fixtures.start_roles(["grabraeuber", "waldhexe", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"]))
+	assert_true(session.gm_correction({"kind": "kill", "target_id": 2, "trigger_effects": false, "reason": "Test"}).ok, "Waldhexe tot")
+	session.start_night()
+	assert_true(session.skip_next_step("kein Opfer").ok, "Rudel übersprungen")
+	assert_true(session.begin_next_step().ok, "Grabräuber-Schritt")
+	var next: Dictionary = session.cockpit_view()["next"]
+	assert_eq([str(next["owner"]), str(next["stage"])], ["grabraeuber", "targets"], "Grabräuber wählt einen Toten")
+	assert_eq(next["allowed_ids"], [2], "nur die tote Waldhexe")
+	var steal := session.answer_targets([2])
+	assert_true(steal.ok, "stiehlt die Fähigkeit (%s)" % steal.error)
+	for guard: int in 10:
+		var n: Dictionary = session.cockpit_view()["next"]
+		if str(n["kind"]) == "day":
+			break
+		var ok := false
+		match str(n["kind"]):
+			"begin_step", "prompt":
+				ok = session.skip_next_step("kein Opfer").ok
+			"end_night":
+				ok = session.end_night().ok
+		assert_true(ok, "Nacht 1 weiter (%s)" % n["kind"])
+		if not ok:
+			return
+	session.decide_execution(-1)
+	session.end_day()
+	session.start_night()
+	var found := false
+	for i: int in 6:
+		next = session.cockpit_view()["next"]
+		if str(next["kind"]) == "begin_step" and str(next["role_id"]) == "waldhexe":
+			found = true
+			assert_eq(str(next["own_role_id"]), "grabraeuber", "eigene Rolle für den Hinweis")
+			assert_eq(next["actor_ids"], [1], "handelnd: der Grabräuber")
+			break
+		if str(next["kind"]) == "prompt" and str(next["owner"]) == "pack":
+			session.skip_next_step("kein Opfer")
+		elif str(next["kind"]) == "begin_step":
+			session.begin_next_step()
+	assert_true(found, "gestohlener Waldhexenschritt angekündigt")

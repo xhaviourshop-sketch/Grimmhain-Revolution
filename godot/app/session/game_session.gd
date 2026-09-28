@@ -132,6 +132,49 @@ func end_night() -> CommandResult:
 	return submit(Command.end_night())
 
 
+func nominate(nominator_id: int, nominee_id: int) -> CommandResult:
+	return submit(Command.nominate(nominator_id, nominee_id))
+
+
+## Hinrichtung (target_id = -1: keine Hinrichtung heute). `extra` enthält nur die Pflichtfelder aus
+## `execution_preview` (cerberus_defend, sage_curse), die der Spielleiter beantwortet hat.
+func decide_execution(target_id: int, extra: Dictionary = {}) -> CommandResult:
+	var payload := {"target_id": target_id}
+	payload.merge(extra)
+	return submit(Command.create(Command.DECIDE_EXECUTION, payload))
+
+
+func end_day() -> CommandResult:
+	return submit(Command.end_day())
+
+
+func amalia_sacrifice(player_id: int, answer: bool) -> CommandResult:
+	return submit(Command.amalia_sacrifice(player_id, answer))
+
+
+func name_wolf(player_id: int, target_id: int) -> CommandResult:
+	return submit(Command.name_wolf(player_id, target_id))
+
+
+## Geheime Vorschau einer Hinrichtung (nur Spielleitung): wer tatsächlich stirbt und welche
+## Entscheidungen der Regelkern zusätzlich verlangt. Siehe CockpitView.execution_preview.
+func execution_preview(target_id: int) -> Dictionary:
+	return CockpitView.execution_preview(_state, target_id)
+
+
+## Geheime Tagesaktionen einzelner Rollen (Amalia, Nekromant), nur für den privaten Bereich.
+func secret_day_actions() -> Array:
+	return CockpitView.secret_day_actions(_state)
+
+
+## Spielleiterkorrektur (GmCorrections): `payload` mit kind, Feldern und Begründung; die bestätigte
+## Warnung setzt dieser Baustein (confirmed = true), weil die Oberfläche sie vorher abfragt.
+func gm_correction(payload: Dictionary) -> CommandResult:
+	var p := payload.duplicate(true)
+	p["confirmed"] = true
+	return submit(Command.gm_correction(p))
+
+
 func confirm_win(candidate_id: int) -> CommandResult:
 	return submit(Command.confirm_win(candidate_id))
 
