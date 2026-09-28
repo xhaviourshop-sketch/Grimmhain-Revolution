@@ -165,9 +165,9 @@ static func gm_drawer(options: Dictionary, seats: Array) -> Control:
 		b.disabled = (options.get(pair[1], {}) as Dictionary).is_empty()
 		list.add_child(b)
 	_label(list, "ui.cockpit.gm.corrections", {}, &"CaptionLabel")
-	var kinds: Array = ["kill", "revive", "set_role", "declare_winner"]
+	var kinds: Array = ["kill", "revive", "set_role", "status", "declare_winner"]
 	if bool(options.get("day", false)):
-		kinds.insert(3, "execute")
+		kinds.insert(4, "execute")
 	for kind: String in kinds:
 		var b := _button("GmKind_%s" % kind, "ui.cockpit.gm.start.%s" % kind, GrimmButton.Kind.SECONDARY)
 		b.set_meta("gm_kind", kind)

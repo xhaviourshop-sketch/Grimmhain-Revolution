@@ -254,6 +254,29 @@ static func command_info(before: GameState, c: Command) -> Dictionary:
 	return info
 
 
+## Einfach korrigierbare Werte einer Person für „Status ändern“ (GmCorrections): je Eintrag die
+## Korrekturart, die Felder des Befehls ohne Wert, der aktuelle Wert und die Art des neuen Werts
+## (bool = umschalten, role = Rollenwahl). Nur für den privaten Korrekturablauf (verrät die Rolle).
+static func status_fields(s: GameState, id: int) -> Array:
+	if not s.players.has(id):
+		return []
+	var p := s.players[id]
+	var out: Array = []
+	out.append({"field": "ever_nominated", "kind": "set_ever_nominated", "fields": {"target_id": id}, "value_key": "value",
+		"current": p.ever_nominated, "type": "bool"})
+	if p.role_id == RoleCatalog.WALDHEXE:
+		for potion: String in WitchStep.POTIONS:
+			out.append({"field": "potion_%s" % potion, "kind": "set_witch_potion", "fields": {"witch_id": id, "potion": potion},
+				"value_key": "available", "current": WitchStep.potion_available(p, potion), "type": "bool"})
+	if p.role_id == RoleCatalog.SPIEGELWOLF:
+		out.append({"field": "mirror", "kind": "set_mirror", "fields": {"target_id": id}, "value_key": "available",
+			"current": ExecutionRules.mirror_available(p), "type": "bool"})
+	if RoleCatalog.requires_appearance(p.role_id):
+		out.append({"field": "appears_as", "kind": "set_role_field", "fields": {"target_id": id, "field": "appears_as"}, "value_key": "value",
+			"current": String(p.appears_as), "type": "role"})
+	return out
+
+
 static func _skipped_count(s: GameState) -> int:
 	var n := 0
 	for status: StringName in s.night_step_status:

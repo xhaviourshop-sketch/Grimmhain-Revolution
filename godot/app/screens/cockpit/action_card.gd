@@ -362,6 +362,20 @@ func _gm(context: Dictionary) -> void:
 				GrimmButton.Kind.PRIMARY if effects is bool and effects == choice else GrimmButton.Kind.SECONDARY, &"gm_effects", {"value": choice})
 			buttons.append(b)
 		ready = ready and effects is bool
+	if mode == "status":
+		# Jeder Wert ist ein eigener Button „Feld: aktuell → neu“; die Wahl führt direkt zur Rückfrage.
+		var fields: Array = context.get("status_fields", [])
+		for i: int in fields.size():
+			var f: Dictionary = fields[i]
+			var b := _button("GmField_%s" % str(f["field"]), "ui.cockpit.card.gm.field", GrimmButton.Kind.SECONDARY, &"gm_field", {"index": i})
+			var now: Variant = f["current"]
+			b.format_values = {"field": StringName("ui.gm.field.%s" % str(f["field"])),
+				"from": StringName("ui.common.yes" if now == true else "ui.common.no") if str(f["type"]) == "bool" else CockpitText.role_name(str(now)),
+				"to": StringName("ui.common.no" if now == true else "ui.common.yes") if str(f["type"]) == "bool" else StringName("ui.cockpit.card.gm.choose")}
+			buttons.append(b)
+		buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))
+		_actions(buttons)
+		return
 	if mode == "set_role":
 		var role := str(context.get("gm_role", ""))
 		if role != "":

@@ -3118,3 +3118,30 @@ msgstr "#{index} Detective clue ({visibility})"
 
 msgid "ui.log.event.alarm_bells"
 msgstr "#{index} Night watchman’s bells ({visibility})"
+
+msgid "ui.cockpit.gm.start.status"
+msgstr "Change status …"
+
+msgid "ui.gm.kind.status"
+msgstr "Change status"
+
+msgid "ui.cockpit.card.gm.field"
+msgstr "{field}: {from} → {to}"
+
+msgid "ui.cockpit.card.gm.choose"
+msgstr "choose …"
+
+msgid "ui.gm.field.ever_nominated"
+msgstr "Ever nominated"
+
+msgid "ui.gm.field.potion_heal"
+msgstr "Healing potion available"
+
+msgid "ui.gm.field.potion_poison"
+msgstr "Poison potion available"
+
+msgid "ui.gm.field.mirror"
+msgstr "Mirror available"
+
+msgid "ui.gm.field.appears_as"
+msgstr "Appears in checks as"

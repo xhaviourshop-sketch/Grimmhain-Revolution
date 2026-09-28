@@ -174,3 +174,29 @@ func test_discard_game_asks_and_keeps_files() -> void:
 	assert_eq(ctx.saves.list().size(), 0, "nicht mehr fortsetzbar")
 	var d := DirAccess.open(ctx.saves.base_dir)
 	assert_true(Array(d.get_files()).any(func(n: String) -> bool: return n.contains(".discarded-")), "Datei umbenannt erhalten")
+
+
+func test_status_change_toggles_witch_potion() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	assert_true((session_of(shell).call("submit", Fixtures.start_roles(["werwolf", "waldhexe", "spiegelwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 2)) as CommandResult).ok, "Start")
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	await _press(shell, "GmButton")
+	await _press(shell, "GmKind_status")
+	await press(_seat(shell, 2))
+	var heal := find_button(current_screen(shell), "GmField_potion_heal")
+	assert_eq(heal.text, "Heiltrank verfügbar: Ja → Nein", "aktueller und neuer Wert")
+	assert_true(find_node(current_screen(shell), "GmField_ever_nominated") != null, "Nominierungsstatus für jede Person")
+	assert_true(find_node(current_screen(shell), "GmField_mirror") == null, "Spiegelung nur beim Spiegelwolf")
+	await press(heal)
+	await _confirm_with_reason(shell, "Trank am Tisch schon benutzt")
+	var fields: Array = session_of(shell).call("status_fields", 2)
+	var potion: Dictionary = fields.filter(func(f: Dictionary) -> bool: return str(f["field"]) == "potion_heal")[0]
+	assert_false(bool(potion["current"]), "Heiltrank jetzt verbraucht")
+	await press(find_button(current_screen(shell), "CloseLayerButton"))
+	await _press(shell, "GmButton")
+	await _press(shell, "GmKind_status")
+	await press(_seat(shell, 3))
+	assert_true(find_node(current_screen(shell), "GmField_mirror") != null, "Spiegelung beim Spiegelwolf")

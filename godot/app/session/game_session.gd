@@ -283,6 +283,11 @@ func execution_preview(target_id: int) -> Dictionary:
 	return CockpitView.execution_preview(_state, target_id)
 
 
+## Einfach korrigierbare Werte einer Person (Spielleitung, privat), siehe CockpitView.status_fields.
+func status_fields(person_id: int) -> Array:
+	return CockpitView.status_fields(_state, person_id)
+
+
 ## Geheime Tagesaktionen einzelner Rollen (Amalia, Nekromant), nur für den privaten Bereich.
 func secret_day_actions() -> Array:
 	return CockpitView.secret_day_actions(_state)

@@ -223,6 +223,7 @@ func _render() -> void:
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
 		"gm_mode": _gm_mode, "gm_effects": _gm_effects, "gm_role": _gm_role,
+		"status_fields": context.session.status_fields(int(_selection[0])) if _gm_mode == "status" and not _selection.is_empty() else [],
 		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
 		"preview": _preview, "exec_extra": _exec_extra, "day_deaths": context.session.day_deaths() if bool(_view.get("has_game")) else [],
 		"reduced_motion": context.settings.reduced_motion,
@@ -376,6 +377,8 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_ask_correction({"kind": "declare_winner", "winner_kind": str(payload["kind"])})
 		&"gm_confirm":
 			_confirm_gm_mode()
+		&"gm_field":
+			_ask_status_field(int(payload["index"]))
 		&"confirm_nomination":
 			var nominee := int(_selection[0])
 			var from := _nominator
@@ -574,6 +577,31 @@ func _confirm_gm_mode() -> void:
 			_day_mode = "execution_check"
 			_check_revealed = true  # die Spielleitung hat die Korrektur bewusst geöffnet
 			_render()
+
+
+## „Status ändern“: Wert umschalten (bool) oder Rolle wählen (Scheinrolle), dann Rückfrage mit Begründung.
+func _ask_status_field(index: int) -> void:
+	var fields := context.session.status_fields(int(_selection[0]))
+	if index >= fields.size():
+		return
+	var f: Dictionary = fields[index]
+	var payload: Dictionary = (f["fields"] as Dictionary).duplicate()
+	payload["kind"] = str(f["kind"])
+	if str(f["type"]) == "bool":
+		payload[str(f["value_key"])] = not bool(f["current"])
+		_ask_correction(payload)
+		return
+	var request := DialogRequest.create("ui.cockpit.dialog.gm_role.title", "ui.cockpit.dialog.gm_role.message", "")
+	for role: StringName in RolePresentation.sorted_roles():
+		var option := DialogOption.new()
+		option.node_name = "Role_%s" % CockpitText.key_part(String(role))
+		option.text_key = RolePresentation.name_key(role)
+		option.on_select = func() -> void:
+			var p := payload.duplicate()
+			p[str(f["value_key"])] = String(role)
+			_ask_correction.call_deferred(p)
+		request.options.append(option)
+	dialog_requested.emit(request)
 
 
 func _ask_gm_role() -> void:

@@ -3118,3 +3118,30 @@ msgstr "#{index} Hinweis des Detektivs ({visibility})"
 
 msgid "ui.log.event.alarm_bells"
 msgstr "#{index} Glocken des Nachtwächters ({visibility})"
+
+msgid "ui.cockpit.gm.start.status"
+msgstr "Status ändern …"
+
+msgid "ui.gm.kind.status"
+msgstr "Status ändern"
+
+msgid "ui.cockpit.card.gm.field"
+msgstr "{field}: {from} → {to}"
+
+msgid "ui.cockpit.card.gm.choose"
+msgstr "wählen …"
+
+msgid "ui.gm.field.ever_nominated"
+msgstr "Jemals nominiert"
+
+msgid "ui.gm.field.potion_heal"
+msgstr "Heiltrank verfügbar"
+
+msgid "ui.gm.field.potion_poison"
+msgstr "Gifttrank verfügbar"
+
+msgid "ui.gm.field.mirror"
+msgstr "Spiegelung verfügbar"
+
+msgid "ui.gm.field.appears_as"
+msgstr "Erscheint bei Prüfungen als"
