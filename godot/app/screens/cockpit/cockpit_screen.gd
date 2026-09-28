@@ -38,6 +38,7 @@ var _check_revealed: bool = false
 @onready var _phase: GrimmLabel = %PhaseValueLabel
 @onready var _round: GrimmLabel = %RoundLabel
 @onready var _alive: GrimmLabel = %AliveLabel
+@onready var _save_status: GrimmLabel = %SaveStatusLabel
 @onready var _warnings: GrimmLabel = %WarningsLabel
 @onready var _ring: GameSeatRing = %SeatRing
 @onready var _center_phase: GrimmLabel = %CenterPhaseLabel
@@ -52,6 +53,7 @@ func _setup() -> void:
 	resized.connect(_update_side_width)
 	context.session.view_changed.connect(_on_session_changed)
 	context.session.command_rejected.connect(_on_rejected)
+	context.saves.status_changed.connect(_on_save_status)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	_card.requested.connect(_on_card_requested)
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
@@ -106,7 +108,24 @@ func _refresh() -> void:
 	_render()
 
 
+## Speicheranzeige: „gespeichert“ nur nach bestätigtem Schreiben, sonst deutlich als Fehler.
+func _on_save_status(status: Dictionary) -> void:
+	_show_save_status(status)
+	if not bool(status.get("ok", false)):
+		status_message_requested.emit("ui.cockpit.save.failed")
+
+
+func _show_save_status(status: Dictionary) -> void:
+	if status.is_empty() or str(status.get("round_id", "")) != context.session.round_id():
+		_save_status.text_key = ""
+		return
+	var ok := bool(status.get("ok", false))
+	_save_status.theme_type_variation = &"CaptionLabel" if ok else &"ErrorCaptionLabel"
+	_save_status.text_key = "ui.cockpit.save.ok" if ok else "ui.cockpit.save.error"
+
+
 func _update_status(active: bool) -> void:
+	_show_save_status(context.saves.last_status if active else {})
 	var phase := str(_view.get("phase", ""))
 	_phase.text_key = "ui.phase.%s" % phase.to_lower() if active else "ui.phase.none"
 	_phase_area.theme_type_variation = &"NightPanel" if phase == "NIGHT" else (&"DayPanel" if phase in ["DAY", "DAWN_RESOLUTION"] else &"HeaderPanel")

@@ -124,6 +124,7 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 | `tests/ui/test_game_start_model.gd`, `tests/ui/test_game_start_step.gd` | Spielstart: ein manueller `StartGame` aus dem bestätigten Setup, Personen/Rollen/Scheinrollen/Sitzplätze im GameState, kein erneutes Mischen, Doppeltippen, Ablehnung ohne Änderung, Replay, Cockpit als aktive Partie, Geheimhaltung, Layout | `../docs/ui/game-start.md` |
 | `tests/ui/test_cockpit_model.gd`, `tests/ui/test_cockpit_screen.gd`, `tests/ui/test_cockpit_day.gd` | Cockpit: Sicht ohne Rollen, geführte Nacht, verdeckte Karten, Ebenen, Sichtschutz, Morgenbericht, Tag, Hinrichtungsprüfung, Sieg, Mehrfachtippen, Layout | `../docs/ui/cockpit.md` |
 | `tests/ui/test_prompt_coverage.gd`, `tests/ui/test_morning_report.gd`, `tests/ui/test_full_round_ui.gd` | alle Prompt-Arten über Kartendaten bedienbar, Morgenbericht mit Positivliste, vollständige Partie nur über Buttons | `../docs/ui/cockpit.md` |
+| `tests/ui/test_save_service.gd` | Speichern und Fortsetzen: Autosave je Befehl, unterbrochenes Schreiben, beschädigte Dateien, Wiederaufnahme offener Prompts, Liste ohne Rollen, Verwerfen ohne Löschen | `../docs/ui/save-resume.md` |
 | `tests/unit/test_reveal_setting.gd` | Setup-Option `reveal_role_on_death` (DR-04): Standard, Übernahme, Speichern, ungültige Werte | DR-04 |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |
 
@@ -344,4 +345,4 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 
 ## Nicht enthalten
 
-Rollenübergabe (Rollen zeigen), Speichern der gestarteten Partie, gespeicherte Einstellungen und Spielerlisten, Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoints auf Datenträger, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
+Rollenübergabe (Rollen zeigen), gespeicherte Einstellungen und Spielerlisten, Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoint-Rotation über eine Sicherung hinaus, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.

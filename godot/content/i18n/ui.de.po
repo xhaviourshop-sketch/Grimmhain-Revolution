@@ -45,7 +45,7 @@ msgid "ui.dialog.quit.title"
 msgstr "Grimmhain beenden?"
 
 msgid "ui.dialog.quit.message"
-msgstr "Die App wird geschlossen. Es gibt noch keine laufende Partie, die verloren gehen könnte."
+msgstr "Die App wird geschlossen. Eine laufende Partie ist gespeichert und lässt sich über „Fortsetzen“ weiterführen."
 
 msgid "ui.dialog.quit.confirm"
 msgstr "Beenden"
@@ -2644,3 +2644,60 @@ msgstr "Fehler: Der Nekromant hat heute schon benannt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.unknown_player"
 msgstr "Fehler: Diese Person gibt es nicht. Nichts wurde geändert."
+
+msgid "ui.cockpit.save.ok"
+msgstr "Gespeichert"
+
+msgid "ui.cockpit.save.error"
+msgstr "Fehler: nicht gespeichert"
+
+msgid "ui.cockpit.save.failed"
+msgstr "Fehler: Die Partie konnte nicht gespeichert werden. Der letzte gespeicherte Stand bleibt erhalten."
+
+msgid "ui.continue.slot.title"
+msgstr "{names} ({count} Personen)"
+
+msgid "ui.continue.slot.unreadable"
+msgstr "Spielstand nicht lesbar"
+
+msgid "ui.continue.slot.detail"
+msgstr "{phase} · Nacht {night} · Tag {day} · {alive} leben · gespeichert {saved}"
+
+msgid "ui.continue.resume"
+msgstr "Fortsetzen"
+
+msgid "ui.continue.discard"
+msgstr "Verwerfen …"
+
+msgid "ui.continue.unsaved.title"
+msgstr "Aktuelle Partie nicht gespeichert"
+
+msgid "ui.continue.unsaved.message"
+msgstr "Der letzte Stand der laufenden Partie konnte nicht gespeichert werden. Beim Wechsel geht er verloren."
+
+msgid "ui.continue.unsaved.confirm"
+msgstr "Trotzdem wechseln"
+
+msgid "ui.continue.status.failed"
+msgstr "Fehler: Der Spielstand ist beschädigt und hat keine gültige Sicherung. Nichts wurde gelöscht."
+
+msgid "ui.continue.status.recovered_backup"
+msgstr "Hinweis: Der Spielstand war beschädigt. Die Sicherung wurde geladen, die beschädigte Datei aufbewahrt."
+
+msgid "ui.continue.status.recovered_tmp"
+msgstr "Hinweis: Das letzte Speichern war unterbrochen. Der vollständige neueste Stand wurde geladen."
+
+msgid "ui.continue.status.resumed"
+msgstr "Partie fortgesetzt"
+
+msgid "ui.continue.status.discarded"
+msgstr "Partie verworfen. Die Dateien bleiben umbenannt erhalten."
+
+msgid "ui.continue.discard_dialog.title"
+msgstr "Partie verwerfen?"
+
+msgid "ui.continue.discard_dialog.message"
+msgstr "Die Partie verschwindet aus der Liste. Die Dateien werden nur umbenannt, nicht gelöscht."
+
+msgid "ui.continue.discard_dialog.confirm"
+msgstr "Verwerfen"

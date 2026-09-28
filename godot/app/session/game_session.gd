@@ -81,6 +81,41 @@ func state_hash() -> String:
 	return _state.content_hash()
 
 
+## Versionierter Spielstand als Text (StateCodec: Zustand, Befehle, Integrität).
+func save_text() -> String:
+	return StateCodec.encode(_state, _commands)
+
+
+## Übernimmt einen gespeicherten Stand. Nur ein vollständig geprüfter Stand (Integrität, Replay)
+## ersetzt die Sitzung; sonst bleibt sie unverändert. Ergebnis: Fehlergrund oder &"".
+func load_text(text: String) -> StringName:
+	var loaded := StateCodec.decode(text)
+	if not loaded.ok:
+		return loaded.error
+	_state = loaded.state
+	_commands = loaded.commands.duplicate()
+	_events = loaded.events.duplicate()
+	view_changed.emit(view())
+	return &""
+
+
+func round_id() -> String:
+	return _state.round_id if _state.is_started() else ""
+
+
+## Öffentliche Zusammenfassung für die Spielstandliste: Namen in Sitzreihenfolge, Phase, Zähler.
+## Keine Rollen, kein Nachtgeheimnis.
+func summary() -> Dictionary:
+	if not _state.is_started():
+		return {}
+	var names: Array = []
+	for id: int in _state.seat_order:
+		names.append(_state.players[id].name)
+	return {"names": names, "player_count": _state.players.size(), "alive_count": _state.alive_ids().size(),
+		"phase": String(_state.phase), "night_number": _state.night_number, "day_number": _state.day_number,
+		"command_count": _commands.size()}
+
+
 ## Verwirft die Sitzung (kein Spielstand).
 func reset() -> void:
 	_state = GameState.new()

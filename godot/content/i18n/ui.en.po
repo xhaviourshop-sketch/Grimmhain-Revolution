@@ -45,7 +45,7 @@ msgid "ui.dialog.quit.title"
 msgstr "Quit Grimmhain?"
 
 msgid "ui.dialog.quit.message"
-msgstr "The app will close. There is no running game yet that could be lost."
+msgstr "The app will close. A running game is saved and can be continued via “Continue”."
 
 msgid "ui.dialog.quit.confirm"
 msgstr "Quit"
@@ -2644,3 +2644,60 @@ msgstr "Error: The Necromancer has already named someone today. Nothing was chan
 
 msgid "ui.cockpit.error.unknown_player"
 msgstr "Error: This person does not exist. Nothing was changed."
+
+msgid "ui.cockpit.save.ok"
+msgstr "Saved"
+
+msgid "ui.cockpit.save.error"
+msgstr "Error: not saved"
+
+msgid "ui.cockpit.save.failed"
+msgstr "Error: The game could not be saved. The last saved state is kept."
+
+msgid "ui.continue.slot.title"
+msgstr "{names} ({count} people)"
+
+msgid "ui.continue.slot.unreadable"
+msgstr "Save not readable"
+
+msgid "ui.continue.slot.detail"
+msgstr "{phase} · night {night} · day {day} · {alive} alive · saved {saved}"
+
+msgid "ui.continue.resume"
+msgstr "Continue"
+
+msgid "ui.continue.discard"
+msgstr "Discard …"
+
+msgid "ui.continue.unsaved.title"
+msgstr "Current game not saved"
+
+msgid "ui.continue.unsaved.message"
+msgstr "The latest state of the running game could not be saved. It is lost if you switch."
+
+msgid "ui.continue.unsaved.confirm"
+msgstr "Switch anyway"
+
+msgid "ui.continue.status.failed"
+msgstr "Error: The save is damaged and has no valid backup. Nothing was deleted."
+
+msgid "ui.continue.status.recovered_backup"
+msgstr "Note: The save was damaged. The backup was loaded and the damaged file kept."
+
+msgid "ui.continue.status.recovered_tmp"
+msgstr "Note: The last save was interrupted. The complete latest state was loaded."
+
+msgid "ui.continue.status.resumed"
+msgstr "Game resumed"
+
+msgid "ui.continue.status.discarded"
+msgstr "Game discarded. The files are kept under a new name."
+
+msgid "ui.continue.discard_dialog.title"
+msgstr "Discard the game?"
+
+msgid "ui.continue.discard_dialog.message"
+msgstr "The game disappears from the list. The files are only renamed, not deleted."
+
+msgid "ui.continue.discard_dialog.confirm"
+msgstr "Discard"

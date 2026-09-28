@@ -40,7 +40,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/screens/start/` | Titel, Untertitel, „Eintreten“, Version |
 | `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Einstellungen, Beenden (nur Desktop, abgesetzt) |
 | `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `decoy_section` mit `decoy_copy_row` (geheime Trugbilderwolf-Scheinrollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
-| `app/screens/continue/` | leerer Zustand „Kein Spielstand vorhanden“, Bereich `SaveSlotList` |
+| `app/screens/continue/` | gespeicherte Partien fortsetzen oder verwerfen; leerer Zustand „Kein Spielstand vorhanden“; Details in `save-resume.md` |
 | `app/screens/settings/` | Sprache DE/EN, Bewegung reduzieren, Platzhalter Audio und Anzeige |
 | `app/screens/cockpit/` | Geführte Partie: Phasenleiste, Sitzkreis, Ansagekarte für Nacht, Morgen, Tag und Sieg, Ebenen für Rollen, Protokoll und gezeigte Karten, Sichtschutz; Details in `cockpit.md` |
 | `app/widgets/grimm_button.gd` | Button mit Übersetzungsschlüssel, Art primär/sekundär/Gefahr, Mindestgröße, Fokus, Umbruch |

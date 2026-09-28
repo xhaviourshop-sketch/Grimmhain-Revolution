@@ -28,6 +28,7 @@ const SUB_SCREENS: Array[StringName] = [&"new_game", &"continue", &"settings", &
 var tree: SceneTree
 var quit_calls: int = 0
 var _spawned: Array[Node] = []
+var _save_dirs: Array[String] = []
 
 
 func attach_tree(t: SceneTree) -> void:
@@ -45,7 +46,26 @@ func after_each() -> void:
 	if platform != null:
 		platform.call("clear_override")
 	TranslationServer.set_locale("de")
+	for dir: String in _save_dirs:
+		_remove_dir(dir)
+	_save_dirs.clear()
 	await frames(1)
+
+
+## Neues leeres Verzeichnis für Spielstände eines Tests (wird in after_each entfernt).
+func make_save_dir() -> String:
+	var dir := "user://test-saves-%d-%d" % [Time.get_ticks_usec(), _save_dirs.size()]
+	_save_dirs.append(dir)
+	return dir
+
+
+func _remove_dir(dir: String) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for f: String in d.get_files():
+		DirAccess.remove_absolute(dir.path_join(f))
+	DirAccess.remove_absolute(dir)
 
 
 func frames(count: int = 2) -> void:
@@ -86,6 +106,11 @@ func spawn_shell(size: Vector2i = SIZE_16_10, locale: String = "de", reduced_mot
 	var context_script := load_script(CONTEXT_SCRIPT)
 	if context_script != null:
 		var context: Object = context_script.new()
+		# Jede Test-Shell speichert in ein eigenes, danach entferntes Verzeichnis (keine echten Spielstände).
+		var saves := context.get("saves") as Object
+		if saves != null:
+			var dir := make_save_dir()
+			saves.set("base_dir", dir)
 		var s := context.get("settings") as Object
 		s.call("set_reduced_motion", reduced_motion)
 		s.call("set_language", locale)
