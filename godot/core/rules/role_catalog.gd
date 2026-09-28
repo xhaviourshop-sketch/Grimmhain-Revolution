@@ -172,6 +172,10 @@ const TODESPREDIGER := &"todesprediger"
 ## Feuerteufel / Pyromaniac (E-05 bis E-11): Einzelsieg; eine Markierung, beim Tod des Ziels brennen dessen
 ## nächste lebende Nachbarn (Feuerteufel verschont); Mitsieg lebend (SoloRules, WinRules).
 const FEUERTEUFEL := &"feuerteufel"
+## Voodoo-Priester / Voodoo Priest (E-12 bis E-15, E-20 bis E-23): Einzelsieg; eine geheime Puppe stirbt statt seiner
+## (KillPipeline); Sieg allein lebend bei höchstens drei Lebenden (WinRules).
+const VOODOO := &"voodoo-priester"
+const VOODOO_MAX_LIVING := 3
 ## Rollen, deren eigener Nachtschritt jede Nacht stattfindet und durch einen Apfel verdoppelt wird (R-02, R-04);
 ## ausgenommen Rollen mit nur einem Ergebnis (Richter, Parasit, Verdammniswächter, Rotkäppchen).
 const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUMWOLF, HENKER, WALDLAEUFER, DOKTOR, TRAUMDEUTER, SCHWARZE_WITWE,
@@ -257,6 +261,7 @@ const ROLES := {
 	PROPHET: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PROPHET, "night_priority": 86},
 	TODESPREDIGER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": TODESPREDIGER, "night_priority": 66, "first_night_only": true},
 	FEUERTEUFEL: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": FEUERTEUFEL, "night_priority": 76},
+	VOODOO: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": VOODOO, "night_priority": 84},
 }
 
 

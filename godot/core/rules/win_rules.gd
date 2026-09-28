@@ -54,6 +54,9 @@ static func evaluate(state: GameState) -> Array:
 	for id: int in state.death_seeker_wins:
 		results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DEATH_SEEKER), "reason_args": {"min_dead": DEATH_SEEKER_MIN_DEAD}, "beneficiary_ids": [id]})
 	for id: int in alive:
+		if SoloRules.voodoo_wins(state, id):
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_VOODOO), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+	for id: int in alive:
 		if parasite_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_PARASITE), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
 	for id: int in state.preacher_wins:
@@ -186,6 +189,8 @@ static func _solo_holds(s: GameState, reason: StringName, id: int) -> bool:
 			return SoloRules.pest_wins(s, id)
 		WinCandidate.REASON_PROPHET:
 			return SoloRules.prophet_wins(s, id)
+		WinCandidate.REASON_VOODOO:
+			return SoloRules.voodoo_wins(s, id)
 	return s.preacher_wins.has(id)
 
 
@@ -230,7 +235,7 @@ static func state_is_consistent(s: GameState) -> bool:
 		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
 				return false
-		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not _solo_holds(s, c.reason_key, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):

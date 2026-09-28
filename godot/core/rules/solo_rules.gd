@@ -11,6 +11,8 @@ extends RefCounted
 ##   oder behalten; sie erlischt mit dem Tod des Ziels, dem Tod oder Rollenverlust des Feuerteufels. Jeder
 ##   tatsächliche Tod eines markierten Ziels (mit Todesfolgen) verbrennt einmal dessen nächste lebende Nachbarn
 ##   ohne Feuerteufel (`CAUSE_BURN`); Mitsieg lebender Feuerteufel bei jedem erkannten Sieg (WinRules).
+## Voodoo-Priester (Teil 3, E-12 bis E-15, E-20 bis E-23): höchstens eine lebende Puppe je Priester (`voodoo_dolls`);
+##   die Umlenkung selbst steht in KillPipeline; Sieg allein lebend bei höchstens drei Lebenden.
 ## Einzelsiegrollen sind weder blockierbar (RM-DR-010) noch vom Fluch des Weisen betroffen.
 
 
@@ -183,3 +185,33 @@ static func fire_on_death(ctx: RuleContext, target: Player, trigger_effects: boo
 	ctx.emit(GameEvent.FIRE_BURNED, Visibility.GM, {"target_id": target.id, "devil_ids": devils, "victim_ids": victims})
 	for id: int in victims:
 		KillPipeline.request_kill(ctx, id, KillEvent.CAUSE_BURN, KillEvent.SOURCE_PLAYER, devils[0])
+
+# --- Voodoo-Priester ------------------------------------------------------------------------------
+
+## Lebende Puppe eines Priesters oder NO_TARGET.
+static func doll_of(s: GameState, priest_id: int) -> int:
+	for d: Dictionary in s.voodoo_dolls:
+		if int(d["priest_id"]) == priest_id:
+			return int(d["doll_id"])
+	return GameState.NO_TARGET
+
+
+static func give_doll(s: GameState, priest_id: int, doll_id: int) -> void:
+	drop_priest_doll(s, priest_id)
+	s.voodoo_dolls.append({"priest_id": priest_id, "doll_id": doll_id})
+	s.voodoo_dolls.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["priest_id"]) < int(b["priest_id"]))
+
+
+## Puppe eines Priesters endet (Verbrauch, Tod oder Rollenverlust des Priesters, RM-DR-132.6, .8).
+static func drop_priest_doll(s: GameState, priest_id: int) -> void:
+	s.voodoo_dolls = s.voodoo_dolls.filter(func(d: Dictionary) -> bool: return int(d["priest_id"]) != priest_id)
+
+
+## Nach jedem Tod: Stirbt ein Priester oder eine Puppe, enden die betroffenen Puppen.
+static func voodoo_on_death(s: GameState, dead_id: int) -> void:
+	s.voodoo_dolls = s.voodoo_dolls.filter(func(d: Dictionary) -> bool: return int(d["priest_id"]) != dead_id and int(d["doll_id"]) != dead_id)
+
+
+static func voodoo_wins(s: GameState, id: int) -> bool:
+	var p: Player = s.players.get(id)
+	return p != null and p.alive and p.role_id == RoleCatalog.VOODOO and s.alive_ids().size() <= RoleCatalog.VOODOO_MAX_LIVING

@@ -779,6 +779,12 @@ msgstr "Feuerteufel"
 msgid "ui.role.feuerteufel.short"
 msgstr "Markiert jede Nacht eine Person; stirbt sie, verbrennen ihre Nachbarn. Gewinnt lebend mit."
 
+msgid "ui.role.voodoo_priester.name"
+msgstr "Voodoo-Priester"
+
+msgid "ui.role.voodoo_priester.short"
+msgstr "Gibt nachts einer anderen Person eine geheime Puppe; stirbt er, stirbt stattdessen die Puppe. Gewinnt allein unter den letzten drei."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

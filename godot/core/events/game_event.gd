@@ -114,6 +114,7 @@ const PROPHECY_SET := &"ProphecySet"            ## Vorhersage des Todespredigers
 const PREACHER_FULFILLED := &"PreacherFulfilled"  ## Vorhersage des Todespredigers erfüllt (nur Spielleiter)
 const FIRE_MARKED := &"FireMarked"              ## Markierung des Feuerteufels gesetzt oder behalten (nur Spielleiter)
 const FIRE_BURNED := &"FireBurned"              ## Brand nach dem Tod eines markierten Ziels (nur Spielleiter)
+const VOODOO_DOLL_GIVEN := &"VoodooDollGiven"    ## Puppe des Voodoo-Priesters vergeben oder verzichtet (nur Spielleiter)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

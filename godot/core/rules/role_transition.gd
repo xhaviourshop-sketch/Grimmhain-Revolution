@@ -31,6 +31,8 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 		ApprenticeRules.end_active(s, player_id, ApprenticeBond.STATUS_REMOVED)
 	if role != RoleCatalog.FEUERTEUFEL:
 		SoloRules.drop_fire_mark(s, player_id)  # Markierung erlischt mit der Rolle (RM-DR-131.7)
+	if role != RoleCatalog.VOODOO:
+		SoloRules.drop_priest_doll(s, player_id)  # Puppe endet mit der Rolle (RM-DR-132.8)
 
 
 ## Wiederbelebung (Decision Log „Rollenaudit · Wiederbelebung …“): lebt wieder, Todesdatensatz weg, alle
@@ -55,6 +57,8 @@ static func restore(s: GameState, player_id: int, snapshot: Dictionary) -> void:
 	WolfChildRules.remove_bond(s, player_id)
 	if p.role_id != RoleCatalog.FEUERTEUFEL:
 		SoloRules.drop_fire_mark(s, player_id)
+	if p.role_id != RoleCatalog.VOODOO:
+		SoloRules.drop_priest_doll(s, player_id)
 
 
 static func snapshot_of(p: Player) -> Dictionary:

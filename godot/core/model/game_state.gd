@@ -72,6 +72,7 @@ var prophet_unlocked: Array[int] = []  ## dauerhaft freigeschaltete Propheten, a
 var prophecies: Array = []            ## Todesprediger: [{preacher_id, kind: night|day, number}]
 var preacher_wins: Array[int] = []    ## Todesprediger mit erfüllter Vorhersage, aufsteigend
 var fire_marks: Array = []             ## Feuerteufel: [{devil_id, target_id}], höchstens eine je Feuerteufel, nach devil_id
+var voodoo_dolls: Array = []           ## Voodoo-Priester: [{priest_id, doll_id}], höchstens eine lebende Puppe je Priester, nach priest_id
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -257,6 +258,7 @@ func to_dict() -> Dictionary:
 		"prophecies": prophecies.duplicate(true),
 		"preacher_wins": preacher_wins.duplicate(),
 		"fire_marks": fire_marks.duplicate(true),
+		"voodoo_dolls": voodoo_dolls.duplicate(true),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -560,6 +562,17 @@ static func from_dict(d: Dictionary) -> GameState:
 		if not s.players.has(piper) or not s.players.has(charmed) or piper == charmed:
 			return null
 		s.charms.append({"piper_id": piper, "target_id": charmed})
+	for item: Variant in DictRead.get_array(d, "voodoo_dolls"):
+		var priest := DictRead.get_int(item, "priest_id", -1) if item is Dictionary else -1
+		var doll := DictRead.get_int(item, "doll_id", -1) if item is Dictionary else -1
+		# E-13, E-14, E-22: lebender Priester mit der Rolle, lebende andere Puppe, eine je Priester, aufsteigend.
+		if not s.players.has(priest) or not s.players.has(doll) or priest == doll:
+			return null
+		if not s.players[priest].alive or s.players[priest].role_id != RoleCatalog.VOODOO or not s.players[doll].alive:
+			return null
+		if not s.voodoo_dolls.is_empty() and int(s.voodoo_dolls[-1]["priest_id"]) >= priest:
+			return null
+		s.voodoo_dolls.append({"priest_id": priest, "doll_id": doll})
 	for item: Variant in DictRead.get_array(d, "fire_marks"):
 		var devil := DictRead.get_int(item, "devil_id", -1) if item is Dictionary else -1
 		var burning := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1

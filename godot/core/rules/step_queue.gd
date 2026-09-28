@@ -114,6 +114,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.PROPHET: false,        # Markieren Pflicht, Töten mit Verzicht (0 Ziele)
 	RoleCatalog.TODESPREDIGER: false,  # Pflichtvorhersage
 	RoleCatalog.FEUERTEUFEL: false,    # Behalten ist eine Antwort (0 Ziele)
+	RoleCatalog.VOODOO: false,         # Verzicht ist eine Antwort (0 Ziele, E-21)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -181,6 +182,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if p.role_id == RoleCatalog.TODESPREDIGER and not SoloRules.prophecy_of(s, id).is_empty():
 			continue
+		if p.role_id == RoleCatalog.VOODOO and SoloRules.doll_of(s, id) != GameState.NO_TARGET:
+			continue  # nur ohne lebende Puppe (E-13)
 		entries.append([priority, id, personal_step_key(p.role_id, id)])
 	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
 	for id: int in s.players:
@@ -290,6 +293,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.FEUERTEUFEL and SoloRules.fire_targets(s, actor).is_empty():
 		return &"no_decision"
+	if step_role(key) == RoleCatalog.VOODOO and (SoloRules.doll_of(s, actor) != GameState.NO_TARGET or SoloRules.fire_targets(s, actor).is_empty()):
+		return &"no_decision"
 	if step_role(key) == RoleCatalog.PROPHET:
 		if SoloRules.prophet_marking(s, actor):
 			return &"no_decision" if s.alive_ids().size() - 1 < RoleCatalog.PROPHET_MARKS else &""
@@ -364,7 +369,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
 	elif BondSteps.OWNERS.has(step_kind(step_id)):
 		BondSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
-	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET, RoleCatalog.FEUERTEUFEL].has(step_kind(step_id)):
+	elif [RoleCatalog.RATTENFAENGER, RoleCatalog.PESTBRINGERIN, RoleCatalog.PROPHET, RoleCatalog.FEUERTEUFEL, RoleCatalog.VOODOO].has(step_kind(step_id)):
 		var solo_actor := step_actor(s.night_plan[s.next_night_step])
 		prompt.owner = step_kind(step_id)
 		prompt.actor_id = solo_actor
@@ -383,6 +388,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 					prompt.min_count = RoleCatalog.PROPHET_MARKS
 					prompt.max_count = RoleCatalog.PROPHET_MARKS
 			RoleCatalog.FEUERTEUFEL:  # eine andere Lebende neu markieren oder behalten (0 Ziele)
+				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
+			RoleCatalog.VOODOO:  # Puppe: eine andere Lebende oder verzichten (E-14, E-21)
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
 	elif step_kind(step_id) == RoleCatalog.SCHWARZE_WITWE or step_kind(step_id) == RoleCatalog.SCHATTENWANDERER:
 		# Witwe: Pflichtwahl einer anderen lebenden Person; Schattenwanderer: eine andere oder „noch nicht“.

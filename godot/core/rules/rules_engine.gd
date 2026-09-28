@@ -575,6 +575,12 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 				"kept": target == GameState.NO_TARGET, "night": s.night_number})
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
+		PendingPrompt.OWNER_VOODOO:
+			if target != GameState.NO_TARGET:
+				SoloRules.give_doll(s, prompt.actor_id, target)
+			ctx.emit(GameEvent.VOODOO_DOLL_GIVEN, Visibility.GM, {"priest_id": prompt.actor_id, "doll_id": target, "night": s.night_number})
+			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+			s.next_night_step += 1
 		PendingPrompt.OWNER_WIDOW:
 			# Schwarze Witwe (B-03, B-06): lebendes Paar des Loki → beide sterben am Morgen.
 			var partners := BondRules.living_partners(s, target)

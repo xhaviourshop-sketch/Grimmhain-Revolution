@@ -779,6 +779,12 @@ msgstr "Pyromaniac"
 msgid "ui.role.feuerteufel.short"
 msgstr "Marks one person each night; when that person dies, their neighbours burn. Wins alongside while alive."
 
+msgid "ui.role.voodoo_priester.name"
+msgstr "Voodoo Priest"
+
+msgid "ui.role.voodoo_priester.short"
+msgstr "Secretly gives another person a doll at night; if he would die, the doll dies instead. Wins alone among the last three."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

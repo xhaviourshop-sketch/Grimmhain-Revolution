@@ -24,13 +24,14 @@ static func living_partners(s: GameState, id: int) -> Array[int]:
 
 
 ## Verknüpfte Person, die statt `target_id` stirbt, oder −1; verbraucht die Verknüpfung.
-static func shadow_partner(s: GameState, target_id: int, source_kind: StringName) -> int:
+static func shadow_partner(s: GameState, target_id: int, source_kind: StringName, chain: Array[int] = []) -> int:
 	if source_kind == KillEvent.SOURCE_GM:
 		return GameState.NO_TARGET
 	for i: int in s.shadow_links.size():
 		var link: Dictionary = s.shadow_links[i]
 		var other := int(link["partner_id"]) if int(link["walker_id"]) == target_id else (int(link["walker_id"]) if int(link["partner_id"]) == target_id else -1)
-		if other != -1 and s.players[other].alive:
+		# E-20: nie zurück zu einer Person, die in dieser Kette schon betroffen war (Verknüpfung bleibt dann ungenutzt).
+		if other != -1 and s.players[other].alive and not chain.has(other):
 			s.shadow_links.remove_at(i)
 			return other
 	return GameState.NO_TARGET
