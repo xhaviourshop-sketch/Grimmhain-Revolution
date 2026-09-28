@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen)
+const SCHEMA_VERSION := 11  ## 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades)
 const RULES_VERSION := &"grimmhain-core-0.11"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -77,6 +77,8 @@ var necro_sacrificed: Array[int] = []  ## Nekromant: geopferte Tote (gemeinsamer
 var necro_shields: Array = []          ## Nekromant: aktive Schilde [{necro_id, night}] in Errichtungsreihenfolge; enden mit der nächsten Nacht
 var necro_named: Dictionary = {}       ## Nekromant: Tag des letzten Benennens je Person-ID
 var necro_wins: Array[int] = []        ## Nekromanten mit Treffer beim Benennen, aufsteigend
+var hades_lights: Dictionary = {}      ## Hades: Lichter je lebender Hades-Person (nur Werte ≥ 1, E-28)
+var hades_barriers: Array[int] = []   ## Hades mit aktiver Barriere, aufsteigend (E-31)
 var pack_redirect_from: int = -1       ## Nekromant, der den Rudelangriff dieser Nacht umgelenkt hat (Kette, E-20)
 var pack_extra_redirect_from: int = -1  ## dasselbe für das Zusatzopfer des Rudelvaters
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
@@ -269,6 +271,8 @@ func to_dict() -> Dictionary:
 		"necro_shields": necro_shields.duplicate(true),
 		"necro_named": _int_keys_to_dict(necro_named),
 		"necro_wins": necro_wins.duplicate(),
+		"hades_lights": _int_keys_to_dict(hades_lights),
+		"hades_barriers": hades_barriers.duplicate(),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -480,7 +484,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var marked_target := DictRead.get_int(item, "target_id", -1)
 		var marked_source := DictRead.get_int(item, "source_id", -1)
 		var mark_cause := StringName(DictRead.get_string(item, "cause"))
-		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW, KillEvent.CAUSE_PROPHET_KILL].has(mark_cause):
+		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW, KillEvent.CAUSE_PROPHET_KILL, KillEvent.CAUSE_HADES_KILL].has(mark_cause):
 			return null
 		s.death_marks.append({"target_id": marked_target, "source_id": marked_source, "cause": String(mark_cause)})
 	for item: Variant in DictRead.get_array(d, "detective_hints"):
@@ -602,6 +606,23 @@ static func from_dict(d: Dictionary) -> GameState:
 		if not String(key).is_valid_int() or not s.players.has(String(key).to_int()) or not DictRead.is_int_like(named[key]) or int(named[key]) < 1 or int(named[key]) > s.day_number:
 			return null
 		s.necro_named[String(key).to_int()] = int(named[key])
+	# Hades (E-28, E-31): Lichter und Barriere hält nur ein lebender Hades (sie erlöschen mit Tod und Rollenverlust).
+	var lights := DictRead.get_dict(d, "hades_lights")
+	for key: Variant in lights:
+		var holder_id := String(key).to_int() if String(key).is_valid_int() else -1
+		if not s.players.has(holder_id) or not DictRead.is_int_like(lights[key]) or int(lights[key]) < 1:
+			return null
+		if not s.players[holder_id].alive or s.players[holder_id].role_id != RoleCatalog.HADES:
+			return null
+		s.hades_lights[holder_id] = int(lights[key])
+	var barriers: Variant = DictRead.to_int_array(DictRead.get_array(d, "hades_barriers"))
+	if barriers == null:
+		return null
+	for i: int in (barriers as Array).size():
+		var barrier_id: int = barriers[i]
+		if not s.players.has(barrier_id) or not s.players[barrier_id].alive or s.players[barrier_id].role_id != RoleCatalog.HADES or (i > 0 and barrier_id <= int(barriers[i - 1])):
+			return null
+	s.hades_barriers = barriers
 	for key: String in ["pack_redirect_from", "pack_extra_redirect_from"]:
 		var from := DictRead.get_int(d, key, -1)
 		if from != -1 and (not s.players.has(from) or s.players[from].role_id != RoleCatalog.NEKROMANT):

@@ -10,6 +10,8 @@ extends RefCounted
 ##   Seelentauscher (bis zur Nutzung): „targets“ (0 oder zwei verschiedene Personen, lebend oder tot).
 ##   Kutscher (ab 10 Toten, bis zur Nutzung): „targets“ (0 oder drei Tote), dann „wolf“ (einer davon).
 ##   Dr. Victor Frankenstein (bis zur Nutzung): „targets“ (0 oder ein Toter), dann „role“ (Index in `options`).
+##   Hades (ab 2 Lichtern): „targets“ (0 oder eine andere Lebende als Opfer), dann „barrier“ (Ja/Nein), wenn danach
+##     eine Barriere kaufbar ist; beides wird erst mit der letzten Antwort bezahlt (SoloRules.hades_act).
 ## Abbrechbar, nicht überspringbar; bestätigte Stufen bleiben bis zur letzten Antwort im Prompt.
 
 const STAGE_TARGETS := &"targets"
@@ -20,9 +22,10 @@ const STAGE_WOLF := &"wolf"
 const STAGE_ROLE := &"role"
 const STAGE_PREDICTION := &"prediction"  ## Todesprediger: {"kind": "night"|"day", "number": n}
 const STAGE_REDIRECT := &"redirect"  ## Nekromant: Umlenkziel (0 = Schild statt Umlenkung)
-const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY, STAGE_WOLF, STAGE_ROLE, STAGE_PREDICTION, STAGE_REDIRECT]
+const STAGE_BARRIER := &"barrier"  ## Hades: Barriere kaufen (Ja/Nein)
+const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY, STAGE_WOLF, STAGE_ROLE, STAGE_PREDICTION, STAGE_REDIRECT, STAGE_BARRIER]
 const OWNERS: Array[StringName] = [PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER,
-	PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO]
+	PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO, PendingPrompt.OWNER_HADES]
 ## Rollen, deren erste Stufe Tote auswählt.
 const REVIVERS: Array[StringName] = [PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_NECRO]
 const LOKI_USE_KEY := "loki:bind"
@@ -114,6 +117,8 @@ static func _first_stage_shape(s: GameState, owner: StringName, actor_id: int) -
 		return [SoloRules.necro_pool(s), 0, RoleCatalog.NECRO_SACRIFICE]
 	if owner == PendingPrompt.OWNER_PREACHER:
 		return [[], 0, 0]
+	if owner == PendingPrompt.OWNER_HADES:  # keins oder ein Opfer (E-30)
+		return [SoloRules.hades_targets(s, actor_id), 0, 1]
 	return [_all_ids(s), 0, 2]
 
 
@@ -133,7 +138,7 @@ static func open(s: GameState, prompt: PendingPrompt, owner: StringName, actor_i
 static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) -> StringName:
 	if DictRead.get_string(p, "stage") != String(prompt.stage):
 		return &"stage_mismatch"
-	if prompt.stage == STAGE_MODE or prompt.stage == STAGE_GRANT:
+	if prompt.stage == STAGE_MODE or prompt.stage == STAGE_GRANT or prompt.stage == STAGE_BARRIER:
 		return &"" if (not p.has("targets") and p.get("choice") is bool) else &"invalid_answer"
 	if prompt.stage == STAGE_PREDICTION:
 		return &"" if (not p.has("targets") and SoloRules.validate_prediction(s, p.get("prediction"))) else &"invalid_prediction"
@@ -187,6 +192,11 @@ static func _next_stage(ctx: RuleContext, prompt: PendingPrompt, answered: Strin
 static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	var prompt := s.pending_prompt
+	if prompt.stage == STAGE_BARRIER:
+		var kill := DictRead.get_int(prompt.partial, "target_id", GameState.NO_TARGET)
+		SoloRules.hades_act(ctx, prompt.actor_id, kill, bool(p["choice"]))
+		_finish(ctx, prompt, STAGE_BARRIER, {"choice": bool(p["choice"])})
+		return
 	if prompt.stage == STAGE_MODE or prompt.stage == STAGE_GRANT:
 		_answer_choice(ctx, prompt, bool(p["choice"]))
 		return
@@ -227,6 +237,16 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 		return
 	if prompt.owner == PendingPrompt.OWNER_LYKAON:
 		_convert(ctx, prompt, int(prompt.partial["ally_id"]), chosen[0])
+		return
+	if prompt.owner == PendingPrompt.OWNER_HADES:
+		var victim := chosen[0] if not chosen.is_empty() else GameState.NO_TARGET
+		if SoloRules.hades_can_buy_barrier(s, prompt.actor_id, victim):
+			prompt.partial = {"target_id": victim}
+			var none_barrier: Array[int] = []
+			_next_stage(ctx, prompt, STAGE_TARGETS, chosen, STAGE_BARRIER, none_barrier, 0)
+			return
+		SoloRules.hades_act(ctx, prompt.actor_id, victim, false)
+		_finish(ctx, prompt, STAGE_TARGETS, {"declined": victim == GameState.NO_TARGET})
 		return
 	if chosen.is_empty():
 		_finish(ctx, prompt, STAGE_TARGETS, {"declined": true})  # Loki oder Seelentauscher verzichtet
@@ -382,6 +402,9 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 		var sorted_dead := (sacrificed as Array).duplicate()
 		sorted_dead.sort()
 		return prompt.stage == STAGE_REDIRECT and sorted_dead == sacrificed and (sacrificed as Array).all(func(id: int) -> bool: return pool.has(id) and (sacrificed as Array).count(id) == 1) 			and SoloRules.necro_attack_slot(s, actor.id) != "" and prompt.allowed_ids == SoloRules.necro_redirect_targets(s, actor.id) and prompt.min_count == 0 and prompt.max_count == 1
+	if prompt.owner == PendingPrompt.OWNER_HADES:
+		var victim := DictRead.get_int(prompt.partial, "target_id", -2)
+		return prompt.stage == STAGE_BARRIER and prompt.partial.size() == 1 and (victim == GameState.NO_TARGET or SoloRules.hades_targets(s, actor.id).has(victim)) 			and SoloRules.hades_can_buy_barrier(s, actor.id, victim) and prompt.allowed_ids.is_empty() and prompt.min_count == 0 and prompt.max_count == 0
 	if prompt.owner == PendingPrompt.OWNER_FRANKENSTEIN:
 		var dead := DictRead.get_int(prompt.partial, "target_id", -1)
 		return prompt.stage == STAGE_ROLE and s.players.has(dead) and not s.players[dead].alive and prompt.allowed_ids.is_empty() \

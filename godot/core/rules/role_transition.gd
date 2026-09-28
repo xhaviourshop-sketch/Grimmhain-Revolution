@@ -35,6 +35,8 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 		SoloRules.drop_priest_doll(s, player_id)  # Puppe endet mit der Rolle (RM-DR-132.8)
 	if role != RoleCatalog.NEKROMANT:
 		SoloRules.necro_drop_shields(s, player_id)  # Schild erlischt mit der Rolle (RM-DR-142.9)
+	if role != RoleCatalog.HADES or previous != RoleCatalog.HADES:
+		SoloRules.hades_drop(s, player_id)  # Lichter und Barriere gehören der bisherigen Rolle
 
 
 ## Wiederbelebung (Decision Log „Rollenaudit · Wiederbelebung …“): lebt wieder, Todesdatensatz weg, alle
@@ -63,6 +65,8 @@ static func restore(s: GameState, player_id: int, snapshot: Dictionary) -> void:
 		SoloRules.drop_priest_doll(s, player_id)
 	if p.role_id != RoleCatalog.NEKROMANT:
 		SoloRules.necro_drop_shields(s, player_id)
+	if p.role_id != RoleCatalog.HADES:
+		SoloRules.hades_drop(s, player_id)
 
 
 static func snapshot_of(p: Player) -> Dictionary:

@@ -321,3 +321,80 @@ static func name_wolf(ctx: RuleContext, p: Dictionary) -> void:
 		s.necro_wins.sort()
 		s.win_check_pending = true
 	ctx.emit(GameEvent.NECRO_NAMED, Visibility.GM, {"necro_id": id, "target_id": target, "hit": hit, "day": s.day_number})
+
+# --- Hades ----------------------------------------------------------------------------------------
+
+static func hades_light_count(s: GameState, id: int) -> int:
+	return int(s.hades_lights.get(id, 0))
+
+
+static func _set_lights(s: GameState, id: int, value: int) -> void:
+	if value > 0:
+		s.hades_lights[id] = value
+	else:
+		s.hades_lights.erase(id)
+
+
+## Andere Lebende als Opfer, wenn er die Tötung bezahlen kann (E-30), sonst keine.
+static func hades_targets(s: GameState, id: int) -> Array[int]:
+	return _others_alive(s, id) if hades_light_count(s, id) >= RoleCatalog.HADES_KILL_COST else [] as Array[int]
+
+
+## Barriere nach einer Tötung (`kill` = NO_TARGET ohne) noch kaufbar: keine aktive, genug übrige Lichter (E-31).
+static func hades_can_buy_barrier(s: GameState, id: int, kill: int) -> bool:
+	var left := hades_light_count(s, id) - (RoleCatalog.HADES_KILL_COST if kill != GameState.NO_TARGET else 0)
+	return not s.hades_barriers.has(id) and left >= RoleCatalog.HADES_BARRIER_COST
+
+
+## Nachtschritt hat eine Entscheidung: Tötung oder Barriere möglich.
+static func hades_has_decision(s: GameState, id: int) -> bool:
+	return not hades_targets(s, id).is_empty() or hades_can_buy_barrier(s, id, GameState.NO_TARGET)
+
+
+## Abschluss des Hades-Schritts: Tötung als Todesmarkierung für den Morgen (eigene Ursache), Barriere sofort.
+static func hades_act(ctx: RuleContext, id: int, kill: int, barrier: bool) -> void:
+	var s := ctx.state
+	var lights := hades_light_count(s, id)
+	if kill != GameState.NO_TARGET:
+		lights -= RoleCatalog.HADES_KILL_COST
+		s.death_marks.append({"target_id": kill, "source_id": id, "cause": String(KillEvent.CAUSE_HADES_KILL)})
+	if barrier:
+		lights -= RoleCatalog.HADES_BARRIER_COST
+		s.hades_barriers.append(id)
+		s.hades_barriers.sort()
+	_set_lights(s, id, lights)
+	ctx.emit(GameEvent.HADES_ACTED, Visibility.GM, {"hades_id": id, "target_id": kill, "barrier": barrier, "lights": lights, "night": s.night_number})
+
+
+## Barriere (E-31): verhindert den nächsten Tod außer Korrektur; persönlicher Schild.
+static func hades_barrier_prevents(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
+	var s := ctx.state
+	if target.role_id != RoleCatalog.HADES or source_kind == KillEvent.SOURCE_GM or not s.hades_barriers.has(target.id):
+		return false
+	s.hades_barriers.erase(target.id)
+	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": target.id, "cause": cause, "source_kind": source_kind,
+		"protection": RoleCatalog.HADES, "sources": [RoleCatalog.HADES], "night": s.night_number})
+	return true
+
+
+## Nach jedem tatsächlichen Tod außer Korrektur: jeder andere lebende Hades erhält 1 Licht (E-28). Lichter und
+## Barriere eines toten Hades erlöschen (abgeleitet wie E-27).
+static func hades_on_death(ctx: RuleContext, target: Player, source_kind: StringName) -> void:
+	var s := ctx.state
+	hades_drop(s, target.id)
+	if source_kind == KillEvent.SOURCE_GM:
+		return
+	for id: int in s.alive_ids():
+		if s.players[id].role_id == RoleCatalog.HADES:
+			_set_lights(s, id, hades_light_count(s, id) + 1)
+			ctx.emit(GameEvent.HADES_LIGHT, Visibility.GM, {"hades_id": id, "from_id": target.id, "lights": hades_light_count(s, id)})
+
+
+static func hades_drop(s: GameState, id: int) -> void:
+	s.hades_lights.erase(id)
+	s.hades_barriers.erase(id)
+
+
+static func hades_wins(s: GameState, id: int) -> bool:
+	var p: Player = s.players.get(id)
+	return p != null and p.alive and p.role_id == RoleCatalog.HADES and hades_light_count(s, id) >= RoleCatalog.HADES_WIN_LIGHTS

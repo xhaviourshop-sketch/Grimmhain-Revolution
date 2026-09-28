@@ -791,6 +791,12 @@ msgstr "Nekromant"
 msgid "ui.role.nekromant.short"
 msgstr "Opfert drei Tote für einen Schild gegen den nächsten Tod oder lenkt einen Angriff um; benennt er einen Wolf, gewinnt er."
 
+msgid "ui.role.hades.name"
+msgstr "Hades"
+
+msgid "ui.role.hades.short"
+msgstr "Erhält für jeden Tod ein Licht; tötet für 2, kauft für 3 eine Barriere; gewinnt lebend mit 10 Lichtern."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

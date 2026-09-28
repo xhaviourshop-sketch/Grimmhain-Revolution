@@ -32,6 +32,8 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		return null
 	if _fenrir_survives(ctx, target, cause, source_kind):
 		return null
+	if SoloRules.hades_barrier_prevents(ctx, target, cause, source_kind):
+		return null
 	# Nekromant (E-16): globaler Schild nach Schutz und persönlichen Schilden, vor den Umlenkungen (E-12, B-07).
 	if SoloRules.necro_shield_prevents(ctx, target_id, cause, source_kind):
 		return null
@@ -80,6 +82,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	SoloRules.on_death(ctx, target, record, trigger_effects)
 	SoloRules.voodoo_on_death(s, target.id)
 	SoloRules.necro_drop_shields(s, target.id)
+	SoloRules.hades_on_death(ctx, target, source_kind)
 	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
 	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:
@@ -178,8 +181,10 @@ static func _use_one_time_protection(ctx: RuleContext, target_id: int, kind: Str
 
 
 ## true, wenn die Person einen Rudelangriff jetzt durch einen persönlichen Schild überlebt (Parasit mit
-## lebendem Wirt, Fenrir ab Stufe 3); für die Frage der Märtyrerin.
+## lebendem Wirt, Fenrir ab Stufe 3, Barriere des Hades); für die Frage der Märtyrerin.
 static func survives_any_death(s: GameState, p: Player) -> bool:
+	if p.role_id == RoleCatalog.HADES:
+		return s.hades_barriers.has(p.id)
 	if p.role_id == RoleCatalog.PARASIT:
 		var host := host_of(s, p.id)
 		return host != GameState.NO_TARGET and s.players[host].alive

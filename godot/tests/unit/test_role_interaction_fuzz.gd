@@ -17,7 +17,7 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
 	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein",
-	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant"]
+	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 ## Volle Fokusrunden: jede Rolle ist gleich oft Fokusrolle, auch wenn der Rollenpool wächst.
@@ -35,9 +35,9 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
 	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived",
-	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed"]
+	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
-	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN"]
+	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN", "HADES_KILL"]
 
 var _rng := RandomNumberGenerator.new()
 var _game_label := ""
@@ -436,7 +436,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				if not chosen.has(t):
 					chosen.append(t)
 			return Command.answer_stage_targets(p.id, String(p.stage), chosen)
-		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO:
+		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO, PendingPrompt.OWNER_HADES:
 			# Apfel (R-02) ist selten: Rotkäppchen-Fokuspartien wählen eine Person mit Jede-Nacht-Schritt und gewähren Zuflucht.
 			if p.owner == PendingPrompt.OWNER_RED and _focus == "rotkaeppchen":
 				if p.stage == BondSteps.STAGE_GRANT:
@@ -448,7 +448,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				var kind := "night" if _rng.randf() < 0.5 else "day"
 				var at := s.night_number + _rng.randi_range(1 if kind == "night" else 0, 4)
 				return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "prediction": {"kind": kind, "number": at}})
-			if p.stage == BondSteps.STAGE_MODE or p.stage == BondSteps.STAGE_GRANT:
+			if p.stage == BondSteps.STAGE_MODE or p.stage == BondSteps.STAGE_GRANT or p.stage == BondSteps.STAGE_BARRIER:
 				return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.6)
 			if p.stage == BondSteps.STAGE_ROLE:
 				var role_options: Array = p.partial.get("options", [])
