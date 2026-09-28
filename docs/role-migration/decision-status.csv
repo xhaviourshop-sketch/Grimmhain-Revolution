@@ -24,8 +24,8 @@ RM-DR-016.2;ja;Kopien während der Partie und Zustand je Person;T;"G-ID-3; DR-11
 RM-DR-017;nein;nächste Rolleneinheit;E;"Auftrag des Nutzers 27.09.2026 (alle 72 Rollen prüfen)";Auftrag Rollenaudit: alle 72 Rollen
 RM-DR-101.1;ja;loki;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Rivalen nur Marker (B-02)
 RM-DR-102.1;ja;nachtwaechter;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
-RM-DR-103.1;ja;rattenfaenger;S;;
-RM-DR-103.2;ja;rattenfaenger;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
+RM-DR-103.1;ja;rattenfaenger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";alle anderen Lebenden, er selbst nicht (E-01)
+RM-DR-103.2;ja;rattenfaenger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Puppe hebt nichts auf (E-01)
 RM-DR-104.1;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Mitsieg mit geprüfter Person (I-12, I-15)
 RM-DR-104.2;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Ja/Nein, gemeinsamer Schritt (I-11)
 RM-DR-104.3;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";bleiben Dorf, zusätzlicher Mitsieg (I-12)
@@ -68,13 +68,13 @@ RM-DR-118.2;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";
 RM-DR-118.3;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nicht blockierbar, Fluch schon (S-03, S-05)
 RM-DR-119.1;ja;dorfwache;S;;
 RM-DR-119.2;ja;dorfwache;S;;
-RM-DR-120.1;ja;pestbringerin;S;;
-RM-DR-120.2;ja;pestbringerin;S;;
-RM-DR-120.3;ja;pestbringerin;S;;
-RM-DR-120.4;ja;pestbringerin;S;;
-RM-DR-121.1;ja;prophet-des-untergangs;S;;
-RM-DR-121.2;ja;prophet-des-untergangs;S;;
-RM-DR-121.3;ja;prophet-des-untergangs;S;;
+RM-DR-120.1;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nicht tödlich, Siegrennen (E-02)
+RM-DR-120.2;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";jede Nacht eine Infektion (E-02)
+RM-DR-120.3;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur lebend (E-02)
+RM-DR-120.4;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nächste lebende Nachbarn, Seed (E-02)
+RM-DR-121.1;ja;prophet-des-untergangs;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";statt Dorfsieg, wenn freigeschaltet und kein Wolf lebt (E-03)
+RM-DR-121.2;ja;prophet-des-untergangs;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";dauerhaft (E-03)
+RM-DR-121.3;ja;prophet-des-untergangs;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur andere (E-03)
 RM-DR-122.1;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Todesreaktion (V-01)
 RM-DR-122.2;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";nur Rollenauskünfte (V-02)
 RM-DR-122.3;ja;daemonischer-wolf;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";jeder Tod mit Folgen (V-01)
@@ -179,9 +179,9 @@ RM-DR-155.3;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur Doppelspi
 RM-DR-156.1;ja;grabraeuber;S;;
 RM-DR-156.2;ja;grabraeuber;S;;
 RM-DR-157.1;ja;parasit;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";höchstens drei Lebende inkl. ihm, mit anderen Siegen
-RM-DR-158.1;ja;todesprediger;S;;
-RM-DR-158.2;ja;todesprediger;S;;
-RM-DR-158.3;ja;todesprediger;S;;
+RM-DR-158.1;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";geheim (E-04)
+RM-DR-158.2;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur Nacht 1 (E-04)
+RM-DR-158.3;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Tag N nach Nacht N, Morgentode zur Nacht (E-04)
 RM-DR-138.3;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";nur aktuell Tote
 RM-DR-138.4;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";erneut nach jeder Zustandsänderung
 RM-DR-138.5;ja;selbstmoerder;E;"rules-register G-TOD-3; DECISION-LOG Spiegelwolf";Tod durch Spiegelung ist keine Hinrichtung des Selbstmörders

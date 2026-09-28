@@ -23,11 +23,11 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 54 | 135 |
+| entschieden | 58 | 147 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 17 | 48 |
-| quellenprüfung | 2 | 2 |
+| später | 14 | 37 |
+| quellenprüfung | 1 | 1 |
 | **gesamt** | **75** | **188** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
@@ -305,12 +305,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `rattenfaenger`; Wechselwirkung laut Dossier: Voodoo-Priester (hebt Verzauberung auf), Lehrling/Seelentauscher (Rollenwechsel), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (Doppelaktion), Die Ewigen (Solo-Erkennung), Wölfe/Dorf …
 - **Belege:** [Dossier](dossiers/solos-a.md#rattenfaenger); RM-C-041, RM-C-043 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-007.
-- **RM-DR-103.1 · Zählt er selbst** · Status: später (K9)
+- **RM-DR-103.1 · Zählt er selbst** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: alle außer Rattenfänger
   - Option B: inkl. Rattenfänger (Selbstverzauberung nötig)
   - Auswirkung: Balance: B verschwendet eine Verzauberung; Umsetzung: Filter
   - Empfehlung: A (Code) + Text präzisieren
-- **RM-DR-103.2 · Verzauberung durch Puppe aufgehoben** · Status: quellenprüfung; ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
+- **RM-DR-103.2 · Verzauberung durch Puppe aufgehoben** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: beabsichtigte Interaktion
   - Option B: Altlast
   - Auswirkung: Balance: Voodoo kann Rattenfänger bremsen; Umsetzung: eigene Regel nötig
@@ -678,22 +678,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `pestbringerin`; Wechselwirkung laut Dossier: Zeitwächter (friert Ausbreitung ein), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (zweiter Einsatz pro Nacht), Die Ewigen, Wolfsparität (konkurrierender …
 - **Belege:** [Dossier](dossiers/solos-a.md#pestbringerin); RM-C-044, RM-C-045, RM-C-046, RM-C-047 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-015.
-- **RM-DR-120.1 · Tödlichkeit** · Status: später (K9)
+- **RM-DR-120.1 · Tödlichkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Code: Marker ohne Tod, Sieg bei Totalinfektion
   - Option B: Text: Seuche tötet (Zeitpunkt offen)
   - Auswirkung: Balance: A ist ein Siegrennen, B eine Tötungsrolle; Umsetzung: A einfach; B braucht verzögerte Tode
   - Empfehlung: A (07-Vorschlag), Text anpassen
-- **RM-DR-120.2 · Häufigkeit** · Status: später (K9)
+- **RM-DR-120.2 · Häufigkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Code
   - Option B: Text (jede Nacht neu)
   - Auswirkung: Balance: B beschleunigt Sieg stark; Umsetzung: Zähler
   - Empfehlung: Code
-- **RM-DR-120.3 · Siegbedingung** · Status: später (K9)
+- **RM-DR-120.3 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: nur lebend
   - Option B: auch tot
   - Auswirkung: Balance: B erlaubt „posthumen" Sieg; Umsetzung: Kandidat nur bei lebender Pestbringerin
   - Empfehlung: lebend verlangen
-- **RM-DR-120.4 · Ausbreitung** · Status: später (K9)
+- **RM-DR-120.4 · Ausbreitung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: direkte Sitze
   - Option B: nächste lebende Nachbarn
   - Auswirkung: Balance: Tote Nachbarn bremsen A; Umsetzung: Sitznachbarschaft + SeededRng
@@ -707,17 +707,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `prophet-des-untergangs`; Wechselwirkung laut Dossier: alle Tötungsrollen (Freischaltung), Kutscher/Frankenstein (Wiederbelebung), Lehrling/Seelentauscher (Erbe des globalen Zustands), Rotkäppchen (zwei Tötungen), Schilde (Nekromant, Hades, Kartenschlucker, Rudelvater), Die …
 - **Belege:** [Dossier](dossiers/solos-a.md#prophet-des-untergangs); RM-C-048, RM-C-049, RM-C-050 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-006, RM-DR-007, RM-DR-014.
-- **RM-DR-121.1 · Einzelsieg** · Status: später (K9)
+- **RM-DR-121.1 · Einzelsieg** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Sieg als letzter Überlebender (bzw. letzte Nicht-Prophet-Person tot)
   - Option B: Sieg, sobald freigeschaltet und X weitere Tote
   - Auswirkung: Balance: Ohne Regel ist die Rolle faktisch Dorf-Hilfe; Umsetzung: neue Siegbedingung
   - Empfehlung: PO definieren (07 Q4 B: SL-Siegbutton bis dahin)
-- **RM-DR-121.2 · Freischaltung dauerhaft** · Status: später (K9)
+- **RM-DR-121.2 · Freischaltung dauerhaft** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: dauerhaft
   - Option B: solange alle tot
   - Auswirkung: Balance: selten; Umsetzung: Status speichern
   - Empfehlung: dauerhaft
-- **RM-DR-121.3 · Selbstmarkierung** · Status: später (K9)
+- **RM-DR-121.3 · Selbstmarkierung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: nur andere
   - Option B: beliebig
   - Auswirkung: Balance: Selbstmarkierung macht Freischaltung unmöglich; Umsetzung: Filter
@@ -1601,17 +1601,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `todesprediger`; Wechselwirkung laut Dossier: alle tötenden Rollen; Zeitwächter (Frost, Nachtzählung), Lynch/Hinrichtung, Parasit-ähnliche Immunitäten und Schilde (verschieben Todeszeitpunkt), Frankenstein/Kutscher (Wiederbelebung und erneuter …
 - **Belege:** [Dossier](dossiers/solos-b.md#todesprediger); RM-C-079, RM-C-080, RM-C-081 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-007, RM-DR-011, RM-DR-014.
-- **RM-DR-158.1 · Öffentlich oder geheim** · Status: später (K15)
+- **RM-DR-158.1 · Öffentlich oder geheim** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: öffentliche Ankündigung
   - Option B: geheime Vorhersage beim SL
   - Auswirkung: Balance: öffentlich: Dorf/Wölfe können gezielt töten oder schonen; Umsetzung: Ereignis-Sichtbarkeit public vs gm
   - Empfehlung: PO
-- **RM-DR-158.2 · Zeitpunkt der Vorhersage** · Status: später (K15)
+- **RM-DR-158.2 · Zeitpunkt der Vorhersage** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: nur Nacht 1
   - Option B: jederzeit einmal
   - Auswirkung: Balance: spätes Vorhersagen ist deutlich leichter; Umsetzung: Schritt nur Nacht 1 oder dauerhaft
   - Empfehlung: Nacht 1 (sonst trivial)
-- **RM-DR-158.3 · Zählbasis Tag/Nacht** · Status: später (K15)
+- **RM-DR-158.3 · Zählbasis Tag/Nacht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Tag N = Tag nach Nacht N, Morgentode zählen zur Nacht
   - Option B: Tag N wie im Protokoll angezeigt (= nach Nacht N-1)
   - Auswirkung: Balance: Überschneidung verdoppelt Trefferchance bei Morgentoden; Umsetzung: eindeutige `night_number`/`day_number` und Zuordnung jedes Todes zu genau einer Phase
