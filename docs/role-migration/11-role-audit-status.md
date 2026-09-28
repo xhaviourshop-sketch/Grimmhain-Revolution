@@ -15,7 +15,7 @@ Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterpl
 - Verwandlungsrollen (Dämonischer Wolf, König Lykaon, Seelentauscher) sind entschieden (V-01 bis V-09) und grün. Der Fuzztest nimmt je Partie reihum eine Fokusrolle auf; seltene Pflichtereignisse (Amalia, Apfel, Spiegelwolf ohne Spiegelung) kommen trotzdem nur 1 bis 2 Mal vor und können bei Generatoränderungen wegfallen.
 - Wiederbelebungsrollen (Kutscher, Dr. Victor Frankenstein) sind entschieden (W-01 bis W-04) und grün; Totenkarten (RM-DR-013) nur für Kartenschlucker und RM-DR-141.4 offen. Der Fuzztest richtet gelegentlich einen lebenden Spiegelwolf ohne Nominierung hin und fragt öfter Korrekturen ab, damit seine Pflichtabdeckung stabil bleibt.
 - Einzelsiege Teil 1 (Rattenfänger, Pestbringerin, Prophet des Untergangs, Todesprediger) sind entschieden (E-01 bis E-04) und grün.
-- **Einzelsiege Teil 2, Stand 28.09.2026 18:45:** Die unterbrochene Runde wurde in einer anderen Sitzung neu zugeschnitten und nur für den Feuerteufel gestellt. Beantwortet sind **E-05 bis E-08 = Feuerteufel** (Auslöser, Dauer, Feuerteufel als Nachbar, Sieg; siehe Decision Log „Einzelsiegrollen, Teil 2 (Feuerteufel)“). Die früher unter E-05 bis E-08 vorbereiteten Fragen gelten damit nicht mehr unter diesen IDs. Der Feuerteufel-Anteil der alten E-05/E-06 ist erledigt, mit Mitsieg statt „höchstens drei Lebende“. Offen und als Nächstes zu stellen (neue IDs ab E-09): Voodoo-Priester (Umlenkung/Puppe RM-DR-132.1, Abklingzeit .2, Sieg .4, Selbstwahl, Wissen des Puppenträgers, Reihenfolge der Abfangregeln) und Nekromant-Schild (RM-DR-142). RM-DR-132.3 ist durch E-01 entschieden. Danach Runde 2 (Nekromant-Umlenkung und Siegversuche RM-DR-142.2/.4/.5, Hades RM-DR-144, Grabräuber RM-DR-156), dann Zeitwächter, Rachsüchtiger Wolf, Schicksalswolf; Kartenschlucker wartet auf den Totenkarten-Assistenten (W-01). Feuerteufel ist entschieden, aber noch nicht umgesetzt.
+- **Einzelsiege Teil 2 (Stand 28.09.2026):** Nur noch eine Sitzung arbeitet am Audit. Feuerteufel entschieden (RM-DR-131.1–.5 über E-05 bis E-08, vom PO in einem eigenen Fenster ausdrücklich bestätigt) und OFFEN (Umsetzung folgt testgetrieben). E-05 bis E-08 bezeichnen nur diese Feuerteufel-Fragen; die früher so benannten, nie beantworteten Fragen zu Voodoo und Nekromant sind im Decision Log als historischer Hinweis vermerkt. Offen (neue IDs ab E-09): Voodoo-Priester (RM-DR-132.1, .2, .4; Selbstwahl, Wissen des Puppenträgers, Reihenfolge der Abfangregeln) und Nekromant (RM-DR-142.1–.5). RM-DR-132.3 ist durch E-01 entschieden. Danach Hades (RM-DR-144), Grabräuber (RM-DR-156), Zeitwächter, Rachsüchtiger Wolf, Schicksalswolf; Kartenschlucker wartet auf den Totenkarten-Assistenten (W-01).
 - Nächste offene Gruppen: Einzelsiege Teil 2 (Feuerteufel entschieden, nicht umgesetzt; Voodoo-Priester, Nekromant, Hades, Grabräuber; Kartenschlucker wartet auf den Totenkarten-Assistenten); Zeitwächter; Rachsüchtiger Wolf; Schicksalswolf.
 - Offen außerhalb des Kerns: Zufallsknopf nach RM-DR-015.2 (Ziehung über den gespeicherten Seed) ist noch in keiner Rolle umgesetzt; König, Traumdeuter, Kopfgeldjäger und Blutpriester nutzen die Spielleiterwahl.
 - Weiter offen außerhalb des Kerns: Analyse unverträglicher Rollenkombinationen (vom PO gewünscht, Setup-Regel vertagt); Tablet-Gegenprüfung „links = Uhrzeigersinn“; Sound bei 5 Toten nur mit Selbstmörder im Spiel.
@@ -32,16 +32,16 @@ Ein Legacy-Befund (`legacy-verified` usw.) ist **kein** Godot-Nachweis. Rollente
 
 ## 2. Zählung
 
-<!-- check:audit-counts total=72 green=63 open=0 blocked=9 -->
+<!-- check:audit-counts total=72 green=63 open=1 blocked=8 -->
 
 | | Anzahl |
 |---|---:|
 | Rollen (`ALL_ROLES` in `js/core/roles.js`, 72 eindeutige IDs) | 72 |
 | **GRÜN** | **63** |
-| **OFFEN** | **0** |
-| **BLOCKIERT** | **9** |
+| **OFFEN** | **1** |
+| **BLOCKIERT** | **8** |
 
-72/72 ist **nicht** erreicht. Die 9 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
+72/72 ist **nicht** erreicht. Der Feuerteufel ist entschieden, aber noch nicht umgesetzt (OFFEN). Die 8 blockierten Rollen warten auf Produktentscheidungen (Spalte „Offene Fragen“, Details in [`08-decision-request.md`](08-decision-request.md) und [`decision-status.csv`](decision-status.csv)); die als Nächstes nötigen Fragen stehen in §6.
 
 ## 3. Übersicht
 
@@ -90,8 +90,8 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | 39 | `blutpriester` | Blutpriester / Blood Priest | Dorf | Rollentext; RM-DR-128, I-08, I-13 (Decision Log „Rollenaudit · Informationsrollen“) | einmal je Leben: andere Lebende opfern (Tod am Morgen, wacht nicht mehr auf), Spielleiter nennt ihm 0–3 lebende Wölfe | – | umgesetzt | test_info_roles, fuzz | Schutzengel (wirkungslos), Rudelvater (überlebt), zweiter Blutpriester (Markierung) | **GRÜN** |
 | 40 | `traumdeuter` | Traumdeuter / Dreamer | Dorf | Rollentext; RM-DR-129, I-01, I-02, I-05 (Decision Log „Rollenaudit · Informationsrollen“) | jede Nacht drei andere Lebende vom Spielleiter, Freigabe ab einem Wolf; Anzeige „mindestens ein Wolf“ | – | umgesetzt | test_info_roles, fuzz | Trugbilderwolf (wahre Wolfszählung); Dämonischer Wolf folgt | **GRÜN** |
 | 41 | `henker` | Henker / Executioner | Dorf | Rollentext; RM-DR-130, RM-DR-138.2 (Decision Log) | ab 3 Hinrichtungen nachts markieren; Zusatztod bei der Hinrichtung des Folgetags | – | umgesetzt | test_fenrir_cerberus_henker, fuzz | Selbstmörder, Cerberus, Spiegelwolf | **GRÜN** |
-| 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-broken` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-131.1, RM-DR-131.2, RM-DR-131.3, RM-DR-131.4, RM-DR-131.5, RM-DR-009 | fehlt | – | [03](03-remaining-roles-analysis.md#feuerteufel) | **BLOCKIERT** |
-| 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-132.1, RM-DR-132.2, RM-DR-132.3, RM-DR-132.4 | fehlt | – | [03](03-remaining-roles-analysis.md#voodoo-priester) | **BLOCKIERT** |
+| 42 | `feuerteufel` | Feuerteufel / Pyromaniac | Einzelsieg | Rollentext; RM-DR-131.1–.5, RM-DR-003 (Decision Log „Einzelsiegrollen, Teil 2 (Feuerteufel)“) | eine aktive Markierung je Feuerteufel bis Neuwahl oder Tod des Ziels; jeder tatsächliche Tod des Ziels verbrennt die nächsten lebenden Nachbarn, Feuerteufel verschont; Mitsieg lebend | – | fehlt | – | [03](03-remaining-roles-analysis.md#feuerteufel) | **OFFEN** |
+| 43 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Einzelsieg | Rollentext `js/core/roles.js`; Legacy `legacy-contradictory` | nur Rahmenregeln (G-ID-3, DR-02, DR-14) | RM-DR-132.1, RM-DR-132.2, RM-DR-132.4 | fehlt | – | [03](03-remaining-roles-analysis.md#voodoo-priester) | **BLOCKIERT** |
 | 44 | `blutwolf` | Blutwolf / Blood Wolf | Wölfe | Rollentext; RM-DR-133.1, RM-DR-008 (Decision Log) | Wolf im Rudel; Stimmbonus nur als Hinweis (+1 je direkt toten Nachbarplatz) | – | umgesetzt | test_richter_waechter_blutwolf, fuzz | Wiederbelebung, Sitzkreis; Anzeige folgt mit UI | **GRÜN** |
 | 45 | `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Wölfe | Rollentext; RM-DR-134, RM-DR-010 (Decision Log) | jede Nacht freiwillig eine Person blockieren; handelt zuerst | – | umgesetzt | test_wolf_specials, fuzz | Orakel, Gebundene, Dorf-Nachtschritte | **GRÜN** |
 | 46 | `cerberus` | Cerberus / Cerberus | Wölfe | Rollentext; RM-DR-135 (Decision Log) | Köpfe je Nacht (max 3); bei 3 Hinrichtung mit Spielleiterfrage abwehrbar | – | umgesetzt | test_fenrir_cerberus_henker, fuzz | Henker-Zählung, Spielleiter-Hinrichtung | **GRÜN** |

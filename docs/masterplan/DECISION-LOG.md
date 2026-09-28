@@ -452,7 +452,11 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 
 ## Rollenaudit · Einzelsiegrollen, Teil 2 (Feuerteufel) · 28. September 2026
 
-Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-05 bis E-08, jeweils die Empfehlung). Es gelten weiter: nächste lebende Nachbarn links und rechts (RM-DR-003, damit ist RM-DR-131.3 entschieden), „Wolfsangriff“ heißt nur Rudelangriff (RM-DR-004), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02).
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-05 bis E-08, jeweils die Empfehlung) und am selben Tag in einem eigenen Auswahlfenster ausdrücklich als beabsichtigte Entscheidungen bestätigt. Verbindlich sind die stabilen IDs RM-DR-131.1 bis .5; die Antworten gelten nur für den Feuerteufel, nicht für Voodoo-Priester oder Nekromant.
+
+*Historischer Hinweis zu den Frage-IDs:* Eine abgebrochene frühere Sitzung hatte E-05 bis E-08 anders zugeschnitten vorbereitet (E-05 Feuerteufel-Wirkung, E-06 Sieg von Feuerteufel und Voodoo-Priester, E-07 Voodoo-Puppe, E-08 Nekromant-Schild). Diese Fragen wurden nie beantwortet. Ab hier bezeichnen E-05 bis E-08 ausschließlich die folgenden Feuerteufel-Fragen; Voodoo und Nekromant folgen ab E-09.
+
+Es gelten weiter: nächste lebende Nachbarn links und rechts (RM-DR-003, damit ist RM-DR-131.3 entschieden), „Wolfsangriff“ heißt nur Rudelangriff (RM-DR-004), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02).
 
 - **Feuerteufel, Auslöser (E-05, RM-DR-131.1):** A. Jeder tatsächliche Tod des markierten Ziels löst den Brand aus, gleich welche Ursache (Rudel, Hinrichtung, Gift, Brand, andere Rollen, Spielleiterkorrektur mit Todesfolgen); nicht bei Korrektur ohne Todesfolgen. Überlebt das Ziel, brennt nichts (Legacy-Fehler entfällt). Es verbrennen die nächsten lebenden Nachbarn links und rechts.
 - **Feuerteufel, Dauer (E-06, RM-DR-131.2):** A. Jeder Feuerteufel hat höchstens eine aktive Markierung; sie gilt, bis er ein neues Ziel wählt oder das Ziel stirbt.
