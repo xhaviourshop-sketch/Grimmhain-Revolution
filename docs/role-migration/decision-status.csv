@@ -66,8 +66,8 @@ RM-DR-117.3;ja;korrupter-richter;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026"
 RM-DR-118.1;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Ersatzopfer, nur wenn Opfer stürbe (S-03)
 RM-DR-118.2;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nur erstes Rudelopfer (S-14)
 RM-DR-118.3;ja;maertyrerin;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";nicht blockierbar, Fluch schon (S-03, S-05)
-RM-DR-119.1;ja;dorfwache;S;;
-RM-DR-119.2;ja;dorfwache;S;;
+RM-DR-119.1;ja;dorfwache;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";nicht immun: Giftpranke ist kein Wolfsangriff (RM-DR-004)
+RM-DR-119.2;ja;dorfwache;E;"DECISION-LOG Rollenaudit Querschnitt 27.09.2026";Durchdringung durchdringt die Immunität (RM-DR-005)
 RM-DR-120.1;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nicht tödlich, Siegrennen (E-02)
 RM-DR-120.2;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";jede Nacht eine Infektion (E-02)
 RM-DR-120.3;ja;pestbringerin;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur lebend (E-02)
@@ -119,7 +119,7 @@ RM-DR-134.3;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";
 RM-DR-135.1;ja;cerberus;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Spielleiter fragt abwehren?
 RM-DR-135.2;ja;cerberus;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";nur Hinrichtung
 RM-DR-136.1;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur Wolfsangriff
-RM-DR-136.2;ja;ritter;S;;
+RM-DR-136.2;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur wer als Wolf zählt; Fluch nur für Rollenauskünfte (V-01/V-02)
 RM-DR-136.3;ja;ritter;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Fenrir-Einmalschutz gilt auch gegen Ritter
 RM-DR-137.1;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";jede andere lebende Person (R-01)
 RM-DR-137.2;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";nur Jede-Nacht-Schritte doppelt (R-02, R-04)

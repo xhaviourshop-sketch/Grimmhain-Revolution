@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 61 | 165 |
+| entschieden | 63 | 168 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 12 | 24 |
+| später | 10 | 21 |
 | quellenprüfung | 0 | 0 |
 | **gesamt** | **75** | **192** |
 
@@ -659,12 +659,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `dorfwache`; Wechselwirkung laut Dossier: Werwolf/Rudel, Seuchenwolf, Rudelvater, Giftwolf, Schicksalswolf, Rachsüchtiger Wolf, Schutzengel, Märtyrerin, Seelentauscher (Rollenwechsel in der …
 - **Belege:** [Dossier](dossiers/village-2.md#dorfwache); RM-C-112, RM-C-113 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005.
-- **RM-DR-119.1 · Giftwolf** · Status: später (K5)
+- **RM-DR-119.1 · Giftwolf** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Querschnitt 27.09.2026 (Querschnittsregel, beim Audit 28.09.2026 zugeordnet)
   - Option A: Giftwolf ist Werwolf → immun
   - Option B: nur Rudelangriff zählt
   - Auswirkung: Balance: Giftwolf-Ladung auf Dorfwache verschwendet oder tödlich; Umsetzung: Filter `is_wolf_attack` muss Giftwolf einordnen
   - Empfehlung: PO
-- **RM-DR-119.2 · Seuchenwolf/Rudelvater** · Status: später (K5)
+- **RM-DR-119.2 · Seuchenwolf/Rudelvater** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Querschnitt 27.09.2026 (Querschnittsregel, beim Audit 28.09.2026 zugeordnet)
   - Option A: Immunität ist "Schutz" → wird durchdrungen
   - Option B: Immunität ist Rolleneigenschaft → hält
   - Auswirkung: Balance: selten, aber spielentscheidend; Umsetzung: Kennzeichnung "ignoriert Immunität"
@@ -1079,7 +1079,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: nur Tode durch feindliche Nachtangriffe (Liste, ggf. erweitert um PACKFATHER_KILL)
   - Auswirkung: Balance: A stärkt das Dorf deutlich (auch Kettentode schlagen zurück); Umsetzung: Ursachen-Attribut `triggers_knight` in beiden Fällen nötig, nur Belegung unterscheidet sich
   - Empfehlung: B mit Ergänzung PACKFATHER_KILL und VOODOO_PUPPET, Text präzisieren
-- **RM-DR-136.2 · Verfluchter Dorfbewohner als Ziel** · Status: später (K3)
+- **RM-DR-136.2 · Verfluchter Dorfbewohner als Ziel** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026 (Querschnittsregel, beim Audit 28.09.2026 zugeordnet)
   - Option A: nur echte Wölfe
   - Option B: alles, was als Wolf zählt
   - Auswirkung: Balance: A schützt Verfluchte; Umsetzung: Ziel über `counts_as_wolf` statt `appears_as`

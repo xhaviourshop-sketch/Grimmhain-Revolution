@@ -133,6 +133,21 @@ func test_knight_strikes_nearest_wolf_counting_dead_seats() -> void:
 	assert_eq(r.state.reactions.size(), 0, "keine Wahl ohne Gleichstand")
 
 
+func test_knight_ignores_cursed_villager() -> void:
+	# RM-DR-136.2 (Decision Log Runde 3 „Ritter, Ziel“: wer als Wolf zählt) mit V-01/V-02 (Fluch nur für
+	# Rollenauskünfte): Ritter 4, rechts 5 verfluchter Dorfbewohner (Abstand 1), links 2 Wolf (Abstand 2).
+	var roles := ["dorfbewohner", "werwolf", "dorfbewohner", RI, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var start := _run([_start(roles)] as Array[Command], "Start")
+	if start == null or not start.ok:
+		return
+	var s := start.state
+	s.players[5].cursed = true
+	s = apply_ok(s, Command.start_night(), "Nacht").state
+	s = apply_ok(s, Command.answer_prompt(s.pending_prompt.id, [4]), "Rudel frisst den Ritter").state
+	var r := apply_ok(s, Command.end_night(), "Morgen")
+	assert_eq(_deaths(r.events), [[4, "NIGHT_KILL"], [2, "KNIGHT_STRIKE"]], "echter Wolf stirbt, der Verfluchte nicht")
+
+
 func test_knight_tie_gm_chooses() -> void:
 	# Ritter 4; Wolf 2 (Abstand 2) und Wolf 6 (Abstand 2) → Spielleiter wählt.
 	var roles := ["dorfbewohner", "werwolf", "dorfbewohner", RI, "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner"]

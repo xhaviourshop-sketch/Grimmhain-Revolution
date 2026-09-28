@@ -212,6 +212,40 @@ func test_packfather_lynch_gives_piercing_second_pack_step() -> void:
 	assert_false(s.night_plan.has(&"pack2"), "nur eine Nacht")
 
 
+func test_guard_is_killed_by_poison_paw() -> void:
+	# RM-DR-119.1 über RM-DR-004: Die Giftpranke ist kein Wolfsangriff; die Dorfwache stirbt daran.
+	var s := _run([_start([GW, "dorfwache", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var none := func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [])
+	s = _night(s, {"giftwolf": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [2]), "pack": none}, "Nacht 1")
+	s = _day(s)
+	s = _night(s, {"giftwolf": none, "pack": none}, "Nacht 2")
+	s = _day(s)
+	s = _night(s, {"giftwolf": none, "pack": none}, "Nacht 3")
+	if s == null:
+		return
+	var d := s.players[2].death
+	assert_true(d != null and String(d.cause) == "WOLF_POISON", "Dorfwache stirbt an der Giftpranke")
+
+
+func test_piercing_second_pack_attack_kills_guard() -> void:
+	# RM-DR-119.2 über RM-DR-005: Das durchdringende Zusatzopfer des Rudelvaters durchdringt die Dorfwache.
+	var s := _run([_start([RV, "werwolf", "schutzengel", "dorfwache", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	if s == null:
+		return
+	s = _night(s, {"schutzengel": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [5])}, "Nacht 1")
+	s = apply_ok(s, Command.nominate(5, 1), "Nominierung").state
+	s = apply_ok(s, Command.decide_execution(1), "Lynch des Rudelvaters").state
+	s = apply_ok(s, Command.end_day(), "Tagesende").state
+	s = apply_ok(s, Command.start_night(), "Nacht 2").state
+	s = _night(s, {"schutzengel": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [4]),
+		"pack": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [6]),
+		"pack2": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [4])}, "Nacht 2")
+	if s == null:
+		return
+	var d := s.players[4].death
+	assert_true(d != null and String(d.cause) == "NIGHT_KILL", "durchdringendes Zusatzopfer tötet Dorfwache trotz Immunität und Schutzengel")
+
+
 # --- Seuchenwolf ----------------------------------------------------------------------------------
 
 func test_blight_wolf_next_pack_attack_pierces_once() -> void:
