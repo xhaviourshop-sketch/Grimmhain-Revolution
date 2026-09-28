@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 68 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 68 |
+| im RoleCatalog vorhandene Rollen | 71 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 71 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 66 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 69 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -115,6 +115,9 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 66 | `nekromant` | Nekromant / Necromancer (Rollentext) | solo | nein | 30 | `bond_steps.gd` (Stufen targets/redirect), `solo_rules.gd` (`necro_*`), `kill_pipeline.gd` (Schild), `rules_engine.gd` (`NameWolf`, Kette) | `test_necromancer.gd`, `test_solo_combinations.gd`, fuzz | RM-DR-142, E-16 bis E-19, E-24 bis E-26, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 3“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 67 | `hades` | Hades / Hades (Rollentext) | solo | nein | 99 | `bond_steps.gd` (Stufen targets/barrier), `solo_rules.gd` (`hades_*`), `kill_pipeline.gd` (Barriere, Lichter), `win_rules.gd` | `test_hades.gd`, fuzz | RM-DR-144, E-28 bis E-31, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 4“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
 | 68 | `grabraeuber` | Grabräuber / Grave Robber (Rollentext) | solo | nein | 64 | `bond_steps.gd` (Stufe targets), `solo_rules.gd` (`grave_*`, `ability_role`, `has_ability`), `step_queue.gd` (Nachtplan), `win_rules.gd` | `test_grave_robber.gd`, fuzz | RM-DR-156, E-32 bis E-34, DECISION-LOG „Rollenaudit · Einzelsiegrollen, Teil 4“ | `implemented-and-tested` | `automatic` | `not-found` |
+| 69 | `schicksalswolf` | Schicksalswolf / Fate Wolf (Rollentext) | wolves | ja | 25 (Nacht 1 und 4) | `solo_rules.gd` (`fate_*`, Umlenkungs-Slot), `step_queue.gd`, `rules_engine.gd` (Zusatzopfer am Morgen), `kill_pipeline.gd` (erste Tote) | `test_fate_wolf.gd`, fuzz | RM-DR-109, DA-11 bis DA-15, DECISION-LOG „Rollenaudit · Rest-Wölfe und Zeitwächter“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 70 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf (Rollentext) | wolves | ja | 22 (Nächte 3, 6, 9 …) | `solo_rules.gd` (`lone_*`), `rules_engine.gd` (Todesmarkierung), `win_rules.gd` (Alleinsieg statt Wolfssieg) | `test_lone_wolf_and_time_warden.gd`, fuzz | RM-DR-106, E-35, DA-16 bis DA-18 | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 71 | `zeitwaechter` | Zeitwächter / Time Warden (Rollentext) | village | nein | 95 (im Plan zuerst) | `step_queue.gd` (Grund `frozen`), `rules_engine.gd` (`_answer_time`, Morgen) | `test_lone_wolf_and_time_warden.gd`, fuzz | RM-DR-150, RM-DR-113.2, E-36, DA-19 | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -467,6 +470,21 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Eigener Schritt (Priorität 64), bis er einmal gestohlen hat: keine oder eine tote Person mit stehlbarer Rolle (`RoleCatalog.stealable`: wiederkehrender eigener Nachtschritt eines Lebenden; nicht Nur-Nacht-1-Rollen, Prophet, Schutzgeist, Wolfskind, Lehrling, Grabräuber). Der Diebstahl (`grave_thefts`) gilt sofort; der eigene Schritt der gestohlenen Rolle folgt ab der nächsten Nacht über `SoloRules.ability_role` im Nachtplan, mit frischen Einsätzen. Alle Wirkungen dieses Schritts gelten für ihn (`SoloRules.has_ability`: Puppe, Feuermarkierung und Verschonung, Wirt und Immunität, Nekromanten-Schild, Hades-Lichter und Barriere, Kopfgeld-Listen, Henker- und Richtermarkierung). Er bleibt Grabräuber (Fraktion, Wolfszählung, Erscheinung); Siegbedingungen, Mitsiege, Todesreaktionen und Tagesaktionen der Toten werden nicht übernommen. Blockade und Fluch richten sich nach ihm (Einzelsieg: weder noch). Alleinsieg lebend bei höchstens drei Lebenden. Die Fähigkeit endet mit Tod oder Rollenverlust; nach Wiederbelebung darf er frisch erneut stehlen.
 - **Tests:** Katalog und stehlbare Rollen, Auswahl nur toter Personen mit stehlbarer Rolle (ungültige Antworten ohne Zustandsänderung), Diebstahl der Waldhexe mit privater Mitteilung und frischem Heiltrank ab der Folgenacht, Voodoo-Puppe über Speichern, Hades-Lichter und Barriere ohne Hades-Sieg, Schattenhund-Blockade ohne Wolfszugehörigkeit, keine Blockade durch den Albtraumwolf, Feuermarkierung mit Verschonung, Nekromanten-Schild über Speichern ohne Benennen, Parasit-Wirt, Sieg bei drei Lebenden, zwei Grabräuber, Seelentausch, Tod und Wiederbelebung, Replay, Ladeprüfung; Fuzz mit Pflichtabdeckung `GraveRobbed` und ausgeführten gestohlenen Schritten.
 - **Grenzen:** Spielleiterkorrekturen, die eine bestimmte Rolle verlangen (z. B. Schutz setzen nur für Schutzengel), gelten nicht für einen Grabräuber mit dieser Fähigkeit.
+
+### 4.69 `schicksalswolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Nacht 1: genau drei andere Lebende markieren (`fate_marks`, je Schicksalswolf). Jeder Tod trägt die ersten drei verschiedenen Toten der Partie ein (`fate_first_dead`). Nacht 4 (nur dann): bis zu so viele Zusatzopfer, wie eigene Markierte darunter sind (`fate_kills`); sie sterben am Morgen als Rudelangriffe nach Rudelopfer und Zusatzopfer des Rudelvaters (Schutz wirkt, Ritter schlägt zurück, Nekromant kann über den Slot `fate:<i>` umlenken). Markierungen erlöschen mit Tod oder Rollenverlust.
+- **Tests:** Katalog, Markierung (ungültige Antworten ohne Zustandsänderung, Speichern mit offenem Prompt), kein Schritt ohne Treffer, Zählung inkl. Tod vor der Markierung und Wiederbelebung, Zusatzopfer mit Schutzengel, Verfall nach Nacht 4, Ritter, Nekromanten-Umlenkung, zwei Schicksalswölfe, Ladeprüfung; Fuzz mit `FateMarked`, `FateKillsChosen`.
+- **Grenzen:** Märtyrerin und Verdammniswächter betreffen nur das erste Rudelopfer (DA-13).
+
+### 4.70 `rachsuechtiger-wolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Wolf im Rudel; in den Nächten 3, 6, 9 … eigener Schritt (Priorität 22): freiwillig eine andere lebende Person, die als Wolf zählt; Tod am Morgen mit Ursache `LONE_WOLF_KILL` (Schutzengel wirkt nicht). Siegprüfung: Ist bei erfüllter Wolfsparität er der einzige lebende Wolf, wird sein Alleinsieg statt des Wolfssiegs vorgeschlagen; leben andere Wölfe, gewinnen die Werwölfe ohne ihn; leben nur mehrere Rachsüchtige Wölfe, gewinnt noch niemand.
+- **Tests:** Katalog, Rhythmus (kein Schritt in Nacht 1, 2, 4, 5; Nacht 6 ohne anderen Wolf entfällt), nur Wölfe als Ziel, Tod trotz Schutzengel, Alleinsieg nur als letzter Wolf, zwei Rachsüchtige ohne Sieg, Speichern; Fuzz mit `LoneWolfStruck`, `LONE_WOLF_KILL`.
+- **Grenzen:** Der englische Rollentext nennt das Siegziel nicht; die App-Kurzbeschreibung (DE/EN) nennt es.
+
+### 4.71 `zeitwaechter`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Einmal je Leben entscheidet er als allererster Nachtschritt (Sortierschlüssel 0) „Nacht einfrieren?“. Ja: `night_frozen`, alle weiteren Nachtschritte entfallen mit Grund `frozen` (auch Rudel, Wölfe, Einzelsieg, Witwe), am Morgen stirbt niemand aus dieser Nacht, Fenrir und Cerberus wachsen nicht, öffentliche Meldung `NightFrozen` ohne Namen; fällige Giftpranken und die Pest-Ausbreitung treten ein, die Nachtnummer zählt weiter. Nein behält die Fähigkeit.
+- **Tests:** Katalog und Position vor dem Schattenhund, Einfrieren mit Rudel, Schutzengel, Witwe und Fenrir, einmal je Leben, Verzicht, fällige Giftpranke in eingefrorener Nacht, Ladeprüfung; Fuzz mit `NightFrozen`.
+- **Grenzen:** Spielleiterkorrekturen während der eingefrorenen Nacht wirken normal.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

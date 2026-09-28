@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 65 | 183 |
+| entschieden | 69 | 194 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 8 | 16 |
+| später | 4 | 5 |
 | quellenprüfung | 0 | 0 |
 | **gesamt** | **75** | **202** |
 
@@ -358,21 +358,21 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-106 · `rachsuechtiger-wolf`
 
-- **Status des Eintrags:** später (ab Charge K11).
+- **Status des Eintrags:** entschieden (Rollenaudit 28.09.2026).
 - **Betroffene Rollen:** `rachsuechtiger-wolf`; Wechselwirkung laut Dossier: Werwolf (Rudel, synthetische Zeile), Doppelspion (Zielausschluss, Textbezug), Dämonischer Wolf (verfluchte Ziele), Schutzengel/Dorfwache, Seuchenwolf, Waldhexe, Verdammniswächter, Die Ewigen, Nachtwächter …
 - **Belege:** [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf); RM-C-001, RM-C-002, RM-C-003 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-006.
-- **RM-DR-106.1 · Siegziel** · Status: später (K11)
+- **RM-DR-106.1 · Siegziel** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-35
   - Option A: Einzelsieg: gewinnt nur, wenn er als Letzter (oder mit Bedingung X) übrig ist
   - Option B: Rudelsieg wie Code
   - Auswirkung: Balance: A macht ihn zum Verräter im Rudel, B zu einem normalen Wolf mit Zusatzkill; Umsetzung: A: neue Siegbedingung, Fraktion "solo" trotz Wolfsrudel, Parität neu definieren
   - Empfehlung: A (Text), EN ergänzen
-- **RM-DR-106.2 · Rhythmus** · Status: später (K11)
+- **RM-DR-106.2 · Rhythmus** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-16
   - Option A: fester Takt (Nacht 3, 6, 9)
   - Option B: Abklingzeit nach Nutzung
   - Auswirkung: Balance: A seltener und vorhersehbar; Umsetzung: Nachtschritt-Bedingung nach Nachtnummer vs. Zähler pro Person
   - Empfehlung: Abklingzeit (Code), Text präzisieren
-- **RM-DR-106.3 · Zeitpunkt der ersten Nutzung** · Status: später (K11)
+- **RM-DR-106.3 · Zeitpunkt der ersten Nutzung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-16
   - Option A: erst ab Nacht 3
   - Option B: ab Nacht 1
   - Auswirkung: Balance: früher Rudelverlust in Nacht 1 möglich; Umsetzung: Startwert Zähler
@@ -425,21 +425,21 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-109 · `schicksalswolf`
 
-- **Status des Eintrags:** später (ab Charge K11).
+- **Status des Eintrags:** entschieden (Rollenaudit 28.09.2026).
 - **Betroffene Rollen:** `schicksalswolf`; Wechselwirkung laut Dossier: Werwolf (Rudelopfer, Deduplizierung), Schutzengel, Dorfwache, Der Weise, Märtyrerin, Zeitwächter (eingefrorene Nacht zählt nicht, `night:323-331` erhöht `nightCount` nicht), Frankenstein/Kutscher (Wiederbelebung), …
 - **Belege:** [Dossier](dossiers/wolves-a.md#schicksalswolf); RM-C-009, RM-C-010, RM-C-011 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005, RM-DR-011, RM-DR-014.
-- **RM-DR-109.1 · Zeitfenster** · Status: später (K11)
+- **RM-DR-109.1 · Zeitfenster** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-11
   - Option A: nur Nacht 4, danach verfallen
   - Option B: ab Nacht 4, einmal
   - Auswirkung: Balance: B lässt Wölfe auf Bonus warten; Umsetzung: Schrittbedingung
   - Empfehlung: A (Text)
-- **RM-DR-109.2 · Schutz gegen Zusatzopfer** · Status: später (K11)
+- **RM-DR-109.2 · Schutz gegen Zusatzopfer** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-13
   - Option A: wie Rudelangriff (Schutz wirkt)
   - Option B: eigener Kill ohne Schutz
   - Auswirkung: Balance: A schwächer; Umsetzung: Ursache/Quelle, Protections-Filter
   - Empfehlung: A
-- **RM-DR-109.3 · Zählung der ersten drei Toten** · Status: später (K11)
+- **RM-DR-109.3 · Zählung der ersten drei Toten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-12
   - Option A: erste drei verschiedenen Toten der Partie
   - Option B: nur Tode nach Markierung
   - Auswirkung: Balance: gering; Umsetzung: Todesreihenfolge-Historie
@@ -530,7 +530,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: Loki ist Pflicht-Beirolle, SL muss sie wählen
   - Auswirkung: Balance: keine, solange Loki Pflicht ist; Umsetzung: Godot: `requires_roles` (`03:200`) als Validierung oder Auto-Ergänzung
   - Empfehlung: Pflichtpaar-Validierung behalten, Text auf "Benötigt Loki im Spiel" ändern
-- **RM-DR-113.2 · Zeitwächter-Einfrieren** · Status: später (mit RM-DR-150 Zeitwächter; Wirkung der Witwe sonst entschieden, DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026)
+- **RM-DR-113.2 · Zeitwächter-Einfrieren** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36 (Option A: die Wahl der Witwe ist eine Nachtaktion und entfällt)
   - Option A: Witwen-Wahl ist Nachtaktion, wird eingefroren
   - Option B: Witwen-Tod ist Tagesereignis, bleibt
   - Auswirkung: Balance: mittel; Zeitwächter kontert Witwe nicht; Umsetzung: Reihenfolge in DAWN
@@ -1467,26 +1467,26 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-150 · `zeitwaechter`
 
-- **Status des Eintrags:** später (ab Charge K16).
+- **Status des Eintrags:** entschieden (Rollenaudit 28.09.2026).
 - **Betroffene Rollen:** `zeitwaechter`; Wechselwirkung laut Dossier: praktisch alle Nachtrollen; besonders Schwarze Witwe, Giftwolf, Märtyrerin, Voodoo-Priester, Rudelvater, Seuchenwolf, Waldhexe, Hades, Amalia, Kriegerin, Dorfschmied, Der Weise, Fenrir, Cerberus, Todesprediger, …
 - **Belege:** [Dossier](dossiers/village-4.md#zeitwaechter); RM-C-164, RM-C-165, RM-C-166, RM-C-167 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-010.
-- **RM-DR-150.1 · Umfang des Abbruchs** · Status: später (K16)
+- **RM-DR-150.1 · Umfang des Abbruchs** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: Gesamte Nacht wird zurückgerollt (Tode und Zustände)
   - Option B: Nur Tode dieser Nacht entfallen, Zustände bleiben
   - Auswirkung: Balance: A sehr stark, B stark; Umsetzung: A: Nacht-Transaktion mit Schnappschuss ab Nachtbeginn; B: alle Tode der Nacht aufschieben bis Morgen
   - Empfehlung: A mit Schnappschuss bei Nachtbeginn (RoleTransition-Schnappschuss-Idee) oder B nach 07
-- **RM-DR-150.2 · Zeitpunkt der Entscheidung** · Status: später (K16)
+- **RM-DR-150.2 · Zeitpunkt der Entscheidung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: Entscheidung am Nachtanfang, dann läuft keine Aktion
   - Option B: Entscheidung am Nachtende, alles wird zurückgenommen
   - Auswirkung: Balance: A spart Zeit, B gibt Zeitwächter Zusatzwissen (sieht keine Nachtergebnisse, aber SL weiß sie); Umsetzung: A: Schritt vor tier 0.1; B: Rücknahme nötig
   - Empfehlung: A (einfacher, fairer)
-- **RM-DR-150.3 · Zähler** · Status: später (K16)
+- **RM-DR-150.3 · Zähler** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: alle nachtabhängigen Zähler zurück
   - Option B: nur Nachtnummer
   - Auswirkung: Balance: Todesprediger, Schmied, Fenrir betroffen; Umsetzung: Zähler-Liste in Nacht-Transaktion
   - Empfehlung: A
-- **RM-DR-150.4 · Wolfsrollen** · Status: später (K16)
+- **RM-DR-150.4 · Wolfsrollen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: auch Wölfe
   - Option B: nur Nicht-Wölfe
   - Auswirkung: Balance: gering; Umsetzung: Blockadegrund pro Schritt

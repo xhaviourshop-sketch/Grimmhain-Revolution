@@ -381,7 +381,9 @@ Siehe §3.
 
 ### K11 · Wolfsangriff-Modifikation, Durchdringung, verzögerte Tode
 
-**Rollen Charge K11 (2):** `schicksalswolf`, `rachsuechtiger-wolf`
+**Rollen Charge K11 (0):** –
+
+**Nachtrag Rollenaudit:** `schicksalswolf` und `rachsuechtiger-wolf` sind umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `verdammniswaechter` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
@@ -474,7 +476,9 @@ Siehe §3.
 
 ### K16 · Nacht-Transaktion
 
-**Rollen Charge K16 (1):** `zeitwaechter`
+**Rollen Charge K16 (0):** –
+
+**Nachtrag Rollenaudit:** `zeitwaechter` ist umgesetzt (Entscheidung zu Nachtbeginn, E-36; keine Nacht-Transaktion nötig) ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 - **Mechanik:** eine ganze Nacht gilt als nicht geschehen.
 - **Neue Systeme:** N-16 (baut auf Undo/Redo aus Masterplan Phase 3 auf).

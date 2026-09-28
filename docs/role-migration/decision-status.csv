@@ -30,17 +30,17 @@ RM-DR-104.1;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2
 RM-DR-104.2;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";nur Ja/Nein, gemeinsamer Schritt (I-11)
 RM-DR-104.3;ja;die-ewigen;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";bleiben Dorf, zusätzlicher Mitsieg (I-12)
 RM-DR-105.1;ja;spuerhund;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";keine falsche Spur; ✗ verliert die Fähigkeit
-RM-DR-106.1;ja;rachsuechtiger-wolf;S;;
-RM-DR-106.2;ja;rachsuechtiger-wolf;S;;
-RM-DR-106.3;ja;rachsuechtiger-wolf;S;;
+RM-DR-106.1;ja;rachsuechtiger-wolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";Alleinsieg als einziger lebender Wolf statt Wolfssieg (E-35)
+RM-DR-106.2;ja;rachsuechtiger-wolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";feste Nächte 3, 6, 9 (DA-16)
+RM-DR-106.3;ja;rachsuechtiger-wolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";erste Nutzung Nacht 3 (DA-16)
 RM-DR-107.1;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";Scheinrolle = alte Rolle (V-03), bis zu 3 Verzichte (V-08, V-09)
 RM-DR-107.2;ja;koenig-lykaon;E;"DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026";nur Fraktion Dorf (V-03)
 RM-DR-108.1;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
 RM-DR-108.2;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nächster tatsächlicher Rudelangriff
 RM-DR-108.3;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Rudelangriff
-RM-DR-109.1;ja;schicksalswolf;S;;
-RM-DR-109.2;ja;schicksalswolf;S;;
-RM-DR-109.3;ja;schicksalswolf;S;;
+RM-DR-109.1;ja;schicksalswolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";nur Nacht 4 (DA-11)
+RM-DR-109.2;ja;schicksalswolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";Rudelangriff mit Schutz (DA-13)
+RM-DR-109.3;ja;schicksalswolf;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung)";erste drei verschiedenen Toten, jede Ursache (DA-12)
 RM-DR-110.1;ja;schattenwanderer;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";stattdessen (B-04)
 RM-DR-110.2;ja;schattenwanderer;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";einmal je Leben, nur echter Tod (B-04, B-07)
 RM-DR-111.1;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";höchstens eine pro Nacht
@@ -51,7 +51,7 @@ RM-DR-112.2;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nu
 RM-DR-112.3;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
 RM-DR-112.4;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";zweiter Rudelschritt
 RM-DR-113.1;ja;schwarze-witwe;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Setup-Pflicht später, Kern wirkt nur mit lebendem Paar (B-06)
-RM-DR-113.2;ja;zeitwaechter;S;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";mit RM-DR-150 (Zeitwächter) entscheiden; Wirkung der Witwe sonst entschieden
+RM-DR-113.2;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";Witwen-Wahl entfällt in eingefrorener Nacht (E-36)
 RM-DR-114.1;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Fraktion Dorf (S-01)
 RM-DR-114.2;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Nächte und Tage, SL wählt 0-3 (S-01)
 RM-DR-114.3;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Durchschlag tötet (RM-DR-005, S-02)
@@ -169,10 +169,10 @@ RM-DR-148.2;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";
 RM-DR-148.3;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";erste Nacht nach dem Tod, Ausnahme G-PH-2 (S-04)
 RM-DR-148.4;ja;schutzgeist;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";öffentlich ohne Namen, wahre Zählung (S-04)
 RM-DR-149.1;ja;waechter-am-tor;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";jeder Weg ins Rudel wird blockiert; Fluch folgt mit Dämonischem Wolf
-RM-DR-150.1;ja;zeitwaechter;S;;
-RM-DR-150.2;ja;zeitwaechter;S;;
-RM-DR-150.3;ja;zeitwaechter;S;;
-RM-DR-150.4;ja;zeitwaechter;S;;
+RM-DR-150.1;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";Entscheidung zu Nachtbeginn, keine Tode dieser Nacht (E-36)
+RM-DR-150.2;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";allererster Nachtschritt (E-36)
+RM-DR-150.3;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";kein Wachstum, Nachtnummer läuft, frühere fällige Wirkungen treten ein (E-36)
+RM-DR-150.4;ja;zeitwaechter;E;"DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026";alle Rollen einschließlich Wölfe (E-36)
 RM-DR-151.1;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Tagesaktion (I-09)
 RM-DR-151.2;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";SL antwortet wahr, App protokolliert (I-09)
 RM-DR-151.3;ja;amalia;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";mindestens 3 lebende Wölfe (I-09)

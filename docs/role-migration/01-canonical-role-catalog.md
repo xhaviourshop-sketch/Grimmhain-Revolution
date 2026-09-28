@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 68 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 71 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 4 |
+| fehlend, Entscheidung nötig (`decision-required`) | 1 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 4 fehlende) | 0 |
-| Legacy-Befund `legacy-contradictory` (nur 4 fehlende) | 4 |
-| Legacy-Befund `legacy-broken` (nur 4 fehlende) | 0 |
-| Legacy-Befund `not-found` (nur 4 fehlende) | 0 |
+| Legacy-Befund `legacy-verified` (nur 1 fehlende) | 0 |
+| Legacy-Befund `legacy-contradictory` (nur 1 fehlende) | 1 |
+| Legacy-Befund `legacy-broken` (nur 1 fehlende) | 0 |
+| Legacy-Befund `not-found` (nur 1 fehlende) | 0 |
 
-<!-- check:counts total=72 implemented=68 remaining=4 -->
+<!-- check:counts total=72 implemented=71 remaining=1 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -48,11 +48,11 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 10 | `spuerhund` | Spürhund / Scent Hound | Dorf | I | 6.8 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-1.md#spuerhund) |
 | 11 | `schutzengel` | Schutzengel / Guardian Angel | Dorf | I | 1.3 | `implemented-and-tested` | `legacy-broken` | `automatic` | Schutz | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 12 | `werwolf` | Werwolf / Werewolf | Wölfe | I, II, III, IV | 2.0 | `implemented-and-tested` | `legacy-verified` | `automatic` | Tötung | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
-| 13 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Wölfe | I, II, III, IV | 2.2 | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | M / hoch | K11 | – | [03](03-remaining-roles-analysis.md#rachsuechtiger-wolf) · [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf) |
+| 13 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Wölfe | I, II, III, IV | 2.2 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Tötung | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf) |
 | 14 | `koenig-lykaon` | König Lykaon / King Lycaon | Wölfe | I | 2.4 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Rollenwechsel | M / mittel | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
 | 15 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | Wölfe | IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | sonstige Spezialmechanik | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#siegreicher-wolf) |
 | 16 | `seuchenwolf` | Seuchenwolf / Blight Wolf | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Wolfsangriff-Modifikation | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#seuchenwolf) |
-| 17 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Wölfe | IV | 2.5 | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | M / mittel | K11 | – | [03](03-remaining-roles-analysis.md#schicksalswolf) · [Dossier](dossiers/wolves-a.md#schicksalswolf) |
+| 17 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Wölfe | IV | 2.5 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Tötung | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#schicksalswolf) |
 | 18 | `schattenwanderer` | Schattenwanderer / Shadowwalker | Wölfe | II | 2.6 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Verknüpfte Personen | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#schattenwanderer) |
 | 19 | `giftwolf` | Giftwolf / Poison Wolf | Wölfe | II | 2.7 | `implemented-and-tested` | `legacy-verified` | `automatic` | Tötung | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#giftwolf) |
 | 20 | `rudelvater` | Rudelvater / Packfather | Wölfe | II | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Wolfsangriff-Modifikation | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#rudelvater) |
@@ -97,7 +97,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 59 | `schutzgeist` | Schutzgeist / Guardian Spirit | Dorf | II | 5.6 | `implemented-and-tested` | `legacy-broken` | `automatic` | Schutz | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#schutzgeist) |
 | 60 | `dorfchronistin` | Dorfchronistin / Village Chronicler | Dorf | III | 0.3 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Informationsrolle | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#dorfchronistin) |
 | 61 | `waechter-am-tor` | Wächter am Tor / Gatewarden | Dorf | IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | globale Regeländerung | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#waechter-am-tor) |
-| 62 | `zeitwaechter` | Zeitwächter / Time Warden | Dorf | III | 9.5 (once) | `decision-required` | `legacy-contradictory` | `assisted` | globale Regeländerung | XL / kritisch | K16 | – | [03](03-remaining-roles-analysis.md#zeitwaechter) · [Dossier](dossiers/village-4.md#zeitwaechter) |
+| 62 | `zeitwaechter` | Zeitwächter / Time Warden | Dorf | III | 9.5 (once) | `implemented-and-tested` | `legacy-contradictory` | `assisted` | globale Regeländerung | XL / kritisch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#zeitwaechter) |
 | 63 | `amalia` | Amalia / Amalia | Dorf | IV | 5.8 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Informationsrolle | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#amalia) |
 | 64 | `kriegerin-des-lichts` | Kriegerin des Lichts / Warrior of Light | Dorf | IV | 6.0 (once) | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Informationsrolle | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#kriegerin-des-lichts) |
 | 65 | `detektiv` | Detektiv / Detective | Dorf | III | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Informationsrolle | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-4.md#detektiv) |
