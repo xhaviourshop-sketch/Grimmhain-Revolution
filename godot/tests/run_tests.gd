@@ -8,6 +8,8 @@ extends SceneTree
 ##
 ## Aufruf:  godot --headless --path godot -s res://tests/run_tests.gd
 ## Optional: -- --filter=<teilstring>   (nur passende Testdateien)
+## Jeder Laufzeitfehler (SCRIPT ERROR, Engine-Fehler) während eines Tests macht diesen Test rot
+## (TestErrorLogger), auch wenn seine Prüfungen vorher bestanden haben.
 
 const TEST_DIRS: Array[String] = ["res://tests/unit", "res://tests/ui"]
 
@@ -19,6 +21,8 @@ func _initialize() -> void:
 			filter = arg.trim_prefix("--filter=")
 
 	var files := _collect_test_files(filter)
+	var errors := TestErrorLogger.new()
+	OS.add_logger(errors)
 	var total := 0
 	var failed := 0
 	var broken_files := 0
@@ -44,7 +48,13 @@ func _initialize() -> void:
 				await instance.call("after_each")
 			total += 1
 			var label := "%s::%s" % [path.get_file().get_basename(), method]
-			if instance.assertions == 0:
+			var runtime_errors := errors.take()
+			if not runtime_errors.is_empty():
+				failed += 1
+				print("FAIL  %s  (Laufzeitfehler)" % label)
+				for e: String in runtime_errors:
+					print("      - %s" % e)
+			elif instance.assertions == 0:
 				failed += 1
 				print("FAIL  %s  (keine Prüfung ausgeführt, möglicher Laufzeitfehler)" % label)
 			elif instance.failures.is_empty():
@@ -55,6 +65,7 @@ func _initialize() -> void:
 				for f: String in instance.failures:
 					print("      - %s" % f)
 
+	OS.remove_logger(errors)
 	print("")
 	print("%d Tests, %d fehlgeschlagen, %d Testdateien nicht ladbar" % [total, failed, broken_files])
 	quit(0 if failed == 0 and broken_files == 0 and total > 0 else 1)
