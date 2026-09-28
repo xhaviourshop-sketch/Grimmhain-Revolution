@@ -17,7 +17,7 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
 	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein",
-	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester"]
+	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant"]
 const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 ## Volle Fokusrunden: jede Rolle ist gleich oft Fokusrolle, auch wenn der Rollenpool wächst.
@@ -35,7 +35,7 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
 	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived",
-	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven"]
+	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
 	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN"]
 
@@ -43,6 +43,7 @@ var _rng := RandomNumberGenerator.new()
 var _game_label := ""
 var _seen := {}
 var _focus := ""  ## Fokusrolle der laufenden Partie
+var _focus_goal_met := false  ## seltene Mechanik der Fokusrolle in dieser Partie schon erreicht (Nekromant: Umlenkung)
 var _probe := false  ## letzter Befehl ist eine zufällige Korrektur, Ablehnung erlaubt
 var _probe_rejected := 0
 var _probe_accepted := 0
@@ -115,6 +116,8 @@ func _play_game(g: int, count: int) -> Dictionary:
 		state = res.state
 		log.append(c)
 		events.append_array(res.events)
+		if res.events.any(func(e: GameEvent) -> bool: return e.type == GameEvent.NECRO_REDIRECTED):
+			_focus_goal_met = true
 		deaths += _check_after(before, state, res.events, "%s @%d %s" % [_game_label, i, c.type])
 		if log.size() % CODEC_EVERY == 0:
 			_check_codec(state, log, "%s @%d" % [_game_label, i])
@@ -135,6 +138,7 @@ func _start_command(g: int, count: int) -> Command:
 	# Fokusrolle: jede Katalogrolle ist reihum sicher in mehreren Partien (Abdeckung wächst mit dem Pool).
 	var focus: String = ROLES[g % ROLES.size()]
 	_focus = focus
+	_focus_goal_met = false
 	var wolves := 1 + _rng.randi_range(0, maxi(0, count / 5))
 	if focus == "amalia":
 		wolves = maxi(wolves, RoleCatalog.AMALIA_MIN_WOLVES)  # ihre Tagesaktion braucht drei Wölfe
@@ -212,6 +216,9 @@ func _next_command(s: GameState) -> Command:
 		# Der König handelt erst bei mehr Toten als Lebenden: seine Fokuspartien laufen bis dahin weiter.
 		if _focus == "koenig" and not InfoSteps.king_condition(s):
 			return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: Königsbedingung abwarten"})
+		# Nekromant: weiterspielen, bis er einmal umgelenkt hat (braucht drei Tote und einen Rudelangriff auf ihn).
+		if _focus == "nekromant" and not _focus_goal_met and s.alive_ids().any(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.NEKROMANT):
+			return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: Umlenkung des Nekromanten abwarten"})
 		if _rng.randf() < 0.6:
 			return Command.confirm_win((_pick(open) as WinCandidate).id)
 		return Command.create(Command.REJECT_WIN, {"reason": "Fuzz: weiterspielen"})
@@ -312,6 +319,11 @@ func _day_command(s: GameState) -> Command:
 			if s.players[id].role_id == RoleCatalog.AMALIA:
 				_probe = true  # bei zu wenigen Wölfen abgelehnt
 				return Command.amalia_sacrifice(id, _rng.randf() < 0.5)
+	elif roll < 0.1:
+		for id: int in s.alive_ids():
+			if s.players[id].role_id == RoleCatalog.NEKROMANT:
+				_probe = true  # zweiter Versuch am selben Tag abgelehnt
+				return Command.name_wolf(id, _pick(s.alive_ids()))
 	if roll < 0.45:
 		var nomination := _random_nomination(s)
 		if nomination != null:
@@ -424,7 +436,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				if not chosen.has(t):
 					chosen.append(t)
 			return Command.answer_stage_targets(p.id, String(p.stage), chosen)
-		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER:
+		PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO:
 			# Apfel (R-02) ist selten: Rotkäppchen-Fokuspartien wählen eine Person mit Jede-Nacht-Schritt und gewähren Zuflucht.
 			if p.owner == PendingPrompt.OWNER_RED and _focus == "rotkaeppchen":
 				if p.stage == BondSteps.STAGE_GRANT:
@@ -442,7 +454,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				var role_options: Array = p.partial.get("options", [])
 				return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "option": _rng.randi_range(0, role_options.size() - 1)})
 			# Seelentauscher, Kutscher und Frankenstein wählen (auch) Tote.
-			var dead_choice := [PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN].has(p.owner)
+			var dead_choice := [PendingPrompt.OWNER_SWAPPER, PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN].has(p.owner) or (p.owner == PendingPrompt.OWNER_NECRO and p.stage == BondSteps.STAGE_TARGETS)
 			var bond_pool: Array[int] = p.allowed_ids.duplicate() if dead_choice else _alive_in(s, p.allowed_ids)
 			var bond_picks: Array = []
 			var wanted := p.max_count if (p.min_count > 0 or _rng.randf() < 0.8) else 0
@@ -469,6 +481,11 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				_:
 					return Command.answer_choice(p.id, String(p.stage), true)
 	var pool := _alive_in(s, p.allowed_ids)
+	# Die Umlenkung des Nekromanten ist selten: in seinen Fokuspartien wählt das Rudel ihn oft, sobald drei Tote bereitliegen.
+	if p.owner == PendingPrompt.OWNER_PACK and _focus == "nekromant" and SoloRules.necro_pool(s).size() >= RoleCatalog.NECRO_SACRIFICE and _rng.randf() < 0.6:
+		var necros := pool.filter(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.NEKROMANT)
+		if not necros.is_empty():
+			return Command.answer_prompt(p.id, [_pick(necros)])
 	var n := _rng.randi_range(p.min_count, mini(p.max_count, pool.size()))
 	var targets: Array = []
 	while targets.size() < n:

@@ -32,6 +32,9 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		return null
 	if _fenrir_survives(ctx, target, cause, source_kind):
 		return null
+	# Nekromant (E-16): globaler Schild nach Schutz und persönlichen Schilden, vor den Umlenkungen (E-12, B-07).
+	if SoloRules.necro_shield_prevents(ctx, target_id, cause, source_kind):
+		return null
 	var next_chain: Array[int] = chain.duplicate()
 	next_chain.append(target_id)
 	# Voodoo-Priester (E-12, E-23): Die eigene Puppe wirkt vor einer fremden Verknüpfung; die Puppe ist verbraucht.

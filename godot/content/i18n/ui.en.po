@@ -785,6 +785,12 @@ msgstr "Voodoo Priest"
 msgid "ui.role.voodoo_priester.short"
 msgstr "Secretly gives another person a doll at night; if he would die, the doll dies instead. Wins alone among the last three."
 
+msgid "ui.role.nekromant.name"
+msgstr "Necromancer"
+
+msgid "ui.role.nekromant.short"
+msgstr "Sacrifices three dead for a shield against the next death or redirects an attack; naming a wolf wins."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

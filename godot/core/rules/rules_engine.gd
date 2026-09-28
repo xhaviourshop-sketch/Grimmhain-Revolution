@@ -78,6 +78,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 			return OracleStep.validate_override(s, p)
 		Command.AMALIA_SACRIFICE:
 			return _validate_amalia(s, p)
+		Command.NAME_WOLF:
+			return SoloRules.validate_name_wolf(s, p)
 		Command.CONFIRM_WIN, Command.REJECT_WIN:
 			var open := s.open_candidates()
 			if open.is_empty():
@@ -350,6 +352,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			GmCorrections.execute(ctx, p)
 		Command.OVERRIDE_SHOWN_ROLE:
 			OracleStep.apply_override(ctx, p)
+		Command.NAME_WOLF:
+			SoloRules.name_wolf(ctx, p)
 		Command.AMALIA_SACRIFICE:
 			# Öffentliche Frage mit Antwort des Spielleiters, danach stirbt Amalia sofort mit allen Folgen.
 			var amalia := int(p["player_id"])
@@ -498,6 +502,7 @@ static func _start_night(ctx: RuleContext) -> void:
 	var s := ctx.state
 	PhaseMachine.enter(ctx, Phase.NIGHT)
 	s.pack_target_id = GameState.NO_TARGET
+	s.necro_shields.clear()  # ungenutzte Schilde verfallen mit Beginn der nächsten Nacht (E-16)
 	s.martyr_saves.clear()  # vor dem Plan: die Frage der Märtyrerin hängt von dieser Nacht ab
 	s.night_plan = StepQueue.build_night_plan(s)
 	s.pack_bonus_pending = false  # in den Plan übernommen (Rudelvater)
@@ -740,7 +745,7 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 				"protection": RoleCatalog.MAERTYRERIN, "sources": [RoleCatalog.MAERTYRERIN], "martyr_id": martyr, "night": s.night_number})
 			KillPipeline.request_kill(ctx, martyr, KillEvent.CAUSE_MARTYR_SACRIFICE, KillEvent.SOURCE_PLAYER, martyr)
 		else:
-			KillPipeline.request_kill(ctx, s.pack_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, pierce)
+			KillPipeline.request_kill(ctx, s.pack_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, pierce, _redirect_chain(s.pack_redirect_from))
 	else:
 		ctx.emit(GameEvent.NO_NIGHT_KILL, Visibility.GM, {"night_number": s.night_number})
 	s.martyr_saves.clear()
@@ -749,9 +754,11 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 		if int(s.apples[holder]) <= s.night_number:
 			s.apples.erase(holder)
 	if s.pack_extra_target_id != GameState.NO_TARGET:
-		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true)
+		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true, _redirect_chain(s.pack_extra_redirect_from))
 	s.pack_target_id = GameState.NO_TARGET
 	s.pack_extra_target_id = GameState.NO_TARGET
+	s.pack_redirect_from = -1
+	s.pack_extra_redirect_from = -1
 	# Fenrir und Cerberus wachsen in jeder Morgenauflösung, die sie lebend erreichen.
 	for id: int in s.alive_ids():
 		var role := s.players[id].role_id
@@ -791,3 +798,11 @@ static func _ring_alarm_bells(ctx: RuleContext) -> void:
 	suspects.sort()
 	ctx.emit(GameEvent.ALARM_BELLS_DETAIL, Visibility.GM, {"watchman_ids": watchmen, "neighbour_ids": suspects, "day": s.day_number})
 	ctx.emit(GameEvent.ALARM_BELLS, Visibility.PUBLIC, {"day": s.day_number})
+
+
+## Umlenkungskette eines Rudelangriffs, den ein Nekromant umgelenkt hat (E-20: nie zurück zu ihm).
+static func _redirect_chain(from_id: int) -> Array[int]:
+	var chain: Array[int] = []
+	if from_id != -1:
+		chain.append(from_id)
+	return chain

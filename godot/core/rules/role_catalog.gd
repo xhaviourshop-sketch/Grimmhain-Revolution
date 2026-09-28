@@ -176,6 +176,10 @@ const FEUERTEUFEL := &"feuerteufel"
 ## (KillPipeline); Sieg allein lebend bei höchstens drei Lebenden (WinRules).
 const VOODOO := &"voodoo-priester"
 const VOODOO_MAX_LIVING := 3
+## Nekromant / Necromancer (E-16 bis E-19, E-24 bis E-26): Einzelsieg; drei Tote opfern für einen globalen Schild
+## oder (nur als sterbendes Rudelopfer) für eine Umlenkung; einmal je Tag Wolf benennen, Treffer = Alleinsieg.
+const NEKROMANT := &"nekromant"
+const NECRO_SACRIFICE := 3
 ## Rollen, deren eigener Nachtschritt jede Nacht stattfindet und durch einen Apfel verdoppelt wird (R-02, R-04);
 ## ausgenommen Rollen mit nur einem Ergebnis (Richter, Parasit, Verdammniswächter, Rotkäppchen).
 const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUMWOLF, HENKER, WALDLAEUFER, DOKTOR, TRAUMDEUTER, SCHWARZE_WITWE,
@@ -262,6 +266,7 @@ const ROLES := {
 	TODESPREDIGER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": TODESPREDIGER, "night_priority": 66, "first_night_only": true},
 	FEUERTEUFEL: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": FEUERTEUFEL, "night_priority": 76},
 	VOODOO: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": VOODOO, "night_priority": 84},
+	NEKROMANT: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": NEKROMANT, "night_priority": 30},
 }
 
 

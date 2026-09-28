@@ -215,3 +215,104 @@ static func voodoo_on_death(s: GameState, dead_id: int) -> void:
 static func voodoo_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
 	return p != null and p.alive and p.role_id == RoleCatalog.VOODOO and s.alive_ids().size() <= RoleCatalog.VOODOO_MAX_LIVING
+
+
+# --- Nekromant ------------------------------------------------------------------------------------
+
+## Tote, die noch nicht geopfert wurden (gemeinsamer Vorrat, E-18, E-24), aufsteigend.
+static func necro_pool(s: GameState) -> Array[int]:
+	var out: Array[int] = []
+	for id: int in s.players:
+		if not s.players[id].alive and not s.necro_sacrificed.has(id):
+			out.append(id)
+	out.sort()
+	return out
+
+
+## Rudelangriff dieser Nacht auf den Nekromanten, der ihn sonst töten würde (E-17, E-26): "pack", "pack2" oder "".
+static func necro_attack_slot(s: GameState, necro_id: int) -> String:
+	var p := s.players[necro_id]
+	for slot: Array in [["pack", s.pack_target_id, s.plague_pierce_pending], ["pack2", s.pack_extra_target_id, true]]:
+		if int(slot[1]) != necro_id:
+			continue
+		if KillPipeline.pack_protection(s, necro_id, bool(slot[2])) != &"" or KillPipeline.survives_any_death(s, p):
+			return ""
+		if not s.necro_shields.is_empty() or StepQueue.is_marked(s, necro_id):
+			return ""
+		if s.shadow_links.any(func(l: Dictionary) -> bool: return (int(l["walker_id"]) == necro_id and s.players[int(l["partner_id"])].alive) or (int(l["partner_id"]) == necro_id and s.players[int(l["walker_id"])].alive)):
+			return ""
+		return String(slot[0])
+	return ""
+
+
+## Andere Lebende als Umlenkziel.
+static func necro_redirect_targets(s: GameState, necro_id: int) -> Array[int]:
+	return _others_alive(s, necro_id)
+
+
+static func necro_sacrifice(s: GameState, dead: Array[int]) -> void:
+	for id: int in dead:
+		if not s.necro_sacrificed.has(id):
+			s.necro_sacrificed.append(id)
+	s.necro_sacrificed.sort()
+
+
+static func necro_shield(ctx: RuleContext, necro_id: int, dead: Array[int]) -> void:
+	var s := ctx.state
+	necro_sacrifice(s, dead)
+	s.necro_shields.append({"necro_id": necro_id, "night": s.night_number})
+	ctx.emit(GameEvent.NECRO_SHIELD, Visibility.GM, {"necro_id": necro_id, "dead_ids": dead.duplicate(), "night": s.night_number})
+
+
+static func necro_redirect(ctx: RuleContext, necro_id: int, dead: Array[int], target_id: int) -> void:
+	var s := ctx.state
+	necro_sacrifice(s, dead)
+	var slot := necro_attack_slot(s, necro_id)
+	if slot == "pack2":
+		s.pack_extra_target_id = target_id
+		s.pack_extra_redirect_from = necro_id
+	else:
+		s.pack_target_id = target_id
+		s.pack_redirect_from = necro_id
+	ctx.emit(GameEvent.NECRO_REDIRECTED, Visibility.GM, {"necro_id": necro_id, "dead_ids": dead.duplicate(), "target_id": target_id, "slot": slot, "night": s.night_number})
+
+
+## Globaler Schild (E-16): verhindert den Tod, falls einer aktiv ist; der älteste wird verbraucht.
+static func necro_shield_prevents(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName) -> bool:
+	var s := ctx.state
+	if s.necro_shields.is_empty() or source_kind == KillEvent.SOURCE_GM:
+		return false
+	var shield: Dictionary = s.necro_shields.pop_front()
+	ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": target_id, "cause": cause, "source_kind": source_kind,
+		"protection": RoleCatalog.NEKROMANT, "sources": [RoleCatalog.NEKROMANT], "necro_id": int(shield["necro_id"]), "night": s.night_number})
+	return true
+
+
+static func validate_name_wolf(s: GameState, p: Dictionary) -> StringName:
+	var id := DictRead.get_int(p, "player_id", GameState.NO_TARGET)
+	var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
+	if not s.players.has(id):
+		return &"unknown_player"
+	if not s.players[id].alive:
+		return &"player_dead"
+	if s.players[id].role_id != RoleCatalog.NEKROMANT:
+		return &"not_necromancer"
+	if int(s.necro_named.get(id, 0)) == s.day_number:
+		return &"already_named_today"
+	if not s.players.has(target) or target == id or not s.players[target].alive:
+		return &"invalid_target"
+	return &""
+
+
+## Einmal je Tag, geheim; ein Treffer (zählt als Wolf, RM-DR-002.2) erfüllt den Alleinsieg dauerhaft (F-11).
+static func name_wolf(ctx: RuleContext, p: Dictionary) -> void:
+	var s := ctx.state
+	var id := int(p["player_id"])
+	var target := int(p["target_id"])
+	var hit := s.players[target].counts_as_wolf
+	s.necro_named[id] = s.day_number
+	if hit and not s.necro_wins.has(id):
+		s.necro_wins.append(id)
+		s.necro_wins.sort()
+		s.win_check_pending = true
+	ctx.emit(GameEvent.NECRO_NAMED, Visibility.GM, {"necro_id": id, "target_id": target, "hit": hit, "day": s.day_number})

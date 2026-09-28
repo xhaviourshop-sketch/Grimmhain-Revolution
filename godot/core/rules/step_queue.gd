@@ -115,6 +115,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.TODESPREDIGER: false,  # Pflichtvorhersage
 	RoleCatalog.FEUERTEUFEL: false,    # Behalten ist eine Antwort (0 Ziele)
 	RoleCatalog.VOODOO: false,         # Verzicht ist eine Antwort (0 Ziele, E-21)
+	RoleCatalog.NEKROMANT: false,      # Verzicht ist eine Antwort (0 Tote)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -294,6 +295,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	if step_role(key) == RoleCatalog.FEUERTEUFEL and SoloRules.fire_targets(s, actor).is_empty():
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.VOODOO and (SoloRules.doll_of(s, actor) != GameState.NO_TARGET or SoloRules.fire_targets(s, actor).is_empty()):
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.NEKROMANT and SoloRules.necro_pool(s).size() < RoleCatalog.NECRO_SACRIFICE:
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.PROPHET:
 		if SoloRules.prophet_marking(s, actor):

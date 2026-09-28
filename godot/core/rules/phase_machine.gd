@@ -68,7 +68,7 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 		Command.GM_CORRECTION:
 			if not state.is_started():
 				return &"game_not_started"
-		Command.AMALIA_SACRIFICE:
+		Command.AMALIA_SACRIFICE, Command.NAME_WOLF:
 			if state.phase != Phase.DAY:
 				return &"wrong_phase"
 			if state.day_step == Phase.DAY_ENDED:

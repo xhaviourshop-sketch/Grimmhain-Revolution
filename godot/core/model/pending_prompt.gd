@@ -53,6 +53,7 @@ const OWNER_PEST := &"pestbringerin"
 const OWNER_PROPHET := &"prophet-des-untergangs"
 const OWNER_FIRE := &"feuerteufel"
 const OWNER_VOODOO := &"voodoo-priester"
+const OWNER_NECRO := &"nekromant"
 const OWNER_PREACHER := &"todesprediger"
 const KIND_BOND := &"bond_choice"  ## Bindungsschritt mit Stufen (BondSteps)
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)

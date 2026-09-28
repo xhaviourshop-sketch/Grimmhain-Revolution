@@ -19,11 +19,12 @@ const STAGE_ALLY := &"ally"
 const STAGE_WOLF := &"wolf"
 const STAGE_ROLE := &"role"
 const STAGE_PREDICTION := &"prediction"  ## Todesprediger: {"kind": "night"|"day", "number": n}
-const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY, STAGE_WOLF, STAGE_ROLE, STAGE_PREDICTION]
+const STAGE_REDIRECT := &"redirect"  ## Nekromant: Umlenkziel (0 = Schild statt Umlenkung)
+const STAGES: Array[StringName] = [STAGE_TARGETS, STAGE_MODE, STAGE_GRANT, STAGE_ALLY, STAGE_WOLF, STAGE_ROLE, STAGE_PREDICTION, STAGE_REDIRECT]
 const OWNERS: Array[StringName] = [PendingPrompt.OWNER_LOKI, PendingPrompt.OWNER_RED, PendingPrompt.OWNER_LYKAON, PendingPrompt.OWNER_SWAPPER,
-	PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER]
+	PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_PREACHER, PendingPrompt.OWNER_NECRO]
 ## Rollen, deren erste Stufe Tote auswählt.
-const REVIVERS: Array[StringName] = [PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN]
+const REVIVERS: Array[StringName] = [PendingPrompt.OWNER_COACH, PendingPrompt.OWNER_FRANKENSTEIN, PendingPrompt.OWNER_NECRO]
 const LOKI_USE_KEY := "loki:bind"
 const LYCAON_USE_KEY := "koenig-lykaon:convert"
 const SWAP_USE_KEY := "seelentauscher:swap"
@@ -109,6 +110,8 @@ static func _first_stage_shape(s: GameState, owner: StringName, actor_id: int) -
 		return [dead_ids(s), 0, RoleCatalog.COACH_REVIVALS]
 	if owner == PendingPrompt.OWNER_FRANKENSTEIN:
 		return [dead_ids(s), 0, 1]
+	if owner == PendingPrompt.OWNER_NECRO:  # keine oder genau drei ungeopferte Tote (E-18)
+		return [SoloRules.necro_pool(s), 0, RoleCatalog.NECRO_SACRIFICE]
 	if owner == PendingPrompt.OWNER_PREACHER:
 		return [[], 0, 0]
 	return [_all_ids(s), 0, 2]
@@ -146,7 +149,7 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 		return &"invalid_target"
 	var seen: Array[int] = []
 	var dead_allowed := prompt.owner == PendingPrompt.OWNER_SWAPPER
-	var dead_only := REVIVERS.has(prompt.owner)
+	var dead_only := REVIVERS.has(prompt.owner) and prompt.stage != STAGE_REDIRECT
 	for t: int in targets:
 		if seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t):
 			return &"invalid_target"
@@ -200,6 +203,15 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 		_revive_frankenstein(ctx, prompt, DictRead.get_int(prompt.partial, "target_id"), StringName(options[int(p["option"])]))
 		return
 	var chosen: Array[int] = DictRead.to_int_array(p["targets"])
+	if prompt.stage == STAGE_REDIRECT:
+		var dead: Array[int] = []
+		dead.assign(DictRead.get_array(prompt.partial, "dead_ids"))
+		if chosen.is_empty():
+			SoloRules.necro_shield(ctx, prompt.actor_id, dead)
+		else:
+			SoloRules.necro_redirect(ctx, prompt.actor_id, dead, chosen[0])
+		_finish(ctx, prompt, STAGE_REDIRECT)
+		return
 	if prompt.stage == STAGE_WOLF:
 		_revive_coach(ctx, prompt, chosen[0])
 		return
@@ -226,6 +238,16 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	if prompt.owner == PendingPrompt.OWNER_COACH:
 		prompt.partial = {"target_ids": chosen.duplicate()}
 		_next_stage(ctx, prompt, STAGE_TARGETS, chosen, STAGE_WOLF, chosen.duplicate(), 1)
+		return
+	if prompt.owner == PendingPrompt.OWNER_NECRO:
+		# Sterbendes Rudelopfer: Umlenkung oder (0) Schild; sonst sofort Schild (E-16, E-17, E-26).
+		if SoloRules.necro_attack_slot(s, prompt.actor_id) == "":
+			SoloRules.necro_shield(ctx, prompt.actor_id, chosen)
+			_finish(ctx, prompt, STAGE_TARGETS)
+			return
+		prompt.partial = {"dead_ids": chosen.duplicate()}
+		_next_stage(ctx, prompt, STAGE_TARGETS, chosen, STAGE_REDIRECT, SoloRules.necro_redirect_targets(s, prompt.actor_id), 0)
+		prompt.max_count = 1
 		return
 	if prompt.owner == PendingPrompt.OWNER_FRANKENSTEIN:
 		prompt.partial = {"target_id": chosen[0], "options": frankenstein_options(s)}
@@ -351,6 +373,15 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 		var picked: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))
 		return prompt.stage == STAGE_WOLF and picked != null and (picked as Array).size() == RoleCatalog.COACH_REVIVALS \
 			and prompt.allowed_ids == Array(picked) and (picked as Array).all(func(id: int) -> bool: return s.players.has(id) and not s.players[id].alive)
+	if prompt.owner == PendingPrompt.OWNER_NECRO:
+		# Stufe 2 nur als sterbendes Rudelopfer mit drei ungeopferten Toten (E-17, E-26).
+		var sacrificed: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "dead_ids"))
+		if sacrificed == null or (sacrificed as Array).size() != RoleCatalog.NECRO_SACRIFICE:
+			return false
+		var pool := SoloRules.necro_pool(s)
+		var sorted_dead := (sacrificed as Array).duplicate()
+		sorted_dead.sort()
+		return prompt.stage == STAGE_REDIRECT and sorted_dead == sacrificed and (sacrificed as Array).all(func(id: int) -> bool: return pool.has(id) and (sacrificed as Array).count(id) == 1) 			and SoloRules.necro_attack_slot(s, actor.id) != "" and prompt.allowed_ids == SoloRules.necro_redirect_targets(s, actor.id) and prompt.min_count == 0 and prompt.max_count == 1
 	if prompt.owner == PendingPrompt.OWNER_FRANKENSTEIN:
 		var dead := DictRead.get_int(prompt.partial, "target_id", -1)
 		return prompt.stage == STAGE_ROLE and s.players.has(dead) and not s.players[dead].alive and prompt.allowed_ids.is_empty() \

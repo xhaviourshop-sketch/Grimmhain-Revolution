@@ -73,6 +73,12 @@ var prophecies: Array = []            ## Todesprediger: [{preacher_id, kind: nig
 var preacher_wins: Array[int] = []    ## Todesprediger mit erfüllter Vorhersage, aufsteigend
 var fire_marks: Array = []             ## Feuerteufel: [{devil_id, target_id}], höchstens eine je Feuerteufel, nach devil_id
 var voodoo_dolls: Array = []           ## Voodoo-Priester: [{priest_id, doll_id}], höchstens eine lebende Puppe je Priester, nach priest_id
+var necro_sacrificed: Array[int] = []  ## Nekromant: geopferte Tote (gemeinsamer Vorrat, jede Person einmal), aufsteigend
+var necro_shields: Array = []          ## Nekromant: aktive Schilde [{necro_id, night}] in Errichtungsreihenfolge; enden mit der nächsten Nacht
+var necro_named: Dictionary = {}       ## Nekromant: Tag des letzten Benennens je Person-ID
+var necro_wins: Array[int] = []        ## Nekromanten mit Treffer beim Benennen, aufsteigend
+var pack_redirect_from: int = -1       ## Nekromant, der den Rudelangriff dieser Nacht umgelenkt hat (Kette, E-20)
+var pack_extra_redirect_from: int = -1  ## dasselbe für das Zusatzopfer des Rudelvaters
 var winner_id: int = -1                 ## ID des bestätigten Kandidaten oder −1
 var command_count: int = 0              ## Anzahl angewandter Befehle
 var next_event_index: int = 1
@@ -194,7 +200,7 @@ func to_dict() -> Dictionary:
 	var apprentice_list: Array = []
 	for b: ApprenticeBond in apprentices:
 		apprentice_list.append(b.to_dict())
-	return {
+	var d := {
 		"schema_version": schema_version,
 		"rules_version": String(rules_version),
 		"round_id": round_id,
@@ -259,6 +265,10 @@ func to_dict() -> Dictionary:
 		"preacher_wins": preacher_wins.duplicate(),
 		"fire_marks": fire_marks.duplicate(true),
 		"voodoo_dolls": voodoo_dolls.duplicate(true),
+		"necro_sacrificed": necro_sacrificed.duplicate(),
+		"necro_shields": necro_shields.duplicate(true),
+		"necro_named": _int_keys_to_dict(necro_named),
+		"necro_wins": necro_wins.duplicate(),
 		"command_count": command_count,
 		"next_ids": {
 			"event": next_event_index,
@@ -269,7 +279,12 @@ func to_dict() -> Dictionary:
 			"info": next_info_id,
 			"apprentice": next_apprentice_id,
 		},
-	}
+	}	# Umlenkung eines Rudelangriffs durch einen Nekromanten: nur in der laufenden Nacht vorhanden (E-17, E-20).
+	if pack_redirect_from != -1:
+		d["pack_redirect_from"] = pack_redirect_from
+	if pack_extra_redirect_from != -1:
+		d["pack_extra_redirect_from"] = pack_extra_redirect_from
+	return d
 
 
 ## Baut einen Zustand aus einem Dictionary. Liefert null bei struktureller Ungültigkeit.
@@ -562,6 +577,34 @@ static func from_dict(d: Dictionary) -> GameState:
 		if not s.players.has(piper) or not s.players.has(charmed) or piper == charmed:
 			return null
 		s.charms.append({"piper_id": piper, "target_id": charmed})
+	for key: String in ["necro_sacrificed", "necro_wins"]:
+		var necro_ids: Variant = DictRead.to_int_array(DictRead.get_array(d, key))
+		if necro_ids == null:
+			return null
+		var sorted_ids: Array[int] = (necro_ids as Array[int]).duplicate()
+		sorted_ids.sort()
+		for i: int in sorted_ids.size():
+			if not s.players.has(sorted_ids[i]) or (i > 0 and sorted_ids[i] == sorted_ids[i - 1]):
+				return null
+		if sorted_ids != necro_ids:
+			return null
+		s.set(key, necro_ids)
+	for item: Variant in DictRead.get_array(d, "necro_shields"):
+		var necro := DictRead.get_int(item, "necro_id", -1) if item is Dictionary else -1
+		var night := DictRead.get_int(item, "night", -1) if item is Dictionary else -1
+		if not s.players.has(necro) or night != s.night_number or night < 1:
+			return null
+		s.necro_shields.append({"necro_id": necro, "night": night})
+	var named := DictRead.get_dict(d, "necro_named")
+	for key: Variant in named:
+		if not String(key).is_valid_int() or not s.players.has(String(key).to_int()) or not DictRead.is_int_like(named[key]) or int(named[key]) < 1 or int(named[key]) > s.day_number:
+			return null
+		s.necro_named[String(key).to_int()] = int(named[key])
+	for key: String in ["pack_redirect_from", "pack_extra_redirect_from"]:
+		var from := DictRead.get_int(d, key, -1)
+		if from != -1 and (not s.players.has(from) or s.players[from].role_id != RoleCatalog.NEKROMANT):
+			return null
+		s.set(key, from)
 	for item: Variant in DictRead.get_array(d, "voodoo_dolls"):
 		var priest := DictRead.get_int(item, "priest_id", -1) if item is Dictionary else -1
 		var doll := DictRead.get_int(item, "doll_id", -1) if item is Dictionary else -1
