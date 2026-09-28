@@ -51,6 +51,11 @@ var _gm_role: String = ""
 @onready var _card: ActionCard = %ActionCard
 @onready var _side: Control = %SideColumn
 @onready var _overlay_host: Control = %OverlayHost
+@onready var _backdrop: Panel = %Backdrop
+@onready var _backdrop_art: TextureRect = %BackdropArt  ## Anschlussstelle für spätere Hintergrundbilder (leer)
+
+var _backdrop_phase: String = ""
+var _backdrop_tween: Tween = null
 
 
 func _setup() -> void:
@@ -130,7 +135,31 @@ func _show_save_status(status: Dictionary) -> void:
 	_save_status.text_key = "ui.cockpit.save.ok" if ok else "ui.cockpit.save.error"
 
 
+## Anschlussstelle für spätere Hintergrundebenen je Tageszeit: Bild über der Grundfarbe, bis dahin leer.
+func set_backdrop_art(texture: Texture2D) -> void:
+	_backdrop_art.texture = texture
+
+
+## Hintergrund je Tageszeit; kurzer Übergang, bei reduzierter Bewegung sofort. Ein neuer Wechsel
+## bricht einen laufenden Übergang ab.
+func _update_backdrop(phase: String) -> void:
+	var group := "night" if phase == "NIGHT" else ("day" if phase in ["DAY", "DAWN_RESOLUTION"] else "")
+	if group == _backdrop_phase:
+		return
+	_backdrop_phase = group
+	_backdrop.theme_type_variation = &"NightBackdrop" if group == "night" else (&"DayBackdrop" if group == "day" else &"AppBackground")
+	if _backdrop_tween != null and _backdrop_tween.is_valid():
+		_backdrop_tween.kill()
+	if context.settings.reduced_motion or not is_inside_tree():
+		_backdrop.modulate.a = 1.0
+		return
+	_backdrop.modulate.a = 0.0
+	_backdrop_tween = create_tween()
+	_backdrop_tween.tween_property(_backdrop, "modulate:a", 1.0, ThemeTokens.BACKDROP_FADE_SECONDS)
+
+
 func _update_status(active: bool) -> void:
+	_update_backdrop(str(_view.get("phase", "")) if active else "")
 	_show_save_status(context.saves.last_status if active else {})
 	var phase := str(_view.get("phase", ""))
 	_phase.text_key = "ui.phase.%s" % phase.to_lower() if active else "ui.phase.none"
@@ -196,7 +225,9 @@ func _render() -> void:
 		"gm_mode": _gm_mode, "gm_effects": _gm_effects, "gm_role": _gm_role,
 		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
 		"preview": _preview, "exec_extra": _exec_extra, "day_deaths": context.session.day_deaths() if bool(_view.get("has_game")) else [],
+		"reduced_motion": context.settings.reduced_motion,
 	})
+	_restore_focus()
 
 
 ## Ringmarkierung im Tagesmodus: wer im aktuellen Schritt antippbar ist (nur Lebende, bei der
@@ -239,6 +270,23 @@ func _reset_day_mode() -> void:
 	_exec_extra = {}
 	_check_revealed = false
 	_selection.clear()
+
+
+## Nach einer Handlung ist der Button unter dem Fokus ersetzt: Fokus auf die erste Aktion der neuen
+## Karte (Tastatur, Controller), solange kein Dialog und keine Ebene offen ist.
+func _restore_focus() -> void:
+	_apply_focus.call_deferred()
+
+
+func _apply_focus() -> void:
+	if _layer != null or not is_inside_tree():
+		return
+	var owner := get_viewport().gui_get_focus_owner()
+	if owner != null and owner.is_visible_in_tree() and not owner.is_queued_for_deletion():
+		return
+	var target := default_focus()
+	if target != null and target.is_inside_tree() and target.is_visible_in_tree():
+		target.grab_focus()
 
 
 ## Der Morgenbericht steht vor den Tagesaktionen, bis die Spielleitung weiterschaltet oder am Tag

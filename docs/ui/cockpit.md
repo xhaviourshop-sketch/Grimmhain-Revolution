@@ -64,6 +64,28 @@ Werkzeug „Spielleitung“ öffnet eine private Ebene:
 
 Weitere Korrekturarten des Regelkerns (Erscheinung, Schutz, Rettung, Trank der Waldhexe, Wolfskind, Lehrling, Spiegelung, Nominierungsstatus) haben noch keine eigene Oberfläche; ihre Wirkung lässt sich bis dahin nur über die vorhandenen Arten oder Rückgängig erreichen.
 
+## Bedienqualität und Anschlussstellen
+
+- Hintergrund des Cockpits je Tageszeit (`NightBackdrop` tiefblau, `DayBackdrop` warm) und Phasenleiste in Nacht- bzw. Tagfarben; Wechsel in 0,3 s, abbrechbar.
+- Die Ansagekarte blendet bei einer neuen Handlung in 0,15 s ein; eine neue Handlung bricht das Einblenden ab. Auswahländerungen derselben Karte blenden nicht erneut ein.
+- „Bewegung reduzieren“ schaltet beide Übergänge ab.
+- Nach jeder Aktion erhält die erste Aktion der neuen Karte den Fokus (Tastatur, Controller), sofern kein Dialog und keine Ebene offen ist.
+- Status nie nur über Farbe: Tote tragen „†“, Nominierte „(N)“, Fehler beginnen mit „Fehler:“, Hinweise mit „Hinweis:“.
+- Anschlussstellen ohne Assets: `CockpitScreen.set_backdrop_art(texture)` legt ein Bild über die Hintergrundfarbe (Knoten `BackdropArt`, leer), `GameSeatToken.set_portrait(texture)` zeigt ein öffentliches Porträt am Platz (nie ein Rollenbild). Für spätere Effekte liefert `GameSession.events_applied` die Ereignisse; ein Effekt darf nur öffentliche Ereignisse sichtbar machen.
+
+## Eigenständig getroffene Bedienentscheidungen
+
+| Entscheidung | Begründung | Folge |
+|---|---|---|
+| Geheime Karten außerhalb der Nacht verdeckt, „Anzeigen“ deckt nur die aktuelle Handlung auf | Am Tag sieht der Tisch mit; nachts haben alle die Augen zu | ein zusätzlicher Tipp bei Reaktionen und Siegkandidaten am Tag |
+| Jede Hinrichtung über eine verdeckte Prüfkarte | eine Prüfkarte nur bei Sonderrollen würde die Rolle verraten | ein zusätzlicher Tipp je Hinrichtung |
+| Morgenbericht als eigener Schritt vor den Tagesaktionen („Weiter zum Tag“) | Ansage vor Diskussion; kein `BeginDay` im Regelkern | Bedienzustand, nach Neustart erscheint der Bericht erneut |
+| Nominierung in zwei Schritten im Sitzkreis | entspricht dem Ablauf am Tisch (wer, wen) | keine Liste, keine Stimmenerfassung |
+| Option „Rolle beim Tod aufdecken“ im Rollenschritt, Standard aus | DR-04 verlangt die Option; aus ist die geheimhaltende Voreinstellung | Feld in `StartGame`, Schema 12 |
+| Traumdeuter/Kopfgeldjäger: Hinweiszeile „Wölfe unter den Wählbaren“ | der Spielleiter muss mindestens einen Wolf wählen und sieht sonst keine Rollen | nur nachts in der Karte; Regelprüfung im Kern |
+| Sichtschutz endet per Button statt Halten | Halten ist ohne Gerätetest nicht verlässlich prüfbar | bei der Tablet-Abnahme prüfen |
+| Undo/Redo je Befehl über Replay, `StartGame` ausgenommen | Vertical Slice §10; ein Start rückgängig hieße Partie verwerfen, dafür gibt es „Beenden und verwerfen“ | mehrstufige Aktionen gehen Stufe für Stufe zurück |
+
 ## Setup-Option „Rolle beim Tod öffentlich aufdecken“
 
 DR-04 verlangt die Option im Setup. Sie fehlte bisher; sie steht jetzt im Rollenschritt (Standard: aus) und geht als optionales Feld `reveal_role_on_death` mit `StartGame` in den Spielstand (Schema 12). Sie ändert keine Regel, nur den öffentlichen Teil der Todesansagen.
@@ -156,6 +178,22 @@ Offene Abhängigkeiten, die nicht als fertig gelten:
 - **Richter-Nominierung:** Öffentlich erscheint nur die nominierte Person. Nominiert der Richter am selben Tag erneut, lehnt der Regelkern mit „hat heute schon nominiert“ ab; die Oberfläche kann das vorher nicht wissen, ohne das Geheimnis zu zeigen.
 - **„Keine oder genau N“-Auswahlen** (Loki, Seelentauscher, Kutscher, Nekromant, Spürhund): Die Karte erlaubt Bestätigen zwischen Mindest- und Höchstzahl; eine Zwischenzahl lehnt der Regelkern mit klarer Meldung ab. Die Anweisung nennt die Regel.
 
+## Manuell testen (gemeinsame Tablet-Abnahme)
+
+Start: `godot/project.godot` im Godot-Editor 4.7.2 öffnen und F5, oder die exportierte App. Fenster auf 1280×800 bzw. 1024×768 stellen; zusätzlich auf dem Tablet im Querformat.
+
+1. **Setup:** Hauptmenü → „Neue Partie“ → acht Namen → Rollen „Vorschlag“ (oder Werwolf ×2, Schutzengel, Waldhexe, Das Orakel, Sensenträger, Dorfbewohner ×2) → im Rollenschritt „Rolle beim Tod öffentlich aufdecken“ einmal an, einmal aus → verteilen → Sitzordnung bestätigen → „Partie starten“. Erwartet: Cockpit mit acht Plätzen, keine Rolle sichtbar, Karte „Nacht 1 beginnen“.
+2. **Geheimhaltung:** „Rollen“ öffnet die Liste „nur Spielleitung“; Tippen neben die Schublade, „Schließen“ und Zurück schließen sie. „Verbergen“ blendet alles aus, „Cockpit wieder anzeigen“ zurück.
+3. **Nacht:** „Nacht beginnen“ → Schutzengel: Platz antippen (gold), „Auswahl bestätigen“ → „Schritt beginnen“ je Rolle → Waldhexe Ja/Nein → Orakel: Ziel, „Karte zeigen“ (nur Ergebnis, keine Wahrheit), „Gezeigt“ → „Nacht abschließen“. Doppelt tippen darf nichts doppelt auslösen.
+4. **Morgen:** Morgenbericht vorlesen, „Ansagekarte zeigen“ (nur Namen, Rolle nur mit Option), „Private Details …“ (Ursachen), „Weiter zum Tag“. Stirbt der Sensenträger, erscheint vorher eine verdeckte Reaktion („Anzeigen“).
+5. **Tag:** „Nominierung erfassen“: erst die nominierende, dann die nominierte Person antippen, bestätigen. „Hinrichtung …“ → nominierte Person → „Weiter zur Prüfung“ → „Anzeigen“ → „Hinrichtung bestätigen“ → Rückfrage. Stimmen werden nur am Tisch gezählt. „Tag beenden“, nächste Nacht.
+6. **Sieg:** bis zur Wolfsparität spielen: verdeckte Siegkarte, „Anzeigen“, bestätigen → Spielende.
+7. **Spielleitung:** „Spielleitung“ → „Rückgängig: …“ (Klartext prüfen), „Wiederholen“; „Person töten …“ mit Begründung; danach „Letzte Korrektur“ ansehen.
+8. **Speichern:** App mitten in der Waldhexen-Kette beenden, neu starten → „Fortsetzen“ → derselbe Schritt ist offen; Anzeige „Gespeichert“ in der Phasenleiste.
+9. **Bewegung reduzieren** in den Einstellungen an/aus: Kartenwechsel und Tag/Nacht-Wechsel ohne bzw. mit kurzem Übergang.
+
+Worauf bei der Abnahme achten: Lesbarkeit der Namen bei 24 Personen, Größe und Abstand der Buttons, Kontrast im abgedunkelten Raum, ob verdeckte Karten und Prüfkarten den Ablauf zu sehr bremsen.
+
 ## Tests
 
 | Test | Inhalt |
@@ -167,6 +205,7 @@ Offene Abhängigkeiten, die nicht als fertig gelten:
 | `test_cockpit_day` | Nominierung, Hinrichtung mit Prüfkarte, Spiegelwolf, Weiser, Amalia, Nekromant, keine Hinrichtung, Sieg |
 | `test_full_round_ui` | vollständige Partie nur über Buttons bis zum bestätigten Sieg |
 | `test_undo` | Rückgängig = Replay der verkürzten Folge, Wiederholen gleicher Hash, mehrstufige Prompts, bestätigter Sieg, Speichern |
+| `test_cockpit_polish` | Tag/Nacht-Hintergrund, Einblenden und Abbruch, reduzierte Bewegung, Fokus nach Aktionen, Anschlussstellen, Kartenbreite bei 1024×768 DE/EN |
 | `test_cockpit_gm` | Korrekturen mit Warnung, Begründung, Protokoll und Änderungsanzeige, Rückgängig/Wiederholen mit Klartext, Hinrichtung ohne Nominierung, Sieger erklären, Verwerfen |
 
 Nicht geprüft: Darstellung auf echten Geräten, Schriftbild, Touch-Treffsicherheit, Lesbarkeit im Dunkeln, Übergänge. Diese Abnahme erfolgt gemeinsam am Tablet.

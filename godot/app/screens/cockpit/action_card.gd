@@ -13,6 +13,8 @@ signal requested(action: StringName, payload: Dictionary)
 var _busy: bool = false
 var _last_next: Dictionary = {}
 var _last_context: Dictionary = {}
+var _fade: Tween = null
+var _shown_kind: String = ""
 
 
 ## Sprachwechsel: Karte mit denselben Daten neu aufbauen (zusammengesetzte Texte).
@@ -35,6 +37,7 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	if bool(next.get("secret", false)) and not bool(context.get("revealed", false)) and str(context.get("phase")) != "NIGHT":
 		_covered(kind)
 		return
+	_fade_in(kind + str(next.get("prompt_id", "")) + str(next.get("stage", "")) + str(next.get("step_id", "")), bool(context.get("reduced_motion", false)))
 	match kind:
 		"start_night":
 			_start_night(next, context)
@@ -61,6 +64,21 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_text("ui.cockpit.instruction.no_game", {}, &"MutedLabel")
 		_:
 			_heading("ui.cockpit.card.none")
+
+
+## Kurzes Einblenden bei einer neuen Handlung (nicht bei Auswahländerungen derselben Karte). Abbrechbar:
+## ein neues Rendern beendet das laufende Einblenden; bei reduzierter Bewegung kein Einblenden.
+func _fade_in(identity: String, reduced: bool) -> void:
+	if _fade != null and _fade.is_valid():
+		_fade.kill()
+	modulate.a = 1.0
+	if identity == _shown_kind or reduced or not is_inside_tree():
+		_shown_kind = identity
+		return
+	_shown_kind = identity
+	modulate.a = 0.0
+	_fade = create_tween()
+	_fade.tween_property(self, "modulate:a", 1.0, ThemeTokens.CARD_FADE_SECONDS)
 
 
 ## Sperrt alle Aktionen bis zum nächsten `render` (Schutz gegen Mehrfachtippen).

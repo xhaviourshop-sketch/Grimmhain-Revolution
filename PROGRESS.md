@@ -197,3 +197,12 @@ Inhalt: „Sitzordnung bestätigen“ beendet nur das Setup; danach steht in der
 Verifiziert (Windows, Godot 4.7.2): 470 Godot-Tests grün (456 + 8 Modell + 6 UI), keine SCRIPT-ERROR- oder ERROR-Zeilen, Register 313/313, `git diff --check` Exit 0. Grafisch: 5 Aufnahmen `docs/evidence/game-start/` und neu `seating-setup/08` (lokal, AMD-Renderer), angesehen; dabei Layoutfehler (Tischmitte bei 24 Personen/1024×768) und widersprüchliche Cockpit-Hinweise gefunden und behoben. Keine Touch- oder Tablet-Prüfung.
 Nicht enthalten: Speichern der Partie, Nacht-/Tagablauf in der Oberfläche, Beenden/Verwerfen einer laufenden Partie.
 Nächster Schritt: Cockpit-Sitzkreis mit der gestarteten Partie (öffentliche Sicht aus `GameSession`, ohne Rollen) oder `StartNight` über das Cockpit, je nach Priorität.
+
+---
+
+## 2026-09-29 — Geführte Partie im Cockpit (Branch `feature/night-ui-expansion`)
+Status: auf dem Branch fertig, nicht nach main gemergt. Worktree `C:/Users/Marku/Desktop/Grimmhain/grimmhain-night-ui`, Basis main `8197ee6` plus Merge von `audit/all-72-roles` (`312f5bb`, 71 Rollen im Kern).
+Inhalt: Cockpit mit echter Partie (Sitzkreis ohne Rollen, Phasenleiste, Ansagekarte, private Ebenen, Sichtschutz); geführte Nacht für alle Prompt-Arten der 71 Rollen mit DE/EN-Vorlesetexten und Anweisungen; Morgenbericht öffentlich/privat mit Setup-Option `reveal_role_on_death` (DR-04, Schema 12); Tag mit Nominierung, verdeckter Hinrichtungsprüfung, Siegbestätigung, geheimen Tagesaktionen; Speichern mit Sicherung, Wiederaufnahme und „Fortsetzen“; Spielleitung mit Korrekturen, Undo/Redo, Beenden/Verwerfen; Bedienqualität (Tag/Nacht, Übergänge, Fokus). Testrunner wertet jeden Laufzeitfehler als Fehlschlag. Details: `docs/ui/cockpit.md`, `docs/ui/save-resume.md`.
+Verifiziert (Windows, Godot 4.7.2, nur headless): 830 Tests grün, Exit 0, keine SCRIPT-ERROR-/ERROR-Zeilen; Assetregister Exit 0, darunter eine vollständige Partie nur über Buttons bis zum bestätigten Sieg und 142 Partien mit allen Rollen nur über Kartendaten. Keine grafische, Touch- oder Tablet-Prüfung.
+Offen: Kartenschlucker und Totenkarten (RM-DR-013, RM-DR-141.4, RM-DR-143.x); Rollen zeigen (`ConfirmRoleShown`); Spezialkorrekturen ohne eigene Oberfläche; visuelle Abnahme am Tablet.
+Nächster Schritt: gemeinsame Tablet-Abnahme des Cockpits (Anleitung in `docs/ui/cockpit.md`), danach Rollen-zeigen-Modus.

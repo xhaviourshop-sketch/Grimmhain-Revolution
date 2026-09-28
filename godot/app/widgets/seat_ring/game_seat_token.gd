@@ -34,6 +34,12 @@ func setup(p_person_id: int) -> void:
 	state = &"normal"
 
 
+## Anschlussstelle für spätere Porträts (öffentliches Bild der Person, nie ein Rollenbild). Bis dahin leer.
+func set_portrait(texture: Texture2D) -> void:
+	icon = texture
+	expand_icon = texture != null
+
+
 ## Öffentliche Sitzdaten: {seat, name, alive, nominated_today}.
 func show_seat(seat: Dictionary) -> void:
 	alive = bool(seat.get("alive", true))

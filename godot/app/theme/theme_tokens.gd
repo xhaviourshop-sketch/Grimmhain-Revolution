@@ -31,6 +31,8 @@ const NIGHT_SURFACE := Color("#121a33")      ## Cockpit in der Nacht: tiefes Bla
 const NIGHT_ACCENT := Color("#8fa8e0")       ## Mondlicht: Rahmen der Nachtflächen, handelnde Person
 const DAY_SURFACE := Color("#2a2112")        ## Cockpit am Tag und Morgen: warmes Dämmerbraun
 const DAY_ACCENT := Color("#e0b060")         ## Sonnengold: Rahmen der Tagflächen
+const NIGHT_BACKDROP := Color("#0a1022")     ## Cockpit-Hintergrund in der Nacht (ruhig, blendet im Dunkeln nicht)
+const DAY_BACKDROP := Color("#16120b")       ## Cockpit-Hintergrund am Morgen und Tag
 
 # --- Abstände, Radien, Rahmen --------------------------------------------------------------------
 const SPACE_XS := 4
@@ -91,3 +93,5 @@ const TRANSITION_SECONDS := 0.2       ## Einblenden neuer Ansichten
 const TRANSITION_OFFSET := 12.0       ## kleine Positionsbewegung beim Einblenden
 const TOAST_FADE_SECONDS := 0.15
 const TOAST_VISIBLE_SECONDS := 2.5
+const CARD_FADE_SECONDS := 0.15       ## Einblenden der Ansagekarte bei neuer Handlung
+const BACKDROP_FADE_SECONDS := 0.3    ## Wechsel des Hintergrunds zwischen Nacht und Tag

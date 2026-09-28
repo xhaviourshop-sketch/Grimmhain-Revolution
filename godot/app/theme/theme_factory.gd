@@ -223,9 +223,11 @@ static func _panels(theme: Theme) -> void:
 		&"DrawerPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_M),
 		&"CoverPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
 		&"ShowPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
+		&"NightBackdrop": _panel(ThemeTokens.NIGHT_BACKDROP, ThemeTokens.NIGHT_BACKDROP, 0, 0, 0),
+		&"DayBackdrop": _panel(ThemeTokens.DAY_BACKDROP, ThemeTokens.DAY_BACKDROP, 0, 0, 0),
 	}
 	for name: StringName in variations:
-		var base := &"Panel" if name == &"AppBackground" else &"PanelContainer"
+		var base := &"Panel" if name in [&"AppBackground", &"NightBackdrop", &"DayBackdrop"] else &"PanelContainer"
 		theme.set_type_variation(name, base)
 		theme.set_stylebox("panel", name, variations[name])
 	var line := StyleBoxLine.new()
