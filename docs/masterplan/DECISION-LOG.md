@@ -486,3 +486,15 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 - **Nekromant, Reihenfolge der Umlenkung (E-25, RM-DR-142.7):** A. Der Nekromant entscheidet nach dem Urteil des Verdammniswächters und vor der Märtyrerin (Legacy-Stufe 3.0); die Märtyrerin sieht das endgültige Rudelopfer. (Ergänzungsfrage bei der Umsetzung.)
 - **Nekromant, Anlass der Umlenkung (E-26, RM-DR-142.8):** A. Gefragt wird nur, wenn der Rudelangriff ihn sonst töten würde; greift ein Schutz, ein persönlicher Schild oder ein aktiver Nekromanten-Schild, gibt es keine Umlenkung. (Ergänzungsfrage bei der Umsetzung.)
 - **Nekromant, Schild nach Rollenverlust oder Tod (E-27, RM-DR-142.9):** A. Verliert der Nekromant die Rolle oder stirbt er, erlischt sein noch ungenutzter Schild sofort (wie Markierung E-10 und Puppe E-22). (Ergänzungsfrage bei der Umsetzung.)
+
+## Rollenaudit · Einzelsiegrollen, Teil 4 (Hades, Grabräuber) · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs E-28 bis E-34, jeweils die Empfehlung). Die Antworten gelten nur für die genannte Rolle. Es gelten weiter: Spielleiterkorrekturen sind von Rollenwirkungen ausgenommen, Stimmen werden nicht digital gezählt (RM-DR-008), Siegbedingung je Rolle (RM-DR-006), gleichzeitige Siege gemeinsam (DR-02), ein erfüllter Sieg wird weiter vorgeschlagen (F-11).
+
+- **Hades, Lichter (E-28, RM-DR-144.2):** A. Jeder tatsächliche Tod einer anderen Person außer Spielleiterkorrektur gibt jedem lebenden Hades 1 Licht (eigener Vorrat je Person), auch seine eigenen Tötungen; abgefangene Tode geben nichts.
+- **Hades, Sieg (E-29, RM-DR-144.1):** A. Lebt er mit mindestens 10 Lichtern, ist sein Alleinsieg erfüllt und wird bei jeder Siegprüfung vorgeschlagen (F-11); kein Einlösen.
+- **Hades, Tötung (E-30, RM-DR-144.4):** A. Für 2 Lichter höchstens einmal je Nacht eine andere lebende Person töten: Tod am Morgen mit eigener Ursache (wie Prophet des Untergangs), Rudelschutz wirkt nicht, persönliche Schilde schon; die Lichter sind auch bei abgefangenem Tod verbraucht.
+- **Hades, Barriere (E-31, RM-DR-144.3):** A. Barriere für 3 Lichter: höchstens eine aktive, verhindert seinen nächsten Tod jeder Ursache außer Korrektur (auch Hinrichtung), kein Verfall, danach neu kaufbar. „Stimme x3“ entfällt (Stimmen werden nicht digital gezählt, RM-DR-008).
+- **Grabräuber, Stehlen (E-32, RM-DR-156.1):** A. Einmalig wählt er nachts eine tote Person; ab der nächsten Nacht hat er dauerhaft deren Nachtfähigkeit (eigener Schritt, frische Einsätze) und bleibt Grabräuber mit eigener Siegbedingung.
+- **Grabräuber, Sieg (E-33, RM-DR-156.2):** A. Er gewinnt allein, wenn er lebt und höchstens drei Personen leben (wie Parasit und Voodoo-Priester).
+- **Grabräuber, Umfang (E-34, RM-DR-156.3):** A. Wählbar ist jede tote Person mit eigenem Nachtschritt, auch Wolfs- und Einzelsiegrollen; er beginnt mit frischen Einsätzen, ohne Zähler oder Zustände der Toten. Rollen ohne eigenen Nachtschritt sind nicht wählbar.

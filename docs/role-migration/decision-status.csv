@@ -153,9 +153,10 @@ RM-DR-142.8;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.
 RM-DR-142.9;ja;nekromant;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Schild erlischt mit Tod oder Rollenverlust (E-27)
 RM-DR-143.1;ja;kartenschlucker;S;;
 RM-DR-143.2;ja;kartenschlucker;S;;
-RM-DR-144.1;ja;hades;S;;
-RM-DR-144.2;ja;hades;S;;
-RM-DR-144.3;ja;hades;S;;
+RM-DR-144.1;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";Sieg automatisch, solange er lebt und mindestens 10 Lichter hat (E-29)
+RM-DR-144.2;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";jeder tatsächliche Tod außer Korrektur, auch eigene Tötungen (E-28)
+RM-DR-144.3;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";Barriere für 3 Lichter, Stimme x3 gestrichen (E-31)
+RM-DR-144.4;ja;hades;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";Tötung für 2 Lichter, einmal je Nacht, Tod am Morgen (E-30)
 RM-DR-145.1;ja;doktor;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";Einzelsieg ist ein Team
 RM-DR-145.2;ja;doktor;E;"rules-register G-ID-2; DR-10; DECISION-LOG Lehrling (Fraktion wechselt sofort)";Siegfraktion ist ein aktueller Personenwert
 RM-DR-146.1;ja;faehrtenleser;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";links = Uhrzeigersinn aus Sicht der Person (Tablet-Gegenprüfung offen)
@@ -188,8 +189,9 @@ RM-DR-154.3;ja;dorfschmied;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";
 RM-DR-155.1;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur lebend gewinnt
 RM-DR-155.2;ja;doppelspion;E;rules-register G-SIEG-2: Einzelsiegrollen zählen als Nicht-Wölfe;
 RM-DR-155.3;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";nur Doppelspion-Kandidat, kein Dorfkandidat
-RM-DR-156.1;ja;grabraeuber;S;;
-RM-DR-156.2;ja;grabraeuber;S;;
+RM-DR-156.1;ja;grabraeuber;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";dauerhafte Fähigkeit, bleibt Grabräuber (E-32)
+RM-DR-156.2;ja;grabraeuber;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";allein, lebend bei höchstens drei Lebenden (E-33)
+RM-DR-156.3;ja;grabraeuber;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026";jede tote Person mit eigenem Nachtschritt, frische Einsätze (E-34)
 RM-DR-157.1;ja;parasit;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";höchstens drei Lebende inkl. ihm, mit anderen Siegen
 RM-DR-158.1;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";geheim (E-04)
 RM-DR-158.2;ja;todesprediger;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";nur Nacht 1 (E-04)

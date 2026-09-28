@@ -23,12 +23,12 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 63 | 176 |
+| entschieden | 65 | 183 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 10 | 21 |
+| später | 8 | 16 |
 | quellenprüfung | 0 | 0 |
-| **gesamt** | **75** | **200** |
+| **gesamt** | **75** | **202** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
 
@@ -1337,21 +1337,26 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `hades`; Wechselwirkung laut Dossier: jede tötende Rolle (Lichterquelle), Nekromant (Schild fängt Hades-Kill ab, Lichter trotzdem weg), Rudelvater (`PACKFATHER_KILL` durchbricht Barriere), Ritter (Vergeltung bei `HADES_KILL`, `core:431`), …
 - **Belege:** [Dossier](dossiers/solos-b.md#hades); RM-C-073, RM-C-074, RM-C-075 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-005, RM-DR-007, RM-DR-008.
-- **RM-DR-144.1 · Sieg automatisch oder eingelöst** · Status: später (K15)
+- **RM-DR-144.1 · Sieg automatisch oder eingelöst** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: Sieg sofort bei 10
   - Option B: Sieg nur durch bewusstes Einlösen (Lichter könnten vorher ausgegeben werden)
   - Auswirkung: Balance: Einlösen erlaubt Taktik (Lichter sparen/ausgeben); Umsetzung: eine Siegregel als WinCandidate
   - Empfehlung: Automatik bei 10 mit SL-Bestätigung, Button streichen
-- **RM-DR-144.2 · Zählen eigene Kills** · Status: später (K15)
+- **RM-DR-144.2 · Zählen eigene Kills** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: jeder Tod zählt
   - Option B: nur Tode durch andere
   - Auswirkung: Balance: Kill kostet netto 1 statt 2; Umsetzung: Filter nach Quelle
   - Empfehlung: PO
-- **RM-DR-144.3 · Stimme x3** · Status: später (K15)
+- **RM-DR-144.3 · Stimme x3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: Kauf bleibt, SL wird erinnert
   - Option B: Kauf streichen
   - Auswirkung: Balance: Kauf ohne Anzeige ist wertlos; Umsetzung: dauerhafter Statusmarker mit Hinweis beim Tag
   - Empfehlung: Marker sichtbar machen
+- **RM-DR-144.4 · Tötung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
+  - Option A: 2 Lichter, einmal je Nacht, Tod am Morgen, keine Erstattung
+  - Option B: wie A, Erstattung bei abgefangenem Tod
+  - Option C: sofortiger Tod in der Nacht
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** 1. Sieg automatisch bei 10 oder nur durch Einlösen? 2. Geben eigene Hades-Kills Lichter? 3. Stimme x3 behalten (als SL-Hinweis) oder streichen? Ist der Kauf öffentlich? 4. Werden Lichter bei abgefangenem Kill erstattet? 5. Soll der Rollentext Preise und Fähigkeiten nennen?
 - **Charge:** K15. **In Option (nicht freigegeben):** keiner.
 
@@ -1632,16 +1637,21 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `grabraeuber`; Wechselwirkung laut Dossier: potenziell jede Rolle mit Nachtfähigkeit (Ziel des Diebstahls); Einmalrollen (bereits verbraucht?); Totenkarte `solo_05` (ähnliche …
 - **Belege:** [Dossier](dossiers/solos-b.md#grabraeuber); RM-C-076, RM-C-077 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-006, RM-DR-007, RM-DR-014.
-- **RM-DR-156.1 · Was bedeutet "Fähigkeit stehlen"** · Status: später (K15)
+- **RM-DR-156.1 · Was bedeutet "Fähigkeit stehlen"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: Grabräuber erhält dauerhaft die Nachtfähigkeit der toten Rolle (inkl. Nachtschritt)
   - Option B: einmalige Nutzung der Fähigkeit
   - Auswirkung: Balance: groß: je nach Zielrolle (z.B. Waldhexe, Hades) stark unterschiedlich; Umsetzung: Fähigkeitsübertragung ist ein neues System; Rollenwechsel (RoleTransition) passt nicht, da Rolle/Fraktion bleiben sollen
   - Empfehlung: PO; bis dahin manuell
-- **RM-DR-156.2 · Siegbedingung** · Status: später (K15)
+- **RM-DR-156.2 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: erbt die Siegbedingung der bestohlenen Rolle
   - Option B: eigene Bedingung (z.B. letzter Überlebender)
   - Auswirkung: Balance: ohne Bedingung ist die Rolle nicht gewinnbar; Umsetzung: zusätzliche Siegbedingung
   - Empfehlung: PO legt fest (Q4)
+- **RM-DR-156.3 · Umfang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
+  - Option A: jede Nachtfähigkeit, frische Einsätze
+  - Option B: nur Dorfrollen
+  - Option C: jede, mit übernommenem Zustand
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** 1. Dauerhafte oder einmalige Nutzung der gestohlenen Fähigkeit? 2. Welche Rollen sind stehlbar (auch Wolfs- und Solofähigkeiten, passive Fähigkeiten, Siegbedingungen)? 3. Welche Siegbedingung hat der Grabräuber? 4. Übernimmt der Grabräuber Zähler/Zustände der toten Rolle (z.B. Hades-Lichter, verbrauchte Tränke)?
 - **Charge:** K15. **In Option (nicht freigegeben):** keiner.
 
