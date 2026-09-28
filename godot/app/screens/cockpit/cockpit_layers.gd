@@ -51,7 +51,7 @@ static func log_drawer(events: Array, seats: Array) -> Control:
 		var row := VBoxContainer.new()
 		row.name = "LogRow_%d" % int(e["index"])
 		var type := str(e["type"])
-		var key := "ui.log.event.%s" % type
+		var key := "ui.log.event.%s" % CockpitText.snake(type)
 		_label(row, key if CockpitText.has_key(key) else "ui.log.event.generic",
 			{"index": int(e["index"]), "type": type, "visibility": StringName("ui.log.visibility.%s" % str(e["visibility"]))}, &"SectionLabel")
 		var details := _details(e.get("data", {}), seats)

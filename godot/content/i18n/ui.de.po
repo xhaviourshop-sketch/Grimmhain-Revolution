@@ -3001,3 +3001,120 @@ msgstr "Umlenkung"
 
 msgid "ui.gm.stage.barrier"
 msgstr "Barriere"
+
+msgid "ui.log.event.seat_died"
+msgstr "#{index} Tod ({visibility})"
+
+msgid "ui.log.event.kill_prevented"
+msgstr "#{index} Tod verhindert ({visibility})"
+
+msgid "ui.log.event.protection_set"
+msgstr "#{index} Schutz gesetzt ({visibility})"
+
+msgid "ui.log.event.witch_acted"
+msgstr "#{index} Entscheidung der Waldhexe ({visibility})"
+
+msgid "ui.log.event.info_recorded"
+msgstr "#{index} Information gezeigt ({visibility})"
+
+msgid "ui.log.event.step_skipped"
+msgstr "#{index} Schritt übersprungen ({visibility})"
+
+msgid "ui.log.event.step_dropped"
+msgstr "#{index} Schritt entfallen ({visibility})"
+
+msgid "ui.log.event.step_begun"
+msgstr "#{index} Schritt begonnen ({visibility})"
+
+msgid "ui.log.event.prompt_opened"
+msgstr "#{index} Eingabe geöffnet ({visibility})"
+
+msgid "ui.log.event.prompt_answered"
+msgstr "#{index} Eingabe beantwortet ({visibility})"
+
+msgid "ui.log.event.prompt_stage_answered"
+msgstr "#{index} Teilantwort ({visibility})"
+
+msgid "ui.log.event.prompt_cancelled"
+msgstr "#{index} Schritt abgebrochen ({visibility})"
+
+msgid "ui.log.event.phase_changed"
+msgstr "#{index} Phasenwechsel ({visibility})"
+
+msgid "ui.log.event.game_started"
+msgstr "#{index} Partie gestartet ({visibility})"
+
+msgid "ui.log.event.role_assigned"
+msgstr "#{index} Rolle zugeteilt ({visibility})"
+
+msgid "ui.log.event.nomination_recorded"
+msgstr "#{index} Nominierung ({visibility})"
+
+msgid "ui.log.event.execution_confirmed"
+msgstr "#{index} Hinrichtung ({visibility})"
+
+msgid "ui.log.event.no_execution"
+msgstr "#{index} Keine Hinrichtung ({visibility})"
+
+msgid "ui.log.event.day_ended"
+msgstr "#{index} Tag beendet ({visibility})"
+
+msgid "ui.log.event.reaction_queued"
+msgstr "#{index} Reaktion eingereiht ({visibility})"
+
+msgid "ui.log.event.reaction_resolved"
+msgstr "#{index} Reaktion erledigt ({visibility})"
+
+msgid "ui.log.event.gm_corrected"
+msgstr "#{index} Spielleiterkorrektur ({visibility})"
+
+msgid "ui.log.event.win_detected"
+msgstr "#{index} Sieg erkannt ({visibility})"
+
+msgid "ui.log.event.win_confirmed"
+msgstr "#{index} Sieg bestätigt ({visibility})"
+
+msgid "ui.log.event.win_rejected"
+msgstr "#{index} Sieg abgelehnt ({visibility})"
+
+msgid "ui.log.event.win_status_provisional"
+msgstr "#{index} Vorläufiger Siegstatus ({visibility})"
+
+msgid "ui.log.event.win_status_final"
+msgstr "#{index} Verbindliche Siegprüfung ({visibility})"
+
+msgid "ui.log.event.no_night_kill"
+msgstr "#{index} Kein Angriff der Werwölfe ({visibility})"
+
+msgid "ui.log.event.kill_ignored"
+msgstr "#{index} Tod ohne Wirkung (bereits tot) ({visibility})"
+
+msgid "ui.log.event.role_changed"
+msgstr "#{index} Rollenwechsel ({visibility})"
+
+msgid "ui.log.event.wolf_child_bound"
+msgstr "#{index} Vorbild des Wolfskinds ({visibility})"
+
+msgid "ui.log.event.wolf_child_transformed"
+msgstr "#{index} Wolfskind verwandelt ({visibility})"
+
+msgid "ui.log.event.apprentice_bound"
+msgstr "#{index} Meister des Lehrlings ({visibility})"
+
+msgid "ui.log.event.player_revived"
+msgstr "#{index} Wiederbelebung ({visibility})"
+
+msgid "ui.log.event.info_overridden"
+msgstr "#{index} Gezeigtes Ergebnis geändert ({visibility})"
+
+msgid "ui.log.event.execution_redirected"
+msgstr "#{index} Hinrichtung gespiegelt ({visibility})"
+
+msgid "ui.log.event.amalia_answered"
+msgstr "#{index} Amalias Frage beantwortet ({visibility})"
+
+msgid "ui.log.event.detective_hint"
+msgstr "#{index} Hinweis des Detektivs ({visibility})"
+
+msgid "ui.log.event.alarm_bells"
+msgstr "#{index} Glocken des Nachtwächters ({visibility})"

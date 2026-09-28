@@ -426,3 +426,19 @@ func test_morning_report_reveals_role_only_with_setup_option() -> void:
 	await _night_with_poison(shell)
 	assert_true(_visible_texts(shell).contains("E (Das Orakel)"), "Rolle der Toten öffentlich: %s" % _visible_texts(shell))
 	_assert_no_roles(shell, "nur die Rolle der Toten", ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "sensentraeger"])
+
+
+func test_log_uses_readable_labels() -> void:
+	var shell := await _cockpit()
+	if shell == null:
+		return
+	session_of(shell).call("start_night")
+	await frames(2)
+	await _press(shell, "LogButton")
+	var layer := find_node(_screen(shell), "LogLayer")
+	var texts := ""
+	for c: Control in text_controls(layer):
+		texts += text_of(c) + "\n"
+	assert_true(texts.contains("Phasenwechsel (öffentlich)"), "lesbare Bezeichnung: %s" % texts.substr(0, 300))
+	assert_true(texts.contains("Partie gestartet (Spielleitung)"), "Startereignis")
+	assert_false(texts.contains("PhaseChanged ("), "kein technischer Name, wenn eine Bezeichnung existiert")

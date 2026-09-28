@@ -3001,3 +3001,120 @@ msgstr "redirect"
 
 msgid "ui.gm.stage.barrier"
 msgstr "barrier"
+
+msgid "ui.log.event.seat_died"
+msgstr "#{index} Death ({visibility})"
+
+msgid "ui.log.event.kill_prevented"
+msgstr "#{index} Death prevented ({visibility})"
+
+msgid "ui.log.event.protection_set"
+msgstr "#{index} Protection set ({visibility})"
+
+msgid "ui.log.event.witch_acted"
+msgstr "#{index} Forest Witch decision ({visibility})"
+
+msgid "ui.log.event.info_recorded"
+msgstr "#{index} Information shown ({visibility})"
+
+msgid "ui.log.event.step_skipped"
+msgstr "#{index} Step skipped ({visibility})"
+
+msgid "ui.log.event.step_dropped"
+msgstr "#{index} Step dropped ({visibility})"
+
+msgid "ui.log.event.step_begun"
+msgstr "#{index} Step begun ({visibility})"
+
+msgid "ui.log.event.prompt_opened"
+msgstr "#{index} Input opened ({visibility})"
+
+msgid "ui.log.event.prompt_answered"
+msgstr "#{index} Input answered ({visibility})"
+
+msgid "ui.log.event.prompt_stage_answered"
+msgstr "#{index} Partial answer ({visibility})"
+
+msgid "ui.log.event.prompt_cancelled"
+msgstr "#{index} Step cancelled ({visibility})"
+
+msgid "ui.log.event.phase_changed"
+msgstr "#{index} Phase change ({visibility})"
+
+msgid "ui.log.event.game_started"
+msgstr "#{index} Game started ({visibility})"
+
+msgid "ui.log.event.role_assigned"
+msgstr "#{index} Role assigned ({visibility})"
+
+msgid "ui.log.event.nomination_recorded"
+msgstr "#{index} Nomination ({visibility})"
+
+msgid "ui.log.event.execution_confirmed"
+msgstr "#{index} Execution ({visibility})"
+
+msgid "ui.log.event.no_execution"
+msgstr "#{index} No execution ({visibility})"
+
+msgid "ui.log.event.day_ended"
+msgstr "#{index} Day ended ({visibility})"
+
+msgid "ui.log.event.reaction_queued"
+msgstr "#{index} Reaction queued ({visibility})"
+
+msgid "ui.log.event.reaction_resolved"
+msgstr "#{index} Reaction resolved ({visibility})"
+
+msgid "ui.log.event.gm_corrected"
+msgstr "#{index} Game master correction ({visibility})"
+
+msgid "ui.log.event.win_detected"
+msgstr "#{index} Win detected ({visibility})"
+
+msgid "ui.log.event.win_confirmed"
+msgstr "#{index} Win confirmed ({visibility})"
+
+msgid "ui.log.event.win_rejected"
+msgstr "#{index} Win rejected ({visibility})"
+
+msgid "ui.log.event.win_status_provisional"
+msgstr "#{index} Provisional win status ({visibility})"
+
+msgid "ui.log.event.win_status_final"
+msgstr "#{index} Final win check ({visibility})"
+
+msgid "ui.log.event.no_night_kill"
+msgstr "#{index} No werewolf attack ({visibility})"
+
+msgid "ui.log.event.kill_ignored"
+msgstr "#{index} Death without effect (already dead) ({visibility})"
+
+msgid "ui.log.event.role_changed"
+msgstr "#{index} Role change ({visibility})"
+
+msgid "ui.log.event.wolf_child_bound"
+msgstr "#{index} Wolf Child’s model ({visibility})"
+
+msgid "ui.log.event.wolf_child_transformed"
+msgstr "#{index} Wolf Child transformed ({visibility})"
+
+msgid "ui.log.event.apprentice_bound"
+msgstr "#{index} Apprentice’s master ({visibility})"
+
+msgid "ui.log.event.player_revived"
+msgstr "#{index} Revival ({visibility})"
+
+msgid "ui.log.event.info_overridden"
+msgstr "#{index} Shown result changed ({visibility})"
+
+msgid "ui.log.event.execution_redirected"
+msgstr "#{index} Execution mirrored ({visibility})"
+
+msgid "ui.log.event.amalia_answered"
+msgstr "#{index} Amalia’s question answered ({visibility})"
+
+msgid "ui.log.event.detective_hint"
+msgstr "#{index} Detective clue ({visibility})"
+
+msgid "ui.log.event.alarm_bells"
+msgstr "#{index} Night watchman’s bells ({visibility})"
