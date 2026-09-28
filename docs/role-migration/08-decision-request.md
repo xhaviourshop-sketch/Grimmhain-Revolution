@@ -23,12 +23,12 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 63 | 168 |
+| entschieden | 63 | 172 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
 | später | 10 | 21 |
 | quellenprüfung | 0 | 0 |
-| **gesamt** | **75** | **192** |
+| **gesamt** | **75** | **196** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
 
@@ -1008,6 +1008,26 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: andere lebende Person, die Puppe erfährt es privat
   - Option C: auch sich selbst, geheim
   - Auswirkung: Balance: B gibt der Puppe Wissen über den Priester; Umsetzung: Zielfilter, Sichtbarkeit
+  - Empfehlung: A
+- **RM-DR-132.6 · Umlenkungsketten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: jede Person höchstens einmal je Kette
+  - Option B: nur ein Schritt
+  - Option C: mechanisch weiter bis zum Ursprung
+  - Empfehlung: A
+- **RM-DR-132.7 · Vergabe Pflicht oder freiwillig** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: freiwillig
+  - Option B: Pflicht
+  - Option C: Pflicht nur Nacht 1
+  - Empfehlung: A
+- **RM-DR-132.8 · Rollenverlust des Priesters** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: Puppe endet
+  - Option B: geht an den neuen Priester
+  - Option C: bleibt beim alten Priester
+  - Empfehlung: A
+- **RM-DR-132.9 · Vorrang zweier Umlenkungen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: Puppe zuerst
+  - Option B: Verknüpfung des Schattenwanderers zuerst
+  - Option C: Spielleiter wählt
   - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** (1) Welche Todesursachen lenkt die Puppe um? (2) Abklingzeit übernehmen, wie lang, auch nach normalem Tod der Puppe? (3) Darf der Priester sich selbst die Puppe geben? (4) Verliert der Puppenträger Verzauberung? (5) Weiß der Puppenträger von der Puppe? (6) Siegbedingung oder Fraktionswechsel? (7) Umlenkung vor oder nach Märtyrerin/Der Weise/Schmied?
 - **Charge:** K10. **In Option (nicht freigegeben):** keiner.

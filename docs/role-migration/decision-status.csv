@@ -112,6 +112,10 @@ RM-DR-132.2;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil
 RM-DR-132.3;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026";Puppe hebt Verzauberung nicht auf (E-01, wie RM-DR-103.2)
 RM-DR-132.4;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";allein, lebend bei höchstens drei Lebenden (E-15)
 RM-DR-132.5;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";andere lebende Person, geheim (E-14)
+RM-DR-132.6;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Ketten: jede Person höchstens einmal, Umlenkung verbraucht (E-20)
+RM-DR-132.7;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Vergabe freiwillig in jeder Nacht ohne Puppe (E-21)
+RM-DR-132.8;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";Puppe endet mit dem Rollenverlust (E-22)
+RM-DR-132.9;ja;voodoo-priester;E;"DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026";eigene Puppe vor fremder Verknüpfung (E-23)
 RM-DR-133.1;ja;blutwolf;E;"DECISION-LOG Rollenaudit Runde 5 28.09.2026";Hinweis für den Spielleiter (RM-DR-008)
 RM-DR-134.1;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";jede Person, Wirkung nur auf Dorf
 RM-DR-134.2;ja;albtraumwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur die Person
