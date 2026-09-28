@@ -22,7 +22,7 @@ RM-DR-015.2;ja;Zufall oder Spielleiterwahl je Rolle;E;"DECISION-LOG Rollenaudit 
 RM-DR-016.1;ja;Setup-Obergrenze je Rolle;S;DECISION-LOG Core-Slice Rollenanzahl: keine feste Komposition, einzelne Rollen dürfen eine Obergrenze erhalten;"keine globale Grenze nötig; nur je Rolle aus Spielgründen"
 RM-DR-016.2;ja;Kopien während der Partie und Zustand je Person;T;"G-ID-3; DR-11; GmCorrection set_role";"Mehrfachkopien entstehen unabhängig vom Setup; Verhalten folgt aus bestehenden Regeln"
 RM-DR-017;nein;nächste Rolleneinheit;E;"Auftrag des Nutzers 27.09.2026 (alle 72 Rollen prüfen)";Auftrag Rollenaudit: alle 72 Rollen
-RM-DR-101.1;ja;loki;S;;
+RM-DR-101.1;ja;loki;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Rivalen nur Marker (B-02)
 RM-DR-102.1;ja;nachtwaechter;E;"DECISION-LOG Rollenaudit Runde 2 27.09.2026";nächste lebende Nachbarn
 RM-DR-103.1;ja;rattenfaenger;S;;
 RM-DR-103.2;ja;rattenfaenger;Q;;ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
@@ -41,8 +41,8 @@ RM-DR-108.3;ja;seuchenwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";n
 RM-DR-109.1;ja;schicksalswolf;S;;
 RM-DR-109.2;ja;schicksalswolf;S;;
 RM-DR-109.3;ja;schicksalswolf;S;;
-RM-DR-110.1;ja;schattenwanderer;S;;
-RM-DR-110.2;ja;schattenwanderer;S;;
+RM-DR-110.1;ja;schattenwanderer;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";stattdessen (B-04)
+RM-DR-110.2;ja;schattenwanderer;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";einmal je Leben, nur echter Tod (B-04, B-07)
 RM-DR-111.1;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";höchstens eine pro Nacht
 RM-DR-111.2;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";sofort privat
 RM-DR-111.3;ja;giftwolf;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Morgen nach Nacht N+2
@@ -50,8 +50,8 @@ RM-DR-112.1;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Ru
 RM-DR-112.2;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";nur Hinrichtung (LYNCH)
 RM-DR-112.3;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";Liste RM-DR-005
 RM-DR-112.4;ja;rudelvater;E;"DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026";zweiter Rudelschritt
-RM-DR-113.1;ja;schwarze-witwe;S;;
-RM-DR-113.2;ja;schwarze-witwe;S;;
+RM-DR-113.1;ja;schwarze-witwe;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Setup-Pflicht später, Kern wirkt nur mit lebendem Paar (B-06)
+RM-DR-113.2;ja;zeitwaechter;S;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";mit RM-DR-150 (Zeitwächter) entscheiden; Wirkung der Witwe sonst entschieden
 RM-DR-114.1;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Fraktion Dorf (S-01)
 RM-DR-114.2;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Nächte und Tage, SL wählt 0-3 (S-01)
 RM-DR-114.3;ja;der-weise;E;"DECISION-LOG Rollenaudit Schutzrollen 28.09.2026";Durchschlag tötet (RM-DR-005, S-02)
@@ -117,11 +117,11 @@ RM-DR-135.2;ja;cerberus;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.202
 RM-DR-136.1;ja;ritter;E;"DECISION-LOG Rollenaudit Runde 3 27.09.2026";nur Wolfsangriff
 RM-DR-136.2;ja;ritter;S;;
 RM-DR-136.3;ja;ritter;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";Fenrir-Einmalschutz gilt auch gegen Ritter
-RM-DR-137.1;ja;rotkaeppchen;S;;
-RM-DR-137.2;ja;rotkaeppchen;S;;
-RM-DR-137.3;ja;rotkaeppchen;S;;
-RM-DR-137.4;ja;rotkaeppchen;S;;
-RM-DR-137.5;ja;rotkaeppchen;S;;
+RM-DR-137.1;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";jede andere lebende Person (R-01)
+RM-DR-137.2;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";nur Jede-Nacht-Schritte doppelt (R-02, R-04)
+RM-DR-137.3;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";bis zur nächsten gewährten Zuflucht (R-01)
+RM-DR-137.4;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Ablehnung löst nichts (R-01)
+RM-DR-137.5;ja;rotkaeppchen;E;"DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026";Wiederholung erlaubt (R-01)
 RM-DR-138.1;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";Toten vor der Hinrichtung, ab 5
 RM-DR-138.2;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026";nur eigene Hinrichtung
 RM-DR-139.1;ja;kopfgeldjaeger;E;"DECISION-LOG Rollenaudit Informationsrollen 28.09.2026";Zähler je Wolfs-Lynch (I-04)

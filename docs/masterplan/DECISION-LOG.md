@@ -402,3 +402,19 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 - **Verdammniswächter, Angebot (S-08, RM-DR-115.3):** B. Die App zieht über den gespeicherten Seed eine lebende Person, die nicht als Wolf zählt, außer dem Rudelopfer und ihm selbst.
 - **Verdammniswächter, zwei Rudelopfer (S-13):** A. Das Urteil betrifft nur das erste Rudelopfer.
 - **Verdammniswächter als Rudelopfer (S-15, durch den Fuzztest gefunden):** B. Ist er selbst das Rudelopfer, entfällt sein Urteil in dieser Nacht; der Angriff trifft ihn.
+
+## Rollenaudit · Bindungsrollen · 28. September 2026
+
+Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs B-01 bis B-08, R-01 bis R-04). Es gelten: Todesfolgen ohne Entscheidung wirken sofort (RM-DR-009.1 = A), eine durch einen Tod beendete Bindung bleibt nach Wiederbelebung beendet (RM-DR-011.2), Nachttode mit Markierung in der Morgenauflösung.
+
+- **Loki, Zeitpunkt (B-01):** B. Nur in Nacht 1 der Partie (wie RM-DR-014); verpasst er sie, verfällt die Fähigkeit.
+- **Loki, Wahl (B-05):** B. Freiwillig; wählt er, dann zwei verschiedene lebende Personen, er selbst erlaubt, als Liebende oder Rivalen. Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache; Schutz gegen den Rudelangriff hilft nicht, persönliche Schilde schon).
+- **Loki, Rivalen (B-02, RM-DR-101.1):** A. Rivalen haben keine eigene Wirkung; sie zählen nur für die Schwarze Witwe.
+- **Schwarze Witwe, Wirkung (B-03):** A. Jede Nacht wählt sie eine andere lebende Person; gehört diese zu einem lebenden Liebes- oder Rivalenpaar, erhalten beide eine Todesmarkierung und sterben in der Morgenauflösung (Ursache Schwarze Witwe); sie wachen in dieser Nacht nicht mehr auf.
+- **Schwarze Witwe, Setup und Paar (B-06, RM-DR-113.1):** A. Die Pflicht „Loki im Spiel“ kommt mit der vertagten Setup-Prüfung; im Regelkern wirkt ihre Wahl nur, wenn Ziel und Partner leben. RM-DR-113.2 (Zeitwächter) wird mit dem Zeitwächter entschieden.
+- **Schattenwanderer (B-04, B-07, RM-DR-110):** A. Jede Nacht bis zur Nutzung (einmal je Leben) verknüpft er sich mit einer anderen lebenden Person. Stirbt einer von beiden tatsächlich (nach allen Schutzwirkungen und persönlichen Schilden), stirbt stattdessen der andere mit der ursprünglichen Ursache und Quelle; danach ist die Verknüpfung verbraucht. Spielleiterkorrekturen werden nicht umgelenkt.
+- **Rotkäppchen, Zuflucht und Kette (R-01, RM-DR-137.1/.3/.4/.5):** A. Jede Nacht fragt sie eine andere lebende Person (auch Wölfe, die ablehnen dürfen); gewährt die Person Zuflucht, erhält sie einen Apfel und ist mit Rotkäppchen verkettet: stirbt eine von beiden, stirbt die andere sofort mit. Die Kette gilt bis zur nächsten gewährten Zuflucht; eine Ablehnung löst nichts; dieselbe Person darf wieder gefragt werden.
+- **Rotkäppchen, Apfel (R-02, RM-DR-137.2):** B. Der nächste eigene Nachtschritt, den die Rolle jede Nacht hat, läuft direkt ein zweites Mal. Einmal- und Ladungsfähigkeiten und passive Rollen: der Apfel ist wirkungslos.
+- **Rotkäppchen, Apfeldauer (R-03):** A. Der Apfel gilt nur in der folgenden Nacht; ungenutzt verfällt er; höchstens ein Apfel je Person.
+- **Apfel bei Rollen mit nur einem Ergebnis (R-04):** A. Für Korrupten Richter, Parasit, Verdammniswächter und Rotkäppchen ist der Apfel wirkungslos.
+- **Bindungen im Fluch des Weisen (B-08):** A. Liebeskummer und Rotkäppchens Todeskette wirken wie Gaben (S-12) auch während des Fluchs.

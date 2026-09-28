@@ -23,10 +23,10 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 46 | 113 |
+| entschieden | 49 | 122 |
 | produktentscheidung | 0 | 0 |
 | technisch | 2 | 3 |
-| später | 25 | 70 |
+| später | 22 | 61 |
 | quellenprüfung | 2 | 2 |
 | **gesamt** | **75** | **188** |
 
@@ -277,7 +277,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `loki`; Wechselwirkung laut Dossier: Schwarze Witwe (Pflichtpaar, liest Bindung), Dr. Victor Frankenstein/Kutscher (Wiederbelebung), Lehrling (Erbe), Nekromant/Kartenschlucker/Hades (Schilde in …
 - **Belege:** [Dossier](dossiers/village-1.md#loki); RM-C-082 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-009, RM-DR-011, RM-DR-014.
-- **RM-DR-101.1 · Rivalen-Wirkung** · Status: später (K6)
+- **RM-DR-101.1 · Rivalen-Wirkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Rivalen = reiner Marker für Schwarze Witwe
   - Option B: Rivalen bekommen eigene Regel (z.B. Siegsperre)
   - Auswirkung: Balance: Hass-Option ist ohne Witwe eine Leerwahl; Umsetzung: Ohne Regel nur Marker; mit Regel WinRules-Erweiterung
@@ -453,12 +453,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schattenwanderer`; Wechselwirkung laut Dossier: Rudelvater (Reihenfolge), Parasit, Nekromant/Kartenschlucker/Hades (Schilde beim Partner), Werwolf, Lynch/ExecutionRules, Frankenstein/Kutscher (Wiederbelebung), Dämonischer Wolf, Kopfgeldjäger, …
 - **Belege:** [Dossier](dossiers/wolves-a.md#schattenwanderer). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-009, RM-DR-011, RM-DR-014.
-- **RM-DR-110.1 · „Stattdessen“ oder „beide sterben“** · Status: später (K6)
+- **RM-DR-110.1 · „Stattdessen“ oder „beide sterben“** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Stirbt einer der beiden, stirbt stattdessen der andere (Text „stattdessen“, Legacy-Umlenkung `core:118-124`)
   - Option B: Beide sterben (Begriff „Todeskette“)
   - Auswirkung: Balance: A ist ein Schutz für den Schattenwanderer, B eine Kettenfalle; Umsetzung: A: Umlenkung in der Abfangstufe; B: Kettentod als Todesfolge
   - Empfehlung: A (Text und Code stimmen überein)
-- **RM-DR-110.2 · Umfang und Dauer** · Status: später (K6)
+- **RM-DR-110.2 · Umfang und Dauer** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Gilt für alle Todesursachen einmalig, danach ist die Bindung verbraucht
   - Option B: Gilt dauerhaft für jeden Tod
   - Auswirkung: Balance: B sehr stark; Umsetzung: Bindungsstatus mit Verbrauch
@@ -525,12 +525,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schwarze-witwe`; Wechselwirkung laut Dossier: Loki (Pflicht, liefert Paare), Zeitwächter (Reihenfolge), Ritter (Vergeltung bei `BLACK_WIDOW`), Rudelvater/Nekromant/Kartenschlucker/Hades/Schattenwanderer/Parasit (Schilde in `applyKill`), Besessener Wolf (siehe …
 - **Belege:** [Dossier](dossiers/wolves-b.md#schwarze-witwe); RM-C-019, RM-C-021 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004.
-- **RM-DR-113.1 · Loki "automatisch gewählt"** · Status: später (K6)
+- **RM-DR-113.1 · Loki "automatisch gewählt"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Loki wird beim Setup automatisch ins Rollenset gelegt
   - Option B: Loki ist Pflicht-Beirolle, SL muss sie wählen
   - Auswirkung: Balance: keine, solange Loki Pflicht ist; Umsetzung: Godot: `requires_roles` (`03:200`) als Validierung oder Auto-Ergänzung
   - Empfehlung: Pflichtpaar-Validierung behalten, Text auf "Benötigt Loki im Spiel" ändern
-- **RM-DR-113.2 · Zeitwächter-Einfrieren** · Status: später (K6)
+- **RM-DR-113.2 · Zeitwächter-Einfrieren** · Status: später (mit RM-DR-150 Zeitwächter; Wirkung der Witwe sonst entschieden, DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026)
   - Option A: Witwen-Wahl ist Nachtaktion, wird eingefroren
   - Option B: Witwen-Tod ist Tagesereignis, bleibt
   - Auswirkung: Balance: mittel; Zeitwächter kontert Witwe nicht; Umsetzung: Reihenfolge in DAWN
@@ -1074,27 +1074,27 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `rotkaeppchen`; Wechselwirkung laut Dossier: alle Rollen mit Nachtfähigkeit (Apfel), König/Frankenstein/Dorfschmied/Pestbringerin/Prophet (`APPLE_RESET_FLAGS`), Seelentauscher, Parasit, Kartenschlucker/Hades/Nekromant (Schilde), Ritter (Kettentod löst keine …
 - **Belege:** [Dossier](dossiers/village-3.md#rotkaeppchen); RM-C-135, RM-C-136, RM-C-137, RM-C-138, RM-C-139 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-009, RM-DR-011.
-- **RM-DR-137.1 · Wölfe als Zuflucht** · Status: später (K10)
+- **RM-DR-137.1 · Wölfe als Zuflucht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: jede andere lebende Person
   - Option B: nur Nicht-Wölfe
   - Auswirkung: Balance: A erlaubt Wolf-Apfel (Doppelkill?) und Wolf-Kette; Umsetzung: Zielfilter
   - Empfehlung: B (Code), Text ergänzen
-- **RM-DR-137.2 · Apfel-Wirkung** · Status: später (K10)
+- **RM-DR-137.2 · Apfel-Wirkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: jede nächste Fähigkeit (auch Info) zweimal
   - Option B: nur Zielwahl-Fähigkeiten, sonst verfällt der Apfel
   - Auswirkung: Balance: A wertet Info-Rollen stark auf; Umsetzung: "repeat step" in StepQueue plus Verfall-Regel
   - Empfehlung: eigene Regel: Apfel verfällt nach der nächsten eigenen Nachtaktion, Info-Rollen erhalten die Info zweimal oder gar nicht (entscheiden)
-- **RM-DR-137.3 · Dauer der Kette** · Status: später (K10)
+- **RM-DR-137.3 · Dauer der Kette** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: nur diese Nacht
   - Option B: bis zur nächsten gewährten Zuflucht
   - Auswirkung: Balance: A schwächt Risiko deutlich; Umsetzung: Bindungsobjekt mit Gültigkeit
   - Empfehlung: B (Code) festschreiben
-- **RM-DR-137.4 · Ablehnung** · Status: später (K10)
+- **RM-DR-137.4 · Ablehnung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Ablehnung löst alte Kette
   - Option B: alte Kette bleibt
   - Auswirkung: Balance: gering; Umsetzung: Bindung beenden oder nicht
   - Empfehlung: entscheiden
-- **RM-DR-137.5 · Mehrfache Zuflucht beim Selben** · Status: später (K10)
+- **RM-DR-137.5 · Mehrfache Zuflucht beim Selben** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: jede Nacht ein anderer
   - Option B: beliebig
   - Auswirkung: Balance: A verhindert Dauer-Apfel beim selben Spieler; Umsetzung: Zielhistorie
