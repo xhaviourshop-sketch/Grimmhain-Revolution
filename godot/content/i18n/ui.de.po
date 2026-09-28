@@ -719,6 +719,24 @@ msgstr "Schattenwanderer"
 msgid "ui.role.schattenwanderer.short"
 msgstr "Wolf im Rudel; verknüpft sich einmal, dann stirbt statt eines von beiden der andere."
 
+msgid "ui.role.seelentauscher.name"
+msgstr "Seelentauscher"
+
+msgid "ui.role.seelentauscher.short"
+msgstr "Tauscht einmal die Rollen zweier Personen, lebend oder tot."
+
+msgid "ui.role.daemonischer_wolf.name"
+msgstr "Dämonischer Wolf"
+
+msgid "ui.role.daemonischer_wolf.short"
+msgstr "Wolf im Rudel; bei seinem Tod verflucht er jemanden, der dem Orakel als Werwolf erscheint."
+
+msgid "ui.role.koenig_lykaon.name"
+msgstr "König Lykaon"
+
+msgid "ui.role.koenig_lykaon.short"
+msgstr "Wolf im Rudel; macht mit einem Verbündeten einen Dorfbewohner zum Trugbilderwolf."
+
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
 

@@ -18,13 +18,10 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 |---|---|---|---|---|---|---|---|---|---|
 | [`rattenfaenger`](#rattenfaenger) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Einzelsieg | mehrstufige Nachtfähigkeit | M / mittel | K9 | B |
 | [`rachsuechtiger-wolf`](#rachsuechtiger-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | Einzelsieg, Wolfsangriff-Modifikation | M / hoch | K11 | – |
-| [`koenig-lykaon`](#koenig-lykaon) | Wölfe | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | Fraktionswechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit | M / mittel | K12 | C |
 | [`schicksalswolf`](#schicksalswolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | mehrstufige Nachtfähigkeit, Einmalfähigkeit | M / mittel | K11 | – |
 | [`pestbringerin`](#pestbringerin) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | Sitzpositionsmechanik, Zufallsmechanik | M / mittel | K9 | – |
 | [`prophet-des-untergangs`](#prophet-des-untergangs) | Einzelsieg | `decision-required` | `not-found` | `assisted` | Tötung | Einzelsieg, Einmalfähigkeit | M / mittel | K9 | – |
-| [`daemonischer-wolf`](#daemonischer-wolf) | Wölfe | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | Fehlinformation, Fraktionswechsel | M / hoch | K12 | – |
 | [`kutscher`](#kutscher) | Dorf | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | Rollenwechsel, Zufallsmechanik | L / hoch | K13 | – |
-| [`seelentauscher`](#seelentauscher) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | Einmalfähigkeit, Fraktionswechsel | L / kritisch | K12 | – |
 | [`feuerteufel`](#feuerteufel) | Einzelsieg | `decision-required` | `legacy-broken` | `automatic` | Todesreaktion | Sitzpositionsmechanik, Hinrichtungsreaktion | M / hoch | K9 | – |
 | [`voodoo-priester`](#voodoo-priester) | Einzelsieg | `decision-required` | `legacy-contradictory` | `automatic` | Zielumleitung | Verknüpfte Personen, Hinrichtungsreaktion | L / hoch | K10 | – |
 | [`dr-victor-frankenstein`](#dr-victor-frankenstein) | Dorf | `decision-required` | `legacy-broken` | `assisted` | Wiederbelebung | Rollenwechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit, Totenkarten-Interaktion | L / hoch | K13 | – |
@@ -82,27 +79,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K11 / in keiner Option |
 | Belegsicherheit | hoch für Code; nicht im Browser ausgeführt. |
 | Detail | [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf) |
-
-### `koenig-lykaon`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | König Lykaon / King Lycaon |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / I / 2.4 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-verified`. Der Code setzt Zeitpunkt, Verbündeten-Gate und Verwandlung nachvollziehbar um; Lücken betreffen nicht beschriebene Details (Scheinrolle, Solo-Ziele). |
-| DE/EN-Vergleich | JA, semantisch gleich (Zeitpunkt erste Nacht, 1 Verbündeter, 1 Dorfbewohner, Ergebnis Trugbilderwolf/Decoy Wolf). |
-| Automationsziel | `automatic`: (mit PendingPrompt zweistufig), Scheinrolle assisted durch SL-Bestätigung. |
-| Mechanik | primär: Rollenwechsel; sekundär: Fraktionswechsel, Einmalfähigkeit, mehrstufige Nachtfähigkeit |
-| Größe / Risiko | M / mittel |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (mehrstufig, abbrechbar), RoleTransition (mit Schnappschuss), appears_as, InfoRecord (Orakel), GmCorrections, WinRules. |
-| Neue Systeme | Wächter-am-Tor-Blockade als zentrale Regel in RoleTransition (für alle Verwandlungswege); optional "Scheinschritt" (Tarnzeile für verschwundene Rolle) in der Nachtplanung. |
-| Abhängigkeiten | Trugbilderwolf, Wächter am Tor, Orakel, Lehrling (Erbe), Werwolf (synthetische Rudelzeile), Totenkarte wende_11. |
-| Widersprüche | RM-C-004 Scheinrolle des erzeugten Trugbilderwolfs; RM-C-005 "Dorfbewohner" |
-| Entscheidungen | RM-DR-107 (Rolle); übergreifend RM-DR-002, RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K12 / ab Option C |
-| Belegsicherheit | hoch; nicht verifiziert: Laufzeitverhalten der hartkodierten Prompts in EN. |
-| Detail | [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
 
 ### `schicksalswolf`
 
@@ -167,27 +143,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Belegsicherheit | hoch; Sieg-Abwesenheit per `rg` über `js/`, `game.html`, `app/src` belegt. |
 | Detail | [Dossier](dossiers/solos-a.md#prophet-des-untergangs) |
 
-### `daemonischer-wolf`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Dämonischer Wolf / Demonic Wolf |
-| Fraktion / Akte / Legacy-Nachtpriorität | Wölfe / II / – |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-contradictory`. Code ist in sich nachvollziehbar (Todesfluch mit Wolfswertung), widerspricht aber Text (Opfer, nur Erscheinung) und der eigenen Code-Absicht (`ab:75`). |
-| DE/EN-Vergleich | JA, semantisch gleich (verfluchen, Opfer/victims, erscheinen/gesehen als Werwolf). Nuance: DE "Opfer" ist grammatisch Singular oder Plural, EN "victims" nur Plural; beide nennen keinen Zeitpunkt und keine Häufigkeit. |
-| Automationsziel | `automatic`: (Reaktion mit Pflicht-Prompt), sobald PO Auslöser und Wirkung entschieden hat. |
-| Mechanik | primär: Todesreaktion; sekundär: Fehlinformation, Fraktionswechsel |
-| Größe / Risiko | M / hoch. Reaktion ist einfach, aber die Trennung Erscheinung vs. Zählung berührt alle Informationsrollen und die Siegprüfung. |
-| Vorhandene Godot-Systeme | Reaktionswarteschlange (neue Reaktionsart "curse_appearance"), PendingPrompt, appears_as, KillPipeline (Auslöser nach echtem Tod), InfoRecord (Wahrheit vs. gezeigt), GmCorrections (Fluch entfernen), StateCodec, Replay, WinRules (unverändert, falls nur Erscheinung). |
-| Neue Systeme | dauerhafte Statusmarker (Fluch als persistenter Marker mit Quelle), falls nicht vollständig über `appears_as` abbildbar. |
-| Abhängigkeiten | Orakel, Blutpriester, Waldläufer, Doktor, Detektiv, Kopfgeldjäger, Ritter, Dorfschmied, Traumdeuter (alle `isWolf`-Leser); Seelentauscher und Wächter am Tor (löschen Fluch); Nekromant (F14-Fall). |
-| Widersprüche | RM-C-022 Auslöser; RM-C-023 Wirkung des Fluchs; RM-C-024 Todespfade |
-| Entscheidungen | RM-DR-122 (Rolle); übergreifend RM-DR-002, RM-DR-009; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K12 / in keiner Option |
-| Belegsicherheit | hoch für Auslösepfade und `isWolf`-Nutzung. Nicht verifiziert: Laufzeitverhalten des Abbruchs (nur aus Code abgeleitet); Godot-Reaktionsarten (nur Doku gelesen). --- |
-| Detail | [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
-
 ### `kutscher`
 
 | Feld | Inhalt |
@@ -208,27 +163,6 @@ Unterschieden wird wie im Auftrag gefordert: **Rollentext behauptet** (Dossier �
 | Charge / Option (nicht freigegeben) | K13 / in keiner Option |
 | Belegsicherheit | hoch für Code; mittel für Totenkarten-Wirkung (Karteninhalte nicht im Detail geprüft). |
 | Detail | [Dossier](dossiers/village-2.md#kutscher) |
-
-### `seelentauscher`
-
-| Feld | Inhalt |
-|---|---|
-| Legacy-Name / EN | Seelentauscher / Soul Swapper |
-| Fraktion / Akte / Legacy-Nachtpriorität | Dorf / II / 8.0 (once) |
-| Migrationsstatus | `decision-required` |
-| Legacy-Befund | `legacy-broken`. Der belegte Fehler F4 verfälscht die Kernfunktion (Rollentausch mit Wolfsrolle erzeugt einen zusätzlichen Wolf). |
-| DE/EN-Vergleich | semantisch gleich JA. |
-| Automationsziel | `assisted`: Tausch automatisch über RoleTransition; SL bestätigt, Betroffene werden informiert. |
-| Mechanik | primär: Rollenwechsel; sekundär: Einmalfähigkeit, Fraktionswechsel |
-| Größe / Risiko | L / kritisch |
-| Vorhandene Godot-Systeme | StepQueue, PendingPrompt (Mehrfachwahl 2, abbrechbar), RoleTransition (Schnappschuss, Wächter-Umleitung), InfoRecord (Mitteilung an Betroffene), WinRules, StateCodec, Replay, GmCorrections, Ereignis-Sichtbarkeit, WolfChildBond/ApprenticeBond (Bindungen bei Rollenwechsel). |
-| Neue Systeme | Regel "Rollenzustand wandert mit" (Verbrauchszähler/Bindungen je Rolle vs. je Person) als Teil von RoleTransition; kein eigenes neues System, sofern RoleTransition zwei gleichzeitige Wechsel atomar kann (nicht verifiziert). |
-| Abhängigkeiten | alle Rollen (tauschbar), insbesondere Wolfsrollen, Wächter am Tor, Wolfskind/Lehrling (Bindungen), Loki/Rotkäppchen/Parasit (Sitz-Bindungen), Dorfwache/Märtyrerin (Rollenprüfung am Morgen), Kutscher/Blutpriester (Einmaligkeit). |
-| Widersprüche | RM-C-118 Wolfsstatus nach Tausch; RM-C-119 Was wandert mit; RM-C-120 Toter erhält Wolfsrolle; RM-C-121 Information der Betroffenen |
-| Entscheidungen | RM-DR-127 (Rolle); übergreifend RM-DR-014; Rahmen: RM-DR-001 (entschieden, G-ID-3) |
-| Charge / Option (nicht freigegeben) | K12 / in keiner Option |
-| Belegsicherheit | hoch für F4 und Einmaligkeitslogik (Code vollständig verfolgt); Querbezüge zu Wolfskind/Lehrling nur gelesen, nicht durchgespielt. |
-| Detail | [Dossier](dossiers/village-2.md#seelentauscher) |
 
 ### `feuerteufel`
 

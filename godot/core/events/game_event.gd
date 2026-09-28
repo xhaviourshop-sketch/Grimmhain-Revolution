@@ -97,6 +97,11 @@ const RED_REFUGE := &"RedRefuge"                ## Zuflucht des Rotkäppchens, g
 const WIDOW_STRUCK := &"WidowStruck"            ## Wahl der Schwarzen Witwe mit gefundenem Paar (nur Spielleiter)
 const SHADOW_LINKED := &"ShadowLinked"          ## Verknüpfung des Schattenwanderers (nur Spielleiter)
 const APPLE_USED := &"AppleUsed"                ## Apfel verdoppelt einen Nachtschritt (nur Spielleiter)
+const DEMON_CURSED := &"DemonCursed"            ## Fluch des Dämonischen Wolfs (nur Spielleiter)
+const LYCAON_CONVERTED := &"LycaonConverted"    ## Wahl des Königs Lykaon mit Verbündetem (nur Spielleiter)
+const LYCAON_NOTICE := &"LycaonNotice"          ## neue Rolle für die verwandelte Person (actor)
+const SOULS_SWAPPED := &"SoulsSwapped"          ## Rollentausch des Seelentauschers (nur Spielleiter)
+const SOUL_SWAP_REVEALED := &"SoulSwapRevealed"  ## neue Rolle für eine lebende betroffene Person (actor)
 const STEP_DROPPED := &"StepDropped"        ## Nachtschritt entfällt automatisch (tot, keine Entscheidung möglich)
 
 var index: int = 0          ## fortlaufend über die ganze Partie

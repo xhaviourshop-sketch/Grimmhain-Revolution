@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 54 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 57 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 18 |
+| fehlend, Entscheidung nötig (`decision-required`) | 15 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 18 fehlende) | 2 |
-| Legacy-Befund `legacy-contradictory` (nur 18 fehlende) | 9 |
-| Legacy-Befund `legacy-broken` (nur 18 fehlende) | 5 |
-| Legacy-Befund `not-found` (nur 18 fehlende) | 2 |
+| Legacy-Befund `legacy-verified` (nur 15 fehlende) | 1 |
+| Legacy-Befund `legacy-contradictory` (nur 15 fehlende) | 8 |
+| Legacy-Befund `legacy-broken` (nur 15 fehlende) | 4 |
+| Legacy-Befund `not-found` (nur 15 fehlende) | 2 |
 
-<!-- check:counts total=72 implemented=54 remaining=18 -->
+<!-- check:counts total=72 implemented=57 remaining=15 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -49,7 +49,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 11 | `schutzengel` | Schutzengel / Guardian Angel | Dorf | I | 1.3 | `implemented-and-tested` | `legacy-broken` | `automatic` | Schutz | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 12 | `werwolf` | Werwolf / Werewolf | Wölfe | I, II, III, IV | 2.0 | `implemented-and-tested` | `legacy-verified` | `automatic` | Tötung | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 13 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Wölfe | I, II, III, IV | 2.2 | `decision-required` | `legacy-contradictory` | `assisted` | Tötung | M / hoch | K11 | – | [03](03-remaining-roles-analysis.md#rachsuechtiger-wolf) · [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf) |
-| 14 | `koenig-lykaon` | König Lykaon / King Lycaon | Wölfe | I | 2.4 (once) | `decision-required` | `legacy-verified` | `automatic` | Rollenwechsel | M / mittel | K12 | C | [03](03-remaining-roles-analysis.md#koenig-lykaon) · [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
+| 14 | `koenig-lykaon` | König Lykaon / King Lycaon | Wölfe | I | 2.4 (once) | `implemented-and-tested` | `legacy-verified` | `automatic` | Rollenwechsel | M / mittel | – | C | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#koenig-lykaon) |
 | 15 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | Wölfe | IV | – | `implemented-and-tested` | `legacy-verified` | `automatic` | sonstige Spezialmechanik | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#siegreicher-wolf) |
 | 16 | `seuchenwolf` | Seuchenwolf / Blight Wolf | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Wolfsangriff-Modifikation | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-a.md#seuchenwolf) |
 | 17 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Wölfe | IV | 2.5 | `decision-required` | `legacy-contradictory` | `automatic` | Tötung | M / mittel | K11 | – | [03](03-remaining-roles-analysis.md#schicksalswolf) · [Dossier](dossiers/wolves-a.md#schicksalswolf) |
@@ -67,13 +67,13 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 29 | `pestbringerin` | Pestbringerin / Plague Bringer | Einzelsieg | II | 7.2 | `decision-required` | `legacy-contradictory` | `automatic` | Einzelsieg | M / mittel | K9 | – | [03](03-remaining-roles-analysis.md#pestbringerin) · [Dossier](dossiers/solos-a.md#pestbringerin) |
 | 30 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Einzelsieg | III, IV | 8.6 | `decision-required` | `not-found` | `assisted` | Tötung | M / mittel | K9 | – | [03](03-remaining-roles-analysis.md#prophet-des-untergangs) · [Dossier](dossiers/solos-a.md#prophet-des-untergangs) |
 | 31 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
-| 32 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Wölfe | II | – | `decision-required` | `legacy-contradictory` | `automatic` | Todesreaktion | M / hoch | K12 | – | [03](03-remaining-roles-analysis.md#daemonischer-wolf) · [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
+| 32 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Wölfe | II | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Todesreaktion | M / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#daemonischer-wolf) |
 | 33 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-verified` | `automatic` | Fehlinformation | M / mittel | – | Basis | [02](02-implemented-roles-audit.md) |
 | 34 | `schattenhund` | Schattenhund / Shadow Hound | Wölfe | III | 0.7 (once) | `implemented-and-tested` | `legacy-contradictory` | `automatic` | globale Regeländerung | S / mittel | – | B | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#schattenhund) |
 | 35 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Wölfe | III | – | `implemented-and-tested` | `legacy-broken` | `automatic` | Todesreaktion | M / mittel | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#besessener-wolf) |
 | 36 | `fenrir` | Fenrir / Fenrir | Wölfe | IV | – | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Hinrichtungsreaktion | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/wolves-b.md#fenrir) |
 | 37 | `kutscher` | Kutscher / Coachman | Dorf | II | 3.8 | `decision-required` | `legacy-contradictory` | `assisted` | Wiederbelebung | L / hoch | K13 | – | [03](03-remaining-roles-analysis.md#kutscher) · [Dossier](dossiers/village-2.md#kutscher) |
-| 38 | `seelentauscher` | Seelentauscher / Soul Swapper | Dorf | II | 8.0 (once) | `decision-required` | `legacy-broken` | `assisted` | Rollenwechsel | L / kritisch | K12 | – | [03](03-remaining-roles-analysis.md#seelentauscher) · [Dossier](dossiers/village-2.md#seelentauscher) |
+| 38 | `seelentauscher` | Seelentauscher / Soul Swapper | Dorf | II | 8.0 (once) | `implemented-and-tested` | `legacy-broken` | `assisted` | Rollenwechsel | L / kritisch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#seelentauscher) |
 | 39 | `blutpriester` | Blutpriester / Blood Priest | Dorf | II | 8.2 (once) | `implemented-and-tested` | `legacy-verified` | `assisted` | Informationsrolle | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#blutpriester) |
 | 40 | `traumdeuter` | Traumdeuter / Dreamer | Dorf | III | 7.0 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / niedrig | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#traumdeuter) |
 | 41 | `henker` | Henker / Executioner | Dorf | III | 7.8 | `implemented-and-tested` | `legacy-verified` | `automatic` | Hinrichtungsreaktion | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-2.md#henker) |

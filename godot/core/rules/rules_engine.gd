@@ -639,6 +639,17 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			s.next_night_step += 1
 		PendingPrompt.OWNER_REACTION:
 			var reaction: Reaction = s.reactions.pop_front()
+			if reaction.kind == Reaction.KIND_DEMON:
+				# Dämonischer Wolf (V-01, V-02): Fluch statt Tod; nur Rollenauskünfte zeigen „Werwolf“.
+				if target != GameState.NO_TARGET:
+					s.players[target].cursed = true
+					ctx.emit(GameEvent.DEMON_CURSED, Visibility.GM, {"demon_id": reaction.owner_id, "target_id": target})
+				ctx.emit(GameEvent.REACTION_RESOLVED, Visibility.GM, {
+					"reaction_id": reaction.id, "owner_id": reaction.owner_id, "target_id": target, "kind": reaction.kind,
+					"outcome": "declined" if target == GameState.NO_TARGET else "cursed",
+				})
+				_finish_dawn_if_ready(ctx)
+				return
 			var cause: StringName = {Reaction.KIND_CURSE: KillEvent.CAUSE_HUNTER_SHOT, Reaction.KIND_POSSESSED: KillEvent.CAUSE_POSSESSED_DRAG,
 				Reaction.KIND_KNIGHT: KillEvent.CAUSE_KNIGHT_STRIKE, Reaction.KIND_SMITH: KillEvent.CAUSE_SMITH_WEAPON}[reaction.kind]
 			ctx.emit(GameEvent.REACTION_RESOLVED, Visibility.GM, {

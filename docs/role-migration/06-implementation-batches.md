@@ -391,7 +391,13 @@ Siehe §3.
 
 ### K12 · Rollen- und Fraktionswechsel
 
-**Rollen Charge K12 (3):** `koenig-lykaon`, `daemonischer-wolf`, `seelentauscher`
+**Rollen Charge K12 (0):** –
+
+**Nachtrag Rollenaudit:** `seelentauscher` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `koenig-lykaon` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
+
+**Nachtrag Rollenaudit:** `daemonischer-wolf` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 
 **Nachtrag Rollenaudit:** `waechter-am-tor` ist umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

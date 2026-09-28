@@ -8,7 +8,8 @@ const KIND_CURSE := &"curse"  ## eine lebende Person verfluchen oder verzichten 
 const KIND_POSSESSED := &"possessed"  ## Besessener Wolf: eine andere lebende Person mitreißen oder verzichten
 const KIND_KNIGHT := &"knight"        ## Ritter bei Gleichstand: einen der gleich nahen Wölfe wählen (Pflicht)
 const KIND_SMITH := &"smith"          ## Schmiedewaffe: Spielleiter wählt den lebenden Wolf, der stirbt (Pflicht)
-const KINDS: Array[StringName] = [KIND_CURSE, KIND_POSSESSED, KIND_KNIGHT, KIND_SMITH]
+const KIND_DEMON := &"demon"          ## Dämonischer Wolf: eine andere lebende Person verfluchen oder verzichten
+const KINDS: Array[StringName] = [KIND_CURSE, KIND_POSSESSED, KIND_KNIGHT, KIND_SMITH, KIND_DEMON]
 
 var id: int = 0
 var kind: StringName = KIND_CURSE

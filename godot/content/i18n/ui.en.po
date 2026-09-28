@@ -719,6 +719,24 @@ msgstr "Shadowwalker"
 msgid "ui.role.schattenwanderer.short"
 msgstr "Werewolf in the pack; links once, then the other one dies instead."
 
+msgid "ui.role.seelentauscher.name"
+msgstr "Soul Swapper"
+
+msgid "ui.role.seelentauscher.short"
+msgstr "Once swaps the roles of two people, alive or dead."
+
+msgid "ui.role.daemonischer_wolf.name"
+msgstr "Demonic Wolf"
+
+msgid "ui.role.daemonischer_wolf.short"
+msgstr "Werewolf in the pack; on death he curses someone who appears as a werewolf to the oracle."
+
+msgid "ui.role.koenig_lykaon.name"
+msgstr "King Lycaon"
+
+msgid "ui.role.koenig_lykaon.short"
+msgstr "Werewolf in the pack; with an ally turns a villager into a decoy wolf."
+
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
 

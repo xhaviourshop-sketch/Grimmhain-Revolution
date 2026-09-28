@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 54 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 54 |
+| im RoleCatalog vorhandene Rollen | 57 (Nachtrag Rollenaudit) |
+| davon Migrationsstatus `implemented-and-tested` | 57 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 52 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 55 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -101,6 +101,9 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 52 | `schwarze-witwe` | Schwarze Witwe / Black Widow (Rollentext) | wolves | ja | 28 | `rules_engine.gd` (Todesmarkierung), `bond_rules.gd` (`living_partners`) | `test_bond_roles.gd`, fuzz | RM-DR-113.1, B-03, B-06, DECISION-LOG „Rollenaudit · Bindungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 53 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood (Rollentext) | village | nein | 74 | `bond_steps.gd` (Stufen targets/grant), `bond_rules.gd` (Kette), `step_queue.gd` (Apfel) | `test_bond_roles.gd`, fuzz | RM-DR-137, R-01 bis R-04, B-08, DECISION-LOG „Rollenaudit · Bindungsrollen“ | `implemented-and-tested` | `assisted` | `legacy-contradictory` |
 | 54 | `schattenwanderer` | Schattenwanderer / Shadowwalker (Rollentext) | wolves | ja | 26 | `bond_rules.gd` (`shadow_partner`), `kill_pipeline.gd` | `test_bond_roles.gd`, fuzz | RM-DR-110, B-04, B-07, DECISION-LOG „Rollenaudit · Bindungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 55 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf (Rollentext) | wolves | ja | – (Todesreaktion) | `rules_engine.gd` (Reaktion `demon`), `information_rules.gd` (`Player.cursed`) | `test_transform_roles.gd`, fuzz | RM-DR-122, V-01, V-02, V-07, DECISION-LOG „Rollenaudit · Verwandlungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 56 | `koenig-lykaon` | König Lykaon / King Lycaon (Rollentext) | wolves | ja | 24 | `bond_steps.gd` (Stufen ally/targets, `_convert`) | `test_transform_roles.gd`, fuzz | RM-DR-107, V-03, V-08, V-09, DECISION-LOG „Rollenaudit · Verwandlungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-verified` |
+| 57 | `seelentauscher` | Seelentauscher / Soul Swapper (Rollentext) | village | nein | 80 | `bond_steps.gd` (`_swap`), `role_transition.gd`, `gatewarden.gd` | `test_transform_roles.gd`, fuzz | RM-DR-127, V-04 bis V-06, DECISION-LOG „Rollenaudit · Verwandlungsrollen“ | `implemented-and-tested` | `automatic` | `legacy-broken` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -383,6 +386,21 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Wolf im Rudel mit eigenem Schritt (Priorität 26), jede Nacht bis zur Nutzung (`schattenwanderer:link`): eine andere Lebende oder „noch nicht“. Stirbt eine Seite tatsächlich (nach allen Schutzwirkungen und Schilden, nicht bei Korrektur), stirbt stattdessen die andere mit derselben Ursache und Quelle; die Verknüpfung ist verbraucht.
 - **Tests:** Schutz verhindert Umlenkung, Rudelangriff umgelenkt, Lynch umgelenkt und gezählt, Korrektur nicht.
 - **Grenzen:** Ein umgelenkter Lynch des Weisen löst keinen Fluch aus.
+
+### 4.55 `daemonischer-wolf`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Todesreaktion bei jedem Tod mit Todesfolgen (einmal je Leben): eine andere lebende Person verfluchen oder verzichten. `Player.cursed` lässt `InformationRules.determine_role` „werwolf“ ergeben (nur Rollenauskünfte wie das Orakel); Zählungen, Prüfungen und Siege bleiben wahr. Ein Rollenwechsel löscht den Fluch, eine Wiederbelebung nicht.
+- **Tests:** Fluch, Orakel-Erscheinung, Waldläufer wahr, Wiederbelebung, Rollenwechsel, Verzicht, ohne Todesfolgen.
+- **Grenzen:** –
+
+### 4.56 `koenig-lykaon`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht bis zur Nutzung (Priorität 24), wenn ein anderer Wolf lebt: Stufe „ally“ (anderer lebender Wolf, höchstens dreimal verschieben, bei der vierten Gelegenheit Pflicht), dann eine lebende Dorfperson → Trugbilderwolf mit alter Rolle als Scheinrolle (frische Einsätze), private Mitteilung; Rudel ab der Folgenacht. Wächter am Tor macht sie zum Dorfbewohner. Nächte ohne Verbündeten zählen nicht.
+- **Tests:** Verwandlung, Scheinrolle, Rudel ab Folgenacht, Ziele nur Dorf, Wächter, drei Verzichte, Nacht ohne Verbündeten.
+- **Grenzen:** –
+
+### 4.57 `seelentauscher`
+- **Belegt umgesetzt (Rollenaudit 2026-09-28):** Jede Nacht bis zur Nutzung (Priorität 80): 0 oder zwei verschiedene Personen, lebend oder tot, er selbst erlaubt. Beide erhalten die Rolle der anderen wie beim Lehrling-Erbe (frische Einsätze, Wolfskind ohne Vorbild, Lehrlingsbindung endet, Scheinrolle des Trugbilderwolfs wandert mit); lebende Betroffene erfahren ihre Rolle privat. Würde jemand (auch tot) neu Wolf, macht ein lebender Wächter am Tor ihn zum Dorfbewohner.
+- **Tests:** Tausch mit frischen Rollen, private Mitteilung, Tote, Selbsttausch, Wächter bei Lebenden und Toten.
+- **Grenzen:** Rollenschritte der Getauschten in derselben Nacht entfallen (Nachtplan-Schnappschuss).
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 
