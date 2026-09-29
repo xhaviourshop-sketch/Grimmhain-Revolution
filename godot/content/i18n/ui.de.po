@@ -3256,3 +3256,69 @@ msgstr "„Die Kette bricht: {target} stirbt mit {name}.“"
 
 msgid "ui.effect.shadow_link"
 msgstr "„Die Verknüpfung greift: {target} stirbt an Stelle von {replaced}.“"
+
+msgid "ui.cockpit.tools.roles"
+msgstr "Rollen zeigen"
+
+msgid "ui.cockpit.action.show_roles"
+msgstr "Rollen zeigen"
+
+msgid "ui.cockpit.roles.heading"
+msgstr "Rollen zeigen"
+
+msgid "ui.cockpit.roles.hint"
+msgstr "Die Spielleitung behält das Gerät und zeigt einer Person gezielt ihre Karte. Es gibt keine Pflicht, alle Rollen vor der ersten Nacht zu zeigen."
+
+msgid "ui.cockpit.roles.progress"
+msgstr "{done} von {total} Personen haben ihre Rolle gesehen."
+
+msgid "ui.cockpit.roles.person"
+msgstr "{seat} · {name}"
+
+msgid "ui.cockpit.roles.person_next"
+msgstr "{seat} · {name} (als Nächste)"
+
+msgid "ui.cockpit.roles.person_done"
+msgstr "{seat} · {name} (gesehen)"
+
+msgid "ui.cockpit.roles.next_marker"
+msgstr "Weiter bei dieser Person:"
+
+msgid "ui.cockpit.roles.done"
+msgstr "Fertig"
+
+msgid "ui.cockpit.roles.front.heading"
+msgstr "Karte für {seat} · {name}"
+
+msgid "ui.cockpit.roles.front.text"
+msgstr "Nur {name} schaut jetzt auf den Bildschirm. Erst dann „Rolle anzeigen“ tippen."
+
+msgid "ui.cockpit.roles.reveal"
+msgstr "Rolle anzeigen"
+
+msgid "ui.cockpit.roles.cancel"
+msgstr "Abbrechen"
+
+msgid "ui.cockpit.roles.card.heading"
+msgstr "Deine Rolle, {name}"
+
+msgid "ui.cockpit.roles.role_value"
+msgstr "{role}"
+
+msgid "ui.cockpit.roles.confirm"
+msgstr "Gesehen, Karte schließen"
+
+msgid "ui.cockpit.roles.close_unconfirmed"
+msgstr "Ohne Bestätigung schließen"
+
+msgid "ui.cockpit.roles.close"
+msgstr "Karte schließen"
+
+msgid "ui.gm.command.confirm_role_shown"
+msgstr "Rolle gezeigt: {names}"
+
+msgid "ui.log.event.role_shown_confirmed"
+msgstr "#{index} Rolle gezeigt ({visibility})"
+
+msgid "ui.cockpit.error.role_already_confirmed"
+msgstr "Fehler: Diese Person hat ihre aktuelle Rolle schon gesehen. Nichts wurde geändert."

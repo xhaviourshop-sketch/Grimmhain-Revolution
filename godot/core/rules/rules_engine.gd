@@ -95,6 +95,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 			return GmCorrections.validate(s, p)
 		Command.ACK_NOTICE:
 			return NoticeRules.validate_ack(s, p)
+		Command.CONFIRM_ROLE_SHOWN:
+			return RoleShownRules.validate(s, p)
 		Command.OVERRIDE_SHOWN_ROLE:
 			return OracleStep.validate_override(s, p)
 		Command.AMALIA_SACRIFICE:
@@ -352,6 +354,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			_start_night(ctx)
 		Command.ACK_NOTICE:
 			NoticeRules.ack(ctx, p)
+		Command.CONFIRM_ROLE_SHOWN:
+			RoleShownRules.confirm(ctx, p)
 		Command.ANSWER_PROMPT:
 			if s.pending_prompt.owner == PendingPrompt.OWNER_WITCH:
 				WitchStep.answer(ctx, p)

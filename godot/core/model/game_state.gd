@@ -4,7 +4,7 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 13  ## 13: Wiederbelebungsrunde (revival_round, aus der Startbesetzung abgeleitet, ersetzt reveal_role_on_death), Hinweise (notices); 12: Setup-Option reveal_role_on_death (DR-04); 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades, Grabräuber)
+const SCHEMA_VERSION := 14  ## 14: Rollenanzeige (roles_shown: bestätigter Fortschritt je Person); 13: Wiederbelebungsrunde (revival_round, aus der Startbesetzung abgeleitet, ersetzt reveal_role_on_death), Hinweise (notices); 12: Setup-Option reveal_role_on_death (DR-04); 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades, Grabräuber)
 const RULES_VERSION := &"grimmhain-core-0.12"
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
@@ -98,6 +98,7 @@ var next_info_id: int = 1
 var next_notice_id: int = 1
 var notices: Array = []  ## offene private Hinweise [{id, kind, viewer_ids, data}] (NoticeRules)
 var next_apprentice_id: int = 1
+var roles_shown: Dictionary = {}  ## Personen-ID → Rolle zum Zeitpunkt der bestätigten Rollenanzeige (RoleShownRules)
 
 
 func is_started() -> bool:
@@ -270,6 +271,7 @@ func to_dict() -> Dictionary:
 		"revived_tonight": revived_tonight.duplicate(),
 		"charms": charms.duplicate(true),
 		"notices": notices.duplicate(true),
+		"roles_shown": RoleShownRules.to_dict(roles_shown),
 		"infected": infected.duplicate(),
 		"prophet_marks": prophet_marks.duplicate(true),
 		"prophet_unlocked": prophet_unlocked.duplicate(),
@@ -610,6 +612,10 @@ static func from_dict(d: Dictionary) -> GameState:
 	if loaded_notices == null:
 		return null
 	s.notices = loaded_notices
+	var loaded_shown: Variant = RoleShownRules.from_dict(s, DictRead.get_dict(d, "roles_shown"))
+	if loaded_shown == null:
+		return null
+	s.roles_shown = loaded_shown
 	for item: Variant in DictRead.get_array(d, "charms"):
 		var piper := DictRead.get_int(item, "piper_id", -1) if item is Dictionary else -1
 		var charmed := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1

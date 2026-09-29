@@ -85,6 +85,7 @@ const AMALIA_ANSWERED := &"AmaliaAnswered"      ## Selbstopfer Amalias mit Ja/Ne
 const DETECTIVE_RECORDED := &"DetectiveRecorded"  ## Detektiv-Hinweis mit Ursprung (nur Spielleiter)
 const DETECTIVE_HINT := &"DetectiveHint"        ## Richtung vom Platz des toten Wolfs (öffentlich)
 const NOTICE_QUEUED := &"NoticeQueued"          ## privater Hinweis eingereiht (nur Spielleiter, DI-04, DI-06, DI-07)
+const ROLE_SHOWN_CONFIRMED := &"RoleShownConfirmed"  ## Person hat ihre Rolle gesehen (nur Spielleiter, Rollenanzeige)
 const NOTICE_ACKED := &"NoticeAcked"            ## Hinweis gezeigt (nur Spielleiter)
 const NOTICE_DROPPED := &"NoticeDropped"        ## Hinweis entfallen, weil alle Betrachter gestorben sind (nur Spielleiter)
 const DEATH_EFFECT := &"DeathEffect"            ## sichtbare Folge eines Todes (DI-03, öffentlich): Effekt, Quelle, Rolle zum Zeitpunkt, Ziel

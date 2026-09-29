@@ -8,6 +8,8 @@ extends RefCounted
 ##   cover_panel     Sichtschutz über dem ganzen Cockpit
 ##   announcement    zeigbare Ansagekarte des Morgens: nur der öffentliche Teil des Berichts
 ##   morning_drawer  private Details des Morgenberichts (Ursachen, Rettungen, entfallene Schritte)
+##   role_list       Rollenanzeige, neutrale Personenliste (nur Namen und Bestätigungsstand, nie Rollen)
+##   role_card       Rollenanzeige, Karte einer Person: neutrale Vorderseite oder (nach bewusster Aktion) Rolle und Kurztext
 ## Jede Ebene hat einen `CloseLayerButton` (bzw. `UncoverButton`); die Ansicht verbindet ihn.
 
 
@@ -115,6 +117,81 @@ static func notice_card(card: Dictionary) -> Control:
 	_label(column, "ui.cockpit.notice.heading.group" if bool(card.get("group", false)) else "ui.cockpit.notice.heading", {}, &"HeadingLabel")
 	_label(column, str(card["text_key"]), CockpitText.notice_values(card.get("values", {})), &"ShowValueLabel").name = "NoticeText"
 	column.add_child(_button("CloseLayerButton", "ui.cockpit.notice.close", GrimmButton.Kind.PRIMARY))
+	return root
+
+
+## Rollenanzeige, neutrale Liste (`CockpitView.role_show_list`): eine Schaltfläche je Person, die nächste offene Person
+## ist hervorgehoben. Enthält keine Rolle.
+static func role_list(list: Dictionary) -> Control:
+	var root := _full_rect("RoleListLayer")
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(center)
+	var panel := PanelContainer.new()
+	panel.theme_type_variation = &"ShowPanel"
+	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
+	center.add_child(panel)
+	var column := VBoxContainer.new()
+	column.theme_type_variation = &"ScreenColumn"
+	panel.add_child(column)
+	_label(column, "ui.cockpit.roles.heading", {}, &"HeadingLabel")
+	_label(column, "ui.cockpit.roles.hint", {}, &"MutedLabel")
+	_label(column, "ui.cockpit.roles.progress", {"done": int(list.get("confirmed_count", 0)), "total": int(list.get("total", 0))}, &"CaptionLabel")
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size.y = ThemeTokens.SPACE_M * 20
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	column.add_child(scroll)
+	var rows := VBoxContainer.new()
+	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(rows)
+	var next_id := int(list.get("next_id", -1))
+	for entry: Dictionary in list.get("persons", []):
+		var id := int(entry["person_id"])
+		var is_next := id == next_id
+		var key := "ui.cockpit.roles.person_done" if bool(entry["confirmed"]) else ("ui.cockpit.roles.person_next" if is_next else "ui.cockpit.roles.person")
+		var b := _button("RolePerson_%d" % id, key, GrimmButton.Kind.PRIMARY if is_next else GrimmButton.Kind.SECONDARY)
+		b.format_values = {"seat": int(entry["seat"]), "name": str(entry["name"])}
+		b.set_meta("person_id", id)
+		if is_next:
+			var marker := _label(rows, "ui.cockpit.roles.next_marker", {}, &"CaptionLabel")
+			marker.name = "RolePersonNext_%d" % id
+		rows.add_child(b)
+	column.add_child(_button("CloseLayerButton", "ui.cockpit.roles.done", GrimmButton.Kind.SECONDARY))
+	return root
+
+
+## Rollenanzeige, Karte einer Person. Ohne `role_id` (neutrale Vorderseite) steht nur der Name auf der Karte; mit `role_id`
+## (erst nach der bewussten Aktion gebaut) Rolle und Kurztext dieser Person, sonst nichts. Bereits bestätigte Personen
+## können nachlesen und schließen ohne Befehl; sonst bestätigt „Gesehen“, „Ohne Bestätigung“ schließt nur.
+static func role_card(card: Dictionary, revealed: bool) -> Control:
+	var root := _full_rect("RoleCardLayer")
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(center)
+	var panel := PanelContainer.new()
+	panel.theme_type_variation = &"ShowPanel"
+	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
+	center.add_child(panel)
+	var column := VBoxContainer.new()
+	column.theme_type_variation = &"ScreenColumn"
+	panel.add_child(column)
+	var values := {"seat": int(card["seat"]), "name": str(card["name"])}
+	if not revealed:
+		_label(column, "ui.cockpit.roles.front.heading", values, &"HeadingLabel")
+		_label(column, "ui.cockpit.roles.front.text", values, &"MutedLabel")
+		column.add_child(_button("RevealRoleButton", "ui.cockpit.roles.reveal", GrimmButton.Kind.PRIMARY))
+		column.add_child(_button("CancelRoleButton", "ui.cockpit.roles.cancel", GrimmButton.Kind.SECONDARY))
+		return root
+	var role := str(card["role_id"])
+	_label(column, "ui.cockpit.roles.card.heading", values, &"HeadingLabel")
+	_label(column, "ui.cockpit.roles.role_value", {"role": CockpitText.role_name(role)}, &"ShowValueLabel").name = "RoleName"
+	_label(column, RolePresentation.short_key(StringName(role)), {}, &"MutedLabel").name = "RoleShort"
+	if bool(card.get("confirmed", false)):
+		column.add_child(_button("CloseRoleButton", "ui.cockpit.roles.close", GrimmButton.Kind.PRIMARY))
+	else:
+		column.add_child(_button("ConfirmRoleButton", "ui.cockpit.roles.confirm", GrimmButton.Kind.PRIMARY))
+		column.add_child(_button("CloseWithoutConfirmButton", "ui.cockpit.roles.close_unconfirmed", GrimmButton.Kind.SECONDARY))
 	return root
 
 

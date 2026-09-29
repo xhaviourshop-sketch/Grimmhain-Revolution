@@ -302,6 +302,20 @@ func execution_preview(target_id: int) -> Dictionary:
 	return CockpitView.execution_preview(_state, target_id)
 
 
+## Rollenanzeige: neutrale Liste (ohne Rollen) und Karte einer Person (nur auf bewusste Aktion abrufen), siehe CockpitView.
+func role_show_list() -> Dictionary:
+	return CockpitView.role_show_list(_state) if _state.is_started() else {}
+
+
+func role_show_card(person_id: int) -> Dictionary:
+	return CockpitView.role_show_card(_state, person_id) if _state.is_started() else {}
+
+
+## Die Person hat ihre Rolle gesehen und die Karte bewusst geschlossen (nicht: geöffnet oder abgebrochen).
+func confirm_role_shown(person_id: int) -> CommandResult:
+	return submit(Command.confirm_role_shown(person_id))
+
+
 ## Einfach korrigierbare Werte einer Person (Spielleitung, privat), siehe CockpitView.status_fields.
 func status_fields(person_id: int) -> Array:
 	return CockpitView.status_fields(_state, person_id)

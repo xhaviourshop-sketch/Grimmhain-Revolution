@@ -36,6 +36,7 @@ var _gm_execute: bool = false  ## Prüfkarte gehört zu einer Hinrichtung ohne N
 var _gm_mode: String = ""
 var _gm_effects: Variant = null
 var _gm_role: String = ""
+var _role_card_person: int = -1  ## Person der offenen Rollenkarte (nur Bedienzustand, keine Rolle)
 
 @onready var _layout: Control = %Layout
 @onready var _badge: Control = %NoGameBadge
@@ -69,6 +70,7 @@ func _setup() -> void:
 	_card.requested.connect(_on_card_requested)
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
 	(%PrivateButton as GrimmButton).pressed.connect(open_layer.bind(&"private"))
+	(%RolesButton as GrimmButton).pressed.connect(open_layer.bind(&"roles"))
 	(%CoverButton as GrimmButton).pressed.connect(cover)
 	(%GmButton as GrimmButton).pressed.connect(open_layer.bind(&"gm"))
 	_refresh()
@@ -102,6 +104,7 @@ func default_focus() -> Control:
 func _on_session_changed(_v: Dictionary) -> void:
 	_error_key = ""
 	_selection.clear()
+	_discard_role_card()
 	_refresh()
 
 
@@ -110,6 +113,7 @@ func _on_session_changed(_v: Dictionary) -> void:
 func _on_state_replaced() -> void:
 	_reset_day_mode()
 	_reset_gm_mode()
+	_discard_role_card()
 	_render()
 
 
@@ -117,7 +121,7 @@ func _refresh() -> void:
 	_view = context.session.cockpit_view()
 	var active := bool(_view.get("has_game", false))
 	_badge.visible = not active
-	for tool: String in ["LogButton", "PrivateButton", "GmButton", "CoverButton"]:
+	for tool: String in ["LogButton", "PrivateButton", "RolesButton", "GmButton", "CoverButton"]:
 		(find_child(tool, true, false) as BaseButton).disabled = not active
 	var next: Dictionary = _view.get("next", {})
 	var identity := _identity(next)
@@ -446,6 +450,8 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_submit(s.begin_next_step)
 		&"show_notice":
 			open_layer(&"notice")
+		&"show_roles":
+			open_layer(&"roles")
 		&"ack_notice":
 			close_layer()
 			_submit(s.ack_notice.bind(int(payload["notice_id"])))
@@ -550,6 +556,9 @@ func open_layer(kind: StringName) -> void:
 			var next: Dictionary = _view.get("next", {})
 			_layer = CockpitLayers.show_card(str(next.get("role_id", "")), next.get("show", []))
 			_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
+		&"roles":
+			_layer = CockpitLayers.role_list(context.session.role_show_list())
+			_layout.visible = false  # die neutrale Liste ersetzt das Cockpit vollständig
 		&"notice":
 			var notice: Dictionary = _view.get("next", {})
 			if str(notice.get("kind")) == "notice":
@@ -576,8 +585,70 @@ func open_layer(kind: StringName) -> void:
 		var node := _layer.find_child(pair[0], true, false) as BaseButton
 		if node != null:
 			node.pressed.connect(pair[1])
+	for b: Node in _layer.find_children("RolePerson_*", "BaseButton", true, false):
+		(b as BaseButton).pressed.connect(_open_role_card.bind(int(b.get_meta("person_id")), false))
+	_wire_role_card()
 	for b: Node in _layer.find_children("SecretAction_*", "BaseButton", true, false):
 		(b as BaseButton).pressed.connect(_on_secret_action.bind(str(b.get_meta("action")), int(b.get_meta("player_id"))))
+
+
+# --- Rollenanzeige ------------------------------------------------------------------------------------------
+# Liste (neutral) → Vorderseite (neutral, nur Name) → Rolle nach bewusster Aktion → Schließen zurück zur Liste. Nur „Gesehen“
+# sendet ConfirmRoleShown. Die Karte mit Rolle entsteht erst beim Zeigen und wird bei jedem Zustandswechsel, Undo, Laden,
+# Sichtschutz und Verlassen der Ansicht verworfen; die Liste schließt nie in einen privaten Bereich.
+
+## Öffnet die Karte einer Person; `revealed` erst nach der bewussten Aktion.
+func _open_role_card(person_id: int, revealed: bool) -> void:
+	var card := context.session.role_show_card(person_id) if revealed else {}
+	if not revealed:
+		for entry: Dictionary in context.session.role_show_list().get("persons", []):
+			if int(entry["person_id"]) == person_id:
+				card = entry
+	if card.is_empty():
+		open_layer.call_deferred(&"roles")
+		return
+	close_layer()
+	_layer = CockpitLayers.role_card(card, revealed)
+	_layer_kind = &"role_card"
+	_role_card_person = person_id
+	_layout.visible = false
+	_overlay_host.add_child(_layer)
+	_wire_role_card()
+	var first := _layer.find_children("*", "BaseButton", true, false)
+	if not first.is_empty():
+		(first[0] as Control).grab_focus()
+
+
+func _wire_role_card() -> void:
+	if _layer == null or _layer.name != "RoleCardLayer":
+		return
+	var reveal := _layer.find_child("RevealRoleButton", true, false) as BaseButton
+	if reveal != null:
+		reveal.pressed.connect(func() -> void: _open_role_card.call_deferred(_role_card_person, true))
+	for button_name: String in ["CancelRoleButton", "CloseRoleButton", "CloseWithoutConfirmButton"]:
+		var b := _layer.find_child(button_name, true, false) as BaseButton
+		if b != null:
+			b.pressed.connect(open_layer.bind(&"roles"), CONNECT_DEFERRED)
+	var confirm := _layer.find_child("ConfirmRoleButton", true, false) as BaseButton
+	if confirm != null:
+		confirm.pressed.connect(_confirm_role.bind(_role_card_person), CONNECT_DEFERRED)
+
+
+func _confirm_role(person_id: int) -> void:
+	var result := context.session.confirm_role_shown(person_id)
+	if not result.ok:
+		open_layer(&"roles")  # bei Annahme erledigt das der Sichtwechsel (_discard_role_card)
+
+
+## Zustandswechsel: eine offene Rollenkarte könnte veraltete Geheimnisse zeigen, deshalb zurück zur frisch gebauten neutralen Liste.
+func _discard_role_card() -> void:
+	if _layer_kind == &"role_card" or _layer_kind == &"roles":
+		open_layer.call_deferred(&"roles")
+		_layer_kind = &"roles"
+		if _layer != null:
+			_overlay_host.remove_child(_layer)
+			_layer.queue_free()
+			_layer = null
 
 
 # --- Spielleitung: Korrekturen, Rückgängig, Partie beenden ---------------------------------------
@@ -723,6 +794,8 @@ func _on_secret_action(action: String, player_id: int) -> void:
 
 
 func close_layer() -> void:
+	if _layer_kind == &"roles" or _layer_kind == &"role_card":
+		_revealed_id = ""  # nach der Rollenanzeige bleibt keine geheime Karte des Cockpits aufgedeckt
 	if _layer != null:
 		_overlay_host.remove_child(_layer)
 		_layer.queue_free()

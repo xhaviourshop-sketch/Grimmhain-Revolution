@@ -291,6 +291,8 @@ static func command_info(before: GameState, c: Command) -> Dictionary:
 			info["kind"] = DictRead.get_string(p, "kind")
 		Command.AMALIA_SACRIFICE, Command.NAME_WOLF:
 			person.call("player_id")
+		Command.CONFIRM_ROLE_SHOWN:
+			person.call("person_id")
 	return info
 
 
@@ -315,6 +317,30 @@ static func status_fields(s: GameState, id: int) -> Array:
 		out.append({"field": "appears_as", "kind": "set_role_field", "fields": {"target_id": id, "field": "appears_as"}, "value_key": "value",
 			"current": String(p.appears_as), "type": "role"})
 	return out
+
+
+## Rollenanzeige, neutrale Liste: Personen in Sitzreihenfolge mit Bestätigungsstand, ohne jede Rolle. `next_id` ist die
+## erste Person ohne gültige Bestätigung (Fortsetzungspunkt), -1 wenn alle bestätigt sind.
+static func role_show_list(s: GameState) -> Dictionary:
+	var persons: Array = []
+	var confirmed := 0
+	for i: int in s.seat_order.size():
+		var id := s.seat_order[i]
+		var done := RoleShownRules.is_current(s, id)
+		confirmed += 1 if done else 0
+		persons.append({"person_id": id, "seat": i + 1, "name": s.players[id].name, "confirmed": done})
+	var pending := RoleShownRules.pending_ids(s)
+	return {"persons": persons, "next_id": pending[0] if not pending.is_empty() else -1, "confirmed_count": confirmed, "total": persons.size()}
+
+
+## Rollenanzeige, Karte einer Person: ausschließlich diese Person mit ihrer wahren Rolle (bei Rollen mit Scheinrolle nie
+## die Scheinrolle, DI-08) und dem Bestätigungsstand. Leer bei unbekannter Person. Wird erst nach der bewussten Aktion gebaut.
+static func role_show_card(s: GameState, person_id: int) -> Dictionary:
+	if not s.players.has(person_id):
+		return {}
+	var p := s.players[person_id]
+	return {"person_id": person_id, "seat": s.seat_of(person_id) + 1, "name": p.name, "role_id": String(p.role_id),
+		"confirmed": RoleShownRules.is_current(s, person_id)}
 
 
 static func _skipped_count(s: GameState) -> int:

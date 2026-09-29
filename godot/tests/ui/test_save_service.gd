@@ -182,9 +182,11 @@ func test_list_shows_public_summary_only_and_discard_renames() -> void:
 # --- Spielstand anderer Version (DI-01, Schema 13) -----------------------------------------------------
 
 ## Schreibt die laufende Partie mit Schema 12 (Stand vor der Wiederbelebungsrunde) auf den Datenträger.
-func _write_old_schema(ctx: AppContext) -> Dictionary:
+func _write_old_schema(ctx: AppContext, schema: int = 12) -> Dictionary:
 	var doc: Dictionary = JSON.parse_string(ctx.session.save_text())
-	doc["schema_version"] = 12
+	doc["schema_version"] = schema
+	if schema == 13:
+		(doc["state"] as Dictionary).erase("roles_shown")  # Schema 13 kannte die Rollenanzeige noch nicht
 	var old_text := JSON.stringify(doc)
 	assert_true(bool(ctx.saves.save(ctx.session.round_id(), old_text, {"player_names": ["A", "B", "C", "D", "E"], "player_count": 5})["ok"]), "Altstand geschrieben")
 	return {"text": old_text, "round": ctx.session.round_id()}
@@ -207,6 +209,23 @@ func test_old_schema_save_is_reported_incompatible_and_left_untouched() -> void:
 	assert_false(_files(ctx).any(func(n: String) -> bool: return n.contains(".corrupt-")), "nichts beiseitegelegt")
 	assert_true(ctx.saves.discard(str(old["round"])).size() > 0, "Verwerfen bleibt möglich (umbenannt, nicht gelöscht)")
 	assert_true(_files(ctx).any(func(n: String) -> bool: return n.contains(".discarded-")), "Datei erhalten")
+
+
+## Schema 13 (vor der Rollenanzeige): dieselbe Behandlung wie jede ältere Version, keine Migration, Datei bleibt erhalten.
+func test_schema_13_save_is_incompatible_and_left_untouched() -> void:
+	var ctx := _context()
+	_start(ctx)
+	var old := _write_old_schema(ctx, 13)
+	var path := ctx.saves.path_for(str(old["round"]))
+	var bytes_before := FileAccess.get_file_as_string(path)
+	var entries := ctx.saves.list()
+	assert_true(bool(entries[0]["readable"]) and not bool(entries[0]["compatible"]), "lesbar, aber nicht kompatibel")
+	assert_eq(int(entries[0]["schema"]), 13, "gefundenes Schema")
+	assert_eq(int(entries[0]["expected"]), 14, "erwartetes Schema")
+	var loaded := ctx.saves.load_game(str(old["round"]))
+	assert_eq(str(loaded["error"]), "incompatible", "als inkompatibel gemeldet, nicht als beschädigt")
+	assert_eq(FileAccess.get_file_as_string(path), bytes_before, "Datei unverändert")
+	assert_false(_files(ctx).any(func(n: String) -> bool: return n.contains(".corrupt-")), "nichts beiseitegelegt")
 
 
 func test_continue_screen_disables_resume_for_old_schema_save() -> void:

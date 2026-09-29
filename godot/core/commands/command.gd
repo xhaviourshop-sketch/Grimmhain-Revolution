@@ -19,6 +19,7 @@ const GM_CORRECTION := &"GmCorrection"
 const OVERRIDE_SHOWN_ROLE := &"OverrideShownRole"
 const AMALIA_SACRIFICE := &"AmaliaSacrifice"
 const NAME_WOLF := &"NameWolf"  ## Nekromant benennt am Tag geheim einen Wolf (E-19)
+const CONFIRM_ROLE_SHOWN := &"ConfirmRoleShown"  ## Person hat ihre Rolle gesehen (Rollenanzeige, Fortschritt gespeichert)
 const ACK_NOTICE := &"AckNotice"  ## privater Hinweis wurde der betroffenen Person gezeigt (DI-04, DI-06, DI-07)
 
 var type: StringName = &""
@@ -124,6 +125,11 @@ func to_dict() -> Dictionary:
 
 static func from_dict(d: Dictionary) -> Command:
 	return create(StringName(DictRead.get_string(d, "type")), DictRead.get_dict(d, "payload"))
+
+
+## Die Person `person_id` hat ihre Rolle gesehen und bewusst geschlossen (nicht: bloß geöffnet oder abgebrochen).
+static func confirm_role_shown(person_id: int) -> Command:
+	return create(CONFIRM_ROLE_SHOWN, {"person_id": person_id})
 
 
 ## Der Hinweis `notice_id` wurde gezeigt; er verlässt die Warteschlange.

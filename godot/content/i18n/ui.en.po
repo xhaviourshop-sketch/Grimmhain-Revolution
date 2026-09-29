@@ -3256,3 +3256,69 @@ msgstr "“The chain breaks: {target} dies along with {name}.”"
 
 msgid "ui.effect.shadow_link"
 msgstr "“The link takes hold: {target} dies in place of {replaced}.”"
+
+msgid "ui.cockpit.tools.roles"
+msgstr "Show roles"
+
+msgid "ui.cockpit.action.show_roles"
+msgstr "Show roles"
+
+msgid "ui.cockpit.roles.heading"
+msgstr "Show roles"
+
+msgid "ui.cockpit.roles.hint"
+msgstr "The game master keeps the device and shows one person their card. Showing every role before the first night is not required."
+
+msgid "ui.cockpit.roles.progress"
+msgstr "{done} of {total} people have seen their role."
+
+msgid "ui.cockpit.roles.person"
+msgstr "{seat} · {name}"
+
+msgid "ui.cockpit.roles.person_next"
+msgstr "{seat} · {name} (next)"
+
+msgid "ui.cockpit.roles.person_done"
+msgstr "{seat} · {name} (seen)"
+
+msgid "ui.cockpit.roles.next_marker"
+msgstr "Continue with this person:"
+
+msgid "ui.cockpit.roles.done"
+msgstr "Done"
+
+msgid "ui.cockpit.roles.front.heading"
+msgstr "Card for {seat} · {name}"
+
+msgid "ui.cockpit.roles.front.text"
+msgstr "Only {name} looks at the screen now. Then tap “Show role”."
+
+msgid "ui.cockpit.roles.reveal"
+msgstr "Show role"
+
+msgid "ui.cockpit.roles.cancel"
+msgstr "Cancel"
+
+msgid "ui.cockpit.roles.card.heading"
+msgstr "Your role, {name}"
+
+msgid "ui.cockpit.roles.role_value"
+msgstr "{role}"
+
+msgid "ui.cockpit.roles.confirm"
+msgstr "Seen, close card"
+
+msgid "ui.cockpit.roles.close_unconfirmed"
+msgstr "Close without confirming"
+
+msgid "ui.cockpit.roles.close"
+msgstr "Close card"
+
+msgid "ui.gm.command.confirm_role_shown"
+msgstr "Role shown: {names}"
+
+msgid "ui.log.event.role_shown_confirmed"
+msgstr "#{index} Role shown ({visibility})"
+
+msgid "ui.cockpit.error.role_already_confirmed"
+msgstr "Error: This person has already seen their current role. Nothing was changed."

@@ -102,7 +102,11 @@ func _start_night(next: Dictionary, context: Dictionary) -> void:
 	_heading("ui.cockpit.card.start_night.heading", {"number": int(context.get("night_number", 0)) + 1})
 	_read_aloud("ui.call.night_falls_revival" if bool(next.get("revival_round", false)) else "ui.call.night_falls", {})
 	_text("ui.cockpit.card.start_night.do" if bool(next.get("first")) else "ui.cockpit.card.start_night.do_next")
-	_actions([_button("StartNightButton", "ui.cockpit.action.start_night", GrimmButton.Kind.PRIMARY, &"start_night")])
+	var buttons: Array[Control] = [_button("StartNightButton", "ui.cockpit.action.start_night", GrimmButton.Kind.PRIMARY, &"start_night")]
+	if bool(next.get("first")):
+		# Optional, keine Voraussetzung für die erste Nacht: Rollen gezielt zeigen.
+		buttons.append(_button("ShowRolesButton", "ui.cockpit.action.show_roles", GrimmButton.Kind.SECONDARY, &"show_roles"))
+	_actions(buttons)
 
 
 ## Tarnaufrufe (DI-02): Rollen, die vor dem nächsten echten Schritt nur angesagt werden. Sie führen nichts aus.
