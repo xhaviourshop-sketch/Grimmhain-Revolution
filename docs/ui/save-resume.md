@@ -31,6 +31,8 @@ Schlägt ein Schritt fehl, meldet `SaveService.status_changed` den Fehler; die l
 | unvollständige `.tmp` | wird als `.tmp.corrupt-<zeit>` beiseitegelegt; die Datei wird geladen |
 | beschädigte Datei | wird nie überschrieben, sondern als `.corrupt-<zeit>` beiseitegelegt; die Sicherung wird geladen (Hinweis) |
 | Datei und Sicherung beschädigt | Fehlermeldung, Sitzung bleibt leer, nichts wird gelöscht |
+| beschädigte Datei ohne Sicherung (erster Stand) | Fehlermeldung, Datei beiseitegelegt, Sitzung bleibt leer |
+| beschädigte Sicherung, intakte Datei | Datei wird geladen, Sicherung bleibt unverändert |
 
 Beim Wechsel zu einer anderen Partie fragt „Fortsetzen“ nach, wenn der letzte Stand der laufenden Partie nicht gespeichert werden konnte. „Verwerfen …“ fragt nach und benennt die Dateien nur um (`.discarded-<zeit>`); nichts wird gelöscht.
 
@@ -38,5 +40,7 @@ Beim Wechsel zu einer anderen Partie fragt „Fortsetzen“ nach, wenn der letzt
 
 - Eine Sicherung (`.bak`), keine längere Checkpoint-Rotation.
 - Die Liste zeigt die acht neuesten Partien; ältere bleiben auf dem Datenträger.
+- Wiederholbare Schritte (nach Rückgängig) werden nicht gespeichert und entfallen beim Neustart.
+- Testspielstände liegen in eigenen Verzeichnissen `user://test-saves-*` und werden nach jedem Test entfernt; `user://saves` wird von Tests nicht berührt.
 - Ältere Schemaversionen werden nicht migriert, sondern mit Meldung abgelehnt (`StateCodec`).
 - Nicht auf einem Tablet geprüft (Speicherort, Rechte, App-Beendigung durch das System). Headless geprüft sind unterbrochenes Schreiben an jedem Schritt, beschädigte Dateien, Wiederaufnahme offener Prompts und identisches Replay (`tests/ui/test_save_service.gd`).

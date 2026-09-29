@@ -25,6 +25,8 @@ Erreichbar: Hauptmenü → „Neue Partie“ → Setup bis „Partie starten“,
 - Rollen, Protokoll, Morgendetails und geheime Tagesaktionen (Amalia, Nekromant) stehen in Ebenen, die erst beim Öffnen gebaut und beim Schließen, beim Sichtschutz, bei Zurück und beim Verlassen der Ansicht entfernt werden. Tippen neben die Schublade schließt sie.
 - „Karte zeigen“ (Informationsrollen) und „Ansagekarte zeigen“ (Morgen) ersetzen das Cockpit vollständig und zeigen nur eine Positivliste: beim Orakel das gezeigte Ergebnis ohne Wahrheit, beim Morgen nur Namen der Toten (Rolle nur mit Setup-Option), Wiederbelebte und ausdrücklich öffentliche Hinweise.
 - Sichtschutz blendet das ganze Cockpit aus und entfernt offene Ebenen. Rückkehr per Button „Cockpit wieder anzeigen“ (Abweichung von `02` §8 „Rückkehr nur über Halten“: kein Halten ohne Gerätetest).
+- Die zeigbaren Ebenen erhalten nur ihre öffentlichen Daten: „Karte zeigen“ nur Rolle des Schritts und Positivliste, die Ansagekarte nur den öffentlichen Teil des Morgenberichts. Das Protokoll trägt denselben Warnhinweis wie der Rollenbereich, weil es alle geheimen Ereignisse enthält.
+- **Grenzen (Review 29.09.2026, nicht entschieden):** Dass eine Reaktion offen ist, bleibt für Mitlesende erkennbar, obwohl ihr Inhalt verdeckt ist: Der Regelkern bleibt dann in der Phase „Morgengrauen“, die Hinweiszeile nennt offene Reaktionen, und statt des Morgenberichts erscheint eine verdeckte Karte. Das zu verbergen, wäre eine Produktentscheidung. Die aufgedeckte Rolle eines Toten ist seine aktuelle Rolle; ändert sie sich nach dem Tod (etwa per Korrektur), zeigt der Bericht die neue Rolle.
 
 ## Ablauf
 
@@ -58,7 +60,7 @@ Texte: `ui.call.<rolle>` (Vorlesetext), `ui.prompt.<besitzer>.<stufe>` (Anweisun
 
 Werkzeug „Spielleitung“ öffnet eine private Ebene:
 
-- **Verlauf:** „Rückgängig: …“ und „Wiederholen: …“ mit Klartext des Befehls (etwa „Antwort im Schritt Waldhexe (Heiltrank)“) und Rückfrage. Grundlage ist die gespeicherte Befehlsfolge: Rückgängig spielt alle Befehle bis auf den letzten erneut ab (deterministisches Replay), Wiederholen wendet den zurückgenommenen Befehl erneut über den Regelkern an. Genau ein Befehl je Schritt, wie in Vertical Slice §10 festgelegt; mehrstufige Aktionen gehen Stufe für Stufe zurück. `StartGame` ist nicht rücknehmbar, ein neuer Befehl verwirft Wiederholbares, nach Rückgängig/Wiederholen wird gespeichert, und Rückgängig funktioniert auch nach einem Neustart.
+- **Verlauf:** „Rückgängig: …“ und „Wiederholen: …“ mit Klartext des Befehls (etwa „Antwort im Schritt Waldhexe (Heiltrank)“) und Rückfrage. Grundlage ist die gespeicherte Befehlsfolge: Rückgängig spielt alle Befehle bis auf den letzten erneut ab (deterministisches Replay), Wiederholen wendet den zurückgenommenen Befehl erneut über den Regelkern an. Genau ein Befehl je Schritt, wie in Vertical Slice §10 festgelegt; mehrstufige Aktionen gehen Stufe für Stufe zurück. `StartGame` ist nicht rücknehmbar, ein neuer Befehl verwirft Wiederholbares, nach Rückgängig/Wiederholen wird gespeichert, und Rückgängig funktioniert auch nach einem Neustart. Wiederholbares wird nicht gespeichert und entfällt beim Neustart. Eine offene Tages- oder Korrekturbedienung (etwa eine Prüfkarte mit Vorschau) verfällt beim Rückgängig. Rückgängig setzt nur den Spielstand zurück: Was bereits gezeigt oder angesagt wurde, bleibt den Spielern bekannt; die Rückfrage sagt das ausdrücklich.
 - **Korrekturen:** Person töten (mit oder ohne Todesfolgen, Pflichtwahl), Person wiederbeleben, Rolle ändern, Status ändern (Nominierungsstatus jeder Person; Tränke der Waldhexe, Spiegelung des Spiegelwolfs, Scheinrolle des Trugbilderwolfs je nach Rolle, angezeigt als „Feld: aktuell → neu“), Hinrichten ohne Nominierung (nur während der Tagesaktionen, mit derselben Prüfkarte wie die normale Hinrichtung) und Sieger erklären. Ablauf: Art wählen → Person im Sitzkreis → Pflichtangaben → Warnung mit Pflichtbegründung → Befehl `GmCorrection`. Danach zeigt die Ebene „Letzte Korrektur: das hat sich geändert“ mit den Ereignissen dieses Befehls; das Protokoll enthält Begründung, alten und neuen Wert.
 - **Partie:** „Zum Hauptmenü“ (Partie bleibt gespeichert) und „Partie beenden und verwerfen …“ (rote Rückfrage; Dateien werden nur umbenannt).
 
@@ -92,7 +94,11 @@ DR-04 verlangt die Option im Setup. Sie fehlte bisher; sie steht jetzt im Rollen
 
 ## Abdeckung der Rollen über die Oberfläche
 
-Grundlage: `tests/ui/test_prompt_coverage.gd` spielt 142 Partien mit allen 71 implementierten Rollen ausschließlich mit den Daten der Karte und löst jeden Prompt; seltene Reaktionen (Ritter bei Gleichstand, Schmiedewaffe) und die gestohlene Fähigkeit des Grabräubers sind gezielt geprüft. Tagesmechaniken prüft `tests/ui/test_cockpit_day.gd`. „Bedienbar“ heißt: headless über die Kartendaten und Buttons geprüft, nicht auf einem Tablet.
+Grundlage: `tests/ui/test_prompt_coverage.gd` spielt 142 Partien mit allen 71 implementierten Rollen ausschließlich mit den Daten der Karte und löst jeden Prompt; seltene Reaktionen (Ritter bei Gleichstand, Schmiedewaffe) und die gestohlene Fähigkeit des Grabräubers sind gezielt geprüft. Tagesmechaniken prüft `tests/ui/test_cockpit_day.gd`. „Bedienbar“ heißt: Jeder Prompt der Rolle ist headless mit den Daten der Karte beantwortbar (zufällige Antworten, nach einer Ablehnung durch den Regelkern bis zu zehn weitere Versuche), und die Karte hat für jede Kombination eigene Bedienelemente und Texte. Es heißt nicht, dass für jede Rolle eine konkrete Aktion mit ihrem erwarteten Ergebnis über Buttons geprüft ist; das gilt nur für die ausdrücklich getesteten Abläufe (erste Nacht mit Schutzengel, Waldhexe, Orakel, Sensenträger, Tag, Spiegelwolf, Weiser, Amalia, Nekromant, Ritter, Schmied, Grabräuber, vollständige Partie). Die Wirkung der Rollen selbst prüfen die Regelkern-Tests. Nicht auf einem Tablet geprüft.
+
+Bekannte Bediengrenze: Die Karte kennt nur Mindest- und Höchstzahl. Wo der Regelkern „genau n oder keiner“ verlangt (Loki, Seelentauscher, Kutscher, Spürhund) oder mindestens einen Wolf (Traumdeuter, Kopfgeldjäger), lässt „Auswahl bestätigen“ auch unpassende Teilauswahlen zu; der Regelkern lehnt sie mit Fehlermeldung ab, nichts ändert sich. Die Anweisung der Karte nennt die Regel. Im Abdeckungslauf traten 178 solche Ablehnungen (`invalid_target_count`) auf.
+
+Spezialkorrekturen für Schutz und Rettung der laufenden Nacht, Wolfskind und Lehrling haben keine eigene Oberfläche (siehe oben). Die Oberfläche ist daher für diese Korrekturen nicht vollständig.
 
 | Rolle | Name | Prompt-Formen (Stufe → Antwortart) | Weitere Mechanik | Oberfläche |
 |---|---|---|---|---|
@@ -202,9 +208,9 @@ Worauf bei der Abnahme achten: Lesbarkeit der Namen bei 24 Personen, Größe und
 | `test_cockpit_screen` | Sitzkreis, Nacht über Buttons, verdeckte Reaktion, privater Bereich, Sichtschutz, gezeigte Karte, Begründungsdialog, Mehrfachtippen, Zurück, Layout 6/24 Personen bei 1024×768, 1280×800, 1920×1080 mit langen Namen, Morgenbericht mit und ohne Rollenaufdeckung |
 | `test_prompt_coverage` | Bedienbarkeit aller Prompt-Arten, eigene Texte je Kombination, Ritter und Schmied |
 | `test_morning_report` | Positivliste, private Ursachen und Rettungen, Rollenaufdeckung |
-| `test_cockpit_day` | Nominierung, Hinrichtung mit Prüfkarte, Spiegelwolf, Weiser, Amalia, Nekromant, keine Hinrichtung, Sieg |
+| `test_cockpit_day` | Nominierung, Hinrichtung mit Prüfkarte, Spiegelwolf, Weiser, Amalia, Nekromant, keine Hinrichtung, Sieg, keine veraltete Prüfkarte nach Rückgängig |
 | `test_full_round_ui` | vollständige Partie nur über Buttons bis zum bestätigten Sieg |
-| `test_undo` | Rückgängig = Replay der verkürzten Folge, Wiederholen gleicher Hash, mehrstufige Prompts, bestätigter Sieg, Speichern |
+| `test_undo` | Rückgängig = Replay der verkürzten Folge, Wiederholen gleicher Hash, mehrstufige Prompts, bestätigter Sieg, Speichern, Ereignisverlauf und entfallenes Wiederholen nach Neustart |
 | `test_cockpit_polish` | Tag/Nacht-Hintergrund, Einblenden und Abbruch, reduzierte Bewegung, Fokus nach Aktionen, Anschlussstellen, Kartenbreite bei 1024×768 DE/EN |
 | `test_cockpit_gm` | Korrekturen mit Warnung, Begründung, Protokoll und Änderungsanzeige, Rückgängig/Wiederholen mit Klartext, Hinrichtung ohne Nominierung, Sieger erklären, Verwerfen |
 

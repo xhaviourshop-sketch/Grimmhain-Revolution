@@ -206,3 +206,13 @@ Inhalt: Cockpit mit echter Partie (Sitzkreis ohne Rollen, Phasenleiste, Ansageka
 Verifiziert (Windows, Godot 4.7.2, nur headless): 832 Tests grün, Exit 0, keine SCRIPT-ERROR-/ERROR-Zeilen; Assetregister Exit 0, darunter eine vollständige Partie nur über Buttons bis zum bestätigten Sieg und 142 Partien mit allen Rollen nur über Kartendaten. Keine grafische, Touch- oder Tablet-Prüfung.
 Offen: Kartenschlucker und Totenkarten (RM-DR-013, RM-DR-141.4, RM-DR-143.x); Rollen zeigen (`ConfirmRoleShown`); Spezialkorrekturen ohne eigene Oberfläche; visuelle Abnahme am Tablet.
 Nächster Schritt: gemeinsame Tablet-Abnahme des Cockpits (Anleitung in `docs/ui/cockpit.md`), danach Rollen-zeigen-Modus.
+
+---
+
+## 2026-09-29 — Review PR #3 (Fehler, Geheimhaltung, Speichern, Undo)
+Status: Korrekturen auf `feature/night-ui-expansion`, nicht nach main gemergt.
+Behoben: (1) Nach Rückgängig/Wiederholen blieb eine offene Tages- oder Korrekturbedienung stehen, etwa die Hinrichtungs-Prüfkarte mit Vorschau des alten Zustands; sie verfällt jetzt (`test_cockpit_day::test_undo_drops_open_execution_check`, vorher rot). (2) Die Rückfrage zu Rückgängig sagt jetzt, dass nur der Spielstand zurückgesetzt wird und Gezeigtes bekannt bleibt. (3) Das Protokoll trägt den Warnhinweis „Nur Spielleitung“. (4) „Karte zeigen“ und die Ansagekarte erhalten nur noch Positivliste bzw. öffentlichen Berichtsteil statt des ganzen Prompts/Berichts (Absicherung, vorher keine sichtbare Lücke).
+Zusätzlich abgesichert (grün ab Beginn): beschädigte Datei ohne Sicherung, beschädigte Sicherung bei intakter Datei, Spielende mitten in der Nacht mit Neustart und Rückgängig, Rückgängig mit Neustart (Ereignisverlauf, kein Wiederholen). Testrunner-Gegenprobe: Laufzeitfehler nach bestandener Prüfung (synchron und nach `await`) ergibt FAIL und Exit 1; Probedateien entfernt.
+Verifiziert (Windows, Godot 4.7.2, headless): 837 Tests, 0 fehlgeschlagen, Exit 0; Assetregister Exit 0; Rollendoku-Prüfer Exit 0; `git diff --check` Exit 0. Keine grafische, Touch- oder Tablet-Prüfung.
+Grenzen (dokumentiert in `docs/ui/cockpit.md`): offene Reaktion ist am Morgen/Tag erkennbar (Phase, Hinweis, verdeckte Karte); aufgedeckte Rolle eines Toten ist seine aktuelle Rolle; Karte lässt Teilauswahlen zu, die der Kern ablehnt (Loki, Seelentauscher, Kutscher, Spürhund); „bedienbar“ = mit Kartendaten lösbar, nicht je Rolle mit erwartetem Ergebnis über Buttons geprüft; Spezialkorrekturen (Schutz, Rettung, Wolfskind, Lehrling) ohne Oberfläche.
+Nächster Schritt: manueller PC-Fenstertest, danach Export-/Installationsweg für den iPad-Test klären.
