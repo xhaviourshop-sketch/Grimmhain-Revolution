@@ -19,6 +19,7 @@ const GM_CORRECTION := &"GmCorrection"
 const OVERRIDE_SHOWN_ROLE := &"OverrideShownRole"
 const AMALIA_SACRIFICE := &"AmaliaSacrifice"
 const NAME_WOLF := &"NameWolf"  ## Nekromant benennt am Tag geheim einen Wolf (E-19)
+const ACK_NOTICE := &"AckNotice"  ## privater Hinweis wurde der betroffenen Person gezeigt (DI-04, DI-06, DI-07)
 
 var type: StringName = &""
 var payload: Dictionary = {}
@@ -123,6 +124,11 @@ func to_dict() -> Dictionary:
 
 static func from_dict(d: Dictionary) -> Command:
 	return create(StringName(DictRead.get_string(d, "type")), DictRead.get_dict(d, "payload"))
+
+
+## Der Hinweis `notice_id` wurde gezeigt; er verlässt die Warteschlange.
+static func ack_notice(notice_id: int) -> Command:
+	return create(ACK_NOTICE, {"notice_id": notice_id})
 
 
 ## Nekromant `player_id` benennt am Tag `target_id` als Werwolf (höchstens einmal je Tag, geheim).

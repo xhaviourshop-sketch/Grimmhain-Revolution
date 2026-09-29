@@ -62,6 +62,9 @@ static func start_curse(ctx: RuleContext, sage_id: int, length: int) -> void:
 		s.sage_curse_from = first
 	s.sage_curse_to = maxi(s.sage_curse_to, s.day_number + length)
 	ctx.emit(GameEvent.SAGE_CURSED, Visibility.GM, {"sage_id": sage_id, "length": length, "from": s.sage_curse_from, "to": s.sage_curse_to})
+	# DI-03: Der Fluch ist ein Todeseffekt und wird angesagt, mit Rolle, aber ohne Länge (Randfall offen).
+	ctx.emit(GameEvent.DEATH_EFFECT, Visibility.PUBLIC, {"effect": "sage_curse", "source_id": sage_id,
+		"role_id": String(s.players[sage_id].role_id), "target_id": GameState.NO_TARGET, "replaced_id": GameState.NO_TARGET})
 
 
 ## Schutzgeist: Nacht, in der die tote Person handelt (die erste nach ihrem Tod).

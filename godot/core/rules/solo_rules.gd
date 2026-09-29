@@ -55,6 +55,17 @@ static func pest_wins(s: GameState, id: int) -> bool:
 	return p != null and p.alive and p.role_id == RoleCatalog.PESTBRINGERIN and not _others_alive(s, id).is_empty() and pest_targets(s, id).is_empty()
 
 
+## Alle lebenden verzauberten Personen, aufsteigend (Rattenfänger, DI-06).
+static func charmed_living(s: GameState) -> Array[int]:
+	var out: Array[int] = []
+	for c: Dictionary in s.charms:
+		var id := int(c["target_id"])
+		if s.players[id].alive and not out.has(id):
+			out.append(id)
+	out.sort()
+	return out
+
+
 static func infect(s: GameState, id: int) -> void:
 	if not s.infected.has(id):
 		s.infected.append(id)
@@ -74,6 +85,8 @@ static func spread(ctx: RuleContext) -> void:
 		var fresh := not s.infected.has(target)
 		infect(s, target)
 		ctx.emit(GameEvent.PLAGUE_SPREAD, Visibility.GM, {"from_id": id, "target_id": target, "new": fresh, "night": s.night_number})
+		if fresh:
+			NoticeRules.queue(ctx, NoticeRules.PEST_INFECTED, [target] as Array[int])  # DI-07: auch nach der Ausbreitung
 
 
 static func prophet_marks_of(s: GameState, prophet_id: int) -> Array[int]:

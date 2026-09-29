@@ -299,6 +299,8 @@ func test_no_secrets_in_public_or_foreign_events() -> void:
 	for e: GameEvent in run.events:
 		if e.visibility == &"public":
 			public_count += 1
+			if is_death_effect_exception(e):
+				continue  # DI-03: angesagter Todeseffekt, ausdrückliche Ausnahme
 			var leak := _find_forbidden(e.data)
 			assert_eq(leak, "", "öffentliches %s ohne Geheimnis" % e.type)
 		elif e.visibility == &"actor":

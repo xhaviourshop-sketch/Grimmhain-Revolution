@@ -16,7 +16,7 @@ extends RefCounted
 
 ## `pierce`: Angriff durchdringt Schutzengel, Waldhexenrettung und Dorfwache (RM-DR-005), keine Schilde.
 ## `chain`: bereits betroffene Personen dieser Umlenkungskette (E-20: jede Person höchstens einmal).
-static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true, pierce: bool = false, chain: Array[int] = []) -> KillEvent:
+static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true, pierce: bool = false, chain: Array[int] = [], shadow: bool = false) -> KillEvent:
 	var s := ctx.state
 	var target: Player = s.players.get(target_id)
 	if target == null or not target.alive:
@@ -45,13 +45,13 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		SoloRules.drop_priest_doll(s, target_id)
 		ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": target_id, "cause": cause, "source_kind": source_kind,
 			"protection": RoleCatalog.VOODOO, "sources": [RoleCatalog.VOODOO], "redirected_to": doll, "night": s.night_number})
-		return request_kill(ctx, doll, cause, source_kind, source_id, trigger_effects, pierce, next_chain)
+		return request_kill(ctx, doll, cause, source_kind, source_id, trigger_effects, pierce, next_chain, shadow)
 	# Schattenwanderer (B-04, B-07): ein tatsächlicher Tod trifft stattdessen die verknüpfte Person.
 	var swapped := BondRules.shadow_partner(s, target_id, source_kind, next_chain)
 	if swapped != GameState.NO_TARGET:
 		ctx.emit(GameEvent.KILL_PREVENTED, Visibility.GM, {"target_id": target_id, "cause": cause, "source_kind": source_kind,
 			"protection": RoleCatalog.SCHATTENWANDERER, "sources": [RoleCatalog.SCHATTENWANDERER], "redirected_to": swapped, "night": s.night_number})
-		return request_kill(ctx, swapped, cause, source_kind, source_id, trigger_effects, pierce, next_chain)
+		return request_kill(ctx, swapped, cause, source_kind, source_id, trigger_effects, pierce, next_chain, true)
 	var dead_before := s.players.size() - s.alive_ids().size()  # nur aktuell Tote (RM-DR-138.3)
 	var record := KillEvent.new()
 	record.target_id = target_id
@@ -70,6 +70,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	var died := record.to_dict()
 	died["role_id"] = String(target.role_id)
 	ctx.emit(GameEvent.SEAT_DIED, Visibility.GM, died)
+	_announce_effects(ctx, record, target, chain, shadow)
 	SoloRules.fate_record_death(s, target_id)
 	ApprenticeRules.on_own_death(s, target_id)
 	if trigger_effects:
@@ -88,6 +89,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	SoloRules.necro_drop_shields(s, target.id)
 	SoloRules.hades_on_death(ctx, target, source_kind)
 	SoloRules.grave_drop(s, target.id)
+	NoticeRules.on_death(ctx, target.id)
 	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
 	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:
@@ -98,6 +100,36 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	SoloRules.fire_on_death(ctx, target, trigger_effects)
 	WinRules.record_provisional(ctx, record)
 	return record
+
+
+## Sichtbare Todesfolgen, die öffentlich angesagt werden (DI-03, Antwort des Product Owners vom 29.09.2026):
+## Ursache → Effekt und ob die Rolle der Quelle genannt wird. Liebeskummer und Kette nennen keine Rolle
+## (Auslegung: Mindestangabe, die Rollen der beiden Personen bleiben verdeckt). Die Ansage entsteht erst,
+## wenn der Tod tatsächlich eintritt; sie enthält nie Ursache, Schutz oder Markierungen.
+const PUBLIC_EFFECTS := {
+	KillEvent.CAUSE_HUNTER_SHOT: {"effect": &"reaper_curse", "role": true},
+	KillEvent.CAUSE_KNIGHT_STRIKE: {"effect": &"knight_strike", "role": true},
+	KillEvent.CAUSE_POSSESSED_DRAG: {"effect": &"possessed_drag", "role": true},
+	KillEvent.CAUSE_COACHMAN_CRASH: {"effect": &"coachman_crash", "role": true},
+	KillEvent.CAUSE_LOVER_HEARTBREAK: {"effect": &"heartbreak", "role": false},
+	KillEvent.CAUSE_RED_CHAIN: {"effect": &"red_chain", "role": false},
+}
+
+
+## Öffentliche Ansage direkt nach `SeatDied`. `chain`: bereits betroffene Personen einer Umlenkungskette; die
+## ursprünglich gewählte Person steht vorn. Bei einer Umlenkung durch den Schattenwanderer nennt die
+## Wirkung die gewählte Person, danach die Verknüpfung, wer stattdessen gestorben ist.
+static func _announce_effects(ctx: RuleContext, record: KillEvent, target: Player, chain: Array[int], shadow: bool) -> void:
+	var intended := chain[0] if not chain.is_empty() else target.id
+	if PUBLIC_EFFECTS.has(record.cause) and record.source_kind == KillEvent.SOURCE_PLAYER:
+		var spec: Dictionary = PUBLIC_EFFECTS[record.cause]
+		var source: Player = ctx.state.players.get(record.source_id)
+		var role := String(source.role_id) if bool(spec["role"]) and source != null else ""
+		ctx.emit(GameEvent.DEATH_EFFECT, Visibility.PUBLIC, {"effect": String(spec["effect"]), "source_id": record.source_id,
+			"role_id": role, "target_id": intended, "replaced_id": GameState.NO_TARGET})
+	if shadow:
+		ctx.emit(GameEvent.DEATH_EFFECT, Visibility.PUBLIC, {"effect": "shadow_link", "source_id": GameState.NO_TARGET,
+			"role_id": "", "target_id": target.id, "replaced_id": intended})
 
 
 ## Abfangstufe: Schutz eines Schutzengels und Rettung einer Waldhexe dieser Nacht

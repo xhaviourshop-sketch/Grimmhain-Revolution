@@ -523,7 +523,9 @@ func _check_after(before: GameState, s: GameState, events: Array[GameEvent], lab
 		if e.type == GameEvent.SEAT_DIED:
 			var key := "cause:" + String(e.data["cause"])
 			_seen[key] = int(_seen.get(key, 0)) + 1
-		if e.visibility == Visibility.PUBLIC:
+		if e.visibility == Visibility.PUBLIC and is_death_effect_exception(e):
+			pass  # DI-03: angesagter Todeseffekt, ausdrückliche Ausnahme mit fester Positivliste
+		elif e.visibility == Visibility.PUBLIC:
 			var leak := _find_forbidden(e.data)
 			assert_eq(leak, "", "%s: öffentliches %s ohne Geheimnis" % [label, e.type])
 		elif e.visibility == Visibility.ACTOR:

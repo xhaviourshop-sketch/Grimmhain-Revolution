@@ -295,6 +295,16 @@ const ROLES := {
 }
 
 
+## Direkte Wiederbelebungsrollen (DI-01): Sie lösen die Wiederbelebungsrunde aus. Erbe (Lehrling), Tausch
+## (Seelentauscher), Diebstahl (Grabräuber) und Spielleiterkorrekturen tun das ausdrücklich nicht.
+## Totenkarten sind noch nicht definiert (RM-DR-013) und stehen hier bewusst nicht.
+const REVIVAL_ROLES: Array[StringName] = [KUTSCHER, FRANKENSTEIN]
+
+
+static func is_revival_role(role_id: StringName) -> bool:
+	return REVIVAL_ROLES.has(role_id)
+
+
 static func has_role(role_id: StringName) -> bool:
 	return ROLES.has(role_id)
 

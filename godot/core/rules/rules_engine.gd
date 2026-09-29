@@ -93,6 +93,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 				return &"reason_required"
 		Command.GM_CORRECTION:
 			return GmCorrections.validate(s, p)
+		Command.ACK_NOTICE:
+			return NoticeRules.validate_ack(s, p)
 		Command.OVERRIDE_SHOWN_ROLE:
 			return OracleStep.validate_override(s, p)
 		Command.AMALIA_SACRIFICE:
@@ -115,8 +117,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 
 
 static func _validate_start_game(p: Dictionary) -> StringName:
-	if p.has("reveal_role_on_death") and not p["reveal_role_on_death"] is bool:
-		return &"invalid_reveal_setting"  # DR-04: optional, nur Ja/Nein
+	if p.has("reveal_role_on_death"):
+		return &"reveal_option_removed"  # DI-01: Die Aufdeckung folgt der Startbesetzung, keine freie Option mehr
 	if not DictRead.is_int_like(p.get("seed")) or int(p["seed"]) < 0 or int(p["seed"]) > CanonicalJson.MAX_SAFE_INT:
 		return &"invalid_seed"
 	var players := DictRead.get_array(p, "players")
@@ -348,6 +350,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			_start_game(ctx, p)
 		Command.START_NIGHT:
 			_start_night(ctx)
+		Command.ACK_NOTICE:
+			NoticeRules.ack(ctx, p)
 		Command.ANSWER_PROMPT:
 			if s.pending_prompt.owner == PendingPrompt.OWNER_WITCH:
 				WitchStep.answer(ctx, p)
@@ -489,7 +493,6 @@ static func _judge_nominations(ctx: RuleContext) -> void:
 static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	s.round_id = DictRead.get_string(p, "round_id")
-	s.reveal_role_on_death = DictRead.get_bool(p, "reveal_role_on_death")
 	s.rng = SeededRng.new(int(p["seed"]))
 
 	var names := {}
@@ -521,6 +524,9 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		if player.role_id == RoleCatalog.WOLFSKIND:
 			WolfChildRules.create_bond(s, player.id)
 	s.seat_order = DictRead.to_int_array(DictRead.get_array(p, "seat_order"))
+	# DI-01: Wiederbelebungsrunde nur aus der Startbesetzung (direkte Wiederbelebungsrollen); Erbe, Tausch,
+	# Diebstahl und Korrekturen ändern sie nie. Sie bleibt die ganze Partie stabil.
+	s.revival_round = s.players.values().any(func(pl: Player) -> bool: return RoleCatalog.is_revival_role(pl.original_role_id))
 
 	ctx.emit(GameEvent.GAME_STARTED, Visibility.GM, {
 		"round_id": s.round_id,
@@ -529,7 +535,7 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		"player_ids": ids,
 		"seat_order": s.seat_order,
 		"assignment": DictRead.get_string(p, "assignment"),
-		"reveal_role_on_death": s.reveal_role_on_death,
+		"revival_round": s.revival_round,
 	})
 	for id: int in ids:
 		ctx.emit(GameEvent.ROLE_ASSIGNED, Visibility.ACTOR, {"player_id": id, "role_id": s.players[id].role_id}, id)
@@ -597,11 +603,14 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			for id: int in targets:
 				s.charms.append({"piper_id": prompt.actor_id, "target_id": id})
 			ctx.emit(GameEvent.CHARMED, Visibility.GM, {"piper_id": prompt.actor_id, "target_ids": targets.duplicate(), "night": s.night_number})
+			NoticeRules.queue(ctx, NoticeRules.PIPER_NEW, targets)  # DI-06: erst die neu Verzauberten, dann alle
+			NoticeRules.queue(ctx, NoticeRules.PIPER_ALL, SoloRules.charmed_living(s))
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_PEST:
 			SoloRules.infect(s, target)
 			ctx.emit(GameEvent.INFECTED, Visibility.GM, {"pest_id": prompt.actor_id, "target_id": target, "night": s.night_number})
+			NoticeRules.queue(ctx, NoticeRules.PEST_INFECTED, [target] as Array[int])  # DI-07
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_PROPHET:

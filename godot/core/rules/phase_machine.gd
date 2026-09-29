@@ -25,7 +25,7 @@ static func can_enter(from: StringName, to: StringName) -> bool:
 
 ## Befehle, die während einer fälligen Pflichtreaktion zulässig sind.
 const ALLOWED_WHILE_REACTION: Array[StringName] = [
-	Command.BEGIN_STEP, Command.ANSWER_PROMPT, Command.SKIP_STEP, Command.CANCEL_PROMPT, Command.GM_CORRECTION,
+	Command.BEGIN_STEP, Command.ANSWER_PROMPT, Command.SKIP_STEP, Command.CANCEL_PROMPT, Command.GM_CORRECTION, Command.ACK_NOTICE,
 ]
 
 
@@ -35,7 +35,7 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 		return &"game_over"
 	if StepQueue.reactions_due(state) and not ALLOWED_WHILE_REACTION.has(type):
 		return &"reaction_open"
-	if not state.open_candidates().is_empty() and type != Command.CONFIRM_WIN and type != Command.REJECT_WIN:
+	if not state.open_candidates().is_empty() and type != Command.CONFIRM_WIN and type != Command.REJECT_WIN and type != Command.ACK_NOTICE:
 		return &"win_candidate_open"
 	match type:
 		Command.START_GAME:
@@ -65,7 +65,7 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 		Command.CANCEL_PROMPT, Command.OVERRIDE_SHOWN_ROLE:
 			if state.pending_prompt == null:
 				return &"no_open_prompt"
-		Command.GM_CORRECTION:
+		Command.GM_CORRECTION, Command.ACK_NOTICE:
 			if not state.is_started():
 				return &"game_not_started"
 		Command.AMALIA_SACRIFICE, Command.NAME_WOLF:
