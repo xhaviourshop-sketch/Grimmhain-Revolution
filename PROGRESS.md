@@ -260,3 +260,13 @@ Umfang: (1) B-01: `Array.shuffle()` im Abdeckungstest nutzte den globalen Zufall
 Nicht umgesetzt: Geräte- und Touchabnahme, Layout-Umbau, Paket 3 (Buttonweg pro Rolle). Offen: siehe Matrix (`docs/masterplan/CODE-COMPLETION-MATRIX.md`).
 Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0; Vollsuite 956 Tests, 0 fehlgeschlagen, keine Laufzeitfehler, Exit 0 (vorher 917); `node tools/check-asset-register.js`, `node tools/role-migration/check-role-docs.js`, `python docs/content-drafts/check-coverage.py`, `node --test tests/check-role-docs.test.js tests/check-asset-register.test.js` jeweils Exit 0; `git diff --check` Exit 0. B-01: mit dem alten `shuffle()` rot (Gegenprobe), mit der Korrektur grün. Keine grafische, Touch- oder Tablet-Prüfung.
 Nächster Schritt: Paket 3 (Rollen- und Interaktionsprüfung bis zur Bedienung), nur nach ausdrücklichem Auftrag.
+
+---
+
+## 2026-09-29 — Paket 3: Rollenbedienung, Wechselwirkungen, Kombinationsanalyse
+Status: umgesetzt auf `feature/night-ui-expansion` (Ausgangs-HEAD `9883291`), PR #3 offen, kein Merge. Schema 14, Regelversion 0.12 unverändert.
+Umfang: Treiber `godot/tests/ui/role_ui_case.gd` (nur Sitzplätze, Kartenbuttons, Dialog); `test_role_buttons` (45 aktive Rollen), `test_role_passive_ui` (13, passive und Morgenbericht-Rollen), `test_role_operation_kinds` (Abbruch ohne Verbrauch, Doppeltippen je Antwortart, Undo, Rollenwechsel, Positivlisten von zwölf Zeigekarten); acht neue feste Wechselwirkungen in `test_role_interactions`; Fuzz unabhängig vom globalen Zufall; Analyse `docs/role-migration/12-role-combination-analysis.md` (A 0, B 0 offen, C 4, D 9).
+Fehler behoben: Stimmhinweise (Blutwolf, Korrupter Richter, RM-DR-008) wurden nie angezeigt; jetzt im privaten Spielleiterbereich.
+Nicht umgesetzt: Zufallsknopf R-06 (nicht beauftragt), Setup-Hinweise zu Kombinationen (Produktentscheidung offen), Geräte- und Touchabnahme.
+Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1028 Tests, 0 fehlgeschlagen, Exit 0 (vorher 956); Asset-Register, Rollendokumentprüfer, Inhaltsabdeckung und `node --test` (2 Prüfertests) jeweils Exit 0; `git diff --check` Exit 0. Gegenprobe: absichtlich verletzte Überspringen-Regel der Karte macht alle 5 Bedienarten-Tests rot. Keine grafische, Touch- oder Tablet-Prüfung.
+Nächster Schritt: Paket 4 (Wiederaufnahme, Geheimhaltung, Betriebsfehler), nur nach Auftrag.

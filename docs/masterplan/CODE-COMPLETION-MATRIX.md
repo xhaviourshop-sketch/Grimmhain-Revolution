@@ -4,6 +4,8 @@
 
 **Aktualisierung nach Paket 2 (29.09.2026):** Schema 14, Regelversion 0.12 unverändert. B-01 behoben (Testlebenszyklus), S-08 und N-06 umgesetzt und headless nachgewiesen, Vollsuite 956 Tests. Betroffene Zeilen sind unten gekennzeichnet; historische Angaben zum Ausgangsstand bleiben stehen.
 
+**Aktualisierung nach Paket 3 (29.09.2026):** R-02 alle 71 Rollen über echte Controls nachgewiesen (`test_role_buttons`, `test_role_passive_ui`, Bedienarten in `test_role_operation_kinds`), N-11 um acht feste Szenarien ergänzt, R-07 analysiert (`docs/role-migration/12-role-combination-analysis.md`), I-04 Positivlisten aller zwölf Informationsrollen geprüft. Ein Fehler behoben: Stimmhinweise (RM-DR-008) wurden nicht angezeigt. Headless, keine Geräteabnahme.
+
 Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch relevante funktionale Anforderung des Masterplans einem Code-, Test- und Paketbeleg zu. Sie implementiert nichts und ändert keine Regel.
 
 ## Wie diese Matrix zu lesen ist
@@ -61,19 +63,19 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 | N-08 | Öffentliche Ansage von Todeseffekten mit Rolle zum Ereigniszeitpunkt (DI-03) | Offline | AUTO | `GameEvent DeathEffect`, `morning_report.gd` | `test_death_effects`, `test_death_effect_lines` | keine | - | - |
 | N-09 | Private Hinweiskarten: Loki, Rattenfänger, Pestbringerin, Rotkäppchen, Trugbilderwolf (DI-04 bis DI-08) | Offline | AUTO | `core/rules/notice_rules.gd`, `AckNotice`, `cockpit_layers.gd` | `test_notices`, `test_notice_cards` | keine | - | - |
 | N-10 | Rollenaufdeckung beim Tod nur in Runden ohne Wiederbelebung | Offline | AUTO | `SeatDied.role_id`, `morning_report.gd` | `test_morning_report` | keine | - | - |
-| N-11 | Rollen mit Schutz-, Wiederbelebungs-, Umlenkungswirkung gegeneinander (Todespipeline, Ketten, Reihenfolge) | Offline | NACHWEIS | `core/rules/kill_pipeline.gd`, `protections.gd`, `role_transition.gd` | `test_role_interactions` (11 feste Szenarien), `test_role_interaction_fuzz`, Familien-Unit-Tests | Feste Szenarien nur für 11 Kombinationen; übrige Wechselwirkungen nur vom Fuzz-Generator abgedeckt | P3 | - |
+| N-11 | **Ergänzt in Paket 3.** Rollen mit Schutz-, Wiederbelebungs-, Umlenkungswirkung gegeneinander (Todespipeline, Ketten, Reihenfolge) | Offline | AUTO | `core/rules/kill_pipeline.gd`, `protections.gd`, `role_transition.gd` | `test_role_interactions` (19, davon 8 neu: Puppe als Dorfwache, gegenseitige Verknüpfung, Wirt mit Puppe, vier Siegkandidaten, öffentliche Todesrolle, Liebeskummer vor Reaktion mit Laden, Kutscher setzt Einsätze zurück, Seelentausch mit Scheinrolle), Familien-Unit-Tests (Zuordnung `docs/role-migration/11-role-audit-status.md` §4.2), Fuzz unabhängig vom globalen Zufall | Keine bekannte ungeprüfte Mechanikfamilie; keine Garantie für alle Paare | P3 erledigt | - |
 
 ### Rollen
 
 | ID | Funktion/Anforderung | Stufe | Status | Implementierungsbeleg | Testbeleg | Konkrete Restlücke | Paket | Voraussetzung / Entscheidung |
 |---|---|---|---|---|---|---|---|---|
 | R-01 | 71 Rollen im Regelkern | Offline | AUTO | `core/rules/role_catalog.gd` (71 Einträge), Regeldateien | je Rolle ein Einzeltest plus `test_role_interaction_fuzz` (alle 71) | keine | - | - |
-| R-02 | Alle 71 Rollen über die Oberfläche bedienbar (Buttonweg) | Offline | NACHWEIS | `action_card.gd` für alle Antwortarten | Button-Tests: 17 Rollen; Kartendaten-Test `test_prompt_coverage` (142 Partien): 41 Rollen; passiv: 11; Morgenbericht: 2 (siehe Rollentabelle) | Buttonweg für 41 Rollen nicht einzeln belegt; B-01 behoben (Paket 2, siehe Befunde) | **P3** | - |
+| R-02 | **Nachgewiesen in Paket 3.** Alle 71 Rollen über die Oberfläche bedienbar (Buttonweg) | Offline | AUTO | `action_card.gd` für alle Antwortarten, Treiber `tests/ui/role_ui_case.gd` (nur Sitzplätze, Kartenbuttons, Dialog) | 45 aktive Rollen je ein festes Szenario mit Ereignis- und Zustandsprüfung (`test_role_buttons`); 12 passive und Morgenbericht-Rollen über ihren Auslöser (`test_role_passive_ui`); frühere Button-Tests für 14 weitere; Bedienarten, Abbruch, Doppeltippen, Undo, Rollenwechsel (`test_role_operation_kinds`); Invarianten Überspringen/Verzicht/Abbrechen bei jeder Karte | Geräte- und Touchabnahme (GERÄT); Zufallsknopf R-06 | **P3** erledigt | - |
 | R-03 | Kartenschlucker (72. Rolle) | Karten | BLOCKIERT | nicht im `RoleCatalog`, im Setup nicht wählbar | keiner | Totenkartenmodell (RM-DR-013, RM-DR-143.1/.2) | P8 | **Nutzerentscheidung:** Kartenregeln (drei Auswahlfragen plus Freitext, siehe P8) |
 | R-04 | Totenkarten / Totenkarten-Assistent (Ziehen, Besitz, Tausch, Verbrauch) | Karten | BLOCKIERT | keiner; `docs/ui/cockpit.md`: „Totenreichkarten sind nicht definiert“ | keiner | gesamtes Kartenmodell | P8 | **Nutzerentscheidung**, gleiche wie R-03 |
 | R-05 | Frankenstein: Totenkarten-Bedingung | Karten | BLOCKIERT | Wiederbelebung bedienbar; Bedingung RM-DR-141.4 wird nicht geprüft; privater Bereich weist darauf hin | `test_revival_roles` (Wiederbelebung) | Bedingung fehlt | P8 | hängt an R-04 |
 | R-06 | Zufallsknopf nach RM-DR-015.2 (König, Traumdeuter, Kopfgeldjäger, Blutpriester) | Offline | TEIL | Spielleiterwahl vorhanden; `decision-status.csv` RM-DR-015.2 = E („Spielleiter wählt oder Zufallsknopf“); `docs/role-migration/11-role-audit-status.md` §0: „in keiner Rolle umgesetzt“ | Spielleiterwahl über `test_info_roles` | Zufallsknopf über gespeicherten Generator | P3 | entschieden; Zufall nur über gespeicherten Seed |
-| R-07 | Analyse unverträglicher Rollenkombinationen (vom Product Owner gewünscht, Setup-Regel vertagt) | Offline | FEHLT | keiner | keiner | Analyse und ggf. Setup-Warnung | P3 | **Nutzerentscheidung**, ob und als welche Setup-Regel |
+| R-07 | **Analysiert in Paket 3.** Analyse unverträglicher Rollenkombinationen (vom Product Owner gewünscht, Setup-Regel vertagt) | Offline | TEIL | `docs/role-migration/12-role-combination-analysis.md` | feste Szenarien D-1 bis D-9 | A: 0, B: 0 offen, C: 4 Balancehinweise (Kutscher unter 13 Personen, Voodoo-Puppe als Dorfwache, viele Einzelsiege, späte Schwellen); Setup-Hinweis nicht umgesetzt | P3 | **Nutzerentscheidung**, ob und als welche Setup-Regel |
 | R-08 | Regel-Linter (fehlende IDs, Texte, Nachtprioritäten, Tests) | Offline | TEIL | `test_role_model::test_presentation_has_every_role_in_both_languages`, `test_ui_i18n`, `tools/role-migration/check-role-docs.js` (nur lokal) | siehe Q-03 | Ein Prüfer für Nachtpriorität gegen Test je Rolle fehlt | P6 | - |
 
 ### Informationsschutz
@@ -83,7 +85,7 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 | I-01 | Cockpit-Sichten ohne Rollen; geheime Ebenen entstehen erst beim Öffnen, verschwinden beim Schließen/Sichtschutz | Offline | AUTO | `cockpit_view.gd`, `cockpit_layers.gd` | `test_cockpit_screen` (`_assert_no_roles`), `test_cockpit_model` | keine | - | - |
 | I-02 | Öffentliche Ereignisse ohne Rollen-, Ursachen- und Informationsdaten | Offline | AUTO | `core/model/visibility.gd` | Fuzz-Invariante in `test_role_interaction_fuzz`, `test_death_effect_lines`, `test_morning_report` | keine | - | - |
 | I-03 | Offene Reaktion für Mitlesende nicht erkennbar | Offline | BLOCKIERT | Kern bleibt in „Morgengrauen“, Hinweiszeile nennt offene Reaktionen (`cockpit.md`, „Grenzen (Review 29.09.2026, nicht entschieden)“) | dokumentiert, kein Test | Verbergen bräuchte eine Änderung am Phasen-/Anzeigekonzept | P4 | **Nutzerentscheidung:** akzeptieren oder verbergen |
-| I-04 | Zeigekarte für Informationsrollen zeigt nur Positivliste | Offline | NACHWEIS | `cockpit_layers.gd` (gezeigte Karte) | Positivliste einzeln geprüft nur für Orakel (`test_cockpit_screen`), Hinweiskarten (`test_notice_cards`), Morgen (`test_morning_report`) | 12 weitere Informationsrollen ohne eigenen Positivlisten-Test der Zeigekarte | P4 | - |
+| I-04 | **Nachgewiesen in Paket 3.** Zeigekarte für Informationsrollen zeigt nur Positivliste | Offline | AUTO | `cockpit_layers.gd` (gezeigte Karte) | Orakel (`test_cockpit_screen`), zwölf weitere Informationsrollen (`test_role_operation_kinds::test_show_cards_contain_only_the_positive_list`: nur Personen und Rollen aus `show`), Hinweiskarten, Morgen | - | P3 erledigt | - |
 | I-05 | Einzelne Spielerkarte je Person (Rolle, Nachtaktion) getrennt vom Gesamtzustand | Clients | FEHLT | keine Projektion pro Person außer Cockpit-Sicht und Hinweiskarte | keiner | Spielerprojektion (Masterplan Phase 5) | P9 | siehe L-02 |
 
 ### Speichern, Wiederaufnahme, Undo
@@ -168,74 +170,76 @@ Alle 71 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Re
 | `waldhexe` | ja (`waldhexe`) | B | ja (15) | Fuzz-Invariante J; Undo rollenspezifisch getestet | Kern-Test, UI-Positivliste nicht einzeln | Korrektur der Rettung und des Tranks: Oberfläche seit Paket 2 |
 | `das-orakel` | ja (`orakel`) | B | ja (16) | Fuzz-Invariante J; Undo rollenspezifisch getestet | Positivliste (UI-Test) | - |
 | `trugbilderwolf` | ja (`trugbilderwolf`) | B (Setup, Rudel) | ja (8) | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
-| `wolfskind` | ja (`wolfskind`) | K | ja (12) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Korrektur (Vorbild, Verwandlung): Oberfläche seit Paket 2 |
+| `wolfskind` | ja (`wolfskind`) | B (`test_role_buttons`, Paket 3) | ja (12) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Korrektur (Vorbild, Verwandlung): Oberfläche seit Paket 2 |
 | `spiegelwolf` | ja (`spiegelwolf`) | B (Hinrichtung) | ja (6) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `manipulator` | ja (`manipulator`) | K | ja (12) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `lehrling` | ja (`lehrling`) | K | ja (10) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Korrektur (Bindung, Erbe): Oberfläche seit Paket 2 |
+| `manipulator` | ja (`manipulator`) | B (`test_role_buttons`, Paket 3) | ja (12) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `lehrling` | ja (`lehrling`) | B (`test_role_buttons`, Paket 3) | ja (10) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Korrektur (Bindung, Erbe): Oberfläche seit Paket 2 |
 | `sensentraeger` | ja (`sensentraeger`, `reactions`) | B (Reaktion) | ja (13) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `siegreicher-wolf` | ja (`siegreicher_wolf`) | A (passiv) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `doppelspion` | ja (`doppelspion`) | A (passiv) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `selbstmoerder` | ja (`selbstmoerder`) | A (passiv) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `dorfchronistin` | ja (`dorfchronistin`) | K | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg nicht einzeln belegt |
-| `die-gebundenen` | ja (`die_gebundenen`) | K | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg nicht einzeln belegt |
-| `waldlaeufer` | ja (`waldlaeufer_doktor`) | K | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg nicht einzeln belegt |
-| `doktor` | ja (`waldlaeufer_doktor`) | K | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg nicht einzeln belegt |
-| `wahnsinniger-kutscher` | ja (`death_effects`, `seat_roles`) | A (passiv) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `nachtwaechter` | ja (`seat_roles`) | M (Morgenbericht, test_morning_report) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg n. a. (automatisch) |
-| `dorfwache` | ja (`seat_roles`) | A (passiv) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `ritter` | ja (`ritter_besessener_faehrtenleser`) | K | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `faehrtenleser` | ja (`ritter_besessener_faehrtenleser`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg nicht einzeln belegt |
-| `besessener-wolf` | ja (`ritter_besessener_faehrtenleser`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `korrupter-richter` | ja (`richter_waechter_blutwolf`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Zweite Nominierung am Tag erst vom Kern abgelehnt (Oberfläche darf nichts verraten) |
-| `waechter-am-tor` | ja (`richter_waechter_blutwolf`) | A (passiv) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `blutwolf` | ja (`richter_waechter_blutwolf`) | A (passiv) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `siegreicher-wolf` | ja (`siegreicher_wolf`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_siegreicher_wolf_counts_double_for_parity` | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `doppelspion` | ja (`doppelspion`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_doppelspion_wins_alone_when_no_wolf_lives` | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `selbstmoerder` | ja (`selbstmoerder`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_selbstmoerder_fulfilled_by_execution_with_five_dead` | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `dorfchronistin` | ja (`dorfchronistin`) | B (`test_role_buttons`, Paket 3) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `die-gebundenen` | ja (`die_gebundenen`) | B (`test_role_buttons`, Paket 3) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `waldlaeufer` | ja (`waldlaeufer_doktor`) | B (`test_role_buttons`, Paket 3) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `doktor` | ja (`waldlaeufer_doktor`) | B (`test_role_buttons`, Paket 3) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `wahnsinniger-kutscher` | ja (`death_effects`, `seat_roles`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_wahnsinniger_kutscher_takes_neighbours_on_lynch` | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `nachtwaechter` | ja (`seat_roles`) | M (Morgenbericht, test_morning_report); Auslöser über Buttons: `test_role_passive_ui::test_nachtwaechter_bells_in_announcement_card` | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `dorfwache` | ja (`seat_roles`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_dorfwache_survives_pack_attack` | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `ritter` | ja (`ritter_besessener_faehrtenleser`) | B (`test_role_buttons`, Paket 3) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `faehrtenleser` | ja (`ritter_besessener_faehrtenleser`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `besessener-wolf` | ja (`ritter_besessener_faehrtenleser`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `korrupter-richter` | ja (`richter_waechter_blutwolf`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Zweite Nominierung am Tag erst vom Kern abgelehnt (Oberfläche darf nichts verraten); Stimmhinweis seit Paket 3 im privaten Bereich |
+| `waechter-am-tor` | ja (`richter_waechter_blutwolf`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_waechter_am_tor_blocks_new_wolf` | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `blutwolf` | ja (`richter_waechter_blutwolf`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_blutwolf_vote_bonus_visible_only_in_private_area` | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `spuerhund` | ja (`spuerhund_parasit`) | B (Auswahl) | mager (1) | Fuzz-Invariante J; Undo rollenspezifisch getestet | Kern-Test, UI-Positivliste nicht einzeln | - |
-| `parasit` | ja (`spuerhund_parasit`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `schattenhund` | ja (`wolf_specials`) | K | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `albtraumwolf` | ja (`wolf_specials`) | K | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `giftwolf` | ja (`wolf_specials`) | K | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `rudelvater` | ja (`wolf_specials`) | A (passiv) | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `seuchenwolf` | ja (`wolf_specials`) | A (passiv) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `fenrir` | ja (`fenrir_cerberus_henker`) | A (passiv) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `cerberus` | ja (`fenrir_cerberus_henker`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `henker` | ja (`fenrir_cerberus_henker`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `traumdeuter` | ja (`info_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2) |
-| `kopfgeldjaeger` | ja (`info_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2) |
-| `koenig` | ja (`info_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2); Coverage-Test rot in 1 von 2 Vollläufen (B-01) |
-| `kriegerin-des-lichts` | ja (`info_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg nicht einzeln belegt |
-| `blutpriester` | ja (`info_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2) |
+| `parasit` | ja (`spuerhund_parasit`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `schattenhund` | ja (`wolf_specials`) | B (`test_role_buttons`, Paket 3) | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `albtraumwolf` | ja (`wolf_specials`) | B (`test_role_buttons`, Paket 3) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `giftwolf` | ja (`wolf_specials`) | B (`test_role_buttons`, Paket 3) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `rudelvater` | ja (`wolf_specials`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_rudelvater_lynch_gives_second_pack_step` | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `seuchenwolf` | ja (`wolf_specials`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_seuchenwolf_death_lets_next_attack_pierce_protection` | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `fenrir` | ja (`fenrir_cerberus_henker`) | A (passiv); Auslöser über Buttons: `test_role_passive_ui::test_fenrir_survives_death_from_stage_three` | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `cerberus` | ja (`fenrir_cerberus_henker`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `henker` | ja (`fenrir_cerberus_henker`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `traumdeuter` | ja (`info_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2) |
+| `kopfgeldjaeger` | ja (`info_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2) |
+| `koenig` | ja (`info_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2) |
+| `kriegerin-des-lichts` | ja (`info_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `blutpriester` | ja (`info_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Spielleiterwahl statt Zufallsknopf (RM-DR-015.2) |
 | `amalia` | ja (`info_roles`) | B (Tagesaktion) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `detektiv` | ja (`info_roles`) | M (Morgenbericht; UI-Nachweis fehlt) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg n. a. (automatisch) |
-| `die-ewigen` | ja (`info_roles`) | K | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Buttonweg nicht einzeln belegt |
+| `detektiv` | ja (`info_roles`) | M (Morgenbericht; UI-Nachweis fehlt); Auslöser über Buttons: `test_role_passive_ui::test_detektiv_hint_in_public_morning_card` | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
+| `die-ewigen` | ja (`info_roles`) | B (`test_role_buttons`, Paket 3) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | - |
 | `der-weise` | ja (`protection_roles`) | B (Hinrichtung) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `maertyrerin` | ja (`protection_roles`) | K | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `schutzgeist` | ja (`protection_roles`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `dorfschmied` | ja (`protection_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `verdammniswaechter` | ja (`protection_roles`) | K | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
+| `maertyrerin` | ja (`protection_roles`) | B (`test_role_buttons`, Paket 3) | ja (3) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `schutzgeist` | ja (`protection_roles`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `dorfschmied` | ja (`protection_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `verdammniswaechter` | ja (`protection_roles`) | B (`test_role_buttons`, Paket 3) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `loki` | ja (`bond_roles`, `notices`) | B (Auswahl, Hinweiskarte) | ja (3) | Fuzz-Invariante J; Undo rollenspezifisch getestet | Positivliste (UI-Test) | - |
-| `rotkaeppchen` | ja (`bond_roles`, `notices`) | B (Hinweiskarte); Prompt K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
-| `schwarze-witwe` | ja (`bond_roles`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `schattenwanderer` | ja (`bond_roles`) | K | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
+| `rotkaeppchen` | ja (`bond_roles`, `notices`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
+| `schwarze-witwe` | ja (`bond_roles`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `schattenwanderer` | ja (`bond_roles`) | B (`test_role_buttons`, Paket 3) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `seelentauscher` | ja (`transform_roles`) | B (Auswahl) | ja (7) | Fuzz-Invariante J; Undo rollenspezifisch getestet | keine | - |
-| `daemonischer-wolf` | ja (`transform_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `koenig-lykaon` | ja (`transform_roles`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
+| `daemonischer-wolf` | ja (`transform_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `koenig-lykaon` | ja (`transform_roles`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `kutscher` | ja (`revival_roles`) | B | ja (4) | Fuzz-Invariante J; Undo rollenspezifisch getestet | keine | - |
-| `dr-victor-frankenstein` | ja (`revival_roles`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Totenkarten-Bedingung RM-DR-141.4 offen |
-| `rattenfaenger` | ja (`solo_roles_a`, `notices`) | B (Hinweiskarte); Prompt K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
-| `pestbringerin` | ja (`solo_roles_a`, `notices`) | B (Hinweiskarte); Prompt K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
-| `prophet-des-untergangs` | ja (`solo_roles_a`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `todesprediger` | ja (`solo_roles_a`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `feuerteufel` | ja (`fire_devil`) | K | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `voodoo-priester` | ja (`voodoo_priest`) | K | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `nekromant` | ja (`necromancer`) | B (Tagesaktion); Nacht K | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `hades` | ja (`hades`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `grabraeuber` | ja (`grave_robber`) | K | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `schicksalswolf` | ja (`fate_wolf`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `rachsuechtiger-wolf` | ja (`lone_wolf_and_time_warden`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `zeitwaechter` | ja (`lone_wolf_and_time_warden`) | K | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
+| `dr-victor-frankenstein` | ja (`revival_roles`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Totenkarten-Bedingung RM-DR-141.4 offen |
+| `rattenfaenger` | ja (`solo_roles_a`, `notices`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
+| `pestbringerin` | ja (`solo_roles_a`, `notices`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
+| `prophet-des-untergangs` | ja (`solo_roles_a`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `todesprediger` | ja (`solo_roles_a`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `feuerteufel` | ja (`fire_devil`) | B (`test_role_buttons`, Paket 3) | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `voodoo-priester` | ja (`voodoo_priest`) | B (`test_role_buttons`, Paket 3) | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `nekromant` | ja (`necromancer`) | B (`test_role_buttons`, Paket 3) | ja (4) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `hades` | ja (`hades`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `grabraeuber` | ja (`grave_robber`) | B (`test_role_buttons`, Paket 3) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `schicksalswolf` | ja (`fate_wolf`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `rachsuechtiger-wolf` | ja (`lone_wolf_and_time_warden`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
+| `zeitwaechter` | ja (`lone_wolf_and_time_warden`) | B (`test_role_buttons`, Paket 3) | nur Fuzz | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `kartenschlucker` | nein | nein | nein | nein | nein | Blockiert: Totenkartenmodell (RM-DR-013, RM-DR-143.1/.2); nicht im Katalog |
 
-**Zählung:** 17 Rollen mit Button-Test, 41 nur über Kartendaten, 11 passiv, 2 über Morgenbericht, 1 blockiert (Kartenschlucker). Summe 72.
+**Zählung (Ausgangsstand Paket 1):** 17 Rollen mit Button-Test, 41 nur über Kartendaten, 11 passiv, 2 über Morgenbericht, 1 blockiert (Kartenschlucker). Summe 72.
+
+**Zählung nach Paket 3:** 71 Rollen mit Bedienweg über echte Controls (davon 45 neu in `test_role_buttons`, 12 passive bzw. Morgenbericht-Rollen über ihren Auslöser in `test_role_passive_ui`; `dorfbewohner` über `test_full_round_ui`), 1 blockiert (Kartenschlucker). Nicht enthalten: Geräte- und Touchabnahme.
 
 ## Befunde
 
@@ -244,15 +248,16 @@ Alle 71 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Re
 | ID | Befund | Beleg | Einordnung |
 |---|---|---|---|
 | B-01 | **BEHOBEN in Paket 2 (Ursache belegt, siehe unten).** `test_prompt_coverage::test_all_prompt_kinds_are_operable_through_the_card` schlug im ersten Vollauf fehl („Rolle koenig erschien nie als Prompt“), im zweiten Vollauf und in 7 isolierten Läufen grün | Lauf 1 (Vollauf direkt nach `--import`): 917 Tests, 1 fehlgeschlagen; Lauf 2: 917 Tests, 0 fehlgeschlagen; isoliert (`--filter=prompt_coverage`) 7 von 7 grün (2 plus 5) | intermittierender Fehler in der Prüfung, nicht im Spielverhalten belegt. Die Seeds sind fest, eine Zeit- oder Zufallsquelle im Pfad wurde per `rg` nicht gefunden. Ursache **ungeklärt**. Der erste Lauf folgte direkt auf `--import`. Verdacht, nicht Beleg. Wird in P2 als Vorprüfung mit Wiederholungsläufen untersucht. **Untersuchungsergebnis P2:** `Array.shuffle()` (Sitzordnung und Zielwahl im Test) nutzt den beim Start zufällig gesetzten globalen Generator; die frühere `rg`-Suche prüfte nur `randi`/`randf`. Dadurch war jede Partie von Lauf zu Lauf verschieden (Fokuspartie König: 23 von 40 globalen Seeds ohne König-Prompt). Der König ist nur bei mehr Toten als Lebenden aktiv und hing am Überleben. Mit dem alten `shuffle()` reproduziert der neue Regressionstest den Fehler („Rolle kutscher erschien nie als Prompt“); mit dem seedbaren Mischen sind Partien unabhängig vom globalen Seed identisch. Ein Importzusammenhang war nicht ursächlich. Kein Spielfehler. Korrektur nur im Test, Pflichtabdeckung erhalten und um zwölf feste Erreichbarkeitsszenarien ergänzt |
+| B-03 | **BEHOBEN in Paket 3.** Stimmhinweise des Regelkerns (`VoteHints`: Blutwolf, Korrupter Richter, RM-DR-008) wurden berechnet, aber nirgends angezeigt | `rg VoteHints godot/app` ohne Treffer; roter Test `test_role_passive_ui::test_blutwolf_vote_bonus_visible_only_in_private_area` | Bedienlücke; Anzeige nur im privaten Spielleiterbereich ergänzt |
 | B-02 | Einstellungen (Sprache, Bewegung) gehen beim Neustart verloren | `app_settings.gd` ohne Dateizugriff | echter Funktionsmangel (D-09) |
 
 **Fehlende Nachweise statt bekannter Fehler**
 
-- Buttonweg für 41 Rollen (R-02).
-- Positivlisten der Zeigekarte für 12 Informationsrollen (I-04).
+- *(Erledigt in Paket 3.)* Buttonweg für 41 Rollen (R-02).
+- *(Erledigt in Paket 3.)* Positivlisten der Zeigekarte für 12 Informationsrollen (I-04).
 - Übersetzungs-Bedeutungsgleichheit (C-01).
 - Rollenspezifisches Undo außer für 7 Rollen (Rollentabelle).
-- Deckungslücke der Wechselwirkungen (N-11).
+- *(Ergänzt in Paket 3, acht feste Szenarien.)* Deckungslücke der Wechselwirkungen (N-11).
 
 **Widersprüche zwischen Dokumenten und Code**
 

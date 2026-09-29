@@ -169,6 +169,8 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 | Interaktionslücken: Nekromant lenkt das durchdringende Zusatzopfer des Rudelvaters um; Rudel und Zusatzopfer auf dem Nekromanten; Verdammniswächter → Nekromant → ursprüngliches Opfer; Nekromant → Priester → Priester → Puppe; Priesterkette ohne Rückweg zum Nekromanten | `test_solo_combinations` (11) |
 | Schicksalswolf: Markierung in Nacht 1, Zählung der ersten drei verschiedenen Toten (vor der Markierung, Wiederbelebung), Zusatzopfer nur in Nacht 4 mit Schutzengel, Ritter, Nekromanten-Umlenkung, zwei Schicksalswölfe, Spielende in Nacht 4, Ladeprüfung | `test_fate_wolf` (8); Fuzz mit `FateMarked`, `FateKillsChosen` |
 | Rachsüchtiger Wolf und Zeitwächter: Rhythmus 3/6/9, nur Wölfe als Ziel, Tod trotz Schutzengel, Alleinsieg nur als letzter Wolf, mehrere Rachsüchtige; Einfrieren vor dem Schattenhund, alle Schritte entfallen, keine Tode, kein Wachstum, einmal je Leben, Verzicht, fällige Giftpranke, Spielende in eingefrorener Nacht | `test_lone_wolf_and_time_warden` (8); Fuzz mit `LoneWolfStruck`, `NightFrozen`, `LONE_WOLF_KILL` |
+| Paket 3 (29.09.2026): Voodoo-Puppe als Dorfwache, gegenseitige Schattenwanderer-Verknüpfung, Parasit-Wirt mit Puppe, vier gleichzeitige Siegkandidaten, öffentliche Todesrolle (Trugbilderwolf, Grabräuber), Liebeskummer vor Sensenträger-Reaktion mit Laden, Kutscher setzt Einsätze zurück, Seelentausch mit Scheinrolle | `test_role_interactions::test_p3_*` (8); Analyse `12-role-combination-analysis.md` |
+| Bedienweg aller 71 Rollen über echte Controls | `godot/tests/ui/test_role_buttons.gd`, `test_role_passive_ui.gd`, `test_role_operation_kinds.gd` (Paket 3) |
 | Einzelrollen und Paare aus dem Vertical Slice | bestehende Rollentests, siehe `godot/README.md` (Testtabelle) und [`02`](02-implemented-roles-audit.md) |
 
 ### 4.3 Bewusst nicht einzeln kombiniert (mit Begründung)
@@ -176,7 +178,7 @@ Spalten: Regelquelle; entschiedene Mechanik; offene Fragen (nur nicht entschiede
 - **Paare ohne gemeinsamen Zustand oder Zeitpunkt**, z. B. Orakel × Manipulator, Schutzengel × Manipulator, Trugbilderwolf × Sensenträger: Die Rollen lesen oder schreiben keine gemeinsamen Daten. Ihr Zusammenspiel läuft nur über Tod und Siegprüfung, die der Fuzztest in gemischten Besetzungen abdeckt.
 - **Rudelzusammensetzung:** Der Rudelschritt kennt keine Einzelpersonen. Welche Wolfsrolle lebt, beeinflusst nur die Existenz des Schritts und die Parität; beides ist über G-PH-6 und die Paritätstests abgedeckt.
 - **Alle 12×12-Paare als eigene Tests:** nicht erzeugt. Paare mit gemeinsamem Datenfluss stehen oben oder in den Rollentests; der Rest ist durch Invarianten im Fuzztest geprüft, nicht durch erwartete Einzelergebnisse.
-- **Noch ungeprüft:** echte Oberfläche, vollständige Runde am Tablet, Undo/Redo (im Kern nicht vorhanden), Randfall F-10 (§6).
+- **Noch ungeprüft:** echte Oberfläche, vollständige Runde am Tablet, Undo/Redo (im Kern nicht vorhanden), Randfall F-10 (§6). *(Stand 28.09.2026; seit Paket 3 sind Oberfläche headless, Undo und Bedienwege aller Rollen geprüft, Tablet weiter offen.)*
 
 ## 5. Testnachweis
 

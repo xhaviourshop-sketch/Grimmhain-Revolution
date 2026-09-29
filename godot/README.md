@@ -129,6 +129,7 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 | `tests/unit/test_call_policy.gd` | Aufrufpolitik als reine Abfrage: lebende und (mit Wiederbelebung) tote Rollen, verbrauchte und entfallene Schritte als Tarnaufruf, Gruppen, Position, keine Zustandsänderung | DI-02 |
 | `tests/unit/test_death_effects.gd` | öffentliche Todeseffekte: Sensenträger, Ritter, Besessener Wolf, Wahnsinniger Kutscher, Weiser, Liebeskummer, Kette, Verknüpfung; nur eingetretene Folgen, feste Positivliste, Reihenfolge, Save/Load, Replay | DI-03 |
 | `tests/unit/test_role_shown.gd`, `tests/ui/test_role_show.gd` | Rollenanzeige: `ConfirmRoleShown`, Fortsetzung, Rollenwechsel, Save/Load, Replay, Oberfläche | AS-A04 |
+| `tests/ui/test_role_buttons.gd`, `test_role_passive_ui.gd`, `test_role_operation_kinds.gd` (Treiber `role_ui_case.gd`) | Bedienweg aller 71 Rollen über echte Controls, Bedienarten und gemeinsame Fehlerfälle, Positivlisten, Stimmhinweise | Paket 3 |
 | `tests/ui/test_special_corrections.gd` | Spezialkorrekturen über Buttons (Schutz, Rettung, Wolfskind, Lehrling) | Paket 2 |
 | `tests/unit/test_notices.gd` | private Hinweise: Loki, Rattenfänger (zwei Phasen), Pestbringerin (auch Ausbreitung), Bestätigen, Tod, Undo, Save/Load, beschädigte Stände | DI-04, DI-06, DI-07 |
 | `tests/unit/test_core_purity.gd` | `core/` ohne Nodes, Szenen, Dateisystem, Zeit, Audio, Netzwerk, globalen Zufall | Masterplan §4 Regel 1 |

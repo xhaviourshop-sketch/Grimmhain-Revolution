@@ -88,14 +88,14 @@ Auch bei abgeschlossenem Offline-Funktionsstand entsteht später Code für Layou
 
 **Tests:** Bestehende `godot/tests/unit/test_role_interactions.gd`, `test_role_interaction_fuzz.gd`, `godot/tests/ui/test_target_selection.gd`, `test_notice_cards.gd` und passende rollenbezogene Tests erweitern, statt parallele Testsysteme einzuführen.
 
-- [ ] Pro Rolle mindestens einen repräsentativen Ablauf durch echte UI-Handler/Buttons headless ausführen und das erwartete Ergebnis prüfen. Ein akzeptierter Befehl allein reicht nicht. *(Stand: 17 von 71 Rollen mit Button-Test, 41 nur über Kartendaten (`test_prompt_coverage`), 11 passiv ohne Bedienung, 2 über den Morgenbericht (Matrix R-02). Zu ergänzen: die 41 `K`-Rollen, gruppiert nach Prompt-Form, nicht als 41 Einzeltests.)*
-- [ ] Gemeinsame Bedienarten parametrisiert prüfen: Einzelziel, Mehrfachziel, Ja/Nein, Rollenwahl, Zahlenwahl, Ablehnung, verpflichtende Auswahl und erlaubtes Überspringen.
-- [ ] Für jede Mechanikfamilie konkurrierende Effekte prüfen: Schutz gegen passende Todesursache, Umlenkung gegen Immunität, Ketten gegen Wiederbelebung, Rollenwechsel gegen Ressourcen, Bindungen gegen Tod, Solo-Sieg gegen Fraktionssieg.
-- [ ] Jede bekannte seltene Interaktion mit einem festen Szenario absichern. Fuzztests ergänzen diese Szenarien, ersetzen sie nicht.
-- [ ] Nicht wahllos 71 × 71 Paare erstellen. Zuerst mechanisch relevante Überschneidungen aus der Matrix ableiten; jedes ausgelassene Risiko begründen. *(Stand: 11 feste Szenarien in `test_role_interactions`, Rest nur Fuzz (Matrix N-11).)*
-- [ ] Zufallsknopf nach RM-DR-015.2 (entschieden) für König, Traumdeuter, Kopfgeldjäger, Blutpriester über den gespeicherten Generator ergänzen (Matrix R-06).
-- [ ] Analyse unverträglicher Rollenkombinationen (vom Product Owner gewünscht, Setup-Regel vertagt; Matrix R-07). Erst Analyse, Regel nur nach Entscheidung.
-- [ ] Tatsächliche Fehler testgetrieben beheben. Keine Tests abschwächen, bis Grün erreicht ist.
+- [x] *(Paket 3: `test_role_buttons`, `test_role_passive_ui`, alle 71 Rollen)* Pro Rolle mindestens einen repräsentativen Ablauf durch echte UI-Handler/Buttons headless ausführen und das erwartete Ergebnis prüfen. Ein akzeptierter Befehl allein reicht nicht. *(Stand: 17 von 71 Rollen mit Button-Test, 41 nur über Kartendaten (`test_prompt_coverage`), 11 passiv ohne Bedienung, 2 über den Morgenbericht (Matrix R-02). Zu ergänzen: die 41 `K`-Rollen, gruppiert nach Prompt-Form, nicht als 41 Einzeltests.)*
+- [x] *(Paket 3: `test_role_operation_kinds` und Invarianten im Treiber)* Gemeinsame Bedienarten parametrisiert prüfen: Einzelziel, Mehrfachziel, Ja/Nein, Rollenwahl, Zahlenwahl, Ablehnung, verpflichtende Auswahl und erlaubtes Überspringen.
+- [x] *(Paket 3: Zuordnung in `11-role-audit-status.md` §4.2, acht neue Szenarien)* Für jede Mechanikfamilie konkurrierende Effekte prüfen: Schutz gegen passende Todesursache, Umlenkung gegen Immunität, Ketten gegen Wiederbelebung, Rollenwechsel gegen Ressourcen, Bindungen gegen Tod, Solo-Sieg gegen Fraktionssieg.
+- [x] *(Paket 3; Fuzz zusätzlich unabhängig vom globalen Zufall)* Jede bekannte seltene Interaktion mit einem festen Szenario absichern. Fuzztests ergänzen diese Szenarien, ersetzen sie nicht.
+- [x] *(Paket 3, Methode in `12-role-combination-analysis.md` §1)* Nicht wahllos 71 × 71 Paare erstellen. Zuerst mechanisch relevante Überschneidungen aus der Matrix ableiten; jedes ausgelassene Risiko begründen. *(Stand: 11 feste Szenarien in `test_role_interactions`, Rest nur Fuzz (Matrix N-11).)*
+- [ ] *(Offen: im Auftrag Paket 3 nicht enthalten, neue Funktion)* Zufallsknopf nach RM-DR-015.2 (entschieden) für König, Traumdeuter, Kopfgeldjäger, Blutpriester über den gespeicherten Generator ergänzen (Matrix R-06).
+- [x] *(Analyse: `docs/role-migration/12-role-combination-analysis.md`; Setup-Regel weiter offen)* Analyse unverträglicher Rollenkombinationen (vom Product Owner gewünscht, Setup-Regel vertagt; Matrix R-07). Erst Analyse, Regel nur nach Entscheidung.
+- [x] *(Paket 3: Stimmhinweise, Matrix B-03)* Tatsächliche Fehler testgetrieben beheben. Keine Tests abschwächen, bis Grün erreicht ist.
 
 **Abnahme:** Die Matrix hat für alle 71 Rollen und relevanten Interaktionsklassen nachvollziehbare Belege. Das bedeutet geprüfte Korrektheit, keine mathematische Bugfreiheitsgarantie.
 

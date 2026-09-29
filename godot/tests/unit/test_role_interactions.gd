@@ -677,3 +677,19 @@ func test_p3_coach_revival_restores_one_shot_ability() -> void:
 	assert_true(_play_until(s, {}, "start_night") and s.start_night().ok, "nächste Nacht")
 	var steps: Array = RulesEngine.replay(s.commands()).state.night_plan.map(func(k: StringName) -> String: return String(k))
 	assert_true(steps.any(func(k: String) -> bool: return k.contains("kriegerin-des-lichts")), "Kriegerin hat wieder einen Schritt")
+
+
+## Rollenwechsel gegen Geheimnis: DI-08 (die Scheinrolle kennt nur die Spielleitung) und V-04 bis V-06 (Seelentausch mit
+## frischen Rollen). Der Seelentauscher tauscht einen Trugbilderwolf mit einer Dorfperson: Die Scheinrolle geht mit der Rolle
+## über; kein Hinweis an eine Person (actor) und kein öffentliches Ereignis nennt sie.
+func test_p3_soul_swap_moves_appearance_without_telling_anyone() -> void:
+	var s := _session(["seelentauscher", "trugbilderwolf", "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"], {"2": "das-orakel"})
+	if not _play_until(s, {"seelentauscher/targets": [2, 3]}, "end_night"):
+		return
+	var st := RulesEngine.replay(s.commands()).state
+	assert_eq([st.players[3].role_id, st.players[3].appears_as], [&"trugbilderwolf", &"das-orakel"], "Scheinrolle geht mit der Rolle über")
+	assert_eq(st.players[2].role_id, &"dorfbewohner", "Tauschpartner wird Dorfbewohner")
+	var told := s.event_log().filter(func(e: Dictionary) -> bool: return str(e["visibility"]) in ["actor", "public"])
+	assert_true(told.any(func(e: Dictionary) -> bool: return str(e["type"]) == "SoulSwapRevealed"), "Betroffene erfahren ihre neue Rolle")
+	for e: Dictionary in told:
+		assert_false(JSON.stringify(e["data"]).contains("das-orakel"), "%s nennt keine Scheinrolle" % str(e["type"]))
