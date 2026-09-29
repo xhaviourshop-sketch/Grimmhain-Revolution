@@ -217,9 +217,19 @@ func _targets_part(next: Dictionary, context: Dictionary, buttons: Array[Control
 	if not selection.is_empty() and error != "":
 		var key := "ui.cockpit.card.selection.blocked.%s" % error
 		_text(key if CockpitText.has_key(key) else "ui.cockpit.card.selection.blocked.generic", {"counts": CockpitText.count_list(counts)}, &"WarningLabel").name = "SelectionBlockedLabel"
+	var random_active := bool(context.get("random_active", false))
+	if random_active:
+		# Vorschlag der Zufallsziehung; übernommen wird er erst mit „Auswahl bestätigen“ (RM-DR-015.2).
+		_text("ui.cockpit.card.random.proposal", {}, &"MutedLabel").name = "RandomProposalLabel"
 	var confirm := _button("ConfirmTargetsButton", "ui.cockpit.action.confirm_targets", GrimmButton.Kind.PRIMARY, &"confirm_targets")
-	confirm.disabled = selection.is_empty() or error != ""
+	confirm.disabled = (selection.is_empty() and not random_active) or error != ""
 	buttons.append(confirm)
+	if bool(next.get("random", false)):
+		var random := _button("RandomTargetsButton", "ui.cockpit.action.random_targets", GrimmButton.Kind.SECONDARY, &"random_targets")
+		random.disabled = not bool(context.get("random_available", false))
+		buttons.append(random)
+		if random.disabled:
+			_text("ui.cockpit.card.random.none", {}, &"MutedLabel").name = "RandomUnavailableLabel"
 	if counts.has(0):
 		buttons.append(_button("DeclineButton", CockpitText.action_key("decline", str(next.get("owner")), str(next.get("stage"))), GrimmButton.Kind.SECONDARY, &"decline"))
 	if not selection.is_empty():

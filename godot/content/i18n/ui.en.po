@@ -1436,6 +1436,21 @@ msgstr "Cancel step …"
 msgid "ui.cockpit.action.confirm_targets"
 msgstr "Confirm selection"
 
+msgid "ui.cockpit.action.random_targets"
+msgstr "Pick at random"
+
+msgid "ui.cockpit.card.random.proposal"
+msgstr "Random suggestion: it only takes effect with “Confirm selection”. Tapping a person makes it your own choice."
+
+msgid "ui.cockpit.card.random.none"
+msgstr "Random pick is not possible here: there is no valid selection."
+
+msgid "ui.cockpit.error.random_mismatch"
+msgstr "The random suggestion no longer matches the game state. Pick at random again or choose yourself."
+
+msgid "ui.cockpit.error.random_not_supported"
+msgstr "This selection has no random pick."
+
 msgid "ui.cockpit.action.decline"
 msgstr "Nobody / decline"
 

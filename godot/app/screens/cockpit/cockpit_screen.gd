@@ -17,6 +17,7 @@ const GROUP_CARD_WIDTH_BREAKPOINT := 1600.0
 var _view: Dictionary = {}
 var _next_id: String = ""
 var _selection: Array = []
+var _random: Variant = null  ## Zufallsvorschlag (Personen) der offenen Spielleiterwahl; nur bis zur nächsten Änderung
 var _revealed_id: String = ""
 var _prediction := {"kind": "night", "number": 0}
 var _error_key: String = ""
@@ -106,6 +107,7 @@ func default_focus() -> Control:
 func _on_session_changed(_v: Dictionary) -> void:
 	_error_key = ""
 	_selection.clear()
+	_random = null
 	_discard_role_card()
 	_refresh()
 
@@ -130,6 +132,7 @@ func _refresh() -> void:
 	if identity != _next_id:
 		_next_id = identity
 		_selection.clear()
+		_random = null
 		_revealed_id = ""
 		_prediction = {"kind": "night", "number": 0}
 	_update_status(active)
@@ -243,6 +246,8 @@ func _render() -> void:
 		selection_error = String(context.session.check_targets(_selection))
 	_card.render(next, {
 		"phase": phase, "seats": _view.get("seats", []), "selection": _selection, "selection_error": selection_error,
+		"random_active": _random != null and _same_set(_selection, _random),
+		"random_available": bool(next.get("random", false)) and context.session.random_proposal() != null,
 		"revealed": _check_revealed if _day_mode == "execution_check" else _revealed_id == _next_id,
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
@@ -343,6 +348,12 @@ func _update_side_width() -> void:
 
 # --- Bedienung --------------------------------------------------------------------------------------
 
+func _same_set(a: Array, b: Variant) -> bool:
+	if not b is Array or a.size() != (b as Array).size():
+		return false
+	return a.all(func(x: Variant) -> bool: return (b as Array).has(x))
+
+
 func _on_seat_tapped(person_id: int) -> void:
 	var next: Dictionary = _view.get("next", {})
 	if _gm_mode != "" and _gm_mode != "declare_winner":
@@ -371,6 +382,7 @@ func _on_seat_tapped(person_id: int) -> void:
 	else:
 		status_message_requested.emit("ui.cockpit.status.selection_full")
 		return
+	_random = null  # manuelle Änderung: ab jetzt eine Spielleiterwahl, keine Zufallsziehung
 	_render()
 
 
@@ -466,11 +478,19 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_ask_reason("ui.cockpit.dialog.cancel.title", "ui.cockpit.dialog.cancel.message", "ui.cockpit.dialog.cancel.confirm",
 				func(reason: String) -> void: _submit(s.cancel_prompt.bind(reason)))
 		&"confirm_targets":
-			_submit(s.answer_targets.bind(_selection.duplicate()))
+			if _random != null and _same_set(_selection, _random):
+				_submit(s.answer_random.bind((_random as Array).duplicate()))
+			else:
+				_submit(s.answer_targets.bind(_selection.duplicate()))
+		&"random_targets":
+			_random = s.random_proposal()
+			_selection = (_random as Array).duplicate() if _random != null else []
+			_render()
 		&"decline":
 			_submit(s.answer_targets.bind([]))
 		&"clear_selection":
 			_selection.clear()
+			_random = null
 			_render()
 		&"choice":
 			_submit(s.answer_choice.bind(bool(payload["choice"])))

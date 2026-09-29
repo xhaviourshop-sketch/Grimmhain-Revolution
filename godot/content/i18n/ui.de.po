@@ -1436,6 +1436,21 @@ msgstr "Schritt abbrechen …"
 msgid "ui.cockpit.action.confirm_targets"
 msgstr "Auswahl bestätigen"
 
+msgid "ui.cockpit.action.random_targets"
+msgstr "Zufällig auswählen"
+
+msgid "ui.cockpit.card.random.proposal"
+msgstr "Zufallsvorschlag: Übernommen wird er erst mit „Auswahl bestätigen“. Wer eine Person antippt, trifft eine eigene Wahl."
+
+msgid "ui.cockpit.card.random.none"
+msgstr "Zufällig auswählen ist hier nicht möglich: Es gibt keine zulässige Auswahl."
+
+msgid "ui.cockpit.error.random_mismatch"
+msgstr "Der Zufallsvorschlag passt nicht mehr zum Spielstand. Bitte erneut „Zufällig auswählen“ oder selbst wählen."
+
+msgid "ui.cockpit.error.random_not_supported"
+msgstr "Für diese Auswahl gibt es keine Zufallsziehung."
+
 msgid "ui.cockpit.action.decline"
 msgstr "Niemand / verzichten"
 

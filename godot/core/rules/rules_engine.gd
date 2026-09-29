@@ -257,6 +257,8 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return &"no_open_prompt"
 	if not DictRead.is_int_like(p.get("prompt_id")) or int(p["prompt_id"]) != prompt.id:
 		return &"prompt_mismatch"
+	if p.has("random") and not InfoSteps.random_supported(prompt):
+		return &"random_not_supported"  # Zufallsknopf nur bei den Stufen aus RM-DR-015.2 (InfoSteps)
 	if prompt.owner == PendingPrompt.OWNER_WITCH:
 		return WitchStep.validate_answer(s, prompt, p)
 	if prompt.owner == PendingPrompt.OWNER_ORACLE:

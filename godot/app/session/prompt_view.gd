@@ -59,6 +59,7 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 		"allowed_ids": p.allowed_ids.duplicate(),
 		"counts": RulesEngine.target_counts(s) if answer == "targets" else [],
 		"cancellable": p.cancellable,
+		"random": InfoSteps.random_supported(p),  ## Zufallsknopf (RM-DR-015.2) für diese Spielleiterwahl
 		"info": info_lines(s, p),
 		"show": show_lines(s, p),
 		"options": [],

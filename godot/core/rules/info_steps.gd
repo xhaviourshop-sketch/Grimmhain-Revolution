@@ -210,9 +210,71 @@ static func target_counts(prompt: PendingPrompt) -> Array[int]:
 	return prompt.count_range()
 
 
+## Zufallsknopf (RM-DR-015.2) nur für die Spielleiterwahl dieser Stufen: Traumdeuter und Kopfgeldjäger (drei andere
+## Lebende mit mindestens einem Wolf), König (eine Person der Fraktion Dorf), Blutpriester-Aufdeckung (0 bis 3 Wölfe).
+## Die Opferwahl des Blutpriesters ist seine eigene Entscheidung und bleibt ohne Zufall.
+static func random_supported(prompt: PendingPrompt) -> bool:
+	if prompt == null or not OWNERS.has(prompt.owner):
+		return false
+	if prompt.stage == STAGE_TARGETS:
+		return TRIPLE_OWNERS.has(prompt.owner) or prompt.owner == PendingPrompt.OWNER_KING
+	return prompt.stage == STAGE_REVEAL and prompt.owner == PendingPrompt.OWNER_BLOOD
+
+
+## Vorschlag aus einer Kopie des gespeicherten Generators; `s` bleibt unverändert. Alle zulässigen Ergebnisse werden
+## stabil nach Personen-ID aufgezählt und genau eines mit einer einzigen Ziehung gewählt (gleich wahrscheinlich, keine
+## Wiederholungsschleife). Ergebnis {targets, rng_after} oder {} (keine Zufallswahl oder kein zulässiges Ergebnis).
+static func random_choice(s: GameState) -> Dictionary:
+	var prompt := s.pending_prompt
+	if not random_supported(prompt):
+		return {}
+	var ids: Array[int] = prompt.allowed_ids.filter(func(id: int) -> bool: return id != prompt.actor_id and s.players.has(id) and s.players[id].alive)
+	ids.sort()
+	var results: Array = []
+	if TRIPLE_OWNERS.has(prompt.owner):
+		for a: int in ids.size():
+			for b: int in range(a + 1, ids.size()):
+				for c: int in range(b + 1, ids.size()):
+					var triple := [ids[a], ids[b], ids[c]]
+					if not _wolves_in(s, triple).is_empty():
+						results.append(triple)
+	elif prompt.owner == PendingPrompt.OWNER_KING:
+		for id: int in ids:
+			results.append([id])
+	else:
+		var wolves := _wolves_in(s, ids)
+		results.append([])
+		for size: int in range(1, mini(BLOOD_MAX_REVEAL, wolves.size()) + 1):
+			results.append_array(_subsets(wolves, size))
+	if results.is_empty():
+		return {}
+	var probe := SeededRng.from_dict(s.rng.to_dict())
+	var picked: Array = results[probe.next_int(0, results.size() - 1)]
+	return {"targets": picked, "rng_after": probe.to_dict()}
+
+
+## Teilmengen fester Größe in stabiler Reihenfolge (Eingabe aufsteigend).
+static func _subsets(items: Array[int], size: int, start: int = 0) -> Array:
+	if size == 0:
+		return [[]]
+	var out: Array = []
+	for i: int in range(start, items.size() - size + 1):
+		for rest: Array in _subsets(items, size - 1, i + 1):
+			out.append([items[i]] + rest)
+	return out
+
+
 static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) -> StringName:
 	if DictRead.get_string(p, "stage") != String(prompt.stage):
 		return &"stage_mismatch"
+	if p.has("random"):
+		if not (p["random"] is bool and bool(p["random"])) or not random_supported(prompt):
+			return &"random_not_supported"
+		var drawn := random_choice(s)
+		var sent: Variant = DictRead.to_int_array(DictRead.get_array(p, "targets"))
+		# Nur genau das Ergebnis des gespeicherten Generators gilt; veraltete oder veränderte Vorschläge nicht.
+		if drawn.is_empty() or sent == null or sent != DictRead.to_int_array(drawn["targets"]):
+			return &"random_mismatch"
 	if prompt.stage == STAGE_TARGETS:
 		if p.has("choice") or not p.get("targets") is Array:
 			return &"invalid_answer"
@@ -267,6 +329,8 @@ static func _stage_done(ctx: RuleContext, prompt: PendingPrompt, stage: StringNa
 static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	var prompt := s.pending_prompt
+	if DictRead.get_bool(p, "random"):
+		s.rng = SeededRng.from_dict(random_choice(s)["rng_after"])  # Generatorfortschritt der bestätigten Ziehung
 	if prompt.stage == STAGE_TARGETS and (TRIPLE_OWNERS.has(prompt.owner) or prompt.owner == PendingPrompt.OWNER_KING or OPTIONAL_OWNERS.has(prompt.owner) or prompt.owner == PendingPrompt.OWNER_ETERNAL):
 		var chosen: Array[int] = DictRead.to_int_array(p["targets"])
 		if chosen.is_empty():

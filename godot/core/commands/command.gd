@@ -59,6 +59,12 @@ static func answer_stage_targets(prompt_id: int, stage: String, targets: Array) 
 	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "targets": targets})
 
 
+## Bestätigter Zufallsvorschlag (RM-DR-015.2): der Regelkern zieht erneut aus dem gespeicherten Generator und nimmt
+## nur an, wenn `targets` genau diesem Ergebnis entspricht (InfoSteps.random_choice).
+static func answer_random(prompt_id: int, stage: String, targets: Array) -> Command:
+	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "targets": targets, "random": true})
+
+
 ## Orakel-Prompt in der Stufe „Gezeigt“: gezeigtes Ergebnis übersteuern (Spielleiter,
 ## bestätigte Warnung und Begründung). Wahrheit und ermitteltes Ergebnis bleiben unverändert.
 static func override_shown_role(prompt_id: int, shown_role: String, reason: String) -> Command:

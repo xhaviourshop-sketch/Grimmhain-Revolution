@@ -235,6 +235,19 @@ func check_targets(targets: Array) -> StringName:
 	return RulesEngine.check(_state, _targets_command(targets))
 
 
+## Zufallsvorschlag für die offene Spielleiterwahl (RM-DR-015.2), gezogen aus einer Kopie des gespeicherten Generators:
+## Personen-IDs, oder null ohne Zufallsknopf bzw. ohne zulässiges Ergebnis. Ändert nichts; gleicher Zustand, gleicher Vorschlag.
+func random_proposal() -> Variant:
+	var r := InfoSteps.random_choice(_state)
+	return (r["targets"] as Array).duplicate() if not r.is_empty() else null
+
+
+## Bestätigt den Zufallsvorschlag. Der Regelkern zieht erneut und nimmt nur genau dieses Ergebnis an.
+func answer_random(targets: Array) -> CommandResult:
+	var p := _state.pending_prompt
+	return submit(Command.answer_random(_prompt_id(), String(p.stage) if p != null else "", targets))
+
+
 func _targets_command(targets: Array) -> Command:
 	var p := _state.pending_prompt
 	if p != null and p.stage != &"":

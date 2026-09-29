@@ -594,3 +594,136 @@ func test_shadow_hound_blocks_shared_village_steps() -> void:
 	assert_eq(_dropped_reason(events, "die-gebundenen"), "blocked", "Gebundene blockiert")
 	assert_eq(_dropped_reason(events, EW), "blocked", "Ewige blockiert")
 	assert_eq(events_of_type(events, "BoundRevealed").size(), 0, "keine Gebundenen-Information")
+
+
+# --- Zufallsknopf (RM-DR-015.2, Matrix R-06) --------------------------------------------------------
+# Die Spielleitung kann wählen oder ziehen lassen. Der Vorschlag entsteht aus einer Kopie des gespeicherten
+# Generators; erst die Bestätigung (Antwort mit `random: true`) übernimmt Ergebnis und Generatorfortschritt.
+# Erwartungen aus den Regeln: Ergebnis im zulässigen Raum, genau eine Ziehung, gleiche Eingabe gleicher Vorschlag.
+
+## Offene Auswahl je Rolle: {owner: [Zustand, Stufe]}.
+func _random_prompts() -> Dictionary:
+	var out := {}
+	out[TD] = [_to_step(_state([W, W, TD, D, D, D]), "%s:3" % TD), "targets"]
+	var k := _state([W, W, W, KG, D, D, D, D])
+	k = _ok(k, Command.start_night(), "Nacht 1")
+	k = _finish_night(k)
+	var lynch := _lynch(k, 5, 1)
+	out[KG] = [_to_step(_ok(lynch.state, Command.end_day(), "Ende"), "%s:4" % KG) if lynch != null else null, "targets"]
+	var ko := _state([W, KO, "dorfwache", D, D, D, D, D, D, D])
+	for id: int in [4, 5, 6, 7, 8, 9]:
+		ko = _ok(ko, _gm("kill", {"target_id": id, "trigger_effects": false}), "tot %d" % id)
+	out[KO] = [_to_step(ko, "%s:2" % KO), "targets"]
+	var bp := _ok(_state([W, W, BP, "schutzengel", D, D, D]), Command.start_night(), "Nacht")
+	bp = _ok(bp, Command.answer_prompt(bp.pending_prompt.id, [5]), "Schutzengel") if bp != null else null
+	bp = _to_step(bp, "%s:3" % BP)
+	bp = _ok(bp, Command.answer_stage_targets(bp.pending_prompt.id, "targets", [5]), "Opfer 5") if bp != null else null
+	out[BP] = [bp, "reveal"]
+	return out
+
+
+## Zulässiger Ergebnisraum nach den Regeln, unabhängig von der Produktionsfunktion.
+func _admissible(role: String, s: GameState, targets: Array) -> bool:
+	var actor := s.pending_prompt.actor_id
+	var distinct := targets.all(func(t: Variant) -> bool: return targets.count(t) == 1)
+	var others_alive := targets.all(func(t: Variant) -> bool: return int(t) != actor and s.players.has(int(t)) and s.players[int(t)].alive)
+	match role:
+		TD, KG:
+			return targets.size() == 3 and distinct and others_alive and targets.any(func(t: Variant) -> bool: return s.players[int(t)].counts_as_wolf)
+		KO:
+			return targets.size() == 1 and others_alive and s.players[int(targets[0])].faction == Faction.VILLAGE
+		BP:
+			return targets.size() <= 3 and distinct and others_alive and targets.all(func(t: Variant) -> bool: return s.players[int(t)].counts_as_wolf)
+	return false
+
+
+func test_random_choice_proposes_an_admissible_result_and_confirms_with_one_draw() -> void:
+	var prompts := _random_prompts()
+	for role: String in prompts:
+		var s: GameState = prompts[role][0]
+		var stage: String = prompts[role][1]
+		if s == null:
+			fail("%s: Auswahl nicht erreicht" % role)
+			continue
+		var before := CanonicalJson.stringify(s.to_dict())
+		var proposal := InfoSteps.random_choice(s)
+		assert_false(proposal.is_empty(), "%s: Vorschlag vorhanden" % role)
+		if proposal.is_empty():
+			continue
+		var targets: Array = proposal["targets"]
+		assert_true(_admissible(role, s, targets), "%s: Vorschlag %s im zulässigen Raum" % [role, targets])
+		assert_eq(InfoSteps.random_choice(s)["targets"], targets, "%s: gleicher Zustand, gleicher Vorschlag" % role)
+		assert_eq(CanonicalJson.stringify(s.to_dict()), before, "%s: Vorschlag ändert den Zustand nicht" % role)
+		var p := s.pending_prompt
+		var manual_targets: Array = [p.allowed_ids[0]] if role == KO else ([p.allowed_ids[0]] if role == BP else [])
+		if role in [TD, KG]:
+			for id: int in p.allowed_ids:
+				if s.players[id].counts_as_wolf:
+					manual_targets = [id]
+					break
+			for id: int in p.allowed_ids:
+				if manual_targets.size() < 3 and not manual_targets.has(id):
+					manual_targets.append(id)
+		var manual := apply_ok(s, Command.answer_stage_targets(p.id, stage, manual_targets), "%s: manuelle Wahl" % role)
+		assert_eq(manual.state.rng.draws, s.rng.draws, "%s: manuelle Wahl verbraucht keine Ziehung" % role)
+		var random := apply_ok(s, Command.answer_random(p.id, stage, targets), "%s: Zufall bestätigt" % role)
+		assert_eq(random.state.rng.draws, s.rng.draws + 1, "%s: genau eine Ziehung übernommen" % role)
+		assert_eq(random.state.rng.to_dict(), proposal["rng_after"], "%s: Generatorfortschritt wie im Vorschlag" % role)
+		assert_eq(random.state.pending_prompt.stage, &"shown", "%s: weiter zur Anzeige" % role)
+		assert_eq(CanonicalJson.stringify(s.to_dict()), before, "%s: Ausgangszustand unverändert (Kopie)" % role)
+		# Manipuliert: anderes, sonst zulässiges Ergebnis mit Zufallskennzeichen.
+		if manual_targets != targets:
+			apply_rejected(s, Command.answer_random(p.id, stage, manual_targets), "random_mismatch", "%s: manipulierte Bestätigung" % role)
+		# Veraltet: Generator inzwischen fortgeschritten (anderer gespeicherter Stand).
+		var stale := GameState.from_dict(s.to_dict())
+		stale.rng.next_int(0, 1000)
+		var fresh := InfoSteps.random_choice(stale)
+		if fresh["targets"] != targets:
+			apply_rejected(stale, Command.answer_random(p.id, stage, targets), "random_mismatch", "%s: veraltete Bestätigung" % role)
+		# Replay und Laden nach der Bestätigung.
+		var loaded := GameState.from_dict(random.state.to_dict())
+		assert_true(loaded != null and CanonicalJson.stringify(loaded.to_dict()) == CanonicalJson.stringify(random.state.to_dict()), "%s: Laden identisch" % role)
+
+
+func test_random_choice_is_uniform_over_the_admissible_results() -> void:
+	# Traumdeuter mit fünf anderen Lebenden, davon ein Wolf: genau sechs zulässige Dreiergruppen (Wolf plus zwei von vier).
+	var s := _to_step(_state([W, TD, D, D, D, D]), "%s:2" % TD)
+	# Blutpriester mit zwei lebenden Wölfen: vier zulässige Ergebnisse (keiner, einer von zwei, beide).
+	var b := _to_step(_state([W, W, BP, D, D, D, D]), "%s:3" % BP)
+	b = _ok(b, Command.answer_stage_targets(b.pending_prompt.id, "targets", [5]), "Opfer") if b != null else null
+	for entry: Array in [[s, 6, "Traumdeuter"], [b, 4, "Blutpriester"]]:
+		var base: GameState = entry[0]
+		if base == null:
+			fail("%s: Auswahl nicht erreicht" % entry[2])
+			continue
+		var counts := {}
+		for seed_value: int in 600:
+			var probe := GameState.from_dict(base.to_dict())
+			probe.rng = SeededRng.new(seed_value + 1)
+			var t: Array = InfoSteps.random_choice(probe)["targets"]
+			counts[str(t)] = int(counts.get(str(t), 0)) + 1
+		assert_eq(counts.size(), int(entry[1]), "%s: jedes zulässige Ergebnis kommt vor %s" % [entry[2], counts])
+		var expected := 600.0 / float(entry[1])
+		for k: String in counts:
+			assert_true(absf(float(counts[k]) - expected) < expected * 0.35, "%s: %s etwa gleich häufig (%d)" % [entry[2], k, counts[k]])
+
+
+func test_random_choice_is_unavailable_without_admissible_result_and_for_other_roles() -> void:
+	# Das Opfer wählt der Blutpriester selbst (I-13): kein Zufallsknopf in dieser Stufe.
+	var b := _to_step(_state([W, BP, D, D, D, D]), "%s:2" % BP)
+	if b != null:
+		assert_true(InfoSteps.random_choice(b).is_empty(), "Opferwahl des Blutpriesters: kein Zufall")
+		apply_rejected(b, Command.answer_random(b.pending_prompt.id, "targets", [3]), "random_not_supported", "Opferwahl nicht per Zufall")
+		# Aufdeckung mit einem lebenden Wolf: zulässig sind „keiner“ oder dieser Wolf.
+		b = _ok(b, Command.answer_stage_targets(b.pending_prompt.id, "targets", [3]), "Opfer 3")
+		assert_true(InfoSteps.random_choice(b)["targets"] in [[], [1]], "nur „keiner“ oder Wolf 1")
+	# Ohne zulässiges Ergebnis (keine Dreiergruppe mit Wolf in der Auswahl) kein Vorschlag, keine ungültige Wahl.
+	var t := _to_step(_state([W, W, TD, D, D, D]), "%s:3" % TD)
+	if t != null:
+		var probe := GameState.from_dict(t.to_dict())
+		probe.pending_prompt.allowed_ids = [4, 5, 6] as Array[int]
+		assert_true(InfoSteps.random_choice(probe).is_empty(), "keine Dreiergruppe mit Wolf: kein Vorschlag")
+	var s := _state([W, "schutzengel", D, D, D, D])
+	s = _ok(s, Command.start_night(), "Nacht")
+	assert_true(InfoSteps.random_choice(s).is_empty(), "Schutzengel: kein Zufallsknopf")
+	apply_rejected(s, Command.answer_random(s.pending_prompt.id, "", [3]), "random_not_supported", "Zufall bei anderer Rolle abgelehnt")
