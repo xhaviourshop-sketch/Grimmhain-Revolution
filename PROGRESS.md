@@ -301,3 +301,14 @@ Zufallsknopf: gesperrter Zustand zusätzlich über die Oberfläche geprüft. Im 
 Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1072 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1059).
 Nicht umgesetzt: Geräte- und Touchabnahme; Paket 5.
 Nächster Schritt: Paket 5 (Inhalte und Medienanschlüsse) nach Freigabe.
+
+## 2026-09-29 — Paket 5a: Einstellungen dauerhaft, i18n-Prüfer, Inhaltsstand bereinigt
+Status: umgesetzt auf `feature/night-ui-expansion` (Ausgangs-HEAD `4f2deea`), PR #3 offen, kein Merge. Schema 14, Regelversion 0.12 unverändert.
+Fehler behoben: B-02 (Sprache und „Bewegung reduzieren“ gingen beim Neustart verloren). Rote Tests zuerst (`test_settings_persistence`, Klasse fehlte), Mutationsproben: Laden erst in `_ready` und „immer gespeichert“ werden jeweils von einem Test erkannt.
+Umgesetzt: `SettingsStore` (`user://settings.json`, getrennt von Spielständen), Laden in `AppShell._enter_tree` vor der ersten Ansicht, Validierung je Wert, defekte Datei ohne Startabbruch, Schreibfehler erhält die letzte gültige Fassung und wird im Einstellungsscreen gemeldet (DA-52). Linkshänderwert wird mitgespeichert, bleibt ohne Wirkung (D-10 offen).
+Umgesetzt: `tools/check-godot-i18n.js` mit 17 Regressionstests und CI-Workflow `godot-i18n.yml` (DA-53). Grenzen: 47 dynamische Schlüsselvorlagen nur als Vorlage, Platzhalterwerte aus Variablen nicht statisch.
+Inhalte: OI-12, OI-13, OI-17 mit DI-04 bis DI-07 verknüpft; 16 deutsche und 13 englische Verweise „noch nicht im Decision Log“ in Rollenlexikon, GUIDE-TEXTS und README durch DI-Nummern ersetzt; Spielleitungszeilen der vier Zufallsrollen an den Bedienweg angepasst (OI-09, DA-43 gekennzeichnet); Integrationsliste für Paket 5b in `INTEGRATION-STATUS.md`. Echte offene Inhaltsfragen: Rolle in drei Todeseffekt-Ansagen (DI-03), Phase „Alle Verzauberten“ ohne neu Verzauberte (DI-06).
+Berichtigt: Matrix I-03 von AUTO auf TEIL (Rückschluss aus Phase „Morgen“ und verdeckter Karte offen, DA-46 ist keine Freigabe).
+Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1081 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1072); Prüfer siehe Abschlussbericht.
+Nicht umgesetzt: Linkshändermodus (D-10), Audio, Lexikonansicht, I-03 Teil 2, Geräte- und Touchabnahme.
+Nächster Schritt: Paket 5b (Lexikon- und Spielleitungstexte ins Programm) nach Klärung von Anzeigeort und Freigabe.

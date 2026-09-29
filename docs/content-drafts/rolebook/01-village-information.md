@@ -172,9 +172,9 @@ Quelle: DECISION-LOG "Rollenaudit · Blutwolf, Korrupter Richter, Wächter am To
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | Der Spielleiter wählt Anna, Emil und Clara. Emil ist ein Wolf. Der Traumdeuter sieht die drei Namen und "mindestens ein Wolf". | The game master chooses Anna, Emil and Clara. Emil is a wolf. The Dreamer sees the three names and "at least one wolf". |
 | Beispiel 2 / Example 2 | Der Spielleiter wählt Anna, Ben und Clara, alle im Dorf. "Bestätigen" bleibt gesperrt, bis er eine Wolfsperson austauscht. | The game master chooses Anna, Ben and Clara, all in the village. "Confirm" stays locked until a wolf replaces one of them. |
-| Spielleitung / Game master | Du wählst, der Traumdeuter zeigt nur. Die App erinnert dich an die Wolfspflicht. Zwei oder drei Wölfe in der Auswahl sind erlaubt. | You choose, the Dreamer only sees. The app reminds you of the wolf requirement. Two or three wolves in the selection are allowed. |
+| Spielleitung / Game master | Du wählst, der Traumdeuter zeigt nur. Statt selbst zu wählen, kannst du "Zufällig auswählen" tippen: Die App schlägt eine zulässige Auswahl vor, die erst mit "Auswahl bestätigen" gilt. Solange sich die Partie nicht ändert, bleibt der Vorschlag gleich. Tippst du selbst eine Person an, gilt deine eigene Wahl. Die App erinnert dich an die Wolfspflicht. Zwei oder drei Wölfe in der Auswahl sind erlaubt. | You choose, the Dreamer only sees. Instead of choosing yourself you can tap "Pick at random": the app suggests a valid selection that only takes effect with "Confirm selection". As long as the game does not change, the suggestion stays the same. If you tap a person yourself, your own choice applies. The app reminds you of the wolf requirement. Two or three wolves in the selection are allowed. |
 
-Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-01, I-02, I-05; RM-DR-129). Randfall: gemeinsame Regel für Pflichtwahlen ohne mögliche Entscheidung (DECISION-LOG "Waldhexe · Produktionsrolle im Regelkern", DA-20), `step_queue.gd` (`no_decision`), Test `test_dreamer_true_wolf_count_and_drop_without_enough_targets`.
+Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-01, I-02, I-05; RM-DR-129). Zufallsknopf: RM-DR-015.2, DA-42 bis DA-45 (OI-09). Randfall: gemeinsame Regel für Pflichtwahlen ohne mögliche Entscheidung (DECISION-LOG "Waldhexe · Produktionsrolle im Regelkern", DA-20), `step_queue.gd` (`no_decision`), Test `test_dreamer_true_wolf_count_and_drop_without_enough_targets`.
 
 ---
 
@@ -191,9 +191,9 @@ Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-01, I-02, I-05; RM-D
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | Emil, ein Wolf, wird hingerichtet. In der folgenden Nacht wählt der Spielleiter Anna, Clara und David (David ist ein Giftwolf). Der Kopfgeldjäger sieht die Namen und "mindestens ein Wolf". | Emil, a wolf, is executed. In the following night the game master chooses Anna, Clara and David (David is a Poison Wolf). The Bounty Hunter sees the names and "at least one wolf". |
 | Beispiel 2 / Example 2 | Ein Cerberus mit drei Köpfen wehrt seine Hinrichtung ab und überlebt. Der Kopfgeldjäger erhält keine Liste. | A Cerberus with three heads wards off its execution and survives. The Bounty Hunter gets no list. |
-| Spielleitung / Game master | Die Listen sammeln sich als Zähler. Reichen die Ziele nicht, verfällt die Liste, und du bekommst einen Hinweis. | The lists accumulate as a counter. If there are not enough targets, the list expires and you get a notice. |
+| Spielleitung / Game master | Die Listen sammeln sich als Zähler. Je Liste wählst du selbst oder tippst "Zufällig auswählen"; der Vorschlag gilt erst mit "Auswahl bestätigen", bleibt bei unveränderter Partie gleich und wird zu deiner eigenen Wahl, sobald du eine Person antippst. Reichen die Ziele nicht, verfällt die Liste, und du bekommst einen Hinweis. | The lists accumulate as a counter. For each list you choose yourself or tap "Pick at random"; the suggestion only takes effect with "Confirm selection", stays the same while the game does not change, and becomes your own choice as soon as you tap a person. If there are not enough targets, the list expires and you get a notice. |
 
-Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-02, I-04, I-06; RM-DR-139).
+Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-02, I-04, I-06; RM-DR-139). Zufallsknopf: RM-DR-015.2, DA-42 bis DA-45 (OI-09).
 
 ---
 
@@ -210,9 +210,9 @@ Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-02, I-04, I-06; RM-D
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | Zehn Personen spielen, sechs sind tot, vier leben. Der Spielleiter wählt Clara. Der König sieht "Clara: Waldhexe". | Ten people play, six are dead, four are alive. The game master chooses Clara. The King sees "Clara: Witch of the Woods". |
 | Beispiel 2 / Example 2 | Fünf Personen sind tot, fünf leben. Es gibt keinen König-Schritt, weil die Toten nicht in der Mehrheit sind. | Five people are dead, five are alive. There is no King step, because the dead are not in the majority. |
-| Spielleitung / Game master | Du wählst die Person selbst. Ein Zufallsknopf ist für diese Rolle noch nicht umgesetzt (siehe OI-09). | You choose the person yourself. A random button is not yet implemented for this role (see OI-09). |
+| Spielleitung / Game master | Du wählst die Person selbst oder tippst "Zufällig auswählen". Der Vorschlag gilt erst mit "Auswahl bestätigen", bleibt bei unveränderter Partie gleich und wird zu deiner eigenen Wahl, sobald du eine Person antippst. | You choose the person yourself or tap "Pick at random". The suggestion only takes effect with "Confirm selection", stays the same while the game does not change, and becomes your own choice as soon as you tap a person. |
 
-Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-03; RM-DR-140.1, RM-DR-140.2). Zufallsknopf: `11-role-audit-status.md` §0.
+Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-03; RM-DR-140.1, RM-DR-140.2). Zufallsknopf: RM-DR-015.2, DA-42 bis DA-45 (OI-09).
 
 ---
 
@@ -248,9 +248,9 @@ Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-07; RM-DR-152).
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | Der Priester opfert Ben. Der Spielleiter nennt Emil. Der Priester sieht "Emil ist ein Wolf". Ben stirbt am Morgen. | The Priest sacrifices Ben. The game master names Emil. The Priest sees "Emil is a wolf". Ben dies at dawn. |
 | Beispiel 2 / Example 2 | Der Priester opfert Emil, einen Wolf. Der Spielleiter wählt niemanden, der Priester erfährt keinen Namen. | The Priest sacrifices Emil, a wolf. The game master names no one, and the Priest learns no name. |
-| Spielleitung / Game master | Du entscheidest, wie viele Wölfe der Priester erfährt, auch keinen. Öffentlich wird nur der Name des Opfers genannt. | You decide how many wolves the Priest learns, even none. Only the victim's name is announced in public. |
+| Spielleitung / Game master | Das Opfer wählt der Priester selbst; dafür gibt es keinen Zufall. Welche Wölfe er erfährt, auch keinen, entscheidest du selbst oder tippst "Zufällig auswählen". Der Vorschlag gilt erst mit "Auswahl bestätigen" und bleibt bei unveränderter Partie gleich. Beim Zufall ist jede zulässige Wolfsmenge, auch "keiner", gleich wahrscheinlich (technische Ableitung DA-43, inhaltlich noch nicht abgenommen). Öffentlich wird nur der Name des Opfers genannt. | The Priest chooses the victim; there is no random pick for that. Which wolves the Priest learns, even none, you decide yourself or tap "Pick at random". The suggestion only takes effect with "Confirm selection" and stays the same while the game does not change. With a random pick every valid set of wolves, "none" included, is equally likely (technical derivation DA-43, content not yet approved). Only the victim's name is announced in public. |
 
-Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-08, I-13; RM-DR-128).
+Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-08, I-13; RM-DR-128). Zufallsknopf nur für die Aufdeckung: RM-DR-015.2, DA-42 bis DA-45; Verteilung DA-43 (OI-09).
 
 ---
 

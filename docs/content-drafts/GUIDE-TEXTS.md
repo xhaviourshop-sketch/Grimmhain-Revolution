@@ -36,7 +36,7 @@ Gilt für Nachtbeginn, Morgen, Diskussion, Nominierung, Hinrichtung und Spielend
 | `narration.morning.death_single` | `[ÖFFENTLICH]` | Diese Nacht hat ein Leben gefordert. Es ist {name}. | This night has claimed a life. It is {name}. | genau ein Tod; Namensteil ergänzt |
 | `narration.morning.death_multiple` | `[ÖFFENTLICH]` | Diese Nacht hat mehrere Leben gefordert. Es sind {names}. | This night has claimed several lives. They are {names}. | mehrere Tode; Namensteil ergänzt |
 | `narration.morning.no_death` | `[ÖFFENTLICH]` | In dieser Nacht ist niemand gestorben. | No one died this night. | kein Tod; übernommen |
-| `narration.morning.role_reveal` | `[ÖFFENTLICH]` | {name} war {role}. | {name} was {role}. | nur in Runden ohne Wiederbelebung; in Wiederbelebungsrunden nie (Antwort des Product Owners vom 29.09.2026, noch nicht im Decision Log; ändert die bisherige frei wählbare Setup-Option) |
+| `narration.morning.role_reveal` | `[ÖFFENTLICH]` | {name} war {role}. | {name} was {role}. | nur in Runden ohne Wiederbelebung; in Wiederbelebungsrunden nie (Antwort des Product Owners vom 29.09.2026, Decision Log DI-01; ändert die bisherige frei wählbare Setup-Option) |
 | `gm.morning.begin` | `[SL-PRIVAT]` | Die Morgenauflösung ist fertig. Lies die Meldungen der Reihe nach vor. | The dawn resolution is done. Read out the announcements in order. | Morgen |
 | `narration.day.begin` | `[ÖFFENTLICH]` | Das Dorf versammelt sich. Beratet, wem ihr noch trauen könnt. | The village gathers. Discuss whom you can still trust. | Diskussion; übernommen |
 | `gm.day.begin` | `[SL-PRIVAT]` | Starte den Timer. Nominierungen öffnest du selbst. | Start the timer. You open nominations yourself. | Diskussion |
@@ -213,7 +213,7 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 
 ### 3.3 `[ÖFFENTLICH]` Aufruf und Einschlafen
 
-Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Aufrufpolitik (Antwort des Product Owners vom 29.09.2026, noch nicht im Decision Log): In Runden ohne Wiederbelebung werden bereits aufgedeckte Rollen in der Nachtreihenfolge nicht mehr aufgerufen. Aufgebrauchte Rollen werden trotzdem aufgerufen, nur ohne Fähigkeit, damit Dorf und Wölfe nicht wissen, was genutzt ist. In Wiederbelebungsrunden werden auch tote Rollen weiter aufgerufen, damit niemand weiß, wer lebt. Aus der Antwort folgt, dass auch blockierte und noch nicht aktive Rollen aufgerufen werden; nicht in der Partie vorkommende Rollen werden nicht aufgerufen (beides abgeleitet, zu bestätigen). Handlungszeilen ("Zeige auf ...") kennt das NARRATOR-SCRIPT nur für die Slice-Rollen; für alle weiteren Rollen sind sie offen (OI-18).
+Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Aufrufpolitik (Antwort des Product Owners vom 29.09.2026, Decision Log DI-02): In Runden ohne Wiederbelebung werden bereits aufgedeckte Rollen in der Nachtreihenfolge nicht mehr aufgerufen. Aufgebrauchte Rollen werden trotzdem aufgerufen, nur ohne Fähigkeit, damit Dorf und Wölfe nicht wissen, was genutzt ist. In Wiederbelebungsrunden werden auch tote Rollen weiter aufgerufen, damit niemand weiß, wer lebt. Aus der Antwort folgt, dass auch blockierte und noch nicht aktive Rollen aufgerufen werden; nicht in der Partie vorkommende Rollen werden nicht aufgerufen (beides abgeleitet, zu bestätigen). Handlungszeilen ("Zeige auf ...") kennt das NARRATOR-SCRIPT nur für die Slice-Rollen; für alle weiteren Rollen sind sie offen (OI-18).
 
 | Rollen-ID | Rolle | DE | EN |
 |---|---|---|---|

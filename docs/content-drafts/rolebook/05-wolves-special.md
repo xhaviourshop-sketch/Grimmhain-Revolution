@@ -20,7 +20,7 @@ Enthalten: `schattenhund`, `albtraumwolf`, `giftwolf`, `schwarze-witwe`, `schatt
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | In Nacht 2 blockiert der Schattenhund. Orakel, Waldhexe und Doktor handeln in dieser Nacht nicht. | In night 2 the Shadow Hound blocks. Oracle, Witch and Doctor do not act this night. |
 | Beispiel 2 / Example 2 | In Nacht 1 verzichtet der Schattenhund. In Nacht 2 wird er erneut gefragt. | In night 1 the Shadow Hound declines. In night 2 the question appears again. |
-| Spielleitung / Game master | Die Schritte entfallen protokolliert. Blockierte Rollen werden trotzdem aufgerufen, damit der Tisch nichts erfährt (abgeleitet aus der Aufrufpolitik vom 29.09.2026, Antwort des Product Owners vom 29.09.2026, noch nicht im Decision Log). | The steps drop and are logged. Blocked roles are still called so that the table learns nothing (derived from the call policy of 29.09.2026, Product Owner answer of 29.09.2026, not yet in the decision log). |
+| Spielleitung / Game master | Die Schritte entfallen protokolliert. Blockierte Rollen werden trotzdem aufgerufen, damit der Tisch nichts erfährt (abgeleitet aus der Aufrufpolitik vom 29.09.2026, Antwort des Product Owners vom 29.09.2026, Decision Log DI-02). | The steps drop and are logged. Blocked roles are still called so that the table learns nothing (derived from the call policy of 29.09.2026, Product Owner answer of 29.09.2026, decision log DI-02). |
 
 Quelle: DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-010); "Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf" (RM-DR-123, RM-DR-134.3); Zeitwächter: E-36.
 
@@ -96,7 +96,7 @@ Quelle: DECISION-LOG "Rollenaudit · Bindungsrollen" (B-03, B-06; RM-DR-113.1); 
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Der Schattenwanderer Emil verknüpft sich mit Ben. Emil wird an Tag 4 hingerichtet. Stattdessen stirbt Ben, Emil lebt, die Verknüpfung ist verbraucht. | The Shadowwalker Emil links themself with Ben. Emil is executed on day 4. Instead Ben dies, Emil lives, the link is used up. |
 | Beispiel 2 / Example 2 | Der Schutzengel schützt Ben vor dem Rudelangriff. Es stirbt niemand, also greift die Verknüpfung nicht. | The Guardian Angel protects Ben from the pack attack. No one dies, so the link does not trigger. |
-| Spielleitung / Game master | Die Verknüpfung siehst nur du. Wird ein Tod umgelenkt, ist das ein Todeseffekt und wird öffentlich angesagt (Antwort des Product Owners vom 29.09.2026, noch nicht im Decision Log). | Only you see the link. If a death is redirected, that is a death effect and is announced publicly (Product Owner answer of 29.09.2026, not yet in the decision log). |
+| Spielleitung / Game master | Die Verknüpfung siehst nur du. Wird ein Tod umgelenkt, ist das ein Todeseffekt und wird öffentlich angesagt (Antwort des Product Owners vom 29.09.2026, Decision Log DI-03). | Only you see the link. If a death is redirected, that is a death effect and is announced publicly (Product Owner answer of 29.09.2026, decision log DI-03). |
 
 Quelle: DECISION-LOG "Rollenaudit · Bindungsrollen" (B-04, B-07; RM-DR-110); Ketten: "Einzelsiegrollen, Teil 3" (E-20).
 

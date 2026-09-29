@@ -51,7 +51,8 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/widgets/toast/` | Statusmeldung am unteren Rand, 2,5 s sichtbar |
 | `app/theme/theme_tokens.gd` | alle Farben, Abstände, Radien, Rahmen, Schriftgrößen, Mindestgrößen, Zeiten |
 | `app/theme/theme_factory.gd` | baut das Theme aus den Tokens (kein `.tres`) |
-| `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Linkshänder-Grundlage; nur im Speicher |
+| `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Linkshänder-Grundlage (Werte im Speicher) |
+| `app/settings/settings_store.gd` | dauerhafte Geräteeinstellungen in `user://settings.json`, getrennt von Spielständen (DA-52) |
 | `app/platform/app_platform.gd` | Desktop/Mobil, Beenden erlaubt, Version aus `project.godot` |
 | `app/session/game_session.gd` | Anwendungsschicht zum Regelkern |
 | `app/setup/*.gd` | Anwendungsschicht und Modell des Setups ohne Regelkern: `PlayerSetup`, `SetupDraft`, `SetupPerson`, `SetupResult`, `PersonNameRules`; Rollen: `SetupRoleCatalog` (lesender Katalogadapter), `RolePresentation`, `RolePoolDraft`, `RoleCopy`, `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView` |
@@ -133,9 +134,9 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 - Schlüssel sind `msgid`s nach dem Muster `app.*` und `ui.<bereich>.<element>` (263 Schlüssel, davon 185 `ui.setup.*` sowie 22 `ui.role.*` und 3 `ui.faction.*`, identisch in beiden Dateien).
 - Szenen setzen nur `text_key`. Kein sichtbarer Text steht in Szenen oder Skripten (`test_no_literal_texts_in_scenes_or_scripts`).
 - `GrimmButton`, `GrimmLabel` und `GrimmToggle` übersetzen selbst (`tr(text_key)`) und aktualisieren sich bei `NOTIFICATION_TRANSLATION_CHANGED`. Die automatische Übersetzung der Engine ist für sie abgeschaltet, damit der sichtbare Text in `text` steht und prüfbar ist.
-- Sprachwechsel: `AppSettings.set_language("de"|"en")` setzt die Locale; die Shell verteilt die Änderung sofort an alle Knoten. Andere Sprachen werden abgelehnt. Die Wahl wird noch nicht gespeichert.
+- Sprachwechsel: `AppSettings.set_language("de"|"en")` setzt die Locale; die Shell verteilt die Änderung sofort an alle Knoten. Andere Sprachen werden abgelehnt. Die Wahl wird dauerhaft gespeichert (siehe „Dauerhafte Einstellungen“).
 - Nutzerdaten (Personennamen) stehen in einfachen `Label`s der Gruppe `user_content`; alle anderen Texte haben einen Schlüssel. Platzhalter von Eingabefeldern setzt die Ansicht per `tr()` und erneuert sie beim Sprachwechsel.
-- Neuer Text: Schlüssel in beide `.po`-Dateien eintragen, im Szenenknoten `text_key` setzen. `test_po_files_have_same_keys` und `test_all_referenced_keys_exist_in_both_languages` finden Lücken.
+- Neuer Text: Schlüssel in beide `.po`-Dateien eintragen, im Szenenknoten `text_key` setzen. `test_po_files_have_same_keys` und `test_all_referenced_keys_exist_in_both_languages` finden Lücken. Strukturprüfung vor dem Commit (Duplikate, leere Texte, Platzhalter `{name}`, Rollenschlüssel): `node tools/check-godot-i18n.js` aus dem Repo-Wurzelordner, Exit 1 mit Fundstelle; läuft auch in CI (`godot-i18n.yml`). Er prüft Struktur, nicht Bedeutung, und dynamisch gebildete Schlüssel nur als Vorlage.
 - Lange Texte: Beschriftungen und Buttons in Spalten brechen um. `test_long_german_texts_do_not_overlap` verlängert alle deutschen Texte um etwa 50 % (Pseudo-Locale `de_XA`) und prüft 1024×768 erneut.
 
 ## Barrierearme Grundlage und Bewegung
@@ -143,7 +144,15 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 - **Bewegung reduzieren** (`AppSettings.reduced_motion`) setzt die Übergangszeit des Routers und die Einblendung der Statusmeldung auf 0. Beim Einschalten wird ein laufender Übergang sofort beendet. Sonst blendet eine neue Ansicht in 200 ms mit 12 px Aufwärtsbewegung ein (Cubic, Ease-out). Eingaben sind während eines Übergangs nie gesperrt.
 - **Fokus:** Jeder Button ist fokussierbar (`FOCUS_ALL`), jede Ansicht setzt einen Standardfokus (Startbutton, erste Menüaktion, Namensfeld in „Neue Partie“, sonst Zurück). Tab, Shift+Tab und Pfeiltasten bewegen den Fokus über die Container, Enter oder Leertaste lösen aus, Escape läuft über Zurück.
 - **Touch und Maus:** Buttons reagieren auf das Signal `pressed`. Touch löst über `input_devices/pointing/emulate_mouse_from_touch=true` dieselben Mausereignisse aus. Keine Gesten, kein Langdruck.
-- **Linkshänder:** `AppSettings.left_handed` existiert mit Signal, hat aber noch keine Wirkung. Die spätere Spiegelung gehört ins Cockpit mit echtem Sitzkreis.
+- **Linkshänder:** `AppSettings.left_handed` existiert mit Signal und wird mitgespeichert, hat aber keinen Schalter und keine Wirkung. Das ist kein Linkshändermodus. Die spätere Spiegelung gehört ins Cockpit mit echtem Sitzkreis (Matrix D-10).
+
+## Dauerhafte Einstellungen
+
+- **Datei:** `user://settings.json` (Windows: `%APPDATA%\Godot\app_userdata\Grimmhain\settings.json`), JSON `{format: "grimmhain-settings", version: 1, language, reduced_motion, left_handed}`. Getrennt von `user://saves`; keine Rollen, Namen, Spielstände oder Geheimnisse. `version` betrifft nur dieses Format.
+- **Startreihenfolge:** `AppShell._enter_tree` erzeugt den Kontext, lädt die Datei (`AppContext.use_settings_store`) und setzt die Sprache, bevor Kindknoten und erste Ansicht entstehen. Laden schreibt nie und löst kein `changed` aus.
+- **Speichern:** jede Änderung über `AppSettings.changed`; `.tmp` schreiben und zurücklesen, alte Datei zu `.bak`, `.tmp` zu Datei. Laden greift bei fehlender oder unlesbarer Datei auf `.bak` zurück.
+- **Fehler:** fehlende Datei = Standardwerte; ungültige Einzelwerte fallen einzeln zurück, unbekannte Schlüssel werden ignoriert; unlesbare Datei = Standardwerte, der Start läuft weiter. Scheitert das Schreiben, gilt die Einstellung in dieser Sitzung weiter, die letzte gültige Fassung bleibt, und die Statusmeldung sagt „Gilt jetzt, konnte aber nicht dauerhaft gespeichert werden“. Kein automatischer Wiederholversuch.
+- **Tests:** Ein von außen übergebener Kontext speichert nur mit ausdrücklich gesetztem `AppShell.settings_store`; `test_settings_persistence` nutzt dafür temporäre Verzeichnisse `user://test-saves-*`.
 - **Skalierung:** Basis 1280×800, Streckung `canvas_items` mit Aspekt `expand`. Alle Layouts nutzen Container und Anker, keine festen Positionen.
 
 ## Tests und Prüfbefehle

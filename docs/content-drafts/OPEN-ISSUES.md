@@ -2,6 +2,8 @@
 
 **Status:** Entwurf. Stand: Quell-Commit `312f5bbbbec4c218754b35a0043b51e79d80bcf5` (`audit/all-72-roles`). Erste Fassung 29.09.2026, fachlich überarbeitet am 29.09.2026 gegen Decision Log, Regelregister, Regelkern (`godot/core/rules/`) und Tests am Quell-Commit. Diese Liste entscheidet nichts. Zeilennummern beziehen sich auf den Quell-Commit.
 
+**Abgleich 29.09.2026 (Paket 5a, Branch `feature/night-ui-expansion`):** Verweise gegen den Decision Log im Branch geprüft. Die Antworten des Product Owners stehen dort im Abschnitt „Inhaltsentscheidungen“ (DI-01 bis DI-09), die technischen Ableitungen als DA-21 bis DA-25 und DA-42 bis DA-45. Die Zeilen OI-09, OI-12, OI-13, OI-17 und Abschnitt 5 sind danach berichtigt; die übrigen Befunde und Zeilennummern bleiben historisch.
+
 Kartenschlucker (`kartenschlucker`) ist ausdrücklich zurückgestellt (`11-role-audit-status.md` §0 "Einzige blockierte Rolle: Kartenschlucker"). Es gibt keinen Entwurf und keine Totenkartenregel.
 
 ## 1. Klassen
@@ -28,15 +30,15 @@ Von 19 Punkten bleibt kein einziger als echter Regelwiderspruch (K1) bestehen. Z
 | OI-06 | "Links" gleich Uhrzeigersinn | Hinweis | K5 | Tablet-Gegenprüfung steht aus |
 | OI-07 | Ton bei fünf Toten | Konflikt | K2 | gewählte Ausnahme mit dokumentierter Nebenwirkung, kein erwiesener Fehler; am 29.09.2026 bestätigt (DI-09) |
 | OI-08 | Traumdeuter und Kopfgeldjäger ohne mögliche Auswahl | Lücke | K2 | aus gemeinsamer Regel, Code und Test belegt, Entwurf ergänzt |
-| OI-09 | Zufallsknopf | Hinweis | K3 | entschieden (RM-DR-015.2), im Programm umgesetzt (29.09.2026); Spielleitertexte stehen aus |
+| OI-09 | Zufallsknopf | Hinweis | K3 | entschieden (RM-DR-015.2), umgesetzt (DA-42 bis DA-45); Spielleitertexte der vier Rollen im Entwurf angepasst (29.09.2026); DA-43 (Blutpriester-Verteilung) ist technische Ableitung, inhaltlich abzunehmen |
 | OI-10 | Amalia: Format der Frage | Lücke | K5 | aufgelöst: Die App prüft die Frage nicht, Entwurf ergänzt |
 | OI-11 | Öffentliche Ansagen (Schutzgeist, Weiser) | Lücke | K2 | (a) Schutzgeist aufgelöst, Entwurf geändert; (b) Weiser durch die Regel der Todeseffekte beantwortet (DI-03) |
-| OI-12 | Loki: Wer erfährt von der Bindung | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026 (Chat), Decision-Log-Eintrag steht aus |
-| OI-13 | Rotkäppchen: Wer erfährt von Kette und Apfel | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026 (Chat), Decision-Log-Eintrag steht aus |
+| OI-12 | Loki: Wer erfährt von der Bindung | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026, Decision Log DI-04; umgesetzt (DA-24, `loki_bond`) |
+| OI-13 | Rotkäppchen: Wer erfährt von Kette und Apfel | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026, Decision Log DI-05; umgesetzt (DA-25) |
 | OI-14 | Henker: Hinrichtung am Folgetag bleibt aus | Lücke | K2 | Decision Log, Code und Test belegen: Markierung verfällt; Entwurf ergänzt |
 | OI-15 | König Lykaon: Information der verwandelten Person | Lücke | K2 | Regelkern meldet privat; Rudel sieht die Person ab der Folgenacht; Entwurf ergänzt |
 | OI-16 | Name der Fraktion "Einzelsieg" | Hinweis | K3, K5 | Decision Log: "folgt später"; Arbeitsbegriff bleibt |
-| OI-17 | Rattenfänger, Pestbringerin: Information der Betroffenen | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026 (Chat), Decision-Log-Eintrag steht aus; ein Detail offen |
+| OI-17 | Rattenfänger, Pestbringerin: Information der Betroffenen | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026, Decision Log DI-06 (Rattenfänger) und DI-07 (Pestbringerin, jede neu infizierte Person, auch durch Ausbreitung am Morgen); umgesetzt (DA-24). Offen bleibt nur ein Detail zu DI-06, siehe Abschnitt 5 Nr. 2 |
 | OI-18 | Handlungszeilen für Nicht-Slice-Rollen | Lücke | K5 | Integrationsfrage (NARRATOR-SCRIPT), keine Regelfrage |
 | OI-19 | Trugbilderwolf: Kennt er seine Scheinrolle | Lücke | K2 | beantwortet am 29.09.2026: nur der Spielleiter (DI-08) |
 
@@ -114,13 +116,13 @@ Ebenfalls ersetzt, im Decision Log selbst und dort ausdrücklich benannt (Zeile 
 
 - **OI-02 · Totenkarten (K3):** Decision Log Zeile 439 (W-01 = A): Kutscher und Dr. Victor Frankenstein werden ohne Kartenbezug umgesetzt, Kartenbedingungen (RM-DR-141.4) und Kartenschlucker folgen mit dem Totenkarten-Assistenten. `11-role-audit-status.md` §0 (Kartenschlucker blockiert: RM-DR-013, RM-DR-143.1, RM-DR-143.2). Bedingung von RM-DR-141.4 könnte später Zeitpunkt und Ziele von `dr-victor-frankenstein` ändern. Entwurf: kein Kartentext, kein Eintrag für `kartenschlucker`.
 - **OI-06 · Richtung "links" (K5):** Decision Log Zeile 308: Gegenprüfung am Tablet, ob die Sitzansicht im Uhrzeigersinn läuft, bleibt offen. `faehrtenleser`, `detektiv` und `{direction}` setzen "links gleich Uhrzeigersinn" voraus. Sollte die Tablet-Ansicht gegen den Uhrzeigersinn laufen, müssen "links" und "rechts" vertauscht werden. Prüfbar erst am UI-Stand.
-- **OI-09 · Zufallsknopf (K3):** RM-DR-015.2 (Zeile 320) ist entschieden. König, Traumdeuter, Kopfgeldjäger und Blutpriester nutzen bisher nur die Spielleiterwahl (`11-role-audit-status.md` §0). Sobald der Zufallsknopf umgesetzt ist, müssen die SL-Texte dieser Rollen ergänzt werden.
+- **OI-09 · Zufallsknopf (K3):** RM-DR-015.2 (Zeile 320) ist entschieden und seit dem Restpaket umgesetzt (DA-42 bis DA-45, `test_random_pick`, `test_info_roles`). Die Spielleitungszeilen von `traumdeuter`, `kopfgeldjaeger`, `koenig` und `blutpriester` in `rolebook/01-village-information.md` beschreiben jetzt den Bedienweg: selbst wählen oder „Zufällig auswählen“, Wirkung erst mit „Auswahl bestätigen“, gleicher Vorschlag bei unverändertem Zustand, Antippen macht den Vorschlag zur eigenen Wahl. Beim Blutpriester betrifft der Zufall nur die Aufdeckung, nie seine Opferwahl (I-13). Für die Inhaltsabnahme: DA-43 (jede zulässige Wolfsmenge einschließlich „keiner“ gleich wahrscheinlich) ist eine technische Ableitung, keine ausdrückliche Entscheidung des Product Owners.
 - **OI-16 · Name der Fraktion "Einzelsieg" (K3, K5):** Decision Log Zeilen 17 und 83: Der Name der Gruppe folgt später. `ui.faction.solo` = "Einzelsieg" (DE) und "Solo" (EN). Die Entwürfe nutzen "Einzelsieg / Solo" als Arbeitsbegriff.
 - **OI-18 · Handlungszeilen (K5):** `docs/assets/NARRATOR-SCRIPT.md` §3 enthält `role.<id>.act` nur für die Slice-Rollen. Für alle weiteren Rollen fehlt der Bedienablauf (zeigt die Person, wählt der Spielleiter, oder das Smartphone). Das ist Integrations- und Sprechertextarbeit, keine Regelfrage. GUIDE-TEXTS enthält nur Aufruf und Einschlafen.
 
 ## 5. Entscheidungsstand
 
-Alle Antworten des Product Owners vom 29.09.2026 sind mit Herkunft, Auswirkungen und Akzeptanztests in [`DECISIONS-TO-INTEGRATE.md`](DECISIONS-TO-INTEGRATE.md) festgehalten. Sie stehen noch nicht im Decision Log.
+Alle Antworten des Product Owners vom 29.09.2026 sind mit Herkunft, Auswirkungen und Akzeptanztests in [`DECISIONS-TO-INTEGRATE.md`](DECISIONS-TO-INTEGRATE.md) festgehalten und stehen seit PR #3 im Decision Log (Abschnitt „Inhaltsentscheidungen · Wiederbelebungsrunde, Aufrufe, Todeseffekte, Hinweise“, DI-01 bis DI-09). Die Umsetzung beschreibt [`INTEGRATION-STATUS.md`](INTEGRATION-STATUS.md).
 
 | Frühere Nummer | Thema | Stand |
 |---|---|---|
@@ -133,10 +135,12 @@ Alle Antworten des Product Owners vom 29.09.2026 sind mit Herkunft, Auswirkungen
 | D7 (OI-07) | Ton bei fünf Toten | bestätigt (DI-09) |
 | neu | Rollenaufdeckung und Wiederbelebungsrunde | beantwortet (DI-01), ändert die bisherige Produktvorgabe |
 
-**Verbleibende Randfälle** (keine Blocker für die Entwürfe):
-1. Nennt die Ansage bei Liebeskummer, Kette und Verknüpfung eine Rolle, und wird die Länge des Fluchs des Weisen genannt? (DI-03)
-2. Findet die Phase "Alle Verzauberten" auch in Nächten ohne neu Verzauberte statt? (DI-06)
-3. Bedeutung von "Selbstmörder in der Partie" für den Ton (Rolle zu Spielbeginn oder lebende Person). (DI-09)
-4. Aufruf blockierter und noch nicht aktiver Rollen sowie nicht vorkommender Rollen: abgeleitet, zu bestätigen. (DI-02)
-5. Ob die Setup-Anzeige der Wiederbelebungsrunde überstimmt werden darf, und Warnung bei indirekten Trägern. (DI-01)
-6. Totenreichkarten sind nicht definiert (OI-02).
+**Verbleibende Randfälle** (keine Blocker für die Entwürfe; Stand 29.09.2026 nach Abgleich mit dem Decision Log). Technische Ableitungen (DA) sind umgesetzt, aber keine Antworten des Product Owners; sie werden bei der Inhaltsabnahme bestätigt oder korrigiert, nicht erneut als offene Frage gestellt.
+
+1. **Rolle in der Ansage bei Liebeskummer, Kette und Verknüpfung (DI-03):** DI-03 wählte „Effekt und Rolle nennen“, auch in Wiederbelebungsrunden. DA-23 nennt bei diesen drei Folgetoden technisch keine Rolle (Mindestangabe). Die Antwort legt nicht fest, *welche* Rolle hier gemeint ist (die der sterbenden Person oder die der Rolle, von der die Bindung stammt). Echte Restfrage: Welche Rolle nennt die Ansage in diesen drei Fällen? Praktische Folge: Bis zur Antwort nennen diese drei Ansagen nur den Effekt und bleiben hinter „Effekt und Rolle nennen“ zurück. Die Länge des Fluchs des Weisen wird nach DA-23 nicht genannt (technisch, zu bestätigen).
+2. **Phase „Alle Verzauberten“ ohne neu Verzauberte (DI-06):** Nicht beantwortet. Ist-Stand: Der Hinweis `piper_all` entsteht nur zusammen mit einer neuen Verzauberung (`rules_engine.gd`, `NoticeRules`), in Nächten ohne neue Verzauberte gibt es keine zweite Phase. Echte Restfrage: Soll „Alle Verzauberten“ in jeder Nacht mit lebenden Verzauberten stattfinden, als Tarnung wie bei DI-02? Praktische Folge: Fehlt die Phase, erkennen die bereits Verzauberten, dass in dieser Nacht niemand neu verzaubert wurde.
+3. **„Selbstmörder in der Partie“ für den Ton (DI-09):** Nicht beantwortet (Rolle zu Spielbeginn oder lebende Person). Blockiert erst die Audio-Umsetzung (X-05), nicht Paket 5b.
+4. **Aufruf blockierter, noch nicht aktiver und nicht vorkommender Rollen (DI-02):** technisch abgeleitet und umgesetzt (DA-22, `CallPolicy`), zu bestätigen.
+5. **Setup-Anzeige der Wiederbelebungsrunde (DI-01):** technisch abgeleitet (DA-21): nur Anzeige, nicht überstimmbar; die Warnung bei indirekten Trägern entfällt, weil sie nie sichtbar wäre. Zu bestätigen.
+6. **Zeitpunkt privater Hinweise (DI-04, DI-07):** technisch abgeleitet (DA-24): offene Hinweise erscheinen zuerst, auch nach der Ausbreitung am Morgen. Zu bestätigen; der Bedienablauf am Tisch gehört zu OI-18.
+7. **Totenreichkarten** sind nicht definiert (OI-02), bewusst später.
