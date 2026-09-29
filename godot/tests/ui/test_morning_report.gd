@@ -94,3 +94,67 @@ func test_nobody_died() -> void:
 	assert_eq((pub["deaths"] as Array).size(), 0, "niemand gestorben")
 	var revived: Array = pub["revived"]
 	assert_eq(revived.size(), 0, "niemand wiederbelebt")
+
+
+# --- Historische Rolle: Die Ansage zeigt die Rolle zum Zeitpunkt des Todes ------------------------------
+
+func _gm(session: GameSession, kind: String, fields: Dictionary) -> void:
+	var r := session.submit(CorrectionFixtures.gm(kind, fields, "Test"))
+	assert_true(r.ok, "%s %s (%s)" % [kind, fields, r.error])
+
+
+func _death_roles(report: Dictionary) -> Array:
+	return (report["public"]["deaths"] as Array).map(func(d: Dictionary) -> String: return str(d["role_id"]))
+
+
+## Tod als Dorfbewohner, danach Rollenänderung: Bericht, privater Teil, Laden und Replay bleiben historisch.
+func test_role_change_after_death_keeps_reported_role() -> void:
+	var session := _session(true)
+	_night(session)
+	_gm(session, "set_role", {"target_id": 6, "role_id": "doktor"})
+	var report := session.morning_report()
+	assert_eq(_death_roles(report), ["dorfbewohner"], "öffentlich: Rolle beim Tod, nicht die spätere")
+	var death: Array = (report["private"] as Array).filter(func(l: Dictionary) -> bool: return str(l["key"]) == "ui.morning.private.death")
+	assert_eq(death.map(func(l: Dictionary) -> String: return str(l["role_id"])), ["dorfbewohner"], "privat: Rolle beim Tod")
+	var loaded := GameSession.new()
+	assert_eq(String(loaded.load_text(session.save_text())), "", "Stand geladen")
+	assert_eq(loaded.morning_report(), report, "nach Laden derselbe Bericht")
+	var replayed := RulesEngine.replay(session.commands())
+	assert_true(replayed.ok, "Replay")
+	assert_eq(MorningReport.build(replayed.state, replayed.events), report, "Replay ergibt denselben Bericht")
+
+
+## Tod, Wiederbelebung, andere Rolle, erneuter Tod am selben Tag: jede Ansage mit ihrer eigenen Rolle.
+func test_revive_and_second_death_each_keep_their_role() -> void:
+	var session := _session(true)
+	_night(session)
+	_gm(session, "kill", {"target_id": 5, "trigger_effects": false})
+	_gm(session, "revive", {"target_id": 5})
+	_gm(session, "set_role", {"target_id": 5, "role_id": "doktor"})
+	_gm(session, "kill", {"target_id": 5, "trigger_effects": false})
+	_gm(session, "revive", {"target_id": 5})
+	_gm(session, "set_role", {"target_id": 5, "role_id": "koenig"})
+	var deaths := session.day_deaths()
+	assert_eq(deaths.map(func(d: Dictionary) -> Array: return [int(d["person_id"]), str(d["role_id"])]), [[5, "dorfbewohner"], [5, "doktor"]], "zwei Tode, zwei Rollen")
+	var loaded := GameSession.new()
+	assert_eq(String(loaded.load_text(session.save_text())), "", "Stand geladen")
+	assert_eq(loaded.day_deaths(), deaths, "nach Laden dieselben Ansagen")
+	var replayed := RulesEngine.replay(session.commands())
+	assert_eq(MorningReport.day_deaths(replayed.state, replayed.events), deaths, "Replay ergibt dieselben Ansagen")
+
+
+## Ohne Setup-Option: keine Rolle in den zeigbaren Daten, auch nicht nach Rollenänderung oder zweitem Tod.
+func test_without_reveal_no_role_in_public_data() -> void:
+	var session := _session(false)
+	_night(session)
+	_gm(session, "set_role", {"target_id": 6, "role_id": "doktor"})
+	_gm(session, "kill", {"target_id": 5, "trigger_effects": false})
+	_gm(session, "revive", {"target_id": 5})
+	_gm(session, "set_role", {"target_id": 5, "role_id": "koenig"})
+	_gm(session, "kill", {"target_id": 5, "trigger_effects": false})
+	var strings: Array = []
+	_all_strings(session.morning_report()["public"], strings)
+	_all_strings(session.day_deaths(), strings)
+	for role: String in ["dorfbewohner", "doktor", "koenig", "werwolf", "schutzengel", "waldhexe", "nachtwaechter"]:
+		assert_false(strings.has(role), "zeigbare Daten ohne %s" % role)
+	assert_eq(session.day_deaths().map(func(d: Dictionary) -> String: return str(d["role_id"])), ["", ""], "Tagesansagen ohne Rolle")

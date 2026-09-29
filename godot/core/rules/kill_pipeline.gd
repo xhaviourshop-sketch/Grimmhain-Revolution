@@ -65,8 +65,11 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	target.alive = false
 	target.death = record
 	ctx.deaths += 1
-	# Nur Spielleiter: Was öffentlich verkündet wird, entscheidet DR-04 (offen).
-	ctx.emit(GameEvent.SEAT_DIED, Visibility.GM, record.to_dict())
+	# Nur Spielleiter: Was öffentlich verkündet wird, entscheidet DR-04. Die Rolle zum Zeitpunkt des
+	# Todes steht im Ereignis, damit eine spätere Rollenänderung die Ansage nicht umschreibt.
+	var died := record.to_dict()
+	died["role_id"] = String(target.role_id)
+	ctx.emit(GameEvent.SEAT_DIED, Visibility.GM, died)
 	SoloRules.fate_record_death(s, target_id)
 	ApprenticeRules.on_own_death(s, target_id)
 	if trigger_effects:

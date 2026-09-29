@@ -3,7 +3,7 @@ extends RefCounted
 ## Morgenbericht der letzten Nacht aus den Ereignissen der Partie (Vertical Slice §4.6, DR-04).
 ## Getrennt in zwei Teile:
 ##   public   nur Werte aus einer Positivliste: Namen der Gestorbenen (Rolle nur mit der Setup-Option
-##            `reveal_role_on_death`), Wiederbelebte und ausdrücklich öffentliche Hinweise
+##            `reveal_role_on_death`, und zwar die Rolle beim Tod aus `SeatDied`), Wiederbelebte und ausdrücklich öffentliche Hinweise
 ##            (Detektiv, Schutzgeist, eingefrorene Nacht, Glocken, Richter-Nominierung). Nie Ursache,
 ##            Quelle, Schutz oder andere Rollen.
 ##   private  aufgelöste Aktionen mit Gründen für die Spielleitung.
@@ -65,9 +65,8 @@ static func day_deaths(s: GameState, events: Array[GameEvent]) -> Array:
 		var e := events[i]
 		if e.command_index == day_command or e.type != GameEvent.SEAT_DIED:
 			continue
-		var id := int(e.data["target_id"])
-		var entry := _person(s, id)
-		entry["role_id"] = String(s.players[id].role_id) if s.reveal_role_on_death else ""
+		var entry := _person(s, int(e.data["target_id"]))
+		entry["role_id"] = str(e.data["role_id"]) if s.reveal_role_on_death else ""
 		out.append(entry)
 	return out
 
@@ -79,9 +78,8 @@ static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 	for e: GameEvent in span:
 		match e.type:
 			GameEvent.SEAT_DIED:
-				var id := int(e.data["target_id"])
-				var entry := _person(s, id)
-				entry["role_id"] = String(s.players[id].role_id) if s.reveal_role_on_death else ""
+				var entry := _person(s, int(e.data["target_id"]))
+				entry["role_id"] = str(e.data["role_id"]) if s.reveal_role_on_death else ""
 				deaths.append(entry)
 			GameEvent.PLAYER_REVIVED:
 				revived.append(_person(s, int(e.data["player_id"])))
@@ -107,7 +105,7 @@ static func _private(s: GameState, span: Array[GameEvent]) -> Array:
 		match e.type:
 			GameEvent.SEAT_DIED:
 				out.append({"key": "ui.morning.private.death", "person": _person(s, int(d["target_id"])), "cause": str(d["cause"]),
-					"role_id": String(s.players[int(d["target_id"])].role_id)})
+					"role_id": str(d["role_id"])})
 			GameEvent.KILL_PREVENTED:
 				out.append({"key": "ui.morning.private.saved", "person": _person(s, int(d["target_id"])), "role_id": str(d.get("protection", ""))})
 			GameEvent.NO_NIGHT_KILL:
