@@ -2859,7 +2859,7 @@ msgid "ui.cockpit.dialog.undo.title"
 msgstr "Undo?"
 
 msgid "ui.cockpit.dialog.undo.message"
-msgstr "This is taken back: {what}. “Redo” restores it."
+msgstr "This is taken back: {what}. “Redo” restores it. Only the game state is reset: anything already shown or announced stays known to the players."
 
 msgid "ui.cockpit.dialog.undo.confirm"
 msgstr "Undo"

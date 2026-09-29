@@ -442,3 +442,5 @@ func test_log_uses_readable_labels() -> void:
 	assert_true(texts.contains("Phasenwechsel (öffentlich)"), "lesbare Bezeichnung: %s" % texts.substr(0, 300))
 	assert_true(texts.contains("Partie gestartet (Spielleitung)"), "Startereignis")
 	assert_false(texts.contains("PhaseChanged ("), "kein technischer Name, wenn eine Bezeichnung existiert")
+	# Das Protokoll enthält alle geheimen Ereignisse: derselbe Warnhinweis wie im Rollenbereich.
+	assert_true(texts.contains("Schließe ihn, bevor jemand mitliest"), "Warnhinweis im Protokoll")

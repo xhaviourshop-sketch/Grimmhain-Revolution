@@ -40,6 +40,7 @@ static func private_drawer(seats: Array, actions: Array = []) -> Control:
 static func log_drawer(events: Array, seats: Array) -> Control:
 	var drawer := _drawer("LogLayer", "ui.cockpit.log.heading")
 	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer
+	_label(list, "ui.cockpit.private.warning", {}, &"WarningLabel")
 	if events.is_empty():
 		_label(list, "ui.cockpit.log.empty", {}, &"MutedLabel")
 	var shown := 0
@@ -67,9 +68,9 @@ static func log_drawer(events: Array, seats: Array) -> Control:
 	return drawer
 
 
-## Karte für die handelnde Person: Rollenname und ausschließlich die freigegebenen Werte.
-static func show_card(next: Dictionary) -> Control:
-	var lines: Array = next.get("show", [])
+## Karte für die handelnde Person: Rollenname und ausschließlich die freigegebenen Werte. Erhält nur
+## diese beiden Angaben, nie den ganzen Prompt (Wahrheit, Teilantworten).
+static func show_card(role_id: String, lines: Array) -> Control:
 	if lines.is_empty():
 		return null
 	var root := _full_rect("ShowLayer")
@@ -83,7 +84,7 @@ static func show_card(next: Dictionary) -> Control:
 	var column := VBoxContainer.new()
 	column.theme_type_variation = &"ScreenColumn"
 	panel.add_child(column)
-	_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(str(next.get("role_id")))}, &"HeadingLabel")
+	_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"HeadingLabel")
 	for line: Dictionary in lines:
 		_label(column, CockpitText.info_key(str(line["key"])), {}, &"CaptionLabel")
 		var value := GrimmLabel.new()
@@ -98,8 +99,9 @@ static func show_card(next: Dictionary) -> Control:
 
 
 ## Zeigbare Ansagekarte: ausschließlich die Vorlesezeilen aus dem öffentlichen Teil des Berichts.
-static func announcement(report: Dictionary) -> Control:
-	if report.is_empty():
+## Erhält nur diesen Teil, nie die privaten Details.
+static func announcement(night_number: int, public: Dictionary) -> Control:
+	if public.is_empty():
 		return null
 	var root := _full_rect("AnnouncementLayer")
 	var center := CenterContainer.new()
@@ -112,8 +114,8 @@ static func announcement(report: Dictionary) -> Control:
 	var column := VBoxContainer.new()
 	column.theme_type_variation = &"ScreenColumn"
 	panel.add_child(column)
-	_label(column, "ui.cockpit.announcement.heading", {"number": int(report.get("night_number", 0))}, &"HeadingLabel")
-	for line: Dictionary in CockpitText.morning_lines(report.get("public", {})):
+	_label(column, "ui.cockpit.announcement.heading", {"number": night_number}, &"HeadingLabel")
+	for line: Dictionary in CockpitText.morning_lines(public):
 		_label(column, str(line["key"]), line["values"], &"ReadAloudLabel")
 	column.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
 	return root

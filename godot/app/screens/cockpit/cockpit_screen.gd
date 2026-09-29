@@ -63,6 +63,7 @@ func _setup() -> void:
 	resized.connect(_update_side_width)
 	context.session.view_changed.connect(_on_session_changed)
 	context.session.command_rejected.connect(_on_rejected)
+	context.session.state_replaced.connect(_on_state_replaced)
 	context.saves.status_changed.connect(_on_save_status)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	_card.requested.connect(_on_card_requested)
@@ -99,6 +100,14 @@ func default_focus() -> Control:
 func _on_session_changed(_v: Dictionary) -> void:
 	_error_key = ""
 	_refresh()
+
+
+## Rückgängig/Wiederholen ersetzt den Zustand: offene Tages- und Korrekturbedienung (Auswahl,
+## Vorschau des alten Zustands) verfällt.
+func _on_state_replaced() -> void:
+	_reset_day_mode()
+	_reset_gm_mode()
+	_render()
 
 
 func _refresh() -> void:
@@ -523,10 +532,12 @@ func open_layer(kind: StringName) -> void:
 		&"log":
 			_layer = CockpitLayers.log_drawer(context.session.event_log(), _view.get("seats", []))
 		&"show":
-			_layer = CockpitLayers.show_card(_view.get("next", {}))
+			var next: Dictionary = _view.get("next", {})
+			_layer = CockpitLayers.show_card(str(next.get("role_id", "")), next.get("show", []))
 			_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
 		&"announcement":
-			_layer = CockpitLayers.announcement(context.session.morning_report())
+			var report := context.session.morning_report()
+			_layer = CockpitLayers.announcement(int(report.get("night_number", 0)), report.get("public", {}))
 			_layout.visible = false
 		&"morning":
 			_layer = CockpitLayers.morning_drawer(context.session.morning_report(), _view.get("seats", []))

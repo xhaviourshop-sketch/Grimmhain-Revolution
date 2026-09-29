@@ -107,3 +107,24 @@ func test_undo_and_redo_are_saved() -> void:
 	assert_eq(other.state_hash(), ctx.session.state_hash(), "Stand nach Wiederholen gespeichert")
 	# Rückgängig ist auch nach einem Neustart möglich (Befehlsfolge im Spielstand).
 	assert_true(other.undo(), "Rückgängig nach dem Laden")
+
+
+## Rückgängig und Neustart: Ereignisse = Anfang des ursprünglichen Verlaufs, Wiederholen überlebt
+## den Neustart nicht (nicht gespeichert), eine neue Handlung ist danach möglich.
+func test_undo_then_restart_keeps_events_and_drops_redo() -> void:
+	var ctx := AppContext.new()
+	ctx.saves.base_dir = make_save_dir()
+	ctx.session.submit(Fixtures.start_roles(ROLES, 4))
+	ctx.session.start_night()
+	ctx.session.answer_targets([5])
+	var full_events := ctx.session.event_log()
+	ctx.session.undo()
+	var n := ctx.session.commands().size()
+	assert_eq(ctx.session.event_log(), full_events.filter(func(e: Dictionary) -> bool: return int(e["command_index"]) < n), "Ereignisse = Anfang des Verlaufs")
+	var fresh := AppContext.new()
+	fresh.saves.base_dir = ctx.saves.base_dir
+	assert_true(bool(fresh.resume(ctx.session.round_id())["ok"]), "Wiederaufnahme")
+	assert_eq(fresh.session.state_hash(), ctx.session.state_hash(), "Zustand nach Rückgängig und Neustart")
+	assert_eq(fresh.session.event_log(), ctx.session.event_log(), "Ereignisse nach Neustart")
+	assert_false(fresh.session.can_redo(), "Wiederholen nach Neustart nicht verfügbar")
+	assert_true(fresh.session.answer_targets([6]).ok, "neue Handlung nach Neustart")

@@ -88,6 +88,8 @@ func test_undo_and_redo_with_plain_text() -> void:
 	await press(undo)
 	var dialog := _dialog(shell)
 	assert_true(dialog.call("is_open"), "Rückfrage")
+	# Undo setzt nur den Spielstand zurück; Gezeigtes oder Angesagtes bleibt den Spielern bekannt.
+	assert_true(text_of(find_node(dialog, "MessageLabel") as Control).contains("bleibt den Spielern bekannt"), "Grenze von Rückgängig genannt")
 	await press(find_node(dialog, "ConfirmButton") as BaseButton)
 	var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
 	assert_eq(str(next["owner"]), "schutzengel", "Schutzengel-Prompt wieder offen")

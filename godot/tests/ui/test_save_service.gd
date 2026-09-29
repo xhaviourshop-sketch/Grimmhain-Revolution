@@ -260,3 +260,56 @@ func test_discard_from_continue_screen_asks_and_keeps_files() -> void:
 	assert_true(_files(ctx).any(func(n: String) -> bool: return n.contains(".discarded-")), "Datei umbenannt erhalten")
 	assert_false(bool(ctx.session.view()["has_game"]), "laufende Partie geschlossen")
 	assert_true((find_node(current_screen(shell), "EmptyStateLabel") as Control).is_visible_in_tree(), "leerer Zustand")
+
+
+func test_corrupt_file_without_backup_reports_error_and_keeps_it() -> void:
+	var ctx := _context()
+	_start(ctx)  # erster Speicherstand: noch keine Sicherung
+	var path := ctx.saves.path_for(ctx.session.round_id())
+	assert_false(FileAccess.file_exists(path + ".bak"), "keine Sicherung vorhanden")
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string("kaputt")
+	f.close()
+	var fresh := _restart(ctx)
+	var resumed := fresh.resume(ctx.session.round_id())
+	assert_false(bool(resumed["ok"]), "nicht ladbar")
+	assert_eq(str(resumed["error"]), "corrupt", "Fehlergrund")
+	assert_false(bool(fresh.session.view()["has_game"]), "Sitzung bleibt leer")
+	var aside: Array = resumed["set_aside"]
+	assert_true(aside.size() == 1 and FileAccess.get_file_as_string(str(aside[0])) == "kaputt", "beschädigte Datei beiseitegelegt, nicht gelöscht")
+
+
+func test_corrupt_backup_does_not_affect_intact_file() -> void:
+	var ctx := _context()
+	_start(ctx)
+	ctx.session.start_night()
+	var path := ctx.saves.path_for(ctx.session.round_id())
+	var f := FileAccess.open(path + ".bak", FileAccess.WRITE)
+	f.store_string("kaputt")
+	f.close()
+	var fresh := _restart(ctx)
+	var resumed := fresh.resume(ctx.session.round_id())
+	assert_true(bool(resumed["ok"]) and str(resumed["recovered"]) == "", "intakte Datei geladen")
+	assert_eq(fresh.session.state_hash(), ctx.session.state_hash(), "gleicher Stand")
+	assert_eq(FileAccess.get_file_as_string(path + ".bak"), "kaputt", "Sicherung beim Laden unverändert")
+
+
+## Spielende mitten in der Nacht (Sieg nach Korrekturen bestätigt): Neustart, gleicher Zustand und
+## Verlauf, Rückgängig öffnet die Entscheidung wieder und wird gespeichert.
+func test_game_over_during_night_survives_restart_and_undo() -> void:
+	var ctx := _context()
+	assert_true(ctx.session.submit(Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 2)).ok, "Start")
+	ctx.session.start_night()
+	for id: int in [4, 5, 6]:
+		assert_true(ctx.session.gm_correction({"kind": "kill", "target_id": id, "trigger_effects": false, "reason": "Test"}).ok, "Korrektur %d" % id)
+	var next: Dictionary = ctx.session.cockpit_view()["next"]
+	assert_eq([str(next["kind"]), str(ctx.session.view()["phase"])], ["win_decision", "NIGHT"], "Siegentscheidung in der Nacht")
+	assert_true(ctx.session.confirm_win(int(next["candidates"][0]["id"])).ok, "Sieg bestätigt")
+	var fresh := _restart(ctx)
+	assert_true(bool(fresh.resume(ctx.session.round_id())["ok"]), "Wiederaufnahme nach Spielende")
+	assert_eq(fresh.session.state_hash(), ctx.session.state_hash(), "gleicher Zustand")
+	assert_eq(fresh.session.event_log(), ctx.session.event_log(), "gleicher Ereignisverlauf")
+	assert_eq(str(fresh.session.cockpit_view()["next"]["kind"]), "game_over", "Spielende")
+	assert_true(fresh.session.undo(), "Rückgängig nach Neustart")
+	assert_eq(str(fresh.session.cockpit_view()["next"]["kind"]), "win_decision", "Entscheidung wieder offen")
+	assert_true(bool(fresh.saves.last_status["ok"]), "Rückgängig gespeichert")

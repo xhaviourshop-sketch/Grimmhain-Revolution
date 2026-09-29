@@ -2859,7 +2859,7 @@ msgid "ui.cockpit.dialog.undo.title"
 msgstr "Rückgängig machen?"
 
 msgid "ui.cockpit.dialog.undo.message"
-msgstr "Zurückgenommen wird: {what}. „Wiederholen“ stellt es wieder her."
+msgstr "Zurückgenommen wird: {what}. „Wiederholen“ stellt es wieder her. Nur der Spielstand wird zurückgesetzt: Was bereits gezeigt oder angesagt wurde, bleibt den Spielern bekannt."
 
 msgid "ui.cockpit.dialog.undo.confirm"
 msgstr "Rückgängig"

@@ -223,3 +223,26 @@ func test_necromancer_names_wolf_secretly() -> void:
 	# Treffer (E-19): Siegkandidat des Nekromanten, verdeckt bis zum Aufdecken.
 	assert_eq(str(_view(shell)["next"]["kind"]), "win_decision", "Siegkandidat nach richtiger Benennung")
 	assert_true(find_button(current_screen(shell), "RevealButton").is_visible_in_tree(), "verdeckt")
+
+
+## Rückgängig ersetzt den Zustand: eine offene Bedienung (hier die Prüfkarte einer Hinrichtung mit
+## Vorschau des alten Zustands) darf nicht stehen bleiben.
+func test_undo_drops_open_execution_check() -> void:
+	var shell := await _cockpit(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	assert_true((session_of(shell).call("nominate", 3, 1) as CommandResult).ok, "Nominierung")
+	await frames(2)
+	await _press(shell, "ExecuteButton")
+	await press(_seat(shell, 1))
+	await _press(shell, "ConfirmExecutionTargetButton")
+	await _press(shell, "RevealButton")
+	assert_true(find_button(current_screen(shell), "ConfirmExecutionButton").is_visible_in_tree(), "Prüfkarte offen")
+	await _press(shell, "GmButton")
+	await _press(shell, "UndoButton")
+	await _confirm_dialog(shell)
+	assert_true((_view(shell)["next"]["nominations"] as Array).is_empty(), "Nominierung zurückgenommen")
+	assert_true(find_node(current_screen(shell), "ConfirmExecutionButton") == null, "keine veraltete Prüfkarte")
+	assert_false(_texts(shell).contains("Keine Besonderheit"), "keine veraltete Vorschau")
+	assert_true(find_node(current_screen(shell), "NominateButton") != null, "Tageskarte des neuen Zustands")
