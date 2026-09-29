@@ -6,6 +6,13 @@ extends RefCounted
 ## erkennt der Adapter an der Katalog-Fraktion `Faction.SOLO`, nicht am Rollennamen.
 
 
+## Rolle der Besetzungshinweise (PE-04): Kutscher, der erst ab zehn Toten wiederbelebt (W-03).
+const COACH := RoleCatalog.KUTSCHER
+## Rollen der Besetzungshinweise (PE-04): Einzelsieg bei höchstens drei Lebenden (Manipulator: genau drei), mehrere davon
+## können gleichzeitig Kandidat werden (WinRules, Analyse R-07 C-3).
+const SMALL_ROUND_SOLO_ROLES: Array[StringName] = [RoleCatalog.PARASIT, RoleCatalog.VOODOO, RoleCatalog.GRABRAEUBER, RoleCatalog.MANIPULATOR]
+
+
 ## Direkte Wiederbelebungsrolle: löst die Wiederbelebungsrunde aus (DI-01, Regelkern).
 static func is_revival_role(role: StringName) -> bool:
 	return RoleCatalog.is_revival_role(role)

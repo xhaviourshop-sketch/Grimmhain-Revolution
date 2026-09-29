@@ -9,6 +9,9 @@ extends RefCounted
 
 const INVALIDATED_ROLES := &"roles_changed"             ## Rollenanzahl nach Bestätigung geändert
 const INVALIDATED_PERSONS := &"person_count_changed"    ## Personenzahl passt nicht mehr
+const HINT_COACH_SMALL_ROUND := &"coach_small_round"             ## Besetzungshinweis PE-04, siehe `hints`
+const HINT_SIMULTANEOUS_SOLO_WINS := &"simultaneous_solo_wins"   ## Besetzungshinweis PE-04, siehe `hints`
+const COACH_HINT_BELOW_PERSONS := 13                             ## Schwelle aus PE-04
 
 var counts: Dictionary[StringName, int] = {}
 var confirmed: bool = false
@@ -29,6 +32,21 @@ func is_revival_round() -> bool:
 		if counts[id] > 0 and SetupRoleCatalog.is_revival_role(id):
 			return true
 	return false
+
+
+## Nicht blockierende Besetzungshinweise (PE-04) für `persons` Personen; nur Anzeige im privaten Rollenschritt, ohne
+## Einfluss auf Gültigkeit, Start oder Regelkern. Kutscher unter 13 Personen (Analyse R-07 C-1) und mindestens zwei Kopien
+## der Rollen mit Einzelsieg bei höchstens drei Lebenden (C-3).
+func hints(persons: int) -> Array[StringName]:
+	var out: Array[StringName] = []
+	if counts.get(SetupRoleCatalog.COACH, 0) > 0 and persons < COACH_HINT_BELOW_PERSONS:
+		out.append(HINT_COACH_SMALL_ROUND)
+	var solo := 0
+	for id: StringName in SetupRoleCatalog.SMALL_ROUND_SOLO_ROLES:
+		solo += maxi(0, counts.get(id, 0))
+	if solo >= 2:
+		out.append(HINT_SIMULTANEOUS_SOLO_WINS)
+	return out
 
 
 func total() -> int:
@@ -172,9 +190,13 @@ func view(persons: int) -> Dictionary:
 		pool_names.append(String(id))
 	var s := summary()
 	var sum := total()
+	var hint_names: Array[String] = []
+	for hint: StringName in hints(persons):
+		hint_names.append(String(hint))
 	return {
 		"counts": string_counts,
 		"revival_round": is_revival_round(),
+		"hints": hint_names,
 		"total": sum,
 		"persons": persons,
 		"free": persons - sum,

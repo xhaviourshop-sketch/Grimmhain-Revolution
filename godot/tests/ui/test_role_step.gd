@@ -346,6 +346,10 @@ func test_role_step_layout() -> void:
 	await _layout_case(SIZE_16_10, "de", "1280×800 DE Überschreibdialog", {"werwolf": 2, "dorfbewohner": 3}, true)
 	await _layout_case(SIZE_4_3, "de", "1024×768 DE Überschreibdialog", {"werwolf": 2, "dorfbewohner": 3}, true)
 	await _layout_case(SIZE_WIDE, "de", "1920×1080 DE", {"werwolf": 1, "manipulator": 1, "dorfbewohner": 6})
+	# PE-04: beide Besetzungshinweise zusätzlich zu Fehlern (ungünstigster Platzbedarf der Seitenspalte).
+	var hinted := {"werwolf": 2, "kutscher": 1, "parasit": 1, "voodoo-priester": 1, "dorfbewohner": 5}
+	await _layout_case(SIZE_4_3, "de", "1024×768 DE Hinweise", hinted)
+	await _layout_case(SIZE_16_10, "en", "1280×800 EN Hinweise", hinted)
 
 
 func test_role_list_scrolls_completely() -> void:

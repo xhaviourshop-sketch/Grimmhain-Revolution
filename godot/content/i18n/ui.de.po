@@ -1601,8 +1601,11 @@ msgstr "Die Gebundenen"
 msgid "ui.cockpit.group.eternal"
 msgstr "Die Ewigen"
 
-msgid "ui.cockpit.warning.reactions_open"
-msgstr "Hinweis: {count} Reaktion(en) offen. Erst danach geht es weiter."
+msgid "ui.cockpit.warning.gm_preparing.dawn"
+msgstr "Die Spielleitung bereitet den Morgen vor."
+
+msgid "ui.cockpit.warning.gm_preparing.day"
+msgstr "Die Spielleitung bereitet den nächsten Schritt vor."
 
 msgid "ui.cockpit.warning.steps_skipped"
 msgstr "Hinweis: {count} Nachtschritte sind entfallen oder wurden übersprungen."
@@ -3196,6 +3199,12 @@ msgstr "Wiederbelebungsrunde: Rollen bleiben beim Tod verdeckt, Tote halten nach
 
 msgid "ui.setup.roles.revival_round.off"
 msgstr "Ohne Wiederbelebung: Rollen werden beim Tod aufgedeckt, Tote müssen nachts die Augen nicht schließen."
+
+msgid "ui.setup.roles.hint.coach_small_round"
+msgstr "Hinweis: Der Kutscher kann erst wiederbeleben, wenn mindestens zehn Personen tot sind. Mit weniger als 13 Personen endet die Partie meist vorher. Die Runde wird trotzdem eine Wiederbelebungsrunde (Rollen bleiben beim Tod verdeckt). Starten bleibt möglich."
+
+msgid "ui.setup.roles.hint.simultaneous_solo_wins"
+msgstr "Hinweis: Mehrere Rollen dieser Besetzung gewinnen allein, wenn höchstens drei Personen leben (Parasit, Voodoo-Priester, Grabräuber; Manipulator bei genau drei). Dann können mehrere Siege zugleich erfüllt sein, die Spielleitung bestätigt genau einen. Starten bleibt möglich."
 
 msgid "ui.call.night_falls_revival"
 msgstr "„Die Nacht bricht herein. Alle schließen die Augen, auch die Toten.“"

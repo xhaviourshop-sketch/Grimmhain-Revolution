@@ -1601,8 +1601,11 @@ msgstr "The Bound"
 msgid "ui.cockpit.group.eternal"
 msgstr "The Eternal"
 
-msgid "ui.cockpit.warning.reactions_open"
-msgstr "Note: {count} reaction(s) open. The game continues only afterwards."
+msgid "ui.cockpit.warning.gm_preparing.dawn"
+msgstr "The game master is preparing the morning."
+
+msgid "ui.cockpit.warning.gm_preparing.day"
+msgstr "The game master is preparing the next step."
 
 msgid "ui.cockpit.warning.steps_skipped"
 msgstr "Note: {count} night steps were dropped or skipped."
@@ -3196,6 +3199,12 @@ msgstr "Revival round: roles stay hidden on death, the dead keep their eyes clos
 
 msgid "ui.setup.roles.revival_round.off"
 msgstr "No revival: roles are revealed on death, the dead do not have to close their eyes at night."
+
+msgid "ui.setup.roles.hint.coach_small_round"
+msgstr "Note: The Coachman can only revive once at least ten people are dead. With fewer than 13 people, the game usually ends before that. It still becomes a revival round (roles stay hidden on death). You can still start."
+
+msgid "ui.setup.roles.hint.simultaneous_solo_wins"
+msgstr "Note: Several roles in this setup win alone when at most three people are alive (Parasite, Voodoo Priest, Grave Robber; Manipulator at exactly three). Several wins can then be met at once, and the game master confirms exactly one. You can still start."
 
 msgid "ui.call.night_falls_revival"
 msgstr "“Night falls. Everyone closes their eyes, the dead included.”"

@@ -110,6 +110,20 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="CoachHintLabel" type="Label" parent="Body/RoleScroll/RoleList"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
+[node name="SoloWinsHintLabel" type="Label" parent="Body/RoleScroll/RoleList"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
 [node name="Footer" type="HBoxContainer" parent="."]
 layout_mode = 2
 

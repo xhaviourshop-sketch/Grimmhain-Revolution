@@ -29,6 +29,11 @@ var _last_view: Dictionary = {}
 @onready var _suggest: GrimmButton = %SuggestButton
 @onready var _reset: GrimmButton = %ResetRolesButton
 @onready var _revival: GrimmLabel = %RevivalRoundLabel  ## DI-01: aus der Rollenwahl abgeleitet, nur Anzeige
+## PE-04: nicht blockierende Besetzungshinweise, je Hinweis eine eigene Zeile
+@onready var _hint_labels: Dictionary[String, GrimmLabel] = {
+	String(RolePoolDraft.HINT_COACH_SMALL_ROUND): %CoachHintLabel,
+	String(RolePoolDraft.HINT_SIMULTANEOUS_SOLO_WINS): %SoloWinsHintLabel,
+}
 @onready var _scroll: ScrollContainer = %RoleScroll
 @onready var _list: VBoxContainer = %RoleList
 @onready var _back: GrimmButton = %BackToPlayersButton
@@ -95,6 +100,10 @@ func _render(view: Dictionary) -> void:
 	_revival.text_key = "ui.setup.roles.revival_round.on" if bool((view["roles"] as Dictionary).get("revival_round", false)) else "ui.setup.roles.revival_round.off"
 	_last_view = view
 	var roles: Dictionary = view["roles"]
+	var hints: Array = roles.get("hints", [])
+	for hint: String in _hint_labels:
+		_hint_labels[hint].visible = hints.has(hint)
+		_hint_labels[hint].text_key = "ui.setup.roles.hint.%s" % hint if hints.has(hint) else ""
 	var counts: Dictionary = roles["counts"]
 	for role: StringName in _rows:
 		var key := String(role)

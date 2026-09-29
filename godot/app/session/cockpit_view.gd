@@ -23,6 +23,7 @@ const OPEN_DEPENDENCIES := {
 static func build(s: GameState) -> Dictionary:
 	if not s.is_started():
 		return {"has_game": false}
+	var next := next_action(s)
 	return {
 		"has_game": true,
 		"phase": String(s.phase),
@@ -34,8 +35,8 @@ static func build(s: GameState) -> Dictionary:
 		"player_count": s.players.size(),
 		"night_progress": night_progress(s),
 		"revival_round": s.revival_round,
-		"next": next_action(s),
-		"warnings": warnings(s),
+		"next": next,
+		"warnings": warnings(s, next),
 	}
 
 
@@ -194,15 +195,17 @@ static func nominations_today(s: GameState) -> Array:
 	return out
 
 
-## Hinweise ohne Geheimnis: offene Reaktionen (Anzahl), übersprungene Nachtschritte, Tote ohne Rolle.
-static func warnings(s: GameState) -> Array:
+## Hinweise ohne Geheimnis: übersprungene Nachtschritte, Tote ohne Rolle und außerhalb der Nacht ein neutraler Hinweis bei
+## jeder verdeckten Karte (PE-01). Er nennt weder Anzahl, Art noch Besitzer einer Reaktion und erscheint ebenso bei
+## Prompts, Siegentscheidungen und Hinweiskarten, damit er kein exklusiver Reaktionsmarker ist.
+static func warnings(s: GameState, next: Dictionary) -> Array:
 	var out: Array = []
-	if StepQueue.reactions_due(s):
-		out.append({"key": "ui.cockpit.warning.reactions_open", "values": {"count": s.reactions.size()}})
 	if s.phase == Phase.NIGHT and s.next_night_step >= s.night_plan.size() and _skipped_count(s) > 0:
 		out.append({"key": "ui.cockpit.warning.steps_skipped", "values": {"count": _skipped_count(s)}})
 	if s.alive_ids().is_empty():
 		out.append({"key": "ui.cockpit.warning.nobody_alive", "values": {}})
+	if bool(next.get("secret", false)) and (s.phase == Phase.DAWN_RESOLUTION or s.phase == Phase.DAY):
+		out.append({"key": "ui.cockpit.warning.gm_preparing.%s" % ("dawn" if s.phase == Phase.DAWN_RESOLUTION else "day"), "values": {}})
 	return out
 
 
