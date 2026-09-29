@@ -132,6 +132,7 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 - Given: 3 von 6 Personen haben `ConfirmRoleShown`.
 - When: Neustart.
 - Then: Rollenanzeige setzt bei der vierten Person fort; keine Rolle ist im Cockpit sichtbar, bis der Spielleiter die Anzeige verlässt.
+- Nachweis (29.09.2026): `test_role_shown::test_resume_continues_with_first_unconfirmed_person_in_seat_order`, `test_role_show::test_resume_after_restart_continues_with_first_unconfirmed_person`.
 
 ## 3. Rollen (Stufe V)
 

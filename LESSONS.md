@@ -15,3 +15,9 @@ Neue Einträge oben einfügen. Nur bewiesene, wiederverwendbare Erkenntnisse auf
 - Ursache: vermutlich abgebrochener Git-Aufruf aus VS Code oder Codex, die parallel im Repo laufen.
 - Lösung: Prozessliste prüfen (kein `git`), dann 0-Byte-Lock nach Rückfrage löschen; Commit/Push liefen danach normal.
 - Vermeidung: Vor Git-Schreibaktionen prüfen, ob andere Agenten/Editoren gerade Git ausführen.
+
+## 2026-09-29: Intermittierend roter Test durch globalen Zufall (`Array.shuffle()`)
+- Symptom: `test_prompt_coverage` meldete einmal „Rolle koenig erschien nie als Prompt“, danach grün.
+- Ursache: `Array.shuffle()` nutzt den globalen Generator, den Godot bei jedem Start zufällig setzt. Eine `rg`-Suche nach `randi`/`randf` fand ihn nicht. Zusätzlich hängt der König-Schritt am Überleben (mehr Tote als Lebende).
+- Lösung: Mischen über den seedbaren Test-Generator; Fokusrolle wird nicht übersprungen oder als Ziel gewählt; bedingte Nachtrollen mit festen Szenarien; Regressionstest (gleiche Partie unter mehreren globalen Seeds muss gleich sein).
+- Vermeidung: In Tests und Kern auch nach `.shuffle()`, `pick_random()` und `randomize()` suchen. Einen roten Lauf nicht durch grüne Wiederholung erklären, sondern die Gegenprobe mit dem alten Verhalten führen.

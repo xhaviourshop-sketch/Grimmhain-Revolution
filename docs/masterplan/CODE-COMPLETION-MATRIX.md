@@ -2,6 +2,8 @@
 
 **Stand:** 29.09.2026 · Worktree `C:/Users/Marku/Desktop/Grimmhain/grimmhain-night-ui` · Branch `feature/night-ui-expansion` · Ausgangs-HEAD `23c7044` (PR #3 offen) · Godot `4.7.2.stable.official.ed1daf0bf` · Schema 13, Regelversion 0.12
 
+**Aktualisierung nach Paket 2 (29.09.2026):** Schema 14, Regelversion 0.12 unverändert. B-01 behoben (Testlebenszyklus), S-08 und N-06 umgesetzt und headless nachgewiesen, Vollsuite 956 Tests. Betroffene Zeilen sind unten gekennzeichnet; historische Angaben zum Ausgangsstand bleiben stehen.
+
 Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch relevante funktionale Anforderung des Masterplans einem Code-, Test- und Paketbeleg zu. Sie implementiert nichts und ändert keine Regel.
 
 ## Wie diese Matrix zu lesen ist
@@ -43,7 +45,7 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 | S-05 | Sitzordnung im Kreis, Tausch per Drag-and-drop/Antippen, Zustand an Personen-ID | Offline | AUTO | `app/setup/seating_draft.gd`, `seating_step.gd`, `widgets/seat_ring/` | `test_seating_model`, `test_seating_step`, `test_player_identity` (Unit) | Touch nur mit simulierten Mausereignissen | P11 | Gerät |
 | S-06 | Sitzplatztausch nach Spielstart (`ReorderSeats`, AS-S03) | Offline | FEHLT | `core/commands/command.gd` kennt den Befehl nicht; Spec `implementation-boundary.md` B-11 | keiner | Befehl, Regelkern-Wirkung auf Sitznachbarn (Kutscher, Wächter, Nachtwächter, Doktor), UI | P7 (neu) | **Nutzerentscheidung:** Ist Tausch während der Partie gewollt? Er verschiebt die Nachbarn im Regelkern |
 | S-07 | `StartGame` aus bestätigtem Setup; Wiederbelebungsrunde abgeleitet (DI-01) | Offline | AUTO | `app/session/game_start.gd`, `core/rules/rules_engine.gd` | `test_game_start_model/_step`, `test_revival_round` | keine | - | - |
-| S-08 | Rollenübergabe an Spieler („Rollen zeigen“): neutrale Karte, bewusste Aktion, Rolle nur für die Person, schließen, `ConfirmRoleShown`, Fortsetzung bei der ersten unbestätigten Person | Offline | FEHLT | `ConfirmRoleShown` existiert in keinem `.gd`, nur in Spec (`vertical-slice-flow.md` §2, B-11) und Doku. Das Cockpit zeigt Rollen nur dem Spielleiter (privater Bereich) | keiner (AS-A04 hat keinen Test) | Befehl und Zustand im Kern, Rollenkarte, Abbruch-Fortsetzung, Trugbilderwolf: Karte trägt keine Scheinrolle (DI-08) | **P2** | Schema-Bump 13 auf 14 würde alte Saves erneut sperren; oder Bedienzustand nur in der App. Bewusste Aktion statt Halten (Halten ist ohne Gerät nicht prüfbar) als technische Ableitung. Kurze Nutzerbestätigung zu Schema |
+| S-08 | **Erledigt in Paket 2 (Schema 14, `roles_shown`, `role_shown_rules.gd`, Ebenen in `cockpit_layers.gd`; Nachweis `test_role_shown`, `test_role_show`); Geräte- und Touchabnahme offen (GERÄT).** Rollenübergabe an Spieler („Rollen zeigen“): neutrale Karte, bewusste Aktion, Rolle nur für die Person, schließen, `ConfirmRoleShown`, Fortsetzung bei der ersten unbestätigten Person | Offline | AUTO | `ConfirmRoleShown` existiert in keinem `.gd`, nur in Spec (`vertical-slice-flow.md` §2, B-11) und Doku. Das Cockpit zeigt Rollen nur dem Spielleiter (privater Bereich) | keiner (AS-A04 hat keinen Test) | Befehl und Zustand im Kern, Rollenkarte, Abbruch-Fortsetzung, Trugbilderwolf: Karte trägt keine Scheinrolle (DI-08) | **P2** | Schema-Bump 13 auf 14 würde alte Saves erneut sperren; oder Bedienzustand nur in der App. Bewusste Aktion statt Halten (Halten ist ohne Gerät nicht prüfbar) als technische Ableitung. Kurze Nutzerbestätigung zu Schema |
 
 ### Spielablauf
 
@@ -54,7 +56,7 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 | N-03 | Tag: Nominierung Quelle→Ziel, Hinrichtung mit verdeckter Prüfkarte, Tagesaktionen; keine digitale Stimme | Offline | AUTO | `app/session/cockpit_view.gd`, `core/rules/execution_rules.gd` | `test_cockpit_day`, `test_gm_execute`, Szenarien `as-c11`, `as-c12`, `dr-03` | keine | - | - |
 | N-04 | Sieg: Kandidaten erkennen, Spielleiter bestätigt oder lehnt ab | Offline | AUTO | `core/rules/win_rules.gd`, `action_card.gd` | `test_win_status`, `test_win_finalize_guard`, `test_cockpit_day::test_win_candidate_is_covered_then_confirmed`, `test_full_round_ui` | keine | - | - |
 | N-05 | Spielleiterkorrekturen in der Oberfläche: Person töten, wiederbeleben, Rolle ändern, Status (Nominierung, Tränke, Spiegelung, Scheinrolle), Hinrichtung ohne Nominierung, Sieger erklären | Offline | AUTO | `core/rules/gm_corrections.gd`, `cockpit_layers.gd`, `cockpit_screen.gd` | `test_cockpit_gm`, `test_gm_correction`, `test_gm_role_field` | keine für diese Arten | - | - |
-| N-06 | Korrekturen Schutz, Rettung, Wolfskind, Lehrling in der Oberfläche | Offline | TEIL | Kern kennt 11 Arten (`gm_corrections.gd`: `set_protection`, `set_rescue`, `set_wolf_model`, `set_apprentice_master` u. a.); Oberfläche bietet `kill, revive, set_role, status, execute, declare_winner` (`cockpit_layers.gd:190`) | Kern: `test_gm_correction`; UI: keiner (`cockpit.md` nennt die Lücke selbst) | Bedienung mit Grund, Warnung, Protokoll; Abbruch offener Prompt; Undo/Reload | **P2** | keine Entscheidung; Kernbefehle bestehen |
+| N-06 | **Erledigt in Paket 2 (12 Arten über „Status ändern“, `cockpit_view.special_fields`; Nachweis `test_special_corrections`); Geräteabnahme offen.** Korrekturen Schutz, Rettung, Wolfskind, Lehrling in der Oberfläche | Offline | AUTO | Kern kennt 11 Arten (`gm_corrections.gd`: `set_protection`, `set_rescue`, `set_wolf_model`, `set_apprentice_master` u. a.); Oberfläche bietet `kill, revive, set_role, status, execute, declare_winner` (`cockpit_layers.gd:190`) | Kern: `test_gm_correction`; UI: keiner (`cockpit.md` nennt die Lücke selbst) | Bedienung mit Grund, Warnung, Protokoll; Abbruch offener Prompt; Undo/Reload | **P2** | keine Entscheidung; Kernbefehle bestehen |
 | N-07 | Aufrufpolitik und Tarnaufrufe (DI-02) | Offline | AUTO | `core/rules/call_policy.gd` | `test_call_policy`, `test_call_presentation` | keine | - | - |
 | N-08 | Öffentliche Ansage von Todeseffekten mit Rolle zum Ereigniszeitpunkt (DI-03) | Offline | AUTO | `GameEvent DeathEffect`, `morning_report.gd` | `test_death_effects`, `test_death_effect_lines` | keine | - | - |
 | N-09 | Private Hinweiskarten: Loki, Rattenfänger, Pestbringerin, Rotkäppchen, Trugbilderwolf (DI-04 bis DI-08) | Offline | AUTO | `core/rules/notice_rules.gd`, `AckNotice`, `cockpit_layers.gd` | `test_notices`, `test_notice_cards` | keine | - | - |
@@ -66,7 +68,7 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 | ID | Funktion/Anforderung | Stufe | Status | Implementierungsbeleg | Testbeleg | Konkrete Restlücke | Paket | Voraussetzung / Entscheidung |
 |---|---|---|---|---|---|---|---|---|
 | R-01 | 71 Rollen im Regelkern | Offline | AUTO | `core/rules/role_catalog.gd` (71 Einträge), Regeldateien | je Rolle ein Einzeltest plus `test_role_interaction_fuzz` (alle 71) | keine | - | - |
-| R-02 | Alle 71 Rollen über die Oberfläche bedienbar (Buttonweg) | Offline | NACHWEIS | `action_card.gd` für alle Antwortarten | Button-Tests: 17 Rollen; Kartendaten-Test `test_prompt_coverage` (142 Partien): 41 Rollen; passiv: 11; Morgenbericht: 2 (siehe Rollentabelle) | Buttonweg für 41 Rollen nicht einzeln belegt; Test ist zusätzlich intermittierend rot (B-01) | **P3** | - |
+| R-02 | Alle 71 Rollen über die Oberfläche bedienbar (Buttonweg) | Offline | NACHWEIS | `action_card.gd` für alle Antwortarten | Button-Tests: 17 Rollen; Kartendaten-Test `test_prompt_coverage` (142 Partien): 41 Rollen; passiv: 11; Morgenbericht: 2 (siehe Rollentabelle) | Buttonweg für 41 Rollen nicht einzeln belegt; B-01 behoben (Paket 2, siehe Befunde) | **P3** | - |
 | R-03 | Kartenschlucker (72. Rolle) | Karten | BLOCKIERT | nicht im `RoleCatalog`, im Setup nicht wählbar | keiner | Totenkartenmodell (RM-DR-013, RM-DR-143.1/.2) | P8 | **Nutzerentscheidung:** Kartenregeln (drei Auswahlfragen plus Freitext, siehe P8) |
 | R-04 | Totenkarten / Totenkarten-Assistent (Ziehen, Besitz, Tausch, Verbrauch) | Karten | BLOCKIERT | keiner; `docs/ui/cockpit.md`: „Totenreichkarten sind nicht definiert“ | keiner | gesamtes Kartenmodell | P8 | **Nutzerentscheidung**, gleiche wie R-03 |
 | R-05 | Frankenstein: Totenkarten-Bedingung | Karten | BLOCKIERT | Wiederbelebung bedienbar; Bedingung RM-DR-141.4 wird nicht geprüft; privater Bereich weist darauf hin | `test_revival_roles` (Wiederbelebung) | Bedingung fehlt | P8 | hängt an R-04 |
@@ -148,7 +150,7 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 | Q-01 | Headless-Suite in CI (Godot 4.7.2 gepinnt) | Offline | AUTO | `.github/workflows/godot-core-tests.yml` (nur bei Änderungen unter `godot/**`) | CI-Lauf auf `23c7044` grün (29.09.2026, beide Läufe) | Auslösung nur mit `godot/`-Änderung | - | - |
 | Q-02 | Assetregister in CI | Offline | AUTO | `.github/workflows/asset-register.yml` | `node --test tests/check-asset-register.test.js`, `node tools/check-asset-register.js` | keine | - | - |
 | Q-03 | Rollendokumente, Inhaltsabdeckung, Prüfertests in CI | Offline | NACHWEIS | `tools/role-migration/check-role-docs.js`, `docs/content-drafts/check-coverage.py`, `tests/check-role-docs.test.js` | lokal grün (siehe Ausgangsprüfungen); in keinem Workflow | Kein CI-Job | P6 | - |
-| Q-04 | Stabile, deterministische Testsuite | Offline | TEIL | Coverage-Test mit festen Seeds | `test_prompt_coverage`: rot in 1 von 2 Vollläufen (B-01), 7 von 7 isolierten Läufen grün | Ursache des Nichtdeterminismus unbekannt | P2 (Vorprüfung) | - |
+| Q-04 | **Erledigt in Paket 2 (B-01).** Stabile, deterministische Testsuite | Offline | AUTO | Coverage-Test mit festen Seeds | `test_prompt_coverage`: rot in 1 von 2 Vollläufen (B-01), 7 von 7 isolierten Läufen grün | Ursache des Nichtdeterminismus unbekannt | P2 (Vorprüfung) | - |
 | Q-05 | Kontrollierte Testpartien mit 6 und 24 Personen inkl. Wiederbelebung, Reload, Abbruch | Offline | TEIL | Fuzz (6 bis 24), `test_prompt_coverage` (6 bis 24) | Fuzz und Coverage headless | keine gemeinsame Abnahmepartie am Gerät | P11 | Gerät |
 | Q-06 | Pilot mit fünf externen Spielleitern, zehn Runden | Plattform | SPÄTER | keiner | keiner | Masterplan Phase 8 | - | - |
 
@@ -162,14 +164,14 @@ Alle 71 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Re
 |---|---|---|---|---|---|---|
 | `dorfbewohner` | ja (`scenarios`, `steps`) | A (passiv) | ja (48) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `werwolf` | ja (`scenarios`, `wolf_specials`) | B (Nacht/Rudel) | ja (48) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
-| `schutzengel` | ja (`schutzengel`) | B | ja (23) | Fuzz-Invariante J; Undo rollenspezifisch getestet | keine | Korrektur des Schutzes hat keine Oberfläche |
-| `waldhexe` | ja (`waldhexe`) | B | ja (15) | Fuzz-Invariante J; Undo rollenspezifisch getestet | Kern-Test, UI-Positivliste nicht einzeln | Korrektur der Rettung hat keine Oberfläche |
+| `schutzengel` | ja (`schutzengel`) | B | ja (23) | Fuzz-Invariante J; Undo rollenspezifisch getestet | keine | Korrektur des Schutzes: Oberfläche seit Paket 2 (`test_special_corrections`) |
+| `waldhexe` | ja (`waldhexe`) | B | ja (15) | Fuzz-Invariante J; Undo rollenspezifisch getestet | Kern-Test, UI-Positivliste nicht einzeln | Korrektur der Rettung und des Tranks: Oberfläche seit Paket 2 |
 | `das-orakel` | ja (`orakel`) | B | ja (16) | Fuzz-Invariante J; Undo rollenspezifisch getestet | Positivliste (UI-Test) | - |
 | `trugbilderwolf` | ja (`trugbilderwolf`) | B (Setup, Rudel) | ja (8) | Fuzz-Invariante J; Undo generisch (Replay) | Positivliste (UI-Test) | - |
-| `wolfskind` | ja (`wolfskind`) | K | ja (12) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Korrektur (Vorbild, Verwandlung) hat keine Oberfläche |
+| `wolfskind` | ja (`wolfskind`) | K | ja (12) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Korrektur (Vorbild, Verwandlung): Oberfläche seit Paket 2 |
 | `spiegelwolf` | ja (`spiegelwolf`) | B (Hinrichtung) | ja (6) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `manipulator` | ja (`manipulator`) | K | ja (12) | Fuzz-Invariante J; Undo generisch (Replay) | keine | Buttonweg nicht einzeln belegt |
-| `lehrling` | ja (`lehrling`) | K | ja (10) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Korrektur (Bindung, Erbe) hat keine Oberfläche |
+| `lehrling` | ja (`lehrling`) | K | ja (10) | Fuzz-Invariante J; Undo generisch (Replay) | Kern-Test, UI-Positivliste nicht einzeln | Korrektur (Bindung, Erbe): Oberfläche seit Paket 2 |
 | `sensentraeger` | ja (`sensentraeger`, `reactions`) | B (Reaktion) | ja (13) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `siegreicher-wolf` | ja (`siegreicher_wolf`) | A (passiv) | mager (1) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
 | `doppelspion` | ja (`doppelspion`) | A (passiv) | mager (2) | Fuzz-Invariante J; Undo generisch (Replay) | keine | - |
@@ -241,7 +243,7 @@ Alle 71 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Re
 
 | ID | Befund | Beleg | Einordnung |
 |---|---|---|---|
-| B-01 | `test_prompt_coverage::test_all_prompt_kinds_are_operable_through_the_card` schlug im ersten Vollauf fehl („Rolle koenig erschien nie als Prompt“), im zweiten Vollauf und in 7 isolierten Läufen grün | Lauf 1 (Vollauf direkt nach `--import`): 917 Tests, 1 fehlgeschlagen; Lauf 2: 917 Tests, 0 fehlgeschlagen; isoliert (`--filter=prompt_coverage`) 7 von 7 grün (2 plus 5) | intermittierender Fehler in der Prüfung, nicht im Spielverhalten belegt. Die Seeds sind fest, eine Zeit- oder Zufallsquelle im Pfad wurde per `rg` nicht gefunden. Ursache **ungeklärt**. Der erste Lauf folgte direkt auf `--import`. Verdacht, nicht Beleg. Wird in P2 als Vorprüfung mit Wiederholungsläufen untersucht |
+| B-01 | **BEHOBEN in Paket 2 (Ursache belegt, siehe unten).** `test_prompt_coverage::test_all_prompt_kinds_are_operable_through_the_card` schlug im ersten Vollauf fehl („Rolle koenig erschien nie als Prompt“), im zweiten Vollauf und in 7 isolierten Läufen grün | Lauf 1 (Vollauf direkt nach `--import`): 917 Tests, 1 fehlgeschlagen; Lauf 2: 917 Tests, 0 fehlgeschlagen; isoliert (`--filter=prompt_coverage`) 7 von 7 grün (2 plus 5) | intermittierender Fehler in der Prüfung, nicht im Spielverhalten belegt. Die Seeds sind fest, eine Zeit- oder Zufallsquelle im Pfad wurde per `rg` nicht gefunden. Ursache **ungeklärt**. Der erste Lauf folgte direkt auf `--import`. Verdacht, nicht Beleg. Wird in P2 als Vorprüfung mit Wiederholungsläufen untersucht. **Untersuchungsergebnis P2:** `Array.shuffle()` (Sitzordnung und Zielwahl im Test) nutzt den beim Start zufällig gesetzten globalen Generator; die frühere `rg`-Suche prüfte nur `randi`/`randf`. Dadurch war jede Partie von Lauf zu Lauf verschieden (Fokuspartie König: 23 von 40 globalen Seeds ohne König-Prompt). Der König ist nur bei mehr Toten als Lebenden aktiv und hing am Überleben. Mit dem alten `shuffle()` reproduziert der neue Regressionstest den Fehler („Rolle kutscher erschien nie als Prompt“); mit dem seedbaren Mischen sind Partien unabhängig vom globalen Seed identisch. Ein Importzusammenhang war nicht ursächlich. Kein Spielfehler. Korrektur nur im Test, Pflichtabdeckung erhalten und um zwölf feste Erreichbarkeitsszenarien ergänzt |
 | B-02 | Einstellungen (Sprache, Bewegung) gehen beim Neustart verloren | `app_settings.gd` ohne Dateizugriff | echter Funktionsmangel (D-09) |
 
 **Fehlende Nachweise statt bekannter Fehler**
@@ -254,7 +256,7 @@ Alle 71 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Re
 
 **Widersprüche zwischen Dokumenten und Code**
 
-- `CODE-COMPLETION-ROADMAP.md` Paket 2 spricht von der „bestehenden `ConfirmRoleShown`-Regel“. Im Code gibt es weder Befehl noch Zustand, nur Spezifikation (`vertical-slice-flow.md` §2, `implementation-boundary.md` B-11). Paket 2 muss den Kernbefehl neu bauen, nicht nur eine Oberfläche ergänzen (S-08).
+- *(Erledigt in Paket 2: Befehl und Zustand entstanden neu.)* `CODE-COMPLETION-ROADMAP.md` Paket 2 spricht von der „bestehenden `ConfirmRoleShown`-Regel“. Im Code gibt es weder Befehl noch Zustand, nur Spezifikation (`vertical-slice-flow.md` §2, `implementation-boundary.md` B-11). Paket 2 muss den Kernbefehl neu bauen, nicht nur eine Oberfläche ergänzen (S-08).
 - `implementation-boundary.md` B-11 listet `BeginDay` und `ReorderSeats`. `BeginDay` ist als Bedienzustand des Morgenberichts gelöst (`cockpit.md`, Entscheidungstabelle), `ReorderSeats` fehlt (S-06).
 - Masterplan Kopfzeile „Status: … keine spielbare Partie (Nacht/Tag) über die Oberfläche“ stammt vom Stand 27.09.2026 und ist überholt (Nacht, Morgen, Tag, Sieg bedienbar, `test_full_round_ui`). Historische Angaben wurden nicht umgeschrieben.
 - Die Inhaltsentwürfe aus `content/rolebook-and-guide` (`cde16f5`) sind per Kopie in diesem Branch. Die Commits selbst liegen nicht im Verlauf: `git rev-list --count HEAD..origin/content/rolebook-and-guide` = 10. Kein Merge, nur Kenntnisnahme.
@@ -264,7 +266,7 @@ Alle 71 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Re
 Nicht beantwortet, nicht durch diesen Auftrag entschieden:
 
 1. Sitzplatztausch während der Partie (S-06).
-2. Schema-Anhebung für Rollenübergabe (S-08), oder Bedienzustand nur in der App.
+2. *(Technisch entschieden in Paket 2, DA-27: Schema 14, keine Migration.)* Schema-Anhebung für Rollenübergabe (S-08), oder Bedienzustand nur in der App.
 3. Offene Reaktion für Mitlesende verbergen (I-03).
 4. Redo nach Neustart und Checkpoint-Rotation für den Offline-Abschluss (D-04, D-05).
 5. Freigabe der Rollenlexikon- und Guide-Texte (C-04, C-05).

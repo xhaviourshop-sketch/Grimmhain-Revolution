@@ -138,4 +138,4 @@ Die Testpartie bleibt unter „Partie fortsetzen“. „Verwerfen …“ entfern
 
 ## Nicht Teil dieses Tests
 
-Tablet, Touch, Schriftbild auf Geräten, Lesbarkeit im Dunkeln. Außerdem Spezialkorrekturen und „Rollen zeigen“, die noch keine Oberfläche haben. Die Grenzen stehen in `docs/ui/cockpit.md`.
+Tablet, Touch, Schriftbild auf Geräten, Lesbarkeit im Dunkeln. Spezialkorrekturen und „Rollen zeigen“ sind seit Paket 2 bedienbar, aber in diesem Testablauf nicht enthalten (headless geprüft, keine Geräteabnahme). Die Grenzen stehen in `docs/ui/cockpit.md`.
