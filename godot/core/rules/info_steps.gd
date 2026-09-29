@@ -203,6 +203,13 @@ static func _info(s: GameState, owner: StringName) -> Dictionary:
 	return {"bound_ids": living_bound(s)}
 
 
+## Zulässige Anzahlen der aktuellen Stufe. Spürhund: keiner oder genau drei (Verzicht).
+static func target_counts(prompt: PendingPrompt) -> Array[int]:
+	if prompt.stage == STAGE_TARGETS and prompt.owner == PendingPrompt.OWNER_HOUND:
+		return [0, prompt.max_count]
+	return prompt.count_range()
+
+
 static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) -> StringName:
 	if DictRead.get_string(p, "stage") != String(prompt.stage):
 		return &"stage_mismatch"
@@ -218,12 +225,7 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 			if t == prompt.actor_id or seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t) or not s.players[t].alive:
 				return &"invalid_target"
 			seen.append(t)
-		if prompt.owner == PendingPrompt.OWNER_HOUND or prompt.owner == PendingPrompt.OWNER_DOCTOR:
-			var needed := 3 if prompt.owner == PendingPrompt.OWNER_HOUND else 2
-			if list.size() != needed and not (prompt.owner == PendingPrompt.OWNER_HOUND and list.is_empty()):
-				return &"invalid_target_count"
-			return &""
-		if list.size() < prompt.min_count or list.size() > prompt.max_count:
+		if not target_counts(prompt).has(list.size()):
 			return &"invalid_target_count"
 		if TRIPLE_OWNERS.has(prompt.owner) and _wolves_in(s, list).is_empty():
 			return &"no_wolf_selected"  # Freigabe erst mit mindestens einem Wolf (I-01)

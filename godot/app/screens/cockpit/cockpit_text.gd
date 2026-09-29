@@ -112,6 +112,14 @@ static func spoken_names(people: Array) -> String:
 	return ", ".join(names)
 
 
+## Zulässige Anzahlen als Text: [2] → „2“, [0, 3] → „0 oder 3“, [1, 2, 3] → „1 bis 3“.
+static func count_list(counts: Array) -> String:
+	if counts.size() >= 3 and int(counts.back()) - int(counts[0]) == counts.size() - 1:
+		return TranslationServer.translate("ui.cockpit.card.selection.range").format({"from": int(counts[0]), "to": int(counts.back())})
+	var parts: Array = counts.map(func(n: Variant) -> String: return str(int(n)))
+	return (" %s " % TranslationServer.translate("ui.cockpit.card.selection.or")).join(parts)
+
+
 ## „SeatDied“ → „seat_died“ (Schlüsselteil aus einem Ereignis- oder Befehlstyp).
 static func snake(type: String) -> String:
 	var out := ""

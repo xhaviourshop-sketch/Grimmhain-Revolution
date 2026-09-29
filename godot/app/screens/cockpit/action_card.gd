@@ -167,16 +167,21 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 
 func _targets_part(next: Dictionary, context: Dictionary, buttons: Array[Control]) -> void:
 	var selection: Array = context.get("selection", [])
-	var low := int(next.get("min", 0))
-	var high := int(next.get("max", 0))
+	var counts: Array = next.get("counts", [])
+	var error := str(context.get("selection_error", ""))
+	# Zulässige Anzahl und Sperrgrund stammen aus dem Regelkern (counts, check_targets).
+	_text("ui.cockpit.card.selection.counts", {"counts": CockpitText.count_list(counts)}, &"MutedLabel").name = "SelectionRuleLabel"
 	if selection.is_empty():
-		_text("ui.cockpit.card.selection.none", {}, &"MutedLabel")
+		_text("ui.cockpit.card.selection.none", {}, &"MutedLabel").name = "SelectionLabel"
 	else:
-		_text("ui.cockpit.card.selection.some", {"names": CockpitText.names_of(selection, context.get("seats", []))}, &"SectionLabel")
+		_text("ui.cockpit.card.selection.some", {"names": CockpitText.names_of(selection, context.get("seats", []))}, &"SectionLabel").name = "SelectionLabel"
+	if not selection.is_empty() and error != "":
+		var key := "ui.cockpit.card.selection.blocked.%s" % error
+		_text(key if CockpitText.has_key(key) else "ui.cockpit.card.selection.blocked.generic", {"counts": CockpitText.count_list(counts)}, &"WarningLabel").name = "SelectionBlockedLabel"
 	var confirm := _button("ConfirmTargetsButton", "ui.cockpit.action.confirm_targets", GrimmButton.Kind.PRIMARY, &"confirm_targets")
-	confirm.disabled = selection.is_empty() or selection.size() < low or selection.size() > high
+	confirm.disabled = selection.is_empty() or error != ""
 	buttons.append(confirm)
-	if low == 0:
+	if counts.has(0):
 		buttons.append(_button("DeclineButton", CockpitText.action_key("decline", str(next.get("owner")), str(next.get("stage"))), GrimmButton.Kind.SECONDARY, &"decline"))
 	if not selection.is_empty():
 		buttons.append(_button("ClearSelectionButton", "ui.cockpit.action.clear_selection", GrimmButton.Kind.SECONDARY, &"clear_selection"))

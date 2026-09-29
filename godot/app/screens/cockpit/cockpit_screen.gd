@@ -97,8 +97,11 @@ func default_focus() -> Control:
 
 # --- Sicht -------------------------------------------------------------------------------------------
 
+## Jede Zustandsänderung (angenommener Befehl, Laden, Korrektur) verwirft die Auswahl: Sie könnte
+## sich auf einen veralteten Zustand beziehen, auch wenn derselbe Prompt offen bleibt.
 func _on_session_changed(_v: Dictionary) -> void:
 	_error_key = ""
+	_selection.clear()
 	_refresh()
 
 
@@ -226,8 +229,12 @@ func _render() -> void:
 		_ring.set_marking(false, [], [], next.get("actor_ids", []))
 	else:
 		_ring.clear_marking()
+	# Ob die Auswahl bestätigt werden kann, entscheidet der Regelkern (Prüfung ohne Senden).
+	var selection_error := ""
+	if kind == "prompt" and str(next.get("answer")) == "targets" and not _selection.is_empty():
+		selection_error = String(context.session.check_targets(_selection))
 	_card.render(next, {
-		"phase": phase, "seats": _view.get("seats", []), "selection": _selection,
+		"phase": phase, "seats": _view.get("seats", []), "selection": _selection, "selection_error": selection_error,
 		"revealed": _check_revealed if _day_mode == "execution_check" else _revealed_id == _next_id,
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,

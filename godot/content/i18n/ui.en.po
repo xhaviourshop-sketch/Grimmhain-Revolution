@@ -1337,6 +1337,27 @@ msgstr "Nobody selected yet. Tap a person in the seating circle."
 msgid "ui.cockpit.card.selection.some"
 msgstr "Selected: {names}"
 
+msgid "ui.cockpit.card.selection.counts"
+msgstr "Allowed number of chosen people: {counts}."
+
+msgid "ui.cockpit.card.selection.or"
+msgstr "or"
+
+msgid "ui.cockpit.card.selection.range"
+msgstr "{from} to {to}"
+
+msgid "ui.cockpit.card.selection.blocked.invalid_target_count"
+msgstr "Cannot confirm yet: the number does not fit. Allowed: {counts}."
+
+msgid "ui.cockpit.card.selection.blocked.no_wolf_selected"
+msgstr "Cannot confirm yet: at least one chosen person must count as a wolf."
+
+msgid "ui.cockpit.card.selection.blocked.invalid_target"
+msgstr "Cannot confirm: at least one chosen person cannot be chosen here. Tap them to deselect."
+
+msgid "ui.cockpit.card.selection.blocked.generic"
+msgstr "Cannot confirm: the rules do not allow this selection."
+
 msgid "ui.cockpit.card.prediction.value"
 msgstr "Prediction: {when} {number}"
 

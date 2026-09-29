@@ -5,7 +5,8 @@ extends RefCounted
 ## unverändert aus `PendingPrompt`; ob eine Antwort gilt, entscheidet allein der Regelkern.
 ##
 ## Antwortarten (`answer`), abgeleitet aus Besitzer und Stufe:
-##   targets     min..max Personen aus `allowed_ids` (0 = Verzicht, wenn min 0 ist)
+##   targets     Personen aus `allowed_ids`; zulässige Anzahlen in `counts` (aus dem Regelkern,
+##               z. B. [0, 2] für „keiner oder zwei“; 0 = Verzicht)
 ##   choice      Ja/Nein
 ##   ack         nur Bestätigen (Gezeigt, Zur Kenntnis, Zusammenfassung bestätigen)
 ##   option      eine Option aus `options` (Rollen-IDs)
@@ -56,6 +57,7 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 		"min": p.min_count,
 		"max": p.max_count,
 		"allowed_ids": p.allowed_ids.duplicate(),
+		"counts": RulesEngine.target_counts(s) if answer == "targets" else [],
 		"cancellable": p.cancellable,
 		"info": info_lines(s, p),
 		"show": show_lines(s, p),

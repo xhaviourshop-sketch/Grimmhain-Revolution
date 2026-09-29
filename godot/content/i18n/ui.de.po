@@ -1337,6 +1337,27 @@ msgstr "Noch niemand gewählt. Tippe im Sitzkreis auf eine Person."
 msgid "ui.cockpit.card.selection.some"
 msgstr "Gewählt: {names}"
 
+msgid "ui.cockpit.card.selection.counts"
+msgstr "Zulässige Anzahl gewählter Personen: {counts}."
+
+msgid "ui.cockpit.card.selection.or"
+msgstr "oder"
+
+msgid "ui.cockpit.card.selection.range"
+msgstr "{from} bis {to}"
+
+msgid "ui.cockpit.card.selection.blocked.invalid_target_count"
+msgstr "Noch nicht bestätigbar: Die Anzahl passt nicht. Zulässig: {counts}."
+
+msgid "ui.cockpit.card.selection.blocked.no_wolf_selected"
+msgstr "Noch nicht bestätigbar: Mindestens eine gewählte Person muss als Wolf zählen."
+
+msgid "ui.cockpit.card.selection.blocked.invalid_target"
+msgstr "Nicht bestätigbar: Mindestens eine gewählte Person ist hier nicht wählbar. Tippe sie an, um sie abzuwählen."
+
+msgid "ui.cockpit.card.selection.blocked.generic"
+msgstr "Nicht bestätigbar: Der Regelkern lässt diese Auswahl nicht zu."
+
 msgid "ui.cockpit.card.prediction.value"
 msgstr "Vorhersage: {when} {number}"
 

@@ -3,20 +3,23 @@ extends UiTestCase
 ## werden ausschließlich über GameSession gespielt, und zwar nur mit den Daten, die auch die
 ## Aktionskarte hat (cockpit_view: Antwortart, min/max, zulässige Personen, Optionen, Zeitpunkt).
 ## Für jede neue Kombination aus Besitzer, Stufe und Antwortart wird die Karte gerendert und auf
-## passende Bedienelemente geprüft. Jeder Prompt muss mit einer Antwort der Karte lösbar sein;
-## kein Schritt wird automatisch entschieden. Die gefundene Abdeckung wird ausgegeben.
+## passende Bedienelemente geprüft. Jeder Prompt muss mit genau einer Antwort nach den Kartendaten
+## lösbar sein (zulässige Anzahlen `counts`, Freigabe über `check_targets` wie beim Bestätigen-Button);
+## eine Ablehnung durch den Regelkern ist ein Fehler, es gibt keine Wiederholversuche. Kein Schritt wird
+## automatisch entschieden. Die gefundene Abdeckung wird ausgegeben.
+##
+## Grenze: Dieser Lauf bedient GameSession mit den Daten der Karte, nicht die Buttons selbst. Die
+## Button-Bedienung belegen test_full_round_ui, test_cockpit_screen und test_target_selection.
 
 const FUZZ := preload("res://tests/unit/test_role_interaction_fuzz.gd")
 const COUNTS: Array[int] = [6, 8, 10, 12, 16, 24]
 const ROUNDS := 2
 const MAX_STEPS := 220
-const MAX_ATTEMPTS := 10
 
 var _rng := RandomNumberGenerator.new()
 var _combos := {}      ## "owner/stage/answer" → Anzahl gelöster Prompts
 var _owners := {}      ## Besitzer → true
 var _rendered := {}
-var _rejections := {}  ## Fehlergrund → Anzahl (erwartbar: Kartenregeln, die min/max nicht ausdrückt)
 var _card: ActionCard = null
 var _last_error: StringName = &""
 
@@ -53,7 +56,6 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 		if parts[0] != "reaction":
 			assert_ne(CockpitText.call_key(parts[0] if parts[0] != "pack2" else "pack"), "ui.call.generic", "%s: eigener Vorlesetext" % combo)
 	print("      Prompt-Abdeckung (%d Kombinationen): %s" % [keys.size(), ", ".join(keys)])
-	print("      Ablehnungen durch den Regelkern (danach andere Antwort): %s" % JSON.stringify(_rejections))
 
 
 
@@ -101,22 +103,20 @@ func _play(g: int, focus: String, count: int) -> bool:
 	return true
 
 
-## Beantwortet einen Prompt nur mit Kartendaten; bei Ablehnung eine andere zulässige Antwort.
+## Beantwortet einen Prompt mit genau einer Antwort nach den Kartendaten; eine Ablehnung ist ein Fehler.
 func _answer(session: GameSession, next: Dictionary, label: String) -> bool:
 	var combo := "%s/%s/%s" % [next["owner"], next["stage"] if str(next["owner"]) != "reaction" else next["reaction_kind"], next["answer"]]
 	_owners[str(next["owner"])] = true
 	_render_once(combo, next)
-	for attempt: int in MAX_ATTEMPTS:
-		var r := _try(session, next, attempt)
-		if r.ok:
-			_combos[combo] = int(_combos.get(combo, 0)) + 1
-			return true
-		_rejections[String(r.error)] = int(_rejections.get(String(r.error), 0)) + 1
-	fail("%s: Prompt %s mit der Karte nicht lösbar" % [label, combo])
-	return false
+	var r := _try(session, next, label)
+	if r == null or not r.ok:
+		fail("%s: Prompt %s mit der Karte nicht lösbar (%s)" % [label, combo, r.error if r != null else "keine freigegebene Auswahl"])
+		return false
+	_combos[combo] = int(_combos.get(combo, 0)) + 1
+	return true
 
 
-func _try(session: GameSession, next: Dictionary, attempt: int) -> CommandResult:
+func _try(session: GameSession, next: Dictionary, label: String) -> CommandResult:
 	match str(next["answer"]):
 		"choice":
 			return session.answer_choice(_rng.randf() < 0.5)
@@ -128,10 +128,12 @@ func _try(session: GameSession, next: Dictionary, attempt: int) -> CommandResult
 			var kind := "night" if _rng.randf() < 0.5 else "day"
 			return session.answer_prediction(kind, int(next["prediction_min"][kind]) + _rng.randi_range(0, 3))
 	var allowed: Array = (next["allowed_ids"] as Array).duplicate()
-	var low := int(next["min"])
-	var high := mini(int(next["max"]), allowed.size())
-	# Erst eine zufällige Anzahl, danach die Ränder (Höchstzahl, dann Mindestzahl).
-	var n := _rng.randi_range(low, high) if attempt < 4 else (high if attempt % 2 == 0 else low)
+	# Eine der zulässigen Anzahlen der Karte, soweit genug Personen wählbar sind.
+	var counts: Array = (next["counts"] as Array).filter(func(c: int) -> bool: return c <= allowed.size())
+	if counts.is_empty():
+		fail("%s: keine erfüllbare Anzahl %s bei %d wählbaren Personen" % [label, next["counts"], allowed.size()])
+		return null
+	var n := int(counts[_rng.randi_range(0, counts.size() - 1)])
 	allowed.shuffle()
 	var picks := allowed.slice(0, n)
 	# Hinweiszeile der Karte nutzen: mindestens einen der genannten Wölfe wählen (Traumdeuter, Kopfgeldjäger).
@@ -140,6 +142,12 @@ func _try(session: GameSession, next: Dictionary, attempt: int) -> CommandResult
 			var wolf := int((line["value"] as Array)[0]["person_id"])
 			if not picks.has(wolf):
 				picks[0] = wolf
+	# Wie die Karte: Bestätigen nur, wenn der Regelkern die Auswahl freigibt (Verzicht ist eigener Button).
+	if n > 0:
+		var blocked := session.check_targets(picks)
+		if blocked != &"":
+			fail("%s: Karte hätte Bestätigen gesperrt (%s) für %s" % [label, blocked, picks])
+			return null
 	return session.answer_targets(picks)
 
 

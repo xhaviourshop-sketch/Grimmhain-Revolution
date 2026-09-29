@@ -10,9 +10,7 @@ const TIME_USE_KEY := "zeitwaechter:freeze"  ## Zeitwächter: einmal je Leben (E
 
 
 static func apply(state: GameState, command: Command) -> CommandResult:
-	var error := PhaseMachine.check_command(state, command.type)
-	if error == &"":
-		error = _validate(state, command)
+	var error := check(state, command)
 	if error != &"":
 		return CommandResult.rejected(error)
 
@@ -23,6 +21,26 @@ static func apply(state: GameState, command: Command) -> CommandResult:
 	WinRules.finalize_if_ready(ctx)
 	next.command_count += 1
 	return CommandResult.accepted(next, ctx.events)
+
+
+## Prüft einen Befehl genau wie `apply`, ohne ihn anzuwenden: Fehlergrund oder "". Für Bedienhilfen,
+## die eine Auswahl vor dem Senden bewerten; der Zustand bleibt unberührt.
+static func check(state: GameState, command: Command) -> StringName:
+	var error := PhaseMachine.check_command(state, command.type)
+	return error if error != &"" else _validate(state, command)
+
+
+## Zulässige Personenanzahlen des offenen Prompts (aufsteigend), leer ohne Prompt. Dieselbe Quelle,
+## mit der die Validierung die Anzahl einer Antwort prüft.
+static func target_counts(state: GameState) -> Array[int]:
+	var p := state.pending_prompt
+	if p == null:
+		return []
+	if InfoSteps.OWNERS.has(p.owner):
+		return InfoSteps.target_counts(p)
+	if BondSteps.OWNERS.has(p.owner):
+		return BondSteps.target_counts(p)
+	return p.count_range()
 
 
 ## Erwarteter nächster Regelschritt für BeginStep/SkipStep oder "" (siehe StepQueue).

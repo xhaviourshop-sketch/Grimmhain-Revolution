@@ -76,6 +76,14 @@ var step_id: String = ""  ## Regelschritt, zu dem der Prompt gehört (BeginStep/
 var stage: StringName = &""  ## aktuelle Stufe eines mehrstufigen Prompts
 
 
+## Alle Anzahlen von `min_count` bis `max_count` (Normalfall ohne Sonderregel).
+func count_range() -> Array[int]:
+	var out: Array[int] = []
+	for n: int in range(min_count, max_count + 1):
+		out.append(n)
+	return out
+
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,

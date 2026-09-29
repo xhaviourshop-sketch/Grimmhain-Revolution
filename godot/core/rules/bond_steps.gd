@@ -165,12 +165,17 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 		if (dead_only and s.players[t].alive) or (not dead_only and not dead_allowed and not s.players[t].alive):
 			return &"invalid_target"
 		seen.append(t)
-	var n := seen.size()
-	if n < prompt.min_count or n > prompt.max_count:
+	if not target_counts(prompt).has(seen.size()):
 		return &"invalid_target_count"
-	if prompt.stage == STAGE_TARGETS and prompt.max_count > 1 and n != 0 and n != prompt.max_count:
-		return &"invalid_target_count"  # Loki, Seelentauscher, Kutscher: keiner oder alle
 	return &""
+
+
+## Zulässige Anzahlen der aktuellen Stufe. Loki, Seelentauscher, Kutscher, Nekromant: keiner oder alle.
+static func target_counts(prompt: PendingPrompt) -> Array[int]:
+	var out := prompt.count_range()
+	if prompt.stage == STAGE_TARGETS and prompt.max_count > 1:
+		return out.filter(func(n: int) -> bool: return n == 0 or n == prompt.max_count)
+	return out
 
 
 static func _finish(ctx: RuleContext, prompt: PendingPrompt, stage: StringName, extra: Dictionary = {}) -> void:

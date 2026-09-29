@@ -222,10 +222,19 @@ func cancel_prompt(reason: String) -> CommandResult:
 
 ## Auswahl von Personen; einstufige Prompts ohne Stufe, mehrstufige mit ihrer aktuellen Stufe.
 func answer_targets(targets: Array) -> CommandResult:
+	return submit(_targets_command(targets))
+
+
+## Prüft dieselbe Auswahl wie `answer_targets` beim Regelkern, ohne sie zu senden: Fehlergrund oder "".
+func check_targets(targets: Array) -> StringName:
+	return RulesEngine.check(_state, _targets_command(targets))
+
+
+func _targets_command(targets: Array) -> Command:
 	var p := _state.pending_prompt
 	if p != null and p.stage != &"":
-		return submit(Command.answer_stage_targets(p.id, String(p.stage), targets))
-	return submit(Command.answer_prompt(_prompt_id(), targets))
+		return Command.answer_stage_targets(p.id, String(p.stage), targets)
+	return Command.answer_prompt(_prompt_id(), targets)
 
 
 ## Ja/Nein bzw. Bestätigen (ack = Ja) der aktuellen Stufe.
