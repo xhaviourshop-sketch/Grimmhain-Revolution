@@ -164,6 +164,51 @@ func test_blutpriester_random_pick() -> void:
 	await _check_role("blutpriester")
 
 
+## Unterstützte Rolle ohne zulässiges Zufallsergebnis: Knopf gesperrt mit Erklärung, Auslösen sendet nichts und zieht nicht,
+## „Schritt abbrechen …“ bleibt bedienbar. Grenze: Im regulären Ablauf ist der Zustand nicht erreichbar (Traumdeuter und
+## Kopfgeldjäger entfallen ohne mögliche Dreiergruppe mit Wolf, der König ohne Kandidaten, die Aufdeckung des Blutpriesters
+## erlaubt immer „keiner“, eine Spielleiterkorrektur bricht den offenen Prompt ab). Deshalb setzt die Testvorbereitung bei
+## offenem Traumdeuter-Prompt beide Wölfe im Sitzungszustand auf tot und die Auswahl auf die übrigen Lebenden. Der Zustand
+## bleibt für den Regelkern gültig (InfoSteps.matches_state); die Regeln bleiben unverändert.
+func test_disabled_random_button_without_admissible_result() -> void:
+	if not await start(["traumdeuter", W, W, D, D, D, D]):
+		return
+	assert_true(await run({}, until_prompt("traumdeuter", "targets")), "Traumdeuter: Auswahl offen")
+	var st := session()._state
+	for wolf: int in [2, 3]:
+		st.players[wolf].alive = false  # Testvorbereitung: keine Dreiergruppe mit Wolf mehr möglich
+	st.pending_prompt.allowed_ids = [4, 5, 6, 7] as Array[int]  # wie InfoSteps: alle anderen Lebenden
+	assert_true(GameState.from_dict(st.to_dict()) != null, "vorbereiteter Zustand ist für den Regelkern gültig")
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	assert_true(bool(next()["random"]), "Rolle und Stufe unterstützen Zufall")
+	assert_eq(session().random_proposal(), null, "kein zulässiges Zufallsergebnis")
+	var random := find_button(screen(), "RandomTargetsButton")
+	assert_true(random != null and random.is_visible_in_tree() and random.disabled, "Zufallsknopf sichtbar und gesperrt")
+	var reason := find_node(screen(), "RandomUnavailableLabel") as Label
+	assert_true(reason != null and reason.is_visible_in_tree(), "Erklärung sichtbar")
+	assert_eq(reason.text if reason != null else "", "Zufällig auswählen ist hier nicht möglich: Es gibt keine zulässige Auswahl.", "verständliche Erklärung")
+	var hash0 := session().state_hash()
+	var count0 := session().commands().size()
+	var draws0 := st.rng.draws
+	await press(random)   # Signal wie Touch
+	await click(random)   # Klick über den Viewport
+	assert_eq([session().state_hash(), session().commands().size(), st.rng.draws], [hash0, count0, draws0], "kein Befehl, keine Ziehung")
+	assert_true(selection().is_empty() and find_node(screen(), "RandomProposalLabel") == null, "kein Vorschlag übernommen")
+	# Manuelle Bedienung bleibt erreichbar: Auswahl ohne Wolf wird mit Begründung gesperrt, Abbrechen ist möglich.
+	for id: int in [4, 5, 6]:
+		await tap_seat(id)
+	assert_eq(selection().size(), 3, "Personen weiter antippbar")
+	assert_true(find_button(screen(), "ConfirmTargetsButton").disabled, "Auswahl ohne Wolf nicht bestätigbar (I-01)")
+	assert_true(find_node(screen(), "SelectionBlockedLabel") != null, "Sperrgrund der manuellen Auswahl sichtbar")
+	assert_true(await tap_button("CancelPromptButton"), "Schritt abbrechen bedienbar")
+	assert_true(await confirm_dialog(), "Abbruch mit Begründung")
+	assert_eq(session().commands().size(), count0 + 1, "genau ein Befehl")
+	assert_eq(String(last_command().type), String(Command.CANCEL_PROMPT), "Abbruch gesendet")
+	assert_eq(session()._state.rng.draws, draws0, "Abbrechen ohne Ziehung")
+	assert_eq(session()._state.pending_prompt, null, "Prompt geschlossen")
+
+
 ## Andere Rollen und die Opferwahl des Blutpriesters haben keinen Zufallsknopf.
 func test_no_random_button_for_other_selections() -> void:
 	if not await start(["blutpriester", "schutzengel", W, D, D, D, D]):
