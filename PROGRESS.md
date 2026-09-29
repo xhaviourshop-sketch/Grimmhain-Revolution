@@ -242,3 +242,12 @@ Umfang: Wiederbelebungsrunde statt Aufdeckungsoption (`revival_round`, alte Anga
 Verifiziert (Windows, Godot 4.7.2, headless): 917 Tests, 0 fehlgeschlagen, Exit 0; Register 313/313, Rollenprüfer und `check-coverage.py` ohne Befund, `git diff --check` Exit 0. Keine grafische, Touch- oder Tablet-Prüfung.
 Nicht umgesetzt: Smartphone- und Audio-Ausgabe, Ton bei fünf Toten (DI-09), Totenreichkarten (nicht definiert).
 Nächster Schritt: manueller PC-Test `docs/ui/pc-test-pr3.md` (A4, Teile I bis L).
+
+---
+
+## 2026-09-29 — Paket 1 der Code-Abschluss-Roadmap: Abschlussmatrix
+Status: Dokumentation auf `feature/night-ui-expansion` (Ausgangs-HEAD `23c7044`), kein Code geändert, keine Regel geändert. PR #3 offen, nicht erweitert.
+Ergebnis: `docs/masterplan/CODE-COMPLETION-MATRIX.md` (Funktionen, 72 Rollen-IDs, Befunde, offene Entscheidungen), `docs/masterplan/CODE-COMPLETION-ROADMAP.md` (aus dem Hauptrepo übernommen und mit Belegen konkretisiert), Planungsupdate im Masterplan (aus dem Hauptrepo übernommen, Stand-Absatz auf den Branch angepasst).
+Befunde: `ConfirmRoleShown` existiert nicht im Code (nur Spezifikation); Einstellungen werden nicht gespeichert; gespeicherte Gruppen, Szenarien, Expertenmodus, Übungsmodus, Timer, Nachspielbericht, Audio, Clients, Export fehlen; Schutz-, Rettungs-, Wolfskind- und Lehrling-Korrekturen ohne Oberfläche; `test_prompt_coverage` einmal intermittierend rot (Ursache offen).
+Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0; Vollsuite 917 Tests, Lauf 1 mit 1 Fehlschlag (`test_prompt_coverage`), Lauf 2 mit 0 Fehlschlägen; `--filter=prompt_coverage` 7 von 7 grün; `node tools/check-asset-register.js`, `node tools/role-migration/check-role-docs.js`, `python docs/content-drafts/check-coverage.py`, `node --test tests/check-role-docs.test.js tests/check-asset-register.test.js` (20 Tests) jeweils Exit 0; `git diff --check` Exit 0. Keine grafische, Touch- oder Tablet-Prüfung.
+Nächster Schritt: Paket 2 (Rollen-zeigen-Modus, Spezialkorrekturen, Vorprüfung B-01) nach Beantwortung der Schema-Frage.

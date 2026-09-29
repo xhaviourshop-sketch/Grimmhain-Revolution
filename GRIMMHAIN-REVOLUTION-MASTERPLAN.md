@@ -1,5 +1,13 @@
 # Grimmhain Revolution · Verbindlicher Masterplan
 
+## Aktuelle Arbeitsreihenfolge: Spielfunktionen vor Gestaltung
+
+**Planungsupdate vom 29.09.2026:** Die technische Umsetzung wird ohne feste Tages- oder Wochenfrist in überprüfbaren Arbeitspaketen abgeschlossen. Aktuelle operative Roadmap: [CODE-COMPLETION-ROADMAP.md](docs/masterplan/CODE-COMPLETION-ROADMAP.md). Diese Reihenfolge ersetzt Kalenderannahmen und frühere nächste Schritte für die weitere Planung; Produktumfang und Abnahmeanforderungen dieses Masterplans bleiben erhalten.
+
+Der erste Meilenstein ist die vollständig bedienbare Offline-Partie. Danach folgen übrige Offline-Funktionen, Totenkarten/Kartenschlucker, lokale Clients und öffentliche Anzeige sowie Mediensteuerung und Plattformbasis. Blockierte Regelentscheidungen werden nicht als erledigt markiert. Finale Grafik, Atmosphäre und umfangreiche Layout-/QoL-Überarbeitung folgen als eigenes Gestaltungsprojekt; dessen Standardansicht soll 85 bis 90 Prozent Spielfeldfläche bieten.
+
+**Stand auseinanderhalten:** `main` steht auf `8197ee6` (nach PR #2). Der neuere Funktionsstand liegt im Branch `feature/night-ui-expansion` (PR #3, offen, zuletzt geprüft `23c7044`) und enthält `main`, den Rollenaudit und die Cloud-Integration vollständig. Die Abschlussmatrix [CODE-COMPLETION-MATRIX.md](docs/masterplan/CODE-COMPLETION-MATRIX.md) vom 29.09.2026 belegt den Ist-Stand je Anforderung. Die dort ausgeführte Vollsuite (917 Tests) war einmal rot (intermittierender Prüfungsfehler, Befund B-01) und einmal grün; das ist kein Nachweis für `main` und keine Tablet-Abnahme.
+
 **Stand:** 26. September 2026; Umsetzungsstand aktualisiert 27. September 2026 (main `1bc8016`)
 
 **Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen, Verteilung und Sitzordnung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Spielstart (`StartGame`) aus dem bestätigten Setup umgesetzt und automatisch getestet (PR #2). Keine Tablet-Abnahme, keine spielbare Partie (Nacht/Tag) über die Oberfläche.
