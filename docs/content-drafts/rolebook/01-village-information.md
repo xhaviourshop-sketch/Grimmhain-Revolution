@@ -161,26 +161,26 @@ Quelle: DECISION-LOG "Rollenaudit · Blutwolf, Korrupter Richter, Wächter am To
 
 ## `traumdeuter` · Traumdeuter / Dreamer
 
-**Fraktion / Faction:** Dorf / Village · **Nachtschritt / Night step:** jede Nacht, Stufe 7.0 / every night, stage 7.0 · **Zählt als Wolf / Counts as wolf:** nein / no · **Status:** Regel entschieden, Randfall offen (OI-08)
+**Fraktion / Faction:** Dorf / Village · **Nachtschritt / Night step:** jede Nacht, Stufe 7.0 / every night, stage 7.0 · **Zählt als Wolf / Counts as wolf:** nein / no · **Status:** Regel entschieden, Randfall aus dem Regelkern abgeleitet
 
 | Feld / Field | DE | EN |
 |---|---|---|
 | Fähigkeit / Ability | Sieht jede Nacht drei Namen, darunter mindestens einen Wolf. | Sees three names every night, at least one of them a wolf. |
 | Zeitpunkt, Limit / Timing, limit | Jede Nacht, solange der Traumdeuter lebt. | Every night while the Dreamer lives. |
 | Ziele / Targets | Der Spielleiter wählt genau drei andere lebende Personen. Bestätigen geht erst, wenn mindestens eine davon als Wolf zählt. | The game master chooses exactly three other living people. Confirming is only possible once at least one of them counts as a wolf. |
-| Ausnahmen / Exceptions | Es zählt die wahre Wolfszählung. Die Scheinrolle eines Trugbilderwolfs täuscht nicht. Der Traumdeuter erfährt nur "mindestens ein Wolf unter diesen dreien", nie die Anzahl. | The true wolf count applies. A Decoy Wolf's false role does not deceive. The Dreamer learns only "at least one wolf among these three", never the number. |
+| Ausnahmen / Exceptions | Es zählt die wahre Wolfszählung. Die Scheinrolle eines Trugbilderwolfs täuscht nicht. Der Traumdeuter erfährt nur "mindestens ein Wolf unter diesen dreien", nie die Anzahl. Leben weniger als drei andere Personen oder zählt keine lebende Person als Wolf, entfällt der Schritt in dieser Nacht (protokolliert), und der Traumdeuter erfährt nichts. | The true wolf count applies. A Decoy Wolf's false role does not deceive. The Dreamer learns only "at least one wolf among these three", never the number. If fewer than three other people are alive or no living person counts as a wolf, the step is dropped for that night (logged) and the Dreamer learns nothing. |
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | Der Spielleiter wählt Anna, Emil und Clara. Emil ist ein Wolf. Der Traumdeuter sieht die drei Namen und "mindestens ein Wolf". | The game master chooses Anna, Emil and Clara. Emil is a wolf. The Dreamer sees the three names and "at least one wolf". |
 | Beispiel 2 / Example 2 | Der Spielleiter wählt Anna, Ben und Clara, alle im Dorf. "Bestätigen" bleibt gesperrt, bis er eine Wolfsperson austauscht. | The game master chooses Anna, Ben and Clara, all in the village. "Confirm" stays locked until a wolf replaces one of them. |
 | Spielleitung / Game master | Du wählst, der Traumdeuter zeigt nur. Die App erinnert dich an die Wolfspflicht. Zwei oder drei Wölfe in der Auswahl sind erlaubt. | You choose, the Dreamer only sees. The app reminds you of the wolf requirement. Two or three wolves in the selection are allowed. |
 
-Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-01, I-02, I-05; RM-DR-129). Randfall: OI-08.
+Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-01, I-02, I-05; RM-DR-129). Randfall: gemeinsame Regel für Pflichtwahlen ohne mögliche Entscheidung (DECISION-LOG "Waldhexe · Produktionsrolle im Regelkern", DA-20), `step_queue.gd` (`no_decision`), Test `test_dreamer_true_wolf_count_and_drop_without_enough_targets`.
 
 ---
 
 ## `kopfgeldjaeger` · Kopfgeldjäger / Bounty Hunter
 
-**Fraktion / Faction:** Dorf / Village · **Nachtschritt / Night step:** Nacht nach einer Hinrichtung, Stufe 3.2 / night after an execution, stage 3.2 · **Zählt als Wolf / Counts as wolf:** nein / no · **Status:** Regel entschieden, Randfall offen (OI-08)
+**Fraktion / Faction:** Dorf / Village · **Nachtschritt / Night step:** Nacht nach einer Hinrichtung, Stufe 3.2 / night after an execution, stage 3.2 · **Zählt als Wolf / Counts as wolf:** nein / no · **Status:** Regel entschieden, Randfall aus dem Regelkern abgeleitet
 
 | Feld / Field | DE | EN |
 |---|---|---|
@@ -206,7 +206,7 @@ Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-02, I-04, I-06; RM-D
 | Fähigkeit / Ability | Erfährt eine Dorfperson mit ihrer wahren Rolle. | Learns one village person with their true role. |
 | Zeitpunkt, Limit / Timing, limit | Einmal je Leben, in der ersten Nacht, in der strikt mehr Personen tot sind als leben. | Once per life, in the first night in which strictly more people are dead than alive. |
 | Ziele / Targets | Der Spielleiter wählt eine andere lebende Person, die aktuell zur Fraktion Dorf gehört. | The game master chooses one other living person who currently belongs to the village faction. |
-| Ausnahmen / Exceptions | Ein Trugbilderwolf oder ein bereits verwandeltes Wolfskind gehört nicht zum Dorf und kommt nicht in Frage. | A Decoy Wolf or an already transformed Wolf Child does not belong to the village and cannot be chosen. |
+| Ausnahmen / Exceptions | Ein Trugbilderwolf oder ein bereits verwandeltes Wolfskind gehört nicht zum Dorf und kommt nicht in Frage. Gibt es keine wählbare Dorfperson, entfällt der Schritt in dieser Nacht, und die Fähigkeit bleibt ungenutzt. | A Decoy Wolf or an already transformed Wolf Child does not belong to the village and cannot be chosen. If no village person can be chosen, the step is dropped for that night and the ability stays unused. |
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | Zehn Personen spielen, sechs sind tot, vier leben. Der Spielleiter wählt Clara. Der König sieht "Clara: Waldhexe". | Ten people play, six are dead, four are alive. The game master chooses Clara. The King sees "Clara: Witch of the Woods". |
 | Beispiel 2 / Example 2 | Fünf Personen sind tot, fünf leben. Es gibt keinen König-Schritt, weil die Toten nicht in der Mehrheit sind. | Five people are dead, five are alive. There is no King step, because the dead are not in the majority. |
@@ -267,9 +267,9 @@ Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-08, I-13; RM-DR-128)
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | An Tag 3 leben drei Wölfe. Amalia stellt eine Ja/Nein-Frage, zum Beispiel "Ist Ben ein Wolf?". Der Spielleiter antwortet "Ja". Amalia stirbt. | On day 3 three wolves are alive. Amalia asks a yes/no question, for example "Is Ben a wolf?". The game master answers "Yes". Amalia dies. |
 | Beispiel 2 / Example 2 | Nur noch zwei Wölfe leben. Die Fähigkeit ist nicht verfügbar. | Only two wolves are left alive. The ability is not available. |
-| Spielleitung / Game master | Frage und Antwort sind öffentlich. Das Format der Frage ist in den Quellen nicht eingeschränkt (OI-10). Nach Amalias Tod laufen Todesfolgen und Siegprüfung wie sonst. | Question and answer are public. The question format is not restricted in the sources (OI-10). After Amalia's death, death consequences and win check run as usual. |
+| Spielleitung / Game master | Frage und Antwort sind öffentlich, damit wird ihre Fähigkeit sichtbar (erlaubte Enthüllung). Die App prüft die Frage nicht und protokolliert nur Amalias Tod und dein Ja oder Nein. Nach Amalias Tod laufen Todesfolgen und Siegprüfung wie sonst. | Question and answer are public, so the ability becomes visible (permitted reveal). The app does not check the question and only logs Amalia's death and your yes or no. After Amalia's death, death consequences and win check run as usual. |
 
-Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-09; RM-DR-151).
+Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-09; RM-DR-151). Regelkern: `AMALIA_ANSWERED` (öffentlich, enthält Person, Antwort und Tag, keinen Fragetext).
 
 ---
 
@@ -282,11 +282,11 @@ Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-09; RM-DR-151).
 | Fähigkeit / Ability | Stirbt ein Wolf, wird öffentlich die Richtung des nächsten Wolfs verkündet. | When a wolf dies, the direction of the nearest wolf is announced publicly. |
 | Zeitpunkt, Limit / Timing, limit | Nach jedem Tod einer Person, die als Wolf zählt, solange ein Detektiv lebt und danach mindestens ein anderer Wolf lebt. Am Tag sofort, in der Nacht in der Morgenauflösung. | After every death of a person who counts as a wolf, as long as a Detective lives and at least one other wolf lives afterwards. During the day at once, at night during the dawn resolution. |
 | Ziele / Targets | Keine Wahl. Gemessen wird vom Platz des Toten zum nächsten lebenden Wolf, tote Plätze eingeschlossen. | No choice. Measured from the dead person's seat to the nearest living wolf, dead seats included. |
-| Ausnahmen / Exceptions | Ein Hinweis je Wolfstod, egal wie viele Detektive leben. Bei gleichem Abstand lautet die Ansage "beide Seiten gleich weit". Ein durch denselben Tod verwandeltes Wolfskind zählt als anderer Wolf. Ein Tod per Korrektur ohne Folgen löst nichts aus. | One hint per wolf death, no matter how many Detectives live. With equal distance the announcement is "both sides equally far". A Wolf Child transformed by the same death counts as another wolf. A death by correction without consequences triggers nothing. |
+| Ausnahmen / Exceptions | Ein Hinweis je Wolfstod, egal wie viele Detektive leben. Bei gleichem Abstand lautet die Ansage "beide Seiten gleich weit". Ein durch denselben Tod verwandeltes Wolfskind zählt als anderer Wolf. Ein Tod per Korrektur ohne Folgen löst nichts aus. Im Fluch des Weisen ruht die Fähigkeit. | One hint per wolf death, no matter how many Detectives live. With equal distance the announcement is "both sides equally far". A Wolf Child transformed by the same death counts as another wolf. A death by correction without consequences triggers nothing. During the Elder's curse the ability rests. |
 | Sieg / Win | Mit dem Dorf. | With the village. |
 | Beispiel 1 / Example 1 | Emil wird hingerichtet. Der nächste lebende Wolf sitzt zwei Plätze im Uhrzeigersinn vom Platz von Emil. Öffentliche Ansage: Der nächste Wolf sitzt links von Emil. | Emil is executed. The nearest living wolf sits two seats clockwise from Emil's seat. Public announcement: the nearest wolf sits to Emil's left. |
 | Beispiel 2 / Example 2 | Der letzte Wolf stirbt. Es gibt keinen anderen Wolf, also keinen Hinweis. | The last wolf dies. There is no other wolf, so no hint. |
-| Spielleitung / Game master | Die Ansage nennt nur die Richtung, nie die Rolle. "Links" gilt als Uhrzeigersinn. Die Gegenprüfung am Tablet steht noch aus. | The announcement names only the direction, never the role. "Left" means clockwise. The tablet cross-check is still pending. |
+| Spielleitung / Game master | Die Ansage nennt nur die Richtung, nie die Rolle. Sie legt aber offen, dass die gestorbene Person als Wolf zählte und dass noch ein Detektiv lebt, auch wenn "Rolle beim Tod aufdecken" ausgeschaltet ist (erlaubte Enthüllung, I-10). "Links" gilt als Uhrzeigersinn. Die Gegenprüfung am Tablet steht noch aus. | The announcement names only the direction, never the role. It does reveal, however, that the dead person counted as a wolf and that a Detective is still alive, even if "reveal role on death" is off (permitted reveal, I-10). "Left" means clockwise. The tablet cross-check is still pending. |
 
 Quelle: DECISION-LOG "Rollenaudit · Informationsrollen" (I-10, I-14; RM-DR-153.1 bis .3); "Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser" (Richtung "links").
 

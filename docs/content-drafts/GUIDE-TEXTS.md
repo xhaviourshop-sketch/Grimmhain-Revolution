@@ -14,7 +14,7 @@ Jeder Text trägt genau eine Kategorie:
 
 Regeln:
 
-1. `[ÖFFENTLICH]` nennt nie eine geheime Rolle, ein geheimes Ziel, eine geheime Wirkung oder eine Todesursache. Erlaubt sind nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht (Detektiv, Nachtwächter, Amalia, Schutzgeist, Zeitwächter, Wiederbelebung, Nominierung) und die allgemeinen Tod-, Tag- und Siegtexte.
+1. `[ÖFFENTLICH]` nennt nie eine geheime Rolle, ein geheimes Ziel, eine geheime Wirkung oder eine Todesursache. Erlaubt sind nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht (Detektiv, Nachtwächter, Amalia, Schutzgeist ohne Rollennamen, Zeitwächter, Wiederbelebung, Nominierung durch den Korrupten Richter, Ton bei fünf Toten; Zusammenstellung in Abschnitt 4) und die allgemeinen Tod-, Tag- und Siegtexte.
 2. Ein Aufruf nennt nur den Rollennamen, nie Ergebnis, Ziel oder ob die Rolle lebt (`docs/assets/NARRATOR-SCRIPT.md` §1 Regel 4). Ob und wie Rollen aufgerufen werden, deren Anwesenheit dadurch bekannt würde, ist offen (OI-01).
 3. Kartenlänge: höchstens 140 Zeichen je Text und Sprache, höchstens zwei kurze Sätze. Ausnahme: die Kombizeilen der Aufrufe (Aufruf und Einschlafen zusammen).
 4. Platzhalter in geschweiften Klammern (`{name}`, `{names}`, `{role}`, `{roles}`, `{count}`, `{direction}`, `{n}`) sind nur für Karten gedacht. Aufgenommene Zeilen enthalten keine Platzhalter (NARRATOR-SCRIPT §1 Regel 3).
@@ -111,16 +111,16 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 | `maertyrerin` | Märtyrerin / Martyr | Am Ende der Nacht: Frag nur, wenn das Rudelopfer sonst stürbe. | At the end of the night: ask only if the pack victim would otherwise die. |
 | `schutzgeist` | Schutzgeist / Guardian Spirit | Nur tot: In der ersten Nacht nach ihrem Tod frag, wen sie mit dem Schild schützt. | Only when dead: in the first night after their death ask whom they shield. |
 | `dorfschmied` | Dorfschmied / Village Blacksmith | Ab Nacht 6: Frag, ob er die Waffe jetzt gibt. Beim Abwehren wählst du den Wolf. | From night 6: ask whether they give the weapon now. When it blocks, you choose the wolf. |
-| `verdammniswaechter` | Verdammniswächter / Doom Warden | Nach der Rudelwahl: Zeig das Angebot. Er darf umlenken. | After the pack choice: show the offer. They may redirect. |
+| `verdammniswaechter` | Verdammniswächter / Doom Warden | Nach der Rudelwahl: Zeig das Angebot. Er muss zwischen Rudelopfer und Angebot entscheiden. | After the pack choice: show the offer. They must decide between the pack victim and the offer. |
 | `loki` | Loki / Loki | Nur Nacht 1: Frag, welche zwei Personen Liebende oder Rivalen werden. | Night 1 only: ask which two people become lovers or rivals. |
 | `schwarze-witwe` | Schwarze Witwe / Black Widow | Frag, wen sie wählt. Gehört die Person zu einem lebenden Paar des Loki, sterben beide am Morgen. | Ask whom they choose. If the person belongs to a living pair of Loki, both die in the morning. |
 | `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Frag, wen sie um Zuflucht bittet. Bei Zustimmung entstehen Kette und Apfel. | Ask whom they ask for refuge. On agreement chain and apple arise. |
 | `schattenwanderer` | Schattenwanderer / Shadowwalker | Frag, mit wem er sich verknüpft. Er tut es einmal. | Ask with whom they link. They do it once. |
 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Stirbt er, frag, wen er verflucht, oder ob er verzichtet. | If they die, ask whom they curse, or whether they decline. |
 | `koenig-lykaon` | König Lykaon / King Lycaon | Frag, ob er jetzt verwandelt. Nach drei Verzichten muss er wählen. | Ask whether they transform someone now. After three refusals they must choose. |
-| `seelentauscher` | Seelentauscher / Soul Swapper | Frag einmalig nach zwei Personen, lebend oder tot. Sie tauschen die Rollen. | Ask once for two people, living or dead. They swap roles. |
+| `seelentauscher` | Seelentauscher / Soul Swapper | Frag jede Nacht bis zur Nutzung nach zwei Personen, lebend oder tot. Sie tauschen die Rollen. | Ask every night until used for two people, living or dead. They swap roles. |
 | `kutscher` | Kutscher / Coachman | Ab 10 Toten: Frag, welche drei zurückkehren und wer Wolf wird. | From 10 dead: ask which three return and who becomes a wolf. |
-| `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Frag einmalig nach einer toten Person und einer freien Rolle. Keine Wolfsrolle. | Ask once for a dead person and a free role. No wolf role. |
+| `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Frag jede Nacht bis zur Nutzung nach einer toten Person und einer freien Rolle. Keine Wolfsrolle. | Ask every night until used for a dead person and a free role. No wolf role. |
 | `rattenfaenger` | Rattenfänger / Pied Piper | Frag, wen er verzaubert: eine oder zwei unverzauberte Personen. | Ask whom they enchant: one or two people not yet enchanted. |
 | `pestbringerin` | Pestbringerin / Plague Bringer | Frag, wen sie infiziert. Am Morgen zieht die App die Ausbreitung. | Ask whom they infect. In the morning the app draws the spread. |
 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Nacht 1: drei Markierungen. Freigeschaltet: Frag jede Nacht, wen er tötet. | Night 1: three markings. Once unlocked: ask every night whom they kill. |
@@ -131,7 +131,7 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | In den Nächten 3, 6, 9 ...: Frag, welchen Wolf er reißt, oder ob er verzichtet. | In nights 3, 6, 9 ...: ask which wolf they tear, or whether they decline. |
 | `zeitwaechter` | Zeitwächter / Time Warden | Vor allen anderen: Frag, ob er die Nacht einfriert. Dann entfallen alle Nachtschritte. | Before all others: ask whether they freeze the night. Then all night steps drop. |
 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Nacht 1: drei Markierungen. Nacht 4: Zusatzopfer je Markierten unter den ersten drei Toten. | Night 1: three markings. Night 4: extra victims per marked person among the first three dead. |
-| `grabraeuber` | Grabräuber / Grave Robber | Frag einmalig nach der toten Person. Danach folgt der gestohlene Schritt. | Ask once for the dead person. After that the stolen step follows. |
+| `grabraeuber` | Grabräuber / Grave Robber | Frag jede Nacht bis zur Nutzung nach der toten Person. Danach folgt der gestohlene Schritt. | Ask every night until used for the dead person. After that the stolen step follows. |
 | `hades` | Hades / Hades | Letzter Schritt: erst Tötung für 2 Lichter, dann Barriere für 3. Bezahlt wird am Ende. | Last step: first kill for 2 lights, then barrier for 3. Payment comes at the end. |
 
 ### 3.2 `[PERSON-PRIVAT]` Information nur für die betreffende Person
@@ -190,10 +190,10 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 | `verdammniswaechter` | Verdammniswächter / Doom Warden | (entfällt) Das Angebot ist eine Wahl, keine Information. | (not applicable) The offer is a choice, not information. |
 | `loki` | Loki / Loki | (ungeklärt) Information der Betroffenen offen (OI-12). | (unresolved) Information of those affected is open (OI-12). |
 | `schwarze-witwe` | Schwarze Witwe / Black Widow | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
-| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | (ungeklärt) Information der Verketteten offen (OI-13). | (unresolved) Information of the chained person is open (OI-13). |
+| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | (ungeklärt) Information über Kette und Apfel offen (OI-13). | (unresolved) Information about chain and apple is open (OI-13). |
 | `schattenwanderer` | Schattenwanderer / Shadowwalker | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | (entfällt) Der verfluchten Person wird nichts gezeigt. | (not applicable) The cursed person is shown nothing. |
-| `koenig-lykaon` | König Lykaon / King Lycaon | (ungeklärt) Information der verwandelten Person offen (OI-15). | (unresolved) Information of the transformed person is open (OI-15). |
+| `koenig-lykaon` | König Lykaon / King Lycaon | An die verwandelte Person: Du bist jetzt Trugbilderwolf. | To the transformed person: You are now a Decoy Wolf. |
 | `seelentauscher` | Seelentauscher / Soul Swapper | An jede lebende betroffene Person: Deine neue Rolle: {role}. | To each living affected person: Your new role: {role}. |
 | `kutscher` | Kutscher / Coachman | An jede zurückgeholte Person: Du lebst wieder. Deine Rolle: {role}. | To each returned person: You are alive again. Your role: {role}. |
 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | An die zurückgeholte Person: Du lebst wieder. Deine neue Rolle: {role}. | To the returned person: You are alive again. Your new role: {role}. |
@@ -212,7 +212,7 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 
 ### 3.3 `[ÖFFENTLICH]` Aufruf und Einschlafen
 
-Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Ob Rollen mit dadurch erkennbarer Anwesenheit beim Namen aufgerufen werden, ist offen (OI-01). Handlungszeilen ("Zeige auf ...") kennt das NARRATOR-SCRIPT nur für die Slice-Rollen; für alle weiteren Rollen sind sie offen (OI-18).
+Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Ob Rollen mit dadurch erkennbarer Anwesenheit beim Namen aufgerufen werden, ist offen (OI-01). Ohne Tarnaufrufe verrät jeder Aufruf mit Rollennamen, dass die Rolle in der Partie ist; bei bedingten Schritten (Schutzgeist erst nach ihrem Tod, Henker ab drei Hinrichtungen, Kopfgeldjäger, König, Kutscher, Dorfschmied ab Nacht 6, Rachsüchtiger Wolf in den Nächten 3, 6, 9) verrät er zusätzlich den Zustand. Handlungszeilen ("Zeige auf ...") kennt das NARRATOR-SCRIPT nur für die Slice-Rollen; für alle weiteren Rollen sind sie offen (OI-18).
 
 | Rollen-ID | Rolle | DE | EN |
 |---|---|---|---|
@@ -307,7 +307,7 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `sensentraeger` | Sensenträger / Reaper | (keine zusätzliche Ansage) | (no additional announcement) |
 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
 | `doppelspion` | Doppelspion / Double Agent | (keine; der Rudelaufruf nennt ihn nicht) | (none; the pack call does not name them) |
-| `selbstmoerder` | Selbstmörder / Death Seeker | (keine Ansage; ein Ton bei 5 Toten würde ihn verraten (OI-07)) | (no announcement; a sound at 5 dead would reveal them (OI-07)) |
+| `selbstmoerder` | Selbstmörder / Death Seeker | (keine Textansage; der Ton bei fünf Toten ist entschieden, nur mit Selbstmörder in der Partie, Umsetzung offen (OI-07)) | (no text announcement; the sound at five dead is decided, only with a Death Seeker in the game, implementation open (OI-07)) |
 | `dorfchronistin` | Dorfchronistin / Village Chronicler | (keine zusätzliche Ansage) | (no additional announcement) |
 | `die-gebundenen` | Die Gebundenen / The Bound | (keine zusätzliche Ansage) | (no additional announcement) |
 | `waldlaeufer` | Waldläufer / Ranger | (keine zusätzliche Ansage) | (no additional announcement) |
@@ -341,7 +341,7 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `die-ewigen` | Die Ewigen / The Eternal Ones | (keine zusätzliche Ansage) | (no additional announcement) |
 | `der-weise` | Der Weise / The Elder | (keine öffentliche Ansage; Länge des Fluchs wird nicht genannt (OI-11)) | (no public announcement; the curse length is not named (OI-11)) |
 | `maertyrerin` | Märtyrerin / Martyr | (keine zusätzliche Ansage) | (no additional announcement) |
-| `schutzgeist` | Schutzgeist / Guardian Spirit | Der Schutzgeist hat einen Wolf gewählt. | The Guardian Spirit chose a wolf. |
+| `schutzgeist` | Schutzgeist / Guardian Spirit | Eine tote Person hat in der Nacht einen Wolf gewählt. | A dead person chose a wolf in the night. |
 | `dorfschmied` | Dorfschmied / Village Blacksmith | (keine zusätzliche Ansage) | (no additional announcement) |
 | `verdammniswaechter` | Verdammniswächter / Doom Warden | (keine zusätzliche Ansage) | (no additional announcement) |
 | `loki` | Loki / Loki | (keine zusätzliche Ansage) | (no additional announcement) |
@@ -366,3 +366,50 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `grabraeuber` | Grabräuber / Grave Robber | (keine zusätzliche Ansage) | (no additional announcement) |
 | `hades` | Hades / Hades | (keine zusätzliche Ansage) | (no additional announcement) |
 
+## 4. Prüfung auf Informationsweitergabe
+
+Geprüft wurden alle `[ÖFFENTLICH]`-Zeilen (Abschnitt 2, 3.3, 3.4), die `[SL-PRIVAT]`-Zeilen auf öffentlich vorzulesende Teile und die Spielleitungs- und Beispielzellen im Rollenlexikon. Stand: Quell-Commit `312f5bb`, Prüfung 29.09.2026.
+
+### 4.1 Ausdrücklich erlaubte öffentliche Enthüllungen
+
+Diese Ansagen legen bewusst etwas offen, weil eine Entscheidung es so vorsieht. Sie sind nicht als Fehler zu behandeln, aber ihre Wirkung ist genau die folgende.
+
+| Öffentliche Ansage oder Wirkung | Was sie offenlegt | Was sie nicht offenlegt | Quelle |
+|---|---|---|---|
+| Tod einer Person (allgemeiner Text) | Name; Rolle nur bei eingeschalteter Setup-Option "Rolle beim Tod aufdecken" | Todesursache, interne Effekte | DR-04, G-TOD-5 |
+| Detektiv: "Der nächste Wolf sitzt {direction} vom Platz von {name}." | dass die gestorbene Person als Wolf zählte (auch bei ausgeschalteter Rollenaufdeckung), dass noch ein Detektiv lebt, dass mindestens ein weiterer Wolf lebt, die Richtung | Rolle der Toten, wer der Detektiv ist, wer der nächste Wolf ist | I-10, I-14 |
+| Nachtwächter: "Die Glocken läuten. Etwas stimmt nicht." | dass ein Nachtwächter lebt und neben ihm eine Person sitzt, die nicht zum Dorf gehört | Seite, Namen, Rolle der Nachbarn, wer der Nachtwächter ist | Nachfrage Nachtwächter (Decision Log, Sitznachbarn) |
+| Amalia: Frage und Antwort | die Fähigkeit von Amalia, ihre Frage, das Ja oder Nein | nichts über die Befragten außer dem, was Frage und Antwort selbst sagen | I-09 |
+| Schutzgeist: "Eine tote Person hat in der Nacht einen Wolf gewählt." | dass die gewählte Person ein Wolf ist, und dass eine Tote diese Wahl getroffen hat | Name der Toten, Name des Gewählten, Rollenname | S-04, DR-04 |
+| Zeitwächter: "Die Zeit stand still. Diese Nacht ist ausgefallen." | dass ein Zeitwächter existiert und genutzt hat | Name | E-36, DA-19 |
+| Wiederbelebung: "Zurück im Dorf: {names}." | dass genannte Personen wieder leben | neue Rolle, Wolfsstatus, wer sie zurückgeholt hat | W-04 |
+| Korrupter Richter: "{name} ist nominiert." | Nominierung der markierten Person | dass der Richter markiert hat | RM-DR-012, Korrupter-Richter-Entscheidung |
+| Ton bei fünf Toten (entschieden, nicht umgesetzt) | dass ein Selbstmörder in der Partie ist und die Schwelle erreicht ist | wer die Rolle hat | Decision Log "Sound bei 5 Toten", OI-07 |
+| Siegtexte und Spielende | Sieger; bei Alleinsieg Name und Rolle; am Ende alle Rollen | | F-11, G-SIEG |
+
+### 4.2 Geheim zu halten (nie `[ÖFFENTLICH]`)
+
+Rollen lebender Personen; alle Ziele und Wahlen; Todesursachen; Ergebnisse aller Informationsrollen (Orakel, Waldläufer, Doktor, Fährtenleser, Spürhund, Traumdeuter, Kopfgeldjäger, König, Kriegerin des Lichts, Blutpriester, Ewige, Chronistin, Gebundene); Schutz, Rettung, Durchdringung und verbrauchte Rettungen; Gift und Todesmarkierungen; Scheinrolle des Trugbilderwolfs; Bindungen (Loki, Rotkäppchen, Schattenwanderer, Puppe, Wirt, Markierungen von Henker, Schicksalswolf, Feuerteufel, Prophet); Vorhersage des Todespredigers; Lichter und Barriere von Hades; Schilde des Nekromanten; Länge des Fluchs des Weisen; Zufallsergebnisse (Verdammniswächter-Angebot, Pest-Nachbar). Zufall ausschließlich über den gespeicherten Generator.
+
+### 4.3 Nicht als Text ergänzbar, aber am Tisch sichtbar
+
+Diese Wirkungen sind physisch erkennbar, ohne dass ein Text etwas sagt. Sie dürfen nicht durch Ansagen verstärkt werden.
+
+| Beobachtung | Was der Tisch daraus ableiten kann |
+|---|---|
+| Aufruf mit Rollennamen (OI-01) | dass die Rolle in der Partie ist; bei bedingten Schritten zusätzlich ihren Zustand |
+| Spiegelwolf: Statt der hingerichteten Person stirbt die nominierende Person | dass die Hinrichtung umgelenkt wurde |
+| Manipulator: Die nominierte Person stirbt sofort | dass eine Rolle mit dieser Wirkung im Spiel ist |
+| Hinrichtung ohne Tod (Fenrir ab Stufe 3, Cerberus, Parasit) | dass die Person eine Schutzfähigkeit hat |
+| Kutscher: drei Personen kehren gleichzeitig zurück | dass eine Wiederbelebungsrolle im Spiel ist |
+| Mehrere Tode gleichzeitig (Feuerteufel, Wahnsinniger Kutscher, Liebeskummer, Ritter, Schwarze Witwe) | ein gemeinsames Muster; die Ursache nennt niemand |
+| "Niemand gestorben" (Schutzengel, Rettung des Weisen, Zeitwächter, Rudel ohne Wahl) | nichts Eindeutiges, der Text ist neutral |
+| Doppelspion wacht mit dem Rudel | Wölfe sehen eine weitere wache Person, ohne Rollenname |
+
+### 4.4 Befund
+
+- **Geändert:** Die öffentliche Ansage des Schutzgeists nannte den Rollennamen. Sie enthält jetzt weder Namen noch Rolle (OI-11 a). Die Selbstmörder-Zeile behauptete, der Ton "würde ihn verraten". Sie beschreibt jetzt die entschiedene Wirkung statt eines Fehlers (OI-07).
+- **Ergänzt im Lexikon:** Detektiv und Amalia benennen ihre erlaubte Enthüllung; Spiegelwolf und Manipulator benennen die sichtbare Wirkung.
+- **Keine geheime Information gefunden** in den übrigen `[ÖFFENTLICH]`-Zeilen. Die Beispiele im Rollenlexikon sind Spielleitungs- und Lernbeispiele, keine Ansagen.
+- **Offen:** OI-01 (Aufrufpolitik), OI-11 b (Weiser), OI-07 (Bestätigung der gewählten Ausnahme).
+- **PERSON-PRIVAT-Zeile für `koenig-lykaon`:** Sie folgt der Meldung des Regelkerns (`LYCAON_NOTICE`), ist aber keine dokumentierte Entscheidung des Product Owners (OI-15).

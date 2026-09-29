@@ -22,7 +22,7 @@ Enthalten: `manipulator`, `doppelspion`, `selbstmoerder`, `parasit`, `rattenfaen
 | Sieg / Win | Er gewinnt allein, wenn genau drei Personen leben, er lebt und nie nominiert wurde. | They win alone if exactly three people are alive, they are alive and were never nominated. |
 | Beispiel 1 / Example 1 | Anna, Ben (Manipulator) und Clara leben. Ben wurde nie nominiert. Der Manipulator-Sieg ist Kandidat. | Anna, Ben (Manipulator) and Clara are alive. Ben was never nominated. The Manipulator win is a candidate. |
 | Beispiel 2 / Example 2 | An Tag 2 nominiert Anna den Ben. Ben stirbt sofort, die Beratung geht weiter. | On day 2 Anna nominates Ben. Ben dies at once, the discussion continues. |
-| Spielleitung / Game master | Trifft der Manipulator-Sieg mit Wolfssieg oder Dorfsieg zusammen, entscheidest du. Den Tod bei Nominierung nennst du öffentlich nicht als Rollenwirkung. | If the Manipulator win coincides with a wolf win or village win, you decide. You do not name the death at nomination as a role effect in public. |
+| Spielleitung / Game master | Trifft der Manipulator-Sieg mit Wolfssieg oder Dorfsieg zusammen, entscheidest du. Den Tod bei Nominierung nennst du öffentlich nicht als Rollenwirkung; der Tisch sieht aber, dass die nominierte Person sofort stirbt. | If the Manipulator win coincides with a wolf win or village win, you decide. You do not name the death at nomination as a role effect in public; the table does see, however, that the nominated person dies at once. |
 
 Quelle: DECISION-LOG DR-12, "Manipulator und Kandidatenmenge"; DR-02, DR-14.
 
@@ -49,7 +49,7 @@ Quelle: DECISION-LOG "Rollenaudit · Doppelspion, Selbstmörder, Einmalfähigkei
 
 ## `selbstmoerder` · Selbstmörder / Death Seeker
 
-**Fraktion / Faction:** Einzelsieg / Solo · **Nachtschritt / Night step:** keiner / none · **Zählt als Wolf / Counts as wolf:** nein / no · **Status:** Regel entschieden, Sound-Frage offen (OI-07)
+**Fraktion / Faction:** Einzelsieg / Solo · **Nachtschritt / Night step:** keiner / none · **Zählt als Wolf / Counts as wolf:** nein / no · **Status:** Regel entschieden; Ton bei fünf Toten entschieden, Umsetzung offen (OI-07)
 
 | Feld / Field | DE | EN |
 |---|---|---|
@@ -60,7 +60,7 @@ Quelle: DECISION-LOG "Rollenaudit · Doppelspion, Selbstmörder, Einmalfähigkei
 | Sieg / Win | Erfüllt bei einer Hinrichtung mit mindestens 5 aktuell Toten. | Fulfilled at an execution with at least 5 people currently dead. |
 | Beispiel 1 / Example 1 | Fünf Personen sind tot. Ben, der Selbstmörder, wird hingerichtet. Sein Sieg ist erfüllt. | Five people are dead. Ben, the Death Seeker, is executed. Ben's win is fulfilled. |
 | Beispiel 2 / Example 2 | Erst vier Personen sind tot. Die Hinrichtung von Ben erfüllt den Sieg nicht. | Only four people are dead. Ben's execution does not fulfil the win. |
-| Spielleitung / Game master | Der Ton bei fünf Toten würde die Anwesenheit des Selbstmörders verraten (OI-07). Öffentlich wird der Sieg erst nach deiner Bestätigung verkündet. | The sound at five dead would reveal the Death Seeker's presence (OI-07). The win is announced publicly only after you confirm it. |
+| Spielleitung / Game master | Entschieden ist ein öffentlicher Ton, sobald die fünfte Person tot ist, nur wenn ein Selbstmörder in der Partie ist. Er legt offen, dass die Rolle in der Partie ist, nicht wer sie hat (gewählte Ausnahme zur Geheimhaltung, OI-07). Öffentlich wird der Sieg erst nach deiner Bestätigung verkündet. | Decided is a public sound as soon as the fifth person is dead, only if a Death Seeker is in the game. It reveals that the role is in the game, not who holds it (a chosen exception to secrecy, OI-07). The win is announced publicly only after you confirm it. |
 
 Quelle: DECISION-LOG "Rollenaudit · Doppelspion, Selbstmörder, ..." (RM-DR-138.1, .3, .4), "Rollenaudit · Nachfragen Spielende, Nachttode, Sound"; "Rollenaudit · Fenrir, Cerberus, Henker" (RM-DR-138.2).
 

@@ -60,7 +60,7 @@ Quelle: DECISION-LOG DR-08, "Korrekturrunde Regelkern" (Nr. 1), "Trugbilderwolf 
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Ben nominiert Fritz, den Spiegelwolf. Fritz soll hingerichtet werden. Stattdessen stirbt Ben, Fritz lebt. | Ben nominates Fritz, the Mirror Wolf. Fritz is to be executed. Instead Ben dies, Fritz lives. |
 | Beispiel 2 / Example 2 | Die Spiegelung von Fritz ist schon verbraucht. Die nächste Hinrichtung von Fritz tötet ihn normal. | Fritz's reflection is already used. The next execution of Fritz kills them normally. |
-| Spielleitung / Game master | Öffentlich erscheint nur der Tod der nominierenden Person, keine Ursache. Mit Wiederbelebung stehen die Einsätze wieder bereit. | In public only the nominating person's death appears, no cause. After a revival the uses are available again. |
+| Spielleitung / Game master | Öffentlich erscheint nur der Tod der nominierenden Person, keine Ursache. Der Tisch sieht allerdings, dass statt des Spiegelwolfs die nominierende Person stirbt; das lässt sich nicht verbergen. Mit Wiederbelebung stehen die Einsätze wieder bereit. | In public only the nominating person's death appears, no cause. The table does see, however, that the nominating person dies instead of the Mirror Wolf; that cannot be hidden. After a revival the uses are available again. |
 
 Quelle: DECISION-LOG DR-13, "Spiegelwolf · Produktionsrolle und Hinrichtungsauflösung"; je Leben: "Rollenaudit · Wiederbelebung, Besessener Wolf, Ritter, Fährtenleser".
 
@@ -68,7 +68,7 @@ Quelle: DECISION-LOG DR-13, "Spiegelwolf · Produktionsrolle und Hinrichtungsauf
 
 ## `siegreicher-wolf` · Siegreicher Wolf / Victorious Wolf
 
-**Fraktion / Faction:** Werwölfe / Werewolves · **Nachtschritt / Night step:** kein eigener, Teil des Rudels / none of its own, part of the pack · **Zählt als Wolf / Counts as wolf:** ja, in der Wolfsparität doppelt / yes, double in the wolf parity · **Status:** Regel als Auslegung des Rollentexts, ohne ausdrückliche Bestätigung (OI-03)
+**Fraktion / Faction:** Werwölfe / Werewolves · **Nachtschritt / Night step:** kein eigener, Teil des Rudels / none of its own, part of the pack · **Zählt als Wolf / Counts as wolf:** ja, in der Wolfsparität doppelt / yes, double in the wolf parity · **Status:** Regel aus dem widerspruchsfreien Rollentext abgeleitet, umgesetzt und getestet; keine Einzelbestätigung des Product Owners (Hinweis OI-03)
 
 | Feld / Field | DE | EN |
 |---|---|---|
@@ -81,7 +81,7 @@ Quelle: DECISION-LOG DR-13, "Spiegelwolf · Produktionsrolle und Hinrichtungsauf
 | Beispiel 2 / Example 2 | Emil lebt mit Anna, Ben und Clara. Wölfe 2, andere 3. Noch kein Wolfssieg. | Emil is alive with Anna, Ben and Clara. Wolves 2, others 3. No wolf win yet. |
 | Spielleitung / Game master | Die Sonderzählung erscheint in deiner Siegprüfung, nicht öffentlich. | The special count appears in your win check, not in public. |
 
-Quelle: `10-next-decisions.md` "Zur Kenntnis, keine Frage"; `11-role-audit-status.md` §3 Nr. 15 und §4.1; `rules-register.md` G-SIEG-2 (im Slice noch einfach gezählt, siehe OI-03).
+Quelle: `10-next-decisions.md` "Zur Kenntnis, keine Frage"; `11-role-audit-status.md` §3 Nr. 15 und §4.1; `rules-register.md` G-SIEG-2 (beschreibt nur den Slice ohne diese Rolle, siehe OI-03); Rollentext "As long as they live, counts as two werewolves toward the win condition." (`01-canonical-role-catalog.md` §4); Waldläufer-Entscheidung RM-DR-147.2 setzt die Sonderzählung voraus.
 
 ---
 
@@ -94,7 +94,7 @@ Quelle: `10-next-decisions.md` "Zur Kenntnis, keine Frage"; `11-role-audit-statu
 | Fähigkeit / Ability | Wolf im Rudel, reißt bei seinem Tod eine Person mit. | Pack wolf, takes a person with them on death. |
 | Zeitpunkt, Limit / Timing, limit | Einmal je Leben, freiwillig. Nach einem Tod am Tag sofort, nachts in der Morgenauflösung. Voraussetzung: Unmittelbar vor seinem Tod leben mindestens 5 Personen, er eingeschlossen. | Once per life, optional. After a death during the day at once, at night during the dawn resolution. Requirement: at least 5 people are alive immediately before their death, the Possessed Wolf included. |
 | Ziele / Targets | Eine andere lebende Person, auch ein Wolf, oder Verzicht. | One other living person, a wolf included, or declining. |
-| Ausnahmen / Exceptions | Sinkt die Zahl der Lebenden unter 5, gibt es keine Reaktion. | If the number of living people is below 5, there is no reaction. |
+| Ausnahmen / Exceptions | Leben unmittelbar vor seinem Tod weniger als 5 Personen (er eingeschlossen), gibt es keine Reaktion. | If fewer than 5 people are alive immediately before their death (the Possessed Wolf included), there is no reaction. |
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Sechs Personen leben. Fritz, der Besessene Wolf, wird hingerichtet und nimmt Ben mit. Ben stirbt sofort. | Six people are alive. Fritz, the Possessed Wolf, is executed and takes Ben along. Ben dies at once. |
 | Beispiel 2 / Example 2 | Nur vier Personen leben. Fritz stirbt ohne Mitnahme. | Only four people are alive. Fritz dies without taking anyone along. |
@@ -132,13 +132,13 @@ Quelle: DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-008); "Rollenaud
 | Fähigkeit / Ability | Wolf im Rudel. Nach seinem Tod durchdringt der nächste Rudelangriff jeden Schutz. | Pack wolf. After their death the next pack attack pierces all protection. |
 | Zeitpunkt, Limit / Timing, limit | Nach dem Tod des Seuchenwolfs wirkt der nächste tatsächliche Rudelangriff durchdringend und verbraucht die Wirkung, gleich ob ein Schutz bestand. Eine Nacht ohne Rudelopfer verbraucht nichts. Mehrere tote Seuchenwölfe stapeln nicht. | After the Blight Wolf's death the next actual pack attack pierces and uses up the effect, whether or not a protection existed. A night without a pack victim uses up nothing. Several dead Blight Wolves do not stack. |
 | Ziele / Targets | Das nächste Rudelopfer. | The next pack victim. |
-| Ausnahmen / Exceptions | Durchdrungen werden Schutzengel, Waldhexenrettung, Dorfwache und die Rettung des Weisen. Nicht durchdrungen werden persönliche Schilde der Einzelsiegrollen, Umlenkungen und Ersatzopfer. | Pierced are the Guardian Angel, Witch rescue, Village Guard and the Elder's rescue. Not pierced are personal shields of solo roles, redirections and substitute victims. |
+| Ausnahmen / Exceptions | Durchdrungen werden Schutzengel, Waldhexenrettung, Dorfwache, die Rettung des Weisen und das Schild des Schutzgeists. Nicht durchdrungen werden die Waffe des Dorfschmieds, persönliche Schilde der Einzelsiegrollen, Umlenkungen und Ersatzopfer. | Pierced are the Guardian Angel, Witch rescue, Village Guard, the Elder's rescue and the Guardian Spirit's shield. Not pierced are the Blacksmith's weapon, personal shields of solo roles, redirections and substitute victims. |
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Emil, der Seuchenwolf, wird hingerichtet. In der nächsten Nacht schützt der Schutzengel Ben, das Rudel wählt Ben. Ben stirbt trotzdem. | Emil, the Blight Wolf, is executed. In the next night the Guardian Angel protects Ben, the pack chooses Ben. Ben dies anyway. |
 | Beispiel 2 / Example 2 | Zwei Seuchenwölfe sind tot. Nur der nächste Rudelangriff durchdringt, der übernächste nicht. | Two Blight Wolves are dead. Only the next pack attack pierces, not the one after. |
 | Spielleitung / Game master | Den Effekt siehst nur du. Am Morgen ist öffentlich kein Hinweis auf Schutz oder Durchdringung erlaubt. | Only you see the effect. In the morning no public hint about protection or piercing is allowed. |
 
-Quelle: DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-005); "Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf" (RM-DR-108).
+Quelle: DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-005); "Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf" (RM-DR-108); "Rollenaudit · Schutzrollen" (S-04, S-06).
 
 ---
 

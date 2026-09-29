@@ -10,8 +10,8 @@ Diese Liste gilt für alle Dateien in `docs/content-drafts/`. Sie ändert keine 
 | Person am Tisch | Person | person | Nie "Spieler", nie Sitzplatz. Identität ist die Person, der Sitz ist nur Anordnung. | DECISION-LOG "Personen, Sitze und Darstellung", G-ID-1 |
 | Leitung | Spielleiter (Kurzform SL) | game master (GM) | Bedient das Tablet, liest an, bestätigt. | `ui.en.po` "Game master cockpit" |
 | Tod (allgemein) | Tod, stirbt, gestorben | death, dies, died | Oberbegriff für jeden Tod, unabhängig von Ursache. | G-TOD-1 |
-| Hinrichtung | Hinrichtung, wird hingerichtet | execution, is executed | Tod durch die Abstimmung am Tag, vom Spielleiter bestätigt. Intern `LYNCH`; auf Karten nie "Lynch" oder "lynchen" verwenden. | DECISION-LOG "Regeln", G-TAG-3, G-TOD-3 |
-| Rudelangriff | Rudelangriff | pack attack | Ausschließlich die gemeinsame nächtliche Wahl des Rudels (einschließlich weiterer Rudelopfer der Art des Rudelvaters). Einzeltötungen einzelner Wolfsrollen sind kein Rudelangriff. | DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-004) |
+| Hinrichtung | Hinrichtung, wird hingerichtet | execution, is executed | Tod durch die Abstimmung am Tag, vom Spielleiter bestätigt. Intern `LYNCH`. Die Entwürfe verwenden auf Karten "Hinrichtung"; "gelyncht" steht in Kurztexten und im Decision Log und ist eine Formulierungsfrage. | DECISION-LOG "Regeln", G-TAG-3, G-TOD-3 |
+| Rudelangriff | Rudelangriff | pack attack | Ausschließlich die gemeinsame nächtliche Wahl des Rudels (einschließlich weiterer Rudelopfer der Art des Rudelvaters). Einzeltötungen einzelner Wolfsrollen sind kein Rudelangriff. "Wolfsangriff" ist dasselbe und ebenfalls ein Begriff der Quellen (G-TOD-3); die Entwürfe schreiben "Rudelangriff" der Klarheit wegen, "Wolfsangriff" ist in Kurztexten zulässig. | DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-004) |
 | Rudelopfer | Rudelopfer | pack victim | Person, die das Rudel in dieser Nacht gewählt hat. | G-TOD-3, Waldhexe-Eintrag |
 | Rudel | Rudel | pack | Alle lebenden Personen, die zu Beginn der Nacht als Wolf zählen und gemeinsam aufwachen. | rules-register §2 |
 | Wolf (Zählung) | zählt als Wolf | counts as a wolf | Wahre Wolfszählung (`counts_as_wolf`). Eine Scheinrolle täuscht nur Rollenauskünfte, nie die Zählung. | G-ID-2, RM-DR-002.2, I-02 |
@@ -53,14 +53,15 @@ Diese Liste gilt für alle Dateien in `docs/content-drafts/`. Sie ändert keine 
 
 Regel: `[ÖFFENTLICH]` nennt nie eine geheime Rolle, ein geheimes Ziel, eine geheime Wirkung, eine Todesursache oder einen Namen, den die Regel nicht ausdrücklich veröffentlicht (G-TOD-5, DECISION-LOG "Smartphone und öffentlicher Bildschirm").
 
-## 4. Abweichungen zu bestehenden Übersetzungsdateien
+## 4. Abweichungen und Fehlalarme gegenüber bestehenden Übersetzungsdateien
 
-Die folgenden Punkte wurden nicht in `ui.*.po` geändert, weil `godot/` und Übersetzungsdateien nicht Teil dieses Auftrags sind. Details und Empfehlung in `OPEN-ISSUES.md` (OI-04, OI-05).
+Die Punkte wurden nicht in `ui.*.po` geändert, weil `godot/` und Übersetzungsdateien nicht Teil dieses Auftrags sind. Nach der fachlichen Prüfung (`OPEN-ISSUES.md`, OI-04) ist keiner davon ein Regelkonflikt.
 
-| Stelle | Bestehender Text | Empfohlener Begriff dieser Entwürfe |
+| Stelle | Bestehender Text | Bewertung |
 |---|---|---|
-| Kurztexte `ui.role.*.short` (Schutzengel, Dorfwache, Weiser, Schutzgeist, Dorfschmied, Verdammniswächter, Seuchenwolf) | "Wolfsangriff", "Angriff der Werwölfe", "werewolf attack", "wolf attack", "the next attack" | "Rudelangriff" / "pack attack" |
-| Kurztexte Weiser und Kopfgeldjäger | "gelyncht", "lynched" | "hingerichtet" / "executed" |
-| Regelregister §7 (Regeltext Sensenträger) | "einmal pro Partie" | "einmal je Leben" (Entscheidung vom 27.09.2026 ersetzt die ältere Fassung) |
-| EN-Kurztexte mit Personenbezug (zum Beispiel Seuchenwolf, Schutzgeist) | "his", "her" | "their" (neutral, weil die Person am Tisch beliebig sein kann) |
-| Schlüssel `ui.role.das_orakel.*` und weitere | Unterstrich statt Bindestrich in der Rollen-ID | Rollen-ID bleibt kebab-case (`das-orakel`, DR-01); Schlüsselbildung ist Integrationsfrage |
+| Kurztexte `ui.role.*.short` (Schutzengel, Dorfwache, Weiser, Schutzgeist, Dorfschmied, Verdammniswächter, Seuchenwolf) | "Wolfsangriff", "Angriff der Werwölfe" | Kein Konflikt. "Wolfsangriff" ist ein Begriff der Quellen und bedeutet ausschließlich den Rudelangriff (RM-DR-004, G-TOD-3). Beide Wörter sind gleichbedeutend, die Angleichung ist optional. |
+| EN-Kurztexte | "werewolf attack", "wolf attack", "the next attack" | Uneinheitlich innerhalb der EN-Datei. Eine Form wählen, zum Beispiel "pack attack" oder "wolf attack". Stilfrage. |
+| Kurztexte Weiser und Kopfgeldjäger | "gelyncht", "lynched" | Formulierungsfrage. G-TOD-3 nennt `LYNCH` (Hinrichtung), das Decision Log verwendet beide Wörter. Die Entwürfe verwenden "Hinrichtung / execution". |
+| Regelregister §7 (Regeltext Sensenträger) | "einmal pro Partie" | Überholt, ersetzt durch "einmal je Leben" (Entscheidung vom 27.09.2026, OI-05). |
+| EN-Kurztexte mit Personenbezug (zum Beispiel Seuchenwolf, Schutzgeist) | "his", "her" | Stilfrage. Die Entwürfe verwenden neutrales "their", weil die Person am Tisch beliebig sein kann. |
+| Schlüssel `ui.role.das_orakel.*` und weitere | Unterstrich statt Bindestrich | Kein Verstoß. Übersetzungsschlüssel sind keine Rollen-IDs. DR-01 (kebab-case) betrifft die technischen Rollen-IDs (`das-orakel`). Die Schlüsselbildung ist eine Integrationsfrage. |
