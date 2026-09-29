@@ -1,0 +1,34 @@
+name: Godot i18n
+
+# Strukturprüfung der produktiven Godot-Übersetzungen (DE/EN): Schlüssel, Duplikate, leere Texte,
+# Platzhalter, Schlüssel im Quelltext, Rollengruppe. Läuft auch bei Änderungen am Prüfer und seinen Tests.
+on:
+  push:
+    paths:
+      - "godot/content/i18n/**"
+      - "godot/app/**"
+      - "godot/core/rules/role_catalog.gd"
+      - "tools/check-godot-i18n.js"
+      - "tests/check-godot-i18n.test.js"
+      - ".github/workflows/godot-i18n.yml"
+  pull_request:
+    paths:
+      - "godot/content/i18n/**"
+      - "godot/app/**"
+      - "godot/core/rules/role_catalog.gd"
+      - "tools/check-godot-i18n.js"
+      - "tests/check-godot-i18n.test.js"
+      - ".github/workflows/godot-i18n.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Regressionstests des Prüfwerkzeugs
+        run: node --test tests/check-godot-i18n.test.js
+      - name: Godot-Übersetzungen prüfen
+        run: node tools/check-godot-i18n.js
