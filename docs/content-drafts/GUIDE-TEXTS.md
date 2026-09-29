@@ -15,7 +15,7 @@ Jeder Text trägt genau eine Kategorie:
 Regeln:
 
 1. `[ÖFFENTLICH]` nennt nie eine geheime Rolle, ein geheimes Ziel, eine geheime Wirkung oder eine Todesursache, ausgenommen die angesagten Todeseffekte (Abschnitt 4.1). Erlaubt sind nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht (Detektiv, Nachtwächter, Amalia, Schutzgeist ohne Rollennamen, Zeitwächter, Wiederbelebung, Nominierung durch den Korrupten Richter, Ton bei fünf Toten, Todeseffekte; Zusammenstellung in Abschnitt 4) und die allgemeinen Tod-, Tag- und Siegtexte.
-2. Ein Aufruf nennt nur den Rollennamen, nie Ergebnis, Ziel oder ob die Rolle lebt (`docs/assets/NARRATOR-SCRIPT.md` §1 Regel 4). Ob und wie Rollen aufgerufen werden, deren Anwesenheit dadurch bekannt würde, ist offen (OI-01).
+2. Ein Aufruf nennt nur den Rollennamen, nie Ergebnis, Ziel oder ob die Rolle lebt (`docs/assets/NARRATOR-SCRIPT.md` §1 Regel 4). Die Aufrufpolitik steht in Abschnitt 3.3 (DI-02).
 3. Kartenlänge: höchstens 140 Zeichen je Text und Sprache, höchstens zwei kurze Sätze. Ausnahme: die Kombizeilen der Aufrufe (Aufruf und Einschlafen zusammen).
 4. Platzhalter in geschweiften Klammern (`{name}`, `{names}`, `{role}`, `{roles}`, `{count}`, `{direction}`, `{n}`, `{target}`) sind nur für Karten gedacht. Aufgenommene Zeilen enthalten keine Platzhalter (NARRATOR-SCRIPT §1 Regel 3).
 5. Anrede: aufgerufene Rolle "du", Rudel "ihr", Tisch "alle". Der Spielleiter wird als "du" angesprochen.
@@ -300,8 +300,8 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `schutzengel` | Schutzengel / Guardian Angel | (keine zusätzliche Ansage) | (no additional announcement) |
 | `waldhexe` | Waldhexe / Witch of the Woods | (keine zusätzliche Ansage) | (no additional announcement) |
 | `das-orakel` | Das Orakel / The Oracle | (keine zusätzliche Ansage) | (no additional announcement) |
-| `wolfskind` | Wolfskind / Wolf Child | (keine; der Aufruf hängt von der Aufrufpolitik ab (OI-01)) | (none; the call depends on the call policy (OI-01)) |
-| `lehrling` | Lehrling / Apprentice | (keine; der Aufruf hängt von der Aufrufpolitik ab (OI-01)) | (none; the call depends on the call policy (OI-01)) |
+| `wolfskind` | Wolfskind / Wolf Child | (keine; Aufruf nach der Aufrufpolitik, DI-02) | (none; call according to the call policy, DI-02) |
+| `lehrling` | Lehrling / Apprentice | (keine; Aufruf nach der Aufrufpolitik, DI-02) | (none; call according to the call policy, DI-02) |
 | `manipulator` | Manipulator / Manipulator | (keine zusätzliche Ansage) | (no additional announcement) |
 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
@@ -399,7 +399,7 @@ Diese Wirkungen sind physisch erkennbar, ohne dass ein Text etwas sagt. Sie dür
 
 | Beobachtung | Was der Tisch daraus ableiten kann |
 |---|---|
-| Aufruf mit Rollennamen (OI-01) | dass die Rolle in der Partie ist; bei bedingten Schritten zusätzlich ihren Zustand |
+| Aufruf mit Rollennamen (DI-02) | dass die Rolle in der Partie ist; bei bedingten Schritten zusätzlich ihren Zustand |
 | Spiegelwolf: Statt der hingerichteten Person stirbt die nominierende Person | dass die Hinrichtung umgelenkt wurde |
 | Manipulator: Die nominierte Person stirbt sofort | dass eine Rolle mit dieser Wirkung im Spiel ist |
 | Hinrichtung ohne Tod (Fenrir ab Stufe 3, Cerberus, Parasit) | dass die Person eine Schutzfähigkeit hat |
@@ -413,6 +413,6 @@ Diese Wirkungen sind physisch erkennbar, ohne dass ein Text etwas sagt. Sie dür
 - **Geändert:** Die öffentliche Ansage des Schutzgeists nannte den Rollennamen. Sie enthält jetzt weder Namen noch Rolle (OI-11 a). Die Selbstmörder-Zeile behauptete, der Ton "würde ihn verraten". Sie beschreibt jetzt die entschiedene Wirkung statt eines Fehlers (OI-07).
 - **Ergänzt im Lexikon:** Detektiv und Amalia benennen ihre erlaubte Enthüllung; Spiegelwolf und Manipulator benennen die sichtbare Wirkung.
 - **Keine geheime Information gefunden** in den übrigen `[ÖFFENTLICH]`-Zeilen. Die Beispiele im Rollenlexikon sind Spielleitungs- und Lernbeispiele, keine Ansagen.
-- **Offen:** OI-01 (Aufrufpolitik), OI-11 b (Weiser), OI-07 (Bestätigung der gewählten Ausnahme).
+- **Offen:** Randfälle in `OPEN-ISSUES.md` §5 und `DECISIONS-TO-INTEGRATE.md`.
 - **PERSON-PRIVAT-Zeile für `koenig-lykaon`:** Sie folgt der Meldung des Regelkerns (`LYCAON_NOTICE`), ist aber keine dokumentierte Entscheidung des Product Owners (OI-15).
 - **Neue Regel Todeseffekte:** Sichtbare Folgen eines Todes werden ausgespielt und angesagt, mit Effekt und Rolle, auch in Wiederbelebungsrunden. Das ist eine bewusste Ausnahme von der Verdeckung und ändert DR-04. Offen: Welche Rolle bei Liebeskummer, Kette und Verknüpfung genannt wird, und ob die Länge des Fluchs des Weisen genannt wird (`DECISIONS-TO-INTEGRATE.md`).
