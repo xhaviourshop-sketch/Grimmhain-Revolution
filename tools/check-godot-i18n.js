@@ -18,6 +18,8 @@
 //     Direkte Aufrufe tr("ui.x").format({"a": ...}) liefern jeden Platzhalter, den DE oder EN verwendet.
 //  6. Bekannte dynamische Gruppe Rollen: für jede Rollen-ID aus godot/core/rules/role_catalog.gd existieren
 //     ui.role.<id>.name und ui.role.<id>.short (Bindestrich wird zu Unterstrich, wie RolePresentation).
+//     Rollenlexikon: je Rolle jedes Pflichtfeld aus RolePresentation.LEXICON_FIELDS als ui.role.<id>.lex.<feld>;
+//     Lexikonschlüssel für unbekannte Rollen oder Felder (außer LEXICON_OPEN) sind Befunde.
 //
 // Grenzen (werden bei jedem Lauf benannt, nicht als vollständig behauptet):
 //  - Dynamisch zusammengesetzte Schlüssel ("ui.phase.%s", "ui.setup.error." + x) sind nur als Vorlage
@@ -33,6 +35,7 @@ const ROOT = path.join(__dirname, "..");
 const PO_FILES = { de: "godot/content/i18n/ui.de.po", en: "godot/content/i18n/ui.en.po" };
 const SOURCE_DIR = "godot/app";
 const ROLE_CATALOG = "godot/core/rules/role_catalog.gd";
+const ROLE_PRESENTATION = "godot/app/setup/role_presentation.gd";
 const KEY_SCHEMA = /^(app|ui)\.[a-z0-9_]+(\.[a-z0-9_]+)*$/;
 const ESCAPES = { n: "\n", t: "\t", r: "\r", '"': '"', "\\": "\\", a: "\x07", b: "\b", f: "\f", v: "\v" };
 
@@ -294,11 +297,30 @@ function roleIds(catalogText) {
   return [...catalogText.matchAll(/^const [A-Z_]+ := &"([a-z0-9-]+)"/gm)].map((m) => m[1]);
 }
 
-function checkRoles(ids, maps, files) {
+// Lexikonfelder aus role_presentation.gd: Pflichtfelder (LEXICON_FIELDS) und das optionale Feld (LEXICON_OPEN).
+function lexiconFields(presentationText) {
+  const list = presentationText.match(/^const LEXICON_FIELDS: Array\[String\] = \[([^\]]*)\]/m);
+  const open = presentationText.match(/^const LEXICON_OPEN := "([a-z0-9_]+)"/m);
+  return {
+    required: list ? [...list[1].matchAll(/"([a-z0-9_]+)"/g)].map((m) => m[1]) : [],
+    optional: open ? [open[1]] : [],
+  };
+}
+
+function checkRoles(ids, maps, files, lexicon = { required: [], optional: [] }) {
   const problems = [];
+  const parts = new Set(ids.map((id) => id.replace(/-/g, "_")));
+  const fields = new Set([...lexicon.required, ...lexicon.optional]);
+  for (const [lang, map] of Object.entries(maps)) {
+    for (const key of map.keys()) {
+      const m = /^ui\.role\.([a-z0-9_]+)\.lex\.([a-z0-9_]+)$/.exec(key);
+      if (m && !parts.has(m[1])) problems.push(`${files[lang]}: ${key}: Lexikoneintrag für unbekannte Rolle ${m[1]}`);
+      else if (m && !fields.has(m[2])) problems.push(`${files[lang]}: ${key}: unbekanntes Lexikonfeld ${m[2]}`);
+    }
+  }
   for (const id of ids) {
     const part = id.replace(/-/g, "_");
-    for (const suffix of ["name", "short"]) {
+    for (const suffix of ["name", "short", ...lexicon.required.map((f) => `lex.${f}`)]) {
       const key = `ui.role.${part}.${suffix}`;
       for (const [lang, map] of Object.entries(maps)) {
         if (!map.has(key)) problems.push(`${ROLE_CATALOG}: Rolle ${id}: ${key} fehlt in ${files[lang]}`);
@@ -327,18 +349,20 @@ function run(root = ROOT) {
   const scan = scanSources(listSources(root, SOURCE_DIR).map((file) => ({ file, text: read(file) })));
   const src = checkSources(scan, maps, PO_FILES);
   const ids = roleIds(read(ROLE_CATALOG));
-  const all = [...problems, ...src.problems, ...checkRoles(ids, maps, PO_FILES)];
+  const lexicon = lexiconFields(read(ROLE_PRESENTATION));
+  const all = [...problems, ...src.problems, ...checkRoles(ids, maps, PO_FILES, lexicon)];
   if (ids.length === 0) all.push(`${ROLE_CATALOG}: keine Rollen-IDs gefunden (Muster veraltet?)`);
-  return { all, maps, scan, src, ids };
+  if (lexicon.required.length === 0) all.push(`${ROLE_PRESENTATION}: keine Lexikonfelder gefunden (Muster veraltet?)`);
+  return { all, maps, scan, src, ids, lexicon };
 }
 
 function main(argv) {
   const rootArg = argv.indexOf("--root");
-  const { all, maps, scan, src, ids } = run(rootArg >= 0 ? path.resolve(argv[rootArg + 1]) : ROOT);
+  const { all, maps, scan, src, ids, lexicon } = run(rootArg >= 0 ? path.resolve(argv[rootArg + 1]) : ROOT);
   const out = process.stdout;
   out.write(`Schlüssel: de ${maps.de.size}, en ${maps.en.size}\n`);
   out.write(`Quelltext ${SOURCE_DIR}: ${scan.refs.length} wörtliche Schlüssel, ${scan.formats.length} direkte .format()-Aufrufe geprüft\n`);
-  out.write(`Rollen: ${ids.length} IDs mit Name und Kurzname geprüft\n`);
+  out.write(`Rollen: ${ids.length} IDs mit Name, Kurzname und ${lexicon.required.length} Lexikonfeldern geprüft\n`);
   out.write(`Nicht statisch vollständig prüfbar: ${src.templateReport.length} dynamische Vorlagen (je mindestens ein Schlüssel vorhanden):\n`);
   for (const t of src.templateReport) out.write(`  ${t.template}  (${t.matches.de} Schlüssel)  ${t.where}\n`);
   out.write(`Nicht statisch prüfbar: Platzhalterwerte aus Variablen oder format_values.\n`);
@@ -350,7 +374,7 @@ function main(argv) {
   return 0;
 }
 
-module.exports = { parsePo, placeholders, checkCatalogs, scanSources, checkSources, roleIds, checkRoles, templateRegex, run };
+module.exports = { parsePo, placeholders, checkCatalogs, scanSources, checkSources, roleIds, lexiconFields, checkRoles, templateRegex, run };
 
 if (require.main === module) {
   process.exit(main(process.argv.slice(2)));

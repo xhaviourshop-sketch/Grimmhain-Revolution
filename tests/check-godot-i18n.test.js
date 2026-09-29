@@ -11,7 +11,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { execFileSync } = require("child_process");
-const { parsePo, placeholders, checkCatalogs, scanSources, checkSources, roleIds, checkRoles, templateRegex, run } =
+const { parsePo, placeholders, checkCatalogs, scanSources, checkSources, roleIds, lexiconFields, checkRoles, templateRegex, run } =
   require("../tools/check-godot-i18n.js");
 
 const TOOL = path.join(__dirname, "..", "tools", "check-godot-i18n.js");
@@ -157,11 +157,29 @@ test("Rollengruppe: jede ID aus dem Katalog braucht Name und Kurzname (Bindestri
   assert.match(problems[0], /Rolle werwolf: ui\.role\.werwolf\.name fehlt in ui\.de\.po/);
 });
 
+test("Rollenlexikon: jedes Pflichtfeld je Katalogrolle, keine Einträge für unbekannte Rollen oder Felder", () => {
+  const lexicon = lexiconFields('const LEXICON_FIELDS: Array[String] = ["ability", "win"]\nconst LEXICON_OPEN := "open"\n');
+  assert.deepEqual(lexicon, { required: ["ability", "win"], optional: ["open"] });
+  const entries = [
+    'msgid "ui.role.werwolf.name"\nmsgstr "W"\n', 'msgid "ui.role.werwolf.short"\nmsgstr "W"\n',
+    'msgid "ui.role.werwolf.lex.ability"\nmsgstr "A"\n', 'msgid "ui.role.werwolf.lex.open"\nmsgstr "O"\n',
+    'msgid "ui.role.kartenschlucker.lex.ability"\nmsgstr "K"\n', 'msgid "ui.role.werwolf.lex.extra"\nmsgstr "E"\n',
+  ].join("\n");
+  const { maps } = check(entries, entries);
+  const problems = checkRoles(["werwolf"], maps, FILES, lexicon);
+  assert.equal(problems.filter((p) => /unbekannte Rolle kartenschlucker/.test(p)).length, 2);
+  assert.equal(problems.filter((p) => /unbekanntes Lexikonfeld extra/.test(p)).length, 2);
+  assert.equal(problems.filter((p) => /ui\.role\.werwolf\.lex\.win fehlt/.test(p)).length, 2);
+  assert.ok(!problems.some((p) => /lex\.open|lex\.ability fehlt/.test(p)), "optionales und vorhandenes Feld ohne Befund");
+  assert.equal(problems.length, 6);
+});
+
 test("echtes Repository: produktive Übersetzungen ohne Befund", () => {
-  const { all, maps, ids } = run();
+  const { all, maps, ids, lexicon } = run();
   assert.deepEqual(all, []);
   assert.ok(maps.de.size > 1000, `Schlüssel ${maps.de.size}`);
   assert.ok(ids.length >= 70, `Rollen ${ids.length}`);
+  assert.ok(lexicon.required.length >= 9, `Lexikonfelder ${lexicon.required.length}`);
 });
 
 test("Kommandozeile: Exit 1 mit Fundstelle bei echtem Fehler, Exit 0 ohne", () => {
@@ -175,6 +193,7 @@ test("Kommandozeile: Exit 1 mit Fundstelle bei echtem Fehler, Exit 0 ohne", () =
     write("godot/content/i18n/ui.en.po", po("en", 'msgid "ui.a"\nmsgstr "Hello {name}"\n'));
     write("godot/app/x.gd", 'var a := "ui.a"\n');
     write("godot/core/rules/role_catalog.gd", "const UNLIMITED := -1\n");
+    write("godot/app/setup/role_presentation.gd", 'const LEXICON_FIELDS: Array[String] = ["ability"]\n');
     let out = "";
     let code = 0;
     try {
@@ -186,8 +205,8 @@ test("Kommandozeile: Exit 1 mit Fundstelle bei echtem Fehler, Exit 0 ohne", () =
     assert.equal(code, 1, "ohne Rollen-IDs ist das Muster veraltet → Befund");
     assert.match(out, /keine Rollen-IDs gefunden/);
     write("godot/core/rules/role_catalog.gd", 'const WERWOLF := &"werwolf"\n');
-    write("godot/content/i18n/ui.de.po", po("de", 'msgid "ui.a"\nmsgstr "Hallo {name}"\n\nmsgid "ui.role.werwolf.name"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.short"\nmsgstr "W"\n'));
-    write("godot/content/i18n/ui.en.po", po("en", 'msgid "ui.a"\nmsgstr "Hello {nam}"\n\nmsgid "ui.role.werwolf.name"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.short"\nmsgstr "W"\n'));
+    write("godot/content/i18n/ui.de.po", po("de", 'msgid "ui.a"\nmsgstr "Hallo {name}"\n\nmsgid "ui.role.werwolf.name"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.short"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.lex.ability"\nmsgstr "A"\n'));
+    write("godot/content/i18n/ui.en.po", po("en", 'msgid "ui.a"\nmsgstr "Hello {nam}"\n\nmsgid "ui.role.werwolf.name"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.short"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.lex.ability"\nmsgstr "A"\n'));
     try {
       execFileSync(process.execPath, [TOOL, "--root", root], { encoding: "utf8" });
       code = 0;
@@ -197,7 +216,7 @@ test("Kommandozeile: Exit 1 mit Fundstelle bei echtem Fehler, Exit 0 ohne", () =
     }
     assert.equal(code, 1);
     assert.match(out, /godot\/content\/i18n\/ui\.en\.po:7: Platzhalter von ui\.a weichen ab/);
-    write("godot/content/i18n/ui.en.po", po("en", 'msgid "ui.a"\nmsgstr "Hello {name}"\n\nmsgid "ui.role.werwolf.name"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.short"\nmsgstr "W"\n'));
+    write("godot/content/i18n/ui.en.po", po("en", 'msgid "ui.a"\nmsgstr "Hello {name}"\n\nmsgid "ui.role.werwolf.name"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.short"\nmsgstr "W"\n\nmsgid "ui.role.werwolf.lex.ability"\nmsgstr "A"\n'));
     out = execFileSync(process.execPath, [TOOL, "--root", root], { encoding: "utf8" });
     assert.match(out, /strukturell konsistent/);
   } finally {

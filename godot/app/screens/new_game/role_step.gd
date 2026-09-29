@@ -11,6 +11,7 @@ extends VBoxContainer
 signal dialog_requested(request: DialogRequest)
 signal status_message_requested(text_key: String)
 signal players_requested  ## „Zurück zu Spielern“
+signal lexicon_requested(role: StringName)  ## Lexikoneintrag einer Rolle öffnen (nur Anzeige)
 
 const ROW_SCENE := preload("res://app/screens/new_game/role_row.tscn")
 const DECOY_SCENE := preload("res://app/screens/new_game/decoy_section.tscn")
@@ -87,6 +88,7 @@ func _build_rows() -> void:
 		_list.add_child(row)
 		row.show_role(role)
 		row.change_requested.connect(_on_change_requested)
+		row.info_requested.connect(lexicon_requested.emit)
 		_rows[role] = row
 		if SetupRoleCatalog.requires_appearance(role):
 			var section := DECOY_SCENE.instantiate() as DecoySection

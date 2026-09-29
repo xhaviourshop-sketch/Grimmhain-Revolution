@@ -76,6 +76,7 @@ func _setup() -> void:
 	(%RolesButton as GrimmButton).pressed.connect(open_layer.bind(&"roles"))
 	(%CoverButton as GrimmButton).pressed.connect(cover)
 	(%GmButton as GrimmButton).pressed.connect(open_layer.bind(&"gm"))
+	(%LexiconButton as GrimmButton).pressed.connect(open_lexicon.bind(&""))  # allgemeines Lexikon, auch ohne Partie
 	_refresh()
 
 
@@ -389,6 +390,8 @@ func _on_seat_tapped(person_id: int) -> void:
 func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 	var s := context.session
 	match action:
+		&"help":
+			open_lexicon(StringName(str(payload.get("role_id", ""))))
 		&"reveal":
 			if _day_mode == "execution_check":
 				_check_revealed = true
@@ -870,6 +873,19 @@ func close_layer() -> void:
 	_layer = null
 	_layer_kind = &""
 	_layout.visible = not _covered
+
+
+## Rollenlexikon als Ebene (Werkzeug oder Kontexthilfe der privaten Karte). Liest nur Übersetzungen und Katalog: kein
+## Befehl, kein Zufall, keine Ressource. Die Auswahl der offenen Karte bleibt erhalten, solange sich der Zustand nicht
+## ändert (eine Änderung verwirft sie wie immer über `_on_session_changed`). Sichtschutz und Zurück schließen die Ebene.
+func open_lexicon(role: StringName) -> void:
+	close_layer()
+	_layer = RoleLexicon.layer(context.settings, role)
+	_layer_kind = &"lexicon"
+	_overlay_host.add_child(_layer)
+	var lexicon := _layer.find_child("RoleLexicon", true, false) as RoleLexicon
+	lexicon.close_requested.connect(close_layer)
+	(_layer.find_child("CloseLayerButton", true, false) as Control).grab_focus()
 
 
 func layer_kind() -> StringName:

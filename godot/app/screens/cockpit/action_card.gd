@@ -127,10 +127,12 @@ func _notice(next: Dictionary) -> void:
 	var names: Array = (next.get("viewers", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
 	_text("ui.cockpit.card.notice.for", {"names": ", ".join(names)}, &"MutedLabel")
 	_text("ui.cockpit.card.notice.do")
-	_actions([
+	var buttons: Array[Control] = [
 		_button("ShowNoticeButton", "ui.cockpit.action.show_notice", GrimmButton.Kind.PRIMARY, &"show_notice"),
 		_button("AckNoticeButton", "ui.cockpit.action.ack_notice", GrimmButton.Kind.SECONDARY, &"ack_notice", {"notice_id": int(next.get("notice_id", -1))}),
-	])
+	]
+	_help(next, buttons)
+	_actions(buttons)
 
 
 func _begin_step(next: Dictionary, context: Dictionary) -> void:
@@ -152,6 +154,7 @@ func _begin_step(next: Dictionary, context: Dictionary) -> void:
 	var buttons: Array[Control] = [_button("BeginStepButton", "ui.cockpit.action.begin_step", GrimmButton.Kind.PRIMARY, &"begin_step")]
 	if bool(next.get("skippable", false)):
 		buttons.append(_button("SkipStepButton", "ui.cockpit.action.skip_step", GrimmButton.Kind.SECONDARY, &"skip_step"))
+	_help(next, buttons)
 	_actions(buttons)
 
 
@@ -201,6 +204,7 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 		buttons.append(_button("OverrideShownButton", "ui.cockpit.action.override_shown", GrimmButton.Kind.SECONDARY, &"override_shown"))
 	if bool(next.get("cancellable", false)):
 		buttons.append(_button("CancelPromptButton", "ui.cockpit.action.cancel_prompt", GrimmButton.Kind.SECONDARY, &"cancel_prompt"))
+	_help(next, buttons)
 	_actions(buttons)
 
 
@@ -491,6 +495,14 @@ func _reason_key(reason: String) -> String:
 
 
 # --- Bausteine --------------------------------------------------------------------------------------
+
+## Kontexthilfe (private Spielleiterkarte): allgemeiner Lexikoneintrag der Rolle der aktuellen Handlung. Entsteht nur auf
+## einer aufgedeckten bzw. nächtlichen Karte (verdeckt gibt es keine Knoten) und nie auf gezeigten Ebenen.
+func _help(next: Dictionary, buttons: Array[Control]) -> void:
+	var role := CockpitText.help_role(next)
+	if role != "":
+		buttons.append(_button("ContextHelpButton", "ui.cockpit.action.help", GrimmButton.Kind.COMPACT, &"help", {"role_id": role}))
+
 
 func _heading(key: String, values: Dictionary = {}) -> GrimmLabel:
 	return _text(key, values, &"HeadingLabel")

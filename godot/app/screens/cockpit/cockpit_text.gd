@@ -26,6 +26,25 @@ static func role_name(role_id: String) -> StringName:
 	return StringName("ui.role.%s.name" % key_part(role_id))
 
 
+## Rolle der Kontexthilfe zur aktuellen Handlung (Schritt, Prompt, Hinweis) oder "" ohne passenden Lexikoneintrag. Das
+## Rudel verweist auf den Werwolf; bei der anonymen Frage an die von Rotkäppchen gefragte Person gilt der Prompt-Besitzer.
+const NOTICE_HELP := {"loki_bond": "loki", "piper_new": "rattenfaenger", "piper_all": "rattenfaenger", "pest_infected": "pestbringerin"}
+
+
+static func help_role(next: Dictionary) -> String:
+	var role := ""
+	match str(next.get("kind")):
+		"begin_step", "prompt":
+			role = str(next.get("role_id", ""))
+			if role == "":
+				role = str(next.get("owner", ""))
+			if role == str(CockpitView.GROUP_PACK):
+				role = String(RoleCatalog.WERWOLF)
+		"notice":
+			role = str(NOTICE_HELP.get(str(next.get("notice_kind", "")), ""))
+	return role if RoleCatalog.has_role(StringName(role)) else ""
+
+
 static func call_key(role_id: String) -> String:
 	var key := "ui.call.%s" % key_part(role_id)
 	return key if has_key(key) else "ui.call.generic"
@@ -103,7 +122,7 @@ static func morning_lines(pub: Dictionary) -> Array:
 
 
 ## Angesagter Todeseffekt (DI-03) als {key, values}: Effekt und Rolle zum Ereigniszeitpunkt, Namen ohne Platznummer.
-## Liebeskummer, Kette und Verknüpfung nennen keine Rolle.
+## Liebeskummer, Kette und Verknüpfung nennen die Rolle, von der der Effekt stammt (PE-05).
 static func effect_line(e: Dictionary) -> Dictionary:
 	var role := str(e.get("role_id", ""))
 	return {"key": "ui.effect.%s" % str(e["effect"]), "values": {

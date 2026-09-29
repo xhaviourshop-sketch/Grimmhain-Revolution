@@ -408,7 +408,7 @@ msgid "ui.role.schutzengel.name"
 msgstr "Schutzengel"
 
 msgid "ui.role.schutzengel.short"
-msgstr "Schützt nachts eine andere Person vor dem Wolfsangriff."
+msgstr "Schützt nachts eine andere Person vor dem Rudelangriff."
 
 msgid "ui.role.waldhexe.name"
 msgstr "Waldhexe"
@@ -510,7 +510,7 @@ msgid "ui.role.dorfwache.name"
 msgstr "Dorfwache"
 
 msgid "ui.role.dorfwache.short"
-msgstr "Überlebt den Angriff der Werwölfe."
+msgstr "Überlebt den Rudelangriff."
 
 msgid "ui.role.wahnsinniger_kutscher.name"
 msgstr "Wahnsinniger Kutscher"
@@ -588,7 +588,7 @@ msgid "ui.role.rudelvater.name"
 msgstr "Rudelvater"
 
 msgid "ui.role.rudelvater.short"
-msgstr "Wolf im Rudel, überlebt einmal; nach seinem Lynch ein zusätzliches Opfer."
+msgstr "Wolf im Rudel, überlebt einmal; nach seiner Hinrichtung ein zusätzliches Opfer."
 
 msgid "ui.role.seuchenwolf.name"
 msgstr "Seuchenwolf"
@@ -624,7 +624,7 @@ msgid "ui.role.kopfgeldjaeger.name"
 msgstr "Kopfgeldjäger"
 
 msgid "ui.role.kopfgeldjaeger.short"
-msgstr "Nach jedem gelynchten Wolf drei Namen, darunter mindestens ein Wolf."
+msgstr "Nach jedem hingerichteten Wolf drei Namen, darunter mindestens ein Wolf."
 
 msgid "ui.role.koenig.name"
 msgstr "König"
@@ -666,7 +666,7 @@ msgid "ui.role.der_weise.name"
 msgstr "Der Weise"
 
 msgid "ui.role.der_weise.short"
-msgstr "Überlebt einmal einen Wolfsangriff; wird er gelyncht, ruhen die Fähigkeiten des Dorfes."
+msgstr "Überlebt einmal einen Rudelangriff; wird er hingerichtet, ruhen die Fähigkeiten des Dorfes."
 
 msgid "ui.role.maertyrerin.name"
 msgstr "Märtyrerin"
@@ -678,19 +678,19 @@ msgid "ui.role.schutzgeist.name"
 msgstr "Schutzgeist"
 
 msgid "ui.role.schutzgeist.short"
-msgstr "Gibt in der Nacht nach ihrem Tod jemandem ein Schild gegen den nächsten Wolfsangriff."
+msgstr "Gibt in der Nacht nach ihrem Tod jemandem ein Schild gegen den nächsten Rudelangriff."
 
 msgid "ui.role.dorfschmied.name"
 msgstr "Dorfschmied"
 
 msgid "ui.role.dorfschmied.short"
-msgstr "Ab der sechsten Nacht eine Waffe, die einen Wolfsangriff abwehrt und einen Wolf tötet."
+msgstr "Ab der sechsten Nacht eine Waffe, die einen Rudelangriff abwehrt und einen Wolf tötet."
 
 msgid "ui.role.verdammniswaechter.name"
 msgstr "Verdammniswächter"
 
 msgid "ui.role.verdammniswaechter.short"
-msgstr "Lenkt jede Nacht den Wolfsangriff wahlweise auf eine angebotene andere Person."
+msgstr "Lenkt jede Nacht den Rudelangriff wahlweise auf eine angebotene andere Person."
 
 msgid "ui.role.loki.name"
 msgstr "Loki"
@@ -2430,7 +2430,7 @@ msgid "ui.morning.drop.no_living_wolf"
 msgstr "kein Wolf lebt"
 
 msgid "ui.cause.night_kill"
-msgstr "Angriff der Werwölfe"
+msgstr "Rudelangriff"
 
 msgid "ui.cause.lynch"
 msgstr "Hinrichtung"
@@ -3135,7 +3135,7 @@ msgid "ui.log.event.win_status_final"
 msgstr "#{index} Verbindliche Siegprüfung ({visibility})"
 
 msgid "ui.log.event.no_night_kill"
-msgstr "#{index} Kein Angriff der Werwölfe ({visibility})"
+msgstr "#{index} Kein Rudelangriff ({visibility})"
 
 msgid "ui.log.event.kill_ignored"
 msgstr "#{index} Tod ohne Wirkung (bereits tot) ({visibility})"
@@ -3282,13 +3282,13 @@ msgid "ui.effect.sage_curse"
 msgstr "„{name} war {role}. Die Fähigkeiten des Dorfes ruhen.“"
 
 msgid "ui.effect.heartbreak"
-msgstr "„Aus Liebeskummer stirbt {target}.“"
+msgstr "„Die Bindung von {role} wirkt: Aus Liebeskummer stirbt {target}.“"
 
 msgid "ui.effect.red_chain"
-msgstr "„Die Kette bricht: {target} stirbt mit {name}.“"
+msgstr "„Die Kette von {role} bricht: {target} stirbt mit {name}.“"
 
 msgid "ui.effect.shadow_link"
-msgstr "„Die Verknüpfung greift: {target} stirbt an Stelle von {replaced}.“"
+msgstr "„Die Verknüpfung von {role} greift: {target} stirbt an Stelle von {replaced}.“"
 
 msgid "ui.cockpit.tools.roles"
 msgstr "Rollen zeigen"
@@ -3463,3 +3463,2041 @@ msgstr "Stimmhinweise (physisch zählen, Bonus einrechnen)"
 
 msgid "ui.cockpit.private.vote_hint"
 msgstr "{name}: +{bonus} ({role})"
+
+# Rollenlexikon und Kontexthilfe (Paket 5b): Bedienung
+msgid "ui.menu.lexicon"
+msgstr "Rollenlexikon"
+
+msgid "ui.lexicon.title"
+msgstr "Rollenlexikon"
+
+msgid "ui.lexicon.back_to_list"
+msgstr "Alle Rollen"
+
+msgid "ui.lexicon.language"
+msgstr "English"
+
+msgid "ui.lexicon.close"
+msgstr "Schließen"
+
+msgid "ui.lexicon.search"
+msgstr "Rolle suchen"
+
+msgid "ui.lexicon.filter.all"
+msgstr "Alle"
+
+msgid "ui.lexicon.empty"
+msgstr "Keine Rolle passt. Ändere den Suchbegriff oder wähle den Filter „Alle“."
+
+msgid "ui.lexicon.row"
+msgstr "{name} · {faction}"
+
+msgid "ui.lexicon.faction"
+msgstr "Fraktion: {faction}"
+
+msgid "ui.lexicon.field.night"
+msgstr "Nachtschritt"
+
+msgid "ui.lexicon.field.wolf"
+msgstr "Zählt als Wolf"
+
+msgid "ui.lexicon.field.ability"
+msgstr "Fähigkeit"
+
+msgid "ui.lexicon.field.timing"
+msgstr "Zeitpunkt und Einsätze"
+
+msgid "ui.lexicon.field.targets"
+msgstr "Ziele"
+
+msgid "ui.lexicon.field.exceptions"
+msgstr "Ausnahmen"
+
+msgid "ui.lexicon.field.win"
+msgstr "Sieg"
+
+msgid "ui.lexicon.field.example"
+msgstr "Beispiele"
+
+msgid "ui.lexicon.field.gm"
+msgstr "Hinweise für die Spielleitung"
+
+msgid "ui.lexicon.field.open"
+msgstr "Noch nicht geklärt oder umgesetzt"
+
+msgid "ui.setup.roles.info"
+msgstr "Regeln"
+
+msgid "ui.cockpit.tools.lexicon"
+msgstr "Lexikon"
+
+msgid "ui.cockpit.action.help"
+msgstr "Regel nachlesen"
+
+# --- Rollenlexikon (Paket 5b) ---
+# Allgemeine Lexikoneinträge je Rolle (ui.role.<rolle>.lex.<feld>). Quelle: docs/content-drafts/rolebook/, redaktionell geprüft.
+# Maßgeblich ist dieser Wortlaut. "open" gibt es nur bei Rollen mit ungeklärten oder noch nicht umgesetzten Punkten.
+
+msgid "ui.role.dorfbewohner.lex.night"
+msgstr "keiner"
+
+msgid "ui.role.dorfbewohner.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.dorfbewohner.lex.ability"
+msgstr "Keine Fähigkeit. Sucht mit dem Dorf die Werwölfe."
+
+msgid "ui.role.dorfbewohner.lex.timing"
+msgstr "Kein Einsatz, keine Obergrenze je Partie."
+
+msgid "ui.role.dorfbewohner.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.dorfbewohner.lex.exceptions"
+msgstr "Keine."
+
+msgid "ui.role.dorfbewohner.lex.win"
+msgstr "Das Dorf gewinnt, wenn keine lebende Person mehr als Wolf zählt."
+
+msgid "ui.role.dorfbewohner.lex.example"
+msgstr "Anna hat die Rolle Dorfbewohner. Anna schläft in der Nacht durch und berät am Tag mit den anderen.\nDie letzte Wolfsperson wird hingerichtet. Das Dorf, und damit Anna, gewinnt."
+
+msgid "ui.role.dorfbewohner.lex.gm"
+msgstr "Wird nie aufgerufen. Mit Dorfbewohnern und Werwölfen allein ist jede Personenzahl von 6 bis 24 spielbar."
+
+msgid "ui.role.das_orakel.lex.night"
+msgstr "jede Nacht, nach allen Waldhexenschritten"
+
+msgid "ui.role.das_orakel.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.das_orakel.lex.ability"
+msgstr "Prüft eine andere Person und sieht deren Rolle. Sonderwölfe erscheinen als Werwolf."
+
+msgid "ui.role.das_orakel.lex.timing"
+msgstr "Pflichtschritt in jeder Nacht, solange das Orakel lebt. Er kann nicht übersprungen werden."
+
+msgid "ui.role.das_orakel.lex.targets"
+msgstr "Genau eine andere lebende Person. Selbstprüfung ist verboten."
+
+msgid "ui.role.das_orakel.lex.exceptions"
+msgstr "Hat eine Person eine Scheinrolle (Trugbilderwolf), erscheint diese. Sonst gilt: zählt sie als Wolf, erscheint „Werwolf“; sonst die wahre Rolle. Das Wolfskind erscheint vor der Verwandlung als Wolfskind, danach als Werwolf. Eine vom Dämonischen Wolf verfluchte Person erscheint als Werwolf."
+
+msgid "ui.role.das_orakel.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.das_orakel.lex.example"
+msgstr "Das Orakel prüft Ben, einen Dorfbewohner. Es sieht „Dorfbewohner“.\nDas Orakel prüft Clara, einen Spiegelwolf. Es sieht „Werwolf“."
+
+msgid "ui.role.das_orakel.lex.gm"
+msgstr "Nur du siehst Wahrheit, ermittelte und gezeigte Rolle. Die gezeigte Rolle darf nur mit Bestätigung und Grund geändert werden, bevor „Gezeigt“ gedrückt wird. Das Ergebnis erscheint nie auf dem öffentlichen Bildschirm."
+
+msgid "ui.role.dorfchronistin.lex.night"
+msgstr "nur Nacht 1"
+
+msgid "ui.role.dorfchronistin.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.dorfchronistin.lex.ability"
+msgstr "Erfährt, wie viele Personen in dieser Partie eine Einzelsiegrolle haben."
+
+msgid "ui.role.dorfchronistin.lex.timing"
+msgstr "Nur in Nacht 1. Wer in Nacht 1 nicht handelt oder die Rolle später erhält, hat die Fähigkeit nicht mehr."
+
+msgid "ui.role.dorfchronistin.lex.targets"
+msgstr "Keine Wahl. Es zählen alle Personen mit Einzelsiegrolle, lebend und tot."
+
+msgid "ui.role.dorfchronistin.lex.exceptions"
+msgstr "Mehrere Chronistinnen erfahren die Zahl jeweils für sich. Eine Blockade (Schattenhund, Albtraumwolf) lässt den Schritt entfallen."
+
+msgid "ui.role.dorfchronistin.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.dorfchronistin.lex.example"
+msgstr "In der Partie sind ein Rattenfänger und ein Manipulator. Die Chronistin sieht „2“.\nEs gibt keine Einzelsiegrolle. Die Chronistin sieht „0“ und weiß dadurch, dass keine im Spiel ist."
+
+msgid "ui.role.dorfchronistin.lex.gm"
+msgstr "Die Zahl erscheint nur auf der Karte der Chronistin. Wird die Chronistin in Nacht 1 nicht aufgerufen, verfällt die Fähigkeit endgültig."
+
+msgid "ui.role.die_gebundenen.lex.night"
+msgstr "nur Nacht 1, gemeinsamer Schritt"
+
+msgid "ui.role.die_gebundenen.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.die_gebundenen.lex.ability"
+msgstr "Lernen sich in Nacht 1 gegenseitig kennen."
+
+msgid "ui.role.die_gebundenen.lex.timing"
+msgstr "Nur in Nacht 1, ein gemeinsamer Schritt aller Gebundenen."
+
+msgid "ui.role.die_gebundenen.lex.targets"
+msgstr "Keine Wahl. Jede lebende Gebundene sieht alle anderen lebenden Gebundenen."
+
+msgid "ui.role.die_gebundenen.lex.exceptions"
+msgstr "Lebt nur eine Gebundene, erfährt sie „keine anderen“. Wer in Nacht 1 nicht handelt oder die Rolle später erhält, hat die Fähigkeit nicht mehr."
+
+msgid "ui.role.die_gebundenen.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.die_gebundenen.lex.example"
+msgstr "Anna, Ben und Clara sind Gebundene. Jede sieht auf ihrer Karte die beiden anderen Namen.\nNur David ist gebunden und lebt. Er sieht „keine anderen“."
+
+msgid "ui.role.die_gebundenen.lex.gm"
+msgstr "Alle Gebundenen wachen im selben Schritt auf, die Karten zeigen jeder Person nur ihre Mitgebundenen."
+
+msgid "ui.role.waldlaeufer.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.waldlaeufer.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.waldlaeufer.lex.ability"
+msgstr "Erfährt jede Nacht, wie viele Wölfe leben."
+
+msgid "ui.role.waldlaeufer.lex.timing"
+msgstr "Eigener Schritt in jeder Nacht, solange der Waldläufer lebt."
+
+msgid "ui.role.waldlaeufer.lex.targets"
+msgstr "Keine Wahl. Gezählt werden Personen, die zum Zeitpunkt seines Schritts leben und als Wolf zählen."
+
+msgid "ui.role.waldlaeufer.lex.exceptions"
+msgstr "Der Siegreiche Wolf zählt einmal. Das Rudelopfer dieser Nacht lebt noch. Ein noch nicht verwandeltes Wolfskind zählt nicht."
+
+msgid "ui.role.waldlaeufer.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.waldlaeufer.lex.example"
+msgstr "Emil und Fritz sind Wölfe und leben. Der Waldläufer sieht „2“.\nEmil, der Siegreiche Wolf, lebt allein als Wolf. Der Waldläufer sieht „1“, nicht „2“."
+
+msgid "ui.role.waldlaeufer.lex.gm"
+msgstr "Nur die Zahl erscheint auf seiner Karte, nie Namen."
+
+msgid "ui.role.doktor.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.doktor.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.doktor.lex.ability"
+msgstr "Prüft, ob zwei Personen zum selben Team gehören."
+
+msgid "ui.role.doktor.lex.timing"
+msgstr "Jede Nacht, solange der Doktor lebt."
+
+msgid "ui.role.doktor.lex.targets"
+msgstr "Genau zwei verschiedene andere lebende Personen."
+
+msgid "ui.role.doktor.lex.exceptions"
+msgstr "Team heißt die wahre aktuelle Fraktion: Dorf, Werwölfe oder Einzelsieg. Zwei Personen mit Einzelsiegrolle gelten als gleiches Team. Die Scheinrolle eines Trugbilderwolfs täuscht hier nicht."
+
+msgid "ui.role.doktor.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.doktor.lex.example"
+msgstr "Der Doktor prüft Anna (Dorfbewohnerin) und Ben (Waldhexe). Ergebnis: gleiches Team.\nDer Doktor prüft Clara (Manipulator) und David (Doppelspion). Ergebnis: gleiches Team, weil beide Einzelsieg haben."
+
+msgid "ui.role.doktor.lex.gm"
+msgstr "Das Ergebnis lautet nur „gleiches Team“ oder „verschiedene Teams“, nie welche Fraktion."
+
+msgid "ui.role.faehrtenleser.lex.night"
+msgstr "jede Nacht bis zur Nutzung"
+
+msgid "ui.role.faehrtenleser.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.faehrtenleser.lex.ability"
+msgstr "Erfährt einmal, auf welcher Seite der nächste Wolf sitzt."
+
+msgid "ui.role.faehrtenleser.lex.timing"
+msgstr "Einmal je Leben. Jede Nacht kommt die Frage „jetzt nutzen?“, bis er es getan hat; danach gibt es keinen Schritt mehr."
+
+msgid "ui.role.faehrtenleser.lex.targets"
+msgstr "Keine Wahl. Gemessen wird der Abstand in Sitzen, tote Plätze eingeschlossen, zur nächsten lebenden Person, die als Wolf zählt."
+
+msgid "ui.role.faehrtenleser.lex.exceptions"
+msgstr "Sitzen zwei Wölfe gleich weit entfernt, erfährt er „beide Seiten gleich weit“. „Links“ ist der nächste Platz im Uhrzeigersinn des App-Sitzkreises."
+
+msgid "ui.role.faehrtenleser.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.faehrtenleser.lex.example"
+msgstr "Der nächste Wolf sitzt zwei Plätze im Uhrzeigersinn entfernt. Der Fährtenleser erfährt „links“.\nAuf beiden Seiten sitzt ein Wolf drei Plätze entfernt. Er erfährt „beide Seiten gleich weit“."
+
+msgid "ui.role.faehrtenleser.lex.gm"
+msgstr "Weist der Fährtenleser die Frage ab, kommt sie in der nächsten Nacht wieder. „Links“ gilt als Uhrzeigersinn."
+
+msgid "ui.role.faehrtenleser.lex.open"
+msgstr "Ob „links“ am Tablet wirklich dem Uhrzeigersinn am Tisch entspricht, ist noch nicht am Gerät geprüft."
+
+msgid "ui.role.spuerhund.lex.night"
+msgstr "jede Nacht, freiwillig"
+
+msgid "ui.role.spuerhund.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.spuerhund.lex.ability"
+msgstr "Prüft drei Personen auf Wolf oder Einzelsieg. Ein Fehlgriff kostet die Fähigkeit."
+
+msgid "ui.role.spuerhund.lex.timing"
+msgstr "Jede Nacht freiwillig, Verzicht ist möglich."
+
+msgid "ui.role.spuerhund.lex.targets"
+msgstr "Drei verschiedene andere lebende Personen."
+
+msgid "ui.role.spuerhund.lex.exceptions"
+msgstr "Ist mindestens eine der drei Wolf oder Einzelsieg (wahre Fraktion), erhält er ein Häkchen. Sonst ein Kreuz: Er verliert die Fähigkeit, wird aber weiter jede Nacht aufgerufen. Es gibt keine falsche Spur."
+
+msgid "ui.role.spuerhund.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.spuerhund.lex.example"
+msgstr "Der Spürhund wählt Anna, Ben und Emil. Emil ist ein Wolf. Ergebnis: Häkchen.\nEr wählt Anna, Ben und Clara, alle im Dorf. Ergebnis: Kreuz. Ab jetzt hat er keine Fähigkeit mehr."
+
+msgid "ui.role.spuerhund.lex.gm"
+msgstr "Weiter aufrufen, auch nach dem Kreuz, damit der Tisch nichts erfährt. Das Häkchen zeigt nicht, welche der drei Personen es ist."
+
+msgid "ui.role.traumdeuter.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.traumdeuter.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.traumdeuter.lex.ability"
+msgstr "Sieht jede Nacht drei Namen, darunter mindestens einen Wolf."
+
+msgid "ui.role.traumdeuter.lex.timing"
+msgstr "Jede Nacht, solange der Traumdeuter lebt."
+
+msgid "ui.role.traumdeuter.lex.targets"
+msgstr "Der Spielleiter wählt genau drei andere lebende Personen. „Auswahl bestätigen“ geht erst, wenn mindestens eine davon als Wolf zählt."
+
+msgid "ui.role.traumdeuter.lex.exceptions"
+msgstr "Es zählt die wahre Wolfszählung. Die Scheinrolle eines Trugbilderwolfs täuscht nicht. Der Traumdeuter erfährt nur „mindestens ein Wolf unter diesen dreien“, nie die Anzahl. Leben weniger als drei andere Personen oder zählt keine lebende Person als Wolf, entfällt der Schritt in dieser Nacht (protokolliert), und der Traumdeuter erfährt nichts."
+
+msgid "ui.role.traumdeuter.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.traumdeuter.lex.example"
+msgstr "Der Spielleiter wählt Anna, Emil und Clara. Emil ist ein Wolf. Der Traumdeuter sieht die drei Namen und „mindestens ein Wolf“.\nDer Spielleiter wählt Anna, Ben und Clara, alle im Dorf. „Auswahl bestätigen“ bleibt gesperrt, bis eine Wolfsperson eine von ihnen ersetzt."
+
+msgid "ui.role.traumdeuter.lex.gm"
+msgstr "Du wählst, der Traumdeuter zeigt nur. Statt selbst zu wählen, kannst du „Zufällig auswählen“ tippen: Die App schlägt eine zulässige Auswahl vor, die erst mit „Auswahl bestätigen“ gilt. Solange sich die Partie nicht ändert, bleibt der Vorschlag gleich. Tippst du selbst eine Person an, gilt deine eigene Wahl. Die App erinnert dich an die Wolfspflicht. Zwei oder drei Wölfe in der Auswahl sind erlaubt."
+
+msgid "ui.role.kopfgeldjaeger.lex.night"
+msgstr "Nacht nach einer Hinrichtung"
+
+msgid "ui.role.kopfgeldjaeger.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.kopfgeldjaeger.lex.ability"
+msgstr "Nach jedem hingerichteten Wolf drei Namen, darunter mindestens ein Wolf."
+
+msgid "ui.role.kopfgeldjaeger.lex.timing"
+msgstr "Jede Hinrichtung einer Person, die als Wolf zählt, während der Kopfgeldjäger lebt und die Rolle hat, ergibt eine Liste in einer folgenden Nacht. Die Listen sammeln sich als Zähler."
+
+msgid "ui.role.kopfgeldjaeger.lex.targets"
+msgstr "Der Spielleiter wählt drei andere lebende Personen. „Auswahl bestätigen“ geht ab mindestens einem Wolf. Der Kopfgeldjäger steht nie in der Liste."
+
+msgid "ui.role.kopfgeldjaeger.lex.exceptions"
+msgstr "Eine Spiegelung des Spiegelwolfs und die Abwehr durch Cerberus sind keine Hinrichtung eines Wolfs. Reichen die Ziele nicht, verfällt die Liste mit einem Hinweis. Angezeigt wird nur „mindestens ein Wolf“. Wahre Wolfszählung."
+
+msgid "ui.role.kopfgeldjaeger.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.kopfgeldjaeger.lex.example"
+msgstr "Emil, ein Wolf, wird hingerichtet. In der folgenden Nacht wählt der Spielleiter Anna, Clara und David (David ist ein Giftwolf). Der Kopfgeldjäger sieht die Namen und „mindestens ein Wolf“.\nEin Cerberus mit drei Köpfen wehrt seine Hinrichtung ab und überlebt. Der Kopfgeldjäger erhält keine Liste."
+
+msgid "ui.role.kopfgeldjaeger.lex.gm"
+msgstr "Die Listen sammeln sich als Zähler. Je Liste wählst du selbst oder tippst „Zufällig auswählen“; der Vorschlag gilt erst mit „Auswahl bestätigen“, bleibt bei unveränderter Partie gleich und wird zu deiner eigenen Wahl, sobald du eine Person antippst. Reichen die Ziele nicht, verfällt die Liste, und du bekommst einen Hinweis."
+
+msgid "ui.role.koenig.lex.night"
+msgstr "ab der ersten Nacht mit mehr Toten als Lebenden"
+
+msgid "ui.role.koenig.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.koenig.lex.ability"
+msgstr "Erfährt eine Dorfperson mit ihrer wahren Rolle."
+
+msgid "ui.role.koenig.lex.timing"
+msgstr "Einmal je Leben, in der ersten Nacht, in der strikt mehr Personen tot sind als leben."
+
+msgid "ui.role.koenig.lex.targets"
+msgstr "Der Spielleiter wählt eine andere lebende Person, die aktuell zur Fraktion Dorf gehört."
+
+msgid "ui.role.koenig.lex.exceptions"
+msgstr "Ein Trugbilderwolf oder ein bereits verwandeltes Wolfskind gehört nicht zum Dorf und kommt nicht in Frage. Gibt es keine wählbare Dorfperson, entfällt der Schritt in dieser Nacht, und die Fähigkeit bleibt ungenutzt."
+
+msgid "ui.role.koenig.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.koenig.lex.example"
+msgstr "Zehn Personen spielen, sechs sind tot, vier leben. Der Spielleiter wählt Clara. Der König sieht „Clara: Waldhexe“.\nFünf Personen sind tot, fünf leben. Es gibt keinen König-Schritt, weil die Toten nicht in der Mehrheit sind."
+
+msgid "ui.role.koenig.lex.gm"
+msgstr "Du wählst die Person selbst oder tippst „Zufällig auswählen“. Der Vorschlag gilt erst mit „Auswahl bestätigen“, bleibt bei unveränderter Partie gleich und wird zu deiner eigenen Wahl, sobald du eine Person antippst."
+
+msgid "ui.role.kriegerin_des_lichts.lex.night"
+msgstr "jede Nacht bis zur Nutzung, freiwillig"
+
+msgid "ui.role.kriegerin_des_lichts.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.kriegerin_des_lichts.lex.ability"
+msgstr "Prüft einmal nachts, ob jemand ein Wolf ist. Irrt sie, stirbt sie."
+
+msgid "ui.role.kriegerin_des_lichts.lex.timing"
+msgstr "Einmal je Leben, freiwillig."
+
+msgid "ui.role.kriegerin_des_lichts.lex.targets"
+msgstr "Eine andere lebende Person."
+
+msgid "ui.role.kriegerin_des_lichts.lex.exceptions"
+msgstr "Die App prüft die wahre Wolfszählung. Nur die Kriegerin erfährt das Ergebnis. Ein getroffener Wolf überlebt. Ist das Ziel kein Wolf, stirbt die Kriegerin in der Morgenauflösung."
+
+msgid "ui.role.kriegerin_des_lichts.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.kriegerin_des_lichts.lex.example"
+msgstr "Die Kriegerin prüft Emil, der als Wolf zählt. Sie sieht „Wolf“, Emil überlebt, und öffentlich geschieht nichts.\nDie Kriegerin prüft Ben, der kein Wolf ist. Sie sieht „kein Wolf“ und stirbt am Morgen."
+
+msgid "ui.role.kriegerin_des_lichts.lex.gm"
+msgstr "Am Morgen wird nur ihr Tod verkündet, nicht der Grund."
+
+msgid "ui.role.blutpriester.lex.night"
+msgstr "jede Nacht bis zur Nutzung, freiwillig"
+
+msgid "ui.role.blutpriester.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.blutpriester.lex.ability"
+msgstr "Opfert einmal eine Person und erfährt bis zu drei Wölfe."
+
+msgid "ui.role.blutpriester.lex.timing"
+msgstr "Einmal je Leben, freiwillig."
+
+msgid "ui.role.blutpriester.lex.targets"
+msgstr "Eine andere lebende Person, auch ein Wolf."
+
+msgid "ui.role.blutpriester.lex.exceptions"
+msgstr "Das Opfer stirbt in der Morgenauflösung und wacht in dieser Nacht nicht mehr auf. Das ist kein Rudelangriff, der Schutzengel wirkt nicht. Der Spielleiter wählt 0 bis 3 lebende Wölfe, deren Namen nur der Blutpriester erfährt."
+
+msgid "ui.role.blutpriester.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.blutpriester.lex.example"
+msgstr "Der Priester opfert Ben. Der Spielleiter nennt Emil. Der Priester sieht „Emil ist ein Wolf“. Ben stirbt am Morgen.\nDer Priester opfert Emil, einen Wolf. Der Spielleiter wählt niemanden, der Priester erfährt keinen Namen."
+
+msgid "ui.role.blutpriester.lex.gm"
+msgstr "Das Opfer wählt der Priester selbst; dafür gibt es keinen Zufall. Welche Wölfe er erfährt, auch keinen, entscheidest du selbst oder tippst „Zufällig auswählen“. Der Vorschlag gilt erst mit „Auswahl bestätigen“ und bleibt bei unveränderter Partie gleich. Tippst du selbst eine Person an, gilt deine eigene Wahl. Öffentlich wird nur der Name des Opfers genannt."
+
+msgid "ui.role.blutpriester.lex.open"
+msgstr "Beim Zufallsvorschlag ist jede zulässige Wolfsmenge, auch „keiner“, gleich wahrscheinlich. Diese Verteilung ist technisch abgeleitet und noch nicht bestätigt."
+
+msgid "ui.role.amalia.lex.night"
+msgstr "keiner, Tagesaktion"
+
+msgid "ui.role.amalia.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.amalia.lex.ability"
+msgstr "Bei mindestens drei Wölfen: opfert sich am Tag für eine öffentliche Ja/Nein-Frage."
+
+msgid "ui.role.amalia.lex.timing"
+msgstr "Am Tag, solange mindestens drei lebende Personen als Wolf zählen."
+
+msgid "ui.role.amalia.lex.targets"
+msgstr "Keine Auswahl in der App. Amalia stellt die Frage laut."
+
+msgid "ui.role.amalia.lex.exceptions"
+msgstr "Amalia stirbt sofort. Der Spielleiter beantwortet die Frage wahrheitsgemäß mit Ja oder Nein, die App protokolliert die Antwort."
+
+msgid "ui.role.amalia.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.amalia.lex.example"
+msgstr "An Tag 3 leben drei Wölfe. Amalia stellt eine Ja/Nein-Frage, zum Beispiel „Ist Ben ein Wolf?“. Der Spielleiter antwortet „Ja“. Amalia stirbt.\nNur noch zwei Wölfe leben. Die Fähigkeit ist nicht verfügbar."
+
+msgid "ui.role.amalia.lex.gm"
+msgstr "Frage und Antwort sind öffentlich, damit wird ihre Fähigkeit sichtbar (erlaubte Enthüllung). Die App prüft die Frage nicht und protokolliert nur Amalias Tod und dein Ja oder Nein. Nach Amalias Tod laufen Todesfolgen und Siegprüfung wie sonst."
+
+msgid "ui.role.detektiv.lex.night"
+msgstr "keiner, passiv"
+
+msgid "ui.role.detektiv.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.detektiv.lex.ability"
+msgstr "Stirbt ein Wolf, wird öffentlich die Richtung des nächsten Wolfs verkündet."
+
+msgid "ui.role.detektiv.lex.timing"
+msgstr "Nach jedem Tod einer Person, die als Wolf zählt, solange ein Detektiv lebt und danach mindestens ein anderer Wolf lebt. Am Tag sofort, in der Nacht in der Morgenauflösung."
+
+msgid "ui.role.detektiv.lex.targets"
+msgstr "Keine Wahl. Gemessen wird vom Platz des Toten zum nächsten lebenden Wolf, tote Plätze eingeschlossen."
+
+msgid "ui.role.detektiv.lex.exceptions"
+msgstr "Ein Hinweis je Wolfstod, egal wie viele Detektive leben. Bei gleichem Abstand lautet die Ansage „beide Seiten gleich weit“. Ein durch denselben Tod verwandeltes Wolfskind zählt als anderer Wolf. Ein Tod per Korrektur ohne Folgen löst nichts aus. Im Fluch des Weisen ruht die Fähigkeit."
+
+msgid "ui.role.detektiv.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.detektiv.lex.example"
+msgstr "Emil wird hingerichtet. Der nächste lebende Wolf sitzt zwei Plätze im Uhrzeigersinn vom Platz von Emil. Öffentliche Ansage: Der nächste Wolf sitzt links von Emil.\nDer letzte Wolf stirbt. Es gibt keinen anderen Wolf, also keinen Hinweis."
+
+msgid "ui.role.detektiv.lex.gm"
+msgstr "Die Ansage nennt nur die Richtung, nie die Rolle. Sie legt aber offen, dass die gestorbene Person als Wolf zählte und dass noch ein Detektiv lebt, auch in Wiederbelebungsrunden, in denen Rollen verdeckt bleiben (erlaubte Enthüllung). „Links“ gilt als Uhrzeigersinn."
+
+msgid "ui.role.detektiv.lex.open"
+msgstr "Ob „links“ am Tablet wirklich dem Uhrzeigersinn am Tisch entspricht, ist noch nicht am Gerät geprüft."
+
+msgid "ui.role.die_ewigen.lex.night"
+msgstr "jede Nacht, gemeinsamer Schritt"
+
+msgid "ui.role.die_ewigen.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.die_ewigen.lex.ability"
+msgstr "Prüfen jede Nacht gemeinsam, ob jemand allein gewinnt, und gewinnen mit ihm."
+
+msgid "ui.role.die_ewigen.lex.timing"
+msgstr "Ein gemeinsamer Schritt aller lebenden Ewigen in jeder Nacht."
+
+msgid "ui.role.die_ewigen.lex.targets"
+msgstr "Eine andere lebende Person, die nicht zu den Ewigen gehört. Sie erfahren nur Ja (Einzelsiegrolle) oder Nein."
+
+msgid "ui.role.die_ewigen.lex.exceptions"
+msgstr "Sie bleiben im Dorf. Gewinnt eine mit Ja geprüfte Person einen Einzelsieg, gewinnen alle Ewigen mit, lebend oder tot. Der Mitsieg gilt der geprüften Person, nicht ihrer Rolle."
+
+msgid "ui.role.die_ewigen.lex.win"
+msgstr "Mit dem Dorf, zusätzlich mit jeder mit Ja geprüften Person, die einen Einzelsieg erreicht."
+
+msgid "ui.role.die_ewigen.lex.example"
+msgstr "Die Ewigen prüfen Ben und sehen „Nein“. Ben ist Waldhexe.\nSie prüfen Clara, einen Rattenfänger, und sehen „Ja“. Später gewinnt Clara. Damit gewinnen auch alle Ewigen, selbst tote."
+
+msgid "ui.role.die_ewigen.lex.gm"
+msgstr "Alle Ewigen wachen im selben Schritt auf. Auch ein Manipulator gilt bei der Prüfung als Einzelsieg."
+
+msgid "ui.role.nachtwaechter.lex.night"
+msgstr "keiner, passiv"
+
+msgid "ui.role.nachtwaechter.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.nachtwaechter.lex.ability"
+msgstr "Läutet morgens Alarm, wenn neben ihm jemand nicht zum Dorf gehört."
+
+msgid "ui.role.nachtwaechter.lex.timing"
+msgstr "Jeden Morgen nach der Morgenauflösung, solange ein Nachtwächter lebt."
+
+msgid "ui.role.nachtwaechter.lex.targets"
+msgstr "Keine Wahl. Nachbarn sind die nächsten lebenden Personen links und rechts, tote Plätze werden übersprungen."
+
+msgid "ui.role.nachtwaechter.lex.exceptions"
+msgstr "Sitzt neben ihm ein Wolf oder eine Person mit Einzelsiegrolle, läuten öffentlich die Glocken, ohne Seite und ohne Namen. Der Fluch des Weisen lässt die Fähigkeit ruhen."
+
+msgid "ui.role.nachtwaechter.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.nachtwaechter.lex.example"
+msgstr "Ben ist Nachtwächter. Der rechte lebende Nachbar von Ben ist ein Wolf. Am Morgen läuten die Glocken.\nBeide lebenden Nachbarn gehören zum Dorf. Die Glocken bleiben stumm."
+
+msgid "ui.role.nachtwaechter.lex.gm"
+msgstr "Die Glocken sagen nur, dass etwas nicht stimmt, nicht bei welcher Seite. Wer neben dem Nachtwächter sitzt, sagt die App nicht."
+
+msgid "ui.role.schutzengel.lex.night"
+msgstr "jede Nacht, Pflicht, vor dem Rudel"
+
+msgid "ui.role.schutzengel.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.schutzengel.lex.ability"
+msgstr "Schützt nachts eine andere Person vor dem Rudelangriff."
+
+msgid "ui.role.schutzengel.lex.timing"
+msgstr "Jede Nacht, solange der Schutzengel lebt. Der Schutz gilt nur in dieser Nacht, wird in der Morgenauflösung angewandt und endet mit Tagesbeginn. Der Schritt darf nicht übersprungen werden."
+
+msgid "ui.role.schutzengel.lex.targets"
+msgstr "Genau eine andere lebende Person."
+
+msgid "ui.role.schutzengel.lex.exceptions"
+msgstr "Schützt nur gegen den Rudelangriff, nicht gegen Gift oder andere Tode. Durchdringende Angriffe (Seuchenwolf, Zusatzopfer des Rudelvaters) brechen den Schutz. Stirbt der Schutzengel später in derselben Nacht, bleibt der bestätigte Schutz bestehen. Schutz und Waldhexenrettung auf derselben Person: beide werden verbraucht, es gibt genau einen verhinderten Angriff."
+
+msgid "ui.role.schutzengel.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.schutzengel.lex.example"
+msgstr "Der Schutzengel schützt Ben. Das Rudel wählt Ben. Am Morgen heißt es „In dieser Nacht ist niemand gestorben.“\nDer Schutzengel schützt Ben. Die Waldhexe vergiftet Ben. Ben stirbt trotzdem, denn der Schutz wirkt nicht gegen Gift."
+
+msgid "ui.role.schutzengel.lex.gm"
+msgstr "Ruf den Schutzengel vor dem Rudel auf. Öffentlich sagt nie jemand, dass ein Angriff verhindert wurde."
+
+msgid "ui.role.waldhexe.lex.night"
+msgstr "jede Nacht mit unverbrauchtem Trank, nach dem Rudel"
+
+msgid "ui.role.waldhexe.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.waldhexe.lex.ability"
+msgstr "Hat je einmal einen Heiltrank und einen Gifttrank."
+
+msgid "ui.role.waldhexe.lex.timing"
+msgstr "Je ein Trank je Leben, beide dürfen in derselben Nacht verwendet werden. Jede Wiederbelebung setzt die Tränke zurück. Der Schritt läuft als eine Kette und wird erst mit der Schlussbestätigung wirksam."
+
+msgid "ui.role.waldhexe.lex.targets"
+msgstr "Heilen: nur das aktuelle Rudelopfer dieser Nacht. Vergiften: eine lebende Person."
+
+msgid "ui.role.waldhexe.lex.exceptions"
+msgstr "Vor der Entscheidung sieht die Waldhexe den Namen des Rudelopfers, auch wenn ein Schutz besteht. Rettet sie es, erfährt sie dessen wahre Rolle. Die Rettung verhindert nur den Rudelangriff dieser Nacht. Gift markiert die Person, sie stirbt erst in der Morgenauflösung und wacht in dieser Nacht nicht mehr auf. Schutz verhindert Gift nicht."
+
+msgid "ui.role.waldhexe.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.waldhexe.lex.example"
+msgstr "Das Rudel wählt Ben. Die Waldhexe sieht „Ben“, rettet ihn und sieht „Ben: Dorfbewohner“. Ben überlebt.\nDie Waldhexe vergiftet Emil. Emil bekommt eine Todesmarkierung, wacht nicht mehr auf und stirbt am Morgen."
+
+msgid "ui.role.waldhexe.lex.gm"
+msgstr "Bis zur Bestätigung wird nichts verbraucht, ein Abbruch verwirft alle Teilantworten. Die Waldhexe verzichtet ausdrücklich im Schritt, überspringen geht nicht. Ohne mögliche Entscheidung entfällt der Schritt."
+
+msgid "ui.role.der_weise.lex.night"
+msgstr "keiner, passiv, plus Entscheidung bei der Hinrichtung"
+
+msgid "ui.role.der_weise.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.der_weise.lex.ability"
+msgstr "Überlebt einmal einen Rudelangriff. Wird er hingerichtet, ruhen die Fähigkeiten des Dorfes."
+
+msgid "ui.role.der_weise.lex.timing"
+msgstr "Die Rettung gilt einmal je Leben. Der Fluch tritt nur bei einer Hinrichtung des Weisen ein: Der Spielleiter legt dabei 0 bis 3 fest, so viele folgende Nächte und Tage, beginnend mit der folgenden Nacht, ruhen die Fähigkeiten. 0 bedeutet kein Fluch."
+
+msgid "ui.role.der_weise.lex.targets"
+msgstr "Keine. Der Fluch trifft alle Personen der Fraktion Dorf."
+
+msgid "ui.role.der_weise.lex.exceptions"
+msgstr "Die Rettung wird nur verbraucht, wenn der Rudelangriff den Weisen sonst getötet hätte; sie geschieht still, nur der Spielleiter erfährt es. Durchdringende Angriffe töten ihn. Im Fluch ruht wirklich alles bei Dorfpersonen: aktive und passive Fähigkeiten, Todesreaktionen, Wolfskind-Verwandlung, Lehrling-Erbe. Ausgelöste Wirkungen entfallen endgültig. Schild, Waffe, Liebeskummer und die Todeskette von Rotkäppchen wirken weiter."
+
+msgid "ui.role.der_weise.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.der_weise.lex.example"
+msgstr "Das Rudel wählt Ben, den Weisen. Kein Schutz greift. Ben überlebt, am Morgen ist niemand gestorben, und nur der Spielleiter weiß warum.\nBen wird hingerichtet. Der Spielleiter legt 2 fest. In den folgenden zwei Nächten und Tagen haben alle Dorfpersonen keine Fähigkeiten."
+
+msgid "ui.role.der_weise.lex.gm"
+msgstr "Die Zahl legst du bei der Hinrichtung fest. Der Fluch betrifft nur Dorfpersonen, nicht Wölfe und nicht Einzelsieg. Er ist ein Todeseffekt und wird öffentlich ausgespielt und angesagt, mit Rolle, auch in Wiederbelebungsrunden. Die Ansage nennt die Länge des Fluchs nicht."
+
+msgid "ui.role.der_weise.lex.open"
+msgstr "Dass die Ansage die Länge des Fluchs nicht nennt, ist technisch abgeleitet und noch nicht bestätigt."
+
+msgid "ui.role.maertyrerin.lex.night"
+msgstr "am Ende der Nacht"
+
+msgid "ui.role.maertyrerin.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.maertyrerin.lex.ability"
+msgstr "Kann sich opfern, damit das Nachtopfer überlebt."
+
+msgid "ui.role.maertyrerin.lex.timing"
+msgstr "Am Ende der Nacht, aber nur wenn das Rudelopfer tatsächlich sterben würde. Nur das erste Rudelopfer (erster Rudelschritt) ist rettbar."
+
+msgid "ui.role.maertyrerin.lex.targets"
+msgstr "Das endgültige erste Rudelopfer dieser Nacht. Die Märtyrerin sieht das Opfer nach Umlenkungen."
+
+msgid "ui.role.maertyrerin.lex.exceptions"
+msgstr "Blockaden verhindern das Opfer nicht, der Fluch des Weisen schon. Greift ein Schutz, wird sie nicht gefragt. Opfert sie sich, stirbt sie als Ersatzopfer statt des Opfers."
+
+msgid "ui.role.maertyrerin.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.maertyrerin.lex.example"
+msgstr "Das Rudel wählt Ben, kein Schutz greift. Die Märtyrerin wird gefragt und opfert sich. Sie stirbt am Morgen, Ben lebt.\nDer Schutzengel schützt Ben, das Rudel wählt Ben. Die Märtyrerin wird nicht gefragt."
+
+msgid "ui.role.maertyrerin.lex.gm"
+msgstr "Die Frage kommt nur, wenn das Opfer sonst stürbe. Öffentlich wird nur der Tod der Märtyrerin verkündet, nicht das Opfer."
+
+msgid "ui.role.schutzgeist.lex.night"
+msgstr "nur tot, in der ersten Nacht nach ihrem Tod"
+
+msgid "ui.role.schutzgeist.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.schutzgeist.lex.ability"
+msgstr "Gibt in der Nacht nach ihrem Tod jemandem ein Schild gegen den nächsten Rudelangriff."
+
+msgid "ui.role.schutzgeist.lex.timing"
+msgstr "Einmal je Leben, in der ersten Nacht nach dem Tod. Das Schild wirkt ab der folgenden Nacht, bis zum nächsten Rudelangriff auf diese Person."
+
+msgid "ui.role.schutzgeist.lex.targets"
+msgstr "Eine lebende Person."
+
+msgid "ui.role.schutzgeist.lex.exceptions"
+msgstr "Das Schild wirkt nur gegen Rudelangriffe und bricht bei Durchdringung wie der Schutz des Schutzengels. Es wirkt auch im Fluch des Weisen. Gibt es keine lebende Person, entfällt der Schritt. Wählt sie einen Wolf (wahre Zählung), wird am Morgen öffentlich ohne Namen verkündet, dass sie einen Wolf gewählt hat."
+
+msgid "ui.role.schutzgeist.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.schutzgeist.lex.example"
+msgstr "Der Schutzgeist wird an Tag 2 hingerichtet. In Nacht 3 wählt er Ben. Ab Nacht 4 schützt das Schild Ben vor dem nächsten Rudelangriff.\nDer Schutzgeist wählt Emil, einen Wolf. Am Morgen wird öffentlich verkündet, dass eine tote Person einen Wolf gewählt hat. Weder ein Name noch die Rolle fällt."
+
+msgid "ui.role.schutzgeist.lex.gm"
+msgstr "Die Rolle handelt als einzige nur tot. Die Ansage am Morgen nennt keinen Namen und keinen Rollennamen: In Wiederbelebungsrunden bleiben Rollen verdeckt, in Runden ohne Wiederbelebung ist die Rolle beim Tod ohnehin aufgedeckt."
+
+msgid "ui.role.dorfschmied.lex.night"
+msgstr "ab Nacht 6 bis zur Nutzung, freiwillig"
+
+msgid "ui.role.dorfschmied.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.dorfschmied.lex.ability"
+msgstr "Ab der sechsten Nacht eine Waffe, die einen Rudelangriff abwehrt und einen Wolf tötet."
+
+msgid "ui.role.dorfschmied.lex.timing"
+msgstr "Einmal je Leben. Ab Nacht 6 der Partie wird der Schmied jede Nacht gefragt, ob er die Waffe jetzt gibt, bis er sie gegeben hat."
+
+msgid "ui.role.dorfschmied.lex.targets"
+msgstr "Eine andere lebende Person als Träger."
+
+msgid "ui.role.dorfschmied.lex.exceptions"
+msgstr "Die Waffe wehrt den nächsten Rudelangriff auf den Träger ab, auch einen durchdringenden. Der Spielleiter wählt einen lebenden Wolf, der dabei stirbt. Die Waffe bleibt nach dem Tod des Schmieds bestehen und wirkt auch im Fluch des Weisen. Sie greift vor Schild und Rettung des Weisen."
+
+msgid "ui.role.dorfschmied.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.dorfschmied.lex.example"
+msgstr "In Nacht 6 gibt der Schmied Clara die Waffe. In Nacht 7 greift das Rudel Clara an. Die Waffe wehrt ab, der Spielleiter wählt Emil, und Emil stirbt.\nIn Nacht 6 lehnt der Schmied ab. In Nacht 7 wird er erneut gefragt."
+
+msgid "ui.role.dorfschmied.lex.gm"
+msgstr "Wen der Schmied gewählt hat, weiß nur er und du. Die Wolfswahl beim Abwehren triffst du."
+
+msgid "ui.role.verdammniswaechter.lex.night"
+msgstr "jede Nacht, nach der Rudelwahl"
+
+msgid "ui.role.verdammniswaechter.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.verdammniswaechter.lex.ability"
+msgstr "Entscheidet jede Nacht, ob der Rudelangriff das Rudelopfer oder eine angebotene andere Person trifft."
+
+msgid "ui.role.verdammniswaechter.lex.timing"
+msgstr "Jede Nacht ein Pflichturteil, der Schritt darf nicht übersprungen werden. Er entscheidet zwischen dem Rudelopfer und der angebotenen Person. Das Urteil betrifft nur das erste Rudelopfer. Ohne Rudelopfer, ohne mögliches Angebot oder wenn er selbst das Rudelopfer ist, entfällt der Schritt."
+
+msgid "ui.role.verdammniswaechter.lex.targets"
+msgstr "Die App zieht über den gespeicherten Seed eine lebende Person, die nicht als Wolf zählt, außer dem Rudelopfer und dem Verdammniswächter selbst."
+
+msgid "ui.role.verdammniswaechter.lex.exceptions"
+msgstr "Wählt er die angebotene Person, greift das Rudel diese statt des Opfers an. Es bleibt ein Rudelangriff: Schutz, Durchdringung, Ritter und Märtyrerin gelten wie sonst. Ist er selbst das Rudelopfer, entfällt sein Urteil und der Angriff trifft ihn."
+
+msgid "ui.role.verdammniswaechter.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.verdammniswaechter.lex.example"
+msgstr "Das Rudel wählt Ben. Dem Verdammniswächter wird Clara angeboten. Er nimmt an, und das Rudel greift Clara an. Ein Schutz auf Clara würde greifen.\nDas Rudel wählt den Verdammniswächter selbst. Sein Urteil entfällt, der Angriff trifft ihn."
+
+msgid "ui.role.verdammniswaechter.lex.gm"
+msgstr "Das Angebot zeigt nur die App dem Verdammniswächter. Der Tisch erfährt nichts von der Umlenkung."
+
+msgid "ui.role.dorfwache.lex.night"
+msgstr "keiner, passiv"
+
+msgid "ui.role.dorfwache.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.dorfwache.lex.ability"
+msgstr "Überlebt den Rudelangriff."
+
+msgid "ui.role.dorfwache.lex.timing"
+msgstr "Immer, solange die Dorfwache lebt, unbegrenzt oft."
+
+msgid "ui.role.dorfwache.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.dorfwache.lex.exceptions"
+msgstr "Ein Rudelangriff tötet sie nicht. Durchdringende Angriffe (nach dem Tod eines Seuchenwolfs, das Zusatzopfer des Rudelvaters) und die Giftpranke des Giftwolfs töten sie. Alles andere wirkt normal: Hinrichtung, Waldhexengift, andere Tode. Im Fluch des Weisen ruht die Fähigkeit."
+
+msgid "ui.role.dorfwache.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.dorfwache.lex.example"
+msgstr "Das Rudel wählt Anna, die Dorfwache. Anna überlebt, am Morgen ist niemand gestorben.\nEin Seuchenwolf ist tot. Der nächste Rudelangriff durchdringt Schutz und trifft Anna. Anna stirbt."
+
+msgid "ui.role.dorfwache.lex.gm"
+msgstr "Die Wache wird nie aufgerufen und nie öffentlich genannt. Am Morgen sieht der Tisch nur „niemand gestorben“."
+
+msgid "ui.role.ritter.lex.night"
+msgstr "keiner, Todesreaktion"
+
+msgid "ui.role.ritter.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.ritter.lex.ability"
+msgstr "Stirbt er durch die Werwölfe, stirbt der nächste Wolf mit."
+
+msgid "ui.role.ritter.lex.timing"
+msgstr "Einmal je Leben. Nur ein Tod durch Rudelangriff löst aus, Gift nicht. Der Rudelangriff trifft nur nachts, die Reaktion läuft also in der Morgenauflösung."
+
+msgid "ui.role.ritter.lex.targets"
+msgstr "Die nächste lebende Person, die als Wolf zählt. Der Abstand wird in Sitzen gemessen, tote Plätze eingeschlossen. Bei Gleichstand wählt der Spielleiter."
+
+msgid "ui.role.ritter.lex.exceptions"
+msgstr "Eine vom Dämonischen Wolf verfluchte Dorfperson ist kein Ziel. Ein Fenrir ab Stufe 3 überlebt den Tod durch den Ritter einmal. Im Fluch des Weisen ruht die Reaktion."
+
+msgid "ui.role.ritter.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.ritter.lex.example"
+msgstr "Das Rudel tötet Ben, den Ritter. Der nächste lebende Wolf ist Emil, zwei Plätze entfernt. Emil stirbt am Morgen zusammen mit Ben.\nDie Waldhexe vergiftet Ben, den Ritter. Ben stirbt, aber niemand sonst, denn Gift löst den Ritter nicht aus."
+
+msgid "ui.role.ritter.lex.gm"
+msgstr "Bei Gleichstand der Abstände wählst du. Der Rückschlag ist ein Todeseffekt und wird öffentlich angesagt, mit Rolle und dem mitgerissenen Wolf."
+
+msgid "ui.role.waechter_am_tor.lex.night"
+msgstr "keiner, passiv"
+
+msgid "ui.role.waechter_am_tor.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.waechter_am_tor.lex.ability"
+msgstr "Solange er lebt, wird kein neuer Wolf, stattdessen Dorfbewohner."
+
+msgid "ui.role.waechter_am_tor.lex.timing"
+msgstr "Immer, solange ein Wächter am Tor lebt, unbegrenzt oft."
+
+msgid "ui.role.waechter_am_tor.lex.targets"
+msgstr "Keine Wahl. Jeder Weg zu einem neuen Wolf wird blockiert: Wolfskind-Verwandlung, Lehrling erbt eine Wolfsrolle, König Lykaon, Seelentauscher."
+
+msgid "ui.role.waechter_am_tor.lex.exceptions"
+msgstr "Auch eine tote Person, die eine Wolfsrolle erhielte, wird Dorfbewohner. Auch die Wiederbelebten des Kutschers werden geprüft. Spielleiterkorrekturen werden nicht blockiert. Nur die betroffene Person erfährt privat, dass sie jetzt Dorfbewohner ist. Im Fluch des Weisen ruht die Fähigkeit."
+
+msgid "ui.role.waechter_am_tor.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.waechter_am_tor.lex.example"
+msgstr "Das Vorbild des Wolfskinds Clara stirbt, während der Wächter lebt. Clara verwandelt sich nicht, Clara wird Dorfbewohner und erfährt es privat.\nKönig Lykaon will David zum Trugbilderwolf machen. Ein Wächter lebt. David wird Dorfbewohner."
+
+msgid "ui.role.waechter_am_tor.lex.gm"
+msgstr "Der Tisch erfährt nichts. Nur die betroffene Person sieht die Mitteilung auf ihrer Karte."
+
+msgid "ui.role.zeitwaechter.lex.night"
+msgstr "einmal je Leben, als allererster Schritt einer Nacht, freiwillig"
+
+msgid "ui.role.zeitwaechter.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.zeitwaechter.lex.ability"
+msgstr "Kann einmal zu Beginn einer Nacht die Nacht einfrieren: Alle Nachtaktionen entfallen, aus dieser Nacht stirbt niemand."
+
+msgid "ui.role.zeitwaechter.lex.timing"
+msgstr "Einmal je Leben. Ein Verzicht behält die Fähigkeit."
+
+msgid "ui.role.zeitwaechter.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.zeitwaechter.lex.exceptions"
+msgstr "Alle Nachtschritte entfallen für alle Rollen, auch Wölfe, Einzelsieg und Schwarze Witwe. Am Morgen sterben keine Personen aus dieser Nacht, Fenrir und Cerberus wachsen nicht, Äpfel dieser Nacht verfallen. Fällige Wirkungen früherer Nächte (Giftpranke, Pest-Ausbreitung) treten ein. Die Nachtnummer zählt weiter. Das Zusatzopfer eines hingerichteten Rudelvaters entfällt. Im Fluch des Weisen ruht die Fähigkeit."
+
+msgid "ui.role.zeitwaechter.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.zeitwaechter.lex.example"
+msgstr "In Nacht 4 friert der Zeitwächter die Nacht ein. Am Morgen wird öffentlich gemeldet, dass die Nacht eingefroren war. Niemand aus dieser Nacht ist gestorben.\nDer Giftwolf hat Clara in Nacht 2 vergiftet. Nacht 4 ist eingefroren. Das Gift wirkt trotzdem planmäßig, Clara stirbt am Morgen nach Nacht 4."
+
+msgid "ui.role.zeitwaechter.lex.gm"
+msgstr "Ruf den Zeitwächter noch vor dem Schattenhund auf. Die öffentliche Meldung nennt keinen Namen."
+
+msgid "ui.role.zeitwaechter.lex.open"
+msgstr "Einzelheiten (einmal je Leben, Verhalten im Fluch des Weisen, Zusatzopfer des Rudelvaters) sind technisch abgeleitet und noch nicht bestätigt."
+
+msgid "ui.role.sensentraeger.lex.night"
+msgstr "keiner, Todesreaktion"
+
+msgid "ui.role.sensentraeger.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.sensentraeger.lex.ability"
+msgstr "Darf bei seinem Tod eine lebende Person verfluchen."
+
+msgid "ui.role.sensentraeger.lex.timing"
+msgstr "Einmal je Leben, freiwillig, Verzicht möglich. Nach einem Tod am Tag sofort, nach einem Tod in der Nacht (auch durch Gift) in der Morgenauflösung."
+
+msgid "ui.role.sensentraeger.lex.targets"
+msgstr "Jede Person, die zum Zeitpunkt der Antwort lebt, außer dem Sensenträger selbst."
+
+msgid "ui.role.sensentraeger.lex.exceptions"
+msgstr "Die gewählte Person stirbt durch den Fluch. Die Reaktion bleibt offen, bis sie beantwortet ist. Eine spätere Wiederbelebung entfernt eine bereits eingereihte Reaktion nicht. Der Schutzengel schützt nicht. Im Fluch des Weisen ruht die Reaktion."
+
+msgid "ui.role.sensentraeger.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.sensentraeger.lex.example"
+msgstr "Der Sensenträger wird am Tag hingerichtet und wählt sofort Emil. Emil stirbt.\nDas Rudel tötet den Sensenträger in der Nacht. In der Morgenauflösung verzichtet er. Niemand sonst stirbt."
+
+msgid "ui.role.sensentraeger.lex.gm"
+msgstr "Der Fluch ist ein Todeseffekt und wird öffentlich ausgespielt und angesagt, mit Rolle und Ziel. Bei Verzicht gibt es keine Ansage. Öffentlich zählen sonst nur die Namen der Toten."
+
+msgid "ui.role.wolfskind.lex.night"
+msgstr "Vorbildwahl, nur solange ohne Vorbild"
+
+msgid "ui.role.wolfskind.lex.wolf"
+msgstr "erst nach der Verwandlung"
+
+msgid "ui.role.wolfskind.lex.ability"
+msgstr "Wählt ein Vorbild und wird bei dessen Tod zum Wolf."
+
+msgid "ui.role.wolfskind.lex.timing"
+msgstr "Der Schritt kommt in jeder Nacht, solange das Wolfskind lebt, unverwandelt ist und kein Vorbild hat. Ein regulär gestartetes Wolfskind wählt in Nacht 1. Er darf nicht übersprungen werden."
+
+msgid "ui.role.wolfskind.lex.targets"
+msgstr "Genau eine andere lebende Person. Es darf sich nicht selbst wählen."
+
+msgid "ui.role.wolfskind.lex.exceptions"
+msgstr "Stirbt das Vorbild mit Todesfolgen, verwandelt sich das Wolfskind sofort und vor der Siegprüfung dieses Todes: Fraktion Werwölfe, zählt als Wolf, erscheint als Werwolf, die Rolle bleibt Wolfskind. Am Rudel nimmt es ab der folgenden Nacht teil. Ein Tod per Spielleiterkorrektur ohne Todesfolgen verwandelt nicht. Ein totes Wolfskind verwandelt sich für diesen Tod nie, auch nicht nach einer Wiederbelebung. Ein erneuter Tod des wiederbelebten Vorbilds kann verwandeln. Ein Wächter am Tor macht es stattdessen zum Dorfbewohner. Im Fluch des Weisen ruht die Verwandlung."
+
+msgid "ui.role.wolfskind.lex.win"
+msgstr "Vor der Verwandlung mit dem Dorf, danach mit den Werwölfen."
+
+msgid "ui.role.wolfskind.lex.example"
+msgstr "In Nacht 1 wählt Clara, das Wolfskind, Ben als Vorbild. An Tag 3 wird Ben hingerichtet. Clara wird sofort zum Wolf und wacht ab der folgenden Nacht mit dem Rudel auf.\nDer Spielleiter setzt Bens Tod per Korrektur ohne Todesfolgen. Clara bleibt Dorf."
+
+msgid "ui.role.wolfskind.lex.gm"
+msgstr "Das Orakel sieht vor der Verwandlung „Wolfskind“, danach „Werwolf“. Die Waldhexe sieht immer „Wolfskind“. Wer Vorbild ist, weiß nur das Wolfskind und du."
+
+msgid "ui.role.lehrling.lex.night"
+msgstr "Auswahl in der ersten verfügbaren Nacht ohne Bindung"
+
+msgid "ui.role.lehrling.lex.wolf"
+msgstr "nur bei geerbter Wolfsrolle"
+
+msgid "ui.role.lehrling.lex.ability"
+msgstr "Wählt einen Meister und erbt bei dessen Tod die Rolle."
+
+msgid "ui.role.lehrling.lex.timing"
+msgstr "Die Auswahl kommt in der ersten verfügbaren Nacht ohne aktive Bindung. Sie darf nicht übersprungen werden. Gibt es weniger als drei andere Lebende, entfällt sie mit Protokolleintrag."
+
+msgid "ui.role.lehrling.lex.targets"
+msgstr "Der Spielleiter wählt drei verschiedene andere lebende Personen. Der Lehrling sieht nur deren drei aktuelle Rollen, nach Rollen-ID sortiert, nie Namen. Er wählt eine Rolle, nie eine Person."
+
+msgid "ui.role.lehrling.lex.exceptions"
+msgstr "Stirbt der Meister mit Todesfolgen, erbt der Lehrling sofort die aktuelle Rolle: Fraktion, passive Eigenschaften, Siegbedingung und Todesreaktion gelten sofort, aktive Nachtfähigkeiten ab der folgenden Nacht, alle Einsätze frisch. Stirbt der Lehrling vor dem Erbe, verfällt die Bindung endgültig. Ein Meistertod per Korrektur ohne Todesfolgen vererbt nichts. Ein Wächter am Tor macht aus einer geerbten Wolfsrolle einen Dorfbewohner."
+
+msgid "ui.role.lehrling.lex.win"
+msgstr "Vor dem Erbe mit dem Dorf, danach nach der geerbten Rolle."
+
+msgid "ui.role.lehrling.lex.example"
+msgstr "Der Spielleiter wählt Ben, Clara und Emil. Der Lehrling sieht „Dorfbewohner, Waldhexe, Werwolf“ und wählt „Waldhexe“, die zu Clara gehört. Stirbt Clara, wird der Lehrling Waldhexe mit frischen Tränken, einsetzbar ab der folgenden Nacht.\nDer Lehrling wählt „Werwolf“, die zu Emil gehört. Emil wird hingerichtet. Der Lehrling zählt sofort als Wolf und wacht ab der folgenden Nacht mit dem Rudel auf."
+
+msgid "ui.role.lehrling.lex.gm"
+msgstr "Die Bindung ist nur für dich sichtbar. Erbt der Lehrling Wolfskind, bleibt es unverwandelt, er wählt in der nächsten Nacht ein neues Vorbild. Erbt er Lehrling, folgt die neue Auswahl in der nächsten Nacht."
+
+msgid "ui.role.loki.lex.night"
+msgstr "nur Nacht 1"
+
+msgid "ui.role.loki.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.loki.lex.ability"
+msgstr "Verbindet in der ersten Nacht zwei Personen als Liebende oder Rivalen."
+
+msgid "ui.role.loki.lex.timing"
+msgstr "Nur in Nacht 1 der Partie, freiwillig. Verpasst Loki die Nacht, verfällt die Fähigkeit."
+
+msgid "ui.role.loki.lex.targets"
+msgstr "Zwei verschiedene lebende Personen, Loki selbst ist erlaubt."
+
+msgid "ui.role.loki.lex.exceptions"
+msgstr "Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache). Der Schutz gegen den Rudelangriff hilft dagegen nicht, persönliche Schilde schon. Rivalen haben keine eigene Wirkung, sie zählen nur für die Schwarze Witwe. Liebeskummer wirkt auch im Fluch des Weisen. Eine einmal durch Tod beendete Bindung bleibt nach einer Wiederbelebung beendet."
+
+msgid "ui.role.loki.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.loki.lex.example"
+msgstr "Loki verbindet Anna und Ben als Liebende. An Tag 2 wird Anna hingerichtet. Ben stirbt sofort an Liebeskummer.\nLoki verbindet Clara und David als Rivalen. Stirbt Clara, geschieht mit David nichts."
+
+msgid "ui.role.loki.lex.gm"
+msgstr "Einen echten Schritt hat Loki nur in Nacht 1. In späteren Nächten wird Loki weiter aufgerufen, aber nur angesagt, damit der Tisch nichts erfährt; die App zeigt diese Ansage. Liebende und Rivalen erfahren privat ihren Partner und die Art der Bindung. Der Tod durch Liebeskummer ist ein Todeseffekt und wird öffentlich angesagt. Die Ansage nennt Loki als Rolle, von der die Bindung stammt, nie die Rolle der sterbenden Person."
+
+msgid "ui.role.rotkaeppchen.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.rotkaeppchen.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.rotkaeppchen.lex.ability"
+msgstr "Sucht jede Nacht Zuflucht. Wer sie gewährt, erhält einen Apfel und eine Todeskette."
+
+msgid "ui.role.rotkaeppchen.lex.timing"
+msgstr "Jede Nacht, solange Rotkäppchen lebt."
+
+msgid "ui.role.rotkaeppchen.lex.targets"
+msgstr "Eine andere lebende Person, auch ein Wolf, der ablehnen darf. Dieselbe Person darf wieder gefragt werden."
+
+msgid "ui.role.rotkaeppchen.lex.exceptions"
+msgstr "Gewährt die Person Zuflucht, sind sie und Rotkäppchen verkettet: Stirbt eine, stirbt die andere sofort mit. Die Kette gilt bis zur nächsten gewährten Zuflucht. Eine Ablehnung löst nichts aus. Der Apfel lässt den nächsten Nachtschritt der Person, den ihre Rolle jede Nacht hat, ein zweites Mal laufen. Er gilt nur in der folgenden Nacht, ungenutzt verfällt er, und jede Person hat höchstens einen. Für Einmal- und Ladungsfähigkeiten, passive Rollen sowie Korrupten Richter, Parasit, Verdammniswächter und Rotkäppchen ist er wirkungslos. Die Kette wirkt auch im Fluch des Weisen."
+
+msgid "ui.role.rotkaeppchen.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.rotkaeppchen.lex.example"
+msgstr "Rotkäppchen fragt Ben, Ben gewährt Zuflucht. In der folgenden Nacht führt Ben, ein Doktor, den Schritt zweimal aus. An Tag 4 wird Ben hingerichtet, und Rotkäppchen stirbt sofort mit.\nRotkäppchen fragt Emil, einen Wolf. Emil lehnt ab. Es entsteht keine Kette und kein Apfel."
+
+msgid "ui.role.rotkaeppchen.lex.gm"
+msgstr "Die gefragte Person beantwortet die Frage selbst. Fähigkeiten und ihre Effekte sind allen Personen bekannt: Die gefragte Person kennt Apfel und Kette und darf ablehnen, erfährt aber nicht, wer fragt. Ihre Karte nennt deshalb weder die Rolle noch die fragende Person. Der Tod durch die Kette ist ein Todeseffekt und wird öffentlich angesagt. Die Ansage nennt Rotkäppchen als Rolle, von der die Kette stammt, nie die Rolle der sterbenden Person."
+
+msgid "ui.role.rotkaeppchen.lex.open"
+msgstr "Wie die gefragte Person am Tisch geweckt und befragt wird, ist noch nicht festgelegt."
+
+msgid "ui.role.seelentauscher.lex.night"
+msgstr "jede Nacht bis zur Nutzung"
+
+msgid "ui.role.seelentauscher.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.seelentauscher.lex.ability"
+msgstr "Tauscht einmal die Rollen zweier Personen, lebend oder tot."
+
+msgid "ui.role.seelentauscher.lex.timing"
+msgstr "Einmal je Leben, jede Nacht bis zur Nutzung, freiwillig (Verzicht ist möglich)."
+
+msgid "ui.role.seelentauscher.lex.targets"
+msgstr "Zwei verschiedene Personen, lebend oder tot. Der Seelentauscher selbst ist erlaubt."
+
+msgid "ui.role.seelentauscher.lex.exceptions"
+msgstr "Beide erhalten die neue Rolle wie beim Lehrling-Erbe: frische Einsätze, keine übernommenen Bindungen (ein Wolfskind hat kein Vorbild, eine Lehrlingsbindung endet). Eine Pflicht-Scheinrolle des Trugbilderwolfs wandert mit. Lebende Betroffene erfahren ihre neue Rolle sofort und privat. Ein lebender Wächter am Tor macht auch bei einer toten Person aus einer erhaltenen Wolfsrolle einen Dorfbewohner. Im Fluch des Weisen ruht die Fähigkeit."
+
+msgid "ui.role.seelentauscher.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.seelentauscher.lex.example"
+msgstr "In Nacht 3 tauscht der Seelentauscher Ben (Waldhexe) und Emil (Werwolf). Ben ist nun Werwolf, Emil Waldhexe. Beide sehen ihre neue Rolle privat.\nEin Wächter am Tor lebt. Ben würde die Rolle Werwolf erhalten und wird stattdessen Dorfbewohner. Emil wird Waldhexe."
+
+msgid "ui.role.seelentauscher.lex.gm"
+msgstr "Der Tisch erfährt nichts. Ein toter Betroffener sieht keine Mitteilung, ein lebender schon."
+
+msgid "ui.role.kutscher.lex.night"
+msgstr "ab einer Nacht mit mindestens 10 Toten"
+
+msgid "ui.role.kutscher.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.kutscher.lex.ability"
+msgstr "Holt ab zehn Toten einmal drei Tote zurück. Einer davon wird Wolf."
+
+msgid "ui.role.kutscher.lex.timing"
+msgstr "Einmal je Leben, freiwillig, ab einer Nacht mit mindestens 10 Toten (alle zählen)."
+
+msgid "ui.role.kutscher.lex.targets"
+msgstr "Drei tote Personen. Der Kutscher bestimmt, wer davon Wolf wird."
+
+msgid "ui.role.kutscher.lex.exceptions"
+msgstr "Die Wiederbelebten behalten ihre Rolle mit frischen Einsätzen, nur der bestimmte Wolf erhält die Rolle Werwolf. Ein lebender Wächter am Tor macht ihn stattdessen zum Dorfbewohner. Sie erfahren es privat, handeln ab der folgenden Nacht, und die Wiederbelebung wird am Morgen öffentlich sichtbar."
+
+msgid "ui.role.kutscher.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.kutscher.lex.example"
+msgstr "In Nacht 6 sind 11 Personen tot. Der Kutscher holt Anna (Waldhexe), Ben (Dorfbewohner) und Clara (Doktor) zurück und macht Ben zum Wolf. Am Morgen wird öffentlich sichtbar, dass drei Personen zurück sind.\nErst neun Personen sind tot. Der Kutscher hat keinen Schritt."
+
+msgid "ui.role.kutscher.lex.gm"
+msgstr "Die Wahl, wer Wolf wird, triffst nicht du, sondern der Kutscher. Der neue Wolf wacht ab der folgenden Nacht mit dem Rudel auf."
+
+msgid "ui.role.kutscher.lex.open"
+msgstr "Regeln zu Totenreichkarten sind noch nicht festgelegt und nicht Teil dieser Umsetzung."
+
+msgid "ui.role.dr_victor_frankenstein.lex.night"
+msgstr "jede Nacht bis zur Nutzung, freiwillig"
+
+msgid "ui.role.dr_victor_frankenstein.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.dr_victor_frankenstein.lex.ability"
+msgstr "Belebt einmal einen Toten mit einer freien Rolle wieder."
+
+msgid "ui.role.dr_victor_frankenstein.lex.timing"
+msgstr "Einmal je Leben, jede Nacht bis zur Nutzung, freiwillig."
+
+msgid "ui.role.dr_victor_frankenstein.lex.targets"
+msgstr "Eine tote Person. Sie erhält eine Rolle, die gerade niemand hat. Dorfbewohner ist immer möglich, eine Wolfsrolle nie."
+
+msgid "ui.role.dr_victor_frankenstein.lex.exceptions"
+msgstr "Die wiederbelebte Person startet frisch, erfährt ihre neue Rolle privat und handelt ab der folgenden Nacht. Die Wiederbelebung wird am Morgen öffentlich sichtbar."
+
+msgid "ui.role.dr_victor_frankenstein.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.dr_victor_frankenstein.lex.example"
+msgstr "In Nacht 3 belebt Frankenstein Anna wieder und gibt ihr die freie Rolle Doktor. Anna sieht „Doktor“ privat und handelt ab Nacht 4.\nFrankenstein belebt Ben wieder und wählt Dorfbewohner. Diese Rolle geht immer."
+
+msgid "ui.role.dr_victor_frankenstein.lex.gm"
+msgstr "Am Morgen erscheint nur, dass jemand zurück ist, nicht die neue Rolle."
+
+msgid "ui.role.dr_victor_frankenstein.lex.open"
+msgstr "Eine Kartenbedingung gehört zu den noch nicht festgelegten Totenreichkarten und ist nicht umgesetzt."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.night"
+msgstr "keiner, passiv"
+
+msgid "ui.role.wahnsinniger_kutscher.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.wahnsinniger_kutscher.lex.ability"
+msgstr "Wird er hingerichtet, sterben seine Nachbarn mit."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.timing"
+msgstr "Bei jeder Hinrichtung des Wahnsinnigen Kutschers, unbegrenzt oft."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.targets"
+msgstr "Keine Wahl. Nachbarn sind die nächsten lebenden Personen links und rechts, tote Plätze werden übersprungen."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.exceptions"
+msgstr "Nur eine echte Hinrichtung löst aus. Eine Spiegelung des Spiegelwolfs auf ihn ist keine Hinrichtung. Im Fluch des Weisen ruht die Fähigkeit."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.example"
+msgstr "Ben sitzt zwischen Anna und Clara und ist der Wahnsinnige Kutscher. Ben wird hingerichtet, Anna und Clara sterben mit.\nDer Spiegelwolf spiegelt eine Hinrichtung auf Ben, den Wahnsinnigen Kutscher. Es gibt keinen Kutscherunfall."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.gm"
+msgstr "Das Mitsterben der Nachbarn ist ein Todeseffekt und wird öffentlich angesagt, mit Rolle und den Namen der Mitgestorbenen."
+
+msgid "ui.role.henker.lex.night"
+msgstr "ab drei Hinrichtungen jede Nacht, freiwillig"
+
+msgid "ui.role.henker.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.henker.lex.ability"
+msgstr "Ab drei Hinrichtungen markiert er nachts jemanden, der bei der nächsten mitstirbt."
+
+msgid "ui.role.henker.lex.timing"
+msgstr "Jede Nacht freiwillig, sobald in der Partie mindestens drei Hinrichtungen bestätigt wurden, auch vor dem Rollenerwerb. Unbegrenzt oft."
+
+msgid "ui.role.henker.lex.targets"
+msgstr "Eine Person. Sie stirbt zusätzlich bei der Hinrichtung des folgenden Tages, wenn der Henker dabei lebt."
+
+msgid "ui.role.henker.lex.exceptions"
+msgstr "Jede bestätigte Hinrichtung zählt, auch ohne Tod (Spiegelung, Cerberus-Abwehr, Parasit). Lebt der Henker bei dieser Hinrichtung nicht mehr, verfällt die Markierung. Findet am Folgetag keine Hinrichtung statt, verfällt sie mit Beginn der nächsten Nacht. Die markierte Person stirbt auch dann mit, wenn die Hinrichtung selbst niemanden tötet (Spiegelung, Cerberus-Abwehr). Für den Selbstmörder zählt nur die Hinrichtung der Person selbst, ein zusätzlicher Henker-Tod ist keine."
+
+msgid "ui.role.henker.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.henker.lex.example"
+msgstr "Drei Hinrichtungen sind vorbei. In Nacht 4 markiert der Henker Clara. Am Tag 4 wird Ben hingerichtet, Clara stirbt zusammen mit Ben.\nDer Henker markiert Clara und stirbt noch in derselben Nacht. Die Markierung verfällt."
+
+msgid "ui.role.henker.lex.gm"
+msgstr "Die Markierung gilt nur für die Hinrichtung des folgenden Tages. Ohne Hinrichtung verfällt sie mit Beginn der nächsten Nacht."
+
+msgid "ui.role.korrupter_richter.lex.night"
+msgstr "jede Nacht, freiwillig"
+
+msgid "ui.role.korrupter_richter.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.korrupter_richter.lex.ability"
+msgstr "Markiert nachts eine Person, die am Tag als nominiert gilt."
+
+msgid "ui.role.korrupter_richter.lex.timing"
+msgstr "Jede Nacht freiwillig. Bei Nachtbeginn wird die alte Markierung gelöscht, es gibt höchstens eine."
+
+msgid "ui.role.korrupter_richter.lex.targets"
+msgstr "Eine lebende Person, der Richter selbst ist erlaubt."
+
+msgid "ui.role.korrupter_richter.lex.exceptions"
+msgstr "Bei Tagesbeginn gilt die markierte Person als vom Richter nominiert (normale Nominierung: Tageslimit, Manipulator-Tod, Spiegelung wie sonst). Öffentlich erscheint nur die Nominierung der markierten Person, nicht der Richter. Der Apfel von Rotkäppchen wirkt hier nicht. Die Spielleiteransicht zeigt einen Hinweis „+1 Stimme auf die markierte Person“, die Stimmen zählst du selbst."
+
+msgid "ui.role.korrupter_richter.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.korrupter_richter.lex.example"
+msgstr "In Nacht 3 markiert der Richter Emil. Zu Beginn von Tag 4 ist Emil nominiert. Öffentlich heißt es nur, dass Emil nominiert ist.\nDer Richter markiert sich selbst. Er ist zu Beginn des Tages nominiert."
+
+msgid "ui.role.korrupter_richter.lex.gm"
+msgstr "Wer nominiert hat, sagst du nie. Bei Nachtbeginn löscht die App die alte Markierung."
+
+msgid "ui.role.werwolf.lex.night"
+msgstr "Rudelschritt jede Nacht"
+
+msgid "ui.role.werwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.werwolf.lex.ability"
+msgstr "Wählt nachts mit dem Rudel ein Opfer."
+
+msgid "ui.role.werwolf.lex.timing"
+msgstr "Jede Nacht, solange mindestens eine lebende Person als Wolf zählt. Das Opfer stirbt erst in der Morgenauflösung."
+
+msgid "ui.role.werwolf.lex.targets"
+msgstr "Jede lebende Person, auch ein Wolf. Das Rudel darf auch ausdrücklich niemanden wählen. Alle Personen, die zu Beginn der Nacht als Wolf zählen, wachen mit auf."
+
+msgid "ui.role.werwolf.lex.exceptions"
+msgstr "Schutz und Rettung können den Angriff verhindern. Ist das gewählte Opfer bis zum Morgen schon tot, findet kein Angriff statt und die Wahl wird nicht neu geöffnet. Wer erst während der Nacht zum Wolf wird, wacht ab der folgenden Nacht mit."
+
+msgid "ui.role.werwolf.lex.win"
+msgstr "Wolfssieg wie oben."
+
+msgid "ui.role.werwolf.lex.example"
+msgstr "Emil und Fritz sind Wölfe und wählen Ben. Am Morgen stirbt Ben.\nEmil, Fritz, Clara und David leben. Emil und Fritz sind Wölfe. 2 Wölfe gegen 2 Nicht-Wölfe: Die Wölfe sind Siegkandidat."
+
+msgid "ui.role.werwolf.lex.gm"
+msgstr "Das Rudel einigt sich lautlos, du trägst das Ziel ein. Ein Verzicht des Rudels wird mit Grund protokolliert."
+
+msgid "ui.role.trugbilderwolf.lex.night"
+msgstr "kein eigener, Teil des Rudels"
+
+msgid "ui.role.trugbilderwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.trugbilderwolf.lex.ability"
+msgstr "Wolf im Rudel, erscheint bei Prüfungen mit einer Scheinrolle."
+
+msgid "ui.role.trugbilderwolf.lex.timing"
+msgstr "Die Scheinrolle legt der Spielleiter beim Spielaufbau für jede Instanz ausdrücklich fest, nie zufällig."
+
+msgid "ui.role.trugbilderwolf.lex.targets"
+msgstr "Als Scheinrolle ist jede bekannte Rolle zulässig, die nicht als Wolf zählt, auch wenn sie in der Partie nicht vorkommt."
+
+msgid "ui.role.trugbilderwolf.lex.exceptions"
+msgstr "Das Orakel sieht die Scheinrolle, die Waldhexe sieht bei einer Rettung die wahre Rolle. Zählungen und Ja/Nein-Prüfungen (Doktor, Traumdeuter, Kriegerin, Spürhund) nutzen die wahre Wolfszählung. Eine Korrektur der Scheinrolle geht nur auf eine Nicht-Wolf-Rolle und wirkt auf spätere Prüfungen."
+
+msgid "ui.role.trugbilderwolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.trugbilderwolf.lex.example"
+msgstr "Clara ist Trugbilderwolf mit der Scheinrolle „Waldhexe“. Das Orakel prüft Clara und sieht „Waldhexe“.\nClara ist das Rudelopfer und wird von der Waldhexe gerettet. Die Waldhexe sieht „Clara: Trugbilderwolf“."
+
+msgid "ui.role.trugbilderwolf.lex.gm"
+msgstr "Die Scheinrolle wählst du im Setup pro Instanz, ohne Vorbelegung. Sie wird gespeichert und nie öffentlich gezeigt. Nur du kennst sie, der Trugbilderwolf erfährt sie nicht."
+
+msgid "ui.role.spiegelwolf.lex.night"
+msgstr "kein eigener, Teil des Rudels"
+
+msgid "ui.role.spiegelwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.spiegelwolf.lex.ability"
+msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die nominierende Person."
+
+msgid "ui.role.spiegelwolf.lex.timing"
+msgstr "Die erste bestätigte Hinrichtung des Spiegelwolfs, einmal je Leben. Verbraucht wird sie erst mit der bestätigten Hinrichtung."
+
+msgid "ui.role.spiegelwolf.lex.targets"
+msgstr "Die Person, die den Spiegelwolf an diesem Tag nominiert hat. Sie stirbt mit der Ursache Spiegelung, der Spiegelwolf überlebt, die Hinrichtung des Tages gilt als erfolgt."
+
+msgid "ui.role.spiegelwolf.lex.exceptions"
+msgstr "Keine Spiegelung, normaler Tod: bei bereits verbrauchter Spiegelung, ohne Nominierung dieses Tages auf ihn, oder wenn die nominierende Person bei der Hinrichtung tot oder unbekannt ist. Bei Selbstnominierung wird gespiegelt, und er selbst stirbt, genau ein Tod. Schutzengel und Hexenrettung verhindern die Spiegelung nicht."
+
+msgid "ui.role.spiegelwolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.spiegelwolf.lex.example"
+msgstr "Ben nominiert Fritz, den Spiegelwolf. Fritz soll hingerichtet werden. Stattdessen stirbt Ben, Fritz lebt.\nDie Spiegelung von Fritz ist schon verbraucht. Die nächste Hinrichtung von Fritz tötet ihn normal."
+
+msgid "ui.role.spiegelwolf.lex.gm"
+msgstr "Öffentlich erscheint nur der Tod der nominierenden Person, keine Ursache. Der Tisch sieht allerdings, dass statt des Spiegelwolfs die nominierende Person stirbt; das lässt sich nicht verbergen. Mit Wiederbelebung stehen die Einsätze wieder bereit."
+
+msgid "ui.role.siegreicher_wolf.lex.night"
+msgstr "kein eigener, Teil des Rudels"
+
+msgid "ui.role.siegreicher_wolf.lex.wolf"
+msgstr "ja, in der Wolfsparität doppelt"
+
+msgid "ui.role.siegreicher_wolf.lex.ability"
+msgstr "Wolf im Rudel, zählt lebend für den Wolfssieg wie zwei Wölfe."
+
+msgid "ui.role.siegreicher_wolf.lex.timing"
+msgstr "Dauerhaft, solange er lebt."
+
+msgid "ui.role.siegreicher_wolf.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.siegreicher_wolf.lex.exceptions"
+msgstr "Doppelt zählt er nur in der Wolfsparität. Bei „kein Wolf lebt mehr“ und bei Bedingungen, die Personen zählen (Manipulator: genau drei Lebende), zählt er einmal. Der Waldläufer zählt ihn einmal. Ein Lehrling, der ihn erbt, zählt sofort doppelt. Das Orakel sieht „Werwolf“."
+
+msgid "ui.role.siegreicher_wolf.lex.win"
+msgstr "Wolfssieg mit dem doppelten Gewicht."
+
+msgid "ui.role.siegreicher_wolf.lex.example"
+msgstr "Emil (Siegreicher Wolf), Clara und David leben. Wölfe 2, andere 2. Die Wölfe sind Siegkandidat.\nEmil lebt mit Anna, Ben und Clara. Wölfe 2, andere 3. Noch kein Wolfssieg."
+
+msgid "ui.role.siegreicher_wolf.lex.gm"
+msgstr "Die Sonderzählung erscheint in deiner Siegprüfung, nicht öffentlich."
+
+msgid "ui.role.besessener_wolf.lex.night"
+msgstr "kein eigener, Todesreaktion"
+
+msgid "ui.role.besessener_wolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.besessener_wolf.lex.ability"
+msgstr "Wolf im Rudel, reißt bei seinem Tod eine Person mit."
+
+msgid "ui.role.besessener_wolf.lex.timing"
+msgstr "Einmal je Leben, freiwillig. Nach einem Tod am Tag sofort, nachts in der Morgenauflösung. Voraussetzung: Unmittelbar vor seinem Tod leben mindestens 5 Personen, er eingeschlossen."
+
+msgid "ui.role.besessener_wolf.lex.targets"
+msgstr "Eine andere lebende Person, auch ein Wolf, oder Verzicht."
+
+msgid "ui.role.besessener_wolf.lex.exceptions"
+msgstr "Leben unmittelbar vor seinem Tod weniger als 5 Personen (er eingeschlossen), gibt es keine Reaktion."
+
+msgid "ui.role.besessener_wolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.besessener_wolf.lex.example"
+msgstr "Sechs Personen leben. Fritz, der Besessene Wolf, wird hingerichtet und nimmt Ben mit. Ben stirbt sofort.\nNur vier Personen leben. Fritz stirbt ohne Mitnahme."
+
+msgid "ui.role.besessener_wolf.lex.gm"
+msgstr "Die Wahl der Mitnahme triffst du am Tablet. Die Mitnahme ist ein Todeseffekt und wird öffentlich angesagt, mit Rolle und Ziel. Bei Verzicht gibt es keine Ansage."
+
+msgid "ui.role.blutwolf.lex.night"
+msgstr "kein eigener, Teil des Rudels"
+
+msgid "ui.role.blutwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.blutwolf.lex.ability"
+msgstr "Wolf im Rudel, Stimme +1 je totem direkten Nachbarn."
+
+msgid "ui.role.blutwolf.lex.timing"
+msgstr "Bei jeder Abstimmung, solange er lebt."
+
+msgid "ui.role.blutwolf.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.blutwolf.lex.exceptions"
+msgstr "Stimmen werden nicht digital gezählt. Die Spielleiteransicht zeigt nur den Hinweis „+1 Stimme je direkt benachbartem toten Platz“. Du zählst selbst."
+
+msgid "ui.role.blutwolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.blutwolf.lex.example"
+msgstr "Beide Nachbarplätze des Blutwolfs Emil sind tot. Der Hinweis lautet „+2 Stimmen“.\nBeide Nachbarn leben. Es gibt keinen Hinweis."
+
+msgid "ui.role.blutwolf.lex.gm"
+msgstr "Der Hinweis ist nur für dich sichtbar und rechnet nichts ab. Er erscheint nur, solange der Blutwolf lebt."
+
+msgid "ui.role.seuchenwolf.lex.night"
+msgstr "kein eigener, Teil des Rudels"
+
+msgid "ui.role.seuchenwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.seuchenwolf.lex.ability"
+msgstr "Wolf im Rudel. Nach seinem Tod durchdringt der nächste Rudelangriff jeden Schutz."
+
+msgid "ui.role.seuchenwolf.lex.timing"
+msgstr "Nach dem Tod des Seuchenwolfs wirkt der nächste tatsächliche Rudelangriff durchdringend und verbraucht die Wirkung, gleich ob ein Schutz bestand. Eine Nacht ohne Rudelopfer verbraucht nichts. Mehrere tote Seuchenwölfe stapeln nicht."
+
+msgid "ui.role.seuchenwolf.lex.targets"
+msgstr "Das nächste Rudelopfer."
+
+msgid "ui.role.seuchenwolf.lex.exceptions"
+msgstr "Durchdrungen werden Schutzengel, Waldhexenrettung, Dorfwache, die Rettung des Weisen und das Schild des Schutzgeists. Nicht durchdrungen werden die Waffe des Dorfschmieds, persönliche Schilde der Einzelsiegrollen, Umlenkungen und Ersatzopfer."
+
+msgid "ui.role.seuchenwolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.seuchenwolf.lex.example"
+msgstr "Emil, der Seuchenwolf, wird hingerichtet. In der nächsten Nacht schützt der Schutzengel Ben, das Rudel wählt Ben. Ben stirbt trotzdem.\nZwei Seuchenwölfe sind tot. Nur der nächste Rudelangriff durchdringt, der übernächste nicht."
+
+msgid "ui.role.seuchenwolf.lex.gm"
+msgstr "Den Effekt siehst nur du. Am Morgen ist öffentlich kein Hinweis auf Schutz oder Durchdringung erlaubt."
+
+msgid "ui.role.rudelvater.lex.night"
+msgstr "Rudel, nach seiner Hinrichtung zusätzlicher Rudelschritt"
+
+msgid "ui.role.rudelvater.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.rudelvater.lex.ability"
+msgstr "Wolf im Rudel, überlebt einmal. Nach seiner Hinrichtung gibt es ein zusätzliches Opfer."
+
+msgid "ui.role.rudelvater.lex.timing"
+msgstr "Einmal je Leben überlebt er den ersten Tod, der weder Rudelangriff noch Hinrichtung ist. Wird er hingerichtet, gibt es in der folgenden Nacht direkt nach dem Rudel einen zweiten Rudelschritt."
+
+msgid "ui.role.rudelvater.lex.targets"
+msgstr "Das zusätzliche Rudelopfer wählt das Rudel wie das erste."
+
+msgid "ui.role.rudelvater.lex.exceptions"
+msgstr "Das zusätzliche Opfer stirbt am Morgen und durchdringt Schutz. Spielleitertötungen sind immer wirksam. Ein Nekromant kann das Zusatzopfer umlenken."
+
+msgid "ui.role.rudelvater.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.rudelvater.lex.example"
+msgstr "Die Waldhexe vergiftet Emil, den Rudelvater. Es ist sein erster solcher Tod, er überlebt.\nEmil wird an Tag 3 hingerichtet. In Nacht 4 wählt das Rudel zuerst Ben, dann in einem zweiten Schritt Clara. Ein Schutz kann Ben retten. Clara stirbt am Morgen trotz Schutzengel oder Rettung, weil das Zusatzopfer Schutz durchdringt."
+
+msgid "ui.role.rudelvater.lex.gm"
+msgstr "Der zweite Rudelschritt kommt nur nach einer Hinrichtung. Ein Zeitwächter-Einfrieren hebt ihn auf."
+
+msgid "ui.role.fenrir.lex.night"
+msgstr "kein eigener, Teil des Rudels"
+
+msgid "ui.role.fenrir.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.fenrir.lex.ability"
+msgstr "Wolf im Rudel, wird jede Nacht stärker und überlebt ab Stufe 3 einmal."
+
+msgid "ui.role.fenrir.lex.timing"
+msgstr "Stufe +1 in jeder Morgenauflösung, in der er lebt. Ab Stufe 3 überlebt er einmal jeden Tod."
+
+msgid "ui.role.fenrir.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.fenrir.lex.exceptions"
+msgstr "Ausgenommen sind Spielleiterkorrekturen. Auch Hinrichtung und Ritter werden überlebt. Eine Wiederbelebung setzt Stufe und Schutz zurück. Eine eingefrorene Nacht lässt Fenrir nicht wachsen."
+
+msgid "ui.role.fenrir.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.fenrir.lex.example"
+msgstr "Nach drei Morgen hat Fenrir Stufe 3. An Tag 3 wird Fenrir hingerichtet und überlebt einmal.\nAn Tag 2 hat Fenrir erst Stufe 2. Die Hinrichtung tötet Fenrir normal."
+
+msgid "ui.role.fenrir.lex.gm"
+msgstr "Die Stufe steht nur in deiner Ansicht. Ein überlebter Tod wird öffentlich nicht als solcher benannt."
+
+msgid "ui.role.cerberus.lex.night"
+msgstr "kein eigener, Teil des Rudels"
+
+msgid "ui.role.cerberus.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.cerberus.lex.ability"
+msgstr "Wolf im Rudel, sammelt Köpfe und wehrt mit drei eine Hinrichtung ab."
+
+msgid "ui.role.cerberus.lex.timing"
+msgstr "+1 Kopf in jeder Morgenauflösung, in der er lebt, höchstens 3. Hat er bei der Hinrichtung 3 Köpfe, fragt die App den Spielleiter „abwehren?“."
+
+msgid "ui.role.cerberus.lex.targets"
+msgstr "Nur Hinrichtungen."
+
+msgid "ui.role.cerberus.lex.exceptions"
+msgstr "Bei „Ja“ überlebt er, die Köpfe fallen auf 0, und die Hinrichtung des Tages gilt als erfolgt. Der Kopfgeldjäger zählt die Abwehr nicht als Hinrichtung eines Wolfs. Der Henker zählt sie als Hinrichtung."
+
+msgid "ui.role.cerberus.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.cerberus.lex.example"
+msgstr "Cerberus hat drei Köpfe und wird hingerichtet. Der Spielleiter antwortet „Ja“. Cerberus überlebt, die Köpfe sind 0.\nCerberus hat erst zwei Köpfe. Die Hinrichtung tötet Cerberus normal."
+
+msgid "ui.role.cerberus.lex.gm"
+msgstr "Die Frage „abwehren?“ erscheint nur dir."
+
+msgid "ui.role.schattenhund.lex.night"
+msgstr "jede Nacht bis zur Nutzung, freiwillig, vor allen Dorfrollen"
+
+msgid "ui.role.schattenhund.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.schattenhund.lex.ability"
+msgstr "Wolf im Rudel, blockiert einmal alle Dorf-Fähigkeiten einer Nacht."
+
+msgid "ui.role.schattenhund.lex.timing"
+msgstr "Einmal je Leben. Jede Nacht, auch Nacht 1, kommt die Frage „jetzt blockieren?“, bis er es genutzt hat. Die Blockade gilt für die ganze Nacht."
+
+msgid "ui.role.schattenhund.lex.targets"
+msgstr "Keine Wahl, alle Nachtschritte von Dorfrollen dieser Nacht."
+
+msgid "ui.role.schattenhund.lex.exceptions"
+msgstr "Die Blockade lässt nur aktive Nachtschritte von Dorfrollen entfallen (protokolliert). Todesreaktionen und passive Fähigkeiten wirken weiter. Wölfe und Einzelsieg sind nicht betroffen. Der Schattenhund handelt ganz am Anfang der Nacht, nach dem Zeitwächter."
+
+msgid "ui.role.schattenhund.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.schattenhund.lex.example"
+msgstr "In Nacht 2 blockiert der Schattenhund. Orakel, Waldhexe und Doktor handeln in dieser Nacht nicht.\nIn Nacht 1 verzichtet der Schattenhund. In Nacht 2 wird er erneut gefragt."
+
+msgid "ui.role.schattenhund.lex.gm"
+msgstr "Die Schritte entfallen protokolliert. Blockierte Rollen werden trotzdem aufgerufen, damit der Tisch nichts erfährt."
+
+msgid "ui.role.albtraumwolf.lex.night"
+msgstr "jede Nacht, freiwillig, vor allen Dorfrollen"
+
+msgid "ui.role.albtraumwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.albtraumwolf.lex.ability"
+msgstr "Wolf im Rudel, blockiert jede Nacht die Fähigkeit einer Person."
+
+msgid "ui.role.albtraumwolf.lex.timing"
+msgstr "Jede Nacht freiwillig, unbegrenzt oft."
+
+msgid "ui.role.albtraumwolf.lex.targets"
+msgstr "Eine lebende Person, auch dieselbe wie in der Vornacht, oder Verzicht."
+
+msgid "ui.role.albtraumwolf.lex.exceptions"
+msgstr "Die Wirkung trifft nur die Nachtschritte dieser Person, wenn sie Dorfrolle ist (protokolliert). Todesreaktionen und passive Fähigkeiten laufen weiter. Er handelt am Anfang der Nacht vor allen Dorfrollen."
+
+msgid "ui.role.albtraumwolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.albtraumwolf.lex.example"
+msgstr "Der Albtraumwolf blockiert Ben, das Orakel. Ben handelt in dieser Nacht nicht.\nDer Albtraumwolf blockiert Emil, einen Wolf. Es passiert nichts, denn nur Dorfrollen werden blockiert."
+
+msgid "ui.role.albtraumwolf.lex.gm"
+msgstr "Blockierte Personen werden trotzdem aufgerufen, damit der Tisch nichts erfährt. Angesammelte Listen bleiben bei einer Blockade erhalten (zum Beispiel beim Kopfgeldjäger)."
+
+msgid "ui.role.giftwolf.lex.night"
+msgstr "jede Nacht, freiwillig, nach dem Rudel"
+
+msgid "ui.role.giftwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.giftwolf.lex.ability"
+msgstr "Wolf im Rudel, vergiftet zweimal. Das Ziel stirbt zwei Nächte später."
+
+msgid "ui.role.giftwolf.lex.timing"
+msgstr "Zwei Giftpranken je Leben, höchstens eine pro Nacht, freiwillig. Vergiftet in Nacht N, stirbt die Person in der Morgenauflösung nach Nacht N+2."
+
+msgid "ui.role.giftwolf.lex.targets"
+msgstr "Eine lebende Person."
+
+msgid "ui.role.giftwolf.lex.exceptions"
+msgstr "Das Ziel erhält sofort eine private Mitteilung. Das Gift ist unaufhaltbar, nur der frühere Tod des Ziels beendet es. Die Dorfwache stirbt daran. Ein Zeitwächter-Einfrieren verschiebt es nicht."
+
+msgid "ui.role.giftwolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.giftwolf.lex.example"
+msgstr "In Nacht 2 vergiftet der Giftwolf Clara. Clara sieht sofort eine private Mitteilung. Am Morgen nach Nacht 4 stirbt Clara.\nClara wird an Tag 3 hingerichtet. Das Gift endet damit, es gibt keinen zweiten Tod."
+
+msgid "ui.role.giftwolf.lex.gm"
+msgstr "Öffentlich erscheint nur der Tod, nie das Gift. Die zweite Pranke ist erst wieder in einer späteren Nacht möglich."
+
+msgid "ui.role.schwarze_witwe.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.schwarze_witwe.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.schwarze_witwe.lex.ability"
+msgstr "Wolf im Rudel. Trifft sie ein Paar des Loki, sterben beide am Morgen."
+
+msgid "ui.role.schwarze_witwe.lex.timing"
+msgstr "Jede Nacht, unbegrenzt oft."
+
+msgid "ui.role.schwarze_witwe.lex.targets"
+msgstr "Eine andere lebende Person."
+
+msgid "ui.role.schwarze_witwe.lex.exceptions"
+msgstr "Wirkt nur, wenn die Person zu einem lebenden Liebes- oder Rivalenpaar gehört und der Partner lebt. Beide erhalten eine Todesmarkierung, sterben in der Morgenauflösung (Ursache Schwarze Witwe) und wachen in dieser Nacht nicht mehr auf. Ein Zeitwächter-Einfrieren hebt die Nacht auf."
+
+msgid "ui.role.schwarze_witwe.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.schwarze_witwe.lex.example"
+msgstr "Loki hat Anna und Ben als Rivalen verbunden. Die Witwe wählt Anna. Anna und Ben sterben am Morgen.\nDie Witwe wählt Clara, die zu keinem Paar gehört. Es passiert nichts."
+
+msgid "ui.role.schwarze_witwe.lex.gm"
+msgstr "Ob eine Partie mit Schwarzer Witwe zwingend einen Loki enthält, ist als Setup-Prüfung vertagt. Ohne Loki hat sie keine Wirkung."
+
+msgid "ui.role.schwarze_witwe.lex.open"
+msgstr "Ob eine Partie mit Schwarzer Witwe zwingend einen Loki enthalten muss, ist als Setup-Prüfung vertagt."
+
+msgid "ui.role.schattenwanderer.lex.night"
+msgstr "jede Nacht bis zur Nutzung"
+
+msgid "ui.role.schattenwanderer.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.schattenwanderer.lex.ability"
+msgstr "Wolf im Rudel, verknüpft sich einmal. Dann stirbt statt eines von beiden der andere."
+
+msgid "ui.role.schattenwanderer.lex.timing"
+msgstr "Einmal je Leben, jede Nacht bis zur Nutzung."
+
+msgid "ui.role.schattenwanderer.lex.targets"
+msgstr "Eine andere lebende Person."
+
+msgid "ui.role.schattenwanderer.lex.exceptions"
+msgstr "Stirbt einer von beiden tatsächlich, nach allen Schutzwirkungen und persönlichen Schilden, stirbt stattdessen der andere mit der ursprünglichen Ursache und Quelle. Danach ist die Verknüpfung verbraucht. Spielleiterkorrekturen werden nicht umgelenkt. Umlenkungsketten treffen nie dieselbe Person zweimal."
+
+msgid "ui.role.schattenwanderer.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.schattenwanderer.lex.example"
+msgstr "Der Schattenwanderer Emil verknüpft sich mit Ben. Emil wird an Tag 4 hingerichtet. Stattdessen stirbt Ben, Emil lebt, die Verknüpfung ist verbraucht.\nDer Schutzengel schützt Ben vor dem Rudelangriff. Es stirbt niemand, also greift die Verknüpfung nicht."
+
+msgid "ui.role.schattenwanderer.lex.gm"
+msgstr "Die Verknüpfung siehst nur du. Wird ein Tod umgelenkt, ist das ein Todeseffekt und wird öffentlich angesagt. Die Ansage nennt den Schattenwanderer als Rolle, von der die Verknüpfung stammt, nie die Rolle der sterbenden Person."
+
+msgid "ui.role.daemonischer_wolf.lex.night"
+msgstr "kein eigener, Todesreaktion"
+
+msgid "ui.role.daemonischer_wolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.daemonischer_wolf.lex.ability"
+msgstr "Wolf im Rudel. Bei seinem Tod verflucht er jemanden, der dem Orakel als Werwolf erscheint."
+
+msgid "ui.role.daemonischer_wolf.lex.timing"
+msgstr "Todesreaktion bei jedem Tod mit Todesfolgen, einmal je Leben, freiwillig. Am Tag sofort, nachts in der Morgenauflösung."
+
+msgid "ui.role.daemonischer_wolf.lex.targets"
+msgstr "Eine andere lebende Person, auch ein Wolf, oder Verzicht."
+
+msgid "ui.role.daemonischer_wolf.lex.exceptions"
+msgstr "Nur Rollenauskünfte (Orakel) zeigen die verfluchte Person als Werwolf. Zählungen, Ja/Nein-Prüfungen, Wirkungen und Siege bleiben wahr. Der Fluch bleibt, bis die Person ihre Rolle wechselt (Erbe, Tausch, Lykaon, Korrektur). Eine Wiederbelebung löscht ihn nicht."
+
+msgid "ui.role.daemonischer_wolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.daemonischer_wolf.lex.example"
+msgstr "Der Dämonische Wolf Fritz wird hingerichtet und verflucht Ben. Das Orakel prüft später Ben und sieht „Werwolf“.\nDie Kriegerin des Lichts prüft Ben. Sie erfährt „kein Wolf“, weil die wahre Zählung gilt, und stirbt am Morgen."
+
+msgid "ui.role.daemonischer_wolf.lex.gm"
+msgstr "Der Fluch ist dir und dem Dämonischen Wolf bekannt, der ihn wählt. Die verfluchte Person erfährt nichts, und öffentlich wird der Fluch nicht angesagt."
+
+msgid "ui.role.koenig_lykaon.lex.night"
+msgstr "jede Nacht bis zur Nutzung"
+
+msgid "ui.role.koenig_lykaon.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.koenig_lykaon.lex.ability"
+msgstr "Wolf im Rudel. Macht mit einem Verbündeten einen Dorfbewohner zum Trugbilderwolf."
+
+msgid "ui.role.koenig_lykaon.lex.timing"
+msgstr "Einmal je Leben. Ab Nacht 1 wird er jede Nacht gefragt, bis er verwandelt hat. Er darf höchstens dreimal verzichten, bei der vierten Gelegenheit muss er wählen. Eine Nacht, in der sein Schritt mangels lebenden Verbündeten entfällt, zählt nicht."
+
+msgid "ui.role.koenig_lykaon.lex.targets"
+msgstr "Voraussetzung: ein anderer Wolf lebt. Er nennt einen verbündeten lebenden Wolf (wird protokolliert) und wählt eine lebende Person der Fraktion Dorf."
+
+msgid "ui.role.koenig_lykaon.lex.exceptions"
+msgstr "Die Person wird Trugbilderwolf mit ihrer alten Rolle als Scheinrolle und wacht ab der folgenden Nacht mit dem Rudel auf. Ein lebender Wächter am Tor macht sie stattdessen zum Dorfbewohner. Einzelsiegpersonen sind kein Ziel."
+
+msgid "ui.role.koenig_lykaon.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.koenig_lykaon.lex.example"
+msgstr "In Nacht 2 nennt König Lykaon den Verbündeten Emil und wählt Ben (Waldhexe). Ben wird Trugbilderwolf mit der Scheinrolle „Waldhexe“ und wacht ab Nacht 3 mit dem Rudel auf.\nKönig Lykaon verzichtet in drei Nächten. In der vierten Gelegenheit muss er wählen."
+
+msgid "ui.role.koenig_lykaon.lex.gm"
+msgstr "Der Tisch erfährt nichts von der Umwandlung. Die betroffene Person erhält eine private Mitteilung über ihre neue Rolle und wacht ab der folgenden Nacht mit dem Rudel auf, wo auch der Verbündete sie sieht."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.night"
+msgstr "Rudel, zusätzlich in den Nächten 3, 6, 9 ..."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.rachsuechtiger_wolf.lex.ability"
+msgstr "Wacht mit dem Rudel und in jeder dritten Nacht zusätzlich auf, um einen anderen Wolf zu reißen."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.timing"
+msgstr "In den festen Nächten 3, 6, 9 ..., freiwillig. Die erste Nutzung ist in Nacht 3."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.targets"
+msgstr "Eine andere lebende Person, die als Wolf zählt."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.exceptions"
+msgstr "Der Tod kommt am Morgen mit eigener Ursache, es ist kein Rudelangriff: Der Schutzengel wirkt nicht, persönliche Schilde schon. Er zählt als Wolf für Parität und Dorfsieg. Ist er beim Wolfssieg der einzige lebende Wolf, wird statt des Wolfssiegs sein Alleinsieg vorgeschlagen. Leben andere Wölfe, gewinnen die Werwölfe ohne ihn. Leben nur noch Rachsüchtige Wölfe (zwei oder mehr), gewinnt noch niemand, jeder will allein gewinnen."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.win"
+msgstr "Wolfssieg als Teil des Rudels, oder Alleinsieg als einziger lebender Wolf."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.example"
+msgstr "In Nacht 3 wählt der Rachsüchtige Wolf Emil den Wolf Fritz. Fritz stirbt am Morgen.\nEmil ist der letzte lebende Wolf, und die Zahl der Wölfe erreicht die der übrigen. Statt des Wolfssiegs wird Emils Alleinsieg vorgeschlagen."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.gm"
+msgstr "Der zusätzliche Aufruf kommt nur in den Nächten 3, 6, 9 ... und ohne Angabe des Grundes."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.open"
+msgstr "Rhythmus der Nächte, Angriff und das Verhalten mehrerer Rachsüchtiger Wölfe sind technisch abgeleitet und noch nicht bestätigt."
+
+msgid "ui.role.schicksalswolf.lex.night"
+msgstr "Nacht 1 (Markierung) und Nacht 4 (Zusatzopfer)"
+
+msgid "ui.role.schicksalswolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.schicksalswolf.lex.ability"
+msgstr "Markiert in Nacht 1 drei Personen. Für jede markierte Person unter den ersten drei Toten reißt er in Nacht 4 ein zusätzliches Opfer."
+
+msgid "ui.role.schicksalswolf.lex.timing"
+msgstr "Nur in Nacht 1 markieren und nur in Nacht 4 die Zusatzopfer wählen, danach verfällt die Fähigkeit."
+
+msgid "ui.role.schicksalswolf.lex.targets"
+msgstr "Nacht 1: genau drei andere lebende Personen, auch Wölfe. Nacht 4: bis zu so viele Zusatzopfer, wie Markierte unter den ersten drei Toten der Partie sind, Verzicht möglich."
+
+msgid "ui.role.schicksalswolf.lex.exceptions"
+msgstr "Die ersten drei Toten sind die ersten drei verschiedenen Personen der Partie, die sterben, jede Ursache, auch vor der Markierung. Wiederbelebte belegen keinen zweiten Platz. Zusatzopfer sind Rudelangriffe am Morgen: Schutz wirkt, sie durchdringen nicht, der Ritter schlägt zurück, der Nekromant darf umlenken. Märtyrerin und Verdammniswächter betreffen nur das erste Rudelopfer. Die Markierungen erlöschen mit seinem Tod oder Rollenverlust."
+
+msgid "ui.role.schicksalswolf.lex.win"
+msgstr "Wolfssieg wie beim Werwolf."
+
+msgid "ui.role.schicksalswolf.lex.example"
+msgstr "In Nacht 1 markiert der Schicksalswolf Anna, Ben und Clara. Die ersten drei Toten sind Anna, Emil und Ben. Zwei Markierte sind darunter, also darf er in Nacht 4 bis zu zwei zusätzliche Opfer wählen.\nKeine der drei markierten Personen gehört zu den ersten drei Toten. In Nacht 4 gibt es kein Zusatzopfer."
+
+msgid "ui.role.schicksalswolf.lex.gm"
+msgstr "Die Rolle handelt nur in den Nächten 1 und 4. Ist unter den ersten drei Toten keine markierte Person, gibt es in Nacht 4 nichts zu wählen."
+
+msgid "ui.role.schicksalswolf.lex.open"
+msgstr "Zeitfenster, Zählung der ersten drei Toten, Zusatzopfer und Auswahl sind technisch abgeleitet und noch nicht bestätigt."
+
+msgid "ui.role.manipulator.lex.night"
+msgstr "keiner"
+
+msgid "ui.role.manipulator.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.manipulator.lex.ability"
+msgstr "Gewinnt allein bei genau drei Lebenden, stirbt bei Nominierung."
+
+msgid "ui.role.manipulator.lex.timing"
+msgstr "Bei jeder Nominierung, unbegrenzt oft. Der Sieg wird geprüft, sobald genau drei Personen leben."
+
+msgid "ui.role.manipulator.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.manipulator.lex.exceptions"
+msgstr "Wird er nominiert, wird zuerst die Nominierung gespeichert, dann stirbt er sofort (Quelle: die nominierende Person). Der Tag bleibt aktiv. „Jemals nominiert“ ist ein dauerhafter Status, den auch Wiederbelebung und Rollenwechsel nicht ändern. Mehrere Manipulatoren sind getrennte Siegkandidaten. Eine Hinrichtung per Korrektur ohne Nominierung löst keinen Manipulator-Tod aus."
+
+msgid "ui.role.manipulator.lex.win"
+msgstr "Er gewinnt allein, wenn genau drei Personen leben, er lebt und nie nominiert wurde."
+
+msgid "ui.role.manipulator.lex.example"
+msgstr "Anna, Ben (Manipulator) und Clara leben. Ben wurde nie nominiert. Der Manipulator-Sieg ist Kandidat.\nAn Tag 2 nominiert Anna den Ben. Ben stirbt sofort, die Beratung geht weiter."
+
+msgid "ui.role.manipulator.lex.gm"
+msgstr "Trifft der Manipulator-Sieg mit Wolfssieg oder Dorfsieg zusammen, entscheidest du. Den Tod bei Nominierung nennst du öffentlich nicht als Rollenwirkung; der Tisch sieht aber, dass die nominierte Person sofort stirbt."
+
+msgid "ui.role.doppelspion.lex.night"
+msgstr "keiner eigener, wacht mit dem Rudel nur als Ansage"
+
+msgid "ui.role.doppelspion.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.doppelspion.lex.ability"
+msgstr "Wacht mit dem Rudel, gewinnt allein, wenn er lebt und kein Wolf mehr lebt."
+
+msgid "ui.role.doppelspion.lex.timing"
+msgstr "Er wacht in jedem Rudelschritt mit. Der Sieg wird bei jeder Siegprüfung geprüft."
+
+msgid "ui.role.doppelspion.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.doppelspion.lex.exceptions"
+msgstr "Der Spielleiter nennt den Wölfen keine Rolle, sie sehen eine weitere wache Person. Er zählt als Nicht-Wolf in der Parität. Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, wird nur sein Sieg (je Person) vorgeschlagen, nicht der Dorfsieg. Ablehnen und Sieger erklären bleiben möglich."
+
+msgid "ui.role.doppelspion.lex.win"
+msgstr "Allein, wenn er lebt und kein Wolf mehr lebt. Ist er tot, wenn der letzte Wolf stirbt, gewinnt das Dorf."
+
+msgid "ui.role.doppelspion.lex.example"
+msgstr "Der letzte Wolf wird hingerichtet, der Doppelspion Ben lebt. Vorgeschlagen wird Bens Alleinsieg, nicht der Dorfsieg.\nBen ist bereits tot, wenn der letzte Wolf stirbt. Das Dorf gewinnt."
+
+msgid "ui.role.doppelspion.lex.gm"
+msgstr "Weck den Doppelspion zusammen mit dem Rudel auf, ohne seine Rolle zu nennen. Die Wölfe halten ihn vielleicht für einen der Ihren."
+
+msgid "ui.role.selbstmoerder.lex.night"
+msgstr "keiner"
+
+msgid "ui.role.selbstmoerder.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.selbstmoerder.lex.ability"
+msgstr "Gewinnt, wenn er hingerichtet wird, während mindestens fünf Personen tot sind."
+
+msgid "ui.role.selbstmoerder.lex.timing"
+msgstr "Bei seiner Hinrichtung, auch bei einer Hinrichtung per Spielleiterkorrektur."
+
+msgid "ui.role.selbstmoerder.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.selbstmoerder.lex.exceptions"
+msgstr "Gezählt werden die Toten vor seiner Hinrichtung, nur Personen, die dann tot sind (Wiederbelebte zählen nicht). Ist der Sieg erfüllt, wird er fortan bei jeder Prüfung vorgeschlagen, auch nach einer Ablehnung und nach einer Wiederbelebung. Nur die Hinrichtung des Selbstmörders zählt, ein zusätzlicher Tod durch den Henker nicht."
+
+msgid "ui.role.selbstmoerder.lex.win"
+msgstr "Erfüllt bei einer Hinrichtung mit mindestens 5 aktuell Toten."
+
+msgid "ui.role.selbstmoerder.lex.example"
+msgstr "Fünf Personen sind tot. Ben, der Selbstmörder, wird hingerichtet. Sein Sieg ist erfüllt.\nErst vier Personen sind tot. Die Hinrichtung von Ben erfüllt den Sieg nicht."
+
+msgid "ui.role.selbstmoerder.lex.gm"
+msgstr "Entschieden ist ein öffentlicher Ton, sobald die fünfte Person tot ist, nur wenn ein Selbstmörder in der Partie ist. Er legt offen, dass die Rolle in der Partie ist, nicht wer sie hat (gewählte Ausnahme zur Geheimhaltung). Öffentlich wird der Sieg erst nach deiner Bestätigung verkündet."
+
+msgid "ui.role.selbstmoerder.lex.open"
+msgstr "Der Ton ist in der App noch nicht umgesetzt. Nicht geklärt ist, ob „in der Partie“ die Rolle zu Spielbeginn oder eine lebende Person mit dieser Rolle meint."
+
+msgid "ui.role.parasit.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.parasit.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.parasit.lex.ability"
+msgstr "Heftet sich an einen Wirt, stirbt nur mit ihm. Gewinnt unter den letzten drei."
+
+msgid "ui.role.parasit.lex.timing"
+msgstr "Jede Nacht darf er einen neuen Wirt wählen oder beim alten bleiben."
+
+msgid "ui.role.parasit.lex.targets"
+msgstr "Eine andere lebende Person als Wirt."
+
+msgid "ui.role.parasit.lex.exceptions"
+msgstr "Mit lebendem Wirt überlebt er jede Todesursache. Nur der Tod des Wirts tötet ihn. Ohne lebenden Wirt ist er normal verwundbar. Spielleiterkorrekturen bleiben möglich. Eine durch Tod beendete Bindung bleibt nach einer Wiederbelebung beendet. Der Apfel wirkt für ihn nicht."
+
+msgid "ui.role.parasit.lex.win"
+msgstr "Er gewinnt, wenn höchstens drei Personen leben und er darunter ist, egal ob Wolf oder Dorf. Andere gleichzeitige Siege werden mit vorgeschlagen."
+
+msgid "ui.role.parasit.lex.example"
+msgstr "Der Parasit hat Ben als Wirt. Das Rudel wählt den Parasiten, er überlebt. Stirbt Ben, stirbt der Parasit im selben Moment mit.\nDrei Personen leben, der Parasit ist darunter. Sein Sieg ist Kandidat."
+
+msgid "ui.role.parasit.lex.gm"
+msgstr "Wer der Wirt ist, weißt du und der Parasit. Eine überlebte Hinrichtung des Parasiten zählt für den Henker trotzdem als Hinrichtung."
+
+msgid "ui.role.rattenfaenger.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.rattenfaenger.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.rattenfaenger.lex.ability"
+msgstr "Verzaubert jede Nacht ein oder zwei Personen. Sind alle anderen verzaubert, gewinnt er."
+
+msgid "ui.role.rattenfaenger.lex.timing"
+msgstr "Jede Nacht, solange er lebt. Die Verzauberung bleibt dauerhaft."
+
+msgid "ui.role.rattenfaenger.lex.targets"
+msgstr "Ein oder zwei andere lebende, noch unverzauberte Personen."
+
+msgid "ui.role.rattenfaenger.lex.exceptions"
+msgstr "Eine Voodoo-Puppe hebt eine Verzauberung nicht auf. Der Apfel von Rotkäppchen verdoppelt den Schritt."
+
+msgid "ui.role.rattenfaenger.lex.win"
+msgstr "Er gewinnt allein, wenn er lebt und alle anderen Lebenden verzaubert sind, bei jeder Siegprüfung, auch nach einem Tod."
+
+msgid "ui.role.rattenfaenger.lex.example"
+msgstr "Nacht 1: Anna und Ben werden verzaubert. Nacht 2: Clara. Nacht 3: David. Sind alle Lebenden außer dem Rattenfänger verzaubert, ist sein Sieg erfüllt.\nDie einzige noch unverzauberte Person Emil wird hingerichtet. Nach dem Tod erfüllt sich der Sieg des Rattenfängers."
+
+msgid "ui.role.rattenfaenger.lex.gm"
+msgstr "Wer verzaubert ist, siehst du. Auf den Schritt folgen zwei Phasen: Zuerst öffnen die neu Verzauberten kurz die Augen und erfahren ihren Status, danach „Alle Verzauberten“: Alle Verzauberten öffnen die Augen und erkennen einander. Ob sie es im Dorf teilen, entscheiden sie selbst. Die Phase „Alle Verzauberten“ folgt auf jeden Aufruf des Rattenfängers, auch auf einen reinen Tarnaufruf, solange es Verzauberte gibt, damit der Tisch nicht erfährt, ob in dieser Nacht verzaubert wurde."
+
+msgid "ui.role.rattenfaenger.lex.open"
+msgstr "Die App zeigt die Phase „Alle Verzauberten“ bisher nur in Nächten mit neuer Verzauberung. Bis zur Umsetzung rufst du sie in den übrigen Nächten nach dem Aufruf des Rattenfängers selbst auf, solange es lebende Verzauberte gibt."
+
+msgid "ui.role.pestbringerin.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.pestbringerin.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.pestbringerin.lex.ability"
+msgstr "Infiziert jede Nacht jemanden. Die Seuche springt auf Nachbarn über. Alle anderen krank: Sieg."
+
+msgid "ui.role.pestbringerin.lex.timing"
+msgstr "Jede Nacht ein Ziel. Zu Beginn jeder Morgenauflösung steckt jede lebende infizierte Person einen nächsten lebenden Nachbarn an."
+
+msgid "ui.role.pestbringerin.lex.targets"
+msgstr "Eine andere lebende, noch gesunde Person. Der Nachbar wird zufällig über den gespeicherten Seed gezogen, tote Plätze werden übersprungen."
+
+msgid "ui.role.pestbringerin.lex.exceptions"
+msgstr "Die Seuche ist nicht tödlich. Der Apfel von Rotkäppchen verdoppelt den Schritt. Ein Zeitwächter-Einfrieren lässt die Ausbreitung trotzdem eintreten."
+
+msgid "ui.role.pestbringerin.lex.win"
+msgstr "Sie gewinnt allein, wenn sie lebt und alle anderen Lebenden infiziert sind."
+
+msgid "ui.role.pestbringerin.lex.example"
+msgstr "Nacht 1: Die Pestbringerin infiziert Ben. Zu Beginn des Morgens steckt Ben einen seiner beiden lebenden Nachbarn an, gezogen per Seed.\nSind alle anderen Lebenden infiziert, ist ihr Sieg erfüllt."
+
+msgid "ui.role.pestbringerin.lex.gm"
+msgstr "Der Zufall gehört dem gespeicherten Seed, nicht deiner Wahl. Jede neu infizierte Person, auch durch die Ausbreitung am Morgen, erhält einen privaten Hinweis, dass sie infiziert ist und was mit ihr und ihren Nachbarn geschieht, wenn sie am Leben bleibt. Ob sie es im Dorf teilt, entscheidet sie selbst."
+
+msgid "ui.role.todesprediger.lex.night"
+msgstr "nur Nacht 1"
+
+msgid "ui.role.todesprediger.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.todesprediger.lex.ability"
+msgstr "Sagt in der ersten Nacht geheim seinen Todeszeitpunkt voraus. Trifft er, gewinnt er."
+
+msgid "ui.role.todesprediger.lex.timing"
+msgstr "Nur in Nacht 1, geheim beim Spielleiter. Wer in Nacht 1 nicht handelt oder die Rolle später erhält, hat die Fähigkeit nicht mehr."
+
+msgid "ui.role.todesprediger.lex.targets"
+msgstr "Eine künftige Nacht oder ein Tag. Tag N folgt auf Nacht N. Tode aus der Morgenauflösung zählen zur Nacht N."
+
+msgid "ui.role.todesprediger.lex.exceptions"
+msgstr "Es zählt jede Todesart außer einer Korrektur ohne Todesfolgen. Ist der Sieg erfüllt, wird er wie beim Selbstmörder fortan vorgeschlagen."
+
+msgid "ui.role.todesprediger.lex.win"
+msgstr "Erfüllt, wenn er genau zum vorhergesagten Zeitpunkt stirbt."
+
+msgid "ui.role.todesprediger.lex.example"
+msgstr "Ben sagt Nacht 3 voraus. In der Morgenauflösung nach Nacht 3 stirbt er. Sein Sieg ist erfüllt.\nBen sagt Tag 2 voraus und wird an Tag 4 hingerichtet. Der Sieg bleibt unerfüllt."
+
+msgid "ui.role.todesprediger.lex.gm"
+msgstr "Die Vorhersage bleibt nur bei dir. Sie steht nie auf einem öffentlichen Bildschirm."
+
+msgid "ui.role.prophet_des_untergangs.lex.night"
+msgstr "Nacht 1 markieren, danach jede Nacht töten, sobald freigeschaltet"
+
+msgid "ui.role.prophet_des_untergangs.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.prophet_des_untergangs.lex.ability"
+msgstr "Markiert drei Personen. Sind alle tot, tötet er nachts und gewinnt statt des Dorfes."
+
+msgid "ui.role.prophet_des_untergangs.lex.timing"
+msgstr "In Nacht 1 genau drei Markierungen. Sind alle drei tot, ist er dauerhaft freigeschaltet und darf jede Nacht freiwillig eine Person töten."
+
+msgid "ui.role.prophet_des_untergangs.lex.targets"
+msgstr "Nacht 1: drei andere Lebende. Danach: eine Person pro Nacht."
+
+msgid "ui.role.prophet_des_untergangs.lex.exceptions"
+msgstr "Der Tod kommt am Morgen mit eigener Ursache. Der Schutz gegen den Rudelangriff wirkt nicht, persönliche Schilde schon. Der Apfel von Rotkäppchen wirkt nur, wenn er freigeschaltet ist."
+
+msgid "ui.role.prophet_des_untergangs.lex.win"
+msgstr "Lebt er freigeschaltet, wenn kein Wolf mehr lebt, gewinnt er allein statt des Dorfes."
+
+msgid "ui.role.prophet_des_untergangs.lex.example"
+msgstr "In Nacht 1 markiert der Prophet Anna, Ben und Clara. In Nacht 5 sind alle drei tot. In Nacht 6 tötet er David.\nDer Prophet ist freigeschaltet und der letzte Wolf stirbt. Sein Alleinsieg wird vorgeschlagen, nicht der Dorfsieg."
+
+msgid "ui.role.prophet_des_untergangs.lex.gm"
+msgstr "Die Markierungen siehst nur du. Trifft der Sieg mit dem Doppelspion zusammen, entscheidest du."
+
+msgid "ui.role.feuerteufel.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.feuerteufel.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.feuerteufel.lex.ability"
+msgstr "Markiert jede Nacht eine Person. Stirbt sie, verbrennen ihre Nachbarn. Gewinnt lebend mit."
+
+msgid "ui.role.feuerteufel.lex.timing"
+msgstr "Jede Nacht darf er ein neues Ziel wählen oder die bestehende Markierung behalten. Höchstens eine aktive Markierung je Feuerteufel."
+
+msgid "ui.role.feuerteufel.lex.targets"
+msgstr "Eine andere lebende Person, nie er selbst."
+
+msgid "ui.role.feuerteufel.lex.exceptions"
+msgstr "Jeder tatsächliche Tod des Ziels löst den Brand aus, gleich welche Ursache (nicht bei Spielleiterkorrektur ohne Todesfolgen). Es verbrennen die nächsten lebenden Nachbarn links und rechts. Ein Feuerteufel als Nachbar wird verschont, auf dieser Seite brennt niemand. Überlebt das Ziel, brennt nichts. Mehrere Markierungen auf derselben Person lösen genau einen Brand aus. Stirbt der Feuerteufel oder verliert er die Rolle, erlischt die Markierung sofort."
+
+msgid "ui.role.feuerteufel.lex.win"
+msgstr "Ist irgendein Sieg erfüllt und der Feuerteufel lebt, gewinnt er zusätzlich mit der siegreichen Seite. Kein Alleinsieg, keine eigene Siegprüfung."
+
+msgid "ui.role.feuerteufel.lex.example"
+msgstr "Der Feuerteufel markiert Ben. Ben wird hingerichtet. Bens nächste lebende Nachbarn Anna und Clara verbrennen.\nBens rechter lebender Nachbar ist ein Feuerteufel. Es verbrennt nur Bens linker lebender Nachbar."
+
+msgid "ui.role.feuerteufel.lex.gm"
+msgstr "Wer markiert ist, siehst du. Öffentlich zeigt sich nur, wer stirbt, nie die Ursache."
+
+msgid "ui.role.voodoo_priester.lex.night"
+msgstr "jede Nacht ohne lebende Puppe, freiwillig"
+
+msgid "ui.role.voodoo_priester.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.voodoo_priester.lex.ability"
+msgstr "Gibt nachts einer anderen Person eine geheime Puppe. Stirbt er, stirbt stattdessen die Puppe. Gewinnt allein unter den letzten drei."
+
+msgid "ui.role.voodoo_priester.lex.timing"
+msgstr "Höchstens eine lebende Puppe je Priester. Ist keine mehr da, darf er in der nächsten Nacht eine neue vergeben, ohne Abklingzeit, freiwillig."
+
+msgid "ui.role.voodoo_priester.lex.targets"
+msgstr "Eine andere lebende Person, nie er selbst. Geheim: außer dem Priester weiß es nur der Spielleiter, die Puppe erfährt es nicht vorab."
+
+msgid "ui.role.voodoo_priester.lex.exceptions"
+msgstr "Jeder tatsächliche Tod des Priesters außer einer Spielleiterkorrektur trifft nach allen Schutzwirkungen stattdessen die lebende Puppe. Ohne lebende Puppe stirbt er selbst. Verliert er die Rolle, endet die Puppe sofort. Eine Umlenkungskette trifft nie dieselbe Person zweimal. Die eigene Fähigkeit wirkt vor einer fremden Verknüpfung, etwa der eines Schattenwanderers. Die Puppe hebt keine Verzauberung auf."
+
+msgid "ui.role.voodoo_priester.lex.win"
+msgstr "Er gewinnt allein, wenn er lebt und höchstens drei Personen leben."
+
+msgid "ui.role.voodoo_priester.lex.example"
+msgstr "Ben ist der Priester, Clara seine Puppe. Das Rudel wählt Ben, kein Schutz greift. Clara stirbt am Morgen an Bens Stelle.\nBen wird hingerichtet, Bens Puppe ist bereits tot. Ben stirbt selbst."
+
+msgid "ui.role.voodoo_priester.lex.gm"
+msgstr "Die Puppe ist nur dir und dem Priester bekannt. Öffentlich stirbt einfach die Puppe, ohne Ursache."
+
+msgid "ui.role.nekromant.lex.night"
+msgstr "nachts Schild, bei Rudelangriff auf ihn Umlenkung"
+
+msgid "ui.role.nekromant.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.nekromant.lex.ability"
+msgstr "Opfert drei Tote für einen Schild gegen den nächsten Tod oder lenkt einen Angriff um. Benennt er einen Wolf, gewinnt er."
+
+msgid "ui.role.nekromant.lex.timing"
+msgstr "Schild: nachts, mit mindestens drei geopferten Toten. Umlenkung: nur wenn der Rudelangriff ihn sonst töten würde, freiwillig, mit drei Toten. Wolf benennen: höchstens ein Versuch pro Tag, geheim beim Spielleiter."
+
+msgid "ui.role.nekromant.lex.targets"
+msgstr "Schild: keine Wahl. Umlenkung: eine andere lebende Person, auch ein Wolf. Wolf benennen: eine lebende Person."
+
+msgid "ui.role.nekromant.lex.exceptions"
+msgstr "Der Schild verhindert den nächsten Tod irgendeiner Person, gleich welche Ursache, auch eine Hinrichtung, und verfällt ungenutzt mit Beginn der nächsten Nacht. Für das neue Ziel einer Umlenkung gilt es als Rudelangriff, dessen Schutz wirkt. Verzichtet er, stirbt er. Jede tote Person kann in der ganzen Partie nur einmal geopfert werden. Jeder errichtete Schild verhindert genau einen Tod. Er entscheidet nach dem Urteil des Verdammniswächters und vor der Märtyrerin. Verliert er die Rolle oder stirbt er, erlischt sein Schild."
+
+msgid "ui.role.nekromant.lex.win"
+msgstr "Ein Treffer beim Benennen (jede lebende Person, die als Wolf zählt) erfüllt seinen Alleinsieg. Ein Fehlversuch hat keine Folgen."
+
+msgid "ui.role.nekromant.lex.example"
+msgstr "Fünf Personen sind tot. In Nacht 4 opfert der Nekromant drei von ihnen für einen Schild. Das Rudel tötet in dieser Nacht niemanden, weil der Schild den ersten Tod verhindert.\nAn Tag 3 nennt der Nekromant dem Spielleiter geheim Emil. Emil zählt als Wolf, damit ist der Alleinsieg erfüllt."
+
+msgid "ui.role.nekromant.lex.gm"
+msgstr "Das Benennen läuft geheim bei dir, ein Fehlversuch bleibt unsichtbar. Dass ein Schild besteht, ist nur dir bekannt. Der Fluch des Dämonischen Wolfs ändert die Treffer nicht."
+
+msgid "ui.role.hades.lex.night"
+msgstr "jede Nacht, als letzter Schritt"
+
+msgid "ui.role.hades.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.hades.lex.ability"
+msgstr "Erhält für jeden Tod ein Licht. Tötet für 2, kauft für 3 eine Barriere. Gewinnt lebend mit 10 Lichtern."
+
+msgid "ui.role.hades.lex.timing"
+msgstr "Jeder tatsächliche Tod einer anderen Person außer Spielleiterkorrektur gibt jedem lebenden Hades 1 Licht, auch seine eigenen Tötungen. Tötung: höchstens einmal je Nacht. Barriere: höchstens eine aktive."
+
+msgid "ui.role.hades.lex.targets"
+msgstr "Tötung: eine andere lebende Person, Tod am Morgen mit eigener Ursache."
+
+msgid "ui.role.hades.lex.exceptions"
+msgstr "Abgefangene Tode geben kein Licht. Der Schutz gegen den Rudelangriff wirkt nicht, persönliche Schilde schon. Die Lichter sind auch bei einem abgefangenen Tod verbraucht. Die Barriere verhindert seinen nächsten Tod jeder Ursache außer einer Korrektur, auch eine Hinrichtung, verfällt nicht und ist danach neu kaufbar. In seinem Schritt kommt zuerst keine oder eine Tötung, dann die Barrierefrage. Bezahlt wird mit der letzten Antwort. Lichter und Barriere erlöschen mit Tod oder Rollenverlust, ein neuer Hades beginnt mit 0 Lichtern."
+
+msgid "ui.role.hades.lex.win"
+msgstr "Er gewinnt allein, solange er lebt und mindestens 10 Lichter hat. Kein Einlösen, der Sieg wird bei jeder Prüfung vorgeschlagen."
+
+msgid "ui.role.hades.lex.example"
+msgstr "Hades hat 2 Lichter und tötet Ben. Die Lichter fallen auf 0, mit Bens Tod am Morgen erhält Hades 1 Licht.\nHades lebt mit 10 Lichtern. Sein Alleinsieg ist Kandidat."
+
+msgid "ui.role.hades.lex.gm"
+msgstr "Die Lichter sind ein eigener Vorrat je Hades. Ein Abbruch vor der letzten Antwort kostet nichts."
+
+msgid "ui.role.hades.lex.open"
+msgstr "Zeitpunkt und Reihenfolge von Tötung, Barriere und Lichtern sind technisch abgeleitet und noch nicht bestätigt."
+
+msgid "ui.role.grabraeuber.lex.night"
+msgstr "einmalig Stehlen, danach der gestohlene Schritt"
+
+msgid "ui.role.grabraeuber.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.grabraeuber.lex.ability"
+msgstr "Stiehlt einmal die Nachtfähigkeit einer toten Person und nutzt sie fortan. Gewinnt lebend bei höchstens drei Lebenden."
+
+msgid "ui.role.grabraeuber.lex.timing"
+msgstr "Einmalig wählt er nachts eine tote Person. Der Diebstahl gilt sofort, der eigene Schritt folgt planmäßig ab der nächsten Nacht, dauerhaft und mit frischen Einsätzen."
+
+msgid "ui.role.grabraeuber.lex.targets"
+msgstr "Eine tote Person, deren Rolle einen wiederkehrenden eigenen Nachtschritt hat. Maßgeblich ist die Rolle zum Zeitpunkt des Diebstahls."
+
+msgid "ui.role.grabraeuber.lex.exceptions"
+msgstr "Nicht wählbar: Loki, Dorfchronistin, Todesprediger (nur Nacht 1), Prophet des Untergangs, Schicksalswolf, Schutzgeist, Wolfskind, Lehrling, der Grabräuber selbst. Gemeinsame Schritte (Gebundene, Ewige, Rudel) sind keine eigenen. Übernommen werden Schritt und Wirkungen (etwa Puppe, Brandmarkierung, Wirt, Schild, Lichter, Listen). Nicht übernommen werden Siegbedingung, Mitsieg, Fraktion, Wolfszählung, Erscheinung, Todesreaktionen und Tagesaktionen. Er bleibt Einzelsieg, ist also nicht blockierbar und nicht vom Fluch des Weisen betroffen. Nach einer Wiederbelebung darf er neu stehlen."
+
+msgid "ui.role.grabraeuber.lex.win"
+msgstr "Er gewinnt allein, wenn er lebt und höchstens drei Personen leben."
+
+msgid "ui.role.grabraeuber.lex.example"
+msgstr "Anna, die Waldhexe, ist tot. Der Grabräuber stiehlt die Fähigkeit von Anna und hat ab der nächsten Nacht frische Tränke.\nDer tote Loki kann nicht gestohlen werden, weil sein Schritt nur in Nacht 1 stattfindet."
+
+msgid "ui.role.grabraeuber.lex.gm"
+msgstr "Der Grabräuber erfährt die gestohlene Rolle privat. Rollen ohne eigenen Nachtschritt erscheinen nicht in der Auswahl."
+
+msgid "ui.role.grabraeuber.lex.open"
+msgstr "Welche Rollen stehlbar sind und was genau übernommen wird, ist technisch abgeleitet und noch nicht bestätigt."
+
+# --- Ende Rollenlexikon ---

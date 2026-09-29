@@ -408,7 +408,7 @@ msgid "ui.role.schutzengel.name"
 msgstr "Guardian Angel"
 
 msgid "ui.role.schutzengel.short"
-msgstr "Protects another person from the wolf attack at night."
+msgstr "Protects another person from the pack attack at night."
 
 msgid "ui.role.waldhexe.name"
 msgstr "Witch of the Woods"
@@ -510,13 +510,13 @@ msgid "ui.role.dorfwache.name"
 msgstr "Village Guard"
 
 msgid "ui.role.dorfwache.short"
-msgstr "Survives the werewolf attack."
+msgstr "Survives the pack attack."
 
 msgid "ui.role.wahnsinniger_kutscher.name"
 msgstr "Mad Coachman"
 
 msgid "ui.role.wahnsinniger_kutscher.short"
-msgstr "If executed, his neighbours die with him."
+msgstr "If executed, their neighbours die with them."
 
 msgid "ui.role.ritter.name"
 msgstr "Knight"
@@ -588,13 +588,13 @@ msgid "ui.role.rudelvater.name"
 msgstr "Packfather"
 
 msgid "ui.role.rudelvater.short"
-msgstr "Pack wolf, survives once; his lynching grants an extra victim."
+msgstr "Pack wolf, survives once; their execution grants an extra victim."
 
 msgid "ui.role.seuchenwolf.name"
 msgstr "Blight Wolf"
 
 msgid "ui.role.seuchenwolf.short"
-msgstr "Pack wolf; after his death the next attack pierces all protection."
+msgstr "Pack wolf; after their death the next pack attack pierces all protection."
 
 msgid "ui.role.fenrir.name"
 msgstr "Fenrir"
@@ -624,7 +624,7 @@ msgid "ui.role.kopfgeldjaeger.name"
 msgstr "Bounty Hunter"
 
 msgid "ui.role.kopfgeldjaeger.short"
-msgstr "After each lynched werewolf, three names with at least one werewolf."
+msgstr "After each executed werewolf, three names with at least one werewolf."
 
 msgid "ui.role.koenig.name"
 msgstr "King"
@@ -636,7 +636,7 @@ msgid "ui.role.kriegerin_des_lichts.name"
 msgstr "Warrior of Light"
 
 msgid "ui.role.kriegerin_des_lichts.short"
-msgstr "Once at night checks whether someone is a werewolf; if wrong, she dies."
+msgstr "Once at night checks whether someone is a werewolf; if wrong, they die."
 
 msgid "ui.role.blutpriester.name"
 msgstr "Blood Priest"
@@ -648,7 +648,7 @@ msgid "ui.role.amalia.name"
 msgstr "Amalia"
 
 msgid "ui.role.amalia.short"
-msgstr "With at least three werewolves: sacrifices herself by day for a public yes/no question."
+msgstr "With at least three werewolves: sacrifices themself by day for a public yes/no question."
 
 msgid "ui.role.detektiv.name"
 msgstr "Detective"
@@ -666,31 +666,31 @@ msgid "ui.role.der_weise.name"
 msgstr "The Elder"
 
 msgid "ui.role.der_weise.short"
-msgstr "Survives one werewolf attack; if lynched, the village loses its abilities for a while."
+msgstr "Survives one pack attack; if executed, the village loses its abilities for a while."
 
 msgid "ui.role.maertyrerin.name"
 msgstr "Martyr"
 
 msgid "ui.role.maertyrerin.short"
-msgstr "Can sacrifice herself so the night victim survives."
+msgstr "Can sacrifice themself so the night victim survives."
 
 msgid "ui.role.schutzgeist.name"
 msgstr "Guardian Spirit"
 
 msgid "ui.role.schutzgeist.short"
-msgstr "In the night after her death gives someone a shield against the next werewolf attack."
+msgstr "In the night after their death gives someone a shield against the next pack attack."
 
 msgid "ui.role.dorfschmied.name"
 msgstr "Village Blacksmith"
 
 msgid "ui.role.dorfschmied.short"
-msgstr "From the sixth night a weapon that blocks one werewolf attack and kills a werewolf."
+msgstr "From the sixth night a weapon that blocks one pack attack and kills a werewolf."
 
 msgid "ui.role.verdammniswaechter.name"
 msgstr "Doom Warden"
 
 msgid "ui.role.verdammniswaechter.short"
-msgstr "Each night may redirect the werewolf attack to another offered person."
+msgstr "Each night may redirect the pack attack to another offered person."
 
 msgid "ui.role.loki.name"
 msgstr "Loki"
@@ -708,7 +708,7 @@ msgid "ui.role.schwarze_witwe.name"
 msgstr "Black Widow"
 
 msgid "ui.role.schwarze_witwe.short"
-msgstr "Werewolf in the pack; if she finds one of Loki's pairs, both die at dawn."
+msgstr "Werewolf in the pack; if they find one of Loki's pairs, both die at dawn."
 
 msgid "ui.role.schattenwanderer.name"
 msgstr "Shadowwalker"
@@ -726,7 +726,7 @@ msgid "ui.role.daemonischer_wolf.name"
 msgstr "Demonic Wolf"
 
 msgid "ui.role.daemonischer_wolf.short"
-msgstr "Werewolf in the pack; on death he curses someone who appears as a werewolf to the oracle."
+msgstr "Werewolf in the pack; on death they curse someone who appears as a werewolf to the oracle."
 
 msgid "ui.role.koenig_lykaon.name"
 msgstr "King Lycaon"
@@ -738,7 +738,7 @@ msgid "ui.role.kutscher.name"
 msgstr "Coachman"
 
 msgid "ui.role.kutscher.short"
-msgstr "From ten dead he once brings back three dead; one of them becomes a werewolf."
+msgstr "From ten dead they once bring back three dead; one of them becomes a werewolf."
 
 msgid "ui.role.dr_victor_frankenstein.name"
 msgstr "Dr. Victor Frankenstein"
@@ -750,7 +750,7 @@ msgid "ui.role.rattenfaenger.name"
 msgstr "Pied Piper"
 
 msgid "ui.role.rattenfaenger.short"
-msgstr "Charms one or two people each night; once all others are charmed, he wins."
+msgstr "Charms one or two people each night; once all others are charmed, they win."
 
 msgid "ui.role.pestbringerin.name"
 msgstr "Plague Bringer"
@@ -762,13 +762,13 @@ msgid "ui.role.prophet_des_untergangs.name"
 msgstr "Prophet of Doom"
 
 msgid "ui.role.prophet_des_untergangs.short"
-msgstr "Marks three people; once all are dead he kills at night and wins instead of the village."
+msgstr "Marks three people; once all are dead they kill at night and win instead of the village."
 
 msgid "ui.role.todesprediger.name"
 msgstr "Death Prophet"
 
 msgid "ui.role.todesprediger.short"
-msgstr "Secretly predicts the time of his death in the first night; if right, he wins."
+msgstr "Secretly predicts the time of their death in the first night; if right, they win."
 
 msgid "ui.role.feuerteufel.name"
 msgstr "Pyromaniac"
@@ -780,7 +780,7 @@ msgid "ui.role.voodoo_priester.name"
 msgstr "Voodoo Priest"
 
 msgid "ui.role.voodoo_priester.short"
-msgstr "Secretly gives another person a doll at night; if he would die, the doll dies instead. Wins alone among the last three."
+msgstr "Secretly gives another person a doll at night; if they would die, the doll dies instead. Wins alone among the last three."
 
 msgid "ui.role.nekromant.name"
 msgstr "Necromancer"
@@ -804,7 +804,7 @@ msgid "ui.role.schicksalswolf.name"
 msgstr "Fate Wolf"
 
 msgid "ui.role.schicksalswolf.short"
-msgstr "Marks three people in night 1; for each among the first three dead he kills one additional victim in night 4."
+msgstr "Marks three people in night 1; for each among the first three dead they kill one additional victim in night 4."
 
 msgid "ui.role.rachsuechtiger_wolf.name"
 msgstr "Lone Wolf"
@@ -1779,10 +1779,10 @@ msgid "ui.prompt.pack2.pick"
 msgstr "Second pack victim: tap the person and confirm. It pierces protection."
 
 msgid "ui.prompt.waldhexe.heal"
-msgstr "Show the Forest Witch the victim. Does she use the healing potion?"
+msgstr "Show the Forest Witch the victim. Do they use the healing potion?"
 
 msgid "ui.prompt.waldhexe.reveal"
-msgstr "The Forest Witch saves. Now show her the victim’s role."
+msgstr "The Forest Witch saves. Now show them the victim’s role."
 
 msgid "ui.prompt.waldhexe.poison"
 msgstr "Does the Forest Witch use the poison potion?"
@@ -2205,13 +2205,13 @@ msgid "ui.prompt.kopfgeldjaeger.shown"
 msgstr "Show the Bounty Hunter the three names. Then tap “Shown”."
 
 msgid "ui.prompt.korrupter_richter.pick"
-msgstr "Tap the person the Judge marks (may be himself). Without a choice: decline."
+msgstr "Tap the person the Judge marks (may be themself). Without a choice: decline."
 
 msgid "ui.prompt.kriegerin_des_lichts.targets"
 msgstr "Tap the person the Warrior attacks. Without an attack: decline."
 
 msgid "ui.prompt.kriegerin_des_lichts.shown"
-msgstr "Show the Warrior whether she hit a wolf. Then tap “Shown”."
+msgstr "Show the Warrior whether they hit a wolf. Then tap “Shown”."
 
 msgid "ui.prompt.kutscher.targets"
 msgstr "Tap exactly three dead people to return, or decline completely."
@@ -2220,13 +2220,13 @@ msgid "ui.prompt.kutscher.wolf"
 msgstr "Tap which of the three returns as a wolf."
 
 msgid "ui.prompt.loki.targets"
-msgstr "Tap exactly two people (Loki may choose himself) or decline completely."
+msgstr "Tap exactly two people (Loki may choose themself) or decline completely."
 
 msgid "ui.prompt.loki.mode"
 msgstr "Do the two become lovers or rivals?"
 
 msgid "ui.prompt.maertyrerin.pick"
-msgstr "Does the Martyr sacrifice herself for this person? Then tap the person and confirm."
+msgstr "Does the Martyr sacrifice themself for this person? Then tap the person and confirm."
 
 msgid "ui.prompt.nekromant.targets"
 msgstr "Tap exactly three unsacrificed dead people or decline completely."
@@ -2430,7 +2430,7 @@ msgid "ui.morning.drop.no_living_wolf"
 msgstr "no wolf alive"
 
 msgid "ui.cause.night_kill"
-msgstr "werewolf attack"
+msgstr "pack attack"
 
 msgid "ui.cause.lynch"
 msgstr "execution"
@@ -2625,7 +2625,7 @@ msgid "ui.cockpit.dialog.no_execution.confirm"
 msgstr "No execution"
 
 msgid "ui.cockpit.dialog.amalia.title"
-msgstr "Amalia sacrifices herself"
+msgstr "Amalia sacrifices themself"
 
 msgid "ui.cockpit.dialog.amalia.message"
 msgstr "Answer Amalia’s question truthfully with yes or no. Amalia then dies immediately."
@@ -2643,7 +2643,7 @@ msgid "ui.cockpit.private.actions"
 msgstr "Secret day actions"
 
 msgid "ui.cockpit.private.action.amalia"
-msgstr "{name}: Amalia sacrifices herself …"
+msgstr "{name}: Amalia sacrifices themself …"
 
 msgid "ui.cockpit.private.action.name_wolf"
 msgstr "{name}: Necromancer names a wolf …"
@@ -2676,7 +2676,7 @@ msgid "ui.cockpit.error.sage_curse_required"
 msgstr "Error: The Sage’s curse length is missing. Nothing was changed."
 
 msgid "ui.cockpit.error.too_few_wolves"
-msgstr "Error: Amalia can only sacrifice herself with at least three living wolves. Nothing was changed."
+msgstr "Error: Amalia can only sacrifice themself with at least three living wolves. Nothing was changed."
 
 msgid "ui.cockpit.error.cursed"
 msgstr "Error: The ability is suspended by the Sage’s curse. Nothing was changed."
@@ -3135,7 +3135,7 @@ msgid "ui.log.event.win_status_final"
 msgstr "#{index} Final win check ({visibility})"
 
 msgid "ui.log.event.no_night_kill"
-msgstr "#{index} No werewolf attack ({visibility})"
+msgstr "#{index} No pack attack ({visibility})"
 
 msgid "ui.log.event.kill_ignored"
 msgstr "#{index} Death without effect (already dead) ({visibility})"
@@ -3282,13 +3282,13 @@ msgid "ui.effect.sage_curse"
 msgstr "“{name} was {role}. The village's abilities rest.”"
 
 msgid "ui.effect.heartbreak"
-msgstr "“{target} dies of heartbreak.”"
+msgstr "“{role}'s bond holds: {target} dies of heartbreak.”"
 
 msgid "ui.effect.red_chain"
-msgstr "“The chain breaks: {target} dies along with {name}.”"
+msgstr "“{role}'s chain breaks: {target} dies along with {name}.”"
 
 msgid "ui.effect.shadow_link"
-msgstr "“The link takes hold: {target} dies in place of {replaced}.”"
+msgstr "“{role}'s link takes hold: {target} dies in place of {replaced}.”"
 
 msgid "ui.cockpit.tools.roles"
 msgstr "Show roles"
@@ -3463,3 +3463,2041 @@ msgstr "Vote hints (count physically, add the bonus)"
 
 msgid "ui.cockpit.private.vote_hint"
 msgstr "{name}: +{bonus} ({role})"
+
+# Rollenlexikon und Kontexthilfe (Paket 5b): Bedienung
+msgid "ui.menu.lexicon"
+msgstr "Role lexicon"
+
+msgid "ui.lexicon.title"
+msgstr "Role lexicon"
+
+msgid "ui.lexicon.back_to_list"
+msgstr "All roles"
+
+msgid "ui.lexicon.language"
+msgstr "Deutsch"
+
+msgid "ui.lexicon.close"
+msgstr "Close"
+
+msgid "ui.lexicon.search"
+msgstr "Search for a role"
+
+msgid "ui.lexicon.filter.all"
+msgstr "All"
+
+msgid "ui.lexicon.empty"
+msgstr "No role matches. Change the search term or choose the “All” filter."
+
+msgid "ui.lexicon.row"
+msgstr "{name} · {faction}"
+
+msgid "ui.lexicon.faction"
+msgstr "Faction: {faction}"
+
+msgid "ui.lexicon.field.night"
+msgstr "Night step"
+
+msgid "ui.lexicon.field.wolf"
+msgstr "Counts as a wolf"
+
+msgid "ui.lexicon.field.ability"
+msgstr "Ability"
+
+msgid "ui.lexicon.field.timing"
+msgstr "Timing and uses"
+
+msgid "ui.lexicon.field.targets"
+msgstr "Targets"
+
+msgid "ui.lexicon.field.exceptions"
+msgstr "Exceptions"
+
+msgid "ui.lexicon.field.win"
+msgstr "Win"
+
+msgid "ui.lexicon.field.example"
+msgstr "Examples"
+
+msgid "ui.lexicon.field.gm"
+msgstr "Notes for the game master"
+
+msgid "ui.lexicon.field.open"
+msgstr "Not yet settled or implemented"
+
+msgid "ui.setup.roles.info"
+msgstr "Rules"
+
+msgid "ui.cockpit.tools.lexicon"
+msgstr "Lexicon"
+
+msgid "ui.cockpit.action.help"
+msgstr "Read the rule"
+
+# --- Rollenlexikon (Paket 5b) ---
+# Allgemeine Lexikoneinträge je Rolle (ui.role.<rolle>.lex.<feld>). Quelle: docs/content-drafts/rolebook/, redaktionell geprüft.
+# Maßgeblich ist dieser Wortlaut. "open" gibt es nur bei Rollen mit ungeklärten oder noch nicht umgesetzten Punkten.
+
+msgid "ui.role.dorfbewohner.lex.night"
+msgstr "none"
+
+msgid "ui.role.dorfbewohner.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.dorfbewohner.lex.ability"
+msgstr "No ability. Searches for the werewolves together with the village."
+
+msgid "ui.role.dorfbewohner.lex.timing"
+msgstr "No use, no limit per game."
+
+msgid "ui.role.dorfbewohner.lex.targets"
+msgstr "None."
+
+msgid "ui.role.dorfbewohner.lex.exceptions"
+msgstr "None."
+
+msgid "ui.role.dorfbewohner.lex.win"
+msgstr "The village wins when no living person counts as a wolf."
+
+msgid "ui.role.dorfbewohner.lex.example"
+msgstr "Anna is a Villager. Anna sleeps through the night and joins the discussion during the day.\nThe last wolf is executed. The village, and with it Anna, wins."
+
+msgid "ui.role.dorfbewohner.lex.gm"
+msgstr "Is never called. With Villagers and Werewolves alone any group size from 6 to 24 is playable."
+
+msgid "ui.role.das_orakel.lex.night"
+msgstr "every night, after all Witch steps"
+
+msgid "ui.role.das_orakel.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.das_orakel.lex.ability"
+msgstr "Checks one other person and sees their role. Special wolves appear as Werewolf."
+
+msgid "ui.role.das_orakel.lex.timing"
+msgstr "Mandatory step every night while the Oracle lives. It cannot be skipped."
+
+msgid "ui.role.das_orakel.lex.targets"
+msgstr "Exactly one other living person. Checking oneself is not allowed."
+
+msgid "ui.role.das_orakel.lex.exceptions"
+msgstr "If a person has a false role (Decoy Wolf), that role appears. Otherwise: if they count as a wolf, “Werewolf” appears; else the true role. The Wolf Child appears as Wolf Child before the transformation and as Werewolf after it. A person cursed by the Demonic Wolf appears as Werewolf."
+
+msgid "ui.role.das_orakel.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.das_orakel.lex.example"
+msgstr "The Oracle checks Ben, a Villager. They see “Villager”.\nThe Oracle checks Clara, a Mirror Wolf. They see “Werewolf”."
+
+msgid "ui.role.das_orakel.lex.gm"
+msgstr "Only you see the truth, the determined role and the shown role. The shown role may only be changed with confirmation and a reason before “Shown” is pressed. The result never appears on the public screen."
+
+msgid "ui.role.dorfchronistin.lex.night"
+msgstr "night 1 only"
+
+msgid "ui.role.dorfchronistin.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.dorfchronistin.lex.ability"
+msgstr "Learns how many people in this game hold a solo role."
+
+msgid "ui.role.dorfchronistin.lex.timing"
+msgstr "Night 1 only. Anyone who does not act in night 1, or receives the role later, no longer has the ability."
+
+msgid "ui.role.dorfchronistin.lex.targets"
+msgstr "No choice. All people with a solo role count, living and dead."
+
+msgid "ui.role.dorfchronistin.lex.exceptions"
+msgstr "Several Chroniclers each learn the number separately. A block (Shadow Hound, Nightmare Wolf) cancels the step."
+
+msgid "ui.role.dorfchronistin.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.dorfchronistin.lex.example"
+msgstr "The game contains a Pied Piper and a Manipulator. The Chronicler sees “2”.\nThere is no solo role. The Chronicler sees “0” and therefore knows none is in play."
+
+msgid "ui.role.dorfchronistin.lex.gm"
+msgstr "The number appears only on the Chronicler's card. If the Chronicler is not called in night 1, the ability expires for good."
+
+msgid "ui.role.die_gebundenen.lex.night"
+msgstr "night 1 only, shared step"
+
+msgid "ui.role.die_gebundenen.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.die_gebundenen.lex.ability"
+msgstr "Get to know each other in night 1."
+
+msgid "ui.role.die_gebundenen.lex.timing"
+msgstr "Night 1 only, one shared step for all of the Bound."
+
+msgid "ui.role.die_gebundenen.lex.targets"
+msgstr "No choice. Each living Bound person sees all other living Bound people."
+
+msgid "ui.role.die_gebundenen.lex.exceptions"
+msgstr "If only one Bound person lives, they learn “no others”. Anyone who does not act in night 1, or receives the role later, no longer has the ability."
+
+msgid "ui.role.die_gebundenen.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.die_gebundenen.lex.example"
+msgstr "Anna, Ben and Clara are the Bound. Each sees the other two names on their card.\nOnly David is Bound and alive. They see “no others”."
+
+msgid "ui.role.die_gebundenen.lex.gm"
+msgstr "All of the Bound wake in the same step; each card shows the person only their fellow Bound."
+
+msgid "ui.role.waldlaeufer.lex.night"
+msgstr "every night"
+
+msgid "ui.role.waldlaeufer.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.waldlaeufer.lex.ability"
+msgstr "Learns every night how many wolves are alive."
+
+msgid "ui.role.waldlaeufer.lex.timing"
+msgstr "Own step every night while the Ranger lives."
+
+msgid "ui.role.waldlaeufer.lex.targets"
+msgstr "No choice. Counted are people who are alive at the time of the step and count as wolves."
+
+msgid "ui.role.waldlaeufer.lex.exceptions"
+msgstr "The Victorious Wolf counts once. This night's pack victim is still alive. A Wolf Child that has not yet transformed does not count."
+
+msgid "ui.role.waldlaeufer.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.waldlaeufer.lex.example"
+msgstr "Emil and Fritz are wolves and alive. The Ranger sees “2”.\nEmil, the Victorious Wolf, is the only living wolf. The Ranger sees “1”, not “2”."
+
+msgid "ui.role.waldlaeufer.lex.gm"
+msgstr "Only the number appears on the card, never names."
+
+msgid "ui.role.doktor.lex.night"
+msgstr "every night"
+
+msgid "ui.role.doktor.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.doktor.lex.ability"
+msgstr "Checks whether two people belong to the same team."
+
+msgid "ui.role.doktor.lex.timing"
+msgstr "Every night while the Doctor lives."
+
+msgid "ui.role.doktor.lex.targets"
+msgstr "Exactly two different other living people."
+
+msgid "ui.role.doktor.lex.exceptions"
+msgstr "Team means the true current faction: village, werewolves or solo. Two people with solo roles count as the same team. A Decoy Wolf's false role does not deceive here."
+
+msgid "ui.role.doktor.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.doktor.lex.example"
+msgstr "The Doctor checks Anna (Villager) and Ben (Witch of the Woods). Result: same team.\nThe Doctor checks Clara (Manipulator) and David (Double Agent). Result: same team, because both are solo."
+
+msgid "ui.role.doktor.lex.gm"
+msgstr "The result reads only “same team” or “different teams”, never which faction."
+
+msgid "ui.role.faehrtenleser.lex.night"
+msgstr "every night until used"
+
+msgid "ui.role.faehrtenleser.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.faehrtenleser.lex.ability"
+msgstr "Learns once on which side the nearest wolf sits."
+
+msgid "ui.role.faehrtenleser.lex.timing"
+msgstr "Once per life. Every night the question “use now?” appears until they have done it; after that there is no step."
+
+msgid "ui.role.faehrtenleser.lex.targets"
+msgstr "No choice. The distance is measured in seats, dead seats included, to the nearest living person who counts as a wolf."
+
+msgid "ui.role.faehrtenleser.lex.exceptions"
+msgstr "If two wolves sit equally far away, the Tracker learns “both sides equally far”. “Left” is the next seat clockwise in the app's seating circle."
+
+msgid "ui.role.faehrtenleser.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.faehrtenleser.lex.example"
+msgstr "The nearest wolf sits two seats clockwise. The Tracker learns “left”.\nA wolf sits three seats away on both sides. They learn “both sides equally far”."
+
+msgid "ui.role.faehrtenleser.lex.gm"
+msgstr "If the Tracker declines, the question returns next night. “Left” means clockwise."
+
+msgid "ui.role.faehrtenleser.lex.open"
+msgstr "Whether “left” on the tablet really matches clockwise at the table has not yet been checked on a device."
+
+msgid "ui.role.spuerhund.lex.night"
+msgstr "every night, optional"
+
+msgid "ui.role.spuerhund.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.spuerhund.lex.ability"
+msgstr "Checks three people for wolf or solo. A miss costs the ability."
+
+msgid "ui.role.spuerhund.lex.timing"
+msgstr "Every night, optional; declining is allowed."
+
+msgid "ui.role.spuerhund.lex.targets"
+msgstr "Three different other living people."
+
+msgid "ui.role.spuerhund.lex.exceptions"
+msgstr "If at least one of the three is a wolf or solo (true faction), they get a check mark. Otherwise a cross: they lose the ability but are still called every night. There is no false trail."
+
+msgid "ui.role.spuerhund.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.spuerhund.lex.example"
+msgstr "The Scent Hound picks Anna, Ben and Emil. Emil is a wolf. Result: check mark.\nThey pick Anna, Ben and Clara, all in the village. Result: cross. From now on they have no ability."
+
+msgid "ui.role.spuerhund.lex.gm"
+msgstr "Keep calling, even after the cross, so the table learns nothing. The check mark does not show which of the three people it is."
+
+msgid "ui.role.traumdeuter.lex.night"
+msgstr "every night"
+
+msgid "ui.role.traumdeuter.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.traumdeuter.lex.ability"
+msgstr "Sees three names every night, at least one of them a wolf."
+
+msgid "ui.role.traumdeuter.lex.timing"
+msgstr "Every night while the Dreamer lives."
+
+msgid "ui.role.traumdeuter.lex.targets"
+msgstr "The game master chooses exactly three other living people. “Confirm selection” is only possible once at least one of them counts as a wolf."
+
+msgid "ui.role.traumdeuter.lex.exceptions"
+msgstr "The true wolf count applies. A Decoy Wolf's false role does not deceive. The Dreamer learns only “at least one wolf among these three”, never the number. If fewer than three other people are alive or no living person counts as a wolf, the step is dropped for that night (logged) and the Dreamer learns nothing."
+
+msgid "ui.role.traumdeuter.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.traumdeuter.lex.example"
+msgstr "The game master chooses Anna, Emil and Clara. Emil is a wolf. The Dreamer sees the three names and “at least one wolf”.\nThe game master chooses Anna, Ben and Clara, all in the village. “Confirm selection” stays locked until a wolf replaces one of them."
+
+msgid "ui.role.traumdeuter.lex.gm"
+msgstr "You choose, the Dreamer only sees. Instead of choosing yourself you can tap “Pick at random”: the app suggests a valid selection that only takes effect with “Confirm selection”. As long as the game does not change, the suggestion stays the same. If you tap a person yourself, your own choice applies. The app reminds you of the wolf requirement. Two or three wolves in the selection are allowed."
+
+msgid "ui.role.kopfgeldjaeger.lex.night"
+msgstr "night after an execution"
+
+msgid "ui.role.kopfgeldjaeger.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.kopfgeldjaeger.lex.ability"
+msgstr "After every executed wolf, three names, at least one of them a wolf."
+
+msgid "ui.role.kopfgeldjaeger.lex.timing"
+msgstr "Each execution of a person who counts as a wolf, while the Bounty Hunter lives and holds the role, earns one list in a following night. Lists accumulate as a counter."
+
+msgid "ui.role.kopfgeldjaeger.lex.targets"
+msgstr "The game master chooses three other living people. “Confirm selection” is possible with at least one wolf. The Bounty Hunter is never in the list."
+
+msgid "ui.role.kopfgeldjaeger.lex.exceptions"
+msgstr "A Mirror Wolf reflection and a Cerberus ward are not an execution of a wolf. If there are not enough targets, the list expires with a notice. Only “at least one wolf” is shown. True wolf count."
+
+msgid "ui.role.kopfgeldjaeger.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.kopfgeldjaeger.lex.example"
+msgstr "Emil, a wolf, is executed. In the following night the game master chooses Anna, Clara and David (David is a Poison Wolf). The Bounty Hunter sees the names and “at least one wolf”.\nA Cerberus with three heads wards off its execution and survives. The Bounty Hunter gets no list."
+
+msgid "ui.role.kopfgeldjaeger.lex.gm"
+msgstr "The lists accumulate as a counter. For each list you choose yourself or tap “Pick at random”; the suggestion only takes effect with “Confirm selection”, stays the same while the game does not change, and becomes your own choice as soon as you tap a person. If there are not enough targets, the list expires and you get a notice."
+
+msgid "ui.role.koenig.lex.night"
+msgstr "from the first night with more dead than living"
+
+msgid "ui.role.koenig.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.koenig.lex.ability"
+msgstr "Learns one village person with their true role."
+
+msgid "ui.role.koenig.lex.timing"
+msgstr "Once per life, in the first night in which strictly more people are dead than alive."
+
+msgid "ui.role.koenig.lex.targets"
+msgstr "The game master chooses one other living person who currently belongs to the village faction."
+
+msgid "ui.role.koenig.lex.exceptions"
+msgstr "A Decoy Wolf or an already transformed Wolf Child does not belong to the village and cannot be chosen. If no village person can be chosen, the step is dropped for that night and the ability stays unused."
+
+msgid "ui.role.koenig.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.koenig.lex.example"
+msgstr "Ten people play, six are dead, four are alive. The game master chooses Clara. The King sees “Clara: Witch of the Woods”.\nFive people are dead, five are alive. There is no King step, because the dead are not in the majority."
+
+msgid "ui.role.koenig.lex.gm"
+msgstr "You choose the person yourself or tap “Pick at random”. The suggestion only takes effect with “Confirm selection”, stays the same while the game does not change, and becomes your own choice as soon as you tap a person."
+
+msgid "ui.role.kriegerin_des_lichts.lex.night"
+msgstr "every night until used, optional"
+
+msgid "ui.role.kriegerin_des_lichts.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.kriegerin_des_lichts.lex.ability"
+msgstr "Checks once at night whether someone is a wolf. If wrong, the Warrior dies."
+
+msgid "ui.role.kriegerin_des_lichts.lex.timing"
+msgstr "Once per life, optional."
+
+msgid "ui.role.kriegerin_des_lichts.lex.targets"
+msgstr "One other living person."
+
+msgid "ui.role.kriegerin_des_lichts.lex.exceptions"
+msgstr "The app checks the true wolf count. Only the Warrior learns the result. A wolf who is hit survives. If the target is not a wolf, the Warrior dies during the dawn resolution."
+
+msgid "ui.role.kriegerin_des_lichts.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.kriegerin_des_lichts.lex.example"
+msgstr "The Warrior checks Emil, who counts as a wolf. The Warrior sees “wolf”, Emil survives, and nothing happens in public.\nThe Warrior checks Ben, who is not a wolf. The Warrior sees “not a wolf” and dies at dawn."
+
+msgid "ui.role.kriegerin_des_lichts.lex.gm"
+msgstr "At dawn only the Warrior's death is announced, not the reason."
+
+msgid "ui.role.blutpriester.lex.night"
+msgstr "every night until used, optional"
+
+msgid "ui.role.blutpriester.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.blutpriester.lex.ability"
+msgstr "Sacrifices one person once and learns up to three wolves."
+
+msgid "ui.role.blutpriester.lex.timing"
+msgstr "Once per life, optional."
+
+msgid "ui.role.blutpriester.lex.targets"
+msgstr "One other living person, a wolf included."
+
+msgid "ui.role.blutpriester.lex.exceptions"
+msgstr "The victim dies during the dawn resolution and does not wake again this night. This is not a pack attack, the Guardian Angel has no effect. The game master chooses 0 to 3 living wolves whose names only the Blood Priest learns."
+
+msgid "ui.role.blutpriester.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.blutpriester.lex.example"
+msgstr "The Priest sacrifices Ben. The game master names Emil. The Priest sees “Emil is a wolf”. Ben dies at dawn.\nThe Priest sacrifices Emil, a wolf. The game master names no one, and the Priest learns no name."
+
+msgid "ui.role.blutpriester.lex.gm"
+msgstr "The Priest chooses the victim; there is no random pick for that. Which wolves the Priest learns, even none, you decide yourself or tap “Pick at random”. The suggestion only takes effect with “Confirm selection” and stays the same while the game does not change. If you tap a person yourself, your own choice applies. Only the victim's name is announced in public."
+
+msgid "ui.role.blutpriester.lex.open"
+msgstr "With a random suggestion every valid set of wolves, “none” included, is equally likely. This distribution is technically derived and not yet confirmed."
+
+msgid "ui.role.amalia.lex.night"
+msgstr "none, day action"
+
+msgid "ui.role.amalia.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.amalia.lex.ability"
+msgstr "With at least three wolves: sacrifices themself during the day for a public yes/no question."
+
+msgid "ui.role.amalia.lex.timing"
+msgstr "During the day, as long as at least three living people count as wolves."
+
+msgid "ui.role.amalia.lex.targets"
+msgstr "No selection in the app. Amalia asks the question aloud."
+
+msgid "ui.role.amalia.lex.exceptions"
+msgstr "Amalia dies at once. The game master answers the question truthfully with yes or no, and the app logs the answer."
+
+msgid "ui.role.amalia.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.amalia.lex.example"
+msgstr "On day 3 three wolves are alive. Amalia asks a yes/no question, for example “Is Ben a wolf?”. The game master answers “Yes”. Amalia dies.\nOnly two wolves are left alive. The ability is not available."
+
+msgid "ui.role.amalia.lex.gm"
+msgstr "Question and answer are public, so the ability becomes visible (permitted reveal). The app does not check the question and only logs Amalia's death and your yes or no. After Amalia's death, death consequences and win check run as usual."
+
+msgid "ui.role.detektiv.lex.night"
+msgstr "none, passive"
+
+msgid "ui.role.detektiv.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.detektiv.lex.ability"
+msgstr "When a wolf dies, the direction of the nearest wolf is announced publicly."
+
+msgid "ui.role.detektiv.lex.timing"
+msgstr "After every death of a person who counts as a wolf, as long as a Detective lives and at least one other wolf lives afterwards. During the day at once, at night during the dawn resolution."
+
+msgid "ui.role.detektiv.lex.targets"
+msgstr "No choice. Measured from the dead person's seat to the nearest living wolf, dead seats included."
+
+msgid "ui.role.detektiv.lex.exceptions"
+msgstr "One hint per wolf death, no matter how many Detectives live. With equal distance the announcement is “both sides equally far”. A Wolf Child transformed by the same death counts as another wolf. A death by correction without consequences triggers nothing. During the Elder's curse the ability rests."
+
+msgid "ui.role.detektiv.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.detektiv.lex.example"
+msgstr "Emil is executed. The nearest living wolf sits two seats clockwise from Emil's seat. Public announcement: the nearest wolf sits to Emil's left.\nThe last wolf dies. There is no other wolf, so no hint."
+
+msgid "ui.role.detektiv.lex.gm"
+msgstr "The announcement names only the direction, never the role. It does reveal, however, that the dead person counted as a wolf and that a Detective is still alive, even in revival rounds where roles stay hidden (permitted reveal). “Left” means clockwise."
+
+msgid "ui.role.detektiv.lex.open"
+msgstr "Whether “left” on the tablet really matches clockwise at the table has not yet been checked on a device."
+
+msgid "ui.role.die_ewigen.lex.night"
+msgstr "every night, shared step"
+
+msgid "ui.role.die_ewigen.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.die_ewigen.lex.ability"
+msgstr "Check together every night whether someone wins alone, and win along with them."
+
+msgid "ui.role.die_ewigen.lex.timing"
+msgstr "One shared step of all living Eternal Ones every night."
+
+msgid "ui.role.die_ewigen.lex.targets"
+msgstr "One other living person who is not one of the Eternal Ones. They learn only yes (solo role) or no."
+
+msgid "ui.role.die_ewigen.lex.exceptions"
+msgstr "They stay in the village. If a person checked with yes wins a solo victory, all Eternal Ones win along, living or dead. The shared win belongs to the checked person, not their role."
+
+msgid "ui.role.die_ewigen.lex.win"
+msgstr "With the village, and additionally with every person checked with yes who achieves a solo win."
+
+msgid "ui.role.die_ewigen.lex.example"
+msgstr "The Eternal Ones check Ben and see “no”. Ben is the Witch of the Woods.\nThey check Clara, a Pied Piper, and see “yes”. Later Clara wins. That makes all the Eternal Ones win too, even dead ones."
+
+msgid "ui.role.die_ewigen.lex.gm"
+msgstr "All the Eternal Ones wake in the same step. A Manipulator also counts as solo in the check."
+
+msgid "ui.role.nachtwaechter.lex.night"
+msgstr "none, passive"
+
+msgid "ui.role.nachtwaechter.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.nachtwaechter.lex.ability"
+msgstr "Rings the alarm in the morning if someone next to them does not belong to the village."
+
+msgid "ui.role.nachtwaechter.lex.timing"
+msgstr "Every morning after the dawn resolution, as long as a Night Warden lives."
+
+msgid "ui.role.nachtwaechter.lex.targets"
+msgstr "No choice. Neighbours are the nearest living people to the left and right; dead seats are skipped."
+
+msgid "ui.role.nachtwaechter.lex.exceptions"
+msgstr "If a wolf or a person with a solo role sits next to them, the bells ring publicly, without side and without names. The Elder's curse silences the ability."
+
+msgid "ui.role.nachtwaechter.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.nachtwaechter.lex.example"
+msgstr "Ben is the Night Warden. The living neighbour to Ben's right is a wolf. In the morning the bells ring.\nBoth living neighbours belong to the village. The bells stay silent."
+
+msgid "ui.role.nachtwaechter.lex.gm"
+msgstr "The bells say only that something is off, not on which side. The app does not say who sits next to the Night Warden."
+
+msgid "ui.role.schutzengel.lex.night"
+msgstr "every night, mandatory, before the pack"
+
+msgid "ui.role.schutzengel.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.schutzengel.lex.ability"
+msgstr "Protects another person from the pack attack at night."
+
+msgid "ui.role.schutzengel.lex.timing"
+msgstr "Every night while the Guardian Angel lives. The protection lasts only this night, is applied during the dawn resolution and ends when day begins. The step cannot be skipped."
+
+msgid "ui.role.schutzengel.lex.targets"
+msgstr "Exactly one other living person."
+
+msgid "ui.role.schutzengel.lex.exceptions"
+msgstr "Protects only against the pack attack, not against poison or other deaths. Piercing attacks (Blight Wolf, the Packfather's extra victim) break the protection. If the Guardian Angel dies later in the same night, the confirmed protection stays. Protection and Witch rescue on the same person: both are used up, exactly one attack is prevented."
+
+msgid "ui.role.schutzengel.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.schutzengel.lex.example"
+msgstr "The Guardian Angel protects Ben. The pack chooses Ben. In the morning the announcement is “No one died this night.”\nThe Guardian Angel protects Ben. The Witch poisons Ben. Ben dies anyway, because protection does not work against poison."
+
+msgid "ui.role.schutzengel.lex.gm"
+msgstr "Call the Guardian Angel before the pack. Nobody ever says in public that an attack was prevented."
+
+msgid "ui.role.waldhexe.lex.night"
+msgstr "every night with an unused potion, after the pack"
+
+msgid "ui.role.waldhexe.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.waldhexe.lex.ability"
+msgstr "Has one healing potion and one poison potion, each usable once."
+
+msgid "ui.role.waldhexe.lex.timing"
+msgstr "One potion of each kind per life; both may be used in the same night. Every revival resets the potions. The step runs as one chain and only takes effect on the final confirmation."
+
+msgid "ui.role.waldhexe.lex.targets"
+msgstr "Healing: only this night's current pack victim. Poisoning: one living person."
+
+msgid "ui.role.waldhexe.lex.exceptions"
+msgstr "Before deciding, the Witch sees the pack victim's name, even if protection exists. If they rescue the victim, they learn the victim's true role. The rescue prevents only this night's pack attack. Poison marks the person, who dies only in the dawn resolution and does not wake again this night. Protection does not prevent poison."
+
+msgid "ui.role.waldhexe.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.waldhexe.lex.example"
+msgstr "The pack chooses Ben. The Witch sees “Ben”, rescues Ben and sees “Ben: Villager”. Ben survives.\nThe Witch poisons Emil. Emil gets a death marker, does not wake again and dies at dawn."
+
+msgid "ui.role.waldhexe.lex.gm"
+msgstr "Nothing is used up until confirmation; cancelling discards all partial answers. The Witch declines explicitly within the step, skipping is not possible. Without a possible decision the step is dropped."
+
+msgid "ui.role.der_weise.lex.night"
+msgstr "none, passive, plus a decision at the execution"
+
+msgid "ui.role.der_weise.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.der_weise.lex.ability"
+msgstr "Survives one pack attack. If executed, the village's abilities rest."
+
+msgid "ui.role.der_weise.lex.timing"
+msgstr "The rescue works once per life. The curse only triggers when the Elder is executed: the game master sets 0 to 3, and that many following nights and days, starting with the following night, the abilities rest. 0 means no curse."
+
+msgid "ui.role.der_weise.lex.targets"
+msgstr "None. The curse affects everyone in the village faction."
+
+msgid "ui.role.der_weise.lex.exceptions"
+msgstr "The rescue is only used up if the pack attack would otherwise have killed the Elder; it happens silently, only the game master learns of it. Piercing attacks kill them. During the curse everything rests for village people: active and passive abilities, death reactions, Wolf Child transformation, Apprentice inheritance. Triggered effects lapse for good. Shield, weapon, heartbreak and Red Riding Hood's death chain keep working."
+
+msgid "ui.role.der_weise.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.der_weise.lex.example"
+msgstr "The pack chooses Ben, the Elder. No protection applies. Ben survives, no one has died in the morning, and only the game master knows why.\nBen is executed. The game master sets 2. During the following two nights and days all village people have no abilities."
+
+msgid "ui.role.der_weise.lex.gm"
+msgstr "You set the number at the execution. The curse affects only village people, not wolves and not solo roles. It is a death effect and is played out and announced publicly, with the role, also in revival rounds. The announcement does not name the length of the curse."
+
+msgid "ui.role.der_weise.lex.open"
+msgstr "That the announcement does not name the length of the curse is technically derived and not yet confirmed."
+
+msgid "ui.role.maertyrerin.lex.night"
+msgstr "at the end of the night"
+
+msgid "ui.role.maertyrerin.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.maertyrerin.lex.ability"
+msgstr "Can sacrifice themself so that the night's victim survives."
+
+msgid "ui.role.maertyrerin.lex.timing"
+msgstr "At the end of the night, but only if the pack victim would actually die. Only the first pack victim (first pack step) can be saved."
+
+msgid "ui.role.maertyrerin.lex.targets"
+msgstr "The final first pack victim of this night. The Martyr sees the victim after redirections."
+
+msgid "ui.role.maertyrerin.lex.exceptions"
+msgstr "Blocks do not prevent the sacrifice, the Elder's curse does. If a protection applies, the Martyr is not asked. If they sacrifice themself, they die as a substitute victim in place of the victim."
+
+msgid "ui.role.maertyrerin.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.maertyrerin.lex.example"
+msgstr "The pack chooses Ben, no protection applies. The Martyr is asked and sacrifices themself. The Martyr dies at dawn, Ben lives.\nThe Guardian Angel protects Ben, the pack chooses Ben. The Martyr is not asked."
+
+msgid "ui.role.maertyrerin.lex.gm"
+msgstr "The question only appears if the victim would otherwise die. Only the Martyr's death is announced in public, not the sacrifice."
+
+msgid "ui.role.schutzgeist.lex.night"
+msgstr "only when dead, in the first night after their death"
+
+msgid "ui.role.schutzgeist.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.schutzgeist.lex.ability"
+msgstr "In the night after their death, gives someone a shield against the next pack attack."
+
+msgid "ui.role.schutzgeist.lex.timing"
+msgstr "Once per life, in the first night after death. The shield works from the following night until the next pack attack on that person."
+
+msgid "ui.role.schutzgeist.lex.targets"
+msgstr "One living person."
+
+msgid "ui.role.schutzgeist.lex.exceptions"
+msgstr "The shield works only against pack attacks and breaks under piercing like the Guardian Angel's protection. It also works during the Elder's curse. If no living person exists, the step is dropped. If they choose a wolf (true count), it is announced publicly in the morning, without a name, that they chose a wolf."
+
+msgid "ui.role.schutzgeist.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.schutzgeist.lex.example"
+msgstr "The Guardian Spirit is executed on day 2. In night 3 they choose Ben. From night 4 the shield protects Ben against the next pack attack.\nThe Guardian Spirit chooses Emil, a wolf. In the morning it is announced publicly that a dead person chose a wolf. Neither a name nor the role is given."
+
+msgid "ui.role.schutzgeist.lex.gm"
+msgstr "This is the only role that acts only when dead. The morning announcement names no person and no role: in revival rounds roles stay hidden, in rounds without revival the role is revealed at death anyway."
+
+msgid "ui.role.dorfschmied.lex.night"
+msgstr "from night 6 until used, optional"
+
+msgid "ui.role.dorfschmied.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.dorfschmied.lex.ability"
+msgstr "From the sixth night a weapon that blocks one pack attack and kills a wolf."
+
+msgid "ui.role.dorfschmied.lex.timing"
+msgstr "Once per life. From night 6 of the game on, the Blacksmith is asked every night whether to give the weapon now, until it has been given."
+
+msgid "ui.role.dorfschmied.lex.targets"
+msgstr "One other living person as the carrier."
+
+msgid "ui.role.dorfschmied.lex.exceptions"
+msgstr "The weapon blocks the next pack attack on the carrier, even a piercing one. The game master chooses a living wolf who dies in the process. The weapon stays after the Blacksmith's death and also works during the Elder's curse. It applies before the shield and the Elder's rescue."
+
+msgid "ui.role.dorfschmied.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.dorfschmied.lex.example"
+msgstr "In night 6 the Blacksmith gives Clara the weapon. In night 7 the pack attacks Clara. The weapon blocks it, the game master chooses Emil, and Emil dies.\nIn night 6 the Blacksmith declines. In night 7 the question appears again."
+
+msgid "ui.role.dorfschmied.lex.gm"
+msgstr "Only the Blacksmith and you know whom they chose. You choose the wolf when the weapon blocks an attack."
+
+msgid "ui.role.verdammniswaechter.lex.night"
+msgstr "every night, after the pack choice"
+
+msgid "ui.role.verdammniswaechter.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.verdammniswaechter.lex.ability"
+msgstr "Each night decides whether the pack attack hits the pack victim or an offered other person."
+
+msgid "ui.role.verdammniswaechter.lex.timing"
+msgstr "Every night a mandatory judgment, the step cannot be skipped. The Doom Warden decides between the pack victim and the offered person. The judgment concerns only the first pack victim. Without a pack victim, without a possible offer, or if the Doom Warden is the pack victim, the step is dropped."
+
+msgid "ui.role.verdammniswaechter.lex.targets"
+msgstr "The app draws, using the stored seed, one living person who does not count as a wolf, other than the pack victim and the Doom Warden."
+
+msgid "ui.role.verdammniswaechter.lex.exceptions"
+msgstr "If they choose the offered person, the pack attacks that person instead of the victim. It stays a pack attack: protection, piercing, Knight and Martyr apply as usual. If the Doom Warden is the pack victim themself, the judgment lapses and the attack hits them."
+
+msgid "ui.role.verdammniswaechter.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.verdammniswaechter.lex.example"
+msgstr "The pack chooses Ben. The Doom Warden is offered Clara. They accept, and the pack attacks Clara. A protection on Clara would apply.\nThe pack chooses the Doom Warden. The judgment lapses, the attack hits them."
+
+msgid "ui.role.verdammniswaechter.lex.gm"
+msgstr "Only the app shows the offer to the Doom Warden. The table learns nothing of the redirection."
+
+msgid "ui.role.dorfwache.lex.night"
+msgstr "none, passive"
+
+msgid "ui.role.dorfwache.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.dorfwache.lex.ability"
+msgstr "Survives the pack attack."
+
+msgid "ui.role.dorfwache.lex.timing"
+msgstr "Always, while the Village Guard lives, without limit."
+
+msgid "ui.role.dorfwache.lex.targets"
+msgstr "None."
+
+msgid "ui.role.dorfwache.lex.exceptions"
+msgstr "A pack attack does not kill them. Piercing attacks (after a Blight Wolf's death, the Packfather's extra victim) and the Poison Wolf's paw do kill them. Everything else works normally: execution, Witch's poison, other deaths. During the Elder's curse the ability rests."
+
+msgid "ui.role.dorfwache.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.dorfwache.lex.example"
+msgstr "The pack chooses Anna, the Village Guard. Anna survives, no one has died in the morning.\nA Blight Wolf is dead. The next pack attack pierces protection and hits Anna. Anna dies."
+
+msgid "ui.role.dorfwache.lex.gm"
+msgstr "The Guard is never called and never named in public. In the morning the table sees only “no one died”."
+
+msgid "ui.role.ritter.lex.night"
+msgstr "none, death reaction"
+
+msgid "ui.role.ritter.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.ritter.lex.ability"
+msgstr "If killed by the werewolves, the nearest wolf dies too."
+
+msgid "ui.role.ritter.lex.timing"
+msgstr "Once per life. Only a death by pack attack triggers it, poison does not. The pack attack only strikes at night, so the reaction runs in the dawn resolution."
+
+msgid "ui.role.ritter.lex.targets"
+msgstr "The nearest living person who counts as a wolf. Distance is measured in seats, dead seats included. In a tie the game master chooses."
+
+msgid "ui.role.ritter.lex.exceptions"
+msgstr "A village person cursed by the Demonic Wolf is not a target. A Fenrir from stage 3 survives the Knight's blow once. During the Elder's curse the reaction rests."
+
+msgid "ui.role.ritter.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.ritter.lex.example"
+msgstr "The pack kills Ben, the Knight. The nearest living wolf is Emil, two seats away. Emil dies in the morning together with Ben.\nThe Witch poisons Ben, the Knight. Ben dies, but no one else, because poison does not trigger the Knight."
+
+msgid "ui.role.ritter.lex.gm"
+msgstr "If distances tie, you choose. The strike-back is a death effect and is announced publicly, with the role and the wolf taken along."
+
+msgid "ui.role.waechter_am_tor.lex.night"
+msgstr "none, passive"
+
+msgid "ui.role.waechter_am_tor.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.waechter_am_tor.lex.ability"
+msgstr "As long as they live, no new wolf appears; the person becomes a Villager instead."
+
+msgid "ui.role.waechter_am_tor.lex.timing"
+msgstr "Always, as long as a Gatewarden lives, without limit."
+
+msgid "ui.role.waechter_am_tor.lex.targets"
+msgstr "No choice. Every way to a new wolf is blocked: Wolf Child transformation, Apprentice inherits a wolf role, King Lycaon, Soul Swapper."
+
+msgid "ui.role.waechter_am_tor.lex.exceptions"
+msgstr "Even a dead person who would receive a wolf role becomes a Villager. The Coachman's revived people are checked too. Game master corrections are not blocked. Only the affected person learns privately that they are now a Villager. During the Elder's curse the ability rests."
+
+msgid "ui.role.waechter_am_tor.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.waechter_am_tor.lex.example"
+msgstr "Clara's Wolf Child role model dies while the Gatewarden lives. Clara does not transform, becomes a Villager and learns it privately.\nKing Lycaon wants to make David a Decoy Wolf. A Gatewarden is alive. David becomes a Villager."
+
+msgid "ui.role.waechter_am_tor.lex.gm"
+msgstr "The table learns nothing. Only the affected person sees the message on their card."
+
+msgid "ui.role.zeitwaechter.lex.night"
+msgstr "once per life, as the very first step of a night, optional"
+
+msgid "ui.role.zeitwaechter.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.zeitwaechter.lex.ability"
+msgstr "Can once at the start of a night freeze the night: all night actions are dropped, no one dies from this night."
+
+msgid "ui.role.zeitwaechter.lex.timing"
+msgstr "Once per life. Declining keeps the ability."
+
+msgid "ui.role.zeitwaechter.lex.targets"
+msgstr "None."
+
+msgid "ui.role.zeitwaechter.lex.exceptions"
+msgstr "All night steps are dropped for all roles, including wolves, solo and Black Widow. In the morning no people from this night die, Fenrir and Cerberus do not grow, this night's apples expire. Due effects from earlier nights (poison paw, plague spread) take place. The night number keeps counting. The extra victim of an executed Packfather lapses. During the Elder's curse the ability rests."
+
+msgid "ui.role.zeitwaechter.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.zeitwaechter.lex.example"
+msgstr "In night 4 the Time Warden freezes the night. In the morning it is announced publicly that the night was frozen. No one died from this night.\nThe Poison Wolf poisoned Clara in night 2. Night 4 is frozen. Clara's poison still works on schedule, Clara dies in the morning after night 4."
+
+msgid "ui.role.zeitwaechter.lex.gm"
+msgstr "Call the Time Warden before the Shadow Hound. The public announcement names no one."
+
+msgid "ui.role.zeitwaechter.lex.open"
+msgstr "Details (once per life, behaviour during the Elder's curse, the Packfather's extra victim) are technically derived and not yet confirmed."
+
+msgid "ui.role.sensentraeger.lex.night"
+msgstr "none, death reaction"
+
+msgid "ui.role.sensentraeger.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.sensentraeger.lex.ability"
+msgstr "May curse a living person upon death."
+
+msgid "ui.role.sensentraeger.lex.timing"
+msgstr "Once per life, optional, declining is allowed. After a death during the day at once, after a death at night (poison included) during the dawn resolution."
+
+msgid "ui.role.sensentraeger.lex.targets"
+msgstr "Any person who is alive at the time of the answer, except the Reaper."
+
+msgid "ui.role.sensentraeger.lex.exceptions"
+msgstr "The chosen person dies from the curse. The reaction stays open until it is answered. A later revival does not remove an already queued reaction. The Guardian Angel does not protect. During the Elder's curse the reaction rests."
+
+msgid "ui.role.sensentraeger.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.sensentraeger.lex.example"
+msgstr "The Reaper is executed during the day and chooses Emil at once. Emil dies.\nThe pack kills the Reaper at night. During the dawn resolution the Reaper declines. No one else dies."
+
+msgid "ui.role.sensentraeger.lex.gm"
+msgstr "The curse is a death effect and is played out and announced publicly, with role and target. If the Reaper declines, there is no announcement. Otherwise only the names of the dead count in public."
+
+msgid "ui.role.wolfskind.lex.night"
+msgstr "role model choice, only while without a role model"
+
+msgid "ui.role.wolfskind.lex.wolf"
+msgstr "only after transformation"
+
+msgid "ui.role.wolfskind.lex.ability"
+msgstr "Chooses a role model and becomes a wolf when the model dies."
+
+msgid "ui.role.wolfskind.lex.timing"
+msgstr "The step occurs every night while the Wolf Child lives, is untransformed and has no role model. A regularly started Wolf Child chooses in night 1. It cannot be skipped."
+
+msgid "ui.role.wolfskind.lex.targets"
+msgstr "Exactly one other living person. The Wolf Child may not choose themself."
+
+msgid "ui.role.wolfskind.lex.exceptions"
+msgstr "If the role model dies with consequences, the Wolf Child transforms at once and before the win check of that death: faction werewolves, counts as a wolf, appears as Werewolf, the role stays Wolf Child. The Wolf Child joins the pack from the following night. A death by game master correction without consequences does not transform. A dead Wolf Child never transforms for that death, not even after revival. A renewed death of the revived role model can transform. A Gatewarden makes them a Villager instead. During the Elder's curse the transformation rests."
+
+msgid "ui.role.wolfskind.lex.win"
+msgstr "Before the transformation with the village, afterwards with the werewolves."
+
+msgid "ui.role.wolfskind.lex.example"
+msgstr "In night 1 Clara, the Wolf Child, chooses Ben as role model. On day 3 Ben is executed. Clara becomes a wolf at once and wakes with the pack from the following night.\nThe game master sets Ben's death by correction without consequences. Clara stays in the village."
+
+msgid "ui.role.wolfskind.lex.gm"
+msgstr "The Oracle sees “Wolf Child” before the transformation and “Werewolf” after. The Witch always sees “Wolf Child”. Only the Wolf Child and you know who the role model is."
+
+msgid "ui.role.lehrling.lex.night"
+msgstr "choice in the first available night without a bond"
+
+msgid "ui.role.lehrling.lex.wolf"
+msgstr "only with an inherited wolf role"
+
+msgid "ui.role.lehrling.lex.ability"
+msgstr "Chooses a master and inherits the role when the master dies."
+
+msgid "ui.role.lehrling.lex.timing"
+msgstr "The choice appears in the first available night without an active bond. It cannot be skipped. If fewer than three other people are alive, it is dropped with a log entry."
+
+msgid "ui.role.lehrling.lex.targets"
+msgstr "The game master chooses three different other living people. The Apprentice sees only their three current roles, sorted by role ID, never names. They choose a role, never a person."
+
+msgid "ui.role.lehrling.lex.exceptions"
+msgstr "If the master dies with consequences, the Apprentice inherits the current role at once: faction, passive traits, win condition and death reaction apply at once, active night abilities from the following night, all uses fresh. If the Apprentice dies before the inheritance, the bond ends for good. A master's death by correction without consequences passes nothing on. A Gatewarden turns an inherited wolf role into a Villager."
+
+msgid "ui.role.lehrling.lex.win"
+msgstr "Before the inheritance with the village, afterwards according to the inherited role."
+
+msgid "ui.role.lehrling.lex.example"
+msgstr "The game master chooses Ben, Clara and Emil. The Apprentice sees “Villager, Witch of the Woods, Werewolf” and chooses “Witch of the Woods”, which belongs to Clara. When Clara dies, the Apprentice becomes the Witch with fresh potions, usable from the following night.\nThe Apprentice chooses “Werewolf”, which belongs to Emil. Emil is executed. The Apprentice counts as a wolf at once and wakes with the pack from the following night."
+
+msgid "ui.role.lehrling.lex.gm"
+msgstr "The bond is visible only to you. If the Apprentice inherits Wolf Child, it stays untransformed and they choose a new role model next night. If they inherit Apprentice, the new choice follows next night."
+
+msgid "ui.role.loki.lex.night"
+msgstr "night 1 only"
+
+msgid "ui.role.loki.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.loki.lex.ability"
+msgstr "Links two people as lovers or rivals in the first night."
+
+msgid "ui.role.loki.lex.timing"
+msgstr "Night 1 of the game only, optional. If Loki misses the night, the ability expires."
+
+msgid "ui.role.loki.lex.targets"
+msgstr "Two different living people, Loki themself is allowed."
+
+msgid "ui.role.loki.lex.exceptions"
+msgstr "If one lover dies, the other dies at once of heartbreak (own cause). Protection against the pack attack does not help against it, personal shields do. Rivals have no effect of their own, they matter only to the Black Widow. Heartbreak also works during the Elder's curse. A bond once ended by death stays ended after a revival."
+
+msgid "ui.role.loki.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.loki.lex.example"
+msgstr "Loki links Anna and Ben as lovers. On day 2 Anna is executed. Ben dies at once of heartbreak.\nLoki links Clara and David as rivals. If Clara dies, nothing happens to David."
+
+msgid "ui.role.loki.lex.gm"
+msgstr "Loki has a real step only in night 1. In later nights Loki is still called, but only announced, so that the table learns nothing; the app shows this announcement. Lovers and rivals learn their partner and the kind of bond privately. The death by heartbreak is a death effect and is announced publicly. The announcement names Loki as the role the bond comes from, never the role of the dying person."
+
+msgid "ui.role.rotkaeppchen.lex.night"
+msgstr "every night"
+
+msgid "ui.role.rotkaeppchen.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.rotkaeppchen.lex.ability"
+msgstr "Seeks refuge every night. Whoever grants it receives an apple and a death chain."
+
+msgid "ui.role.rotkaeppchen.lex.timing"
+msgstr "Every night while Little Red Riding Hood lives."
+
+msgid "ui.role.rotkaeppchen.lex.targets"
+msgstr "One other living person, a wolf included, who may decline. The same person may be asked again."
+
+msgid "ui.role.rotkaeppchen.lex.exceptions"
+msgstr "If the person grants refuge, they and Little Red Riding Hood are chained: if one dies, the other dies at once too. The chain lasts until the next granted refuge. A refusal triggers nothing. The apple lets the person's next night step, which their role has every night, run a second time. It only applies in the following night, expires if unused, and each person has at most one. It has no effect for once-only and charge abilities, passive roles, and for the Corrupt Judge, Parasite, Doom Warden and Little Red Riding Hood. The chain also works during the Elder's curse."
+
+msgid "ui.role.rotkaeppchen.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.rotkaeppchen.lex.example"
+msgstr "Little Red Riding Hood asks Ben, Ben grants refuge. In the following night Ben, a Doctor, performs the step twice. On day 4 Ben is executed and Little Red Riding Hood dies at once too.\nLittle Red Riding Hood asks Emil, a wolf. Emil declines. No chain and no apple arise."
+
+msgid "ui.role.rotkaeppchen.lex.gm"
+msgstr "The chosen person answers the question themself. Abilities and their effects are known to all people: the chosen person knows apple and chain and may decline, but does not learn who asks. Their card therefore names neither the role nor the person asking. The death through the chain is a death effect and is announced publicly. The announcement names Little Red Riding Hood as the role the chain comes from, never the role of the dying person."
+
+msgid "ui.role.rotkaeppchen.lex.open"
+msgstr "How the chosen person is woken and asked at the table is not yet settled."
+
+msgid "ui.role.seelentauscher.lex.night"
+msgstr "every night until used"
+
+msgid "ui.role.seelentauscher.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.seelentauscher.lex.ability"
+msgstr "Swaps the roles of two people once, living or dead."
+
+msgid "ui.role.seelentauscher.lex.timing"
+msgstr "Once per life, every night until used, optional (declining is allowed)."
+
+msgid "ui.role.seelentauscher.lex.targets"
+msgstr "Two different people, living or dead. The Soul Swapper themself is allowed."
+
+msgid "ui.role.seelentauscher.lex.exceptions"
+msgstr "Both receive the new role as with an Apprentice inheritance: fresh uses, no carried-over bonds (a Wolf Child has no role model, an Apprentice bond ends). A Decoy Wolf's mandatory false role moves along. Living people affected learn their new role at once and privately. A living Gatewarden turns a received wolf role into a Villager even for a dead person. During the Elder's curse the ability rests."
+
+msgid "ui.role.seelentauscher.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.seelentauscher.lex.example"
+msgstr "In night 3 the Soul Swapper swaps Ben (Witch of the Woods) and Emil (Werewolf). Ben is now a Werewolf, Emil the Witch. Both see their new role privately.\nA Gatewarden is alive. Ben would receive the role Werewolf and becomes a Villager instead. Emil becomes the Witch."
+
+msgid "ui.role.seelentauscher.lex.gm"
+msgstr "The table learns nothing. A dead person affected sees no message, a living one does."
+
+msgid "ui.role.kutscher.lex.night"
+msgstr "from a night with at least 10 dead"
+
+msgid "ui.role.kutscher.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.kutscher.lex.ability"
+msgstr "With ten dead, brings back three dead once. One of them becomes a wolf."
+
+msgid "ui.role.kutscher.lex.timing"
+msgstr "Once per life, optional, from a night with at least 10 dead (all count)."
+
+msgid "ui.role.kutscher.lex.targets"
+msgstr "Three dead people. The Coachman decides which of them becomes a wolf."
+
+msgid "ui.role.kutscher.lex.exceptions"
+msgstr "The revived keep their role with fresh uses, only the chosen wolf receives the role Werewolf. A living Gatewarden turns them into a Villager instead. They learn it privately, act from the following night, and the revival becomes publicly visible in the morning."
+
+msgid "ui.role.kutscher.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.kutscher.lex.example"
+msgstr "In night 6 11 people are dead. The Coachman brings back Anna (Witch of the Woods), Ben (Villager) and Clara (Doctor) and makes Ben a wolf. In the morning it becomes publicly visible that three people are back.\nOnly nine people are dead. The Coachman has no step."
+
+msgid "ui.role.kutscher.lex.gm"
+msgstr "The choice of who becomes a wolf is not yours but the Coachman's. The new wolf wakes with the pack from the following night."
+
+msgid "ui.role.kutscher.lex.open"
+msgstr "Rules for underworld cards are not yet settled and not part of this implementation."
+
+msgid "ui.role.dr_victor_frankenstein.lex.night"
+msgstr "every night until used, optional"
+
+msgid "ui.role.dr_victor_frankenstein.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.dr_victor_frankenstein.lex.ability"
+msgstr "Revives one dead person once with a free role."
+
+msgid "ui.role.dr_victor_frankenstein.lex.timing"
+msgstr "Once per life, every night until used, optional."
+
+msgid "ui.role.dr_victor_frankenstein.lex.targets"
+msgstr "One dead person. They receive a role nobody currently has. Villager is always possible, a wolf role never."
+
+msgid "ui.role.dr_victor_frankenstein.lex.exceptions"
+msgstr "The revived person starts fresh, learns their new role privately and acts from the following night. The revival becomes publicly visible in the morning."
+
+msgid "ui.role.dr_victor_frankenstein.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.dr_victor_frankenstein.lex.example"
+msgstr "In night 3 Frankenstein revives Anna and gives Anna the free role Doctor. Anna sees “Doctor” privately and acts from night 4.\nFrankenstein revives Ben and chooses Villager. That role is always possible."
+
+msgid "ui.role.dr_victor_frankenstein.lex.gm"
+msgstr "In the morning only the fact that someone is back appears, not the new role."
+
+msgid "ui.role.dr_victor_frankenstein.lex.open"
+msgstr "A card condition belongs to the underworld cards, which are not yet settled, and is not implemented."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.night"
+msgstr "none, passive"
+
+msgid "ui.role.wahnsinniger_kutscher.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.wahnsinniger_kutscher.lex.ability"
+msgstr "If executed, their neighbours die with them."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.timing"
+msgstr "At every execution of the Mad Coachman, without limit."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.targets"
+msgstr "No choice. Neighbours are the nearest living people to the left and right; dead seats are skipped."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.exceptions"
+msgstr "Only a real execution triggers it. A Mirror Wolf reflection onto them is not an execution. During the Elder's curse the ability rests."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.example"
+msgstr "Ben sits between Anna and Clara and is the Mad Coachman. Ben is executed, Anna and Clara die too.\nThe Mirror Wolf reflects an execution onto Ben, the Mad Coachman. There is no coachman crash."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.gm"
+msgstr "The neighbours dying along is a death effect and is announced publicly, with the role and the names of those who died along."
+
+msgid "ui.role.henker.lex.night"
+msgstr "from three executions every night, optional"
+
+msgid "ui.role.henker.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.henker.lex.ability"
+msgstr "From three executions on, marks someone at night who dies along at the next one."
+
+msgid "ui.role.henker.lex.timing"
+msgstr "Every night, optional, as soon as at least three executions have been confirmed in the game, even before receiving the role. Without limit."
+
+msgid "ui.role.henker.lex.targets"
+msgstr "One person. They die additionally at the following day's execution if the Executioner is alive then."
+
+msgid "ui.role.henker.lex.exceptions"
+msgstr "Every confirmed execution counts, even without a death (reflection, Cerberus ward, Parasite). If the Executioner is not alive at that execution, the marking lapses. If no execution takes place on the following day, it lapses at the start of the next night. The marked person also dies along when the execution itself kills no one (reflection, Cerberus ward). For the Death Seeker only the execution of that person counts; an additional Executioner death is not one."
+
+msgid "ui.role.henker.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.henker.lex.example"
+msgstr "Three executions are over. In night 4 the Executioner marks Clara. On day 4 Ben is executed, Clara dies along with Ben.\nThe Executioner marks Clara and dies in the same night. The marking lapses."
+
+msgid "ui.role.henker.lex.gm"
+msgstr "The marking applies only to the following day's execution. Without an execution it lapses at the start of the next night."
+
+msgid "ui.role.korrupter_richter.lex.night"
+msgstr "every night, optional"
+
+msgid "ui.role.korrupter_richter.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.korrupter_richter.lex.ability"
+msgstr "Marks a person at night who counts as nominated during the day."
+
+msgid "ui.role.korrupter_richter.lex.timing"
+msgstr "Every night, optional. At the start of the night the old marking is cleared, there is at most one."
+
+msgid "ui.role.korrupter_richter.lex.targets"
+msgstr "One living person, the Judge themself is allowed."
+
+msgid "ui.role.korrupter_richter.lex.exceptions"
+msgstr "At the start of the day the marked person counts as nominated by the Judge (normal nomination: daily limit, Manipulator death, reflection as usual). Only the marked person's nomination appears in public, not the Judge. Little Red Riding Hood's apple has no effect here. The game master view shows a reminder “+1 vote on the marked person”; you count the votes yourself."
+
+msgid "ui.role.korrupter_richter.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.korrupter_richter.lex.example"
+msgstr "In night 3 the Judge marks Emil. At the start of day 4 Emil is nominated. In public it is only said that Emil is nominated.\nThe Judge marks themself. They are nominated at the start of the day."
+
+msgid "ui.role.korrupter_richter.lex.gm"
+msgstr "You never say who nominated. At the start of the night the app clears the old marking."
+
+msgid "ui.role.werwolf.lex.night"
+msgstr "pack step every night"
+
+msgid "ui.role.werwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.werwolf.lex.ability"
+msgstr "Chooses a victim at night together with the pack."
+
+msgid "ui.role.werwolf.lex.timing"
+msgstr "Every night, as long as at least one living person counts as a wolf. The victim dies only in the dawn resolution."
+
+msgid "ui.role.werwolf.lex.targets"
+msgstr "Any living person, a wolf included. The pack may also expressly choose no one. All people who count as wolves at the start of the night wake up."
+
+msgid "ui.role.werwolf.lex.exceptions"
+msgstr "Protection and rescue can prevent the attack. If the chosen victim is already dead by morning, no attack takes place and the choice is not reopened. Anyone who becomes a wolf only during the night wakes with the pack from the following night."
+
+msgid "ui.role.werwolf.lex.win"
+msgstr "Wolf win as above."
+
+msgid "ui.role.werwolf.lex.example"
+msgstr "Emil and Fritz are wolves and choose Ben. In the morning Ben dies.\nEmil, Fritz, Clara and David are alive. Emil and Fritz are wolves. 2 wolves against 2 non-wolves: the wolves are a win candidate."
+
+msgid "ui.role.werwolf.lex.gm"
+msgstr "The pack agrees silently, you enter the target. A pack decision to skip is logged with a reason."
+
+msgid "ui.role.trugbilderwolf.lex.night"
+msgstr "none of its own, part of the pack"
+
+msgid "ui.role.trugbilderwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.trugbilderwolf.lex.ability"
+msgstr "Pack wolf, appears with a false role when checked."
+
+msgid "ui.role.trugbilderwolf.lex.timing"
+msgstr "The game master sets the false role for every instance expressly at setup, never randomly."
+
+msgid "ui.role.trugbilderwolf.lex.targets"
+msgstr "Any known role that does not count as a wolf is valid as a false role, even if it does not appear in the game."
+
+msgid "ui.role.trugbilderwolf.lex.exceptions"
+msgstr "The Oracle sees the false role, the Witch sees the true role on a rescue. Counts and yes/no checks (Doctor, Dreamer, Warrior, Scent Hound) use the true wolf count. A correction of the false role only works to a non-wolf role and affects later checks."
+
+msgid "ui.role.trugbilderwolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.trugbilderwolf.lex.example"
+msgstr "Clara is a Decoy Wolf with the false role “Witch of the Woods”. The Oracle checks Clara and sees “Witch of the Woods”.\nClara is the pack victim and is rescued by the Witch. The Witch sees “Clara: Decoy Wolf”."
+
+msgid "ui.role.trugbilderwolf.lex.gm"
+msgstr "You choose the false role in setup per instance, with no default. It is saved and never shown in public. Only you know it, the Decoy Wolf does not learn it."
+
+msgid "ui.role.spiegelwolf.lex.night"
+msgstr "none of its own, part of the pack"
+
+msgid "ui.role.spiegelwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.spiegelwolf.lex.ability"
+msgstr "Pack wolf, redirects one execution onto the nominating person once."
+
+msgid "ui.role.spiegelwolf.lex.timing"
+msgstr "The Mirror Wolf's first confirmed execution, once per life. It is used up only with the confirmed execution."
+
+msgid "ui.role.spiegelwolf.lex.targets"
+msgstr "The person who nominated the Mirror Wolf on that day. They die with the cause reflection, the Mirror Wolf survives, the day's execution counts as done."
+
+msgid "ui.role.spiegelwolf.lex.exceptions"
+msgstr "No reflection, normal death: if the reflection is already used, without a nomination of that day on them, or if the nominating person is dead or unknown at the execution. With self-nomination the reflection triggers and the Mirror Wolf themself dies, exactly one death. Guardian Angel and Witch rescue do not prevent the reflection."
+
+msgid "ui.role.spiegelwolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.spiegelwolf.lex.example"
+msgstr "Ben nominates Fritz, the Mirror Wolf. Fritz is to be executed. Instead Ben dies, Fritz lives.\nFritz's reflection is already used. The next execution of Fritz kills them normally."
+
+msgid "ui.role.spiegelwolf.lex.gm"
+msgstr "In public only the nominating person's death appears, no cause. The table does see, however, that the nominating person dies instead of the Mirror Wolf; that cannot be hidden. After a revival the uses are available again."
+
+msgid "ui.role.siegreicher_wolf.lex.night"
+msgstr "none of its own, part of the pack"
+
+msgid "ui.role.siegreicher_wolf.lex.wolf"
+msgstr "yes, double in the wolf parity"
+
+msgid "ui.role.siegreicher_wolf.lex.ability"
+msgstr "Pack wolf, counts as two wolves for the wolf win while alive."
+
+msgid "ui.role.siegreicher_wolf.lex.timing"
+msgstr "Permanently, while alive."
+
+msgid "ui.role.siegreicher_wolf.lex.targets"
+msgstr "None."
+
+msgid "ui.role.siegreicher_wolf.lex.exceptions"
+msgstr "The Victorious Wolf counts double only in the wolf parity. For “no wolf is left alive” and for conditions that count people (Manipulator: exactly three living), they count once. The Ranger counts them once. An Apprentice who inherits the role counts double at once. The Oracle sees “Werewolf”."
+
+msgid "ui.role.siegreicher_wolf.lex.win"
+msgstr "Wolf win with the double weight."
+
+msgid "ui.role.siegreicher_wolf.lex.example"
+msgstr "Emil (Victorious Wolf), Clara and David are alive. Wolves 2, others 2. The wolves are a win candidate.\nEmil is alive with Anna, Ben and Clara. Wolves 2, others 3. No wolf win yet."
+
+msgid "ui.role.siegreicher_wolf.lex.gm"
+msgstr "The special count appears in your win check, not in public."
+
+msgid "ui.role.besessener_wolf.lex.night"
+msgstr "none of its own, death reaction"
+
+msgid "ui.role.besessener_wolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.besessener_wolf.lex.ability"
+msgstr "Pack wolf, takes a person with them on death."
+
+msgid "ui.role.besessener_wolf.lex.timing"
+msgstr "Once per life, optional. After a death during the day at once, at night during the dawn resolution. Requirement: at least 5 people are alive immediately before their death, the Possessed Wolf included."
+
+msgid "ui.role.besessener_wolf.lex.targets"
+msgstr "One other living person, a wolf included, or declining."
+
+msgid "ui.role.besessener_wolf.lex.exceptions"
+msgstr "If fewer than 5 people are alive immediately before their death (the Possessed Wolf included), there is no reaction."
+
+msgid "ui.role.besessener_wolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.besessener_wolf.lex.example"
+msgstr "Six people are alive. Fritz, the Possessed Wolf, is executed and takes Ben along. Ben dies at once.\nOnly four people are alive. Fritz dies without taking anyone along."
+
+msgid "ui.role.besessener_wolf.lex.gm"
+msgstr "You enter the choice of whom to take along on the tablet. Taking someone along is a death effect and is announced publicly, with role and target. If they decline, there is no announcement."
+
+msgid "ui.role.blutwolf.lex.night"
+msgstr "none of its own, part of the pack"
+
+msgid "ui.role.blutwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.blutwolf.lex.ability"
+msgstr "Pack wolf, vote +1 per dead direct neighbour."
+
+msgid "ui.role.blutwolf.lex.timing"
+msgstr "At every vote, while alive."
+
+msgid "ui.role.blutwolf.lex.targets"
+msgstr "None."
+
+msgid "ui.role.blutwolf.lex.exceptions"
+msgstr "Votes are not counted digitally. The game master view shows only the reminder “+1 vote per directly adjacent dead seat”. You count yourself."
+
+msgid "ui.role.blutwolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.blutwolf.lex.example"
+msgstr "Both neighbouring seats of Emil, the Blood Wolf, are dead. The reminder reads “+2 votes”.\nBoth neighbours are alive. There is no reminder."
+
+msgid "ui.role.blutwolf.lex.gm"
+msgstr "The reminder is visible only to you and calculates nothing. It appears only while the Blood Wolf lives."
+
+msgid "ui.role.seuchenwolf.lex.night"
+msgstr "none of its own, part of the pack"
+
+msgid "ui.role.seuchenwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.seuchenwolf.lex.ability"
+msgstr "Pack wolf. After their death the next pack attack pierces all protection."
+
+msgid "ui.role.seuchenwolf.lex.timing"
+msgstr "After the Blight Wolf's death the next actual pack attack pierces and uses up the effect, whether or not a protection existed. A night without a pack victim uses up nothing. Several dead Blight Wolves do not stack."
+
+msgid "ui.role.seuchenwolf.lex.targets"
+msgstr "The next pack victim."
+
+msgid "ui.role.seuchenwolf.lex.exceptions"
+msgstr "Pierced are the Guardian Angel, Witch rescue, Village Guard, the Elder's rescue and the Guardian Spirit's shield. Not pierced are the Blacksmith's weapon, personal shields of solo roles, redirections and substitute victims."
+
+msgid "ui.role.seuchenwolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.seuchenwolf.lex.example"
+msgstr "Emil, the Blight Wolf, is executed. In the next night the Guardian Angel protects Ben, the pack chooses Ben. Ben dies anyway.\nTwo Blight Wolves are dead. Only the next pack attack pierces, not the one after."
+
+msgid "ui.role.seuchenwolf.lex.gm"
+msgstr "Only you see the effect. In the morning no public hint about protection or piercing is allowed."
+
+msgid "ui.role.rudelvater.lex.night"
+msgstr "pack, extra pack step after their execution"
+
+msgid "ui.role.rudelvater.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.rudelvater.lex.ability"
+msgstr "Pack wolf, survives once. After their execution there is an extra victim."
+
+msgid "ui.role.rudelvater.lex.timing"
+msgstr "Once per life they survive the first death that is neither a pack attack nor an execution. If executed, there is a second pack step in the following night, right after the pack."
+
+msgid "ui.role.rudelvater.lex.targets"
+msgstr "The pack chooses the extra pack victim like the first."
+
+msgid "ui.role.rudelvater.lex.exceptions"
+msgstr "The extra victim dies in the morning and pierces protection. Game master kills are always effective. A Necromancer can redirect the extra victim."
+
+msgid "ui.role.rudelvater.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.rudelvater.lex.example"
+msgstr "The Witch poisons Emil, the Packfather. It is their first such death, they survive.\nEmil is executed on day 3. In night 4 the pack chooses Ben first, then Clara in a second step. A protection can save Ben. Clara dies in the morning despite Guardian Angel or rescue, because the extra victim pierces protection."
+
+msgid "ui.role.rudelvater.lex.gm"
+msgstr "The second pack step comes only after an execution. A Time Warden freeze cancels it."
+
+msgid "ui.role.fenrir.lex.night"
+msgstr "none of its own, part of the pack"
+
+msgid "ui.role.fenrir.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.fenrir.lex.ability"
+msgstr "Pack wolf, grows stronger every night and survives once from stage 3."
+
+msgid "ui.role.fenrir.lex.timing"
+msgstr "Stage +1 in every dawn resolution in which they live. From stage 3 they survive one death of any kind, once."
+
+msgid "ui.role.fenrir.lex.targets"
+msgstr "None."
+
+msgid "ui.role.fenrir.lex.exceptions"
+msgstr "Game master corrections are excepted. Execution and the Knight are survived too. A revival resets stage and protection. A frozen night does not let Fenrir grow."
+
+msgid "ui.role.fenrir.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.fenrir.lex.example"
+msgstr "After three mornings Fenrir has stage 3. On day 3 Fenrir is executed and survives once.\nOn day 2 Fenrir has only stage 2. The execution kills Fenrir normally."
+
+msgid "ui.role.fenrir.lex.gm"
+msgstr "The stage appears only in your view. A survived death is not named as such in public."
+
+msgid "ui.role.cerberus.lex.night"
+msgstr "none of its own, part of the pack"
+
+msgid "ui.role.cerberus.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.cerberus.lex.ability"
+msgstr "Pack wolf, collects heads and with three wards off an execution."
+
+msgid "ui.role.cerberus.lex.timing"
+msgstr "+1 head in every dawn resolution in which they live, at most 3. If they have 3 heads at the execution, the app asks the game master “ward off?”."
+
+msgid "ui.role.cerberus.lex.targets"
+msgstr "Executions only."
+
+msgid "ui.role.cerberus.lex.exceptions"
+msgstr "On “yes” they survive, the heads drop to 0, and the day's execution counts as done. The Bounty Hunter does not count the ward as an execution of a wolf. The Executioner counts it as an execution."
+
+msgid "ui.role.cerberus.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.cerberus.lex.example"
+msgstr "Cerberus has three heads and is executed. The game master answers “yes”. Cerberus survives, the heads are 0.\nCerberus has only two heads. The execution kills Cerberus normally."
+
+msgid "ui.role.cerberus.lex.gm"
+msgstr "The question “ward off?” appears only to you."
+
+msgid "ui.role.schattenhund.lex.night"
+msgstr "every night until used, optional, before all village roles"
+
+msgid "ui.role.schattenhund.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.schattenhund.lex.ability"
+msgstr "Pack wolf, blocks all village abilities of one night, once."
+
+msgid "ui.role.schattenhund.lex.timing"
+msgstr "Once per life. Every night, night 1 included, the question “block now?” appears until used. The block lasts the whole night."
+
+msgid "ui.role.schattenhund.lex.targets"
+msgstr "No choice, all night steps of village roles this night."
+
+msgid "ui.role.schattenhund.lex.exceptions"
+msgstr "The block only drops active night steps of village roles (logged). Death reactions and passive abilities keep working. Wolves and solo roles are not affected. The Shadow Hound acts at the very start of the night, after the Time Warden."
+
+msgid "ui.role.schattenhund.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.schattenhund.lex.example"
+msgstr "In night 2 the Shadow Hound blocks. Oracle, Witch and Doctor do not act this night.\nIn night 1 the Shadow Hound declines. In night 2 the question appears again."
+
+msgid "ui.role.schattenhund.lex.gm"
+msgstr "The steps drop and are logged. Blocked roles are still called so that the table learns nothing."
+
+msgid "ui.role.albtraumwolf.lex.night"
+msgstr "every night, optional, before all village roles"
+
+msgid "ui.role.albtraumwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.albtraumwolf.lex.ability"
+msgstr "Pack wolf, blocks one person's ability every night."
+
+msgid "ui.role.albtraumwolf.lex.timing"
+msgstr "Every night, optional, without limit."
+
+msgid "ui.role.albtraumwolf.lex.targets"
+msgstr "One living person, the same as the night before is allowed, or declining."
+
+msgid "ui.role.albtraumwolf.lex.exceptions"
+msgstr "The effect hits only that person's night steps, if they are a village role (logged). Death reactions and passive abilities keep running. They act at the start of the night before all village roles."
+
+msgid "ui.role.albtraumwolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.albtraumwolf.lex.example"
+msgstr "The Nightmare Wolf blocks Ben, the Oracle. Ben does not act this night.\nThe Nightmare Wolf blocks Emil, a wolf. Nothing happens, because only village roles are blocked."
+
+msgid "ui.role.albtraumwolf.lex.gm"
+msgstr "Blocked people are still called so that the table learns nothing. Accumulated lists stay in place during a block (for example for the Bounty Hunter)."
+
+msgid "ui.role.giftwolf.lex.night"
+msgstr "every night, optional, after the pack"
+
+msgid "ui.role.giftwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.giftwolf.lex.ability"
+msgstr "Pack wolf, poisons twice. The target dies two nights later."
+
+msgid "ui.role.giftwolf.lex.timing"
+msgstr "Two poison paws per life, at most one per night, optional. Poisoned in night N, the person dies in the dawn resolution after night N+2."
+
+msgid "ui.role.giftwolf.lex.targets"
+msgstr "One living person."
+
+msgid "ui.role.giftwolf.lex.exceptions"
+msgstr "The target receives a private message at once. The poison is unstoppable, only the target's earlier death ends it. The Village Guard dies from it. A Time Warden freeze does not postpone it."
+
+msgid "ui.role.giftwolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.giftwolf.lex.example"
+msgstr "In night 2 the Poison Wolf poisons Clara. Clara sees a private message at once. In the morning after night 4 Clara dies.\nClara is executed on day 3. The poison ends there, there is no second death."
+
+msgid "ui.role.giftwolf.lex.gm"
+msgstr "In public only the death appears, never the poison. The second paw is only possible again in a later night."
+
+msgid "ui.role.schwarze_witwe.lex.night"
+msgstr "every night"
+
+msgid "ui.role.schwarze_witwe.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.schwarze_witwe.lex.ability"
+msgstr "Pack wolf. If they hit one of Loki's pairs, both die in the morning."
+
+msgid "ui.role.schwarze_witwe.lex.timing"
+msgstr "Every night, without limit."
+
+msgid "ui.role.schwarze_witwe.lex.targets"
+msgstr "One other living person."
+
+msgid "ui.role.schwarze_witwe.lex.exceptions"
+msgstr "Works only if the person belongs to a living lover or rival pair and the partner is alive. Both get a death marker, die in the dawn resolution (cause Black Widow) and do not wake again this night. A Time Warden freeze cancels the night."
+
+msgid "ui.role.schwarze_witwe.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.schwarze_witwe.lex.example"
+msgstr "Loki linked Anna and Ben as rivals. The Widow chooses Anna. Anna and Ben die in the morning.\nThe Widow chooses Clara, who belongs to no pair. Nothing happens."
+
+msgid "ui.role.schwarze_witwe.lex.gm"
+msgstr "Whether a game with a Black Widow must contain a Loki is postponed as a setup check. Without Loki the Widow has no effect."
+
+msgid "ui.role.schwarze_witwe.lex.open"
+msgstr "Whether a game with a Black Widow must contain a Loki is postponed as a setup check."
+
+msgid "ui.role.schattenwanderer.lex.night"
+msgstr "every night until used"
+
+msgid "ui.role.schattenwanderer.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.schattenwanderer.lex.ability"
+msgstr "Pack wolf, links themself once. Then the other of the two dies instead."
+
+msgid "ui.role.schattenwanderer.lex.timing"
+msgstr "Once per life, every night until used."
+
+msgid "ui.role.schattenwanderer.lex.targets"
+msgstr "One other living person."
+
+msgid "ui.role.schattenwanderer.lex.exceptions"
+msgstr "If one of the two actually dies, after all protections and personal shields, the other dies instead with the original cause and source. After that the link is used up. Game master corrections are not redirected. Redirect chains never hit the same person twice."
+
+msgid "ui.role.schattenwanderer.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.schattenwanderer.lex.example"
+msgstr "The Shadowwalker Emil links themself with Ben. Emil is executed on day 4. Instead Ben dies, Emil lives, the link is used up.\nThe Guardian Angel protects Ben from the pack attack. No one dies, so the link does not trigger."
+
+msgid "ui.role.schattenwanderer.lex.gm"
+msgstr "Only you see the link. If a death is redirected, that is a death effect and is announced publicly. The announcement names the Shadowwalker as the role the link comes from, never the role of the dying person."
+
+msgid "ui.role.daemonischer_wolf.lex.night"
+msgstr "none of its own, death reaction"
+
+msgid "ui.role.daemonischer_wolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.daemonischer_wolf.lex.ability"
+msgstr "Pack wolf. On death they curse someone who appears to the Oracle as a Werewolf."
+
+msgid "ui.role.daemonischer_wolf.lex.timing"
+msgstr "Death reaction on every death with consequences, once per life, optional. During the day at once, at night in the dawn resolution."
+
+msgid "ui.role.daemonischer_wolf.lex.targets"
+msgstr "One other living person, a wolf included, or declining."
+
+msgid "ui.role.daemonischer_wolf.lex.exceptions"
+msgstr "Only role information (Oracle) shows the cursed person as a Werewolf. Counts, yes/no checks, effects and wins stay true. The curse stays until the person changes role (inheritance, swap, Lycaon, correction). A revival does not remove it."
+
+msgid "ui.role.daemonischer_wolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.daemonischer_wolf.lex.example"
+msgstr "Fritz, the Demonic Wolf, is executed and curses Ben. The Oracle later checks Ben and sees “Werewolf”.\nThe Warrior of Light checks Ben. They learn “not a wolf”, because the true count applies, and dies in the morning."
+
+msgid "ui.role.daemonischer_wolf.lex.gm"
+msgstr "The curse is known to you and to the Demonic Wolf who chooses it. The cursed person learns nothing, and the curse is not announced publicly."
+
+msgid "ui.role.koenig_lykaon.lex.night"
+msgstr "every night until used"
+
+msgid "ui.role.koenig_lykaon.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.koenig_lykaon.lex.ability"
+msgstr "Pack wolf. Together with an ally turns a villager into a Decoy Wolf."
+
+msgid "ui.role.koenig_lykaon.lex.timing"
+msgstr "Once per life. From night 1 on the King is asked every night until someone has been transformed. The King may decline at most three times, at the fourth opportunity they must choose. A night in which the step drops for lack of a living ally does not count."
+
+msgid "ui.role.koenig_lykaon.lex.targets"
+msgstr "Requirement: another wolf is alive. The King names an allied living wolf (logged) and chooses a living person of the village faction."
+
+msgid "ui.role.koenig_lykaon.lex.exceptions"
+msgstr "The person becomes a Decoy Wolf with their old role as the false role and wakes with the pack from the following night. A living Gatewarden turns them into a Villager instead. Solo people are not a target."
+
+msgid "ui.role.koenig_lykaon.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.koenig_lykaon.lex.example"
+msgstr "In night 2 King Lycaon names the ally Emil and chooses Ben (Witch of the Woods). Ben becomes a Decoy Wolf with the false role “Witch of the Woods” and wakes with the pack from night 3.\nKing Lycaon declines in three nights. At the fourth opportunity they must choose."
+
+msgid "ui.role.koenig_lykaon.lex.gm"
+msgstr "The table learns nothing of the change. The affected person receives a private message about their new role and wakes with the pack from the following night, where the ally sees them too."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.night"
+msgstr "pack, additionally in nights 3, 6, 9 ..."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.rachsuechtiger_wolf.lex.ability"
+msgstr "Wakes with the pack and additionally every third night to tear another wolf apart."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.timing"
+msgstr "In the fixed nights 3, 6, 9 ..., optional. The first use is in night 3."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.targets"
+msgstr "One other living person who counts as a wolf."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.exceptions"
+msgstr "The death comes in the morning with its own cause, it is not a pack attack: the Guardian Angel does not apply, personal shields do. The Lone Wolf counts as a wolf for parity and the village win. If they are the only living wolf at the wolf win, their solo win is proposed instead of the wolf win. If other wolves live, the werewolves win without them. If only Lone Wolves remain as wolves (two or more), nobody wins yet, each wants to win alone."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.win"
+msgstr "Wolf win as part of the pack, or solo win as the only living wolf."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.example"
+msgstr "In night 3 the Lone Wolf Emil chooses the wolf Fritz. Fritz dies in the morning.\nEmil is the last living wolf, and the wolf count reaches that of the others. Instead of the wolf win, Emil's solo win is proposed."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.gm"
+msgstr "The additional call comes only in nights 3, 6, 9 ... and without giving the reason."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.open"
+msgstr "The rhythm of nights, the attack and the behaviour of several Lone Wolves are technically derived and not yet confirmed."
+
+msgid "ui.role.schicksalswolf.lex.night"
+msgstr "night 1 (marking) and night 4 (extra victims)"
+
+msgid "ui.role.schicksalswolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.schicksalswolf.lex.ability"
+msgstr "Marks three people in night 1. For each of them among the first three dead, tears an additional victim in night 4."
+
+msgid "ui.role.schicksalswolf.lex.timing"
+msgstr "Marking only in night 1 and choosing extra victims only in night 4, after that the ability lapses."
+
+msgid "ui.role.schicksalswolf.lex.targets"
+msgstr "Night 1: exactly three other living people, wolves included. Night 4: up to as many extra victims as there are marked people among the first three dead of the game, declining is possible."
+
+msgid "ui.role.schicksalswolf.lex.exceptions"
+msgstr "The first three dead are the first three different people of the game who die, any cause, even before the marking. Revived people do not take a second place. Extra victims are pack attacks in the morning: protection works, they do not pierce, the Knight strikes back, the Necromancer may redirect. Martyr and Doom Warden concern only the first pack victim. The markings expire with their death or loss of role."
+
+msgid "ui.role.schicksalswolf.lex.win"
+msgstr "Wolf win as for the Werewolf."
+
+msgid "ui.role.schicksalswolf.lex.example"
+msgstr "In night 1 the Fate Wolf marks Anna, Ben and Clara. The first three dead are Anna, Emil and Ben. Two marked people are among them, so in night 4 they may choose up to two additional victims.\nNone of the three marked people is among the first three dead. In night 4 there is no extra victim."
+
+msgid "ui.role.schicksalswolf.lex.gm"
+msgstr "The role acts only in nights 1 and 4. If none of the first three dead is a marked person, there is nothing to choose in night 4."
+
+msgid "ui.role.schicksalswolf.lex.open"
+msgstr "Time window, the count of the first three dead, extra victims and the choice are technically derived and not yet confirmed."
+
+msgid "ui.role.manipulator.lex.night"
+msgstr "none"
+
+msgid "ui.role.manipulator.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.manipulator.lex.ability"
+msgstr "Wins alone with exactly three living people, dies when nominated."
+
+msgid "ui.role.manipulator.lex.timing"
+msgstr "At every nomination, without limit. The win is checked as soon as exactly three people are alive."
+
+msgid "ui.role.manipulator.lex.targets"
+msgstr "None."
+
+msgid "ui.role.manipulator.lex.exceptions"
+msgstr "If nominated, the nomination is stored first, then the Manipulator dies at once (source: the nominating person). The day stays active. “Ever nominated” is a permanent status that neither revival nor role change alters. Several Manipulators are separate win candidates. An execution by correction without a nomination does not trigger a Manipulator death."
+
+msgid "ui.role.manipulator.lex.win"
+msgstr "They win alone if exactly three people are alive, they are alive and were never nominated."
+
+msgid "ui.role.manipulator.lex.example"
+msgstr "Anna, Ben (Manipulator) and Clara are alive. Ben was never nominated. The Manipulator win is a candidate.\nOn day 2 Anna nominates Ben. Ben dies at once, the discussion continues."
+
+msgid "ui.role.manipulator.lex.gm"
+msgstr "If the Manipulator win coincides with a wolf win or village win, you decide. You do not name the death at nomination as a role effect in public; the table does see, however, that the nominated person dies at once."
+
+msgid "ui.role.doppelspion.lex.night"
+msgstr "none of its own, wakes with the pack as an announcement only"
+
+msgid "ui.role.doppelspion.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.doppelspion.lex.ability"
+msgstr "Wakes with the pack, wins alone if alive and no wolf is left."
+
+msgid "ui.role.doppelspion.lex.timing"
+msgstr "Wakes in every pack step. The win is checked at every win check."
+
+msgid "ui.role.doppelspion.lex.targets"
+msgstr "None."
+
+msgid "ui.role.doppelspion.lex.exceptions"
+msgstr "The game master names no role to the wolves, they see one more awake person. The Double Agent counts as a non-wolf in the parity. If at least one Double Agent lives when no wolf is left, only their win (per person) is proposed, not the village win. Declining and declaring a winner remain possible."
+
+msgid "ui.role.doppelspion.lex.win"
+msgstr "Alone, if alive and no wolf is left. If dead when the last wolf dies, the village wins."
+
+msgid "ui.role.doppelspion.lex.example"
+msgstr "The last wolf is executed, Ben the Double Agent is alive. Ben's solo win is proposed, not the village win.\nBen is already dead when the last wolf dies. The village wins."
+
+msgid "ui.role.doppelspion.lex.gm"
+msgstr "Wake the Double Agent together with the pack without naming the role. The wolves may take them for one of their own."
+
+msgid "ui.role.selbstmoerder.lex.night"
+msgstr "none"
+
+msgid "ui.role.selbstmoerder.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.selbstmoerder.lex.ability"
+msgstr "Wins if executed while at least five people are dead."
+
+msgid "ui.role.selbstmoerder.lex.timing"
+msgstr "At their execution, also at an execution by game master correction."
+
+msgid "ui.role.selbstmoerder.lex.targets"
+msgstr "None."
+
+msgid "ui.role.selbstmoerder.lex.exceptions"
+msgstr "The dead are counted before their execution, only people who are dead then (revived people do not count). Once the win is fulfilled, it is proposed at every check from then on, also after a rejection and after a revival. Only the Death Seeker's own execution counts, an additional death through the Executioner does not."
+
+msgid "ui.role.selbstmoerder.lex.win"
+msgstr "Fulfilled at an execution with at least 5 people currently dead."
+
+msgid "ui.role.selbstmoerder.lex.example"
+msgstr "Five people are dead. Ben, the Death Seeker, is executed. Ben's win is fulfilled.\nOnly four people are dead. Ben's execution does not fulfil the win."
+
+msgid "ui.role.selbstmoerder.lex.gm"
+msgstr "Decided is a public sound as soon as the fifth person is dead, only if a Death Seeker is in the game. It reveals that the role is in the game, not who holds it (a chosen exception to secrecy). The win is announced publicly only after you confirm it."
+
+msgid "ui.role.selbstmoerder.lex.open"
+msgstr "The sound is not yet implemented in the app. Not settled is whether “in the game” means the role at the start of the game or a living person holding it."
+
+msgid "ui.role.parasit.lex.night"
+msgstr "every night"
+
+msgid "ui.role.parasit.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.parasit.lex.ability"
+msgstr "Attaches to a host, dies only with them. Wins among the last three."
+
+msgid "ui.role.parasit.lex.timing"
+msgstr "Every night the Parasite may choose a new host or stay with the old one."
+
+msgid "ui.role.parasit.lex.targets"
+msgstr "One other living person as host."
+
+msgid "ui.role.parasit.lex.exceptions"
+msgstr "With a living host the Parasite survives every cause of death. Only the host's death kills them. Without a living host they are vulnerable as usual. Game master corrections remain possible. A bond ended by death stays ended after a revival. The apple has no effect for them."
+
+msgid "ui.role.parasit.lex.win"
+msgstr "The Parasite wins if at most three people are alive and they are among them, whether wolf or village. Other simultaneous wins are proposed too."
+
+msgid "ui.role.parasit.lex.example"
+msgstr "The Parasite has Ben as host. The pack chooses the Parasite, they survive. If Ben dies, the Parasite dies at the same moment.\nThree people are alive, the Parasite among them. Their win is a candidate."
+
+msgid "ui.role.parasit.lex.gm"
+msgstr "Only you and the Parasite know who the host is. A survived execution of the Parasite still counts as an execution for the Executioner."
+
+msgid "ui.role.rattenfaenger.lex.night"
+msgstr "every night"
+
+msgid "ui.role.rattenfaenger.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.rattenfaenger.lex.ability"
+msgstr "Enchants one or two people every night. When all others are enchanted, the Piper wins."
+
+msgid "ui.role.rattenfaenger.lex.timing"
+msgstr "Every night while alive. The enchantment is permanent."
+
+msgid "ui.role.rattenfaenger.lex.targets"
+msgstr "One or two other living, not yet enchanted people."
+
+msgid "ui.role.rattenfaenger.lex.exceptions"
+msgstr "A voodoo doll does not lift an enchantment. Little Red Riding Hood's apple doubles the step."
+
+msgid "ui.role.rattenfaenger.lex.win"
+msgstr "The Piper wins alone if alive and all other living people are enchanted, at every win check, also after a death."
+
+msgid "ui.role.rattenfaenger.lex.example"
+msgstr "Night 1: Anna and Ben are enchanted. Night 2: Clara. Night 3: David. Once all living people except the Piper are enchanted, the win is fulfilled.\nThe only not yet enchanted person, Emil, is executed. After the death the Piper's win is fulfilled."
+
+msgid "ui.role.rattenfaenger.lex.gm"
+msgstr "You see who is enchanted. The step is followed by two phases: first the newly enchanted briefly open their eyes and learn their status, then “All enchanted”: all enchanted people open their eyes and recognise each other. Whether they share it with the village is up to them. The “All enchanted” phase follows every call of the Pied Piper, even a call that is only announced, as long as there are enchanted people, so that the table does not learn whether anyone was enchanted this night."
+
+msgid "ui.role.rattenfaenger.lex.open"
+msgstr "So far the app shows the “All enchanted” phase only in nights with a new enchantment. Until this is implemented, call it yourself in the other nights after the Pied Piper's call, as long as there are living enchanted people."
+
+msgid "ui.role.pestbringerin.lex.night"
+msgstr "every night"
+
+msgid "ui.role.pestbringerin.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.pestbringerin.lex.ability"
+msgstr "Infects someone every night. The plague spreads to neighbours. All others sick: win."
+
+msgid "ui.role.pestbringerin.lex.timing"
+msgstr "One target every night. At the start of each dawn resolution every living infected person infects one nearest living neighbour."
+
+msgid "ui.role.pestbringerin.lex.targets"
+msgstr "One other living, still healthy person. The neighbour is drawn randomly with the stored seed, dead seats are skipped."
+
+msgid "ui.role.pestbringerin.lex.exceptions"
+msgstr "The plague is not lethal. Little Red Riding Hood's apple doubles the step. A Time Warden freeze lets the spread happen anyway."
+
+msgid "ui.role.pestbringerin.lex.win"
+msgstr "The Plague Bringer wins alone if alive and all other living people are infected."
+
+msgid "ui.role.pestbringerin.lex.example"
+msgstr "Night 1: the Plague Bringer infects Ben. At the start of the morning Ben infects one of the two living neighbours, drawn by seed.\nOnce all other living people are infected, the win is fulfilled."
+
+msgid "ui.role.pestbringerin.lex.gm"
+msgstr "The randomness belongs to the stored seed, not to your choice. Every newly infected person, also through the spread in the morning, receives a private reminder that they are infected and what happens to them and their neighbours if they stay alive. Whether they share it with the village is up to them."
+
+msgid "ui.role.todesprediger.lex.night"
+msgstr "night 1 only"
+
+msgid "ui.role.todesprediger.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.todesprediger.lex.ability"
+msgstr "Secretly predicts the time of their death in the first night. If right, they win."
+
+msgid "ui.role.todesprediger.lex.timing"
+msgstr "Night 1 only, secretly with the game master. Anyone who does not act in night 1, or receives the role later, no longer has the ability."
+
+msgid "ui.role.todesprediger.lex.targets"
+msgstr "A future night or a day. Day N follows night N. Deaths from the dawn resolution count to night N."
+
+msgid "ui.role.todesprediger.lex.exceptions"
+msgstr "Every kind of death counts except a correction without consequences. Once the win is fulfilled, it is proposed from then on as with the Death Seeker."
+
+msgid "ui.role.todesprediger.lex.win"
+msgstr "Fulfilled if the Death Prophet dies exactly at the predicted time."
+
+msgid "ui.role.todesprediger.lex.example"
+msgstr "Ben predicts night 3. In the dawn resolution after night 3 Ben dies. Ben's win is fulfilled.\nBen predicts day 2 and is executed on day 4. The win stays unfulfilled."
+
+msgid "ui.role.todesprediger.lex.gm"
+msgstr "The prediction stays only with you. It never appears on a public screen."
+
+msgid "ui.role.prophet_des_untergangs.lex.night"
+msgstr "night 1 mark, then kill every night once unlocked"
+
+msgid "ui.role.prophet_des_untergangs.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.prophet_des_untergangs.lex.ability"
+msgstr "Marks three people. When all are dead, kills at night and wins instead of the village."
+
+msgid "ui.role.prophet_des_untergangs.lex.timing"
+msgstr "In night 1 exactly three markings. Once all three are dead, the Prophet is unlocked permanently and may voluntarily kill one person every night."
+
+msgid "ui.role.prophet_des_untergangs.lex.targets"
+msgstr "Night 1: three other living people. After that: one person per night."
+
+msgid "ui.role.prophet_des_untergangs.lex.exceptions"
+msgstr "The death comes in the morning with its own cause. Protection against the pack attack does not apply, personal shields do. Little Red Riding Hood's apple only works once unlocked."
+
+msgid "ui.role.prophet_des_untergangs.lex.win"
+msgstr "If the Prophet lives unlocked when no wolf is left, they win alone instead of the village."
+
+msgid "ui.role.prophet_des_untergangs.lex.example"
+msgstr "In night 1 the Prophet marks Anna, Ben and Clara. By night 5 all three are dead. In night 6 the Prophet kills David.\nThe Prophet is unlocked and the last wolf dies. Their solo win is proposed, not the village win."
+
+msgid "ui.role.prophet_des_untergangs.lex.gm"
+msgstr "Only you see the markings. If the win coincides with the Double Agent's, you decide."
+
+msgid "ui.role.feuerteufel.lex.night"
+msgstr "every night"
+
+msgid "ui.role.feuerteufel.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.feuerteufel.lex.ability"
+msgstr "Marks a person every night. If they die, their neighbours burn. Wins along while alive."
+
+msgid "ui.role.feuerteufel.lex.timing"
+msgstr "Every night the Pyromaniac may choose a new target or keep the existing marking. At most one active marking per Pyromaniac."
+
+msgid "ui.role.feuerteufel.lex.targets"
+msgstr "One other living person, never themself."
+
+msgid "ui.role.feuerteufel.lex.exceptions"
+msgstr "Every actual death of the target triggers the fire, whatever the cause (not for a game master correction without consequences). The nearest living neighbours to the left and right burn. A Pyromaniac as a neighbour is spared, nobody burns on that side. If the target survives, nothing burns. Several markings on the same person trigger exactly one fire. If the Pyromaniac dies or loses the role, the marking ends at once."
+
+msgid "ui.role.feuerteufel.lex.win"
+msgstr "If any win is fulfilled and the Pyromaniac is alive, they win additionally along with the winning side. No solo win, no separate win check."
+
+msgid "ui.role.feuerteufel.lex.example"
+msgstr "The Pyromaniac marks Ben. Ben is executed. Ben's nearest living neighbours Anna and Clara burn.\nBen's right-hand living neighbour is a Pyromaniac. Only Ben's left-hand living neighbour burns."
+
+msgid "ui.role.feuerteufel.lex.gm"
+msgstr "You see who is marked. In public only who dies appears, never the cause."
+
+msgid "ui.role.voodoo_priester.lex.night"
+msgstr "every night without a living doll, optional"
+
+msgid "ui.role.voodoo_priester.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.voodoo_priester.lex.ability"
+msgstr "Gives another person a secret doll at night. If the Priest dies, the doll dies instead. Wins alone among the last three."
+
+msgid "ui.role.voodoo_priester.lex.timing"
+msgstr "At most one living doll per Priest. If none is left, the Priest may give a new one in the next night, with no cooldown, optional."
+
+msgid "ui.role.voodoo_priester.lex.targets"
+msgstr "One other living person, never themself. Secret: apart from the Priest only the game master knows, the doll does not learn of it beforehand."
+
+msgid "ui.role.voodoo_priester.lex.exceptions"
+msgstr "Every actual death of the Priest except a game master correction, after all protections, hits the living doll instead. Without a living doll the Priest dies. If the Priest loses the role, the doll ends at once. A redirect chain never hits the same person twice. Their own ability applies before a foreign link, such as a Shadowwalker's. The doll does not lift an enchantment."
+
+msgid "ui.role.voodoo_priester.lex.win"
+msgstr "The Priest wins alone if alive and at most three people are alive."
+
+msgid "ui.role.voodoo_priester.lex.example"
+msgstr "Ben is the Priest, Clara their doll. The pack chooses Ben, no protection applies. Clara dies in the morning in Ben's place.\nBen is executed, their doll is already dead. Ben dies themself."
+
+msgid "ui.role.voodoo_priester.lex.gm"
+msgstr "The doll is known only to you and the Priest. In public the doll simply dies, with no cause."
+
+msgid "ui.role.nekromant.lex.night"
+msgstr "at night shield, on a pack attack on them redirection"
+
+msgid "ui.role.nekromant.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.nekromant.lex.ability"
+msgstr "Sacrifices three dead for a shield against the next death or redirects an attack. If they name a wolf, they win."
+
+msgid "ui.role.nekromant.lex.timing"
+msgstr "Shield: at night, with at least three sacrificed dead. Redirection: only if the pack attack would otherwise kill them, optional, with three dead. Naming a wolf: at most one attempt per day, secretly with the game master."
+
+msgid "ui.role.nekromant.lex.targets"
+msgstr "Shield: no choice. Redirection: another living person, a wolf included. Naming a wolf: one living person."
+
+msgid "ui.role.nekromant.lex.exceptions"
+msgstr "The shield prevents the next death of any person, whatever the cause, even an execution, and lapses unused at the start of the next night. For the new target of a redirection it counts as a pack attack, whose protection applies. If the Necromancer declines, they die. Each dead person can be sacrificed only once in the whole game. Each shield built prevents exactly one death. They decide after the Doom Warden's judgment and before the Martyr. If they lose the role or die, their shield expires."
+
+msgid "ui.role.nekromant.lex.win"
+msgstr "A hit when naming (any living person who counts as a wolf) fulfils their solo win. A miss has no consequences."
+
+msgid "ui.role.nekromant.lex.example"
+msgstr "Five people are dead. In night 4 the Necromancer sacrifices three of them for a shield. The pack kills no one this night, because the shield prevents the first death.\nOn day 3 the Necromancer secretly names Emil to the game master. Emil counts as a wolf, so the solo win is fulfilled."
+
+msgid "ui.role.nekromant.lex.gm"
+msgstr "The naming runs secretly with you, a miss stays invisible. That a shield exists is known only to you. The Demonic Wolf's curse does not change the hits."
+
+msgid "ui.role.hades.lex.night"
+msgstr "every night, as the last step"
+
+msgid "ui.role.hades.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.hades.lex.ability"
+msgstr "Gains a light for every death. Kills for 2, buys a barrier for 3. Wins alive with 10 lights."
+
+msgid "ui.role.hades.lex.timing"
+msgstr "Every actual death of another person except a game master correction gives each living Hades 1 light, also their own kills. Kill: at most once per night. Barrier: at most one active."
+
+msgid "ui.role.hades.lex.targets"
+msgstr "Kill: one other living person, death in the morning with its own cause."
+
+msgid "ui.role.hades.lex.exceptions"
+msgstr "Deaths that are intercepted give no light. Protection against the pack attack does not apply, personal shields do. The lights are spent even if a death is intercepted. The barrier prevents their next death of any cause except a correction, an execution included, does not lapse and can be bought again afterwards. In their step first comes no kill or one kill, then the barrier question. Payment is made with the last answer. Lights and barrier expire on death or loss of role, a new Hades starts with 0 lights."
+
+msgid "ui.role.hades.lex.win"
+msgstr "The Hades wins alone as long as they are alive and have at least 10 lights. No cashing in, the win is proposed at every check."
+
+msgid "ui.role.hades.lex.example"
+msgstr "Hades has 2 lights and kills Ben. The lights drop to 0, with Ben's death in the morning Hades gains 1 light.\nHades is alive with 10 lights. Their solo win is a candidate."
+
+msgid "ui.role.hades.lex.gm"
+msgstr "The lights are a separate stock per Hades. Cancelling before the last answer costs nothing."
+
+msgid "ui.role.hades.lex.open"
+msgstr "Timing and order of kill, barrier and lights are technically derived and not yet confirmed."
+
+msgid "ui.role.grabraeuber.lex.night"
+msgstr "once stealing, then the stolen step"
+
+msgid "ui.role.grabraeuber.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.grabraeuber.lex.ability"
+msgstr "Steals the night ability of a dead person once and uses it from then on. Wins alive with at most three people alive."
+
+msgid "ui.role.grabraeuber.lex.timing"
+msgstr "Once at night the Grave Robber chooses a dead person. The theft counts at once, the own step follows from the next night, permanently and with fresh uses."
+
+msgid "ui.role.grabraeuber.lex.targets"
+msgstr "A dead person whose role has a recurring own night step. The role at the time of the theft counts."
+
+msgid "ui.role.grabraeuber.lex.exceptions"
+msgstr "Not selectable: Loki, Village Chronicler, Death Prophet (night 1 only), Prophet of Doom, Fate Wolf, Guardian Spirit, Wolf Child, Apprentice, the Grave Robber themself. Shared steps (Bound, Eternal Ones, pack) are not own steps. Taken over are the step and its effects (such as doll, fire marking, host, shield, lights, lists). Not taken over are win condition, shared win, faction, wolf count, appearance, death reactions and day actions. They stay solo, so they cannot be blocked and are not affected by the Elder's curse. After a revival they may steal anew."
+
+msgid "ui.role.grabraeuber.lex.win"
+msgstr "The Grave Robber wins alone if alive and at most three people are alive."
+
+msgid "ui.role.grabraeuber.lex.example"
+msgstr "Anna, the Witch of the Woods, is dead. The Grave Robber steals Anna's ability and has fresh potions from the next night.\nThe dead Loki cannot be stolen, because their step happens only in night 1."
+
+msgid "ui.role.grabraeuber.lex.gm"
+msgstr "The Grave Robber learns the stolen role privately. Roles without an own night step do not appear in the selection."
+
+msgid "ui.role.grabraeuber.lex.open"
+msgstr "Which roles can be stolen and what exactly is taken over is technically derived and not yet confirmed."
+
+# --- Ende Rollenlexikon ---

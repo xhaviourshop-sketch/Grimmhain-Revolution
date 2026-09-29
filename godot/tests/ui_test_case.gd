@@ -22,8 +22,8 @@ const SIZE_16_10 := Vector2i(1280, 800)
 const SIZE_WIDE := Vector2i(1920, 1080)
 
 ## Alle sechs Ansichten mit ihren erwarteten stabilen IDs.
-const SCREEN_IDS: Array[StringName] = [&"start", &"main_menu", &"new_game", &"continue", &"settings", &"cockpit"]
-const SUB_SCREENS: Array[StringName] = [&"new_game", &"continue", &"settings", &"cockpit"]
+const SCREEN_IDS: Array[StringName] = [&"start", &"main_menu", &"new_game", &"continue", &"settings", &"cockpit", &"lexicon"]
+const SUB_SCREENS: Array[StringName] = [&"new_game", &"continue", &"settings", &"cockpit", &"lexicon"]
 
 var tree: SceneTree
 var quit_calls: int = 0
@@ -241,6 +241,20 @@ func _collect_visible(node: Node, out: Array[Control]) -> void:
 		_collect_visible(child, out)
 
 
+## Sichtbarer Teil eines Controls: sein Rechteck, beschnitten auf alle umgebenden ScrollContainer (deren Inhalt
+## außerhalb der Scrollfläche nicht gezeichnet wird). Leeres Rechteck, wenn nichts davon sichtbar ist.
+func clipped_rect(c: Control) -> Rect2:
+	var r := rect_of(c)
+	var parent := c.get_parent()
+	while parent != null:
+		if parent is ScrollContainer:
+			r = r.intersection(rect_of(parent as Control))
+			if not r.has_area():
+				return Rect2()
+		parent = parent.get_parent()
+	return r
+
+
 func visible_buttons(root: Node) -> Array[BaseButton]:
 	var out: Array[BaseButton] = []
 	for c: Control in visible_controls(root):
@@ -312,6 +326,8 @@ func inside(inner: Rect2, outer: Rect2, tolerance: float = 0.5) -> bool:
 
 ## Echte Überlappung (Berührung an Kanten zählt nicht).
 func overlaps(a: Rect2, b: Rect2, tolerance: float = 0.5) -> bool:
+	if not a.has_area() or not b.has_area():
+		return false  # nicht sichtbarer (weggescrollter) Teil überdeckt nichts
 	return a.grow(-tolerance).intersects(b.grow(-tolerance))
 
 
