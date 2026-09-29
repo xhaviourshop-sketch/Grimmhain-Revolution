@@ -504,3 +504,176 @@ func test_guard_and_wolf_child_without_other_living_are_dropped() -> void:
 		var dropped := events_of_type(night.events, "StepDropped")
 		assert_true(dropped.size() == 1 and String(dropped[0].data["reason"]) == "no_decision", "%s: protokolliert entfallen" % role)
 		apply_ok(night.state, Command.end_night(), "%s: Nacht endet" % role)
+
+
+# --- Paket 3: feste Szenarien aus gemeinsam genutzten Mechaniken (N-11) ------------------------------------
+# Abgeleitet aus Todespipeline, Umlenkung, Siegkandidaten, Wiederbelebung und öffentlicher Todesansage. Jede Prüfung
+# nennt die Regelquelle und prüft Reihenfolge und Endzustand; Speichern/Laden und Replay an der kritischen Stelle.
+# Gespielt über GameSession mit den Kartendaten (UiGame); den Bedienweg selbst belegen die UI-Rollentests.
+
+const UiGame := preload("res://tests/ui/ui_game.gd")
+
+
+func _session(roles: Array, appearances: Dictionary = {}) -> GameSession:
+	return UiGame.session(roles, 7, appearances)
+
+
+func _play_until(s: GameSession, answers: Dictionary, kind: String, max_steps: int = 150) -> bool:
+	for i: int in max_steps:
+		if str(UiGame.next_of(s).get("kind")) == kind:
+			return true
+		if UiGame.step(s, answers) == "":
+			fail("Ablauf blockiert bei %s" % JSON.stringify(UiGame.next_of(s)).left(200))
+			return false
+	fail("%s nicht erreicht" % kind)
+	return false
+
+
+func _log_types(s: GameSession, types: Array) -> Array:
+	return s.event_log().filter(func(e: Dictionary) -> bool: return types.has(str(e["type"]))).map(func(e: Dictionary) -> String: return str(e["type"]))
+
+
+func _died(s: GameSession) -> Array:
+	return s.event_log().filter(func(e: Dictionary) -> bool: return str(e["type"]) == "SeatDied").map(func(e: Dictionary) -> int: return int((e["data"] as Dictionary)["target_id"]))
+
+
+func _session_roundtrip(s: GameSession, label: String) -> void:
+	var other := GameSession.new()
+	assert_eq(other.load_text(s.save_text()), &"", "%s: Laden" % label)
+	assert_eq(other.state_hash(), s.state_hash(), "%s: gleicher Zustand nach Laden" % label)
+	assert_eq(RulesEngine.replay(s.commands()).state.content_hash(), s.state_hash(), "%s: Replay gleich" % label)
+	assert_eq(JSON.stringify(other.cockpit_view()["next"]), JSON.stringify(s.cockpit_view()["next"]), "%s: gleiche nächste Handlung" % label)
+
+
+## Umlenkung gegen Immunität: E-12/E-20 (die Puppe stirbt statt des Priesters, mit ursprünglicher Ursache) und RM-DR-119
+## (Rudelangriff tötet die Dorfwache nicht). Erwartet: Umlenkung auf die Puppe, dort Immunität, niemand stirbt.
+func test_p3_voodoo_doll_is_guard_nobody_dies() -> void:
+	var s := _session(["voodoo-priester", "werwolf", "dorfwache", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	if not _play_until(s, {"voodoo-priester/": [3], "pack/": [1]}, "end_night"):
+		return
+	_session_roundtrip(s, "vor der Morgenauflösung")
+	assert_true(s.end_night().ok, "Morgen")
+	assert_eq(_died(s), [], "niemand stirbt")
+	var prevented := s.event_log().filter(func(e: Dictionary) -> bool: return str(e["type"]) == "KillPrevented").map(func(e: Dictionary) -> String: return str((e["data"] as Dictionary)["protection"]))
+	assert_eq(prevented, ["voodoo-priester", "dorfwache"], "erst Umlenkung, dann Immunität")
+
+
+## Mehrere Umlenkungen ohne Schleife: B-04/B-07 (Schattenwanderer lenkt einmal um), jede Person höchstens einmal in einer
+## Umlenkungskette (wie E-21). Zwei Schattenwanderer, gegenseitig verknüpft: Der Tod geht genau einmal weiter.
+func test_p3_mutual_shadow_links_redirect_once_without_loop() -> void:
+	var s := _session(["werwolf", "schattenwanderer", "schattenwanderer", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	s.start_night()
+	for guard: int in 30:
+		var n := UiGame.next_of(s)
+		if str(n.get("kind")) == "end_night":
+			break
+		if str(n.get("kind")) == "prompt" and str(n.get("owner")) == "schattenwanderer":
+			assert_true(s.answer_targets([3] if int((n["actor_ids"] as Array)[0]) == 2 else [2]).ok, "Verknüpfung")
+		elif str(n.get("kind")) == "prompt" and str(n.get("owner")) == "pack":
+			assert_true(s.answer_targets([2]).ok, "Rudel greift 2 an")
+		elif UiGame.step(s) == "":
+			fail("blockiert")
+			return
+	assert_true(s.end_night().ok, "Morgen ohne Endlosschleife")
+	assert_eq(_died(s), [3], "nur der Verknüpfte stirbt")
+	var st := RulesEngine.replay(s.commands()).state
+	assert_true(st.players[2].alive, "angegriffener Schattenwanderer lebt")
+
+
+## Wirt und Puppe: RM-DR-157 (Parasit stirbt mit dem Wirt) und E-12 (Puppe stirbt statt des Priesters). Der Rudelangriff
+## auf den Wirt (Priester) trifft die Puppe; Wirt und Parasit leben.
+func test_p3_parasite_host_protected_by_voodoo_doll() -> void:
+	var s := _session(["parasit", "voodoo-priester", "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	if not _play_until(s, {"parasit/": [2], "voodoo-priester/": [3], "pack/": [2]}, "day"):
+		return
+	assert_eq(_died(s), [3], "Puppe stirbt")
+	var st := RulesEngine.replay(s.commands()).state
+	assert_true(st.players[1].alive and st.players[2].alive, "Parasit und Wirt leben")
+
+
+## Konkurrierende Siege: DR-02 und Decision Log „Siegkandidaten“ (Kandidatenmenge ohne Priorität, Spielleiter bestätigt genau
+## einen). Drei Lebende ohne Wolf: Dorf, Voodoo-Priester, Grabräuber und Parasit sind gleichzeitig Kandidaten.
+func test_p3_simultaneous_solo_wins_form_one_candidate_set() -> void:
+	var s := _session(["parasit", "voodoo-priester", "grabraeuber", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	if not _play_until(s, {"parasit/": [2]}, "end_night"):
+		return
+	for id: int in [5, 6, 7, 4]:
+		assert_true(s.gm_correction({"kind": "kill", "target_id": id, "trigger_effects": false, "reason": "Szenario"}).ok, "%d tot" % id)
+	var n := UiGame.next_of(s)
+	assert_eq(str(n.get("kind")), "win_decision", "Siegentscheidung")
+	var reasons: Array = (n.get("candidates", []) as Array).map(func(c: Dictionary) -> String: return str(c["reason_key"]))
+	reasons.sort()
+	assert_eq(reasons, ["grave_robber_final_three", "no_wolves_alive", "parasite_final_three", "voodoo_final_three"], "vier Kandidaten ohne Priorität")
+	_session_roundtrip(s, "offene Kandidaten")
+	var chosen := int(((n["candidates"] as Array).filter(func(c: Dictionary) -> bool: return str(c["reason_key"]) == "voodoo_final_three")[0] as Dictionary)["id"])
+	assert_true(s.confirm_win(chosen).ok, "Spielleitung bestätigt genau einen")
+	assert_eq(str(UiGame.next_of(s).get("kind")), "game_over", "Spielende")
+	assert_eq(str(((UiGame.next_of(s)["winner"] as Dictionary)["reason_key"])), "voodoo_final_three", "gewählter Sieger")
+
+
+## Private Information gegen öffentliche Todesansage: DI-08 (Scheinrolle nur für Rollenauskünfte) und DR-04/Entscheidung
+## 29.09.2026 (Rolle beim Tod nur in Runden ohne Wiederbelebung). Öffentlich erscheint die wahre Rolle, nie die Scheinrolle;
+## beim Grabräuber die eigene Rolle, nicht die gestohlene Fähigkeit.
+func test_p3_public_death_names_true_role_not_appearance_or_stolen_ability() -> void:
+	var s := _session(["trugbilderwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], {"1": "das-orakel"})
+	if not _play_until(s, {}, "day"):
+		return
+	assert_true(s.nominate(3, 1).ok and s.decide_execution(1).ok, "Trugbilderwolf gehängt")
+	var deaths := s.day_deaths()
+	assert_eq(str((deaths[0] as Dictionary)["role_id"]), "trugbilderwolf", "wahre Rolle")
+	assert_false(JSON.stringify(deaths).contains("das-orakel"), "keine Scheinrolle")
+	var g := _session(["grabraeuber", "werwolf", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	assert_true(g.gm_correction({"kind": "kill", "target_id": 3, "trigger_effects": false, "reason": "Szenario"}).ok, "Orakel tot")
+	if not _play_until(g, {"grabraeuber/targets": [3]}, "day"):
+		return
+	assert_true(g.nominate(4, 1).ok and g.decide_execution(1).ok, "Grabräuber gehängt")
+	assert_eq(str((g.day_deaths()[0] as Dictionary)["role_id"]), "grabraeuber", "eigene Rolle, nicht die gestohlene")
+
+
+## Kettentod und Todesreaktion: Loki-Liebeskummer (B-01/B-02) trifft einen Sensenträger, dessen Reaktion (DR-09) folgt erst
+## danach; öffentliche Effekte in dieser Reihenfolge (DA-23), Siegprüfung erst nach der Reaktion (DR-14). Speichern mit
+## offener Reaktion setzt identisch fort.
+func test_p3_heartbreak_then_reaper_reaction_in_order_with_save_load() -> void:
+	var s := _session(["loki", "werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	if not _play_until(s, {"loki/targets": [4, 5], "loki/mode": true, "pack/": [5]}, "end_night"):
+		return
+	assert_true(s.end_night().ok, "Morgen")
+	var n := UiGame.next_of(s)
+	assert_eq([str(n.get("kind")), str(n.get("reaction_kind"))], ["begin_step", "curse"], "Reaktion des Sensenträgers offen")
+	assert_eq(_died(s), [5, 4], "erst das Opfer, dann der Liebeskummer")
+	_session_roundtrip(s, "offene Reaktion")
+	assert_true(s.begin_next_step().ok and s.answer_targets([2]).ok, "Sensenträger reißt Wolf 2")
+	assert_eq(_died(s), [5, 4, 2], "Reaktion nach der Kette")
+	var effects: Array = s.event_log().filter(func(e: Dictionary) -> bool: return str(e["type"]) == "DeathEffect").map(func(e: Dictionary) -> String: return str((e["data"] as Dictionary)["effect"]))
+	assert_eq(effects.size(), 2, "zwei angesagte Effekte: %s" % str(effects))
+	assert_eq(str(effects[0]) if not effects.is_empty() else "", "heartbreak", "Liebeskummer zuerst angesagt")
+
+
+## Wiederbelebung und verbrauchte Fähigkeit: W-02/W-03 (Kutscher belebt drei Tote, einer wird Werwolf) und „Wiederbelebung
+## setzt alle begrenzten Einsätze zurück“ (Decision Log W). Eine Kriegerin, die ihren Angriff verbraucht hat und starb,
+## hat nach der Wiederbelebung (ohne Wolfswahl) im nächsten Leben wieder ihren Schritt.
+func test_p3_coach_revival_restores_one_shot_ability() -> void:
+	var roles: Array = ["kutscher", "werwolf", "werwolf", "kriegerin-des-lichts"]
+	for i: int in 20:
+		roles.append("dorfbewohner")
+	var s := _session(roles)
+	if not _play_until(s, {"kriegerin-des-lichts/targets": [5]}, "day"):
+		return
+	var st := RulesEngine.replay(s.commands()).state
+	assert_false(st.players[4].alive, "Kriegerin nach Irrtum tot")
+	assert_true(InfoSteps.used(st.players[4], InfoSteps.WARRIOR_USE_KEY), "Angriff verbraucht")
+	for id: int in [6, 7, 8, 9, 10, 11, 12, 13, 14]:
+		assert_true(s.gm_correction({"kind": "kill", "target_id": id, "trigger_effects": false, "reason": "Szenario"}).ok, "%d tot" % id)
+	if not _play_until(s, {}, "start_night") or not s.start_night().ok:
+		return
+	if not _play_until(s, {"kutscher/targets": [4, 6, 7], "kutscher/wolf": [6]}, "day"):
+		return
+	st = RulesEngine.replay(s.commands()).state
+	assert_true(st.players[4].alive, "Kriegerin wiederbelebt")
+	assert_eq(st.players[4].role_id, &"kriegerin-des-lichts", "behält ihre Rolle (nicht zum Wolf gewählt)")
+	assert_false(InfoSteps.used(st.players[4], InfoSteps.WARRIOR_USE_KEY), "Einsatz zurückgesetzt")
+	assert_eq(st.players[6].role_id, &"werwolf", "gewählte Person wird Werwolf")
+	_session_roundtrip(s, "nach Wiederbelebung")
+	assert_true(_play_until(s, {}, "start_night") and s.start_night().ok, "nächste Nacht")
+	var steps: Array = RulesEngine.replay(s.commands()).state.night_plan.map(func(k: StringName) -> String: return String(k))
+	assert_true(steps.any(func(k: String) -> bool: return k.contains("kriegerin-des-lichts")), "Kriegerin hat wieder einen Schritt")
