@@ -1,7 +1,7 @@
 extends TestCase
 ## DI-04, DI-06, DI-07 (Antworten des Product Owners vom 29.09.2026): Private Hinweise an Betroffene.
 ##   Loki: beide Personen des Paares erfahren Partner und Bindungsart.
-##   Rattenfänger: zuerst die neu Verzauberten, danach alle lebenden Verzauberten.
+##   Rattenfänger: die neu Verzauberten; „Alle Verzauberten“ ist seit PE-06 ein Nachtschritt (test_piper_all).
 ##   Pestbringerin: jede neu infizierte Person, auch durch die Ausbreitung am Morgen.
 ## Ein Hinweis ist Teil des Spielstands (`notices`), wird mit `AckNotice` als gezeigt abgeschlossen und ist
 ## nie öffentlich. Er blockiert den Ablauf im Regelkern nicht; die Oberfläche zeigt ihn zuerst.
@@ -113,19 +113,16 @@ func test_loki_himself_in_the_pair_is_a_viewer_too() -> void:
 
 # --- Rattenfänger -----------------------------------------------------------------------------------
 
-func test_piper_notifies_new_then_all_living_enchanted() -> void:
+func test_piper_notifies_only_the_new_enchanted() -> void:
 	var s := _night(_state([W, RF, D, D, D, D]), {"rattenfaenger:2": [3, 4]})
 	assert_true(s != null, "Nacht 1")
 	if s == null:
 		return
 	var new_notices := _notices_of(s, "piper_new")
-	var all_notices := _notices_of(s, "piper_all")
-	assert_true(new_notices.size() == 1 and all_notices.size() == 1, "je eine Phase")
-	if new_notices.size() == 1 and all_notices.size() == 1:
+	assert_true(new_notices.size() == 1 and s.notices.size() == 1, "ein Hinweis, kein zweiter für alle Verzauberten (PE-06)")
+	if new_notices.size() == 1:
 		assert_eq(new_notices[0]["viewer_ids"], [3, 4], "neu Verzauberte")
-		assert_eq(all_notices[0]["viewer_ids"], [3, 4], "alle Verzauberten")
-		assert_true(int(new_notices[0]["id"]) < int(all_notices[0]["id"]), "erst die Neuen, dann alle")
-	# Zweite Nacht: eine weitere Person; die zweite Phase enthält alle lebenden Verzauberten.
+	# Zweite Nacht: nur die weitere Person erhält den Hinweis.
 	for n: Dictionary in s.notices.duplicate():
 		s = _ok(s, Command.ack_notice(int(n["id"])), "Hinweis gezeigt")
 	s = _ok(_ok(s, Command.end_night(), "Morgen"), Command.decide_execution(-1), "keine Hinrichtung")
@@ -133,7 +130,7 @@ func test_piper_notifies_new_then_all_living_enchanted() -> void:
 	if s2 == null:
 		return
 	assert_eq(_notices_of(s2, "piper_new")[0]["viewer_ids"], [5], "nur die neu Verzauberte")
-	assert_eq(_notices_of(s2, "piper_all")[0]["viewer_ids"], [3, 4, 5], "alle Verzauberten in Personen-ID-Reihenfolge")
+	assert_eq(s2.notices.size(), 1, "kein Hinweis für alle Verzauberten")
 
 
 # --- Pestbringerin ---------------------------------------------------------------------------------
@@ -229,8 +226,8 @@ func test_death_removes_the_viewer_and_drops_empty_notices() -> void:
 		return
 	piper = _ok(piper, Command.end_night(), "Morgen")
 	var shrunk := apply_ok(piper, CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": false}), "Verzauberte stirbt")
-	for n: Dictionary in _notices_of(shrunk.state, "piper_all"):
-		assert_eq(n["viewer_ids"], [4], "Tote steht nicht mehr in der Liste aller Verzauberten")
+	var charmed := _notices_of(shrunk.state, "piper_new")
+	assert_true(charmed.size() == 1 and charmed[0]["viewer_ids"] == [4], "Tote steht nicht mehr in der Liste der neu Verzauberten")
 
 
 func test_notices_survive_save_load_and_replay() -> void:

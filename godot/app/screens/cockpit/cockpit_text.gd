@@ -8,7 +8,7 @@ extends RefCounted
 ##                       Rückfall ui.prompt.generic.<antwortart>
 ##   Teilantwort         ui.prompt.info.<feld> (Rückfall ui.prompt.info.generic)
 
-const GROUPS := {"pack": "ui.cockpit.group.pack", "die-gebundenen": "ui.cockpit.group.bound", "die-ewigen": "ui.cockpit.group.eternal", "reaction": "ui.cockpit.group.reaction"}
+const GROUPS := {"pack": "ui.cockpit.group.pack", "die-gebundenen": "ui.cockpit.group.bound", "die-ewigen": "ui.cockpit.group.eternal", "piper-all": "ui.cockpit.group.piper_all", "reaction": "ui.cockpit.group.reaction"}
 
 
 static func key_part(id: String) -> String:
@@ -27,8 +27,9 @@ static func role_name(role_id: String) -> StringName:
 
 
 ## Rolle der Kontexthilfe zur aktuellen Handlung (Schritt, Prompt, Hinweis) oder "" ohne passenden Lexikoneintrag. Das
-## Rudel verweist auf den Werwolf; bei der anonymen Frage an die von Rotkäppchen gefragte Person gilt der Prompt-Besitzer.
-const NOTICE_HELP := {"loki_bond": "loki", "piper_new": "rattenfaenger", "piper_all": "rattenfaenger", "pest_infected": "pestbringerin"}
+## Rudel verweist auf den Werwolf, „Alle Verzauberten“ auf den Rattenfänger; bei der anonymen Frage an die von
+## Rotkäppchen gefragte Person gilt der Prompt-Besitzer.
+const NOTICE_HELP := {"loki_bond": "loki", "piper_new": "rattenfaenger", "pest_infected": "pestbringerin"}
 
 
 static func help_role(next: Dictionary) -> String:
@@ -40,6 +41,8 @@ static func help_role(next: Dictionary) -> String:
 				role = str(next.get("owner", ""))
 			if role == str(CockpitView.GROUP_PACK):
 				role = String(RoleCatalog.WERWOLF)
+			elif role == str(CockpitView.GROUP_PIPER_ALL):
+				role = String(RoleCatalog.RATTENFAENGER)
 		"notice":
 			role = str(NOTICE_HELP.get(str(next.get("notice_kind", "")), ""))
 	return role if RoleCatalog.has_role(StringName(role)) else ""

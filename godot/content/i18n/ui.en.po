@@ -1604,6 +1604,9 @@ msgstr "The Bound"
 msgid "ui.cockpit.group.eternal"
 msgstr "The Eternal"
 
+msgid "ui.cockpit.group.piper_all"
+msgstr "All enchanted"
+
 msgid "ui.cockpit.warning.gm_preparing.dawn"
 msgstr "The game master is preparing the morning."
 
@@ -1871,6 +1874,9 @@ msgstr "Living wolves"
 msgid "ui.prompt.info.bound_ids"
 msgstr "Living Bound"
 
+msgid "ui.prompt.info.charmed_ids"
+msgstr "Living enchanted"
+
 msgid "ui.prompt.info.same_team"
 msgstr "Same team"
 
@@ -2081,6 +2087,9 @@ msgstr "“Vengeful Wolf, wake up. Do you want to tear another wolf? Point to th
 msgid "ui.call.rattenfaenger"
 msgstr "“Pied Piper, wake up. Point to one or two people you want to charm.”"
 
+msgid "ui.call.piper_all"
+msgstr "“All enchanted, open your eyes and recognise each other.”"
+
 msgid "ui.call.rotkaeppchen"
 msgstr "“Little Red Riding Hood, wake up. Point to the person you seek refuge with.”"
 
@@ -2140,6 +2149,9 @@ msgstr "Tap the person the Eternal check and confirm."
 
 msgid "ui.prompt.die_ewigen.shown"
 msgstr "Show the Eternal whether the person can win alone. Then tap “Shown”."
+
+msgid "ui.prompt.piper_all.shown"
+msgstr "The enchanted open their eyes and recognise each other. The list stays on this card and is shown to nobody. Then tap “Shown”."
 
 msgid "ui.prompt.die_gebundenen.shown"
 msgstr "The Bound see each other. Then tap “Shown”."
@@ -3253,9 +3265,6 @@ msgstr "You and {partner} are rivals. The bond has no effect of its own, it only
 
 msgid "ui.notice.piper_new"
 msgstr "You are enchanted. The Pied Piper wins when all other living people are enchanted."
-
-msgid "ui.notice.piper_all"
-msgstr "All enchanted: {names}. You recognise each other."
 
 msgid "ui.notice.pest_infected"
 msgstr "You are infected. At the start of each morning you infect a neighbouring living person, as long as you live. Whether you tell the village is up to you."
@@ -5273,10 +5282,7 @@ msgid "ui.role.rattenfaenger.lex.example"
 msgstr "Night 1: Anna and Ben are enchanted. Night 2: Clara. Night 3: David. Once all living people except the Piper are enchanted, the win is fulfilled.\nThe only not yet enchanted person, Emil, is executed. After the death the Piper's win is fulfilled."
 
 msgid "ui.role.rattenfaenger.lex.gm"
-msgstr "You see who is enchanted. The step is followed by two phases: first the newly enchanted briefly open their eyes and learn their status, then “All enchanted”: all enchanted people open their eyes and recognise each other. Whether they share it with the village is up to them. The “All enchanted” phase follows every call of the Pied Piper, even a call that is only announced, as long as there are enchanted people, so that the table does not learn whether anyone was enchanted this night."
-
-msgid "ui.role.rattenfaenger.lex.open"
-msgstr "So far the app shows the “All enchanted” phase only in nights with a new enchantment. Until this is implemented, call it yourself in the other nights after the Pied Piper's call, as long as there are living enchanted people."
+msgstr "You see who is enchanted. After the Pied Piper the app runs two phases: first you show the newly enchanted their notice, then the step “All enchanted” follows: all living enchanted people open their eyes and recognise each other; their names appear only on your card. Whether they share it with the village is up to them. “All enchanted” follows every call of the Pied Piper, even a call that is only announced, as long as there are living enchanted people, so that the table does not learn whether anyone was enchanted this night. If the Pied Piper is no longer called, this step is dropped as well."
 
 msgid "ui.role.pestbringerin.lex.night"
 msgstr "every night"

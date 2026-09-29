@@ -420,7 +420,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 			if _rng.randf() < 0.1 and _override_allowed(p):
 				return Command.override_shown_role(p.id, "dorfbewohner", "Fuzz: Übersteuerung")
 			return Command.answer_choice(p.id, String(p.stage), true)
-		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER, PendingPrompt.OWNER_HOUND:
+		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_PIPER_ALL, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER, PendingPrompt.OWNER_HOUND:
 			if p.stage == InfoSteps.STAGE_USE:
 				return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.5)
 			if p.stage == InfoSteps.STAGE_TARGETS and p.owner == PendingPrompt.OWNER_HOUND:

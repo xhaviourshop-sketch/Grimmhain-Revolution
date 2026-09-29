@@ -1604,6 +1604,9 @@ msgstr "Die Gebundenen"
 msgid "ui.cockpit.group.eternal"
 msgstr "Die Ewigen"
 
+msgid "ui.cockpit.group.piper_all"
+msgstr "Alle Verzauberten"
+
 msgid "ui.cockpit.warning.gm_preparing.dawn"
 msgstr "Die Spielleitung bereitet den Morgen vor."
 
@@ -1871,6 +1874,9 @@ msgstr "Lebende Wölfe"
 msgid "ui.prompt.info.bound_ids"
 msgstr "Lebende Gebundene"
 
+msgid "ui.prompt.info.charmed_ids"
+msgstr "Lebende Verzauberte"
+
 msgid "ui.prompt.info.same_team"
 msgstr "Gleiches Team"
 
@@ -2081,6 +2087,9 @@ msgstr "„Rachsüchtiger Wolf, erwache. Willst du einen anderen Wolf reißen? Z
 msgid "ui.call.rattenfaenger"
 msgstr "„Rattenfänger, erwache. Zeige auf eine oder zwei Personen, die du verzaubern willst.“"
 
+msgid "ui.call.piper_all"
+msgstr "„Alle Verzauberten, öffnet die Augen und erkennt einander.“"
+
 msgid "ui.call.rotkaeppchen"
 msgstr "„Rotkäppchen, erwache. Zeige auf die Person, bei der du Zuflucht suchst.“"
 
@@ -2140,6 +2149,9 @@ msgstr "Tippe die Person an, die die Ewigen prüfen, und bestätige."
 
 msgid "ui.prompt.die_ewigen.shown"
 msgstr "Zeige den Ewigen, ob die Person allein gewinnen kann. Danach „Gezeigt“."
+
+msgid "ui.prompt.piper_all.shown"
+msgstr "Die Verzauberten öffnen die Augen und erkennen einander. Die Liste bleibt auf dieser Karte, sie wird niemandem gezeigt. Danach „Gezeigt“."
 
 msgid "ui.prompt.die_gebundenen.shown"
 msgstr "Die Gebundenen sehen einander. Danach „Gezeigt“."
@@ -3253,9 +3265,6 @@ msgstr "Du und {partner} seid Rivalen. Die Bindung hat keine eigene Wirkung, sie
 
 msgid "ui.notice.piper_new"
 msgstr "Ihr seid verzaubert. Der Rattenfänger gewinnt, wenn alle anderen Lebenden verzaubert sind."
-
-msgid "ui.notice.piper_all"
-msgstr "Alle Verzauberten: {names}. Ihr erkennt einander."
 
 msgid "ui.notice.pest_infected"
 msgstr "Du bist infiziert. Zu Beginn jedes Morgens steckst du eine benachbarte lebende Person an, solange du lebst. Ob du es im Dorf sagst, entscheidest du."
@@ -5273,10 +5282,7 @@ msgid "ui.role.rattenfaenger.lex.example"
 msgstr "Nacht 1: Anna und Ben werden verzaubert. Nacht 2: Clara. Nacht 3: David. Sind alle Lebenden außer dem Rattenfänger verzaubert, ist sein Sieg erfüllt.\nDie einzige noch unverzauberte Person Emil wird hingerichtet. Nach dem Tod erfüllt sich der Sieg des Rattenfängers."
 
 msgid "ui.role.rattenfaenger.lex.gm"
-msgstr "Wer verzaubert ist, siehst du. Auf den Schritt folgen zwei Phasen: Zuerst öffnen die neu Verzauberten kurz die Augen und erfahren ihren Status, danach „Alle Verzauberten“: Alle Verzauberten öffnen die Augen und erkennen einander. Ob sie es im Dorf teilen, entscheiden sie selbst. Die Phase „Alle Verzauberten“ folgt auf jeden Aufruf des Rattenfängers, auch auf einen reinen Tarnaufruf, solange es Verzauberte gibt, damit der Tisch nicht erfährt, ob in dieser Nacht verzaubert wurde."
-
-msgid "ui.role.rattenfaenger.lex.open"
-msgstr "Die App zeigt die Phase „Alle Verzauberten“ bisher nur in Nächten mit neuer Verzauberung. Bis zur Umsetzung rufst du sie in den übrigen Nächten nach dem Aufruf des Rattenfängers selbst auf, solange es lebende Verzauberte gibt."
+msgstr "Wer verzaubert ist, siehst du. Nach dem Rattenfänger führt die App zwei Phasen: Zuerst zeigst du den neu Verzauberten ihren Hinweis, danach folgt der Schritt „Alle Verzauberten“: Alle lebenden Verzauberten öffnen die Augen und erkennen einander, ihre Namen stehen nur auf deiner Karte. Ob sie es im Dorf teilen, entscheiden sie selbst. „Alle Verzauberten“ folgt auf jeden Aufruf des Rattenfängers, auch auf einen reinen Tarnaufruf, solange es lebende Verzauberte gibt, damit der Tisch nicht erfährt, ob in dieser Nacht verzaubert wurde. Wird der Rattenfänger nicht mehr aufgerufen, entfällt auch dieser Schritt."
 
 msgid "ui.role.pestbringerin.lex.night"
 msgstr "jede Nacht"

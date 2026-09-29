@@ -238,3 +238,49 @@ func test_open_win_candidate_is_decided_once_after_restart() -> void:
 	await restart()
 	assert_eq(str(next()["kind"]), "game_over", "bestätigtes Spielende nach erneutem Neustart")
 	assert_eq(session().commands().filter(func(c: Command) -> bool: return c.type == Command.CONFIRM_WIN).size(), 1, "genau eine Bestätigung")
+
+
+## PE-06: Neustart an jeder Unterbrechungsstelle des Rattenfänger-Ablaufs. Danach steht dieselbe Karte mit denselben
+## berechtigten Personen an, keine Ebene ist offen, eine Bedienung erzeugt genau einen Befehl; keine Ansage fehlt oder
+## doppelt sich. Rückgängig und Wiederholen der Bestätigung stellen den Schritt wieder her bzw. erledigen ihn wieder.
+func test_piper_flow_resumes_at_every_interruption_point() -> void:
+	if not await start([W, "rattenfaenger", D, D, D, D, D, "das-orakel"]):
+		return
+	var at_step := func(role: String) -> Callable:
+		return func(n: Dictionary) -> bool: return str(n.get("kind")) == "begin_step" and str(n.get("role_id")) == role
+	assert_true(await run({}, at_step.call("rattenfaenger")), "vor dem Rattenfänger")
+	var before := await restart()
+	assert_eq(str(next()["role_id"]), "rattenfaenger", "Rattenfänger steht weiter an")
+	await tap_button("BeginStepButton")
+	assert_one_effect(before, "Rattenfänger begonnen")
+	await tap_seat(4)
+	await tap_seat(5)
+	await tap_button("ConfirmTargetsButton")
+	assert_eq(str(next().get("notice_kind")), "piper_new", "nach der Aktion: Hinweis offen")
+	await tap_button("ShowNoticeButton")
+	before = await restart()
+	assert_true(find_node(screen(), "NoticeLayer") == null, "Hinweiskarte nach dem Neustart nicht wieder geöffnet")
+	assert_eq(str(next().get("notice_kind")), "piper_new", "derselbe Hinweis")
+	await tap_button("AckNoticeButton")
+	assert_one_effect(before, "Hinweis bestätigt")
+	before = await restart()
+	assert_eq(str(next()["role_id"]), "piper-all", "zwischen den Phasen: „Alle Verzauberten“ steht an")
+	assert_eq(next()["actor_ids"], [4, 5], "dieselben Personen")
+	await tap_button("BeginStepButton")
+	assert_one_effect(before, "„Alle Verzauberten“ begonnen")
+	before = await restart()
+	assert_eq(str(next().get("owner")), "piper-all", "offene Karte bleibt offen")
+	assert_eq(next()["actor_ids"], [4, 5], "dieselben Personen nach dem Neustart")
+	await tap_button("AckButton")
+	assert_one_effect(before, "„Alle Verzauberten“ bestätigt")
+	var after_ack := next()
+	assert_eq(str(after_ack["role_id"]), "das-orakel", "weiter mit dem nächsten Nachtschritt")
+	await restart()
+	assert_eq(next(), after_ack, "nach dem Neustart kein erneutes „Alle Verzauberten“")
+	assert_true(session().undo(), "Rückgängig der Bestätigung")
+	assert_eq(str(next().get("owner")), "piper-all", "Karte wieder offen")
+	assert_eq(next()["actor_ids"], [4, 5], "dieselben Personen nach Rückgängig")
+	assert_true(session().redo(), "Wiederholen")
+	assert_eq(next(), after_ack, "wieder erledigt")
+	var shown := session().commands().filter(func(c: Command) -> bool: return c.type == Command.BEGIN_STEP and str(c.payload["step_id"]).ends_with(":piper-all"))
+	assert_eq(shown.size(), 1, "„Alle Verzauberten“ genau einmal begonnen")

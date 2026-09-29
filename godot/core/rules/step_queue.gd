@@ -20,10 +20,12 @@ const PACK := &"pack"
 const PACK2 := &"pack2"  ## zweiter Rudelschritt nach dem Lynch eines Rudelvaters (RM-DR-112)
 const BOUND := &"die-gebundenen"  ## gemeinsamer Schritt aller Gebundenen, nur Nacht 1
 const ETERNAL := &"die-ewigen"  ## gemeinsamer Schritt aller Ewigen, jede Nacht (I-11)
+const PIPER_ALL := &"piper-all"  ## „Alle Verzauberten“ direkt hinter dem Rattenfänger (PE-06)
 const STATUS_PENDING := &"pending"
 const STATUS_DONE := &"done"
 const STATUS_SKIPPED := &"skipped"
 const STEP_STATUSES: Array[StringName] = [STATUS_PENDING, STATUS_DONE, STATUS_SKIPPED]
+const PIPER_ALL_ORDER := 1 << 30  ## Sortierschlüssel: hinter jedem Rattenfänger-Schritt derselben Priorität
 
 
 static func personal_step_key(role_id: StringName, player_id: int) -> StringName:
@@ -98,6 +100,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.KRIEGERIN: false,      # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.BLUTPRIESTER: false,   # Verzicht ist eine Antwort (0 Ziele)
 	ETERNAL: false,                    # Pflichtprüfung der Ewigen
+	PIPER_ALL: false,                  # Pflichtinformation nach jedem Aufruf des Rattenfängers (PE-06)
 	RoleCatalog.DORFSCHMIED: false,    # „noch nicht“ ist eine Antwort (0 Ziele)
 	RoleCatalog.SCHUTZGEIST: false,    # Pflichtwahl einer lebenden Person
 	RoleCatalog.VERDAMMNISWAECHTER: false,  # Pflichturteil zwischen zwei Personen
@@ -219,6 +222,10 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		entries.append([RoleCatalog.BOUND_PRIORITY, 0, BOUND])
 	if not InfoSteps.living_eternal(s).is_empty():
 		entries.append([RoleCatalog.ETERNAL_PRIORITY, 0, ETERNAL])
+	# PE-06: nach jedem Aufruf des Rattenfängers (echter Schritt oder Tarnaufruf), hinter allen Rattenfänger-Schritten.
+	# Auch ohne Verzauberte bei Nachtbeginn, weil der Rattenfänger in dieser Nacht die ersten verzaubern kann.
+	if CallPolicy.called_roles(s).has(RoleCatalog.RATTENFAENGER) or entries.any(func(e: Array) -> bool: return step_role(e[2]) == RoleCatalog.RATTENFAENGER):
+		entries.append([RoleCatalog.night_priority(RoleCatalog.RATTENFAENGER), PIPER_ALL_ORDER, PIPER_ALL])
 	entries.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and a[1] < b[1]))
 	var plan: Array[StringName] = []
 	for entry: Array in entries:
@@ -229,6 +236,12 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 ## Grund, warum der Nachtschritt `index` entfällt, oder &"" wenn er auszuführen ist.
 static func drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
+	if key == PIPER_ALL:
+		# PE-06: entfällt nur ohne Aufruf des Rattenfängers oder ohne lebende Verzauberte. Keine Fähigkeit, daher weder
+		# Einfrieren (E-36) noch Blockade: Der Tarnaufruf des Rattenfängers wird auch dann angesagt (DI-02).
+		if not piper_called(s):
+			return &"not_called"
+		return &"no_decision" if SoloRules.charmed_living(s).is_empty() else &""
 	if s.night_frozen:
 		return &"frozen"  # Zeitwächter (E-36): alle Nachtschritte dieser Nacht entfallen
 	if key == BOUND:
@@ -338,6 +351,17 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	return &""
 
 
+## Wurde der Rattenfänger in dieser Nacht aufgerufen? Nach der Aufrufpolitik (auch als Tarnaufruf) oder durch einen
+## ausgeführten Rattenfänger-Schritt (Grabräuber mit gestohlener Fähigkeit).
+static func piper_called(s: GameState) -> bool:
+	if CallPolicy.called_roles(s).has(RoleCatalog.RATTENFAENGER):
+		return true
+	for j: int in s.night_plan.size():
+		if step_role(s.night_plan[j]) == RoleCatalog.RATTENFAENGER and s.night_step_status[j] == STATUS_DONE:
+			return true
+	return false
+
+
 ## Todesmarkierung dieser Nacht: Gifttrank der Waldhexe oder Tod am Morgen aus einem Nachtschritt.
 static func is_marked(s: GameState, id: int) -> bool:
 	return WitchStep.is_marked(s, id) or s.death_marks.any(func(m: Dictionary) -> bool: return int(m["target_id"]) == id)
@@ -445,6 +469,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.cancellable = true
 	elif s.night_plan[s.next_night_step] == ETERNAL:
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_ETERNAL, -1)
+	elif s.night_plan[s.next_night_step] == PIPER_ALL:
+		InfoSteps.open(s, prompt, PendingPrompt.OWNER_PIPER_ALL, -1)
 	elif InfoSteps.OWNERS.has(step_kind(step_id)):
 		InfoSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))
 	elif s.night_plan[s.next_night_step] == PACK2:

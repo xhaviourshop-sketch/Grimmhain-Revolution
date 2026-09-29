@@ -14,6 +14,8 @@ extends RefCounted
 ##   Kriegerin des Lichts (einmal je Leben, Verzicht möglich): Wolf ja/nein; nein → Todesmarkierung für sie.
 ##   Blutpriester (einmal je Leben, Verzicht möglich): Opfer (Todesmarkierung), dann 0–3 lebende Wölfe.
 ##   Die Ewigen (jede Nacht, ein gemeinsamer Schritt): eine Person außerhalb der Ewigen, Einzelsieg ja/nein.
+## Alle Verzauberten (PE-06, ein gemeinsamer Schritt nach jedem Aufruf des Rattenfängers): Die Spielleitung sieht die
+##   lebenden Verzauberten, sie öffnen die Augen und erkennen einander. Keine Karte für die Personen, keine Wirkung.
 ## Prompt mit Stufe „Gezeigt“ (nur Ja), beim Doktor vorher „targets“. Abbrechbar, nicht
 ## überspringbar. Der Spielleiter sieht die Information im Prompt; mit „Gezeigt“ erhält jede
 ## betroffene Person ein eigenes ACTOR-Ereignis, der Spielleiter einen Datensatz.
@@ -34,7 +36,7 @@ const TRIPLE_OWNERS: Array[StringName] = [PendingPrompt.OWNER_DREAMER, PendingPr
 ## Freiwillige Einmal-Aktion: 0 Ziele = Verzicht (nichts verbraucht).
 const OPTIONAL_OWNERS: Array[StringName] = [PendingPrompt.OWNER_WARRIOR, PendingPrompt.OWNER_BLOOD]
 const OWNERS: Array[StringName] = [PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER, PendingPrompt.OWNER_HOUND,
-	PendingPrompt.OWNER_DREAMER, PendingPrompt.OWNER_BOUNTY, PendingPrompt.OWNER_KING, PendingPrompt.OWNER_WARRIOR, PendingPrompt.OWNER_BLOOD, PendingPrompt.OWNER_ETERNAL]
+	PendingPrompt.OWNER_DREAMER, PendingPrompt.OWNER_BOUNTY, PendingPrompt.OWNER_KING, PendingPrompt.OWNER_WARRIOR, PendingPrompt.OWNER_BLOOD, PendingPrompt.OWNER_ETERNAL, PendingPrompt.OWNER_PIPER_ALL]
 const FIRST_NIGHT_OWNERS: Array[StringName] = [PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND]
 
 
@@ -200,6 +202,8 @@ static func _info(s: GameState, owner: StringName) -> Dictionary:
 			return {"solo_count": solo_count(s)}
 		PendingPrompt.OWNER_RANGER:
 			return {"wolf_count": living_wolf_count(s)}
+		PendingPrompt.OWNER_PIPER_ALL:
+			return {"charmed_ids": SoloRules.charmed_living(s)}
 	return {"bound_ids": living_bound(s)}
 
 
@@ -464,6 +468,8 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 			var same := DictRead.get_bool(prompt.partial, "same_team")
 			ctx.emit(GameEvent.DOCTOR_RECORDED, Visibility.GM, {"doctor_id": prompt.actor_id, "target_ids": ids.duplicate(), "same_team": same, "night": night})
 			ctx.emit(GameEvent.DOCTOR_REVEALED, Visibility.ACTOR, {"target_ids": ids.duplicate(), "same_team": same, "night": night}, prompt.actor_id)
+		PendingPrompt.OWNER_PIPER_ALL:
+			pass  # nur Erkennen am Tisch; kein Zustand außer dem erledigten Schritt
 		_:
 			var bound: Array = DictRead.to_int_array(DictRead.get_array(prompt.partial, "bound_ids"))
 			ctx.emit(GameEvent.BOUND_RECORDED, Visibility.GM, {"bound_ids": bound.duplicate(), "night": night})
@@ -508,6 +514,11 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 			return false
 		var stored: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "bound_ids"))
 		return stored != null and Array(stored) == living_bound(s)
+	if prompt.owner == PendingPrompt.OWNER_PIPER_ALL:
+		if key != StepQueue.PIPER_ALL or prompt.actor_id != -1 or prompt.stage != STAGE_SHOWN or not prompt.allowed_ids.is_empty():
+			return false
+		var charmed: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "charmed_ids"))
+		return charmed != null and prompt.partial.size() == 1 and Array(charmed) == Array(SoloRules.charmed_living(s))
 	if prompt.owner == PendingPrompt.OWNER_ETERNAL:
 		if key != StepQueue.ETERNAL or prompt.actor_id != -1:
 			return false

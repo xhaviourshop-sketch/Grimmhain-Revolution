@@ -85,7 +85,7 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 		if parts[0] != "reaction":
 			assert_ne(CockpitText.call_key(parts[0] if parts[0] != "pack2" else "pack"), "ui.call.generic", "%s: eigener Vorlesetext" % combo)
 	print("      Prompt-Abdeckung (%d Kombinationen): %s" % [keys.size(), ", ".join(keys)])
-	for kind: String in ["loki_bond", "piper_new", "piper_all", "pest_infected"]:
+	for kind: String in ["loki_bond", "piper_new", "pest_infected"]:
 		assert_true(int(_notices.get(kind, 0)) > 0, "Hinweisart %s wurde über die Karte bedient" % kind)
 	print("      Hinweise über die Karte bestätigt: %s" % str(_notices))
 

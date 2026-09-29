@@ -68,13 +68,13 @@ func test_texts_have_no_placeholders_or_document_references() -> void:
 
 
 func test_decided_rule_answers_are_reflected() -> void:
-	# PE-05: Quellrolle in den Ansagen; PE-06: Phase „Alle Verzauberten“, noch nicht umgesetzt und deshalb offen markiert.
+	# PE-05: Quellrolle in den Ansagen; PE-06: Schritt „Alle Verzauberten“ ist umgesetzt, kein offener Punkt mehr.
 	var de := po_entries(PO_DE)
 	assert_true(str(de["ui.role.loki.lex.gm"]).contains("nie die Rolle der sterbenden Person"), "Loki: Quellrolle")
 	assert_true(str(de["ui.role.rotkaeppchen.lex.gm"]).contains("nie die Rolle der sterbenden Person"), "Rotkäppchen: Quellrolle")
 	assert_true(str(de["ui.role.schattenwanderer.lex.gm"]).contains("nie die Rolle der sterbenden Person"), "Schattenwanderer: Quellrolle")
 	assert_true(str(de["ui.role.rattenfaenger.lex.gm"]).contains("auch auf einen reinen Tarnaufruf"), "Rattenfänger: Regel PE-06")
-	assert_true(de.has("ui.role.rattenfaenger.lex.open"), "Rattenfänger: Umsetzung offen gekennzeichnet")
+	assert_false(de.has("ui.role.rattenfaenger.lex.open"), "Rattenfänger: kein Hinweis mehr, die Phase selbst aufzurufen")
 	assert_false(str(de["ui.role.loki.lex.gm"]).contains("nur in Nacht 1 auf"), "Loki: kein Widerspruch zur Aufrufpolitik")
 
 

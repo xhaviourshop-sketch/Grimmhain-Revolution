@@ -36,6 +36,7 @@ const OWNER_KING := &"koenig"
 const OWNER_WARRIOR := &"kriegerin-des-lichts"
 const OWNER_BLOOD := &"blutpriester"
 const OWNER_ETERNAL := &"die-ewigen"
+const OWNER_PIPER_ALL := &"piper-all"  ## „Alle Verzauberten“ nach dem Rattenfänger (PE-06)
 const OWNER_SMITH := &"dorfschmied"
 const OWNER_GHOST := &"schutzgeist"
 const OWNER_DOOM := &"verdammniswaechter"

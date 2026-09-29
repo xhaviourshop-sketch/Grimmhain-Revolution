@@ -109,6 +109,8 @@ static func actor_ids(s: GameState, p: PendingPrompt) -> Array:
 			return InfoSteps.living_bound(s)
 		PendingPrompt.OWNER_ETERNAL:
 			return InfoSteps.awake_eternal(s)
+		PendingPrompt.OWNER_PIPER_ALL:
+			return SoloRules.charmed_living(s)
 	return []
 
 

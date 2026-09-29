@@ -1,7 +1,7 @@
 extends UiTestCase
 ## DI-04 bis DI-08 in der Oberfläche: private Hinweise als bedienbare Karten (zeigen, dann als gezeigt bestätigen).
 ##   Loki: beide Personen sehen nur ihren Partner und die Bindungsart.
-##   Rattenfänger: zuerst die neu Verzauberten (ohne Namen), danach alle Verzauberten mit Namen.
+##   Rattenfänger: die neu Verzauberten (ohne Namen); „Alle Verzauberten“ ist ein Nachtschritt (PE-06, test_piper_all_ui).
 ##   Pestbringerin: jede neu infizierte Person, auch nach der Ausbreitung am Morgen.
 ##   Rotkäppchen: Die Frage an die gefragte Person erklärt Apfel und Kette, ohne Rolle und ohne fragende Person.
 ##   Trugbilderwolf: Seine Scheinrolle steht auf keiner Karte.
@@ -121,7 +121,7 @@ func test_notice_survives_navigation_restart_and_undo() -> void:
 
 # --- Rattenfänger -----------------------------------------------------------------------------------
 
-func test_piper_shows_new_enchanted_first_then_all_with_names() -> void:
+func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
 	var shell := await _cockpit([W, "rattenfaenger", D, D, D, D, D])
 	if shell == null:
 		return
@@ -140,12 +140,8 @@ func test_piper_shows_new_enchanted_first_then_all_with_names() -> void:
 	await press(find_button(find_node(screen, "NoticeLayer"), "CloseLayerButton"))
 	await press(find_button(screen, "AckNoticeButton"))
 	next = UiGame.next_of(s)
-	assert_eq(str(next["text_key"]), "ui.notice.piper_all", "danach alle Verzauberten")
-	await press(find_button(screen, "ShowNoticeButton"))
-	var second := _texts(find_node(screen, "NoticeLayer"))
-	assert_true(second.contains("3 · C") and second.contains("4 · D"), "zweite Phase nennt alle Verzauberten: %s" % second)
-	assert_false(second.contains("2 · B"), "nicht den Rattenfänger")
-	_assert_no_role_names(second, "zweite Phase")
+	assert_eq(str(next["kind"]), "begin_step", "danach kein zweiter Hinweis, sondern der Schritt")
+	assert_eq(str(next["role_id"]), "piper-all", "Schritt „Alle Verzauberten“")
 
 
 # --- Pestbringerin ----------------------------------------------------------------------------------

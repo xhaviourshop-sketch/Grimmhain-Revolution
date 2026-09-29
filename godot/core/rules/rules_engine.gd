@@ -609,8 +609,7 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 			for id: int in targets:
 				s.charms.append({"piper_id": prompt.actor_id, "target_id": id})
 			ctx.emit(GameEvent.CHARMED, Visibility.GM, {"piper_id": prompt.actor_id, "target_ids": targets.duplicate(), "night": s.night_number})
-			NoticeRules.queue(ctx, NoticeRules.PIPER_NEW, targets)  # DI-06: erst die neu Verzauberten, dann alle
-			NoticeRules.queue(ctx, NoticeRules.PIPER_ALL, SoloRules.charmed_living(s))
+			NoticeRules.queue(ctx, NoticeRules.PIPER_NEW, targets)  # DI-06; „Alle Verzauberten“ ist der Schritt StepQueue.PIPER_ALL (PE-06)
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_PEST:

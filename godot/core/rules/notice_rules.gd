@@ -7,15 +7,13 @@ extends RefCounted
 ## Oberfläche zeigt offene Hinweise zuerst. Stirbt eine Person, verlässt sie die Betrachterliste, ein leerer
 ## Hinweis entfällt (protokolliert).
 ##   loki_bond      Betrachter: eine Person des Paares; data {partner_id, bond: love|rival}
-##   piper_new      Betrachter: die in dieser Nacht neu Verzauberten
-##   piper_all      Betrachter: alle lebenden Verzauberten (sie erkennen einander)
+##   piper_new      Betrachter: die in dieser Nacht neu Verzauberten („Alle Verzauberten“ ist ein Nachtschritt, PE-06)
 ##   pest_infected  Betrachter: eine neu infizierte Person
 
 const LOKI_BOND := "loki_bond"
 const PIPER_NEW := "piper_new"
-const PIPER_ALL := "piper_all"
 const PEST_INFECTED := "pest_infected"
-const KINDS: Array[String] = [LOKI_BOND, PIPER_NEW, PIPER_ALL, PEST_INFECTED]
+const KINDS: Array[String] = [LOKI_BOND, PIPER_NEW, PEST_INFECTED]
 
 
 static func queue(ctx: RuleContext, kind: String, viewer_ids: Array[int], data: Dictionary = {}) -> void:

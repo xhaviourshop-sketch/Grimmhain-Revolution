@@ -252,6 +252,7 @@ func test_help_role_mapping() -> void:
 	assert_eq(CockpitText.help_role({"kind": "begin_step", "role_id": "pack"}), "werwolf", "Rudel → Werwolf")
 	assert_eq(CockpitText.help_role({"kind": "prompt", "role_id": "", "owner": "rotkaeppchen"}), "rotkaeppchen", "anonyme Frage → Rotkäppchen")
 	assert_eq(CockpitText.help_role({"kind": "prompt", "role_id": "die-gebundenen"}), "die-gebundenen", "Gruppe mit eigenem Eintrag")
-	assert_eq(CockpitText.help_role({"kind": "notice", "notice_kind": "piper_all"}), "rattenfaenger", "Hinweis der Verzauberten")
+	assert_eq(CockpitText.help_role({"kind": "notice", "notice_kind": "piper_new"}), "rattenfaenger", "Hinweis der neu Verzauberten")
+	assert_eq(CockpitText.help_role({"kind": "begin_step", "role_id": "piper-all"}), "rattenfaenger", "Schritt „Alle Verzauberten“ → Rattenfänger")
 	assert_eq(CockpitText.help_role({"kind": "day"}), "", "Tageskarte: keine Kontexthilfe")
 	assert_eq(CockpitText.help_role({"kind": "prompt", "role_id": "reaction"}), "", "unbekannt: keine Hilfe")

@@ -11,6 +11,7 @@ extends RefCounted
 const GROUP_PACK := &"pack"
 const GROUP_BOUND := &"die-gebundenen"
 const GROUP_ETERNAL := &"die-ewigen"
+const GROUP_PIPER_ALL := &"piper-all"
 
 ## Rollen, deren Regel noch an einem nicht entschiedenen System hängt (Totenkarten, RM-DR-013).
 ## Nur im privaten Bereich als Hinweis, weil die Nennung die Rolle verrät.
@@ -135,6 +136,9 @@ static func step_announcement(s: GameState, step_id: String) -> Dictionary:
 		StepQueue.ETERNAL:
 			out["role_id"] = String(GROUP_ETERNAL)
 			out["actor_ids"] = InfoSteps.living_eternal(s)
+		StepQueue.PIPER_ALL:
+			out["role_id"] = String(GROUP_PIPER_ALL)
+			out["actor_ids"] = SoloRules.charmed_living(s)
 		_:
 			var actor := StepQueue.step_actor(key)
 			out["role_id"] = String(StepQueue.step_role(key))
@@ -154,8 +158,8 @@ static func _decoys(s: GameState) -> Array:
 
 
 ## Erster offener privater Hinweis (DI-04, DI-06, DI-07) als Karte für die betroffenen Personen. Der Kartentext
-## enthält nur, was die Betrachter erfahren dürfen: den eigenen Partner (Loki), die Liste aller Verzauberten
-## (sie erkennen einander) bzw. den eigenen Zustand; nie Rollen anderer Personen.
+## enthält nur, was die Betrachter erfahren dürfen: den eigenen Partner (Loki) bzw. den eigenen Zustand; nie Rollen
+## anderer Personen. „Alle Verzauberten“ ist ein Nachtschritt (PE-06), kein Hinweis.
 static func notice_card(s: GameState) -> Dictionary:
 	var n: Dictionary = s.notices[0]
 	var viewers: Array = n["viewer_ids"]
@@ -170,9 +174,6 @@ static func notice_card(s: GameState) -> Dictionary:
 			values = {"partner": PromptView.person_label(s, int((n["data"] as Dictionary)["partner_id"]))}
 		NoticeRules.PIPER_NEW:
 			text_key = "ui.notice.piper_new"
-		NoticeRules.PIPER_ALL:
-			text_key = "ui.notice.piper_all"
-			values = {"names": viewer_labels}
 		NoticeRules.PEST_INFECTED:
 			text_key = "ui.notice.pest_infected"
 	return {"kind": "notice", "secret": true, "notice_id": int(n["id"]), "notice_kind": str(n["kind"]), "open": s.notices.size(),

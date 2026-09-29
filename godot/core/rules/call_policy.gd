@@ -23,6 +23,8 @@ static func slot_priority(role_id: StringName) -> int:
 		return RoleCatalog.BOUND_PRIORITY
 	if role_id == RoleCatalog.DIE_EWIGEN:
 		return RoleCatalog.ETERNAL_PRIORITY
+	if role_id == StepQueue.PIPER_ALL:
+		return RoleCatalog.night_priority(RoleCatalog.RATTENFAENGER)  # PE-06: Platz des Rattenfängers, Tarnaufruf davor
 	if not RoleCatalog.has_role(role_id):
 		return -1
 	if role_id == RoleCatalog.ZEITWAECHTER:
@@ -56,7 +58,7 @@ static func called_roles(s: GameState) -> Array[StringName]:
 static func entry_role(key: StringName) -> StringName:
 	if key == StepQueue.PACK or key == StepQueue.PACK2:
 		return &""
-	if key == StepQueue.BOUND or key == StepQueue.ETERNAL:
+	if key == StepQueue.BOUND or key == StepQueue.ETERNAL or key == StepQueue.PIPER_ALL:
 		return key
 	return StepQueue.step_role(key)
 
