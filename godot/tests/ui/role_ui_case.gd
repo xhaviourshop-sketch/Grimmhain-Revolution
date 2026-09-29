@@ -118,6 +118,8 @@ func step(plan: Dictionary) -> bool:
 		"start_night":
 			return await tap_button("StartNightButton")
 		"begin_step":
+			# Invariante: Überspringen nur bei überspringbaren Schritten (Regelkern), nie bei Pflichtschritten.
+			assert_eq(live("SkipStepButton") != null, bool(n.get("skippable")), "Schritt %s: Überspringen nur wenn erlaubt" % str(n.get("step_id")))
 			if str(plan.get("step/%s" % str(n.get("role_id")), "")) == "skip":
 				return await tap_button("SkipStepButton") and await confirm_dialog()
 			return await tap_button("BeginStepButton")
@@ -144,6 +146,10 @@ func plan_key(n: Dictionary) -> String:
 ## Antwort auf den offenen Prompt ausschließlich über die Karte.
 func answer(action: Variant) -> bool:
 	var n := next()
+	# Invarianten jeder Karte: Abbrechen genau bei abbrechbaren Prompts, Verzicht genau bei zulässiger Anzahl 0.
+	assert_eq(live("CancelPromptButton") != null, bool(n.get("cancellable")), "%s: Abbrechen nur wenn erlaubt" % plan_key(n))
+	if str(n.get("answer")) == "targets":
+		assert_eq(live("DeclineButton") != null, (n.get("counts", []) as Array).has(0), "%s: Verzicht nur bei zulässiger Anzahl 0" % plan_key(n))
 	if action is String and action == "cancel":
 		return await tap_button("CancelPromptButton") and await confirm_dialog()
 	match str(n.get("answer")):
