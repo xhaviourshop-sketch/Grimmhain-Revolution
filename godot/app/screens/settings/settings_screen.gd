@@ -1,7 +1,8 @@
 class_name SettingsScreen
 extends BaseScreen
 ## Einstellungen: Sprache (Deutsch/Englisch), Bewegung reduzieren, Platzhalter für Audio und
-## Anzeige. Wirkt sofort auf AppSettings; noch keine dauerhafte Speicherung.
+## Anzeige. Wirkt sofort auf AppSettings; der AppContext speichert jede Änderung dauerhaft. Scheitert das
+## Speichern, gilt die Einstellung trotzdem für diese Sitzung und die Meldung sagt das statt „geändert“.
 
 @onready var _german: GrimmButton = %LanguageGermanButton
 @onready var _english: GrimmButton = %LanguageEnglishButton
@@ -20,9 +21,13 @@ func _setup() -> void:
 
 func _on_language_toggled(pressed: bool, code: String) -> void:
 	if pressed and context.settings.set_language(code):
-		status_message_requested.emit("ui.settings.toast.language")
+		_report("ui.settings.toast.language")
 
 
 func _on_motion_toggled(pressed: bool) -> void:
 	context.settings.set_reduced_motion(pressed)
-	status_message_requested.emit("ui.settings.toast.motion_on" if pressed else "ui.settings.toast.motion_off")
+	_report("ui.settings.toast.motion_on" if pressed else "ui.settings.toast.motion_off")
+
+
+func _report(success_key: String) -> void:
+	status_message_requested.emit(success_key if context.settings_saved() else "ui.settings.toast.save_failed")

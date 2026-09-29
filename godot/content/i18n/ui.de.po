@@ -119,6 +119,9 @@ msgstr "Bewegung reduziert"
 msgid "ui.settings.toast.motion_off"
 msgstr "Übergänge aktiv"
 
+msgid "ui.settings.toast.save_failed"
+msgstr "Gilt jetzt, konnte aber nicht dauerhaft gespeichert werden"
+
 msgid "ui.cockpit.title"
 msgstr "Spielleiter-Cockpit"
 

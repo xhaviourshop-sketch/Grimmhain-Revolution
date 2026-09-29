@@ -1,8 +1,8 @@
 class_name AppSettings
 extends RefCounted
-## Geräte- und Bedienpräferenzen (nicht Teil des Spielstands, 03 §4.1). Noch nicht dauerhaft
-## gespeichert. Sprache wird sofort am TranslationServer gesetzt; alle Änderungen werden über
-## `changed` gemeldet, damit die Shell Texte und Übergänge aktualisiert.
+## Geräte- und Bedienpräferenzen (nicht Teil des Spielstands, 03 §4.1). Dauerhaft gespeichert über
+## SettingsStore (AppContext.use_settings_store). Sprache wird sofort am TranslationServer gesetzt; alle
+## Änderungen werden über `changed` gemeldet, damit die Shell Texte und Übergänge aktualisiert.
 
 signal changed(key: StringName)
 

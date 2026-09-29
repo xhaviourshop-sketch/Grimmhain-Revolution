@@ -119,6 +119,9 @@ msgstr "Motion reduced"
 msgid "ui.settings.toast.motion_off"
 msgstr "Transitions on"
 
+msgid "ui.settings.toast.save_failed"
+msgstr "Applied now, but could not be saved permanently"
+
 msgid "ui.cockpit.title"
 msgstr "Game master cockpit"
 

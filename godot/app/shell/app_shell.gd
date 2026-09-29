@@ -11,9 +11,13 @@ extends Control
 ## Ersetzt `get_tree().quit()` (Tests, spätere Plattformschicht).
 var quit_handler: Callable = Callable()
 var app_context: AppContext = null
+## Dauerhafte Einstellungen. Beim echten Start (ohne vorbereiteten Kontext) user://settings.json; ein von außen
+## übergebener Kontext bleibt ohne Datei, außer ein Speicher wird ausdrücklich gesetzt (Tests mit Temp-Pfad).
+var settings_store: SettingsStore = null
 
 var _safe_rect_override: Rect2 = Rect2()
 var _has_safe_override: bool = false
+var _settings_applied: bool = false
 
 @onready var _router: ScreenRouter = %ScreenHost
 @onready var _safe_area: MarginContainer = %SafeArea
@@ -21,12 +25,25 @@ var _has_safe_override: bool = false
 @onready var _toast: ToastHost = %ToastHost
 
 
+## Einstellungen laden und anwenden, bevor Kindknoten und erste Ansicht entstehen (_enter_tree des Elternknotens
+## läuft vor dem Aufbau der Kinder): Die Oberfläche entsteht gleich in der gespeicherten Sprache.
+func _enter_tree() -> void:
+	if _settings_applied:
+		return
+	_settings_applied = true
+	if app_context == null:
+		app_context = AppContext.new()
+		if settings_store == null:
+			settings_store = SettingsStore.new()
+	if settings_store != null:
+		app_context.use_settings_store(settings_store)
+	else:
+		app_context.settings.apply()
+
+
 func _ready() -> void:
 	theme = ThemeFactory.build()
 	get_tree().set_auto_accept_quit(false)  # Fenster schließen läuft über _notification (Warnung bei ungespeichertem Stand)
-	if app_context == null:
-		app_context = AppContext.new()
-	app_context.settings.apply()
 	app_context.settings.changed.connect(_on_settings_changed)
 	_toast.settings = app_context.settings
 	_router.setup(app_context)
