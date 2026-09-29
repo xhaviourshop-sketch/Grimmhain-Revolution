@@ -174,6 +174,24 @@ static func command_label(info: Dictionary) -> Dictionary:
 		"kind": StringName("ui.gm.kind.%s" % str(info["kind"])) if str(info.get("kind", "")) != "" else ""}}
 
 
+## Bisheriger Wert einer Spezialkorrektur ({key, values}) als Text: Personenlabels als „3 · Anna“, Schlüssel und Wahrheitswerte übersetzt.
+static func state_text(state: Dictionary) -> String:
+	if state.is_empty():
+		return ""
+	var values := {}
+	for k: Variant in (state["values"] as Dictionary):
+		var v: Variant = (state["values"] as Dictionary)[k]
+		if v is Dictionary:
+			values[k] = person(v)
+		elif v is bool:
+			values[k] = TranslationServer.translate("ui.common.yes" if v else "ui.common.no")
+		elif v is StringName:
+			values[k] = TranslationServer.translate(v)
+		else:
+			values[k] = str(v)
+	return TranslationServer.translate(str(state["key"])).format(values)
+
+
 ## Personen-IDs als „3 · Anna, 5 · Ben“ aus den öffentlichen Sitzdaten.
 static func names_of(ids: Array, seats: Array) -> String:
 	var names: Array = []

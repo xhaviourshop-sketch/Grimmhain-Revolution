@@ -3322,3 +3322,105 @@ msgstr "#{index} Rolle gezeigt ({visibility})"
 
 msgid "ui.cockpit.error.role_already_confirmed"
 msgstr "Fehler: Diese Person hat ihre aktuelle Rolle schon gesehen. Nichts wurde geändert."
+
+msgid "ui.cockpit.card.gm.action"
+msgstr "{kind} · {state}"
+
+msgid "ui.cockpit.card.gm.action_pick"
+msgstr "{kind} … · {state}"
+
+msgid "ui.cockpit.dialog.pick.title"
+msgstr "Ziel wählen"
+
+msgid "ui.cockpit.dialog.pick.message"
+msgstr "{what} für {person}: Wer soll das Ziel sein? Angeboten werden nur Personen, die der Regelkern jetzt annimmt."
+
+msgid "ui.cockpit.dialog.gm.message_detail"
+msgstr "{what} für {person} ({detail}): Diese Änderung übersteuert die Regeln und wird mit Begründung protokolliert."
+
+msgid "ui.cockpit.dialog.gm.detail_from"
+msgstr "bisher: {state}"
+
+msgid "ui.cockpit.dialog.gm.detail_to"
+msgstr "bisher: {state} · neues Ziel: {target}"
+
+msgid "ui.cockpit.status.stale_selection"
+msgstr "Der Spielstand hat sich geändert. Die Auswahl wurde verworfen, nichts wurde geändert."
+
+msgid "ui.gm.state.protection_set"
+msgstr "schützt {target}"
+
+msgid "ui.gm.state.protection_none"
+msgstr "schützt niemanden"
+
+msgid "ui.gm.state.rescue_set"
+msgstr "rettet {target}"
+
+msgid "ui.gm.state.rescue_none"
+msgstr "keine Rettung"
+
+msgid "ui.gm.state.wolf_child"
+msgstr "Vorbild: {model} · verwandelt: {transformed}"
+
+msgid "ui.gm.state.apprentice"
+msgstr "Meister: {master} · Erbe angetreten: {inherited}"
+
+msgid "ui.gm.state.nobody"
+msgstr "niemand"
+
+msgid "ui.cockpit.error.not_a_guardian"
+msgstr "Fehler: Diese Person ist kein Schutzengel. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_guard_step"
+msgstr "Fehler: Für diesen Schutzengel gibt es in dieser Nacht keinen Schritt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.step_not_completed"
+msgstr "Fehler: Der Schritt dieser Rolle ist in dieser Nacht noch nicht erledigt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.not_a_witch"
+msgstr "Fehler: Diese Person ist keine Waldhexe. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_witch_step"
+msgstr "Fehler: Für diese Waldhexe gibt es in dieser Nacht keinen Schritt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_pack_target"
+msgstr "Fehler: Das Rudel hat in dieser Nacht kein Opfer gewählt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.not_current_pack_target"
+msgstr "Fehler: Gerettet werden kann nur das aktuelle Rudelopfer. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.not_a_wolf_child"
+msgstr "Fehler: Diese Person ist kein Wolfskind. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.not_an_apprentice"
+msgstr "Fehler: Diese Person ist kein Lehrling. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_binding"
+msgstr "Fehler: Der Lehrling hat keinen aktiven Meister. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.no_inheritance"
+msgstr "Fehler: Es gibt kein Erbe zum Zurücknehmen. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.stale_inheritance"
+msgstr "Fehler: Das Erbe kann nicht mehr zurückgenommen werden, weil sich die Person seitdem verändert hat. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.not_a_mirror_wolf"
+msgstr "Fehler: Diese Person ist kein Spiegelwolf. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.invalid_correction"
+msgstr "Fehler: Diese Korrektur ist ungültig. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.invalid_value"
+msgstr "Fehler: Dieser Wert ist nicht zulässig. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.unknown_role"
+msgstr "Fehler: Diese Rolle gibt es nicht. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.field_not_correctable"
+msgstr "Fehler: Dieses Feld lässt sich nicht korrigieren. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.confirmation_required"
+msgstr "Fehler: Die Warnung wurde nicht bestätigt. Nichts wurde geändert."
+
+msgid "ui.cockpit.error.player_alive"
+msgstr "Fehler: Diese Person lebt. Nichts wurde geändert."

@@ -316,7 +316,92 @@ static func status_fields(s: GameState, id: int) -> Array:
 	if RoleCatalog.requires_appearance(p.role_id):
 		out.append({"field": "appears_as", "kind": "set_role_field", "fields": {"target_id": id, "field": "appears_as"}, "value_key": "value",
 			"current": String(p.appears_as), "type": "role"})
+	out.append_array(special_fields(s, id))
 	return out
+
+
+## Spezialkorrekturen der Person (Schutz, Rettung, Wolfskind, Lehrling). Angeboten wird nur, was der Regelkern jetzt annimmt:
+## Jede Korrektur wird mit `RulesEngine.check` vorgeprüft (keine zweite Regel in der Oberfläche). Eintrag: `type` "action"
+## (sofort, mit Rückfrage) oder "pick" (zuerst ein Ziel aus `pick_ids` wählen, `pick_key` ist das Payload-Feld) und `state`
+## (bisheriger Wert der Person als {key, values}, nur für die Anzeige).
+const SPECIAL_KINDS: Array = [
+	[GmCorrections.SET_PROTECTION, "guardian_id", true, "protection"],
+	[GmCorrections.REMOVE_PROTECTION, "guardian_id", false, "protection"],
+	[GmCorrections.SET_RESCUE, "witch_id", false, "rescue"],
+	[GmCorrections.REMOVE_RESCUE, "witch_id", false, "rescue"],
+	[GmCorrections.SET_WOLF_MODEL, "child_id", true, "wolf_child"],
+	[GmCorrections.REMOVE_WOLF_MODEL, "child_id", false, "wolf_child"],
+	[GmCorrections.TRANSFORM_WOLF_CHILD, "child_id", false, "wolf_child"],
+	[GmCorrections.REVERT_WOLF_CHILD, "child_id", false, "wolf_child"],
+	[GmCorrections.SET_APPRENTICE_MASTER, "apprentice_id", true, "apprentice"],
+	[GmCorrections.REMOVE_APPRENTICE_MASTER, "apprentice_id", false, "apprentice"],
+	[GmCorrections.TRIGGER_APPRENTICE_INHERITANCE, "apprentice_id", false, "apprentice"],
+	[GmCorrections.REVERT_APPRENTICE_INHERITANCE, "apprentice_id", false, "apprentice"],
+]
+
+
+static func special_fields(s: GameState, id: int) -> Array:
+	var out: Array = []
+	if not s.players.has(id):
+		return out
+	for spec: Array in SPECIAL_KINDS:
+		var kind: String = spec[0]
+		var fields := {str(spec[1]): id}
+		if kind == GmCorrections.SET_RESCUE:
+			fields["target_id"] = s.pack_target_id  # gerettet werden kann nur das aktuelle Rudelopfer
+		var entry := {"field": kind, "kind": kind, "fields": fields, "state": _special_state(s, id, str(spec[3])), "type": "action"}
+		if bool(spec[2]):
+			var ids: Array = []
+			for target: int in s.alive_ids():
+				var probe := fields.duplicate()
+				probe["target_id"] = target
+				if _accepted(s, kind, probe):
+					ids.append(target)
+			if ids.is_empty():
+				continue
+			entry["type"] = "pick"
+			entry["pick_key"] = "target_id"
+			entry["pick_ids"] = ids
+		elif not _accepted(s, kind, fields):
+			continue
+		out.append(entry)
+	return out
+
+
+static func _accepted(s: GameState, kind: String, fields: Dictionary) -> bool:
+	var payload := fields.duplicate()
+	payload["kind"] = kind
+	payload["reason"] = "Vorprüfung"
+	payload["confirmed"] = true
+	return RulesEngine.check(s, Command.gm_correction(payload)) == &""
+
+
+## Bisheriger Wert der Person zur Familie der Korrektur: {key, values}; Werte sind Personenlabels, Schlüssel oder Wahrheitswerte.
+static func _special_state(s: GameState, id: int, family: String) -> Dictionary:
+	var nobody := StringName("ui.gm.state.nobody")
+	match family:
+		"protection":
+			var current := Protections.of_guardian(s, id)
+			if current == null:
+				return {"key": "ui.gm.state.protection_none", "values": {}}
+			return {"key": "ui.gm.state.protection_set", "values": {"target": PromptView.person_label(s, current.target_id)}}
+		"rescue":
+			var action := WitchStep.action_of(s, id)
+			if action == null or action.saved_id == GameState.NO_TARGET:
+				return {"key": "ui.gm.state.rescue_none", "values": {}}
+			return {"key": "ui.gm.state.rescue_set", "values": {"target": PromptView.person_label(s, action.saved_id)}}
+		"wolf_child":
+			var bond := WolfChildRules.bond_of(s, id)
+			if bond == null:
+				return {"key": "ui.gm.state.wolf_child", "values": {"model": nobody, "transformed": false}}
+			return {"key": "ui.gm.state.wolf_child", "values": {"model": PromptView.person_label(s, bond.model_id) if bond.model_id != GameState.NO_TARGET else nobody,
+				"transformed": bond.transformed}}
+		"apprentice":
+			var active := ApprenticeRules.active_of(s, id)
+			var latest := ApprenticeRules.latest_of(s, id)
+			return {"key": "ui.gm.state.apprentice", "values": {"master": PromptView.person_label(s, active.master_id) if active != null else nobody,
+				"inherited": latest != null and latest.status == ApprenticeBond.STATUS_INHERITED}}
+	return {}
 
 
 ## Rollenanzeige, neutrale Liste: Personen in Sitzreihenfolge mit Bestätigungsstand, ohne jede Rolle. `next_id` ist die

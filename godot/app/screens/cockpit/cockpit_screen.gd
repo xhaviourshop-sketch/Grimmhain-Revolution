@@ -689,6 +689,12 @@ func _ask_status_field(index: int) -> void:
 	var f: Dictionary = fields[index]
 	var payload: Dictionary = (f["fields"] as Dictionary).duplicate()
 	payload["kind"] = str(f["kind"])
+	if str(f["type"]) == "action":
+		_ask_correction(payload, TranslationServer.translate("ui.cockpit.dialog.gm.detail_from").format({"state": CockpitText.state_text(f.get("state", {}))}))
+		return
+	if str(f["type"]) == "pick":
+		_ask_pick(payload, f)
+		return
 	if str(f["type"]) == "bool":
 		payload[str(f["value_key"])] = not bool(f["current"])
 		_ask_correction(payload)
@@ -719,11 +725,49 @@ func _ask_gm_role() -> void:
 	dialog_requested.emit(request)
 
 
+## Zielwahl einer Spezialkorrektur: nur Personen, die der Regelkern als Ziel annimmt (`pick_ids`). Die Wahl gilt nur für den
+## Zustand, in dem sie geöffnet wurde; ein Zustandswechsel dazwischen verwirft sie.
+func _ask_pick(payload: Dictionary, field: Dictionary) -> void:
+	var revision := context.session.state_hash()
+	var request := DialogRequest.create("ui.cockpit.dialog.pick.title", "ui.cockpit.dialog.pick.message", "")
+	request.message_values = {"what": StringName("ui.gm.kind.%s" % str(payload["kind"])),
+		"person": CockpitText.names_of([int((field["fields"] as Dictionary).values()[0])], _view.get("seats", []))}
+	for id: Variant in field["pick_ids"]:
+		var seat := int(id)
+		var option := DialogOption.new()
+		option.node_name = "Pick_%d" % seat
+		option.text_key = "ui.cockpit.roles.person"
+		for entry: Dictionary in _view.get("seats", []):
+			if int(entry["person_id"]) == seat:
+				option.values = {"seat": int(entry["seat"]), "name": str(entry["name"])}
+		option.on_select = func() -> void:
+			if context.session.state_hash() != revision:
+				status_message_requested.emit("ui.cockpit.status.stale_selection")
+				_render()
+				return
+			var p := payload.duplicate()
+			p[str(field["pick_key"])] = seat
+			_ask_correction.call_deferred(p, TranslationServer.translate("ui.cockpit.dialog.gm.detail_to").format({"state": CockpitText.state_text(field.get("state", {})),
+				"target": CockpitText.names_of([seat], _view.get("seats", []))}), revision)
+		request.options.append(option)
+	dialog_requested.emit(request)
+
+
 ## Warnung mit Pflichtbegründung; erst dann geht die Korrektur an den Regelkern. Danach zeigt die
-## Ebene „Spielleitung“, was sich geändert hat.
-func _ask_correction(payload: Dictionary) -> void:
-	var request := DialogRequest.with_input("ui.cockpit.dialog.gm.title", "ui.cockpit.dialog.gm.message", "ui.cockpit.dialog.gm.confirm",
-		"ui.cockpit.dialog.reason_placeholder", func(reason: String) -> void:
+## Ebene „Spielleitung“, was sich geändert hat. `detail` nennt Person und Wert (Spezialkorrekturen), `revision` den Zustand,
+## für den die Rückfrage gilt (ein Zustandswechsel verwirft sie).
+func _ask_correction(payload: Dictionary, detail: String = "", revision: String = "") -> void:
+	revision = revision if revision != "" else context.session.state_hash()
+	var subject := ""
+	for key: String in ["guardian_id", "witch_id", "child_id", "apprentice_id"]:
+		if payload.has(key):
+			subject = CockpitText.names_of([int(payload[key])], _view.get("seats", []))
+	var request := DialogRequest.with_input("ui.cockpit.dialog.gm.title", "ui.cockpit.dialog.gm.message" if subject == "" else "ui.cockpit.dialog.gm.message_detail",
+		"ui.cockpit.dialog.gm.confirm", "ui.cockpit.dialog.reason_placeholder", func(reason: String) -> void:
+			if context.session.state_hash() != revision:
+				status_message_requested.emit("ui.cockpit.status.stale_selection")
+				_render()
+				return
 			var p := payload.duplicate()
 			p["reason"] = reason
 			_reset_gm_mode()
@@ -735,7 +779,7 @@ func _ask_correction(payload: Dictionary) -> void:
 				open_layer(&"gm")
 			else:
 				_render(), true)
-	request.message_values = {"what": StringName("ui.gm.kind.%s" % str(payload["kind"]))}
+	request.message_values = {"what": StringName("ui.gm.kind.%s" % str(payload["kind"])), "person": subject, "detail": detail}
 	dialog_requested.emit(request)
 
 

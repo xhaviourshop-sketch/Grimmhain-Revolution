@@ -417,6 +417,13 @@ func _gm(context: Dictionary) -> void:
 		var fields: Array = context.get("status_fields", [])
 		for i: int in fields.size():
 			var f: Dictionary = fields[i]
+			if str(f["type"]) == "action" or str(f["type"]) == "pick":
+				# Spezialkorrektur: Art der Korrektur und bisheriger Wert der Person; „…“ = zuerst ein Ziel wählen.
+				var special := _button("GmField_%s" % str(f["field"]), "ui.cockpit.card.gm.action_pick" if str(f["type"]) == "pick" else "ui.cockpit.card.gm.action",
+					GrimmButton.Kind.SECONDARY, &"gm_field", {"index": i})
+				special.format_values = {"kind": StringName("ui.gm.kind.%s" % str(f["kind"])), "state": CockpitText.state_text(f.get("state", {}))}
+				buttons.append(special)
+				continue
 			var b := _button("GmField_%s" % str(f["field"]), "ui.cockpit.card.gm.field", GrimmButton.Kind.SECONDARY, &"gm_field", {"index": i})
 			var now: Variant = f["current"]
 			b.format_values = {"field": StringName("ui.gm.field.%s" % str(f["field"])),

@@ -3322,3 +3322,105 @@ msgstr "#{index} Role shown ({visibility})"
 
 msgid "ui.cockpit.error.role_already_confirmed"
 msgstr "Error: This person has already seen their current role. Nothing was changed."
+
+msgid "ui.cockpit.card.gm.action"
+msgstr "{kind} · {state}"
+
+msgid "ui.cockpit.card.gm.action_pick"
+msgstr "{kind} … · {state}"
+
+msgid "ui.cockpit.dialog.pick.title"
+msgstr "Choose target"
+
+msgid "ui.cockpit.dialog.pick.message"
+msgstr "{what} for {person}: who is the target? Only people the rules core accepts right now are offered."
+
+msgid "ui.cockpit.dialog.gm.message_detail"
+msgstr "{what} for {person} ({detail}): This change overrides the rules and is logged with your reason."
+
+msgid "ui.cockpit.dialog.gm.detail_from"
+msgstr "currently: {state}"
+
+msgid "ui.cockpit.dialog.gm.detail_to"
+msgstr "currently: {state} · new target: {target}"
+
+msgid "ui.cockpit.status.stale_selection"
+msgstr "The game state changed. The selection was discarded, nothing was changed."
+
+msgid "ui.gm.state.protection_set"
+msgstr "protects {target}"
+
+msgid "ui.gm.state.protection_none"
+msgstr "protects nobody"
+
+msgid "ui.gm.state.rescue_set"
+msgstr "rescues {target}"
+
+msgid "ui.gm.state.rescue_none"
+msgstr "no rescue"
+
+msgid "ui.gm.state.wolf_child"
+msgstr "Model: {model} · transformed: {transformed}"
+
+msgid "ui.gm.state.apprentice"
+msgstr "Master: {master} · inheritance taken: {inherited}"
+
+msgid "ui.gm.state.nobody"
+msgstr "nobody"
+
+msgid "ui.cockpit.error.not_a_guardian"
+msgstr "Error: This person is not a guardian angel. Nothing was changed."
+
+msgid "ui.cockpit.error.no_guard_step"
+msgstr "Error: This guardian angel has no step tonight. Nothing was changed."
+
+msgid "ui.cockpit.error.step_not_completed"
+msgstr "Error: This role's step is not finished tonight. Nothing was changed."
+
+msgid "ui.cockpit.error.not_a_witch"
+msgstr "Error: This person is not a forest witch. Nothing was changed."
+
+msgid "ui.cockpit.error.no_witch_step"
+msgstr "Error: This forest witch has no step tonight. Nothing was changed."
+
+msgid "ui.cockpit.error.no_pack_target"
+msgstr "Error: The pack chose no victim tonight. Nothing was changed."
+
+msgid "ui.cockpit.error.not_current_pack_target"
+msgstr "Error: Only the current pack victim can be rescued. Nothing was changed."
+
+msgid "ui.cockpit.error.not_a_wolf_child"
+msgstr "Error: This person is not a wolf child. Nothing was changed."
+
+msgid "ui.cockpit.error.not_an_apprentice"
+msgstr "Error: This person is not an apprentice. Nothing was changed."
+
+msgid "ui.cockpit.error.no_binding"
+msgstr "Error: The apprentice has no active master. Nothing was changed."
+
+msgid "ui.cockpit.error.no_inheritance"
+msgstr "Error: There is no inheritance to revert. Nothing was changed."
+
+msgid "ui.cockpit.error.stale_inheritance"
+msgstr "Error: The inheritance can no longer be reverted because the person changed since. Nothing was changed."
+
+msgid "ui.cockpit.error.not_a_mirror_wolf"
+msgstr "Error: This person is not a mirror wolf. Nothing was changed."
+
+msgid "ui.cockpit.error.invalid_correction"
+msgstr "Error: This correction is invalid. Nothing was changed."
+
+msgid "ui.cockpit.error.invalid_value"
+msgstr "Error: This value is not allowed. Nothing was changed."
+
+msgid "ui.cockpit.error.unknown_role"
+msgstr "Error: This role does not exist. Nothing was changed."
+
+msgid "ui.cockpit.error.field_not_correctable"
+msgstr "Error: This field cannot be corrected. Nothing was changed."
+
+msgid "ui.cockpit.error.confirmation_required"
+msgstr "Error: The warning was not confirmed. Nothing was changed."
+
+msgid "ui.cockpit.error.player_alive"
+msgstr "Error: This person is alive. Nothing was changed."
