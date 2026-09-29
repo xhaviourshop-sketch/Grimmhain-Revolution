@@ -61,6 +61,11 @@ func day_deaths() -> Array:
 	return MorningReport.day_deaths(_state, _events)
 
 
+## Angesagte Todeseffekte des laufenden Tages (DI-03), siehe MorningReport.day_effects.
+func day_effects() -> Array:
+	return MorningReport.day_effects(_state, _events)
+
+
 ## Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
 func private_seats() -> Array:
 	return CockpitView.private_seats(_state) if _state.is_started() else []
@@ -260,6 +265,11 @@ func override_shown_role(role_id: String, reason: String) -> CommandResult:
 
 func end_night() -> CommandResult:
 	return submit(Command.end_night())
+
+
+## Der erste offene private Hinweis wurde der betroffenen Person gezeigt (DI-04, DI-06, DI-07).
+func ack_notice(notice_id: int) -> CommandResult:
+	return submit(Command.ack_notice(notice_id))
 
 
 func nominate(nominator_id: int, nominee_id: int) -> CommandResult:

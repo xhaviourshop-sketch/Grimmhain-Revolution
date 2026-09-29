@@ -3,7 +3,8 @@ extends RefCounted
 ## Morgenbericht der letzten Nacht aus den Ereignissen der Partie (Vertical Slice §4.6, DR-04).
 ## Getrennt in zwei Teile:
 ##   public   nur Werte aus einer Positivliste: Namen der Gestorbenen (Rolle nur mit der Setup-Option
-##            `reveal_role_on_death`, und zwar die Rolle beim Tod aus `SeatDied`), Wiederbelebte und ausdrücklich öffentliche Hinweise
+##            Runden ohne Wiederbelebung, und zwar die Rolle beim Tod aus `SeatDied`), Wiederbelebte, angesagte
+##            Todeseffekte (`DeathEffect`, DI-03, mit Rolle zum Ereigniszeitpunkt) und ausdrücklich öffentliche Hinweise
 ##            (Detektiv, Schutzgeist, eingefrorene Nacht, Glocken, Richter-Nominierung). Nie Ursache,
 ##            Quelle, Schutz oder andere Rollen.
 ##   private  aufgelöste Aktionen mit Gründen für die Spielleitung.
@@ -11,7 +12,7 @@ extends RefCounted
 ## (Glocken und Richter-Nominierung entstehen erst dabei).
 
 ## Ereignisse ohne eigenen Informationswert für den Bericht (Ablaufrauschen).
-const QUIET_TYPES: Array[StringName] = [GameEvent.PHASE_CHANGED, GameEvent.PROMPT_OPENED, GameEvent.PROMPT_ANSWERED,
+const QUIET_TYPES: Array[StringName] = [GameEvent.DEATH_EFFECT, GameEvent.NOTICE_QUEUED, GameEvent.NOTICE_ACKED, GameEvent.NOTICE_DROPPED, GameEvent.PHASE_CHANGED, GameEvent.PROMPT_OPENED, GameEvent.PROMPT_ANSWERED,
 	GameEvent.PROMPT_STAGE_ANSWERED, GameEvent.STEP_BEGUN, GameEvent.WIN_STATUS_PROVISIONAL, GameEvent.WIN_STATUS_FINAL,
 	GameEvent.KILL_IGNORED, GameEvent.REACTION_QUEUED]
 
@@ -66,8 +67,48 @@ static func day_deaths(s: GameState, events: Array[GameEvent]) -> Array:
 		if e.command_index == day_command or e.type != GameEvent.SEAT_DIED:
 			continue
 		var entry := _person(s, int(e.data["target_id"]))
-		entry["role_id"] = str(e.data["role_id"]) if s.reveal_role_on_death else ""
+		entry["role_id"] = str(e.data["role_id"]) if not s.revival_round else ""
 		out.append(entry)
+	return out
+
+
+## Öffentlich angesagte Todeseffekte des laufenden Tages (nach dem Befehl, mit dem der Tag begann), in Ereignisreihenfolge.
+static func day_effects(s: GameState, events: Array[GameEvent]) -> Array:
+	if s.phase != Phase.DAY:
+		return []
+	var start := -1
+	for i: int in range(events.size() - 1, -1, -1):
+		if events[i].type == GameEvent.PHASE_CHANGED and StringName(str(events[i].data.get("to"))) == Phase.DAY:
+			start = i
+			break
+	if start == -1:
+		return []
+	var day_command := events[start].command_index
+	var span: Array[GameEvent] = []
+	for i: int in range(start + 1, events.size()):
+		if events[i].command_index != day_command:
+			span.append(events[i])
+	return effects_of(s, span)
+
+
+## Angesagte Todeseffekte aus den Ereignissen: nur die Positivliste (Effekt, Rolle, Quelle, Ziele, ersetzte Person).
+## Mehrere Nachbarn desselben Kutscherunfalls erscheinen als eine Ansage mit mehreren Zielen.
+static func effects_of(s: GameState, span: Array[GameEvent]) -> Array:
+	var out: Array = []
+	for e: GameEvent in span:
+		if e.type != GameEvent.DEATH_EFFECT:
+			continue
+		var d := e.data
+		var effect := str(d["effect"])
+		var source_id := int(d["source_id"])
+		var target_id := int(d["target_id"])
+		if not out.is_empty() and effect == "coachman_crash" and str(out.back()["effect"]) == effect and int(out.back()["source_id"]) == source_id:
+			(out.back()["targets"] as Array).append(_person(s, target_id))
+			continue
+		out.append({"effect": effect, "role_id": str(d["role_id"]), "source_id": source_id,
+			"source": _person(s, source_id) if source_id != GameState.NO_TARGET else {},
+			"targets": [_person(s, target_id)] if target_id != GameState.NO_TARGET else [],
+			"replaced": _person(s, int(d["replaced_id"])) if int(d["replaced_id"]) != GameState.NO_TARGET else {}})
 	return out
 
 
@@ -79,7 +120,7 @@ static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 		match e.type:
 			GameEvent.SEAT_DIED:
 				var entry := _person(s, int(e.data["target_id"]))
-				entry["role_id"] = str(e.data["role_id"]) if s.reveal_role_on_death else ""
+				entry["role_id"] = str(e.data["role_id"]) if not s.revival_round else ""
 				deaths.append(entry)
 			GameEvent.PLAYER_REVIVED:
 				revived.append(_person(s, int(e.data["player_id"])))
@@ -93,7 +134,7 @@ static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 				notices.append({"key": "ui.morning.notice.bells"})
 			GameEvent.JUDGE_NOMINATION_PUBLIC:
 				notices.append({"key": "ui.morning.notice.judge", "person": _person(s, int(e.data["nominee_id"]))})
-	return {"deaths": deaths, "revived": revived, "notices": notices, "reveal_roles": s.reveal_role_on_death}
+	return {"deaths": deaths, "revived": revived, "notices": notices, "effects": effects_of(s, span), "reveal_roles": not s.revival_round}
 
 
 static func _private(s: GameState, span: Array[GameEvent]) -> Array:

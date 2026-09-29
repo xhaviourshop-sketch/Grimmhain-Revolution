@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://app/screens/new_game/role_step.gd" id="1_step"]
 [ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
 [ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
-[ext_resource type="Script" path="res://app/widgets/grimm_toggle.gd" id="4_toggle"]
 
 [node name="RoleStep" type="VBoxContainer"]
 anchors_preset = 15
@@ -93,11 +92,12 @@ script = ExtResource("2_button")
 text_key = "ui.setup.roles.reset"
 kind = 1
 
-[node name="RevealRoleToggle" type="CheckButton" parent="Body/RoleSideColumn"]
+[node name="RevivalRoundLabel" type="Label" parent="Body/RoleSideColumn"]
 unique_name_in_owner = true
 layout_mode = 2
-script = ExtResource("4_toggle")
-text_key = "ui.setup.roles.reveal_role"
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.roles.revival_round.off"
 
 [node name="RoleScroll" type="ScrollContainer" parent="Body"]
 unique_name_in_owner = true

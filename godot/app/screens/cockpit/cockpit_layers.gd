@@ -98,6 +98,26 @@ static func show_card(role_id: String, lines: Array) -> Control:
 	return root
 
 
+## Hinweiskarte für die betroffene Person bzw. Gruppe (DI-04, DI-06, DI-07): nur der Kartentext mit den Werten,
+## die die Betrachter erfahren dürfen (`CockpitView.notice_card`), nie Rollen anderer Personen.
+static func notice_card(card: Dictionary) -> Control:
+	var root := _full_rect("NoticeLayer")
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(center)
+	var panel := PanelContainer.new()
+	panel.theme_type_variation = &"ShowPanel"
+	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
+	center.add_child(panel)
+	var column := VBoxContainer.new()
+	column.theme_type_variation = &"ScreenColumn"
+	panel.add_child(column)
+	_label(column, "ui.cockpit.notice.heading.group" if bool(card.get("group", false)) else "ui.cockpit.notice.heading", {}, &"HeadingLabel")
+	_label(column, str(card["text_key"]), CockpitText.notice_values(card.get("values", {})), &"ShowValueLabel").name = "NoticeText"
+	column.add_child(_button("CloseLayerButton", "ui.cockpit.notice.close", GrimmButton.Kind.PRIMARY))
+	return root
+
+
 ## Zeigbare Ansagekarte: ausschließlich die Vorlesezeilen aus dem öffentlichen Teil des Berichts.
 ## Erhält nur diesen Teil, nie die privaten Details.
 static func announcement(night_number: int, public: Dictionary) -> Control:

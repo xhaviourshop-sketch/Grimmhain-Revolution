@@ -6,6 +6,11 @@ extends RefCounted
 ## erkennt der Adapter an der Katalog-Fraktion `Faction.SOLO`, nicht am Rollennamen.
 
 
+## Direkte Wiederbelebungsrolle: löst die Wiederbelebungsrunde aus (DI-01, Regelkern).
+static func is_revival_role(role: StringName) -> bool:
+	return RoleCatalog.is_revival_role(role)
+
+
 ## Alle produktiven Rollen-IDs, kanonisch nach ID sortiert.
 static func role_ids() -> Array[StringName]:
 	var out: Array[StringName] = []

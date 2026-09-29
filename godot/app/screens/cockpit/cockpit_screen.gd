@@ -242,6 +242,7 @@ func _render() -> void:
 		"status_fields": context.session.status_fields(int(_selection[0])) if _gm_mode == "status" and not _selection.is_empty() else [],
 		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
 		"preview": _preview, "exec_extra": _exec_extra, "day_deaths": context.session.day_deaths() if bool(_view.get("has_game")) else [],
+		"day_effects": context.session.day_effects() if bool(_view.get("has_game")) else [],
 		"reduced_motion": context.settings.reduced_motion,
 	})
 	_restore_focus()
@@ -320,6 +321,8 @@ func _identity(next: Dictionary) -> String:
 			return "prompt:%d:%s" % [int(next.get("prompt_id", 0)), str(next.get("stage"))]
 		"begin_step":
 			return "step:%s" % str(next.get("step_id"))
+		"notice":
+			return "notice:%d" % int(next.get("notice_id", 0))
 		"win_decision":
 			return "win:%s" % str((next.get("candidates", []) as Array).map(func(c: Dictionary) -> int: return int(c["id"])))
 	return str(next.get("kind"))
@@ -441,6 +444,11 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_submit(s.start_night)
 		&"begin_step":
 			_submit(s.begin_next_step)
+		&"show_notice":
+			open_layer(&"notice")
+		&"ack_notice":
+			close_layer()
+			_submit(s.ack_notice.bind(int(payload["notice_id"])))
 		&"skip_step":
 			_ask_reason("ui.cockpit.dialog.skip.title", "ui.cockpit.dialog.skip.message", "ui.cockpit.dialog.skip.confirm",
 				func(reason: String) -> void: _submit(s.skip_next_step.bind(reason)))
@@ -542,6 +550,11 @@ func open_layer(kind: StringName) -> void:
 			var next: Dictionary = _view.get("next", {})
 			_layer = CockpitLayers.show_card(str(next.get("role_id", "")), next.get("show", []))
 			_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
+		&"notice":
+			var notice: Dictionary = _view.get("next", {})
+			if str(notice.get("kind")) == "notice":
+				_layer = CockpitLayers.notice_card(notice)
+				_layout.visible = false  # die Hinweiskarte ersetzt das Cockpit vollständig
 		&"announcement":
 			var report := context.session.morning_report()
 			_layer = CockpitLayers.announcement(int(report.get("night_number", 0)), report.get("public", {}))

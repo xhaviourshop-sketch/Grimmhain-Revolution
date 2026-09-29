@@ -2,7 +2,7 @@
 
 Stand: 29.09.2026 · Godot 4.7.2 · Projekt `godot/`
 
-Die laufende Partie wird nach jedem angenommenen Befehl automatisch gespeichert und lässt sich nach einem Neustart über Hauptmenü → „Fortsetzen“ an derselben Stelle weiterführen, auch mitten in einem mehrstufigen Prompt (etwa der Waldhexen-Kette) oder bei offener Reaktion. Der Regelkern bleibt ohne Dateizugriff: Er liefert nur den versionierten Text (`StateCodec`, Schema 12); Dateien, Sicherung und Wiederaufnahme liegen in `app/session/save_service.gd`.
+Die laufende Partie wird nach jedem angenommenen Befehl automatisch gespeichert und lässt sich nach einem Neustart über Hauptmenü → „Fortsetzen“ an derselben Stelle weiterführen, auch mitten in einem mehrstufigen Prompt (etwa der Waldhexen-Kette) oder bei offener Reaktion. Der Regelkern bleibt ohne Dateizugriff: Er liefert nur den versionierten Text (`StateCodec`, Schema 13); Dateien, Sicherung und Wiederaufnahme liegen in `app/session/save_service.gd`.
 
 ## Dateien
 
@@ -33,6 +33,7 @@ Schlägt ein Schritt fehl, meldet `SaveService.status_changed` den Fehler; die l
 | Datei und Sicherung beschädigt | Fehlermeldung, Sitzung bleibt leer, nichts wird gelöscht |
 | beschädigte Datei ohne Sicherung (erster Stand) | Fehlermeldung, Datei beiseitegelegt, Sitzung bleibt leer |
 | beschädigte Sicherung, intakte Datei | Datei wird geladen, Sicherung bleibt unverändert |
+| Spielstand anderer Schema- oder Regelversion (zum Beispiel Schema 12) | gilt nicht als beschädigt: nie beiseitegelegt, nie verändert, nie neu gedeutet. „Fortsetzen“ zeigt den Hinweis „andere Version“ und ist gesperrt; „Verwerfen“ bleibt möglich (Datei wird umbenannt, nicht gelöscht) |
 
 Beim Wechsel zu einer anderen Partie fragt „Fortsetzen“ nach, wenn der letzte Stand der laufenden Partie nicht gespeichert werden konnte. „Verwerfen …“ fragt nach und benennt die Dateien nur um (`.discarded-<zeit>`); nichts wird gelöscht.
 
@@ -41,7 +42,7 @@ Beim Wechsel zu einer anderen Partie fragt „Fortsetzen“ nach, wenn der letzt
 - Eine Sicherung (`.bak`), keine längere Checkpoint-Rotation.
 - Die Liste zeigt die acht neuesten Partien; ältere bleiben auf dem Datenträger.
 - Wiederholbare Schritte (nach Rückgängig) werden nicht gespeichert und entfallen beim Neustart.
-- Ereignisse werden nicht gespeichert, sondern beim Laden per Replay der Befehle neu erzeugt. Deshalb ändert die Rolle beim Tod im Ereignis `SeatDied` das Speicherformat nicht (weiter Schema 12).
+- Ereignisse werden nicht gespeichert, sondern beim Laden per Replay der Befehle neu erzeugt. Deshalb ändert die Rolle beim Tod im Ereignis `SeatDied` das Speicherformat nicht. Schema 13 (29.09.2026) ersetzt `reveal_role_on_death` durch die abgeleitete `revival_round` und ergänzt `notices`; Spielstände älterer Schemata werden mit klarer Meldung abgelehnt (`unsupported_schema_version`), die Dateien bleiben unverändert erhalten.
 - Testspielstände liegen in eigenen Verzeichnissen `user://test-saves-*` und werden nach jedem Test entfernt; `user://saves` wird von Tests nicht berührt.
-- Ältere Schemaversionen werden nicht migriert, sondern mit Meldung abgelehnt (`StateCodec`).
+- Ältere Schemaversionen werden nicht migriert, sondern mit Meldung abgelehnt (`StateCodec`, Fehler `incompatible` im `SaveService`). Die Datei bleibt dabei unverändert auf dem Datenträger (Test `test_save_service`).
 - Nicht auf einem Tablet geprüft (Speicherort, Rechte, App-Beendigung durch das System). Headless geprüft sind unterbrochenes Schreiben an jedem Schritt, beschädigte Dateien, Wiederaufnahme offener Prompts und identisches Replay (`tests/ui/test_save_service.gd`).

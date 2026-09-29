@@ -7,7 +7,8 @@ extends RefCounted
 ## Zuordnung: immer `assignment = "manual"` mit der im Setup festgelegten Rolle je Personen-ID und
 ## den ausdrücklich gewählten Scheinrollen (`appearances`). Beim Start wird nicht erneut gemischt,
 ## auch wenn die Verteilung im Setup zufällig entstand.
-## Setup-Option `reveal_role_on_death` (DR-04) wird immer ausdrücklich übertragen.
+## Die Rollenaufdeckung ist keine Setup-Option mehr (DI-01): Der Regelkern leitet die Wiederbelebungsrunde
+## beim Start aus der Besetzung ab; der Befehl trägt keine Aufdeckungsangabe.
 ## Seed: ein neuer Wert aus `PlayerSetup.seed_source` (Standard AppPlatform.initial_seed, in Tests
 ## fest). round_id: nur aus dem Seed abgeleitet (`round_id_for`), damit gleiche Eingaben denselben
 ## Befehl ergeben.
@@ -40,7 +41,6 @@ static func build_command(data: Dictionary, seed_value: int) -> Command:
 		"players": data["players"],
 		"seat_order": data["seat_order"],
 		"roles": data["roles"],
-		"reveal_role_on_death": bool(data.get("reveal_role_on_death", false)),
 	}
 	if not (data["appearances"] as Dictionary).is_empty():
 		payload["appearances"] = data["appearances"]

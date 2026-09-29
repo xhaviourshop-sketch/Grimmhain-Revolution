@@ -22,6 +22,7 @@ var _owners := {}      ## Besitzer → true
 var _rendered := {}
 var _card: ActionCard = null
 var _last_error: StringName = &""
+var _notices := {}     ## Hinweisart → Anzahl bestätigter Hinweise (DI-04, DI-06, DI-07)
 
 
 func _on_rejected(error: StringName) -> void:
@@ -56,7 +57,17 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 		if parts[0] != "reaction":
 			assert_ne(CockpitText.call_key(parts[0] if parts[0] != "pack2" else "pack"), "ui.call.generic", "%s: eigener Vorlesetext" % combo)
 	print("      Prompt-Abdeckung (%d Kombinationen): %s" % [keys.size(), ", ".join(keys)])
+	for kind: String in ["loki_bond", "piper_new", "piper_all", "pest_infected"]:
+		assert_true(int(_notices.get(kind, 0)) > 0, "Hinweisart %s wurde über die Karte bedient" % kind)
+	print("      Hinweise über die Karte bestätigt: %s" % str(_notices))
 
+
+
+## Hinweiskarte: Zeigen und Bestätigen sind bedienbar, die Karte nennt keine fremden Rollen.
+func _check_notice_card(next: Dictionary) -> void:
+	_card.render(next, {"phase": "NIGHT", "seats": [], "selection": [], "revealed": true})
+	assert_true(_card.find_child("ShowNoticeButton", true, false) != null, "Hinweis: Karte zeigen bedienbar")
+	assert_true(_card.find_child("AckNoticeButton", true, false) != null, "Hinweis: Bestätigen bedienbar")
 
 
 func _play(g: int, focus: String, count: int) -> bool:
@@ -85,6 +96,10 @@ func _play(g: int, focus: String, count: int) -> bool:
 					ok = session.cancel_prompt("Abdeckungstest").ok
 				else:
 					ok = _answer(session, next, "Partie %d (%s), Schritt %d" % [g, focus, step])
+			"notice":
+				_notices[str(next["notice_kind"])] = int(_notices.get(str(next["notice_kind"]), 0)) + 1
+				_check_notice_card(next)
+				ok = session.ack_notice(int(next["notice_id"])).ok
 			"end_night":
 				ok = session.end_night().ok
 			"day":

@@ -73,6 +73,19 @@ func _view(shell: Control) -> Dictionary:
 	return session_of(shell).call("cockpit_view")
 
 
+func test_execution_in_a_revival_round_names_no_role() -> void:
+	var shell := await _cockpit(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "kutscher"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	var s := session_of(shell)
+	assert_true((s.call("nominate", 3, 1) as CommandResult).ok, "Nominierung")
+	assert_true((s.call("decide_execution", 1, {}) as CommandResult).ok, "Hinrichtung")
+	await frames(3)
+	assert_true(_texts(shell).contains("„Heute gestorben: Anna.“"), "Wiederbelebungsrunde: Ansage ohne Rolle (DI-01)")
+	assert_false(_texts(shell).contains("Werwolf"), "keine Rolle der Toten in der Ansage")
+
+
 func test_nomination_execution_end_day_and_next_night() -> void:
 	var shell := await _cockpit(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
 	if shell == null:
@@ -106,7 +119,7 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	await _press(shell, "ConfirmExecutionButton")
 	await _confirm_dialog(shell)
 	assert_false(_seat(shell, 1).get("alive"), "Anna hingerichtet")
-	assert_true(_texts(shell).contains("„Heute gestorben: Anna.“"), "öffentliche Ansage ohne Rolle")
+	assert_true(_texts(shell).contains("„Heute gestorben: Anna (Werwolf).“"), "Runde ohne Wiederbelebung: Ansage mit Rolle (DI-01)")
 	await _press(shell, "EndDayButton")
 	assert_true(find_button(current_screen(shell), "StartNightButton").is_visible_in_tree(), "nächste Nacht beginnen")
 	await _press(shell, "StartNightButton")

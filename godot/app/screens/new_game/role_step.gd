@@ -28,7 +28,7 @@ var _last_view: Dictionary = {}
 @onready var _suggestion_state: GrimmLabel = %SuggestionStateLabel
 @onready var _suggest: GrimmButton = %SuggestButton
 @onready var _reset: GrimmButton = %ResetRolesButton
-@onready var _reveal: GrimmToggle = %RevealRoleToggle  ## Setup-Option DR-04, gilt für die ganze Partie
+@onready var _revival: GrimmLabel = %RevivalRoundLabel  ## DI-01: aus der Rollenwahl abgeleitet, nur Anzeige
 @onready var _scroll: ScrollContainer = %RoleScroll
 @onready var _list: VBoxContainer = %RoleList
 @onready var _back: GrimmButton = %BackToPlayersButton
@@ -48,7 +48,6 @@ func start(setup: PlayerSetup) -> void:
 	_reset.pressed.connect(_on_reset_pressed)
 	_back.pressed.connect(players_requested.emit)
 	_confirm.pressed.connect(_on_confirm_pressed)
-	_reveal.toggled.connect(func(on: bool) -> void: _setup.set_reveal_role_on_death(on))
 	_setup.changed.connect(_render)
 	visibility_changed.connect(_on_visibility_changed)
 	_render(_setup.view())
@@ -93,7 +92,7 @@ func _build_rows() -> void:
 
 
 func _render(view: Dictionary) -> void:
-	_reveal.set_pressed_no_signal(bool(view.get("reveal_role_on_death", false)))
+	_revival.text_key = "ui.setup.roles.revival_round.on" if bool((view["roles"] as Dictionary).get("revival_round", false)) else "ui.setup.roles.revival_round.off"
 	_last_view = view
 	var roles: Dictionary = view["roles"]
 	var counts: Dictionary = roles["counts"]

@@ -21,7 +21,6 @@ var current_step: StringName = STEP_PLAYERS
 var roles: RolePoolDraft = RolePoolDraft.new()
 var distribution: DistributionDraft = DistributionDraft.new()
 var seating: SeatingDraft = SeatingDraft.new()
-var reveal_role_on_death: bool = false  ## Setup-Option DR-04, gilt für die ganze Partie
 
 
 func index_of(person_id: int) -> int:

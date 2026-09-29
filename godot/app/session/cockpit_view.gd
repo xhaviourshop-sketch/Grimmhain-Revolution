@@ -33,6 +33,7 @@ static func build(s: GameState) -> Dictionary:
 		"alive_count": s.alive_ids().size(),
 		"player_count": s.players.size(),
 		"night_progress": night_progress(s),
+		"revival_round": s.revival_round,
 		"next": next_action(s),
 		"warnings": warnings(s),
 	}
@@ -84,18 +85,22 @@ static func next_action(s: GameState) -> Dictionary:
 		var prompt := PromptView.build(s, s.pending_prompt)
 		prompt["kind"] = "prompt"
 		prompt["secret"] = true
+		# Tarnaufrufe vor dem Schritt (DI-02); nur beim frischen Prompt, nicht in jeder Stufe.
+		prompt["decoys"] = _decoys(s) if s.pending_prompt.partial.is_empty() else []
 		return prompt
+	if not s.notices.is_empty():
+		return notice_card(s)
 	var step_id := RulesEngine.next_step_id(s)
 	if step_id != "":
 		return step_announcement(s, step_id)
 	match s.phase:
 		Phase.SETUP:
-			return {"kind": "start_night", "secret": false, "first": true}
+			return {"kind": "start_night", "secret": false, "first": true, "revival_round": s.revival_round}
 		Phase.NIGHT:
-			return {"kind": "end_night", "secret": false, "skipped": _skipped_count(s)}
+			return {"kind": "end_night", "secret": false, "skipped": _skipped_count(s), "decoys": _decoys(s)}
 		Phase.DAY:
 			if s.day_step == Phase.DAY_ENDED:
-				return {"kind": "start_night", "secret": false, "first": false}
+				return {"kind": "start_night", "secret": false, "first": false, "revival_round": s.revival_round}
 			if s.day_step == Phase.DAY_EXECUTION_DECIDED:
 				return {"kind": "end_day", "secret": false, "nominations": nominations_today(s)}
 			return {"kind": "day", "secret": false, "day_step": String(s.day_step), "nominations": nominations_today(s),
@@ -105,7 +110,7 @@ static func next_action(s: GameState) -> Dictionary:
 
 ## Ankündigung des erwarteten, noch nicht begonnenen Schritts (Nachtschritt oder Reaktion).
 static func step_announcement(s: GameState, step_id: String) -> Dictionary:
-	var out := {"kind": "begin_step", "secret": true, "step_id": step_id, "skippable": StepQueue.is_skippable(step_id)}
+	var out := {"kind": "begin_step", "secret": true, "step_id": step_id, "skippable": StepQueue.is_skippable(step_id), "decoys": _decoys(s)}
 	if StepQueue.is_reaction_step(step_id):
 		var r := s.reactions[0]
 		out["step_kind"] = "reaction"
@@ -136,6 +141,41 @@ static func step_announcement(s: GameState, step_id: String) -> Dictionary:
 			# Grabräuber: gestohlene Fähigkeit einer anderen Rolle (nur privat sichtbar).
 			out["own_role_id"] = String(s.players[actor].role_id)
 	return out
+
+
+## Tarnaufrufe (DI-02) als Rollen-IDs: Rollen, die vor dem nächsten echten Schritt angesagt werden, ohne dass sie
+## etwas ausführen. Die Auswahl trifft allein `CallPolicy` im Regelkern.
+static func _decoys(s: GameState) -> Array:
+	var out: Array = []
+	for role: StringName in CallPolicy.decoy_calls(s):
+		out.append(String(role))
+	return out
+
+
+## Erster offener privater Hinweis (DI-04, DI-06, DI-07) als Karte für die betroffenen Personen. Der Kartentext
+## enthält nur, was die Betrachter erfahren dürfen: den eigenen Partner (Loki), die Liste aller Verzauberten
+## (sie erkennen einander) bzw. den eigenen Zustand; nie Rollen anderer Personen.
+static func notice_card(s: GameState) -> Dictionary:
+	var n: Dictionary = s.notices[0]
+	var viewers: Array = n["viewer_ids"]
+	var viewer_labels: Array = []
+	for id: Variant in viewers:
+		viewer_labels.append(PromptView.person_label(s, int(id)))
+	var text_key := ""
+	var values := {}
+	match str(n["kind"]):
+		NoticeRules.LOKI_BOND:
+			text_key = "ui.notice.loki_bond.%s" % str((n["data"] as Dictionary)["bond"])
+			values = {"partner": PromptView.person_label(s, int((n["data"] as Dictionary)["partner_id"]))}
+		NoticeRules.PIPER_NEW:
+			text_key = "ui.notice.piper_new"
+		NoticeRules.PIPER_ALL:
+			text_key = "ui.notice.piper_all"
+			values = {"names": viewer_labels}
+		NoticeRules.PEST_INFECTED:
+			text_key = "ui.notice.pest_infected"
+	return {"kind": "notice", "secret": true, "notice_id": int(n["id"]), "notice_kind": str(n["kind"]), "open": s.notices.size(),
+		"viewers": viewer_labels, "group": viewers.size() > 1, "text_key": text_key, "values": values}
 
 
 ## Heute nominierte, lebende Personen: reguläre Hinrichtungsziele (DR-03).

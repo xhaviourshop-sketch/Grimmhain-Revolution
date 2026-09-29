@@ -22,6 +22,15 @@ func _init() -> void:
 		counts[id] = 0
 
 
+## Wiederbelebungsrunde (DI-01): Die Rollenwahl enthält eine direkte Wiederbelebungsrolle. Nur Anzeige;
+## der Regelkern leitet den Modus beim Start selbst aus der Besetzung ab.
+func is_revival_round() -> bool:
+	for id: StringName in counts:
+		if counts[id] > 0 and SetupRoleCatalog.is_revival_role(id):
+			return true
+	return false
+
+
 func total() -> int:
 	var sum := 0
 	for id: StringName in counts:
@@ -165,6 +174,7 @@ func view(persons: int) -> Dictionary:
 	var sum := total()
 	return {
 		"counts": string_counts,
+		"revival_round": is_revival_round(),
 		"total": sum,
 		"persons": persons,
 		"free": persons - sum,

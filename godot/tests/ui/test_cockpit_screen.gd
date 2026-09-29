@@ -5,7 +5,10 @@ extends UiTestCase
 
 ## 1 Werwolf, 2 Trugbilderwolf (erscheint als Dorfbewohner), 3 Schutzengel, 4 Waldhexe, 5 Orakel,
 ## 6 Sensenträger, 7 Dorfbewohner. Sitzordnung nicht nach ID.
-const ROLES := ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "das-orakel", "sensentraeger", "dorfbewohner"]
+## Standardbesetzung mit Kutscher auf Platz 7: Wiederbelebungsrunde, Rollen bleiben beim Tod verdeckt (DI-01).
+const ROLES := ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "das-orakel", "sensentraeger", "kutscher"]
+## Dieselbe Besetzung ohne Wiederbelebung: Rolle der Toten wird aufgedeckt.
+const ROLES_OPEN := ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "das-orakel", "sensentraeger", "dorfbewohner"]
 const SEATS: Array[int] = [3, 1, 4, 7, 2, 6, 5]
 
 
@@ -413,14 +416,12 @@ func test_morning_report_public_and_private_parts() -> void:
 	assert_true(find_node(screen, "ContinueDayButton") == null, "Tagesaktionen nach dem Morgenbericht")
 
 
-func test_morning_report_reveals_role_only_with_setup_option() -> void:
+func test_morning_report_reveals_role_only_in_rounds_without_revival() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
-	var cmd := _start_command(ROLES, SEATS)
-	var payload := cmd.payload.duplicate(true)
-	payload["reveal_role_on_death"] = true
-	assert_true((session_of(shell).call("submit", Command.start_game(payload)) as CommandResult).ok, "Start mit Option")
+	var cmd := _start_command(ROLES_OPEN, SEATS)
+	assert_true((session_of(shell).call("submit", cmd) as CommandResult).ok, "Start ohne Wiederbelebung")
 	await navigate(shell, &"main_menu")
 	await navigate(shell, &"cockpit")
 	await _night_with_poison(shell)

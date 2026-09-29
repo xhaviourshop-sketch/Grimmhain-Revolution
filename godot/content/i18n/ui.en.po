@@ -2229,7 +2229,7 @@ msgid "ui.prompt.rotkaeppchen.targets"
 msgstr "Tap the person Little Red Riding Hood seeks refuge with and confirm."
 
 msgid "ui.prompt.rotkaeppchen.grant"
-msgstr "Briefly wake the person. Do they grant refuge?"
+msgstr "Someone asks you for refuge. If you grant it, you receive an apple (your next night step runs twice) and you are chained: if one of you dies, the other dies at once too. You may decline. You do not learn who asks."
 
 msgid "ui.prompt.schattenhund.use"
 msgstr "Does the Shadow Hound block all village abilities this night?"
@@ -2480,9 +2480,6 @@ msgstr "mirrored execution (Mirror Wolf)"
 msgid "ui.cause.manipulator_nominated"
 msgstr "Manipulator nominated"
 
-msgid "ui.setup.roles.reveal_role"
-msgstr "Reveal role publicly on death"
-
 msgid "ui.cockpit.card.day.heading"
 msgstr "Day {number}"
 
@@ -2698,6 +2695,12 @@ msgstr "The latest state of the running game could not be saved. It is lost if y
 
 msgid "ui.continue.unsaved.confirm"
 msgstr "Switch anyway"
+
+msgid "ui.continue.slot.incompatible"
+msgstr "This save comes from a different version (schema {found}, expected {expected}). It stays unchanged and cannot be resumed here."
+
+msgid "ui.continue.status.incompatible"
+msgstr "Note: This save comes from a different version and cannot be resumed here. It was not changed or deleted."
 
 msgid "ui.continue.status.failed"
 msgstr "Error: The save is damaged and has no valid backup. Nothing was deleted."
@@ -3166,3 +3169,90 @@ msgstr "Mirror available"
 
 msgid "ui.gm.field.appears_as"
 msgstr "Appears in checks as"
+
+msgid "ui.setup.roles.revival_round.on"
+msgstr "Revival round: roles stay hidden on death, the dead keep their eyes closed at night."
+
+msgid "ui.setup.roles.revival_round.off"
+msgstr "No revival: roles are revealed on death, the dead do not have to close their eyes at night."
+
+msgid "ui.call.night_falls_revival"
+msgstr "“Night falls. Everyone closes their eyes, the dead included.”"
+
+msgid "ui.cockpit.card.decoys.caption"
+msgstr "Call first (announcement only)"
+
+msgid "ui.cockpit.card.decoys.hint"
+msgstr "These roles do nothing. They are only announced so the table learns nothing."
+
+msgid "ui.cockpit.card.notice.caption"
+msgstr "Notice, {count} open"
+
+msgid "ui.cockpit.card.notice.heading"
+msgstr "Private notice"
+
+msgid "ui.cockpit.card.notice.for"
+msgstr "For: {names}"
+
+msgid "ui.cockpit.card.notice.do"
+msgstr "Show the card only to the people named. Confirm afterwards that it was shown."
+
+msgid "ui.cockpit.action.show_notice"
+msgstr "Show card"
+
+msgid "ui.cockpit.action.ack_notice"
+msgstr "Shown"
+
+msgid "ui.cockpit.notice.heading"
+msgstr "Notice for you"
+
+msgid "ui.cockpit.notice.heading.group"
+msgstr "Notice for you all"
+
+msgid "ui.cockpit.notice.close"
+msgstr "Close"
+
+msgid "ui.notice.loki_bond.love"
+msgstr "You and {partner} are lovers. If one of you dies, the other dies at once too."
+
+msgid "ui.notice.loki_bond.rival"
+msgstr "You and {partner} are rivals. The bond has no effect of its own, it only matters to the Black Widow."
+
+msgid "ui.notice.piper_new"
+msgstr "You are enchanted. The Pied Piper wins when all other living people are enchanted."
+
+msgid "ui.notice.piper_all"
+msgstr "All enchanted: {names}. You recognise each other."
+
+msgid "ui.notice.pest_infected"
+msgstr "You are infected. At the start of each morning you infect a neighbouring living person, as long as you live. Whether you tell the village is up to you."
+
+msgid "ui.cockpit.card.red_grant.heading"
+msgstr "Refuge"
+
+msgid "ui.cockpit.card.asked"
+msgstr "Asked: {names}"
+
+msgid "ui.effect.reaper_curse"
+msgstr "“{name} was {role} and curses {target}.”"
+
+msgid "ui.effect.knight_strike"
+msgstr "“{name} was {role} and takes {target} down too.”"
+
+msgid "ui.effect.possessed_drag"
+msgstr "“{name} was {role} and drags {target} to their death.”"
+
+msgid "ui.effect.coachman_crash"
+msgstr "“{name} was {role}. The neighbours {target} die too.”"
+
+msgid "ui.effect.sage_curse"
+msgstr "“{name} was {role}. The village's abilities rest.”"
+
+msgid "ui.effect.heartbreak"
+msgstr "“{target} dies of heartbreak.”"
+
+msgid "ui.effect.red_chain"
+msgstr "“The chain breaks: {target} dies along with {name}.”"
+
+msgid "ui.effect.shadow_link"
+msgstr "“The link takes hold: {target} dies in place of {replaced}.”"

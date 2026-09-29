@@ -97,6 +97,33 @@ static func morning_lines(pub: Dictionary) -> Array:
 		if n.has("direction"):
 			values["direction"] = StringName("ui.prompt.direction.%s" % str(n["direction"]))
 		out.append({"key": str(n["key"]), "values": values})
+	for e: Dictionary in pub.get("effects", []):
+		out.append(effect_line(e))
+	return out
+
+
+## Angesagter Todeseffekt (DI-03) als {key, values}: Effekt und Rolle zum Ereigniszeitpunkt, Namen ohne Platznummer.
+## Liebeskummer, Kette und Verknüpfung nennen keine Rolle.
+static func effect_line(e: Dictionary) -> Dictionary:
+	var role := str(e.get("role_id", ""))
+	return {"key": "ui.effect.%s" % str(e["effect"]), "values": {
+		"name": str((e.get("source", {}) as Dictionary).get("name", "")),
+		"role": role_name(role) if role != "" else "",
+		"target": spoken_names(e.get("targets", [])),
+		"replaced": str((e.get("replaced", {}) as Dictionary).get("name", ""))}}
+
+
+## Werte einer Hinweiskarte (DI-04, DI-06, DI-07): Personen als „3 · Anna“, Listen als kommagetrennter Text.
+static func notice_values(values: Dictionary) -> Dictionary:
+	var out := {}
+	for k: Variant in values:
+		var v: Variant = values[k]
+		if v is Dictionary:
+			out[k] = person(v)
+		elif v is Array:
+			out[k] = ", ".join((v as Array).map(func(x: Variant) -> String: return person(x)))
+		else:
+			out[k] = v
 	return out
 
 

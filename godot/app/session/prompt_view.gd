@@ -64,6 +64,12 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 		"options": [],
 		"reaction_kind": "",
 	}
+	# DI-05: Die Frage von Rotkäppchen („grant“) richtet sich an die gefragte Person. Ihre Karte nennt weder
+	# die Rolle noch die Person, die fragt: handelnd ist die gefragte Person, Rolle und Handelnde bleiben leer.
+	if p.owner == PendingPrompt.OWNER_RED and p.stage == &"grant":
+		out["actor_ids"] = DictRead.to_int_array(DictRead.get_array(p.partial, "target_ids"))
+		out["role_id"] = ""
+		out["anonymous_asker"] = true
 	if answer == "option":
 		for role: Variant in DictRead.get_array(p.partial, "options"):
 			out["options"].append(str(role))

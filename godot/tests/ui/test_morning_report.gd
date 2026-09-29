@@ -1,19 +1,23 @@
 extends TestCase
 ## Morgenbericht (MorningReport über GameSession): öffentlicher Teil nur aus der Positivliste, Rolle
-## der Gestorbenen nur mit der Setup-Option, privater Teil mit Ursachen und Rettungen.
+## der Gestorbenen nur in Runden ohne Wiederbelebung (DI-01), privater Teil mit Ursachen und Rettungen.
 
 ## 1 Werwolf, 2 Schutzengel, 3 Waldhexe, 4 Nachtwächter (sitzt neben dem Wolf), 5 bis 7 Dorfbewohner.
 const ROLES := ["werwolf", "schutzengel", "waldhexe", "nachtwaechter", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
 const SEATS := [1, 4, 2, 3, 5, 6, 7]
 
 
+## `reveal` = Runde ohne Wiederbelebung (Rolle beim Tod öffentlich); sonst Wiederbelebungsrunde (Kutscher auf Platz 7).
 func _session(reveal: bool) -> GameSession:
+	var roles := ROLES.duplicate()
+	if not reveal:
+		roles[6] = "kutscher"
 	var map := {}
-	for i: int in ROLES.size():
-		map[str(i + 1)] = ROLES[i]
+	for i: int in roles.size():
+		map[str(i + 1)] = roles[i]
 	var session := GameSession.new()
 	var r := session.submit(Command.start_game({"round_id": "r", "seed": 5, "assignment": "manual", "players": Fixtures.players(7),
-		"seat_order": SEATS, "roles": map, "reveal_role_on_death": reveal}))
+		"seat_order": SEATS, "roles": map}))
 	assert_true(r.ok, "Start (%s)" % r.error)
 	return session
 

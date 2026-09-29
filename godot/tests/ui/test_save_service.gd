@@ -179,6 +179,53 @@ func test_list_shows_public_summary_only_and_discard_renames() -> void:
 	assert_eq(ctx.saves.list().size(), 0, "nicht mehr in der Liste")
 
 
+# --- Spielstand anderer Version (DI-01, Schema 13) -----------------------------------------------------
+
+## Schreibt die laufende Partie mit Schema 12 (Stand vor der Wiederbelebungsrunde) auf den Datenträger.
+func _write_old_schema(ctx: AppContext) -> Dictionary:
+	var doc: Dictionary = JSON.parse_string(ctx.session.save_text())
+	doc["schema_version"] = 12
+	var old_text := JSON.stringify(doc)
+	assert_true(bool(ctx.saves.save(ctx.session.round_id(), old_text, {"player_names": ["A", "B", "C", "D", "E"], "player_count": 5})["ok"]), "Altstand geschrieben")
+	return {"text": old_text, "round": ctx.session.round_id()}
+
+
+func test_old_schema_save_is_reported_incompatible_and_left_untouched() -> void:
+	var ctx := _context()
+	_start(ctx)
+	var old := _write_old_schema(ctx)
+	var path := ctx.saves.path_for(str(old["round"]))
+	var bytes_before := FileAccess.get_file_as_string(path)
+	var entries := ctx.saves.list()
+	assert_eq(entries.size(), 1, "in der Liste")
+	assert_true(bool(entries[0]["readable"]) and not bool(entries[0]["compatible"]), "lesbar, aber nicht kompatibel")
+	assert_eq(int(entries[0]["schema"]), 12, "gefundenes Schema")
+	var loaded := ctx.saves.load_game(str(old["round"]))
+	assert_false(bool(loaded["ok"]), "nicht ladbar")
+	assert_eq(str(loaded["error"]), "incompatible", "Fehler benennt die Version")
+	assert_eq(FileAccess.get_file_as_string(path), bytes_before, "Datei unverändert")
+	assert_false(_files(ctx).any(func(n: String) -> bool: return n.contains(".corrupt-")), "nichts beiseitegelegt")
+	assert_true(ctx.saves.discard(str(old["round"])).size() > 0, "Verwerfen bleibt möglich (umbenannt, nicht gelöscht)")
+	assert_true(_files(ctx).any(func(n: String) -> bool: return n.contains(".discarded-")), "Datei erhalten")
+
+
+func test_continue_screen_disables_resume_for_old_schema_save() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	_start(ctx)
+	var old := _write_old_schema(ctx)
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"continue")
+	var screen := current_screen(shell)
+	var note := find_node(screen, "IncompatibleLabel") as Control
+	assert_true(note != null and note.is_visible_in_tree(), "Hinweis sichtbar")
+	assert_true((find_button(screen, "ResumeButton_%s" % old["round"]) as BaseButton).disabled, "Fortsetzen gesperrt")
+	assert_true(find_button(screen, "DiscardButton_%s" % old["round"]) != null, "Verwerfen weiter möglich")
+	assert_false(_files(ctx).any(func(n: String) -> bool: return n.contains(".corrupt-")), "nichts beiseitegelegt")
+
+
 # --- Oberfläche ---------------------------------------------------------------------------------------
 
 func test_continue_screen_resumes_saved_game_after_restart() -> void:

@@ -2229,7 +2229,7 @@ msgid "ui.prompt.rotkaeppchen.targets"
 msgstr "Tippe die Person an, bei der Rotkäppchen Zuflucht sucht, und bestätige."
 
 msgid "ui.prompt.rotkaeppchen.grant"
-msgstr "Wecke die Person kurz. Gewährt sie Zuflucht?"
+msgstr "Jemand bittet dich um Zuflucht. Gewährst du sie, erhältst du einen Apfel (dein nächster Nachtschritt läuft doppelt) und ihr seid verkettet: Stirbt eine Person, stirbt die andere sofort mit. Du darfst ablehnen. Du erfährst nicht, wer fragt."
 
 msgid "ui.prompt.schattenhund.use"
 msgstr "Blockiert der Schattenhund in dieser Nacht alle Dorffähigkeiten?"
@@ -2480,9 +2480,6 @@ msgstr "gespiegelte Hinrichtung (Spiegelwolf)"
 msgid "ui.cause.manipulator_nominated"
 msgstr "Nominierung des Manipulators"
 
-msgid "ui.setup.roles.reveal_role"
-msgstr "Rolle beim Tod öffentlich aufdecken"
-
 msgid "ui.cockpit.card.day.heading"
 msgstr "Tag {number}"
 
@@ -2698,6 +2695,12 @@ msgstr "Der letzte Stand der laufenden Partie konnte nicht gespeichert werden. B
 
 msgid "ui.continue.unsaved.confirm"
 msgstr "Trotzdem wechseln"
+
+msgid "ui.continue.slot.incompatible"
+msgstr "Dieser Spielstand stammt aus einer anderen Version (Schema {found}, erwartet {expected}). Er bleibt unverändert und kann hier nicht fortgesetzt werden."
+
+msgid "ui.continue.status.incompatible"
+msgstr "Hinweis: Dieser Spielstand stammt aus einer anderen Version und kann hier nicht fortgesetzt werden. Er wurde nicht verändert oder gelöscht."
 
 msgid "ui.continue.status.failed"
 msgstr "Fehler: Der Spielstand ist beschädigt und hat keine gültige Sicherung. Nichts wurde gelöscht."
@@ -3166,3 +3169,90 @@ msgstr "Spiegelung verfügbar"
 
 msgid "ui.gm.field.appears_as"
 msgstr "Erscheint bei Prüfungen als"
+
+msgid "ui.setup.roles.revival_round.on"
+msgstr "Wiederbelebungsrunde: Rollen bleiben beim Tod verdeckt, Tote halten nachts die Augen geschlossen."
+
+msgid "ui.setup.roles.revival_round.off"
+msgstr "Ohne Wiederbelebung: Rollen werden beim Tod aufgedeckt, Tote müssen nachts die Augen nicht schließen."
+
+msgid "ui.call.night_falls_revival"
+msgstr "„Die Nacht bricht herein. Alle schließen die Augen, auch die Toten.“"
+
+msgid "ui.cockpit.card.decoys.caption"
+msgstr "Zuerst aufrufen (nur Ansage)"
+
+msgid "ui.cockpit.card.decoys.hint"
+msgstr "Diese Rollen tun nichts. Sie werden nur angesagt, damit der Tisch nichts erfährt."
+
+msgid "ui.cockpit.card.notice.caption"
+msgstr "Hinweis, noch {count} offen"
+
+msgid "ui.cockpit.card.notice.heading"
+msgstr "Privater Hinweis"
+
+msgid "ui.cockpit.card.notice.for"
+msgstr "Für: {names}"
+
+msgid "ui.cockpit.card.notice.do"
+msgstr "Zeige die Karte nur den genannten Personen. Bestätige danach, dass sie gezeigt wurde."
+
+msgid "ui.cockpit.action.show_notice"
+msgstr "Karte zeigen"
+
+msgid "ui.cockpit.action.ack_notice"
+msgstr "Gezeigt"
+
+msgid "ui.cockpit.notice.heading"
+msgstr "Hinweis für dich"
+
+msgid "ui.cockpit.notice.heading.group"
+msgstr "Hinweis für euch"
+
+msgid "ui.cockpit.notice.close"
+msgstr "Schließen"
+
+msgid "ui.notice.loki_bond.love"
+msgstr "Du und {partner} seid Liebende. Stirbt eine Person von euch, stirbt die andere sofort mit."
+
+msgid "ui.notice.loki_bond.rival"
+msgstr "Du und {partner} seid Rivalen. Die Bindung hat keine eigene Wirkung, sie zählt nur für die Schwarze Witwe."
+
+msgid "ui.notice.piper_new"
+msgstr "Ihr seid verzaubert. Der Rattenfänger gewinnt, wenn alle anderen Lebenden verzaubert sind."
+
+msgid "ui.notice.piper_all"
+msgstr "Alle Verzauberten: {names}. Ihr erkennt einander."
+
+msgid "ui.notice.pest_infected"
+msgstr "Du bist infiziert. Zu Beginn jedes Morgens steckst du eine benachbarte lebende Person an, solange du lebst. Ob du es im Dorf sagst, entscheidest du."
+
+msgid "ui.cockpit.card.red_grant.heading"
+msgstr "Zuflucht"
+
+msgid "ui.cockpit.card.asked"
+msgstr "Gefragt: {names}"
+
+msgid "ui.effect.reaper_curse"
+msgstr "„{name} war {role} und verflucht {target}.“"
+
+msgid "ui.effect.knight_strike"
+msgstr "„{name} war {role} und reißt {target} mit in den Tod.“"
+
+msgid "ui.effect.possessed_drag"
+msgstr "„{name} war {role} und zieht {target} mit in den Tod.“"
+
+msgid "ui.effect.coachman_crash"
+msgstr "„{name} war {role}. Die Nachbarn {target} sterben mit.“"
+
+msgid "ui.effect.sage_curse"
+msgstr "„{name} war {role}. Die Fähigkeiten des Dorfes ruhen.“"
+
+msgid "ui.effect.heartbreak"
+msgstr "„Aus Liebeskummer stirbt {target}.“"
+
+msgid "ui.effect.red_chain"
+msgstr "„Die Kette bricht: {target} stirbt mit {name}.“"
+
+msgid "ui.effect.shadow_link"
+msgstr "„Die Verknüpfung greift: {target} stirbt an Stelle von {replaced}.“"

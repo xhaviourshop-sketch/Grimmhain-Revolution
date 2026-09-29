@@ -14,7 +14,7 @@ func _view(shell: Control) -> Dictionary:
 
 
 ## Neue Partie bis zur bestätigten Sitzordnung (Vorbereitung über echte Buttons).
-func _to_confirmed_seating(shell: Control, count: int) -> Control:
+func _to_confirmed_seating(shell: Control, count: int, revival: bool = false) -> Control:
 	var screen := await open_new_game(shell)
 	var s := setup_of(shell)
 	s.set("seed_source", func() -> int: return FIXED_SEED)
@@ -24,6 +24,11 @@ func _to_confirmed_seating(shell: Control, count: int) -> Control:
 	await press(find_button(screen, "SuggestButton"))
 	for d: Variant in (s.call("view") as Dictionary)["roles"].get("decoys", []):
 		s.call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"waldhexe")
+	if revival:
+		# Ein Dorfbewohner weniger, dafür ein Kutscher: direkte Wiederbelebungsrolle (DI-01).
+		var counts: Dictionary = (s.call("view") as Dictionary)["roles"]["counts"]
+		s.call("set_role_count", &"dorfbewohner", int(counts["dorfbewohner"]) - 1)
+		s.call("set_role_count", &"kutscher", 1)
 	await frames(2)
 	await press(find_button(screen, "ConfirmRolesButton"))
 	await press(find_button(screen, "DistributeButton"))
@@ -190,34 +195,24 @@ func test_start_messages_show_no_roles_de_en() -> void:
 		await after_each()
 
 
-func test_reveal_role_option_is_sent_with_start_game() -> void:
-	for on: bool in [false, true]:
+func test_start_game_has_no_reveal_option_and_the_mode_follows_the_roles() -> void:
+	# DI-01: keine frei wählbare Aufdeckung mehr; der Regelkern leitet die Wiederbelebungsrunde aus der Besetzung ab.
+	for revival: bool in [false, true]:
 		var shell := await spawn_shell()
 		if shell == null:
 			return
-		if on:
-			# Option im Rollenschritt setzen, danach bis zur Sitzordnung wie sonst.
-			var roles_screen := await open_new_game(shell)
-			await seed_names(shell, numbered_names(6))
-			await press(find_button(roles_screen, "ConfirmPlayersButton"))
-			await press(find_button(roles_screen, "ToRolesButton"))
-			var toggle := find_node(roles_screen, "RevealRoleToggle") as BaseButton
-			assert_true(toggle != null and toggle.is_visible_in_tree(), "Option im Rollenschritt sichtbar")
-			assert_false(toggle.button_pressed, "Standard: Rolle nicht aufdecken")
-			assert_eq(toggle.text, "Rolle beim Tod öffentlich aufdecken", "Beschriftung")
-			await press(toggle)
-			assert_true(bool((setup_of(shell).call("view") as Dictionary)["reveal_role_on_death"]), "Option im Entwurf")
-			setup_of(shell).call("reset")
-			await navigate(shell, &"main_menu")
-			# Die Option gilt je Entwurf; nach dem Verwerfen wieder Standard, deshalb erneut setzen.
-		var screen := await _to_confirmed_seating(shell, 6)
-		if on:
-			setup_of(shell).call("set_reveal_role_on_death", true)
-			await frames(2)
-		assert_true(_start_button(screen).is_visible_in_tree(), "Option hebt die Bestätigung nicht auf")
+		var screen := await _to_confirmed_seating(shell, 6, revival)
+		assert_true(find_node(screen, "RevealRoleToggle") == null, "keine frei wählbare Aufdeckungsoption")
+		var label := find_node(screen, "RevivalRoundLabel") as Label
+		assert_true(label != null, "Anzeige der Wiederbelebungsrunde im Rollenschritt")
+		if label != null:
+			assert_eq(label.text, tr("ui.setup.roles.revival_round.on" if revival else "ui.setup.roles.revival_round.off"), "Anzeige folgt der Rollenwahl (%s)" % revival)
+		assert_eq(bool((setup_of(shell).call("view") as Dictionary)["revival_round"]), revival, "Sicht des Setups (%s)" % revival)
+		assert_true(_start_button(screen).is_visible_in_tree(), "Start bereit")
 		await press(_start_button(screen))
 		var commands: Array = session_of(shell).call("commands")
-		assert_eq(bool((commands[0] as Command).payload.get("reveal_role_on_death")), on, "StartGame überträgt die Option (%s)" % on)
+		assert_false((commands[0] as Command).payload.has("reveal_role_on_death"), "StartGame ohne Aufdeckungsangabe")
+		assert_eq(bool((session_of(shell).call("cockpit_view") as Dictionary)["revival_round"]), revival, "Regelkern leitet den Modus ab (%s)" % revival)
 		after_each_shell(shell)
 
 

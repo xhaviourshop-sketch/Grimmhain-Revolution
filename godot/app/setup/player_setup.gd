@@ -271,15 +271,8 @@ func start_data() -> SetupResult:
 		if copy != null:
 			appearances[str(p.person_id)] = String(copy.appears_as)
 	var result := SetupResult.success(view())
-	result.details = {"players": players, "seat_order": _draft.seating.order.duplicate(), "roles": roles, "appearances": appearances,
-		"reveal_role_on_death": _draft.reveal_role_on_death}
+	result.details = {"players": players, "seat_order": _draft.seating.order.duplicate(), "roles": roles, "appearances": appearances}
 	return result
-
-
-## Setup-Option „Rolle beim Tod aufdecken“ (DR-04). Ändert keine Bestätigung des Entwurfs.
-func set_reveal_role_on_death(value: bool) -> void:
-	_draft.reveal_role_on_death = value
-	changed.emit(view())
 
 
 # --- Sicht ------------------------------------------------------------------------------------------
@@ -302,7 +295,7 @@ func view() -> Dictionary:
 		"can_confirm": bool(validation["valid"]) and not _draft.confirmed,
 		"confirmed": _draft.confirmed,
 		"has_unconfirmed_changes": _draft.has_unconfirmed_changes,
-		"reveal_role_on_death": _draft.reveal_role_on_death,
+		"revival_round": _draft.roles.is_revival_round(),  # DI-01: aus der Rollenwahl abgeleitet, nicht wählbar
 		"is_empty": _draft.persons.is_empty(),
 		"duplicate_count": dup.size(),
 		"next_person_id": _draft.next_person_id,

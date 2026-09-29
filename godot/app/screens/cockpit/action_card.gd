@@ -45,6 +45,8 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_begin_step(next, context)
 		"prompt":
 			_prompt(next, context)
+		"notice":
+			_notice(next)
 		"end_night":
 			_end_night(next)
 		"morning":
@@ -98,13 +100,38 @@ func _covered(kind: String) -> void:
 
 func _start_night(next: Dictionary, context: Dictionary) -> void:
 	_heading("ui.cockpit.card.start_night.heading", {"number": int(context.get("night_number", 0)) + 1})
-	_read_aloud("ui.call.night_falls", {})
+	_read_aloud("ui.call.night_falls_revival" if bool(next.get("revival_round", false)) else "ui.call.night_falls", {})
 	_text("ui.cockpit.card.start_night.do" if bool(next.get("first")) else "ui.cockpit.card.start_night.do_next")
 	_actions([_button("StartNightButton", "ui.cockpit.action.start_night", GrimmButton.Kind.PRIMARY, &"start_night")])
 
 
+## Tarnaufrufe (DI-02): Rollen, die vor dem nächsten echten Schritt nur angesagt werden. Sie führen nichts aus.
+func _decoys(next: Dictionary) -> void:
+	var roles: Array = next.get("decoys", [])
+	if roles.is_empty():
+		return
+	_caption("ui.cockpit.card.decoys.caption")
+	_text("ui.cockpit.card.decoys.hint", {}, &"MutedLabel")
+	for role: Variant in roles:
+		_text(CockpitText.call_key(str(role)), {"role": CockpitText.role_name(str(role))}, &"ReadAloudLabel").name = "DecoyCall_%s" % CockpitText.key_part(str(role))
+
+
+## Hinweis an betroffene Personen (DI-04, DI-06, DI-07): zeigen, dann als gezeigt bestätigen.
+func _notice(next: Dictionary) -> void:
+	_caption("ui.cockpit.card.notice.caption", {"count": int(next.get("open", 1))})
+	_heading("ui.cockpit.card.notice.heading")
+	var names: Array = (next.get("viewers", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
+	_text("ui.cockpit.card.notice.for", {"names": ", ".join(names)}, &"MutedLabel")
+	_text("ui.cockpit.card.notice.do")
+	_actions([
+		_button("ShowNoticeButton", "ui.cockpit.action.show_notice", GrimmButton.Kind.PRIMARY, &"show_notice"),
+		_button("AckNoticeButton", "ui.cockpit.action.ack_notice", GrimmButton.Kind.SECONDARY, &"ack_notice", {"notice_id": int(next.get("notice_id", -1))}),
+	])
+
+
 func _begin_step(next: Dictionary, context: Dictionary) -> void:
 	var role := str(next.get("role_id"))
+	_decoys(next)
 	if str(next.get("step_kind")) == "reaction":
 		_caption("ui.cockpit.card.reaction.caption", {"count": int(next.get("reactions_open", 1))})
 	else:
@@ -127,12 +154,20 @@ func _begin_step(next: Dictionary, context: Dictionary) -> void:
 func _prompt(next: Dictionary, context: Dictionary) -> void:
 	var role := str(next.get("role_id"))
 	var answer := str(next.get("answer"))
+	var anonymous := bool(next.get("anonymous_asker", false))
+	_decoys(next)
 	_caption("ui.cockpit.card.prompt.caption")
-	_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)})
+	# DI-05: Die Frage an die gefragte Person nennt weder Rolle noch die fragende Person.
+	if anonymous:
+		_heading("ui.cockpit.card.red_grant.heading")
+	else:
+		_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)})
 	var actors := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
 	if actors != "":
-		_text("ui.cockpit.card.actors", {"names": actors}, &"MutedLabel")
+		_text("ui.cockpit.card.asked" if anonymous else "ui.cockpit.card.actors", {"names": actors}, &"MutedLabel")
 	for line: Dictionary in next.get("info", []):
+		if anonymous:
+			break
 		_text("ui.cockpit.card.info_line", {"label": StringName(CockpitText.info_key(str(line["key"]))), "value": CockpitText.info_value(line)}, &"WarningLabel")
 	var instruction := CockpitText.reaction_key(str(next.get("reaction_kind"))) if str(next.get("owner")) == "reaction" \
 		else CockpitText.instruction_key(str(next.get("owner")), str(next.get("stage")), answer)
@@ -200,6 +235,7 @@ func _prediction_part(next: Dictionary, context: Dictionary, buttons: Array[Cont
 
 
 func _end_night(next: Dictionary) -> void:
+	_decoys(next)
 	_heading("ui.cockpit.card.end_night.heading")
 	if int(next.get("skipped", 0)) > 0:
 		_text("ui.cockpit.card.end_night.skipped", {"count": int(next["skipped"])}, &"WarningLabel")
@@ -263,9 +299,14 @@ func _day_public(next: Dictionary, context: Dictionary) -> void:
 			else:
 				_text("ui.cockpit.card.day.nomination", {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}, &"SectionLabel")
 	var deaths: Array = context.get("day_deaths", [])
-	if not deaths.is_empty():
+	var effects: Array = context.get("day_effects", [])
+	if not deaths.is_empty() or not effects.is_empty():
 		_caption("ui.cockpit.card.say_now")
+	if not deaths.is_empty():
 		_text("ui.cockpit.card.day.deaths", {"names": CockpitText.spoken_names(deaths)}, &"ReadAloudLabel")
+	for e: Dictionary in effects:
+		var line := CockpitText.effect_line(e)
+		_text(str(line["key"]), line["values"], &"ReadAloudLabel")
 
 
 func _day_nominate(context: Dictionary) -> void:

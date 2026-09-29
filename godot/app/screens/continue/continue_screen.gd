@@ -54,6 +54,14 @@ func _slot(game: Dictionary) -> Control:
 			"alive": int(summary.get("alive_count", 0)), "saved": _time_text(int(game["saved_at"]))}
 		detail.text_key = "ui.continue.slot.detail"
 		column.add_child(detail)
+	var compatible := bool(game.get("compatible", true))
+	if bool(game["readable"]) and not compatible:
+		var note := GrimmLabel.new()
+		note.name = "IncompatibleLabel"
+		note.theme_type_variation = &"WarningLabel"
+		note.format_values = {"found": int(game.get("schema", -1)), "expected": int(game.get("expected", -1))}
+		note.text_key = "ui.continue.slot.incompatible"
+		column.add_child(note)
 	var row := HBoxContainer.new()
 	row.theme_type_variation = &"ButtonRow"
 	column.add_child(row)
@@ -61,6 +69,7 @@ func _slot(game: Dictionary) -> Control:
 	resume.name = "ResumeButton_%s" % id
 	resume.kind = GrimmButton.Kind.PRIMARY
 	resume.text_key = "ui.continue.resume"
+	resume.disabled = not compatible  # Spielstand anderer Version: nicht fortsetzbar, Datei bleibt unverändert
 	resume.pressed.connect(_resume.bind(id))
 	row.add_child(resume)
 	var discard := GrimmButton.new()
@@ -94,7 +103,7 @@ func _resume(id: String) -> void:
 func _load(id: String) -> void:
 	var result := context.resume(id)
 	if not bool(result["ok"]):
-		status_message_requested.emit("ui.continue.status.failed")
+		status_message_requested.emit("ui.continue.status.incompatible" if str(result.get("error", "")) == "incompatible" else "ui.continue.status.failed")
 		_render()
 		return
 	match str(result.get("recovered", "")):
