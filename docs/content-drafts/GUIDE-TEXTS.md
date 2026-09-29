@@ -35,7 +35,7 @@ Gilt für Nachtbeginn, Morgen, Diskussion, Nominierung, Hinrichtung und Spielend
 | `narration.morning.death_single` | `[ÖFFENTLICH]` | Diese Nacht hat ein Leben gefordert. Es ist {name}. | This night has claimed a life. It is {name}. | genau ein Tod; Namensteil ergänzt |
 | `narration.morning.death_multiple` | `[ÖFFENTLICH]` | Diese Nacht hat mehrere Leben gefordert. Es sind {names}. | This night has claimed several lives. They are {names}. | mehrere Tode; Namensteil ergänzt |
 | `narration.morning.no_death` | `[ÖFFENTLICH]` | In dieser Nacht ist niemand gestorben. | No one died this night. | kein Tod; übernommen |
-| `narration.morning.role_reveal` | `[ÖFFENTLICH]` | {name} war {role}. | {name} was {role}. | nur wenn die Setup-Option "Rolle beim Tod aufdecken" gilt |
+| `narration.morning.role_reveal` | `[ÖFFENTLICH]` | {name} war {role}. | {name} was {role}. | nur wenn die Setup-Option "Rolle beim Tod aufdecken" gilt; in Partien, in denen Wiederbelebung möglich ist, wird nie aufgedeckt (Antwort des Product Owners vom 29.09.2026 im Chat, noch nicht im Decision Log) |
 | `gm.morning.begin` | `[SL-PRIVAT]` | Die Morgenauflösung ist fertig. Lies die Meldungen der Reihe nach vor. | The dawn resolution is done. Read out the announcements in order. | Morgen |
 | `narration.day.begin` | `[ÖFFENTLICH]` | Das Dorf versammelt sich. Beratet, wem ihr noch trauen könnt. | The village gathers. Discuss whom you can still trust. | Diskussion; übernommen |
 | `gm.day.begin` | `[SL-PRIVAT]` | Starte den Timer. Nominierungen öffnest du selbst. | Start the timer. You open nominations yourself. | Diskussion |
@@ -121,7 +121,7 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 | `seelentauscher` | Seelentauscher / Soul Swapper | Frag jede Nacht bis zur Nutzung nach zwei Personen, lebend oder tot. Sie tauschen die Rollen. | Ask every night until used for two people, living or dead. They swap roles. |
 | `kutscher` | Kutscher / Coachman | Ab 10 Toten: Frag, welche drei zurückkehren und wer Wolf wird. | From 10 dead: ask which three return and who becomes a wolf. |
 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Frag jede Nacht bis zur Nutzung nach einer toten Person und einer freien Rolle. Keine Wolfsrolle. | Ask every night until used for a dead person and a free role. No wolf role. |
-| `rattenfaenger` | Rattenfänger / Pied Piper | Frag, wen er verzaubert: eine oder zwei unverzauberte Personen. | Ask whom they enchant: one or two people not yet enchanted. |
+| `rattenfaenger` | Rattenfänger / Pied Piper | Frag, wen er verzaubert: eine oder zwei unverzauberte Personen. Danach weck alle neu Verzauberten kurz auf. | Ask whom they enchant: one or two people not yet enchanted. Afterwards wake all newly enchanted people briefly. |
 | `pestbringerin` | Pestbringerin / Plague Bringer | Frag, wen sie infiziert. Am Morgen zieht die App die Ausbreitung. | Ask whom they infect. In the morning the app draws the spread. |
 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Nacht 1: drei Markierungen. Freigeschaltet: Frag jede Nacht, wen er tötet. | Night 1: three markings. Once unlocked: ask every night whom they kill. |
 | `todesprediger` | Todesprediger / Death Prophet | Nur Nacht 1: Lass ihn leise eine Nacht oder einen Tag nennen. Trag sie geheim ein. | Night 1 only: let them quietly name a night or a day. Enter it secretly. |
@@ -188,17 +188,17 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 | `schutzgeist` | Schutzgeist / Guardian Spirit | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
 | `dorfschmied` | Dorfschmied / Village Blacksmith | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
 | `verdammniswaechter` | Verdammniswächter / Doom Warden | (entfällt) Das Angebot ist eine Wahl, keine Information. | (not applicable) The offer is a choice, not information. |
-| `loki` | Loki / Loki | (ungeklärt) Information der Betroffenen offen (OI-12). | (unresolved) Information of those affected is open (OI-12). |
+| `loki` | Loki / Loki | Du und {name} seid Liebende: Stirbt eine Person, stirbt die andere. Wenn Rivalen: Du und {name} seid Rivalen. | You and {name} are lovers: if one dies, the other dies. If rivals: You and {name} are rivals. |
 | `schwarze-witwe` | Schwarze Witwe / Black Widow | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
-| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | (ungeklärt) Information über Kette und Apfel offen (OI-13). | (unresolved) Information about chain and apple is open (OI-13). |
+| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | An die gefragte Person: Du wirst um Zuflucht gebeten. Gewährst du sie, erhältst du einen Apfel und wirst verkettet: Stirbt eine Person, stirbt die andere. | To the asked person: You are asked for refuge. If you grant it, you receive an apple and are chained: if one dies, the other dies. |
 | `schattenwanderer` | Schattenwanderer / Shadowwalker | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | (entfällt) Der verfluchten Person wird nichts gezeigt. | (not applicable) The cursed person is shown nothing. |
 | `koenig-lykaon` | König Lykaon / King Lycaon | An die verwandelte Person: Du bist jetzt Trugbilderwolf. | To the transformed person: You are now a Decoy Wolf. |
 | `seelentauscher` | Seelentauscher / Soul Swapper | An jede lebende betroffene Person: Deine neue Rolle: {role}. | To each living affected person: Your new role: {role}. |
 | `kutscher` | Kutscher / Coachman | An jede zurückgeholte Person: Du lebst wieder. Deine Rolle: {role}. | To each returned person: You are alive again. Your role: {role}. |
 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | An die zurückgeholte Person: Du lebst wieder. Deine neue Rolle: {role}. | To the returned person: You are alive again. Your new role: {role}. |
-| `rattenfaenger` | Rattenfänger / Pied Piper | (ungeklärt) Information der Verzauberten offen (OI-17). | (unresolved) Information of the enchanted is open (OI-17). |
-| `pestbringerin` | Pestbringerin / Plague Bringer | (ungeklärt) Information der Infizierten offen (OI-17). | (unresolved) Information of the infected is open (OI-17). |
+| `rattenfaenger` | Rattenfänger / Pied Piper | An jede neu verzauberte Person: Du bist jetzt verzaubert. | To each newly enchanted person: You are now enchanted. |
+| `pestbringerin` | Pestbringerin / Plague Bringer | An die infizierte Person: Du bist infiziert. Zu Beginn jedes Morgens steckst du eine benachbarte lebende Person an, solange du lebst. | To the infected person: You are infected. At the start of each morning you infect a neighbouring living person, as long as you live. |
 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
 | `todesprediger` | Todesprediger / Death Prophet | (entfällt) Die Vorhersage geht nur an den Spielleiter. | (not applicable) The prediction goes to the game master only. |
 | `feuerteufel` | Feuerteufel / Pyromaniac | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
@@ -275,7 +275,7 @@ Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Ob Rollen mit 
 | `seelentauscher` | Seelentauscher / Soul Swapper | Der Seelentauscher erwacht. Der Seelentauscher schläft wieder ein. | The Soul Swapper wakes up. The Soul Swapper goes back to sleep. |
 | `kutscher` | Kutscher / Coachman | Der Kutscher erwacht. Der Kutscher schläft wieder ein. | The Coachman wakes up. The Coachman goes back to sleep. |
 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Dr. Victor Frankenstein erwacht. Dr. Victor Frankenstein schläft wieder ein. | Dr. Victor Frankenstein wakes up. Dr. Victor Frankenstein goes back to sleep. |
-| `rattenfaenger` | Rattenfänger / Pied Piper | Der Rattenfänger erwacht. Der Rattenfänger schläft wieder ein. | The Pied Piper wakes up. The Pied Piper goes back to sleep. |
+| `rattenfaenger` | Rattenfänger / Pied Piper | Der Rattenfänger erwacht. Der Rattenfänger schläft wieder ein. Die Verzauberten öffnen kurz die Augen und schließen sie wieder. | The Pied Piper wakes up. The Pied Piper goes back to sleep. The enchanted briefly open their eyes and close them again. |
 | `pestbringerin` | Pestbringerin / Plague Bringer | Die Pestbringerin erwacht. Die Pestbringerin schläft wieder ein. | The Plague Bringer wakes up. The Plague Bringer goes back to sleep. |
 | `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Der Prophet des Untergangs erwacht. Der Prophet des Untergangs schläft wieder ein. | The Prophet of Doom wakes up. The Prophet of Doom goes back to sleep. |
 | `todesprediger` | Todesprediger / Death Prophet | Der Todesprediger erwacht. Der Todesprediger schläft wieder ein. | The Death Prophet wakes up. The Death Prophet goes back to sleep. |
