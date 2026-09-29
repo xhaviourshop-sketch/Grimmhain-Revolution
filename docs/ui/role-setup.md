@@ -68,6 +68,8 @@ Alle Werte sind reine, speicherbare Daten. Eine Dateispeicherung gibt es noch ni
 
 Die Tabelle gibt die Oberflächenreihenfolge wieder: nach Fraktion gruppiert (`RolePresentation.FACTION_ORDER`), darin nach `ROLE_ORDER`. Schlüssel: `ui.role.<id>.name` und `ui.role.<id>.short` (Bindestrich wird zu Unterstrich, z. B. `ui.role.das_orakel.name`) sowie `ui.faction.village|wolves|solo`. `wolfskind` beginnt laut Katalog im Dorf und zählt deshalb im Setup nicht als Wolf.
 
+**Regeln (Paket 5b):** Jede Rollenzeile hat neben der Kurzbeschreibung den Knopf „Regeln“ (`RoleInfoButton_<id>`). Er öffnet den allgemeinen Lexikoneintrag der Rolle als Ebene über dem Setup (`NewGameScreen.open_lexicon`). Rollenwahl, Scheinrollen, Verteilung und Setup-Schritt bleiben unverändert; „Schließen“ und Zurück führen in denselben Setup-Zustand zurück. Der Knopf steht bewusst in der umbrechenden Beschreibungszeile, damit die Zeile bei 1024×768 nicht breiter wird.
+
 ## Rollenpool und Validierung
 
 Ein Pool ist gültig, wenn alle folgenden Bedingungen gelten:

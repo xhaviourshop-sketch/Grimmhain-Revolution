@@ -38,7 +38,8 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/navigation/screen_router.gd` | Ansicht wechseln, alte sofort entfernen, Übergang, Standardfokus |
 | `app/screens/base_screen.gd` | Basis jeder Ansicht: Signale statt Router-Zugriff, Kopfzeile verdrahten, Standardfokus |
 | `app/screens/start/` | Titel, Untertitel, „Eintreten“, Version |
-| `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Einstellungen, Beenden (nur Desktop, abgesetzt) |
+| `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Rollenlexikon, Einstellungen, Beenden (nur Desktop, abgesetzt) |
+| `app/screens/lexicon/` | Rollenlexikon als eigene Ansicht (Zurück schließt erst den Eintrag, dann zum Hauptmenü); Details in `cockpit.md` §Rollenlexikon |
 | `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `decoy_section` mit `decoy_copy_row` (geheime Trugbilderwolf-Scheinrollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
 | `app/screens/continue/` | gespeicherte Partien fortsetzen oder verwerfen; leerer Zustand „Kein Spielstand vorhanden“; Details in `save-resume.md` |
 | `app/screens/settings/` | Sprache DE/EN, Bewegung reduzieren, Platzhalter Audio und Anzeige |
@@ -47,6 +48,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/widgets/grimm_label.gd` | Beschriftung mit Übersetzungsschlüssel und Platzhaltern (`{version}`) |
 | `app/widgets/grimm_toggle.gd` | Umschalter mit Übersetzungsschlüssel |
 | `app/widgets/header_bar/` | Kopfzeile: Zurück, Titel, Platz `%Actions` für spätere Aktionen |
+| `app/widgets/role_lexicon/` | Rollenlexikon (Liste, Suche, Fraktionsfilter, Eintrag, Sprachknopf); `RoleLexicon.layer` als Ebene für Setup und Cockpit; liest nur Übersetzungen und Katalog |
 | `app/widgets/confirm_dialog/` | Modal für Rückfragen (`DialogRequest`): Abbrechen links mit Fokus, optionale Alternative, Bestätigen rechts, 32 px Abstand, optional rot; optional scrollbare Auswahlliste (`DialogOption`); Fokussperre und Fokus-Rückgabe |
 | `app/widgets/toast/` | Statusmeldung am unteren Rand, 2,5 s sichtbar |
 | `app/theme/theme_tokens.gd` | alle Farben, Abstände, Radien, Rahmen, Schriftgrößen, Mindestgrößen, Zeiten |

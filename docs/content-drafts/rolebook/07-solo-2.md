@@ -1,6 +1,7 @@
 # Rollenlexikon 07 · Einzelsieg, Teil 2 (6 Rollen)
 
 **Status:** Entwurf, nicht freigegeben. Regelquelle: `audit/all-72-roles` @ `312f5bbbbec4c218754b35a0043b51e79d80bcf5`. Begriffe siehe [`../TERMINOLOGY.md`](../TERMINOLOGY.md).
+**Paket 5b (29.09.2026):** Gegen Decision Log, Kern und Tests geprüft und als `ui.role.<rolle>.lex.*` ins Programm übernommen (Rollenlexikon). Maßgeblich für das Programm ist der Wortlaut in `godot/content/i18n/ui.*.po`. Die Zeile „Offen / Open“ nennt ungeklärte, technisch abgeleitete und unbestätigte oder noch nicht umgesetzte Punkte. Redaktionelle Endabnahme ausstehend.
 Kopfzeile je Rolle: Nachtstufe = `night_priority` des Katalogs geteilt durch zehn. Der endgültige Name der Fraktion "Einzelsieg" / "Solo" steht noch nicht fest (OI-16). Alle Rollen zählen als Nicht-Wolf. Zu Hades und Grabräuber gehören abgeleitete Präzisierungen (DA-01 bis DA-10), die der Product Owner nicht einzeln ausgewählt hat.
 
 Gilt für alle Einzelsiegrollen: Treffen mehrere Siegbedingungen gleichzeitig zu, bilden sie eine Kandidatenmenge. Der Spielleiter bestätigt genau einen oder lehnt alle gemeinsam mit Grund ab. Ein erfüllter Sieg wird nach einer Ablehnung weiter vorgeschlagen.
@@ -99,6 +100,7 @@ Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 3" (E-16 bis E-19, E
 | Beispiel 1 / Example 1 | Hades hat 2 Lichter und tötet Ben. Die Lichter fallen auf 0, mit Bens Tod am Morgen erhält Hades 1 Licht. | Hades has 2 lights and kills Ben. The lights drop to 0, with Ben's death in the morning Hades gains 1 light. |
 | Beispiel 2 / Example 2 | Hades lebt mit 10 Lichtern. Sein Alleinsieg ist Kandidat. | Hades is alive with 10 lights. Their solo win is a candidate. |
 | Spielleitung / Game master | Die Lichter sind ein eigener Vorrat je Hades. Ein Abbruch vor der letzten Antwort kostet nichts. | The lights are a separate stock per Hades. Cancelling before the last answer costs nothing. |
+| Offen / Open | Zeitpunkt und Reihenfolge von Tötung, Barriere und Lichtern sind technisch abgeleitet und noch nicht bestätigt. | Timing and order of kill, barrier and lights are technically derived and not yet confirmed. |
 
 Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 4" (E-28 bis E-31; RM-DR-144.1 bis .4); "Hades und Grabräuber, abgeleitete Präzisierungen" (DA-01 bis DA-05).
 
@@ -118,5 +120,6 @@ Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 4" (E-28 bis E-31; R
 | Beispiel 1 / Example 1 | Anna, die Waldhexe, ist tot. Der Grabräuber stiehlt die Fähigkeit von Anna und hat ab der nächsten Nacht frische Tränke. | Anna, the Witch of the Woods, is dead. The Grave Robber steals Anna's ability and has fresh potions from the next night. |
 | Beispiel 2 / Example 2 | Der tote Loki kann nicht gestohlen werden, weil sein Schritt nur in Nacht 1 stattfindet. | The dead Loki cannot be stolen, because their step happens only in night 1. |
 | Spielleitung / Game master | Der Grabräuber erfährt die gestohlene Rolle privat. Rollen ohne eigenen Nachtschritt erscheinen nicht in der Auswahl. | The Grave Robber learns the stolen role privately. Roles without an own night step do not appear in the selection. |
+| Offen / Open | Welche Rollen stehlbar sind und was genau übernommen wird, ist technisch abgeleitet und noch nicht bestätigt. | Which roles can be stolen and what exactly is taken over is technically derived and not yet confirmed. |
 
 Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 4" (E-32 bis E-34; RM-DR-156); "Hades und Grabräuber, abgeleitete Präzisierungen" (DA-06 bis DA-09); "Rest-Wölfe und Zeitwächter" (DA-15).

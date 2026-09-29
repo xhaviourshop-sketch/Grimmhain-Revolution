@@ -1,6 +1,7 @@
 # Rollenlexikon 05 · Werwölfe, Sonderschritte und Wandlung (9 Rollen)
 
 **Status:** Entwurf, nicht freigegeben. Regelquelle: `audit/all-72-roles` @ `312f5bbbbec4c218754b35a0043b51e79d80bcf5`. Begriffe siehe [`../TERMINOLOGY.md`](../TERMINOLOGY.md).
+**Paket 5b (29.09.2026):** Gegen Decision Log, Kern und Tests geprüft und als `ui.role.<rolle>.lex.*` ins Programm übernommen (Rollenlexikon). Maßgeblich für das Programm ist der Wortlaut in `godot/content/i18n/ui.*.po`. Die Zeile „Offen / Open“ nennt ungeklärte, technisch abgeleitete und unbestätigte oder noch nicht umgesetzte Punkte. Redaktionelle Endabnahme ausstehend.
 Kopfzeile je Rolle: Nachtstufe = `night_priority` des Katalogs geteilt durch zehn. Alle Rollen dieser Datei zählen als Wolf und wachen zusätzlich zum Rudelschritt (Stufe 2.0) mit eigenem Schritt auf, soweit angegeben. Wolfssieg: siehe [`04-wolves-pack.md`](04-wolves-pack.md).
 
 Enthalten: `schattenhund`, `albtraumwolf`, `giftwolf`, `schwarze-witwe`, `schattenwanderer`, `daemonischer-wolf`, `koenig-lykaon`, `rachsuechtiger-wolf`, `schicksalswolf`.
@@ -20,7 +21,7 @@ Enthalten: `schattenhund`, `albtraumwolf`, `giftwolf`, `schwarze-witwe`, `schatt
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | In Nacht 2 blockiert der Schattenhund. Orakel, Waldhexe und Doktor handeln in dieser Nacht nicht. | In night 2 the Shadow Hound blocks. Oracle, Witch and Doctor do not act this night. |
 | Beispiel 2 / Example 2 | In Nacht 1 verzichtet der Schattenhund. In Nacht 2 wird er erneut gefragt. | In night 1 the Shadow Hound declines. In night 2 the question appears again. |
-| Spielleitung / Game master | Die Schritte entfallen protokolliert. Blockierte Rollen werden trotzdem aufgerufen, damit der Tisch nichts erfährt (abgeleitet aus der Aufrufpolitik vom 29.09.2026, Antwort des Product Owners vom 29.09.2026, Decision Log DI-02). | The steps drop and are logged. Blocked roles are still called so that the table learns nothing (derived from the call policy of 29.09.2026, Product Owner answer of 29.09.2026, decision log DI-02). |
+| Spielleitung / Game master | Die Schritte entfallen protokolliert. Blockierte Rollen werden trotzdem aufgerufen, damit der Tisch nichts erfährt. | The steps drop and are logged. Blocked roles are still called so that the table learns nothing. |
 
 Quelle: DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-010); "Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf" (RM-DR-123, RM-DR-134.3); Zeitwächter: E-36.
 
@@ -39,7 +40,7 @@ Quelle: DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-010); "Rollenaud
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Der Albtraumwolf blockiert Ben, das Orakel. Ben handelt in dieser Nacht nicht. | The Nightmare Wolf blocks Ben, the Oracle. Ben does not act this night. |
 | Beispiel 2 / Example 2 | Der Albtraumwolf blockiert Emil, einen Wolf. Es passiert nichts, denn nur Dorfrollen werden blockiert. | The Nightmare Wolf blocks Emil, a wolf. Nothing happens, because only village roles are blocked. |
-| Spielleitung / Game master | Blockierte Personen werden trotzdem aufgerufen (abgeleitet aus der Aufrufpolitik vom 29.09.2026). Angesammelte Listen bleiben bei einer Blockade erhalten (zum Beispiel beim Kopfgeldjäger). | Blocked people are still called (derived from the call policy of 29.09.2026). Accumulated lists stay in place during a block (for example for the Bounty Hunter). |
+| Spielleitung / Game master | Blockierte Personen werden trotzdem aufgerufen, damit der Tisch nichts erfährt. Angesammelte Listen bleiben bei einer Blockade erhalten (zum Beispiel beim Kopfgeldjäger). | Blocked people are still called so that the table learns nothing. Accumulated lists stay in place during a block (for example for the Bounty Hunter). |
 
 Quelle: DECISION-LOG "Rollenaudit · Querschnittsfragen" (RM-DR-010); "Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudelvater, Seuchenwolf" (RM-DR-134.1 bis .3).
 
@@ -78,6 +79,7 @@ Quelle: DECISION-LOG "Rollenaudit · Schattenhund, Albtraumwolf, Giftwolf, Rudel
 | Beispiel 1 / Example 1 | Loki hat Anna und Ben als Rivalen verbunden. Die Witwe wählt Anna. Anna und Ben sterben am Morgen. | Loki linked Anna and Ben as rivals. The Widow chooses Anna. Anna and Ben die in the morning. |
 | Beispiel 2 / Example 2 | Die Witwe wählt Clara, die zu keinem Paar gehört. Es passiert nichts. | The Widow chooses Clara, who belongs to no pair. Nothing happens. |
 | Spielleitung / Game master | Ob eine Partie mit Schwarzer Witwe zwingend einen Loki enthält, ist als Setup-Prüfung vertagt. Ohne Loki hat sie keine Wirkung. | Whether a game with a Black Widow must contain a Loki is postponed as a setup check. Without Loki the Widow has no effect. |
+| Offen / Open | Ob eine Partie mit Schwarzer Witwe zwingend einen Loki enthalten muss, ist als Setup-Prüfung vertagt. | Whether a game with a Black Widow must contain a Loki is postponed as a setup check. |
 
 Quelle: DECISION-LOG "Rollenaudit · Bindungsrollen" (B-03, B-06; RM-DR-113.1); Zeitwächter: RM-DR-113.2, E-36.
 
@@ -96,7 +98,7 @@ Quelle: DECISION-LOG "Rollenaudit · Bindungsrollen" (B-03, B-06; RM-DR-113.1); 
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Der Schattenwanderer Emil verknüpft sich mit Ben. Emil wird an Tag 4 hingerichtet. Stattdessen stirbt Ben, Emil lebt, die Verknüpfung ist verbraucht. | The Shadowwalker Emil links themself with Ben. Emil is executed on day 4. Instead Ben dies, Emil lives, the link is used up. |
 | Beispiel 2 / Example 2 | Der Schutzengel schützt Ben vor dem Rudelangriff. Es stirbt niemand, also greift die Verknüpfung nicht. | The Guardian Angel protects Ben from the pack attack. No one dies, so the link does not trigger. |
-| Spielleitung / Game master | Die Verknüpfung siehst nur du. Wird ein Tod umgelenkt, ist das ein Todeseffekt und wird öffentlich angesagt (Antwort des Product Owners vom 29.09.2026, Decision Log DI-03). | Only you see the link. If a death is redirected, that is a death effect and is announced publicly (Product Owner answer of 29.09.2026, decision log DI-03). |
+| Spielleitung / Game master | Die Verknüpfung siehst nur du. Wird ein Tod umgelenkt, ist das ein Todeseffekt und wird öffentlich angesagt. Die Ansage nennt den Schattenwanderer als Rolle, von der die Verknüpfung stammt, nie die Rolle der sterbenden Person. | Only you see the link. If a death is redirected, that is a death effect and is announced publicly. The announcement names the Shadowwalker as the role the link comes from, never the role of the dying person. |
 
 Quelle: DECISION-LOG "Rollenaudit · Bindungsrollen" (B-04, B-07; RM-DR-110); Ketten: "Einzelsiegrollen, Teil 3" (E-20).
 
@@ -115,7 +117,7 @@ Quelle: DECISION-LOG "Rollenaudit · Bindungsrollen" (B-04, B-07; RM-DR-110); Ke
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Der Dämonische Wolf Fritz wird hingerichtet und verflucht Ben. Das Orakel prüft später Ben und sieht "Werwolf". | Fritz, the Demonic Wolf, is executed and curses Ben. The Oracle later checks Ben and sees "Werewolf". |
 | Beispiel 2 / Example 2 | Die Kriegerin des Lichts prüft Ben. Sie erfährt "kein Wolf", weil die wahre Zählung gilt, und stirbt am Morgen. | The Warrior of Light checks Ben. They learn "not a wolf", because the true count applies, and dies in the morning. |
-| Spielleitung / Game master | Der Fluch ist dir und dem Dämonischen Wolf bekannt, der ihn wählt. Der Regelkern meldet der verfluchten Person nichts (`DEMON_CURSED` nur für den Spielleiter). | The curse is known to you and to the Demonic Wolf who chooses it. The rules core reports nothing to the cursed person (`DEMON_CURSED` for the game master only). |
+| Spielleitung / Game master | Der Fluch ist dir und dem Dämonischen Wolf bekannt, der ihn wählt. Die verfluchte Person erfährt nichts, und öffentlich wird der Fluch nicht angesagt. | The curse is known to you and to the Demonic Wolf who chooses it. The cursed person learns nothing, and the curse is not announced publicly. |
 
 Quelle: DECISION-LOG "Rollenaudit · Verwandlungsrollen" (V-01, V-02, V-07; RM-DR-122).
 
@@ -134,7 +136,7 @@ Quelle: DECISION-LOG "Rollenaudit · Verwandlungsrollen" (V-01, V-02, V-07; RM-D
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | In Nacht 2 nennt König Lykaon den Verbündeten Emil und wählt Ben (Waldhexe). Ben wird Trugbilderwolf mit der Scheinrolle "Waldhexe" und wacht ab Nacht 3 mit dem Rudel auf. | In night 2 King Lycaon names the ally Emil and chooses Ben (Witch of the Woods). Ben becomes a Decoy Wolf with the false role "Witch of the Woods" and wakes with the pack from night 3. |
 | Beispiel 2 / Example 2 | König Lykaon verzichtet in drei Nächten. In der vierten Gelegenheit muss er wählen. | King Lycaon declines in three nights. At the fourth opportunity they must choose. |
-| Spielleitung / Game master | Der Tisch erfährt nichts von der Umwandlung. Die betroffene Person erhält im Regelkern eine private Mitteilung über ihre neue Rolle (`LYCAON_NOTICE`) und wacht ab der folgenden Nacht mit dem Rudel auf, wo auch der Verbündete sie sieht. Als Entscheidung des Product Owners ist das nicht dokumentiert, es folgt aber aus dem Aufwachen (OI-15). | The table learns nothing of the change. The affected person receives a private message about their new role in the rules core (`LYCAON_NOTICE`) and wakes with the pack from the following night, where the ally sees them too. This is not documented as a Product Owner decision, but it follows from the waking (OI-15). |
+| Spielleitung / Game master | Der Tisch erfährt nichts von der Umwandlung. Die betroffene Person erhält eine private Mitteilung über ihre neue Rolle und wacht ab der folgenden Nacht mit dem Rudel auf, wo auch der Verbündete sie sieht. | The table learns nothing of the change. The affected person receives a private message about their new role and wakes with the pack from the following night, where the ally sees them too. |
 
 Quelle: DECISION-LOG "Rollenaudit · Verwandlungsrollen" (V-03, V-08, V-09; RM-DR-107); Wächter: RM-DR-149.
 
@@ -154,6 +156,7 @@ Quelle: DECISION-LOG "Rollenaudit · Verwandlungsrollen" (V-03, V-08, V-09; RM-D
 | Beispiel 1 / Example 1 | In Nacht 3 wählt der Rachsüchtige Wolf Emil den Wolf Fritz. Fritz stirbt am Morgen. | In night 3 the Lone Wolf Emil chooses the wolf Fritz. Fritz dies in the morning. |
 | Beispiel 2 / Example 2 | Emil ist der letzte lebende Wolf, und die Zahl der Wölfe erreicht die der übrigen. Statt des Wolfssiegs wird Emils Alleinsieg vorgeschlagen. | Emil is the last living wolf, and the wolf count reaches that of the others. Instead of the wolf win, Emil's solo win is proposed. |
 | Spielleitung / Game master | Der zusätzliche Aufruf kommt nur in den Nächten 3, 6, 9 ... und ohne Angabe des Grundes. | The additional call comes only in nights 3, 6, 9 ... and without giving the reason. |
+| Offen / Open | Rhythmus der Nächte, Angriff und das Verhalten mehrerer Rachsüchtiger Wölfe sind technisch abgeleitet und noch nicht bestätigt. | The rhythm of nights, the attack and the behaviour of several Lone Wolves are technically derived and not yet confirmed. |
 
 Quelle: DECISION-LOG "Rollenaudit · Rest-Wölfe und Zeitwächter" (E-35, RM-DR-106.1; DA-16, DA-17, DA-18).
 
@@ -173,5 +176,6 @@ Quelle: DECISION-LOG "Rollenaudit · Rest-Wölfe und Zeitwächter" (E-35, RM-DR-
 | Beispiel 1 / Example 1 | In Nacht 1 markiert der Schicksalswolf Anna, Ben und Clara. Die ersten drei Toten sind Anna, Emil und Ben. Zwei Markierte sind darunter, also darf er in Nacht 4 bis zu zwei zusätzliche Opfer wählen. | In night 1 the Fate Wolf marks Anna, Ben and Clara. The first three dead are Anna, Emil and Ben. Two marked people are among them, so in night 4 they may choose up to two additional victims. |
 | Beispiel 2 / Example 2 | Keine der drei markierten Personen gehört zu den ersten drei Toten. In Nacht 4 gibt es kein Zusatzopfer. | None of the three marked people is among the first three dead. In night 4 there is no extra victim. |
 | Spielleitung / Game master | Die Rolle handelt nur in den Nächten 1 und 4. Ist unter den ersten drei Toten keine markierte Person, gibt es in Nacht 4 nichts zu wählen. | The role acts only in nights 1 and 4. If none of the first three dead is a marked person, there is nothing to choose in night 4. |
+| Offen / Open | Zeitfenster, Zählung der ersten drei Toten, Zusatzopfer und Auswahl sind technisch abgeleitet und noch nicht bestätigt. | Time window, the count of the first three dead, extra victims and the choice are technically derived and not yet confirmed. |
 
 Quelle: DECISION-LOG "Rollenaudit · Rest-Wölfe und Zeitwächter" (DA-11 bis DA-15; RM-DR-109); Märtyrerin und Verdammniswächter: S-13, S-14.

@@ -35,7 +35,7 @@ Diese Liste gilt für alle Dateien in `docs/content-drafts/`. Sie ändert keine 
 | Nominierung | Nominierung, nominiert | nomination, nominates | Eine Person schlägt eine andere für die Hinrichtung vor. | DR-03 |
 | Spielende | Spielende, Sieg bestätigen | game over, confirm the win | App schlägt Sieg vor, Spielleiter bestätigt. | "Nachfrage zu F-11" |
 | Wiederbelebungsrunde | Wiederbelebungsrunde | revival round | Runde, in der Wiederbelebung möglich ist (direkte Rollen, später Totenreichkarten). Rollen bleiben verdeckt, Tote halten nachts die Augen geschlossen. | Antwort des Product Owners vom 29.09.2026 |
-| Todeseffekt | Todeseffekt | death effect | Sichtbare Folge eines Todes, die ausgespielt und mit Effekt und Rolle angesagt wird. | Antwort des Product Owners vom 29.09.2026 |
+| Todeseffekt | Todeseffekt | death effect | Sichtbare Folge eines Todes, die ausgespielt und mit Effekt und Rolle angesagt wird. Bei Liebeskummer, Kette und Verknüpfung ist das die Rolle, von der der Effekt stammt (PE-05). | Antwort des Product Owners vom 29.09.2026 |
 
 ## 2. Zeichenkonventionen für die Entwürfe
 
@@ -56,6 +56,8 @@ Diese Liste gilt für alle Dateien in `docs/content-drafts/`. Sie ändert keine 
 Regel: `[ÖFFENTLICH]` nennt nie eine geheime Rolle, ein geheimes Ziel, eine geheime Wirkung, eine Todesursache oder einen Namen, den die Regel nicht ausdrücklich veröffentlicht (G-TOD-5, DECISION-LOG "Smartphone und öffentlicher Bildschirm").
 
 ## 4. Abweichungen und Fehlalarme gegenüber bestehenden Übersetzungsdateien
+
+**Paket 5b (29.09.2026):** Die Zeilen zu „Wolfsangriff“, den englischen Angriffsbegriffen, „gelyncht“ und den englischen Pronomen sind in `ui.*.po` angeglichen: „Rudelangriff“ / „pack attack“ nur für den Rudelangriff, „Hinrichtung“ / „execution“, neutrale englische Pronomen („they“, „themself“). Die Tabelle bleibt als Herkunft stehen (Decision Log DA-58).
 
 Die Punkte wurden nicht in `ui.*.po` geändert, weil `godot/` und Übersetzungsdateien nicht Teil dieses Auftrags sind. Nach der fachlichen Prüfung (`OPEN-ISSUES.md`, OI-04) ist keiner davon ein Regelkonflikt.
 

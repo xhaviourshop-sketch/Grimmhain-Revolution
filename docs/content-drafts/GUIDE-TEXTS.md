@@ -213,17 +213,19 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 
 ### 3.3 `[ÖFFENTLICH]` Aufruf und Einschlafen
 
+**Abgleich Paket 5b (29.09.2026):** Die Spalten DE/EN geben den im Programm integrierten Vorlesetext wieder (`ui.call.*`; ohne eigenen Text der allgemeine Aufruf `ui.call.generic`). Maßgeblich ist der Wortlaut in `ui.*.po`. Das Einschlafen sagt die App nicht gesondert an. Rollen ohne Nachtschritt behalten ihre Zeile.
+
 Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Aufrufpolitik (Antwort des Product Owners vom 29.09.2026, Decision Log DI-02): In Runden ohne Wiederbelebung werden bereits aufgedeckte Rollen in der Nachtreihenfolge nicht mehr aufgerufen. Aufgebrauchte Rollen werden trotzdem aufgerufen, nur ohne Fähigkeit, damit Dorf und Wölfe nicht wissen, was genutzt ist. In Wiederbelebungsrunden werden auch tote Rollen weiter aufgerufen, damit niemand weiß, wer lebt. Aus der Antwort folgt, dass auch blockierte und noch nicht aktive Rollen aufgerufen werden; nicht in der Partie vorkommende Rollen werden nicht aufgerufen (beides abgeleitet, zu bestätigen). Handlungszeilen ("Zeige auf ...") kennt das NARRATOR-SCRIPT nur für die Slice-Rollen; für alle weiteren Rollen sind sie offen (OI-18).
 
 | Rollen-ID | Rolle | DE | EN |
 |---|---|---|---|
 | `dorfbewohner` | Dorfbewohner / Villager | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
-| `werwolf` | Werwolf / Werewolf | Die Werwölfe erwachen und erkennen einander. Sie schlafen danach wieder ein. | The werewolves wake up and recognise each other. Afterwards they go back to sleep. |
-| `schutzengel` | Schutzengel / Guardian Angel | Der Schutzengel erwacht. Der Schutzengel schläft wieder ein. | The Guardian Angel wakes up. The Guardian Angel goes back to sleep. |
-| `waldhexe` | Waldhexe / Witch of the Woods | Die Waldhexe erwacht. Die Waldhexe schläft wieder ein. | The Witch of the Woods wakes up. The Witch of the Woods goes back to sleep. |
-| `das-orakel` | Das Orakel / The Oracle | Das Orakel erwacht. Das Orakel schläft wieder ein. | The Oracle wakes up. The Oracle goes back to sleep. |
-| `wolfskind` | Wolfskind / Wolf Child | Das Wolfskind erwacht. Das Wolfskind schläft wieder ein. | The Wolf Child wakes up. The Wolf Child goes back to sleep. |
-| `lehrling` | Lehrling / Apprentice | Der Lehrling erwacht. Der Lehrling schläft wieder ein. | The Apprentice wakes up. The Apprentice goes back to sleep. |
+| `werwolf` | Werwolf / Werewolf | Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir. | Werewolves, wake up. Silently agree on a victim and point to them. |
+| `schutzengel` | Schutzengel / Guardian Angel | Schutzengel, erwache. Zeige auf die Person, die du heute Nacht beschützen willst. | Guardian Angel, wake up. Point to the person you want to protect tonight. |
+| `waldhexe` | Waldhexe / Witch of the Woods | Waldhexe, erwache. Ich zeige dir das Opfer der Nacht. Willst du einen Trank nutzen? | Forest Witch, wake up. I will show you tonight’s victim. Do you want to use a potion? |
+| `das-orakel` | Das Orakel / The Oracle | Orakel, erwache. Zeige auf die Person, deren Wesen du schauen willst. | Oracle, wake up. Point to the person whose nature you want to see. |
+| `wolfskind` | Wolfskind / Wolf Child | Wolfskind, erwache. Zeige auf die Person, die dein Vorbild sein soll. | Wolf Child, wake up. Point to the person who shall be your role model. |
+| `lehrling` | Lehrling / Apprentice | Lehrling, erwache. Ich zeige dir gleich drei Rollen. Wähle deinen Meister. | Apprentice, wake up. I will show you three roles. Choose your master. |
 | `manipulator` | Manipulator / Manipulator | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
@@ -231,65 +233,67 @@ Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Aufrufpolitik 
 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
 | `doppelspion` | Doppelspion / Double Agent | Kein eigener Aufruf. Wacht im Rudelaufruf mit, ohne genannt zu werden. | No call of its own. Wakes within the pack call without being named. |
 | `selbstmoerder` | Selbstmörder / Death Seeker | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
-| `dorfchronistin` | Dorfchronistin / Village Chronicler | Die Dorfchronistin erwacht. Die Dorfchronistin schläft wieder ein. | The Village Chronicler wakes up. The Village Chronicler goes back to sleep. |
-| `die-gebundenen` | Die Gebundenen / The Bound | Die Gebundenen erwachen. Sie schlafen wieder ein. | The Bound wake up. They go back to sleep. |
-| `waldlaeufer` | Waldläufer / Ranger | Der Waldläufer erwacht. Der Waldläufer schläft wieder ein. | The Ranger wakes up. The Ranger goes back to sleep. |
-| `doktor` | Doktor / Doctor | Der Doktor erwacht. Der Doktor schläft wieder ein. | The Doctor wakes up. The Doctor goes back to sleep. |
+| `dorfchronistin` | Dorfchronistin / Village Chronicler | Dorfchronistin, erwache. Ich zeige dir, wie viele Einzelgänger im Dorf sind. | Village Chronicler, wake up. I will show you how many loners are in the village. |
+| `die-gebundenen` | Die Gebundenen / The Bound | Gebundene, erwacht und seht einander an. | Bound ones, wake up and look at each other. |
+| `waldlaeufer` | Waldläufer / Ranger | Waldläufer, erwache. Ich zeige dir, wie viele Wölfe noch leben. | Ranger, wake up. I will show you how many wolves are still alive. |
+| `doktor` | Doktor / Doctor | Doktor, erwache. Zeige auf zwei Personen, deren Blut du vergleichen willst. | Doctor, wake up. Point to two people whose blood you want to compare. |
 | `wahnsinniger-kutscher` | Wahnsinniger Kutscher / Mad Coachman | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
 | `nachtwaechter` | Nachtwächter / Night Warden | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
 | `dorfwache` | Dorfwache / Village Guard | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
 | `besessener-wolf` | Besessener Wolf / Possessed Wolf | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
 | `ritter` | Ritter / Knight | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
-| `faehrtenleser` | Fährtenleser / Tracker | Der Fährtenleser erwacht. Der Fährtenleser schläft wieder ein. | The Tracker wakes up. The Tracker goes back to sleep. |
+| `faehrtenleser` | Fährtenleser / Tracker | Fährtenleser, erwache. Willst du heute die Fährte lesen? | Tracker, wake up. Do you want to read the trail tonight? |
 | `blutwolf` | Blutwolf / Blood Wolf | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
-| `korrupter-richter` | Korrupter Richter / Corrupt Judge | Der Korrupte Richter erwacht. Der Korrupte Richter schläft wieder ein. | The Corrupt Judge wakes up. The Corrupt Judge goes back to sleep. |
+| `korrupter-richter` | Korrupter Richter / Corrupt Judge | Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt. | Corrupt Judge, wake up. Point to the person who counts as nominated tomorrow. |
 | `waechter-am-tor` | Wächter am Tor / Gatewarden | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
-| `spuerhund` | Spürhund / Scent Hound | Der Spürhund erwacht. Der Spürhund schläft wieder ein. | The Scent Hound wakes up. The Scent Hound goes back to sleep. |
-| `parasit` | Parasit / Parasite | Der Parasit erwacht. Der Parasit schläft wieder ein. | The Parasite wakes up. The Parasite goes back to sleep. |
-| `schattenhund` | Schattenhund / Shadow Hound | Der Schattenhund erwacht. Der Schattenhund schläft wieder ein. | The Shadow Hound wakes up. The Shadow Hound goes back to sleep. |
-| `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Der Albtraumwolf erwacht. Der Albtraumwolf schläft wieder ein. | The Nightmare Wolf wakes up. The Nightmare Wolf goes back to sleep. |
-| `giftwolf` | Giftwolf / Poison Wolf | Der Giftwolf erwacht. Der Giftwolf schläft wieder ein. | The Poison Wolf wakes up. The Poison Wolf goes back to sleep. |
+| `spuerhund` | Spürhund / Scent Hound | Spürhund, erwache. Zeige auf drei Personen, an denen du schnüffeln willst. | Sniffer Dog, wake up. Point to three people you want to sniff. |
+| `parasit` | Parasit / Parasite | Parasit, erwache. Willst du einen neuen Wirt wählen? Zeige auf die Person. | Parasite, wake up. Do you want to choose a new host? Point to the person. |
+| `schattenhund` | Schattenhund / Shadow Hound | Schattenhund, erwache. Willst du das Dorf heute Nacht blockieren? | Shadow Hound, wake up. Do you want to block the village tonight? |
+| `albtraumwolf` | Albtraumwolf / Nightmare Wolf | Albtraumwolf, erwache. Zeige auf die Person, deren Fähigkeit du heute Nacht blockierst. | Nightmare Wolf, wake up. Point to the person whose ability you block tonight. |
+| `giftwolf` | Giftwolf / Poison Wolf | Giftwolf, erwache. Willst du jemanden vergiften? Zeige auf die Person. | Poison Wolf, wake up. Do you want to poison someone? Point to the person. |
 | `rudelvater` | Rudelvater / Packfather | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
 | `seuchenwolf` | Seuchenwolf / Blight Wolf | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
 | `fenrir` | Fenrir / Fenrir | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
 | `cerberus` | Cerberus / Cerberus | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
-| `henker` | Henker / Executioner | Der Henker erwacht. Der Henker schläft wieder ein. | The Executioner wakes up. The Executioner goes back to sleep. |
-| `traumdeuter` | Traumdeuter / Dreamer | Der Traumdeuter erwacht. Der Traumdeuter schläft wieder ein. | The Dreamer wakes up. The Dreamer goes back to sleep. |
-| `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter | Der Kopfgeldjäger erwacht. Der Kopfgeldjäger schläft wieder ein. | The Bounty Hunter wakes up. The Bounty Hunter goes back to sleep. |
-| `koenig` | König / King | Der König erwacht. Der König schläft wieder ein. | The King wakes up. The King goes back to sleep. |
-| `kriegerin-des-lichts` | Kriegerin des Lichts / Warrior of Light | Die Kriegerin des Lichts erwacht. Die Kriegerin des Lichts schläft wieder ein. | The Warrior of Light wakes up. The Warrior of Light goes back to sleep. |
-| `blutpriester` | Blutpriester / Blood Priest | Der Blutpriester erwacht. Der Blutpriester schläft wieder ein. | The Blood Priest wakes up. The Blood Priest goes back to sleep. |
+| `henker` | Henker / Executioner | Henker, erwache. Zeige auf die Person, die bei der nächsten Hinrichtung mit stirbt. | Hangman, wake up. Point to the person who dies at the next execution as well. |
+| `traumdeuter` | Traumdeuter / Dreamer | Traumdeuter, erwache. Ich zeige dir die Namen aus deinem Traum. | Dream Reader, wake up. I will show you the names from your dream. |
+| `kopfgeldjaeger` | Kopfgeldjäger / Bounty Hunter | Kopfgeldjäger, erwache. Hier ist deine Liste. | Bounty Hunter, wake up. Here is your list. |
+| `koenig` | König / King | König, erwache. Zeige auf eine Person aus dem Dorf, deren Rolle du erfahren willst. | King, wake up. Point to a villager whose role you want to learn. |
+| `kriegerin-des-lichts` | Kriegerin des Lichts / Warrior of Light | Kriegerin des Lichts, erwache. Willst du heute angreifen? Zeige auf die Person. | Warrior of Light, wake up. Do you want to attack tonight? Point to the person. |
+| `blutpriester` | Blutpriester / Blood Priest | Blutpriester, erwache. Willst du heute ein Opfer bringen? Zeige darauf oder schüttle den Kopf. | Blood Priest, wake up. Do you want to make a sacrifice tonight? Point to them or shake your head. |
 | `amalia` | Amalia / Amalia | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
 | `detektiv` | Detektiv / Detective | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
-| `die-ewigen` | Die Ewigen / The Eternal Ones | Die Ewigen erwachen. Sie schlafen wieder ein. | The Eternal Ones wake up. They go back to sleep. |
+| `die-ewigen` | Die Ewigen / The Eternal Ones | Ewige, erwacht. Zeigt gemeinsam auf die Person, die ihr prüfen wollt. | Eternal ones, wake up. Point together to the person you want to check. |
 | `der-weise` | Der Weise / The Elder | Kein Nachtschritt, kein Aufruf. | No night step, no call. |
-| `maertyrerin` | Märtyrerin / Martyr | Die Märtyrerin erwacht. Die Märtyrerin schläft wieder ein. | The Martyr wakes up. The Martyr goes back to sleep. |
-| `schutzgeist` | Schutzgeist / Guardian Spirit | Der Schutzgeist erwacht. Der Schutzgeist schläft wieder ein. | The Guardian Spirit wakes up. The Guardian Spirit goes back to sleep. |
-| `dorfschmied` | Dorfschmied / Village Blacksmith | Der Dorfschmied erwacht. Der Dorfschmied schläft wieder ein. | The Village Blacksmith wakes up. The Village Blacksmith goes back to sleep. |
-| `verdammniswaechter` | Verdammniswächter / Doom Warden | Der Verdammniswächter erwacht. Der Verdammniswächter schläft wieder ein. | The Doom Warden wakes up. The Doom Warden goes back to sleep. |
-| `loki` | Loki / Loki | Loki erwacht. Loki schläft wieder ein. | Loki wakes up. Loki goes back to sleep. |
-| `schwarze-witwe` | Schwarze Witwe / Black Widow | Die Schwarze Witwe erwacht. Die Schwarze Witwe schläft wieder ein. | The Black Widow wakes up. The Black Widow goes back to sleep. |
-| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Rotkäppchen erwacht. Rotkäppchen schläft wieder ein. | Little Red Riding Hood wakes up. Little Red Riding Hood goes back to sleep. |
-| `schattenwanderer` | Schattenwanderer / Shadowwalker | Der Schattenwanderer erwacht. Der Schattenwanderer schläft wieder ein. | The Shadowwalker wakes up. The Shadowwalker goes back to sleep. |
+| `maertyrerin` | Märtyrerin / Martyr | Märtyrerin, erwache. Willst du dich für das Opfer der Nacht opfern? | Martyr, wake up. Do you want to sacrifice yourself for tonight’s victim? |
+| `schutzgeist` | Schutzgeist / Guardian Spirit | Schutzgeist, erwache. Zeige auf die Person, der du deinen Schild schenkst. | Guardian Spirit, wake up. Point to the person you give your shield to. |
+| `dorfschmied` | Dorfschmied / Village Blacksmith | Dorfschmied, erwache. Willst du deine Waffe jetzt vergeben? Zeige auf die Person. | Village Smith, wake up. Do you want to hand over your weapon now? Point to the person. |
+| `verdammniswaechter` | Verdammniswächter / Doom Warden | Verdammniswächter, erwache. Wen soll der Angriff der Wölfe treffen? | Doom Warden, wake up. Whom shall the wolves’ attack strike? |
+| `loki` | Loki / Loki | Loki, erwache. Zeige auf zwei Personen, die du miteinander verbinden willst. | Loki, wake up. Point to two people you want to bind together. |
+| `schwarze-witwe` | Schwarze Witwe / Black Widow | Schwarze Witwe, erwache. Zeige auf die Person, die du umgarnen willst. | Black Widow, wake up. Point to the person you want to ensnare. |
+| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Rotkäppchen, erwache. Zeige auf die Person, bei der du Zuflucht suchst. | Little Red Riding Hood, wake up. Point to the person you seek refuge with. |
+| `schattenwanderer` | Schattenwanderer / Shadowwalker | Schattenwanderer, erwache. Willst du dich mit jemandem verknüpfen? Zeige auf die Person. | Shadow Walker, wake up. Do you want to link with someone? Point to the person. |
 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | Kein eigener Aufruf. Wacht im Rudelaufruf mit. | No call of its own. Wakes within the pack call. |
-| `koenig-lykaon` | König Lykaon / King Lycaon | König Lykaon erwacht. König Lykaon schläft wieder ein. | King Lycaon wakes up. King Lycaon goes back to sleep. |
-| `seelentauscher` | Seelentauscher / Soul Swapper | Der Seelentauscher erwacht. Der Seelentauscher schläft wieder ein. | The Soul Swapper wakes up. The Soul Swapper goes back to sleep. |
-| `kutscher` | Kutscher / Coachman | Der Kutscher erwacht. Der Kutscher schläft wieder ein. | The Coachman wakes up. The Coachman goes back to sleep. |
-| `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Dr. Victor Frankenstein erwacht. Dr. Victor Frankenstein schläft wieder ein. | Dr. Victor Frankenstein wakes up. Dr. Victor Frankenstein goes back to sleep. |
-| `rattenfaenger` | Rattenfänger / Pied Piper | Der Rattenfänger erwacht. Der Rattenfänger schläft wieder ein. Die neu Verzauberten öffnen kurz die Augen. Alle Verzauberten erwachen und erkennen einander, dann schlafen sie wieder ein. | The Pied Piper wakes up. The Pied Piper goes back to sleep. The newly enchanted briefly open their eyes. All enchanted wake up and recognise each other, then go back to sleep. |
-| `pestbringerin` | Pestbringerin / Plague Bringer | Die Pestbringerin erwacht. Die Pestbringerin schläft wieder ein. | The Plague Bringer wakes up. The Plague Bringer goes back to sleep. |
-| `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Der Prophet des Untergangs erwacht. Der Prophet des Untergangs schläft wieder ein. | The Prophet of Doom wakes up. The Prophet of Doom goes back to sleep. |
-| `todesprediger` | Todesprediger / Death Prophet | Der Todesprediger erwacht. Der Todesprediger schläft wieder ein. | The Death Prophet wakes up. The Death Prophet goes back to sleep. |
-| `feuerteufel` | Feuerteufel / Pyromaniac | Der Feuerteufel erwacht. Der Feuerteufel schläft wieder ein. | The Pyromaniac wakes up. The Pyromaniac goes back to sleep. |
-| `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Der Voodoo-Priester erwacht. Der Voodoo-Priester schläft wieder ein. | The Voodoo Priest wakes up. The Voodoo Priest goes back to sleep. |
-| `nekromant` | Nekromant / Necromancer | Der Nekromant erwacht. Der Nekromant schläft wieder ein. | The Necromancer wakes up. The Necromancer goes back to sleep. |
-| `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Der Rachsüchtige Wolf erwacht. Der Rachsüchtige Wolf schläft wieder ein. | The Lone Wolf wakes up. The Lone Wolf goes back to sleep. |
-| `zeitwaechter` | Zeitwächter / Time Warden | Der Zeitwächter erwacht. Der Zeitwächter schläft wieder ein. | The Time Warden wakes up. The Time Warden goes back to sleep. |
-| `schicksalswolf` | Schicksalswolf / Fate Wolf | Der Schicksalswolf erwacht. Der Schicksalswolf schläft wieder ein. | The Fate Wolf wakes up. The Fate Wolf goes back to sleep. |
-| `grabraeuber` | Grabräuber / Grave Robber | Der Grabräuber erwacht. Der Grabräuber schläft wieder ein. | The Grave Robber wakes up. The Grave Robber goes back to sleep. |
-| `hades` | Hades / Hades | Hades erwacht. Hades schläft wieder ein. | Hades wakes up. Hades goes back to sleep. |
+| `koenig-lykaon` | König Lykaon / King Lycaon | König Lykaon, erwache. Wähle einen Verbündeten und ein Opfer deiner Verwandlung. | King Lycaon, wake up. Choose an ally and a victim of your transformation. |
+| `seelentauscher` | Seelentauscher / Soul Swapper | Seelentauscher, erwache. Willst du zwei Seelen tauschen? Zeige auf die beiden. | Soul Swapper, wake up. Do you want to swap two souls? Point to both. |
+| `kutscher` | Kutscher / Coachman | Kutscher, erwache. Willst du drei Tote zurückholen? Zeige auf sie. | Coachman, wake up. Do you want to bring back three of the dead? Point to them. |
+| `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Doktor Frankenstein, erwache. Willst du einen Toten zurückholen? Zeige auf ihn. | Doctor Frankenstein, wake up. Do you want to bring back one of the dead? Point to them. |
+| `rattenfaenger` | Rattenfänger / Pied Piper | Rattenfänger, erwache. Zeige auf eine oder zwei Personen, die du verzaubern willst. Danach: die neu Verzauberten (Hinweiskarte), dann „Alle Verzauberten“; nach PE-06 auch ohne neue Verzauberung, solange es Verzauberte gibt (noch nicht umgesetzt). | Pied Piper, wake up. Point to one or two people you want to charm. Then: the newly enchanted (notice card), then “All enchanted”; per PE-06 also without a new enchantment while enchanted people exist (not yet implemented). |
+| `pestbringerin` | Pestbringerin / Plague Bringer | Pestbringerin, erwache. Zeige auf die Person, die du infizieren willst. | Plague Bringer, wake up. Point to the person you want to infect. |
+| `prophet-des-untergangs` | Prophet des Untergangs / Prophet of Doom | Prophet des Untergangs, erwache. Zeige auf die Personen deiner Prophezeiung. | Prophet of Doom, wake up. Point to the people of your prophecy. |
+| `todesprediger` | Todesprediger / Death Prophet | Todesprediger, erwache. Sag mir leise, wann du sterben wirst. | Death Preacher, wake up. Tell me quietly when you will die. |
+| `feuerteufel` | Feuerteufel / Pyromaniac | Feuerteufel, erwache. Zeige auf die Person, die du markieren willst. | Fire Devil, wake up. Point to the person you want to mark. |
+| `voodoo-priester` | Voodoo-Priester / Voodoo Priest | Voodoo-Priester, erwache. Zeige auf die Person, die deine Puppe erhält. | Voodoo Priest, wake up. Point to the person who receives your doll. |
+| `nekromant` | Nekromant / Necromancer | Nekromant, erwache. Willst du Tote opfern? Zeige auf drei von ihnen. | Necromancer, wake up. Do you want to sacrifice the dead? Point to three of them. |
+| `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | Rachsüchtiger Wolf, erwache. Willst du einen anderen Wolf reißen? Zeige auf ihn. | Vengeful Wolf, wake up. Do you want to tear another wolf? Point to them. |
+| `zeitwaechter` | Zeitwächter / Time Warden | Zeitwächter, erwache. Willst du diese Nacht einfrieren? | Time Warden, wake up. Do you want to freeze this night? |
+| `schicksalswolf` | Schicksalswolf / Fate Wolf | Schicksalswolf, erwache. Zeige auf die Personen, die das Schicksal treffen soll. | Fate Wolf, wake up. Point to the people fate shall strike. |
+| `grabraeuber` | Grabräuber / Grave Robber | Grabräuber, erwache. Willst du das Grab eines Toten plündern? Zeige auf ihn. | Grave Robber, wake up. Do you want to rob a dead person’s grave? Point to them. |
+| `hades` | Hades / Hades | Hades, erwache. Willst du mit deinen Lichtern jemanden holen? Zeige auf die Person. | Hades, wake up. Do you want to use your lights to take someone? Point to the person. |
 
 ### 3.4 `[ÖFFENTLICH]` Öffentliche Wirkung
+
+**Abgleich Paket 5b (29.09.2026):** Todeseffekte (`ui.effect.*`) und öffentliche Morgenhinweise (`ui.morning.notice.*`) im integrierten Wortlaut; `{name}`, `{role}`, `{target}`, `{replaced}` sind dessen Platzhalter. Liebeskummer, Kette und Verknüpfung nennen die Rolle, von der der Effekt stammt (PE-05). Übrige Zeilen unverändert.
 
 Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen Rollen erscheinen öffentlich ausschließlich über die allgemeinen Tod-, Morgen-, Tag- und Siegtexte aus Abschnitt 2.
 
@@ -305,7 +309,7 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `manipulator` | Manipulator / Manipulator | (keine zusätzliche Ansage) | (no additional announcement) |
 | `spiegelwolf` | Spiegelwolf / Mirror Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
 | `trugbilderwolf` | Trugbilderwolf / Decoy Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
-| `sensentraeger` | Sensenträger / Reaper | {name} war Sensenträger und verflucht {target}. | {name} was the Reaper and curses {target}. |
+| `sensentraeger` | Sensenträger / Reaper | {name} war {role} und verflucht {target}. | {name} was {role} and curses {target}. |
 | `siegreicher-wolf` | Siegreicher Wolf / Victorious Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
 | `doppelspion` | Doppelspion / Double Agent | (keine; der Rudelaufruf nennt ihn nicht) | (none; the pack call does not name them) |
 | `selbstmoerder` | Selbstmörder / Death Seeker | (keine Textansage; der Ton bei fünf Toten ist entschieden, nur mit Selbstmörder in der Partie, Umsetzung offen (OI-07)) | (no text announcement; the sound at five dead is decided, only with a Death Seeker in the game, implementation open (OI-07)) |
@@ -313,14 +317,14 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `die-gebundenen` | Die Gebundenen / The Bound | (keine zusätzliche Ansage) | (no additional announcement) |
 | `waldlaeufer` | Waldläufer / Ranger | (keine zusätzliche Ansage) | (no additional announcement) |
 | `doktor` | Doktor / Doctor | (keine zusätzliche Ansage) | (no additional announcement) |
-| `wahnsinniger-kutscher` | Wahnsinniger Kutscher / Mad Coachman | {name} war der Wahnsinnige Kutscher. Die Nachbarn {names} sterben mit. | {name} was the Mad Coachman. The neighbours {names} die too. |
-| `nachtwaechter` | Nachtwächter / Night Warden | Die Glocken läuten. Etwas stimmt nicht. | The bells ring. Something is wrong. |
+| `wahnsinniger-kutscher` | Wahnsinniger Kutscher / Mad Coachman | {name} war {role}. Die Nachbarn {target} sterben mit. | {name} was {role}. The neighbours {target} die too. |
+| `nachtwaechter` | Nachtwächter / Night Warden | Die Glocken des Nachtwächters läuten. | The night watchman’s bells are ringing. |
 | `dorfwache` | Dorfwache / Village Guard | (keine zusätzliche Ansage) | (no additional announcement) |
-| `besessener-wolf` | Besessener Wolf / Possessed Wolf | {name} war der Besessene Wolf und reißt {target} mit in den Tod. | {name} was the Possessed Wolf and drags {target} to their death. |
-| `ritter` | Ritter / Knight | {name} war der Ritter und reißt {target} mit in den Tod. | {name} was the Knight and takes {target} down too. |
+| `besessener-wolf` | Besessener Wolf / Possessed Wolf | {name} war {role} und zieht {target} mit in den Tod. | {name} was {role} and drags {target} to their death. |
+| `ritter` | Ritter / Knight | {name} war {role} und reißt {target} mit in den Tod. | {name} was {role} and takes {target} down too. |
 | `faehrtenleser` | Fährtenleser / Tracker | (keine zusätzliche Ansage) | (no additional announcement) |
 | `blutwolf` | Blutwolf / Blood Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
-| `korrupter-richter` | Korrupter Richter / Corrupt Judge | {name} ist nominiert. | {name} is nominated. |
+| `korrupter-richter` | Korrupter Richter / Corrupt Judge | {name} gilt heute als nominiert. | {name} counts as nominated today. |
 | `waechter-am-tor` | Wächter am Tor / Gatewarden | (keine zusätzliche Ansage) | (no additional announcement) |
 | `spuerhund` | Spürhund / Scent Hound | (keine zusätzliche Ansage) | (no additional announcement) |
 | `parasit` | Parasit / Parasite | (keine zusätzliche Ansage) | (no additional announcement) |
@@ -338,17 +342,17 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `kriegerin-des-lichts` | Kriegerin des Lichts / Warrior of Light | (keine zusätzliche Ansage) | (no additional announcement) |
 | `blutpriester` | Blutpriester / Blood Priest | (keine zusätzliche Ansage) | (no additional announcement) |
 | `amalia` | Amalia / Amalia | Amalia opfert sich. Ihre Frage: {question} Die Antwort: {answer}. | Amalia sacrifices themself. Their question: {question} The answer: {answer}. |
-| `detektiv` | Detektiv / Detective | Der nächste Wolf sitzt {direction} vom Platz von {name}. | The nearest wolf sits {direction} of {name}'s seat. |
+| `detektiv` | Detektiv / Detective | Ein Hinweis: Vom Platz von {name} aus liegt der nächste Wolf {direction}. | A clue: from {name}’s seat, the nearest wolf is {direction}. |
 | `die-ewigen` | Die Ewigen / The Eternal Ones | (keine zusätzliche Ansage) | (no additional announcement) |
-| `der-weise` | Der Weise / The Elder | {name} war der Weise. Die Fähigkeiten des Dorfes ruhen. | {name} was the Elder. The village's abilities rest. |
+| `der-weise` | Der Weise / The Elder | {name} war {role}. Die Fähigkeiten des Dorfes ruhen. | {name} was {role}. The village's abilities rest. |
 | `maertyrerin` | Märtyrerin / Martyr | (keine zusätzliche Ansage) | (no additional announcement) |
-| `schutzgeist` | Schutzgeist / Guardian Spirit | Eine tote Person hat in der Nacht einen Wolf gewählt. | A dead person chose a wolf in the night. |
+| `schutzgeist` | Schutzgeist / Guardian Spirit | Ein Schutzgeist hat in dieser Nacht einen Wolf berührt. | A guardian spirit touched a wolf this night. |
 | `dorfschmied` | Dorfschmied / Village Blacksmith | (keine zusätzliche Ansage) | (no additional announcement) |
 | `verdammniswaechter` | Verdammniswächter / Doom Warden | (keine zusätzliche Ansage) | (no additional announcement) |
-| `loki` | Loki / Loki | Aus Liebeskummer stirbt {name}. | {name} dies of heartbreak. |
+| `loki` | Loki / Loki | Die Bindung von {role} wirkt: Aus Liebeskummer stirbt {target}. | {role}'s bond holds: {target} dies of heartbreak. |
 | `schwarze-witwe` | Schwarze Witwe / Black Widow | (keine zusätzliche Ansage) | (no additional announcement) |
-| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Die Kette bricht: {name} stirbt mit {target}. | The chain breaks: {name} dies along with {target}. |
-| `schattenwanderer` | Schattenwanderer / Shadowwalker | Die Verknüpfung greift: {name} stirbt an Stelle von {target}. | The link takes hold: {name} dies in place of {target}. |
+| `rotkaeppchen` | Rotkäppchen / Little Red Riding Hood | Die Kette von {role} bricht: {target} stirbt mit {name}. | {role}'s chain breaks: {target} dies along with {name}. |
+| `schattenwanderer` | Schattenwanderer / Shadowwalker | Die Verknüpfung von {role} greift: {target} stirbt an Stelle von {replaced}. | {role}'s link takes hold: {target} dies in place of {replaced}. |
 | `daemonischer-wolf` | Dämonischer Wolf / Demonic Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
 | `koenig-lykaon` | König Lykaon / King Lycaon | (keine zusätzliche Ansage) | (no additional announcement) |
 | `seelentauscher` | Seelentauscher / Soul Swapper | (keine zusätzliche Ansage) | (no additional announcement) |
@@ -362,7 +366,7 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `voodoo-priester` | Voodoo-Priester / Voodoo Priest | (keine zusätzliche Ansage) | (no additional announcement) |
 | `nekromant` | Nekromant / Necromancer | (keine zusätzliche Ansage) | (no additional announcement) |
 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
-| `zeitwaechter` | Zeitwächter / Time Warden | Die Zeit stand still. Diese Nacht ist ausgefallen. | Time stood still. This night was skipped. |
+| `zeitwaechter` | Zeitwächter / Time Warden | In dieser Nacht stand die Zeit still. | Time stood still this night. |
 | `schicksalswolf` | Schicksalswolf / Fate Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
 | `grabraeuber` | Grabräuber / Grave Robber | (keine zusätzliche Ansage) | (no additional announcement) |
 | `hades` | Hades / Hades | (keine zusätzliche Ansage) | (no additional announcement) |
@@ -378,7 +382,7 @@ Diese Ansagen legen bewusst etwas offen, weil eine Entscheidung es so vorsieht. 
 | Öffentliche Ansage oder Wirkung | Was sie offenlegt | Was sie nicht offenlegt | Quelle |
 |---|---|---|---|
 | Tod einer Person (allgemeiner Text) | Name; Rolle nur in Runden ohne Wiederbelebung | Todesursache, interne Effekte, außer den angesagten Todeseffekten | DR-04, G-TOD-5, Antwort des Product Owners vom 29.09.2026 |
-| Todeseffekt-Ansage (Sensenträger, Ritter, Besessener Wolf, Wahnsinniger Kutscher, Fluch des Weisen, Liebeskummer, Rotkäppchen-Kette, Verknüpfung des Schattenwanderers) | der Effekt, die Rolle des Toten (auch in Wiederbelebungsrunden, in denen Rollen sonst verdeckt bleiben) und die Betroffenen | geheime Wahlen ohne sichtbare Folge (Fluch des Dämonischen Wolfs, Voodoo-Puppe, Markierungen), Ursachen anderer Tode | Antwort des Product Owners vom 29.09.2026, ändert DR-04 |
+| Todeseffekt-Ansage (Sensenträger, Ritter, Besessener Wolf, Wahnsinniger Kutscher, Fluch des Weisen, Liebeskummer, Rotkäppchen-Kette, Verknüpfung des Schattenwanderers) | der Effekt und eine Rolle (auch in Wiederbelebungsrunden, in denen Rollen sonst verdeckt bleiben): bei Sensenträger, Ritter, Besessenem Wolf, Wahnsinnigem Kutscher und Fluch des Weisen die Rolle der auslösenden Person, bei Liebeskummer, Kette und Verknüpfung die Rolle, von der der Effekt stammt (PE-05), nie die der sterbenden Person und die Betroffenen | geheime Wahlen ohne sichtbare Folge (Fluch des Dämonischen Wolfs, Voodoo-Puppe, Markierungen), Ursachen anderer Tode | Antwort des Product Owners vom 29.09.2026, ändert DR-04 |
 | Detektiv: "Der nächste Wolf sitzt {direction} vom Platz von {name}." | dass die gestorbene Person als Wolf zählte (auch bei ausgeschalteter Rollenaufdeckung), dass noch ein Detektiv lebt, dass mindestens ein weiterer Wolf lebt, die Richtung | Rolle der Toten, wer der Detektiv ist, wer der nächste Wolf ist | I-10, I-14 |
 | Nachtwächter: "Die Glocken läuten. Etwas stimmt nicht." | dass ein Nachtwächter lebt und neben ihm eine Person sitzt, die nicht zum Dorf gehört | Seite, Namen, Rolle der Nachbarn, wer der Nachtwächter ist | Nachfrage Nachtwächter (Decision Log, Sitznachbarn) |
 | Amalia: Frage und Antwort | die Fähigkeit von Amalia, ihre Frage, das Ja oder Nein | nichts über die Befragten außer dem, was Frage und Antwort selbst sagen | I-09 |
@@ -415,4 +419,4 @@ Diese Wirkungen sind physisch erkennbar, ohne dass ein Text etwas sagt. Sie dür
 - **Keine geheime Information gefunden** in den übrigen `[ÖFFENTLICH]`-Zeilen. Die Beispiele im Rollenlexikon sind Spielleitungs- und Lernbeispiele, keine Ansagen.
 - **Offen:** Randfälle in `OPEN-ISSUES.md` §5 und `DECISIONS-TO-INTEGRATE.md`.
 - **PERSON-PRIVAT-Zeile für `koenig-lykaon`:** Sie folgt der Meldung des Regelkerns (`LYCAON_NOTICE`), ist aber keine dokumentierte Entscheidung des Product Owners (OI-15).
-- **Neue Regel Todeseffekte:** Sichtbare Folgen eines Todes werden ausgespielt und angesagt, mit Effekt und Rolle, auch in Wiederbelebungsrunden. Das ist eine bewusste Ausnahme von der Verdeckung und ändert DR-04. Offen: Welche Rolle bei Liebeskummer, Kette und Verknüpfung genannt wird, und ob die Länge des Fluchs des Weisen genannt wird (`DECISIONS-TO-INTEGRATE.md`).
+- **Neue Regel Todeseffekte:** Sichtbare Folgen eines Todes werden ausgespielt und angesagt, mit Effekt und Rolle, auch in Wiederbelebungsrunden. Das ist eine bewusste Ausnahme von der Verdeckung und ändert DR-04. Beantwortet am 29.09.2026 (PE-05): Bei Liebeskummer, Kette und Verknüpfung nennt die Ansage die Rolle, von der der Effekt stammt (Loki, Rotkäppchen, Schattenwanderer), nie die der sterbenden Person. Die Länge des Fluchs des Weisen nennt sie nicht (technische Ableitung DA-23, noch zu bestätigen).

@@ -15,7 +15,7 @@ Erreichbar: Hauptmenü → „Neue Partie“ → Setup bis „Partie starten“,
 | Hinweiszeile | übersprungene Schritte, niemand lebt (ohne Rollen); außerhalb der Nacht bei jeder verdeckten Karte ein neutraler Hinweis je Phase (PE-01): „Die Spielleitung bereitet den Morgen vor.“ bzw. „… den nächsten Schritt vor.“ |
 | Sitzkreis | Plätze der Partie im Uhrzeigersinn: Platznummer, Name, „†“ für Tote, „(N)“ für heute Nominierte. Nie eine Rolle. Bei 13 bis 24 Personen kompakte Plätze (48 px hoch, 96 bis 120 px breit) |
 | Ansagekarte | nächste Handlung aus dem Regelkern: Kontext, „Sag jetzt“ (Vorlesetext), „Tu jetzt“ (Anweisung), Auswahl, Aktionen |
-| Werkzeuge | Protokoll, Rollen (privater Bereich), Rollen zeigen (neutrale Liste, dann Karte je Person), Spielleitung (Korrekturen, Rückgängig, Partie beenden), Verbergen (Sichtschutz); ohne Partie deaktiviert. Auf der Startkarte der ersten Nacht zusätzlich „Rollen zeigen“ (optional) |
+| Werkzeuge | Protokoll, Rollen (privater Bereich), Rollen zeigen (neutrale Liste, dann Karte je Person), Spielleitung (Korrekturen, Rückgängig, Partie beenden), Verbergen (Sichtschutz); ohne Partie deaktiviert. Lexikon (allgemeines Rollenlexikon, auch ohne Partie, Paket 5b). Auf der Startkarte der ersten Nacht zusätzlich „Rollen zeigen“ (optional) |
 
 ## Geheimhaltung
 
@@ -111,7 +111,16 @@ Eine Korrektur während eines offenen Prompts setzt den Schritt im Regelkern zur
 
 ## Todeseffekte werden angesagt (DI-03, ändert DR-04)
 
-**Änderung der bisherigen Produktvorgabe.** Sichtbare Folgen eines Todes werden öffentlich angesagt, mit Effekt und Rolle zum Ereigniszeitpunkt, auch in Wiederbelebungsrunden: Sensenträger, Ritter, Besessener Wolf, Wahnsinniger Kutscher, Fluch des Weisen, Liebeskummer, Rotkäppchen-Kette, Verknüpfung des Schattenwanderers. Der Kern erzeugt dafür das öffentliche Ereignis `DeathEffect` (Positivliste: Effekt, Quelle, Rolle, Ziel, ersetzte Person) direkt nach `SeatDied`, nur wenn der Tod eintritt; kein privates Ereignis wird übernommen. Liebeskummer, Kette und Verknüpfung nennen keine Rolle; der Fluch des Weisen nennt seine Länge nicht. Der Morgenbericht (`public.effects`) und die Tageskarte zeigen die Ansagen; mehrere Nachbarn desselben Kutscherunfalls stehen in einer Ansage. Geheime Wahlen ohne sichtbare Folge (Fluch des Dämonischen Wolfs, Puppe, Markierungen) bleiben verdeckt.
+**Änderung der bisherigen Produktvorgabe.** Sichtbare Folgen eines Todes werden öffentlich angesagt, mit Effekt und Rolle zum Ereigniszeitpunkt, auch in Wiederbelebungsrunden: Sensenträger, Ritter, Besessener Wolf, Wahnsinniger Kutscher, Fluch des Weisen, Liebeskummer, Rotkäppchen-Kette, Verknüpfung des Schattenwanderers. Der Kern erzeugt dafür das öffentliche Ereignis `DeathEffect` (Positivliste: Effekt, Quelle, Rolle, Ziel, ersetzte Person) direkt nach `SeatDied`, nur wenn der Tod eintritt; kein privates Ereignis wird übernommen. Liebeskummer, Kette und Verknüpfung nennen die Rolle, von der der Effekt stammt (Loki, Rotkäppchen, Schattenwanderer; PE-05), nie die der sterbenden Person; der Fluch des Weisen nennt seine Länge nicht. Der Morgenbericht (`public.effects`) und die Tageskarte zeigen die Ansagen; mehrere Nachbarn desselben Kutscherunfalls stehen in einer Ansage. Geheime Wahlen ohne sichtbare Folge (Fluch des Dämonischen Wolfs, Puppe, Markierungen) bleiben verdeckt.
+
+## Rollenlexikon und Kontexthilfe (Paket 5b)
+
+- **Werkzeug „Lexikon“:** öffnet das allgemeine Rollenlexikon als Ebene über dem Cockpit, auch ohne Partie. Es zeigt alle 71 Rollen unabhängig von der Partie: keine Personen, keine verteilten Rollen, keine Ziele, Bindungen, Markierungen oder Ladungen.
+- **„Regel nachlesen“ auf der Karte:** nur auf der privaten Spielleiterkarte eines Schritts, eines Prompts oder eines privaten Hinweises; öffnet den allgemeinen Eintrag der handelnden Rolle (Rudel → Werwolf, Frage an die von Rotkäppchen gefragte Person → Rotkäppchen, Hinweise → Loki, Rattenfänger, Pestbringerin). Eine verdeckte Karte hat keine Hilfe; eine gezeigte Karte (Karte zeigen, Hinweiskarte, Rollenanzeige, Ansagekarte) ersetzt das Cockpit und hat keine.
+- **Bedienzustand:** Die Ebene ändert weder Karte noch Auswahl. Eine offene Zielauswahl bleibt erhalten, solange sich der Spielstand nicht ändert; jede Zustandsänderung verwirft sie wie bisher. Öffnen, Suchen, Filtern und Schließen senden keinen Befehl, ziehen keinen Zufall und verbrauchen nichts.
+- **Schließen:** „Schließen“, Zurück/Escape und Sichtschutz entfernen die Ebene; Zurück führt nicht zur Verlassen-Rückfrage, solange die Ebene offen ist.
+- **Inhalt:** Suche nach dem Rollennamen der gewählten Sprache, Filter Alle/Dorf/Werwölfe/Einzelsieg, leerer Suchzustand, Eintrag mit Fraktion, Kurztext und neun Abschnitten, bei 15 Rollen zusätzlich „Noch nicht geklärt oder umgesetzt“. Der Sprachknopf wechselt die App-Sprache, der geöffnete Eintrag bleibt.
+- **Nicht geprüft:** Darstellung und Touch auf dem Gerät; die spätere Gestaltung (85 bis 90 % Spielfeldfläche) ist ein eigener Auftrag.
 
 ## Private Hinweise (DI-04 bis DI-08)
 
@@ -262,6 +271,8 @@ Die aktive Nachtkarte der Spielleitung nennt die aufgerufene Rolle; das entspric
 
 | Test | Inhalt |
 |---|---|
+| `test_role_lexicon_ui` | Lexikon aus Hauptmenü, Setup und Cockpit: Suche, Filter, leerer Zustand, langer Eintrag bei 1024×768, Sprachwechsel, Kontexthilfe bei offener Auswahl ohne Befehl, Zufall oder Ressource, Verwerfen nach Zustandsänderung, keine Partiedaten, gezeigte und verdeckte Karte, Sichtschutz, Zurück |
+| `test_role_lexicon_content` | alle Katalogrollen mit allen Lexikonfeldern in DE/EN, keine unbekannten Rollen oder Felder, keine Platzhalter oder Dokumentverweise, gerendert in beiden Sprachen |
 | `test_cockpit_model` | Sicht ohne Rollen, vollständige erste Nacht über die Bausteine, Abbruch (gleicher Hash), Pflichtbegründung, gestohlene Fähigkeit |
 | `test_cockpit_screen` | Sitzkreis, Nacht über Buttons, verdeckte Reaktion, privater Bereich, Sichtschutz, gezeigte Karte, Begründungsdialog, Mehrfachtippen, Zurück, Layout 6/24 Personen bei 1024×768, 1280×800, 1920×1080 mit langen Namen, Morgenbericht mit und ohne Rollenaufdeckung |
 | `test_public_reaction_hint` | PE-01: unterschiedliche offene Reaktionen (Art, Besitzer, Anzahl) ergeben dieselbe neutrale Hinweiszeile, Tagestext statt Morgentext, derselbe Text bei einer Siegentscheidung ohne Reaktion, nachts keine Zeile, private Karte vollständig und bedienbar, DI-03-Ansage, Laden und Rückgängig, Label DE/EN |

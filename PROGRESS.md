@@ -312,3 +312,13 @@ Berichtigt: Matrix I-03 von AUTO auf TEIL (Rückschluss aus Phase „Morgen“ u
 Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1081 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1072); Prüfer siehe Abschlussbericht.
 Nicht umgesetzt: Linkshändermodus (D-10), Audio, Lexikonansicht, I-03 Teil 2, Geräte- und Touchabnahme.
 Nächster Schritt: Paket 5b (Lexikon- und Spielleitungstexte ins Programm) nach Klärung von Anzeigeort und Freigabe.
+
+## 2026-09-29 — Paket 5b: Rollenlexikon und kontextbezogene Spielleiterhilfe
+Status: umgesetzt auf `feature/night-ui-expansion` (Ausgangs-HEAD `b75d69d`), PR #3 offen, kein Merge. Schema 14, Regelversion 0.12 unverändert (DA-54).
+Nutzerantworten (Auswahl in Claude Code): PE-05 „Quellrolle nennen“ (Liebeskummer → Loki, Kette → Rotkäppchen, Verknüpfung → Schattenwanderer), umgesetzt testgetrieben (`test_death_effects`, `test_death_effect_lines` erst rot, dann grün). PE-06 „Immer nach Rattenfänger“, nicht umgesetzt: ein Hinweis erschiene vor dem Tarnaufruf und verriete die Tarnung; Folgeauftrag mit eigenem Nachtschritt (DA-55, Matrix N-12).
+Umgesetzt: Rollenlexikon (`RoleLexicon`) mit Suche, Fraktionsfilter, leerem Zustand, scrollbarem Eintrag und Sprachknopf; eigene Ansicht aus dem Hauptmenü, Ebene im Setup (Knopf „Regeln“ je Rollenzeile) und im Cockpit (Werkzeug „Lexikon“, „Regel nachlesen“ auf der privaten Karte). Offene Auswahl bleibt bis zur nächsten Zustandsänderung; kein Befehl, kein Zufall, keine Ressource (DA-57).
+Inhalte: 71 Einträge gegen aktuellen Stand geprüft, 26 Zellen redaktionell korrigiert, 15 Rollen mit Feld „Noch nicht geklärt oder umgesetzt“; 654 Lexikonschlüssel je Sprache (DA-56). Kurztexte angeglichen (Rudelangriff, Hinrichtung, neutrale englische Pronomen, DA-58). GUIDE-TEXTS §3.3/§3.4 an den integrierten Wortlaut angeglichen.
+Prüfer: `check-godot-i18n.js` prüft jedes Lexikon-Pflichtfeld je Katalogrolle und meldet Einträge für unbekannte Rollen oder Felder (18 Regressionstests). Layoutprüfung wertet Scrollinhalt mit seinem sichtbaren Teil (DA-59); sie fand dabei umbrechende Filterknöpfe, die die Liste bei 1024×768 fast aus dem Bild schoben (behoben).
+Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0; Vollsuite 1096 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1081); Mutationsprobe: Verwerfen der Auswahl beim Öffnen wird erkannt. Keine visuelle, Touch- oder Geräteabnahme.
+Nicht umgesetzt: PE-06, allgemeines Regelbuch, Handlungszeilen (OI-18), redaktionelle Endabnahme, I-03 Teil 2, D-10, Audio.
+Nächster Schritt: PE-06 als Kernauftrag (eigener Nachtschritt „Alle Verzauberten“, Regelversion 0.13), danach redaktionelle Endabnahme des Lexikons.
