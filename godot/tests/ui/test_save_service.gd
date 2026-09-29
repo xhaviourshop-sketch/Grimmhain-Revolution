@@ -432,6 +432,89 @@ func test_quit_dialog_warns_when_the_running_game_is_not_saved() -> void:
 	dialog.call("cancel")
 
 
+## Mobilgerät: System-Zurück in der Wurzel beendet sofort, außer der letzte Stand der laufenden Partie ist nicht
+## gespeichert. Dann warnt dieselbe Rückfrage; Abbrechen erhält die Sitzung, Bestätigen beendet genau einmal.
+func test_mobile_back_at_root_warns_when_unsaved() -> void:
+	var platform := load_script(PLATFORM_SCRIPT)
+	platform.call("set_override", &"mobile")
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	var dialog := shell.call("get_dialog") as Control
+	var message := find_node(dialog, "MessageLabel") as Label
+	_start(ctx)
+	ctx.saves.simulate_failure = &"write"
+	ctx.autosave()
+	var hash := ctx.session.state_hash()
+	await navigate(shell, &"start")
+	await go_back(shell)
+	assert_eq(quit_calls, 0, "ungespeichert: nicht sofort beendet")
+	assert_true(dialog.call("is_open") and message.text.contains("nicht gespeichert"), "Warnung: %s" % message.text)
+	await press(find_node(dialog, "CancelButton") as BaseButton)
+	assert_eq(quit_calls, 0, "Abbrechen beendet nicht")
+	assert_eq(ctx.session.state_hash(), hash, "Sitzung und Zustand erhalten")
+	await go_back(shell)
+	await press(find_node(dialog, "ConfirmButton") as BaseButton)
+	await press(find_node(dialog, "ConfirmButton") as BaseButton)
+	assert_eq(quit_calls, 1, "bewusstes Beenden genau einmal")
+	# Nach erfolgreichem erneutem Speichern: bisheriges Plattformverhalten, sofort beenden.
+	ctx.saves.simulate_failure = &""
+	ctx.autosave()
+	await go_back(shell)
+	assert_eq(quit_calls, 2, "gespeichert: System-Zurück beendet sofort")
+	assert_false(dialog.call("is_open"), "keine falsche Warnung")
+
+
+## Zurück bei offenem Dialog oder in einer Unteransicht beendet auch mit ungespeichertem Stand nicht.
+func test_mobile_back_in_dialog_or_sub_view_never_quits() -> void:
+	var platform := load_script(PLATFORM_SCRIPT)
+	platform.call("set_override", &"mobile")
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	_start(ctx)
+	ctx.saves.simulate_failure = &"write"
+	ctx.autosave()
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	await go_back(shell)
+	assert_eq(quit_calls, 0, "Zurück im Cockpit beendet nicht")
+	assert_eq(String(current_id(shell)), "cockpit", "Cockpit behandelt Zurück selbst")
+	assert_true((shell.call("get_dialog") as Control).call("is_open"), "Rückfrage „Partie verlassen“")
+	await go_back(shell)
+	assert_false((shell.call("get_dialog") as Control).call("is_open"), "Zurück schließt zuerst den Dialog")
+	assert_eq(String(current_id(shell)), "cockpit", "weiter im Cockpit")
+	await navigate(shell, &"settings")
+	await go_back(shell)
+	assert_ne(String(current_id(shell)), "settings", "Unteransicht führt zur Elternansicht")
+	assert_eq(quit_calls, 0, "kein Beenden")
+
+
+## Desktop: Fenster schließen (X, Alt+F4) ist ein freiwilliges Beenden und darf die Warnung nicht umgehen. Ohne
+## Speicherfehler schließt es wie bisher sofort.
+func test_window_close_request_warns_only_when_unsaved() -> void:
+	var platform := load_script(PLATFORM_SCRIPT)
+	platform.call("set_override", &"desktop")
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	var dialog := shell.call("get_dialog") as Control
+	_start(ctx)
+	assert_false(tree.is_auto_accept_quit(), "Schließen wird von der App behandelt")
+	shell.propagate_notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	assert_eq(quit_calls, 1, "gespeichert: Fenster schließt sofort")
+	ctx.saves.simulate_failure = &"write"
+	ctx.autosave()
+	shell.propagate_notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	assert_eq(quit_calls, 1, "ungespeichert: nicht sofort geschlossen")
+	assert_true(dialog.call("is_open") and (find_node(dialog, "MessageLabel") as Label).text.contains("nicht gespeichert"), "Warnung")
+	await press(find_node(dialog, "ConfirmButton") as BaseButton)
+	assert_eq(quit_calls, 2, "bewusstes Schließen genau einmal")
+
+
 ## Rückfall auf die Sicherung: Die Meldung sagt, dass ein älterer Stand geladen wurde.
 func test_backup_recovery_message_names_the_older_state() -> void:
 	var shell := await spawn_shell()

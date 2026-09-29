@@ -23,6 +23,7 @@ var _has_safe_override: bool = false
 
 func _ready() -> void:
 	theme = ThemeFactory.build()
+	get_tree().set_auto_accept_quit(false)  # Fenster schließen läuft über _notification (Warnung bei ungespeichertem Stand)
 	if app_context == null:
 		app_context = AppContext.new()
 	app_context.settings.apply()
@@ -50,6 +51,13 @@ func _input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		go_back()
+	elif what == NOTIFICATION_WM_CLOSE_REQUEST:
+		# Fenster schließen (Desktop): wie bisher sofort, außer der letzte Stand ist nicht gespeichert. Ein erzwungenes
+		# Beenden durch das Betriebssystem erreicht die App nicht und ist nicht abfangbar.
+		if _unsaved():
+			_open_unsaved_quit()
+		else:
+			_quit()
 
 
 # --- öffentliche Schnittstelle ------------------------------------------------------------------
@@ -99,15 +107,16 @@ func go_back() -> void:
 	request_quit()
 
 
-## Beenden: Desktop mit Rückfrage, Mobilgerät sofort (Systemverhalten beim Zurück in der Wurzel).
+## Beenden: Desktop mit Rückfrage, Mobilgerät sofort (Systemverhalten beim Zurück in der Wurzel). Ist der letzte
+## Stand der laufenden Partie nicht gespeichert, warnt die Rückfrage auf beiden Plattformen.
 func request_quit() -> void:
+	if _unsaved():
+		_open_unsaved_quit()
+		return
 	if AppPlatform.is_mobile():
 		_quit()
 		return
-	# Nur versprechen, dass die Partie gespeichert ist, wenn das letzte Speichern der laufenden Partie gelang.
-	var unsaved := app_context.session.round_id() != "" and not bool(app_context.saves.last_status.get("ok", true)) \
-		and str(app_context.saves.last_status.get("round_id", "")) == app_context.session.round_id()
-	_dialog.open_request(DialogRequest.create("ui.dialog.quit.title", "ui.dialog.quit.unsaved_message" if unsaved else "ui.dialog.quit.message", "ui.dialog.quit.confirm", _quit))
+	_dialog.open_request(DialogRequest.create("ui.dialog.quit.title", "ui.dialog.quit.message", "ui.dialog.quit.confirm", _quit))
 
 
 ## Sichere Fläche in Viewport-Koordinaten; leeres Rechteck = keine Geräteangabe.
@@ -118,6 +127,17 @@ func apply_safe_area(rect: Rect2) -> void:
 
 
 # --- intern ---------------------------------------------------------------------------------------
+
+## Letztes Speichern der laufenden Partie ist fehlgeschlagen.
+func _unsaved() -> bool:
+	var round := app_context.session.round_id()
+	return round != "" and not bool(app_context.saves.last_status.get("ok", true)) \
+		and str(app_context.saves.last_status.get("round_id", "")) == round
+
+
+func _open_unsaved_quit() -> void:
+	_dialog.open_request(DialogRequest.create("ui.dialog.quit.title", "ui.dialog.quit.unsaved_message", "ui.dialog.quit.confirm", _quit))
+
 
 func _quit() -> void:
 	if quit_handler.is_valid():
