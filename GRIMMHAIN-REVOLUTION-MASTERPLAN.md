@@ -186,14 +186,14 @@ Godot Tablet/PC
 - [ ] Effektprioritäten und persistente Reaktionswarteschlange implementieren.
 - [ ] Schutz, Umlenkung, Immunität, verzögerter Tod, Kettentod, Rollenwechsel und Wiederbelebung zentralisieren.
 - [ ] Mehrstufige Prompts abbrechbar machen; Abbruch muss den vorherigen Hash wiederherstellen.
-- [ ] Undo/Redo als Command-Gruppen mit Klartextbeschreibung implementieren.
+- [ ] Undo/Redo als Command-Gruppen mit Klartextbeschreibung implementieren. *(Stand 29.09.2026: Wiederholen entfällt beim Neustart, Decision Log PE-03; Rückgängig über einen Neustart bleibt.)*
 - [ ] Manuelle Spielleiterkorrektur durch dieselbe Pipeline führen.
-- [ ] Automatische Rotation von Checkpoints und Reparaturdialog für beschädigte Saves bauen.
+- [ ] ~~Automatische Rotation von Checkpoints~~ und Reparaturdialog für beschädigte Saves bauen. *(Ersetzt durch Decision Log PE-02, 29.09.2026: eine Sicherung `.bak` je Partie reicht für den Offline-Abschluss, mehrere Stände frühestens als spätere Komfortfunktion. Beschädigte Dateien fallen heute automatisch mit Hinweis auf die Sicherung zurück, `docs/ui/save-resume.md`.)*
 - [ ] Ereignisprotokoll persistent machen und als lesbare Rundenchronik projizieren.
 - [ ] Golden Tests nur für verifiziertes Legacy-Verhalten erstellen; bekannte Bugs ausdrücklich als korrigierte Abweichung testen.
 - [ ] Regel-Linter für fehlende IDs, Texte, Nachtprioritäten und Tests einführen.
 
-**Gate:** Undo aller Commands führt zum Ausgangszustand; Redo reproduziert denselben Endzustand. Jede mehrstufige Aktion überlebt Neustart oder lässt sich ohne Teilwirkung abbrechen.
+**Gate:** Undo aller Commands führt zum Ausgangszustand; Redo reproduziert denselben Endzustand. Jede mehrstufige Aktion überlebt Neustart oder lässt sich ohne Teilwirkung abbrechen. *(Redo gilt innerhalb einer laufenden Sitzung; über einen Neustart wird es nicht verlangt, Decision Log PE-03.)*
 
 ## Phase 4 · Tablet-MVP und geführte Spielleitung
 

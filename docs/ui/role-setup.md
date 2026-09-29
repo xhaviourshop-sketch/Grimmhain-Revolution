@@ -86,6 +86,17 @@ Die Einzelsiegrolle erkennt der Adapter über `RoleCatalog.faction_of(id) == Fac
 - nach Rollen-ID sortiert, z. B. `["dorfbewohner", "dorfbewohner", "manipulator", "schutzengel", "werwolf", …]`
 - unabhängig von Eingabereihenfolge und Sprache
 
+## Besetzungshinweise (PE-04)
+
+Nicht blockierende Hinweise im Rollenschritt (Decision Log PE-04, technische Ableitungen DA-47 bis DA-49). Sie sind kein Validierungsfehler, verändern weder `valid` noch `can_confirm`, öffnen keinen Dialog, sperren weder Bestätigen noch Start und ändern die Besetzung nie. `RolePoolDraft.hints(persons)` liefert sie als `roles.hints` in der Sicht; `RoleStep` zeigt je Hinweis eine eigene Zeile am Anfang der scrollbaren Rollenliste (`CoachHintLabel`, `SoloWinsHintLabel`). Die Seitenspalte hat bei 1024×768 keinen Platz dafür.
+
+| Hinweis | Auslösebedingung | Text DE / EN |
+|---|---|---|
+| `coach_small_round` | mindestens ein `kutscher` und weniger als 13 Personen (Analyse R-07 C-1). `wahnsinniger-kutscher` und `dr-victor-frankenstein` lösen ihn nicht aus | „Hinweis: Der Kutscher kann erst wiederbeleben, wenn mindestens zehn Personen tot sind. Mit weniger als 13 Personen endet die Partie meist vorher. Die Runde wird trotzdem eine Wiederbelebungsrunde (Rollen bleiben beim Tod verdeckt). Starten bleibt möglich.“ / “Note: The Coachman can only revive once at least ten people are dead. With fewer than 13 people, the game usually ends before that. It still becomes a revival round (roles stay hidden on death). You can still start.” |
+| `simultaneous_solo_wins` | zusammen mindestens zwei Kopien aus `parasit`, `voodoo-priester`, `grabraeuber`, `manipulator`: Einzelsieg bei höchstens drei Lebenden, Manipulator bei genau drei (Analyse C-3). Andere Einzelsiegrollen lösen ihn nicht aus | „Hinweis: Mehrere Rollen dieser Besetzung gewinnen allein, wenn höchstens drei Personen leben (Parasit, Voodoo-Priester, Grabräuber; Manipulator bei genau drei). Dann können mehrere Siege zugleich erfüllt sein, die Spielleitung bestätigt genau einen. Starten bleibt möglich.“ / “Note: Several roles in this setup win alone when at most three people are alive (Parasite, Voodoo Priest, Grave Robber; Manipulator at exactly three). Several wins can then be met at once, and the game master confirms exactly one. You can still start.” |
+
+Beide Hinweise können gleichzeitig erscheinen. Jede Änderung der Rollenanzahl oder der Personenzahl aktualisiert sie sofort. Sie erscheinen nur im privaten Rollenschritt, nicht in Verteilung, Sitzordnung, Cockpit oder im StartGame-Befehl. Weitere Balancehinweise oder Rollenverbote gibt es nicht. Nachweis: `tests/ui/test_setup_hints.gd`, Layout in `test_role_step::test_role_step_layout`.
+
 ## Vorschlag
 
 `RoleSuggestion.for_count(n)` ist eine Setup-Hilfe, keine Spielregel. Die Oberfläche nennt ihn „Vorschlag“ und nicht „ausgewogen“. Der Vorschlag ist deterministisch und kommt ohne Zufall aus:
@@ -258,6 +269,7 @@ xvfb-run -a -s "-screen 0 1920x1080x24" <godot-4.7.2> --path godot --rendering-d
 | `tests/ui/test_distribution_model.gd` | Vollständigkeit, Reproduzierbarkeit, Personen-ID statt Reihenfolge, Neuaufbau/Sprache/Name, Neu mischen, Bestätigen, Invalidierung, manuelle Zuweisung, Moduswechsel, ausdrücklich gewählte Trugbilderwolf-Scheinrollen (auch mehrere, manuell) |
 | `tests/ui/test_decoy_model.gd` | DR-08: keine Vorbelegung, Bestätigung erst nach Wahl, Validierung, Kopien anlegen und entfernen, Vorschlag und Zurücksetzen, Kopien als Einheit beim Verteilen, Neu mischen, manuell und Tauschen, Invalidierung, Name und Sprache, kein abgeleiteter Code |
 | `tests/ui/test_decoy_step.gd` | Scheinrollen-Bereich: fehlende Wahl sichtbar, Öffnen und Schließen mit Fokusabgabe, modaler Dialog, zwei Kopien, Entfernen mit Rückfrage, Anzeige in der Verteilung, Kopienwahl im Dialog, Geheimhaltung, kein GameState/StartGame, Layout 1024×768/1280×800 DE/EN |
+| `tests/ui/test_setup_hints.gd` | PE-04: Kutscher-Schwelle 12/13, ohne Kutscher kein Hinweis, belegte Siegüberschneidung, Kontrollbesetzungen ohne Fehlalarm, beide Hinweise zugleich, Gültigkeit unverändert, sofortige Aktualisierung bei Rollen- und Personenänderung, DE/EN, StartGame mit denselben Rollen und Zuordnungen, keine Hinweise im Cockpit |
 | `tests/ui/test_distribution_step.gd` | verborgene Rollen, geheimer Bereich, Seed, Neu mischen, Zusammenfassung ohne Partie, manuelle Auswahl im modalen Dialog mit Fokussperre, Moduswechsel-Rückfrage, Layout, Scrollen |
 
 Prüf-Screenshots: `docs/evidence/role-setup/`.

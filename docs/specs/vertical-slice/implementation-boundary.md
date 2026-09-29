@@ -90,7 +90,7 @@ Erst nach Abnahme von A. Alle DR-Punkte sind entschieden (`decision-request.md`,
 | B-09 | Einzelsiegregel Manipulator (genau drei Lebende); mehrere gleichzeitige Kandidaten ohne Priorität, Spielleiter bestätigt einen; vorläufiger Siegstatus nach jedem Tod und verbindliche Prüfung nach allen Reaktionen (im Regelkern umgesetzt: persistente Kandidatenmenge `win_candidates`, `ever_nominated`) | DR-02, DR-12, DR-14 |
 | B-10 | Zusätzliche Todesursachen `WITCH_POISON` (umgesetzt), `HUNTER_SHOT` (umgesetzt), `SPIEGELWOLF_RETALIATE` (umgesetzt), `MANIPULATOR_NOMINATED` (umgesetzt), `GM_CORRECTION` | G-TOD-3 |
 | B-11 | Befehle `BeginStep`, `SkipStep`, `CancelPrompt`, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, `GmCorrection` | `vertical-slice-flow.md` §0.1 |
-| B-12 | Undo/Redo als Befehlsstapel, über Neustart | AS-U01–U04 |
+| B-12 | Undo/Redo als Befehlsstapel; Undo über Neustart, ~~Redo über Neustart~~ (ersetzt 29.09.2026 durch Decision Log PE-03: wiederholbare Schritte entfallen beim Neustart) | AS-U01–U04, Decision Log PE-03 |
 | B-13 | Checkpoint nach jeder bestätigten Aktion, atomisches Schreiben, Backup, Wiederaufnahme nach Prozessabbruch | Masterplan Phase 1 und 2 |
 | B-14 | Tablet-UI: Start, Setup, Wiederaufnahme, Sitzkreis mit Drag-and-drop, Cockpit, gesicherte Ansagekarte, Morgenbericht öffentlich/privat, Nominierung Quelle → Ziel, getrennte Buttons für Todesaktionen | Masterplan Phase 2 |
 | B-15 | Vorläufige, lizenzklare Tag-/Nacht-Gestaltung; Reduced-Motion-, Untertitel- und Lautstärkeregelung verdrahtet | Masterplan Phase 2 |

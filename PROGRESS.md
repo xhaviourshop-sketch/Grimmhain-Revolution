@@ -291,3 +291,13 @@ Paket 4: automatisierte Prüfungen abgeschlossen, Produktentscheidungen offen (D
 Nicht umgesetzt: Spielleitertexte der vier Rollen (OI-09, Paket 5), Setup-Hinweise R-07 (Entscheidung offen), Geräte- und Touchabnahme.
 Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1059 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1048); Prüfer siehe Abschlussbericht.
 Nächster Schritt: Antworten zu D-04, D-05, I-03, R-07 umsetzen (eigener Auftrag), danach Paket 5.
+
+## 2026-09-29 — Produktentscheidungen PE-01 bis PE-04 umgesetzt
+Status: umgesetzt auf `feature/night-ui-expansion` (Ausgangs-HEAD `ca7b44e`), PR #3 offen, kein Merge. Schema 14, Regelversion 0.12 unverändert.
+PE-01 (I-03): Die öffentliche Hinweiszeile nennt keine offenen Reaktionen mehr. Außerhalb der Nacht zeigt sie bei jeder verdeckten Karte einen neutralen Text je Phase (Morgen, Tag). Die Karte der Spielleitung bleibt vollständig. Als Rückschlussweg bleiben die Phase „Morgen“ und die verdeckte Karte (DA-46).
+PE-04 (R-07): Zwei nicht blockierende Hinweise im Rollenschritt: Kutscher unter 13 Personen und mindestens zwei aus Parasit, Voodoo-Priester, Grabräuber, Manipulator. PE-04 nennt „Wahnsinniger Kutscher“, umgesetzt ist nach der Mechanik der Kutscher (DA-47, zur Bestätigung durch den Product Owner).
+PE-02/PE-03 (D-04, D-05): Masterplan, Spec B-12, `save-resume.md`, Matrix und Roadmap nachgezogen; keine Codeänderung.
+Zufallsknopf: gesperrter Zustand zusätzlich über die Oberfläche geprüft. Im regulären Ablauf ist er nicht erreichbar, deshalb wird er per Testvorbereitung hergestellt (DA-50).
+Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1072 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1059).
+Nicht umgesetzt: Geräte- und Touchabnahme; Paket 5.
+Nächster Schritt: Paket 5 (Inhalte und Medienanschlüsse) nach Freigabe.

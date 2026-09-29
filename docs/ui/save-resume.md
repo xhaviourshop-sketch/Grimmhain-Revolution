@@ -80,9 +80,9 @@ Nach jedem Neustart ist keine private Ebene geöffnet. Geprüft wird der Neustar
 
 ## Grenzen
 
-- Eine Sicherung (`.bak`), keine längere Checkpoint-Rotation.
+- Eine Sicherung (`.bak`) je Partie, keine längere Checkpoint-Rotation. Entschieden durch Decision Log PE-02 (29.09.2026): eine Sicherung reicht, mehrere Stände frühestens als spätere Komfortfunktion.
 - Die Liste zeigt die acht neuesten Partien; ältere bleiben auf dem Datenträger.
-- Wiederholbare Schritte (nach Rückgängig) werden nicht gespeichert und entfallen beim Neustart. Spezifikation B-12 verlangt Wiederholen über einen Neustart; diese Abweichung ist offene Produktentscheidung D-05 und wurde in Paket 4 bewusst nicht als neue Funktion ergänzt.
+- Wiederholbare Schritte (nach Rückgängig) werden nicht gespeichert und entfallen beim Neustart. Entschieden durch Decision Log PE-03 (29.09.2026); die frühere Anforderung „über Neustart“ in Spezifikation B-12 ist entsprechend ersetzt.
 - Ereignisse werden nicht gespeichert, sondern beim Laden per Replay der Befehle neu erzeugt. Deshalb ändert die Rolle beim Tod im Ereignis `SeatDied` das Speicherformat nicht. Schema 13 (29.09.2026) ersetzt `reveal_role_on_death` durch die abgeleitete `revival_round` und ergänzt `notices`; Spielstände älterer Schemata werden mit klarer Meldung abgelehnt (`unsupported_schema_version`), die Dateien bleiben unverändert erhalten.
 - Testspielstände liegen in eigenen Verzeichnissen `user://test-saves-*` und werden nach jedem Test entfernt; `user://saves` wird von Tests nicht berührt.
 - Ältere Schemaversionen werden nicht migriert, sondern mit Meldung abgelehnt (`StateCodec`, Fehler `incompatible` im `SaveService`). Die Datei bleibt dabei unverändert auf dem Datenträger (Test `test_save_service`).

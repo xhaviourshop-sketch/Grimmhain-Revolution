@@ -60,6 +60,7 @@ Keine offenen. Geprüft und als bereits entschieden eingeordnet:
 - **Erwartet laut Regeln:** genau so; beide Regeln sind entschieden.
 - **Schweregrad:** mittel (verändert die öffentliche Information der ganzen Partie ohne spielbaren Gegenwert).
 - **Empfehlung:** Produktentscheidung, ob das Setup bei weniger als 13 Personen einen Hinweis zeigt. Keine Umsetzung in diesem Paket.
+- **Umgesetzt (29.09.2026, Decision Log PE-04, DA-47):** Nicht blockierender Hinweis `coach_small_round` im Rollenschritt, wenn ein `kutscher` bei weniger als 13 Personen gewählt ist. Er behauptet keine Unmöglichkeit („meist“), weil Siegablehnung und Spielleiterkorrekturen Gegenbeispiele erlauben. PE-04 nennt „Wahnsinniger Kutscher“; gemeint ist nach Mechanik und diesem Abschnitt der Kutscher (DA-47). Nachweis: `test_setup_hints`.
 
 ### C-2 · Voodoo-Priester mit einer Dorfwache als Puppe
 
@@ -78,6 +79,7 @@ Keine offenen. Geprüft und als bereits entschieden eingeordnet:
 - **Nachweis:** `test_role_interactions::test_p3_simultaneous_solo_wins_form_one_candidate_set`.
 - **Schweregrad:** niedrig (regelkonform, DR-02), aber das Ende kann am Tisch willkürlich wirken.
 - **Empfehlung:** Bei der Rollenauswahl für Version 1.0 (offene Entscheidung 8) berücksichtigen; keine Setup-Regel ohne Entscheidung.
+- **Umgesetzt (29.09.2026, Decision Log PE-04, DA-48):** Nicht blockierender Hinweis `simultaneous_solo_wins`, sobald zusammen mindestens zwei Kopien aus `parasit`, `voodoo-priester`, `grabraeuber` und `manipulator` gewählt sind. Andere Einzelsiegrollen lösen ihn nicht aus. Es gibt keine neue Siegpriorität, die Kandidatenmenge bleibt wie oben. Nachweis: `test_setup_hints`.
 
 ### C-4 · Späte Schwellen in kleinen Runden
 
@@ -107,3 +109,5 @@ Die Stimmhinweise des Regelkerns (`VoteHints`: Blutwolf +1 je totem Nachbarplatz
 ## 8. Offene Produktfragen aus dieser Analyse
 
 Keine Regelkonflikte. Für die Balance (Kategorie C) bleibt die bestehende offene Entscheidung 9 der Matrix: ob und in welcher Form das Setup auf ungünstige Kombinationen hinweist. Konkrete Kandidaten dafür: C-1 (Kutscher unter 13 Personen) und C-3 (viele Einzelsiege).
+
+*(Entschieden am 29.09.2026 durch Decision Log PE-04 und umgesetzt: Hinweise zu C-1 und C-3 im Rollenschritt, siehe dort. C-2 und C-4 bleiben ohne Hinweis.)*
