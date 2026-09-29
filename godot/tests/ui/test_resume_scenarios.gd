@@ -1,0 +1,240 @@
+extends "res://tests/ui/role_ui_case.gd"
+## Paket 4: Unterbrechung und Fortsetzen über den tatsächlichen Bedienweg. Jede Szene wird über die Karten und Sitzplätze
+## des Cockpits bis zur Unterbrechungsstelle bedient; gespeichert wird nur über den automatischen Speicherweg
+## (AppContext.autosave nach jedem Befehl). Der Neustart entfernt die Shell samt Sitzung und Diensten, startet eine neue
+## Shell mit demselben Speicherort und setzt über Hauptmenü → „Fortsetzen“ → „Fortsetzen“ fort.
+##
+## Geprüft wird je Szene:
+##   A. persistenter Regelzustand: fachlicher Hash, Ereignisverlauf, Cockpit-Sicht (nächste Handlung, Hinweise),
+##      Morgenbericht und Rollenanzeige sind nach dem Neustart identisch
+##   B. flüchtige Bedienauswahl (angetippte Sitzplätze, aufgedeckte Prüfkarte, offene Ebene) ist bewusst verworfen
+##   C. nach dem Fortsetzen erzeugt genau eine Bedienung genau einen Befehl, und das Ergebnis gleicht dem
+##      ununterbrochenen Ablauf (Replay der Befehle vor dem Neustart plus dieser Befehl)
+## Vorbereitung ohne Karten (Start, Spielleiterkorrekturen) ist wie in role_ui_case.gd gekennzeichnet.
+
+const W := "werwolf"
+const D := "dorfbewohner"
+
+
+## Neustart der App mit demselben Speicherort, Fortsetzen über den Fortsetzen-Bildschirm. Liefert den Zustand vor dem
+## Neustart {snapshot, commands}.
+func restart() -> Dictionary:
+	var before := {"snapshot": snapshot(), "commands": session().commands()}
+	var dir := (context_of(shell) as AppContext).saves.base_dir
+	var round := session().round_id()
+	assert_true(bool((context_of(shell) as AppContext).saves.last_status.get("ok", false)), "vor dem Neustart gespeichert")
+	_spawned.erase(shell)
+	shell.get_parent().remove_child(shell)
+	shell.free()
+	await frames(2)
+	shell = await spawn_shell()
+	(context_of(shell) as AppContext).saves.base_dir = dir
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"continue")
+	await tap_button("ResumeButton_%s" % round)
+	assert_eq(String(current_id(shell)), "cockpit", "Fortsetzen öffnet das Cockpit")
+	assert_eq(snapshot(), before["snapshot"], "persistenter Zustand nach dem Neustart identisch")
+	assert_true(screen().get("_layer") == null, "keine private Ebene nach dem Fortsetzen geöffnet")
+	return before
+
+
+func snapshot() -> Dictionary:
+	return {"hash": session().state_hash(), "events": session().event_log(), "cockpit": session().cockpit_view(),
+		"morning": session().morning_report(), "roles": session().role_show_list(), "day_effects": session().day_effects()}
+
+
+## Genau ein Befehl nach dem Fortsetzen, Ergebnis wie ohne Unterbrechung, und er wurde gespeichert.
+func assert_one_effect(before: Dictionary, label: String) -> void:
+	var old: Array[Command] = before["commands"]
+	var now := session().commands()
+	assert_eq(now.size(), old.size() + 1, "%s: genau ein Befehl nach dem Fortsetzen" % label)
+	var expected: Array[Command] = old.duplicate()
+	expected.append(now.back())
+	var reference := RulesEngine.replay(expected)
+	assert_true(reference.ok, "%s: ununterbrochener Ablauf angenommen" % label)
+	assert_eq(session().state_hash(), reference.state.content_hash(), "%s: Zustand wie ohne Unterbrechung" % label)
+	assert_eq(session().event_log(), reference.events.map(func(e: GameEvent) -> Dictionary: return e.to_dict()), "%s: Ereignisse wie ohne Unterbrechung" % label)
+	assert_true(bool((context_of(shell) as AppContext).saves.last_status.get("ok", false)), "%s: nach dem Fortsetzen gespeichert" % label)
+
+
+func selection() -> Array:
+	return screen().get("_selection") as Array
+
+
+# --- offene Auswahl -------------------------------------------------------------------------------------
+
+## Einzelauswahl: angetippte, nicht bestätigte Person ist flüchtig und nach dem Neustart verworfen; die neue
+## Auswahl erzeugt den Befehl mit dem neuen Ziel (kein veraltetes Ziel).
+func test_open_single_selection_is_discarded_and_prompt_stays_open() -> void:
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+		return
+	assert_true(await run({}, until_prompt("pack")), "bis zum Rudel")
+	await tap_seat(5)
+	assert_eq(selection(), [5], "Person 5 angetippt, nicht bestätigt")
+	var before := await restart()
+	assert_eq(selection(), [], "flüchtige Auswahl verworfen")
+	assert_eq(str(next()["owner"]), "pack", "Rudel-Prompt weiter offen")
+	await tap_seat(6)
+	await tap_button("ConfirmTargetsButton")
+	assert_one_effect(before, "Einzelauswahl")
+	assert_eq(last_command().payload.get("targets"), [6], "Befehl mit der neuen, nicht der alten Auswahl")
+
+
+## Mehrfachauswahl (Loki wählt zwei Personen): eine halbe Auswahl ist flüchtig.
+func test_open_multi_selection_is_discarded() -> void:
+	if not await start([W, "loki", D, D, D, D, D]):
+		return
+	assert_true(await run({}, until_prompt("loki", "targets")), "bis Loki")
+	await tap_seat(3)
+	var before := await restart()
+	assert_eq(selection(), [], "halbe Mehrfachauswahl verworfen")
+	assert_eq(str(next()["owner"]), "loki", "Loki-Prompt weiter offen")
+	await tap_seat(4)
+	await tap_seat(5)
+	await tap_button("ConfirmTargetsButton")
+	assert_one_effect(before, "Mehrfachauswahl")
+
+
+# --- mehrstufige Rollenaktion, Todesreaktion ------------------------------------------------------------
+
+## Waldhexe: Stufe „Heiltrank“ ist beantwortet (bestätigter Schritt), Stufe „Gift“ offen.
+func test_multistage_role_action_keeps_the_answered_stage() -> void:
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+		return
+	assert_true(await run({"waldhexe/heal": false}, until_prompt("waldhexe", "poison")), "bis zur Giftstufe")
+	var before := await restart()
+	assert_eq(str(next()["stage"]), "poison", "Giftstufe weiter offen, Heiltrankantwort erhalten")
+	assert_true(await answer(false), "Gift verworfen")
+	assert_one_effect(before, "Waldhexe")
+
+
+## Offene Todesreaktion (Sensenträger), einmal eingereiht und einmal mit offenem Prompt: nach dem Neustart genau
+## eine Reaktion, keine doppelte Auslösung.
+func test_open_death_reaction_survives_restart_once() -> void:
+	if not await start([W, W, "sensentraeger", D, D, D, D]):
+		return
+	assert_true(await run({}, until_day(1)), "bis Tag 1")
+	# Vorbereitung ohne Karte: Tod des Sensenträgers mit Folgen.
+	assert_true(session().submit(CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}, "Vorbereitung")).ok, "Tod mit Folgen")
+	assert_eq(state().reactions.size(), 1, "Reaktion eingereiht")
+	var before := await restart()
+	assert_eq(state().reactions.size(), 1, "nach dem Neustart genau eine Reaktion")
+	assert_true(await step({}), "Reaktion beginnen")
+	assert_one_effect(before, "Reaktion eingereiht")
+	assert_eq(str(next()["owner"]), "reaction", "Reaktionsprompt offen")
+	before = await restart()
+	assert_true(await step({"reaction/%s" % str(next()["reaction_kind"]): [4]}), "Ziel der Reaktion über die aufgedeckte Karte")
+	assert_one_effect(before, "Reaktionsprompt")
+	assert_eq(state().reactions.size(), 0, "Reaktion erledigt")
+	assert_eq(events("ReactionQueued").size(), 1, "nur einmal eingereiht")
+	assert_false(alive(4), "Wirkung genau einmal")
+
+
+# --- private Hinweise und Rollenanzeige ------------------------------------------------------------------
+
+## Unbestätigter privater Hinweis bleibt erreichbar; eine vor dem Neustart geöffnete Karte ist geschlossen.
+## Ein bestätigter Hinweis wird nach dem nächsten Neustart nicht erneut verlangt.
+func test_unconfirmed_notice_stays_reachable_and_confirmed_one_is_not_asked_again() -> void:
+	if not await start([W, "loki", D, D, D, D, D]):
+		return
+	assert_true(await run({"loki/targets": [3, 5], "loki/mode": true}, until_kind("notice")), "bis zum ersten Hinweis")
+	var first := int(next()["notice_id"])
+	await tap_button("ShowNoticeButton")
+	assert_true(find_node(screen(), "NoticeLayer") != null or screen().get("_layer") != null, "Hinweiskarte offen")
+	var before := await restart()
+	assert_true(find_node(screen(), "NoticeLayer") == null, "private Karte nach dem Neustart nicht offen")
+	assert_eq(int(next()["notice_id"]), first, "derselbe unbestätigte Hinweis erreichbar")
+	await tap_button("AckNoticeButton")
+	assert_one_effect(before, "Hinweis bestätigt")
+	assert_ne(int(next().get("notice_id", -1)), first, "erledigter Hinweis steht nicht mehr an")
+	assert_true(session().undo(), "Rückgängig nach dem Fortsetzen")
+	assert_eq(int(next()["notice_id"]), first, "Hinweis steht wieder an")
+	assert_true(session().redo(), "Wiederholen")
+	assert_ne(int(next().get("notice_id", -1)), first, "wieder erledigt")
+	await restart()
+	assert_ne(int(next().get("notice_id", -1)), first, "nach erneutem Neustart nicht erneut verlangt")
+	assert_eq(session().commands().filter(func(c: Command) -> bool: return c.type == Command.ACK_NOTICE).size(), 1, "genau eine Bestätigung")
+
+
+## Teilweise abgeschlossene Rollenanzeige: bestätigte Personen bleiben bestätigt, die offene Karte ist verworfen.
+func test_partial_role_show_continues_with_the_first_unconfirmed_person() -> void:
+	if not await start([D, W, "waldhexe", D, "schutzengel", D]):
+		return
+	for id: int in [1, 2]:
+		await tap_button("RolesButton")
+		await tap_button("RolePerson_%d" % id, find_node(screen(), "RoleListLayer"))
+		await tap_button("RevealRoleButton", find_node(screen(), "RoleCardLayer"))
+		await tap_button("ConfirmRoleButton", find_node(screen(), "RoleCardLayer"))
+		await tap_button("CloseLayerButton", find_node(screen(), "RoleListLayer"))
+	await tap_button("RolesButton")
+	await tap_button("RolePerson_3", find_node(screen(), "RoleListLayer"))
+	await tap_button("RevealRoleButton", find_node(screen(), "RoleCardLayer"))  # Karte offen, nicht bestätigt
+	var before := await restart()
+	assert_true(find_node(screen(), "RoleCardLayer") == null, "offene Rollenkarte nach dem Neustart verworfen")
+	assert_eq(int(session().role_show_list()["next_id"]), 3, "Fortsetzung bei Person 3")
+	await tap_button("RolesButton")
+	await tap_button("RolePerson_3", find_node(screen(), "RoleListLayer"))
+	await tap_button("RevealRoleButton", find_node(screen(), "RoleCardLayer"))
+	await tap_button("ConfirmRoleButton", find_node(screen(), "RoleCardLayer"))
+	assert_one_effect(before, "Rollenanzeige")
+	assert_eq(int(session().role_show_list()["next_id"]), 4, "danach Person 4")
+
+
+# --- Morgen, Tag, Sieg --------------------------------------------------------------------------------------
+
+## Morgenbericht: öffentlicher und privater Teil nach dem Neustart gleich (Vergleich in `restart`); das Weiterschalten
+## des Berichts ist Bedienzustand und darf erneut angeboten werden.
+func test_morning_report_is_identical_after_restart() -> void:
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+		return
+	assert_true(await run({"pack/": [5]}, until_day(1)), "bis zum Morgen")
+	assert_false((session().morning_report()["public"]["deaths"] as Array).is_empty(), "Bericht mit Todesfall")
+	var before := await restart()
+	if live("ContinueDayButton") != null:
+		await tap_button("ContinueDayButton")
+	assert_true(await day({}), "Tag ohne Hinrichtung")
+	assert_one_effect(before, "Tag nach dem Morgenbericht")
+
+
+## Offene Nominierung bleibt (bestätigter Befehl); eine aufgedeckte, nicht bestätigte Hinrichtungsprüfung ist flüchtig.
+func test_open_nomination_survives_and_execution_check_is_discarded() -> void:
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+		return
+	assert_true(await run({}, until_day(1)), "bis Tag 1")
+	if live("ContinueDayButton") != null:
+		await tap_button("ContinueDayButton")
+	assert_true(await day({"nominate": [2, 1]}), "Nominierung über Sitzplätze")
+	await tap_button("ExecuteButton")
+	await tap_seat(1)
+	await tap_button("ConfirmExecutionTargetButton")
+	await tap_button("RevealButton")  # geheime Prüfkarte offen, Hinrichtung nicht bestätigt
+	var before := await restart()
+	assert_eq((next()["nominations"] as Array).size(), 1, "Nominierung erhalten")
+	assert_true(live("ConfirmExecutionButton") == null, "Prüfkarte verworfen")
+	assert_true(await day({"execute": 1}), "Hinrichtung nach dem Fortsetzen")
+	assert_one_effect(before, "Hinrichtung")
+	assert_eq(events("Executed").size() + events("SeatDied").filter(func(e: Dictionary) -> bool: return str(e["data"].get("cause", "")) == "LYNCH").size() > 0, true, "Hinrichtung genau jetzt wirksam")
+
+
+## Offener Siegkandidat: Entscheidung bleibt offen und wird genau einmal bestätigt.
+func test_open_win_candidate_is_decided_once_after_restart() -> void:
+	if not await start([W, W, "schutzengel", D, D, D, D]):
+		return
+	assert_true(await run({}, until_prompt("pack")), "bis zum Rudel")
+	# Vorbereitung ohne Karte: drei Tote per Korrektur führen zur Siegentscheidung.
+	for id: int in [4, 5, 6]:
+		assert_true(session().submit(CorrectionFixtures.gm("kill", {"target_id": id, "trigger_effects": false}, "Vorbereitung")).ok, "Korrektur %d" % id)
+	await frames(2)
+	assert_eq(str(next()["kind"]), "win_decision", "Siegentscheidung offen")
+	var before := await restart()
+	var candidate := int((next()["candidates"] as Array)[0]["id"])
+	await tap_button("ConfirmWinButton_%d" % candidate)
+	await confirm_dialog()
+	assert_one_effect(before, "Sieg")
+	assert_eq(str(next()["kind"]), "game_over", "Spielende")
+	assert_true(session().undo(), "Rückgängig nach dem Fortsetzen")
+	assert_eq(str(next()["kind"]), "win_decision", "Entscheidung wieder offen")
+	assert_true(session().redo(), "Wiederholen")
+	await restart()
+	assert_eq(str(next()["kind"]), "game_over", "bestätigtes Spielende nach erneutem Neustart")
+	assert_eq(session().commands().filter(func(c: Command) -> bool: return c.type == Command.CONFIRM_WIN).size(), 1, "genau eine Bestätigung")

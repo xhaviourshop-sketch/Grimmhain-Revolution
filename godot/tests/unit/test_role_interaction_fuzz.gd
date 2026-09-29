@@ -47,6 +47,7 @@ var _focus_goal_met := false  ## seltene Mechanik der Fokusrolle in dieser Parti
 var _probe := false  ## letzter Befehl ist eine zufällige Korrektur, Ablehnung erlaubt
 var _probe_rejected := 0
 var _probe_accepted := 0
+var last_log: Array[Command] = []  ## Befehle der zuletzt gespielten Partie (test_resume_every_command startet sie nach jedem Befehl neu)
 
 
 func test_random_games_keep_invariants() -> void:
@@ -146,6 +147,7 @@ func _play_game(g: int, count: int) -> Dictionary:
 		if replay.ok:
 			assert_eq(CanonicalJson.stringify(replay.state.to_dict()), CanonicalJson.stringify(state.to_dict()), "%s: Replay-Zustand identisch" % _game_label)
 			assert_eq(events_json(replay.events), events_json(events), "%s: Replay-Ereignisse identisch" % _game_label)
+	last_log = log
 	return {"commands": log.size(), "deaths": deaths, "game_over": state.phase == Phase.GAME_OVER}
 
 
