@@ -15,14 +15,30 @@ const FUZZ := preload("res://tests/unit/test_role_interaction_fuzz.gd")
 const COUNTS: Array[int] = [6, 8, 10, 12, 16, 24]
 const ROUNDS := 2
 const MAX_STEPS := 220
+const FOCUS_ID := 1    ## Personen-ID der Fokusrolle in _start()
 
 var _rng := RandomNumberGenerator.new()
+var _focus := ""       ## Fokusrolle der laufenden Partie
+var _focus_hit := {}       ## Rollen, die in ihrer eigenen Fokuspartie als Prompt erschienen
+var _scenario := false     ## Erreichbarkeitsszenario: kein zufälliges Überspringen/Abbrechen, feste Tagespolitik
+var _scenario_day := "none"    ## Szenario-Tag: "none" (keine Hinrichtung), "execute" oder "wolf_first"
+var _scenario_wolves: Array = []
 var _combos := {}      ## "owner/stage/answer" → Anzahl gelöster Prompts
 var _owners := {}      ## Besitzer → true
 var _rendered := {}
 var _card: ActionCard = null
 var _last_error: StringName = &""
 var _notices := {}     ## Hinweisart → Anzahl bestätigter Hinweise (DI-04, DI-06, DI-07)
+
+
+## Mischen ausschließlich über den seedbaren Generator dieses Tests. `Array.shuffle()` nutzt den globalen,
+## bei jedem Start zufällig gesetzten Generator und machte die Partien (und damit die Abdeckung) von Lauf zu Lauf verschieden (B-01).
+func _shuffle(items: Array) -> void:
+	for i: int in range(items.size() - 1, 0, -1):
+		var j := _rng.randi_range(0, i)
+		var tmp: Variant = items[i]
+		items[i] = items[j]
+		items[j] = tmp
 
 
 func _on_rejected(error: StringName) -> void:
@@ -38,7 +54,14 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 	var finished := 0
 	for g: int in games:
 		_rng.seed = 104729 * (g + 3)
-		if not _play(g, str(roles[g % roles.size()]), COUNTS[g % COUNTS.size()]):
+		var focus_role := str(roles[g % roles.size()])
+		var seen_before := _owners.duplicate()
+		_owners.clear()
+		var played := _play(g, focus_role, COUNTS[g % COUNTS.size()])
+		if _owners.has(focus_role):
+			_focus_hit[focus_role] = true
+		_owners.merge(seen_before)
+		if not played:
 			return
 		finished += 1
 	assert_eq(finished, games, "alle Partien ohne unlösbaren Prompt")
@@ -47,6 +70,11 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 	for role: Variant in roles:
 		if SetupRoleCatalog.night_priority(StringName(role)) > 0 and not _owners.has(str(role)):
 			fail("Rolle %s erschien nie als Prompt" % role)
+	# Zusätzlich darf keine Pflichtabdeckung allein von Füllrollen anderer Partien leben: Jede Nachtrolle erschien entweder
+	# in ihrer eigenen Fokuspartie oder hat ein festes Szenario (REACH_SCENARIOS, geprüft im eigenen Test).
+	for role: Variant in roles:
+		if SetupRoleCatalog.night_priority(StringName(role)) > 0 and not _focus_hit.has(str(role)) and not REACH_SCENARIOS.has(str(role)):
+			fail("Rolle %s erschien in keiner eigenen Fokuspartie und hat kein festes Szenario" % role)
 	var keys := _combos.keys()
 	keys.sort()
 	# Jede Kombination hat eine eigene Anweisung, jede Nachtrolle einen eigenen Vorlesetext.
@@ -76,7 +104,16 @@ func _play(g: int, focus: String, count: int) -> bool:
 	if not start.ok:
 		fail("Start %d abgelehnt: %s" % [g, start.error])
 		return false
+	return _run(session, g, focus, false)
+
+
+## Spielt eine gestartete Partie mit den Kartendaten. Mit `stop_on_focus` endet der Lauf, sobald die Fokusrolle als
+## Prompt bedient wurde (Erreichbarkeitsszenarien); sonst läuft die Partie bis zum Ende oder zu MAX_STEPS.
+func _run(session: GameSession, g: int, focus: String, stop_on_focus: bool) -> bool:
+	_focus = focus
 	for step: int in MAX_STEPS:
+		if stop_on_focus and _owners.has(focus):
+			return true
 		var next: Dictionary = session.cockpit_view()["next"]
 		var ok := true
 		_last_error = &""
@@ -87,12 +124,13 @@ func _play(g: int, focus: String, count: int) -> bool:
 			"start_night":
 				ok = session.start_night().ok
 			"begin_step":
-				if bool(next.get("skippable")) and _rng.randf() < 0.1:
+				# Die Fokusrolle wird nie übersprungen oder abgebrochen: Sonst hinge ihre Abdeckung am Zufall.
+				if bool(next.get("skippable")) and str(next.get("role_id", "")) != focus and not _scenario and _rng.randf() < 0.1:
 					ok = session.skip_next_step("Abdeckungstest").ok
 				else:
 					ok = session.begin_next_step().ok
 			"prompt":
-				if bool(next["cancellable"]) and _rng.randf() < 0.04:
+				if bool(next["cancellable"]) and str(next["owner"]) != focus and not _scenario and _rng.randf() < 0.04:
 					ok = session.cancel_prompt("Abdeckungstest").ok
 				else:
 					ok = _answer(session, next, "Partie %d (%s), Schritt %d" % [g, focus, step])
@@ -115,7 +153,7 @@ func _play(g: int, focus: String, count: int) -> bool:
 		if not ok:
 			fail("Partie %d (%s), Schritt %d: Handlung %s abgelehnt (%s) %s" % [g, focus, step, next["kind"], _last_error, JSON.stringify(next)])
 			return false
-	return true
+	return not stop_on_focus or _owners.has(focus)
 
 
 ## Beantwortet einen Prompt mit genau einer Antwort nach den Kartendaten; eine Ablehnung ist ein Fehler.
@@ -143,13 +181,17 @@ func _try(session: GameSession, next: Dictionary, label: String) -> CommandResul
 			var kind := "night" if _rng.randf() < 0.5 else "day"
 			return session.answer_prediction(kind, int(next["prediction_min"][kind]) + _rng.randi_range(0, 3))
 	var allowed: Array = (next["allowed_ids"] as Array).duplicate()
+	# Die Spielleitung hält die Fokusperson (Personen-ID 1) am Leben, solange andere wählbar sind: Sonst stürbe sie
+	# je nach Zufallswahl vor ihrem ersten Schritt und ihre Abdeckung hinge am Zufall (B-01).
+	if str(next["owner"]) != _focus and allowed.has(FOCUS_ID) and allowed.size() > 1 + int((next["counts"] as Array).max()):
+		allowed.erase(FOCUS_ID)
 	# Eine der zulässigen Anzahlen der Karte, soweit genug Personen wählbar sind.
 	var counts: Array = (next["counts"] as Array).filter(func(c: int) -> bool: return c <= allowed.size())
 	if counts.is_empty():
 		fail("%s: keine erfüllbare Anzahl %s bei %d wählbaren Personen" % [label, next["counts"], allowed.size()])
 		return null
 	var n := int(counts[_rng.randi_range(0, counts.size() - 1)])
-	allowed.shuffle()
+	_shuffle(allowed)
 	var picks := allowed.slice(0, n)
 	# Hinweiszeile der Karte nutzen: mindestens einen der genannten Wölfe wählen (Traumdeuter, Kopfgeldjäger).
 	for line: Dictionary in next["info"]:
@@ -167,13 +209,15 @@ func _try(session: GameSession, next: Dictionary, label: String) -> CommandResul
 
 
 func _day(session: GameSession, next: Dictionary) -> bool:
+	if _scenario:
+		return _scenario_execution(session, next)
 	var seats: Array = session.cockpit_view()["seats"]
 	var alive: Array = seats.filter(func(s: Dictionary) -> bool: return bool(s["alive"])).map(func(s: Dictionary) -> int: return int(s["person_id"]))
 	if _rng.randf() < 0.6 and alive.size() >= 2:
 		var used_from: Array = (next["nominations"] as Array).map(func(n: Dictionary) -> int: return int(n["nominator_id"]))
 		var used_to: Array = (next["nominations"] as Array).map(func(n: Dictionary) -> int: return int(n["nominee_id"]))
 		var from: Array = alive.filter(func(id: int) -> bool: return not used_from.has(id))
-		var to: Array = alive.filter(func(id: int) -> bool: return not used_to.has(id))
+		var to: Array = alive.filter(func(id: int) -> bool: return not used_to.has(id) and id != FOCUS_ID)
 		if not from.is_empty() and not to.is_empty():
 			# Eine Richter-Nominierung zeigt öffentlich keinen Nominierenden; nominiert der Richter
 			# erneut, lehnt der Regelkern mit already_nominated_today ab. Dann entscheidet der Test über
@@ -182,7 +226,7 @@ func _day(session: GameSession, next: Dictionary) -> bool:
 				return true
 			if _last_error != &"already_nominated_today":
 				return false
-	var candidates: Array = next["execution_candidates"]
+	var candidates: Array = (next["execution_candidates"] as Array).filter(func(id: int) -> bool: return id != FOCUS_ID)
 	if candidates.is_empty() or _rng.randf() < 0.2:
 		return session.decide_execution(-1).ok
 	var target := int(candidates[_rng.randi_range(0, candidates.size() - 1)])
@@ -245,11 +289,139 @@ func _start(focus: String, count: int) -> Command:
 		order.append(i + 1)
 		if roles[i] == "trugbilderwolf":
 			appearances[str(i + 1)] = "dorfbewohner"
-	order.shuffle()
+	_shuffle(order)
 	var payload := {"round_id": "coverage", "seed": 500 + count, "assignment": "manual", "players": Fixtures.players(count), "seat_order": order, "roles": map}
 	if not appearances.is_empty():
 		payload["appearances"] = appearances
 	return Command.start_game(payload)
+
+
+# --- Erreichbarkeit: feste Szenarien statt Zufallsglück (B-01) ------------------------------------------
+
+## Nachtrollen, deren Schritt an eine Bedingung des Regelkerns geknüpft ist, die eine Mischpartie nur zufällig herstellt
+## (StepQueue.build_night_plan): Tote, Hinrichtungen, Nachtnummer, Kopfgeld, Tod der Rolle. Je Rolle ein Szenario mit
+## Fokusrolle (Person 1), einem Werwolf (`wolves` weitere) und Dorfbewohnern; `kills` sind Spielleiterkorrekturen
+## (`kill`, ohne Todeseffekte) vor der ersten Nacht, `day` die Tagespolitik. Die Karte muss den Schritt nach wenigen
+## Nächten tatsächlich als Prompt zeigen.
+const REACH_SCENARIOS := {
+	"koenig": {"count": 8, "kills": [4, 5, 6, 7, 8]},              # mehr Tote als Lebende (InfoSteps.king_condition)
+	"kutscher": {"count": 24, "kills": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]},  # mindestens 10 Tote (COACH_MIN_DEAD)
+	"dr-victor-frankenstein": {"count": 8, "kills": [4]},          # mindestens ein Toter
+	"schutzgeist": {"count": 8, "kills": [1]},                     # handelt nur tot, ab der folgenden Nacht
+	"hades": {"count": 10, "day": "execute"},                      # zwei Lichter aus zwei echten Toden
+	"henker": {"count": 12, "day": "execute"},                     # mindestens drei Hinrichtungen
+	"kopfgeldjaeger": {"count": 10, "wolves": 1, "day": "wolf_first"},  # ein gelynchter Wolf gibt eine Liste
+	"rachsuechtiger-wolf": {"count": 8},                           # nur jede dritte Nacht
+	"dorfchronistin": {"count": 8},                                # nur Nacht 1
+	"loki": {"count": 8},
+	"nekromant": {"count": 8},
+	"grabraeuber": {"count": 8},
+}
+
+
+func _scenario_start(focus: String, count: int, extra_wolves: int) -> Command:
+	var roles: Array = [focus, "werwolf"]
+	_scenario_wolves = [2]
+	for i: int in extra_wolves:
+		roles.append("werwolf")
+		_scenario_wolves.append(roles.size())
+	while roles.size() < count:
+		roles.append("dorfbewohner")
+	var map := {}
+	for i: int in roles.size():
+		map[str(i + 1)] = roles[i]
+	return Command.start_game({"round_id": "reach", "seed": 7, "assignment": "manual", "players": Fixtures.players(count),
+		"seat_order": Fixtures.identity_order(count), "roles": map})
+
+
+## Tagespolitik der Szenarien ohne Zufall: keine Hinrichtung, oder täglich die erste zulässige Person (Fokusperson
+## ausgenommen), im Modus "wolf_first" zuerst ein Wolf.
+func _scenario_execution(session: GameSession, next: Dictionary) -> bool:
+	if _scenario_day == "none":
+		return session.decide_execution(-1).ok
+	var seats: Array = session.cockpit_view()["seats"]
+	var alive: Array = seats.filter(func(x: Dictionary) -> bool: return bool(x["alive"])).map(func(x: Dictionary) -> int: return int(x["person_id"]))
+	var candidates: Array = (next["execution_candidates"] as Array).filter(func(id: int) -> bool: return id != FOCUS_ID)
+	if candidates.is_empty():
+		# Erst nominieren (Fokusperson wird nie nominiert), dann in der nächsten Tagesrunde hinrichten.
+		var pool: Array = alive.filter(func(id: int) -> bool: return id != FOCUS_ID)
+		if _scenario_day == "wolf_first":
+			var wolves: Array = pool.filter(func(id: int) -> bool: return _scenario_wolves.has(id))
+			pool = wolves if not wolves.is_empty() else pool
+		var used: Array = (next["nominations"] as Array).map(func(n: Dictionary) -> int: return int(n["nominee_id"]))
+		pool = pool.filter(func(id: int) -> bool: return not used.has(id))
+		var nominators: Array = (next["nominations"] as Array).map(func(n: Dictionary) -> int: return int(n["nominator_id"]))
+		if pool.is_empty():
+			return session.decide_execution(-1).ok
+		var nominator := -1
+		for id: Variant in alive:
+			if int(id) != int(pool[0]) and not nominators.has(int(id)):
+				nominator = int(id)
+				break
+		if nominator == -1:
+			return session.decide_execution(-1).ok
+		return session.nominate(nominator, int(pool[0])).ok
+	var target := int(candidates[0])
+	var preview := session.execution_preview(target)
+	var extra := {}
+	if bool(preview["needs_cerberus"]):
+		extra["cerberus_defend"] = false
+	if bool(preview["needs_sage"]):
+		extra["sage_curse"] = 0
+	return session.decide_execution(target, extra).ok
+
+
+## Spielt ein Szenario und meldet, ob die Fokusrolle als Prompt bedient wurde.
+func _reach(focus: String, spec: Dictionary) -> bool:
+	_owners.clear()
+	_scenario = true
+	_scenario_day = str(spec.get("day", "none"))
+	_rng.seed = 7
+	var session := GameSession.new()
+	var start := session.submit(_scenario_start(focus, int(spec["count"]), int(spec.get("wolves", 0))))
+	if not start.ok:
+		fail("Szenario %s: Start abgelehnt (%s)" % [focus, start.error])
+		_scenario = false
+		return false
+	for id: Variant in spec.get("kills", []):
+		var killed := session.submit(CorrectionFixtures.gm("kill", {"target_id": int(id), "trigger_effects": false}, "Szenario"))
+		if not killed.ok:
+			fail("Szenario %s: Korrektur kill %s abgelehnt (%s)" % [focus, id, killed.error])
+			_scenario = false
+			return false
+	var reached := _run(session, 900 + int(spec["count"]), focus, true)
+	_scenario = false
+	return reached
+
+
+func test_conditional_night_roles_are_reachable_in_fixed_scenarios() -> void:
+	_card = ActionCard.new()
+	tree.root.add_child(_card)
+	_spawned.append(_card)
+	for focus: String in REACH_SCENARIOS:
+		assert_true(_reach(focus, REACH_SCENARIOS[focus]), "Szenario %s: Schritt der Rolle wurde als Prompt erreicht" % focus)
+
+
+## Regression B-01: Die Abdeckungspartien dürfen nicht vom globalen Zufallsgenerator abhängen, der bei jedem
+## Start anders gesetzt ist. Dieselbe Partie muss unter verschiedenen globalen Seeds dieselben Prompts liefern.
+func test_coverage_games_do_not_depend_on_the_global_random_generator() -> void:
+	_card = ActionCard.new()
+	tree.root.add_child(_card)
+	_spawned.append(_card)
+	var roles: Array = FUZZ.ROLES
+	var g := roles.find("koenig")
+	var signatures: Array = []
+	for global_seed: int in [1, 2, 3, 4]:
+		seed(global_seed)
+		_rng.seed = 104729 * (g + 3)
+		_combos.clear()
+		_owners.clear()
+		_play(g, "koenig", COUNTS[g % COUNTS.size()])
+		var keys := _combos.keys()
+		keys.sort()
+		signatures.append(",".join(keys) + "|" + ",".join(_owners.keys()))
+	for i: int in signatures.size():
+		assert_eq(signatures[i], signatures[0], "Partie unter globalem Seed %d wie unter Seed 1" % (i + 1))
 
 
 # --- Gezielt: seltene Reaktionen ---------------------------------------------------------------------
