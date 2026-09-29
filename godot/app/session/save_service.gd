@@ -9,6 +9,7 @@ extends RefCounted
 ## der unveränderte StateCodec-Text. Geladen wird immer über StateCodec.decode (Integrität, Replay).
 ##
 ## Sicheres Schreiben (jeder Schritt einzeln prüfbar):
+##   0. liegt noch eine vollständige `.tmp` aus einem abgebrochenen Speichern vor, wird sie zuerst eingesetzt
 ##   1. neuen Stand in `<datei>.tmp` schreiben und byteweise zurücklesen
 ##   2. vorhandene Datei zu `<datei>.bak` umbenennen (ältere Sicherung ersetzt)
 ##   3. `.tmp` zu `<datei>` umbenennen
@@ -52,10 +53,14 @@ func _save(round_id: String, core_text: String, summary: Dictionary) -> Dictiona
 	var saved_at := int(Time.get_unix_time_from_system())
 	var failed := func(error: String) -> Dictionary:
 		return {"ok": false, "error": error, "round_id": round_id, "saved_at": 0}
-	if round_id == "" or DirAccess.make_dir_recursive_absolute(base_dir) != OK:
+	if round_id == "" or not _ensure_dir():
 		return failed.call("no_directory")
 	var path := path_for(round_id)
 	var tmp := path + ".tmp"
+	# Eine vollständige `.tmp` aus einem abgebrochenen Speichern ist der neueste Stand: erst einsetzen, damit ein
+	# erneuter Fehler beim Überschreiben der `.tmp` ihn nicht zerstört.
+	if FileAccess.file_exists(tmp) and bool(_read(tmp)["ok"]) and not _promote_tmp(path):
+		return failed.call("backup_failed")
 	var text := JSON.stringify({"format": FORMAT, "version": VERSION, "app_version": AppPlatform.app_version(),
 		"saved_at": saved_at, "summary": summary, "core": core_text})
 	var file := FileAccess.open(tmp, FileAccess.WRITE) if simulate_failure != &"write" else null
@@ -92,11 +97,7 @@ func load_game(round_id: String) -> Dictionary:
 	if FileAccess.file_exists(tmp):
 		var from_tmp := _read(tmp)
 		if bool(from_tmp["ok"]):
-			if FileAccess.file_exists(path):
-				if FileAccess.file_exists(bak):
-					DirAccess.remove_absolute(bak)
-				DirAccess.rename_absolute(path, bak)
-			DirAccess.rename_absolute(tmp, path)
+			_promote_tmp(path)
 			return _result(from_tmp, "tmp", set_aside)
 		if bool(from_tmp.get("incompatible", false)):
 			return _incompatible(from_tmp, set_aside)
@@ -194,6 +195,30 @@ func _envelope(path: String) -> Dictionary:
 	if not data is Dictionary or str((data as Dictionary).get("format", "")) != FORMAT or not (data as Dictionary).get("core") is String:
 		return {}
 	return data
+
+
+## Setzt die vollständige `<datei>.tmp` ein: vorhandene Datei wird Sicherung, `.tmp` wird Datei.
+func _promote_tmp(path: String) -> bool:
+	var bak := path + ".bak"
+	if FileAccess.file_exists(path):
+		if FileAccess.file_exists(bak):
+			DirAccess.remove_absolute(bak)
+		if DirAccess.rename_absolute(path, bak) != OK:
+			return false
+	return DirAccess.rename_absolute(path + ".tmp", path) == OK
+
+
+## Legt `base_dir` bei Bedarf an. Steht eine Datei im Pfad, ist das Anlegen unmöglich: dann ohne Engine-Fehler ablehnen.
+func _ensure_dir() -> bool:
+	var p := base_dir
+	while not DirAccess.dir_exists_absolute(p):
+		if FileAccess.file_exists(p):
+			return false
+		var parent := p.get_base_dir()
+		if parent == p or parent == "":
+			break
+		p = parent
+	return DirAccess.dir_exists_absolute(base_dir) or DirAccess.make_dir_recursive_absolute(base_dir) == OK
 
 
 func _set_aside(path: String) -> String:

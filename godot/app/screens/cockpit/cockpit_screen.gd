@@ -45,6 +45,7 @@ var _role_card_person: int = -1  ## Person der offenen Rollenkarte (nur Bedienzu
 @onready var _round: GrimmLabel = %RoundLabel
 @onready var _alive: GrimmLabel = %AliveLabel
 @onready var _save_status: GrimmLabel = %SaveStatusLabel
+@onready var _retry_save: GrimmButton = %RetrySaveButton  ## nur nach einem Speicherfehler; ein Versuch je Tippen
 @onready var _warnings: GrimmLabel = %WarningsLabel
 @onready var _ring: GameSeatRing = %SeatRing
 @onready var _center_phase: GrimmLabel = %CenterPhaseLabel
@@ -66,6 +67,7 @@ func _setup() -> void:
 	context.session.command_rejected.connect(_on_rejected)
 	context.session.state_replaced.connect(_on_state_replaced)
 	context.saves.status_changed.connect(_on_save_status)
+	_retry_save.pressed.connect(context.autosave)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	_card.requested.connect(_on_card_requested)
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
@@ -145,8 +147,10 @@ func _on_save_status(status: Dictionary) -> void:
 func _show_save_status(status: Dictionary) -> void:
 	if status.is_empty() or str(status.get("round_id", "")) != context.session.round_id():
 		_save_status.text_key = ""
+		_retry_save.visible = false
 		return
 	var ok := bool(status.get("ok", false))
+	_retry_save.visible = not ok
 	_save_status.theme_type_variation = &"CaptionLabel" if ok else &"ErrorCaptionLabel"
 	_save_status.text_key = "ui.cockpit.save.ok" if ok else "ui.cockpit.save.error"
 

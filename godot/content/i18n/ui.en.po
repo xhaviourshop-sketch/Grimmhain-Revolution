@@ -47,6 +47,9 @@ msgstr "Quit Grimmhain?"
 msgid "ui.dialog.quit.message"
 msgstr "The app will close. A running game is saved and can be continued via “Continue”."
 
+msgid "ui.dialog.quit.unsaved_message"
+msgstr "Warning: The latest state of the running game is not saved. Quitting loses it; “Continue” returns to the last saved state."
+
 msgid "ui.dialog.quit.confirm"
 msgstr "Quit"
 
@@ -2669,6 +2672,9 @@ msgstr "Saved"
 msgid "ui.cockpit.save.error"
 msgstr "Error: not saved"
 
+msgid "ui.cockpit.save.retry"
+msgstr "Save again"
+
 msgid "ui.cockpit.save.failed"
 msgstr "Error: The game could not be saved. The last saved state is kept."
 
@@ -2706,7 +2712,7 @@ msgid "ui.continue.status.failed"
 msgstr "Error: The save is damaged and has no valid backup. Nothing was deleted."
 
 msgid "ui.continue.status.recovered_backup"
-msgstr "Note: The save was damaged. The backup was loaded and the damaged file kept."
+msgstr "Note: The save was damaged. The backup was loaded, an older state: the most recent steps are missing and must be carried out again. The damaged file is kept."
 
 msgid "ui.continue.status.recovered_tmp"
 msgstr "Note: The last save was interrupted. The complete latest state was loaded."

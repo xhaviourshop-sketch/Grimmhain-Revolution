@@ -94,6 +94,71 @@ func test_failed_write_keeps_last_good_file_and_reports_error() -> void:
 	assert_true(bool(ctx.autosave()["ok"]), "danach wieder speicherbar")
 
 
+## Paket 4: Nach einem abgebrochenen Speichern liegt der neueste vollständige Stand nur in `.tmp`. Scheitert das
+## nächste Speichern (Prüfung), darf dieser Stand nicht verloren gehen; sonst lädt der Neustart einen älteren.
+func test_failure_after_interrupted_save_keeps_the_newest_complete_state() -> void:
+	for first: StringName in [&"swap", &"backup"]:
+		var ctx := _context()
+		_start(ctx)
+		ctx.session.start_night()
+		ctx.saves.simulate_failure = first
+		ctx.session.answer_targets([5])  # Stand N liegt vollständig in `.tmp`
+		assert_false(bool(ctx.saves.last_status["ok"]), "%s: Abbruch gemeldet" % first)
+		var hash_n := ctx.session.state_hash()
+		ctx.saves.simulate_failure = &"verify"
+		ctx.session.begin_next_step()  # Stand N+1: Prüfung scheitert
+		assert_false(bool(ctx.saves.last_status["ok"]), "%s: zweiter Fehler gemeldet" % first)
+		var fresh := _restart(ctx)
+		var resumed := fresh.resume(ctx.session.round_id())
+		assert_true(bool(resumed["ok"]), "%s: ladbar" % first)
+		assert_eq(fresh.session.state_hash(), hash_n, "%s: neuester vollständiger Stand N, nicht die ältere Sicherung" % first)
+		assert_ne(str(resumed.get("recovered", "")), "backup", "%s: kein Rückfall auf die Sicherung" % first)
+
+
+## Fehlendes Verzeichnis wird angelegt; ein nicht anlegbares Verzeichnis (eine Datei steht im Weg) ist ein echter
+## Schreibfehler, unabhängig von Kontorechten. Danach kann in ein gültiges Verzeichnis gespeichert werden.
+func test_missing_directory_is_created_and_blocked_directory_reports_error() -> void:
+	var ctx := _context()
+	var root := ctx.saves.base_dir
+	ctx.saves.base_dir = root.path_join("neu/unter")
+	_start(ctx)
+	assert_true(bool(ctx.saves.last_status["ok"]) and FileAccess.file_exists(ctx.saves.path_for(ctx.session.round_id())), "fehlendes Verzeichnis angelegt")
+	var blocker := root.path_join("blockiert")
+	var f := FileAccess.open(blocker, FileAccess.WRITE)
+	f.store_string("keine Mappe")
+	f.close()
+	ctx.saves.base_dir = blocker.path_join("saves")
+	var r := ctx.autosave()
+	assert_false(bool(r["ok"]), "kein Erfolg gemeldet")
+	assert_eq(str(r["error"]), "no_directory", "Fehlergrund")
+	assert_eq(FileAccess.get_file_as_string(blocker), "keine Mappe", "im Weg stehende Datei unverändert")
+	ctx.saves.base_dir = root.path_join("neu/unter")
+	assert_true(bool(ctx.autosave()["ok"]), "nach Behebung wieder speicherbar")
+	for p: String in [root.path_join("neu/unter").path_join(ctx.saves.PREFIX + ctx.session.round_id() + ctx.saves.EXT), root.path_join("neu/unter").path_join(ctx.saves.PREFIX + ctx.session.round_id() + ctx.saves.EXT + ".bak")]:
+		DirAccess.remove_absolute(p)
+	DirAccess.remove_absolute(root.path_join("neu/unter"))
+	DirAccess.remove_absolute(root.path_join("neu"))
+
+
+## Wiederholtes Laden und Wiederherstellen wendet keinen Befehl doppelt an und liefert immer denselben Stand.
+func test_repeated_resume_never_applies_commands_twice() -> void:
+	var ctx := _context()
+	_start(ctx)
+	ctx.session.start_night()
+	ctx.saves.simulate_failure = &"swap"
+	ctx.session.answer_targets([5])
+	var expected := [ctx.session.state_hash(), ctx.session.commands().size(), ctx.session.event_log()]
+	var recovered: Array = []
+	for i: int in 3:
+		var fresh := _restart(ctx)
+		var resumed := fresh.resume(ctx.session.round_id())
+		recovered.append(str(resumed.get("recovered", "")))
+		assert_eq([fresh.session.state_hash(), fresh.session.commands().size(), fresh.session.event_log()], expected, "Laden %d: gleicher Stand" % i)
+		assert_eq(fresh.resume(ctx.session.round_id())["ok"], true, "Laden %d: erneut in derselben Sitzung" % i)
+		assert_eq(fresh.session.commands().size(), int(expected[1]), "Laden %d: keine doppelten Befehle" % i)
+	assert_eq(recovered, ["tmp", "", ""], "Unterbrechung nur einmal eingesetzt, danach reguläre Datei")
+
+
 func test_interrupted_swap_is_completed_on_load() -> void:
 	var ctx := _context()
 	_start(ctx)
@@ -304,6 +369,89 @@ func test_cockpit_shows_save_error_without_false_success() -> void:
 	ctx.session.answer_targets([5])
 	await frames(2)
 	assert_eq(status.text, "Gespeichert", "nach erfolgreichem Speichern wieder grün")
+
+
+## Paket 4: Nach einem Speicherfehler kann ohne neuen Spielbefehl erneut gespeichert werden (etwa nach Spielende).
+## Kein automatisches Wiederholen: jeder Versuch geht von einem Tippen aus. Die Partie bleibt dabei unverändert bedienbar.
+func test_retry_save_button_after_failure_without_automatic_loop() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	_start(ctx)
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	var retry := find_node(current_screen(shell), "RetrySaveButton") as BaseButton
+	assert_true(retry != null and not retry.is_visible_in_tree(), "ohne Fehler kein Button „Erneut speichern“")
+	var attempts: Array = []
+	ctx.saves.status_changed.connect(func(st: Dictionary) -> void: attempts.append(st))
+	ctx.saves.simulate_failure = &"write"
+	await press(find_button(current_screen(shell), "StartNightButton"))
+	await frames(3)
+	assert_eq(attempts.size(), 1, "genau ein Speicherversuch, keine automatische Wiederholung")
+	assert_true(retry.is_visible_in_tree() and not retry.disabled, "Erneut speichern angeboten")
+	var hash := ctx.session.state_hash()
+	await press(retry)
+	assert_eq(attempts.size(), 2, "ein Versuch je Tippen")
+	assert_eq((find_node(current_screen(shell), "SaveStatusLabel") as Label).text, "Fehler: nicht gespeichert", "Fehler bleibt sichtbar")
+	assert_true(retry.is_visible_in_tree(), "weiter angeboten")
+	assert_eq(ctx.session.state_hash(), hash, "Partie unverändert, nicht zurückgesetzt")
+	assert_false(visible_buttons(find_node(current_screen(shell), "ActionCard")).is_empty(), "Partie weiter bedienbar")
+	ctx.saves.simulate_failure = &""
+	await press(retry)
+	assert_eq((find_node(current_screen(shell), "SaveStatusLabel") as Label).text, "Gespeichert", "nach Behebung gespeichert")
+	assert_false(retry.is_visible_in_tree(), "Button verschwindet nach Erfolg")
+	var loaded := ctx.saves.load_game(ctx.session.round_id())
+	var other := GameSession.new()
+	assert_eq(other.load_text(str(loaded["core"])), &"", "gespeicherter Stand ladbar")
+	assert_eq(other.state_hash(), hash, "gespeichert ist der aktuelle Stand")
+
+
+## Die Beenden-Rückfrage verspricht nur dann einen gespeicherten Stand, wenn das letzte Speichern gelang.
+func test_quit_dialog_warns_when_the_running_game_is_not_saved() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	var dialog := shell.call("get_dialog") as Control
+	var message := find_node(dialog, "MessageLabel") as Label
+	shell.call("request_quit")
+	assert_true(message.text.contains("gespeichert") and not message.text.contains("nicht gespeichert"), "ohne Partie: Standardtext (%s)" % message.text)
+	dialog.call("cancel")
+	_start(ctx)
+	ctx.saves.simulate_failure = &"write"
+	ctx.autosave()
+	shell.call("request_quit")
+	assert_true(message.text.contains("nicht gespeichert"), "Warnung bei ungespeichertem Stand: %s" % message.text)
+	await press(find_node(dialog, "CancelButton") as BaseButton)
+	assert_eq(quit_calls, 0, "Abbrechen beendet nicht")
+	ctx.saves.simulate_failure = &""
+	ctx.autosave()
+	shell.call("request_quit")
+	assert_false(message.text.contains("nicht gespeichert"), "nach erfolgreichem Speichern keine Warnung")
+	dialog.call("cancel")
+
+
+## Rückfall auf die Sicherung: Die Meldung sagt, dass ein älterer Stand geladen wurde.
+func test_backup_recovery_message_names_the_older_state() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	_start(ctx)
+	ctx.session.start_night()
+	var path := ctx.saves.path_for(ctx.session.round_id())
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string("kaputt")
+	f.close()
+	var round := ctx.session.round_id()
+	ctx.session.reset()
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"continue")
+	await press(find_button(current_screen(shell), "ResumeButton_%s" % round))
+	var toast := find_node(shell.call("get_toast") as Node, "MessageLabel") as Label
+	assert_true(toast.text.contains("älter"), "Meldung nennt den älteren Stand: %s" % toast.text)
+	assert_eq(int((session_of(shell) as GameSession).view()["command_count"]), 1, "Stand der Sicherung geladen")
 
 
 func test_discard_from_continue_screen_asks_and_keeps_files() -> void:

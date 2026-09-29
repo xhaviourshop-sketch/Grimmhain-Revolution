@@ -47,6 +47,9 @@ msgstr "Grimmhain beenden?"
 msgid "ui.dialog.quit.message"
 msgstr "Die App wird geschlossen. Eine laufende Partie ist gespeichert und lässt sich über „Fortsetzen“ weiterführen."
 
+msgid "ui.dialog.quit.unsaved_message"
+msgstr "Achtung: Der letzte Stand der laufenden Partie ist nicht gespeichert. Beim Beenden geht er verloren; „Fortsetzen“ führt zum zuletzt gespeicherten Stand."
+
 msgid "ui.dialog.quit.confirm"
 msgstr "Beenden"
 
@@ -2669,6 +2672,9 @@ msgstr "Gespeichert"
 msgid "ui.cockpit.save.error"
 msgstr "Fehler: nicht gespeichert"
 
+msgid "ui.cockpit.save.retry"
+msgstr "Erneut speichern"
+
 msgid "ui.cockpit.save.failed"
 msgstr "Fehler: Die Partie konnte nicht gespeichert werden. Der letzte gespeicherte Stand bleibt erhalten."
 
@@ -2706,7 +2712,7 @@ msgid "ui.continue.status.failed"
 msgstr "Fehler: Der Spielstand ist beschädigt und hat keine gültige Sicherung. Nichts wurde gelöscht."
 
 msgid "ui.continue.status.recovered_backup"
-msgstr "Hinweis: Der Spielstand war beschädigt. Die Sicherung wurde geladen, die beschädigte Datei aufbewahrt."
+msgstr "Hinweis: Der Spielstand war beschädigt. Geladen wurde die Sicherung, ein älterer Stand: Die zuletzt ausgeführten Schritte fehlen und müssen erneut ausgeführt werden. Die beschädigte Datei bleibt aufbewahrt."
 
 msgid "ui.continue.status.recovered_tmp"
 msgstr "Hinweis: Das letzte Speichern war unterbrochen. Der vollständige neueste Stand wurde geladen."

@@ -104,7 +104,10 @@ func request_quit() -> void:
 	if AppPlatform.is_mobile():
 		_quit()
 		return
-	_dialog.open_request(DialogRequest.create("ui.dialog.quit.title", "ui.dialog.quit.message", "ui.dialog.quit.confirm", _quit))
+	# Nur versprechen, dass die Partie gespeichert ist, wenn das letzte Speichern der laufenden Partie gelang.
+	var unsaved := app_context.session.round_id() != "" and not bool(app_context.saves.last_status.get("ok", true)) \
+		and str(app_context.saves.last_status.get("round_id", "")) == app_context.session.round_id()
+	_dialog.open_request(DialogRequest.create("ui.dialog.quit.title", "ui.dialog.quit.unsaved_message" if unsaved else "ui.dialog.quit.message", "ui.dialog.quit.confirm", _quit))
 
 
 ## Sichere Fläche in Viewport-Koordinaten; leeres Rechteck = keine Geräteangabe.

@@ -107,6 +107,14 @@ vertical_alignment = 1
 script = ExtResource("3_label")
 wrap = false
 
+[node name="RetrySaveButton" type="Button" parent="Layout/StatusRow/PhaseArea/Row"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.cockpit.save.retry"
+kind = 3
+
 [node name="NoGameBadge" type="PanelContainer" parent="Layout/StatusRow"]
 unique_name_in_owner = true
 layout_mode = 2
