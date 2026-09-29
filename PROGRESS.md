@@ -233,3 +233,12 @@ Nächster Schritt: manueller PC-Fenstertest.
 Status: vorbereitet, noch nicht durchgeführt. Anleitung `docs/ui/pc-test-pr3.md` (feste Partie mit acht Personen, Schritte A bis H), Fehlerliste `docs/ui/pc-test-pr3-fehlerliste.md`, Starter `PC-Test-starten.cmd` (Godot 4.7.2 aus Downloads, ohne Editor; `--check` prüft nur Pfade und Version).
 Verifiziert: Partie der Anleitung headless über `GameSession` durchgespielt (temporärer Test, nicht versioniert); Starter mit `--check` Exit 0, fehlende Datei und falsche Version Exit 1; nicht grafisch gestartet. Kein Code geändert, daher keine erneute Volltestsuite.
 Nächster Schritt: PC-Test durch den Nutzer, danach Befunde aus der Fehlerliste bearbeiten.
+
+---
+
+## 2026-09-29 — Inhaltsentscheidungen DI-01 bis DI-08 in PR #3
+Status: integriert im Branch `feature/night-ui-expansion`, noch nicht gemergt. Schema 13, Regelversion 0.12. Umsetzung und Abweichungen von den Entwurfsannahmen: `docs/content-drafts/INTEGRATION-STATUS.md`, Entscheidungen im Decision Log ("Inhaltsentscheidungen").
+Umfang: Wiederbelebungsrunde statt Aufdeckungsoption (`revival_round`, alte Angabe wird abgelehnt), Tarnaufrufe (`CallPolicy`), öffentliche Todeseffekt-Ansagen (`DeathEffect`), private Hinweiskarten für Loki, Rattenfänger und Pestbringerin (`notices`, `AckNotice`), anonyme Rotkäppchen-Karte, keine Scheinrolle auf Karten. Spielstände anderer Schemaversion (zum Beispiel 12) werden nicht beiseitegelegt oder verändert, sondern als "andere Version" angezeigt (Fortsetzen gesperrt, Verwerfen möglich).
+Verifiziert (Windows, Godot 4.7.2, headless): 917 Tests, 0 fehlgeschlagen, Exit 0; Register 313/313, Rollenprüfer und `check-coverage.py` ohne Befund, `git diff --check` Exit 0. Keine grafische, Touch- oder Tablet-Prüfung.
+Nicht umgesetzt: Smartphone- und Audio-Ausgabe, Ton bei fünf Toten (DI-09), Totenreichkarten (nicht definiert).
+Nächster Schritt: manueller PC-Test `docs/ui/pc-test-pr3.md` (A4, Teile I bis L).

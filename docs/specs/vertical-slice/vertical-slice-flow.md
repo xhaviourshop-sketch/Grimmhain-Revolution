@@ -34,7 +34,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 |---|---|
 | **Spielleiter** (Cockpit) | vollständiger Zustand, alle Ereignisse |
 | **Handelnde Person** (gesicherte Tablet-Karte) | genau die Information oder Auswahl dieses Schritts |
-| **Öffentlich** (vorlesen, später öffentliche Anzeige) | Phase, Nummer, lebend/tot, Namen, Nominierungen, öffentliche Ansagen. Bei einem Tod: Name immer; Rolle nur, wenn im Setup `reveal_role_on_death` = Ja; Ursache nie (DR-04) |
+| **Öffentlich** (vorlesen, später öffentliche Anzeige) | Phase, Nummer, lebend/tot, Namen, Nominierungen, öffentliche Ansagen. Bei einem Tod: Name immer; Rolle nur in Runden ohne Wiederbelebung (29.09.2026, ersetzt die Setup-Option); Ursache nie (DR-04), außer den angesagten Todeseffekten mit Effekt und Rolle |
 
 ---
 
@@ -47,7 +47,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 | 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen je Rolle nur, wo die Rolle eine eigene festlegt (`dorfbewohner` und `werwolf` haben keine, damit 6 bis 24 Personen allein mit ihnen spielbar sind; `../../masterplan/DECISION-LOG.md` 26.09.2026; die Legacy-Grenzen aus `setup.html` gelten nicht), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"; der Core-Slice ohne Einzelsiegrolle verlangt nur Dorf und Werwölfe). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
 | 1.4 | Verteilung wählen: zufällig oder manuell | zufällig: Ziehung über `SeededRng` | Seed, Zuordnung Person → Rolle |
 | 1.5a | Ist `trugbilderwolf` im Rollenpool: Scheinrolle festlegen (DR-08) | bietet nur Rollen an, die nicht als Wolf zählen; die Scheinrolle ändert sich danach nur per bestätigter Spielleiterkorrektur | Scheinrolle |
-| 1.5 | Option `Rolle beim Tod aufdecken: Ja/Nein` wählen (DR-04) | speichert die Option als Teil des Setups; sie gilt für die ganze Partie | `reveal_role_on_death` |
+| 1.5 | *(entfallen am 29.09.2026)* Keine Option „Rolle beim Tod aufdecken“ mehr; der Regelkern leitet die Wiederbelebungsrunde aus der Startbesetzung ab (Kutscher, Dr. Victor Frankenstein), das Setup zeigt sie nur an | Modus gilt für die ganze Partie | `revival_round` (abgeleitet) |
 | 1.6 | Setup bestätigen → `StartGame` | friert `rules_version` ein, legt ersten Checkpoint an | vollständiger Anfangszustand |
 
 Gleicher Seed, gleiche Personenliste und gleicher Rollenpool erzeugen dieselbe Zuordnung.
@@ -99,7 +99,7 @@ Regeln des Ablaufs:
 
 | Teil | Inhalt |
 |---|---|
-| Öffentlich vorlesen | Namen der in der Nacht Gestorbenen oder „Niemand ist gestorben"; Rolle der Gestorbenen nur bei `reveal_role_on_death` = Ja; keine Ursache (DR-04) |
+| Öffentlich vorlesen | Namen der in der Nacht Gestorbenen oder „Niemand ist gestorben"; Rolle der Gestorbenen nur in Runden ohne Wiederbelebung; keine Ursache (DR-04), außer den angesagten Todeseffekten |
 | Nur für den Spielleiter | wer wen geschützt oder gerettet hat, wer vergiftet wurde, Ursachen, Verwandlungen, Lehrling-Bindung und -Erbe, Informationsergebnisse der Nacht |
 
 7. `BeginDay` setzt Phase DAY (Unterzustand DISCUSSION) und den Tageszähler.

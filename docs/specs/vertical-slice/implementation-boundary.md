@@ -96,7 +96,7 @@ Erst nach Abnahme von A. Alle DR-Punkte sind entschieden (`decision-request.md`,
 | B-15 | Vorläufige, lizenzklare Tag-/Nacht-Gestaltung; Reduced-Motion-, Untertitel- und Lautstärkeregelung verdrahtet | Masterplan Phase 2 |
 | B-16 | DE- und EN-Texte aller Slice-Rollen aus `rules-register.md` als Übersetzungsschlüssel | DL |
 | B-17 | Nachweis auf echtem iPad | Masterplan Phase 2 Gate |
-| B-18 | Setup-Option `reveal_role_on_death`; öffentliche Todesmeldung mit Name, Rolle nur bei Ja, nie Ursache | DR-04 |
+| B-18 | ~~Setup-Option `reveal_role_on_death`~~ (ersetzt 29.09.2026 durch die aus der Startbesetzung abgeleitete Wiederbelebungsrunde); öffentliche Todesmeldung mit Name, Rolle nur in Runden ohne Wiederbelebung, nie Ursache, außer angesagten Todeseffekten | DR-04, Decision Log 29.09.2026 |
 
 ---
 

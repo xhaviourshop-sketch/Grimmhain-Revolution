@@ -59,7 +59,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | G-TOD-2 | Jeder Tod, auch ein vom Spielleiter gesetzter, läuft durch dieselbe Tötungs-Pipeline. Der Spielleiter wählt bei einer Korrektur ausdrücklich, ob Folgen ausgelöst werden. | 07-T2 „manueller Tod umgeht Folgen"; `04` C-4 |
 | G-TOD-3 | Todesursachen im Slice: `NIGHT_KILL` (Wolfsangriff), `WITCH_POISON` (Hexengift), `HUNTER_SHOT` (Fluch des Sensenträgers), `LYNCH` (Hinrichtung nach physischer Abstimmung), `SPIEGELWOLF_RETALIATE` (Spiegelung auf Nominierende), `MANIPULATOR_NOMINATED` (Tod durch Nominierung), `GM_CORRECTION` (Spielleiterkorrektur). | `../../godot-migration/04-rules-migration-matrix.md` C.2; `GM_CORRECTION` aus `04` C-4 |
 | G-TOD-4 | Todesfolgen mit Spielerentscheidung werden als persistente Reaktion eingereiht. Nach einem Tod am Tag werden sie sofort, nach einem Tod in der Nacht während der Morgenauflösung abgearbeitet. | DR-09; 03 §5.2 `reaction_queue` |
-| G-TOD-5 | Öffentlich ist immer der Name. Die Setup-Option `reveal_role_on_death` bestimmt, ob zusätzlich die Rolle veröffentlicht wird. Ursache und interne Effekte bleiben privat, sofern eine Regel sie nicht ausdrücklich veröffentlicht. | DR-04 |
+| G-TOD-5 | Öffentlich ist immer der Name. Die Rolle wird beim Tod nur in Runden ohne Wiederbelebung veröffentlicht (ersetzt am 29.09.2026 die frei wählbare Setup-Option `reveal_role_on_death`, DI-01). Ursache und interne Effekte bleiben privat, sofern eine Regel sie nicht ausdrücklich veröffentlicht; ausdrücklich veröffentlicht werden die angesagten Todeseffekte mit Effekt und Rolle (DI-03). | DR-04, Decision Log 29.09.2026 |
 
 ### 0.6 Tag, Nominierung, Hinrichtung
 
@@ -346,7 +346,7 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 | DR-01 | Technische Rollen-IDs | deutsches ASCII-kebab-case (`dorfbewohner`, `werwolf`, `das-orakel`) | §1 bis §11 (Überschriften) |
 | DR-02 | gleichzeitige Siege, niemand lebt | Spielleiter entscheidet; niemand lebt → kein automatischer Gewinner | G-SIEG-5 |
 | DR-03 | Nominierung | pro Tag, nur Lebende, je einmal nominieren und nominiert werden; Hinrichtung nur nach Nominierung, sonst Übersteuerung | G-TAG-2, G-TAG-4 |
-| DR-04 | öffentliche Todesinformation | Name öffentlich; Rolle nach Setup-Option `reveal_role_on_death`; Ursache privat | G-TOD-5 |
+| DR-04 | öffentliche Todesinformation | Name öffentlich; Rolle nur in Runden ohne Wiederbelebung (ersetzt die Setup-Option, 29.09.2026); Ursache privat, außer angesagten Todeseffekten | G-TOD-5 |
 | DR-05 | Schutzengel | andere lebende Person; nur diese Nacht gegen Wolfsangriff; Anwendung in der Morgenauflösung; Ende bei Tagesbeginn | §3 |
 | DR-06 | Waldhexe | je ein Heil- und Gifttrank, beide in einer Nacht erlaubt; Gift als Markierung, Tod am Morgen (27.09.2026); Name vor Entscheidung, Rolle nach Rettung | §6 |
 | DR-07 | Orakel | Sonderwölfe erscheinen als `werwolf`; Selbstprüfung verboten | §4 |

@@ -483,18 +483,22 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_spiegelwolf
 
 ## 6. Morgenbericht und Geheimhaltung (Stufe V, DR-04)
 
-**AS-M01 · Öffentlich nur der Name**
-- Given: `reveal_role_on_death` = Nein; Nacht mit Schutz auf F, Angriff auf F, Gift auf A.
+**AS-M01 · Öffentlich nur der Name (Wiederbelebungsrunde)** *(ersetzt am 29.09.2026, DI-01: statt `reveal_role_on_death` = Nein)*
+- Given: Wiederbelebungsrunde (die Startbesetzung enthält eine direkte Wiederbelebungsrolle); Nacht mit Schutz auf F, Angriff auf F, Gift auf A.
 - Then: Der öffentliche Teil nennt nur „A"; keine Rolle, keine Ursache. Der private Teil nennt Schutz, Angriff, Gift und Ursachen.
 
-**AS-M03 · Rolle bei Tod aufdecken**
-- Given: `reveal_role_on_death` = Ja; wie AS-M01.
+**AS-M03 · Rolle bei Tod aufdecken (Runde ohne Wiederbelebung)** *(ersetzt am 29.09.2026, DI-01: statt `reveal_role_on_death` = Ja)*
+- Given: Runde ohne Wiederbelebung (keine direkte Wiederbelebungsrolle in der Startbesetzung); wie AS-M01.
 - Then: Der öffentliche Teil nennt „A" und `werwolf`; weiterhin keine Ursache.
+
+**AS-M04 · Todeseffekt angesagt (DI-03)** *(neu, 29.09.2026)*
+- Given: Ritter stirbt durch den Rudelangriff, der nächste Wolf stirbt mit; einmal Wiederbelebungsrunde, einmal Runde ohne Wiederbelebung.
+- Then: Der öffentliche Teil enthält eine Ansage „Ritter … reißt … mit in den Tod“ mit Rolle zum Ereigniszeitpunkt, in beiden Runden. Die Todesansagen der beiden nennen die Rolle nur in der Runde ohne Wiederbelebung. Keine Ursache, kein Schutz, keine Markierung.
 
 **AS-M02 · Keine Geheimnisse in öffentlicher Projektion**
 - Given: beliebiger Zustand.
 - When: öffentliche Projektion wird erzeugt.
-- Then: keine Rollen lebender Personen, keine Rollen Toter bei `reveal_role_on_death` = Nein, keine Todesursachen, keine Effekte, keine Nachtziele, keine Lehrling-Bindungen, keine Informationsergebnisse (Negativtest über alle Felder).
+- Then: keine Rollen lebender Personen, keine Rollen Toter in Wiederbelebungsrunden (DI-01), keine Todesursachen, keine Effekte außer den ausdrücklich angesagten Todeseffekten (DI-03: Effekt und Rolle zum Ereigniszeitpunkt), keine Nachtziele, keine Lehrling-Bindungen, keine Informationsergebnisse (Negativtest über alle Felder).
 
 ## 7. Übersteuerung (Stufe V)
 

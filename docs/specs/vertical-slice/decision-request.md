@@ -19,7 +19,7 @@ Alle Fragen sind entschieden. Die Spalte „Empfehlung“ und die Optionstabelle
 | DR-03 | Nominierungsregeln | Core-Slice | A | **A** · pro Tag, nur Lebende, Hinrichtung nur nach Nominierung, sonst Übersteuerung |
 | DR-02 | Siegpriorität, „niemand lebt" | Vertical Slice | A | **C** · Spielleiter entscheidet gleichzeitige Siege; niemand lebt → kein automatischer Gewinner |
 | DR-14 | Siegprüfung bei offenen Reaktionen | Vertical Slice | A | **eigene** · nach jedem Tod vorläufig, Reaktionen abarbeiten, danach verbindlich prüfen |
-| DR-04 | Öffentliche Information bei Tod | Vertical Slice | A | **eigene** · Name öffentlich; Rolle nach Setup-Option `reveal_role_on_death`; Ursache privat |
+| DR-04 | Öffentliche Information bei Tod | Vertical Slice | A | **eigene** · Name öffentlich; Rolle nach Setup-Option `reveal_role_on_death`; Ursache privat *(ersetzt am 29.09.2026: Rolle nur in Runden ohne Wiederbelebung, Todeseffekte angesagt; siehe Decision Log)* |
 | DR-05 | Schutzengel: Dauer und Verbrauch | Vertical Slice | a A, b A | **a A, b A** |
 | DR-06 | Waldhexe: Tränke, Zeitpunkt, Anzeige | Vertical Slice | a A, b A, c A, d A | **a A, b A, c A, d eigene** · Name vor Entscheidung, Rolle nach Rettung |
 | DR-07 | Orakel: Ergebnis bei Wölfen, Selbstwahl | Vertical Slice | a A, c A | **a A, c A** |

@@ -86,14 +86,38 @@ Eine Korrektur während eines offenen Prompts setzt den Schritt im Regelkern zur
 | Jede Hinrichtung über eine verdeckte Prüfkarte | eine Prüfkarte nur bei Sonderrollen würde die Rolle verraten | ein zusätzlicher Tipp je Hinrichtung |
 | Morgenbericht als eigener Schritt vor den Tagesaktionen („Weiter zum Tag“) | Ansage vor Diskussion; kein `BeginDay` im Regelkern | Bedienzustand, nach Neustart erscheint der Bericht erneut |
 | Nominierung in zwei Schritten im Sitzkreis | entspricht dem Ablauf am Tisch (wer, wen) | keine Liste, keine Stimmenerfassung |
-| Option „Rolle beim Tod aufdecken“ im Rollenschritt, Standard aus | DR-04 verlangt die Option; aus ist die geheimhaltende Voreinstellung | Feld in `StartGame`, Schema 12 |
+| Keine Option „Rolle beim Tod aufdecken“ mehr; die Wiederbelebungsrunde folgt aus der Startbesetzung (DI-01) | Antwort des Product Owners vom 29.09.2026 ersetzt DR-04 | Anzeige im Rollenschritt, Schema 13 |
 | Traumdeuter/Kopfgeldjäger: Hinweiszeile „Wölfe unter den Wählbaren“ | der Spielleiter muss mindestens einen Wolf wählen und sieht sonst keine Rollen | nur nachts in der Karte; Regelprüfung im Kern |
 | Sichtschutz endet per Button statt Halten | Halten ist ohne Gerätetest nicht verlässlich prüfbar | bei der Tablet-Abnahme prüfen |
 | Undo/Redo je Befehl über Replay, `StartGame` ausgenommen | Vertical Slice §10; ein Start rückgängig hieße Partie verwerfen, dafür gibt es „Beenden und verwerfen“ | mehrstufige Aktionen gehen Stufe für Stufe zurück |
 
-## Setup-Option „Rolle beim Tod öffentlich aufdecken“
+## Wiederbelebungsrunde statt Aufdeckungsoption (DI-01, ersetzt DR-04)
 
-DR-04 verlangt die Option im Setup. Sie fehlte bisher; sie steht jetzt im Rollenschritt (Standard: aus) und geht als optionales Feld `reveal_role_on_death` mit `StartGame` in den Spielstand (Schema 12). Sie ändert keine Regel, nur den öffentlichen Teil der Todesansagen.
+**Änderung der bisherigen Produktvorgabe.** Die frei wählbare Setup-Option „Rolle beim Tod öffentlich aufdecken“ (`reveal_role_on_death`, Schema 12) ist entfallen. Der Regelkern leitet bei `StartGame` aus den Startrollen ab, ob die Partie eine Wiederbelebungsrunde ist (`GameState.revival_round`, Schema 13): Direkte Wiederbelebungsrollen (Kutscher, Dr. Victor Frankenstein) lösen den Modus aus; Erbe, Tausch, Diebstahl und die Korrektur `revive` nicht. Der Modus bleibt die ganze Partie gleich.
+
+- Wiederbelebungsrunde: Beim Tod wird keine Rolle aufgedeckt; die Ansage der Nacht sagt „Alle schließen die Augen, auch die Toten.“ (`ui.call.night_falls_revival`).
+- Runde ohne Wiederbelebung: Die Rolle wird beim Tod aufgedeckt (Rolle zum Todeszeitpunkt aus `SeatDied`).
+- Das Setup zeigt den Modus im Rollenschritt nur an (`RevivalRoundLabel`, aus der Rollenwahl berechnet); `StartGame` trägt keine Aufdeckungsangabe, der Kern lehnt `reveal_role_on_death` ab (`reveal_option_removed`).
+- Ältere Spielstände (Schema 12) werden mit klarer Meldung abgelehnt und nicht verändert.
+- Totenreichkarten sind nicht definiert; es gibt weder Kartenregeln noch Dummy-Karten.
+
+## Aufrufe und Tarnaufrufe (DI-02)
+
+`CallPolicy` (Regelkern, reine Abfrage) bestimmt, welche Rollen in der Nacht aufgerufen werden: ohne Wiederbelebung nur Rollen, die noch eine lebende Person hält (Startrolle oder aktuelle Rolle); mit Wiederbelebung auch Rollen Toter. Rollen ohne Schritt heute (verbrauchte, blockierte, noch nicht aktive) erscheinen als **Tarnaufruf**: Die Karte des nächsten echten Schritts (bzw. „Nacht abschließen“) trägt oben die Zeile „Zuerst aufrufen (nur Ansage)“ mit den Vorlesezeilen dieser Rollen. Tarnaufrufe lösen keinen Befehl, keine Ziehung und keinen Verbrauch aus; sie werden bei jedem Rendern aus dem Kernzustand neu berechnet und bleiben deshalb nach Rückgängig, Wiederholen, Neustart und Navigation gleich. Abgeleitet und noch zu bestätigen: Blockierte und noch nicht aktive Rollen werden ebenfalls aufgerufen; Rollen, die in der Partie nicht vorkommen, nicht.
+
+## Todeseffekte werden angesagt (DI-03, ändert DR-04)
+
+**Änderung der bisherigen Produktvorgabe.** Sichtbare Folgen eines Todes werden öffentlich angesagt, mit Effekt und Rolle zum Ereigniszeitpunkt, auch in Wiederbelebungsrunden: Sensenträger, Ritter, Besessener Wolf, Wahnsinniger Kutscher, Fluch des Weisen, Liebeskummer, Rotkäppchen-Kette, Verknüpfung des Schattenwanderers. Der Kern erzeugt dafür das öffentliche Ereignis `DeathEffect` (Positivliste: Effekt, Quelle, Rolle, Ziel, ersetzte Person) direkt nach `SeatDied`, nur wenn der Tod eintritt; kein privates Ereignis wird übernommen. Liebeskummer, Kette und Verknüpfung nennen keine Rolle; der Fluch des Weisen nennt seine Länge nicht. Der Morgenbericht (`public.effects`) und die Tageskarte zeigen die Ansagen; mehrere Nachbarn desselben Kutscherunfalls stehen in einer Ansage. Geheime Wahlen ohne sichtbare Folge (Fluch des Dämonischen Wolfs, Puppe, Markierungen) bleiben verdeckt.
+
+## Private Hinweise (DI-04 bis DI-08)
+
+Der Kern führt offene Hinweise im Spielstand (`notices`, Befehl `AckNotice`); die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ öffnet die Karte für die betroffene Person, „Gezeigt“ bestätigt sie. Der Kern blockiert nicht, die Oberfläche zeigt offene Hinweise zuerst; im Sichtschutz (Tag) bleibt der Inhalt bis „Anzeigen“ verdeckt.
+
+- Loki: beide Personen des Paares, jede sieht nur ihren Partner und die Bindungsart.
+- Rattenfänger: erst die neu Verzauberten (ohne Namen), dann alle lebenden Verzauberten mit Namen.
+- Pestbringerin: jede neu infizierte Person, auch durch die Ausbreitung am Morgen.
+- Rotkäppchen: Die Frage an die gefragte Person erklärt Apfel und Kette und nennt weder die Rolle noch die fragende Person (Handelnde ist die gefragte Person).
+- Trugbilderwolf: Seine Scheinrolle steht auf keiner Karte; nur der private Spielleiterbereich nennt sie.
 
 ## Abdeckung der Rollen über die Oberfläche
 
@@ -214,6 +238,9 @@ Worauf bei der Abnahme achten: Lesbarkeit der Namen bei 24 Personen, Größe und
 | `test_prompt_coverage` | Bedienbarkeit aller Prompt-Arten mit genau einer Antwort nach Kartendaten, eigene Texte je Kombination, Ritter und Schmied |
 | `test_target_selection` | Loki, Seelentauscher, Kutscher, Spürhund über Sitzplätze und Buttons: Regelzeile, gesperrte Teilauswahl mit Erklärung, gesperrter Button sendet nichts, vollständige Auswahl mit erwartetem Ergebnis; Höchstzahl; Auswahl verfällt bei Laden, Korrektur, Rückgängig/Wiederholen |
 | `test_target_counts` (Regelkern) | zulässige Anzahlen und `check` = `apply` ohne Änderung für Loki, Seelentauscher, Kutscher, Spürhund, Doktor; manipulierte und veraltete Befehle abgelehnt |
+| `test_call_presentation` | Tarnaufrufe vor dem ersten Schritt und vor dem Ende der Nacht, tote Rolle nur in Wiederbelebungsrunden, „auch die Toten“, keine Zustandsänderung, gleiche Ansage nach Rückgängig und Laden |
+| `test_notice_cards` | Loki, Rattenfänger, Pestbringerin, Rotkäppchen und Trugbilderwolf: Karten zeigen nur Erlaubtes, Bestätigen, Neustart, Navigation, Rückgängig, Sichtschutz |
+| `test_death_effect_lines` | Ansagen der Todeseffekte mit Rolle (DE, EN), Wiederbelebungsrunde, nur Positivliste, ein Kutscherunfall eine Ansage, Laden und Replay |
 | `test_morning_report` | Positivliste, private Ursachen und Rettungen, Rollenaufdeckung, Rolle beim Tod nach späterer Rollenänderung, Wiederbelebung und zweitem Tod, Laden und Replay, ohne Aufdeckung keine Rolle in zeigbaren Daten |
 | `test_cockpit_day` | Nominierung, Hinrichtung mit Prüfkarte, Spiegelwolf, Weiser, Amalia, Nekromant, keine Hinrichtung, Sieg, keine veraltete Prüfkarte nach Rückgängig |
 | `test_full_round_ui` | vollständige Partie nur über Buttons bis zum bestätigten Sieg |
