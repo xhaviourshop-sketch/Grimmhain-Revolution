@@ -130,7 +130,7 @@ func test_day_card_lists_day_effects_and_sage_curse_names_the_role() -> void:
 	assert_true(keys.has("ui.effect.sage_curse"), "Tageskarte zeigt die Ansage des Fluchs: %s" % str(keys))
 
 
-func test_heartbreak_names_no_role_and_survives_load() -> void:
+func test_heartbreak_names_the_source_role_and_survives_load() -> void:
 	var s := UiGame.session([W, "loki", D, D, D, D, D])
 	assert_true(s.start_night().ok, "Nacht 1")
 	assert_true(s.answer_targets([3, 5]).ok and s.answer_choice(true).ok, "Liebende 3 und 5")
@@ -139,7 +139,8 @@ func test_heartbreak_names_no_role_and_survives_load() -> void:
 	var effects := s.day_effects()
 	assert_eq(effects.size(), 1, "Liebeskummer angesagt")
 	assert_eq(str(effects[0]["effect"]), "heartbreak", "Effekt")
-	assert_eq(str(effects[0]["role_id"]), "", "keine Rolle genannt")
+	assert_eq(str(effects[0]["role_id"]), "loki", "Quellrolle Loki (PE-05)")
+	assert_eq(str((CockpitText.effect_line(effects[0])["values"] as Dictionary)["role"]), "ui.role.loki.name", "Ansagezeile nennt Loki")
 	var other := GameSession.new()
 	assert_eq(other.load_text(s.save_text()), &"", "Laden")
 	assert_eq(JSON.stringify(other.day_effects()), JSON.stringify(effects), "nach dem Laden dieselbe Ansage")

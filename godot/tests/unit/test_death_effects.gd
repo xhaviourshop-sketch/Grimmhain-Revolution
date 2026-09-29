@@ -134,7 +134,8 @@ func test_coachman_crash_announces_each_neighbour_in_order() -> void:
 			assert_eq(int(e.data["source_id"]), 3, "Quelle")
 
 
-func test_heartbreak_and_chain_name_no_role() -> void:
+## PE-05: Liebeskummer, Kette und Verknüpfung nennen die Quellrolle, nie die Rolle einer beteiligten Person.
+func test_heartbreak_and_chain_name_the_source_role() -> void:
 	var day := _day_one(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
 	var loki := day.duplicate_state()
 	loki.loki_pairs.append({"loki_id": 2, "a": 4, "b": 5, "kind": "love", "ended": false})
@@ -145,7 +146,7 @@ func test_heartbreak_and_chain_name_no_role() -> void:
 		assert_eq(String(effects[0].data["effect"]), "heartbreak", "Effekt")
 		assert_eq(int(effects[0].data["source_id"]), 4, "gestorbener Partner")
 		assert_eq(int(effects[0].data["target_id"]), 5, "Liebeskummer")
-		assert_eq(String(effects[0].data["role_id"]), "", "keine Rolle genannt (Auslegung: nichts über Rollen der Liebenden)")
+		assert_eq(String(effects[0].data["role_id"]), "loki", "Quellrolle Loki, nicht die Rolle der Liebenden")
 	var rivals := day.duplicate_state()
 	rivals.loki_pairs.append({"loki_id": 2, "a": 4, "b": 5, "kind": "rival", "ended": false})
 	var rr := _run(rivals, [CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command])
@@ -158,7 +159,7 @@ func test_heartbreak_and_chain_name_no_role() -> void:
 	if chain_effects.size() == 1:
 		assert_eq(String(chain_effects[0].data["effect"]), "red_chain", "Effekt")
 		assert_eq(int(chain_effects[0].data["target_id"]), 4, "Kettenpartner")
-		assert_eq(String(chain_effects[0].data["role_id"]), "", "keine Rolle genannt")
+		assert_eq(String(chain_effects[0].data["role_id"]), "rotkaeppchen", "Quellrolle Rotkäppchen")
 	var no_effects := _run(chained, [CorrectionFixtures.gm("kill", {"target_id": 5, "trigger_effects": false})] as Array[Command])
 	assert_true(_effects(no_effects["events"]).is_empty(), "Korrektur ohne Todesfolgen: keine Ansage")
 
@@ -188,7 +189,7 @@ func test_shadow_link_announces_redirect_and_intended_target() -> void:
 		assert_eq(String(effects[0].data["effect"]), "shadow_link", "Effekt")
 		assert_eq(int(effects[0].data["target_id"]), 5, "stirbt tatsächlich")
 		assert_eq(int(effects[0].data["replaced_id"]), 4, "an Stelle von")
-		assert_eq(String(effects[0].data["role_id"]), "", "keine Rolle genannt")
+		assert_eq(String(effects[0].data["role_id"]), "schattenwanderer", "Quellrolle Schattenwanderer (PE-05)")
 	var gm := day.duplicate_state()
 	gm.shadow_links.append({"walker_id": 4, "partner_id": 5})
 	var direct := _run(gm, [CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command])

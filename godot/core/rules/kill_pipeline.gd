@@ -103,16 +103,18 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 
 
 ## Sichtbare Todesfolgen, die öffentlich angesagt werden (DI-03, Antwort des Product Owners vom 29.09.2026):
-## Ursache → Effekt und ob die Rolle der Quelle genannt wird. Liebeskummer und Kette nennen keine Rolle
-## (Auslegung: Mindestangabe, die Rollen der beiden Personen bleiben verdeckt). Die Ansage entsteht erst,
-## wenn der Tod tatsächlich eintritt; sie enthält nie Ursache, Schutz oder Markierungen.
+## Ursache → Effekt und genannte Rolle: `role` true nennt die Rolle der auslösenden Person zum Ereigniszeitpunkt,
+## eine Rollen-ID nennt fest die Rolle, von der der Effekt stammt (PE-05, Antwort des Product Owners vom 29.09.2026:
+## Liebeskummer → Loki, Kette → Rotkäppchen, Verknüpfung → Schattenwanderer). So bleiben die Rollen der beteiligten
+## Personen auch in Wiederbelebungsrunden verdeckt. Die Ansage entsteht erst, wenn der Tod tatsächlich eintritt;
+## sie enthält nie Ursache, Schutz oder Markierungen.
 const PUBLIC_EFFECTS := {
 	KillEvent.CAUSE_HUNTER_SHOT: {"effect": &"reaper_curse", "role": true},
 	KillEvent.CAUSE_KNIGHT_STRIKE: {"effect": &"knight_strike", "role": true},
 	KillEvent.CAUSE_POSSESSED_DRAG: {"effect": &"possessed_drag", "role": true},
 	KillEvent.CAUSE_COACHMAN_CRASH: {"effect": &"coachman_crash", "role": true},
-	KillEvent.CAUSE_LOVER_HEARTBREAK: {"effect": &"heartbreak", "role": false},
-	KillEvent.CAUSE_RED_CHAIN: {"effect": &"red_chain", "role": false},
+	KillEvent.CAUSE_LOVER_HEARTBREAK: {"effect": &"heartbreak", "role": RoleCatalog.LOKI},
+	KillEvent.CAUSE_RED_CHAIN: {"effect": &"red_chain", "role": RoleCatalog.ROTKAEPPCHEN},
 }
 
 
@@ -124,12 +126,12 @@ static func _announce_effects(ctx: RuleContext, record: KillEvent, target: Playe
 	if PUBLIC_EFFECTS.has(record.cause) and record.source_kind == KillEvent.SOURCE_PLAYER:
 		var spec: Dictionary = PUBLIC_EFFECTS[record.cause]
 		var source: Player = ctx.state.players.get(record.source_id)
-		var role := String(source.role_id) if bool(spec["role"]) and source != null else ""
+		var role := String(spec["role"]) if spec["role"] is StringName else (String(source.role_id) if source != null else "")
 		ctx.emit(GameEvent.DEATH_EFFECT, Visibility.PUBLIC, {"effect": String(spec["effect"]), "source_id": record.source_id,
 			"role_id": role, "target_id": intended, "replaced_id": GameState.NO_TARGET})
 	if shadow:
 		ctx.emit(GameEvent.DEATH_EFFECT, Visibility.PUBLIC, {"effect": "shadow_link", "source_id": GameState.NO_TARGET,
-			"role_id": "", "target_id": target.id, "replaced_id": intended})
+			"role_id": String(RoleCatalog.SCHATTENWANDERER), "target_id": target.id, "replaced_id": intended})
 
 
 ## Abfangstufe: Schutz eines Schutzengels und Rettung einer Waldhexe dieser Nacht
