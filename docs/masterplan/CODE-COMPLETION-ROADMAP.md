@@ -103,17 +103,19 @@ Auch bei abgeschlossenem Offline-Funktionsstand entsteht später Code für Layou
 
 **Dateien:** `godot/app/session/save_service.gd`, `game_session.gd`, `cockpit_view.gd`, `morning_report.gd`; bestehende Tests `test_save_service`, `test_save_versions`, `test_corrupt_save`, `test_notices`.
 
-- [ ] Neustart bei offenem Prompt, offener Todesreaktion, privatem Hinweis, Morgenbericht und Siegkandidat prüfen.
-- [ ] Gespeicherte Partie vor und nach Rollenwechsel, Wiederbelebung und Kettentod laden; Zustand, Ereignisse und zulässige nächste Aktion vergleichen.
-- [ ] Unterbrochenes Schreiben, fehlende Schreibrechte, defekte Hauptdatei und defektes Backup mit isolierten Testdaten simulieren.
-- [ ] Verhalten alter Schemaversionen beibehalten: verständliche Sperre, Datei erhalten. Migration ist kein stiller Zusatzauftrag.
-- [ ] Undo/Redo nach jeder neu ergänzten Bedienung prüfen. Redo nach Neustart bleibt nur dann Aufgabe, wenn die Abschlussmatrix es ausdrücklich verlangt. *(Matrix D-05: Spezifikation B-12 verlangt „über Neustart“, Umsetzung verwirft Wiederholen beim Neustart. Nutzerentscheidung nötig.)*
-- [ ] Für öffentliche und personenbezogene Karten Positivlisten prüfen. Keine fremde Rolle, Scheinrolle, geheime Ursache, Schutzmarkierung oder andere private Hinweise durchreichen. *(Matrix I-04: Zeigekarte nur für Orakel, Hinweiskarten und Morgenbericht einzeln geprüft; zwölf weitere Informationsrollen offen.)*
+- [x] *(Paket 4: `test_resume_scenarios`, `test_process_restart`)* Neustart bei offenem Prompt, offener Todesreaktion, privatem Hinweis, Morgenbericht und Siegkandidat prüfen. *(Neun Unterbrechungsstellen über Hauptmenü → „Fortsetzen“, dazu ein echter zweiter Godot-Prozess; erhalten/verworfen je Stelle in `docs/ui/save-resume.md`.)*
+- [x] *(Paket 4: `test_resume_every_command`)* Gespeicherte Partie vor und nach Rollenwechsel, Wiederbelebung und Kettentod laden; Zustand, Ereignisse und zulässige nächste Aktion vergleichen. *(Neustart über die Datei nach jedem Befehl von sechs Mischpartien, auch Ressourcenverbrauch, Spielleiterkorrektur, Rollen- und Hinweisbestätigung.)*
+- [x] *(Paket 4: `test_save_service`, Befund B-04 behoben)* Unterbrochenes Schreiben, fehlende Schreibrechte, defekte Hauptdatei und defektes Backup mit isolierten Testdaten simulieren. *(Schreibrechte über eine im Pfad stehende Datei und den Testanschluss `simulate_failure`, nicht über Kontorechte.)*
+- [x] *(bestehend, in Paket 4 unverändert: `test_save_service`, `test_save_versions`)* Verhalten alter Schemaversionen beibehalten: verständliche Sperre, Datei erhalten. Migration ist kein stiller Zusatzauftrag.
+- [x] *(Paket 4: Undo und Redo nach dem Fortsetzen in `test_resume_scenarios`; „Erneut speichern“ ist kein Spielbefehl)* Undo/Redo nach jeder neu ergänzten Bedienung prüfen. Redo nach Neustart bleibt nur dann Aufgabe, wenn die Abschlussmatrix es ausdrücklich verlangt. *(Matrix D-05: Spezifikation B-12 verlangt „über Neustart“, Umsetzung verwirft Wiederholen beim Neustart. Nutzerentscheidung nötig.)*
+- [x] *(Paket 4: `test_output_positive_lists`, Matrix I-06; Inventar aller Ausgabewege in `docs/ui/cockpit.md`, Abschnitt „Geheimhaltung der Ausgabewege“)* Für öffentliche und personenbezogene Karten Positivlisten prüfen. Keine fremde Rolle, Scheinrolle, geheime Ursache, Schutzmarkierung oder andere private Hinweise durchreichen. *(Matrix I-04: Zeigekarte nur für Orakel, Hinweiskarten und Morgenbericht einzeln geprüft; zwölf weitere Informationsrollen offen.)*
 - [ ] Checkpoint-Rotation und Reparaturdialog (Masterplan Phase 3) einordnen (Matrix D-04): heute eine `.bak`. Nutzerentscheidung, ob für den Offline-Abschluss nötig.
 - [ ] Offene Reaktion für Mitlesende erkennbar (Matrix I-03): Produktentscheidung, nicht still ändern.
-- [ ] Öffentliche Todesreaktionen als erlaubte Ausnahme testen. Geheimhaltungstests dürfen diese Ausnahme nicht fälschlich verbieten.
+- [x] *(bestehend: `test_death_effect_lines`, `test_death_effects`, Fuzz-Ausnahme `is_death_effect_exception`)* Öffentliche Todesreaktionen als erlaubte Ausnahme testen. Geheimhaltungstests dürfen diese Ausnahme nicht fälschlich verbieten.
 
 **Abnahme:** Keine bekannte Datenverlustlücke, doppelte Aktion oder unerlaubte Informationsweitergabe. Fehler führen zu einem verständlichen und fortsetzbaren Zustand.
+
+**Stand nach Paket 4 (29.09.2026):** Headless erfüllt, bis auf drei offene Produktentscheidungen: Checkpoint-Rotation (D-04), Redo nach Neustart (D-05), offene Reaktion für Mitlesende (I-03). Aus Paket 3 bleiben offen: Zufallsknopf R-06 (funktionale Restaufgabe) und die Setup-Regel zu R-07 (Entscheidung). Keine Geräte- oder Touchabnahme.
 
 ## Paket 5: Inhalte und Medienanschlüsse
 

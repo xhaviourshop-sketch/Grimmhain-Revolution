@@ -228,10 +228,32 @@ Start: `godot/project.godot` im Godot-Editor 4.7.2 öffnen und F5, oder die expo
 5. **Tag:** „Nominierung erfassen“: erst die nominierende, dann die nominierte Person antippen, bestätigen. „Hinrichtung …“ → nominierte Person → „Weiter zur Prüfung“ → „Anzeigen“ → „Hinrichtung bestätigen“ → Rückfrage. Stimmen werden nur am Tisch gezählt. „Tag beenden“, nächste Nacht.
 6. **Sieg:** bis zur Wolfsparität spielen: verdeckte Siegkarte, „Anzeigen“, bestätigen → Spielende.
 7. **Spielleitung:** „Spielleitung“ → „Rückgängig: …“ (Klartext prüfen), „Wiederholen“; „Person töten …“ mit Begründung; danach „Letzte Korrektur“ ansehen.
-8. **Speichern:** App mitten in der Waldhexen-Kette beenden, neu starten → „Fortsetzen“ → derselbe Schritt ist offen; Anzeige „Gespeichert“ in der Phasenleiste.
+8. **Speichern:** App mitten in der Waldhexen-Kette beenden, neu starten → „Fortsetzen“ → derselbe Schritt ist offen; Anzeige „Gespeichert“ in der Phasenleiste. Nach einem Speicherfehler erscheint „Erneut speichern“ (siehe `save-resume.md`).
 9. **Bewegung reduzieren** in den Einstellungen an/aus: Kartenwechsel und Tag/Nacht-Wechsel ohne bzw. mit kurzem Übergang.
 
 Worauf bei der Abnahme achten: Lesbarkeit der Namen bei 24 Personen, Größe und Abstand der Buttons, Kontrast im abgedunkelten Raum, ob verdeckte Karten und Prüfkarten den Ablauf zu sehr bremsen.
+
+## Geheimhaltung der Ausgabewege (Inventar Paket 4)
+
+Jeder Weg hat eine Positivliste; ein weiteres Feld macht den jeweiligen Test rot. Geprüft werden Datenstrukturen und die an Controls übergebenen Texte, nicht nur einzelne Zeichenfolgen.
+
+| Ausgabeweg | erlaubte Angaben | Nachweis |
+|---|---|---|
+| Öffentliche Ansagekarte (Morgen) | Tote mit Namen; Rolle nur ohne Wiederbelebungsrunde (DI-01); angesagte Todeseffekte; Wiederbelebte; öffentliche Hinweiszeilen (`deaths`, `effects`, `notices`, `reveal_roles`, `revived`) | `test_death_effect_lines`, `test_morning_report` |
+| Tages-/Todeseffektkarte | Effekt, Quelle, Rolle zum Ereigniszeitpunkt, Ziel, ersetzte Person (DI-03, erlaubte Ausnahme); Liebeskummer, Kette, Verknüpfung ohne Rolle | `test_death_effects`, `test_death_effect_lines` |
+| Morgenbericht, privater Teil | Ursachen, Rettungen (nur Spielleitung, nach ausdrücklichem Öffnen) | `test_morning_report` |
+| Personenbezogene Informationskarte (Zeigekarte) | nur Personen und Rollen aus `show`, keine Wahrheit hinter einer Scheinrolle | `test_cockpit_model`, `test_cockpit_screen`, `test_role_operation_kinds` |
+| Private Hinweiskarten | nur der eigene Partner und die Bindungsart (Loki), Verzauberte (Rattenfänger), Infektion (Pestbringerin), Apfel ohne fragende Person (Rotkäppchen); Trugbilderwolf erhält keine Karte (DI-08) | `test_notice_cards` |
+| Rollenanzeige | Name, Platz, eigene Rolle, Kurztext (`confirmed`, `name`, `person_id`, `role_id`, `seat`); Trugbilderwolf sieht seine wahre Rolle, nie die Scheinrolle | `test_role_show` |
+| Neutrale Vorderseiten | nur Name und Platz | `test_role_show`, `test_cockpit_screen` |
+| Statusmeldungen (Toasts) | nur feste Textschlüssel ohne Platzhalter (`ToastHost.show_message(text_key)`) | `test_output_positive_lists` |
+| Speicher-/Fortsetzen-Übersicht | Namen, Personenzahl, Lebende, Phase, Nacht, Tag, Befehlszahl; Listeneintrag und Dateihülle ohne Kern | `test_output_positive_lists`, `test_save_service` |
+| Öffentliche Cockpit-Sicht und Sitzkreis | feste Felder, Sitzplätze nur mit ID, Platz, Name, lebend, Nominierungen; gleich nach Laden und Rückgängig | `test_output_positive_lists`, `test_cockpit_screen` |
+| Öffentliche Ereignisse | keine Rolle, Ursache oder Information außer der DI-03-Ausnahme | Fuzz-Invariante `test_role_interaction_fuzz` |
+| Spielleiterbereich, Protokoll | alles (bewusst), nur nach ausdrücklichem Öffnen; Sichtschutz, Laden, Rückgängig und Zustandswechsel schließen offene Karten | `test_cockpit_screen`, `test_role_show`, `test_special_corrections`, `test_resume_scenarios` |
+| Export | nicht implementiert (C-09) | – |
+
+Die aktive Nachtkarte der Spielleitung nennt die aufgerufene Rolle; das entspricht dem öffentlichen Aufruf. Tagsüber sind Reaktions- und Siegkarten verdeckt, bis die Spielleitung sie aufdeckt.
 
 ## Tests
 
@@ -248,6 +270,8 @@ Worauf bei der Abnahme achten: Lesbarkeit der Namen bei 24 Personen, Größe und
 | `test_morning_report` | Positivliste, private Ursachen und Rettungen, Rollenaufdeckung, Rolle beim Tod nach späterer Rollenänderung, Wiederbelebung und zweitem Tod, Laden und Replay, ohne Aufdeckung keine Rolle in zeigbaren Daten |
 | `test_cockpit_day` | Nominierung, Hinrichtung mit Prüfkarte, Spiegelwolf, Weiser, Amalia, Nekromant, keine Hinrichtung, Sieg, keine veraltete Prüfkarte nach Rückgängig |
 | `test_full_round_ui` | vollständige Partie nur über Buttons bis zum bestätigten Sieg |
+| `test_resume_scenarios`, `test_resume_every_command`, `test_process_restart` | Paket 4: Fortsetzen nach Neustart über den Fortsetzen-Bildschirm an neun Unterbrechungsstellen, Neustart nach jedem Befehl, zweiter Godot-Prozess |
+| `test_output_positive_lists` | Paket 4: Positivlisten der Speicherübersicht, Statusmeldungen und öffentlichen Cockpit-Sicht |
 | `test_undo` | Rückgängig = Replay der verkürzten Folge, Wiederholen gleicher Hash, mehrstufige Prompts, bestätigter Sieg, Speichern, Ereignisverlauf und entfallenes Wiederholen nach Neustart |
 | `test_cockpit_polish` | Tag/Nacht-Hintergrund, Einblenden und Abbruch, reduzierte Bewegung, Fokus nach Aktionen, Anschlussstellen, Kartenbreite bei 1024×768 DE/EN |
 | `test_role_show`, `test_role_shown` | Rollenanzeige: Bestätigung, Fortsetzung nach Neustart, Abbruch, Nachlesen, Rollenwechsel, verworfene Karte bei Zustandswechsel und Undo, Sichtschutz, Trugbilderwolf, Buttonweg, Speichern und Replay |

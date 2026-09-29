@@ -270,3 +270,13 @@ Fehler behoben: Stimmhinweise (Blutwolf, Korrupter Richter, RM-DR-008) wurden ni
 Nicht umgesetzt: Zufallsknopf R-06 (nicht beauftragt), Setup-Hinweise zu Kombinationen (Produktentscheidung offen), Geräte- und Touchabnahme.
 Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1028 Tests, 0 fehlgeschlagen, Exit 0 (vorher 956); Asset-Register, Rollendokumentprüfer, Inhaltsabdeckung und `node --test` (2 Prüfertests) jeweils Exit 0; `git diff --check` Exit 0. Gegenprobe: absichtlich verletzte Überspringen-Regel der Karte macht alle 5 Bedienarten-Tests rot. Keine grafische, Touch- oder Tablet-Prüfung.
 Nächster Schritt: Paket 4 (Wiederaufnahme, Geheimhaltung, Betriebsfehler), nur nach Auftrag.
+
+---
+
+## 2026-09-29 — Paket 4: Speichern, Wiederaufnahme, Geheimhaltung unter Fehlerbedingungen
+Status: umgesetzt auf `feature/night-ui-expansion` (Ausgangs-HEAD `437df88`), PR #3 offen, kein Merge. Schema 14, Regelversion 0.12 unverändert, kein Formatwechsel.
+Umfang: Neustart über Hauptmenü → „Fortsetzen“ an neun Unterbrechungsstellen (`test_resume_scenarios`), Neustart über die Datei nach jedem Befehl von sechs Mischpartien (`test_resume_every_command`), echter zweiter Godot-Prozess (`test_process_restart`), Speicherfehler (zwei Fehler nacheinander, nicht anlegbares Verzeichnis, wiederholtes Laden), Positivlisten für Speicherübersicht, Statusmeldungen und öffentliche Cockpit-Sicht (`test_output_positive_lists`), Inventar aller Ausgabewege in `docs/ui/cockpit.md`.
+Fehler behoben: B-04 (zweiter Speicherfehler nach abgebrochenem Speichern löschte den neuesten vollständigen Stand); B-05 (Beenden-Rückfrage versprach „ist gespeichert“ trotz Fehler, kein erneutes Speichern ohne neuen Befehl, Rückfallmeldung ohne Hinweis auf älteren Stand). Neu: „Erneut speichern“ (ein Versuch je Tippen). Ableitungen DA-34 bis DA-39.
+Nicht umgesetzt: Zufallsknopf R-06 (funktionale Restaufgabe), Setup-Regel R-07 (Entscheidung offen), Checkpoint-Rotation D-04, Redo nach Neustart D-05, I-03 (alle Produktentscheidungen), Geräte- und Touchabnahme.
+Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1048 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1028); Asset-Register, Rollendokumentprüfer, Inhaltsabdeckung Exit 0; `node --test` 3 Prüfertests Exit 0; `git diff --check` Exit 0.
+Nächster Schritt: Produktentscheidungen D-04, D-05, I-03 und R-07; danach R-06 oder Paket 5, nur nach Auftrag.
