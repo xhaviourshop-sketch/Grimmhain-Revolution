@@ -12,3 +12,6 @@ docs/masterplan/asset-register.csv text eol=lf
 # OFL-Lizenztexte sind wörtliche Upstream-Kopien (siehe docs/assets/FONTS.md) und enthalten
 # Leerzeichen am Zeilenende. Nicht bereinigen; git diff --check prüft sie deshalb nicht.
 assets/fonts/OFL-*.txt -whitespace
+
+# Windows-Starter: CRLF, damit cmd.exe Bloecke und Umleitungen sicher liest.
+*.cmd text eol=crlf

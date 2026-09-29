@@ -189,6 +189,8 @@ Offene Abhängigkeiten, die nicht als fertig gelten:
 
 ## Manuell testen (gemeinsame Tablet-Abnahme)
 
+Für den Windows-Fenstertest am PC mit fester Partie und Starter ohne Editor: `docs/ui/pc-test-pr3.md` (Fehlerliste: `docs/ui/pc-test-pr3-fehlerliste.md`).
+
 Start: `godot/project.godot` im Godot-Editor 4.7.2 öffnen und F5, oder die exportierte App. Fenster auf 1280×800 bzw. 1024×768 stellen; zusätzlich auf dem Tablet im Querformat.
 
 1. **Setup:** Hauptmenü → „Neue Partie“ → acht Namen → Rollen „Vorschlag“ (oder Werwolf ×2, Schutzengel, Waldhexe, Das Orakel, Sensenträger, Dorfbewohner ×2) → im Rollenschritt „Rolle beim Tod öffentlich aufdecken“ einmal an, einmal aus → verteilen → Sitzordnung bestätigen → „Partie starten“. Erwartet: Cockpit mit acht Plätzen, keine Rolle sichtbar, Karte „Nacht 1 beginnen“.

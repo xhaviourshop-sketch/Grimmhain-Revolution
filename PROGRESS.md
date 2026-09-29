@@ -226,3 +226,10 @@ Nachweise: `test_target_selection` (vier Rollen über Sitzplätze und Buttons, T
 Verifiziert (Windows, Godot 4.7.2, headless): 854 Tests, 0 fehlgeschlagen, Exit 0; weitere Prüfungen siehe PR-Beschreibung. Keine grafische, Touch- oder Tablet-Prüfung.
 Grenzen: Abdeckungslauf bedient `GameSession` mit Kartendaten, Buttons nur in den genannten gezielten Tests; Spezialkorrekturen (Schutz, Rettung, Wolfskind, Lehrling) und „Rollen zeigen“ ohne Oberfläche; Wiederholbares nach Rückgängig entfällt beim Neustart; offene Reaktion bleibt am Morgen erkennbar (Produktfrage, unverändert).
 Nächster Schritt: manueller PC-Fenstertest.
+
+---
+
+## 2026-09-29 — Vorbereitung manueller PC-Test PR #3
+Status: vorbereitet, noch nicht durchgeführt. Anleitung `docs/ui/pc-test-pr3.md` (feste Partie mit acht Personen, Schritte A bis H), Fehlerliste `docs/ui/pc-test-pr3-fehlerliste.md`, Starter `PC-Test-starten.cmd` (Godot 4.7.2 aus Downloads, ohne Editor; `--check` prüft nur Pfade und Version).
+Verifiziert: Partie der Anleitung headless über `GameSession` durchgespielt (temporärer Test, nicht versioniert); Starter mit `--check` Exit 0, fehlende Datei und falsche Version Exit 1; nicht grafisch gestartet. Kein Code geändert, daher keine erneute Volltestsuite.
+Nächster Schritt: PC-Test durch den Nutzer, danach Befunde aus der Fehlerliste bearbeiten.
