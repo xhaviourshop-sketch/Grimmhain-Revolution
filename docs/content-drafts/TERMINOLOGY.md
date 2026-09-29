@@ -34,6 +34,8 @@ Diese Liste gilt für alle Dateien in `docs/content-drafts/`. Sie ändert keine 
 | Nacht, Morgen, Tag | Nacht, Morgen, Tag | night, dawn, day | Für Karten: "Morgen" für die Morgenauflösung, "Tag" für Diskussion und Abstimmung. | `ui.phase.*`, G-PH-1 |
 | Nominierung | Nominierung, nominiert | nomination, nominates | Eine Person schlägt eine andere für die Hinrichtung vor. | DR-03 |
 | Spielende | Spielende, Sieg bestätigen | game over, confirm the win | App schlägt Sieg vor, Spielleiter bestätigt. | "Nachfrage zu F-11" |
+| Wiederbelebungsrunde | Wiederbelebungsrunde | revival round | Runde, in der Wiederbelebung möglich ist (direkte Rollen, später Totenreichkarten). Rollen bleiben verdeckt, Tote halten nachts die Augen geschlossen. | Antwort des Product Owners vom 29.09.2026 |
+| Todeseffekt | Todeseffekt | death effect | Sichtbare Folge eines Todes, die ausgespielt und mit Effekt und Rolle angesagt wird. | Antwort des Product Owners vom 29.09.2026 |
 
 ## 2. Zeichenkonventionen für die Entwürfe
 

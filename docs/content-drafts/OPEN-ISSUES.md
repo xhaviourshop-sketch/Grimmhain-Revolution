@@ -16,21 +16,21 @@ Kartenschlucker (`kartenschlucker`) ist ausdrücklich zurückgestellt (`11-role-
 
 ## 2. Ergebnis der Prüfung
 
-Von 19 Punkten bleibt kein einziger als echter Regelwiderspruch (K1) bestehen. Sieben Punkte sind im Kern aufgelöst (K2: OI-03, OI-05, OI-07, OI-08, OI-14, OI-15 und OI-11 a). Sieben sind bewusst spätere Erweiterung, Formulierungs- oder Integrationsfrage (K3, K5: OI-02, OI-04, OI-06, OI-09, OI-10, OI-16, OI-18). Sechs bleiben als offene Produktentscheidung (K4: OI-01, OI-11 b, OI-12, OI-13, OI-17, OI-19), davon vier mit Vorrang (Abschnitt 5). OI-11 zählt in zwei Klassen.
+Von 19 Punkten bleibt kein einziger als echter Regelwiderspruch (K1) bestehen. Zwölf Punkte sind aufgelöst oder beantwortet (K2: OI-01, OI-03, OI-05, OI-07, OI-08, OI-11, OI-12, OI-13, OI-14, OI-15, OI-17, OI-19). Sieben sind bewusst spätere Erweiterung, Formulierungs- oder Integrationsfrage (K3, K5: OI-02, OI-04, OI-06, OI-09, OI-10, OI-16, OI-18). Es bleibt keine offene Produktentscheidung mit Vorrang; offene Randfälle stehen in Abschnitt 5 und in `DECISIONS-TO-INTEGRATE.md`.
 
 | ID | Thema | Vorher | Klasse jetzt | Ergebnis |
 |---|---|---|---|---|
-| OI-01 | Aufrufpolitik für bedingte, blockierte und fehlende Rollen | Lücke | K4 | teilweise beantwortet (D1), Folgefrage offen |
+| OI-01 | Aufrufpolitik für bedingte, blockierte und fehlende Rollen | Lücke | K2 | beantwortet am 29.09.2026 (DI-02), Randfälle zu bestätigen |
 | OI-02 | Totenkarten (Kutscher, Frankenstein, Kartenschlucker) | Lücke | K3 | bewusst später (W-01 = A), keine Entscheidung für die Entwürfe nötig |
 | OI-03 | Siegreicher Wolf zählt doppelt | Konflikt | K2 | Fehlalarm, aufgelöst; nur ein Hinweis bleibt |
 | OI-04 | Begriffe in `ui.*.po` | Konflikt | K5 | kein Regelkonflikt, teilweise Fehlalarm; Angleichung ist Übersetzungsarbeit |
 | OI-05 | Überholte Regelregister-Texte | Konflikt | K2 | vom Decision Log bereits ersetzt; Vermerk im Register steht aus |
 | OI-06 | "Links" gleich Uhrzeigersinn | Hinweis | K5 | Tablet-Gegenprüfung steht aus |
-| OI-07 | Ton bei fünf Toten | Konflikt | K2 | gewählte Ausnahme mit dokumentierter Nebenwirkung, kein erwiesener Fehler; optionale Bestätigung (D7) |
+| OI-07 | Ton bei fünf Toten | Konflikt | K2 | gewählte Ausnahme mit dokumentierter Nebenwirkung, kein erwiesener Fehler; am 29.09.2026 bestätigt (DI-09) |
 | OI-08 | Traumdeuter und Kopfgeldjäger ohne mögliche Auswahl | Lücke | K2 | aus gemeinsamer Regel, Code und Test belegt, Entwurf ergänzt |
 | OI-09 | Zufallsknopf | Hinweis | K3 | entschieden (RM-DR-015.2), Umsetzung steht aus |
 | OI-10 | Amalia: Format der Frage | Lücke | K5 | aufgelöst: Die App prüft die Frage nicht, Entwurf ergänzt |
-| OI-11 | Öffentliche Ansagen (Schutzgeist, Weiser) | Lücke | K2 und K4 | (a) Schutzgeist aufgelöst, Entwurf geändert; (b) Weiser offen, Vorrang niedrig (D6) |
+| OI-11 | Öffentliche Ansagen (Schutzgeist, Weiser) | Lücke | K2 | (a) Schutzgeist aufgelöst, Entwurf geändert; (b) Weiser durch die Regel der Todeseffekte beantwortet (DI-03) |
 | OI-12 | Loki: Wer erfährt von der Bindung | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026 (Chat), Decision-Log-Eintrag steht aus |
 | OI-13 | Rotkäppchen: Wer erfährt von Kette und Apfel | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026 (Chat), Decision-Log-Eintrag steht aus |
 | OI-14 | Henker: Hinrichtung am Folgetag bleibt aus | Lücke | K2 | Decision Log, Code und Test belegen: Markierung verfällt; Entwurf ergänzt |
@@ -38,7 +38,7 @@ Von 19 Punkten bleibt kein einziger als echter Regelwiderspruch (K1) bestehen. S
 | OI-16 | Name der Fraktion "Einzelsieg" | Hinweis | K3, K5 | Decision Log: "folgt später"; Arbeitsbegriff bleibt |
 | OI-17 | Rattenfänger, Pestbringerin: Information der Betroffenen | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026 (Chat), Decision-Log-Eintrag steht aus; ein Detail offen |
 | OI-18 | Handlungszeilen für Nicht-Slice-Rollen | Lücke | K5 | Integrationsfrage (NARRATOR-SCRIPT), keine Regelfrage |
-| OI-19 | Trugbilderwolf: Kennt er seine Scheinrolle | Lücke | K4 | offen, Vorrang 5 (D5) |
+| OI-19 | Trugbilderwolf: Kennt er seine Scheinrolle | Lücke | K2 | beantwortet am 29.09.2026: nur der Spielleiter (DI-08) |
 
 ## 3. Aufgelöste Punkte mit Belegen
 
@@ -118,84 +118,25 @@ Ebenfalls ersetzt, im Decision Log selbst und dort ausdrücklich benannt (Zeile 
 - **OI-16 · Name der Fraktion "Einzelsieg" (K3, K5):** Decision Log Zeilen 17 und 83: Der Name der Gruppe folgt später. `ui.faction.solo` = "Einzelsieg" (DE) und "Solo" (EN). Die Entwürfe nutzen "Einzelsieg / Solo" als Arbeitsbegriff.
 - **OI-18 · Handlungszeilen (K5):** `docs/assets/NARRATOR-SCRIPT.md` §3 enthält `role.<id>.act` nur für die Slice-Rollen. Für alle weiteren Rollen fehlt der Bedienablauf (zeigt die Person, wählt der Spielleiter, oder das Smartphone). Das ist Integrations- und Sprechertextarbeit, keine Regelfrage. GUIDE-TEXTS enthält nur Aufruf und Einschlafen.
 
-## 5. Offene Produktentscheidungen, nach Vorrang
+## 5. Entscheidungsstand
 
-Vorrang bedeutet: Wie viele Entwurfstexte hängen von der Antwort ab, und wie stark verändert sie sichtbares Verhalten. Alle Empfehlungen sind Empfehlungen, keine Entscheidungen. Die ersten vier stelle ich dem Product Owner zuerst.
+Alle Antworten des Product Owners vom 29.09.2026 sind mit Herkunft, Auswirkungen und Akzeptanztests in [`DECISIONS-TO-INTEGRATE.md`](DECISIONS-TO-INTEGRATE.md) festgehalten. Sie stehen noch nicht im Decision Log.
 
-### D1 · OI-01 Aufrufpolitik (Vorrang 1)
+| Frühere Nummer | Thema | Stand |
+|---|---|---|
+| D1 (OI-01) | Aufrufpolitik | beantwortet (DI-02); Randfälle abgeleitet und zu bestätigen |
+| D2 (OI-12) | Loki | beantwortet (DI-04) |
+| D3 (OI-13) | Rotkäppchen | beantwortet (DI-05) |
+| D4 (OI-17) | Rattenfänger, Pestbringerin | beantwortet (DI-06, DI-07) |
+| D5 (OI-19) | Scheinrolle des Trugbilderwolfs | beantwortet (DI-08) |
+| D6 (OI-11 b) | Fluch des Weisen | durch die Regel der Todeseffekte beantwortet (DI-03) |
+| D7 (OI-07) | Ton bei fünf Toten | bestätigt (DI-09) |
+| neu | Rollenaufdeckung und Wiederbelebungsrunde | beantwortet (DI-01), ändert die bisherige Produktvorgabe |
 
-**Teilantwort des Product Owners, 29.09.2026 (Chat, noch nicht im Decision Log):** Es gibt Spielrunden mit Wiederbelebung, dort dürfen Rollen nach dem Tod nicht aufgedeckt werden. Nur wenn Wiederbelebung garantiert ausgeschlossen ist, dürfen Rollen nach dem Tod aufgedeckt werden. Damit ist die Rollenaufdeckung geklärt, die Aufrufpolitik selbst noch nicht. In Partien ohne mögliche Wiederbelebung verrät ein Aufruf einer toten Rolle nichts Neues, in Partien mit Wiederbelebung bleibt das Problem bestehen. **Folgefrage:** Sollen in Partien mit Wiederbelebung Tarnaufrufe (Alternative B) gelten und in Partien ohne Wiederbelebung nur handelnde Rollen (Alternative C)?
-
-- **Quellen:** `docs/assets/NARRATOR-SCRIPT.md` Zeile 13 (Regel 4: Aufruf klingt gleich, egal ob die Rolle lebt) und Zeile 99 (offene Frage: "Sollen tote Rollen standardmäßig weiter aufgerufen werden?"); `docs/godot-migration/02-product-and-ux-spec.md` Zeile 76 ("Pro Runde einstellbar: 'Tote Rollen weiter aufrufen'"); Decision Log Zeile 318 (blockierte Schritte entfallen protokolliert, nichts zum Aufruf).
-- **Szenario:** Der Schutzgeist ist an Tag 3 gestorben, "Rolle beim Tod aufdecken" ist aus. In Nacht 4 sagt die Stimme "Der Schutzgeist erwacht." Alle am Tisch wissen jetzt, wer die Tote war. Ebenso verrät "Der Henker erwacht" nach der dritten Hinrichtung, dass die Rolle in der Partie ist.
-- **A:** Alle Rollen des Katalogs werden jede Nacht aufgerufen (maximale Tarnung, aber bei 71 Rollen viele Minuten je Nacht).
-- **B:** Jede Rolle, die in der Partie vorkommt, wird jede Nacht aufgerufen, auch tot, blockiert oder noch nicht aktiv (Tarnaufruf mit fester Wartezeit, Einstellung "Tote Rollen weiter aufrufen" standardmäßig an). Der Tisch erfährt die Rollen der Partie, nicht wer sie hat und ob sie wirken.
-- **C:** Nur aktuell handelnde Rollen werden aufgerufen. Das ist am schnellsten, verrät aber Zustand und Anwesenheit (Tod, Blockade, Schwellen).
-- **Empfehlung: B.** Es ist der klassische Ablauf, zeitlich tragbar und verrät nur die Rollenzusammensetzung. Die frühere Empfehlung dieser Liste (A) wäre bei 71 Rollen zu lang.
-- **Wirkung:** GUIDE-TEXTS §3.3 (47 Aufrufzeilen) und die Frage, ob Schutzgeist, Henker, Kopfgeldjäger, König, Kutscher, Dorfschmied, Rachsüchtiger Wolf und Schicksalswolf überhaupt einen Aufruf erhalten.
-
-### D2 · OI-12 Loki: Wer erfährt von der Bindung (beantwortet)
-
-**Antwort des Product Owners, 29.09.2026 (Chat, noch nicht im Decision Log):** Alternative B. Liebende und Rivalen erfahren privat ihren Partner und die Art der Bindung.
-
-- **Quellen:** Decision Log Zeile 411 (B-05): Wahl und Wirkung sind geregelt, nicht aber, ob Liebende oder Rivalen von der Bindung erfahren. Der Regelkern meldet `LOKI_BOUND` nur dem Spielleiter.
-- **Szenario:** In Nacht 1 verbindet Loki Anna und Ben als Liebende. An Tag 2 wird Anna hingerichtet, Ben stirbt sofort an Liebeskummer. Ben wusste nichts von der Bindung.
-- **A:** Nur Loki und der Spielleiter wissen es (Stand des Regelkerns). Die Liebenden merken es erst durch den Tod, Rivalen nie.
-- **B:** Liebende und Rivalen erfahren privat den Namen ihres Partners und die Art der Bindung.
-- **C:** Liebende erfahren einander privat, Rivalen erfahren nichts.
-- **Empfehlung: C.** Liebende, die einander nicht kennen, sterben zufällig gemeinsam, was die Rolle sinnlos macht. Rivalen haben keine eigene Wirkung, sie nicht zu informieren schützt die Wahl der Schwarzen Witwe.
-- **Wirkung:** PERSON-PRIVAT-Text für `loki`, Spielleitertext von `schwarze-witwe`.
-
-### D3 · OI-13 Rotkäppchen: Wer erfährt von Kette und Apfel (beantwortet)
-
-**Antwort des Product Owners, 29.09.2026 (Chat, noch nicht im Decision Log):** Fähigkeiten und ihre Effekte sind allen Personen bekannt, die gefragte Person kennt Vorteil und Nachteil und darf ablehnen. Das entspricht Alternative A. Unbeantwortet bleibt, ob die gefragte Person erfährt, wer sie fragt.
-
-- **Quellen:** Decision Log Zeile 416 (R-01): Die gefragte Person darf ablehnen; gewährt sie Zuflucht, erhält sie einen Apfel und ist verkettet. Der Regelkern meldet `RED_REFUGE` und `APPLE_USED` nur dem Spielleiter.
-- **Szenario:** Rotkäppchen fragt in Nacht 2 Ben. Ben gewährt Zuflucht. In Nacht 3 läuft sein Nachtschritt zweimal, an Tag 4 wird er hingerichtet und Rotkäppchen stirbt mit. Wusste Ben bei seiner Antwort, dass er sich damit ketten würde?
-- **A:** Die gefragte Person erfährt vor ihrer Antwort Apfel und Kette. Sie entscheidet mit voller Kenntnis.
-- **B:** Sie erfährt nur den Apfel (er zeigt sich ohnehin im doppelten Schritt), die Kette bleibt geheim.
-- **C:** Niemand außer dem Spielleiter kennt Apfel und Kette. Die Person merkt nur den doppelten Schritt.
-- **Empfehlung: A.** Weil die Regel der gefragten Person ausdrücklich das Recht zur Ablehnung gibt (auch Wölfen), ist eine Ablehnung nur sinnvoll, wenn die Folgen bekannt sind.
-- **Wirkung:** PERSON-PRIVAT-Text für `rotkaeppchen`, Bedienablauf der Frage (OI-18).
-- **Teilweise aufgelöst:** Dass die gefragte Person weiß, dass sie gefragt wird, folgt daraus, dass sie antwortet.
-
-### D4 · OI-17 Rattenfänger und Pestbringerin: Information der Betroffenen (beantwortet)
-
-**Antwort des Product Owners, 29.09.2026 (Chat, noch nicht im Decision Log):** Nach dem Schritt des Rattenfängers gibt es eine Phase, in der alle neu Verzauberten kurz die Augen öffnen und erfahren, dass sie verzaubert sind. Infizierte erhalten einen kleinen Hinweis, dass sie infiziert sind und was mit ihnen und ihren Nachbarn geschieht, wenn sie am Leben bleiben. Ob sie es im Dorf teilen, entscheiden die Personen selbst. Das weicht von den Alternativen ab und kommt B nahe. Offen: ob sich die Verzauberten in der Phase sehen, und ob jede später angesteckte Person den Hinweis erhält.
-
-- **Quellen:** Decision Log Zeilen 448 und 449 (E-01, E-02) regeln Wirkung und Sieg, nicht die Information. Der Regelkern meldet `INFECTED` nur dem Spielleiter.
-- **Szenario:** Nacht 1: Der Rattenfänger verzaubert Anna und Ben; die Pestbringerin infiziert Clara, am Morgen steckt Clara David an. Erfahren Anna, Ben, Clara oder David davon?
-- **A:** Niemand außer dem Spielleiter. Der Sieg (alle anderen verzaubert oder infiziert) kommt als Überraschung, das Dorf hat kein Gegenspiel.
-- **B:** Alle Betroffenen erfahren es privat.
-- **C:** Verzauberte erfahren es privat, Infizierte nicht.
-- **Empfehlung: C.** Verzauberte können das Dorf warnen (Gegenspiel gegen den Rattenfänger). Die Pest lebt von der verdeckten Ausbreitung, eine Meldung würde zudem den gezogenen Nachbarn verraten. Die Empfehlung ist unsicher, weil keine Quelle das Ziel der Rolle beschreibt.
-- **Wirkung:** PERSON-PRIVAT-Texte für `rattenfaenger` und `pestbringerin`.
-
-### D5 · OI-19 Trugbilderwolf: Kennt er seine Scheinrolle (Vorrang 5)
-
-- **Quellen:** Decision Log Zeilen 110 und 176 (DR-08): Der Spielleiter legt die Scheinrolle im Setup fest. Keine Quelle sagt, ob der Trugbilderwolf sie erfährt.
-- **Szenario:** Clara ist Trugbilderwolf mit der Scheinrolle "Waldhexe". Am Tag behauptet sie, Waldhexe zu sein. Kennt sie die Scheinrolle, die das Orakel sieht?
-- **A:** Ja, ihre private Karte zeigt sie.
-- **B:** Nein, nur der Spielleiter kennt sie.
-- **C:** Der Spielleiter entscheidet im Setup je Partie.
-- **Empfehlung: A.** Sie kann dann stimmig bluffen, so wie das Orakel es bestätigen würde.
-- **Wirkung:** ein Satz im PERSON-PRIVAT-Text von `trugbilderwolf`.
-
-### D6 · OI-11 (b) Weiser: Ansage zum Fluch (Vorrang 6)
-
-- **Quellen:** Decision Log Zeile 390 (S-01): Länge legt der Spielleiter fest. Der Regelkern meldet den Fluch nur dem Spielleiter (`SAGE_CURSED`).
-- **Szenario:** Ben, der Weise, wird hingerichtet, der Spielleiter setzt 2. In den folgenden Nächten und Tagen handeln alle Dorfpersonen nicht. Der Tisch merkt nur, dass nichts geschieht.
-- **A:** Keine Ansage (Stand des Regelkerns). Es verrät nichts, der Tisch rätselt.
-- **B:** Öffentlich "Die Fähigkeiten des Dorfes ruhen", ohne Länge.
-- **C:** Öffentlich mit Länge.
-- **Empfehlung: A.** B und C würden bei ausgeschalteter Rollenaufdeckung die Rolle des Hingerichteten verraten.
-- **Wirkung:** nur GUIDE-TEXTS §3.4 (`der-weise`).
-
-### D7 · OI-07 Ton bei fünf Toten: Bestätigung der gewählten Ausnahme (nur optional)
-
-- **Stand:** entschieden (Decision Log Zeile 284), Nebenwirkung in Abschnitt 3 beschrieben. Eine Rückfrage ist nur nötig, wenn der Product Owner die Nebenwirkung neu bewertet.
-- **Szenario:** Fünf Personen sind tot. Der Ton erklingt. Alle wissen: Ein Selbstmörder ist in der Partie. Ohne Ton bei fünf Toten wissen sie: keiner.
-- **A:** Wie entschieden: Ton nur mit Selbstmörder in der Partie.
-- **B:** Ton bei fünf Toten in jeder Partie (verrät nichts über die Rollen).
-- **C:** Kein Ton, stattdessen ein privater Hinweis an den Selbstmörder.
-- **Empfehlung: A beibehalten,** solange die Runde die Rollenzusammensetzung ohnehin kennt. B ist die sichere Alternative, wenn Rollen geheim bleiben sollen.
+**Verbleibende Randfälle** (keine Blocker für die Entwürfe):
+1. Nennt die Ansage bei Liebeskummer, Kette und Verknüpfung eine Rolle, und wird die Länge des Fluchs des Weisen genannt? (DI-03)
+2. Findet die Phase "Alle Verzauberten" auch in Nächten ohne neu Verzauberte statt? (DI-06)
+3. Bedeutung von "Selbstmörder in der Partie" für den Ton (Rolle zu Spielbeginn oder lebende Person). (DI-09)
+4. Aufruf blockierter und noch nicht aktiver Rollen sowie nicht vorkommender Rollen: abgeleitet, zu bestätigen. (DI-02)
+5. Ob die Setup-Anzeige der Wiederbelebungsrunde überstimmt werden darf, und Warnung bei indirekten Trägern. (DI-01)
+6. Totenreichkarten sind nicht definiert (OI-02).
