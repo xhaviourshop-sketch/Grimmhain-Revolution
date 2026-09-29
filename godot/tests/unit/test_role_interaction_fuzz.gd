@@ -78,6 +78,22 @@ func test_random_games_keep_invariants() -> void:
 	print("      Zufallskorrekturen: %d angenommen, %d abgelehnt" % [_probe_accepted, _probe_rejected])
 
 
+## Paket 3: Mischpartien (anders als die Fokuspartien in test_prompt_coverage) schützen keine Rolle: Angriffe, Tode,
+## Blockaden und Korrekturen treffen jede Person. Reproduzierbar bleiben sie nur, wenn nichts den globalen, bei jedem Start
+## zufällig gesetzten Generator nutzt (vgl. B-01). Dieselben Partien müssen unter verschiedenen globalen Seeds gleich sein.
+func test_mixed_games_do_not_depend_on_the_global_random_generator() -> void:
+	var runs: Array = []
+	for global_seed: int in [11, 29]:
+		seed(global_seed)
+		_seen.clear()
+		var results: Array = []
+		for g: int in 6:
+			_rng.seed = 7919 * (g + 1)
+			results.append(_play_game(g, COUNTS[g % COUNTS.size()]))
+		runs.append(CanonicalJson.stringify({"results": results, "seen": _seen}))
+	assert_eq(runs[1], runs[0], "gleiche Mischpartien unabhängig vom globalen Seed")
+
+
 func _play_game(g: int, count: int) -> Dictionary:
 	var start := _start_command(g, count)
 	var log: Array[Command] = []
