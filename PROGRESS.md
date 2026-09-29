@@ -280,3 +280,14 @@ Fehler behoben: B-04 (zweiter Speicherfehler nach abgebrochenem Speichern lösch
 Nicht umgesetzt: Zufallsknopf R-06 (funktionale Restaufgabe), Setup-Regel R-07 (Entscheidung offen), Checkpoint-Rotation D-04, Redo nach Neustart D-05, I-03 (alle Produktentscheidungen), Geräte- und Touchabnahme.
 Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1048 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1028); Asset-Register, Rollendokumentprüfer, Inhaltsabdeckung Exit 0; `node --test` 3 Prüfertests Exit 0; `git diff --check` Exit 0.
 Nächster Schritt: Produktentscheidungen D-04, D-05, I-03 und R-07; danach R-06 oder Paket 5, nur nach Auftrag.
+
+---
+
+## 2026-09-29 — Restpaket vor Paket 5: sichere Beendigung und Zufallsknopf R-06
+Status: umgesetzt auf `feature/night-ui-expansion` (Ausgangs-HEAD `a44bb0e`), PR #3 offen, kein Merge. Schema 14, Regelversion 0.12 unverändert, kein Formatwechsel.
+Fehler behoben: B-06, die Warnung bei ungespeichertem Stand ließ sich umgehen (mobiles System-Zurück in der Wurzel beendete sofort, Desktop-Fensterschließen beendete ohne Rückfrage).
+Umgesetzt: R-06 Zufallsknopf für Traumdeuter, Kopfgeldjäger, König und die Aufdeckung des Blutpriesters. Vorschlag aus einer Kopie des gespeicherten Generators, Übernahme erst mit Bestätigung über den Regelkern (`AnswerPrompt` mit `random: true`). Ableitungen DA-40 bis DA-45.
+Paket 4: automatisierte Prüfungen abgeschlossen, Produktentscheidungen offen (D-04, D-05, I-03); keine vollständige Abnahme.
+Nicht umgesetzt: Spielleitertexte der vier Rollen (OI-09, Paket 5), Setup-Hinweise R-07 (Entscheidung offen), Geräte- und Touchabnahme.
+Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; Vollsuite 1059 Tests, 0 fehlgeschlagen, Exit 0 (vorher 1048); Prüfer siehe Abschlussbericht.
+Nächster Schritt: Antworten zu D-04, D-05, I-03, R-07 umsetzen (eigener Auftrag), danach Paket 5.

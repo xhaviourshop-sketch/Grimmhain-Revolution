@@ -25,7 +25,7 @@ Diese Datei ersetzt keine Nutzerentscheidung. Verbindlich bleiben `docs/masterpl
 - Nächster Schritt: Totenkarten-Assistent entscheiden (RM-DR-013), danach Kartenschlucker; Kartenbedingung des Frankenstein (RM-DR-141.4) hängt am selben System.
 - Prüfhinweis Grabräuber: Jede neue Rolle mit eigenem Nachtschritt muss prüfen, ob `RoleCatalog.stealable` sie erfasst und ob ihre Wirkungen per `has_ability` statt `role_id` ausgewertet werden.
 - Veraltete CSV-Einträge bereinigt (28.09.2026): RM-DR-119.1/.2 (Dorfwache) folgen aus RM-DR-004/005, RM-DR-136.2 (Ritter) aus der Entscheidung „Ritter, Ziel“ (wer als Wolf zählt); Regressionstests `test_wolf_specials::test_guard_is_killed_by_poison_paw`, `test_piercing_second_pack_attack_kills_guard`, `test_ritter_besessener_faehrtenleser::test_knight_ignores_cursed_villager`.
-- Offen außerhalb des Kerns: Zufallsknopf nach RM-DR-015.2 (Ziehung über den gespeicherten Seed) ist noch in keiner Rolle umgesetzt; König, Traumdeuter, Kopfgeldjäger und Blutpriester nutzen die Spielleiterwahl.
+- *(Umgesetzt am 29.09.2026, Restpaket.)* Zufallsknopf nach RM-DR-015.2 (Ziehung über den gespeicherten Seed) für König, Traumdeuter, Kopfgeldjäger und die Aufdeckung des Blutpriesters, neben der Spielleiterwahl (`InfoSteps.random_choice`, `test_info_roles`, `test_random_pick`). Früher: „noch in keiner Rolle umgesetzt“.
 - Weiter offen außerhalb des Kerns: Analyse unverträglicher Rollenkombinationen (vom PO gewünscht, Setup-Regel vertagt); Tablet-Gegenprüfung „links = Uhrzeigersinn“; Sound bei 5 Toten nur mit Selbstmörder im Spiel.
 
 ## 1. Statusdefinition

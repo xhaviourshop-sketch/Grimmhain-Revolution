@@ -33,7 +33,10 @@ Schlägt ein Schritt fehl, meldet `SaveService.status_changed` den Fehler; die l
 | Speichern fehlgeschlagen | Phasenleiste „Fehler: nicht gespeichert“ (rot), Statusmeldung „Der letzte gespeicherte Stand bleibt erhalten“, Button „Erneut speichern“ |
 | „Erneut speichern“ | genau ein Versuch je Tippen, keine automatische Wiederholung; bei Erfolg „Gespeichert“, der Button verschwindet. Nötig vor allem nach dem letzten Befehl einer Partie (Spielende), weil sonst kein weiterer Befehl ein Speichern auslöst |
 | nächster angenommener Befehl | speichert wie immer automatisch; gelingt es, ist der Fehlerzustand beendet |
-| Beenden (Desktop) | die Rückfrage warnt „Der letzte Stand der laufenden Partie ist nicht gespeichert“ statt „ist gespeichert“; auf Mobilgeräten beendet Zurück in der Wurzel weiter sofort (Systemverhalten) |
+| Beenden (Desktop-Button, Zurück in der Wurzel) | die Rückfrage warnt „Der letzte Stand der laufenden Partie ist nicht gespeichert“ statt „ist gespeichert“ |
+| System-Zurück in der Wurzel (Mobilgerät) | gespeichert: beendet sofort wie bisher; ungespeichert: dieselbe Warnung, Abbrechen erhält die Sitzung, „Beenden“ beendet genau einmal. Offene Dialoge und Unteransichten behandeln Zurück zuerst |
+| Fenster schließen (Desktop, X oder Alt+F4) | gespeichert: schließt sofort wie bisher; ungespeichert: dieselbe Warnung (`auto_accept_quit` aus, Behandlung in `AppShell._notification`) |
+| Beenden durch das Betriebssystem | nicht abfangbar (Speicherdruck, Aufgabenwechsel, Absturz); geschützt ist nur, was vorher gespeichert wurde |
 | Wechsel zu einer anderen Partie | Rückfrage „Aktuelle Partie nicht gespeichert“ (bestehend) |
 | neue Partie | nicht möglich, solange eine Partie läuft (Regelkern `game_already_started`); die laufende Partie wird nie still ersetzt |
 

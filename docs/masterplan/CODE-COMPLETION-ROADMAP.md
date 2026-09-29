@@ -93,7 +93,7 @@ Auch bei abgeschlossenem Offline-Funktionsstand entsteht später Code für Layou
 - [x] *(Paket 3: Zuordnung in `11-role-audit-status.md` §4.2, acht neue Szenarien)* Für jede Mechanikfamilie konkurrierende Effekte prüfen: Schutz gegen passende Todesursache, Umlenkung gegen Immunität, Ketten gegen Wiederbelebung, Rollenwechsel gegen Ressourcen, Bindungen gegen Tod, Solo-Sieg gegen Fraktionssieg.
 - [x] *(Paket 3; Fuzz zusätzlich unabhängig vom globalen Zufall)* Jede bekannte seltene Interaktion mit einem festen Szenario absichern. Fuzztests ergänzen diese Szenarien, ersetzen sie nicht.
 - [x] *(Paket 3, Methode in `12-role-combination-analysis.md` §1)* Nicht wahllos 71 × 71 Paare erstellen. Zuerst mechanisch relevante Überschneidungen aus der Matrix ableiten; jedes ausgelassene Risiko begründen. *(Stand: 11 feste Szenarien in `test_role_interactions`, Rest nur Fuzz (Matrix N-11).)*
-- [ ] *(Offen: im Auftrag Paket 3 nicht enthalten, neue Funktion)* Zufallsknopf nach RM-DR-015.2 (entschieden) für König, Traumdeuter, Kopfgeldjäger, Blutpriester über den gespeicherten Generator ergänzen (Matrix R-06).
+- [x] *(Restpaket 29.09.2026: `test_info_roles`, `test_random_pick`, Matrix R-06)* Zufallsknopf nach RM-DR-015.2 (entschieden) für König, Traumdeuter, Kopfgeldjäger, Blutpriester über den gespeicherten Generator ergänzen (Matrix R-06). *(Spielleitertexte der vier Rollen: OI-09, Paket 5.)*
 - [x] *(Analyse: `docs/role-migration/12-role-combination-analysis.md`; Setup-Regel weiter offen)* Analyse unverträglicher Rollenkombinationen (vom Product Owner gewünscht, Setup-Regel vertagt; Matrix R-07). Erst Analyse, Regel nur nach Entscheidung.
 - [x] *(Paket 3: Stimmhinweise, Matrix B-03)* Tatsächliche Fehler testgetrieben beheben. Keine Tests abschwächen, bis Grün erreicht ist.
 
@@ -115,7 +115,7 @@ Auch bei abgeschlossenem Offline-Funktionsstand entsteht später Code für Layou
 
 **Abnahme:** Keine bekannte Datenverlustlücke, doppelte Aktion oder unerlaubte Informationsweitergabe. Fehler führen zu einem verständlichen und fortsetzbaren Zustand.
 
-**Stand nach Paket 4 (29.09.2026):** Headless erfüllt, bis auf drei offene Produktentscheidungen: Checkpoint-Rotation (D-04), Redo nach Neustart (D-05), offene Reaktion für Mitlesende (I-03). Aus Paket 3 bleiben offen: Zufallsknopf R-06 (funktionale Restaufgabe) und die Setup-Regel zu R-07 (Entscheidung). Keine Geräte- oder Touchabnahme.
+**Stand nach Paket 4 (29.09.2026):** Automatisierte Prüfungen abgeschlossen, Produktentscheidungen offen: Checkpoint-Rotation (D-04), Redo nach Neustart (D-05), offene Reaktion für Mitlesende (I-03). Keine vollständige Abnahme, keine Geräte- oder Touchabnahme. *(Restpaket: Warnung auch bei mobilem Zurück und Fensterschließen, B-06; R-06 umgesetzt. Offen aus Paket 3 bleibt die Setup-Regel zu R-07, Entscheidung.)*
 
 ## Paket 5: Inhalte und Medienanschlüsse
 

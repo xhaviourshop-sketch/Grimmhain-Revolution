@@ -28,7 +28,7 @@ Von 19 Punkten bleibt kein einziger als echter Regelwiderspruch (K1) bestehen. Z
 | OI-06 | "Links" gleich Uhrzeigersinn | Hinweis | K5 | Tablet-Gegenprüfung steht aus |
 | OI-07 | Ton bei fünf Toten | Konflikt | K2 | gewählte Ausnahme mit dokumentierter Nebenwirkung, kein erwiesener Fehler; am 29.09.2026 bestätigt (DI-09) |
 | OI-08 | Traumdeuter und Kopfgeldjäger ohne mögliche Auswahl | Lücke | K2 | aus gemeinsamer Regel, Code und Test belegt, Entwurf ergänzt |
-| OI-09 | Zufallsknopf | Hinweis | K3 | entschieden (RM-DR-015.2), Umsetzung steht aus |
+| OI-09 | Zufallsknopf | Hinweis | K3 | entschieden (RM-DR-015.2), im Programm umgesetzt (29.09.2026); Spielleitertexte stehen aus |
 | OI-10 | Amalia: Format der Frage | Lücke | K5 | aufgelöst: Die App prüft die Frage nicht, Entwurf ergänzt |
 | OI-11 | Öffentliche Ansagen (Schutzgeist, Weiser) | Lücke | K2 | (a) Schutzgeist aufgelöst, Entwurf geändert; (b) Weiser durch die Regel der Todeseffekte beantwortet (DI-03) |
 | OI-12 | Loki: Wer erfährt von der Bindung | Lücke | K2 | beantwortet vom Product Owner am 29.09.2026 (Chat), Decision-Log-Eintrag steht aus |
