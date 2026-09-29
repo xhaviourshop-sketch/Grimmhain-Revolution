@@ -41,6 +41,7 @@ Beim Wechsel zu einer anderen Partie fragt „Fortsetzen“ nach, wenn der letzt
 - Eine Sicherung (`.bak`), keine längere Checkpoint-Rotation.
 - Die Liste zeigt die acht neuesten Partien; ältere bleiben auf dem Datenträger.
 - Wiederholbare Schritte (nach Rückgängig) werden nicht gespeichert und entfallen beim Neustart.
+- Ereignisse werden nicht gespeichert, sondern beim Laden per Replay der Befehle neu erzeugt. Deshalb ändert die Rolle beim Tod im Ereignis `SeatDied` das Speicherformat nicht (weiter Schema 12).
 - Testspielstände liegen in eigenen Verzeichnissen `user://test-saves-*` und werden nach jedem Test entfernt; `user://saves` wird von Tests nicht berührt.
 - Ältere Schemaversionen werden nicht migriert, sondern mit Meldung abgelehnt (`StateCodec`).
 - Nicht auf einem Tablet geprüft (Speicherort, Rechte, App-Beendigung durch das System). Headless geprüft sind unterbrochenes Schreiben an jedem Schritt, beschädigte Dateien, Wiederaufnahme offener Prompts und identisches Replay (`tests/ui/test_save_service.gd`).
