@@ -280,11 +280,11 @@ Nicht beantwortet, nicht durch diesen Auftrag entschieden:
 
 1. Sitzplatztausch während der Partie (S-06).
 2. *(Technisch entschieden in Paket 2, DA-27: Schema 14, keine Migration.)* Schema-Anhebung für Rollenübergabe (S-08), oder Bedienzustand nur in der App.
-3. Offene Reaktion für Mitlesende verbergen (I-03).
-4. Redo nach Neustart und Checkpoint-Rotation für den Offline-Abschluss (D-04, D-05).
+3. *(Entschieden am 29.09.2026, noch nicht umgesetzt: „Neutral statt Anzahl“, Decision Log PE-01.)* Offene Reaktion für Mitlesende verbergen (I-03).
+4. *(Entschieden am 29.09.2026: eine Sicherung reicht; Wiederholen entfällt beim Neustart, Decision Log PE-02, PE-03.)* Redo nach Neustart und Checkpoint-Rotation für den Offline-Abschluss (D-04, D-05).
 5. Freigabe der Rollenlexikon- und Guide-Texte (C-04, C-05).
 6. Inhalt von Szenarien, Beispielrunde, Definition Expertenmodus, Timer-Vorgaben (S-04, C-07, C-08, C-10).
 7. Kartenregeln (R-03 bis R-05, P8).
 8. Endgültige Rollenauswahl 20 bis 30 für Version 1.0 gegenüber 71 implementierten Rollen (Decision Log, „nicht blockierende Punkte“).
-9. Unverträgliche Rollenkombinationen als Setup-Regel (R-07).
+9. *(Entschieden am 29.09.2026, noch nicht umgesetzt: nicht blockierender Hinweis im Setup, Decision Log PE-04.)* Unverträgliche Rollenkombinationen als Setup-Regel (R-07).
 10. Linkshänder-Schalter jetzt oder im Gestaltungsprojekt (D-10).
