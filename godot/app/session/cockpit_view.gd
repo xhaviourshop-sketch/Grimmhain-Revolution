@@ -404,6 +404,18 @@ static func _special_state(s: GameState, id: int, family: String) -> Dictionary:
 	return {}
 
 
+## Stimmhinweise (RM-DR-008) für den privaten Bereich: Stimmen zählt die Spielleitung physisch, der Regelkern nennt nur Boni
+## (Blutwolf, Korrupter Richter). Verrät Rollen und darf nie auf eine öffentliche Karte.
+static func vote_hints(s: GameState) -> Array:
+	var out: Array = []
+	for h: Dictionary in VoteHints.hints(s):
+		var entry := PromptView.person_label(s, int(h["player_id"]))
+		entry["bonus"] = int(h["bonus"])
+		entry["source_role"] = str(h["source_role"])
+		out.append(entry)
+	return out
+
+
 ## Rollenanzeige, neutrale Liste: Personen in Sitzreihenfolge mit Bestätigungsstand, ohne jede Rolle. `next_id` ist die
 ## erste Person ohne gültige Bestätigung (Fortsetzungspunkt), -1 wenn alle bestätigt sind.
 static func role_show_list(s: GameState) -> Dictionary:

@@ -321,6 +321,11 @@ func status_fields(person_id: int) -> Array:
 	return CockpitView.status_fields(_state, person_id)
 
 
+## Stimmhinweise (Blutwolf, Korrupter Richter) nur für den privaten Bereich, siehe CockpitView.vote_hints.
+func vote_hints() -> Array:
+	return CockpitView.vote_hints(_state) if _state.is_started() else []
+
+
 ## Geheime Tagesaktionen einzelner Rollen (Amalia, Nekromant), nur für den privaten Bereich.
 func secret_day_actions() -> Array:
 	return CockpitView.secret_day_actions(_state)

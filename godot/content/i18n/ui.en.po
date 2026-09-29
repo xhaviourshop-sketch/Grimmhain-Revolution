@@ -3424,3 +3424,9 @@ msgstr "Error: The warning was not confirmed. Nothing was changed."
 
 msgid "ui.cockpit.error.player_alive"
 msgstr "Error: This person is alive. Nothing was changed."
+
+msgid "ui.cockpit.private.vote_hints"
+msgstr "Vote hints (count physically, add the bonus)"
+
+msgid "ui.cockpit.private.vote_hint"
+msgstr "{name}: +{bonus} ({role})"

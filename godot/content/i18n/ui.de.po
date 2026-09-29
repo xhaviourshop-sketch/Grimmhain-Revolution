@@ -3424,3 +3424,9 @@ msgstr "Fehler: Die Warnung wurde nicht bestätigt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.player_alive"
 msgstr "Fehler: Diese Person lebt. Nichts wurde geändert."
+
+msgid "ui.cockpit.private.vote_hints"
+msgstr "Stimmhinweise (physisch zählen, Bonus einrechnen)"
+
+msgid "ui.cockpit.private.vote_hint"
+msgstr "{name}: +{bonus} ({role})"

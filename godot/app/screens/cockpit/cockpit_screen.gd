@@ -543,7 +543,7 @@ func open_layer(kind: StringName) -> void:
 		return
 	match kind:
 		&"private":
-			_layer = CockpitLayers.private_drawer(context.session.private_seats(), context.session.secret_day_actions())
+			_layer = CockpitLayers.private_drawer(context.session.private_seats(), context.session.secret_day_actions(), context.session.vote_hints())
 		&"gm":
 			var undo := context.session.undo_info()
 			_layer = CockpitLayers.gm_drawer({"undo": undo, "redo": context.session.redo_info(),

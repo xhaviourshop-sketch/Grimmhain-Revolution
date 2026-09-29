@@ -15,10 +15,16 @@ extends RefCounted
 
 ## `actions`: geheime Tagesaktionen [{action, player_id, name, seat}] als Buttons `SecretAction_*`
 ## (Metadaten action und player_id); die Ansicht verbindet sie.
-static func private_drawer(seats: Array, actions: Array = []) -> Control:
+## `hints`: Stimmhinweise [{person_id, seat, name, bonus, source_role}] (RM-DR-008) als Zeilen `VoteHint_<id>`.
+static func private_drawer(seats: Array, actions: Array = [], hints: Array = []) -> Control:
 	var drawer := _drawer("PrivateLayer", "ui.cockpit.private.heading")
 	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer
 	_label(list, "ui.cockpit.private.warning", {}, &"WarningLabel")
+	if not hints.is_empty():
+		_label(list, "ui.cockpit.private.vote_hints", {}, &"CaptionLabel")
+		for h: Dictionary in hints:
+			_label(list, "ui.cockpit.private.vote_hint", {"name": CockpitText.person(h), "bonus": int(h["bonus"]),
+				"role": CockpitText.role_name(str(h["source_role"]))}, &"SectionLabel").name = "VoteHint_%d" % int(h["person_id"])
 	if not actions.is_empty():
 		_label(list, "ui.cockpit.private.actions", {}, &"CaptionLabel")
 		for a: Dictionary in actions:
