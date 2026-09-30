@@ -5668,3 +5668,658 @@ msgstr "Saving is not possible. The last saved groups stay unchanged."
 
 msgid "ui.groups.error.load_failed"
 msgstr "The group “{name}” could not be loaded. The current list stays unchanged."
+
+# --- Rulebook ---
+
+msgid "ui.menu.rulebook"
+msgstr "Rulebook"
+
+msgid "ui.cockpit.tools.rulebook"
+msgstr "Rulebook"
+
+msgid "ui.rulebook.title"
+msgstr "Rulebook"
+
+msgid "ui.rulebook.toc.heading"
+msgstr "Contents"
+
+msgid "ui.rulebook.toc.entry"
+msgstr "{number}. {title}"
+
+msgid "ui.rulebook.back_to_toc"
+msgstr "Contents"
+
+msgid "ui.rulebook.prev"
+msgstr "Previous chapter"
+
+msgid "ui.rulebook.next"
+msgstr "Next chapter"
+
+msgid "ui.rulebook.chapter_of"
+msgstr "Chapter {number} of {total}"
+
+msgid "ui.rulebook.language"
+msgstr "Deutsch"
+
+msgid "ui.rulebook.close"
+msgstr "Close"
+
+msgid "ui.rulebook.intro"
+msgstr "This is the confirmed flow of a game as the app runs it today. The rulebook never shows details of a running game."
+
+msgid "ui.rulebook.c01.title"
+msgstr "Preparation"
+
+msgid "ui.rulebook.c01.b01"
+msgstr "Grimmhain is a werewolf game for 6 to 24 people at a table. One person runs the game as game master and operates the app on the tablet. Everyone else plays without a device."
+
+msgid "ui.rulebook.c01.b02"
+msgstr "The app guides the game step by step, applies the rules and saves after every action. Speaking, showing, discussing and voting happen at the table."
+
+msgid "ui.rulebook.c01.b03"
+msgstr "What you need"
+
+msgid "ui.rulebook.c01.b04"
+msgstr "A device with the app and a table with room for everyone. The game master keeps the device. Many cards show secret information, so the game master should be able to shield the screen from the others."
+
+msgid "ui.rulebook.c01.b05"
+msgstr "What the app does not do"
+
+msgid "ui.rulebook.c01.b06"
+msgstr "The app does not count votes. Discussion and voting happen at the table and the game master counts. This version also has no sound or narrator voice, no own view for the players' smartphones and no card features. What is not described here is not built in."
+
+msgid "ui.rulebook.c01.b07"
+msgstr "The flow in short"
+
+msgid "ui.rulebook.c01.b08"
+msgstr "1. Set up a new game: people, roles, distribution, seating (chapter 2)."
+
+msgid "ui.rulebook.c01.b09"
+msgstr "2. Each person sees their role without anyone else learning it (chapter 3)."
+
+msgid "ui.rulebook.c01.b10"
+msgstr "3. Run the night (chapters 4 and 5), close the morning (chapter 6)."
+
+msgid "ui.rulebook.c01.b11"
+msgstr "4. Day with nomination and a vote at the table, execution (chapters 7 and 8)."
+
+msgid "ui.rulebook.c01.b12"
+msgstr "5. Night and day alternate until the game master confirms a win (chapter 9)."
+
+msgid "ui.rulebook.c02.title"
+msgstr "People, role choice, distribution and seating"
+
+msgid "ui.rulebook.c02.b01"
+msgstr "Setup starts in the main menu with “New game”. It has four steps: players, roles, distribution and seating. Each step is confirmed. If you change something later, the following steps must be confirmed again. “Start game” only appears once the seating is confirmed."
+
+msgid "ui.rulebook.c02.b02"
+msgstr "1. Players"
+
+msgid "ui.rulebook.c02.b03"
+msgstr "Enter the names of 6 to 24 people, one by one or as a list (separated by line break, comma or semicolon). A name may be at most 32 characters long. Identical names are allowed and get marked. “Confirm players” completes the step."
+
+msgid "ui.rulebook.c02.b04"
+msgstr "“Save group” stores the current name list under a group name. “Load group” fills the list again later with the same names in the same order. Only names are saved, no roles. A filled list is only replaced after a confirmation, and a group with the same name is never overwritten silently."
+
+msgid "ui.rulebook.c02.b05"
+msgstr "2. Roles"
+
+msgid "ui.rulebook.c02.b06"
+msgstr "Choose exactly as many roles as there are people. A valid cast contains at least one village role, one wolf role and one solo role. Each role appears at most once at the start; only “The Bound” may be chosen several times. The card shows what is still missing."
+
+msgid "ui.rulebook.c02.b07"
+msgstr "“Use suggestion” fills a fixed starting aid. It is not a guaranteed balanced cast. “Reset selection” clears the choice. The “Rules” button next to a role opens its lexicon entry without changing the selection. “Confirm roles” completes the step."
+
+msgid "ui.rulebook.c02.b08"
+msgstr "If the cast contains the Decoy Wolf, you set a disguise role for each copy: the role it appears as when checked. Any role that does not count as a wolf is allowed. Only the game master knows the disguise."
+
+msgid "ui.rulebook.c02.b09"
+msgstr "If the cast contains a direct revival role (Coachman, Dr. Victor Frankenstein), the game becomes a revival round. The role step only displays this; it cannot be switched separately (chapter 6)."
+
+msgid "ui.rulebook.c02.b10"
+msgstr "3. Distribution"
+
+msgid "ui.rulebook.c02.b11"
+msgstr "Choose “Random” or “Manual”. Random draws the roles with a stored seed: the same inputs give the same assignment, “Reshuffle” draws again. With manual you assign a role to each person yourself. “Confirm distribution” completes the step."
+
+msgid "ui.rulebook.c02.b12"
+msgstr "4. Seating"
+
+msgid "ui.rulebook.c02.b13"
+msgstr "The seating circle should match the seating at the table, clockwise. This matters because some roles affect their neighbours. To swap, drag a person to another seat or tap two people one after the other. “Confirm seating”, then “Start game”."
+
+msgid "ui.rulebook.c02.b14"
+msgstr "Roles belong to the person, not to the seat. In this version the seating cannot be changed after the game has started."
+
+msgid "ui.rulebook.c03.title"
+msgstr "Showing roles safely"
+
+msgid "ui.rulebook.c03.b01"
+msgstr "Each person should see their role once without anyone else learning it. The game master keeps the device. The “Show roles” tool is in the cockpit and on the start card of the first night."
+
+msgid "ui.rulebook.c03.b02"
+msgstr "1. The list shows only names and the “seen” state, never a role. The next open person is highlighted."
+
+msgid "ui.rulebook.c03.b03"
+msgstr "2. Tap a person. A neutral front side “Card for seat · name” appears."
+
+msgid "ui.rulebook.c03.b04"
+msgstr "3. Only this person looks at the screen and taps “Show role”. They see their name, their role and a short text."
+
+msgid "ui.rulebook.c03.b05"
+msgstr "4. “Seen, close card” records that the person knows their role and returns to the list. “Close without confirming” records nothing."
+
+msgid "ui.rulebook.c03.b06"
+msgstr "Showing roles is not mandatory: the first night can begin without any confirmation. Someone who has already confirmed can read their role again. A person whose role changes later counts as not yet seen again."
+
+msgid "ui.rulebook.c03.b07"
+msgstr "The Decoy Wolf sees their true role on the card, never the disguise. Wolves do not recognise each other through the role card but in the first night during the shared pack step."
+
+msgid "ui.rulebook.c03.b08"
+msgstr "An open role card disappears on every change of the game state, on “Undo”, on loading and on “Hide”. The neutral list is shown again afterwards."
+
+msgid "ui.rulebook.c04.title"
+msgstr "Running the night and cover calls"
+
+msgid "ui.rulebook.c04.b01"
+msgstr "The “Begin night” card starts the night: everyone closes their eyes. In a revival round the dead close their eyes too. The app then plans the night and opens the first step. The app sets the order of the roles, not the game master."
+
+msgid "ui.rulebook.c04.b02"
+msgstr "One step"
+
+msgid "ui.rulebook.c04.b03"
+msgstr "Each card names the called role or group, the acting people (highlighted in the seating circle) and the progress “Next step · 3 of 7”. “Say now” is the text to read aloud. “Do now” tells you what to operate."
+
+msgid "ui.rulebook.c04.b04"
+msgstr "1. Read out the text under “Say now”."
+
+msgid "ui.rulebook.c04.b05"
+msgstr "2. Tap “Begin step”."
+
+msgid "ui.rulebook.c04.b06"
+msgstr "3. Enter the answer of the called person the way the card shows: tap people in the seating circle and “Confirm selection”, “Yes” or “No”, tap an option, “Shown”, or confirm a prediction."
+
+msgid "ui.rulebook.c04.b07"
+msgstr "4. The app opens the next step. After the last step “End night” appears."
+
+msgid "ui.rulebook.c04.b08"
+msgstr "Choosing people"
+
+msgid "ui.rulebook.c04.b09"
+msgstr "Only allowed people can be tapped in the seating circle. The card names the allowed number. “Confirm selection” only unlocks when the app would accept the selection; otherwise the card explains why. Tapping a chosen person removes them again, “Clear selection” clears everything. To choose nobody, use “Nobody / decline” or the wording of the role."
+
+msgid "ui.rulebook.c04.b10"
+msgstr "Four roles offer “Pick at random” (Dreamer, Bounty Hunter, King and the reveal of the Blood Priest). The proposal only counts after “Confirm selection”. Whoever taps a person chooses themselves."
+
+msgid "ui.rulebook.c04.b11"
+msgstr "Skipping and cancelling"
+
+msgid "ui.rulebook.c04.b12"
+msgstr "Skippable steps (the pack) have “Skip …” and require a reason. “Cancel step …” discards everything entered in this step; afterwards it can start again. Steps of people who have died or changed role in the meantime drop out on their own and appear in the log."
+
+msgid "ui.rulebook.c04.b13"
+msgstr "Cover calls"
+
+msgid "ui.rulebook.c04.b14"
+msgstr "Roles that cannot do anything this night because their ability is used up are called anyway. That way nobody at the table hears who can still act. The card of the next real step then shows “Call first (announcement only)” at the top with the reading lines of these roles. A cover call triggers no action."
+
+msgid "ui.rulebook.c04.b15"
+msgstr "In a round without revival, roles that no living person holds any more are not called any more. In a revival round the roles of the dead are called too."
+
+msgid "ui.rulebook.c04.b16"
+msgstr "An open step blocks “End night”. If steps have dropped out or been skipped, the card points that out."
+
+msgid "ui.rulebook.c05.title"
+msgstr "Showing private information"
+
+msgid "ui.rulebook.c05.b01"
+msgstr "Some steps end with information that only one person may see. The card then shows “Show card”. This opens a full-screen card that contains only what this person may see. “Back to game master” closes it. Then you confirm with “Shown”."
+
+msgid "ui.rulebook.c05.b02"
+msgstr "Night and day"
+
+msgid "ui.rulebook.c05.b03"
+msgstr "At night everyone has their eyes closed, so cards with secret content can be read openly. In the morning and during the day everyone can see along. There such cards are covered (“Game master only”) and open only with “Show”. With the next action they are covered again."
+
+msgid "ui.rulebook.c05.b04"
+msgstr "Hiding"
+
+msgid "ui.rulebook.c05.b05"
+msgstr "“Hide” hides the whole cockpit and closes all open layers. The game continues unchanged. “Show cockpit again” brings it back."
+
+msgid "ui.rulebook.c05.b06"
+msgstr "Private notices"
+
+msgid "ui.rulebook.c05.b07"
+msgstr "Some roles trigger private notices (Loki, Pied Piper, Plague Bringer, Little Red Riding Hood). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, “Shown” confirms. Each person sees only what is meant for them. During the day the content stays covered until you tap “Show”."
+
+msgid "ui.rulebook.c05.b08"
+msgstr "Areas with all secrets"
+
+msgid "ui.rulebook.c05.b09"
+msgstr "“Roles” and “Log” deliberately show everything. Open them only when nobody is reading along. They close on “Hide”, on “Back” and when leaving the view. A tap next to the drawer closes it as well."
+
+msgid "ui.rulebook.c06.title"
+msgstr "Morning and revival round"
+
+msgid "ui.rulebook.c06.b01"
+msgstr "“End night” evaluates the night: first the attack of the pack is checked. A rescue by the Witch of the Woods or a protection by the Guardian Angel prevents it; only the game master learns that. Then come immediate consequences of deaths, then open reactions one after another, and only at the end does the app check for a win."
+
+msgid "ui.rulebook.c06.b02"
+msgstr "Open reactions (such as Reaper, Possessed Wolf, Knight, Village Blacksmith, Demonic Wolf) appear as covered cards. “Show”, then tap the person the card names, or “Declines”. Each reaction may stay voluntary and can trigger further deaths."
+
+msgid "ui.rulebook.c06.b03"
+msgstr "Morning report"
+
+msgid "ui.rulebook.c06.b04"
+msgstr "The morning report comes before the day actions. The reading text names the people who died in the night or “Nobody died this night”. A role is only named in rounds without revival, a cause never."
+
+msgid "ui.rulebook.c06.b05"
+msgstr "“Show announcement card” shows the public part full-screen at the table: names of the dead, revived people and explicitly public notices."
+
+msgid "ui.rulebook.c06.b06"
+msgstr "“Private details …” shows only the game master causes, rescues, dropped steps, reactions and role changes."
+
+msgid "ui.rulebook.c06.b07"
+msgstr "“Continue to the day” starts the day."
+
+msgid "ui.rulebook.c06.b08"
+msgstr "Visible consequences of a death are announced publicly, also in revival rounds, for example the Reaper's curse, the Knight's effect or heartbreak. The announcement names the effect and the role it comes from. Secret choices without a visible consequence stay covered."
+
+msgid "ui.rulebook.c06.b09"
+msgstr "Revival round"
+
+msgid "ui.rulebook.c06.b10"
+msgstr "If the cast contains a direct revival role, the whole game counts as a revival round: no role is revealed on death and the night announcement says “Everyone closes their eyes, the dead included.”"
+
+msgid "ui.rulebook.c06.b11"
+msgstr "In a round without revival the role is revealed on death, namely the role at the time of death. The dead do not have to close their eyes at night."
+
+msgid "ui.rulebook.c07.title"
+msgstr "Day, nomination and physical vote"
+
+msgid "ui.rulebook.c07.b01"
+msgstr "After “Continue to the day” the day begins. Discussion and voting happen at the table. The app has no vote field, counts no votes and calculates no majority. The game master counts and records only the nominations and the result."
+
+msgid "ui.rulebook.c07.b02"
+msgstr "The card shows as reading text who died today (“Died today: …”) and the public list of today's nominations."
+
+msgid "ui.rulebook.c07.b03"
+msgstr "Recording a nomination"
+
+msgid "ui.rulebook.c07.b04"
+msgstr "1. Tap “Record nomination”."
+
+msgid "ui.rulebook.c07.b05"
+msgstr "2. Tap the person who nominates in the seating circle."
+
+msgid "ui.rulebook.c07.b06"
+msgstr "3. Tap the nominated person, then “Confirm nomination”."
+
+msgid "ui.rulebook.c07.b07"
+msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. The app rejects violations with a message (“This person has already nominated today”). An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
+
+msgid "ui.rulebook.c07.b08"
+msgstr "Vote hints"
+
+msgid "ui.rulebook.c07.b09"
+msgstr "Some roles change the count at the table (for example the Blood Wolf and the Corrupt Judge). These hints are in the “Roles” area under “Vote hints”. They never appear on a public card. The game master includes them in the count at the table."
+
+msgid "ui.rulebook.c07.b10"
+msgstr "Secret day actions of certain roles are in the “Roles” area under “Secret day actions”."
+
+msgid "ui.rulebook.c08.title"
+msgstr "Execution and death reactions"
+
+msgid "ui.rulebook.c08.b01"
+msgstr "After the vote at the table you tap “Execution …”, then the person to be executed, then “Continue to check”. Only people nominated today can be chosen. An execution without nomination is only possible as a game master correction (chapter 10)."
+
+msgid "ui.rulebook.c08.b02"
+msgstr "A covered check card always follows. It appears on every execution so that its appearance reveals nothing about certain roles. “Show” reveals it to the game master: either it names a special case (such as a mirroring, a defence question or the question about the curse duration) or “Nothing special”. Answer the question on the card and tap “Confirm execution”. A confirmation guards against mistakes."
+
+msgid "ui.rulebook.c08.b03"
+msgstr "If nobody is to be executed, tap “No execution today …” and confirm the question. Only after this decision, and when no step or reaction is open any more, “End day” is possible."
+
+msgid "ui.rulebook.c08.b04"
+msgstr "Death reactions"
+
+msgid "ui.rulebook.c08.b05"
+msgstr "After every death the app first works through the immediate consequences without a decision, then the open reactions one after another. Reactions appear as covered cards. The reacting person decides voluntarily: the card names whom to tap, or “Declines”."
+
+msgid "ui.rulebook.c08.b06"
+msgstr "Every reaction can trigger further deaths and consequences. Only when nothing is open any more does the app check for a win (chapter 9). Visible consequences are announced publicly (chapter 6)."
+
+msgid "ui.rulebook.c08.b07"
+msgstr "Afterwards you end the day with “End day”. The next night starts with the “Begin night” card once everyone has closed their eyes."
+
+msgid "ui.rulebook.c09.title"
+msgstr "Confirming a win"
+
+msgid "ui.rulebook.c09.b01"
+msgstr "After every death the app checks provisionally whether a win condition is met. Open reactions and abilities are worked through first, then the check becomes binding. If a condition is met, the covered card “Possible end of game” appears."
+
+msgid "ui.rulebook.c09.b02"
+msgstr "“Show” shows every win candidate with the reason, for example: the wolves are at least as many as all the other living people. Check the condition at the table."
+
+msgid "ui.rulebook.c09.b03"
+msgstr "“Confirm win: …” with the confirmation that follows confirms exactly one candidate. The game is over, winner and reason are saved."
+
+msgid "ui.rulebook.c09.b04"
+msgstr "“Reject all …” requires a reason. The game continues. A win is only proposed again after the next relevant change."
+
+msgid "ui.rulebook.c09.b05"
+msgstr "If several conditions are met at once there is no fixed order. The game master confirms exactly one candidate or rejects all. The app never ends a game by itself."
+
+msgid "ui.rulebook.c09.b06"
+msgstr "If nobody is alive there is no candidate. The card points that out and the game master declares the result through “Game master” and “Declare the winner …”."
+
+msgid "ui.rulebook.c09.b07"
+msgstr "Even a confirmed win decision can be taken back with “Undo” (chapter 10)."
+
+msgid "ui.rulebook.c10.title"
+msgstr "Game master corrections and undo"
+
+msgid "ui.rulebook.c10.b01"
+msgstr "The “Game master” tool opens a private area for history, corrections and ending the game. Everything you change here is logged with a reason."
+
+msgid "ui.rulebook.c10.b02"
+msgstr "Undo and redo"
+
+msgid "ui.rulebook.c10.b03"
+msgstr "“Undo: …” and “Redo: …” state in plain words which step is taken back or repeated and ask for confirmation. Exactly one command is taken back each time, multi-stage actions go back stage by stage. Undo also works after a restart. A new command discards whatever could still be redone. Starting the game cannot be undone; use “End and discard the game …” for that."
+
+msgid "ui.rulebook.c10.b04"
+msgstr "Undo only resets the game state. What has already been shown or announced stays known to the players. The confirmation says so explicitly."
+
+msgid "ui.rulebook.c10.b05"
+msgstr "Corrections"
+
+msgid "ui.rulebook.c10.b06"
+msgstr "Under “Corrections (with reason, logged)” you find: “Kill a person …” (with or without consequences), “Revive a person …”, “Change a role …”, “Change status …”, “Execute without nomination …” (during the day only) and “Declare the winner …”. “Change status …” only offers corrections the app accepts for this person in the current state."
+
+msgid "ui.rulebook.c10.b07"
+msgstr "The flow: choose the kind, tap a person in the seating circle, give the required details, read the warning and enter a reason. Afterwards “Last correction: what changed” shows the consequences. If the game state changes between selection and confirmation, the selection is discarded and nothing is changed."
+
+msgid "ui.rulebook.c10.b08"
+msgstr "A correction during an open step resets that step. The card announces it again afterwards."
+
+msgid "ui.rulebook.c10.b09"
+msgstr "Leaving or ending the game"
+
+msgid "ui.rulebook.c10.b10"
+msgstr "“To main menu (game stays saved)” leaves the view and keeps the game. “End and discard the game …” asks with a red confirmation. The files are only renamed, not deleted."
+
+msgid "ui.rulebook.c11.title"
+msgstr "Saving, resuming and error handling"
+
+msgid "ui.rulebook.c11.b01"
+msgstr "The running game is saved automatically after every accepted command. The phase bar shows “Saved”. You do not need to do anything, not even in the middle of a multi-stage step."
+
+msgid "ui.rulebook.c11.b02"
+msgstr "Resuming"
+
+msgid "ui.rulebook.c11.b03"
+msgstr "In the main menu “Continue game” shows the saved games with names, number of people, phase, night, day, living people and save time, but without roles. “Continue” returns to the same place, even in the middle of a step or with an open reaction. “Discard …” asks first and only renames the files."
+
+msgid "ui.rulebook.c11.b04"
+msgstr "When saving fails"
+
+msgid "ui.rulebook.c11.b05"
+msgstr "If saving fails, the phase bar shows “Error: not saved” with the button “Save again”. The last saved state is kept and the game continues. The app does not retry on its own: each tap is one attempt. The next accepted command saves as usual."
+
+msgid "ui.rulebook.c11.b06"
+msgstr "When closing the app it warns if the last state could not be saved. The app cannot intercept being closed by the operating system; only what was saved before is protected."
+
+msgid "ui.rulebook.c11.b07"
+msgstr "Damaged and foreign saves"
+
+msgid "ui.rulebook.c11.b08"
+msgstr "A damaged file is never overwritten but set aside. The app then loads the backup and points out that it is an older state and the last steps must be done again. If there is no valid backup the app reports an error and nothing is deleted."
+
+msgid "ui.rulebook.c11.b09"
+msgstr "A save from another version of the app stays unchanged and cannot be resumed here. “Discard” remains possible. A running game is never replaced silently by another one."
+
+msgid "ui.rulebook.c11.b10"
+msgstr "Settings such as the language and “Reduce motion” as well as saved player groups are stored separately from the game saves."
+
+msgid "ui.rulebook.c12.title"
+msgstr "Role lexicon and using help"
+
+msgid "ui.rulebook.c12.b01"
+msgstr "The role lexicon explains all roles. You find it in the main menu under “Role lexicon”, in the role choice via the “Rules” button of a role and in the cockpit via the “Lexicon” tool. This rulebook is in the main menu under “Rulebook” and in the cockpit as the “Rulebook” tool."
+
+msgid "ui.rulebook.c12.b02"
+msgstr "In the lexicon you search by the role name in the chosen language and filter by All, Village, Werewolves and Solo. An entry names the faction, a short text and the sections Night step, Counts as a wolf, Ability, Timing and uses, Targets, Exceptions, Win, Examples, Procedure at the table and Notes for the game master. For some roles “Not yet settled or implemented” is added."
+
+msgid "ui.rulebook.c12.b03"
+msgstr "On the private card of a step “Read the rule” opens the entry of the acting role. A covered card has no help. On a shown card (show card, announcement card, role display) there is no help because the card replaces the cockpit."
+
+msgid "ui.rulebook.c12.b04"
+msgstr "What help does and does not do"
+
+msgid "ui.rulebook.c12.b05"
+msgstr "Opening, searching, filtering, browsing and closing help sends no command, draws no randomness and uses up nothing. An open selection is kept as long as the game state does not change. If it changes, the selection is discarded as usual."
+
+msgid "ui.rulebook.c12.b06"
+msgstr "The general lexicon and this rulebook never show details of the running game: no people, no distributed roles, no targets or markings. Hide, “Back” and Escape close the help."
+
+msgid "ui.rulebook.c12.b07"
+msgstr "The language button in the help switches the language of the whole app. The opened place is kept."
+
+# --- Procedure at the table per role (OI-18) ---
+
+msgid "ui.role.albtraumwolf.lex.act"
+msgstr "Call: (every night, optional, before all village roles) The app announces the role “Nightmare Wolf” in the night order. Read out: “Nightmare Wolf, wake up. Point to the person whose ability you block tonight.”\nSelect or read: Tap the person the Nightmare Wolf blocks. Without a choice: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.amalia.lex.act"
+msgstr "Call: No call, no night action. It is a day action.\nSelect or read: Open the “Roles” area and in it under “Secret day actions” the entry “Amalia sacrifices themself …”. In the dialog answer Amalia's question truthfully with “Answer: yes” or “Answer: no”.\nRead out or show: Question and answer are public; that makes the ability visible. Amalia's death is announced like any death.\nFinish: With the answer the action is finished. Amalia dies immediately."
+
+msgid "ui.role.besessener_wolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”. If he dies, a covered reaction card appears: The Possessed Wolf drags someone along. Tap the person or “Declines”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.blutpriester.lex.act"
+msgstr "Call: (every night until used, optional) The app announces the role “Blood Priest” in the night order. Read out: “Blood Priest, wake up. Do you want to make a sacrifice tonight? Point to them or shake your head.”\nSelect or read: Tap the Blood Priest’s sacrifice. They die in the morning. Without a sacrifice: decline. For you only: choose up to three living wolves to name to the Blood Priest.\nRead out or show: Name the chosen wolves to the Blood Priest. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.blutwolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.cerberus.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”. On an execution of Cerberus with three heads the covered check card shows the defence question: ask the person secretly and tap “Repels” or “Does not repel”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.daemonischer_wolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”. If he dies, a covered reaction card appears: The Demonic Wolf curses someone as they die. Tap the person or “Declines”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.das_orakel.lex.act"
+msgstr "Call: (every night, after all Witch steps) The app announces the role “The Oracle” in the night order. Read out: “Oracle, wake up. Point to the person whose nature you want to see.”\nSelect or read: Tap the person the Oracle points to and confirm.\nRead out or show: Show the Oracle the result, for example via “Show card”. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.der_weise.lex.act"
+msgstr "Call: No call, no night step.\nSelect or read: The role acts passively. If the Sage is executed, the covered check card asks for the curse duration: “how many days (0 to 3)?” Ask the person and tap the number.\nRead out or show: The curse is announced publicly as a visible consequence of a death (rulebook, chapter 6).\nFinish: Tap “Confirm execution” on the check card."
+
+msgid "ui.role.detektiv.lex.act"
+msgstr "Call: No call, no night step.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: After the death of a person who counts as a wolf, a public notice with the direction to the nearest wolf, never with a role, appears in the morning report or during the day. Read it out with the report.\nFinish: There is nothing to finish."
+
+msgid "ui.role.die_ewigen.lex.act"
+msgstr "Call: (every night, shared step) The app announces the role “The Eternal Ones” in the night order. Read out: “Eternal ones, wake up. Point together to the person you want to check.”\nSelect or read: Tap the person the Eternal check and confirm.\nRead out or show: Show the Eternal whether the person can win alone. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.die_gebundenen.lex.act"
+msgstr "Call: (night 1 only, shared step) The app announces the role “The Bound” in the night order. Read out: “Bound ones, wake up and look at each other.”\nSelect or read: There is nothing to select. The app determines the result itself.\nRead out or show: The Bound see each other. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.doktor.lex.act"
+msgstr "Call: (every night) The app announces the role “Doctor” in the night order. Read out: “Doctor, wake up. Point to two people whose blood you want to compare.”\nSelect or read: Tap the two people the Doctor points to and confirm.\nRead out or show: Show the Doctor whether both belong to the same team. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.doppelspion.lex.act"
+msgstr "Call: No step of his own. He wakes in every pack step: wake him together with the pack without naming his role.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: Nothing is read out or shown.\nFinish: There is nothing to finish."
+
+msgid "ui.role.dorfbewohner.lex.act"
+msgstr "Call: No call, no night step.\nSelect or read: The role has no ability, there is nothing to operate.\nRead out or show: Nothing is read out or shown.\nFinish: There is nothing to finish."
+
+msgid "ui.role.dorfchronistin.lex.act"
+msgstr "Call: (night 1 only) The app announces the role “Village Chronicler” in the night order. Read out: “Village Chronicler, wake up. I will show you how many loners are in the village.”\nSelect or read: There is nothing to select. The app determines the result itself.\nRead out or show: Show the Village Chronicler the number. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.dorfschmied.lex.act"
+msgstr "Call: (from night 6 until used, optional) The app announces the role “Village Blacksmith” in the night order. Read out: “Village Smith, wake up. Do you want to hand over your weapon now? Point to the person.”\nSelect or read: Tap the person who receives the weapon. Otherwise “Not yet”. Later a covered reaction card can appear: The Smith’s weapon repels the attack. Tap the wolf that dies.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.dorfwache.lex.act"
+msgstr "Call: No call, no night step. The role is never called or named publicly.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: In the morning the table only sees the usual result of the night.\nFinish: There is nothing to finish."
+
+msgid "ui.role.dr_victor_frankenstein.lex.act"
+msgstr "Call: (every night until used, optional) The app announces the role “Dr. Victor Frankenstein” in the night order. Read out: “Doctor Frankenstein, wake up. Do you want to bring back one of the dead? Point to them.”\nSelect or read: Tap the dead person Frankenstein brings back. Without a choice: decline. Choose the free role the person returns with.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the chosen option. The app then opens the next step."
+
+msgid "ui.role.faehrtenleser.lex.act"
+msgstr "Call: (every night until used) The app announces the role “Tracker” in the night order. Read out: “Tracker, wake up. Do you want to read the trail tonight?”\nSelect or read: Does the Tracker read the trail tonight?\nRead out or show: Show the Tracker the direction. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.fenrir.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.feuerteufel.lex.act"
+msgstr "Call: (every night) The app announces the role “Pyromaniac” in the night order. Read out: “Fire Devil, wake up. Point to the person you want to mark.”\nSelect or read: Tap the newly marked person. Otherwise “Keep the mark”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.giftwolf.lex.act"
+msgstr "Call: (every night, optional, after the pack) The app announces the role “Poison Wolf” in the night order. Read out: “Poison Wolf, wake up. Do you want to poison someone? Point to the person.”\nSelect or read: Tap the person the Poison Wolf poisons. They die two nights later. Without a choice: decline.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.grabraeuber.lex.act"
+msgstr "Call: (once stealing, then the stolen step) The app announces the role “Grave Robber” in the night order. Read out: “Grave Robber, wake up. Do you want to rob a dead person’s grave? Point to them.” After the theft the stolen step is added from the following night.\nSelect or read: Tap the dead person whose night ability the Grave Robber steals. Without a choice: decline.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.hades.lex.act"
+msgstr "Call: (every night, as the last step) The app announces the role “Hades” in the night order. Read out: “Hades, wake up. Do you want to use your lights to take someone? Point to the person.”\nSelect or read: Tap Hades’ victim (costs lights). Without a victim: decline. Does Hades also buy a barrier?\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Buy barrier” or “No barrier”. The app then opens the next step."
+
+msgid "ui.role.henker.lex.act"
+msgstr "Call: (from three executions every night, optional) The app announces the role “Executioner” in the night order. Read out: “Hangman, wake up. Point to the person who dies at the next execution as well.”\nSelect or read: Tap the person the Hangman marks. Without a choice: decline.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.koenig.lex.act"
+msgstr "Call: (from the first night with more dead than living) The app announces the role “King” in the night order. Read out: “King, wake up. Point to a villager whose role you want to learn.”\nSelect or read: Tap the villager the King points to and confirm.\nRead out or show: Show the King the person’s role. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.koenig_lykaon.lex.act"
+msgstr "Call: (every night until used) The app announces the role “King Lycaon” in the night order. Read out: “King Lycaon, wake up. Choose an ally and a victim of your transformation.”\nSelect or read: Tap the allied wolf. “Postpone” is possible at most three times. Tap the villager who becomes an Illusion Wolf and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.kopfgeldjaeger.lex.act"
+msgstr "Call: (night after an execution) The app announces the role “Bounty Hunter” in the night order. Read out: “Bounty Hunter, wake up. Here is your list.”\nSelect or read: For you only: choose three other living people with at least one wolf for the list.\nRead out or show: Show the Bounty Hunter the three names. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.korrupter_richter.lex.act"
+msgstr "Call: (every night, optional) The app announces the role “Corrupt Judge” in the night order. Read out: “Corrupt Judge, wake up. Point to the person who counts as nominated tomorrow.”\nSelect or read: Tap the person the Judge marks (may be themself). Without a choice: decline. Publicly the covered nomination only appears as “… counts as nominated today”; its vote hint is in the “Roles” area under “Vote hints”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.kriegerin_des_lichts.lex.act"
+msgstr "Call: (every night until used, optional) The app announces the role “Warrior of Light” in the night order. Read out: “Warrior of Light, wake up. Do you want to attack tonight? Point to the person.”\nSelect or read: Tap the person the Warrior attacks. Without an attack: decline.\nRead out or show: Show the Warrior whether they hit a wolf. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.kutscher.lex.act"
+msgstr "Call: (from a night with at least 10 dead) The app announces the role “Coachman” in the night order. Read out: “Coachman, wake up. Do you want to bring back three of the dead? Point to them.”\nSelect or read: Tap exactly three dead people to return, or decline completely. Tap which of the three returns as a wolf.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.lehrling.lex.act"
+msgstr "Call: (choice in the first available night without a bond) The app announces the role “Apprentice” in the night order. Read out: “Apprentice, wake up. I will show you three roles. Choose your master.”\nSelect or read: First you choose, visible to you only, three other living people; the Apprentice gets their roles to choose from. Then you tap the role the Apprentice chooses.\nRead out or show: Show the Apprentice the three roles without names. He never sees names or seats of the three people.\nFinish: Confirm the Apprentice's choice. Only now the covert bond arises. The app then opens the next step."
+
+msgid "ui.role.loki.lex.act"
+msgstr "Call: (night 1 only) The app announces the role “Loki” in the night order. Read out: “Loki, wake up. Point to two people you want to bind together.”\nSelect or read: Tap exactly two people (Loki may choose themself) or decline completely. Do the two become lovers or rivals?\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Lovers” or “Rivals”. The app then opens the next step."
+
+msgid "ui.role.maertyrerin.lex.act"
+msgstr "Call: (at the end of the night) The app announces the role “Martyr” in the night order. Read out: “Martyr, wake up. Do you want to sacrifice yourself for tonight’s victim?”\nSelect or read: Does the Martyr sacrifice themself for this person? Then tap the person and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.manipulator.lex.act"
+msgstr "Call: No call, no night step.\nSelect or read: Record nominations as usual. If the Manipulator is nominated he dies immediately; the app applies that.\nRead out or show: You do not name the death as a role effect; the table sees, though, that the nominated person dies immediately.\nFinish: There is nothing to finish."
+
+msgid "ui.role.nachtwaechter.lex.act"
+msgstr "Call: No call, no night step.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: Every morning after the dawn resolution the morning report says: “The night watchman’s bells are ringing.” The announcement does not say on which side something is wrong.\nFinish: There is nothing to finish."
+
+msgid "ui.role.nekromant.lex.act"
+msgstr "Call: (at night shield, on a pack attack on them redirection) The app announces the role “Necromancer” in the night order. Read out: “Necromancer, wake up. Do you want to sacrifice the dead? Point to three of them.”\nSelect or read: Tap exactly three unsacrificed dead people or decline completely. Does the Necromancer redirect the attack? Tap the new target, otherwise “Shield instead of redirect”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.parasit.lex.act"
+msgstr "Call: (every night) The app announces the role “Parasite” in the night order. Read out: “Parasite, wake up. Do you want to choose a new host? Point to the person.”\nSelect or read: Tap the new host. Otherwise “Keep the host”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.pestbringerin.lex.act"
+msgstr "Call: (every night) The app announces the role “Plague Bringer” in the night order. Read out: “Plague Bringer, wake up. Point to the person you want to infect.”\nSelect or read: Tap the person the Plague Bringer infects and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.prophet_des_untergangs.lex.act"
+msgstr "Call: (night 1 mark, then kill every night once unlocked) The app announces the role “Prophet of Doom” in the night order. Read out: “Prophet of Doom, wake up. Point to the people of your prophecy.”\nSelect or read: Night 1: mark exactly three people; later: kill one person or decline.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.act"
+msgstr "Call: (pack, additionally in nights 3, 6, 9 ...) The app announces the role “Lone Wolf” in the night order. Read out: “Vengeful Wolf, wake up. Do you want to tear another wolf? Point to them.”\nSelect or read: Tap the wolf the Vengeful Wolf tears. They die in the morning. Without a choice: decline.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.rattenfaenger.lex.act"
+msgstr "Call: (every night) The app announces the role “Pied Piper” in the night order. Read out: “Pied Piper, wake up. Point to one or two people you want to charm.”\nSelect or read: Tap one or two people the Pied Piper charms and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.ritter.lex.act"
+msgstr "Call: No call, no night step. If several wolves are equally close after the death of a person with the role “Knight”, a covered reaction card appears.\nSelect or read: The Knight strikes the nearest wolf. Several are equally close: tap the wolf that is hit.\nRead out or show: Nothing is read out. The visible consequence is announced publicly as a death effect (rulebook, chapter 6).\nFinish: Tap “Confirm selection” or “Declines”. The app then checks further consequences."
+
+msgid "ui.role.rotkaeppchen.lex.act"
+msgstr "Call: (every night) The app announces the role “Little Red Riding Hood” in the night order. Read out: “Little Red Riding Hood, wake up. Point to the person you seek refuge with.”\nSelect or read: Tap the person Little Red Riding Hood seeks refuge with and confirm. Then the question to the asked person appears with “Refuge granted” and “No refuge”.\nRead out or show: The question (“Someone asks you for shelter …”) names neither the role nor the asking person. Open: how the asked person is woken and asked at the table is not settled yet.\nFinish: Tap “Confirm selection”, then the answer of the asked person. The app then opens the next step."
+
+msgid "ui.role.rudelvater.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”. After the Pack Father is executed a second pack step follows in the next night right after the pack: Second pack victim: tap the person and confirm. It pierces protection.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.schattenhund.lex.act"
+msgstr "Call: (every night until used, optional, before all village roles) The app announces the role “Shadow Hound” in the night order. Read out: “Shadow Hound, wake up. Do you want to block the village tonight?”\nSelect or read: Does the Shadow Hound block all village abilities this night?\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Block now” or “Not this night”. The app then opens the next step."
+
+msgid "ui.role.schattenwanderer.lex.act"
+msgstr "Call: (every night until used) The app announces the role “Shadowwalker” in the night order. Read out: “Shadow Walker, wake up. Do you want to link with someone? Point to the person.”\nSelect or read: Tap the person the Shadow Walker links with. Otherwise “Do not link yet”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.schicksalswolf.lex.act"
+msgstr "Call: (night 1 (marking) and night 4 (extra victims)) The app announces the role “Fate Wolf” in the night order. Read out: “Fate Wolf, wake up. Point to the people fate shall strike.”\nSelect or read: Night 1: mark exactly three people; night 4: choose up to the shown number of extra victims.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.schutzengel.lex.act"
+msgstr "Call: (every night, mandatory, before the pack) The app announces the role “Guardian Angel” in the night order. Read out: “Guardian Angel, wake up. Point to the person you want to protect tonight.”\nSelect or read: Tap the person the Guardian Angel points to and confirm. They may not protect themselves.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.schutzgeist.lex.act"
+msgstr "Call: (only when dead, in the first night after their death) The app announces the role “Guardian Spirit” in the night order. Read out: “Guardian Spirit, wake up. Point to the person you give your shield to.”\nSelect or read: Tap the person who receives the Guardian Spirit’s shield and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.schwarze_witwe.lex.act"
+msgstr "Call: (every night) The app announces the role “Black Widow” in the night order. Read out: “Black Widow, wake up. Point to the person you want to ensnare.”\nSelect or read: Tap the person the Black Widow points to and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.seelentauscher.lex.act"
+msgstr "Call: (every night until used) The app announces the role “Soul Swapper” in the night order. Read out: “Soul Swapper, wake up. Do you want to swap two souls? Point to both.”\nSelect or read: Tap exactly two people (the dead too) or decline completely.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.selbstmoerder.lex.act"
+msgstr "Call: No call, no night step.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: Nothing is read out or shown.\nFinish: There is nothing to finish."
+
+msgid "ui.role.sensentraeger.lex.act"
+msgstr "Call: No call, no night step. If a person with the role “Reaper” dies, a covered reaction card appears.\nSelect or read: The person may curse someone as they die. Tap the person or “Declines”.\nRead out or show: Nothing is read out. The visible consequence is announced publicly as a death effect (rulebook, chapter 6).\nFinish: Tap “Confirm selection” or “Declines”. The app then checks further consequences."
+
+msgid "ui.role.seuchenwolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.siegreicher_wolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.spiegelwolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”. On the first execution of the Mirror Wolf the covered check card reports “Attention: The execution is mirrored” and names the person who dies instead.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.spuerhund.lex.act"
+msgstr "Call: (every night, optional) The app announces the role “Scent Hound” in the night order. Read out: “Sniffer Dog, wake up. Point to three people you want to sniff.”\nSelect or read: Tap exactly three people or decline completely.\nRead out or show: Show the Sniffer Dog the result. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.todesprediger.lex.act"
+msgstr "Call: (night 1 only) The app announces the role “Death Prophet” in the night order. Read out: “Death Preacher, wake up. Tell me quietly when you will die.”\nSelect or read: Set night or day and the number the Death Preacher names, then confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm prediction”. The app then opens the next step."
+
+msgid "ui.role.traumdeuter.lex.act"
+msgstr "Call: (every night) The app announces the role “Dreamer” in the night order. Read out: “Dream Reader, wake up. I will show you the names from your dream.”\nSelect or read: For you only: choose three other living people with at least one wolf for the dream.\nRead out or show: Show the Dream Reader the three names. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.trugbilderwolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.verdammniswaechter.lex.act"
+msgstr "Call: (every night, after the pack choice) The app announces the role “Doom Warden” in the night order. Read out: “Doom Warden, wake up. Whom shall the wolves’ attack strike?”\nSelect or read: Choose whom the attack strikes: the wolves’ victim or the offered person.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.voodoo_priester.lex.act"
+msgstr "Call: (every night without a living doll, optional) The app announces the role “Voodoo Priest” in the night order. Read out: “Voodoo Priest, wake up. Point to the person who receives your doll.”\nSelect or read: Tap the person who receives the doll. Without a choice: decline.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.waechter_am_tor.lex.act"
+msgstr "Call: No call, no night step. The role is never called or named publicly.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: The table learns nothing. Only an affected person sees their notice on their card.\nFinish: There is nothing to finish."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.act"
+msgstr "Call: No call, no night step.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: When he is executed his neighbours die with him. That is a death effect and is announced publicly, with role and names of those who died too (rulebook, chapter 6).\nFinish: There is nothing to finish."
+
+msgid "ui.role.waldhexe.lex.act"
+msgstr "Call: (every night with an unused potion, after the pack) The app announces the role “Witch of the Woods” in the night order. Read out: “Forest Witch, wake up. I will show you tonight’s victim. Do you want to use a potion?”\nSelect or read: Ask the Witch of the Woods about the healing potion and tap “Use healing potion” or “Do not heal”. Then ask about the poison potion (“Use poison” or “Do not poison”); if she uses it, tap the poisoned person and confirm.\nRead out or show: Show the Witch of the Woods the victim of the night. If she rescues, then show her the victim's role. The victim appears on the tablet only.\nFinish: Check the summary and tap “Confirm”. Only that applies the potions. The app then opens the next step."
+
+msgid "ui.role.waldlaeufer.lex.act"
+msgstr "Call: (every night) The app announces the role “Ranger” in the night order. Read out: “Ranger, wake up. I will show you how many wolves are still alive.”\nSelect or read: There is nothing to select. The app determines the result itself.\nRead out or show: Show the Ranger the number. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
+
+msgid "ui.role.werwolf.lex.act"
+msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
+
+msgid "ui.role.wolfskind.lex.act"
+msgstr "Call: (role model choice, only while without a role model) The app announces the role “Wolf Child” in the night order. Read out: “Wolf Child, wake up. Point to the person who shall be your role model.”\nSelect or read: Tap the chosen role model and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+
+msgid "ui.role.zeitwaechter.lex.act"
+msgstr "Call: (once per life, as the very first step of a night, optional) The app announces the role “Time Warden” in the night order. Read out: “Time Warden, wake up. Do you want to freeze this night?”\nSelect or read: Does the Time Warden freeze this night? All further night steps are then dropped.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Freeze the night” or “Do not freeze”. The app then opens the next step."
+
+msgid "ui.lexicon.field.act"
+msgstr "Procedure at the table"

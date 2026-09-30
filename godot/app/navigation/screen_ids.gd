@@ -10,6 +10,7 @@ const CONTINUE := &"continue"
 const SETTINGS := &"settings"
 const COCKPIT := &"cockpit"
 const LEXICON := &"lexicon"
+const RULEBOOK := &"rulebook"
 
 const _SCENES := {
 	START: "res://app/screens/start/start_screen.tscn",
@@ -19,6 +20,7 @@ const _SCENES := {
 	SETTINGS: "res://app/screens/settings/settings_screen.tscn",
 	COCKPIT: "res://app/screens/cockpit/cockpit_screen.tscn",
 	LEXICON: "res://app/screens/lexicon/lexicon_screen.tscn",
+	RULEBOOK: "res://app/screens/rulebook/rulebook_screen.tscn",
 }
 
 const _PARENTS := {
@@ -29,11 +31,12 @@ const _PARENTS := {
 	SETTINGS: MAIN_MENU,
 	COCKPIT: MAIN_MENU,
 	LEXICON: MAIN_MENU,
+	RULEBOOK: MAIN_MENU,
 }
 
 
 static func all() -> Array[StringName]:
-	return [START, MAIN_MENU, NEW_GAME, CONTINUE, SETTINGS, COCKPIT, LEXICON]
+	return [START, MAIN_MENU, NEW_GAME, CONTINUE, SETTINGS, COCKPIT, LEXICON, RULEBOOK]
 
 
 static func has(id: StringName) -> bool:

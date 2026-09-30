@@ -369,3 +369,13 @@ Verifiziert (Windows, Godot 4.7.2, headless): Import Exit 0 ohne Skriptfehler; V
 Nicht umgesetzt und nicht getestet: Geräte- und Touchabnahme, visuelle Abnahme.
 Offene Produktfragen (unbeantwortet, nichts davon umgesetzt): `docs/masterplan/NIGHT-QUESTIONS-2026-09-30.md` (NQ-01 bis NQ-05).
 Nächster Schritt: Roadmap Paket 6 (Technikabschluss und Übergabe an die Gestaltung).
+
+## 2026-09-30 — Nachtauftrag Pakete B, C, D (Zwischenstand, Übergabe)
+Status: in Arbeit auf `feature/night-ui-expansion` (Ausgangs-HEAD dieses Auftrags `f54d105`), PR #3 offen, kein Merge, kein Force-Push. Schema 14 und Regelversion `grimmhain-core-0.14` unverändert (reine Zusatzansichten).
+Erledigt und committet:
+- Setup-Überlauf (`ac784ef`): Seitenspalte des Rollenschritts steckt in einer vertikalen Scrollfläche (`RoleSideScroll`); Regressionstest `test_side_column_two_line_issue_stays_reachable` war vor dem Fix rot (24 px, DE, nur ein Werwolf gewählt).
+- Paket B Spielergruppen (`0c7b233`): `app/groups/group_store.gd` (Datei `user://groups.json`, Format `grimmhain-player-groups`, Version 1, nur ID, Name, geordnete Namen), `group_actions.gd` (Rückfragen), `app/storage/safe_json_file.gd` (sicheres Schreiben, `.bak`, defekte Dateien nach `.corrupt`), `PlayerSetup.replace_persons`, Karte `group_card` im Spielerschritt, Knöpfe „Gruppe laden/speichern“ über der Spielerliste. Tests `test_group_store` (13), `test_player_groups` (17).
+In Arbeit, noch nicht committet (Stand der Übergabe):
+- Paket C Regelbuch: `app/rulebook/rulebook_catalog.gd` (12 Kapitel, Blockarten), Texte `ui.rulebook.cNN.*` in beiden `.po`, `app/widgets/rulebook/rulebook.gd`, Ansicht `rulebook` (Hauptmenü „Regelbuch“), Cockpit-Werkzeug „Regelbuch“ (`open_rulebook`, Ebene `rulebook`). Handlungszeilen (OI-18) als Lexikonfeld `act` „Ablauf am Tisch“ für alle 71 Rollen (`ui.role.<rolle>.lex.act`, vier Zeilen Aufruf, Auswählen, Vorlesen/Zeigen, Beenden), zusammengesetzt aus den Kartentexten; Rotkäppchen als offen gekennzeichnet (NQ-06). Tests `test_rulebook` (11), `test_role_act_lines` (4), `test_ui_shell` und `UiTestCase.SCREEN_IDS` um `rulebook` ergänzt.
+Nächste Schritte: Vollsuite, Commit Paket C, Doku B/C (Matrix S-02, C-05, `docs/ui/player-groups.md`, `docs/ui/rulebook.md`, Decision Log DA, NQ-06), dann Paket D (Partiebericht: `HistoryStore` mit `SafeJsonFile`, öffentlicher und privater Bericht, Textexport, Löschen, Undo der Siegbestätigung, Kapitel 9 des Regelbuchs um den Bericht ergänzen), Matrix C-09, Abschlussbericht.
+Prüfstand vor diesem Abschnitt: Vollsuite 1166 Tests grün (nach Paket B), `check-godot-i18n.js` Exit 0.

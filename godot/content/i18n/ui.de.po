@@ -5668,3 +5668,658 @@ msgstr "Speichern nicht möglich. Die zuletzt gespeicherten Gruppen bleiben unve
 
 msgid "ui.groups.error.load_failed"
 msgstr "Die Gruppe „{name}“ konnte nicht geladen werden. Die aktuelle Liste bleibt unverändert."
+
+# --- Regelbuch ---
+
+msgid "ui.menu.rulebook"
+msgstr "Regelbuch"
+
+msgid "ui.cockpit.tools.rulebook"
+msgstr "Regelbuch"
+
+msgid "ui.rulebook.title"
+msgstr "Regelbuch"
+
+msgid "ui.rulebook.toc.heading"
+msgstr "Inhalt"
+
+msgid "ui.rulebook.toc.entry"
+msgstr "{number}. {title}"
+
+msgid "ui.rulebook.back_to_toc"
+msgstr "Inhaltsverzeichnis"
+
+msgid "ui.rulebook.prev"
+msgstr "Vorheriges Kapitel"
+
+msgid "ui.rulebook.next"
+msgstr "Nächstes Kapitel"
+
+msgid "ui.rulebook.chapter_of"
+msgstr "Kapitel {number} von {total}"
+
+msgid "ui.rulebook.language"
+msgstr "English"
+
+msgid "ui.rulebook.close"
+msgstr "Schließen"
+
+msgid "ui.rulebook.intro"
+msgstr "Hier steht der bestätigte Ablauf einer Partie, so wie die App ihn heute führt. Das Regelbuch zeigt nie Angaben aus einer laufenden Partie."
+
+msgid "ui.rulebook.c01.title"
+msgstr "Vorbereitung"
+
+msgid "ui.rulebook.c01.b01"
+msgstr "Grimmhain ist ein Werwolf-Spiel für 6 bis 24 Personen am Tisch. Eine Person leitet die Runde als Spielleitung und bedient die App auf dem Tablet. Alle anderen spielen ohne Gerät mit."
+
+msgid "ui.rulebook.c01.b02"
+msgstr "Die App führt Schritt für Schritt durch die Partie, wendet die Regeln an und speichert nach jeder Handlung. Gesprochen, gezeigt, diskutiert und abgestimmt wird am Tisch."
+
+msgid "ui.rulebook.c01.b03"
+msgstr "Was du brauchst"
+
+msgid "ui.rulebook.c01.b04"
+msgstr "Ein Gerät mit der App und einen Tisch mit Platz für alle. Die Spielleitung behält das Gerät. Viele Karten zeigen geheime Informationen, deshalb sollte die Spielleitung den Bildschirm vor den anderen abschirmen können."
+
+msgid "ui.rulebook.c01.b05"
+msgstr "Was die App nicht tut"
+
+msgid "ui.rulebook.c01.b06"
+msgstr "Die App zählt keine Stimmen. Diskussion und Abstimmung finden am Tisch statt, die Spielleitung zählt selbst. In dieser Version gibt es außerdem keinen Ton und keine Sprecherstimme, keine eigene Ansicht für die Smartphones der Mitspielenden und keine Kartenfunktionen. Was hier nicht beschrieben ist, ist nicht eingebaut."
+
+msgid "ui.rulebook.c01.b07"
+msgstr "Der Ablauf in Kürze"
+
+msgid "ui.rulebook.c01.b08"
+msgstr "1. Neue Partie einrichten: Personen, Rollen, Verteilung, Sitzordnung (Kapitel 2)."
+
+msgid "ui.rulebook.c01.b09"
+msgstr "2. Jede Person sieht ihre Rolle, ohne dass andere sie erfahren (Kapitel 3)."
+
+msgid "ui.rulebook.c01.b10"
+msgstr "3. Nacht führen (Kapitel 4 und 5), Morgen abschließen (Kapitel 6)."
+
+msgid "ui.rulebook.c01.b11"
+msgstr "4. Tag mit Nominierung und Abstimmung am Tisch, Hinrichtung (Kapitel 7 und 8)."
+
+msgid "ui.rulebook.c01.b12"
+msgstr "5. Nacht und Tag wechseln sich ab, bis die Spielleitung einen Sieg bestätigt (Kapitel 9)."
+
+msgid "ui.rulebook.c02.title"
+msgstr "Personen, Rollenwahl, Verteilung und Sitzordnung"
+
+msgid "ui.rulebook.c02.b01"
+msgstr "Die Einrichtung beginnt im Hauptmenü mit „Neue Partie“. Sie hat vier Schritte: Spieler, Rollen, Verteilung und Sitzordnung. Jeder Schritt wird bestätigt. Ändert ihr später etwas, müssen die folgenden Schritte erneut bestätigt werden. Erst nach bestätigter Sitzordnung erscheint „Partie starten“."
+
+msgid "ui.rulebook.c02.b02"
+msgstr "1. Spieler"
+
+msgid "ui.rulebook.c02.b03"
+msgstr "Gib die Namen von 6 bis 24 Personen ein, einzeln oder als Liste (getrennt durch Zeilenumbruch, Komma oder Semikolon). Ein Name darf höchstens 32 Zeichen lang sein. Gleiche Namen sind erlaubt und werden markiert. „Spieler bestätigen“ schließt den Schritt ab."
+
+msgid "ui.rulebook.c02.b04"
+msgstr "Mit „Gruppe speichern“ legst du die aktuelle Namensliste unter einem Gruppennamen ab. „Gruppe laden“ füllt die Liste später wieder mit denselben Namen in derselben Reihenfolge. Gespeichert werden nur Namen, keine Rollen. Eine gefüllte Liste wird nur nach Rückfrage ersetzt, und eine Gruppe mit gleichem Namen wird nie still überschrieben."
+
+msgid "ui.rulebook.c02.b05"
+msgstr "2. Rollen"
+
+msgid "ui.rulebook.c02.b06"
+msgstr "Stelle genau so viele Rollen zusammen, wie Personen mitspielen. Eine gültige Besetzung enthält mindestens eine Dorfrolle, eine Wolfsrolle und eine Einzelsiegrolle. Jede Rolle kommt beim Start höchstens einmal vor; nur „Die Gebundenen“ dürfen mehrfach gewählt werden. Die Karte zeigt, was noch fehlt."
+
+msgid "ui.rulebook.c02.b07"
+msgstr "„Vorschlag verwenden“ füllt eine feste Starthilfe. Sie ist keine garantiert ausgewogene Besetzung. „Auswahl zurücksetzen“ leert die Auswahl. Der Knopf „Regeln“ neben einer Rolle öffnet ihren Lexikoneintrag, ohne die Auswahl zu ändern. „Rollen bestätigen“ schließt den Schritt ab."
+
+msgid "ui.rulebook.c02.b08"
+msgstr "Enthält die Besetzung den Trugbilderwolf, legst du für jede Kopie eine Scheinrolle fest: die Rolle, als die sie bei einer Prüfung erscheint. Erlaubt ist jede Rolle, die nicht als Wolf zählt. Die Scheinrolle kennt nur die Spielleitung."
+
+msgid "ui.rulebook.c02.b09"
+msgstr "Enthält die Besetzung eine direkte Wiederbelebungsrolle (Kutscher, Dr. Victor Frankenstein), wird die Partie zur Wiederbelebungsrunde. Die Rollenwahl zeigt das nur an, es lässt sich nicht einzeln umstellen (Kapitel 6)."
+
+msgid "ui.rulebook.c02.b10"
+msgstr "3. Verteilung"
+
+msgid "ui.rulebook.c02.b11"
+msgstr "Wähle „Zufällig“ oder „Manuell“. Zufällig zieht die Rollen mit einem gespeicherten Startwert: Dieselben Eingaben ergeben dieselbe Zuordnung, „Neu mischen“ zieht neu. Manuell weist du jeder Person selbst eine Rolle zu. „Verteilung bestätigen“ schließt den Schritt ab."
+
+msgid "ui.rulebook.c02.b12"
+msgstr "4. Sitzordnung"
+
+msgid "ui.rulebook.c02.b13"
+msgstr "Der Sitzkreis soll der Sitzordnung am Tisch entsprechen, im Uhrzeigersinn. Das ist wichtig, weil einige Rollen auf ihre Nachbarn wirken. Zum Tauschen ziehst du eine Person auf einen anderen Platz oder tippst nacheinander zwei Personen an. „Sitzordnung bestätigen“, danach „Partie starten“."
+
+msgid "ui.rulebook.c02.b14"
+msgstr "Die Zuordnung von Rollen gehört zur Person, nicht zum Sitzplatz. In dieser Version lässt sich die Sitzordnung nach dem Start nicht mehr ändern."
+
+msgid "ui.rulebook.c03.title"
+msgstr "Rollen sicher zeigen"
+
+msgid "ui.rulebook.c03.b01"
+msgstr "Jede Person soll ihre Rolle einmal sehen, ohne dass andere sie erfahren. Die Spielleitung behält dabei das Gerät. Das Werkzeug „Rollen zeigen“ steht im Cockpit und auf der Startkarte der ersten Nacht."
+
+msgid "ui.rulebook.c03.b02"
+msgstr "1. Die Liste zeigt nur Namen und den Stand „gesehen“, nie eine Rolle. Die nächste offene Person ist hervorgehoben."
+
+msgid "ui.rulebook.c03.b03"
+msgstr "2. Tippe eine Person an. Es erscheint eine neutrale Vorderseite „Karte für Sitz · Name“."
+
+msgid "ui.rulebook.c03.b04"
+msgstr "3. Nur diese Person schaut auf den Bildschirm und tippt „Rolle anzeigen“. Sie sieht ihren Namen, ihre Rolle und einen Kurztext."
+
+msgid "ui.rulebook.c03.b05"
+msgstr "4. „Gesehen, Karte schließen“ merkt sich, dass die Person ihre Rolle kennt, und führt zur Liste zurück. „Ohne Bestätigung schließen“ merkt sich nichts."
+
+msgid "ui.rulebook.c03.b06"
+msgstr "Das Zeigen der Rollen ist keine Pflicht: Die erste Nacht kann auch ohne jede Bestätigung beginnen. Wer seine Rolle schon bestätigt hat, kann sie nachlesen. Eine Person, deren Rolle sich später ändert, gilt danach wieder als noch nicht gesehen."
+
+msgid "ui.rulebook.c03.b07"
+msgstr "Der Trugbilderwolf sieht auf seiner Karte seine wahre Rolle, nie die Scheinrolle. Die Wölfe erkennen einander nicht über die Rollenkarte, sondern in der ersten Nacht im gemeinsamen Rudelschritt."
+
+msgid "ui.rulebook.c03.b08"
+msgstr "Eine offene Rollenkarte verschwindet bei jeder Änderung des Spielstands, bei „Rückgängig“, beim Laden und beim „Verbergen“. Danach steht wieder die neutrale Liste da."
+
+msgid "ui.rulebook.c04.title"
+msgstr "Nacht führen und Tarnaufrufe"
+
+msgid "ui.rulebook.c04.b01"
+msgstr "Die Karte „Nacht beginnen“ startet die Nacht: Alle schließen die Augen. In einer Wiederbelebungsrunde schließen auch die Toten die Augen. Danach plant die App die Nacht und öffnet den ersten Schritt. Die Reihenfolge der Rollen bestimmt die App, nicht die Spielleitung."
+
+msgid "ui.rulebook.c04.b02"
+msgstr "Ein Schritt"
+
+msgid "ui.rulebook.c04.b03"
+msgstr "Jede Karte nennt die aufgerufene Rolle oder Gruppe, die handelnden Personen (im Sitzkreis hervorgehoben) und den Fortschritt „Nächster Schritt · 3 von 7“. „Sag jetzt“ ist der Text zum Vorlesen. „Tu jetzt“ sagt, was du bedienst."
+
+msgid "ui.rulebook.c04.b04"
+msgstr "1. Lies den Text unter „Sag jetzt“ vor."
+
+msgid "ui.rulebook.c04.b05"
+msgstr "2. Tippe „Schritt beginnen“."
+
+msgid "ui.rulebook.c04.b06"
+msgstr "3. Erfasse die Antwort der aufgerufenen Person, so wie die Karte es zeigt: Personen im Sitzkreis antippen und „Auswahl bestätigen“, „Ja“ oder „Nein“, eine Option antippen, „Gezeigt“ oder eine Vorhersage bestätigen."
+
+msgid "ui.rulebook.c04.b07"
+msgstr "4. Die App öffnet den nächsten Schritt. Nach dem letzten Schritt erscheint „Nacht abschließen“."
+
+msgid "ui.rulebook.c04.b08"
+msgstr "Personen auswählen"
+
+msgid "ui.rulebook.c04.b09"
+msgstr "Im Sitzkreis sind nur zulässige Personen antippbar. Die Karte nennt die zulässige Anzahl. „Auswahl bestätigen“ ist erst frei, wenn die App die Auswahl annehmen würde; sonst erklärt die Karte den Grund. Ein Tipp auf eine gewählte Person nimmt sie wieder heraus, „Auswahl leeren“ leert alles. Wer nichts wählen will, nutzt „Niemand / verzichten“ oder die Beschriftung der Rolle."
+
+msgid "ui.rulebook.c04.b10"
+msgstr "Bei vier Rollen gibt es „Zufällig auswählen“ (Traumdeuter, Kopfgeldjäger, König und die Aufdeckung des Blutpriesters). Der Vorschlag gilt erst nach „Auswahl bestätigen“. Wer eine Person antippt, wählt selbst."
+
+msgid "ui.rulebook.c04.b11"
+msgstr "Überspringen und abbrechen"
+
+msgid "ui.rulebook.c04.b12"
+msgstr "Überspringbare Schritte (das Rudel) haben „Überspringen …“ und verlangen eine Begründung. „Schritt abbrechen …“ verwirft alle Angaben dieses Schritts, danach kann er neu beginnen. Schritte von Personen, die inzwischen gestorben sind oder ihre Rolle gewechselt haben, entfallen von selbst und stehen im Protokoll."
+
+msgid "ui.rulebook.c04.b13"
+msgstr "Tarnaufrufe"
+
+msgid "ui.rulebook.c04.b14"
+msgstr "Rollen, die in dieser Nacht nichts tun können, weil ihre Fähigkeit verbraucht ist, werden trotzdem aufgerufen. So hört niemand am Tisch, wer noch etwas kann. Auf der Karte des nächsten echten Schritts steht dann oben „Zuerst aufrufen (nur Ansage)“ mit den Vorlesezeilen dieser Rollen. Ein Tarnaufruf löst keine Handlung aus."
+
+msgid "ui.rulebook.c04.b15"
+msgstr "In einer Runde ohne Wiederbelebung werden Rollen, die keine lebende Person mehr hält, nicht mehr aufgerufen. In einer Wiederbelebungsrunde werden auch Rollen Toter aufgerufen."
+
+msgid "ui.rulebook.c04.b16"
+msgstr "Ein offener Schritt blockiert „Nacht abschließen“. Sind Schritte entfallen oder übersprungen worden, weist die Karte darauf hin."
+
+msgid "ui.rulebook.c05.title"
+msgstr "Private Informationen zeigen"
+
+msgid "ui.rulebook.c05.b01"
+msgstr "Manche Schritte enden mit einer Information, die nur eine Person sehen darf. Dann zeigt die Karte „Karte zeigen“. Das öffnet eine Vollbildkarte, die nur enthält, was diese Person sehen darf. „Zurück zur Spielleitung“ schließt sie. Danach bestätigst du mit „Gezeigt“."
+
+msgid "ui.rulebook.c05.b02"
+msgstr "Nacht und Tag"
+
+msgid "ui.rulebook.c05.b03"
+msgstr "In der Nacht haben alle die Augen geschlossen, deshalb sind Karten mit geheimem Inhalt offen lesbar. Im Morgen und am Tag sehen alle mit. Dort sind solche Karten verdeckt („Nur für die Spielleitung“) und öffnen sich erst mit „Anzeigen“. Mit der nächsten Handlung sind sie wieder verdeckt."
+
+msgid "ui.rulebook.c05.b04"
+msgstr "Verbergen"
+
+msgid "ui.rulebook.c05.b05"
+msgstr "„Verbergen“ blendet das ganze Cockpit aus und schließt alle offenen Ebenen. Die Partie läuft unverändert weiter. „Cockpit wieder anzeigen“ bringt es zurück."
+
+msgid "ui.rulebook.c05.b06"
+msgstr "Private Hinweise"
+
+msgid "ui.rulebook.c05.b07"
+msgstr "Einige Rollen lösen private Hinweise aus (Loki, Rattenfänger, Pestbringerin, Rotkäppchen). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, „Gezeigt“ bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Am Tag bleibt der Inhalt verdeckt, bis du „Anzeigen“ tippst."
+
+msgid "ui.rulebook.c05.b08"
+msgstr "Bereiche mit allen Geheimnissen"
+
+msgid "ui.rulebook.c05.b09"
+msgstr "„Rollen“ und „Protokoll“ zeigen bewusst alles. Öffne sie nur, wenn niemand mitliest. Sie schließen sich beim Verbergen, bei „Zurück“ und beim Verlassen der Ansicht. Ein Tipp neben die Schublade schließt sie ebenfalls."
+
+msgid "ui.rulebook.c06.title"
+msgstr "Morgen und Wiederbelebungsrunde"
+
+msgid "ui.rulebook.c06.b01"
+msgstr "„Nacht abschließen“ wertet die Nacht aus: Zuerst wird der Angriff des Rudels geprüft. Eine Rettung durch die Waldhexe oder ein Schutz durch den Schutzengel verhindert ihn; das erfährt nur die Spielleitung. Danach folgen sofortige Todesfolgen, dann offene Reaktionen der Reihe nach, und erst am Ende prüft die App verbindlich auf einen Sieg."
+
+msgid "ui.rulebook.c06.b02"
+msgstr "Offene Reaktionen (etwa Sensenträger, Besessener Wolf, Ritter, Dorfschmied, Dämonischer Wolf) erscheinen als verdeckte Karten. „Anzeigen“, dann die Person antippen, die die Karte nennt, oder „Verzichtet“. Jede Reaktion darf freiwillig bleiben und kann weitere Tode auslösen."
+
+msgid "ui.rulebook.c06.b03"
+msgstr "Morgenbericht"
+
+msgid "ui.rulebook.c06.b04"
+msgstr "Der Morgenbericht steht vor den Tagesaktionen. Der Vorlesetext nennt die Namen der in der Nacht Gestorbenen oder „In dieser Nacht ist niemand gestorben“. Eine Rolle wird nur in Runden ohne Wiederbelebung genannt, eine Ursache nie."
+
+msgid "ui.rulebook.c06.b05"
+msgstr "„Ansagekarte zeigen“ zeigt den öffentlichen Teil vollflächig am Tisch: Namen der Toten, Wiederbelebte und ausdrücklich öffentliche Hinweise."
+
+msgid "ui.rulebook.c06.b06"
+msgstr "„Private Details …“ zeigt nur der Spielleitung Ursachen, Rettungen, entfallene Schritte, Reaktionen und Rollenwechsel."
+
+msgid "ui.rulebook.c06.b07"
+msgstr "„Weiter zum Tag“ beginnt den Tag."
+
+msgid "ui.rulebook.c06.b08"
+msgstr "Sichtbare Folgen eines Todes werden öffentlich angesagt, auch in Wiederbelebungsrunden, zum Beispiel der Fluch des Sensenträgers, die Wirkung des Ritters oder der Liebeskummer. Die Ansage nennt den Effekt und die Rolle, von der er stammt. Geheime Wahlen ohne sichtbare Folge bleiben verdeckt."
+
+msgid "ui.rulebook.c06.b09"
+msgstr "Wiederbelebungsrunde"
+
+msgid "ui.rulebook.c06.b10"
+msgstr "Enthält die Besetzung eine direkte Wiederbelebungsrolle, gilt die ganze Partie als Wiederbelebungsrunde: Beim Tod wird keine Rolle aufgedeckt, und die Nachtansage lautet „Alle schließen die Augen, auch die Toten.“"
+
+msgid "ui.rulebook.c06.b11"
+msgstr "In einer Runde ohne Wiederbelebung wird beim Tod die Rolle aufgedeckt, und zwar die Rolle zum Zeitpunkt des Todes. Die Toten müssen nachts die Augen nicht schließen."
+
+msgid "ui.rulebook.c07.title"
+msgstr "Tag, Nominierung und physische Abstimmung"
+
+msgid "ui.rulebook.c07.b01"
+msgstr "Nach „Weiter zum Tag“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Nominierungen und das Ergebnis."
+
+msgid "ui.rulebook.c07.b02"
+msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Nominierungen des Tages."
+
+msgid "ui.rulebook.c07.b03"
+msgstr "Nominierung erfassen"
+
+msgid "ui.rulebook.c07.b04"
+msgstr "1. Tippe „Nominierung erfassen“."
+
+msgid "ui.rulebook.c07.b05"
+msgstr "2. Tippe im Sitzkreis die Person an, die nominiert."
+
+msgid "ui.rulebook.c07.b06"
+msgstr "3. Tippe die nominierte Person an und dann „Nominierung bestätigen“."
+
+msgid "ui.rulebook.c07.b07"
+msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal nominieren und wird pro Tag höchstens einmal nominiert. Verstöße lehnt die App mit einer Meldung ab („Diese Person hat heute schon nominiert“). Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Nominierung nimmst du mit „Rückgängig“ zurück."
+
+msgid "ui.rulebook.c07.b08"
+msgstr "Stimmhinweise"
+
+msgid "ui.rulebook.c07.b09"
+msgstr "Einige Rollen ändern die Zählung am Tisch (zum Beispiel der Blutwolf und der Korrupte Richter). Diese Hinweise stehen im Bereich „Rollen“ unter „Stimmhinweise“. Sie erscheinen nie auf einer öffentlichen Karte. Die Spielleitung rechnet sie bei der Zählung am Tisch selbst ein."
+
+msgid "ui.rulebook.c07.b10"
+msgstr "Geheime Tagesaktionen bestimmter Rollen stehen im Bereich „Rollen“ unter „Geheime Tagesaktionen“."
+
+msgid "ui.rulebook.c08.title"
+msgstr "Hinrichtung und Todesreaktionen"
+
+msgid "ui.rulebook.c08.b01"
+msgstr "Nach der Abstimmung am Tisch tippst du „Hinrichtung …“, dann die Person, die hingerichtet wird, und „Weiter zur Prüfung“. Wählbar sind nur Personen, die heute nominiert wurden. Eine Hinrichtung ohne Nominierung ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
+
+msgid "ui.rulebook.c08.b02"
+msgstr "Es folgt immer eine verdeckte Prüfkarte. Sie erscheint bei jeder Hinrichtung, damit ihr Auftauchen nichts über bestimmte Rollen verrät. „Anzeigen“ zeigt sie der Spielleitung: Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichtung bestätigen“. Eine Rückfrage schützt vor Fehlern."
+
+msgid "ui.rulebook.c08.b03"
+msgstr "Soll niemand hingerichtet werden, tippst du „Keine Hinrichtung heute …“ und bestätigst die Rückfrage. Erst nach dieser Entscheidung, und wenn kein Schritt und keine Reaktion mehr offen ist, ist „Tag beenden“ möglich."
+
+msgid "ui.rulebook.c08.b04"
+msgstr "Todesreaktionen"
+
+msgid "ui.rulebook.c08.b05"
+msgstr "Nach jedem Tod arbeitet die App zuerst die sofortigen Folgen ohne Entscheidung ab, danach die offenen Reaktionen der Reihe nach. Reaktionen erscheinen als verdeckte Karten. Die Person, die reagiert, entscheidet freiwillig: die Karte nennt, wen du antippen sollst, oder „Verzichtet“."
+
+msgid "ui.rulebook.c08.b06"
+msgstr "Jede Reaktion kann weitere Tode und Folgen auslösen. Erst wenn nichts mehr offen ist, prüft die App verbindlich, ob jemand gewonnen hat (Kapitel 9). Sichtbare Folgen werden öffentlich angesagt (Kapitel 6)."
+
+msgid "ui.rulebook.c08.b07"
+msgstr "Danach beendest du den Tag mit „Tag beenden“. Die nächste Nacht beginnt mit der Karte „Nacht beginnen“, sobald alle die Augen geschlossen haben."
+
+msgid "ui.rulebook.c09.title"
+msgstr "Sieg bestätigen"
+
+msgid "ui.rulebook.c09.b01"
+msgstr "Nach jedem Tod prüft die App vorläufig, ob eine Siegbedingung erfüllt ist. Offene Reaktionen und Fähigkeiten werden zuerst abgearbeitet, danach gilt die Prüfung verbindlich. Ist eine Bedingung erfüllt, erscheint die verdeckte Karte „Mögliches Spielende“."
+
+msgid "ui.rulebook.c09.b02"
+msgstr "„Anzeigen“ zeigt jeden Siegkandidaten mit dem Grund, zum Beispiel: Die Wölfe sind mindestens so viele wie alle anderen Lebenden. Prüfe die Bedingung am Tisch."
+
+msgid "ui.rulebook.c09.b03"
+msgstr "„Sieg bestätigen: …“ mit anschließender Rückfrage bestätigt genau einen Kandidaten. Die Partie ist beendet, Sieger und Grund sind gespeichert."
+
+msgid "ui.rulebook.c09.b04"
+msgstr "„Alle ablehnen …“ verlangt eine Begründung. Die Partie läuft weiter. Ein Sieg wird erst nach der nächsten relevanten Änderung erneut vorgeschlagen."
+
+msgid "ui.rulebook.c09.b05"
+msgstr "Sind mehrere Bedingungen zugleich erfüllt, gibt es keine feste Reihenfolge. Die Spielleitung bestätigt genau einen Kandidaten oder lehnt alle ab. Die App beendet nie von selbst eine Partie."
+
+msgid "ui.rulebook.c09.b06"
+msgstr "Lebt niemand mehr, entsteht kein Kandidat. Die Karte weist darauf hin, und die Spielleitung erklärt das Ergebnis über „Spielleitung“ und „Sieger erklären …“."
+
+msgid "ui.rulebook.c09.b07"
+msgstr "Auch eine bestätigte Siegentscheidung lässt sich mit „Rückgängig“ zurücknehmen (Kapitel 10)."
+
+msgid "ui.rulebook.c10.title"
+msgstr "Spielleiterkorrekturen und Undo"
+
+msgid "ui.rulebook.c10.b01"
+msgstr "Das Werkzeug „Spielleitung“ öffnet einen privaten Bereich für Verlauf, Korrekturen und das Ende der Partie. Alles, was du hier änderst, wird mit Begründung protokolliert."
+
+msgid "ui.rulebook.c10.b02"
+msgstr "Rückgängig und Wiederholen"
+
+msgid "ui.rulebook.c10.b03"
+msgstr "„Rückgängig: …“ und „Wiederholen: …“ nennen im Klartext, welcher Schritt zurückgenommen oder wiederholt wird, und fragen nach. Jeweils genau ein Befehl wird zurückgenommen, mehrstufige Aktionen gehen Stufe für Stufe zurück. Rückgängig funktioniert auch nach einem Neustart. Ein neuer Befehl verwirft, was sich noch wiederholen ließe. Der Start der Partie ist nicht rücknehmbar; dafür gibt es „Partie beenden und verwerfen …“."
+
+msgid "ui.rulebook.c10.b04"
+msgstr "Rückgängig setzt nur den Spielstand zurück. Was schon gezeigt oder angesagt wurde, bleibt den Mitspielenden bekannt. Die Rückfrage sagt das ausdrücklich."
+
+msgid "ui.rulebook.c10.b05"
+msgstr "Korrekturen"
+
+msgid "ui.rulebook.c10.b06"
+msgstr "Unter „Korrekturen (mit Begründung, protokolliert)“ stehen: „Person töten …“ (mit oder ohne Todesfolgen), „Person wiederbeleben …“, „Rolle ändern …“, „Status ändern …“, „Hinrichten ohne Nominierung …“ (nur am Tag) und „Sieger erklären …“. „Status ändern …“ bietet nur Korrekturen an, die die App für diese Person im aktuellen Zustand annimmt."
+
+msgid "ui.rulebook.c10.b07"
+msgstr "Der Ablauf: Art wählen, Person im Sitzkreis antippen, Pflichtangaben machen, Warnung lesen und eine Begründung eingeben. Danach zeigt „Letzte Korrektur: das hat sich geändert“ die Folgen. Ändert sich der Spielstand zwischen Auswahl und Bestätigung, wird die Auswahl verworfen und nichts geändert."
+
+msgid "ui.rulebook.c10.b08"
+msgstr "Eine Korrektur während eines offenen Schritts setzt diesen Schritt zurück. Die Karte kündigt ihn danach neu an."
+
+msgid "ui.rulebook.c10.b09"
+msgstr "Partie verlassen oder beenden"
+
+msgid "ui.rulebook.c10.b10"
+msgstr "„Zum Hauptmenü (Partie bleibt gespeichert)“ verlässt die Ansicht, die Partie bleibt. „Partie beenden und verwerfen …“ fragt mit einer roten Rückfrage nach. Dabei werden die Dateien nur umbenannt, nicht gelöscht."
+
+msgid "ui.rulebook.c11.title"
+msgstr "Speichern, Fortsetzen und Fehlerbehandlung"
+
+msgid "ui.rulebook.c11.b01"
+msgstr "Die laufende Partie wird nach jedem angenommenen Befehl automatisch gespeichert. Die Phasenleiste zeigt „Gespeichert“. Du musst nichts tun, auch nicht mitten in einem mehrstufigen Schritt."
+
+msgid "ui.rulebook.c11.b02"
+msgstr "Fortsetzen"
+
+msgid "ui.rulebook.c11.b03"
+msgstr "Im Hauptmenü zeigt „Partie fortsetzen“ die gespeicherten Partien mit Namen, Personenzahl, Phase, Nacht, Tag, Lebenden und Speicherzeit, aber ohne Rollen. „Fortsetzen“ führt an dieselbe Stelle zurück, auch mitten in einem Schritt oder bei einer offenen Reaktion. „Verwerfen …“ fragt nach und benennt die Dateien nur um."
+
+msgid "ui.rulebook.c11.b04"
+msgstr "Wenn das Speichern scheitert"
+
+msgid "ui.rulebook.c11.b05"
+msgstr "Scheitert das Speichern, steht in der Phasenleiste „Fehler: nicht gespeichert“ mit dem Knopf „Erneut speichern“. Der letzte gespeicherte Stand bleibt erhalten, die Partie läuft weiter. Die App versucht es nicht von selbst erneut: Jeder Tipp ist ein Versuch. Der nächste angenommene Befehl speichert wie gewohnt."
+
+msgid "ui.rulebook.c11.b06"
+msgstr "Beim Beenden der App warnt sie, wenn der letzte Stand nicht gespeichert werden konnte. Ein Beenden durch das Betriebssystem kann die App nicht abfangen; geschützt ist nur, was vorher gespeichert wurde."
+
+msgid "ui.rulebook.c11.b07"
+msgstr "Beschädigte und fremde Spielstände"
+
+msgid "ui.rulebook.c11.b08"
+msgstr "Eine beschädigte Datei wird nie überschrieben, sondern beiseitegelegt. Die App lädt dann die Sicherung und weist darauf hin, dass es ein älterer Stand ist und die zuletzt ausgeführten Schritte erneut gemacht werden müssen. Gibt es keine gültige Sicherung, meldet die App einen Fehler, und nichts wird gelöscht."
+
+msgid "ui.rulebook.c11.b09"
+msgstr "Ein Spielstand aus einer anderen Version der App bleibt unverändert und lässt sich hier nicht fortsetzen. „Verwerfen“ bleibt möglich. Eine laufende Partie wird nie still durch eine andere ersetzt."
+
+msgid "ui.rulebook.c11.b10"
+msgstr "Einstellungen wie die Sprache und „Bewegung reduzieren“ sowie gespeicherte Spielergruppen liegen getrennt von den Spielständen."
+
+msgid "ui.rulebook.c12.title"
+msgstr "Rollenlexikon und Hilfe nutzen"
+
+msgid "ui.rulebook.c12.b01"
+msgstr "Das Rollenlexikon erklärt alle Rollen. Du findest es im Hauptmenü unter „Rollenlexikon“, in der Rollenwahl über den Knopf „Regeln“ bei einer Rolle und im Cockpit über das Werkzeug „Lexikon“. Dieses Regelbuch steht im Hauptmenü unter „Regelbuch“ und im Cockpit als Werkzeug „Regelbuch“."
+
+msgid "ui.rulebook.c12.b02"
+msgstr "Im Lexikon suchst du nach dem Rollennamen der gewählten Sprache und filterst nach Alle, Dorf, Werwölfe und Einzelsieg. Ein Eintrag nennt die Fraktion, einen Kurztext und die Abschnitte Nachtschritt, Zählt als Wolf, Fähigkeit, Zeitpunkt und Einsätze, Ziele, Ausnahmen, Sieg, Beispiele, Ablauf am Tisch und Hinweise für die Spielleitung. Bei einigen Rollen steht zusätzlich „Noch nicht geklärt oder umgesetzt“."
+
+msgid "ui.rulebook.c12.b03"
+msgstr "Auf der privaten Karte eines Schritts öffnet „Regel nachlesen“ den Eintrag der handelnden Rolle. Eine verdeckte Karte hat keine Hilfe. Auf einer gezeigten Karte (Karte zeigen, Ansagekarte, Rollenanzeige) gibt es keine Hilfe, denn die Karte ersetzt das Cockpit."
+
+msgid "ui.rulebook.c12.b04"
+msgstr "Was Hilfe tut und nicht tut"
+
+msgid "ui.rulebook.c12.b05"
+msgstr "Öffnen, Suchen, Filtern, Blättern und Schließen der Hilfe sendet keinen Befehl, zieht keinen Zufall und verbraucht nichts. Eine offene Auswahl bleibt erhalten, solange sich der Spielstand nicht ändert. Ändert er sich, wird die Auswahl wie sonst auch verworfen."
+
+msgid "ui.rulebook.c12.b06"
+msgstr "Das allgemeine Lexikon und dieses Regelbuch zeigen nie Angaben aus der laufenden Partie: keine Personen, keine verteilten Rollen, keine Ziele oder Markierungen. Sichtschutz, „Zurück“ und Escape schließen die Hilfe."
+
+msgid "ui.rulebook.c12.b07"
+msgstr "Der Sprachknopf in der Hilfe wechselt die Sprache der ganzen App. Die geöffnete Stelle bleibt erhalten."
+
+# --- Ablauf am Tisch je Rolle (OI-18) ---
+
+msgid "ui.role.albtraumwolf.lex.act"
+msgstr "Aufruf: (jede Nacht, freiwillig, vor allen Dorfrollen) Die App kündigt die Rolle „Albtraumwolf“ in der Nachtreihenfolge an. Lies vor: „Albtraumwolf, erwache. Zeige auf die Person, deren Fähigkeit du heute Nacht blockierst.“\nAuswählen oder ablesen: Tippe die Person an, die der Albtraumwolf blockiert. Ohne Wahl: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.amalia.lex.act"
+msgstr "Aufruf: Kein Aufruf, keine Nachtaktion. Es ist eine Tagesaktion.\nAuswählen oder ablesen: Öffne den Bereich „Rollen“ und darin unter „Geheime Tagesaktionen“ den Eintrag „Amalia opfert sich …“. Beantworte im Dialog Amalias Frage wahrheitsgemäß mit „Antwort: Ja“ oder „Antwort: Nein“.\nVorlesen oder zeigen: Frage und Antwort sind öffentlich; das macht die Fähigkeit sichtbar. Amalias Tod wird wie jeder Tod angesagt.\nBeenden: Mit der Antwort ist die Aktion beendet. Amalia stirbt sofort."
+
+msgid "ui.role.besessener_wolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“. Stirbt er, erscheint eine verdeckte Reaktionskarte: Der Besessene Wolf reißt jemanden mit. Tippe die Person an oder „Verzichtet“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.blutpriester.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Blutpriester“ in der Nachtreihenfolge an. Lies vor: „Blutpriester, erwache. Willst du heute ein Opfer bringen? Zeige darauf oder schüttle den Kopf.“\nAuswählen oder ablesen: Tippe das Opfer des Blutpriesters an. Es stirbt am Morgen. Ohne Opfer: verzichten. Nur für dich: Wähle bis zu drei lebende Wölfe, die du dem Blutpriester nennst.\nVorlesen oder zeigen: Nenne dem Blutpriester die gewählten Wölfe. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.blutwolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.cerberus.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“. Bei einer Hinrichtung des Cerberus mit drei Köpfen zeigt die verdeckte Prüfkarte die Abwehrfrage: Frage die Person geheim und tippe „Wehrt ab“ oder „Wehrt nicht ab“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.daemonischer_wolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“. Stirbt er, erscheint eine verdeckte Reaktionskarte: Der Dämonische Wolf verflucht im Sterben jemanden. Tippe die Person an oder „Verzichtet“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.das_orakel.lex.act"
+msgstr "Aufruf: (jede Nacht, nach allen Waldhexenschritten) Die App kündigt die Rolle „Das Orakel“ in der Nachtreihenfolge an. Lies vor: „Orakel, erwache. Zeige auf die Person, deren Wesen du schauen willst.“\nAuswählen oder ablesen: Tippe die Person an, auf die das Orakel zeigt, und bestätige.\nVorlesen oder zeigen: Zeige dem Orakel das Ergebnis, zum Beispiel über „Karte zeigen“. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.der_weise.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Die Rolle wirkt passiv. Wird der Weise hingerichtet, fragt die verdeckte Prüfkarte nach der Fluchdauer: „Wie viele Tage (0 bis 3)?“ Frage die Person und tippe die Zahl.\nVorlesen oder zeigen: Der Fluch wird als sichtbare Todesfolge öffentlich angesagt (Regelbuch, Kapitel 6).\nBeenden: Tippe „Hinrichtung bestätigen“ auf der Prüfkarte."
+
+msgid "ui.role.detektiv.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Nach dem Tod einer Person, die als Wolf zählt, erscheint im Morgenbericht oder am Tag ein öffentlicher Hinweis mit der Richtung zum nächsten Wolf, nie mit einer Rolle. Lies ihn mit vor.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.die_ewigen.lex.act"
+msgstr "Aufruf: (jede Nacht, gemeinsamer Schritt) Die App kündigt die Rolle „Die Ewigen“ in der Nachtreihenfolge an. Lies vor: „Ewige, erwacht. Zeigt gemeinsam auf die Person, die ihr prüfen wollt.“\nAuswählen oder ablesen: Tippe die Person an, die die Ewigen prüfen, und bestätige.\nVorlesen oder zeigen: Zeige den Ewigen, ob die Person allein gewinnen kann. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.die_gebundenen.lex.act"
+msgstr "Aufruf: (nur Nacht 1, gemeinsamer Schritt) Die App kündigt die Rolle „Die Gebundenen“ in der Nachtreihenfolge an. Lies vor: „Gebundene, erwacht und seht einander an.“\nAuswählen oder ablesen: Es ist nichts auszuwählen. Die App ermittelt das Ergebnis selbst.\nVorlesen oder zeigen: Die Gebundenen sehen einander. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.doktor.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Doktor“ in der Nachtreihenfolge an. Lies vor: „Doktor, erwache. Zeige auf zwei Personen, deren Blut du vergleichen willst.“\nAuswählen oder ablesen: Tippe die zwei Personen an, auf die der Doktor zeigt, und bestätige.\nVorlesen oder zeigen: Zeige dem Doktor, ob beide zum selben Team gehören. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.doppelspion.lex.act"
+msgstr "Aufruf: Kein eigener Schritt. Er wacht in jedem Rudelschritt mit: Weck ihn zusammen mit dem Rudel auf, ohne seine Rolle zu nennen.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Nichts wird vorgelesen oder gezeigt.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.dorfbewohner.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Die Rolle hat keine Fähigkeit, es ist nichts zu bedienen.\nVorlesen oder zeigen: Nichts wird vorgelesen oder gezeigt.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.dorfchronistin.lex.act"
+msgstr "Aufruf: (nur Nacht 1) Die App kündigt die Rolle „Dorfchronistin“ in der Nachtreihenfolge an. Lies vor: „Dorfchronistin, erwache. Ich zeige dir, wie viele Einzelgänger im Dorf sind.“\nAuswählen oder ablesen: Es ist nichts auszuwählen. Die App ermittelt das Ergebnis selbst.\nVorlesen oder zeigen: Zeige der Dorfchronistin die Zahl. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.dorfschmied.lex.act"
+msgstr "Aufruf: (ab Nacht 6 bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Dorfschmied“ in der Nachtreihenfolge an. Lies vor: „Dorfschmied, erwache. Willst du deine Waffe jetzt vergeben? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, die die Waffe erhält. Sonst „Noch nicht vergeben“. Später kann eine verdeckte Reaktionskarte erscheinen: Die Waffe des Schmieds wehrt den Angriff ab. Tippe den Wolf an, der stirbt.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.dorfwache.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt. Die Rolle wird nie aufgerufen oder öffentlich genannt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Am Morgen sieht der Tisch nur das übliche Ergebnis der Nacht.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.dr_victor_frankenstein.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Dr. Victor Frankenstein“ in der Nachtreihenfolge an. Lies vor: „Doktor Frankenstein, erwache. Willst du einen Toten zurückholen? Zeige auf ihn.“\nAuswählen oder ablesen: Tippe den Toten an, den Frankenstein zurückholt. Ohne Wahl: verzichten. Wähle die freie Rolle, mit der die Person zurückkehrt.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die gewählte Option an. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.faehrtenleser.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung) Die App kündigt die Rolle „Fährtenleser“ in der Nachtreihenfolge an. Lies vor: „Fährtenleser, erwache. Willst du heute die Fährte lesen?“\nAuswählen oder ablesen: Liest der Fährtenleser heute die Fährte?\nVorlesen oder zeigen: Zeige dem Fährtenleser die Richtung. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.fenrir.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.feuerteufel.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Feuerteufel“ in der Nachtreihenfolge an. Lies vor: „Feuerteufel, erwache. Zeige auf die Person, die du markieren willst.“\nAuswählen oder ablesen: Tippe die neu markierte Person an. Sonst „Markierung behalten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.giftwolf.lex.act"
+msgstr "Aufruf: (jede Nacht, freiwillig, nach dem Rudel) Die App kündigt die Rolle „Giftwolf“ in der Nachtreihenfolge an. Lies vor: „Giftwolf, erwache. Willst du jemanden vergiften? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, die der Giftwolf vergiftet. Sie stirbt zwei Nächte später. Ohne Wahl: verzichten.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.grabraeuber.lex.act"
+msgstr "Aufruf: (einmalig Stehlen, danach der gestohlene Schritt) Die App kündigt die Rolle „Grabräuber“ in der Nachtreihenfolge an. Lies vor: „Grabräuber, erwache. Willst du das Grab eines Toten plündern? Zeige auf ihn.“ Nach dem Diebstahl kommt ab der folgenden Nacht der gestohlene Schritt hinzu.\nAuswählen oder ablesen: Tippe die tote Person an, deren Nachtfähigkeit der Grabräuber stiehlt. Ohne Wahl: verzichten.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.hades.lex.act"
+msgstr "Aufruf: (jede Nacht, als letzter Schritt) Die App kündigt die Rolle „Hades“ in der Nachtreihenfolge an. Lies vor: „Hades, erwache. Willst du mit deinen Lichtern jemanden holen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe das Opfer des Hades an (kostet Lichter). Ohne Opfer: verzichten. Kauft Hades zusätzlich eine Barriere?\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Barriere kaufen“ oder „Keine Barriere“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.henker.lex.act"
+msgstr "Aufruf: (ab drei Hinrichtungen jede Nacht, freiwillig) Die App kündigt die Rolle „Henker“ in der Nachtreihenfolge an. Lies vor: „Henker, erwache. Zeige auf die Person, die bei der nächsten Hinrichtung mit stirbt.“\nAuswählen oder ablesen: Tippe die Person an, die der Henker markiert. Ohne Wahl: verzichten.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.koenig.lex.act"
+msgstr "Aufruf: (ab der ersten Nacht mit mehr Toten als Lebenden) Die App kündigt die Rolle „König“ in der Nachtreihenfolge an. Lies vor: „König, erwache. Zeige auf eine Person aus dem Dorf, deren Rolle du erfahren willst.“\nAuswählen oder ablesen: Tippe die Dorfperson an, auf die der König zeigt, und bestätige.\nVorlesen oder zeigen: Zeige dem König die Rolle der Person. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.koenig_lykaon.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung) Die App kündigt die Rolle „König Lykaon“ in der Nachtreihenfolge an. Lies vor: „König Lykaon, erwache. Wähle einen Verbündeten und ein Opfer deiner Verwandlung.“\nAuswählen oder ablesen: Tippe den verbündeten Wolf an. „Verschieben“ ist höchstens dreimal möglich. Tippe die Dorfperson an, die zum Trugbilderwolf wird, und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.kopfgeldjaeger.lex.act"
+msgstr "Aufruf: (Nacht nach einer Hinrichtung) Die App kündigt die Rolle „Kopfgeldjäger“ in der Nachtreihenfolge an. Lies vor: „Kopfgeldjäger, erwache. Hier ist deine Liste.“\nAuswählen oder ablesen: Nur für dich: Wähle drei andere Lebende mit mindestens einem Wolf für die Liste.\nVorlesen oder zeigen: Zeige dem Kopfgeldjäger die drei Namen. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.korrupter_richter.lex.act"
+msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Korrupter Richter“ in der Nachtreihenfolge an. Lies vor: „Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“\nAuswählen oder ablesen: Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten. Die verdeckte Nominierung erscheint öffentlich nur als „… gilt heute als nominiert“; ihr Stimmhinweis steht im Bereich „Rollen“ unter „Stimmhinweise“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.kriegerin_des_lichts.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Kriegerin des Lichts“ in der Nachtreihenfolge an. Lies vor: „Kriegerin des Lichts, erwache. Willst du heute angreifen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, die die Kriegerin angreift. Ohne Angriff: verzichten.\nVorlesen oder zeigen: Zeige der Kriegerin, ob sie einen Wolf getroffen hat. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.kutscher.lex.act"
+msgstr "Aufruf: (ab einer Nacht mit mindestens 10 Toten) Die App kündigt die Rolle „Kutscher“ in der Nachtreihenfolge an. Lies vor: „Kutscher, erwache. Willst du drei Tote zurückholen? Zeige auf sie.“\nAuswählen oder ablesen: Tippe genau drei Tote an, die zurückkehren, oder verzichte ganz. Tippe an, wer von den dreien als Wolf zurückkehrt.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.lehrling.lex.act"
+msgstr "Aufruf: (Auswahl in der ersten verfügbaren Nacht ohne Bindung) Die App kündigt die Rolle „Lehrling“ in der Nachtreihenfolge an. Lies vor: „Lehrling, erwache. Ich zeige dir gleich drei Rollen. Wähle deinen Meister.“\nAuswählen oder ablesen: Zuerst wählst du selbst, nur für dich sichtbar, drei andere lebende Personen; ihre Rollen bekommt der Lehrling zur Wahl. Danach tippst du die Rolle an, die der Lehrling wählt.\nVorlesen oder zeigen: Zeige dem Lehrling die drei Rollen ohne Namen. Namen und Plätze der drei Personen sieht er nie.\nBeenden: Bestätige die Wahl des Lehrlings. Erst jetzt entsteht die verdeckte Bindung. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.loki.lex.act"
+msgstr "Aufruf: (nur Nacht 1) Die App kündigt die Rolle „Loki“ in der Nachtreihenfolge an. Lies vor: „Loki, erwache. Zeige auf zwei Personen, die du miteinander verbinden willst.“\nAuswählen oder ablesen: Tippe genau zwei Personen an (Loki darf sich selbst wählen) oder verzichte ganz. Werden die beiden Liebende oder Rivalen?\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Liebende“ oder „Rivalen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.maertyrerin.lex.act"
+msgstr "Aufruf: (am Ende der Nacht) Die App kündigt die Rolle „Märtyrerin“ in der Nachtreihenfolge an. Lies vor: „Märtyrerin, erwache. Willst du dich für das Opfer der Nacht opfern?“\nAuswählen oder ablesen: Opfert sich die Märtyrerin für diese Person? Dann Person antippen und bestätigen.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.manipulator.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Erfasse Nominierungen wie immer. Wird der Manipulator nominiert, stirbt er sofort; das wendet die App an.\nVorlesen oder zeigen: Den Tod nennst du nicht als Rollenwirkung; der Tisch sieht aber, dass die nominierte Person sofort stirbt.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.nachtwaechter.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Jeden Morgen nach der Morgenauflösung steht im Morgenbericht: „Die Glocken des Nachtwächters läuten.“ Die Ansage nennt nicht, bei welcher Seite etwas nicht stimmt.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.nekromant.lex.act"
+msgstr "Aufruf: (nachts Schild, bei Rudelangriff auf ihn Umlenkung) Die App kündigt die Rolle „Nekromant“ in der Nachtreihenfolge an. Lies vor: „Nekromant, erwache. Willst du Tote opfern? Zeige auf drei von ihnen.“\nAuswählen oder ablesen: Tippe genau drei ungeopferte Tote an oder verzichte ganz. Lenkt der Nekromant den Angriff um? Tippe das neue Ziel an, sonst „Schild statt Umlenkung“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.parasit.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Parasit“ in der Nachtreihenfolge an. Lies vor: „Parasit, erwache. Willst du einen neuen Wirt wählen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe den neuen Wirt an. Sonst „Wirt behalten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.pestbringerin.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Pestbringerin“ in der Nachtreihenfolge an. Lies vor: „Pestbringerin, erwache. Zeige auf die Person, die du infizieren willst.“\nAuswählen oder ablesen: Tippe die Person an, die die Pestbringerin infiziert, und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.prophet_des_untergangs.lex.act"
+msgstr "Aufruf: (Nacht 1 markieren, danach jede Nacht töten, sobald freigeschaltet) Die App kündigt die Rolle „Prophet des Untergangs“ in der Nachtreihenfolge an. Lies vor: „Prophet des Untergangs, erwache. Zeige auf die Personen deiner Prophezeiung.“\nAuswählen oder ablesen: In Nacht 1 genau drei Personen markieren, später eine Person töten oder verzichten.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.rachsuechtiger_wolf.lex.act"
+msgstr "Aufruf: (Rudel, zusätzlich in den Nächten 3, 6, 9 ...) Die App kündigt die Rolle „Rachsüchtiger Wolf“ in der Nachtreihenfolge an. Lies vor: „Rachsüchtiger Wolf, erwache. Willst du einen anderen Wolf reißen? Zeige auf ihn.“\nAuswählen oder ablesen: Tippe den Wolf an, den der Rachsüchtige Wolf reißt. Er stirbt am Morgen. Ohne Wahl: verzichten.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.rattenfaenger.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Rattenfänger“ in der Nachtreihenfolge an. Lies vor: „Rattenfänger, erwache. Zeige auf eine oder zwei Personen, die du verzaubern willst.“\nAuswählen oder ablesen: Tippe eine oder zwei Personen an, die der Rattenfänger verzaubert, und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.ritter.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt. Sind nach dem Tod einer Person mit der Rolle „Ritter“ mehrere Wölfe gleich nah, erscheint eine verdeckte Reaktionskarte.\nAuswählen oder ablesen: Der Ritter trifft den nächsten Wolf. Mehrere sind gleich nah: Tippe den getroffenen Wolf an.\nVorlesen oder zeigen: Nichts wird vorgelesen. Die sichtbare Folge wird öffentlich als Todeseffekt angesagt (Regelbuch, Kapitel 6).\nBeenden: Tippe „Auswahl bestätigen“ oder „Verzichtet“. Danach prüft die App weitere Folgen."
+
+msgid "ui.role.rotkaeppchen.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Rotkäppchen“ in der Nachtreihenfolge an. Lies vor: „Rotkäppchen, erwache. Zeige auf die Person, bei der du Zuflucht suchst.“\nAuswählen oder ablesen: Tippe die Person an, bei der Rotkäppchen Zuflucht sucht, und bestätige. Danach erscheint die Frage an die gefragte Person mit „Zuflucht gewährt“ und „Keine Zuflucht“.\nVorlesen oder zeigen: Die Frage („Jemand bittet dich um Zuflucht …“) nennt weder die Rolle noch die fragende Person. Offen: Wie die gefragte Person am Tisch geweckt und befragt wird, ist noch nicht festgelegt.\nBeenden: Tippe „Auswahl bestätigen“, danach die Antwort der gefragten Person. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.rudelvater.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“. Nach einer Hinrichtung des Rudelvaters folgt in der nächsten Nacht direkt nach dem Rudel ein zweiter Rudelschritt: Zweites Opfer des Rudels: Tippe die Person an und bestätige. Es durchdringt Schutz.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.schattenhund.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig, vor allen Dorfrollen) Die App kündigt die Rolle „Schattenhund“ in der Nachtreihenfolge an. Lies vor: „Schattenhund, erwache. Willst du das Dorf heute Nacht blockieren?“\nAuswählen oder ablesen: Blockiert der Schattenhund in dieser Nacht alle Dorffähigkeiten?\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Jetzt blockieren“ oder „Nicht in dieser Nacht“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.schattenwanderer.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung) Die App kündigt die Rolle „Schattenwanderer“ in der Nachtreihenfolge an. Lies vor: „Schattenwanderer, erwache. Willst du dich mit jemandem verknüpfen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, mit der sich der Schattenwanderer verknüpft. Sonst „Noch nicht verknüpfen“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.schicksalswolf.lex.act"
+msgstr "Aufruf: (Nacht 1 (Markierung) und Nacht 4 (Zusatzopfer)) Die App kündigt die Rolle „Schicksalswolf“ in der Nachtreihenfolge an. Lies vor: „Schicksalswolf, erwache. Zeige auf die Personen, die das Schicksal treffen soll.“\nAuswählen oder ablesen: In Nacht 1 genau drei Personen markieren, in Nacht 4 bis zur angezeigten Zahl Zusatzopfer wählen.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.schutzengel.lex.act"
+msgstr "Aufruf: (jede Nacht, Pflicht, vor dem Rudel) Die App kündigt die Rolle „Schutzengel“ in der Nachtreihenfolge an. Lies vor: „Schutzengel, erwache. Zeige auf die Person, die du heute Nacht beschützen willst.“\nAuswählen oder ablesen: Tippe die Person an, auf die der Schutzengel zeigt, und bestätige. Er darf sich nicht selbst schützen.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.schutzgeist.lex.act"
+msgstr "Aufruf: (nur tot, in der ersten Nacht nach ihrem Tod) Die App kündigt die Rolle „Schutzgeist“ in der Nachtreihenfolge an. Lies vor: „Schutzgeist, erwache. Zeige auf die Person, der du deinen Schild schenkst.“\nAuswählen oder ablesen: Tippe die Person an, die den Schild des Schutzgeists erhält, und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.schwarze_witwe.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Schwarze Witwe“ in der Nachtreihenfolge an. Lies vor: „Schwarze Witwe, erwache. Zeige auf die Person, die du umgarnen willst.“\nAuswählen oder ablesen: Tippe die Person an, auf die die Schwarze Witwe zeigt, und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.seelentauscher.lex.act"
+msgstr "Aufruf: (jede Nacht bis zur Nutzung) Die App kündigt die Rolle „Seelentauscher“ in der Nachtreihenfolge an. Lies vor: „Seelentauscher, erwache. Willst du zwei Seelen tauschen? Zeige auf die beiden.“\nAuswählen oder ablesen: Tippe genau zwei Personen an (auch Tote) oder verzichte ganz.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.selbstmoerder.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Nichts wird vorgelesen oder gezeigt.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.sensentraeger.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt. Stirbt eine Person mit der Rolle „Sensenträger“, erscheint eine verdeckte Reaktionskarte.\nAuswählen oder ablesen: Die Person darf im Sterben jemanden verfluchen. Tippe die Person an oder „Verzichtet“.\nVorlesen oder zeigen: Nichts wird vorgelesen. Die sichtbare Folge wird öffentlich als Todeseffekt angesagt (Regelbuch, Kapitel 6).\nBeenden: Tippe „Auswahl bestätigen“ oder „Verzichtet“. Danach prüft die App weitere Folgen."
+
+msgid "ui.role.seuchenwolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.siegreicher_wolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.spiegelwolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“. Bei der ersten Hinrichtung des Spiegelwolfs meldet die verdeckte Prüfkarte „Achtung: Die Hinrichtung wird gespiegelt“ und nennt die Person, die stattdessen stirbt.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.spuerhund.lex.act"
+msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Spürhund“ in der Nachtreihenfolge an. Lies vor: „Spürhund, erwache. Zeige auf drei Personen, an denen du schnüffeln willst.“\nAuswählen oder ablesen: Tippe genau drei Personen an oder verzichte ganz.\nVorlesen oder zeigen: Zeige dem Spürhund das Ergebnis. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.todesprediger.lex.act"
+msgstr "Aufruf: (nur Nacht 1) Die App kündigt die Rolle „Todesprediger“ in der Nachtreihenfolge an. Lies vor: „Todesprediger, erwache. Sag mir leise, wann du sterben wirst.“\nAuswählen oder ablesen: Stelle Nacht oder Tag und die Nummer ein, die der Todesprediger nennt, und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Vorhersage bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.traumdeuter.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Traumdeuter“ in der Nachtreihenfolge an. Lies vor: „Traumdeuter, erwache. Ich zeige dir die Namen aus deinem Traum.“\nAuswählen oder ablesen: Nur für dich: Wähle drei andere Lebende mit mindestens einem Wolf für den Traum.\nVorlesen oder zeigen: Zeige dem Traumdeuter die drei Namen. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.trugbilderwolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.verdammniswaechter.lex.act"
+msgstr "Aufruf: (jede Nacht, nach der Rudelwahl) Die App kündigt die Rolle „Verdammniswächter“ in der Nachtreihenfolge an. Lies vor: „Verdammniswächter, erwache. Wen soll der Angriff der Wölfe treffen?“\nAuswählen oder ablesen: Wähle, wen der Angriff trifft: das Opfer der Wölfe oder die angebotene Person.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.voodoo_priester.lex.act"
+msgstr "Aufruf: (jede Nacht ohne lebende Puppe, freiwillig) Die App kündigt die Rolle „Voodoo-Priester“ in der Nachtreihenfolge an. Lies vor: „Voodoo-Priester, erwache. Zeige auf die Person, die deine Puppe erhält.“\nAuswählen oder ablesen: Tippe die Person an, die die Puppe erhält. Ohne Wahl: verzichten.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.waechter_am_tor.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt. Die Rolle wird nie aufgerufen oder öffentlich genannt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Der Tisch erfährt nichts. Nur eine betroffene Person sieht ihre Mitteilung auf ihrer Karte.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.wahnsinniger_kutscher.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Bei seiner Hinrichtung sterben die Nachbarn mit. Das ist ein Todeseffekt und wird öffentlich angesagt, mit Rolle und Namen der Mitgestorbenen (Regelbuch, Kapitel 6).\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.waldhexe.lex.act"
+msgstr "Aufruf: (jede Nacht mit unverbrauchtem Trank, nach dem Rudel) Die App kündigt die Rolle „Waldhexe“ in der Nachtreihenfolge an. Lies vor: „Waldhexe, erwache. Ich zeige dir das Opfer der Nacht. Willst du einen Trank nutzen?“\nAuswählen oder ablesen: Frage die Waldhexe nach dem Heiltrank und tippe „Heiltrank nutzen“ oder „Nicht heilen“. Frage danach nach dem Gifttrank („Gifttrank nutzen“ oder „Nicht vergiften“); nutzt sie ihn, tippe die vergiftete Person an und bestätige.\nVorlesen oder zeigen: Zeige der Waldhexe das Opfer der Nacht. Rettet sie, zeige ihr danach die Rolle des Opfers. Das Opfer erscheint nur auf dem Tablet.\nBeenden: Prüfe die Zusammenfassung und tippe „Bestätigen“. Erst damit wendet die App die Tränke an. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.waldlaeufer.lex.act"
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Waldläufer“ in der Nachtreihenfolge an. Lies vor: „Waldläufer, erwache. Ich zeige dir, wie viele Wölfe noch leben.“\nAuswählen oder ablesen: Es ist nichts auszuwählen. Die App ermittelt das Ergebnis selbst.\nVorlesen oder zeigen: Zeige dem Waldläufer die Zahl. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.werwolf.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.wolfskind.lex.act"
+msgstr "Aufruf: (Vorbildwahl, nur solange ohne Vorbild) Die App kündigt die Rolle „Wolfskind“ in der Nachtreihenfolge an. Lies vor: „Wolfskind, erwache. Zeige auf die Person, die dein Vorbild sein soll.“\nAuswählen oder ablesen: Tippe das gewählte Vorbild an und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.role.zeitwaechter.lex.act"
+msgstr "Aufruf: (einmal je Leben, als allererster Schritt einer Nacht, freiwillig) Die App kündigt die Rolle „Zeitwächter“ in der Nachtreihenfolge an. Lies vor: „Zeitwächter, erwache. Willst du diese Nacht einfrieren?“\nAuswählen oder ablesen: Friert der Zeitwächter diese Nacht ein? Dann entfallen alle weiteren Nachtschritte.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Nacht einfrieren“ oder „Nicht einfrieren“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.lexicon.field.act"
+msgstr "Ablauf am Tisch"

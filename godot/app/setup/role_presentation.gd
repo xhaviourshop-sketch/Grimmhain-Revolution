@@ -51,7 +51,7 @@ static func faction_key(faction: StringName) -> String:
 ## Felder eines allgemeinen Lexikoneintrags (ui.role.<rolle>.lex.<feld>) in Anzeigereihenfolge. Jede Katalogrolle hat
 ## alle Pflichtfelder; LEXICON_OPEN (ungeklärte oder noch nicht umgesetzte Punkte) gibt es nur bei betroffenen Rollen.
 ## Reiner Erklärtext: Regeln wirken ausschließlich im Regelkern.
-const LEXICON_FIELDS: Array[String] = ["night", "wolf", "ability", "timing", "targets", "exceptions", "win", "example", "gm"]
+const LEXICON_FIELDS: Array[String] = ["night", "wolf", "ability", "timing", "targets", "exceptions", "win", "example", "act", "gm"]
 const LEXICON_OPEN := "open"
 
 

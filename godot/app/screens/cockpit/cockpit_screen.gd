@@ -77,6 +77,7 @@ func _setup() -> void:
 	(%CoverButton as GrimmButton).pressed.connect(cover)
 	(%GmButton as GrimmButton).pressed.connect(open_layer.bind(&"gm"))
 	(%LexiconButton as GrimmButton).pressed.connect(open_lexicon.bind(&""))  # allgemeines Lexikon, auch ohne Partie
+	(%RulebookButton as GrimmButton).pressed.connect(open_rulebook)  # allgemeines Regelbuch, auch ohne Partie
 	_refresh()
 
 
@@ -885,6 +886,18 @@ func open_lexicon(role: StringName) -> void:
 	_overlay_host.add_child(_layer)
 	var lexicon := _layer.find_child("RoleLexicon", true, false) as RoleLexicon
 	lexicon.close_requested.connect(close_layer)
+	(_layer.find_child("CloseLayerButton", true, false) as Control).grab_focus()
+
+
+## Allgemeines Regelbuch als Ebene (Werkzeug „Regelbuch“). Wie das Lexikon: liest nur Übersetzungen, sendet keinen Befehl, zieht
+## keinen Zufall, verbraucht nichts und lässt die offene Auswahl unberührt; Sichtschutz und Zurück schließen die Ebene.
+func open_rulebook() -> void:
+	close_layer()
+	_layer = RuleBook.layer(context.settings)
+	_layer_kind = &"rulebook"
+	_overlay_host.add_child(_layer)
+	var book := _layer.find_child("RuleBook", true, false) as RuleBook
+	book.close_requested.connect(close_layer)
 	(_layer.find_child("CloseLayerButton", true, false) as Control).grab_focus()
 
 

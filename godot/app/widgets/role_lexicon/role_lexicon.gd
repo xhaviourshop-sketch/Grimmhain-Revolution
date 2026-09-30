@@ -69,8 +69,16 @@ func _init(p_settings: AppSettings = null, show_close: bool = true) -> void:
 
 ## Ebene über einer Ansicht: Abdunklung und Lexikon mit Rand; `role` öffnet gleich den Eintrag.
 static func layer(p_settings: AppSettings, role: StringName = &"") -> Control:
+	var lexicon := RoleLexicon.new(p_settings)
+	if role != &"":
+		lexicon.open_role(role)
+	return overlay(lexicon, "LexiconLayer")
+
+
+## Abdunklung mit Rand um einen Hilfeinhalt (Lexikon, Regelbuch): eine Ebene über dem Cockpit oder Setup.
+static func overlay(content: Control, layer_name: String) -> Control:
 	var root := Control.new()
-	root.name = "LexiconLayer"
+	root.name = layer_name
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var dim := Panel.new()
 	dim.name = "Dim"
@@ -82,10 +90,7 @@ static func layer(p_settings: AppSettings, role: StringName = &"") -> Control:
 	for side: String in ["margin_left", "margin_top", "margin_right", "margin_bottom"]:
 		margin.add_theme_constant_override(side, ThemeTokens.SPACE_L)
 	root.add_child(margin)
-	var lexicon := RoleLexicon.new(p_settings)
-	margin.add_child(lexicon)
-	if role != &"":
-		lexicon.open_role(role)
+	margin.add_child(content)
 	return root
 
 
