@@ -848,7 +848,7 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - **`segen_08`, Angebot und Wahl:** Die App bietet bis zu drei passende tote Personen als Namen zur Auswahl an. Gibt es mehr als drei passende Personen, wählt der gespeicherte Zufallsgenerator drei aus. Die Auswahl wird gespeichert; Neuladen erzeugt keine neuen Namen. Der Kartenbesitzer wählt durch Antippen eines angebotenen Namens.
 - **`segen_08`, Sichtbarkeit:** Dass die angebotenen Namen dem Kartenbesitzer die Fraktion dieser Personen verraten, ist ausdrücklich gewollt. Diese Erlaubnis gilt für den Kartenbesitzer, nicht automatisch für eine öffentliche Anzeige.
 - **`segen_08`, späteres Ausspielen:** Ist beim Ausspielen nur noch eine passende andere tote Person übrig, wird diese allein angeboten. Ist keine vorhanden, bleibt die Karte ungespielt erhalten.
-- **`wende_04` Wiedergeburt:** Die Spielleitung wählt die wiederzubelebende Person innerhalb der erlaubten Fraktion. Die Person, die die Karte spielt, darf selbst gewählt werden.
+- **`wende_04` Wiedergeburt:** Die Spielleitung wählt die wiederzubelebende Person innerhalb der erlaubten Fraktion. Sie darf dabei auch die Person wählen, die die Karte spielt. (Formulierung in der fünften Antwortrunde präzisiert, keine Regeländerung.)
 - **`wende_07` Befreiung, Ziel:** Die Person, die die Karte spielt, wählt das Ziel innerhalb der erlaubten Fraktion.
 - **`wende_07`, erneuter Tod:** Die zurückgeholte Person stirbt erst nach dem einmaligen Fähigkeitseinsatz erneut. Ohne Fähigkeitseinsatz bleibt sie am Leben. Es gibt keinen automatischen Tod am nächsten Morgen und keine neu eingeführte Frist. Rollen ohne aktiv einsetzbare Fähigkeit werden durch diese Entscheidung nicht ausgeschlossen. Welche Vorgänge bei passiven Fähigkeiten, Rudelaktionen oder mehrstufigen Fähigkeiten als Einsatz zählen, ist damit nicht pauschal entschieden.
 - **Rückkehrrolle (alle drei Karten):** Die Wiederbelebung stellt die Rolle vom Todeszeitpunkt wieder her. Hat eine andere Person diese Rolle inzwischen ebenfalls, bleibt die Wiederbelebung trotzdem zulässig. Beispiel: Anna starb als Orakel, jemand erbte die Rolle; Anna kehrt als Orakel zurück, es gibt dann zwei Orakel. Kein Ersatz durch Dorfbewohner oder Werwolf allein wegen einer bereits vergebenen Rolle. Die Einmaligkeit der Startrollen (PE-07) gilt weiterhin nur für die Startbesetzung. Die bestätigten Regeln zum Zurücksetzen bei Wiederbelebung bleiben (Abschnitt „Rollenaudit · Wiederbelebungsrollen“: begrenzte Einsätze zurück, durch Tod beendete Bindungen bleiben beendet, RM-DR-011.2).
@@ -861,7 +861,7 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - Abschnitt 10, Frage 4, Empfehlung B (Standardrolle, wenn die Rolle schon vergeben ist): ersetzt durch die doppelte Rolle.
 - Abschnitt 10, Frage 5, Empfehlung C (Zufall wählt das Ziel bei `wende_07`): ersetzt durch die Wahl der Kartenspielerin.
 - Offener Punkt „Darf die Kartenträgerin bei `segen_08` sich selbst wählen, und was gilt ohne passende tote Person“: für `segen_08` beantwortet (nein; Karte bleibt ungespielt erhalten). Für `wende_04` und `wende_07` gilt die Ohne-Ziel-Frage weiter als offen.
-- Im Kern bestätigt, keine Ersetzung: Frage 2, Option A (SL wählt frei, Selbstwahl erlaubt).
+- Im Kern bestätigt, keine Ersetzung: Frage 2, Option A (die SL wählt frei und darf dabei auch die Kartenspielerin wählen).
 
 **Technisch abgeleitet (nicht bestätigt, Diskussionsgrundlage):**
 
@@ -874,3 +874,44 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - `wende_04`, `wende_07`: Ob die Vergabebedingung „mindestens zwei andere Tote“ auch hier gilt; ob die Karte ohne passendes Ziel aufbewahrt wird oder verfällt. Bei `wende_07` zusätzlich: ob sich die Kartenspielerin selbst wählen darf, ob wie bei `segen_08` Namen angeboten werden, und was als Fähigkeitseinsatz zählt.
 - Alle drei: Zeitpunkt und Sichtbarkeit der Rückkehr (ab wann die Person handelt, was öffentlich wird), Wirkung eines lebenden Wächters am Tor auf eine zurückkehrende Wölfin (RM-DR-149), Verhältnis zu den offenen Kartenfenster-Fragen (KS-22 bis KS-26).
 - `wende_04`, `wende_07` und `segen_08` sind damit **nicht vollständig spezifiziert** und nicht implementiert. Die Detailfragen stehen in der Arbeitsliste als KS-38 bis KS-40.
+
+## Rückkehr- und Rollenkarten: Phoenix, Geheimrat, Neuer Anfang, Rollenroulette (fünfte Antwortrunde, 30.09.2026)
+
+**Herkunft:** Antworten des Product Owners im Claude-Code-Auftrag vom 30.09.2026 (fünfte Runde) auf die fünf Fragen in Abschnitt 12 der Arbeitsliste `docs/role-migration/14-totenkarten-arbeitsliste.md` (KS-29 bis KS-33, zugleich KS-19, KS-20 und KS-34 teilweise). Die Antworten kamen als zusammenhängender Regeltext ohne Buchstabenwahl; die Zuordnung zu den Fragen ist meine Zuordnung. Diese Entscheidungen gelten nur für `loki_10`, `wende_12` (Dorf), `schicksal_08` und `loki_06`. Es ist nichts implementiert: kein Karten-Code, keine Würfel, keine Zufallsziehung, keine Animation, keine Kartenverteilung, kein Kartentausch, kein Kartenschlucker, keine Änderung an Speicherschema oder Oberfläche. Die Originaltexte der Karten und früherer Abschnitte bleiben unverändert stehen.
+
+**Bestätigt (Product Owner):**
+
+- **`loki_10` Phoenix, Würfel:** Zwei sichtbare virtuelle Würfel werden in der App gerollt. Würfel 1 hat die Seiten 1, 2, 3, 4, 5, 6 und bestimmt die Anzahl der Rückkehrer. Würfel 2 hat die Seiten 1, 1, 2, 2, 3, 3 und bestimmt die Lebensdauer in Tagen.
+- **`loki_10`, Lebensdauer:** Der Tag des Ausspielens zählt bereits als erster Tag. Die zurückgeholten Personen sterben am Ende des ausgewürfelten Tages erneut. Beispiel: Ausspielen an Tag 4, zweiter Würfel zeigt 2: erneuter Tod am Ende von Tag 5.
+- **`loki_10`, Auswahl:** Die App wählt zufällig verschiedene tote Personen aus. Die tote Person, die Phoenix spielt, ist ausdrücklich ausgeschlossen. Gibt es weniger andere Tote als gewürfelt, kehren alle verfügbaren anderen Toten zurück. Es wird nicht erneut gewürfelt.
+- **`loki_10`, Wiederbelebungsrunden:** Die bestehende Beschränkung auf Wiederbelebungsrunden bleibt bestehen.
+- **`wende_12` Geheimrat, Dorfvariante:** Jede Frage ist erlaubt. Die Spielleitung muss wahrheitsgemäß antworten. Auch eine Frage wie „Wer sind alle Werwölfe?“ ist erlaubt. Es gibt keine Beschränkung auf Ja/Nein-Fragen.
+- **`schicksal_08` Neuer Anfang:** Die Person, die die Karte spielt, wählt zwei lebende Personen. Die Spielleitung bestimmt deren neue Rollen. Jede neue Rolle gehört zur jeweiligen bisherigen Fraktion. Ein zufälliger Rollenvorschlag ist keine verbindliche Auswahlregel.
+- **`loki_06` Rollenroulette:** Zwei zufällige lebende Personen derselben Fraktion tauschen ihre Rollen. Erlaubt sind zwei Dorfpersonen oder zwei Werwölfe. Einzelsiegrollen sind ausgeschlossen. Beide Betroffenen werden heimlich informiert.
+- **Rollenwechsel durch `schicksal_08` und `loki_06`:** Die neue Rolle beginnt frisch, beispielsweise mit verfügbaren Tränken. Persönliche Zustände bleiben nach den bestehenden Regeln erhalten. Bereits bestätigte Sonderregeln, insbesondere persönliche Kartenschlucker-Stapel und gekaufte Schilde, bleiben bestehen. Es werden weder pauschal sämtliche Zustände gelöscht noch sämtliche Rollenzustände übertragen. Diese Entscheidung wird nicht ungefragt auf andere Rollenwechselmechaniken ausgeweitet.
+- **Formulierungskorrektur `wende_04` Wiedergeburt (keine Regeländerung):** Die Spielleitung wählt die wiederzubelebende Person. Sie darf dabei auch die Person wählen, die die Karte spielt. Die frühere Kurzform „SL wählt, Selbstwahl erlaubt“ konnte so gelesen werden, als wähle die Kartenspielerin sich selbst; das ist nicht gemeint. Korrigiert im Abschnitt „Rückkehrkarten (vierte Antwortrunde)“ und in den Arbeitsdokumenten.
+
+**Ersetzt (nicht mehr gültig):**
+
+- Arbeitsliste Abschnitt 12, KS-29: Empfehlung A (Runde ist eine Nacht, Tod in der Morgenauflösung) ersetzt. Im Kern gewählt ist Option B (Runde ist ein Tag, Tod am Ende des Tages), in geänderter Form: Der Tag des Ausspielens zählt schon als erster Tag.
+- KS-30: Empfehlung B (nur Ja/Nein-Frage zum Spielzustand) ersetzt; bestätigt ist Option A (jede Frage) für die Dorfvariante.
+- KS-31: Empfehlung A (Generator zieht die Rollen) ersetzt; im Kern bestätigt ist Option B (Kartenspielerin wählt, Spielleitung bestimmt die Rollen), ergänzt um die Bindung an die bisherige Fraktion.
+- KS-32: Empfehlung B (Einzelsiegrollen zählen als Fraktion) ersetzt; bestätigt ist Option A (nur Dorf und Werwölfe). Option C (Kartenspielerin nennt die Fraktion) nicht gewählt.
+- KS-33: Empfehlung A im Kern bestätigt („wie jeder Rollenwechsel“, frischer Start, Personengebundenes bleibt), aber ausdrücklich nur für diese zwei Karten und ohne pauschales Löschen. Die Optionen B und C sind nicht gewählt.
+- KS-34, Teil „Würfel: Generator oder Tisch“ und „wer zählt zu den zufälligen Spielern“ und „weniger Tote als der erste Würfel“: beantwortet (siehe oben).
+
+**Technisch abgeleitet (nicht bestätigt, Diskussionsgrundlage):**
+
+- Die App-Würfel und die Auswahl der Rückkehrer laufen über den gespeicherten Zufallsgenerator (Projektregel: Zufall nur über den gespeicherten Generator). Der Product Owner hat nur „in der App gerollt“ gesagt.
+- „Sichtbar“ lese ich als: Die Würfelergebnisse werden in der App gezeigt. Für wen (nur Spielleitung oder öffentlich am Tisch), ist nicht entschieden.
+- Für die Auswahl der Rückkehrer wurde keine Fraktionsbeschränkung genannt; ich habe keine ergänzt. Alle anderen Toten kommen in Frage.
+- Die Lebensdauer ist ein Zähler in Tagen des App-Tageszählers.
+- Die Rückkehrrolle der vierten Runde („Rolle vom Todeszeitpunkt, doppelte Rolle zulässig“) wurde für `segen_08`, `wende_04` und `wende_07` beschlossen. Für Phoenix hat der Product Owner sie nicht bestätigt; die Arbeitsliste hatte sie dort vorschnell als gegeben beschrieben und ist korrigiert.
+
+**Weiter offen (nicht entschieden, nicht erfunden):**
+
+- `loki_10`: Reihenfolge zwischen dem zweiten Kartenfenster am Tagesende und dem Ablauf der Lebensdauer, insbesondere Ausspielen am Tagesende mit Lebensdauer 1 (kein zusätzlicher Lebenstag wird erfunden). Verhalten ohne andere Tote. Früherer Tod und erneute Wiederbelebung während der Frist. Rückkehrrolle bei Phoenix. Für wen die Würfel und die Namen sichtbar sind. Verhältnis zu KS-23 und zur Siegprüfung.
+- `wende_12`: Öffentlichkeit von Frage und Antwort der Dorfvariante (nicht festgelegt), Zeitpunkt der Frage. Die Wolfsvariante ist nicht entschieden (Ablauf, Art der Hinweise, Bezug „in dieser Nacht“, Aufrufreihenfolge, Öffentlichkeit). Ob die Szenariobedingung „nur in Spielen mit Wiederbelebungs-Szenarien“ auch für den Wolf-Text gilt.
+- `schicksal_08`: Vorrat der neuen Rollen (bisherige Rolle erlaubt, Sonderrollen wie Trugbilderwolf und Selbstmörder), was „bisherige Fraktion“ für Einzelsiegrollen heißt, weniger als zwei passende Lebende, Zeitpunkt und Sichtbarkeit.
+- `loki_06`: Verhalten bei weniger als zwei Lebenden in einer Fraktion, Zufall über den gespeicherten Generator (abgeleitet, nicht bestätigt), Sonderzustände beim Tausch (Scheinrolle des Trugbilderwolfs).
+- Alle vier Karten sind damit **nicht vollständig spezifiziert** und nicht implementiert. Die Detailfragen stehen in der Arbeitsliste (KS-35 bis KS-37 und KS-46 bis KS-48).
