@@ -748,6 +748,8 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 
 **Weiter offen (nicht entschieden, nicht umgesetzt):** Bedeutung von „im Spiel“ bei Tod und Rollenverlust (3A); Kosten, Pflicht und Reichweite der Tötungsfähigkeit, Art und Häufigkeit des Schilds, Zählbeginn der Drei-Nächte-Ansage, Verbleib der Stapel bei Rollenwechsel, Schild bei Tod (4B, 5A); der Inhalt jeder einzelnen Karte (2C); der Kartentext für Solo- und neutrale Personen; Öffentlichkeit des Tauschs und der Stapelzahl. Die geordnete Fragenliste steht in der Arbeitsliste (Abschnitte 7 und 8). Nicht entschieden und im Verhalten unverändert: Wird ein toter Selbstmörder wiederbelebt und bleiben dabei fünf oder mehr Personen tot, löst das keinen Hinweis aus (`test_open_case_reviving_the_death_seeker_while_five_stay_dead_is_unchanged`, kein Beschluss).
 
+**Nachtrag (dritte Antwortrunde, 30.09.2026):** Teilweise beantwortet: Schild bei Tod und Rollenverlust (unverbrauchter Schild bleibt), Inhalt der Ansage (Gesamtzahl) und Zeitpunkt des Spielens (zwei feste Kartenfenster). Siehe Abschnitt „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten“ unten. Der Originaltext dieses Abschnitts bleibt unverändert.
+
 **Umsetzung (Umfang):** Ausschließlich 6B. `GameSession._observe_five_dead` und `_rescan_five_dead` erhalten den Zustand vor dem Befehl; neue Funktion `PresentationCue.death_seeker_gained`. Kein Speicherschema, keine Regelversion, kein Audio, keine Tondatei, keine Kartenmechanik. Alles übrige aus diesen Entscheidungen ist reine Dokumentation.
 
 **Ableitungen (technisch abgeleitet, nicht bestätigt):**
@@ -794,3 +796,44 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - Nachtablauf: Wie die Wahl (Finger) am Tisch erfasst und in der App eingetragen wird; Wecken bei Nächten, die durch Karten ausfallen.
 - Tausch: Öffentlichkeit, Ablauf am Tisch, Auslösung und Bestätigung; Öffentlichkeit der Stapelzahl außerhalb der Ansage.
 - Der bekannte offene Wiederbelebungsfall des Fünf-Tote-Hinweises bleibt offen.
+- Nachtrag (dritte Antwortrunde, 30.09.2026): Beantwortet sind Schild bei Rollenverlust, Tod und Wiederbelebung (bleibt, unverbrauchter Schild), Wirkung des Schilds gegen Rollenfähigkeit und Hinrichtung, Inhalt der Ansage (Gesamtzahl) und der Zeitpunkt des Spielens einer Karte (zwei Kartenfenster). Offen bleiben die übrigen Punkte dieser Liste sowie die neuen Punkte im folgenden Abschnitt.
+
+## Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten (dritte Antwortrunde, 30.09.2026)
+
+**Herkunft:** Antworten des Product Owners im Claude-Code-Auftrag vom 30.09.2026 (dritte Runde) auf die Fragen KS-06 bis KS-10 der Arbeitsliste `docs/role-migration/14-totenkarten-arbeitsliste.md`. Die Antworten kamen als zusammenhängender Regeltext ohne Buchstabenwahl; die Zuordnung zu den Fragen-IDs ist meine Zuordnung. Diese Entscheidungen **ersetzen** widersprechende frühere Empfehlungen (Liste am Ende der bestätigten Punkte). Es ist nichts implementiert: kein Karten-Code, keine Kartenverteilung, kein Kartentausch, kein Kartenschlucker, keine Änderung an Speicherschema oder Oberfläche. Die Originaltexte der früheren Abschnitte bleiben unverändert stehen.
+
+**Bestätigt (Product Owner):**
+
+- **Schild, Wirkung (KS-06):** Der Schild verhindert einen Tod durch Rollenfähigkeit oder Hinrichtung, auch durch Angriffe, die sonst Schutz ignorieren. Eine direkte Spielleiterkorrektur bleibt möglich. Bestehende Regeln bleiben: fünf Stapel bezahlen, höchstens ein Schild gleichzeitig, Verbrauch beim Abfangen eines Todes.
+- **Schild, Bindung (KS-07):** Der gekaufte Schild gehört zur Person und bleibt auch bei Rollenwechsel wirksam. Ein noch unverbrauchter Schild bleibt über Tod und Wiederbelebung erhalten. (Ersetzt die Empfehlung, der Schild ruhe bei Rollenverlust, und beantwortet den in 5A offen gelassenen Schild bei Tod für den unverbrauchten Schild.)
+- **Öffentliche Stapelansage, Inhalt (KS-08):** Genannt wird die Gesamtzahl aller gesammelten Stapel, ohne Ausgaben abzuziehen. Begründung des Product Owners: Käufe sollen durch die Ansage nicht verraten werden. Verfügbares Guthaben und insgesamt gesammelte Stapel sind deshalb verschiedene Werte. Keine öffentliche Kaufmeldung und keine zusätzliche öffentliche Anzeige des Restguthabens. Das ist ausdrücklich keine Zusage, dass Spieler aus sichtbaren Spieleffekten keinerlei Rückschlüsse ziehen können. Feste Ansagenächte 3, 6, 9 bleiben (KS-04). Der genaue Ansagezeitpunkt bleibt offen (KS-12) und wird nicht beiläufig entschieden.
+- **Kartenfenster (KS-09, ersetzt das Modell „sofort beim öffentlichen Tod“):** Tote werden zweimal am Tag gefragt, ob sie ihre Totenreichkarte einsetzen möchten: (1) zu Beginn des Tages, vor der Diskussion; (2) am Tagesende, nach der Hinrichtung und allen dadurch ausgelösten Todeseffekten. Im zweiten Fenster dürfen auch die gerade Verstorbenen teilnehmen. Eine Originalkarte darf aufbewahrt werden. In beiden Fenstern darf eine tote Person ihre Originalkarte einsetzen, sie unter den bestätigten Voraussetzungen tauschen oder vorerst nichts tun.
+- **Tausch, Präzisierung:** Nur erlaubt, solange eine lebende Person die Rolle Kartenschlucker besitzt (KS-01). Einmal pro erhaltener Originalkarte. Die Ersatzkarte wird sofort gespielt und darf nicht erneut getauscht werden. Nach Wiederbelebung und erneutem Tod gilt die bereits bestätigte neue Kartenvergabe (1A) mit neuer Tauschmöglichkeit. Daraus folgt keine zusätzliche freie Nutzung und keine Tauschmöglichkeit außerhalb der beiden Fenster.
+- **Wiederbelebungskarten (KS-10, ersetzt die Kartenbedingung „passende Rolle lebt“):** Sie gehören nur zu Partien, die bereits zu Beginn als Wiederbelebungsrunde eingerichtet sind. Grundlage ist die bestehende bestätigte Ableitung des Wiederbelebungsmodus (DI-01, `GameState.revival_round`, aus der Startbesetzung abgeleitet); es gibt keine neue frei wählbare Setup-Option. Sterben die entsprechenden Wiederbelebungsrollen später oder verlieren ihre Rolle, bleiben diese Karten weiter im Kartenbestand und nutzbar. Es gibt beim späteren Ziehen oder Spielen keine Prüfung „passende Rolle lebt noch“. Wiederbelebungskarten dürfen eine normale Partie nicht nachträglich in eine Wiederbelebungsrunde verwandeln.
+
+**Ersetzt (nicht mehr gültig):**
+
+- Sofortiges Spielen der Originalkarte beim öffentlichen Tod (Empfehlung A zu KS-09 der Arbeitsliste, Stand 30.09.2026): jetzt zwei feste Kartenfenster.
+- Öffentliche Ansage der aktuellen Reststapelzahl (Empfehlung A zu KS-08 und Legacy-Text „Das Dorf erfährt: Kartenschlucker hat N Stapel.“): jetzt Gesamtzahl aller gesammelten Stapel.
+- „Schild ruht bei Rollenverlust“ (Empfehlung B zu KS-07): jetzt bleibt er wirksam.
+- Lebende Wiederbelebungsrolle als Voraussetzung beim Ziehen oder Spielen (Legacy-`deathCardRequirements`, Empfehlung A zu KS-10, Bedingung ÜB-5): entfällt als Prüfung.
+
+**Technisch abgeleitet (nicht bestätigt, Diskussionsgrundlage):**
+
+- Verfügbares Guthaben und insgesamt gesammelte Stapel sind zwei getrennte Zahlen je Person. Für die Gesamtzahl ist bei Rollenwechsel eine Behandlung analog zu den Stapeln (KS-05) naheliegend, aber nicht bestätigt.
+- Das erste Kartenfenster schließt die zu Tagesbeginn bereits Toten ein, also auch Personen, die in der Nacht gestorben sind (folgt aus „Tote werden gefragt“, nicht ausdrücklich gesagt).
+- Ein verbrauchter Schild wird durch eine Wiederbelebung nicht wiederhergestellt (folgt aus „Verbrauch beim Abfangen“).
+- Die Ableitung `revival_round` gilt nach dem bestehenden Stand die ganze Partie. Die Frage aus RM-DR-141.4 („Totenkarten-Aktivierung nach Verbrauch“) und Dossier-Frage 6 (bleiben Wiederbelebungs-Totenkarten nach Verbrauch aktiv?) ist im Kern damit beantwortet: sie bleiben. Die Zuordnung zu RM-DR-141.4 ist meine.
+
+**Weiter offen (nicht entschieden, nicht erfunden):**
+
+- Reihenfolge mehrerer Toter innerhalb eines Kartenfensters.
+- Neue Todesfälle oder Wiederbelebungen durch eine gerade gespielte Karte (auch: darf eine dabei Wiederbelebte im selben Fenster wieder teilnehmen?).
+- Verhältnis zwischen Kartenfenster und bereits anstehender Siegprüfung (besonders am Tagesende).
+- Verhalten einer aufbewahrten Karte bei Wiederbelebung, auch im Verhältnis zur neuen Karte nach erneutem Tod (1A).
+- Tagesende ohne Hinrichtung: gibt es das zweite Fenster trotzdem?
+- Kartenschlucker-Tötung: Ziel, Todesursache, Zeitpunkt, Schutz und Durchdringung (KS-11).
+- Schild-Reihenfolge mit anderen Schutz- und Abfangwirkungen sowie verhinderte Hinrichtung (KS-21). Außerdem ungeklärt, ob Rudelangriff, Karteneffekte und Todesketten (Todeseffekte) unter „Rollenfähigkeit“ fallen, und ob „höchstens ein Schild gleichzeitig“ je Person oder insgesamt gilt, seit der Schild an die Person und nicht mehr an die Rolle gebunden ist.
+- Ansagezeitpunkt und Verhalten bei übersprungenen Nächten (KS-12); Bezug „nächste Nacht“ und „nächster Lynch“ je Kartenfenster (ÜB-3).
+- Welche Karten Wiederbelebungskarten sind und welcher Kartenbestand in normalen Partien gilt (ÜB-6, KS-16, KS-17).
+- Öffentlichkeit von Tausch und Karte sowie Ablauf am Tisch (KS-15, ÜB-7, ÜB-9).

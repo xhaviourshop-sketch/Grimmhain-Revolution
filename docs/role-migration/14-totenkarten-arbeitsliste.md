@@ -1,6 +1,6 @@
 # Totenkarten: Arbeitsliste zur vollständigen Überarbeitung
 
-Stand: 30.09.2026 (zweite Runde), Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitte „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“ und „Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
+Stand: 30.09.2026 (dritte Runde), Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitte „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“ „Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)“ und „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten (dritte Antwortrunde, 30.09.2026)“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
 
 ## 1. Kennzeichnung
 
@@ -33,11 +33,13 @@ Ausführlich mit Herkunft im Decision Log. Hier nur die Kurzfassung, damit die F
 |---|---|---|
 | 1A | Jede Person erhält beim Tod eine Karte, unabhängig von der Fraktion. Nach Wiederbelebung und erneutem Tod eine neue Karte. | Welche Karten für wen in Frage kommen (ÜB-1, KS-16). |
 | 2C | ALLE Karten werden vor der Umsetzung gemeinsam überarbeitet. Mechanische Wirkung später im Spiel, reale Handlungen mit Anweisung, Bestätigung/Eingabe je Karte. Bis dahin kein Code. | Alles je Karte (diese Liste). |
-| 3A + zweite Runde | Ein Toter darf seine Karte einmal tauschen, nur solange eine lebende Person die Rolle Kartenschlucker besitzt. Jeder zulässige Tausch gibt einen Stapel. Ersatzkarte sofort gespielt, nicht erneut tauschbar; nach Wiederbelebung und erneutem Tod wieder möglich. | Öffentlichkeit und Ablauf des Tauschs (KS-15), Zeitpunkt des Spielens (KS-09). |
+| 3A + zweite Runde | Ein Toter darf seine Karte einmal tauschen, nur solange eine lebende Person die Rolle Kartenschlucker besitzt. Jeder zulässige Tausch gibt einen Stapel. Ersatzkarte sofort gespielt, nicht erneut tauschbar; nach Wiederbelebung und erneutem Tod wieder möglich. | Öffentlichkeit und Ablauf des Tauschs (KS-15). Zeitpunkt entschieden (dritte Runde): Tausch nur in den zwei Kartenfenstern (Zeile „Kartenfenster“). |
 | 4B + zweite Runde | Kartenschlucker wird jede Nacht geweckt und wählt genau eine Aktion: Kopf schütteln (nichts), zwei Finger (zwei Stapel abgeben, eine Person töten, freiwillig, höchstens einmal), fünf Finger (fünf Stapel abgeben, Schild kaufen), zehn Finger (zehn Stapel abgeben, Sieg auslösen). Keine Kombination, zu wenig Guthaben erlaubt die Aktion nicht. | Tötungsdetails (KS-11), Ansage-Zeitpunkt (KS-12), Sieg-Einzelfälle (KS-13), Erfassung der Wahl (KS-14). |
-| Schild | Gekaufter Schild bleibt bis zum verhinderten Tod, höchstens einer, kein Gratis-Schild, keine automatische Erneuerung. | Todesarten und Zusammenspiel (KS-06, KS-21), Rollenverlust und Wiederbelebung (KS-07). |
+| Schild | Gekaufter Schild bleibt bis zum verhinderten Tod, höchstens einer, kein Gratis-Schild, keine automatische Erneuerung. Dritte Runde: verhindert Tod durch Rollenfähigkeit oder Hinrichtung, auch bei „ignoriert Schutz“; Spielleiterkorrektur bleibt möglich; gehört zur Person, bleibt bei Rollenwechsel wirksam; ein unverbrauchter Schild bleibt über Tod und Wiederbelebung. | Reihenfolge und verhinderte Hinrichtung (KS-21); Reichweite bei Rudelangriff, Karteneffekten, Todesketten und „ein Schild“ je Person oder insgesamt (KS-27). |
 | Sieg | Zehn Stapel allein lösen keinen Sieg aus; nur die Zehn-Finger-Aktion. Spielleiterbestätigung des Siegkandidaten bleibt (DR-02, DR-14, F-11). | KS-13. |
-| Ansage | Feste Nächte 3, 6, 9 usw., sofern er lebt und die Rolle besitzt. | Inhalt (KS-08), Zeitpunkt (KS-12). |
+| Ansage | Feste Nächte 3, 6, 9 usw., sofern er lebt und die Rolle besitzt. Dritte Runde: genannt wird die Gesamtzahl aller gesammelten Stapel ohne Abzug von Ausgaben (Käufe sollen nicht verraten werden); Guthaben und Gesamtzahl sind verschiedene Werte; keine Kaufmeldung, keine Anzeige des Restguthabens. | Zeitpunkt (KS-12). |
+| Kartenfenster (dritte Runde) | Tote werden zweimal am Tag gefragt: (1) Tagesbeginn vor der Diskussion, (2) Tagesende nach Hinrichtung und Todeseffekten (dann auch die gerade Verstorbenen). Originalkarte einsetzen, tauschen (nur bei lebendem Kartenschlucker) oder vorerst nichts tun; Originalkarte darf aufbewahrt werden. Kein Spielen oder Tauschen außerhalb der Fenster. | KS-22 bis KS-26. |
+| Wiederbelebungskarten (dritte Runde) | Nur in Partien, die von Beginn an Wiederbelebungsrunden sind (bestehende Ableitung, keine neue Option). Bleiben im Kartenbestand und nutzbar, auch wenn die Wiederbelebungsrollen sterben oder die Rolle verlieren; keine Prüfung „passende Rolle lebt“; verwandeln keine normale Partie in eine Wiederbelebungsrunde. | Welche Karten das sind (KS-16, KS-17); Ablauf der Rückkehr (Abschnitt 10, Frage 4, KS-18). |
 | 5A + zweite Runde | Stapel gehören zur Person. Neuer Träger der Rolle bei null; beim bisherigen Träger ruhen sie und werden bei Rückerhalt wieder nutzbar. Tod: Stapel bleiben, tot sammelt und gewinnt er nicht; nach Wiederbelebung weiter mit dem Stand. | Schild bei Tod und Rollenverlust (KS-07). |
 | 6B | Fünf-Tote-Hinweis auch bei später erhaltener Selbstmörder-Rolle, wenn schon fünf tot sind (einmalig). Umgesetzt. | Wiederbelebungsfall bleibt offen (kein Beschluss). |
 
@@ -53,10 +55,10 @@ Gelten für viele Karten und werden bei den Karten mit ihrer ID (ÜB-n) verwiese
 | ÜB-2 | Abstimmungen am Tisch | Bestätigt: keine digitale Abstimmung. Offen je Karte: welches Ergebnis die SL einträgt (Person, Rangfolge, ja/nein), damit die App die Wirkung darstellen kann. |
 | ÜB-3 | Bezugszeitpunkt | „Nächste Nacht“, „nächster Lynch“, „folgende Nacht“: ab wann zählt es, wenn eine Karte am Tag, in der Nacht oder in der Morgenauflösung gespielt wird? Wie werden „Tage“ und „Runden“ gezählt? |
 | ÜB-4 | Zufall | Projektregel: Zufall nur über den gespeicherten Generator. „Zufällig“ auf einer Karte kann Generator, echten Würfel am Tisch oder SL-Wahl bedeuten. Je Karte festlegen. |
-| ÜB-5 | Kartenbedingung und Wiederbelebung | Die vier deathCardRequirements-Karten und die Kutscher/Frankenstein-Bedingung RM-DR-141.4 folgen mit der Kartenüberarbeitung (W-01 = A). Offen: Bedingung behalten, streichen oder ersetzen. |
+| ÜB-5 | Kartenbedingung und Wiederbelebung | Die vier deathCardRequirements-Karten und die Kutscher/Frankenstein-Bedingung RM-DR-141.4 folgen mit der Kartenüberarbeitung (W-01 = A). Offen: Bedingung behalten, streichen oder ersetzen. **Beantwortet (dritte Runde, 30.09.2026):** Die Prüfung „passende Rolle lebt“ entfällt; Wiederbelebungskarten gehören nur zu Partien, die von Beginn an Wiederbelebungsrunden sind. |
 | ÜB-6 | Kartenbestand | Legacy sortiert bereits vergebene Karten aus. Offen: Darf dieselbe Karte mehrfach vorkommen? Was, wenn der Vorrat leer ist? Neue Karte bei erneutem Tod (1A). |
 | ÜB-7 | Sichtbarkeit | Wer sieht die Karte und wann (Legacy: nur auf SL-Knopfdruck am toten Sitz)? Ist der Tausch öffentlich? Darf eine Karte Geheimnisse offenlegen? |
-| ÜB-8 | Zeitpunkt des Spielens | Wann wird die Karte gespielt (sofort beim Tod, an einer festen Stelle des Ablaufs, auf Wunsch)? Legacy kennt nur das Flag „gespielt“. |
+| ÜB-8 | Zeitpunkt des Spielens | Wann wird die Karte gespielt (sofort beim Tod, an einer festen Stelle des Ablaufs, auf Wunsch)? Legacy kennt nur das Flag „gespielt“. **Beantwortet (dritte Runde, 30.09.2026):** zwei feste Kartenfenster, Originalkarte darf aufbewahrt werden. Offen bleibt der Bezug „nächste Nacht“ je Fenster (ÜB-3). |
 | ÜB-9 | Reale Handlungen | Zeigen, Schweigen, Zettel, Würfel, Zeitmessung: die App kann sie nicht ausführen. Je Karte: Anweisungstext und welche Bestätigung die SL eingibt (kein Timer in der App, Timer ist offen). |
 | ÜB-10 | Namensdopplung | „Anarchie“ kommt zweimal vor; einer der Namen müsste vor der Umsetzung geändert werden (Inhaltsfrage, nicht Regel). |
 
@@ -76,9 +78,9 @@ Reihenfolge nach gemeinsamen Regeln und Abhängigkeiten, jede Gruppe in einer Si
 | 8 | Solo-Karten | 11 | Eigene Siegbedingungen, Zettel, Bindungen. Am Ende, weil sie die meisten neuen Konzepte einführen (Mitsieg, posthumer Sieg, Todesband). |
 | | **Summe** | **80** | |
 
-Die Grundregeln des Kartenschluckers sind entschieden (Abschnitt 3). Für den Einstieg in Gruppe 1 blockieren noch die Fragen aus Abschnitt 8.
+Die Grundregeln des Kartenschluckers sind entschieden (Abschnitt 3). Für den Einstieg in Gruppe 1 sind die Fragen KS-06 bis KS-10 seit der dritten Runde beantwortet (Abschnitt 8, Statusübersicht). Die erste Kartenrunde steht in Abschnitt 10.
 
-**Gruppe 1, gemeinsame Grundentscheidungen (Blocker):** (1) Zeitpunkt des Spielens und Bezug „nächste Nacht“ (KS-09, alle Karten); (2) Kartenbedingung `deathCardRequirements` (KS-10, `segen_08`, `wende_04`, `wende_07`, `loki_10`, `wende_12`); (3) Ablauf einer Karten-Wiederbelebung (KS-18); (4) „halbe Fähigkeit“ und Würfel (KS-19); (5) Rollenwechsel durch Karten (KS-20). Nach 1A erhält eine Wiederbelebte bei erneutem Tod eine neue Karte; die Stapelregel gilt für Wechsel von oder zum Kartenschlucker.
+**Gruppe 1, gemeinsame Grundentscheidungen (Blocker):** (1) Zeitpunkt des Spielens: entschieden (zwei Kartenfenster, dritte Runde), offen bleibt der Bezug „nächste Nacht“ je Fenster (ÜB-3); (2) Kartenbedingung `deathCardRequirements`: entfällt als Prüfung (dritte Runde, KS-10); (3) Ablauf einer Karten-Wiederbelebung (KS-18); (4) „halbe Fähigkeit“ und Würfel (KS-19); (5) Rollenwechsel durch Karten (KS-20). Nach 1A erhält eine Wiederbelebte bei erneutem Tod eine neue Karte; die Stapelregel gilt für Wechsel von oder zum Kartenschlucker.
 
 ## 6. Karten je Gruppe
 
@@ -94,7 +96,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** SL informiert die Person; sie erhält ihre Rolle zurück und sitzt wieder am Tisch.
 - **[V] Eingabe oder Bestätigung der SL:** Zielperson (Tote), Bestätigung.
 - **Unklarheiten und Rolleninteraktionen:** Kartenbedingung (deathCardRequirements) vorhanden. Wiederbelebung nach W-01 bis W-04 (frischer Start, Einmal-Fähigkeiten je Person). Interaktion mit Nekromant, Kutscher, Frankenstein. ÜB-5.
-- **Status:** noch nicht überarbeitet
+- **Status:** in Fragerunde 3 (Abschnitt 10) zur Entscheidung vorgelegt; noch nicht überarbeitet. Kartenbedingung entfällt als Prüfung (Decision Log, dritte Runde)
 
 #### `wende_04` Wiedergeburt (WENDE)
 
@@ -104,7 +106,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** SL informiert die Person; Person erhält ihre Rolle zurück.
 - **[V] Eingabe oder Bestätigung der SL:** Zielperson (SL nach Ermessen).
 - **Unklarheiten und Rolleninteraktionen:** Kartenbedingung: nur wenn eine lebende Person mit Wiederbelebungs-Rolle im Spiel ist (Legacy-Tags revive, role-return, death-trigger-transform). Ob die Bedingung bleibt, ist offen. ÜB-5.
-- **Status:** noch nicht überarbeitet
+- **Status:** in Fragerunde 3 (Abschnitt 10) zur Entscheidung vorgelegt; noch nicht überarbeitet. Kartenbedingung entfällt als Prüfung (Decision Log, dritte Runde)
 
 #### `wende_07` Befreiung (WENDE)
 
@@ -114,7 +116,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** SL informiert die Person; nach dem Einsatz stirbt sie wieder.
 - **[V] Eingabe oder Bestätigung der SL:** Zielperson, Bestätigung des Einsatzes.
 - **Unklarheiten und Rolleninteraktionen:** „Halbe Fähigkeit“ nicht definiert. Erneuter Tod = neue Karte (Entscheidung 1A) und Tauschmöglichkeit (3A): Kettenwirkung. Kartenbedingung. ÜB-5.
-- **Status:** noch nicht überarbeitet
+- **Status:** in Fragerunde 3 (Abschnitt 10) zur Entscheidung vorgelegt; noch nicht überarbeitet. Kartenbedingung entfällt als Prüfung (Decision Log, dritte Runde)
 
 #### `loki_10` Phoenix (LOKI)
 
@@ -124,7 +126,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Würfeln am Tisch (echter Würfel) oder Generator.
 - **[V] Eingabe oder Bestätigung der SL:** Würfelergebnisse (falls am Tisch gewürfelt).
 - **Unklarheiten und Rolleninteraktionen:** Kartenbedingung. Wiederbelebte Personen sterben nach Ablauf erneut: Zeitzähler in Runden (Runde = ?). Zufall (Würfel am Tisch gegen gespeicherten Generator, ÜB-4). Sehr große Wirkung auf Siegprüfung.
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet. Kartenbedingung entfällt als Prüfung (Decision Log, dritte Runde); Würfel und „Runde“ offen (KS-19)
 
 #### `wende_12` Geheimrat (WENDE)
 
@@ -134,7 +136,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** W: Tote gibt dem Rudel Hinweise (stumm?). D: Frage an die SL.
 - **[V] Eingabe oder Bestätigung der SL:** D: Antwort der SL.
 - **Unklarheiten und Rolleninteraktionen:** D-Text enthält eine Szenariobedingung („nur in Spielen mit Wiederbelebung“), ohne dass die Karte eine deathCardRequirements-Angabe hat. Geheimhaltung der Antwort. ÜB-5.
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet. Der Dorf-Zusatz „nur in Spielen mit Wiederbelebungs-Szenarien“ entspricht dem Grundsatz der dritten Runde (Wiederbelebungskarten nur in Wiederbelebungsrunden); welche Karten dazugehören, ist offen (KS-16, KS-17)
 
 #### `schicksal_08` Neuer Anfang (SCHICKSAL)
 
@@ -917,6 +919,16 @@ Die Antworten sind im Decision Log („Kartenschlucker, Grundregeln“) verbindl
 
 Nur neue Fragen; Entschiedenes wird nicht wiederholt. Jede Frage: betroffene Karte oder Fähigkeit mit unverändertem relevantem Originaltext, ein Beispiel, drei Antworten, freie Antwort D, fachlich begründete Empfehlung. Die Empfehlung ist ein Vorschlag, keine Entscheidung, und nichts davon ist implementiert.
 
+**Stand nach der dritten Antwortrunde (30.09.2026):** Die Fragen KS-06 bis KS-10 sind beantwortet. Die Antworten kamen als Regeltext und stehen im Decision Log („Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten“). Die Originalfassungen der Fragen und Empfehlungen bleiben unten zur Nachvollziehbarkeit stehen; **wo sie den Antworten widersprechen, gelten die Antworten**. Die Zuordnung zu den Fragen-IDs ist meine Zuordnung.
+
+| Frage | Ergebnis |
+|---|---|
+| KS-06 | Beantwortet: Der Schild verhindert einen Tod durch Rollenfähigkeit oder Hinrichtung, auch bei „ignoriert Schutz“; Spielleiterkorrektur bleibt möglich (im Kern Option A). Offen: Reichweite bei Rudelangriff, Karteneffekten, Todesketten (KS-27), Reihenfolge und verhinderte Hinrichtung (KS-21). |
+| KS-07 | Beantwortet, weicht von Empfehlung B ab: Der Schild gehört zur Person und bleibt bei Rollenwechsel wirksam; ein unverbrauchter Schild bleibt über Tod und Wiederbelebung erhalten. |
+| KS-08 | Beantwortet, weicht von Empfehlung A ab (Option B): Gesamtzahl aller gesammelten Stapel ohne Abzug, damit Käufe nicht verraten werden. Zeitpunkt offen (KS-12). |
+| KS-09 | Beantwortet, weicht von allen drei Optionen ab: zwei feste Kartenfenster (Tagesbeginn vor der Diskussion, Tagesende nach Hinrichtung und Todeseffekten), Karte darf aufbewahrt werden, Tausch nur in den Fenstern. Die Empfehlung „sofort beim öffentlichen Tod“ ist ersetzt. |
+| KS-10 | Beantwortet, weicht von allen drei Optionen ab: keine Prüfung „passende Rolle lebt“ beim Ziehen oder Spielen; Wiederbelebungskarten nur in Partien, die von Beginn an Wiederbelebungsrunden sind. |
+
 ### KS-06: Schild: Welche Todesarten verhindert der gekaufte Schild?
 
 Originaltext:
@@ -1010,13 +1022,100 @@ Noch nicht gestellt. Nichts davon ist beschlossen. Reihenfolge nach Abhängigkei
 | ID | Frage |
 |---|---|
 | KS-11 | Tötung („zwei Finger“): Ziel (auch die eigene Person?), Todesursache, Zeitpunkt (Nacht oder Morgen), Schutz und Durchdringung, Reihenfolge mit anderen Todesregeln. (Gruppe 2 und 3) |
-| KS-12 | Ansage: Zeitpunkt (vor oder nach der Aktion, Nacht oder Morgen) und Verhalten bei übersprungenen Nächten. (Gruppe 3) |
+| KS-12 | Ansage (Inhalt entschieden: Gesamtzahl, dritte Runde): Zeitpunkt (vor oder nach der Aktion, Nacht oder Morgen) und Verhalten bei übersprungenen Nächten. (Gruppe 3) |
 | KS-13 | Sieg („zehn Finger“): Wann entsteht der Kandidat, was geschieht bei Ablehnung durch die Spielleitung oder Tod in derselben Nacht (Guthaben zurück oder verbraucht)? Regeln DR-02, DR-14, F-11 gelten. |
 | KS-14 | Nachtablauf: Wie wird die Fingerwahl am Tisch erfasst und in der App eingetragen (die Wahl darf die Spielleitung wohl allein sehen)? Wecken in Nächten, die durch Karten ausfallen. (ÜB-9) |
 | KS-15 | Öffentlichkeit: Ist der Tausch sichtbar, und wer sieht die Stapelzahl außerhalb der Ansage? Ablauf des Tauschs am Tisch (wer fordert, wer bestätigt). (ÜB-7) |
 | KS-16 | Kartentexte je Person (ÜB-1, korrigiert): Welche Karten kommen für Wölfe, Dorf, Einzelsiegrollen und Neutrale in Frage, und nach welcher Rolle oder Fraktion, wenn sie sich zwischen Tod und Spielen ändert? |
 | KS-17 | Ziehung: Zufall über den gespeicherten Generator oder Auswahl der Spielleitung, Kartenbestand, Wiederholungen, Gewichtung. (ÜB-4, ÜB-6) |
-| KS-18 | Wiederbelebung durch Karten (`segen_08`, `wende_04`, `wende_07`, `loki_10`): Gelten die Wiederbelebungsregeln W-01 bis W-04 (frischer Start), und was heißt „ursprüngliche Fähigkeit“ bei Einmalfähigkeiten? (Gruppe 1) |
-| KS-19 | `wende_07`: Was ist eine „halbe Fähigkeit“ (auch bei Rollen ohne aktive Fähigkeit)? `loki_10`: Würfel am Tisch oder Generator, was ist eine „Runde“? (Gruppe 1) |
+| KS-18 | Wiederbelebung durch Karten (`segen_08`, `wende_04`, `wende_07`, `loki_10`): Gelten die Wiederbelebungsregeln W-01 bis W-04 (frischer Start), und was heißt „ursprüngliche Fähigkeit“ bei Einmalfähigkeiten? (Gruppe 1) **Gestellt in Abschnitt 10, Frage 4.** |
+| KS-19 | `wende_07`: Was ist eine „halbe Fähigkeit“ (auch bei Rollen ohne aktive Fähigkeit)? `loki_10`: Würfel am Tisch oder Generator, was ist eine „Runde“? (Gruppe 1) **`wende_07` gestellt in Abschnitt 10, Fragen 3 und 5** (der Text erklärt „halb“ selbst als einmalig). |
 | KS-20 | Rollenwechsel durch Karten (`schicksal_08`, `loki_06`): Welche Rollen sind erlaubt, folgt der Zustand der Person oder der Rolle? Wechsel von oder zum Kartenschlucker folgt der Stapelregel (entschieden); Wechsel zum Selbstmörder berührt den Fünf-Tote-Hinweis (6B). (Gruppe 1) |
 | KS-21 | Schild: verhinderte Hinrichtung (Tag endet ohne Opfer oder neue Abstimmung) und Reihenfolge mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen. (Gruppe 2) |
+| KS-22 | Kartenfenster: Reihenfolge mehrerer Toter innerhalb eines Fensters. (Neu, dritte Runde) |
+| KS-23 | Kartenfenster: Neue Todesfälle oder Wiederbelebungen durch eine gerade gespielte Karte; darf eine dabei Wiederbelebte im selben Fenster teilnehmen? (Neu) |
+| KS-24 | Kartenfenster und Siegprüfung: Verhältnis zur bereits anstehenden Siegprüfung, besonders am Tagesende. (Neu) |
+| KS-25 | Aufbewahrte Karte bei Wiederbelebung: Bleibt sie, und wie verhält sie sich zur neuen Karte nach erneutem Tod (1A)? (Neu) |
+| KS-26 | Tagesende ohne Hinrichtung: Gibt es das zweite Kartenfenster trotzdem? (Neu) |
+| KS-27 | Schild: Fallen Rudelangriff, Karteneffekte und Todesketten unter „Rollenfähigkeit“? Gilt „höchstens ein Schild“ je Person oder insgesamt, seit er an die Person gebunden ist? (Neu; ergänzt KS-21) |
+| KS-28 | Rückkehrkarten (Abschnitt 10): Darf sich die Kartenträgerin bei `segen_08` selbst wählen, was gilt ohne passende tote Person, und wirkt ein lebender Wächter am Tor auf zurückkehrende Wölfe (RM-DR-149)? (Neu) |
+
+## 10. Dritte Fragerunde: erste drei Karten der Gruppe 1 (Stand 30.09.2026)
+
+Grundlage sind die verbindlichen Regeln aus dem Decision Log, Abschnitt „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten“. Für diese drei Karten gilt insbesondere: Wiederbelebungskarten gibt es nur in Partien, die von Beginn an Wiederbelebungsrunden sind (`GameState.revival_round`). In solchen Runden wird beim Tod keine Rolle aufgedeckt und Tote schließen nachts die Augen (DI-01). Die Karten werden in einem der beiden Kartenfenster gespielt (Tagesbeginn vor der Diskussion, Tagesende nach Hinrichtung und Todeseffekten). Eine Karte darf aufbewahrt werden. Es gibt keine Prüfung „passende Rolle lebt noch“. Alle Vorschläge unten sind **[V]**, keine Entscheidungen, und nichts davon ist implementiert.
+
+### Karte 1: `segen_08` Zweites Leben (SEGEN)
+
+- **[R] Originaltext:** Wolf: „Ein toter Werwolf deiner Wahl kehrt als vollwertiger Werwolf mit seiner ursprünglichen Rolle zurück.“ · Dorf: „Ein toter Dorfbewohner deiner Wahl kehrt als vollwertiger Dorfbewohner mit seiner ursprünglichen Rolle zurück.“
+- **Praktische Wirkung:** Die tote Kartenträgerin wählt eine andere tote Person ihrer Kartenfraktion. Diese Person lebt wieder, mit ihrer Rolle.
+- **Unklarheit und Wechselwirkung:** Wiederbelebungskarten gibt es nur in Wiederbelebungsrunden, dort sind die Rollen der Toten verdeckt. Eine Dorfkarte verlangt aber „toter Dorfbewohner“: Die Kartenträgerin weiß meist nicht, wer von den Toten Dorf war. Ohne Regel für den Fehlgriff (sie nennt einen toten Wolf) ist die Karte nicht spielbar. Zusätzlich offen: darf sie sich selbst wählen, und was gilt ohne passende tote Person (siehe offene Punkte).
+- **Beispiel am Tisch:** Zwölf Personen, Kutscher im Spiel, also Wiederbelebungsrunde. Anna (Dorf) ist in Nacht 2 gestorben, Ben (Wolf) und Clara (Seherin) sind schon tot, niemand kennt ihre Rollen. Zu Tagesbeginn spielt Anna „Zweites Leben“ und nennt Clara. Ist Clara Dorf, kehrt sie zurück. Hätte Anna Ben genannt, gäbe es keinen passenden Toten.
+- **[V] Überarbeitungsvorschlag:** Text beibehalten. Ergänzen: Die SL prüft die Wahl still gegen die Fraktion. Passt sie nicht, verfällt die Wirkung und die Karte ist verbraucht (Frage 1 A). Wie die Person zurückkehrt, regelt Frage 4.
+
+### Karte 2: `wende_04` Wiedergeburt (WENDE)
+
+- **[R] Originaltext:** Wolf: „Der Spielleiter wählt nach eigenem Ermessen einen toten Werwolf — er kehrt mit seiner ursprünglichen Fähigkeit zurück.“ · Dorf: „Der Spielleiter wählt nach eigenem Ermessen einen toten Dorfbewohner — er kehrt mit seiner ursprünglichen Fähigkeit zurück.“
+- **Praktische Wirkung:** Wie „Zweites Leben“, aber die Spielleitung wählt, nicht die Kartenträgerin. Die Spielleitung kennt alle Rollen, deshalb entsteht kein Fehlgriff.
+- **Unklarheit und Wechselwirkung:** Der Text ist eindeutig. Der Unterschied zu „Zweites Leben“ ist nur, wer wählt (und „Fähigkeit“ statt „Rolle“, was hier dasselbe meint). Offen ist nur, ob „nach eigenem Ermessen“ auch die Kartenträgerin selbst umfasst: Der Text nennt keine Ausnahme. Die Legacy-Kartenbedingung (lebende Wiederbelebungsrolle) entfällt nach der neuen Regel.
+- **Beispiel am Tisch:** Tagesende, nach der Hinrichtung. Dora (Wolf) ist tot und spielt „Wiedergeburt“. Die Spielleitung wählt nach Ermessen unter allen toten Wölfen, vielleicht Dora selbst, vielleicht Emil. Der Gewählte kehrt mit seiner Rolle zurück.
+- **[V] Überarbeitungsvorschlag:** Text unverändert beibehalten, Karte bleibt neben „Zweites Leben“ bestehen (Frage 2 A). Nur die Rückkehr wird nach Frage 4 festgelegt.
+
+### Karte 3: `wende_07` Befreiung (WENDE)
+
+- **[R] Originaltext:** Wolf: „Ein toter Werwolf kehrt mit halber Fähigkeit zurück — er darf sie einmalig einsetzen, dann stirbt er erneut.“ · Dorf: „Ein toter Dorfbewohner kehrt mit halber Fähigkeit zurück — er darf sie einmalig einsetzen, dann stirbt er erneut.“
+- **Praktische Wirkung:** Eine tote Person kommt kurz zurück, darf ihre Fähigkeit genau einmal einsetzen und stirbt dann wieder. Der Gedankenstrich erklärt „halbe Fähigkeit“ selbst: gemeint ist einmalig. Dieser Teil ist also nicht unklar.
+- **Unklarheit und Wechselwirkung:** (1) Der Text sagt nicht, wer die Person wählt. (2) „Dann stirbt er erneut“ hat keinen Zeitpunkt: Rollen ohne einsetzbare Fähigkeit (einfacher Dorfbewohner) oder eine nie eingesetzte Fähigkeit würden nie zum zweiten Tod führen, die Rückkehr wäre dauerhaft. (3) Der zweite Tod gibt nach 1A eine neue Karte mit neuer Tauschmöglichkeit (bestätigt, keine Frage).
+- **Beispiel am Tisch:** Frieda (Dorfbewohnerin, keine aktive Fähigkeit) ist tot, die Karte holt sie zurück. Sie hat nichts, das sie „einmalig einsetzen“ könnte. Stirbt sie erneut, wann?
+- **[V] Überarbeitungsvorschlag:** Wer wählt: Zufall über den gespeicherten Generator (Frage 5 C). Zweiter Tod: mit Beginn des Morgens nach der ersten Nacht nach der Rückkehr, gleich ob eingesetzt oder nicht (Frage 3 B). Rückkehr nach Frage 4.
+
+### Fragen
+
+Jede Frage: drei Möglichkeiten, dazu immer die freie Antwort D. Die Empfehlung ist ein Vorschlag, keine Entscheidung.
+
+**Frage 1 (`segen_08`): Was passiert, wenn die Kartenträgerin eine Person nennt, die nicht zur Kartenfraktion gehört?**
+- **A (Empfehlung):** Die SL prüft still. Passt die Person nicht, geschieht nichts und die Karte ist verbraucht. Die Kartenträgerin erfährt nur „nichts geschehen“.
+- **B:** Die SL sagt „nicht möglich“, die Karte bleibt aufbewahrt und darf im nächsten Kartenfenster neu versucht werden.
+- **C:** Das Fraktionswort im Text entfällt: Jede tote Person kann gewählt werden, sie kehrt mit ihrer Rolle zurück (Textänderung).
+- **D:** Eigene Antwort.
+
+Begründung: Rollen Toter sind in Wiederbelebungsrunden geheim. B erlaubt Ausprobieren über mehrere Fenster und verrät so nach und nach Fraktionen. C beseitigt das Problem, macht aus der Dorfkarte aber auch eine Wolfskarte. A hält den Text und verrät höchstens ein Stück Information einmalig.
+
+**Frage 2 (`wende_04`): Wie geht es mit „Wiedergeburt“ weiter?**
+- **A (Empfehlung):** Unverändert beibehalten. Die SL wählt frei, die Kartenträgerin ist als Ziel nicht ausgeschlossen. Die Karte bleibt neben „Zweites Leben“.
+- **B:** Beibehalten, aber die Kartenträgerin darf nicht selbst das Ziel sein (Text: „eine andere tote Person“).
+- **C:** Die Karte entfällt oder wird durch eine neue ersetzt, weil sie „Zweites Leben“ fast doppelt (Inhalt dann gesondert).
+- **D:** Eigene Antwort.
+
+Begründung: Der Text ist eindeutig, und Ermessen der SL ist gewollt. Der Text nennt keine Ausnahme für die Kartenträgerin, und Rollenbeschränkungen sollen nicht aus Bequemlichkeit erfunden werden. Die Antwort entscheidet die Selbstwahl nur für diese Karte, nicht für `segen_08`.
+
+**Frage 3 (`wende_07`): Wann stirbt die Person erneut?**
+- **A:** Wörtlich: erst nach dem Einsatz. Ohne Einsatz oder ohne einsetzbare Fähigkeit bleibt die Person am Leben.
+- **B (Empfehlung):** Feste Frist: Die Rückkehr gilt für genau eine Nacht. Am folgenden Morgen stirbt die Person erneut, ob eingesetzt oder nicht (Textänderung).
+- **C:** Wörtlich wie A, aber Rollen ohne einsetzbare Fähigkeit sind keine gültigen Ziele.
+- **D:** Eigene Antwort.
+
+Begründung: A macht eine „kurze Rückkehr“ bei fähigkeitslosen Rollen zur dauerhaften Wiederbelebung. C schließt viele Tote als Ziel aus, obwohl „toter Dorfbewohner“ sie einschließt. B ist überall spielbar und passt zum Kartennamen und zur Absicht „nur einmal“.
+
+**Frage 4 (übergreifend, gilt für alle drei Karten und KS-18): Was heißt „ursprüngliche Rolle“ bei der Rückkehr?**
+- **A:** Die Rolle, die die Person beim Tod hatte, mit frischem Start (Einsätze zurück, beendete Bindungen bleiben beendet, wie W-01 bis W-04). Die Rolle wird privat mitgeteilt, die Rückkehr ist sichtbar, die Person handelt ab der folgenden Nacht. Hält die Rolle inzwischen eine andere lebende Person, gibt es sie doppelt.
+- **B (Empfehlung):** Wie A, aber hält die Rolle inzwischen eine andere lebende Person, kehrt die Person als Standardrolle ihrer Fraktion zurück (Dorfbewohner bzw. Werwolf), wie bei Frankenstein (W-04, Rolle, die gerade niemand hat).
+- **C:** Wörtlich die Startrolle bei Spielbeginn, sonst wie A (kann der Kartenfraktion widersprechen, etwa wenn ein Lehrling die Wolfsrolle erbte).
+- **D:** Eigene Antwort.
+
+Begründung: In der Startbesetzung kommt jede Rolle höchstens einmal vor (PE-07), Frankenstein vergibt nur freie Rollen. B hält diese Linie. C führt bei Rollenwechsel zu Widersprüchen zwischen Rolle und Kartentext. Hinweis: Ob ein lebender Wächter am Tor eine zurückkehrende Wölfin zur Dorfbewohnerin macht (RM-DR-149), bleibt offen.
+
+**Frage 5 (`wende_07`): Wer wählt die zurückkehrende Person?**
+- **A:** Die Kartenträgerin (wie „Zweites Leben“, samt Fehlgriff-Regel aus Frage 1).
+- **B:** Die Spielleitung nach Ermessen (wie „Wiedergeburt“).
+- **C (Empfehlung):** Der gespeicherte Zufallsgenerator zieht eine passende tote Person, niemand wählt.
+- **D:** Eigene Antwort.
+
+Begründung: Der Text nennt keine wählende Instanz. Mit A oder B wäre die Karte eine schwächere Kopie von „Zweites Leben“ bzw. „Wiedergeburt“, C macht die drei Karten unterscheidbar und braucht keine Fehlgriff-Regel. Zufall läuft über den gespeicherten Generator (Projektregel, ÜB-4).
+
+### Offene Abhängigkeiten dieser Runde (nicht gefragt, nicht entschieden)
+
+- Darf die Kartenträgerin bei `segen_08` sich selbst wählen? Und was gilt bei allen drei Karten, wenn keine passende tote Person existiert (nicht einsetzbar und aufbewahrt, oder verfällt)?
+- Ob ein lebender Wächter am Tor einen zurückkehrenden Wolf beeinflusst (RM-DR-149).
+- Reihenfolge mehrerer Toter im Kartenfenster; neue Todesfälle oder Wiederbelebungen durch eine gespielte Karte; Verhältnis zur anstehenden Siegprüfung; Tagesende ohne Hinrichtung; aufbewahrte Karte bei Wiederbelebung (Decision Log, dritte Runde).
+- Welche weiteren Karten als Wiederbelebungskarten gelten, und der Kartenbestand normaler Partien (ÜB-6, KS-16, KS-17).
+- Bezug „nächste Nacht“ und „nächster Lynch“ je Kartenfenster (ÜB-3); Öffentlichkeit der Kartenwahl (ÜB-7, KS-15).

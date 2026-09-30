@@ -6,6 +6,8 @@ Stand: 30.09.2026, Branch `feature/night-ui-expansion`. Reine Vorbereitung: kein
 
 **Nachtrag 30.09.2026 (Kartenschlucker-Grundregeln):** Die zweite Antwortrunde hat Tausch, Nachtaktion (Tötung und Schild kosten Stapel), Sieg (nur durch die Zehn-Finger-Aktion), Ansage (feste Nächte 3, 6, 9) und Stapel bei Rollenwechsel entschieden; siehe Decision Log „Kartenschlucker, Grundregeln“. **Überholt** sind damit in dieser Vorlage der Rollentext-Wortlaut „Bei 10 Stapeln gewinnt er sofort“ in Abschnitt 1, die Abschnitte 3 und 5 (Sieg bei 10 als Stapelschwelle) und die Antworten A bis C der Fragen 4 und 5 in Abschnitt 6. Es entsteht keine zweite Regelquelle: gültig ist nur der Decision Log.
 
+**Nachtrag 30.09.2026 (dritte Runde):** Schild (verhindert Tod durch Rollenfähigkeit oder Hinrichtung, gehört zur Person, bleibt über Rollenwechsel, Tod und Wiederbelebung), Inhalt der Ansage (Gesamtzahl aller gesammelten Stapel), Zeitpunkt des Spielens und Tauschens (zwei Kartenfenster) und Wiederbelebungskarten (nur in Wiederbelebungsrunden, keine Prüfung „Rolle lebt“) sind entschieden; siehe Decision Log „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten“. Damit präzisiert bzw. überholt: die „Stapelzahl“-Ansage in Frage 4 (Option B) nennt die Gesamtzahl, nicht das Restguthaben, und die Legacy-Kartenbedingung „lebende Wiederbelebungsrolle“ entfällt als Prüfung. Keine zweite Regelquelle.
+
 ## 1. Was ist schon verbindlich?
 
 | Regel | Quelle |

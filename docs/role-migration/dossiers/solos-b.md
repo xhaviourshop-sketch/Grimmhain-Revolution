@@ -117,7 +117,7 @@ Gemeinsame Grundlagen (für alle sechs Rollen geprüft):
 
 ### kartenschlucker
 
-> **Hinweis 30.09.2026:** Dieser Abschnitt ist die Legacy-Analyse und bleibt als historische Quelle unverändert. Die aktuelle Regel steht im Decision Log („Kartenschlucker, Grundregeln“). Ersetzt sind insbesondere: „Bei 10 Stapeln gewinnt er sofort“, die kostenlose Tötung ab 2 Stapeln und der jede Nacht neu gesetzte Schild ab 5 Stapeln (Legacy-Punkte 5 und 6 unten und die Dossier-Fragen 1 bis 5 sind entschieden oder neu gefasst).
+> **Hinweis 30.09.2026:** Dieser Abschnitt ist die Legacy-Analyse und bleibt als historische Quelle unverändert. Die aktuelle Regel steht im Decision Log („Kartenschlucker, Grundregeln“). Ersetzt sind insbesondere: „Bei 10 Stapeln gewinnt er sofort“, die kostenlose Tötung ab 2 Stapeln und der jede Nacht neu gesetzte Schild ab 5 Stapeln (Legacy-Punkte 5 und 6 unten und die Dossier-Fragen 1 bis 5 sind entschieden oder neu gefasst). Dritte Runde (30.09.2026, Decision Log „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten“): Die Ansage nennt die Gesamtzahl aller gesammelten Stapel (Legacy-Punkt 7 und Dossier-Frage 4 sind damit beantwortet); der Schild gehört zur Person und bleibt bei Rollenwechsel wirksam, ein unverbrauchter Schild bleibt über Tod und Wiederbelebung.
 
 - DE-Name / EN-Name: Kartenschlucker / The Collector (`roles:184`).
 - Aliase/Altnamen: keine Migration in `state:18`. i18n-Laufzeitübersetzung für Hinweis (`i18n:784`, `i18n:1063`). Bilder `assets/cards/de/Kartenschlucker.webp`, EN `assets/cards/en/The_Collector.webp` (`gh:835`, `roleCard.ts:72`). Todesursache `KARTENSCHLUCKER_KILL` (`chunk:228`, Label `ui:414`).
