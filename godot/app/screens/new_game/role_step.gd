@@ -38,6 +38,8 @@ var _last_view: Dictionary = {}
 ## PE-07: Rollen über der Höchstzahl der Startbesetzung stehen namentlich im scrollbaren Listenkopf, nicht in der Seitenspalte.
 @onready var _over_limit: GrimmLabel = %OverLimitLabel
 @onready var _scroll: ScrollContainer = %RoleScroll
+## Die Seitenspalte scrollt, wenn Hinweise (zwei Zeilen, DE) sie höher machen als das Fenster: nichts verlässt den Bildschirm.
+@onready var _side_scroll: ScrollContainer = %RoleSideScroll
 @onready var _list: VBoxContainer = %RoleList
 @onready var _back: GrimmButton = %BackToPlayersButton
 @onready var _status: GrimmLabel = %RoleStatusLabel
@@ -51,6 +53,7 @@ func start(setup: PlayerSetup) -> void:
 	_scroll.custom_minimum_size.y = ThemeTokens.ROLE_LIST_MIN_HEIGHT
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.follow_focus = true
+	_side_scroll.follow_focus = true
 	_build_rows()
 	_suggest.pressed.connect(_on_suggest_pressed)
 	_reset.pressed.connect(_on_reset_pressed)

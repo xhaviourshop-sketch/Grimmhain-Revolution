@@ -381,6 +381,7 @@ func test_confirm_roles_creates_no_game() -> void:
 func _check_layout(shell: Control, label: String) -> void:
 	var screen := current_screen(shell)
 	var scroll := find_node(screen, "RoleScroll") as ScrollContainer
+	var side_scroll := find_node(screen, "RoleSideScroll") as ScrollContainer
 	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
 	var root: Control = screen
 	var dialog := _dialog(shell)
@@ -392,6 +393,9 @@ func _check_layout(shell: Control, label: String) -> void:
 			continue
 		var r := rect_of(c)
 		var in_scroll := scroll != null and scroll.is_ancestor_of(c)
+		var in_side := side_scroll != null and side_scroll.is_ancestor_of(c)
+		if in_side:
+			continue  # Seitenspalte: eigene Prüfung in _side_column_reachable
 		if in_scroll:
 			if not r.intersects(rect_of(scroll)) or (c is BaseButton and not inside(r, rect_of(scroll))):
 				continue
@@ -436,9 +440,7 @@ func _layout_case(size: Vector2i, locale: String, label: String, counts: Diction
 func test_role_step_layout() -> void:
 	# 82, 83, 86, 87, 89
 	await _layout_case(SIZE_4_3, "de", "1024×768 DE leer", {})
-	# Eine Fehlerzeile (keine Einzelsiegrolle), wie im früheren Fall. Zwei Zeilen zugleich (keine Dorf- und keine Einzelsiegrolle)
-	# schieben die Ansicht bei 1024×768 um 24 px aus dem Fenster; das war schon vor PE-07 so (mit dem Stand 6ff63f4 nachgewiesen,
-	# {"werwolf": 1} allein) und ist nicht Teil dieses Auftrags: Befund in PROGRESS.md.
+	# Zweizeilige Fehler der Seitenspalte: eigener Test test_side_column_two_line_issue_stays_reachable.
 	await _layout_case(SIZE_4_3, "de", "1024×768 DE Fehler", _village(6).merged({"werwolf": 1}))
 	await _layout_case(SIZE_16_10, "en", "1280×800 EN", _village(5).merged({"werwolf": 1, "manipulator": 1}))
 	await _layout_case(SIZE_16_10, "de", "1280×800 DE Überschreibdialog", {"werwolf": 1, "dorfbewohner": 1, "amalia": 1, "detektiv": 1}, true)
@@ -448,6 +450,46 @@ func test_role_step_layout() -> void:
 	var hinted := {"werwolf": 1, "blutwolf": 1, "kutscher": 1, "parasit": 1, "voodoo-priester": 1, "dorfbewohner": 1, "amalia": 1, "detektiv": 1}
 	await _layout_case(SIZE_4_3, "de", "1024×768 DE Hinweise", hinted)
 	await _layout_case(SIZE_16_10, "en", "1280×800 EN Hinweise", hinted)
+
+
+## Zwei Zeilen in der Fehlermeldung der Seitenspalte (nur Werwolf, keine Dorf- und keine Einzelsiegrolle) schoben die Ansicht bei
+## 1024×768 um 24 px aus dem Fenster. Alle Bedienelemente und Hinweise müssen erreichbar bleiben (ggf. per Scrollen der Spalte).
+func test_side_column_two_line_issue_stays_reachable() -> void:
+	for locale: String in ["de", "en"]:
+		await _layout_case(SIZE_4_3, locale, "1024×768 %s zweizeilige Fehler" % locale, {"werwolf": 1})
+		await _side_column_reachable(SIZE_4_3, locale, {"werwolf": 1})
+		await _side_column_reachable(SIZE_4_3, locale, {"werwolf": 1, "blutwolf": 1, "kutscher": 1, "parasit": 1, "voodoo-priester": 1, "dorfbewohner": 1, "amalia": 1, "detektiv": 1})
+
+
+## Die Seitenspalte liegt im Fenster; jedes ihrer Elemente ist sichtbar oder per Scrollen der Spalte erreichbar (Scrollen bis zum
+## letzten Element, danach liegt es vollständig im sichtbaren Ausschnitt).
+func _side_column_reachable(size: Vector2i, locale: String, counts: Dictionary) -> void:
+	var shell := await spawn_shell(size, locale)
+	if shell == null:
+		return
+	var screen := await _to_roles(shell, 8)
+	await _set_counts(shell, counts)
+	await frames(3)
+	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
+	var side := find_node(screen, "RoleSideScroll") as ScrollContainer
+	assert_true(side != null and inside(rect_of(side), viewport), "%s %s: Seitenspalte im Fenster (%s)" % [size, locale, rect_of(side) if side != null else Rect2()])
+	if side == null:
+		return
+	var column := find_node(screen, "RoleSideColumn") as Control
+	for c: Control in visible_controls(column):
+		if c.size.x <= 0.0 or c.size.y <= 0.0 or not c is BaseButton and not c is Label:
+			continue
+		assert_true(rect_of(c).position.x >= rect_of(side).position.x - 0.5 and rect_of(c).end.x <= rect_of(side).end.x + 0.5, "%s %s: %s nicht seitlich abgeschnitten" % [size, locale, c.name])
+	side.scroll_vertical = int(side.get_v_scroll_bar().max_value)
+	await frames(2)
+	for name: String in ["ResetRolesButton", "RevivalRoundLabel"]:
+		var c := find_node(screen, name) as Control
+		assert_true(c != null and inside(rect_of(c), rect_of(side)), "%s %s: %s nach Scrollen vollständig sichtbar (%s in %s)" % [size, locale, name, rect_of(c), rect_of(side)])
+	side.scroll_vertical = 0
+	await frames(2)
+	var suggest := find_node(screen, "SuggestButton") as Control
+	assert_true(inside(rect_of(suggest), rect_of(side)), "%s %s: Vorschlag oben ohne Scrollen sichtbar" % [size, locale])
+	await after_each()
 
 
 func test_role_list_scrolls_completely() -> void:
