@@ -145,6 +145,7 @@ test("Vorlagen des Projekts: Mittelteil, mehrere Teile und Suffix", () => {
   assert.ok(templateRegex("ui.cockpit.action.%s.%s.%s").test("ui.cockpit.action.a.b.c"));
   assert.ok(templateRegex("ui.setup.distribution.mode.%s_hint").test("ui.setup.distribution.mode.manual_hint"));
   assert.ok(templateRegex("ui.setup.error.").test("ui.setup.error.too_many"));
+  assert.ok(templateRegex("ui.rulebook.%s.b%02d").test("ui.rulebook.c01.b07"), "Breitenangabe wie %02d gilt als Platzhalter");
 });
 
 test("Rollengruppe: jede ID aus dem Katalog braucht Name und Kurzname (Bindestrich → Unterstrich)", () => {

@@ -256,7 +256,7 @@ function scanSources(sources) {
 }
 
 function templateRegex(template) {
-  const parts = template.split(/%[sd]/).map((p) => p.replace(/\./g, "\\."));
+  const parts = template.split(/%0?\d*[sd]/).map((p) => p.replace(/\./g, "\\."));
   let src = parts.join("[a-z0-9_]+");
   if (template.endsWith(".")) src += "[a-z0-9_]+(?:\\.[a-z0-9_]+)*";
   return new RegExp(`^${src}$`);
