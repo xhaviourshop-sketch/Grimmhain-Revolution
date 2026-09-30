@@ -35,7 +35,7 @@ func _setup() -> void:
 	_distribution_step.seating_requested.connect(_go_to.bind(&"seating"))
 	_seating_step.distribution_requested.connect(_go_to.bind(&"distribution"))
 	_seating_step.start_requested.connect(_on_start_requested)
-	_player_step.start(context.setup)
+	_player_step.start(context.setup, context.groups)
 	_role_step.start(context.setup)
 	_distribution_step.start(context.setup)
 	_seating_step.start(context.setup)

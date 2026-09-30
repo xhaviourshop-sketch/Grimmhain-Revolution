@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://app/screens/new_game/player_step.gd" id="1_step"]
 [ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
 [ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+[ext_resource type="PackedScene" path="res://app/screens/new_game/group_card.tscn" id="4_group"]
 
 [node name="PlayerStep" type="VBoxContainer"]
 anchors_preset = 15
@@ -158,6 +159,9 @@ script = ExtResource("2_button")
 text_key = "ui.setup.edit.save"
 kind = 1
 
+[node name="GroupCard" parent="Body/SideColumn" instance=ExtResource("4_group")]
+unique_name_in_owner = true
+
 [node name="FeedbackLabel" type="Label" parent="Body/SideColumn"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -187,6 +191,26 @@ vertical_alignment = 1
 script = ExtResource("3_label")
 text_key = "ui.setup.count"
 wrap = false
+
+[node name="GroupButtons" type="HBoxContainer" parent="Body/ListColumn"]
+layout_mode = 2
+theme_type_variation = &"ButtonRow"
+
+[node name="LoadGroupButton" type="Button" parent="Body/ListColumn/GroupButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.groups.open"
+kind = 1
+
+[node name="SaveGroupButton" type="Button" parent="Body/ListColumn/GroupButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.groups.save"
+kind = 1
 
 [node name="MinimumHintLabel" type="Label" parent="Body/ListColumn"]
 unique_name_in_owner = true

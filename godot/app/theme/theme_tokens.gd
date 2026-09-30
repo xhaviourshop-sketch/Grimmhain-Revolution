@@ -72,6 +72,7 @@ const DRAWER_WIDTH := 520             ## Cockpit: Schublade für Protokoll und S
 const SETUP_SIDE_WIDTH := 360        ## Spieler-Setup: Spalte für Eingabe, Import, Bearbeiten
 const INPUT_HEIGHT := 56              ## Texteingabefelder
 const IMPORT_TEXT_MIN_HEIGHT := 96    ## mehrzeiliges Importfeld
+const GROUP_LIST_MIN_HEIGHT := 96     ## Liste gespeicherter Spielergruppen
 const PERSON_NUMBER_WIDTH := 44       ## Listennummer in der Personenzeile
 const ROLE_COUNT_WIDTH := 56          ## Anzahl zwischen Minus und Plus in der Rollenzeile
 const ASSIGNMENT_STATE_WIDTH := 200   ## Spalte „zugewiesen“ bzw. Rolle und Scheinrolle in der Zuordnungszeile

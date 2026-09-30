@@ -35,6 +35,8 @@ func _enter_tree() -> void:
 		app_context = AppContext.new()
 		if settings_store == null:
 			settings_store = SettingsStore.new()
+		app_context.groups.path = GroupStore.DEFAULT_PATH
+		app_context.groups.load_from_disk()
 	if settings_store != null:
 		app_context.use_settings_store(settings_store)
 	else:

@@ -5513,3 +5513,158 @@ msgid "ui.role.grabraeuber.lex.open"
 msgstr "Which roles can be stolen and what exactly is taken over is technically derived and not yet confirmed."
 
 # --- Ende Rollenlexikon ---
+
+# --- Player groups ---
+
+msgid "ui.groups.save"
+msgstr "Save group"
+
+msgid "ui.groups.open"
+msgstr "Load group"
+
+msgid "ui.groups.heading"
+msgstr "Saved groups"
+
+msgid "ui.groups.empty"
+msgstr "No group saved yet. Save the current name list as a group to load it again later."
+
+msgid "ui.groups.entry"
+msgstr "{name} · {count} names"
+
+msgid "ui.groups.preview"
+msgstr "Names: {players}"
+
+msgid "ui.groups.load"
+msgstr "Load"
+
+msgid "ui.groups.rename"
+msgstr "Rename"
+
+msgid "ui.groups.update"
+msgstr "Update"
+
+msgid "ui.groups.delete"
+msgstr "Delete"
+
+msgid "ui.groups.close"
+msgstr "Back to entry"
+
+msgid "ui.groups.status.unreadable"
+msgstr "The saved groups could not be read. The damaged file was set aside and the list is empty."
+
+msgid "ui.groups.status.newer_version"
+msgstr "The group file comes from a newer app version and was not loaded. It was set aside unchanged."
+
+msgid "ui.groups.status.skipped"
+msgstr "{count} damaged group(s) were skipped."
+
+msgid "ui.groups.status.recovered"
+msgstr "The groups were loaded from the backup copy."
+
+msgid "ui.groups.dialog.save.title"
+msgstr "Save group"
+
+msgid "ui.groups.dialog.save.message"
+msgstr "The current list of {count} names is saved under a group name. Roles and seats are not saved."
+
+msgid "ui.groups.dialog.save.confirm"
+msgstr "Save"
+
+msgid "ui.groups.dialog.name_placeholder"
+msgstr "Group name"
+
+msgid "ui.groups.dialog.exists.title"
+msgstr "Group already exists"
+
+msgid "ui.groups.dialog.exists.message"
+msgstr "A group “{name}” with {old} names already exists. Replace it with the current list of {count} names?"
+
+msgid "ui.groups.dialog.exists.confirm"
+msgstr "Replace group"
+
+msgid "ui.groups.dialog.load.title"
+msgstr "Replace list?"
+
+msgid "ui.groups.dialog.load.message"
+msgstr "The current list of {current} names is replaced by the group “{name}” with {count} names. Role choice, distribution and seating of this draft are discarded. The saved group stays unchanged."
+
+msgid "ui.groups.dialog.load.confirm"
+msgstr "Replace list"
+
+msgid "ui.groups.dialog.rename.title"
+msgstr "Rename group"
+
+msgid "ui.groups.dialog.rename.message"
+msgstr "New name for the group “{name}”:"
+
+msgid "ui.groups.dialog.rename.confirm"
+msgstr "Rename"
+
+msgid "ui.groups.dialog.update.title"
+msgstr "Update group?"
+
+msgid "ui.groups.dialog.update.message"
+msgstr "The names of the group “{name}” ({old} names) are replaced by the current list ({count} names)."
+
+msgid "ui.groups.dialog.update.confirm"
+msgstr "Update group"
+
+msgid "ui.groups.dialog.delete.title"
+msgstr "Delete group?"
+
+msgid "ui.groups.dialog.delete.message"
+msgstr "The group “{name}” with {count} names is deleted permanently. The current list stays unchanged."
+
+msgid "ui.groups.dialog.delete.confirm"
+msgstr "Delete"
+
+msgid "ui.groups.info.saved"
+msgstr "Group “{name}” saved with {count} names."
+
+msgid "ui.groups.info.loaded"
+msgstr "Group “{name}” loaded: {count} names."
+
+msgid "ui.groups.info.renamed"
+msgstr "Group renamed to “{name}”."
+
+msgid "ui.groups.info.updated"
+msgstr "Group “{name}” updated with {count} names."
+
+msgid "ui.groups.info.deleted"
+msgstr "Group “{name}” deleted."
+
+msgid "ui.groups.error.empty_name"
+msgstr "Please enter a group name."
+
+msgid "ui.groups.error.invalid_characters"
+msgstr "The group name contains control characters."
+
+msgid "ui.groups.error.name_too_long"
+msgstr "The group name is too long (at most {max_length} characters)."
+
+msgid "ui.groups.error.no_players"
+msgstr "The list is empty. Add names first."
+
+msgid "ui.groups.error.too_many_persons"
+msgstr "A group can have at most {max} names."
+
+msgid "ui.groups.error.empty_player"
+msgstr "The list contains an empty name."
+
+msgid "ui.groups.error.invalid_player_characters"
+msgstr "A name in the list contains control characters."
+
+msgid "ui.groups.error.player_name_too_long"
+msgstr "A name in the list is too long."
+
+msgid "ui.groups.error.name_taken"
+msgstr "A group named “{name}” already exists."
+
+msgid "ui.groups.error.unknown_group"
+msgstr "This group no longer exists."
+
+msgid "ui.groups.error.write_failed"
+msgstr "Saving is not possible. The last saved groups stay unchanged."
+
+msgid "ui.groups.error.load_failed"
+msgstr "The group “{name}” could not be loaded. The current list stays unchanged."

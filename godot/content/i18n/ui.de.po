@@ -5513,3 +5513,158 @@ msgid "ui.role.grabraeuber.lex.open"
 msgstr "Welche Rollen stehlbar sind und was genau übernommen wird, ist technisch abgeleitet und noch nicht bestätigt."
 
 # --- Ende Rollenlexikon ---
+
+# --- Spielergruppen ---
+
+msgid "ui.groups.save"
+msgstr "Gruppe speichern"
+
+msgid "ui.groups.open"
+msgstr "Gruppe laden"
+
+msgid "ui.groups.heading"
+msgstr "Gespeicherte Gruppen"
+
+msgid "ui.groups.empty"
+msgstr "Noch keine Gruppe gespeichert. Speichere die aktuelle Namensliste als Gruppe, um sie später wieder zu laden."
+
+msgid "ui.groups.entry"
+msgstr "{name} · {count} Namen"
+
+msgid "ui.groups.preview"
+msgstr "Namen: {players}"
+
+msgid "ui.groups.load"
+msgstr "Laden"
+
+msgid "ui.groups.rename"
+msgstr "Umbenennen"
+
+msgid "ui.groups.update"
+msgstr "Aktualisieren"
+
+msgid "ui.groups.delete"
+msgstr "Löschen"
+
+msgid "ui.groups.close"
+msgstr "Zurück zur Eingabe"
+
+msgid "ui.groups.status.unreadable"
+msgstr "Die gespeicherten Gruppen konnten nicht gelesen werden. Die beschädigte Datei wurde beiseitegelegt, die Liste ist leer."
+
+msgid "ui.groups.status.newer_version"
+msgstr "Die Gruppendatei stammt aus einer neueren App-Version und wurde nicht geladen. Sie wurde unverändert beiseitegelegt."
+
+msgid "ui.groups.status.skipped"
+msgstr "{count} beschädigte Gruppe(n) wurden übersprungen."
+
+msgid "ui.groups.status.recovered"
+msgstr "Die Gruppen wurden aus der Sicherungskopie geladen."
+
+msgid "ui.groups.dialog.save.title"
+msgstr "Gruppe speichern"
+
+msgid "ui.groups.dialog.save.message"
+msgstr "Die aktuelle Liste mit {count} Namen wird unter einem Gruppennamen gespeichert. Rollen und Sitzplätze werden nicht gespeichert."
+
+msgid "ui.groups.dialog.save.confirm"
+msgstr "Speichern"
+
+msgid "ui.groups.dialog.name_placeholder"
+msgstr "Gruppenname"
+
+msgid "ui.groups.dialog.exists.title"
+msgstr "Gruppe existiert bereits"
+
+msgid "ui.groups.dialog.exists.message"
+msgstr "Es gibt schon eine Gruppe „{name}“ mit {old} Namen. Soll sie durch die aktuelle Liste mit {count} Namen ersetzt werden?"
+
+msgid "ui.groups.dialog.exists.confirm"
+msgstr "Gruppe ersetzen"
+
+msgid "ui.groups.dialog.load.title"
+msgstr "Liste ersetzen?"
+
+msgid "ui.groups.dialog.load.message"
+msgstr "Die aktuelle Liste mit {current} Namen wird durch die Gruppe „{name}“ mit {count} Namen ersetzt. Rollenwahl, Verteilung und Sitzordnung dieses Entwurfs werden verworfen. Die gespeicherte Gruppe bleibt unverändert."
+
+msgid "ui.groups.dialog.load.confirm"
+msgstr "Liste ersetzen"
+
+msgid "ui.groups.dialog.rename.title"
+msgstr "Gruppe umbenennen"
+
+msgid "ui.groups.dialog.rename.message"
+msgstr "Neuer Name für die Gruppe „{name}“:"
+
+msgid "ui.groups.dialog.rename.confirm"
+msgstr "Umbenennen"
+
+msgid "ui.groups.dialog.update.title"
+msgstr "Gruppe aktualisieren?"
+
+msgid "ui.groups.dialog.update.message"
+msgstr "Die Namen der Gruppe „{name}“ ({old} Namen) werden durch die aktuelle Liste ({count} Namen) ersetzt."
+
+msgid "ui.groups.dialog.update.confirm"
+msgstr "Gruppe aktualisieren"
+
+msgid "ui.groups.dialog.delete.title"
+msgstr "Gruppe löschen?"
+
+msgid "ui.groups.dialog.delete.message"
+msgstr "Die Gruppe „{name}“ mit {count} Namen wird endgültig gelöscht. Die aktuelle Liste bleibt unverändert."
+
+msgid "ui.groups.dialog.delete.confirm"
+msgstr "Löschen"
+
+msgid "ui.groups.info.saved"
+msgstr "Gruppe „{name}“ mit {count} Namen gespeichert."
+
+msgid "ui.groups.info.loaded"
+msgstr "Gruppe „{name}“ geladen: {count} Namen."
+
+msgid "ui.groups.info.renamed"
+msgstr "Gruppe umbenannt in „{name}“."
+
+msgid "ui.groups.info.updated"
+msgstr "Gruppe „{name}“ mit {count} Namen aktualisiert."
+
+msgid "ui.groups.info.deleted"
+msgstr "Gruppe „{name}“ gelöscht."
+
+msgid "ui.groups.error.empty_name"
+msgstr "Bitte gib einen Gruppennamen ein."
+
+msgid "ui.groups.error.invalid_characters"
+msgstr "Der Gruppenname enthält Steuerzeichen."
+
+msgid "ui.groups.error.name_too_long"
+msgstr "Der Gruppenname ist zu lang (höchstens {max_length} Zeichen)."
+
+msgid "ui.groups.error.no_players"
+msgstr "Die Liste ist leer. Füge zuerst Namen hinzu."
+
+msgid "ui.groups.error.too_many_persons"
+msgstr "Eine Gruppe darf höchstens {max} Namen haben."
+
+msgid "ui.groups.error.empty_player"
+msgstr "Die Liste enthält einen leeren Namen."
+
+msgid "ui.groups.error.invalid_player_characters"
+msgstr "Ein Name in der Liste enthält Steuerzeichen."
+
+msgid "ui.groups.error.player_name_too_long"
+msgstr "Ein Name in der Liste ist zu lang."
+
+msgid "ui.groups.error.name_taken"
+msgstr "Eine Gruppe mit dem Namen „{name}“ gibt es bereits."
+
+msgid "ui.groups.error.unknown_group"
+msgstr "Diese Gruppe gibt es nicht mehr."
+
+msgid "ui.groups.error.write_failed"
+msgstr "Speichern nicht möglich. Die zuletzt gespeicherten Gruppen bleiben unverändert."
+
+msgid "ui.groups.error.load_failed"
+msgstr "Die Gruppe „{name}“ konnte nicht geladen werden. Die aktuelle Liste bleibt unverändert."

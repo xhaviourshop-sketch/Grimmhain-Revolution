@@ -9,6 +9,7 @@ var settings: AppSettings
 var session: GameSession
 var setup: PlayerSetup  ## Setup-Entwurf „Neue Partie“, bleibt über Navigation und Sprachwechsel erhalten
 var saves: SaveService
+var groups: GroupStore  ## gespeicherte Spielergruppen; ohne Pfad nur im Speicher (die Shell setzt beim echten Start den Pfad)
 var settings_store: SettingsStore = null  ## null = Einstellungen nur im Speicher (Tests, Screenshot-Werkzeug)
 
 
@@ -17,6 +18,7 @@ func _init(p_settings: AppSettings = null, p_session: GameSession = null) -> voi
 	session = p_session if p_session != null else GameSession.new()
 	setup = PlayerSetup.new()
 	saves = SaveService.new()
+	groups = GroupStore.new()
 	session.events_applied.connect(_on_events_applied)
 	session.state_replaced.connect(autosave)
 
