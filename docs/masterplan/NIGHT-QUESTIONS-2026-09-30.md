@@ -115,3 +115,24 @@ Bewusst nicht aufgenommen, weil bereits entschieden oder nicht blockierend:
 **Empfehlung: A.** Alles ist bereits getestet und lässt sich später ohne Datenverlust anpassen. Balance zeigt sich erst im Spiel, nicht am Schreibtisch.
 
 **Bis zur Antwort unangetastet:** keine Änderung an den genannten Rollen und keine Bestätigung der Lexikonhinweise „noch nicht bestätigt“ (14 Rollen mit offenen Punkten laut Lexikon).
+
+
+---
+
+## NQ-06 · Wie wird bei Rotkäppchen die gefragte Person am Tisch geweckt und befragt?
+
+**Frage:** Rotkäppchen wählt nachts eine Person, bei der sie Zuflucht sucht. Die App fragt diese Person danach „Gewährst du Zuflucht?“. Wie läuft das am Tisch ab?
+
+**Beispiel aus einer Partie:** Rotkäppchen zeigt auf Ben. Ben schläft mit geschlossenen Augen. Die Spielleitung müsste ihn jetzt wecken, ihm die Frage stellen und ihn wieder einschlafen lassen, ohne dass der Tisch erfährt, wer gefragt hat oder wer Rotkäppchen ist. Zum Beispiel: Wird Ben nach Rotkäppchens Aufruf gesondert aufgerufen, oder fragt die Spielleitung ihn leise an, oder geschieht es erst am Morgen?
+
+**Warum die vorhandenen Entscheidungen nicht ausreichen:** DI-05 legt fest, dass die Karte der gefragten Person weder die Rolle noch die fragende Person nennt. Wie die Person am Tisch geweckt und befragt wird, ist im Rollenlexikon und in `INTEGRATION-STATUS.md` als offen geführt (OI-18). Die Handlungszeile „Ablauf am Tisch“ von Rotkäppchen sagt deshalb ausdrücklich „noch nicht festgelegt“.
+
+**Antworten:**
+- **A:** Die Spielleitung weckt die gefragte Person still (Antippen der Schulter), stellt die Frage leise und lässt sie wieder einschlafen. Der Tisch hört nichts.
+- **B:** Die App führt einen eigenen Aufruf für die gefragte Person ein („Person, die gefragt wurde, erwache“) mit Tarnaufruf, wenn niemand gefragt wurde.
+- **C:** Die Frage wird erst am Morgen gestellt, gleich nach der Morgenauflösung.
+- Freitext möglich.
+
+**Empfehlung: A.** Sie braucht keinen neuen Aufruf im Ansagesystem und verrät nichts durch Reihenfolge oder Wortlaut. B würde ein neues Ansagesystem und eine zweite Nachtsteuerung verlangen, C ändert die Wirkungsreihenfolge.
+
+**Bis zur Antwort unangetastet:** Handlungszeile von Rotkäppchen im Lexikon (bleibt „noch nicht festgelegt“), Kartenfolge der Frage, Aufrufpolitik für gefragte Personen.
