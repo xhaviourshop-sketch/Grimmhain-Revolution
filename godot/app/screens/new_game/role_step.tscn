@@ -124,6 +124,13 @@ layout_mode = 2
 theme_type_variation = &"WarningLabel"
 script = ExtResource("3_label")
 
+[node name="OverLimitLabel" type="Label" parent="Body/RoleScroll/RoleList"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"ErrorCaptionLabel"
+script = ExtResource("3_label")
+
 [node name="Footer" type="HBoxContainer" parent="."]
 layout_mode = 2
 

@@ -15,10 +15,10 @@ const D := "dorfbewohner"
 ## Rolle → [Rollen, Vorbereitungstote, Plan bis zur Auswahl, Stufe, Nutzungsschlüssel oder ""].
 func _cases() -> Dictionary:
 	return {
-		"traumdeuter": [["traumdeuter", W, W, D, D, D, D], [], {}, "targets", ""],
-		"kopfgeldjaeger": [["kopfgeldjaeger", W, W, D, D, D, D, D], [], {"day1": {"nominate": [4, 2], "execute": 2}}, "targets", ""],
-		"koenig": [["koenig", W, "schutzengel", "dorfwache", D, D, D, D, D, D], [5, 6, 7, 8, 9, 10], {"schutzengel/": [1]}, "targets", "koenig:learn"],
-		"blutpriester": [["blutpriester", W, W, D, D, D, D], [], {"blutpriester/targets": [4]}, "reveal", "blutpriester:sacrifice"],
+		"traumdeuter": [["traumdeuter", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [], {}, "targets", ""],
+		"kopfgeldjaeger": [["kopfgeldjaeger", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"day1": {"nominate": [4, 2], "execute": 2}}, "targets", ""],
+		"koenig": [["koenig", W, "schutzengel", "dorfwache", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [5, 6, 7, 8, 9, 10], {"schutzengel/": [1]}, "targets", "koenig:learn"],
+		"blutpriester": [["blutpriester", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [], {"blutpriester/targets": [4]}, "reveal", "blutpriester:sacrifice"],
 	}
 
 
@@ -171,7 +171,7 @@ func test_blutpriester_random_pick() -> void:
 ## offenem Traumdeuter-Prompt beide Wölfe im Sitzungszustand auf tot und die Auswahl auf die übrigen Lebenden. Der Zustand
 ## bleibt für den Regelkern gültig (InfoSteps.matches_state); die Regeln bleiben unverändert.
 func test_disabled_random_button_without_admissible_result() -> void:
-	if not await start(["traumdeuter", W, W, D, D, D, D]):
+	if not await start(["traumdeuter", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({}, until_prompt("traumdeuter", "targets")), "Traumdeuter: Auswahl offen")
 	var st := session()._state
@@ -211,7 +211,7 @@ func test_disabled_random_button_without_admissible_result() -> void:
 
 ## Andere Rollen und die Opferwahl des Blutpriesters haben keinen Zufallsknopf.
 func test_no_random_button_for_other_selections() -> void:
-	if not await start(["blutpriester", "schutzengel", W, D, D, D, D]):
+	if not await start(["blutpriester", "schutzengel", W, D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({}, until_prompt("schutzengel")), "Schutzengel")
 	assert_true(live("RandomTargetsButton") == null and find_node(screen(), "RandomTargetsButton") == null, "Schutzengel ohne Zufallsknopf")

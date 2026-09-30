@@ -13,30 +13,30 @@ const V5 := [D, D, D, D, D]
 
 ## Einmal-Fähigkeiten: Besitzer → [Rollen, Vorbereitungstote, Plan für die Nutzung, Nutzungsschlüssel].
 const ONE_SHOT := {
-	"kriegerin-des-lichts": [["kriegerin-des-lichts", W, D, D, D, D, D], [], {"kriegerin-des-lichts/targets": [2]}, "kriegerin-des-lichts:attack"],
-	"blutpriester": [["blutpriester", W, D, D, D, D, D], [], {"blutpriester/targets": [3], "blutpriester/reveal": [2]}, "blutpriester:sacrifice"],
-	"faehrtenleser": [["faehrtenleser", W, D, D, D, D, D], [], {"faehrtenleser/use": true}, "faehrtenleser:track"],
-	"schattenwanderer": [[W, "schattenwanderer", D, D, D, D, D], [], {"schattenwanderer/": [3]}, "schattenwanderer:link"],
-	"seelentauscher": [["seelentauscher", W, "das-orakel", D, D, D, D], [], {"seelentauscher/targets": [3, 4], "das-orakel/target": [2]}, "seelentauscher:swap"],
-	"zeitwaechter": [["zeitwaechter", W, D, D, D, D, D], [], {"zeitwaechter/use": true}, "zeitwaechter:freeze"],
-	"grabraeuber": [["grabraeuber", W, "das-orakel", D, D, D, D], [3], {"grabraeuber/targets": [3]}, "grabraeuber:steal"],
-	"koenig-lykaon": [["koenig-lykaon", W, D, D, D, D, D, D], [], {"koenig-lykaon/ally": [2], "koenig-lykaon/targets": [3]}, "koenig-lykaon:convert"],
+	"kriegerin-des-lichts": [["kriegerin-des-lichts", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"kriegerin-des-lichts/targets": [2]}, "kriegerin-des-lichts:attack"],
+	"blutpriester": [["blutpriester", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"blutpriester/targets": [3], "blutpriester/reveal": [2]}, "blutpriester:sacrifice"],
+	"faehrtenleser": [["faehrtenleser", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"faehrtenleser/use": true}, "faehrtenleser:track"],
+	"schattenwanderer": [[W, "schattenwanderer", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"], [], {"schattenwanderer/": [3]}, "schattenwanderer:link"],
+	"seelentauscher": [["seelentauscher", W, "das-orakel", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [], {"seelentauscher/targets": [3, 4], "das-orakel/target": [2]}, "seelentauscher:swap"],
+	"zeitwaechter": [["zeitwaechter", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"zeitwaechter/use": true}, "zeitwaechter:freeze"],
+	"grabraeuber": [["grabraeuber", W, "das-orakel", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [3], {"grabraeuber/targets": [3]}, "grabraeuber:steal"],
+	"koenig-lykaon": [["koenig-lykaon", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "nachtwaechter", "der-weise"], [], {"koenig-lykaon/ally": [2], "koenig-lykaon/targets": [3]}, "koenig-lykaon:convert"],
 }
 
 ## Informationsrollen mit Zeigekarte: Besitzer → [Rollen, Vorbereitungstote, Plan bis zur Stufe „Gezeigt“].
 const SHOW := {
-	"dorfchronistin": [["dorfchronistin", W, "rattenfaenger", D, D, D, D], [], {}],
-	"die-gebundenen": [["die-gebundenen", W, "die-gebundenen", D, D, D, D], [], {}],
-	"waldlaeufer": [["waldlaeufer", W, W, D, D, D, D], [], {}],
-	"doktor": [["doktor", W, D, D, D, D, D], [], {"doktor/targets": [2, 3]}],
-	"faehrtenleser": [["faehrtenleser", W, D, D, D, D, D], [], {"faehrtenleser/use": true}],
-	"traumdeuter": [["traumdeuter", W, D, D, D, D, D], [], {"traumdeuter/targets": [2, 3, 4]}],
-	"koenig": [["koenig", W, "schutzengel", D, D, D, D, D], [4, 5, 6, 7, 8], {"koenig/targets": [3], "schutzengel/": [1]}],
-	"kriegerin-des-lichts": [["kriegerin-des-lichts", W, D, D, D, D, D], [], {"kriegerin-des-lichts/targets": [2]}],
-	"blutpriester": [["blutpriester", W, D, D, D, D, D], [], {"blutpriester/targets": [3], "blutpriester/reveal": [2]}],
-	"die-ewigen": [["die-ewigen", W, "rattenfaenger", D, D, D, D], [], {"die-ewigen/targets": [3]}],
-	"spuerhund": [["spuerhund", W, D, D, D, D, D], [], {"spuerhund/targets": [2, 3, 4]}],
-	"kopfgeldjaeger": [["kopfgeldjaeger", W, W, D, D, D, D, D], [], {"day1": {"nominate": [4, 2], "execute": 2}, "kopfgeldjaeger/targets": [3, 4, 5]}],
+	"dorfchronistin": [["dorfchronistin", W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [], {}],
+	"die-gebundenen": [["die-gebundenen", W, "die-gebundenen", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [], {}],
+	"waldlaeufer": [["waldlaeufer", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [], {}],
+	"doktor": [["doktor", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"doktor/targets": [2, 3]}],
+	"faehrtenleser": [["faehrtenleser", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"faehrtenleser/use": true}],
+	"traumdeuter": [["traumdeuter", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"traumdeuter/targets": [2, 3, 4]}],
+	"koenig": [["koenig", W, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [4, 5, 6, 7, 8], {"koenig/targets": [3], "schutzengel/": [1]}],
+	"kriegerin-des-lichts": [["kriegerin-des-lichts", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"kriegerin-des-lichts/targets": [2]}],
+	"blutpriester": [["blutpriester", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"blutpriester/targets": [3], "blutpriester/reveal": [2]}],
+	"die-ewigen": [["die-ewigen", W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [], {"die-ewigen/targets": [3]}],
+	"spuerhund": [["spuerhund", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"spuerhund/targets": [2, 3, 4]}],
+	"kopfgeldjaeger": [["kopfgeldjaeger", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [], {"day1": {"nominate": [4, 2], "execute": 2}, "kopfgeldjaeger/targets": [3, 4, 5]}],
 }
 
 
@@ -85,12 +85,12 @@ func _double_tap(node_name: String) -> void:
 func test_double_tap_sends_one_command_for_each_answer_kind() -> void:
 	# [Rollen, Plan bis zum Prompt, Besitzer, Stufe, Vorbereitung auf der Karte, Button]
 	var cases: Array = [
-		[["doktor", W, D, D, D, D, D], {}, "doktor", "targets", [2, 3], "ConfirmTargetsButton"],
-		[["faehrtenleser", W, D, D, D, D, D], {}, "faehrtenleser", "use", [], "YesButton"],
-		[["dorfchronistin", W, D, D, D, D, D], {}, "dorfchronistin", "shown", [], "AckButton"],
-		[["lehrling", W, "schutzengel", "das-orakel", "waldhexe", D, D], {"lehrling/candidates": [3, 4, 5]}, "lehrling", "option", [], "OptionButton_0"],
-		[["todesprediger", W, D, D, D, D, D], {}, "todesprediger", "prediction", [], "ConfirmPredictionButton"],
-		[["schutzengel", W, D, D, D, D, D], {}, "pack", "", [], "DeclineButton"],
+		[["doktor", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {}, "doktor", "targets", [2, 3], "ConfirmTargetsButton"],
+		[["faehrtenleser", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {}, "faehrtenleser", "use", [], "YesButton"],
+		[["dorfchronistin", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {}, "dorfchronistin", "shown", [], "AckButton"],
+		[["lehrling", W, "schutzengel", "das-orakel", "waldhexe", D, "amalia"], {"lehrling/candidates": [3, 4, 5]}, "lehrling", "option", [], "OptionButton_0"],
+		[["todesprediger", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {}, "todesprediger", "prediction", [], "ConfirmPredictionButton"],
+		[["schutzengel", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {}, "pack", "", [], "DeclineButton"],
 	]
 	for c: Array in cases:
 		if not await start(c[0]):
@@ -105,7 +105,7 @@ func test_double_tap_sends_one_command_for_each_answer_kind() -> void:
 
 
 func test_undo_discards_open_selection_on_the_card() -> void:
-	if not await start(["doktor", W, D, D, D, D, D]):
+	if not await start(["doktor", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	await run({}, until_prompt("doktor", "targets"))
 	await tap_seat(2)
@@ -122,7 +122,7 @@ func test_undo_discards_open_selection_on_the_card() -> void:
 
 
 func test_role_change_discards_open_prompt_card() -> void:
-	if not await start(["doktor", W, D, D, D, D, D]):
+	if not await start(["doktor", W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	await run({}, until_prompt("doktor", "targets"))
 	await tap_seat(2)

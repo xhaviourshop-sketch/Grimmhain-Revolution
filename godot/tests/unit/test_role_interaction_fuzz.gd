@@ -1,7 +1,7 @@
 extends TestCase
 ## Kombinationsprüfung aller Rollen des Regelkerns (Rollenaudit, docs/role-migration/11-role-audit-status.md).
-## Deterministisch erzeugte Partien mit 6 bis 24 Personen (je Partie reihum eine Fokusrolle), gemischten Rollen inklusive
-## Mehrfachkopien, zufälligen gültigen Antworten, Abbrüchen, Überspringen, Nominierungen,
+## Deterministisch erzeugte Partien mit 6 bis 24 Personen (je Partie reihum eine Fokusrolle), gemischten, verschiedenen Rollen
+## (PE-07: jede Rolle höchstens einmal beim Start, Die Gebundenen ausgenommen), zufälligen gültigen Antworten, Abbrüchen, Überspringen, Nominierungen,
 ## Hinrichtungen, Spielleitertötungen und Wiederbelebungen. Nach jedem angenommenen Befehl
 ## gelten Invarianten, die unabhängig von der einzelnen Rolle beobachtbar sind:
 ##   - Zustand übersteht to_dict/from_dict unverändert (inkl. Ladeprüfungen aller Rollen)
@@ -157,15 +157,21 @@ func _start_command(g: int, count: int) -> Command:
 	var focus: String = ROLES[g % ROLES.size()]
 	_focus = focus
 	_focus_goal_met = false
+	# PE-07: jede Rolle höchstens einmal in der Startbesetzung, Die Gebundenen ausgenommen. Die Fokusrolle steht zuerst (einmal); jede
+	# gezogene Rolle, die schon vergeben ist, wird durch die nächste freie des Pools ersetzt. Die Zahl der Ziehungen bleibt gleich.
+	roles.append(focus)
 	var wolves := 1 + _rng.randi_range(0, maxi(0, count / 5))
 	if focus == "amalia":
 		wolves = maxi(wolves, RoleCatalog.AMALIA_MIN_WOLVES)  # ihre Tagesaktion braucht drei Wölfe
 	for i: int in wolves:
-		roles.append(WOLF_ROLES[_rng.randi_range(0, WOLF_ROLES.size() - 1)])
-	roles.append("dorfbewohner" if _rng.randf() < 0.3 else ["schutzengel", "waldhexe", "das-orakel", "wolfskind", "lehrling", "sensentraeger"][_rng.randi_range(0, 5)])
-	roles.append(focus)
+		add_unique(roles, WOLF_ROLES, _rng.randi_range(0, WOLF_ROLES.size() - 1))
+	var villagers: Array[String] = ["schutzengel", "waldhexe", "das-orakel", "wolfskind", "lehrling", "sensentraeger"]
+	if _rng.randf() < 0.3:
+		add_unique(roles, ["dorfbewohner"], 0)
+	else:
+		add_unique(roles, villagers, _rng.randi_range(0, 5))
 	while roles.size() < count:
-		roles.append(ROLES[_rng.randi_range(0, ROLES.size() - 1)])
+		add_unique(roles, ROLES, _rng.randi_range(0, ROLES.size() - 1))
 	# Mischen im Test (nicht im Kern): Sitz- und ID-Verteilung variieren.
 	for i: int in range(roles.size() - 1, 0, -1):
 		var j := _rng.randi_range(0, i)
@@ -196,6 +202,16 @@ func _start_command(g: int, count: int) -> Command:
 
 
 # --- Befehlserzeugung (nur gültige Befehle) ------------------------------------------------------
+
+## Hängt die Rolle an Position `start` des Pools an; ist sie schon vergeben, die nächste freie in Poolreihenfolge.
+## Ohne freie Rolle im Pool passiert nichts (der Aufrufer prüft die Personenzahl).
+static func add_unique(roles: Array, pool: Array, start: int) -> void:
+	for k: int in pool.size():
+		var candidate: String = pool[(start + k) % pool.size()]
+		if candidate == "die-gebundenen" or not roles.has(candidate):
+			roles.append(candidate)
+			return
+
 
 func _pick(list: Array) -> Variant:
 	return list[_rng.randi_range(0, list.size() - 1)]

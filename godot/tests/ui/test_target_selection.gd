@@ -117,7 +117,7 @@ func _role_of(shell: Control, person_id: int) -> String:
 
 
 func test_loki_needs_none_or_two() -> void:
-	var shell := await _cockpit([W, "loki", D, D, D, D, D])
+	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null or not await _partial_then_full(shell, "loki", ["0", "2"], [3], [4]):
 		return
 	var next := _next(shell)
@@ -125,14 +125,14 @@ func test_loki_needs_none_or_two() -> void:
 
 
 func test_soul_swapper_needs_none_or_two() -> void:
-	var shell := await _cockpit([W, "seelentauscher", "ritter", D, D, D, D])
+	var shell := await _cockpit([W, "seelentauscher", "ritter", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	if shell == null or not await _partial_then_full(shell, "seelentauscher", ["0", "2"], [3], [4]):
 		return
 	assert_eq([_role_of(shell, 3), _role_of(shell, 4)], [D, "ritter"], "Seelentauscher: Rollen von 3 und 4 getauscht")
 
 
 func test_coachman_needs_none_or_three() -> void:
-	var shell := await _cockpit([W, "kutscher", D, D, D, D, D, D, D, D, D, D, D, D, D, D], [5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+	var shell := await _cockpit([W, "kutscher", D, "amalia"] + Fixtures.extra_village(10) + ["detektiv", "wahnsinniger-kutscher"], [5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
 	if shell == null or not await _partial_then_full(shell, "kutscher", ["0", "3"], [5, 6], [7]):
 		return
 	var next := _next(shell)
@@ -140,7 +140,7 @@ func test_coachman_needs_none_or_three() -> void:
 
 
 func test_hound_needs_none_or_three() -> void:
-	var shell := await _cockpit([W, "spuerhund", D, D, D, D, D])
+	var shell := await _cockpit([W, "spuerhund", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null or not await _partial_then_full(shell, "spuerhund", ["0", "3"], [1, 3], [4]):
 		return
 	var next := _next(shell)
@@ -151,7 +151,7 @@ func test_hound_needs_none_or_three() -> void:
 
 ## Mehr als die Höchstzahl lässt der Sitzkreis nicht zu.
 func test_selection_beyond_maximum_is_refused() -> void:
-	var shell := await _cockpit([W, "loki", D, D, D, D, D])
+	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null or not await _advance_to(shell, "loki"):
 		return
 	for id: int in [3, 4, 5]:
@@ -164,7 +164,7 @@ func test_selection_beyond_maximum_is_refused() -> void:
 ## Ändert sich der Zustand (Laden, Spielleiterkorrektur, Rückgängig/Wiederholen), verfällt die Auswahl,
 ## auch wenn danach derselbe Prompt offen ist.
 func test_state_change_discards_selection() -> void:
-	var shell := await _cockpit([W, "loki", D, D, D, D, D])
+	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null or not await _advance_to(shell, "loki"):
 		return
 	var session := session_of(shell)

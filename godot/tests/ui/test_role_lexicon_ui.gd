@@ -161,7 +161,7 @@ func test_setup_opens_an_entry_without_changing_the_selection() -> void:
 ## Schutzengel-Auswahl offen, eine Person angetippt: Kontexthilfe öffnet den passenden Eintrag, Lexikonbedienung ändert
 ## nichts, Schließen führt zur selben Auswahl zurück. Eine echte Zustandsänderung verwirft die Auswahl.
 func test_context_help_keeps_the_open_selection_and_sends_nothing() -> void:
-	if not await start([W, "schutzengel", D, D, D, D]):
+	if not await start([W, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({}, until_prompt("schutzengel")), "Schutzengel-Auswahl offen")
 	await tap_seat(3)
@@ -190,7 +190,7 @@ func test_context_help_keeps_the_open_selection_and_sends_nothing() -> void:
 
 
 func test_general_lexicon_in_a_game_shows_no_game_data() -> void:
-	if not await start([W, "rattenfaenger", "schutzengel", D, D, D]):
+	if not await start([W, "rattenfaenger", "schutzengel", D, "amalia", "detektiv"]):
 		return
 	await tap_button("LexiconButton")
 	var lexicon := _lexicon(screen())
@@ -211,7 +211,7 @@ func test_general_lexicon_in_a_game_shows_no_game_data() -> void:
 
 
 func test_context_help_stays_private_and_cover_closes_it() -> void:
-	if not await start([W, "das-orakel", D, D, D, D]):
+	if not await start([W, "das-orakel", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({}, until_prompt("das-orakel", "shown")), "Orakel: Ergebnis zum Zeigen")
 	# Die gezeigte Karte ersetzt das Cockpit; auf ihr gibt es keine Hilfe.

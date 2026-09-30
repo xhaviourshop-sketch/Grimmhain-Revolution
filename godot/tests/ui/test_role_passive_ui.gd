@@ -51,7 +51,7 @@ func test_selbstmoerder_fulfilled_by_execution_with_five_dead() -> void:
 
 
 func test_wahnsinniger_kutscher_takes_neighbours_on_lynch() -> void:
-	if not await start([D, W, "wahnsinniger-kutscher", D, D, W, D]):
+	if not await start([D, W, "wahnsinniger-kutscher", "amalia", "detektiv", "blutwolf", "waechter-am-tor"]):
 		return
 	await run({"day1": {"nominate": [5, 3], "execute": 3}}, until_kind("end_day"))
 	assert_false(alive(2) or alive(4), "beide Nachbarn sterben mit")

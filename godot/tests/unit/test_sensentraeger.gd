@@ -7,11 +7,12 @@ const FORBIDDEN_PUBLIC := ["sensentraeger", "werwolf", "dorfbewohner", "reaction
 
 
 func _s6(seed_value: int = 1) -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], seed_value)
+	return Fixtures.start_roles(["werwolf", "blutwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv"], seed_value)
 
 
-func _s7() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+## Zwei Sensenträger: der zweite entsteht nach dem Start durch Korrektur (PE-07).
+func _s7(rest: Array[Command]) -> Array[Command]:
+	return Fixtures.with_copies(["werwolf", "blutwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "amalia", "detektiv"], rest)
 
 
 ## Nacht 1: Rudel tötet den Sensenträger (3).
@@ -180,8 +181,8 @@ func test_resolved_reaction_cannot_run_again() -> void:
 
 func test_chain_of_two_reapers() -> void:
 	# Zusatz 9
-	var run := _replay_ok([_s7(), Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
-		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command], "Kette")
+	var run := _replay_ok(_s7([Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
+		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command]) as Array[Command], "Kette")
 	if not run.ok:
 		return
 	assert_eq(run.state.reactions.size(), 1, "zweite Reaktion hinten eingereiht")
@@ -212,8 +213,8 @@ func test_provisional_win_changed_by_curse() -> void:
 
 func test_no_final_candidate_while_chain_open() -> void:
 	# S7: Nacht 1 tötet 5 (2:4); Tag 1 Hinrichtung 3 (2:3), Fluch auf 4 (2:2) → Folgereaktion offen.
-	var run := _replay_ok([_s7(), Command.start_night(), Command.answer_prompt(1, [5]), Command.end_night(),
-		Command.nominate(6, 3), Command.decide_execution(3), Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command], "Kette am Tag")
+	var run := _replay_ok(_s7([Command.start_night(), Command.answer_prompt(1, [5]), Command.end_night(),
+		Command.nominate(6, 3), Command.decide_execution(3), Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command]) as Array[Command], "Kette am Tag")
 	if not run.ok:
 		return
 	assert_eq(run.state.alive_ids(), [1, 2, 6, 7] as Array[int], "Parität 2:2")
@@ -276,8 +277,8 @@ func test_save_load_states() -> void:
 func test_replay_single_and_chain() -> void:
 	# Zusatz 14 und 15
 	var single := _concat(_killed_by_pack(), [Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command])
-	var chain: Array[Command] = [_s7(), Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
-		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4]), Command.begin_step("reaction:2"), Command.answer_prompt(3, [5])]
+	var chain: Array[Command] = _s7([Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
+		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4]), Command.begin_step("reaction:2"), Command.answer_prompt(3, [5])] as Array[Command])
 	for commands: Array[Command] in [single, chain]:
 		var a := RulesEngine.replay(commands)
 		var b := RulesEngine.replay(commands)
@@ -287,9 +288,9 @@ func test_replay_single_and_chain() -> void:
 
 
 func test_no_secrets_in_public_or_foreign_events() -> void:
-	var run := _replay_ok([_s7(), Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
+	var run := _replay_ok(_s7([Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
 		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4]), Command.begin_step("reaction:2"), Command.answer_prompt(3, []),
-		Command.nominate(5, 1), Command.decide_execution(1), Command.end_day()] as Array[Command], "Partie")
+		Command.nominate(5, 1), Command.decide_execution(1), Command.end_day()] as Array[Command]) as Array[Command], "Partie")
 	if not run.ok:
 		return
 	for type: String in ["ReactionQueued", "ReactionResolved", "SeatDied", "PromptOpened", "PromptAnswered", "StepBegun", "WinStatusProvisional"]:

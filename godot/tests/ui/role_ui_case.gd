@@ -27,10 +27,14 @@ func start(roles: Array, kills: Array = [], appearances: Dictionary = {}, seed_v
 	shell = await spawn_shell()
 	if shell == null:
 		return false
-	var r := session().submit(UiGame.start(roles, seed_value, appearances))
-	if not r.ok:
-		fail("Start abgelehnt: %s" % r.error)
-		return false
+	# PE-07: Füllplätze („dorfbewohner“, „werwolf“ mehrfach) werden zu verschiedenen Füllern; weitere gleiche Rollen entstehen
+	# nach dem Start durch Spielleiterkorrektur (Vorbereitung, wie das Töten unten).
+	for c: Command in Fixtures.start_with_copies(Fixtures.legalize(roles), seed_value, appearances):
+		var r := session().submit(c)
+		if not r.ok:
+			fail("Start abgelehnt: %s" % r.error)
+			return false
+	var r := CommandResult.new()
 	for id: Variant in kills:
 		r = session().submit(CorrectionFixtures.gm("kill", {"target_id": int(id), "trigger_effects": false}, "Vorbereitung"))
 		if not r.ok:

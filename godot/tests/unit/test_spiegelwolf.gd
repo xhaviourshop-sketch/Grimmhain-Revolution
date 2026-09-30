@@ -10,11 +10,11 @@ const FORBIDDEN_PUBLIC := ["spiegel", "mirror", "redirect", "retaliate", "werwol
 
 
 func _m6() -> Command:
-	return Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	return Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 
 
 func _m6r() -> Command:
-	return Fixtures.start_roles(["werwolf", "spiegelwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	return Fixtures.start_roles(["werwolf", "spiegelwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv"])
 
 
 func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
@@ -95,7 +95,7 @@ func test_production_role() -> void:
 	var n := _replay_ok([_m6(), Command.start_night()] as Array[Command], "Nacht 1")
 	if n.ok:
 		assert_eq(n.state.night_plan, [&"pack"] as Array[StringName], "kein eigener Schritt")
-	var alone := _replay_ok([Fixtures.start_roles(["spiegelwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var alone := _replay_ok([Fixtures.start_roles(["spiegelwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]),
 		Command.start_night()] as Array[Command], "allein")
 	if alone.ok:
 		assert_eq(alone.state.night_plan, [&"pack"] as Array[StringName], "allein erzeugt er den Rudelschritt")
@@ -103,7 +103,7 @@ func test_production_role() -> void:
 
 func test_oracle_sees_werewolf() -> void:
 	# 5, AS-R10
-	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "das-orakel", "dorfbewohner", "dorfbewohner"]),
+	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "das-orakel", "amalia", "detektiv"]),
 		Command.start_night(), Command.answer_prompt(1, []), Command.begin_step("night:1:1:das-orakel:4"), Command.answer_stage_targets(2, "target", [2])] as Array[Command])
 	assert_true(s != null and s.pending_prompt != null, "Orakel hat geprüft")
 	if s != null and s.pending_prompt != null:
@@ -112,7 +112,7 @@ func test_oracle_sees_werewolf() -> void:
 
 func test_witch_sees_true_role() -> void:
 	# 6
-	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "dorfbewohner", "waldhexe", "dorfbewohner"]),
+	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "amalia", "waldhexe", "detektiv"]),
 		Command.start_night(), Command.answer_prompt(1, [2]), Command.begin_step("night:1:1:waldhexe:5"), Command.answer_choice(2, "heal", true)] as Array[Command])
 	assert_true(s != null and s.pending_prompt != null and str(s.pending_prompt.partial.get("victim_role", "")) == "spiegelwolf", "tatsächliche Rolle")
 
@@ -236,7 +236,7 @@ func test_mirror_target_reaper_reacts() -> void:
 
 func test_event_order_with_child_and_reaper() -> void:
 	# 24, 25: 3 ist Sensenträger und Vorbild des Wolfskinds 6.
-	var start := Fixtures.start_roles(["werwolf", "spiegelwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "wolfskind"])
+	var start := Fixtures.start_roles(["werwolf", "spiegelwolf", "sensentraeger", "dorfbewohner", "amalia", "wolfskind"])
 	var s := Fixtures.play([start, Command.start_night(), Command.answer_prompt(1, [3]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, []),
 		Command.end_night(), Command.nominate(3, 2)] as Array[Command])
 	var r := apply_ok(s, Command.decide_execution(2), "Hinrichtung")
@@ -248,7 +248,7 @@ func test_event_order_with_child_and_reaper() -> void:
 
 func test_guard_and_witch_do_not_prevent_mirror() -> void:
 	# 26, 27: 4 war nachts geschützt und gerettet.
-	var start := Fixtures.start_roles(["werwolf", "spiegelwolf", "schutzengel", "dorfbewohner", "waldhexe", "dorfbewohner"])
+	var start := Fixtures.start_roles(["werwolf", "spiegelwolf", "schutzengel", "dorfbewohner", "waldhexe", "amalia"])
 	var commands: Array[Command] = [start, Command.start_night(), Command.answer_prompt(1, [4]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, [4]),
 		Command.begin_step("night:1:2:waldhexe:5"), Command.answer_choice(3, "heal", true), Command.answer_choice(3, "reveal", true),
 		Command.answer_choice(3, "poison", false), Command.answer_choice(3, "confirm", true), Command.end_night(), Command.nominate(4, 2), Command.decide_execution(2)]
@@ -325,7 +325,7 @@ func test_parity_and_village_win() -> void:
 	var parity := _replay_ok([_m6(), Command.start_night(), Command.answer_prompt(1, [6]), Command.end_night(), Command.nominate(3, 2), Command.decide_execution(2)] as Array[Command], "Parität")
 	if parity.ok:
 		assert_true(sole_candidate(parity.state) != null and String(sole_candidate(parity.state).kind) == "wolves" and int(sole_candidate(parity.state).reason_args["wolves"]) == 2, "Spiegelwolf zählt")
-	var alone := Fixtures.start_roles(["spiegelwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var alone := Fixtures.start_roles(["spiegelwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var village := _replay_ok([alone, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), _gm("execute", {"target_id": 1})] as Array[Command], "letzter Wolf")
 	if village.ok:
 		assert_true(sole_candidate(village.state) != null and String(sole_candidate(village.state).kind) == "village", "Dorfsieg")

@@ -47,7 +47,7 @@ func test_production_roles() -> void:
 
 func test_blood_wolf_hint_counts_direct_dead_neighbours() -> void:
 	# Blutwolf 3; direkte Nachbarsitze 2 und 4.
-	var roles := ["werwolf", "dorfbewohner", BL, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := ["werwolf", "dorfbewohner", BL, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"]
 	var s := _run([_start(roles)] as Array[Command], "Start").state
 	assert_eq(_hints(s), [], "ohne tote Nachbarn kein Hinweis")
 	s = apply_ok(s, _gm("kill", {"target_id": 2, "trigger_effects": false}), "2 tot").state
@@ -71,7 +71,7 @@ func _judge_day(roles: Array, target: int) -> Array[Command]:
 
 
 func test_judge_mark_becomes_hidden_nomination_with_hint() -> void:
-	var cmds := _judge_day(["werwolf", KR, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 4)
+	var cmds := _judge_day(["werwolf", KR, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"], 4)
 	var run := _run(cmds, "Markierung")
 	if not run.ok:
 		return
@@ -95,10 +95,10 @@ func test_judge_mark_becomes_hidden_nomination_with_hint() -> void:
 
 
 func test_judge_decline_self_mark_and_clear() -> void:
-	var none := _run(_judge_day(["werwolf", KR, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], -1), "Verzicht")
+	var none := _run(_judge_day(["werwolf", KR, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"], -1), "Verzicht")
 	if none.ok:
 		assert_eq(none.state.nominations_on_day(1).size(), 0, "ohne Markierung keine Nominierung")
-	var self_mark := _run(_judge_day(["werwolf", KR, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 2), "selbst")
+	var self_mark := _run(_judge_day(["werwolf", KR, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"], 2), "selbst")
 	if not self_mark.ok:
 		return
 	assert_eq(self_mark.state.nominations_on_day(1)[0].nominee_id, 2, "Selbstmarkierung erlaubt")
@@ -109,11 +109,11 @@ func test_judge_decline_self_mark_and_clear() -> void:
 
 
 func test_judge_mark_kills_manipulator_and_mirror_hits_judge() -> void:
-	var manip := _run(_judge_day(["werwolf", KR, "manipulator", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 3), "Manipulator")
+	var manip := _run(_judge_day(["werwolf", KR, "manipulator", "dorfbewohner", "amalia", "detektiv"], 3), "Manipulator")
 	if manip.ok:
 		var d := manip.state.players[3].death
 		assert_true(d != null and String(d.cause) == "MANIPULATOR_NOMINATED" and d.source_id == 2, "Manipulator stirbt, Quelle Richter")
-	var cmds := _judge_day(["spiegelwolf", KR, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1)
+	var cmds := _judge_day(["spiegelwolf", KR, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"], 1)
 	cmds.append(Command.decide_execution(1))
 	var run := _run(cmds, "Spiegelung")
 	if run.ok:
@@ -121,12 +121,12 @@ func test_judge_mark_kills_manipulator_and_mirror_hits_judge() -> void:
 
 
 func test_judge_or_target_dead_by_morning_no_nomination() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", KR, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var cmds: Array[Command] = [_start(["werwolf", KR, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night(),
 		Command.answer_prompt(1, [4]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, [4]), Command.end_night()]
 	var run := _run(cmds, "Ziel tot")
 	if run.ok:
 		assert_eq(run.state.nominations_on_day(1).size(), 0, "tote Markierte wird nicht nominiert")
-	var judge_dead: Array[Command] = [_start(["werwolf", KR, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var judge_dead: Array[Command] = [_start(["werwolf", KR, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night(),
 		Command.answer_prompt(1, [4]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, [2]), Command.end_night()]
 	run = _run(judge_dead, "Richter tot")
 	if run.ok:
@@ -137,7 +137,7 @@ func test_judge_or_target_dead_by_morning_no_nomination() -> void:
 
 func test_gatewarden_blocks_wolf_child_transformation() -> void:
 	# 1 Werwolf, 2 Wächter, 3 Wolfskind → Vorbild 4; 5–7 Dorf. 4 stirbt am Tag.
-	var cmds: Array[Command] = [_start(["werwolf", WT, "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", WT, "wolfskind", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.answer_prompt(1, [4]), Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(),
 		Command.nominate(5, 4), Command.decide_execution(4)]
 	var run := _run(cmds, "Wächter lebt")
@@ -151,7 +151,7 @@ func test_gatewarden_blocks_wolf_child_transformation() -> void:
 	var loaded := StateCodec.decode(StateCodec.encode(run.state, cmds))
 	assert_true(loaded.ok, "Save/Load")
 	# Ohne lebenden Wächter normale Verwandlung.
-	var dead: Array[Command] = [_start(["werwolf", WT, "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var dead: Array[Command] = [_start(["werwolf", WT, "wolfskind", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		_gm("kill", {"target_id": 2, "trigger_effects": false}), Command.start_night(), Command.answer_prompt(1, [4]),
 		Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), Command.nominate(5, 4), Command.decide_execution(4)]
 	run = _run(dead, "Wächter tot")
@@ -161,7 +161,7 @@ func test_gatewarden_blocks_wolf_child_transformation() -> void:
 
 func test_gatewarden_blocks_apprentice_wolf_inheritance_only() -> void:
 	# 1 Werwolf, 2 Wächter, 3 Lehrling wählt den Werwolf; 1 stirbt → 3 wird Dorfbewohner.
-	var cmds: Array[Command] = [_start(["werwolf", WT, "lehrling", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", WT, "lehrling", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 5, 6])]
 	var run := _run(cmds, "Kandidaten")
 	if not run.ok:
@@ -178,7 +178,7 @@ func test_gatewarden_blocks_apprentice_wolf_inheritance_only() -> void:
 
 
 func test_gatewarden_ignores_gm_corrections() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", WT, "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", WT, "wolfskind", "dorfbewohner", "amalia", "detektiv"]),
 		_gm("set_wolf_model", {"child_id": 3, "target_id": 4}), _gm("transform_wolf_child", {"child_id": 3}), _gm("set_role", {"target_id": 5, "role_id": "werwolf"})]
 	var run := _run(cmds, "Korrekturen")
 	if run.ok:

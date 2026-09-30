@@ -47,7 +47,7 @@ func _index_of(events: Array[GameEvent], type: String, key: String, value: int) 
 
 
 func test_reaper_curse_is_announced_with_role_and_target() -> void:
-	var day := _day_one(["werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "blutwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv"])
 	var first := _run(day, _lynch(3, 4))
 	var st: GameState = first["state"]
 	assert_true(st.pending_prompt == null and not st.reactions.is_empty(), "Reaktion des Sensenträgers eingereiht")
@@ -72,7 +72,7 @@ func test_reaper_curse_is_announced_with_role_and_target() -> void:
 
 
 func test_reaper_declining_makes_no_announcement() -> void:
-	var day := _day_one(["werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "blutwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv"])
 	var st: GameState = _run(day, _lynch(3, 4))["state"]
 	st = _run(st, [Command.begin_step(RulesEngine.next_step_id(st))] as Array[Command])["state"]
 	var r := _run(st, [_answer_open(st, [])] as Array[Command])
@@ -80,7 +80,7 @@ func test_reaper_declining_makes_no_announcement() -> void:
 
 
 func test_prevented_curse_is_not_announced() -> void:
-	var day := _day_one(["werwolf", "werwolf", "sensentraeger", "fenrir", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "blutwolf", "sensentraeger", "fenrir", "dorfbewohner", "amalia"])
 	var s := day.duplicate_state()
 	s.growth[4] = RoleCatalog.FENRIR_SHIELD_STAGE
 	var st: GameState = _run(s, _lynch(3, 5))["state"]
@@ -91,7 +91,7 @@ func test_prevented_curse_is_not_announced() -> void:
 
 
 func test_knight_strike_is_announced_after_the_wolf_dies() -> void:
-	var roles := ["werwolf", "ritter", "dorfbewohner", "dorfbewohner", "dorfbewohner", "werwolf"]
+	var roles := ["werwolf", "ritter", "dorfbewohner", "amalia", "detektiv", "blutwolf"]
 	var st: GameState = Fixtures.play([Fixtures.start_roles(roles), Command.start_night()] as Array[Command])
 	var r := _run(st, [Command.answer_prompt(st.pending_prompt.id, [2]), Command.end_night()] as Array[Command])
 	var effects := _effects(r["events"])
@@ -107,7 +107,7 @@ func test_knight_strike_is_announced_after_the_wolf_dies() -> void:
 
 
 func test_possessed_wolf_drag_is_announced() -> void:
-	var day := _day_one(["werwolf", "besessener-wolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "besessener-wolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var st: GameState = _run(day, _lynch(2, 3))["state"]
 	st = _run(st, [Command.begin_step(RulesEngine.next_step_id(st))] as Array[Command])["state"]
 	var r := _run(st, [_answer_open(st, [5])] as Array[Command])
@@ -120,7 +120,7 @@ func test_possessed_wolf_drag_is_announced() -> void:
 
 
 func test_coachman_crash_announces_each_neighbour_in_order() -> void:
-	var day := _day_one(["werwolf", "dorfbewohner", "wahnsinniger-kutscher", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "dorfbewohner", "wahnsinniger-kutscher", "amalia", "detektiv", "waechter-am-tor"])
 	var r := _run(day, _lynch(3, 5))
 	var effects := _effects(r["events"])
 	assert_eq(effects.size(), 2, "zwei Nachbarn")
@@ -136,7 +136,7 @@ func test_coachman_crash_announces_each_neighbour_in_order() -> void:
 
 ## PE-05: Liebeskummer, Kette und Verknüpfung nennen die Quellrolle, nie die Rolle einer beteiligten Person.
 func test_heartbreak_and_chain_name_the_source_role() -> void:
-	var day := _day_one(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var loki := day.duplicate_state()
 	loki.loki_pairs.append({"loki_id": 2, "a": 4, "b": 5, "kind": "love", "ended": false})
 	var r := _run(loki, [CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command])
@@ -165,7 +165,7 @@ func test_heartbreak_and_chain_name_the_source_role() -> void:
 
 
 func test_sage_curse_is_announced_only_with_a_length() -> void:
-	var day := _day_one(["werwolf", "dorfbewohner", "der-weise", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "dorfbewohner", "der-weise", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var cursed := _run(day, _lynch(3, 4, {"sage_curse": 2}))
 	var effects := _effects(cursed["events"])
 	assert_eq(effects.size(), 1, "Fluch angesagt")
@@ -179,7 +179,8 @@ func test_sage_curse_is_announced_only_with_a_length() -> void:
 
 
 func test_shadow_link_announces_redirect_and_intended_target() -> void:
-	var day := _day_one(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	# Der Wahnsinnige Kutscher steht auf 6, nicht neben den Hingerichteten: seine eigene Ansage gehört nicht zu diesem Fall.
+	var day := _day_one(["werwolf", "dorfbewohner", "amalia", "detektiv", "waechter-am-tor", "wahnsinniger-kutscher"])
 	var s := day.duplicate_state()
 	s.shadow_links.append({"walker_id": 4, "partner_id": 5})
 	var r := _run(s, _lynch(4, 2))
@@ -197,7 +198,7 @@ func test_shadow_link_announces_redirect_and_intended_target() -> void:
 
 
 func test_curse_redirected_by_shadow_link_keeps_both_effects_in_order() -> void:
-	var day := _day_one(["werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "blutwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv"])
 	var s := day.duplicate_state()
 	s.shadow_links.append({"walker_id": 4, "partner_id": 5})
 	var st: GameState = _run(s, _lynch(3, 6))["state"]
@@ -215,16 +216,16 @@ func test_curse_redirected_by_shadow_link_keeps_both_effects_in_order() -> void:
 
 
 func test_hidden_choices_and_ordinary_deaths_stay_silent() -> void:
-	var day := _day_one(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var day := _day_one(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var r := _run(day, _lynch(3, 4))
 	assert_true(_effects(r["events"]).is_empty(), "gewöhnliche Hinrichtung: keine Effektansage")
-	var night := Fixtures.play([Fixtures.start_roles(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command])
+	var night := Fixtures.play([Fixtures.start_roles(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night()] as Array[Command])
 	var killed := _run(night, [Command.answer_prompt(night.pending_prompt.id, [3]), Command.end_night()] as Array[Command])
 	assert_true(_effects(killed["events"]).is_empty(), "Rudelangriff: keine Effektansage")
 
 
 func test_announcements_survive_save_load_and_replay() -> void:
-	var commands: Array[Command] = [Fixtures.start_roles(["werwolf", "dorfbewohner", "wahnsinniger-kutscher", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var commands: Array[Command] = [Fixtures.start_roles(["werwolf", "dorfbewohner", "wahnsinniger-kutscher", "amalia", "detektiv", "waechter-am-tor"]),
 		Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), Command.nominate(5, 3), Command.create(Command.DECIDE_EXECUTION, {"target_id": 3})]
 	var first := RulesEngine.replay(commands)
 	assert_true(first.ok, "Replay")

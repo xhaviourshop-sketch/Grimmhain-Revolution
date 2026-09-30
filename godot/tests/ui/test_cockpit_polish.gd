@@ -3,7 +3,7 @@ extends UiTestCase
 ## reduzierte Bewegung ohne Übergänge, Fokus nach Aktionen, Anschlussstellen für spätere Bilder und
 ## Karteninhalt innerhalb der Spalte bei 1024×768 in DE und EN.
 
-const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "amalia", "detektiv"]
 
 
 func _cockpit(size: Vector2i = SIZE_16_10, locale: String = "de", reduced: bool = true) -> Control:

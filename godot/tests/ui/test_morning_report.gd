@@ -3,7 +3,7 @@ extends TestCase
 ## der Gestorbenen nur in Runden ohne Wiederbelebung (DI-01), privater Teil mit Ursachen und Rettungen.
 
 ## 1 Werwolf, 2 Schutzengel, 3 Waldhexe, 4 Nachtwächter (sitzt neben dem Wolf), 5 bis 7 Dorfbewohner.
-const ROLES := ["werwolf", "schutzengel", "waldhexe", "nachtwaechter", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "schutzengel", "waldhexe", "nachtwaechter", "dorfbewohner", "amalia", "detektiv"]
 const SEATS := [1, 4, 2, 3, 5, 6, 7]
 
 
@@ -61,7 +61,7 @@ func test_public_part_without_roles_by_default() -> void:
 	assert_eq(str(pub["deaths"][0]["role_id"]), "", "keine Rolle ohne Setup-Option")
 	var strings: Array = []
 	_all_strings(pub, strings)
-	for forbidden: String in ["cause", "WITCH_POISON", "protection", "schutzengel", "waldhexe", "werwolf", "dorfbewohner", "nachtwaechter", "source"]:
+	for forbidden: String in ["cause", "WITCH_POISON", "protection", "schutzengel", "waldhexe", "werwolf", "dorfbewohner", "amalia", "nachtwaechter", "source"]:
 		assert_false(strings.has(forbidden), "öffentlicher Teil ohne %s" % forbidden)
 	var notices: Array = (pub["notices"] as Array).map(func(n: Dictionary) -> String: return str(n["key"]))
 	assert_eq(notices, ["ui.morning.notice.bells"], "Glocken des Nachtwächters (Wolf sitzt neben ihm)")
@@ -72,7 +72,7 @@ func test_private_part_names_causes_and_rescues() -> void:
 	_night(session)
 	var lines: Array = session.morning_report()["private"]
 	var death: Array = lines.filter(func(l: Dictionary) -> bool: return str(l["key"]) == "ui.morning.private.death")
-	assert_true(death.size() == 1 and str(death[0]["cause"]) == "WITCH_POISON" and str(death[0]["role_id"]) == "dorfbewohner", "Tod mit Ursache und Rolle")
+	assert_true(death.size() == 1 and str(death[0]["cause"]) == "WITCH_POISON" and str(death[0]["role_id"]) == "amalia", "Tod mit Ursache und Rolle")
 	var saved: Array = lines.filter(func(l: Dictionary) -> bool: return str(l["key"]) == "ui.morning.private.saved")
 	assert_true(saved.size() == 1 and int(saved[0]["person"]["person_id"]) == 5 and str(saved[0]["role_id"]) == "schutzengel", "Rettung durch den Schutzengel")
 
@@ -82,7 +82,7 @@ func test_reveal_option_adds_role_of_the_dead() -> void:
 	_night(session)
 	var pub: Dictionary = session.morning_report()["public"]
 	assert_true(bool(pub["reveal_roles"]), "Option aktiv")
-	assert_eq(str(pub["deaths"][0]["role_id"]), "dorfbewohner", "Rolle der Gestorbenen öffentlich")
+	assert_eq(str(pub["deaths"][0]["role_id"]), "amalia", "Rolle der Gestorbenen öffentlich")
 
 
 func test_nobody_died() -> void:
@@ -111,15 +111,15 @@ func _death_roles(report: Dictionary) -> Array:
 	return (report["public"]["deaths"] as Array).map(func(d: Dictionary) -> String: return str(d["role_id"]))
 
 
-## Tod als Dorfbewohner, danach Rollenänderung: Bericht, privater Teil, Laden und Replay bleiben historisch.
+## Tod als Amalia (Dorfrolle ohne Nachtschritt), danach Rollenänderung: Bericht, privater Teil, Laden und Replay bleiben historisch.
 func test_role_change_after_death_keeps_reported_role() -> void:
 	var session := _session(true)
 	_night(session)
 	_gm(session, "set_role", {"target_id": 6, "role_id": "doktor"})
 	var report := session.morning_report()
-	assert_eq(_death_roles(report), ["dorfbewohner"], "öffentlich: Rolle beim Tod, nicht die spätere")
+	assert_eq(_death_roles(report), ["amalia"], "öffentlich: Rolle beim Tod, nicht die spätere")
 	var death: Array = (report["private"] as Array).filter(func(l: Dictionary) -> bool: return str(l["key"]) == "ui.morning.private.death")
-	assert_eq(death.map(func(l: Dictionary) -> String: return str(l["role_id"])), ["dorfbewohner"], "privat: Rolle beim Tod")
+	assert_eq(death.map(func(l: Dictionary) -> String: return str(l["role_id"])), ["amalia"], "privat: Rolle beim Tod")
 	var loaded := GameSession.new()
 	assert_eq(String(loaded.load_text(session.save_text())), "", "Stand geladen")
 	assert_eq(loaded.morning_report(), report, "nach Laden derselbe Bericht")

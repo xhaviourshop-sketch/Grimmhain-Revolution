@@ -6,7 +6,7 @@ extends UiTestCase
 
 const UiGame := preload("res://tests/ui/ui_game.gd")
 ## 1, 2 Werwölfe; 3 Schutzengel; 4 Waldhexe; 5 Wolfskind; 6 Lehrling; 7 bis 9 Dorfbewohner.
-const ROLES: Array = ["werwolf", "werwolf", "schutzengel", "waldhexe", "wolfskind", "lehrling", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES: Array = ["werwolf", "blutwolf", "schutzengel", "waldhexe", "wolfskind", "lehrling", "dorfbewohner", "amalia", "detektiv"]
 
 
 ## Cockpit mit Partie am Ende von Nacht 1 (alle Nachtschritte erledigt, EndNight noch offen).

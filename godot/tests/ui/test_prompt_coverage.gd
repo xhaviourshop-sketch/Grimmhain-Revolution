@@ -275,12 +275,13 @@ func _render_once(combo: String, next: Dictionary) -> void:
 func _start(focus: String, count: int) -> Command:
 	var pool: Array = FUZZ.ROLES
 	var wolves: Array = FUZZ.WOLF_ROLES
+	# PE-07: jede Rolle höchstens einmal beim Start; gezogene, schon vergebene Rollen weichen auf die nächste freie des Pools aus.
 	var roles: Array = [focus]
 	if not wolves.has(focus):
-		roles.append("werwolf")
-	roles.append("dorfbewohner")
+		FUZZ.add_unique(roles, ["werwolf"], 0)
+	FUZZ.add_unique(roles, ["dorfbewohner"], 0)
 	while roles.size() < count:
-		roles.append(str(pool[_rng.randi_range(0, pool.size() - 1)]))
+		FUZZ.add_unique(roles, pool, _rng.randi_range(0, pool.size() - 1))
 	var map := {}
 	var appearances := {}
 	var order: Array = []
@@ -320,13 +321,14 @@ const REACH_SCENARIOS := {
 
 
 func _scenario_start(focus: String, count: int, extra_wolves: int) -> Command:
+	# Fokusrolle, ein Werwolf, `extra_wolves` weitere Wolfsrollen, der Rest verschiedene wirkungsarme Dorfrollen (PE-07).
 	var roles: Array = [focus, "werwolf"]
 	_scenario_wolves = [2]
-	for i: int in extra_wolves:
-		roles.append("werwolf")
+	for role: String in Fixtures.wolf_fillers(extra_wolves + 1, [focus]).slice(1):
+		roles.append(role)
 		_scenario_wolves.append(roles.size())
-	while roles.size() < count:
-		roles.append("dorfbewohner")
+	for role: String in Fixtures.village_fillers(count - roles.size(), roles):
+		roles.append(role)
 	var map := {}
 	for i: int in roles.size():
 		map[str(i + 1)] = roles[i]
@@ -437,7 +439,7 @@ func _roles_start(roles: Array) -> Command:
 ## Ritter bei Gleichstand: Pflichtwahl unter den gleich nahen Wölfen, ohne Verzicht.
 func test_knight_tie_reaction_card() -> void:
 	var session := GameSession.new()
-	session.submit(_roles_start(["dorfbewohner", "werwolf", "dorfbewohner", "ritter", "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner"]))
+	session.submit(_roles_start(["dorfbewohner", "werwolf", "amalia", "ritter", "detektiv", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor"]))
 	session.start_night()
 	assert_true(session.answer_targets([4]).ok, "Rudel reißt den Ritter")
 	assert_true(session.end_night().ok, "Morgen")
@@ -459,7 +461,7 @@ func test_knight_tie_reaction_card() -> void:
 ## Schmiedewaffe: Die Spielleitung wählt den Wolf, der stirbt (S-06). Waffe ab Nacht 6.
 func test_smith_weapon_reaction_card() -> void:
 	var session := GameSession.new()
-	session.submit(_roles_start(["werwolf", "werwolf", "dorfschmied", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]))
+	session.submit(_roles_start(["werwolf", "blutwolf", "dorfschmied", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"]))
 	for night: int in 5:
 		assert_true(session.start_night().ok, "Nacht %d" % (night + 1))
 		assert_true(session.skip_next_step("kein Opfer").ok, "Rudel übersprungen")

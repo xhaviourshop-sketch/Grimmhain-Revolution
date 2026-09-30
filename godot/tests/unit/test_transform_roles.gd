@@ -140,7 +140,7 @@ func test_catalog_entries() -> void:
 # --- Dämonischer Wolf -----------------------------------------------------------------------------
 
 func test_demon_curses_on_any_death_only_role_information_sees_it() -> void:
-	var s := _day(_state([DW, W, D, "das-orakel", "waldlaeufer", D, D, D]))
+	var s := _day(_state([DW, W, D, "das-orakel", "waldlaeufer", "amalia", "detektiv", "wahnsinniger-kutscher"]))
 	var r := apply_ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "Dämon stirbt (jede Ursache)")
 	assert_eq(r.state.reactions.size(), 1, "Todesreaktion eingereiht")
 	s = _ok(r.state, Command.begin_step(RulesEngine.next_step_id(r.state)), "Reaktion")
@@ -163,7 +163,7 @@ func test_demon_curses_on_any_death_only_role_information_sees_it() -> void:
 
 
 func test_demon_may_decline_and_needs_effects() -> void:
-	var s := _day(_state([DW, W, D, D, D, D, D, D]))
+	var s := _day(_state([DW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]))
 	var quiet := apply_ok(s, _gm("kill", {"target_id": 1, "trigger_effects": false}), "ohne Folgen")
 	assert_true(quiet.state.reactions.is_empty(), "ohne Todesfolgen keine Reaktion")
 	var r := apply_ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "mit Folgen")
@@ -177,7 +177,7 @@ func test_demon_may_decline_and_needs_effects() -> void:
 # --- König Lykaon ---------------------------------------------------------------------------------
 
 func test_lycaon_converts_village_person_into_decoy_wolf() -> void:
-	var s := _state([KL, W, "das-orakel", D, D, D, D, D])
+	var s := _state([KL, W, "das-orakel", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"])
 	var log: Array[GameEvent] = []
 	s = _night(s, {"koenig-lykaon:1@ally": [2], "koenig-lykaon:1@targets": [3]}, log)
 	if s == null:
@@ -197,14 +197,14 @@ func test_lycaon_converts_village_person_into_decoy_wolf() -> void:
 
 
 func test_lycaon_targets_and_gatewarden() -> void:
-	var s := _to_owner(_state([KL, W, "manipulator", D, D, D, D, D]), &"koenig-lykaon")
+	var s := _to_owner(_state([KL, W, "manipulator", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]), &"koenig-lykaon")
 	if s == null:
 		return
 	assert_eq(s.pending_prompt.allowed_ids, [2] as Array[int], "Verbündeter: andere lebende Wölfe")
 	s = _ok(s, Command.answer_stage_targets(s.pending_prompt.id, "ally", [2]), "Verbündeter")
 	assert_false(s != null and s.pending_prompt.allowed_ids.has(3), "Einzelsieg ist kein Ziel")
 	# Wächter am Tor: das Ziel wird Dorfbewohner.
-	var t := _state([KL, W, "waechter-am-tor", D, D, D, D, D])
+	var t := _state([KL, W, "waechter-am-tor", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"])
 	t = _night(t, {"koenig-lykaon:1@ally": [2], "koenig-lykaon:1@targets": [4]})
 	if t != null:
 		assert_eq(t.players[4].role_id, &"dorfbewohner", "blockiert")
@@ -212,7 +212,7 @@ func test_lycaon_targets_and_gatewarden() -> void:
 
 
 func test_lycaon_postpones_at_most_three_times() -> void:
-	var s := _state([KL, W, D, D, D, D, D, D])
+	var s := _state([KL, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "nachtwaechter", "der-weise"])
 	for night: int in 3:
 		s = _night(s, {"koenig-lykaon:1@ally": []})
 		if s == null:
@@ -227,7 +227,7 @@ func test_lycaon_postpones_at_most_three_times() -> void:
 
 
 func test_lycaon_without_ally_does_not_count() -> void:
-	var s := _state([KL, W, D, D, D, D, D, D])
+	var s := _state([KL, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "nachtwaechter", "der-weise"])
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": false}), "kein Verbündeter")
 	var log: Array[GameEvent] = []
 	s = _night(s, {}, log)
@@ -238,7 +238,7 @@ func test_lycaon_without_ally_does_not_count() -> void:
 # --- Seelentauscher -------------------------------------------------------------------------------
 
 func test_soul_swapper_swaps_with_fresh_roles_and_tells_the_living() -> void:
-	var s := _state([W, ST, "waldhexe", "wolfskind", D, D, D])
+	var s := _state([W, ST, "waldhexe", "wolfskind", D, "amalia", "detektiv"])
 	# Waldhexe ohne Gifttrank und ohne Rudelopfer: ihr Schritt entfällt vor dem Tausch.
 	s = _ok(s, _gm("set_witch_potion", {"witch_id": 3, "potion": "poison", "available": false}), "Gift verbraucht")
 	var log: Array[GameEvent] = []
@@ -261,7 +261,7 @@ func test_soul_swapper_swaps_with_fresh_roles_and_tells_the_living() -> void:
 
 
 func test_soul_swapper_with_the_dead_and_gatewarden() -> void:
-	var s := _state([W, ST, D, D, D, "waechter-am-tor", D, W])
+	var s := _state([W, ST, D, "amalia", "detektiv", "waechter-am-tor", "wahnsinniger-kutscher", "blutwolf"])
 	s = _ok(s, _gm("kill", {"target_id": 1, "trigger_effects": false}), "Wolf 1 tot")
 	s = _night(s, {"seelentauscher:2@targets": [1, 2]})
 	if s == null:
@@ -269,7 +269,7 @@ func test_soul_swapper_with_the_dead_and_gatewarden() -> void:
 	assert_eq(s.players[1].role_id, &"seelentauscher", "der Tote erhält den Seelentauscher")
 	assert_eq(s.players[2].role_id, &"dorfbewohner", "Wächter: statt Werwolf Dorfbewohner")
 	# Ohne Wächter: ein Toter kann eine Wolfsrolle erhalten; mit Wächter nicht (V-06).
-	var t := _state([W, ST, D, D, D, "waechter-am-tor", D, W])
+	var t := _state([W, ST, D, "amalia", "detektiv", "waechter-am-tor", "wahnsinniger-kutscher", "blutwolf"])
 	t = _ok(t, _gm("kill", {"target_id": 3, "trigger_effects": false}), "3 tot")
 	t = _night(t, {"seelentauscher:2@targets": [3, 8]})
 	if t != null:

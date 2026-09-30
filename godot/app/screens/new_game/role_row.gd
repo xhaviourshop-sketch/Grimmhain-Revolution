@@ -43,7 +43,9 @@ func show_count(count: int, can_decrease: bool, can_increase: bool) -> void:
 	_plus.disabled = not can_increase
 	var at_limit := not can_increase and count > 0
 	_limit.visible = at_limit
-	_limit.text_key = "ui.setup.roles.limit" if at_limit else ""
+	# Höchstzahl 1 gilt nur für den Spielbeginn (PE-07); spätere gleiche Rollen sind nicht ausgeschlossen: kein „pro Partie“.
+	var once := SetupRoleCatalog.max_copies(role_id) == 1
+	_limit.text_key = ("ui.setup.roles.limit_once" if once else "ui.setup.roles.limit") if at_limit else ""
 
 
 func plus_button() -> GrimmButton:

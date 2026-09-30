@@ -74,7 +74,7 @@ func _view(shell: Control) -> Dictionary:
 
 
 func test_execution_in_a_revival_round_names_no_role() -> void:
-	var shell := await _cockpit(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "kutscher"])
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "nachtwaechter", "kutscher"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -87,7 +87,7 @@ func test_execution_in_a_revival_round_names_no_role() -> void:
 
 
 func test_nomination_execution_end_day_and_next_night() -> void:
-	var shell := await _cockpit(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -127,7 +127,7 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 
 
 func test_no_execution_needs_confirmation() -> void:
-	var shell := await _cockpit(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -142,7 +142,7 @@ func test_no_execution_needs_confirmation() -> void:
 
 
 func test_mirror_wolf_preview_names_real_victim() -> void:
-	var shell := await _cockpit(["spiegelwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["spiegelwolf", "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -159,7 +159,7 @@ func test_mirror_wolf_preview_names_real_victim() -> void:
 
 
 func test_sage_curse_length_is_required() -> void:
-	var shell := await _cockpit(["werwolf", "der-weise", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["werwolf", "der-weise", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -179,7 +179,7 @@ func test_sage_curse_length_is_required() -> void:
 
 
 func test_amalia_secret_day_action() -> void:
-	var shell := await _cockpit(["werwolf", "werwolf", "werwolf", "amalia", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["werwolf", "blutwolf", "rudelvater", "amalia", "dorfbewohner", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -195,7 +195,7 @@ func test_amalia_secret_day_action() -> void:
 
 
 func test_win_candidate_is_covered_then_confirmed() -> void:
-	var shell := await _cockpit(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -222,7 +222,7 @@ func find_children_of_type(root: Node, type: String) -> Array[Node]:
 
 
 func test_necromancer_names_wolf_secretly() -> void:
-	var shell := await _cockpit(["werwolf", "nekromant", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["werwolf", "nekromant", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
@@ -241,7 +241,7 @@ func test_necromancer_names_wolf_secretly() -> void:
 ## Rückgängig ersetzt den Zustand: eine offene Bedienung (hier die Prüfkarte einer Hinrichtung mit
 ## Vorschau des alten Zustands) darf nicht stehen bleiben.
 func test_undo_drops_open_execution_check() -> void:
-	var shell := await _cockpit(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	if shell == null:
 		return
 	await _quiet_night(shell)

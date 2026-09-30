@@ -23,7 +23,7 @@ const W := "werwolf"
 
 
 func _state(roles: Array) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	return r.state if r.ok else null
 
@@ -141,7 +141,7 @@ func test_catalog_entries() -> void:
 # --- Der Weise ------------------------------------------------------------------------------------
 
 func test_sage_survives_first_attack_only_when_needed() -> void:
-	var s := _state([W, WE, "schutzengel", D, D, D, D])
+	var s := _state([W, WE, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var r := _dawn(s, 2, {"schutzengel:3": [2]})
 	if r == null:
 		return
@@ -159,7 +159,7 @@ func test_sage_survives_first_attack_only_when_needed() -> void:
 
 
 func test_sage_is_pierced() -> void:
-	var s := _state(["seuchenwolf", W, WE, D, D, D, D])
+	var s := _state(["seuchenwolf", W, WE, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "Seuchenwolf tot")
 	var r := _dawn(s, 3)
 	assert_eq(_died(r.events, 3) if r != null else "", "NIGHT_KILL", "Durchdringung tötet den Weisen")
@@ -167,7 +167,7 @@ func test_sage_is_pierced() -> void:
 
 func test_sage_lynch_curse_silences_village_abilities() -> void:
 	# 1 W, 2 Weiser, 3 Orakel, 4 Dorfwache, 5 Nachtwächter (neben 6 = Wolf), 6 W, 7 Sensenträger, 8 Amalia, 9 W, 10–12 D
-	var s := _state([W, WE, "das-orakel", "dorfwache", "nachtwaechter", W, "sensentraeger", "amalia", W, D, D, D])
+	var s := _state([W, WE, "das-orakel", "dorfwache", "nachtwaechter", "blutwolf", "sensentraeger", "amalia", "rudelvater", D, "detektiv", "wahnsinniger-kutscher"])
 	var r := _dawn(s, -1)
 	if r == null:
 		return
@@ -207,7 +207,7 @@ func test_sage_lynch_curse_silences_village_abilities() -> void:
 
 func test_sage_curse_drops_triggered_effects_for_good() -> void:
 	# Wolfskind 3 mit Vorbild 4, Lehrling 5 mit Meister 6 (per Korrektur gebunden).
-	var s := _state([W, WE, "wolfskind", D, "lehrling", "das-orakel", D, D, W])
+	var s := _state([W, WE, "wolfskind", D, "lehrling", "das-orakel", "amalia", "detektiv", "blutwolf"])
 	s = _ok(s, _gm("set_wolf_model", {"child_id": 3, "target_id": 4}), "Vorbild")
 	s = _ok(s, _gm("set_apprentice_master", {"apprentice_id": 5, "target_id": 6}), "Meister")
 	var r := _dawn(s, -1)
@@ -233,7 +233,7 @@ func test_sage_curse_drops_triggered_effects_for_good() -> void:
 
 
 func test_sage_curse_zero_and_silenced_sage() -> void:
-	var s := _state([W, WE, WE, D, D, D, D, D, W])
+	var s := _state([W, WE, WE, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "blutwolf"])
 	var r := _dawn(s, -1)
 	r = _lynch_sage(r.state, 4, 2, 0) if r != null else null
 	if r == null:
@@ -258,7 +258,7 @@ func test_sage_curse_zero_and_silenced_sage() -> void:
 
 func test_one_time_protection_order_weapon_shield_sage() -> void:
 	# Weiser 2 trägt Waffe (Schmied 3) und Schild (Schutzgeist 4) per Spielablauf; hier per Zustand vorbereitet.
-	var s := _state([W, WE, SM, SG, D, D, D, W])
+	var s := _state([W, WE, SM, SG, D, "amalia", "detektiv", "blutwolf"])
 	if s == null:
 		return
 	s.weapons.append({"holder_id": 2, "smith_id": 3})
@@ -286,7 +286,7 @@ func test_one_time_protection_order_weapon_shield_sage() -> void:
 # --- Märtyrerin -----------------------------------------------------------------------------------
 
 func test_martyr_replaces_victim_who_would_die() -> void:
-	var s := _state([W, MA, D, D, D, D, "albtraumwolf"])
+	var s := _state([W, MA, D, "amalia", "detektiv", "wahnsinniger-kutscher", "albtraumwolf"])
 	# Albtraumwolf blockiert die Märtyrerin: ihre Entscheidung ist trotzdem möglich (S-03).
 	s = _night(s, 3, {"albtraumwolf:7": [2]})
 	if s == null:
@@ -304,7 +304,7 @@ func test_martyr_replaces_victim_who_would_die() -> void:
 
 
 func test_martyr_not_asked_when_victim_survives_anyway() -> void:
-	var s := _state([W, MA, "schutzengel", D, D, D])
+	var s := _state([W, MA, "schutzengel", D, "amalia", "detektiv"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	if s == null:
 		return
@@ -325,7 +325,7 @@ func test_martyr_not_asked_when_victim_survives_anyway() -> void:
 # --- Schutzgeist ----------------------------------------------------------------------------------
 
 func test_guardian_spirit_shield_from_next_night() -> void:
-	var s := _state([W, SG, D, D, D, D, D, D])
+	var s := _state([W, SG, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	var r := _dawn(s, -1)
 	if r == null:
 		return
@@ -351,7 +351,7 @@ func test_guardian_spirit_shield_from_next_night() -> void:
 func test_guardian_spirit_step_dropped_without_living_person() -> void:
 	# Regressionstest (Fuzz, 28.09.2026): Leben keine Personen mehr, öffnete der Schritt der toten Schutzgeist eine
 	# Pflichtwahl ohne mögliches Ziel. Wie jede Pflichtwahl ohne Ziel entfällt er mit „no_decision“.
-	var r := _dawn(_state([W, SG, D, D, D, D, D, D]), -1)
+	var r := _dawn(_state([W, SG, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), -1)
 	if r == null:
 		return
 	var s := _ok(r.state, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Schutzgeist stirbt am Tag 1")
@@ -371,7 +371,7 @@ func test_guardian_spirit_step_dropped_without_living_person() -> void:
 
 
 func test_guardian_spirit_announces_wolf_without_name() -> void:
-	var s := _state([W, SG, D, D, D, D, D, D])
+	var s := _state([W, SG, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Schutzgeist tot vor Nacht 1")
 	var r := _dawn(s, -1, {"schutzgeist:2": [1]})
 	if r == null:
@@ -385,7 +385,7 @@ func test_guardian_spirit_announces_wolf_without_name() -> void:
 # --- Dorfschmied ----------------------------------------------------------------------------------
 
 func test_smith_gives_weapon_from_night_six_and_it_beats_piercing() -> void:
-	var s := _state(["seuchenwolf", W, SM, D, D, D, D, D, D, D])
+	var s := _state(["seuchenwolf", W, SM, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"])
 	var r: CommandResult = null
 	for night: int in 5:
 		if s != null and s.phase != Phase.SETUP:
@@ -416,7 +416,7 @@ func test_smith_gives_weapon_from_night_six_and_it_beats_piercing() -> void:
 # --- Verdammniswächter ----------------------------------------------------------------------------
 
 func test_doom_warden_redirects_pack_attack_to_offered_non_wolf() -> void:
-	var s := _state([W, VW, "schutzengel", D, D, D, D, W])
+	var s := _state([W, VW, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher", "blutwolf"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	if s == null:
 		return
@@ -446,7 +446,7 @@ func test_doom_warden_redirects_pack_attack_to_offered_non_wolf() -> void:
 
 
 func test_doom_warden_choice_of_protected_victim_keeps_protection() -> void:
-	var s := _state([W, VW, "schutzengel", D, D, D, D, W])
+	var s := _state([W, VW, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher", "blutwolf"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	if s == null:
 		return
@@ -457,7 +457,7 @@ func test_doom_warden_choice_of_protected_victim_keeps_protection() -> void:
 
 func test_doom_warden_as_pack_victim_has_no_judgment() -> void:
 	# Regression aus dem Fuzztest (S-15 = B): ist er selbst das Rudelopfer, entfällt sein Schritt.
-	var s := _state([W, VW, D, D, D, D, D])
+	var s := _state([W, VW, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	if s == null:
 		return

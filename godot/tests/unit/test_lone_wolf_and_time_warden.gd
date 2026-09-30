@@ -18,7 +18,7 @@ const SE := "schutzengel"
 
 
 func _state(roles: Array, dead: Array = []) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	var s := r.state if r.ok else null
 	for id: int in dead:
@@ -144,7 +144,7 @@ func test_lone_wolf_catalog() -> void:
 
 
 func test_lone_wolf_kills_another_wolf_every_third_night() -> void:
-	var s := _state([W, RW, SE, D, D, D, D, D, D, D])
+	var s := _state([W, RW, SE, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {}, log)
 	s = _dawn(s, {}, log)
@@ -179,10 +179,10 @@ func test_lone_wolf_kills_another_wolf_every_third_night() -> void:
 
 func test_lone_wolf_wins_alone_only_as_last_wolf() -> void:
 	# Mit einem anderen Wolf: Werwölfe gewinnen (ohne ihn), kein Alleinsieg.
-	var s := _state([RW, W, D, D, D, D], [4, 5, 6])
+	var s := _state([RW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher"], [4, 5, 6])
 	assert_eq(_reasons(s), ["wolf_parity"], "Wolfssieg mit anderem Wolf")
 	# Er ist der einzige lebende Wolf: sein Alleinsieg statt des Wolfssiegs.
-	s = _state([RW, W, D, D, D, D], [2, 4, 5, 6])
+	s = _state([RW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher"], [2, 4, 5, 6])
 	var solo := s.open_candidates() if s != null else []
 	assert_eq(_reasons(s), ["lone_wolf_last_wolf"], "Alleinsieg statt Wolfssieg")
 	if solo.size() == 1:
@@ -190,7 +190,7 @@ func test_lone_wolf_wins_alone_only_as_last_wolf() -> void:
 		assert_eq(String((solo[0] as WinCandidate).kind), "solo", "Einzelsieg")
 	_codec_same(s, "Alleinsieg offen")
 	# Zwei Rachsüchtige Wölfe als einzige Wölfe: noch kein Sieg (DA-18).
-	s = _state([RW, RW, D, D, D, D], [4, 5, 6])
+	s = _state([RW, RW, D, "amalia", "detektiv", "wahnsinniger-kutscher"], [4, 5, 6])
 	assert_eq(_reasons(s), [], "keiner gewinnt, sie müssen sich reißen")
 
 
@@ -202,12 +202,12 @@ func test_time_warden_catalog_and_first_step() -> void:
 		return
 	assert_eq(RoleCatalog.faction_of(&"zeitwaechter"), Faction.VILLAGE, "Dorf")
 	assert_true(RoleCatalog.stealable(&"zeitwaechter"), "stehlbar")
-	var s := _ok(_state([W, "schattenhund", ZW, D, D, D, D, D]), Command.start_night(), "Nacht")
+	var s := _ok(_state([W, "schattenhund", ZW, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night(), "Nacht")
 	assert_eq(s.night_plan[0] if s != null else &"", &"zeitwaechter:3", "allererster Nachtschritt (vor dem Schattenhund)")
 
 
 func test_freeze_drops_all_steps_no_deaths_no_growth() -> void:
-	var s := _state([W, ZW, SE, "fenrir", "schwarze-witwe", D, D, D, D, D])
+	var s := _state([W, ZW, SE, "fenrir", "schwarze-witwe", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
 	if s == null:
 		return
@@ -234,7 +234,7 @@ func test_freeze_drops_all_steps_no_deaths_no_growth() -> void:
 
 func test_decline_keeps_ability_and_earlier_poison_still_due() -> void:
 	# Giftpranke in Nacht 1 (fällig Nacht 3); in Nacht 3 friert der Zeitwächter ein: das Gift wirkt trotzdem.
-	var s := _state(["giftwolf", ZW, D, D, D, D, D, D])
+	var s := _state(["giftwolf", ZW, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"zeitwaechter:2@use": false, "giftwolf:1@": [5]}, log)
 	s = _dawn(s, {"zeitwaechter:2@use": false}, log)
@@ -246,7 +246,7 @@ func test_decline_keeps_ability_and_earlier_poison_still_due() -> void:
 
 
 func test_load_rejects_frozen_outside_night() -> void:
-	var s := _state([W, ZW, D, D, D, D, D, D])
+	var s := _state([W, ZW, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	if s == null:
 		return
 	var d := s.to_dict()
@@ -256,7 +256,7 @@ func test_load_rejects_frozen_outside_night() -> void:
 
 func test_win_confirmed_in_frozen_night_still_loads() -> void:
 	# Regressionstest (Fuzz, andere Seeds): Siegbestätigung mitten in der eingefrorenen Nacht → Spielende bleibt ladbar.
-	var s := _state([W, ZW, D, D, D, D])
+	var s := _state([W, ZW, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	s = _ok(s, Command.answer_choice(s.pending_prompt.id, "use", true), "einfrieren") if s != null else null
 	s = _ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "letzter Wolf stirbt (Korrektur)")

@@ -28,10 +28,12 @@ const W := "werwolf"
 
 
 func _state(roles: Array, appearances: Dictionary = {}) -> GameState:
-	var payload := Fixtures.start_roles(roles, 1).payload.duplicate(true)
+	var commands := Fixtures.start_with_copies(roles, 1)  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	if not appearances.is_empty():
+		var payload := commands[0].payload.duplicate(true)
 		payload["appearances"] = appearances
-	var r := RulesEngine.replay([Command.start_game(payload)] as Array[Command])
+		commands[0] = Command.start_game(payload)
+	var r := RulesEngine.replay(commands)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	return r.state if r.ok else null
 
@@ -159,7 +161,7 @@ func test_catalog_entries() -> void:
 # --- Traumdeuter ----------------------------------------------------------------------------------
 
 func test_dreamer_needs_three_others_with_a_wolf_and_learns_only_that() -> void:
-	var s := _to_step(_state([W, W, TD, D, D, D]), "%s:3" % TD)
+	var s := _to_step(_state([W, "blutwolf", TD, D, "amalia", "detektiv"]), "%s:3" % TD)
 	if s == null:
 		return
 	var p := s.pending_prompt
@@ -190,12 +192,12 @@ func test_dreamer_needs_three_others_with_a_wolf_and_learns_only_that() -> void:
 
 func test_dreamer_true_wolf_count_and_drop_without_enough_targets() -> void:
 	# Trugbilderwolf mit Scheinrolle Dorfbewohner zählt als Wolf (I-02).
-	var s := _to_step(_state(["trugbilderwolf", TD, D, D, D, D], {"1": "dorfbewohner"}), "%s:2" % TD)
+	var s := _to_step(_state(["trugbilderwolf", TD, D, "amalia", "detektiv", "wahnsinniger-kutscher"], {"1": "dorfbewohner"}), "%s:2" % TD)
 	if s == null:
 		return
 	_ok(s, Command.answer_stage_targets(s.pending_prompt.id, "targets", [1, 3, 4]), "Trugbild ist der Wolf")
 	# Weniger als drei andere Lebende: Schritt entfällt ohne Entscheidung (nach der Rudelantwort).
-	var t := _state([W, TD, D, D, D, D])
+	var t := _state([W, TD, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	for id: int in [4, 5, 6]:
 		t = _ok(t, _gm("kill", {"target_id": id, "trigger_effects": false}), "tot %d" % id)
 	t = _ok(t, Command.start_night(), "Nacht")
@@ -210,7 +212,7 @@ func test_dreamer_true_wolf_count_and_drop_without_enough_targets() -> void:
 # --- Kopfgeldjäger --------------------------------------------------------------------------------
 
 func test_bounty_hunter_gets_one_list_per_wolf_lynch() -> void:
-	var s := _state([W, W, W, KG, D, D, D, D])
+	var s := _state([W, "blutwolf", "rudelvater", KG, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
 	assert_false(_plan_has(s, "%s:4" % KG), "ohne Lynch kein Schritt")
 	s = _finish_night(s)
@@ -241,7 +243,7 @@ func test_bounty_hunter_gets_one_list_per_wolf_lynch() -> void:
 
 func test_bounty_hunter_only_counts_real_wolf_lynch_while_holding_role() -> void:
 	# Spielleitertötung eines Wolfs ist kein Lynch; ein toter Kopfgeldjäger sammelt nichts.
-	var s := _next_day(_state([W, W, KG, D, D, D, D, D]))
+	var s := _next_day(_state([W, "blutwolf", KG, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]))
 	s = _ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "Korrektur-Tod eines Wolfs")
 	assert_eq(int(s.bounty_credits.get(3, 0)) if s != null else -1, 0, "kein Lynch")
 	s = _ok(s, _gm("kill", {"target_id": 3, "trigger_effects": false}), "Kopfgeldjäger tot")
@@ -250,7 +252,7 @@ func test_bounty_hunter_only_counts_real_wolf_lynch_while_holding_role() -> void
 
 
 func test_bounty_list_expires_with_notice_and_survives_block() -> void:
-	var s := _state([W, W, KG, D, D, D, "albtraumwolf"])
+	var s := _state([W, "blutwolf", KG, D, "amalia", "detektiv", "albtraumwolf"])
 	s = _next_day(s)
 	var r := _lynch(s, 4, 1)
 	if r == null:
@@ -286,7 +288,7 @@ func test_bounty_list_expires_with_notice_and_survives_block() -> void:
 # --- König ----------------------------------------------------------------------------------------
 
 func test_king_learns_one_village_person_once_per_life() -> void:
-	var s := _state([W, KO, "dorfwache", D, D, D, D, D, D, D])
+	var s := _state([W, KO, "dorfwache", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"])
 	for id: int in [4, 5, 6, 7, 8]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": false}), "tot %d" % id)
 	s = _ok(s, Command.start_night(), "5 tot, 5 leben")
@@ -321,7 +323,7 @@ func test_king_learns_one_village_person_once_per_life() -> void:
 # --- Kriegerin des Lichts -------------------------------------------------------------------------
 
 func test_warrior_hits_wolf_privately_and_wolf_survives() -> void:
-	var s := _to_step(_state([W, KR, D, D, D, D]), "%s:2" % KR)
+	var s := _to_step(_state([W, KR, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), "%s:2" % KR)
 	if s == null:
 		return
 	var p := s.pending_prompt
@@ -341,7 +343,7 @@ func test_warrior_hits_wolf_privately_and_wolf_survives() -> void:
 
 func test_warrior_wrong_dies_at_dawn() -> void:
 	# Kriegerin 3 irrt: Tod erst am Morgen, Ursache WARRIOR_WRONG; ein Verzicht verbraucht nichts.
-	var s := _to_step(_state([W, D, KR, D, D, D]), "%s:3" % KR)
+	var s := _to_step(_state([W, D, KR, "amalia", "detektiv", "wahnsinniger-kutscher"]), "%s:3" % KR)
 	if s == null:
 		return
 	var declined := _ok(s, Command.answer_stage_targets(s.pending_prompt.id, "targets", []), "Verzicht")
@@ -371,7 +373,7 @@ func _finish_night_before_end(s: GameState) -> GameState:
 func test_sacrificed_person_sleeps_rest_of_night() -> void:
 	# Todesmarkierung (Decision Log „Nachttode“): Blutpriester 2 opfert Blutpriester 3 (gleiche Priorität,
 	# später nach Personen-ID); dessen Schritt entfällt, er stirbt am Morgen.
-	var s := _to_step(_state([W, BP, BP, D, D, D, D]), "%s:2" % BP)
+	var s := _to_step(_state([W, BP, BP, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), "%s:2" % BP)
 	if s == null:
 		return
 	s = _ok(s, Command.answer_stage_targets(s.pending_prompt.id, "targets", [3]), "Opfer 3")
@@ -388,7 +390,7 @@ func test_sacrificed_person_sleeps_rest_of_night() -> void:
 # --- Blutpriester ---------------------------------------------------------------------------------
 
 func test_blood_priest_sacrifice_and_private_reveal() -> void:
-	var s := _state([W, W, BP, "schutzengel", D, D, D])
+	var s := _state([W, "blutwolf", BP, "schutzengel", D, "amalia", "detektiv"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	if s == null:
 		return
@@ -420,7 +422,7 @@ func test_blood_priest_sacrifice_and_private_reveal() -> void:
 
 
 func test_blood_priest_victim_packfather_survives_once() -> void:
-	var s := _to_step(_state(["rudelvater", W, BP, D, D, D, D]), "%s:3" % BP)
+	var s := _to_step(_state(["rudelvater", W, BP, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), "%s:3" % BP)
 	if s == null:
 		return
 	s = _ok(s, Command.answer_stage_targets(s.pending_prompt.id, "targets", [1]), "Rudelvater als Opfer")
@@ -434,7 +436,7 @@ func test_blood_priest_victim_packfather_survives_once() -> void:
 # --- Amalia ---------------------------------------------------------------------------------------
 
 func test_amalia_day_sacrifice_with_public_answer() -> void:
-	var s := _next_day(_state([W, W, W, AM, D, D, D, D, D, D]))
+	var s := _next_day(_state([W, "blutwolf", "rudelvater", AM, D, "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"]))
 	if s == null:
 		return
 	apply_rejected(s, Command.amalia_sacrifice(5, true), "not_amalia", "nur Amalia")
@@ -450,7 +452,7 @@ func test_amalia_day_sacrifice_with_public_answer() -> void:
 
 
 func test_amalia_needs_three_living_wolves() -> void:
-	var s := _next_day(_state([W, W, W, AM, D, D, D, D, D, D]))
+	var s := _next_day(_state([W, "blutwolf", "rudelvater", AM, D, "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"]))
 	s = _ok(s, _gm("kill", {"target_id": 1, "trigger_effects": false}), "Wolf tot")
 	apply_rejected(s, Command.amalia_sacrifice(4, true), "too_few_wolves", "zwei Wölfe reichen nicht")
 
@@ -459,7 +461,7 @@ func test_amalia_needs_three_living_wolves() -> void:
 
 func test_detective_hint_points_from_dead_wolf_seat() -> void:
 	# Sitze = IDs 1..8 im Uhrzeigersinn. Wolf 1 stirbt; Wölfe 5 (Abstand 4 links) und 8 (Abstand 1 rechts).
-	var s := _next_day(_state([W, D, DE, D, W, D, D, W]))
+	var s := _next_day(_state([W, D, DE, "amalia", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor", "rudelvater"]))
 	var r := _lynch(s, 2, 1)
 	if r == null:
 		return
@@ -469,7 +471,7 @@ func test_detective_hint_points_from_dead_wolf_seat() -> void:
 		assert_eq(int(hint[0].data["anchor_id"]), 1, "Anker: Platz des Toten")
 		assert_eq(String(hint[0].data["direction"]), "right", "nächster Wolf rechts")
 	# Tie: gleich weit.
-	var t := _next_day(_state([D, W, DE, D, D, D, D, W, D, W]))
+	var t := _next_day(_state([D, W, DE, "amalia", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "blutwolf", "nachtwaechter", "rudelvater"]))
 	# Wolf 10 stirbt: Wolf 2 (cw Abstand 2), Wolf 8 (ccw Abstand 2) → gleich weit.
 	r = _lynch(t, 1, 10)
 	hint = events_of_type(r.events, "DetectiveHint") if r != null else []
@@ -478,16 +480,16 @@ func test_detective_hint_points_from_dead_wolf_seat() -> void:
 
 func test_detective_conditions() -> void:
 	# Ohne lebenden Detektiv kein Hinweis.
-	var s := _next_day(_state([W, D, DE, D, W, D, D, D]))
+	var s := _next_day(_state([W, D, DE, "amalia", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]))
 	s = _ok(s, _gm("kill", {"target_id": 3, "trigger_effects": false}), "Detektiv tot")
 	var r := _lynch(s, 2, 1)
 	assert_eq(events_of_type(r.events, "DetectiveHint").size() if r != null else -1, 0, "Detektiv muss leben")
 	# Letzter Wolf: kein anderer Wolf, kein Hinweis.
-	s = _next_day(_state([W, D, DE, D, D, D, D, D]))
+	s = _next_day(_state([W, D, DE, "amalia", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"]))
 	r = _lynch(s, 2, 1)
 	assert_eq(events_of_type(r.events, "DetectiveHint").size() if r != null else -1, 0, "ohne anderen Wolf kein Hinweis")
 	# Zwei Detektive: ein Hinweis; Korrektur-Tod ohne Folgen: kein Hinweis.
-	s = _next_day(_state([W, DE, DE, D, W, D, D, D]))
+	s = _next_day(_state([W, DE, DE, D, "blutwolf", "amalia", "wahnsinniger-kutscher", "waechter-am-tor"]))
 	var quiet := apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": false}), "ohne Folgen")
 	assert_eq(events_of_type(quiet.events, "DetectiveHint").size(), 0, "ohne Todesfolgen kein Hinweis")
 	r = _lynch(s, 4, 1)
@@ -495,7 +497,7 @@ func test_detective_conditions() -> void:
 
 
 func test_detective_night_death_is_announced_at_dawn() -> void:
-	var s := _state([W, D, DE, D, W, D, D, D])
+	var s := _state([W, D, DE, "amalia", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	var r := apply_ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "Wolf stirbt nachts")
 	assert_eq(events_of_type(r.events, "DetectiveHint").size(), 0, "nachts noch nicht öffentlich")
@@ -510,7 +512,7 @@ func test_detective_night_death_is_announced_at_dawn() -> void:
 
 func test_detective_counts_wolf_child_transformed_by_same_death() -> void:
 	# Wolf 1 ist Vorbild von Wolfskind 2 (rechts daneben, Abstand 1); der andere Wolf 5 sitzt links weiter weg.
-	var s := _state([W, "wolfskind", DE, D, D, W, D, D])
+	var s := _state([W, "wolfskind", DE, D, "amalia", "blutwolf", "wahnsinniger-kutscher", "der-weise"])
 	s = _ok(s, _gm("set_wolf_model", {"child_id": 2, "target_id": 1}), "Vorbild")
 	s = _next_day(s)
 	var r := _lynch(s, 4, 1)
@@ -524,7 +526,7 @@ func test_detective_counts_wolf_child_transformed_by_same_death() -> void:
 # --- Die Ewigen -----------------------------------------------------------------------------------
 
 func test_eternal_shared_check_yes_no() -> void:
-	var s := _to_step(_state([W, EW, EW, "manipulator", D, D]), EW)
+	var s := _to_step(_state([W, EW, EW, "manipulator", D, "amalia"]), EW)
 	if s == null:
 		return
 	var p := s.pending_prompt
@@ -549,7 +551,7 @@ func test_eternal_shared_check_yes_no() -> void:
 
 
 func test_eternal_co_win_with_found_person_only() -> void:
-	var s := _to_step(_state([W, EW, EW, "manipulator", D, D, D]), EW)
+	var s := _to_step(_state([W, EW, EW, "manipulator", D, "amalia", "detektiv"]), EW)
 	s = _ok(s, Command.answer_stage_targets(s.pending_prompt.id, "targets", [4]), "prüft Manipulator")
 	s = _finish_night(_ok(s, Command.answer_choice(s.pending_prompt.id, "shown", true), "Ja"))
 	# Drei Lebende (1, 2, 4): Manipulator gewinnt; Ewige 2 (lebend) und 3 (tot) gewinnen mit.
@@ -566,7 +568,7 @@ func test_eternal_co_win_with_found_person_only() -> void:
 		assert_eq(manip.beneficiary_ids, [4, 2, 3] as Array[int], "Mitsieg aller Ewigen, lebend oder tot")
 	_codec_same(s, "Kandidat mit Mitsiegern")
 	# I-15: ein anderer Manipulator (nicht geprüft) gewinnt ohne Ewige.
-	var t := _state([W, EW, EW, "manipulator", "manipulator", D, D])
+	var t := _state([W, EW, EW, "manipulator", "manipulator", D, "amalia"])
 	for id: int in [4, 6, 7, 3]:
 		t = _ok(t, _gm("kill", {"target_id": id, "trigger_effects": false}), "tot %d" % id)
 	if t == null:
@@ -578,7 +580,7 @@ func test_eternal_co_win_with_found_person_only() -> void:
 
 func test_shadow_hound_blocks_shared_village_steps() -> void:
 	# Regression (RM-DR-010): der Schattenhund blockiert auch gemeinsame Dorfschritte (Gebundene, Ewige).
-	var s := _state(["schattenhund", "die-gebundenen", "die-gebundenen", EW, EW, D, D])
+	var s := _state(["schattenhund", "die-gebundenen", "die-gebundenen", EW, EW, D, "amalia"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
 	if s == null:
 		return
@@ -604,17 +606,17 @@ func test_shadow_hound_blocks_shared_village_steps() -> void:
 ## Offene Auswahl je Rolle: {owner: [Zustand, Stufe]}.
 func _random_prompts() -> Dictionary:
 	var out := {}
-	out[TD] = [_to_step(_state([W, W, TD, D, D, D]), "%s:3" % TD), "targets"]
-	var k := _state([W, W, W, KG, D, D, D, D])
+	out[TD] = [_to_step(_state([W, "blutwolf", TD, D, "amalia", "detektiv"]), "%s:3" % TD), "targets"]
+	var k := _state([W, "blutwolf", "rudelvater", KG, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	k = _ok(k, Command.start_night(), "Nacht 1")
 	k = _finish_night(k)
 	var lynch := _lynch(k, 5, 1)
 	out[KG] = [_to_step(_ok(lynch.state, Command.end_day(), "Ende"), "%s:4" % KG) if lynch != null else null, "targets"]
-	var ko := _state([W, KO, "dorfwache", D, D, D, D, D, D, D])
+	var ko := _state([W, KO, "dorfwache", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"])
 	for id: int in [4, 5, 6, 7, 8, 9]:
 		ko = _ok(ko, _gm("kill", {"target_id": id, "trigger_effects": false}), "tot %d" % id)
 	out[KO] = [_to_step(ko, "%s:2" % KO), "targets"]
-	var bp := _ok(_state([W, W, BP, "schutzengel", D, D, D]), Command.start_night(), "Nacht")
+	var bp := _ok(_state([W, "blutwolf", BP, "schutzengel", D, "amalia", "detektiv"]), Command.start_night(), "Nacht")
 	bp = _ok(bp, Command.answer_prompt(bp.pending_prompt.id, [5]), "Schutzengel") if bp != null else null
 	bp = _to_step(bp, "%s:3" % BP)
 	bp = _ok(bp, Command.answer_stage_targets(bp.pending_prompt.id, "targets", [5]), "Opfer 5") if bp != null else null
@@ -687,9 +689,9 @@ func test_random_choice_proposes_an_admissible_result_and_confirms_with_one_draw
 
 func test_random_choice_is_uniform_over_the_admissible_results() -> void:
 	# Traumdeuter mit fünf anderen Lebenden, davon ein Wolf: genau sechs zulässige Dreiergruppen (Wolf plus zwei von vier).
-	var s := _to_step(_state([W, TD, D, D, D, D]), "%s:2" % TD)
+	var s := _to_step(_state([W, TD, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), "%s:2" % TD)
 	# Blutpriester mit zwei lebenden Wölfen: vier zulässige Ergebnisse (keiner, einer von zwei, beide).
-	var b := _to_step(_state([W, W, BP, D, D, D, D]), "%s:3" % BP)
+	var b := _to_step(_state([W, "blutwolf", BP, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), "%s:3" % BP)
 	b = _ok(b, Command.answer_stage_targets(b.pending_prompt.id, "targets", [5]), "Opfer") if b != null else null
 	for entry: Array in [[s, 6, "Traumdeuter"], [b, 4, "Blutpriester"]]:
 		var base: GameState = entry[0]
@@ -710,7 +712,7 @@ func test_random_choice_is_uniform_over_the_admissible_results() -> void:
 
 func test_random_choice_is_unavailable_without_admissible_result_and_for_other_roles() -> void:
 	# Das Opfer wählt der Blutpriester selbst (I-13): kein Zufallsknopf in dieser Stufe.
-	var b := _to_step(_state([W, BP, D, D, D, D]), "%s:2" % BP)
+	var b := _to_step(_state([W, BP, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), "%s:2" % BP)
 	if b != null:
 		assert_true(InfoSteps.random_choice(b).is_empty(), "Opferwahl des Blutpriesters: kein Zufall")
 		apply_rejected(b, Command.answer_random(b.pending_prompt.id, "targets", [3]), "random_not_supported", "Opferwahl nicht per Zufall")
@@ -718,12 +720,12 @@ func test_random_choice_is_unavailable_without_admissible_result_and_for_other_r
 		b = _ok(b, Command.answer_stage_targets(b.pending_prompt.id, "targets", [3]), "Opfer 3")
 		assert_true(InfoSteps.random_choice(b)["targets"] in [[], [1]], "nur „keiner“ oder Wolf 1")
 	# Ohne zulässiges Ergebnis (keine Dreiergruppe mit Wolf in der Auswahl) kein Vorschlag, keine ungültige Wahl.
-	var t := _to_step(_state([W, W, TD, D, D, D]), "%s:3" % TD)
+	var t := _to_step(_state([W, "blutwolf", TD, D, "amalia", "detektiv"]), "%s:3" % TD)
 	if t != null:
 		var probe := GameState.from_dict(t.to_dict())
 		probe.pending_prompt.allowed_ids = [4, 5, 6] as Array[int]
 		assert_true(InfoSteps.random_choice(probe).is_empty(), "keine Dreiergruppe mit Wolf: kein Vorschlag")
-	var s := _state([W, "schutzengel", D, D, D, D])
+	var s := _state([W, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	assert_true(InfoSteps.random_choice(s).is_empty(), "Schutzengel: kein Zufallsknopf")
 	apply_rejected(s, Command.answer_random(s.pending_prompt.id, "", [3]), "random_not_supported", "Zufall bei anderer Rolle abgelehnt")

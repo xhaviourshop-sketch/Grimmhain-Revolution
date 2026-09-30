@@ -22,6 +22,8 @@ func _draft(counts: Dictionary) -> RolePoolDraft:
 	return d
 
 
+## Die Hinweisfunktion liest nur die Anzahlen; die Fälle unten mit mehr als einer Kopie (z. B. zwei Parasiten) sind bewusst
+## isolierte Funktionsprüfungen ohne Gültigkeitsanspruch (beim Start ist jede Rolle höchstens einmal möglich, PE-07).
 func _hints(counts: Dictionary, persons: int) -> Array:
 	return _draft(counts).view(persons)["hints"]
 
@@ -50,7 +52,8 @@ func test_solo_hint_only_for_the_documented_overlap() -> void:
 
 
 func test_both_hints_together_and_validity_unchanged() -> void:
-	var pool := {"werwolf": 2, "dorfbewohner": 4, "kutscher": 1, "parasit": 1, "voodoo-priester": 1}
+	# Gültige Besetzung für 9 Personen mit verschiedenen Rollen (PE-07): zwei Wolfsrollen, Kutscher, Parasit und Voodoo-Priester.
+	var pool := {"werwolf": 1, "blutwolf": 1, "dorfbewohner": 1, "amalia": 1, "detektiv": 1, "wahnsinniger-kutscher": 1, "kutscher": 1, "parasit": 1, "voodoo-priester": 1}
 	var view := _draft(pool).view(9)
 	assert_eq(view["hints"], [COACH, SOLO], "beide Hinweise nebeneinander")
 	assert_true(bool(view["valid"]), "Hinweise machen die Besetzung nicht ungültig")
@@ -74,6 +77,14 @@ func _set_counts(shell: Control, counts: Dictionary) -> void:
 	await frames(2)
 
 
+## 12 Personen mit Kutscher (PE-07: jede Rolle einmal): Werwolf, Blutwolf, Manipulator, Kutscher und acht wirkungsarme Dorfrollen.
+func _cast12() -> Dictionary:
+	var out := {"werwolf": 1, "blutwolf": 1, "manipulator": 1, "kutscher": 1}
+	for role: String in Fixtures.village_fillers(8):
+		out[role] = 1
+	return out
+
+
 func _label(screen: Node, node_name: String) -> Label:
 	return find_node(screen, node_name) as Label
 
@@ -89,12 +100,12 @@ func test_role_step_updates_hints_immediately() -> void:
 		return
 	var screen := await _to_roles(shell, 12)
 	assert_false(_shown(screen, "CoachHintLabel") or _shown(screen, "SoloWinsHintLabel"), "leere Besetzung: kein Hinweis")
-	await _set_counts(shell, {"werwolf": 2, "dorfbewohner": 8, "manipulator": 1, "kutscher": 1})
+	await _set_counts(shell, _cast12())
 	assert_true(_shown(screen, "CoachHintLabel"), "Kutscher bei 12 Personen")
 	assert_eq(_label(screen, "CoachHintLabel").text, COACH_DE, "Text DE")
 	assert_false(_shown(screen, "SoloWinsHintLabel"), "ein Einzelsieg: kein Sieg-Hinweis")
 	assert_false(find_button(screen, "ConfirmRolesButton").disabled, "Bestätigen bleibt möglich")
-	await _set_counts(shell, {"dorfbewohner": 7, "parasit": 1})
+	await _set_counts(shell, {Fixtures.village_fillers(8)[7]: 0, "parasit": 1})  # eine Dorfrolle weniger, dafür der zweite Einzelsieg
 	assert_true(_shown(screen, "CoachHintLabel") and _shown(screen, "SoloWinsHintLabel"), "beide Hinweise gleichzeitig")
 	assert_eq(_label(screen, "SoloWinsHintLabel").text, SOLO_DE, "Text DE")
 	assert_false(find_button(screen, "ConfirmRolesButton").disabled, "Bestätigen bleibt möglich")
@@ -108,10 +119,11 @@ func test_role_step_updates_hints_immediately() -> void:
 	await press(find_button(find_node(screen, "RoleRow_parasit"), "MinusButton"))
 	assert_false(_shown(screen, "SoloWinsHintLabel"), "Parasit entfernt: Sieg-Hinweis weg")
 	assert_true(_shown(screen, "CoachHintLabel"), "Kutscher-Hinweis bleibt")
-	await _set_counts(shell, {"kutscher": 0, "dorfbewohner": 9})
+	var nine := Fixtures.village_fillers(9)
+	await _set_counts(shell, {"kutscher": 0, nine[7]: 1, nine[8]: 1})
 	assert_false(_shown(screen, "CoachHintLabel"), "Kutscher entfernt: Hinweis weg")
 	var counts: Dictionary = (setup_of(shell).call("view") as Dictionary)["roles"]["counts"]
-	assert_eq([int(counts["werwolf"]), int(counts["dorfbewohner"]), int(counts["manipulator"])], [2, 9, 1], "Besetzung unverändert")
+	assert_eq([int(counts["werwolf"]), int(counts["blutwolf"]), int(counts["manipulator"]), int(counts[nine[8]])], [1, 1, 1, 1], "Besetzung nur wie ausdrücklich geändert")
 
 
 func test_person_count_change_updates_coach_hint() -> void:
@@ -119,7 +131,7 @@ func test_person_count_change_updates_coach_hint() -> void:
 	if shell == null:
 		return
 	var screen := await _to_roles(shell, 12)
-	await _set_counts(shell, {"werwolf": 2, "dorfbewohner": 8, "manipulator": 1, "kutscher": 1})
+	await _set_counts(shell, _cast12())
 	assert_true(_shown(screen, "CoachHintLabel"), "12 Personen: Hinweis")
 	var s := setup_of(shell)
 	s.call("go_to_step", &"players")
@@ -142,7 +154,7 @@ func test_start_game_with_hinted_setup_keeps_roles_and_assignments() -> void:
 	if shell == null:
 		return
 	var screen := await _to_roles(shell, 8)
-	await _set_counts(shell, {"werwolf": 2, "dorfbewohner": 3, "kutscher": 1, "parasit": 1, "voodoo-priester": 1})
+	await _set_counts(shell, {"werwolf": 1, "blutwolf": 1, "dorfbewohner": 1, "amalia": 1, "detektiv": 1, "kutscher": 1, "parasit": 1, "voodoo-priester": 1})
 	assert_true(_shown(screen, "CoachHintLabel") and _shown(screen, "SoloWinsHintLabel"), "beide Hinweise vor dem Start")
 	await press(find_button(screen, "ConfirmRolesButton"))
 	await press(find_button(screen, "DistributeButton"))

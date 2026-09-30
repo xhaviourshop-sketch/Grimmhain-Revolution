@@ -5,7 +5,7 @@ extends RefCounted
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
 const SCHEMA_VERSION := 14  ## 14: Rollenanzeige (roles_shown: bestätigter Fortschritt je Person); 13: Wiederbelebungsrunde (revival_round, aus der Startbesetzung abgeleitet, ersetzt reveal_role_on_death), Hinweise (notices); 12: Setup-Option reveal_role_on_death (DR-04); 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades, Grabräuber)
-const RULES_VERSION := &"grimmhain-core-0.13"  ## 0.13: Nachtschritt „Alle Verzauberten“ statt Hinweis piper_all (PE-06)
+const RULES_VERSION := &"grimmhain-core-0.14"  ## 0.14: Startbesetzung höchstens einmal je Rolle, außer Die Gebundenen (PE-07)
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1

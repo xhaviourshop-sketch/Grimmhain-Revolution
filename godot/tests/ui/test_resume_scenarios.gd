@@ -66,7 +66,7 @@ func selection() -> Array:
 ## Einzelauswahl: angetippte, nicht bestätigte Person ist flüchtig und nach dem Neustart verworfen; die neue
 ## Auswahl erzeugt den Befehl mit dem neuen Ziel (kein veraltetes Ziel).
 func test_open_single_selection_is_discarded_and_prompt_stays_open() -> void:
-	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, "amalia", "detektiv"]):
 		return
 	assert_true(await run({}, until_prompt("pack")), "bis zum Rudel")
 	await tap_seat(5)
@@ -82,7 +82,7 @@ func test_open_single_selection_is_discarded_and_prompt_stays_open() -> void:
 
 ## Mehrfachauswahl (Loki wählt zwei Personen): eine halbe Auswahl ist flüchtig.
 func test_open_multi_selection_is_discarded() -> void:
-	if not await start([W, "loki", D, D, D, D, D]):
+	if not await start([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	assert_true(await run({}, until_prompt("loki", "targets")), "bis Loki")
 	await tap_seat(3)
@@ -99,7 +99,7 @@ func test_open_multi_selection_is_discarded() -> void:
 
 ## Waldhexe: Stufe „Heiltrank“ ist beantwortet (bestätigter Schritt), Stufe „Gift“ offen.
 func test_multistage_role_action_keeps_the_answered_stage() -> void:
-	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, "amalia", "detektiv"]):
 		return
 	assert_true(await run({"waldhexe/heal": false}, until_prompt("waldhexe", "poison")), "bis zur Giftstufe")
 	var before := await restart()
@@ -111,7 +111,7 @@ func test_multistage_role_action_keeps_the_answered_stage() -> void:
 ## Offene Todesreaktion (Sensenträger), einmal eingereiht und einmal mit offenem Prompt: nach dem Neustart genau
 ## eine Reaktion, keine doppelte Auslösung.
 func test_open_death_reaction_survives_restart_once() -> void:
-	if not await start([W, W, "sensentraeger", D, D, D, D]):
+	if not await start([W, "blutwolf", "sensentraeger", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({}, until_day(1)), "bis Tag 1")
 	# Vorbereitung ohne Karte: Tod des Sensenträgers mit Folgen.
@@ -135,7 +135,7 @@ func test_open_death_reaction_survives_restart_once() -> void:
 ## Unbestätigter privater Hinweis bleibt erreichbar; eine vor dem Neustart geöffnete Karte ist geschlossen.
 ## Ein bestätigter Hinweis wird nach dem nächsten Neustart nicht erneut verlangt.
 func test_unconfirmed_notice_stays_reachable_and_confirmed_one_is_not_asked_again() -> void:
-	if not await start([W, "loki", D, D, D, D, D]):
+	if not await start([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	assert_true(await run({"loki/targets": [3, 5], "loki/mode": true}, until_kind("notice")), "bis zum ersten Hinweis")
 	var first := int(next()["notice_id"])
@@ -158,7 +158,7 @@ func test_unconfirmed_notice_stays_reachable_and_confirmed_one_is_not_asked_agai
 
 ## Teilweise abgeschlossene Rollenanzeige: bestätigte Personen bleiben bestätigt, die offene Karte ist verworfen.
 func test_partial_role_show_continues_with_the_first_unconfirmed_person() -> void:
-	if not await start([D, W, "waldhexe", D, "schutzengel", D]):
+	if not await start([D, W, "waldhexe", "amalia", "schutzengel", "detektiv"]):
 		return
 	for id: int in [1, 2]:
 		await tap_button("RolesButton")
@@ -185,7 +185,7 @@ func test_partial_role_show_continues_with_the_first_unconfirmed_person() -> voi
 ## Morgenbericht: öffentlicher und privater Teil nach dem Neustart gleich (Vergleich in `restart`); das Weiterschalten
 ## des Berichts ist Bedienzustand und darf erneut angeboten werden.
 func test_morning_report_is_identical_after_restart() -> void:
-	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, "amalia", "detektiv"]):
 		return
 	assert_true(await run({"pack/": [5]}, until_day(1)), "bis zum Morgen")
 	assert_false((session().morning_report()["public"]["deaths"] as Array).is_empty(), "Bericht mit Todesfall")
@@ -198,7 +198,7 @@ func test_morning_report_is_identical_after_restart() -> void:
 
 ## Offene Nominierung bleibt (bestätigter Befehl); eine aufgedeckte, nicht bestätigte Hinrichtungsprüfung ist flüchtig.
 func test_open_nomination_survives_and_execution_check_is_discarded() -> void:
-	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, D, D]):
+	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, "amalia", "detektiv"]):
 		return
 	assert_true(await run({}, until_day(1)), "bis Tag 1")
 	if live("ContinueDayButton") != null:
@@ -218,7 +218,7 @@ func test_open_nomination_survives_and_execution_check_is_discarded() -> void:
 
 ## Offener Siegkandidat: Entscheidung bleibt offen und wird genau einmal bestätigt.
 func test_open_win_candidate_is_decided_once_after_restart() -> void:
-	if not await start([W, W, "schutzengel", D, D, D, D]):
+	if not await start([W, "blutwolf", "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({}, until_prompt("pack")), "bis zum Rudel")
 	# Vorbereitung ohne Karte: drei Tote per Korrektur führen zur Siegentscheidung.
@@ -244,7 +244,7 @@ func test_open_win_candidate_is_decided_once_after_restart() -> void:
 ## berechtigten Personen an, keine Ebene ist offen, eine Bedienung erzeugt genau einen Befehl; keine Ansage fehlt oder
 ## doppelt sich. Rückgängig und Wiederholen der Bestätigung stellen den Schritt wieder her bzw. erledigen ihn wieder.
 func test_piper_flow_resumes_at_every_interruption_point() -> void:
-	if not await start([W, "rattenfaenger", D, D, D, D, D, "das-orakel"]):
+	if not await start([W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "das-orakel"]):
 		return
 	var at_step := func(role: String) -> Callable:
 		return func(n: Dictionary) -> bool: return str(n.get("kind")) == "begin_step" and str(n.get("role_id")) == role

@@ -110,7 +110,7 @@ func test_catalog_entries() -> void:
 # --- Rattenfänger ---------------------------------------------------------------------------------
 
 func test_pied_piper_charms_and_wins_after_last_uncharmed_dies() -> void:
-	var r := _dawn(_state([W, RF, D, D, D, D]), {"rattenfaenger:2": [3, 4]})
+	var r := _dawn(_state([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"rattenfaenger:2": [3, 4]})
 	if r == null:
 		return
 	assert_eq(r.state.charms.size(), 2, "zwei verzaubert")
@@ -127,7 +127,7 @@ func test_pied_piper_charms_and_wins_after_last_uncharmed_dies() -> void:
 
 
 func test_pied_piper_targets_and_dead_piper() -> void:
-	var s := _state([W, RF, D, D, D, D])
+	var s := _state([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Rattenfänger") if s != null else null
@@ -138,7 +138,7 @@ func test_pied_piper_targets_and_dead_piper() -> void:
 	assert_eq([p.min_count, p.max_count], [1, 2], "1 oder 2")
 	apply_rejected(s, Command.answer_prompt(p.id, [2]), "invalid_target", "nicht er selbst")
 	# Toter Rattenfänger gewinnt nie.
-	var t := _state([W, RF, D, D, D, D])
+	var t := _state([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	t.charms = [{"piper_id": 2, "target_id": 1}, {"piper_id": 2, "target_id": 3}, {"piper_id": 2, "target_id": 4}, {"piper_id": 2, "target_id": 5}, {"piper_id": 2, "target_id": 6}]
 	t = _ok(t, _gm("kill", {"target_id": 2, "trigger_effects": false}), "Rattenfänger tot")
 	assert_eq(_solo_winners(t, WinCandidate.REASON_PIED_PIPER) if t != null else [0], [] as Array[int], "nur lebend")
@@ -147,7 +147,7 @@ func test_pied_piper_targets_and_dead_piper() -> void:
 # --- Pestbringerin --------------------------------------------------------------------------------
 
 func test_plague_bringer_infects_and_spreads_to_living_neighbours() -> void:
-	var s := _state([W, PB, D, D, D, D, D, D])
+	var s := _state([W, PB, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	var r := _dawn(s, {"pestbringerin:2": [5]})
 	if r == null:
 		return
@@ -157,13 +157,13 @@ func test_plague_bringer_infects_and_spreads_to_living_neighbours() -> void:
 	var spread := events_of_type(r.events, "PlagueSpread")
 	assert_true(spread.size() == 1 and [4, 6].has(int(spread[0].data["target_id"])), "nächster lebender Nachbar")
 	# Replay gleich (Seed).
-	var again := _dawn(_state([W, PB, D, D, D, D, D, D]), {"pestbringerin:2": [5]})
+	var again := _dawn(_state([W, PB, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), {"pestbringerin:2": [5]})
 	assert_eq(again.state.infected if again != null else [], s.infected, "gleicher Seed, gleiche Ansteckung")
 	_codec_same(s, "Infektion")
 
 
 func test_plague_bringer_wins_alive_with_all_others_infected() -> void:
-	var s := _state([W, PB, D, D, D, D])
+	var s := _state([W, PB, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var r := _dawn(s, {"pestbringerin:2": [3]})
 	if r == null:
 		return
@@ -177,7 +177,7 @@ func test_plague_bringer_wins_alive_with_all_others_infected() -> void:
 # --- Prophet des Untergangs ----------------------------------------------------------------------
 
 func test_prophet_marks_unlocks_kills_and_replaces_village_win() -> void:
-	var s := _state([W, PR, D, D, D, D, "schutzengel", D])
+	var s := _state([W, PR, D, "amalia", "detektiv", "wahnsinniger-kutscher", "schutzengel", "waechter-am-tor"])
 	var r := _dawn(s, {"prophet-des-untergangs:2": [3, 4, 5]})
 	if r == null:
 		return
@@ -205,7 +205,7 @@ func test_prophet_marks_unlocks_kills_and_replaces_village_win() -> void:
 # --- Todesprediger --------------------------------------------------------------------------------
 
 func test_death_preacher_wins_on_predicted_day() -> void:
-	var s := _state([W, TP, D, D, D, D, D])
+	var s := _state([W, TP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Todesprediger") if s != null else null
@@ -224,7 +224,7 @@ func test_death_preacher_wins_on_predicted_day() -> void:
 
 
 func test_death_preacher_wrong_phase_does_not_win() -> void:
-	var s := _state([W, TP, D, D, D, D, D])
+	var s := _state([W, TP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var r := _dawn(s, {"todesprediger:2": {"kind": "night", "number": 2}})
 	if r == null:
 		return

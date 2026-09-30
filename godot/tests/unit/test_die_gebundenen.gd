@@ -46,7 +46,7 @@ func test_production_role() -> void:
 
 func test_each_living_bound_sees_other_living() -> void:
 	# 2, 4, 6 Gebundene; 6 stirbt vor dem Schritt.
-	var cmds: Array[Command] = [_start(["werwolf", DG, "dorfbewohner", DG, "dorfbewohner", DG, "dorfbewohner"]), Command.start_night(),
+	var cmds: Array[Command] = [_start(["werwolf", DG, "dorfbewohner", DG, "amalia", DG, "detektiv"]), Command.start_night(),
 		_gm("kill", {"target_id": 6, "trigger_effects": false}), Command.begin_step(STEP)]
 	var run := _run(cmds, "Schritt")
 	if not run.ok:
@@ -63,26 +63,26 @@ func test_each_living_bound_sees_other_living() -> void:
 
 
 func test_single_bound_learns_nobody() -> void:
-	var run := _run([_start(["werwolf", DG, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var run := _run([_start(["werwolf", DG, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night(),
 		Command.answer_choice(1, "shown", true)] as Array[Command], "allein")
 	if run.ok:
 		assert_eq(_revealed(run.events), {2: []}, "keine anderen")
 
 
 func test_only_first_night_and_absent_without_bound() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", DG, DG, "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var cmds: Array[Command] = [_start(["werwolf", DG, DG, "dorfbewohner", "amalia", "detektiv"]), Command.start_night(),
 		Command.answer_choice(1, "shown", true), Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(),
 		Command.decide_execution(-1), Command.end_day(), Command.start_night()]
 	var run := _run(cmds, "Nacht 2")
 	if run.ok:
 		assert_false(run.state.night_plan.has(&"die-gebundenen"), "kein Schritt in Nacht 2")
-	var none := _run([_start(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "ohne")
+	var none := _run([_start(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night()] as Array[Command], "ohne")
 	if none.ok:
 		assert_false(none.state.night_plan.has(&"die-gebundenen"), "kein Schritt ohne Gebundene")
 
 
 func test_all_bound_dead_step_dropped() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", DG, DG, "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var cmds: Array[Command] = [_start(["werwolf", DG, DG, "dorfbewohner", "amalia", "detektiv"]), Command.start_night(),
 		_gm("kill", {"target_id": 2, "trigger_effects": false}), _gm("kill", {"target_id": 3, "trigger_effects": false})]
 	var run := _run(cmds, "alle tot")
 	if not run.ok:
@@ -92,7 +92,7 @@ func test_all_bound_dead_step_dropped() -> void:
 
 
 func test_cancel_invalid_and_corrupt() -> void:
-	var s := _run([_start(["werwolf", DG, DG, "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start(["werwolf", DG, DG, "dorfbewohner", "amalia", "detektiv"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	apply_rejected(s, Command.answer_choice(1, "shown", false), "invalid_answer", "nur Ja")
@@ -105,9 +105,12 @@ func test_cancel_invalid_and_corrupt() -> void:
 
 
 func test_24_players_six_bound() -> void:
-	var roles: Array = []
-	for i: int in 24:
-		roles.append("werwolf" if i < 4 else (DG if i < 10 else "dorfbewohner"))
+	# 4 Wölfe, 6 Gebundene (die einzige Rolle, die mehrfach beginnen darf), 14 verschiedene Dorfrollen (PE-07).
+	var roles: Array = Fixtures.wolf_fillers(4)
+	for i: int in 6:
+		roles.append(DG)
+	roles.append_array(Fixtures.village_fillers(9))
+	roles.append_array(Fixtures.extra_village(5))
 	var run := _run([_start(roles), Command.start_night(), Command.answer_choice(1, "shown", true)] as Array[Command], "24")
 	if not run.ok:
 		return
@@ -117,7 +120,7 @@ func test_24_players_six_bound() -> void:
 
 
 func test_no_leak() -> void:
-	var run := _run([_start(["werwolf", DG, DG, "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var run := _run([_start(["werwolf", DG, DG, "dorfbewohner", "amalia", "detektiv"]), Command.start_night(),
 		Command.answer_choice(1, "shown", true)] as Array[Command], "Partie")
 	if run.ok:
 		for e: GameEvent in run.events:

@@ -3,7 +3,7 @@ extends UiTestCase
 ## Protokoll und Anzeige der Änderung, Rückgängig/Wiederholen mit Klartext, Hinrichtung ohne
 ## Nominierung, Sieger erklären, Partie beenden und verwerfen ohne Löschen.
 
-const ROLES := ["werwolf", "werwolf", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "blutwolf", "schutzengel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]
 
 
 func _cockpit() -> Control:
@@ -182,7 +182,7 @@ func test_status_change_toggles_witch_potion() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
-	assert_true((session_of(shell).call("submit", Fixtures.start_roles(["werwolf", "waldhexe", "spiegelwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 2)) as CommandResult).ok, "Start")
+	assert_true((session_of(shell).call("submit", Fixtures.start_roles(["werwolf", "waldhexe", "spiegelwolf", "dorfbewohner", "amalia", "detektiv"], 2)) as CommandResult).ok, "Start")
 	await navigate(shell, &"main_menu")
 	await navigate(shell, &"cockpit")
 	await _press(shell, "GmButton")

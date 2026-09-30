@@ -16,15 +16,16 @@ const FORBIDDEN_PUBLIC := ["waldhexe", "witch", "heal", "poison", "rescue", "pot
 
 
 func _w6(seed_value: int = 1) -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "dorfbewohner", "waldhexe", "dorfbewohner"], seed_value)
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "dorfbewohner", "waldhexe", "amalia"], seed_value)
 
 
 func _w7r() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "dorfbewohner", "waldhexe", "dorfbewohner", "sensentraeger"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "dorfbewohner", "waldhexe", "amalia", "sensentraeger"])
 
 
-func _w2h() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "waldhexe", "dorfbewohner", "waldhexe", "dorfbewohner"])
+## Zwei Waldhexen: die zweite entsteht nach dem Start durch Korrektur (PE-07).
+func _w2h(rest: Array[Command]) -> Array[Command]:
+	return Fixtures.with_copies(["werwolf", "blutwolf", "waldhexe", "dorfbewohner", "waldhexe", "amalia"], rest)
 
 
 func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
@@ -122,7 +123,7 @@ func test_night_order_guard_pack_witch() -> void:
 func test_multiple_witches_by_id() -> void:
 	# 3: stabile Reihenfolge; Gift der ersten Hexe auf die zweite lässt deren Schritt entfallen
 	# (Todesmarkierung, Decision Log „Nachttode“: Tod erst am Morgen, kein weiterer Nachtschritt).
-	var run := _replay_ok([_w2h(), Command.start_night()] as Array[Command], "zwei Waldhexen")
+	var run := _replay_ok(_w2h([Command.start_night()] as Array[Command]), "zwei Waldhexen")
 	if not run.ok:
 		return
 	assert_eq(run.state.night_plan, [&"pack", &"waldhexe:3", &"waldhexe:5"] as Array[StringName], "nach Personen-ID")
@@ -835,8 +836,7 @@ func test_witch_role_lost_with_open_prompt() -> void:
 
 func test_guard_role_lost_before_step() -> void:
 	# Zwei Schutzengel; der zweite wird vor seinem Schritt Dorfbewohner.
-	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
-		Command.start_night(), Command.answer_prompt(1, [6])] as Array[Command])
+	var s := Fixtures.play(Fixtures.with_copies(["werwolf", "blutwolf", "schutzengel", "schutzengel", "dorfbewohner", "amalia", "detektiv"], [Command.start_night(), Command.answer_prompt(1, [6])] as Array[Command]) as Array[Command])
 	assert_eq(RulesEngine.next_step_id(s), "night:1:1:schutzengel:4", "zweiter Schutzengel wäre dran")
 	var r := apply_ok(s, CorrectionFixtures.gm("set_role", {"target_id": 4, "role_id": "dorfbewohner"}), "wird Dorfbewohner")
 	var dropped := events_of_type(r.events, "StepDropped")

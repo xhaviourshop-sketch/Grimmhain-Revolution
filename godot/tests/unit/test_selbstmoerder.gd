@@ -6,15 +6,14 @@ extends TestCase
 ## abgelehnter Sieg wird nach jeder späteren Zustandsänderung erneut vorgeschlagen (RM-DR-138.4),
 ## auch nach seiner Wiederbelebung (F-11). Hinrichtung = Ursache LYNCH, auch per Spielleiter
 ## (Korrekturrunde 4); Tod durch Spiegelung ist keine Hinrichtung (RM-DR-138.5).
-## Personen: 1, 2 Werwolf; 3 Selbstmörder; 4–12 Dorfbewohner (12 Personen).
+## Personen: 1 Werwolf, 2 Blutwolf; 3 Selbstmörder; 4–12 neun verschiedene wirkungsarme Dorfrollen (12 Personen, PE-07).
 
 const SM := "selbstmoerder"
 const REASON := "death_seeker_lynched"
 
 
 func _roles() -> Array:
-	return ["werwolf", "werwolf", SM, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner",
-		"dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	return ["werwolf", "blutwolf", SM] + Fixtures.village_fillers(9)
 
 
 func _gm(kind: String, fields: Dictionary) -> Command:
@@ -27,8 +26,9 @@ func _kill(id: int, effects: bool = true) -> Command:
 
 ## Bis Tag 1, danach `dead` Personen per Korrektur tot.
 func _day_with_dead(dead: Array, roles: Array = []) -> Array[Command]:
-	var out: Array[Command] = [Fixtures.start_roles(roles if not roles.is_empty() else _roles(), 1), Command.start_night(),
-		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()]
+	# Zwei Selbstmörder (test_two_death_seekers_only_lynched_wins): die Kopie entsteht nach dem Start durch Korrektur (PE-07).
+	var out := Fixtures.with_copies(roles if not roles.is_empty() else _roles(), [Command.start_night(),
+		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command], 1)
 	for id: int in dead:
 		out.append(_kill(id))
 	return out
@@ -195,7 +195,7 @@ func test_apprentice_inherits_and_wins_when_lynched() -> void:
 func test_six_players_lynch_when_last_alive() -> void:
 	# 6 Personen: bei 5 Toten lebt nur er; Selbstnominierung und Hinrichtung → niemand lebt, kein automatischer Sieger (DR-02).
 	# Zwischendurch entstehende Siegvorschläge (Parität, Dorf) werden abgelehnt.
-	var s := RulesEngine.replay(_day_with_dead([], ["werwolf", "werwolf", SM, "dorfbewohner", "dorfbewohner", "dorfbewohner"])).state
+	var s := RulesEngine.replay(_day_with_dead([], ["werwolf", "blutwolf", SM, "dorfbewohner", "amalia", "detektiv"])).state
 	for id: int in [1, 4, 5, 2, 6]:
 		s = apply_ok(s, _kill(id), "Tod %d" % id).state
 		if not s.open_candidates().is_empty():

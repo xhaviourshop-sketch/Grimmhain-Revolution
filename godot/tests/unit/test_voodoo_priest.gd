@@ -18,7 +18,7 @@ const FT := "feuerteufel"
 
 
 func _state(roles: Array) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	return r.state if r.ok else null
 
@@ -137,7 +137,7 @@ func test_catalog_entry() -> void:
 
 
 func test_giving_is_voluntary_secret_and_only_without_living_doll() -> void:
-	var s := _state([W, VP, D, D, D, D, D])
+	var s := _state([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Priester") if s != null else null
@@ -160,7 +160,7 @@ func test_giving_is_voluntary_secret_and_only_without_living_doll() -> void:
 	s = _night(s)
 	assert_false(s != null and s.night_plan.has(&"voodoo-priester:2"), "kein Schritt mit lebender Puppe")
 	# Verzicht: in der nächsten Nacht wieder gefragt.
-	var t := _dawn(_state([W, VP, D, D, D, D, D]), {"voodoo-priester:2@": []})
+	var t := _dawn(_state([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"voodoo-priester:2@": []})
 	assert_eq(_dolls(t), [], "Verzicht")
 	t = _night(t)
 	assert_true(t != null and t.night_plan.has(&"voodoo-priester:2"), "erneut gefragt")
@@ -169,7 +169,7 @@ func test_giving_is_voluntary_secret_and_only_without_living_doll() -> void:
 # --- Umlenkung ----------------------------------------------------------------------------------
 
 func test_pack_attack_goes_to_doll_with_original_cause_and_source() -> void:
-	var s := _with_doll([W, VP, D, D, D, D, D], 2, 5)
+	var s := _with_doll([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2]}, log)
 	if s == null:
@@ -192,19 +192,19 @@ func test_pack_attack_goes_to_doll_with_original_cause_and_source() -> void:
 
 func test_lynch_and_burn_redirect_but_gm_correction_does_not() -> void:
 	# Hinrichtung.
-	var s := _with_doll([W, VP, D, D, D, D, D], 2, 5)
+	var s := _with_doll([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	s = _ok(s, Command.nominate(3, 2), "Nominierung")
 	var r := apply_ok(s, Command.decide_execution(2), "Hinrichtung des Priesters") if s != null else null
 	assert_eq(_deaths(r.events) if r != null else [], [[5, "LYNCH"]], "Puppe stirbt durch die Hinrichtung")
 	# Spielleiterkorrektur mit Folgen: keine Umlenkung.
-	s = _with_doll([W, VP, D, D, D, D, D], 2, 5)
+	s = _with_doll([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	r = apply_ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Korrektur") if s != null else null
 	if r != null:
 		assert_eq(_deaths(r.events), [[2, "GM_CORRECTION"]], "Priester stirbt selbst")
 		assert_true(r.state.players[5].alive, "Puppe lebt")
 		assert_eq(_dolls(r.state), [], "Puppe endet mit dem Priester")
 	# Brand (Voodoo × Feuerteufel): Feuerteufel 4 markiert 3; 3 stirbt; Nachbar 2 (Priester) verbrennt → Puppe 6.
-	s = _dawn(_state([W, VP, D, FT, D, D, D]), {"voodoo-priester:2@": [6], "feuerteufel:4@": [3]})
+	s = _dawn(_state([W, VP, D, FT, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"voodoo-priester:2@": [6], "feuerteufel:4@": [3]})
 	r = apply_ok(s, _gm("kill", {"target_id": 3, "trigger_effects": true}), "Ziel des Feuerteufels stirbt") if s != null else null
 	if r == null:
 		return
@@ -214,7 +214,7 @@ func test_lynch_and_burn_redirect_but_gm_correction_does_not() -> void:
 
 func test_protection_acts_before_redirect_and_doll_keeps_own_protection() -> void:
 	# Schutzengel 3 schützt den Priester: keine Umlenkung, Puppe bleibt.
-	var s := _with_doll([W, VP, SE, D, D, D, D], 2, 5)
+	var s := _with_doll([W, VP, SE, D, "amalia", "detektiv", "wahnsinniger-kutscher"], 2, 5)
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"schutzengel:3@": [2], "pack@": [2]}, log)
 	if s == null:
@@ -223,7 +223,7 @@ func test_protection_acts_before_redirect_and_doll_keeps_own_protection() -> voi
 	assert_eq(_voodoo_redirects(log), [], "keine Umlenkung bei Schutz")
 	assert_eq(_dolls(s), [{"priest_id": 2, "doll_id": 5}], "Puppe bleibt")
 	# Schutzengel 3 schützt die Puppe: umgelenkter Rudelangriff wird abgewehrt, Verknüpfung verbraucht (E-20).
-	s = _with_doll([W, VP, SE, D, D, D, D], 2, 5)
+	s = _with_doll([W, VP, SE, D, "amalia", "detektiv", "wahnsinniger-kutscher"], 2, 5)
 	log = []
 	s = _dawn(s, {"schutzengel:3@": [5], "pack@": [2]}, log)
 	if s == null:
@@ -234,7 +234,7 @@ func test_protection_acts_before_redirect_and_doll_keeps_own_protection() -> voi
 
 
 func test_dead_doll_and_new_doll_without_cooldown() -> void:
-	var s := _with_doll([W, VP, D, D, D, D, D], 2, 5)
+	var s := _with_doll([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	s = _ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Puppe stirbt")
 	assert_eq(_dolls(s), [], "tote Puppe schützt nicht")
 	s = _dawn(s, {"voodoo-priester:2@": [6]})
@@ -248,7 +248,7 @@ func test_dead_doll_and_new_doll_without_cooldown() -> void:
 
 func test_mutual_dolls_and_chains_each_person_at_most_once() -> void:
 	# Gegenseitig: 2 hat 3, 3 hat 2 als Puppe; 2 wird angegriffen → 3 stirbt.
-	var s := _dawn(_state([W, VP, VP, D, D, D, D]), {"voodoo-priester:2@": [3], "voodoo-priester:3@": [2]})
+	var s := _dawn(_state([W, VP, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"voodoo-priester:2@": [3], "voodoo-priester:3@": [2]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2]}, log)
 	if s == null:
@@ -257,7 +257,7 @@ func test_mutual_dolls_and_chains_each_person_at_most_once() -> void:
 	assert_eq(_voodoo_redirects(log), [[2, 3]], "genau eine Umlenkung")
 	assert_eq(_dolls(s), [], "beide Verknüpfungen beendet")
 	# Kette: 2 hat 3, 3 hat 4 → 2 angegriffen → 4 stirbt.
-	s = _dawn(_state([W, VP, VP, D, D, D, D]), {"voodoo-priester:2@": [3], "voodoo-priester:3@": [4]})
+	s = _dawn(_state([W, VP, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"voodoo-priester:2@": [3], "voodoo-priester:3@": [4]})
 	log = []
 	s = _dawn(s, {"pack@": [2]}, log)
 	if s == null:
@@ -266,7 +266,7 @@ func test_mutual_dolls_and_chains_each_person_at_most_once() -> void:
 	assert_eq(_voodoo_redirects(log), [[2, 3], [3, 4]], "zwei Umlenkungen in Reihenfolge")
 	assert_true(s.players[2].alive and s.players[3].alive, "beide Priester leben")
 	# Zwei Priester, dieselbe Puppe: 2 angegriffen → 5 stirbt; 3 verliert seine Puppe.
-	s = _dawn(_state([W, VP, VP, D, D, D, D]), {"voodoo-priester:2@": [5], "voodoo-priester:3@": [5]})
+	s = _dawn(_state([W, VP, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"voodoo-priester:2@": [5], "voodoo-priester:3@": [5]})
 	log = []
 	s = _dawn(s, {"pack@": [2]}, log)
 	if s == null:
@@ -278,7 +278,7 @@ func test_mutual_dolls_and_chains_each_person_at_most_once() -> void:
 
 func test_own_doll_before_shadow_link_and_no_way_back() -> void:
 	# E-23: Schattenwanderer 3 verknüpft sich mit Priester 2; Priester 2 hat 5 als Puppe; 2 angegriffen → 5 stirbt.
-	var s := _dawn(_state([W, VP, SW, D, D, D, D]), {"schattenwanderer:3@": [2], "voodoo-priester:2@": [5]})
+	var s := _dawn(_state([W, VP, SW, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"schattenwanderer:3@": [2], "voodoo-priester:2@": [5]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2]}, log)
 	if s == null:
@@ -287,7 +287,7 @@ func test_own_doll_before_shadow_link_and_no_way_back() -> void:
 	assert_eq(s.shadow_links.size(), 1, "Verknüpfung des Schattenwanderers bleibt")
 	# E-20: Priester 2 hat den Schattenwanderer 3 als Puppe, 3 ist mit 2 verknüpft; das Rudel greift 3 an:
 	# Verknüpfung → 2; 2s Puppe ist 3 (schon betroffen) → keine Umlenkung zurück → 2 stirbt.
-	s = _dawn(_state([W, VP, SW, D, D, D, D]), {"schattenwanderer:3@": [2], "voodoo-priester:2@": [3]})
+	s = _dawn(_state([W, VP, SW, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"schattenwanderer:3@": [2], "voodoo-priester:2@": [3]})
 	log = []
 	s = _dawn(s, {"pack@": [3]}, log)
 	if s == null:
@@ -301,11 +301,11 @@ func test_own_doll_before_shadow_link_and_no_way_back() -> void:
 # --- Rollenverlust, Sieg, Laden ---------------------------------------------------------------------
 
 func test_role_loss_ends_doll() -> void:
-	var s := _with_doll([W, VP, D, D, D, D, D], 2, 5)
+	var s := _with_doll([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	s = _ok(s, _gm("set_role", {"target_id": 2, "role_id": D}), "Rolle weg")
 	assert_eq(_dolls(s), [], "Puppe endet (E-22)")
 	# Seelentausch in Nacht 2: Priester 2 tauscht mit 4; 4 wird Priester ohne Puppe.
-	s = _with_doll([W, VP, "seelentauscher", D, D, D, D], 2, 5)
+	s = _with_doll([W, VP, "seelentauscher", D, "amalia", "detektiv", "wahnsinniger-kutscher"], 2, 5)
 	s = _dawn(s, {"seelentauscher:3@targets": [2, 4]})
 	if s == null:
 		return
@@ -316,7 +316,7 @@ func test_role_loss_ends_doll() -> void:
 
 
 func test_wins_alone_with_at_most_three_living() -> void:
-	var s := _state([W, VP, D, D, D, D])
+	var s := _state([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	for id: int in [4, 5, 6]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": true}), "Tod %d" % id)
 	if s == null:
@@ -327,14 +327,14 @@ func test_wins_alone_with_at_most_three_living() -> void:
 		assert_eq((solo[0] as WinCandidate).beneficiary_ids, [2] as Array[int], "Priester allein")
 	_codec_same(s, "Kandidat")
 	# Toter Priester gewinnt nicht; lebender Feuerteufel gewinnt mit.
-	s = _state([W, VP, FT, D, D, D])
+	s = _state([W, VP, FT, D, "amalia", "detektiv"])
 	for id: int in [4, 5, 6]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": true}), "Tod %d" % id)
 	if s == null:
 		return
 	solo = s.open_candidates().filter(func(c: WinCandidate) -> bool: return c.reason_key == WinCandidate.REASON_VOODOO)
 	assert_true(solo.size() == 1 and (solo[0] as WinCandidate).co_winner_ids == ([3] as Array[int]), "Feuerteufel als Mitsieger")
-	s = _state([W, VP, D, D, D, D])
+	s = _state([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Priester tot")
 	for id: int in [5, 6]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": true}), "Tod %d" % id)
@@ -344,7 +344,7 @@ func test_wins_alone_with_at_most_three_living() -> void:
 
 
 func test_load_rejects_inconsistent_dolls() -> void:
-	var s := _with_doll([W, VP, VP, D, D, D, D], 2, 5)
+	var s := _with_doll([W, VP, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher"], 2, 5)
 	if s == null:
 		return
 	s = _ok(s, _gm("kill", {"target_id": 6, "trigger_effects": true}), "6 tot")

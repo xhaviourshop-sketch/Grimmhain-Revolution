@@ -344,10 +344,9 @@ func _check_layout(shell: Control, count: int, label: String) -> void:
 func test_layout_6_and_24_people_all_sizes() -> void:
 	for size: Vector2i in [SIZE_4_3, SIZE_16_10, SIZE_WIDE]:
 		for count: int in [6, 24]:
-			var roles: Array = []
+			var roles: Array = Fixtures.unique_roles(count)  # PE-07: 6 bzw. 24 verschiedene Rollen
 			var seats: Array = []
 			for i: int in count:
-				roles.append("werwolf" if i < 2 else "dorfbewohner")
 				seats.append(i + 1)
 			var names: Array = long_names(count)
 			var shell := await _cockpit(size, "de", roles, seats, names)

@@ -46,7 +46,7 @@ func test_production_roles_and_order() -> void:
 func test_ranger_counts_living_wolf_persons_now() -> void:
 	# 1 Werwolf, 2 Siegreicher Wolf (einfach gezählt), 3 Wolfskind (per Korrektur verwandelt, Rudelopfer),
 	# 4 Waldläufer, 5–8 Dorf. Das Rudelopfer lebt beim Schritt noch → 3.
-	var cmds: Array[Command] = [_start(["werwolf", "siegreicher-wolf", "wolfskind", WL, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", "siegreicher-wolf", "wolfskind", WL, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		_gm("set_wolf_model", {"child_id": 3, "target_id": 5}), _gm("transform_wolf_child", {"child_id": 3}), Command.start_night(),
 		Command.answer_prompt(1, [3]), Command.begin_step("night:1:1:waldlaeufer:4")]
 	var run := _run(cmds, "Schritt")
@@ -64,7 +64,7 @@ func test_ranger_counts_living_wolf_persons_now() -> void:
 
 
 func test_ranger_every_night_and_marked_ranger_sleeps() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", WL, "waldhexe", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var cmds: Array[Command] = [_start(["werwolf", WL, "waldhexe", "dorfbewohner", "amalia", "detektiv"]), Command.start_night(),
 		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:waldhexe:3"), Command.answer_choice(2, "poison", false),
 		Command.answer_choice(2, "confirm", true), Command.begin_step("night:1:2:waldlaeufer:2"), Command.answer_choice(3, "shown", true),
 		Command.end_night(), Command.decide_execution(-1), Command.end_day(), Command.start_night()]
@@ -82,7 +82,7 @@ func test_ranger_every_night_and_marked_ranger_sleeps() -> void:
 
 
 func test_ranger_corrupt_count_rejected() -> void:
-	var s := _run([_start(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", WL]), Command.start_night(),
+	var s := _run([_start(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", WL]), Command.start_night(),
 		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:waldlaeufer:6")] as Array[Command], "Prompt").state
 	if s == null:
 		return
@@ -114,7 +114,7 @@ func _doctor(roles: Array, a: int, b: int, before: Array[Command] = [], appearan
 
 
 func test_doctor_same_team_rules() -> void:
-	var base := ["werwolf", DK, "dorfbewohner", "dorfbewohner", "manipulator", "doppelspion", "trugbilderwolf", "wolfskind"]
+	var base := ["werwolf", DK, "dorfbewohner", "amalia", "manipulator", "doppelspion", "trugbilderwolf", "wolfskind"]
 	var app := {"7": "schutzengel"}
 	assert_eq(_doctor(base, 3, 4, [], app), true, "zwei Dorfbewohner: gleich")
 	assert_eq(_doctor(base, 1, 3, [], app), false, "Wolf und Dorf: verschieden")
@@ -125,7 +125,7 @@ func test_doctor_same_team_rules() -> void:
 
 
 func test_doctor_invalid_targets_cancel_and_corrupt() -> void:
-	var s := _run([_start(["werwolf", DK, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _gm("kill", {"target_id": 6, "trigger_effects": false}),
+	var s := _run([_start(["werwolf", DK, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _gm("kill", {"target_id": 6, "trigger_effects": false}),
 		Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:doktor:2")] as Array[Command], "Prompt").state
 	if s == null:
 		return
@@ -144,7 +144,7 @@ func test_doctor_invalid_targets_cancel_and_corrupt() -> void:
 
 
 func test_no_leak_public() -> void:
-	var run := _run([_start(["werwolf", DK, WL, "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var run := _run([_start(["werwolf", DK, WL, "dorfbewohner", "amalia", "detektiv"]), Command.start_night(),
 		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:doktor:2"), Command.answer_stage_targets(2, "targets", [1, 4]),
 		Command.answer_choice(2, "shown", true), Command.begin_step("night:1:2:waldlaeufer:3"), Command.answer_choice(3, "shown", true), Command.end_night()] as Array[Command], "Partie")
 	if run.ok:

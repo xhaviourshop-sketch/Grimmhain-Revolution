@@ -8,7 +8,7 @@ const W := "werwolf"
 const D := "dorfbewohner"
 
 
-func _state(roles: Array = [D, W, D, D, D, D]) -> GameState:
+func _state(roles: Array = [D, W, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]) -> GameState:
 	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
 	assert_true(r.ok, "Start (%s)" % r.error)
 	return r.state
@@ -61,16 +61,16 @@ func test_role_change_makes_confirmation_stale_and_allows_new_one() -> void:
 func test_resume_continues_with_first_unconfirmed_person_in_seat_order() -> void:
 	# AS-A04: 3 von 6 Personen bestätigt, Neustart, Fortsetzung bei der vierten (Sitzreihenfolge, nicht ID).
 	var start := Command.start_game({"round_id": "seat", "seed": 1, "assignment": "manual", "players": Fixtures.players(6),
-		"seat_order": [4, 1, 6, 2, 5, 3], "roles": {"1": D, "2": W, "3": D, "4": D, "5": D, "6": D}})
+		"seat_order": [4, 1, 6, 2, 5, 3], "roles": {"1": D, "2": W, "3": "amalia", "4": "detektiv", "5": "wahnsinniger-kutscher", "6": "waechter-am-tor"}})
 	var commands: Array[Command] = [start, Command.confirm_role_shown(4), Command.confirm_role_shown(1), Command.confirm_role_shown(6)]
 	var loaded := StateCodec.decode(StateCodec.encode(RulesEngine.replay(commands).state, commands))
 	assert_true(loaded.ok, "Laden (%s)" % loaded.error)
 	assert_eq(RoleShownRules.pending_ids(loaded.state), [2, 5, 3] as Array[int], "offen in Sitzreihenfolge")
-	assert_eq(loaded.state.roles_shown, {4: &"dorfbewohner", 1: &"dorfbewohner", 6: &"dorfbewohner"}, "Fortschritt nach dem Laden")
+	assert_eq(loaded.state.roles_shown, {4: &"detektiv", 1: &"dorfbewohner", 6: &"waechter-am-tor"}, "Fortschritt nach dem Laden")
 
 
 func test_save_load_and_replay_agree() -> void:
-	var commands: Array[Command] = [Fixtures.start_roles([D, W, D, D, D, D], 5), Command.confirm_role_shown(2), Command.start_night(),
+	var commands: Array[Command] = [Fixtures.start_roles([D, W, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 5), Command.confirm_role_shown(2), Command.start_night(),
 		Command.confirm_role_shown(5)]
 	var state := RulesEngine.replay(commands).state
 	var loaded := StateCodec.decode(StateCodec.encode(state, commands))
@@ -117,7 +117,7 @@ func test_public_events_never_carry_the_role() -> void:
 
 
 func test_undo_sequence_by_replay_removes_confirmation() -> void:
-	var commands: Array[Command] = [Fixtures.start_roles([D, W, D, D, D, D], 1), Command.confirm_role_shown(2)]
+	var commands: Array[Command] = [Fixtures.start_roles([D, W, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 1), Command.confirm_role_shown(2)]
 	var undone: Array[Command] = commands.slice(0, 1)
 	assert_true(RulesEngine.replay(undone).state.roles_shown.is_empty(), "Rückgängig entfernt die Bestätigung")
 	assert_eq(RulesEngine.replay(commands).state.roles_shown.size(), 1, "Wiederholen stellt sie her")

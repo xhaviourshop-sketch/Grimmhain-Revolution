@@ -25,7 +25,7 @@ func _until_step(role: String) -> Callable:
 
 
 func test_new_charm_through_the_cockpit() -> void:
-	if not await start([W, "rattenfaenger", D, D, D, D, D]):
+	if not await start([W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	assert_true(await run({}, _until_step("rattenfaenger")), "bis zum Rattenfänger")
 	assert_true(find_node(screen(), "DecoyCall_rattenfaenger") == null, "echter Aufruf, kein Tarnaufruf")
@@ -71,7 +71,7 @@ func test_new_charm_through_the_cockpit() -> void:
 
 
 func test_decoy_call_comes_first_and_gives_no_reason() -> void:
-	if not await start([W, "rattenfaenger", "waldhexe", D, D, D, D]):
+	if not await start([W, "rattenfaenger", "waldhexe", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({"rattenfaenger/": [4, 5]}, until_day(1)), "Nacht 1 mit Verzauberung")
 	assert_true(await run({}, until_kind("start_night")), "Tag ohne Hinrichtung")
@@ -97,7 +97,7 @@ func test_decoy_call_comes_first_and_gives_no_reason() -> void:
 
 
 func test_help_on_the_all_step_opens_the_piper_entry() -> void:
-	if not await start([W, "rattenfaenger", D, D, D, D, D]):
+	if not await start([W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	assert_true(await run({"rattenfaenger/": [4, 5]}, _until_step("piper-all")), "bis „Alle Verzauberten“")
 	assert_eq(CockpitText.help_role(next()), "rattenfaenger", "Regel nachlesen führt zum Rattenfänger")

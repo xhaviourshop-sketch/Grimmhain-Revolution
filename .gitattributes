@@ -15,3 +15,6 @@ assets/fonts/OFL-*.txt -whitespace
 
 # Windows-Starter: CRLF, damit cmd.exe Bloecke und Umleitungen sicher liest.
 *.cmd text eol=crlf
+
+# PE-07: echte Spielstand-Fixtures muessen bytegleich bleiben (kein Zeilenenden-Umbau).
+godot/tests/saves/** -text

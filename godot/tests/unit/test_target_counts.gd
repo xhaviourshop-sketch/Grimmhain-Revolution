@@ -67,42 +67,42 @@ func _assert_counts(s: GameState, expected: Array[int], label: String) -> void:
 
 
 func test_loki_none_or_two() -> void:
-	_assert_counts(_to_owner(_state([W, "loki", D, D, D, D, D]), &"loki"), [0, 2] as Array[int], "Loki")
+	_assert_counts(_to_owner(_state([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"loki"), [0, 2] as Array[int], "Loki")
 
 
 func test_soul_swapper_none_or_two() -> void:
-	_assert_counts(_to_owner(_state([W, "seelentauscher", D, D, D, D, D]), &"seelentauscher"), [0, 2] as Array[int], "Seelentauscher")
+	_assert_counts(_to_owner(_state([W, "seelentauscher", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]), &"seelentauscher"), [0, 2] as Array[int], "Seelentauscher")
 
 
 func test_coachman_none_or_three() -> void:
-	var s := _state([W, "kutscher", D, D, D, D, D, D, D, D, D, D, D, D, D, D])
+	var s := _state([W, "kutscher", D, "amalia"] + Fixtures.extra_village(10) + ["detektiv", "wahnsinniger-kutscher"])
 	for id: int in [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]:
 		s = _ok(s, CorrectionFixtures.gm("kill", {"target_id": id, "trigger_effects": false}, "Test"), "%d tot" % id)
 	_assert_counts(_to_owner(s, &"kutscher"), [0, 3] as Array[int], "Kutscher")
 
 
 func test_hound_none_or_three() -> void:
-	_assert_counts(_to_owner(_state([W, "spuerhund", D, D, D, D, D]), &"spuerhund"), [0, 3] as Array[int], "Spürhund")
+	_assert_counts(_to_owner(_state([W, "spuerhund", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"spuerhund"), [0, 3] as Array[int], "Spürhund")
 
 
 func test_doctor_exactly_two() -> void:
-	_assert_counts(_to_owner(_state([W, "doktor", D, D, D, D, D]), &"doktor"), [2] as Array[int], "Doktor")
+	_assert_counts(_to_owner(_state([W, "doktor", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"doktor"), [2] as Array[int], "Doktor")
 
 
 func test_plain_prompt_uses_min_and_max() -> void:
-	var s := _ok(_state([W, D, D, D, D, D, D]), Command.start_night(), "Nacht")
+	var s := _ok(_state([W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), Command.start_night(), "Nacht")
 	assert_eq(s.pending_prompt.owner, &"pack", "Rudel offen")
 	assert_eq([s.pending_prompt.min_count, s.pending_prompt.max_count], [0, 1], "Rudel: kein oder ein Opfer")
 	assert_eq(RulesEngine.target_counts(s), [0, 1] as Array[int], "Rudel: min bis max")
 
 
 func test_no_prompt_has_no_counts() -> void:
-	assert_eq(RulesEngine.target_counts(_state([W, D, D, D, D, D, D])), [] as Array[int], "ohne Prompt keine Anzahl")
+	assert_eq(RulesEngine.target_counts(_state([W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])), [] as Array[int], "ohne Prompt keine Anzahl")
 
 
 ## Manipulierte und veraltete Befehle bleiben abgelehnt, auch wenn die Oberfläche sie nie bildet.
 func test_manipulated_and_stale_commands_are_still_rejected() -> void:
-	var s := _to_owner(_state([W, "loki", D, D, D, D, D]), &"loki")
+	var s := _to_owner(_state([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"loki")
 	if s == null:
 		fail("Loki nicht erreicht")
 		return
@@ -118,4 +118,4 @@ func test_manipulated_and_stale_commands_are_still_rejected() -> void:
 	apply_rejected(answered, Command.answer_stage_targets(p.id, "targets", [3, 4]), "stage_mismatch", "veraltete Antwort")
 	assert_eq(RulesEngine.check(answered, Command.answer_stage_targets(p.id, "targets", [3, 4])), &"stage_mismatch", "check: veraltet")
 	# Phase: außerhalb der Nacht lehnt schon die Phasenprüfung ab.
-	assert_eq(RulesEngine.check(_state([W, D, D, D, D, D, D]), Command.answer_prompt(1, [2])), RulesEngine.apply(_state([W, D, D, D, D, D, D]), Command.answer_prompt(1, [2])).error, "check mit Phasenprüfung")
+	assert_eq(RulesEngine.check(_state([W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), Command.answer_prompt(1, [2])), RulesEngine.apply(_state([W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), Command.answer_prompt(1, [2])).error, "check mit Phasenprüfung")

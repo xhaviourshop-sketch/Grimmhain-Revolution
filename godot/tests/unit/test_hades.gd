@@ -20,7 +20,7 @@ const VP := "voodoo-priester"
 
 
 func _state(roles: Array, dead: Array = [], lights: Dictionary = {}) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	var s := r.state if r.ok else null
 	for id: int in dead:
@@ -169,7 +169,7 @@ func test_catalog_entry() -> void:
 # --- Lichter --------------------------------------------------------------------------------------
 
 func test_lights_from_real_deaths_only_each_hades_own_pool() -> void:
-	var s := _state([W, H, H, D, D, D, SE, D, D, D])
+	var s := _state([W, H, H, D, "amalia", "detektiv", SE, "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [4], "schutzengel:7@": [8]}, log)
 	if s == null:
@@ -198,7 +198,7 @@ func test_lights_from_real_deaths_only_each_hades_own_pool() -> void:
 # --- Tötung ---------------------------------------------------------------------------------------
 
 func test_kill_for_two_lights_dies_at_dawn_ignoring_pack_protection() -> void:
-	var s := _state([W, H, SE, D, D, D, D, D, D, D], [], {2: 2})
+	var s := _state([W, H, SE, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [], {2: 2})
 	var log: Array[GameEvent] = []
 	s = _night(s, {"schutzengel:3@": [5], "hades:2@targets": [5]}, log)
 	if s == null:
@@ -219,7 +219,7 @@ func test_kill_for_two_lights_dies_at_dawn_ignoring_pack_protection() -> void:
 
 
 func test_kill_prevented_by_necromancer_shield_still_costs_lights() -> void:
-	var s := _state([W, H, NK, D, D, D, D, D, D, D], [8, 9, 10], {2: 2})
+	var s := _state([W, H, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [8, 9, 10], {2: 2})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"nekromant:3@targets": [8, 9, 10], "hades:2@targets": [5]}, log)
 	if s == null:
@@ -230,7 +230,7 @@ func test_kill_prevented_by_necromancer_shield_still_costs_lights() -> void:
 
 
 func test_no_step_below_two_lights_and_invalid_answers() -> void:
-	var s := _state([W, H, D, D, D, D, D, D, D, D], [9], {2: 1})
+	var s := _state([W, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [9], {2: 1})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {}, log)
 	assert_eq(_hades_steps(log).size(), 0, "ein Licht: kein Schritt")
@@ -258,7 +258,7 @@ func test_no_step_below_two_lights_and_invalid_answers() -> void:
 # --- Barriere -------------------------------------------------------------------------------------
 
 func test_barrier_blocks_next_death_including_execution_not_correction() -> void:
-	var s := _state([W, H, D, D, D, D, D, D, D, D], [], {2: 3})
+	var s := _state([W, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [], {2: 3})
 	var log: Array[GameEvent] = []
 	s = _night(s, {"hades:2@targets": [], "hades:2@barrier": true}, log)
 	if s == null:
@@ -273,7 +273,7 @@ func test_barrier_blocks_next_death_including_execution_not_correction() -> void
 	assert_eq(_saves(log, H), [2] as Array[int], "durch die Barriere")
 	assert_eq(s.hades_barriers if s != null else [0], [] as Array[int], "Barriere verbraucht")
 	# Neue Barriere; die Korrektur tötet trotzdem.
-	s = _state([W, H, D, D, D, D, D, D, D, D], [], {2: 3})
+	s = _state([W, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [], {2: 3})
 	s = _dawn(s, {"hades:2@targets": [], "hades:2@barrier": true})
 	log = []
 	var r := apply_ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Korrektur") if s != null else null
@@ -283,7 +283,7 @@ func test_barrier_blocks_next_death_including_execution_not_correction() -> void
 
 func test_only_one_barrier_kill_and_barrier_same_night() -> void:
 	# Mit aktiver Barriere keine Barrierenfrage; Tötung und Barriere in derselben Nacht sind erlaubt.
-	var s := _state([W, H, D, D, D, D, D, D, D, D], [], {2: 5})
+	var s := _state([W, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [], {2: 5})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"hades:2@targets": [4], "hades:2@barrier": true}, log)
 	if s == null:
@@ -301,7 +301,7 @@ func test_only_one_barrier_kill_and_barrier_same_night() -> void:
 
 func test_barrier_holds_against_packfather_extra_and_martyr_stays_out() -> void:
 	# Rudelangriff auf Hades mit Barriere: die Märtyrerin wird nicht gefragt, die Barriere rettet ihn.
-	var s := _state([W, H, "maertyrerin", D, D, D, D, D, D, D], [], {2: 3})
+	var s := _state([W, H, "maertyrerin", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [], {2: 3})
 	s = _dawn(s, {"hades:2@targets": [], "hades:2@barrier": true})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2], "maertyrerin:3@": [2]}, log)
@@ -312,7 +312,7 @@ func test_barrier_holds_against_packfather_extra_and_martyr_stays_out() -> void:
 	assert_eq(_saves(log, H), [2] as Array[int], "Barriere fängt den Rudelangriff ab")
 	assert_eq(_deaths(log), [], "Hades lebt")
 	# Das durchdringende Zusatzopfer des Rudelvaters durchbricht die Barriere nicht (E-31: jede Ursache außer Korrektur).
-	s = _state([W, H, D, D, D, D, D, D, D, D], [], {2: 3})
+	s = _state([W, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [], {2: 3})
 	s = _dawn(s, {"hades:2@targets": [], "hades:2@barrier": true})
 	s = _ok(s, Command.decide_execution(-1), "keine Hinrichtung")
 	s = _ok(s, Command.end_day(), "Tagesende")
@@ -328,7 +328,7 @@ func test_barrier_holds_against_packfather_extra_and_martyr_stays_out() -> void:
 # --- Sieg -----------------------------------------------------------------------------------------
 
 func test_win_while_alive_with_ten_lights() -> void:
-	var s := _state([W, H, D, D, D, D, D, D, D, D], [], {2: 9})
+	var s := _state([W, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [], {2: 9})
 	s = _dawn(s, {"pack@": [4], "hades:2@targets": []})
 	if s == null:
 		return
@@ -349,7 +349,7 @@ func test_win_while_alive_with_ten_lights() -> void:
 
 func test_role_loss_clears_lights_new_holder_starts_fresh() -> void:
 	# Seelentauscher (80) vor Hades (99): 2 und 4 tauschen, der Schritt von 2 entfällt.
-	var s := _state([W, H, "seelentauscher", D, D, D, D, D, D, D], [], {2: 4})
+	var s := _state([W, H, "seelentauscher", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise", "nachtwaechter", "ritter"], [], {2: 4})
 	s.hades_barriers.append(2)
 	var log: Array[GameEvent] = []
 	s = _night(s, {"seelentauscher:3@targets": [2, 4]}, log)
@@ -364,7 +364,7 @@ func test_role_loss_clears_lights_new_holder_starts_fresh() -> void:
 
 func test_two_hades_barrier_absorbs_other_kill() -> void:
 	# Hades 3 kauft in Nacht 1 die Barriere; in Nacht 2 tötet Hades 2 ihn: die Barriere fängt ab, niemand erhält ein Licht.
-	var s := _state([W, H, H, D, D, D, D, D, D, D], [], {3: 3})
+	var s := _state([W, H, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [], {3: 3})
 	s = _dawn(s, {"hades:3@targets": [], "hades:3@barrier": true})
 	if s == null:
 		return
@@ -384,7 +384,7 @@ func test_two_hades_barrier_absorbs_other_kill() -> void:
 
 
 func test_kill_on_voodoo_priest_redirected_to_doll_gives_light() -> void:
-	var s := _dawn(_state([W, H, VP, D, D, D, D, D, D, D]), {"voodoo-priester:3@": [5]})
+	var s := _dawn(_state([W, H, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"]), {"voodoo-priester:3@": [5]})
 	if s == null:
 		return
 	s.hades_lights[2] = 2
@@ -395,7 +395,7 @@ func test_kill_on_voodoo_priest_redirected_to_doll_gives_light() -> void:
 
 
 func test_load_rejects_inconsistent_state() -> void:
-	var s := _state([W, H, D, D, D, D, D, D, D, D], [], {2: 4})
+	var s := _state([W, H, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [], {2: 4})
 	if s == null:
 		return
 	s.hades_barriers.append(2)

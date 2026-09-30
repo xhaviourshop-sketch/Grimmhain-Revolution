@@ -22,7 +22,7 @@ const FT := "feuerteufel"
 
 
 func _state(roles: Array, dead: Array = []) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	var s := r.state if r.ok else null
 	for id: int in dead:
@@ -144,7 +144,7 @@ func test_catalog_entry() -> void:
 # --- Schild ---------------------------------------------------------------------------------------
 
 func test_shield_prevents_next_death_of_anyone_once() -> void:
-	var s := _state([W, NK, D, D, D, D, D, D, D, D], [7, 8, 9])
+	var s := _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [7, 8, 9])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"nekromant:2@targets": [7, 8, 9], "pack@": [4]}, log)
 	if s == null:
@@ -163,7 +163,7 @@ func test_shield_prevents_next_death_of_anyone_once() -> void:
 
 
 func test_shield_blocks_execution_and_expires_with_next_night() -> void:
-	var s := _state([W, NK, D, D, D, D, D, D, D, D], [7, 8, 9])
+	var s := _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [7, 8, 9])
 	s = _dawn(s, {"nekromant:2@targets": [7, 8, 9]})
 	s = _ok(s, Command.nominate(3, 5), "Nominierung")
 	var r := apply_ok(s, Command.decide_execution(5), "Hinrichtung") if s != null else null
@@ -173,7 +173,7 @@ func test_shield_blocks_execution_and_expires_with_next_night() -> void:
 	assert_eq(_shield_saves(r.events), [5] as Array[int], "durch den Schild")
 	assert_true(r.state.players[5].alive, "5 lebt")
 	# Ungenutzt verfällt der Schild mit der nächsten Nacht.
-	s = _state([W, NK, D, D, D, D, D, D, D, D], [7, 8, 9])
+	s = _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [7, 8, 9])
 	s = _dawn(s, {"nekromant:2@targets": [7, 8, 9]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [4]}, log)
@@ -183,7 +183,7 @@ func test_shield_blocks_execution_and_expires_with_next_night() -> void:
 
 
 func test_shared_pool_each_dead_once_and_invalid_answers() -> void:
-	var s := _state([W, NK, D, D, D, D, D, D, D, D], [7, 8, 9, 10])
+	var s := _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [7, 8, 9, 10])
 	s = _ok(s, Command.start_night(), "Nacht")
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Nekromant") if s != null else null
@@ -206,7 +206,7 @@ func test_shared_pool_each_dead_once_and_invalid_answers() -> void:
 
 
 func test_two_necromancers_share_pool_and_shields_count() -> void:
-	var s := _state([W, NK, NK, D, D, D, D, D, D, D, D, D], [7, 8, 9, 10, 11, 12])
+	var s := _state([W, NK, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter", "dorfwache"], [7, 8, 9, 10, 11, 12])
 	var log: Array[GameEvent] = []
 	s = _night(s, {"nekromant:2@targets": [7, 8, 9], "nekromant:3@targets": [10, 11, 12], "pack@": [4]}, log)
 	if s == null:
@@ -223,7 +223,7 @@ func test_two_necromancers_share_pool_and_shields_count() -> void:
 
 func test_shield_ends_with_role_loss_or_death() -> void:
 	# E-27 (RM-DR-142.9): Seelentausch in derselben Nacht nach dem Schild (Seelentauscher 80 > Nekromant 30).
-	var s := _state([W, NK, "seelentauscher", D, D, D, D, D, D, D], [8, 9, 10])
+	var s := _state([W, NK, "seelentauscher", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise", "nachtwaechter", "ritter"], [8, 9, 10])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"nekromant:2@targets": [8, 9, 10], "seelentauscher:3@targets": [2, 4], "pack@": [5]}, log)
 	if s == null:
@@ -231,7 +231,7 @@ func test_shield_ends_with_role_loss_or_death() -> void:
 	assert_eq(String(s.players[2].role_id), D, "2 hat die Rolle verloren")
 	assert_eq(_deaths(log), [[5, "NIGHT_KILL"]], "Schild erloschen, Rudelopfer stirbt")
 	# Tod des Nekromanten per Korrektur.
-	s = _state([W, NK, D, D, D, D, D, D, D, D], [8, 9, 10])
+	s = _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [8, 9, 10])
 	s = _night(s, {"nekromant:2@targets": [8, 9, 10], "pack@": [5]})
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Nekromant stirbt")
 	assert_eq(s.necro_shields if s != null else [0], [], "Schild erloschen")
@@ -242,7 +242,7 @@ func test_shield_ends_with_role_loss_or_death() -> void:
 # --- Umlenkung ------------------------------------------------------------------------------------
 
 func test_redirect_pack_attack_to_another_person() -> void:
-	var s := _state([W, NK, D, D, D, D, D, D, D, D], [7, 8, 9])
+	var s := _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [7, 8, 9])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [7, 8, 9], "nekromant:2@redirect": [5]}, log)
 	if s == null:
@@ -253,12 +253,12 @@ func test_redirect_pack_attack_to_another_person() -> void:
 	assert_eq(s.necro_shields, [], "kein Schild")
 	assert_eq(s.necro_sacrificed, [7, 8, 9] as Array[int], "Tote geopfert")
 	# Schutz des neuen Ziels wirkt.
-	s = _state([W, NK, SE, D, D, D, D, D, D, D], [7, 8, 9])
+	s = _state([W, NK, SE, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [7, 8, 9])
 	log = []
 	s = _dawn(s, {"schutzengel:3@": [5], "pack@": [2], "nekromant:2@targets": [7, 8, 9], "nekromant:2@redirect": [5]}, log)
 	assert_eq(_deaths(log), [], "Schutzengel schützt das neue Ziel")
 	# Verzicht auf die Umlenkung: dann entsteht der Schild und rettet ihn.
-	s = _state([W, NK, D, D, D, D, D, D, D, D], [7, 8, 9])
+	s = _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [7, 8, 9])
 	log = []
 	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [7, 8, 9], "nekromant:2@redirect": []}, log)
 	assert_eq(_deaths(log), [], "Schild statt Umlenkung")
@@ -267,7 +267,7 @@ func test_redirect_pack_attack_to_another_person() -> void:
 
 func test_no_redirect_when_he_would_not_die() -> void:
 	# Schutzengel schützt den Nekromanten: nach den Toten gibt es keine Umlenkungsstufe, der Schild entsteht.
-	var s := _state([W, NK, SE, D, D, D, D, D, D, D], [7, 8, 9])
+	var s := _state([W, NK, SE, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [7, 8, 9])
 	var log: Array[GameEvent] = []
 	s = _night(s, {"schutzengel:3@": [2], "pack@": [2], "nekromant:2@targets": [7, 8, 9], "nekromant:2@redirect": [5]}, log)
 	if s == null:
@@ -276,7 +276,7 @@ func test_no_redirect_when_he_would_not_die() -> void:
 	assert_eq(stages.size(), 0, "keine Frage nach Umlenkung (E-26)")
 	assert_eq(s.necro_shields.size(), 1, "Schild errichtet")
 	# Ein zuvor errichteter Schild eines anderen Nekromanten verhindert seinen Tod: ebenfalls keine Umlenkung.
-	s = _state([W, NK, NK, D, D, D, D, D, D, D, D, D], [7, 8, 9, 10, 11, 12])
+	s = _state([W, NK, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter", "dorfwache"], [7, 8, 9, 10, 11, 12])
 	log = []
 	s = _night(s, {"pack@": [3], "nekromant:2@targets": [7, 8, 9], "nekromant:3@targets": [10, 11, 12], "nekromant:3@redirect": [5]}, log)
 	stages = events_of_type(log, "PromptStageAnswered").filter(func(e: GameEvent) -> bool: return String(e.data.get("next_stage", "")) == "redirect")
@@ -285,7 +285,7 @@ func test_no_redirect_when_he_would_not_die() -> void:
 
 func test_martyr_sees_redirected_victim() -> void:
 	# E-25: Der Nekromant lenkt vor der Märtyrerin um; sie opfert sich für das neue Ziel 5.
-	var s := _state([W, NK, "maertyrerin", D, D, D, D, D, D, D], [7, 8, 9])
+	var s := _state([W, NK, "maertyrerin", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [7, 8, 9])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [7, 8, 9], "nekromant:2@redirect": [5], "maertyrerin:3@": [5]}, log)
 	if s == null:
@@ -297,7 +297,7 @@ func test_martyr_sees_redirected_victim() -> void:
 # --- Wolf benennen --------------------------------------------------------------------------------
 
 func test_name_wolf_once_per_day_secret_and_win() -> void:
-	var s := _state([W, NK, D, D, D, D, D])
+	var s := _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _dawn(s)
 	if s == null:
 		return
@@ -320,7 +320,7 @@ func test_name_wolf_once_per_day_secret_and_win() -> void:
 	assert_true(solo.size() == 1 and (solo[0] as WinCandidate).beneficiary_ids == ([2] as Array[int]), "Alleinsieg vorgeschlagen")
 	_codec_same(s, "Sieg")
 	# Nachts nicht; ein nur verfluchter Dorfbewohner ist kein Treffer.
-	var t := _dawn(_state([W, NK, D, D, D, D, D]))
+	var t := _dawn(_state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]))
 	if t == null:
 		return
 	t.players[4].cursed = true
@@ -336,7 +336,7 @@ func test_name_wolf_once_per_day_secret_and_win() -> void:
 func test_redirect_to_priest_with_necromancer_doll_does_not_return() -> void:
 	# Priester 3 hat den Nekromanten 2 als Puppe. Das Rudel greift 2 an, 2 lenkt auf 3 um; 3s Puppe ist 2
 	# (schon betroffen, E-20) → 3 stirbt.
-	var s := _dawn(_state([W, NK, VP, D, D, D, D, D, D, D], [7, 8, 9]), {"voodoo-priester:3@": [2]})
+	var s := _dawn(_state([W, NK, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [7, 8, 9]), {"voodoo-priester:3@": [2]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [7, 8, 9], "nekromant:2@redirect": [3]}, log)
 	if s == null:
@@ -346,7 +346,7 @@ func test_redirect_to_priest_with_necromancer_doll_does_not_return() -> void:
 
 
 func test_redirect_onto_fire_devil_target_burns_neighbours() -> void:
-	var s := _dawn(_state([W, NK, D, FT, D, D, D, D, D, D], [8, 9, 10]), {"feuerteufel:4@": [5]})
+	var s := _dawn(_state([W, NK, D, FT, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [8, 9, 10]), {"feuerteufel:4@": [5]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [5]}, log)
 	if s == null:
@@ -356,7 +356,7 @@ func test_redirect_onto_fire_devil_target_burns_neighbours() -> void:
 
 func test_shield_acts_before_doll_and_after_personal_shields() -> void:
 	# Schild vor der Puppe: Priester 3 (Puppe 5) wird angegriffen; der Schild verhindert seinen Tod, die Puppe bleibt.
-	var s := _dawn(_state([W, NK, VP, D, D, D, D, D, D, D], [7, 8, 9]), {"voodoo-priester:3@": [5]})
+	var s := _dawn(_state([W, NK, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [7, 8, 9]), {"voodoo-priester:3@": [5]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"nekromant:2@targets": [7, 8, 9], "pack@": [3]}, log)
 	if s == null:
@@ -364,7 +364,7 @@ func test_shield_acts_before_doll_and_after_personal_shields() -> void:
 	assert_eq(_shield_saves(log), [3] as Array[int], "Schild rettet den Priester")
 	assert_eq(s.voodoo_dolls, [{"priest_id": 3, "doll_id": 5}], "Puppe nicht verbraucht")
 	# Persönlicher Schild zuerst: Der Rudelvater überlebt einen Brand selbst, der Schild bleibt.
-	s = _dawn(_state([W, NK, D, "rudelvater", FT, D, D, D, D, D], [8, 9, 10]), {"feuerteufel:5@": [3], "nekromant:2@targets": [8, 9, 10]})
+	s = _dawn(_state([W, NK, D, "rudelvater", FT, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [8, 9, 10]), {"feuerteufel:5@": [3], "nekromant:2@targets": [8, 9, 10]})
 	if s == null:
 		return
 	var r := apply_ok(s, _gm("kill", {"target_id": 3, "trigger_effects": true}), "Ziel des Feuerteufels stirbt (Korrektur)")
@@ -374,7 +374,7 @@ func test_shield_acts_before_doll_and_after_personal_shields() -> void:
 
 
 func test_load_rejects_inconsistent_state() -> void:
-	var s := _dawn(_state([W, NK, D, D, D, D, D, D, D, D], [7, 8, 9]), {"nekromant:2@targets": [7, 8, 9]})
+	var s := _dawn(_state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [7, 8, 9]), {"nekromant:2@targets": [7, 8, 9]})
 	if s == null:
 		return
 	_codec_same(s, "Schild")

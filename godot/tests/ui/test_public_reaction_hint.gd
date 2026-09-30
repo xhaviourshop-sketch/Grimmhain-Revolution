@@ -10,7 +10,7 @@ const D := "dorfbewohner"
 const DAWN_HINT := {"key": "ui.cockpit.warning.gm_preparing.dawn", "values": {}}
 const DAY_HINT := {"key": "ui.cockpit.warning.gm_preparing.day", "values": {}}
 ## 2 Sensenträger, 3 Waldhexe, 4 Besessener Wolf; acht Personen, damit der Besessene Wolf reagieren darf.
-const ROLES := [W, "sensentraeger", "waldhexe", "besessener-wolf", D, D, D, D]
+const ROLES := [W, "sensentraeger", "waldhexe", "besessener-wolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"]
 
 
 ## Erste Nacht mit Rudelziel und optionalem Gift der Waldhexe, danach Morgenauflösung.
@@ -62,8 +62,8 @@ func test_different_dawn_reactions_give_the_same_public_hint() -> void:
 
 
 func test_day_reaction_uses_the_day_text() -> void:
-	var curse := _day_execution([W, "sensentraeger", D, D, D, D, D], 2)
-	var possessed := _day_execution([W, "besessener-wolf", D, D, D, D, D, D], 2)
+	var curse := _day_execution([W, "sensentraeger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2)
+	var possessed := _day_execution([W, "besessener-wolf", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], 2)
 	for entry: Array in [["Sensenträger am Tag", curse], ["Besessener Wolf am Tag", possessed]]:
 		var s: GameSession = entry[1]
 		assert_eq(str(UiGame.next_of(s)["step_kind"]), "reaction", "%s: Reaktion offen" % entry[0])
@@ -72,7 +72,7 @@ func test_day_reaction_uses_the_day_text() -> void:
 
 ## Kein exklusiver Marker: dieselbe Zeile erscheint bei einer verdeckten Siegentscheidung ohne jede Reaktion.
 func test_same_hint_for_other_secret_steps_and_none_on_open_cards() -> void:
-	var s := UiGame.session([W, D, D, D, D, D])
+	var s := UiGame.session([W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	assert_true(s.start_night().ok, "Nacht 1")
 	assert_true(UiGame.to_day(s, {"pack/": [2]}), "bis zum Tag")
 	assert_eq(_warnings(s), [], "offener Tag ohne verdeckten Schritt: keine Zeile")
@@ -81,7 +81,7 @@ func test_same_hint_for_other_secret_steps_and_none_on_open_cards() -> void:
 	assert_eq(str(UiGame.next_of(s)["kind"]), "win_decision", "verdeckte Siegentscheidung")
 	assert_false(JSON.stringify(s.event_log()).contains("ReactionQueued"), "keine Reaktion (Werwolf hat keine Todesfolge)")
 	_assert_neutral(s, DAY_HINT, "Siegentscheidung")
-	var night := UiGame.session([W, "sensentraeger", D, D, D, D])
+	var night := UiGame.session([W, "sensentraeger", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	assert_true(night.start_night().ok, "Nacht 1")
 	assert_eq(_warnings(night), [], "Nacht: keine Zeile (jeder Nachtschritt ist verdeckt)")
 

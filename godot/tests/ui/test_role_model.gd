@@ -33,8 +33,16 @@ func _set_counts(s: Object, counts: Dictionary) -> void:
 		s.call("set_role_count", StringName(str(role)), int(counts[role]))
 
 
+## Gültiger Pool für `persons` Personen (PE-07: jede Rolle einmal): Werwolf, Manipulator und verschiedene Dorfrollen.
 func _valid_pool(persons: int) -> Dictionary:
-	return {"werwolf": 1, "manipulator": 1, "dorfbewohner": persons - 2}
+	var pool := {"werwolf": 1, "manipulator": 1}
+	for role: String in Fixtures.village_fillers(persons - 2):
+		pool[role] = 1
+	return pool
+
+
+func _reset(s: Object) -> void:
+	s.call("reset_roles")
 
 
 func _ok(result: Object, label: String) -> bool:
@@ -118,17 +126,21 @@ func test_plus_minus_and_limits() -> void:
 	assert_eq(_count(s, "werwolf"), 0, "Start bei 0")
 	_ok(s.call("change_role_count", &"werwolf", 1), "Plus")
 	assert_eq(_count(s, "werwolf"), 1, "Plus erhöht um eins")
-	s.call("change_role_count", &"werwolf", 1)
+	assert_false(bool((_roles(s)["can_increase"] as Dictionary)["werwolf"]), "Plus bei der Höchstzahl 1 gesperrt (PE-07)")
+	var at_limit := JSON.stringify(s.call("view"))
+	_rejected(s, s.call("change_role_count", &"werwolf", 1), "above_maximum", "zweiter Werwolf", at_limit)
 	_ok(s.call("change_role_count", &"werwolf", -1), "Minus")
-	assert_eq(_count(s, "werwolf"), 1, "Minus verringert um eins")
-	s.call("change_role_count", &"werwolf", -1)
+	assert_eq(_count(s, "werwolf"), 0, "Minus verringert um eins")
+	assert_true(bool((_roles(s)["can_increase"] as Dictionary)["werwolf"]), "nach dem Entfernen wieder auswählbar")
 	var before := JSON.stringify(s.call("view"))
 	_rejected(s, s.call("change_role_count", &"werwolf", -1), "negative_count", "unter 0", before)
 	assert_false(bool((_roles(s)["can_decrease"] as Dictionary)["werwolf"]), "Minus bei 0 gesperrt")
 	_rejected(s, s.call("change_role_count", &"nicht-im-katalog", 1), "unknown_role", "unbekannte Rolle", before)
-	_rejected(s, s.call("set_role_count", &"dorfbewohner", 9), "above_maximum", "mehr Kopien als Personen", before)
-	_ok(s.call("set_role_count", &"dorfbewohner", 8), "genau Personenzahl")
-	assert_false(bool((_roles(s)["can_increase"] as Dictionary)["dorfbewohner"]), "Plus an der technischen Grenze gesperrt")
+	_rejected(s, s.call("set_role_count", &"dorfbewohner", 2), "above_maximum", "zweiter Dorfbewohner", before)
+	# Die Gebundenen sind die einzige Ausnahme: 1 bis zur Personenzahl, darüber die technische Grenze.
+	_rejected(s, s.call("set_role_count", &"die-gebundenen", 9), "above_maximum", "mehr Gebundene als Personen", before)
+	_ok(s.call("set_role_count", &"die-gebundenen", 8), "Gebundene genau Personenzahl")
+	assert_false(bool((_roles(s)["can_increase"] as Dictionary)["die-gebundenen"]), "Plus an der technischen Grenze gesperrt")
 
 
 func test_pool_validation() -> void:
@@ -137,26 +149,37 @@ func test_pool_validation() -> void:
 		return
 	var r := _roles(s)
 	assert_true(not bool(r["valid"]) and int(r["total"]) == 0 and int(r["persons"]) == 8 and int(r["free"]) == 8, "leer: ungültig, 8 frei")
-	_set_counts(s, {"werwolf": 1, "manipulator": 1, "dorfbewohner": 4})
+	_set_counts(s, _valid_pool(6))
 	r = _roles(s)
 	assert_true(not bool(r["valid"]) and (r["issues"] as Array).has("too_few_roles") and int(r["free"]) == 2, "unter Personenzahl ungültig")
-	_set_counts(s, {"dorfbewohner": 8})
+	_reset(s)
+	_set_counts(s, _valid_pool(8))
+	_set_counts(s, {"schutzengel": 1, "das-orakel": 1})
 	r = _roles(s)
 	assert_true(not bool(r["valid"]) and (r["issues"] as Array).has("too_many_roles") and int(r["free"]) == -2 and int(r["total"]) == 10, "über Personenzahl ungültig")
-	_set_counts(s, {"dorfbewohner": 6})
+	_reset(s)
+	_set_counts(s, _valid_pool(8))
 	r = _roles(s)
 	assert_true(bool(r["valid"]) and (r["issues"] as Array).is_empty(), "exakt passend und vollständig gültig")
+	# Je Fall acht verschiedene Rollen (PE-07): sieben Wolfsrollen ohne Dorf, sieben Dorfrollen ohne Wolf, ohne Einzelsieg.
+	var wolves := {"werwolf": 1, "spiegelwolf": 1, "blutwolf": 1, "besessener-wolf": 1, "rudelvater": 1, "seuchenwolf": 1, "cerberus": 1}
+	var seven_village := {}
+	for role: String in Fixtures.village_fillers(7):
+		seven_village[role] = 1
 	var cases := {
-		"missing_village": {"werwolf": 7, "manipulator": 1, "dorfbewohner": 0},
-		"missing_wolf": {"werwolf": 0, "manipulator": 1, "dorfbewohner": 7},
-		"missing_solo": {"werwolf": 1, "manipulator": 0, "dorfbewohner": 7},
+		"missing_village": [wolves, {"manipulator": 1}],
+		"missing_wolf": [seven_village, {"manipulator": 1}],
+		"missing_solo": [{"werwolf": 1}, seven_village],
 	}
 	for issue: String in cases:
-		_set_counts(s, cases[issue])
+		_reset(s)
+		for part: Dictionary in cases[issue]:
+			_set_counts(s, part)
 		r = _roles(s)
 		assert_true(not bool(r["valid"]) and (r["issues"] as Array).has(issue), "%s erkannt (%s)" % [issue, r["issues"]])
 	# Fraktionen kommen aus dem Katalog: Sonderwölfe zählen als Wolf, Wolfskind nicht.
-	_set_counts(s, {"werwolf": 0, "spiegelwolf": 1, "wolfskind": 1, "manipulator": 1, "dorfbewohner": 5})
+	_reset(s)
+	_set_counts(s, {"spiegelwolf": 1, "wolfskind": 1, "manipulator": 1, "dorfbewohner": 1, "amalia": 1, "detektiv": 1, "wahnsinniger-kutscher": 1, "waechter-am-tor": 1})
 	r = _roles(s)
 	assert_true(bool(r["valid"]) and int(r["wolf_count"]) == 1 and int((r["factions"] as Dictionary)["village"]) == 6, "Spiegelwolf als Wolf, Wolfskind im Dorf")
 
@@ -167,7 +190,7 @@ func test_confirm_pool_is_canonical_and_stable() -> void:
 		return
 	var before := JSON.stringify(s.call("view"))
 	_rejected(s, s.call("confirm_roles"), "roles_invalid", "ungültigen Pool bestätigen", before)
-	_set_counts(s, {"dorfbewohner": 5, "manipulator": 1, "werwolf": 1, "schutzengel": 1})
+	_set_counts(s, {"dorfbewohner": 1, "amalia": 1, "detektiv": 1, "wahnsinniger-kutscher": 1, "waechter-am-tor": 1, "manipulator": 1, "werwolf": 1, "schutzengel": 1})
 	var result: Object = s.call("confirm_roles")
 	if not _ok(result, "gültigen Pool bestätigen"):
 		return
@@ -178,11 +201,11 @@ func test_confirm_pool_is_canonical_and_stable() -> void:
 	var sorted := pool.duplicate()
 	sorted.sort()
 	assert_eq(pool, sorted, "kanonisch nach Rollen-ID sortiert")
-	assert_eq(pool, ["dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "manipulator", "schutzengel", "werwolf"], "exakte Anzahl je Rolle")
+	assert_eq(pool, ["amalia", "detektiv", "dorfbewohner", "manipulator", "schutzengel", "waechter-am-tor", "wahnsinniger-kutscher", "werwolf"], "genau eine Kopie je gewählter Rolle")
 	for id: Variant in pool:
 		assert_true(id is String, "reine Daten (String)")
 	var other := _make(8)
-	_set_counts(other, {"schutzengel": 1, "werwolf": 1, "manipulator": 1, "dorfbewohner": 5})
+	_set_counts(other, {"schutzengel": 1, "werwolf": 1, "manipulator": 1, "waechter-am-tor": 1, "wahnsinniger-kutscher": 1, "detektiv": 1, "amalia": 1, "dorfbewohner": 1})
 	other.call("confirm_roles")
 	assert_eq(_roles(other)["pool"], pool, "unabhängig von der Eingabereihenfolge")
 	assert_eq(String((s.call("view") as Dictionary)["step"]), "distribution", "Bestätigen wechselt zur Verteilung")
@@ -265,7 +288,7 @@ func test_suggestion_overwrites_only_after_confirmation() -> void:
 	_ok(s.call("apply_suggestion"), "Vorschlag auf leere Auswahl")
 	var suggested := JSON.stringify(_roles(s)["counts"])
 	_ok(s.call("apply_suggestion"), "gleicher Vorschlag erneut ohne Rückfrage")
-	s.call("change_role_count", &"schutzengel", 1)
+	s.call("change_role_count", &"ritter", 1)
 	s.call("change_role_count", &"dorfbewohner", -1)
 	var before := JSON.stringify(s.call("view"))
 	_rejected(s, s.call("apply_suggestion"), "confirmation_required", "manuelle Auswahl überschreiben", before)
@@ -292,7 +315,7 @@ func test_person_changes_and_role_pool() -> void:
 	assert_true(not bool(r["confirmed"]) and String(r["invalidated"]) == "person_count_changed" and not bool(r["valid"]), "Person hinzufügen invalidiert unpassenden Pool")
 	var steps: Array = (s.call("view") as Dictionary)["steps"]
 	assert_eq(String(steps[1]["state"]), "invalid", "Rollenschritt als ungültig geworden markiert")
-	s.call("set_role_count", &"dorfbewohner", 7)
+	s.call("set_role_count", &"nachtwaechter", 1)  # neunte Rolle für die neunte Person
 	s.call("confirm")
 	_ok(s.call("confirm_roles"), "neu bestätigt")
 	s.call("remove_person", ids[1])

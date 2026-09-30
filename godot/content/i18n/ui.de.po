@@ -858,7 +858,7 @@ msgid "ui.setup.roles.issue.missing_solo"
 msgstr "keine Einzelsiegrolle"
 
 msgid "ui.setup.roles.issue.above_maximum"
-msgstr "Höchstzahl einer Rolle überschritten"
+msgstr "Rolle zu oft gewählt"
 
 msgid "ui.setup.roles.issue.negative_count"
 msgstr "negative Anzahl"
@@ -892,6 +892,12 @@ msgstr "+"
 
 msgid "ui.setup.roles.limit"
 msgstr "Höchstzahl erreicht"
+
+msgid "ui.setup.roles.limit_once"
+msgstr "Nur einmal zu Spielbeginn"
+
+msgid "ui.setup.roles.over_limit"
+msgstr "Nur einmal zu Spielbeginn erlaubt, bitte verringern: {roles}"
 
 msgid "ui.setup.roles.status.invalid"
 msgstr "Rollenwahl noch nicht gültig."
@@ -2736,7 +2742,7 @@ msgid "ui.continue.unsaved.confirm"
 msgstr "Trotzdem wechseln"
 
 msgid "ui.continue.slot.incompatible"
-msgstr "Dieser Spielstand stammt aus einer anderen Version (Schema {found}, erwartet {expected}). Er bleibt unverändert und kann hier nicht fortgesetzt werden."
+msgstr "Dieser Spielstand stammt aus einer anderen Version (gespeichert: {found}; erwartet: {expected}). Er bleibt unverändert und kann hier nicht fortgesetzt werden."
 
 msgid "ui.continue.status.incompatible"
 msgstr "Hinweis: Dieser Spielstand stammt aus einer anderen Version und kann hier nicht fortgesetzt werden. Er wurde nicht verändert oder gelöscht."

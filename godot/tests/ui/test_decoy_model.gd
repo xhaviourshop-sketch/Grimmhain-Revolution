@@ -20,8 +20,9 @@ func _make(count: int, counts: Dictionary, seed_value: int = FIXED_SEED, calls: 
 	for i: int in count:
 		s.call("add_person", "Person %d" % (i + 1))
 	s.call("confirm")
-	for role: Variant in counts:
-		s.call("set_role_count", StringName(str(role)), int(counts[role]))
+	var legal := Fixtures.legal_counts(counts)  # PE-07: Füllplätze werden zu verschiedenen Füllrollen
+	for role: Variant in legal:
+		s.call("set_role_count", StringName(str(role)), int(legal[role]))
 	return s
 
 
@@ -144,32 +145,35 @@ func test_appearance_choices_are_validated_atomically() -> void:
 		assert_eq(_config(s)[copy], role, "%s gespeichert" % role)
 
 
-func test_two_copies_same_or_different_and_add_remove() -> void:
-	var s := _make(10, {"trugbilderwolf": 2, "manipulator": 1, "dorfbewohner": 7})
+## Seit PE-07 gibt es beim Start höchstens einen Trugbilderwolf; mehrere Kopien mit eigener Scheinrolle sind im Setup nicht mehr
+## erreichbar (`above_maximum`). Geprüft werden Anlegen, Konfigurieren, Entfernen mit Rückfrage und die stabile Kopien-ID.
+func test_single_copy_add_configure_remove_and_readd() -> void:
+	var s := _make(10, {"trugbilderwolf": 1, "manipulator": 1, "dorfbewohner": 8})
 	if s == null:
 		return
 	var a := _copy_id(s, 0)
-	var b := _copy_id(s, 1)
-	assert_true(a != b and a > 0 and b > 0, "zwei stabile, getrennte Kopien")
-	_ok(s.call("set_decoy_appearance", a, &"waldhexe"), "A")
-	_ok(s.call("set_decoy_appearance", b, &"waldhexe"), "B gleich")
-	assert_true(bool(_roles(s)["valid"]), "gleiche Scheinrolle zulässig")
-	_ok(s.call("set_decoy_appearance", b, &"das-orakel"), "B anders")
-	assert_eq(_config(s), {a: "waldhexe", b: "das-orakel"}, "unterschiedliche Scheinrollen")
-	s.call("set_role_count", &"dorfbewohner", 6)
-	_ok(s.call("change_role_count", DECOY, 1), "dritte Kopie")
-	var c := _copy_id(s, 2)
-	assert_eq(_config(s), {a: "waldhexe", b: "das-orakel", c: ""}, "neue Kopie unkonfiguriert, übrige unverändert")
-	_ok(s.call("change_role_count", DECOY, -1), "unkonfigurierte Kopie ohne Rückfrage entfernen")
-	assert_eq(_config(s), {a: "waldhexe", b: "das-orakel"}, "übrige Kopien unverändert")
+	assert_true(a > 0, "stabile Kopie mit ID")
+	assert_eq(_config(s), {a: ""}, "neue Kopie unkonfiguriert")
+	var full := JSON.stringify(s.call("view"))
+	_rejected(s, s.call("change_role_count", DECOY, 1), "above_maximum", "zweite Kopie beim Start", full)
+	_rejected(s, s.call("set_role_count", DECOY, 2), "above_maximum", "zweite Kopie per Anzahl", full)
+	assert_false(bool((_roles(s)["can_increase"] as Dictionary)["trugbilderwolf"]), "Plus gesperrt")
+	_ok(s.call("set_decoy_appearance", a, &"waldhexe"), "Scheinrolle wählen")
+	assert_true(bool(_roles(s)["valid"]), "gültig mit Scheinrolle")
 	var before := JSON.stringify(s.call("view"))
 	var result: Object = s.call("change_role_count", DECOY, -1)
 	_rejected(s, result, "confirmation_required", "konfigurierte Kopie per Minus", before)
-	assert_eq(int((result.get("details") as Dictionary).get("copy_id", -1)), b, "Rückfrage nennt die betroffene Kopie")
-	_ok(s.call("remove_decoy_copy", a), "Kopie A gezielt entfernen")
-	assert_eq(_config(s), {b: "das-orakel"}, "B bleibt mit Scheinrolle und ID")
-	assert_eq(int(_roles(s)["counts"]["trugbilderwolf"]), 1, "Anzahl folgt den Kopien")
-	assert_eq(int(_decoys(s)[0]["number"]), 1, "sichtbare Nummer neu gezählt")
+	assert_eq(int((result.get("details") as Dictionary).get("copy_id", -1)), a, "Rückfrage nennt die betroffene Kopie")
+	_ok(s.call("remove_decoy_copy", a), "Kopie gezielt entfernen")
+	assert_true(_config(s).is_empty(), "keine Kopie mehr")
+	assert_eq(int(_roles(s)["counts"]["trugbilderwolf"]), 0, "Anzahl folgt den Kopien")
+	_ok(s.call("change_role_count", DECOY, 1), "nach dem Entfernen wieder auswählbar")
+	var again := _copy_id(s, 0)
+	assert_true(again > a, "neue Kopie erhält eine neue ID (IDs sinken nie)")
+	assert_eq(_config(s), {again: ""}, "neue Kopie unkonfiguriert")
+	assert_eq(int(_decoys(s)[0]["number"]), 1, "sichtbare Nummer 1")
+	_ok(s.call("change_role_count", DECOY, -1), "unkonfigurierte Kopie ohne Rückfrage entfernen")
+	assert_true(_decoys(s).is_empty(), "wieder ohne Kopie")
 
 
 func test_suggestion_and_reset_handle_copies() -> void:
@@ -189,12 +193,12 @@ func test_suggestion_and_reset_handle_copies() -> void:
 
 # --- Verteilung ---------------------------------------------------------------------------------------
 
+## Zehn Personen mit einem Trugbilderwolf (Scheinrolle Waldhexe), Werwolf, Manipulator und sieben Dorfrollen.
 func _two_copy_setup(seed_value: int = FIXED_SEED, calls: Array = [0]) -> Object:
-	var s := _make(10, {"trugbilderwolf": 2, "werwolf": 1, "manipulator": 1, "dorfbewohner": 6}, seed_value, calls)
+	var s := _make(10, {"trugbilderwolf": 1, "werwolf": 1, "manipulator": 1, "dorfbewohner": 7}, seed_value, calls)
 	if s == null:
 		return null
 	s.call("set_decoy_appearance", _copy_id(s, 0), &"waldhexe")
-	s.call("set_decoy_appearance", _copy_id(s, 1), &"das-orakel")
 	var r: Object = s.call("confirm_roles")
 	assert_true(r != null and bool(r.get("ok")), "Vorbereitung: Rollen bestätigt")
 	return s
@@ -228,26 +232,20 @@ func test_manual_distribution_uses_specific_copies() -> void:
 		return
 	s.call("set_distribution_mode", &"manual")
 	var a := _key_of(s, _copy_id(s, 0))
-	var b := _key_of(s, _copy_id(s, 1))
-	assert_true(a != "" and b != "" and a != b, "Kopien haben getrennte Schlüssel")
+	assert_true(a != "", "die Kopie hat einen Schlüssel")
 	var before := JSON.stringify(s.call("view"))
 	_rejected(s, s.call("assign_role", 3, DECOY), "copy_required", "Trugbilderwolf ohne konkrete Kopie", before)
-	_ok(s.call("assign_role", 1, StringName(b)), "Person 1 erhält Kopie B")
-	_ok(s.call("assign_role", 2, StringName(a)), "Person 2 erhält Kopie A")
+	_ok(s.call("assign_role", 2, StringName(a)), "Person 2 erhält die Kopie")
 	var placed := _placed(s)
-	assert_eq(placed[1], ["trugbilderwolf", b, "das-orakel"], "Person 1: Kopie B mit Orakel")
-	assert_eq(placed[2], ["trugbilderwolf", a, "waldhexe"], "Person 2: Kopie A mit Waldhexe")
+	assert_eq(placed[2], ["trugbilderwolf", a, "waldhexe"], "Person 2: Kopie mit Waldhexe")
 	before = JSON.stringify(s.call("view"))
-	_rejected(s, s.call("assign_role", 3, StringName(a)), "no_copy_available", "Kopie A doppelt", before)
+	_rejected(s, s.call("assign_role", 3, StringName(a)), "no_copy_available", "Kopie doppelt", before)
 	_ok(s.call("unassign_role", 2), "Person 2 freigeben")
-	assert_true((_dist(s)["remaining_keys"] as Array).has(a) and not (_dist(s)["remaining_keys"] as Array).has(b), "genau Kopie A wieder frei")
-	_ok(s.call("assign_role", 3, StringName(a)), "Person 3 erhält Kopie A")
+	assert_true((_dist(s)["remaining_keys"] as Array).has(a), "Kopie wieder frei")
+	_ok(s.call("assign_role", 3, StringName(a)), "Person 3 erhält die Kopie")
 	_ok(s.call("swap_roles", 3, 4), "mit nicht zugewiesener Person tauschen")
 	placed = _placed(s)
 	assert_true(not placed.has(3) and placed[4] == ["trugbilderwolf", a, "waldhexe"], "Scheinrolle folgt beim Tauschen")
-	_ok(s.call("swap_roles", 1, 4), "zwei Kopien tauschen")
-	placed = _placed(s)
-	assert_true(placed[1][2] == "waldhexe" and placed[4][2] == "das-orakel", "beide Scheinrollen wandern mit ihren Kopien")
 
 
 func test_appearance_change_invalidates_distribution() -> void:
@@ -257,9 +255,9 @@ func test_appearance_change_invalidates_distribution() -> void:
 	s.call("distribute_randomly")
 	s.call("confirm_distribution")
 	var before := JSON.stringify(s.call("view"))
-	_ok(s.call("set_decoy_appearance", _copy_id(s, 1), &"das-orakel"), "unveränderte Wahl")
+	_ok(s.call("set_decoy_appearance", _copy_id(s, 0), &"waldhexe"), "unveränderte Wahl")
 	assert_eq(JSON.stringify(s.call("view")), before, "gleiche Scheinrolle ändert nichts")
-	_ok(s.call("set_decoy_appearance", _copy_id(s, 1), &"sensentraeger"), "Scheinrolle ändern")
+	_ok(s.call("set_decoy_appearance", _copy_id(s, 0), &"sensentraeger"), "Scheinrolle ändern")
 	var r := _roles(s)
 	var d := _dist(s)
 	assert_true(not bool(r["confirmed"]) and str(r["invalidated"]) == "roles_changed", "Rollenbestätigung aufgehoben")

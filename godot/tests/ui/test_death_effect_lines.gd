@@ -32,7 +32,7 @@ func _card_text(shell: Control) -> String:
 
 ## Ritter B (Platz 2) stirbt durch das Rudel, der nächste Wolf A (Platz 1) stirbt mit.
 func _knight_roles(revival: bool) -> Array:
-	return [W, "ritter", D, D, "kutscher" if revival else D, W]
+	return [W, "ritter", D, "amalia", "kutscher" if revival else "waechter-am-tor", "blutwolf"]
 
 
 func _knight_morning(s: GameSession) -> void:
@@ -100,7 +100,7 @@ func test_public_part_contains_only_the_positive_list() -> void:
 
 
 func test_coachman_crash_is_one_announcement_with_all_neighbours() -> void:
-	var s := UiGame.session([W, D, "wahnsinniger-kutscher", D, D, D])
+	var s := UiGame.session([W, D, "wahnsinniger-kutscher", "amalia", "detektiv", "waechter-am-tor"])
 	assert_true(s.start_night().ok and UiGame.to_day(s), "Tag 1")
 	assert_true(s.nominate(5, 3).ok and s.decide_execution(3).ok, "Kutscher wird hingerichtet")
 	var effects := s.day_effects()
@@ -111,7 +111,7 @@ func test_coachman_crash_is_one_announcement_with_all_neighbours() -> void:
 
 
 func test_day_card_lists_day_effects_and_sage_curse_names_the_role() -> void:
-	var s := UiGame.session([W, D, "der-weise", D, D, "kutscher"])
+	var s := UiGame.session([W, D, "der-weise", "amalia", "detektiv", "kutscher"])
 	assert_true(s.start_night().ok and UiGame.to_day(s), "Tag 1")
 	assert_true(s.nominate(4, 3).ok and s.decide_execution(3, {"sage_curse": 2}).ok, "Weiser wird hingerichtet")
 	var effects := s.day_effects()
@@ -131,7 +131,7 @@ func test_day_card_lists_day_effects_and_sage_curse_names_the_role() -> void:
 
 
 func test_heartbreak_names_the_source_role_and_survives_load() -> void:
-	var s := UiGame.session([W, "loki", D, D, D, D, D])
+	var s := UiGame.session([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	assert_true(s.start_night().ok, "Nacht 1")
 	assert_true(s.answer_targets([3, 5]).ok and s.answer_choice(true).ok, "Liebende 3 und 5")
 	assert_true(UiGame.to_day(s), "Tag 1")

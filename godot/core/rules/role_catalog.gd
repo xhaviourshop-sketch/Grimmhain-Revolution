@@ -2,10 +2,10 @@ class_name RoleCatalog
 extends RefCounted
 ## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen` und die Schutzrollen `der-weise`, `maertyrerin`, `schutzgeist`, `dorfschmied` und `verdammniswaechter` und die Bindungsrollen `loki`, `schwarze-witwe`, `rotkaeppchen` und `schattenwanderer` sowie `daemonischer-wolf`, `koenig-lykaon`, `seelentauscher`, `kutscher` und `dr-victor-frankenstein` sowie `rattenfaenger`, `pestbringerin`, `prophet-des-untergangs` und `todesprediger` sowie `feuerteufel`, `voodoo-priester`, `nekromant`, `hades` und `grabraeuber` sowie `schicksalswolf`, `rachsuechtiger-wolf` und `zeitwaechter`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
-## Keine fest verdrahtete Rollenkomposition: Die Grundrollen haben keine Obergrenze,
-## damit jede Personenzahl von 6 bis 24 allein mit ihnen spielbar ist. Spätere Rollen
-## können `max_copies` setzen; wie viele Exemplare eine Partie tatsächlich nutzt,
-## entscheidet die Rollenkomposition im Setup (Phase 2), nicht dieser Katalog.
+## Startbesetzung (PE-07, Option B): jede Rolle höchstens einmal, auch Dorfbewohner und Werwolf.
+## Einzige Ausnahme sind Die Gebundenen (`max_copies` UNLIMITED, 1 bis Personenzahl). Die Grenze gilt nur
+## für StartGame; später durch Verwandlung, Erbe, Tausch, Diebstahl oder Korrektur entstehende gleiche
+## Rollen regelt sie nicht (offen). Welche Rollen eine Partie nutzt, entscheidet das Setup.
 
 const UNLIMITED := -1
 
@@ -236,7 +236,7 @@ const ROLES := {
 	DOPPELSPION: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": DOPPELSPION},
 	SELBSTMOERDER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": SELBSTMOERDER},
 	DORFCHRONISTIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFCHRONISTIN, "night_priority": 3, "first_night_only": true},
-	DIE_GEBUNDENEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_GEBUNDENEN},
+	DIE_GEBUNDENEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_GEBUNDENEN, "max_copies": UNLIMITED},
 	WALDLAEUFER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDLAEUFER, "night_priority": 54},
 	DOKTOR: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DOKTOR, "night_priority": 50},
 	WAHNSINNIGER_KUTSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WAHNSINNIGER_KUTSCHER},
@@ -363,6 +363,6 @@ static func parity_weight(role_id: StringName) -> int:
 	return (ROLES[role_id] as Dictionary).get("parity_weight", 1)
 
 
-## Höchstzahl je Partie oder UNLIMITED, wenn die Rolle keine eigene Grenze hat.
+## Höchstzahl in der Startbesetzung: 1 (PE-07), UNLIMITED nur für Rollen mit ausdrücklicher Ausnahme.
 static func max_copies(role_id: StringName) -> int:
-	return (ROLES[role_id] as Dictionary).get("max_copies", UNLIMITED)
+	return (ROLES[role_id] as Dictionary).get("max_copies", 1)

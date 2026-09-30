@@ -5,7 +5,7 @@ extends TestCase
 
 ## 1 Werwolf, 2 Trugbilderwolf (Scheinrolle Dorfbewohner), 3 Schutzengel, 4 Waldhexe, 5 Orakel,
 ## 6 und 7 Dorfbewohner. Sitzordnung bewusst nicht nach ID.
-const ROLES := ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "amalia"]
 const SEATS: Array[int] = [3, 1, 4, 7, 2, 6, 5]
 
 
@@ -181,7 +181,7 @@ func test_skip_requires_reason() -> void:
 ## Gestohlene Fähigkeit (Grabräuber): Die Ankündigung nennt die übernommene Rolle und die eigene.
 func test_stolen_ability_is_announced_with_own_role() -> void:
 	var session := GameSession.new()
-	session.submit(Fixtures.start_roles(["grabraeuber", "waldhexe", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"]))
+	session.submit(Fixtures.start_roles(["grabraeuber", "waldhexe", "werwolf", "dorfbewohner", "amalia", "detektiv"]))
 	assert_true(session.gm_correction({"kind": "kill", "target_id": 2, "trigger_effects": false, "reason": "Test"}).ok, "Waldhexe tot")
 	session.start_night()
 	assert_true(session.skip_next_step("kein Opfer").ok, "Rudel übersprungen")

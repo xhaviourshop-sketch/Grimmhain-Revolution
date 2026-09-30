@@ -108,7 +108,7 @@ func test_catalog_entries() -> void:
 
 func test_coachman_revives_three_one_becomes_wolf() -> void:
 	# 1 W, 2 Kutscher, 3 Orakel, 4 Waldhexe, 5–16 Dorfbewohner (6 Doktor).
-	var roles := [W, KU, "das-orakel", "waldhexe", D, "doktor", D, D, D, D, D, D, D, D, D, D]
+	var roles := [W, KU, "das-orakel", "waldhexe", D, "doktor", "amalia", "detektiv", "wahnsinniger-kutscher"] + Fixtures.extra_village(6) + ["der-weise"]
 	var s := _kill(_state(roles), [6, 7, 8, 9, 10, 11, 12, 13, 14])
 	s = _ok(s, Command.start_night(), "9 Tote")
 	assert_false(s != null and s.night_plan.has(&"kutscher:2"), "unter 10 Toten kein Schritt")
@@ -146,7 +146,7 @@ func test_coachman_revives_three_one_becomes_wolf() -> void:
 
 
 func test_coachman_gatewarden_and_decline() -> void:
-	var roles := [W, KU, "waechter-am-tor", D, D, D, D, D, D, D, D, D, D, D, D, D]
+	var roles := [W, KU, "waechter-am-tor", D] + Fixtures.extra_village(10) + ["amalia", "detektiv"]
 	var s := _kill(_state(roles), [5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
 	s = _to_owner(s, &"kutscher")
 	if s == null:
@@ -163,7 +163,7 @@ func test_coachman_gatewarden_and_decline() -> void:
 # --- Frankenstein ---------------------------------------------------------------------------------
 
 func test_frankenstein_revives_with_unassigned_role() -> void:
-	var s := _kill(_state([W, FR, "das-orakel", "ritter", D, D, D]), [3])
+	var s := _kill(_state([W, FR, "das-orakel", "ritter", D, "amalia", "detektiv"]), [3])
 	s = _to_owner(s, &"dr-victor-frankenstein")
 	if s == null:
 		fail("Frankenstein nicht erreicht")

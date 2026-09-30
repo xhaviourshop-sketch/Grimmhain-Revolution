@@ -858,7 +858,7 @@ msgid "ui.setup.roles.issue.missing_solo"
 msgstr "no solo role"
 
 msgid "ui.setup.roles.issue.above_maximum"
-msgstr "a role exceeds its maximum"
+msgstr "Role chosen too often"
 
 msgid "ui.setup.roles.issue.negative_count"
 msgstr "negative count"
@@ -892,6 +892,12 @@ msgstr "+"
 
 msgid "ui.setup.roles.limit"
 msgstr "Maximum reached"
+
+msgid "ui.setup.roles.limit_once"
+msgstr "Only once at the start of the game"
+
+msgid "ui.setup.roles.over_limit"
+msgstr "Allowed only once at the start of the game, please reduce: {roles}"
 
 msgid "ui.setup.roles.status.invalid"
 msgstr "Role selection not valid yet."
@@ -2736,7 +2742,7 @@ msgid "ui.continue.unsaved.confirm"
 msgstr "Switch anyway"
 
 msgid "ui.continue.slot.incompatible"
-msgstr "This save comes from a different version (schema {found}, expected {expected}). It stays unchanged and cannot be resumed here."
+msgstr "This save comes from a different version (saved: {found}; expected: {expected}). It stays unchanged and cannot be resumed here."
 
 msgid "ui.continue.status.incompatible"
 msgstr "Note: This save comes from a different version and cannot be resumed here. It was not changed or deleted."

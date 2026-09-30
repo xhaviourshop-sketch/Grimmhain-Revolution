@@ -16,7 +16,7 @@ const NK := "nekromant"
 
 
 func _state(roles: Array, dead: Array = []) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	var s := r.state if r.ok else null
 	for id: int in dead:
@@ -147,7 +147,7 @@ func test_catalog_entry() -> void:
 
 
 func test_marks_three_other_living_in_night_one_only() -> void:
-	var s := _state([FW, W, D, D, D, D, D, D], [8])
+	var s := _state([FW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [8])
 	s = _ok(s, Command.start_night(), "Nacht")
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Schicksalswolf") if s != null else null
@@ -175,7 +175,7 @@ func test_marks_three_other_living_in_night_one_only() -> void:
 
 func test_first_three_distinct_dead_count_including_before_marking() -> void:
 	# 9 stirbt vor Nacht 1 (zählt, RM-DR-109.3 A); 3 stirbt, wird wiederbelebt und stirbt erneut (zählt einmal).
-	var s := _state([FW, W, D, D, D, D, D, D, D], [9])
+	var s := _state([FW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [9])
 	s = _dawn(s, {"schicksalswolf:1@": [3, 4, 5], "pack@": [3]})
 	s = _ok(s, _gm("revive", {"target_id": 3}), "3 lebt wieder")
 	s = _lynch(s, 6, 3)
@@ -194,7 +194,8 @@ func test_first_three_distinct_dead_count_including_before_marking() -> void:
 # --- Nacht 4 ---------------------------------------------------------------------------------------
 
 func test_night_four_extra_victims_are_pack_attacks_with_protection() -> void:
-	var s := _state([FW, W, SE, D, D, D, D, D, D, D])
+	# Opfer sind 4 bis 9 (ohne Schutzwirkung); der Weise (Rettung vor dem Rudel) steht auf 10 und wird nie angegriffen.
+	var s := _state([FW, W, SE, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "nachtwaechter", "der-weise"])
 	s = _dawn(s, {"schicksalswolf:1@": [4, 5, 6], "pack@": [4]})
 	s = _dawn(s, {"pack@": [5]})
 	s = _dawn(s, {"pack@": [7]})
@@ -222,7 +223,7 @@ func test_night_four_extra_victims_are_pack_attacks_with_protection() -> void:
 
 func test_fate_victim_is_wolf_attack_for_knight() -> void:
 	# Ritter 5 als Zusatzopfer: sein Schlag trifft den nächsten Wolf (Zusatzopfer = Wolfsangriff).
-	var s := _state([W, FW, D, D, "ritter", D, D, D, D, D])
+	var s := _state([W, FW, D, "amalia", "ritter", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"])
 	s = _dawn(s, {"schicksalswolf:2@": [3, 4, 6], "pack@": [3]})
 	s = _dawn(s)
 	s = _dawn(s)
@@ -235,7 +236,7 @@ func test_fate_victim_is_wolf_attack_for_knight() -> void:
 
 func test_necromancer_redirects_fate_victim() -> void:
 	# Das Zusatzopfer ist der Nekromant 3; er stürbe und lenkt auf 6 um (RM-DR-109.2 A: Rudelangriff, E-17).
-	var s := _state([FW, W, NK, D, D, D, D, D, D, D], [10])
+	var s := _state([FW, W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [10])
 	s = _dawn(s, {"schicksalswolf:1@": [4, 5, 6], "pack@": [4]})
 	s = _dawn(s, {"pack@": [5]})
 	s = _dawn(s, {"pack@": [7]})
@@ -252,7 +253,7 @@ func test_necromancer_redirects_fate_victim() -> void:
 
 
 func test_two_fate_wolves_own_marks_and_load_checks() -> void:
-	var s := _state([FW, FW, D, D, D, D, D, D])
+	var s := _state([FW, FW, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	s = _dawn(s, {"schicksalswolf:1@": [3, 4, 5], "schicksalswolf:2@": [5, 6, 7], "pack@": [5]})
 	if s == null:
 		return
@@ -273,7 +274,7 @@ func test_two_fate_wolves_own_marks_and_load_checks() -> void:
 
 func test_win_confirmed_after_fate_kills_chosen_still_loads() -> void:
 	# Regressionstest: Zusatzopfer gewählt, dann Sieg noch in Nacht 4 bestätigt → Spielende bleibt ladbar.
-	var s := _state([FW, W, D, D, D, D, D, D, D, D])
+	var s := _state([FW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"])
 	s = _dawn(s, {"schicksalswolf:1@": [4, 5, 6], "pack@": [4]})
 	s = _dawn(s)
 	s = _dawn(s)

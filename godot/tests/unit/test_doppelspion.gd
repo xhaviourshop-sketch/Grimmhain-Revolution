@@ -54,7 +54,7 @@ func test_production_role() -> void:
 	assert_eq(RoleCatalog.night_priority(role), 0, "kein eigener Nachtschritt")
 	assert_eq(RoleCatalog.appears_as(role), role, "normale Erscheinung")
 	assert_true(WinCandidate.REASONS.has(StringName(REASON)), "eigener Siegesgrund")
-	var run := _run([_start(["werwolf", DS, "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start")
+	var run := _run([_start(["werwolf", DS, "das-orakel", "dorfbewohner", "amalia", "detektiv"]), Command.start_night()] as Array[Command], "Start")
 	if run.ok:
 		assert_eq(run.state.night_plan, [&"pack", &"das-orakel:3"] as Array[StringName], "kein Doppelspion-Schritt, Rudel unverändert")
 		assert_eq(InformationRules.determine_role(run.state.players[2]), StringName(DS), "Orakel ermittelt Doppelspion (DR-07)")
@@ -62,7 +62,7 @@ func test_production_role() -> void:
 
 func test_last_wolf_dies_only_double_agent_offered() -> void:
 	# 1 Werwolf; 2 Doppelspion; 3–6 Dorfbewohner. Hinrichtung des letzten Wolfs.
-	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night(), Command.nominate(3, 1), Command.decide_execution(1)]
 	var run := _run(cmds, "Hinrichtung")
 	if not run.ok:
@@ -78,21 +78,21 @@ func test_last_wolf_dies_only_double_agent_offered() -> void:
 
 func test_dead_double_agent_village_wins() -> void:
 	# RM-DR-155.1: nur lebend. Doppelspion stirbt vorher → Dorfsieg.
-	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(2), _kill(1)]
+	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _kill(2), _kill(1)]
 	var run := _run(cmds, "tot")
 	if run.ok:
 		assert_eq(_open(run.state), [["village", "no_wolves_alive", []]], "Dorfsieg")
 
 
 func test_two_double_agents_each_own_candidate() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", DS, DS, "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(1)]
+	var cmds: Array[Command] = Fixtures.with_copies(["werwolf", DS, DS, "dorfbewohner", "amalia", "detektiv"], [_kill(1)] as Array[Command])
 	var run := _run(cmds, "zwei")
 	if run.ok:
 		assert_eq(_open(run.state), [["solo", REASON, [2]], ["solo", REASON, [3]]], "je Person ein Kandidat, kein Dorfsieg")
 
 
 func test_one_of_two_dead_only_living_offered() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", DS, DS, "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(2), _kill(1)]
+	var cmds: Array[Command] = Fixtures.with_copies(["werwolf", DS, DS, "dorfbewohner", "amalia", "detektiv"], [_kill(2), _kill(1)] as Array[Command])
 	var run := _run(cmds, "einer tot")
 	if run.ok:
 		assert_eq(_open(run.state), [["solo", REASON, [3]]], "nur der lebende")
@@ -100,7 +100,7 @@ func test_one_of_two_dead_only_living_offered() -> void:
 
 func test_counts_as_non_wolf_for_parity() -> void:
 	# 1 Werwolf; 2 Doppelspion; 3–6 Dorf. Nach drei Toten: 1 Wolf gegen 2 Nicht-Wölfe → kein Sieg; nach vier: 1 gegen 1.
-	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(3), _kill(4), _kill(5)]
+	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _kill(3), _kill(4), _kill(5)]
 	var run := _run(cmds, "drei Tote")
 	if not run.ok:
 		return
@@ -114,7 +114,7 @@ func test_counts_as_non_wolf_for_parity() -> void:
 
 func test_manipulator_and_double_agent_together() -> void:
 	# Lebend nach Toden: 2 Doppelspion, 3 Manipulator, 4 Dorfbewohner; kein Wolf → beide Einzelsiege, kein Dorfsieg.
-	var cmds: Array[Command] = [_start(["werwolf", DS, "manipulator", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(5), _kill(6)]
+	var cmds: Array[Command] = [_start(["werwolf", DS, "manipulator", "dorfbewohner", "amalia", "detektiv"]), _kill(5), _kill(6)]
 	var run := _run(cmds, "vier Lebende")
 	if not run.ok:
 		return
@@ -126,7 +126,7 @@ func test_manipulator_and_double_agent_together() -> void:
 
 func test_apprentice_inherits_double_agent() -> void:
 	# 1 Werwolf; 2 Doppelspion; 3 Lehrling; 4–7 Dorfbewohner.
-	var cmds: Array[Command] = [_start(["werwolf", DS, "lehrling", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", DS, "lehrling", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 2, 4])]
 	var run := _run(cmds, "Kandidaten")
 	if not run.ok:
@@ -147,7 +147,7 @@ func test_apprentice_inherits_double_agent() -> void:
 
 func test_rejected_is_offered_again_after_change() -> void:
 	# Decision Log „Spielende“: ein erfüllter Sieg wird nach Ablehnung bei der nächsten Änderung erneut vorgeschlagen.
-	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(1)]
+	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _kill(1)]
 	var run := _run(cmds, "Kandidat")
 	if not run.ok:
 		return
@@ -158,7 +158,7 @@ func test_rejected_is_offered_again_after_change() -> void:
 
 
 func test_corrupt_candidate_rejected_on_load() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(1)]
+	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _kill(1)]
 	var run := _run(cmds, "Kandidat")
 	if not run.ok:
 		return
@@ -170,7 +170,7 @@ func test_corrupt_candidate_rejected_on_load() -> void:
 
 
 func test_no_secret_in_public_events() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", DS, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(), Command.nominate(4, 1), Command.decide_execution(1)]
 	var run := _run(cmds, "Partie")
 	if run.ok:

@@ -83,7 +83,7 @@ func _notices_of(s: GameState, kind: String) -> Array:
 # --- Loki ------------------------------------------------------------------------------------------
 
 func test_loki_love_notifies_both_persons_with_partner_and_kind() -> void:
-	var s := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
+	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
 	assert_true(s != null, "Nacht 1")
 	if s == null:
 		return
@@ -98,15 +98,15 @@ func test_loki_love_notifies_both_persons_with_partner_and_kind() -> void:
 
 
 func test_loki_rivals_and_decline() -> void:
-	var rivals := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": [4, 6], "loki:2@mode": false})
+	var rivals := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [4, 6], "loki:2@mode": false})
 	var bonds := _notices_of(rivals, "loki_bond") if rivals != null else []
 	assert_true(bonds.size() == 2 and bonds[0]["data"]["bond"] == "rival" and bonds[1]["data"]["bond"] == "rival", "Rivalen erfahren die Art")
-	var declined := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": []})
+	var declined := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": []})
 	assert_true(declined != null and declined.notices.is_empty(), "Verzicht: keine Hinweise")
 
 
 func test_loki_himself_in_the_pair_is_a_viewer_too() -> void:
-	var s := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": [2, 3], "loki:2@mode": true})
+	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [2, 3], "loki:2@mode": true})
 	var bonds := _notices_of(s, "loki_bond") if s != null else []
 	assert_eq(bonds.size(), 2, "beide Personen des Paares, auch Loki selbst")
 
@@ -114,7 +114,7 @@ func test_loki_himself_in_the_pair_is_a_viewer_too() -> void:
 # --- Rattenfänger -----------------------------------------------------------------------------------
 
 func test_piper_notifies_only_the_new_enchanted() -> void:
-	var s := _night(_state([W, RF, D, D, D, D]), {"rattenfaenger:2": [3, 4]})
+	var s := _night(_state([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"rattenfaenger:2": [3, 4]})
 	assert_true(s != null, "Nacht 1")
 	if s == null:
 		return
@@ -137,7 +137,7 @@ func test_piper_notifies_only_the_new_enchanted() -> void:
 
 func test_plague_notifies_each_newly_infected_including_spread() -> void:
 	var log: Array[GameEvent] = []
-	var s := _night(_state([W, PB, D, D, D, D, D, D]), {"pestbringerin:2": [5]}, log)
+	var s := _night(_state([W, PB, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), {"pestbringerin:2": [5]}, log)
 	assert_true(s != null, "Nacht 1")
 	if s == null:
 		return
@@ -163,7 +163,7 @@ func test_plague_notifies_each_newly_infected_including_spread() -> void:
 # --- Bestätigen, Sichtbarkeit, Aufräumen -----------------------------------------------------------
 
 func test_ack_removes_notice_and_rejects_unknown_ids() -> void:
-	var s := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
+	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
 	if s == null or s.notices.size() != 2:
 		fail("Vorbereitung")
 		return
@@ -181,7 +181,7 @@ func test_ack_removes_notice_and_rejects_unknown_ids() -> void:
 
 func test_notices_never_appear_in_public_events() -> void:
 	var log: Array[GameEvent] = []
-	var s := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": [3, 5], "loki:2@mode": true}, log)
+	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true}, log)
 	assert_true(s != null, "Nacht")
 	var queued := 0
 	for e: GameEvent in log:
@@ -194,7 +194,7 @@ func test_notices_never_appear_in_public_events() -> void:
 
 
 func test_ack_is_allowed_while_a_reaction_or_win_candidate_is_open() -> void:
-	var s := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
+	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
 	if s == null:
 		return
 	s = _ok(s, Command.end_night(), "Morgen")
@@ -210,7 +210,7 @@ func test_ack_is_allowed_while_a_reaction_or_win_candidate_is_open() -> void:
 
 
 func test_death_removes_the_viewer_and_drops_empty_notices() -> void:
-	var s := _night(_state([W, PB, D, D, D, D, D, D]), {"pestbringerin:2": [5]})
+	var s := _night(_state([W, PB, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), {"pestbringerin:2": [5]})
 	if s == null or s.notices.size() != 1:
 		fail("Vorbereitung")
 		return
@@ -221,7 +221,7 @@ func test_death_removes_the_viewer_and_drops_empty_notices() -> void:
 	var r := apply_ok(s, CorrectionFixtures.gm("kill", {"target_id": target, "trigger_effects": false}), "Person stirbt")
 	assert_true(_notices_of(r.state, "pest_infected").filter(func(n: Dictionary) -> bool: return (n["viewer_ids"] as Array).has(target)).is_empty(), "Hinweis einer Toten entfällt")
 	assert_eq(events_of_type(r.events, "NoticeDropped").size(), 1, "Verwerfen protokolliert")
-	var piper := _night(_state([W, RF, D, D, D, D]), {"rattenfaenger:2": [3, 4]})
+	var piper := _night(_state([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"]), {"rattenfaenger:2": [3, 4]})
 	if piper == null:
 		return
 	piper = _ok(piper, Command.end_night(), "Morgen")
@@ -231,7 +231,7 @@ func test_death_removes_the_viewer_and_drops_empty_notices() -> void:
 
 
 func test_notices_survive_save_load_and_replay() -> void:
-	var commands: Array[Command] = [Fixtures.start_roles([W, LO, D, D, D, D, D], 1), Command.start_night()]
+	var commands: Array[Command] = [Fixtures.start_roles([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 1), Command.start_night()]
 	var s := RulesEngine.replay(commands).state
 	var p := s.pending_prompt
 	commands.append(Command.answer_stage_targets(p.id, "targets", [3, 5]))
@@ -255,7 +255,7 @@ func test_notices_survive_save_load_and_replay() -> void:
 
 
 func test_load_rejects_inconsistent_notices() -> void:
-	var s := _night(_state([W, LO, D, D, D, D, D]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
+	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
 	if s == null:
 		return
 	var d := s.to_dict()

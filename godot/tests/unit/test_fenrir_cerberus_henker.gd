@@ -72,7 +72,7 @@ func test_production_roles() -> void:
 # --- Fenrir ---------------------------------------------------------------------------------------
 
 func test_fenrir_grows_and_survives_once_from_stage_three() -> void:
-	var s := _start_state([FE, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _start_state([FE, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"])
 	for night: int in [1, 2]:
 		s = _quiet_night(s)
 		if s == null:
@@ -99,7 +99,7 @@ func test_fenrir_grows_and_survives_once_from_stage_three() -> void:
 
 
 func test_fenrir_below_three_and_gm_kill() -> void:
-	var s := _start_state([FE, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _start_state([FE, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	s = _quiet_night(s)
 	s = _ok(s, Command.nominate(2, 1), "Nominierung")
 	var r := _execute(s, 1)
@@ -118,7 +118,7 @@ func _cerberus_three(roles: Array) -> GameState:
 
 
 func test_cerberus_heads_and_defence() -> void:
-	var roles := [CE, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := [CE, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"]
 	var s := _cerberus_three(roles)
 	if s == null:
 		return
@@ -137,7 +137,7 @@ func test_cerberus_heads_and_defence() -> void:
 
 
 func test_cerberus_heads_cap_at_three() -> void:
-	var s := _cerberus_three([CE, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _cerberus_three([CE, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	s = _end_day(s)
 	s = _quiet_night(s)
 	if s != null:
@@ -146,10 +146,11 @@ func test_cerberus_heads_cap_at_three() -> void:
 
 # --- Henker ---------------------------------------------------------------------------------------
 
-## Henker 2; drei Hinrichtungen an Tag 1–3 (Personen 9, 10, 11), danach Nacht 4.
+## Henker 2; drei Hinrichtungen an Tag 1–3 (Personen 9, 10, 11), danach Nacht 4. 12 Personen (vorher 14).
 func _hangman_active() -> GameState:
-	var s := _start_state(["werwolf", HE, "dorfbewohner", "selbstmoerder", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner",
-		"dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	# 12 Personen (PE-07: verschiedene Rollen; außer den drei Sonderrollen gibt es nur neun Dorfrollen ohne Nachtschritt).
+	var s := _start_state(["werwolf", HE, "dorfbewohner", "selbstmoerder", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor",
+		"nachtwaechter", "ritter", "dorfwache", "der-weise"])  # 9, 10, 11 werden hingerichtet: kein Weiser (verlangt einen Fluch)
 	for victim: int in [9, 10, 11]:
 		s = _quiet_night(s)
 		if s == null:

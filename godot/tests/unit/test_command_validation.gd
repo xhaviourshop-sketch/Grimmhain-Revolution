@@ -22,7 +22,7 @@ func _expect_reject(state: GameState, command: Command, expected: String, label:
 
 
 func test_player_count_limits() -> void:
-	var five: Array = ["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var five: Array = ["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]
 	_expect_reject(GameState.new(), _players_with_roles(5, five), "player_count_out_of_range", "5 Personen")
 	var many: Array = []
 	for i: int in 25:
@@ -33,9 +33,9 @@ func test_player_count_limits() -> void:
 func test_role_rules() -> void:
 	var unknown: Array = ["werwolf", "nicht-im-katalog", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
 	_expect_reject(GameState.new(), _players_with_roles(6, unknown), "unknown_role", "Rolle außerhalb des Core-Slice")
-	var no_wolf: Array = ["dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var no_wolf: Array = ["dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]  # verschieden (PE-07), sonst greift schon die Startgrenze
 	_expect_reject(GameState.new(), _players_with_roles(6, no_wolf), "missing_wolf_role", "ohne Wolf")
-	var no_village: Array = ["werwolf", "werwolf", "werwolf", "werwolf", "werwolf", "werwolf"]
+	var no_village: Array = ["werwolf", "blutwolf", "rudelvater", "seuchenwolf", "cerberus", "fenrir"]
 	_expect_reject(GameState.new(), _players_with_roles(6, no_village), "missing_village_role", "ohne Dorfbewohner")
 
 

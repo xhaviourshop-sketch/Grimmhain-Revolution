@@ -378,7 +378,7 @@ func test_grabraeuber_steals_a_dead_ability() -> void:
 # --- Todesreaktionen ---------------------------------------------------------------------------------------
 
 func test_ritter_tie_choice_through_the_card() -> void:
-	if not await start([D, W, D, "ritter", D, W, D, D]):
+	if not await start([D, W, "amalia", "ritter", "detektiv", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	await run({"pack/": [4], "reaction/knight": [6]}, until_kind("day"))
 	assert_false(alive(4), "Ritter tot")

@@ -78,7 +78,7 @@ func test_production_roles() -> void:
 
 func test_shadow_hound_blocks_all_village_steps_once() -> void:
 	# 1 Schattenhund, 2 Schutzengel, 3 Orakel, 4 Waldläufer, 5–7 Dorf.
-	var s := _run([_start([SH, "schutzengel", "das-orakel", "waldlaeufer", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([SH, "schutzengel", "das-orakel", "waldlaeufer", "dorfbewohner", "amalia", "detektiv"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	assert_eq(s.night_plan[0], &"schattenhund:1", "Schattenhund vor allen Dorfrollen")
@@ -100,7 +100,7 @@ func test_shadow_hound_blocks_all_village_steps_once() -> void:
 
 
 func test_shadow_hound_declines_and_asks_again() -> void:
-	var s := _run([_start([SH, "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([SH, "schutzengel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	s = _night(s, {}, "Nacht 1")
@@ -112,7 +112,8 @@ func test_shadow_hound_declines_and_asks_again() -> void:
 
 func test_nightmare_wolf_blocks_one_village_person() -> void:
 	# 1 Albtraumwolf, 2 Orakel, 3 Orakel, 4–6 Dorf. Blockiert 2 → nur Orakel 3 prüft.
-	var s := _run([_start([AW, "das-orakel", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	# Das zweite Orakel entsteht nach dem Start durch Korrektur (PE-07).
+	var s := _run(Fixtures.with_copies([AW, "das-orakel", "das-orakel", "dorfbewohner", "amalia", "detektiv"], [Command.start_night()] as Array[Command], 1), "Start").state
 	if s == null:
 		return
 	assert_eq(s.night_plan[0], &"albtraumwolf:1", "Albtraumwolf vor den Dorfrollen")
@@ -130,7 +131,7 @@ func test_nightmare_wolf_blocks_one_village_person() -> void:
 
 func test_poison_wolf_delayed_unstoppable_death() -> void:
 	# 1 Giftwolf, 2 Schutzengel (schützt 3), 3–7 Dorf. Nacht 1: Giftpranke auf 3.
-	var s := _run([_start([GW, "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([GW, "schutzengel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	s = apply_ok(s, Command.answer_prompt(s.pending_prompt.id, [3]), "Schutz auf 3").state
@@ -154,7 +155,7 @@ func test_poison_wolf_delayed_unstoppable_death() -> void:
 
 
 func test_poison_wolf_two_charges_one_per_night() -> void:
-	var s := _run([_start([GW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([GW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	var paw := func(target: int) -> Callable:
@@ -176,7 +177,7 @@ func test_poison_wolf_two_charges_one_per_night() -> void:
 
 func test_packfather_survives_first_other_death() -> void:
 	# 1 Rudelvater, 2 Werwolf, 3 Waldhexe, 4–8 Dorf. Hexe vergiftet 1 → überlebt; zweites Mal (per Korrektur-Trank) stirbt er.
-	var s := _run([_start([RV, "werwolf", "waldhexe", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([RV, "werwolf", "waldhexe", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	var poison1 := func(p: PendingPrompt) -> Command: return Command.answer_choice(p.id, String(p.stage), p.stage != &"heal") if p.stage != &"poison_target" else Command.answer_stage_targets(p.id, "poison_target", [1])
@@ -191,7 +192,7 @@ func test_packfather_survives_first_other_death() -> void:
 
 func test_packfather_lynch_gives_piercing_second_pack_step() -> void:
 	# 1 Rudelvater, 2 Werwolf, 3 Schutzengel, 4 Dorfwache, 5–8 Dorf. Tag 1: Lynch des Rudelvaters.
-	var s := _run([_start([RV, "werwolf", "schutzengel", "dorfwache", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([RV, "werwolf", "schutzengel", "dorfwache", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	s = _night(s, {"schutzengel": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [5])}, "Nacht 1")
@@ -214,7 +215,7 @@ func test_packfather_lynch_gives_piercing_second_pack_step() -> void:
 
 func test_guard_is_killed_by_poison_paw() -> void:
 	# RM-DR-119.1 über RM-DR-004: Die Giftpranke ist kein Wolfsangriff; die Dorfwache stirbt daran.
-	var s := _run([_start([GW, "dorfwache", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([GW, "dorfwache", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night()] as Array[Command], "Start").state
 	var none := func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [])
 	s = _night(s, {"giftwolf": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [2]), "pack": none}, "Nacht 1")
 	s = _day(s)
@@ -229,7 +230,7 @@ func test_guard_is_killed_by_poison_paw() -> void:
 
 func test_piercing_second_pack_attack_kills_guard() -> void:
 	# RM-DR-119.2 über RM-DR-005: Das durchdringende Zusatzopfer des Rudelvaters durchdringt die Dorfwache.
-	var s := _run([_start([RV, "werwolf", "schutzengel", "dorfwache", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([RV, "werwolf", "schutzengel", "dorfwache", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	s = _night(s, {"schutzengel": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [5])}, "Nacht 1")
@@ -250,7 +251,7 @@ func test_piercing_second_pack_attack_kills_guard() -> void:
 
 func test_blight_wolf_next_pack_attack_pierces_once() -> void:
 	# 1 Seuchenwolf, 2 Werwolf, 3 Schutzengel, 4–8 Dorf. Tag 1: Lynch des Seuchenwolfs.
-	var s := _run([_start([SW, "werwolf", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start").state
+	var s := _run([_start([SW, "werwolf", "schutzengel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night()] as Array[Command], "Start").state
 	if s == null:
 		return
 	s = _night(s, {"schutzengel": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [4])}, "Nacht 1")

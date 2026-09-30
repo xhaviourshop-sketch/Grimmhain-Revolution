@@ -8,9 +8,10 @@ extends UiTestCase
 ## Hinweiskarten (test_notice_cards), öffentliche Ereignisse (Fuzz-Invariante in test_role_interaction_fuzz).
 
 const UiGame := preload("res://tests/ui/ui_game.gd")
-const ROLES := ["werwolf", "trugbilderwolf", "loki", "schutzengel", "waldhexe", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "trugbilderwolf", "loki", "schutzengel", "waldhexe", "dorfbewohner", "amalia", "detektiv"]
 const SUMMARY_KEYS := ["alive_count", "command_count", "day_number", "names", "night_number", "phase", "player_count"]
-const LIST_KEYS := ["compatible", "expected", "readable", "round_id", "saved_at", "schema", "summary"]
+## `expected_label` und `found_label` (Regelversion 0.14): nur Schema- und Regelversionsnummern, keine Spielinhalte.
+const LIST_KEYS := ["compatible", "expected", "expected_label", "found_label", "readable", "round_id", "saved_at", "schema", "summary"]
 const COCKPIT_KEYS := ["alive_count", "day_number", "day_step", "has_game", "next", "night_number", "night_progress", "phase",
 	"player_count", "revival_round", "seats", "warnings"]
 const SEAT_KEYS := ["alive", "name", "nominated_someone_today", "nominated_today", "person_id", "seat"]

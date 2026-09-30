@@ -22,7 +22,7 @@ const VP := "voodoo-priester"
 
 
 func _state(roles: Array, dead: Array = []) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	var s := r.state if r.ok else null
 	for id: int in dead:
@@ -162,7 +162,7 @@ func test_catalog_entry_and_stealable_roles() -> void:
 
 func test_steal_offers_only_dead_with_stealable_ability_and_rejects_invalid() -> void:
 	# 3 Waldhexe (tot), 4 Dorfbewohner (tot), 5 Loki (tot), 6 lebende Seherin; 2 ist der Grabräuber.
-	var s := _at_robber_prompt([W, GR, WH, D, "loki", "das-orakel", D, D], [3, 4, 5])
+	var s := _at_robber_prompt([W, GR, WH, D, "loki", "das-orakel", "amalia", "detektiv"], [3, 4, 5])
 	if s == null:
 		return
 	var p := s.pending_prompt
@@ -174,12 +174,12 @@ func test_steal_offers_only_dead_with_stealable_ability_and_rejects_invalid() ->
 	_codec_same(s, "offener Prompt")
 	# Keine stehlbare tote Person: kein Schritt.
 	var log: Array[GameEvent] = []
-	_dawn(_state([W, GR, WH, D, D, D, D, D], [4]), {}, log)
+	_dawn(_state([W, GR, WH, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [4]), {}, log)
 	assert_eq(_opened(log, "grabraeuber:2").size(), 0, "ohne passende Tote kein Schritt")
 
 
 func test_steal_witch_fresh_potions_from_next_night_stays_grave_robber() -> void:
-	var s := _state([W, GR, WH, D, D, D, D, D], [3])
+	var s := _state([W, GR, WH, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [3])
 	var log: Array[GameEvent] = []
 	s = _night(s, {"grabraeuber:2@targets": [3]}, log)
 	if s == null:
@@ -202,7 +202,7 @@ func test_steal_witch_fresh_potions_from_next_night_stays_grave_robber() -> void
 
 func test_stolen_witch_heals_pack_victim() -> void:
 	# Die Tote hatte ihren Heiltrank schon verbraucht; der Grabräuber beginnt frisch (E-34).
-	var s := _state([W, GR, WH, D, D, D, D, D], [3])
+	var s := _state([W, GR, WH, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [3])
 	s.players[3].ability_uses["waldhexe:heal"] = 1
 	s = _dawn(s, {"grabraeuber:2@targets": [3]})
 	var log: Array[GameEvent] = []
@@ -216,7 +216,7 @@ func test_stolen_witch_heals_pack_victim() -> void:
 # --- Wirkungen übernommener Fähigkeiten ------------------------------------------------------------
 
 func test_stolen_voodoo_doll_protects_robber_and_survives_load() -> void:
-	var s := _state([W, GR, VP, D, D, D, D, D], [3])
+	var s := _state([W, GR, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [3])
 	s = _dawn(s, {"grabraeuber:2@targets": [3]})
 	s = _dawn(s, {"voodoo-priester:2@": [5]})
 	if s == null:
@@ -238,7 +238,7 @@ func test_stolen_voodoo_doll_protects_robber_and_survives_load() -> void:
 
 
 func test_stolen_hades_collects_lights_and_kills_without_hades_win() -> void:
-	var s := _state([W, GR, "hades", D, D, D, D, D, D, D], [3])
+	var s := _state([W, GR, "hades", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [3])
 	s = _dawn(s, {"grabraeuber:2@targets": [3], "pack@": [4]})
 	if s == null:
 		return
@@ -258,7 +258,7 @@ func test_stolen_hades_collects_lights_and_kills_without_hades_win() -> void:
 
 func test_stolen_wolf_ability_blocks_village_but_robber_is_no_wolf() -> void:
 	# Schattenhund gestohlen: Blockade aller Dorf-Nachtschritte; der Grabräuber zählt nicht als Wolf.
-	var s := _state([W, GR, "schattenhund", "das-orakel", D, D, D, D], [3])
+	var s := _state([W, GR, "schattenhund", "das-orakel", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [3])
 	s = _dawn(s, {"grabraeuber:2@targets": [3]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"schattenhund:2@use": true}, log)
@@ -272,7 +272,7 @@ func test_stolen_wolf_ability_blocks_village_but_robber_is_no_wolf() -> void:
 
 
 func test_robber_with_village_ability_not_blocked_by_nightmare_wolf() -> void:
-	var s := _state([W, GR, "schutzengel", "albtraumwolf", D, D, D, D], [3])
+	var s := _state([W, GR, "schutzengel", "albtraumwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"], [3])
 	s = _dawn(s, {"grabraeuber:2@targets": [3]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"albtraumwolf:4@": [2], "schutzengel:2@": [5], "pack@": [5]}, log)
@@ -281,7 +281,7 @@ func test_robber_with_village_ability_not_blocked_by_nightmare_wolf() -> void:
 
 func test_stolen_fire_devil_mark_spares_robber() -> void:
 	# Sitze 1–8: 2 Grabräuber mit Feuerfähigkeit markiert 3; stirbt 3, brennt 4, der Grabräuber 2 bleibt verschont.
-	var s := _state([W, GR, D, D, "feuerteufel", D, D, D], [5])
+	var s := _state([W, GR, D, "amalia", "feuerteufel", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [5])
 	s = _dawn(s, {"grabraeuber:2@targets": [5]})
 	s = _dawn(s, {"feuerteufel:2@": [3]})
 	if s == null:
@@ -293,7 +293,7 @@ func test_stolen_fire_devil_mark_spares_robber() -> void:
 # --- Sieg, Kopien, Rollenverlust ------------------------------------------------------------------
 
 func test_win_alone_alive_with_at_most_three_living() -> void:
-	var s := _dawn(_state([W, GR, D, D, D, D], [4, 5]))
+	var s := _dawn(_state([W, GR, D, "amalia", "detektiv", "wahnsinniger-kutscher"], [4, 5]))
 	if s == null:
 		return
 	s = _ok(s, Command.nominate(3, 6), "Nominierung")
@@ -303,11 +303,11 @@ func test_win_alone_alive_with_at_most_three_living() -> void:
 	var robber := s.open_candidates().filter(func(c: WinCandidate) -> bool: return c.reason_key == WinCandidate.REASON_GRAVE_ROBBER)
 	assert_true(robber.size() == 1 and (robber[0] as WinCandidate).beneficiary_ids == ([2] as Array[int]), "Alleinsieg bei drei Lebenden")
 	_codec_same(s, "Sieg offen")
-	assert_false(WinRules.grave_robber_wins(_state([W, GR, D, D, D, D], [2, 4, 5, 6]), 2), "tot kein Sieg")
+	assert_false(WinRules.grave_robber_wins(_state([W, GR, D, "amalia", "detektiv", "wahnsinniger-kutscher"], [2, 4, 5, 6]), 2), "tot kein Sieg")
 
 
 func test_two_robbers_steal_same_role_independently() -> void:
-	var s := _state([W, GR, GR, WH, D, D, D, D], [4])
+	var s := _state([W, GR, GR, WH, D, "amalia", "detektiv", "wahnsinniger-kutscher"], [4])
 	s = _dawn(s, {"grabraeuber:2@targets": [4], "grabraeuber:3@targets": [4]})
 	if s == null:
 		return
@@ -319,7 +319,7 @@ func test_two_robbers_steal_same_role_independently() -> void:
 
 func test_role_loss_or_death_ends_ability_revival_allows_new_theft() -> void:
 	# Seelentausch (80) nach dem Diebstahl (64) in derselben Nacht: 2 wird Dorfbewohner, 4 wird Grabräuber ohne Fähigkeit.
-	var s := _state([W, GR, WH, D, "seelentauscher", D, D, D], [3])
+	var s := _state([W, GR, WH, D, "seelentauscher", "amalia", "detektiv", "wahnsinniger-kutscher"], [3])
 	s = _dawn(s, {"grabraeuber:2@targets": [3], "seelentauscher:5@targets": [2, 4]})
 	if s == null:
 		return
@@ -329,7 +329,7 @@ func test_role_loss_or_death_ends_ability_revival_allows_new_theft() -> void:
 	s = _night(s, {"grabraeuber:4@targets": []}, log)
 	assert_eq(_opened(log, "grabraeuber:4").size(), 1, "der neue Grabräuber darf stehlen")
 	# Tod und Wiederbelebung.
-	s = _dawn(_state([W, GR, WH, D, D, D, D, D], [3]), {"grabraeuber:2@targets": [3]})
+	s = _dawn(_state([W, GR, WH, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [3]), {"grabraeuber:2@targets": [3]})
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Grabräuber stirbt")
 	assert_eq(SoloRules.stolen_role(s, 2) if s != null else &"x", &"", "Fähigkeit erlischt mit dem Tod")
 	s = _ok(s, _gm("revive", {"target_id": 2}), "Wiederbelebung")
@@ -340,7 +340,7 @@ func test_role_loss_or_death_ends_ability_revival_allows_new_theft() -> void:
 
 
 func test_replay_identical() -> void:
-	var commands: Array[Command] = [Fixtures.start_roles([W, GR, VP, D, D, D, D, D], 7), _gm("kill", {"target_id": 3, "trigger_effects": false})]
+	var commands: Array[Command] = [Fixtures.start_roles([W, GR, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 7), _gm("kill", {"target_id": 3, "trigger_effects": false})]
 	var s := RulesEngine.replay(commands).state
 	# Befehle mitschreiben: Nacht mit Diebstahl, Nacht mit Puppe.
 	var recorder := []
@@ -390,7 +390,7 @@ func _record_dawn(s: GameState, answers: Dictionary, recorder: Array) -> GameSta
 
 
 func test_load_rejects_inconsistent_state() -> void:
-	var s := _dawn(_state([W, GR, WH, D, D, D, D, D], [3]), {"grabraeuber:2@targets": [3]})
+	var s := _dawn(_state([W, GR, WH, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [3]), {"grabraeuber:2@targets": [3]})
 	if s == null:
 		return
 	_codec_same(s, "Diebstahl")
@@ -407,7 +407,7 @@ func test_load_rejects_inconsistent_state() -> void:
 
 
 func test_stolen_necromancer_shield_survives_load_and_protects() -> void:
-	var s := _state([W, GR, "nekromant", D, D, D, D, D, D, D], [3, 8, 9, 10])
+	var s := _state([W, GR, "nekromant", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [3, 8, 9, 10])
 	s = _dawn(s, {"grabraeuber:2@targets": [3]})
 	var log: Array[GameEvent] = []
 	s = _night(s, {"nekromant:2@targets": [8, 9, 10], "pack@": [5]}, log)
@@ -422,7 +422,7 @@ func test_stolen_necromancer_shield_survives_load_and_protects() -> void:
 
 
 func test_stolen_parasite_host_makes_robber_immune() -> void:
-	var s := _state([W, GR, "parasit", D, D, D, D, D], [3])
+	var s := _state([W, GR, "parasit", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [3])
 	s = _dawn(s, {"grabraeuber:2@targets": [3]})
 	s = _dawn(s, {"parasit:2@": [5]})
 	if s == null:

@@ -95,7 +95,7 @@ func _kill(id: int) -> Command:
 # --- A. Neue Verzauberung -------------------------------------------------------------------------------
 
 func test_new_charm_runs_piper_then_new_notice_then_all_then_next_step() -> void:
-	var commands := _start([W, RF, D, D, D, D, D, "das-orakel"])
+	var commands := _start([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "das-orakel"])
 	var s := _state(commands)
 	if s == null:
 		return
@@ -128,7 +128,7 @@ func test_new_charm_runs_piper_then_new_notice_then_all_then_next_step() -> void
 
 
 func test_second_night_lists_all_living_charmed_but_notifies_only_the_new_one() -> void:
-	var commands := _start([W, RF, D, D, D, D, D])
+	var commands := _start([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	_run(commands, {"rattenfaenger:2": [3, 4]}, func(_s: GameState) -> bool: return false)
 	_next_night(commands, [_kill(3)] as Array[Command])
 	var s := _run(commands, {"rattenfaenger:2": [5]}, _at_piper_all)
@@ -142,7 +142,7 @@ func test_second_night_lists_all_living_charmed_but_notifies_only_the_new_one() 
 # --- B/C. Kein neuer Zauber, Tarnaufruf -----------------------------------------------------------------
 
 func test_poisoned_piper_is_a_decoy_call_followed_by_all_charmed() -> void:
-	var commands := _start([W, RF, HX, D, D, D, D])
+	var commands := _start([W, RF, HX, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	_run(commands, {"rattenfaenger:2": [4, 5]}, func(_s: GameState) -> bool: return false)
 	_next_night(commands)
 	var s := _run(commands, {"waldhexe:3@poison": true, "waldhexe:3@poison_target": [2]}, _at_piper_all)
@@ -161,7 +161,7 @@ func test_poisoned_piper_is_a_decoy_call_followed_by_all_charmed() -> void:
 
 func test_nightmare_block_does_not_stop_the_piper() -> void:
 	# RM-DR-010: Blockaden treffen nur Dorfrollen; der Rattenfänger handelt, der Folgeschritt folgt.
-	var commands := _start([W, "albtraumwolf", RF, D, D, D, D])
+	var commands := _start([W, "albtraumwolf", RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var s := _run(commands, {"albtraumwolf:2": [3], "rattenfaenger:3": [5]}, _at_piper_all)
 	assert_true(s != null and s.blocked_ids.has(3), "Rattenfänger vom Albtraumwolf getroffen")
 	if s == null:
@@ -171,7 +171,7 @@ func test_nightmare_block_does_not_stop_the_piper() -> void:
 
 
 func test_dead_piper_in_revival_round_is_called_as_decoy_with_follow_up() -> void:
-	var commands := _start([W, RF, "kutscher", D, D, D, D])
+	var commands := _start([W, RF, "kutscher", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	_run(commands, {"rattenfaenger:2": [4, 5]}, func(_s: GameState) -> bool: return false)
 	var s := _next_night(commands, [_kill(2)] as Array[Command])
 	if s == null:
@@ -186,7 +186,7 @@ func test_dead_piper_in_revival_round_is_called_as_decoy_with_follow_up() -> voi
 func test_frozen_night_still_follows_the_decoy_call() -> void:
 	# Technische Ableitung: Der Zeitwächter lässt alle Fähigkeiten entfallen, die Rollen werden aber weiter angesagt (DI-02).
 	# „Alle Verzauberten“ ist keine Fähigkeit, sondern folgt auf den Aufruf (PE-06).
-	var commands := _start([W, RF, "zeitwaechter", D, D, D, D])
+	var commands := _start([W, RF, "zeitwaechter", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	_run(commands, {"rattenfaenger:2": [4]}, func(_s: GameState) -> bool: return false)
 	_next_night(commands)
 	var s := _run(commands, {"zeitwaechter:3@use": true}, _at_piper_all)
@@ -201,7 +201,7 @@ func test_frozen_night_still_follows_the_decoy_call() -> void:
 # --- D. Aufruf entfällt -----------------------------------------------------------------------------------
 
 func test_dead_piper_without_revival_has_no_follow_up() -> void:
-	var commands := _start([W, RF, D, D, D, D, D])
+	var commands := _start([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	_run(commands, {"rattenfaenger:2": [3, 4]}, func(_s: GameState) -> bool: return false)
 	var s := _next_night(commands, [_kill(2)] as Array[Command])
 	if s == null:
@@ -215,7 +215,7 @@ func test_dead_piper_without_revival_has_no_follow_up() -> void:
 
 
 func test_no_living_charmed_drops_the_follow_up_without_orphan() -> void:
-	var commands := _start([W, RF, HX, D, D, D, D])
+	var commands := _start([W, RF, HX, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	_run(commands, {"rattenfaenger:2": [4, 5]}, func(_s: GameState) -> bool: return false)
 	_next_night(commands, [_kill(4), _kill(5)] as Array[Command])
 	var log_start := commands.size()
@@ -253,7 +253,7 @@ func _assert_resumes(commands: Array[Command], label: String) -> void:
 
 
 func test_save_and_resume_at_every_interruption_point() -> void:
-	var commands := _start([W, RF, D, D, D, D, D, "das-orakel"])
+	var commands := _start([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "das-orakel"])
 	_run(commands, {}, _at_owner("rattenfaenger"))
 	var before_piper := commands.slice(0, commands.size() - 1)  # vor BeginStep des Rattenfängers
 	_assert_resumes(before_piper, "vor dem Rattenfänger")
@@ -286,8 +286,60 @@ func test_save_and_resume_at_every_interruption_point() -> void:
 	assert_eq(events_json(RulesEngine.replay(commands).events), events_json(RulesEngine.replay(commands).events), "bytegleiches Replay")
 
 
+## PE-07 (Restlücke aus PE-06): Grabräuber mit gestohlenem Rattenfänger. Legal beginnt jede Rolle einmal: Person 2 ist der Grabräuber,
+## Person 3 der Rattenfänger. Der Rattenfänger ist vor Nacht 1 tot, der Grabräuber stiehlt seine Fähigkeit in Nacht 1 und nutzt sie ab
+## Nacht 2 (RM-DR-156.1). Geprüft wird die abgeleitete Reihenfolge nach DA-60: gestohlener Rattenfänger-Schritt → Hinweis an die neu
+## Verzauberten → „Alle Verzauberten“ → nächster Schritt. Keine neue Regel für den Grabräuber (Siegbedingung, Blockade und Fluch
+## bleiben wie in DA-08); es wird nur das bestehende Verhalten belegt.
+func test_robber_with_stolen_piper_runs_the_piper_phases_in_order() -> void:
+	var roles := [W, "grabraeuber", RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"]
+	var commands: Array[Command] = [Fixtures.start_roles(roles, 1), _kill(3), Command.start_night()]
+	var night_one := _run(commands, {"grabraeuber:2@targets": [3]}, func(s: GameState) -> bool: return s.pending_prompt == null and RulesEngine.next_step_id(s) == "")
+	if night_one == null:
+		return
+	assert_false(night_one.night_plan.has(StringName(PIPER_ALL)), "Nacht 1: der tote Rattenfänger wird nicht aufgerufen, kein Folgeschritt")
+	assert_true(night_one.grave_thefts.size() == 1 and String(night_one.grave_thefts[0]["role_id"]) == RF, "der Grabräuber hat die Rolle des Rattenfängers gestohlen")
+	var s := _next_night(commands)
+	if s == null:
+		return
+	var stolen_index := s.night_plan.find(&"rattenfaenger:2")
+	assert_true(stolen_index >= 0, "Nacht 2: gestohlener Rattenfänger-Schritt auf dem Platz des Grabräubers (%s)" % str(s.night_plan))
+	assert_eq(s.night_plan.find(StringName(PIPER_ALL)), stolen_index + 1, "„Alle Verzauberten“ direkt hinter dem gestohlenen Schritt")
+	# Verzaubern durch den Grabräuber, dann erst der Hinweis, dann die Liste.
+	s = _run(commands, {"rattenfaenger:2": [4, 5]}, _at_piper_all)
+	if s == null:
+		return
+	assert_eq(s.charms.size(), 2, "zwei Personen verzaubert")
+	assert_eq(_notices_of(s, "piper_new").size(), 1, "Hinweis an die neu Verzauberten")
+	assert_eq(_notices_of(s, "piper_new")[0]["viewer_ids"], [4, 5], "nur die neu Verzauberten")
+	# Save/Load an der offenen Stelle: Hinweis noch offen, Folgeschritt steht an.
+	var loaded := StateCodec.decode(StateCodec.encode(s, commands))
+	assert_true(loaded.ok, "Laden vor der Liste (%s)" % loaded.error)
+	if loaded.ok:
+		assert_eq(loaded.state.content_hash(), s.content_hash(), "gleicher Stand nach dem Laden")
+		assert_eq(RulesEngine.next_step_id(loaded.state), RulesEngine.next_step_id(s), "derselbe Folgeschritt")
+	var begun := apply_ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Folgeschritt beginnen")
+	var p := begun.state.pending_prompt
+	assert_true(p != null and p.owner == &"piper-all" and p.stage == &"shown" and p.actor_id == -1, "Bestätigungskarte der Spielleitung")
+	if p == null:
+		return
+	assert_eq(p.partial, {"charmed_ids": [4, 5]}, "alle lebenden Verzauberten")
+	# Save/Load mit offener Liste, Bestätigung, danach geht es mit dem nächsten Schritt weiter.
+	var open_commands := commands.duplicate()
+	open_commands.append(Command.begin_step(RulesEngine.next_step_id(s)))
+	var reloaded := StateCodec.decode(StateCodec.encode(begun.state, open_commands))
+	assert_true(reloaded.ok and reloaded.state.content_hash() == begun.state.content_hash(), "Laden mit offener Liste: gleicher Stand")
+	var done := apply_ok(begun.state, Command.answer_choice(p.id, "shown", true), "Liste bestätigt")
+	assert_eq(done.state.charms.size(), 2, "Bestätigen verzaubert nichts und verbraucht nichts")
+	assert_true(done.state.night_step_status[done.state.night_plan.find(StringName(PIPER_ALL))] == StepQueue.STATUS_DONE, "Schritt erledigt")
+	# Der Rattenfänger ist tot und nicht wiederbelebt: kein Tarnaufruf auf seinem eigenen Platz, nur der gestohlene Schritt zählt
+	# (der verbrauchte Diebstahl des Grabräubers wird nach DI-02 weiter als Tarnaufruf angesagt, das ist eine andere Rolle).
+	assert_false(CallPolicy.decoy_calls(done.state).has(StringName(RF)), "kein Tarnaufruf des toten Rattenfängers")
+	assert_eq(RulesEngine.replay(open_commands).state.content_hash(), begun.state.content_hash(), "Replay der Befehle ergibt denselben Stand")
+
+
 func test_stale_answer_after_state_change_is_rejected() -> void:
-	var commands := _start([W, RF, D, D, D, D, D])
+	var commands := _start([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var s := _run(commands, {"rattenfaenger:2": [4, 5]}, _at_piper_all)
 	if s == null:
 		return
@@ -300,7 +352,7 @@ func test_stale_answer_after_state_change_is_rejected() -> void:
 
 
 func test_load_rejects_a_tampered_list() -> void:
-	var commands := _start([W, RF, D, D, D, D, D])
+	var commands := _start([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var s := _run(commands, {"rattenfaenger:2": [4, 5]}, _at_piper_all)
 	if s == null:
 		return
@@ -313,7 +365,7 @@ func test_load_rejects_a_tampered_list() -> void:
 
 
 func test_old_rules_version_is_marked_incompatible() -> void:
-	var commands := _start([W, RF, D, D, D, D, D])
+	var commands := _start([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var s := _state(commands)
 	var text := StateCodec.encode(s, commands).replace(String(GameState.RULES_VERSION), "grimmhain-core-0.12")
 	var loaded := StateCodec.decode(text)

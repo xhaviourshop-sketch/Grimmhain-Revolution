@@ -40,7 +40,7 @@ func _night_two(roles: Array) -> GameSession:
 
 
 func test_first_night_only_role_is_announced_on_the_first_card_of_later_nights() -> void:
-	var s := _night_two([W, W, "loki", "schutzengel", "das-orakel", D])
+	var s := _night_two([W, "blutwolf", "loki", "schutzengel", "das-orakel", D])
 	var next := UiGame.next_of(s)
 	assert_eq(str(next["kind"]), "prompt", "erster Schritt der Nacht läuft schon")
 	assert_eq(str(next["owner"]), "schutzengel", "Schutzengel handelt zuerst")
@@ -55,7 +55,7 @@ func test_first_night_only_role_is_announced_on_the_first_card_of_later_nights()
 
 
 func test_trailing_call_stands_on_the_end_of_night_card() -> void:
-	var s := UiGame.session([W, W, "schutzengel", "henker", "das-orakel", D])
+	var s := UiGame.session([W, "blutwolf", "schutzengel", "henker", "das-orakel", D])
 	assert_true(s.start_night().ok, "Nacht 1")
 	assert_true(UiGame.run_until(s, func(n: Dictionary) -> bool: return str(n.get("kind")) == "end_night"), "Ende der Nacht erreicht")
 	var next := UiGame.next_of(s)
@@ -88,7 +88,7 @@ func test_dead_eyes_line_only_in_revival_rounds() -> void:
 
 
 func test_announcing_changes_nothing_in_state_or_randomness() -> void:
-	var s := UiGame.session([W, W, "schutzengel", "henker", "das-orakel", "kutscher"])
+	var s := UiGame.session([W, "blutwolf", "schutzengel", "henker", "das-orakel", "kutscher"])
 	assert_true(s.start_night().ok, "Nacht 1")
 	var hash_before := s.state_hash()
 	var commands_before := s.commands().size()
@@ -104,7 +104,7 @@ func test_announcing_changes_nothing_in_state_or_randomness() -> void:
 
 
 func test_same_calls_after_undo_redo_and_load() -> void:
-	var s := _night_two([W, W, "loki", "schutzengel", "das-orakel", D])
+	var s := _night_two([W, "blutwolf", "loki", "schutzengel", "das-orakel", D])
 	var decoys: Array = UiGame.next_of(s).get("decoys", [])
 	assert_eq(decoys, ["loki"], "Ausgangslage")
 	assert_true(s.can_undo() and s.undo(), "Rückgängig")

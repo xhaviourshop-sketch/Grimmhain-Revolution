@@ -59,7 +59,7 @@ func _bw_day(roles: Array) -> Array[Command]:
 
 
 func test_possessed_lynched_drags_chosen_person() -> void:
-	var cmds := _bw_day([BW, "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var cmds := _bw_day([BW, "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	cmds.append_array([Command.nominate(3, 1), Command.decide_execution(1)])
 	var run := _run(cmds, "Lynch")
 	if not run.ok:
@@ -81,7 +81,7 @@ func test_possessed_lynched_drags_chosen_person() -> void:
 
 
 func test_possessed_threshold_five_living_including_him() -> void:
-	var roles := [BW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := [BW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]
 	var five := _bw_day(roles)
 	five.append_array([_gm("kill", {"target_id": 6, "trigger_effects": false}), _gm("kill", {"target_id": 7, "trigger_effects": false}),
 		Command.nominate(3, 1), Command.decide_execution(1)])
@@ -98,7 +98,7 @@ func test_possessed_threshold_five_living_including_him() -> void:
 
 func test_possessed_night_death_at_dawn_decline_and_revive() -> void:
 	# Rudel frisst den Besessenen: Reaktion am Morgen, Verzicht; Wiederbelebung, zweiter Tod → erneut.
-	var cmds: Array[Command] = [_start([BW, "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var cmds: Array[Command] = [_start([BW, "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night(),
 		Command.answer_prompt(1, [1]), Command.end_night()]
 	var run := _run(cmds, "Nacht")
 	if not run.ok:
@@ -123,7 +123,7 @@ func _knight_night(roles: Array, knight: int, dead: Array = []) -> Array[Command
 
 func test_knight_strikes_nearest_wolf_counting_dead_seats() -> void:
 	# Ritter 4; links 3 tot, 2 Wolf (Abstand 2 mit Totem); rechts 5 Wolf (Abstand 1) → 5 stirbt sofort.
-	var roles := ["dorfbewohner", "werwolf", "dorfbewohner", RI, "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := ["dorfbewohner", "werwolf", "amalia", RI, "blutwolf", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 	var cmds := _knight_night(roles, 4, [3])
 	var r := _last(cmds)
 	if r == null:
@@ -136,7 +136,7 @@ func test_knight_strikes_nearest_wolf_counting_dead_seats() -> void:
 func test_knight_ignores_cursed_villager() -> void:
 	# RM-DR-136.2 (Decision Log Runde 3 „Ritter, Ziel“: wer als Wolf zählt) mit V-01/V-02 (Fluch nur für
 	# Rollenauskünfte): Ritter 4, rechts 5 verfluchter Dorfbewohner (Abstand 1), links 2 Wolf (Abstand 2).
-	var roles := ["dorfbewohner", "werwolf", "dorfbewohner", RI, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := ["dorfbewohner", "werwolf", "amalia", RI, "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]
 	var start := _run([_start(roles)] as Array[Command], "Start")
 	if start == null or not start.ok:
 		return
@@ -150,7 +150,7 @@ func test_knight_ignores_cursed_villager() -> void:
 
 func test_knight_tie_gm_chooses() -> void:
 	# Ritter 4; Wolf 2 (Abstand 2) und Wolf 6 (Abstand 2) → Spielleiter wählt.
-	var roles := ["dorfbewohner", "werwolf", "dorfbewohner", RI, "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner"]
+	var roles := ["dorfbewohner", "werwolf", "amalia", RI, "detektiv", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor"]
 	var cmds := _knight_night(roles, 4)
 	var run := _run(cmds, "Gleichstand")
 	if not run.ok:
@@ -172,7 +172,7 @@ func test_knight_tie_gm_chooses() -> void:
 
 
 func test_knight_only_wolf_attack_and_revive() -> void:
-	var roles := ["dorfbewohner", "werwolf", "dorfbewohner", RI, "werwolf", "dorfbewohner", "waldhexe", "dorfbewohner"]
+	var roles := ["dorfbewohner", "werwolf", "amalia", RI, "blutwolf", "detektiv", "waldhexe", "wahnsinniger-kutscher"]
 	# Gift der Waldhexe: kein Ritterschlag.
 	var poison: Array[Command] = [_start(roles), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"),
 		Command.begin_step("night:1:1:waldhexe:7"), Command.answer_choice(2, "poison", true), Command.answer_stage_targets(2, "poison_target", [4]),
@@ -190,7 +190,7 @@ func test_knight_only_wolf_attack_and_revive() -> void:
 
 
 func test_knight_revived_strikes_again() -> void:
-	var roles := ["dorfbewohner", "werwolf", "dorfbewohner", RI, "werwolf", "dorfbewohner", "werwolf", "dorfbewohner"]
+	var roles := ["dorfbewohner", "werwolf", "amalia", RI, "blutwolf", "detektiv", "rudelvater", "wahnsinniger-kutscher"]
 	var cmds := _knight_night(roles, 4)
 	cmds.append_array([_gm("revive", {"target_id": 4}), Command.decide_execution(-1), Command.end_day(), Command.start_night(),
 		Command.answer_prompt(2, [4]), Command.end_night()])
@@ -223,15 +223,15 @@ func _track(roles: Array, dead: Array = []) -> String:
 
 func test_tracker_direction_left_is_clockwise() -> void:
 	# Wolf 6 im Uhrzeigersinn (Abstand 2), Wolf 1 gegen den Uhrzeigersinn (Abstand 3) → links.
-	assert_eq(_track(["werwolf", "dorfbewohner", "dorfbewohner", FL, "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner"]), "left", "links = Uhrzeigersinn")
+	assert_eq(_track(["werwolf", "dorfbewohner", "amalia", FL, "detektiv", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor"]), "left", "links = Uhrzeigersinn")
 	# Nur Wolf 2 gegen den Uhrzeigersinn → rechts.
-	assert_eq(_track(["dorfbewohner", "werwolf", "dorfbewohner", FL, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), "right", "rechts")
+	assert_eq(_track(["dorfbewohner", "werwolf", "amalia", FL, "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), "right", "rechts")
 	# 5 tot, Wolf 6 (Abstand 2 mit totem Platz) und Wolf 2 (Abstand 2) → gleich weit.
-	assert_eq(_track(["dorfbewohner", "werwolf", "dorfbewohner", FL, "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner"], [5]), "equal", "gleich weit, tote Plätze zählen")
+	assert_eq(_track(["dorfbewohner", "werwolf", "amalia", FL, "detektiv", "blutwolf", "wahnsinniger-kutscher", "waechter-am-tor"], [5]), "equal", "gleich weit, tote Plätze zählen")
 
 
 func test_tracker_asks_each_night_until_used() -> void:
-	var roles := ["werwolf", "dorfbewohner", "dorfbewohner", FL, "dorfbewohner", "dorfbewohner"]
+	var roles := ["werwolf", "dorfbewohner", "amalia", FL, "detektiv", "wahnsinniger-kutscher"]
 	var cmds: Array[Command] = [_start(roles), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"),
 		Command.begin_step("night:1:1:faehrtenleser:4"), Command.answer_choice(2, "use", false), Command.end_night(),
 		Command.decide_execution(-1), Command.end_day(), Command.start_night()]
@@ -256,7 +256,7 @@ func test_tracker_asks_each_night_until_used() -> void:
 
 
 func test_tracker_corrupt_direction_rejected() -> void:
-	var s := _run([_start(["werwolf", "dorfbewohner", "dorfbewohner", FL, "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var s := _run([_start(["werwolf", "dorfbewohner", "amalia", FL, "detektiv", "wahnsinniger-kutscher"]), Command.start_night(),
 		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:faehrtenleser:4"), Command.answer_choice(2, "use", true)] as Array[Command], "Prompt").state
 	if s == null:
 		return

@@ -4,7 +4,7 @@ extends UiTestCase
 ## denselben Hash her, ein neuer Befehl verwirft Wiederholbares, StartGame bleibt, mehrstufige
 ## Prompts und bestätigte Siege lassen sich zurücknehmen, gespeichert wird nach jeder Änderung.
 
-const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "amalia", "detektiv"]
 
 
 func _session() -> GameSession:
@@ -75,7 +75,7 @@ func test_undo_inside_multistage_prompt_steps_back_one_stage() -> void:
 
 func test_undo_confirmed_win() -> void:
 	var s := GameSession.new()
-	s.submit(Fixtures.start_roles(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]))
+	s.submit(Fixtures.start_roles(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]))
 	s.start_night()
 	s.answer_targets([3])
 	s.end_night()

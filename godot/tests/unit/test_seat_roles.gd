@@ -67,7 +67,7 @@ func test_production_roles() -> void:
 
 func test_coachman_lynch_kills_nearest_living_neighbours() -> void:
 	# Sitzkreis 1..8 (ID = Sitz). 4 Kutscher; 3 ist tot → links stirbt 2, rechts 5.
-	var cmds := _to_day(_start(["werwolf", "dorfbewohner", "dorfbewohner", KU, "dorfbewohner", "dorfbewohner", "werwolf", "dorfbewohner"]))
+	var cmds := _to_day(_start(["werwolf", "dorfbewohner", "amalia", KU, "detektiv", "waechter-am-tor", "blutwolf", "der-weise"]))
 	cmds.append_array([_gm("kill", {"target_id": 3, "trigger_effects": false}), Command.nominate(6, 4), Command.decide_execution(4)])
 	var run := _run(cmds, "Lynch")
 	var last := _last(cmds)
@@ -80,7 +80,7 @@ func test_coachman_lynch_kills_nearest_living_neighbours() -> void:
 
 func test_coachman_neighbours_follow_seat_order_not_ids() -> void:
 	# Sitzreihenfolge 1, 5, 3, 7, 2, 6, 4, 8 → Nachbarn von 3 sind 5 und 7.
-	var cmds := _to_day(_start(["werwolf", "dorfbewohner", KU, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "werwolf"], [1, 5, 3, 7, 2, 6, 4, 8]))
+	var cmds := _to_day(_start(["werwolf", "dorfbewohner", KU, "amalia", "detektiv", "waechter-am-tor", "der-weise", "blutwolf"], [1, 5, 3, 7, 2, 6, 4, 8]))
 	cmds.append_array([Command.nominate(2, 3), Command.decide_execution(3)])
 	var run := _run(cmds, "Sitzfolge")
 	if run.ok:
@@ -89,7 +89,7 @@ func test_coachman_neighbours_follow_seat_order_not_ids() -> void:
 
 
 func test_coachman_gm_execute_and_not_other_deaths() -> void:
-	var roles := ["werwolf", "dorfbewohner", KU, "dorfbewohner", "dorfbewohner", "dorfbewohner", "werwolf"]
+	var roles := ["werwolf", "dorfbewohner", KU, "amalia", "detektiv", "waechter-am-tor", "blutwolf"]
 	var gm_exec := _to_day(_start(roles))
 	gm_exec.append(_gm("execute", {"target_id": 3}))
 	var run := _run(gm_exec, "Spielleiter-Hinrichtung")
@@ -107,7 +107,7 @@ func test_coachman_gm_execute_and_not_other_deaths() -> void:
 
 
 func test_coachman_mirrored_is_not_lynched() -> void:
-	var cmds := _to_day(_start(["spiegelwolf", "dorfbewohner", KU, "dorfbewohner", "dorfbewohner", "dorfbewohner", "werwolf"]))
+	var cmds := _to_day(_start(["spiegelwolf", "dorfbewohner", KU, "amalia", "detektiv", "waechter-am-tor", "werwolf"]))
 	cmds.append_array([Command.nominate(3, 1), Command.decide_execution(1)])
 	var run := _run(cmds, "Spiegelung")
 	if run.ok:
@@ -117,7 +117,7 @@ func test_coachman_mirrored_is_not_lynched() -> void:
 
 func test_coachman_neighbour_reacts_and_single_other() -> void:
 	# Nachbar 2 ist Sensenträger: Reaktion sofort am Tag. Siegkandidat erst nach der Reaktion.
-	var cmds := _to_day(_start(["werwolf", "sensentraeger", KU, "dorfbewohner", "dorfbewohner", "dorfbewohner", "werwolf"]))
+	var cmds := _to_day(_start(["werwolf", "sensentraeger", KU, "dorfbewohner", "amalia", "detektiv", "blutwolf"]))
 	cmds.append_array([Command.nominate(4, 3), Command.decide_execution(3)])
 	var run := _run(cmds, "Reaktion")
 	if not run.ok:
@@ -125,7 +125,7 @@ func test_coachman_neighbour_reacts_and_single_other() -> void:
 	assert_eq(run.state.reactions.size(), 1, "Sensenträger-Reaktion eingereiht")
 	assert_eq(run.state.open_candidates().size(), 0, "kein Kandidat bei offener Reaktion")
 	# Nur zwei Lebende: Kutscher und eine andere Person → genau ein Mittod.
-	var few := _to_day(_start([KU, "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]))
+	var few := _to_day(_start([KU, "werwolf", "dorfbewohner", "amalia", "detektiv", "waechter-am-tor"]))
 	var s := _run(few, "wenige").state
 	if s == null:
 		return
@@ -146,7 +146,7 @@ func _alarm(events: Array[GameEvent]) -> Array[GameEvent]:
 
 func test_watchman_rings_for_wolf_or_solo_neighbour() -> void:
 	# 2 Nachtwächter zwischen 1 (Werwolf) und 3 (Dorf).
-	var run := _run(_to_day(_start(["werwolf", NW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])), "Wolf")
+	var run := _run(_to_day(_start(["werwolf", NW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])), "Wolf")
 	if run.ok:
 		var alarm := _alarm(run.events)
 		assert_eq(alarm.size(), 1, "Glocken am Morgen")
@@ -155,22 +155,22 @@ func test_watchman_rings_for_wolf_or_solo_neighbour() -> void:
 			assert_false(alarm[0].data.has("watchman_ids") or alarm[0].data.has("neighbour_ids"), "ohne Namen und Seite")
 		var gm := events_of_type(run.events, "AlarmBellsDetail")
 		assert_true(gm.size() == 1 and gm[0].visibility == Visibility.GM, "Details nur für den Spielleiter")
-	var solo := _run(_to_day(_start(["dorfbewohner", NW, "manipulator", "werwolf", "dorfbewohner", "dorfbewohner"])), "Solo")
+	var solo := _run(_to_day(_start(["dorfbewohner", NW, "manipulator", "werwolf", "amalia", "detektiv"])), "Solo")
 	if solo.ok:
 		assert_eq(_alarm(solo.events).size(), 1, "Einzelsieg-Nachbar löst aus")
-	var quiet := _run(_to_day(_start(["dorfbewohner", NW, "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner"])), "ruhig")
+	var quiet := _run(_to_day(_start(["dorfbewohner", NW, "amalia", "werwolf", "detektiv", "wahnsinniger-kutscher"])), "ruhig")
 	if quiet.ok:
 		assert_eq(_alarm(quiet.events).size(), 0, "nur Dorf-Nachbarn: keine Glocken")
 
 
 func test_watchman_skips_dead_seats_and_needs_to_live() -> void:
 	# 3 ist tot → nächster rechter Lebender 4 ist Wolf.
-	var cmds: Array[Command] = [_start(["dorfbewohner", NW, "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["dorfbewohner", NW, "amalia", "werwolf", "detektiv", "wahnsinniger-kutscher"]),
 		_gm("kill", {"target_id": 3, "trigger_effects": false}), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()]
 	var run := _run(cmds, "tote Plätze")
 	if run.ok:
 		assert_eq(_alarm(run.events).size(), 1, "nächster Lebender zählt")
-	var dead: Array[Command] = [_start(["werwolf", NW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var dead: Array[Command] = [_start(["werwolf", NW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.answer_prompt(1, [2]), Command.end_night()]
 	run = _run(dead, "toter Nachtwächter")
 	if run.ok:
@@ -178,7 +178,9 @@ func test_watchman_skips_dead_seats_and_needs_to_live() -> void:
 
 
 func test_watchman_every_morning_and_two_watchmen_one_bell() -> void:
-	var cmds := _to_day(_start([NW, "werwolf", NW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]))
+	# Der zweite Nachtwächter entsteht nach dem Start durch Korrektur (PE-07).
+	var cmds := Fixtures.with_copies([NW, "werwolf", NW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"],
+		[Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command])
 	cmds.append_array([Command.decide_execution(-1), Command.end_day(), Command.start_night(), Command.skip_step("night:2:0:pack", "kein Opfer"), Command.end_night()])
 	var run := _run(cmds, "zwei Morgen")
 	if run.ok:
@@ -189,7 +191,7 @@ func test_watchman_every_morning_and_two_watchmen_one_bell() -> void:
 # --- Dorfwache ---------------------------------------------------------------------------------------
 
 func test_guard_survives_pack_attack_only() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", "werwolf", DW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", "blutwolf", DW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night()]
 	var run := _run(cmds, "Rudel")
 	if not run.ok:
@@ -206,7 +208,7 @@ func test_guard_survives_pack_attack_only() -> void:
 
 func test_guard_dies_by_poison_and_witch_can_heal() -> void:
 	# 3 Dorfwache, 4 Waldhexe. Rudel greift 3 an; Waldhexe heilt (verbraucht) → zwei Quellen, ein Abfangen.
-	var cmds: Array[Command] = [_start(["werwolf", "werwolf", DW, "waldhexe", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", "blutwolf", DW, "waldhexe", "dorfbewohner", "amalia", "detektiv"]),
 		Command.start_night(), Command.answer_prompt(1, [3]), Command.begin_step("night:1:1:waldhexe:4"),
 		Command.answer_choice(2, "heal", true), Command.answer_choice(2, "reveal", true), Command.answer_choice(2, "poison", false),
 		Command.answer_choice(2, "confirm", true), Command.end_night()]
@@ -215,7 +217,7 @@ func test_guard_dies_by_poison_and_witch_can_heal() -> void:
 		var prevented := events_of_type(run.events, "KillPrevented")
 		assert_true(prevented.size() == 1 and (prevented[0].data["sources"] as Array).size() == 2, "Waldhexe und Dorfwache, genau ein Abfangen")
 		assert_eq(int(run.state.players[4].ability_uses.get("waldhexe:heal", 0)), 1, "Heiltrank verbraucht")
-	var poison: Array[Command] = [_start(["werwolf", "werwolf", DW, "waldhexe", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var poison: Array[Command] = [_start(["werwolf", "blutwolf", DW, "waldhexe", "dorfbewohner", "amalia", "detektiv"]),
 		Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:waldhexe:4"),
 		Command.answer_choice(2, "poison", true), Command.answer_stage_targets(2, "poison_target", [3]), Command.answer_choice(2, "confirm", true), Command.end_night()]
 	run = _run(poison, "Gift")
@@ -225,7 +227,7 @@ func test_guard_dies_by_poison_and_witch_can_heal() -> void:
 
 func test_apprentice_inherits_guard_immunity_immediately() -> void:
 	# Lehrling 3 bindet an Dorfwache 4; 4 stirbt am Tag; in der nächsten Nacht greift das Rudel 3 an.
-	var cmds: Array[Command] = [_start(["werwolf", "werwolf", "lehrling", DW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start(["werwolf", "blutwolf", "lehrling", DW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
 		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 4, 5])]
 	var run := _run(cmds, "Kandidaten")
 	if not run.ok:

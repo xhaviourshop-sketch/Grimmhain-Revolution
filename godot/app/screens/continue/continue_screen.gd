@@ -59,7 +59,7 @@ func _slot(game: Dictionary) -> Control:
 		var note := GrimmLabel.new()
 		note.name = "IncompatibleLabel"
 		note.theme_type_variation = &"WarningLabel"
-		note.format_values = {"found": int(game.get("schema", -1)), "expected": int(game.get("expected", -1))}
+		note.format_values = {"found": str(game.get("found_label", "")), "expected": str(game.get("expected_label", ""))}
 		note.text_key = "ui.continue.slot.incompatible"
 		column.add_child(note)
 	var row := HBoxContainer.new()

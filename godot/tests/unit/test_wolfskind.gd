@@ -13,20 +13,20 @@ const FORBIDDEN_PUBLIC := ["wolfskind", "model", "vorbild", "transform", "werwol
 
 
 func _k6() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "wolfskind"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wolfskind"])
 
 
 ## K6 mit nur einem Werwolf (1): Verwandlungen erzeugen keine sofortige Parität.
 func _k6one() -> Command:
-	return Fixtures.start_roles(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "wolfskind"])
+	return Fixtures.start_roles(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "wolfskind"])
 
 
 func _k7r() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner", "wolfskind"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv", "wolfskind"])
 
 
 func _k8() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "das-orakel", "waldhexe", "dorfbewohner", "dorfbewohner", "wolfskind"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "das-orakel", "waldhexe", "dorfbewohner", "amalia", "wolfskind"])
 
 
 func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
@@ -100,7 +100,7 @@ func test_step_priority_before_guard_and_pack() -> void:
 
 func test_multiple_children_by_id() -> void:
 	# 4
-	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "werwolf", "wolfskind", "dorfbewohner", "wolfskind", "dorfbewohner"]), Command.start_night()] as Array[Command])
+	var s := Fixtures.play(Fixtures.with_copies(["werwolf", "blutwolf", "wolfskind", "dorfbewohner", "wolfskind", "amalia"], [Command.start_night()] as Array[Command]) as Array[Command])
 	assert_eq(s.night_plan, [&"wolfskind:3", &"wolfskind:5", &"pack"] as Array[StringName], "nach Personen-ID")
 
 
@@ -228,9 +228,9 @@ func test_dead_child_revive_and_second_death() -> void:
 
 func test_multiple_children_same_model() -> void:
 	# 20, 21, 45
-	var start := Fixtures.start_roles(["werwolf", "werwolf", "wolfskind", "dorfbewohner", "wolfskind", "dorfbewohner"])
-	var commands: Array[Command] = [start, Command.start_night(), Command.answer_prompt(1, [4]), Command.begin_step("night:1:1:wolfskind:5"),
-		Command.answer_prompt(2, [4]), Command.begin_step("night:1:2:pack"), Command.answer_prompt(3, [4]), Command.end_night()]
+	var commands := Fixtures.with_copies(["werwolf", "blutwolf", "wolfskind", "dorfbewohner", "wolfskind", "amalia"],
+		[Command.start_night(), Command.answer_prompt(1, [4]), Command.begin_step("night:1:1:wolfskind:5"),
+		Command.answer_prompt(2, [4]), Command.begin_step("night:1:2:pack"), Command.answer_prompt(3, [4]), Command.end_night()] as Array[Command])
 	var run := _replay_ok(commands, "gleiches Vorbild")
 	if not run.ok:
 		return
@@ -240,7 +240,7 @@ func test_multiple_children_same_model() -> void:
 		assert_true(int(turned[0].data["child_id"]) == 3 and int(turned[1].data["child_id"]) == 5 and turned[0].index < turned[1].index, "stabile Reihenfolge nach ID")
 	assert_eq(events_json(RulesEngine.replay(commands).events), events_json(run.events), "Replay bytegleich")
 	var one_dead := commands.duplicate()
-	one_dead.insert(5, _gm("kill", {"target_id": 3, "trigger_effects": false}))
+	one_dead.insert(6, _gm("kill", {"target_id": 3, "trigger_effects": false}))  # nach der Korrektur, die das zweite Wolfskind setzt: Index 6 statt 5
 	var partial := _replay_ok(one_dead, "ein Wolfskind tot")
 	if partial.ok:
 		var only := events_of_type(partial.events, "WolfChildTransformed")
@@ -249,7 +249,7 @@ func test_multiple_children_same_model() -> void:
 
 func test_no_extra_pack_step_and_next_night() -> void:
 	# 24, 25, 26, AS-R20: Vorbild ist der einzige Werwolf; er wird am Tag hingerichtet.
-	var start := Fixtures.start_roles(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "wolfskind"])
+	var start := Fixtures.start_roles(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "wolfskind"])
 	var night: Array[Command] = [start, Command.start_night(), Command.answer_prompt(1, [1]), Command.begin_step(PACK_1), Command.answer_prompt(2, [])]
 	var s := Fixtures.play(night)
 	var r := apply_ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "anderer Tod in der Nacht")
@@ -375,7 +375,7 @@ func test_gm_transform_and_revert() -> void:
 	apply_rejected(s, _gm("transform_wolf_child", {"child_id": 3}), "not_a_wolf_child", "kein Wolfskind")
 	apply_rejected(s, _gm("set_role_field", {"target_id": 6, "field": "appears_as", "value": "dorfbewohner"}), "field_not_correctable", "Erscheinung folgt der Verwandlung")
 	# Parität: 1, 2 Werwölfe, 3 Wolfskind, 4–6 Dorf → nach Verwandlung 3:3.
-	var parity := Fixtures.play([Fixtures.start_roles(["werwolf", "werwolf", "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner"])] as Array[Command])
+	var parity := Fixtures.play([Fixtures.start_roles(["werwolf", "blutwolf", "wolfskind", "dorfbewohner", "amalia", "detektiv"])] as Array[Command])
 	var p := apply_ok(parity, _gm("transform_wolf_child", {"child_id": 3}), "Parität")
 	assert_true(sole_candidate(p.state) != null and String(sole_candidate(p.state).kind) == "wolves", "38: Kandidat mit neuem Wolfsstatus")
 

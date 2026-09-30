@@ -7,7 +7,7 @@ extends UiTestCase
 const UiGame := preload("res://tests/ui/ui_game.gd")
 const W := "werwolf"
 const D := "dorfbewohner"
-const ROLES: Array = [D, W, "waldhexe", D, "schutzengel", D]
+const ROLES: Array = [D, W, "waldhexe", "amalia", "schutzengel", "detektiv"]
 
 
 func _cockpit(roles: Array = ROLES, appearances: Dictionary = {}) -> Control:
@@ -79,7 +79,7 @@ func test_session_views_and_commands() -> void:
 
 
 func test_trugbilderwolf_card_shows_true_role_never_the_appearance() -> void:
-	var s := UiGame.session([D, "trugbilderwolf", D, D, D, D], 7, {"2": "schutzengel"})
+	var s := UiGame.session([D, "trugbilderwolf", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 7, {"2": "schutzengel"})
 	var card: Dictionary = s.role_show_card(2)
 	assert_eq(str(card["role_id"]), "trugbilderwolf", "wahre Rolle")
 	assert_false(JSON.stringify(card).contains("schutzengel"), "Scheinrolle nirgends in der Karte")
@@ -241,7 +241,7 @@ func test_cover_closes_role_layers_and_screen_exit_removes_them() -> void:
 
 
 func test_trugbilderwolf_card_through_buttons_never_shows_appearance() -> void:
-	var shell := await _cockpit([D, "trugbilderwolf", D, D, D, D], {"2": "schutzengel"})
+	var shell := await _cockpit([D, "trugbilderwolf", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {"2": "schutzengel"})
 	if shell == null:
 		return
 	var screen := current_screen(shell)

@@ -15,10 +15,12 @@ static func start(roles: Array, seed_value: int = 7, appearances: Dictionary = {
 	return Command.start_game(payload)
 
 
+## Startet die Sitzung. Gleiche Rollen mehrfach (PE-07: im Start nicht erlaubt) entstehen danach durch Spielleiterkorrekturen.
 static func session(roles: Array, seed_value: int = 7, appearances: Dictionary = {}) -> GameSession:
 	var s := GameSession.new()
-	var r := s.submit(start(roles, seed_value, appearances))
-	assert(r.ok)
+	for c: Command in Fixtures.start_with_copies(roles, seed_value, appearances):
+		var r := s.submit(c)
+		assert(r.ok)
 	return s
 
 

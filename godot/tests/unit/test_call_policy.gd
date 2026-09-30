@@ -10,7 +10,9 @@ const D := "dorfbewohner"
 
 
 func _night_state(roles: Array) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 3), Command.start_night()] as Array[Command])
+	var commands := Fixtures.start_with_copies(roles, 3)
+	commands.append(Command.start_night())
+	var r := RulesEngine.replay(commands)
 	assert_true(r.ok, "Start und Nacht (%s)" % r.error)
 	return r.state if r.ok else null
 
@@ -28,7 +30,7 @@ func _begin(s: GameState) -> GameState:
 
 
 func test_non_revival_round_calls_living_roles_only() -> void:
-	var s := _night_state([W, W, "schutzengel", "waldhexe", "das-orakel", D])
+	var s := _night_state([W, "blutwolf", "schutzengel", "waldhexe", "das-orakel", D])
 	var called := CallPolicy.called_roles(s)
 	for role: StringName in [&"schutzengel", &"waldhexe", &"das-orakel"]:
 		assert_true(called.has(role), "%s wird aufgerufen" % role)
@@ -40,15 +42,16 @@ func test_non_revival_round_calls_living_roles_only() -> void:
 	assert_true(CallPolicy.called_roles(killed).has(&"waldhexe"), "lebende Rolle bleibt")
 
 
+## Zwei Personen mit derselben Rolle entstehen im Spiel (Korrektur, Verwandlung, Erbe), nicht im Start (PE-07).
 func test_second_holder_keeps_the_role_called() -> void:
-	var s := _night_state([W, W, "schutzengel", "schutzengel", "das-orakel", D])
+	var s := _night_state([W, "blutwolf", "schutzengel", "schutzengel", "das-orakel", D])
 	s.players[3].alive = false
 	s.players[3].death = KillEvent.new()
 	assert_true(CallPolicy.called_roles(s).has(&"schutzengel"), "solange eine Person die Rolle lebend hält")
 
 
 func test_revival_round_keeps_calling_dead_roles() -> void:
-	var s := _night_state([W, W, "schutzengel", "kutscher", "das-orakel", D])
+	var s := _night_state([W, "blutwolf", "schutzengel", "kutscher", "das-orakel", D])
 	assert_true(s.revival_round, "Wiederbelebungsrunde")
 	s.players[3].alive = false
 	s.players[3].death = KillEvent.new()
@@ -57,7 +60,7 @@ func test_revival_round_keeps_calling_dead_roles() -> void:
 
 
 func test_used_up_role_is_announced_at_its_place_without_a_step() -> void:
-	var fresh := RulesEngine.replay([Fixtures.start_roles([W, W, "schutzengel", "waldhexe", "das-orakel", D], 3)] as Array[Command]).state
+	var fresh := RulesEngine.replay([Fixtures.start_roles([W, "blutwolf", "schutzengel", "waldhexe", "das-orakel", D], 3)] as Array[Command]).state
 	fresh.players[4].ability_uses["waldhexe:heal"] = 1
 	fresh.players[4].ability_uses["waldhexe:poison"] = 1
 	var running := _ok(fresh, Command.start_night(), "Nacht")
@@ -84,14 +87,14 @@ func test_dropped_step_is_still_announced() -> void:
 
 
 func test_trailing_calls_before_end_of_night() -> void:
-	var s := _night_state([W, W, "kutscher", D, D, D])
+	var s := _night_state([W, "blutwolf", "kutscher", D, "amalia", "detektiv"])
 	s = _answer(s, [])
 	assert_eq(RulesEngine.next_step_id(s), "", "kein Schritt mehr")
 	assert_eq(CallPolicy.decoy_calls(s), [&"kutscher"] as Array[StringName], "Rolle nach dem letzten Schritt wird angesagt")
 
 
 func test_group_roles_and_first_night_roles_are_called_after_their_night() -> void:
-	var s := _night_state(["werwolf", "die-gebundenen", "die-gebundenen", "dorfchronistin", D, D])
+	var s := _night_state(["werwolf", "die-gebundenen", "die-gebundenen", "dorfchronistin", D, "amalia"])
 	var guard := 0
 	while guard < 30 and s != null and (s.pending_prompt != null or RulesEngine.next_step_id(s) != ""):
 		guard += 1
@@ -120,7 +123,7 @@ func test_decoys_are_ordered_by_night_position() -> void:
 
 
 func test_calls_do_not_touch_state_or_randomness() -> void:
-	var s := _night_state([W, W, "schutzengel", "waldhexe", "das-orakel", "kutscher"])
+	var s := _night_state([W, "blutwolf", "schutzengel", "waldhexe", "das-orakel", "kutscher"])
 	var before := s.content_hash()
 	var rng_before := CanonicalJson.stringify(s.rng.to_dict())
 	for i: int in 5:
@@ -131,7 +134,7 @@ func test_calls_do_not_touch_state_or_randomness() -> void:
 
 
 func test_same_state_gives_same_calls_after_replay_and_load() -> void:
-	var commands: Array[Command] = [Fixtures.start_roles([W, W, "schutzengel", "waldhexe", "das-orakel", "kutscher"], 3), Command.start_night()]
+	var commands: Array[Command] = [Fixtures.start_roles([W, "blutwolf", "schutzengel", "waldhexe", "das-orakel", "kutscher"], 3), Command.start_night()]
 	var first := RulesEngine.replay(commands)
 	var loaded := StateCodec.decode(StateCodec.encode(first.state, commands))
 	assert_true(loaded.ok, "Laden")

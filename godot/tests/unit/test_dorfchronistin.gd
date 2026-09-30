@@ -24,7 +24,7 @@ func _run(commands: Array[Command], label: String) -> ReplayResult:
 
 ## 1 Werwolf; 2 Chronistin; 3, 4 Manipulator; 5 Doppelspion; 6 Selbstmörder; 7, 8 Dorfbewohner → 4 Einzelsiegpersonen.
 func _roles() -> Array:
-	return ["werwolf", DC, "manipulator", "manipulator", "doppelspion", "selbstmoerder", "dorfbewohner", "dorfbewohner"]
+	return ["werwolf", DC, "manipulator", "manipulator", "doppelspion", "selbstmoerder", "dorfbewohner", "amalia"]
 
 
 func test_production_role() -> void:
@@ -33,7 +33,7 @@ func test_production_role() -> void:
 	assert_eq(RoleCatalog.faction_of(role), Faction.VILLAGE, "Dorf")
 	assert_false(RoleCatalog.counts_as_wolf(role), "kein Wolf")
 	assert_eq(RoleCatalog.night_priority(role), 3, "Priorität 0.3")
-	var run := _run([_start(["werwolf", DC, "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start")
+	var run := _run(Fixtures.with_copies(["werwolf", DC, "wolfskind", "dorfbewohner", "amalia", "detektiv"], [Command.start_night()] as Array[Command]) as Array[Command], "Start")
 	if not run.ok:
 		return
 	assert_eq(run.state.night_plan, [&"dorfchronistin:2", &"wolfskind:3", &"pack"] as Array[StringName], "zuerst die Chronistin")
@@ -44,8 +44,8 @@ func test_production_role() -> void:
 
 func test_counts_solo_persons_including_dead() -> void:
 	# Manipulator 3 stirbt vor dem Schritt: gezählt werden weiter 4 Personen (lebend und tot).
-	var cmds: Array[Command] = [_start(_roles()), Command.start_night(), _gm("kill", {"target_id": 3, "trigger_effects": false}),
-		Command.begin_step("night:1:0:dorfchronistin:2")]
+	var cmds: Array[Command] = Fixtures.with_copies(_roles(), [Command.start_night(), _gm("kill", {"target_id": 3, "trigger_effects": false}),
+		Command.begin_step("night:1:0:dorfchronistin:2")] as Array[Command])
 	var run := _run(cmds, "Schritt")
 	if not run.ok:
 		return
@@ -64,16 +64,16 @@ func test_counts_solo_persons_including_dead() -> void:
 
 
 func test_only_first_night() -> void:
-	var cmds: Array[Command] = [_start(_roles()), Command.start_night(), Command.answer_choice(1, "shown", true),
-		Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), Command.decide_execution(-1), Command.end_day(), Command.start_night()]
+	var cmds: Array[Command] = Fixtures.with_copies(_roles(), [Command.start_night(), Command.answer_choice(1, "shown", true),
+		Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), Command.decide_execution(-1), Command.end_day(), Command.start_night()] as Array[Command])
 	var run := _run(cmds, "Nacht 2")
 	if run.ok:
 		assert_false(run.state.night_plan.has(&"dorfchronistin:2"), "kein Schritt in Nacht 2 (RM-DR-014 = B)")
 
 
 func test_two_chroniclers_each_informed() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", DC, "manipulator", DC, "dorfbewohner", "dorfbewohner"]), Command.start_night(),
-		Command.answer_choice(1, "shown", true), Command.begin_step("night:1:1:dorfchronistin:4"), Command.answer_choice(2, "shown", true)]
+	var cmds: Array[Command] = Fixtures.with_copies(["werwolf", DC, "manipulator", DC, "dorfbewohner", "amalia"], [Command.start_night(),
+		Command.answer_choice(1, "shown", true), Command.begin_step("night:1:1:dorfchronistin:4"), Command.answer_choice(2, "shown", true)] as Array[Command])
 	var run := _run(cmds, "zwei")
 	if not run.ok:
 		return
@@ -84,7 +84,7 @@ func test_two_chroniclers_each_informed() -> void:
 
 
 func test_dead_chronicler_step_dropped() -> void:
-	var cmds: Array[Command] = [_start(_roles()), Command.start_night(), _gm("kill", {"target_id": 2, "trigger_effects": false})]
+	var cmds: Array[Command] = Fixtures.with_copies(_roles(), [Command.start_night(), _gm("kill", {"target_id": 2, "trigger_effects": false})] as Array[Command])
 	var run := _run(cmds, "tot")
 	if not run.ok:
 		return
@@ -94,7 +94,7 @@ func test_dead_chronicler_step_dropped() -> void:
 
 func test_cancel_and_role_correction_recount() -> void:
 	# Abbruch öffnet neu mit gleicher Zahl; eine Rollenkorrektur vor dem Schritt ändert die Zahl.
-	var cmds: Array[Command] = [_start(_roles()), Command.start_night(), Command.cancel_prompt(1, "später"), Command.begin_step("night:1:0:dorfchronistin:2")]
+	var cmds: Array[Command] = Fixtures.with_copies(_roles(), [Command.start_night(), Command.cancel_prompt(1, "später"), Command.begin_step("night:1:0:dorfchronistin:2")] as Array[Command])
 	var run := _run(cmds, "Abbruch")
 	if not run.ok:
 		return
@@ -106,7 +106,7 @@ func test_cancel_and_role_correction_recount() -> void:
 
 
 func test_invalid_answers_and_corrupt_prompt() -> void:
-	var s := _run([_start(_roles()), Command.start_night()] as Array[Command], "Start").state
+	var s := _run(Fixtures.with_copies(_roles(), [Command.start_night()] as Array[Command]) as Array[Command], "Start").state
 	if s == null:
 		return
 	apply_rejected(s, Command.answer_choice(1, "shown", false), "invalid_answer", "nur Ja")
@@ -118,7 +118,7 @@ func test_invalid_answers_and_corrupt_prompt() -> void:
 
 
 func test_no_leak() -> void:
-	var run := _run([_start(_roles()), Command.start_night(), Command.answer_choice(1, "shown", true)] as Array[Command], "Partie")
+	var run := _run(Fixtures.with_copies(_roles(), [Command.start_night(), Command.answer_choice(1, "shown", true)] as Array[Command]) as Array[Command], "Partie")
 	if run.ok:
 		for e: GameEvent in run.events:
 			if e.visibility == Visibility.PUBLIC:

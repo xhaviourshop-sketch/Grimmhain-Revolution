@@ -17,7 +17,7 @@ const SE := "schutzengel"
 
 
 func _state(roles: Array) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	return r.state if r.ok else null
 
@@ -128,7 +128,7 @@ func test_catalog_entry() -> void:
 
 
 func test_step_targets_keep_and_replace() -> void:
-	var s := _state([W, FT, D, D, D, D])
+	var s := _state([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Feuerteufel") if s != null else null
@@ -162,7 +162,7 @@ func test_step_targets_keep_and_replace() -> void:
 # --- Brand ----------------------------------------------------------------------------------------
 
 func test_pack_death_of_target_burns_nearest_living_neighbours() -> void:
-	var s := _marked([W, FT, D, D, D, D, D, D], 2, 5)
+	var s := _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], 2, 5)
 	if s == null:
 		return
 	s = _ok(s, _gm("kill", {"target_id": 6, "trigger_effects": false}), "Platz 6 bereits tot")
@@ -180,16 +180,16 @@ func test_pack_death_of_target_burns_nearest_living_neighbours() -> void:
 
 func test_every_real_death_triggers_but_not_correction_without_effects() -> void:
 	# Hinrichtung.
-	var s := _marked([W, FT, D, D, D, D, D], 2, 5)
+	var s := _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	s = _ok(s, Command.nominate(3, 5), "Nominierung")
 	var r := apply_ok(s, Command.decide_execution(5), "Hinrichtung des Ziels") if s != null else null
 	assert_eq(_burned(r.events) if r != null else [], [6, 4] as Array[int], "Brand bei Hinrichtung")
 	# Korrektur mit Todesfolgen.
-	s = _marked([W, FT, D, D, D, D, D], 2, 5)
+	s = _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Korrektur mit Folgen") if s != null else null
 	assert_eq(_burned(r.events) if r != null else [], [6, 4] as Array[int], "Brand bei Korrektur mit Folgen")
 	# Korrektur ohne Todesfolgen: kein Brand, Markierung trotzdem beendet (Ziel tot).
-	s = _marked([W, FT, D, D, D, D, D], 2, 5)
+	s = _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": false}), "Korrektur ohne Folgen") if s != null else null
 	if r == null:
 		return
@@ -202,7 +202,7 @@ func test_every_real_death_triggers_but_not_correction_without_effects() -> void
 
 func test_surviving_target_does_not_burn() -> void:
 	# Schutzengel schützt das Ziel vor dem Rudel: kein Tod, kein Brand, Markierung bleibt (Legacy-Fehler entfällt).
-	var s := _marked([W, FT, D, D, SE, D, D], 2, 4)
+	var s := _marked([W, FT, D, "amalia", SE, "detektiv", "wahnsinniger-kutscher"], 2, 4)
 	var r := _dawn(s, {"pack": [4], "schutzengel:5": [4]})
 	if r == null:
 		return
@@ -212,20 +212,20 @@ func test_surviving_target_does_not_burn() -> void:
 
 func test_fire_devils_are_spared_without_replacement() -> void:
 	# 3 und 5 sind Feuerteufel; 5 markiert 4, 4 stirbt → beide Nachbarn sind Feuerteufel, niemand brennt.
-	var s := _marked([W, D, FT, D, FT, D, D], 5, 4)
+	var s := _marked([W, D, FT, "amalia", FT, "detektiv", "wahnsinniger-kutscher"], 5, 4)
 	var r := apply_ok(s, _gm("kill", {"target_id": 4, "trigger_effects": true}), "Ziel stirbt") if s != null else null
 	if r == null:
 		return
 	assert_eq(_burned(r.events), [] as Array[int], "kein Ersatz hinter den Feuerteufeln")
 	assert_eq(_dead(r.state), [4] as Array[int], "nur das Ziel")
 	# Einseitig: Feuerteufel 3 markiert 2; Nachbarn 3 (verschont) und 1 (brennt).
-	s = _marked([W, D, FT, D, D, D], 3, 2)
+	s = _marked([W, D, FT, "amalia", "detektiv", "wahnsinniger-kutscher"], 3, 2)
 	r = apply_ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Ziel neben dem Feuerteufel") if s != null else null
 	assert_eq(_burned(r.events) if r != null else [], [1] as Array[int], "nur die andere Seite brennt")
 
 
 func test_two_devils_same_target_burn_once() -> void:
-	var r := _dawn(_state([W, FT, D, D, D, FT, D, D]), {"feuerteufel:2": [4], "feuerteufel:6": [4], "pack": []})
+	var r := _dawn(_state([W, FT, D, "amalia", "detektiv", FT, "wahnsinniger-kutscher", "waechter-am-tor"]), {"feuerteufel:2": [4], "feuerteufel:6": [4], "pack": []})
 	if r == null:
 		return
 	var s := r.state
@@ -239,7 +239,7 @@ func test_two_devils_same_target_burn_once() -> void:
 
 func test_burn_chain_through_marked_neighbour() -> void:
 	# 2 markiert 5, 7 markiert 6; 5 stirbt → 6 brennt → 6 war markiert → 8 (und 5 ist tot, also 4) brennen.
-	var r := _dawn(_state([W, FT, D, D, D, D, FT, D, D, D]), {"feuerteufel:2": [5], "feuerteufel:7": [6], "pack": []})
+	var r := _dawn(_state([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", FT, "waechter-am-tor", "der-weise", "nachtwaechter"]), {"feuerteufel:2": [5], "feuerteufel:7": [6], "pack": []})
 	if r == null:
 		return
 	r = apply_ok(r.state, _gm("kill", {"target_id": 5, "trigger_effects": true}), "5 stirbt")
@@ -256,11 +256,11 @@ func test_burn_chain_through_marked_neighbour() -> void:
 
 func test_protection_and_personal_shields_against_burn() -> void:
 	# Schutzengel schützt nur vor dem Rudel (RM-DR-004/005): der geschützte Nachbar verbrennt trotzdem.
-	var s := _marked([W, FT, D, D, SE, D, D], 2, 3)
+	var s := _marked([W, FT, D, "amalia", SE, "detektiv", "wahnsinniger-kutscher"], 2, 3)
 	var r := _dawn(s, {"pack": [3], "schutzengel:5": [4]})
 	assert_eq(_burned(r.events) if r != null else [], [4] as Array[int], "geschützter Nachbar 4 brennt; 2 ist Feuerteufel")
 	# Rudelvater überlebt einmal je Leben einen Tod, der weder Rudel noch Lynch noch Korrektur ist.
-	s = _marked([W, FT, D, "rudelvater", D, D, D], 2, 5)
+	s = _marked([W, FT, D, "rudelvater", "amalia", "detektiv", "wahnsinniger-kutscher"], 2, 5)
 	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
 	if r == null:
 		return
@@ -270,17 +270,17 @@ func test_protection_and_personal_shields_against_burn() -> void:
 
 func test_devil_death_or_role_loss_ends_mark() -> void:
 	# Tod des Feuerteufels (auch ohne Todesfolgen).
-	var s := _marked([W, FT, D, D, D, D, D], 2, 5)
+	var s := _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": false}), "Feuerteufel tot")
 	assert_eq(_marks(s), [], "Markierung erlischt")
 	var r := apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt danach") if s != null else null
 	assert_eq(_burned(r.events) if r != null else [0], [] as Array[int], "kein Brand nach dem Tod des Feuerteufels")
 	# Rollenverlust per Korrektur.
-	s = _marked([W, FT, D, D, D, D, D], 2, 5)
+	s = _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	s = _ok(s, _gm("set_role", {"target_id": 2, "role_id": D}), "Rolle weg")
 	assert_eq(_marks(s), [], "Markierung erlischt bei Rollenverlust")
 	# Wiederbelebter Feuerteufel startet ohne Markierung.
-	s = _marked([W, FT, D, D, D, D, D], 2, 5)
+	s = _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 2, 5)
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Feuerteufel tot")
 	s = _ok(s, _gm("revive", {"target_id": 2}), "wiederbelebt")
 	assert_eq(_marks(s), [], "keine alte Markierung")
@@ -290,7 +290,7 @@ func test_devil_death_or_role_loss_ends_mark() -> void:
 
 func test_living_devil_co_wins_with_every_detected_win() -> void:
 	# Dorfsieg: letzter Wolf stirbt, Feuerteufel 2 lebt → Mitsieger.
-	var s := _state([W, FT, D, D, D, D])
+	var s := _state([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "letzter Wolf tot")
 	if s == null:
 		return
@@ -301,7 +301,7 @@ func test_living_devil_co_wins_with_every_detected_win() -> void:
 		assert_eq(open[0].co_winner_ids, [2] as Array[int], "Feuerteufel gewinnt mit")
 	_codec_same(s, "Kandidat mit Mitsieger")
 	# Wolfssieg durch Parität: Feuerteufel zählt als Nicht-Wolf und gewinnt lebend mit.
-	s = _state([W, W, FT, D, D, D])
+	s = _state([W, "blutwolf", FT, D, "amalia", "detektiv"])
 	for id: int in [4, 5]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": true}), "Tod %d" % id)
 	if s == null:
@@ -309,7 +309,7 @@ func test_living_devil_co_wins_with_every_detected_win() -> void:
 	var wolves := s.open_candidates().filter(func(c: WinCandidate) -> bool: return c.reason_key == WinCandidate.REASON_WOLF_PARITY)
 	assert_true(wolves.size() == 1 and (wolves[0] as WinCandidate).co_winner_ids == ([3] as Array[int]), "Mitsieg beim Wolfssieg")
 	# Toter Feuerteufel gewinnt nicht mit.
-	s = _state([W, FT, D, D, D, D])
+	s = _state([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "Feuerteufel tot")
 	s = _ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "letzter Wolf tot")
 	if s == null:
@@ -319,7 +319,7 @@ func test_living_devil_co_wins_with_every_detected_win() -> void:
 
 func test_co_win_with_solo_win_and_two_devils() -> void:
 	# Einzelsieg des Manipulators bei genau drei Lebenden: beide lebenden Feuerteufel gewinnen mit.
-	var s := _state([W, "manipulator", FT, FT, D, D])
+	var s := _state([W, "manipulator", FT, FT, D, "amalia"])
 	for id: int in [5, 6, 1]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": true}), "Tod %d" % id)
 	if s == null:
@@ -334,7 +334,7 @@ func test_co_win_with_solo_win_and_two_devils() -> void:
 
 func test_no_solo_win_of_his_own() -> void:
 	# Feuerteufel allein mit einer Dorfperson und ohne Wolf: nur der Dorfsieg (mit ihm), kein eigener Sieg.
-	var s := _state([W, FT, D, D, D, D])
+	var s := _state([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	for id: int in [4, 5, 6, 1]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": true}), "Tod %d" % id)
 	if s == null:
@@ -345,7 +345,7 @@ func test_no_solo_win_of_his_own() -> void:
 # --- Laden und Replay -----------------------------------------------------------------------------
 
 func test_load_rejects_inconsistent_marks() -> void:
-	var s := _marked([W, FT, D, D, D, D], 2, 4)
+	var s := _marked([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher"], 2, 4)
 	if s == null:
 		return
 	for bad: Array in [[{"devil_id": 2, "target_id": 2}], [{"devil_id": 2, "target_id": 4}, {"devil_id": 2, "target_id": 5}], [{"devil_id": 9, "target_id": 4}]]:

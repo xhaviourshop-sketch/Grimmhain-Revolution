@@ -53,7 +53,7 @@ func _assert_no_role_names(text: String, label: String) -> void:
 # --- Loki -------------------------------------------------------------------------------------------
 
 func test_loki_cards_show_only_the_own_partner_and_are_confirmed_one_by_one() -> void:
-	var shell := await _cockpit([W, "loki", D, D, D, D, D])
+	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	var s := session_of(shell) as GameSession
@@ -89,7 +89,7 @@ func test_loki_cards_show_only_the_own_partner_and_are_confirmed_one_by_one() ->
 
 
 func test_loki_rivals_card_names_the_kind() -> void:
-	var s := UiGame.session([W, "loki", D, D, D, D, D])
+	var s := UiGame.session([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	assert_true(s.start_night().ok, "Nacht 1")
 	assert_true(s.answer_targets([4, 6]).ok and s.answer_choice(false).ok, "Rivalen")
 	var next := UiGame.next_of(s)
@@ -98,7 +98,7 @@ func test_loki_rivals_card_names_the_kind() -> void:
 
 
 func test_notice_survives_navigation_restart_and_undo() -> void:
-	var shell := await _cockpit([W, "loki", D, D, D, D, D])
+	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	var s := session_of(shell) as GameSession
@@ -122,7 +122,7 @@ func test_notice_survives_navigation_restart_and_undo() -> void:
 # --- Rattenfänger -----------------------------------------------------------------------------------
 
 func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
-	var shell := await _cockpit([W, "rattenfaenger", D, D, D, D, D])
+	var shell := await _cockpit([W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	var s := session_of(shell) as GameSession
@@ -147,7 +147,7 @@ func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
 # --- Pestbringerin ----------------------------------------------------------------------------------
 
 func test_plague_notice_at_night_and_after_the_spread_and_hidden_until_revealed() -> void:
-	var shell := await _cockpit([W, "pestbringerin", D, D, D, D, D, D])
+	var shell := await _cockpit([W, "pestbringerin", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	if shell == null:
 		return
 	var s := session_of(shell) as GameSession
@@ -180,7 +180,7 @@ func test_plague_notice_at_night_and_after_the_spread_and_hidden_until_revealed(
 # --- Rotkäppchen ------------------------------------------------------------------------------------
 
 func test_refuge_card_explains_apple_and_chain_and_hides_the_asker() -> void:
-	var shell := await _cockpit([W, "rotkaeppchen", D, D, D, D, D])
+	var shell := await _cockpit([W, "rotkaeppchen", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	var s := session_of(shell) as GameSession
@@ -205,7 +205,7 @@ func test_refuge_card_explains_apple_and_chain_and_hides_the_asker() -> void:
 
 
 func test_refuge_can_be_declined_without_effect() -> void:
-	var s := UiGame.session([W, "rotkaeppchen", D, D, D, D, D])
+	var s := UiGame.session([W, "rotkaeppchen", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	assert_true(s.start_night().ok, "Nacht 1")
 	assert_true(UiGame.run_until(s, func(n: Dictionary) -> bool: return str(n.get("kind")) == "prompt" and str(n.get("stage")) == "grant", {"rotkaeppchen/targets": [4]}), "Frage")
 	assert_true(s.answer_choice(false).ok, "Ablehnung")
@@ -219,7 +219,7 @@ func test_refuge_can_be_declined_without_effect() -> void:
 # --- Trugbilderwolf ---------------------------------------------------------------------------------
 
 func test_decoy_wolf_gets_no_card_and_public_view_shows_no_appearance() -> void:
-	var s := UiGame.session([W, "trugbilderwolf", "schutzengel", D, D, D, D], 7, {"2": "waldhexe"})
+	var s := UiGame.session([W, "trugbilderwolf", "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher"], 7, {"2": "waldhexe"})
 	assert_true(s.start_night().ok, "Nacht 1")
 	assert_true(UiGame.to_day(s), "Tag 1")
 	for e: Dictionary in s.event_log():

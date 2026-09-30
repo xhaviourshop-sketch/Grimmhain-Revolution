@@ -169,6 +169,16 @@ func issues(persons: int) -> Array[StringName]:
 	return out
 
 
+## Rollen, deren Anzahl die Höchstzahl der Startbesetzung übersteigt (PE-07), kanonisch sortiert. Nur bei einem ungültigen
+## Entwurf nicht leer; der Entwurf wird nie still gekürzt, die Namen stehen in der Fehlerliste.
+func over_limit(persons: int) -> Array[StringName]:
+	var out: Array[StringName] = []
+	for id: StringName in SetupRoleCatalog.role_ids():
+		if SetupRoleCatalog.has_role(id) and counts.get(id, 0) > SetupRoleCatalog.copy_limit(id, persons):
+			out.append(id)
+	return out
+
+
 func view(persons: int) -> Dictionary:
 	var string_counts := {}
 	var can_increase := {}
@@ -182,6 +192,9 @@ func view(persons: int) -> Dictionary:
 		can_increase[String(id)] = c < limit
 		can_decrease[String(id)] = c > 0
 	var found := issues(persons)
+	var over_names: Array[String] = []
+	for id: StringName in over_limit(persons):
+		over_names.append(String(id))
 	var issue_names: Array[String] = []
 	for issue: StringName in found:
 		issue_names.append(String(issue))
@@ -209,6 +222,7 @@ func view(persons: int) -> Dictionary:
 		"factions": s["factions"],
 		"wolf_count": s["wolf_count"],
 		"limits": limits,
+		"over_limit": over_names,
 		"can_increase": can_increase,
 		"can_decrease": can_decrease,
 		"is_empty": sum == 0,

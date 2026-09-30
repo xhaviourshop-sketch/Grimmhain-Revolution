@@ -76,10 +76,10 @@ func test_random_assignment_uses_seed() -> void:
 	for id: int in a.state.alive_ids():
 		roles_a.append(String(a.state.players[id].role_id))
 		roles_b.append(String(b.state.players[id].role_id))
-		if a.state.players[id].role_id == &"werwolf":
+		if a.state.players[id].counts_as_wolf:
 			wolf_count += 1
 	assert_eq(roles_a, roles_b, "gleiche Zuordnung bei gleichem Seed")
-	assert_eq(wolf_count, 2, "Rollenpool vollständig verteilt")
+	assert_eq(wolf_count, 2, "Rollenpool vollständig verteilt (2 Wolfsrollen: Werwolf, Blutwolf)")
 	assert_true(a.state.rng.draws > 0, "Ziehposition wird mitgezählt")
 
 

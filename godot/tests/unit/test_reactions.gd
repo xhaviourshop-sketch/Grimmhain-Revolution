@@ -65,9 +65,10 @@ func test_reaction_can_be_declined() -> void:
 
 
 func test_chained_reactions_in_fifo_order() -> void:
-	var start := Fixtures.start_roles(["werwolf", "werwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1)
-	var run := RulesEngine.replay([start, Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
-		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command])
+	# Der zweite Sensenträger entsteht nach dem Start durch Korrektur (PE-07).
+	var run := RulesEngine.replay(Fixtures.with_copies(["werwolf", "blutwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "amalia", "detektiv"],
+		[Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
+		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command], 1))
 	assert_true(run.ok, "Kette angenommen (%s @ %d)" % [run.error, run.failed_index])
 	if not run.ok:
 		return
@@ -81,10 +82,10 @@ func test_chained_reactions_in_fifo_order() -> void:
 
 func test_multiple_pending_reactions_keep_order() -> void:
 	# Zwei Tode während einer offenen Reaktion: stabile Reihenfolge nach Einreihung.
-	var start := Fixtures.start_roles(["werwolf", "werwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 1)
-	var run := RulesEngine.replay([start, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
+	var run := RulesEngine.replay(Fixtures.with_copies(["werwolf", "blutwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "amalia", "detektiv"],
+		[Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
 		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}),
-		CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command])
+		CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command], 1))
 	assert_true(run.ok, "Korrekturen angenommen (%s @ %d)" % [run.error, run.failed_index])
 	if not run.ok:
 		return

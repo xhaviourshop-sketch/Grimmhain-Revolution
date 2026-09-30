@@ -13,7 +13,7 @@ const FT := "feuerteufel"
 
 
 func _state(roles: Array, dead: Array = []) -> GameState:
-	var r := RulesEngine.replay([Fixtures.start_roles(roles, 1)] as Array[Command])
+	var r := RulesEngine.replay(Fixtures.start_with_copies(roles, 1))  # Kopien gleicher Rollen entstehen nach dem Start (PE-07)
 	assert_true(r.ok, "Start (%s)" % r.error)
 	var s := r.state if r.ok else null
 	for id: int in dead:
@@ -134,7 +134,7 @@ func _types(events: Array[GameEvent], wanted: Array) -> Array:
 
 func test_necro_redirect_to_priest_doll_burns_last_wolf_then_village_wins() -> void:
 	# Sitze 1–10: 1 Dorf, 2 Nekromant, 3 Priester, 4 Dorf, 5 Feuerteufel, 6 Dorf, 7 letzter Wolf, 8–10 tot.
-	var s := _state([D, NK, VP, D, FT, D, W, D, D, D], [8, 9, 10])
+	var s := _state([D, NK, VP, "amalia", FT, "detektiv", W, "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [8, 9, 10])
 	s = _dawn(s, {"voodoo-priester:3@": [6], "feuerteufel:5@": [6]})
 	var log: Array[GameEvent] = []
 	s = _night(s, {"pack@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [3]}, log)
@@ -165,7 +165,7 @@ func test_necro_redirect_to_priest_doll_burns_last_wolf_then_village_wins() -> v
 
 func test_shield_before_shadow_link_and_after_personal_shield() -> void:
 	# Schattenwanderer 3 verknüpft sich mit 5; Schild aktiv; das Rudel greift 5 an → Schild verhindert, Verknüpfung bleibt.
-	var s := _state([W, NK, "schattenwanderer", D, D, D, D, D, D, D], [8, 9, 10])
+	var s := _state([W, NK, "schattenwanderer", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise", "nachtwaechter", "ritter"], [8, 9, 10])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"schattenwanderer:3@": [5], "nekromant:2@targets": [8, 9, 10], "pack@": [5]}, log)
 	if s == null:
@@ -174,7 +174,7 @@ func test_shield_before_shadow_link_and_after_personal_shield() -> void:
 	assert_eq(_shield_saves(log), [5] as Array[int], "Schild vor der Verknüpfung")
 	assert_eq(s.shadow_links.size(), 1, "Verknüpfung ungenutzt")
 	# Rudelvater (persönlicher Schild) wird vom Brand getroffen: er überlebt selbst, der Schild bleibt für den nächsten Tod.
-	s = _state([W, NK, D, "rudelvater", FT, D, D, D, D, D], [8, 9, 10])
+	s = _state([W, NK, D, "rudelvater", FT, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [8, 9, 10])
 	s = _dawn(s, {"feuerteufel:5@": [3], "nekromant:2@targets": [8, 9, 10]})
 	if s == null:
 		return
@@ -187,7 +187,7 @@ func test_shield_before_shadow_link_and_after_personal_shield() -> void:
 # --- Feuerteufel-Regressionen ------------------------------------------------------------------------
 
 func test_fire_devil_apple_doubles_step_one_mark_remains() -> void:
-	var s := _dawn(_state([W, FT, D, D, D, D, D]), {"feuerteufel:2@": [4]})
+	var s := _dawn(_state([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"feuerteufel:2@": [4]})
 	if s == null:
 		return
 	s.apples[2] = 2  # Apfel für Nacht 2 (R-02, R-03)
@@ -207,7 +207,7 @@ func test_fire_devil_inherited_by_apprentice_starts_without_mark() -> void:
 	var candidates := func(p: PendingPrompt) -> Command: return Command.answer_stage_targets(p.id, "candidates", [2, 4, 5])
 	var option := func(p: PendingPrompt) -> Command: return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "option", "option": (p.partial["options"] as Array).find(FT)})
 	var confirm := func(p: PendingPrompt) -> Command: return Command.answer_choice(p.id, "confirm", true)
-	var s := _dawn(_state([W, FT, "lehrling", D, D, D, D, D]), {"lehrling:3@candidates": candidates, "lehrling:3@option": option, "lehrling:3@confirm": confirm, "feuerteufel:2@": [6]})
+	var s := _dawn(_state([W, FT, "lehrling", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]), {"lehrling:3@candidates": candidates, "lehrling:3@option": option, "lehrling:3@confirm": confirm, "feuerteufel:2@": [6]})
 	if s == null:
 		return
 	assert_eq(s.fire_marks, [{"devil_id": 2, "target_id": 6}], "Meister hat markiert")
@@ -225,7 +225,7 @@ func test_fire_devil_inherited_by_apprentice_starts_without_mark() -> void:
 
 func test_fire_devil_soul_swap_removes_mark() -> void:
 	# Feuerteufel 2 (76) markiert 5, danach tauscht der Seelentauscher 3 (80) die Rollen von 2 und 4.
-	var s := _dawn(_state([W, FT, "seelentauscher", D, D, D, D, D]), {"feuerteufel:2@": [5], "seelentauscher:3@targets": [2, 4]})
+	var s := _dawn(_state([W, FT, "seelentauscher", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]), {"feuerteufel:2@": [5], "seelentauscher:3@targets": [2, 4]})
 	if s == null:
 		return
 	assert_eq(String(s.players[4].role_id), FT, "4 ist jetzt Feuerteufel")
@@ -236,18 +236,18 @@ func test_fire_devil_soul_swap_removes_mark() -> void:
 
 func test_burn_hits_martyr_shadow_walker_link_and_eternal() -> void:
 	# Märtyrerin 4 neben dem Ziel 5 verbrennt.
-	var s := _dawn(_state([W, FT, D, "maertyrerin", D, D, D, D]), {"feuerteufel:2@": [5]})
+	var s := _dawn(_state([W, FT, D, "maertyrerin", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"feuerteufel:2@": [5]})
 	var r := apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
 	assert_eq(_deaths(r.events) if r != null else [], [[5, "GM_CORRECTION"], [6, "BURN"], [4, "BURN"]], "Märtyrerin verbrennt")
 	# Schattenwanderer 6 (verknüpft mit 4) neben dem Ziel 5: sein Brandtod trifft 4 (B-04), Quelle bleibt der Feuerteufel.
-	s = _dawn(_state([W, FT, D, D, D, "schattenwanderer", D, D]), {"schattenwanderer:6@": [4], "feuerteufel:2@": [5]})
+	s = _dawn(_state([W, FT, D, "amalia", "detektiv", "schattenwanderer", "wahnsinniger-kutscher", "der-weise"]), {"schattenwanderer:6@": [4], "feuerteufel:2@": [5]})
 	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
 	if r != null:
 		assert_eq(_deaths(r.events), [[5, "GM_CORRECTION"], [4, "BURN"]], "Umlenkung auf 4; 4 ist danach schon tot")
 		assert_eq(r.state.players[4].death.source_id, 2, "Quelle Feuerteufel")
 		assert_true(r.state.players[6].alive, "Schattenwanderer lebt")
 	# Die Ewigen 4 neben dem Ziel 5 verbrennen.
-	s = _dawn(_state([W, FT, D, "die-ewigen", D, D, D, D]), {"feuerteufel:2@": [5]})
+	s = _dawn(_state([W, FT, D, "die-ewigen", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"feuerteufel:2@": [5]})
 	r = apply_ok(s, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Ziel stirbt") if s != null else null
 	assert_eq(_deaths(r.events) if r != null else [], [[5, "GM_CORRECTION"], [6, "BURN"], [4, "BURN"]], "Ewige verbrennt")
 
@@ -257,7 +257,7 @@ func test_burn_hits_martyr_shadow_walker_link_and_eternal() -> void:
 func test_necro_redirects_packfather_extra_victim_piercing() -> void:
 	# Zusatzopfer des Rudelvaters (pack2) ist der Nekromant 2: er lenkt auf 6 um. Der Angriff bleibt durchdringend,
 	# der Schutzengel 5 auf 6 hilft nicht (RM-DR-005, RM-DR-112); ausgelöst wird der zweite Rudelschritt.
-	var s := _state([W, NK, D, D, SE, D, D, D, D, D], [8, 9, 10])
+	var s := _state([W, NK, D, "amalia", SE, "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [8, 9, 10])
 	if s == null:
 		return
 	s.pack_bonus_pending = true  # wie nach dem Lynch eines Rudelvaters
@@ -275,7 +275,7 @@ func test_necro_redirects_packfather_extra_victim_piercing() -> void:
 func test_necro_attacked_by_pack_and_packfather_redirects_first_only() -> void:
 	# Beide Rudelangriffe treffen den Nekromanten: er entscheidet einmal (sein Schritt), für den ersten Angriff, der ihn
 	# töten würde (Rudel); das Zusatzopfer trifft ihn danach und tötet ihn.
-	var s := _state([W, NK, D, D, D, D, D, D, D, D], [8, 9, 10])
+	var s := _state([W, NK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter", "ritter"], [8, 9, 10])
 	if s == null:
 		return
 	s.pack_bonus_pending = true
@@ -290,7 +290,7 @@ func test_doom_warden_judges_necro_who_redirects_back_to_original_victim() -> vo
 	# Vollständiger Ablauf: Rudel wählt 4; der Verdammniswächter 3 (23) erhält das einzige mögliche Angebot, den
 	# Nekromanten 2, und wählt ihn; der Nekromant (30) würde sterben und lenkt auf 4 um. Das Urteil bestimmt das
 	# Rudelopfer und ist kein Kettenglied (E-20 nennt Puppe, Schattenwanderer, Nekromant): 4 darf Ziel sein.
-	var s := _state([W, NK, "verdammniswaechter", D, D, D, D, D, D, D], [5, 6, 7, 8, 9, 10])
+	var s := _state([W, NK, "verdammniswaechter", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise", "nachtwaechter"], [5, 6, 7, 8, 9, 10])
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [4], "verdammniswaechter:3@": [2], "nekromant:2@targets": [5, 6, 7], "nekromant:2@redirect": [4]}, log)
 	if s == null:
@@ -305,7 +305,7 @@ func test_doom_warden_judges_necro_who_redirects_back_to_original_victim() -> vo
 
 func test_necro_redirect_through_two_priests_to_second_doll() -> void:
 	# Priester 3 hat Priester 4 als Puppe, 4 hat 5. Rudel → Nekromant 2 → 3 → 4 → 5: 5 stirbt, beide Puppen verbraucht.
-	var s := _dawn(_state([W, NK, VP, VP, D, D, D, D, D, D], [8, 9, 10]), {"voodoo-priester:3@": [4], "voodoo-priester:4@": [5]})
+	var s := _dawn(_state([W, NK, VP, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [8, 9, 10]), {"voodoo-priester:3@": [4], "voodoo-priester:4@": [5]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [3]}, log)
 	if s == null:
@@ -320,7 +320,7 @@ func test_necro_redirect_through_two_priests_to_second_doll() -> void:
 
 func test_necro_redirect_through_two_priests_never_returns_to_necro() -> void:
 	# Priester 4 hat den Nekromanten 2 als Puppe: Kette 2 → 3 → 4, 2 ist schon betroffen (E-20) → 4 stirbt.
-	var s := _dawn(_state([W, NK, VP, VP, D, D, D, D, D, D], [8, 9, 10]), {"voodoo-priester:3@": [4], "voodoo-priester:4@": [2]})
+	var s := _dawn(_state([W, NK, VP, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [8, 9, 10]), {"voodoo-priester:3@": [4], "voodoo-priester:4@": [2]})
 	var log: Array[GameEvent] = []
 	s = _dawn(s, {"pack@": [2], "nekromant:2@targets": [8, 9, 10], "nekromant:2@redirect": [3]}, log)
 	if s == null:

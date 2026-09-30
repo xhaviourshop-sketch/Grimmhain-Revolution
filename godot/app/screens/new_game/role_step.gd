@@ -35,6 +35,8 @@ var _last_view: Dictionary = {}
 	String(RolePoolDraft.HINT_COACH_SMALL_ROUND): %CoachHintLabel,
 	String(RolePoolDraft.HINT_SIMULTANEOUS_SOLO_WINS): %SoloWinsHintLabel,
 }
+## PE-07: Rollen über der Höchstzahl der Startbesetzung stehen namentlich im scrollbaren Listenkopf, nicht in der Seitenspalte.
+@onready var _over_limit: GrimmLabel = %OverLimitLabel
 @onready var _scroll: ScrollContainer = %RoleScroll
 @onready var _list: VBoxContainer = %RoleList
 @onready var _back: GrimmButton = %BackToPlayersButton
@@ -148,6 +150,12 @@ func _render_issues(roles: Dictionary) -> void:
 	for issue: Variant in roles["issues"]:
 		if str(issue) != "too_few_roles" and str(issue) != "too_many_roles":
 			names.append(tr("ui.setup.roles.issue.%s" % str(issue)))
+	var over: Array[String] = []
+	for role: Variant in roles.get("over_limit", []):
+		over.append(tr(RolePresentation.name_key(StringName(str(role)))))
+	_over_limit.visible = not over.is_empty()
+	_over_limit.format_values = {"roles": ", ".join(over)}
+	_over_limit.text_key = "ui.setup.roles.over_limit" if not over.is_empty() else ""
 	var show_issues := not names.is_empty() and not bool(roles["is_empty"])
 	_issues.visible = show_issues
 	_issues.format_values = {"issues": ", ".join(names)}

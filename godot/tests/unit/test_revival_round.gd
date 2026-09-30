@@ -10,7 +10,7 @@ func _roles_start(roles: Array) -> Command:
 	return Fixtures.start_roles(roles)
 
 
-const PLAIN := ["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const PLAIN := ["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 
 
 func test_plain_game_is_no_revival_round() -> void:
@@ -38,7 +38,7 @@ func test_indirect_carriers_do_not_trigger_the_mode() -> void:
 
 
 func test_random_assignment_derives_from_the_dealt_roles() -> void:
-	var pool: Array = ["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "kutscher"]
+	var pool: Array = ["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "kutscher"]
 	var command := Command.start_game({"round_id": "test-round", "seed": 7, "assignment": "random", "players": Fixtures.players(6),
 		"seat_order": Fixtures.identity_order(6), "role_pool": pool})
 	var r := apply_ok(GameState.new(), command, "Zufallsverteilung mit Kutscher")

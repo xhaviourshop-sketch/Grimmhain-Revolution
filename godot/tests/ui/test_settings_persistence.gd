@@ -4,7 +4,7 @@ extends UiTestCase
 ## falsche Erfolgsmeldung. Jeder Test nutzt ein eigenes temporäres Verzeichnis, nie die echte Einstellungsdatei.
 
 const STORE_SCRIPT := "res://app/settings/settings_store.gd"
-const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "amalia", "detektiv"]
 
 
 func _store_path() -> String:

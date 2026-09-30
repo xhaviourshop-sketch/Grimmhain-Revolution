@@ -11,6 +11,14 @@ func _start(roles: Array, appearances: Dictionary = {}) -> Command:
 	return Command.start_game(payload)
 
 
+## Startet mit `roles`; gleiche Rollen mehrfach (PE-07) entstehen nach dem Start durch Korrektur. Wendet alle Befehle an.
+func _do_start(roles: Array, log: Array[Command], events: Array[GameEvent], appearances: Dictionary = {}) -> GameState:
+	var s := GameState.new()
+	for c: Command in Fixtures.start_with_copies(roles, 1, appearances):
+		s = _do(s, c, log, events, "Start")
+	return s
+
+
 func _gm(kind: String, fields: Dictionary) -> Command:
 	return CorrectionFixtures.gm(kind, fields, "Interaktionstest")
 
@@ -82,7 +90,7 @@ func test_one_death_transforms_inherits_and_reacts_in_order() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1, 2 Werwolf; 3 Sensenträger (Vorbild und Meister); 4 Wolfskind; 5 Lehrling; 6 Dorfbewohner
-	var s := _do(GameState.new(), _start(["werwolf", "werwolf", "sensentraeger", "wolfskind", "lehrling", "dorfbewohner"]), log, ev, "Start")
+	var s := _do(GameState.new(), _start(["werwolf", "blutwolf", "sensentraeger", "wolfskind", "lehrling", "dorfbewohner"]), log, ev, "Start")
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	assert_eq(String(s.pending_prompt.step_id), "night:1:0:wolfskind:4", "Wolfskind zuerst")
 	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [3]), log, ev, "Vorbild 3")
@@ -132,7 +140,7 @@ func test_mirror_death_triggers_child_and_apprentice_of_nominator_only() -> void
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1 Spiegelwolf; 2 Werwolf; 3 Dorfbewohner (nominiert); 4 Wolfskind → 3; 5 Lehrling → 3; 6 Wolfskind → 1; 7, 8 Dorfbewohner
-	var s := _do(GameState.new(), _start(["spiegelwolf", "werwolf", "dorfbewohner", "wolfskind", "lehrling", "wolfskind", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	var s := _do_start(["spiegelwolf", "werwolf", "dorfbewohner", "wolfskind", "lehrling", "wolfskind", "amalia", "detektiv"], log, ev)
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [3]), log, ev, "Wolfskind 4 → 3")
 	s = _begin(s, log, ev)
@@ -167,7 +175,7 @@ func test_nominated_manipulator_passes_role_to_unnominated_apprentice() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1, 2 Werwolf; 3 Manipulator; 4 Wolfskind → 3; 5 Lehrling → 3; 6, 7, 8 Dorfbewohner
-	var s := _do(GameState.new(), _start(["werwolf", "werwolf", "manipulator", "wolfskind", "lehrling", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	var s := _do(GameState.new(), _start(["werwolf", "blutwolf", "manipulator", "wolfskind", "lehrling", "dorfbewohner", "amalia", "detektiv"]), log, ev, "Start")
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [3]), log, ev, "Wolfskind → 3")
 	s = _begin(s, log, ev)
@@ -207,7 +215,7 @@ func test_protected_model_poisoned_transforms_once_at_dawn() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1, 2 Werwolf; 3 Schutzengel; 4 Waldhexe; 5 Wolfskind → 6; 6, 7, 8 Dorfbewohner
-	var s := _do(GameState.new(), _start(["werwolf", "werwolf", "schutzengel", "waldhexe", "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	var s := _do(GameState.new(), _start(["werwolf", "blutwolf", "schutzengel", "waldhexe", "wolfskind", "dorfbewohner", "amalia", "detektiv"]), log, ev, "Start")
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [6]), log, ev, "Wolfskind → 6")
 	s = _begin(s, log, ev)
@@ -248,7 +256,7 @@ func test_24_players_multiple_copies_night_plan_and_save_load() -> void:
 		"lehrling", "wolfskind", "sensentraeger", "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
-	var s := _do(GameState.new(), _start(roles, {"10": "das-orakel"}), log, ev, "Start")
+	var s := _do_start(roles, log, ev, {"10": "das-orakel"})
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	if s == null:
 		return
@@ -333,7 +341,7 @@ func test_pack_step_dropped_when_last_wolf_died_during_night() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1 Werwolf; 2 Schutzengel; 3–6 Dorfbewohner
-	var s := _do(GameState.new(), _start(["werwolf", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	var s := _do(GameState.new(), _start(["werwolf", "schutzengel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), log, ev, "Start")
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	s = _do(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), log, ev, "letzter Wolf stirbt per Korrektur")
 	if s == null:
@@ -364,7 +372,7 @@ func test_poisoned_person_loses_later_step_pack_victim_keeps_it() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1, 2 Werwolf; 3 Waldhexe; 4 Orakel (vergiftet); 5 Orakel (Rudelopfer); 6–8 Dorfbewohner
-	var s := _do(GameState.new(), _start(["werwolf", "werwolf", "waldhexe", "das-orakel", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	var s := _do_start(["werwolf", "blutwolf", "waldhexe", "das-orakel", "das-orakel", "dorfbewohner", "amalia", "detektiv"], log, ev)
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [5]), log, ev, "Rudel auf Orakel 5")
 	s = _begin(s, log, ev)
@@ -403,7 +411,7 @@ func test_poisoned_person_loses_later_step_pack_victim_keeps_it() -> void:
 func test_poison_mark_survives_witch_death() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
-	var s := _do(GameState.new(), _start(["werwolf", "werwolf", "waldhexe", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	var s := _do(GameState.new(), _start(["werwolf", "blutwolf", "waldhexe", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), log, ev, "Start")
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	s = _do(s, Command.skip_step(RulesEngine.next_step_id(s), "kein Opfer"), log, ev, "Rudel ohne Opfer")
 	s = _begin(s, log, ev)
@@ -425,7 +433,7 @@ func test_pack_dropped_when_only_newly_transformed_wolf_lives() -> void:
 	var log: Array[Command] = []
 	var ev: Array[GameEvent] = []
 	# 1 Werwolf; 2 Wolfskind → 3; 3–7 Dorfbewohner. Nacht 2: Korrektur tötet 1 und 3 vor dem Rudel.
-	var s := _do(GameState.new(), _start(["werwolf", "wolfskind", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), log, ev, "Start")
+	var s := _do(GameState.new(), _start(["werwolf", "wolfskind", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]), log, ev, "Start")
 	s = _do(s, Command.start_night(), log, ev, "Nacht 1")
 	s = _do(s, Command.answer_prompt(s.pending_prompt.id, [3]), log, ev, "Vorbild 3")
 	s = _do(s, Command.skip_step(RulesEngine.next_step_id(s), "kein Opfer"), log, ev, "Rudel ohne Opfer")
@@ -461,7 +469,7 @@ func test_pack_dropped_when_only_newly_transformed_wolf_lives() -> void:
 ## Todesreaktion); Nominierungsstatus bleibt.
 func test_revive_resets_all_limited_abilities() -> void:
 	# 1 Werwolf; 2 Waldhexe; 3 Spiegelwolf; 4 Sensenträger; 5–8 Dorfbewohner.
-	var s := _do(GameState.new(), _start(["werwolf", "waldhexe", "spiegelwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), [], [], "Start")
+	var s := _do(GameState.new(), _start(["werwolf", "waldhexe", "spiegelwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), [], [], "Start")
 	for c: Command in [_gm("set_witch_potion", {"witch_id": 2, "potion": "heal", "available": false}),
 			_gm("set_witch_potion", {"witch_id": 2, "potion": "poison", "available": false}),
 			_gm("set_mirror", {"target_id": 3, "available": false}), _gm("set_ever_nominated", {"target_id": 4, "value": true})]:
@@ -494,7 +502,7 @@ func test_revive_resets_all_limited_abilities() -> void:
 ## (Decision Log: „Ein … Schritt ohne mögliche Entscheidung entfällt ebenso“), statt die Nacht zu blockieren.
 func test_guard_and_wolf_child_without_other_living_are_dropped() -> void:
 	for role: String in ["schutzengel", "wolfskind"]:
-		var s := _do(GameState.new(), _start(["werwolf", role, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), [], [], "Start")
+		var s := _do(GameState.new(), _start(["werwolf", role, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), [], [], "Start")
 		for id: int in [1, 3, 4, 5, 6]:
 			s = apply_ok(s, _gm("kill", {"target_id": id, "trigger_effects": false}), "%s: Tod %d" % [role, id]).state
 			if not s.open_candidates().is_empty():
@@ -548,7 +556,7 @@ func _session_roundtrip(s: GameSession, label: String) -> void:
 ## Umlenkung gegen Immunität: E-12/E-20 (die Puppe stirbt statt des Priesters, mit ursprünglicher Ursache) und RM-DR-119
 ## (Rudelangriff tötet die Dorfwache nicht). Erwartet: Umlenkung auf die Puppe, dort Immunität, niemand stirbt.
 func test_p3_voodoo_doll_is_guard_nobody_dies() -> void:
-	var s := _session(["voodoo-priester", "werwolf", "dorfwache", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _session(["voodoo-priester", "werwolf", "dorfwache", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	if not _play_until(s, {"voodoo-priester/": [3], "pack/": [1]}, "end_night"):
 		return
 	_session_roundtrip(s, "vor der Morgenauflösung")
@@ -561,7 +569,7 @@ func test_p3_voodoo_doll_is_guard_nobody_dies() -> void:
 ## Mehrere Umlenkungen ohne Schleife: B-04/B-07 (Schattenwanderer lenkt einmal um), jede Person höchstens einmal in einer
 ## Umlenkungskette (wie E-21). Zwei Schattenwanderer, gegenseitig verknüpft: Der Tod geht genau einmal weiter.
 func test_p3_mutual_shadow_links_redirect_once_without_loop() -> void:
-	var s := _session(["werwolf", "schattenwanderer", "schattenwanderer", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _session(["werwolf", "schattenwanderer", "schattenwanderer", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"])
 	s.start_night()
 	for guard: int in 30:
 		var n := UiGame.next_of(s)
@@ -583,7 +591,7 @@ func test_p3_mutual_shadow_links_redirect_once_without_loop() -> void:
 ## Wirt und Puppe: RM-DR-157 (Parasit stirbt mit dem Wirt) und E-12 (Puppe stirbt statt des Priesters). Der Rudelangriff
 ## auf den Wirt (Priester) trifft die Puppe; Wirt und Parasit leben.
 func test_p3_parasite_host_protected_by_voodoo_doll() -> void:
-	var s := _session(["parasit", "voodoo-priester", "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _session(["parasit", "voodoo-priester", "dorfbewohner", "werwolf", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	if not _play_until(s, {"parasit/": [2], "voodoo-priester/": [3], "pack/": [2]}, "day"):
 		return
 	assert_eq(_died(s), [3], "Puppe stirbt")
@@ -594,7 +602,7 @@ func test_p3_parasite_host_protected_by_voodoo_doll() -> void:
 ## Konkurrierende Siege: DR-02 und Decision Log „Siegkandidaten“ (Kandidatenmenge ohne Priorität, Spielleiter bestätigt genau
 ## einen). Drei Lebende ohne Wolf: Dorf, Voodoo-Priester, Grabräuber und Parasit sind gleichzeitig Kandidaten.
 func test_p3_simultaneous_solo_wins_form_one_candidate_set() -> void:
-	var s := _session(["parasit", "voodoo-priester", "grabraeuber", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _session(["parasit", "voodoo-priester", "grabraeuber", "werwolf", "dorfbewohner", "amalia", "detektiv"])
 	if not _play_until(s, {"parasit/": [2]}, "end_night"):
 		return
 	for id: int in [5, 6, 7, 4]:
@@ -615,14 +623,14 @@ func test_p3_simultaneous_solo_wins_form_one_candidate_set() -> void:
 ## 29.09.2026 (Rolle beim Tod nur in Runden ohne Wiederbelebung). Öffentlich erscheint die wahre Rolle, nie die Scheinrolle;
 ## beim Grabräuber die eigene Rolle, nicht die gestohlene Fähigkeit.
 func test_p3_public_death_names_true_role_not_appearance_or_stolen_ability() -> void:
-	var s := _session(["trugbilderwolf", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], {"1": "das-orakel"})
+	var s := _session(["trugbilderwolf", "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {"1": "das-orakel"})
 	if not _play_until(s, {}, "day"):
 		return
 	assert_true(s.nominate(3, 1).ok and s.decide_execution(1).ok, "Trugbilderwolf gehängt")
 	var deaths := s.day_deaths()
 	assert_eq(str((deaths[0] as Dictionary)["role_id"]), "trugbilderwolf", "wahre Rolle")
 	assert_false(JSON.stringify(deaths).contains("das-orakel"), "keine Scheinrolle")
-	var g := _session(["grabraeuber", "werwolf", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var g := _session(["grabraeuber", "werwolf", "das-orakel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	assert_true(g.gm_correction({"kind": "kill", "target_id": 3, "trigger_effects": false, "reason": "Szenario"}).ok, "Orakel tot")
 	if not _play_until(g, {"grabraeuber/targets": [3]}, "day"):
 		return
@@ -634,7 +642,7 @@ func test_p3_public_death_names_true_role_not_appearance_or_stolen_ability() -> 
 ## danach; öffentliche Effekte in dieser Reihenfolge (DA-23), Siegprüfung erst nach der Reaktion (DR-14). Speichern mit
 ## offener Reaktion setzt identisch fort.
 func test_p3_heartbreak_then_reaper_reaction_in_order_with_save_load() -> void:
-	var s := _session(["loki", "werwolf", "werwolf", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var s := _session(["loki", "werwolf", "blutwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	if not _play_until(s, {"loki/targets": [4, 5], "loki/mode": true, "pack/": [5]}, "end_night"):
 		return
 	assert_true(s.end_night().ok, "Morgen")
@@ -683,7 +691,7 @@ func test_p3_coach_revival_restores_one_shot_ability() -> void:
 ## frischen Rollen). Der Seelentauscher tauscht einen Trugbilderwolf mit einer Dorfperson: Die Scheinrolle geht mit der Rolle
 ## über; kein Hinweis an eine Person (actor) und kein öffentliches Ereignis nennt sie.
 func test_p3_soul_swap_moves_appearance_without_telling_anyone() -> void:
-	var s := _session(["seelentauscher", "trugbilderwolf", "dorfbewohner", "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner"], {"2": "das-orakel"})
+	var s := _session(["seelentauscher", "trugbilderwolf", "dorfbewohner", "werwolf", "amalia", "detektiv", "wahnsinniger-kutscher"], {"2": "das-orakel"})
 	if not _play_until(s, {"seelentauscher/targets": [2, 3]}, "end_night"):
 		return
 	var st := RulesEngine.replay(s.commands()).state

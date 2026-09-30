@@ -62,8 +62,9 @@ func _to_roles(shell: Control, count: int) -> Control:
 
 
 func _set_counts(shell: Control, counts: Dictionary) -> void:
-	for role: Variant in counts:
-		setup_of(shell).call("set_role_count", StringName(str(role)), int(counts[role]))
+	var legal := Fixtures.legal_counts(counts)  # PE-07: Füllplätze werden zu verschiedenen Füllrollen
+	for role: Variant in legal:
+		setup_of(shell).call("set_role_count", StringName(str(role)), int(legal[role]))
 	await frames(2)
 
 
@@ -190,48 +191,49 @@ func test_closing_secret_area_removes_focus_and_input() -> void:
 	assert_eq((_view(shell)["roles"]["decoys"] as Array).size(), 1, "Navigation verliert nichts")
 
 
-func test_two_copies_and_removing_a_configured_copy() -> void:
+## Seit PE-07 gibt es beim Start höchstens einen Trugbilderwolf; das Entfernen einer konfigurierten Kopie fragt weiter nach.
+func test_removing_a_configured_copy_asks_first() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
 	var screen := await _to_roles(shell, 10)
-	await _set_counts(shell, {"trugbilderwolf": 2, "manipulator": 1, "dorfbewohner": 7})
+	await _set_counts(shell, {"trugbilderwolf": 1, "manipulator": 1, "dorfbewohner": 8})
 	await press(find_button(screen, "DecoyRevealButton"))
 	var rows := _copy_rows(screen)
-	assert_eq(rows.size(), 2, "zwei Kopien")
-	assert_eq(_label(rows[1], "DecoyCopyLabel"), tr("ui.setup.decoy.copy").format({"number": 2}), "„Trugbilderwolf 2“")
-	await _choose_appearance(shell, rows[0], "waldhexe")
-	await _choose_appearance(shell, _copy_rows(screen)[1], "das-orakel")
+	assert_eq(rows.size(), 1, "eine Kopie")
+	assert_eq(_label(rows[0], "DecoyCopyLabel"), tr("ui.setup.decoy.copy").format({"number": 1}), "„Trugbilderwolf 1“")
+	var plus := find_button(find_node(screen, "RoleRow_trugbilderwolf"), "PlusButton")
+	assert_true(plus.disabled, "Plus gesperrt: keine zweite Kopie beim Start")
+	await _choose_appearance(shell, rows[0], "das-orakel")
 	var decoys: Array = _view(shell)["roles"]["decoys"]
-	assert_true(str(decoys[0]["appears_as"]) == "waldhexe" and str(decoys[1]["appears_as"]) == "das-orakel", "unterschiedlich konfiguriert")
+	assert_eq(str(decoys[0]["appears_as"]), "das-orakel", "Scheinrolle gewählt")
 	settings_of(shell).call("set_language", "en")
 	await frames(3)
 	assert_eq(_view(shell)["roles"]["decoys"], decoys, "Sprachwechsel verliert nichts")
-	assert_eq(_label(_copy_rows(screen)[1], "DecoyAppearanceLabel"), tr("ui.setup.decoy.chosen").format({"role": "The Oracle"}), "englisch angezeigt")
+	assert_eq(_label(_copy_rows(screen)[0], "DecoyAppearanceLabel"), tr("ui.setup.decoy.chosen").format({"role": "The Oracle"}), "englisch angezeigt")
 	settings_of(shell).call("set_language", "de")
 	await frames(3)
 	var dialog := _dialog(shell)
-	await press(find_button(_copy_rows(screen)[1], "RemoveCopyButton"))
+	await press(find_button(_copy_rows(screen)[0], "RemoveCopyButton"))
 	assert_true(dialog.visible, "konfigurierte Kopie: Rückfrage")
-	assert_true(_label(dialog, "MessageLabel").contains(tr("ui.setup.decoy.copy").format({"number": 2})), "Rückfrage nennt die Kopie: %s" % _label(dialog, "MessageLabel"))
+	assert_true(_label(dialog, "MessageLabel").contains(tr("ui.setup.decoy.copy").format({"number": 1})), "Rückfrage nennt die Kopie: %s" % _label(dialog, "MessageLabel"))
 	assert_eq(_contains_any(_label(dialog, "TitleLabel"), _role_names()), "", "Titel ohne Rolle")
 	await press(find_button(dialog, "CancelButton"))
-	assert_eq((_view(shell)["roles"]["decoys"] as Array).size(), 2, "Abbruch behält die Kopie")
-	await press(find_button(_copy_rows(screen)[1], "RemoveCopyButton"))
+	assert_eq((_view(shell)["roles"]["decoys"] as Array).size(), 1, "Abbruch behält die Kopie")
+	await press(find_button(_copy_rows(screen)[0], "RemoveCopyButton"))
 	await press(find_button(dialog, "ConfirmButton"))
-	decoys = _view(shell)["roles"]["decoys"]
-	assert_true(decoys.size() == 1 and str(decoys[0]["appears_as"]) == "waldhexe", "Kopie 1 bleibt unverändert")
+	assert_true((_view(shell)["roles"]["decoys"] as Array).is_empty(), "bestätigt: Kopie entfernt")
+	assert_false(plus.disabled, "danach wieder auswählbar")
 
 
 # --- Verteilung ---------------------------------------------------------------------------------------
 
 func _to_distribution_with_copies(shell: Control) -> Control:
 	var screen := await _to_roles(shell, 10)
-	await _set_counts(shell, {"trugbilderwolf": 2, "werwolf": 1, "manipulator": 1, "dorfbewohner": 6})
+	await _set_counts(shell, {"trugbilderwolf": 1, "werwolf": 1, "manipulator": 1, "dorfbewohner": 7})
 	var s := setup_of(shell)
 	var decoys: Array = _view(shell)["roles"]["decoys"]
 	s.call("set_decoy_appearance", int(decoys[0]["copy_id"]), &"waldhexe")
-	s.call("set_decoy_appearance", int(decoys[1]["copy_id"]), &"das-orakel")
 	await frames(2)
 	await press(find_button(screen, "ConfirmRolesButton"))
 	return screen
@@ -257,7 +259,7 @@ func test_distribution_shows_chosen_appearance_only_when_open() -> void:
 			var text := _label(rows[i], "AppearanceLabel")
 			assert_eq(text, tr("ui.setup.distribution.appearance").format({"role": tr("ui.role.%s.name" % str(e["appearance"]).replace("-", "_"))}), "Scheinrolle geöffnet sichtbar")
 			assert_false(text.contains("vorläufig") or text.contains("provisional"), "nicht mehr „vorläufig“")
-	assert_eq(shown, 2, "beide Kopien verteilt")
+	assert_eq(shown, 1, "die Kopie verteilt")
 	await press(find_button(screen, "ReshuffleButton"))
 	await _assert_public_secret(shell, "neu gemischt")
 	await press(find_button(screen, "ConfirmDistributionButton"))
@@ -267,7 +269,7 @@ func test_distribution_shows_chosen_appearance_only_when_open() -> void:
 	assert_eq(int(view["command_count"]), 0, "kein StartGame")
 
 
-func test_manual_picker_offers_each_copy() -> void:
+func test_manual_picker_offers_the_copy() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
@@ -278,15 +280,15 @@ func test_manual_picker_offers_each_copy() -> void:
 	await press(find_button(rows[0], "ChooseRoleButton"))
 	assert_true(dialog.visible, "Rollenauswahl offen")
 	var decoys: Array = _view(shell)["roles"]["decoys"]
-	for i: int in 2:
-		var option := find_node(dialog, "Pick_trugbilderwolf_%d" % int(decoys[i]["copy_id"])) as Button
-		assert_true(option != null and option.is_visible_in_tree(), "Kopie %d einzeln wählbar" % (i + 1))
-		if option != null:
-			assert_true(option.text.contains(tr("ui.setup.decoy.copy").format({"number": i + 1})), "Option nennt die Kopie: %s" % option.text)
+	assert_eq(decoys.size(), 1, "eine Kopie (PE-07)")
+	var option := find_node(dialog, "Pick_trugbilderwolf_%d" % int(decoys[0]["copy_id"])) as Button
+	assert_true(option != null and option.is_visible_in_tree(), "Kopie einzeln wählbar")
+	if option != null:
+		assert_true(option.text.contains(tr("ui.setup.decoy.copy").format({"number": 1})), "Option nennt die Kopie: %s" % option.text)
 	assert_true(find_node(dialog, "Pick_trugbilderwolf") == null, "keine unbestimmte Trugbilderwolf-Option")
-	await press(find_button(dialog, "Pick_trugbilderwolf_%d" % int(decoys[1]["copy_id"])))
+	await press(find_button(dialog, "Pick_trugbilderwolf_%d" % int(decoys[0]["copy_id"])))
 	var first: Dictionary = (_view(shell)["distribution"]["assignment"] as Array)[0]
-	assert_true(str(first["role"]) == "trugbilderwolf" and str(first["appearance"]) == "das-orakel", "gezielt Kopie 2 mit ihrer Scheinrolle")
+	assert_true(str(first["role"]) == "trugbilderwolf" and str(first["appearance"]) == "waldhexe", "gezielt die Kopie mit ihrer Scheinrolle")
 	await _assert_public_secret(shell, "manuell")
 
 
@@ -333,7 +335,7 @@ func test_decoy_layout() -> void:
 			if shell == null:
 				return
 			var screen := await _to_roles(shell, 12)
-			await _set_counts(shell, {"trugbilderwolf": 2, "manipulator": 1, "dorfbewohner": 9})
+			await _set_counts(shell, {"trugbilderwolf": 1, "manipulator": 1, "dorfbewohner": 10})
 			await press(find_button(screen, "DecoyRevealButton"))
 			var scroll := find_node(screen, "RoleScroll") as ScrollContainer
 			scroll.ensure_control_visible(find_node(screen, "DecoySection") as Control)

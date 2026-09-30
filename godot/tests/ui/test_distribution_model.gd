@@ -25,8 +25,9 @@ func _ready_setup(count: int = 8, counts: Dictionary = {}, seed_value: int = FIX
 	if counts.is_empty():
 		s.call("apply_suggestion")
 	else:
-		for role: Variant in counts:
-			s.call("set_role_count", StringName(str(role)), int(counts[role]))
+		var legal := Fixtures.legal_counts(counts)  # PE-07: Füllplätze werden zu verschiedenen Füllrollen
+		for role: Variant in legal:
+			s.call("set_role_count", StringName(str(role)), int(legal[role]))
 	var decoys: Array = (s.call("view") as Dictionary)["roles"].get("decoys", [])
 	for i: int in mini(decoys.size(), appearances.size()):
 		s.call("set_decoy_appearance", int((decoys[i] as Dictionary)["copy_id"]), StringName(str(appearances[i])))
@@ -199,7 +200,7 @@ func test_person_changes_discard_distribution() -> void:
 	var d := _dist(s)
 	assert_true(not bool(d["has_assignment"]) and str(d["invalidated"]) == "person_count_changed", "hinzufügen verwirft die Verteilung")
 	assert_eq(str((s.call("view") as Dictionary)["step"]), "players", "Schritt fällt auf Spieler zurück")
-	s.call("set_role_count", &"dorfbewohner", int((s.call("view") as Dictionary)["roles"]["counts"]["dorfbewohner"]) + 1)
+	s.call("set_role_count", &"ritter", 1)  # neunte Rolle für die neunte Person (jede Rolle höchstens einmal, PE-07)
 	s.call("confirm")
 	_ok(s.call("confirm_roles"), "neu bestätigt")
 	s.call("distribute_randomly")
@@ -232,32 +233,33 @@ func test_role_changes_discard_distribution_unless_pool_identical() -> void:
 # --- Manuelle Verteilung (53 bis 64) ----------------------------------------------------------------------
 
 func test_manual_assignment_flow() -> void:
-	var s := _ready_setup(6, {"werwolf": 2, "manipulator": 1, "dorfbewohner": 3})
+	# Mehrere Kopien einer Rolle gibt es beim Start nur bei Den Gebundenen (PE-07): sie tragen hier den Kopien-Nachweis.
+	var s := _ready_setup(6, {"werwolf": 1, "manipulator": 1, "die-gebundenen": 2, "dorfbewohner": 1, "amalia": 1})
 	if s == null:
 		return
 	_ok(s.call("set_distribution_mode", &"manual"), "Modus manuell")
 	var d := _dist(s)
 	assert_eq(str(d["mode"]), "manual", "Modus gespeichert")
 	assert_eq(_assignment(s).size(), 0, "zunächst alle nicht zugewiesen")
-	assert_eq(d["remaining"], {"dorfbewohner": 3, "manipulator": 1, "werwolf": 2}, "verfügbare Kopien")
+	assert_eq(d["remaining"], {"amalia": 1, "die-gebundenen": 2, "dorfbewohner": 1, "manipulator": 1, "werwolf": 1}, "verfügbare Kopien")
 	var ids := _ids(s)
-	_ok(s.call("assign_role", ids[0], &"werwolf"), "zuweisen")
-	_ok(s.call("assign_role", ids[1], &"werwolf"), "zweite Kopie")
+	_ok(s.call("assign_role", ids[0], &"die-gebundenen"), "zuweisen")
+	_ok(s.call("assign_role", ids[1], &"die-gebundenen"), "zweite Kopie")
 	var before := JSON.stringify(s.call("view"))
-	_rejected(s, s.call("assign_role", ids[2], &"werwolf"), "no_copy_available", "Überbelegung", before)
+	_rejected(s, s.call("assign_role", ids[2], &"die-gebundenen"), "no_copy_available", "Überbelegung", before)
 	_rejected(s, s.call("assign_role", ids[2], &"nicht-im-katalog"), "unknown_role", "unbekannte Rolle", before)
 	_rejected(s, s.call("assign_role", ids[2], &"schutzengel"), "role_not_in_pool", "Rolle nicht im Pool", before)
 	_rejected(s, s.call("assign_role", 999, &"dorfbewohner"), "unknown_person", "unbekannte Person", before)
 	_ok(s.call("assign_role", ids[1], &"manipulator"), "Rolle ändern")
 	assert_eq(_assignment(s)[ids[1]], "manipulator", "geändert")
-	assert_eq(int(_dist(s)["remaining"]["werwolf"]), 1, "alte Kopie wieder frei")
+	assert_eq(int(_dist(s)["remaining"]["die-gebundenen"]), 1, "alte Kopie wieder frei")
 	_ok(s.call("unassign_role", ids[1]), "Zuweisung entfernen")
 	assert_false(_assignment(s).has(ids[1]), "entfernt")
 	_ok(s.call("swap_roles", ids[0], ids[1]), "tauschen mit nicht zugewiesener Person")
-	assert_true(_assignment(s).get(ids[1], "") == "werwolf" and not _assignment(s).has(ids[0]), "getauscht")
+	assert_true(_assignment(s).get(ids[1], "") == "die-gebundenen" and not _assignment(s).has(ids[0]), "getauscht")
 	before = JSON.stringify(s.call("view"))
 	_rejected(s, s.call("confirm_distribution"), "distribution_incomplete", "unvollständige Zuordnung", before)
-	var rest: Array[String] = ["werwolf", "manipulator", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var rest: Array[String] = ["die-gebundenen", "manipulator", "werwolf", "dorfbewohner", "amalia"]
 	var free_ids: Array[int] = [ids[0], ids[2], ids[3], ids[4], ids[5]]
 	for i: int in free_ids.size():
 		_ok(s.call("assign_role", free_ids[i], StringName(rest[i])), "zuweisen %d" % i)
@@ -303,8 +305,9 @@ func _check_appearances(s: Object, chosen: Array, label: String) -> void:
 
 func test_decoy_wolf_appearances() -> void:
 	# Angepasst an DR-08: früher zufällig aus dem Seed abgeleitet, jetzt ausdrücklich gewählt.
-	var counts := {"trugbilderwolf": 3, "manipulator": 1, "dorfbewohner": 6}
-	var chosen := ["lehrling", "waldhexe", "waldhexe"]
+	# Ein Trugbilderwolf (PE-07: mehrere Kopien sind beim Start nicht möglich).
+	var counts := {"trugbilderwolf": 1, "manipulator": 1, "dorfbewohner": 8}
+	var chosen := ["lehrling"]
 	var s := _ready_setup(10, counts, FIXED_SEED, [0], chosen)
 	if s == null:
 		return

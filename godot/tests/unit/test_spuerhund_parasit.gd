@@ -54,7 +54,7 @@ func _sniff(roles: Array, targets: Array, appearances: Dictionary = {}) -> Array
 
 
 func test_hound_hit_and_miss() -> void:
-	var roles := ["werwolf", SH, "dorfbewohner", "dorfbewohner", "manipulator", "trugbilderwolf", "dorfbewohner", "dorfbewohner"]
+	var roles := ["werwolf", SH, "dorfbewohner", "amalia", "manipulator", "trugbilderwolf", "detektiv", "wahnsinniger-kutscher"]
 	var app := {"6": "dorfbewohner"}
 	assert_eq(_sniff(roles, [1, 3, 4], app)[0], true, "Wolf dabei: ✓")
 	assert_eq(_sniff(roles, [5, 3, 4], app)[0], true, "Einzelsieg dabei: ✓")
@@ -77,7 +77,7 @@ func test_hound_hit_and_miss() -> void:
 
 
 func test_hound_decline_and_invalid() -> void:
-	var cmds: Array[Command] = [_start(["werwolf", SH, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _gm("kill", {"target_id": 6, "trigger_effects": false}),
+	var cmds: Array[Command] = [_start(["werwolf", SH, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _gm("kill", {"target_id": 6, "trigger_effects": false}),
 		Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:spuerhund:2")]
 	var s := _run(cmds, "Prompt").state
 	if s == null:
@@ -106,7 +106,7 @@ func _attach(roles: Array, host: int, victim: int = -1) -> Array[Command]:
 
 
 func test_parasite_immune_while_host_lives() -> void:
-	var roles := ["werwolf", PA, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := ["werwolf", PA, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 	var run := _run(_attach(roles, 3, 2), "Rudel auf Parasit")
 	if not run.ok:
 		return
@@ -127,7 +127,7 @@ func test_parasite_immune_while_host_lives() -> void:
 
 
 func test_parasite_dies_with_host_and_is_normal_without() -> void:
-	var roles := ["werwolf", PA, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := ["werwolf", PA, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 	var cmds := _attach(roles, 3)
 	cmds.append_array([Command.nominate(4, 3), Command.decide_execution(3)])
 	var run := _run(cmds, "Wirt stirbt")
@@ -145,7 +145,7 @@ func test_parasite_dies_with_host_and_is_normal_without() -> void:
 
 
 func test_parasite_changes_host() -> void:
-	var roles := ["werwolf", PA, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var roles := ["werwolf", PA, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 	var cmds := _attach(roles, 3)
 	cmds.append_array([Command.decide_execution(-1), Command.end_day(), Command.start_night(), Command.skip_step("night:2:0:pack", "kein Opfer"),
 		Command.begin_step("night:2:1:parasit:2"), Command.answer_prompt(4, [5]), Command.end_night(), Command.nominate(4, 3), Command.decide_execution(3)])
@@ -162,7 +162,7 @@ func test_parasite_changes_host() -> void:
 
 func test_parasite_final_three() -> void:
 	# 1 Werwolf, 2 Parasit (Wirt 3), 3–7 Dorf. Tote per Korrektur bis drei leben: 1, 2, 3.
-	var cmds := _attach(["werwolf", PA, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 3)
+	var cmds := _attach(["werwolf", PA, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 3)
 	var s := _run(cmds, "Start").state
 	if s == null:
 		return

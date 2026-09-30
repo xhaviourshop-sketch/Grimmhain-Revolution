@@ -132,7 +132,8 @@ func list() -> Array:
 		if f.begins_with(PREFIX) and (f.ends_with(EXT) or f.ends_with(EXT + ".bak") or f.ends_with(EXT + ".tmp")):
 			ids[f.trim_prefix(PREFIX).get_slice(EXT, 0)] = true
 	for id: String in ids:
-		var entry := {"round_id": id, "summary": {}, "saved_at": 0, "readable": false, "compatible": true, "schema": GameState.SCHEMA_VERSION, "expected": GameState.SCHEMA_VERSION}
+		var entry := {"round_id": id, "summary": {}, "saved_at": 0, "readable": false, "compatible": true, "schema": GameState.SCHEMA_VERSION, "expected": GameState.SCHEMA_VERSION,
+			"found_label": "", "expected_label": _version_label(GameState.SCHEMA_VERSION, String(GameState.RULES_VERSION))}
 		for candidate: String in [path_for(id) + ".tmp", path_for(id), path_for(id) + ".bak"]:
 			var env := _envelope(candidate)
 			if not env.is_empty():
@@ -142,6 +143,7 @@ func list() -> Array:
 				var compat := _compatibility(env)
 				entry["compatible"] = bool(compat["compatible"])
 				entry["schema"] = int(compat["schema"])
+				entry["found_label"] = _version_label(int(compat["schema"]), str(compat["rules"]))
 				break
 		out.append(entry)
 	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["saved_at"]) > int(b["saved_at"]))
@@ -173,11 +175,16 @@ func _read(path: String) -> Dictionary:
 func _compatibility(env: Dictionary) -> Dictionary:
 	var json := JSON.new()
 	if json.parse(str(env.get("core", ""))) != OK or not json.data is Dictionary:
-		return {"compatible": true, "schema": GameState.SCHEMA_VERSION}
+		return {"compatible": true, "schema": GameState.SCHEMA_VERSION, "rules": String(GameState.RULES_VERSION)}
 	var doc: Dictionary = json.data
 	var schema := DictRead.get_int(doc, "schema_version", -1)
 	var rules := DictRead.get_string(doc, "rules_version")
-	return {"compatible": schema == GameState.SCHEMA_VERSION and rules == String(GameState.RULES_VERSION), "schema": schema}
+	return {"compatible": schema == GameState.SCHEMA_VERSION and rules == String(GameState.RULES_VERSION), "schema": schema, "rules": rules}
+
+
+## Anzeigetext „Schema 14, Regeln grimmhain-core-0.13“: Schema und Regelversion können einzeln abweichen.
+func _version_label(schema: int, rules: String) -> String:
+	return "Schema %d, %s" % [schema, rules.trim_prefix("grimmhain-core-")]
 
 
 func _incompatible(read: Dictionary, set_aside: Array) -> Dictionary:

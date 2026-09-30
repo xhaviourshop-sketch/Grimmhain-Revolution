@@ -131,7 +131,7 @@ func test_catalog_entries() -> void:
 # --- Loki -----------------------------------------------------------------------------------------
 
 func test_loki_binds_once_in_night_one() -> void:
-	var s := _state([W, LO, D, D, D, D, D])
+	var s := _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
 	if s == null:
 		return
@@ -153,7 +153,7 @@ func test_loki_binds_once_in_night_one() -> void:
 
 
 func test_heartbreak_and_rivals() -> void:
-	var s := _state([W, LO, D, D, D, D, D, D])
+	var s := _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	var r := _dawn(s, -1, {"loki:2@targets": [3, 4], "loki:2@mode": true})
 	if r == null:
 		return
@@ -163,7 +163,7 @@ func test_heartbreak_and_rivals() -> void:
 	k = apply_ok(s, _gm("kill", {"target_id": 4, "trigger_effects": true}), "4 stirbt erneut")
 	assert_eq(_died(k.events, 3), "", "Bindung bleibt beendet (RM-DR-011.2)")
 	# Rivalen: keine eigene Wirkung.
-	s = _state([W, LO, D, D, D, D, D, D])
+	s = _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	r = _dawn(s, -1, {"loki:2@targets": [5, 6], "loki:2@mode": false})
 	k = apply_ok(r.state, _gm("kill", {"target_id": 5, "trigger_effects": true}), "Rivale stirbt") if r != null else null
 	assert_eq(_died(k.events, 6) if k != null else "x", "", "Rivalen sterben nicht mit")
@@ -171,7 +171,7 @@ func test_heartbreak_and_rivals() -> void:
 
 func test_heartbreak_during_sage_curse() -> void:
 	# B-08: Liebeskummer wirkt auch im Fluch des Weisen.
-	var s := _state([W, LO, D, D, D, D, D, D])
+	var s := _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	var r := _dawn(s, -1, {"loki:2@targets": [3, 4], "loki:2@mode": true})
 	if r == null:
 		return
@@ -186,7 +186,7 @@ func test_heartbreak_during_sage_curse() -> void:
 
 func test_black_widow_kills_living_pair_at_dawn() -> void:
 	# 1 Witwe, 2 Loki, 3 Orakel (Liebende mit 4), 5/6 Rivalen nicht betroffen.
-	var s := _state([SW, LO, "das-orakel", D, D, D, D, W])
+	var s := _state([SW, LO, "das-orakel", D, "amalia", "detektiv", "wahnsinniger-kutscher", W])
 	var log: Array[GameEvent] = []
 	s = _night(s, -1, {"loki:2@targets": [3, 4], "loki:2@mode": true, "schwarze-witwe:1": [4]}, log)
 	if s == null:
@@ -198,7 +198,7 @@ func test_black_widow_kills_living_pair_at_dawn() -> void:
 
 
 func test_black_widow_without_pair_does_nothing() -> void:
-	var s := _state([SW, LO, D, D, D, D, D, W])
+	var s := _state([SW, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", W])
 	var r := _dawn(s, -1, {"loki:2@targets": [3, 4], "loki:2@mode": false, "schwarze-witwe:1": [5]})
 	if r == null:
 		return
@@ -211,7 +211,7 @@ func test_black_widow_without_pair_does_nothing() -> void:
 # --- Schattenwanderer -----------------------------------------------------------------------------
 
 func test_shadowwalker_takes_the_death_once() -> void:
-	var s := _state([SH, W, D, "schutzengel", D, D, D, D])
+	var s := _state([SH, W, D, "schutzengel", "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"])
 	var r := _dawn(s, -1, {"schattenwanderer:1": [3], "schutzengel:4": [5]})
 	if r == null:
 		return
@@ -230,7 +230,7 @@ func test_shadowwalker_takes_the_death_once() -> void:
 
 
 func test_shadowwalker_redirects_lynch_not_gm_kill() -> void:
-	var s := _state([SH, W, D, D, D, D, D, D])
+	var s := _state([SH, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise", "nachtwaechter"])
 	var r := _dawn(s, -1, {"schattenwanderer:1": [3]})
 	if r == null:
 		return
@@ -245,7 +245,7 @@ func test_shadowwalker_redirects_lynch_not_gm_kill() -> void:
 # --- Rotkäppchen ----------------------------------------------------------------------------------
 
 func test_red_riding_hood_chain_and_refusal() -> void:
-	var s := _state([W, RK, D, D, D, D, D])
+	var s := _state([W, RK, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var r := _dawn(s, -1, {"rotkaeppchen:2@targets": [3], "rotkaeppchen:2@grant": true})
 	if r == null:
 		return
@@ -262,7 +262,7 @@ func test_red_riding_hood_chain_and_refusal() -> void:
 
 func test_apple_doubles_next_every_night_step() -> void:
 	# 3 Orakel erhält in Nacht 1 den Apfel → in Nacht 2 prüft es zweimal; in Nacht 3 wieder einmal.
-	var s := _state([W, RK, "das-orakel", D, D, D, D])
+	var s := _state([W, RK, "das-orakel", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var r := _dawn(s, -1, {"rotkaeppchen:2@targets": [3], "rotkaeppchen:2@grant": true})
 	if r == null:
 		return
@@ -281,7 +281,7 @@ func test_apple_doubles_next_every_night_step() -> void:
 
 
 func test_apple_doubles_guardian_and_is_void_for_single_result_roles() -> void:
-	var s := _state([W, RK, "schutzengel", "korrupter-richter", D, D, D])
+	var s := _state([W, RK, "schutzengel", "korrupter-richter", D, "amalia", "detektiv"])
 	var r := _dawn(s, -1, {"rotkaeppchen:2@targets": [3], "rotkaeppchen:2@grant": true})
 	if r == null:
 		return

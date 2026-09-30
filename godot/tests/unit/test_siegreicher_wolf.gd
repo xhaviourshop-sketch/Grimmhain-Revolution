@@ -52,12 +52,12 @@ func test_production_role() -> void:
 	assert_false(RoleCatalog.is_valid_appearance(role), "keine zulässige Scheinrolle eines Trugbilderwolfs")
 	assert_eq(RoleCatalog.parity_weight(role), 2, "Paritätsgewicht zwei")
 	assert_eq(RoleCatalog.parity_weight(&"werwolf"), 1, "Werwolf zählt einfach")
-	assert_eq(RoleCatalog.max_copies(role), RoleCatalog.UNLIMITED, "keine eigene Obergrenze (RM-DR-016)")
+	assert_eq(RoleCatalog.max_copies(role), 1, "höchstens einmal in der Startbesetzung (PE-07 ersetzt RM-DR-016 „keine eigene Obergrenze“)")
 
 
 func test_alone_forms_pack_and_oracle_sees_werwolf() -> void:
 	# G-PH-6 / Legacy-Bug F2: Rudelschritt auch ohne `werwolf`; DR-07: Sonderwolf erscheint als Werwolf.
-	var run := _run([_start([SW, "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night()] as Array[Command], "Start")
+	var run := _run([_start([SW, "das-orakel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night()] as Array[Command], "Start")
 	if not run.ok:
 		return
 	assert_eq(run.state.night_plan, [&"pack", &"das-orakel:2"] as Array[StringName], "Rudel aus dem Siegreichen Wolf, danach Orakel")
@@ -66,7 +66,7 @@ func test_alone_forms_pack_and_oracle_sees_werwolf() -> void:
 
 func test_counts_twice_for_parity() -> void:
 	# 1 Siegreicher Wolf; 2–6 Dorfbewohner. Stärke 2 gegen 3 → kein Sieg; 2 gegen 2 → Wolfssieg.
-	var cmds: Array[Command] = [_start([SW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(2), _kill(3)]
+	var cmds: Array[Command] = [_start([SW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), _kill(2), _kill(3)]
 	var run := _run(cmds, "zwei Tote")
 	if not run.ok:
 		return
@@ -85,7 +85,7 @@ func test_counts_twice_for_parity() -> void:
 
 func test_dead_counts_zero_and_village_needs_no_living_wolf() -> void:
 	# 1 Siegreicher Wolf; 2 Werwolf; 3–7 Dorfbewohner.
-	var cmds: Array[Command] = [_start([SW, "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(1), _kill(3), _kill(4)]
+	var cmds: Array[Command] = [_start([SW, "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), _kill(1), _kill(3), _kill(4)]
 	var run := _run(cmds, "Siegreicher tot")
 	if not run.ok:
 		return
@@ -99,7 +99,7 @@ func test_dead_counts_zero_and_village_needs_no_living_wolf() -> void:
 
 func test_multiple_copies_each_count_twice() -> void:
 	# 1, 2 Siegreicher Wolf; 3–7 Dorfbewohner. Nach einem Tod: 4 gegen 4.
-	var cmds: Array[Command] = [_start([SW, SW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(3)]
+	var cmds: Array[Command] = Fixtures.with_copies([SW, SW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], [_kill(3)] as Array[Command])
 	var run := _run(cmds, "zwei Kopien")
 	if not run.ok:
 		return
@@ -108,7 +108,7 @@ func test_multiple_copies_each_count_twice() -> void:
 
 
 func test_revived_counts_twice_again() -> void:
-	var cmds: Array[Command] = [_start([SW, "werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start([SW, "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]),
 		_kill(1), _kill(3), _kill(4), _gm("revive", {"target_id": 1})]
 	var run := _run(cmds, "Wiederbelebung")
 	if not run.ok:
@@ -122,7 +122,7 @@ func test_revived_counts_twice_again() -> void:
 func test_apprentice_inherits_and_counts_twice_immediately() -> void:
 	# Korrekturrunde 2: Siegbedingungen der geerbten Rolle gelten sofort.
 	# 1 Siegreicher; 2 Werwolf; 3 Lehrling; 4–8 Dorfbewohner. Nacht 1: Lehrling wählt den Siegreichen.
-	var cmds: Array[Command] = [_start([SW, "werwolf", "lehrling", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]),
+	var cmds: Array[Command] = [_start([SW, "werwolf", "lehrling", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]),
 		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 2, 4])]
 	var run := _run(cmds, "Kandidaten")
 	if not run.ok:
@@ -145,7 +145,7 @@ func test_apprentice_inherits_and_counts_twice_immediately() -> void:
 
 
 func test_role_correction_recomputes_parity() -> void:
-	var cmds: Array[Command] = [_start([SW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(2), _kill(3),
+	var cmds: Array[Command] = [_start([SW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), _kill(2), _kill(3),
 		_gm("set_role", {"target_id": 1, "role_id": "werwolf"}), _kill(4)]
 	var run := _run(cmds, "Korrektur")
 	if run.ok:
@@ -155,7 +155,7 @@ func test_role_correction_recomputes_parity() -> void:
 
 func test_manipulator_counts_persons_not_weight() -> void:
 	# DR-12 zählt Personen: 1 Siegreicher, 2 Manipulator, 3 Dorfbewohner leben → genau drei Lebende.
-	var cmds: Array[Command] = [_start([SW, "manipulator", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), _kill(4), _kill(5), _kill(6)]
+	var cmds: Array[Command] = [_start([SW, "manipulator", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _kill(4), _kill(5), _kill(6)]
 	var run := _run(cmds, "drei Lebende")
 	if not run.ok:
 		return
@@ -166,7 +166,7 @@ func test_manipulator_counts_persons_not_weight() -> void:
 
 
 func test_no_secret_in_public_events() -> void:
-	var cmds: Array[Command] = [_start([SW, "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]), Command.start_night(),
+	var cmds: Array[Command] = [_start([SW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night(),
 		Command.answer_prompt(1, [2]), Command.end_night(), Command.nominate(3, 1), Command.decide_execution(1)]
 	var run := _run(cmds, "Partie")
 	if not run.ok:

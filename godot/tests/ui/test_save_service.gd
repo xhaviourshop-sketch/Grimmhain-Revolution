@@ -4,7 +4,7 @@ extends UiTestCase
 ## statt überschrieben, keine falsche Erfolgsmeldung, offene mehrstufige Prompts überleben einen
 ## Neustart, identisches Replay. Jeder Test nutzt ein eigenes temporäres Verzeichnis.
 
-const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "amalia", "detektiv"]
 
 
 func _context() -> AppContext:
@@ -290,6 +290,62 @@ func test_schema_13_save_is_incompatible_and_left_untouched() -> void:
 	var loaded := ctx.saves.load_game(str(old["round"]))
 	assert_eq(str(loaded["error"]), "incompatible", "als inkompatibel gemeldet, nicht als beschädigt")
 	assert_eq(FileAccess.get_file_as_string(path), bytes_before, "Datei unverändert")
+	assert_false(_files(ctx).any(func(n: String) -> bool: return n.contains(".corrupt-")), "nichts beiseitegelegt")
+
+
+const PE07_FIXTURE := "res://tests/saves/pe07-core-0.13-duplicate-roles.json"
+
+
+## Kopiert den echten Spielstand der Regelversion 0.13 (mit doppelten Startrollen) bytegleich in das Testverzeichnis.
+func _install_pe07_fixture(ctx: AppContext) -> String:
+	var bytes := FileAccess.get_file_as_bytes(PE07_FIXTURE)
+	assert_true(bytes.size() > 0, "Fixture lesbar")
+	DirAccess.make_dir_recursive_absolute(ctx.saves.base_dir)
+	var path := ctx.saves.path_for("test-round")
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_buffer(bytes)
+	f.close()
+	return path
+
+
+## PE-07 / Regelversion 0.14: Ein Stand mit doppelten Startrollen (Regelversion 0.13, Schema 14) ist eine andere Version,
+## keine beschädigte Datei: keine Migration, keine neue Verteilung, Datei bleibt bytegleich, nichts beiseitegelegt.
+func test_pe07_rules_0_13_save_is_incompatible_and_left_untouched() -> void:
+	var ctx := _context()
+	var path := _install_pe07_fixture(ctx)
+	var bytes_before := FileAccess.get_file_as_bytes(path)
+	var entries := ctx.saves.list()
+	assert_eq(entries.size(), 1, "in der Liste")
+	assert_true(bool(entries[0]["readable"]) and not bool(entries[0]["compatible"]), "lesbar, aber nicht kompatibel")
+	assert_eq(int(entries[0]["schema"]), 14, "Schema stimmt, nur die Regelversion weicht ab")
+	assert_eq(str(entries[0]["found_label"]), "Schema 14, 0.13", "gefundene Version benannt")
+	assert_eq(str(entries[0]["expected_label"]), "Schema 14, 0.14", "erwartete Version benannt")
+	var loaded := ctx.saves.load_game("test-round")
+	assert_false(bool(loaded["ok"]), "nicht ladbar")
+	assert_eq(str(loaded["error"]), "incompatible", "als andere Version gemeldet, nicht als beschädigt")
+	assert_eq((loaded["set_aside"] as Array).size(), 0, "nichts beiseitegelegt")
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes_before, "Datei bytegleich")
+	assert_eq(_files(ctx), ["game-test-round.json"], "keine weitere Datei (keine Migration, kein .corrupt-, kein Löschen)")
+	var decoded := StateCodec.decode(str(JSON.parse_string(bytes_before.get_string_from_utf8()).get("core", "")))
+	assert_eq(str(decoded.error), "unsupported_rules_version", "der Kern lehnt die Regelversion ab, ohne neu zu verteilen")
+
+
+func test_continue_screen_shows_pe07_save_as_other_version() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var ctx := context_of(shell) as AppContext
+	var path := _install_pe07_fixture(ctx)
+	var bytes_before := FileAccess.get_file_as_bytes(path)
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"continue")
+	var screen := current_screen(shell)
+	var note := find_node(screen, "IncompatibleLabel") as Label
+	assert_true(note != null and note.is_visible_in_tree(), "Hinweis sichtbar")
+	assert_true(note != null and note.text.contains("anderen Version") and note.text.contains("0.13") and note.text.contains("0.14"), "Text nennt andere Version, gespeichert und erwartet: %s" % (note.text if note != null else ""))
+	assert_true((find_button(screen, "ResumeButton_test-round") as BaseButton).disabled, "Fortsetzen gesperrt")
+	assert_true(find_button(screen, "DiscardButton_test-round") != null, "Verwerfen weiter möglich")
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes_before, "Datei bytegleich")
 	assert_false(_files(ctx).any(func(n: String) -> bool: return n.contains(".corrupt-")), "nichts beiseitegelegt")
 
 
@@ -595,7 +651,7 @@ func test_corrupt_backup_does_not_affect_intact_file() -> void:
 ## Verlauf, Rückgängig öffnet die Entscheidung wieder und wird gespeichert.
 func test_game_over_during_night_survives_restart_and_undo() -> void:
 	var ctx := _context()
-	assert_true(ctx.session.submit(Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], 2)).ok, "Start")
+	assert_true(ctx.session.submit(Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"], 2)).ok, "Start")
 	ctx.session.start_night()
 	for id: int in [4, 5, 6]:
 		assert_true(ctx.session.gm_correction({"kind": "kill", "target_id": id, "trigger_effects": false, "reason": "Test"}).ok, "Korrektur %d" % id)

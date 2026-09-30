@@ -4,7 +4,7 @@ extends UiTestCase
 ## Datei fort und beantwortet die Stufe. Danach lädt dieser Prozess den vom Kindprozess gespeicherten Stand.
 ## Beide Prozesse nutzen dasselbe isolierte Verzeichnis `user://test-saves-*`.
 
-const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+const ROLES := ["werwolf", "schutzengel", "waldhexe", "das-orakel", "dorfbewohner", "amalia", "detektiv"]
 const CHILD := "res://tests/ui/process_resume_child.gd"
 
 

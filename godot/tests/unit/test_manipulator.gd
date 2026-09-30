@@ -17,11 +17,11 @@ func _start(roles: Array) -> Command:
 
 
 func _ma6() -> Command:
-	return _start(["werwolf", "manipulator", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	return _start(["werwolf", "manipulator", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 
 
 func _ma6wr() -> Command:
-	return _start(["werwolf", "werwolf", "manipulator", "sensentraeger", "dorfbewohner", "dorfbewohner"])
+	return _start(["werwolf", "blutwolf", "manipulator", "sensentraeger", "dorfbewohner", "amalia"])
 
 
 ## Tag 1: 6 stirbt, Sensenträger 4 stirbt, sein Fluch trifft 5 → 1, 2, 3 leben:
@@ -30,12 +30,16 @@ func _parity_and_solo() -> Array[Command]:
 	return _concat(_to_day(_ma6wr()), [_kill(6), _kill(4), Command.begin_step("reaction:1"), Command.answer_prompt(2, [5])] as Array[Command])
 
 
-func _ma6mm() -> Command:
-	return _start(["werwolf", "manipulator", "manipulator", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+## Zwei Manipulatoren (3 ist eine Kopie, PE-07: entsteht nach dem Start durch Korrektur), danach die Tode `ids`.
+func _ma6mm_kills(ids: Array) -> Array[Command]:
+	var kills: Array[Command] = []
+	for id: Variant in ids:
+		kills.append(_kill(int(id)))
+	return Fixtures.with_copies(["werwolf", "manipulator", "manipulator", "dorfbewohner", "amalia", "detektiv"], kills)
 
 
 func _ma6r() -> Command:
-	return _start(["werwolf", "manipulator", "sensentraeger", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	return _start(["werwolf", "manipulator", "sensentraeger", "dorfbewohner", "amalia", "detektiv"])
 
 
 func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
@@ -119,7 +123,7 @@ func test_production_role() -> void:
 
 func test_oracle_and_witch() -> void:
 	# 4, 5
-	var start := _start(["werwolf", "manipulator", "dorfbewohner", "das-orakel", "waldhexe", "dorfbewohner"])
+	var start := _start(["werwolf", "manipulator", "dorfbewohner", "das-orakel", "waldhexe", "amalia"])
 	var o := Fixtures.play([start, Command.start_night(), Command.answer_prompt(1, []), Command.begin_step("night:1:1:waldhexe:5"),
 		Command.answer_choice(2, "poison", false), Command.answer_choice(2, "confirm", true), Command.begin_step("night:1:2:das-orakel:4"),
 		Command.answer_stage_targets(3, "target", [2])] as Array[Command])
@@ -161,7 +165,7 @@ func test_execution_is_lynch() -> void:
 
 func test_nomination_death_transforms_wolf_child() -> void:
 	# 14
-	var start := _start(["werwolf", "manipulator", "dorfbewohner", "dorfbewohner", "dorfbewohner", "wolfskind"])
+	var start := _start(["werwolf", "manipulator", "dorfbewohner", "amalia", "detektiv", "wolfskind"])
 	var run := _replay_ok([start, Command.start_night(), Command.answer_prompt(1, [2]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, []),
 		Command.end_night(), Command.nominate(3, 2)] as Array[Command], "Wolfskind")
 	if run.ok:
@@ -182,7 +186,7 @@ func test_nominated_revived_never_candidate() -> void:
 
 func test_status_survives_role_changes() -> void:
 	# 16, 17
-	var start := _start(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var start := _start(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var commands := _concat(_to_day(start), [Command.nominate(3, 2), _gm("set_role", {"target_id": 2, "role_id": "manipulator"})] as Array[Command])
 	var s := Fixtures.play(commands)
 	assert_eq(_ever(s, 2), true, "17: vor der Rolle nominiert")
@@ -234,7 +238,7 @@ func test_simultaneous_candidates() -> void:
 	var cases := {
 		"Manipulator und Parität": [_parity_and_solo(), ["wolves:wolf_parity:[]", "solo:%s:[3]" % MANIPULATOR_REASON]],
 		"Manipulator und Dorf": [_kills(_ma6(), [3, 4, 1]), ["village:no_wolves_alive:[]", "solo:%s:[2]" % MANIPULATOR_REASON]],
-		"zwei Manipulatoren": [_kills(_ma6mm(), [4, 5, 6]), ["solo:%s:[2]" % MANIPULATOR_REASON, "solo:%s:[3]" % MANIPULATOR_REASON]],
+		"zwei Manipulatoren": [_ma6mm_kills([4, 5, 6]), ["solo:%s:[2]" % MANIPULATOR_REASON, "solo:%s:[3]" % MANIPULATOR_REASON]],
 	}
 	for label: String in cases:
 		var commands: Array[Command] = []
@@ -295,7 +299,7 @@ func test_reject_all_together() -> void:
 
 func test_nobody_alive_and_declare_winner() -> void:
 	# 33, 34, AS-R35
-	var start := _start(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+	var start := _start(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	var commands: Array[Command] = [start, _kill(2), _kill(3), _kill(4), _kill(5), _reject_all(), _kill(6), _reject_all(), _kill(1)]
 	var run := _replay_ok(commands, "niemand lebt")
 	if not run.ok:
