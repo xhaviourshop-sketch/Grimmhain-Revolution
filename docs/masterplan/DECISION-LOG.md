@@ -1072,3 +1072,38 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - `loki_12`, `segen_03`, `segen_04`, `wende_05` und `fluch_05` sind damit **nicht vollständig spezifiziert** und nicht implementiert.
 
 **Vorbereitet (keine Entscheidung):** Arbeitsliste Abschnitte 21 und 22 mit den nächsten Karten der Gruppe 3 `segen_09`, `segen_13`, `fluch_02` (Fragen KS-80 bis KS-82), zwei Klärungen (KS-83 erneute Enthüllung bei `segen_03`, KS-84 Folgetode bei `loki_12`) und Folgepunkten KS-85 bis KS-88. Die drei neuen Karten sind nicht spezifiziert und nicht entschieden.
+
+## Gerechter Zorn, Schattenvorteil, Falsche Fährte, Wachsame Augen, Kosmisches Gleichgewicht (zehnte Antwortrunde, 30.09.2026)
+
+**Herkunft:** Antworten des Product Owners im Claude-Code-Auftrag vom 30.09.2026 (zehnte Runde) auf die fünf Fragen in Abschnitt 22 der Arbeitsliste `docs/role-migration/14-totenkarten-arbeitsliste.md`. Zuordnung: 1A zu KS-80 (`segen_09`, Dorfvariante), 2B zu KS-81 (`segen_13`, Wolfsvariante), 3A zu KS-82 (`fluch_02`, Dorfvariante), 4A zu KS-83 (`segen_03`, Neuabstimmung), 5A zu KS-84 (`loki_12`, Folgetode). Die Buchstaben verweisen auf die Optionen in Abschnitt 22; wo die Antwort Zusatzbestimmungen enthält, gelten diese und gehen der Optionsformulierung vor. Die Antworten gelten ausdrücklich nur für diese Karten und Fraktionsvarianten und werden nicht auf andere Karten, Schutzwirkungen, Todesreaktionen oder die allgemeine Nachbarregel übertragen. Es ist nichts implementiert: kein Karten-Code, keine verhinderte Hinrichtung durch Karte, keine Scheitern-Regel für Nachtfähigkeiten, keine Falschauskunft, keine Neuabstimmung, kein zusätzlicher Tod, keine Kartenverteilung, kein Kartentausch, kein Kartenschlucker, keine Änderung an Speicherschema oder Oberfläche. Die Originaltexte der Karten und früherer Abschnitte bleiben unverändert stehen.
+
+**Bestätigt (Product Owner):**
+
+- **`segen_09` Gerechter Zorn, Dorfvariante (KS-80, 1A):** Die Hinrichtung der betroffenen Dorfperson wird verhindert. Dadurch entsteht kein Todesereignis und keine darauf beruhende Todesreaktion. Es gibt keine neue Abstimmung und kein Ersatzopfer durch diese Karte. Der übrige Tagesablauf bleibt erhalten, einschließlich fälliger Fristen und des zweiten Kartenfensters. Andere, unabhängig eintretende Todesfälle werden dadurch nicht verhindert. Die Wolfsvariante wurde nicht weiter entschieden.
+- **`segen_13` Schattenvorteil, Wolfsvariante (KS-81, 2B):** Die erste schädliche oder aufdeckende Nachtfähigkeit, die einen Wolf trifft, scheitert. Dazu gehören beispielsweise Tötung, Rollenprüfung und Sperre. Schutz und Hilfe werden dadurch nicht verhindert. Daraus folgt keine getrennte einmalige Abwehr je Wolf. Die Dorfvariante wurde nicht weiter entschieden.
+- **`fluch_02` Falsche Fährte, Dorfvariante (KS-82, 3A):** Die Wirkung verfälscht eine reguläre Rollenauskunft. Die Spielleitung bestimmt die falsche Auskunft. Der tatsächliche Spielzustand und die angezeigte Information bleiben getrennt. Gibt es für die ausgewählte Person keine entsprechende Auskunft, entsteht keine Wirkung. Es gibt keinen mündlichen Ersatz und keine zusätzliche frei erfundene Nachricht. Die Wolfsvariante wurde nicht weiter entschieden.
+- **`segen_03` Wachsame Augen, Neuabstimmung (KS-83, 4A):** Die Karte enthüllt und ermöglicht die Ablehnung nur beim ersten Wahlgang. Nach einer Ablehnung folgt die bereits bestätigte Neuabstimmung. Bei dieser gibt es durch die Karte keine erneute Enthüllung und kein weiteres Ablehnungsrecht. Die neue Hinrichtung unterliegt weiterhin den sonstigen Regeln und Schutzwirkungen. Ob die zuvor verschonte Person erneut nominiert werden darf, ist nicht entschieden.
+- **`loki_12` Kosmisches Gleichgewicht, Folgetode (KS-84, 5A):** Ein direkt durch diese Karte verursachter zusätzlicher Tod löst die Karte nicht erneut aus. Auch indirekte Todesfolgen dieses zusätzlichen Todes lösen sie nicht erneut aus (Beispiel: Die Karte tötet Ben zusätzlich, Finn stirbt deshalb an Liebeskummer; weder Bens noch Finns Tod löst Kosmisches Gleichgewicht erneut aus). Die normalen Todesreaktionen selbst bleiben aktiv. Todesreaktionen aus unabhängig entstandenen Todesfällen sind nicht pauschal ausgeschlossen. Es wird keine allgemeine Sperre aller Todesketten eingeführt.
+
+**Ersetzt (nicht mehr gültig):**
+
+- KS-80, KS-82, KS-83, KS-84: Empfehlung A ist jeweils bestätigt; die übrigen Optionen sind nicht gewählt. Bei KS-82 gilt Option A ausdrücklich ohne mündlichen Ersatz.
+- KS-81: Empfehlung A (jede Nachtfähigkeit, die eine Wolfsperson als Ziel hat) ist ersetzt durch Option B (nur schädliche oder aufdeckende Fähigkeiten). A und C nicht gewählt.
+- Arbeitsliste Abschnitt 22, „Reihenfolge der nächsten Runden“: überholt durch Abschnitt 24.
+
+**Technisch abgeleitet (nicht bestätigt, Diskussionsgrundlage):**
+
+- `segen_09`: Dass die Karte nach der nächsten Hinrichtung verbraucht ist, folgt aus dem Bezug „nächste“ (KS-56) und der Optionsformulierung; ob sie bei nicht erfüllter Bedingung ebenfalls verfällt, ist nicht entschieden (KS-85).
+- `segen_13`: Dass „die erste“ Fähigkeit der Nachtplan-Reihenfolge folgt, ist nicht bestätigt (KS-86). Die Antwort regelt weder gemischte Fähigkeiten noch mehrere Ziele noch die Behandlung einer gescheiterten Auskunft.
+- `loki_12`: Wie der Ursprung eines Folgetods im Todesereignis nachverfolgt wird, ist eine technische Frage und nicht entschieden. Schutz und Schild des Mitgerissenen bleiben offen (gestellt als KS-93).
+
+**Weiter offen (nicht entschieden, nicht erfunden):**
+
+- `segen_09`: Wolfsvariante; Fraktionsbezug; Öffentlichkeit der Befreiung (verrät die Fraktion); Verfall bei nicht erfüllter Bedingung; Tag ohne Hinrichtung (KS-85).
+- `segen_13`: Dorfvariante; gemischte Fähigkeiten; mehrere Ziele; gescheiterte Auskunft; ob der Einsatz verbraucht wird (KS-86).
+- `fluch_02`: Wolfsvariante (Umlenkung); Bezug „heute Nacht“; Protokoll; Öffentlichkeit; Rollen mit mehreren Ergebnissen (KS-87).
+- `segen_03`: Wolfsvariante; erneute Nominierung der verschonten Person; Ablauf bei Schutz der neuen Hinrichtung (gestellt als KS-92); Rest von KS-77.
+- `loki_12`: Schutz und Schild des Mitgerissenen (KS-93); Wirkungsdauer; Bewertung „Rollenstärke“; Einzelsiegrollen; kein passendes Opfer; gleichzeitige Tode; Todeskarte; Siegprüfung; Ansage (KS-76).
+- `segen_09`, `segen_13`, `fluch_02`, `segen_03` und `loki_12` sind damit **nicht vollständig spezifiziert** und nicht implementiert.
+
+**Vorbereitet (keine Entscheidung):** Arbeitsliste Abschnitte 23 und 24 mit den nächsten Karten der Gruppe 3 `fluch_04`, `fluch_07`, `fluch_10` (Fragen KS-89 bis KS-91), zwei gemeinsamen Klärungen zu Schutz und Schild (KS-92 zu Teilen von KS-21, KS-93 zu Teilen von KS-27) und Folgepunkten KS-94 bis KS-97. Die drei neuen Karten sind nicht spezifiziert und nicht entschieden.

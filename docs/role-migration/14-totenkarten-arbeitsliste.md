@@ -1,6 +1,6 @@
 # Totenkarten: Arbeitsliste zur vollständigen Überarbeitung
 
-Stand: 30.09.2026 (neunte Runde), Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitte „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“ „Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)“ und „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten (dritte Antwortrunde, 30.09.2026)“ und „Rückkehrkarten: Zweites Leben, Wiedergeburt, Befreiung (vierte Antwortrunde, 30.09.2026)“ und „Rückkehr- und Rollenkarten: Phoenix, Geheimrat, Neuer Anfang, Rollenroulette (fünfte Antwortrunde, 30.09.2026)“ und „Phoenix-Tagesende, Geheimrat (Wolf), Heilende Hand, Blutpakt, Spiegelschutz (sechste Antwortrunde, 30.09.2026)“ und „Verzweiflungsschrei, Notanker, Schicksalswende (Wolf), Phoenix-Ausnahme, Bezugszeitpunkt (siebte Antwortrunde, 30.09.2026)“ und „Gebrochener Schild, Kettenfluch, Doppeltes Leid, Notanker (achte Antwortrunde, 30.09.2026)“ und „Kosmisches Gleichgewicht, Wachsame Augen, Stille Nacht, Notanker, Gebrochener Schild (neunte Antwortrunde, 30.09.2026)“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
+Stand: 30.09.2026 (zehnte Runde), Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitte „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“ „Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)“ und „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten (dritte Antwortrunde, 30.09.2026)“ und „Rückkehrkarten: Zweites Leben, Wiedergeburt, Befreiung (vierte Antwortrunde, 30.09.2026)“ und „Rückkehr- und Rollenkarten: Phoenix, Geheimrat, Neuer Anfang, Rollenroulette (fünfte Antwortrunde, 30.09.2026)“ und „Phoenix-Tagesende, Geheimrat (Wolf), Heilende Hand, Blutpakt, Spiegelschutz (sechste Antwortrunde, 30.09.2026)“ und „Verzweiflungsschrei, Notanker, Schicksalswende (Wolf), Phoenix-Ausnahme, Bezugszeitpunkt (siebte Antwortrunde, 30.09.2026)“ und „Gebrochener Schild, Kettenfluch, Doppeltes Leid, Notanker (achte Antwortrunde, 30.09.2026)“ und „Kosmisches Gleichgewicht, Wachsame Augen, Stille Nacht, Notanker, Gebrochener Schild (neunte Antwortrunde, 30.09.2026)“ und „Gerechter Zorn, Schattenvorteil, Falsche Fährte, Wachsame Augen, Kosmisches Gleichgewicht (zehnte Antwortrunde, 30.09.2026)“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
 
 ## 1. Kennzeichnung
 
@@ -46,6 +46,7 @@ Ausführlich mit Herkunft im Decision Log. Hier nur die Kurzfassung, damit die F
 | Verzweiflungsschrei, Notanker, Schicksalswende (Wolf), Phoenix-Ausnahme, Bezug „nächste“ (siebte Runde) | `wende_02`: die Kartenspielerin wählt das Ziel in der nächsten Nacht geheim; Schutz beginnt sofort (Dorf: gegen Wolfsangriffe diese und die nächsten zwei Nächte, Wolf: gegen Hinrichtung in den nächsten zwei Tagesphasen); geschützte Person überlebt die Hinrichtung, kein Ersatzopfer, keine Neuabstimmung, Tagesablauf bleibt. `wende_05`: Person mit aufgeschobenem Tod handelt bis zum Tod normal, zählt für Siegbedingungen bereits als tot, sonst nicht allgemein tot (keine vorzeitige Totenkarte, kein Tauschrecht, keine Wiederbelebung). `wende_11` Wolf: genau eine Gelegenheit in der nächsten Nacht, sonst Verfall. Dorfvariante nicht entschieden. `loki_10`: Ausnahme, wenn Phoenix im zweiten Fenster gespielt wird und die Lebensdauer einen Tag beträgt: Rückkehrer leben bis zum Ende des nächsten Tages (nur dieser Fall). „Nächste“ meint das nächste entsprechende Ereignis nach dem Ausspielen; abweichende Kartenregeln gehen vor. | Details zu allen vier Karten (Abschnitt 17); Siegprüfung gegen Todesreaktionen (KS-63); Entscheider beim Notanker (KS-64). Nicht vollständig spezifiziert. |
 | Gebrochener Schild, Kettenfluch, Doppeltes Leid, Notanker (achte Runde) | `fluch_05`: Schutzwirkungen pausieren und wirken danach wieder (Laufzeit nicht verlängert, unverbrauchter Schild bleibt, keine Ausnahme für gekaufte Schilde). `fluch_08`: nächste lebende Person der Fraktion in der Richtung (Wolf rechts, Dorf links). `fluch_12`: eine passende Schutzwirkung (Schild) verhindert den zusätzlichen Tod, kein Ersatz. `wende_05`: Wolfskind-Verwandlung und Lehrling-ähnliche Erbfolgen schon beim Aufschub, vor der Siegprüfung, keine anderen Todesreaktionen vorgezogen; der nächste passende Tod wird nach dem Ausspielen automatisch aufgeschoben. Nur für diese Karten. | Dauerzählung (KS-75); Rest KS-65 bis KS-67; Konflikt Lehrling-Erbe bei handelnder Person (KS-74); Rest KS-69, KS-79. Nicht vollständig spezifiziert. |
 | Kosmisches Gleichgewicht, Wachsame Augen (Dorf), Stille Nacht (Dorf), Notanker (Lehrling-Erbe), Gebrochener Schild (Dauer) (neunte Runde) | `loki_12`: jeder sonstige passende Tod während der Wirkungsdauer löst einen zusätzlichen Tod der anderen Fraktion aus, nicht nur der erste; ein von der Karte verursachter Tod löst nicht erneut aus; Spielleitung bestimmt die Zusatzopfer nach dem Kartentext; normale Reaktionen bleiben. `segen_03` Dorf: nach der Enthüllung entscheidet das Dorf über den Vollzug; bei Ablehnung neue Abstimmung; kein automatisches Ersatzopfer; Stimmen am Tisch. `segen_04` Dorf: in der Nacht keine Wolfstötungen (Rudelangriff und zusätzliche aktive Wolfstötungen), andere Wolfsfähigkeiten bleiben. `wende_05`: Lehrling erbt sofort vollständig, Meister handelt bis zum tatsächlichen Tod weiter, gleiche Rolle für beide, kein zweites Erbe beim späteren Tod. `fluch_05`: Tag des Ausspielens zählt als erster Tag der Schutzpause, Ende am Ende des gezählten Tages, Laufzeit nicht verlängert, Phoenix-Ausnahme nicht übertragen. Nur für diese Karten und Varianten. | Folgetode aus anderen Todesreaktionen (KS-84); erneute Enthüllung (KS-83); Rest KS-76, KS-77, KS-78; Rest KS-79, KS-69; Ablaufzeitpunkt (KS-88), Rest KS-65. Nicht vollständig spezifiziert. |
+| Gerechter Zorn (Dorf), Schattenvorteil (Wolf), Falsche Fährte (Dorf), Wachsame Augen (Neuabstimmung), Kosmisches Gleichgewicht (Folgetode) (zehnte Runde) | `segen_09` Dorf: Hinrichtung der Dorfperson wird verhindert, kein Todesereignis, keine darauf beruhende Todesreaktion, keine Neuabstimmung, kein Ersatzopfer, übriger Tagesablauf mit Fristen und zweitem Kartenfenster bleibt, unabhängige Tode nicht verhindert. `segen_13` Wolf: die erste schädliche oder aufdeckende Nachtfähigkeit, die einen Wolf trifft, scheitert (Tötung, Rollenprüfung, Sperre); Schutz und Hilfe nicht; keine getrennte Abwehr je Wolf. `fluch_02` Dorf: verfälscht eine reguläre Rollenauskunft, Spielleitung bestimmt die falsche Auskunft, Zustand und Anzeige getrennt, ohne entsprechende Auskunft keine Wirkung, kein mündlicher Ersatz. `segen_03`: Enthüllung und Ablehnung nur beim ersten Wahlgang, danach Neuabstimmung ohne erneute Enthüllung; die neue Hinrichtung unterliegt den sonstigen Schutzwirkungen. `loki_12`: Der Kartentod und seine indirekten Folgen (Beispiel Liebeskummer) lösen die Karte nicht erneut aus; Todesreaktionen bleiben aktiv, unabhängige Tode nicht pauschal ausgeschlossen. Nur für diese Karten und Varianten. | Rest KS-85, KS-86, KS-87, KS-77, KS-76; Schild bei verhinderter Hinrichtung (KS-92) und bei Karten-Toden (KS-93). Nicht vollständig spezifiziert. |
 | 5A + zweite Runde | Stapel gehören zur Person. Neuer Träger der Rolle bei null; beim bisherigen Träger ruhen sie und werden bei Rückerhalt wieder nutzbar. Tod: Stapel bleiben, tot sammelt und gewinnt er nicht; nach Wiederbelebung weiter mit dem Stand. | Schild bei Tod und Rollenverlust (KS-07). |
 | 6B | Fünf-Tote-Hinweis auch bei später erhaltener Selbstmörder-Rolle, wenn schon fünf tot sind (einmalig). Umgesetzt. | Wiederbelebungsfall bleibt offen (kein Beschluss). |
 
@@ -264,7 +265,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine.
 - **[V] Eingabe oder Bestätigung der SL:** SL wählt das zweite Opfer.
 - **Unklarheiten und Rolleninteraktionen:** Todeskette gegen die Fraktion; „Rollenstärke“ nicht definiert; Solo und Neutrale; unbegrenzte Ketten (zwei Tode lösen weitere aus). ÜB-1.
-- **Status:** noch nicht überarbeitet In Fragerunde 8 (Abschnitt 20) vorgelegt: KS-71 (Kette); Rest KS-76; nicht implementiert. **Neunte Runde:** KS-71 beantwortet (jeder passende Tod löst aus, keine Kette durch die Karte selbst, Abschnitt 21); vorgelegt KS-84 (Folgetode aus anderen Todesreaktionen); offen Rest KS-76; nicht vollständig spezifiziert, nicht implementiert.
+- **Status:** noch nicht überarbeitet In Fragerunde 8 (Abschnitt 20) vorgelegt: KS-71 (Kette); Rest KS-76; nicht implementiert. **Neunte Runde:** KS-71 beantwortet (jeder passende Tod löst aus, keine Kette durch die Karte selbst, Abschnitt 21); vorgelegt KS-84 (Folgetode aus anderen Todesreaktionen); offen Rest KS-76; nicht vollständig spezifiziert, nicht implementiert. **Zehnte Runde:** KS-84 beantwortet (Folgetode des Kartentods lösen nicht erneut aus, Abschnitt 23); vorgelegt KS-93 (Schild gegen Karten-Tode); offen Rest KS-76; nicht vollständig spezifiziert, nicht implementiert.
 
 ### Gruppe 3: Nachtablauf und Wolfsangriff (12 Karten)
 
@@ -276,7 +277,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** W: SL nennt dem Rudel leise die Rolle des Opfers. D: SL enthüllt das Opfer vor der Lynchung, Dorf stimmt am Tisch über Vollzug ab.
 - **[V] Eingabe oder Bestätigung der SL:** W: neues Ziel oder Bestätigung. D: Ergebnis der Tischabstimmung (vollziehen ja/nein).
 - **Unklarheiten und Rolleninteraktionen:** D-Text spricht von „Opfer“ vor der Lynchung, meint wohl den Nominierten (Auslegung offen). Öffentliche Rollenenthüllung ist eine Geheimhaltungsfrage. ÜB-1, ÜB-2.
-- **Status:** noch nicht überarbeitet In Fragerunde 8 (Abschnitt 20) vorgelegt: KS-72 (Ablehnung der Hinrichtung, Dorf); Rest KS-77; nicht implementiert. **Neunte Runde:** KS-72 beantwortet (Dorf entscheidet, bei Ablehnung Neuabstimmung, Abschnitt 21); vorgelegt KS-83 (erneute Enthüllung); offen Rest KS-77, Wolfsvariante nicht entschieden; nicht vollständig spezifiziert, nicht implementiert.
+- **Status:** noch nicht überarbeitet In Fragerunde 8 (Abschnitt 20) vorgelegt: KS-72 (Ablehnung der Hinrichtung, Dorf); Rest KS-77; nicht implementiert. **Neunte Runde:** KS-72 beantwortet (Dorf entscheidet, bei Ablehnung Neuabstimmung, Abschnitt 21); vorgelegt KS-83 (erneute Enthüllung); offen Rest KS-77, Wolfsvariante nicht entschieden; nicht vollständig spezifiziert, nicht implementiert. **Zehnte Runde:** KS-83 beantwortet (Enthüllung und Ablehnung nur beim ersten Wahlgang, Abschnitt 23); vorgelegt KS-92 (Ablauf bei Schutz der neuen Hinrichtung); offen Rest KS-77; nicht vollständig spezifiziert, nicht implementiert.
 
 #### `segen_04` Stille Nacht (SEGEN)
 
@@ -296,7 +297,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine; SL merkt sich die Bedingung.
 - **[V] Eingabe oder Bestätigung der SL:** Keine, wenn Fraktion aus Rollenkatalog folgt; sonst SL-Bestätigung.
 - **Unklarheiten und Rolleninteraktionen:** Bedingungskarte über zwei Zeitpunkte. „Dorfbewohner“ und „Wolf“ bei Solo- und Wechselrollen (ÜB-1). „Automatisch befreit“ kollidiert mit Todesketten der Hinrichtung (Wahnsinniger Kutscher).
-- **Status:** noch nicht überarbeitet In Fragerunde 9 (Abschnitt 22) vorgelegt: KS-80 (Tagesablauf nach entfallener Hinrichtung, Dorf); Rest KS-85; nicht implementiert.
+- **Status:** noch nicht überarbeitet In Fragerunde 9 (Abschnitt 22) vorgelegt: KS-80 (Tagesablauf nach entfallener Hinrichtung, Dorf); Rest KS-85; nicht implementiert. **Zehnte Runde:** KS-80 beantwortet (Dorf: Hinrichtung verhindert, Tagesablauf bleibt, Abschnitt 23); offen Rest KS-85, Wolfsvariante nicht entschieden; nicht vollständig spezifiziert, nicht implementiert.
 
 #### `segen_13` Schattenvorteil (SEGEN)
 
@@ -306,7 +307,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** D: SL sagt das Rudelopfer laut an (Nachtgeheimnis wird öffentlich).
 - **[V] Eingabe oder Bestätigung der SL:** W: Bestätigung, welche Fähigkeit „die erste“ ist (Reihenfolge der Nachtschritte).
 - **Unklarheiten und Rolleninteraktionen:** „Erste Fähigkeit“ hängt an der Nachtreihenfolge. D verrät das Rudelopfer vor dem Morgen (Geheimhaltungsregel, öffentliche Ansage). Interaktion mit Schutzrollen. ÜB-3.
-- **Status:** noch nicht überarbeitet In Fragerunde 9 (Abschnitt 22) vorgelegt: KS-81 (Reichweite von „trifft einen Wolf“, Wolf); Rest KS-86; nicht implementiert.
+- **Status:** noch nicht überarbeitet In Fragerunde 9 (Abschnitt 22) vorgelegt: KS-81 (Reichweite von „trifft einen Wolf“, Wolf); Rest KS-86; nicht implementiert. **Zehnte Runde:** KS-81 beantwortet (Wolf: erste schädliche oder aufdeckende Fähigkeit scheitert, Abschnitt 23); offen Rest KS-86, Dorfvariante nicht entschieden; nicht vollständig spezifiziert, nicht implementiert.
 
 #### `fluch_02` Falsche Fährte (FLUCH)
 
@@ -316,7 +317,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** D: SL gibt die falsche Information mündlich oder über die private Ansicht.
 - **[V] Eingabe oder Bestätigung der SL:** W: Ziel. D: Ziel und Inhalt der falschen Information.
 - **Unklarheiten und Rolleninteraktionen:** Falsche Information verlangt Rollen mit Informationsfähigkeit (Detektiv, Orakel). Umlenkung gegen Schutzrollen. „Der Spielleiter wählt“ ist eine bestehende SL-Freiheit (Keine Rollenbeschränkung aus Bequemlichkeit).
-- **Status:** noch nicht überarbeitet In Fragerunde 9 (Abschnitt 22) vorgelegt: KS-82 (Wirkungsbereich der falschen Information, Dorf); Rest KS-87; nicht implementiert.
+- **Status:** noch nicht überarbeitet In Fragerunde 9 (Abschnitt 22) vorgelegt: KS-82 (Wirkungsbereich der falschen Information, Dorf); Rest KS-87; nicht implementiert. **Zehnte Runde:** KS-82 beantwortet (Dorf: reguläre Rollenauskunft wird verfälscht, Abschnitt 23); offen Rest KS-87, Wolfsvariante nicht entschieden; nicht vollständig spezifiziert, nicht implementiert.
 
 #### `fluch_04` Verrat (FLUCH)
 
@@ -326,7 +327,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** D: Mehrere Abstimmungen nacheinander am Tisch.
 - **[V] Eingabe oder Bestätigung der SL:** D: Ergebnis jeder Abstimmung (SL trägt ein).
 - **Unklarheiten und Rolleninteraktionen:** Widerspricht der Regel „Wölfe wählen ein Opfer“ (Zwang gegen das eigene Team). D: Schleife ohne Ende, wenn nur Wölfe leben; Todesketten. Bezug „Dorf-Fraktion“ bei Solo/Wechselrollen (ÜB-1).
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet In Fragerunde 10 (Abschnitt 24) vorgelegt: KS-89 (Reichweite von „kein Dorfbewohner kann heute sterben“, Wolf); Dorf hängt an KS-92; Rest KS-94; nicht implementiert.
 
 #### `fluch_07` Alptraum (FLUCH)
 
@@ -336,7 +337,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** D: SL gibt den Verdacht öffentlich bekannt.
 - **[V] Eingabe oder Bestätigung der SL:** Keine, wenn Zufall über den gespeicherten Generator läuft; sonst SL-Wahl.
 - **Unklarheiten und Rolleninteraktionen:** „Zufällig“ (ÜB-4). D: öffentlicher Verdacht ohne Wirkung, nur Information; kein echter Wahrheitsgehalt (keine erfundenen Aussagen in der App). Doppelt zu segen_04 D.
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet In Fragerunde 10 (Abschnitt 24) vorgelegt: KS-90 (gleiche Wirkung wie `segen_04` Dorf, Wolf); Rest KS-95; nicht implementiert.
 
 #### `fluch_10` Schlechtes Omen (FLUCH)
 
@@ -346,7 +347,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine.
 - **[V] Eingabe oder Bestätigung der SL:** W: SL-Entscheidung; „starke Rolle“ ist nicht definiert.
 - **Unklarheiten und Rolleninteraktionen:** „Starke Rolle“ ist nicht definiert (Auslegung offen). D: „zufälliger Dorfbewohner“ (ÜB-4). Todeszeitpunkt „noch am selben Tag“.
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet In Fragerunde 10 (Abschnitt 24) vorgelegt: KS-91 („starke Rolle“, Wolf); Dorf hängt an KS-92 und KS-93; Rest KS-96; nicht implementiert.
 
 #### `wende_03` Wendepunkt (WENDE)
 
@@ -1037,13 +1038,13 @@ Noch nicht gestellt. Nichts davon ist beschlossen. Reihenfolge nach Abhängigkei
 | KS-18 | Wiederbelebung durch Karten (`segen_08`, `wende_04`, `wende_07`, `loki_10`): Gelten die Wiederbelebungsregeln W-01 bis W-04 (frischer Start), und was heißt „ursprüngliche Fähigkeit“ bei Einmalfähigkeiten? (Gruppe 1) **Gestellt in Abschnitt 10, Frage 4.** **Vierte Runde:** Rolle vom Todeszeitpunkt bestätigt, doppelte Rolle zulässig, bestehende Zurücksetz-Regeln gelten; „ursprüngliche Fähigkeit“ bei Einmalfähigkeiten folgt daraus. Zeitpunkt und Sichtbarkeit der Rückkehr offen (KS-40). |
 | KS-19 | `wende_07`: Was ist eine „halbe Fähigkeit“ (auch bei Rollen ohne aktive Fähigkeit)? `loki_10`: Würfel am Tisch oder Generator, was ist eine „Runde“? (Gruppe 1) **`wende_07` gestellt in Abschnitt 10, Fragen 3 und 5** (der Text erklärt „halb“ selbst als einmalig). **Vierte Runde:** `wende_07` bestätigt (Tod erst nach dem einmaligen Einsatz, Rollen ohne aktive Fähigkeit nicht ausgeschlossen); Definition des Einsatzes offen (KS-39). `loki_10`: als KS-29 (Runde) gestellt, Würfelquelle KS-34. |
 | KS-20 | Rollenwechsel durch Karten (`schicksal_08`, `loki_06`): Welche Rollen sind erlaubt, folgt der Zustand der Person oder der Rolle? Wechsel von oder zum Kartenschlucker folgt der Stapelregel (entschieden); Wechsel zum Selbstmörder berührt den Fünf-Tote-Hinweis (6B). (Gruppe 1) **Vierte Runde gestellt:** KS-32 (Fraktion des Paars bei `loki_06`), KS-33 (Zustand bei Rollenwechsel durch Karte), Rest KS-36 und KS-37. |
-| KS-21 | Schild: verhinderte Hinrichtung (Tag endet ohne Opfer oder neue Abstimmung) und Reihenfolge mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen. (Gruppe 2) **Sechste Runde:** Teilfrage für `wende_02` gestellt als KS-52; Regel für den Schild bleibt offen. |
+| KS-21 | Schild: verhinderte Hinrichtung (Tag endet ohne Opfer oder neue Abstimmung) und Reihenfolge mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen. (Gruppe 2) **Sechste Runde:** Teilfrage für `wende_02` gestellt als KS-52; Regel für den Schild bleibt offen. **Zehnte Runde:** kartenweise auch für `segen_09` Dorf entschieden; Ablauf nach verhinderter Hinrichtung allgemein gestellt als KS-92, Rest in KS-97. |
 | KS-22 | Kartenfenster: Reihenfolge mehrerer Toter innerhalb eines Fensters. (Neu, dritte Runde) |
 | KS-23 | Kartenfenster: Neue Todesfälle oder Wiederbelebungen durch eine gerade gespielte Karte; darf eine dabei Wiederbelebte im selben Fenster teilnehmen? (Neu) |
 | KS-24 | Kartenfenster und Siegprüfung: Verhältnis zur bereits anstehenden Siegprüfung, besonders am Tagesende. (Neu) |
 | KS-25 | Aufbewahrte Karte bei Wiederbelebung: Bleibt sie, und wie verhält sie sich zur neuen Karte nach erneutem Tod (1A)? (Neu) |
 | KS-26 | Tagesende ohne Hinrichtung: Gibt es das zweite Kartenfenster trotzdem? (Neu) |
-| KS-27 | Schild: Fallen Rudelangriff, Karteneffekte und Todesketten unter „Rollenfähigkeit“? Gilt „höchstens ein Schild“ je Person oder insgesamt, seit er an die Person gebunden ist? (Neu; ergänzt KS-21) |
+| KS-27 | Schild: Fallen Rudelangriff, Karteneffekte und Todesketten unter „Rollenfähigkeit“? Gilt „höchstens ein Schild“ je Person oder insgesamt, seit er an die Person gebunden ist? (Neu; ergänzt KS-21) **Zehnte Runde:** Tode aus Karteneffekten gestellt als KS-93, Rest in KS-97. |
 | KS-28 | Rückkehrkarten (Abschnitt 10): Darf sich die Kartenträgerin bei `segen_08` selbst wählen, was gilt ohne passende tote Person, und wirkt ein lebender Wächter am Tor auf zurückkehrende Wölfe (RM-DR-149)? (Neu) **Vierte Runde:** Selbstwahl bei `segen_08` beantwortet (nein), ohne passende Tote bleibt `segen_08` ungespielt erhalten (und wird nicht vergeben, wenn weniger als zwei andere Tote derselben Fraktion existieren). Für `wende_04` und `wende_07` offen (KS-39). Wächter am Tor weiter offen (KS-40). |
 | KS-29 | `loki_10`: Was ist eine „Runde“, und wann sterben die Zurückgeholten erneut? **Gestellt in Abschnitt 12.** **Fünfte Runde:** beantwortet (Runde ist ein Tag, Tag des Ausspielens zählt, Tod am Ende des ausgewürfelten Tages). |
 | KS-30 | `wende_12` (Dorf): Was darf die Frage der Kartenträgerin sein? **Gestellt in Abschnitt 12.** **Fünfte Runde:** für die Dorfvariante beantwortet (jede Frage); Wolfsvariante nicht entschieden. |
@@ -1778,6 +1779,8 @@ Originaltexte gelesen in `js/core/cards.js` und mit Abschnitt 6 verglichen (wort
 
 Empfehlung A: Der Text sagt „ohne Opfer“ und nennt keinen Wegfall weiterer Tagesschritte. A entspricht der bei `wende_02` bestätigten Wirkung (dort nur für diese Karte), braucht keinen Sonderablauf, und da die Hinrichtung nicht stattfindet, läuft auch keine Todesreaktion; die Kollision mit dem Wahnsinnigen Kutscher entfällt. Nachteil: Der Tisch erfährt aus der Befreiung, dass die Person zum Dorf gehört (Ansage offen, KS-85). B liest „Tag endet“ wörtlich und nimmt dem Tisch das zweite Kartenfenster, was KS-26 allgemein offenlässt. C widerspricht dem Text „endet ohne Opfer“.
 
+**Ausgang (zehnte Runde, Abschnitt 23):** 1A bestätigt. Empfehlung A erfüllt; B und C nicht gewählt.
+
 ### Karte 2: `segen_13` Schattenvorteil (SEGEN)
 
 - **Originaltext:** Wolf: „In der Folgenacht missglückt die erste Fähigkeit die einen Wolf trifft.“ · Dorf: „Die Werwölfe werden in der Folgenacht als erstes geweckt und ihr Opfer wird laut nach der Einigung angesagt.“
@@ -1791,6 +1794,8 @@ Empfehlung A: Der Text sagt „ohne Opfer“ und nennt keinen Wegfall weiterer T
 - **D:** Eigene Antwort.
 
 Empfehlung A: Der Text schränkt nicht ein, und A braucht keine Einteilung aller Rollen in schädlich und hilfreich (die niemand als Regel formuliert hat). Nachteil: A kann auch eine Hilfe für einen Wolf scheitern lassen und die Karte damit gegen die Wölfe drehen. B passt besser zum Kartenzweck, verlangt aber eine Wirkungseinteilung über den ganzen Rollenkatalog. C streicht Auskünfte und Sperren, obwohl der Text „die erste Fähigkeit“ sagt.
+
+**Ausgang (zehnte Runde, Abschnitt 23):** 2B bestätigt (nur schädliche oder aufdeckende Fähigkeiten, Schutz und Hilfe nicht). Empfehlung A ist **ersetzt**; A und C nicht gewählt.
 
 ### Karte 3: `fluch_02` Falsche Fährte (FLUCH)
 
@@ -1806,6 +1811,8 @@ Empfehlung A: Der Text schränkt nicht ein, und A braucht keine Einteilung aller
 
 Empfehlung A: Sie folgt dem bestätigten Grundsatz „falsche Information ist ein modellierter Spieleffekt“ und dem vorhandenen Orakelmodell, ist replayfähig und prüfbar und erfindet keine Aussagen in der App. Die Wahl der Zielperson liegt bei der Spielleitung, sie kann also eine Person mit Auskunft wählen. Nachteil: Die Karte verpufft, wenn die gewählte Person keine Auskunft hat. B verlässt die Modellierung und ist nicht prüfbar. C fügt einen nicht prüfbaren mündlichen Teil hinzu.
 
+**Ausgang (zehnte Runde, Abschnitt 23):** 3A bestätigt, ohne mündlichen Ersatz und ohne frei erfundene Nachricht. Empfehlung A erfüllt; B und C nicht gewählt.
+
 ### Klärung zu `segen_03` Wachsame Augen: erneute Enthüllung (Endlosschleife)
 
 Nicht erneut gefragt: Das Dorf entscheidet nach der Enthüllung, lehnt es ab, folgt eine neue Abstimmung, es gibt kein automatisches Ersatzopfer (Abschnitt 21). Offen ist, ob die Karte bei der neuen Abstimmung erneut wirkt. Ohne Antwort kann das Dorf beliebig oft ablehnen und die Partie am Tisch anhalten. Ob die verschonte Person erneut nominiert werden darf, bleibt getrennt in KS-77.
@@ -1817,6 +1824,8 @@ Nicht erneut gefragt: Das Dorf entscheidet nach der Enthüllung, lehnt es ab, fo
 - **D:** Eigene Antwort.
 
 Empfehlung A: Der Text beschreibt einen einzelnen Vorgang „vor der Lynchung“, A braucht als einzigen Zustand „Veto verbraucht ja oder nein“ und kann nicht endlos laufen. Nachteil: Die zweite Person wird ohne Sicherung hingerichtet, obwohl das Dorf sie mit Enthüllung vielleicht verschont hätte. B ist die wörtlichste Lesart, verlangt aber Zustand je Wahlgang und lässt eine Schleife zu. C fügt eine feste Zahl hinzu, die niemand entschieden hat.
+
+**Ausgang (zehnte Runde, Abschnitt 23):** 4A bestätigt. Empfehlung A erfüllt; B und C nicht gewählt. Erneute Nominierung der verschonten Person bleibt offen.
 
 ### Klärung zu `loki_12` Kosmisches Gleichgewicht: Folgetode aus anderen Todesreaktionen (Todeskette)
 
@@ -1830,6 +1839,8 @@ Nicht erneut gefragt: Jeder sonstige passende Tod während der Wirkungsdauer lö
 
 Empfehlung A: Sie führt die bestätigte Regel „keine Kette durch die Karte selbst“ auf den Ursprung zurück und verhindert, dass Liebeskummer oder Verknüpfung die Karte vervielfachen. Sie greift nur auf die bereits gespeicherte Todesquelle zurück (bei der Verknüpfung bleiben Ursache und Quelle erhalten). Nachteil: Die Ursprungskette muss im Todesereignis nachverfolgbar sein. B ist die wörtlichste Lesart von „sonstiger Tod“, lässt aber Reaktionsketten zu, die eine Fraktion auslöschen können. C braucht keine Nachverfolgung, nimmt der Karte aber legitime Auslöser wie den Liebeskummer nach einem Rudelangriff.
 
+**Ausgang (zehnte Runde, Abschnitt 23):** 5A bestätigt, ohne allgemeine Sperre aller Todesketten. Empfehlung A erfüllt; B und C nicht gewählt.
+
 ### Für die Folgerunde dokumentiert (nicht gefragt, nicht entschieden)
 
 | ID | Karte | Klärungsbedarf |
@@ -1839,4 +1850,123 @@ Empfehlung A: Sie führt die bestätigte Regel „keine Kette durch die Karte se
 | KS-87 | `fluch_02` | Wolf: Umlenkung ersetzt das Rudelziel (Schutz und Schild gegen das neue Ziel, Umlenkungsketten E-20, Zusatzopfer des Rudelvaters); ob eine Wolfsperson als Ziel erlaubt ist (der Text schränkt nicht ein); Ansage; hängt an KS-21 und KS-27. Dorf: Rest nach KS-82 (Bezug „heute Nacht“ nach dem Ausspielen; Protokoll der Falschauskunft; Öffentlichkeit; falsche Information für Rollen mit mehreren Ergebnissen). |
 | KS-88 | `fluch_05` | Ablaufzeitpunkt „Ende des Tages“ gegenüber der Tagesend-Reihenfolge (Hinrichtung, Todeseffekte, Fristablauf der Rückkehrer, zweites Kartenfenster, Abschnitt 13); Wirkung einer Dauer von einem Tag im zweiten Fenster (Ende am Ende des Tages, an dem sie beginnt; ob die Pause dann leer läuft, ist nicht bestätigt); Bezug zu Schild-Kauf in der Pause. Phoenix-Ausnahme ausdrücklich nicht übertragen. |
 
-**Reihenfolge der nächsten Runden (Vorschlag, [V]):** (1) Antworten auf KS-80 bis KS-84. (2) Die Schutz- und Schildregeln KS-27 (und KS-21), weil KS-66, KS-67, KS-76, KS-85 und KS-87 sie voraussetzen. (3) Restfragen der Gruppe 1: KS-38 bis KS-40, KS-46 bis KS-48, KS-35 bis KS-37. (4) Details je Karte gebündelt: KS-65 bis KS-70, KS-76 bis KS-79, KS-85 bis KS-88 (zuerst die Schleifenpunkte in KS-77, weil dort Endlosschleifen entstehen können). (5) Gruppe 3 ab `fluch_04`. Der Vorschlag am Ende von Abschnitt 20 ist dadurch überholt.
+**Reihenfolge der nächsten Runden (Vorschlag, [V]):** (1) Antworten auf KS-80 bis KS-84. (2) Die Schutz- und Schildregeln KS-27 (und KS-21), weil KS-66, KS-67, KS-76, KS-85 und KS-87 sie voraussetzen. (3) Restfragen der Gruppe 1: KS-38 bis KS-40, KS-46 bis KS-48, KS-35 bis KS-37. (4) Details je Karte gebündelt: KS-65 bis KS-70, KS-76 bis KS-79, KS-85 bis KS-88 (zuerst die Schleifenpunkte in KS-77, weil dort Endlosschleifen entstehen können). (5) Gruppe 3 ab `fluch_04`. Der Vorschlag am Ende von Abschnitt 20 ist dadurch überholt. **Überholt (zehnte Runde):** dieser Vorschlag ist durch den Vorschlag am Ende von Abschnitt 24 ersetzt.
+
+## 23. Bestätigte Regeln der zehnten Antwortrunde (30.09.2026)
+
+Antworten des Product Owners auf die Fragen aus Abschnitt 22 (KS-80 bis KS-84), als Buchstabenwahl mit Zusatzbestimmungen: 1A, 2B, 3A, 4A, 5A. Verbindlich ist der Decision Log („Gerechter Zorn, Schattenvorteil, Falsche Fährte, Wachsame Augen, Kosmisches Gleichgewicht (zehnte Antwortrunde, 30.09.2026)“); dieser Abschnitt ist die Arbeitsfassung. **[R]** bleibt der Originaltext in Abschnitt 6, **[B]** ist bestätigt, **[V]** in Abschnitt 22 ist der frühere Vorschlag und dort als ersetzt oder erfüllt vermerkt. Die Antworten gelten, wie in den früheren Runden, nur für die genannten Karten und Fraktionsvarianten.
+
+| Karte | [B] Bestätigt | Weiter offen |
+|---|---|---|
+| `segen_09` Gerechter Zorn, Dorf | Die Hinrichtung der betroffenen Dorfperson wird verhindert. Dadurch entsteht kein Todesereignis und keine darauf beruhende Todesreaktion. Keine neue Abstimmung und kein Ersatzopfer durch diese Karte. Der übrige Tagesablauf bleibt erhalten, einschließlich fälliger Fristen und des zweiten Kartenfensters. Andere, unabhängig eintretende Todesfälle werden dadurch nicht verhindert. | Wolfsvariante nicht entschieden; Fraktionsbezug; Öffentlichkeit der Befreiung; Verfall bei nicht erfüllter Bedingung; Tag ohne Hinrichtung (Rest von KS-85). |
+| `segen_13` Schattenvorteil, Wolf | Die erste schädliche oder aufdeckende Nachtfähigkeit, die einen Wolf trifft, scheitert (Beispiele: Tötung, Rollenprüfung, Sperre). Schutz und Hilfe werden dadurch nicht verhindert. Es gibt keine getrennte einmalige Abwehr je Wolf. | Gemischte Fähigkeiten; mehrere Ziele; Behandlung einer gescheiterten Auskunft; ob der Einsatz verbraucht wird; „erste“ nach dem Nachtplan (Rest von KS-86). **Dorfvariante nicht entschieden.** |
+| `fluch_02` Falsche Fährte, Dorf | Die Wirkung verfälscht eine reguläre Rollenauskunft. Die Spielleitung bestimmt die falsche Auskunft. Der tatsächliche Spielzustand und die angezeigte Information bleiben getrennt. Gibt es für die ausgewählte Person keine entsprechende Auskunft, entsteht keine Wirkung. Kein mündlicher Ersatz und keine zusätzliche frei erfundene Nachricht. | Bezug „heute Nacht“; Protokoll; Öffentlichkeit; Rollen mit mehreren Ergebnissen (Rest von KS-87). **Wolfsvariante nicht entschieden.** |
+| `segen_03` Wachsame Augen, Neuabstimmung | Die Karte enthüllt und ermöglicht die Ablehnung nur beim ersten Wahlgang. Nach einer Ablehnung folgt die bestätigte Neuabstimmung. Bei dieser gibt es durch die Karte keine erneute Enthüllung und kein weiteres Ablehnungsrecht. Die neue Hinrichtung unterliegt weiterhin den sonstigen Regeln und Schutzwirkungen. | Ob die zuvor verschonte Person erneut nominiert werden darf; übrige Punkte von KS-77; Ablauf, wenn eine Schutzwirkung die neue Hinrichtung verhindert (gestellt als KS-92). |
+| `loki_12` Kosmisches Gleichgewicht, Folgetode | Ein direkt durch diese Karte verursachter zusätzlicher Tod löst die Karte nicht erneut aus. Auch indirekte Todesfolgen dieses zusätzlichen Todes lösen sie nicht erneut aus (Beispiel: Die Karte tötet Ben zusätzlich, Finn stirbt deshalb an Liebeskummer; weder Bens noch Finns Tod löst die Karte erneut aus). Die normalen Todesreaktionen bleiben aktiv. Todesreaktionen aus unabhängig entstandenen Todesfällen sind nicht pauschal ausgeschlossen. Keine allgemeine Sperre aller Todesketten. | Schutz und Schild des Mitgerissenen (gestellt als KS-93); Wirkungsdauer; Bewertung „Rollenstärke“; Einzelsiegrollen; kein passendes Opfer; gleichzeitige Tode; Todeskarte; Siegprüfung; Ansage (Rest von KS-76). |
+
+Status der fünf Karten: **teilweise bestätigt, nicht vollständig spezifiziert, nicht implementiert.**
+
+### Ausgang der Fragen aus Abschnitt 22
+
+| Frage | Ausgang |
+|---|---|
+| KS-80 (`segen_09`, Tagesablauf nach entfallener Hinrichtung, Dorf) | 1A: Option A bestätigt. Empfehlung A erfüllt; B und C nicht gewählt. |
+| KS-81 (`segen_13`, „trifft einen Wolf“, Wolf) | 2B: Option B (nur schädliche oder aufdeckende Fähigkeiten). Empfehlung A ist **ersetzt**; A und C nicht gewählt. |
+| KS-82 (`fluch_02`, Wirkungsbereich der falschen Information, Dorf) | 3A: Option A (nur reguläre Rollenauskunft, ohne mündlichen Ersatz). Empfehlung A erfüllt; B und C nicht gewählt. |
+| KS-83 (`segen_03`, erneute Enthüllung) | 4A: Option A (Enthüllung und Ablehnung nur beim ersten Wahlgang). Empfehlung A erfüllt; B und C nicht gewählt. |
+| KS-84 (`loki_12`, Folgetode) | 5A: Option A (Folgen des Kartentods lösen nicht erneut aus, unabhängige Tode nicht pauschal ausgeschlossen). Empfehlung A erfüllt; B und C nicht gewählt. |
+
+### Stand der Folgepunkte nach der zehnten Runde
+
+Die Tabellen in Abschnitt 21 und 22 bleiben unverändert stehen; maßgeblich ist dieser Stand.
+
+| ID | Karte | Stand |
+|---|---|---|
+| KS-21 | Schild, verhinderte Hinrichtung | Kartenweise entschieden für `wende_02` (siebte Runde) und `segen_09` Dorf (zehnte Runde): Hinrichtung entfällt, kein Ersatz, keine Neuabstimmung, Tagesablauf bleibt. Die allgemeine Regel bleibt offen; der Teil „Ablauf nach verhinderter Hinrichtung“ ist gestellt als KS-92. Offen bleibt die Reihenfolge mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen (KS-97). |
+| KS-27 | Schild, Reichweite | Kartenweise entschieden für `fluch_12` (Karten-Tod wird abgefangen). Der Teil „Tode aus Karteneffekten“ ist gestellt als KS-93. Offen bleiben Rudelangriff, Todesketten und „ein Schild“ je Person oder insgesamt (KS-97). |
+| KS-76 | `loki_12` | Folgetode beantwortet (5A). Offen: Schutz und Schild des Mitgerissenen (KS-93); Wirkungsdauer; Bewertung „Rollenstärke“; Einzelsiegrollen und Neutrale (ÜB-1); kein passendes Opfer; gleichzeitige Tode; Todeskarte; Siegprüfung; Ansage; Verhältnis zu Wiederbelebungsrunden. |
+| KS-77 | `segen_03` | Erneute Enthüllung beantwortet (4A). Offen: erneute Nominierung der verschonten Person (Standardregel: jede Person wird höchstens einmal nominiert, Regeln können dies ändern); Ablauf bei Schutz der neuen Hinrichtung (KS-92); Deutung „Opfer“; Öffentlichkeit der gezeigten Rolle nach einem Nein; Verhältnis zu Wiederbelebungsrunden (DI-01); Regeln der Tischabstimmung; Spiegelwolf und Wahnsinniger Kutscher; Bezug „Lynchung“ je Fenster. Wolf unverändert offen. |
+| KS-85 | `segen_09` | Dorf beantwortet (KS-80). Offen: Wolf („in dieser Nacht“, zweites Opfer, Schutz je Ziel, Verhältnis zu `segen_04` Wolf und Zusatzopfern, Ansage); Fraktionsbezug bei Einzelsiegrollen und Wechselrollen (ÜB-1); Verfall der Karte bei nicht erfüllter Bedingung; Tag ohne Hinrichtung; Öffentlichkeit der Befreiung (verrät die Fraktion). |
+| KS-86 | `segen_13` | Wolf teilweise beantwortet (KS-81). Offen: gemischte Fähigkeiten (schädlich und hilfreich zugleich); mehrere Ziele; Behandlung einer gescheiterten Auskunft (Geheimhaltung, Scheinrollen täuschen nur Rollenauskünfte, I-02); ob der Einsatz verbraucht wird und wer es erfährt; „erste“ nach dem Nachtplan-Snapshot. Dorf unverändert offen (Nachtreihenfolge, Ansage, Zusatzopfer, Reaktionen anderer Rollen). |
+| KS-87 | `fluch_02` | Dorf teilweise beantwortet (KS-82). Offen: Bezug „heute Nacht“ nach dem Ausspielen; Protokoll der Falschauskunft; Öffentlichkeit; Rollen mit mehreren Ergebnissen. Wolf unverändert offen (Umlenkung, hängt an KS-92, KS-93, KS-97). |
+
+## 24. Zehnte Fragerunde: `fluch_04`, `fluch_07`, `fluch_10` und zwei Klärungen zu Schutz und Schild (Stand 30.09.2026)
+
+Originaltexte gelesen in `js/core/cards.js` und mit Abschnitt 6 verglichen (wortgleich). Reihenfolge: Die Gruppe 3 wird in Listenreihenfolge fortgesetzt. Nach `fluch_02` folgen `fluch_04`, `fluch_07` und `fluch_10`; alle drei stehen auf „noch nicht überarbeitet“, haben keine frühere Frage und keinen Treffer im Decision Log. Fünf Fragen: KS-89 bis KS-91 betreffen die drei Karten. KS-92 und KS-93 sind gemeinsame Klärungen zu Schutz und Schild (Teile von KS-21 und KS-27), weil mehrere Karten sie wirklich voraussetzen. Bereits kartenweise Entschiedenes wird nicht erneut gefragt: persönlicher Schild (höchstens einer je Person, verhindert einen passenden Tod und wird verbraucht), Abfangen des zusätzlichen Todes bei `fluch_12` ohne Ersatzopfer, persönlicher Schild nach der Heilenden Hand, verhinderte Hinrichtung bei `wende_02` und `segen_09`. Es gelten die bestätigten Regeln (Abschnitte 17, 19, 21, 23). Alle Empfehlungen sind **[V]**, keine Entscheidungen. „Gelyncht“ im Originaltext meint die Hinrichtung. Nichts ist implementiert.
+
+### Karte 1: `fluch_04` Verrat (FLUCH)
+
+- **Originaltext:** Wolf: „Die Wölfe müssen heute Nacht zwingend einen ihrer eigenen fressen — kein Dorfbewohner kann heute sterben.“ · Dorf: „Es wird heute so lange gelyncht, bis ein Mitglied der Dorf-Fraktion getroffen wurde.“
+- **Wirkung in einfachen Worten:** Wolf: Das Rudel muss in dieser Nacht eine eigene Person reißen, und keine Dorfperson soll sterben. Dorf: Am Tag wird so oft hingerichtet, bis eine Dorfperson getroffen wurde.
+- **Überarbeitungsbedarf:** Wolf: Der zweite Satzteil „kein Dorfbewohner kann heute sterben“ ist weiter gefasst als der Zwang zum Rudelopfer. Er könnte nur den Rudelangriff meinen oder jede Todesursache (Gift, Nachtfähigkeiten, Hinrichtung). Das greift in die Todespipeline ein. Dorf: Was „getroffen“ heißt, hängt an der verhinderten Hinrichtung (KS-92); die Wiederholung ist nur durch die Siegprüfung und die Nominierungsregel begrenzt. Weiter offen (KS-94).
+
+**KS-89: Was verhindert „kein Dorfbewohner kann heute sterben“ (Wolfsvariante)?** Beispiel: Nina (Wölfin, tot) spielt Verrat im zweiten Fenster von Tag 5. In der folgenden Nacht wählt das Rudel Finn (Wolf) als Opfer, und die Waldhexe Hanna wählt Ben (Dorf) für ihren Gifttrank.
+- **A (Empfehlung):** Nur der Rudelangriff. Das Rudel muss einen eigenen Wolf wählen, die Rudelopfer dieser Nacht sind ausschließlich Wölfe. Hannas Gift tötet Ben wie sonst, und die Hinrichtung am Folgetag bleibt.
+- **B:** Alle Nachttode von Dorfpersonen werden verhindert (Rudel, Gift, Nachtfähigkeiten). Die Hinrichtung am Tag bleibt.
+- **C:** Bis zum Ende des folgenden Tages stirbt keine Dorfperson, auch nicht durch die Hinrichtung.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Der erste Satzteil beschreibt den Zwang, der zweite seine Folge für das Rudel. A setzt den Zwang um und erfindet keine Schutzwirkung für alle Dorfpersonen quer zur Todespipeline (B und C wären neue Schutzregeln gegen Gift, Fähigkeiten und Hinrichtung). Nachteil: A liest „kein Dorfbewohner kann heute sterben“ enger als der Wortlaut; Dorfpersonen können in dieser Nacht trotzdem durch anderes sterben.
+
+### Karte 2: `fluch_07` Alptraum (FLUCH)
+
+- **Originaltext:** Wolf: „Die Wölfe schlafen so schlecht, dass sie heute Nacht kein Opfer reißen können.“ · Dorf: „Ein zufälliger Dorfbewohner wird dem Dorf als verdächtig angezeigt — der Spielleiter gibt es öffentlich bekannt.“
+- **Wirkung in einfachen Worten:** Wolf: In dieser Nacht reißt das Rudel kein Opfer. Dorf: Eine zufällig gewählte Dorfperson wird öffentlich als verdächtig genannt.
+- **Überarbeitungsbedarf:** Die Wolfsvariante klingt wie `segen_04` Dorf, für das gilt: keine Tötungen durch Wölfe, andere Wolfsfähigkeiten bleiben (Abschnitt 21). Die Antwort gilt aber nur für `segen_04`; hier heißt es „kein Opfer reißen“ ohne „sie schlafen“. Ob dieselbe Wirkung gilt, ist nicht entschieden. Dorf: „zufällig“ (ÜB-4), die Anzeige ist reine Information ohne Wahrheitsgehalt (keine erfundenen Aussagen), Öffentlichkeit. Weiter offen (KS-95).
+
+**KS-90: Gilt bei Alptraum (Wolf) dieselbe Wirkung wie bei Stille Nacht (Dorf)?** Beispiel: Nina (Wölfin, tot) spielt Alptraum im zweiten Fenster von Tag 5. In der folgenden Nacht leben das Rudel und eine Wolfsrolle mit eigenem tötenden Zusatzziel neben dem Rudelangriff (etwa Rudelvater oder Schicksalswolf).
+- **A (Empfehlung):** Ja, dieselbe Wirkung wie `segen_04` Dorf: keine Tötungen durch Wölfe, weder Rudelangriff noch zusätzliche aktive Wolfstötungen. Andere Wolfsfähigkeiten bleiben.
+- **B:** Nur der Rudelangriff entfällt (nach RM-DR-004 einschließlich zweitem Rudelschritt). Eigene tötende Zusatzziele einzelner Wolfsrollen bleiben.
+- **C:** Alle Wolfsfähigkeiten der Nacht entfallen.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Der Text sagt wie bei Stille Nacht, dass die Wölfe in der Nacht kein Opfer haben. Eine Regel statt zwei schafft keinen zweiten Begriff von „Wolfstötung“, und die Wirkung hat der Product Owner für Stille Nacht schon gewählt. Nachteil: Der Text nennt nur das „Opfer“ und weder „zusätzlich“ noch „schlafen“, die Übertragung ist also eine Auslegung. B liest den Wortlaut enger und führt zwei Begriffe von Wolfstötung ein. C schaltet auch Fähigkeiten ab, die das Dorf bei Stille Nacht ausdrücklich nicht betrifft.
+
+### Karte 3: `fluch_10` Schlechtes Omen (FLUCH)
+
+- **Originaltext:** Wolf: „Sollten die Wölfe heute Nacht keine starke Rolle erwischen, entscheidet der Spielleiter, ob einer von ihnen stirbt.“ · Dorf: „Sollte heute kein Werwolf gelyncht werden, stirbt ein weiterer zufälliger Dorfbewohner noch am selben Tag.“
+- **Wirkung in einfachen Worten:** Wolf: Trifft das Rudel in dieser Nacht keine starke Rolle, entscheidet die Spielleitung, ob ein Wolf stirbt. Dorf: Wird an diesem Tag kein Wolf hingerichtet, stirbt zusätzlich eine zufällige Dorfperson.
+- **Überarbeitungsbedarf:** Wolf: „Starke Rolle“ ist nirgends definiert, und der Text gibt der Spielleitung zwei Entscheidungen (ist das Opfer stark, stirbt ein Wolf). Dorf: Die Bedingung „kein Werwolf gelyncht“ berührt verhinderte und ausgefallene Hinrichtungen (KS-92); der zusätzliche Tod berührt den Schild (KS-93); „zufällig“ (ÜB-4). Weiter offen (KS-96).
+
+**KS-91: Wer bestimmt bei Schlechtes Omen (Wolf), was eine „starke Rolle“ ist?** Beispiel: Nina (Wölfin, tot) spielt Schlechtes Omen im zweiten Fenster von Tag 5. In der folgenden Nacht reißt das Rudel Mia (Orakel).
+- **A (Empfehlung):** Die Spielleitung entscheidet nach Ermessen, ohne feste Liste, ob Mias Rolle stark ist, und entscheidet dann nach dem Kartentext, ob ein Wolf stirbt. Ein Ermessen der Spielleitung ist bei `segen_07` und `wende_04` bereits bestätigt.
+- **B:** Der Rollenkatalog bekommt eine feste Markierung „starke Rolle“, die App prüft die Bedingung selbst. Das braucht eine eigene Entscheidungsrunde über alle Rollen.
+- **C:** Der Rollenbezug entfällt. Die Bedingung ist nur, dass das Rudel in dieser Nacht niemanden tötet; ob dann ein Wolf stirbt, entscheidet die Spielleitung.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Der Text nennt die Spielleitung als Entscheiderin und definiert keine Stärke; A erfindet keine Liste und keine Regel, die niemand beschlossen hat. Nachteil: Die Spielleitung kann das Ergebnis frei beeinflussen; im Replay erscheint es nur als eingetragene Entscheidung. B verlangt eine Tabelle über alle Rollen, C streicht einen Teil des Kartentextes.
+
+### Gemeinsame Klärung 1 zu Schutz und Schild: Ablauf nach verhinderter Hinrichtung (Teil von KS-21)
+
+Nicht erneut gefragt: Bei `wende_02` und `segen_09` Dorf entfällt die Hinrichtung ohne Ersatz, ohne Neuabstimmung und bei erhaltenem Tagesablauf (Abschnitte 17 und 23). Der persönliche Schild verhindert nach den bestätigten Schildregeln eine Hinrichtung und wird verbraucht. Offen ist die allgemeine Regel für den Ablauf danach. Sie würde folgende bisher offene Fälle entscheiden: die neue Hinrichtung nach der Neuabstimmung bei `segen_03` (4A: „unterliegt weiterhin den Schutzwirkungen“), die Zählung von „getroffen“ bei `fluch_04` Dorf, die Bedingung „kein Werwolf gelyncht“ bei `fluch_10` Dorf und den Ablauf, wenn der Kartenschlucker-Schild oder der Schild der Heilenden Hand eine Hinrichtung abfängt.
+
+**KS-92: Was gilt allgemein, wenn ein Schild eine Hinrichtung verhindert?** Beispiel: Ben (Dorf) hat einen persönlichen Schild und wird an Tag 5 durch die Abstimmung getroffen, ohne dass eine Karte im Spiel ist.
+- **A (Empfehlung):** Wie bei `wende_02` und `segen_09`: Die Hinrichtung entfällt, der Schild wird verbraucht, es gibt kein Ersatzopfer und keine Neuabstimmung, der übrige Tagesablauf bleibt.
+- **B:** Der Schild wird verbraucht, danach folgt eine neue Abstimmung.
+- **C:** Der Schild wird verbraucht, die Person mit der zweithöchsten Stimmenzahl wird hingerichtet (die Spielleitung trägt sie ein, ÜB-2).
+- **D:** Eigene Antwort.
+
+Empfehlung A: Zwei bestätigte Kartenregeln führen zum selben Ablauf; A braucht keinen neuen Abstimmungsschritt und keine Rangfolge in der App. Nachteil: Der Tisch merkt, dass die Person geschützt ist, und Karten, die auf „getroffen“ oder „gelyncht“ zählen, brauchen danach dennoch eine eigene Antwort (KS-94, KS-96). B und C schaffen zusätzliche Abstimmungsschritte; C setzt eine Rangfolge voraus, die die App nicht kennt.
+
+### Gemeinsame Klärung 2 zu Schutz und Schild: Tode aus Karteneffekten (Teil von KS-27)
+
+Nicht erneut gefragt: Bei `fluch_12` fängt ein persönlicher Schild den zusätzlichen Tod ohne Ersatzopfer ab (Abschnitt 19). Offen ist, ob das für jeden von einer Karte erzeugten Tod gilt. Die Antwort würde folgende bisher offene Fälle entscheiden: den Mitgerissenen bei `loki_12` (KS-76), den Mittod bei `fluch_08` (KS-66) und den zusätzlichen Dorftod bei `fluch_10` Dorf.
+
+**KS-93: Fängt ein persönlicher Schild Tode ab, die eine Karte erzeugt (Mittod, Zusatzopfer, Zufallstod)?** Beispiel: Clara (Wölfin) wird hingerichtet, Kosmisches Gleichgewicht ist aktiv, und die Spielleitung wählt Ben (Dorf) als Mitgerissenen. Ben hat einen persönlichen Schild.
+- **A (Empfehlung):** Ja, jeder von einer Karte erzeugte Tod wird vom persönlichen Schild abgefangen und verbraucht ihn. Es wird kein Ersatzopfer gewählt (Verallgemeinerung von `fluch_12`).
+- **B:** Nur Tode aus einer Zufallsauswahl werden abgefangen. Bestimmt die Spielleitung die Person (`loki_12`), wirkt der Tod trotz Schild.
+- **C:** Nein. Der Schild gilt nur für Rollenfähigkeit und Hinrichtung (wörtlich KS-06), Karteneffekte durchdringen ihn. `fluch_12` bleibt die bestätigte Ausnahme.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Die Heilende Hand beschreibt den Schild als Schutz vor „einem späteren weiteren Tod“, und `fluch_12` hat dasselbe für eine Karte bestätigt; A macht daraus eine Regel statt einer Liste je Karte. Nachteil: `loki_12` kann wirkungslos bleiben, wenn die Spielleitung einen geschützten Mitgerissenen wählt (sie kann das vermeiden). B unterscheidet nach dem Auswahlweg, ein Unterschied, den die bestätigten Schildregeln nicht kennen. C folgt dem Wortlaut von KS-06, widerspricht aber der Heilenden Hand und macht `fluch_12` zur Ausnahme.
+
+### Für die Folgerunde dokumentiert (nicht gefragt, nicht entschieden)
+
+| ID | Karte | Klärungsbedarf |
+|---|---|---|
+| KS-94 | `fluch_04` | Wolf: Rudel mit nur einer Wolfsperson (Zwang zum Selbstopfer); Schild oder Schutz auf dem gewählten Wolf (nach KS-93 und KS-27); Verhältnis zu Zusatzopfern; Ansage; Bezug „heute Nacht“. Dorf: Zählt eine durch Schild verhinderte Hinrichtung als „getroffen“ (abhängig von KS-92); Nominierungen in wiederholten Wahlgängen (Standardregel: jede Person höchstens einmal nominiert); Ende der Schleife außer durch die Siegprüfung; Zugehörigkeit zur „Dorf-Fraktion“ bei Einzelsiegrollen und Wechselrollen (ÜB-1); Todesketten der Hinrichtungen. |
+| KS-95 | `fluch_07` | Wolf: Rest nach KS-90 (Bezug „heute Nacht“, Öffentlichkeit einer Nacht ohne Wolfsopfer, Nachtzähler des Kartenschluckers). Dorf: „zufällig“ über den gespeicherten Generator (ÜB-4, nicht bestätigt); Pool der Zufallsauswahl (lebende Dorfpersonen); ob die Anzeige wahrheitsgemäß sein darf oder nicht; Öffentlichkeit und Wortlaut der Ansage; Wirkung ohne Regelfolgen (reine Information); Verhältnis zu anderen Verdachtskarten. |
+| KS-96 | `fluch_10` | Wolf: Rest nach KS-91 (Zeitpunkt der Bewertung, ob ein Wolf stirbt und welcher, Zufall oder Wahl, Schild nach KS-93, Ansage). Dorf: Bedingung „kein Werwolf gelyncht“ bei verhinderter oder ausgefallener Hinrichtung (abhängig von KS-92, KS-26); Zufall über den gespeicherten Generator (ÜB-4); Pool und Schild (KS-93); „noch am selben Tag“ gegenüber Tagesend-Reihenfolge und zweitem Kartenfenster; Zusatztod bei fehlender passender Person. |
+| KS-97 | Schild | Rest von KS-21 und KS-27: Reihenfolge der Schutzwirkungen mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen; Schild gegen Rudelangriff und zweiten Rudelschritt (RM-DR-004, RM-DR-005); Todesketten (Liebeskummer, Rotkäppchen-Kette, Verknüpfung, soweit nicht rollenspezifisch entschieden); „höchstens ein Schild“ je Person insgesamt (gekaufter Schild und Heilende Hand). |
+
+**Reihenfolge der nächsten Runden (Vorschlag, [V]):** (1) Antworten auf KS-89 bis KS-93. (2) KS-97 (Rest der Schildregeln), weil KS-66, KS-67, KS-87, KS-94 und KS-96 darauf aufbauen. (3) Restfragen der Gruppe 1: KS-38 bis KS-40, KS-46 bis KS-48, KS-35 bis KS-37. (4) Details je Karte gebündelt: KS-65 bis KS-70, KS-76 bis KS-79, KS-85 bis KS-88, KS-94 bis KS-96 (zuerst die Schleifenpunkte in KS-77 und KS-94). (5) Gruppe 3 ab `wende_03`. Der Vorschlag am Ende von Abschnitt 22 ist dadurch überholt.
