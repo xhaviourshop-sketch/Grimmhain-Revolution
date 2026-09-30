@@ -837,3 +837,40 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - Ansagezeitpunkt und Verhalten bei übersprungenen Nächten (KS-12); Bezug „nächste Nacht“ und „nächster Lynch“ je Kartenfenster (ÜB-3).
 - Welche Karten Wiederbelebungskarten sind und welcher Kartenbestand in normalen Partien gilt (ÜB-6, KS-16, KS-17).
 - Öffentlichkeit von Tausch und Karte sowie Ablauf am Tisch (KS-15, ÜB-7, ÜB-9).
+
+## Rückkehrkarten: Zweites Leben, Wiedergeburt, Befreiung (vierte Antwortrunde, 30.09.2026)
+
+**Herkunft:** Antworten des Product Owners im Claude-Code-Auftrag vom 30.09.2026 (vierte Runde) auf die fünf Fragen in Abschnitt 10 der Arbeitsliste `docs/role-migration/14-totenkarten-arbeitsliste.md` (zugleich KS-18, KS-19 und KS-28 teilweise). Die Antworten kamen als zusammenhängender Regeltext ohne Buchstabenwahl; die Zuordnung zu den Fragen ist meine Zuordnung. Diese Entscheidungen gelten nur für `segen_08`, `wende_04` und `wende_07`. Es ist nichts implementiert: kein Karten-Code, keine Kartenverteilung, kein Kartentausch, kein Kartenschlucker, keine Änderung an Speicherschema oder Oberfläche. Die Originaltexte der Karten und früherer Abschnitte bleiben unverändert stehen.
+
+**Bestätigt (Product Owner):**
+
+- **`segen_08` Zweites Leben, Vergabebedingung:** Die Karte darf nur vergeben werden, wenn mindestens zwei ANDERE tote Personen derselben Fraktion wie der Empfänger vorhanden sind. Der Empfänger zählt nicht zu diesen zwei Personen und ist als Wiederbelebungsziel ausgeschlossen. Das gilt entsprechend für Dorf und Werwölfe. Welche Variante Einzelsiegrollen erhalten, ist damit nicht entschieden.
+- **`segen_08`, Angebot und Wahl:** Die App bietet bis zu drei passende tote Personen als Namen zur Auswahl an. Gibt es mehr als drei passende Personen, wählt der gespeicherte Zufallsgenerator drei aus. Die Auswahl wird gespeichert; Neuladen erzeugt keine neuen Namen. Der Kartenbesitzer wählt durch Antippen eines angebotenen Namens.
+- **`segen_08`, Sichtbarkeit:** Dass die angebotenen Namen dem Kartenbesitzer die Fraktion dieser Personen verraten, ist ausdrücklich gewollt. Diese Erlaubnis gilt für den Kartenbesitzer, nicht automatisch für eine öffentliche Anzeige.
+- **`segen_08`, späteres Ausspielen:** Ist beim Ausspielen nur noch eine passende andere tote Person übrig, wird diese allein angeboten. Ist keine vorhanden, bleibt die Karte ungespielt erhalten.
+- **`wende_04` Wiedergeburt:** Die Spielleitung wählt die wiederzubelebende Person innerhalb der erlaubten Fraktion. Die Person, die die Karte spielt, darf selbst gewählt werden.
+- **`wende_07` Befreiung, Ziel:** Die Person, die die Karte spielt, wählt das Ziel innerhalb der erlaubten Fraktion.
+- **`wende_07`, erneuter Tod:** Die zurückgeholte Person stirbt erst nach dem einmaligen Fähigkeitseinsatz erneut. Ohne Fähigkeitseinsatz bleibt sie am Leben. Es gibt keinen automatischen Tod am nächsten Morgen und keine neu eingeführte Frist. Rollen ohne aktiv einsetzbare Fähigkeit werden durch diese Entscheidung nicht ausgeschlossen. Welche Vorgänge bei passiven Fähigkeiten, Rudelaktionen oder mehrstufigen Fähigkeiten als Einsatz zählen, ist damit nicht pauschal entschieden.
+- **Rückkehrrolle (alle drei Karten):** Die Wiederbelebung stellt die Rolle vom Todeszeitpunkt wieder her. Hat eine andere Person diese Rolle inzwischen ebenfalls, bleibt die Wiederbelebung trotzdem zulässig. Beispiel: Anna starb als Orakel, jemand erbte die Rolle; Anna kehrt als Orakel zurück, es gibt dann zwei Orakel. Kein Ersatz durch Dorfbewohner oder Werwolf allein wegen einer bereits vergebenen Rolle. Die Einmaligkeit der Startrollen (PE-07) gilt weiterhin nur für die Startbesetzung. Die bestätigten Regeln zum Zurücksetzen bei Wiederbelebung bleiben (Abschnitt „Rollenaudit · Wiederbelebungsrollen“: begrenzte Einsätze zurück, durch Tod beendete Bindungen bleiben beendet, RM-DR-011.2).
+- **Abgrenzung:** Die Rückkehrrolle ist eine Kartenentscheidung. Sie wird nicht ungefragt auf abweichende Regeln anderer Wiederbelebungsfähigkeiten übertragen (Frankenstein vergibt weiter nur eine Rolle, die gerade niemand hat, W-04).
+
+**Ersetzt (nicht mehr gültig):**
+
+- Abschnitt 10, Frage 1 (Fehlgriff bei `segen_08`, Optionen A bis C und Empfehlung A): erledigt, weil nur passende Namen angeboten werden. Der Überarbeitungsvorschlag „SL prüft still gegen die Fraktion, sonst verfällt die Wirkung“ ist ersetzt.
+- Abschnitt 10, Frage 3, Empfehlung B (feste Frist von einer Nacht): ersetzt. Option C (Rollen ohne einsetzbare Fähigkeit ausschließen) wurde ausdrücklich nicht gewählt.
+- Abschnitt 10, Frage 4, Empfehlung B (Standardrolle, wenn die Rolle schon vergeben ist): ersetzt durch die doppelte Rolle.
+- Abschnitt 10, Frage 5, Empfehlung C (Zufall wählt das Ziel bei `wende_07`): ersetzt durch die Wahl der Kartenspielerin.
+- Offener Punkt „Darf die Kartenträgerin bei `segen_08` sich selbst wählen, und was gilt ohne passende tote Person“: für `segen_08` beantwortet (nein; Karte bleibt ungespielt erhalten). Für `wende_04` und `wende_07` gilt die Ohne-Ziel-Frage weiter als offen.
+- Im Kern bestätigt, keine Ersetzung: Frage 2, Option A (SL wählt frei, Selbstwahl erlaubt).
+
+**Technisch abgeleitet (nicht bestätigt, Diskussionsgrundlage):**
+
+- Die Vergabebedingung von `segen_08` ist eine Prüfung beim Vergeben der Karte, nicht beim Ausspielen. Ist sie nicht erfüllt, wird die Karte nicht vergeben; dass stattdessen eine andere Karte gezogen wird, folgt aus 1A (jede Person erhält beim Tod eine Karte), ist aber nicht ausdrücklich gesagt.
+- Dass „Fraktion des Empfängers“ die Kartenfraktion des Textes (Wolf oder Dorf) meint, ist meine Lesart.
+
+**Weiter offen (nicht entschieden, nicht erfunden):**
+
+- `segen_08`: Wann die zufällige Vorauswahl erstmals festgelegt wird und wie bereits angebotene, inzwischen ungültige Ziele ersetzt werden. Außerdem: Variante für Einzelsiegrollen; ob die Vergabebedingung auch für eine Ersatzkarte nach Tausch gilt; welche Fraktion zählt, wenn sich die Fraktion des Empfängers zwischen Vergabe und Ausspielen ändert (ÜB-1).
+- `wende_04`, `wende_07`: Ob die Vergabebedingung „mindestens zwei andere Tote“ auch hier gilt; ob die Karte ohne passendes Ziel aufbewahrt wird oder verfällt. Bei `wende_07` zusätzlich: ob sich die Kartenspielerin selbst wählen darf, ob wie bei `segen_08` Namen angeboten werden, und was als Fähigkeitseinsatz zählt.
+- Alle drei: Zeitpunkt und Sichtbarkeit der Rückkehr (ab wann die Person handelt, was öffentlich wird), Wirkung eines lebenden Wächters am Tor auf eine zurückkehrende Wölfin (RM-DR-149), Verhältnis zu den offenen Kartenfenster-Fragen (KS-22 bis KS-26).
+- `wende_04`, `wende_07` und `segen_08` sind damit **nicht vollständig spezifiziert** und nicht implementiert. Die Detailfragen stehen in der Arbeitsliste als KS-38 bis KS-40.
