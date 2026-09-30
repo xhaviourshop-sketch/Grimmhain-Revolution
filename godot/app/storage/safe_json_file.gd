@@ -27,8 +27,7 @@ static func read(path: String, format: String) -> Dictionary:
 ## Schreibt `text` sicher nach `path`. `simulate_failure` (nur Tests): "write", "verify", "backup", "swap".
 ## Ergebnis {ok, error}.
 static func write(path: String, text: String, simulate_failure: StringName = &"") -> Dictionary:
-	var dir := path.get_base_dir()
-	if not DirAccess.dir_exists_absolute(dir) and DirAccess.make_dir_recursive_absolute(dir) != OK:
+	if not ensure_dir(path.get_base_dir()):
 		return {"ok": false, "error": "no_directory"}
 	var tmp := path + ".tmp"
 	var file := FileAccess.open(tmp, FileAccess.WRITE) if simulate_failure != &"write" else null
@@ -54,6 +53,19 @@ static func write(path: String, text: String, simulate_failure: StringName = &""
 		DirAccess.remove_absolute(tmp)
 		return {"ok": false, "error": "swap_failed"}
 	return {"ok": true, "error": ""}
+
+
+## Legt den Ordner an, falls er fehlt. false, wenn das nicht geht, etwa weil ein Teil des Pfads eine Datei ist (ohne
+## Fehlermeldung der Engine).
+static func ensure_dir(dir: String) -> bool:
+	if DirAccess.dir_exists_absolute(dir):
+		return true
+	var part := dir
+	while part.contains("/") and not part.ends_with("://"):
+		if FileAccess.file_exists(part):
+			return false
+		part = part.get_base_dir()
+	return DirAccess.make_dir_recursive_absolute(dir) == OK
 
 
 ## Legt unlesbare Dateien (Datei und Sicherung) als `.corrupt` beiseite, damit ein späteres Speichern sie nicht

@@ -56,6 +56,16 @@ func morning_report() -> Dictionary:
 	return MorningReport.build(_state, _events)
 
 
+## Abschlussbericht der beendeten Partie (siehe GameReport) oder leer, solange kein Sieg bestätigt ist.
+func game_report() -> Dictionary:
+	return GameReport.build(_state, _events)
+
+
+## Sieg bestätigt (Phase Spielende).
+func is_over() -> bool:
+	return _state.phase == Phase.GAME_OVER
+
+
 ## Öffentliche Tode des laufenden Tages (Namen, Rolle nur mit der Setup-Option).
 func day_deaths() -> Array:
 	return MorningReport.day_deaths(_state, _events)

@@ -136,3 +136,23 @@ Bewusst nicht aufgenommen, weil bereits entschieden oder nicht blockierend:
 **Empfehlung: A.** Sie braucht keinen neuen Aufruf im Ansagesystem und verrät nichts durch Reihenfolge oder Wortlaut. B würde ein neues Ansagesystem und eine zweite Nachtsteuerung verlangen, C ändert die Wirkungsreihenfolge.
 
 **Bis zur Antwort unangetastet:** Handlungszeile von Rotkäppchen im Lexikon (bleibt „noch nicht festgelegt“), Kartenfolge der Frage, Aufrufpolitik für gefragte Personen.
+
+---
+
+## NQ-07 · Was gehört nach dem Spielende in den öffentlichen Bericht?
+
+**Frage:** Der öffentliche Abschlussbericht darf weitergegeben werden. Soll er nach dem bestätigten Spielende mehr zeigen als die Siegseite?
+
+**Beispiel aus einer Partie:** Die Wölfe gewinnen, Anna war der Blutwolf. Steht im öffentlichen Bericht „Sieger: Werwölfe“, oder auch „Anna (Blutwolf)“ und die Siegbedingung?
+
+**Warum die vorhandenen Entscheidungen nicht ausreichen:** Die Aufgabe verlangt bestätigte Gewinner und Siegart, schreibt aber zugleich vor, dass die öffentliche Fassung nichts Geheimes verrät. Ob am Spielende alles offengelegt wird, ist eine Tischregel der Runde und nicht entschieden.
+
+**Antworten:**
+- **A:** Öffentlich nur die Siegseite; Gewinnernamen, Rollen und Siegbedingung nur im Spielleiterbericht (aktueller Stand).
+- **B:** Öffentlich zusätzlich Gewinnernamen und Siegseite, keine Rollen.
+- **C:** Öffentlich nach dem Spielende alle Rollen und die Siegbedingung.
+- Freitext möglich.
+
+**Empfehlung: A.** Der Bericht kann weitergegeben werden, bevor eine Runde ihre Rollen aufdeckt. Wer mehr zeigen will, nutzt den Spielleiterbericht bewusst.
+
+**Bis zur Antwort unangetastet:** erweiterte öffentliche Fassung, Umfang des öffentlichen Berichts nach dem Spielende.

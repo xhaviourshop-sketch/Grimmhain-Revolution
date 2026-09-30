@@ -487,6 +487,8 @@ func _game_over(next: Dictionary) -> void:
 	if not winner.is_empty():
 		_text("ui.cockpit.card.win.candidate", {"side": StringName("ui.cockpit.win.kind.%s" % str(winner["kind"])),
 			"reason": StringName(_reason_key(str(winner["reason_key"]))), "names": ", ".join(winner.get("beneficiaries", []))}, &"SectionLabel")
+	var buttons: Array[Control] = [_button("OpenReportButton", "ui.cockpit.action.open_report", GrimmButton.Kind.PRIMARY, &"open_report")]
+	_actions(buttons)
 
 
 func _reason_key(reason: String) -> String:

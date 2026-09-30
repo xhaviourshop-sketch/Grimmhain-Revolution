@@ -43,6 +43,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `decoy_section` mit `decoy_copy_row` (geheime Trugbilderwolf-Scheinrollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
 | `app/groups/`, `app/storage/`, `screens/new_game/group_card.*` | gespeicherte Spielergruppen im Spielerschritt (Paket B, `player-groups.md`); `SafeJsonFile` für sicheres Schreiben kleiner lokaler JSON-Dateien |
 | `app/rulebook/`, `app/widgets/rulebook/`, `app/screens/rulebook/` | allgemeines Regelbuch mit zwölf Kapiteln (Hauptmenü und Cockpit-Werkzeug, Paket C, `rulebook.md`) |
+| `app/history/`, `app/widgets/history/`, `app/screens/history/`, `app/session/game_report.gd` | Abschlussbericht, lokale Partiehistorie und Textexport (Paket D, `game-history.md`) |
 | `app/screens/continue/` | gespeicherte Partien fortsetzen oder verwerfen; leerer Zustand „Kein Spielstand vorhanden“; Details in `save-resume.md` |
 | `app/screens/settings/` | Sprache DE/EN, Bewegung reduzieren, Platzhalter Audio und Anzeige |
 | `app/screens/cockpit/` | Geführte Partie: Phasenleiste, Sitzkreis, Ansagekarte für Nacht, Morgen, Tag und Sieg, Ebenen für Rollen, Protokoll und gezeigte Karten, Sichtschutz; Details in `cockpit.md` |

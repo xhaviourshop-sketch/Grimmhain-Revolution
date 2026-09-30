@@ -10,6 +10,9 @@ var session: GameSession
 var setup: PlayerSetup  ## Setup-Entwurf „Neue Partie“, bleibt über Navigation und Sprachwechsel erhalten
 var saves: SaveService
 var groups: GroupStore  ## gespeicherte Spielergruppen; ohne Pfad nur im Speicher (die Shell setzt beim echten Start den Pfad)
+var history: HistoryStore  ## Abschlussberichte beendeter Partien; ohne Pfad nur im Speicher (Shell setzt den Pfad)
+var exports_dir: String = ReportExport.DEFAULT_DIR  ## Zielordner der Textexporte
+var history_focus: String = ""  ## Partie-ID, die die Historienansicht beim nächsten Öffnen zeigt (aus dem Cockpit)
 var settings_store: SettingsStore = null  ## null = Einstellungen nur im Speicher (Tests, Screenshot-Werkzeug)
 
 
@@ -19,8 +22,11 @@ func _init(p_settings: AppSettings = null, p_session: GameSession = null) -> voi
 	setup = PlayerSetup.new()
 	saves = SaveService.new()
 	groups = GroupStore.new()
+	history = HistoryStore.new()
 	session.events_applied.connect(_on_events_applied)
 	session.state_replaced.connect(autosave)
+	session.view_changed.connect(func(_v: Dictionary) -> void: sync_history())
+	session.state_replaced.connect(sync_history)
 
 
 ## Einstellungen dauerhaft machen: gespeicherte Werte laden und anwenden, danach jede Änderung speichern.
@@ -51,6 +57,20 @@ func autosave() -> Dictionary:
 	if session.round_id() == "":
 		return {}
 	return saves.save(session.round_id(), session.save_text(), session.summary())
+
+
+## Hält die Partiehistorie zur aktiven Partie aktuell: Ein bestätigter Sieg speichert den Abschlussbericht (idempotent über die
+## Partie-ID, ein erneuter Abschluss ersetzt ihn), eine zurückgenommene Siegbestätigung setzt den Eintrag auf „Partie läuft
+## wieder“. Ergebnis wie HistoryStore; ein Schreibfehler der Historie ändert den Spielstand nie.
+func sync_history() -> Dictionary:
+	var id := session.round_id()
+	if id == "":
+		return {}
+	if session.is_over():
+		return history.save_report(session.game_report())
+	if history.has(id):
+		return history.mark_reopened(id)
+	return {}
 
 
 ## Lädt eine gespeicherte Partie in die Sitzung. Ergebnis wie SaveService.load_game, bei Erfolg

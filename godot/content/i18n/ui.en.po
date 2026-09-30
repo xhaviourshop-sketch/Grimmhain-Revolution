@@ -6011,10 +6011,13 @@ msgid "ui.rulebook.c09.b05"
 msgstr "If several conditions are met at once there is no fixed order. The game master confirms exactly one candidate or rejects all. The app never ends a game by itself."
 
 msgid "ui.rulebook.c09.b06"
-msgstr "If nobody is alive there is no candidate. The card points that out and the game master declares the result through “Game master” and “Declare the winner …”."
+msgstr "After the confirmed win the app creates a final report in the game history. You open it with “Open final report” on the card at the end of the game or later in the main menu under “Game history”. There are two versions: the “Public report” with only the details that were made known at the table during the game, and the “Game master report” with all roles and causes, which only opens after a confirmation. Both can be saved as a text file; the app shows beforehand which version that is and replaces an existing file only after a confirmation."
 
 msgid "ui.rulebook.c09.b07"
-msgstr "Even a confirmed win decision can be taken back with “Undo” (chapter 10)."
+msgstr "If nobody is alive there is no candidate. The card points that out and the game master declares the result through “Game master” and “Declare the winner …”."
+
+msgid "ui.rulebook.c09.b08"
+msgstr "Even a confirmed win decision can be taken back with “Undo” (chapter 10). The report then no longer counts as finished; if you confirm the win again it is updated."
 
 msgid "ui.rulebook.c10.title"
 msgstr "Game master corrections and undo"
@@ -6080,7 +6083,7 @@ msgid "ui.rulebook.c11.b09"
 msgstr "A save from another version of the app stays unchanged and cannot be resumed here. “Discard” remains possible. A running game is never replaced silently by another one."
 
 msgid "ui.rulebook.c11.b10"
-msgstr "Settings such as the language and “Reduce motion” as well as saved player groups are stored separately from the game saves."
+msgstr "Settings such as the language and “Reduce motion”, saved player groups and the game history are stored separately from the game saves."
 
 msgid "ui.rulebook.c12.title"
 msgstr "Role lexicon and using help"
@@ -6323,3 +6326,197 @@ msgstr "Call: (once per life, as the very first step of a night, optional) The a
 
 msgid "ui.lexicon.field.act"
 msgstr "Procedure at the table"
+
+# --- Game history and final report ---
+
+msgid "ui.menu.history"
+msgstr "Game history"
+
+msgid "ui.cockpit.action.open_report"
+msgstr "Open final report"
+
+msgid "ui.history.title"
+msgstr "Game history"
+
+msgid "ui.history.report_title"
+msgstr "Final report"
+
+msgid "ui.history.empty"
+msgstr "No finished game yet. After a confirmed win the final report appears here."
+
+msgid "ui.history.entry"
+msgstr "{names} · {count} people · Winner: {side} · {date}"
+
+msgid "ui.history.entry_reopened"
+msgstr "{names} · {count} people · Game running again · {date}"
+
+msgid "ui.history.back_to_list"
+msgstr "All reports"
+
+msgid "ui.history.version.public"
+msgstr "Public report"
+
+msgid "ui.history.version.gm"
+msgstr "Game master report"
+
+msgid "ui.history.export_info.public"
+msgstr "The public version is exported: only details that were made known at the table during the game."
+
+msgid "ui.history.export_info.gm"
+msgstr "The game master version is exported: it contains all roles, causes and secret details."
+
+msgid "ui.history.export.public"
+msgstr "Save public version as text"
+
+msgid "ui.history.export.gm"
+msgstr "Save game master version as text"
+
+msgid "ui.history.delete"
+msgstr "Delete report …"
+
+msgid "ui.history.reopened"
+msgstr "The win confirmation of this game was taken back. The report is no longer up to date and cannot be exported. If the win is confirmed again it is updated."
+
+msgid "ui.history.dialog.gm.title"
+msgstr "Show game master report?"
+
+msgid "ui.history.dialog.gm.message"
+msgstr "The game master report contains all roles, causes and secret details of the game. Show it only if nobody is reading along."
+
+msgid "ui.history.dialog.gm.confirm"
+msgstr "Show"
+
+msgid "ui.history.dialog.overwrite.title"
+msgstr "Overwrite file?"
+
+msgid "ui.history.dialog.overwrite.message"
+msgstr "The file “{file}” already exists. It will be replaced by this version."
+
+msgid "ui.history.dialog.overwrite.confirm"
+msgstr "Overwrite"
+
+msgid "ui.history.dialog.delete.title"
+msgstr "Delete report?"
+
+msgid "ui.history.dialog.delete.message"
+msgstr "The final report of this game is deleted from the history. The saved game stays unchanged, and so do files that were already exported."
+
+msgid "ui.history.dialog.delete.confirm"
+msgstr "Delete"
+
+msgid "ui.history.info.exported"
+msgstr "Saved: {path}"
+
+msgid "ui.history.info.deleted"
+msgstr "Report deleted."
+
+msgid "ui.history.error.export"
+msgstr "Export not possible. Existing files stay unchanged."
+
+msgid "ui.history.error.delete"
+msgstr "Deleting is not possible. The history stays unchanged."
+
+msgid "ui.history.error.save"
+msgstr "The final report could not be saved in the history. The game is not affected. Open the report again to try once more."
+
+msgid "ui.history.status.unreadable"
+msgstr "The history could not be read. The damaged file was set aside and the list is empty."
+
+msgid "ui.history.status.newer_version"
+msgstr "The history file comes from a newer app version and was not loaded. It was set aside unchanged."
+
+msgid "ui.history.status.skipped"
+msgstr "{count} damaged entries were skipped."
+
+msgid "ui.history.status.recovered"
+msgstr "The history was loaded from the backup copy."
+
+msgid "ui.report.title.public"
+msgstr "Final report (public version)"
+
+msgid "ui.report.title.gm"
+msgstr "Final report (game master version)"
+
+msgid "ui.report.note.public"
+msgstr "This version only contains details that were made known at the table during the game. Roles, goals and causes are left out."
+
+msgid "ui.report.note.gm"
+msgstr "For the game master only. This version contains all roles, causes and secret details."
+
+msgid "ui.report.game_id"
+msgstr "Game: {id}"
+
+msgid "ui.report.participants"
+msgstr "Participants: {count} ({names})"
+
+msgid "ui.report.played"
+msgstr "Played: {nights} nights, {days} days"
+
+msgid "ui.report.result"
+msgstr "Winner: {side}"
+
+msgid "ui.report.win_reason"
+msgstr "Win condition: {reason}"
+
+msgid "ui.report.winners"
+msgstr "People who benefit: {names}"
+
+msgid "ui.report.heading.roles"
+msgstr "Roles"
+
+msgid "ui.report.role_line"
+msgstr "{seat} · {name}: {role}"
+
+msgid "ui.report.role_original"
+msgstr "(originally {role})"
+
+msgid "ui.report.heading.history"
+msgstr "Course of the game"
+
+msgid "ui.report.night"
+msgstr "Night {number}"
+
+msgid "ui.report.day"
+msgstr "Day {number}"
+
+msgid "ui.report.judge_nominator"
+msgstr "Covered nomination: {judge} nominated {nominee}."
+
+msgid "ui.report.execution"
+msgstr "Execution: {name}."
+
+msgid "ui.report.execution_override"
+msgstr "This execution of {name} was a game master correction without a nomination."
+
+msgid "ui.report.execution_redirected"
+msgstr "The execution of {name} was mirrored: {other} died instead."
+
+msgid "ui.report.no_execution"
+msgstr "No execution on this day."
+
+msgid "ui.report.death"
+msgstr "Died: {name}."
+
+msgid "ui.report.death_role"
+msgstr "Died: {name} ({role})."
+
+msgid "ui.report.revived"
+msgstr "Revived: {name}."
+
+msgid "ui.report.correction"
+msgstr "Game master correction “{what}” on {name}. Reason: {reason}"
+
+msgid "ui.report.correction_general"
+msgstr "Game master correction “{what}”. Reason: {reason}"
+
+msgid "ui.report.win_rejected"
+msgstr "Win rejected. Reason: {reason}"
+
+msgid "ui.report.win"
+msgstr "Win confirmed: {side}."
+
+msgid "ui.report.other_events"
+msgstr "{count} further technical single events are not listed here."
+
+msgid "ui.report.no_history"
+msgstr "There are no entries for this version."

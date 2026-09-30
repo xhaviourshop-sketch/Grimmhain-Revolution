@@ -112,6 +112,16 @@ static func effects_of(s: GameState, span: Array[GameEvent]) -> Array:
 	return out
 
 
+## Öffentlicher und privater Teil für einen beliebigen Ereignisabschnitt (Abschlussbericht): dieselben Positivlisten wie der
+## Morgenbericht, ohne den Bezug auf die letzte Nacht.
+static func public_of(s: GameState, span: Array[GameEvent]) -> Dictionary:
+	return _public(s, span)
+
+
+static func private_of(s: GameState, span: Array[GameEvent]) -> Array:
+	return _private(s, span)
+
+
 static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 	var deaths: Array = []
 	var revived: Array = []

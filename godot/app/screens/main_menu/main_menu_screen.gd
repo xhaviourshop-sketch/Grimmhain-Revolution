@@ -1,6 +1,6 @@
 class_name MainMenuScreen
 extends BaseScreen
-## Hauptmenü: Neue Partie, Fortsetzen, Cockpit, Rollenlexikon, Regelbuch, Einstellungen; Beenden nur auf Desktop,
+## Hauptmenü: Neue Partie, Fortsetzen, Cockpit, Rollenlexikon, Regelbuch, Partiehistorie, Einstellungen; Beenden nur auf Desktop,
 ## räumlich abgesetzt von den übrigen Aktionen.
 
 @onready var _column: VBoxContainer = %Column
@@ -15,6 +15,7 @@ func _setup() -> void:
 	(%CockpitButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.COCKPIT))
 	(%LexiconButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.LEXICON))
 	(%RulebookButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.RULEBOOK))
+	(%HistoryButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.HISTORY))
 	(%SettingsButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.SETTINGS))
 	_quit.visible = AppPlatform.can_quit_from_menu()
 	(%QuitGroup as Control).visible = _quit.visible

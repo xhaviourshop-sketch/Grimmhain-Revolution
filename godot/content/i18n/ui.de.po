@@ -6011,10 +6011,13 @@ msgid "ui.rulebook.c09.b05"
 msgstr "Sind mehrere Bedingungen zugleich erfüllt, gibt es keine feste Reihenfolge. Die Spielleitung bestätigt genau einen Kandidaten oder lehnt alle ab. Die App beendet nie von selbst eine Partie."
 
 msgid "ui.rulebook.c09.b06"
-msgstr "Lebt niemand mehr, entsteht kein Kandidat. Die Karte weist darauf hin, und die Spielleitung erklärt das Ergebnis über „Spielleitung“ und „Sieger erklären …“."
+msgstr "Nach dem bestätigten Sieg legt die App einen Abschlussbericht in der Partiehistorie an. Du öffnest ihn mit „Abschlussbericht öffnen“ auf der Karte am Spielende oder später im Hauptmenü unter „Partiehistorie“. Es gibt zwei Fassungen: „Öffentlicher Bericht“ mit nur den Angaben, die während der Partie am Tisch bekannt gemacht wurden, und „Spielleiterbericht“ mit allen Rollen und Ursachen, der sich erst nach einer Rückfrage öffnet. Beide lassen sich als Textdatei speichern; die App zeigt vorher, welche Fassung das ist, und ersetzt eine vorhandene Datei nur nach Rückfrage."
 
 msgid "ui.rulebook.c09.b07"
-msgstr "Auch eine bestätigte Siegentscheidung lässt sich mit „Rückgängig“ zurücknehmen (Kapitel 10)."
+msgstr "Lebt niemand mehr, entsteht kein Kandidat. Die Karte weist darauf hin, und die Spielleitung erklärt das Ergebnis über „Spielleitung“ und „Sieger erklären …“."
+
+msgid "ui.rulebook.c09.b08"
+msgstr "Auch eine bestätigte Siegentscheidung lässt sich mit „Rückgängig“ zurücknehmen (Kapitel 10). Der Bericht gilt dann nicht mehr als abgeschlossen; bestätigst du den Sieg erneut, wird er aktualisiert."
 
 msgid "ui.rulebook.c10.title"
 msgstr "Spielleiterkorrekturen und Undo"
@@ -6080,7 +6083,7 @@ msgid "ui.rulebook.c11.b09"
 msgstr "Ein Spielstand aus einer anderen Version der App bleibt unverändert und lässt sich hier nicht fortsetzen. „Verwerfen“ bleibt möglich. Eine laufende Partie wird nie still durch eine andere ersetzt."
 
 msgid "ui.rulebook.c11.b10"
-msgstr "Einstellungen wie die Sprache und „Bewegung reduzieren“ sowie gespeicherte Spielergruppen liegen getrennt von den Spielständen."
+msgstr "Einstellungen wie die Sprache und „Bewegung reduzieren“, gespeicherte Spielergruppen und die Partiehistorie liegen getrennt von den Spielständen."
 
 msgid "ui.rulebook.c12.title"
 msgstr "Rollenlexikon und Hilfe nutzen"
@@ -6323,3 +6326,197 @@ msgstr "Aufruf: (einmal je Leben, als allererster Schritt einer Nacht, freiwilli
 
 msgid "ui.lexicon.field.act"
 msgstr "Ablauf am Tisch"
+
+# --- Partiehistorie und Abschlussbericht ---
+
+msgid "ui.menu.history"
+msgstr "Partiehistorie"
+
+msgid "ui.cockpit.action.open_report"
+msgstr "Abschlussbericht öffnen"
+
+msgid "ui.history.title"
+msgstr "Partiehistorie"
+
+msgid "ui.history.report_title"
+msgstr "Abschlussbericht"
+
+msgid "ui.history.empty"
+msgstr "Noch keine abgeschlossene Partie. Nach einem bestätigten Sieg erscheint hier der Abschlussbericht."
+
+msgid "ui.history.entry"
+msgstr "{names} · {count} Personen · Sieger: {side} · {date}"
+
+msgid "ui.history.entry_reopened"
+msgstr "{names} · {count} Personen · Partie läuft wieder · {date}"
+
+msgid "ui.history.back_to_list"
+msgstr "Alle Berichte"
+
+msgid "ui.history.version.public"
+msgstr "Öffentlicher Bericht"
+
+msgid "ui.history.version.gm"
+msgstr "Spielleiterbericht"
+
+msgid "ui.history.export_info.public"
+msgstr "Exportiert wird die öffentliche Fassung: nur Angaben, die während der Partie am Tisch bekannt gemacht wurden."
+
+msgid "ui.history.export_info.gm"
+msgstr "Exportiert wird die Spielleiterfassung: Sie enthält alle Rollen, Ursachen und geheimen Angaben."
+
+msgid "ui.history.export.public"
+msgstr "Öffentliche Fassung als Text speichern"
+
+msgid "ui.history.export.gm"
+msgstr "Spielleiterfassung als Text speichern"
+
+msgid "ui.history.delete"
+msgstr "Bericht löschen …"
+
+msgid "ui.history.reopened"
+msgstr "Die Siegbestätigung dieser Partie wurde zurückgenommen. Der Bericht ist nicht mehr aktuell und lässt sich nicht exportieren. Wird der Sieg erneut bestätigt, wird er aktualisiert."
+
+msgid "ui.history.dialog.gm.title"
+msgstr "Spielleiterbericht anzeigen?"
+
+msgid "ui.history.dialog.gm.message"
+msgstr "Der Spielleiterbericht enthält alle Rollen, Ursachen und geheimen Angaben der Partie. Zeige ihn nur, wenn niemand mitliest."
+
+msgid "ui.history.dialog.gm.confirm"
+msgstr "Anzeigen"
+
+msgid "ui.history.dialog.overwrite.title"
+msgstr "Datei überschreiben?"
+
+msgid "ui.history.dialog.overwrite.message"
+msgstr "Die Datei „{file}“ gibt es schon. Sie wird durch diese Fassung ersetzt."
+
+msgid "ui.history.dialog.overwrite.confirm"
+msgstr "Überschreiben"
+
+msgid "ui.history.dialog.delete.title"
+msgstr "Bericht löschen?"
+
+msgid "ui.history.dialog.delete.message"
+msgstr "Der Abschlussbericht dieser Partie wird aus der Historie gelöscht. Der Spielstand bleibt unverändert, bereits exportierte Dateien auch."
+
+msgid "ui.history.dialog.delete.confirm"
+msgstr "Löschen"
+
+msgid "ui.history.info.exported"
+msgstr "Gespeichert: {path}"
+
+msgid "ui.history.info.deleted"
+msgstr "Bericht gelöscht."
+
+msgid "ui.history.error.export"
+msgstr "Export nicht möglich. Vorhandene Dateien bleiben unverändert."
+
+msgid "ui.history.error.delete"
+msgstr "Löschen nicht möglich. Die Historie bleibt unverändert."
+
+msgid "ui.history.error.save"
+msgstr "Der Abschlussbericht konnte nicht in der Historie gespeichert werden. Die Partie ist davon nicht betroffen. Öffne den Bericht erneut, um es noch einmal zu versuchen."
+
+msgid "ui.history.status.unreadable"
+msgstr "Die Historie konnte nicht gelesen werden. Die beschädigte Datei wurde beiseitegelegt, die Liste ist leer."
+
+msgid "ui.history.status.newer_version"
+msgstr "Die Historiendatei stammt aus einer neueren App-Version und wurde nicht geladen. Sie wurde unverändert beiseitegelegt."
+
+msgid "ui.history.status.skipped"
+msgstr "{count} beschädigte Einträge wurden übersprungen."
+
+msgid "ui.history.status.recovered"
+msgstr "Die Historie wurde aus der Sicherungskopie geladen."
+
+msgid "ui.report.title.public"
+msgstr "Abschlussbericht (öffentliche Fassung)"
+
+msgid "ui.report.title.gm"
+msgstr "Abschlussbericht (Spielleiterfassung)"
+
+msgid "ui.report.note.public"
+msgstr "Diese Fassung enthält nur Angaben, die während der Partie am Tisch bekannt gemacht wurden. Rollen, Ziele und Ursachen bleiben ausgelassen."
+
+msgid "ui.report.note.gm"
+msgstr "Nur für die Spielleitung. Diese Fassung enthält alle Rollen, Ursachen und geheimen Angaben."
+
+msgid "ui.report.game_id"
+msgstr "Partie: {id}"
+
+msgid "ui.report.participants"
+msgstr "Teilnehmende: {count} ({names})"
+
+msgid "ui.report.played"
+msgstr "Gespielt: {nights} Nächte, {days} Tage"
+
+msgid "ui.report.result"
+msgstr "Sieger: {side}"
+
+msgid "ui.report.win_reason"
+msgstr "Siegbedingung: {reason}"
+
+msgid "ui.report.winners"
+msgstr "Begünstigte Personen: {names}"
+
+msgid "ui.report.heading.roles"
+msgstr "Rollen"
+
+msgid "ui.report.role_line"
+msgstr "{seat} · {name}: {role}"
+
+msgid "ui.report.role_original"
+msgstr "(ursprünglich {role})"
+
+msgid "ui.report.heading.history"
+msgstr "Verlauf"
+
+msgid "ui.report.night"
+msgstr "Nacht {number}"
+
+msgid "ui.report.day"
+msgstr "Tag {number}"
+
+msgid "ui.report.judge_nominator"
+msgstr "Verdeckte Nominierung: {judge} hat {nominee} nominiert."
+
+msgid "ui.report.execution"
+msgstr "Hinrichtung: {name}."
+
+msgid "ui.report.execution_override"
+msgstr "Diese Hinrichtung von {name} war eine Spielleiterkorrektur ohne Nominierung."
+
+msgid "ui.report.execution_redirected"
+msgstr "Die Hinrichtung von {name} wurde gespiegelt: Stattdessen starb {other}."
+
+msgid "ui.report.no_execution"
+msgstr "Keine Hinrichtung an diesem Tag."
+
+msgid "ui.report.death"
+msgstr "Gestorben: {name}."
+
+msgid "ui.report.death_role"
+msgstr "Gestorben: {name} ({role})."
+
+msgid "ui.report.revived"
+msgstr "Wiederbelebt: {name}."
+
+msgid "ui.report.correction"
+msgstr "Spielleiterkorrektur „{what}“ an {name}. Begründung: {reason}"
+
+msgid "ui.report.correction_general"
+msgstr "Spielleiterkorrektur „{what}“. Begründung: {reason}"
+
+msgid "ui.report.win_rejected"
+msgstr "Sieg abgelehnt. Begründung: {reason}"
+
+msgid "ui.report.win"
+msgstr "Sieg bestätigt: {side}."
+
+msgid "ui.report.other_events"
+msgstr "{count} weitere technische Einzelereignisse sind hier nicht aufgeführt."
+
+msgid "ui.report.no_history"
+msgstr "Zu dieser Fassung gibt es keine Einträge."

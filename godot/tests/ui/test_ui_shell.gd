@@ -10,6 +10,7 @@ const MENU_BUTTONS := {
 	&"settings": "SettingsButton",
 	&"lexicon": "LexiconButton",
 	&"rulebook": "RulebookButton",
+	&"history": "HistoryButton",
 }
 
 
@@ -64,7 +65,7 @@ func test_screen_ids_unique_and_complete() -> void:
 	if ids == null:
 		return
 	var all: Array = ids.call("all")
-	assert_eq(all.size(), SCREEN_IDS.size(), "genau acht Ansichten")
+	assert_eq(all.size(), SCREEN_IDS.size(), "genau neun Ansichten")
 	var seen := {}
 	var paths := {}
 	for id: Variant in all:

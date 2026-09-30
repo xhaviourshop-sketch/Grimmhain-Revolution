@@ -393,6 +393,9 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 	match action:
 		&"help":
 			open_lexicon(StringName(str(payload.get("role_id", ""))))
+		&"open_report":
+			context.history_focus = s.round_id()  # Abschlussbericht der beendeten Partie in der Historienansicht öffnen
+			navigate_requested.emit(ScreenIds.HISTORY)
 		&"reveal":
 			if _day_mode == "execution_check":
 				_check_revealed = true

@@ -166,7 +166,7 @@ Auch bei abgeschlossenem Offline-Funktionsstand entsteht später Code für Layou
 - [ ] Szenariobasierte Rollenwahl gegen gültige Rollen-IDs, Personenanzahl und bestätigte Kompositionsregeln validieren. Keine neuen Szenarioregeln erfinden. *(Untersucht: nicht vorhanden, Matrix S-04; Inhalt der Szenarien ist Nutzerentscheidung.)*
 - [ ] Geführten und Expertenmodus funktional vervollständigen. Beide benutzen denselben Kern, dieselben Schutzprüfungen und dieselben Speicherpunkte. *(Matrix C-06, C-07: das Cockpit führt bereits; „Regelgrund“ und Expertenmodus fehlen, kein Modusbegriff im Code.)*
 - [ ] Beispielrunde und Übungsmodus mit isolierten Spielständen ermöglichen. Eine Übungsrunde darf keine echte laufende Partie überschreiben. *(Matrix C-08: nicht vorhanden.)*
-- [ ] Chronik/Nachspielbericht aus vorhandenen Ereignissen erzeugen. Vor Spielende nur freigegebene Angaben exportieren; private Daten nur nach bewusster Wahl. *(Matrix C-09: nicht vorhanden; nur die private Protokollebene im Cockpit.)*
+- [x] Chronik/Nachspielbericht aus vorhandenen Ereignissen erzeugen. Vor Spielende nur freigegebene Angaben exportieren; private Daten nur nach bewusster Wahl. *(Paket D, 30.09.2026: Abschlussbericht, Partiehistorie, Textexport; erweiterter öffentlicher Umfang offen als NQ-07; Geräteabnahme offen.)*
 - [ ] Timer als Anwendungskomponente ohne Einfluss auf Regeln ergänzen. *(Matrix C-10: fehlt, kein Timer in `app/`.)* Neustartverhalten und Pause definieren; Zeitablauf führt nie eigenständig eine Hinrichtung aus.
 - [ ] Sitzplatztausch nach Spielstart (`ReorderSeats`, Matrix S-06) einordnen. Er verändert Sitznachbarn im Regelkern; nur nach Nutzerentscheidung.
 

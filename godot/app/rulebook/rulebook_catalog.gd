@@ -15,7 +15,7 @@ const CHAPTERS: Array[Dictionary] = [
 	{"id": "c06", "kinds": "pphplllphpp"},
 	{"id": "c07", "kinds": "pphlllphpp"},
 	{"id": "c08", "kinds": "ppphppp"},
-	{"id": "c09", "kinds": "ppllppp"},
+	{"id": "c09", "kinds": "ppllpppp"},
 	{"id": "c10", "kinds": "phpphppphp"},
 	{"id": "c11", "kinds": "phphpphppp"},
 	{"id": "c12", "kinds": "ppphppp"},
