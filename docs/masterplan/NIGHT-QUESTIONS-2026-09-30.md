@@ -1,5 +1,7 @@
 # Offene Fragen aus dem Nachtauftrag vom 30.09.2026
 
+> **Später beantwortet (30.09.2026):** Alle sieben Fragen hat der Product Owner beantwortet (1B, 2A, 3A, 4A mit Freitext, 5A mit Freitext, 6A, 7C). Antworten, Herkunft und Umsetzung stehen im Decision Log unter „Nachtentscheidungen NQ-01 bis NQ-07“. Der folgende Text ist der historische Stand vom Abend des 30.09.2026 und bleibt unverändert; „nicht beantwortet“ gilt hier nicht mehr.
+
 Stand: 30.09.2026, Worktree `grimmhain-night-ui`, Branch `feature/night-ui-expansion`. Die Fragen sind nicht beantwortet. Nichts, was von einer dieser Fragen abhängt, wurde gebaut oder in normativen Dokumenten festgeschrieben. Bereits bestätigte Vorgaben (PE-07 einschließlich Vorschlag, Gebundene, Grenze nur beim Start) stehen nicht auf dieser Liste.
 
 Jede Frage fragt, was in einer konkreten Spielsituation passieren soll. A, B und C sind Vorschläge; eine eigene Antwort in Freitext ist immer möglich. Dringend zuerst: NQ-01 hängt an einer schon entschiedenen Funktion, die deshalb nicht umgesetzt werden kann.

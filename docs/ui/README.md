@@ -56,7 +56,8 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/widgets/toast/` | Statusmeldung am unteren Rand, 2,5 s sichtbar |
 | `app/theme/theme_tokens.gd` | alle Farben, Abstände, Radien, Rahmen, Schriftgrößen, Mindestgrößen, Zeiten |
 | `app/theme/theme_factory.gd` | baut das Theme aus den Tokens (kein `.tres`) |
-| `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Linkshänder-Grundlage (Werte im Speicher) |
+| `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Bedienhand (`left_handed`, wirkt auf die Cockpit-Seitenspalte) |
+| `app/audio/audio_cue_player.gd` | Audioanschluss für Darstellungshinweise (Hinweis bei fünf Toten); stumm ohne Tondatei, keine Tondatei beigelegt |
 | `app/settings/settings_store.gd` | dauerhafte Geräteeinstellungen in `user://settings.json`, getrennt von Spielständen (DA-52) |
 | `app/platform/app_platform.gd` | Desktop/Mobil, Beenden erlaubt, Version aus `project.godot` |
 | `app/session/game_session.gd` | Anwendungsschicht zum Regelkern |
@@ -149,7 +150,7 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 - **Bewegung reduzieren** (`AppSettings.reduced_motion`) setzt die Übergangszeit des Routers und die Einblendung der Statusmeldung auf 0. Beim Einschalten wird ein laufender Übergang sofort beendet. Sonst blendet eine neue Ansicht in 200 ms mit 12 px Aufwärtsbewegung ein (Cubic, Ease-out). Eingaben sind während eines Übergangs nie gesperrt.
 - **Fokus:** Jeder Button ist fokussierbar (`FOCUS_ALL`), jede Ansicht setzt einen Standardfokus (Startbutton, erste Menüaktion, Namensfeld in „Neue Partie“, sonst Zurück). Tab, Shift+Tab und Pfeiltasten bewegen den Fokus über die Container, Enter oder Leertaste lösen aus, Escape läuft über Zurück.
 - **Touch und Maus:** Buttons reagieren auf das Signal `pressed`. Touch löst über `input_devices/pointing/emulate_mouse_from_touch=true` dieselben Mausereignisse aus. Keine Gesten, kein Langdruck.
-- **Linkshänder:** `AppSettings.left_handed` existiert mit Signal und wird mitgespeichert, hat aber keinen Schalter und keine Wirkung. Das ist kein Linkshändermodus. Die spätere Spiegelung gehört ins Cockpit mit echtem Sitzkreis (Matrix D-10).
+- **Bedienhand (NQ-04):** „Rechtshändig“ / „Linkshändig“ in den Optionen setzt `AppSettings.left_handed`; im Cockpit wechselt die Seitenspalte (Ansagekarte und Werkzeuge) die Seite des Sitzkreises, sofort und nach Neustart (`docs/ui/cockpit.md`, Abschnitt „Bedienseite“). Sitzkreis, Reihenfolge, Texte und Regeln bleiben gleich.
 
 ## Dauerhafte Einstellungen
 

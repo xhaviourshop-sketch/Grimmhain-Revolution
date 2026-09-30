@@ -98,6 +98,21 @@ msgstr "Bewegung reduzieren"
 msgid "ui.settings.motion.hint"
 msgstr "Schaltet Bildschirmübergänge und Einblendungen ab."
 
+msgid "ui.settings.hand.heading"
+msgstr "Bedienhand"
+
+msgid "ui.settings.hand.right"
+msgstr "Rechtshändig"
+
+msgid "ui.settings.hand.left"
+msgstr "Linkshändig"
+
+msgid "ui.settings.hand.active_right"
+msgstr "Aktiv: Rechtshändig"
+
+msgid "ui.settings.hand.active_left"
+msgstr "Aktiv: Linkshändig"
+
 msgid "ui.settings.audio.heading"
 msgstr "Audio"
 
@@ -108,13 +123,19 @@ msgid "ui.settings.display.heading"
 msgstr "Anzeige"
 
 msgid "ui.settings.display.placeholder"
-msgstr "Schriftgröße, Dunkelraum- und Linkshändermodus folgen später."
+msgstr "Schriftgröße und Dunkelraummodus folgen später."
 
 msgid "ui.settings.toast.language"
 msgstr "Sprache geändert"
 
 msgid "ui.settings.toast.motion_on"
 msgstr "Bewegung reduziert"
+
+msgid "ui.settings.toast.hand_right"
+msgstr "Rechtshändig aktiv"
+
+msgid "ui.settings.toast.hand_left"
+msgstr "Linkshändig aktiv"
 
 msgid "ui.settings.toast.motion_off"
 msgstr "Übergänge aktiv"
@@ -2268,7 +2289,7 @@ msgid "ui.prompt.rattenfaenger.pick"
 msgstr "Tippe eine oder zwei Personen an, die der Rattenfänger verzaubert, und bestätige."
 
 msgid "ui.prompt.rotkaeppchen.targets"
-msgstr "Tippe die Person an, bei der Rotkäppchen Zuflucht sucht, und bestätige."
+msgstr "Tippe die Person an, bei der Rotkäppchen Zuflucht sucht, und bestätige. Lass Rotkäppchen danach die Augen schließen, tippe die gewählte Person unauffällig an und zeige ihr die nächste Karte auf dem Tablet."
 
 msgid "ui.prompt.rotkaeppchen.grant"
 msgstr "Jemand bittet dich um Zuflucht. Gewährst du sie, erhältst du einen Apfel (dein nächster Nachtschritt läuft doppelt) und ihr seid verkettet: Stirbt eine Person, stirbt die andere sofort mit. Du darfst ablehnen. Du erfährst nicht, wer fragt."
@@ -4459,9 +4480,6 @@ msgstr "Rotkäppchen fragt Ben, Ben gewährt Zuflucht. In der folgenden Nacht f�
 msgid "ui.role.rotkaeppchen.lex.gm"
 msgstr "Die gefragte Person beantwortet die Frage selbst. Fähigkeiten und ihre Effekte sind allen Personen bekannt: Die gefragte Person kennt Apfel und Kette und darf ablehnen, erfährt aber nicht, wer fragt. Ihre Karte nennt deshalb weder die Rolle noch die fragende Person. Der Tod durch die Kette ist ein Todeseffekt und wird öffentlich angesagt. Die Ansage nennt Rotkäppchen als Rolle, von der die Kette stammt, nie die Rolle der sterbenden Person."
 
-msgid "ui.role.rotkaeppchen.lex.open"
-msgstr "Wie die gefragte Person am Tisch geweckt und befragt wird, ist noch nicht festgelegt."
-
 msgid "ui.role.seelentauscher.lex.night"
 msgstr "jede Nacht bis zur Nutzung"
 
@@ -5891,7 +5909,7 @@ msgid "ui.rulebook.c05.b06"
 msgstr "Private Hinweise"
 
 msgid "ui.rulebook.c05.b07"
-msgstr "Einige Rollen lösen private Hinweise aus (Loki, Rattenfänger, Pestbringerin, Rotkäppchen). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, „Gezeigt“ bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Am Tag bleibt der Inhalt verdeckt, bis du „Anzeigen“ tippst."
+msgstr "Einige Rollen lösen private Hinweise aus (Loki, Rattenfänger, Pestbringerin, Rotkäppchen). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, „Gezeigt“ bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Am Tag bleibt der Inhalt verdeckt, bis du „Anzeigen“ tippst. Bei Rotkäppchen tippst du die gewählte Person nach der Wahl unauffällig an und zeigst ihr die anonyme Frage; die Antwort erfasst du mit „Zuflucht gewährt“ oder „Keine Zuflucht“."
 
 msgid "ui.rulebook.c05.b08"
 msgstr "Bereiche mit allen Geheimnissen"
@@ -6244,7 +6262,7 @@ msgid "ui.role.ritter.lex.act"
 msgstr "Aufruf: Kein Aufruf, kein Nachtschritt. Sind nach dem Tod einer Person mit der Rolle „Ritter“ mehrere Wölfe gleich nah, erscheint eine verdeckte Reaktionskarte.\nAuswählen oder ablesen: Der Ritter trifft den nächsten Wolf. Mehrere sind gleich nah: Tippe den getroffenen Wolf an.\nVorlesen oder zeigen: Nichts wird vorgelesen. Die sichtbare Folge wird öffentlich als Todeseffekt angesagt (Regelbuch, Kapitel 6).\nBeenden: Tippe „Auswahl bestätigen“ oder „Verzichtet“. Danach prüft die App weitere Folgen."
 
 msgid "ui.role.rotkaeppchen.lex.act"
-msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Rotkäppchen“ in der Nachtreihenfolge an. Lies vor: „Rotkäppchen, erwache. Zeige auf die Person, bei der du Zuflucht suchst.“\nAuswählen oder ablesen: Tippe die Person an, bei der Rotkäppchen Zuflucht sucht, und bestätige. Danach erscheint die Frage an die gefragte Person mit „Zuflucht gewährt“ und „Keine Zuflucht“.\nVorlesen oder zeigen: Die Frage („Jemand bittet dich um Zuflucht …“) nennt weder die Rolle noch die fragende Person. Offen: Wie die gefragte Person am Tisch geweckt und befragt wird, ist noch nicht festgelegt.\nBeenden: Tippe „Auswahl bestätigen“, danach die Antwort der gefragten Person. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (jede Nacht) Die App kündigt die Rolle „Rotkäppchen“ in der Nachtreihenfolge an. Lies vor: „Rotkäppchen, erwache. Zeige auf die Person, bei der du Zuflucht suchst.“\nAuswählen oder ablesen: Tippe die Person an, auf die Rotkäppchen zeigt, und bestätige. Lass Rotkäppchen danach die Augen wieder schließen und tippe die gewählte Person unauffällig an, ohne ihren Namen zu nennen.\nVorlesen oder zeigen: Zeige der angetippten Person die Frage auf dem Tablet („Jemand bittet dich um Zuflucht …“). Sie nennt weder die Rolle noch die fragende Person; lies sie nicht laut vor. Die Person darf ablehnen, erfährt aber nicht, wer fragt. Die Frage erklärt Apfel und Kette.\nBeenden: Tippe die Antwort der gefragten Person an („Zuflucht gewährt“ oder „Keine Zuflucht“). Die Person schließt danach wieder die Augen. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.rudelvater.lex.act"
 msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“. Nach einer Hinrichtung des Rudelvaters folgt in der nächsten Nacht direkt nach dem Rudel ein zweiter Rudelschritt: Zweites Opfer des Rudels: Tippe die Person an und bestätige. Es durchdringt Schutz.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
@@ -6360,7 +6378,7 @@ msgid "ui.history.version.gm"
 msgstr "Spielleiterbericht"
 
 msgid "ui.history.export_info.public"
-msgstr "Exportiert wird die öffentliche Fassung: nur Angaben, die während der Partie am Tisch bekannt gemacht wurden."
+msgstr "Exportiert wird die öffentliche Fassung: die am Tisch bekannten Angaben sowie alle Rollen zum Spielende, die Sieger und die Siegbedingung. Eine schon weitergegebene Datei lässt sich nicht zurückrufen."
 
 msgid "ui.history.export_info.gm"
 msgstr "Exportiert wird die Spielleiterfassung: Sie enthält alle Rollen, Ursachen und geheimen Angaben."
@@ -6438,7 +6456,10 @@ msgid "ui.report.title.gm"
 msgstr "Abschlussbericht (Spielleiterfassung)"
 
 msgid "ui.report.note.public"
-msgstr "Diese Fassung enthält nur Angaben, die während der Partie am Tisch bekannt gemacht wurden. Rollen, Ziele und Ursachen bleiben ausgelassen."
+msgstr "Diese Fassung enthält die am Tisch bekannt gemachten Angaben und, weil das Spielende bestätigt ist, alle Rollen zum Spielende, die Sieger und die Siegbedingung. Geheime Ziele, Schutzmarkierungen, private Entscheidungen und Ursachen bleiben ausgelassen."
+
+msgid "ui.report.note.public_locked"
+msgstr "Die Siegbestätigung wurde zurückgenommen. Diese Fassung enthält nur Angaben, die am Tisch bekannt gemacht wurden. Rollen, Sieger und Siegbedingung erscheinen erst nach einer neuen Siegbestätigung."
 
 msgid "ui.report.note.gm"
 msgstr "Nur für die Spielleitung. Diese Fassung enthält alle Rollen, Ursachen und geheimen Angaben."
@@ -6459,10 +6480,10 @@ msgid "ui.report.win_reason"
 msgstr "Siegbedingung: {reason}"
 
 msgid "ui.report.winners"
-msgstr "Begünstigte Personen: {names}"
+msgstr "Gewinnende Personen: {names}"
 
 msgid "ui.report.heading.roles"
-msgstr "Rollen"
+msgstr "Rollen zum Spielende"
 
 msgid "ui.report.role_line"
 msgstr "{seat} · {name}: {role}"

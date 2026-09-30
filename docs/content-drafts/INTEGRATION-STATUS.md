@@ -20,11 +20,11 @@ Die vier Stufen werden getrennt geführt. Eine höhere Stufe ist keine Freigabe 
 | `faehrtenleser`, `detektiv` | Geräteprüfung | „links“ = Uhrzeigersinn am Tablet ungeprüft | OI-06; `rolebook/01-village-information.md` |
 | `blutpriester` | technisch abgeleitet | Verteilung des Zufallsvorschlags | DA-43; `rolebook/01-village-information.md` |
 | `der-weise` | technisch abgeleitet | Länge des Fluchs nicht angesagt | DA-23; `rolebook/02-village-protection.md` |
-| `rotkaeppchen` | nicht festgelegt | Wecken und Befragen der gefragten Person am Tisch | OI-18; `rolebook/03-village-bonds-and-changes.md` |
+| `rotkaeppchen` | entschieden (NQ-06, 30.09.2026), im Lexikon umgesetzt | kein offener Punkt mehr: gefragte Person unauffällig antippen, anonyme Frage auf dem Tablet zeigen (Decision Log DA-84) | OI-18; `rolebook/03-village-bonds-and-changes.md` (Entwurfsstand) |
 | `kutscher`, `dr-victor-frankenstein` | nicht festgelegt | Totenreichkarten, Kartenbedingung | OI-02; `rolebook/03-village-bonds-and-changes.md` |
 | `schwarze-witwe` | vertagt | Setup-Pflicht „Loki im Spiel“ | `rolebook/05-wolves-special.md` |
 | `schicksalswolf`, `rachsuechtiger-wolf`, `zeitwaechter`, `hades`, `grabraeuber` | technisch abgeleitet | Einzelheiten DA-01 bis DA-19 | Decision Log; `rolebook/02` (Zeitwächter), `05`, `07` |
-| `selbstmoerder` | nicht umgesetzt, teils ungeklärt | Ton bei fünf Toten; „in der Partie“ | DI-09, X-05; `rolebook/06-solo-1.md` |
+| `selbstmoerder` | Hinweis technisch umgesetzt, kein Ton | „in der Partie“ ist entschieden (NQ-01: lebende Person mit der Rolle, auch geerbt); Hinweis mit stummem Fallback (DA-86), keine Tondatei | DI-09, X-05; `rolebook/06-solo-1.md` |
 
 Kartenschlucker hat keinen Eintrag und ist keine spielbare Rolle (fehlende Kartenmechanik, Paket 8).
 
@@ -40,7 +40,7 @@ Kartenschlucker hat keinen Eintrag und ist keine spielbare Rolle (fehlende Karte
 | DI-06, PE-06 | Rattenfänger | Hinweis `piper_new` (`ui.notice.piper_new`), Nachtschritt `piper-all` (`ui.call.piper_all`, `ui.prompt.piper_all.shown`, `ui.cockpit.group.piper_all`) |
 | DI-07 | Pestbringerin | `notices` (`pest_infected`), auch nach der Ausbreitung, `ui.notice.pest_infected` |
 | DI-08 | Trugbilderwolf | keine Karte trägt die Scheinrolle; nur der private Spielleiterbereich nennt sie (Test `test_notice_cards`) |
-| DI-09 | Ton bei fünf Toten | bestätigt, weiterhin nicht umgesetzt (Audio) |
+| DI-09 | Ton bei fünf Toten | bestätigt; seit 30.09.2026 als technischer Hinweis mit stummem Fallback umgesetzt (NQ-01, DA-86), Tondatei fehlt (Medienproduktion) |
 
 ## Abweichungen von den Entwurfsannahmen in `DECISIONS-TO-INTEGRATE.md`
 

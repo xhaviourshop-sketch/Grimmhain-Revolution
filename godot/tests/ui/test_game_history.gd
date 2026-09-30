@@ -179,9 +179,10 @@ func test_public_version_first_private_only_after_confirmation() -> void:
 	assert_true(find_button(screen, "HistoryPublicButton").button_pressed and not find_button(screen, "HistoryGmButton").button_pressed, "private Fassung nicht vorausgewählt")
 	var text := _report_text(shell)
 	assert_true(text.contains("Abschlussbericht (öffentliche Fassung)") and text.contains("Werwölfe") and text.contains("Hinrichtung: Dörte"), "öffentlicher Inhalt")
-	for secret: String in ["Rudelangriff", "Siegbedingung", "Blutwolf", "Detektiv"]:
+	for released: String in ["Rollen zum Spielende", "2 · Bärbel: Blutwolf", "5 · Émile: Detektiv", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden."]:
+		assert_true(text.contains(released), "nach bestätigtem Spielende öffentlich: %s" % released)
+	for secret: String in ["Rudelangriff", "ursprünglich", "Spielleiterkorrektur"]:
 		assert_false(text.contains(secret), "öffentlich ohne %s" % secret)
-	assert_false(view.report_texts().has("Rollen"), "öffentlich ohne Rollenübersicht")
 	assert_eq(find_node(screen, "HistoryExportButton").get("text_key"), "ui.history.export.public", "Exportknopf nennt die öffentliche Fassung")
 	# Wechsel zur privaten Fassung: erst nach Bestätigung, Abbrechen ändert nichts und baut nichts.
 	await press(find_button(screen, "HistoryGmButton"))
@@ -394,3 +395,76 @@ func test_report_fits_and_scrolls_at_1024x768() -> void:
 		var last := body.get_child(body.get_child_count() - 1) as Control
 		assert_true(inside(rect_of(last), rect_of(scroll), 1.0), "%s: letzte Zeile nach Scrollen sichtbar" % lang)
 		await after_each()
+
+
+## Bildschirm und öffentliche Exportdatei haben denselben freigegebenen Umfang (Zeilen des Bildschirms = Zeilen der Datei),
+## die Datei ist UTF-8 und enthält Rollen zum Spielende, aber keine weiteren Geheimnisse.
+func test_screen_and_public_export_have_the_same_scope() -> void:
+	var made := await _shell_with_finished_game()
+	if made.is_empty():
+		return
+	var shell: Control = made[0]
+	var ctx: AppContext = made[1]
+	var screen := current_screen(shell)
+	await press(find_node(screen, "HistoryList").get_child(0) as BaseButton)
+	var on_screen := _view(shell).report_texts()
+	await press(find_button(screen, "HistoryExportButton"))
+	var path := ReportExport.path_for(ctx.exports_dir, ctx.history.get_entry("ui-bericht")["report"], ReportText.PUBLIC)
+	var exported := FileAccess.get_file_as_bytes(path).get_string_from_utf8()
+	var file_lines: Array[String] = []
+	for line: String in exported.split("
+"):
+		if line != "" and not line.begins_with("=") and not line.begins_with("-"):
+			file_lines.append(line)
+	assert_eq(file_lines, on_screen, "gleiche Zeilen auf dem Bildschirm und in der Datei")
+	assert_true(exported.contains("4 · Dörte: Amalia †") and exported.contains("Sieger: Werwölfe"), "Datei nennt Rollen und Sieger")
+	for secret: String in ["Rudelangriff", "ursprünglich", "Spielleiterkorrektur"]:
+		assert_false(exported.contains(secret), "Datei ohne %s" % secret)
+
+
+## Nach Rückgängig der Siegbestätigung sind Rollen, Sieger und Siegbedingung in der Ansicht wieder gesperrt und der Export ist
+## gesperrt; nach neuer Bestätigung ist die Freigabe wieder da. Die Rollen kommen aus dem neuen Abschluss, nicht aus dem alten.
+func test_undo_locks_the_release_and_a_new_completion_replaces_the_old_roles() -> void:
+	var made := await _shell_with_finished_game()
+	if made.is_empty():
+		return
+	var shell: Control = made[0]
+	var ctx: AppContext = made[1]
+	assert_true(ctx.session.undo(), "Siegbestätigung zurückgenommen")
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"history")
+	var screen := current_screen(shell)
+	await press(find_node(screen, "HistoryList").get_child(0) as BaseButton)
+	var locked := _report_text(shell)
+	for hidden: String in ["Rollen zum Spielende", "Blutwolf", "Detektiv", "Wahnsinniger Kutscher", "Siegbedingung:"]:
+		assert_false(locked.contains(hidden), "gesperrt: %s nicht öffentlich" % hidden)
+	assert_true(locked.contains("Hinrichtung: Dörte"), "Chronik bleibt lesbar")
+	assert_true(find_button(screen, "HistoryExportButton").disabled, "Export gesperrt")
+	await press(find_button(screen, "HistoryExportButton"))
+	assert_false(DirAccess.dir_exists_absolute(ctx.exports_dir) and not DirAccess.get_files_at(ctx.exports_dir).is_empty(), "keine Datei entstanden")
+	# Spielweg ändern: andere Rolle für Person 6, danach neuer Abschluss.
+	await navigate(shell, &"main_menu")
+	assert_true(ctx.session.reject_win("Tisch spielt weiter").ok, "offener Sieg abgelehnt")
+	assert_true(ctx.session.submit(CorrectionFixtures.gm("set_role", {"target_id": 6, "role_id": "dorfbewohner"}, "Karte vertauscht")).ok, "Rolle geändert")
+	var next: Dictionary = ctx.session.cockpit_view()["next"]
+	assert_eq(str(next["kind"]), "win_decision", "Sieg wird weiter vorgeschlagen")
+	assert_true(ctx.session.confirm_win(int(next["candidates"][0]["id"])).ok, "Sieg erneut bestätigt")
+	await navigate(shell, &"history")
+	await press(find_node(current_screen(shell), "HistoryList").get_child(0) as BaseButton)
+	var again := _report_text(shell)
+	assert_true(again.contains("6 · Fjörd: Dorfbewohner") and not again.contains("Wahnsinniger Kutscher"), "neue Rolle zum Spielende, keine alte")
+	assert_false(find_button(current_screen(shell), "HistoryExportButton").disabled, "Export wieder frei")
+	assert_eq(ctx.history.list().size(), 1, "derselbe Eintrag, kein zweiter")
+
+
+## Ein schon gespeicherter Bericht ohne Rollen (unvollständig oder älter) wird nicht ergänzt: keine erfundene Rollenliste.
+func test_stored_report_without_roles_is_not_filled_up() -> void:
+	var ctx := _context(_paths())
+	_win(ctx)
+	var report: Dictionary = ctx.history.get_entry("ui-bericht")["report"].duplicate(true)
+	report.erase("roles")
+	var text := ReportText.plain_text(report, ReportText.PUBLIC)
+	for line: Dictionary in ReportText.lines(report, ReportText.PUBLIC):
+		assert_false(str(line["style"]) == "heading" and str(line["text"]) == "Rollen zum Spielende", "keine Rollenüberschrift ohne gespeicherte Rollen")
+	assert_true(RegEx.create_from_string("(?m)^[0-9]+ · ").search(text) == null, "keine erfundene Rollenzeile")
+	assert_true(text.contains("Sieger: Werwölfe") and text.contains("Hinrichtung: Dörte"), "übrige Angaben bleiben")

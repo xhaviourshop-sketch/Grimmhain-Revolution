@@ -8,6 +8,8 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_language"]
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_hand"]
+
 [node name="SettingsScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -32,33 +34,40 @@ unique_name_in_owner = true
 layout_mode = 2
 title_key = "ui.settings.title"
 
-[node name="Columns" type="HBoxContainer" parent="Layout"]
+[node name="ColumnsScroll" type="ScrollContainer" parent="Layout"]
 layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="Columns" type="HBoxContainer" parent="Layout/ColumnsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_type_variation = &"ButtonRow"
 
-[node name="Primary" type="VBoxContainer" parent="Layout/Columns"]
+[node name="Primary" type="VBoxContainer" parent="Layout/ColumnsScroll/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"ScreenColumn"
 
-[node name="LanguageCard" type="PanelContainer" parent="Layout/Columns/Primary"]
+[node name="LanguageCard" type="PanelContainer" parent="Layout/ColumnsScroll/Columns/Primary"]
 layout_mode = 2
 theme_type_variation = &"CardPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Columns/Primary/LanguageCard"]
+[node name="Column" type="VBoxContainer" parent="Layout/ColumnsScroll/Columns/Primary/LanguageCard"]
 layout_mode = 2
 
-[node name="LanguageHeading" type="Label" parent="Layout/Columns/Primary/LanguageCard/Column"]
+[node name="LanguageHeading" type="Label" parent="Layout/ColumnsScroll/Columns/Primary/LanguageCard/Column"]
 layout_mode = 2
 theme_type_variation = &"HeadingLabel"
 script = ExtResource("3_label")
 text_key = "ui.settings.language.heading"
 
-[node name="LanguageButtons" type="HBoxContainer" parent="Layout/Columns/Primary/LanguageCard/Column"]
+[node name="LanguageButtons" type="HBoxContainer" parent="Layout/ColumnsScroll/Columns/Primary/LanguageCard/Column"]
 layout_mode = 2
 
-[node name="LanguageGermanButton" type="Button" parent="Layout/Columns/Primary/LanguageCard/Column/LanguageButtons"]
+[node name="LanguageGermanButton" type="Button" parent="Layout/ColumnsScroll/Columns/Primary/LanguageCard/Column/LanguageButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -67,7 +76,7 @@ button_group = SubResource("ButtonGroup_language")
 script = ExtResource("2_button")
 text_key = "ui.settings.language.german"
 
-[node name="LanguageEnglishButton" type="Button" parent="Layout/Columns/Primary/LanguageCard/Column/LanguageButtons"]
+[node name="LanguageEnglishButton" type="Button" parent="Layout/ColumnsScroll/Columns/Primary/LanguageCard/Column/LanguageButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -76,78 +85,119 @@ button_group = SubResource("ButtonGroup_language")
 script = ExtResource("2_button")
 text_key = "ui.settings.language.english"
 
-[node name="LanguageStatusLabel" type="Label" parent="Layout/Columns/Primary/LanguageCard/Column"]
+[node name="LanguageStatusLabel" type="Label" parent="Layout/ColumnsScroll/Columns/Primary/LanguageCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 script = ExtResource("3_label")
 text_key = "ui.settings.language.active"
 
-[node name="MotionCard" type="PanelContainer" parent="Layout/Columns/Primary"]
+[node name="MotionCard" type="PanelContainer" parent="Layout/ColumnsScroll/Columns/Primary"]
 layout_mode = 2
 theme_type_variation = &"CardPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Columns/Primary/MotionCard"]
+[node name="Column" type="VBoxContainer" parent="Layout/ColumnsScroll/Columns/Primary/MotionCard"]
 layout_mode = 2
 
-[node name="MotionHeading" type="Label" parent="Layout/Columns/Primary/MotionCard/Column"]
+[node name="MotionHeading" type="Label" parent="Layout/ColumnsScroll/Columns/Primary/MotionCard/Column"]
 layout_mode = 2
 theme_type_variation = &"HeadingLabel"
 script = ExtResource("3_label")
 text_key = "ui.settings.motion.heading"
 
-[node name="ReducedMotionToggle" type="CheckButton" parent="Layout/Columns/Primary/MotionCard/Column"]
+[node name="ReducedMotionToggle" type="CheckButton" parent="Layout/ColumnsScroll/Columns/Primary/MotionCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("5_toggle")
 text_key = "ui.settings.motion.reduce"
 
-[node name="MotionHint" type="Label" parent="Layout/Columns/Primary/MotionCard/Column"]
+[node name="MotionHint" type="Label" parent="Layout/ColumnsScroll/Columns/Primary/MotionCard/Column"]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 script = ExtResource("3_label")
 text_key = "ui.settings.motion.hint"
 
-[node name="Secondary" type="VBoxContainer" parent="Layout/Columns"]
+[node name="Secondary" type="VBoxContainer" parent="Layout/ColumnsScroll/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"ScreenColumn"
 
-[node name="AudioCard" type="PanelContainer" parent="Layout/Columns/Secondary"]
+[node name="AudioCard" type="PanelContainer" parent="Layout/ColumnsScroll/Columns/Secondary"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"PlaceholderPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Columns/Secondary/AudioCard"]
+[node name="Column" type="VBoxContainer" parent="Layout/ColumnsScroll/Columns/Secondary/AudioCard"]
 layout_mode = 2
 
-[node name="AudioHeading" type="Label" parent="Layout/Columns/Secondary/AudioCard/Column"]
+[node name="AudioHeading" type="Label" parent="Layout/ColumnsScroll/Columns/Secondary/AudioCard/Column"]
 layout_mode = 2
 theme_type_variation = &"HeadingLabel"
 script = ExtResource("3_label")
 text_key = "ui.settings.audio.heading"
 
-[node name="AudioPlaceholder" type="Label" parent="Layout/Columns/Secondary/AudioCard/Column"]
+[node name="AudioPlaceholder" type="Label" parent="Layout/ColumnsScroll/Columns/Secondary/AudioCard/Column"]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 script = ExtResource("3_label")
 text_key = "ui.settings.audio.placeholder"
 
-[node name="DisplayCard" type="PanelContainer" parent="Layout/Columns/Secondary"]
+[node name="HandCard" type="PanelContainer" parent="Layout/ColumnsScroll/Columns/Secondary"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Column" type="VBoxContainer" parent="Layout/ColumnsScroll/Columns/Secondary/HandCard"]
+layout_mode = 2
+
+[node name="HandHeading" type="Label" parent="Layout/ColumnsScroll/Columns/Secondary/HandCard/Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.hand.heading"
+
+[node name="HandButtons" type="HBoxContainer" parent="Layout/ColumnsScroll/Columns/Secondary/HandCard/Column"]
+layout_mode = 2
+
+[node name="HandRightButton" type="Button" parent="Layout/ColumnsScroll/Columns/Secondary/HandCard/Column/HandButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_hand")
+script = ExtResource("2_button")
+text_key = "ui.settings.hand.right"
+
+[node name="HandLeftButton" type="Button" parent="Layout/ColumnsScroll/Columns/Secondary/HandCard/Column/HandButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_hand")
+script = ExtResource("2_button")
+text_key = "ui.settings.hand.left"
+
+[node name="HandStatusLabel" type="Label" parent="Layout/ColumnsScroll/Columns/Secondary/HandCard/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+text_key = "ui.settings.hand.active_right"
+
+[node name="DisplayCard" type="PanelContainer" parent="Layout/ColumnsScroll/Columns/Secondary"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"PlaceholderPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Columns/Secondary/DisplayCard"]
+[node name="Column" type="VBoxContainer" parent="Layout/ColumnsScroll/Columns/Secondary/DisplayCard"]
 layout_mode = 2
 
-[node name="DisplayHeading" type="Label" parent="Layout/Columns/Secondary/DisplayCard/Column"]
+[node name="DisplayHeading" type="Label" parent="Layout/ColumnsScroll/Columns/Secondary/DisplayCard/Column"]
 layout_mode = 2
 theme_type_variation = &"HeadingLabel"
 script = ExtResource("3_label")
 text_key = "ui.settings.display.heading"
 
-[node name="DisplayPlaceholder" type="Label" parent="Layout/Columns/Secondary/DisplayCard/Column"]
+[node name="DisplayPlaceholder" type="Label" parent="Layout/ColumnsScroll/Columns/Secondary/DisplayCard/Column"]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 script = ExtResource("3_label")

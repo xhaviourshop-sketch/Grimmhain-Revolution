@@ -1,0 +1,27 @@
+class_name PresentationCue
+extends RefCounted
+## Darstellungshinweise (kein Regelbestandteil, keine Spielwirkung): reine Auswertung eines Zustands. Bisher nur DI-09, der
+## Hinweis bei fünf Toten. Er bezieht sich auf den Zeitpunkt, an dem zum ersten Mal fünf Personen öffentlich tot sind (Tag,
+## Morgenauflösung oder Spielende; Tode der Nacht werden erst mit der Morgenauflösung öffentlich), und nur auf diesen einen.
+## Berechtigt ist er nur, wenn in genau diesem Zustand eine lebende Person die Rolle Selbstmörder hat (NQ-01; auch eine
+## geerbte Rolle zählt, eine tote Person nicht). Der Hinweis trägt weder Namen noch Rolle: Er enthält nur seine Kennung.
+
+const FIVE_DEAD := &"five_dead"
+const THRESHOLD := 5
+
+
+static func dead_count(s: GameState) -> int:
+	return s.players.size() - s.alive_ids().size()
+
+
+## Erstmals mindestens fünf Tote in einer öffentlichen Phase (nicht Aufbau, nicht Nacht).
+static func five_dead_reached(s: GameState) -> bool:
+	return [Phase.DAWN_RESOLUTION, Phase.DAY, Phase.GAME_OVER].has(s.phase) and dead_count(s) >= THRESHOLD
+
+
+## Eine lebende Person hat aktuell die Rolle Selbstmörder.
+static func five_dead_eligible(s: GameState) -> bool:
+	for id: int in s.alive_ids():
+		if s.players[id].role_id == RoleCatalog.SELBSTMOERDER:
+			return true
+	return false

@@ -11,7 +11,7 @@ const DEFAULT_LANGUAGE := "de"
 
 var language: String = DEFAULT_LANGUAGE
 var reduced_motion: bool = false  ## schaltet Bildschirmübergänge und Einblendungen ab
-var left_handed: bool = false     ## Grundlage für spätere Spiegelung; noch ohne Wirkung
+var left_handed: bool = false     ## Bedienseite: true = Ansagekarte und Werkzeuge des Cockpits links vom Sitzkreis (NQ-04)
 
 
 ## Setzt die Sprache. Nur unterstützte Sprachen; liefert false bei Ablehnung.

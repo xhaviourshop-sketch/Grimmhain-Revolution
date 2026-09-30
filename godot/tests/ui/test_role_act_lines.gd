@@ -1,8 +1,8 @@
 extends UiTestCase
 ## Handlungszeilen (OI-18): Das Lexikonfeld „Ablauf am Tisch“ (`act`) beantwortet für jede der 71 Rollen vier Fragen: Wen ruft die
 ## Spielleitung auf, was wählt oder liest sie ab, was darf sie vorlesen oder zeigen, wie beendet sie den Schritt. Die Zeilen
-## stützen sich auf die Texte der Karten (`ui.call.*`, `ui.prompt.*`) und dürfen ihnen nicht widersprechen; ein offener Bedienablauf
-## (Rotkäppchen) ist als offen gekennzeichnet.
+## stützen sich auf die Texte der Karten (`ui.call.*`, `ui.prompt.*`) und dürfen ihnen nicht widersprechen; alle Abläufe sind
+## entschieden (Rotkäppchen: NQ-06).
 
 const LABELS := {
 	"de": ["Aufruf: ", "Auswählen oder ablesen: ", "Vorlesen oder zeigen: ", "Beenden: "],
@@ -62,13 +62,45 @@ func test_lines_agree_with_the_card_texts() -> void:
 		assert_true(with_prompts >= 50, "%s: Anweisungen der Karten in den Zeilen gefunden (%d)" % [lang, with_prompts])
 
 
-## Nur entschiedene Abläufe: Die offene Frage zu Rotkäppchen steht ausdrücklich als offen da, statt einen Ablauf zu erfinden.
-func test_undecided_flow_is_marked_open_not_invented() -> void:
-	assert_true(str(_po("de")[_key(&"rotkaeppchen")]).contains("noch nicht festgelegt"), "DE: Rotkäppchen nennt den offenen Punkt")
-	assert_true(str(_po("en")[_key(&"rotkaeppchen")]).contains("not settled yet"), "EN: Rotkäppchen nennt den offenen Punkt")
+## NQ-06: Rotkäppchens Ablauf am Tisch ist entschieden und vollständig. Reihenfolge der Handlungen, keine hörbare Namensansage,
+## Erklärung zu Apfel, Kette und Ablehnung bleibt; kein offener Hinweis mehr, weder bei ihr noch bei einer anderen Rolle.
+func test_red_riding_hood_flow_is_complete_in_order() -> void:
+	for lang: String in ["de", "en"]:
+		var po := _po(lang)
+		var text := str(po[_key(&"rotkaeppchen")])
+		var steps: Array = [
+			["Zeige auf die Person", "Point to the person"],  # Rotkäppchen wählt
+			["Augen wieder schließen", "close their eyes again"],  # Spielleitung lässt Rotkäppchen die Augen schließen
+			["unauffällig an", "quietly tap"],  # gewählte Person unauffällig antippen
+			["auf dem Tablet", "on the tablet"],  # anonyme Frage zeigen
+			["Zuflucht gewährt", "Refuge granted"],  # Antwort über den bestehenden Bedienweg
+			["schließt danach wieder die Augen", "then closes their eyes again"],  # Person schließt die Augen
+		]
+		var at := -1
+		for step: Array in steps:
+			var found := text.find(str(step[0] if lang == "de" else step[1]))
+			assert_true(found > at, "%s: Schritt „%s“ vorhanden und nach dem vorigen" % [lang, step[0 if lang == "de" else 1]])
+			at = found
+		assert_true(text.contains("Apfel und Kette" if lang == "de" else "apple and chain"), "%s: Erklärung zu Apfel und Kette bleibt" % lang)
+		assert_true(text.contains("ablehnen" if lang == "de" else "decline"), "%s: Ablehnung bleibt erklärt" % lang)
+		assert_true(text.contains("nicht laut" if lang == "de" else "not read it aloud"), "%s: keine hörbare Ansage der Frage" % lang)
+		assert_true(text.contains("ohne ihren Namen" if lang == "de" else "without saying a name"), "%s: keine Namensnennung" % lang)
+		assert_false(po.has("ui.role.rotkaeppchen.lex.open"), "%s: kein offener Hinweis zu Rotkäppchen" % lang)
+		# Vertrauliche Anleitung bleibt von der Karte der gefragten Person und von öffentlichen Texten getrennt.
+		for key: String in ["ui.prompt.rotkaeppchen.grant", "ui.cockpit.card.red_grant.heading", "ui.cockpit.action.yes.rotkaeppchen.grant",
+				"ui.cockpit.action.no.rotkaeppchen.grant"]:
+			var card := str(po[key])
+			for secret: String in ["Augen", "eyes", "antippen", "tap the chosen", "Rotkäppchen", "Little Red"]:
+				assert_false(card.contains(secret), "%s: %s enthält keine Anleitung oder Rolle (%s)" % [lang, key, secret])
+		var gm_card := str(po["ui.prompt.rotkaeppchen.targets"])
+		assert_true(gm_card.contains("Augen schließen" if lang == "de" else "close their eyes") and gm_card.contains("unauffällig" if lang == "de" else "quietly"),
+			"%s: Spielleiterkarte nennt Augen und unauffälliges Antippen" % lang)
 	for role: Variant in RoleCatalog.ROLES:
-		if String(role) != "rotkaeppchen":
-			assert_false(str(_po("de")[_key(StringName(role))]).contains("noch nicht festgelegt"), "%s: kein offener Punkt erfunden" % role)
+		for lang: String in ["de", "en"]:
+			var open_key := RolePresentation.lexicon_key(StringName(role), RolePresentation.LEXICON_OPEN)
+			if String(role) == "rotkaeppchen":
+				assert_false(_po(lang).has(open_key), "%s: Rotkäppchen ohne Offen-Feld" % lang)
+			assert_false(str(_po(lang)[_key(StringName(role))]).contains("noch nicht festgelegt" if lang == "de" else "not settled yet"), "%s/%s: kein offener Punkt in den Zeilen" % [lang, role])
 
 
 func test_lexicon_entry_shows_the_field_in_both_languages() -> void:

@@ -276,7 +276,7 @@ func _render_report() -> void:
 	_report_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_report_body.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	_report_scroll.add_child(_report_body)
-	for line: Dictionary in ReportText.lines(report, _version):
+	for line: Dictionary in ReportText.lines(report, _version, not reopened):
 		var label := Label.new()
 		label.add_to_group(&"user_content")  # Text aus Partiedaten, nicht aus festen Übersetzungsschlüsseln
 		label.text = str(line["text"])
@@ -310,7 +310,7 @@ func _do_export(overwrite: bool) -> void:
 	var entry := context.history.get_entry(_game_id)
 	if entry.is_empty():
 		return
-	var result := ReportExport.export(context.exports_dir, entry["report"], _version, overwrite)
+	var result := ReportExport.export(context.exports_dir, entry["report"], _version, overwrite, &"", str(entry["status"]) != HistoryStore.STATUS_REOPENED)
 	if bool(result["ok"]):
 		_set_feedback("ui.history.info.exported", {"path": ProjectSettings.globalize_path(str(result["path"]))}, &"MutedLabel")
 	elif str(result["error"]) == "exists":

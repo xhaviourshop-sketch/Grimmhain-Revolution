@@ -18,13 +18,13 @@ static func path_for(dir: String, report: Dictionary, version: String) -> String
 
 ## Ergebnis {ok, error, path}. Fehler: `exists` (Datei da, `overwrite` fehlt), `no_directory`, `write_failed`, `verify_failed`, `swap_failed`.
 ## `simulate_failure` (nur Tests): "write", "verify", "swap".
-static func export(dir: String, report: Dictionary, version: String, overwrite: bool = false, simulate_failure: StringName = &"") -> Dictionary:
+static func export(dir: String, report: Dictionary, version: String, overwrite: bool = false, simulate_failure: StringName = &"", reveal: bool = true) -> Dictionary:
 	var path := path_for(dir, report, version)
 	if FileAccess.file_exists(path) and not overwrite:
 		return {"ok": false, "error": "exists", "path": path}
 	if not SafeJsonFile.ensure_dir(dir):
 		return {"ok": false, "error": "no_directory", "path": path}
-	var text := ReportText.plain_text(report, version)
+	var text := ReportText.plain_text(report, version, reveal)
 	var tmp := path + ".tmp"
 	var file := FileAccess.open(tmp, FileAccess.WRITE) if simulate_failure != &"write" else null
 	if file == null:

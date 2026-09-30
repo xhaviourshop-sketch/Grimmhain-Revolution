@@ -25,7 +25,7 @@ func _init(p_settings: AppSettings = null, p_session: GameSession = null) -> voi
 	history = HistoryStore.new()
 	session.events_applied.connect(_on_events_applied)
 	session.state_replaced.connect(autosave)
-	session.view_changed.connect(func(_v: Dictionary) -> void: sync_history())
+	session.view_changed.connect(_on_view_changed)
 	session.state_replaced.connect(sync_history)
 
 
@@ -46,6 +46,11 @@ func settings_saved() -> bool:
 
 func _on_settings_changed(_key: StringName) -> void:
 	settings_store.save(settings)
+
+
+## Methode statt Lambda: Ein Lambda, das `self` hält, verbände AppContext und Sitzung zu einem Referenzkreis (nie freigegeben).
+func _on_view_changed(_view: Dictionary) -> void:
+	sync_history()
 
 
 func _on_events_applied(_events: Array[GameEvent]) -> void:

@@ -11,11 +11,15 @@ signal events_applied(events: Array[GameEvent])  ## nach jedem angenommenen Befe
 signal command_rejected(error: StringName)        ## Befehl abgelehnt, Zustand unverändert
 signal view_changed(view: Dictionary)             ## neue Sicht nach Annahme, Laden oder Reset
 signal state_replaced                             ## Zustand durch Rückgängig/Wiederholen ersetzt (danach speichern)
+## Darstellungshinweis (PresentationCue) aus einem soeben angenommenen Befehl. Nie beim Laden, Rückgängig, Wiederholen oder
+## Neuzeichnen; er trägt nur seine Kennung und ändert nichts am Zustand.
+signal cue_requested(cue: StringName)
 
 var _state: GameState = GameState.new()
 var _commands: Array[Command] = []
 var _events: Array[GameEvent] = []
 var _redo: Array[Command] = []  ## zurückgenommene Befehle, letzter zuerst wiederholbar
+var _five_dead_at: int = -1  ## Index des Befehls, nach dem zum ersten Mal fünf Personen öffentlich tot waren (DI-09), sonst -1
 
 
 ## Reicht den Befehl an den Regelkern weiter und übernimmt bei Annahme den neuen Zustand.
@@ -30,7 +34,37 @@ func submit(command: Command) -> CommandResult:
 	_redo.clear()  # ein neuer Befehl verwirft zurückgenommene
 	events_applied.emit(result.events)
 	view_changed.emit(view())
+	_track_five_dead(true)
 	return result
+
+
+## DI-09: Der Hinweis gehört zum ersten Erreichen von fünf öffentlichen Toten und wird höchstens einmal je Partieverlauf gemeldet
+## (ein späteres Wiederholen desselben Zustands, Laden oder Neuzeichnen meldet nichts). Berechtigt nur mit lebendem Selbstmörder.
+func _track_five_dead(announce: bool) -> void:
+	if _five_dead_at != -1 or not PresentationCue.five_dead_reached(_state):
+		return
+	_five_dead_at = _commands.size() - 1
+	if announce and PresentationCue.five_dead_eligible(_state):
+		cue_requested.emit(PresentationCue.FIVE_DEAD)
+
+
+## Nach Laden: Wann waren erstmals fünf Personen öffentlich tot? Ohne mindestens fünf Todesereignisse nie, dann ohne Wiederholung.
+func _scan_five_dead() -> int:
+	var deaths := 0
+	for e: GameEvent in _events:
+		if e.type == GameEvent.SEAT_DIED:
+			deaths += 1
+	if deaths < PresentationCue.THRESHOLD:
+		return -1
+	var s := GameState.new()
+	for i: int in _commands.size():
+		var r := RulesEngine.apply(s, _commands[i])
+		if not r.ok:
+			return -1
+		s = r.state
+		if PresentationCue.five_dead_reached(s):
+			return i
+	return -1
 
 
 ## Lesbare Sicht für die Darstellung. Immer eine neue Kopie aus einfachen Werten.
@@ -114,6 +148,7 @@ func load_text(text: String) -> StringName:
 	_commands = loaded.commands.duplicate()
 	_events = loaded.events.duplicate()
 	_redo.clear()
+	_five_dead_at = _scan_five_dead()
 	view_changed.emit(view())
 	return &""
 
@@ -141,6 +176,7 @@ func reset() -> void:
 	_commands.clear()
 	_events.clear()
 	_redo.clear()
+	_five_dead_at = -1
 	view_changed.emit(view())
 
 
@@ -169,6 +205,8 @@ func undo() -> bool:
 	_state = replayed.state
 	_commands = prefix
 	_events = replayed.events
+	if _five_dead_at >= _commands.size():
+		_five_dead_at = -1  # der Befehl, der die fünf Toten brachte, ist zurückgenommen
 	view_changed.emit(view())
 	state_replaced.emit()
 	return true
@@ -187,6 +225,7 @@ func redo() -> bool:
 	_state = result.state
 	_commands.append(command)
 	_events.append_array(result.events)
+	_track_five_dead(false)  # Wiederholen spielt nichts ab
 	view_changed.emit(view())
 	state_replaced.emit()
 	return true

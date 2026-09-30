@@ -64,6 +64,8 @@ var _backdrop_tween: Tween = null
 func _setup() -> void:
 	_update_side_width()
 	resized.connect(_update_side_width)
+	_apply_handedness()
+	context.settings.changed.connect(_on_settings_changed)
 	context.session.view_changed.connect(_on_session_changed)
 	context.session.command_rejected.connect(_on_rejected)
 	context.session.state_replaced.connect(_on_state_replaced)
@@ -346,6 +348,20 @@ func _identity(next: Dictionary) -> String:
 func _update_side_width() -> void:
 	if _side != null:
 		_side.custom_minimum_size.x = ThemeTokens.SIDE_COLUMN_WIDE_WIDTH if size.x >= GROUP_CARD_WIDTH_BREAKPOINT else ThemeTokens.SIDE_COLUMN_WIDTH
+
+
+## Bedienseite (NQ-04): Nur die Seitenspalte (Ansagekarte und Werkzeuge) wechselt die Seite des Sitzkreises. Kinder werden
+## umgereiht, nicht neu erzeugt: Sitzkreis, Auswahl, offene Karte und Signalverbindungen bleiben unberührt.
+func _apply_handedness() -> void:
+	var body := _side.get_parent()
+	var wanted := 0 if context.settings.left_handed else body.get_child_count() - 1
+	if _side.get_index() != wanted:
+		body.move_child(_side, wanted)
+
+
+func _on_settings_changed(key: StringName) -> void:
+	if key == &"left_handed":
+		_apply_handedness()
 
 
 # --- Bedienung --------------------------------------------------------------------------------------

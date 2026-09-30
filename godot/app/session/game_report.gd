@@ -10,9 +10,11 @@ extends RefCounted
 ##   entries [{vis: "public"|"gm", kind, ...}] in zeitlicher Reihenfolge.
 ## Öffentlich sind nur Angaben, die die Partie ohnehin am Tisch bekannt gemacht hat: Namen, Nächte und Tage, Nominierungen
 ## (ohne den Nominierenden einer Richter-Nominierung), Hinrichtungen, Tode (Rolle nur in Runden ohne Wiederbelebung, und zwar
-## die Rolle beim Tod), angesagte Todeseffekte, ausdrücklich öffentliche Hinweise und die Siegseite. Ob Siegbedingung,
-## Gewinnernamen und Rollen aller Personen nach dem Spielende öffentlich werden, ist nicht entschieden und wird deshalb
-## ausgelassen (NQ-07); sie stehen nur im Spielleiterbericht. Eine Spielzeit wird nicht erfasst und deshalb nie behauptet.
+## die Rolle beim Tod), angesagte Todeseffekte, ausdrücklich öffentliche Hinweise und die Siegseite. Nach bestätigtem Spielende
+## werden zusätzlich Rollen zum Spielende (`roles.role_id`, nie der Rollenwechselverlauf), Gewinner und Siegbedingung öffentlich (NQ-07);
+## dieselben Felder sind in der Spielleiterfassung ohnehin enthalten, `original_role_id`, Ursachen, private Zeilen und Korrekturen
+## bleiben dort. Die Freigabe setzt ReportText um; ohne bestätigten Sieg entsteht kein Bericht. Eine Spielzeit wird nicht erfasst
+## und deshalb nie behauptet.
 
 const VERSION := 1
 

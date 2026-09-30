@@ -7,6 +7,9 @@ extends BaseScreen
 @onready var _german: GrimmButton = %LanguageGermanButton
 @onready var _english: GrimmButton = %LanguageEnglishButton
 @onready var _motion: GrimmToggle = %ReducedMotionToggle
+@onready var _hand_right: GrimmButton = %HandRightButton
+@onready var _hand_left: GrimmButton = %HandLeftButton
+@onready var _hand_status: GrimmLabel = %HandStatusLabel
 
 
 func _setup() -> void:
@@ -17,6 +20,9 @@ func _setup() -> void:
 	_german.toggled.connect(_on_language_toggled.bind("de"))
 	_english.toggled.connect(_on_language_toggled.bind("en"))
 	_motion.toggled.connect(_on_motion_toggled)
+	_show_hand(settings.left_handed)
+	_hand_right.toggled.connect(_on_hand_toggled.bind(false))
+	_hand_left.toggled.connect(_on_hand_toggled.bind(true))
 
 
 func _on_language_toggled(pressed: bool, code: String) -> void:
@@ -27,6 +33,21 @@ func _on_language_toggled(pressed: bool, code: String) -> void:
 func _on_motion_toggled(pressed: bool) -> void:
 	context.settings.set_reduced_motion(pressed)
 	_report("ui.settings.toast.motion_on" if pressed else "ui.settings.toast.motion_off")
+
+
+## Nur das gedrückte Ende der Gruppe zählt; die Auswahl ändert allein AppSettings.left_handed (kein Spielbefehl).
+func _on_hand_toggled(pressed: bool, left: bool) -> void:
+	if not pressed:
+		return
+	context.settings.set_left_handed(left)
+	_show_hand(left)
+	_report("ui.settings.toast.hand_left" if left else "ui.settings.toast.hand_right")
+
+
+func _show_hand(left: bool) -> void:
+	_hand_right.set_pressed_no_signal(not left)
+	_hand_left.set_pressed_no_signal(left)
+	_hand_status.text_key = "ui.settings.hand.active_left" if left else "ui.settings.hand.active_right"
 
 
 func _report(success_key: String) -> void:

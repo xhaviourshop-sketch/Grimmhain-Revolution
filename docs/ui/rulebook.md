@@ -46,13 +46,13 @@ Lexikonfeld `act`, Überschrift „Ablauf am Tisch“ (EN „Procedure at the ta
 | Vorlesen oder zeigen | Was darf sie vorlesen oder zeigen |
 | Beenden | Wie beendet sie den Schritt (Beschriftung des Knopfes) |
 
-Die Zeilen sind aus den Kartentexten (`ui.call.*`, `ui.prompt.*`, `ui.cockpit.action.*`) und dem Feld „Nachtschritt“ des Lexikons zusammengesetzt und dürfen ihnen nicht widersprechen (`test_role_act_lines::test_lines_agree_with_the_card_texts`). Rollen ohne Nachtschritt beschreiben ihre Tages- oder Reaktionsbedienung (Amalia, Nekromant, Weiser, Cerberus, Spiegelwolf, Reaktionen) oder sagen, dass es nichts zu bedienen gibt. Nur bereits entschiedene Abläufe: Bei Rotkäppchen ist offen, wie die gefragte Person am Tisch geweckt und befragt wird (OI-18, NQ-06). Das steht als „noch nicht festgelegt“ in der Zeile, ohne einen Ablauf zu erfinden.
+Die Zeilen sind aus den Kartentexten (`ui.call.*`, `ui.prompt.*`, `ui.cockpit.action.*`) und dem Feld „Nachtschritt“ des Lexikons zusammengesetzt und dürfen ihnen nicht widersprechen (`test_role_act_lines::test_lines_agree_with_the_card_texts`). Rollen ohne Nachtschritt beschreiben ihre Tages- oder Reaktionsbedienung (Amalia, Nekromant, Weiser, Cerberus, Spiegelwolf, Reaktionen) oder sagen, dass es nichts zu bedienen gibt. Nur entschiedene Abläufe. Rotkäppchen (NQ-06, DA-84): Rotkäppchen wählt die Person, die Spielleitung lässt Rotkäppchen die Augen wieder schließen, tippt die gewählte Person unauffällig an (ohne Namen zu nennen) und zeigt ihr die anonyme Frage auf dem Tablet (nicht laut vorlesen); die Antwort wird mit „Zuflucht gewährt“ oder „Keine Zuflucht“ erfasst, danach schließt die Person die Augen wieder. Diese Anleitung steht im Lexikon, im Regelbuch (Kapitel 5) und auf der Spielleiterkarte der Zielwahl, nicht auf der Karte der gefragten Person.
 
 ## Tests
 
 | Test | Inhalt |
 |---|---|
 | `test_rulebook` | zwölf Kapitel mit vereinbarten Titeln, alle Blöcke in DE und EN vorhanden und verschieden, keine Codebegriffe, keine Platzhalter; Beschriftungen kommen im Programm vor; Hauptmenü, Verzeichnis, jedes Kapitel in DE und EN; Vor, Zurück, Escape; Sprachwechsel; jedes Kapitel bei 1024×768 in beiden Sprachen (Kopf und Fuß sichtbar, letzter Absatz nach Scrollen erreichbar); Cockpit-Werkzeug ohne Befehl, Zufall und Ressourcenverbrauch, Auswahl bleibt, wird nach Zustandsänderung verworfen; kein Partiedaten-Unterschied; Sichtschutz, Zurück; keine gezeigte Karte; ohne Partie |
-| `test_role_act_lines` | vier beschriftete Zeilen je Rolle in DE und EN, Übereinstimmung mit den Kartentexten, offener Punkt nur bei Rotkäppchen, Anzeige im Lexikoneintrag |
+| `test_role_act_lines` | vier beschriftete Zeilen je Rolle in DE und EN, Übereinstimmung mit den Kartentexten, vollständiger Ablauf von Rotkäppchen in fester Reihenfolge (keine offenen Punkte), Anzeige im Lexikoneintrag |
 
 Nicht geprüft: Lesbarkeit, Darstellung und Bedienung auf einem Tablet. Redaktionelle Endabnahme aller Texte steht aus (maßgeblich ist `ui.*.po`; `docs/content-drafts/GUIDE-TEXTS.md` bleibt Entwurf).

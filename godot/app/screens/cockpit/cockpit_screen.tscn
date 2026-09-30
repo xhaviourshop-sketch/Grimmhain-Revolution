@@ -114,6 +114,7 @@ layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.cockpit.save.retry"
 kind = 3
+wrap = false
 
 [node name="NoGameBadge" type="PanelContainer" parent="Layout/StatusRow"]
 unique_name_in_owner = true

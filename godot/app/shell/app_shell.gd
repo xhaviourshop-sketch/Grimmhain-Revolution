@@ -24,6 +24,8 @@ var _settings_applied: bool = false
 @onready var _dialog: ConfirmDialog = %ConfirmDialog
 @onready var _toast: ToastHost = %ToastHost
 
+var _cues: AudioCuePlayer = null
+
 
 ## Einstellungen laden und anwenden, bevor Kindknoten und erste Ansicht entstehen (_enter_tree des Elternknotens
 ## läuft vor dem Aufbau der Kinder): Die Oberfläche entsteht gleich in der gespeicherten Sprache.
@@ -50,6 +52,10 @@ func _ready() -> void:
 	get_tree().set_auto_accept_quit(false)  # Fenster schließen läuft über _notification (Warnung bei ungespeichertem Stand)
 	app_context.settings.changed.connect(_on_settings_changed)
 	_toast.settings = app_context.settings
+	_cues = AudioCuePlayer.new()
+	_cues.name = "AudioCuePlayer"
+	add_child(_cues)
+	_cues.setup(app_context)
 	_router.setup(app_context)
 	_router.back_requested.connect(go_back)
 	_router.quit_requested.connect(request_quit)
@@ -97,6 +103,10 @@ func get_dialog() -> ConfirmDialog:
 
 func get_toast() -> ToastHost:
 	return _toast
+
+
+func get_cue_player() -> AudioCuePlayer:
+	return _cues
 
 
 func current_screen_id() -> StringName:

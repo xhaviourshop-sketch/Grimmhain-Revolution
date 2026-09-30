@@ -14,8 +14,14 @@ Erreichbar: Hauptmenü → „Neue Partie“ → Setup bis „Partie starten“,
 | Phasenleiste | Phase, Runde und Nachtfortschritt („Nacht 2 · Schritt 3 von 7 erledigt“), Lebende; Nacht blau, Tag und Morgen warm |
 | Hinweiszeile | übersprungene Schritte, niemand lebt (ohne Rollen); außerhalb der Nacht bei jeder verdeckten Karte ein neutraler Hinweis je Phase (PE-01): „Die Spielleitung bereitet den Morgen vor.“ bzw. „… den nächsten Schritt vor.“ |
 | Sitzkreis | Plätze der Partie im Uhrzeigersinn: Platznummer, Name, „†“ für Tote, „(N)“ für heute Nominierte. Nie eine Rolle. Bei 13 bis 24 Personen kompakte Plätze (48 px hoch, 96 bis 120 px breit) |
-| Ansagekarte | nächste Handlung aus dem Regelkern: Kontext, „Sag jetzt“ (Vorlesetext), „Tu jetzt“ (Anweisung), Auswahl, Aktionen |
+| Ansagekarte | nächste Handlung aus dem Regelkern: Kontext, „Sag jetzt“ (Vorlesetext), „Tu jetzt“ (Anweisung), Auswahl, Aktionen. Sie und die Werkzeugleiste bilden die **Seitenspalte** (siehe „Bedienseite“) |
 | Werkzeuge | Protokoll, Rollen (privater Bereich), Rollen zeigen (neutrale Liste, dann Karte je Person), Spielleitung (Korrekturen, Rückgängig, Partie beenden), Verbergen (Sichtschutz); ohne Partie deaktiviert. Lexikon (allgemeines Rollenlexikon, auch ohne Partie, Paket 5b). Auf der Startkarte der ersten Nacht zusätzlich „Rollen zeigen“ (optional) |
+
+## Bedienseite (Rechts-/Linkshänder, NQ-04)
+
+Die Einstellung „Bedienhand“ in den Optionen (Buttons „Rechtshändig“ / „Linkshändig“, Zeile „Aktiv: …“) wählt die Seite der **Seitenspalte**: rechts vom Sitzkreis bei rechtshändig (Standard), links bei linkshändig. Die Seitenspalte besteht aus Ansagekarte mit den Aktionsbuttons und der Werkzeugleiste (Protokoll, Privat, Rollen, Spielleitung, Sichtschutz, Lexikon, Regelbuch). Der Wechsel wirkt sofort (auch bei geöffnetem Cockpit), wird in `user://settings.json` gespeichert (`left_handed`) und gilt nach dem Neustart. Umgesetzt durch Umordnen des vorhandenen Knotens in `CockpitScreen._apply_handedness`: Sitzkreis, offene Karte, Auswahl und Signalverbindungen bleiben unberührt.
+
+Unverändert: Sitzkreis, Personenreihenfolge und Sitznummern, Bedeutung von links und rechts bei Rollen, Ziele und Nachbarn, Texte, Symbole und Porträts (nicht gespiegelt), Spielregeln und Befehle. Ebenen (Protokoll, Rollen, gezeigte Karte, Lexikon, Regelbuch) und Dialoge liegen über dem Cockpit und bleiben mittig. Andere Ansichten haben keine Seitenspalte dieser Art. Prüfung: `test_handedness` (headless, Rechteckprüfungen; keine Tablet- und Touchabnahme).
 
 ## Geheimhaltung
 

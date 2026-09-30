@@ -98,6 +98,21 @@ msgstr "Reduce motion"
 msgid "ui.settings.motion.hint"
 msgstr "Turns off screen transitions and fades."
 
+msgid "ui.settings.hand.heading"
+msgstr "Handedness"
+
+msgid "ui.settings.hand.right"
+msgstr "Right-handed"
+
+msgid "ui.settings.hand.left"
+msgstr "Left-handed"
+
+msgid "ui.settings.hand.active_right"
+msgstr "Active: right-handed"
+
+msgid "ui.settings.hand.active_left"
+msgstr "Active: left-handed"
+
 msgid "ui.settings.audio.heading"
 msgstr "Audio"
 
@@ -108,13 +123,19 @@ msgid "ui.settings.display.heading"
 msgstr "Display"
 
 msgid "ui.settings.display.placeholder"
-msgstr "Font size, dark-room and left-handed mode follow later."
+msgstr "Font size and dark-room mode follow later."
 
 msgid "ui.settings.toast.language"
 msgstr "Language changed"
 
 msgid "ui.settings.toast.motion_on"
 msgstr "Motion reduced"
+
+msgid "ui.settings.toast.hand_right"
+msgstr "Right-handed active"
+
+msgid "ui.settings.toast.hand_left"
+msgstr "Left-handed active"
 
 msgid "ui.settings.toast.motion_off"
 msgstr "Transitions on"
@@ -2268,7 +2289,7 @@ msgid "ui.prompt.rattenfaenger.pick"
 msgstr "Tap one or two people the Pied Piper charms and confirm."
 
 msgid "ui.prompt.rotkaeppchen.targets"
-msgstr "Tap the person Little Red Riding Hood seeks refuge with and confirm."
+msgstr "Tap the person Little Red Riding Hood seeks refuge with and confirm. Then let Little Red Riding Hood close their eyes, quietly tap the chosen person and show them the next card on the tablet."
 
 msgid "ui.prompt.rotkaeppchen.grant"
 msgstr "Someone asks you for refuge. If you grant it, you receive an apple (your next night step runs twice) and you are chained: if one of you dies, the other dies at once too. You may decline. You do not learn who asks."
@@ -4459,9 +4480,6 @@ msgstr "Little Red Riding Hood asks Ben, Ben grants refuge. In the following nig
 msgid "ui.role.rotkaeppchen.lex.gm"
 msgstr "The chosen person answers the question themself. Abilities and their effects are known to all people: the chosen person knows apple and chain and may decline, but does not learn who asks. Their card therefore names neither the role nor the person asking. The death through the chain is a death effect and is announced publicly. The announcement names Little Red Riding Hood as the role the chain comes from, never the role of the dying person."
 
-msgid "ui.role.rotkaeppchen.lex.open"
-msgstr "How the chosen person is woken and asked at the table is not yet settled."
-
 msgid "ui.role.seelentauscher.lex.night"
 msgstr "every night until used"
 
@@ -5891,7 +5909,7 @@ msgid "ui.rulebook.c05.b06"
 msgstr "Private notices"
 
 msgid "ui.rulebook.c05.b07"
-msgstr "Some roles trigger private notices (Loki, Pied Piper, Plague Bringer, Little Red Riding Hood). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, “Shown” confirms. Each person sees only what is meant for them. During the day the content stays covered until you tap “Show”."
+msgstr "Some roles trigger private notices (Loki, Pied Piper, Plague Bringer, Little Red Riding Hood). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, “Shown” confirms. Each person sees only what is meant for them. During the day the content stays covered until you tap “Show”. For Little Red Riding Hood you quietly tap the chosen person after the choice and show them the anonymous question; you record the answer with “Refuge granted” or “No refuge”."
 
 msgid "ui.rulebook.c05.b08"
 msgstr "Areas with all secrets"
@@ -6244,7 +6262,7 @@ msgid "ui.role.ritter.lex.act"
 msgstr "Call: No call, no night step. If several wolves are equally close after the death of a person with the role “Knight”, a covered reaction card appears.\nSelect or read: The Knight strikes the nearest wolf. Several are equally close: tap the wolf that is hit.\nRead out or show: Nothing is read out. The visible consequence is announced publicly as a death effect (rulebook, chapter 6).\nFinish: Tap “Confirm selection” or “Declines”. The app then checks further consequences."
 
 msgid "ui.role.rotkaeppchen.lex.act"
-msgstr "Call: (every night) The app announces the role “Little Red Riding Hood” in the night order. Read out: “Little Red Riding Hood, wake up. Point to the person you seek refuge with.”\nSelect or read: Tap the person Little Red Riding Hood seeks refuge with and confirm. Then the question to the asked person appears with “Refuge granted” and “No refuge”.\nRead out or show: The question (“Someone asks you for shelter …”) names neither the role nor the asking person. Open: how the asked person is woken and asked at the table is not settled yet.\nFinish: Tap “Confirm selection”, then the answer of the asked person. The app then opens the next step."
+msgstr "Call: (every night) The app announces the role “Little Red Riding Hood” in the night order. Read out: “Little Red Riding Hood, wake up. Point to the person you seek refuge with.”\nSelect or read: Tap the person Little Red Riding Hood points to and confirm. Then let Little Red Riding Hood close their eyes again and quietly tap the chosen person, without saying a name.\nRead out or show: Show the tapped person the question on the tablet (“Someone asks you for refuge …”). It names neither the role nor the asking person; do not read it aloud. The person may decline but does not learn who asks. The question explains apple and chain.\nFinish: Tap the answer of the chosen person (“Refuge granted” or “No refuge”). The person then closes their eyes again. The app then opens the next step."
 
 msgid "ui.role.rudelvater.lex.act"
 msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”. After the Pack Father is executed a second pack step follows in the next night right after the pack: Second pack victim: tap the person and confirm. It pierces protection.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
@@ -6360,7 +6378,7 @@ msgid "ui.history.version.gm"
 msgstr "Game master report"
 
 msgid "ui.history.export_info.public"
-msgstr "The public version is exported: only details that were made known at the table during the game."
+msgstr "The public version is exported: what was made known at the table plus all roles at the end of the game, the winners and the winning condition. A file that has already been passed on cannot be recalled."
 
 msgid "ui.history.export_info.gm"
 msgstr "The game master version is exported: it contains all roles, causes and secret details."
@@ -6438,7 +6456,10 @@ msgid "ui.report.title.gm"
 msgstr "Final report (game master version)"
 
 msgid "ui.report.note.public"
-msgstr "This version only contains details that were made known at the table during the game. Roles, goals and causes are left out."
+msgstr "This version contains what was made known at the table and, because the end of the game is confirmed, all roles at the end of the game, the winners and the winning condition. Secret goals, protection marks, private decisions and causes are left out."
+
+msgid "ui.report.note.public_locked"
+msgstr "The win confirmation was taken back. This version only contains details that were made known at the table. Roles, winners and the winning condition appear again after a new win confirmation."
 
 msgid "ui.report.note.gm"
 msgstr "For the game master only. This version contains all roles, causes and secret details."
@@ -6459,10 +6480,10 @@ msgid "ui.report.win_reason"
 msgstr "Win condition: {reason}"
 
 msgid "ui.report.winners"
-msgstr "People who benefit: {names}"
+msgstr "Winning people: {names}"
 
 msgid "ui.report.heading.roles"
-msgstr "Roles"
+msgstr "Roles at the end of the game"
 
 msgid "ui.report.role_line"
 msgstr "{seat} · {name}: {role}"

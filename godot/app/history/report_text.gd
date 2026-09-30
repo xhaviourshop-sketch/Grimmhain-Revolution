@@ -1,36 +1,43 @@
 class_name ReportText
 extends RefCounted
 ## Setzt einen Abschlussbericht (GameReport, gespeichert in der Partiehistorie) in die aktuelle Sprache: als Zeilenliste für die
-## Ansicht und als UTF-8-Text für den Export. Die Fassung bestimmt den Umfang: `PUBLIC` nur bereits öffentliche Angaben,
-## `GM` alle Angaben für die Spielleitung. Nichts hier verändert einen Spielstand; kein rohes Wörterbuch wird ausgegeben.
+## Ansicht und als UTF-8-Text für den Export. Die Fassung bestimmt den Umfang: `PUBLIC` die am Tisch bekannten Angaben und, nach
+## bestätigtem Spielende (`reveal`), alle Rollen zum Spielende, die Sieger und die Siegbedingung (NQ-07); `GM` alle Angaben für die
+## Spielleitung. Ohne `reveal` (Siegbestätigung zurückgenommen) fehlt die Freigabe wieder. Geheime Ziele, Schutzmarkierungen, private
+## Entscheidungen, Ursachen und Rollenwechselverläufe stehen nie in der öffentlichen Fassung. Nichts hier verändert einen Spielstand;
+## kein rohes Wörterbuch wird ausgegeben.
 
 const PUBLIC := "public"
 const GM := "gm"
 
 
 ## Zeilen [{style: "title"|"heading"|"line"|"note", text}] der Fassung in der aktuellen Sprache.
-static func lines(report: Dictionary, version: String) -> Array[Dictionary]:
+static func lines(report: Dictionary, version: String, reveal: bool = true) -> Array[Dictionary]:
 	var gm := version == GM
+	var show_end := gm or reveal  ## Rollen, Sieger und Siegbedingung: für die Spielleitung immer, öffentlich nur nach bestätigtem Spielende
 	var out: Array[Dictionary] = []
 	out.append({"style": "title", "text": _t("ui.report.title.gm" if gm else "ui.report.title.public")})
-	out.append({"style": "note", "text": _t("ui.report.note.gm" if gm else "ui.report.note.public")})
+	out.append({"style": "note", "text": _t("ui.report.note.gm" if gm else ("ui.report.note.public" if reveal else "ui.report.note.public_locked"))})
 	out.append({"style": "line", "text": _t("ui.report.game_id", {"id": str(report.get("game_id", ""))})})
 	out.append({"style": "line", "text": _t("ui.report.participants", {"count": int(report.get("players", 0)), "names": ", ".join(PackedStringArray(report.get("names", [])))})})
 	out.append({"style": "line", "text": _t("ui.report.played", {"nights": int(report.get("nights", 0)), "days": int(report.get("days", 0))})})
 	var winner: Dictionary = report.get("winner", {})
 	out.append({"style": "line", "text": _t("ui.report.result", {"side": StringName(_side_key(str(winner.get("side", "none"))))})})
-	if gm:
+	if show_end:
 		var reason := str(winner.get("reason_key", ""))
-		out.append({"style": "line", "text": _t("ui.report.win_reason", {"reason": StringName(_reason_key(reason))})})
+		if reason != "":
+			out.append({"style": "line", "text": _t("ui.report.win_reason", {"reason": StringName(_reason_key(reason))})})
 		var people: Array = []
 		people.append_array(winner.get("names", []))
 		people.append_array(winner.get("co_names", []))
 		if not people.is_empty():
 			out.append({"style": "line", "text": _t("ui.report.winners", {"names": ", ".join(PackedStringArray(people))})})
-		out.append({"style": "heading", "text": _t("ui.report.heading.roles")})
-		for r: Dictionary in report.get("roles", []):
+		var roles: Array = report.get("roles", [])
+		if not roles.is_empty():  # ältere oder unvollständige Berichte werden nicht ergänzt
+			out.append({"style": "heading", "text": _t("ui.report.heading.roles")})
+		for r: Dictionary in roles:
 			var text := _t("ui.report.role_line", {"seat": int(r.get("seat", 0)), "name": str(r.get("name", "")), "role": StringName(str(CockpitText.role_name(str(r.get("role_id", "")))))})
-			if str(r.get("original_role_id", "")) != str(r.get("role_id", "")):
+			if gm and str(r.get("original_role_id", "")) != str(r.get("role_id", "")):
 				text += " " + _t("ui.report.role_original", {"role": StringName(str(CockpitText.role_name(str(r.get("original_role_id", "")))))})
 			if not bool(r.get("alive", true)):
 				text += " †"
@@ -49,9 +56,9 @@ static func lines(report: Dictionary, version: String) -> Array[Dictionary]:
 
 
 ## UTF-8-Text der Fassung: Überschriften unterstrichen, jede Zeile eine Textzeile.
-static func plain_text(report: Dictionary, version: String) -> String:
+static func plain_text(report: Dictionary, version: String, reveal: bool = true) -> String:
 	var parts: Array[String] = []
-	for line: Dictionary in lines(report, version):
+	for line: Dictionary in lines(report, version, reveal):
 		var text := str(line["text"])
 		match str(line["style"]):
 			"title":
