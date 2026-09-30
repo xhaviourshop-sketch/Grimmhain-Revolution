@@ -1,6 +1,6 @@
 # Totenkarten: Arbeitsliste zur vollständigen Überarbeitung
 
-Stand: 30.09.2026, Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitt „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
+Stand: 30.09.2026 (zweite Runde), Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitte „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“ und „Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
 
 ## 1. Kennzeichnung
 
@@ -17,7 +17,7 @@ Keine Karte wird hier entfernt, freigegeben, umgedeutet oder vereinfacht. Dass e
 Gelesen und mit Skript ausgewertet: `js/core/cards.js` (`TOTENKARTEN`, `ALLE_KARTEN`). Die Angabe „80 Karten“ trifft zu, wurde aber gezählt, nicht übernommen.
 
 - **80 Karten, 80 eindeutige IDs.** Je Kategorie: SEGEN 14, SCHICKSAL 14, FLUCH 13, WENDE 12, LOKI 13, SOLO 14.
-- **Textform:** 39 Karten (SEGEN, FLUCH, WENDE) haben je einen Text für Wölfe und für Dorfbewohner (`wolf`, `dorf`), 27 (SCHICKSAL, LOKI) einen neutralen Text, 14 (SOLO) einen Solo-Text. Das kollidiert mit Entscheidung 1A (jede Person bekommt eine Karte, unabhängig von der Fraktion): siehe ÜB-1.
+- **Textform:** 39 Karten (SEGEN, FLUCH, WENDE) haben je einen Text für Wölfe und für Dorfbewohner (`wolf`, `dorf`), 27 (SCHICKSAL, LOKI) einen neutralen Text, 14 (SOLO) einen Solo-Text. Das widerspricht Entscheidung 1A nicht: Die Vergabe (jede Person bekommt beim Tod eine Karte) und der Kartentext je Fraktion oder Rolle sind unabhängige Dinge. Offen ist nur, welche Karten für wen in Frage kommen (ÜB-1).
 - **Doppelter Name „Anarchie“:** `schicksal_10` (verbrauchte Einmalfähigkeit der eigenen Fraktion kehrt zurück) und `loki_07` (alle Schutzeffekte fallen, alle Einmalfähigkeiten kehren für alle zurück). Die Wirkungen sind verschieden.
 - **Kartenbedingung (`deathCardRequirements`):** 4 Karten (`segen_08`, `wende_04`, `wende_07`, `loki_10`), alle mit „lebende Person mit Rollen-Tag revive, role-return oder death-trigger-transform“. `wende_12` (Dorf-Text) nennt eine ähnliche Bedingung nur im Text.
 - **Fast gleiche Karten:** `schicksal_06` Zeitsprung und `loki_03` Zeitwarp (Nacht überspringen); `schicksal_12` Totengericht und `solo_13` Das Totenreich Regiert; `schicksal_09` Stimmentausch und `loki_01` Spiegelwelt.
@@ -31,12 +31,17 @@ Ausführlich mit Herkunft im Decision Log. Hier nur die Kurzfassung, damit die F
 
 | ID | Kern | Noch offen |
 |---|---|---|
-| 1A | Jede Person erhält beim Tod eine Karte, unabhängig von der Fraktion. Nach Wiederbelebung und erneutem Tod eine neue Karte. | Welcher Kartentext bei Solo/Neutralen (ÜB-1). |
+| 1A | Jede Person erhält beim Tod eine Karte, unabhängig von der Fraktion. Nach Wiederbelebung und erneutem Tod eine neue Karte. | Welche Karten für wen in Frage kommen (ÜB-1, KS-16). |
 | 2C | ALLE Karten werden vor der Umsetzung gemeinsam überarbeitet. Mechanische Wirkung später im Spiel, reale Handlungen mit Anweisung, Bestätigung/Eingabe je Karte. Bis dahin kein Code. | Alles je Karte (diese Liste). |
-| 3A (eingeschränkt) | Ein Toter darf seine Karte einmal tauschen, sofern der Kartenschlucker im Spiel ist. Ersatzkarte sofort gespielt, nicht erneut tauschbar. Nach Wiederbelebung und erneutem Tod wieder möglich. | Was „im Spiel“ bei Tod und Rollenverlust bedeutet (KS-01). |
-| 4B | Zusatzfähigkeiten bleiben vorgesehen: ab 2 Stapeln nachts töten, ab 5 Stapeln ein Schild, alle 3 Nächte öffentliche Stapelansage, Sieg bei 10 Stapeln. | Kosten, Verbrauch, Zeitpunkte, Wechselwirkungen (KS-02 bis KS-05, KS-08 bis KS-09). |
-| 5A | Stapel bleiben beim Tod. Tot: keine neuen Stapel, kein Sieg. Nach Wiederbelebung weiter mit dem Stand. | Schild bei Tod/Wiederbelebung (nicht entschieden, KS-07). |
-| 6B | Fünf-Tote-Hinweis auch bei später erhaltener Selbstmörder-Rolle, wenn schon fünf tot sind (einmalig). Umgesetzt. | Nichts. |
+| 3A + zweite Runde | Ein Toter darf seine Karte einmal tauschen, nur solange eine lebende Person die Rolle Kartenschlucker besitzt. Jeder zulässige Tausch gibt einen Stapel. Ersatzkarte sofort gespielt, nicht erneut tauschbar; nach Wiederbelebung und erneutem Tod wieder möglich. | Öffentlichkeit und Ablauf des Tauschs (KS-15), Zeitpunkt des Spielens (KS-09). |
+| 4B + zweite Runde | Kartenschlucker wird jede Nacht geweckt und wählt genau eine Aktion: Kopf schütteln (nichts), zwei Finger (zwei Stapel abgeben, eine Person töten, freiwillig, höchstens einmal), fünf Finger (fünf Stapel abgeben, Schild kaufen), zehn Finger (zehn Stapel abgeben, Sieg auslösen). Keine Kombination, zu wenig Guthaben erlaubt die Aktion nicht. | Tötungsdetails (KS-11), Ansage-Zeitpunkt (KS-12), Sieg-Einzelfälle (KS-13), Erfassung der Wahl (KS-14). |
+| Schild | Gekaufter Schild bleibt bis zum verhinderten Tod, höchstens einer, kein Gratis-Schild, keine automatische Erneuerung. | Todesarten und Zusammenspiel (KS-06, KS-21), Rollenverlust und Wiederbelebung (KS-07). |
+| Sieg | Zehn Stapel allein lösen keinen Sieg aus; nur die Zehn-Finger-Aktion. Spielleiterbestätigung des Siegkandidaten bleibt (DR-02, DR-14, F-11). | KS-13. |
+| Ansage | Feste Nächte 3, 6, 9 usw., sofern er lebt und die Rolle besitzt. | Inhalt (KS-08), Zeitpunkt (KS-12). |
+| 5A + zweite Runde | Stapel gehören zur Person. Neuer Träger der Rolle bei null; beim bisherigen Träger ruhen sie und werden bei Rückerhalt wieder nutzbar. Tod: Stapel bleiben, tot sammelt und gewinnt er nicht; nach Wiederbelebung weiter mit dem Stand. | Schild bei Tod und Rollenverlust (KS-07). |
+| 6B | Fünf-Tote-Hinweis auch bei später erhaltener Selbstmörder-Rolle, wenn schon fünf tot sind (einmalig). Umgesetzt. | Wiederbelebungsfall bleibt offen (kein Beschluss). |
+
+„Karten abgeben“ und „Stapel ausgeben“ meinen nur das Guthaben des Kartenschluckers, nicht das Entfernen fremder Totenreichkarten. Quelle und Ersetzt-Liste: Decision Log „Kartenschlucker, Grundregeln“.
 
 ## 4. Übergreifende offene Punkte
 
@@ -44,7 +49,7 @@ Gelten für viele Karten und werden bei den Karten mit ihrer ID (ÜB-n) verwiese
 
 | ID | Thema | Frage |
 |---|---|---|
-| ÜB-1 | Kartentext je Person | Die Karten haben Wolf-, Dorf-, neutrale oder Solo-Texte. Nach 1A bekommt jede Person eine Karte. Offen: Welche Variante liest eine Solo- oder neutrale Person? Gilt der Rollenkatalog oder die Fraktion bei Wechselrollen? Welche Karten zieht wer (Legacy: Solo-Karten nur für Solo, Kategorien gewichtet)? |
+| ÜB-1 | Kartentext je Person | Unterschiedliche Kartentexte für Dorf, Wölfe und Einzelsiegrollen sind mit 1A (jede Person bekommt beim Tod eine Karte) vereinbar. Offen: Welche Karten kommen für welche Rolle oder Fraktion in Frage (Legacy: Solo-Karten fast nur für Solo, Kategorien gewichtet), und nach welcher Rolle, wenn sie sich zwischen Tod und Spielen ändert? Nicht entschieden. |
 | ÜB-2 | Abstimmungen am Tisch | Bestätigt: keine digitale Abstimmung. Offen je Karte: welches Ergebnis die SL einträgt (Person, Rangfolge, ja/nein), damit die App die Wirkung darstellen kann. |
 | ÜB-3 | Bezugszeitpunkt | „Nächste Nacht“, „nächster Lynch“, „folgende Nacht“: ab wann zählt es, wenn eine Karte am Tag, in der Nacht oder in der Morgenauflösung gespielt wird? Wie werden „Tage“ und „Runden“ gezählt? |
 | ÜB-4 | Zufall | Projektregel: Zufall nur über den gespeicherten Generator. „Zufällig“ auf einer Karte kann Generator, echten Würfel am Tisch oder SL-Wahl bedeuten. Je Karte festlegen. |
@@ -71,7 +76,9 @@ Reihenfolge nach gemeinsamen Regeln und Abhängigkeiten, jede Gruppe in einer Si
 | 8 | Solo-Karten | 11 | Eigene Siegbedingungen, Zettel, Bindungen. Am Ende, weil sie die meisten neuen Konzepte einführen (Mitsieg, posthumer Sieg, Todesband). |
 | | **Summe** | **80** | |
 
-Vor Gruppe 1 sind die Grundregeln des Kartenschluckers zu klären (Abschnitt 7), weil Tausch und Stapel an Tod und Wiederbelebung hängen.
+Die Grundregeln des Kartenschluckers sind entschieden (Abschnitt 3). Für den Einstieg in Gruppe 1 blockieren noch die Fragen aus Abschnitt 8.
+
+**Gruppe 1, gemeinsame Grundentscheidungen (Blocker):** (1) Zeitpunkt des Spielens und Bezug „nächste Nacht“ (KS-09, alle Karten); (2) Kartenbedingung `deathCardRequirements` (KS-10, `segen_08`, `wende_04`, `wende_07`, `loki_10`, `wende_12`); (3) Ablauf einer Karten-Wiederbelebung (KS-18); (4) „halbe Fähigkeit“ und Würfel (KS-19); (5) Rollenwechsel durch Karten (KS-20). Nach 1A erhält eine Wiederbelebte bei erneutem Tod eine neue Karte; die Stapelregel gilt für Wechsel von oder zum Kartenschlucker.
 
 ## 6. Karten je Gruppe
 
@@ -893,86 +900,123 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **Unklarheiten und Rolleninteraktionen:** Wer sind „Nachbarn“ der Toten (Sitzordnung, tote Nachbarn)? Todesursache. Die Person ist tot: von welcher Position aus?
 - **Status:** noch nicht überarbeitet
 
-## 7. Erste Fragerunde: Grundregeln des Kartenschluckers
+## 7. Ergebnis der ersten Fragerunde (beantwortet am 30.09.2026)
 
-Bereits bestätigt und deshalb nicht erneut gefragt: 1A, 2C, 3A (eingeschränkt), 4B (Liste der Fähigkeiten), 5A, 6B. Jede Frage: ein Beispiel am Tisch, drei Antworten, dazu immer die freie Antwort D. Die Empfehlung ist ein Vorschlag, keine Entscheidung. Nichts davon ist implementiert.
+Die Antworten sind im Decision Log („Kartenschlucker, Grundregeln“) verbindlich eingetragen. Die Empfehlungen der Vorversion dieser Liste sind damit überholt; die Zuordnung zu den Fragen-IDs ist meine Zuordnung, die Antworten kamen als zusammenhängender Regeltext.
 
-### KS-01: Was bedeutet „Kartenschlucker im Spiel“, wenn er tot ist oder seine Rolle verliert?
+| Frage | Thema | Antwort des Product Owners (sinngemäß) |
+|---|---|---|
+| KS-01 | „Im Spiel“ bei Tod und Rollenverlust | Tausch nur, solange eine lebende Person die Rolle Kartenschlucker besitzt; jeder zulässige Tausch gibt einen Stapel. |
+| KS-02 | Tötungsfähigkeit | Freiwillige Nachtaktion „zwei Finger“: zwei Stapel abgeben, eine Person töten, höchstens einmal pro Nacht; kein Zwang, keine Kombination. |
+| KS-03 | Schild | Nachtaktion „fünf Finger“: fünf Stapel abgeben, Schild kaufen; bleibt bis zum verhinderten Tod, höchstens einer, kein Gratis-Schild, keine Erneuerung. |
+| KS-04 | Zählbeginn der Ansage | Feste Nächte 3, 6, 9 usw., sofern er lebt und die Rolle besitzt. |
+| KS-05 | Stapel bei Rollenwechsel | Stapel gehören zur Person; neuer Träger bei null; beim bisherigen Träger ruhen sie und werden bei Rückerhalt der Rolle wieder nutzbar. |
+| KS-13 (im Kern) | Sieg bei zehn Stapeln | Kein Automatismus: nur die Nachtaktion „zehn Finger“ (zehn Stapel abgeben) löst den Sieg aus; Spielleiterbestätigung bleibt. |
 
-Beispiel: Der Kartenschlucker wurde in Nacht 2 getötet. In Nacht 3 stirbt Anna. Darf Anna ihre Totenkarte tauschen?
+## 8. Zweite Fragerunde
 
-- **A (Empfehlung):** Nur solange eine lebende Person die Rolle Kartenschlucker hat. Ist er tot oder hat er die Rolle verloren, darf niemand tauschen. Nach einer Wiederbelebung geht es wieder.
-- **B:** Solange die Rolle in der Partie vergeben ist, auch wenn ihr Träger tot ist. Tauschen ist dann erlaubt, es gibt aber keine Stapel, solange er tot ist (5A). Bei Rollenverlust nicht mehr.
-- **C:** Sobald er einmal in der Startbesetzung war, für die ganze Partie, egal ob tot oder ohne Rolle.
+Nur neue Fragen; Entschiedenes wird nicht wiederholt. Jede Frage: betroffene Karte oder Fähigkeit mit unverändertem relevantem Originaltext, ein Beispiel, drei Antworten, freie Antwort D, fachlich begründete Empfehlung. Die Empfehlung ist ein Vorschlag, keine Entscheidung, und nichts davon ist implementiert.
+
+### KS-06: Schild: Welche Todesarten verhindert der gekaufte Schild?
+
+Originaltext:
+- [R] Kein Kartentext. Der Schild steht nur in der Entscheidung (Decision Log, Kartenschlucker, Grundregeln): „Ein gekaufter Schild bleibt bestehen, bis er einen Tod verhindert.“
+
+Beispiel: Der Kartenschlucker hat einen Schild. Am Tag wird er hingerichtet, in einer späteren Nacht greift das Rudel ihn an, dann trifft ihn ein Zusatzopfer des Rudelvaters (das sonst Schutz ignoriert).
+
+- **A:** Jeder Tod durch Rollenwirkung oder Hinrichtung wird verhindert. Effekte, die „Schutz ignorieren“, durchdringen den Schild nicht (wie bei den persönlichen Schilden anderer Einzelsiegrollen, RM-DR-005). Spielleiterkorrekturen wirken immer.
+- **B:** Nur Tode in der Nacht (Rudelangriff und Fähigkeiten). Die Hinrichtung am Tag trifft ihn trotz Schild.
+- **C:** Nur der Rudelangriff wird verhindert. Fähigkeiten und Hinrichtung nicht.
 - **D:** Eigene Antwort.
 
-Empfehlung und Begründung: A folgt der bereits bestätigten Regel des Fünf-Tote-Hinweises („in der Partie“ heißt: lebt mit dieser Rolle, NQ-01) und passt zu 5A, weil ein toter Kartenschlucker keine Stapel sammelt. Ein Tausch ohne Wirkung (B, C) wäre am Tisch schwer zu erklären.
+Empfehlung und Begründung: A ist fachlich stimmig: Der Schild kostet fünf Stapel, also mehr als das Doppelte der Tötung. B lässt die Hinrichtung ungeschützt, C wäre gegen Fähigkeiten und Hinrichtung wertlos. A passt zur vorhandenen Regel für persönliche Schilde (RM-DR-005) und braucht keine zusätzliche Ausnahme. Achtung: Was bei einer verhinderten Hinrichtung geschieht (Tag endet ohne Opfer oder neue Abstimmung), bleibt eine eigene Frage.
 
-Reichweite: Betrifft nur Zeitpunkt und Bedingung des Tauschs. Keine Tötungs- oder Schildregel.
+Reichweite: Betrifft den Kartenschlucker und die Todespipeline (Gruppe 2 der Kartenliste). Reihenfolge mit anderen Schutzwirkungen bleibt offen.
 
-### KS-02: Verbraucht die Tötungsfähigkeit Stapel, und muss der Kartenschlucker sie einsetzen?
+### KS-07: Schild: Was passiert mit einem vorhandenen Schild bei Rollenverlust, Tod und Wiederbelebung?
 
-Beispiel: Der Kartenschlucker hat 3 Stapel. In der Nacht ruft die Spielleitung ihn auf. Muss er jemanden töten? Hat er danach noch 3 Stapel?
+Originaltext:
+- [R] Kein Kartentext. Bestätigt: „Ein gekaufter Schild bleibt bestehen, bis er einen Tod verhindert.“ Ausdrücklich nicht aus der Stapelregel abzuleiten.
 
-- **A (Empfehlung):** Kostet nichts. Er darf einmal pro Nacht jemanden töten, muss aber nicht (er darf „niemand“ wählen). Die Stapel bleiben.
-- **B:** Kostet 1 Stapel je Tötung. Er darf, muss aber nicht.
-- **C:** Kostet nichts, aber er muss jede Nacht töten, sobald er 2 oder mehr Stapel hat.
+Beispiel: Anna ist Kartenschlucker und hat einen Schild. Eine Spielleiterkorrektur nimmt ihr die Rolle, später bekommt sie die Rolle zurück. Oder: Ein Effekt, der den Schild durchdringt, tötet sie; später wird sie wiederbelebt.
+
+- **A:** Der Schild gehört zur Person und bleibt in allen Fällen bestehen. Er wirkt, solange die Person lebt, auch ohne die Rolle.
+- **B:** Der Schild gehört zur Person, ruht aber ohne die Rolle: Bei Rollenverlust wirkt er nicht, nach Rückerhalt wieder. Tod und Wiederbelebung ändern nichts an seinem Bestand.
+- **C:** Der Schild verfällt bei Rollenverlust. Bei Tod und Wiederbelebung bleibt er bestehen.
 - **D:** Eigene Antwort.
 
-Empfehlung und Begründung: A entspricht der alten Fassung (dort keine Kosten) und zwingt niemanden zu einer Tötung. B macht die Fähigkeit teuer, weil Stapel auch der Siegweg sind; das wäre eine neue Balance-Entscheidung. C zwingt die Person und ist am Tisch unpraktisch, wenn er lieber niemanden töten will.
+Empfehlung und Begründung: B folgt dem Wortlaut (bleibt bestehen, bis er einen Tod verhindert) und verhält sich wie die ruhenden Stapel, ohne dass eine Person ohne die Rolle plötzlich einen Rollenvorteil hat. A gäbe einem Nicht-Kartenschlucker Schutz, C vernichtet bezahlte Stapel durch eine Spielleiterkorrektur.
 
-Reichweite: Legt Kosten und Pflicht fest, nicht Reihenfolge oder Wechselwirkung mit Schutzrollen.
+Reichweite: Betrifft nur den Schild, nicht Stapel (entschieden) und nicht die Todesarten (KS-06).
 
-### KS-03: Wie oft steht das Schild des Kartenschluckers bereit?
+### KS-08: Öffentliche Ansage: Welche Zahl wird in den Nächten 3, 6, 9 genannt?
 
-Beispiel: Der Kartenschlucker hat 6 Stapel. In Nacht 4 wollen die Wölfe ihn töten, das Schild fängt es ab. In Nacht 5 greifen sie wieder an. Ist er wieder geschützt?
+Originaltext:
+- [R] Kein Kartentext. Bestätigt: Feste Nächte 3, 6, 9 usw., sofern er lebt und die Rolle besitzt. Legacy-Text (historisch): „Das Dorf erfährt: Kartenschlucker hat N Stapel.“
 
-- **A (Empfehlung):** Jede Nacht wieder, solange er mindestens 5 Stapel hat. Das Schild fängt jeweils einen Tod ab.
-- **B:** Nur einmal in der ganzen Partie: Das Schild entsteht beim Erreichen von 5 Stapeln und ist nach dem ersten abgefangenen Tod weg.
-- **C:** Einmal je Leben: Es ist nach dem ersten abgefangenen Tod weg und kommt erst nach einer Wiederbelebung neu.
+Beispiel: In Nacht 6 hat der Kartenschlucker 7 Stapel gesammelt und wählt „zwei Finger“ (zwei abgeben, jemanden töten). Was hört das Dorf?
+
+- **A:** Das aktuelle Guthaben: Es zählt, was er hat (nach seiner Aktion dieser Nacht: 5).
+- **B:** Die Gesamtzahl aller je gesammelten Stapel, auch der ausgegebenen (z. B. 7 plus frühere Käufe).
+- **C:** Nur die Stufe: „unter 2“, „mindestens 2“, „mindestens 5“, „mindestens 10“ (ohne genaue Zahl).
 - **D:** Eigene Antwort.
 
-Empfehlung und Begründung: A entspricht der alten Fassung (dort wird das Schild jede Nacht ab 5 Stapeln neu gesetzt) und braucht keinen zusätzlichen Zähler. Es macht den Kartenschlucker aber sehr schwer zu töten. B ist schwächer, braucht dafür ein gemerktes „verbraucht“. Diese Frage klärt auch, ob nach Wiederbelebung noch etwas zurückgesetzt werden muss.
+Empfehlung und Begründung: A nennt die Zahl, mit der er tatsächlich handeln kann (2, 5, 10). Das gibt dem Dorf faire, spielrelevante Information. B verrät auch, was er schon ausgegeben hat, und macht Rückschlüsse auf frühere Aktionen möglich. C ist geheimniswahrend, nimmt der Ansage aber den Nutzen. Der Zeitpunkt (vor oder nach der Aktion, Morgen oder Nacht) ist eine getrennte Frage und bleibt in der Liste.
 
-Reichweite: Bestimmt, ob es einen Schildzustand gibt, der gespeichert werden muss. Gegen welche Todesursachen das Schild wirkt, wird erst bei Gruppe 2 (Todespipeline) gefragt.
+Reichweite: Betrifft nur den Inhalt der Ansage.
 
-### KS-04: Von wann werden die drei Nächte für die öffentliche Stapelansage gezählt?
+### KS-09: Wann wird die Originalkarte eines Toten gespielt (und wann darf getauscht werden)?
 
-Beispiel: Der Kartenschlucker ist ab Nacht 1 im Spiel. Wann sagt das Dorf seine Stapelzahl an: nach Nacht 3, 6, 9? Was, wenn er in Nacht 2 durch eine Karte die Rolle bekommt?
+Originaltext:
+- [R] `segen_04` Stille Nacht (Dorf): „Die Wölfe dürfen heute Nacht kein Opfer wählen — sie schlafen.“
+- [R] `segen_09` Gerechter Zorn (Wolf): „Wird beim nächsten Lynch ein Werwolf gelyncht, dürfen die Wölfe in dieser Nacht zwei Opfer reißen statt einem.“
+- [R] Bestätigt: Originalkarte einmal tauschen, Ersatzkarte sofort spielen.
 
-- **A (Empfehlung):** Feste Nächte der Partie: nach Nacht 3, 6, 9. Sie kommt nur, wenn er in dieser Nacht lebt und die Rolle hat.
-- **B:** Ab seiner eigenen ersten Nacht mit der Rolle: jede dritte Nacht, in der er lebt (er hat eigene Zählung).
-- **C:** Ab der ersten Nacht, in der er mindestens einen Stapel hat: jede dritte Nacht danach.
+Beispiel: Anna stirbt in Nacht 2, ihr Tod wird am Morgen bekannt. Ihre Karte lautet „Die Wölfe dürfen heute Nacht kein Opfer wählen“. Welche Nacht ist „heute Nacht“, und bis wann kann der Kartenschlucker-Tausch stattfinden?
+
+- **A:** Sofort, wenn der Tod öffentlich wird (Morgenauflösung oder Hinrichtung): Anna entscheidet dann tauschen oder spielen; „heute Nacht“ und „nächster Lynch“ zählen ab diesem Moment.
+- **B:** Zu einem festen Zeitpunkt: zu Beginn der nächsten Phase nach dem öffentlichen Tod. Bis dahin bleibt die Karte verdeckt und kann getauscht werden.
+- **C:** Der Tote wählt den Zeitpunkt selbst (Ankündigung an die Spielleitung); bis dahin bleibt die Karte verdeckt und tauschbar.
 - **D:** Eigene Antwort.
 
-Empfehlung und Begründung: A ist am Tisch leicht zu merken (die Nächte 3, 6, 9 sind für alle gleich) und braucht keinen eigenen Zähler. B ähnelt der alten Fassung (eigener Nachtzähler), verlangt aber einen Zähler, der bei Tod, Wiederbelebung und übersprungenen Nächten geregelt werden muss.
+Empfehlung und Begründung: A ist die klarste Ursache-Wirkung-Kette, gilt für alle 80 Karten gleich und erzeugt keinen verdeckten Kartenvorrat (den C eröffnen würde: Der Kartenschlucker müsste beliebig lange auf Tauschgelegenheiten warten). B ist möglich, macht aber Bezüge wie „heute Nacht“ je nach Todeszeit unterschiedlich. Bezüge „nächste Nacht“ (ÜB-3) sind damit für alle Karten eindeutig.
 
-Reichweite: Legt nur den Zählbeginn der Ansage fest, nicht ihren Inhalt.
+Reichweite: Betrifft alle 80 Karten und den Tauschablauf. Nicht Teil: wer die Karte ansagt und wie die Spielleitung sie bestätigt.
 
-### KS-05: Was passiert mit den Stapeln, wenn die Rolle Kartenschlucker wechselt (nicht der Tod)?
+### KS-10: Kartenbedingung „lebende Wiederbelebungsrolle im Spiel“: behalten, verschieben oder streichen?
 
-Beispiel: Der Kartenschlucker hat 7 Stapel. Die Spielleitung korrigiert eine Rolle, oder ein Lehrling erbt die Rolle. Wer hat danach wie viele Stapel?
+Originaltext:
+- [R] `segen_08` Zweites Leben (Dorf): „Ein toter Dorfbewohner deiner Wahl kehrt als vollwertiger Dorfbewohner mit seiner ursprünglichen Rolle zurück.“
+- [R] `wende_04` Wiedergeburt (Dorf): „Der Spielleiter wählt nach eigenem Ermessen einen toten Dorfbewohner — er kehrt mit seiner ursprünglichen Fähigkeit zurück.“
+- [R] `wende_07` Befreiung (Dorf): „Ein toter Dorfbewohner kehrt mit halber Fähigkeit zurück — er darf sie einmalig einsetzen, dann stirbt er erneut.“
+- [R] `loki_10` Phoenix (Neutral): „Es werden zwei Würfel gewürfelt, der erste belebt entsprechend viele zufällige Spieler wieder, der zweite entscheidet für wie viele Runden sie am Leben bleiben.“
+- [R] Alle vier tragen im Legacy-Code die Bedingung: lebende Person mit Rollen-Tag revive, role-return oder death-trigger-transform. Ebenso trägt `wende_12` (Dorf) im Text: „Nur in Spielen mit Wiederbelebungs-Szenarien“.
 
-- **A:** Die Stapel gehören zur Rolle: Wer die Rolle bekommt, übernimmt den Stand (7).
-- **B (Empfehlung):** Die Stapel gehören zur Person: Wer die Rolle neu bekommt, startet bei 0. Der bisherige Träger behält seine 7, sie ruhen aber; bekommt er die Rolle zurück, geht es bei 7 weiter.
-- **C:** Bei Rollenverlust gehen die Stapel ganz verloren, auch für den bisherigen Träger.
+Beispiel: In der Partie gibt es keine Kutscher-, Frankenstein- oder ähnliche Rolle. Anna zieht (oder tauscht in) die Karte „Wiedergeburt“: Ein toter Dorfbewohner kehrt zurück. Darf diese Karte überhaupt vergeben werden?
+
+- **A:** Bedingung behalten und prüfen: Die Karte wird nur vergeben und nur gespielt, solange eine lebende Person mit einer Wiederbelebungsrolle im Spiel ist (wie im Legacy-Code).
+- **B:** Bedingung nur beim Vergeben prüfen: Die Karte wird nur gezogen, wenn beim Ziehen eine solche Rolle lebt. Beim Spielen wird nicht erneut geprüft.
+- **C:** Bedingung streichen: Die Karte wirkt immer. Die Wiederbelebung geschieht durch die Karte selbst, unabhängig von Rollen.
 - **D:** Eigene Antwort.
 
-Empfehlung und Begründung: B folgt 5A (Stapel gehören zur Person und bleiben) und der Regel, dass neue Rollen frisch starten (W-01 bis W-04). Es verhindert, dass ein Erbe durch Rollenübernahme plötzlich kurz vor dem Sieg bei 10 steht.
+Empfehlung und Begründung: A bewahrt die vorhandene Kartenidee (W-01 sah die Bedingung ausdrücklich für den Karten-Assistenten vor) und verhindert eine Wiederbelebung, die keine Rolle der Partie erklärt und die Wiederbelebungsregeln W-01 bis W-04 unbemerkt ausweitet. C wäre eine stille Änderung von vier Karten. B lässt zu, dass die Karte nach dem Tod der Rolle wirkungslos oder widersprüchlich wird.
 
-Reichweite: Nur der Fall Rollenwechsel ohne Tod. Tod und Wiederbelebung sind durch 5A entschieden.
+Reichweite: Betrifft 4 (mit `wende_12` 5) Karten der Gruppe 1 und die Bedingung von Kutscher und Frankenstein (RM-DR-141.4). Wie eine Karten-Wiederbelebung genau abläuft, ist eine eigene Frage in der Liste.
 
-## 8. Weitere Fragen, geordnet für die nächsten Runden
+## 9. Weitere offene Punkte, geordnet für die nächsten Runden
 
-Noch nicht gestellt. Reihenfolge nach Abhängigkeit von den Fragen KS-01 bis KS-05.
+Noch nicht gestellt. Nichts davon ist beschlossen. Reihenfolge nach Abhängigkeit von den Fragen in Abschnitt 8.
 
 | ID | Frage |
 |---|---|
-| KS-06 | Öffentlichkeit: Ist der Tausch einer Karte für alle sichtbar, und wer sieht die Stapelzahl außerhalb der Ansage? (ÜB-7) |
-| KS-07 | Schild bei Tod und Wiederbelebung, falls KS-03 nicht A ist (5A lässt das ausdrücklich offen). |
-| KS-08 | Gegen welche Todesursachen wirkt das Schild (Legacy: alle außer dem Rudelvater-Tod), und in welcher Reihenfolge vor oder nach Nekromant, Hades, Parasit, Rudelvater? (Gruppe 2) |
-| KS-09 | Wechselwirkung der Tötungsfähigkeit mit Schutz: Kann sie durch Schutzrollen verhindert werden, gilt sie als Wolfsangriff? (Gruppe 2 und 3) |
-| KS-10 | Wie wird ein Tausch am Tisch ausgelöst und bestätigt (wer fordert, wer trägt ein)? Ersatzkarte sofort spielen: Ablauf. (ÜB-8, ÜB-9) |
-| KS-11 | Kartentext je Person (ÜB-1): Welche Variante liest eine Solo- oder neutrale Person? Vor Gruppe 1 nötig, sobald Karten überarbeitet werden. |
-| KS-12 | Ziehung: Zufall über den gespeicherten Generator oder Auswahl der SL, Kartenbestand und Wiederholungen (ÜB-4, ÜB-6). |
-| KS-13 | Sieg bei 10 Stapeln: sofort beim zehnten Stapel oder erst am Morgen? Bestätigung durch die SL? |
+| KS-11 | Tötung („zwei Finger“): Ziel (auch die eigene Person?), Todesursache, Zeitpunkt (Nacht oder Morgen), Schutz und Durchdringung, Reihenfolge mit anderen Todesregeln. (Gruppe 2 und 3) |
+| KS-12 | Ansage: Zeitpunkt (vor oder nach der Aktion, Nacht oder Morgen) und Verhalten bei übersprungenen Nächten. (Gruppe 3) |
+| KS-13 | Sieg („zehn Finger“): Wann entsteht der Kandidat, was geschieht bei Ablehnung durch die Spielleitung oder Tod in derselben Nacht (Guthaben zurück oder verbraucht)? Regeln DR-02, DR-14, F-11 gelten. |
+| KS-14 | Nachtablauf: Wie wird die Fingerwahl am Tisch erfasst und in der App eingetragen (die Wahl darf die Spielleitung wohl allein sehen)? Wecken in Nächten, die durch Karten ausfallen. (ÜB-9) |
+| KS-15 | Öffentlichkeit: Ist der Tausch sichtbar, und wer sieht die Stapelzahl außerhalb der Ansage? Ablauf des Tauschs am Tisch (wer fordert, wer bestätigt). (ÜB-7) |
+| KS-16 | Kartentexte je Person (ÜB-1, korrigiert): Welche Karten kommen für Wölfe, Dorf, Einzelsiegrollen und Neutrale in Frage, und nach welcher Rolle oder Fraktion, wenn sie sich zwischen Tod und Spielen ändert? |
+| KS-17 | Ziehung: Zufall über den gespeicherten Generator oder Auswahl der Spielleitung, Kartenbestand, Wiederholungen, Gewichtung. (ÜB-4, ÜB-6) |
+| KS-18 | Wiederbelebung durch Karten (`segen_08`, `wende_04`, `wende_07`, `loki_10`): Gelten die Wiederbelebungsregeln W-01 bis W-04 (frischer Start), und was heißt „ursprüngliche Fähigkeit“ bei Einmalfähigkeiten? (Gruppe 1) |
+| KS-19 | `wende_07`: Was ist eine „halbe Fähigkeit“ (auch bei Rollen ohne aktive Fähigkeit)? `loki_10`: Würfel am Tisch oder Generator, was ist eine „Runde“? (Gruppe 1) |
+| KS-20 | Rollenwechsel durch Karten (`schicksal_08`, `loki_06`): Welche Rollen sind erlaubt, folgt der Zustand der Person oder der Rolle? Wechsel von oder zum Kartenschlucker folgt der Stapelregel (entschieden); Wechsel zum Selbstmörder berührt den Fünf-Tote-Hinweis (6B). (Gruppe 1) |
+| KS-21 | Schild: verhinderte Hinrichtung (Tag endet ohne Opfer oder neue Abstimmung) und Reihenfolge mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen. (Gruppe 2) |

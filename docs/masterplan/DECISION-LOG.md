@@ -741,8 +741,8 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 
 - **1A (Vergabe):** Jede Person erhält beim Tod eine Totenreichkarte, unabhängig von ihrer Fraktion. Nach Wiederbelebung und erneutem Tod erhält sie eine neue Karte.
 - **2C (Kartenwirkung, ausdrücklich präzisiert):** ALLE Totenreichkarten werden vor ihrer Implementierung gemeinsam mit dem Product Owner überarbeitet. Mechanische Auswirkungen auf den Spielzustand sollen anschließend im Spiel umgesetzt werden. Handlungen in der realen Welt werden durch verständliche Anweisungen begleitet; die App kann sie nicht selbst ausführen. Welche Bestätigung oder Eingabe dafür nötig ist, wird je Karte festgelegt. Bis zu dieser Überarbeitung gibt es keinen Code für Kartenmechanik, Kartenverteilung, Kartentausch oder Kartenwirkungen und keine vorläufigen Dummy-Regeln. Stimmen werden weiterhin am Tisch gezählt, nötige Ergebnisse trägt die Spielleitung ein (keine digitale Abstimmung).
-- **3A (Tausch, ausdrücklich eingeschränkt):** Ein Toter darf seine erhaltene Karte einmal austauschen, sofern der Kartenschlucker im Spiel ist. Die Ersatzkarte wird sofort gespielt und nicht erneut getauscht. Nach Wiederbelebung und erneutem Tod ist der Tausch der neu erhaltenen Karte wieder möglich. „Kartenschlucker im Spiel“ ist hinsichtlich Tod und Rollenverlust noch präzisierungsbedürftig und wird weder als „lebt“ noch als „war in der Startbesetzung“ ausgelegt.
-- **4B (Zusatzfähigkeiten):** Vorgesehen bleiben: ab zwei Stapeln nachts töten, ab fünf Stapeln ein Schild, alle drei Nächte öffentliche Ansage der Stapelzahl, Sieg bei zehn Stapeln. Kosten, Verbrauch, Zeitpunkte und Wechselwirkungen sind damit nicht entschieden.
+- **3A (Tausch, ausdrücklich eingeschränkt):** Ein Toter darf seine erhaltene Karte einmal austauschen, sofern der Kartenschlucker im Spiel ist. Die Ersatzkarte wird sofort gespielt und nicht erneut getauscht. Nach Wiederbelebung und erneutem Tod ist der Tausch der neu erhaltenen Karte wieder möglich. „Kartenschlucker im Spiel“ ist hinsichtlich Tod und Rollenverlust noch präzisierungsbedürftig und wird weder als „lebt“ noch als „war in der Startbesetzung“ ausgelegt. **Beantwortet in der zweiten Antwortrunde (Abschnitt „Kartenschlucker, Grundregeln“ unten): Tausch nur, solange eine lebende Person die Rolle besitzt.**
+- **4B (Zusatzfähigkeiten):** Vorgesehen bleiben: ab zwei Stapeln nachts töten, ab fünf Stapeln ein Schild, alle drei Nächte öffentliche Ansage der Stapelzahl, Sieg bei zehn Stapeln. Kosten, Verbrauch, Zeitpunkte und Wechselwirkungen sind damit nicht entschieden. **Wortlaut teilweise ersetzt in der zweiten Antwortrunde (siehe unten): Tötung und Schild sind kostenpflichtige Nachtaktionen, der Sieg bei zehn Stapeln ist eine Aktion und kein Automatismus; die Ansage gilt in den festen Nächten 3, 6, 9.**
 - **5A (Tod des Kartenschluckers):** Beim Tod bleiben seine Stapel erhalten. Solange er tot ist, sammelt er keine neuen Stapel und gewinnt nicht. Nach Wiederbelebung setzt er mit dem vorhandenen Stapelstand fort. Nicht entschieden: Zurücksetzen oder Wiederherstellen eines verbrauchten Schilds.
 - **6B (Fünf-Tote-Hinweis):** Sind bereits mindestens fünf Personen gleichzeitig tot und erhält eine lebende Person anschließend die Rolle Selbstmörder, darf der Hinweis ausgelöst werden, sofern er in dieser Partie noch nicht ausgelöst wurde. Eine entsprechende Spielleiterkorrektur zählt ebenfalls. Ersetzt die offene Randfallfrage aus DA-86 und Entscheidung B.
 
@@ -756,3 +756,41 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - Sie gilt als neuer Auslöseversuch, sobald mindestens fünf Personen tot sind. Geschieht sie in der Nacht, wird der Versuch erst mit der Morgenauflösung öffentlich ausgewertet; ist die Person dann nicht mehr lebende Selbstmörderin, ist es ein erfolgloser Versuch, der den Hinweis nicht verbraucht (Entscheidung B).
 - Alle übrigen Regeln bleiben: öffentliche Phase, abgeschlossene Todesketten, kein Hinweis beim Laden, Wiederholen und Neuzeichnen, Rückgängig macht eine Auslösung ungeschehen, keine Namen, keine Rollen, kein Zufall, keine Wirkung auf den Zustand.
 - Tests in `test_five_dead_cue`: Rollenübernahme bei fünf Toten genau ein Hinweis, tote Person und weniger als fünf Tote ohne Hinweis, Speichern und Laden vor und nach der Übernahme, Rückgängig und Wiederholen, Rollenübernahme in der Nacht, ausstehender Randfall. Mit einer künstlich wirkungslosen `death_seeker_gained` sind vier dieser Tests rot (einmal geprüft).
+
+## Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)
+
+**Herkunft:** Antworten des Product Owners im Claude-Code-Auftrag vom 30.09.2026 (zweite Runde) auf die Fragen KS-01 bis KS-05 der Arbeitsliste `docs/role-migration/14-totenkarten-arbeitsliste.md` samt eigener Ergänzungen zu Nachtaktion, Schild und Sieg. Die Antworten kamen als zusammenhängender Regeltext ohne Buchstabenwahl; die Zuordnung zu den Fragen-IDs steht bei den Punkten und ist meine Zuordnung. Diese Entscheidungen **ersetzen** widersprechende frühere Vorschläge (Liste am Ende). Der Kartenschlucker ist weiterhin **nicht implementiert**; es gibt keinen Karten-Code.
+
+**Bestätigt (Product Owner):**
+
+- **Tausch (KS-01 und Ergänzung):** Totenreichkarten dürfen nur getauscht werden, solange eine lebende Person die Rolle Kartenschlucker besitzt. Jeder zulässige Tausch gibt dem Kartenschlucker einen Stapel. Weiter gilt 3A: Originalkarte einmal tauschen, Ersatzkarte sofort spielen und nicht erneut tauschen; nach Wiederbelebung und erneutem Tod gilt das für die neu erhaltene Karte wieder.
+- **Nachtaktion (KS-02, ersetzt die Vorschläge kostenlos oder Pflicht):** Der Kartenschlucker wird jede Nacht geweckt und wählt genau eine Aktion: Kopf schütteln = nichts tun. Zwei Finger = zwei angesammelte Karten/Stapel abgeben und eine Person töten (freiwillig, höchstens einmal pro Nacht). Fünf Finger = fünf angesammelte Karten/Stapel abgeben und einen Schild kaufen. Zehn Finger = zehn angesammelte Karten/Stapel abgeben und seinen Sieg auslösen. Keine Kombination mehrerer Aktionen in derselben Nacht. Unzureichendes Guthaben erlaubt die jeweilige Aktion nicht.
+- **Schild (KS-03, ersetzt „ab 5 Stapeln ein Schild“):** Ein gekaufter Schild bleibt bestehen, bis er einen Tod verhindert. Höchstens ein Schild gleichzeitig. Kein kostenloser Schild beim Erreichen von fünf Stapeln, keine automatische Erneuerung pro Nacht.
+- **Sieg (ersetzt „Bei zehn Stapeln gewinnt er sofort“, beantwortet KS-13 im Kern):** Zehn Stapel allein lösen keinen Sieg aus. Die Person entscheidet sich bei ihrer Nachtaktion mit zehn Fingern dafür und gibt zehn Stapel ab. Die bestehende technische Spielleiterbestätigung eines Siegkandidaten bleibt erhalten (kein zusätzlicher morgendlicher Wartezeitpunkt).
+- **Öffentliche Ansage (KS-04):** Feste Nächte 3, 6, 9 usw., sofern er lebt und die Rolle besitzt.
+- **Stapel und Rollenwechsel (KS-05):** Stapel gehören zur Person. Ein neuer Träger der Rolle beginnt bei null. Beim bisherigen Träger ruhen die Stapel; erhält diese Person die Rolle zurück, sind ihre vorhandenen Stapel wieder nutzbar. Beim Tod bleiben Stapel erhalten, die tote Person sammelt nicht und gewinnt nicht (5A). Nach Wiederbelebung geht es mit dem gespeicherten Stapelstand weiter.
+- **Begriffe:** „Karten abgeben“ und „Stapel ausgeben“ bezeichnen das angesammelte Guthaben des Kartenschluckers. Daraus folgt keine Regel zum Entfernen fremder Totenreichkarten oder zum Rückgängigmachen ihrer Wirkungen. Eine physische Darstellung des Guthabens ist nicht festgelegt.
+
+**Ersetzt (nicht mehr gültig):**
+
+- Rollentext „Bei 10 Stapeln gewinnt er sofort“ (`dossiers/solos-b.md`): Sieg nur durch die Zehn-Finger-Aktion mit Abgabe von zehn Stapeln.
+- 4B, Wortlaut „ab zwei Stapeln nachts töten“ und „ab fünf Stapeln ein Schild“ als Schwellen ohne Kosten: jetzt kostenpflichtige Aktionen (zwei bzw. fünf Stapel werden abgegeben).
+- Legacy-Verhalten (nur historisch): Tötung ab 2 Stapeln ohne Kosten (`chunk:226-233`), Schild wird ab 5 Stapeln jede Nacht neu gesetzt (`chunk:235`), Sieg automatisch bei 10 Stapeln (`ui/core.js:241-247`).
+- Vorlage 13, Frage 4 Antwort A („nur sammeln und bei 10 gewinnen“) und die Empfehlungen der Fragen KS-02 bis KS-04 der Arbeitsliste (Version vom Vortag): durch die tatsächlichen Antworten überholt.
+- Aussage der Arbeitsliste, Kartenvergabe bei jeder Person widerspreche unterschiedlichen Kartentexten (ÜB-1): korrigiert; siehe Arbeitsliste.
+
+**Vorhandene Entscheidungen, die für die offenen Punkte gelten (nichts Neues beschlossen):**
+
+- Siegkonflikte: Gleichzeitig erfüllte Siegbedingungen bilden eine Kandidatenmenge ohne Priorität, aus dem endgültigen Zustand nach allen Reaktionen; die Spielleitung bestätigt genau einen oder lehnt alle mit Grund ab (DR-02, DR-14, Zeile „Alle gleichzeitig erfüllten Siegbedingungen“); ein erfüllter Sieg wird nach Ablehnung weiter vorgeschlagen (F-11).
+- Durchdringung (RM-DR-005): „Ignoriert Schutz“ durchdringt nicht die persönlichen Schilde der Einzelsiegrollen. Ob der Kartenschlucker-Schild darunter fällt und welche Todesarten er verhindert, ist **nicht entschieden**; die Aussage ist nur ein Hinweis auf die vorhandene Regel.
+- Spielleiterkorrekturen sind von Rollenwirkungen ausgenommen; Stimmen werden nicht digital gezählt (RM-DR-008).
+
+**Weiter offen (nicht entschieden, nicht erfunden):**
+
+- Schild: welche Todesarten er verhindert, Zusammenspiel und Reihenfolge mit anderen Schutz- und Abfangwirkungen; Verhalten bei Rollenverlust, Tod und Wiederbelebung (ausdrücklich nicht aus der Stapelregel abzuleiten).
+- Tötung: Ziel (auch die eigene Person?), Todesursache, Zeitpunkt (Nacht oder Morgen), Schutz und Durchdringung, Reihenfolge mit anderen Todesregeln.
+- Ansage: Zeitpunkt (vor oder nach der Aktion, Morgen oder Nacht) und Inhalt (Guthaben, Gesamtzahl oder Stufe); Verhalten bei übersprungenen Nächten.
+- Sieg: Wann genau der Kandidat entsteht, was geschieht, wenn die Spielleitung ihn ablehnt oder er in derselben Nacht stirbt (Guthaben zurück oder verbraucht), und wie ein Konflikt mit gleichzeitigen Siegen dargestellt wird (Regeln DR-02, DR-14 gelten; Einzelfälle offen).
+- Nachtablauf: Wie die Wahl (Finger) am Tisch erfasst und in der App eingetragen wird; Wecken bei Nächten, die durch Karten ausfallen.
+- Tausch: Öffentlichkeit, Ablauf am Tisch, Auslösung und Bestätigung; Öffentlichkeit der Stapelzahl außerhalb der Ansage.
+- Der bekannte offene Wiederbelebungsfall des Fünf-Tote-Hinweises bleibt offen.

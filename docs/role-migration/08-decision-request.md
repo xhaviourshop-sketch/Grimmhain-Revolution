@@ -1314,7 +1314,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-143 · `kartenschlucker`
 
-- **Status des Eintrags:** später (ab Charge K15).
+- **Status des Eintrags:** später (ab Charge K15). **Stand 30.09.2026:** Grundregeln entschieden (Decision Log „Kartenschlucker, Grundregeln“), RM-DR-143.1 und .2 sind damit beantwortet, die Rolle bleibt nicht implementiert; Kartenüberarbeitung steht aus. Die folgenden Optionstexte sind historisch.
 - **Betroffene Rollen:** `kartenschlucker`; Wechselwirkung laut Dossier: alle Rollen, die Tote erzeugen (mehr Tote = mehr Tauschgelegenheiten), Totenkarten-System (`cards`), Frankenstein/Kutscher (Wiederbelebung ermöglicht erneuten Tausch), Nekromant/Hades/Parasit/Rudelvater (Abfangregeln in …
 - **Belege:** [Dossier](dossiers/solos-b.md#kartenschlucker); RM-C-071, RM-C-072 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-005, RM-DR-007, RM-DR-013.

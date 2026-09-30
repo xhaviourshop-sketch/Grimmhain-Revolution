@@ -174,11 +174,11 @@ Auch bei abgeschlossenem Offline-Funktionsstand entsteht später Code für Layou
 
 ## Paket 8: Totenkarten und die 72. Rolle
 
-- [ ] Vorhandene Kartentexte und bisher bestätigte Regeln gezielt inventarisieren. Offene Entscheidungen mit Beispielen und drei Auswahlmöglichkeiten plus Freitext stellen. *(Teilstand 30.09.2026: alle 80 Karten inventarisiert, `docs/role-migration/14-totenkarten-arbeitsliste.md`, alle Karten „noch nicht überarbeitet“; erste Fragerunde zum Kartenschlucker (KS-01 bis KS-05) vorbereitet und unbeantwortet. Entschieden: 1A, 2C, 3A eingeschränkt, 4B, 5A, 6B. Keine Kartenmechanik, kein Kartenschlucker implementiert.)*
+- [ ] Vorhandene Kartentexte und bisher bestätigte Regeln gezielt inventarisieren. Offene Entscheidungen mit Beispielen und drei Auswahlmöglichkeiten plus Freitext stellen. *(Teilstand 30.09.2026: alle 80 Karten inventarisiert, `docs/role-migration/14-totenkarten-arbeitsliste.md`, alle Karten „noch nicht überarbeitet“; erste Fragerunde zum Kartenschlucker (KS-01 bis KS-05) vorbereitet und unbeantwortet. Entschieden: 1A, 2C, 3A eingeschränkt, 4B, 5A, 6B. Keine Kartenmechanik, kein Kartenschlucker implementiert. Zweite Runde 30.09.2026: Kartenschlucker-Grundregeln entschieden (Tausch, kostenpflichtige Nachtaktionen, Sieg per Aktion, Ansage in Nächten 3, 6, 9, Stapel bei Rollenwechsel); Details offen, Decision Log.)*
 - [ ] **Vor jeder Kartenimplementierung (2C):** ALLE Karten gemeinsam mit dem Product Owner überarbeiten (Gruppen 1 bis 8 der Arbeitsliste); je Karte mechanische Wirkung, reale Handlung, nötige Eingabe der Spielleitung festlegen.
 - [ ] Ziehen, Kartenbesitz, Ausspielen, Verbrauch, Austausch und Karteninformationen eindeutig festlegen. Automatisierte Karten und lediglich vom Spielleiter geführte Karten kennzeichnen.
 - [ ] Seeded-Ziehung, Zustandsmodell, Befehle und Speichern erst aus diesen Entscheidungen ableiten. Unbekannte Kartenwirkung nicht als umgesetzt darstellen.
-- [ ] Kartenschlucker danach gemäß bestätigten Fähigkeiten implementieren, inklusive Austausch, Schwellen, Ressourcen, Tod, Rollenverlust, Undo und Save/Load.
+- [ ] Kartenschlucker danach gemäß bestätigten Fähigkeiten implementieren, inklusive Austausch, Nachtaktionen mit Stapelkosten (Tötung 2, Schild 5, Sieg 10), Schild, Tod, Rollenverlust, Undo und Save/Load. *(Regelgrundlage im Decision Log „Kartenschlucker, Grundregeln“; Schild-Details, Tötung und Ansage noch offen.)*
 - [ ] Karteneinflüsse auf Wiederbelebungsmodus, Nachtreihenfolge, Todespipeline, Sieg und Geheimhaltung testen.
 
 **Abnahme:** 72 Rollen innerhalb der definierten Kartenmechanik geprüft. Ist eine Entscheidung noch offen, bleibt dieses Paket blockiert; unabhängige Pakete dürfen weiterlaufen.

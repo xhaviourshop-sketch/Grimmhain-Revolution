@@ -4,6 +4,8 @@ Stand: 30.09.2026, Branch `feature/night-ui-expansion`. Reine Vorbereitung: kein
 
 **Nachtrag 30.09.2026 (zweite Runde):** Die Fragen 1 bis 5 dieser Vorlage sind beantwortet: 1A, 2C (ALLE Karten werden vor der Umsetzung gemeinsam überarbeitet), 3A (eingeschränkt: „Kartenschlucker im Spiel“ ist offen), 4B (Fähigkeiten bleiben vorgesehen, Details offen), 5A (Stapel bleiben beim Tod, Schild offen). Wortlaut, Herkunft und Offenes stehen im Decision Log („Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“). Die Abschnitte 5 bis 7 unten gelten damit **nicht mehr als Umsetzungsreihenfolge**: Es gibt keinen Kartentausch-Code vor der Kartenüberarbeitung. Die Arbeitsliste aller 80 Karten und die neue Fragerunde stehen in [`14-totenkarten-arbeitsliste.md`](14-totenkarten-arbeitsliste.md).
 
+**Nachtrag 30.09.2026 (Kartenschlucker-Grundregeln):** Die zweite Antwortrunde hat Tausch, Nachtaktion (Tötung und Schild kosten Stapel), Sieg (nur durch die Zehn-Finger-Aktion), Ansage (feste Nächte 3, 6, 9) und Stapel bei Rollenwechsel entschieden; siehe Decision Log „Kartenschlucker, Grundregeln“. **Überholt** sind damit in dieser Vorlage der Rollentext-Wortlaut „Bei 10 Stapeln gewinnt er sofort“ in Abschnitt 1, die Abschnitte 3 und 5 (Sieg bei 10 als Stapelschwelle) und die Antworten A bis C der Fragen 4 und 5 in Abschnitt 6. Es entsteht keine zweite Regelquelle: gültig ist nur der Decision Log.
+
 ## 1. Was ist schon verbindlich?
 
 | Regel | Quelle |
@@ -12,7 +14,7 @@ Stand: 30.09.2026, Branch `feature/night-ui-expansion`. Reine Vorbereitung: kein
 | Wiederbelebung setzt begrenzte Einsätze zurück; Einmal-Fähigkeiten gelten je Person. Ein Wiederbelebter startet frisch. | Decision Log W-01 bis W-04, RM-DR-126.3, RM-DR-141.3 |
 | Fünf-Tote-Hinweis: unabhängig von Karten, Entscheidung B vom 30.09.2026. | Decision Log „Fünf-Tote-Hinweis, Entscheidung B“ |
 | Der Kartenschlucker ist die 72. Rolle. Er ist zurückgestellt, nicht im `RoleCatalog`, im Setup nicht wählbar. Die 71 anderen Rollen sind umgesetzt. | `11-role-audit-status.md` §0, Matrix R-03 |
-| Rollentext (DE): „Erhält jedes Mal einen Stapel, wenn ein Toter seine Karte austauscht. Bei 10 Stapeln gewinnt er sofort.“ | `dossiers/solos-b.md` (Kartenschlucker) |
+| Rollentext (DE): „Erhält jedes Mal einen Stapel, wenn ein Toter seine Karte austauscht. Bei 10 Stapeln gewinnt er sofort.“ **(Sieg-Wortlaut ersetzt seit 30.09.2026: kein Automatismus, Zehn-Finger-Aktion)** | `dossiers/solos-b.md` (Kartenschlucker) |
 | Es gibt keine Kartenregeln und keine Dummy-Karten. Der Abschluss von 71 Rollen ist kein Abschluss von 72 Rollen. | `docs/ui/cockpit.md` Zeile 112, `CODE-COMPLETION-ROADMAP.md` Paket 8 |
 
 Nur Legacy, nicht verbindlich: 80 Karten in 6 Kategorien (SEGEN 14, FLUCH 13, SCHICKSAL 14, SOLO 14, WENDE 12, LOKI 13), Vergabe an Nicht-Wölfe beim Start und an Wölfe beim Tod, Tausch einmal je Karte mit Sofort-Ausspielen der Ersatzkarte, Zusatzkräfte des Kartenschluckers (Tötung ab 2 Stapeln, Schild ab 5, Ansage alle 3 Nächte). Kein Karteneffekt ist im Legacy-Code automatisiert; etwa 40 Karten setzen ein Abstimmungssystem voraus, das es nicht gibt. Belege: `docs/godot-migration/01-current-system-inventory.md` §4.6, `js/core/cards.js`, `js/core/abilities-helpers.js:5-20,119-259`, `js/core/abilities-roles-chunk.js:222-237`, `js/ui/core.js:134,190-207,241`. Das Legacy-Verhalten widerspricht dem Rollentext (`legacy-contradictory`, RM-C-071, RM-C-072).
@@ -90,7 +92,7 @@ Beispiel: Ben (Wolf) ist tot und hat eine schlechte Karte. Darf er sie gegen ein
 
 Auswirkung von A: Entspricht der alten Fassung und dem Rollentext („ein Toter“). Wölfe können dem Kartenschlucker helfen oder ihn bremsen, das ist gewollt spannend. B und C sind einfacher zu begrenzen und schützen vor einem sehr schnellen Sieg, sind aber neue Regeln, die im Text stehen müssten.
 
-### Frage 4: Was kann der Kartenschlucker außer Sammeln, und wer weiß von seinen Stapeln?
+### Frage 4 (überholt durch die zweite Antwortrunde, siehe Nachtrag): Was kann der Kartenschlucker außer Sammeln, und wer weiß von seinen Stapeln?
 
 Beispiel: Der Kartenschlucker hat 2 Stapel. In der alten Fassung darf er ab jetzt jede Nacht jemanden töten. Soll das so sein?
 
@@ -101,7 +103,7 @@ Beispiel: Der Kartenschlucker hat 2 Stapel. In der alten Fassung darf er ab jetz
 
 Auswirkung von A: Kleinste Umsetzung, greift nicht in die Todesregeln ein, die anderen Rollen bleiben unberührt. B macht ihn ab 2 Stapeln zum Nachtmörder, verlangt Tötung, Schild und Ansage im Kern und Tests gegen Hades, Nekromant, Parasit und Rudelvater. C verrät allen sofort, wer der Kartenschlucker ist (nur er hat Stapel), das ist eine Geheimhaltungsfrage.
 
-### Frage 5: Was passiert mit den Stapeln, wenn der Kartenschlucker stirbt?
+### Frage 5 (Antwort A beantwortet durch 5A, Rollenwechsel durch die zweite Antwortrunde): Was passiert mit den Stapeln, wenn der Kartenschlucker stirbt?
 
 Beispiel: Der Kartenschlucker hat 8 Stapel und wird in der Nacht getötet. Später wird er wiederbelebt. Hat er noch 8?
 
