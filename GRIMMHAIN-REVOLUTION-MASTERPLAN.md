@@ -200,7 +200,7 @@ Godot Tablet/PC
 **Ziel:** Eine echte Gruppe kann ohne Entwicklerhilfe eine vollständige Runde spielen.
 
 - [ ] 17 bis 20 priorisierte Rollen vollständig automatisieren; weitere Inhalte nur klar als manuell geführt anbieten.
-- [ ] Automatische, manuelle und szenariobasierte Rollenwahl implementieren. *(Stand 27.09.2026: Vorschlag, manuelle Rollenwahl sowie zufällige und manuelle Verteilung implementiert, automatisch getestet, grafisch geprüft; szenariobasierte Wahl fehlt.)*
+- [ ] Automatische, manuelle und szenariobasierte Rollenwahl implementieren. *(Stand 27.09.2026: Vorschlag, manuelle Rollenwahl sowie zufällige und manuelle Verteilung implementiert, automatisch getestet, grafisch geprüft; szenariobasierte Wahl fehlt. Stand 30.09.2026, PE-07: In der Startbesetzung kommt jede Rolle höchstens einmal vor, Die Gebundenen (1 bis Personenzahl) sind die einzige Ausnahme; der automatische Vorschlag ist eine feste Liste je Personenzahl von 6 bis 24 (Wolfsrollen 1/2/3/4/5 ab 6/9/13/18/22 Personen, genau ein Manipulator, Dorfrollen in fester Reihenfolge, Regelversion 0.14). Gleiche Rollen, die erst im Spiel durch Verwandlung, Erbe, Tausch, Diebstahl oder Korrektur entstehen, sind nicht neu geregelt. Details: `docs/masterplan/DECISION-LOG.md`, Abschnitt „PE-07-Umsetzung (30.09.2026)“.)*
 - [ ] Geführten Modus mit nächster Aktion, Regelgrund und Vorlesetext fertigstellen.
 - [ ] Expertenmodus mit kompaktem Ablauf und direkter Korrektur fertigstellen.
 - [ ] Rollenanzeige ohne Smartphone als sichere Tablet-Karte ermöglichen.

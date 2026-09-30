@@ -19,6 +19,8 @@ Pfade relativ zu `docs/specs/vertical-slice/`.
 - **B6**: Personen A–F, IDs 1–6, Sitzreihenfolge 1–6. A `werwolf`, B `trugbilderwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, F `dorfbewohner`. `reveal_role_on_death` = Nein.
 - **B9L**: Personen A–G, L, W, IDs 1–9, Sitzreihenfolge 1–9. A `werwolf`, B `werwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, F `dorfbewohner`, G `dorfbewohner`, L `lehrling` (ID 8), W `wolfskind` (ID 9). `reveal_role_on_death` = Nein. Nachtreihenfolge Nacht 1: W (0.9) → L (1.1) → C (1.3) → Rudel (2.0) → E (3.4) → D (4.6).
 
+**PE-07 (30.09.2026, Regelversion 0.14):** In einer Startbesetzung kommt jede Rolle höchstens einmal vor, nur Die Gebundenen dürfen mehrfach beginnen. B9L mit zwei Werwölfen und zwei Dorfbewohnern ist deshalb kein gültiger Start mehr. Gültige Fassung **B9L′** mit denselben IDs und Nachtschritten: B `blutwolf` statt des zweiten `werwolf`, G `amalia` statt des zweiten `dorfbewohner`. Szenarien, die gleiche Rollen brauchen (AS-L03: drei Kandidaten mit derselben Rolle; zwei Lehrlinge, zwei Waldhexen, zwei Schutzengel), erzeugen sie nach dem Start durch die Spielleiterkorrektur „Rolle setzen“ (Testhilfe `Fixtures.with_copies`); so entstehen gleiche Rollen auch im Spiel. In den Szenarien AS-C01 bis AS-C12 steht B statt eines zweiten `werwolf` ein `blutwolf` und statt der Dorfbewohner C bis F je eine verschiedene wirkungsarme Dorfrolle (C `dorfbewohner`, D `amalia`, E `waechter-am-tor`, F `detektiv`; in AS-C03 C `amalia`, D `waechter-am-tor`, E `wahnsinniger-kutscher`, F `detektiv`). Die Erwartungen bleiben unverändert (`godot/tests/scenarios/*.json`).
+
 ---
 
 ## 1. Kern (Stufe C)

@@ -141,6 +141,8 @@ Auch bei abgeschlossenem Offline-Funktionsstand entsteht später Code für Layou
 
 **Stand nach PE-06 (29.09.2026):** „Alle Verzauberten“ ist ein eigener Nachtschritt hinter dem Rattenfänger (Matrix N-12 AUTO, DA-60 bis DA-64, Regelversion 0.13). Neu offen: PE-07, ob tatsächlich keine Rolle außer den Gebundenen doppelt vorkommen darf (Setup-Grenzen).
 
+**Stand nach PE-07 (30.09.2026):** PE-07 ist beantwortet (Option B) und umgesetzt: In der Startbesetzung kommt jede Rolle höchstens einmal vor, Die Gebundenen (1 bis Personenzahl) sind die einzige Ausnahme; gleiche Rollen, die erst im Spiel entstehen, bleiben unverändert. Regelversion 0.14, Schema 14 (Decision Log „PE-07-Umsetzung (30.09.2026)“, DA-65 bis DA-72). Fester Rollenvorschlag für 6 bis 24 Personen, Setup-Texte DE/EN, Entwurf über der Höchstzahl wird erklärt und nicht gekürzt, Weg von „Neue Partie“ bis zum ersten Tag über echte Buttons für 6, 13 und 24 Personen, Grabräuber mit gestohlenem Rattenfänger nachgewiesen. Vollsuite 1134 Tests, 0 fehlgeschlagen. Offen bleiben die Produktfragen in `NIGHT-QUESTIONS-2026-09-30.md` und ein Layoutbefund im Rollenschritt (1024×768, zwei Fehlerzeilen, vor PE-07 vorhanden).
+
 **Stand Matrix:** Rollenname, Kurztext und neun Lexikonfelder je Rolle im Programm (`ui.role.*`, 796 Schlüssel je Sprache). Allgemeines Regelbuch (C-05) fehlt. Bedingung für Abschluss von C-04: redaktionelle Endabnahme.
 
 ## Paket 6: Technikabschluss und Übergabe an die Gestaltung

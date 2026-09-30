@@ -36,7 +36,7 @@ Stand: 27.09.2026 (Korrekturrunde DR-08) · Godot 4.7.2 · Projekt `godot/`
 **`RoleCopy`**
 - `copy_id` (stabil ab 1, nie wiederverwendet, nie als Produkttext gezeigt), `role_id`, `appears_as` (leer = noch nicht festgelegt)
 - Verteilungsschlüssel `key()`, z. B. `trugbilderwolf#2`; `role_of(key)` liefert die Rolle
-- Sichtbare Bezeichnung „Trugbilderwolf 1, 2, …“ = Position unter den Kopien der Rolle
+- Sichtbare Bezeichnung „Trugbilderwolf 1, 2, …“ = Position unter den Kopien der Rolle. Seit PE-07 gibt es beim Start höchstens eine Kopie („Trugbilderwolf 1“); das Modell führt weiter eine Liste, mehrere Kopien sind im Setup aber nicht mehr erreichbar (`above_maximum`).
 
 **Verteilungseinheiten** (`RolePoolDraft.entries()`): je Einheit `{key, role_id, appears_as}` in kanonischer Reihenfolge. Normale Rollen haben ihre Rollen-ID als Schlüssel, gleiche Kopien sind austauschbar und brauchen keine Unterscheidung. Jede Trugbilderwolf-Kopie ist eine eigene Einheit aus Rolle und gewählter Scheinrolle. Das entspricht direkt dem Core-Format `role_entries [{role_id, appears_as}]`.
 
@@ -75,7 +75,7 @@ Die Tabelle gibt die Oberflächenreihenfolge wieder: nach Fraktion gruppiert (`R
 Ein Pool ist gültig, wenn alle folgenden Bedingungen gelten:
 - Summe = Personenzahl (`too_few_roles`, `too_many_roles`)
 - keine negative Anzahl (`negative_count`) und nur bekannte IDs (`unknown_role`)
-- höchstens `copy_limit` Kopien je Rolle (`above_maximum`): Katalog-`max_copies`, bei `UNLIMITED` die Personenzahl
+- höchstens `copy_limit` Kopien je Rolle (`above_maximum`): Katalog-`max_copies`; seit PE-07 ist das 1, nur Die Gebundenen (`UNLIMITED`) dürfen bis zur Personenzahl vorkommen. Die Grenze gilt für die Startbesetzung (`StartGame`, `role_limit_exceeded`), nicht für gleiche Rollen, die erst im Spiel entstehen. `RolePoolDraft.over_limit(persons)` nennt die Rollen über der Grenze (Sicht: `over_limit`); ein solcher Entwurf wird nie still gekürzt
 - mindestens eine Rolle der Fraktion Dorf (`missing_village`)
 - mindestens eine Rolle mit `counts_as_wolf` (`missing_wolf`)
 - mindestens eine Einzelsiegrolle (`missing_solo`)
@@ -85,7 +85,7 @@ Die Einzelsiegrolle erkennt der Adapter über `RoleCatalog.faction_of(id) == Fac
 
 **Kanonischer Pool:**
 - jede Kopie einmal
-- nach Rollen-ID sortiert, z. B. `["dorfbewohner", "dorfbewohner", "manipulator", "schutzengel", "werwolf", …]`
+- nach Rollen-ID sortiert, z. B. `["das-orakel", "dorfbewohner", "manipulator", "schutzengel", "waldhexe", "werwolf"]` (6 Personen)
 - unabhängig von Eingabereihenfolge und Sprache
 
 ## Besetzungshinweise (PE-04)
@@ -101,30 +101,36 @@ Beide Hinweise können gleichzeitig erscheinen. Jede Änderung der Rollenanzahl 
 
 ## Vorschlag
 
-`RoleSuggestion.for_count(n)` ist eine Setup-Hilfe, keine Spielregel. Die Oberfläche nennt ihn „Vorschlag“ und nicht „ausgewogen“. Der Vorschlag ist deterministisch und kommt ohne Zufall aus:
-1. **Wölfe:** 6–8 → 1, 9–12 → 2, 13–17 → 3, 18–21 → 4, 22–24 → 5, in der Reihenfolge Werwolf, Spiegelwolf, Werwolf, Trugbilderwolf, Werwolf
-2. **Einzelsieg:** genau ein Manipulator
-3. **Sonderrollen des Dorfs:** (n − Wölfe − 1) / 2, höchstens 6, in der Reihenfolge Schutzengel, Das Orakel, Waldhexe, Sensenträger, Lehrling, Wolfskind
-4. **Rest:** Dorfbewohner
+`RoleSuggestion.for_count(n)` ist eine Setup-Hilfe, keine Spielregel. Die Oberfläche nennt ihn „Vorschlag“ und nicht „ausgewogen“. Seit PE-07 (30.09.2026, Regelversion 0.14) ist er eine feste Liste je Personenzahl von 6 bis 24: keine Füllung mit gleichen Rollen, jede Rolle einmal, kein Zufall, keine Uhr.
+1. **Wolfsrollen:** 1, 2, 3, 4, 5 ab 6, 9, 13, 18, 22 Personen, in der Reihenfolge Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf, Besessener Wolf.
+2. **Einzelsieg:** genau ein Manipulator (nur im Vorschlag; für manuelle Besetzungen gilt keine neue Pflicht, wohl aber die bestehende Setup-Prüfung „mindestens eine Einzelsiegrolle“).
+3. **Dorfrollen:** die ersten `n − Wolfsrollen − 1` der festen Reihenfolge Schutzengel, Orakel, Dorfbewohner, Waldhexe, Dorfwache, Sensenträger, Ritter, Lehrling, Nachtwächter, Wolfskind, Waldläufer, Doktor, Detektiv, Fährtenleser, Der Weise, Dorfchronistin, Wahnsinniger Kutscher, Traumdeuter (18 Einträge, reicht bis 24 Personen).
 
-| n | Zusammensetzung |
-|---|---|
-| 6 | 1 Werwolf, 1 Manipulator, Schutzengel, Orakel, 2 Dorfbewohner |
-| 7 | 1 Werwolf, 1 Manipulator, Schutzengel, Orakel, 3 Dorfbewohner |
-| 8 | 1 Werwolf, 1 Manipulator, Schutzengel, Orakel, Waldhexe, 3 Dorfbewohner |
-| 9 | Werwolf, Spiegelwolf, Manipulator, Schutzengel, Orakel, Waldhexe, 3 Dorfbewohner |
-| 10 | wie 9, 4 Dorfbewohner |
-| 11 | wie 9 + Sensenträger, 4 Dorfbewohner |
-| 12 | wie 11, 5 Dorfbewohner |
-| 13 | 2 Werwölfe, Spiegelwolf, Manipulator, Schutzengel, Orakel, Waldhexe, Sensenträger, 5 Dorfbewohner |
-| 14 | wie 13 + Lehrling, 5 Dorfbewohner |
-| 15 | wie 14, 6 Dorfbewohner |
-| 16 | wie 14 + Wolfskind, 6 Dorfbewohner |
-| 17 | wie 16, 7 Dorfbewohner |
-| 18 | 2 Werwölfe, Spiegelwolf, Trugbilderwolf, Manipulator, alle 6 Sonderrollen, 7 Dorfbewohner |
-| 19–21 | wie 18, 8 bis 10 Dorfbewohner |
-| 22 | 3 Werwölfe, Spiegelwolf, Trugbilderwolf, Manipulator, alle 6 Sonderrollen, 10 Dorfbewohner |
-| 23–24 | wie 22, 11 bzw. 12 Dorfbewohner |
+Rollen-IDs: Orakel = `das-orakel`, Wahnsinniger Kutscher = `wahnsinniger-kutscher` (nicht `kutscher`), Sensenträger = `sensentraeger`, Nachtwächter = `nachtwaechter`, Waldläufer = `waldlaeufer`, Fährtenleser = `faehrtenleser`, Besessener Wolf = `besessener-wolf`, Der Weise = `der-weise`; die übrigen entsprechen ihrem Namen (`test_role_suggestion::test_answer_names_match_catalog_ids`). Beispiel 6 Personen: Werwolf, Manipulator, Schutzengel, Orakel, Dorfbewohner, Waldhexe.
+
+| Personen | Wolfsrollen | Wolfsrollen (in dieser Reihenfolge) | Dorfrollen (die ersten n) |
+|---|---|---|---|
+| 6 | 1 | Werwolf | 4 |
+| 7 | 1 | Werwolf | 5 |
+| 8 | 1 | Werwolf | 6 |
+| 9 | 2 | Werwolf, Spiegelwolf | 6 |
+| 10 | 2 | Werwolf, Spiegelwolf | 7 |
+| 11 | 2 | Werwolf, Spiegelwolf | 8 |
+| 12 | 2 | Werwolf, Spiegelwolf | 9 |
+| 13 | 3 | Werwolf, Spiegelwolf, Trugbilderwolf | 9 |
+| 14 | 3 | Werwolf, Spiegelwolf, Trugbilderwolf | 10 |
+| 15 | 3 | Werwolf, Spiegelwolf, Trugbilderwolf | 11 |
+| 16 | 3 | Werwolf, Spiegelwolf, Trugbilderwolf | 12 |
+| 17 | 3 | Werwolf, Spiegelwolf, Trugbilderwolf | 13 |
+| 18 | 4 | Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf | 13 |
+| 19 | 4 | Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf | 14 |
+| 20 | 4 | Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf | 15 |
+| 21 | 4 | Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf | 16 |
+| 22 | 5 | Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf, Besessener Wolf | 16 |
+| 23 | 5 | Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf, Besessener Wolf | 17 |
+| 24 | 5 | Werwolf, Spiegelwolf, Trugbilderwolf, Blutwolf, Besessener Wolf | 18 |
+
+Ab 13 Personen enthält der Vorschlag den Trugbilderwolf. Seine Scheinrolle bleibt offen: Der Pool ist bis zur ausdrücklichen Wahl im Dialog ungültig (`missing_appearance`), es gibt keine geheime Standardwahl (DR-08). Der Vorschlag führt keine Nachtfähigkeit aus. Für jede Personenzahl von 6 bis 24 nimmt der Regelkern den Vorschlag nach Rollenbestätigung, Verteilung und Sitzordnung als Start an (`test_role_suggestion::test_every_proposal_is_a_valid_start_for_the_core`).
 
 `apply_suggestion()` übernimmt ihn direkt, wenn die Auswahl leer ist oder bereits dem Vorschlag entspricht. Weicht eine bestehende Auswahl ab, liefert es `confirmation_required`; die UI fragt dann „Vorschlag übernehmen?“, und Abbrechen ändert nichts. Danach ist alles frei änderbar.
 
@@ -184,7 +190,7 @@ Die Verteilung nutzt weder globalen Zufall noch eine Uhr. Das Ergebnis hängt nu
 Der Spielleiter legt die Scheinrolle jeder Trugbilderwolf-Kopie ausdrücklich fest. Es gibt keine Vorbelegung und keine aus Zufall oder Seed abgeleitete Scheinrolle.
 
 - **Anlegen:** Plus beim Trugbilderwolf (auch über den Vorschlag) erzeugt eine neue, noch nicht konfigurierte Kopie. Solange eine Kopie keine Scheinrolle hat, ist der Pool ungültig (`missing_appearance`) und „Rollen bestätigen“ gesperrt.
-- **Wählen:** `set_decoy_appearance(copy_id, rolle)` akzeptiert jede bekannte Rolle, die nicht als Wolf zählt, auch wenn sie nicht im Pool vorkommt. Abgelehnt werden atomar `empty_appearance`, `unknown_role`, `invalid_appearance` (Wolf) und `unknown_copy`. Mehrere Kopien dürfen dieselbe Scheinrolle haben.
+- **Wählen:** `set_decoy_appearance(copy_id, rolle)` akzeptiert jede bekannte Rolle, die nicht als Wolf zählt, auch wenn sie nicht im Pool vorkommt. Abgelehnt werden atomar `empty_appearance`, `unknown_role`, `invalid_appearance` (Wolf) und `unknown_copy`. (Mehrere Kopien mit gleicher oder verschiedener Scheinrolle waren bis PE-07 möglich und sind beim Start nicht mehr erreichbar.)
 - **Entfernen:** Minus entfernt die letzte *unkonfigurierte* Kopie ohne Rückfrage. Ist keine unkonfigurierte übrig, fragt die Oberfläche „Kopie entfernen?“ und nennt „Trugbilderwolf N“ (`confirmation_required` mit `copy_id` und `number`). Jede Kopie hat zusätzlich „Entfernen“ (`remove_decoy_copy`). Übrige Kopien behalten Kopien-ID und Scheinrolle; die sichtbaren Nummern zählen neu.
 - **Vorschlag und Zurücksetzen:** Der Vorschlag behält vorhandene Kopien samt Scheinrolle, soweit er Trugbilderwölfe vorsieht, und legt fehlende unkonfiguriert an. Zurücksetzen entfernt alle Kopien.
 - **Invalidierung:** Eine geänderte Scheinrolle hebt Rollen- und Verteilungsbestätigung auf und verwirft die Verteilung. Dieselbe Scheinrolle erneut zu wählen ändert nichts. Umbenennen, Sprachwechsel und Navigation erhalten alles.
@@ -266,11 +272,12 @@ xvfb-run -a -s "-screen 0 1920x1080x24" <godot-4.7.2> --path godot --rendering-d
 
 | Testdatei | Inhalt |
 |---|---|
-| `tests/ui/test_role_model.gd` | Katalogadapter gegen `RoleCatalog`, Darstellungsschlüssel DE/EN, Plus/Minus, Grenzen, Validierung, kanonischer Pool, Schrittsperren, Vorschlag 6 bis 24, Überschreiben nur mit Bestätigung, Personenänderungen, kein Zufall und keine Uhr in `app/setup/` |
-| `tests/ui/test_role_step.gd` | Schrittanzeige und Sperren, Doppelklick, Zurück und Navigation erhalten Daten, Verlassen-Rückfrage, Rollenzeilen mit Katalogdaten und Gruppen, Zähler und Fehler, Überschreib-Dialog, kein GameState/StartGame, Layout 1024×768/1280×800 EN/1920×1080, Scrollen, Schlüssel |
-| `tests/ui/test_distribution_model.gd` | Vollständigkeit, Reproduzierbarkeit, Personen-ID statt Reihenfolge, Neuaufbau/Sprache/Name, Neu mischen, Bestätigen, Invalidierung, manuelle Zuweisung, Moduswechsel, ausdrücklich gewählte Trugbilderwolf-Scheinrollen (auch mehrere, manuell) |
-| `tests/ui/test_decoy_model.gd` | DR-08: keine Vorbelegung, Bestätigung erst nach Wahl, Validierung, Kopien anlegen und entfernen, Vorschlag und Zurücksetzen, Kopien als Einheit beim Verteilen, Neu mischen, manuell und Tauschen, Invalidierung, Name und Sprache, kein abgeleiteter Code |
-| `tests/ui/test_decoy_step.gd` | Scheinrollen-Bereich: fehlende Wahl sichtbar, Öffnen und Schließen mit Fokusabgabe, modaler Dialog, zwei Kopien, Entfernen mit Rückfrage, Anzeige in der Verteilung, Kopienwahl im Dialog, Geheimhaltung, kein GameState/StartGame, Layout 1024×768/1280×800 DE/EN |
+| `tests/ui/test_role_model.gd` | Katalogadapter gegen `RoleCatalog`, Darstellungsschlüssel DE/EN, Plus/Minus mit Höchstzahl 1 (PE-07) und Ausnahme Die Gebundenen, Validierung, kanonischer Pool, Schrittsperren, Vorschlag 6 bis 24, Überschreiben nur mit Bestätigung, Personenänderungen, kein Zufall und keine Uhr in `app/setup/` |
+| `tests/ui/test_role_suggestion.gd` | PE-07: fester Vorschlag für 6 bis 24 Personen (Wolfsstufen und Schwellen 8→9, 12→13, 17→18, 21→22, genau ein Manipulator, Reihenfolgen, keine Dublette), Namen der Antwort gegen Katalog-IDs, jeder Vorschlag ist über das Setup ein gültiger `StartGame` |
+| `tests/ui/test_role_step.gd` | Schrittanzeige und Sperren, Doppelklick, Zurück und Navigation erhalten Daten, Verlassen-Rückfrage, Rollenzeilen mit Katalogdaten und Gruppen, Zähler und Fehler, „Nur einmal zu Spielbeginn“ (DE/EN), Entwurf über der Höchstzahl (Namen im Listenkopf, nicht gekürzt, Start gesperrt, Layout 1024×768), Überschreib-Dialog, kein GameState/StartGame, Layout 1024×768/1280×800 EN/1920×1080, Scrollen, Schlüssel |
+| `tests/ui/test_distribution_model.gd` | Vollständigkeit, Reproduzierbarkeit, Personen-ID statt Reihenfolge, Neuaufbau/Sprache/Name, Neu mischen, Bestätigen, Invalidierung, manuelle Zuweisung, Moduswechsel, ausdrücklich gewählte Trugbilderwolf-Scheinrolle, mehrere Kopien einer Rolle nur bei Den Gebundenen |
+| `tests/ui/test_decoy_model.gd` | DR-08: keine Vorbelegung, Bestätigung erst nach Wahl, Validierung, eine Kopie anlegen, konfigurieren und entfernen (zweite Kopie abgelehnt), Vorschlag und Zurücksetzen, Kopie als Einheit beim Verteilen, Neu mischen, manuell und Tauschen, Invalidierung, Name und Sprache, kein abgeleiteter Code |
+| `tests/ui/test_decoy_step.gd` | Scheinrollen-Bereich: fehlende Wahl sichtbar, Öffnen und Schließen mit Fokusabgabe, modaler Dialog, Entfernen der konfigurierten Kopie mit Rückfrage, Anzeige in der Verteilung, Kopienwahl im Dialog, Geheimhaltung, kein GameState/StartGame, Layout 1024×768/1280×800 DE/EN |
 | `tests/ui/test_setup_hints.gd` | PE-04: Kutscher-Schwelle 12/13, ohne Kutscher kein Hinweis, belegte Siegüberschneidung, Kontrollbesetzungen ohne Fehlalarm, beide Hinweise zugleich, Gültigkeit unverändert, sofortige Aktualisierung bei Rollen- und Personenänderung, DE/EN, StartGame mit denselben Rollen und Zuordnungen, keine Hinweise im Cockpit |
 | `tests/ui/test_distribution_step.gd` | verborgene Rollen, geheimer Bereich, Seed, Neu mischen, Zusammenfassung ohne Partie, manuelle Auswahl im modalen Dialog mit Fokussperre, Moduswechsel-Rückfrage, Layout, Scrollen |
 
