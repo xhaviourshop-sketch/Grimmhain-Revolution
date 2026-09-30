@@ -26,3 +26,12 @@ static func five_dead_eligible(s: GameState) -> bool:
 		if s.players[id].role_id == RoleCatalog.SELBSTMOERDER:
 			return true
 	return false
+
+
+## Eine Person, die im neuen Zustand lebt und Selbstmörder ist, war es im Zustand davor nicht (Rollenübernahme oder Korrektur).
+## Eine Wiederbelebung ohne Rollenwechsel zählt nicht.
+static func death_seeker_gained(before: GameState, after: GameState) -> bool:
+	for id: int in after.alive_ids():
+		if after.players[id].role_id == RoleCatalog.SELBSTMOERDER and (not before.players.has(id) or before.players[id].role_id != RoleCatalog.SELBSTMOERDER):
+			return true
+	return false

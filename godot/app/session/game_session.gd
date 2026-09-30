@@ -29,13 +29,14 @@ func submit(command: Command) -> CommandResult:
 	if not result.ok:
 		command_rejected.emit(result.error)
 		return result
+	var before := _state
 	_state = result.state
 	_commands.append(command)
 	_events.append_array(result.events)
 	_redo.clear()  # ein neuer Befehl verwirft zurückgenommene
 	events_applied.emit(result.events)
 	view_changed.emit(view())
-	if _observe_five_dead(_state, _commands.size() - 1):
+	if _observe_five_dead(before, _state, _commands.size() - 1):
 		cue_requested.emit(PresentationCue.FIVE_DEAD)
 	return result
 
@@ -43,12 +44,16 @@ func submit(command: Command) -> CommandResult:
 ## DI-09 (Entscheidung B): Ein Auslöseversuch ist jedes Erreichen von fünf öffentlichen Toten, nachdem die Zahl unter fünf lag.
 ## Er löst nur aus, wenn dann eine lebende Person die Rolle Selbstmörder hat; ein erfolgloser Versuch verbraucht den Hinweis nicht.
 ## Nach einer tatsächlichen Auslösung (`_five_dead_at`) gibt es keine weitere. Fünf Tote ohne vorheriges Absinken unter fünf sind
-## kein neuer Versuch (offen: Selbstmörder durch Rollenübernahme bei durchgehend fünf Toten, Decision Log DA-86).
+## kein neuer Versuch, außer eine lebende Person erhält die Rolle Selbstmörder, während schon fünf Personen tot sind
+## (Entscheidung 6B: Rollenübernahme oder Spielleiterkorrektur); sie gilt als neuer Versuch, auch wenn sie in der Nacht geschieht
+## und erst mit der Morgenauflösung öffentlich wird. Wiederbelebung ist keine Rollenübernahme.
 ## Gibt zurück, ob der Hinweis an diesem Zustand (nach Befehl `index`) ausgelöst wird; Laden, Wiederholen und Neuzeichnen melden nie.
-func _observe_five_dead(s: GameState, index: int) -> bool:
+func _observe_five_dead(before: GameState, s: GameState, index: int) -> bool:
 	if PresentationCue.dead_count(s) < PresentationCue.THRESHOLD:
 		_five_dead_armed = true
 		return false
+	if PresentationCue.death_seeker_gained(before, s):
+		_five_dead_armed = true
 	if not _five_dead_armed or not PresentationCue.five_dead_reached(s):
 		return false  # Nacht mit schon toten Personen ist kein neuer Versuch; öffentlich wird es erst am Morgen
 	_five_dead_armed = false
@@ -74,8 +79,9 @@ func _rescan_five_dead() -> void:
 		var r := RulesEngine.apply(s, _commands[i])
 		if not r.ok:
 			return
+		var before := s
 		s = r.state
-		_observe_five_dead(s, i)
+		_observe_five_dead(before, s, i)
 
 
 ## Lesbare Sicht für die Darstellung. Immer eine neue Kopie aus einfachen Werten.
@@ -233,10 +239,11 @@ func redo() -> bool:
 		command_rejected.emit(result.error)
 		return false
 	_redo.pop_back()
+	var before := _state
 	_state = result.state
 	_commands.append(command)
 	_events.append_array(result.events)
-	_observe_five_dead(_state, _commands.size() - 1)  # Wiederholen spielt nichts ab
+	_observe_five_dead(before, _state, _commands.size() - 1)  # Wiederholen spielt nichts ab
 	view_changed.emit(view())
 	state_replaced.emit()
 	return true

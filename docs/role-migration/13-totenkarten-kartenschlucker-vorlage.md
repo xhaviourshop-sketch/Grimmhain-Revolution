@@ -2,6 +2,8 @@
 
 Stand: 30.09.2026, Branch `feature/night-ui-expansion`. Reine Vorbereitung: keine Kartenmechanik ist implementiert, keine Regel ist hier neu beschlossen. Diese Datei ist keine zweite Regelquelle. Verbindliche Regeln stehen im Decision Log, offene Entscheidungen mit ihren IDs in [`08-decision-request.md`](08-decision-request.md). Antworten der ersten Fragerunde gehören nach dem Beantworten in den Decision Log, nicht hierher.
 
+**Nachtrag 30.09.2026 (zweite Runde):** Die Fragen 1 bis 5 dieser Vorlage sind beantwortet: 1A, 2C (ALLE Karten werden vor der Umsetzung gemeinsam überarbeitet), 3A (eingeschränkt: „Kartenschlucker im Spiel“ ist offen), 4B (Fähigkeiten bleiben vorgesehen, Details offen), 5A (Stapel bleiben beim Tod, Schild offen). Wortlaut, Herkunft und Offenes stehen im Decision Log („Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“). Die Abschnitte 5 bis 7 unten gelten damit **nicht mehr als Umsetzungsreihenfolge**: Es gibt keinen Kartentausch-Code vor der Kartenüberarbeitung. Die Arbeitsliste aller 80 Karten und die neue Fragerunde stehen in [`14-totenkarten-arbeitsliste.md`](14-totenkarten-arbeitsliste.md).
+
 ## 1. Was ist schon verbindlich?
 
 | Regel | Quelle |
@@ -51,7 +53,7 @@ Nicht betroffen ist alles, was nicht tot ist oder stirbt: Die Karten setzen erst
 
 Nicht in der kleinsten Umsetzung: Kartenwirkungen, Abstimmungssystem, Kartenbilder, Übersetzung der 80 Texte.
 
-## 6. Erste Fragerunde (einfaches Deutsch)
+## 6. Erste Fragerunde (einfaches Deutsch), beantwortet am 30.09.2026
 
 Jede Frage: ein Beispiel vom Spieltisch, drei Möglichkeiten, dazu immer die freie Antwort D. Die Empfehlung ist ein Vorschlag, keine Entscheidung.
 
@@ -110,6 +112,6 @@ Beispiel: Der Kartenschlucker hat 8 Stapel und wird in der Nacht getötet. Spät
 
 Auswirkung von A: Entspricht der alten Fassung. B passt zur Entscheidung „Wiederbelebte starten frisch“ (W-01 bis W-04), muss aber ausdrücklich bestätigt werden, weil Stapel ein Zähler und kein „begrenzter Einsatz“ im Sinn der Wiederbelebungsregel ist. C würde einen Toten gewinnen lassen und widerspricht dem Sinn der Tauschregel aus Frage 3.
 
-## 7. Auftrag nach den Antworten
+## 7. Auftrag nach den Antworten (überholt durch 2C, siehe Nachtrag oben)
 
 Sind die Fragen 1 bis 5 beantwortet: Umsetzungsauftrag „Totenkarten-Grundlage und Kartenschlucker“ nach Abschnitt 5, Schritte 1 bis 3 mit Test je Schritt. Vorher nötig: Freigabe der Schemaänderung (Kartenzustand je Person). Nicht Teil: Karteneffekte, Frankenstein-Bedingung, Bilder, Übersetzung.

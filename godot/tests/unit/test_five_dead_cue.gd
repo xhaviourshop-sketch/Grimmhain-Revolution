@@ -273,15 +273,109 @@ func test_undo_of_the_successful_second_crossing_allows_it_again_and_redo_stays_
 	assert_eq(r, ["five_dead", "five_dead"], "zurückgenommene Auslösung zählt nicht: das neue Erreichen löst erneut aus")
 
 
-## NICHT ENTSCHIEDEN (Decision Log, DA-86): Ein Selbstmörder durch Rollenübernahme, während schon fünf Personen tot sind und die
-## Zahl nie unter fünf fiel, löst nichts aus. Das ist das unveränderte bisherige Verhalten, keine bestätigte Regel.
-func test_open_case_role_gain_while_five_are_already_dead_is_unchanged() -> void:
+## Entscheidung 6B (Decision Log): Sind schon fünf Personen tot und erhält danach eine lebende Person die Rolle Selbstmörder
+## (Spielleiterkorrektur oder Rollenübernahme), darf der Hinweis genau einmal kommen, sofern er noch nicht ausgelöst wurde.
+func test_role_gain_while_five_are_already_dead_gives_exactly_one_hint() -> void:
 	var cues: Array = []
 	var s := _day(_roles_without_sm(), cues)
 	_kills(s, [4, 5, 6, 9, 10])
+	assert_eq(cues, [], "fünf Tote, kein Selbstmörder: kein Hinweis, nichts verbraucht")
 	assert_true(s.submit(CorrectionFixtures.gm("set_role", {"target_id": 12, "role_id": SM}, "Test")).ok, "Rolle gesetzt")
+	assert_eq(cues, ["five_dead"], "lebende Person erhält die Rolle: genau ein Hinweis")
 	_kills(s, [11])
-	assert_eq(cues, [], "ungeklärter Sonderfall: bisheriges Verhalten (kein Hinweis) bleibt")
+	assert_true(s.submit(CorrectionFixtures.gm("set_role", {"target_id": 8, "role_id": SM}, "Test")).ok, "zweite Rolle gesetzt")
+	assert_eq(cues, ["five_dead"], "weitere Befehle und Rollenwechsel lösen keinen zweiten Hinweis aus")
+	assert_false(JSON.stringify(cues).contains("selbst"), "der Hinweis trägt nur seine Kennung")
+
+
+func test_role_gain_by_a_dead_person_or_under_five_dead_gives_no_hint() -> void:
+	var cues: Array = []
+	var s := _day(_roles_without_sm(), cues)
+	_kills(s, [4, 5, 6, 9, 10])
+	assert_true(s.submit(CorrectionFixtures.gm("set_role", {"target_id": 4, "role_id": SM}, "Test")).ok, "tote Person erhält die Rolle")
+	assert_eq(cues, [], "eine tote Person mit der Rolle reicht nicht")
+	var under: Array = []
+	var t := _day(_roles_without_sm(), under)
+	_kills(t, [4, 5, 6, 9])
+	assert_true(t.submit(CorrectionFixtures.gm("set_role", {"target_id": 12, "role_id": SM}, "Test")).ok, "Rolle bei vier Toten")
+	assert_eq(under, [], "unter fünf Toten keine Auslösung durch die Rolle")
+	_kills(t, [10])
+	assert_eq(under, ["five_dead"], "das Erreichen von fünf löst danach wie gewohnt aus")
+
+
+func test_role_gain_after_save_and_load_gives_exactly_one_hint() -> void:
+	var cues: Array = []
+	var s := _day(_roles_without_sm(), cues)
+	_kills(s, [4, 5, 6, 9, 10])
+	var loaded_cues: Array = []
+	var loaded := GameSession.new()
+	loaded.cue_requested.connect(func(cue: StringName) -> void: loaded_cues.append(String(cue)))
+	assert_eq(loaded.load_text(s.save_text()), &"", "vor der Rollenübernahme gespeichert und geladen")
+	assert_eq(loaded_cues, [], "Laden meldet nichts")
+	assert_true(loaded.submit(CorrectionFixtures.gm("set_role", {"target_id": 12, "role_id": SM}, "Test")).ok, "Rolle nach dem Laden")
+	assert_eq(loaded_cues, ["five_dead"], "genau ein Hinweis nach dem Laden")
+	# Nach der Auslösung gespeichert: bleibt verbraucht.
+	var again: Array = []
+	var reloaded := GameSession.new()
+	reloaded.cue_requested.connect(func(cue: StringName) -> void: again.append(String(cue)))
+	assert_eq(reloaded.load_text(loaded.save_text()), &"", "nach der Auslösung geladen")
+	assert_true(reloaded.submit(CorrectionFixtures.gm("set_role", {"target_id": 8, "role_id": SM}, "Test")).ok, "weitere Rolle")
+	assert_eq(again, [], "bereits ausgelöster Hinweis bleibt verbraucht")
+
+
+func test_role_gain_undo_and_redo() -> void:
+	var cues: Array = []
+	var s := _day(_roles_without_sm(), cues)
+	_kills(s, [4, 5, 6, 9, 10])
+	assert_true(s.submit(CorrectionFixtures.gm("set_role", {"target_id": 12, "role_id": SM}, "Test")).ok, "Rolle")
+	assert_true(s.undo(), "zurückgenommen")
+	assert_true(s.redo(), "wiederholt")
+	assert_eq(cues, ["five_dead"], "Wiederholen meldet nichts")
+	assert_true(s.submit(CorrectionFixtures.gm("set_role", {"target_id": 8, "role_id": SM}, "Test")).ok, "weitere Rolle")
+	assert_eq(cues, ["five_dead"], "nach Wiederholen bleibt der Hinweis verbraucht")
+	var r: Array = []
+	var t := _day(_roles_without_sm(), r)
+	_kills(t, [4, 5, 6, 9, 10])
+	assert_true(t.submit(CorrectionFixtures.gm("set_role", {"target_id": 12, "role_id": SM}, "Test")).ok, "Rolle")
+	assert_true(t.undo(), "Auslösung zurückgenommen")
+	assert_true(t.submit(CorrectionFixtures.gm("set_role", {"target_id": 12, "role_id": SM}, "Test")).ok, "Rolle erneut")
+	assert_eq(r, ["five_dead", "five_dead"], "zurückgenommene Auslösung zählt nicht")
+
+
+## Rollenübernahme in der Nacht: Der Meister (3) stirbt am Tag ohne Wirkung; fünf Tote, kein lebender Selbstmörder.
+## In der Nacht erbt der Lehrling nicht (Meister ist schon tot); die Berechtigung entsteht durch eine Korrektur in der Nacht und
+## wird erst mit der Morgenauflösung öffentlich.
+func test_role_gained_during_the_night_is_announced_at_the_morning() -> void:
+	var cues: Array = []
+	var s := _day(_roles_without_sm(), cues)
+	_kills(s, [4, 5, 6, 9, 10])
+	assert_true(s.decide_execution(-1).ok, "keine Hinrichtung")
+	assert_true(s.end_day().ok, "Tag beendet")
+	assert_true(s.start_night().ok, "Nacht 2")
+	assert_true(s.submit(CorrectionFixtures.gm("set_role", {"target_id": 12, "role_id": SM}, "Test")).ok, "Rolle in der Nacht")
+	assert_eq(cues, [], "in der Nacht nichts, nichts an geheimen Änderungen öffentlich")
+	for guard: int in 12:
+		var next: Dictionary = s.cockpit_view()["next"]
+		if str(next["kind"]) == "prompt":
+			assert_true(s.answer_targets([] if int(next["min"]) == 0 else [int(next["allowed_ids"][0])]).ok, "Schritt beantwortet")
+		elif str(next["kind"]) == "begin_step":
+			assert_true(s.begin_next_step().ok, "Schritt begonnen")
+		else:
+			break
+	assert_eq(cues, [], "bis zum Nachtende nichts")
+	assert_true(s.end_night().ok, "Morgen")
+	assert_eq(cues, ["five_dead"], "der Hinweis kommt mit der Morgenauflösung, genau einmal")
+
+
+## NICHT ENTSCHIEDEN (Decision Log, Entscheidung 6B): Wird ein toter Selbstmörder wiederbelebt und bleiben dabei fünf oder mehr
+## Personen tot, ist das keine Rollenübernahme und kein neues Erreichen der Schwelle. Das ist das bisherige Verhalten, keine Regel.
+func test_open_case_reviving_the_death_seeker_while_five_stay_dead_is_unchanged() -> void:
+	var cues: Array = []
+	var s := _day(_roles(), cues)
+	_kills(s, [3, 4, 5, 6, 9, 10])
+	assert_eq(cues, [], "sechs Tote, Selbstmörder tot: kein Hinweis")
+	_revive(s, 3)
+	assert_eq(cues, [], "ungeklärter Sonderfall: Wiederbelebung bei weiter fünf Toten löst nichts aus")
 
 
 func test_no_hint_on_load_undo_redo_or_repeated_rendering() -> void:
