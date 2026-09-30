@@ -1,6 +1,6 @@
 # Totenkarten: Arbeitsliste zur vollständigen Überarbeitung
 
-Stand: 30.09.2026 (fünfte Runde), Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitte „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“ „Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)“ und „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten (dritte Antwortrunde, 30.09.2026)“ und „Rückkehrkarten: Zweites Leben, Wiedergeburt, Befreiung (vierte Antwortrunde, 30.09.2026)“ und „Rückkehr- und Rollenkarten: Phoenix, Geheimrat, Neuer Anfang, Rollenroulette (fünfte Antwortrunde, 30.09.2026)“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
+Stand: 30.09.2026 (sechste Runde), Branch `feature/night-ui-expansion`. **Arbeitsmaterial**, keine Regelquelle: Es ersetzt den Decision Log nicht und beschließt nichts. Verbindliche Entscheidungen stehen in [`../masterplan/DECISION-LOG.md`](../masterplan/DECISION-LOG.md) (Abschnitte „Totenkarten und Kartenschlucker, Entscheidungen vom 30.09.2026“ „Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)“ und „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten (dritte Antwortrunde, 30.09.2026)“ und „Rückkehrkarten: Zweites Leben, Wiedergeburt, Befreiung (vierte Antwortrunde, 30.09.2026)“ und „Rückkehr- und Rollenkarten: Phoenix, Geheimrat, Neuer Anfang, Rollenroulette (fünfte Antwortrunde, 30.09.2026)“ und „Phoenix-Tagesende, Geheimrat (Wolf), Heilende Hand, Blutpakt, Spiegelschutz (sechste Antwortrunde, 30.09.2026)“). Die frühere Vorlage [`13-totenkarten-kartenschlucker-vorlage.md`](13-totenkarten-kartenschlucker-vorlage.md) bleibt die Entscheidungsvorlage. Es ist **keine Kartenmechanik, keine Kartenverteilung, kein Kartentausch und kein Kartenschlucker implementiert**, und es gibt keine vorläufigen Dummy-Regeln.
 
 ## 1. Kennzeichnung
 
@@ -41,7 +41,8 @@ Ausführlich mit Herkunft im Decision Log. Hier nur die Kurzfassung, damit die F
 | Kartenfenster (dritte Runde) | Tote werden zweimal am Tag gefragt: (1) Tagesbeginn vor der Diskussion, (2) Tagesende nach Hinrichtung und Todeseffekten (dann auch die gerade Verstorbenen). Originalkarte einsetzen, tauschen (nur bei lebendem Kartenschlucker) oder vorerst nichts tun; Originalkarte darf aufbewahrt werden. Kein Spielen oder Tauschen außerhalb der Fenster. | KS-22 bis KS-26. |
 | Wiederbelebungskarten (dritte Runde) | Nur in Partien, die von Beginn an Wiederbelebungsrunden sind (bestehende Ableitung, keine neue Option). Bleiben im Kartenbestand und nutzbar, auch wenn die Wiederbelebungsrollen sterben oder die Rolle verlieren; keine Prüfung „passende Rolle lebt“; verwandeln keine normale Partie in eine Wiederbelebungsrunde. | Welche Karten das sind (KS-16, KS-17); Ablauf der Rückkehr (Abschnitt 10, Frage 4, KS-18). |
 | Rückkehrkarten (vierte Runde) | `segen_08`: Vergabe nur bei mindestens zwei ANDEREN toten Personen derselben Fraktion; bis zu drei passende Namen zur Auswahl (bei mehr als drei zieht der gespeicherte Generator, Auswahl wird gespeichert); Kartenbesitzer tippt einen Namen; Fraktionsinfo für den Besitzer gewollt, nicht automatisch öffentlich. `wende_04`: die SL wählt die wiederzubelebende Person und darf dabei auch die Person wählen, die die Karte spielt. `wende_07`: Kartenspielerin wählt; Tod erst nach dem einmaligen Einsatz, sonst am Leben, keine Frist. Rückkehrrolle: Rolle vom Todeszeitpunkt, doppelte Rolle zulässig. | Einsatzbegriff bei `wende_07`, Vorauswahl-Zeitpunkt und Ersatz ungültiger Ziele bei `segen_08`, Rückkehr-Ablauf (KS-38 bis KS-40). Nicht vollständig spezifiziert. |
-| Phoenix, Geheimrat, Neuer Anfang, Rollenroulette (fünfte Runde) | `loki_10`: zwei sichtbare App-Würfel (Anzahl 1 bis 6; Lebensdauer in Tagen mit Seiten 1, 1, 2, 2, 3, 3), Tag des Ausspielens zählt als erster Tag, Tod am Ende des Tages; zufällige andere Tote, die spielende Person ausgeschlossen; weniger Tote: alle anderen, kein Neuwurf. `wende_12` Dorf: jede Frage, wahrheitsgemäße Antwort. `schicksal_08`: Kartenspielerin wählt zwei Lebende, SL bestimmt Rollen der bisherigen Fraktion. `loki_06`: zwei zufällige Lebende derselben Fraktion (Dorf oder Werwölfe, keine Einzelsiegrollen) tauschen still. Neue Rolle frisch, persönliche Zustände und bestätigte Sonderregeln bleiben, nur für diese zwei Karten. | Tagesende gegen Fristablauf (KS-41); ohne andere Tote, Wiederbelebung in der Frist, Rückkehrrolle, Sichtbarkeit (KS-46 bis KS-48); Wolfsvariante von `wende_12` (KS-42, KS-35); KS-36, KS-37. Nicht vollständig spezifiziert. |
+| Phoenix, Geheimrat, Neuer Anfang, Rollenroulette (fünfte Runde) | `loki_10`: zwei sichtbare App-Würfel (Anzahl 1 bis 6; Lebensdauer in Tagen mit Seiten 1, 1, 2, 2, 3, 3), Tag des Ausspielens zählt als erster Tag, Tod am Ende des Tages; zufällige andere Tote, die spielende Person ausgeschlossen; weniger Tote: alle anderen, kein Neuwurf. `wende_12` Dorf: jede Frage, wahrheitsgemäße Antwort. `schicksal_08`: Kartenspielerin wählt zwei Lebende, SL bestimmt Rollen der bisherigen Fraktion. `loki_06`: zwei zufällige Lebende derselben Fraktion (Dorf oder Werwölfe, keine Einzelsiegrollen) tauschen still. Neue Rolle frisch, persönliche Zustände und bestätigte Sonderregeln bleiben, nur für diese zwei Karten. | Tagesende bestätigt (sechste Runde, siehe nächste Zeile); Sonderfall Ausspielen im zweiten Fenster mit Lebensdauer 1 (KS-55); ohne andere Tote, Wiederbelebung in der Frist, Rückkehrrolle, Sichtbarkeit (KS-46 bis KS-48); Wolfsvariante von `wende_12`: Aufrufreihenfolge, Bezugsnacht, Öffentlichkeit (KS-35); KS-36, KS-37. Nicht vollständig spezifiziert. |
+| Phoenix-Tagesende, Geheimrat (Wolf), Heilende Hand, Blutpakt, Spiegelschutz (sechste Runde) | `loki_10`: Tagesende in der Reihenfolge Hinrichtung, Todeseffekte, Fristablauf der Rückkehrer, zweites Kartenfenster; die durch Fristablauf Verstorbenen nutzen ihre neue Karte im zweiten Fenster. `wende_12` Wolf: Hinweise nur stumm (Gesten, Zeigen), kein leises Sprechen, keine Tablet-Funktion. `segen_01` Dorf: Angriff verhindert plus persönlicher Schild nach den bestätigten Regeln (verhindert auch Hinrichtung, höchstens einer je Person, keine Nacht-Unsterblichkeit). `segen_07` Dorf: Spielleitung entscheidet nach Ermessen über null bis zwei aufgedeckte Wölfe, keine feste Zuordnung, kein Zufall. `segen_11` Dorf: gespeicherter Generator zieht einen lebenden Wolf als Ersatzopfer. | Phoenix-Sonderfall (KS-55); Reihenfolge der Schutzwirkungen, Schildplatz (KS-27); Öffentlichkeit und Wolfsauswahl bei Blutpakt (KS-50); Wolfsvarianten (KS-49 bis KS-51); Bezugszeitpunkt (KS-56). Nicht vollständig spezifiziert. |
 | 5A + zweite Runde | Stapel gehören zur Person. Neuer Träger der Rolle bei null; beim bisherigen Träger ruhen sie und werden bei Rückerhalt wieder nutzbar. Tod: Stapel bleiben, tot sammelt und gewinnt er nicht; nach Wiederbelebung weiter mit dem Stand. | Schild bei Tod und Rollenverlust (KS-07). |
 | 6B | Fünf-Tote-Hinweis auch bei später erhaltener Selbstmörder-Rolle, wenn schon fünf tot sind (einmalig). Umgesetzt. | Wiederbelebungsfall bleibt offen (kein Beschluss). |
 
@@ -55,7 +56,7 @@ Gelten für viele Karten und werden bei den Karten mit ihrer ID (ÜB-n) verwiese
 |---|---|---|
 | ÜB-1 | Kartentext je Person | Unterschiedliche Kartentexte für Dorf, Wölfe und Einzelsiegrollen sind mit 1A (jede Person bekommt beim Tod eine Karte) vereinbar. Offen: Welche Karten kommen für welche Rolle oder Fraktion in Frage (Legacy: Solo-Karten fast nur für Solo, Kategorien gewichtet), und nach welcher Rolle, wenn sie sich zwischen Tod und Spielen ändert? Nicht entschieden. |
 | ÜB-2 | Abstimmungen am Tisch | Bestätigt: keine digitale Abstimmung. Offen je Karte: welches Ergebnis die SL einträgt (Person, Rangfolge, ja/nein), damit die App die Wirkung darstellen kann. |
-| ÜB-3 | Bezugszeitpunkt | „Nächste Nacht“, „nächster Lynch“, „folgende Nacht“: ab wann zählt es, wenn eine Karte am Tag, in der Nacht oder in der Morgenauflösung gespielt wird? Wie werden „Tage“ und „Runden“ gezählt? |
+| ÜB-3 | Bezugszeitpunkt | „Nächste Nacht“, „nächster Lynch“, „folgende Nacht“: ab wann zählt es, wenn eine Karte am Tag, in der Nacht oder in der Morgenauflösung gespielt wird? Wie werden „Tage“ und „Runden“ gezählt? **Gestellt in Abschnitt 16 (KS-56), unbeantwortet.** |
 | ÜB-4 | Zufall | Projektregel: Zufall nur über den gespeicherten Generator. „Zufällig“ auf einer Karte kann Generator, echten Würfel am Tisch oder SL-Wahl bedeuten. Je Karte festlegen. |
 | ÜB-5 | Kartenbedingung und Wiederbelebung | Die vier deathCardRequirements-Karten und die Kutscher/Frankenstein-Bedingung RM-DR-141.4 folgen mit der Kartenüberarbeitung (W-01 = A). Offen: Bedingung behalten, streichen oder ersetzen. **Beantwortet (dritte Runde, 30.09.2026):** Die Prüfung „passende Rolle lebt“ entfällt; Wiederbelebungskarten gehören nur zu Partien, die von Beginn an Wiederbelebungsrunden sind. |
 | ÜB-6 | Kartenbestand | Legacy sortiert bereits vergebene Karten aus. Offen: Darf dieselbe Karte mehrfach vorkommen? Was, wenn der Vorrat leer ist? Neue Karte bei erneutem Tod (1A). |
@@ -128,7 +129,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Würfeln am Tisch (echter Würfel) oder Generator.
 - **[V] Eingabe oder Bestätigung der SL:** Würfelergebnisse (falls am Tisch gewürfelt).
 - **Unklarheiten und Rolleninteraktionen:** Kartenbedingung. Wiederbelebte Personen sterben nach Ablauf erneut: Zeitzähler in Runden (Runde = ?). Zufall (Würfel am Tisch gegen gespeicherten Generator, ÜB-4). Sehr große Wirkung auf Siegprüfung.
-- **Status:** noch nicht überarbeitet. Kartenbedingung entfällt als Prüfung (Decision Log, dritte Runde); Würfel und „Runde“ offen (KS-19) In Fragerunde 4 (Abschnitt 12) vorgelegt: KS-29 (Runde); Rest KS-34. **Fünfte Runde:** teilweise bestätigt (Würfel, Anzahl, Lebensdauer in Tagen, Auswahl, Abschnitt 13); nicht vollständig spezifiziert, offen: Tagesende gegen Fristablauf (KS-41), ohne andere Tote und Wiederbelebung in der Frist (KS-46, KS-47), Rückkehrrolle und Sichtbarkeit (KS-48); nicht implementiert.
+- **Status:** noch nicht überarbeitet. Kartenbedingung entfällt als Prüfung (Decision Log, dritte Runde); Würfel und „Runde“ offen (KS-19) In Fragerunde 4 (Abschnitt 12) vorgelegt: KS-29 (Runde); Rest KS-34. **Fünfte Runde:** teilweise bestätigt (Würfel, Anzahl, Lebensdauer in Tagen, Auswahl, Abschnitt 13); nicht vollständig spezifiziert, offen: Tagesende gegen Fristablauf (KS-41), ohne andere Tote und Wiederbelebung in der Frist (KS-46, KS-47), Rückkehrrolle und Sichtbarkeit (KS-48); nicht implementiert. **Sechste Runde:** Tagesende bestätigt (Fristablauf nach Hinrichtung und Todeseffekten, vor dem zweiten Fenster, Abschnitt 15); Sonderfall Ausspielen im zweiten Fenster mit Lebensdauer 1 gestellt als KS-55; weiter offen KS-46 bis KS-48; nicht vollständig spezifiziert, nicht implementiert.
 
 #### `wende_12` Geheimrat (WENDE)
 
@@ -138,7 +139,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** W: Tote gibt dem Rudel Hinweise (stumm?). D: Frage an die SL.
 - **[V] Eingabe oder Bestätigung der SL:** D: Antwort der SL.
 - **Unklarheiten und Rolleninteraktionen:** D-Text enthält eine Szenariobedingung („nur in Spielen mit Wiederbelebung“), ohne dass die Karte eine deathCardRequirements-Angabe hat. Geheimhaltung der Antwort. ÜB-5.
-- **Status:** noch nicht überarbeitet. Der Dorf-Zusatz „nur in Spielen mit Wiederbelebungs-Szenarien“ entspricht dem Grundsatz der dritten Runde (Wiederbelebungskarten nur in Wiederbelebungsrunden); welche Karten dazugehören, ist offen (KS-16, KS-17) In Fragerunde 4 (Abschnitt 12) vorgelegt: KS-30 (Umfang der Dorf-Frage); Rest KS-35. **Fünfte Runde:** Dorf-Text teilweise bestätigt (jede Frage, wahrheitsgemäße Antwort, Abschnitt 13); Wolf-Text nicht entschieden (KS-42, KS-35); Öffentlichkeit nicht festgelegt; nicht vollständig spezifiziert, nicht implementiert.
+- **Status:** noch nicht überarbeitet. Der Dorf-Zusatz „nur in Spielen mit Wiederbelebungs-Szenarien“ entspricht dem Grundsatz der dritten Runde (Wiederbelebungskarten nur in Wiederbelebungsrunden); welche Karten dazugehören, ist offen (KS-16, KS-17) In Fragerunde 4 (Abschnitt 12) vorgelegt: KS-30 (Umfang der Dorf-Frage); Rest KS-35. **Fünfte Runde:** Dorf-Text teilweise bestätigt (jede Frage, wahrheitsgemäße Antwort, Abschnitt 13); Wolf-Text nicht entschieden (KS-42, KS-35); Öffentlichkeit nicht festgelegt; nicht vollständig spezifiziert, nicht implementiert. **Sechste Runde:** Wolf-Text teilweise bestätigt (Hinweise nur stumm durch Gesten und Zeigen, kein leises Sprechen, keine Tablet-Funktion, Abschnitt 15); Aufrufreihenfolge, Bezugsnacht, Öffentlichkeit weiter offen (KS-35, KS-56); nicht vollständig spezifiziert, nicht implementiert.
 
 #### `schicksal_08` Neuer Anfang (SCHICKSAL)
 
@@ -170,7 +171,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine.
 - **[V] Eingabe oder Bestätigung der SL:** Keine, wenn der Generator zieht.
 - **Unklarheiten und Rolleninteraktionen:** Umleitung und Schild in der Todespipeline (Reihenfolge mit Rudelvater, Parasit, Schattenwanderer, Nekromant, Hades). „Nächstes Mal“ ohne Ablauf. ÜB-3, ÜB-4.
-- **Status:** noch nicht überarbeitet. In Fragerunde 5 (Abschnitt 14) vorgelegt: KS-43 (Schild der Dorfvariante); Rest KS-49.
+- **Status:** noch nicht überarbeitet. In Fragerunde 5 (Abschnitt 14) vorgelegt: KS-43 (Schild der Dorfvariante); Rest KS-49. **Sechste Runde:** Dorf-Text teilweise bestätigt (Angriff verhindert, persönlicher Schild nach den bestätigten Regeln, Abschnitt 15); Reihenfolge der Schutzwirkungen, Schildplatz (KS-27), Wolf-Text (KS-49) offen; nicht vollständig spezifiziert, nicht implementiert.
 
 #### `segen_07` Blutpakt (SEGEN)
 
@@ -180,7 +181,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** D: SL nennt öffentlich 0 bis 2 Wolfsnamen.
 - **[V] Eingabe oder Bestätigung der SL:** D: SL wählt, welche Wölfe.
 - **Unklarheiten und Rolleninteraktionen:** D: öffentliche Enthüllung von Wölfen, Regeln zu „0 bis 2“ nicht festgelegt. W: „Sonderfähigkeit“ in der Todespipeline. Geheimhaltung.
-- **Status:** noch nicht überarbeitet. In Fragerunde 5 (Abschnitt 14) vorgelegt: KS-44 (Zahl der aufgedeckten Wölfe); Rest KS-50.
+- **Status:** noch nicht überarbeitet. In Fragerunde 5 (Abschnitt 14) vorgelegt: KS-44 (Zahl der aufgedeckten Wölfe); Rest KS-50. **Sechste Runde:** Dorf-Text teilweise bestätigt (Spielleitung entscheidet nach Ermessen über null bis zwei Wölfe, Abschnitt 15); Öffentlichkeit, Wolfsauswahl, Wolf-Text offen (KS-50); nicht vollständig spezifiziert, nicht implementiert.
 
 #### `segen_11` Spiegelschutz (SEGEN)
 
@@ -190,7 +191,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine.
 - **[V] Eingabe oder Bestätigung der SL:** Keine bei automatischer Ersetzung; sonst Wahl.
 - **Unklarheiten und Rolleninteraktionen:** Ersetzen des Opfers in der Todespipeline; „nominierende Person“ ist im Verlauf nicht immer bekannt (Nominierung hat Nominierenden). „Einer von ihnen“: wer (Generator oder SL). ÜB-3, ÜB-4.
-- **Status:** noch nicht überarbeitet. In Fragerunde 5 (Abschnitt 14) vorgelegt: KS-45 (Wer bestimmt den Wolf); Rest KS-51.
+- **Status:** noch nicht überarbeitet. In Fragerunde 5 (Abschnitt 14) vorgelegt: KS-45 (Wer bestimmt den Wolf); Rest KS-51. **Sechste Runde:** Dorf-Text teilweise bestätigt (gespeicherter Generator zieht einen lebenden Wolf, Abschnitt 15); weitere Wechselwirkungen, Wolf-Text offen (KS-51, KS-56); nicht vollständig spezifiziert, nicht implementiert.
 
 #### `wende_02` Verzweiflungsschrei (WENDE)
 
@@ -200,7 +201,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine.
 - **[V] Eingabe oder Bestätigung der SL:** Zielperson.
 - **Unklarheiten und Rolleninteraktionen:** Schutzdauer in Tagen/Nächten gezählt (Zählbeginn ÜB-3). Verhältnis zu Schutzrollen und Ketten.
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet In Fragerunde 6 (Abschnitt 16) vorgelegt: KS-52 (verhinderte Hinrichtung); Rest KS-57, Bezug KS-56.
 
 #### `wende_05` Notanker (WENDE)
 
@@ -210,7 +211,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine, SL merkt sich das Datum.
 - **[V] Eingabe oder Bestätigung der SL:** Keine.
 - **Unklarheiten und Rolleninteraktionen:** Verzögerter Tod (Zustand mit Zeitpunkt): neue Regelkategorie. Zwischenzeit: gilt die Person als lebend? Siegprüfung, Nachtaktionen, Abstimmung. Nicht ausschließbar bei Ketten.
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet In Fragerunde 6 (Abschnitt 16) vorgelegt: KS-53 (Zustand während des Aufschubs); Rest KS-58, Bezug KS-56.
 
 #### `wende_11` Schicksalswende (WENDE)
 
@@ -220,7 +221,7 @@ Je Karte: **[R]** Regeltext unverändert, Quelle, **[V]** mechanische Wirkung, r
 - **[V] Handlung in der realen Welt:** Keine.
 - **[V] Eingabe oder Bestätigung der SL:** W: Zielperson und Wolf. D: Keine, wenn der Generator zieht.
 - **Unklarheiten und Rolleninteraktionen:** W: Rolle Trugbilderwolf und Verwandlungsregel vorhanden? (Rollenübernahme). D: Umleitung des Urteils verrät die Fraktion. ÜB-4.
-- **Status:** noch nicht überarbeitet
+- **Status:** noch nicht überarbeitet In Fragerunde 6 (Abschnitt 16) vorgelegt: KS-54 (Umfang der verliehenen Fähigkeit); Rest KS-59, Bezug KS-56.
 
 #### `fluch_05` Gebrochener Schild (FLUCH)
 
@@ -1033,7 +1034,7 @@ Noch nicht gestellt. Nichts davon ist beschlossen. Reihenfolge nach Abhängigkei
 | KS-18 | Wiederbelebung durch Karten (`segen_08`, `wende_04`, `wende_07`, `loki_10`): Gelten die Wiederbelebungsregeln W-01 bis W-04 (frischer Start), und was heißt „ursprüngliche Fähigkeit“ bei Einmalfähigkeiten? (Gruppe 1) **Gestellt in Abschnitt 10, Frage 4.** **Vierte Runde:** Rolle vom Todeszeitpunkt bestätigt, doppelte Rolle zulässig, bestehende Zurücksetz-Regeln gelten; „ursprüngliche Fähigkeit“ bei Einmalfähigkeiten folgt daraus. Zeitpunkt und Sichtbarkeit der Rückkehr offen (KS-40). |
 | KS-19 | `wende_07`: Was ist eine „halbe Fähigkeit“ (auch bei Rollen ohne aktive Fähigkeit)? `loki_10`: Würfel am Tisch oder Generator, was ist eine „Runde“? (Gruppe 1) **`wende_07` gestellt in Abschnitt 10, Fragen 3 und 5** (der Text erklärt „halb“ selbst als einmalig). **Vierte Runde:** `wende_07` bestätigt (Tod erst nach dem einmaligen Einsatz, Rollen ohne aktive Fähigkeit nicht ausgeschlossen); Definition des Einsatzes offen (KS-39). `loki_10`: als KS-29 (Runde) gestellt, Würfelquelle KS-34. |
 | KS-20 | Rollenwechsel durch Karten (`schicksal_08`, `loki_06`): Welche Rollen sind erlaubt, folgt der Zustand der Person oder der Rolle? Wechsel von oder zum Kartenschlucker folgt der Stapelregel (entschieden); Wechsel zum Selbstmörder berührt den Fünf-Tote-Hinweis (6B). (Gruppe 1) **Vierte Runde gestellt:** KS-32 (Fraktion des Paars bei `loki_06`), KS-33 (Zustand bei Rollenwechsel durch Karte), Rest KS-36 und KS-37. |
-| KS-21 | Schild: verhinderte Hinrichtung (Tag endet ohne Opfer oder neue Abstimmung) und Reihenfolge mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen. (Gruppe 2) |
+| KS-21 | Schild: verhinderte Hinrichtung (Tag endet ohne Opfer oder neue Abstimmung) und Reihenfolge mit Nekromant-, Hades-, Parasit- und Rudelvater-Wirkungen. (Gruppe 2) **Sechste Runde:** Teilfrage für `wende_02` gestellt als KS-52; Regel für den Schild bleibt offen. |
 | KS-22 | Kartenfenster: Reihenfolge mehrerer Toter innerhalb eines Fensters. (Neu, dritte Runde) |
 | KS-23 | Kartenfenster: Neue Todesfälle oder Wiederbelebungen durch eine gerade gespielte Karte; darf eine dabei Wiederbelebte im selben Fenster teilnehmen? (Neu) |
 | KS-24 | Kartenfenster und Siegprüfung: Verhältnis zur bereits anstehenden Siegprüfung, besonders am Tagesende. (Neu) |
@@ -1363,3 +1364,103 @@ Empfehlung A: Die Karte heißt „Schutz“ für das Dorf, also darf nicht das R
 | KS-51 | `segen_11` | Wolf-Text: nominierende Person vom Tisch übernehmen, kein Lynch. „Folgenacht“ und „nächster Tag“ (ÜB-3). „Dorfbewohner“ gegen Nicht-Wolf. |
 
 **Reihenfolge der nächsten Runden (Vorschlag, [V]):** (1) Restfragen der Gruppe 1: KS-38 bis KS-40, KS-46 bis KS-48, KS-35 bis KS-37. (2) Gruppe 2, nächste drei Karten in Listenreihenfolge: `wende_02` Verzweiflungsschrei, `wende_05` Notanker, `wende_11` Schicksalswende. (3) Danach `fluch_05`, `fluch_08`, `fluch_12`, `loki_12`, anschließend Gruppe 3.
+
+## 15. Bestätigte Regeln der sechsten Antwortrunde (30.09.2026)
+
+Antworten des Product Owners auf die Fragen aus Abschnitt 14 (KS-41 bis KS-45). Verbindlich ist der Decision Log („Phoenix-Tagesende, Geheimrat (Wolf), Heilende Hand, Blutpakt, Spiegelschutz (sechste Antwortrunde, 30.09.2026)“); dieser Abschnitt ist die Arbeitsfassung. **[R]** bleibt der Originaltext in Abschnitt 6, **[B]** ist bestätigt, **[V]** in Abschnitt 14 ist der frühere Vorschlag und dort als ersetzt oder erfüllt vermerkt. Die Antworten zu `segen_01`, `segen_07` und `segen_11` gelten nur für die Dorfvarianten; die Wolfsvarianten bleiben offen. Nichts davon ist implementiert.
+
+| Karte | [B] Bestätigt | Weiter offen |
+|---|---|---|
+| `loki_10` Phoenix, Tagesende | Reihenfolge am Tagesende: (1) Hinrichtung, (2) dadurch ausgelöste Todeseffekte, (3) Phoenix-Rückkehrer sterben, deren Lebensdauer an diesem Tag endet, (4) zweites Kartenfenster. Die durch den Fristablauf gerade Verstorbenen dürfen ihre neue Totenreichkarte im zweiten Fenster bereits nutzen. Gilt nur für den regulären Fristablauf. | Sonderfall: Phoenix wird erst im zweiten Fenster gespielt, Lebensdauer ein Tag (gestellt als KS-55, nicht als Tod oder Zusatztag vorentschieden). KS-46 bis KS-48. |
+| `wende_12` Geheimrat (Wolf) | Hinweise an das Rudel nur stumm, durch Gesten und Zeigen. Kein leises Sprechen. Keine zusätzliche Tablet-Kommunikationsfunktion. | Aufrufreihenfolge, Bezugsnacht, Öffentlichkeit, Szenariobedingung (KS-35; Bezugsnacht berührt KS-56). |
+| `segen_01` Heilende Hand (Dorf) | Der auslösende Wolfsangriff wird verhindert. Zusätzlich erhält die betroffene Person einen persönlichen Schild nach den bestätigten Schildregeln: verhindert einen späteren weiteren Tod, auch Hinrichtung oder schutzignorierenden Rollenangriff; höchstens ein solcher Schild gleichzeitig je Person; keine Unsterblichkeit für die ganze Nacht; Spielleiterkorrektur bleibt möglich. | Reihenfolge gegenüber vorhandenen Schutzwirkungen (nicht ergänzt); Platz zusammen mit dem gekauften Schild (KS-27); Wolf-Text (KS-49); Dauer „nächstes Mal“ (KS-56). |
+| `segen_07` Blutpakt (Dorf) | Die Spielleitung bestimmt nach Ermessen, ob null, ein oder zwei Wölfe aufgedeckt werden. Keine feste Zuordnung nach Opferrolle, keine Zufallszahl. | Öffentlich oder privat; wer wählt die betroffenen Wölfe; kein Opfer; Wolf-Text (KS-50). |
+| `segen_11` Spiegelschutz (Dorf) | Die App bestimmt zufällig einen lebenden Wolf als Ersatzopfer, über den gespeicherten Generator. Keine Wahl durch Spielleitung oder Rudel. | Weitere Schutz- und Umleitungswechselwirkungen; welche Wölfe zählen; Wolf-Text (KS-51); „Folgenacht“ (KS-56). |
+
+Status der fünf Karten: **teilweise bestätigt, nicht vollständig spezifiziert, nicht implementiert.**
+
+### Ausgang der Fragen aus Abschnitt 14
+
+| Frage | Ausgang |
+|---|---|
+| KS-41 (`loki_10`, Tagesende) | Inhaltlich Option B: Tod aus Fristablauf nach Hinrichtung und Todeseffekten, vor dem zweiten Fenster; neue Karte dort nutzbar. Der Product Owner nannte den Ablauf „Reihenfolge A“; die Beschriftung passt nicht zu den Buchstaben in Abschnitt 14 (dort ist A der Tod nach dem Fenster), maßgeblich ist der beschriebene Ablauf. Empfehlung A ersetzt. Der in Option B genannte Sonderfall (Phoenix im zweiten Fenster, Lebensdauer 1, wirkt sofort) ist ausdrücklich nicht mitentschieden: KS-55. |
+| KS-42 (`wende_12`, Wolf) | Option A: nur stumm. Leises Sprechen (B) ausgeschlossen, Tablet (C) nicht gewählt. |
+| KS-43 (`segen_01`, Schild) | Im Kern Option A (Schild nach den bestätigten Regeln, höchstens einer je Person), ergänzt um Verhinderung des auslösenden Angriffs und „keine Unsterblichkeit für die Nacht“. B und C nicht gewählt. |
+| KS-44 (`segen_07`, Zahl) | Im Kern Option A (Spielleitung nach Ermessen, null bis zwei). B (feste Einteilung) und C (Zufallszahl) nicht gewählt. Wer die Wölfe wählt, bleibt offen. |
+| KS-45 (`segen_11`, Ersatzopfer) | Option A: gespeicherter Generator zieht einen lebenden Wolf. B und C nicht gewählt. |
+
+## 16. Sechste Fragerunde: `wende_02`, `wende_05`, `wende_11` und zwei Klärungen (Stand 30.09.2026)
+
+Originaltexte gelesen in `js/core/cards.js`. Als Nächstes folgen in Gruppe 2 (Schutz, Umleitung und Todesketten) in Listenreihenfolge `wende_02`, `wende_05`, `wende_11`. Fünf Fragen: KS-52 bis KS-54 betreffen die drei Karten, KS-55 den offenen Phoenix-Sonderfall, KS-56 den Bezugszeitpunkt „nächste“ (ÜB-3, betrifft mehrere Karten). Es gelten die bestätigten Regeln (Kartenfenster, Schild, Tagesend-Reihenfolge, Rückkehrkarten). Alle Empfehlungen sind **[V]**, keine Entscheidungen. „Gelyncht“ im Originaltext meint die Hinrichtung. Nichts ist implementiert.
+
+### Klärung zu `loki_10` Phoenix: Ausspielen im letzten Kartenfenster
+
+**KS-55: Was geschieht, wenn Phoenix im zweiten Kartenfenster gespielt wird und die Lebensdauer einen Tag beträgt?** Nicht erneut gefragt: Die normale Tagesend-Reihenfolge (Hinrichtung, Todeseffekte, Fristablauf, zweites Fenster) ist bestätigt. Offen ist nur der Sonderfall, in dem der Ablaufschritt dieses Tages schon vor dem Fenster lag. Beispiel: Tag 4, zweites Fenster. Tim (tot) spielt Phoenix. Würfel 1 zeigt 2 (Ben und Eva kehren zurück), Würfel 2 zeigt 1. Der Tag des Ausspielens zählt als erster Tag; die Frist würde also am Ende von Tag 4 enden.
+- **A:** Ben und Eva kehren zurück und sterben sofort nach dem Wurf, noch im selben Fenster. Beide erhalten nach 1A eine neue Todeskarte, die sie im laufenden Fenster spielen dürfen (Berührung mit KS-23). Auswirkung: Phoenix bringt in diesem Fall keine handelnden Rückkehrer, sondern nur neue Todeskarten und mögliche Todeseffekte.
+- **B (Empfehlung):** Ben und Eva leben, bis das zweite Fenster schließt, und sterben dann als letzter Schritt des Tages. Kein zusätzlicher Lebenstag. Ihre neue Todeskarte kommt im ersten Fenster des nächsten Tages. Alle anderen Fälle bleiben bei der bestätigten Reihenfolge.
+- **C:** Der Ablaufschritt von Tag 4 ist schon vorbei, also gilt der nächste: Ben und Eva leben durch die Nacht und Tag 5 und sterben nach der Hinrichtung von Tag 5. Das ist ein zusätzlicher Lebenstag gegenüber der bestätigten Regel „Tag des Ausspielens zählt als erster Tag“.
+- **D:** Eigene Antwort (z. B. Phoenix darf im zweiten Fenster bei Lebensdauer 1 nicht wirken).
+
+Empfehlung B: Sie hält die bestätigte Regel („Tod am Ende des ausgewürfelten Tages“) ein, vergibt keinen Zusatztag (C) und erzeugt keine Kartenkette im selben Fenster (A). Der Preis ist ein zusätzlicher Schritt „offene Fristen beim Schließen des zweiten Fensters“ und eine kurze Lebenszeit im Fenster, deren Wirkung auf Siegprüfung und Todeseffekte offen bleibt (KS-24). A ist die kürzeste Regel, macht die Karte in diesem Fall aber zu einem reinen Kartenlieferanten. C ändert die Lebensdauer.
+
+### Klärung zum Bezugszeitpunkt „nächste“ (ÜB-3)
+
+**KS-56: Was bedeutet „der nächste Lynch“, „die nächste Nacht“, „der nächste Tod“, wenn die Karte im Fenster gespielt wird?** Betrifft `segen_01`, `segen_11`, `wende_05`, `wende_11` und die Bezugsnacht von `wende_12`. Beispiel: Ida (Dorf, tot) spielt am Tag 4 Schicksalswende (Dorf: „Sollte der nächste Lynch einen Dorfbewohner treffen, …“).
+- **A (Empfehlung):** Das nächste Ereignis dieser Art, das nach dem Ausspielen eintritt. Spielt Ida im ersten Fenster (Tagesbeginn), zählt die Hinrichtung von Tag 4. Spielt sie im zweiten Fenster (nach der Hinrichtung), zählt die von Tag 5. „Die nächste Nacht“ ist immer die Nacht nach dem Tag des Ausspielens.
+- **B:** Erst ab dem nächsten Tag: Ereignisse des Tages, an dem gespielt wird, zählen nie. Auch im ersten Fenster zählt erst die Hinrichtung von Tag 5.
+- **C:** Keine allgemeine Regel; jede Karte legt es einzeln fest, die Frage bleibt bei jeder betroffenen Karte offen.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Es folgt dem Wortsinn von „nächste“, entspricht dem bestätigten Grundsatz „Tag des Ausspielens zählt“ bei Phoenix und klärt alle „nächste“-Karten mit einer Regel. B macht das erste Fenster für Hinrichtungskarten wirkungslos für den laufenden Tag. C erzeugt bei jeder Karte dieselbe Rückfrage. Nicht mitgeklärt: Dauerangaben wie „2 Tage“ und „3 Tage“ (KS-57).
+
+### Karte 1: `wende_02` Verzweiflungsschrei (WENDE)
+
+- **Originaltext:** Wolf: „Ein Werwolf deiner Wahl kann die nächsten 2 Tage nicht gelyncht werden.“ · Dorf: „Ein Dorfbewohner deiner Wahl erhält 3 Tage lang einen Schutz gegen Werwolf-Angriffe.“
+- **Wirkung in einfachen Worten:** Wolf: Eine gewählte Wölfin oder ein gewählter Wolf kann zwei Tage lang nicht hingerichtet werden. Dorf: Eine gewählte Dorfperson ist drei Tage lang gegen Angriffe des Rudels geschützt.
+- **Überarbeitungsbedarf:** Der Text nennt keinen Ersatz, wenn der Tisch die geschützte Person verurteilt. Ohne Regel ist offen, ob der Tag ohne Opfer endet, neu abgestimmt wird oder jemand anderes stirbt. Weiter offen: Zählung der Tage (ÜB-3, KS-56, KS-57), Verhältnis zum bestätigten Schild und zu anderen Schutzwirkungen.
+
+**KS-52: Was passiert, wenn der Tisch die durch den Wolf-Text geschützte Person verurteilt?** Beispiel: Ida (Wölfin, tot) spielt Verzweiflungsschrei und schützt Clara (Wölfin). Am nächsten Tag stimmt der Tisch ab, Clara hat die meisten Stimmen.
+- **A (Empfehlung):** Die Hinrichtung entfällt. Der Tag endet ohne Opfer, es wird nicht neu abgestimmt. Die Spielleitung trägt „nicht vollstreckt“ ein und nennt keinen Grund.
+- **B:** Der Tisch stimmt sofort neu ab, Clara darf dabei nicht mehr gewählt werden.
+- **C:** Die Person mit der zweithöchsten Stimmenzahl wird hingerichtet; die Spielleitung trägt die Rangfolge ein.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Der Text sagt nur, dass Clara nicht gelyncht werden kann, und nennt keinen Ersatz. A erfindet weder einen zweiten Wahlgang (B) noch einen Ersatzkandidaten (C) und braucht keine Rangfolge in der App (Stimmen werden am Tisch gezählt, ÜB-2). Nachteil: Der Tisch merkt, dass Clara geschützt ist und schließt womöglich auf eine Wölfin; das ist ein Geheimhaltungsproblem jeder verhinderten Hinrichtung. Die Antwort gilt nur für diese Karte. Ob dieselbe Regel für den bestätigten Schild und Umleitungen gilt, entscheidet KS-21, das damit noch offen bleibt.
+
+### Karte 2: `wende_05` Notanker (WENDE)
+
+- **Originaltext:** Wolf: „Die Wölfe dürfen den nächsten Tod in den eigenen Reihen einmalig auf den übernächsten Tag verschieben — der Spielleiter vollstreckt ihn dann automatisch.“ · Dorf: „Das Dorf darf den nächsten Tod in den eigenen Reihen einmalig auf den übernächsten Tag verschieben — der Spielleiter vollstreckt ihn dann automatisch.“
+- **Wirkung in einfachen Worten:** Stirbt als Nächstes jemand aus der eigenen Fraktion, darf der Tod einmal aufgeschoben werden. Er wird dann am übernächsten Tag ausgeführt.
+- **Überarbeitungsbedarf:** Die App bräuchte einen aufgeschobenen Tod als eigenen Zustand mit Zeitpunkt (neue Regelkategorie). Der Text sagt nicht, was die Person bis dahin ist: handelt sie, stimmt sie ab, zählt sie bei der Siegprüfung? Weiter offen: wer entscheidet über das Verschieben, welche Todesarten zählen, Zeitpunkt der Vollstreckung, Schutz bei Vollstreckung (KS-58).
+
+**KS-53: Was gilt für die Person mit aufgeschobenem Tod, bis der Tod vollstreckt wird?** Beispiel: Ida (Dorf, tot) spielt Notanker. Das Rudel reißt Ben (Dorf); der Tod wird verschoben und soll am übernächsten Tag vollstreckt werden.
+- **A (Empfehlung):** Ben lebt in jeder Hinsicht weiter: Nachtfähigkeit, Abstimmung und Siegprüfung mit ihm als lebend. Zum festgelegten Zeitpunkt stirbt er automatisch; der Tod läuft dann wie jeder andere (Todeseffekte, Todeskarte nach 1A, Siegprüfung).
+- **B:** Ben lebt und handelt, zählt für die Siegprüfung aber schon als tot. Ein Sieg kann also während des Aufschubs eintreten.
+- **C:** Ben lebt, darf aber keine Fähigkeit mehr einsetzen und nicht mehr abstimmen; bei der Siegprüfung zählt er als lebend.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Der Text sagt „verschieben“ und nennt keine Einschränkung; B und C fügen Regeln hinzu, die niemand entschieden hat. Nachteil: Ben kann in der Zwischenzeit noch handeln, und ein Sieg kann sich verzögern (etwa wenn die letzte Wölfin einen aufgeschobenen Tod hat). Das ist die direkte Folge von „verschieben“.
+
+### Karte 3: `wende_11` Schicksalswende (WENDE)
+
+- **Originaltext:** Wolf: „König Lykaon erwacht in dir — verleihe einem Wolf deiner Wahl die Fähigkeit, einen Spieler in einen Trugbilderwolf zu verwandeln.“ · Dorf: „Sollte der nächste Lynch einen Dorfbewohner treffen, wird das Urteil auf einen zufälligen Wolf umgeleitet.“
+- **Wirkung in einfachen Worten:** Wolf: Eine gewählte Wölfin oder ein gewählter Wolf erhält die Fähigkeit von König Lykaon und kann eine Person in einen Trugbilderwolf verwandeln. Dorf: Würde die nächste Hinrichtung eine Dorfperson treffen, stirbt stattdessen ein zufälliger Wolf.
+- **Überarbeitungsbedarf:** Wolf: Der Text sagt nicht, wie oft und wann die Fähigkeit eingesetzt wird. Für die Rolle König Lykaon sind Einmaligkeit, Verzichte und Voraussetzungen bestätigt (V-03, V-08, V-09); ob die Karte diese Regeln übernimmt, ist offen. Dorf: Die Umleitung verrät, dass die verurteilte Person zum Dorf gehörte (öffentliche Wirkung, KS-59).
+
+**KS-54: Wie oft und wann darf der Wolf die durch die Karte verliehene Verwandlung einsetzen?** Bestätigt für die Rolle König Lykaon: nur bei einem lebenden verbündeten Wolf, eine lebende Dorfperson wird Trugbilderwolf (alte Rolle als Scheinrolle, wacht ab der folgenden Nacht mit dem Rudel), ein lebender Wächter am Tor macht sie stattdessen zum Dorfbewohner, einmal je Leben, bis zu dreimal verzichten. Beispiel: Ida (Wölfin, tot) spielt Schicksalswende und verleiht Clara die Fähigkeit.
+- **A (Empfehlung):** Clara erhält genau diese bestätigte Fähigkeit mit allen bestätigten Regeln: einmal, ab der nächsten Nacht jede Nacht angeboten, bis zu dreimal verzichten. Die Karte erfindet keine eigene Regel.
+- **B:** Clara hat genau eine Gelegenheit, in der nächsten Nacht nach dem Ausspielen, ohne Verschieben. Verzichtet sie, verfällt die Fähigkeit.
+- **C:** Dauerhaft: Clara darf ab dann jede Nacht eine weitere Person verwandeln.
+- **D:** Eigene Antwort.
+
+Empfehlung A: Der Text sagt „die Fähigkeit“ und nennt König Lykaon; dafür gibt es bestätigte Regeln, die die Karte nur wiederverwendet. B erfindet eine neue Frist. C ist mit dem Text („einen Spieler“) kaum vereinbar und würde das Rudel unbegrenzt vergrößern. Nachteil von A: Die Karte erbt auch die offenen Details der Rolle (z. B. Verhältnis zu Wächter am Tor).
+
+### Für die Folgerunde dokumentiert (nicht gefragt, nicht entschieden)
+
+| ID | Karte | Klärungsbedarf |
+|---|---|---|
+| KS-57 | `wende_02` | Zählung von „2 Tage“ und „3 Tage“ (Tag des Ausspielens, Bezug ÜB-3, KS-56). Wolf-Text: nur Hinrichtung oder auch andere Todesursachen? Dorf-Text: nur Rudelangriff; Schutz bleibt nach einem Treffer für die Restdauer? Ziel: Wahl durch die Kartenspielerin. Verhältnis zu Schild und anderen Schutzwirkungen (KS-27). Öffentlichkeit. |
+| KS-58 | `wende_05` | Wer entscheidet das Verschieben (Fraktion, in welchem Moment, Bestätigung durch die Spielleitung). Welche Todesarten und welche Personen zählen („in den eigenen Reihen“, auch nach Rollenwechsel). Genauer Zeitpunkt der Vollstreckung am übernächsten Tag. Schutz und Schild bei der Vollstreckung. Mehrere gleichzeitige Tode. Was, wenn nie ein eigener Tod eintritt (Karte verfällt?). |
+| KS-59 | `wende_11` | Wolf: Wahl des Wolfs, gewählter Wolf ist schon König Lykaon oder hat die Fähigkeit verbraucht, kein verbündeter Wolf lebt. Dorf: Zufall über den gespeicherten Generator (analog `segen_11`, abgeleitet, nicht bestätigt), welche Wölfe zählen, Öffentlichkeit der Umleitung, Verurteilte Person ist weder Dorf noch Wolf, kein lebender Wolf, Verhältnis zu Schild und Wächter am Tor (KS-21, KS-27), Bezug „nächster Lynch“ (KS-56). |
+
+**Reihenfolge der nächsten Runden (Vorschlag, [V]):** (1) Antworten auf KS-52 bis KS-56. (2) Restfragen der Gruppe 1: KS-38 bis KS-40, KS-46 bis KS-48, KS-35 bis KS-37. (3) Gruppe 2, restliche Karten in Listenreihenfolge: `fluch_05`, `fluch_08`, `fluch_12`, `loki_12`, anschließend Gruppe 3.

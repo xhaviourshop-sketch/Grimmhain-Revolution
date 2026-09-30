@@ -915,3 +915,39 @@ Aus dem Auftrag „Pakete B, C und D“; Schema 14 und Regelversion 0.14 unverä
 - `schicksal_08`: Vorrat der neuen Rollen (bisherige Rolle erlaubt, Sonderrollen wie Trugbilderwolf und Selbstmörder), was „bisherige Fraktion“ für Einzelsiegrollen heißt, weniger als zwei passende Lebende, Zeitpunkt und Sichtbarkeit.
 - `loki_06`: Verhalten bei weniger als zwei Lebenden in einer Fraktion, Zufall über den gespeicherten Generator (abgeleitet, nicht bestätigt), Sonderzustände beim Tausch (Scheinrolle des Trugbilderwolfs).
 - Alle vier Karten sind damit **nicht vollständig spezifiziert** und nicht implementiert. Die Detailfragen stehen in der Arbeitsliste (KS-35 bis KS-37 und KS-46 bis KS-48).
+
+## Phoenix-Tagesende, Geheimrat (Wolf), Heilende Hand, Blutpakt, Spiegelschutz (sechste Antwortrunde, 30.09.2026)
+
+**Herkunft:** Antworten des Product Owners im Claude-Code-Auftrag vom 30.09.2026 (sechste Runde) auf die fünf Fragen in Abschnitt 14 der Arbeitsliste `docs/role-migration/14-totenkarten-arbeitsliste.md` (KS-41 bis KS-45). Die Antworten kamen als zusammenhängender Regeltext, teils mit Kartenbezeichnung statt Buchstabenwahl; die Zuordnung zu den Fragen ist meine Zuordnung. Die Antworten zu `segen_01`, `segen_07` und `segen_11` betreffen ausdrücklich nur deren Dorfvarianten; unbesprochene Details der Wolfsvarianten bleiben offen. Es ist nichts implementiert: kein Karten-Code, keine Würfel, keine Zufallsziehung, kein Schild, keine Kartenverteilung, kein Kartentausch, kein Kartenschlucker, keine Änderung an Speicherschema oder Oberfläche. Die Originaltexte der Karten und früherer Abschnitte bleiben unverändert stehen.
+
+**Bestätigt (Product Owner):**
+
+- **`loki_10` Phoenix, Reihenfolge am Tagesende (regulärer Fristablauf):** (1) Hinrichtung. (2) Dadurch ausgelöste Todeseffekte werden abgehandelt. (3) Phoenix-Rückkehrer sterben, deren Lebensdauer an diesem Tag endet. (4) Danach folgt das zweite Kartenfenster. Auch die durch den Fristablauf gerade Verstorbenen dürfen ihre neue Totenreichkarte in diesem zweiten Fenster bereits nutzen.
+- **`loki_10`, Abgrenzung:** Diese Antwort regelt nur den regulären Fristablauf. Sie entscheidet nicht automatisch den Sonderfall, dass Phoenix erst im anschließenden (zweiten) Kartenfenster gespielt wird und die Lebensdauer einen Tag beträgt (der Ablaufschritt dieses Tages liegt dann schon vor dem Fenster). Dieser Fall wird weder als sofortiger Tod noch als zusätzlicher Lebenstag ausgelegt; er ist offen und als KS-55 gestellt.
+- **`wende_12` Geheimrat, Wolfsvariante (Hinweise):** Hinweise an das Rudel erfolgen ausschließlich stumm, durch Gesten und Zeigen. Kein leises Sprechen. Daraus wird keine zusätzliche Tablet-Kommunikationsfunktion abgeleitet.
+- **`segen_01` Heilende Hand, Dorfvariante:** Der auslösende Wolfsangriff wird verhindert. Zusätzlich erhält die betroffene Person einen persönlichen Schild nach den bereits bestätigten Schildregeln (dritte Runde). Dieser Schild verhindert einen späteren weiteren Tod, auch durch eine Hinrichtung oder einen sonst schutzignorierenden Rollenangriff. Höchstens ein solcher Schild gleichzeitig pro Person. Keine allgemeine Unsterblichkeit für die gesamte Nacht. Eine direkte Spielleiterkorrektur bleibt möglich.
+- **`segen_07` Blutpakt, Dorfvariante:** Die Spielleitung bestimmt nach Ermessen, ob null, ein oder zwei Wölfe aufgedeckt werden. Keine feste Zuordnung anhand der Opferrolle und keine zufällige Zahl.
+- **`segen_11` Spiegelschutz, Dorfvariante:** Die App bestimmt zufällig einen lebenden Wolf als Ersatzopfer. Es gilt die Projektregel für gespeicherten, reproduzierbaren Zufall. Keine Wahl durch Spielleitung oder Rudel.
+
+**Ersetzt (nicht mehr gültig):**
+
+- Arbeitsliste Abschnitt 14, KS-41: Empfehlung A (Tod aus Fristablauf als letzter Schritt des Tages, nach dem zweiten Fenster) ersetzt. Bestätigt ist der Ablauf von Option B (Tod vor dem zweiten Fenster, neue Karte im selben Fenster nutzbar). Der in Option B beschriebene Sonderfall (Phoenix im zweiten Fenster mit Lebensdauer 1 wirkt sofort) ist ausdrücklich nicht mitbestätigt.
+- KS-42: Option A bestätigt (nur stumm). Option B (leises Sprechen) ausdrücklich ausgeschlossen, Option C (Tablet) nicht gewählt.
+- KS-43: Im Kern Option A bestätigt (Schild nach den bestätigten Schildregeln, höchstens einer je Person). Ergänzt um die Verhinderung des auslösenden Angriffs und die Klarstellung „keine allgemeine Unsterblichkeit für die Nacht“. Optionen B (eigener Karten-Schild) und C (nur dieser eine Angriff) nicht gewählt.
+- KS-44: Im Kern Option A bestätigt (Ermessen der Spielleitung, null bis zwei). Nicht bestätigt ist der Teil der Option, die Spielleitung „trage die Wölfe ein“: Wer die Wölfe auswählt, ist offen. Optionen B (feste Einteilung der Opferrollen) und C (Zufallszahl) nicht gewählt.
+- KS-45: Option A bestätigt (gespeicherter Generator zieht einen lebenden Wolf). Optionen B (Spielleitung) und C (Rudel) nicht gewählt.
+
+**Technisch abgeleitet (nicht bestätigt, Diskussionsgrundlage):**
+
+- **Beschriftung „Reihenfolge A“:** Der Product Owner nannte den bestätigten Tagesend-Ablauf „Reihenfolge A“. Inhaltlich entspricht er Option B von KS-41 in Abschnitt 14 (dort ist Option A der Tod nach dem Fenster). Maßgeblich ist der beschriebene Ablauf, nicht der Buchstabe. Hinweis im Bericht, keine Regeländerung.
+- Die neue Todeskarte der durch den Fristablauf Verstorbenen folgt aus 1A (jeder Tod gibt eine Karte, auch nach Wiederbelebung). Die Nutzung im zweiten Fenster ist bestätigt.
+- „Ein solcher Schild“ bei `segen_01` lese ich als den bestätigten Schild. Ob dieser Schild und ein bereits gekaufter Schild sich den einen Platz je Person teilen, ist nicht ausdrücklich gesagt (KS-27).
+
+**Weiter offen (nicht entschieden, nicht erfunden):**
+
+- `loki_10`: Sonderfall Ausspielen im letzten Fenster mit Lebensdauer 1 (KS-55). Ohne andere Tote, früherer Tod und erneute Wiederbelebung in der Frist, Rückkehrrolle bei Phoenix, Sichtbarkeit von Würfeln und Namen, Verhältnis zu KS-23 und zur Siegprüfung (KS-46 bis KS-48).
+- `wende_12`: Aufrufreihenfolge („als letztes“) und Bezugsnacht („in dieser Nacht“) der Wolfsvariante, Öffentlichkeit, Zeitpunkt, Szenariobedingung (KS-35). Die Dorfvariante bleibt wie in der fünften Runde bestätigt.
+- `segen_01`: Reihenfolge des Schilds gegenüber bereits vorhandenen Schutzwirkungen (nicht ergänzt), Verhältnis zum gekauften Schild und „höchstens einer“ insgesamt (KS-27), Dauer von „nächstes Mal“ (ÜB-3), Wolf-Text (KS-49).
+- `segen_07`: Ob die Information öffentlich oder privat ist und wer die betroffenen Wölfe auswählt; kein Opfer in der Nacht; Wolf-Text (KS-50).
+- `segen_11`: Weitere Schutz- und Umleitungswechselwirkungen (Schild, Wächter am Tor, Heilende Hand), welche Wölfe zählen (Scheinrollen, Sonderwölfe), „Folgenacht“ (ÜB-3), Wolf-Text (KS-51).
+- `loki_10`, `wende_12`, `segen_01`, `segen_07` und `segen_11` sind damit **nicht vollständig spezifiziert** und nicht implementiert.
