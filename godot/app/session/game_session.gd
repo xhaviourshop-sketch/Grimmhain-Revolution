@@ -19,7 +19,8 @@ var _state: GameState = GameState.new()
 var _commands: Array[Command] = []
 var _events: Array[GameEvent] = []
 var _redo: Array[Command] = []  ## zurückgenommene Befehle, letzter zuerst wiederholbar
-var _five_dead_at: int = -1  ## Index des Befehls, nach dem zum ersten Mal fünf Personen öffentlich tot waren (DI-09), sonst -1
+var _five_dead_at: int = -1  ## Index des Befehls, der den Hinweis bei fünf Toten tatsächlich ausgelöst hat (DI-09), sonst -1
+var _five_dead_armed: bool = true  ## Die Zahl der Toten war seit dem letzten Erreichen von fünf wieder unter fünf (oder nie darüber)
 
 
 ## Reicht den Befehl an den Regelkern weiter und übernimmt bei Annahme den neuen Zustand.
@@ -34,37 +35,47 @@ func submit(command: Command) -> CommandResult:
 	_redo.clear()  # ein neuer Befehl verwirft zurückgenommene
 	events_applied.emit(result.events)
 	view_changed.emit(view())
-	_track_five_dead(true)
+	if _observe_five_dead(_state, _commands.size() - 1):
+		cue_requested.emit(PresentationCue.FIVE_DEAD)
 	return result
 
 
-## DI-09: Der Hinweis gehört zum ersten Erreichen von fünf öffentlichen Toten und wird höchstens einmal je Partieverlauf gemeldet
-## (ein späteres Wiederholen desselben Zustands, Laden oder Neuzeichnen meldet nichts). Berechtigt nur mit lebendem Selbstmörder.
-func _track_five_dead(announce: bool) -> void:
-	if _five_dead_at != -1 or not PresentationCue.five_dead_reached(_state):
-		return
-	_five_dead_at = _commands.size() - 1
-	if announce and PresentationCue.five_dead_eligible(_state):
-		cue_requested.emit(PresentationCue.FIVE_DEAD)
+## DI-09 (Entscheidung B): Ein Auslöseversuch ist jedes Erreichen von fünf öffentlichen Toten, nachdem die Zahl unter fünf lag.
+## Er löst nur aus, wenn dann eine lebende Person die Rolle Selbstmörder hat; ein erfolgloser Versuch verbraucht den Hinweis nicht.
+## Nach einer tatsächlichen Auslösung (`_five_dead_at`) gibt es keine weitere. Fünf Tote ohne vorheriges Absinken unter fünf sind
+## kein neuer Versuch (offen: Selbstmörder durch Rollenübernahme bei durchgehend fünf Toten, Decision Log DA-86).
+## Gibt zurück, ob der Hinweis an diesem Zustand (nach Befehl `index`) ausgelöst wird; Laden, Wiederholen und Neuzeichnen melden nie.
+func _observe_five_dead(s: GameState, index: int) -> bool:
+	if PresentationCue.dead_count(s) < PresentationCue.THRESHOLD:
+		_five_dead_armed = true
+		return false
+	if not _five_dead_armed or not PresentationCue.five_dead_reached(s):
+		return false  # Nacht mit schon toten Personen ist kein neuer Versuch; öffentlich wird es erst am Morgen
+	_five_dead_armed = false
+	if _five_dead_at != -1 or not PresentationCue.five_dead_eligible(s):
+		return false
+	_five_dead_at = index
+	return true
 
 
-## Nach Laden: Wann waren erstmals fünf Personen öffentlich tot? Ohne mindestens fünf Todesereignisse nie, dann ohne Wiederholung.
-func _scan_five_dead() -> int:
+## Nach Laden oder Rückgängig: Zustand des Hinweises aus der Befehlsfolge neu bestimmen (gleiche Auswertung wie im Betrieb).
+## Ohne mindestens fünf Todesereignisse gab es nie einen Versuch.
+func _rescan_five_dead() -> void:
+	_five_dead_at = -1
+	_five_dead_armed = true
 	var deaths := 0
 	for e: GameEvent in _events:
 		if e.type == GameEvent.SEAT_DIED:
 			deaths += 1
 	if deaths < PresentationCue.THRESHOLD:
-		return -1
+		return
 	var s := GameState.new()
 	for i: int in _commands.size():
 		var r := RulesEngine.apply(s, _commands[i])
 		if not r.ok:
-			return -1
+			return
 		s = r.state
-		if PresentationCue.five_dead_reached(s):
-			return i
-	return -1
+		_observe_five_dead(s, i)
 
 
 ## Lesbare Sicht für die Darstellung. Immer eine neue Kopie aus einfachen Werten.
@@ -148,7 +159,7 @@ func load_text(text: String) -> StringName:
 	_commands = loaded.commands.duplicate()
 	_events = loaded.events.duplicate()
 	_redo.clear()
-	_five_dead_at = _scan_five_dead()
+	_rescan_five_dead()
 	view_changed.emit(view())
 	return &""
 
@@ -177,6 +188,7 @@ func reset() -> void:
 	_events.clear()
 	_redo.clear()
 	_five_dead_at = -1
+	_five_dead_armed = true
 	view_changed.emit(view())
 
 
@@ -205,8 +217,7 @@ func undo() -> bool:
 	_state = replayed.state
 	_commands = prefix
 	_events = replayed.events
-	if _five_dead_at >= _commands.size():
-		_five_dead_at = -1  # der Befehl, der die fünf Toten brachte, ist zurückgenommen
+	_rescan_five_dead()  # eine zurückgenommene Auslösung gilt als nicht gegeben
 	view_changed.emit(view())
 	state_replaced.emit()
 	return true
@@ -225,7 +236,7 @@ func redo() -> bool:
 	_state = result.state
 	_commands.append(command)
 	_events.append_array(result.events)
-	_track_five_dead(false)  # Wiederholen spielt nichts ab
+	_observe_five_dead(_state, _commands.size() - 1)  # Wiederholen spielt nichts ab
 	view_changed.emit(view())
 	state_replaced.emit()
 	return true

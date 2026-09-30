@@ -1,10 +1,11 @@
 class_name PresentationCue
 extends RefCounted
 ## Darstellungshinweise (kein Regelbestandteil, keine Spielwirkung): reine Auswertung eines Zustands. Bisher nur DI-09, der
-## Hinweis bei fünf Toten. Er bezieht sich auf den Zeitpunkt, an dem zum ersten Mal fünf Personen öffentlich tot sind (Tag,
-## Morgenauflösung oder Spielende; Tode der Nacht werden erst mit der Morgenauflösung öffentlich), und nur auf diesen einen.
-## Berechtigt ist er nur, wenn in genau diesem Zustand eine lebende Person die Rolle Selbstmörder hat (NQ-01; auch eine
-## geerbte Rolle zählt, eine tote Person nicht). Der Hinweis trägt weder Namen noch Rolle: Er enthält nur seine Kennung.
+## Hinweis bei fünf Toten. Er bezieht sich auf ein Erreichen von fünf Toten in einer öffentlichen Phase (Tag, Morgenauflösung
+## oder Spielende; Tode der Nacht werden erst mit der Morgenauflösung öffentlich). Berechtigt ist ein Erreichen nur, wenn in
+## genau diesem Zustand eine lebende Person die Rolle Selbstmörder hat (NQ-01; auch eine geerbte Rolle zählt, eine tote Person
+## nicht). Ein nicht berechtigtes Erreichen verbraucht den Hinweis nicht (Entscheidung B); nach einer Auslösung gibt es keine
+## weitere (GameSession führt das). Der Hinweis trägt weder Namen noch Rolle: Er enthält nur seine Kennung.
 
 const FIVE_DEAD := &"five_dead"
 const THRESHOLD := 5
