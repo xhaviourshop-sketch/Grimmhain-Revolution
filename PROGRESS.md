@@ -539,7 +539,11 @@ Entscheidung: Stil der Rollensymbole für alle 72 Rollen in `DECISIONS.md`. Art 
 Schätzung Rollensymbole: 61 fehlende Symbole, mindestens 6 Blätter, realistisch 7 bis 8 (Grafikliste).
 Abgelegt in `docs/assets/p2-mockup/`, nichts in `godot/`, lokaler Commit auf `feature/visual-night-board`, kein Push.
 
-## 2026-10-01: P3 Nachtbrett, Zwischenstand 1 (läuft)
-Branch `feature/visual-night-board`, lokal, kein Push, PR #3 unberührt. Ausgangspunkt: Basislauf der Godot-Suite vor den Änderungen grün (1453 von 1457, die 4 Fehler stammten aus halbfertigen eigenen Dateien während des Laufs).
-Erledigt (noch nicht committet): Assetregel geklärt (neuer Status `intern-freigegeben`, `--release`-Prüfung sperrt Veröffentlichung, Eintrag in `DECISIONS.md`), 202 Laufzeitassets unter `godot/assets/night/` mit Registerzeilen (Build-Skript `docs/assets/p3-runtime/build_assets.py`), Porträtplätze (Ellipse, 24 stabile Gesichter je Personen-ID), Statusabzeichen und „Verbergen“, Nachtleiste, Laschen, Aktionskarte Variante A mit Zielplatz und Dock, Anzeige-Timer (eigener Block `ui` in der Speicherhülle), Capture-Werkzeug `godot/tools/capture_p3_night.gd` (spielt eine echte Nacht über die Knöpfe).
-Offen: bestehende UI-Tests anpassen, neue Tests (Timer, Verbergen, Layout, Porträts), Gesamtlauf, Spielläufe mit 24 und 6 Personen bei 1024x768 und 1280x800.
+## 2026-10-01: P3 Nachtbrett, Zwischenstand 2 (Commit `cfcf1d1`, Vollsuite nicht abgeschlossen)
+Branch `feature/visual-night-board`, lokal, kein Push, PR #3 unberührt.
+Stand: Nachtbrett im Code fertig (Hintergrund, 24 eindeutige Porträts, Abzeichen, Nachtleiste, Laschen, Zielplatz mit Pfeilen, „i“, Dock, Speicherzeile unten, Verbergen, Anzeige-Timer im Block `ui` der Speicherhülle, Asset-Status `intern-freigegeben` mit Release-Sperre). Commits: `cfcf1d1` (P3-Stand), `1446580` (Testregeln in `CLAUDE.md`).
+Verifikation: gezielt grün (jeweils 0 Fehler): display_timer, night_board_view, portrait_assignment, portrait_ring_layout, night_board, timer_save, board_layout, cockpit_screen, cards_ui, cards_ui_closing, handedness, cockpit_polish, ui_i18n, setup_model, full_round_ui; `node tools/check-asset-register.js` Exit 0 (657 Dateien), Asset-Tests 19/19. Der Vollauf wurde bei ca. 106 Tests ohne Fehler abgebrochen: kein Gesamtergebnis. Nach der letzten Kartenänderung (Zielplatz neben den Aktionen) liefen keine Tests, nur Screenshots (`Downloads/Grimmhain-P1-Nachtentwurf/p3-spielbar/wip/`, noch nicht nach `p3-spielbar/` übernommen).
+Offen (blockiert Abnahme 2): Tests nach der Kartenänderung (`cards_ui*`, `handedness`, `cockpit_screen`) einmal bestätigen; Screenshots ansehen und übernehmen. Später: Namen am Rand bei 24 Personen und 4:3 teils stark gekürzt, Anweisungstext scrollt auf kleiner Karte, Nacht-Timer-Schalter im Einstellungsbildschirm, Spielerauswahl der Porträts (P4).
+Lehre: Testläufe nicht mit Dateiänderungen in `godot/` überlappen; Python-Edits von CRLF-Dateien nur im Textmodus, Pfade für Python als Windows-Pfad (nicht `/tmp`).
+Neue Testregeln: siehe `CLAUDE.md` (Abschnitt „Testregeln“).
+
