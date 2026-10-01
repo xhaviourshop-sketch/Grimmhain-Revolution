@@ -218,8 +218,28 @@ static func after_death(ctx: RuleContext, target: Player, record: KillEvent) -> 
 	# loki_12: jeder passende Tod während der Wirkungsdauer löst einen zusätzlichen Tod der anderen Fraktion aus (Wahl der Spielleitung)
 	if variant == CardCatalog.WOLF or variant == CardCatalog.DORF:
 		for e: Dictionary in CardEffects.active(s, "cosmic_balance"):
+			if _is_cosmic_consequence(s, record, int(e["owner"])):
+				continue
 			var other := CardCatalog.DORF if variant == CardCatalog.WOLF else CardCatalog.WOLF
 			CardEffects.add_task(s, "cosmic_victim", {"owner": int(e["owner"]), "card": "loki_12"}, {"faction": String(other)})
+
+
+## Folgt der Tod aus dem zusätzlichen Opfer dieses Kosmischen Gleichgewichts (etwa dem Schuss eines Sensenträgers, der als dieses Opfer
+## starb)? Das Opfer ist erkennbar an Ursache Kartenkette mit der Besitzerin als Quelle; spätere Reaktionen laufen ohne Kartentiefe
+## und hängen über die Quelle an diesem Tod, auch über mehrere Glieder.
+static func _is_cosmic_consequence(s: GameState, record: KillEvent, owner_id: int) -> bool:
+	var source_id := record.source_id
+	var hops := 0
+	while record.source_kind == KillEvent.SOURCE_PLAYER and hops <= s.players.size():
+		hops += 1
+		var source: Player = s.players.get(source_id)
+		if source == null or source.death == null:
+			return false
+		record = source.death
+		if record.cause == KillEvent.CAUSE_CARD_CHAIN and record.source_id == owner_id:
+			return true
+		source_id = record.source_id
+	return false
 
 
 # --- Nacht: Rudel, Reihenfolge, Ausfall -----------------------------------------------------------------------------
