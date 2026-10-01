@@ -361,15 +361,20 @@ func test_card_window_fits_for_both_hands_and_languages() -> void:
 				assert_true(b != null, "%s/%s: %s vorhanden" % [lang, left, node_name])
 				if b == null:
 					continue
-				var r := rect_of(b)
-				# Spielen und Aufbewahren müssen ohne Scrollen sichtbar sein; seltene Aktionen sind durch Scrollen erreichbar.
+				# Spielen und Aufbewahren müssen durch Scrollen der Ansagekarte vollständig in deren sichtbaren Teil und ins Fenster
+				# kommen (die Rohlage vor dem Scrollen hängt von der Höhe der Ansagekarte ab); seltene Aktionen liegen in der scrollbaren Karte.
 				if node_name in ["CardPlayButton", "CardKeepButton"]:
-					assert_true(inside(r, viewport), "%s/%s: %s im Fenster ohne Scrollen (%s)" % [lang, left, node_name, str(r)])
+					var scroll := find_node(current_screen(shell), "Scroll") as ScrollContainer
+					scroll.ensure_control_visible(b)
+					await frames(2)
+					var r := rect_of(b)
+					assert_true(inside(r, viewport) and inside(r, rect_of(scroll)), "%s/%s: %s erreichbar (%s)" % [lang, left, node_name, str(r)])
 				else:
 					var scroller := b.get_parent()
 					while scroller != null and not scroller is ScrollContainer:
 						scroller = scroller.get_parent()
 					assert_true(scroller != null, "%s/%s: %s liegt in der scrollbaren Ansagekarte" % [lang, left, node_name])
+				var r := rect_of(b)
 				assert_false(r.intersects(ring.grow(-2.0)), "%s/%s: %s überdeckt den Sitzkreis nicht" % [lang, left, node_name])
 				assert_true(r.size.y >= 44.0, "%s/%s: %s mindestens 44 hoch" % [lang, left, node_name])
 			side_x[left] = rect_of(find_button(current_screen(shell), "CardPlayButton")).get_center().x

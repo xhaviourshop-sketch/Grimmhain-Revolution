@@ -218,6 +218,7 @@ size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.cockpit.tools.log"
 kind = 3
+wrap = false
 
 [node name="PrivateButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
 unique_name_in_owner = true
@@ -226,6 +227,7 @@ size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.cockpit.tools.private"
 kind = 3
+wrap = false
 
 [node name="RolesButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
 unique_name_in_owner = true
@@ -234,6 +236,7 @@ size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.cockpit.tools.roles"
 kind = 3
+wrap = false
 
 [node name="GmButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
 unique_name_in_owner = true
@@ -242,6 +245,7 @@ size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.cockpit.tools.gm"
 kind = 3
+wrap = false
 
 [node name="CoverButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
 unique_name_in_owner = true
@@ -250,6 +254,7 @@ size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.cockpit.tools.cover"
 kind = 3
+wrap = false
 
 [node name="LexiconButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
 unique_name_in_owner = true
@@ -258,6 +263,7 @@ size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.cockpit.tools.lexicon"
 kind = 3
+wrap = false
 
 [node name="RulebookButton" type="Button" parent="Layout/Body/SideColumn/ActionsArea/Tools"]
 unique_name_in_owner = true
@@ -266,6 +272,7 @@ size_flags_horizontal = 3
 script = ExtResource("2_button")
 text_key = "ui.cockpit.tools.rulebook"
 kind = 3
+wrap = false
 
 [node name="OverlayHost" type="Control" parent="."]
 unique_name_in_owner = true
