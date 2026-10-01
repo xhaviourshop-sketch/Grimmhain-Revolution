@@ -6127,6 +6127,48 @@ msgstr "Das allgemeine Lexikon und dieses Regelbuch zeigen nie Angaben aus der l
 msgid "ui.rulebook.c12.b07"
 msgstr "Der Sprachknopf in der Hilfe wechselt die Sprache der ganzen App. Die geöffnete Stelle bleibt erhalten."
 
+msgid "ui.rulebook.c13.title"
+msgstr "Totenreichkarten und Kartenschlucker"
+
+msgid "ui.rulebook.c13.b01"
+msgstr "Totenreichkarten sind eine Option beim Spielaufbau („Totenreichkarten“ in der Rollenwahl). Ist sie an, zieht jede Person, die stirbt, genau eine Karte. Die Karte gehört zur Fraktion der Person bei ihrem Tod: Wölfe, Dorf oder, bei Einzelsiegrollen, neutrale und Solo-Karten."
+
+msgid "ui.rulebook.c13.b02"
+msgstr "Die App kennt den Kartentext, setzt die Wirkung um und merkt sich die Karte der toten Person. Eine Korrektur der Spielleitung ohne Folgen löst keine Ziehung aus. Wird eine Person wiederbelebt, verfällt ihre nicht gespielte Karte aus dem früheren Leben."
+
+msgid "ui.rulebook.c13.b03"
+msgstr "Das Kartenfenster"
+
+msgid "ui.rulebook.c13.b04"
+msgstr "Tote handeln nur in einem Kartenfenster, und nur wenn ihre Karte gerade etwas bewirken kann. Es gibt zwei Fenster je Tag. Die App fragt die toten Personen nacheinander, jede höchstens einmal je Fenster."
+
+msgid "ui.rulebook.c13.b05"
+msgstr "• Erstes Fenster: nach dem Morgenbericht, vor der Diskussion des Tages."
+
+msgid "ui.rulebook.c13.b06"
+msgstr "• Zweites Fenster: am Tagesende, nach der Hinrichtung und ihren Todeseffekten, vor der Nacht."
+
+msgid "ui.rulebook.c13.b07"
+msgstr "• Reihenfolge: in der Reihenfolge, in der die Karten gezogen wurden. Solange ein Fenster offen ist, geht der Tag oder die Nacht nicht weiter; die Spielleitung kann es schließen, dann behalten alle ihre Karten."
+
+msgid "ui.rulebook.c13.b08"
+msgstr "Spielen, aufbewahren, tauschen"
+
+msgid "ui.rulebook.c13.b09"
+msgstr "„Karte spielen“ setzt die Karte ein. Je nach Karte wählst du Personen im Sitzkreis, eine Option, Ja oder Nein oder würfelst am Bildschirm; das Ergebnis wird gespeichert und nie neu gewürfelt. „Aufbewahren“ lässt die Karte bis zum nächsten passenden Fenster liegen. „Karte zeigen“ legt die Karte groß auf den Bildschirm, damit der Tisch sie lesen kann."
+
+msgid "ui.rulebook.c13.b10"
+msgstr "„Gegen Ersatzkarte tauschen“ gibt es nur, solange ein Kartenschlucker lebt: Die Karte wird abgegeben, der Kartenschlucker erhält einen Stapel, und die Ersatzkarte wird sofort gespielt. Was am Tisch geschehen muss (Redeverbote, Schweigen, Zeigen), setzt die Spielleitung durch; die App hat keine Uhr, und Regelverstöße meldest du über die Tagesregel in der Tagesansicht."
+
+msgid "ui.rulebook.c13.b11"
+msgstr "Der Kartenschlucker"
+
+msgid "ui.rulebook.c13.b12"
+msgstr "Der Kartenschlucker ist eine Einzelsiegrolle und nur in Partien mit Totenreichkarten wählbar. Jeder zulässige Tausch einer Karte bringt ihm einen Stapel. Stapel gehören zur Person, nicht zur Rolle. Mit mindestens zwei Stapeln wird er jede Nacht geweckt, sonst entfällt sein Schritt."
+
+msgid "ui.rulebook.c13.b13"
+msgstr "Die Spielleitung nimmt sein Handzeichen entgegen: Kopf schütteln (nichts), zwei Finger (zwei Stapel: eine Tötung am Morgen), fünf Finger (fünf Stapel: ein Schild gegen den nächsten Tod) oder zehn Finger (zehn Stapel: Sieg, wenn er lebt und die Spielleitung bestätigt). Die Spielleitung tippt das Zeichen als Button. In den Nächten 3, 6, 9 und so weiter nennt der Morgen öffentlich nur die Gesamtzahl aller gesammelten Stapel, ohne Käufe zu verraten."
+
 # --- Ablauf am Tisch je Rolle (OI-18) ---
 
 msgid "ui.role.albtraumwolf.lex.act"

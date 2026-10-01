@@ -71,6 +71,14 @@ static func build(s: GameState, events: Array[GameEvent]) -> Dictionary:
 		for id: int in ids:
 			out.append(s.players[id].name if s.players.has(id) else "")
 		return out
+	# Stille Mitsieger und posthume Sieger der Totenreichkarten (aus der bestätigten Entscheidung, nie neu berechnet).
+	var card_co: Array[int] = []
+	for e: GameEvent in events:
+		if e.type == GameEvent.WIN_CONFIRMED:
+			for c: Variant in DictRead.get_array(e.data, "card_cowinners"):
+				var id := DictRead.get_int(c as Dictionary, "person_id", -1)
+				if s.players.has(id) and not card_co.has(id) and not winner.beneficiary_ids.has(id) and not winner.co_winner_ids.has(id):
+					card_co.append(id)
 	return {
 		"version": VERSION,
 		"game_id": s.round_id,
@@ -80,7 +88,7 @@ static func build(s: GameState, events: Array[GameEvent]) -> Dictionary:
 		"days": s.day_number,
 		"revival_round": s.revival_round,
 		"winner": {"side": String(winner.kind), "reason_key": String(winner.reason_key), "reason_args": winner.reason_args.duplicate(true),
-			"names": names_of.call(winner.beneficiary_ids), "co_names": names_of.call(winner.co_winner_ids)},
+			"names": names_of.call(winner.beneficiary_ids), "co_names": names_of.call(winner.co_winner_ids), "card_co_names": names_of.call(card_co)},
 		"roles": roles,
 		"other_events": other,
 		"entries": entries,
@@ -121,6 +129,9 @@ static func _day(s: GameState, span: Array[GameEvent], entries: Array) -> void:
 	var effects := MorningReport.effects_of(s, span)
 	if not effects.is_empty():
 		entries.append({"vis": "public", "kind": "effects", "effects": effects})
+	var cards := CardView.public_lines(s, span)
+	if not cards.is_empty():
+		entries.append({"vis": "public", "kind": "cards", "cards": cards})
 	_corrections(s, span, entries)
 
 

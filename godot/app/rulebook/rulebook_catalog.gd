@@ -1,6 +1,6 @@
 class_name RulebookCatalog
 extends RefCounted
-## Aufbau des allgemeinen Regelbuchs: zwölf Kapitel mit je einer Folge von Blöcken. Die Texte stehen nur in den
+## Aufbau des allgemeinen Regelbuchs: dreizehn Kapitel mit je einer Folge von Blöcken. Die Texte stehen nur in den
 ## Übersetzungen (`ui.rulebook.<kapitel>.title` und `ui.rulebook.<kapitel>.b<NN>`); dieser Katalog kennt nur die Reihenfolge und die
 ## Art jedes Blocks: `h` Zwischenüberschrift, `p` Absatz, `l` Listenzeile (der Text trägt Aufzählungszeichen oder Nummer selbst).
 ## Kein Bezug zu einer Partie, einem Spielstand oder dem Regelkern: Das Regelbuch erklärt nur bestätigte Regeln und tatsächlich
@@ -19,6 +19,7 @@ const CHAPTERS: Array[Dictionary] = [
 	{"id": "c10", "kinds": "phpphppphp"},
 	{"id": "c11", "kinds": "phphpphppp"},
 	{"id": "c12", "kinds": "ppphppp"},
+	{"id": "c13", "kinds": "pphplllhpphpp"},
 ]
 
 

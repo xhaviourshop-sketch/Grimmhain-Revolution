@@ -1,5 +1,5 @@
 extends "res://tests/ui/role_ui_case.gd"
-## Allgemeines Regelbuch (Paket C): zwölf Kapitel in DE und EN, erreichbar aus Hauptmenü und Cockpit, Navigation, lange
+## Allgemeines Regelbuch (Paket C): dreizehn Kapitel in DE und EN, erreichbar aus Hauptmenü und Cockpit, Navigation, lange
 ## Kapitel, Sprachwechsel, keine Befehle, kein Zufall, keine Ressourcen, keine Partiedaten. Headless-Geometrie belegt nur
 ## Überlauf und Erreichbarkeit, keine visuelle oder Touch-Abnahme.
 
@@ -8,7 +8,8 @@ const D := "dorfbewohner"
 const CHAPTER_TITLES_DE: Array[String] = ["Vorbereitung", "Personen, Rollenwahl, Verteilung und Sitzordnung", "Rollen sicher zeigen",
 		"Nacht führen und Tarnaufrufe", "Private Informationen zeigen", "Morgen und Wiederbelebungsrunde",
 		"Tag, Nominierung und physische Abstimmung", "Hinrichtung und Todesreaktionen", "Sieg bestätigen",
-		"Spielleiterkorrekturen und Undo", "Speichern, Fortsetzen und Fehlerbehandlung", "Rollenlexikon und Hilfe nutzen"]
+		"Spielleiterkorrekturen und Undo", "Speichern, Fortsetzen und Fehlerbehandlung", "Rollenlexikon und Hilfe nutzen",
+		"Totenreichkarten und Kartenschlucker"]
 ## Begriffe aus Code und Planungsdokumenten haben im Regelbuch nichts zu suchen (verständliche Sprache).
 const BANNED_TERMS: Array[String] = ["Regelkern", "GameState", "JSON", "user://", "Godot", ".gd", "Schema", "Autoload", "Node", "Befehlsfolge", "Replay", "Seed"]
 
@@ -40,7 +41,7 @@ func _block_texts(index: int, lang: String) -> Array[String]:
 # --- Inhalt --------------------------------------------------------------------------------------------------
 
 func test_catalog_matches_translations_in_both_languages() -> void:
-	assert_eq(RulebookCatalog.count(), 12, "zwölf Kapitel")
+	assert_eq(RulebookCatalog.count(), 13, "dreizehn Kapitel")
 	var chapter_key := RegEx.create_from_string("^ui\\.rulebook\\.c\\d\\d\\.")
 	for lang: String in ["de", "en"]:
 		var po := po_entries(PO_DE if lang == "de" else PO_EN)
@@ -156,12 +157,12 @@ func test_previous_next_and_back_navigation() -> void:
 	assert_false(find_button(book, "RulebookNextButton").disabled, "erstes Kapitel: Nächstes frei")
 	await press(find_button(book, "RulebookNextButton"))
 	assert_eq(book.current_chapter(), 1, "Nächstes Kapitel")
-	assert_true(str((find_node(book, "RulebookPositionLabel") as Label).text).contains("2") and str((find_node(book, "RulebookPositionLabel") as Label).text).contains("12"), "Position „Kapitel 2 von 12“")
+	assert_true(str((find_node(book, "RulebookPositionLabel") as Label).text).contains("2") and str((find_node(book, "RulebookPositionLabel") as Label).text).contains("13"), "Position „Kapitel 2 von 13“")
 	await press(find_button(book, "RulebookPrevButton"))
 	assert_eq(book.current_chapter(), 0, "Vorheriges Kapitel")
-	for i: int in 11:
+	for i: int in 12:
 		await press(find_button(book, "RulebookNextButton"))
-	assert_eq(book.current_chapter(), 11, "letztes Kapitel erreicht")
+	assert_eq(book.current_chapter(), 12, "letztes Kapitel erreicht")
 	assert_true(find_button(book, "RulebookNextButton").disabled, "letztes Kapitel: kein Nächstes")
 	await go_back(shell)
 	assert_eq(current_id(shell), &"rulebook", "Zurück schließt zuerst das Kapitel")
@@ -219,10 +220,10 @@ func test_every_chapter_fits_and_scrolls_at_1024x768() -> void:
 		await navigate(shell, &"rulebook")
 		var book := _book(current_screen(shell))
 		var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
-		# Inhaltsverzeichnis: alle zwölf Einträge erreichbar (zur Not durch Scrollen), Einträge mindestens 48 hoch.
+		# Inhaltsverzeichnis: alle dreizehn Einträge erreichbar (zur Not durch Scrollen), Einträge mindestens 48 hoch.
 		var toc_scroll := find_node(book, "RulebookTocScroll") as ScrollContainer
 		assert_true(inside(rect_of(toc_scroll), viewport), "%s: Verzeichnis im Fenster" % lang)
-		var last_toc := find_button(book, "RulebookChapter_c12")
+		var last_toc := find_button(book, "RulebookChapter_c13")
 		toc_scroll.ensure_control_visible(last_toc)
 		await frames(2)
 		assert_true(inside(rect_of(last_toc), rect_of(toc_scroll), 1.0), "%s: letzter Verzeichniseintrag erreichbar" % lang)

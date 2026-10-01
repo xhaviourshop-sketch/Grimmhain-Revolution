@@ -30,6 +30,7 @@ static func lines(report: Dictionary, version: String, reveal: bool = true) -> A
 		var people: Array = []
 		people.append_array(winner.get("names", []))
 		people.append_array(winner.get("co_names", []))
+		people.append_array(winner.get("card_co_names", []))  # stille Mitsieger der Totenreichkarten
 		if not people.is_empty():
 			out.append({"style": "line", "text": _t("ui.report.winners", {"names": ", ".join(PackedStringArray(people))})})
 		var roles: Array = report.get("roles", [])
@@ -111,6 +112,9 @@ static func _entry(entry: Dictionary, out: Array[Dictionary]) -> bool:
 		"effects":
 			for e: Dictionary in entry.get("effects", []):
 				var line := CockpitText.effect_line(e)
+				out.append({"style": "line", "text": _t(str(line["key"]), line["values"])})
+		"cards":
+			for line: Dictionary in CockpitText.card_lines(entry.get("cards", [])):
 				out.append({"style": "line", "text": _t(str(line["key"]), line["values"])})
 		"night_private":
 			for line: Dictionary in entry.get("lines", []):

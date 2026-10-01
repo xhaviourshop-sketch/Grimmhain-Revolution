@@ -683,30 +683,35 @@ func _card_window(next: Dictionary, _context: Dictionary) -> void:
 	if not waiting.is_empty():
 		_text("ui.cards.window.waiting", {"names": ", ".join(waiting)}, &"MutedLabel").name = "WaitingLabel"
 	_card_face(card)
-	_text(str(card.get("guide_key", "")), {}, &"MutedLabel").name = "CardGuideLabel"
-	var preselected: Array = (next.get("preselected", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
-	if not preselected.is_empty():
-		_text("ui.cards.window.preselected", {"names": ", ".join(preselected)}, &"WarningLabel").name = "PreselectedLabel"
 	if bool(next.get("must_play", false)):
 		_text("ui.cards.window.must_play", {}, &"WarningLabel").name = "MustPlayLabel"
+	if not bool(next.get("can_play", false)):
+		_text("ui.cards.window.not_playable", {}, &"MutedLabel").name = "NotPlayableLabel"
 	var owner_id := int(next.get("owner_id", -1))
 	var play := _button("CardPlayButton", "ui.cards.action.play", GrimmButton.Kind.PRIMARY, &"card_play", {"owner_id": owner_id})
 	play.disabled = not bool(next.get("can_play", false))
 	var keep := _button("CardKeepButton", "ui.cards.action.keep", GrimmButton.Kind.SECONDARY, &"card_keep", {"owner_id": owner_id})
 	keep.disabled = not bool(next.get("can_keep", true))
 	var buttons: Array[Control] = [play, keep]
-	if not bool(next.get("can_play", false)):
-		_text("ui.cards.window.not_playable", {}, &"MutedLabel").name = "NotPlayableLabel"
 	if bool(next.get("swallower_alive", false)):
 		var exchange := _button("CardExchangeButton", "ui.cards.action.exchange", GrimmButton.Kind.SECONDARY, &"card_exchange", {"owner_id": owner_id})
 		exchange.disabled = not bool(next.get("can_exchange", false))
 		buttons.append(exchange)
-	buttons.append(_button("CardShowButton", "ui.cards.action.show", GrimmButton.Kind.SECONDARY, &"card_show"))
-	buttons.append(_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"))
+	# Die Hauptaktionen stehen direkt unter dem Kartentext (ohne Scrollen erreichbar); Erklärung und seltene Aktionen folgen.
+	_actions(buttons)
+	_text(str(card.get("guide_key", "")), {}, &"MutedLabel").name = "CardGuideLabel"
+	var preselected: Array = (next.get("preselected", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
+	if not preselected.is_empty():
+		_text("ui.cards.window.preselected", {"names": ", ".join(preselected)}, &"WarningLabel").name = "PreselectedLabel"
 	var close := _button("CardCloseWindowButton", "ui.cards.action.close_window", GrimmButton.Kind.SECONDARY, &"card_close")
 	close.disabled = not bool(next.get("can_close", true))
-	buttons.append(close)
-	_actions(buttons)
+	var more := VBoxContainer.new()
+	more.name = "MoreActions"
+	more.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	for b: Control in [_button("CardShowButton", "ui.cards.action.show", GrimmButton.Kind.SECONDARY, &"card_show"),
+			_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"), close]:
+		more.add_child(b)
+	add_child(more)
 
 
 ## Öffentliche Tagesregeln durch Karten (Nebelhorn, Stummfilm, Totengericht, ...): Name, Text und, wo vorgesehen, Button zum Melden

@@ -6127,6 +6127,48 @@ msgstr "The general lexicon and this rulebook never show details of the running 
 msgid "ui.rulebook.c12.b07"
 msgstr "The language button in the help switches the language of the whole app. The opened place is kept."
 
+msgid "ui.rulebook.c13.title"
+msgstr "Realm of the Dead cards and the Card Swallower"
+
+msgid "ui.rulebook.c13.b01"
+msgstr "Realm of the Dead cards are an option when setting up a game (“Realm-of-the-dead cards” in the role selection). When it is on, every person who dies draws exactly one card. The card belongs to the person's faction at death: wolves, village or, for solo roles, neutral and solo cards."
+
+msgid "ui.rulebook.c13.b02"
+msgstr "The app knows the card text, applies the effect and remembers the dead person's card. A game master correction without consequences does not draw a card. When a person is revived, the unplayed card from the earlier life lapses."
+
+msgid "ui.rulebook.c13.b03"
+msgstr "The card window"
+
+msgid "ui.rulebook.c13.b04"
+msgstr "The dead act only in a card window, and only when their card can do something right now. There are two windows per day. The app asks the dead one after another, each at most once per window."
+
+msgid "ui.rulebook.c13.b05"
+msgstr "• First window: after the morning report, before the day's discussion."
+
+msgid "ui.rulebook.c13.b06"
+msgstr "• Second window: at the end of the day, after the execution and its death effects, before the night."
+
+msgid "ui.rulebook.c13.b07"
+msgstr "• Order: in the order in which the cards were drawn. While a window is open the day or night does not continue; the game master can close it, and everyone keeps their cards."
+
+msgid "ui.rulebook.c13.b08"
+msgstr "Play, keep, exchange"
+
+msgid "ui.rulebook.c13.b09"
+msgstr "“Play card” uses the card. Depending on the card you choose people in the seat ring, an option, yes or no, or roll on screen; the result is stored and never rolled again. “Keep” leaves the card for the next fitting window. “Show card” puts the card large on screen so the table can read it."
+
+msgid "ui.rulebook.c13.b10"
+msgstr "“Exchange for a replacement card” exists only while a Card Swallower is alive: the card is given up, the Card Swallower gains a stack, and the replacement card is played at once. What has to happen at the table (speaking bans, silence, showing) is enforced by the game master; the app has no clock, and you report rule violations through the day rule in the day view."
+
+msgid "ui.rulebook.c13.b11"
+msgstr "The Card Swallower"
+
+msgid "ui.rulebook.c13.b12"
+msgstr "The Card Swallower is a solo role and can only be chosen in games with Realm of the Dead cards. Every permitted exchange of a card gives them a stack. Stacks belong to the person, not to the role. With at least two stacks they are woken every night, otherwise their step is skipped."
+
+msgid "ui.rulebook.c13.b13"
+msgstr "The game master takes their hand sign: shake the head (nothing), two fingers (two stacks: a kill in the morning), five fingers (five stacks: a shield against the next death) or ten fingers (ten stacks: a win if they live and the game master confirms). The game master taps the sign as a button. In nights 3, 6, 9 and so on the morning announces publicly only the total of all collected stacks, without revealing purchases."
+
 # --- Procedure at the table per role (OI-18) ---
 
 msgid "ui.role.albtraumwolf.lex.act"
