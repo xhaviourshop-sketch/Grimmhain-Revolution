@@ -525,3 +525,7 @@ Entscheidungen von Markus in `DECISIONS.md` (Karte A, G2-Porträts mit leichter 
 Roadmap: P0 und P1 als erledigt markiert (Verweis auf mockup-v2); offen bleibt der Punkt, die Roadmap nach `docs/masterplan/VISUAL-EXPERIENCE-ROADMAP.md` zu übernehmen und im Masterplan zu verlinken.
 Abgelegt in `docs/assets/p1-mockup/` (Skripte, zugeschnittene Bilder, README, keine Laufzeitassets). 23 neue Medien im Register (Status `ungeklärt`, Herkunft als Nutzerangabe). `node tools/check-asset-register.js`: Register vollständig und konsistent (336 Zeilen). Mockup-Skript aus dem Repo-Ordner einmal gestartet (Screenshot erzeugt).
 Commit lokal auf `feature/visual-night-board`, nur Dokumentation und `docs/assets/`, kein Push, `CLAUDE.md` (Nutzeränderung) nicht enthalten.
+
+## 2026-10-01: P2 vorbereitet (nur Planung)
+Grafikliste `docs/assets/P2-GRAFIKLISTE.md`: Claude Code kann aus dem Bestand ableiten (nicht ausgeführt): textfreie Lasche Protokoll (vorhanden) und Optionen, bereinigte Nachtreihenfolge-Slots, Rollenbilder ohne Kartenecken als Übergangslösung, Rollenkartenrahmen ohne schwarzen Block. ChatGPT nötig: Porträtblätter C und D (je 8 Gesichter, ergibt 26 statt der nötigen 24), Statusabzeichen, Rollensymbol-Probeblatt (12). Briefings: `Downloads/Grimmhain-P1-Nachtentwurf/P2-BRIEFINGS-FUER-CHATGPT.md`. Nichts generiert, nichts repariert, nichts bestellt.
+Nächster Schritt: Markus erzeugt die vier Bilder P2-1 bis P2-4, danach P2-Ausführung (Reparaturen und Einbau ins Mockup) und P3.
