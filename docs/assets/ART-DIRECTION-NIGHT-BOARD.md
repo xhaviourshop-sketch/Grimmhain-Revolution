@@ -62,3 +62,13 @@ Rechenbasis: 24 Plätze auf einer Ellipse mit etwa 2270 px Umfang bei 1024 × 76
 ## 6. Quellen und Status
 
 Alle Bilder aus dem ChatGPT-Lauf sind Kandidaten. Pro Bild festhalten: Werkzeug und Modell, Datum, Prompt, Nachbearbeitung. Kandidaten liegen außerhalb von `godot/` (Übergabeordner), freigegebene Exporte kommen später in das Register (`docs/masterplan/ASSET-REGISTER.md`). Eine Aufnahme in das Register oder in `godot/` bedeutet noch keine Release-Freigabe.
+
+## 7. Statusabzeichen und Rollensymbole (P2)
+
+**Statusabzeichen am Platz:** Die sechs freigestellten Medaillons aus `p2-mockup/badges/` (Schutz, Gift, Markiert, Stumm, Tot, Sonder) sind die Abzeichen am Porträtplatz. Größe ab 24 px (rund 37 % des Porträtdurchmessers), unten rechts am Porträt, mehrere Abzeichen reihen sich nach links. Form und Farbe tragen die Information gemeinsam. Bei 24 px sind Schutz, Gift, Markiert und Tot sicher erkennbar, das Stumm-Symbol (Mund mit Schrägstrich) ist grenzwertig und auf dem Gerät zu prüfen.
+
+**Größere Ansichten (Protokoll, Legende, Detailpanels):** nicht die Abzeichen skalieren, sondern die vorhandenen `marker-*.webp` verwenden.
+
+**Rollensymbole (Nachtreihenfolge-Leiste):** Der Stil des Probeblatts P2-4 gilt für alle 72 Rollen (Entscheidung in `DECISIONS.md`): rundes Medaillon mit dunklem Metallrand, vier Rautenzier an den Kompasspunkten, monochromes Silber auf dunklem Grund, ein Emblem statt einer Szene, kein Text, keine Kartenecken. Lesbar ab etwa 40 px. Bis ein Symbol existiert, zeigt die Leiste das Kreisbild aus `night-icons-circle/`. Das Wolfskind-Symbol (Wolf mit Zipfelmütze) ist verworfen und wird neu erzeugt.
+
+**Reparierte Teile:** Laschen ohne Text (Beschriftung über Lokalisierung), Nachtreihenfolge-Slots ohne Säume, Rollenkartenrahmen mit transparenter Platte. Siehe `p2-mockup/README.md`.

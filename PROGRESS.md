@@ -529,3 +529,12 @@ Commit lokal auf `feature/visual-night-board`, nur Dokumentation und `docs/asset
 ## 2026-10-01: P2 vorbereitet (nur Planung)
 Grafikliste `docs/assets/P2-GRAFIKLISTE.md`: Claude Code kann aus dem Bestand ableiten (nicht ausgeführt): textfreie Lasche Protokoll (vorhanden) und Optionen, bereinigte Nachtreihenfolge-Slots, Rollenbilder ohne Kartenecken als Übergangslösung, Rollenkartenrahmen ohne schwarzen Block. ChatGPT nötig: Porträtblätter C und D (je 8 Gesichter, ergibt 26 statt der nötigen 24), Statusabzeichen, Rollensymbol-Probeblatt (12). Briefings: `Downloads/Grimmhain-P1-Nachtentwurf/P2-BRIEFINGS-FUER-CHATGPT.md`. Nichts generiert, nichts repariert, nichts bestellt.
 Nächster Schritt: Markus erzeugt die vier Bilder P2-1 bis P2-4, danach P2-Ausführung (Reparaturen und Einbau ins Mockup) und P3.
+
+## 2026-10-01: P2 ausgeführt
+Ergebnis: Mockup V3 (1024x768 und 1280x800, Leiste voll und eingeklappt), angesehen: `Downloads/Grimmhain-P1-Nachtentwurf/mockup-v3/`, dort auch das Kontaktblatt `P2-kontaktblatt-gesichter-24.png`.
+24 eindeutige Gesichter (26 Kandidaten aus A, B ohne zwei Duplikate, C, D; D5 und D6 als zu ähnlich aussortiert, fünf grenzwertige Paare in der Grafikliste). Statusabzeichen freigestellt und als 24-px-Abzeichen an vier Plätzen im Mockup (Schutz, Gift plus Stumm, Markiert, Stumm). Rollensymbole freigestellt (11 von 12, Wolfskind-Symbol verworfen), 7 davon in der Nachtreihenfolge-Leiste, Wolfskind mit Kreisbild als Übergang.
+Repariert: Laschen textfrei (Zahnrad selbst gezeichnet), Slots ohne Säume und Speckles mit dunklem Sockel, Kartenrahmen mit transparenter Platte, Kreismaske für alle 72 Nachtbilder.
+Nicht gelöst: aktiver Slot behält einen leichten rosa Hauch am Rand, Stumm-Abzeichen bei 24 px grenzwertig, „Rückgängig“ überlappt bei 1024x768 knapp Platz 11 (Layout aus V2), nichts auf dem Tablet geprüft.
+Entscheidung: Stil der Rollensymbole für alle 72 Rollen in `DECISIONS.md`. Art Direction Abschnitt 7 (Abzeichen 24 px, größer `marker-*.webp`). Herkunft in `ORIGIN-NOTES-NIGHT-BOARD.md` Abschnitt 5, 119 neue Registerzeilen (`node tools/check-asset-register.js`: vollständig und konsistent).
+Schätzung Rollensymbole: 61 fehlende Symbole, mindestens 6 Blätter, realistisch 7 bis 8 (Grafikliste).
+Abgelegt in `docs/assets/p2-mockup/`, nichts in `godot/`, lokaler Commit auf `feature/visual-night-board`, kein Push.

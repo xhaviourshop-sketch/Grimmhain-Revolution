@@ -42,3 +42,11 @@ Nur wichtige Architektur-, Produkt-, Daten- oder Sicherheitsentscheidungen mit B
 **Warum:** Das Mockup V2 (`docs/assets/p1-mockup/`, Screenshots im Übergabeordner `mockup-v2/`) zeigte, dass diese Variante auf 24 Plätzen lesbar bleibt und zur eigenen Vorlage passt.
 
 **Folgen:** Die Regel „Verbergen zeigt nur Öffentliches“ muss P3 mit den bestehenden öffentlichen Sichten (`cockpit_view.gd`) umsetzen, nicht mit einer zweiten Regelquelle. Das Roadmap-Ziel „Geheimnisse nicht durch Highlight verraten“ gilt für den Verbergen-Zustand und für eine spätere öffentliche Zweitansicht, nicht für die offene Spielleitungsansicht.
+
+## 2026-10-01: Stil der Rollensymbole für alle 72 Rollen
+
+**Entscheidung (Markus, 01.10.2026):** Der Stil des Probeblatts `P2-04-role-emblems-probe-v1.png` gilt für alle 72 Rollensymbole: rundes Medaillon, dunkler Metallrand mit vier Rautenzieren, monochromes Silber auf dunklem Grund, ein Emblem statt einer Szene. Das Symbol 6 (Wolf mit Zipfelmütze, Wolfskind) wird nicht verwendet und neu erzeugt.
+
+**Warum:** Der Stil passt zu den Medaillons in `Full UI.png` und bleibt bei 40 px lesbar. Er löst die Übergangslösung mit Kartenausschnitten ab.
+
+**Folgen:** Die restlichen Symbole entstehen in Blättern zu je 12 (Schätzung in `docs/assets/P2-GRAFIKLISTE.md`). Die Motive leitet Markus aus den Rollen ab. Bis zur Lieferung zeigt die Leiste das Kreisbild aus `night-icons-circle/`. Die Bilder bleiben Kandidaten ohne Veröffentlichungsfreigabe.
