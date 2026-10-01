@@ -1186,3 +1186,53 @@ Beide Antworten konkretisieren die in KS-92 offen gelassene Frage, was „getrof
 - Die Karten `wende_03`, `wende_06`, `schicksal_06`, `fluch_04` und `fluch_10` sind damit **nicht vollständig spezifiziert** und nicht implementiert.
 
 **Vorbereitet (keine Entscheidung):** Arbeitsliste Abschnitte 27 und 28 mit den nächsten Karten `loki_03` Zeitwarp (letzte Karte der Gruppe 3), `segen_06` Schattenmantel (erste Karte der Gruppe 4) und `segen_12` Geisterhand (Fragen KS-106 bis KS-108), zwei Klärungen zu Zeitsprung (KS-109 Giftwolf, KS-110 Todesprediger) und Folgepunkten KS-111 bis KS-113. Die drei neuen Karten sind nicht spezifiziert und nicht entschieden.
+
+
+## Totenreichkarten und Kartenschlucker: Umsetzung (01.10.2026)
+
+**Herkunft:** Umsetzungsauftrag des Product Owners vom 01.10.2026 (alle 80 Karten, 119 Varianten und der Kartenschlucker). Die
+Mechanik steht im Regelkern (`core/rules/card_*.gd`, `swallower_rules.gd`), die Bedienung in der Anwendungsschicht und im Cockpit.
+Umsetzungsstand je Karte: `docs/role-migration/15-totenkarten-umsetzungsmatrix.md`.
+
+**Bestätigt und umgesetzt (Product Owner, mit Test `test_cards_decisions`):**
+
+- KS-106: Zeitwarp übernimmt die Zählregel von Zeitsprung (Nachtnummer und Fristen laufen weiter, Aktionen und Ansagen entfallen).
+- KS-107: Schattenmantel, Dorf: ein Zufallsziel ersetzt die normale Rudelzielwahl (auch ein Wolf kann getroffen werden).
+- KS-108: Geisterhand verleiht die zusätzliche Fähigkeit frisch mit verfügbaren Einsätzen.
+- KS-109: Bereits fälliges Gift wirkt am Ende der durch Zeitsprung übersprungenen Nacht (ausdrückliche Ausnahme von „kein Tod“).
+- KS-110: Die gewählte Nacht des Todespredigers zählt auch beim Überspringen; keine Verschiebung und keine Ersatzwahl.
+
+**Technische bzw. redaktionelle Entscheidung innerhalb dieses Auftrags (nicht vom Product Owner bestätigt, jederzeit änderbar):**
+
+- Variante: Die Variante einer Karte (Wolf, Dorf, neutral, Solo) richtet sich nach der Fraktion beim Tod und bleibt fest (ÜB-1).
+  Neutrale Karten wirken auf die Seite der Besitzerin.
+- Fenster: Die Reihenfolge der Fragen im Kartenfenster folgt der Ziehreihenfolge der Karten. Offene Reaktionen gehen dem Fenster vor.
+  Ein Spielleiter-„Hinrichten“ ist bei offenem Kartenfenster nicht möglich (zuerst schließen).
+- Tausch: Die Ersatzkarte nach einem Tausch wird sofort gespielt. Tauschen ist nur mit lebendem Kartenschlucker möglich.
+- Phoenix (`loki_10`): Der Tag des Spielens zählt als erster Tag; die Rückkehrenden sterben nach Hinrichtung und Todeseffekten des letzten
+  Tages (im zweiten Fenster mit einem Tag Lebensdauer: Ende des Folgetags). Würfel sind App-Würfel mit gespeicherten Ergebnissen.
+- Befreiung (`wende_07`): Als „Einsatz der Fähigkeit“ zählt ein abgeschlossener eigener Nachtschritt mit Auswahl, Ja oder Bestätigung oder
+  eine Tagesaktion (Amalia, Nekromant); ein Verzicht zählt nicht.
+- Zweites Leben (`segen_08`): Das Angebot (bis zu drei Namen) wird gespeichert; ungültig gewordene Namen werden deterministisch durch die
+  kleinsten noch gültigen IDs ersetzt (KS-38).
+- Geisterhand-Stellvertretung (`loki_08`): Die Spielleitung bestimmt, wer die Nachtfähigkeit der Karteninhaberin in der nächsten Nacht ausführt.
+- Gleichgewicht (`schicksal_07`): Blockiert wird der erste Schritt der führenden Fraktion im Nachtplan; ein bereits behandelter erster
+  Schritt bleibt der blockierte, der nächste rückt nicht nach.
+- Puppenspieler (`loki_09`): Die fünf Nominierten decken so viele Fraktionen ab, wie bei der Größe möglich sind; die App prüft das.
+- Solo-Karten: Auslegungen in `core/rules/card_fx_solo.gd` (Kopfkommentar): Zettel und Tipps trägt die Spielleitung ein, stille Mitsieger
+  erscheinen nach bestätigtem Spielende im Abschlussbericht, Stimmenzahlen werden am Tisch gezählt.
+- Tischregeln (Nebelhorn, Stummfilm, Totengericht): Die App hat keinen Timer. Regelverstöße meldet die Spielleitung als Button, die Folge
+  (Ausschluss, Tod) setzt der Kern um.
+- Kartenschlucker: Nur mit Totenreichkarten wählbar, keine Scheinrolle; Schild, Stapel und Ansagen wie in `swallower_rules.gd`.
+- Speicherformat: Schema 15 und Regelversion 0.15; ältere Spielstände werden als „nicht kompatibel“ gemeldet und nie überschrieben.
+- Oberfläche: Hauptaktionen des Kartenfensters (Spielen, Aufbewahren, Tauschen) stehen unter dem Kartentext und sind ohne Scrollen
+  erreichbar; Erklärung, Zeigen, Überblick und Schließen folgen darunter. Regelbuch Kapitel 13 erklärt Fenster, Tausch und Kartenschlucker.
+
+**Entdeckte und behobene Fehler (durch die Tests dieses Auftrags):** Reaktionen blockierten das Kartenfenster nicht (Cockpit), ein
+Spielleiter-„Hinrichten“ bei offenem Fenster brach den gespeicherten Zustand, Einzelauswahlen kamen als Zahl statt als Liste an, eine
+Morgenauflösung endete nicht nach der letzten Aufgabe ohne Eingabe, die Mischprüfung des Puppenspielers wurde nie aufgerufen, falsch
+typisierte Antworten lösten Skriptfehler aus, „Gleichgewicht“ sperrte mehrere Schritte, neutrale Karten (Anarchie, Totale Anarchie,
+Geisterhand-Stellvertretung) fanden nie ein Ziel.
+
+**Offen und nicht entschieden (nicht erfunden):** Einzelfälle, die die Arbeitsliste ausdrücklich als offen führt, bleiben offen; dazu zählen
+Kombinationen mehrerer Karten, die dort nicht beantwortet sind. Nicht geprüft: Tablet, Touch, visuelle Abnahme, Audio.

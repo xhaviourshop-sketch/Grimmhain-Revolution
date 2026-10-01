@@ -479,3 +479,10 @@ Entschieden (Decision Log "Wendepunkt, Trotz, Zeitsprung, Verrat, Schlechtes Ome
 Offen: `wende_03` KS-103; `wende_06` KS-104; `schicksal_06` KS-105 samt Wechselwirkung mit "kein Tod" (gestellt als KS-109, KS-110); `fluch_04` KS-94; `fluch_10` KS-96; Schild KS-97; Dorfvarianten von `wende_03` und `wende_06` nicht entschieden. Keine dieser Karten ist vollständig spezifiziert.
 Vorbereitet: Arbeitsliste Abschnitte 27 und 28 mit `loki_03`, `segen_06`, `segen_12` (Originaltexte aus `cards.js`, Fragen KS-106 bis KS-108; Übernahme der Zeitsprung-Regel bei Zeitwarp ausdrücklich zur Entscheidung), zwei Klärungen zu Zeitsprung (KS-109 Giftpranke des Giftwolfs, KS-110 Wahl des Todespredigers) und Folgepunkten KS-111 bis KS-113.
 Nächster Schritt: Antworten auf KS-106 bis KS-110, dann der Rest der Schildregeln (KS-97), danach Gruppe 4 ab `segen_14`.
+
+## 2026-10-01: Totenreichkarten und Kartenschlucker umgesetzt (alle 80 Karten, 119 Varianten)
+Status: umgesetzt auf `feature/night-ui-expansion` (PR #3), kein Merge. Regelkern, Spielaufbau, Cockpit (Kartenfenster, Karteneingaben, Würfel, Handzeichen, Tagesregeln), Speicherformat (Schema 15, Regelversion 0.15, alte Spielstände unverändert als nicht kompatibel gemeldet), Regelbuch Kapitel 13, Abschlussbericht mit stillen Mitsiegern.
+Entschieden: Product-Owner-Antworten KS-106 bis KS-110 (Decision Log „Totenreichkarten und Kartenschlucker: Umsetzung“); alle übrigen Auslegungen sind dort als technische bzw. redaktionelle Entscheidung innerhalb dieses Auftrags gekennzeichnet.
+Nachweis: `docs/role-migration/15-totenkarten-umsetzungsmatrix.md` (80 Karten mit Kern, UI, DE/EN, Tests); Tests je Mechanikfamilie, je Kartenvariante (Spielbarkeit, ungültige Eingaben, öffentliche Angaben), Fuzz mit Karten, Oberflächenpartien mit 6, 12 und 24 Personen.
+Offen: keine Prüfung auf Tablet, Touch, visuell oder Audio; keine Zusicherung der Fehlerfreiheit aller Kombinationen.
+Übergabe: `docs/development/HANDOVER-TOTENKARTEN.md`.

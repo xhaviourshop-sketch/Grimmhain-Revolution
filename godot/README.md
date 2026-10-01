@@ -360,3 +360,18 @@ Diese Punkte legt die Spezifikation nicht fest; sie sind so gewählt, dass keine
 ## Nicht enthalten
 
 gespeicherte Einstellungen und Spielerlisten (Rollenübergabe und `ConfirmRoleShown` seit Paket 2 vorhanden, siehe Schema 14), Autoloads, Assets, eingebettete Schriften, Audio, weitere Rollen, allgemeines Effektmodell, `ReorderSeats`, `ConfirmRoleShown`, `BeginDay`, Undo/Redo, Checkpoint-Rotation über eine Sicherung hinaus, öffentliche Projektionen. Siehe `implementation-boundary.md` B bis D.
+
+## Totenreichkarten und Kartenschlucker
+
+Optional beim Spielaufbau (`death_cards`). Regeln: `core/rules/card_*.gd` (Katalog, Fenster, Familien `card_fx_*`, Haken in der
+Tötungsstufe, Hinrichtung und Nachtplan) und `core/rules/swallower_rules.gd`; Befehle `CardAct`, `CardCloseWindow`, `CardTableAction`;
+Anzeige `app/session/card_view.gd` und das Cockpit (Ansagekarte `card_window`, Karteneingaben als Prompt, Besitzer `card` und
+`kartenschlucker`). Zustand: `GameState.cardsys` (Schema 15).
+
+```bash
+godot/tests/run_all.sh --filter=cards_     # alle Kartentests (Familien, Varianten, Oberfläche)
+godot/tests/run_all.sh --filter=swallower  # Kartenschlucker im Kern
+godot/tests/run_all.sh --filter=cards_ui_games  # Partien mit 6, 12 und 24 Personen nur über Buttons
+```
+
+Umsetzungsstand je Karte: `../docs/role-migration/15-totenkarten-umsetzungsmatrix.md`. Entscheidungen: `../docs/masterplan/DECISION-LOG.md`.
