@@ -200,6 +200,9 @@ const RACHSUECHTIGER_WOLF := &"rachsuechtiger-wolf"
 const LONE_WOLF_EVERY := 3
 ## Zeitwächter / Time Warden (E-36, DA-19, DA-20): einmal je Leben als allererster Nachtschritt die Nacht einfrieren.
 const ZEITWAECHTER := &"zeitwaechter"
+## Kartenschlucker / Card Swallower (72. Rolle, Decision Log „Kartenschlucker, Grundregeln“): Einzelsieg, sammelt Stapel aus
+## Tauschaktionen der Totenreichkarten und kauft jede Nacht höchstens eine Aktion (SwallowerRules). Nur mit Totenreichkarten.
+const KARTENSCHLUCKER := &"kartenschlucker"
 ## Rollen, deren eigener Nachtschritt jede Nacht stattfindet und durch einen Apfel verdoppelt wird (R-02, R-04);
 ## ausgenommen Rollen mit nur einem Ergebnis (Richter, Parasit, Verdammniswächter, Rotkäppchen).
 const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUMWOLF, HENKER, WALDLAEUFER, DOKTOR, TRAUMDEUTER, SCHWARZE_WITWE,
@@ -292,6 +295,7 @@ const ROLES := {
 	SCHICKSALSWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHICKSALSWOLF, "night_priority": 25},  ## Legacy-Stufe 2.5
 	GRABRAEUBER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": GRABRAEUBER, "night_priority": 64},  ## Legacy-Stufe 6.4
 	HADES: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": HADES, "night_priority": 99},  ## Legacy-Stufe 9.9: zuletzt
+	KARTENSCHLUCKER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": KARTENSCHLUCKER, "night_priority": 58, "requires_cards": true},  ## nach dem Schutzgeist (56), vor der Kriegerin (60)
 }
 
 
@@ -343,7 +347,7 @@ static func first_night_only(role_id: StringName) -> bool:
 static func stealable(role_id: StringName) -> bool:
 	if not has_role(role_id) or night_priority(role_id) == 0 or first_night_only(role_id):
 		return false
-	return not [PROPHET, SCHICKSALSWOLF, SCHUTZGEIST, WOLFSKIND, LEHRLING, GRABRAEUBER].has(role_id)
+	return not [PROPHET, SCHICKSALSWOLF, SCHUTZGEIST, WOLFSKIND, LEHRLING, GRABRAEUBER, KARTENSCHLUCKER].has(role_id)
 
 
 ## true, wenn jede Instanz der Rolle eine vom Spielleiter festgelegte Scheinrolle braucht.
@@ -353,14 +357,20 @@ static func requires_appearance(role_id: StringName) -> bool:
 
 ## Zulässige Scheinrolle: eine bekannte Rolle, die nicht als Wolf zählt
 ## (also weder `werwolf` noch `trugbilderwolf`); sie muss nicht in der Partie vorkommen.
+## Technische Entscheidung (Totenreichkarten): Der Kartenschlucker gibt es nur mit Totenreichkarten und ist keine Scheinrolle.
 static func is_valid_appearance(role_id: StringName) -> bool:
-	return has_role(role_id) and not counts_as_wolf(role_id)
+	return has_role(role_id) and not counts_as_wolf(role_id) and not requires_cards(role_id)
 
 
 ## Gewicht einer lebenden Person dieser Rolle in der Wolfsparität (G-SIEG-2), sonst 1.
 ## Nur für Rollen, die als Wolf zählen; Personenzählungen (DR-12) nutzen es nie.
 static func parity_weight(role_id: StringName) -> int:
 	return (ROLES[role_id] as Dictionary).get("parity_weight", 1)
+
+
+## true, wenn die Rolle nur in Partien mit Totenreichkarten sinnvoll ist (Kartenschlucker).
+static func requires_cards(role_id: StringName) -> bool:
+	return (ROLES[role_id] as Dictionary).get("requires_cards", false)
 
 
 ## Höchstzahl in der Startbesetzung: 1 (PE-07), UNLIMITED nur für Rollen mit ausdrücklicher Ausnahme.

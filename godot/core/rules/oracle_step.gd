@@ -52,6 +52,8 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 		return &""
 	if p.has("targets") or not (p.get("choice") is bool and bool(p["choice"])):
 		return &"invalid_answer"  # „Gezeigt“ kennt nur Ja; zurück per CancelPrompt
+	if CardHooks.false_info_pending(s, prompt.actor_id) and not DictRead.get_bool(prompt.partial, "overridden"):
+		return &"false_info_required"  # Falsche Fährte (Dorf): erst die falsche Auskunft per Übersteuerung festlegen
 	return &""
 
 
@@ -63,13 +65,14 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 		return
 	var target := s.players[(DictRead.to_int_array(p["targets"]) as Array[int])[0]]
 	var determined := InformationRules.determine_role(target)
+	var cloaked := CardHooks.oracle_cloak(ctx, target)  # Schattenmantel / Schattenvorteil (Totenreichkarten)
 	prompt.partial = {
 		"target_id": target.id,
 		"truth_role": String(target.role_id),
 		"determined_role": String(determined),
-		"shown_role": String(determined),
-		"overridden": false,
-		"override_reason": "",
+		"shown_role": String(cloaked if cloaked != &"" else determined),
+		"overridden": cloaked != &"" and cloaked != determined,
+		"override_reason": "card" if cloaked != &"" and cloaked != determined else "",
 	}
 	prompt.stage = STAGE_SHOWN
 	prompt.allowed_ids = []
@@ -85,6 +88,7 @@ static func _confirm(ctx: RuleContext) -> void:
 	var prompt := s.pending_prompt
 	s.pending_prompt = null
 	var partial := prompt.partial
+	CardHooks.consume_false_info(s, prompt.actor_id)
 	ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {"prompt_id": prompt.id, "owner": prompt.owner, "stage": STAGE_SHOWN})
 	var record := InfoRecord.new()
 	record.id = s.next_info_id
@@ -157,7 +161,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step) or StepQueue.step_role(key) != RoleCatalog.ORAKEL:
 		return false
 	var oracle: Player = s.players.get(prompt.actor_id)
-	if oracle == null or StepQueue.step_actor(key) != oracle.id or not oracle.alive or SoloRules.ability_role(s, oracle.id) != RoleCatalog.ORAKEL:
+	if oracle == null or StepQueue.step_actor(key) != oracle.id or not oracle.alive or not SoloRules.acts_as(s, oracle.id, RoleCatalog.ORAKEL):
 		return false
 	if prompt.stage == STAGE_TARGET:
 		var allowed := s.alive_ids()

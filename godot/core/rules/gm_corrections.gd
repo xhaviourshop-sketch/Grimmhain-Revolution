@@ -29,6 +29,13 @@ const REMOVE_APPRENTICE_MASTER := "remove_apprentice_master"              ## akt
 const TRIGGER_APPRENTICE_INHERITANCE := "trigger_apprentice_inheritance"  ## Erbe manuell auslösen
 const REVERT_APPRENTICE_INHERITANCE := "revert_apprentice_inheritance"    ## Erbe exakt zurücknehmen
 const APPRENTICE_KINDS: Array[String] = [SET_APPRENTICE_MASTER, REMOVE_APPRENTICE_MASTER, TRIGGER_APPRENTICE_INHERITANCE, REVERT_APPRENTICE_INHERITANCE]
+## Totenreichkarten (CardRules.gm_validate): Karte zuweisen oder entfernen, Stapel und Schild des Kartenschluckers, Karteneffekt beenden.
+const SET_CARD := "set_card"
+const REMOVE_CARD := "remove_card"
+const SET_STACKS := "set_stacks"
+const SET_CARD_SHIELD := "set_card_shield"
+const END_CARD_EFFECT := "end_card_effect"
+const CARD_KINDS: Array[String] = [SET_CARD, REMOVE_CARD, SET_STACKS, SET_CARD_SHIELD, END_CARD_EFFECT]
 const WOLF_CHILD_KINDS: Array[String] = [SET_WOLF_MODEL, REMOVE_WOLF_MODEL, TRANSFORM_WOLF_CHILD, REVERT_WOLF_CHILD]
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
@@ -51,6 +58,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		if not s.reactions.is_empty():
 			return &"reaction_open"
 		return &""
+	if CARD_KINDS.has(kind):
+		return CardRules.gm_validate(s, p, kind)
 	if kind == SET_PROTECTION or kind == REMOVE_PROTECTION:
 		return _validate_protection(s, p, kind)
 	if kind == SET_WITCH_POTION or kind == SET_RESCUE or kind == REMOVE_RESCUE:
@@ -335,6 +344,9 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			else:
 				mirror.ability_uses[ExecutionRules.MIRROR_USE_KEY] = 1
 			_log(ctx, kind, target, old, {"mirror_available": bool(p["available"])}, reason, false)
+		SET_CARD, REMOVE_CARD, SET_STACKS, SET_CARD_SHIELD, END_CARD_EFFECT:
+			var changed := CardRules.gm_execute(ctx, p, kind)
+			_log(ctx, kind, DictRead.get_int(p, "target_id", GameState.NO_TARGET), changed["old"], changed["new"], reason, false)
 		SET_WOLF_MODEL, REMOVE_WOLF_MODEL:
 			var child := DictRead.get_int(p, "child_id")
 			var bond := WolfChildRules.bond_of(s, child)

@@ -61,6 +61,8 @@ const OWNER_FATE := &"schicksalswolf"
 const OWNER_LONE := &"rachsuechtiger-wolf"
 const OWNER_TIME := &"zeitwaechter"
 const OWNER_PREACHER := &"todesprediger"
+const OWNER_CARD := &"card"  ## Eingabekette einer Totenreichkarte (CardSteps)
+const OWNER_SWALLOWER := &"kartenschlucker"  ## Nachtaktion des Kartenschluckers (SwallowerRules)
 const KIND_BOND := &"bond_choice"  ## Bindungsschritt mit Stufen (BondSteps)
 const KIND_INFO_SHOWN := &"info_shown"  ## Informationsschritt mit Bestätigung „Gezeigt“ (InfoSteps)
 
@@ -126,6 +128,12 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 			return null
 	elif p.owner == OWNER_APPRENTICE:
 		if not ApprenticeRules.STAGES.has(p.stage):
+			return null
+	elif p.owner == OWNER_CARD:
+		if not CardSteps.STAGES.has(p.stage):
+			return null
+	elif p.owner == OWNER_SWALLOWER:
+		if not SwallowerRules.STAGES.has(p.stage):
 			return null
 	elif p.owner == OWNER_SHADOW or p.owner == OWNER_TIME:
 		if p.stage != &"use":

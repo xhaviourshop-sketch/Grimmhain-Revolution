@@ -21,6 +21,9 @@ const AMALIA_SACRIFICE := &"AmaliaSacrifice"
 const NAME_WOLF := &"NameWolf"  ## Nekromant benennt am Tag geheim einen Wolf (E-19)
 const CONFIRM_ROLE_SHOWN := &"ConfirmRoleShown"  ## Person hat ihre Rolle gesehen (Rollenanzeige, Fortschritt gespeichert)
 const ACK_NOTICE := &"AckNotice"  ## privater Hinweis wurde der betroffenen Person gezeigt (DI-04, DI-06, DI-07)
+const CARD_ACT := &"CardAct"  ## Kartenfenster: tote Person spielt, behält oder tauscht ihre Totenreichkarte
+const CARD_CLOSE_WINDOW := &"CardCloseWindow"  ## Kartenfenster schließen: alle übrigen behalten ihre Karte
+const CARD_TABLE_ACTION := &"CardTableAction"  ## gemeldeter Verstoß einer Tagesregel (Nebelhorn, Stummfilm)
 
 var type: StringName = &""
 var payload: Dictionary = {}
@@ -141,6 +144,20 @@ static func confirm_role_shown(person_id: int) -> Command:
 ## Der Hinweis `notice_id` wurde gezeigt; er verlässt die Warteschlange.
 static func ack_notice(notice_id: int) -> Command:
 	return create(ACK_NOTICE, {"notice_id": notice_id})
+
+
+## Kartenfenster: `action` ist `play`, `keep` oder `exchange`; `owner_id` ist die gerade gefragte tote Person.
+static func card_act(owner_id: int, action: String) -> Command:
+	return create(CARD_ACT, {"owner_id": owner_id, "action": action})
+
+
+static func card_close_window() -> Command:
+	return create(CARD_CLOSE_WINDOW)
+
+
+## Verstoß gegen eine Tagesregel einer Karte (`effect_id`) durch `person_id`.
+static func card_table_action(effect_id: int, person_id: int) -> Command:
+	return create(CARD_TABLE_ACTION, {"effect_id": effect_id, "person_id": person_id})
 
 
 ## Nekromant `player_id` benennt am Tag `target_id` als Werwolf (höchstens einmal je Tag, geheim).

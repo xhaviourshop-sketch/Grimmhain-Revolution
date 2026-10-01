@@ -125,6 +125,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SCHICKSALSWOLF: false,  # Markieren Pflicht, Zusatzopfer mit Verzicht (0 Ziele)
 	RoleCatalog.RACHSUECHTIGER_WOLF: false,  # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.ZEITWAECHTER: false,   # Nein ist eine Antwort
+	RoleCatalog.KARTENSCHLUCKER: false,  # Nichtstun ist eine Antwort (Kopfschütteln)
 	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
 }
 
@@ -147,9 +148,10 @@ static func is_skippable(step_id: String) -> bool:
 ## mindestens einem unverbrauchten Trank, Wolfskinder und Lehrlinge nur mit Auswahlbedarf.
 static func build_night_plan(s: GameState) -> Array[StringName]:
 	var entries: Array = []  # [Priorität, Personen-ID, Schritt]
-	for id: int in s.alive_ids():
+	for pair: Array in SoloRules.night_role_pairs(s):  # Grabräuber: gestohlene Nachtfähigkeit (E-32); Totenreichkarten: zusätzliche Fähigkeit
+		var id: int = pair[0]
 		var p := s.players[id]
-		var role := SoloRules.ability_role(s, id)  # Grabräuber: gestohlene Nachtfähigkeit (E-32)
+		var role: StringName = pair[1]
 		var priority := RoleCatalog.night_priority(role)
 		if priority == 0:
 			continue
@@ -187,7 +189,7 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if role == RoleCatalog.SEELENTAUSCHER and p.ability_uses.has(BondSteps.SWAP_USE_KEY):
 			continue
-		if (role == RoleCatalog.KUTSCHER or role == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, p):
+		if (role == RoleCatalog.KUTSCHER or role == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, p, role):
 			continue
 		if role == RoleCatalog.PROPHET and not (SoloRules.prophet_marking(s, id) or s.prophet_unlocked.has(id)):
 			continue
@@ -199,6 +201,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue  # nur jede dritte Nacht (DA-16)
 		if role == RoleCatalog.ZEITWAECHTER and p.ability_uses.has(RulesEngine.TIME_USE_KEY):
 			continue  # einmal je Leben (E-36)
+		if role == RoleCatalog.KARTENSCHLUCKER and not SwallowerRules.has_decision(s, id):
+			continue  # ohne bezahlbare Aktion nur Tarnaufruf (CallPolicy)
 		if role == RoleCatalog.SCHICKSALSWOLF and not (SoloRules.fate_marking(s, id) or SoloRules.fate_killing(s, id)):
 			continue  # nur Nacht 1 (markieren) und Nacht 4 (Zusatzopfer)
 		if role == RoleCatalog.GRABRAEUBER and p.ability_uses.has(SoloRules.GRAVE_USE_KEY):
@@ -207,6 +211,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue  # ohne 2 Lichter nichts zu kaufen (E-30, E-31)
 		if role == RoleCatalog.ZEITWAECHTER:
 			priority = 0  # E-36: Entscheidung als allererster Nachtschritt
+		if role == RoleCatalog.VERDAMMNISWAECHTER:
+			priority = CardHooks.guard_priority(s, priority)  # braucht das Rudelopfer, auch wenn das Rudel als letztes ruft
 		entries.append([priority, id, personal_step_key(role, id)])
 	# Schutzgeist: Ausnahme zu G-PH-2, handelt in der ersten Nacht nach ihrem Tod (S-04).
 	for id: int in s.players:
@@ -214,9 +220,10 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			entries.append([RoleCatalog.night_priority(RoleCatalog.SCHUTZGEIST), id, personal_step_key(RoleCatalog.SCHUTZGEIST, id)])
 	for id: int in s.alive_ids():
 		if s.players[id].counts_as_wolf:
-			entries.append([RoleCatalog.PACK_PRIORITY, 0, PACK])
+			var pack_slot := CardHooks.pack_slot(s)
+			entries.append([pack_slot[0], pack_slot[1], PACK])
 			if s.pack_bonus_pending:
-				entries.append([RoleCatalog.PACK_PRIORITY, 1, PACK2])
+				entries.append([pack_slot[0], int(pack_slot[1]) + 1, PACK2])
 			break
 	if s.night_number == 1 and not InfoSteps.living_bound(s).is_empty():
 		entries.append([RoleCatalog.BOUND_PRIORITY, 0, BOUND])
@@ -235,6 +242,13 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 
 ## Grund, warum der Nachtschritt `index` entfällt, oder &"" wenn er auszuführen ist.
 static func drop_reason(s: GameState, index: int) -> StringName:
+	var reason := core_drop_reason(s, index)
+	if reason != &"":
+		return reason
+	return &"card_blocked" if CardHooks.step_blocked(s, index) else &""
+
+
+static func core_drop_reason(s: GameState, index: int) -> StringName:
 	var key := s.night_plan[index]
 	if key == PIPER_ALL:
 		# PE-06: entfällt nur ohne Aufruf des Rattenfängers oder ohne lebende Verzauberte. Keine Fähigkeit, daher weder
@@ -257,6 +271,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 			return &"blocked"
 		return &"cursed" if GuardRoles.curse_active(s) else &""
 	if key == PACK or key == PACK2:
+		if CardHooks.pack_suppressed(s):
+			return &"card_sleep"  # Totenreichkarte: kein gemeinsames Rudelopfer in dieser Nacht
 		# G-PH-6 mit Decision Log „Rollenaudit“ (F-10): Das Rudel dieser Nacht sind die Personen,
 		# die bei StartNight als Wolf zählten; lebt keine von ihnen mehr, entfällt der Schritt.
 		for id: int in s.night_wolf_ids:
@@ -282,7 +298,7 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	if GuardRoles.silenced(s, actor):
 		return &"cursed"
 	# Nie die Fähigkeit einer inzwischen verlorenen Rolle ausführen (gilt für alle persönlichen Schritte).
-	if SoloRules.ability_role(s, actor) != step_role(key):
+	if not SoloRules.acts_as(s, actor, step_role(key)):
 		return &"actor_role_changed"
 	if step_role(key) == RoleCatalog.WALDHEXE and not WitchStep.has_decision(s, actor):
 		return &"no_decision"
@@ -320,7 +336,7 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # ohne lebenden Verbündeten zählt die Nacht nicht (V-09)
 	if step_role(key) == RoleCatalog.SEELENTAUSCHER and s.players[actor].ability_uses.has(BondSteps.SWAP_USE_KEY):
 		return &"no_decision"
-	if (step_role(key) == RoleCatalog.KUTSCHER or step_role(key) == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, s.players[actor]):
+	if (step_role(key) == RoleCatalog.KUTSCHER or step_role(key) == RoleCatalog.FRANKENSTEIN) and not BondSteps.can_revive(s, s.players[actor], step_role(key)):
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.RATTENFAENGER and SoloRules.charm_targets(s, actor).is_empty():
 		return &"no_decision"
@@ -337,6 +353,8 @@ static func drop_reason(s: GameState, index: int) -> StringName:
 	if step_role(key) == RoleCatalog.RACHSUECHTIGER_WOLF and SoloRules.lone_targets(s, actor).is_empty():
 		return &"no_decision"  # kein anderer lebender Wolf
 	if step_role(key) == RoleCatalog.ZEITWAECHTER and s.players[actor].ability_uses.has(RulesEngine.TIME_USE_KEY):
+		return &"no_decision"
+	if step_role(key) == RoleCatalog.KARTENSCHLUCKER and not SwallowerRules.has_decision(s, actor):
 		return &"no_decision"
 	if step_role(key) == RoleCatalog.SCHICKSALSWOLF:
 		if SoloRules.fate_marking(s, actor):
@@ -501,6 +519,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 				prompt.min_count = 1
 			RoleCatalog.MAERTYRERIN:  # sich für das Rudelopfer opfern oder nicht
 				prompt.allowed_ids = [GuardRoles.martyr_victim(s, guard_actor)] as Array[int]
+	elif step_kind(step_id) == RoleCatalog.KARTENSCHLUCKER:
+		SwallowerRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
 	elif step_kind(step_id) == RoleCatalog.HENKER:
 		prompt.owner = PendingPrompt.OWNER_HANGMAN
 		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
@@ -535,6 +555,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.owner = PendingPrompt.OWNER_PACK
 		prompt.actor_id = -1
 		prompt.cancellable = true
+		CardHooks.shape_pack_prompt(s, prompt)
 	else:
 		# Schutzengel: Pflichtauswahl genau einer anderen lebenden Person (DR-05).
 		prompt.owner = PendingPrompt.OWNER_GUARD
@@ -586,4 +607,5 @@ static func cancel_prompt(ctx: RuleContext, reason: String) -> void:
 	var s := ctx.state
 	var prompt := s.pending_prompt
 	s.pending_prompt = null
+	CardSteps.on_cancel(s, prompt)  # eine Aufgabe der Spielleitung (z. B. durch eine Korrektur unterbrochen) geht nicht verloren
 	ctx.emit(GameEvent.PROMPT_CANCELLED, Visibility.GM, {"prompt_id": prompt.id, "step_id": prompt.step_id, "reason": reason})

@@ -32,13 +32,14 @@ func _to_roles(shell: Control, count: int = 8) -> Control:
 	return screen
 
 
-func _role_rows(screen: Node) -> Array[Control]:
+## Sichtbare Rollenzeilen. Der Kartenschlucker erscheint nur bei eingeschalteten Totenreichkarten (`all` zählt ihn immer mit).
+func _role_rows(screen: Node, all: bool = false) -> Array[Control]:
 	var out: Array[Control] = []
 	var list := find_node(screen, "RoleList")
 	if list == null:
 		return out
 	_collect_rows(list, out)
-	return out
+	return out if all else out.filter(func(row: Control) -> bool: return row.visible)
 
 
 func _collect_rows(node: Node, out: Array[Control]) -> void:
@@ -173,7 +174,8 @@ func test_role_rows_show_catalog_data() -> void:
 		return
 	var screen := await _to_roles(shell)
 	var rows := _role_rows(screen)
-	assert_eq(rows.size(), RoleCatalog.ROLES.size(), "eine Zeile je Katalogrolle")
+	assert_eq(rows.size(), ROLE_IDS.size(), "eine Zeile je Katalogrolle ohne den Kartenschlucker")
+	assert_eq(_role_rows(screen, true).size(), RoleCatalog.ROLES.size(), "der Kartenschlucker hat eine verborgene Zeile")
 	var seen: Array[String] = []
 	var faction_order: Array[String] = []
 	for row: Control in rows:
@@ -500,7 +502,7 @@ func test_role_list_scrolls_completely() -> void:
 	var screen := await _to_roles(shell)
 	var scroll := find_node(screen, "RoleScroll") as ScrollContainer
 	var rows := _role_rows(screen)
-	if scroll == null or rows.size() != RoleCatalog.ROLES.size():
+	if scroll == null or rows.size() != ROLE_IDS.size():
 		fail("Rollenliste fehlt")
 		return
 	scroll.scroll_vertical = 0
@@ -543,3 +545,27 @@ func test_role_step_texts_are_keys() -> void:
 			continue  # reine Zahl
 		assert_true(k != "" and de.has(k), "%s nutzt einen Übersetzungsschlüssel (%s)" % [c.name, k])
 		assert_true(shown != k, "%s zeigt Text statt Schlüssel" % c.name)
+
+
+## Totenreichkarten im Rollenschritt: Der Schalter ist standardmäßig aus, schaltet den Kartenschlucker frei und nimmt ihn beim
+## Ausschalten wieder aus der Auswahl; die Rolle zählt erst mit Karten als gültig.
+func test_death_cards_toggle_unlocks_the_card_swallower() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var screen := await _to_roles(shell)
+	var toggle := find_node(screen, "DeathCardsToggle") as CheckButton
+	assert_true(toggle != null and not toggle.button_pressed, "Schalter vorhanden und aus")
+	var swallower := find_node(screen, "RoleRow_kartenschlucker") as Control
+	assert_true(swallower != null and not swallower.visible, "Kartenschlucker ohne Karten verborgen")
+	toggle.button_pressed = true
+	await frames(3)
+	assert_true(swallower.visible, "Kartenschlucker mit Karten sichtbar")
+	var plus := find_button(swallower, "PlusButton")
+	assert_true(plus != null and not plus.disabled, "Plus frei")
+	await press(plus)
+	assert_eq(_label(swallower, "RoleCountLabel"), "1", "gewählt")
+	toggle.button_pressed = false
+	await frames(3)
+	assert_false(swallower.visible, "wieder verborgen")
+	assert_eq(_label(swallower, "RoleCountLabel"), "0", "Anzahl zurückgesetzt")

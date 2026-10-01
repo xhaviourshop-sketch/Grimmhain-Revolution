@@ -30,6 +30,7 @@ var _last_view: Dictionary = {}
 @onready var _suggest: GrimmButton = %SuggestButton
 @onready var _reset: GrimmButton = %ResetRolesButton
 @onready var _revival: GrimmLabel = %RevivalRoundLabel  ## DI-01: aus der Rollenwahl abgeleitet, nur Anzeige
+@onready var _cards: GrimmToggle = %DeathCardsToggle  ## Totenreichkarten: schaltet auch den Kartenschlucker frei
 ## PE-04: nicht blockierende Besetzungshinweise, je Hinweis eine eigene Zeile
 @onready var _hint_labels: Dictionary[String, GrimmLabel] = {
 	String(RolePoolDraft.HINT_COACH_SMALL_ROUND): %CoachHintLabel,
@@ -59,6 +60,7 @@ func start(setup: PlayerSetup) -> void:
 	_reset.pressed.connect(_on_reset_pressed)
 	_back.pressed.connect(players_requested.emit)
 	_confirm.pressed.connect(_on_confirm_pressed)
+	_cards.toggled.connect(_on_cards_toggled)
 	_setup.changed.connect(_render)
 	visibility_changed.connect(_on_visibility_changed)
 	_render(_setup.view())
@@ -111,9 +113,12 @@ func _render(view: Dictionary) -> void:
 	for hint: String in _hint_labels:
 		_hint_labels[hint].visible = hints.has(hint)
 		_hint_labels[hint].text_key = "ui.setup.roles.hint.%s" % hint if hints.has(hint) else ""
+	if _cards.button_pressed != bool(roles.get("death_cards", false)):
+		_cards.set_pressed_no_signal(bool(roles.get("death_cards", false)))
 	var counts: Dictionary = roles["counts"]
 	for role: StringName in _rows:
 		var key := String(role)
+		_rows[role].visible = bool(roles.get("death_cards", false)) or not RoleCatalog.requires_cards(role)
 		_rows[role].show_count(int(counts[key]), bool(roles["can_decrease"][key]), bool(roles["can_increase"][key]))
 	for section: DecoySection in _decoy_sections:
 		section.render(roles)
@@ -184,6 +189,10 @@ func _on_visibility_changed() -> void:
 	if not visible:
 		for section: DecoySection in _decoy_sections:
 			section.close()
+
+
+func _on_cards_toggled(on: bool) -> void:
+	_setup.set_death_cards(on)
 
 
 func _on_suggest_pressed() -> void:

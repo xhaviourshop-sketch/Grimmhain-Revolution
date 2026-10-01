@@ -130,4 +130,4 @@ func test_schema_12_save_is_refused_with_a_clear_message_not_reinterpreted() -> 
 	assert_false(result.ok, "Schema 12 wird nicht geladen")
 	assert_eq(result.error, &"unsupported_schema_version", "klarer Fehlergrund")
 	assert_true(result.detail.contains("12"), "Meldung nennt das gefundene Schema")
-	assert_eq(GameState.SCHEMA_VERSION, 14, "Schema 14")
+	assert_eq(GameState.SCHEMA_VERSION, 15, "Schema 15")

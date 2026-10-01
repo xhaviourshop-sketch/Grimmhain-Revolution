@@ -43,8 +43,8 @@ static func dead_ids(s: GameState) -> Array[int]:
 
 
 ## Kutscher (ab 10 Toten, mindestens drei Tote) und Frankenstein (mindestens ein Toter), je Leben einmal.
-static func can_revive(s: GameState, p: Player) -> bool:
-	var role := SoloRules.ability_role(s, p.id)
+static func can_revive(s: GameState, p: Player, step_role: StringName = &"") -> bool:
+	var role := step_role if step_role != &"" else SoloRules.ability_role(s, p.id)
 	if not p.alive or p.ability_uses.has(_revive_key(role)):
 		return false
 	var dead := dead_ids(s).size()
@@ -395,7 +395,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step) or StepQueue.step_role(key) != prompt.owner or StepQueue.step_actor(key) != prompt.actor_id:
 		return false
 	var actor: Player = s.players.get(prompt.actor_id)
-	if actor == null or not actor.alive or SoloRules.ability_role(s, actor.id) != prompt.owner:
+	if actor == null or not actor.alive or not SoloRules.acts_as(s, actor.id, prompt.owner):
 		return false
 	if prompt.stage == _first_stage(prompt.owner):
 		var shape := _first_stage_shape(s, prompt.owner, actor.id)

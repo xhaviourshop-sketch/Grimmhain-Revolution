@@ -6541,3 +6541,1011 @@ msgstr "{count} weitere technische Einzelereignisse sind hier nicht aufgeführt.
 
 msgid "ui.report.no_history"
 msgstr "Zu dieser Fassung gibt es keine Einträge."
+
+msgid "ui.role.kartenschlucker.name"
+msgstr "Kartenschlucker"
+
+msgid "ui.role.kartenschlucker.short"
+msgstr "Sammelt Stapel durch getauschte Totenreichkarten und kauft damit Tötung, Schild oder Sieg."
+
+msgid "ui.call.kartenschlucker"
+msgstr "„Kartenschlucker, erwache. Zeige mit den Fingern, was du tun willst: Kopfschütteln heißt nichts, zwei Finger eine Tötung, fünf Finger einen Schild, zehn Finger den Sieg.“"
+
+msgid "ui.prompt.kartenschlucker.act"
+msgstr "Tippe das Handzeichen an, das der Kartenschlucker zeigt: Kopfschütteln, zwei, fünf oder zehn Finger. Zu teure Zeichen sind gesperrt."
+
+msgid "ui.prompt.kartenschlucker.target"
+msgstr "Tippe die Person an, die der Kartenschlucker töten will."
+
+msgid "ui.role.kartenschlucker.lex.night"
+msgstr "jede Nacht, freiwillig, sobald zwei Stapel zur Verfügung stehen"
+
+msgid "ui.role.kartenschlucker.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.kartenschlucker.lex.ability"
+msgstr "Sammelt für jede getauschte Totenreichkarte einen Stapel und gibt sie nachts für eine Tötung, einen Schild oder den Sieg aus."
+
+msgid "ui.role.kartenschlucker.lex.timing"
+msgstr "Nur in Partien mit Totenreichkarten. Jede Nacht wählt er genau eine Aktion: nichts, zwei Stapel für eine Tötung, fünf Stapel für einen Schild, zehn Stapel für den Sieg. Mit weniger als zwei Stapeln entfällt der Schritt. In den Nächten 3, 6, 9 und so weiter nennt der Morgen öffentlich die Gesamtzahl aller gesammelten Stapel, ohne Käufe zu verraten."
+
+msgid "ui.role.kartenschlucker.lex.targets"
+msgstr "Bei der Tötung eine lebende Person. Schild und Sieg brauchen kein Ziel."
+
+msgid "ui.role.kartenschlucker.lex.exceptions"
+msgstr "Stapel gehören der Person, nicht der Rolle: Ein neuer Träger beginnt bei null, beim bisherigen ruhen sie. Der Tod lässt Stapel bestehen. Der Schild gilt höchstens einmal je Person, bleibt bis zum Verbrauch und verhindert jeden Tod außer Spielleiterkorrekturen. Die Tötung wirkt am Morgen wie jede Rollenfähigkeit, Schutz und Schilde greifen. Die Rolle ist nicht stehlbar und keine Scheinrolle."
+
+msgid "ui.role.kartenschlucker.lex.win"
+msgstr "Allein. Die Zehn-Finger-Aktion gibt zehn Stapel ab und macht den Sieg zum Kandidaten, solange die Person lebt und die Rolle hält. Zehn gesammelte Stapel allein lösen nichts aus."
+
+msgid "ui.role.kartenschlucker.lex.example"
+msgstr "Der Kartenschlucker hat vier Stapel gesammelt. Er zeigt zwei Finger und wählt Ben: Ben stirbt am Morgen, zwei Stapel bleiben übrig.\nSpäter hat er zehn Stapel und zeigt zehn Finger: Die Spielleitung bestätigt seinen Einzelsieg."
+
+msgid "ui.role.kartenschlucker.lex.gm"
+msgstr "Handzeichen am Tisch tippst du als Schaltflächen. Die App führt Guthaben und Gesamtzahl der Stapel mit."
+
+msgid "ui.role.kartenschlucker.lex.act"
+msgstr "Aufruf: (jede Nacht, freiwillig, ab zwei Stapeln) Die App kündigt die Rolle „Kartenschlucker“ in der Nachtreihenfolge an. Lies vor: „Kartenschlucker, erwache. Zeige mit den Fingern, was du tun willst: Kopfschütteln heißt nichts, zwei Finger eine Tötung, fünf Finger einen Schild, zehn Finger den Sieg.“\nAuswählen oder ablesen: Tippe das Handzeichen an, das der Kartenschlucker zeigt: Kopfschütteln, zwei, fünf oder zehn Finger. Zu teure Zeichen sind gesperrt. Tippe die Person an, die der Kartenschlucker töten will.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe das Handzeichen, bei der Tötung danach „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+
+msgid "ui.card.segen_08.name"
+msgstr "Zweites Leben"
+
+msgid "ui.card.segen_08.wolf.text"
+msgstr "Ein toter Werwolf deiner Wahl kehrt als vollwertiger Werwolf mit seiner ursprünglichen Rolle zurück."
+
+msgid "ui.card.segen_08.wolf.guide"
+msgstr "Die Kartenspielerin sucht eine der angebotenen toten Personen aus. Die Person kehrt mit der Rolle vom Todeszeitpunkt zurück und sitzt wieder am Tisch."
+
+msgid "ui.card.segen_08.dorf.text"
+msgstr "Ein toter Dorfbewohner deiner Wahl kehrt als vollwertiger Dorfbewohner mit seiner ursprünglichen Rolle zurück."
+
+msgid "ui.card.segen_08.dorf.guide"
+msgstr "Die Kartenspielerin sucht eine der angebotenen toten Personen aus. Die Person kehrt mit der Rolle vom Todeszeitpunkt zurück und sitzt wieder am Tisch."
+
+msgid "ui.card.wende_04.name"
+msgstr "Wiedergeburt"
+
+msgid "ui.card.wende_04.wolf.text"
+msgstr "Der Spielleiter wählt nach eigenem Ermessen einen toten Werwolf, er kehrt mit seiner ursprünglichen Fähigkeit zurück."
+
+msgid "ui.card.wende_04.wolf.guide"
+msgstr "Die Spielleitung wählt eine tote Person der Fraktion, auch die Kartenspielerin. Die Person kehrt zurück und wird still informiert."
+
+msgid "ui.card.wende_04.dorf.text"
+msgstr "Der Spielleiter wählt nach eigenem Ermessen einen toten Dorfbewohner, er kehrt mit seiner ursprünglichen Fähigkeit zurück."
+
+msgid "ui.card.wende_04.dorf.guide"
+msgstr "Die Spielleitung wählt eine tote Person der Fraktion, auch die Kartenspielerin. Die Person kehrt zurück und wird still informiert."
+
+msgid "ui.card.wende_07.name"
+msgstr "Befreiung"
+
+msgid "ui.card.wende_07.wolf.text"
+msgstr "Ein toter Werwolf kehrt mit halber Fähigkeit zurück, er darf sie einmalig einsetzen, dann stirbt er erneut."
+
+msgid "ui.card.wende_07.wolf.guide"
+msgstr "Die Kartenspielerin wählt eine tote Person. Sie kehrt zurück und stirbt nach dem ersten abgeschlossenen Einsatz ihrer Fähigkeit erneut."
+
+msgid "ui.card.wende_07.dorf.text"
+msgstr "Ein toter Dorfbewohner kehrt mit halber Fähigkeit zurück, er darf sie einmalig einsetzen, dann stirbt er erneut."
+
+msgid "ui.card.wende_07.dorf.guide"
+msgstr "Die Kartenspielerin wählt eine tote Person. Sie kehrt zurück und stirbt nach dem ersten abgeschlossenen Einsatz ihrer Fähigkeit erneut."
+
+msgid "ui.card.loki_10.name"
+msgstr "Phoenix"
+
+msgid "ui.card.loki_10.neutral.text"
+msgstr "Es werden zwei Würfel gewürfelt, der erste belebt entsprechend viele zufällige Spieler wieder, der zweite entscheidet für wie viele Runden sie am Leben bleiben."
+
+msgid "ui.card.loki_10.neutral.guide"
+msgstr "Zwei App-Würfel werden gerollt und gespeichert: Anzahl der Zurückkehrenden und Lebensdauer in Tagen. Die App wählt die Personen aus dem gespeicherten Zufall."
+
+msgid "ui.card.wende_12.name"
+msgstr "Geheimrat"
+
+msgid "ui.card.wende_12.wolf.text"
+msgstr "Die Werwölfe werden in dieser Nacht als letztes aufgerufen, du darfst für diese Nacht die Augen öffnen und ihnen Hinweise geben."
+
+msgid "ui.card.wende_12.wolf.guide"
+msgstr "In der nächsten Nacht wird das Rudel als letztes aufgerufen. Die Tote darf die Augen öffnen und stumm Hinweise geben. Gesten statt Sprechen."
+
+msgid "ui.card.wende_12.dorf.text"
+msgstr "Du darfst dem Spielleiter eine Frage stellen die er wahrheitsgemäß beantworten muss. (Nur in Spielen mit Wiederbelebungs-Szenarien)"
+
+msgid "ui.card.wende_12.dorf.guide"
+msgstr "Die Kartenspielerin stellt der Spielleitung eine Frage, die wahrheitsgemäß beantwortet wird. Bestätige in der App, wenn die Frage beantwortet ist."
+
+msgid "ui.card.schicksal_08.name"
+msgstr "Neuer Anfang"
+
+msgid "ui.card.schicksal_08.neutral.text"
+msgstr "Zwei ausgewählte lebende Spieler erhalten eine neue Rolle innerhalb ihrer Fraktion, der Spielleiter informiert beide still."
+
+msgid "ui.card.schicksal_08.neutral.guide"
+msgstr "Wähle zwei lebende Personen und für jede eine neue Rolle ihrer Fraktion. Beide werden still informiert und beginnen mit frischen Einsätzen."
+
+msgid "ui.card.loki_06.name"
+msgstr "Rollenroulette"
+
+msgid "ui.card.loki_06.neutral.text"
+msgstr "Der Spielleiter tauscht die Rollen zweier zufälliger lebender Spieler, beide gehören derselben Fraktion an und werden still informiert."
+
+msgid "ui.card.loki_06.neutral.guide"
+msgstr "Die App wählt zwei zufällige lebende Personen derselben Fraktion und tauscht still ihre Rollen. Informiere beide leise."
+
+msgid "ui.card.segen_01.name"
+msgstr "Heilende Hand"
+
+msgid "ui.card.segen_01.wolf.text"
+msgstr "Das nächste Mal, wenn ein Werwolf sterben würde, stirbt stattdessen ein zufälliger Dorfbewohner."
+
+msgid "ui.card.segen_01.wolf.guide"
+msgstr "Der nächste Tod eines Wolfs trifft stattdessen eine zufällige Dorfperson. Die App führt den Tausch automatisch aus."
+
+msgid "ui.card.segen_01.dorf.text"
+msgstr "Das nächste Mal, wenn ein Werwolf einen Dorfbewohner reißen würde, überlebt er und erhält ein einmaliges Schutzschild."
+
+msgid "ui.card.segen_01.dorf.guide"
+msgstr "Der nächste Rudelangriff auf eine Dorfperson scheitert. Sie erhält einen persönlichen Schild, der einen weiteren Tod verhindert."
+
+msgid "ui.card.segen_07.name"
+msgstr "Blutpakt"
+
+msgid "ui.card.segen_07.wolf.text"
+msgstr "Die nächste Sonderfähigkeit die einen Werwolf töten würde wird negiert."
+
+msgid "ui.card.segen_07.wolf.guide"
+msgstr "Die nächste Sonderfähigkeit, die einen Wolf töten würde, wird negiert. Die App verbraucht den Schutz dabei."
+
+msgid "ui.card.segen_07.dorf.text"
+msgstr "Basierend auf dem Charakter des nächsten nächtlichen Opfers deckt der Spielleiter 0 bis 2 Werwölfe auf."
+
+msgid "ui.card.segen_07.dorf.guide"
+msgstr "Nach dem nächsten nächtlichen Opfer wählst du für die Kartenspielerin null bis zwei Wölfe, die öffentlich aufgedeckt werden."
+
+msgid "ui.card.segen_11.name"
+msgstr "Spiegelschutz"
+
+msgid "ui.card.segen_11.wolf.text"
+msgstr "Sollte am nächsten Tag ein Wolf gelyncht werden, stirbt stattdessen derjenige, der die Nominierung ausgesprochen hat."
+
+msgid "ui.card.segen_11.wolf.guide"
+msgstr "Wird am nächsten Tag ein Wolf gelyncht, stirbt stattdessen die nominierende Person. Die App setzt es bei der Hinrichtung um."
+
+msgid "ui.card.segen_11.dorf.text"
+msgstr "Sollten die Werwölfe in der Folgenacht einen Dorfbewohner erwischen, stirbt stattdessen einer von ihnen."
+
+msgid "ui.card.segen_11.dorf.guide"
+msgstr "Erwischt das Rudel in der Folgenacht eine Dorfperson, stirbt stattdessen ein zufälliger Wolf."
+
+msgid "ui.card.wende_02.name"
+msgstr "Verzweiflungsschrei"
+
+msgid "ui.card.wende_02.wolf.text"
+msgstr "Ein Werwolf deiner Wahl kann die nächsten 2 Tage nicht gelyncht werden."
+
+msgid "ui.card.wende_02.wolf.guide"
+msgstr "Die Kartenspielerin wählt in der nächsten Nacht geheim einen Wolf. Er kann die nächsten zwei Tage nicht gelyncht werden."
+
+msgid "ui.card.wende_02.dorf.text"
+msgstr "Ein Dorfbewohner deiner Wahl erhält 3 Tage lang einen Schutz gegen Werwolf-Angriffe."
+
+msgid "ui.card.wende_02.dorf.guide"
+msgstr "Die Kartenspielerin wählt in der nächsten Nacht geheim eine Dorfperson. Sie ist drei Nächte gegen Rudelangriffe geschützt."
+
+msgid "ui.card.wende_05.name"
+msgstr "Notanker"
+
+msgid "ui.card.wende_05.wolf.text"
+msgstr "Die Wölfe dürfen den nächsten Tod in den eigenen Reihen einmalig auf den übernächsten Tag verschieben, der Spielleiter vollstreckt ihn dann automatisch."
+
+msgid "ui.card.wende_05.wolf.guide"
+msgstr "Der nächste Tod in der eigenen Fraktion wird auf den übernächsten Tag verschoben. Die Person handelt bis dahin normal, zählt für Siege aber schon als tot. Die App vollstreckt den Tod."
+
+msgid "ui.card.wende_05.dorf.text"
+msgstr "Das Dorf darf den nächsten Tod in den eigenen Reihen einmalig auf den übernächsten Tag verschieben, der Spielleiter vollstreckt ihn dann automatisch."
+
+msgid "ui.card.wende_05.dorf.guide"
+msgstr "Der nächste Tod in der eigenen Fraktion wird auf den übernächsten Tag verschoben. Die Person handelt bis dahin normal, zählt für Siege aber schon als tot. Die App vollstreckt den Tod."
+
+msgid "ui.card.wende_11.name"
+msgstr "Schicksalswende"
+
+msgid "ui.card.wende_11.wolf.text"
+msgstr "König Lykaon erwacht in dir, verleihe einem Wolf deiner Wahl die Fähigkeit, einen Spieler in einen Trugbilderwolf zu verwandeln."
+
+msgid "ui.card.wende_11.wolf.guide"
+msgstr "Wähle einen Wolf. Er erhält in der nächsten Nacht genau eine Gelegenheit, König Lykaons Verwandlung zu nutzen."
+
+msgid "ui.card.wende_11.dorf.text"
+msgstr "Sollte der nächste Lynch einen Dorfbewohner treffen, wird das Urteil auf einen zufälligen Wolf umgeleitet."
+
+msgid "ui.card.wende_11.dorf.guide"
+msgstr "Trifft die nächste Hinrichtung eine Dorfperson, trifft sie stattdessen einen zufälligen Wolf. Die App wählt den Wolf aus dem gespeicherten Zufall."
+
+msgid "ui.card.fluch_05.name"
+msgstr "Gebrochener Schild"
+
+msgid "ui.card.fluch_05.wolf.text"
+msgstr "Alle aktiven Schutz-Effekte auf Werwölfen werden für 1 bis 3 Tage aufgehoben, der Spielleiter entscheidet die Dauer."
+
+msgid "ui.card.fluch_05.wolf.guide"
+msgstr "Du wählst, wie lange die Schutzwirkungen der Fraktion ruhen: 1 bis 3 Tage, der Tag des Spielens zählt als erster."
+
+msgid "ui.card.fluch_05.dorf.text"
+msgstr "Alle aktiven Schutz-Effekte auf Dorfbewohnern werden für 1 bis 3 Tage aufgehoben, der Spielleiter entscheidet die Dauer."
+
+msgid "ui.card.fluch_05.dorf.guide"
+msgstr "Du wählst, wie lange die Schutzwirkungen der Fraktion ruhen: 1 bis 3 Tage, der Tag des Spielens zählt als erster."
+
+msgid "ui.card.fluch_08.name"
+msgstr "Kettenfluch"
+
+msgid "ui.card.fluch_08.wolf.text"
+msgstr "Stirbt heute Nacht ein Werwolf durch eine Sonderfähigkeit, stirbt der Werwolf rechts von ihm mit."
+
+msgid "ui.card.fluch_08.wolf.guide"
+msgstr "Heute Nacht: Stirbt ein Wolf durch eine Sonderfähigkeit, stirbt der nächste lebende Wolf rechts mit. Die App führt die Kette aus."
+
+msgid "ui.card.fluch_08.dorf.text"
+msgstr "Stirbt heute Nacht ein Dorfbewohner durch die Wölfe, stirbt der Dorfbewohner links von ihm mit."
+
+msgid "ui.card.fluch_08.dorf.guide"
+msgstr "Heute Nacht: Stirbt eine Dorfperson durch die Wölfe, stirbt die nächste lebende Dorfperson links mit. Die App führt die Kette aus."
+
+msgid "ui.card.fluch_12.name"
+msgstr "Doppeltes Leid"
+
+msgid "ui.card.fluch_12.wolf.text"
+msgstr "Stirbt als Nächstes ein Wolf, stirbt automatisch ein weiterer zufälliger Wolf mit ihm."
+
+msgid "ui.card.fluch_12.wolf.guide"
+msgstr "Der nächste Tod in der Fraktion reißt eine weitere zufällige Person der Fraktion mit. Ein Schild verhindert den Mitstod, einen Ersatz gibt es nicht."
+
+msgid "ui.card.fluch_12.dorf.text"
+msgstr "Stirbt als Nächstes ein Dorfbewohner, stirbt automatisch ein weiterer zufälliger Dorfbewohner mit ihm."
+
+msgid "ui.card.fluch_12.dorf.guide"
+msgstr "Der nächste Tod in der Fraktion reißt eine weitere zufällige Person der Fraktion mit. Ein Schild verhindert den Mitstod, einen Ersatz gibt es nicht."
+
+msgid "ui.card.loki_12.name"
+msgstr "Kosmisches Gleichgewicht"
+
+msgid "ui.card.loki_12.neutral.text"
+msgstr "Stirbt heute ein Wolf, stirbt auch ein Dorfbewohner. Stirbt ein Dorfbewohner, stirbt auch ein Wolf. Der Spielleiter entscheidet die Opfer nach Rollenstärke."
+
+msgid "ui.card.loki_12.neutral.guide"
+msgstr "Bis zum Ende der kommenden Nacht löst jeder Tod eines Wolfs oder einer Dorfperson einen zusätzlichen Tod der anderen Seite aus. Du wählst die Opfer."
+
+msgid "ui.card.segen_03.name"
+msgstr "Wachsame Augen"
+
+msgid "ui.card.segen_03.wolf.text"
+msgstr "Die Wölfe erfahren heute Nacht die Rolle ihres gewählten Opfers bevor sie es reißen, und dürfen das Ziel danach noch wechseln."
+
+msgid "ui.card.segen_03.wolf.guide"
+msgstr "Nach der Rudelwahl erfährt das Rudel die Rolle des Opfers und darf das Ziel wechseln. Zeige dem Rudel die Rolle, dann tippe das endgültige Ziel."
+
+msgid "ui.card.segen_03.dorf.text"
+msgstr "Vor der Lynchung wird das aktuelle Opfer dem Dorf enthüllt, das Dorf entscheidet ob die Lynchung vollzogen wird oder nicht."
+
+msgid "ui.card.segen_03.dorf.guide"
+msgstr "Vor der Hinrichtung wird die Rolle der Person öffentlich enthüllt. Das Dorf entscheidet, ob vollstreckt wird. Du trägst die Entscheidung ein."
+
+msgid "ui.card.segen_04.name"
+msgstr "Stille Nacht"
+
+msgid "ui.card.segen_04.wolf.text"
+msgstr "Die Wölfe dürfen heute Nacht zusätzlich zu ihrem normalen Opfer ein zweites Ziel reißen."
+
+msgid "ui.card.segen_04.wolf.guide"
+msgstr "In der nächsten Nacht wählt das Rudel zwei verschiedene Personen statt einer."
+
+msgid "ui.card.segen_04.dorf.text"
+msgstr "Die Wölfe dürfen heute Nacht kein Opfer wählen, sie schlafen."
+
+msgid "ui.card.segen_04.dorf.guide"
+msgstr "In der nächsten Nacht entfallen alle Wolfstötungen: das Rudelopfer und zusätzliche aktive Tötungen. Andere Wolfsfähigkeiten bleiben."
+
+msgid "ui.card.segen_09.name"
+msgstr "Gerechter Zorn"
+
+msgid "ui.card.segen_09.wolf.text"
+msgstr "Wird beim nächsten Lynch ein Werwolf gelyncht, dürfen die Wölfe in dieser Nacht zwei Opfer reißen statt einem."
+
+msgid "ui.card.segen_09.wolf.guide"
+msgstr "Wird beim nächsten Lynch ein Wolf hingerichtet, darf das Rudel in der folgenden Nacht zwei Opfer wählen."
+
+msgid "ui.card.segen_09.dorf.text"
+msgstr "Sollte beim nächsten Lynch ein Dorfbewohner gelyncht werden, wird er automatisch befreit und der Tag endet ohne Opfer."
+
+msgid "ui.card.segen_09.dorf.guide"
+msgstr "Trifft die nächste Hinrichtung eine Dorfperson, wird sie verhindert. Der Tag endet ohne Opfer."
+
+msgid "ui.card.segen_13.name"
+msgstr "Schattenvorteil"
+
+msgid "ui.card.segen_13.wolf.text"
+msgstr "In der Folgenacht missglückt die erste Fähigkeit die einen Wolf trifft."
+
+msgid "ui.card.segen_13.wolf.guide"
+msgstr "Die erste schädliche Fähigkeit, die in der nächsten Nacht einen Wolf trifft, missglückt, auch eine Orakel-Prüfung."
+
+msgid "ui.card.segen_13.dorf.text"
+msgstr "Die Werwölfe werden in der Folgenacht als erstes geweckt und ihr Opfer wird laut nach der Einigung angesagt."
+
+msgid "ui.card.segen_13.dorf.guide"
+msgstr "In der nächsten Nacht wird das Rudel zuerst geweckt. Nach der Einigung sagst du das Opfer laut an."
+
+msgid "ui.card.fluch_02.name"
+msgstr "Falsche Fährte"
+
+msgid "ui.card.fluch_02.wolf.text"
+msgstr "Der Spielleiter lenkt den Werwolf-Angriff diese Nacht auf ein Ziel seiner Wahl um."
+
+msgid "ui.card.fluch_02.wolf.guide"
+msgstr "Nach der Rudelwahl entscheidest du, welche Person stattdessen getroffen wird, und trägst sie ein."
+
+msgid "ui.card.fluch_02.dorf.text"
+msgstr "Der Spielleiter gibt einem Dorfbewohner seiner Wahl heute Nacht eine falsche Information."
+
+msgid "ui.card.fluch_02.dorf.guide"
+msgstr "Die Kartenspielerin wählt ein Orakel. In der nächsten Nacht legst du dessen Rollenauskunft per Übersteuerung falsch fest."
+
+msgid "ui.card.fluch_04.name"
+msgstr "Verrat"
+
+msgid "ui.card.fluch_04.wolf.text"
+msgstr "Die Wölfe müssen heute Nacht zwingend einen ihrer eigenen fressen, kein Dorfbewohner kann heute sterben."
+
+msgid "ui.card.fluch_04.wolf.guide"
+msgstr "In der nächsten Nacht muss das Rudel eine Person aus den eigenen Reihen wählen."
+
+msgid "ui.card.fluch_04.dorf.text"
+msgstr "Es wird heute so lange gelyncht, bis ein Mitglied der Dorf-Fraktion getroffen wurde."
+
+msgid "ui.card.fluch_04.dorf.guide"
+msgstr "Heute wird so lange hingerichtet, bis eine Dorfperson ausgewählt wurde. Die App hält den Tag offen, bis es so weit ist."
+
+msgid "ui.card.fluch_07.name"
+msgstr "Alptraum"
+
+msgid "ui.card.fluch_07.wolf.text"
+msgstr "Die Wölfe schlafen so schlecht, dass sie heute Nacht kein Opfer reißen können."
+
+msgid "ui.card.fluch_07.wolf.guide"
+msgstr "In der nächsten Nacht entfallen die gemeinsamen Rudelangriffe. Eigene Tötungsfähigkeiten einzelner Wölfe bleiben."
+
+msgid "ui.card.fluch_07.dorf.text"
+msgstr "Ein zufälliger Dorfbewohner wird dem Dorf als verdächtig angezeigt, der Spielleiter gibt es öffentlich bekannt."
+
+msgid "ui.card.fluch_07.dorf.guide"
+msgstr "Die App wählt zufällig eine Dorfperson, die als verdächtig angezeigt wird. Sage es öffentlich an."
+
+msgid "ui.card.fluch_10.name"
+msgstr "Schlechtes Omen"
+
+msgid "ui.card.fluch_10.wolf.text"
+msgstr "Sollten die Wölfe heute Nacht keine starke Rolle erwischen, entscheidet der Spielleiter, ob einer von ihnen stirbt."
+
+msgid "ui.card.fluch_10.wolf.guide"
+msgstr "Nach der Nacht entscheidest du, ob das Rudel eine starke Rolle erwischt hat. Wenn nicht, wählst du, ob und welcher Wolf stirbt."
+
+msgid "ui.card.fluch_10.dorf.text"
+msgstr "Sollte heute kein Werwolf gelyncht werden, stirbt ein weiterer zufälliger Dorfbewohner noch am selben Tag."
+
+msgid "ui.card.fluch_10.dorf.guide"
+msgstr "Wird heute kein Wolf hingerichtet, stirbt am Tagesende eine zufällige Dorfperson. Die App prüft das nach dem Tag."
+
+msgid "ui.card.wende_03.name"
+msgstr "Wendepunkt"
+
+msgid "ui.card.wende_03.wolf.text"
+msgstr "Die Wölfe dürfen diese Nacht zwei Opfer reißen statt einem."
+
+msgid "ui.card.wende_03.wolf.guide"
+msgstr "In der nächsten Nacht wählt das Rudel zwei verschiedene Personen statt einer."
+
+msgid "ui.card.wende_03.dorf.text"
+msgstr "Das Dorf darf heute lynchen, trifft die Lynchung einen Dorfbewohner, schreitet der Spielleiter ein und verhindert sie. Trifft sie einen Werwolf, wird vollstreckt."
+
+msgid "ui.card.wende_03.dorf.guide"
+msgstr "Trifft die heutige Hinrichtung eine Dorfperson, wird sie verhindert. Trifft sie einen Wolf, wird sie vollstreckt."
+
+msgid "ui.card.wende_06.name"
+msgstr "Trotz"
+
+msgid "ui.card.wende_06.wolf.text"
+msgstr "Die Wölfe sind diese Nacht komplett geschützt, keine Sonderfähigkeit kann heute einen Wolf töten."
+
+msgid "ui.card.wende_06.wolf.guide"
+msgstr "In der nächsten Nacht kann keine Rollenfähigkeit einen Wolf töten. Todesketten und Kartentode bleiben möglich."
+
+msgid "ui.card.wende_06.dorf.text"
+msgstr "Das Dorf ist diese Nacht komplett geschützt, die Wölfe können heute Nacht kein Opfer reißen."
+
+msgid "ui.card.wende_06.dorf.guide"
+msgstr "In der nächsten Nacht kann das Rudel kein Opfer wählen."
+
+msgid "ui.card.schicksal_06.name"
+msgstr "Zeitsprung"
+
+msgid "ui.card.schicksal_06.neutral.text"
+msgstr "Diese Nacht wird vollständig übersprungen, keine Fähigkeiten, kein Wolf-Angriff, kein Tod. Direkt zum nächsten Tag."
+
+msgid "ui.card.schicksal_06.neutral.guide"
+msgstr "Die nächste Nacht fällt aus: Die Nummer zählt weiter, aber es gibt keine Aktionen, keine Ansagen und keinen Rudelangriff. Bereits fälliges Gift wirkt."
+
+msgid "ui.card.loki_03.name"
+msgstr "Zeitwarp"
+
+msgid "ui.card.loki_03.neutral.text"
+msgstr "Diese Nacht wird übersprungen. Alle Nacht-Fähigkeiten verfallen, kein Tod, kein Angriff, kein Schutz. Direkt zum nächsten Tag."
+
+msgid "ui.card.loki_03.neutral.guide"
+msgstr "Die nächste Nacht fällt aus: Die Nummer zählt weiter, aber es gibt keine Aktionen, keine Ansagen und keinen Rudelangriff. Bereits fälliges Gift wirkt."
+
+msgid "ui.card.segen_06.name"
+msgstr "Schattenmantel"
+
+msgid "ui.card.segen_06.wolf.text"
+msgstr "Das nächste Mal, wenn ein Werwolf vom Orakel gesehen werden würde, wird er ihr als eine zufällige noch lebende Dorfbewohnerrolle angezeigt."
+
+msgid "ui.card.segen_06.wolf.guide"
+msgstr "Der nächste Wolf, den das Orakel prüft, erscheint ihm als zufällige lebende Dorfrolle. Die App setzt die Anzeige selbst."
+
+msgid "ui.card.segen_06.dorf.text"
+msgstr "Die Wölfe werden die folgende Nacht geblendet, ein zufälliges Opfer stirbt, es könnte auch ein Werwolf selbst sein."
+
+msgid "ui.card.segen_06.dorf.guide"
+msgstr "In der nächsten Nacht ist das Rudel geblendet: Die App wählt ein zufälliges Opfer, auch ein Wolf kann es sein."
+
+msgid "ui.card.segen_12.name"
+msgstr "Geisterhand"
+
+msgid "ui.card.segen_12.wolf.text"
+msgstr "Ein von dir ausgewählter Spieler erhält zusätzlich für die nächste Nacht die Fähigkeit des zuletzt verstorbenen Werwolfs."
+
+msgid "ui.card.segen_12.wolf.guide"
+msgstr "Die Kartenspielerin wählt eine Person. Sie erhält für die nächste Nacht zusätzlich die Fähigkeit der zuletzt verstorbenen Person der Fraktion, mit frischen Einsätzen."
+
+msgid "ui.card.segen_12.dorf.text"
+msgstr "Ein von dir ausgewählter Spieler erhält zusätzlich für die nächste Nacht die Fähigkeit des zuletzt verstorbenen Dorfbewohners."
+
+msgid "ui.card.segen_12.dorf.guide"
+msgstr "Die Kartenspielerin wählt eine Person. Sie erhält für die nächste Nacht zusätzlich die Fähigkeit der zuletzt verstorbenen Person der Fraktion, mit frischen Einsätzen."
+
+msgid "ui.card.segen_14.name"
+msgstr "Eiserner Wille"
+
+msgid "ui.card.segen_14.wolf.text"
+msgstr "Erhalte Einsicht ins Spiel und wähle einen Spieler aus, der seine Fähigkeit in der Folgenacht entweder erneut oder zweimal einsetzen darf."
+
+msgid "ui.card.segen_14.wolf.guide"
+msgstr "Die Besitzerin sieht den Spielstand, wählt eine Person und dann: Fähigkeit erneut oder zweimal einsetzen in der nächsten Nacht."
+
+msgid "ui.card.segen_14.dorf.text"
+msgstr "Erhalte Einsicht ins Spiel und wähle einen Spieler aus, der seine Fähigkeit in der Folgenacht entweder erneut oder zweimal einsetzen darf."
+
+msgid "ui.card.segen_14.dorf.guide"
+msgstr "Die Besitzerin sieht den Spielstand, wählt eine Person und dann: Fähigkeit erneut oder zweimal einsetzen in der nächsten Nacht."
+
+msgid "ui.card.fluch_01.name"
+msgstr "Blinder Fleck"
+
+msgid "ui.card.fluch_01.wolf.text"
+msgstr "Ein zufälliger Werwolf verliert diese Nacht seine Sonderfähigkeit, nur der Wolf-Angriff bleibt."
+
+msgid "ui.card.fluch_01.wolf.guide"
+msgstr "Die App wählt zufällig eine Person der Fraktion mit Nachtfähigkeit. Sie verliert in der nächsten Nacht die Fähigkeit, das Rudel bleibt."
+
+msgid "ui.card.fluch_01.dorf.text"
+msgstr "Ein zufälliger Dorfbewohner verliert diese Nacht seine Sonderfähigkeit."
+
+msgid "ui.card.fluch_01.dorf.guide"
+msgstr "Die App wählt zufällig eine Person der Fraktion mit Nachtfähigkeit. Sie verliert in der nächsten Nacht die Fähigkeit, das Rudel bleibt."
+
+msgid "ui.card.wende_01.name"
+msgstr "Letzter Atemzug"
+
+msgid "ui.card.wende_01.wolf.text"
+msgstr "Ein Werwolf deiner Wahl darf seine bereits genutzte Fähigkeit diese Nacht erneut einsetzen."
+
+msgid "ui.card.wende_01.wolf.guide"
+msgstr "Die Kartenspielerin wählt eine Person. Ihre bereits genutzte Fähigkeit ist in der nächsten Nacht wieder verfügbar."
+
+msgid "ui.card.wende_01.dorf.text"
+msgstr "Ein Dorfbewohner deiner Wahl darf seine bereits genutzte Fähigkeit diese Nacht erneut einsetzen."
+
+msgid "ui.card.wende_01.dorf.guide"
+msgstr "Die Kartenspielerin wählt eine Person. Ihre bereits genutzte Fähigkeit ist in der nächsten Nacht wieder verfügbar."
+
+msgid "ui.card.wende_08.name"
+msgstr "Auserwählt"
+
+msgid "ui.card.wende_08.wolf.text"
+msgstr "Der Spielleiter wählt nach bestem Gewissen einen Werwolf, dieser darf seine Fähigkeit in der nächsten Nacht zweimal einsetzen."
+
+msgid "ui.card.wende_08.wolf.guide"
+msgstr "Du wählst eine Person. Sie darf ihre Fähigkeit in der nächsten Nacht zweimal einsetzen."
+
+msgid "ui.card.wende_08.dorf.text"
+msgstr "Der Spielleiter wählt nach bestem Gewissen einen Dorfbewohner, dieser darf seine Fähigkeit in der nächsten Nacht zweimal einsetzen."
+
+msgid "ui.card.wende_08.dorf.guide"
+msgstr "Du wählst eine Person. Sie darf ihre Fähigkeit in der nächsten Nacht zweimal einsetzen."
+
+msgid "ui.card.wende_10.name"
+msgstr "Schicksalsumkehr"
+
+msgid "ui.card.wende_10.wolf.text"
+msgstr "Die stärkste aktive Schutzfähigkeit eines Dorfbewohners wird für eine Nacht deaktiviert, der Spielleiter wählt welche."
+
+msgid "ui.card.wende_10.wolf.guide"
+msgstr "Du wählst eine Dorfperson mit Schutzfähigkeit. Ihre Fähigkeit ruht in der nächsten Nacht."
+
+msgid "ui.card.wende_10.dorf.text"
+msgstr "Die stärkste aktive Fähigkeit eines Werwolfs wird für eine Nacht deaktiviert, der Spielleiter wählt welche."
+
+msgid "ui.card.wende_10.dorf.guide"
+msgstr "Du wählst einen Wolf mit Nachtfähigkeit. Seine Fähigkeit ruht in der nächsten Nacht."
+
+msgid "ui.card.schicksal_07.name"
+msgstr "Gleichgewicht"
+
+msgid "ui.card.schicksal_07.neutral.text"
+msgstr "Der Spielleiter beobachtet den aktuellen Spielstand, verkündet laut, wer vorne liegt, und blockiert die erste aktive gewählte Fähigkeit zugunsten des verlierenden Teams."
+
+msgid "ui.card.schicksal_07.neutral.guide"
+msgstr "Du bestimmst und verkündest, welches Team vorne liegt. Die erste gewählte Nachtfähigkeit dieses Teams wird in der nächsten Nacht blockiert."
+
+msgid "ui.card.schicksal_10.name"
+msgstr "Anarchie"
+
+msgid "ui.card.schicksal_10.neutral.text"
+msgstr "In der kommenden Nacht wird eine zufällige bereits verbrauchte Einmalfähigkeit eines lebenden Spielers deiner Fraktion wieder verfügbar."
+
+msgid "ui.card.schicksal_10.neutral.guide"
+msgstr "Die App wählt aus den verbrauchten Einmalfähigkeiten lebender Personen der Fraktion eine zufällig aus. Sie ist wieder verfügbar."
+
+msgid "ui.card.loki_07.name"
+msgstr "Totale Anarchie"
+
+msgid "ui.card.loki_07.neutral.text"
+msgstr "Alle aktiven Schutz-Effekte aller Spieler werden sofort aufgehoben. Alle bereits genutzten Einmal-Fähigkeiten kehren für alle zurück."
+
+msgid "ui.card.loki_07.neutral.guide"
+msgstr "Alle Schutzwirkungen aller Personen fallen sofort weg und alle verbrauchten Einsätze kehren für alle zurück."
+
+msgid "ui.card.loki_08.name"
+msgstr "Verhexte Nacht"
+
+msgid "ui.card.loki_08.neutral.text"
+msgstr "Der Spielleiter entscheidet, ob deine nächtliche Fähigkeit durchgeht oder ein anderes Ziel trifft, auch du selbst. Überlege weise, ob du deine Fähigkeit diese Nacht überhaupt einsetzen willst."
+
+msgid "ui.card.loki_08.neutral.guide"
+msgstr "Du bestimmst, wer die Nachtfähigkeit der Kartenspielerin in der nächsten Nacht ausführt, und entscheidest so, ob sie durchgeht oder ein anderes Ziel trifft."
+
+msgid "ui.card.segen_05.name"
+msgstr "Wahre Stimme"
+
+msgid "ui.card.segen_05.wolf.text"
+msgstr "Ein Werwolf deiner Wahl erhält beim heutigen Lynch doppelte Stimmkraft."
+
+msgid "ui.card.segen_05.wolf.guide"
+msgstr "Die Kartenspielerin wählt eine Person. Ihre Stimme zählt heute doppelt. Du zählst am Tisch."
+
+msgid "ui.card.segen_05.dorf.text"
+msgstr "Ein Dorfbewohner deiner Wahl erhält beim heutigen Lynch doppelte Stimmkraft."
+
+msgid "ui.card.segen_05.dorf.guide"
+msgstr "Die Kartenspielerin wählt eine Person. Ihre Stimme zählt heute doppelt. Du zählst am Tisch."
+
+msgid "ui.card.fluch_03.name"
+msgstr "Lähmung"
+
+msgid "ui.card.fluch_03.wolf.text"
+msgstr "Ein zufälliger Werwolf darf beim nächsten Lynch nicht abstimmen."
+
+msgid "ui.card.fluch_03.wolf.guide"
+msgstr "Die App wählt zufällig eine Person der Fraktion. Sie darf bei der Hinrichtung nicht abstimmen. Du achtest am Tisch darauf."
+
+msgid "ui.card.fluch_03.dorf.text"
+msgstr "Ein zufälliger Dorfbewohner darf beim nächsten Lynch nicht abstimmen."
+
+msgid "ui.card.fluch_03.dorf.guide"
+msgstr "Die App wählt zufällig eine Person der Fraktion. Sie darf bei der Hinrichtung nicht abstimmen. Du achtest am Tisch darauf."
+
+msgid "ui.card.fluch_09.name"
+msgstr "Verlorene Stimme"
+
+msgid "ui.card.fluch_09.wolf.text"
+msgstr "Die Werwölfe verlieren beim nächsten Lynch die Wertigkeit ihrer Stimmen, der Spielleiter hält die Anzahl geheim, offenbart jedoch wer das Opfer ist."
+
+msgid "ui.card.fluch_09.wolf.guide"
+msgstr "Die Stimmen der Fraktion zählen bei der Hinrichtung nicht. Du zählst am Tisch und sagst nur das Opfer an, nie die Zahlen."
+
+msgid "ui.card.fluch_09.dorf.text"
+msgstr "Die Dorfbewohner verlieren beim nächsten Lynch die Wertigkeit ihrer Stimmen, der Spielleiter hält die Anzahl geheim, offenbart jedoch wer das Opfer ist."
+
+msgid "ui.card.fluch_09.dorf.guide"
+msgstr "Die Stimmen der Fraktion zählen bei der Hinrichtung nicht. Du zählst am Tisch und sagst nur das Opfer an, nie die Zahlen."
+
+msgid "ui.card.fluch_13.name"
+msgstr "Lähmungswelle"
+
+msgid "ui.card.fluch_13.wolf.text"
+msgstr "Alle Wölfe können beim nächsten Lynch nicht abstimmen."
+
+msgid "ui.card.fluch_13.wolf.guide"
+msgstr "Alle Personen der Fraktion (Dorf: nur solche mit aktiver Fähigkeit) dürfen bei der Hinrichtung nicht abstimmen."
+
+msgid "ui.card.fluch_13.dorf.text"
+msgstr "Alle Dorfbewohner mit einer aktiven Fähigkeit können beim nächsten Lynch nicht abstimmen."
+
+msgid "ui.card.fluch_13.dorf.guide"
+msgstr "Alle Personen der Fraktion (Dorf: nur solche mit aktiver Fähigkeit) dürfen bei der Hinrichtung nicht abstimmen."
+
+msgid "ui.card.wende_09.name"
+msgstr "Rückenwind"
+
+msgid "ui.card.wende_09.wolf.text"
+msgstr "Alle Wolf-Stimmen beim nächsten Lynch werden verdoppelt, der Spielleiter hält die Gesamtmenge an Stimmen geheim, offenbart jedoch wer das Opfer ist."
+
+msgid "ui.card.wende_09.wolf.guide"
+msgstr "Alle Stimmen der Fraktion zählen bei der Hinrichtung doppelt. Du zählst am Tisch und sagst nur das Opfer an, nie die Zahlen."
+
+msgid "ui.card.wende_09.dorf.text"
+msgstr "Alle Dorf-Stimmen beim nächsten Lynch werden verdoppelt, der Spielleiter hält die Gesamtmenge an Stimmen geheim, offenbart jedoch wer das Opfer ist."
+
+msgid "ui.card.wende_09.dorf.guide"
+msgstr "Alle Stimmen der Fraktion zählen bei der Hinrichtung doppelt. Du zählst am Tisch und sagst nur das Opfer an, nie die Zahlen."
+
+msgid "ui.card.schicksal_03.name"
+msgstr "Amnestie"
+
+msgid "ui.card.schicksal_03.neutral.text"
+msgstr "Die aktuelle Lynchung wird sofort abgebrochen. Alle Stimmen verfallen. Kein neuer Lynch heute, direkt in die Nacht."
+
+msgid "ui.card.schicksal_03.neutral.guide"
+msgstr "Die heutige Hinrichtung entfällt. Tippe „Keine Hinrichtung“, alle Stimmen verfallen."
+
+msgid "ui.card.schicksal_05.name"
+msgstr "Spiegel"
+
+msgid "ui.card.schicksal_05.neutral.text"
+msgstr "Alle Spieler zeigen nach einem 5-Sekunden-Countdown gleichzeitig auf einen Spieler. Wer keine einzige Stimme erhält, stirbt sofort."
+
+msgid "ui.card.schicksal_05.neutral.guide"
+msgstr "Nach einem 5-Sekunden-Countdown zeigen alle gleichzeitig auf eine Person. Tippe alle Personen an, die keine Stimme erhalten haben. Sie sterben sofort."
+
+msgid "ui.card.schicksal_09.name"
+msgstr "Stimmentausch"
+
+msgid "ui.card.schicksal_09.neutral.text"
+msgstr "Beim nächsten Lynch zählt jede Stimme für den Spieler links daneben statt für den Nominierten."
+
+msgid "ui.card.schicksal_09.neutral.guide"
+msgstr "Bei der betroffenen Hinrichtung zählen die Stimmen für die Person links neben der Nominierten. Du trägst die Nominierte ein, die App wendet das Ziel links an."
+
+msgid "ui.card.schicksal_11.name"
+msgstr "Kettenreaktion"
+
+msgid "ui.card.schicksal_11.neutral.text"
+msgstr "Stirbt jemand durch Lynch, stirbt auch der Spieler mit den zweitmeisten Stimmen sofort, ohne weitere Abstimmung."
+
+msgid "ui.card.schicksal_11.neutral.guide"
+msgstr "Stirbt jemand bei der Hinrichtung, trägst du die Person mit den zweitmeisten Stimmen ein. Sie stirbt sofort mit."
+
+msgid "ui.card.schicksal_14.name"
+msgstr "Richterstuhl"
+
+msgid "ui.card.schicksal_14.neutral.text"
+msgstr "Das Dorf wählt sofort einen temporären Richter, exakt wie die Bürgermeisterwahl. Dieser Richter allein verhängt das Urteil des Tages."
+
+msgid "ui.card.schicksal_14.neutral.guide"
+msgstr "Das Dorf wählt am Tisch eine Richterin. Du trägst sie ein. Heute ist jede lebende Person als Urteil zulässig."
+
+msgid "ui.card.loki_01.name"
+msgstr "Spiegelwelt"
+
+msgid "ui.card.loki_01.neutral.text"
+msgstr "Alle Lynch-Stimmen heute zählen für den Spieler links daneben statt für den Nominierten. Niemand weiß, wer wirklich stirbt, bis der Spielleiter es verkündet."
+
+msgid "ui.card.loki_01.neutral.guide"
+msgstr "Heute zählen alle Stimmen für die Person links neben der Nominierten. Niemand erfährt vorher, wer wirklich stirbt. Du verkündest es."
+
+msgid "ui.card.loki_02.name"
+msgstr "Stille Abstimmung"
+
+msgid "ui.card.loki_02.neutral.text"
+msgstr "Der Tag wird auf 60 Sekunden verkürzt. Gibt es nicht mindestens 3 Nominierungen, sterben 1-5 zufällige Spieler. Werden Nominierung und Lynchung nicht innerhalb der 60 Sekunden abgeschlossen, sterben alle 3 Nominierten."
+
+msgid "ui.card.loki_02.neutral.guide"
+msgstr "Der Tag hat 60 Sekunden. Am Tagesende fragt die App, ob die Zeit eingehalten wurde, und setzt die Tode um."
+
+msgid "ui.card.loki_13.name"
+msgstr "Verhexte Lynch"
+
+msgid "ui.card.loki_13.neutral.text"
+msgstr "Beim heutigen Lynch stirbt der Spieler mit den wenigsten Stimmen, nicht der mit den meisten."
+
+msgid "ui.card.loki_13.neutral.guide"
+msgstr "Heute stirbt die Person mit den wenigsten Stimmen. Du trägst sie bei der Hinrichtung ein, jede lebende Person ist zulässig."
+
+msgid "ui.card.segen_10.name"
+msgstr "Totenurteil"
+
+msgid "ui.card.segen_10.wolf.text"
+msgstr "Die toten Werwölfe stimmen heimlich ab, ein Dorfbewohner ihrer Wahl stirbt noch in dieser Nacht."
+
+msgid "ui.card.segen_10.wolf.guide"
+msgstr "Die toten Wölfe wählen heimlich. Du trägst die Dorfperson ein, die noch in der Nacht stirbt."
+
+msgid "ui.card.segen_10.dorf.text"
+msgstr "Die toten Dorfbewohner stimmen heimlich ab, ein Werwolf ihrer Wahl stirbt noch in dieser Nacht."
+
+msgid "ui.card.segen_10.dorf.guide"
+msgstr "Die toten Dorfpersonen wählen heimlich. Du trägst den Wolf ein, der noch in der Nacht stirbt."
+
+msgid "ui.card.schicksal_12.name"
+msgstr "Totengericht"
+
+msgid "ui.card.schicksal_12.neutral.text"
+msgstr "Der nächste Tag wird von den Toten geleitet, nur tote Spieler dürfen nominieren und abstimmen. Lebende Spieler hören schweigend zu."
+
+msgid "ui.card.schicksal_12.neutral.guide"
+msgstr "Am nächsten Tag nominieren nur tote Personen. Lebende hören schweigend zu. Die App erlaubt nur Nominierungen durch Tote."
+
+msgid "ui.card.loki_05.name"
+msgstr "Totenerwachen"
+
+msgid "ui.card.loki_05.neutral.text"
+msgstr "Alle Toten zeigen gleichzeitig auf einen lebenden Spieler, der meistgenannte stirbt sofort. Bei Gleichstand sterben beide."
+
+msgid "ui.card.loki_05.neutral.guide"
+msgstr "Alle Toten zeigen gleichzeitig auf eine lebende Person. Tippe die meistgenannte Person an (bei Gleichstand alle). Sie sterben sofort."
+
+msgid "ui.card.solo_06.name"
+msgstr "Geisterstimme"
+
+msgid "ui.card.solo_06.solo.text"
+msgstr "Du agierst ab sofort vom Totenreich aus, du darfst in den folgenden drei Tagen nominieren und mit abstimmen, dazu zählt deine Stimme doppelt. Sollte es dir gelingen, dadurch jemanden zu lynchen, wirst du mit einer neuen Solo-Rolle wiederbelebt."
+
+msgid "ui.card.solo_06.solo.guide"
+msgstr "Drei Tage darf die Kartenspielerin nominieren und mitstimmen (Stimme doppelt, am Tisch). Wird jemand hingerichtet, den sie nominiert hat, kehrt sie mit einer neuen Einzelsiegrolle zurück."
+
+msgid "ui.card.solo_11.name"
+msgstr "Richter aus dem Totenreich"
+
+msgid "ui.card.solo_11.solo.text"
+msgstr "Nach jeder Abstimmung darfst du erneut einmal nominieren, nur wenn mindestens 50% der Spieler dafür sind, wird diese Person zusätzlich gelyncht."
+
+msgid "ui.card.solo_11.solo.guide"
+msgstr "Nach der Abstimmung des Tages darf die Kartenspielerin noch einmal nominieren. Stimmt mindestens die Hälfte zu, wird die Person hingerichtet. Du trägst Person und Zustimmung ein."
+
+msgid "ui.card.solo_13.name"
+msgstr "Das Totenreich Regiert"
+
+msgid "ui.card.solo_13.solo.text"
+msgstr "Die nächsten 2 Tagphasen werden von den Toten regiert, nur diese dürfen reden, nominieren und lynchen."
+
+msgid "ui.card.solo_13.solo.guide"
+msgstr "Heute und morgen nominieren nur Tote. Lebende hören schweigend zu. Die App erlaubt nur Nominierungen durch Tote."
+
+msgid "ui.card.schicksal_01.name"
+msgstr "Nebelhorn"
+
+msgid "ui.card.schicksal_01.neutral.text"
+msgstr "Niemand darf in der nächsten Tagesphase über Rollen sprechen, nur über Verhalten und Beobachtungen. Wer es tut scheidet sofort aus der Diskussion aus."
+
+msgid "ui.card.schicksal_01.neutral.guide"
+msgstr "Am Tisch gilt: Keine Gespräche über Rollen in der nächsten Tagesphase. Du achtest darauf und schließt Verstöße aus der Diskussion aus."
+
+msgid "ui.card.schicksal_02.name"
+msgstr "Offene Bücher"
+
+msgid "ui.card.schicksal_02.neutral.text"
+msgstr "Jeder lebende Spieler muss öffentlich sagen ob er heute Nacht eine Fähigkeit genutzt hat, lügen erlaubt. Reihenfolge bestimmt der Spielleiter."
+
+msgid "ui.card.schicksal_02.neutral.guide"
+msgstr "Jede lebende Person sagt öffentlich, ob sie heute Nacht eine Fähigkeit genutzt hat. Lügen ist erlaubt. Du bestimmst die Reihenfolge."
+
+msgid "ui.card.schicksal_04.name"
+msgstr "Großes Schweigen"
+
+msgid "ui.card.schicksal_04.neutral.text"
+msgstr "Die gesamte nächste Tagesphase dauert exakt 2 Minuten. Danach wird sofort abgestimmt, ohne weitere Diskussion."
+
+msgid "ui.card.schicksal_04.neutral.guide"
+msgstr "Die gesamte nächste Tagesphase dauert 2 Minuten, dann wird sofort abgestimmt. Stoppe die Zeit am Tisch."
+
+msgid "ui.card.schicksal_13.name"
+msgstr "Stille Wahl"
+
+msgid "ui.card.schicksal_13.neutral.text"
+msgstr "Heute findet keine Diskussion statt, lediglich Nominierung und sofortige Abstimmung. Kein Spieler darf zuvor das Wort ergreifen."
+
+msgid "ui.card.schicksal_13.neutral.guide"
+msgstr "Heute gibt es nur Nominierung und sofortige Abstimmung, keine Diskussion. Du achtest am Tisch darauf."
+
+msgid "ui.card.loki_11.name"
+msgstr "Stummfilm"
+
+msgid "ui.card.loki_11.neutral.text"
+msgstr "Heute darf niemand sprechen, nur Handzeichen und Mimik erlaubt. Wer auch nur ein Wort spricht, stirbt sofort."
+
+msgid "ui.card.loki_11.neutral.guide"
+msgstr "Heute spricht niemand, nur Handzeichen und Mimik. Wer ein Wort spricht, stirbt sofort: Tippe die Person, wenn es passiert."
+
+msgid "ui.card.loki_09.name"
+msgstr "Puppenspieler"
+
+msgid "ui.card.loki_09.neutral.text"
+msgstr "Der Spielleiter nominiert am nächsten Tag 5 Spieler, es ist mindestens einer aus jeder Fraktion darunter."
+
+msgid "ui.card.loki_09.neutral.guide"
+msgstr "Am nächsten Tag nominierst du fünf Personen, mindestens eine aus jeder Fraktion. Die App nimmt die Nominierungen entgegen."
+
+msgid "ui.card.segen_02.name"
+msgstr "Flüsterwind"
+
+msgid "ui.card.segen_02.wolf.text"
+msgstr "Ein Werwolf deiner Wahl darf dem Spielleiter heute öffentlich eine Ja/Nein Frage über einen Dorfbewohner stellen."
+
+msgid "ui.card.segen_02.wolf.guide"
+msgstr "Die Kartenspielerin wählt die Person, die dir heute öffentlich eine Ja/Nein-Frage stellen darf. Beantworte sie wahrheitsgemäß."
+
+msgid "ui.card.segen_02.dorf.text"
+msgstr "Ein Dorfbewohner deiner Wahl darf dem Spielleiter heute öffentlich eine Ja/Nein Frage über einen Mitspieler stellen."
+
+msgid "ui.card.segen_02.dorf.guide"
+msgstr "Die Kartenspielerin wählt die Person, die dir heute öffentlich eine Ja/Nein-Frage stellen darf. Beantworte sie wahrheitsgemäß."
+
+msgid "ui.card.fluch_06.name"
+msgstr "Schwarzes Mal"
+
+msgid "ui.card.fluch_06.wolf.text"
+msgstr "Der Spielleiter offenbart die Rolle eines Werwolfs seiner Wahl öffentlich dem Dorf."
+
+msgid "ui.card.fluch_06.wolf.guide"
+msgstr "Du wählst eine Person der Fraktion. Ihre Rolle wird öffentlich enthüllt. Die App zeigt die Ansage."
+
+msgid "ui.card.fluch_06.dorf.text"
+msgstr "Der Spielleiter offenbart die Rolle eines Dorfbewohners seiner Wahl öffentlich dem Dorf."
+
+msgid "ui.card.fluch_06.dorf.guide"
+msgstr "Du wählst eine Person der Fraktion. Ihre Rolle wird öffentlich enthüllt. Die App zeigt die Ansage."
+
+msgid "ui.card.fluch_11.name"
+msgstr "Rabe des Unheils"
+
+msgid "ui.card.fluch_11.wolf.text"
+msgstr "Du musst einen Wolf deiner Wahl dem Dorf öffentlich enthüllen."
+
+msgid "ui.card.fluch_11.wolf.guide"
+msgstr "Die Kartenspielerin wählt eine Person der Fraktion. Ihre Rolle wird öffentlich enthüllt. Die App zeigt die Ansage."
+
+msgid "ui.card.fluch_11.dorf.text"
+msgstr "Du musst einen Dorfbewohner deiner Wahl dem Dorf öffentlich enthüllen."
+
+msgid "ui.card.fluch_11.dorf.guide"
+msgstr "Die Kartenspielerin wählt eine Person der Fraktion. Ihre Rolle wird öffentlich enthüllt. Die App zeigt die Ansage."
+
+msgid "ui.card.loki_04.name"
+msgstr "Doppelgänger"
+
+msgid "ui.card.loki_04.neutral.text"
+msgstr "Der Spielleiter markiert heimlich einen zufälligen Spieler als verdächtig, alle sehen den Marker, niemand weiß warum. Ob er wirklich ein Wolf ist, bleibt offen."
+
+msgid "ui.card.loki_04.neutral.guide"
+msgstr "Die App markiert zufällig eine Person als verdächtig. Alle sehen die Markierung, niemand weiß den Grund."
+
+msgid "ui.card.solo_01.name"
+msgstr "Todesprojektion"
+
+msgid "ui.card.solo_01.solo.text"
+msgstr "Schreibe den Namen eines Spielers auf einen Zettel und gib ihn dem Spielleiter. Sollte dieser Spieler bei der nächsten Lynchung sterben, nimmst du seine Rolle & Fraktion an und nimmst wieder am Spielgeschehen teil."
+
+msgid "ui.card.solo_01.solo.guide"
+msgstr "Du trägst den Namen vom Zettel ein. Stirbt diese Person bei der nächsten Hinrichtung, kehrt die Kartenspielerin mit deren Rolle und Fraktion zurück."
+
+msgid "ui.card.solo_02.name"
+msgstr "Schwarze Prophezeiung"
+
+msgid "ui.card.solo_02.solo.text"
+msgstr "Du tippst dem SL geheim, welches Team das Spiel gewinnt. Liegst du richtig, wirst du am Spielende als stiller Mitsieger anerkannt."
+
+msgid "ui.card.solo_02.solo.guide"
+msgstr "Du trägst den geheimen Tipp ein: Dorf, Wölfe oder Einzelsieg. Liegt sie richtig, steht sie im Abschlussbericht als stille Mitsiegerin."
+
+msgid "ui.card.solo_03.name"
+msgstr "Racheschwur"
+
+msgid "ui.card.solo_03.solo.text"
+msgstr "Der Spieler der dich zuletzt nominiert hat (oder dich nachts angegriffen hat) erhält dauerhaft +3 Startstimmen gegen sich bei jedem zukünftigen Lynch. Der Fluch endet erst, wenn er stirbt."
+
+msgid "ui.card.solo_03.solo.guide"
+msgstr "Du trägst die Person ein, die die Kartenspielerin zuletzt nominiert oder angegriffen hat. Die App sagt öffentlich an: +3 Stimmen gegen sie, bis sie stirbt. Du zählst am Tisch."
+
+msgid "ui.card.solo_04.name"
+msgstr "Apokalyptischer Abgang"
+
+msgid "ui.card.solo_04.solo.text"
+msgstr "Wähle 2 lebende Spieler. Sie sind ab sofort durch ein Todesband verbunden: Stirbt einer in den nächsten 4 Nächten, stirbt der andere am selben Abend sofort nach."
+
+msgid "ui.card.solo_04.solo.guide"
+msgstr "Du trägst zwei lebende Personen ein. Stirbt eine in den nächsten vier Nächten, stirbt die andere sofort nach. Ein Schild verhindert den Mitstod."
+
+msgid "ui.card.solo_05.name"
+msgstr "Vermächtnis der Einsamkeit"
+
+msgid "ui.card.solo_05.solo.text"
+msgstr "Wähle einen lebenden Spieler. Er erbt deine Fähigkeit und deine Siegbedingung zusätzlich. Sollte dieser unter den Gewinnern sein, gewinnst du mit."
+
+msgid "ui.card.solo_05.solo.guide"
+msgstr "Du trägst die Erbin oder den Erben ein. Sie erben die Nachtfähigkeit der Kartenspielerin dauerhaft. Gewinnt die Person, gewinnt die Kartenspielerin mit."
+
+msgid "ui.card.solo_07.name"
+msgstr "Martyrium"
+
+msgid "ui.card.solo_07.solo.text"
+msgstr "Wähle Dorf oder Wölfe. Diese Fraktion erhält sofort einen Bonus: Dorf = die nächste Nacht findet kein Wolf-Angriff statt. Wölfe = der nächste Lynch wird annulliert."
+
+msgid "ui.card.solo_07.solo.guide"
+msgstr "Du trägst Dorf oder Wölfe ein. Dorf: Die nächste Nacht ohne Rudelangriff. Wölfe: Die nächste Hinrichtung entfällt."
+
+msgid "ui.card.solo_08.name"
+msgstr "Stiller Zeuge"
+
+msgid "ui.card.solo_08.solo.text"
+msgstr "Du hast das ganze Spiel beobachtet. Nenne dem SL heimlich den Spieler, den du für den gefährlichsten hältst. Sollte dieser gewinnen, gewinnst du mit ihm."
+
+msgid "ui.card.solo_08.solo.guide"
+msgstr "Du trägst die Person ein, die die Kartenspielerin für die gefährlichste hält. Gewinnt sie, gewinnt die Kartenspielerin mit."
+
+msgid "ui.card.solo_09.name"
+msgstr "Chaosgeist"
+
+msgid "ui.card.solo_09.solo.text"
+msgstr "Würfle laut einen Würfel. Die gewürfelte Zahl entspricht der Anzahl Spieler, die heute durch Lynchung sterben müssen."
+
+msgid "ui.card.solo_09.solo.guide"
+msgstr "Ein App-Würfel bestimmt, wie viele Hinrichtungen heute stattfinden. Der Tag bleibt offen, bis alle erfolgt sind oder niemand mehr nominiert ist."
+
+msgid "ui.card.solo_10.name"
+msgstr "Einsames Erbe"
+
+msgid "ui.card.solo_10.solo.text"
+msgstr "Du hinterlässt zwei Zettel beim SL. Auf einem steht der Name des Spielers, der gewinnen wird. Auf dem anderen steht der erste Spieler, der nach dir stirbt. Beide Zettel werden zu ihrem jeweiligen Zeitpunkt geöffnet. Lagen beide richtig, du gewinnst posthum."
+
+msgid "ui.card.solo_10.solo.guide"
+msgstr "Du trägst beide Zettel ein: die Person, die gewinnt, und die erste Person, die nach der Kartenspielerin stirbt. Stimmen beide, gewinnt sie posthum mit."
+
+msgid "ui.card.solo_12.name"
+msgstr "Familienbande aus dem Totenreich"
+
+msgid "ui.card.solo_12.solo.text"
+msgstr "Wähle einen Spieler, dieser erhält dauerhaft +3 auf seine Stimme. Er gewinnt automatisch, wenn er unter den letzten 2 Lebenden ist, und du gewinnst mit ihm."
+
+msgid "ui.card.solo_12.solo.guide"
+msgstr "Du trägst die Person ein. Die App sagt öffentlich an: +3 Stimmen für sie. Gehört sie zu den letzten zwei Lebenden, gewinnt sie und die Kartenspielerin mit."
+
+msgid "ui.card.solo_14.name"
+msgstr "Verrat oder Verbrüderung"
+
+msgid "ui.card.solo_14.solo.text"
+msgstr "Du darfst einen deiner lebenden Nachbarn beschuldigen, böse zu sein, sollte der andere Nachbar zustimmen, stirbt der besagte Bösewicht."
+
+msgid "ui.card.solo_14.solo.guide"
+msgstr "Wähle einen der lebenden Nachbarn der Kartenspielerin als Beschuldigten und frage den anderen Nachbarn. Stimmt er zu, stirbt der Beschuldigte."
+
+msgid "ui.setup.roles.death_cards"
+msgstr "Totenreichkarten"
+
+msgid "ui.setup.roles.death_cards_hint"
+msgstr "Tote ziehen Karten, die im Kartenfenster gespielt werden. Schaltet auch die Rolle Kartenschlucker frei."
+
+msgid "ui.setup.roles.issue.role_needs_death_cards"
+msgstr "Kartenschlucker nur mit Totenreichkarten"

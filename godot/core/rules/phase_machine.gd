@@ -29,12 +29,31 @@ const ALLOWED_WHILE_REACTION: Array[StringName] = [
 ]
 
 
+## Befehle, die während eines offenen Kartenfensters oder einer Karteneingabe nicht zulässig sind: Der Tag läuft erst weiter,
+## wenn das Fenster geschlossen und jede Kartenentscheidung getroffen ist.
+const BLOCKED_DURING_CARDS: Array[StringName] = [
+	Command.NOMINATE, Command.DECIDE_EXECUTION, Command.END_DAY, Command.START_NIGHT, Command.AMALIA_SACRIFICE, Command.NAME_WOLF, Command.CARD_TABLE_ACTION,
+]
+
+
 ## Prüft, ob der Befehlstyp in der aktuellen Phase zulässig ist. Leerer Rückgabewert = zulässig.
 static func check_command(state: GameState, type: StringName) -> StringName:
 	if state.phase == Phase.GAME_OVER:
 		return &"game_over"
 	if StepQueue.reactions_due(state) and not ALLOWED_WHILE_REACTION.has(type):
 		return &"reaction_open"
+	if state.death_cards:
+		if (CardRules.window_open(state) or CardRules.tasks_open(state)) and BLOCKED_DURING_CARDS.has(type):
+			return &"card_window_open"
+		if state.pending_prompt != null and state.pending_prompt.owner == PendingPrompt.OWNER_CARD and BLOCKED_DURING_CARDS.has(type):
+			return &"prompt_open"
+		if type == Command.CARD_ACT or type == Command.CARD_CLOSE_WINDOW:
+			if state.phase != Phase.DAY:
+				return &"wrong_phase"
+		elif type == Command.CARD_TABLE_ACTION and state.phase != Phase.DAY:
+			return &"wrong_phase"
+	elif type == Command.CARD_ACT or type == Command.CARD_CLOSE_WINDOW or type == Command.CARD_TABLE_ACTION:
+		return &"cards_disabled"
 	if not state.open_candidates().is_empty() and type != Command.CONFIRM_WIN and type != Command.REJECT_WIN and type != Command.ACK_NOTICE and type != Command.CONFIRM_ROLE_SHOWN:
 		return &"win_candidate_open"
 	match type:
@@ -84,7 +103,7 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 				return &"execution_already_decided"
 			if type == Command.END_DAY and state.day_step != Phase.DAY_EXECUTION_DECIDED:
 				return &"execution_not_decided"
-		Command.CONFIRM_WIN, Command.REJECT_WIN:
+		Command.CONFIRM_WIN, Command.REJECT_WIN, Command.CARD_ACT, Command.CARD_CLOSE_WINDOW, Command.CARD_TABLE_ACTION:
 			pass
 		_:
 			return &"unknown_command"

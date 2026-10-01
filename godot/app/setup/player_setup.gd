@@ -197,6 +197,11 @@ func change_role_count(role: StringName, delta: int) -> SetupResult:
 	return set_role_count(role, _draft.roles.counts.get(role, 0) + delta)
 
 
+## Partie mit Totenreichkarten (Standard aus). Eine bestätigte Rollenwahl verliert dabei ihre Bestätigung.
+func set_death_cards(on: bool) -> SetupResult:
+	return _apply(RoleSetup.set_death_cards(_draft, on), {"death_cards": on})
+
+
 func reset_roles() -> SetupResult:
 	return _apply(RoleSetup.reset_roles(_draft))
 
@@ -301,7 +306,7 @@ func start_data() -> SetupResult:
 		if copy != null:
 			appearances[str(p.person_id)] = String(copy.appears_as)
 	var result := SetupResult.success(view())
-	result.details = {"players": players, "seat_order": _draft.seating.order.duplicate(), "roles": roles, "appearances": appearances}
+	result.details = {"players": players, "seat_order": _draft.seating.order.duplicate(), "roles": roles, "appearances": appearances, "death_cards": _draft.roles.death_cards}
 	return result
 
 

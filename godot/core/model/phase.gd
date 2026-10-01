@@ -16,6 +16,7 @@ const DAY_NONE := &""
 const DAY_DISCUSSION := &"DISCUSSION"
 const DAY_NOMINATION := &"NOMINATION"
 const DAY_EXECUTION_DECIDED := &"EXECUTION_DECIDED"
+const DAY_CARDS_END := &"CARDS_END"  ## Tagesende läuft: Fristen sind abgelaufen, das zweite Kartenfenster ist offen (Totenreichkarten)
 const DAY_ENDED := &"ENDED"
 
-const ALL_DAY_STEPS: Array[StringName] = [DAY_NONE, DAY_DISCUSSION, DAY_NOMINATION, DAY_EXECUTION_DECIDED, DAY_ENDED]
+const ALL_DAY_STEPS: Array[StringName] = [DAY_NONE, DAY_DISCUSSION, DAY_NOMINATION, DAY_EXECUTION_DECIDED, DAY_CARDS_END, DAY_ENDED]

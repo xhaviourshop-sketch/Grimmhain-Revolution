@@ -440,6 +440,31 @@ static func ability_role(s: GameState, id: int) -> StringName:
 	return stolen if stolen != &"" else s.players[id].role_id
 
 
+## Personen mit ihrer Nachtrolle für den Nachtplan: eigene bzw. gestohlene Rolle jeder lebenden Person, dazu zusätzliche
+## Fähigkeiten dieser Nacht aus Totenreichkarten (Geisterhand, Schicksalswende).
+static func night_role_pairs(s: GameState) -> Array:
+	var out: Array = []
+	for id: int in s.alive_ids():
+		out.append([id, ability_role(s, id)])
+	for extra: Array in CardFxAbility.night_abilities(s):
+		if not out.any(func(pair: Array) -> bool: return int(pair[0]) == int(extra[0]) and StringName(pair[1]) == StringName(extra[1])):
+			out.append(extra)
+	return out
+
+
+## true, wenn die Person in dieser Nacht den Schritt der Rolle `role` ausführt: eigene bzw. gestohlene Rolle oder eine
+## zusätzliche Fähigkeit aus einer Totenreichkarte.
+static func acts_as(s: GameState, id: int, role: StringName) -> bool:
+	if ability_role(s, id) == role:
+		return true
+	if not s.death_cards:
+		return false
+	for a: Dictionary in s.cardsys["abilities"]:
+		if int(a["player_id"]) == id and StringName(a["role_id"]) == role and (int(a["night"]) == s.night_number or int(a["night"]) == CardFxSolo.PERM):
+			return true
+	return false
+
+
 ## true, wenn die Person die Nachtfähigkeit `role` hat (eigene Rolle oder vom Grabräuber gestohlen).
 static func has_ability(s: GameState, id: int, role: StringName) -> bool:
 	return s.players.has(id) and (s.players[id].role_id == role or stolen_role(s, id) == role)

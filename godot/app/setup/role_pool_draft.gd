@@ -18,6 +18,7 @@ var confirmed: bool = false
 var invalidated: StringName = &""   ## Grund, warum eine frühere Bestätigung aufgehoben wurde
 var copies: Array[RoleCopy] = []    ## Kopien mit Pflicht-Scheinrolle in Anlagereihenfolge
 var next_copy_id: int = 1           ## nächste Kopien-ID; sinkt nie
+var death_cards: bool = false       ## Partie mit Totenreichkarten (Kartenschlucker wählbar); Standard aus
 
 
 func _init() -> void:
@@ -166,6 +167,8 @@ func issues(persons: int) -> Array[StringName]:
 		if not copy.is_configured():
 			out.append(&"missing_appearance")
 			break
+	if not death_cards and counts.get(RoleCatalog.KARTENSCHLUCKER, 0) > 0:
+		out.append(&"role_needs_death_cards")
 	return out
 
 
@@ -189,7 +192,7 @@ func view(persons: int) -> Dictionary:
 		var limit := SetupRoleCatalog.copy_limit(id, persons)
 		string_counts[String(id)] = c
 		limits[String(id)] = limit
-		can_increase[String(id)] = c < limit
+		can_increase[String(id)] = c < limit and (death_cards or not RoleCatalog.requires_cards(id))
 		can_decrease[String(id)] = c > 0
 	var found := issues(persons)
 	var over_names: Array[String] = []
@@ -212,6 +215,7 @@ func view(persons: int) -> Dictionary:
 		"hints": hint_names,
 		"total": sum,
 		"persons": persons,
+		"death_cards": death_cards,
 		"free": persons - sum,
 		"valid": found.is_empty(),
 		"issues": issue_names,

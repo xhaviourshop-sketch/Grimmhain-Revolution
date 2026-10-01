@@ -22,7 +22,8 @@ extends RefCounted
 
 ## Alle erfüllten Siegbedingungen: [{kind, reason_key, reason_args, beneficiary_ids}].
 static func evaluate(state: GameState) -> Array:
-	var alive := state.alive_ids()
+	var deferred := CardHooks.deferred_ids(state)  # Notanker: aufgeschobener Tod zählt für Siegbedingungen bereits als tot
+	var alive := state.alive_ids().filter(func(id: int) -> bool: return not deferred.has(id))
 	var living_wolves := 0
 	var wolves := 0  # Paritätswert: Siegreicher Wolf zählt doppelt (RoleCatalog.parity_weight)
 	var non_wolves := 0
@@ -75,6 +76,12 @@ static func evaluate(state: GameState) -> Array:
 		results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_NECROMANCER), "reason_args": {}, "beneficiary_ids": [id]})
 	for id: int in state.preacher_wins:
 		results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_DEATH_PREACHER), "reason_args": {}, "beneficiary_ids": [id]})
+	for id: int in alive:
+		if CardFxSolo.family_bond_wins(state, id):
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_FAMILY_BOND), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+	for id: int in alive:
+		if SwallowerRules.wins(state, id):
+			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_SWALLOWER), "reason_args": {"total": SwallowerRules.total_of(state, id)}, "beneficiary_ids": [id]})
 	for id: int in alive:
 		if SoloRules.piper_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_PIED_PIPER), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
@@ -167,7 +174,7 @@ static func record_provisional(ctx: RuleContext, death: KillEvent) -> void:
 ## werden nie überschrieben.
 static func finalize_if_ready(ctx: RuleContext) -> void:
 	var s := ctx.state
-	if not s.win_check_pending or not s.reactions.is_empty() or s.pending_prompt != null:
+	if not s.win_check_pending or not s.reactions.is_empty() or s.pending_prompt != null or CardRules.defers_win_check(s):
 		return
 	if s.winner_id != -1 or not s.open_candidates().is_empty():
 		return
@@ -219,6 +226,10 @@ static func _solo_holds(s: GameState, reason: StringName, id: int) -> bool:
 			return grave_robber_wins(s, id)
 		WinCandidate.REASON_LONE_WOLF:
 			return SoloRules.lone_wolf_wins(s, id)
+		WinCandidate.REASON_SWALLOWER:
+			return SwallowerRules.wins(s, id)
+		WinCandidate.REASON_FAMILY_BOND:
+			return CardFxSolo.family_bond_wins(s, id)
 	return s.preacher_wins.has(id)
 
 
@@ -263,7 +274,7 @@ static func state_is_consistent(s: GameState) -> bool:
 		if c.reason_key == WinCandidate.REASON_DEATH_SEEKER and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not s.death_seeker_wins.has(c.beneficiary_ids[0]):
 				return false
-		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO, WinCandidate.REASON_NECROMANCER, WinCandidate.REASON_HADES, WinCandidate.REASON_GRAVE_ROBBER, WinCandidate.REASON_LONE_WOLF].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO, WinCandidate.REASON_NECROMANCER, WinCandidate.REASON_HADES, WinCandidate.REASON_GRAVE_ROBBER, WinCandidate.REASON_LONE_WOLF, WinCandidate.REASON_SWALLOWER, WinCandidate.REASON_FAMILY_BOND].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not _solo_holds(s, c.reason_key, c.beneficiary_ids[0]):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):

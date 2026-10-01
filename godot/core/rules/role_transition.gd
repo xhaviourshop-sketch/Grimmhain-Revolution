@@ -50,6 +50,7 @@ static func revive(s: GameState, player_id: int) -> void:
 	p.alive = true
 	p.death = null
 	p.ability_uses.clear()
+	CardRules.on_revive(s, player_id)  # nicht gespielte Karte aus dem früheren Leben verfällt
 	s.growth.erase(player_id)  # Fenrir-Stufe und Cerberus-Köpfe beginnen neu
 	s.win_check_pending = true
 

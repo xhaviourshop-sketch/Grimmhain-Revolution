@@ -19,7 +19,7 @@ func _role_parts() -> Dictionary:
 func test_every_catalog_role_has_all_fields_in_both_languages() -> void:
 	var de := po_entries(PO_DE)
 	var en := po_entries(PO_EN)
-	assert_eq(RoleCatalog.ROLES.size(), 71, "71 implementierte Rollen im Katalog")
+	assert_eq(RoleCatalog.ROLES.size(), 72, "72 implementierte Rollen im Katalog (mit Kartenschlucker)")
 	for id: Variant in RoleCatalog.ROLES:
 		for field: String in RolePresentation.LEXICON_FIELDS:
 			var key := RolePresentation.lexicon_key(StringName(id), field)
@@ -30,7 +30,7 @@ func test_every_catalog_role_has_all_fields_in_both_languages() -> void:
 		assert_eq(de.has(open), en.has(open), "%s in beiden Sprachen gleich vorhanden" % open)
 
 
-func test_no_entries_for_unknown_roles_fields_or_the_card_eater() -> void:
+func test_no_entries_for_unknown_roles_or_fields() -> void:
 	var parts := _role_parts()
 	var allowed: Array[String] = RolePresentation.LEXICON_FIELDS.duplicate()
 	allowed.append(RolePresentation.LEXICON_OPEN)
@@ -47,9 +47,9 @@ func test_no_entries_for_unknown_roles_fields_or_the_card_eater() -> void:
 			assert_true(allowed.has(m.get_string(2)), "%s: unbekanntes Feld in %s" % [path, key])
 			roles[m.get_string(1)] = true
 		assert_eq(roles.size(), parts.size(), "%s: Einträge für genau alle Katalogrollen" % path)
-		assert_false(roles.has("kartenschlucker"), "%s: Kartenschlucker ohne Eintrag" % path)
+		assert_true(roles.has("kartenschlucker"), "%s: Kartenschlucker hat Einträge (seit den Totenreichkarten spielbar)" % path)
 		assert_true(count >= parts.size() * RolePresentation.LEXICON_FIELDS.size(), "%s: alle Pflichtfelder" % path)
-	assert_false(RoleCatalog.has_role(&"kartenschlucker"), "Kartenschlucker ist keine spielbare Rolle")
+	assert_true(RoleCatalog.has_role(&"kartenschlucker") and RoleCatalog.requires_cards(&"kartenschlucker"), "Kartenschlucker ist Rolle der Partien mit Totenreichkarten")
 
 
 func test_texts_have_no_placeholders_or_document_references() -> void:

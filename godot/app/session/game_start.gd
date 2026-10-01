@@ -44,6 +44,8 @@ static func build_command(data: Dictionary, seed_value: int) -> Command:
 	}
 	if not (data["appearances"] as Dictionary).is_empty():
 		payload["appearances"] = data["appearances"]
+	if bool(data.get("death_cards", false)):
+		payload["death_cards"] = true
 	return Command.start_game(payload)
 
 

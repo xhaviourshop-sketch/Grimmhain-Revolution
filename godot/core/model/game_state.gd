@@ -4,8 +4,8 @@ extends RefCounted
 ## und zwar immer auf einer Kopie (RulesEngine.apply ist für den Aufrufer rein).
 ## Anzeige- und Zeitwerte gehören nicht hierher (03 §6.3).
 
-const SCHEMA_VERSION := 14  ## 14: Rollenanzeige (roles_shown: bestätigter Fortschritt je Person); 13: Wiederbelebungsrunde (revival_round, aus der Startbesetzung abgeleitet, ersetzt reveal_role_on_death), Hinweise (notices); 12: Setup-Option reveal_role_on_death (DR-04); 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades, Grabräuber)
-const RULES_VERSION := &"grimmhain-core-0.14"  ## 0.14: Startbesetzung höchstens einmal je Rolle, außer Die Gebundenen (PE-07)
+const SCHEMA_VERSION := 15  ## 15: Totenreichkarten (death_cards, cardsys: Karten, Kartenfenster, Aufgaben, Karteneffekte, Kartenschlucker); 14: Rollenanzeige (roles_shown: bestätigter Fortschritt je Person); 13: Wiederbelebungsrunde (revival_round, aus der Startbesetzung abgeleitet, ersetzt reveal_role_on_death), Hinweise (notices); 12: Setup-Option reveal_role_on_death (DR-04); 2: Nachtplan, Reaktionen, vorläufiger Siegstatus; 3: Player.ability_uses; 4: Schutz, Schrittstatus; 5: Waldhexe (witch_actions, Prompt-Stufe); 6: Orakel (info_records, next_ids.info); 7: Trugbilderwolf (Pflicht-Scheinrolle, Setup appearances/role_entries); 8: Wolfskind (wolf_children); 9: Manipulator (ever_nominated, win_candidates, winner_id); 10: Lehrling (apprentices, next_ids.apprentice); 11: Rollenaudit (night_wolf_ids, death_seeker_wins, judge_marks, parasite_hosts, Wolfsrollen-Zustand, Informations-, Schutz-, Bindungs-, Verwandlungs-, Wiederbelebungs- und Einzelsiegrollen, Hades, Grabräuber)
+const RULES_VERSION := &"grimmhain-core-0.15"  ## 0.15: Totenreichkarten und Kartenschlucker (nur mit Setup-Option death_cards, sonst unverändert); 0.14: Startbesetzung höchstens einmal je Rolle, außer Die Gebundenen (PE-07)
 ## Reine Zählfelder, die nicht zum fachlichen Hash gehören (Befehls- und ID-Zähler).
 const HASH_EXCLUDED_KEYS: Array[String] = ["command_count", "next_ids"]
 const NO_TARGET := -1
@@ -13,6 +13,8 @@ const NO_TARGET := -1
 var schema_version: int = SCHEMA_VERSION
 var rules_version: StringName = RULES_VERSION
 var round_id: String = ""
+var death_cards: bool = false  ## Totenreichkarten aktiv (Setup-Option, bleibt die ganze Partie); dann ist `cardsys` vollständig, sonst leer
+var cardsys: Dictionary = {}  ## Totenreichkarten, siehe CardRules
 var revival_round: bool = false  ## DI-01: Wiederbelebung gehört zur Startbesetzung; dann keine Rollenaufdeckung beim Tod, sonst Aufdeckung (bleibt die ganze Partie)
 var rng: SeededRng = SeededRng.new(0)
 var phase: StringName = Phase.SETUP
@@ -216,6 +218,7 @@ func to_dict() -> Dictionary:
 		"rules_version": String(rules_version),
 		"round_id": round_id,
 		"revival_round": revival_round,
+		"death_cards": death_cards,
 		"rng": rng.to_dict(),
 		"phase": String(phase),
 		"day_step": String(day_step),
@@ -301,7 +304,10 @@ func to_dict() -> Dictionary:
 			"notice": next_notice_id,
 			"apprentice": next_apprentice_id,
 		},
-	}	# Umlenkung eines Rudelangriffs durch einen Nekromanten: nur in der laufenden Nacht vorhanden (E-17, E-20).
+	}
+	if death_cards:
+		d["cardsys"] = cardsys.duplicate(true)
+	# Umlenkung eines Rudelangriffs durch einen Nekromanten: nur in der laufenden Nacht vorhanden (E-17, E-20).
 	if pack_redirect_from != -1:
 		d["pack_redirect_from"] = pack_redirect_from
 	if pack_extra_redirect_from != -1:
@@ -320,6 +326,9 @@ static func from_dict(d: Dictionary) -> GameState:
 	if not d.get("revival_round") is bool:
 		return null
 	s.revival_round = bool(d["revival_round"])
+	if not d.get("death_cards") is bool:
+		return null
+	s.death_cards = bool(d["death_cards"])
 	s.rng = SeededRng.from_dict(DictRead.get_dict(d, "rng"))
 	if s.rng == null:
 		return null
@@ -349,6 +358,8 @@ static func from_dict(d: Dictionary) -> GameState:
 	if sorted_order != ids:
 		return null
 
+	if not CardRules.load_system(s, d):
+		return null
 	# Grabräuber (E-32, E-34): lebender Grabräuber mit verbrauchtem Diebstahl, stehlbare Rolle, einer je Person, aufsteigend.
 	for item: Variant in DictRead.get_array(d, "grave_thefts"):
 		var robber := DictRead.get_int(item, "robber_id", -1) if item is Dictionary else -1
@@ -517,7 +528,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var marked_target := DictRead.get_int(item, "target_id", -1)
 		var marked_source := DictRead.get_int(item, "source_id", -1)
 		var mark_cause := StringName(DictRead.get_string(item, "cause"))
-		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW, KillEvent.CAUSE_PROPHET_KILL, KillEvent.CAUSE_HADES_KILL, KillEvent.CAUSE_LONE_WOLF_KILL].has(mark_cause):
+		if not s.players.has(marked_target) or not s.players.has(marked_source) or not [KillEvent.CAUSE_WARRIOR_WRONG, KillEvent.CAUSE_BLOOD_SACRIFICE, KillEvent.CAUSE_BLACK_WIDOW, KillEvent.CAUSE_PROPHET_KILL, KillEvent.CAUSE_HADES_KILL, KillEvent.CAUSE_LONE_WOLF_KILL, KillEvent.CAUSE_SWALLOWER_KILL, KillEvent.CAUSE_CARD_EFFECT, KillEvent.CAUSE_CARD_EXPIRY, KillEvent.CAUSE_CARD_CHAIN].has(mark_cause):
 			return null
 		s.death_marks.append({"target_id": marked_target, "source_id": marked_source, "cause": String(mark_cause)})
 	for item: Variant in DictRead.get_array(d, "detective_hints"):
@@ -790,6 +801,12 @@ static func from_dict(d: Dictionary) -> GameState:
 	if s.pending_prompt != null and BondSteps.OWNERS.has(s.pending_prompt.owner) and not BondSteps.matches_state(s, s.pending_prompt):
 		return null
 	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_APPRENTICE and not ApprenticeRules.matches_state(s, s.pending_prompt):
+		return null
+	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_CARD and not CardSteps.matches_state(s, s.pending_prompt):
+		return null
+	if s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_SWALLOWER and not SwallowerRules.matches_state(s, s.pending_prompt):
+		return null
+	if not CardRules.state_is_consistent(s):
 		return null
 	if not WinRules.state_is_consistent(s):
 		return null

@@ -6541,3 +6541,1011 @@ msgstr "{count} further technical single events are not listed here."
 
 msgid "ui.report.no_history"
 msgstr "There are no entries for this version."
+
+msgid "ui.role.kartenschlucker.name"
+msgstr "Card Swallower"
+
+msgid "ui.role.kartenschlucker.short"
+msgstr "Collects stacks from exchanged realm-of-the-dead cards and buys a kill, a shield or the win with them."
+
+msgid "ui.call.kartenschlucker"
+msgstr "“Card Swallower, wake up. Show with your fingers what you want to do: shaking your head means nothing, two fingers a kill, five fingers a shield, ten fingers the win.”"
+
+msgid "ui.prompt.kartenschlucker.act"
+msgstr "Tap the hand sign the Card Swallower shows: head shake, two, five or ten fingers. Signs that cost too much are locked."
+
+msgid "ui.prompt.kartenschlucker.target"
+msgstr "Tap the person the Card Swallower wants to kill."
+
+msgid "ui.role.kartenschlucker.lex.night"
+msgstr "every night, optional, once two stacks are available"
+
+msgid "ui.role.kartenschlucker.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.kartenschlucker.lex.ability"
+msgstr "Collects one stack for every exchanged realm-of-the-dead card and spends them at night on a kill, a shield or the win."
+
+msgid "ui.role.kartenschlucker.lex.timing"
+msgstr "Only in games with realm-of-the-dead cards. Every night they choose exactly one action: nothing, two stacks for a kill, five stacks for a shield, ten stacks for the win. With fewer than two stacks the step is skipped. In nights 3, 6, 9 and so on the morning announces publicly the total of all stacks collected, without revealing purchases."
+
+msgid "ui.role.kartenschlucker.lex.targets"
+msgstr "One living person for the kill. Shield and win need no target."
+
+msgid "ui.role.kartenschlucker.lex.exceptions"
+msgstr "Stacks belong to the person, not the role: a new bearer starts at zero, for the previous one they rest. Death leaves stacks in place. The shield applies at most once per person, stays until used and prevents any death except game master corrections. The kill takes effect in the morning like any role ability; protection and shields apply. The role cannot be stolen and is not a decoy appearance."
+
+msgid "ui.role.kartenschlucker.lex.win"
+msgstr "Alone. The ten-finger action spends ten stacks and makes the win a candidate as long as the person is alive and holds the role. Ten collected stacks alone trigger nothing."
+
+msgid "ui.role.kartenschlucker.lex.example"
+msgstr "The Card Swallower has collected four stacks. They show two fingers and choose Ben: Ben dies in the morning, two stacks remain.\nLater they have ten stacks and show ten fingers: the game master confirms their solo win."
+
+msgid "ui.role.kartenschlucker.lex.gm"
+msgstr "You tap the table's hand signs as buttons. The app keeps track of the balance and the total of stacks."
+
+msgid "ui.role.kartenschlucker.lex.act"
+msgstr "Call: (every night, optional, from two stacks) The app announces the role “Card Swallower” in the night order. Read out: “Card Swallower, wake up. Show with your fingers what you want to do: shaking your head means nothing, two fingers a kill, five fingers a shield, ten fingers the win.”\nSelect or read: Tap the hand sign the Card Swallower shows: head shake, two, five or ten fingers. Signs that cost too much are locked. Tap the person the Card Swallower wants to kill.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the hand sign; for the kill then “Confirm selection”. The app then opens the next step."
+
+msgid "ui.card.segen_08.name"
+msgstr "Second Life"
+
+msgid "ui.card.segen_08.wolf.text"
+msgstr "A dead werewolf of your choice returns as a full werewolf with their original role."
+
+msgid "ui.card.segen_08.wolf.guide"
+msgstr "The card player picks one of the dead people offered. They return with the role they had at death and sit at the table again."
+
+msgid "ui.card.segen_08.dorf.text"
+msgstr "A dead villager of your choice returns as a full villager with their original role."
+
+msgid "ui.card.segen_08.dorf.guide"
+msgstr "The card player picks one of the dead people offered. They return with the role they had at death and sit at the table again."
+
+msgid "ui.card.wende_04.name"
+msgstr "Rebirth"
+
+msgid "ui.card.wende_04.wolf.text"
+msgstr "The game master chooses a dead werewolf at their discretion, who returns with their original ability."
+
+msgid "ui.card.wende_04.wolf.guide"
+msgstr "The game master chooses a dead person of the faction, possibly the card player. They return and are informed silently."
+
+msgid "ui.card.wende_04.dorf.text"
+msgstr "The game master chooses a dead villager at their discretion, who returns with their original ability."
+
+msgid "ui.card.wende_04.dorf.guide"
+msgstr "The game master chooses a dead person of the faction, possibly the card player. They return and are informed silently."
+
+msgid "ui.card.wende_07.name"
+msgstr "Liberation"
+
+msgid "ui.card.wende_07.wolf.text"
+msgstr "A dead werewolf returns with half an ability: they may use it once, then die again."
+
+msgid "ui.card.wende_07.wolf.guide"
+msgstr "The card player chooses a dead person. They return and die again after their first completed use of the ability."
+
+msgid "ui.card.wende_07.dorf.text"
+msgstr "A dead villager returns with half an ability: they may use it once, then die again."
+
+msgid "ui.card.wende_07.dorf.guide"
+msgstr "The card player chooses a dead person. They return and die again after their first completed use of the ability."
+
+msgid "ui.card.loki_10.name"
+msgstr "Phoenix"
+
+msgid "ui.card.loki_10.neutral.text"
+msgstr "Two dice are rolled. The first revives that many random players, the second decides for how many rounds they stay alive."
+
+msgid "ui.card.loki_10.neutral.guide"
+msgstr "Two app dice are rolled and stored: the number of returning people and how many days they live. The app picks the people from the stored randomness."
+
+msgid "ui.card.wende_12.name"
+msgstr "Secret Counsel"
+
+msgid "ui.card.wende_12.wolf.text"
+msgstr "The werewolves are called last tonight, and you may open your eyes for this night and give them hints."
+
+msgid "ui.card.wende_12.wolf.guide"
+msgstr "In the next night the pack is called last. The dead player may open their eyes and give silent hints. Gestures, no talking."
+
+msgid "ui.card.wende_12.dorf.text"
+msgstr "You may ask the game master a question that they must answer truthfully. (Only in games with revival scenarios)"
+
+msgid "ui.card.wende_12.dorf.guide"
+msgstr "The card player asks the game master a question that is answered truthfully. Confirm in the app once it has been answered."
+
+msgid "ui.card.schicksal_08.name"
+msgstr "New Beginning"
+
+msgid "ui.card.schicksal_08.neutral.text"
+msgstr "Two chosen living players receive a new role within their faction. The game master informs both silently."
+
+msgid "ui.card.schicksal_08.neutral.guide"
+msgstr "Choose two living people and a new role of their faction for each. Both are informed silently and start with fresh uses."
+
+msgid "ui.card.loki_06.name"
+msgstr "Role Roulette"
+
+msgid "ui.card.loki_06.neutral.text"
+msgstr "The game master swaps the roles of two random living players. Both belong to the same faction and are informed silently."
+
+msgid "ui.card.loki_06.neutral.guide"
+msgstr "The app picks two random living people of the same faction and swaps their roles silently. Inform both quietly."
+
+msgid "ui.card.segen_01.name"
+msgstr "Healing Hand"
+
+msgid "ui.card.segen_01.wolf.text"
+msgstr "The next time a werewolf would die, a random villager dies instead."
+
+msgid "ui.card.segen_01.wolf.guide"
+msgstr "The next death of a wolf hits a random villager instead. The app carries out the swap automatically."
+
+msgid "ui.card.segen_01.dorf.text"
+msgstr "The next time a werewolf would kill a villager, they survive and receive a one-time protective shield."
+
+msgid "ui.card.segen_01.dorf.guide"
+msgstr "The next pack attack on a villager fails. They receive a personal shield that prevents one further death."
+
+msgid "ui.card.segen_07.name"
+msgstr "Blood Pact"
+
+msgid "ui.card.segen_07.wolf.text"
+msgstr "The next special ability that would kill a werewolf is negated."
+
+msgid "ui.card.segen_07.wolf.guide"
+msgstr "The next special ability that would kill a wolf is negated. The app uses up the protection."
+
+msgid "ui.card.segen_07.dorf.text"
+msgstr "Based on the character of the next nightly victim, the game master reveals 0 to 2 werewolves."
+
+msgid "ui.card.segen_07.dorf.guide"
+msgstr "After the next nightly victim you choose zero to two wolves for the card player, who are revealed publicly."
+
+msgid "ui.card.segen_11.name"
+msgstr "Mirror Shield"
+
+msgid "ui.card.segen_11.wolf.text"
+msgstr "If a wolf is lynched on the next day, the person who made the nomination dies instead."
+
+msgid "ui.card.segen_11.wolf.guide"
+msgstr "If a wolf is lynched on the next day, the nominating person dies instead. The app applies it at the execution."
+
+msgid "ui.card.segen_11.dorf.text"
+msgstr "If the werewolves catch a villager in the following night, one of them dies instead."
+
+msgid "ui.card.segen_11.dorf.guide"
+msgstr "If the pack catches a villager in the following night, a random wolf dies instead."
+
+msgid "ui.card.wende_02.name"
+msgstr "Cry of Despair"
+
+msgid "ui.card.wende_02.wolf.text"
+msgstr "A werewolf of your choice cannot be lynched for the next 2 days."
+
+msgid "ui.card.wende_02.wolf.guide"
+msgstr "In the next night the card player secretly chooses a wolf. They cannot be lynched for the next two days."
+
+msgid "ui.card.wende_02.dorf.text"
+msgstr "A villager of your choice receives protection against werewolf attacks for 3 days."
+
+msgid "ui.card.wende_02.dorf.guide"
+msgstr "In the next night the card player secretly chooses a villager. They are protected from pack attacks for three nights."
+
+msgid "ui.card.wende_05.name"
+msgstr "Emergency Anchor"
+
+msgid "ui.card.wende_05.wolf.text"
+msgstr "The wolves may postpone the next death in their own ranks once, to the day after tomorrow. The game master then carries it out automatically."
+
+msgid "ui.card.wende_05.wolf.guide"
+msgstr "The next death in your own faction is postponed to the day after tomorrow. The person acts normally until then but already counts as dead for wins. The app carries out the death."
+
+msgid "ui.card.wende_05.dorf.text"
+msgstr "The village may postpone the next death in its own ranks once, to the day after tomorrow. The game master then carries it out automatically."
+
+msgid "ui.card.wende_05.dorf.guide"
+msgstr "The next death in your own faction is postponed to the day after tomorrow. The person acts normally until then but already counts as dead for wins. The app carries out the death."
+
+msgid "ui.card.wende_11.name"
+msgstr "Twist of Fate"
+
+msgid "ui.card.wende_11.wolf.text"
+msgstr "King Lycaon awakens in you: give a wolf of your choice the ability to turn a player into a Decoy Wolf."
+
+msgid "ui.card.wende_11.wolf.guide"
+msgstr "Choose a wolf. In the next night they get exactly one chance to use King Lycaon's transformation."
+
+msgid "ui.card.wende_11.dorf.text"
+msgstr "If the next lynching hits a villager, the verdict is redirected to a random wolf."
+
+msgid "ui.card.wende_11.dorf.guide"
+msgstr "If the next execution hits a villager, it hits a random wolf instead. The app picks the wolf from the stored randomness."
+
+msgid "ui.card.fluch_05.name"
+msgstr "Broken Shield"
+
+msgid "ui.card.fluch_05.wolf.text"
+msgstr "All active protective effects on werewolves are lifted for 1 to 3 days. The game master decides the duration."
+
+msgid "ui.card.fluch_05.wolf.guide"
+msgstr "You choose how long the faction's protective effects rest: 1 to 3 days, the day of play counts as the first."
+
+msgid "ui.card.fluch_05.dorf.text"
+msgstr "All active protective effects on villagers are lifted for 1 to 3 days. The game master decides the duration."
+
+msgid "ui.card.fluch_05.dorf.guide"
+msgstr "You choose how long the faction's protective effects rest: 1 to 3 days, the day of play counts as the first."
+
+msgid "ui.card.fluch_08.name"
+msgstr "Chain Curse"
+
+msgid "ui.card.fluch_08.wolf.text"
+msgstr "If a werewolf dies tonight through a special ability, the werewolf to their right dies with them."
+
+msgid "ui.card.fluch_08.wolf.guide"
+msgstr "Tonight: if a wolf dies through a special ability, the next living wolf to their right dies with them. The app carries out the chain."
+
+msgid "ui.card.fluch_08.dorf.text"
+msgstr "If a villager dies tonight by the wolves, the villager to their left dies with them."
+
+msgid "ui.card.fluch_08.dorf.guide"
+msgstr "Tonight: if a villager dies by the wolves, the next living villager to their left dies with them. The app carries out the chain."
+
+msgid "ui.card.fluch_12.name"
+msgstr "Double Suffering"
+
+msgid "ui.card.fluch_12.wolf.text"
+msgstr "If a wolf dies next, another random wolf automatically dies with them."
+
+msgid "ui.card.fluch_12.wolf.guide"
+msgstr "The next death in the faction takes another random member with it. A shield prevents the extra death, there is no substitute."
+
+msgid "ui.card.fluch_12.dorf.text"
+msgstr "If a villager dies next, another random villager automatically dies with them."
+
+msgid "ui.card.fluch_12.dorf.guide"
+msgstr "The next death in the faction takes another random member with it. A shield prevents the extra death, there is no substitute."
+
+msgid "ui.card.loki_12.name"
+msgstr "Cosmic Balance"
+
+msgid "ui.card.loki_12.neutral.text"
+msgstr "If a wolf dies today, a villager dies too. If a villager dies, a wolf dies too. The game master decides the victims by role strength."
+
+msgid "ui.card.loki_12.neutral.guide"
+msgstr "Until the end of the coming night every death of a wolf or villager triggers an extra death on the other side. You choose the victims."
+
+msgid "ui.card.segen_03.name"
+msgstr "Watchful Eyes"
+
+msgid "ui.card.segen_03.wolf.text"
+msgstr "Tonight the wolves learn the role of their chosen victim before they kill, and may still change the target afterwards."
+
+msgid "ui.card.segen_03.wolf.guide"
+msgstr "After the pack's choice the pack learns the victim's role and may change the target. Show the pack the role, then tap the final target."
+
+msgid "ui.card.segen_03.dorf.text"
+msgstr "Before the lynching, the current victim is revealed to the village. The village decides whether the lynching is carried out or not."
+
+msgid "ui.card.segen_03.dorf.guide"
+msgstr "Before the execution the person's role is revealed publicly. The village decides whether it is carried out. You enter the decision."
+
+msgid "ui.card.segen_04.name"
+msgstr "Silent Night"
+
+msgid "ui.card.segen_04.wolf.text"
+msgstr "Tonight the wolves may kill a second target in addition to their normal victim."
+
+msgid "ui.card.segen_04.wolf.guide"
+msgstr "In the next night the pack chooses two different people instead of one."
+
+msgid "ui.card.segen_04.dorf.text"
+msgstr "Tonight the wolves may not choose a victim. They sleep."
+
+msgid "ui.card.segen_04.dorf.guide"
+msgstr "In the next night all wolf kills lapse: the pack victim and additional active kills. Other wolf abilities remain."
+
+msgid "ui.card.segen_09.name"
+msgstr "Righteous Wrath"
+
+msgid "ui.card.segen_09.wolf.text"
+msgstr "If a werewolf is lynched at the next lynching, the wolves may kill two victims instead of one that night."
+
+msgid "ui.card.segen_09.wolf.guide"
+msgstr "If a wolf is executed at the next lynching, the pack may choose two victims in the following night."
+
+msgid "ui.card.segen_09.dorf.text"
+msgstr "If a villager is lynched at the next lynching, they are freed automatically and the day ends without a victim."
+
+msgid "ui.card.segen_09.dorf.guide"
+msgstr "If the next execution hits a villager, it is prevented. The day ends without a victim."
+
+msgid "ui.card.segen_13.name"
+msgstr "Shadow Advantage"
+
+msgid "ui.card.segen_13.wolf.text"
+msgstr "In the following night, the first ability that hits a wolf fails."
+
+msgid "ui.card.segen_13.wolf.guide"
+msgstr "The first harmful ability that hits a wolf in the next night fails, including an oracle check."
+
+msgid "ui.card.segen_13.dorf.text"
+msgstr "In the following night the werewolves are woken first, and their victim is announced aloud after they agree."
+
+msgid "ui.card.segen_13.dorf.guide"
+msgstr "In the next night the pack is woken first. After they agree you announce the victim aloud."
+
+msgid "ui.card.fluch_02.name"
+msgstr "False Trail"
+
+msgid "ui.card.fluch_02.wolf.text"
+msgstr "The game master redirects the werewolf attack tonight to a target of their choice."
+
+msgid "ui.card.fluch_02.wolf.guide"
+msgstr "After the pack's choice you decide which person is hit instead and enter them."
+
+msgid "ui.card.fluch_02.dorf.text"
+msgstr "The game master gives a villager of their choice false information tonight."
+
+msgid "ui.card.fluch_02.dorf.guide"
+msgstr "The card player chooses an oracle. In the next night you set their role information to a false value by override."
+
+msgid "ui.card.fluch_04.name"
+msgstr "Betrayal"
+
+msgid "ui.card.fluch_04.wolf.text"
+msgstr "Tonight the wolves must kill one of their own. No villager can die today."
+
+msgid "ui.card.fluch_04.wolf.guide"
+msgstr "In the next night the pack must choose a person from its own ranks."
+
+msgid "ui.card.fluch_04.dorf.text"
+msgstr "Lynchings continue today until a member of the village faction has been hit."
+
+msgid "ui.card.fluch_04.dorf.guide"
+msgstr "Executions continue today until a villager has been chosen. The app keeps the day open until then."
+
+msgid "ui.card.fluch_07.name"
+msgstr "Nightmare"
+
+msgid "ui.card.fluch_07.wolf.text"
+msgstr "The wolves sleep so badly that they cannot kill a victim tonight."
+
+msgid "ui.card.fluch_07.wolf.guide"
+msgstr "In the next night the shared pack attacks lapse. Individual wolves' own kill abilities remain."
+
+msgid "ui.card.fluch_07.dorf.text"
+msgstr "A random villager is shown to the village as suspicious. The game master announces it publicly."
+
+msgid "ui.card.fluch_07.dorf.guide"
+msgstr "The app picks a random villager who is shown as suspicious. Announce it publicly."
+
+msgid "ui.card.fluch_10.name"
+msgstr "Bad Omen"
+
+msgid "ui.card.fluch_10.wolf.text"
+msgstr "If the wolves do not catch a strong role tonight, the game master decides whether one of them dies."
+
+msgid "ui.card.fluch_10.wolf.guide"
+msgstr "After the night you decide whether the pack caught a strong role. If not, you choose whether and which wolf dies."
+
+msgid "ui.card.fluch_10.dorf.text"
+msgstr "If no werewolf is lynched today, another random villager dies on the same day."
+
+msgid "ui.card.fluch_10.dorf.guide"
+msgstr "If no wolf is executed today, a random villager dies at the end of the day. The app checks this after the day."
+
+msgid "ui.card.wende_03.name"
+msgstr "Turning Point"
+
+msgid "ui.card.wende_03.wolf.text"
+msgstr "The wolves may kill two victims tonight instead of one."
+
+msgid "ui.card.wende_03.wolf.guide"
+msgstr "In the next night the pack chooses two different people instead of one."
+
+msgid "ui.card.wende_03.dorf.text"
+msgstr "The village may lynch today. If the lynching hits a villager, the game master steps in and prevents it. If it hits a werewolf, it is carried out."
+
+msgid "ui.card.wende_03.dorf.guide"
+msgstr "If today's execution hits a villager it is prevented. If it hits a wolf it is carried out."
+
+msgid "ui.card.wende_06.name"
+msgstr "Defiance"
+
+msgid "ui.card.wende_06.wolf.text"
+msgstr "The wolves are completely protected tonight. No special ability can kill a wolf today."
+
+msgid "ui.card.wende_06.wolf.guide"
+msgstr "In the next night no role ability can kill a wolf. Death chains and card deaths remain possible."
+
+msgid "ui.card.wende_06.dorf.text"
+msgstr "The village is completely protected tonight. The wolves cannot kill a victim tonight."
+
+msgid "ui.card.wende_06.dorf.guide"
+msgstr "In the next night the pack cannot choose a victim."
+
+msgid "ui.card.schicksal_06.name"
+msgstr "Time Leap"
+
+msgid "ui.card.schicksal_06.neutral.text"
+msgstr "This night is skipped completely: no abilities, no wolf attack, no death. Straight to the next day."
+
+msgid "ui.card.schicksal_06.neutral.guide"
+msgstr "The next night is skipped: the number still counts, but there are no actions, no announcements and no pack attack. Poison that is already due still takes effect."
+
+msgid "ui.card.loki_03.name"
+msgstr "Time Warp"
+
+msgid "ui.card.loki_03.neutral.text"
+msgstr "This night is skipped. All night abilities lapse: no death, no attack, no protection. Straight to the next day."
+
+msgid "ui.card.loki_03.neutral.guide"
+msgstr "The next night is skipped: the number still counts, but there are no actions, no announcements and no pack attack. Poison that is already due still takes effect."
+
+msgid "ui.card.segen_06.name"
+msgstr "Shadow Cloak"
+
+msgid "ui.card.segen_06.wolf.text"
+msgstr "The next time a werewolf would be seen by the oracle, they appear to the oracle as a random villager role that is still alive."
+
+msgid "ui.card.segen_06.wolf.guide"
+msgstr "The next wolf the oracle checks appears to them as a random living village role. The app sets the display itself."
+
+msgid "ui.card.segen_06.dorf.text"
+msgstr "The wolves are blinded in the following night. A random victim dies, which could even be a werewolf."
+
+msgid "ui.card.segen_06.dorf.guide"
+msgstr "In the next night the pack is blinded: the app picks a random victim, which can even be a wolf."
+
+msgid "ui.card.segen_12.name"
+msgstr "Ghost Hand"
+
+msgid "ui.card.segen_12.wolf.text"
+msgstr "A player you choose additionally receives the ability of the most recently deceased werewolf for the next night."
+
+msgid "ui.card.segen_12.wolf.guide"
+msgstr "The card player chooses a person. For the next night they additionally receive the ability of the most recently deceased person of the faction, with fresh uses."
+
+msgid "ui.card.segen_12.dorf.text"
+msgstr "A player you choose additionally receives the ability of the most recently deceased villager for the next night."
+
+msgid "ui.card.segen_12.dorf.guide"
+msgstr "The card player chooses a person. For the next night they additionally receive the ability of the most recently deceased person of the faction, with fresh uses."
+
+msgid "ui.card.segen_14.name"
+msgstr "Iron Will"
+
+msgid "ui.card.segen_14.wolf.text"
+msgstr "Gain insight into the game and choose a player who may use their ability again or twice in the following night."
+
+msgid "ui.card.segen_14.wolf.guide"
+msgstr "The owner sees the game state, chooses a person and then: use the ability again or twice in the next night."
+
+msgid "ui.card.segen_14.dorf.text"
+msgstr "Gain insight into the game and choose a player who may use their ability again or twice in the following night."
+
+msgid "ui.card.segen_14.dorf.guide"
+msgstr "The owner sees the game state, chooses a person and then: use the ability again or twice in the next night."
+
+msgid "ui.card.fluch_01.name"
+msgstr "Blind Spot"
+
+msgid "ui.card.fluch_01.wolf.text"
+msgstr "A random werewolf loses their special ability tonight. Only the wolf attack remains."
+
+msgid "ui.card.fluch_01.wolf.guide"
+msgstr "The app picks a random person of the faction with a night ability. They lose the ability in the next night, the pack remains."
+
+msgid "ui.card.fluch_01.dorf.text"
+msgstr "A random villager loses their special ability tonight."
+
+msgid "ui.card.fluch_01.dorf.guide"
+msgstr "The app picks a random person of the faction with a night ability. They lose the ability in the next night, the pack remains."
+
+msgid "ui.card.wende_01.name"
+msgstr "Last Breath"
+
+msgid "ui.card.wende_01.wolf.text"
+msgstr "A werewolf of your choice may use their already used ability again tonight."
+
+msgid "ui.card.wende_01.wolf.guide"
+msgstr "The card player chooses a person. Their already used ability is available again in the next night."
+
+msgid "ui.card.wende_01.dorf.text"
+msgstr "A villager of your choice may use their already used ability again tonight."
+
+msgid "ui.card.wende_01.dorf.guide"
+msgstr "The card player chooses a person. Their already used ability is available again in the next night."
+
+msgid "ui.card.wende_08.name"
+msgstr "Chosen One"
+
+msgid "ui.card.wende_08.wolf.text"
+msgstr "The game master chooses a werewolf in good conscience, who may use their ability twice in the next night."
+
+msgid "ui.card.wende_08.wolf.guide"
+msgstr "You choose a person. They may use their ability twice in the next night."
+
+msgid "ui.card.wende_08.dorf.text"
+msgstr "The game master chooses a villager in good conscience, who may use their ability twice in the next night."
+
+msgid "ui.card.wende_08.dorf.guide"
+msgstr "You choose a person. They may use their ability twice in the next night."
+
+msgid "ui.card.wende_10.name"
+msgstr "Fate Reversal"
+
+msgid "ui.card.wende_10.wolf.text"
+msgstr "The strongest active protective ability of a villager is deactivated for one night. The game master chooses which."
+
+msgid "ui.card.wende_10.wolf.guide"
+msgstr "You choose a villager with a protective ability. Their ability rests in the next night."
+
+msgid "ui.card.wende_10.dorf.text"
+msgstr "The strongest active ability of a werewolf is deactivated for one night. The game master chooses which."
+
+msgid "ui.card.wende_10.dorf.guide"
+msgstr "You choose a wolf with a night ability. Their ability rests in the next night."
+
+msgid "ui.card.schicksal_07.name"
+msgstr "Balance"
+
+msgid "ui.card.schicksal_07.neutral.text"
+msgstr "The game master observes the current state of the game, announces aloud who is ahead, and blocks the first active chosen ability in favour of the losing team."
+
+msgid "ui.card.schicksal_07.neutral.guide"
+msgstr "You determine and announce which team is ahead. The first chosen night ability of that team is blocked in the next night."
+
+msgid "ui.card.schicksal_10.name"
+msgstr "Anarchy"
+
+msgid "ui.card.schicksal_10.neutral.text"
+msgstr "In the coming night a random already used one-time ability of a living player of your faction becomes available again."
+
+msgid "ui.card.schicksal_10.neutral.guide"
+msgstr "The app picks one of the used one-time abilities of living people of the faction at random. It is available again."
+
+msgid "ui.card.loki_07.name"
+msgstr "Total Anarchy"
+
+msgid "ui.card.loki_07.neutral.text"
+msgstr "All active protective effects of all players are lifted immediately. All already used one-time abilities return for everyone."
+
+msgid "ui.card.loki_07.neutral.guide"
+msgstr "All protective effects of all people fall away immediately and all used uses return for everyone."
+
+msgid "ui.card.loki_08.name"
+msgstr "Hexed Night"
+
+msgid "ui.card.loki_08.neutral.text"
+msgstr "The game master decides whether your nightly ability goes through or hits another target, even you yourself. Think carefully whether you want to use your ability tonight at all."
+
+msgid "ui.card.loki_08.neutral.guide"
+msgstr "You determine who carries out the card player's night ability in the next night, and so decide whether it goes through or hits another target."
+
+msgid "ui.card.segen_05.name"
+msgstr "True Voice"
+
+msgid "ui.card.segen_05.wolf.text"
+msgstr "A werewolf of your choice has double voting power at today's lynching."
+
+msgid "ui.card.segen_05.wolf.guide"
+msgstr "The card player chooses a person. Their vote counts double today. You count at the table."
+
+msgid "ui.card.segen_05.dorf.text"
+msgstr "A villager of your choice has double voting power at today's lynching."
+
+msgid "ui.card.segen_05.dorf.guide"
+msgstr "The card player chooses a person. Their vote counts double today. You count at the table."
+
+msgid "ui.card.fluch_03.name"
+msgstr "Paralysis"
+
+msgid "ui.card.fluch_03.wolf.text"
+msgstr "A random werewolf may not vote at the next lynching."
+
+msgid "ui.card.fluch_03.wolf.guide"
+msgstr "The app picks a random person of the faction. They may not vote at the execution. You watch for it at the table."
+
+msgid "ui.card.fluch_03.dorf.text"
+msgstr "A random villager may not vote at the next lynching."
+
+msgid "ui.card.fluch_03.dorf.guide"
+msgstr "The app picks a random person of the faction. They may not vote at the execution. You watch for it at the table."
+
+msgid "ui.card.fluch_09.name"
+msgstr "Lost Voice"
+
+msgid "ui.card.fluch_09.wolf.text"
+msgstr "The werewolves lose the value of their votes at the next lynching. The game master keeps the number secret but reveals who the victim is."
+
+msgid "ui.card.fluch_09.wolf.guide"
+msgstr "The faction's votes do not count at the execution. You count at the table and announce only the victim, never the numbers."
+
+msgid "ui.card.fluch_09.dorf.text"
+msgstr "The villagers lose the value of their votes at the next lynching. The game master keeps the number secret but reveals who the victim is."
+
+msgid "ui.card.fluch_09.dorf.guide"
+msgstr "The faction's votes do not count at the execution. You count at the table and announce only the victim, never the numbers."
+
+msgid "ui.card.fluch_13.name"
+msgstr "Paralysis Wave"
+
+msgid "ui.card.fluch_13.wolf.text"
+msgstr "All wolves cannot vote at the next lynching."
+
+msgid "ui.card.fluch_13.wolf.guide"
+msgstr "All people of the faction (village: only those with an active ability) may not vote at the execution."
+
+msgid "ui.card.fluch_13.dorf.text"
+msgstr "All villagers with an active ability cannot vote at the next lynching."
+
+msgid "ui.card.fluch_13.dorf.guide"
+msgstr "All people of the faction (village: only those with an active ability) may not vote at the execution."
+
+msgid "ui.card.wende_09.name"
+msgstr "Tailwind"
+
+msgid "ui.card.wende_09.wolf.text"
+msgstr "All wolf votes at the next lynching are doubled. The game master keeps the total number of votes secret but reveals who the victim is."
+
+msgid "ui.card.wende_09.wolf.guide"
+msgstr "All votes of the faction count double at the execution. You count at the table and announce only the victim, never the numbers."
+
+msgid "ui.card.wende_09.dorf.text"
+msgstr "All village votes at the next lynching are doubled. The game master keeps the total number of votes secret but reveals who the victim is."
+
+msgid "ui.card.wende_09.dorf.guide"
+msgstr "All votes of the faction count double at the execution. You count at the table and announce only the victim, never the numbers."
+
+msgid "ui.card.schicksal_03.name"
+msgstr "Amnesty"
+
+msgid "ui.card.schicksal_03.neutral.text"
+msgstr "The current lynching is aborted immediately. All votes lapse. No new lynching today, straight into the night."
+
+msgid "ui.card.schicksal_03.neutral.guide"
+msgstr "Today's execution is cancelled. Tap “No execution”, all votes lapse."
+
+msgid "ui.card.schicksal_05.name"
+msgstr "Mirror"
+
+msgid "ui.card.schicksal_05.neutral.text"
+msgstr "After a 5-second countdown all players point at one player at the same time. Whoever receives no vote at all dies immediately."
+
+msgid "ui.card.schicksal_05.neutral.guide"
+msgstr "After a 5-second countdown everyone points at one person at the same time. Tap everyone who received no vote. They die immediately."
+
+msgid "ui.card.schicksal_09.name"
+msgstr "Vote Swap"
+
+msgid "ui.card.schicksal_09.neutral.text"
+msgstr "At the next lynching every vote counts for the player to the left of the nominee instead of the nominee."
+
+msgid "ui.card.schicksal_09.neutral.guide"
+msgstr "At the affected execution the votes count for the person to the left of the nominee. You enter the nominee, the app applies the target to the left."
+
+msgid "ui.card.schicksal_11.name"
+msgstr "Chain Reaction"
+
+msgid "ui.card.schicksal_11.neutral.text"
+msgstr "If someone dies by lynching, the player with the second most votes dies immediately too, without another vote."
+
+msgid "ui.card.schicksal_11.neutral.guide"
+msgstr "If someone dies at the execution you enter the person with the second most votes. They die immediately too."
+
+msgid "ui.card.schicksal_14.name"
+msgstr "Judge's Chair"
+
+msgid "ui.card.schicksal_14.neutral.text"
+msgstr "The village immediately chooses a temporary judge, exactly like the mayor's election. This judge alone passes the verdict of the day."
+
+msgid "ui.card.schicksal_14.neutral.guide"
+msgstr "The village chooses a judge at the table. You enter them. Today any living person is a valid verdict."
+
+msgid "ui.card.loki_01.name"
+msgstr "Mirror World"
+
+msgid "ui.card.loki_01.neutral.text"
+msgstr "All lynch votes today count for the player to the left of the nominee instead of the nominee. Nobody knows who really dies until the game master announces it."
+
+msgid "ui.card.loki_01.neutral.guide"
+msgstr "Today all votes count for the person to the left of the nominee. Nobody knows beforehand who really dies. You announce it."
+
+msgid "ui.card.loki_02.name"
+msgstr "Silent Vote"
+
+msgid "ui.card.loki_02.neutral.text"
+msgstr "The day is shortened to 60 seconds. If there are not at least 3 nominations, 1 to 5 random players die. If nomination and lynching are not completed within the 60 seconds, all 3 nominees die."
+
+msgid "ui.card.loki_02.neutral.guide"
+msgstr "The day has 60 seconds. At the end of the day the app asks whether the time was kept and applies the deaths."
+
+msgid "ui.card.loki_13.name"
+msgstr "Hexed Lynching"
+
+msgid "ui.card.loki_13.neutral.text"
+msgstr "At today's lynching the player with the fewest votes dies, not the one with the most."
+
+msgid "ui.card.loki_13.neutral.guide"
+msgstr "Today the person with the fewest votes dies. You enter them at the execution, any living person is valid."
+
+msgid "ui.card.segen_10.name"
+msgstr "Verdict of the Dead"
+
+msgid "ui.card.segen_10.wolf.text"
+msgstr "The dead werewolves vote secretly. A villager of their choice dies in this night."
+
+msgid "ui.card.segen_10.wolf.guide"
+msgstr "The dead wolves vote secretly. You enter the villager who dies in this night."
+
+msgid "ui.card.segen_10.dorf.text"
+msgstr "The dead villagers vote secretly. A werewolf of their choice dies in this night."
+
+msgid "ui.card.segen_10.dorf.guide"
+msgstr "The dead villagers vote secretly. You enter the wolf who dies in this night."
+
+msgid "ui.card.schicksal_12.name"
+msgstr "Court of the Dead"
+
+msgid "ui.card.schicksal_12.neutral.text"
+msgstr "The next day is led by the dead. Only dead players may nominate and vote. Living players listen in silence."
+
+msgid "ui.card.schicksal_12.neutral.guide"
+msgstr "On the next day only dead people nominate. The living listen in silence. The app only allows nominations by the dead."
+
+msgid "ui.card.loki_05.name"
+msgstr "Awakening of the Dead"
+
+msgid "ui.card.loki_05.neutral.text"
+msgstr "All the dead point at a living player at the same time. The most named one dies immediately. In case of a tie both die."
+
+msgid "ui.card.loki_05.neutral.guide"
+msgstr "All the dead point at a living person at the same time. Tap the most named person (all in case of a tie). They die immediately."
+
+msgid "ui.card.solo_06.name"
+msgstr "Ghost Voice"
+
+msgid "ui.card.solo_06.solo.text"
+msgstr "From now on you act from the realm of the dead: in the following three days you may nominate and vote, and your vote counts double. If you manage to get someone lynched this way, you are revived with a new solo role."
+
+msgid "ui.card.solo_06.solo.guide"
+msgstr "For three days the card player may nominate and vote (vote doubled, at the table). If someone she nominated is executed, she returns with a new solo role."
+
+msgid "ui.card.solo_11.name"
+msgstr "Judge from the Realm of the Dead"
+
+msgid "ui.card.solo_11.solo.text"
+msgstr "After every vote you may nominate once more. Only if at least 50% of the players agree is this person additionally lynched."
+
+msgid "ui.card.solo_11.solo.guide"
+msgstr "After the day's vote the card player may nominate once more. If at least half agree, the person is executed. You enter the person and the agreement."
+
+msgid "ui.card.solo_13.name"
+msgstr "The Realm of the Dead Rules"
+
+msgid "ui.card.solo_13.solo.text"
+msgstr "The next 2 day phases are ruled by the dead. Only they may speak, nominate and lynch."
+
+msgid "ui.card.solo_13.solo.guide"
+msgstr "Today and tomorrow only the dead nominate. The living listen in silence. The app only allows nominations by the dead."
+
+msgid "ui.card.schicksal_01.name"
+msgstr "Foghorn"
+
+msgid "ui.card.schicksal_01.neutral.text"
+msgstr "Nobody may talk about roles in the next day phase, only about behaviour and observations. Whoever does is out of the discussion immediately."
+
+msgid "ui.card.schicksal_01.neutral.guide"
+msgstr "At the table: no talk about roles in the next day phase. You watch for it and exclude offenders from the discussion."
+
+msgid "ui.card.schicksal_02.name"
+msgstr "Open Books"
+
+msgid "ui.card.schicksal_02.neutral.text"
+msgstr "Every living player must say publicly whether they used an ability tonight. Lying is allowed. The game master decides the order."
+
+msgid "ui.card.schicksal_02.neutral.guide"
+msgstr "Every living person says publicly whether they used an ability tonight. Lying is allowed. You decide the order."
+
+msgid "ui.card.schicksal_04.name"
+msgstr "Great Silence"
+
+msgid "ui.card.schicksal_04.neutral.text"
+msgstr "The entire next day phase lasts exactly 2 minutes. Then a vote is held immediately, without further discussion."
+
+msgid "ui.card.schicksal_04.neutral.guide"
+msgstr "The entire next day phase lasts 2 minutes, then a vote is held immediately. Keep the time at the table."
+
+msgid "ui.card.schicksal_13.name"
+msgstr "Silent Election"
+
+msgid "ui.card.schicksal_13.neutral.text"
+msgstr "There is no discussion today, only nomination and an immediate vote. No player may speak beforehand."
+
+msgid "ui.card.schicksal_13.neutral.guide"
+msgstr "Today there is only nomination and an immediate vote, no discussion. You watch for it at the table."
+
+msgid "ui.card.loki_11.name"
+msgstr "Silent Film"
+
+msgid "ui.card.loki_11.neutral.text"
+msgstr "Today nobody may speak, only hand signs and facial expressions are allowed. Whoever speaks even a single word dies immediately."
+
+msgid "ui.card.loki_11.neutral.guide"
+msgstr "Nobody speaks today, only hand signs and facial expressions. Whoever speaks a word dies immediately: tap the person if it happens."
+
+msgid "ui.card.loki_09.name"
+msgstr "Puppeteer"
+
+msgid "ui.card.loki_09.neutral.text"
+msgstr "On the next day the game master nominates 5 players, at least one from each faction among them."
+
+msgid "ui.card.loki_09.neutral.guide"
+msgstr "On the next day you nominate five people, at least one from each faction. The app takes the nominations."
+
+msgid "ui.card.segen_02.name"
+msgstr "Whispering Wind"
+
+msgid "ui.card.segen_02.wolf.text"
+msgstr "A werewolf of your choice may publicly ask the game master a yes/no question about a villager today."
+
+msgid "ui.card.segen_02.wolf.guide"
+msgstr "The card player chooses the person who may publicly ask you a yes/no question today. Answer truthfully."
+
+msgid "ui.card.segen_02.dorf.text"
+msgstr "A villager of your choice may publicly ask the game master a yes/no question about a fellow player today."
+
+msgid "ui.card.segen_02.dorf.guide"
+msgstr "The card player chooses the person who may publicly ask you a yes/no question today. Answer truthfully."
+
+msgid "ui.card.fluch_06.name"
+msgstr "Black Mark"
+
+msgid "ui.card.fluch_06.wolf.text"
+msgstr "The game master publicly reveals the role of a werewolf of their choice to the village."
+
+msgid "ui.card.fluch_06.wolf.guide"
+msgstr "You choose a person of the faction. Their role is revealed publicly. The app shows the announcement."
+
+msgid "ui.card.fluch_06.dorf.text"
+msgstr "The game master publicly reveals the role of a villager of their choice to the village."
+
+msgid "ui.card.fluch_06.dorf.guide"
+msgstr "You choose a person of the faction. Their role is revealed publicly. The app shows the announcement."
+
+msgid "ui.card.fluch_11.name"
+msgstr "Raven of Doom"
+
+msgid "ui.card.fluch_11.wolf.text"
+msgstr "You must publicly reveal a wolf of your choice to the village."
+
+msgid "ui.card.fluch_11.wolf.guide"
+msgstr "The card player chooses a person of the faction. Their role is revealed publicly. The app shows the announcement."
+
+msgid "ui.card.fluch_11.dorf.text"
+msgstr "You must publicly reveal a villager of your choice to the village."
+
+msgid "ui.card.fluch_11.dorf.guide"
+msgstr "The card player chooses a person of the faction. Their role is revealed publicly. The app shows the announcement."
+
+msgid "ui.card.loki_04.name"
+msgstr "Doppelganger"
+
+msgid "ui.card.loki_04.neutral.text"
+msgstr "The game master secretly marks a random player as suspicious. Everyone sees the marker, nobody knows why. Whether they really are a wolf stays open."
+
+msgid "ui.card.loki_04.neutral.guide"
+msgstr "The app marks a random person as suspicious. Everyone sees the marker, nobody knows why."
+
+msgid "ui.card.solo_01.name"
+msgstr "Death Projection"
+
+msgid "ui.card.solo_01.solo.text"
+msgstr "Write a player's name on a slip of paper and give it to the game master. If this player dies at the next lynching, you take on their role and faction and rejoin the game."
+
+msgid "ui.card.solo_01.solo.guide"
+msgstr "You enter the name from the slip. If this person dies at the next execution, the card player returns with their role and faction."
+
+msgid "ui.card.solo_02.name"
+msgstr "Black Prophecy"
+
+msgid "ui.card.solo_02.solo.text"
+msgstr "You secretly tell the game master which team wins the game. If you are right, you are recognised as a silent co-winner at the end of the game."
+
+msgid "ui.card.solo_02.solo.guide"
+msgstr "You enter the secret guess: village, wolves or solo win. If correct, she is listed as a silent co-winner in the final report."
+
+msgid "ui.card.solo_03.name"
+msgstr "Oath of Revenge"
+
+msgid "ui.card.solo_03.solo.text"
+msgstr "The player who nominated you last (or attacked you at night) permanently receives +3 starting votes against them at every future lynching. The curse ends only when they die."
+
+msgid "ui.card.solo_03.solo.guide"
+msgstr "You enter the person who last nominated or attacked the card player. The app announces publicly: +3 votes against them until they die. You count at the table."
+
+msgid "ui.card.solo_04.name"
+msgstr "Apocalyptic Exit"
+
+msgid "ui.card.solo_04.solo.text"
+msgstr "Choose 2 living players. From now on they are linked by a death bond: if one dies in the next 4 nights, the other dies immediately after on the same evening."
+
+msgid "ui.card.solo_04.solo.guide"
+msgstr "You enter two living people. If one dies in the next four nights, the other dies immediately after. A shield prevents the extra death."
+
+msgid "ui.card.solo_05.name"
+msgstr "Legacy of Loneliness"
+
+msgid "ui.card.solo_05.solo.text"
+msgstr "Choose a living player. They additionally inherit your ability and your win condition. If they are among the winners, you win too."
+
+msgid "ui.card.solo_05.solo.guide"
+msgstr "You enter the heir. They inherit the card player's night ability permanently. If the person wins, the card player wins too."
+
+msgid "ui.card.solo_07.name"
+msgstr "Martyrdom"
+
+msgid "ui.card.solo_07.solo.text"
+msgstr "Choose village or wolves. This faction receives a bonus immediately. Village: no wolf attack in the next night. Wolves: the next lynching is annulled."
+
+msgid "ui.card.solo_07.solo.guide"
+msgstr "You enter village or wolves. Village: the next night without a pack attack. Wolves: the next execution is cancelled."
+
+msgid "ui.card.solo_08.name"
+msgstr "Silent Witness"
+
+msgid "ui.card.solo_08.solo.text"
+msgstr "You have watched the whole game. Secretly tell the game master the player you consider the most dangerous. If they win, you win with them."
+
+msgid "ui.card.solo_08.solo.guide"
+msgstr "You enter the person the card player considers the most dangerous. If they win, the card player wins too."
+
+msgid "ui.card.solo_09.name"
+msgstr "Chaos Spirit"
+
+msgid "ui.card.solo_09.solo.text"
+msgstr "Roll a die aloud. The number rolled is the number of players who must die by lynching today."
+
+msgid "ui.card.solo_09.solo.guide"
+msgstr "An app die decides how many executions take place today. The day stays open until all are done or nobody is left nominated."
+
+msgid "ui.card.solo_10.name"
+msgstr "Lonely Inheritance"
+
+msgid "ui.card.solo_10.solo.text"
+msgstr "You leave two slips of paper with the game master. One names the player who will win. The other names the first player to die after you. Both slips are opened at their respective times. If both were right, you win posthumously."
+
+msgid "ui.card.solo_10.solo.guide"
+msgstr "You enter both slips: the person who wins and the first person to die after the card player. If both are right, she wins posthumously."
+
+msgid "ui.card.solo_12.name"
+msgstr "Family Bonds from the Realm of the Dead"
+
+msgid "ui.card.solo_12.solo.text"
+msgstr "Choose a player. They permanently receive +3 on their vote. They win automatically if they are among the last 2 living players, and you win with them."
+
+msgid "ui.card.solo_12.solo.guide"
+msgstr "You enter the person. The app announces publicly: +3 votes for them. If they are among the last two living, they win and the card player wins with them."
+
+msgid "ui.card.solo_14.name"
+msgstr "Betrayal or Brotherhood"
+
+msgid "ui.card.solo_14.solo.text"
+msgstr "You may accuse one of your living neighbours of being evil. If the other neighbour agrees, the accused villain dies."
+
+msgid "ui.card.solo_14.solo.guide"
+msgstr "Choose one of the card player's living neighbours as the accused and ask the other neighbour. If they agree, the accused dies."
+
+msgid "ui.setup.roles.death_cards"
+msgstr "Realm-of-the-dead cards"
+
+msgid "ui.setup.roles.death_cards_hint"
+msgstr "The dead draw cards that are played in the card window. Also unlocks the Card Swallower role."
+
+msgid "ui.setup.roles.issue.role_needs_death_cards"
+msgstr "Card Swallower only with realm-of-the-dead cards"

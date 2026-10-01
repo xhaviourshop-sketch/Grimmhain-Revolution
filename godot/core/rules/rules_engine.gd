@@ -16,7 +16,12 @@ static func apply(state: GameState, command: Command) -> CommandResult:
 
 	var next := state.duplicate_state()
 	var ctx := RuleContext.new(next, state.command_count)
+	var prompt_actor := state.pending_prompt.actor_id if state.pending_prompt != null else -1
+	var prompt_id := state.pending_prompt.id if state.pending_prompt != null else -1
+	var prompt_owner := state.pending_prompt.owner if state.pending_prompt != null else &""
 	_execute(ctx, command)
+	CardRules.after_command(ctx, command, prompt_actor, prompt_id, prompt_owner)
+	CardRules.pump(ctx)
 	StepQueue.drop_unactionable(ctx)
 	WinRules.finalize_if_ready(ctx)
 	next.command_count += 1
@@ -93,6 +98,12 @@ static func _validate(s: GameState, c: Command) -> StringName:
 				return &"reason_required"
 		Command.GM_CORRECTION:
 			return GmCorrections.validate(s, p)
+		Command.CARD_ACT:
+			return CardRules.validate_act(s, p)
+		Command.CARD_CLOSE_WINDOW:
+			return CardRules.validate_close(s)
+		Command.CARD_TABLE_ACTION:
+			return CardFxTable.validate_action(s, p)
 		Command.ACK_NOTICE:
 			return NoticeRules.validate_ack(s, p)
 		Command.CONFIRM_ROLE_SHOWN:
@@ -121,6 +132,8 @@ static func _validate(s: GameState, c: Command) -> StringName:
 static func _validate_start_game(p: Dictionary) -> StringName:
 	if p.has("reveal_role_on_death"):
 		return &"reveal_option_removed"  # DI-01: Die Aufdeckung folgt der Startbesetzung, keine freie Option mehr
+	if p.has("death_cards") and not p["death_cards"] is bool:
+		return &"invalid_death_cards"
 	if not DictRead.is_int_like(p.get("seed")) or int(p["seed"]) < 0 or int(p["seed"]) > CanonicalJson.MAX_SAFE_INT:
 		return &"invalid_seed"
 	var players := DictRead.get_array(p, "players")
@@ -156,6 +169,8 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 		if not RoleCatalog.has_role(r):
 			return &"unknown_role"
 		counts[r] = int(counts.get(r, 0)) + 1
+		if RoleCatalog.requires_cards(r) and not bool(p.get("death_cards", false)):
+			return &"role_needs_death_cards"  # Kartenschlucker nur mit Totenreichkarten
 	# Scheinrolle je Rolleninstanz: Pflicht für den Trugbilderwolf, sonst unzulässig (DR-08).
 	for entry: Dictionary in entries:
 		if RoleCatalog.requires_appearance(entry["role_id"]):
@@ -265,6 +280,10 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return OracleStep.validate_answer(s, prompt, p)
 	if prompt.owner == PendingPrompt.OWNER_APPRENTICE:
 		return ApprenticeRules.validate_answer(s, prompt, p)
+	if prompt.owner == PendingPrompt.OWNER_CARD:
+		return CardSteps.validate_answer(s, prompt, p)
+	if prompt.owner == PendingPrompt.OWNER_SWALLOWER:
+		return SwallowerRules.validate_answer(s, prompt, p)
 	if InfoSteps.OWNERS.has(prompt.owner):
 		return InfoSteps.validate_answer(s, prompt, p)
 	if BondSteps.OWNERS.has(prompt.owner):
@@ -311,7 +330,16 @@ static func _validate_nominate(s: GameState, p: Dictionary) -> StringName:
 	var nominee := DictRead.get_int(p, "nominee_id", GameState.NO_TARGET)
 	if not s.players.has(nominator) or not s.players.has(nominee):
 		return &"unknown_player"
-	if not s.players[nominator].alive or not s.players[nominee].alive:
+	if CardFxSolo.may_nominate_dead(s, nominator) and not s.players[nominator].alive:
+		if not s.players[nominee].alive:
+			return &"player_dead"
+	elif CardFxDead.dead_rule_active(s):
+		# Totengericht: nur tote Personen nominieren, lebende hören schweigend zu.
+		if s.players[nominator].alive:
+			return &"only_dead_nominate"
+		if not s.players[nominee].alive:
+			return &"player_dead"
+	elif not s.players[nominator].alive or not s.players[nominee].alive:
 		return &"player_dead"
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if n.nominator_id == nominator:
@@ -337,6 +365,11 @@ static func _validate_execution(s: GameState, p: Dictionary) -> StringName:
 	var curse_error := GuardRoles.validate_curse_field(s, target, p)
 	if curse_error != &"":
 		return curse_error
+	var card_error := CardLynch.validate(s, p, target)
+	if card_error != &"":
+		return card_error
+	if s.death_cards and CardLynch.allows_unnominated(s):
+		return &""
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if n.nominee_id == target:
 			return &""
@@ -354,6 +387,12 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			_start_game(ctx, p)
 		Command.START_NIGHT:
 			_start_night(ctx)
+		Command.CARD_ACT:
+			CardRules.act(ctx, p)
+		Command.CARD_CLOSE_WINDOW:
+			CardRules.close(ctx)
+		Command.CARD_TABLE_ACTION:
+			CardFxTable.table_action(ctx, p)
 		Command.ACK_NOTICE:
 			NoticeRules.ack(ctx, p)
 		Command.CONFIRM_ROLE_SHOWN:
@@ -365,6 +404,10 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				OracleStep.answer(ctx, p)
 			elif s.pending_prompt.owner == PendingPrompt.OWNER_APPRENTICE:
 				ApprenticeRules.answer(ctx, p)
+			elif s.pending_prompt.owner == PendingPrompt.OWNER_CARD:
+				CardSteps.answer(ctx, p)
+			elif s.pending_prompt.owner == PendingPrompt.OWNER_SWALLOWER:
+				SwallowerRules.answer(ctx, p)
 			elif InfoSteps.OWNERS.has(s.pending_prompt.owner):
 				InfoSteps.answer(ctx, p)
 			elif BondSteps.OWNERS.has(s.pending_prompt.owner):
@@ -398,15 +441,22 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 			_record_nomination(ctx, int(p["nominator_id"]), int(p["nominee_id"]), false)
 		Command.DECIDE_EXECUTION:
 			var target := int(p["target_id"])
-			s.day_step = Phase.DAY_EXECUTION_DECIDED
-			if target == GameState.NO_TARGET:
-				ctx.emit(GameEvent.NO_EXECUTION, Visibility.PUBLIC, {"day": s.day_number})
+			if s.death_cards and CardLynch.handle_decision(ctx, p):
+				pass  # Enthüllung vor dem Vollzug bzw. Ablehnung durch das Dorf (Wachsame Augen): Tag bleibt unentschieden
 			else:
-				ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": false})
-				ExecutionRules.execute(ctx, target, KillEvent.SOURCE_VILLAGE, DictRead.get_bool(p, "cerberus_defend"), DictRead.get_int(p, "sage_curse"))
+				s.day_step = Phase.DAY_EXECUTION_DECIDED
+				if target == GameState.NO_TARGET:
+					ctx.emit(GameEvent.NO_EXECUTION, Visibility.PUBLIC, {"day": s.day_number})
+				else:
+					ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": false})
+					ExecutionRules.execute(ctx, target, KillEvent.SOURCE_VILLAGE, DictRead.get_bool(p, "cerberus_defend"), DictRead.get_int(p, "sage_curse"), p)
+				CardLynch.after_decision(ctx, target, p)
 		Command.END_DAY:
-			s.day_step = Phase.DAY_ENDED
-			ctx.emit(GameEvent.DAY_ENDED, Visibility.PUBLIC, {"day": s.day_number})
+			if s.death_cards:
+				CardRules.begin_day_end(ctx)  # Fristen, zweites Kartenfenster, dann Ende des Tages
+			else:
+				s.day_step = Phase.DAY_ENDED
+				ctx.emit(GameEvent.DAY_ENDED, Visibility.PUBLIC, {"day": s.day_number})
 		Command.CONFIRM_WIN:
 			# Genau einer wird bestätigt; alle übrigen offenen gelten als nicht gewählt.
 			var chosen_id := int(p["candidate_id"])
@@ -420,7 +470,10 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 					candidate.status = WinCandidate.STATUS_NOT_CHOSEN
 					ctx.emit(GameEvent.WIN_REJECTED, Visibility.GM, {"candidate": candidate.to_dict(), "reason": String(WinCandidate.STATUS_NOT_CHOSEN)})
 			s.winner_id = chosen.id
-			ctx.emit(GameEvent.WIN_CONFIRMED, Visibility.PUBLIC, {"winner": chosen.to_dict()})
+			var win_payload := {"winner": chosen.to_dict()}
+			if s.death_cards:
+				win_payload["card_cowinners"] = CardFxSolo.cowinners(s, chosen)  # stille Mitsieger und posthume Sieger der Totenreichkarten
+			ctx.emit(GameEvent.WIN_CONFIRMED, Visibility.PUBLIC, win_payload)
 			PhaseMachine.enter(ctx, Phase.GAME_OVER)
 		Command.REJECT_WIN:
 			# Die gesamte offene Kandidatenmenge wird gemeinsam abgelehnt.
@@ -500,6 +553,9 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	s.round_id = DictRead.get_string(p, "round_id")
 	s.rng = SeededRng.new(int(p["seed"]))
+	s.death_cards = bool(p.get("death_cards", false))
+	if s.death_cards:
+		s.cardsys = CardRules.empty_system()
 
 	var names := {}
 	var ids: Array[int] = []
@@ -542,6 +598,7 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		"seat_order": s.seat_order,
 		"assignment": DictRead.get_string(p, "assignment"),
 		"revival_round": s.revival_round,
+		"death_cards": s.death_cards,
 	})
 	for id: int in ids:
 		ctx.emit(GameEvent.ROLE_ASSIGNED, Visibility.ACTOR, {"player_id": id, "role_id": s.players[id].role_id}, id)
@@ -576,6 +633,15 @@ static func _start_night(ctx: RuleContext) -> void:
 	s.witch_actions.clear()
 	s.doom_offers.clear()
 	s.apple_steps.clear()
+	CardRules.begin_night(ctx)  # Karteneffekte der Nacht (Aufgaben der Spielleitung)
+	if CardHooks.night_skipped(s):
+		# Zeitsprung/Zeitwarp: die Nacht zählt (Nummer steigt, Fristen laufen weiter), Aktionen und Ansagen entfallen (KS-106).
+		s.night_plan.clear()
+		s.night_step_status.clear()
+		s.night_wolf_ids.clear()
+		s.pack_target_id = GameState.NO_TARGET
+		ctx.emit(GameEvent.NIGHT_SKIPPED_BY_CARD, Visibility.PUBLIC, {"night": s.night_number})
+		return
 	if s.night_plan.is_empty():
 		ctx.emit(GameEvent.NIGHT_STEP_SKIPPED, Visibility.GM, {"step": StepQueue.PACK, "reason": "no_living_wolf"})
 		return
@@ -594,9 +660,11 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 	var target := targets[0] if targets.size() == 1 else GameState.NO_TARGET
 	match prompt.owner:
 		PendingPrompt.OWNER_PACK:
-			s.pack_target_id = target
+			s.pack_target_id = targets[0] if not targets.is_empty() else GameState.NO_TARGET
+			CardHooks.record_pack_targets(s, targets)
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
+			CardFxNight.after_pack_answer(ctx)
 		PendingPrompt.OWNER_GUARD:
 			if s.apple_steps.has(s.next_night_step):
 				Protections.add_extra(s, prompt.actor_id, target)  # zweiter Schutz durch einen Apfel
@@ -778,6 +846,10 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 ## DAY erfolgt automatisch mit der letzten Reaktion (BeginDay folgt später).
 static func _resolve_dawn(ctx: RuleContext) -> void:
 	var s := ctx.state
+	var had_victim := s.pack_target_id != GameState.NO_TARGET
+	if CardHooks.night_skipped(s):
+		_resolve_skipped_night(ctx)
+		return
 	PhaseMachine.enter(ctx, Phase.DAWN_RESOLUTION)
 	# Detektiv: nachts entstandene Hinweise werden jetzt öffentlich (I-10).
 	for hint: Dictionary in s.detective_hints:
@@ -789,6 +861,7 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	s.ghost_alerts = 0
 	# Pestbringerin (E-02): Ausbreitung zu Beginn der Morgenauflösung.
 	SoloRules.spread(ctx)
+	SwallowerRules.announce(ctx)  # Kartenschlucker: Gesamtzahl in den Nächten 3, 6, 9 …
 	# Wiederbelebungen durch Kutscher und Frankenstein werden am Morgen sichtbar (W-04).
 	for id: int in s.revived_tonight:
 		ctx.emit(GameEvent.PLAYER_REVIVED, Visibility.PUBLIC, {"player_id": id, "night": s.night_number})
@@ -799,6 +872,8 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	# Die Liste bleibt bis zum Ende bestehen: noch markierte Personen sterben an ihrer eigenen Markierung
 	# (z. B. beide Partner der Schwarzen Witwe), nicht an einer Todesfolge davor.
 	for mark: Dictionary in s.death_marks.duplicate(true):
+		if StringName(mark["cause"]) == KillEvent.CAUSE_LONE_WOLF_KILL and CardHooks.pack_sleep_wide(s):
+			continue  # Stille Nacht (Dorf): zusätzliche aktive Wolfstötungen entfallen
 		KillPipeline.request_kill(ctx, int(mark["target_id"]), StringName(mark["cause"]), KillEvent.SOURCE_PLAYER, int(mark["source_id"]))
 	s.death_marks.clear()
 	# Giftwolf: fällige Vergiftungen (zwei Nächte nach der Giftpranke), unaufhaltbar.
@@ -821,6 +896,7 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	else:
 		ctx.emit(GameEvent.NO_NIGHT_KILL, Visibility.GM, {"night_number": s.night_number})
 	s.martyr_saves.clear()
+	CardHooks.resolve_extra_victims(ctx)  # zusätzliche Rudelopfer der Totenreichkarten
 	# Äpfel gelten nur in der Nacht nach der Zuflucht (R-03).
 	for holder: int in s.apples.keys():
 		if int(s.apples[holder]) <= s.night_number:
@@ -829,6 +905,8 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 		KillPipeline.request_kill(ctx, s.pack_extra_target_id, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, true, _redirect_chain(s.pack_extra_redirect_from))
 	# Schicksalswolf (RM-DR-109.2 A): Zusatzopfer sind Rudelangriffe nach Rudel und Zusatzopfer des Rudelvaters.
 	for fate: Dictionary in s.fate_kills.duplicate(true):
+		if CardHooks.pack_sleep_wide(s):
+			break  # Stille Nacht (Dorf): auch zusätzliche aktive Wolfstötungen entfallen
 		KillPipeline.request_kill(ctx, int(fate["target_id"]), KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, false, _redirect_chain(int(fate["redirect_from"])))
 	s.fate_kills.clear()
 	s.pack_target_id = GameState.NO_TARGET
@@ -845,15 +923,45 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 			s.growth[id] = int(s.growth.get(id, 0)) + 1
 			ctx.emit(GameEvent.GROWTH_CHANGED, Visibility.GM, {"player_id": id, "role_id": String(role), "value": s.growth[id]})
 	s.night_frozen = false
+	CardRules.end_dawn(ctx, had_victim)  # Karteneffekte nach dem nächtlichen Opfer
+	_finish_dawn_if_ready(ctx)
+
+
+## Ausgefallene Nacht (KS-106, KS-109): kein Rudelangriff, keine Fähigkeiten, kein Tod; ausdrücklich bereits fälliges Gift wirkt.
+static func _resolve_skipped_night(ctx: RuleContext) -> void:
+	var s := ctx.state
+	PhaseMachine.enter(ctx, Phase.DAWN_RESOLUTION)
+	for entry: Dictionary in s.wolf_poisons.duplicate():
+		if int(entry["due_night"]) <= s.night_number:
+			s.wolf_poisons.erase(entry)
+			KillPipeline.request_kill(ctx, int(entry["target_id"]), KillEvent.CAUSE_WOLF_POISON, KillEvent.SOURCE_PLAYER, int(entry["source_id"]))
+	s.pack_target_id = GameState.NO_TARGET
+	s.pack_extra_target_id = GameState.NO_TARGET
+	s.death_marks.clear()
+	s.fate_kills.clear()
+	s.cardsys["pack_extra"] = []
+	CardRules.end_dawn(ctx, false)
 	_finish_dawn_if_ready(ctx)
 
 
 static func _finish_dawn_if_ready(ctx: RuleContext) -> void:
 	var s := ctx.state
-	if s.phase == Phase.DAWN_RESOLUTION and s.reactions.is_empty() and s.pending_prompt == null:
+	if s.phase == Phase.DAWN_RESOLUTION and s.reactions.is_empty() and s.pending_prompt == null and not CardRules.tasks_open(s):
 		PhaseMachine.enter(ctx, Phase.DAY)
 		_ring_alarm_bells(ctx)
 		_judge_nominations(ctx)
+		CardRules.begin_day(ctx)  # Karteneffekte des Tagesbeginns, erstes Kartenfenster
+
+
+## Wie `_finish_dawn_if_ready`, für Aufgaben und Karteneingaben, die eine Morgenauflösung offen gehalten haben.
+static func finish_dawn_if_ready(ctx: RuleContext) -> void:
+	_finish_dawn_if_ready(ctx)
+
+
+## Nominierung durch eine Karte (Puppenspieler): wie die des Korrupten Richters öffentlich ohne Nominierenden, ohne die
+## Einschränkung „einmal je Nominierender“.
+static func record_card_nomination(ctx: RuleContext, owner_id: int, nominee: int) -> void:
+	_record_nomination(ctx, owner_id, nominee, true)
 
 
 ## Nachtwächter (DECISION-LOG „Rollenaudit · … Nachtwächter“): nach der vollständigen

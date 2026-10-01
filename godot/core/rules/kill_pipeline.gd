@@ -26,6 +26,10 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		return null
 	if _prevented_by_protection(ctx, target_id, cause, source_kind, pierce):
 		return null
+	if SwallowerRules.shield_prevents(ctx, target, cause, source_kind):
+		return null
+	if CardHooks.intercept(ctx, target, cause, source_kind, source_id, trigger_effects, pierce, chain, shadow):
+		return null
 	if _parasite_immune(ctx, target, cause, source_kind):
 		return null
 	if _packfather_survives(ctx, target, cause, source_kind):
@@ -72,6 +76,8 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	ctx.emit(GameEvent.SEAT_DIED, Visibility.GM, died)
 	_announce_effects(ctx, record, target, chain, shadow)
 	SoloRules.fate_record_death(s, target_id)
+	if trigger_effects:
+		CardRules.on_death(ctx, target)  # Totenreichkarte ziehen (1A); eine Korrektur ohne Todesfolgen gibt keine Karte
 	ApprenticeRules.on_own_death(s, target_id)
 	if trigger_effects:
 		WolfChildRules.on_death(ctx, record)
@@ -99,6 +105,7 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		_coachman_crash(ctx, target, record)
 	SoloRules.fire_on_death(ctx, target, trigger_effects)
 	WinRules.record_provisional(ctx, record)
+	CardHooks.after_death(ctx, target, record)  # Totenreichkarten: Doppeltes Leid, Kettenfluch, Kosmisches Gleichgewicht
 	return record
 
 
@@ -154,6 +161,8 @@ static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: St
 	var rescuers := WitchStep.rescuers_of(s, target_id, night)
 	var immune := _guard_immune(s, target_id)
 	var sources: Array[StringName] = []
+	if CardHooks.pack_protected(s, target_id, pierce):
+		sources.append(&"card_wende_02")  # Verzweiflungsschrei (Dorf)
 	if immune:
 		sources.append(RoleCatalog.DORFWACHE)
 	if not guardians.is_empty():
@@ -179,6 +188,10 @@ static func _guard_immune(s: GameState, target_id: int) -> bool:
 ## des Weisen; &"" ohne Schutz.
 static func pack_protection(s: GameState, target_id: int, pierce: bool) -> StringName:
 	var night := s.night_number
+	if CardHooks.protections_paused(s, target_id):
+		return &""  # Gebrochener Schild (fluch_05): Schutzwirkungen ruhen
+	if CardHooks.pack_protected(s, target_id, pierce):
+		return GuardRoles.REPEATABLE
 	if not pierce and (not Protections.guardians_of(s, target_id, night).is_empty() or not WitchStep.rescuers_of(s, target_id, night).is_empty() or _guard_immune(s, target_id)):
 		return GuardRoles.REPEATABLE
 	if s.weapons.any(func(w: Dictionary) -> bool: return int(w["holder_id"]) == target_id):
