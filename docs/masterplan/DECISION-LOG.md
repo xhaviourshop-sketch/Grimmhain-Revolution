@@ -1221,7 +1221,7 @@ Umsetzungsstand je Karte: `docs/role-migration/15-totenkarten-umsetzungsmatrix.m
 - Puppenspieler (`loki_09`): Die fünf Nominierten decken so viele Fraktionen ab, wie bei der Größe möglich sind; die App prüft das.
 - Solo-Karten: Auslegungen in `core/rules/card_fx_solo.gd` (Kopfkommentar): Zettel und Tipps trägt die Spielleitung ein, stille Mitsieger
   erscheinen nach bestätigtem Spielende im Abschlussbericht, Stimmenzahlen werden am Tisch gezählt.
-- Tischregeln (Nebelhorn, Stummfilm, Totengericht): Die App hat keinen Timer. Regelverstöße meldet die Spielleitung als Button, die Folge
+- Tischregeln (Nebelhorn, Stummfilm, Totengericht): Die App hat keinen Timer, der Tischregeln durchsetzt. (Ein rein anzeigender, von der Spielleitung einstellbarer Timer für Tagphase, Diskussion und Nacht (abschaltbar) ist separat entschieden: `DECISIONS.md`, 01.10.2026, Umsetzung in P3 der visuellen Roadmap; er ändert an dieser Regel nichts.) Regelverstöße meldet die Spielleitung als Button, die Folge
   (Ausschluss, Tod) setzt der Kern um.
 - Kartenschlucker: Nur mit Totenreichkarten wählbar, keine Scheinrolle; Schild, Stapel und Ansagen wie in `swallower_rules.gd`.
 - Speicherformat: Schema 15 und Regelversion 0.15; ältere Spielstände werden als „nicht kompatibel“ gemeldet und nie überschrieben.
