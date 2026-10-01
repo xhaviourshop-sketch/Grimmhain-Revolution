@@ -458,7 +458,9 @@ Siehe §3.
 
 ### K15 · Ressourcen und Totenkarten
 
-**Rollen Charge K15 (1):** `kartenschlucker`
+**Rollen Charge K15 (0):** –
+
+**Nachtrag Totenreichkarten (01.10.2026):** `kartenschlucker` ist umgesetzt ([`02`](02-implemented-roles-audit.md) §4.72).
 
 **Nachtrag Rollenaudit:** `hades` und `grabraeuber` sind umgesetzt ([`11-role-audit-status.md`](11-role-audit-status.md)).
 

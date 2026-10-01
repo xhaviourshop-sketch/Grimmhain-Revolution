@@ -27,7 +27,7 @@ Bei neueren Commits auf dem Audit-Branch, im Regelkern oder im UI-Branch gilt di
 | [`rolebook/04-wolves-pack.md`](rolebook/04-wolves-pack.md) | 10 Rollen: Werwolf, Trugbilderwolf, Spiegelwolf, Siegreicher Wolf, Besessener Wolf, Blutwolf, Seuchenwolf, Rudelvater, Fenrir, Cerberus |
 | [`rolebook/05-wolves-special.md`](rolebook/05-wolves-special.md) | 9 Rollen: Schattenhund, Albtraumwolf, Giftwolf, Schwarze Witwe, Schattenwanderer, Dämonischer Wolf, König Lykaon, Rachsüchtiger Wolf, Schicksalswolf |
 | [`rolebook/06-solo-1.md`](rolebook/06-solo-1.md) | 7 Rollen: Manipulator, Doppelspion, Selbstmörder, Parasit, Rattenfänger, Pestbringerin, Todesprediger |
-| [`rolebook/07-solo-2.md`](rolebook/07-solo-2.md) | 6 Rollen: Prophet des Untergangs, Feuerteufel, Voodoo-Priester, Nekromant, Hades, Grabräuber |
+| [`rolebook/07-solo-2.md`](rolebook/07-solo-2.md) | 7 Rollen: Prophet des Untergangs, Feuerteufel, Voodoo-Priester, Nekromant, Hades, Grabräuber, Kartenschlucker |
 | [`GUIDE-TEXTS.md`](GUIDE-TEXTS.md) | Allgemeine Texte für Nachtbeginn, Morgen, Diskussion, Nominierung, Hinrichtung, Spielende; je Rolle Texte in den drei Kategorien `[SL-PRIVAT]`, `[PERSON-PRIVAT]`, `[ÖFFENTLICH]`; §4 prüft auf Informationsweitergabe |
 | [`TERMINOLOGY.md`](TERMINOLOGY.md) | Einheitliche DE/EN-Begriffe |
 | [`DECISIONS-TO-INTEGRATE.md`](DECISIONS-TO-INTEGRATE.md) | Bestätigte Entscheidungen des Product Owners mit Herkunft, Decision-Log-Bedarf, Auswirkungen und Akzeptanztests |

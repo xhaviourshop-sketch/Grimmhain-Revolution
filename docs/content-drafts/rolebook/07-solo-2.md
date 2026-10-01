@@ -1,4 +1,4 @@
-# Rollenlexikon 07 · Einzelsieg, Teil 2 (6 Rollen)
+# Rollenlexikon 07 · Einzelsieg, Teil 2 (7 Rollen)
 
 **Status:** Entwurf, nicht freigegeben. Regelquelle: `audit/all-72-roles` @ `312f5bbbbec4c218754b35a0043b51e79d80bcf5`. Begriffe siehe [`../TERMINOLOGY.md`](../TERMINOLOGY.md).
 **Paket 5b (29.09.2026):** Gegen Decision Log, Kern und Tests geprüft und als `ui.role.<rolle>.lex.*` ins Programm übernommen (Rollenlexikon). Maßgeblich für das Programm ist der Wortlaut in `godot/content/i18n/ui.*.po`. Die Zeile „Offen / Open“ nennt ungeklärte, technisch abgeleitete und unbestätigte oder noch nicht umgesetzte Punkte. Redaktionelle Endabnahme ausstehend.
@@ -6,7 +6,7 @@ Kopfzeile je Rolle: Nachtstufe = `night_priority` des Katalogs geteilt durch zeh
 
 Gilt für alle Einzelsiegrollen: Treffen mehrere Siegbedingungen gleichzeitig zu, bilden sie eine Kandidatenmenge. Der Spielleiter bestätigt genau einen oder lehnt alle gemeinsam mit Grund ab. Ein erfüllter Sieg wird nach einer Ablehnung weiter vorgeschlagen.
 
-Enthalten: `prophet-des-untergangs`, `feuerteufel`, `voodoo-priester`, `nekromant`, `hades`, `grabraeuber`.
+Enthalten: `prophet-des-untergangs`, `feuerteufel`, `voodoo-priester`, `nekromant`, `hades`, `grabraeuber`, `kartenschlucker`.
 
 ---
 
@@ -123,3 +123,22 @@ Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 4" (E-28 bis E-31; R
 | Offen / Open | Welche Rollen stehlbar sind und was genau übernommen wird, ist technisch abgeleitet und noch nicht bestätigt. | Which roles can be stolen and what exactly is taken over is technically derived and not yet confirmed. |
 
 Quelle: DECISION-LOG "Rollenaudit · Einzelsiegrollen, Teil 4" (E-32 bis E-34; RM-DR-156); "Hades und Grabräuber, abgeleitete Präzisierungen" (DA-06 bis DA-09); "Rest-Wölfe und Zeitwächter" (DA-15).
+
+---
+
+## `kartenschlucker` · Kartenschlucker / Card Swallower
+
+**Fraktion / Faction:** Einzelsieg / Solo · **Nachtschritt / Night step:** jede Nacht, freiwillig, Stufe 5.8 / every night, optional, stage 5.8 · **Zählt als Wolf / Counts as wolf:** nein / no · **Status:** Regel entschieden
+
+| Feld / Field | DE | EN |
+|---|---|---|
+| Fähigkeit / Ability | Sammelt für jede getauschte Totenreichkarte einen Stapel und gibt sie nachts für eine Tötung, einen Schild oder den Sieg aus. | Collects one stack for every exchanged realm-of-the-dead card and spends them at night on a kill, a shield or the win. |
+| Zeitpunkt, Limit / Timing, limit | Nur in Partien mit Totenreichkarten. Jede Nacht wählt er genau eine Aktion: nichts, zwei Stapel für eine Tötung, fünf Stapel für einen Schild, zehn Stapel für den Sieg. Mit weniger als zwei Stapeln entfällt der Schritt. In den Nächten 3, 6, 9 und so weiter nennt der Morgen öffentlich die Gesamtzahl aller gesammelten Stapel, ohne Käufe zu verraten. | Only in games with realm-of-the-dead cards. Every night they choose exactly one action: nothing, two stacks for a kill, five stacks for a shield, ten stacks for the win. With fewer than two stacks the step is skipped. In nights 3, 6, 9 and so on the morning announces publicly the total of all stacks collected, without revealing purchases. |
+| Ziele / Targets | Bei der Tötung eine lebende Person. Schild und Sieg brauchen kein Ziel. | One living person for the kill. Shield and win need no target. |
+| Ausnahmen / Exceptions | Stapel gehören der Person, nicht der Rolle: Ein neuer Träger beginnt bei null, beim bisherigen ruhen sie. Der Tod lässt Stapel bestehen. Der Schild gilt höchstens einmal je Person, bleibt bis zum Verbrauch und verhindert jeden Tod außer Spielleiterkorrekturen. Die Tötung wirkt am Morgen wie jede Rollenfähigkeit, Schutz und Schilde greifen. Die Rolle ist nicht stehlbar und keine Scheinrolle. | Stacks belong to the person, not the role: a new bearer starts at zero, for the previous one they rest. Death leaves stacks in place. The shield applies at most once per person, stays until used and prevents any death except game master corrections. The kill takes effect in the morning like any role ability; protection and shields apply. The role cannot be stolen and is not a decoy appearance. |
+| Sieg / Win | Allein. Die Zehn-Finger-Aktion gibt zehn Stapel ab und macht den Sieg zum Kandidaten, solange die Person lebt und die Rolle hält. Zehn gesammelte Stapel allein lösen nichts aus. | Alone. The ten-finger action spends ten stacks and makes the win a candidate as long as the person is alive and holds the role. Ten collected stacks alone trigger nothing. |
+| Beispiel 1 / Example 1 | Der Kartenschlucker hat vier Stapel gesammelt. Er zeigt zwei Finger und wählt Ben: Ben stirbt am Morgen, zwei Stapel bleiben übrig. | The Card Swallower has collected four stacks. They show two fingers and choose Ben: Ben dies in the morning, two stacks remain. |
+| Beispiel 2 / Example 2 | Später hat er zehn Stapel und zeigt zehn Finger: Die Spielleitung bestätigt seinen Einzelsieg. | Later they have ten stacks and show ten fingers: the game master confirms their solo win. |
+| Spielleitung / Game master | Handzeichen am Tisch tippst du als Schaltflächen. Die App führt Guthaben und Gesamtzahl der Stapel mit. | You tap the table's hand signs as buttons. The app keeps track of the balance and the total of stacks. |
+
+Quelle: DECISION-LOG "Kartenschlucker, Grundregeln (zweite Antwortrunde, 30.09.2026)", "Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten (dritte Antwortrunde, 30.09.2026)" und "Totenreichkarten und Kartenschlucker: Umsetzung (01.10.2026)"; Umsetzung `godot/core/rules/swallower_rules.gd`, Wortlaut maßgeblich in `godot/content/i18n/ui.*.po` (`ui.role.kartenschlucker.*`).

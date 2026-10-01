@@ -13,20 +13,20 @@ Es gibt **72 Rollen**. `ALL_ROLES` in `js/core/roles.js:1` enthält 72 eindeutig
 |---|---:|
 | Rollen gesamt | 72 |
 | Dorf / Wölfe / Einzelsieg (`getRoleFaction`) | 39 / 19 / 14 |
-| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 71 |
+| im Godot-Regelkern umgesetzt und headless getestet (`implemented-and-tested`) | 72 |
 | teilweise umgesetzt (`implemented-partial`) | 0 |
 | fehlend, Regel ausreichend klar (`documented-only`) | 0 |
-| fehlend, Entscheidung nötig (`decision-required`) | 1 |
+| fehlend, Entscheidung nötig (`decision-required`) | 0 |
 | Legacy-Befund `legacy-verified` (alle 72) | 26 |
 | Legacy-Befund `legacy-contradictory` (alle 72) | 28 |
 | Legacy-Befund `legacy-broken` (alle 72) | 14 |
 | Legacy-Befund `not-found` (alle 72) | 4 |
-| Legacy-Befund `legacy-verified` (nur 1 fehlende) | 0 |
-| Legacy-Befund `legacy-contradictory` (nur 1 fehlende) | 1 |
-| Legacy-Befund `legacy-broken` (nur 1 fehlende) | 0 |
-| Legacy-Befund `not-found` (nur 1 fehlende) | 0 |
+| Legacy-Befund `legacy-verified` (nur 0 fehlende) | 0 |
+| Legacy-Befund `legacy-contradictory` (nur 0 fehlende) | 0 |
+| Legacy-Befund `legacy-broken` (nur 0 fehlende) | 0 |
+| Legacy-Befund `not-found` (nur 0 fehlende) | 0 |
 
-<!-- check:counts total=72 implemented=71 remaining=1 -->
+<!-- check:counts total=72 implemented=72 remaining=0 -->
 
 Die Legacy-Befunde weichen bewusst von der älteren Matrix `docs/godot-migration/04-rules-migration-matrix.md` ab (dort 41 verifiziert, 19 widersprüchlich, 3 unklar, 9 fehlend). Gründe je Rolle stehen in [`04-rule-conflicts.md`](04-rule-conflicts.md) §5.
 
@@ -89,7 +89,7 @@ Spalten: Godot = Migrationsstatus (gilt nur für den Regelkern, siehe [`02`](02-
 | 51 | `koenig` | König / King | Dorf | III, IV | 4.4 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#koenig) |
 | 52 | `dr-victor-frankenstein` | Dr. Victor Frankenstein / Dr. Victor Frankenstein | Dorf | II | 3.6 | `implemented-and-tested` | `legacy-broken` | `assisted` | Wiederbelebung | L / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#dr-victor-frankenstein) |
 | 53 | `nekromant` | Nekromant / Necromancer | Einzelsieg | II | 3.0 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Schutz | L / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-b.md#nekromant) |
-| 54 | `kartenschlucker` | Kartenschlucker / The Collector | Einzelsieg | III, IV | 4.0 | `decision-required` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | L / hoch | K15 | – | [03](03-remaining-roles-analysis.md#kartenschlucker) · [Dossier](dossiers/solos-b.md#kartenschlucker) |
+| 54 | `kartenschlucker` | Kartenschlucker / The Collector | Einzelsieg | III, IV | 4.0 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Totenkarten-Interaktion | L / hoch | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-b.md#kartenschlucker) |
 | 55 | `hades` | Hades / Hades | Einzelsieg | IV | 9.9 | `implemented-and-tested` | `legacy-verified` | `assisted` | Einzelsieg | M / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/solos-b.md#hades) |
 | 56 | `doktor` | Doktor / Doctor | Dorf | IV | 5.0 | `implemented-and-tested` | `legacy-contradictory` | `automatic` | Informationsrolle | S / niedrig | – | A | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#doktor) |
 | 57 | `faehrtenleser` | Fährtenleser / Tracker | Dorf | III | 5.2 | `implemented-and-tested` | `legacy-contradictory` | `assisted` | Informationsrolle | S / mittel | – | – | [02](02-implemented-roles-audit.md) · [Dossier](dossiers/village-3.md#faehrtenleser) |

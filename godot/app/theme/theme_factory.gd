@@ -220,6 +220,11 @@ static func _panels(theme: Theme) -> void:
 		# Cockpit: Phasenleiste und Ansagekarte je Tageszeit, Schublade, Sichtschutz, gezeigte Karte.
 		&"NightPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.NIGHT_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		&"DayPanel": _panel(ThemeTokens.DAY_SURFACE, ThemeTokens.DAY_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		# Spielbrett: Tischfläche je Tageszeit und schmale Leisten darüber und darunter (Cockpit).
+		&"BarPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.BAR_GAP),
+		&"BoardPanel": _panel(ThemeTokens.BOARD_NEUTRAL, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
+		&"NightBoardPanel": _panel(ThemeTokens.BOARD_NIGHT, ThemeTokens.NIGHT_ACCENT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
+		&"DayBoardPanel": _panel(ThemeTokens.BOARD_DAY, ThemeTokens.DAY_ACCENT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
 		&"DrawerPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_M),
 		&"CoverPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
 		&"ShowPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
@@ -243,6 +248,10 @@ static func _panels(theme: Theme) -> void:
 static func _containers(theme: Theme) -> void:
 	theme.set_constant("separation", "VBoxContainer", ThemeTokens.SPACE_M)
 	theme.set_constant("separation", "HBoxContainer", ThemeTokens.SPACE_M)
+	theme.set_type_variation(&"BoardColumn", &"VBoxContainer")  ## Cockpit: Leisten und Brett ohne Luft dazwischen
+	theme.set_constant("separation", &"BoardColumn", ThemeTokens.BAR_GAP)
+	theme.set_type_variation(&"BarRow", &"HBoxContainer")
+	theme.set_constant("separation", &"BarRow", ThemeTokens.SPACE_S)
 	theme.set_type_variation(&"ScreenColumn", &"VBoxContainer")
 	theme.set_constant("separation", &"ScreenColumn", ThemeTokens.SPACE_L)
 	theme.set_type_variation(&"ButtonRow", &"HBoxContainer")

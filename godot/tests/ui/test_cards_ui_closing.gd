@@ -251,13 +251,27 @@ func _answer_prompt_minimally(s: Object, next: Dictionary) -> void:
 			s.call("answer_choice", false)
 
 
-## Der Button ist durch Scrollen der Ansagekarte erreichbar: danach liegt er ganz im sichtbaren Teil der Karte und im Fenster.
+## Die Pflichtaktion steht ohne Scrollen im festen Aktionsbereich der Ansagekarte (nicht im scrollenden Text): ganz in der Karte und im Fenster.
 func _reachable(shell: Control, b: BaseButton) -> bool:
 	var scroll := find_node(current_screen(shell), "Scroll") as ScrollContainer
-	scroll.ensure_control_visible(b)
-	await frames(2)
+	var card := find_node(current_screen(shell), "InstructionCard") as Control
 	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
-	return inside(rect_of(b), rect_of(scroll)) and inside(rect_of(b), viewport) and b.size.y >= 47.5
+	return not scroll.is_ancestor_of(b) and inside(rect_of(b), rect_of(card)) and inside(rect_of(b), viewport) and b.size.y >= 47.5
+
+
+## Rechtecke aller Plätze des Sitzkreises (die Ansagekarte liegt in der Tischmitte, nicht auf einem Platz).
+func _seat_rects(shell: Control) -> Array[Rect2]:
+	var out: Array[Rect2] = []
+	for t: Variant in find_node(current_screen(shell), "SeatRing").call("tokens"):
+		out.append(rect_of(t as Control))
+	return out
+
+
+func _hits_seat(shell: Control, r: Rect2) -> bool:
+	for seat: Rect2 in _seat_rects(shell):
+		if r.intersects(seat.grow(-1.0)):
+			return true
+	return false
 
 
 func test_cockpit_tool_buttons_keep_a_usable_shape_at_1024x768_with_24_persons() -> void:
@@ -274,6 +288,7 @@ func test_cockpit_tool_buttons_keep_a_usable_shape_at_1024x768_with_24_persons()
 					assert_true(b.size.x >= 64.0 and b.size.y <= 64.0, "%s: %s hat eine nutzbare Form (%s)" % [label, node_name, str(b.size)])
 			var card := rect_of(find_node(current_screen(shell), "InstructionCard") as Control)
 			assert_true(card.size.y >= 240.0, "%s: die Ansagekarte behält mindestens 240 Höhe (%.0f)" % [label, card.size.y])
+			assert_false(_hits_seat(shell, card), "%s: die Ansagekarte überdeckt keinen Platz" % label)
 
 
 func test_longest_card_text_is_complete_and_its_actions_reachable_at_1024x768_with_24_persons() -> void:
@@ -288,20 +303,25 @@ func test_longest_card_text_is_complete_and_its_actions_reachable_at_1024x768_wi
 				return
 			assert_eq(str(_next(shell)["kind"]), "card_window", "%s: Kartenfenster" % label)
 			await _tap(shell, "RevealButton")
-			var ring := rect_of(find_node(current_screen(shell), "SeatRing") as Control)
 			for node_name: String in ["CardTextLabel", "CardGuideLabel"]:
 				var l := find_node(current_screen(shell), node_name) as Label
 				assert_true(l != null and l.get_line_count() > 0, "%s: %s vorhanden" % [label, node_name])
 				if l == null:
 					continue
 				assert_eq(l.get_visible_line_count(), l.get_line_count(), "%s: %s nicht abgeschnitten (%d Zeilen)" % [label, node_name, l.get_line_count()])
-				assert_false(rect_of(l).intersects(ring.grow(-2.0)), "%s: %s überdeckt den Sitzkreis nicht" % [label, node_name])
-			for node_name: String in ["CardPlayButton", "CardKeepButton"]:
+				assert_false(_hits_seat(shell, clipped_rect(l)), "%s: %s überdeckt keinen Platz" % [label, node_name])
+			# Langer Text scrollt, Pflichtaktionen bleiben ohne Scrollen sichtbar.
+			var scroll := find_node(current_screen(shell), "Scroll") as ScrollContainer
+			for node_name: String in ["CardPlayButton", "CardKeepButton", "CardShowButton", "CardCloseWindowButton"]:
 				var b := find_button(current_screen(shell), node_name)
 				assert_true(b != null, "%s: %s vorhanden" % [label, node_name])
 				if b != null:
-					assert_true(await _reachable(shell, b), "%s: %s durch Scrollen erreichbar" % [label, node_name])
-					assert_false(rect_of(b).intersects(ring.grow(-2.0)), "%s: %s überdeckt den Sitzkreis nicht" % [label, node_name])
+					assert_true(await _reachable(shell, b), "%s: %s fest sichtbar" % [label, node_name])
+					assert_false(_hits_seat(shell, rect_of(b)), "%s: %s überdeckt keinen Platz" % [label, node_name])
+			scroll.scroll_vertical = 100000
+			await frames(2)
+			for node_name: String in ["CardPlayButton", "CardKeepButton"]:
+				assert_true(await _reachable(shell, find_button(current_screen(shell), node_name)), "%s: %s bleibt beim Scrollen sichtbar" % [label, node_name])
 
 
 func test_target_selection_with_24_persons_is_operable_for_both_hands_and_with_a_save_error() -> void:
@@ -333,7 +353,7 @@ func test_target_selection_with_24_persons_is_operable_for_both_hands_and_with_a
 			for j: int in range(i + 1, rects.size()):
 				assert_false(overlaps(rects[i], rects[j], 1.0), "%s: Plätze %d und %d überlappen nicht" % [label, i, j])
 		var confirm := find_button(current_screen(shell), "ConfirmTargetsButton")
-		assert_true(confirm != null and await _reachable(shell, confirm), "%s: Bestätigen durch Scrollen erreichbar" % label)
+		assert_true(confirm != null and await _reachable(shell, confirm), "%s: Bestätigen fest sichtbar" % label)
 		if confirm != null:
 			for r: Rect2 in rects:
 				assert_false(overlaps(r, rect_of(confirm), 1.0), "%s: Bestätigen verdeckt keinen Platz" % label)

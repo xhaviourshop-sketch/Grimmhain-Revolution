@@ -135,6 +135,16 @@ Starter und Worktree wie oben: `PC-Test-starten.cmd` im Ordner `C:\Users\Marku\D
 - **M4** Kartenschlucker in der Nacht: Sein Schritt kommt erst mit mindestens 2 verfügbaren Stapeln. Handzeichen „Zwei Finger: Tötung (2 Stapel)“, „Fünf Finger: Schild (5 Stapel)“, „Zehn Finger: Sieg (10 Stapel)“ oder „Kopfschütteln: nichts tun“, eine Aktion je Nacht. Das Guthaben steht nur in der Spielleiterkarte; öffentlich wird in den Nächten 3, 6 und 9 nur die Gesamtzahl genannt. Stapel entstehen nur durch Tauschen; zehn gesammelte Stapel bringen allein keinen Sieg.
 - **M5** Speichern und fortsetzen: Es wird nach jedem Schritt automatisch gespeichert („Gespeichert“ oben). Zum Test mitten in einer mehrstufigen Kartenaktion (nach der ersten Eingabe) das Fenster mit „X“ schließen, `PC-Test-starten.cmd` erneut starten, „Partie fortsetzen“, „Fortsetzen“. Erwartet: dieselbe offene Eingabe, bei Würfelkarten kein neuer Wurf. Erscheint „Fehler: nicht gespeichert“, bleibt alles bedienbar; „Erneut speichern“ versucht es nochmals.
 
+## N · Neues Spielbrett (Stand 01.10.2026)
+
+Das Cockpit zeigt hauptsächlich das Spielbrett mit allen Personen. Die Ansagekarte liegt in der Tischmitte, oben steht die schmale Phasenleiste, unten die Werkzeugleiste. Das ist headless geprüft; wie es aussieht und sich anfühlt, prüfst erst du (keine Tablet- oder Touchabnahme).
+
+- **N1** Tun: „Neue Partie“ (6 Personen) bis „Partie starten“. Erwartet: Die Plätze bilden einen Kreis über fast die ganze Fläche, in der Mitte steht die Karte „Nacht 1 beginnen“. Keine breite Spalte links oder rechts, oben eine schmale Leiste mit „Nacht“ und „… von … leben“, unten die Werkzeuge.
+- **N2** Tun: „Nacht 1 beginnen“ und bei der Zielwahl einen Platz antippen. Erwartet: Wählbare Plätze tragen vorn ein „›“, der gewählte ein „✓“; nicht wählbare Plätze sind gesperrt. Die Karte verdeckt keinen Platz. „Auswahl bestätigen“ steht fest unten in der Karte.
+- **N3** Tun: Einstellungen, „Linkshändig“, zurück zum Cockpit. Erwartet: Alle Plätze liegen an derselben Stelle wie vorher; nur die Hauptaktion in der Karte wechselt an das linke Ende.
+- **N4** Tun: „Protokoll“, „Lexikon“ oder „Spielleitung“ öffnen und schließen. Erwartet: Jedes öffnet über dem Brett und schließt zurück zum Brett; danach steht kein Rest davon auf dem Brett.
+- **N5** Tun: Mit Totenreichkarten (Teil M) ein Kartenfenster öffnen. Erwartet: Langer Kartentext scrollt in der Karte, „Karte spielen“ und „Aufbewahren“ bleiben sichtbar, ohne zu scrollen.
+
 ## Godot vollständig beenden
 
 1. Im Cockpit „Esc“ drücken (oder „Zurück“), dann „Zum Hauptmenü“. Im Hauptmenü „Beenden“, im Dialog „Beenden“. Alternativ das Fenster mit „X“ schließen.

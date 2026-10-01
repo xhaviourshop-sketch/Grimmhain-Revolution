@@ -30,6 +30,19 @@ func _rect(shell: Control, node_name: String) -> Rect2:
 	return rect_of(find_node(_screen(shell), node_name) as Control)
 
 
+## Liegt die Hauptaktion der ersten Karte (Nacht beginnen) in der linken Hälfte der Ansagekarte?
+func _main_action_on_left(shell: Control) -> bool:
+	var action := rect_of(find_node(_screen(shell), "StartNightButton") as Control).get_center().x
+	return action < _rect(shell, "InstructionCard").get_center().x
+
+
+func _seat_rects(shell: Control) -> Array[Rect2]:
+	var out: Array[Rect2] = []
+	for t: Variant in find_node(_screen(shell), "SeatRing").call("tokens"):
+		out.append(rect_of(t as Control))
+	return out
+
+
 func _hand_state(shell: Control) -> Array:
 	var right := find_node(_screen(shell), "HandRightButton") as BaseButton
 	var left := find_node(_screen(shell), "HandLeftButton") as BaseButton
@@ -98,9 +111,7 @@ func test_button_choice_reaches_the_cockpit_after_a_real_restart() -> void:
 		assert_true(r.ok, "Partie gestartet")
 		await navigate(second, &"main_menu")
 		await navigate(second, &"cockpit")
-		var side := _rect(second, "SideColumn")
-		var ring := _rect(second, "SeatRingArea")
-		assert_true(side.end.x <= ring.position.x + 0.5 if left else side.position.x >= ring.end.x - 0.5, "Cockpit nach Neustart: Spalte %s" % ("links" if left else "rechts"))
+		assert_eq(_main_action_on_left(second), left, "Cockpit nach Neustart: Hauptaktion %s" % ("links" if left else "rechts"))
 		await navigate(second, &"main_menu")
 		await navigate(second, &"settings")
 		assert_eq(_hand_state(second), [not left, left], "Einstellungsansicht zeigt die geladene Auswahl")
@@ -127,10 +138,10 @@ func test_restart_applies_the_saved_side_to_the_cockpit() -> void:
 	var shell := await _cockpit(SIZE_16_10, "de", Fixtures.unique_roles(7), true)
 	if shell == null:
 		return
-	assert_true(_rect(shell, "SideColumn").end.x <= _rect(shell, "SeatRingArea").position.x + 0.5, "gespeicherte Linkshändigkeit: Spalte links")
+	assert_true(_main_action_on_left(shell), "gespeicherte Linkshändigkeit: Hauptaktion links")
 
 
-func test_cockpit_moves_only_the_side_column() -> void:
+func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> void:
 	var shell := await _cockpit(SIZE_16_10, "de", Fixtures.unique_roles(7))
 	if shell == null:
 		return
@@ -138,19 +149,18 @@ func test_cockpit_moves_only_the_side_column() -> void:
 	var commands_before := (session_of(shell).call("commands") as Array).size()
 	var state_before := str(session_of(shell).call("state_hash"))
 	var ring_before := _rect(shell, "SeatRingArea")
-	var side := _rect(shell, "SideColumn")
-	assert_true(side.position.x >= ring_before.end.x - 0.5, "rechtshändig: Spalte rechts vom Sitzkreis")
+	var seats_before := _seat_rects(shell)
+	assert_false(_main_action_on_left(shell), "rechtshändig: Hauptaktion rechts")
+	assert_true(find_node(_screen(shell), "SideColumn") == null, "keine dauerhafte Seitenspalte")
 	var texts_before := {}
 	for c: Control in text_controls(_screen(shell)):
 		if c.is_visible_in_tree():
 			texts_before[str(c.get_path())] = text_of(c)
 	settings_of(shell).call("set_left_handed", true)
 	await frames(3)
-	var side_left := _rect(shell, "SideColumn")
-	var ring_after := _rect(shell, "SeatRingArea")
-	assert_true(side_left.end.x <= ring_after.position.x + 0.5, "linkshändig: Spalte links vom Sitzkreis")
-	assert_true(side_left.position.x >= -0.5 and ring_after.end.x <= tree.root.size.x + 0.5, "beides im Viewport")
-	assert_eq(ring_after.size.x, ring_before.size.x, "Sitzkreis behält seine Größe")
+	assert_true(_main_action_on_left(shell), "linkshändig: Hauptaktion links")
+	assert_eq(_rect(shell, "SeatRingArea"), ring_before, "Sitzkreisfläche unverändert")
+	assert_eq(_seat_rects(shell), seats_before, "Sitzkreis nicht gespiegelt: jeder Platz an derselben Stelle")
 	var ids_after: Array = (session_of(shell).call("cockpit_view") as Dictionary)["seats"].map(func(s: Dictionary) -> Variant: return s["person_id"])
 	assert_eq(ids_after, ids_before, "Personenreihenfolge und Sitznummern unverändert")
 	assert_eq((session_of(shell).call("commands") as Array).size(), commands_before, "kein Spielbefehl")
@@ -161,10 +171,11 @@ func test_cockpit_moves_only_the_side_column() -> void:
 	# Zurück: gleiche Ausgangsgeometrie, kein doppeltes Umschalten.
 	settings_of(shell).call("set_left_handed", true)
 	await frames(2)
-	assert_eq(_rect(shell, "SideColumn"), side_left, "gleicher Wert ohne Wirkung")
+	assert_true(_main_action_on_left(shell), "gleicher Wert ohne Wirkung")
 	settings_of(shell).call("set_left_handed", false)
 	await frames(3)
-	assert_eq(_rect(shell, "SideColumn"), side, "zurück auf rechts: identische Geometrie")
+	assert_false(_main_action_on_left(shell), "zurück auf rechts")
+	assert_eq(_seat_rects(shell), seats_before, "Plätze nach dem Rückwechsel unverändert")
 
 
 func test_open_selection_stays_valid_and_confirms_exactly_once() -> void:
@@ -289,17 +300,14 @@ func test_layout_with_visible_save_warning() -> void:
 			await after_each()
 
 
-func _check_layout(shell: Control, label: String, left: bool) -> void:
+func _check_layout(shell: Control, label: String, _left: bool) -> void:
 	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
-	var side := _rect(shell, "SideColumn")
+	var card := _rect(shell, "InstructionCard")
 	var ring := _rect(shell, "SeatRingArea")
-	assert_true(inside(side, viewport) and inside(ring, viewport), "%s: Spalte und Sitzkreis im Viewport" % label)
-	assert_false(overlaps(side, ring), "%s: Spalte und Sitzkreis überlappen nicht" % label)
-	if left:
-		assert_true(side.end.x <= ring.position.x + 0.5, "%s: Spalte links" % label)
-	else:
-		assert_true(side.position.x >= ring.end.x - 0.5, "%s: Spalte rechts" % label)
-	assert_true(ring.size.x >= viewport.size.x * 0.5, "%s: Sitzkreis behält mehr als die halbe Breite (%.0f)" % [label, ring.size.x])
+	assert_true(inside(card, viewport) and inside(ring, viewport), "%s: Karte und Sitzkreis im Viewport" % label)
+	assert_true(inside(card, ring), "%s: Ansagekarte liegt in der Tischmitte des Bretts" % label)
+	for seat: Rect2 in _seat_rects(shell):
+		assert_false(overlaps(card, seat), "%s: Ansagekarte überdeckt keinen Platz" % label)
 	var buttons := visible_buttons(_screen(shell))
 	for b: BaseButton in buttons:
 		if b.size.x > 0.0 and b.size.y > 0.0:
@@ -308,7 +316,7 @@ func _check_layout(shell: Control, label: String, left: bool) -> void:
 	for i: int in buttons.size():
 		for j: int in range(i + 1, buttons.size()):
 			assert_false(overlaps(clipped_rect(buttons[i]), clipped_rect(buttons[j])), "%s: %s und %s überlappen" % [label, buttons[i].name, buttons[j].name])
-	for c: Control in visible_controls(find_node(_screen(shell), "SideColumn")):
+	for c: Control in visible_controls(find_node(_screen(shell), "InstructionCard")):
 		if c.size.x <= 0.0 or c.size.y <= 0.0 or c is ScrollContainer:
 			continue
 		var m := c.get_combined_minimum_size()

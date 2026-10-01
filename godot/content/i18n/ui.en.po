@@ -1284,13 +1284,13 @@ msgid "ui.cockpit.alive"
 msgstr "{alive} of {total} alive"
 
 msgid "ui.cockpit.seat.alive"
-msgstr "{number} · {name}"
+msgstr "{mark}{number} · {name}"
 
 msgid "ui.cockpit.seat.dead"
-msgstr "{number} · † {name}"
+msgstr "{mark}{number} · † {name}"
 
 msgid "ui.cockpit.seat.nominated"
-msgstr "{number} · {name} (N)"
+msgstr "{mark}{number} · {name} (N)"
 
 msgid "ui.cockpit.tools.log"
 msgstr "Log"

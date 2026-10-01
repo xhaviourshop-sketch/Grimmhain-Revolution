@@ -7,6 +7,10 @@ extends VBoxContainer
 ##
 ## Geheime Karten (`secret`) zeigt die Karte außerhalb der Nacht verdeckt, bis `revealed` gesetzt
 ## ist. Verdeckt entstehen keine Knoten mit geheimem Inhalt.
+##
+## Aufbau: oben `Scroll` mit dem Text (`Content`), darunter der feste Bereich `Actions` mit allen Aktionsbuttons.
+## Langer Text scrollt, die Aktionen bleiben immer sichtbar. Die Bedienhand bestimmt die Seite der Hauptaktion
+## (rechts: Hauptaktion am rechten Ende, links: am linken); der Inhalt bleibt unverändert.
 
 signal requested(action: StringName, payload: Dictionary)
 
@@ -15,6 +19,30 @@ var _last_next: Dictionary = {}
 var _last_context: Dictionary = {}
 var _fade: Tween = null
 var _shown_kind: String = ""
+var _content: VBoxContainer = null
+var _actions_box: HFlowContainer = null
+var _left_handed: bool = false
+
+const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
+
+
+func _init() -> void:
+	var scroll := ScrollContainer.new()
+	scroll.name = "Scroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	add_child(scroll)
+	_content = VBoxContainer.new()
+	_content.name = "Content"
+	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(_content)
+	_actions_box = HFlowContainer.new()
+	_actions_box.name = "Actions"
+	_actions_box.add_theme_constant_override(&"h_separation", ThemeTokens.SPACE_S)
+	_actions_box.add_theme_constant_override(&"v_separation", ThemeTokens.SPACE_S)
+	_actions_box.alignment = FlowContainer.ALIGNMENT_END
+	add_child(_actions_box)
 
 
 ## Sprachwechsel: Karte mit denselben Daten neu aufbauen (zusammengesetzte Texte).
@@ -28,9 +56,10 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_last_next = next
 	_last_context = context
 	_busy = false
-	for child: Node in get_children():
-		remove_child(child)
-		child.queue_free()
+	for box: Node in [_content, _actions_box]:
+		for child: Node in box.get_children():
+			box.remove_child(child)
+			child.queue_free()
 	var kind := str(next.get("kind", "none"))
 	if str(context.get("error_key", "")) != "":
 		_text(str(context["error_key"]), {}, &"ErrorLabel").name = "ErrorLabel"
@@ -83,6 +112,35 @@ func _fade_in(identity: String, reduced: bool) -> void:
 	modulate.a = 0.0
 	_fade = create_tween()
 	_fade.tween_property(self, "modulate:a", 1.0, ThemeTokens.CARD_FADE_SECONDS)
+
+
+## Bedienhand (Einstellung): setzt die Seite der Hauptaktion im festen Aktionsbereich. Ändert weder Inhalt noch Reihenfolge der Texte.
+func set_left_handed(left: bool) -> void:
+	if left == _left_handed:
+		return
+	_left_handed = left
+	_apply_hand(true)
+
+
+## Aktionsbuttons in Bauart-Reihenfolge (Hauptaktion zuerst), die auch die Tab-Reihenfolge der Linkshänder bleibt.
+func action_buttons() -> Array[BaseButton]:
+	var out: Array[BaseButton] = []
+	for b: Node in _actions_box.get_children():
+		if b is BaseButton and not b.is_queued_for_deletion():
+			out.append(b as BaseButton)
+	if not _left_handed:
+		out.reverse()
+	return out
+
+
+## Rechtshänder: Hauptaktion am rechten Ende, also Reihenfolge der Bauart umgekehrt; Linkshänder: wie gebaut.
+func _apply_hand(reorder: bool) -> void:
+	_actions_box.alignment = FlowContainer.ALIGNMENT_BEGIN if _left_handed else FlowContainer.ALIGNMENT_END
+	if reorder:
+		var children := _actions_box.get_children()
+		children.reverse()
+		for i: int in children.size():
+			_actions_box.move_child(children[i], i)
 
 
 ## Sperrt alle Aktionen bis zum nächsten `render` (Schutz gegen Mehrfachtippen).
@@ -598,7 +656,7 @@ func _text(key: String, values: Dictionary = {}, variation: StringName = &"") ->
 	if variation != &"":
 		label.theme_type_variation = variation
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_child(label)
+	_content.add_child(label)
 	return label
 
 
@@ -608,17 +666,15 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 	b.kind = kind
 	b.text_key = key
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.custom_minimum_size.x = maxf(b.custom_minimum_size.x, ACTION_MIN_WIDTH)
 	b.pressed.connect(_emit.bind(action, payload, b))
 	return b
 
 
 func _actions(buttons: Array[Control]) -> void:
-	var box := VBoxContainer.new()
-	box.name = "Actions"
-	box.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
 	for b: Control in buttons:
-		box.add_child(b)
-	add_child(box)
+		_actions_box.add_child(b)
+	_apply_hand(not _left_handed)
 
 
 ## Ein Tippen zählt nur auf einem Button der aktuellen Karte, solange sie nicht gesperrt ist.
@@ -659,7 +715,7 @@ func _card_prompt_head(next: Dictionary) -> void:
 func _dice(values: Array) -> void:
 	var row := DiceRow.new()
 	row.show_dice(values)
-	add_child(row)
+	_content.add_child(row)
 	_text("ui.cards.dice.result", {"dice": ", ".join(values.map(func(v: Variant) -> String: return str(int(v))))}, &"SectionLabel").name = "DiceResultLabel"
 
 
@@ -697,21 +753,16 @@ func _card_window(next: Dictionary, _context: Dictionary) -> void:
 		var exchange := _button("CardExchangeButton", "ui.cards.action.exchange", GrimmButton.Kind.SECONDARY, &"card_exchange", {"owner_id": owner_id})
 		exchange.disabled = not bool(next.get("can_exchange", false))
 		buttons.append(exchange)
-	# Die Hauptaktionen stehen direkt unter dem Kartentext (ohne Scrollen erreichbar); Erklärung und seltene Aktionen folgen.
-	_actions(buttons)
+	# Kartentext und Erklärung scrollen; alle Aktionen stehen im festen Bereich darunter, nie hinter langem Text.
 	_text(str(card.get("guide_key", "")), {}, &"MutedLabel").name = "CardGuideLabel"
 	var preselected: Array = (next.get("preselected", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
 	if not preselected.is_empty():
 		_text("ui.cards.window.preselected", {"names": ", ".join(preselected)}, &"WarningLabel").name = "PreselectedLabel"
 	var close := _button("CardCloseWindowButton", "ui.cards.action.close_window", GrimmButton.Kind.SECONDARY, &"card_close")
 	close.disabled = not bool(next.get("can_close", true))
-	var more := VBoxContainer.new()
-	more.name = "MoreActions"
-	more.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
-	for b: Control in [_button("CardShowButton", "ui.cards.action.show", GrimmButton.Kind.SECONDARY, &"card_show"),
-			_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"), close]:
-		more.add_child(b)
-	add_child(more)
+	buttons.append_array([_button("CardShowButton", "ui.cards.action.show", GrimmButton.Kind.SECONDARY, &"card_show"),
+		_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"), close])
+	_actions(buttons)
 
 
 ## Öffentliche Tagesregeln durch Karten (Nebelhorn, Stummfilm, Totengericht, ...): Name, Text und, wo vorgesehen, Button zum Melden

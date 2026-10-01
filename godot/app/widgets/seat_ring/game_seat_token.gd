@@ -2,7 +2,8 @@ class_name GameSeatToken
 extends GrimmButton
 ## Ein Platz im Cockpit-Sitzkreis: Platznummer und Name, bei Toten zusätzlich „†“, bei heutiger
 ## Nominierung ein Zeichen. Zeigt nie eine Rolle. Zustände über die Theme-Variation; Information
-## hängt nie allein an der Farbe (Text trägt Tod und Nominierung, deaktiviert = nicht wählbar).
+## hängt nie allein an der Farbe: Text trägt Tod („†“), Nominierung („(N)“), wählbares Ziel („›“), Auswahl („✓“)
+## und handelnde Person („•“); deaktiviert = nicht wählbar.
 
 signal tapped(person_id: int)
 
@@ -15,11 +16,17 @@ const STATE_VARIATIONS := {
 }
 
 var person_id: int = 0
+## Textzeichen je Zustand; zusätzlich zur Farbe, damit Ziel, Auswahl und handelnde Person ohne Farbsehen erkennbar sind.
+const STATE_MARKS := {&"allowed": "› ", &"selected": "✓ ", &"actor": "• "}
+
 var alive: bool = true
+var _nominated: bool = false
+var _seat: Dictionary = {}
 var state: StringName = &"normal":
 	set(value):
 		state = value
 		theme_type_variation = STATE_VARIATIONS.get(value, &"SeatButton")
+		_show()
 
 
 func setup(p_person_id: int) -> void:
@@ -43,11 +50,19 @@ func set_portrait(texture: Texture2D) -> void:
 ## Öffentliche Sitzdaten: {seat, name, alive, nominated_today}.
 func show_seat(seat: Dictionary) -> void:
 	alive = bool(seat.get("alive", true))
-	format_values = {"number": int(seat["seat"]), "name": str(seat["name"])}
+	_nominated = bool(seat.get("nominated_today", false))
+	_seat = seat
+	tooltip_text = str(seat["name"])
+	_show()
+
+
+func _show() -> void:
+	if _seat.is_empty():
+		return
+	format_values = {"mark": STATE_MARKS.get(state, ""), "number": int(_seat["seat"]), "name": str(_seat["name"])}
 	var key := "ui.cockpit.seat.alive"
 	if not alive:
 		key = "ui.cockpit.seat.dead"
-	elif bool(seat.get("nominated_today", false)):
+	elif _nominated:
 		key = "ui.cockpit.seat.nominated"
 	text_key = key
-	tooltip_text = str(seat["name"])

@@ -337,8 +337,15 @@ func _check_layout(shell: Control, count: int, label: String) -> void:
 		for j: int in range(i + 1, tokens.size()):
 			assert_false(overlaps(rect_of(a), rect_of(tokens[j] as Control)), "%s: Plätze %d und %d überlappen" % [label, i + 1, j + 1])
 	var card := find_node(screen, "InstructionCard") as Control
-	assert_false(overlaps(rect_of(area), rect_of(card)), "%s: Sitzkreis und Karte getrennt" % label)
+	assert_true(inside(rect_of(card), rect_of(area)), "%s: Karte liegt in der Tischmitte des Bretts" % label)
+	for t: Variant in tokens:
+		assert_false(overlaps(rect_of(card), rect_of(t as Control)), "%s: Karte überdeckt keinen Platz" % label)
 	assert_true(inside(rect_of(card), Rect2(Vector2.ZERO, tree.root.get_visible_rect().size)), "%s: Karte im Fenster" % label)
+	# Das Spielbrett ist die Hauptansicht: etwa 85 bis 90 Prozent der nutzbaren (sicheren) Fläche, keine Seitenspalte.
+	var usable := rect_of(screen)
+	var share := area.size.x * area.size.y / (usable.size.x * usable.size.y)
+	assert_true(share >= 0.85 and share <= 0.92, "%s: Brett belegt %.1f Prozent der nutzbaren Fläche" % [label, share * 100.0])
+	assert_true(find_node(screen, "SideColumn") == null, "%s: keine dauerhafte Seitenspalte" % label)
 
 
 func test_layout_6_and_24_people_all_sizes() -> void:

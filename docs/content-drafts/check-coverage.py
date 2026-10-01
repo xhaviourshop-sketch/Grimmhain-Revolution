@@ -111,9 +111,6 @@ def main():
                 if bad in text:
                     print(f"FORBIDDEN '{bad!r}' in {path.relative_to(ROOT)}")
                     ok = False
-    if "kartenschlucker" in "".join(entries):
-        print("kartenschlucker must not have an entry")
-        ok = False
     print("RESULT", "OK" if ok else "FAILED")
     return 0 if ok else 1
 

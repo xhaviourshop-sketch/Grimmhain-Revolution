@@ -133,6 +133,7 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 | `zeitwaechter` | Zeitwächter / Time Warden | Vor allen anderen: Frag, ob er die Nacht einfriert. Dann entfallen alle Nachtschritte. | Before all others: ask whether they freeze the night. Then all night steps drop. |
 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Nacht 1: drei Markierungen. Nacht 4: Zusatzopfer je Markierten unter den ersten drei Toten. | Night 1: three markings. Night 4: extra victims per marked person among the first three dead. |
 | `grabraeuber` | Grabräuber / Grave Robber | Frag jede Nacht bis zur Nutzung nach der toten Person. Danach folgt der gestohlene Schritt. | Ask every night until used for the dead person. After that the stolen step follows. |
+| `kartenschlucker` | Kartenschlucker / Card Swallower | Frag, welches Handzeichen er zeigt: Kopfschütteln, zwei, fünf oder zehn Finger. Bei zwei Fingern wählt er danach die Person. | Ask which hand sign they show: head shake, two, five or ten fingers. For two fingers they then choose the person. |
 | `hades` | Hades / Hades | Letzter Schritt: erst Tötung für 2 Lichter, dann Barriere für 3. Bezahlt wird am Ende. | Last step: first kill for 2 lights, then barrier for 3. Payment comes at the end. |
 
 ### 3.2 `[PERSON-PRIVAT]` Information nur für die betreffende Person
@@ -209,6 +210,7 @@ Je Rolle eine Zeile in jeder der vier Tabellen. Zeilen in Klammern bedeuten: kei
 | `zeitwaechter` | Zeitwächter / Time Warden | (entfällt) Nur Frage, keine Information. | (not applicable) Question only, no information. |
 | `schicksalswolf` | Schicksalswolf / Fate Wolf | (entfällt) Nur Wahl, keine Rückmeldung. | (not applicable) Choice only, no feedback. |
 | `grabraeuber` | Grabräuber / Grave Robber | Du hast die Fähigkeit von {role} gestohlen. | You stole the ability of {role}. |
+| `kartenschlucker` | Kartenschlucker / Card Swallower | (entfällt) Nur Handzeichen, keine Information. | (not applicable) Hand sign only, no information. |
 | `hades` | Hades / Hades | (entfällt) Quellen nennen keine private Anzeige. | (not applicable) Sources name no private display. |
 
 ### 3.3 `[ÖFFENTLICH]` Aufruf und Einschlafen
@@ -289,6 +291,7 @@ Entwurf nach dem Muster von `docs/assets/NARRATOR-SCRIPT.md` §3. Aufrufpolitik 
 | `zeitwaechter` | Zeitwächter / Time Warden | Zeitwächter, erwache. Willst du diese Nacht einfrieren? | Time Warden, wake up. Do you want to freeze this night? |
 | `schicksalswolf` | Schicksalswolf / Fate Wolf | Schicksalswolf, erwache. Zeige auf die Personen, die das Schicksal treffen soll. | Fate Wolf, wake up. Point to the people fate shall strike. |
 | `grabraeuber` | Grabräuber / Grave Robber | Grabräuber, erwache. Willst du das Grab eines Toten plündern? Zeige auf ihn. | Grave Robber, wake up. Do you want to rob a dead person’s grave? Point to them. |
+| `kartenschlucker` | Kartenschlucker / Card Swallower | Kartenschlucker, erwache. Zeige mit den Fingern, was du tun willst: Kopfschütteln heißt nichts, zwei Finger eine Tötung, fünf Finger einen Schild, zehn Finger den Sieg. | Card Swallower, wake up. Show with your fingers what you want to do: shaking your head means nothing, two fingers a kill, five fingers a shield, ten fingers the win. |
 | `hades` | Hades / Hades | Hades, erwache. Willst du mit deinen Lichtern jemanden holen? Zeige auf die Person. | Hades, wake up. Do you want to use your lights to take someone? Point to the person. |
 
 ### 3.4 `[ÖFFENTLICH]` Öffentliche Wirkung
@@ -369,6 +372,7 @@ Nur Wirkungen, die eine Entscheidung ausdrücklich veröffentlicht. Alle anderen
 | `zeitwaechter` | Zeitwächter / Time Warden | In dieser Nacht stand die Zeit still. | Time stood still this night. |
 | `schicksalswolf` | Schicksalswolf / Fate Wolf | (keine zusätzliche Ansage) | (no additional announcement) |
 | `grabraeuber` | Grabräuber / Grave Robber | (keine zusätzliche Ansage) | (no additional announcement) |
+| `kartenschlucker` | Kartenschlucker / Card Swallower | In den Nächten 3, 6, 9 und so weiter: Der Kartenschlucker hat insgesamt {total} Stapel gesammelt. Käufe bleiben unerwähnt. | In nights 3, 6, 9 and so on: The Card Swallower has collected {total} stacks in total. Purchases stay unmentioned. |
 | `hades` | Hades / Hades | (keine zusätzliche Ansage) | (no additional announcement) |
 
 ## 4. Prüfung auf Informationsweitergabe

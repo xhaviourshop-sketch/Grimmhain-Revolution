@@ -11,6 +11,8 @@ extends RefCounted
 ##   role_list       Rollenanzeige, neutrale Personenliste (nur Namen und Bestätigungsstand, nie Rollen)
 ##   role_card       Rollenanzeige, Karte einer Person: neutrale Vorderseite oder (nach bewusster Aktion) Rolle und Kurztext
 ## Jede Ebene hat einen `CloseLayerButton` (bzw. `UncoverButton`); die Ansicht verbindet ihn.
+## Karten- und Ansageebenen (show_card, notice_card, role_card, announcement, card_face) sind `DetailPanel`s: der Text scrollt,
+## die Buttons stehen in einem festen Bereich darunter.
 
 
 ## `actions`: geheime Tagesaktionen [{action, player_id, name, seat}] als Buttons `SecretAction_*`
@@ -81,17 +83,10 @@ static func log_drawer(events: Array, seats: Array) -> Control:
 static func show_card(role_id: String, lines: Array) -> Control:
 	if lines.is_empty():
 		return null
-	var root := _full_rect("ShowLayer")
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(center)
-	var panel := PanelContainer.new()
-	panel.theme_type_variation = &"ShowPanel"
-	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
-	center.add_child(panel)
-	var column := VBoxContainer.new()
-	column.theme_type_variation = &"ScreenColumn"
-	panel.add_child(column)
+	var layer := _detail_layer("ShowLayer")
+	var root: Control = layer[0]
+	var panel: DetailPanel = layer[1]
+	var column := panel.content
 	_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"HeadingLabel")
 	for line: Dictionary in lines:
 		_label(column, CockpitText.info_key(str(line["key"])), {}, &"CaptionLabel")
@@ -101,28 +96,20 @@ static func show_card(role_id: String, lines: Array) -> Control:
 		value.format_values = {"value": shown}
 		value.text_key = "ui.cockpit.show.value"
 		column.add_child(value)
-	var close := _button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY)
-	column.add_child(close)
+	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
 	return root
 
 
 ## Hinweiskarte für die betroffene Person bzw. Gruppe (DI-04, DI-06, DI-07): nur der Kartentext mit den Werten,
 ## die die Betrachter erfahren dürfen (`CockpitView.notice_card`), nie Rollen anderer Personen.
 static func notice_card(card: Dictionary) -> Control:
-	var root := _full_rect("NoticeLayer")
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(center)
-	var panel := PanelContainer.new()
-	panel.theme_type_variation = &"ShowPanel"
-	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
-	center.add_child(panel)
-	var column := VBoxContainer.new()
-	column.theme_type_variation = &"ScreenColumn"
-	panel.add_child(column)
+	var layer := _detail_layer("NoticeLayer")
+	var root: Control = layer[0]
+	var panel: DetailPanel = layer[1]
+	var column := panel.content
 	_label(column, "ui.cockpit.notice.heading.group" if bool(card.get("group", false)) else "ui.cockpit.notice.heading", {}, &"HeadingLabel")
 	_label(column, str(card["text_key"]), CockpitText.notice_values(card.get("values", {})), &"ShowValueLabel").name = "NoticeText"
-	column.add_child(_button("CloseLayerButton", "ui.cockpit.notice.close", GrimmButton.Kind.PRIMARY))
+	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.notice.close", GrimmButton.Kind.PRIMARY))
 	return root
 
 
@@ -171,33 +158,26 @@ static func role_list(list: Dictionary) -> Control:
 ## (erst nach der bewussten Aktion gebaut) Rolle und Kurztext dieser Person, sonst nichts. Bereits bestätigte Personen
 ## können nachlesen und schließen ohne Befehl; sonst bestätigt „Gesehen“, „Ohne Bestätigung“ schließt nur.
 static func role_card(card: Dictionary, revealed: bool) -> Control:
-	var root := _full_rect("RoleCardLayer")
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(center)
-	var panel := PanelContainer.new()
-	panel.theme_type_variation = &"ShowPanel"
-	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
-	center.add_child(panel)
-	var column := VBoxContainer.new()
-	column.theme_type_variation = &"ScreenColumn"
-	panel.add_child(column)
+	var layer := _detail_layer("RoleCardLayer")
+	var root: Control = layer[0]
+	var panel: DetailPanel = layer[1]
+	var column := panel.content
 	var values := {"seat": int(card["seat"]), "name": str(card["name"])}
 	if not revealed:
 		_label(column, "ui.cockpit.roles.front.heading", values, &"HeadingLabel")
 		_label(column, "ui.cockpit.roles.front.text", values, &"MutedLabel")
-		column.add_child(_button("RevealRoleButton", "ui.cockpit.roles.reveal", GrimmButton.Kind.PRIMARY))
-		column.add_child(_button("CancelRoleButton", "ui.cockpit.roles.cancel", GrimmButton.Kind.SECONDARY))
+		panel.actions.add_child(_button("RevealRoleButton", "ui.cockpit.roles.reveal", GrimmButton.Kind.PRIMARY))
+		panel.actions.add_child(_button("CancelRoleButton", "ui.cockpit.roles.cancel", GrimmButton.Kind.SECONDARY))
 		return root
 	var role := str(card["role_id"])
 	_label(column, "ui.cockpit.roles.card.heading", values, &"HeadingLabel")
 	_label(column, "ui.cockpit.roles.role_value", {"role": CockpitText.role_name(role)}, &"ShowValueLabel").name = "RoleName"
 	_label(column, RolePresentation.short_key(StringName(role)), {}, &"MutedLabel").name = "RoleShort"
 	if bool(card.get("confirmed", false)):
-		column.add_child(_button("CloseRoleButton", "ui.cockpit.roles.close", GrimmButton.Kind.PRIMARY))
+		panel.actions.add_child(_button("CloseRoleButton", "ui.cockpit.roles.close", GrimmButton.Kind.PRIMARY))
 	else:
-		column.add_child(_button("ConfirmRoleButton", "ui.cockpit.roles.confirm", GrimmButton.Kind.PRIMARY))
-		column.add_child(_button("CloseWithoutConfirmButton", "ui.cockpit.roles.close_unconfirmed", GrimmButton.Kind.SECONDARY))
+		panel.actions.add_child(_button("ConfirmRoleButton", "ui.cockpit.roles.confirm", GrimmButton.Kind.PRIMARY))
+		panel.actions.add_child(_button("CloseWithoutConfirmButton", "ui.cockpit.roles.close_unconfirmed", GrimmButton.Kind.SECONDARY))
 	return root
 
 
@@ -206,21 +186,14 @@ static func role_card(card: Dictionary, revealed: bool) -> Control:
 static func announcement(night_number: int, public: Dictionary) -> Control:
 	if public.is_empty():
 		return null
-	var root := _full_rect("AnnouncementLayer")
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(center)
-	var panel := PanelContainer.new()
-	panel.theme_type_variation = &"ShowPanel"
-	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
-	center.add_child(panel)
-	var column := VBoxContainer.new()
-	column.theme_type_variation = &"ScreenColumn"
-	panel.add_child(column)
+	var layer := _detail_layer("AnnouncementLayer")
+	var root: Control = layer[0]
+	var panel: DetailPanel = layer[1]
+	var column := panel.content
 	_label(column, "ui.cockpit.announcement.heading", {"number": night_number}, &"HeadingLabel")
 	for line: Dictionary in CockpitText.morning_lines(public):
 		_label(column, str(line["key"]), line["values"], &"ReadAloudLabel")
-	column.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
+	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
 	return root
 
 
@@ -228,22 +201,15 @@ static func announcement(night_number: int, public: Dictionary) -> Control:
 static func card_face(card: Dictionary, owner: Dictionary) -> Control:
 	if card.is_empty():
 		return null
-	var root := _full_rect("CardLayer")
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(center)
-	var panel := PanelContainer.new()
-	panel.theme_type_variation = &"ShowPanel"
-	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
-	center.add_child(panel)
-	var column := VBoxContainer.new()
-	column.theme_type_variation = &"ScreenColumn"
-	panel.add_child(column)
+	var layer := _detail_layer("CardLayer")
+	var root: Control = layer[0]
+	var panel: DetailPanel = layer[1]
+	var column := panel.content
 	_label(column, "ui.cards.face.heading", {"name": str(owner.get("name", ""))}, &"CaptionLabel")
 	_label(column, str(card["name_key"]), {}, &"HeadingLabel").name = "CardFaceName"
 	var value := _label(column, str(card["text_key"]), {}, &"ShowValueLabel")
 	value.name = "CardFaceText"
-	column.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
+	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
 	return root
 
 
@@ -385,6 +351,17 @@ static func _drawer(node_name: String, heading_key: String) -> Control:
 		if event is InputEventMouseButton and not (event as InputEventMouseButton).pressed:
 			close.pressed.emit())
 	return root
+
+
+## Ebene mit zentriertem `DetailPanel`: [Wurzel, Panel]. Text in `panel.content`, Buttons in `panel.actions`.
+static func _detail_layer(node_name: String) -> Array:
+	var root := _full_rect(node_name)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(center)
+	var panel := DetailPanel.new()
+	center.add_child(panel)
+	return [root, panel]
 
 
 static func _full_rect(node_name: String) -> Control:

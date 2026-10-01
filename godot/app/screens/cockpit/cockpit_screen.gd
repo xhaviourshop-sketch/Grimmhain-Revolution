@@ -1,7 +1,9 @@
 class_name CockpitScreen
 extends BaseScreen
-## Spielleiter-Cockpit (02 §4.1): Phasenleiste, Sitzkreis der laufenden Partie, Ansagekarte mit
-## der nächsten Handlung und Werkzeuge (Protokoll, privater Spielleiterbereich, Sichtschutz).
+## Spielleiter-Cockpit (02 §4.1), spielbrettzentriert: Der Sitzkreis der laufenden Partie füllt fast die ganze Fläche
+## (obere Leiste mit Phase und Speicherstand, untere Leiste mit den Werkzeugen). Die Ansagekarte mit der nächsten
+## Handlung liegt in der freien Tischmitte des Sitzkreises und verdeckt keinen Platz; ihr Text scrollt, ihre Aktionen
+## stehen in einem festen Bereich. Protokoll, privater Bereich, Lexikon, Korrekturen usw. öffnen als Ebene.
 ## Liest nur Sichten der Anwendungsschicht (GameSession.cockpit_view) und sendet Befehle über deren
 ## Bausteine; eigene Zustände sind nur flüchtige Bedienzustände (Auswahl, aufgedeckte Karte).
 ##
@@ -11,8 +13,6 @@ extends BaseScreen
 ##     und erst nach „Anzeigen“; mit der nächsten Handlung sind sie wieder verdeckt.
 ##   - Rollen, Protokoll und die gezeigte Karte entstehen erst beim Öffnen als eigene Ebene und
 ##     werden beim Schließen, beim Sichtschutz und beim Verlassen der Ansicht entfernt.
-
-const GROUP_CARD_WIDTH_BREAKPOINT := 1600.0
 
 var _view: Dictionary = {}
 var _next_id: String = ""
@@ -50,10 +50,8 @@ var _role_card_person: int = -1  ## Person der offenen Rollenkarte (nur Bedienzu
 @onready var _retry_save: GrimmButton = %RetrySaveButton  ## nur nach einem Speicherfehler; ein Versuch je Tippen
 @onready var _warnings: GrimmLabel = %WarningsLabel
 @onready var _ring: GameSeatRing = %SeatRing
-@onready var _center_phase: GrimmLabel = %CenterPhaseLabel
-@onready var _center_hint: GrimmLabel = %CenterHintLabel
+@onready var _board: PanelContainer = %SeatRingArea
 @onready var _card: ActionCard = %ActionCard
-@onready var _side: Control = %SideColumn
 @onready var _overlay_host: Control = %OverlayHost
 @onready var _backdrop: Panel = %Backdrop
 @onready var _backdrop_art: TextureRect = %BackdropArt  ## Anschlussstelle für spätere Hintergrundbilder (leer)
@@ -63,8 +61,7 @@ var _backdrop_tween: Tween = null
 
 
 func _setup() -> void:
-	_update_side_width()
-	resized.connect(_update_side_width)
+	header.back_button().kind = GrimmButton.Kind.COMPACT  # schmale Kopfleiste: mehr Fläche für das Brett
 	_apply_handedness()
 	context.settings.changed.connect(_on_settings_changed)
 	context.session.view_changed.connect(_on_session_changed)
@@ -74,6 +71,8 @@ func _setup() -> void:
 	_retry_save.pressed.connect(context.autosave)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	_card.requested.connect(_on_card_requested)
+	for tool: GrimmButton in [%LogButton, %PrivateButton, %RolesButton, %GmButton, %CoverButton, %LexiconButton, %RulebookButton]:
+		tool.custom_minimum_size.x = ThemeTokens.TOOL_BUTTON_MIN_WIDTH
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
 	(%PrivateButton as GrimmButton).pressed.connect(open_layer.bind(&"private"))
 	(%RolesButton as GrimmButton).pressed.connect(open_layer.bind(&"roles"))
@@ -101,7 +100,7 @@ func handle_back() -> bool:
 
 
 func default_focus() -> Control:
-	var first := _card.find_children("*", "BaseButton", true, false)
+	var first := _card.action_buttons()  # in Bauart-Reihenfolge: Hauptaktion zuerst, unabhängig von der Bedienhand
 	return first[0] as Control if not first.is_empty() else super.default_focus()
 
 
@@ -176,6 +175,7 @@ func _update_backdrop(phase: String) -> void:
 		return
 	_backdrop_phase = group
 	_backdrop.theme_type_variation = &"NightBackdrop" if group == "night" else (&"DayBackdrop" if group == "day" else &"AppBackground")
+	_board.theme_type_variation = &"NightBoardPanel" if group == "night" else (&"DayBoardPanel" if group == "day" else &"BoardPanel")
 	if _backdrop_tween != null and _backdrop_tween.is_valid():
 		_backdrop_tween.kill()
 	if context.settings.reduced_motion or not is_inside_tree():
@@ -204,13 +204,9 @@ func _update_status(active: bool) -> void:
 			_round.text_key = ""
 		_alive.format_values = {"alive": int(_view["alive_count"]), "total": int(_view["player_count"])}
 		_alive.text_key = "ui.cockpit.alive"
-		_center_phase.text_key = "ui.phase.%s" % phase.to_lower()
-		_center_hint.text_key = ""
 	else:
 		_round.text_key = ""
 		_alive.text_key = ""
-		_center_phase.text_key = ""
-		_center_hint.text_key = "ui.cockpit.seats.placeholder"
 	var warnings: Array = _view.get("warnings", [])
 	_warnings.visible = not warnings.is_empty()
 	if not warnings.is_empty():
@@ -356,18 +352,11 @@ func _identity(next: Dictionary) -> String:
 	return str(next.get("kind"))
 
 
-func _update_side_width() -> void:
-	if _side != null:
-		_side.custom_minimum_size.x = ThemeTokens.SIDE_COLUMN_WIDE_WIDTH if size.x >= GROUP_CARD_WIDTH_BREAKPOINT else ThemeTokens.SIDE_COLUMN_WIDTH
-
-
-## Bedienseite (NQ-04): Nur die Seitenspalte (Ansagekarte und Werkzeuge) wechselt die Seite des Sitzkreises. Kinder werden
-## umgereiht, nicht neu erzeugt: Sitzkreis, Auswahl, offene Karte und Signalverbindungen bleiben unberührt.
+## Bedienhand (NQ-04): Der Sitzkreis wird nie gespiegelt (Sitzfolge und Nachbarn bleiben). Nur die Hauptaktion im festen
+## Aktionsbereich der Ansagekarte wechselt das Ende (rechts bzw. links). Buttons werden umgereiht, nicht neu erzeugt:
+## Auswahl, offene Karte und Signalverbindungen bleiben unberührt.
 func _apply_handedness() -> void:
-	var body := _side.get_parent()
-	var wanted := 0 if context.settings.left_handed else body.get_child_count() - 1
-	if _side.get_index() != wanted:
-		body.move_child(_side, wanted)
+	_card.set_left_handed(context.settings.left_handed)
 
 
 func _on_settings_changed(key: StringName) -> void:

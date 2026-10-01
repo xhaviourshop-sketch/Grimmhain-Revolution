@@ -10,18 +10,21 @@ Erreichbar: Hauptmenü → „Neue Partie“ → Setup bis „Partie starten“,
 
 | Bereich | Inhalt |
 |---|---|
-| Kopfzeile | Zurück (fragt bei laufender Partie nach, die Partie bleibt erhalten), Titel |
-| Phasenleiste | Phase, Runde und Nachtfortschritt („Nacht 2 · Schritt 3 von 7 erledigt“), Lebende; Nacht blau, Tag und Morgen warm |
-| Hinweiszeile | übersprungene Schritte, niemand lebt (ohne Rollen); außerhalb der Nacht bei jeder verdeckten Karte ein neutraler Hinweis je Phase (PE-01): „Die Spielleitung bereitet den Morgen vor.“ bzw. „… den nächsten Schritt vor.“ |
-| Sitzkreis | Plätze der Partie im Uhrzeigersinn: Platznummer, Name, „†“ für Tote, „(N)“ für heute Nominierte. Nie eine Rolle. Bei 13 bis 24 Personen kompakte Plätze (48 px hoch, 96 bis 120 px breit) |
-| Ansagekarte | nächste Handlung aus dem Regelkern: Kontext, „Sag jetzt“ (Vorlesetext), „Tu jetzt“ (Anweisung), Auswahl, Aktionen. Sie und die Werkzeugleiste bilden die **Seitenspalte** (siehe „Bedienseite“) |
-| Werkzeuge | Protokoll, Rollen (privater Bereich), Rollen zeigen (neutrale Liste, dann Karte je Person), Spielleitung (Korrekturen, Rückgängig, Partie beenden), Verbergen (Sichtschutz); ohne Partie deaktiviert. Lexikon (allgemeines Rollenlexikon, auch ohne Partie, Paket 5b). Auf der Startkarte der ersten Nacht zusätzlich „Rollen zeigen“ (optional) |
+| Kopfleiste (schmal) | Zurück (fragt bei laufender Partie nach, die Partie bleibt erhalten), Phase, Runde und Nachtfortschritt („Nacht 2 · Schritt 3 von 7 erledigt“), Lebende, Speicherstand mit „Erneut speichern“ nach einem Fehler; Nacht blau, Tag und Morgen warm |
+| Hinweiszeile | übersprungene Schritte, niemand lebt (ohne Rollen); außerhalb der Nacht bei jeder verdeckten Karte ein neutraler Hinweis je Phase (PE-01) |
+| Spielbrett | Der Sitzkreis füllt die Mitte der Ansicht: etwa 85 bis 92 Prozent der nutzbaren Fläche (geprüft in `test_cockpit_screen`), keine dauerhafte Seitenspalte. Plätze im Uhrzeigersinn: Platznummer, Name, „†“ für Tote, „(N)“ für heute Nominierte, Textzeichen „›“ für wählbare Ziele, „✓“ für die Auswahl und „•“ für handelnde Personen (nie nur Farbe). Nie eine Rolle. Bei 13 bis 24 Personen kompakte Plätze (48 px hoch, 96 bis 120 px breit). Tischfläche nachts blau, am Tag braun |
+| Ansagekarte | liegt in der freien Tischmitte des Sitzkreises und verdeckt keinen Platz: Kontext, „Sag jetzt“ (Vorlesetext), „Tu jetzt“ (Anweisung), Auswahl. Der Text scrollt (`Scroll`); alle Aktionsbuttons stehen in einem festen Bereich darunter (`Actions`) und bleiben ohne Scrollen sichtbar |
+| Werkzeugleiste (schmal, unten) | Protokoll, Rollen (privater Bereich), Rollen zeigen (neutrale Liste, dann Karte je Person), Spielleitung (Korrekturen, Rückgängig, Partie beenden), Verbergen (Sichtschutz), Lexikon, Regelbuch; ohne Partie deaktiviert. Jedes Werkzeug öffnet als Ebene über dem Brett |
 
-## Bedienseite (Rechts-/Linkshänder, NQ-04)
+## Bedienhand (Rechts-/Linkshänder, NQ-04)
 
-Die Einstellung „Bedienhand“ in den Optionen (Buttons „Rechtshändig“ / „Linkshändig“, Zeile „Aktiv: …“) wählt die Seite der **Seitenspalte**: rechts vom Sitzkreis bei rechtshändig (Standard), links bei linkshändig. Die Seitenspalte besteht aus Ansagekarte mit den Aktionsbuttons und der Werkzeugleiste (Protokoll, Privat, Rollen, Spielleitung, Sichtschutz, Lexikon, Regelbuch). Der Wechsel wirkt sofort (auch bei geöffnetem Cockpit), wird in `user://settings.json` gespeichert (`left_handed`) und gilt nach dem Neustart. Umgesetzt durch Umordnen des vorhandenen Knotens in `CockpitScreen._apply_handedness`: Sitzkreis, offene Karte, Auswahl und Signalverbindungen bleiben unberührt.
+Die Einstellung „Bedienhand“ in den Optionen (Buttons „Rechtshändig“ / „Linkshändig“, Zeile „Aktiv: …“) legt fest, an welchem Ende des festen Aktionsbereichs der Ansagekarte die Hauptaktion steht: rechts bei rechtshändig (Standard), links bei linkshändig. Der Wechsel wirkt sofort (auch bei geöffnetem Cockpit), wird in `user://settings.json` gespeichert (`left_handed`) und gilt nach dem Neustart. Umgesetzt durch Umordnen der vorhandenen Buttons in `ActionCard.set_left_handed`: Auswahl, offene Karte und Signalverbindungen bleiben unberührt.
 
-Unverändert: Sitzkreis, Personenreihenfolge und Sitznummern, Bedeutung von links und rechts bei Rollen, Ziele und Nachbarn, Texte, Symbole und Porträts (nicht gespiegelt), Spielregeln und Befehle. Ebenen (Protokoll, Rollen, gezeigte Karte, Lexikon, Regelbuch) und Dialoge liegen über dem Cockpit und bleiben mittig. Andere Ansichten haben keine Seitenspalte dieser Art. Prüfung: `test_handedness` (headless, Rechteckprüfungen; keine Tablet- und Touchabnahme).
+**Der Sitzkreis wird nie gespiegelt:** Sitzordnung, Personenreihenfolge und Nachbarn sind in beiden Modi identisch, jeder Platz liegt an derselben Stelle. Ebenfalls unverändert: Texte, Symbole und Porträts, Spielregeln und Befehle. Ebenen (Protokoll, Rollen, gezeigte Karte, Lexikon, Regelbuch) und Dialoge liegen über dem Cockpit und bleiben mittig. Prüfung: `test_handedness` (headless, Rechteckprüfungen; keine Tablet- und Touchabnahme).
+
+## Detailansichten
+
+Gezeigte Karte, Hinweiskarte, Ansagekarte, Rollenkarte und Kartenfläche sind `DetailPanel`s (`detail_panel.gd`): Überschrift und Text scrollen, wenn sie die Höhe der Ebene überschreiten; die Buttons stehen in einem festen Bereich darunter. Im Kartenfenster der Ansagekarte liegen Spielen, Aufbewahren, Tauschen, Zeigen, Überblick und Schließen im festen Aktionsbereich, auch bei dem längsten Kartentext in Deutsch und Englisch (`test_cards_ui_closing`, `test_board_layout`).
 
 ## Geheimhaltung
 
@@ -58,6 +61,7 @@ Mehrfachtippen: Jede Aktion sperrt die Karte bis zur neuen Sicht; Tippen auf ein
 | `app/session/morning_report.gd` | Morgenbericht (öffentlich/privat) und heutige öffentliche Tode |
 | `app/screens/cockpit/action_card.gd` | eine Karte für alle Handlungen, meldet Aktionen über `requested` |
 | `app/screens/cockpit/cockpit_layers.gd` | Ebenen: Rollen, Protokoll, gezeigte Karte, Ansagekarte, Morgendetails, Sichtschutz |
+| `app/screens/cockpit/detail_panel.gd` | Detailansicht: scrollender Text, feste Aktionsbuttons |
 | `app/screens/cockpit/cockpit_text.gd` | Schlüssel je Rolle und Stufe mit generischem Rückfall |
 | `app/widgets/seat_ring/` | Sitzkreis des Cockpits (Anordnung aus `SeatCircle.layout`) |
 
@@ -281,6 +285,7 @@ Die aktive Nachtkarte der Spielleitung nennt die aufgerufene Rolle; das entspric
 | `test_role_lexicon_content` | alle Katalogrollen mit allen Lexikonfeldern in DE/EN, keine unbekannten Rollen oder Felder, keine Platzhalter oder Dokumentverweise, gerendert in beiden Sprachen |
 | `test_cockpit_model` | Sicht ohne Rollen, vollständige erste Nacht über die Bausteine, Abbruch (gleicher Hash), Pflichtbegründung, gestohlene Fähigkeit |
 | `test_cockpit_screen` | Sitzkreis, Nacht über Buttons, verdeckte Reaktion, privater Bereich, Sichtschutz, gezeigte Karte, Begründungsdialog, Mehrfachtippen, Zurück, Layout 6/24 Personen bei 1024×768, 1280×800, 1920×1080 mit langen Namen, Morgenbericht mit und ohne Rollenaufdeckung |
+| `test_board_layout` | Zielwahl mit Textzeichen bei Lebenden und Toten, `DetailPanel` mit langem Text und festen Buttons, private Rollenkarte schließt zum Brett ohne Rollen, Speicherfehler mit erreichbarem „Erneut speichern“ |
 | `test_public_reaction_hint` | PE-01: unterschiedliche offene Reaktionen (Art, Besitzer, Anzahl) ergeben dieselbe neutrale Hinweiszeile, Tagestext statt Morgentext, derselbe Text bei einer Siegentscheidung ohne Reaktion, nachts keine Zeile, private Karte vollständig und bedienbar, DI-03-Ansage, Laden und Rückgängig, Label DE/EN |
 | `test_prompt_coverage` | Bedienbarkeit aller Prompt-Arten mit genau einer Antwort nach Kartendaten, eigene Texte je Kombination, Ritter und Schmied |
 | `test_target_selection` | Loki, Seelentauscher, Kutscher, Spürhund über Sitzplätze und Buttons: Regelzeile, gesperrte Teilauswahl mit Erklärung, gesperrter Button sendet nichts, vollständige Auswahl mit erwartetem Ergebnis; Höchstzahl; Auswahl verfällt bei Laden, Korrektur, Rückgängig/Wiederholen |

@@ -13,10 +13,10 @@ Alle 11 Rollen sind im Regelkern **implementiert und durch grüne headless Tests
 
 | Kennzahl | Wert |
 |---|---:|
-| im RoleCatalog vorhandene Rollen | 71 (Nachtrag Rollenaudit) |
-| davon Migrationsstatus `implemented-and-tested` | 71 |
+| im RoleCatalog vorhandene Rollen | 72 (Nachtrag Totenreichkarten und Kartenschlucker) |
+| davon Migrationsstatus `implemented-and-tested` | 72 |
 | davon `implemented-partial` | 0 |
-| Rollen mit eigener Unit-Testdatei | 69 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
+| Rollen mit eigener Unit-Testdatei | 70 (`dorfbewohner` und `werwolf` ohne eigene Datei, aber in Szenarien und fast allen Rollentests benutzt) |
 | Testrollen im Katalog | 0 (die frühere `test-sensentraeger` ist entfernt, [`../../godot/README.md`](../../godot/README.md) „Umsetzungsentscheidungen“ Nr. 13) |
 
 ## 1a. Geltungsbereich des Status (Konsolidierung 2026-09-27)
@@ -118,6 +118,7 @@ Grenze: Die Tests wurden nicht inhaltlich einzeln nachgerechnet. Die Aussage „
 | 69 | `schicksalswolf` | Schicksalswolf / Fate Wolf (Rollentext) | wolves | ja | 25 (Nacht 1 und 4) | `solo_rules.gd` (`fate_*`, Umlenkungs-Slot), `step_queue.gd`, `rules_engine.gd` (Zusatzopfer am Morgen), `kill_pipeline.gd` (erste Tote) | `test_fate_wolf.gd`, fuzz | RM-DR-109, DA-11 bis DA-15, DECISION-LOG „Rollenaudit · Rest-Wölfe und Zeitwächter“ | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 70 | `rachsuechtiger-wolf` | Rachsüchtiger Wolf / Lone Wolf (Rollentext) | wolves | ja | 22 (Nächte 3, 6, 9 …) | `solo_rules.gd` (`lone_*`), `rules_engine.gd` (Todesmarkierung), `win_rules.gd` (Alleinsieg statt Wolfssieg) | `test_lone_wolf_and_time_warden.gd`, fuzz | RM-DR-106, E-35, DA-16 bis DA-18 | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
 | 71 | `zeitwaechter` | Zeitwächter / Time Warden (Rollentext) | village | nein | 95 (im Plan zuerst) | `step_queue.gd` (Grund `frozen`), `rules_engine.gd` (`_answer_time`, Morgen) | `test_lone_wolf_and_time_warden.gd`, fuzz | RM-DR-150, RM-DR-113.2, E-36, DA-19 | `implemented-and-tested` | `automatic` | `legacy-contradictory` |
+| 72 | `kartenschlucker` | Kartenschlucker / Card Swallower (Rollentext) | solo | nein | 58 (nach dem Schutzgeist, vor der Kriegerin) | `swallower_rules.gd`, `step_queue.gd` (Schritt nur mit bezahlbarer Aktion), `card_rules.gd` (Tausch gibt Stapel), `kill_pipeline.gd` (Schild), `rules_engine.gd` (Morgen, Ansage), `win_rules.gd` (Kandidat) | `test_swallower.gd`, fuzz, UI `test_cards_ui*.gd` | DECISION-LOG „Kartenschlucker, Grundregeln“ (30.09.2026) und „Totenreichkarten und Kartenschlucker: Umsetzung (01.10.2026)“, RM-DR-143 | `implemented-and-tested` | `assisted` | `legacy-contradictory` |
 
 Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_corrupt_save.gd` (10), `test_save_versions.gd` (1), `test_gm_correction.gd` (7), `test_gm_open_prompt.gd` (8), `test_gm_execute.gd` (4), `test_win_status.gd` (5), `test_win_finalize_guard.gd` (3), `test_command_validation.gd` (6), `test_player_identity.gd` (4), `test_seeded_rng.gd` (3), `test_scenarios.gd` (1 Runner für 8 Szenarien).
 
@@ -485,6 +486,11 @@ Querschnittstests, die alle Rollen betreffen: `test_core_purity.gd` (2), `test_c
 - **Belegt umgesetzt (Rollenaudit 2026-09-28):** Einmal je Leben entscheidet er als allererster Nachtschritt (Sortierschlüssel 0) „Nacht einfrieren?“. Ja: `night_frozen`, alle weiteren Nachtschritte entfallen mit Grund `frozen` (auch Rudel, Wölfe, Einzelsieg, Witwe), am Morgen stirbt niemand aus dieser Nacht, Fenrir und Cerberus wachsen nicht, öffentliche Meldung `NightFrozen` ohne Namen; fällige Giftpranken und die Pest-Ausbreitung treten ein, die Nachtnummer zählt weiter. Nein behält die Fähigkeit.
 - **Tests:** Katalog und Position vor dem Schattenhund, Einfrieren mit Rudel, Schutzengel, Witwe und Fenrir, einmal je Leben, Verzicht, fällige Giftpranke in eingefrorener Nacht, Ladeprüfung; Fuzz mit `NightFrozen`.
 - **Grenzen:** Spielleiterkorrekturen während der eingefrorenen Nacht wirken normal.
+
+### 4.72 `kartenschlucker`
+- **Belegt umgesetzt (Totenreichkarten und Kartenschlucker, 01.10.2026):** Nur in Partien mit Totenreichkarten. Jeder zulässige Tausch einer Totenreichkarte gibt dem lebenden Träger einen Stapel (Guthaben und Gesamtzahl getrennt, je Person). Eigener Nachtschritt (Priorität 58) nur mit mindestens zwei Stapeln: genau eine Aktion, Kopfschütteln = nichts, zwei Finger = zwei Stapel für eine Tötung (Tod am Morgen, Ursache `KARTENSCHLUCKER_KILL`, Schutz und Schilde greifen), fünf Finger = fünf Stapel für einen Schild (höchstens einer je Person, bleibt bis zum Verbrauch, verhindert jeden Tod außer Spielleiterkorrekturen), zehn Finger = zehn Stapel, der Einzelsieg wird Kandidat (Spielleiterbestätigung). Zu teure Aktionen sind gesperrt. In den Nächten 3, 6, 9 … nennt der Morgen öffentlich die Gesamtzahl aller gesammelten Stapel. Stapel gehören der Person: neuer Träger beginnt bei null, Tod lässt sie bestehen.
+- **Tests:** `test_swallower.gd` (Stapel, Aktionen, Schild, Sieg, Ansage, Speichern, Replay), Rollenfuzz, Kartenoberfläche in `test_cards_ui.gd`, `test_cards_ui_games.gd`, `test_cards_ui_closing.gd`.
+- **Grenzen:** Das Stehlen der Rolle (Grabräuber) und die Scheinrolle sind ausgeschlossen; Spielleiterkorrekturen umgehen den Schild. Keine Tablet-Abnahme.
 
 ## 5. Bekannte Grenzen, die alle 11 Rollen betreffen
 

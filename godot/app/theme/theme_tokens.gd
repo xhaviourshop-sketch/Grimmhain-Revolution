@@ -33,9 +33,13 @@ const DAY_SURFACE := Color("#2a2112")        ## Cockpit am Tag und Morgen: warme
 const DAY_ACCENT := Color("#e0b060")         ## Sonnengold: Rahmen der Tagflächen
 const NIGHT_BACKDROP := Color("#0a1022")     ## Cockpit-Hintergrund in der Nacht (ruhig, blendet im Dunkeln nicht)
 const DAY_BACKDROP := Color("#16120b")       ## Cockpit-Hintergrund am Morgen und Tag
+const BOARD_NEUTRAL := Color("#10131c")      ## Spielbrett ohne Tageszeit (Spielende, keine Partie)
+const BOARD_NIGHT := Color("#0e1530")        ## Spielbrett in der Nacht: tiefes Blau, heller als der Hintergrund
+const BOARD_DAY := Color("#1c160d")          ## Spielbrett am Morgen und Tag: dunkles Dämmerbraun
 
 # --- Abstände, Radien, Rahmen --------------------------------------------------------------------
 const SPACE_XS := 4
+const BAR_GAP := 2                    ## Cockpit: Abstand zwischen Leisten und Brett sowie Innenrand der Leisten
 const SPACE_S := 8
 const SPACE_M := 16
 const SPACE_L := 24
@@ -66,8 +70,7 @@ const SAFE_MARGIN := 16               ## Mindestrand zum Displayrand zusätzlich
 const SCREEN_PADDING := 24            ## Innenrand jeder Ansicht
 const MENU_COLUMN_WIDTH := 480        ## Breite der Menüspalte (wächst auf breiten Fenstern nicht)
 const CONTENT_MAX_WIDTH := 880        ## Textkarten auf breiten Fenstern
-const SIDE_COLUMN_WIDTH := 360        ## Cockpit: Ansagekarte und Aktionen
-const SIDE_COLUMN_WIDE_WIDTH := 440   ## Cockpit ab 1600 px Fensterbreite
+const TOOL_BUTTON_MIN_WIDTH := 96     ## Cockpit: Werkzeugleiste, auch kurze Beschriftungen („Log“) bleiben gut antippbar
 const DRAWER_WIDTH := 520             ## Cockpit: Schublade für Protokoll und Spielleiterbereich
 const SETUP_SIDE_WIDTH := 360        ## Spieler-Setup: Spalte für Eingabe, Import, Bearbeiten
 const INPUT_HEIGHT := 56              ## Texteingabefelder

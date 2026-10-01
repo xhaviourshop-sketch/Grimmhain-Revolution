@@ -342,8 +342,9 @@ func test_exchange_by_buttons_plays_the_replacement_at_once_and_moves_on() -> vo
 	assert_true(find_node(current_screen(shell), "CardExchangeButton") != null, "zweite Person darf tauschen")
 
 
-## Rechts- und Linkshänder, DE und EN: Die Kartenaktionen liegen im Fenster, überdecken den Sitzkreis nicht, und die Seitenspalte
-## wechselt mit der Bedienhand die Seite des Sitzkreises (Texte, Reihenfolge und Spielzustand bleiben gleich).
+## Rechts- und Linkshänder, DE und EN: Alle Kartenaktionen stehen im festen Aktionsbereich der Karte in der Tischmitte
+## (ohne Scrollen sichtbar, nicht im scrollenden Text), überdecken keinen Platz, und nur die Hauptaktion wechselt mit der Bedienhand
+## das Ende (Texte, Reihenfolge und Spielzustand bleiben gleich).
 func test_card_window_fits_for_both_hands_and_languages() -> void:
 	for lang: String in ["de", "en"]:
 		var side_x := {}
@@ -355,28 +356,20 @@ func test_card_window_fits_for_both_hands_and_languages() -> void:
 			await _to_day(shell)
 			await _tap(shell, "RevealButton")
 			var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
-			var ring := rect_of(find_node(current_screen(shell), "SeatRing") as Control)
+			var card := rect_of(find_node(current_screen(shell), "InstructionCard") as Control)
+			var scroll := find_node(current_screen(shell), "Scroll") as ScrollContainer
+			var seats: Array = find_node(current_screen(shell), "SeatRing").call("tokens")
 			for node_name: String in ["CardPlayButton", "CardKeepButton", "CardShowButton", "CardOverviewButton", "CardCloseWindowButton"]:
 				var b := find_button(current_screen(shell), node_name)
 				assert_true(b != null, "%s/%s: %s vorhanden" % [lang, left, node_name])
 				if b == null:
 					continue
-				# Spielen und Aufbewahren müssen durch Scrollen der Ansagekarte vollständig in deren sichtbaren Teil und ins Fenster
-				# kommen (die Rohlage vor dem Scrollen hängt von der Höhe der Ansagekarte ab); seltene Aktionen liegen in der scrollbaren Karte.
-				if node_name in ["CardPlayButton", "CardKeepButton"]:
-					var scroll := find_node(current_screen(shell), "Scroll") as ScrollContainer
-					scroll.ensure_control_visible(b)
-					await frames(2)
-					var r := rect_of(b)
-					assert_true(inside(r, viewport) and inside(r, rect_of(scroll)), "%s/%s: %s erreichbar (%s)" % [lang, left, node_name, str(r)])
-				else:
-					var scroller := b.get_parent()
-					while scroller != null and not scroller is ScrollContainer:
-						scroller = scroller.get_parent()
-					assert_true(scroller != null, "%s/%s: %s liegt in der scrollbaren Ansagekarte" % [lang, left, node_name])
 				var r := rect_of(b)
-				assert_false(r.intersects(ring.grow(-2.0)), "%s/%s: %s überdeckt den Sitzkreis nicht" % [lang, left, node_name])
+				assert_false(scroll.is_ancestor_of(b), "%s/%s: %s steht außerhalb des scrollenden Textes" % [lang, left, node_name])
+				assert_true(inside(r, viewport) and inside(r, card), "%s/%s: %s ohne Scrollen sichtbar (%s)" % [lang, left, node_name, str(r)])
+				for t: Variant in seats:
+					assert_false(r.intersects(rect_of(t as Control).grow(-1.0)), "%s/%s: %s überdeckt keinen Platz" % [lang, left, node_name])
 				assert_true(r.size.y >= 44.0, "%s/%s: %s mindestens 44 hoch" % [lang, left, node_name])
 			side_x[left] = rect_of(find_button(current_screen(shell), "CardPlayButton")).get_center().x
 			assert_true(str(_next(shell)["kind"]) == "card_window", "%s/%s: Zustand unverändert (Fenster offen)" % [lang, left])
-		assert_ne(side_x[true] < tree.root.size.x / 2.0, side_x[false] < tree.root.size.x / 2.0, "%s: die Seitenspalte wechselt die Seite" % lang)
+		assert_true(side_x[true] < side_x[false], "%s: die Hauptaktion liegt für Linkshänder weiter links" % lang)
