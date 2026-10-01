@@ -1,6 +1,6 @@
 # Manueller PC-Test · PR #3 (geführte Partie im Cockpit)
 
-Stand: 29.09.2026 (mit den Entscheidungen DI-01 bis DI-08, Teile I bis L) · Branch `feature/night-ui-expansion` · Godot 4.7.2
+Stand: 01.10.2026 (mit den Entscheidungen DI-01 bis DI-08, Teile I bis L, Teil M für Totenreichkarten) · Branch `feature/night-ui-expansion` · Godot 4.7.2
 
 **Das ist ein Windows-Fenstertest mit Maus und Tastatur. Er ist keine Tablet-, Touch- oder Endgeräte-Abnahme.** Godot-Kenntnisse sind nicht nötig. Dauer etwa 30 Minuten. Abweichungen trägst du in die Fehlerliste ein: [pc-test-pr3-fehlerliste.md](pc-test-pr3-fehlerliste.md).
 
@@ -124,6 +124,16 @@ Diese Teile prüfen die Entscheidungen vom 29.09.2026 (DI-01 bis DI-08, `docs/co
 
 - **L1** Rattenfänger: Neue Partie mit den Rollen A Werwolf, B Rattenfänger, C bis F Dorfbewohner, G Doppelspion. Nacht 1: Werwölfe: F (6) wählen und bestätigen, Rattenfänger „Schritt beginnen“, C (3) und D (4) anklicken, „Auswahl bestätigen“. Erwartet: Karte „Privater Hinweis“ für die neu Verzauberten („Ihr seid verzaubert …“, ohne Namen). Tun: zeigen, „Gezeigt“. Erwartet: zweite Karte „Alle Verzauberten: 3 · C, 4 · D. Ihr erkennt einander.“ Tun: zeigen, „Gezeigt“.
 - **L2** Pestbringerin: Neue Partie mit den Rollen A Werwolf, B Pestbringerin, C bis G Dorfbewohner, H Doppelspion (8 Personen, Namen A bis H). Nacht 1: Werwölfe: G (7) wählen und bestätigen, Pestbringerin „Schritt beginnen“, E (5) anklicken, „Auswahl bestätigen“. Erwartet: Karte „Privater Hinweis“ für 5 · E („Du bist infiziert …“). Tun: zeigen, „Gezeigt“, „Nacht abschließen“. Erwartet am Morgen: Karte „Privater Hinweis“ für die neu Angesteckte, im Tagesmodus zuerst verdeckt („Anzeigen“ drücken), Text nennt keinen Namen.
+
+## M · Totenreichkarten und Kartenschlucker (neu, Stand 01.10.2026)
+
+Starter und Worktree wie oben: `PC-Test-starten.cmd` im Ordner `C:\Users\Marku\Desktop\Grimmhain\grimmhain-night-ui` (Branch `feature/night-ui-expansion`, PR #3). Die Kartenregeln sind headless geprüft (`docs/development/HANDOVER-TOTENKARTEN.md`); hier prüfst du die Bedienung am Fenster. Welche Karte gezogen wird, hängt vom Zufall der Partie ab, es gibt keine feste Kartenfolge.
+
+- **M1** Aktivieren: „Neue Partie“, Namen übernehmen (mindestens 6 Personen), „Weiter zu den Rollen“. Rechts den Schalter „Totenreichkarten“ einschalten. Erst dann erscheint die Rolle „Kartenschlucker“ und lässt sich mit „+“ wählen. Ohne den Schalter gibt es weder Karten noch Kartenschlucker. Danach wie in A bis „Partie starten“.
+- **M2** Karte spielen: Wer stirbt, zieht automatisch eine Karte. Nach dem Morgenbericht und „Weiter zum Tag“ öffnet sich je tote Person ein Kartenfenster, zuerst verdeckt. Tun: „Anzeigen“, Kartentext vorlesen, dann „Karte spielen“ oder „Aufbewahren“. Braucht die Karte eine Person, im Sitzkreis antippen und „Auswahl bestätigen“. „Fenster schließen“ behält alle Karten. Aufbewahrte Karten kommen am Tagesende in einem zweiten Fenster wieder, wenn sie dann spielbar sind.
+- **M3** Karte tauschen: nur mit lebendem Kartenschlucker im Spiel. Tun: im Kartenfenster nach „Anzeigen“ „Gegen Ersatzkarte tauschen“. Erwartet: Die Ersatzkarte wird sofort gespielt (Eingaben wie in M2), der Kartenschlucker bekommt einen Stapel, die Ersatzkarte lässt sich nicht noch einmal tauschen.
+- **M4** Kartenschlucker in der Nacht: Sein Schritt kommt erst mit mindestens 2 verfügbaren Stapeln. Handzeichen „Zwei Finger: Tötung (2 Stapel)“, „Fünf Finger: Schild (5 Stapel)“, „Zehn Finger: Sieg (10 Stapel)“ oder „Kopfschütteln: nichts tun“, eine Aktion je Nacht. Das Guthaben steht nur in der Spielleiterkarte; öffentlich wird in den Nächten 3, 6 und 9 nur die Gesamtzahl genannt. Stapel entstehen nur durch Tauschen; zehn gesammelte Stapel bringen allein keinen Sieg.
+- **M5** Speichern und fortsetzen: Es wird nach jedem Schritt automatisch gespeichert („Gespeichert“ oben). Zum Test mitten in einer mehrstufigen Kartenaktion (nach der ersten Eingabe) das Fenster mit „X“ schließen, `PC-Test-starten.cmd` erneut starten, „Partie fortsetzen“, „Fortsetzen“. Erwartet: dieselbe offene Eingabe, bei Würfelkarten kein neuer Wurf. Erscheint „Fehler: nicht gespeichert“, bleibt alles bedienbar; „Erneut speichern“ versucht es nochmals.
 
 ## Godot vollständig beenden
 
