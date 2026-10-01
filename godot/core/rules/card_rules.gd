@@ -645,7 +645,7 @@ static func after_command(ctx: RuleContext, c: Command, prompt_actor: int, promp
 		return
 	var p := c.payload
 	if c.type == Command.ANSWER_PROMPT and prompt_actor != -1 and (s.pending_prompt == null or s.pending_prompt.id != prompt_id):
-		var substantive: bool = not DictRead.get_array(p, "targets").is_empty() or p.get("choice") == true or p.has("option") or p.has("prediction")
+		var substantive: bool = not DictRead.get_array(p, "targets").is_empty() or (p.get("choice") is bool and bool(p["choice"])) or p.has("option") or p.has("prediction")
 		if substantive and prompt_owner != PendingPrompt.OWNER_CARD and prompt_owner != PendingPrompt.OWNER_SWALLOWER:
 			CardFxReturn.half_used(ctx, prompt_actor)
 	elif c.type == Command.NAME_WOLF or c.type == Command.AMALIA_SACRIFICE:

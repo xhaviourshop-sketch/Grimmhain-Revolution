@@ -114,10 +114,10 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 			if not p.get("choice") is bool:
 				return &"invalid_answer"
 		STAGE_ROLL:
-			if p.get("roll") != true:
+			if not p.get("roll") is bool or not bool(p["roll"]):
 				return &"invalid_answer"
 		STAGE_CONFIRM:
-			if p.get("choice") != true:
+			if not p.get("choice") is bool or not bool(p["choice"]):
 				return &"invalid_answer"
 	return &""
 
