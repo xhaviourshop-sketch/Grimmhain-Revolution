@@ -63,3 +63,16 @@ Vorhandene `writing-plans`/`executing-plans` nur für tatsächlich komplexe Plan
 - Kein Commit, Push, Merge oder Kauf ohne Auftrag. Cloud-Branches nicht automatisch integrieren. Drei Claude-Berichte gegen tatsächliche Commitstände abgleichen.
 - Abschluss: Ergebnis, Branch/HEAD, Dateien, Prüfungen mit Exit-Code, echte offene Punkte, nächster Schritt. Details bei Fehlern, Regelentscheidungen oder ausdrücklichem Wunsch.
 - Ausführliche Setup-Hinweise: `docs/development/CLAUDE-STACK.md`, nur bei Bedarf lesen.
+
+## Testregeln (verbindlich, Markus 01.10.2026)
+1. Während der Arbeit nur die Tests der direkt geänderten Dateien ausführen. Nie die komplette Suite zwischendurch.
+2. Komplette Suite höchstens einmal pro Auftrag, ganz am Ende, und nur wenn Regelkern (`core/`), Speichern/Laden oder Befehle geändert wurden. Bei reiner Oberflächen- oder Grafikarbeit: keine komplette Suite.
+3. Der Fuzz-Test (`test_role_interaction_fuzz`) läuft nur bei Änderungen am Regelkern oder vor einem Merge nach main.
+4. Keine neuen Tests für Positionen, Abstände oder Aussehen. Das wird per Screenshot geprüft.
+5. Neue Tests nur für echte Logik, die still kaputtgehen kann (Speichern, Geheimhaltung, Regeln). Höchstens ein kleiner Test pro neuer Funktion, außer Markus verlangt mehr.
+6. Lange Testläufe im Hintergrund starten und einmal auf das Ende warten. Kein wiederholtes Nachschauen oder Neu-Starten von Wartebefehlen.
+7. Im Bericht immer angeben: welche Tests liefen und warum.
+- Weiter gültig: Bekannte Fehler nicht ignorieren und Tests nie abschwächen, um Läufe zu sparen. Unveränderten grünen Stand nicht nachtesten, nur weil CI ebenfalls läuft; erforderliche CI bleibt aktiv. Nach ausreichender Prüfung abschließen, keine weitere Audit-Runde. Diese Regeln auch in künftige Arbeits- und Übergabeprompts übernehmen; ältere pauschale Testvorgaben (z. B. DE/EN-, Auflösungs- oder Fuzz-Matrizen) sind dadurch eingegrenzt.
+
+## Ausgabedateien: Nutzerentscheidung vom 01.10.2026
+- Roadmaps, Berichte, Bilder, Archive und andere zur Übergabe erzeugte Dateien standardmäßig unter C:/Users/Marku/Downloads/ ablegen, bei mehreren zusammengehörigen Dateien in einem verständlich benannten Unterordner. Im Abschluss direkt auf die Datei in Downloads verlinken. Projektcode und notwendige versionierte Projektdateien bleiben im jeweiligen Repository; bei gewünschten Übergabedokumenten eine Kopie in Downloads bereitstellen. Bestehende Downloads nicht ungefragt überschreiben.
