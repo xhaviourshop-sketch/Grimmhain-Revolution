@@ -337,12 +337,16 @@ func _card_answer(s: GameState, p: PendingPrompt) -> Command:
 	match p.stage:
 		CardSteps.STAGE_PICK:
 			var n := _rng.randi_range(p.min_count, p.max_count)
-			var pool: Array = p.allowed_ids.duplicate()
 			var picks: Array = []
-			while picks.size() < n and not pool.is_empty():
-				var t: int = _pick(pool)
-				pool.erase(t)
-				picks.append(t)
+			for attempt: int in 25:  # manche Auswahlen verlangen eine Mischung (Puppenspieler: jede Fraktion)
+				var pool: Array = p.allowed_ids.duplicate()
+				picks = []
+				while picks.size() < n and not pool.is_empty():
+					var t: int = _pick(pool)
+					pool.erase(t)
+					picks.append(t)
+				if CardEffects.check_pick(s, spec, picks):
+					break
 			return Command.answer_stage_targets(p.id, String(p.stage), picks)
 		CardSteps.STAGE_OPTION:
 			return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "option": _rng.randi_range(0, DictRead.get_array(spec, "options").size() - 1)})

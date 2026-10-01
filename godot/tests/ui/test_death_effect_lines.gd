@@ -8,7 +8,7 @@ const UiGame := preload("res://tests/ui/ui_game.gd")
 const W := "werwolf"
 const D := "dorfbewohner"
 const EFFECT_ENTRY_KEYS := ["effect", "replaced", "role_id", "source", "source_id", "targets"]
-const PUBLIC_KEYS := ["deaths", "effects", "notices", "reveal_roles", "revived"]
+const PUBLIC_KEYS := ["cards", "deaths", "effects", "notices", "reveal_roles", "revived"]
 const EFFECTS := ["reaper_curse", "knight_strike", "possessed_drag", "coachman_crash", "sage_curse", "heartbreak", "red_chain", "shadow_link"]
 
 
