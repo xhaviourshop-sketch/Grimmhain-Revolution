@@ -24,7 +24,7 @@ const PROTECTIVE_ROLES: Array[StringName] = [RoleCatalog.SCHUTZENGEL, RoleCatalo
 
 
 static func playable(s: GameState, rec: Dictionary, _window: StringName) -> bool:
-	var variant := StringName(rec["variant"])
+	var variant := _side(s, rec)
 	match StringName(rec["card"]):
 		&"fluch_01":
 			return not _members(s, variant).is_empty()
@@ -44,7 +44,7 @@ static func playable(s: GameState, rec: Dictionary, _window: StringName) -> bool
 
 
 static func next_stage(s: GameState, rec: Dictionary, _window: StringName, got: Dictionary) -> Dictionary:
-	var variant := StringName(rec["variant"])
+	var variant := _side(s, rec)
 	match StringName(rec["card"]):
 		&"segen_12":
 			if not got.has("target_id"):
@@ -76,7 +76,7 @@ static func next_stage(s: GameState, rec: Dictionary, _window: StringName, got: 
 
 static func apply(ctx: RuleContext, rec: Dictionary, _window: StringName, got: Dictionary) -> void:
 	var s := ctx.state
-	var variant := StringName(rec["variant"])
+	var variant := _side(s, rec)
 	var n := CardEffects.next_night(s)
 	var now := CardEffects.now_key(s)
 	var night_from := CardEffects.night_key(n)
@@ -130,6 +130,12 @@ static func apply(ctx: RuleContext, rec: Dictionary, _window: StringName, got: D
 
 
 # --- Bausteine -----------------------------------------------------------------------------------------------------
+
+## Fraktionsseite der Karte: neutrale Karten (Variante `neutral`) wirken auf die Seite der Besitzerin.
+static func _side(s: GameState, rec: Dictionary) -> StringName:
+	var variant := StringName(rec["variant"])
+	return CardCatalog.owner_variant(s.players[int(rec["owner"])]) if variant == CardCatalog.NEUTRAL else variant
+
 
 static func _members(s: GameState, variant: StringName) -> Array[int]:
 	return CardEffects.living_of_variant(s, CardCatalog.WOLF if variant == CardCatalog.WOLF else CardCatalog.DORF)

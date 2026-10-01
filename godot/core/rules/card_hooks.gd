@@ -330,8 +330,9 @@ static func first_block_index(s: GameState, leader: String) -> int:
 	var faction := Faction.VILLAGE if leader == "village" else Faction.WOLVES
 	for j: int in s.night_plan.size():
 		var actor := StepQueue.step_actor(s.night_plan[j])
-		if actor == -1 or s.night_step_status[j] != StepQueue.STATUS_PENDING:
+		if actor == -1:
 			continue
+		# Ein bereits ausgeführter oder durch die Karte gestrichener erster Schritt bleibt der blockierte; der nächste rückt nicht nach.
 		if s.players[actor].faction == faction and StepQueue.core_drop_reason(s, j) == &"":
 			return j
 	return -1
