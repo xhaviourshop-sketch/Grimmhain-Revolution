@@ -189,6 +189,21 @@ func find_button(root: Node, node_name: String) -> BaseButton:
 	return node as BaseButton
 
 
+## Werkzeuge im Optionenmenü des Cockpits (Privat, Rollen zeigen, Spielleitung, Lexikon, Regelbuch): Wie die Spielleitung öffnet die
+## Hilfe zuerst die Lasche „Optionen“, falls der Knopf im geschlossenen Menü liegt. Ergebnis: Knopf oder null.
+func tool_button(screen: Node, node_name: String) -> BaseButton:
+	var b := screen.find_child(node_name, true, false) as BaseButton
+	if b == null:
+		return null
+	var menu := screen.find_child("ToolsMenu", true, false) as Control
+	if menu != null and menu.is_ancestor_of(b) and not menu.visible:
+		var options := screen.find_child("OptionsButton", true, false) as BaseButton
+		if options != null and not options.disabled:
+			options.pressed.emit()
+			await frames(2)
+	return b
+
+
 ## Löst die Aktion eines Buttons so aus, wie Maus und Touch es tun (Signal `pressed`).
 func press(button: BaseButton) -> void:
 	if button == null:
@@ -315,6 +330,35 @@ func _po_string(quoted: String) -> String:
 
 
 ## Rechteck eines Controls in Viewport-Koordinaten.
+## Sichtbare und antippbare Teile eines Porträtplatzes (Porträtkreis samt Nummer, Namensschild) in globalen Koordinaten. Die
+## Steuerelemente der Plätze liegen auf einer Ellipse und überlappen diagonal, ihre Teile nicht (P3, GameSeatToken).
+func seat_parts(token: Control) -> Array[Rect2]:
+	var portrait: Rect2 = token.call("portrait_rect")
+	var plate: Rect2 = token.call("plate_rect")
+	var origin := token.get_global_position()
+	return [Rect2(origin + portrait.position, portrait.size), Rect2(origin + plate.position, plate.size)]
+
+
+## Berührt ein Rechteck einen Platz (rundes Porträt oder Namensschild)? Das Porträtquadrat selbst zählt nicht: Es überlappt diagonal.
+func seat_hits_rect(token: Control, rect: Rect2) -> bool:
+	if not rect.has_area():
+		return false
+	var parts := seat_parts(token)
+	var portrait := parts[0]
+	var center := portrait.get_center()
+	var nearest := Vector2(clampf(center.x, rect.position.x, rect.end.x), clampf(center.y, rect.position.y, rect.end.y))
+	return center.distance_to(nearest) < portrait.size.x * 0.5 - 0.5 or overlaps(parts[1], rect)
+
+
+## Überlappen sich zwei Plätze (Porträtkreise, Namensschilder)?
+func seats_overlap(a: Control, b: Control) -> bool:
+	var pa := seat_parts(a)
+	var pb := seat_parts(b)
+	if pa[0].get_center().distance_to(pb[0].get_center()) < pa[0].size.x - 0.5:
+		return true
+	return seat_hits_rect(a, pb[1]) or seat_hits_rect(b, pa[1])
+
+
 func rect_of(c: Control) -> Rect2:
 	return c.get_global_rect()
 

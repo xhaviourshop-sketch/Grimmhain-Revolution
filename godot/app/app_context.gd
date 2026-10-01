@@ -14,6 +14,8 @@ var history: HistoryStore  ## Abschlussberichte beendeter Partien; ohne Pfad nur
 var exports_dir: String = ReportExport.DEFAULT_DIR  ## Zielordner der Textexporte
 var history_focus: String = ""  ## Partie-ID, die die Historienansicht beim nächsten Öffnen zeigt (aus dem Cockpit)
 var settings_store: SettingsStore = null  ## null = Einstellungen nur im Speicher (Tests, Screenshot-Werkzeug)
+var timer: DisplayTimer  ## Anzeige-Timer der laufenden Partie (reine Anzeige, Zahlen im Block `ui` der Speicherdatei)
+var _timer_round: String = ""  ## Partie, zu der der Timer gehört; ein Wechsel setzt ihn zurück
 
 
 func _init(p_settings: AppSettings = null, p_session: GameSession = null) -> void:
@@ -23,6 +25,7 @@ func _init(p_settings: AppSettings = null, p_session: GameSession = null) -> voi
 	saves = SaveService.new()
 	groups = GroupStore.new()
 	history = HistoryStore.new()
+	timer = DisplayTimer.new()
 	session.events_applied.connect(_on_events_applied)
 	session.state_replaced.connect(autosave)
 	session.view_changed.connect(_on_view_changed)
@@ -50,7 +53,16 @@ func _on_settings_changed(_key: StringName) -> void:
 
 ## Methode statt Lambda: Ein Lambda, das `self` hält, verbände AppContext und Sitzung zu einem Referenzkreis (nie freigegeben).
 func _on_view_changed(_view: Dictionary) -> void:
+	_sync_timer_round()
 	sync_history()
+
+
+## Eine andere Partie (neue oder geladene) beginnt mit leerem Timer; `resume` setzt danach den gespeicherten Stand ein.
+func _sync_timer_round() -> void:
+	var id := session.round_id()
+	if id != _timer_round:
+		_timer_round = id
+		timer.clear()
 
 
 func _on_events_applied(_events: Array[GameEvent]) -> void:
@@ -61,7 +73,7 @@ func _on_events_applied(_events: Array[GameEvent]) -> void:
 func autosave() -> Dictionary:
 	if session.round_id() == "":
 		return {}
-	return saves.save(session.round_id(), session.save_text(), session.summary())
+	return saves.save(session.round_id(), session.save_text(), session.summary(), timer.to_dict())
 
 
 ## Hält die Partiehistorie zur aktiven Partie aktuell: Ein bestätigter Sieg speichert den Abschlussbericht (idempotent über die
@@ -87,4 +99,7 @@ func resume(round_id: String) -> Dictionary:
 	var error := session.load_text(str(loaded["core"]))
 	if error != &"":
 		return {"ok": false, "error": String(error)}
+	_timer_round = session.round_id()
+	if not timer.from_dict(loaded.get("ui", {}) as Dictionary):
+		timer.clear()  # ungültiger Block: Timer leer, die Partie bleibt unberührt
 	return loaded

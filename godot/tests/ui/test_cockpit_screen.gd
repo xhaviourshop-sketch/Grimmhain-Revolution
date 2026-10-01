@@ -332,19 +332,23 @@ func _check_layout(shell: Control, count: int, label: String) -> void:
 	assert_eq(tokens.size(), count, "%s: alle Plätze" % label)
 	for i: int in tokens.size():
 		var a := tokens[i] as Control
-		assert_true(inside(rect_of(a), rect_of(area)), "%s: Platz %d im Sitzbereich" % [label, i + 1])
-		assert_true(a.size.y >= ThemeTokens.TOUCH_MIN and a.size.x >= 96.0, "%s: Platz %d Touch-Größe und lesbare Breite %s" % [label, i + 1, a.size])
+		var parts_a := seat_parts(a)
+		for part: Rect2 in parts_a:
+			assert_true(inside(part, rect_of(area)), "%s: Platz %d im Sitzbereich" % [label, i + 1])
+		# Porträt mindestens 56 px (Ziel 66), Tippfläche mindestens 48 px (Nachtbrett P3).
+		assert_true(float(a.get("diameter")) >= 56.0 and parts_a[0].size.x >= float(ThemeTokens.TOUCH_MIN), "%s: Platz %d Porträtgröße %s" % [label, i + 1, str(parts_a[0].size)])
 		for j: int in range(i + 1, tokens.size()):
-			assert_false(overlaps(rect_of(a), rect_of(tokens[j] as Control)), "%s: Plätze %d und %d überlappen" % [label, i + 1, j + 1])
+			assert_false(seats_overlap(a, tokens[j] as Control), "%s: Plätze %d und %d überlappen" % [label, i + 1, j + 1])
 	var card := find_node(screen, "InstructionCard") as Control
 	assert_true(inside(rect_of(card), rect_of(area)), "%s: Karte liegt in der Tischmitte des Bretts" % label)
 	for t: Variant in tokens:
-		assert_false(overlaps(rect_of(card), rect_of(t as Control)), "%s: Karte überdeckt keinen Platz" % label)
+		assert_false(seat_hits_rect(t as Control, rect_of(card)), "%s: Karte überdeckt keinen Platz" % label)
 	assert_true(inside(rect_of(card), Rect2(Vector2.ZERO, tree.root.get_visible_rect().size)), "%s: Karte im Fenster" % label)
-	# Das Spielbrett ist die Hauptansicht: etwa 85 bis 90 Prozent der nutzbaren (sicheren) Fläche, keine Seitenspalte.
+	# Das Spielbrett ist die Hauptansicht: Der Dorfplatz füllt das ganze Fenster (mindestens 85 Prozent der nutzbaren Fläche, P3),
+	# Leisten, Laschen und Dock liegen darüber, es gibt keine dauerhafte Seitenspalte.
 	var usable := rect_of(screen)
 	var share := area.size.x * area.size.y / (usable.size.x * usable.size.y)
-	assert_true(share >= 0.85 and share <= 0.92, "%s: Brett belegt %.1f Prozent der nutzbaren Fläche" % [label, share * 100.0])
+	assert_true(share >= 0.85, "%s: Brett belegt %.1f Prozent der nutzbaren Fläche" % [label, share * 100.0])
 	assert_true(find_node(screen, "SideColumn") == null, "%s: keine dauerhafte Seitenspalte" % label)
 
 

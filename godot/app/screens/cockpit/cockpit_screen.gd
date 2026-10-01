@@ -1,18 +1,38 @@
 class_name CockpitScreen
 extends BaseScreen
-## Spielleiter-Cockpit (02 §4.1), spielbrettzentriert: Der Sitzkreis der laufenden Partie füllt fast die ganze Fläche
-## (obere Leiste mit Phase und Speicherstand, untere Leiste mit den Werkzeugen). Die Ansagekarte mit der nächsten
-## Handlung liegt in der freien Tischmitte des Sitzkreises und verdeckt keinen Platz; ihr Text scrollt, ihre Aktionen
-## stehen in einem festen Bereich. Protokoll, privater Bereich, Lexikon, Korrekturen usw. öffnen als Ebene.
-## Liest nur Sichten der Anwendungsschicht (GameSession.cockpit_view) und sendet Befehle über deren
-## Bausteine; eigene Zustände sind nur flüchtige Bedienzustände (Auswahl, aufgedeckte Karte).
+## Spielleiter-Cockpit (02 §4.1), spielbrettzentriert, als Nachtbrett (P3): Der Dorfplatz füllt das ganze Fenster, die Porträtplätze
+## der laufenden Partie liegen auf einer Ellipse, in der freien Tischmitte steht die Aktionskarte (Rollenbild, Anweisung, Zielwahl;
+## ihr Text scrollt, ihre Nebenaktionen stehen im festen Bereich, die Hauptaktion unten rechts als „Nächster Schritt“). Oben die
+## Nachtreihenfolge-Leiste, links die Protokoll-Lasche, rechts die Optionen-Lasche (Werkzeuge, Timer), unten links Phase und
+## Anzeige-Timer. Protokoll, privater Bereich, Lexikon, Korrekturen usw. öffnen als Ebene.
+## Liest nur Sichten der Anwendungsschicht (GameSession.cockpit_view, board_marks, night_order) und sendet Befehle über deren
+## Bausteine; eigene Zustände sind nur flüchtige Bedienzustände (Auswahl, aufgedeckte Karte, Verbergen, Menü).
 ##
 ## Geheimhaltung:
-##   - Sitzkreis und Phasenleiste zeigen nie Rollen.
+##   - Sitzkreis und Phasenanzeige zeigen nie Rollen. Zustandsabzeichen, Statusringe, handelnde Person, Nachtleiste und Rollenbild
+##     der Karte sind für die Spielleitung gedacht und verschwinden mit „Verbergen“ (nur Namen, Porträts, tot oder lebendig).
 ##   - Geheime Karten (Schritte, Prompts, Siegkandidaten) erscheinen außerhalb der Nacht verdeckt
 ##     und erst nach „Anzeigen“; mit der nächsten Handlung sind sie wieder verdeckt.
 ##   - Rollen, Protokoll und die gezeigte Karte entstehen erst beim Öffnen als eigene Ebene und
 ##     werden beim Schließen, beim Sichtschutz und beim Verlassen der Ansicht entfernt.
+
+const BAR_SIDE := 128.0         ## Abstand der Nachtleiste zum Fensterrand (Laschen und Eckinfo daneben)
+const BAR_MAX_WIDTH := 840.0
+const TOP_MARGIN := 6.0
+const RING_SIDE := 58.0         ## Randabstand des Sitzkreises (Platz für Laschen)
+const BOTTOM_MARGIN := 68.0     ## unter dem Sitzkreis liegt das Dock (Rückgängig, Nächster Schritt) und die Phasen-Kartusche
+const DOCK_MARGIN := 8.0
+const TAB_WIDTH := 52.0
+const TAB_MAX_HEIGHT := 320.0
+const WIDE_ASPECT := 1.5        ## ab diesem Seitenverhältnis (16:10) ist die Leiste voll sichtbar, darunter (4:3) eingeklappt
+const MENU_WIDTH := 300.0
+const PLATE_MARGIN := 12.0
+const PLATE_TEXTURE_MARGIN := Vector2(18.0, 14.0)
+const UNDO_TEXTURE_MARGIN := 28.0
+const NEXT_BUTTON_SIZE := Vector2(200.0, 56.0)
+const DOCK_UNDO_SIZE := Vector2(112.0, 48.0)
+const CORNER_WIDTH := 176.0
+const PLATE_SIZE := Vector2(200.0, 52.0)
 
 var _view: Dictionary = {}
 var _next_id: String = ""
@@ -22,6 +42,8 @@ var _revealed_id: String = ""
 var _prediction := {"kind": "night", "number": 0}
 var _error_key: String = ""
 var _covered: bool = false
+var _hidden: bool = false  ## „Verbergen“: nur Namen, Porträts, tot oder lebendig (nur Bedienzustand, nie gespeichert)
+var _bar_expanded: bool = false  ## Nachtleiste auf 4:3 ausgeklappt (Überlagerung, nur Bedienzustand)
 var _layer: Control = null
 var _layer_kind: StringName = &""
 var _morning_done_day: int = -1  ## Tag, dessen Morgenbericht die Spielleitung weitergeschaltet hat (nur Bedienzustand)
@@ -39,6 +61,7 @@ var _gm_mode: String = ""
 var _gm_effects: Variant = null
 var _gm_role: String = ""
 var _role_card_person: int = -1  ## Person der offenen Rollenkarte (nur Bedienzustand, keine Rolle)
+var _timer_labels: Dictionary = {}  ## Wertanzeigen der Timer-Dauern im Menü ("day", "night")
 
 @onready var _layout: Control = %Layout
 @onready var _badge: Control = %NoGameBadge
@@ -46,15 +69,30 @@ var _role_card_person: int = -1  ## Person der offenen Rollenkarte (nur Bedienzu
 @onready var _phase: GrimmLabel = %PhaseValueLabel
 @onready var _round: GrimmLabel = %RoundLabel
 @onready var _alive: GrimmLabel = %AliveLabel
+@onready var _save_row: Control = %SaveRow  ## Speicherstand unten in der Mitte, zwischen Phase und Dock
 @onready var _save_status: GrimmLabel = %SaveStatusLabel
 @onready var _retry_save: GrimmButton = %RetrySaveButton  ## nur nach einem Speicherfehler; ein Versuch je Tippen
 @onready var _warnings: GrimmLabel = %WarningsLabel
 @onready var _ring: GameSeatRing = %SeatRing
-@onready var _board: PanelContainer = %SeatRingArea
 @onready var _card: ActionCard = %ActionCard
 @onready var _overlay_host: Control = %OverlayHost
 @onready var _backdrop: Panel = %Backdrop
-@onready var _backdrop_art: TextureRect = %BackdropArt  ## Anschlussstelle für spätere Hintergrundbilder (leer)
+@onready var _backdrop_art: TextureRect = %BackdropArt  ## Dorfplatz bei Nacht (G1), mit Abdunklung und Randdämpfung
+@onready var _backdrop_shade: ColorRect = %BackdropShade
+@onready var _order_bar: NightOrderBar = %OrderBar
+@onready var _corner: Control = %CornerInfo
+@onready var _status_strip: Control = %StatusStrip
+@onready var _hidden_label: GrimmLabel = %HiddenLabel
+@onready var _log_tab: NightTab = %LogButton
+@onready var _options_tab: NightTab = %OptionsButton
+@onready var _hide_button: GlyphButton = %HideButton
+@onready var _cover_button: GlyphButton = %CoverButton
+@onready var _timer_button: TimerButton = %TimerButton
+@onready var _dock: Control = %ActionsArea
+@onready var _dock_undo: GrimmButton = %DockUndoButton
+@onready var _next_host: Control = %NextHost
+@onready var _tools_menu: PanelContainer = %ToolsMenu
+@onready var _menu_column: VBoxContainer = %MenuColumn
 
 var _backdrop_phase: String = ""
 var _backdrop_tween: Tween = null
@@ -62,17 +100,25 @@ var _backdrop_tween: Tween = null
 
 func _setup() -> void:
 	header.back_button().kind = GrimmButton.Kind.COMPACT  # schmale Kopfleiste: mehr Fläche für das Brett
+	(header.find_child("TitleLabel", true, false) as Control).visible = false  # nur der Zurück-Knopf steht in der Ecke
+	header.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_backdrop_art.texture = NightArt.texture("bg/village-night.webp")
+	_style_backdrop()
+	_card.primary_host = _next_host
+	_card.info_host = _make_info_corner()
+	_next_host.child_entered_tree.connect(_skin_primary)
 	_apply_handedness()
 	context.settings.changed.connect(_on_settings_changed)
 	context.session.view_changed.connect(_on_session_changed)
 	context.session.command_rejected.connect(_on_rejected)
 	context.session.state_replaced.connect(_on_state_replaced)
 	context.saves.status_changed.connect(_on_save_status)
+	context.timer.changed.connect(_refresh_timer)
 	_retry_save.pressed.connect(context.autosave)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	_card.requested.connect(_on_card_requested)
-	for tool: GrimmButton in [%LogButton, %PrivateButton, %RolesButton, %GmButton, %CoverButton, %LexiconButton, %RulebookButton]:
-		tool.custom_minimum_size.x = ThemeTokens.TOOL_BUTTON_MIN_WIDTH
+	for tool: GrimmButton in [%PrivateButton, %RolesButton, %GmButton, %LexiconButton, %RulebookButton]:
+		tool.custom_minimum_size.x = MENU_WIDTH - 2.0 * ThemeTokens.SPACE_S
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
 	(%PrivateButton as GrimmButton).pressed.connect(open_layer.bind(&"private"))
 	(%RolesButton as GrimmButton).pressed.connect(open_layer.bind(&"roles"))
@@ -80,11 +126,23 @@ func _setup() -> void:
 	(%GmButton as GrimmButton).pressed.connect(open_layer.bind(&"gm"))
 	(%LexiconButton as GrimmButton).pressed.connect(open_lexicon.bind(&""))  # allgemeines Lexikon, auch ohne Partie
 	(%RulebookButton as GrimmButton).pressed.connect(open_rulebook)  # allgemeines Regelbuch, auch ohne Partie
+	_options_tab.pressed.connect(_toggle_menu)
+	_hide_button.toggled.connect(_on_hide_toggled)
+	_dock_undo.pressed.connect(_ask_undo)
+	_timer_button.pressed.connect(_on_timer_pressed)
+	_order_bar.expand_toggled.connect(_on_order_toggled)
+	_build_menu_extras()
+	_style_plate()
+	resized.connect(_arrange)
 	_refresh()
+	_arrange()
 
 
 ## Zurück: offene Ebene schließen, Sichtschutz aufheben oder (mit laufender Partie) nachfragen.
 func handle_back() -> bool:
+	if _tools_menu.visible:
+		_tools_menu.visible = false
+		return true
 	if _layer != null:
 		close_layer()
 		return true
@@ -129,7 +187,7 @@ func _refresh() -> void:
 	_view = context.session.cockpit_view()
 	var active := bool(_view.get("has_game", false))
 	_badge.visible = not active
-	for tool: String in ["LogButton", "PrivateButton", "RolesButton", "GmButton", "CoverButton"]:
+	for tool: String in ["LogButton", "PrivateButton", "RolesButton", "GmButton", "CoverButton", "HideButton"]:
 		(find_child(tool, true, false) as BaseButton).disabled = not active
 	var next: Dictionary = _view.get("next", {})
 	var identity := _identity(next)
@@ -141,7 +199,40 @@ func _refresh() -> void:
 		_prediction = {"kind": "night", "number": 0}
 	_update_status(active)
 	_ring.show_seats(_view.get("seats", []))
+	_ring.set_marks(context.session.board_marks() if active else {})
+	_ring.set_secrets_visible(not _hidden)
+	_update_order(active)
+	_dock_undo.disabled = not (active and context.session.can_undo())
+	_hidden_label.visible = active and _hidden
+	_arrange()
 	_render()
+
+
+## Nachtreihenfolge: nur in der Nacht, nur für die Spielleitung (bei „Verbergen“ aus).
+func _update_order(active: bool) -> void:
+	var in_night := active and str(_view.get("phase", "")) == "NIGHT"
+	var order: Array = context.session.night_order() if in_night else []
+	_order_bar.show_order(order, _bar_is_full(), _bar_collapsible())
+	_order_bar.visible = in_night and not _hidden and not order.is_empty()
+
+
+func _bar_collapsible() -> bool:
+	return size.y > 0.0 and size.x / size.y < WIDE_ASPECT
+
+
+func _bar_is_full() -> bool:
+	return not _bar_collapsible() or _bar_expanded
+
+
+func _on_order_toggled(expanded: bool) -> void:
+	_bar_expanded = expanded
+	_update_order(bool(_view.get("has_game", false)))
+	_arrange()
+
+
+func _on_hide_toggled(on: bool) -> void:
+	_hidden = on
+	_refresh()
 
 
 ## Speicheranzeige: „gespeichert“ nur nach bestätigtem Schreiben, sonst deutlich als Fehler.
@@ -155,14 +246,16 @@ func _show_save_status(status: Dictionary) -> void:
 	if status.is_empty() or str(status.get("round_id", "")) != context.session.round_id():
 		_save_status.text_key = ""
 		_retry_save.visible = false
+		_arrange()
 		return
 	var ok := bool(status.get("ok", false))
 	_retry_save.visible = not ok
 	_save_status.theme_type_variation = &"CaptionLabel" if ok else &"ErrorCaptionLabel"
 	_save_status.text_key = "ui.cockpit.save.ok" if ok else "ui.cockpit.save.error"
+	_arrange()  # die Zeile wird mit dem Wiederholen-Knopf höher
 
 
-## Anschlussstelle für spätere Hintergrundebenen je Tageszeit: Bild über der Grundfarbe, bis dahin leer.
+## Anschlussstelle für spätere Hintergrundebenen je Tageszeit: Bild über der Grundfarbe.
 func set_backdrop_art(texture: Texture2D) -> void:
 	_backdrop_art.texture = texture
 
@@ -175,7 +268,6 @@ func _update_backdrop(phase: String) -> void:
 		return
 	_backdrop_phase = group
 	_backdrop.theme_type_variation = &"NightBackdrop" if group == "night" else (&"DayBackdrop" if group == "day" else &"AppBackground")
-	_board.theme_type_variation = &"NightBoardPanel" if group == "night" else (&"DayBoardPanel" if group == "day" else &"BoardPanel")
 	if _backdrop_tween != null and _backdrop_tween.is_valid():
 		_backdrop_tween.kill()
 	if context.settings.reduced_motion or not is_inside_tree():
@@ -186,13 +278,25 @@ func _update_backdrop(phase: String) -> void:
 	_backdrop_tween.tween_property(_backdrop, "modulate:a", 1.0, ThemeTokens.BACKDROP_FADE_SECONDS)
 
 
+## Abdunklung und Randdämpfung des Dorfplatzes als eigene Ebene (Abnahme 1): Das Bild bleibt unverändert, die Ebenen darüber dämpfen
+## warme Reflexe auf dem Pflaster und die Ränder. Shader in `res://app/theme/`.
+func _style_backdrop() -> void:
+	var art := ShaderMaterial.new()
+	art.shader = load("res://app/theme/night_backdrop.gdshader") as Shader
+	_backdrop_art.material = art
+	var shade := ShaderMaterial.new()
+	shade.shader = load("res://app/theme/night_vignette.gdshader") as Shader
+	_backdrop_shade.material = shade
+	_backdrop_shade.color = ThemeTokens.TINT_NONE
+
+
 func _update_status(active: bool) -> void:
 	_update_backdrop(str(_view.get("phase", "")) if active else "")
 	_show_save_status(context.saves.last_status if active else {})
 	var phase := str(_view.get("phase", ""))
 	_phase.text_key = "ui.phase.%s" % phase.to_lower() if active else "ui.phase.none"
-	_phase_area.theme_type_variation = &"NightPanel" if phase == "NIGHT" else (&"DayPanel" if phase in ["DAY", "DAWN_RESOLUTION"] else &"HeaderPanel")
 	if active:
+		context.timer.switch_group(DisplayTimer.group_of_phase(phase))
 		var progress: Dictionary = _view.get("night_progress", {})
 		if phase == "NIGHT":
 			_round.format_values = {"number": int(_view["night_number"]), "done": int(progress.get("done", 0)), "total": int(progress.get("total", 0))}
@@ -207,11 +311,275 @@ func _update_status(active: bool) -> void:
 	else:
 		_round.text_key = ""
 		_alive.text_key = ""
+	_refresh_timer()
 	var warnings: Array = _view.get("warnings", [])
 	_warnings.visible = not warnings.is_empty()
 	if not warnings.is_empty():
 		_warnings.format_values = (warnings[0] as Dictionary).get("values", {})
 		_warnings.text_key = str((warnings[0] as Dictionary)["key"])
+
+
+# --- Anordnung ------------------------------------------------------------------------------------------
+
+## Höhe über dem Sitzkreis: in der Nacht Platz für die Nachtleiste (auf 4:3 für den Chip), sonst nur der schmale Streifen.
+func _top_reserved() -> float:
+	var night := str(_view.get("phase", "")) == "NIGHT"
+	var chip_h := NightOrderBar.CHIP_SIZE.y
+	if not night or _bar_collapsible():
+		return TOP_MARGIN + chip_h + 4.0
+	return TOP_MARGIN + NightOrderBar.FULL_HEIGHT + 4.0
+
+
+## Setzt alle Bedienelemente des Bretts an ihren Platz: Leiste oben, Laschen und Randknöpfe seitlich, Phase und Dock unten in den
+## Ecken (mit Linkshändermodus vertauscht), Sitzkreis in der restlichen Fläche. Läuft bei jeder Größen- und Zustandsänderung.
+func _arrange() -> void:
+	if not is_node_ready():
+		return
+	var w := size.x
+	var h := size.y
+	if w <= 0.0 or h <= 0.0:
+		return
+	var left_handed := context.settings.left_handed
+	var full := _bar_is_full()
+	var bar_w := minf(w - 2.0 * BAR_SIDE, BAR_MAX_WIDTH) if full else NightOrderBar.CHIP_SIZE.x
+	var bar_h := NightOrderBar.FULL_HEIGHT if full else NightOrderBar.CHIP_SIZE.y
+	_order_bar.size = Vector2(bar_w, bar_h)
+	_order_bar.position = Vector2((w - bar_w) * 0.5, TOP_MARGIN)
+	var reserved := _top_reserved()
+	_ring.position = Vector2(RING_SIDE, reserved)
+	_ring.size = Vector2(maxf(w - 2.0 * RING_SIDE, 1.0), maxf(h - reserved - BOTTOM_MARGIN, 1.0))
+	_corner.custom_minimum_size.x = CORNER_WIDTH
+	_corner.size = _corner.get_combined_minimum_size()
+	_corner.position = Vector2(TOP_MARGIN, TOP_MARGIN)
+	_badge.size = _badge.get_combined_minimum_size()
+	_badge.position = Vector2(w - _badge.size.x - TOP_MARGIN, TOP_MARGIN)
+	_status_strip.size = Vector2(minf(w - 2.0 * BAR_SIDE, BAR_MAX_WIDTH), _status_strip.get_combined_minimum_size().y)
+	_status_strip.position = Vector2((w - _status_strip.size.x) * 0.5, TOP_MARGIN + 16.0)  # dort, wo sonst die Nachtleiste steht
+	var tab_h := minf(TAB_MAX_HEIGHT, h * 0.42)
+	var tab_y := h * 0.5 + 20.0 - tab_h * 0.5
+	_log_tab.size = Vector2(TAB_WIDTH, tab_h)
+	_log_tab.position = Vector2(0.0, tab_y)
+	_options_tab.size = Vector2(TAB_WIDTH, tab_h)
+	_options_tab.position = Vector2(w - TAB_WIDTH, tab_y)
+	var knob := Vector2(ThemeTokens.TOUCH_MIN, ThemeTokens.TOUCH_MIN)
+	_hide_button.size = knob
+	_hide_button.position = Vector2(w - knob.x - 2.0, tab_y + tab_h + 6.0)
+	_cover_button.size = knob
+	_cover_button.position = Vector2(w - knob.x - 2.0, tab_y + tab_h + 6.0 + knob.y + 4.0)
+	_phase_area.custom_minimum_size = PLATE_SIZE
+	_dock_undo.custom_minimum_size = DOCK_UNDO_SIZE
+	_dock.size = _dock.get_combined_minimum_size()
+	_phase_area.size = _phase_area.get_combined_minimum_size()
+	var dock_x := DOCK_MARGIN if left_handed else w - DOCK_MARGIN - _dock.size.x
+	var plate_x := w - DOCK_MARGIN - _phase_area.size.x if left_handed else DOCK_MARGIN
+	_dock.position = Vector2(dock_x, h - DOCK_MARGIN - _dock.size.y)
+	_phase_area.position = Vector2(plate_x, h - DOCK_MARGIN - _phase_area.size.y)
+	var free_left := (_dock.position.x + _dock.size.x if left_handed else _phase_area.position.x + _phase_area.size.x) + PLATE_MARGIN
+	var free_right := (_phase_area.position.x if left_handed else _dock.position.x) - PLATE_MARGIN
+	_save_row.size = Vector2(maxf(free_right - free_left, 1.0), 0.0)
+	var row_height := maxf(_save_row.get_combined_minimum_size().y, float(ThemeTokens.TOUCH_MIN) if _retry_save.visible else 0.0)  # Mindesthöhe aktualisiert sich erst im nächsten Bild
+	_save_row.size = Vector2(_save_row.size.x, row_height)
+	_save_row.position = Vector2(free_left, h - DOCK_MARGIN - _save_row.size.y)
+	_tools_menu.size = _tools_menu.get_combined_minimum_size()
+	_tools_menu.position = Vector2(w - TAB_WIDTH - _tools_menu.size.x - 4.0, clampf(tab_y, TOP_MARGIN, maxf(TOP_MARGIN, h - _tools_menu.size.y - TOP_MARGIN)))
+
+
+## „i“-Ecke der Aktionskarte: eine Ebene über der Karte (PanelContainer legt alle Kinder übereinander), der Knopf oben rechts.
+func _make_info_corner() -> Control:
+	var corner := Control.new()
+	corner.name = "InfoCorner"
+	corner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	(%InstructionCard as Control).add_child(corner)
+	return corner
+
+
+## Phasen-Kartusche unten: kleiner Rahmen aus dem Leistenbild (Mockup V3), Innenabstand für Phase und Timer. Die Rahmenbilder sind
+## in Anzeigegröße gebaut, weil 9-Slice-Ränder in Bildpunkten gezeichnet werden.
+func _style_plate() -> void:
+	var texture := NightArt.texture("ui/plate-frame.png")
+	if texture != null:
+		var box := StyleBoxTexture.new()
+		box.texture = texture
+		box.texture_margin_left = PLATE_TEXTURE_MARGIN.x
+		box.texture_margin_right = PLATE_TEXTURE_MARGIN.x
+		box.texture_margin_top = PLATE_TEXTURE_MARGIN.y
+		box.texture_margin_bottom = PLATE_TEXTURE_MARGIN.y
+		box.content_margin_left = PLATE_MARGIN + 2.0
+		box.content_margin_right = PLATE_MARGIN
+		box.content_margin_top = 4.0
+		box.content_margin_bottom = 4.0
+		_phase_area.add_theme_stylebox_override("panel", box)
+	_skin_button(_dock_undo, "ui/btn-undo.png", UNDO_TEXTURE_MARGIN, 16.0)
+
+
+## Hauptaktion im Dock: ganzes Bild des roten Knopfs, Beschriftung und Zustand bleiben die des Buttons.
+func _skin_primary(node: Node) -> void:
+	var button := node as GrimmButton
+	if button == null:
+		return
+	button.custom_minimum_size = NEXT_BUTTON_SIZE
+	button.size_flags_horizontal = Control.SIZE_SHRINK_END
+	button.wrap = false
+	_skin_button(button, "ui/btn-next-step.png", 0.0, 12.0)
+
+
+## Knopf mit Bild als Rand: normal, gedrückt (heller), gesperrt (gedämpft). Ohne Bild bleibt der Theme-Stil.
+func _skin_button(button: GrimmButton, art: String, texture_margin: float, content_margin: float) -> void:
+	var texture := NightArt.texture(art)
+	if texture == null:
+		return
+	for state: String in ["normal", "hover", "pressed", "hover_pressed", "focus", "disabled"]:
+		var box := StyleBoxTexture.new()
+		box.texture = texture
+		box.texture_margin_left = texture_margin
+		box.texture_margin_right = texture_margin
+		box.content_margin_left = content_margin
+		box.content_margin_right = content_margin
+		if state == "pressed" or state == "hover_pressed" or state == "hover":
+			box.modulate_color = ThemeTokens.TINT_HOVER
+		elif state == "disabled":
+			box.modulate_color = ThemeTokens.TINT_DEAD
+		button.add_theme_stylebox_override(state, box)
+	for color: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
+		button.add_theme_color_override(color, ThemeTokens.TEXT_PRIMARY)
+	button.add_theme_color_override("font_disabled_color", ThemeTokens.TEXT_DISABLED)
+	button.add_theme_font_size_override("font_size", ThemeTokens.FONT_CAPTION)
+
+
+# --- Optionen und Timer ------------------------------------------------------------------------------------
+
+func _toggle_menu() -> void:
+	if _tools_menu.visible:
+		_tools_menu.visible = false
+		return
+	_arrange()
+	_tools_menu.visible = true
+	_arrange()
+
+
+func _input(event: InputEvent) -> void:
+	if not _tools_menu.visible:
+		return
+	var press := event as InputEventMouseButton
+	if press != null and press.pressed and not _tools_menu.get_global_rect().has_point(press.global_position) \
+			and not _options_tab.get_global_rect().has_point(press.global_position):
+		_tools_menu.visible = false
+
+
+## Timer-Abschnitt und Schalter im Optionenmenü; die Werkzeugknöpfe stehen schon in der Szene.
+func _build_menu_extras() -> void:
+	_menu_column.add_child(_section_label("ui.cockpit.menu.timer"))
+	for group: String in ["day", "night"]:
+		_menu_column.add_child(_timer_row(group))
+	var reset := _menu_button("TimerResetButton", "ui.cockpit.menu.timer_reset")
+	reset.pressed.connect(_on_timer_reset)
+	_menu_column.add_child(reset)
+	var night_toggle := GrimmToggle.new()
+	night_toggle.name = "NightTimerToggle"
+	night_toggle.text_key = "ui.cockpit.menu.night_timer"
+	night_toggle.set_pressed_no_signal(context.settings.show_night_timer)
+	night_toggle.toggled.connect(func(on: bool) -> void:
+		context.settings.set_show_night_timer(on)
+		_refresh_timer())
+	_menu_column.add_child(night_toggle)
+	var settings := _menu_button("SettingsButton", "ui.cockpit.menu.settings")
+	settings.pressed.connect(func() -> void: navigate_requested.emit(ScreenIds.SETTINGS))
+	_menu_column.add_child(settings)
+	_refresh_timer()
+
+
+func _section_label(key: String) -> GrimmLabel:
+	var label := GrimmLabel.new()
+	label.text_key = key
+	label.theme_type_variation = &"CaptionLabel"
+	return label
+
+
+func _menu_button(node_name: String, key: String, width: float = 0.0) -> GrimmButton:
+	var b := GrimmButton.new()
+	b.name = node_name
+	b.text_key = key
+	b.kind = GrimmButton.Kind.COMPACT
+	b.wrap = false
+	b.custom_minimum_size.x = maxf(width, ThemeTokens.TOUCH_MIN) if width > 0.0 else MENU_WIDTH - 2.0 * ThemeTokens.SPACE_S
+	return b
+
+
+## Eine Dauerzeile: Name der Phasengruppe, Minus, Wert, Plus und +5 (Minuten).
+func _timer_row(group: String) -> Control:
+	var column := VBoxContainer.new()
+	column.name = "Timer_%s" % group
+	var title := GrimmLabel.new()
+	title.text_key = "ui.cockpit.menu.timer_%s" % group
+	title.theme_type_variation = &"MutedLabel"
+	column.add_child(title)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", ThemeTokens.SPACE_XS)
+	var minus := _menu_button("Timer%sMinusButton" % group.capitalize(), "ui.cockpit.menu.minus", float(ThemeTokens.TOUCH_MIN))
+	minus.pressed.connect(_on_timer_adjust.bind(group, -DisplayTimer.STEP_SECONDS))
+	row.add_child(minus)
+	var value := GrimmLabel.new()
+	value.name = "Timer%sValueLabel" % group.capitalize()
+	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	value.wrap = false
+	_timer_labels[group] = value
+	row.add_child(value)
+	var plus := _menu_button("Timer%sPlusButton" % group.capitalize(), "ui.cockpit.menu.plus", float(ThemeTokens.TOUCH_MIN))
+	plus.pressed.connect(_on_timer_adjust.bind(group, DisplayTimer.STEP_SECONDS))
+	row.add_child(plus)
+	var plus5 := _menu_button("Timer%sPlusFiveButton" % group.capitalize(), "ui.cockpit.menu.plus_five", float(ThemeTokens.TOUCH_MIN))
+	plus5.pressed.connect(_on_timer_adjust.bind(group, 5 * DisplayTimer.STEP_SECONDS))
+	row.add_child(plus5)
+	column.add_child(row)
+	return column
+
+
+func _on_timer_adjust(group: String, delta_seconds: int) -> void:
+	context.timer.adjust_duration(StringName(group), delta_seconds)
+	context.autosave()
+
+
+func _on_timer_reset() -> void:
+	context.timer.reset()
+	context.autosave()
+
+
+## Tippen auf die Anzeige: mit eingestellter Dauer starten oder pausieren, sonst das Menü mit den Einstellungen öffnen.
+func _on_timer_pressed() -> void:
+	if context.timer.is_set():
+		context.timer.toggle()
+		context.autosave()
+	elif not _tools_menu.visible:
+		_toggle_menu()
+
+
+## Anzeige und Menüwerte nachführen. Die Anzeige erscheint nur mit laufender Partie in Tag oder Nacht (Nacht abschaltbar).
+func _refresh_timer() -> void:
+	if not is_node_ready():
+		return
+	var t := context.timer
+	var active := bool(_view.get("has_game", false)) and t.group != &""
+	_timer_button.visible = active and (t.group != DisplayTimer.GROUP_NIGHT or context.settings.show_night_timer)
+	_timer_button.show_time(t.remaining, t.running, t.is_set(), t.is_expired())
+	_timer_button.tooltip_text = tr("ui.cockpit.timer.tooltip_pause") if t.running else tr("ui.cockpit.timer.tooltip_start")
+	for group: String in _timer_labels:
+		var label := _timer_labels[group] as GrimmLabel
+		var seconds := int(t.durations.get(group, 0))
+		if seconds > 0:
+			label.format_values = {"time": DisplayTimer.format_seconds(float(seconds))}
+			label.text_key = "ui.cockpit.menu.timer_value"
+		else:
+			label.format_values = {}
+			label.text_key = "ui.cockpit.menu.timer_off"
+
+
+## Der Timer läuft mit der Anzeige: je Frame vergeht die Frame-Zeit. Reine Anzeige, kein Befehl.
+func _process(delta: float) -> void:
+	if context != null and context.timer.running:
+		context.timer.tick(delta)
+		_timer_button.show_time(context.timer.remaining, context.timer.running, context.timer.is_set(), context.timer.is_expired())
 
 
 func _render() -> void:
@@ -221,6 +589,7 @@ func _render() -> void:
 	if not bool(_view.get("has_game", false)):
 		_card.render({"kind": "no_game"}, {})
 		_ring.clear_marking()
+		_card.role_art().show_role("")
 		return
 	var kind := str(next.get("kind"))
 	if _gm_mode != "":
@@ -245,6 +614,7 @@ func _render() -> void:
 	var selection_error := ""
 	if kind == "prompt" and str(next.get("answer")) == "targets" and not _selection.is_empty():
 		selection_error = String(context.session.check_targets(_selection))
+	_card.role_art().show_role(_card_role(next, kind, phase, visible_secret))
 	_card.render(next, {
 		"phase": phase, "seats": _view.get("seats", []), "selection": _selection, "selection_error": selection_error,
 		"random_active": _random != null and _same_set(_selection, _random),
@@ -260,7 +630,20 @@ func _render() -> void:
 		"day_cards": context.session.day_cards() if bool(_view.get("has_game")) else [],
 		"reduced_motion": context.settings.reduced_motion,
 	})
+	_arrange()  # die Hauptaktion im Dock wechselt mit der Karte: Dock und Phasenplatte neu setzen
 	_restore_focus()
+
+
+## Rolle für das Rollenbild der Karte: nur in der Nacht, bei einer Rollenhandlung, solange nicht verborgen und die Karte sichtbar ist.
+## Nie bei der anonymen Frage (DI-05) und nie bei Karten der Totenreichkarten.
+func _card_role(next: Dictionary, kind: String, phase: String, visible_secret: bool) -> String:
+	if _hidden or not visible_secret or phase != "NIGHT" or _gm_mode != "":
+		return ""
+	if kind != "begin_step" and kind != "prompt":
+		return ""
+	if str(next.get("owner", "")) == "card" or bool(next.get("anonymous_asker", false)):
+		return ""
+	return str(next.get("role_id", ""))
 
 
 ## Ringmarkierung im Tagesmodus: wer im aktuellen Schritt antippbar ist (nur Lebende, bei der
@@ -322,7 +705,7 @@ func _apply_focus() -> void:
 	if _layer != null or not is_inside_tree():
 		return
 	var owner := get_viewport().gui_get_focus_owner()
-	if owner != null and owner.is_visible_in_tree() and not owner.is_queued_for_deletion():
+	if owner != null and owner.is_visible_in_tree() and not owner.is_queued_for_deletion() and owner != header.back_button():
 		return
 	var target := default_focus()
 	if target != null and target.is_inside_tree() and target.is_visible_in_tree():
@@ -357,11 +740,14 @@ func _identity(next: Dictionary) -> String:
 ## Auswahl, offene Karte und Signalverbindungen bleiben unberührt.
 func _apply_handedness() -> void:
 	_card.set_left_handed(context.settings.left_handed)
+	_arrange()
 
 
 func _on_settings_changed(key: StringName) -> void:
 	if key == &"left_handed":
 		_apply_handedness()
+	elif key == &"show_night_timer":
+		_refresh_timer()
 
 
 # --- Bedienung --------------------------------------------------------------------------------------
@@ -412,6 +798,8 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 	match action:
 		&"help":
 			open_lexicon(StringName(str(payload.get("role_id", ""))))
+		&"cycle_target":
+			_cycle_target(int(payload["direction"]))
 		&"open_report":
 			context.history_focus = s.round_id()  # Abschlussbericht der beendeten Partie in der Historienansicht öffnen
 			navigate_requested.emit(ScreenIds.HISTORY)
@@ -592,6 +980,23 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 
 
 ## Sendet genau einen Befehl; die Karte ist bis zur neuen Sicht gesperrt (Mehrfachtippen).
+## Pfeile am Zielplatz: zur nächsten oder vorherigen wählbaren Person (Sitzreihenfolge), wie das Antippen dieses Platzes.
+func _cycle_target(direction: int) -> void:
+	var next: Dictionary = _view.get("next", {})
+	var allowed: Array = next.get("allowed_ids", [])
+	if allowed.size() < 2 or int(next.get("max", 0)) != 1:
+		return
+	var ordered: Array = []
+	for seat: Dictionary in _view.get("seats", []):
+		if allowed.has(int(seat["person_id"])):
+			ordered.append(int(seat["person_id"]))
+	var index := ordered.find(int(_selection[0])) if not _selection.is_empty() else -1
+	var target: int = int(ordered[posmod(index + direction, ordered.size())]) if index >= 0 else int(ordered[0] if direction > 0 else ordered[-1])
+	_selection = [target]
+	_random = null
+	_render()
+
+
 func _submit(action: Callable) -> void:
 	_card.lock()
 	var result: CommandResult = action.call()
@@ -933,6 +1338,7 @@ func _on_secret_action(action: String, player_id: int) -> void:
 
 
 func close_layer() -> void:
+	_tools_menu.visible = false
 	if _layer_kind == &"roles" or _layer_kind == &"role_card":
 		_revealed_id = ""  # nach der Rollenanzeige bleibt keine geheime Karte des Cockpits aufgedeckt
 	if _layer != null:
@@ -1000,3 +1406,5 @@ func is_covered() -> bool:
 
 func _exit_tree() -> void:
 	close_layer()
+	if context != null and context.timer.running:
+		context.autosave()  # die Restzeit läuft nur mit der Anzeige: beim Verlassen den Stand festhalten

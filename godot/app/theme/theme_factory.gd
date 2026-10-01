@@ -228,6 +228,8 @@ static func _panels(theme: Theme) -> void:
 		&"DrawerPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_M),
 		&"CoverPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
 		&"ShowPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
+		# Nachtbrett (P3): halbtransparente Aktionskarte und Optionenfläche über dem Dorfplatz.
+		&"NightCardPanel": _panel(ThemeTokens.CARD_BG, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		&"NightBackdrop": _panel(ThemeTokens.NIGHT_BACKDROP, ThemeTokens.NIGHT_BACKDROP, 0, 0, 0),
 		&"DayBackdrop": _panel(ThemeTokens.DAY_BACKDROP, ThemeTokens.DAY_BACKDROP, 0, 0, 0),
 	}

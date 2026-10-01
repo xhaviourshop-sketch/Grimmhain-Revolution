@@ -1,7 +1,7 @@
 class_name SettingsStore
 extends RefCounted
 ## Dauerhafte Geräteeinstellungen (Paket 5a), getrennt von Spielständen: eine kleine JSON-Datei
-## `user://settings.json` mit {format, version, language, reduced_motion, left_handed}. Keine Rollen, Namen,
+## `user://settings.json` mit {format, version, language, reduced_motion, left_handed, show_night_timer}. Keine Rollen, Namen,
 ## Spielstände oder Geheimnisse; `version` betrifft nur dieses Format, nicht Spielschema oder Regelversion.
 ##
 ## Laden setzt nur gültige Werte direkt in AppSettings (ohne `changed`, also ohne Speicher-/Signalfolge) und
@@ -50,7 +50,7 @@ func load_into(settings: AppSettings) -> Dictionary:
 			settings.language = lang
 		else:
 			rejected.append("language")
-	for key: String in ["reduced_motion", "left_handed"]:
+	for key: String in ["reduced_motion", "left_handed", "show_night_timer"]:
 		if data.has(key):
 			if data[key] is bool:
 				settings.set(key, data[key])
@@ -71,7 +71,7 @@ func _save(settings: AppSettings) -> Dictionary:
 	if not DirAccess.dir_exists_absolute(dir) and DirAccess.make_dir_recursive_absolute(dir) != OK:
 		return {"ok": false, "error": "no_directory"}
 	var text := JSON.stringify({"format": FORMAT, "version": VERSION, "language": settings.language,
-		"reduced_motion": settings.reduced_motion, "left_handed": settings.left_handed})
+		"reduced_motion": settings.reduced_motion, "left_handed": settings.left_handed, "show_night_timer": settings.show_night_timer})
 	var tmp := path + ".tmp"
 	var file := FileAccess.open(tmp, FileAccess.WRITE) if simulate_failure != &"write" else null
 	if file == null:

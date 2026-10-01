@@ -1299,7 +1299,7 @@ msgid "ui.cockpit.tools.private"
 msgstr "Rollen"
 
 msgid "ui.cockpit.tools.cover"
-msgstr "Verbergen"
+msgstr "Sichtschutz"
 
 msgid "ui.cockpit.leave.title"
 msgstr "Cockpit verlassen?"
@@ -5834,7 +5834,7 @@ msgid "ui.rulebook.c03.b07"
 msgstr "Der Trugbilderwolf sieht auf seiner Karte seine wahre Rolle, nie die Scheinrolle. Die Wölfe erkennen einander nicht über die Rollenkarte, sondern in der ersten Nacht im gemeinsamen Rudelschritt."
 
 msgid "ui.rulebook.c03.b08"
-msgstr "Eine offene Rollenkarte verschwindet bei jeder Änderung des Spielstands, bei „Rückgängig“, beim Laden und beim „Verbergen“. Danach steht wieder die neutrale Liste da."
+msgstr "Eine offene Rollenkarte verschwindet bei jeder Änderung des Spielstands, bei „Rückgängig“, beim Laden und beim „Sichtschutz“. Danach steht wieder die neutrale Liste da."
 
 msgid "ui.rulebook.c04.title"
 msgstr "Nacht führen und Tarnaufrufe"
@@ -5900,10 +5900,10 @@ msgid "ui.rulebook.c05.b03"
 msgstr "In der Nacht haben alle die Augen geschlossen, deshalb sind Karten mit geheimem Inhalt offen lesbar. Im Morgen und am Tag sehen alle mit. Dort sind solche Karten verdeckt („Nur für die Spielleitung“) und öffnen sich erst mit „Anzeigen“. Mit der nächsten Handlung sind sie wieder verdeckt."
 
 msgid "ui.rulebook.c05.b04"
-msgstr "Verbergen"
+msgstr "Sichtschutz und Verbergen"
 
 msgid "ui.rulebook.c05.b05"
-msgstr "„Verbergen“ blendet das ganze Cockpit aus und schließt alle offenen Ebenen. Die Partie läuft unverändert weiter. „Cockpit wieder anzeigen“ bringt es zurück."
+msgstr "„Sichtschutz“ blendet das ganze Cockpit aus und schließt alle offenen Ebenen. Die Partie läuft unverändert weiter. „Cockpit wieder anzeigen“ bringt es zurück. „Verbergen“ (das Auge am Rand) lässt das Brett stehen und blendet nur Geheimes aus: Zustandsabzeichen, Statusringe, die handelnde Person, die Nachtreihenfolge und das Rollenbild der Karte. Es bleiben Namen, Porträts und ob eine Person tot oder lebendig ist."
 
 msgid "ui.rulebook.c05.b06"
 msgstr "Private Hinweise"
@@ -5915,7 +5915,7 @@ msgid "ui.rulebook.c05.b08"
 msgstr "Bereiche mit allen Geheimnissen"
 
 msgid "ui.rulebook.c05.b09"
-msgstr "„Rollen“ und „Protokoll“ zeigen bewusst alles. Öffne sie nur, wenn niemand mitliest. Sie schließen sich beim Verbergen, bei „Zurück“ und beim Verlassen der Ansicht. Ein Tipp neben die Schublade schließt sie ebenfalls."
+msgstr "„Rollen“ und „Protokoll“ zeigen bewusst alles. Öffne sie nur, wenn niemand mitliest. Sie schließen sich beim Sichtschutz, bei „Zurück“ und beim Verlassen der Ansicht. Ein Tipp neben die Schublade schließt sie ebenfalls."
 
 msgid "ui.rulebook.c06.title"
 msgstr "Morgen und Wiederbelebungsrunde"
@@ -8131,3 +8131,75 @@ msgstr "#{index} Hinrichtung durch Karte verhindert ({visibility})"
 
 msgid "ui.cards.pack_victim"
 msgstr "Rudelopfer: {name}, Rolle: {role}"
+
+msgid "ui.cockpit.seat.plate.alive"
+msgstr "{mark}{name}"
+
+msgid "ui.cockpit.seat.plate.dead"
+msgstr "{mark}† {name}"
+
+msgid "ui.cockpit.seat.plate.nominated"
+msgstr "{mark}{name} (N)"
+
+msgid "ui.cockpit.tools.options"
+msgstr "Optionen"
+
+msgid "ui.cockpit.tools.hide"
+msgstr "Verbergen"
+
+msgid "ui.cockpit.hide.banner"
+msgstr "Verborgen: nur Namen, Porträts, tot oder lebendig"
+
+msgid "ui.cockpit.dock.undo"
+msgstr "Rückgängig"
+
+msgid "ui.cockpit.order.toggle"
+msgstr "Nachtreihenfolge ein- oder ausklappen"
+
+msgid "ui.cockpit.timer.unset"
+msgstr "–:––"
+
+msgid "ui.cockpit.timer.tooltip_start"
+msgstr "Timer starten"
+
+msgid "ui.cockpit.timer.tooltip_pause"
+msgstr "Timer pausieren"
+
+msgid "ui.cockpit.menu.timer"
+msgstr "Anzeige-Timer (nur Anzeige, ohne Regelwirkung)"
+
+msgid "ui.cockpit.menu.timer_day"
+msgstr "Tag und Diskussion"
+
+msgid "ui.cockpit.menu.timer_night"
+msgstr "Nacht"
+
+msgid "ui.cockpit.menu.timer_value"
+msgstr "{time}"
+
+msgid "ui.cockpit.menu.timer_off"
+msgstr "nicht eingestellt"
+
+msgid "ui.cockpit.menu.timer_reset"
+msgstr "Timer zurücksetzen"
+
+msgid "ui.cockpit.menu.night_timer"
+msgstr "Nacht-Timer anzeigen"
+
+msgid "ui.cockpit.menu.settings"
+msgstr "Einstellungen"
+
+msgid "ui.cockpit.menu.minus"
+msgstr "−1"
+
+msgid "ui.cockpit.menu.plus"
+msgstr "+1"
+
+msgid "ui.cockpit.menu.plus_five"
+msgstr "+5"
+
+msgid "ui.cockpit.card.target.named"
+msgstr "%d · %s"
+
+msgid "ui.cockpit.card.target.none"
+msgstr "Ziel wählen"

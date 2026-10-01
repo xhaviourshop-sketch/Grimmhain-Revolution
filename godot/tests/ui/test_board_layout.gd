@@ -166,11 +166,11 @@ func test_save_error_is_visible_retry_reachable_and_does_not_cover_the_action() 
 	var retry := find_button(_screen(shell), "RetrySaveButton")
 	assert_eq(status.text, "Fehler: nicht gespeichert", "Fehlertext deutlich")
 	assert_eq(status.theme_type_variation, &"ErrorCaptionLabel", "Fehler in Fehlerstil")
-	assert_true(retry.is_visible_in_tree() and not retry.disabled and retry.size.y >= 47.5 and inside(rect_of(retry), viewport), "Erneut speichern erreichbar")
+	assert_true(retry.is_visible_in_tree() and not retry.disabled and retry.size.y >= 47.5 and inside(rect_of(retry), viewport), "Erneut speichern erreichbar (%s, sichtbar %s, Zeile %s)" % [str(rect_of(retry)), str(retry.is_visible_in_tree()), str(rect_of(find_node(_screen(shell), "SaveRow") as Control))])
 	for b: BaseButton in visible_buttons(find_node(_screen(shell), "InstructionCard")):
 		assert_false(overlaps(rect_of(b), rect_of(retry)), "%s von der Fehleranzeige nicht überdeckt" % b.name)
 	for t: Variant in _tokens(shell):
-		assert_false(overlaps(rect_of(t as Control), rect_of(retry)), "Platz von der Fehleranzeige nicht überdeckt")
+		assert_false(seat_hits_rect(t as Control, rect_of(retry)), "Platz %d von der Fehleranzeige nicht überdeckt (%s)" % [int((t as Control).get("person_id")), str(rect_of(retry))])
 	ctx.saves.simulate_failure = &""
 	await press(retry)
 	assert_eq(status.text, "Gespeichert", "nach erneutem Speichern bestätigt")

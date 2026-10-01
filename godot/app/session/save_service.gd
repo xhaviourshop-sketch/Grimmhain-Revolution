@@ -4,9 +4,10 @@ extends RefCounted
 ## versionierten Text (StateCodec), hier liegen Dateien, sicheres Schreiben, Sicherung und Wiederaufnahme.
 ##
 ## Je Partie eine Datei `game-<round_id>.json` im Verzeichnis `base_dir` (Standard user://saves) mit Hülle:
-##   {format, version, app_version, saved_at, summary, core}
+##   {format, version, app_version, saved_at, summary, core[, ui]}
 ## `summary` enthält nur öffentliche Angaben für die Liste (Namen, Phase, Zähler), nie Rollen; `core` ist
-## der unveränderte StateCodec-Text. Geladen wird immer über StateCodec.decode (Integrität, Replay).
+## der unveränderte StateCodec-Text. `ui` (optional) trägt Bedienzustand außerhalb des Regelkerns, derzeit die Zahlen des
+## Anzeige-Timers (DisplayTimer): keine Rollen, keine Namen, nie Teil von `core`; fehlt er, ist die Hülle wie zuvor. Geladen wird immer über StateCodec.decode (Integrität, Replay).
 ##
 ## Sicheres Schreiben (jeder Schritt einzeln prüfbar):
 ##   0. liegt noch eine vollständige `.tmp` aus einem abgebrochenen Speichern vor, wird sie zuerst eingesetzt
@@ -42,14 +43,14 @@ func path_for(round_id: String) -> String:
 
 ## Speichert den Stand sicher. Ergebnis {ok, error, round_id, saved_at}; bei Fehler bleibt die letzte
 ## intakte Datei unverändert erhalten.
-func save(round_id: String, core_text: String, summary: Dictionary) -> Dictionary:
-	var status := _save(round_id, core_text, summary)
+func save(round_id: String, core_text: String, summary: Dictionary, ui: Dictionary = {}) -> Dictionary:
+	var status := _save(round_id, core_text, summary, ui)
 	last_status = status
 	status_changed.emit(status)
 	return status
 
 
-func _save(round_id: String, core_text: String, summary: Dictionary) -> Dictionary:
+func _save(round_id: String, core_text: String, summary: Dictionary, ui: Dictionary) -> Dictionary:
 	var saved_at := int(Time.get_unix_time_from_system())
 	var failed := func(error: String) -> Dictionary:
 		return {"ok": false, "error": error, "round_id": round_id, "saved_at": 0}
@@ -61,8 +62,11 @@ func _save(round_id: String, core_text: String, summary: Dictionary) -> Dictiona
 	# erneuter Fehler beim Überschreiben der `.tmp` ihn nicht zerstört.
 	if FileAccess.file_exists(tmp) and bool(_read(tmp)["ok"]) and not _promote_tmp(path):
 		return failed.call("backup_failed")
-	var text := JSON.stringify({"format": FORMAT, "version": VERSION, "app_version": AppPlatform.app_version(),
-		"saved_at": saved_at, "summary": summary, "core": core_text})
+	var envelope := {"format": FORMAT, "version": VERSION, "app_version": AppPlatform.app_version(),
+		"saved_at": saved_at, "summary": summary, "core": core_text}
+	if not ui.is_empty():
+		envelope["ui"] = ui
+	var text := JSON.stringify(envelope)
 	var file := FileAccess.open(tmp, FileAccess.WRITE) if simulate_failure != &"write" else null
 	if file == null:
 		return failed.call("write_failed")
@@ -84,7 +88,7 @@ func _save(round_id: String, core_text: String, summary: Dictionary) -> Dictiona
 	return {"ok": true, "error": "", "round_id": round_id, "saved_at": saved_at}
 
 
-## Lädt die Partie `round_id`. Ergebnis {ok, error, core, summary, recovered, set_aside}:
+## Lädt die Partie `round_id`. Ergebnis {ok, error, core, summary, ui, recovered, set_aside}:
 ##   recovered  "" | "tmp" (unterbrochenes Schreiben fortgesetzt) | "backup" (Datei beschädigt)
 ##   set_aside  beiseitegelegte Dateien (beschädigt oder unvollständig), nie gelöscht
 ## Ein Spielstand aus einer anderen Schema- oder Regelversion ist nicht beschädigt: Er wird nie beiseitegelegt, nie
@@ -168,7 +172,8 @@ func _read(path: String) -> Dictionary:
 	if not decoded.ok:
 		var incompatible := decoded.error == &"unsupported_schema_version" or decoded.error == &"unsupported_rules_version"
 		return {"ok": false, "error": String(decoded.error), "incompatible": incompatible, "detail": decoded.detail}
-	return {"ok": true, "core": str(env["core"]), "summary": env.get("summary", {})}
+	var ui: Variant = env.get("ui", {})
+	return {"ok": true, "core": str(env["core"]), "summary": env.get("summary", {}), "ui": ui if ui is Dictionary else {}}
 
 
 ## Schema und Regelversion des gespeicherten Kerns gegen diese Version (nur Kopfdaten, keine Prüfung des Inhalts).
@@ -239,4 +244,4 @@ func _set_aside(path: String) -> String:
 
 
 func _result(read: Dictionary, recovered: String, set_aside: Array) -> Dictionary:
-	return {"ok": true, "error": "", "core": read["core"], "summary": read["summary"], "recovered": recovered, "set_aside": set_aside}
+	return {"ok": true, "error": "", "core": read["core"], "summary": read["summary"], "ui": read.get("ui", {}), "recovered": recovered, "set_aside": set_aside}

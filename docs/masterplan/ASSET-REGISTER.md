@@ -12,7 +12,7 @@ Prüfung (Exit-Code 1 bei Befunden):
 node tools/check-asset-register.js
 ```
 
-Das Werkzeug meldet nicht registrierte Mediendateien, fehlende oder veränderte Dateien (SHA-256), leere Pflichtfelder, unbekannte Status, `freigegeben` ohne Product-Owner-Eintrag oder mit ungeklärter Lizenz, `prüfartefakt` außerhalb von `docs/evidence/` und `docs/screenshots/`, und jede Datei unter `godot/`, die nicht `freigegeben` ist. Formal prüft es: gültiges UTF-8 ohne BOM, exakte Kopfzeile, gleiche Spaltenzahl, keine unsichtbaren Zeichen in Zellen. LF- und CRLF-Zeilenenden sind beide gültig. Regressionstests: `node --test tests/check-asset-register.test.js`.
+Das Werkzeug meldet nicht registrierte Mediendateien, fehlende oder veränderte Dateien (SHA-256), leere Pflichtfelder, unbekannte Status, `freigegeben` ohne Product-Owner-Eintrag oder mit ungeklärter Lizenz, `prüfartefakt` außerhalb von `docs/evidence/` und `docs/screenshots/`, und jede Datei unter `godot/`, die weder `freigegeben` noch `intern-freigegeben` ist. Mit `--release` ist zusätzlich jede nur intern freigegebene Datei unter `godot/` ein Befund. Formal prüft es: gültiges UTF-8 ohne BOM, exakte Kopfzeile, gleiche Spaltenzahl, keine unsichtbaren Zeichen in Zellen. LF- und CRLF-Zeilenenden sind beide gültig. Regressionstests: `node --test tests/check-asset-register.test.js`.
 
 **Dateiformat beim Bearbeiten.** Am sichersten mit LibreOffice Calc (Zeichensatz UTF-8, Feldtrenner Semikolon, kein Texttrenner) oder einem Texteditor bearbeiten. Excel ist ungeeignet: „CSV UTF-8" fügt einen BOM ein, „CSV (Trennzeichen-getrennt)" speichert in Windows-1252 und zerstört Umlaute. Das Werkzeug meldet beides ausdrücklich. Semikolons im Text durch Kommas ersetzen.
 
@@ -32,6 +32,7 @@ Es gibt keine Pfad-Ausnahme: Jede neue Mediendatei braucht eine Registerzeile im
 | Status | Bedeutung | Darf in einen Build |
 |---|---|---|
 | `freigegeben` | Herkunft, Lizenz und Tarif belegt, Product Owner hat nach Sicht- oder Hörprüfung freigegeben (`po_freigabe` = Datum und Name) | ja |
+| `intern-freigegeben` | Rechteinhaber (Product Owner) bestätigt, die Datei selbst per KI erstellt zu haben, und erlaubt die interne Nutzung (`po_freigabe` = Datum und Name). Dienst, Modell, Tarif und Nutzungsbedingungen bleiben undokumentiert | ja, aber nur in internen Entwicklungs- und Testbuilds. Veröffentlichung, Store und Release bleiben gesperrt (`node tools/check-asset-register.js --release` meldet jede solche Datei unter `godot/`) |
 | `ki-nachgewiesen` | KI-Herkunft per C2PA belegt; Tarif, Prompt, Bedingungen oder Freigabe fehlen | nein, höchstens Entwicklungsbuild |
 | `lizenz-belegt` | Lizenz belegt und vorgeschriebener Lizenztext liegt bei; Product-Owner-Freigabe steht aus | nein, erst nach Freigabe |
 | `lizenz-belegt-datei-fehlt` | Lizenz aus der Datei ablesbar, vorgeschriebener Lizenztext liegt nicht bei | nein |
@@ -39,7 +40,7 @@ Es gibt keine Pfad-Ausnahme: Jede neue Mediendatei braucht eine Registerzeile im
 | `gesperrt` | ausdrücklich gesperrt, mit Beleg für die Sperre (z. B. Masterplan Phase 0 für die Nachtmusik) | nein |
 | `prüfartefakt` | eigener Screenshot für Dokumentation | nein, nie |
 
-Nur der Product Owner setzt `freigegeben`. Claude trägt diesen Status nie selbst ein.
+Nur der Product Owner setzt `freigegeben` und `intern-freigegeben`. Claude trägt `intern-freigegeben` nur auf ausdrücklichen Auftrag des Product Owners ein (Auftrag P3, 2026-10-01, siehe `../../DECISIONS.md`) und nie `freigegeben`.
 
 Stand 2026-09-27 (Werkzeugausgabe nach Spielstart): 313 Dateien, **0 freigegeben**, 228 ungeklärt, 24 ki-nachgewiesen, 1 gesperrt (Nachtmusik), 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 56 prüfartefakt. Die neun kurzen Legacy-Sounds standen bis zur Korrektur vom 27.09. ohne Beleg auf `gesperrt`.
 

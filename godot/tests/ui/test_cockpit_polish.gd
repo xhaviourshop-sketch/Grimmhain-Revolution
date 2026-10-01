@@ -77,7 +77,9 @@ func test_focus_moves_to_next_card_action() -> void:
 	await frames(2)
 	var owner := focus_owner()
 	var card := find_node(current_screen(shell), "ActionCard")
-	assert_true(owner != null and card.is_ancestor_of(owner), "Fokus auf der neuen Karte (%s)" % (owner.name if owner != null else "keiner"))
+	# Die Hauptaktion steht im Dock (P3) und gehört zur Karte (`action_buttons`); alle anderen Aktionen liegen in ihr.
+	var on_card := owner != null and (card.is_ancestor_of(owner) or (card.call("action_buttons") as Array).has(owner))
+	assert_true(on_card, "Fokus auf der neuen Karte (%s)" % (owner.name if owner != null else "keiner"))
 
 
 func test_hooks_for_later_art_are_empty_and_settable() -> void:
@@ -86,17 +88,18 @@ func test_hooks_for_later_art_are_empty_and_settable() -> void:
 		return
 	var screen := current_screen(shell)
 	var art := find_node(screen, "BackdropArt") as TextureRect
-	assert_true(art != null and art.texture == null, "Hintergrundebene vorbereitet, ohne Bild")
+	assert_true(art != null and art.texture != null, "Hintergrundebene trägt den Dorfplatz bei Nacht (P3)")
 	var image := Image.create(4, 4, false, Image.FORMAT_RGBA8)
 	var texture := ImageTexture.create_from_image(image)
 	screen.call("set_backdrop_art", texture)
 	assert_eq(art.texture, texture, "Bild setzbar")
 	var token := find_node(screen, "SeatRing").call("token_for", 1) as Button
-	assert_true(token.icon == null, "Platz ohne Porträt")
+	var automatic: Texture2D = token.call("portrait_texture")
+	assert_true(automatic != null, "Platz mit automatisch zugeordnetem Porträt (P3)")
 	token.call("set_portrait", texture)
-	assert_eq(token.icon, texture, "Porträt setzbar")
+	assert_eq(token.call("portrait_texture"), texture, "Porträt setzbar")
 	token.call("set_portrait", null)
-	assert_true(token.icon == null and not token.expand_icon, "Porträt entfernbar")
+	assert_eq(token.call("portrait_texture"), automatic, "Porträt entfernbar: zurück zur automatischen Zuordnung")
 
 
 func test_card_content_stays_inside_column_at_4_3() -> void:

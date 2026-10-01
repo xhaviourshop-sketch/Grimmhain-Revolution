@@ -16,6 +16,25 @@ Erreichbar: Hauptmenü → „Neue Partie“ → Setup bis „Partie starten“,
 | Ansagekarte | liegt in der freien Tischmitte des Sitzkreises und verdeckt keinen Platz: Kontext, „Sag jetzt“ (Vorlesetext), „Tu jetzt“ (Anweisung), Auswahl. Der Text scrollt (`Scroll`); alle Aktionsbuttons stehen in einem festen Bereich darunter (`Actions`) und bleiben ohne Scrollen sichtbar |
 | Werkzeugleiste (schmal, unten) | Protokoll, Rollen (privater Bereich), Rollen zeigen (neutrale Liste, dann Karte je Person), Spielleitung (Korrekturen, Rückgängig, Partie beenden), Verbergen (Sichtschutz), Lexikon, Regelbuch; ohne Partie deaktiviert. Jedes Werkzeug öffnet als Ebene über dem Brett |
 
+## Nachtbrett (P3, 01.10.2026)
+
+Das Cockpit ist ein Nachtbrett im Stil von `Spielfeld.png` und Mockup V3 (`docs/assets/p2-mockup/`). **Dieser Abschnitt ersetzt die Beschreibung von Kopfleiste, Spielbrett und Werkzeugleiste im Abschnitt „Aufbau“.** Die Regeln der Ansagekarte, Ebenen und der Geheimhaltung gelten unverändert. Die Bilder liegen unter `godot/assets/night/` (Registerstatus `intern-freigegeben`, Veröffentlichung gesperrt, siehe `DECISIONS.md`).
+
+| Bereich | Inhalt |
+|---|---|
+| Hintergrund | Dorfplatz bei Nacht (G1) als eigene Ebene mit Farb- und Randdämpfung (`night_backdrop.gdshader`, `night_vignette.gdshader`) |
+| Porträtplätze | Ellipse im Uhrzeigersinn (`PortraitRingLayout`), Platz 1 knapp links oben. Porträt 66 px (bis 12 Personen 76 bzw. 88 px), Nummern-Abzeichen, Namensschild, Ring für Zustand (handelnd, gewählt, wählbar, tot). Gesicht je Personen-ID automatisch und stabil (`PortraitAssignment`, bis 24 Personen nie doppelt); die Auswahl durch die Spielleitung folgt in P4 |
+| Zustandsabzeichen | Schutz, Gift, Markiert, Stumm, Sonder, ab 24 px unten rechts am Porträt (nur Spielleitung, `GameSession.board_marks`, `NightBoardView`). Tote tragen den Tod als Ring und „†“ |
+| Nachtleiste | oben, Rollensymbole in Aufrufreihenfolge (`GameSession.night_order`). Auf 4:3 eingeklappt als Chip, ab 16:10 voll; Pfeile blättern |
+| Laschen | links Protokoll, rechts Optionen (Tippfläche 52 px breit). Darunter am rechten Rand „Verbergen“ (Auge) und „Sichtschutz“ (Schloss) |
+| Optionen | Werkzeuge Privat, Rollen zeigen, Spielleitung, Lexikon, Regelbuch, Timer-Einstellungen, „Nacht-Timer anzeigen“, Einstellungen |
+| Aktionskarte | Variante A in der Tischmitte: Rollenbild (nur Nacht), Titel, Anweisung, Zielplatz mit Pfeilen, Nebenaktionen, „i“ für Details. Die Hauptaktion steht als roter Knopf unten rechts („Nächster Schritt“ bzw. die Aktion selbst, z. B. „Auswahl bestätigen“) |
+| Unten | links Phase und Timer, rechts Rückgängig und Hauptaktion; im Linkshändermodus vertauscht. Ecke oben links: Zurück, Nachtfortschritt, Lebende, Speicherstand |
+
+**Verbergen** blendet alle geheimen Zustände aus: Abzeichen, Statusringe, Hervorhebung der handelnden Person, Nachtleiste und Rollenbild der Karte. Es bleiben Namen, Porträts und tot oder lebendig. Der Zustand ist nur Bedienzustand, wird nicht gespeichert und schaltet die Regeln nicht. **Sichtschutz** (früher „Verbergen“) blendet weiter das ganze Cockpit aus.
+
+**Anzeige-Timer:** Dauer je Phasengruppe (Tag und Diskussion, Nacht) in den Optionen einstellbar, keine Standarddauer. Tippen auf die Anzeige startet und pausiert. Bei Ablauf steht die Anzeige auf 0:00 (kein Ton, keine Regelwirkung). Gespeichert werden Dauer, Restzeit und Pause im Block `ui` der Speicherhülle (`DisplayTimer`, `SaveService`), nie im Regelkern. Der Timer zählt nur, solange das Cockpit offen ist.
+
 ## Bedienhand (Rechts-/Linkshänder, NQ-04)
 
 Die Einstellung „Bedienhand“ in den Optionen (Buttons „Rechtshändig“ / „Linkshändig“, Zeile „Aktiv: …“) legt fest, an welchem Ende des festen Aktionsbereichs der Ansagekarte die Hauptaktion steht: rechts bei rechtshändig (Standard), links bei linkshändig. Der Wechsel wirkt sofort (auch bei geöffnetem Cockpit), wird in `user://settings.json` gespeichert (`left_handed`) und gilt nach dem Neustart. Umgesetzt durch Umordnen der vorhandenen Buttons in `ActionCard.set_left_handed`: Auswahl, offene Karte und Signalverbindungen bleiben unberührt.

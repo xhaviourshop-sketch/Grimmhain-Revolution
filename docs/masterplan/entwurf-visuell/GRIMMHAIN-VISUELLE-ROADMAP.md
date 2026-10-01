@@ -192,6 +192,7 @@ Reihenfolge: P0 → P1 → P2 → P3. Danach P4/P5/P6 auf derselben gestalterisc
 
 - [ ] Deckungsgleiche Tagesversion des Dorfplatzes produzieren, daraus einen sparsamen Morgenübergang gestalten.
 - [ ] Setup, Rollenverteilung und Sitzordnung stilistisch angleichen, ohne einen neuen Setup-Ablauf zu erfinden.
+- [ ] Porträtauswahl durch die Spielleitung beim Einrichten (Entscheidung 01.10.2026, `DECISIONS.md`): löst die vorläufige automatische Zuordnung aus P3 ab (`PortraitAssignment`, stabil je Personen-ID, bis 24 Personen nie dasselbe Gesicht). Vorschlag nach Alter und Geschlecht, Speicherort je Personen-ID im Zustand klären, Rollenwechsel ändern das Porträt nie.
 - [ ] Morgenbericht, Diskussion, Nominierung, Hinrichtung und Tagesend-Kartenfenster gestalten.
 - [ ] Tod und Wiederbelebung klar kennzeichnen, ohne private Ursachen öffentlich zu machen.
 - [ ] Siegansicht und Abschlussbericht im selben Design; erlaubte Rollenoffenlegung erst nach bestätigtem Spielende.

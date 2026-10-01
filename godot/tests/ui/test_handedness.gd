@@ -306,8 +306,8 @@ func _check_layout(shell: Control, label: String, _left: bool) -> void:
 	var ring := _rect(shell, "SeatRingArea")
 	assert_true(inside(card, viewport) and inside(ring, viewport), "%s: Karte und Sitzkreis im Viewport" % label)
 	assert_true(inside(card, ring), "%s: Ansagekarte liegt in der Tischmitte des Bretts" % label)
-	for seat: Rect2 in _seat_rects(shell):
-		assert_false(overlaps(card, seat), "%s: Ansagekarte überdeckt keinen Platz" % label)
+	for t: Variant in find_node(_screen(shell), "SeatRing").call("tokens"):
+		assert_false(seat_hits_rect(t as Control, card), "%s: Ansagekarte überdeckt keinen Platz" % label)
 	var buttons := visible_buttons(_screen(shell))
 	for b: BaseButton in buttons:
 		if b.size.x > 0.0 and b.size.y > 0.0:
@@ -315,7 +315,18 @@ func _check_layout(shell: Control, label: String, _left: bool) -> void:
 			assert_true(b.size.y >= 47.5, "%s: %s mindestens 48 hoch (%s)" % [label, b.name, b.size])
 	for i: int in buttons.size():
 		for j: int in range(i + 1, buttons.size()):
-			assert_false(overlaps(clipped_rect(buttons[i]), clipped_rect(buttons[j])), "%s: %s und %s überlappen" % [label, buttons[i].name, buttons[j].name])
+			var a := buttons[i]
+			var b := buttons[j]
+			if a.has_method("portrait_rect") or b.has_method("portrait_rect"):
+				# Plätze sind rund und liegen auf einer Ellipse: Steuerelementflächen überlappen diagonal, sichtbare Teile nicht.
+				if a.has_method("portrait_rect") and b.has_method("portrait_rect"):
+					assert_false(seats_overlap(a, b), "%s: %s und %s überlappen" % [label, a.name, b.name])
+				else:
+					var seat := a if a.has_method("portrait_rect") else b
+					var other := b if seat == a else a
+					assert_false(seat_hits_rect(seat, clipped_rect(other)), "%s: %s und %s überlappen" % [label, a.name, b.name])
+				continue
+			assert_false(overlaps(clipped_rect(a), clipped_rect(b)), "%s: %s und %s überlappen" % [label, a.name, b.name])
 	for c: Control in visible_controls(find_node(_screen(shell), "InstructionCard")):
 		if c.size.x <= 0.0 or c.size.y <= 0.0 or c is ScrollContainer:
 			continue

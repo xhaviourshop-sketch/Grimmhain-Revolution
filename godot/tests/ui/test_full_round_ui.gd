@@ -30,6 +30,7 @@ func _button(shell: Control, node_name: String) -> BaseButton:
 
 
 func _tap(shell: Control, node_name: String) -> bool:
+	await tool_button(current_screen(shell), node_name)  # Werkzeuge im Optionenmenü: erst die Lasche öffnen
 	var b := _button(shell, node_name)
 	if b == null:
 		return false

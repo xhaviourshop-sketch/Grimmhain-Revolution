@@ -1,8 +1,10 @@
 class_name GameSeatRing
 extends Control
-## Sitzkreis des Cockpits: Plätze der laufenden Partie im Uhrzeigersinn (Anordnung wie im Setup,
-## SeatCircle.layout), in der Mitte ein freier Bereich `%RingCenter`. Reine Darstellung:
+## Sitzkreis des Cockpits: Porträtplätze der laufenden Partie im Uhrzeigersinn auf einer Ellipse (PortraitRingLayout),
+## in der Mitte ein freier Bereich `%RingCenter`. Reine Darstellung:
 ##   show_seats(seats)            öffentliche Sitzdaten (ohne Rollen)
+##   set_marks(marks)             geheime Zustandsabzeichen je Person (Person-ID → Arten), nur für die Spielleitung
+##   set_secrets_visible(on)      aus bei „Verbergen“: keine Abzeichen, keine Statusringe, keine Hervorhebung handelnder Personen
 ##   set_marking(mode, allowed, selected, actors)
 ##                                mit Auswahlmodus: nur `allowed` antippbar, `selected` gold; ohne
 ##                                Auswahlmodus: handelnde Personen (`actors`) hervorgehoben.
@@ -10,17 +12,14 @@ extends Control
 
 signal seat_tapped(person_id: int)
 
-const COMPACT_FROM := 13            ## ab so vielen Personen kompakte Platzhöhe
-## Mindestbreiten je Stufe: zuerst lesbarere Plätze, dann schmalere, bevor SeatCircle auf zwei Reihen
-## zurückfällt (etwa zehn bzw. acht Zeichen Name neben der Platznummer).
-const TOKEN_WIDTH_STEPS: Array[float] = [120.0, 104.0, 96.0]
-
 var _tokens: Dictionary[int, GameSeatToken] = {}
 var _order: Array[int] = []
 var _selection_mode: bool = false
 var _allowed: Array = []
 var _selected: Array = []
 var _actors: Array = []
+var _marks: Dictionary = {}
+var _secrets_visible: bool = true
 
 @onready var _center: Control = %RingCenter
 
@@ -62,6 +61,22 @@ func set_marking(selection_mode: bool, allowed: Array, selected: Array, actors: 
 	_apply_states()
 
 
+## Geheime Zustandsabzeichen (Person-ID → Arten). Wirken nur, solange Geheimes sichtbar ist.
+func set_marks(marks: Dictionary) -> void:
+	_marks = marks.duplicate()
+	_apply_states()
+
+
+## „Verbergen“: ohne Geheimes zeigt der Kreis nur Namen, Porträts und tot oder lebendig (plus Bedienmarkierung der Zielwahl).
+func set_secrets_visible(visible_secrets: bool) -> void:
+	_secrets_visible = visible_secrets
+	_apply_states()
+
+
+func secrets_visible() -> bool:
+	return _secrets_visible
+
+
 func clear_marking() -> void:
 	set_marking(false, [], [], [])
 
@@ -96,26 +111,26 @@ func _apply_states() -> void:
 				state = &"selected"
 			elif _allowed.has(id):
 				state = &"allowed"
-		elif _actors.has(id):
+		elif _actors.has(id) and _secrets_visible:
 			state = &"actor"
 		token.state = state
+		token.secrets_visible = _secrets_visible
+		token.marks = _marks.get(id, []) if _secrets_visible else []
 		token.disabled = _selection_mode and not _allowed.has(id) and not _selected.has(id)
 
 
 func _layout() -> void:
 	if not is_node_ready():
 		return
-	var height := float(ThemeTokens.TOUCH_MIN) if _order.size() >= COMPACT_FROM else float(ThemeTokens.BUTTON_SECONDARY_HEIGHT)
-	var result := {}
-	for width: float in TOKEN_WIDTH_STEPS:
-		result = SeatCircle.layout(_order.size(), size, height, width)
-		if SeatCircle.fits(result, size):
-			break
+	var result := PortraitRingLayout.layout(_order.size(), size)
 	var rects: Array = result["seats"]
 	for i: int in _order.size():
 		var r: Rect2 = rects[i]
-		_tokens[_order[i]].position = r.position
-		_tokens[_order[i]].size = r.size
+		var token := _tokens[_order[i]]
+		token.diameter = float(result["diameter"])
+		token.plate_limit = float((result["plate_widths"] as Array)[i])
+		token.position = r.position
+		token.size = r.size
 	var c: Rect2 = result["center"]
 	_center.position = c.position
 	_center.size = c.size

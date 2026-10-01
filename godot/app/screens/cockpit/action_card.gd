@@ -22,27 +22,61 @@ var _shown_kind: String = ""
 var _content: VBoxContainer = null
 var _actions_box: HFlowContainer = null
 var _left_handed: bool = false
+var _art: RoleCardArt = null  ## Rollenbild (nur im Cockpit gesetzt, sonst unsichtbar)
+var _slot: TargetSlot = null  ## Zielplatz (nur im Cockpit, bei Personenwahl): gewählte Person mit Pfeilen
+var _lower: BoxContainer = null  ## Zielplatz und Aktionen: nebeneinander auf breiter Karte (mehr Platz für den Text), sonst untereinander
+## Dockplatz der Hauptaktion (Cockpit, P3): Ist er gesetzt, steht der erste Button der Art PRIMARY dort („Nächster Schritt“ unten
+## am Rand) statt im Aktionsbereich der Karte. Ohne Dockplatz (eigenständige Karte, Tests) bleibt alles im Aktionsbereich.
+var primary_host: Control = null
+## Eckplatz des „i“ (Cockpit): Ist er gesetzt, steht die Kontexthilfe der Rolle als runder Knopf mit „i“ oben rechts auf der Karte.
+var info_host: Control = null
+var _primary: GrimmButton = null
+var _info: GrimmButton = null
 
 const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
+const SIDE_BY_SIDE_WIDTH := 560.0  ## ab dieser Kartenbreite stehen Zielplatz und Nebenaktionen in einer Zeile
+const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
 
 
 func _init() -> void:
+	var head := HBoxContainer.new()
+	head.name = "Head"
+	head.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	add_child(head)
+	_art = RoleCardArt.new()
+	_art.visible = false
+	_art.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(_art)
 	var scroll := ScrollContainer.new()
 	scroll.name = "Scroll"
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.follow_focus = true
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(scroll)
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(scroll)
 	_content = VBoxContainer.new()
 	_content.name = "Content"
 	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(_content)
+	_slot = TargetSlot.new()
+	_slot.visible = false
+	_slot.stepped.connect(func(direction: int) -> void: requested.emit(&"cycle_target", {"direction": direction}))
+	_lower = BoxContainer.new()
+	_lower.name = "Lower"
+	_lower.vertical = true
+	_lower.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	add_child(_lower)
+	_slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_lower.add_child(_slot)
 	_actions_box = HFlowContainer.new()
 	_actions_box.name = "Actions"
 	_actions_box.add_theme_constant_override(&"h_separation", ThemeTokens.SPACE_S)
 	_actions_box.add_theme_constant_override(&"v_separation", ThemeTokens.SPACE_S)
 	_actions_box.alignment = FlowContainer.ALIGNMENT_END
-	add_child(_actions_box)
+	_actions_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_actions_box.size_flags_stretch_ratio = 1.0
+	_lower.add_child(_actions_box)
+	resized.connect(func() -> void: _lower.vertical = size.x < SIDE_BY_SIDE_WIDTH)
 
 
 ## Sprachwechsel: Karte mit denselben Daten neu aufbauen (zusammengesetzte Texte).
@@ -56,6 +90,19 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_last_next = next
 	_last_context = context
 	_busy = false
+	if _primary != null and is_instance_valid(_primary):
+		if _primary.get_parent() != null:
+			_primary.get_parent().remove_child(_primary)
+		_primary.queue_free()
+	_primary = null
+	if _info != null and is_instance_valid(_info):
+		if _info.get_parent() != null:
+			_info.get_parent().remove_child(_info)
+		_info.queue_free()
+	_info = null
+	_slot.visible = false
+	for arrow: Node in _slot.find_children("*", "BaseButton", true, false):
+		(arrow as BaseButton).disabled = false  # `lock` sperrt auch den Zielplatz bis zur nächsten Karte
 	for box: Node in [_content, _actions_box]:
 		for child: Node in box.get_children():
 			box.remove_child(child)
@@ -130,7 +177,19 @@ func action_buttons() -> Array[BaseButton]:
 			out.append(b as BaseButton)
 	if not _left_handed:
 		out.reverse()
+	if _primary != null and is_instance_valid(_primary) and not _primary.is_queued_for_deletion():
+		out.push_front(_primary)
 	return out
+
+
+## Rollenbild der Karte; die Ansicht setzt die Rolle (nur Nacht, nicht verborgen).
+func role_art() -> RoleCardArt:
+	return _art
+
+
+## Hauptaktion im Dockplatz (oder null).
+func primary_button() -> GrimmButton:
+	return _primary if _primary != null and is_instance_valid(_primary) and not _primary.is_queued_for_deletion() else null
 
 
 ## Rechtshänder: Hauptaktion am rechten Ende, also Reihenfolge der Bauart umgekehrt; Linkshänder: wie gebaut.
@@ -148,6 +207,10 @@ func lock() -> void:
 	_busy = true
 	for b: Node in find_children("*", "BaseButton", true, false):
 		(b as BaseButton).disabled = true
+	if _primary != null and is_instance_valid(_primary):
+		_primary.disabled = true
+	if _info != null and is_instance_valid(_info):
+		_info.disabled = true
 
 
 # --- Kartenarten ------------------------------------------------------------------------------------
@@ -297,6 +360,7 @@ func _targets_part(next: Dictionary, context: Dictionary, buttons: Array[Control
 	if not selection.is_empty() and error != "":
 		var key := "ui.cockpit.card.selection.blocked.%s" % error
 		_text(key if CockpitText.has_key(key) else "ui.cockpit.card.selection.blocked.generic", {"counts": CockpitText.count_list(counts)}, &"WarningLabel").name = "SelectionBlockedLabel"
+	_show_slot(next, context, selection)
 	var random_active := bool(context.get("random_active", false))
 	if random_active:
 		# Vorschlag der Zufallsziehung; übernommen wird er erst mit „Auswahl bestätigen“ (RM-DR-015.2).
@@ -314,6 +378,22 @@ func _targets_part(next: Dictionary, context: Dictionary, buttons: Array[Control
 		buttons.append(_button("DeclineButton", CockpitText.action_key("decline", str(next.get("owner")), str(next.get("stage"))), GrimmButton.Kind.SECONDARY, &"decline"))
 	if not selection.is_empty():
 		buttons.append(_button("ClearSelectionButton", "ui.cockpit.action.clear_selection", GrimmButton.Kind.SECONDARY, &"clear_selection"))
+
+
+## Zielplatz im festen Bereich der Karte: gewählte Person (Einzelwahl) bzw. Namensliste (Mehrfachwahl). Nur im Cockpit (mit Dockplatz).
+func _show_slot(next: Dictionary, context: Dictionary, selection: Array) -> void:
+	if primary_host == null:
+		return
+	var seats: Array = context.get("seats", [])
+	var single := int(next.get("max", 0)) == 1
+	var chosen := {}
+	if single and not selection.is_empty():
+		for seat: Variant in seats:
+			if int((seat as Dictionary)["person_id"]) == int(selection[0]):
+				chosen = seat
+	var names := "" if single else (CockpitText.names_of(selection, seats) if not selection.is_empty() else tr("ui.cockpit.card.target.none"))
+	_slot.show_selection(chosen, names, single and (next.get("allowed_ids", []) as Array).size() > 1)
+	_slot.visible = true
 
 
 func _prediction_part(next: Dictionary, context: Dictionary, buttons: Array[Control]) -> void:
@@ -632,8 +712,24 @@ func _reason_key(reason: String) -> String:
 ## einer aufgedeckten bzw. nächtlichen Karte (verdeckt gibt es keine Knoten) und nie auf gezeigten Ebenen.
 func _help(next: Dictionary, buttons: Array[Control]) -> void:
 	var role := CockpitText.help_role(next)
-	if role != "":
+	if role == "":
+		return
+	if info_host == null:
 		buttons.append(_button("ContextHelpButton", "ui.cockpit.action.help", GrimmButton.Kind.COMPACT, &"help", {"role_id": role}))
+		return
+	var info := GlyphButton.new()
+	info.name = "ContextHelpButton"
+	info.glyph = "info"
+	info.text_key = "ui.cockpit.action.help"
+	info.tooltip_text = tr("ui.cockpit.action.help")
+	info.pressed.connect(_emit.bind(&"help", {"role_id": role}, info))
+	_info = info
+	info_host.add_child(info)
+	info.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	info.offset_left = -float(ThemeTokens.TOUCH_MIN) - 6.0
+	info.offset_right = -6.0
+	info.offset_top = 6.0
+	info.offset_bottom = 6.0 + float(ThemeTokens.TOUCH_MIN)
 
 
 func _heading(key: String, values: Dictionary = {}) -> GrimmLabel:
@@ -666,20 +762,29 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 	b.kind = kind
 	b.text_key = key
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.custom_minimum_size.x = maxf(b.custom_minimum_size.x, ACTION_MIN_WIDTH)
+	if primary_host != null and kind != GrimmButton.Kind.PRIMARY:
+		# Cockpit (Nachtbrett): schmale, flache Nebenaktionen, zwei je Reihe; so bleibt dem Text der Karte mehr Platz.
+		b.custom_minimum_size = Vector2(CARD_ACTION_MIN_WIDTH, ThemeTokens.TOUCH_MIN)
+		b.add_theme_font_size_override("font_size", ThemeTokens.FONT_CAPTION)
+	else:
+		b.custom_minimum_size.x = maxf(b.custom_minimum_size.x, ACTION_MIN_WIDTH)
 	b.pressed.connect(_emit.bind(action, payload, b))
 	return b
 
 
 func _actions(buttons: Array[Control]) -> void:
 	for b: Control in buttons:
+		if primary_host != null and _primary == null and b is GrimmButton and (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY:
+			_primary = b as GrimmButton
+			primary_host.add_child(b)
+			continue
 		_actions_box.add_child(b)
 	_apply_hand(not _left_handed)
 
 
 ## Ein Tippen zählt nur auf einem Button der aktuellen Karte, solange sie nicht gesperrt ist.
 func _emit(action: StringName, payload: Dictionary, source: BaseButton) -> void:
-	if _busy or source.disabled or source.is_queued_for_deletion() or not is_ancestor_of(source):
+	if _busy or source.disabled or source.is_queued_for_deletion() or not (is_ancestor_of(source) or source == _primary or source == _info):
 		return
 	requested.emit(action, payload)
 

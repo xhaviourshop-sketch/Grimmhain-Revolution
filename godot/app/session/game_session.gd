@@ -137,6 +137,17 @@ func private_seats() -> Array:
 	return CockpitView.private_seats(_state) if _state.is_started() else []
 
 
+## Zustandsabzeichen je lebender Person (Schutz, Gift, Markierung, Stumm, Sonder) für das Brett der Spielleitung, nur Lesen.
+## Geheim: nie in die öffentliche Sicht, die Oberfläche blendet sie bei „Verbergen“ aus (NightBoardView).
+func board_marks() -> Dictionary:
+	return NightBoardView.marks(_state)
+
+
+## Nachtreihenfolge der laufenden Nacht für die Leiste der Spielleitung (geheim, siehe NightBoardView).
+func night_order() -> Array:
+	return NightBoardView.night_order(_state)
+
+
 ## Angenommene Befehle in Reihenfolge (Kopie).
 func commands() -> Array[Command]:
 	return _commands.duplicate()

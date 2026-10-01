@@ -251,25 +251,21 @@ func _answer_prompt_minimally(s: Object, next: Dictionary) -> void:
 			s.call("answer_choice", false)
 
 
-## Die Pflichtaktion steht ohne Scrollen im festen Aktionsbereich der Ansagekarte (nicht im scrollenden Text): ganz in der Karte und im Fenster.
+## Die Pflichtaktion steht ohne Scrollen im festen Aktionsbereich der Ansagekarte (nicht im scrollenden Text): ganz in der Karte und im
+## Fenster; die Hauptaktion (Dock, P3) ganz im Dock am unteren Rand.
 func _reachable(shell: Control, b: BaseButton) -> bool:
 	var scroll := find_node(current_screen(shell), "Scroll") as ScrollContainer
-	var card := find_node(current_screen(shell), "InstructionCard") as Control
+	var home := find_node(current_screen(shell), "InstructionCard") as Control
+	if find_node(current_screen(shell), "NextHost").is_ancestor_of(b):
+		home = find_node(current_screen(shell), "ActionsArea") as Control
 	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
-	return not scroll.is_ancestor_of(b) and inside(rect_of(b), rect_of(card)) and inside(rect_of(b), viewport) and b.size.y >= 47.5
+	return not scroll.is_ancestor_of(b) and inside(rect_of(b), rect_of(home)) and inside(rect_of(b), viewport) and b.size.y >= 47.5
 
 
-## Rechtecke aller Plätze des Sitzkreises (die Ansagekarte liegt in der Tischmitte, nicht auf einem Platz).
-func _seat_rects(shell: Control) -> Array[Rect2]:
-	var out: Array[Rect2] = []
-	for t: Variant in find_node(current_screen(shell), "SeatRing").call("tokens"):
-		out.append(rect_of(t as Control))
-	return out
-
-
+## Trifft ein Rechteck einen Platz (Porträtkreis oder Namensschild)? Die Ansagekarte liegt in der Tischmitte, nicht auf einem Platz.
 func _hits_seat(shell: Control, r: Rect2) -> bool:
-	for seat: Rect2 in _seat_rects(shell):
-		if r.intersects(seat.grow(-1.0)):
+	for t: Variant in find_node(current_screen(shell), "SeatRing").call("tokens"):
+		if seat_hits_rect(t as Control, r):
 			return true
 	return false
 
@@ -281,11 +277,17 @@ func test_cockpit_tool_buttons_keep_a_usable_shape_at_1024x768_with_24_persons()
 			if shell == null:
 				return
 			var label := "%s/%s" % [locale, "links" if left else "rechts"]
-			for node_name: String in ["LogButton", "PrivateButton", "RolesButton", "GmButton", "CoverButton", "LexiconButton", "RulebookButton"]:
+			# Laschen und Randknöpfe stehen am Rand (mindestens 48 px je Seite); die übrigen Werkzeuge stehen im Optionenmenü.
+			for node_name: String in ["LogButton", "OptionsButton", "HideButton", "CoverButton"]:
+				var edge := find_button(current_screen(shell), node_name)
+				assert_true(edge != null and edge.size.x >= 47.5 and edge.size.y >= 47.5, "%s: %s hat eine nutzbare Form (%s)" % [label, node_name, str(edge.size) if edge != null else "fehlt"])
+			await press(find_button(current_screen(shell), "OptionsButton"))
+			for node_name: String in ["PrivateButton", "RolesButton", "GmButton", "LexiconButton", "RulebookButton"]:
 				var b := find_button(current_screen(shell), node_name)
-				assert_true(b != null, "%s: %s vorhanden" % [label, node_name])
+				assert_true(b != null and b.is_visible_in_tree(), "%s: %s im geöffneten Optionenmenü sichtbar" % [label, node_name])
 				if b != null:
 					assert_true(b.size.x >= 64.0 and b.size.y <= 64.0, "%s: %s hat eine nutzbare Form (%s)" % [label, node_name, str(b.size)])
+			await press(find_button(current_screen(shell), "OptionsButton"))
 			var card := rect_of(find_node(current_screen(shell), "InstructionCard") as Control)
 			assert_true(card.size.y >= 240.0, "%s: die Ansagekarte behält mindestens 240 Höhe (%.0f)" % [label, card.size.y])
 			assert_false(_hits_seat(shell, card), "%s: die Ansagekarte überdeckt keinen Platz" % label)
@@ -341,22 +343,23 @@ func test_target_selection_with_24_persons_is_operable_for_both_hands_and_with_a
 		var ring_node := find_node(current_screen(shell), "SeatRing") as Control
 		var allowed: Array = _next(shell)["allowed_ids"]
 		assert_false(allowed.is_empty(), "%s: wählbare Personen vorhanden" % label)
-		var rects: Array[Rect2] = []
+		var tokens_allowed: Array[Control] = []
 		for id: Variant in allowed:
 			var token := ring_node.call("token_for", int(id)) as BaseButton
 			assert_true(token != null and not token.disabled and token.is_visible_in_tree(), "%s: Platz %d antippbar" % [label, int(id)])
 			if token == null:
 				continue
-			assert_true(inside(rect_of(token), viewport), "%s: Platz %d im sichtbaren Bereich" % [label, int(id)])
-			rects.append(rect_of(token))
-		for i: int in rects.size():
-			for j: int in range(i + 1, rects.size()):
-				assert_false(overlaps(rects[i], rects[j], 1.0), "%s: Plätze %d und %d überlappen nicht" % [label, i, j])
+			for part: Rect2 in seat_parts(token):
+				assert_true(inside(part, viewport), "%s: Platz %d im sichtbaren Bereich" % [label, int(id)])
+			tokens_allowed.append(token)
+		for i: int in tokens_allowed.size():
+			for j: int in range(i + 1, tokens_allowed.size()):
+				assert_false(seats_overlap(tokens_allowed[i], tokens_allowed[j]), "%s: Plätze %d und %d überlappen nicht" % [label, i, j])
 		var confirm := find_button(current_screen(shell), "ConfirmTargetsButton")
 		assert_true(confirm != null and await _reachable(shell, confirm), "%s: Bestätigen fest sichtbar" % label)
 		if confirm != null:
-			for r: Rect2 in rects:
-				assert_false(overlaps(r, rect_of(confirm), 1.0), "%s: Bestätigen verdeckt keinen Platz" % label)
+			for token: Control in tokens_allowed:
+				assert_false(seat_hits_rect(token, rect_of(confirm)), "%s: Bestätigen verdeckt keinen Platz" % label)
 		if left:
 			var status := find_node(current_screen(shell), "SaveStatusLabel") as Label
 			assert_eq(status.text, "Fehler: nicht gespeichert", "%s: Speicherfehler sichtbar" % label)

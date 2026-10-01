@@ -37,6 +37,19 @@ const BOARD_NEUTRAL := Color("#10131c")      ## Spielbrett ohne Tageszeit (Spiel
 const BOARD_NIGHT := Color("#0e1530")        ## Spielbrett in der Nacht: tiefes Blau, heller als der Hintergrund
 const BOARD_DAY := Color("#1c160d")          ## Spielbrett am Morgen und Tag: dunkles Dämmerbraun
 
+# --- Nachtbrett (P3): Tönungen und Flächen der Porträtplätze, Laschen und Leiste --------------------
+const INVISIBLE := Color(0, 0, 0, 0)         ## unsichtbar (Text, den ein selbstzeichnendes Element nicht doppelt zeigen soll)
+const TINT_NONE := Color(1, 1, 1, 1)         ## Bild unverändert
+const TINT_DEAD := Color(0.5, 0.5, 0.55)     ## Porträt einer toten Person
+const TINT_DISABLED := Color(0.62, 0.62, 0.66)  ## nicht wählbare Person oder gesperrte Lasche
+const TINT_HOVER := Color(1.25, 1.2, 1.1)    ## Lasche unter Finger oder Zeiger
+const TINT_ART_DONE := Color(0.8, 0.8, 0.84)  ## erledigter Schritt der Nachtleiste
+const TINT_ART_OPEN := Color(1.3, 1.3, 1.3)  ## Rollensymbol der Nachtleiste, heller als das dunkle Medaillon
+const PLATE_BG := Color(0.02, 0.03, 0.06, 0.66)   ## Namensschild unter dem Porträt
+const NUMBER_BG := Color(0.03, 0.03, 0.05, 0.92)  ## Nummern-Abzeichen am Porträt
+const CARD_BG := Color(0.03, 0.025, 0.05, 0.86)   ## Aktionskarte über dem Dorfplatz
+const SHADE_EDGE := Color(0.012, 0.02, 0.05)      ## Randabdunklung des Hintergrundbilds
+
 # --- Abstände, Radien, Rahmen --------------------------------------------------------------------
 const SPACE_XS := 4
 const BAR_GAP := 2                    ## Cockpit: Abstand zwischen Leisten und Brett sowie Innenrand der Leisten
@@ -63,6 +76,7 @@ const FONT_SHOW := 48                 ## gezeigte Karte: Ergebnis groß für die
 
 # --- Bedienflächen und Layout --------------------------------------------------------------------
 const TOUCH_MIN := 48                 ## Mindestgröße jeder Bedienfläche
+const BADGE_MIN := 24.0               ## kleinstes Zustandsabzeichen am Porträtplatz (Art Direction, Abschnitt 7)
 const BUTTON_SECONDARY_HEIGHT := 56
 const BUTTON_PRIMARY_HEIGHT := 64
 const BUTTON_PRIMARY_MIN_WIDTH := 240

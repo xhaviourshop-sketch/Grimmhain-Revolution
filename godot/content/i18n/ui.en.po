@@ -1299,7 +1299,7 @@ msgid "ui.cockpit.tools.private"
 msgstr "Roles"
 
 msgid "ui.cockpit.tools.cover"
-msgstr "Hide"
+msgstr "Privacy cover"
 
 msgid "ui.cockpit.leave.title"
 msgstr "Leave the cockpit?"
@@ -5834,7 +5834,7 @@ msgid "ui.rulebook.c03.b07"
 msgstr "The Decoy Wolf sees their true role on the card, never the disguise. Wolves do not recognise each other through the role card but in the first night during the shared pack step."
 
 msgid "ui.rulebook.c03.b08"
-msgstr "An open role card disappears on every change of the game state, on “Undo”, on loading and on “Hide”. The neutral list is shown again afterwards."
+msgstr "An open role card disappears on every change of the game state, on “Undo”, on loading and on “Privacy cover”. The neutral list is shown again afterwards."
 
 msgid "ui.rulebook.c04.title"
 msgstr "Running the night and cover calls"
@@ -5900,10 +5900,10 @@ msgid "ui.rulebook.c05.b03"
 msgstr "At night everyone has their eyes closed, so cards with secret content can be read openly. In the morning and during the day everyone can see along. There such cards are covered (“Game master only”) and open only with “Show”. With the next action they are covered again."
 
 msgid "ui.rulebook.c05.b04"
-msgstr "Hiding"
+msgstr "Privacy cover and hiding secrets"
 
 msgid "ui.rulebook.c05.b05"
-msgstr "“Hide” hides the whole cockpit and closes all open layers. The game continues unchanged. “Show cockpit again” brings it back."
+msgstr "“Privacy cover” hides the whole cockpit and closes all open layers. The game continues unchanged. “Show cockpit again” brings it back. “Hide secrets” (the eye at the edge) keeps the board and only hides what is secret: state badges, status rings, the acting person, the night order and the role image of the card. Names, portraits and whether a person is dead or alive stay visible."
 
 msgid "ui.rulebook.c05.b06"
 msgstr "Private notices"
@@ -5915,7 +5915,7 @@ msgid "ui.rulebook.c05.b08"
 msgstr "Areas with all secrets"
 
 msgid "ui.rulebook.c05.b09"
-msgstr "“Roles” and “Log” deliberately show everything. Open them only when nobody is reading along. They close on “Hide”, on “Back” and when leaving the view. A tap next to the drawer closes it as well."
+msgstr "“Roles” and “Log” deliberately show everything. Open them only when nobody is reading along. They close on “Privacy cover”, on “Back” and when leaving the view. A tap next to the drawer closes it as well."
 
 msgid "ui.rulebook.c06.title"
 msgstr "Morning and revival round"
@@ -8131,3 +8131,75 @@ msgstr "#{index} Execution prevented by card ({visibility})"
 
 msgid "ui.cards.pack_victim"
 msgstr "Pack victim: {name}, role: {role}"
+
+msgid "ui.cockpit.seat.plate.alive"
+msgstr "{mark}{name}"
+
+msgid "ui.cockpit.seat.plate.dead"
+msgstr "{mark}† {name}"
+
+msgid "ui.cockpit.seat.plate.nominated"
+msgstr "{mark}{name} (N)"
+
+msgid "ui.cockpit.tools.options"
+msgstr "Options"
+
+msgid "ui.cockpit.tools.hide"
+msgstr "Hide secrets"
+
+msgid "ui.cockpit.hide.banner"
+msgstr "Hidden: names, portraits, dead or alive only"
+
+msgid "ui.cockpit.dock.undo"
+msgstr "Undo"
+
+msgid "ui.cockpit.order.toggle"
+msgstr "Expand or collapse the night order"
+
+msgid "ui.cockpit.timer.unset"
+msgstr "–:––"
+
+msgid "ui.cockpit.timer.tooltip_start"
+msgstr "Start timer"
+
+msgid "ui.cockpit.timer.tooltip_pause"
+msgstr "Pause timer"
+
+msgid "ui.cockpit.menu.timer"
+msgstr "Display timer (display only, no rules effect)"
+
+msgid "ui.cockpit.menu.timer_day"
+msgstr "Day and discussion"
+
+msgid "ui.cockpit.menu.timer_night"
+msgstr "Night"
+
+msgid "ui.cockpit.menu.timer_value"
+msgstr "{time}"
+
+msgid "ui.cockpit.menu.timer_off"
+msgstr "not set"
+
+msgid "ui.cockpit.menu.timer_reset"
+msgstr "Reset timer"
+
+msgid "ui.cockpit.menu.night_timer"
+msgstr "Show night timer"
+
+msgid "ui.cockpit.menu.settings"
+msgstr "Settings"
+
+msgid "ui.cockpit.menu.minus"
+msgstr "−1"
+
+msgid "ui.cockpit.menu.plus"
+msgstr "+1"
+
+msgid "ui.cockpit.menu.plus_five"
+msgstr "+5"
+
+msgid "ui.cockpit.card.target.named"
+msgstr "%d · %s"
+
+msgid "ui.cockpit.card.target.none"
+msgstr "Choose a target"

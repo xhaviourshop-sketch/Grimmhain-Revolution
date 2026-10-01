@@ -36,6 +36,7 @@
 
 - [ ] Marken-/IP-Prüfung abgeschlossen.
 - [ ] Assetregister ohne ungeklärte Releaseassets.
+- [ ] `node tools/check-asset-register.js --release` ohne Befund: kein nur intern freigegebenes Asset (`intern-freigegeben`) unter `godot/`.
 - [ ] Schriftlizenzen mitgeliefert.
 - [ ] KI-Dienste und verwendete Inhalte gemäß Storeanforderungen dokumentiert.
 - [ ] Einwilligung, Löschung und lokale Speicherung eigener Fotos/Namen erklärt.

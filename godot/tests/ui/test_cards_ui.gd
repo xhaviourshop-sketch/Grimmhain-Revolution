@@ -366,9 +366,11 @@ func test_card_window_fits_for_both_hands_and_languages() -> void:
 					continue
 				var r := rect_of(b)
 				assert_false(scroll.is_ancestor_of(b), "%s/%s: %s steht außerhalb des scrollenden Textes" % [lang, left, node_name])
-				assert_true(inside(r, viewport) and inside(r, card), "%s/%s: %s ohne Scrollen sichtbar (%s)" % [lang, left, node_name, str(r)])
+				# Die Hauptaktion steht im Dock am unteren Rand (P3), alle anderen Aktionen in der Karte.
+				var home := rect_of(find_node(current_screen(shell), "ActionsArea") as Control) if node_name == "CardPlayButton" else card
+				assert_true(inside(r, viewport) and inside(r, home), "%s/%s: %s ohne Scrollen sichtbar (%s)" % [lang, left, node_name, str(r)])
 				for t: Variant in seats:
-					assert_false(r.intersects(rect_of(t as Control).grow(-1.0)), "%s/%s: %s überdeckt keinen Platz" % [lang, left, node_name])
+					assert_false(seat_hits_rect(t as Control, r), "%s/%s: %s überdeckt keinen Platz" % [lang, left, node_name])
 				assert_true(r.size.y >= 44.0, "%s/%s: %s mindestens 44 hoch" % [lang, left, node_name])
 			side_x[left] = rect_of(find_button(current_screen(shell), "CardPlayButton")).get_center().x
 			assert_true(str(_next(shell)["kind"]) == "card_window", "%s/%s: Zustand unverändert (Fenster offen)" % [lang, left])

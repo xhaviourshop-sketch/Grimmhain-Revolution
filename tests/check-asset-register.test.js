@@ -104,6 +104,28 @@ test("Datei unter godot/ ohne Freigabe wird gemeldet", () => {
   assert.ok(problems.some((p) => /Godot-Projekt/.test(p)));
 });
 
+test("intern-freigegeben ist unter godot/ zulässig, verlangt aber einen PO-Eintrag", () => {
+  const ok = parseRegister(`${HEADER}
+${row({ datei: "godot/assets/x.png", status: "intern-freigegeben", po_freigabe: "2026-10-01 Markus" })}
+`);
+  assert.deepEqual(checkRegister(ok.rows, ["godot/assets/x.png"], hashes({ "godot/assets/x.png": SHA })).problems, []);
+  const missing = parseRegister(`${HEADER}
+${row({ datei: "godot/assets/x.png", status: "intern-freigegeben" })}
+`);
+  const { problems } = checkRegister(missing.rows, ["godot/assets/x.png"], hashes({ "godot/assets/x.png": SHA }));
+  assert.ok(problems.some((p) => /intern-freigegeben" ohne Eintrag in po_freigabe/.test(p)));
+});
+
+test("Veröffentlichungsprüfung meldet intern freigegebene Dateien unter godot/", () => {
+  const { rows } = parseRegister(`${HEADER}
+${row({ datei: "godot/assets/x.png", status: "intern-freigegeben", po_freigabe: "2026-10-01 Markus" })}
+`);
+  const files = ["godot/assets/x.png"];
+  assert.deepEqual(checkRegister(rows, files, hashes({ "godot/assets/x.png": SHA }), false).problems, []);
+  const release = checkRegister(rows, files, hashes({ "godot/assets/x.png": SHA }), true).problems;
+  assert.ok(release.some((p) => /für eine Veröffentlichung gesperrt/.test(p)));
+});
+
 test("freigegeben verlangt PO-Eintrag und geklärte Lizenz", () => {
   const { rows } = parseRegister(`${HEADER}\n${row({ datei: "assets/x.png", status: "freigegeben", lizenzquelle: "ungeklärt" })}\n`);
   const { problems } = checkRegister(rows, ["assets/x.png"], hashes({ "assets/x.png": SHA }));

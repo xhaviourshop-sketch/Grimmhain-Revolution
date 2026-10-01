@@ -538,3 +538,8 @@ Nicht gelöst: aktiver Slot behält einen leichten rosa Hauch am Rand, Stumm-Abz
 Entscheidung: Stil der Rollensymbole für alle 72 Rollen in `DECISIONS.md`. Art Direction Abschnitt 7 (Abzeichen 24 px, größer `marker-*.webp`). Herkunft in `ORIGIN-NOTES-NIGHT-BOARD.md` Abschnitt 5, 119 neue Registerzeilen (`node tools/check-asset-register.js`: vollständig und konsistent).
 Schätzung Rollensymbole: 61 fehlende Symbole, mindestens 6 Blätter, realistisch 7 bis 8 (Grafikliste).
 Abgelegt in `docs/assets/p2-mockup/`, nichts in `godot/`, lokaler Commit auf `feature/visual-night-board`, kein Push.
+
+## 2026-10-01: P3 Nachtbrett, Zwischenstand 1 (läuft)
+Branch `feature/visual-night-board`, lokal, kein Push, PR #3 unberührt. Ausgangspunkt: Basislauf der Godot-Suite vor den Änderungen grün (1453 von 1457, die 4 Fehler stammten aus halbfertigen eigenen Dateien während des Laufs).
+Erledigt (noch nicht committet): Assetregel geklärt (neuer Status `intern-freigegeben`, `--release`-Prüfung sperrt Veröffentlichung, Eintrag in `DECISIONS.md`), 202 Laufzeitassets unter `godot/assets/night/` mit Registerzeilen (Build-Skript `docs/assets/p3-runtime/build_assets.py`), Porträtplätze (Ellipse, 24 stabile Gesichter je Personen-ID), Statusabzeichen und „Verbergen“, Nachtleiste, Laschen, Aktionskarte Variante A mit Zielplatz und Dock, Anzeige-Timer (eigener Block `ui` in der Speicherhülle), Capture-Werkzeug `godot/tools/capture_p3_night.gd` (spielt eine echte Nacht über die Knöpfe).
+Offen: bestehende UI-Tests anpassen, neue Tests (Timer, Verbergen, Layout, Porträts), Gesamtlauf, Spielläufe mit 24 und 6 Personen bei 1024x768 und 1280x800.
