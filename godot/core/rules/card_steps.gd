@@ -105,6 +105,8 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 				if not prompt.allowed_ids.has(t) or seen.has(t) or not s.players.has(t):
 					return &"invalid_target"
 				seen.append(t)
+			if not CardEffects.check_pick(s, spec, list):
+				return &"invalid_target_mix"  # z. B. Puppenspieler: jede Fraktion muss vertreten sein
 		STAGE_OPTION:
 			if not DictRead.is_int_like(p.get("option")) or int(p["option"]) < 0 or int(p["option"]) >= DictRead.get_array(spec, "options").size():
 				return &"invalid_option"
