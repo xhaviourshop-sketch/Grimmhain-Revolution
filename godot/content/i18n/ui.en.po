@@ -7549,3 +7549,543 @@ msgstr "The dead draw cards that are played in the card window. Also unlocks the
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
 msgstr "Card Swallower only with realm-of-the-dead cards"
+
+msgid "ui.cockpit.secret.card"
+msgstr "A dead person's card is secret. Show it only when nobody is reading along."
+
+msgid "ui.cards.window.caption.start"
+msgstr "Card window before the day discussion"
+
+msgid "ui.cards.window.caption.end"
+msgstr "Card window after execution and death effects"
+
+msgid "ui.cards.window.heading"
+msgstr "Realm-of-the-dead card of {name}"
+
+msgid "ui.cards.window.waiting"
+msgstr "Next: {names}"
+
+msgid "ui.cards.window.preselected"
+msgstr "Offered people (stored): {names}"
+
+msgid "ui.cards.window.must_play"
+msgstr "This replacement card must be played immediately."
+
+msgid "ui.cards.window.not_playable"
+msgstr "The card has no effect right now and can only be kept."
+
+msgid "ui.cards.action.play"
+msgstr "Play card"
+
+msgid "ui.cards.action.keep"
+msgstr "Keep"
+
+msgid "ui.cards.action.exchange"
+msgstr "Exchange for a replacement card"
+
+msgid "ui.cards.action.show"
+msgstr "Show card"
+
+msgid "ui.cards.action.overview"
+msgstr "Card overview"
+
+msgid "ui.cards.action.close_window"
+msgstr "Close window"
+
+msgid "ui.cards.action.roll"
+msgstr "Roll ({count})"
+
+msgid "ui.cards.action.reveal_role"
+msgstr "Reveal role publicly"
+
+msgid "ui.cards.action.take_runner_up"
+msgstr "Use second most votes"
+
+msgid "ui.cards.action.no_runner_up"
+msgstr "Nobody"
+
+msgid "ui.cards.action.confirm_report"
+msgstr "Confirm violation"
+
+msgid "ui.cards.action.village.yes"
+msgstr "The village carries out the execution"
+
+msgid "ui.cards.action.village.no"
+msgstr "The village refuses"
+
+msgid "ui.cards.action.report.no_role_talk"
+msgstr "Report violation: roles mentioned"
+
+msgid "ui.cards.action.report.no_speaking"
+msgstr "Report violation: spoke"
+
+msgid "ui.cards.prompt.heading"
+msgstr "Realm-of-the-dead card is being played"
+
+msgid "ui.cards.task.heading"
+msgstr "Task for the game master"
+
+msgid "ui.cards.dice.result"
+msgstr "Rolled: {dice}"
+
+msgid "ui.cards.swallower.status"
+msgstr "Balance: {balance} stacks, collected in total: {total}, shield: {shield}"
+
+msgid "ui.cards.rules.caption"
+msgstr "In force (by cards)"
+
+msgid "ui.cards.rules.excluded"
+msgstr "Excluded: {names}"
+
+msgid "ui.cards.exec.cancelled"
+msgstr "The execution is cancelled today by a card."
+
+msgid "ui.cards.exec.dead_nominate"
+msgstr "Today only the dead nominate. The living listen in silence."
+
+msgid "ui.cards.exec.reveal"
+msgstr "Watchful Eyes: the person's role is revealed publicly first. Then the village decides."
+
+msgid "ui.cards.exec.village_decides"
+msgstr "The role is revealed. Ask the village: should the execution be carried out?"
+
+msgid "ui.cards.exec.runner_up"
+msgstr "Chain Reaction: tap the person with the second most votes in the circle or choose “Nobody”."
+
+msgid "ui.cards.exec.runner_up_set"
+msgstr "Second most votes: {name}"
+
+msgid "ui.cards.exec.shifted"
+msgstr "The votes count for the person to the left: they are the target ({name})."
+
+msgid "ui.cards.exec.random_wolf"
+msgstr "If the verdict hits a villager it is redirected to a random wolf."
+
+msgid "ui.cards.report.heading"
+msgstr "Report violation"
+
+msgid "ui.cards.report.do"
+msgstr "Tap the person who broke the day rule."
+
+msgid "ui.cards.dialog.exchange.title"
+msgstr "Exchange card?"
+
+msgid "ui.cards.dialog.exchange.message"
+msgstr "The Card Swallower receives a stack. The original card returns to the pool and the replacement card must be played immediately."
+
+msgid "ui.cards.dialog.exchange.confirm"
+msgstr "Exchange"
+
+msgid "ui.cards.dialog.close.title"
+msgstr "Close the card window?"
+
+msgid "ui.cards.dialog.close.message"
+msgstr "All cards not yet played stay with their owners."
+
+msgid "ui.cards.dialog.close.confirm"
+msgstr "Close"
+
+msgid "ui.cards.face.heading"
+msgstr "Card of {name}"
+
+msgid "ui.cards.overview.heading"
+msgstr "Realm-of-the-dead cards"
+
+msgid "ui.cards.overview.empty"
+msgstr "Nobody has received a card yet."
+
+msgid "ui.cards.overview.row"
+msgstr "{name}: {card} ({status})"
+
+msgid "ui.cards.overview.swallower"
+msgstr "Card Swallower {name}: balance {balance}, collected {total}, shield: {shield}"
+
+msgid "ui.cards.status.held"
+msgstr "held by the person"
+
+msgid "ui.cards.status.played"
+msgstr "played"
+
+msgid "ui.cards.status.swapped"
+msgstr "exchanged"
+
+msgid "ui.cards.status.lapsed"
+msgstr "lapsed"
+
+msgid "ui.prompt.generic.roll"
+msgstr "Tap “Roll”. The result is stored and never rolled again."
+
+msgid "ui.card.task.puppet_nominate.heading"
+msgstr "Task: puppeteer nominations"
+
+msgid "ui.card.task.protect_pick.heading"
+msgstr "Task: choose the protected person"
+
+msgid "ui.card.task.blood_pact_reveal.heading"
+msgstr "Task: reveal wolves"
+
+msgid "ui.card.task.cosmic_victim.heading"
+msgstr "Task: victim of the other side"
+
+msgid "ui.card.task.pack_review.heading"
+msgstr "Task: review the pack's target"
+
+msgid "ui.card.task.pack_redirect.heading"
+msgstr "Task: redirect the pack attack"
+
+msgid "ui.card.task.bad_omen_pick.heading"
+msgstr "Task: Bad Omen"
+
+msgid "ui.card.task.short_vote_check.heading"
+msgstr "Task: evaluate the Silent Vote"
+
+msgid "ui.card.task.solo_rebirth.heading"
+msgstr "Task: return with a new role"
+
+msgid "ui.card.task.solo_judge.heading"
+msgstr "Task: judge from the realm of the dead"
+
+msgid "ui.card.task.puppet_nominate.targets"
+msgstr "Choose five people, at least one from each faction. They are nominated."
+
+msgid "ui.card.task.protect_pick.target_id"
+msgstr "Secretly choose the person who is protected."
+
+msgid "ui.card.task.blood_pact_reveal.targets"
+msgstr "Choose zero to two wolves who are revealed publicly."
+
+msgid "ui.card.task.cosmic_victim.target_id"
+msgstr "Choose the victim of the other side."
+
+msgid "ui.card.task.pack_review.target_id"
+msgstr "Show the pack the victim's role. If the pack picks another target, tap it, otherwise choose nobody."
+
+msgid "ui.card.task.pack_redirect.target_id"
+msgstr "Choose the person who is hit instead of the pack's victim."
+
+msgid "ui.card.task.bad_omen_pick.caught"
+msgstr "Did the pack catch a strong role this night?"
+
+msgid "ui.card.task.bad_omen_pick.target_id"
+msgstr "Choose the wolf who dies, or nobody."
+
+msgid "ui.card.task.short_vote_check.in_time"
+msgstr "Were nomination and execution completed within 60 seconds?"
+
+msgid "ui.card.task.solo_rebirth.role"
+msgstr "Choose the new solo role of the returning person."
+
+msgid "ui.card.task.solo_judge.target_id"
+msgstr "Choose the person who is additionally nominated, or nobody."
+
+msgid "ui.card.task.solo_judge.agrees"
+msgstr "Do at least 50 percent of the players agree?"
+
+msgid "ui.card.input.target_id"
+msgstr "Choose the person for this card."
+
+msgid "ui.card.input.targets"
+msgstr "Choose the people for this card."
+
+msgid "ui.card.input.subject_id"
+msgstr "Choose the person who is asked about."
+
+msgid "ui.card.input.asker_id"
+msgstr "Choose the person who may ask the question."
+
+msgid "ui.card.input.winner_id"
+msgstr "Choose the person who wins according to the slip."
+
+msgid "ui.card.input.next_dead_id"
+msgstr "Choose the person who dies next according to the slip."
+
+msgid "ui.card.input.answer"
+msgstr "Is the truthful answer yes?"
+
+msgid "ui.card.input.seen"
+msgstr "Confirm that the owner has seen the game state."
+
+msgid "ui.card.input.done"
+msgstr "Confirm that the question has been answered."
+
+msgid "ui.card.input.agrees"
+msgstr "Does the asked side agree?"
+
+msgid "ui.card.input.days"
+msgstr "Choose the duration in days."
+
+msgid "ui.card.input.mode"
+msgstr "How may the ability be used?"
+
+msgid "ui.card.input.leader"
+msgstr "Which team is ahead?"
+
+msgid "ui.card.input.team"
+msgstr "Which team wins according to the guess?"
+
+msgid "ui.card.input.side"
+msgstr "Which side receives the bonus?"
+
+msgid "ui.card.input.role"
+msgstr "Choose the new role."
+
+msgid "ui.card.input.role_0"
+msgstr "Choose the new role for the first person."
+
+msgid "ui.card.input.role_1"
+msgstr "Choose the new role for the second person."
+
+msgid "ui.card.input.dice"
+msgstr "Roll the virtual dice."
+
+msgid "ui.card.input.dice.confirm"
+msgstr "The dice have fallen. The result is stored."
+
+msgid "ui.card.solo_14.input.target_id"
+msgstr "Choose the neighbour who is accused."
+
+msgid "ui.card.solo_14.input.agrees"
+msgstr "Does the other neighbour agree?"
+
+msgid "ui.card.solo_01.input.target_id"
+msgstr "Choose the person whose name is on the slip."
+
+msgid "ui.card.solo_03.input.target_id"
+msgstr "Choose the person who last nominated or attacked."
+
+msgid "ui.card.solo_05.input.target_id"
+msgstr "Choose the heir."
+
+msgid "ui.card.solo_08.input.target_id"
+msgstr "Choose the person named as the most dangerous."
+
+msgid "ui.card.solo_12.input.target_id"
+msgstr "Choose the person with the three extra votes."
+
+msgid "ui.card.schicksal_14.input.target_id"
+msgstr "Choose the judge the village has chosen."
+
+msgid "ui.card.schicksal_05.input.targets"
+msgstr "Choose everyone who received no vote."
+
+msgid "ui.card.loki_05.input.targets"
+msgstr "Choose the most named person, all of them in case of a tie."
+
+msgid "ui.card.segen_10.input.target_id"
+msgstr "Choose the victim of the dead's vote."
+
+msgid "ui.card.segen_05.input.target_id"
+msgstr "Choose the person with the double vote."
+
+msgid "ui.card.loki_08.input.target_id"
+msgstr "Choose the person who carries out the night ability."
+
+msgid "ui.card.option.days.1"
+msgstr "1 day(s)"
+
+msgid "ui.card.option.days.2"
+msgstr "2 day(s)"
+
+msgid "ui.card.option.days.3"
+msgstr "3 day(s)"
+
+msgid "ui.card.option.mode.again"
+msgstr "Use again"
+
+msgid "ui.card.option.mode.twice"
+msgstr "Use twice"
+
+msgid "ui.card.option.leader.village"
+msgstr "The village is ahead"
+
+msgid "ui.card.option.leader.wolves"
+msgstr "The wolves are ahead"
+
+msgid "ui.card.option.team.village"
+msgstr "Village"
+
+msgid "ui.card.option.team.wolves"
+msgstr "Wolves"
+
+msgid "ui.card.option.team.solo"
+msgstr "Solo win"
+
+msgid "ui.card.option.side.village"
+msgstr "Village: next night without a pack attack"
+
+msgid "ui.card.option.side.wolves"
+msgstr "Wolves: next execution is cancelled"
+
+msgid "ui.card.option.value.village"
+msgstr "Village"
+
+msgid "ui.card.option.value.wolves"
+msgstr "Wolves"
+
+msgid "ui.card.option.swallower.none"
+msgstr "Head shake: do nothing"
+
+msgid "ui.card.option.swallower.kill"
+msgstr "Two fingers: kill (2 stacks)"
+
+msgid "ui.card.option.swallower.shield"
+msgstr "Five fingers: shield (5 stacks)"
+
+msgid "ui.card.option.swallower.win"
+msgstr "Ten fingers: win (10 stacks)"
+
+msgid "ui.card.public.played"
+msgstr "Realm-of-the-dead card played: {card}"
+
+msgid "ui.card.public.role_revealed"
+msgstr "{name} is: {role} ({card})"
+
+msgid "ui.card.public.revived"
+msgstr "{name} returns."
+
+msgid "ui.card.public.question"
+msgstr "Public question from {asker} to the game master about {subject}. Answer: {answer}"
+
+msgid "ui.card.public.marker"
+msgstr "{name} carries a suspicion marker."
+
+msgid "ui.card.public.excluded"
+msgstr "{name} is out of the discussion."
+
+msgid "ui.card.public.dice"
+msgstr "{name} rolled: {dice}"
+
+msgid "ui.card.public.swallower"
+msgstr "The Card Swallower has collected {total} stacks in total."
+
+msgid "ui.card.public.night_skipped"
+msgstr "Night {night} is skipped."
+
+msgid "ui.card.public.value.person_id"
+msgstr "Affected: {value}"
+
+msgid "ui.card.public.value.person_ids"
+msgstr "Affected: {value}"
+
+msgid "ui.card.public.value.victim_id"
+msgstr "Victim: {value}"
+
+msgid "ui.card.public.value.victim_ids"
+msgstr "Victims: {value}"
+
+msgid "ui.card.public.value.extra_ids"
+msgstr "Additional victims: {value}"
+
+msgid "ui.card.public.value.wolf_ids"
+msgstr "Revealed wolves: {value}"
+
+msgid "ui.card.public.value.judge_id"
+msgstr "Judge: {value}"
+
+msgid "ui.card.public.value.accused_id"
+msgstr "Accused: {value}"
+
+msgid "ui.card.public.value.agreed"
+msgstr "Agreement: {value}"
+
+msgid "ui.card.public.value.rejected_id"
+msgstr "Refused by the village: {value}"
+
+msgid "ui.card.public.value.nominee_ids"
+msgstr "Nominated: {value}"
+
+msgid "ui.card.public.value.count"
+msgstr "Number: {value}"
+
+msgid "ui.card.public.value.day"
+msgstr "Day: {value}"
+
+msgid "ui.card.public.value.to_day"
+msgstr "Until day: {value}"
+
+msgid "ui.card.public.value.from_day"
+msgstr "From day: {value}"
+
+msgid "ui.card.public.value.night"
+msgstr "Night: {value}"
+
+msgid "ui.card.public.value.until_night"
+msgstr "Until night: {value}"
+
+msgid "ui.card.public.value.leader"
+msgstr "Ahead: {value}"
+
+msgid "ui.card.public.value.side"
+msgstr "Side: {value}"
+
+msgid "ui.card.public.value.extra_votes"
+msgstr "Additional votes: {value}"
+
+msgid "ui.log.event.card_drawn"
+msgstr "#{index} Card drawn ({visibility})"
+
+msgid "ui.log.event.card_pool_empty"
+msgstr "#{index} No matching card pool ({visibility})"
+
+msgid "ui.log.event.card_window_opened"
+msgstr "#{index} Card window opened ({visibility})"
+
+msgid "ui.log.event.card_window_closed"
+msgstr "#{index} Card window closed ({visibility})"
+
+msgid "ui.log.event.card_played"
+msgstr "#{index} Card played ({visibility})"
+
+msgid "ui.log.event.card_kept"
+msgstr "#{index} Card kept ({visibility})"
+
+msgid "ui.log.event.card_exchanged"
+msgstr "#{index} Card exchanged ({visibility})"
+
+msgid "ui.log.event.card_dice_rolled"
+msgstr "#{index} Dice rolled ({visibility})"
+
+msgid "ui.log.event.card_announced"
+msgstr "#{index} Card effect announced ({visibility})"
+
+msgid "ui.log.event.card_role_revealed"
+msgstr "#{index} Role revealed by card ({visibility})"
+
+msgid "ui.log.event.card_question"
+msgstr "#{index} Public question by card ({visibility})"
+
+msgid "ui.log.event.card_marker"
+msgstr "#{index} Suspicion marker ({visibility})"
+
+msgid "ui.log.event.card_excluded"
+msgstr "#{index} Excluded from the discussion ({visibility})"
+
+msgid "ui.log.event.card_table_report"
+msgstr "#{index} Day rule violation reported ({visibility})"
+
+msgid "ui.log.event.card_effect_note"
+msgstr "#{index} Effect note for the game master ({visibility})"
+
+msgid "ui.log.event.card_notice"
+msgstr "#{index} Private notice about a card ({visibility})"
+
+msgid "ui.log.event.card_revived"
+msgstr "#{index} Return by card ({visibility})"
+
+msgid "ui.log.event.card_stack_gained"
+msgstr "#{index} Card Swallower gains a stack ({visibility})"
+
+msgid "ui.log.event.card_swallower_acted"
+msgstr "#{index} Card Swallower night action ({visibility})"
+
+msgid "ui.log.event.swallower_announced"
+msgstr "#{index} Stack total announced ({visibility})"
+
+msgid "ui.log.event.night_skipped_by_card"
+msgstr "#{index} Night skipped by card ({visibility})"
+
+msgid "ui.log.event.execution_prevented_by_card"
+msgstr "#{index} Execution prevented by card ({visibility})"
+
+msgid "ui.cards.pack_victim"
+msgstr "Pack victim: {name}, role: {role}"

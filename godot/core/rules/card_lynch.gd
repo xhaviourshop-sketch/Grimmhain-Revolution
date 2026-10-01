@@ -59,16 +59,15 @@ static func validate(s: GameState, p: Dictionary, target: int) -> StringName:
 		return &""
 	var reveal := _reveal_effect(s)
 	if not reveal.is_empty():
+		var revealed_for := int(reveal["data"].get("revealed_for", -1))
 		if p.has("card_reveal"):
-			if not p["card_reveal"] is bool or int(reveal["data"].get("revealed_for", -1)) != -1:
+			# Jede Zielperson wird höchstens einmal enthüllt; wechselt die Spielleitung das Ziel, wird die neue Person enthüllt.
+			if not p["card_reveal"] is bool or not bool(p["card_reveal"]) or revealed_for == target:
 				return &"invalid_card_reveal"
-		elif int(reveal["data"].get("revealed_for", -1)) == -1:
-			return &"card_reveal_required"
-		else:
-			if int(reveal["data"]["revealed_for"]) != target:
-				return &"card_reveal_target_changed"
-			if not p.get("village_confirms") is bool:
-				return &"village_decision_required"
+		elif revealed_for != target:
+			return &"card_reveal_required"  # erst enthüllen (auch nach einem Wechsel des Ziels)
+		elif not p.get("village_confirms") is bool:
+			return &"village_decision_required"
 	elif p.has("card_reveal") or p.has("village_confirms"):
 		return &"no_card_reveal"
 	if _needs_runner_up(s) and not (p.has("card_reveal") and bool(p["card_reveal"])):

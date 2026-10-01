@@ -29,6 +29,7 @@ var _morning_done_day: int = -1  ## Tag, dessen Morgenbericht die Spielleitung w
 var _day_mode: String = ""
 var _nominator: int = -1
 var _necromancer: int = -1
+var _card_effect: int = -1  ## Tagesregel einer Karte, für die ein Verstoß gemeldet wird (nur Bedienzustand)
 var _preview: Dictionary = {}
 var _exec_extra: Dictionary = {}
 var _check_revealed: bool = false
@@ -230,7 +231,7 @@ func _render() -> void:
 		next = {"kind": "gm", "secret": false}
 		kind = "gm"
 		_mark_gm_mode()
-	elif kind == "day" and _morning_pending():
+	elif (kind == "day" or kind == "card_window") and _morning_pending():
 		next = {"kind": "morning", "secret": false, "public": context.session.morning_report().get("public", {}),
 			"night_number": int(_view.get("night_number", 0))}
 		kind = "morning"
@@ -260,6 +261,7 @@ func _render() -> void:
 		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
 		"preview": _preview, "exec_extra": _exec_extra, "day_deaths": context.session.day_deaths() if bool(_view.get("has_game")) else [],
 		"day_effects": context.session.day_effects() if bool(_view.get("has_game")) else [],
+		"day_cards": context.session.day_cards() if bool(_view.get("has_game")) else [],
 		"reduced_motion": context.settings.reduced_motion,
 	})
 	_restore_focus()
@@ -271,15 +273,21 @@ func _mark_day_mode(next: Dictionary) -> void:
 	var alive: Array = (_view.get("seats", []) as Array).filter(func(s: Dictionary) -> bool: return bool(s["alive"])).map(func(s: Dictionary) -> int: return int(s["person_id"]))
 	match _day_mode:
 		"nominate_from":
-			_ring.set_marking(true, alive, [], [])
+			_ring.set_marking(true, next.get("nominator_ids", alive), [], [])
 		"nominate_to":
 			_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != _nominator), _selection, [_nominator])
 		"execute":
 			_ring.set_marking(true, next.get("execution_candidates", []), _selection, [])
 		"name_wolf":
 			_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != _necromancer), _selection, [])
+		"card_report":
+			_ring.set_marking(true, alive, _selection, [])
 		"execution_check":
-			_ring.set_marking(false, [], [], [])
+			# Kettenreaktion: die Person mit den zweitmeisten Stimmen wird am Sitzkreis gewählt.
+			if bool(_preview.get("card_runner_up", false)) and not _exec_extra.has("runner_up_id"):
+				_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != int(_preview.get("target_id", -1))), _selection, [])
+			else:
+				_ring.set_marking(false, [], [], [])
 
 
 func _mark_gm_mode() -> void:
@@ -303,6 +311,7 @@ func _reset_day_mode() -> void:
 	_necromancer = -1
 	_preview = {}
 	_exec_extra = {}
+	_card_effect = -1
 	_check_revealed = false
 	_selection.clear()
 
@@ -342,6 +351,8 @@ func _identity(next: Dictionary) -> String:
 			return "notice:%d" % int(next.get("notice_id", 0))
 		"win_decision":
 			return "win:%s" % str((next.get("candidates", []) as Array).map(func(c: Dictionary) -> int: return int(c["id"])))
+		"card_window":
+			return "card:%d:%d" % [int(next.get("owner_id", -1)), int((next.get("card", {}) as Dictionary).get("record_id", -1))]
 	return str(next.get("kind"))
 
 
@@ -384,8 +395,11 @@ func _on_seat_tapped(person_id: int) -> void:
 				_nominator = person_id
 				_day_mode = "nominate_to"
 				_selection.clear()
-			"nominate_to", "execute", "name_wolf":
+			"nominate_to", "execute", "name_wolf", "card_report":
 				_selection = [] if _selection.has(person_id) else [person_id]
+			"execution_check":
+				if bool(_preview.get("card_runner_up", false)) and not _exec_extra.has("runner_up_id"):
+					_selection = [] if _selection.has(person_id) else [person_id]
 		_render()
 		return
 	if str(next.get("kind")) != "prompt" or str(next.get("answer")) != "targets":
@@ -455,12 +469,50 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"exec_extra":
 			_exec_extra[str(payload["field"])] = payload["value"]
 			_render()
+		&"exec_runner_up":
+			_exec_extra["runner_up_id"] = int(payload["id"])
+			_selection.clear()
+			_render()
+		&"roll":
+			_submit(s.answer_roll)
+		&"card_play":
+			_submit(s.card_act.bind(int(payload["owner_id"]), "play"))
+		&"card_keep":
+			_submit(s.card_act.bind(int(payload["owner_id"]), "keep"))
+		&"card_exchange":
+			var owner_id := int(payload["owner_id"])
+			dialog_requested.emit(DialogRequest.create("ui.cards.dialog.exchange.title", "ui.cards.dialog.exchange.message", "ui.cards.dialog.exchange.confirm",
+				func() -> void: _submit(s.card_act.bind(owner_id, "exchange")), true))
+		&"card_close":
+			dialog_requested.emit(DialogRequest.create("ui.cards.dialog.close.title", "ui.cards.dialog.close.message", "ui.cards.dialog.close.confirm",
+				func() -> void: _submit(s.card_close_window)))
+		&"card_show":
+			open_layer(&"card")
+		&"card_overview":
+			open_layer(&"cards")
+		&"card_report":
+			_reset_day_mode()
+			_card_effect = int(payload["effect_id"])
+			_day_mode = "card_report"
+			_render()
+		&"confirm_card_report":
+			var effect_id := _card_effect
+			var person_id := int(_selection[0])
+			_reset_day_mode()
+			_submit(s.card_table_action.bind(effect_id, person_id))
 		&"confirm_execution" when _gm_execute:
 			var payload_gm := {"kind": "execute", "target_id": int(_preview.get("target_id", -1))}
 			payload_gm.merge(_exec_extra)
 			_reset_day_mode()
 			_reset_gm_mode()
 			_ask_correction(payload_gm)
+		&"confirm_execution" when bool(_preview.get("card_reveal", false)) and not bool(_preview.get("card_revealed", false)):
+			# Wachsame Augen: erst wird die Rolle öffentlich enthüllt, danach entscheidet das Dorf. Der Tag bleibt dabei offen.
+			var reveal_target := int(_preview.get("target_id", -1))
+			_submit(s.decide_execution.bind(reveal_target, {"card_reveal": true}))
+			_preview = s.execution_preview(reveal_target)
+			_exec_extra = {}
+			_render()
 		&"confirm_execution":
 			var target := int(_preview.get("target_id", -1))
 			var extra := _exec_extra.duplicate()
@@ -611,6 +663,13 @@ func open_layer(kind: StringName) -> void:
 			if str(notice.get("kind")) == "notice":
 				_layer = CockpitLayers.notice_card(notice)
 				_layout.visible = false  # die Hinweiskarte ersetzt das Cockpit vollständig
+		&"card":
+			var window: Dictionary = _view.get("next", {})
+			if str(window.get("kind")) == "card_window":
+				_layer = CockpitLayers.card_face(window.get("card", {}), window.get("owner", {}))
+				_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
+		&"cards":
+			_layer = CockpitLayers.cards_drawer(context.session.card_overview(), context.session.card_swallowers())
 		&"announcement":
 			var report := context.session.morning_report()
 			_layer = CockpitLayers.announcement(int(report.get("night_number", 0)), report.get("public", {}))

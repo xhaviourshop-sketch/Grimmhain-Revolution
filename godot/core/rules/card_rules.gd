@@ -555,6 +555,9 @@ static func pump(ctx: RuleContext) -> void:
 	while s.pending_prompt == null and not tasks.is_empty() and guard < 64:
 		guard += 1
 		CardSteps.open_task(ctx, tasks.pop_front())
+	# Eine Morgenauflösung, die auf Aufgaben wartete, endet auch dann, wenn die letzte Aufgabe ohne Eingabe wirkte.
+	if guard > 0 and s.phase == Phase.DAWN_RESOLUTION and s.pending_prompt == null and tasks.is_empty():
+		RulesEngine.finish_dawn_if_ready(ctx)
 
 
 # --- Spielleiterkorrekturen ------------------------------------------------------------------------------------
@@ -647,6 +650,9 @@ static func after_command(ctx: RuleContext, c: Command, prompt_actor: int, promp
 			CardFxReturn.half_used(ctx, prompt_actor)
 	elif c.type == Command.NAME_WOLF or c.type == Command.AMALIA_SACRIFICE:
 		CardFxReturn.half_used(ctx, DictRead.get_int(p, "player_id", -1))
+	# Korrekturen (Wiederbelebung, Tötung, Rollenwechsel) können die Fragenden des Fensters ändern: Warteschlange abgleichen.
+	if c.type == Command.GM_CORRECTION and not (s.cardsys["window"] as Dictionary).is_empty() and s.pending_prompt == null:
+		refresh_window(ctx)
 
 
 # --- Haken für Nacht und Morgen --------------------------------------------------------------------------------

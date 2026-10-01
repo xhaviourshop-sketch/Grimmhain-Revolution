@@ -18,6 +18,9 @@ extends RefCounted
 ## Werte, die sie laut Regel erfährt (entspricht dem ACTOR-Ereignis), nie Wahrheit oder Quelle.
 
 const CHOICE_STAGES: Array[StringName] = [&"heal", &"poison", &"use", &"mode", &"grant", &"barrier"]
+## Totenreichkarten (Besitzer `card`): Stufen pick, option, ask, roll, confirm; Kartenschlucker: act (Handzeichen), target.
+const CARD_ANSWERS := {&"pick": "targets", &"option": "option", &"ask": "choice", &"roll": "roll", &"confirm": "ack"}
+const SWALLOWER_ANSWERS := {&"act": "option", &"target": "targets"}
 const ACK_STAGES: Array[StringName] = [&"confirm", &"shown"]
 const OPTION_STAGES: Array[StringName] = [&"option", &"role"]
 
@@ -71,7 +74,11 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 		out["actor_ids"] = DictRead.to_int_array(DictRead.get_array(p.partial, "target_ids"))
 		out["role_id"] = ""
 		out["anonymous_asker"] = true
-	if answer == "option":
+	if p.owner == PendingPrompt.OWNER_CARD:
+		out.merge(card_prompt(s, p), true)
+	elif p.owner == PendingPrompt.OWNER_SWALLOWER:
+		out.merge(swallower_prompt(s, p), true)
+	elif answer == "option":
 		for role: Variant in DictRead.get_array(p.partial, "options"):
 			out["options"].append(str(role))
 	if p.owner == PendingPrompt.OWNER_REACTION and not s.reactions.is_empty():
@@ -84,6 +91,10 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 
 
 static func answer_type(owner: StringName, stage: StringName) -> String:
+	if owner == PendingPrompt.OWNER_CARD:
+		return CARD_ANSWERS.get(stage, "targets")
+	if owner == PendingPrompt.OWNER_SWALLOWER:
+		return SWALLOWER_ANSWERS.get(stage, "targets")
 	if stage == &"prediction":
 		return "prediction"
 	if OPTION_STAGES.has(stage):
@@ -126,6 +137,8 @@ static func role_of(s: GameState, p: PendingPrompt) -> String:
 
 static func info_lines(s: GameState, p: PendingPrompt) -> Array:
 	var out: Array = []
+	if p.owner == PendingPrompt.OWNER_CARD or p.owner == PendingPrompt.OWNER_SWALLOWER:
+		return out  # Karten und Kartenschlucker beschreiben sich selbst (`card`, `dice`, `swallower`)
 	# Traumdeuter und Kopfgeldjäger: Die Spielleitung wählt drei Personen mit mindestens einem Wolf
 	# (I-01). Hinweis, wer unter den Wählbaren als Wolf zählt; die Prüfung bleibt im Regelkern.
 	if InfoSteps.TRIPLE_OWNERS.has(p.owner) and p.stage == InfoSteps.STAGE_TARGETS:
@@ -177,3 +190,43 @@ static func person_label(s: GameState, id: int) -> Dictionary:
 	if not s.players.has(id):
 		return {"person_id": id, "seat": 0, "name": ""}
 	return {"person_id": id, "seat": s.seat_of(id) + 1, "name": s.players[id].name}
+
+
+## Totenreichkarte als Prompt: welche Karte oder Aufgabe, welche Eingabe (`input_key`), Optionsart, Würfel. Stufen, Anzahlen und
+## zulässige Personen stehen wie bei jedem Prompt in `PendingPrompt`.
+static func card_prompt(s: GameState, p: PendingPrompt) -> Dictionary:
+	var partial := p.partial
+	var spec: Dictionary = DictRead.get_dict(partial, "spec")
+	var mode := DictRead.get_string(partial, "mode")
+	var out := {"card_mode": mode, "input_key": DictRead.get_string(spec, "key"), "option_kind": DictRead.get_string(spec, "option_kind"), "options": [],
+		"dice": [], "dice_count": DictRead.get_int(spec, "count", 1), "card": {}, "task_kind": ""}
+	if mode == CardSteps.MODE_PLAY:
+		out["card"] = CardView.card_info(CardRules.record_by_id(s, DictRead.get_int(partial, "record", -1)))
+	else:
+		var task := DictRead.get_dict(partial, "task")
+		out["task_kind"] = DictRead.get_string(task, "kind")
+		var card_id := StringName(DictRead.get_string(task, "card"))
+		if CardCatalog.CARDS.has(card_id):
+			out["card"] = {"card_id": String(card_id), "name_key": CardCatalog.name_key(card_id)}
+	for option: Variant in DictRead.get_array(spec, "options"):
+		out["options"].append(str(option))
+	if partial.has("rolled"):
+		out["dice"] = (partial["rolled"] as Array).duplicate()
+	if spec.has("victim_id") and s.players.has(DictRead.get_int(spec, "victim_id", -1)):
+		# Rudelziel prüfen (Wachsame Augen): Opfer und seine Rolle zum Zeigen an das Rudel.
+		out["victim"] = person_label(s, DictRead.get_int(spec, "victim_id", -1))
+		out["victim_role"] = DictRead.get_string(spec, "victim_role")
+	if p.stage == &"pick" or p.stage == &"confirm":
+		out["person_id"] = DictRead.get_int(spec, "person_id", -1)
+	return out
+
+
+## Kartenschlucker-Prompt: Handzeichen (Optionen mit Kosten) bzw. Zielwahl; Guthaben und Zahlen für die Spielleitung.
+static func swallower_prompt(s: GameState, p: PendingPrompt) -> Dictionary:
+	var out := {"option_kind": "swallower", "options": [], "swallower": {}}
+	for option: Variant in DictRead.get_array(p.partial, "options"):
+		out["options"].append(str(option))
+	var entry := CardView.swallower(s).filter(func(e: Dictionary) -> bool: return int((e["person"] as Dictionary)["person_id"]) == p.actor_id)
+	if not entry.is_empty():
+		out["swallower"] = entry[0]
+	return out

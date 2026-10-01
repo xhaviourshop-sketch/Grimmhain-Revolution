@@ -65,6 +65,85 @@ static func action_key(action: String, owner: String, stage: String) -> String:
 	return key if has_key(key) else "ui.cockpit.action.%s" % action
 
 
+## Anweisung einer Karteneingabe: kartenspezifisch (`ui.card.<id>.input.<eingabe>`), sonst allgemein je Eingabe
+## (`ui.card.input.<eingabe>`), bei Aufgaben zuerst `ui.card.task.<art>.<eingabe>`, zuletzt der Rückfall je Antwortart.
+static func card_instruction_key(next: Dictionary) -> String:
+	var input := str(next.get("input_key", ""))
+	var card_id := str((next.get("card", {}) as Dictionary).get("card_id", ""))
+	var task := str(next.get("task_kind", ""))
+	var stage := str(next.get("stage", ""))
+	for key: String in ["ui.card.task.%s.%s" % [task, input], "ui.card.%s.input.%s" % [card_id, input], "ui.card.input.%s.%s" % [input, stage], "ui.card.input.%s" % input]:
+		if task == "" and key.begins_with("ui.card.task."):
+			continue
+		if has_key(key):
+			return key
+	return "ui.prompt.generic.%s" % str(next.get("answer", "targets"))
+
+
+## Beschriftung einer Option einer Karteneingabe: Rollen mit Namen, sonst `ui.card.option.<art>.<wert>`.
+static func card_option_key(kind: String, value: String) -> String:
+	if kind == "role":
+		return role_name(value)
+	return "ui.card.option.%s.%s" % [kind, value]
+
+
+## Vorlesezeilen öffentlicher Kartenereignisse [{key, values}]: Karte mit ihrem Text, dazu die genannten Personen und Zahlen.
+static func card_lines(public_cards: Array) -> Array:
+	var out: Array = []
+	for c: Dictionary in public_cards:
+		var card_id := str(c.get("card_id", ""))
+		var card_name: Variant = StringName(CardCatalog.name_key(StringName(card_id))) if CardCatalog.CARDS.has(StringName(card_id)) else ""
+		match str(c["kind"]):
+			"announced":
+				var variant := StringName(str(c["variant"]))
+				out.append({"key": "ui.card.public.played", "values": {"card": card_name}})
+				if CardCatalog.CARDS.has(StringName(card_id)):
+					out.append({"key": CardCatalog.text_key(StringName(card_id), variant), "values": {}})
+				var values: Dictionary = c.get("values", {})
+				var keys := values.keys()
+				keys.sort()
+				for k: Variant in keys:
+					var line := _card_value_line(str(k), values[k])
+					if not line.is_empty():
+						out.append(line)
+			"role_revealed":
+				out.append({"key": "ui.card.public.role_revealed", "values": {"name": str((c["person"] as Dictionary).get("name", "")), "role": role_name(str(c["role_id"])), "card": card_name}})
+			"revived":
+				out.append({"key": "ui.card.public.revived", "values": {"name": str((c["person"] as Dictionary).get("name", ""))}})
+			"question":
+				out.append({"key": "ui.card.public.question", "values": {"asker": str((c["asker"] as Dictionary).get("name", "")), "subject": str((c["subject"] as Dictionary).get("name", "")),
+					"answer": StringName("ui.common.yes" if bool(c["answer"]) else "ui.common.no")}})
+			"marker":
+				out.append({"key": "ui.card.public.marker", "values": {"name": str((c["person"] as Dictionary).get("name", ""))}})
+			"excluded":
+				out.append({"key": "ui.card.public.excluded", "values": {"name": str((c["person"] as Dictionary).get("name", ""))}})
+			"dice":
+				out.append({"key": "ui.card.public.dice", "values": {"name": str((c["person"] as Dictionary).get("name", "")), "dice": ", ".join((c["dice"] as Array).map(func(v: Variant) -> String: return str(int(v))))}})
+			"swallower":
+				out.append({"key": "ui.card.public.swallower", "values": {"total": int(c["total"])}})
+			"night_skipped":
+				out.append({"key": "ui.card.public.night_skipped", "values": {"night": int(c["night"])}})
+	return out
+
+
+## Zeile zu einem Wert einer Ansage: Personen (`*_id`, `*_ids`) mit Beschriftung, Zahlen und Wahrheitswerte; unbekannte Arten entfallen.
+static func _card_value_line(key: String, value: Variant) -> Dictionary:
+	var label_key := "ui.card.public.value.%s" % key
+	if not has_key(label_key):
+		return {}
+	if value is Array:
+		if (value as Array).is_empty():
+			return {"key": label_key, "values": {"value": StringName("ui.prompt.value.nobody")}}
+		return {"key": label_key, "values": {"value": spoken_names(value)}}
+	if value is Dictionary:
+		return {"key": label_key, "values": {"value": str((value as Dictionary).get("name", "")) if not (value as Dictionary).is_empty() else StringName("ui.prompt.value.nobody")}}
+	if value is bool:
+		return {"key": label_key, "values": {"value": StringName("ui.common.yes" if value else "ui.common.no")}}
+	if value is String and has_key("ui.card.option.value.%s" % value):
+		return {"key": label_key, "values": {"value": StringName("ui.card.option.value.%s" % value)}}
+	return {"key": label_key, "values": {"value": str(value)}}
+
+
 static func reaction_key(kind: String) -> String:
 	var key := "ui.prompt.reaction.%s" % kind
 	return key if has_key(key) else "ui.prompt.generic.targets"
@@ -121,6 +200,7 @@ static func morning_lines(pub: Dictionary) -> Array:
 		out.append({"key": str(n["key"]), "values": values})
 	for e: Dictionary in pub.get("effects", []):
 		out.append(effect_line(e))
+	out.append_array(card_lines(pub.get("cards", [])))
 	return out
 
 

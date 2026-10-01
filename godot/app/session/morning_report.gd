@@ -72,6 +72,25 @@ static func day_deaths(s: GameState, events: Array[GameEvent]) -> Array:
 	return out
 
 
+## Öffentliche Kartenereignisse des laufenden Tages (nach dem Befehl, mit dem der Tag begann), in Ereignisreihenfolge.
+static func day_cards(s: GameState, events: Array[GameEvent]) -> Array:
+	if s.phase != Phase.DAY or not s.death_cards:
+		return []
+	var start := -1
+	for i: int in range(events.size() - 1, -1, -1):
+		if events[i].type == GameEvent.PHASE_CHANGED and StringName(str(events[i].data.get("to"))) == Phase.DAY:
+			start = i
+			break
+	if start == -1:
+		return []
+	var day_command := events[start].command_index
+	var span: Array[GameEvent] = []
+	for i: int in range(start + 1, events.size()):
+		if events[i].command_index != day_command and events[i].visibility == Visibility.PUBLIC:
+			span.append(events[i])
+	return CardView.public_lines(s, span)
+
+
 ## Öffentlich angesagte Todeseffekte des laufenden Tages (nach dem Befehl, mit dem der Tag begann), in Ereignisreihenfolge.
 static func day_effects(s: GameState, events: Array[GameEvent]) -> Array:
 	if s.phase != Phase.DAY:
@@ -144,7 +163,8 @@ static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 				notices.append({"key": "ui.morning.notice.bells"})
 			GameEvent.JUDGE_NOMINATION_PUBLIC:
 				notices.append({"key": "ui.morning.notice.judge", "person": _person(s, int(e.data["nominee_id"]))})
-	return {"deaths": deaths, "revived": revived, "notices": notices, "effects": effects_of(s, span), "reveal_roles": not s.revival_round}
+	return {"deaths": deaths, "revived": revived, "notices": notices, "effects": effects_of(s, span), "reveal_roles": not s.revival_round,
+		"cards": CardView.public_lines(s, span)}
 
 
 static func _private(s: GameState, span: Array[GameEvent]) -> Array:

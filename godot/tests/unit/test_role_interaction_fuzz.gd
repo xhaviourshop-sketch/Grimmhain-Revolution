@@ -10,6 +10,8 @@ extends TestCase
 ##   - niemand stirbt zweimal; Tote tragen einen Todesdatensatz, Lebende keinen
 ##   - Rollenfelder passen zur Rolle (Wolfskind: zum Verwandlungszustand)
 ##   - Save/Load (StateCodec) und Replay liefern denselben Zustand und dieselben Ereignisse
+## Jede zweite Partie läuft mit Totenreichkarten (Kartenfenster, Kartenprompts, Kartenschlucker, Tagesregeln); dort gelten
+## zusätzlich: der Kartenzustand ist konsistent, Fenster fragen nur Tote, öffentliche Kartenereignisse nennen nur ihre Positivliste.
 ## Der Test-Zufall ist lokal und festgelegt; der Regelkern nutzt ausschließlich seinen Seed.
 
 const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
@@ -24,6 +26,9 @@ const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 const FOCUS_ROUNDS := 3
 const MAX_COMMANDS := 160
 const CODEC_EVERY := 20
+## Öffentliche Kartenereignisse, die bewusst Personen und Rollen nennen (Enthüllung, Ansage, Frage); ihre Werte sind eine feste Positivliste.
+const CARD_PUBLIC_EVENTS: Array[String] = ["CardAnnounced", "CardRoleRevealed", "CardQuestion", "CardMarker", "CardExcluded", "CardRevived", "CardDiceRolled",
+	"SwallowerAnnounced", "NightSkippedByCard", "CardWindowOpened", "CardWindowClosed"]
 const FORBIDDEN_PUBLIC_KEYS: Array[String] = ["role_id", "appears_as", "cause", "faction", "shown_role", "truth_role",
 	"determined_role", "victim_id", "model_id", "master_id", "options", "protection", "saved_id", "poison_target_id"]
 
@@ -35,6 +40,7 @@ const REQUIRED_EVENTS: Array[String] = ["KillPrevented", "WitchActed", "InfoReco
 	"DreamRevealed", "BountyRevealed", "KingRevealed", "WarriorRevealed", "BloodRevealed", "EternalRevealed", "DetectiveHint", "AmaliaAnswered",
 	"SageCursed", "WeaponGiven", "ShieldGiven", "DoomJudged", "MartyrChosen", "LokiBound", "RedRefuge", "WidowStruck", "ShadowLinked", "AppleUsed",
 	"DemonCursed", "LycaonConverted", "SoulsSwapped", "RevivedByRole", "PlayerRevived",
+	"CardDrawn", "CardWindowOpened", "CardPlayed", "CardKept",
 	"Charmed", "Infected", "PlagueSpread", "ProphetMarked", "ProphecySet", "FireMarked", "FireBurned", "VoodooDollGiven", "NecroShield", "NecroRedirected", "NecroNamed", "HadesLight", "HadesActed", "GraveRobbed", "StolenStepOpened", "FateMarked", "FateKillsChosen", "LoneWolfStruck", "NightFrozen"]
 const REQUIRED_CAUSES: Array[String] = ["NIGHT_KILL", "WITCH_POISON", "HUNTER_SHOT", "LYNCH", "SPIEGELWOLF_RETALIATE",
 	"MANIPULATOR_NOMINATED", "GM_CORRECTION", "WARRIOR_WRONG", "BLOOD_SACRIFICE", "AMALIA_SACRIFICE", "MARTYR_SACRIFICE", "LOVER_HEARTBREAK", "RED_CHAIN", "BURN", "HADES_KILL", "LONE_WOLF_KILL"]
@@ -127,15 +133,17 @@ func _play_game(g: int, count: int) -> Dictionary:
 		if _probe:
 			_probe_accepted += 1
 		if not res.ok:
-			fail("%s @%d: gültig erzeugter Befehl abgelehnt: %s → %s (Phase %s, Schritt %s)" % [_game_label, i,
-				CanonicalJson.stringify(c.to_dict()), res.error, state.phase, RulesEngine.next_step_id(state)])
+			fail("%s @%d: gültig erzeugter Befehl abgelehnt: %s → %s (Phase %s, Schritt %s, Reaktionen %d, Prompt %s, Aufgaben %d, Hinweise %d, Tagesschritt %s)" % [_game_label, i,
+				CanonicalJson.stringify(c.to_dict()), res.error, state.phase, RulesEngine.next_step_id(state), state.reactions.size(),
+				"-" if state.pending_prompt == null else state.pending_prompt.owner, 0 if state.cardsys.is_empty() else (state.cardsys["tasks"] as Array).size(),
+				state.notices.size(), state.day_step]  + " Zuvor: " + CanonicalJson.stringify(log[-1].to_dict()))
 			break
 		state = res.state
 		log.append(c)
 		events.append_array(res.events)
 		if res.events.any(func(e: GameEvent) -> bool: return e.type == GameEvent.NECRO_REDIRECTED or e.type == GameEvent.KING_REVEALED):
 			_focus_goal_met = true
-		deaths += _check_after(before, state, res.events, "%s @%d %s" % [_game_label, i, c.type])
+		deaths += _check_after(before, state, res.events, "%s @%d %s" % [_game_label, i, c.type if c.type != Command.GM_CORRECTION else "GmCorrection %s" % CanonicalJson.stringify(c.payload)])
 		if log.size() % CODEC_EVERY == 0:
 			_check_codec(state, log, "%s @%d" % [_game_label, i])
 		if not failures.is_empty():
@@ -196,6 +204,17 @@ func _start_command(g: int, count: int) -> Command:
 		"round_id": "fuzz-%d" % g, "seed": 1000 + g, "assignment": "manual",
 		"players": Fixtures.players(count), "seat_order": order, "roles": map,
 	}
+	if g % 2 == 1:
+		# Totenreichkarten: jede zweite Partie; dort ersetzt in jeder zweiten solchen Partie eine lebende Dorfrolle den Kartenschlucker.
+		payload["death_cards"] = true
+		var village := roles.filter(func(r: String) -> bool: return RoleCatalog.faction_of(StringName(r)) == Faction.VILLAGE).size()
+		if g % 4 == 3 and not roles.has("kartenschlucker") and village >= 2:  # die Besetzung braucht weiter eine Dorfrolle
+			for i: int in count:
+				if roles[i] == "dorfbewohner" or roles[i] == "schutzengel":
+					map[str(i + 1)] = "kartenschlucker"
+					roles[i] = "kartenschlucker"
+					break
+		_game_label = "Partie %d (%d Personen, Karten: %s)" % [g, count, ",".join(roles)]
 	if not appearances.is_empty():
 		payload["appearances"] = appearances
 	return Command.start_game(payload)
@@ -272,6 +291,8 @@ func _next_command(s: GameState) -> Command:
 			return revive
 	if s.pending_prompt != null:
 		return _answer(s, s.pending_prompt)
+	if s.death_cards and CardRules.window_open(s) and not StepQueue.reactions_due(s):
+		return _card_window_command(s)
 	match s.phase:
 		Phase.SETUP:
 			return Command.start_night()
@@ -287,6 +308,49 @@ func _next_command(s: GameState) -> Command:
 				return Command.begin_step(RulesEngine.next_step_id(s))
 			return _day_command(s)
 	return null
+
+
+## Kartenfenster: die gefragte Person spielt, behält oder tauscht; selten schließt die Spielleitung das Fenster.
+func _card_window_command(s: GameState) -> Command:
+	var owner_id := CardRules.current_owner(s)
+	var rec := CardRules.held_of(s, owner_id)
+	var window := CardRules.window_kind(s)
+	var roll := _rng.randf()
+	if roll < 0.06 and CardRules.validate_close(s) == &"":
+		return Command.card_close_window()
+	if not rec.is_empty() and CardRules.can_exchange(s, rec, window) and roll < 0.4:
+		return Command.card_act(owner_id, CardRules.ACT_EXCHANGE)
+	if not rec.is_empty() and (CardRules.playable(s, rec, window) and (roll < 0.85 or bool(rec["must_play"]))):
+		return Command.card_act(owner_id, CardRules.ACT_PLAY)
+	if not rec.is_empty() and bool(rec["must_play"]):
+		return Command.card_act(owner_id, CardRules.ACT_PLAY)
+	return Command.card_act(owner_id, CardRules.ACT_KEEP)
+
+
+## Gültige Eingabe zu einem Kartenprompt (Karte oder Aufgabe) bzw. zum Kartenschlucker.
+func _card_answer(s: GameState, p: PendingPrompt) -> Command:
+	if p.owner == PendingPrompt.OWNER_SWALLOWER:
+		if p.stage == SwallowerRules.STAGE_ACT:
+			return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "option": _rng.randi_range(0, DictRead.get_array(p.partial, "options").size() - 1)})
+		return Command.answer_stage_targets(p.id, String(p.stage), [_pick(p.allowed_ids)])
+	var spec: Dictionary = DictRead.get_dict(p.partial, "spec")
+	match p.stage:
+		CardSteps.STAGE_PICK:
+			var n := _rng.randi_range(p.min_count, p.max_count)
+			var pool: Array = p.allowed_ids.duplicate()
+			var picks: Array = []
+			while picks.size() < n and not pool.is_empty():
+				var t: int = _pick(pool)
+				pool.erase(t)
+				picks.append(t)
+			return Command.answer_stage_targets(p.id, String(p.stage), picks)
+		CardSteps.STAGE_OPTION:
+			return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "option": _rng.randi_range(0, DictRead.get_array(spec, "options").size() - 1)})
+		CardSteps.STAGE_ASK:
+			return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.5)
+		CardSteps.STAGE_ROLL:
+			return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "roll": true})
+	return Command.answer_choice(p.id, String(p.stage), true)
 
 
 ## Beliebige Spielleiterkorrektur mit plausiblen, aber nicht garantiert gültigen Feldern.
@@ -377,19 +441,45 @@ func _day_command(s: GameState) -> Command:
 		if not alive.is_empty():
 			var exec_target: int = _pick(alive)
 			return CorrectionFixtures.gm("execute", _execution_fields(s, exec_target), "Fuzz: Hinrichtung ohne Nominierung")
+	if s.death_cards and roll < 0.55:
+		var report := _table_report(s)
+		if report != null:
+			return report
 	var nominees: Array[int] = []
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if s.players[n.nominee_id].alive:
 			nominees.append(n.nominee_id)
-	if nominees.is_empty() or _rng.randf() < 0.2:
+	if s.death_cards and CardLynch.allows_unnominated(s):
+		nominees = s.alive_ids()
+	if nominees.is_empty() or _rng.randf() < 0.2 or (s.death_cards and CardLynch.cancelled_today(s)):
 		return Command.decide_execution(-1)
 	var chosen: int = _pick(nominees)
 	return Command.create(Command.DECIDE_EXECUTION, _execution_fields(s, chosen))
 
 
 ## Pflichtfelder einer Hinrichtung: Cerberus-Abwehr und Fluchdauer des Weisen (0–3).
+func _table_report(s: GameState) -> Command:
+	for r: Dictionary in CardView.rules(s):
+		if bool(r["reportable"]) and _rng.randf() < 0.5:
+			var alive := s.alive_ids()
+			if not alive.is_empty():
+				_probe = true  # bereits ausgeschlossene Personen werden abgelehnt
+				return Command.card_table_action(int(r["effect_id"]), _pick(alive))
+	return null
+
+
 func _execution_fields(s: GameState, target: int) -> Dictionary:
 	var fields := {"target_id": target}
+	if s.death_cards:
+		var reveal := CardLynch.for_today(s, "lynch_reveal")
+		if not reveal.is_empty():
+			if int(reveal[0]["data"].get("revealed_for", -1)) == target:
+				fields["village_confirms"] = _rng.randf() < 0.6
+			else:
+				fields["card_reveal"] = true  # Enthüllung zuerst; der Tag bleibt unentschieden, die Entscheidung folgt im nächsten Befehl
+		if not CardLynch.for_today(s, "lynch_runner_up").is_empty():
+			var others := s.alive_ids().filter(func(id: int) -> bool: return id != target)
+			fields["runner_up_id"] = _pick(others) if not others.is_empty() and _rng.randf() < 0.7 else GameState.NO_TARGET
 	if ExecutionRules.needs_cerberus_decision(s, target):
 		fields["cerberus_defend"] = _rng.randf() < 0.5
 	if GuardRoles.needs_sage_decision(s, target):
@@ -405,9 +495,11 @@ func _random_nomination(s: GameState) -> Command:
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		used_nominators[n.nominator_id] = true
 		used_nominees[n.nominee_id] = true
-	for id: int in s.alive_ids():
+	var possible_nominators: Array = CockpitView.nominator_ids(s) if s.death_cards else s.alive_ids()
+	for id: int in possible_nominators:
 		if not used_nominators.has(id):
 			nominators.append(id)
+	for id: int in s.alive_ids():
 		if not used_nominees.has(id):
 			nominees.append(id)
 	if nominators.is_empty() or nominees.is_empty():
@@ -418,6 +510,8 @@ func _random_nomination(s: GameState) -> Command:
 func _answer(s: GameState, p: PendingPrompt) -> Command:
 	if p.cancellable and _rng.randf() < 0.08:
 		return Command.cancel_prompt(p.id, "Fuzz: Abbruch")
+	if p.owner == PendingPrompt.OWNER_CARD or p.owner == PendingPrompt.OWNER_SWALLOWER:
+		return _card_answer(s, p)
 	match p.owner:
 		PendingPrompt.OWNER_WITCH:
 			match p.stage:
@@ -559,6 +653,8 @@ func _check_after(before: GameState, s: GameState, events: Array[GameEvent], lab
 			_seen[key] = int(_seen.get(key, 0)) + 1
 		if e.visibility == Visibility.PUBLIC and is_death_effect_exception(e):
 			pass  # DI-03: angesagter Todeseffekt, ausdrückliche Ausnahme mit fester Positivliste
+		elif e.visibility == Visibility.PUBLIC and CARD_PUBLIC_EVENTS.has(String(e.type)):
+			pass  # Totenreichkarten: öffentliche Ansagen mit fester Positivliste (Karte, Personen, Zahlen)
 		elif e.visibility == Visibility.PUBLIC:
 			var leak := _find_forbidden(e.data)
 			assert_eq(leak, "", "%s: öffentliches %s ohne Geheimnis" % [label, e.type])
@@ -570,6 +666,12 @@ func _check_after(before: GameState, s: GameState, events: Array[GameEvent], lab
 			assert_true(before.players[target].alive and not _died_earlier_in(events, e, target), "%s: nur Lebende sterben, höchstens einmal (%d)" % [label, target])
 		if e.type == GameEvent.PROMPT_OPENED:
 			_check_prompt_actor(s, e.data["prompt"], label)
+	if s.death_cards:
+		assert_true(CardRules.state_is_consistent(s), "%s: Kartenzustand konsistent" % label)
+		for owner_id: Variant in (s.cardsys["window"].get("queue", []) as Array):
+			assert_false(s.players[int(owner_id)].alive, "%s: das Kartenfenster fragt nur Tote (%d)" % [label, int(owner_id)])
+	else:
+		assert_true(s.cardsys.is_empty(), "%s: ohne Totenreichkarten keine Kartenzustände" % label)
 	for id: int in s.players:
 		var p: Player = s.players[id]
 		assert_eq(p.death == null, p.alive, "%s: Todesdatensatz passt zu lebend/tot (%d)" % [label, id])
@@ -607,7 +709,7 @@ func _check_prompt_actor(s: GameState, prompt: Dictionary, label: String) -> voi
 		_seen["StolenStepOpened"] = int(_seen.get("StolenStepOpened", 0)) + 1  # Grabräuber nutzt die gestohlene Fähigkeit
 	# Ausnahme zu G-PH-2: der Schutzgeist handelt in der ersten Nacht nach seinem Tod (S-04).
 	assert_true(s.players[actor].alive != (role == RoleCatalog.SCHUTZGEIST), "%s: %s nur für Lebende (Schutzgeist: nur tot)" % [label, step])
-	assert_eq(SoloRules.ability_role(s, actor), role, "%s: %s nur mit geplanter Rolle oder gestohlener Fähigkeit" % [label, step])
+	assert_true(SoloRules.acts_as(s, actor, role), "%s: %s nur mit geplanter Rolle, gestohlener oder durch eine Karte verliehener Fähigkeit (%s statt %s)" % [label, step, SoloRules.ability_role(s, actor), role])
 	assert_false((prompt["allowed_ids"] as Array).has(actor) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER, RoleCatalog.LOKI, RoleCatalog.SEELENTAUSCHER].has(role), "%s: %s ohne Selbstwahl" % [label, step])
 
 

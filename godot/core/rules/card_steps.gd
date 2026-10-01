@@ -130,7 +130,8 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	match prompt.stage:
 		STAGE_PICK:
 			inputs[key] = DictRead.to_int_array(DictRead.get_array(p, "targets"))
-			if prompt.max_count == 1 and (inputs[key] as Array).size() == 1:
+			# Einzelwahlen (`*_id`) liefern die Person, Mehrfachwahlen (`targets`) immer eine Liste, auch mit nur einer Person.
+			if key.ends_with("_id") and (inputs[key] as Array).size() == 1:
 				inputs[key] = (inputs[key] as Array)[0]
 		STAGE_OPTION:
 			inputs[key] = String(DictRead.get_array(spec, "options")[int(p["option"])])

@@ -94,7 +94,13 @@ static func next_action(s: GameState) -> Dictionary:
 		return notice_card(s)
 	var step_id := RulesEngine.next_step_id(s)
 	if step_id != "":
-		return step_announcement(s, step_id)
+		return step_announcement(s, step_id)  # eine offene Reaktion geht dem Kartenfenster vor (die Phasenmaschine verlangt es so)
+	if CardRules.window_open(s) and s.death_cards:
+		var card_window := CardView.window(s)
+		if not card_window.is_empty():
+			card_window["kind"] = "card_window"
+			card_window["secret"] = true  # die Karte der toten Person zeigt die Karte erst nach bewusster Aktion
+			return card_window
 	match s.phase:
 		Phase.SETUP:
 			return {"kind": "start_night", "secret": false, "first": true, "revival_round": s.revival_round}
@@ -106,7 +112,8 @@ static func next_action(s: GameState) -> Dictionary:
 			if s.day_step == Phase.DAY_EXECUTION_DECIDED:
 				return {"kind": "end_day", "secret": false, "nominations": nominations_today(s)}
 			return {"kind": "day", "secret": false, "day_step": String(s.day_step), "nominations": nominations_today(s),
-				"execution_candidates": _execution_candidates(s)}
+				"execution_candidates": _execution_candidates(s), "cards": s.death_cards, "execution_cancelled": s.death_cards and CardLynch.cancelled_today(s),
+				"card_rules": CardView.rules(s), "dead_nominate": CardFxDead.dead_rule_active(s), "nominator_ids": nominator_ids(s)}
 	return {"kind": "none", "secret": false}
 
 
@@ -183,6 +190,8 @@ static func notice_card(s: GameState) -> Dictionary:
 ## Heute nominierte, lebende Personen: reguläre Hinrichtungsziele (DR-03).
 static func _execution_candidates(s: GameState) -> Array:
 	var out: Array = []
+	if s.death_cards and CardLynch.allows_unnominated(s):
+		return s.alive_ids()  # Verhexte Lynch und Richterstuhl: jede lebende Person ist als Urteil zulässig
 	for n: Nomination in s.nominations_on_day(s.day_number):
 		if s.players[n.nominee_id].alive and not out.has(n.nominee_id):
 			out.append(n.nominee_id)
@@ -242,14 +251,21 @@ static func execution_preview(s: GameState, target_id: int) -> Dictionary:
 		return {}
 	var r := ExecutionRules.preview(s, target_id, KillEvent.SOURCE_VILLAGE)
 	var dying := int(r["death_target_id"])
+	var reveal := s.death_cards and not CardLynch.for_today(s, "lynch_reveal").is_empty()
+	var revealed_for: int = int(CardLynch.for_today(s, "lynch_reveal")[0]["data"].get("revealed_for", -1)) if reveal else -1
 	return {
 		"target_id": target_id,
 		"death_target_id": dying,
+		"card_shifted": s.death_cards and str(r.get("card_reason", "")) == "shifted",
+		"card_random_wolf": s.death_cards and bool(r.get("random_wolf", false)),
+		"card_reveal": reveal,
+		"card_revealed": reveal and revealed_for == target_id,
+		"card_runner_up": s.death_cards and not CardLynch.for_today(s, "lynch_runner_up").is_empty(),
 		"redirected": bool(r["redirected"]),
 		"needs_cerberus": ExecutionRules.needs_cerberus_decision(s, target_id),
 		"needs_sage": GuardRoles.needs_sage_decision(s, target_id),
 		"sage_max": RoleCatalog.SAGE_MAX_CURSE,
-		"secret": bool(r["redirected"]) or ExecutionRules.needs_cerberus_decision(s, target_id) or GuardRoles.needs_sage_decision(s, target_id),
+		"secret": bool(r["redirected"]) or ExecutionRules.needs_cerberus_decision(s, target_id) or GuardRoles.needs_sage_decision(s, target_id) 			or (s.death_cards and (str(r.get("card_reason", "")) != "" or not CardLynch.for_today(s, "lynch_runner_up").is_empty())),
 	}
 
 
@@ -467,3 +483,18 @@ static func _candidate(s: GameState, c: WinCandidate) -> Dictionary:
 		"co_winners": names.call(c.co_winner_ids),
 		"status": String(c.status),
 	}
+
+
+## Personen, die heute nominieren dürfen: Lebende, mit Totengericht nur Tote, mit Geisterstimme zusätzlich die Besitzerin.
+## Ob die Nominierung gilt, entscheidet der Regelkern; dies sind nur die antippbaren Personen.
+static func nominator_ids(s: GameState) -> Array:
+	var out: Array = []
+	var dead_rule := s.death_cards and CardFxDead.dead_rule_active(s)
+	for id: int in s.seat_order:
+		var alive := s.players[id].alive
+		if dead_rule:
+			if not alive:
+				out.append(id)
+		elif alive or (s.death_cards and CardFxSolo.may_nominate_dead(s, id)):
+			out.append(id)
+	return out

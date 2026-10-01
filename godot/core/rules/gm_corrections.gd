@@ -91,6 +91,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 			return &"wrong_phase"
 		if s.day_step == Phase.DAY_ENDED:
 			return &"day_already_ended"
+		if s.death_cards and (CardRules.window_open(s) or s.day_step == Phase.DAY_CARDS_END):
+			return &"card_window_open"  # das Kartenfenster ist offen: erst schließen, dann hinrichten
 	var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
 	if not s.players.has(target):
 		return &"unknown_player"

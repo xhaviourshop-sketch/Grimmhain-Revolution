@@ -53,6 +53,8 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_morning(next)
 		"gm":
 			_gm(context)
+		"card_window":
+			_card_window(next, context)
 		"day":
 			_day(next, context)
 		"end_day":
@@ -94,7 +96,7 @@ func lock() -> void:
 
 func _covered(kind: String) -> void:
 	_heading("ui.cockpit.secret.heading")
-	_text("ui.cockpit.secret.%s" % ("win" if kind == "win_decision" else "step"), {}, &"MutedLabel")
+	_text("ui.cockpit.secret.%s" % ("win" if kind == "win_decision" else ("card" if kind == "card_window" else "step")), {}, &"MutedLabel")
 	_actions([_button("RevealButton", "ui.cockpit.secret.reveal", GrimmButton.Kind.PRIMARY, &"reveal")])
 
 
@@ -162,11 +164,14 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 	var role := str(next.get("role_id"))
 	var answer := str(next.get("answer"))
 	var anonymous := bool(next.get("anonymous_asker", false))
+	var is_card := str(next.get("owner")) == "card"
 	_decoys(next)
 	_caption("ui.cockpit.card.prompt.caption")
 	# DI-05: Die Frage an die gefragte Person nennt weder Rolle noch die fragende Person.
 	if anonymous:
 		_heading("ui.cockpit.card.red_grant.heading")
+	elif is_card:
+		_card_prompt_head(next)
 	else:
 		_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)})
 	var actors := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
@@ -177,8 +182,12 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 			break
 		_text("ui.cockpit.card.info_line", {"label": StringName(CockpitText.info_key(str(line["key"]))), "value": CockpitText.info_value(line)}, &"WarningLabel")
 	var instruction := CockpitText.reaction_key(str(next.get("reaction_kind"))) if str(next.get("owner")) == "reaction" \
-		else CockpitText.instruction_key(str(next.get("owner")), str(next.get("stage")), answer)
+		else (CockpitText.card_instruction_key(next) if is_card else CockpitText.instruction_key(str(next.get("owner")), str(next.get("stage")), answer))
 	_text(instruction, {"min": int(next.get("min", 0)), "max": int(next.get("max", 0))})
+	if str(next.get("owner")) == "kartenschlucker":
+		_swallower_status(next)
+	if is_card and not (next.get("dice", []) as Array).is_empty():
+		_dice(next.get("dice", []))
 	var buttons: Array[Control] = []
 	match answer:
 		"targets":
@@ -192,10 +201,19 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 			buttons.append(_button("AckButton", "ui.cockpit.action.ack.%s" % str(next.get("stage")), GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
 		"option":
 			var options: Array = next.get("options", [])
+			var option_kind := str(next.get("option_kind", ""))
 			for i: int in options.size():
+				if option_kind != "" and option_kind != "role":
+					# Karteneingaben und Handzeichen des Kartenschluckers: eigene Beschriftung je Option.
+					buttons.append(_button("OptionButton_%d" % i, CockpitText.card_option_key(option_kind, str(options[i])), GrimmButton.Kind.SECONDARY, &"option", {"index": i}))
+					continue
 				var b := _button("OptionButton_%d" % i, "ui.cockpit.action.option", GrimmButton.Kind.SECONDARY, &"option", {"index": i})
 				b.format_values = {"number": i + 1, "role": CockpitText.role_name(str(options[i]))}
 				buttons.append(b)
+		"roll":
+			var roll := _button("RollButton", "ui.cards.action.roll", GrimmButton.Kind.PRIMARY, &"roll")
+			roll.format_values = {"count": int(next.get("dice_count", 1))}
+			buttons.append(roll)
 		"prediction":
 			_prediction_part(next, context, buttons)
 	if not (next.get("show", []) as Array).is_empty():
@@ -288,19 +306,32 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 		"name_wolf":
 			_day_pick(context, "ui.cockpit.card.day.name_wolf.heading", "ui.cockpit.card.day.name_wolf.do", "ConfirmNameWolfButton", "ui.cockpit.action.confirm_name_wolf", &"confirm_name_wolf")
 			return
+		"card_report":
+			_day_pick(context, "ui.cards.report.heading", "ui.cards.report.do", "ConfirmCardReportButton", "ui.cards.action.confirm_report", &"confirm_card_report")
+			return
 		"execution_check":
 			_execution_check(context)
 			return
 	_heading("ui.cockpit.card.day.heading", {"number": int(context.get("day_number", 0))})
 	_day_public(next, context)
+	var extra_buttons: Array[Control] = []
+	_card_rules(next.get("card_rules", []), extra_buttons)
+	if bool(next.get("execution_cancelled", false)):
+		_text("ui.cards.exec.cancelled", {}, &"WarningLabel").name = "ExecutionCancelledLabel"
+	if bool(next.get("dead_nominate", false)):
+		_text("ui.cards.exec.dead_nominate", {}, &"WarningLabel").name = "DeadNominateLabel"
 	_text("ui.cockpit.card.day.do", {}, &"MutedLabel")
 	var execute := _button("ExecuteButton", "ui.cockpit.action.execute", GrimmButton.Kind.PRIMARY, &"start_execute")
-	execute.disabled = (next.get("execution_candidates", []) as Array).is_empty()
-	_actions([
+	execute.disabled = (next.get("execution_candidates", []) as Array).is_empty() or bool(next.get("execution_cancelled", false))
+	var day_buttons: Array[Control] = [
 		_button("NominateButton", "ui.cockpit.action.nominate", GrimmButton.Kind.SECONDARY, &"start_nominate"),
 		execute,
 		_button("NoExecutionButton", "ui.cockpit.action.no_execution", GrimmButton.Kind.SECONDARY, &"no_execution"),
-	])
+	]
+	day_buttons.append_array(extra_buttons)
+	if bool(next.get("cards", false)):
+		day_buttons.append(_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"))
+	_actions(day_buttons)
 
 
 func _day_public(next: Dictionary, context: Dictionary) -> void:
@@ -324,6 +355,11 @@ func _day_public(next: Dictionary, context: Dictionary) -> void:
 		_text("ui.cockpit.card.day.deaths", {"names": CockpitText.spoken_names(deaths)}, &"ReadAloudLabel")
 	for e: Dictionary in effects:
 		var line := CockpitText.effect_line(e)
+		_text(str(line["key"]), line["values"], &"ReadAloudLabel")
+	var card_lines: Array = CockpitText.card_lines(context.get("day_cards", []))
+	if not card_lines.is_empty() and deaths.is_empty() and effects.is_empty():
+		_caption("ui.cockpit.card.say_now")
+	for line: Dictionary in card_lines:
 		_text(str(line["key"]), line["values"], &"ReadAloudLabel")
 
 
@@ -374,7 +410,7 @@ func _execution_check(context: Dictionary) -> void:
 	var buttons: Array[Control] = []
 	if bool(preview.get("redirected", false)):
 		_text("ui.cockpit.card.day.check.redirected", {"name": CockpitText.names_of([int(preview["death_target_id"])], seats)}, &"WarningLabel")
-	elif not bool(preview.get("needs_cerberus", false)) and not bool(preview.get("needs_sage", false)):
+	elif not bool(preview.get("needs_cerberus", false)) and not bool(preview.get("needs_sage", false)) and not _card_exec_notes(preview, seats):
 		_text("ui.cockpit.card.day.check.plain", {"name": target}, &"MutedLabel")
 	if bool(preview.get("needs_cerberus", false)):
 		_text("ui.cockpit.card.day.check.cerberus", {}, &"WarningLabel")
@@ -394,11 +430,47 @@ func _execution_check(context: Dictionary) -> void:
 			if extra.has("sage_curse") and int(extra["sage_curse"]) == n:
 				b.kind = GrimmButton.Kind.PRIMARY
 			buttons.append(b)
-	var confirm := _button("ConfirmExecutionButton", "ui.cockpit.action.confirm_execution", GrimmButton.Kind.PRIMARY, &"confirm_execution")
+	# Totenreichkarten: Enthüllung vor dem Vollzug (Wachsame Augen) und Entscheid des Dorfes, zweitmeiste Stimmen (Kettenreaktion).
+	var confirm_key := "ui.cockpit.action.confirm_execution"
+	if bool(preview.get("card_reveal", false)):
+		if not bool(preview.get("card_revealed", false)):
+			_text("ui.cards.exec.reveal", {}, &"WarningLabel").name = "CardRevealLabel"
+			confirm_key = "ui.cards.action.reveal_role"
+		else:
+			_text("ui.cards.exec.village_decides", {}, &"WarningLabel").name = "VillageDecidesLabel"
+			ready = ready and extra.has("village_confirms")
+			for choice: bool in [true, false]:
+				var b := _button("VillageConfirms%s" % ("Yes" if choice else "No"), "ui.cards.action.village.%s" % ("yes" if choice else "no"),
+					GrimmButton.Kind.PRIMARY if extra.get("village_confirms") == choice else GrimmButton.Kind.SECONDARY, &"exec_extra", {"field": "village_confirms", "value": choice})
+				buttons.append(b)
+	if bool(preview.get("card_runner_up", false)) and (not bool(preview.get("card_reveal", false)) or bool(preview.get("card_revealed", false))):
+		var picked: Array = context.get("selection", [])
+		if extra.has("runner_up_id"):
+			_text("ui.cards.exec.runner_up_set", {"name": CockpitText.names_of([int(extra["runner_up_id"])], seats) if int(extra["runner_up_id"]) != -1 else "–"}, &"SectionLabel").name = "RunnerUpLabel"
+		else:
+			_text("ui.cards.exec.runner_up", {}, &"WarningLabel").name = "RunnerUpPrompt"
+			ready = false
+			var take := _button("TakeRunnerUpButton", "ui.cards.action.take_runner_up", GrimmButton.Kind.PRIMARY, &"exec_runner_up", {"id": int(picked[0]) if not picked.is_empty() else -1})
+			take.disabled = picked.is_empty()
+			buttons.append(take)
+			buttons.append(_button("NoRunnerUpButton", "ui.cards.action.no_runner_up", GrimmButton.Kind.SECONDARY, &"exec_runner_up", {"id": -1}))
+	var confirm := _button("ConfirmExecutionButton", confirm_key, GrimmButton.Kind.PRIMARY, &"confirm_execution")
 	confirm.disabled = not ready
 	buttons.append(confirm)
 	buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))
 	_actions(buttons)
+
+
+## Hinweise zu Kartenwirkungen auf die Hinrichtung; gibt zurück, ob mindestens einer angezeigt wurde.
+func _card_exec_notes(preview: Dictionary, seats: Array) -> bool:
+	var shown := false
+	if bool(preview.get("card_shifted", false)):
+		_text("ui.cards.exec.shifted", {"name": CockpitText.names_of([int(preview["death_target_id"])], seats)}, &"WarningLabel").name = "ShiftedLabel"
+		shown = true
+	if bool(preview.get("card_random_wolf", false)):
+		_text("ui.cards.exec.random_wolf", {}, &"WarningLabel").name = "RandomWolfLabel"
+		shown = true
+	return shown
 
 
 ## Geführte Spielleiterkorrektur: Person wählen, Pflichtangaben, dann Rückfrage mit Begründung.
@@ -554,3 +626,101 @@ func _emit(action: StringName, payload: Dictionary, source: BaseButton) -> void:
 	if _busy or source.disabled or source.is_queued_for_deletion() or not is_ancestor_of(source):
 		return
 	requested.emit(action, payload)
+
+
+# --- Totenreichkarten ---------------------------------------------------------------------------------
+
+## Kartenfläche: Name der Karte und ihr Text zum Vorlesen oder Zeigen.
+func _card_face(card: Dictionary) -> void:
+	if card.is_empty():
+		return
+	var title := _text(str(card["name_key"]), {}, &"SectionLabel")
+	title.name = "CardNameLabel"
+	if str(card.get("text_key", "")) != "":
+		_text(str(card["text_key"]), {}, &"ReadAloudLabel").name = "CardTextLabel"
+
+
+## Kopf einer Karteneingabe: Karte oder Aufgabe, handelnde Person, Kartentext (nur beim Spielen).
+func _card_prompt_head(next: Dictionary) -> void:
+	var card: Dictionary = next.get("card", {})
+	var task := str(next.get("task_kind", ""))
+	if task != "":
+		_heading("ui.card.task.%s.heading" % task if CockpitText.has_key("ui.card.task.%s.heading" % task) else "ui.cards.task.heading")
+		if not card.is_empty():
+			_text(str(card["name_key"]), {}, &"CaptionLabel").name = "CardNameLabel"
+		if next.has("victim") and str(next.get("victim_role", "")) != "":
+			_text("ui.cards.pack_victim", {"name": CockpitText.person(next["victim"]), "role": CockpitText.role_name(str(next["victim_role"]))}, &"WarningLabel").name = "PackVictimLabel"
+	else:
+		_heading("ui.cards.prompt.heading")
+		_card_face(card)
+
+
+## Würfel mit den gespeicherten Würfen (sichtbar gezeichnet, zusätzlich als Zahl).
+func _dice(values: Array) -> void:
+	var row := DiceRow.new()
+	row.show_dice(values)
+	add_child(row)
+	_text("ui.cards.dice.result", {"dice": ", ".join(values.map(func(v: Variant) -> String: return str(int(v))))}, &"SectionLabel").name = "DiceResultLabel"
+
+
+## Guthaben des Kartenschluckers (nur Spielleitung): verfügbare und insgesamt gesammelte Stapel, Schild.
+func _swallower_status(next: Dictionary) -> void:
+	var info: Dictionary = next.get("swallower", {})
+	if info.is_empty():
+		return
+	_text("ui.cards.swallower.status", {"balance": int(info["balance"]), "total": int(info["total"]),
+		"shield": StringName("ui.common.yes" if bool(info["shield"]) else "ui.common.no")}, &"WarningLabel").name = "SwallowerStatusLabel"
+
+
+## Kartenfenster: die gefragte tote Person mit ihrer Originalkarte. Spielen, aufbewahren, tauschen (nur mit lebendem
+## Kartenschlucker), Karte zeigen, Überblick oder das Fenster schließen. Verdeckt, bis die Spielleitung aufdeckt.
+func _card_window(next: Dictionary, _context: Dictionary) -> void:
+	var card: Dictionary = next.get("card", {})
+	var owner: Dictionary = next.get("owner", {})
+	_caption("ui.cards.window.caption.%s" % str(next.get("window", "start")))
+	_heading("ui.cards.window.heading", {"name": CockpitText.person(owner)})
+	var waiting: Array = (next.get("waiting", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
+	if not waiting.is_empty():
+		_text("ui.cards.window.waiting", {"names": ", ".join(waiting)}, &"MutedLabel").name = "WaitingLabel"
+	_card_face(card)
+	_text(str(card.get("guide_key", "")), {}, &"MutedLabel").name = "CardGuideLabel"
+	var preselected: Array = (next.get("preselected", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
+	if not preselected.is_empty():
+		_text("ui.cards.window.preselected", {"names": ", ".join(preselected)}, &"WarningLabel").name = "PreselectedLabel"
+	if bool(next.get("must_play", false)):
+		_text("ui.cards.window.must_play", {}, &"WarningLabel").name = "MustPlayLabel"
+	var owner_id := int(next.get("owner_id", -1))
+	var play := _button("CardPlayButton", "ui.cards.action.play", GrimmButton.Kind.PRIMARY, &"card_play", {"owner_id": owner_id})
+	play.disabled = not bool(next.get("can_play", false))
+	var keep := _button("CardKeepButton", "ui.cards.action.keep", GrimmButton.Kind.SECONDARY, &"card_keep", {"owner_id": owner_id})
+	keep.disabled = not bool(next.get("can_keep", true))
+	var buttons: Array[Control] = [play, keep]
+	if not bool(next.get("can_play", false)):
+		_text("ui.cards.window.not_playable", {}, &"MutedLabel").name = "NotPlayableLabel"
+	if bool(next.get("swallower_alive", false)):
+		var exchange := _button("CardExchangeButton", "ui.cards.action.exchange", GrimmButton.Kind.SECONDARY, &"card_exchange", {"owner_id": owner_id})
+		exchange.disabled = not bool(next.get("can_exchange", false))
+		buttons.append(exchange)
+	buttons.append(_button("CardShowButton", "ui.cards.action.show", GrimmButton.Kind.SECONDARY, &"card_show"))
+	buttons.append(_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"))
+	var close := _button("CardCloseWindowButton", "ui.cards.action.close_window", GrimmButton.Kind.SECONDARY, &"card_close")
+	close.disabled = not bool(next.get("can_close", true))
+	buttons.append(close)
+	_actions(buttons)
+
+
+## Öffentliche Tagesregeln durch Karten (Nebelhorn, Stummfilm, Totengericht, ...): Name, Text und, wo vorgesehen, Button zum Melden
+## eines Verstoßes. Zeigt nur öffentliche Regeln, keine versteckten Wirkungen.
+func _card_rules(rules: Array, buttons: Array[Control]) -> void:
+	if rules.is_empty():
+		return
+	_caption("ui.cards.rules.caption")
+	for r: Dictionary in rules:
+		var name_label := _text(str(r["name_key"]), {}, &"SectionLabel")
+		name_label.name = "CardRuleName_%d" % int(r["effect_id"])
+		_text(str(r["text_key"]), {}, &"MutedLabel").name = "CardRuleText_%d" % int(r["effect_id"])
+		var excluded: Array = (r.get("excluded", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
+		if not excluded.is_empty():
+			_text("ui.cards.rules.excluded", {"names": ", ".join(excluded)}, &"WarningLabel")
+		if bool(r.get("reportable", false)):
+			buttons.append(_button("CardReportButton_%d" % int(r["effect_id"]), "ui.cards.action.report.%s" % str(r["kind"]), GrimmButton.Kind.SECONDARY, &"card_report", {"effect_id": int(r["effect_id"])}))

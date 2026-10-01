@@ -224,6 +224,48 @@ static func announcement(night_number: int, public: Dictionary) -> Control:
 	return root
 
 
+## Karte der toten Person zum Zeigen am Tisch: Name der Besitzerin, Name der Karte und ihr Text (Regeltext der Fraktionsvariante).
+static func card_face(card: Dictionary, owner: Dictionary) -> Control:
+	if card.is_empty():
+		return null
+	var root := _full_rect("CardLayer")
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(center)
+	var panel := PanelContainer.new()
+	panel.theme_type_variation = &"ShowPanel"
+	panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
+	center.add_child(panel)
+	var column := VBoxContainer.new()
+	column.theme_type_variation = &"ScreenColumn"
+	panel.add_child(column)
+	_label(column, "ui.cards.face.heading", {"name": str(owner.get("name", ""))}, &"CaptionLabel")
+	_label(column, str(card["name_key"]), {}, &"HeadingLabel").name = "CardFaceName"
+	var value := _label(column, str(card["text_key"]), {}, &"ShowValueLabel")
+	value.name = "CardFaceText"
+	column.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
+	return root
+
+
+## Überblick aller Karten der Partie (nur Spielleitung): wem gehört welche Karte, welchen Status hat sie; dazu die Zahlen der Kartenschlucker.
+static func cards_drawer(cards: Array, swallowers: Array) -> Control:
+	var drawer := _drawer("CardsLayer", "ui.cards.overview.heading")
+	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer
+	_label(list, "ui.cockpit.private.warning", {}, &"WarningLabel")
+	for s: Dictionary in swallowers:
+		_label(list, "ui.cards.overview.swallower", {"name": CockpitText.person(s["person"]), "balance": int(s["balance"]), "total": int(s["total"]),
+			"shield": StringName("ui.common.yes" if bool(s["shield"]) else "ui.common.no")}, &"SectionLabel").name = "SwallowerRow_%d" % int((s["person"] as Dictionary)["person_id"])
+	if cards.is_empty():
+		_label(list, "ui.cards.overview.empty", {}, &"MutedLabel")
+	for c: Dictionary in cards:
+		var row := VBoxContainer.new()
+		row.name = "CardRow_%d" % int(c["record_id"])
+		_label(row, "ui.cards.overview.row", {"name": CockpitText.person(c["owner"]), "card": StringName(str(c["name_key"])), "status": StringName(str(c["status_key"]))}, &"SectionLabel")
+		_label(row, str(c["text_key"]), {}, &"CaptionLabel")
+		list.add_child(row)
+	return drawer
+
+
 static func morning_drawer(report: Dictionary, seats: Array) -> Control:
 	var drawer := _drawer("MorningLayer", "ui.cockpit.morning.heading")
 	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer

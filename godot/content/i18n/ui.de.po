@@ -7549,3 +7549,543 @@ msgstr "Tote ziehen Karten, die im Kartenfenster gespielt werden. Schaltet auch 
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
 msgstr "Kartenschlucker nur mit Totenreichkarten"
+
+msgid "ui.cockpit.secret.card"
+msgstr "Die Karte einer toten Person ist geheim. Zeige sie erst an, wenn niemand mitliest."
+
+msgid "ui.cards.window.caption.start"
+msgstr "Kartenfenster vor der Tagesdiskussion"
+
+msgid "ui.cards.window.caption.end"
+msgstr "Kartenfenster nach Hinrichtung und Todeseffekten"
+
+msgid "ui.cards.window.heading"
+msgstr "Totenreichkarte von {name}"
+
+msgid "ui.cards.window.waiting"
+msgstr "Danach: {names}"
+
+msgid "ui.cards.window.preselected"
+msgstr "Angebotene Personen (gespeichert): {names}"
+
+msgid "ui.cards.window.must_play"
+msgstr "Diese Ersatzkarte muss sofort gespielt werden."
+
+msgid "ui.cards.window.not_playable"
+msgstr "Die Karte hat jetzt keine Wirkung und kann nur aufbewahrt werden."
+
+msgid "ui.cards.action.play"
+msgstr "Karte spielen"
+
+msgid "ui.cards.action.keep"
+msgstr "Aufbewahren"
+
+msgid "ui.cards.action.exchange"
+msgstr "Gegen Ersatzkarte tauschen"
+
+msgid "ui.cards.action.show"
+msgstr "Karte zeigen"
+
+msgid "ui.cards.action.overview"
+msgstr "Kartenüberblick"
+
+msgid "ui.cards.action.close_window"
+msgstr "Fenster schließen"
+
+msgid "ui.cards.action.roll"
+msgstr "Würfeln ({count})"
+
+msgid "ui.cards.action.reveal_role"
+msgstr "Rolle öffentlich enthüllen"
+
+msgid "ui.cards.action.take_runner_up"
+msgstr "Zweitmeiste Stimmen übernehmen"
+
+msgid "ui.cards.action.no_runner_up"
+msgstr "Niemand"
+
+msgid "ui.cards.action.confirm_report"
+msgstr "Verstoß bestätigen"
+
+msgid "ui.cards.action.village.yes"
+msgstr "Das Dorf vollzieht die Hinrichtung"
+
+msgid "ui.cards.action.village.no"
+msgstr "Das Dorf lehnt ab"
+
+msgid "ui.cards.action.report.no_role_talk"
+msgstr "Verstoß melden: Rollen genannt"
+
+msgid "ui.cards.action.report.no_speaking"
+msgstr "Verstoß melden: gesprochen"
+
+msgid "ui.cards.prompt.heading"
+msgstr "Totenreichkarte wird gespielt"
+
+msgid "ui.cards.task.heading"
+msgstr "Aufgabe der Spielleitung"
+
+msgid "ui.cards.dice.result"
+msgstr "Gewürfelt: {dice}"
+
+msgid "ui.cards.swallower.status"
+msgstr "Guthaben: {balance} Stapel, insgesamt gesammelt: {total}, Schild: {shield}"
+
+msgid "ui.cards.rules.caption"
+msgstr "Es gilt (durch Karten)"
+
+msgid "ui.cards.rules.excluded"
+msgstr "Ausgeschlossen: {names}"
+
+msgid "ui.cards.exec.cancelled"
+msgstr "Die Hinrichtung entfällt heute durch eine Karte."
+
+msgid "ui.cards.exec.dead_nominate"
+msgstr "Heute nominieren nur Tote. Lebende hören schweigend zu."
+
+msgid "ui.cards.exec.reveal"
+msgstr "Wachsame Augen: Die Rolle der Person wird zuerst öffentlich enthüllt. Danach entscheidet das Dorf."
+
+msgid "ui.cards.exec.village_decides"
+msgstr "Die Rolle ist enthüllt. Frage das Dorf: Soll die Hinrichtung vollzogen werden?"
+
+msgid "ui.cards.exec.runner_up"
+msgstr "Kettenreaktion: Tippe im Sitzkreis die Person mit den zweitmeisten Stimmen an oder wähle „Niemand“."
+
+msgid "ui.cards.exec.runner_up_set"
+msgstr "Zweitmeiste Stimmen: {name}"
+
+msgid "ui.cards.exec.shifted"
+msgstr "Die Stimmen zählen für die Person links daneben: Sie ist das Ziel ({name})."
+
+msgid "ui.cards.exec.random_wolf"
+msgstr "Trifft das Urteil eine Dorfperson, wird es auf einen zufälligen Wolf umgeleitet."
+
+msgid "ui.cards.report.heading"
+msgstr "Verstoß melden"
+
+msgid "ui.cards.report.do"
+msgstr "Tippe die Person an, die gegen die Tagesregel verstoßen hat."
+
+msgid "ui.cards.dialog.exchange.title"
+msgstr "Karte tauschen?"
+
+msgid "ui.cards.dialog.exchange.message"
+msgstr "Der Kartenschlucker erhält einen Stapel. Die Originalkarte kehrt in den Vorrat zurück, die Ersatzkarte muss sofort gespielt werden."
+
+msgid "ui.cards.dialog.exchange.confirm"
+msgstr "Tauschen"
+
+msgid "ui.cards.dialog.close.title"
+msgstr "Kartenfenster schließen?"
+
+msgid "ui.cards.dialog.close.message"
+msgstr "Alle noch nicht gespielten Karten bleiben bei ihren Besitzern."
+
+msgid "ui.cards.dialog.close.confirm"
+msgstr "Schließen"
+
+msgid "ui.cards.face.heading"
+msgstr "Karte von {name}"
+
+msgid "ui.cards.overview.heading"
+msgstr "Totenreichkarten"
+
+msgid "ui.cards.overview.empty"
+msgstr "Noch hat niemand eine Karte erhalten."
+
+msgid "ui.cards.overview.row"
+msgstr "{name}: {card} ({status})"
+
+msgid "ui.cards.overview.swallower"
+msgstr "Kartenschlucker {name}: Guthaben {balance}, gesammelt {total}, Schild: {shield}"
+
+msgid "ui.cards.status.held"
+msgstr "liegt bei der Person"
+
+msgid "ui.cards.status.played"
+msgstr "gespielt"
+
+msgid "ui.cards.status.swapped"
+msgstr "getauscht"
+
+msgid "ui.cards.status.lapsed"
+msgstr "verfallen"
+
+msgid "ui.prompt.generic.roll"
+msgstr "Tippe „Würfeln“. Das Ergebnis wird gespeichert und nicht neu gewürfelt."
+
+msgid "ui.card.task.puppet_nominate.heading"
+msgstr "Aufgabe: Nominierungen des Puppenspielers"
+
+msgid "ui.card.task.protect_pick.heading"
+msgstr "Aufgabe: Geschützte Person wählen"
+
+msgid "ui.card.task.blood_pact_reveal.heading"
+msgstr "Aufgabe: Wölfe aufdecken"
+
+msgid "ui.card.task.cosmic_victim.heading"
+msgstr "Aufgabe: Opfer der anderen Seite"
+
+msgid "ui.card.task.pack_review.heading"
+msgstr "Aufgabe: Rudelziel prüfen"
+
+msgid "ui.card.task.pack_redirect.heading"
+msgstr "Aufgabe: Rudelangriff umlenken"
+
+msgid "ui.card.task.bad_omen_pick.heading"
+msgstr "Aufgabe: Schlechtes Omen"
+
+msgid "ui.card.task.short_vote_check.heading"
+msgstr "Aufgabe: Stille Abstimmung auswerten"
+
+msgid "ui.card.task.solo_rebirth.heading"
+msgstr "Aufgabe: Rückkehr mit neuer Rolle"
+
+msgid "ui.card.task.solo_judge.heading"
+msgstr "Aufgabe: Richter aus dem Totenreich"
+
+msgid "ui.card.task.puppet_nominate.targets"
+msgstr "Wähle fünf Personen, mindestens eine aus jeder Fraktion. Sie werden nominiert."
+
+msgid "ui.card.task.protect_pick.target_id"
+msgstr "Wähle geheim die Person, die geschützt wird."
+
+msgid "ui.card.task.blood_pact_reveal.targets"
+msgstr "Wähle null bis zwei Wölfe, die öffentlich aufgedeckt werden."
+
+msgid "ui.card.task.cosmic_victim.target_id"
+msgstr "Wähle das Opfer der anderen Seite."
+
+msgid "ui.card.task.pack_review.target_id"
+msgstr "Zeige dem Rudel die Rolle des Opfers. Wählt das Rudel ein anderes Ziel, tippe es an, sonst wähle niemanden."
+
+msgid "ui.card.task.pack_redirect.target_id"
+msgstr "Wähle die Person, die statt des Rudelopfers getroffen wird."
+
+msgid "ui.card.task.bad_omen_pick.caught"
+msgstr "Hat das Rudel in dieser Nacht eine starke Rolle erwischt?"
+
+msgid "ui.card.task.bad_omen_pick.target_id"
+msgstr "Wähle den Wolf, der stirbt, oder niemanden."
+
+msgid "ui.card.task.short_vote_check.in_time"
+msgstr "Wurden Nominierung und Hinrichtung in 60 Sekunden abgeschlossen?"
+
+msgid "ui.card.task.solo_rebirth.role"
+msgstr "Wähle die neue Einzelsiegrolle der zurückkehrenden Person."
+
+msgid "ui.card.task.solo_judge.target_id"
+msgstr "Wähle die Person, die zusätzlich nominiert wird, oder niemanden."
+
+msgid "ui.card.task.solo_judge.agrees"
+msgstr "Stimmen mindestens 50 Prozent der Spieler zu?"
+
+msgid "ui.card.input.target_id"
+msgstr "Wähle die Person für diese Karte."
+
+msgid "ui.card.input.targets"
+msgstr "Wähle die Personen für diese Karte."
+
+msgid "ui.card.input.subject_id"
+msgstr "Wähle die Person, nach der gefragt wird."
+
+msgid "ui.card.input.asker_id"
+msgstr "Wähle die Person, die die Frage stellen darf."
+
+msgid "ui.card.input.winner_id"
+msgstr "Wähle die Person, die laut Zettel gewinnt."
+
+msgid "ui.card.input.next_dead_id"
+msgstr "Wähle die Person, die laut Zettel als Nächste stirbt."
+
+msgid "ui.card.input.answer"
+msgstr "Lautet die wahrheitsgemäße Antwort Ja?"
+
+msgid "ui.card.input.seen"
+msgstr "Bestätige, dass die Besitzerin den Spielstand gesehen hat."
+
+msgid "ui.card.input.done"
+msgstr "Bestätige, dass die Frage beantwortet wurde."
+
+msgid "ui.card.input.agrees"
+msgstr "Stimmt die gefragte Seite zu?"
+
+msgid "ui.card.input.days"
+msgstr "Wähle die Dauer in Tagen."
+
+msgid "ui.card.input.mode"
+msgstr "Wie darf die Fähigkeit eingesetzt werden?"
+
+msgid "ui.card.input.leader"
+msgstr "Welches Team liegt vorne?"
+
+msgid "ui.card.input.team"
+msgstr "Welches Team gewinnt laut Tipp?"
+
+msgid "ui.card.input.side"
+msgstr "Welche Seite erhält den Bonus?"
+
+msgid "ui.card.input.role"
+msgstr "Wähle die neue Rolle."
+
+msgid "ui.card.input.role_0"
+msgstr "Wähle die neue Rolle für die erste Person."
+
+msgid "ui.card.input.role_1"
+msgstr "Wähle die neue Rolle für die zweite Person."
+
+msgid "ui.card.input.dice"
+msgstr "Würfle die virtuellen Würfel."
+
+msgid "ui.card.input.dice.confirm"
+msgstr "Die Würfel sind gefallen. Das Ergebnis ist gespeichert."
+
+msgid "ui.card.solo_14.input.target_id"
+msgstr "Wähle den Nachbarn, der beschuldigt wird."
+
+msgid "ui.card.solo_14.input.agrees"
+msgstr "Stimmt der andere Nachbar zu?"
+
+msgid "ui.card.solo_01.input.target_id"
+msgstr "Wähle die Person, deren Name auf dem Zettel steht."
+
+msgid "ui.card.solo_03.input.target_id"
+msgstr "Wähle die Person, die zuletzt nominiert oder angegriffen hat."
+
+msgid "ui.card.solo_05.input.target_id"
+msgstr "Wähle die Erbin oder den Erben."
+
+msgid "ui.card.solo_08.input.target_id"
+msgstr "Wähle die Person, die als gefährlichste genannt wird."
+
+msgid "ui.card.solo_12.input.target_id"
+msgstr "Wähle die Person mit den drei zusätzlichen Stimmen."
+
+msgid "ui.card.schicksal_14.input.target_id"
+msgstr "Wähle die Richterin, die das Dorf bestimmt hat."
+
+msgid "ui.card.schicksal_05.input.targets"
+msgstr "Wähle alle Personen, die keine Stimme erhalten haben."
+
+msgid "ui.card.loki_05.input.targets"
+msgstr "Wähle die meistgenannte Person, bei Gleichstand alle."
+
+msgid "ui.card.segen_10.input.target_id"
+msgstr "Wähle das Opfer der Abstimmung der Toten."
+
+msgid "ui.card.segen_05.input.target_id"
+msgstr "Wähle die Person mit doppelter Stimme."
+
+msgid "ui.card.loki_08.input.target_id"
+msgstr "Wähle die Person, die die Nachtfähigkeit ausführt."
+
+msgid "ui.card.option.days.1"
+msgstr "1 Tag(e)"
+
+msgid "ui.card.option.days.2"
+msgstr "2 Tag(e)"
+
+msgid "ui.card.option.days.3"
+msgstr "3 Tag(e)"
+
+msgid "ui.card.option.mode.again"
+msgstr "Erneut einsetzen"
+
+msgid "ui.card.option.mode.twice"
+msgstr "Zweimal einsetzen"
+
+msgid "ui.card.option.leader.village"
+msgstr "Das Dorf liegt vorne"
+
+msgid "ui.card.option.leader.wolves"
+msgstr "Die Wölfe liegen vorne"
+
+msgid "ui.card.option.team.village"
+msgstr "Dorf"
+
+msgid "ui.card.option.team.wolves"
+msgstr "Wölfe"
+
+msgid "ui.card.option.team.solo"
+msgstr "Einzelsieg"
+
+msgid "ui.card.option.side.village"
+msgstr "Dorf: nächste Nacht ohne Rudelangriff"
+
+msgid "ui.card.option.side.wolves"
+msgstr "Wölfe: nächste Hinrichtung entfällt"
+
+msgid "ui.card.option.value.village"
+msgstr "Dorf"
+
+msgid "ui.card.option.value.wolves"
+msgstr "Wölfe"
+
+msgid "ui.card.option.swallower.none"
+msgstr "Kopfschütteln: nichts tun"
+
+msgid "ui.card.option.swallower.kill"
+msgstr "Zwei Finger: Tötung (2 Stapel)"
+
+msgid "ui.card.option.swallower.shield"
+msgstr "Fünf Finger: Schild (5 Stapel)"
+
+msgid "ui.card.option.swallower.win"
+msgstr "Zehn Finger: Sieg (10 Stapel)"
+
+msgid "ui.card.public.played"
+msgstr "Totenreichkarte gespielt: {card}"
+
+msgid "ui.card.public.role_revealed"
+msgstr "{name} ist: {role} ({card})"
+
+msgid "ui.card.public.revived"
+msgstr "{name} kehrt zurück."
+
+msgid "ui.card.public.question"
+msgstr "Öffentliche Frage von {asker} an die Spielleitung über {subject}. Antwort: {answer}"
+
+msgid "ui.card.public.marker"
+msgstr "{name} trägt ein Verdachtsmarker."
+
+msgid "ui.card.public.excluded"
+msgstr "{name} scheidet aus der Diskussion aus."
+
+msgid "ui.card.public.dice"
+msgstr "{name} hat gewürfelt: {dice}"
+
+msgid "ui.card.public.swallower"
+msgstr "Der Kartenschlucker hat insgesamt {total} Stapel gesammelt."
+
+msgid "ui.card.public.night_skipped"
+msgstr "Nacht {night} fällt aus."
+
+msgid "ui.card.public.value.person_id"
+msgstr "Betroffen: {value}"
+
+msgid "ui.card.public.value.person_ids"
+msgstr "Betroffen: {value}"
+
+msgid "ui.card.public.value.victim_id"
+msgstr "Opfer: {value}"
+
+msgid "ui.card.public.value.victim_ids"
+msgstr "Opfer: {value}"
+
+msgid "ui.card.public.value.extra_ids"
+msgstr "Zusätzliche Opfer: {value}"
+
+msgid "ui.card.public.value.wolf_ids"
+msgstr "Aufgedeckte Wölfe: {value}"
+
+msgid "ui.card.public.value.judge_id"
+msgstr "Richterin: {value}"
+
+msgid "ui.card.public.value.accused_id"
+msgstr "Beschuldigt: {value}"
+
+msgid "ui.card.public.value.agreed"
+msgstr "Zustimmung: {value}"
+
+msgid "ui.card.public.value.rejected_id"
+msgstr "Abgelehnt vom Dorf: {value}"
+
+msgid "ui.card.public.value.nominee_ids"
+msgstr "Nominiert: {value}"
+
+msgid "ui.card.public.value.count"
+msgstr "Anzahl: {value}"
+
+msgid "ui.card.public.value.day"
+msgstr "Tag: {value}"
+
+msgid "ui.card.public.value.to_day"
+msgstr "Bis Tag: {value}"
+
+msgid "ui.card.public.value.from_day"
+msgstr "Ab Tag: {value}"
+
+msgid "ui.card.public.value.night"
+msgstr "Nacht: {value}"
+
+msgid "ui.card.public.value.until_night"
+msgstr "Bis Nacht: {value}"
+
+msgid "ui.card.public.value.leader"
+msgstr "Vorne liegt: {value}"
+
+msgid "ui.card.public.value.side"
+msgstr "Seite: {value}"
+
+msgid "ui.card.public.value.extra_votes"
+msgstr "Zusätzliche Stimmen: {value}"
+
+msgid "ui.log.event.card_drawn"
+msgstr "#{index} Karte gezogen ({visibility})"
+
+msgid "ui.log.event.card_pool_empty"
+msgstr "#{index} Kein passender Kartenvorrat ({visibility})"
+
+msgid "ui.log.event.card_window_opened"
+msgstr "#{index} Kartenfenster geöffnet ({visibility})"
+
+msgid "ui.log.event.card_window_closed"
+msgstr "#{index} Kartenfenster geschlossen ({visibility})"
+
+msgid "ui.log.event.card_played"
+msgstr "#{index} Karte gespielt ({visibility})"
+
+msgid "ui.log.event.card_kept"
+msgstr "#{index} Karte aufbewahrt ({visibility})"
+
+msgid "ui.log.event.card_exchanged"
+msgstr "#{index} Karte getauscht ({visibility})"
+
+msgid "ui.log.event.card_dice_rolled"
+msgstr "#{index} Würfel geworfen ({visibility})"
+
+msgid "ui.log.event.card_announced"
+msgstr "#{index} Kartenwirkung angesagt ({visibility})"
+
+msgid "ui.log.event.card_role_revealed"
+msgstr "#{index} Rolle durch Karte enthüllt ({visibility})"
+
+msgid "ui.log.event.card_question"
+msgstr "#{index} Öffentliche Frage durch Karte ({visibility})"
+
+msgid "ui.log.event.card_marker"
+msgstr "#{index} Verdachtsmarker ({visibility})"
+
+msgid "ui.log.event.card_excluded"
+msgstr "#{index} Aus der Diskussion ausgeschlossen ({visibility})"
+
+msgid "ui.log.event.card_table_report"
+msgstr "#{index} Verstoß gegen Tagesregel gemeldet ({visibility})"
+
+msgid "ui.log.event.card_effect_note"
+msgstr "#{index} Wirkung für die Spielleitung ({visibility})"
+
+msgid "ui.log.event.card_notice"
+msgstr "#{index} Private Mitteilung zu einer Karte ({visibility})"
+
+msgid "ui.log.event.card_revived"
+msgstr "#{index} Rückkehr durch Karte ({visibility})"
+
+msgid "ui.log.event.card_stack_gained"
+msgstr "#{index} Kartenschlucker erhält einen Stapel ({visibility})"
+
+msgid "ui.log.event.card_swallower_acted"
+msgstr "#{index} Nachtaktion des Kartenschluckers ({visibility})"
+
+msgid "ui.log.event.swallower_announced"
+msgstr "#{index} Stapelzahl angesagt ({visibility})"
+
+msgid "ui.log.event.night_skipped_by_card"
+msgstr "#{index} Nacht durch Karte ausgefallen ({visibility})"
+
+msgid "ui.log.event.execution_prevented_by_card"
+msgstr "#{index} Hinrichtung durch Karte verhindert ({visibility})"
+
+msgid "ui.cards.pack_victim"
+msgstr "Rudelopfer: {name}, Rolle: {role}"

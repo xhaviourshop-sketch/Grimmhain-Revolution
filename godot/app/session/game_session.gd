@@ -127,6 +127,11 @@ func day_effects() -> Array:
 	return MorningReport.day_effects(_state, _events)
 
 
+## Öffentliche Kartenereignisse des laufenden Tages (Totenreichkarten), siehe MorningReport.day_cards.
+func day_cards() -> Array:
+	return MorningReport.day_cards(_state, _events)
+
+
 ## Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
 func private_seats() -> Array:
 	return CockpitView.private_seats(_state) if _state.is_started() else []
@@ -331,6 +336,35 @@ func answer_choice(choice: bool) -> CommandResult:
 func answer_option(index: int) -> CommandResult:
 	var p := _state.pending_prompt
 	return submit(Command.create(Command.ANSWER_PROMPT, {"prompt_id": _prompt_id(), "stage": String(p.stage) if p != null else "", "option": index}))
+
+
+## Würfeln für die offene Karteneingabe (Stufe „roll“): Der Kern wirft über den gespeicherten Generator und merkt sich das Ergebnis.
+func answer_roll() -> CommandResult:
+	var p := _state.pending_prompt
+	return submit(Command.create(Command.ANSWER_PROMPT, {"prompt_id": _prompt_id(), "stage": String(p.stage) if p != null else "", "roll": true}))
+
+
+## Totenreichkarte der aktuell gefragten Person: "play", "keep" oder "exchange".
+func card_act(owner_id: int, action: String) -> CommandResult:
+	return submit(Command.card_act(owner_id, action))
+
+
+func card_close_window() -> CommandResult:
+	return submit(Command.card_close_window())
+
+
+## Meldet einen Verstoß gegen eine Tagesregel (Nebelhorn, Stummfilm) für `person_id`.
+func card_table_action(effect_id: int, person_id: int) -> CommandResult:
+	return submit(Command.card_table_action(effect_id, person_id))
+
+
+func card_overview() -> Array:
+	return CardView.overview(_state)
+
+
+## Lebende Kartenschlucker mit Guthaben, gesammelten Stapeln und Schild (nur Spielleiter).
+func card_swallowers() -> Array:
+	return CardView.swallower(_state)
 
 
 func answer_prediction(kind: String, number: int) -> CommandResult:
