@@ -7,6 +7,8 @@ extends RefCounted
 ## Zuordnung: immer `assignment = "manual"` mit der im Setup festgelegten Rolle je Personen-ID und
 ## den ausdrücklich gewählten Scheinrollen (`appearances`). Beim Start wird nicht erneut gemischt,
 ## auch wenn die Verteilung im Setup zufällig entstand.
+## Die Rollenaufdeckung ist keine Setup-Option mehr (DI-01): Der Regelkern leitet die Wiederbelebungsrunde
+## beim Start aus der Besetzung ab; der Befehl trägt keine Aufdeckungsangabe.
 ## Seed: ein neuer Wert aus `PlayerSetup.seed_source` (Standard AppPlatform.initial_seed, in Tests
 ## fest). round_id: nur aus dem Seed abgeleitet (`round_id_for`), damit gleiche Eingaben denselben
 ## Befehl ergeben.
@@ -42,6 +44,8 @@ static func build_command(data: Dictionary, seed_value: int) -> Command:
 	}
 	if not (data["appearances"] as Dictionary).is_empty():
 		payload["appearances"] = data["appearances"]
+	if bool(data.get("death_cards", false)):
+		payload["death_cards"] = true
 	return Command.start_game(payload)
 
 

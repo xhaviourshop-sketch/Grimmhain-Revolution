@@ -62,6 +62,36 @@ func import_names(raw_text: String) -> SetupResult:
 	return result
 
 
+## Ersetzt den gesamten Entwurf durch neue Personen mit den genannten Namen in dieser Reihenfolge (gespeicherte Gruppe
+## laden): frische Personen-IDs, keine Rollenwahl, Verteilung oder Sitzordnung. Alle Namen oder keiner; dieselben
+## Namensregeln und dieselbe Höchstzahl wie beim Import.
+func replace_persons(raw_names: Array) -> SetupResult:
+	var names: Array[String] = []
+	for raw: Variant in raw_names:
+		names.append(PersonNameRules.normalize(str(raw)))
+	if names.is_empty():
+		return SetupResult.failure(&"import_empty", view())
+	var invalid: Array[Dictionary] = []
+	for i: int in names.size():
+		var error := PersonNameRules.error_for(names[i])
+		if error != &"":
+			invalid.append({"position": i + 1, "name": names[i], "error": error})
+	var details := {"current": 0, "incoming": names.size(), "max": PersonNameRules.MAX_PERSONS, "max_length": PersonNameRules.MAX_NAME_LENGTH}
+	if not invalid.is_empty():
+		details["exceeds_max"] = names.size() > PersonNameRules.MAX_PERSONS
+		return SetupResult.failure(&"invalid_entries", view(), details, invalid)
+	if names.size() > PersonNameRules.MAX_PERSONS:
+		return SetupResult.failure(&"too_many_persons", view(), details)
+	_draft = SetupDraft.new()
+	var warnings: Array[StringName] = []
+	var ids: Array[int] = []
+	for name: String in names:
+		if _draft.has_duplicate_of(name) and not warnings.has(&"duplicate_name"):
+			warnings.append(&"duplicate_name")
+		ids.append(_create(name))
+	return _commit(ids, warnings, true)
+
+
 func rename_person(person_id: int, raw_name: String) -> SetupResult:
 	var index := _draft.index_of(person_id)
 	if index == -1:
@@ -165,6 +195,11 @@ func change_role_count(role: StringName, delta: int) -> SetupResult:
 	if not SetupRoleCatalog.has_role(role):
 		return SetupResult.failure(&"unknown_role", view(), {"role": role})
 	return set_role_count(role, _draft.roles.counts.get(role, 0) + delta)
+
+
+## Partie mit Totenreichkarten (Standard aus). Eine bestätigte Rollenwahl verliert dabei ihre Bestätigung.
+func set_death_cards(on: bool) -> SetupResult:
+	return _apply(RoleSetup.set_death_cards(_draft, on), {"death_cards": on})
 
 
 func reset_roles() -> SetupResult:
@@ -271,7 +306,7 @@ func start_data() -> SetupResult:
 		if copy != null:
 			appearances[str(p.person_id)] = String(copy.appears_as)
 	var result := SetupResult.success(view())
-	result.details = {"players": players, "seat_order": _draft.seating.order.duplicate(), "roles": roles, "appearances": appearances}
+	result.details = {"players": players, "seat_order": _draft.seating.order.duplicate(), "roles": roles, "appearances": appearances, "death_cards": _draft.roles.death_cards}
 	return result
 
 
@@ -295,6 +330,7 @@ func view() -> Dictionary:
 		"can_confirm": bool(validation["valid"]) and not _draft.confirmed,
 		"confirmed": _draft.confirmed,
 		"has_unconfirmed_changes": _draft.has_unconfirmed_changes,
+		"revival_round": _draft.roles.is_revival_round(),  # DI-01: aus der Rollenwahl abgeleitet, nicht wählbar
 		"is_empty": _draft.persons.is_empty(),
 		"duplicate_count": dup.size(),
 		"next_person_id": _draft.next_person_id,

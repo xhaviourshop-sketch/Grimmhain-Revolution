@@ -3,7 +3,7 @@ extends VBoxContainer
 ## Wizard-Schritt 1 „Spieler“: Personen erfassen, bearbeiten, entfernen und bestätigen.
 ## Die Wahrheit über Personen, IDs und Bestätigung liegt in PlayerSetup (AppContext); dieser
 ## Schritt stellt nur dar, ruft Operationen auf und zeigt deren Ergebnisse als Meldungen.
-## Linke Spalte, genau ein Modus: Einzeleingabe, Mehrfachimport oder Bearbeiten.
+## Linke Spalte, genau ein Modus: Einzeleingabe, Mehrfachimport, Bearbeiten oder gespeicherte Gruppen.
 ## Rechte Spalte: Anzahl, Hinweise, scrollbare Liste; nach Bestätigung „Weiter zu den Rollen“.
 ## Fußzeile: Neu beginnen, Status, Bestätigen. Rückfragen und Meldungen gehen über den Host.
 
@@ -11,7 +11,7 @@ signal dialog_requested(request: DialogRequest)
 signal status_message_requested(text_key: String)
 signal roles_requested  ## „Weiter zu den Rollen“
 
-enum Mode { ENTRY, IMPORT, EDIT }
+enum Mode { ENTRY, IMPORT, EDIT, GROUPS }
 
 const ROW_SCENE := preload("res://app/screens/new_game/person_row.tscn")
 const IMPORT_ERROR_LIST_LIMIT := 3    ## höchstens so viele fehlerhafte Importeinträge einzeln nennen
@@ -24,11 +24,15 @@ var _feedback_values: Dictionary = {}
 var _feedback_variation: StringName = &"MutedLabel"
 var _import_result: SetupResult = null
 var _setup: PlayerSetup = null
+var _group_actions: GroupActions = null
 
 @onready var _entry_card: Control = %EntryCard
 @onready var _name_input: LineEdit = %NameInput
 @onready var _add: GrimmButton = %AddButton
 @onready var _import_toggle: GrimmButton = %ImportToggleButton
+@onready var _save_group: GrimmButton = %SaveGroupButton
+@onready var _open_groups: GrimmButton = %LoadGroupButton
+@onready var _group_card: GroupCard = %GroupCard
 @onready var _import_card: Control = %ImportCard
 @onready var _import_text: TextEdit = %ImportText
 @onready var _import_confirm: GrimmButton = %ImportConfirmButton
@@ -54,8 +58,16 @@ var _setup: PlayerSetup = null
 
 
 ## Wird vom Host einmal nach `_ready` aufgerufen.
-func start(setup: PlayerSetup) -> void:
+func start(setup: PlayerSetup, groups: GroupStore) -> void:
 	_setup = setup
+	_group_actions = GroupActions.new(groups, setup)
+	_group_actions.dialog_requested.connect(dialog_requested.emit)
+	_group_actions.message.connect(_show_feedback)
+	_group_actions.group_loaded.connect(_on_group_loaded)
+	_group_card.start(_group_actions)
+	_group_card.close_requested.connect(_leave_mode)
+	_save_group.pressed.connect(_group_actions.request_save)
+	_open_groups.pressed.connect(_on_groups_open)
 	(%SideColumn as Control).custom_minimum_size.x = ThemeTokens.SETUP_SIDE_WIDTH
 	for field: Control in [_name_input, _edit_input]:
 		field.custom_minimum_size.y = ThemeTokens.INPUT_HEIGHT
@@ -165,6 +177,9 @@ func _update_controls(view: Dictionary) -> void:
 	_add.disabled = not can_add or PersonNameRules.normalize(_name_input.text).is_empty()
 	_import_toggle.disabled = not can_add
 	_import_confirm.disabled = PersonNameRules.split_import(_import_text.text).is_empty()
+	_save_group.disabled = bool(view["is_empty"])
+	if _mode == Mode.GROUPS:
+		_group_card.refresh()
 	_confirm.disabled = not bool(view["can_confirm"])
 	_restart.disabled = bool(view["is_empty"])
 
@@ -174,6 +189,7 @@ func _set_mode(mode: Mode) -> void:
 	_entry_card.visible = mode == Mode.ENTRY
 	_import_card.visible = mode == Mode.IMPORT
 	_edit_card.visible = mode == Mode.EDIT
+	_group_card.visible = mode == Mode.GROUPS
 
 
 func _apply_placeholders() -> void:
@@ -311,6 +327,25 @@ func _on_import_cancel() -> void:
 		return
 	_import_text.text = ""
 	_leave_mode()
+
+
+# --- Gespeicherte Gruppen ---------------------------------------------------------------------------
+
+func _on_groups_open() -> void:
+	if _mode != Mode.ENTRY:
+		return
+	_show_feedback("")
+	_show_import_feedback(null)
+	_group_card.refresh()
+	_set_mode(Mode.GROUPS)
+	_group_card.default_focus().grab_focus()
+
+
+## Nach dem Laden einer Gruppe: zurück zur Eingabe, die Meldung der Aktion bleibt stehen.
+func _on_group_loaded(_group_id: String) -> void:
+	_set_mode(Mode.ENTRY)
+	_update_controls(_setup_view())
+	_name_input.grab_focus()
 
 
 # --- Bearbeiten -------------------------------------------------------------------------------------

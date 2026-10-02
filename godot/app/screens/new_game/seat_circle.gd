@@ -158,8 +158,9 @@ func _layout() -> void:
 ## Platzrechtecke in Sitzreihenfolge und die freie Tischmitte für `count` Plätze in `area`.
 ## Wählt die Zahl der Plätze je Reihe so, dass die Plätze mindestens TOKEN_MIN_WIDTH breit sind,
 ## die Seiten passen und Reihen- und Seitenabstand möglichst ähnlich sind (ringförmiger Eindruck).
-static func layout(count: int, area: Vector2) -> Dictionary:
-	var h := TOKEN_HEIGHT
+## `token_height` und `min_width` erlauben dem Cockpit kompaktere Plätze bei vielen Personen.
+static func layout(count: int, area: Vector2, token_height: float = TOKEN_HEIGHT, min_width: float = TOKEN_MIN_WIDTH) -> Dictionary:
+	var h := token_height
 	var span := area.y - 2.0 * h - 2.0 * GAP
 	var best := {}
 	var best_score := INF
@@ -171,7 +172,7 @@ static func layout(count: int, area: Vector2) -> Dictionary:
 		if bottom < 1 or (count >= 4 and left < 1):
 			continue
 		var w := minf(TOKEN_MAX_WIDTH, (area.x - (top - 1) * GAP) / top)
-		if w < TOKEN_MIN_WIDTH:
+		if w < min_width:
 			break
 		if right * h + (right + 1) * GAP > span:
 			continue
@@ -185,37 +186,46 @@ static func layout(count: int, area: Vector2) -> Dictionary:
 				"width": maxf(float(ThemeTokens.TOUCH_MIN), (area.x - (top - 1) * GAP) / maxi(top, 1))}
 	var w: float = best["width"]
 	var seats: Array[Rect2] = []
-	_row(seats, best["top"], w, 0.0, area.x, false)
-	_column(seats, best["right"], w, area.x - w, area.y, false)
-	_row(seats, best["bottom"], w, area.y - h, area.x, true)
-	_column(seats, best["left"], w, 0.0, area.y, true)
+	_row(seats, best["top"], w, 0.0, area.x, false, h)
+	_column(seats, best["right"], w, area.x - w, area.y, false, h)
+	_row(seats, best["bottom"], w, area.y - h, area.x, true, h)
+	_column(seats, best["left"], w, 0.0, area.y, true, h)
 	var inset_x := w + 2.0 * GAP if int(best["right"]) + int(best["left"]) > 0 else 0.0
 	var center := Rect2(inset_x, h + 2.0 * GAP, area.x - 2.0 * inset_x, area.y - 2.0 * (h + 2.0 * GAP))
 	return {"seats": seats, "center": center}
 
 
-static func _row(out: Array[Rect2], n: int, w: float, y: float, width: float, reverse: bool) -> void:
+## true, wenn alle Plätze in `area` liegen (kein Rückfall auf zwei zu schmale Reihen nötig).
+static func fits(result: Dictionary, area: Vector2) -> bool:
+	var bounds := Rect2(Vector2.ZERO, area).grow(0.5)
+	for r: Rect2 in result.get("seats", []):
+		if not bounds.encloses(r) or r.size.x < TOKEN_MIN_WIDTH * 0.75:
+			return false
+	return true
+
+
+static func _row(out: Array[Rect2], n: int, w: float, y: float, width: float, reverse: bool, h: float = TOKEN_HEIGHT) -> void:
 	if n <= 0:
 		return
 	var gap := GAP if n == 1 else clampf((width - n * w) / (n - 1), GAP, w * 0.5)
 	var x0 := (width - (n * w + (n - 1) * gap)) / 2.0
 	var row: Array[Rect2] = []
 	for i: int in n:
-		row.append(Rect2(x0 + i * (w + gap), y, w, TOKEN_HEIGHT))
+		row.append(Rect2(x0 + i * (w + gap), y, w, h))
 	if reverse:
 		row.reverse()
 	out.append_array(row)
 
 
-static func _column(out: Array[Rect2], n: int, w: float, x: float, height: float, reverse: bool) -> void:
+static func _column(out: Array[Rect2], n: int, w: float, x: float, height: float, reverse: bool, h: float = TOKEN_HEIGHT) -> void:
 	if n <= 0:
 		return
-	var top := TOKEN_HEIGHT + GAP
+	var top := h + GAP
 	var span := height - 2.0 * top
-	var spacing := (span - n * TOKEN_HEIGHT) / (n + 1)
+	var spacing := (span - n * h) / (n + 1)
 	var column: Array[Rect2] = []
 	for i: int in n:
-		column.append(Rect2(x, top + spacing + i * (TOKEN_HEIGHT + spacing), w, TOKEN_HEIGHT))
+		column.append(Rect2(x, top + spacing + i * (h + spacing), w, h))
 	if reverse:
 		column.reverse()
 	out.append_array(column)

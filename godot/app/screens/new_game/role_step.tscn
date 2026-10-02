@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://app/screens/new_game/role_step.gd" id="1_step"]
 [ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
 [ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+[ext_resource type="Script" path="res://app/widgets/grimm_toggle.gd" id="4_toggle"]
 
 [node name="RoleStep" type="VBoxContainer"]
 anchors_preset = 15
@@ -17,80 +18,105 @@ script = ExtResource("1_step")
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RoleSideColumn" type="VBoxContainer" parent="Body"]
+[node name="RoleSideScroll" type="ScrollContainer" parent="Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RoleSideColumn" type="VBoxContainer" parent="Body/RoleSideScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RoleSummaryCard" type="PanelContainer" parent="Body/RoleSideColumn"]
+[node name="RoleSummaryCard" type="PanelContainer" parent="Body/RoleSideScroll/RoleSideColumn"]
 layout_mode = 2
 theme_type_variation = &"CardPanel"
 
-[node name="Column" type="VBoxContainer" parent="Body/RoleSideColumn/RoleSummaryCard"]
+[node name="Column" type="VBoxContainer" parent="Body/RoleSideScroll/RoleSideColumn/RoleSummaryCard"]
 layout_mode = 2
 
-[node name="RolesHeading" type="Label" parent="Body/RoleSideColumn/RoleSummaryCard/Column"]
+[node name="RolesHeading" type="Label" parent="Body/RoleSideScroll/RoleSideColumn/RoleSummaryCard/Column"]
 layout_mode = 2
 theme_type_variation = &"SectionLabel"
 script = ExtResource("3_label")
 text_key = "ui.setup.roles.heading"
 
-[node name="RoleSelectionCountLabel" type="Label" parent="Body/RoleSideColumn/RoleSummaryCard/Column"]
+[node name="RoleSelectionCountLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn/RoleSummaryCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("3_label")
 
-[node name="RemainingLabel" type="Label" parent="Body/RoleSideColumn/RoleSummaryCard/Column"]
+[node name="RemainingLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn/RoleSummaryCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 script = ExtResource("3_label")
 
-[node name="FactionSummaryLabel" type="Label" parent="Body/RoleSideColumn/RoleSummaryCard/Column"]
+[node name="FactionSummaryLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn/RoleSummaryCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CaptionLabel"
 script = ExtResource("3_label")
 
-[node name="RoleIssuesLabel" type="Label" parent="Body/RoleSideColumn/RoleSummaryCard/Column"]
+[node name="RoleIssuesLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn/RoleSummaryCard/Column"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_type_variation = &"ErrorCaptionLabel"
 script = ExtResource("3_label")
 
-[node name="RoleInvalidatedLabel" type="Label" parent="Body/RoleSideColumn/RoleSummaryCard/Column"]
+[node name="RoleInvalidatedLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn/RoleSummaryCard/Column"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_type_variation = &"WarningLabel"
 script = ExtResource("3_label")
 
-[node name="SuggestButton" type="Button" parent="Body/RoleSideColumn"]
+[node name="SuggestButton" type="Button" parent="Body/RoleSideScroll/RoleSideColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.setup.roles.suggest"
 kind = 1
 
-[node name="SuggestHintLabel" type="Label" parent="Body/RoleSideColumn"]
+[node name="SuggestHintLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn"]
 layout_mode = 2
 theme_type_variation = &"CaptionLabel"
 script = ExtResource("3_label")
 text_key = "ui.setup.roles.suggest_hint"
 
-[node name="SuggestionStateLabel" type="Label" parent="Body/RoleSideColumn"]
+[node name="SuggestionStateLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_type_variation = &"CaptionLabel"
 script = ExtResource("3_label")
 
-[node name="ResetRolesButton" type="Button" parent="Body/RoleSideColumn"]
+[node name="ResetRolesButton" type="Button" parent="Body/RoleSideScroll/RoleSideColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.setup.roles.reset"
 kind = 1
+
+[node name="RevivalRoundLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.roles.revival_round.off"
+
+[node name="DeathCardsToggle" type="CheckButton" parent="Body/RoleSideScroll/RoleSideColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("4_toggle")
+text_key = "ui.setup.roles.death_cards"
+
+[node name="DeathCardsHintLabel" type="Label" parent="Body/RoleSideScroll/RoleSideColumn"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+text_key = "ui.setup.roles.death_cards_hint"
 
 [node name="RoleScroll" type="ScrollContainer" parent="Body"]
 unique_name_in_owner = true
@@ -102,6 +128,27 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="CoachHintLabel" type="Label" parent="Body/RoleScroll/RoleList"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
+[node name="SoloWinsHintLabel" type="Label" parent="Body/RoleScroll/RoleList"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
+[node name="OverLimitLabel" type="Label" parent="Body/RoleScroll/RoleList"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"ErrorCaptionLabel"
+script = ExtResource("3_label")
 
 [node name="Footer" type="HBoxContainer" parent="."]
 layout_mode = 2

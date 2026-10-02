@@ -11,15 +11,16 @@ const FORBIDDEN_PUBLIC := ["schutzengel", "guardian", "protect", "prevent", "wer
 
 
 func _g6(seed_value: int = 1) -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner"], seed_value)
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "dorfbewohner", "amalia", "detektiv"], seed_value)
 
 
 func _g6r() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "sensentraeger", "dorfbewohner", "dorfbewohner"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "sensentraeger", "dorfbewohner", "amalia"])
 
 
-func _g7() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "schutzengel", "dorfbewohner", "dorfbewohner", "dorfbewohner"])
+## Zwei Schutzengel: der zweite entsteht nach dem Start durch Korrektur (PE-07).
+func _g7(rest: Array[Command]) -> Array[Command]:
+	return Fixtures.with_copies(["werwolf", "blutwolf", "schutzengel", "schutzengel", "dorfbewohner", "amalia", "detektiv"], rest)
 
 
 func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
@@ -122,7 +123,7 @@ func test_no_guard_step_without_living_guardian() -> void:
 
 func test_two_guardians_ordered_by_id() -> void:
 	# Zusatz 20
-	var run := _replay_ok([_g7(), Command.start_night()] as Array[Command], "zwei Schutzengel")
+	var run := _replay_ok(_g7([Command.start_night()] as Array[Command]) as Array[Command], "zwei Schutzengel")
 	if not run.ok:
 		return
 	assert_eq(run.state.night_plan, [&"schutzengel:3", &"schutzengel:4", &"pack"] as Array[StringName], "stabile Reihenfolge nach ID")
@@ -288,8 +289,8 @@ func test_protected_dies_earlier_no_new_target() -> void:
 
 func test_two_guardians_same_target_one_prevention() -> void:
 	# AS-R43, Zusatz 21
-	var run := _replay_ok([_g7(), Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step("night:1:1:schutzengel:4"),
-		Command.answer_prompt(2, [6]), Command.begin_step("night:1:2:pack"), Command.answer_prompt(3, [6]), Command.end_night()] as Array[Command], "doppelter Schutz")
+	var run := _replay_ok(_g7([Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step("night:1:1:schutzengel:4"),
+		Command.answer_prompt(2, [6]), Command.begin_step("night:1:2:pack"), Command.answer_prompt(3, [6]), Command.end_night()] as Array[Command]) as Array[Command], "doppelter Schutz")
 	if not run.ok:
 		return
 	var prevented := events_of_type(run.events, "KillPrevented")

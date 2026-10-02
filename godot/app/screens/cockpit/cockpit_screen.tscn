@@ -1,8 +1,15 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://app/screens/cockpit/cockpit_screen.gd" id="1_screen"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
 [ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
 [ext_resource type="PackedScene" path="res://app/widgets/header_bar/header_bar.tscn" id="4_header"]
+[ext_resource type="Script" path="res://app/widgets/seat_ring/game_seat_ring.gd" id="5_ring"]
+[ext_resource type="Script" path="res://app/screens/cockpit/action_card.gd" id="6_card"]
+[ext_resource type="Script" path="res://app/widgets/night/night_tab.gd" id="7_tab"]
+[ext_resource type="Script" path="res://app/widgets/night/night_order_bar.gd" id="8_bar"]
+[ext_resource type="Script" path="res://app/widgets/night/timer_button.gd" id="9_timer"]
+[ext_resource type="Script" path="res://app/widgets/night/glyph_button.gd" id="10_glyph"]
 
 [node name="CockpitScreen" type="Control"]
 layout_mode = 3
@@ -14,55 +21,181 @@ grow_vertical = 2
 script = ExtResource("1_screen")
 screen_id = &"cockpit"
 
-[node name="Layout" type="VBoxContainer" parent="."]
+[node name="Backdrop" type="Panel" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+clip_contents = true
+mouse_filter = 2
+theme_type_variation = &"AppBackground"
 
-[node name="HeaderBar" parent="Layout" instance=ExtResource("4_header")]
+[node name="BackdropArt" type="TextureRect" parent="Backdrop"]
 unique_name_in_owner = true
-layout_mode = 2
-title_key = "ui.cockpit.title"
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
 
-[node name="StatusRow" type="HBoxContainer" parent="Layout"]
-layout_mode = 2
+[node name="BackdropFog" type="ColorRect" parent="Backdrop"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="PhaseArea" type="PanelContainer" parent="Layout/StatusRow"]
+[node name="BackdropShade" type="ColorRect" parent="Backdrop"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Layout" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SeatRingArea" type="Control" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SeatRing" type="Control" parent="Layout/SeatRingArea"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("5_ring")
+
+[node name="RingCenter" type="Control" parent="Layout/SeatRingArea/SeatRing"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="InstructionCard" type="PanelContainer" parent="Layout/SeatRingArea/SeatRing/RingCenter"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"NightCardPanel"
+
+[node name="ActionCard" type="VBoxContainer" parent="Layout/SeatRingArea/SeatRing/RingCenter/InstructionCard"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"CardPanel"
+size_flags_vertical = 3
+script = ExtResource("6_card")
 
-[node name="Row" type="HBoxContainer" parent="Layout/StatusRow/PhaseArea"]
-layout_mode = 2
+[node name="OrderBar" type="Control" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("8_bar")
 
-[node name="PhaseCaption" type="Label" parent="Layout/StatusRow/PhaseArea/Row"]
+[node name="CornerInfo" type="VBoxContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+
+[node name="HeaderBar" parent="Layout/CornerInfo" instance=ExtResource("4_header")]
+unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
-vertical_alignment = 1
+theme_type_variation = &"BarPanel"
+
+[node name="RoundLabel" type="Label" parent="Layout/CornerInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
 script = ExtResource("3_label")
-text_key = "ui.cockpit.phase.label"
+
+[node name="AliveLabel" type="Label" parent="Layout/CornerInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
 wrap = false
 
-[node name="PhaseValueLabel" type="Label" parent="Layout/StatusRow/PhaseArea/Row"]
+[node name="SaveRow" type="HFlowContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+alignment = 1
+
+[node name="SaveStatusLabel" type="Label" parent="Layout/SaveRow"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"HeadingLabel"
+theme_type_variation = &"CaptionLabel"
 vertical_alignment = 1
 script = ExtResource("3_label")
-text_key = "ui.phase.none"
+wrap = false
 
-[node name="NoGameBadge" type="PanelContainer" parent="Layout/StatusRow"]
+[node name="RetrySaveButton" type="Button" parent="Layout/SaveRow"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-size_flags_vertical = 4
+script = ExtResource("2_button")
+text_key = "ui.cockpit.save.retry"
+kind = 3
+wrap = false
+
+[node name="WarningsLabel" type="Label" parent="Layout/CornerInfo"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
+[node name="StatusStrip" type="VBoxContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="HiddenLabel" type="Label" parent="Layout/StatusStrip"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+horizontal_alignment = 1
+script = ExtResource("3_label")
+text_key = "ui.cockpit.hide.banner"
+
+[node name="NoGameBadge" type="PanelContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
 theme_type_variation = &"StatusBadge"
 
-[node name="NoGameLabel" type="Label" parent="Layout/StatusRow/NoGameBadge"]
+[node name="NoGameLabel" type="Label" parent="Layout/NoGameBadge"]
 layout_mode = 2
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -70,77 +203,136 @@ script = ExtResource("3_label")
 text_key = "ui.cockpit.no_game"
 wrap = false
 
-[node name="Body" type="HBoxContainer" parent="Layout"]
-layout_mode = 2
-size_flags_vertical = 3
+[node name="LogButton" type="Button" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("7_tab")
+text_key = "ui.cockpit.tools.log"
 
-[node name="SeatRingArea" type="PanelContainer" parent="Layout/Body"]
+[node name="OptionsButton" type="Button" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("7_tab")
+text_key = "ui.cockpit.tools.options"
+glyph = "options"
+at_right = true
+
+[node name="HideButton" type="Button" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+toggle_mode = true
+script = ExtResource("10_glyph")
+text_key = "ui.cockpit.tools.hide"
+glyph = "hide"
+
+[node name="CoverButton" type="Button" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("10_glyph")
+text_key = "ui.cockpit.tools.cover"
+glyph = "cover"
+
+[node name="PhaseArea" type="PanelContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+
+[node name="PhaseRow" type="HBoxContainer" parent="Layout/PhaseArea"]
+layout_mode = 2
+
+[node name="PhaseValueLabel" type="Label" parent="Layout/PhaseArea/PhaseRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"PlaceholderPanel"
-
-[node name="Column" type="VBoxContainer" parent="Layout/Body/SeatRingArea"]
-layout_mode = 2
-alignment = 1
-
-[node name="SeatsHeading" type="Label" parent="Layout/Body/SeatRingArea/Column"]
-layout_mode = 2
-theme_type_variation = &"HeadingLabel"
-horizontal_alignment = 1
+theme_type_variation = &"SectionLabel"
+vertical_alignment = 1
 script = ExtResource("3_label")
-text_key = "ui.cockpit.seats.heading"
+text_key = "ui.phase.none"
+wrap = false
 
-[node name="SeatsPlaceholder" type="Label" parent="Layout/Body/SeatRingArea/Column"]
+[node name="TimerButton" type="Button" parent="Layout/PhaseArea/PhaseRow"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
-horizontal_alignment = 1
-script = ExtResource("3_label")
-text_key = "ui.cockpit.seats.placeholder"
+script = ExtResource("9_timer")
 
-[node name="SideColumn" type="VBoxContainer" parent="Layout/Body"]
+[node name="ActionsArea" type="HBoxContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+
+[node name="DockUndoButton" type="Button" parent="Layout/ActionsArea"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.cockpit.dock.undo"
+kind = 3
+wrap = false
+
+[node name="NextHost" type="HBoxContainer" parent="Layout/ActionsArea"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="InstructionCard" type="PanelContainer" parent="Layout/Body/SideColumn"]
+[node name="ToolsMenu" type="PanelContainer" parent="Layout"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 0
+theme_type_variation = &"NightCardPanel"
+
+[node name="MenuColumn" type="VBoxContainer" parent="Layout/ToolsMenu"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"CardPanel"
 
-[node name="Column" type="VBoxContainer" parent="Layout/Body/SideColumn/InstructionCard"]
-layout_mode = 2
-
-[node name="InstructionHeading" type="Label" parent="Layout/Body/SideColumn/InstructionCard/Column"]
-layout_mode = 2
-theme_type_variation = &"HeadingLabel"
-script = ExtResource("3_label")
-text_key = "ui.cockpit.instruction.heading"
-
-[node name="InstructionLabel" type="Label" parent="Layout/Body/SideColumn/InstructionCard/Column"]
+[node name="PrivateButton" type="Button" parent="Layout/ToolsMenu/MenuColumn"]
 unique_name_in_owner = true
 layout_mode = 2
-script = ExtResource("3_label")
-text_key = "ui.cockpit.instruction.no_game"
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.private"
+kind = 3
+wrap = false
 
-[node name="ActionsArea" type="PanelContainer" parent="Layout/Body/SideColumn"]
+[node name="RolesButton" type="Button" parent="Layout/ToolsMenu/MenuColumn"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"PlaceholderPanel"
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.roles"
+kind = 3
+wrap = false
 
-[node name="Column" type="VBoxContainer" parent="Layout/Body/SideColumn/ActionsArea"]
-layout_mode = 2
-
-[node name="ActionsHeading" type="Label" parent="Layout/Body/SideColumn/ActionsArea/Column"]
-layout_mode = 2
-theme_type_variation = &"HeadingLabel"
-script = ExtResource("3_label")
-text_key = "ui.cockpit.actions.heading"
-
-[node name="ActionsPlaceholder" type="Label" parent="Layout/Body/SideColumn/ActionsArea/Column"]
+[node name="GmButton" type="Button" parent="Layout/ToolsMenu/MenuColumn"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
-script = ExtResource("3_label")
-text_key = "ui.cockpit.actions.placeholder"
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.gm"
+kind = 3
+wrap = false
+
+[node name="LexiconButton" type="Button" parent="Layout/ToolsMenu/MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.lexicon"
+kind = 3
+wrap = false
+
+[node name="RulebookButton" type="Button" parent="Layout/ToolsMenu/MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.cockpit.tools.rulebook"
+kind = 3
+wrap = false
+
+[node name="OverlayHost" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

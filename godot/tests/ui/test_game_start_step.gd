@@ -14,7 +14,7 @@ func _view(shell: Control) -> Dictionary:
 
 
 ## Neue Partie bis zur bestätigten Sitzordnung (Vorbereitung über echte Buttons).
-func _to_confirmed_seating(shell: Control, count: int) -> Control:
+func _to_confirmed_seating(shell: Control, count: int, revival: bool = false) -> Control:
 	var screen := await open_new_game(shell)
 	var s := setup_of(shell)
 	s.set("seed_source", func() -> int: return FIXED_SEED)
@@ -24,6 +24,11 @@ func _to_confirmed_seating(shell: Control, count: int) -> Control:
 	await press(find_button(screen, "SuggestButton"))
 	for d: Variant in (s.call("view") as Dictionary)["roles"].get("decoys", []):
 		s.call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"waldhexe")
+	if revival:
+		# Ein Dorfbewohner weniger, dafür ein Kutscher: direkte Wiederbelebungsrolle (DI-01).
+		var counts: Dictionary = (s.call("view") as Dictionary)["roles"]["counts"]
+		s.call("set_role_count", &"dorfbewohner", int(counts["dorfbewohner"]) - 1)
+		s.call("set_role_count", &"kutscher", 1)
 	await frames(2)
 	await press(find_button(screen, "ConfirmRolesButton"))
 	await press(find_button(screen, "DistributeButton"))
@@ -126,11 +131,11 @@ func test_start_opens_cockpit_with_active_game() -> void:
 	var cockpit := current_screen(shell)
 	var badge := find_node(cockpit, "NoGameBadge") as Control
 	assert_true(badge != null and not badge.is_visible_in_tree(), "kein Hinweis „Keine Partie aktiv“")
-	var instruction := find_node(cockpit, "InstructionLabel") as Label
-	assert_true(instruction != null and instruction.text.contains("späteren"), "Cockpit verspricht keinen spielbaren Ablauf: %s" % (instruction.text if instruction != null else ""))
-	for node_name: String in ["SeatsPlaceholder", "ActionsPlaceholder"]:
-		var placeholder := find_node(cockpit, node_name) as Label
-		assert_true(placeholder != null and placeholder.text.contains("späteren"), "%s ohne Widerspruch zur aktiven Partie: %s" % [node_name, placeholder.text if placeholder != null else ""])
+	# Das Cockpit zeigt die gestartete Partie: sechs Plätze und als nächsten Schritt „Nacht beginnen“.
+	var ring := find_node(cockpit, "SeatRing")
+	assert_eq(ring.call("tokens").size() if ring != null else 0, 6, "Sitzkreis mit sechs Plätzen")
+	var start_night := find_node(cockpit, "StartNightButton") as BaseButton
+	assert_true(start_night != null and start_night.is_visible_in_tree(), "nächster Schritt: Nacht beginnen")
 	assert_eq(_toast_text(shell), "Partie gestartet", "Statusmeldung")
 	_assert_no_roles_visible(shell, "Cockpit")
 	# Der Entwurf ist verbraucht: „Neue Partie“ beginnt leer.
@@ -188,3 +193,30 @@ func test_start_messages_show_no_roles_de_en() -> void:
 		assert_ne(_toast_text(shell), "", "%s: Statusmeldung sichtbar" % locale)
 		_assert_no_roles_visible(shell, "%s gestartet" % locale)
 		await after_each()
+
+
+func test_start_game_has_no_reveal_option_and_the_mode_follows_the_roles() -> void:
+	# DI-01: keine frei wählbare Aufdeckung mehr; der Regelkern leitet die Wiederbelebungsrunde aus der Besetzung ab.
+	for revival: bool in [false, true]:
+		var shell := await spawn_shell()
+		if shell == null:
+			return
+		var screen := await _to_confirmed_seating(shell, 6, revival)
+		assert_true(find_node(screen, "RevealRoleToggle") == null, "keine frei wählbare Aufdeckungsoption")
+		var label := find_node(screen, "RevivalRoundLabel") as Label
+		assert_true(label != null, "Anzeige der Wiederbelebungsrunde im Rollenschritt")
+		if label != null:
+			assert_eq(label.text, tr("ui.setup.roles.revival_round.on" if revival else "ui.setup.roles.revival_round.off"), "Anzeige folgt der Rollenwahl (%s)" % revival)
+		assert_eq(bool((setup_of(shell).call("view") as Dictionary)["revival_round"]), revival, "Sicht des Setups (%s)" % revival)
+		assert_true(_start_button(screen).is_visible_in_tree(), "Start bereit")
+		await press(_start_button(screen))
+		var commands: Array = session_of(shell).call("commands")
+		assert_false((commands[0] as Command).payload.has("reveal_role_on_death"), "StartGame ohne Aufdeckungsangabe")
+		assert_eq(bool((session_of(shell).call("cockpit_view") as Dictionary)["revival_round"]), revival, "Regelkern leitet den Modus ab (%s)" % revival)
+		after_each_shell(shell)
+
+
+func after_each_shell(shell: Control) -> void:
+	_spawned.erase(shell)
+	shell.get_parent().remove_child(shell)
+	shell.free()

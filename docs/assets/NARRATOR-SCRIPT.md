@@ -92,11 +92,11 @@ Reihenfolge nach Nachtpriorität aus `rules-register.md`. Trugbilderwolf, Spiege
 | Tod des Manipulators bei Nominierung | Ursache ist privat (G-TOD-5); öffentlich ist nur der Name | Spielleiter verkündet den Tod mit Namen |
 | Spiegelung beim Spiegelwolf | Umleitung ist ein Spielleiter-Ereignis; öffentlich ist nur, wer stirbt | `narration.day.execution`, danach Name der tatsächlich gestorbenen Person |
 | Wolfskind-Verwandlung | privat | Tablet-Anzeige |
-| Rolle einer gestorbenen Person | hängt von `reveal_role_on_death` ab | Spielleiter liest vor, wenn die Option aktiv ist |
+| Rolle einer gestorbenen Person | nur in Runden ohne Wiederbelebung (29.09.2026, ersetzt `reveal_role_on_death`) | Spielleiter liest vor, wenn die Runde keine Wiederbelebung hat |
 
 ## 6. Offene Fragen an den Product Owner
 
-1. **Tarnaufrufe:** Sollen tote Rollen standardmäßig weiter aufgerufen werden (`02` §3.2)? Falls ja: Wie lange wartet die App zwischen `call` und `sleep` bei einer Tarnung (Vorschlag: 5 s)?
+1. **Tarnaufrufe:** *(beantwortet am 29.09.2026, DI-02: ohne Wiederbelebung werden aufgedeckte tote Rollen nicht mehr aufgerufen, aufgebrauchte Rollen weiter; mit Wiederbelebung auch tote Rollen)* Sollen tote Rollen standardmäßig weiter aufgerufen werden (`02` §3.2)? Falls ja: Wie lange wartet die App zwischen `call` und `sleep` bei einer Tarnung (Vorschlag: 5 s)?
 2. **Ton und Register:** Passt der ruhige Märchenerzähler, oder soll es knapper und sachlicher klingen? Eine Probe beider Varianten mit je drei Zeilen wäre die schnellste Entscheidung.
 3. **Einleitung:** Soll `narration.game.intro` nur bei der ersten Partie einer Sitzung laufen oder jedes Mal?
 4. **Zeigen oder Tippen:** Die `act`-Zeilen sagen „Zeige auf die Person". Passt das zum geplanten Ablauf, oder tippt die handelnde Person selbst auf das Tablet?

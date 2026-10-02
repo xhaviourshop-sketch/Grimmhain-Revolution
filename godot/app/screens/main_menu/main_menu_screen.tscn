@@ -57,6 +57,24 @@ layout_mode = 2
 script = ExtResource("2_button")
 text_key = "ui.menu.cockpit"
 
+[node name="LexiconButton" type="Button" parent="Center/Column/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.lexicon"
+
+[node name="RulebookButton" type="Button" parent="Center/Column/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.rulebook"
+
+[node name="HistoryButton" type="Button" parent="Center/Column/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.menu.history"
+
 [node name="SettingsButton" type="Button" parent="Center/Column/Actions"]
 unique_name_in_owner = true
 layout_mode = 2

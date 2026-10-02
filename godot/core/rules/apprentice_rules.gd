@@ -233,7 +233,7 @@ static func on_master_death(ctx: RuleContext, record: KillEvent) -> void:
 	heirs.sort_custom(func(a: ApprenticeBond, c: ApprenticeBond) -> bool: return a.apprentice_id < c.apprentice_id)
 	for b: ApprenticeBond in heirs:
 		var heir: Player = ctx.state.players.get(b.apprentice_id)
-		if heir != null and heir.alive and heir.role_id == RoleCatalog.LEHRLING:
+		if heir != null and heir.alive and heir.role_id == RoleCatalog.LEHRLING and not GuardRoles.silenced(ctx.state, heir.id):
 			inherit(ctx, b, record.order_index, "master_death")
 
 
@@ -247,9 +247,14 @@ static func inherit(ctx: RuleContext, b: ApprenticeBond, trigger_order: int, sou
 	var from := heir.role_id
 	b.snapshot = RoleTransition.snapshot_of(heir)
 	b.status = ApprenticeBond.STATUS_INHERITED
-	b.inherited_role = master.role_id
 	b.inherit_order = trigger_order
 	b.inherit_command = ctx.command_index
+	# Wächter am Tor: ein Erbe einer Wolfsrolle durch Tod des Meisters wird blockiert (nicht per Korrektur).
+	if source == "master_death" and RoleCatalog.counts_as_wolf(master.role_id) and Gatewarden.active(s):
+		b.inherited_role = RoleCatalog.DORFBEWOHNER
+		Gatewarden.block(ctx, heir.id, master.role_id, "apprentice")
+		return
+	b.inherited_role = master.role_id
 	RoleTransition.change_role(s, heir.id, master.role_id, master.appears_as, true)
 	s.win_check_pending = true
 	ctx.emit(GameEvent.ROLE_CHANGED, Visibility.GM, {

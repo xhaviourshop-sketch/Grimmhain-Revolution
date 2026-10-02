@@ -27,41 +27,67 @@ static func mirror_available(p: Player) -> bool:
 ## Reine Vorschau der Hinrichtung von `target_id` (ändert nichts). Felder: target_id,
 ## death_target_id, cause, source_kind, source_id, redirected, nominator_id, reason.
 static func preview(s: GameState, target_id: int, source_kind: StringName) -> Dictionary:
+	var cards := s.death_cards and source_kind != KillEvent.SOURCE_GM
+	# Stimmenkarten (Stimmentausch, Spiegelwelt): die Stimmen zählen für die Person links; sie ist dann das Ziel der Hinrichtung.
+	var effective := CardLynch.vote_target(s, target_id) if cards else target_id
 	var result := {
-		"target_id": target_id, "death_target_id": target_id, "cause": String(KillEvent.CAUSE_LYNCH),
+		"target_id": target_id, "death_target_id": effective, "cause": String(KillEvent.CAUSE_LYNCH),
 		"source_kind": String(source_kind), "source_id": -1, "redirected": false, "nominator_id": -1,
-		"reason": REASON_NOT_MIRROR_WOLF,
+		"reason": REASON_NOT_MIRROR_WOLF, "random_wolf": false, "card_reason": "shifted" if effective != target_id else "",
 	}
-	var target: Player = s.players.get(target_id)
-	if target == null or target.role_id != RoleCatalog.SPIEGELWOLF:
-		return result
-	if not mirror_available(target):
-		result["reason"] = REASON_MIRROR_USED
-		return result
-	var nominator := -1
-	for n: Nomination in s.nominations_on_day(s.day_number):
-		if n.nominee_id == target_id:
-			nominator = n.nominator_id
-			break
-	if nominator == -1:
-		result["reason"] = REASON_NO_NOMINATION
-		return result
-	result["nominator_id"] = nominator
-	if not s.players.has(nominator) or not s.players[nominator].alive:
-		result["reason"] = REASON_NOMINATOR_DEAD
-		return result
-	result["death_target_id"] = nominator
-	result["cause"] = String(KillEvent.CAUSE_SPIEGELWOLF_RETALIATE)
-	result["source_kind"] = String(KillEvent.SOURCE_PLAYER)
-	result["source_id"] = target_id
-	result["redirected"] = true
-	result["reason"] = REASON_MIRRORED
+	var target: Player = s.players.get(effective)
+	if target != null and target.role_id == RoleCatalog.SPIEGELWOLF:
+		if not mirror_available(target):
+			result["reason"] = REASON_MIRROR_USED
+		else:
+			var nominator := -1
+			for n: Nomination in s.nominations_on_day(s.day_number):
+				if n.nominee_id == effective:
+					nominator = n.nominator_id
+					break
+			if nominator == -1:
+				result["reason"] = REASON_NO_NOMINATION
+			else:
+				result["nominator_id"] = nominator
+				if not s.players.has(nominator) or not s.players[nominator].alive:
+					result["reason"] = REASON_NOMINATOR_DEAD
+				else:
+					result["death_target_id"] = nominator
+					result["cause"] = String(KillEvent.CAUSE_SPIEGELWOLF_RETALIATE)
+					result["source_kind"] = String(KillEvent.SOURCE_PLAYER)
+					result["source_id"] = effective
+					result["redirected"] = true
+					result["reason"] = REASON_MIRRORED
+	if cards:
+		var red := CardLynch.redirect(s, target_id, int(result["death_target_id"]), bool(result["redirected"]))
+		result["death_target_id"] = red["death_target_id"]
+		result["random_wolf"] = red["random_wolf"]
+		if String(red["reason"]) != "":
+			result["card_reason"] = red["reason"]
 	return result
 
 
-## Führt die (bereits bestätigte) Hinrichtung nach der Vorschau aus.
-static func execute(ctx: RuleContext, target_id: int, source_kind: StringName) -> void:
+## true, wenn die Hinrichtung von `target_id` eine Entscheidung „abwehren?“ verlangt (Cerberus mit 3 Köpfen).
+static func needs_cerberus_decision(s: GameState, target_id: int) -> bool:
+	var p: Player = s.players.get(target_id)
+	return p != null and p.alive and p.role_id == RoleCatalog.CERBERUS and int(s.growth.get(target_id, 0)) >= RoleCatalog.CERBERUS_MAX_HEADS
+
+
+## Führt die (bereits bestätigte) Hinrichtung nach der Vorschau aus. Zählt jede Hinrichtung (Henker),
+## lässt Cerberus bei Wunsch abwehren und vollzieht danach Henker-Markierungen.
+static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, cerberus_defend: bool = false, sage_curse: int = 0, payload: Dictionary = {}) -> void:
 	var s := ctx.state
+	var cards := s.death_cards and source_kind != KillEvent.SOURCE_GM
+	# Verhinderung durch eine Karte (Verzweiflungsschrei, Gerechter Zorn): keine Hinrichtung, kein Tod, kein Ersatz.
+	if cards and CardLynch.prevented(ctx, int(preview(s, target_id, source_kind)["death_target_id"])):
+		return
+	s.executions_count += 1
+	if cerberus_defend and needs_cerberus_decision(s, target_id):
+		s.growth[target_id] = 0
+		ctx.emit(GameEvent.EXECUTION_DEFENDED, Visibility.GM, {"target_id": target_id, "by": String(RoleCatalog.CERBERUS), "day": s.day_number})
+		_hangman_extras(ctx)
+		return
+	var sage := GuardRoles.needs_sage_decision(s, target_id)  # vor dem Verbrauch einer Spiegelung
 	var r := preview(s, target_id, source_kind)
 	var target: Player = s.players[target_id]
 	if bool(r["redirected"]):
@@ -74,4 +100,31 @@ static func execute(ctx: RuleContext, target_id: int, source_kind: StringName) -
 		ctx.emit(GameEvent.MIRROR_NOT_TRIGGERED, Visibility.GM, {
 			"target_id": target_id, "nominator_id": r["nominator_id"], "reason": r["reason"],
 		})
-	KillPipeline.request_kill(ctx, int(r["death_target_id"]), StringName(r["cause"]), StringName(r["source_kind"]), int(r["source_id"]))
+	var death_id := int(r["death_target_id"])
+	if bool(r.get("random_wolf", false)):
+		# Schicksalswende (Dorf): das Urteil trifft einen zufälligen Wolf (gespeicherter Generator).
+		var wolf := CardEffects.random_of(s, CardEffects.living_of_variant(s, CardCatalog.WOLF))
+		for e: Dictionary in CardLynch.for_today(s, "lynch_redirect_wolf"):
+			CardEffects.remove_effect(s, int(e["id"]))
+		ctx.emit(GameEvent.CARD_EFFECT_NOTE, Visibility.GM, {"card_id": "wende_11", "execution_target_id": target_id, "redirected_to": wolf})
+		death_id = wolf
+	if cards and String(r.get("card_reason", "")) == "swap_nominator":
+		for e: Dictionary in CardLynch.for_today(s, "lynch_swap_nominator"):
+			CardEffects.remove_effect(s, int(e["id"]))
+	var record := KillPipeline.request_kill(ctx, death_id, StringName(r["cause"]), StringName(r["source_kind"]), int(r["source_id"]))
+	if sage and record != null:
+		GuardRoles.start_curse(ctx, record.target_id, sage_curse)
+	if cards:
+		CardLynch.after_execution(ctx, payload, record)
+	_hangman_extras(ctx)
+
+
+## Henker (RM-DR-130): Markierte sterben bei der Hinrichtung des Tages mit, wenn ihr Henker jetzt lebt.
+static func _hangman_extras(ctx: RuleContext) -> void:
+	var s := ctx.state
+	var marks := s.hangman_marks.duplicate()
+	s.hangman_marks.clear()
+	for mark: Dictionary in marks:
+		var hangman: Player = s.players[int(mark["hangman_id"])]
+		if hangman.alive and SoloRules.has_ability(s, hangman.id, RoleCatalog.HENKER) and not GuardRoles.silenced(s, hangman.id):
+			KillPipeline.request_kill(ctx, int(mark["target_id"]), KillEvent.CAUSE_HANGMAN_EXTRA, KillEvent.SOURCE_PLAYER, hangman.id)

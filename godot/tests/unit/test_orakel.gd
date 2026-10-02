@@ -16,15 +16,15 @@ const FORBIDDEN_PUBLIC := ["orakel", "oracle", "info", "truth", "determined", "s
 
 
 func _o6() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "das-orakel", "dorfbewohner", "dorfbewohner"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "das-orakel", "dorfbewohner", "amalia"])
 
 
 func _o6r() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "das-orakel", "sensentraeger", "dorfbewohner"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "das-orakel", "sensentraeger", "dorfbewohner"])
 
 
 func _b6() -> Command:
-	return Fixtures.start_roles(["werwolf", "werwolf", "schutzengel", "das-orakel", "waldhexe", "dorfbewohner"])
+	return Fixtures.start_roles(["werwolf", "blutwolf", "schutzengel", "das-orakel", "waldhexe", "dorfbewohner"])
 
 
 func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
@@ -112,8 +112,7 @@ func test_night_order_guard_pack_witch_oracle() -> void:
 
 func test_multiple_oracles_by_id() -> void:
 	# 3
-	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "werwolf", "das-orakel", "dorfbewohner", "das-orakel", "dorfbewohner"]),
-		Command.start_night()] as Array[Command])
+	var s := Fixtures.play(Fixtures.with_copies(["werwolf", "blutwolf", "das-orakel", "dorfbewohner", "das-orakel", "amalia"], [Command.start_night()] as Array[Command]) as Array[Command])
 	assert_eq(s.night_plan, [&"pack", &"das-orakel:3", &"das-orakel:5"] as Array[StringName], "nach Personen-ID")
 	s = apply_ok(s, Command.answer_prompt(1, []), "Rudel").state
 	s = apply_ok(s, Command.begin_step("night:1:1:das-orakel:3"), "erstes Orakel").state

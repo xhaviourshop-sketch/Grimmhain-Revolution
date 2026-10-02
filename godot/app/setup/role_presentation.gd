@@ -9,9 +9,9 @@ const FACTION_ORDER: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Facti
 
 ## Reihenfolge innerhalb einer Gruppe (Grundrolle zuerst, dann Nachtschritte, dann übrige).
 const ROLE_ORDER: Array[StringName] = [
-	&"dorfbewohner", &"schutzengel", &"das-orakel", &"waldhexe", &"sensentraeger", &"wolfskind", &"lehrling",
-	&"werwolf", &"spiegelwolf", &"trugbilderwolf",
-	&"manipulator",
+	&"dorfbewohner", &"schutzengel", &"das-orakel", &"waldhexe", &"sensentraeger", &"wolfskind", &"lehrling", &"dorfchronistin", &"die-gebundenen", &"waldlaeufer", &"doktor", &"nachtwaechter", &"dorfwache", &"wahnsinniger-kutscher", &"ritter", &"faehrtenleser", &"korrupter-richter", &"waechter-am-tor", &"spuerhund", &"henker", &"traumdeuter", &"kopfgeldjaeger", &"koenig", &"kriegerin-des-lichts", &"blutpriester", &"amalia", &"detektiv", &"die-ewigen", &"der-weise", &"maertyrerin", &"schutzgeist", &"dorfschmied", &"verdammniswaechter", &"loki", &"rotkaeppchen", &"seelentauscher", &"kutscher", &"dr-victor-frankenstein", &"zeitwaechter",
+	&"werwolf", &"spiegelwolf", &"trugbilderwolf", &"siegreicher-wolf", &"besessener-wolf", &"blutwolf", &"schattenhund", &"albtraumwolf", &"giftwolf", &"rudelvater", &"seuchenwolf", &"fenrir", &"cerberus", &"schwarze-witwe", &"schattenwanderer", &"daemonischer-wolf", &"koenig-lykaon", &"schicksalswolf", &"rachsuechtiger-wolf",
+	&"manipulator", &"doppelspion", &"selbstmoerder", &"parasit", &"rattenfaenger", &"pestbringerin", &"prophet-des-untergangs", &"todesprediger", &"feuerteufel", &"voodoo-priester", &"nekromant", &"hades", &"grabraeuber",
 ]
 
 
@@ -46,3 +46,18 @@ static func short_key(role: StringName) -> String:
 
 static func faction_key(faction: StringName) -> String:
 	return "ui.faction.%s" % String(faction)
+
+
+## Felder eines allgemeinen Lexikoneintrags (ui.role.<rolle>.lex.<feld>) in Anzeigereihenfolge. Jede Katalogrolle hat
+## alle Pflichtfelder; LEXICON_OPEN (ungeklärte oder noch nicht umgesetzte Punkte) gibt es nur bei betroffenen Rollen.
+## Reiner Erklärtext: Regeln wirken ausschließlich im Regelkern.
+const LEXICON_FIELDS: Array[String] = ["night", "wolf", "ability", "timing", "targets", "exceptions", "win", "example", "act", "gm"]
+const LEXICON_OPEN := "open"
+
+
+static func lexicon_key(role: StringName, field: String) -> String:
+	return "ui.role.%s.lex.%s" % [_key_part(role), field]
+
+
+static func lexicon_caption_key(field: String) -> String:
+	return "ui.lexicon.field.%s" % field

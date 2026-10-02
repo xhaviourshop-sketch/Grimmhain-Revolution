@@ -106,7 +106,9 @@ func test_safe_area_insets_respected() -> void:
 	for id: StringName in SCREEN_IDS:
 		await navigate(shell, id)
 		for c: Control in visible_controls(current_screen(shell)):
-			assert_true(inside(rect_of(c), inset), "%s: %s innerhalb der sicheren Fläche" % [id, c.name])
+			var visible_part := clipped_rect(c)
+			if visible_part.has_area():
+				assert_true(inside(visible_part, inset), "%s: %s innerhalb der sicheren Fläche" % [id, c.name])
 	shell.call("apply_safe_area", Rect2())
 	await frames(3)
 	var margin := float(tokens.get("SAFE_MARGIN"))
@@ -134,13 +136,16 @@ func _check_controls(root: Control, label: String) -> void:
 	for c: Control in controls:
 		if c.size.x <= 0.0 or c.size.y <= 0.0:
 			continue
-		assert_true(inside(rect_of(c), viewport), "%s: %s liegt im Viewport (%s)" % [label, c.name, rect_of(c)])
+		# Scrollinhalt zählt nur mit seinem sichtbaren Teil; der ScrollContainer selbst muss im Viewport liegen.
+		var visible_part := clipped_rect(c)
+		if visible_part.has_area():
+			assert_true(inside(visible_part, viewport), "%s: %s liegt im Viewport (%s)" % [label, c.name, visible_part])
 		var min_size := c.get_combined_minimum_size()
 		assert_true(min_size.x <= c.size.x + 0.5 and min_size.y <= c.size.y + 0.5,
 			"%s: %s nicht abgeschnitten (min %s, ist %s)" % [label, c.name, min_size, c.size])
 	for i: int in buttons.size():
 		for j: int in range(i + 1, buttons.size()):
-			assert_false(overlaps(rect_of(buttons[i]), rect_of(buttons[j])),
+			assert_false(overlaps(clipped_rect(buttons[i]), clipped_rect(buttons[j])),
 				"%s: %s und %s überlappen" % [label, buttons[i].name, buttons[j].name])
 	for c: Control in text_controls(root):
 		if c is BaseButton:
@@ -148,4 +153,4 @@ func _check_controls(root: Control, label: String) -> void:
 		for b: BaseButton in buttons:
 			if b.is_ancestor_of(c):
 				continue
-			assert_false(overlaps(rect_of(c), rect_of(b)), "%s: Text %s überdeckt %s" % [label, c.name, b.name])
+			assert_false(overlaps(clipped_rect(c), clipped_rect(b)), "%s: Text %s überdeckt %s" % [label, c.name, b.name])

@@ -3,6 +3,7 @@
 //
 // Nutzung (aus dem Repo-Wurzelordner):
 //   node tools/check-asset-register.js            Prüfung, Exit-Code 1 bei Befunden
+//   node tools/check-asset-register.js --release  zusätzlich: nur intern freigegebene Dateien unter godot/ sind Befunde
 //   node tools/check-asset-register.js --suggest  zusätzlich Registerzeilen-Vorschläge
 //                                                 für nicht registrierte Dateien ausgeben
 // Regressionstests: node --test tests/check-asset-register.test.js
@@ -19,7 +20,10 @@
 //  5. Status "lizenz-belegt" verlangt eine vorhandene Lizenzdatei (Pfad in lizenzquelle).
 //  6. Status "freigegeben" verlangt eine eingetragene Product-Owner-Freigabe und
 //     eine geklärte Lizenzquelle.
-//  7. Im Godot-Projekt (godot/) liegt nur, was "freigegeben" ist.
+//  7. Im Godot-Projekt (godot/) liegt nur, was "freigegeben" oder "intern-freigegeben" ist.
+//  8. Status "intern-freigegeben" (Rechteinhaber bestätigt, nur interne Entwicklungs- und Testbuilds) verlangt
+//     einen Eintrag in po_freigabe. Mit --release meldet das Werkzeug jede solche Datei unter godot/:
+//     eine Veröffentlichung ist damit gesperrt.
 
 const fs = require("fs");
 const path = require("path");
@@ -42,6 +46,7 @@ const REQUIRED = [
 ];
 const STATUS = new Set([
   "freigegeben",               // alle Nachweise vorhanden, PO hat nach Sicht-/Hörprüfung freigegeben
+  "intern-freigegeben",        // Rechteinhaber (PO) bestätigt Eigenerstellung, nur interne Entwicklungs- und Testbuilds, Veröffentlichung gesperrt
   "ki-nachgewiesen",           // KI-Herkunft per C2PA belegt, Bedingungen/Prompt/PO-Freigabe fehlen
   "lizenz-belegt-datei-fehlt", // Lizenz aus der Datei ablesbar, Lizenztext liegt nicht bei
   "lizenz-belegt",             // Lizenz belegt und Lizenztext liegt bei, PO-Freigabe steht aus
@@ -100,7 +105,7 @@ function parseRegister(text) {
 // Prüft Registerzeilen gegen die Mediendateien.
 //   media:  Liste versionierter Mediendateipfade (relativ, "/" als Trenner)
 //   hashOf: Pfad -> SHA-256 (hex) oder null, wenn die Datei fehlt
-function checkRegister(rows, media, hashOf) {
+function checkRegister(rows, media, hashOf, release = false) {
   const problems = [];
   const byFile = new Map();
   const ids = new Map();
@@ -119,6 +124,9 @@ function checkRegister(rows, media, hashOf) {
       if (!row.po_freigabe) problems.push(`${where}: "freigegeben" ohne Eintrag in po_freigabe`);
       if (/ungeklärt|unbekannt/i.test(row.lizenzquelle)) problems.push(`${where}: "freigegeben" mit ungeklärter Lizenzquelle`);
     }
+    if (row.status === "intern-freigegeben" && !row.po_freigabe) {
+      problems.push(`${where}: "intern-freigegeben" ohne Eintrag in po_freigabe`);
+    }
     if (row.status === "lizenz-belegt") {
       const licenseFile = (row.lizenzquelle.match(/\b([\w./-]+\.(?:txt|md))\b/) || [])[1];
       if (!licenseFile) problems.push(`${where}: "lizenz-belegt" ohne Pfad zur Lizenzdatei in lizenzquelle`);
@@ -127,8 +135,11 @@ function checkRegister(rows, media, hashOf) {
     if (row.status === "prüfartefakt" && !EVIDENCE_DIRS.some((d) => row.datei.startsWith(d))) {
       problems.push(`${where}: "prüfartefakt" ist nur unter ${EVIDENCE_DIRS.join(" oder ")} zulässig`);
     }
-    if (row.datei.startsWith("godot/") && row.status !== "freigegeben") {
+    if (row.datei.startsWith("godot/") && row.status !== "freigegeben" && row.status !== "intern-freigegeben") {
       problems.push(`${where}: liegt im Godot-Projekt, Status ist aber "${row.status}"`);
+    }
+    if (release && row.datei.startsWith("godot/") && row.status === "intern-freigegeben") {
+      problems.push(`${where}: nur intern freigegeben, für eine Veröffentlichung gesperrt`);
     }
 
     const sha = hashOf(row.datei);
@@ -190,7 +201,7 @@ function hashFile(rel) {
 function main(argv) {
   const { rows, problems: formatProblems } = parseRegister(fs.readFileSync(REGISTER, "utf8"));
   const media = trackedMedia();
-  const { problems, unregistered } = checkRegister(rows, media, hashFile);
+  const { problems, unregistered } = checkRegister(rows, media, hashFile, argv.includes("--release"));
   const all = formatProblems.concat(problems);
 
   const counts = {};

@@ -14,6 +14,8 @@ extends RefCounted
 ## `appears_as` wird beim Spielaufbau und bei `set_role` mit der Katalog-Erscheinung
 ## belegt, die derzeit für jede Rolle gleich der Rolle ist; dann greift Stufe 2 oder 3.
 static func determine_role(target: Player) -> StringName:
+	if target.cursed:
+		return RoleCatalog.WERWOLF  # Fluch des Dämonischen Wolfs (V-02): nur Rollenauskünfte
 	if target.appears_as != &"" and target.appears_as != target.role_id:
 		return target.appears_as
 	if target.counts_as_wolf:

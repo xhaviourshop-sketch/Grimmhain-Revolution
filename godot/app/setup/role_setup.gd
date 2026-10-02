@@ -38,6 +38,8 @@ static func set_role_count(d: SetupDraft, role: StringName, count: int) -> Strin
 	if count < 0:
 		return &"negative_count"
 	var current: int = d.roles.counts.get(role, 0)
+	if count > current and RoleCatalog.requires_cards(role) and not d.roles.death_cards:
+		return &"cards_required"  # Kartenschlucker nur mit Totenreichkarten
 	if count > SetupRoleCatalog.copy_limit(role, d.persons.size()) and count > current:
 		return &"above_maximum"
 	if count == current:
@@ -85,6 +87,17 @@ static func set_copy_appearance(d: SetupDraft, copy_id: int, appearance: StringN
 	if copy.appears_as != appearance:
 		copy.appears_as = appearance
 		_roles_changed(d)
+	return &""
+
+
+## Totenreichkarten ein- oder ausschalten. Ausschalten nimmt den Kartenschlucker aus der Rollenwahl, denn er gibt es nur mit Karten.
+static func set_death_cards(d: SetupDraft, on: bool) -> StringName:
+	if d.roles.death_cards == on:
+		return &""
+	d.roles.death_cards = on
+	if not on:
+		d.roles.counts[RoleCatalog.KARTENSCHLUCKER] = 0
+	_roles_changed(d)
 	return &""
 
 

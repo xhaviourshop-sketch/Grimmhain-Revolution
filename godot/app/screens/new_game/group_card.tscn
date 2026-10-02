@@ -1,0 +1,98 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://app/screens/new_game/group_card.gd" id="1_card"]
+[ext_resource type="Script" path="res://app/widgets/grimm_button.gd" id="2_button"]
+[ext_resource type="Script" path="res://app/widgets/grimm_label.gd" id="3_label"]
+
+[node name="GroupCard" type="PanelContainer"]
+visible = false
+size_flags_vertical = 3
+theme_type_variation = &"CardPanel"
+script = ExtResource("1_card")
+
+[node name="Column" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="GroupHeading" type="Label" parent="Column"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+script = ExtResource("3_label")
+text_key = "ui.groups.heading"
+
+[node name="GroupStatusLabel" type="Label" parent="Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"WarningLabel"
+script = ExtResource("3_label")
+
+[node name="GroupEmptyLabel" type="Label" parent="Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+script = ExtResource("3_label")
+text_key = "ui.groups.empty"
+
+[node name="GroupScroll" type="ScrollContainer" parent="Column"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GroupList" type="VBoxContainer" parent="Column/GroupScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GroupPreviewLabel" type="Label" parent="Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+script = ExtResource("3_label")
+
+[node name="GroupActions" type="GridContainer" parent="Column"]
+layout_mode = 2
+columns = 2
+
+[node name="GroupLoadButton" type="Button" parent="Column/GroupActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.groups.load"
+kind = 0
+wrap = false
+
+[node name="GroupRenameButton" type="Button" parent="Column/GroupActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.groups.rename"
+kind = 1
+wrap = false
+
+[node name="GroupUpdateButton" type="Button" parent="Column/GroupActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.groups.update"
+kind = 1
+wrap = false
+
+[node name="GroupDeleteButton" type="Button" parent="Column/GroupActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.groups.delete"
+kind = 2
+wrap = false
+
+[node name="GroupCloseButton" type="Button" parent="Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_button")
+text_key = "ui.groups.close"
+kind = 1

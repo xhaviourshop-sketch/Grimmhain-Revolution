@@ -26,6 +26,11 @@ func _random(entries: Array, seed_value: int = 1) -> Command:
 	})
 
 
+## `n` verschiedene wirkungsarme Dorfrollen als Setup-Einträge (PE-07: jede Rolle höchstens einmal).
+func _dv(n: int, skip: Array = []) -> Array:
+	return Fixtures.village_fillers(n, skip).map(func(r: String) -> Dictionary: return {"role_id": r})
+
+
 func _b6t(appearance: String = "waldhexe") -> Command:
 	return _manual(B6_ROLES, {"2": appearance})
 
@@ -96,7 +101,7 @@ func test_no_personal_night_step() -> void:
 
 func test_alone_creates_pack_step() -> void:
 	# 4
-	var start := _manual(["trugbilderwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], {"1": "dorfbewohner"})
+	var start := _manual(["trugbilderwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {"1": "dorfbewohner"})
 	var run := _replay_ok([start, Command.start_night()] as Array[Command], "einziger Wolf")
 	if run.ok:
 		assert_eq(run.state.night_plan, [&"pack"] as Array[StringName], "Rudelschritt existiert")
@@ -134,30 +139,28 @@ func test_manual_setup_validation() -> void:
 
 func test_random_setup_validation() -> void:
 	# Zufällige Rolleninstanz mit ungültiger Konfiguration
-	var d := {"role_id": "dorfbewohner"}
-	_setup_rejected(_random([{"role_id": "trugbilderwolf"}, d, d, d, d, d]), "appearance_required", "ohne Scheinrolle")
-	_setup_rejected(_random([{"role_id": "trugbilderwolf", "appears_as": "werwolf"}, d, d, d, d, d]), "invalid_appearance", "Wolfsrolle")
-	_setup_rejected(_random([{"role_id": "trugbilderwolf", "appears_as": "trugbilderwolf"}, d, d, d, d, d]), "invalid_appearance", "sich selbst")
-	_setup_rejected(_random([{"role_id": "trugbilderwolf", "appears_as": ""}, d, d, d, d, d]), "invalid_appearance", "leer")
-	_setup_rejected(_random([{"role_id": "werwolf"}, {"role_id": "dorfbewohner", "appears_as": "waldhexe"}, d, d, d, d]), "appearance_not_allowed", "Scheinrolle für Dorfbewohner")
-	_setup_rejected(_random([{"role_id": "werwolf", "extra": 1}, d, d, d, d, d]), "invalid_role_entry", "unbekanntes Feld")
-	_setup_rejected(_random(["werwolf", d, d, d, d, d]), "invalid_role_entry", "kein Eintrag")
-	_setup_rejected(_random([{"appears_as": "waldhexe"}, d, d, d, d, d]), "invalid_role_entry", "ohne role_id")
+	_setup_rejected(_random([{"role_id": "trugbilderwolf"}] + _dv(5)), "appearance_required", "ohne Scheinrolle")
+	_setup_rejected(_random([{"role_id": "trugbilderwolf", "appears_as": "werwolf"}] + _dv(5)), "invalid_appearance", "Wolfsrolle")
+	_setup_rejected(_random([{"role_id": "trugbilderwolf", "appears_as": "trugbilderwolf"}] + _dv(5)), "invalid_appearance", "sich selbst")
+	_setup_rejected(_random([{"role_id": "trugbilderwolf", "appears_as": ""}] + _dv(5)), "invalid_appearance", "leer")
+	_setup_rejected(_random([{"role_id": "werwolf"}, {"role_id": "dorfbewohner", "appears_as": "waldhexe"}] + _dv(4, ["dorfbewohner"])), "appearance_not_allowed", "Scheinrolle für Dorfbewohner")
+	_setup_rejected(_random([{"role_id": "werwolf", "extra": 1}] + _dv(5)), "invalid_role_entry", "unbekanntes Feld")
+	_setup_rejected(_random(["werwolf"] + _dv(5)), "invalid_role_entry", "kein Eintrag")
+	_setup_rejected(_random([{"appears_as": "waldhexe"}] + _dv(5)), "invalid_role_entry", "ohne role_id")
 	var pool := Fixtures.start_random(6, 1, 1).payload.duplicate(true)
-	pool["role_pool"] = ["trugbilderwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	pool["role_pool"] = ["trugbilderwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 	_setup_rejected(Command.start_game(pool), "appearance_required", "role_pool ohne Kopplung")
-	var both := _random([{"role_id": "werwolf"}, d, d, d, d, d]).payload.duplicate(true)
-	both["role_pool"] = ["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"]
+	var both := _random([{"role_id": "werwolf"}] + _dv(5)).payload.duplicate(true)
+	both["role_pool"] = ["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 	_setup_rejected(Command.start_game(both), "invalid_assignment", "role_pool und role_entries")
-	var appearances := _random([{"role_id": "werwolf"}, d, d, d, d, d]).payload.duplicate(true)
+	var appearances := _random([{"role_id": "werwolf"}] + _dv(5)).payload.duplicate(true)
 	appearances["appearances"] = {"1": "waldhexe"}
 	_setup_rejected(Command.start_game(appearances), "invalid_assignment", "appearances bei Zufall")
 
 
 func test_random_setup_couples_role_and_appearance() -> void:
 	# 11, 12
-	var d := {"role_id": "dorfbewohner"}
-	var single := [{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}, d, d, d, d, {"role_id": "werwolf"}]
+	var single := [{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}] + _dv(4) + [{"role_id": "werwolf"}]
 	var holders := {}
 	for seed_value: int in range(1, 21):
 		var s := Fixtures.play([_random(single, seed_value)] as Array[Command])
@@ -172,30 +175,31 @@ func test_random_setup_couples_role_and_appearance() -> void:
 			else:
 				assert_eq(p.appears_as, p.role_id, "Seed %d: keine Scheinrolle bei %d" % [seed_value, id])
 	assert_true(holders.size() > 1, "verschiedene Seeds geben die Rolle an verschiedene Personen")
-	var double := [{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}, {"role_id": "trugbilderwolf", "appears_as": "schutzengel"}, d, d, d, {"role_id": "das-orakel"}]
+	# Zwei Trugbilderwölfe gleichzeitig gibt es seit PE-07 erst nach dem Start (Lycaon-Verwandlung, Korrektur); die Kopplung
+	# je Instanz belegen `test_two_decoys_keep_own_appearance` und `test_replay_two_decoys` über die Korrektur.
+	var pair := [{"role_id": "trugbilderwolf", "appears_as": "schutzengel"}, {"role_id": "werwolf"}] + _dv(3) + [{"role_id": "das-orakel"}]
 	for seed_value: int in [3, 11]:
-		var a := Fixtures.play([_random(double, seed_value)] as Array[Command])
-		var b := Fixtures.play([_random(double, seed_value)] as Array[Command])
+		var a := Fixtures.play([_random(pair, seed_value)] as Array[Command])
+		var b := Fixtures.play([_random(pair, seed_value)] as Array[Command])
 		assert_eq(_json(a.to_dict()), _json(b.to_dict()), "Seed %d: identische Zuordnung" % seed_value)
 		var seen: Array[String] = []
 		for id: int in a.players:
 			if a.players[id].role_id == &"trugbilderwolf":
 				seen.append(String(a.players[id].appears_as))
-		seen.sort()
-		assert_eq(seen, ["schutzengel", "waldhexe"] as Array[String], "Seed %d: beide Scheinrollen je Instanz" % seed_value)
+		assert_eq(seen, ["schutzengel"] as Array[String], "Seed %d: Scheinrolle bei ihrer Instanz" % seed_value)
 
 
 func test_random_compatibility_and_replay() -> void:
 	# 13: role_entries ohne Scheinrolle verteilt wie role_pool; Replay bytegleich.
 	var pool_state := Fixtures.play([Fixtures.start_random(8, 2, 4711)] as Array[Command])
 	var entries: Array = []
-	for i: int in 8:
-		entries.append({"role_id": "werwolf" if i < 2 else "dorfbewohner"})
+	for role: String in Fixtures.wolf_fillers(2) + Fixtures.village_fillers(6):
+		entries.append({"role_id": role})
 	var entry_state := Fixtures.play([_random(entries, 4711)] as Array[Command])
 	for id: int in pool_state.players:
 		assert_eq(entry_state.players[id].role_id, pool_state.players[id].role_id, "gleiche Verteilung für Person %d" % id)
 	var commands: Array[Command] = [_random([{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}, {"role_id": "werwolf"}, {"role_id": "schutzengel"},
-		{"role_id": "das-orakel"}, {"role_id": "dorfbewohner"}, {"role_id": "dorfbewohner"}], 99), Command.start_night()]
+		{"role_id": "das-orakel"}, {"role_id": "dorfbewohner"}, {"role_id": "amalia"}], 99), Command.start_night()]
 	var a := RulesEngine.replay(commands)
 	var b := RulesEngine.replay(commands)
 	assert_eq(events_json(a.events), events_json(b.events), "Ereignisse bytegleich")
@@ -206,8 +210,8 @@ func test_random_compatibility_and_replay() -> void:
 
 func test_two_decoys_keep_own_appearance() -> void:
 	# 14
-	var start := _manual(["trugbilderwolf", "trugbilderwolf", "dorfbewohner", "das-orakel", "dorfbewohner", "dorfbewohner"], {"1": "waldhexe", "2": "schutzengel"})
-	var s := Fixtures.play([start, Command.start_night()] as Array[Command])
+	# Der zweite Trugbilderwolf entsteht nach dem Start durch Korrektur (PE-07), mit eigener Scheinrolle.
+	var s := Fixtures.play(Fixtures.with_copies(["trugbilderwolf", "trugbilderwolf", "dorfbewohner", "das-orakel", "amalia", "detektiv"], [Command.start_night()] as Array[Command], 1, {"1": "waldhexe", "2": "schutzengel"}))
 	assert_eq(s.night_plan, [&"pack", &"das-orakel:4"] as Array[StringName], "ein gemeinsamer Rudelschritt")
 	assert_true(s.players[1].counts_as_wolf and s.players[2].counts_as_wolf, "beide zählen als Wolf")
 	s = apply_ok(apply_ok(s, Command.answer_prompt(1, []), "Rudel").state, Command.begin_step("night:1:1:das-orakel:4"), "Orakel").state
@@ -272,7 +276,7 @@ func test_parity_counts_decoy() -> void:
 
 func test_last_decoy_dies_village_wins() -> void:
 	# 21
-	var start := _manual(["trugbilderwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], {"1": "dorfbewohner"})
+	var start := _manual(["trugbilderwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {"1": "dorfbewohner"})
 	var run := _replay_ok([start, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), Command.nominate(2, 1),
 		Command.decide_execution(1)] as Array[Command], "letzter Wolf")
 	if run.ok:
@@ -350,7 +354,7 @@ func test_set_role_to_decoy() -> void:
 
 func test_set_role_away_from_decoy() -> void:
 	# 29, 30
-	var start := _manual(["trugbilderwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner", "dorfbewohner"], {"1": "waldhexe"})
+	var start := _manual(["trugbilderwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {"1": "waldhexe"})
 	var r := apply_ok(Fixtures.play([start] as Array[Command]), CorrectionFixtures.gm("set_role", {"target_id": 1, "role_id": "dorfbewohner"}), "kein Trugbilderwolf mehr")
 	var p := r.state.players[1]
 	assert_true(p.role_id == &"dorfbewohner" and p.appears_as == &"dorfbewohner" and not p.counts_as_wolf and p.faction == &"village", "normale Erscheinung")
@@ -386,11 +390,10 @@ func test_save_load_points() -> void:
 
 func test_replay_two_decoys() -> void:
 	# 34
-	var manual := _manual(["trugbilderwolf", "trugbilderwolf", "dorfbewohner", "das-orakel", "dorfbewohner", "dorfbewohner"], {"1": "waldhexe", "2": "schutzengel"})
-	var random := _random([{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}, {"role_id": "trugbilderwolf", "appears_as": "schutzengel"},
-		{"role_id": "dorfbewohner"}, {"role_id": "das-orakel"}, {"role_id": "dorfbewohner"}, {"role_id": "dorfbewohner"}], 5)
-	for start: Command in [manual, random]:
-		var commands: Array[Command] = [start, Command.start_night()]
+	# Manuell: der zweite Trugbilderwolf entsteht nach dem Start durch Korrektur (PE-07); zufällig wird nur einer verteilt.
+	var manual := Fixtures.with_copies(["trugbilderwolf", "trugbilderwolf", "dorfbewohner", "das-orakel", "amalia", "detektiv"], [Command.start_night()] as Array[Command], 1, {"1": "waldhexe", "2": "schutzengel"})
+	var random: Array[Command] = [_random([{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}, {"role_id": "das-orakel"}] + _dv(4), 5), Command.start_night()]
+	for commands: Array[Command] in [manual, random]:
 		var loaded := _roundtrip(commands, "zwei Trugbilderwölfe")
 		var a := RulesEngine.replay(commands)
 		assert_eq(events_json(a.events), events_json(RulesEngine.replay(commands).events), "Replay bytegleich")
@@ -440,13 +443,13 @@ func test_corrupt_saves_rejected() -> void:
 	# Setup-Daten im gespeicherten Befehl: falsche Person, verlorene Kopplung, Vertauschung.
 	_expect_load_error(_tampered(base, none, func(doc: Dictionary) -> void: doc["commands"][0]["payload"]["appearances"]["6"] = "schutzengel"),
 		"replay_rejected", "Scheinrolle für Dorfbewohner im Setup")
-	var two: Array[Command] = [_random([{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}, {"role_id": "trugbilderwolf", "appears_as": "schutzengel"},
-		{"role_id": "dorfbewohner"}, {"role_id": "das-orakel"}, {"role_id": "dorfbewohner"}, {"role_id": "dorfbewohner"}], 5)]
-	_expect_load_error(_tampered(two, none, func(doc: Dictionary) -> void: (doc["commands"][0]["payload"]["role_entries"][0] as Dictionary).erase("appears_as")),
+	# Zufällig wird ein Trugbilderwolf verteilt; zwei gleichzeitig gibt es erst nach dem Start (Korrektur, PE-07).
+	var one: Array[Command] = [_random([{"role_id": "trugbilderwolf", "appears_as": "waldhexe"}, {"role_id": "das-orakel"}] + _dv(4), 5)]
+	_expect_load_error(_tampered(one, none, func(doc: Dictionary) -> void: (doc["commands"][0]["payload"]["role_entries"][0] as Dictionary).erase("appears_as")),
 		"replay_rejected", "Kopplung verloren")
-	_expect_load_error(_tampered(two, none, func(doc: Dictionary) -> void:
-		doc["commands"][0]["payload"]["role_entries"][0]["appears_as"] = "schutzengel"
-		doc["commands"][0]["payload"]["role_entries"][1]["appears_as"] = "waldhexe"), "replay_mismatch", "vertauschte Scheinrollen im Setup")
+	_expect_load_error(_tampered(one, none, func(doc: Dictionary) -> void:
+		doc["commands"][0]["payload"]["role_entries"][0]["appears_as"] = "schutzengel"), "replay_mismatch", "geänderte Scheinrolle im Setup")
+	var two := Fixtures.with_copies(["trugbilderwolf", "trugbilderwolf", "dorfbewohner", "das-orakel", "amalia", "detektiv"], [] as Array[Command], 5, {"1": "waldhexe", "2": "schutzengel"})
 	_expect_load_error(_tampered(two, func(st: Dictionary) -> void:
 		var decoys: Array = []
 		for p: Dictionary in st["players"]:

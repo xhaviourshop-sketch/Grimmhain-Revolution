@@ -15,6 +15,7 @@ const TITLE_KEYS := {
 }
 
 var _shown_step: StringName = &""
+var _lexicon_layer: Control = null  ## offene Lexikon-Ebene (Rollenwahl), sonst null
 
 @onready var _progress: WizardProgress = %WizardProgress
 @onready var _player_step: PlayerStep = %PlayerStep
@@ -29,11 +30,12 @@ func _setup() -> void:
 		step.connect(&"status_message_requested", status_message_requested.emit)
 	_player_step.roles_requested.connect(_go_to.bind(&"roles"))
 	_role_step.players_requested.connect(_go_to.bind(&"players"))
+	_role_step.lexicon_requested.connect(open_lexicon)
 	_distribution_step.roles_requested.connect(_go_to.bind(&"roles"))
 	_distribution_step.seating_requested.connect(_go_to.bind(&"seating"))
 	_seating_step.distribution_requested.connect(_go_to.bind(&"distribution"))
 	_seating_step.start_requested.connect(_on_start_requested)
-	_player_step.start(context.setup)
+	_player_step.start(context.setup, context.groups)
 	_role_step.start(context.setup)
 	_distribution_step.start(context.setup)
 	_seating_step.start(context.setup)
@@ -48,6 +50,9 @@ func default_focus() -> Control:
 ## Zurück, Escape und System-Zurück: erst der Schritt selbst (offener Modus, Auswahl),
 ## dann einen Schritt zurück; im Spielerschritt die Verlassen-Rückfrage wie bisher.
 func handle_back() -> bool:
+	if _lexicon_layer != null:
+		close_lexicon()
+		return true
 	if bool(_current_step().call("handle_back")):
 		return true
 	match _shown_step:
@@ -68,6 +73,33 @@ func handle_back() -> bool:
 	request.on_alternative = navigate_requested.emit.bind(ScreenIds.MAIN_MENU)
 	dialog_requested.emit(request)
 	return true
+
+
+## Lexikoneintrag als Ebene über dem Setup. Liest nur Übersetzungen und Katalog; Rollenwahl, Verteilung und
+## Sitzordnung bleiben unverändert. Schließen und Zurück führen in denselben Setup-Zustand zurück.
+func open_lexicon(role: StringName) -> void:
+	close_lexicon()
+	_lexicon_layer = RoleLexicon.layer(context.settings, role)
+	add_child(_lexicon_layer)
+	var lexicon := _lexicon_layer.find_child("RoleLexicon", true, false) as RoleLexicon
+	lexicon.close_requested.connect(close_lexicon)
+	var close := _lexicon_layer.find_child("CloseLayerButton", true, false) as Control
+	close.grab_focus()
+
+
+func close_lexicon() -> void:
+	if _lexicon_layer == null:
+		return
+	remove_child(_lexicon_layer)
+	_lexicon_layer.queue_free()
+	_lexicon_layer = null
+	var target := default_focus()
+	if target != null and target.is_visible_in_tree():
+		target.grab_focus()
+
+
+func lexicon_layer() -> Control:
+	return _lexicon_layer
 
 
 func _go_to(step: StringName) -> void:

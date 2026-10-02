@@ -15,10 +15,11 @@ var alive: bool = true
 var death: KillEvent = null
 var ever_nominated: bool = false  ## in der Partie jemals nominiert; haftet an der Person (DR-12)
 var ability_uses: Dictionary = {}  ## begrenzte Einsätze pro Person: "<rolle>:<fähigkeit>" → Anzahl (G-ID-3)
+var cursed: bool = false  ## Fluch des Dämonischen Wolfs: Rollenauskünfte zeigen „Werwolf“ bis zum Rollenwechsel (V-02, V-07)
 
 
 func to_dict() -> Dictionary:
-	return {
+	var d := {
 		"id": id,
 		"name": name,
 		"role_id": String(role_id),
@@ -31,6 +32,9 @@ func to_dict() -> Dictionary:
 		"ability_uses": ability_uses.duplicate(),
 		"ever_nominated": ever_nominated,
 	}
+	if cursed:
+		d["cursed"] = true
+	return d
 
 
 static func from_dict(d: Dictionary) -> Player:
@@ -46,6 +50,7 @@ static func from_dict(d: Dictionary) -> Player:
 	if not d.get("ever_nominated") is bool:
 		return null
 	p.ever_nominated = d["ever_nominated"]
+	p.cursed = DictRead.get_bool(d, "cursed")
 	for key: Variant in DictRead.get_dict(d, "ability_uses"):
 		var count: Variant = DictRead.get_dict(d, "ability_uses")[key]
 		# Nur bekannte Einsätze, jeweils 0 oder 1 (einmal pro Person und Partie).

@@ -278,8 +278,10 @@ func test_start_data_is_plain_and_only_when_ready() -> void:
 	var result: Object = s.call("start_data")
 	_ok(result, "Startdaten")
 	var data: Dictionary = result.get("details")
-	assert_eq(data.keys().size(), 4, "nur players, seat_order, roles, appearances")
-	for key: String in ["players", "seat_order", "roles", "appearances"]:
+	assert_eq(data.keys().size(), 5, "nur players, seat_order, roles, appearances, death_cards (DI-01: keine Aufdeckungsoption mehr)")
+	assert_false(data.has("reveal_role_on_death"), "keine Aufdeckungsangabe in den Startdaten")
+	assert_eq(data["death_cards"], false, "Totenreichkarten sind ohne Wahl aus")
+	for key: String in ["players", "seat_order", "roles", "appearances", "death_cards"]:
 		assert_true(data.has(key), "Startdaten enthalten %s" % key)
 	assert_eq(data["seat_order"], _order(s), "Sitzreihenfolge")
 	var ids := _ids(s)

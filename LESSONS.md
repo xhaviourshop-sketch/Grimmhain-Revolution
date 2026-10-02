@@ -2,6 +2,11 @@
 
 Neue Einträge oben einfügen. Nur bewiesene, wiederverwendbare Erkenntnisse aufnehmen.
 
+## 2026-09-29: Laufzeitfehler nach bestandener Prüfung galten als grün
+- Symptom: Ein Test mit `SCRIPT ERROR` nach der ersten Prüfung meldete „ok“; nur die Log-Suche fand den Fehler.
+- Lösung: `tests/error_logger.gd` (Godot-`Logger`) im Runner; jeder Engine- oder Skriptfehler während eines Tests macht ihn rot.
+- Folgen für neuen Code: erwartbar ungültige Eingaben ohne Engine-Fehler behandeln (`JSON.new().parse()` statt `JSON.parse_string()`), Hilfsfunktionen in Testdateien nie mit `test_` beginnen (der Runner führt sie als Tests aus), Lambdas mit `self` nicht an Signale langlebiger Objekte hängen (Referenzzyklus, Leckmeldung beim Beenden).
+
 ## 2026-09-27: Rule-15-Hook blockierte trotz aktueller Doku
 - Fehler: `~/.claude/hooks/rule15-enforcer.js` erkannte Doku nur bei Edit/Write auf die Zustandsdatei (nicht per Shell) und wertete jeden Commit als neue, ungedokumentierte Änderung. Behoben: Inhalts-Hash statt Werkzeug, Commits mit `PROGRESS.md` gelten als dokumentiert, Doku-Dateien zählen nicht als Code (Backup: `rule15-enforcer.js.bak`).
 
@@ -10,3 +15,9 @@ Neue Einträge oben einfügen. Nur bewiesene, wiederverwendbare Erkenntnisse auf
 - Ursache: vermutlich abgebrochener Git-Aufruf aus VS Code oder Codex, die parallel im Repo laufen.
 - Lösung: Prozessliste prüfen (kein `git`), dann 0-Byte-Lock nach Rückfrage löschen; Commit/Push liefen danach normal.
 - Vermeidung: Vor Git-Schreibaktionen prüfen, ob andere Agenten/Editoren gerade Git ausführen.
+
+## 2026-09-29: Intermittierend roter Test durch globalen Zufall (`Array.shuffle()`)
+- Symptom: `test_prompt_coverage` meldete einmal „Rolle koenig erschien nie als Prompt“, danach grün.
+- Ursache: `Array.shuffle()` nutzt den globalen Generator, den Godot bei jedem Start zufällig setzt. Eine `rg`-Suche nach `randi`/`randf` fand ihn nicht. Zusätzlich hängt der König-Schritt am Überleben (mehr Tote als Lebende).
+- Lösung: Mischen über den seedbaren Test-Generator; Fokusrolle wird nicht übersprungen oder als Ziel gewählt; bedingte Nachtrollen mit festen Szenarien; Regressionstest (gleiche Partie unter mehreren globalen Seeds muss gleich sein).
+- Vermeidung: In Tests und Kern auch nach `.shuffle()`, `pick_random()` und `randomize()` suchen. Einen roten Lauf nicht durch grüne Wiederholung erklären, sondern die Gegenprobe mit dem alten Verhalten führen.

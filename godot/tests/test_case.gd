@@ -7,6 +7,22 @@ var failures: Array[String] = []
 var assertions: int = 0
 
 
+## DI-03: Das öffentliche `DeathEffect` ist die ausdrückliche Ausnahme der Geheimhaltungstests (es nennt Effekt und
+## Rolle zum Ereigniszeitpunkt). Andere öffentliche Ereignisse bleiben streng. Die Ausnahme gilt nur für genau diese
+## Positivliste von Feldern; jedes weitere Feld macht den Test rot.
+const DEATH_EFFECT_KEYS: Array = ["effect", "replaced_id", "role_id", "source_id", "target_id"]
+
+
+func is_death_effect_exception(e: GameEvent) -> bool:
+	if String(e.type) != "DeathEffect":
+		return false
+	var keys: Array = e.data.keys()
+	keys.sort()
+	assert_eq(keys, DEATH_EFFECT_KEYS, "DeathEffect nur mit der Positivliste")
+	assert_eq(String(e.visibility), "public", "DeathEffect öffentlich")
+	return true
+
+
 func fail(message: String) -> void:
 	assertions += 1
 	failures.append(message)

@@ -22,12 +22,13 @@ const SIZE_16_10 := Vector2i(1280, 800)
 const SIZE_WIDE := Vector2i(1920, 1080)
 
 ## Alle sechs Ansichten mit ihren erwarteten stabilen IDs.
-const SCREEN_IDS: Array[StringName] = [&"start", &"main_menu", &"new_game", &"continue", &"settings", &"cockpit"]
-const SUB_SCREENS: Array[StringName] = [&"new_game", &"continue", &"settings", &"cockpit"]
+const SCREEN_IDS: Array[StringName] = [&"start", &"main_menu", &"new_game", &"continue", &"settings", &"cockpit", &"lexicon", &"rulebook", &"history"]
+const SUB_SCREENS: Array[StringName] = [&"new_game", &"continue", &"settings", &"cockpit", &"lexicon", &"rulebook", &"history"]
 
 var tree: SceneTree
 var quit_calls: int = 0
 var _spawned: Array[Node] = []
+var _save_dirs: Array[String] = []
 
 
 func attach_tree(t: SceneTree) -> void:
@@ -45,7 +46,26 @@ func after_each() -> void:
 	if platform != null:
 		platform.call("clear_override")
 	TranslationServer.set_locale("de")
+	for dir: String in _save_dirs:
+		_remove_dir(dir)
+	_save_dirs.clear()
 	await frames(1)
+
+
+## Neues leeres Verzeichnis für Spielstände eines Tests (wird in after_each entfernt).
+func make_save_dir() -> String:
+	var dir := "user://test-saves-%d-%d" % [Time.get_ticks_usec(), _save_dirs.size()]
+	_save_dirs.append(dir)
+	return dir
+
+
+func _remove_dir(dir: String) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for f: String in d.get_files():
+		DirAccess.remove_absolute(dir.path_join(f))
+	DirAccess.remove_absolute(dir)
 
 
 func frames(count: int = 2) -> void:
@@ -86,6 +106,11 @@ func spawn_shell(size: Vector2i = SIZE_16_10, locale: String = "de", reduced_mot
 	var context_script := load_script(CONTEXT_SCRIPT)
 	if context_script != null:
 		var context: Object = context_script.new()
+		# Jede Test-Shell speichert in ein eigenes, danach entferntes Verzeichnis (keine echten Spielstände).
+		var saves := context.get("saves") as Object
+		if saves != null:
+			var dir := make_save_dir()
+			saves.set("base_dir", dir)
 		var s := context.get("settings") as Object
 		s.call("set_reduced_motion", reduced_motion)
 		s.call("set_language", locale)
@@ -164,6 +189,21 @@ func find_button(root: Node, node_name: String) -> BaseButton:
 	return node as BaseButton
 
 
+## Werkzeuge im Optionenmenü des Cockpits (Privat, Rollen zeigen, Spielleitung, Lexikon, Regelbuch): Wie die Spielleitung öffnet die
+## Hilfe zuerst die Lasche „Optionen“, falls der Knopf im geschlossenen Menü liegt. Ergebnis: Knopf oder null.
+func tool_button(screen: Node, node_name: String) -> BaseButton:
+	var b := screen.find_child(node_name, true, false) as BaseButton
+	if b == null:
+		return null
+	var menu := screen.find_child("ToolsMenu", true, false) as Control
+	if menu != null and menu.is_ancestor_of(b) and not menu.visible:
+		var options := screen.find_child("OptionsButton", true, false) as BaseButton
+		if options != null and not options.disabled:
+			options.pressed.emit()
+			await frames(2)
+	return b
+
+
 ## Löst die Aktion eines Buttons so aus, wie Maus und Touch es tun (Signal `pressed`).
 func press(button: BaseButton) -> void:
 	if button == null:
@@ -214,6 +254,20 @@ func _collect_visible(node: Node, out: Array[Control]) -> void:
 		out.append(node as Control)
 	for child: Node in node.get_children():
 		_collect_visible(child, out)
+
+
+## Sichtbarer Teil eines Controls: sein Rechteck, beschnitten auf alle umgebenden ScrollContainer und Controls mit `clip_contents`
+## (deren Inhalt außerhalb der Fläche nicht gezeichnet wird, z. B. das überstehende Hintergrundbild). Leeres Rechteck, wenn nichts davon sichtbar ist.
+func clipped_rect(c: Control) -> Rect2:
+	var r := rect_of(c)
+	var parent := c.get_parent()
+	while parent != null:
+		if parent is ScrollContainer or (parent is Control and (parent as Control).clip_contents):
+			r = r.intersection(rect_of(parent as Control))
+			if not r.has_area():
+				return Rect2()
+		parent = parent.get_parent()
+	return r
 
 
 func visible_buttons(root: Node) -> Array[BaseButton]:
@@ -276,6 +330,35 @@ func _po_string(quoted: String) -> String:
 
 
 ## Rechteck eines Controls in Viewport-Koordinaten.
+## Sichtbare und antippbare Teile eines Porträtplatzes (Porträtkreis samt Nummer, Namensschild) in globalen Koordinaten. Die
+## Steuerelemente der Plätze liegen auf einer Ellipse und überlappen diagonal, ihre Teile nicht (P3, GameSeatToken).
+func seat_parts(token: Control) -> Array[Rect2]:
+	var portrait: Rect2 = token.call("portrait_rect")
+	var plate: Rect2 = token.call("plate_rect")
+	var origin := token.get_global_position()
+	return [Rect2(origin + portrait.position, portrait.size), Rect2(origin + plate.position, plate.size)]
+
+
+## Berührt ein Rechteck einen Platz (rundes Porträt oder Namensschild)? Das Porträtquadrat selbst zählt nicht: Es überlappt diagonal.
+func seat_hits_rect(token: Control, rect: Rect2) -> bool:
+	if not rect.has_area():
+		return false
+	var parts := seat_parts(token)
+	var portrait := parts[0]
+	var center := portrait.get_center()
+	var nearest := Vector2(clampf(center.x, rect.position.x, rect.end.x), clampf(center.y, rect.position.y, rect.end.y))
+	return center.distance_to(nearest) < portrait.size.x * 0.5 - 0.5 or overlaps(parts[1], rect)
+
+
+## Überlappen sich zwei Plätze (Porträtkreise, Namensschilder)?
+func seats_overlap(a: Control, b: Control) -> bool:
+	var pa := seat_parts(a)
+	var pb := seat_parts(b)
+	if pa[0].get_center().distance_to(pb[0].get_center()) < pa[0].size.x - 0.5:
+		return true
+	return seat_hits_rect(a, pb[1]) or seat_hits_rect(b, pa[1])
+
+
 func rect_of(c: Control) -> Rect2:
 	return c.get_global_rect()
 
@@ -287,6 +370,8 @@ func inside(inner: Rect2, outer: Rect2, tolerance: float = 0.5) -> bool:
 
 ## Echte Überlappung (Berührung an Kanten zählt nicht).
 func overlaps(a: Rect2, b: Rect2, tolerance: float = 0.5) -> bool:
+	if not a.has_area() or not b.has_area():
+		return false  # nicht sichtbarer (weggescrollter) Teil überdeckt nichts
 	return a.grow(-tolerance).intersects(b.grow(-tolerance))
 
 

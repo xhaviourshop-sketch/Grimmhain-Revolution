@@ -25,7 +25,14 @@ static func can_enter(from: StringName, to: StringName) -> bool:
 
 ## Befehle, die während einer fälligen Pflichtreaktion zulässig sind.
 const ALLOWED_WHILE_REACTION: Array[StringName] = [
-	Command.BEGIN_STEP, Command.ANSWER_PROMPT, Command.SKIP_STEP, Command.CANCEL_PROMPT, Command.GM_CORRECTION,
+	Command.BEGIN_STEP, Command.ANSWER_PROMPT, Command.SKIP_STEP, Command.CANCEL_PROMPT, Command.GM_CORRECTION, Command.ACK_NOTICE, Command.CONFIRM_ROLE_SHOWN,
+]
+
+
+## Befehle, die während eines offenen Kartenfensters oder einer Karteneingabe nicht zulässig sind: Der Tag läuft erst weiter,
+## wenn das Fenster geschlossen und jede Kartenentscheidung getroffen ist.
+const BLOCKED_DURING_CARDS: Array[StringName] = [
+	Command.NOMINATE, Command.DECIDE_EXECUTION, Command.END_DAY, Command.START_NIGHT, Command.AMALIA_SACRIFICE, Command.NAME_WOLF, Command.CARD_TABLE_ACTION,
 ]
 
 
@@ -35,7 +42,19 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 		return &"game_over"
 	if StepQueue.reactions_due(state) and not ALLOWED_WHILE_REACTION.has(type):
 		return &"reaction_open"
-	if not state.open_candidates().is_empty() and type != Command.CONFIRM_WIN and type != Command.REJECT_WIN:
+	if state.death_cards:
+		if (CardRules.window_open(state) or CardRules.tasks_open(state)) and BLOCKED_DURING_CARDS.has(type):
+			return &"card_window_open"
+		if state.pending_prompt != null and state.pending_prompt.owner == PendingPrompt.OWNER_CARD and BLOCKED_DURING_CARDS.has(type):
+			return &"prompt_open"
+		if type == Command.CARD_ACT or type == Command.CARD_CLOSE_WINDOW:
+			if state.phase != Phase.DAY:
+				return &"wrong_phase"
+		elif type == Command.CARD_TABLE_ACTION and state.phase != Phase.DAY:
+			return &"wrong_phase"
+	elif type == Command.CARD_ACT or type == Command.CARD_CLOSE_WINDOW or type == Command.CARD_TABLE_ACTION:
+		return &"cards_disabled"
+	if not state.open_candidates().is_empty() and type != Command.CONFIRM_WIN and type != Command.REJECT_WIN and type != Command.ACK_NOTICE and type != Command.CONFIRM_ROLE_SHOWN:
 		return &"win_candidate_open"
 	match type:
 		Command.START_GAME:
@@ -65,9 +84,16 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 		Command.CANCEL_PROMPT, Command.OVERRIDE_SHOWN_ROLE:
 			if state.pending_prompt == null:
 				return &"no_open_prompt"
-		Command.GM_CORRECTION:
+		Command.GM_CORRECTION, Command.ACK_NOTICE, Command.CONFIRM_ROLE_SHOWN:
 			if not state.is_started():
 				return &"game_not_started"
+		Command.AMALIA_SACRIFICE, Command.NAME_WOLF:
+			if state.phase != Phase.DAY:
+				return &"wrong_phase"
+			if state.day_step == Phase.DAY_ENDED:
+				return &"day_already_ended"
+			if state.pending_prompt != null:
+				return &"prompt_open"
 		Command.NOMINATE, Command.DECIDE_EXECUTION, Command.END_DAY:
 			if state.phase != Phase.DAY:
 				return &"wrong_phase"
@@ -77,7 +103,7 @@ static func check_command(state: GameState, type: StringName) -> StringName:
 				return &"execution_already_decided"
 			if type == Command.END_DAY and state.day_step != Phase.DAY_EXECUTION_DECIDED:
 				return &"execution_not_decided"
-		Command.CONFIRM_WIN, Command.REJECT_WIN:
+		Command.CONFIRM_WIN, Command.REJECT_WIN, Command.CARD_ACT, Command.CARD_CLOSE_WINDOW, Command.CARD_TABLE_ACTION:
 			pass
 		_:
 			return &"unknown_command"

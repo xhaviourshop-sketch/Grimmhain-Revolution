@@ -8,6 +8,10 @@ Der erste Meilenstein ist die vollständig bedienbare Offline-Partie. Danach fol
 
 **Stand auseinanderhalten:** Dieser Checkout steht auf main `8197ee6`. Der neuere Funktionsstand liegt im Worktree `grimmhain-night-ui`, Branch `feature/night-ui-expansion`, zuletzt lokal geprüft `23c7044`. Die dafür gemeldeten 917 Tests sind kein Nachweis für den älteren main und keine Tablet-Abnahme. Der nächste Auftrag prüft den aktuellen Stand und erstellt die vollständige Restmatrix, bevor weitere Funktionspakete umgesetzt werden.
 
+**KONFLIKT (main/branch), Markus entscheidet:** Die beiden Absätze zum Repositorystand (main-Fassung oben, Branch-Fassung unten) beschreiben denselben Punkt zu verschiedenen Zeitpunkten und stimmen nach dem Merge nicht mehr; beide bleiben stehen.
+
+**Stand auseinanderhalten:** `main` steht auf `8197ee6` (nach PR #2). Der neuere Funktionsstand liegt im Branch `feature/night-ui-expansion` (PR #3, offen, zuletzt geprüft `23c7044`) und enthält `main`, den Rollenaudit und die Cloud-Integration vollständig. Die Abschlussmatrix [CODE-COMPLETION-MATRIX.md](docs/masterplan/CODE-COMPLETION-MATRIX.md) vom 29.09.2026 belegt den Ist-Stand je Anforderung. Die dort ausgeführte Vollsuite (917 Tests) war einmal rot (intermittierender Prüfungsfehler, Befund B-01) und einmal grün; das ist kein Nachweis für `main` und keine Tablet-Abnahme.
+
 **Stand:** 26. September 2026; Umsetzungsstand aktualisiert 27. September 2026 (main `1bc8016`)
 
 **Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen, Verteilung und Sitzordnung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Spielstart (`StartGame`) aus dem bestätigten Setup umgesetzt und automatisch getestet (PR #2). Keine Tablet-Abnahme, keine spielbare Partie (Nacht/Tag) über die Oberfläche.
@@ -186,21 +190,21 @@ Godot Tablet/PC
 - [ ] Effektprioritäten und persistente Reaktionswarteschlange implementieren.
 - [ ] Schutz, Umlenkung, Immunität, verzögerter Tod, Kettentod, Rollenwechsel und Wiederbelebung zentralisieren.
 - [ ] Mehrstufige Prompts abbrechbar machen; Abbruch muss den vorherigen Hash wiederherstellen.
-- [ ] Undo/Redo als Command-Gruppen mit Klartextbeschreibung implementieren.
+- [ ] Undo/Redo als Command-Gruppen mit Klartextbeschreibung implementieren. *(Stand 29.09.2026: Wiederholen entfällt beim Neustart, Decision Log PE-03; Rückgängig über einen Neustart bleibt.)*
 - [ ] Manuelle Spielleiterkorrektur durch dieselbe Pipeline führen.
-- [ ] Automatische Rotation von Checkpoints und Reparaturdialog für beschädigte Saves bauen.
+- [ ] ~~Automatische Rotation von Checkpoints~~ und Reparaturdialog für beschädigte Saves bauen. *(Ersetzt durch Decision Log PE-02, 29.09.2026: eine Sicherung `.bak` je Partie reicht für den Offline-Abschluss, mehrere Stände frühestens als spätere Komfortfunktion. Beschädigte Dateien fallen heute automatisch mit Hinweis auf die Sicherung zurück, `docs/ui/save-resume.md`.)*
 - [ ] Ereignisprotokoll persistent machen und als lesbare Rundenchronik projizieren.
 - [ ] Golden Tests nur für verifiziertes Legacy-Verhalten erstellen; bekannte Bugs ausdrücklich als korrigierte Abweichung testen.
 - [ ] Regel-Linter für fehlende IDs, Texte, Nachtprioritäten und Tests einführen.
 
-**Gate:** Undo aller Commands führt zum Ausgangszustand; Redo reproduziert denselben Endzustand. Jede mehrstufige Aktion überlebt Neustart oder lässt sich ohne Teilwirkung abbrechen.
+**Gate:** Undo aller Commands führt zum Ausgangszustand; Redo reproduziert denselben Endzustand. Jede mehrstufige Aktion überlebt Neustart oder lässt sich ohne Teilwirkung abbrechen. *(Redo gilt innerhalb einer laufenden Sitzung; über einen Neustart wird es nicht verlangt, Decision Log PE-03.)*
 
 ## Phase 4 · Tablet-MVP und geführte Spielleitung
 
 **Ziel:** Eine echte Gruppe kann ohne Entwicklerhilfe eine vollständige Runde spielen.
 
 - [ ] 17 bis 20 priorisierte Rollen vollständig automatisieren; weitere Inhalte nur klar als manuell geführt anbieten.
-- [ ] Automatische, manuelle und szenariobasierte Rollenwahl implementieren. *(Stand 27.09.2026: Vorschlag, manuelle Rollenwahl sowie zufällige und manuelle Verteilung implementiert, automatisch getestet, grafisch geprüft; szenariobasierte Wahl fehlt.)*
+- [ ] Automatische, manuelle und szenariobasierte Rollenwahl implementieren. *(Stand 27.09.2026: Vorschlag, manuelle Rollenwahl sowie zufällige und manuelle Verteilung implementiert, automatisch getestet, grafisch geprüft; szenariobasierte Wahl fehlt. Stand 30.09.2026, PE-07: In der Startbesetzung kommt jede Rolle höchstens einmal vor, Die Gebundenen (1 bis Personenzahl) sind die einzige Ausnahme; der automatische Vorschlag ist eine feste Liste je Personenzahl von 6 bis 24 (Wolfsrollen 1/2/3/4/5 ab 6/9/13/18/22 Personen, genau ein Manipulator, Dorfrollen in fester Reihenfolge, Regelversion 0.14). Gleiche Rollen, die erst im Spiel durch Verwandlung, Erbe, Tausch, Diebstahl oder Korrektur entstehen, sind nicht neu geregelt. Details: `docs/masterplan/DECISION-LOG.md`, Abschnitt „PE-07-Umsetzung (30.09.2026)“.)*
 - [ ] Geführten Modus mit nächster Aktion, Regelgrund und Vorlesetext fertigstellen.
 - [ ] Expertenmodus mit kompaktem Ablauf und direkter Korrektur fertigstellen.
 - [ ] Rollenanzeige ohne Smartphone als sichere Tablet-Karte ermöglichen.

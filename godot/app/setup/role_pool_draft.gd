@@ -9,17 +9,45 @@ extends RefCounted
 
 const INVALIDATED_ROLES := &"roles_changed"             ## Rollenanzahl nach Bestätigung geändert
 const INVALIDATED_PERSONS := &"person_count_changed"    ## Personenzahl passt nicht mehr
+const HINT_COACH_SMALL_ROUND := &"coach_small_round"             ## Besetzungshinweis PE-04, siehe `hints`
+const HINT_SIMULTANEOUS_SOLO_WINS := &"simultaneous_solo_wins"   ## Besetzungshinweis PE-04, siehe `hints`
+const COACH_HINT_BELOW_PERSONS := 13                             ## Schwelle aus PE-04
 
 var counts: Dictionary[StringName, int] = {}
 var confirmed: bool = false
 var invalidated: StringName = &""   ## Grund, warum eine frühere Bestätigung aufgehoben wurde
 var copies: Array[RoleCopy] = []    ## Kopien mit Pflicht-Scheinrolle in Anlagereihenfolge
 var next_copy_id: int = 1           ## nächste Kopien-ID; sinkt nie
+var death_cards: bool = false       ## Partie mit Totenreichkarten (Kartenschlucker wählbar); Standard aus
 
 
 func _init() -> void:
 	for id: StringName in SetupRoleCatalog.role_ids():
 		counts[id] = 0
+
+
+## Wiederbelebungsrunde (DI-01): Die Rollenwahl enthält eine direkte Wiederbelebungsrolle. Nur Anzeige;
+## der Regelkern leitet den Modus beim Start selbst aus der Besetzung ab.
+func is_revival_round() -> bool:
+	for id: StringName in counts:
+		if counts[id] > 0 and SetupRoleCatalog.is_revival_role(id):
+			return true
+	return false
+
+
+## Nicht blockierende Besetzungshinweise (PE-04) für `persons` Personen; nur Anzeige im privaten Rollenschritt, ohne
+## Einfluss auf Gültigkeit, Start oder Regelkern. Kutscher unter 13 Personen (Analyse R-07 C-1) und mindestens zwei Kopien
+## der Rollen mit Einzelsieg bei höchstens drei Lebenden (C-3).
+func hints(persons: int) -> Array[StringName]:
+	var out: Array[StringName] = []
+	if counts.get(SetupRoleCatalog.COACH, 0) > 0 and persons < COACH_HINT_BELOW_PERSONS:
+		out.append(HINT_COACH_SMALL_ROUND)
+	var solo := 0
+	for id: StringName in SetupRoleCatalog.SMALL_ROUND_SOLO_ROLES:
+		solo += maxi(0, counts.get(id, 0))
+	if solo >= 2:
+		out.append(HINT_SIMULTANEOUS_SOLO_WINS)
+	return out
 
 
 func total() -> int:
@@ -139,6 +167,18 @@ func issues(persons: int) -> Array[StringName]:
 		if not copy.is_configured():
 			out.append(&"missing_appearance")
 			break
+	if not death_cards and counts.get(RoleCatalog.KARTENSCHLUCKER, 0) > 0:
+		out.append(&"role_needs_death_cards")
+	return out
+
+
+## Rollen, deren Anzahl die Höchstzahl der Startbesetzung übersteigt (PE-07), kanonisch sortiert. Nur bei einem ungültigen
+## Entwurf nicht leer; der Entwurf wird nie still gekürzt, die Namen stehen in der Fehlerliste.
+func over_limit(persons: int) -> Array[StringName]:
+	var out: Array[StringName] = []
+	for id: StringName in SetupRoleCatalog.role_ids():
+		if SetupRoleCatalog.has_role(id) and counts.get(id, 0) > SetupRoleCatalog.copy_limit(id, persons):
+			out.append(id)
 	return out
 
 
@@ -152,9 +192,12 @@ func view(persons: int) -> Dictionary:
 		var limit := SetupRoleCatalog.copy_limit(id, persons)
 		string_counts[String(id)] = c
 		limits[String(id)] = limit
-		can_increase[String(id)] = c < limit
+		can_increase[String(id)] = c < limit and (death_cards or not RoleCatalog.requires_cards(id))
 		can_decrease[String(id)] = c > 0
 	var found := issues(persons)
+	var over_names: Array[String] = []
+	for id: StringName in over_limit(persons):
+		over_names.append(String(id))
 	var issue_names: Array[String] = []
 	for issue: StringName in found:
 		issue_names.append(String(issue))
@@ -163,10 +206,16 @@ func view(persons: int) -> Dictionary:
 		pool_names.append(String(id))
 	var s := summary()
 	var sum := total()
+	var hint_names: Array[String] = []
+	for hint: StringName in hints(persons):
+		hint_names.append(String(hint))
 	return {
 		"counts": string_counts,
+		"revival_round": is_revival_round(),
+		"hints": hint_names,
 		"total": sum,
 		"persons": persons,
+		"death_cards": death_cards,
 		"free": persons - sum,
 		"valid": found.is_empty(),
 		"issues": issue_names,
@@ -177,6 +226,7 @@ func view(persons: int) -> Dictionary:
 		"factions": s["factions"],
 		"wolf_count": s["wolf_count"],
 		"limits": limits,
+		"over_limit": over_names,
 		"can_increase": can_increase,
 		"can_decrease": can_decrease,
 		"is_empty": sum == 0,

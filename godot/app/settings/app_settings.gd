@@ -1,8 +1,8 @@
 class_name AppSettings
 extends RefCounted
-## Geräte- und Bedienpräferenzen (nicht Teil des Spielstands, 03 §4.1). Noch nicht dauerhaft
-## gespeichert. Sprache wird sofort am TranslationServer gesetzt; alle Änderungen werden über
-## `changed` gemeldet, damit die Shell Texte und Übergänge aktualisiert.
+## Geräte- und Bedienpräferenzen (nicht Teil des Spielstands, 03 §4.1). Dauerhaft gespeichert über
+## SettingsStore (AppContext.use_settings_store). Sprache wird sofort am TranslationServer gesetzt; alle
+## Änderungen werden über `changed` gemeldet, damit die Shell Texte und Übergänge aktualisiert.
 
 signal changed(key: StringName)
 
@@ -11,7 +11,8 @@ const DEFAULT_LANGUAGE := "de"
 
 var language: String = DEFAULT_LANGUAGE
 var reduced_motion: bool = false  ## schaltet Bildschirmübergänge und Einblendungen ab
-var left_handed: bool = false     ## Grundlage für spätere Spiegelung; noch ohne Wirkung
+var left_handed: bool = false     ## Bedienseite: true = Ansagekarte und Werkzeuge des Cockpits links vom Sitzkreis (NQ-04)
+var show_night_timer: bool = true  ## Anzeige-Timer auch in der Nacht zeigen (DECISIONS.md, Ergänzung zur Timer-Entscheidung); nur Anzeige
 
 
 ## Setzt die Sprache. Nur unterstützte Sprachen; liefert false bei Ablehnung.
@@ -36,6 +37,13 @@ func set_left_handed(value: bool) -> void:
 		return
 	left_handed = value
 	changed.emit(&"left_handed")
+
+
+func set_show_night_timer(value: bool) -> void:
+	if show_night_timer == value:
+		return
+	show_night_timer = value
+	changed.emit(&"show_night_timer")
 
 
 ## Wendet die aktuelle Sprache an (App-Start).

@@ -15,9 +15,17 @@ func _start(roles: Array, appearances: Dictionary = {}, seed_value: int = 1) -> 
 	return Command.start_game(payload)
 
 
-func _ls(role5: String = "dorfbewohner", seed_value: int = 1) -> Command:
+## 1 Werwolf, 2 Dorfbewohner, 3 Füller, 4 Sensenträger, 5 `role5`, 6 Lehrling (PE-07: keine Rolle doppelt; bei `role5` gleich
+## einem Füller rückt der Füller nach). Gleiche Rollen unter den Kandidaten gibt es erst nach einer Korrektur (`_equal_start`).
+func _ls(role5: String = "amalia", seed_value: int = 1) -> Command:
 	var appearances := {"5": "waldhexe"} if role5 == "trugbilderwolf" else {}
-	return _start(["werwolf", "dorfbewohner", "dorfbewohner", "sensentraeger", role5, "lehrling"], appearances, seed_value)
+	var filler: String = Fixtures.village_fillers(1, ["dorfbewohner", "sensentraeger", role5])[0]
+	return _start(["werwolf", "dorfbewohner", filler, "sensentraeger", role5, "lehrling"], appearances, seed_value)
+
+
+## Wie `_ls`, aber 2, 3 und 5 sind Dorfbewohner: 3 und 5 werden nach dem Start durch Korrektur zu Dorfbewohnern (AS-L03).
+func _equal_start(rest: Array[Command]) -> Array[Command]:
+	return Fixtures.with_copies(["werwolf", "dorfbewohner", "dorfbewohner", "sensentraeger", "dorfbewohner", "lehrling"], rest, 1)
 
 
 func _cands(prompt_id: int, ids: Array) -> Command:
@@ -255,7 +263,7 @@ func test_invalid_candidates_rejected() -> void:
 
 func test_duplicate_roles_separately_bound() -> void:
 	# 6, 7, AS-L03
-	var s := Fixtures.play([_ls(), Command.start_night()] as Array[Command])
+	var s := Fixtures.play(_equal_start([Command.start_night()] as Array[Command]))
 	if s == null:
 		fail("Aufbau")
 		return
@@ -270,9 +278,9 @@ func test_duplicate_roles_separately_bound() -> void:
 	var done := apply_ok(apply_ok(o, _opt(1, 1), "Option 1").state, _conf(1), "Bestätigung").state
 	assert_eq(done.rng.draws, draws + 2, "zwei Ziehungen erst mit der Bestätigung")
 	assert_eq(int(_bond(done, 6).get("master_id", -1)), int(mapping[1]), "gewählte Option gehört zu ihrer Person")
-	var again := Fixtures.play([_ls(), Command.start_night(), _cands(1, [2, 3, 5])] as Array[Command])
+	var again := Fixtures.play(_equal_start([Command.start_night(), _cands(1, [2, 3, 5])] as Array[Command]))
 	assert_eq(again.pending_prompt.partial.get("option_person_ids"), mapping, "gleicher Seed, gleiche Zuordnung")
-	var loaded := StateCodec.decode(StateCodec.encode(o, [_ls(), Command.start_night(), _cands(1, [2, 3, 5])] as Array[Command]))
+	var loaded := StateCodec.decode(StateCodec.encode(o, _equal_start([Command.start_night(), _cands(1, [2, 3, 5])] as Array[Command])))
 	assert_true(loaded.ok and loaded.state.pending_prompt.partial.get("option_person_ids") == mapping, "Save/Load behält die Zuordnung")
 
 
@@ -312,7 +320,7 @@ func test_not_skippable() -> void:
 func test_multiple_apprentices_in_order() -> void:
 	# 10
 	var log: Array[Command] = []
-	var s := _steps(GameState.new(), [_start(["werwolf", "dorfbewohner", "dorfbewohner", "dorfbewohner", "lehrling", "lehrling"]), Command.start_night()] as Array[Command], log)
+	var s := _steps(GameState.new(), Fixtures.with_copies(["werwolf", "dorfbewohner", "amalia", "detektiv", "lehrling", "lehrling"], [Command.start_night()] as Array[Command]) as Array[Command], log)
 	if s == null:
 		return
 	assert_eq(s.night_plan, [&"lehrling:5", &"lehrling:6", &"pack"] as Array[StringName], "nach Personen-ID")
@@ -404,7 +412,7 @@ func test_inherited_reaction_applies_immediately() -> void:
 func test_two_apprentices_same_master() -> void:
 	# 17
 	var log: Array[Command] = []
-	var s := _steps(GameState.new(), [_start(["werwolf", "dorfbewohner", "dorfbewohner", "sensentraeger", "lehrling", "lehrling"]), Command.start_night()] as Array[Command], log)
+	var s := _steps(GameState.new(), Fixtures.with_copies(["werwolf", "dorfbewohner", "amalia", "sensentraeger", "lehrling", "lehrling"], [Command.start_night()] as Array[Command]) as Array[Command], log)
 	s = _drive_night(s, log, {5: {"cands": [1, 2, 4], "master": 4}, 6: {"cands": [1, 2, 4], "master": 4}})
 	if s == null:
 		return
@@ -504,7 +512,7 @@ func test_inherit_transformed_wolf_child() -> void:
 	# 25, AS-L10, AS-L11
 	var log: Array[Command] = []
 	# Zwei Wölfe, damit der Tod des Vorbilds (Person 1) keinen Sieg auslöst.
-	var s := _bound(5, [1, 4, 5], _start(["werwolf", "werwolf", "dorfbewohner", "sensentraeger", "wolfskind", "lehrling"]), log)
+	var s := _bound(5, [1, 4, 5], _start(["werwolf", "blutwolf", "dorfbewohner", "sensentraeger", "wolfskind", "lehrling"]), log)
 	if s == null:
 		return
 	assert_eq(WolfChildRules.bond_of(s, 5).model_id, 1, "Wolfskind 5 wählt Vorbild 1")
@@ -528,7 +536,7 @@ func test_inherit_transformed_wolf_child() -> void:
 func test_inherit_apprentice_again() -> void:
 	# 28
 	var log: Array[Command] = []
-	var s := _steps(GameState.new(), [_start(["werwolf", "dorfbewohner", "dorfbewohner", "sensentraeger", "lehrling", "lehrling"]), Command.start_night()] as Array[Command], log)
+	var s := _steps(GameState.new(), Fixtures.with_copies(["werwolf", "dorfbewohner", "amalia", "sensentraeger", "lehrling", "lehrling"], [Command.start_night()] as Array[Command]) as Array[Command], log)
 	s = _drive_night(s, log, {5: {"cands": [1, 2, 4], "master": 2}, 6: {"cands": [1, 4, 5], "master": 5}})
 	if s == null:
 		return
@@ -548,7 +556,7 @@ func test_inherit_apprentice_again() -> void:
 
 func test_save_load_every_stage_and_replay() -> void:
 	# 29, 31, 32, AS-L12, AS-L13, AS-L15
-	var full: Array[Command] = [_ls("dorfbewohner", 4711), Command.start_night(), _cands(1, [2, 3, 5]), _opt(1, 0), _conf(1), Command.begin_step("night:1:1:pack"),
+	var full: Array[Command] = [_ls("amalia", 4711), Command.start_night(), _cands(1, [2, 3, 5]), _opt(1, 0), _conf(1), Command.begin_step("night:1:1:pack"),
 		Command.answer_prompt(2, []), Command.end_night(), Command.decide_execution(-1), Command.end_day()]
 	var run := RulesEngine.replay(full)
 	assert_true(run.ok, "Ablauf (%s @ %d)" % [run.error, run.failed_index])

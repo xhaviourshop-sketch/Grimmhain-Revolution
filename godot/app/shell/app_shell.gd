@@ -11,23 +11,51 @@ extends Control
 ## Ersetzt `get_tree().quit()` (Tests, spätere Plattformschicht).
 var quit_handler: Callable = Callable()
 var app_context: AppContext = null
+## Dauerhafte Einstellungen. Beim echten Start (ohne vorbereiteten Kontext) user://settings.json; ein von außen
+## übergebener Kontext bleibt ohne Datei, außer ein Speicher wird ausdrücklich gesetzt (Tests mit Temp-Pfad).
+var settings_store: SettingsStore = null
 
 var _safe_rect_override: Rect2 = Rect2()
 var _has_safe_override: bool = false
+var _settings_applied: bool = false
 
 @onready var _router: ScreenRouter = %ScreenHost
 @onready var _safe_area: MarginContainer = %SafeArea
 @onready var _dialog: ConfirmDialog = %ConfirmDialog
 @onready var _toast: ToastHost = %ToastHost
 
+var _cues: AudioCuePlayer = null
+
+
+## Einstellungen laden und anwenden, bevor Kindknoten und erste Ansicht entstehen (_enter_tree des Elternknotens
+## läuft vor dem Aufbau der Kinder): Die Oberfläche entsteht gleich in der gespeicherten Sprache.
+func _enter_tree() -> void:
+	if _settings_applied:
+		return
+	_settings_applied = true
+	if app_context == null:
+		app_context = AppContext.new()
+		if settings_store == null:
+			settings_store = SettingsStore.new()
+		app_context.groups.path = GroupStore.DEFAULT_PATH
+		app_context.groups.load_from_disk()
+		app_context.history.path = HistoryStore.DEFAULT_PATH
+		app_context.history.load_from_disk()
+	if settings_store != null:
+		app_context.use_settings_store(settings_store)
+	else:
+		app_context.settings.apply()
+
 
 func _ready() -> void:
 	theme = ThemeFactory.build()
-	if app_context == null:
-		app_context = AppContext.new()
-	app_context.settings.apply()
+	get_tree().set_auto_accept_quit(false)  # Fenster schließen läuft über _notification (Warnung bei ungespeichertem Stand)
 	app_context.settings.changed.connect(_on_settings_changed)
 	_toast.settings = app_context.settings
+	_cues = AudioCuePlayer.new()
+	_cues.name = "AudioCuePlayer"
+	add_child(_cues)
+	_cues.setup(app_context)
 	_router.setup(app_context)
 	_router.back_requested.connect(go_back)
 	_router.quit_requested.connect(request_quit)
@@ -50,6 +78,13 @@ func _input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		go_back()
+	elif what == NOTIFICATION_WM_CLOSE_REQUEST:
+		# Fenster schließen (Desktop): wie bisher sofort, außer der letzte Stand ist nicht gespeichert. Ein erzwungenes
+		# Beenden durch das Betriebssystem erreicht die App nicht und ist nicht abfangbar.
+		if _unsaved():
+			_open_unsaved_quit()
+		else:
+			_quit()
 
 
 # --- öffentliche Schnittstelle ------------------------------------------------------------------
@@ -68,6 +103,10 @@ func get_dialog() -> ConfirmDialog:
 
 func get_toast() -> ToastHost:
 	return _toast
+
+
+func get_cue_player() -> AudioCuePlayer:
+	return _cues
 
 
 func current_screen_id() -> StringName:
@@ -99,8 +138,12 @@ func go_back() -> void:
 	request_quit()
 
 
-## Beenden: Desktop mit Rückfrage, Mobilgerät sofort (Systemverhalten beim Zurück in der Wurzel).
+## Beenden: Desktop mit Rückfrage, Mobilgerät sofort (Systemverhalten beim Zurück in der Wurzel). Ist der letzte
+## Stand der laufenden Partie nicht gespeichert, warnt die Rückfrage auf beiden Plattformen.
 func request_quit() -> void:
+	if _unsaved():
+		_open_unsaved_quit()
+		return
 	if AppPlatform.is_mobile():
 		_quit()
 		return
@@ -115,6 +158,17 @@ func apply_safe_area(rect: Rect2) -> void:
 
 
 # --- intern ---------------------------------------------------------------------------------------
+
+## Letztes Speichern der laufenden Partie ist fehlgeschlagen.
+func _unsaved() -> bool:
+	var round := app_context.session.round_id()
+	return round != "" and not bool(app_context.saves.last_status.get("ok", true)) \
+		and str(app_context.saves.last_status.get("round_id", "")) == round
+
+
+func _open_unsaved_quit() -> void:
+	_dialog.open_request(DialogRequest.create("ui.dialog.quit.title", "ui.dialog.quit.unsaved_message", "ui.dialog.quit.confirm", _quit))
+
 
 func _quit() -> void:
 	if quit_handler.is_valid():

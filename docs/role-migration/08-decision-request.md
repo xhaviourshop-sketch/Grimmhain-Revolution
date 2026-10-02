@@ -23,12 +23,12 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 2 | 12 |
-| produktentscheidung | 3 | 7 |
-| technisch | 1 | 3 |
-| später | 65 | 162 |
-| quellenprüfung | 4 | 4 |
-| **gesamt** | **75** | **188** |
+| entschieden | 69 | 194 |
+| produktentscheidung | 0 | 0 |
+| technisch | 2 | 3 |
+| später | 4 | 5 |
+| quellenprüfung | 0 | 0 |
+| **gesamt** | **75** | **202** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
 
@@ -211,7 +211,7 @@ Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017
 
 ## RM-DR-013 · Rollen mit Totenkarten-Abhängigkeit
 
-- **Status:** später (K13, K15); `07` Q3 offen.
+- **Status:** entschieden für Kutscher und Frankenstein (ohne Karten, DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026); Totenkarten-Assistent und Kartenschlucker später (K15).
 - **Betroffene Rollen:** `kartenschlucker` (Kernmechanik), `kutscher`, `dr-victor-frankenstein` (Kartenbedingungen über Rollen-Tags).
 - **Problem:** Totenkarten sind in Godot nicht umgesetzt; `07` Q3 (Automatisierungsgrad, Ziehungszeitpunkt) ist offen.
 - **Belege:** `js/core/cards.js:573`; [`dossiers/solos-b.md`](dossiers/solos-b.md#kartenschlucker).
@@ -222,7 +222,7 @@ Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017
 
 ## RM-DR-014 · Bedeutung von „einmalig“ und „erste Nacht“
 
-- **Status:** später. Für Wolfskind und Lehrling bereits entschieden (DR-10, DR-11: erste verfügbare Nacht).
+- **Status:** entschieden (Option B, strikt Nacht 1; DECISION-LOG Rollenaudit 27.09.2026). Vorher: später. Für Wolfskind und Lehrling bereits entschieden (DR-10, DR-11: erste verfügbare Nacht).
 - **Betroffene Rollen:** 14, u. a. `loki`, `die-gebundenen`, `schattenhund`, `koenig-lykaon`, `schicksalswolf`, `schattenwanderer`, `dorfchronistin`, `kriegerin-des-lichts`, `faehrtenleser`.
 - **Problem:** Legacy `once:true` heißt „einmal pro Partie“, nicht „nur Nacht 1“; einige Handler prüfen zusätzlich `nightCount===1` und verbrauchen die Fähigkeit bei späterem Klick. Texte sagen teils „in der ersten Nacht“.
 - **Belege:** [`04`](04-rule-conflicts.md) §2 Zeile 13; DR-10/DR-11 entschieden „erste verfügbare Nacht“ für Wolfskind und Lehrling.
@@ -277,7 +277,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `loki`; Wechselwirkung laut Dossier: Schwarze Witwe (Pflichtpaar, liest Bindung), Dr. Victor Frankenstein/Kutscher (Wiederbelebung), Lehrling (Erbe), Nekromant/Kartenschlucker/Hades (Schilde in …
 - **Belege:** [Dossier](dossiers/village-1.md#loki); RM-C-082 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-009, RM-DR-011, RM-DR-014.
-- **RM-DR-101.1 · Rivalen-Wirkung** · Status: später (K6)
+- **RM-DR-101.1 · Rivalen-Wirkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Rivalen = reiner Marker für Schwarze Witwe
   - Option B: Rivalen bekommen eigene Regel (z.B. Siegsperre)
   - Auswirkung: Balance: Hass-Option ist ohne Witwe eine Leerwahl; Umsetzung: Ohne Regel nur Marker; mit Regel WinRules-Erweiterung
@@ -291,7 +291,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `nachtwaechter`; Wechselwirkung laut Dossier: alle Wolfs- und Solorollen; Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Wolfskind (verwandelt), Doppelspion (Solo, …
 - **Belege:** [Dossier](dossiers/village-1.md#nachtwaechter); RM-C-085 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003.
-- **RM-DR-102.1 · Nachbarbegriff** · Status: später (K3)
+- **RM-DR-102.1 · Nachbarbegriff** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: nächster lebender Sitz
   - Option B: direkter Sitz
   - Auswirkung: Balance: leicht; Umsetzung: Sitznachbarschafts-Funktion
@@ -305,12 +305,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `rattenfaenger`; Wechselwirkung laut Dossier: Voodoo-Priester (hebt Verzauberung auf), Lehrling/Seelentauscher (Rollenwechsel), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (Doppelaktion), Die Ewigen (Solo-Erkennung), Wölfe/Dorf …
 - **Belege:** [Dossier](dossiers/solos-a.md#rattenfaenger); RM-C-041, RM-C-043 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-007.
-- **RM-DR-103.1 · Zählt er selbst** · Status: später (K9)
+- **RM-DR-103.1 · Zählt er selbst** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: alle außer Rattenfänger
   - Option B: inkl. Rattenfänger (Selbstverzauberung nötig)
   - Auswirkung: Balance: B verschwendet eine Verzauberung; Umsetzung: Filter
   - Empfehlung: A (Code) + Text präzisieren
-- **RM-DR-103.2 · Verzauberung durch Puppe aufgehoben** · Status: quellenprüfung; ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
+- **RM-DR-103.2 · Verzauberung durch Puppe aufgehoben** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: beabsichtigte Interaktion
   - Option B: Altlast
   - Auswirkung: Balance: Voodoo kann Rattenfänger bremsen; Umsetzung: eigene Regel nötig
@@ -324,17 +324,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `die-ewigen`; Wechselwirkung laut Dossier: alle 14 Solo-Rollen (`roles:399-403`), insbesondere solche ohne Siegcode (Prophet, Feuerteufel, Voodoo, Grabräuber: 07 Q4); Lehrling/Seelentauscher (Solo-Rolle wechselt …
 - **Belege:** [Dossier](dossiers/village-1.md#die-ewigen); RM-C-087, RM-C-088, RM-C-089 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-006.
-- **RM-DR-104.1 · Mitsieg** · Status: später (K9)
+- **RM-DR-104.1 · Mitsieg** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Ewige gewinnen mit jedem gefundenen Solo, wenn dieser gewinnt
   - Option B: Ewige gewinnen mit dem Solo, den sie zuletzt/zuerst gefunden haben
   - Auswirkung: Balance: hoch (Dorfrolle wechselt faktisch Siegseite); Umsetzung: WinCandidate muss Mitsieger tragen; widerspricht "genau ein Kandidat"
   - Empfehlung: Regel festlegen, Mitsieg als Zusatz-Gewinner am Kandidaten
-- **RM-DR-104.2 · Info-Umfang** · Status: später (K9)
+- **RM-DR-104.2 · Info-Umfang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur Ja/Nein
   - Option B: Ja + Rolle
   - Auswirkung: Balance: Rollenname ist Orakel-starke Info; Umsetzung: InfoRecord-Inhalt
   - Empfehlung: nur Ja/Nein
-- **RM-DR-104.3 · Siegseite der Ewigen** · Status: später (K9)
+- **RM-DR-104.3 · Siegseite der Ewigen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Ewige bleiben Dorf und gewinnen zusätzlich mit Solo
   - Option B: Ewige verlassen das Dorf, sobald Solo gefunden
   - Auswirkung: Balance: mittel; Umsetzung: Fraktionswechsel oder Zusatzsieg
@@ -348,7 +348,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `spuerhund`; Wechselwirkung laut Dossier: Wolfskind, Dämonischer Wolf (Fluch), Trugbilderwolf (Wolfsrolle), alle Solos, Lehrling/Seelentauscher (Rollenname …
 - **Belege:** [Dossier](dossiers/village-1.md#spuerhund); RM-C-090 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-105.1 · Wer wird falsche Spur** · Status: später (K7)
+- **RM-DR-105.1 · Wer wird falsche Spur** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Zufall (SeededRng)
   - Option B: SL wählt
   - Auswirkung: Balance: Zufall kann Spürhund selbst oder echte Wölfe treffen (dann wirkungslos); Umsetzung: Rng-Aufruf vs. Prompt
@@ -358,21 +358,21 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-106 · `rachsuechtiger-wolf`
 
-- **Status des Eintrags:** später (ab Charge K11).
+- **Status des Eintrags:** entschieden (Rollenaudit 28.09.2026).
 - **Betroffene Rollen:** `rachsuechtiger-wolf`; Wechselwirkung laut Dossier: Werwolf (Rudel, synthetische Zeile), Doppelspion (Zielausschluss, Textbezug), Dämonischer Wolf (verfluchte Ziele), Schutzengel/Dorfwache, Seuchenwolf, Waldhexe, Verdammniswächter, Die Ewigen, Nachtwächter …
 - **Belege:** [Dossier](dossiers/wolves-a.md#rachsuechtiger-wolf); RM-C-001, RM-C-002, RM-C-003 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-006.
-- **RM-DR-106.1 · Siegziel** · Status: später (K11)
+- **RM-DR-106.1 · Siegziel** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-35
   - Option A: Einzelsieg: gewinnt nur, wenn er als Letzter (oder mit Bedingung X) übrig ist
   - Option B: Rudelsieg wie Code
   - Auswirkung: Balance: A macht ihn zum Verräter im Rudel, B zu einem normalen Wolf mit Zusatzkill; Umsetzung: A: neue Siegbedingung, Fraktion "solo" trotz Wolfsrudel, Parität neu definieren
   - Empfehlung: A (Text), EN ergänzen
-- **RM-DR-106.2 · Rhythmus** · Status: später (K11)
+- **RM-DR-106.2 · Rhythmus** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-16
   - Option A: fester Takt (Nacht 3, 6, 9)
   - Option B: Abklingzeit nach Nutzung
   - Auswirkung: Balance: A seltener und vorhersehbar; Umsetzung: Nachtschritt-Bedingung nach Nachtnummer vs. Zähler pro Person
   - Empfehlung: Abklingzeit (Code), Text präzisieren
-- **RM-DR-106.3 · Zeitpunkt der ersten Nutzung** · Status: später (K11)
+- **RM-DR-106.3 · Zeitpunkt der ersten Nutzung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-16
   - Option A: erst ab Nacht 3
   - Option B: ab Nacht 1
   - Auswirkung: Balance: früher Rudelverlust in Nacht 1 möglich; Umsetzung: Startwert Zähler
@@ -386,12 +386,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `koenig-lykaon`; Wechselwirkung laut Dossier: Trugbilderwolf, Wächter am Tor, Orakel, Lehrling (Erbe), Werwolf (synthetische Rudelzeile), Totenkarte …
 - **Belege:** [Dossier](dossiers/wolves-a.md#koenig-lykaon); RM-C-004, RM-C-005 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-014.
-- **RM-DR-107.1 · Scheinrolle des erzeugten Trugbilderwolfs** · Status: später (K12)
+- **RM-DR-107.1 · Scheinrolle des erzeugten Trugbilderwolfs** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Scheinrolle = alte Rolle der Person
   - Option B: SL wählt bei Verwandlung
   - Auswirkung: Balance: A passt zur Tarnzeile und ist logisch stark; Umsetzung: `appears_as` muss bei RoleTransition gesetzt werden
   - Empfehlung: A, mit SL-Korrektur
-- **RM-DR-107.2 · "Dorfbewohner"** · Status: später (K12)
+- **RM-DR-107.2 · "Dorfbewohner"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: nur Dorffraktion
   - Option B: jede Nicht-Wolf-Person
   - Auswirkung: Balance: B kann Solo-Rollen neutralisieren; Umsetzung: Zielfilter `faction==village` vs `!counts_as_wolf`
@@ -405,17 +405,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `seuchenwolf`; Wechselwirkung laut Dossier: Werwolf, Schutzengel, Schutzgeist, Dorfwache, Der Weise, Waldhexe, Nekromant, Kartenschlucker, Hades, Dorfschmied, Märtyrerin, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (gemeinsames …
 - **Belege:** [Dossier](dossiers/wolves-a.md#seuchenwolf); RM-C-006, RM-C-007, RM-C-008 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005, RM-DR-009, RM-DR-011.
-- **RM-DR-108.1 · Umfang "alle Schutzeffekte"** · Status: später (K11)
+- **RM-DR-108.1 · Umfang "alle Schutzeffekte"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: wirklich alles, was einen Rudelkill verhindert
   - Option B: nur Schutzrollen (Schutzengel, Dorfwache, Der Weise), keine Schilde/Rettungen
   - Auswirkung: Balance: A deutlich stärker; Umsetzung: Liste der durchdrungenen Abfangregeln in KillPipeline festlegen
   - Empfehlung: Einheitliche Liste mit Rudelvater teilen
-- **RM-DR-108.2 · Verbrauch** · Status: später (K11)
+- **RM-DR-108.2 · Verbrauch** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nächster Angriff, auch wenn er scheitert
   - Option B: nächster erfolgreiche Kill
   - Auswirkung: Balance: A kann durch Hexe verpuffen; Umsetzung: Verbrauchszeitpunkt
   - Empfehlung: A (Text)
-- **RM-DR-108.3 · Welche Angriffe** · Status: später (K11)
+- **RM-DR-108.3 · Welche Angriffe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Rudelangriff
   - Option B: jeder Wolfskill
   - Auswirkung: Balance: gering; Umsetzung: Ursachen-Attribut
@@ -425,21 +425,21 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-109 · `schicksalswolf`
 
-- **Status des Eintrags:** später (ab Charge K11).
+- **Status des Eintrags:** entschieden (Rollenaudit 28.09.2026).
 - **Betroffene Rollen:** `schicksalswolf`; Wechselwirkung laut Dossier: Werwolf (Rudelopfer, Deduplizierung), Schutzengel, Dorfwache, Der Weise, Märtyrerin, Zeitwächter (eingefrorene Nacht zählt nicht, `night:323-331` erhöht `nightCount` nicht), Frankenstein/Kutscher (Wiederbelebung), …
 - **Belege:** [Dossier](dossiers/wolves-a.md#schicksalswolf); RM-C-009, RM-C-010, RM-C-011 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005, RM-DR-011, RM-DR-014.
-- **RM-DR-109.1 · Zeitfenster** · Status: später (K11)
+- **RM-DR-109.1 · Zeitfenster** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-11
   - Option A: nur Nacht 4, danach verfallen
   - Option B: ab Nacht 4, einmal
   - Auswirkung: Balance: B lässt Wölfe auf Bonus warten; Umsetzung: Schrittbedingung
   - Empfehlung: A (Text)
-- **RM-DR-109.2 · Schutz gegen Zusatzopfer** · Status: später (K11)
+- **RM-DR-109.2 · Schutz gegen Zusatzopfer** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-13
   - Option A: wie Rudelangriff (Schutz wirkt)
   - Option B: eigener Kill ohne Schutz
   - Auswirkung: Balance: A schwächer; Umsetzung: Ursache/Quelle, Protections-Filter
   - Empfehlung: A
-- **RM-DR-109.3 · Zählung der ersten drei Toten** · Status: später (K11)
+- **RM-DR-109.3 · Zählung der ersten drei Toten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026 (abgeleitet, delegierte Autorisierung), DA-12
   - Option A: erste drei verschiedenen Toten der Partie
   - Option B: nur Tode nach Markierung
   - Auswirkung: Balance: gering; Umsetzung: Todesreihenfolge-Historie
@@ -453,12 +453,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schattenwanderer`; Wechselwirkung laut Dossier: Rudelvater (Reihenfolge), Parasit, Nekromant/Kartenschlucker/Hades (Schilde beim Partner), Werwolf, Lynch/ExecutionRules, Frankenstein/Kutscher (Wiederbelebung), Dämonischer Wolf, Kopfgeldjäger, …
 - **Belege:** [Dossier](dossiers/wolves-a.md#schattenwanderer). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-009, RM-DR-011, RM-DR-014.
-- **RM-DR-110.1 · „Stattdessen“ oder „beide sterben“** · Status: später (K6)
+- **RM-DR-110.1 · „Stattdessen“ oder „beide sterben“** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Stirbt einer der beiden, stirbt stattdessen der andere (Text „stattdessen“, Legacy-Umlenkung `core:118-124`)
   - Option B: Beide sterben (Begriff „Todeskette“)
   - Auswirkung: Balance: A ist ein Schutz für den Schattenwanderer, B eine Kettenfalle; Umsetzung: A: Umlenkung in der Abfangstufe; B: Kettentod als Todesfolge
   - Empfehlung: A (Text und Code stimmen überein)
-- **RM-DR-110.2 · Umfang und Dauer** · Status: später (K6)
+- **RM-DR-110.2 · Umfang und Dauer** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Gilt für alle Todesursachen einmalig, danach ist die Bindung verbraucht
   - Option B: Gilt dauerhaft für jeden Tod
   - Auswirkung: Balance: B sehr stark; Umsetzung: Bindungsstatus mit Verbrauch
@@ -472,17 +472,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `giftwolf`; Wechselwirkung laut Dossier: Rudelvater (keine Rettung), Ritter (Vergeltung), Schattenwanderer, Nekromant/Kartenschlucker/Hades (Schilde), Zeitwächter (Morgenzähler), Frankenstein/Kutscher (Wiederbelebung), Orakel (sieht …
 - **Belege:** [Dossier](dossiers/wolves-a.md#giftwolf); RM-C-012, RM-C-013, RM-C-014 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-011.
-- **RM-DR-111.1 · Zwei Ladungen in einer Nacht** · Status: später (K11)
+- **RM-DR-111.1 · Zwei Ladungen in einer Nacht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: beide sofort erlaubt
   - Option B: max 1 pro Nacht
   - Auswirkung: Balance: A erlaubt Doppelschlag; Umsetzung: Schrittbedingung
   - Empfehlung: B (07)
-- **RM-DR-111.2 · "erfährt davon"** · Status: später (K11)
+- **RM-DR-111.2 · "erfährt davon"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: öffentlich/Ansage an Ziel in der Nacht
   - Option B: SL flüstert am Morgen
   - Auswirkung: Balance: Informationsvorteil fürs Ziel; Umsetzung: InfoRecord actor=Ziel
   - Empfehlung: A als Actor-Ereignis
-- **RM-DR-111.3 · Zeitpunkt "zwei Tage später"** · Status: später (K11)
+- **RM-DR-111.3 · Zeitpunkt "zwei Tage später"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: Morgen von Tag N+1
   - Option B: Ende von Tag N+1
   - Auswirkung: Balance: gering; Umsetzung: Termin in `day_number`
@@ -496,22 +496,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `rudelvater`; Wechselwirkung laut Dossier: Werwolf (Rudel), Seuchenwolf (gemeinsame Durchdringung), Giftwolf, Schattenwanderer, Nekromant/Kartenschlucker/Hades, Dorfwache, Der Weise, Dorfschmied, Voodoo-Priester, Märtyrerin, Albtraumwolf, Sensenträger, …
 - **Belege:** [Dossier](dossiers/wolves-a.md#rudelvater); RM-C-015, RM-C-016, RM-C-017, RM-C-018 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005.
-- **RM-DR-112.1 · Was ist "Wolfsangriff"** · Status: später (K11)
+- **RM-DR-112.1 · Was ist "Wolfsangriff"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: jede Tötung durch eine Wolfsrolle
   - Option B: nur Rudel-/Wolfsnachtangriff
   - Auswirkung: Balance: A macht ihn verwundbarer; Umsetzung: Ursachen-Attribut `wolf_source`
   - Empfehlung: A oder Liste
-- **RM-DR-112.2 · Was ist "Lynch"** · Status: später (K11)
+- **RM-DR-112.2 · Was ist "Lynch"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur die Hinrichtung selbst
   - Option B: alles, was aus einer Hinrichtung folgt
   - Auswirkung: Balance: gering; Umsetzung: Ursachen-Attribut execution vs. execution_side
   - Empfehlung: nur Hinrichtung (Code)
-- **RM-DR-112.3 · "alle Schutzfähigkeiten"** · Status: später (K11)
+- **RM-DR-112.3 · "alle Schutzfähigkeiten"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: wirklich alle Abfangregeln
   - Option B: nur Schutzrollen und Schilde
   - Auswirkung: Balance: gering; Umsetzung: gemeinsame Durchdringungsliste mit Seuchenwolf
   - Empfehlung: eine Liste für beide
-- **RM-DR-112.4 · Wer wählt wann** · Status: später (K11)
+- **RM-DR-112.4 · Wer wählt wann** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: eigener Rudelschritt in der Nacht
   - Option B: Pick bei Morgenauflösung
   - Auswirkung: Balance: kein, aber Ablauf/Ansage; Umsetzung: zweiter Rudel-Prompt in StepQueue
@@ -525,12 +525,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schwarze-witwe`; Wechselwirkung laut Dossier: Loki (Pflicht, liefert Paare), Zeitwächter (Reihenfolge), Ritter (Vergeltung bei `BLACK_WIDOW`), Rudelvater/Nekromant/Kartenschlucker/Hades/Schattenwanderer/Parasit (Schilde in `applyKill`), Besessener Wolf (siehe …
 - **Belege:** [Dossier](dossiers/wolves-b.md#schwarze-witwe); RM-C-019, RM-C-021 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004.
-- **RM-DR-113.1 · Loki "automatisch gewählt"** · Status: später (K6)
+- **RM-DR-113.1 · Loki "automatisch gewählt"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Loki wird beim Setup automatisch ins Rollenset gelegt
   - Option B: Loki ist Pflicht-Beirolle, SL muss sie wählen
   - Auswirkung: Balance: keine, solange Loki Pflicht ist; Umsetzung: Godot: `requires_roles` (`03:200`) als Validierung oder Auto-Ergänzung
   - Empfehlung: Pflichtpaar-Validierung behalten, Text auf "Benötigt Loki im Spiel" ändern
-- **RM-DR-113.2 · Zeitwächter-Einfrieren** · Status: später (K6)
+- **RM-DR-113.2 · Zeitwächter-Einfrieren** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36 (Option A: die Wahl der Witwe ist eine Nachtaktion und entfällt)
   - Option A: Witwen-Wahl ist Nachtaktion, wird eingefroren
   - Option B: Witwen-Tod ist Tagesereignis, bleibt
   - Auswirkung: Balance: mittel; Zeitwächter kontert Witwe nicht; Umsetzung: Reihenfolge in DAWN
@@ -544,22 +544,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `der-weise`; Wechselwirkung laut Dossier: Werwolf, Rachsüchtiger Wolf, Schicksalswolf, Seuchenwolf, Rudelvater (Durchschlag), Schutzengel/Schutzgeist (Stapelung), Albtraumwolf (Blockade entfernt Ziel), Märtyrerin, Verdammniswächter (umgeht Rettung), Waldhexe; …
 - **Belege:** [Dossier](dossiers/village-1.md#der-weise); RM-C-093, RM-C-094, RM-C-096, RM-C-097 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-010.
-- **RM-DR-114.1 · Wer verliert Fähigkeiten** · Status: später (K8)
+- **RM-DR-114.1 · Wer verliert Fähigkeiten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Dorf-Fraktion
   - Option B: alle Nicht-Wölfe
   - Auswirkung: Balance: Solos werden mitbestraft; Umsetzung: FactionQuery-Filter
   - Empfehlung: nur Dorf
-- **RM-DR-114.2 · Dauer "Nächte und Tage"** · Status: später (K8)
+- **RM-DR-114.2 · Dauer "Nächte und Tage"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Sperre gilt auch für Tagfähigkeiten
   - Option B: nur Nächte
   - Auswirkung: Balance: gering bis mittel; Umsetzung: Tagesaktionen brauchen Blockprüfung
   - Empfehlung: Nacht und Tag
-- **RM-DR-114.3 · Durchschlag** · Status: später (K8)
+- **RM-DR-114.3 · Durchschlag** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Durchschlag tötet
   - Option B: Rettung greift trotzdem
   - Auswirkung: Balance: gering; Umsetzung: Filter in Protections
   - Empfehlung: wie Code
-- **RM-DR-114.4 · Passive Fähigkeiten im Debuff** · Status: später (K8)
+- **RM-DR-114.4 · Passive Fähigkeiten im Debuff** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: auch passive (Nachtwächter, Kutscher)
   - Option B: nur aktive
   - Auswirkung: Balance: mittel; Umsetzung: Blockmarker in Reaktionen
@@ -573,17 +573,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `verdammniswaechter`; Wechselwirkung laut Dossier: Werwolf/Rudel (liefert Nachtopfer), Rachsüchtiger Wolf (Zusatzziel), Schutzengel/Dorfwache, Der Weise, Märtyrerin, Waldhexe, Voodoo-Priester, Nekromant, Kartenschlucker, Hades, Rudelvater, Ritter, …
 - **Belege:** [Dossier](dossiers/village-1.md#verdammniswaechter); RM-C-098, RM-C-099, RM-C-100 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-005, RM-DR-015.
-- **RM-DR-115.1 · "umgeht alle Schutzfähigkeiten"** · Status: später (K11)
+- **RM-DR-115.1 · "umgeht alle Schutzfähigkeiten"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: wirklich alle (auch Schilde, Schutzengel)
   - Option B: nur Schutz gegen das Nachtopfer
   - Auswirkung: Balance: mittel; Umsetzung: KillPipeline-Option `ignore_protections` + Auslösung auch bei geschütztem Opfer
   - Empfehlung: A (07-Vorschlag)
-- **RM-DR-115.2 · Todeszeitpunkt** · Status: später (K11)
+- **RM-DR-115.2 · Todeszeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: sofort
   - Option B: Morgen
   - Auswirkung: Balance: hoch (Hexe, spätere Rollen); Umsetzung: IMMEDIATE vs. Morgenkill
   - Empfehlung: Morgen (07)
-- **RM-DR-115.3 · Zufallskandidat** · Status: später (K11)
+- **RM-DR-115.3 · Zufallskandidat** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: jeder andere Lebende
   - Option B: nur Nicht-Wölfe
   - Auswirkung: Balance: Pool ohne Wölfe schützt das Rudel; Umsetzung: Rng-Menge
@@ -597,7 +597,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `wahnsinniger-kutscher`; Wechselwirkung laut Dossier: Loki (Kette), Sensenträger/Besessener Wolf (Folgereaktionen), Rudelvater/Nekromant/Kartenschlucker/Hades/Parasit (Schilde), Henker (`finalizeLynch`), Feuerteufel/Voodoo-Priester/Kopfgeldjäger (ausgelassene …
 - **Belege:** [Dossier](dossiers/village-1.md#wahnsinniger-kutscher); RM-C-103 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-003.
-- **RM-DR-116.1 · Nachbarbegriff** · Status: später (K3)
+- **RM-DR-116.1 · Nachbarbegriff** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: direkte Sitze (DE, Code)
   - Option B: nächste Lebende (EN, 07)
   - Auswirkung: Balance: B tötet spät im Spiel zuverlässiger zwei; Umsetzung: gleiche Sitznachbarschafts-Funktion wie Nachtwächter
@@ -611,17 +611,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `korrupter-richter`; Wechselwirkung laut Dossier: Manipulator, Spiegelwolf, Nominations-Limit, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise (Blockaden), Hades (Stimme x3) und Blutwolf nur konzeptionell (weitere …
 - **Belege:** [Dossier](dossiers/village-2.md#korrupter-richter); RM-C-105, RM-C-106, RM-C-107 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-008, RM-DR-012.
-- **RM-DR-117.1 · +1 Stimme** · Status: später (K14)
+- **RM-DR-117.1 · +1 Stimme** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: SL-Hinweis "zählt +1 Stimme" am nominierten Sitz
   - Option B: Rolle verliert "+1 Stimme", Text anpassen
   - Auswirkung: Balance: ohne Hinweis wirkungslos, Rolle nahezu leer; Umsetzung: A: nur Anzeige in Nomination-Ansicht; B: nur Text
   - Empfehlung: A (Hinweis + Protokoll)
-- **RM-DR-117.2 · Wer ist Nominierender?** · Status: später (K14)
+- **RM-DR-117.2 · Wer ist Nominierender?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Richter ist Nominierender (Spiegelwolf trifft Richter)
   - Option B: anonyme System-Nominierung (Spiegelwolf ohne Ziel)
   - Auswirkung: Balance: Spiegelwolf-Gefahr für Richter; Umsetzung: Nominations braucht Quelle `system`/`role`
   - Empfehlung: PO klärt
-- **RM-DR-117.3 · Zählt gegen "einmal nominiert werden"?** · Status: später (K14)
+- **RM-DR-117.3 · Zählt gegen "einmal nominiert werden"?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: zählt
   - Option B: zählt nicht
   - Auswirkung: Balance: Richter kann reguläre Nominierung blockieren; Umsetzung: Nominations-Regeloption
@@ -635,17 +635,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `maertyrerin`; Wechselwirkung laut Dossier: Werwolf/Rudel, Rudelvater (Extraopfer), Schicksalswolf, Dorfwache, Voodoo-Priester, Zeitwächter, Der Weise, Dorfschmied, Albtraumwolf, Nekromant (Schild), …
 - **Belege:** [Dossier](dossiers/village-2.md#maertyrerin); RM-C-108, RM-C-109, RM-C-111 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-004.
-- **RM-DR-118.1 · Rettung vs. Zeitpunkt** · Status: später (K5)
+- **RM-DR-118.1 · Rettung vs. Zeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Ersatzopfer für ein Nachtopfer (Code)
   - Option B: Opfer ohne garantierte Rettung (EN wörtlich)
   - Auswirkung: Balance: B macht die Rolle fast nutzlos; Umsetzung: A: Abfangregel in Morgenauflösung
   - Empfehlung: A, EN-Text angleichen
-- **RM-DR-118.2 · Welches Opfer bei mehreren** · Status: später (K5)
+- **RM-DR-118.2 · Welches Opfer bei mehreren** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: SL/Märtyrerin wählt eines
   - Option B: nur Rudelopfer
   - Auswirkung: Balance: Rudelvater-/Schicksalswolf-Nächte; Umsetzung: Auswahlprompt statt fester Index
   - Empfehlung: Auswahl unter Todeskandidaten
-- **RM-DR-118.3 · Blockaden** · Status: später (K5)
+- **RM-DR-118.3 · Blockaden** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Reaktion ist blockierbar
   - Option B: nicht blockierbar
   - Auswirkung: Balance: gering; Umsetzung: Blockadeprüfung in Reaktion
@@ -659,12 +659,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `dorfwache`; Wechselwirkung laut Dossier: Werwolf/Rudel, Seuchenwolf, Rudelvater, Giftwolf, Schicksalswolf, Rachsüchtiger Wolf, Schutzengel, Märtyrerin, Seelentauscher (Rollenwechsel in der …
 - **Belege:** [Dossier](dossiers/village-2.md#dorfwache); RM-C-112, RM-C-113 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-005.
-- **RM-DR-119.1 · Giftwolf** · Status: später (K5)
+- **RM-DR-119.1 · Giftwolf** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Querschnitt 27.09.2026 (Querschnittsregel, beim Audit 28.09.2026 zugeordnet)
   - Option A: Giftwolf ist Werwolf → immun
   - Option B: nur Rudelangriff zählt
   - Auswirkung: Balance: Giftwolf-Ladung auf Dorfwache verschwendet oder tödlich; Umsetzung: Filter `is_wolf_attack` muss Giftwolf einordnen
   - Empfehlung: PO
-- **RM-DR-119.2 · Seuchenwolf/Rudelvater** · Status: später (K5)
+- **RM-DR-119.2 · Seuchenwolf/Rudelvater** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Querschnitt 27.09.2026 (Querschnittsregel, beim Audit 28.09.2026 zugeordnet)
   - Option A: Immunität ist "Schutz" → wird durchdrungen
   - Option B: Immunität ist Rolleneigenschaft → hält
   - Auswirkung: Balance: selten, aber spielentscheidend; Umsetzung: Kennzeichnung "ignoriert Immunität"
@@ -678,22 +678,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `pestbringerin`; Wechselwirkung laut Dossier: Zeitwächter (friert Ausbreitung ein), Kutscher/Frankenstein (Wiederbelebung löscht Marker), Rotkäppchen (zweiter Einsatz pro Nacht), Die Ewigen, Wolfsparität (konkurrierender …
 - **Belege:** [Dossier](dossiers/solos-a.md#pestbringerin); RM-C-044, RM-C-045, RM-C-046, RM-C-047 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-015.
-- **RM-DR-120.1 · Tödlichkeit** · Status: später (K9)
+- **RM-DR-120.1 · Tödlichkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Code: Marker ohne Tod, Sieg bei Totalinfektion
   - Option B: Text: Seuche tötet (Zeitpunkt offen)
   - Auswirkung: Balance: A ist ein Siegrennen, B eine Tötungsrolle; Umsetzung: A einfach; B braucht verzögerte Tode
   - Empfehlung: A (07-Vorschlag), Text anpassen
-- **RM-DR-120.2 · Häufigkeit** · Status: später (K9)
+- **RM-DR-120.2 · Häufigkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Code
   - Option B: Text (jede Nacht neu)
   - Auswirkung: Balance: B beschleunigt Sieg stark; Umsetzung: Zähler
   - Empfehlung: Code
-- **RM-DR-120.3 · Siegbedingung** · Status: später (K9)
+- **RM-DR-120.3 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: nur lebend
   - Option B: auch tot
   - Auswirkung: Balance: B erlaubt „posthumen" Sieg; Umsetzung: Kandidat nur bei lebender Pestbringerin
   - Empfehlung: lebend verlangen
-- **RM-DR-120.4 · Ausbreitung** · Status: später (K9)
+- **RM-DR-120.4 · Ausbreitung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: direkte Sitze
   - Option B: nächste lebende Nachbarn
   - Auswirkung: Balance: Tote Nachbarn bremsen A; Umsetzung: Sitznachbarschaft + SeededRng
@@ -707,17 +707,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `prophet-des-untergangs`; Wechselwirkung laut Dossier: alle Tötungsrollen (Freischaltung), Kutscher/Frankenstein (Wiederbelebung), Lehrling/Seelentauscher (Erbe des globalen Zustands), Rotkäppchen (zwei Tötungen), Schilde (Nekromant, Hades, Kartenschlucker, Rudelvater), Die …
 - **Belege:** [Dossier](dossiers/solos-a.md#prophet-des-untergangs); RM-C-048, RM-C-049, RM-C-050 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-006, RM-DR-007, RM-DR-014.
-- **RM-DR-121.1 · Einzelsieg** · Status: später (K9)
+- **RM-DR-121.1 · Einzelsieg** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Sieg als letzter Überlebender (bzw. letzte Nicht-Prophet-Person tot)
   - Option B: Sieg, sobald freigeschaltet und X weitere Tote
   - Auswirkung: Balance: Ohne Regel ist die Rolle faktisch Dorf-Hilfe; Umsetzung: neue Siegbedingung
   - Empfehlung: PO definieren (07 Q4 B: SL-Siegbutton bis dahin)
-- **RM-DR-121.2 · Freischaltung dauerhaft** · Status: später (K9)
+- **RM-DR-121.2 · Freischaltung dauerhaft** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: dauerhaft
   - Option B: solange alle tot
   - Auswirkung: Balance: selten; Umsetzung: Status speichern
   - Empfehlung: dauerhaft
-- **RM-DR-121.3 · Selbstmarkierung** · Status: später (K9)
+- **RM-DR-121.3 · Selbstmarkierung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: nur andere
   - Option B: beliebig
   - Auswirkung: Balance: Selbstmarkierung macht Freischaltung unmöglich; Umsetzung: Filter
@@ -731,17 +731,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `daemonischer-wolf`; Wechselwirkung laut Dossier: Orakel, Blutpriester, Waldläufer, Doktor, Detektiv, Kopfgeldjäger, Ritter, Dorfschmied, Traumdeuter (alle `isWolf`-Leser); Seelentauscher und Wächter am Tor (löschen Fluch); Nekromant …
 - **Belege:** [Dossier](dossiers/wolves-b.md#daemonischer-wolf); RM-C-022, RM-C-023, RM-C-024 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-009.
-- **RM-DR-122.1 · Auslöser** · Status: später (K12)
+- **RM-DR-122.1 · Auslöser** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Die Opfer des Rudels werden verflucht (dann sind sie aber tot)
   - Option B: Beim eigenen Tod verflucht er ein Opfer seiner Wahl
   - Auswirkung: Balance: hoch: laufender Fluch vs. einmaliger Todesfluch; Umsetzung: Nachtschritt vs. Todesreaktion
   - Empfehlung: Todesreaktion (Code) übernehmen, Text präzisieren
-- **RM-DR-122.2 · Wirkung des Fluchs** · Status: später (K12)
+- **RM-DR-122.2 · Wirkung des Fluchs** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: nur `appears_as` (Informationsrollen)
   - Option B: echter Fraktionswechsel für Parität
   - Auswirkung: Balance: sehr hoch: Dorf kann ohne echten Wolf nicht gewinnen; Umsetzung: Godot `appears_as` vs. `counts_as_wolf`
   - Empfehlung: nur `appears_as`
-- **RM-DR-122.3 · Todespfade** · Status: später (K12)
+- **RM-DR-122.3 · Todespfade** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: jeder Tod löst Fluch aus
   - Option B: nur Wolfsangriff und Lynch
   - Auswirkung: Balance: mittel; Umsetzung: Reaktion an KillPipeline für alle Ursachen
@@ -755,17 +755,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schattenhund`; Wechselwirkung laut Dossier: alle Dorf-Nachtrollen; Wolfskind und Lehrling (Begründung der Nacht-1-Sperre); Albtraumwolf, Zeitwächter, Der Weise (gleiche …
 - **Belege:** [Dossier](dossiers/wolves-b.md#schattenhund); RM-C-025, RM-C-026, RM-C-027 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-010, RM-DR-014.
-- **RM-DR-123.1 · Betroffene Rollen** · Status: später (K8)
+- **RM-DR-123.1 · Betroffene Rollen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Fraktion Dorf
   - Option B: alle Nicht-Wölfe
   - Auswirkung: Balance: mittel: Solos werden mitblockiert; Umsetzung: Filter über Fraktion statt "nicht Wolf"
   - Empfehlung: nur Dorf
-- **RM-DR-123.2 · Nacht 1** · Status: später (K8)
+- **RM-DR-123.2 · Nacht 1** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: Einsatz ab Nacht 1
   - Option B: ab Nacht 2
   - Auswirkung: Balance: gering; Umsetzung: Verfügbarkeitsbedingung des Schritts
   - Empfehlung: ab Nacht 2, Text ergänzen
-- **RM-DR-123.3 · Nicht-Nachtschritt-Effekte** · Status: später (K8)
+- **RM-DR-123.3 · Nicht-Nachtschritt-Effekte** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Nachtschritte
   - Option B: auch Reaktionen/passive Effekte dieser Nacht
   - Auswirkung: Balance: mittel; Umsetzung: Blockade als Schritt-Status oder als globale Regel
@@ -779,7 +779,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `besessener-wolf`; Wechselwirkung laut Dossier: Loki (Liebeskummer-Pfad), Schwarze Witwe und Giftwolf (Morgen-Tode), Dämonischer Wolf (Reihenfolge), Rudelvater, Nekromant, Kartenschlucker, Hades, Schattenwanderer, Parasit …
 - **Belege:** [Dossier](dossiers/wolves-b.md#besessener-wolf); RM-C-028 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-004, RM-DR-009.
-- **RM-DR-124.1 · Schwelle "≥5 Spieler"** · Status: später (K4)
+- **RM-DR-124.1 · Schwelle "≥5 Spieler"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026
   - Option A: 5 Lebende inkl. ihm im Todesmoment
   - Option B: 5 Spieler bei Spielbeginn
   - Auswirkung: Balance: mittel im Endspiel; Umsetzung: Prüfzeitpunkt (Tod vs. Abarbeitung)
@@ -793,17 +793,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `fenrir`; Wechselwirkung laut Dossier: Ritter, Henker (LynchCount), Feuerteufel (Brand), Lehrling/Seelentauscher/Frankenstein (Rollenerwerb mit alter Stufe), alle …
 - **Belege:** [Dossier](dossiers/wolves-b.md#fenrir); RM-C-029, RM-C-030, RM-C-031 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-011.
-- **RM-DR-125.1 · Umfang des Überlebens** · Status: später (K4)
+- **RM-DR-125.1 · Umfang des Überlebens** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: jede Todesursache, einmal
   - Option B: nur Hinrichtung
   - Auswirkung: Balance: hoch: Nachtangriffe kann Wolf-Team nicht wählen, aber Witwe/Hexe/Hades sehr wohl; Umsetzung: Abfangregel in KillPipeline vs. ExecutionRules
   - Empfehlung: jede Ursache (Text)
-- **RM-DR-125.2 · Zählung** · Status: später (K4)
+- **RM-DR-125.2 · Zählung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: +1 am Morgen nach überlebter Nacht
   - Option B: +1 bei Nachtbeginn
   - Auswirkung: Balance: gering (eine Nacht früher Stufe 3); Umsetzung: Zeitpunkt DAWN vs. NIGHT_START
   - Empfehlung: +1 am Morgen, wenn Fenrir lebt
-- **RM-DR-125.3 · Ritter** · Status: später (K4)
+- **RM-DR-125.3 · Ritter** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Teil von "jeder Tod" (einmal)
   - Option B: Sonderimmunität
   - Auswirkung: Balance: mittel; Umsetzung: Ritter-Zielauswahl
@@ -817,12 +817,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `kutscher`; Wechselwirkung laut Dossier: Wächter am Tor, Werwolf/Rudel, alle Rollen im Pool, Totenkarten (4 revive-Karten), Prophet des Untergangs (Ziele), Schicksalswolf (`FirstThreeDeadIds`), Seelentauscher/Lehrling …
 - **Belege:** [Dossier](dossiers/village-2.md#kutscher); RM-C-114, RM-C-115, RM-C-117 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-011, RM-DR-013, RM-DR-015.
-- **RM-DR-126.1 · Rollen der Wiederbelebten** · Status: später (K13)
+- **RM-DR-126.1 · Rollen der Wiederbelebten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: echte Wiederbelebung, alte Rolle bleibt (außer Wolf)
   - Option B: "Nachbardorf" bringt neue Personen mit neuen Rollen (Code, Dialogtext)
   - Auswirkung: Balance: neue Solo-Rollen mitten im Spiel können Sieglage kippen; Umsetzung: Rollenpool, Fraktionszuordnung, Siegbedingungen neuer Solos
   - Empfehlung: PO; wenn Code: Pool auf Dorfrollen des Akts begrenzen
-- **RM-DR-126.2 · Wer wählt die Toten** · Status: später (K13)
+- **RM-DR-126.2 · Wer wählt die Toten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: Kutscher/SL wählt
   - Option B: Zufall (SeededRng)
   - Auswirkung: Balance: Wahl macht Rolle stärker; Umsetzung: Prompt vs. RNG
@@ -841,17 +841,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `seelentauscher`; Wechselwirkung laut Dossier: alle Rollen (tauschbar), insbesondere Wolfsrollen, Wächter am Tor, Wolfskind/Lehrling (Bindungen), Loki/Rotkäppchen/Parasit (Sitz-Bindungen), Dorfwache/Märtyrerin (Rollenprüfung am Morgen), Kutscher/Blutpriester …
 - **Belege:** [Dossier](dossiers/village-2.md#seelentauscher); RM-C-119, RM-C-120, RM-C-121 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-014.
-- **RM-DR-127.1 · Was wandert mit** · Status: später (K12)
+- **RM-DR-127.1 · Was wandert mit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Rolle inkl. Rollenzustand (Verbrauch, Bindungen) wandert
   - Option B: nur Rollenname, Zustand bleibt
   - Auswirkung: Balance: Tausch von verbrauchten Rollen; Umsetzung: RoleTransition-Schnappschuss definiert
   - Empfehlung: PO
-- **RM-DR-127.2 · Toter erhält Wolfsrolle** · Status: später (K12)
+- **RM-DR-127.2 · Toter erhält Wolfsrolle** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: erlaubt
   - Option B: Wächter-Prüfung auch für Tote
   - Auswirkung: Balance: gering (tot), relevant bei Wiederbelebung; Umsetzung: Wächter-Regel auf alle Rollenwechsel
   - Empfehlung: Wächter-Prüfung auch bei Wiederbelebung
-- **RM-DR-127.3 · Information der Betroffenen** · Status: später (K12)
+- **RM-DR-127.3 · Information der Betroffenen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Verwandlungsrollen 28.09.2026
   - Option A: Betroffene erfahren neue Rolle
   - Option B: geheim
   - Auswirkung: Balance: hoch (Spieler kennt eigene Rolle nicht); Umsetzung: InfoRecord an Betroffene
@@ -865,12 +865,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `blutpriester`; Wechselwirkung laut Dossier: Rudelvater, Nekromant, Hades, Kartenschlucker, Parasit, Schattenwanderer (Todesabfang), Dämonischer Wolf (`cursedWolfAura` zählt als Wolf), Doppelspion (nicht Wolf), Sensenträger (Reaktion auf Opfer), Seelentauscher …
 - **Belege:** [Dossier](dossiers/village-2.md#blutpriester); RM-C-122, RM-C-123 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-014, RM-DR-015.
-- **RM-DR-128.1 · Anzahl 0–3** · Status: später (K7)
+- **RM-DR-128.1 · Anzahl 0–3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: SL entscheidet
   - Option B: Anzahl aus Regel (z. B. Zufall oder Rolle des Opfers)
   - Auswirkung: Balance: SL-Willkür vs. Planbarkeit; Umsetzung: Prompt vs. RNG
   - Empfehlung: PO; Legacy (SL wählt) beibehalten ist einfach
-- **RM-DR-128.2 · Wer sieht das Ergebnis** · Status: später (K7)
+- **RM-DR-128.2 · Wer sieht das Ergebnis** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: öffentlich (aufdecken)
   - Option B: nur Blutpriester
   - Auswirkung: Balance: groß (öffentliche Wolfsnennung); Umsetzung: Ereignis-Sichtbarkeit public vs. actor
@@ -884,17 +884,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `traumdeuter`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (Fluch), Trugbilderwolf (Erscheinung), Doppelspion, Albtraumwolf/Schattenhund/Zeitwächter/Der Weise …
 - **Belege:** [Dossier](dossiers/village-2.md#traumdeuter); RM-C-125, RM-C-126, RM-C-127 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-129.1 · Inhalt der Vision** · Status: später (K7)
+- **RM-DR-129.1 · Inhalt der Vision** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Code übernehmen, Text präzisieren
   - Option B: eigene Mechanik (Rollen/Zustände)
   - Auswirkung: Balance: Code: starke Info jede Nacht; Umsetzung: A: kleiner Aufwand; B: neue Spezifikation
   - Empfehlung: A mit Textanpassung
-- **RM-DR-129.2 · Selbst in der Vision** · Status: später (K7)
+- **RM-DR-129.2 · Selbst in der Vision** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: ausschließen
   - Option B: erlaubt
   - Auswirkung: Balance: Selbstnennung ist verschwendete Info; Umsetzung: Filter
   - Empfehlung: ausschließen
-- **RM-DR-129.3 · Verfluchte als Wolf** · Status: später (K7)
+- **RM-DR-129.3 · Verfluchte als Wolf** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Erscheinung zählt (Fehlinformation)
   - Option B: nur echte Wölfe
   - Auswirkung: Balance: beeinflusst Dämonischen Wolf; Umsetzung: InformationRules.determine
@@ -907,17 +907,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Status des Eintrags:** später (ab Charge K4).
 - **Betroffene Rollen:** `henker`; Wechselwirkung laut Dossier: alle Lynch-Sonderzweige (Wahnsinniger Kutscher, Voodoo, Der Weise, Selbstmörder, Spiegelwolf, Dämonischer Wolf, Fenrir, Cerberus, Rudelvater), Rudelvater/Nekromant/Hades/Kartenschlucker/Parasit …
 - **Belege:** [Dossier](dossiers/village-2.md#henker); RM-C-129, RM-C-130, RM-C-131 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
-- **RM-DR-130.1 · Blockierter Lynch (Fenrir/Cerberus)** · Status: später (K4)
+- **RM-DR-130.1 · Blockierter Lynch (Fenrir/Cerberus)** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: blockierter Lynch zählt als Lynch
   - Option B: zählt nicht (kein Tod)
   - Auswirkung: Balance: beeinflusst Aktivierung und Markierten; Umsetzung: ExecutionRules-Ergebnis "verhindert"
   - Empfehlung: PO bestätigen, 07 geht von A aus
-- **RM-DR-130.2 · Zählbasis** · Status: später (K4)
+- **RM-DR-130.2 · Zählbasis** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Vorgänge
   - Option B: nur Lynch-Tote
   - Auswirkung: Balance: Spiegelwolf/Voodoo-Tage; Umsetzung: Zähler-Definition
   - Empfehlung: Vorgänge, i18n anpassen
-- **RM-DR-130.3 · Henker tot** · Status: später (K4)
+- **RM-DR-130.3 · Henker tot** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: wirkt weiter
   - Option B: verfällt mit Henker
   - Auswirkung: Balance: gering; Umsetzung: Bindung Markierung↔Henker
@@ -931,31 +931,49 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `feuerteufel`; Wechselwirkung laut Dossier: Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Albtraumwolf (Blockade), Der Weise, Dorfschmied, Nekromant, Waldhexe, Märtyrerin, Voodoo-Priester, Dorfwache (Überleben/Entfernen aus Zielen), …
 - **Belege:** [Dossier](dossiers/solos-a.md#feuerteufel); RM-C-051, RM-C-052, RM-C-053, RM-C-054, RM-C-055 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-003, RM-DR-006, RM-DR-007, RM-DR-009.
-- **RM-DR-131.1 · Auslöser** · Status: später (K9)
+- **RM-DR-131.1 · Auslöser** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: jeder tatsächliche Tod, jede Ursache
   - Option B: nur Wolfsangriff und Hinrichtung, aber nur bei Tod
   - Auswirkung: Balance: A stärker; Umsetzung: Todesreaktion in KillPipeline
   - Empfehlung: A oder B, jeweils nur bei Tod
-- **RM-DR-131.2 · Dauer der Markierung** · Status: später (K9)
+- **RM-DR-131.2 · Dauer der Markierung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: bis Ziel stirbt
   - Option B: nur diese Nacht
   - Auswirkung: Balance: A viel stärker; Umsetzung: Statusmarker mit Ablauf
   - Empfehlung: PO
-- **RM-DR-131.3 · Nachbarn** · Status: später (K9)
+- **RM-DR-131.3 · Nachbarn** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026 (RM-DR-003, nächste lebende Nachbarn)
   - Option A: direkte Sitze
   - Option B: nächste Lebende
   - Auswirkung: Balance: B tötet immer 2; Umsetzung: Sitznachbarschaft
   - Empfehlung: analog Wahnsinniger Kutscher
-- **RM-DR-131.4 · Feuerteufel als Nachbar** · Status: später (K9)
+- **RM-DR-131.4 · Feuerteufel als Nachbar** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: immer verschont
   - Option B: nie verschont
   - Auswirkung: Balance: –; Umsetzung: Filter
   - Empfehlung: einheitlich
-- **RM-DR-131.5 · Siegbedingung** · Status: später (K9)
+- **RM-DR-131.5 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
   - Option A: Einzelsieg definieren
   - Option B: Fraktion ändern (Dorf-Chaos-Rolle)
   - Auswirkung: Balance: –; Umsetzung: WinRules
   - Empfehlung: PO
+- **RM-DR-131.6 · Wahl je Nacht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
+  - Option A: neu wählen oder behalten, nie sich selbst
+  - Option B: jede Nacht Pflicht zur Neuwahl
+  - Option C: wie A, Selbstwahl erlaubt
+  - Auswirkung: Balance: C erlaubt gezielten Selbstbrand; Umsetzung: Nachtschritt mit optionaler Wahl
+  - Empfehlung: A
+- **RM-DR-131.7 · Markierung nach Tod oder Rollenverlust** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
+  - Option A: erlischt sofort
+  - Option B: bleibt bis zum Tod des Ziels
+  - Option C: bleibt nach Tod, erlischt bei Rollenverlust
+  - Auswirkung: Balance: B erlaubt Brand nach dem Tod; Umsetzung: Markierung an Person und Rolle
+  - Empfehlung: A
+- **RM-DR-131.8 · Mehrere Feuerteufel, gleiches Ziel** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 2 28.09.2026
+  - Option A: ein Brand, alle Markierungen verbraucht
+  - Option B: ein Brand je Markierung
+  - Option C: Doppelmarkierung verboten
+  - Auswirkung: Balance: B bis zu vier Tote; Umsetzung: Markierungsliste je Feuerteufel
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** (1) Brand bei jedem Tod des Ziels oder nur Nacht/Hinrichtung? (2) Wie lange gilt die Markierung? (3) Direkte oder lebende Nachbarn? (4) Stirbt der Feuerteufel, wenn er Nachbar ist? (5) Welche Siegbedingung, oder gehört die Rolle nicht zur Einzelsiegfraktion? (6) Kettenbrand, wenn ein verbrannter Nachbar selbst markiert ist?
 - **Charge:** K9. **In Option (nicht freigegeben):** keiner.
 
@@ -965,26 +983,52 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `voodoo-priester`; Wechselwirkung laut Dossier: Wolfsrudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater (Nachtziele), Waldhexe (Gift), Märtyrerin, Der Weise, Dorfschmied, Nekromant (Reihenfolge der Abfangregeln), Rattenfänger (Verzauberung), Feuerteufel (Brand …
 - **Belege:** [Dossier](dossiers/solos-a.md#voodoo-priester); RM-C-056, RM-C-057, RM-C-058, RM-C-059 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-006, RM-DR-007.
-- **RM-DR-132.1 · Ursachen der Umlenkung** · Status: später (K10)
+- **RM-DR-132.1 · Ursachen der Umlenkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: jede Todesursache
   - Option B: nur Angriffe (Wolf, Hinrichtung, Gift)
   - Auswirkung: Balance: A macht ihn sehr robust; Umsetzung: Umlenkungsregel mit Ursachenfilter in KillPipeline
   - Empfehlung: PO
-- **RM-DR-132.2 · Abklingzeit** · Status: später (K10)
+- **RM-DR-132.2 · Abklingzeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: Code übernehmen, Text ergänzen
   - Option B: keine Abklingzeit
   - Auswirkung: Balance: ohne Abklingzeit endloser Schutz; Umsetzung: Zähler
   - Empfehlung: Code
-- **RM-DR-132.3 · Verzauberung löschen** · Status: quellenprüfung; ob die Legacy-Wechselwirkung beabsichtigt ist, ist aus Quellen nicht belegbar
+- **RM-DR-132.3 · Verzauberung löschen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026 (E-01, wie RM-DR-103.2: Puppe hebt nichts auf)
   - Option A: Altlast
   - Option B: gewollt
   - Auswirkung: Balance: Rattenfänger-Konter; Umsetzung: –
   - Empfehlung: streichen
-- **RM-DR-132.4 · Siegbedingung** · Status: später (K10)
+- **RM-DR-132.4 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: Einzelsieg definieren
   - Option B: Fraktion ändern
   - Auswirkung: Balance: –; Umsetzung: WinRules
   - Empfehlung: PO
+- **RM-DR-132.5 · Vergabe der Puppe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: andere lebende Person, geheim
+  - Option B: andere lebende Person, die Puppe erfährt es privat
+  - Option C: auch sich selbst, geheim
+  - Auswirkung: Balance: B gibt der Puppe Wissen über den Priester; Umsetzung: Zielfilter, Sichtbarkeit
+  - Empfehlung: A
+- **RM-DR-132.6 · Umlenkungsketten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: jede Person höchstens einmal je Kette
+  - Option B: nur ein Schritt
+  - Option C: mechanisch weiter bis zum Ursprung
+  - Empfehlung: A
+- **RM-DR-132.7 · Vergabe Pflicht oder freiwillig** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: freiwillig
+  - Option B: Pflicht
+  - Option C: Pflicht nur Nacht 1
+  - Empfehlung: A
+- **RM-DR-132.8 · Rollenverlust des Priesters** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: Puppe endet
+  - Option B: geht an den neuen Priester
+  - Option C: bleibt beim alten Priester
+  - Empfehlung: A
+- **RM-DR-132.9 · Vorrang zweier Umlenkungen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: Puppe zuerst
+  - Option B: Verknüpfung des Schattenwanderers zuerst
+  - Option C: Spielleiter wählt
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** (1) Welche Todesursachen lenkt die Puppe um? (2) Abklingzeit übernehmen, wie lang, auch nach normalem Tod der Puppe? (3) Darf der Priester sich selbst die Puppe geben? (4) Verliert der Puppenträger Verzauberung? (5) Weiß der Puppenträger von der Puppe? (6) Siegbedingung oder Fraktionswechsel? (7) Umlenkung vor oder nach Märtyrerin/Der Weise/Schmied?
 - **Charge:** K10. **In Option (nicht freigegeben):** keiner.
 
@@ -994,7 +1038,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `blutwolf`; Wechselwirkung laut Dossier: alle Tötungen neben dem Blutwolf; indirekt Korrupter Richter und Hades (gleiche …
 - **Belege:** [Dossier](dossiers/wolves-b.md#blutwolf). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-003, RM-DR-008.
-- **RM-DR-133.1 · Umsetzung ohne Stimmsystem** · Status: später (K14)
+- **RM-DR-133.1 · Umsetzung ohne Stimmsystem** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Gewicht als Hinweis für die physische Zählung anzeigen (Legacy-Marker „V<n>“)
   - Option B: Rolle bis zu einem Stimmsystem zurückstellen
   - Auswirkung: Balance: –; Umsetzung: A: Sitznachbarschaft (RM-DR-003) und Anzeige
@@ -1008,17 +1052,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `albtraumwolf`; Wechselwirkung laut Dossier: alle Nicht-Wolf-Nachtrollen mit tier > 2.1; Schattenhund/Zeitwächter/Der Weise (gleiche Blockadefamilie); Dämonischer Wolf (Verfluchte nicht wählbar); Rudel …
 - **Belege:** [Dossier](dossiers/wolves-b.md#albtraumwolf); RM-C-033, RM-C-034, RM-C-036 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-010.
-- **RM-DR-134.1 · Ziele** · Status: später (K8)
+- **RM-DR-134.1 · Ziele** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur Fraktion Dorf
   - Option B: alle Nicht-Wölfe
   - Auswirkung: Balance: mittel; Umsetzung: Zielfilter
   - Empfehlung: alle Nicht-Wölfe (Solos sind Gegner der Wölfe), Text anpassen
-- **RM-DR-134.2 · Umfang** · Status: später (K8)
+- **RM-DR-134.2 · Umfang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: nur die gewählte Person
   - Option B: alle Personen der Rolle
   - Auswirkung: Balance: mittel bei Mehrfachrollen; Umsetzung: Blockade pro Person vs. pro Rolle
   - Empfehlung: nur die Person
-- **RM-DR-134.3 · Späte Wirkung** · Status: später (K8)
+- **RM-DR-134.3 · Späte Wirkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wolfsrollen 28.09.2026
   - Option A: Albtraumwolf handelt vor Dorfrollen
   - Option B: Blockade nur für spätere Schritte
   - Auswirkung: Balance: mittel: Schutzengel nie blockierbar; Umsetzung: Nachtreihenfolge
@@ -1031,12 +1075,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Status des Eintrags:** später (ab Charge K4).
 - **Betroffene Rollen:** `cerberus`; Wechselwirkung laut Dossier: Waldhexe (Trank), Henker (LynchCount), Feuerteufel (Brand beim Lynch), Kopfgeldjäger (Lynch eines Wolfs), Spiegelwolf/Voodoo/Der Weise (Reihenfolge der Lynch-Sonderzweige …
 - **Belege:** [Dossier](dossiers/wolves-b.md#cerberus); RM-C-037, RM-C-038 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
-- **RM-DR-135.1 · Wahl oder Automatik** · Status: später (K4)
+- **RM-DR-135.1 · Wahl oder Automatik** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Cerberus entscheidet (Prompt)
   - Option B: automatisch
   - Auswirkung: Balance: mittel: Wahl erlaubt Bluff/Aufsparen; Umsetzung: Prompt in ExecutionRules
   - Empfehlung: Prompt an SL "Cerberus wehrt ab?"
-- **RM-DR-135.2 · Hexengift** · Status: später (K4)
+- **RM-DR-135.2 · Hexengift** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: nur Lynch
   - Option B: jede Hinrichtung/gezielte Tötung
   - Auswirkung: Balance: mittel; Umsetzung: zusätzliche Abfangregel
@@ -1050,17 +1094,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `ritter`; Wechselwirkung laut Dossier: Dämonischer Wolf (Verfluchte), Fenrir, Rudelvater (Ersttod-Rettung, PACKFATHER_KILL), Schattenwanderer (Umlenkung), Zeitwächter, Waldhexe, Hades, Schwarze Witwe, Giftwolf, Feuerteufel, Kartenschlucker, Nekromant-Schild, …
 - **Belege:** [Dossier](dossiers/village-3.md#ritter); RM-C-132, RM-C-133, RM-C-134 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003, RM-DR-004, RM-DR-009.
-- **RM-DR-136.1 · Welche Nachttode lösen aus** · Status: später (K3)
+- **RM-DR-136.1 · Welche Nachttode lösen aus** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026
   - Option A: jeder Tod in der Nacht löst aus
   - Option B: nur Tode durch feindliche Nachtangriffe (Liste, ggf. erweitert um PACKFATHER_KILL)
   - Auswirkung: Balance: A stärkt das Dorf deutlich (auch Kettentode schlagen zurück); Umsetzung: Ursachen-Attribut `triggers_knight` in beiden Fällen nötig, nur Belegung unterscheidet sich
   - Empfehlung: B mit Ergänzung PACKFATHER_KILL und VOODOO_PUPPET, Text präzisieren
-- **RM-DR-136.2 · Verfluchter Dorfbewohner als Ziel** · Status: später (K3)
+- **RM-DR-136.2 · Verfluchter Dorfbewohner als Ziel** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026 (Querschnittsregel, beim Audit 28.09.2026 zugeordnet)
   - Option A: nur echte Wölfe
   - Option B: alles, was als Wolf zählt
   - Auswirkung: Balance: A schützt Verfluchte; Umsetzung: Ziel über `counts_as_wolf` statt `appears_as`
   - Empfehlung: hängt an Q1 Dämonischer Wolf; bei "nur Erscheinung" nur echte Wölfe
-- **RM-DR-136.3 · Fenrir ab Stufe 3** · Status: später (K3)
+- **RM-DR-136.3 · Fenrir ab Stufe 3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: Fenrir-Immunität gilt auch gegen Ritter
   - Option B: Ritter trifft Fenrir normal
   - Auswirkung: Balance: gering; Umsetzung: Sonderregel im Zielfinder
@@ -1074,27 +1118,27 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `rotkaeppchen`; Wechselwirkung laut Dossier: alle Rollen mit Nachtfähigkeit (Apfel), König/Frankenstein/Dorfschmied/Pestbringerin/Prophet (`APPLE_RESET_FLAGS`), Seelentauscher, Parasit, Kartenschlucker/Hades/Nekromant (Schilde), Ritter (Kettentod löst keine …
 - **Belege:** [Dossier](dossiers/village-3.md#rotkaeppchen); RM-C-135, RM-C-136, RM-C-137, RM-C-138, RM-C-139 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-009, RM-DR-011.
-- **RM-DR-137.1 · Wölfe als Zuflucht** · Status: später (K10)
+- **RM-DR-137.1 · Wölfe als Zuflucht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: jede andere lebende Person
   - Option B: nur Nicht-Wölfe
   - Auswirkung: Balance: A erlaubt Wolf-Apfel (Doppelkill?) und Wolf-Kette; Umsetzung: Zielfilter
   - Empfehlung: B (Code), Text ergänzen
-- **RM-DR-137.2 · Apfel-Wirkung** · Status: später (K10)
+- **RM-DR-137.2 · Apfel-Wirkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: jede nächste Fähigkeit (auch Info) zweimal
   - Option B: nur Zielwahl-Fähigkeiten, sonst verfällt der Apfel
   - Auswirkung: Balance: A wertet Info-Rollen stark auf; Umsetzung: "repeat step" in StepQueue plus Verfall-Regel
   - Empfehlung: eigene Regel: Apfel verfällt nach der nächsten eigenen Nachtaktion, Info-Rollen erhalten die Info zweimal oder gar nicht (entscheiden)
-- **RM-DR-137.3 · Dauer der Kette** · Status: später (K10)
+- **RM-DR-137.3 · Dauer der Kette** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: nur diese Nacht
   - Option B: bis zur nächsten gewährten Zuflucht
   - Auswirkung: Balance: A schwächt Risiko deutlich; Umsetzung: Bindungsobjekt mit Gültigkeit
   - Empfehlung: B (Code) festschreiben
-- **RM-DR-137.4 · Ablehnung** · Status: später (K10)
+- **RM-DR-137.4 · Ablehnung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: Ablehnung löst alte Kette
   - Option B: alte Kette bleibt
   - Auswirkung: Balance: gering; Umsetzung: Bindung beenden oder nicht
   - Empfehlung: entscheiden
-- **RM-DR-137.5 · Mehrfache Zuflucht beim Selben** · Status: später (K10)
+- **RM-DR-137.5 · Mehrfache Zuflucht beim Selben** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Bindungsrollen 28.09.2026
   - Option A: jede Nacht ein anderer
   - Option B: beliebig
   - Auswirkung: Balance: A verhindert Dauer-Apfel beim selben Spieler; Umsetzung: Zielhistorie
@@ -1108,22 +1152,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `selbstmoerder`; Wechselwirkung laut Dossier: Feuerteufel (Brand vor Siegprüfung), Henker (Nebenhinrichtung), Voodoo (Puppe), alle Tötungsrollen (Totenzahl), Die …
 - **Belege:** [Dossier](dossiers/solos-a.md#selbstmoerder); RM-C-061, RM-C-062 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-007.
-- **RM-DR-138.1 · Zählbasis** · Status: produktentscheidung; Selbstmörder: Zählbasis
+- **RM-DR-138.1 · Zählbasis** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; Selbstmörder: Zählbasis
   - Option A: vorher (Code/EN)
   - Option B: inklusive eigenem Tod
   - Auswirkung: Balance: B einen Tod früher; Umsetzung: Zählpunkt
   - Empfehlung: A, DE-Text präzisieren
-- **RM-DR-138.2 · Hinrichtungsarten** · Status: später; Quelle: DECISION-LOG Korrekturrunde 4: Spielleiter-Hinrichtung bleibt LYNCH (dieser Teil entschieden); Rest betrifft nur den noch fehlenden Henker (K4)
+- **RM-DR-138.2 · Hinrichtungsarten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: nur Hauptziel des Lynchs
   - Option B: auch Henker-Hinrichtung
   - Auswirkung: Balance: –; Umsetzung: ExecutionRules
   - Empfehlung: A
-- **RM-DR-138.3 · Wer zählt als tot, wenn Personen wiederbelebt wurden?** · Status: produktentscheidung; neu: wer zählt als tot (Wiederbelebung)
+- **RM-DR-138.3 · Wer zählt als tot, wenn Personen wiederbelebt wurden?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; neu: wer zählt als tot (Wiederbelebung)
   - Option A: alle Personen, die zum Zeitpunkt der Hinrichtung tot sind (Legacy zählt tote Sitze)
   - Option B: alle Todesfälle der Partie, auch wenn die Person inzwischen wieder lebt
   - Auswirkung: Balance: B macht den Sieg nach Wiederbelebungen leichter; Umsetzung: A: Zählung aus dem Zustand; B: Zählung aus dem Todesprotokoll
   - Empfehlung: A (entspricht Legacy und Text „sobald 5+ Tote sind“)
-- **RM-DR-138.4 · Was geschieht mit einem abgelehnten Selbstmörder-Kandidaten?** · Status: produktentscheidung; neu: abgelehnter Kandidat
+- **RM-DR-138.4 · Was geschieht mit einem abgelehnten Selbstmörder-Kandidaten?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; neu: abgelehnter Kandidat
   - Option A: Er verfällt endgültig; nur eine erneute Hinrichtung derselben Person (nach Wiederbelebung) kann ihn wieder auslösen
   - Option B: Er wird nach jeder späteren Zustandsänderung erneut angeboten
   - Option C: Er bleibt als Hinweis sichtbar, entsteht aber nicht neu; der Spielleiter kann später per `declare_winner` entscheiden
@@ -1143,22 +1187,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `kopfgeldjaeger`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (Verfluchte), Spiegelwolf/Fenrir/Cerberus (kein Tod beim Lynch), Der Weise, Lehrling/Seelentauscher, Schattenhund/Albtraumwolf/Zeitwächter (Blockade), Doppelspion (zählt als …
 - **Belege:** [Dossier](dossiers/village-3.md#kopfgeldjaeger); RM-C-140, RM-C-141, RM-C-142, RM-C-143 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-139.1 · Wiederholung** · Status: später (K7)
+- **RM-DR-139.1 · Wiederholung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: eine Info pro Wolfs-Lynch (Zähler)
   - Option B: eine Info in der Nacht nach einem Wolfs-Lynch
   - Auswirkung: Balance: A minimal stärker; Umsetzung: Zähler statt bool
   - Empfehlung: A (Zähler), Texte angleichen
-- **RM-DR-139.2 · Selbst unter den drei** · Status: später (K7)
+- **RM-DR-139.2 · Selbst unter den drei** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: drei andere Spieler
   - Option B: beliebige lebende
   - Auswirkung: Balance: A gibt mehr Info; Umsetzung: Filter `id != actor`
   - Empfehlung: A
-- **RM-DR-139.3 · Aktivierung durch Erbe** · Status: später (K7)
+- **RM-DR-139.3 · Aktivierung durch Erbe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur Lynch aktiviert
   - Option B: Erbe startet aktiv
   - Auswirkung: Balance: B schenkt Info; Umsetzung: Rollenwechsel mit frischen Einsätzen ohne Aktivierung
   - Empfehlung: A
-- **RM-DR-139.4 · Verfluchter als "Werwolf"** · Status: später (K7)
+- **RM-DR-139.4 · Verfluchter als "Werwolf"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur echte Wölfe
   - Option B: Erscheinung zählt
   - Auswirkung: Balance: hängt an Q1; Umsetzung: `counts_as_wolf` vs `appears_as`
@@ -1172,12 +1216,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `koenig`; Wechselwirkung laut Dossier: Wolfskind, Lehrling, Dämonischer Wolf (Verfluchte), Seelentauscher, Rotkäppchen (Apfel), Frankenstein/Kutscher (Wiederbelebung verändert …
 - **Belege:** [Dossier](dossiers/village-3.md#koenig); RM-C-144, RM-C-145 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-015.
-- **RM-DR-140.1 · Häufigkeit** · Status: später (K7)
+- **RM-DR-140.1 · Häufigkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: einmal im Spiel
   - Option B: jede Nacht, solange Bedingung gilt
   - Auswirkung: Balance: B ist in der Endphase sehr stark; Umsetzung: Einsatzzähler vs. Nachtbedingung
   - Empfehlung: 07-Vorschlag übernehmen oder A; Texte angleichen
-- **RM-DR-140.2 · Wer wird gezeigt** · Status: später (K7)
+- **RM-DR-140.2 · Wer wird gezeigt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: SL/Zufall wählt echten Dorf-Angehörigen (Fraktion aktuell)
   - Option B: rollenbasiert (Legacy)
   - Auswirkung: Balance: A verhindert Fehlinfo bei Wolfskind; Umsetzung: `faction` aktuell statt Katalog
@@ -1191,12 +1235,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `dr-victor-frankenstein`; Wechselwirkung laut Dossier: Wächter am Tor, Loki (Liebende), Rotkäppchen (Apfel/Kette), Sensenträger (`hunterShot`/`hunterQueued`), Ritter, Lehrling/Seelentauscher (Erbe), Kutscher (zweite Wiederbelebungsrolle), Totenkarten `segen_08`, `wende_04`, …
 - **Belege:** [Dossier](dossiers/village-3.md#dr-victor-frankenstein); RM-C-147, RM-C-148, RM-C-149, RM-C-150 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-011, RM-DR-013.
-- **RM-DR-141.1 · Rollenpool** · Status: später (K13)
+- **RM-DR-141.1 · Rollenpool** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: jede Rolle außer der bisherigen
   - Option B: nur nicht im Spiel befindliche Rollen
   - Auswirkung: Balance: Wolfsrolle stärkt ggf. Wölfe (Tag `creates-wolf`); Umsetzung: Katalogfilter, `max_copies`
   - Empfehlung: B mit ausdrücklich erlaubtem Dorfbewohner; Wolfsrollen nur nach Entscheidung
-- **RM-DR-141.2 · Zustand des Wiederbelebten** · Status: später (K13)
+- **RM-DR-141.2 · Zustand des Wiederbelebten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Wiederbelebungsrollen 28.09.2026
   - Option A: vollständiger Neustart des Sitzes (wie Kutscher)
   - Option B: Bindungen bleiben
   - Auswirkung: Balance: A verhindert Sofort-Tod durch Liebeskummer; Umsetzung: Wiederbelebungsmodell mit Reset-Liste
@@ -1206,7 +1250,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: einmal pro Rolle im Spiel
   - Auswirkung: Balance: A erlaubt 2 Wiederbelebungen; Umsetzung: `ability_uses` pro Person
   - Empfehlung: A (Godot-Standard)
-- **RM-DR-141.4 · Totenkarten-Aktivierung nach Verbrauch** · Status: später (K13)
+- **RM-DR-141.4 · Totenkarten-Aktivierung nach Verbrauch** · Status: später (mit dem Totenkarten-Assistenten, W-01)
   - Option A: nur solange Wiederbelebung noch möglich
   - Option B: solange die Rolle lebt
   - Auswirkung: Balance: gering bis mittel; Umsetzung: Tag-Abfrage mit Verbrauchszustand
@@ -1220,37 +1264,57 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `nekromant`; Wechselwirkung laut Dossier: Werwolf-Rudel (Angriff als Auslöser), Schicksalswolf/Rudelvater (Zusatzziele, `PACKFATHER_KILL` durchbricht Schild), Dämonischer Wolf (`cursedWolfAura` zählt bei Benennung als Wolf, Nekromant selbst kann verflucht …
 - **Belege:** [Dossier](dossiers/solos-b.md#nekromant); RM-C-066, RM-C-067, RM-C-068, RM-C-069, RM-C-070 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-005, RM-DR-007, RM-DR-008.
-- **RM-DR-142.1 · Wen schützt der Schild** · Status: später (K15)
+- **RM-DR-142.1 · Wen schützt der Schild** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: globaler Schild für die nächste Tötung irgendwo
   - Option B: Schild nur für den Nekromanten, jede Todesart
   - Auswirkung: Balance: global: Nekromant kann Wolfskill auf beliebige Person verhindern (Dorf-nahe Macht), auch Lynch am Tag; Umsetzung: global braucht globalen Modifikator in der KillPipeline; selbst passt in Protections
   - Empfehlung: PO entscheidet; Text so oder so präzisieren
-- **RM-DR-142.2 · Umlenkung optional oder Pflicht** · Status: später (K15)
+- **RM-DR-142.2 · Umlenkung optional oder Pflicht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: optional (Text)
   - Option B: Pflicht (Code)
   - Auswirkung: Balance: Pflicht zwingt Nekromanten, einen Mitspieler zu töten; Umsetzung: PendingPrompt mit "nicht umlenken"
   - Empfehlung: Text gilt: optional mit Verzicht
-- **RM-DR-142.3 · Ressource der Toten** · Status: später (K15)
+- **RM-DR-142.3 · Ressource der Toten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: ein gemeinsamer Vorrat "Stimme der Toten"
   - Option B: zwei getrennte Vorräte
   - Auswirkung: Balance: getrennt: doppelte Nutzung derselben Toten; Umsetzung: Statusmarker pro Toter: ein oder zwei Felder
   - Empfehlung: ein gemeinsamer Marker "geopfert"
-- **RM-DR-142.4 · Siegversuche** · Status: später (K15)
+- **RM-DR-142.4 · Siegversuche** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: beliebig viele Versuche
   - Option B: ein Versuch pro Tag oder pro Spiel, evtl. mit Strafe
   - Auswirkung: Balance: unbegrenzt: Solo-Sieg praktisch sicher durch Durchprobieren; Umsetzung: Versuchszähler und Tagesaktion
   - Empfehlung: Begrenzung festlegen
-- **RM-DR-142.5 · Übungs-Enthüllung** · Status: später (K15)
+- **RM-DR-142.5 · Übungs-Enthüllung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
   - Option A: streichen
   - Option B: als Regel übernehmen und Text ergänzen
   - Auswirkung: Balance: unklar, derzeit nur Hinweis; Umsetzung: eigener Tagesbefehl
   - Empfehlung: streichen, sofern keine Regelquelle existiert
+- **RM-DR-142.6 · Mehrere Nekromanten** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: ein gemeinsamer Vorrat, Schilde zählen einzeln
+  - Option B: ein gemeinsamer Vorrat, höchstens ein aktiver Schild
+  - Option C: Vorrat je Nekromant, Schilde zählen einzeln
+  - Empfehlung: A
+- **RM-DR-142.7 · Reihenfolge der Umlenkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: nach dem Verdammniswächter, vor der Märtyrerin
+  - Option B: zuerst, direkt nach dem Rudel
+  - Option C: zuletzt, nach Verdammniswächter und Märtyrerin
+  - Empfehlung: A
+- **RM-DR-142.8 · Anlass der Umlenkung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: nur wenn er sonst stürbe
+  - Option B: immer, wenn das Rudel ihn wählt
+  - Option C: bei eigenem Schild darf er wählen
+  - Empfehlung: A
+- **RM-DR-142.9 · Schild nach Rollenverlust oder Tod** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 3 28.09.2026
+  - Option A: erlischt
+  - Option B: bleibt bestehen
+  - Option C: nur der Tod beendet ihn
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** 1. Schützt der Schild jede Person oder nur den Nekromanten? Gilt er gegen Lynch? 2. Ist die Umlenkung optional? Darf auf Wölfe umgelenkt werden? Gelten Schutz/Der Weise für das Umlenkziel? 3. Gibt es einen gemeinsamen Vorrat "Stimme der Toten" für Schild und Umlenkung? 4. Wie oft darf der Nekromant einen Wolf benennen (pro Tag, pro Spiel), und hat ein Fehlversuch Folgen? Ist die Benennung öffentlich? 5. Zählt ein verfluchter Nicht-Wolf (`cursedWolfAura`) als korrekt benannter Werwolf? 6. Bleibt die Übungs-Enthüllung als Regel erhalten?
 - **Charge:** K15. **In Option (nicht freigegeben):** keiner.
 
 ## RM-DR-143 · `kartenschlucker`
 
-- **Status des Eintrags:** später (ab Charge K15).
+- **Status des Eintrags:** später (ab Charge K15). **Stand 30.09.2026:** Grundregeln entschieden (Decision Log „Kartenschlucker, Grundregeln“), RM-DR-143.1 und .2 sind damit beantwortet, die Rolle bleibt nicht implementiert; Kartenüberarbeitung steht aus. **Dritte Runde 30.09.2026:** Schild (Wirkung, Bindung an die Person, Bestand über Tod und Wiederbelebung), Inhalt der Ansage (Gesamtzahl) und Tauschzeitpunkt (zwei Kartenfenster) sind entschieden (Decision Log „Totenreichkarten: Kartenfenster, Schild, Stapelansage, Wiederbelebungskarten“). Die folgenden Optionstexte sind historisch.
 - **Betroffene Rollen:** `kartenschlucker`; Wechselwirkung laut Dossier: alle Rollen, die Tote erzeugen (mehr Tote = mehr Tauschgelegenheiten), Totenkarten-System (`cards`), Frankenstein/Kutscher (Wiederbelebung ermöglicht erneuten Tausch), Nekromant/Hades/Parasit/Rudelvater (Abfangregeln in …
 - **Belege:** [Dossier](dossiers/solos-b.md#kartenschlucker); RM-C-071, RM-C-072 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-005, RM-DR-007, RM-DR-013.
@@ -1273,21 +1337,26 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `hades`; Wechselwirkung laut Dossier: jede tötende Rolle (Lichterquelle), Nekromant (Schild fängt Hades-Kill ab, Lichter trotzdem weg), Rudelvater (`PACKFATHER_KILL` durchbricht Barriere), Ritter (Vergeltung bei `HADES_KILL`, `core:431`), …
 - **Belege:** [Dossier](dossiers/solos-b.md#hades); RM-C-073, RM-C-074, RM-C-075 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-005, RM-DR-007, RM-DR-008.
-- **RM-DR-144.1 · Sieg automatisch oder eingelöst** · Status: später (K15)
+- **RM-DR-144.1 · Sieg automatisch oder eingelöst** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: Sieg sofort bei 10
   - Option B: Sieg nur durch bewusstes Einlösen (Lichter könnten vorher ausgegeben werden)
   - Auswirkung: Balance: Einlösen erlaubt Taktik (Lichter sparen/ausgeben); Umsetzung: eine Siegregel als WinCandidate
   - Empfehlung: Automatik bei 10 mit SL-Bestätigung, Button streichen
-- **RM-DR-144.2 · Zählen eigene Kills** · Status: später (K15)
+- **RM-DR-144.2 · Zählen eigene Kills** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: jeder Tod zählt
   - Option B: nur Tode durch andere
   - Auswirkung: Balance: Kill kostet netto 1 statt 2; Umsetzung: Filter nach Quelle
   - Empfehlung: PO
-- **RM-DR-144.3 · Stimme x3** · Status: später (K15)
+- **RM-DR-144.3 · Stimme x3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: Kauf bleibt, SL wird erinnert
   - Option B: Kauf streichen
   - Auswirkung: Balance: Kauf ohne Anzeige ist wertlos; Umsetzung: dauerhafter Statusmarker mit Hinweis beim Tag
   - Empfehlung: Marker sichtbar machen
+- **RM-DR-144.4 · Tötung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
+  - Option A: 2 Lichter, einmal je Nacht, Tod am Morgen, keine Erstattung
+  - Option B: wie A, Erstattung bei abgefangenem Tod
+  - Option C: sofortiger Tod in der Nacht
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** 1. Sieg automatisch bei 10 oder nur durch Einlösen? 2. Geben eigene Hades-Kills Lichter? 3. Stimme x3 behalten (als SL-Hinweis) oder streichen? Ist der Kauf öffentlich? 4. Werden Lichter bei abgefangenem Kill erstattet? 5. Soll der Rollentext Preise und Fähigkeiten nennen?
 - **Charge:** K15. **In Option (nicht freigegeben):** keiner.
 
@@ -1297,7 +1366,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `doktor`; Wechselwirkung laut Dossier: Wolfskind, Lehrling, Seelentauscher, Dämonischer Wolf, alle Solo-Rollen, Doppelspion, Trugbilderwolf (Erscheinung vs. Fraktion), Rotkäppchen …
 - **Belege:** [Dossier](dossiers/village-3.md#doktor); RM-C-151, RM-C-152 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-145.1 · Zwei Solo-Rollen** · Status: später (K2)
+- **RM-DR-145.1 · Zwei Solo-Rollen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: Solos bilden kein Team (immer "verschieden", auch mit sich selbst)
   - Option B: "Solo" ist ein Team
   - Auswirkung: Balance: A verhindert Fehlschluss; Umsetzung: Vergleich über Siegpartei statt Fraktionskonstante
@@ -1316,17 +1385,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `faehrtenleser`; Wechselwirkung laut Dossier: alle Wolfsrollen, Fenrir, Dämonischer Wolf (Verfluchte), Wolfskind/Lehrling (Verwandlung), Doppelspion, Ritter (gemeinsame Richtungsdefinition), …
 - **Belege:** [Dossier](dossiers/village-3.md#faehrtenleser); RM-C-154, RM-C-155, RM-C-156 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003, RM-DR-014.
-- **RM-DR-146.1 · Richtungsdefinition** · Status: quellenprüfung; „links“ am Tisch gegenüber Bildschirm ist ohne Gerät nicht prüfbar
+- **RM-DR-146.1 · Richtungsdefinition** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026; „links“ am Tisch gegenüber Bildschirm ist ohne Gerät nicht prüfbar
   - Option A: aus Sicht des Spielers am Tisch
   - Option B: aus Sicht des SL-Bildschirms
   - Auswirkung: Balance: Fehlinfo bei falscher Deutung; Umsetzung: Richtung relativ zu `seat_order` (Uhrzeigersinn) festlegen
   - Empfehlung: am Tisch prüfen und festschreiben
-- **RM-DR-146.2 · Gleichstand** · Status: später (K3)
+- **RM-DR-146.2 · Gleichstand** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026
   - Option A: fest links
   - Option B: beide Richtungen nennen / SL wählt
   - Auswirkung: Balance: gering; Umsetzung: Regel im Rechner
   - Empfehlung: entscheiden
-- **RM-DR-146.3 · Fenrir Stufe 3** · Status: später (K3)
+- **RM-DR-146.3 · Fenrir Stufe 3** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Hinrichtungsrollen 28.09.2026
   - Option A: gleiche Wolfsdefinition wie Ritter
   - Option B: unterschiedlich
   - Auswirkung: Balance: gering; Umsetzung: eine gemeinsame Zielfunktion
@@ -1340,12 +1409,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `waldlaeufer`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf, Wolfskind/Lehrling, Siegreicher Wolf (Zählweise), Doppelspion, Waldhexe/Hades (sofortige Nachttode vor dem …
 - **Belege:** [Dossier](dossiers/village-3.md#waldlaeufer); RM-C-157, RM-C-158 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-147.1 · Häufigkeit** · Status: später (K2)
+- **RM-DR-147.1 · Häufigkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: jede Nacht
   - Option B: einmal (z. B. Nacht 1)
   - Auswirkung: Balance: jede Nacht ist stark in Akt IV; Umsetzung: Schritt jede Nacht vs. Einmal-Einsatz
   - Empfehlung: entscheiden und in Text aufnehmen
-- **RM-DR-147.2 · Verfluchte zählen** · Status: später (K2)
+- **RM-DR-147.2 · Verfluchte zählen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 2 27.09.2026
   - Option A: nur `counts_as_wolf`
   - Option B: auch Erscheinung
   - Auswirkung: Balance: hängt an Q1; Umsetzung: Zählung über `counts_as_wolf`
@@ -1359,22 +1428,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `schutzgeist`; Wechselwirkung laut Dossier: Werwolf/Rudel (Angriff), Rachsüchtiger Wolf (Zusatzangriff), Seuchenwolf (Durchbohren ignoriert Schutz beim Pick, chunk:162) und Rudelvater (Zusatzopfer am Morgen ohne Schutzprüfung, night:269-280), Dämonischer Wolf …
 - **Belege:** [Dossier](dossiers/village-4.md#schutzgeist); RM-C-159, RM-C-160, RM-C-161, RM-C-162 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-009.
-- **RM-DR-148.1 · Dauer/Wirkung des Schilds** · Status: später (K5)
+- **RM-DR-148.1 · Dauer/Wirkung des Schilds** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: Schild hält bis zum nächsten Wolfsangriff (auch spätere Nächte)
   - Option B: Schild gilt nur für die aktuelle Nacht, Schritt muss dann vor dem Rudel liegen
   - Auswirkung: Balance: A stärker, B ohne Umordnung wirkungslos; Umsetzung: A: dauerhafter Marker; B: Schrittposition vor Rudel
   - Empfehlung: A (deckt Alttext, macht Rolle spielbar)
-- **RM-DR-148.2 · Schutzart** · Status: später (K5)
+- **RM-DR-148.2 · Schutzart** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Wolfsangriff
   - Option B: jeder Tod
   - Auswirkung: Balance: A schwächer; Umsetzung: A nutzt vorhandene Protections
   - Empfehlung: A
-- **RM-DR-148.3 · Zeitpunkt** · Status: später; Quelle: Konflikt mit rules-register G-PH-2 (nur lebende Rolleninhaber handeln); bei Umsetzung ausdrücklich als Ausnahme entscheiden
+- **RM-DR-148.3 · Zeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: frühestens nächste Nacht
   - Option B: sobald tot, auch dieselbe Nacht
   - Auswirkung: Balance: gering; Umsetzung: Schrittfreigabe mit Nachtindex
   - Empfehlung: A (Textwortlaut)
-- **RM-DR-148.4 · Wolf-Meldung** · Status: später (K5)
+- **RM-DR-148.4 · Wolf-Meldung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Tatsache, ohne Namen, echte Fraktion
   - Option B: mit Namen / nach Erscheinung (`appears_as`)
   - Auswirkung: Balance: Name wäre starke Info; Umsetzung: InfoRecord public, Quelle Wahrheit oder Erscheinung
@@ -1388,7 +1457,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `waechter-am-tor`; Wechselwirkung laut Dossier: Wolfskind, Lehrling, König Lykaon/Trugbilderwolf, Seelentauscher, Dr. Victor Frankenstein, Kutscher, Dämonischer Wolf (Regelfrage), Grabräuber …
 - **Belege:** [Dossier](dossiers/village-4.md#waechter-am-tor); RM-C-163 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-149.1 · Gilt der Dämonische-Wolf-Fluch als "neu entstehender Werwolf"?** · Status: später (K12)
+- **RM-DR-149.1 · Gilt der Dämonische-Wolf-Fluch als "neu entstehender Werwolf"?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Fluch ist nur Erscheinung, Wächter irrelevant
   - Option B: Fluch erzeugt echten Wolf, Wächter muss abfangen
   - Auswirkung: Balance: bei B stärker für Dorf; Umsetzung: A: appears_as; B: zusätzlicher Abfangpunkt
@@ -1398,26 +1467,26 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-150 · `zeitwaechter`
 
-- **Status des Eintrags:** später (ab Charge K16).
+- **Status des Eintrags:** entschieden (Rollenaudit 28.09.2026).
 - **Betroffene Rollen:** `zeitwaechter`; Wechselwirkung laut Dossier: praktisch alle Nachtrollen; besonders Schwarze Witwe, Giftwolf, Märtyrerin, Voodoo-Priester, Rudelvater, Seuchenwolf, Waldhexe, Hades, Amalia, Kriegerin, Dorfschmied, Der Weise, Fenrir, Cerberus, Todesprediger, …
 - **Belege:** [Dossier](dossiers/village-4.md#zeitwaechter); RM-C-164, RM-C-165, RM-C-166, RM-C-167 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-010.
-- **RM-DR-150.1 · Umfang des Abbruchs** · Status: später (K16)
+- **RM-DR-150.1 · Umfang des Abbruchs** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: Gesamte Nacht wird zurückgerollt (Tode und Zustände)
   - Option B: Nur Tode dieser Nacht entfallen, Zustände bleiben
   - Auswirkung: Balance: A sehr stark, B stark; Umsetzung: A: Nacht-Transaktion mit Schnappschuss ab Nachtbeginn; B: alle Tode der Nacht aufschieben bis Morgen
   - Empfehlung: A mit Schnappschuss bei Nachtbeginn (RoleTransition-Schnappschuss-Idee) oder B nach 07
-- **RM-DR-150.2 · Zeitpunkt der Entscheidung** · Status: später (K16)
+- **RM-DR-150.2 · Zeitpunkt der Entscheidung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: Entscheidung am Nachtanfang, dann läuft keine Aktion
   - Option B: Entscheidung am Nachtende, alles wird zurückgenommen
   - Auswirkung: Balance: A spart Zeit, B gibt Zeitwächter Zusatzwissen (sieht keine Nachtergebnisse, aber SL weiß sie); Umsetzung: A: Schritt vor tier 0.1; B: Rücknahme nötig
   - Empfehlung: A (einfacher, fairer)
-- **RM-DR-150.3 · Zähler** · Status: später (K16)
+- **RM-DR-150.3 · Zähler** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: alle nachtabhängigen Zähler zurück
   - Option B: nur Nachtnummer
   - Auswirkung: Balance: Todesprediger, Schmied, Fenrir betroffen; Umsetzung: Zähler-Liste in Nacht-Transaktion
   - Empfehlung: A
-- **RM-DR-150.4 · Wolfsrollen** · Status: später (K16)
+- **RM-DR-150.4 · Wolfsrollen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Rest-Wölfe und Zeitwächter 28.09.2026, E-36
   - Option A: auch Wölfe
   - Option B: nur Nicht-Wölfe
   - Auswirkung: Balance: gering; Umsetzung: Blockadegrund pro Schritt
@@ -1431,17 +1500,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `amalia`; Wechselwirkung laut Dossier: alle Wolfsrollen (Schwelle), Dämonischer Wolf (Verfluchte zählen im Code mit), Doppelspion (zählt nicht), Nekromant (Globalschild verhindert Opfer), Zeitwächter (Opfer bleibt trotz …
 - **Belege:** [Dossier](dossiers/village-4.md#amalia); RM-C-168, RM-C-169, RM-C-170 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002.
-- **RM-DR-151.1 · Zeitpunkt** · Status: später (K14)
+- **RM-DR-151.1 · Zeitpunkt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Tagesaktion (öffentlich, alle wach)
   - Option B: Nachtschritt, Frage wird am Morgen verkündet
   - Auswirkung: Balance: A: Frage wirkt sofort in Diskussion; Umsetzung: A: Tagesaktionswarteschlange; B: verzögertes Ereignis
   - Empfehlung: A
-- **RM-DR-151.2 · Frage und Antwort** · Status: später (K14)
+- **RM-DR-151.2 · Frage und Antwort** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: SL beantwortet wahrheitsgemäß, App protokolliert Frage und Antwort
   - Option B: Frage rein mündlich, App nur Opfer
   - Auswirkung: Balance: A: nachvollziehbar; Umsetzung: A: PendingPrompt mit Freitext + Ja/Nein; InfoRecord
   - Empfehlung: A
-- **RM-DR-151.3 · Schwelle** · Status: später (K14)
+- **RM-DR-151.3 · Schwelle** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: >2 lebende echte Wölfe
   - Option B: >=2 (Alttext) oder inkl. toter ("im Spiel")
   - Auswirkung: Balance: Verfügbarkeit; Umsetzung: Zählung über Fraktion, ohne Erscheinung
@@ -1455,17 +1524,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `kriegerin-des-lichts`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (verfluchter Sitz: Wolf oder nicht?), Trugbilderwolf/Erscheinungsrollen, Doppelspion, Rudelvater (erste Sonderfähigkeitstötung überlebt, falls Treffer tötet), …
 - **Belege:** [Dossier](dossiers/village-4.md#kriegerin-des-lichts); RM-C-171, RM-C-172, RM-C-173 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-contradictory`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-014.
-- **RM-DR-152.1 · Stirbt ein getroffener Wolf?** · Status: später (K7)
+- **RM-DR-152.1 · Stirbt ein getroffener Wolf?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Angriff tötet den Wolf
   - Option B: Angriff ist nur Test, Wolf wird nur erkannt
   - Auswirkung: Balance: A sehr stark (sicherer Wolfskill mit Risiko); Umsetzung: A: KillPipeline-Ursache, Reaktionen
   - Empfehlung: Entscheidung nötig; 04 korrigieren
-- **RM-DR-152.2 · Wahrheitsquelle** · Status: später (K7)
+- **RM-DR-152.2 · Wahrheitsquelle** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: App prüft Fraktion automatisch
   - Option B: SL entscheidet (kann Erscheinung berücksichtigen)
   - Auswirkung: Balance: A verhindert SL-Fehler; Umsetzung: A: Fraktion oder appears_as
   - Empfehlung: A mit Wahrheit, appears_as nur falls gewünscht
-- **RM-DR-152.3 · Öffentlichkeit** · Status: später (K7)
+- **RM-DR-152.3 · Öffentlichkeit** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: geheim an Kriegerin
   - Option B: öffentlich
   - Auswirkung: Balance: B starke Dorfinfo; Umsetzung: Sichtbarkeit actor vs public
@@ -1479,22 +1548,22 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `detektiv`; Wechselwirkung laut Dossier: alle Wolfsrollen, Dämonischer Wolf (Verfluchte lösen aus), Wolfskind/Lehrling (verwandelte Wölfe), Doppelspion (ausgenommen), Dorfschmied (Wolfstod durch Waffe), Fährtenleser …
 - **Belege:** [Dossier](dossiers/village-4.md#detektiv); RM-C-174, RM-C-175, RM-C-176, RM-C-177 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-003, RM-DR-009, RM-DR-015.
-- **RM-DR-153.1 · Muss der Detektiv leben?** · Status: später (K3)
+- **RM-DR-153.1 · Muss der Detektiv leben?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: nur lebend
   - Option B: auch tot
   - Auswirkung: Balance: B stärker; Umsetzung: Bedingung am Hook
   - Empfehlung: A (Code)
-- **RM-DR-153.2 · Mindestens 2 lebende Wölfe** · Status: später (K3)
+- **RM-DR-153.2 · Mindestens 2 lebende Wölfe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: ≥1 anderer lebender Wolf genügt
   - Option B: ≥2 (Code)
   - Auswirkung: Balance: bei A Hinweis auf letzten Wolf, sehr stark; Umsetzung: Schwelle
   - Empfehlung: nach PO
-- **RM-DR-153.3 · Hinweisinhalt** · Status: später (K3)
+- **RM-DR-153.3 · Hinweisinhalt** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Informationsrollen 28.09.2026
   - Option A: Hinweis bezieht sich auf den toten Wolf (Sitz des Toten als Anker)
   - Option B: Hinweis enttarnt Wolf w indirekt (Code)
   - Auswirkung: Balance: B deutlich stärker, A moderat; Umsetzung: Anker und Richtungsregel
   - Empfehlung: A, und Parität nur wenn wahr
-- **RM-DR-153.4 · Richtung links/rechts** · Status: quellenprüfung; Richtungskonvention; zusätzlich widersprüchlich zu Fährtenleser und Ritter
+- **RM-DR-153.4 · Richtung links/rechts** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 3 27.09.2026; Richtungskonvention; zusätzlich widersprüchlich zu Fährtenleser und Ritter
   - Option A: einheitlich id-1
   - Option B: einheitlich id+1
   - Auswirkung: Balance: keine; Umsetzung: Sitznachbarschaft mit einer Konvention
@@ -1508,17 +1577,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `dorfschmied`; Wechselwirkung laut Dossier: Werwolf/Rudel, Rachsüchtiger Wolf, Schicksalswolf, Rudelvater, Seuchenwolf, Schutzengel, Der Weise, Nekromant, Rudelvater (Erstrettung), Dämonischer Wolf, Detektiv (Hinweis bei Waffentod), Zeitwächter, Verdammniswächter …
 - **Belege:** [Dossier](dossiers/village-4.md#dorfschmied); RM-C-178, RM-C-179, RM-C-180 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-004, RM-DR-005, RM-DR-015.
-- **RM-DR-154.1 · Welche Nächte zählen** · Status: später (K5)
+- **RM-DR-154.1 · Welche Nächte zählen** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: globale Nachtnummer 6
   - Option B: eigene Schmiedenächte
   - Auswirkung: Balance: gering; Umsetzung: Zähler vs. Nachtnummer
   - Empfehlung: A (einfach, eindeutig)
-- **RM-DR-154.2 · Nur Nacht 6 oder ab Nacht 6** · Status: später (K5)
+- **RM-DR-154.2 · Nur Nacht 6 oder ab Nacht 6** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: nur Nacht 6
   - Option B: ab Nacht 6
   - Auswirkung: Balance: A strenger; Umsetzung: Schrittfreigabe
   - Empfehlung: B (Code)
-- **RM-DR-154.3 · Welche Angriffe** · Status: später (K5)
+- **RM-DR-154.3 · Welche Angriffe** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Schutzrollen 28.09.2026
   - Option A: alle Wolfsangriffe inkl. durchbohrend
   - Option B: durchbohrende ausgenommen
   - Auswirkung: Balance: gering; Umsetzung: Filter `is_wolf_attack`
@@ -1532,7 +1601,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `doppelspion`; Wechselwirkung laut Dossier: Rachsüchtiger Wolf, Dämonischer Wolf (Fluch wirkungslos), Wolfskind/Lehrling (Wolfszählung), Orakel/Doktor/Spürhund (Erscheinung/Fraktion), Die Ewigen, …
 - **Belege:** [Dossier](dossiers/solos-a.md#doppelspion); RM-C-063, RM-C-064 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-007.
-- **RM-DR-155.1 · Muss er leben?** · Status: produktentscheidung; Doppelspion: muss er leben
+- **RM-DR-155.1 · Muss er leben?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; Doppelspion: muss er leben
   - Option A: nur lebend (Code)
   - Option B: auch tot
   - Auswirkung: Balance: B macht ihn stärker; Umsetzung: WinCandidate
@@ -1542,13 +1611,13 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: neutral (zählt für keine Seite)
   - Auswirkung: Balance: A lässt Wölfe schwerer gewinnen; Umsetzung: `counts_as_wolf=false`
   - Empfehlung: A
-- **RM-DR-155.3 · Verhältnis zum Dorfsieg: welche anderen Kandidaten werden gleichzeitig angeboten?** · Status: produktentscheidung; Doppelspion: gleichzeitige Kandidaten
+- **RM-DR-155.3 · Verhältnis zum Dorfsieg: welche anderen Kandidaten werden gleichzeitig angeboten?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; Doppelspion: gleichzeitige Kandidaten
   - Option A: Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, wird der Dorfkandidat nicht angeboten; nur Doppelspion-Kandidaten (je Person) entstehen. Rollenspezifische Ausnahme zu G-SIEG-1/G-SIEG-3; Legacy `core:227-230` verhält sich so
   - Option B: Dorf- und Doppelspion-Kandidat entstehen gemeinsam; der Spielleiter wählt nach dem Rollentext (bestehende Regel G-SIEG-3 ohne Ausnahme)
   - Option C: wie B, die App kennzeichnet den Doppelspion-Kandidaten als die nach Rollentext zutreffende Wahl
   - Auswirkung: Balance: A setzt die Rolle einheitlich durch; B und C hängen vom Spielleiter ab; Umsetzung: A: `WinRules` unterdrückt einen Kandidaten (neue Ausnahme, eigene Tests); B: nur ein weiterer Kandidat; C: B plus Kennzeichnung
   - Empfehlung: A. Der Text „gewinnt alleine, wenn alle Werwölfe tot sind“ beschreibt genau den Fall, in dem sonst das Dorf gewinnt; B würde bei jedem solchen Ende eine fehleranfällige Wahl verlangen. Der Spielleiter kann über `RejectWin` und `declare_winner` weiterhin anders entscheiden (G-GM-1). Wer bei Bestätigung gewinnt, ist davon unabhängig schon festgelegt: nur die begünstigte Person des Kandidaten
-- **RM-DR-155.4 · Was erfahren die Werwölfe über den Doppelspion, wenn er mit ihnen aufwacht?** · Status: produktentscheidung; neu: was erfahren die Wölfe
+- **RM-DR-155.4 · Was erfahren die Werwölfe über den Doppelspion, wenn er mit ihnen aufwacht?** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit 27.09.2026; neu: was erfahren die Wölfe
   - Option A: Der Spielleiter nennt keine Rolle; die Wölfe sehen eine weitere wache Person und können ihn für einen Wolf halten
   - Option B: Der Spielleiter stellt ihn den Wölfen als Doppelspion vor
   - Option C: Er wacht nur zum Beobachten auf; die Wölfe sehen ihn nicht
@@ -1568,16 +1637,21 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `grabraeuber`; Wechselwirkung laut Dossier: potenziell jede Rolle mit Nachtfähigkeit (Ziel des Diebstahls); Einmalrollen (bereits verbraucht?); Totenkarte `solo_05` (ähnliche …
 - **Belege:** [Dossier](dossiers/solos-b.md#grabraeuber); RM-C-076, RM-C-077 in [`04`](04-rule-conflicts.md). Legacy-Befund `not-found`.
 - **Querschnittsbezug:** RM-DR-006, RM-DR-007, RM-DR-014.
-- **RM-DR-156.1 · Was bedeutet "Fähigkeit stehlen"** · Status: später (K15)
+- **RM-DR-156.1 · Was bedeutet "Fähigkeit stehlen"** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: Grabräuber erhält dauerhaft die Nachtfähigkeit der toten Rolle (inkl. Nachtschritt)
   - Option B: einmalige Nutzung der Fähigkeit
   - Auswirkung: Balance: groß: je nach Zielrolle (z.B. Waldhexe, Hades) stark unterschiedlich; Umsetzung: Fähigkeitsübertragung ist ein neues System; Rollenwechsel (RoleTransition) passt nicht, da Rolle/Fraktion bleiben sollen
   - Empfehlung: PO; bis dahin manuell
-- **RM-DR-156.2 · Siegbedingung** · Status: später (K15)
+- **RM-DR-156.2 · Siegbedingung** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
   - Option A: erbt die Siegbedingung der bestohlenen Rolle
   - Option B: eigene Bedingung (z.B. letzter Überlebender)
   - Auswirkung: Balance: ohne Bedingung ist die Rolle nicht gewinnbar; Umsetzung: zusätzliche Siegbedingung
   - Empfehlung: PO legt fest (Q4)
+- **RM-DR-156.3 · Umfang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 4 28.09.2026
+  - Option A: jede Nachtfähigkeit, frische Einsätze
+  - Option B: nur Dorfrollen
+  - Option C: jede, mit übernommenem Zustand
+  - Empfehlung: A
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** 1. Dauerhafte oder einmalige Nutzung der gestohlenen Fähigkeit? 2. Welche Rollen sind stehlbar (auch Wolfs- und Solofähigkeiten, passive Fähigkeiten, Siegbedingungen)? 3. Welche Siegbedingung hat der Grabräuber? 4. Übernimmt der Grabräuber Zähler/Zustände der toten Rolle (z.B. Hades-Lichter, verbrauchte Tränke)?
 - **Charge:** K15. **In Option (nicht freigegeben):** keiner.
 
@@ -1587,7 +1661,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `parasit`; Wechselwirkung laut Dossier: jede tötende Rolle (Immunität), Rudelvater (`PACKFATHER_KILL` durchbricht Immunität NICHT, da Parasit-Prüfung zuerst), Nekromant-Schild (kann den Kettentod abfangen), Manipulator (gleichzeitiger Final-3-Sieg), Henker …
 - **Belege:** [Dossier](dossiers/solos-b.md#parasit); RM-C-078 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-007, RM-DR-009, RM-DR-011.
-- **RM-DR-157.1 · "Final 3" und Siegvorrang** · Status: später; Quelle: DR-02 schließt eine feste Siegpriorität aus (Teil „Team-Siege zuerst“ entschieden); Restfrage höchstens drei oder genau drei Lebende
+- **RM-DR-157.1 · "Final 3" und Siegvorrang** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Runde 5 28.09.2026
   - Option A: Parasit gewinnt bei <=3 Lebenden immer (ggf. gemeinsam mit anderen)
   - Option B: wie Code, Team-Siege zuerst
   - Auswirkung: Balance: Code: Parasit + 2 Dorf ohne Wölfe => Dorfsieg; Parasit + 2 Wölfe => Wolfssieg; Umsetzung: Siegpriorität in WinRules (Q4)
@@ -1601,17 +1675,17 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `todesprediger`; Wechselwirkung laut Dossier: alle tötenden Rollen; Zeitwächter (Frost, Nachtzählung), Lynch/Hinrichtung, Parasit-ähnliche Immunitäten und Schilde (verschieben Todeszeitpunkt), Frankenstein/Kutscher (Wiederbelebung und erneuter …
 - **Belege:** [Dossier](dossiers/solos-b.md#todesprediger); RM-C-079, RM-C-080, RM-C-081 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-broken`.
 - **Querschnittsbezug:** RM-DR-007, RM-DR-011, RM-DR-014.
-- **RM-DR-158.1 · Öffentlich oder geheim** · Status: später (K15)
+- **RM-DR-158.1 · Öffentlich oder geheim** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: öffentliche Ankündigung
   - Option B: geheime Vorhersage beim SL
   - Auswirkung: Balance: öffentlich: Dorf/Wölfe können gezielt töten oder schonen; Umsetzung: Ereignis-Sichtbarkeit public vs gm
   - Empfehlung: PO
-- **RM-DR-158.2 · Zeitpunkt der Vorhersage** · Status: später (K15)
+- **RM-DR-158.2 · Zeitpunkt der Vorhersage** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: nur Nacht 1
   - Option B: jederzeit einmal
   - Auswirkung: Balance: spätes Vorhersagen ist deutlich leichter; Umsetzung: Schritt nur Nacht 1 oder dauerhaft
   - Empfehlung: Nacht 1 (sonst trivial)
-- **RM-DR-158.3 · Zählbasis Tag/Nacht** · Status: später (K15)
+- **RM-DR-158.3 · Zählbasis Tag/Nacht** · Status: entschieden; Quelle: DECISION-LOG Rollenaudit Einzelsiegrollen Teil 1 28.09.2026
   - Option A: Tag N = Tag nach Nacht N, Morgentode zählen zur Nacht
   - Option B: Tag N wie im Protokoll angezeigt (= nach Nacht N-1)
   - Auswirkung: Balance: Überschneidung verdoppelt Trefferchance bei Morgentoden; Umsetzung: eindeutige `night_number`/`day_number` und Zuordnung jedes Todes zu genau einer Phase

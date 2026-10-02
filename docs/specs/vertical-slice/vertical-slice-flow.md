@@ -23,7 +23,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 
 | Befehl | Zweck |
 |---|---|
-| `ConfirmRoleShown(person)` | protokolliert, dass eine Person ihre Rolle gesehen hat; macht die Rollenanzeige nach Abbruch fortsetzbar |
+| `ConfirmRoleShown(person)` | protokolliert, dass eine Person ihre Rolle gesehen hat; macht die Rollenanzeige nach Abbruch fortsetzbar. **Umgesetzt (Paket 2, 29.09.2026)**, Schema 14: gespeichert wird je Person die Rolle zum Zeitpunkt der Bestätigung (`roles_shown`); nach einem Rollenwechsel gilt die Person wieder als unbestätigt |
 | `ReorderSeats(order)` | ändert nur die Sitzreihenfolge (Drag-and-drop); Personenzustand bleibt unverändert |
 | `ConfirmWin(candidate_id)` / `RejectWin(candidate_id, reason)` | Spielleiterbestätigung eines Siegkandidaten (`rules-register.md` G-SIEG-3) |
 | `BeginDay` | schließt den Morgenbericht und startet die Tagesphase |
@@ -34,7 +34,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 |---|---|
 | **Spielleiter** (Cockpit) | vollständiger Zustand, alle Ereignisse |
 | **Handelnde Person** (gesicherte Tablet-Karte) | genau die Information oder Auswahl dieses Schritts |
-| **Öffentlich** (vorlesen, später öffentliche Anzeige) | Phase, Nummer, lebend/tot, Namen, Nominierungen, öffentliche Ansagen. Bei einem Tod: Name immer; Rolle nur, wenn im Setup `reveal_role_on_death` = Ja; Ursache nie (DR-04) |
+| **Öffentlich** (vorlesen, später öffentliche Anzeige) | Phase, Nummer, lebend/tot, Namen, Nominierungen, öffentliche Ansagen. Bei einem Tod: Name immer; Rolle nur in Runden ohne Wiederbelebung (29.09.2026, ersetzt die Setup-Option); Ursache nie (DR-04), außer den angesagten Todeseffekten mit Effekt und Rolle |
 
 ---
 
@@ -47,7 +47,7 @@ Für den Slice zusätzlich nötig (Vorschlag, noch nicht in `03`):
 | 1.3 | Rollen zusammenstellen (Slice-Pool aus `role-selection.md`) | prüft: Rollenanzahl = Personenzahl, Obergrenzen je Rolle nur, wo die Rolle eine eigene festlegt (`dorfbewohner` und `werwolf` haben keine, damit 6 bis 24 Personen allein mit ihnen spielbar sind; `../../masterplan/DECISION-LOG.md` 26.09.2026; die Legacy-Grenzen aus `setup.html` gelten nicht), je mindestens eine Rolle aus Dorf, Werwölfe und Einzelsieg (`DECISION-LOG.md`: „Jede Partie enthält Dorf, Werwölfe und Einzelsiegrollen"; der Core-Slice ohne Einzelsiegrolle verlangt nur Dorf und Werwölfe). Abweichung nur per Übersteuerung mit Warnung | Rollenpool |
 | 1.4 | Verteilung wählen: zufällig oder manuell | zufällig: Ziehung über `SeededRng` | Seed, Zuordnung Person → Rolle |
 | 1.5a | Ist `trugbilderwolf` im Rollenpool: Scheinrolle festlegen (DR-08) | bietet nur Rollen an, die nicht als Wolf zählen; die Scheinrolle ändert sich danach nur per bestätigter Spielleiterkorrektur | Scheinrolle |
-| 1.5 | Option `Rolle beim Tod aufdecken: Ja/Nein` wählen (DR-04) | speichert die Option als Teil des Setups; sie gilt für die ganze Partie | `reveal_role_on_death` |
+| 1.5 | *(entfallen am 29.09.2026)* Keine Option „Rolle beim Tod aufdecken“ mehr; der Regelkern leitet die Wiederbelebungsrunde aus der Startbesetzung ab (Kutscher, Dr. Victor Frankenstein), das Setup zeigt sie nur an | Modus gilt für die ganze Partie | `revival_round` (abgeleitet) |
 | 1.6 | Setup bestätigen → `StartGame` | friert `rules_version` ein, legt ersten Checkpoint an | vollständiger Anfangszustand |
 
 Gleicher Seed, gleiche Personenliste und gleicher Rollenpool erzeugen dieselbe Zuordnung.
@@ -56,10 +56,11 @@ Gleicher Seed, gleiche Personenliste und gleicher Rollenpool erzeugen dieselbe Z
 
 | Schritt | Ablauf |
 |---|---|
-| 2.1 | Die App zeigt eine neutrale Karte „Gib das Tablet an: *Name*". |
+| 2.1 | Die Spielleitung behält das Tablet und wählt in einer neutralen Liste (nur Namen und Stand „gesehen“, keine Rollen) gezielt eine Person. Die App zeigt eine neutrale Vorderseite „Karte für *Sitz · Name*“. Der frühere Wortlaut „Gib das Tablet weiter“ ist keine Pflicht, das Gerät herumzureichen. |
 | 2.2 | Die Person öffnet die Karte mit einer bewussten Aktion, die nicht versehentlich ausgelöst werden kann (Geste wird in Phase 2 festgelegt), und sieht nur Name, Rolle und Kurztext ihrer Rolle. |
-| 2.3 | Schließen führt zurück zur neutralen Karte; `ConfirmRoleShown(person)` wird gespeichert. |
-| 2.4 | Nach einem Abbruch setzt die App bei der ersten Person ohne Bestätigung fort. |
+| 2.3 | „Gesehen, Karte schließen“ sendet `ConfirmRoleShown(person)` und führt zurück zur neutralen Liste. „Abbrechen“ (Vorderseite) und „Ohne Bestätigung schließen“ senden nichts. Ein erneutes Nachlesen einer bereits bestätigten Rolle braucht keinen Befehl und verändert keine Spielressource. |
+| 2.4 | Nach einem Abbruch oder Neustart setzt die App bei der ersten Person ohne gültige Bestätigung fort (Sitzreihenfolge). |
+| 2.5 | Keine Pflicht: `StartNight` ist auch ohne jede Bestätigung erlaubt. Der Befehl ist reine Darstellung (kein Zufall, keine Ressource), auch in Nacht und Tag möglich und wird nur nach Spielende oder vor dem Start abgelehnt. Eine offene Karte verfällt bei jedem Zustandswechsel, Rückgängig, Laden und Sichtschutz. Beim Trugbilderwolf zeigt die Karte die wahre Rolle, nie die Scheinrolle (DI-08). |
 
 Keine Rolle erscheint im Cockpit, solange eine Spieleransicht aktiv ist. Wölfe erkennen einander physisch in Nacht 1 (Rudelschritt), nicht über die Rollenkarte.
 
@@ -99,7 +100,7 @@ Regeln des Ablaufs:
 
 | Teil | Inhalt |
 |---|---|
-| Öffentlich vorlesen | Namen der in der Nacht Gestorbenen oder „Niemand ist gestorben"; Rolle der Gestorbenen nur bei `reveal_role_on_death` = Ja; keine Ursache (DR-04) |
+| Öffentlich vorlesen | Namen der in der Nacht Gestorbenen oder „Niemand ist gestorben"; Rolle der Gestorbenen nur in Runden ohne Wiederbelebung; keine Ursache (DR-04), außer den angesagten Todeseffekten |
 | Nur für den Spielleiter | wer wen geschützt oder gerettet hat, wer vergiftet wurde, Ursachen, Verwandlungen, Lehrling-Bindung und -Erbe, Informationsergebnisse der Nacht |
 
 7. `BeginDay` setzt Phase DAY (Unterzustand DISCUSSION) und den Tageszähler.

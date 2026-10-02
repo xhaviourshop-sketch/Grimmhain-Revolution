@@ -11,6 +11,7 @@ extends VBoxContainer
 signal dialog_requested(request: DialogRequest)
 signal status_message_requested(text_key: String)
 signal players_requested  ## „Zurück zu Spielern“
+signal lexicon_requested(role: StringName)  ## Lexikoneintrag einer Rolle öffnen (nur Anzeige)
 
 const ROW_SCENE := preload("res://app/screens/new_game/role_row.tscn")
 const DECOY_SCENE := preload("res://app/screens/new_game/decoy_section.tscn")
@@ -28,7 +29,18 @@ var _last_view: Dictionary = {}
 @onready var _suggestion_state: GrimmLabel = %SuggestionStateLabel
 @onready var _suggest: GrimmButton = %SuggestButton
 @onready var _reset: GrimmButton = %ResetRolesButton
+@onready var _revival: GrimmLabel = %RevivalRoundLabel  ## DI-01: aus der Rollenwahl abgeleitet, nur Anzeige
+@onready var _cards: GrimmToggle = %DeathCardsToggle  ## Totenreichkarten: schaltet auch den Kartenschlucker frei
+## PE-04: nicht blockierende Besetzungshinweise, je Hinweis eine eigene Zeile
+@onready var _hint_labels: Dictionary[String, GrimmLabel] = {
+	String(RolePoolDraft.HINT_COACH_SMALL_ROUND): %CoachHintLabel,
+	String(RolePoolDraft.HINT_SIMULTANEOUS_SOLO_WINS): %SoloWinsHintLabel,
+}
+## PE-07: Rollen über der Höchstzahl der Startbesetzung stehen namentlich im scrollbaren Listenkopf, nicht in der Seitenspalte.
+@onready var _over_limit: GrimmLabel = %OverLimitLabel
 @onready var _scroll: ScrollContainer = %RoleScroll
+## Die Seitenspalte scrollt, wenn Hinweise (zwei Zeilen, DE) sie höher machen als das Fenster: nichts verlässt den Bildschirm.
+@onready var _side_scroll: ScrollContainer = %RoleSideScroll
 @onready var _list: VBoxContainer = %RoleList
 @onready var _back: GrimmButton = %BackToPlayersButton
 @onready var _status: GrimmLabel = %RoleStatusLabel
@@ -42,11 +54,13 @@ func start(setup: PlayerSetup) -> void:
 	_scroll.custom_minimum_size.y = ThemeTokens.ROLE_LIST_MIN_HEIGHT
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.follow_focus = true
+	_side_scroll.follow_focus = true
 	_build_rows()
 	_suggest.pressed.connect(_on_suggest_pressed)
 	_reset.pressed.connect(_on_reset_pressed)
 	_back.pressed.connect(players_requested.emit)
 	_confirm.pressed.connect(_on_confirm_pressed)
+	_cards.toggled.connect(_on_cards_toggled)
 	_setup.changed.connect(_render)
 	visibility_changed.connect(_on_visibility_changed)
 	_render(_setup.view())
@@ -81,6 +95,7 @@ func _build_rows() -> void:
 		_list.add_child(row)
 		row.show_role(role)
 		row.change_requested.connect(_on_change_requested)
+		row.info_requested.connect(lexicon_requested.emit)
 		_rows[role] = row
 		if SetupRoleCatalog.requires_appearance(role):
 			var section := DECOY_SCENE.instantiate() as DecoySection
@@ -91,11 +106,19 @@ func _build_rows() -> void:
 
 
 func _render(view: Dictionary) -> void:
+	_revival.text_key = "ui.setup.roles.revival_round.on" if bool((view["roles"] as Dictionary).get("revival_round", false)) else "ui.setup.roles.revival_round.off"
 	_last_view = view
 	var roles: Dictionary = view["roles"]
+	var hints: Array = roles.get("hints", [])
+	for hint: String in _hint_labels:
+		_hint_labels[hint].visible = hints.has(hint)
+		_hint_labels[hint].text_key = "ui.setup.roles.hint.%s" % hint if hints.has(hint) else ""
+	if _cards.button_pressed != bool(roles.get("death_cards", false)):
+		_cards.set_pressed_no_signal(bool(roles.get("death_cards", false)))
 	var counts: Dictionary = roles["counts"]
 	for role: StringName in _rows:
 		var key := String(role)
+		_rows[role].visible = bool(roles.get("death_cards", false)) or not RoleCatalog.requires_cards(role)
 		_rows[role].show_count(int(counts[key]), bool(roles["can_decrease"][key]), bool(roles["can_increase"][key]))
 	for section: DecoySection in _decoy_sections:
 		section.render(roles)
@@ -135,6 +158,12 @@ func _render_issues(roles: Dictionary) -> void:
 	for issue: Variant in roles["issues"]:
 		if str(issue) != "too_few_roles" and str(issue) != "too_many_roles":
 			names.append(tr("ui.setup.roles.issue.%s" % str(issue)))
+	var over: Array[String] = []
+	for role: Variant in roles.get("over_limit", []):
+		over.append(tr(RolePresentation.name_key(StringName(str(role)))))
+	_over_limit.visible = not over.is_empty()
+	_over_limit.format_values = {"roles": ", ".join(over)}
+	_over_limit.text_key = "ui.setup.roles.over_limit" if not over.is_empty() else ""
 	var show_issues := not names.is_empty() and not bool(roles["is_empty"])
 	_issues.visible = show_issues
 	_issues.format_values = {"issues": ", ".join(names)}
@@ -160,6 +189,10 @@ func _on_visibility_changed() -> void:
 	if not visible:
 		for section: DecoySection in _decoy_sections:
 			section.close()
+
+
+func _on_cards_toggled(on: bool) -> void:
+	_setup.set_death_cards(on)
 
 
 func _on_suggest_pressed() -> void:

@@ -7,6 +7,7 @@ var state: GameState
 var command_index: int
 var events: Array[GameEvent] = []
 var deaths: int = 0
+var card_depth: int = 0  ## > 0, solange eine Totenreichkarte tötet: Folgen dieses Tods lösen keine Karte erneut aus (Kosmisches Gleichgewicht)
 
 
 func _init(p_state: GameState, p_command_index: int) -> void:

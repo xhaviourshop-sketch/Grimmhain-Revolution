@@ -38,20 +38,27 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/navigation/screen_router.gd` | Ansicht wechseln, alte sofort entfernen, Übergang, Standardfokus |
 | `app/screens/base_screen.gd` | Basis jeder Ansicht: Signale statt Router-Zugriff, Kopfzeile verdrahten, Standardfokus |
 | `app/screens/start/` | Titel, Untertitel, „Eintreten“, Version |
-| `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Einstellungen, Beenden (nur Desktop, abgesetzt) |
+| `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Rollenlexikon, Einstellungen, Beenden (nur Desktop, abgesetzt) |
+| `app/screens/lexicon/` | Rollenlexikon als eigene Ansicht (Zurück schließt erst den Eintrag, dann zum Hauptmenü); Details in `cockpit.md` §Rollenlexikon |
 | `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `decoy_section` mit `decoy_copy_row` (geheime Trugbilderwolf-Scheinrollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
-| `app/screens/continue/` | leerer Zustand „Kein Spielstand vorhanden“, Bereich `SaveSlotList` |
+| `app/groups/`, `app/storage/`, `screens/new_game/group_card.*` | gespeicherte Spielergruppen im Spielerschritt (Paket B, `player-groups.md`); `SafeJsonFile` für sicheres Schreiben kleiner lokaler JSON-Dateien |
+| `app/rulebook/`, `app/widgets/rulebook/`, `app/screens/rulebook/` | allgemeines Regelbuch mit zwölf Kapiteln (Hauptmenü und Cockpit-Werkzeug, Paket C, `rulebook.md`) |
+| `app/history/`, `app/widgets/history/`, `app/screens/history/`, `app/session/game_report.gd` | Abschlussbericht, lokale Partiehistorie und Textexport (Paket D, `game-history.md`) |
+| `app/screens/continue/` | gespeicherte Partien fortsetzen oder verwerfen; leerer Zustand „Kein Spielstand vorhanden“; Details in `save-resume.md` |
 | `app/screens/settings/` | Sprache DE/EN, Bewegung reduzieren, Platzhalter Audio und Anzeige |
-| `app/screens/cockpit/` | Kopfzeile, Phasenbereich, Ansagekarte, Sitzkreisbereich, Aktionsbereich, Kennzeichen „Keine Partie aktiv“ |
+| `app/screens/cockpit/` | Geführte Partie: Phasenleiste, Sitzkreis, Ansagekarte für Nacht, Morgen, Tag und Sieg, Ebenen für Rollen, Protokoll und gezeigte Karten, Sichtschutz; Details in `cockpit.md` |
 | `app/widgets/grimm_button.gd` | Button mit Übersetzungsschlüssel, Art primär/sekundär/Gefahr, Mindestgröße, Fokus, Umbruch |
 | `app/widgets/grimm_label.gd` | Beschriftung mit Übersetzungsschlüssel und Platzhaltern (`{version}`) |
 | `app/widgets/grimm_toggle.gd` | Umschalter mit Übersetzungsschlüssel |
 | `app/widgets/header_bar/` | Kopfzeile: Zurück, Titel, Platz `%Actions` für spätere Aktionen |
+| `app/widgets/role_lexicon/` | Rollenlexikon (Liste, Suche, Fraktionsfilter, Eintrag, Sprachknopf); `RoleLexicon.layer` als Ebene für Setup und Cockpit; liest nur Übersetzungen und Katalog |
 | `app/widgets/confirm_dialog/` | Modal für Rückfragen (`DialogRequest`): Abbrechen links mit Fokus, optionale Alternative, Bestätigen rechts, 32 px Abstand, optional rot; optional scrollbare Auswahlliste (`DialogOption`); Fokussperre und Fokus-Rückgabe |
 | `app/widgets/toast/` | Statusmeldung am unteren Rand, 2,5 s sichtbar |
 | `app/theme/theme_tokens.gd` | alle Farben, Abstände, Radien, Rahmen, Schriftgrößen, Mindestgrößen, Zeiten |
 | `app/theme/theme_factory.gd` | baut das Theme aus den Tokens (kein `.tres`) |
-| `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Linkshänder-Grundlage; nur im Speicher |
+| `app/settings/app_settings.gd` | Sprache, Bewegung reduzieren, Bedienhand (`left_handed`, wirkt auf die Cockpit-Seitenspalte) |
+| `app/audio/audio_cue_player.gd` | Audioanschluss für Darstellungshinweise (Hinweis bei fünf Toten); stumm ohne Tondatei, keine Tondatei beigelegt |
+| `app/settings/settings_store.gd` | dauerhafte Geräteeinstellungen in `user://settings.json`, getrennt von Spielständen (DA-52) |
 | `app/platform/app_platform.gd` | Desktop/Mobil, Beenden erlaubt, Version aus `project.godot` |
 | `app/session/game_session.gd` | Anwendungsschicht zum Regelkern |
 | `app/setup/*.gd` | Anwendungsschicht und Modell des Setups ohne Regelkern: `PlayerSetup`, `SetupDraft`, `SetupPerson`, `SetupResult`, `PersonNameRules`; Rollen: `SetupRoleCatalog` (lesender Katalogadapter), `RolePresentation`, `RolePoolDraft`, `RoleCopy`, `RoleSuggestion`, `DistributionDraft`, `RoleDistribution`, `RoleSetup`, `SetupDistributionView` |
@@ -80,7 +87,7 @@ Szenen enthalten keine Stilwerte (keine Farben, `theme_override_*`, Mindestgrö�
   3. Elternansicht → dorthin
   4. Start → Desktop: Rückfrage „Grimmhain beenden?“, Mobilgerät: App verlassen
 - `application/config/quit_on_go_back=false`: Android-Zurück beendet die App nicht automatisch, sondern läuft über dieselbe Logik.
-- Späteres Cockpit mit laufender Partie: Zurück darf die Runde nicht ohne Rückfrage verlassen (`02` §4). Dafür ist `handle_back()` vorgesehen.
+- Cockpit mit laufender Partie: Zurück schließt zuerst eine offene Ebene oder den Sichtschutz und fragt sonst vor dem Verlassen nach; die Partie bleibt erhalten (`cockpit.md`).
 - Rückfragen: Ansichten senden `BaseScreen.dialog_requested(DialogRequest)`, der Router reicht sie an die Shell, die Shell öffnet `ConfirmDialog.open_request()`. Jede Aktion hat einen eigenen Rückruf; Beenden nutzt denselben Weg.
 
 ## Dialog als Modal
@@ -112,7 +119,7 @@ Szenen enthalten keine Stilwerte (keine Farben, `theme_override_*`, Mindestgrö�
 | Rahmen | `BORDER_THIN/THICK` · `FOCUS_WIDTH` | 1 · 2 · 3 |
 | Schrift | `FONT_CAPTION/COMPACT/BODY/BUTTON/SUBTITLE/HEADING/TITLE` | 16 · 18 · 20 · 22 · 24 · 30 · 64 |
 | Bedienflächen | `TOUCH_MIN` · `BUTTON_SECONDARY_HEIGHT` · `BUTTON_PRIMARY_HEIGHT` · `BUTTON_PRIMARY_MIN_WIDTH` | 48 · 56 · 64 · 240 |
-| Layout | `SAFE_MARGIN` · `SCREEN_PADDING` · `MENU_COLUMN_WIDTH` · `CONTENT_MAX_WIDTH` · `SIDE_COLUMN_WIDTH` | 16 · 24 · 480 · 880 · 360 |
+| Layout | `SAFE_MARGIN` · `SCREEN_PADDING` · `MENU_COLUMN_WIDTH` · `CONTENT_MAX_WIDTH` · `BAR_GAP` | 16 · 24 · 480 · 880 · 2 |
 | Overlays | `TOAST_WIDTH` · `TOAST_BOTTOM_OFFSET` · `DIALOG_WIDTH` · `DIALOG_WIDE_WIDTH` · `SWITCH_WIDTH`×`SWITCH_HEIGHT` | 420 · 88 · 560 · 720 · 64×32 |
 | Setup | `SETUP_SIDE_WIDTH` · `INPUT_HEIGHT` · `IMPORT_TEXT_MIN_HEIGHT` · `PERSON_NUMBER_WIDTH` · `SCROLLBAR_WIDTH` | 360 · 56 · 96 · 44 · 12 |
 | Rollen-Setup | `ROLE_COUNT_WIDTH` · `ASSIGNMENT_STATE_WIDTH` · `ROLE_LIST_MIN_HEIGHT` · `DIALOG_LIST_RESERVED_HEIGHT` | 56 · 200 · 240 · 300 |
@@ -133,9 +140,9 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 - Schlüssel sind `msgid`s nach dem Muster `app.*` und `ui.<bereich>.<element>` (263 Schlüssel, davon 185 `ui.setup.*` sowie 22 `ui.role.*` und 3 `ui.faction.*`, identisch in beiden Dateien).
 - Szenen setzen nur `text_key`. Kein sichtbarer Text steht in Szenen oder Skripten (`test_no_literal_texts_in_scenes_or_scripts`).
 - `GrimmButton`, `GrimmLabel` und `GrimmToggle` übersetzen selbst (`tr(text_key)`) und aktualisieren sich bei `NOTIFICATION_TRANSLATION_CHANGED`. Die automatische Übersetzung der Engine ist für sie abgeschaltet, damit der sichtbare Text in `text` steht und prüfbar ist.
-- Sprachwechsel: `AppSettings.set_language("de"|"en")` setzt die Locale; die Shell verteilt die Änderung sofort an alle Knoten. Andere Sprachen werden abgelehnt. Die Wahl wird noch nicht gespeichert.
+- Sprachwechsel: `AppSettings.set_language("de"|"en")` setzt die Locale; die Shell verteilt die Änderung sofort an alle Knoten. Andere Sprachen werden abgelehnt. Die Wahl wird dauerhaft gespeichert (siehe „Dauerhafte Einstellungen“).
 - Nutzerdaten (Personennamen) stehen in einfachen `Label`s der Gruppe `user_content`; alle anderen Texte haben einen Schlüssel. Platzhalter von Eingabefeldern setzt die Ansicht per `tr()` und erneuert sie beim Sprachwechsel.
-- Neuer Text: Schlüssel in beide `.po`-Dateien eintragen, im Szenenknoten `text_key` setzen. `test_po_files_have_same_keys` und `test_all_referenced_keys_exist_in_both_languages` finden Lücken.
+- Neuer Text: Schlüssel in beide `.po`-Dateien eintragen, im Szenenknoten `text_key` setzen. `test_po_files_have_same_keys` und `test_all_referenced_keys_exist_in_both_languages` finden Lücken. Strukturprüfung vor dem Commit (Duplikate, leere Texte, Platzhalter `{name}`, Rollenschlüssel): `node tools/check-godot-i18n.js` aus dem Repo-Wurzelordner, Exit 1 mit Fundstelle; läuft auch in CI (`godot-i18n.yml`). Er prüft Struktur, nicht Bedeutung, und dynamisch gebildete Schlüssel nur als Vorlage.
 - Lange Texte: Beschriftungen und Buttons in Spalten brechen um. `test_long_german_texts_do_not_overlap` verlängert alle deutschen Texte um etwa 50 % (Pseudo-Locale `de_XA`) und prüft 1024×768 erneut.
 
 ## Barrierearme Grundlage und Bewegung
@@ -143,7 +150,15 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 - **Bewegung reduzieren** (`AppSettings.reduced_motion`) setzt die Übergangszeit des Routers und die Einblendung der Statusmeldung auf 0. Beim Einschalten wird ein laufender Übergang sofort beendet. Sonst blendet eine neue Ansicht in 200 ms mit 12 px Aufwärtsbewegung ein (Cubic, Ease-out). Eingaben sind während eines Übergangs nie gesperrt.
 - **Fokus:** Jeder Button ist fokussierbar (`FOCUS_ALL`), jede Ansicht setzt einen Standardfokus (Startbutton, erste Menüaktion, Namensfeld in „Neue Partie“, sonst Zurück). Tab, Shift+Tab und Pfeiltasten bewegen den Fokus über die Container, Enter oder Leertaste lösen aus, Escape läuft über Zurück.
 - **Touch und Maus:** Buttons reagieren auf das Signal `pressed`. Touch löst über `input_devices/pointing/emulate_mouse_from_touch=true` dieselben Mausereignisse aus. Keine Gesten, kein Langdruck.
-- **Linkshänder:** `AppSettings.left_handed` existiert mit Signal, hat aber noch keine Wirkung. Die spätere Spiegelung gehört ins Cockpit mit echtem Sitzkreis.
+- **Bedienhand (NQ-04):** „Rechtshändig“ / „Linkshändig“ in den Optionen setzt `AppSettings.left_handed`; im Cockpit wechselt die Seitenspalte (Ansagekarte und Werkzeuge) die Seite des Sitzkreises, sofort und nach Neustart (`docs/ui/cockpit.md`, Abschnitt „Bedienseite“). Sitzkreis, Reihenfolge, Texte und Regeln bleiben gleich.
+
+## Dauerhafte Einstellungen
+
+- **Datei:** `user://settings.json` (Windows: `%APPDATA%\Godot\app_userdata\Grimmhain\settings.json`), JSON `{format: "grimmhain-settings", version: 1, language, reduced_motion, left_handed}`. Getrennt von `user://saves`; keine Rollen, Namen, Spielstände oder Geheimnisse. `version` betrifft nur dieses Format.
+- **Startreihenfolge:** `AppShell._enter_tree` erzeugt den Kontext, lädt die Datei (`AppContext.use_settings_store`) und setzt die Sprache, bevor Kindknoten und erste Ansicht entstehen. Laden schreibt nie und löst kein `changed` aus.
+- **Speichern:** jede Änderung über `AppSettings.changed`; `.tmp` schreiben und zurücklesen, alte Datei zu `.bak`, `.tmp` zu Datei. Laden greift bei fehlender oder unlesbarer Datei auf `.bak` zurück.
+- **Fehler:** fehlende Datei = Standardwerte; ungültige Einzelwerte fallen einzeln zurück, unbekannte Schlüssel werden ignoriert; unlesbare Datei = Standardwerte, der Start läuft weiter. Scheitert das Schreiben, gilt die Einstellung in dieser Sitzung weiter, die letzte gültige Fassung bleibt, und die Statusmeldung sagt „Gilt jetzt, konnte aber nicht dauerhaft gespeichert werden“. Kein automatischer Wiederholversuch.
+- **Tests:** Ein von außen übergebener Kontext speichert nur mit ausdrücklich gesetztem `AppShell.settings_store`; `test_settings_persistence` nutzt dafür temporäre Verzeichnisse `user://test-saves-*`.
 - **Skalierung:** Basis 1280×800, Streckung `canvas_items` mit Aspekt `expand`. Alle Layouts nutzen Container und Anker, keine festen Positionen.
 
 ## Tests und Prüfbefehle
@@ -190,4 +205,4 @@ Ergebnis: `docs/evidence/ui-foundation/*.png`, `docs/evidence/player-setup/*.png
 - Kein Portrait-Layout (`window/handheld/orientation = sensor_landscape`).
 - Keine CI-Screenshots; die Bilder entstehen lokal oder in der Cloud mit Xvfb.
 - Die Statusmeldung schwebt 88 px über dem unteren Rand und verdeckt dabei 2,5 s lang den unteren Listenbereich (fängt keine Eingaben ab).
-- Die Pfeiltasten im Dialog wechseln die Aktion wie Tab; in einem späteren Dialog mit Eingabefeld müsste das angepasst werden.
+- Die Pfeiltasten im Dialog wechseln die Aktion wie Tab; im Begründungsfeld bewegen links/rechts den Cursor.

@@ -67,6 +67,23 @@ static func action_of(s: GameState, witch_id: int) -> WitchAction:
 	return null
 
 
+## true, wenn `player_id` in dieser Nacht vergiftet wurde (sicherer Tod am Morgen).
+static func is_marked(s: GameState, player_id: int) -> bool:
+	for a: WitchAction in s.witch_actions:
+		if a.poison_used and a.poison_target_id == player_id and a.night == s.night_number:
+			return true
+	return false
+
+
+## Morgenauflösung: Gifttode dieser Nacht nach Personen-ID der Waldhexe, über die normale
+## Pipeline (Folgen, Reaktionen, Siegprüfung). Ein bereits totes Ziel wird ignoriert.
+static func apply_poisons(ctx: RuleContext) -> void:
+	var s := ctx.state
+	for a: WitchAction in s.witch_actions:  # nach witch_id sortiert
+		if a.poison_used and a.night == s.night_number:
+			KillPipeline.request_kill(ctx, a.poison_target_id, KillEvent.CAUSE_WITCH_POISON, KillEvent.SOURCE_PLAYER, a.witch_id)
+
+
 ## Waldhexen-IDs, deren Rettung `target_id` in Nacht `night` gilt, aufsteigend.
 static func rescuers_of(s: GameState, target_id: int, night: int) -> Array[int]:
 	var ids: Array[int] = []
@@ -126,7 +143,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step) or StepQueue.step_role(key) != RoleCatalog.WALDHEXE:
 		return false
 	var witch: Player = s.players.get(prompt.actor_id)
-	if witch == null or StepQueue.step_actor(key) != witch.id or not witch.alive or witch.role_id != RoleCatalog.WALDHEXE:
+	if witch == null or StepQueue.step_actor(key) != witch.id or not witch.alive or not SoloRules.acts_as(s, witch.id, RoleCatalog.WALDHEXE):
 		return false
 	if DictRead.get_int(prompt.partial, "victim_id", -2) != victim_of(s):
 		return false
@@ -238,9 +255,8 @@ static func _confirm(ctx: RuleContext) -> void:
 	var data := action.to_dict()
 	data["saved_role"] = DictRead.get_string(partial, "victim_role") if action.heal_used else ""
 	ctx.emit(GameEvent.WITCH_ACTED, Visibility.GM, data)
-	# 2. Gift tötet sofort; Todesfolgen laufen über die normale Pipeline (Reaktionen erst am Morgen, DR-09).
-	if action.poison_used:
-		KillPipeline.request_kill(ctx, action.poison_target_id, KillEvent.CAUSE_WITCH_POISON, KillEvent.SOURCE_PLAYER, witch.id)
+	# 2. Gift ist eine Todesmarkierung (Decision Log „Nachttode“): Tod erst in der Morgenauflösung
+	#    (`apply_poisons`), die Person verliert aber sofort ihre übrigen Nachtschritte (`is_marked`).
 	# 3. Schritt erledigt.
 	s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 	s.next_night_step += 1

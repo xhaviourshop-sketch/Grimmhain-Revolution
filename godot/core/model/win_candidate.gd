@@ -15,7 +15,22 @@ const REASON_WOLF_PARITY := &"wolf_parity"                    ## G-SIEG-2
 const REASON_NO_WOLVES_ALIVE := &"no_wolves_alive"            ## G-SIEG-1
 const REASON_MANIPULATOR := &"manipulator_three_alive"        ## DR-12: genau drei Lebende, nie nominiert
 const REASON_GM_DECLARED := &"gm_declared"                    ## Siegerklärung per GmCorrection (DR-02)
-const REASONS: Array[StringName] = [REASON_WOLF_PARITY, REASON_NO_WOLVES_ALIVE, REASON_MANIPULATOR, REASON_GM_DECLARED]
+const REASON_DOUBLE_AGENT := &"double_agent_no_wolves"        ## RM-DR-155: lebender Doppelspion, kein Wolf lebt
+const REASON_DEATH_SEEKER := &"death_seeker_lynched"          ## RM-DR-138: Selbstmörder bei mindestens 5 Toten hingerichtet
+const REASON_PARASITE := &"parasite_final_three"               ## RM-DR-157: höchstens drei Lebende, Parasit lebt
+const REASON_PIED_PIPER := &"pied_piper_all_charmed"          ## E-01: alle anderen Lebenden verzaubert
+const REASON_PLAGUE := &"plague_all_infected"                 ## E-02: alle anderen Lebenden infiziert
+const REASON_PROPHET := &"prophet_no_wolves"                  ## E-03: freigeschaltet, kein Wolf lebt
+const REASON_DEATH_PREACHER := &"death_preacher_prophecy"     ## E-04: Tod zum vorhergesagten Zeitpunkt
+const REASON_VOODOO := &"voodoo_final_three"                  ## E-15: Voodoo-Priester lebt, höchstens drei Lebende
+const REASON_NECROMANCER := &"necromancer_named_wolf"          ## E-19: lebenden Wolf am Tag korrekt benannt
+const REASON_HADES := &"hades_ten_lights"                     ## E-29: Hades lebt mit mindestens 10 Lichtern
+const REASON_GRAVE_ROBBER := &"grave_robber_final_three"      ## E-33: Grabräuber lebt, höchstens drei Lebende
+const REASON_LONE_WOLF := &"lone_wolf_last_wolf"              ## E-35: Wolfsparität, er ist der einzige lebende Wolf
+const REASON_SWALLOWER := &"swallower_ten_stacks"             ## Kartenschlucker: Zehn-Finger-Aktion, zehn Stapel abgegeben
+const REASON_FAMILY_BOND := &"family_bond_last_two"            ## solo_12 Familienbande: die gewählte Person gehört zu den letzten zwei Lebenden
+const REASONS: Array[StringName] = [REASON_WOLF_PARITY, REASON_NO_WOLVES_ALIVE, REASON_MANIPULATOR, REASON_GM_DECLARED, REASON_DOUBLE_AGENT, REASON_DEATH_SEEKER, REASON_PARASITE,
+	REASON_PIED_PIPER, REASON_PLAGUE, REASON_PROPHET, REASON_DEATH_PREACHER, REASON_VOODOO, REASON_NECROMANCER, REASON_HADES, REASON_GRAVE_ROBBER, REASON_LONE_WOLF, REASON_SWALLOWER, REASON_FAMILY_BOND]
 const KINDS: Array[StringName] = [Faction.VILLAGE, Faction.WOLVES, Faction.SOLO, &"none"]
 
 var id: int = 0
@@ -23,6 +38,7 @@ var kind: StringName = &""  ## Faction oder "none"
 var reason_key: StringName = &""
 var reason_args: Dictionary = {}
 var beneficiary_ids: Array[int] = []  ## begünstigte Personen bei personenbezogenen Siegen (Manipulator)
+var co_winner_ids: Array[int] = []    ## zusätzliche Mitsieger jedes Siegs: lebende Feuerteufel (RM-DR-131.5), aufsteigend
 var status: StringName = STATUS_OPEN
 var detected_at_command: int = -1
 var resolved_at_command: int = -1
@@ -31,11 +47,11 @@ var rejection_reason: String = ""
 
 ## Gleiche Bedingung für dieselben Personen (für die Duplikatprüfung).
 func semantic_key() -> String:
-	return "%s|%s|%s" % [kind, reason_key, str(beneficiary_ids)]
+	return "%s|%s|%s|%s" % [kind, reason_key, str(beneficiary_ids), str(co_winner_ids)]
 
 
 func to_dict() -> Dictionary:
-	return {
+	var d := {
 		"id": id,
 		"kind": String(kind),
 		"reason_key": String(reason_key),
@@ -46,6 +62,10 @@ func to_dict() -> Dictionary:
 		"resolved_at_command": resolved_at_command,
 		"rejection_reason": rejection_reason,
 	}
+	# Nur gespeichert, wenn vorhanden: Spielstände ohne Feuerteufel bleiben unverändert.
+	if not co_winner_ids.is_empty():
+		d["co_winner_ids"] = co_winner_ids.duplicate()
+	return d
 
 
 static func from_dict(d: Dictionary) -> WinCandidate:
@@ -58,6 +78,11 @@ static func from_dict(d: Dictionary) -> WinCandidate:
 	if ids == null or not d.get("beneficiary_ids") is Array:
 		return null
 	w.beneficiary_ids = ids
+	if d.has("co_winner_ids"):
+		var co: Variant = DictRead.to_int_array(DictRead.get_array(d, "co_winner_ids"))
+		if co == null or not d.get("co_winner_ids") is Array or (co as Array).is_empty():
+			return null
+		w.co_winner_ids = co
 	w.status = StringName(DictRead.get_string(d, "status"))
 	w.detected_at_command = DictRead.get_int(d, "detected_at_command", -1)
 	w.resolved_at_command = DictRead.get_int(d, "resolved_at_command", -1)

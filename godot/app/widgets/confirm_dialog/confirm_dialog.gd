@@ -12,6 +12,8 @@ extends Control
 ##     läuft der Rückruf der gewählten Aktion (er darf den Fokus neu setzen)
 ## Mit `options` zeigt der Dialog zusätzlich eine scrollbare Auswahlliste (z. B. Rollenauswahl);
 ## die Optionen gehören zur Fokussperre.
+## Mit `input_placeholder_key` zeigt der Dialog ein Pflicht-Textfeld (Begründung); Bestätigen ist
+## erst mit Text möglich, Enter im Feld bestätigt, das Feld gehört zur Fokussperre.
 ## Solange ein Dialog offen ist, werden weitere Anfragen verworfen (`open_request` → false).
 
 signal confirmed
@@ -29,6 +31,7 @@ var _return_focus: Control = null
 @onready var _alternative: GrimmButton = %AlternativeButton
 @onready var _option_scroll: ScrollContainer = %OptionScroll
 @onready var _option_list: VBoxContainer = %OptionList
+@onready var _input_field: LineEdit = %InputField
 
 
 func _ready() -> void:
@@ -39,6 +42,11 @@ func _ready() -> void:
 	_alternative.pressed.connect(_on_alternative)
 	_option_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_option_scroll.follow_focus = true
+	_input_field.custom_minimum_size.y = ThemeTokens.INPUT_HEIGHT
+	_input_field.text_changed.connect(func(_t: String) -> void: _update_input_state())
+	_input_field.text_submitted.connect(func(_t: String) -> void:
+		if not _confirm.disabled:
+			_on_confirm())
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 
 
@@ -70,10 +78,26 @@ func open_request(request: DialogRequest) -> bool:
 	_panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH if has_alternative else ThemeTokens.DIALOG_WIDTH
 	_message.visible = request.message_key != ""
 	_build_options(request.options)
+	_input_field.visible = request.input_placeholder_key != ""
+	_input_field.text = ""
+	_input_field.placeholder_text = tr(request.input_placeholder_key) if _input_field.visible else ""
+	_update_input_state()
 	visible = true
 	var first := _first_option()
-	(first if first != null else _cancel).grab_focus()
+	if _input_field.visible:
+		_input_field.grab_focus()
+	else:
+		(first if first != null else _cancel).grab_focus()
 	return true
+
+
+## Text des Pflichtfelds (getrimmt) oder "".
+func input_text() -> String:
+	return _input_field.text.strip_edges() if _input_field.visible else ""
+
+
+func _update_input_state() -> void:
+	_confirm.disabled = _input_field.visible and _input_field.text.strip_edges() == ""
 
 
 func is_open() -> bool:
@@ -91,12 +115,15 @@ func cancel() -> void:
 
 
 func _on_confirm() -> void:
-	if not visible:
+	if not visible or _confirm.disabled:
 		return
+	var text := input_text()
 	var request := _close()
 	confirmed.emit()
 	if request != null and request.on_confirm.is_valid():
 		request.on_confirm.call()
+	if request != null and request.on_confirm_text.is_valid():
+		request.on_confirm_text.call(text)
 
 
 func _on_alternative() -> void:
@@ -154,6 +181,9 @@ func _close() -> DialogRequest:
 	_request = null
 	visible = false
 	_build_options([])
+	_input_field.visible = false
+	_input_field.text = ""
+	_confirm.disabled = false
 	var target := _return_focus
 	_return_focus = null
 	if target != null and is_instance_valid(target) and target.is_visible_in_tree() and target.focus_mode != Control.FOCUS_NONE:
@@ -167,9 +197,11 @@ func _input(event: InputEvent) -> void:
 	if not visible or not event is InputEventKey or not event.is_pressed():
 		return
 	var step := 0
-	if event.is_action("ui_focus_prev", true) or event.is_action("ui_left", true) or event.is_action("ui_up", true):
+	# Im Textfeld bewegen links/rechts den Cursor, nicht den Fokus.
+	var in_field := get_viewport().gui_get_focus_owner() == _input_field
+	if event.is_action("ui_focus_prev", true) or (event.is_action("ui_left", true) and not in_field) or event.is_action("ui_up", true):
 		step = -1
-	elif event.is_action("ui_focus_next", true) or event.is_action("ui_right", true) or event.is_action("ui_down", true):
+	elif event.is_action("ui_focus_next", true) or (event.is_action("ui_right", true) and not in_field) or event.is_action("ui_down", true):
 		step = 1
 	if step == 0:
 		return
@@ -186,6 +218,8 @@ func _actions() -> Array[Control]:
 		for child: Node in _option_list.get_children():
 			if child is BaseButton and not child.is_queued_for_deletion():
 				out.append(child as Control)
+	if _input_field.visible:
+		out.append(_input_field)
 	out.append(_cancel)
 	if _alternative.visible:
 		out.append(_alternative)

@@ -12,7 +12,7 @@ Nach bestätigter Sitzordnung (`seating-setup.md`) startet der Spielleiter die P
    - **Angenommen:** Der Setup-Entwurf ist verbraucht und wird verworfen. Die Statusmeldung „Partie gestartet“ erscheint, und das Cockpit öffnet sich. Es erkennt die aktive Partie (`has_game`), zeigt die Phase „Vorbereitung“ und sagt ausdrücklich, dass geführter Ablauf, Sitzkreis und Aktionen für Nacht und Tag in späteren Arbeitspaketen folgen.
    - **Abgelehnt:** Setup und Sitzung bleiben unverändert. Die Fußzeile meldet den Grund, und der Button bleibt für einen neuen Versuch aktiv.
 
-Nacht- und Tagablauf sind über die Oberfläche noch nicht spielbar.
+Den weiteren Ablauf (Nacht, Morgen, Tag, Sieg) führt das Cockpit, siehe `cockpit.md`.
 
 ## Schichten
 
@@ -65,5 +65,4 @@ Prüf-Screenshots: `docs/evidence/game-start/`.
 
 - Nur Maus bzw. simulierte Eingaben geprüft, keine Touch- oder Tablet-Prüfung.
 - Der Start wird noch nicht gespeichert (kein SaveService). Nach einem Neustart der App ist die Partie weg.
-- Das Cockpit zeigt nur Phase und Hinweise, noch keinen Sitzkreis und keine Aktionen. `StartNight` wird über die Oberfläche noch nicht ausgelöst.
 - Wer im Hauptmenü erneut „Neue Partie“ wählt, während eine Partie läuft, kann ein neues Setup aufbauen. Der Start wird dann abgelehnt. Eine Partie zu beenden oder zu verwerfen ist noch nicht vorgesehen.

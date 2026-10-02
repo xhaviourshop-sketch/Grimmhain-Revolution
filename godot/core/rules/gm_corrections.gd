@@ -29,6 +29,13 @@ const REMOVE_APPRENTICE_MASTER := "remove_apprentice_master"              ## akt
 const TRIGGER_APPRENTICE_INHERITANCE := "trigger_apprentice_inheritance"  ## Erbe manuell auslösen
 const REVERT_APPRENTICE_INHERITANCE := "revert_apprentice_inheritance"    ## Erbe exakt zurücknehmen
 const APPRENTICE_KINDS: Array[String] = [SET_APPRENTICE_MASTER, REMOVE_APPRENTICE_MASTER, TRIGGER_APPRENTICE_INHERITANCE, REVERT_APPRENTICE_INHERITANCE]
+## Totenreichkarten (CardRules.gm_validate): Karte zuweisen oder entfernen, Stapel und Schild des Kartenschluckers, Karteneffekt beenden.
+const SET_CARD := "set_card"
+const REMOVE_CARD := "remove_card"
+const SET_STACKS := "set_stacks"
+const SET_CARD_SHIELD := "set_card_shield"
+const END_CARD_EFFECT := "end_card_effect"
+const CARD_KINDS: Array[String] = [SET_CARD, REMOVE_CARD, SET_STACKS, SET_CARD_SHIELD, END_CARD_EFFECT]
 const WOLF_CHILD_KINDS: Array[String] = [SET_WOLF_MODEL, REMOVE_WOLF_MODEL, TRANSFORM_WOLF_CHILD, REVERT_WOLF_CHILD]
 const WINNER_KINDS: Array[String] = ["village", "wolves", "solo", "none"]
 ## Einzeln korrigierbare Rollenfelder. `appears_as` trägt die Erscheinung gegenüber
@@ -51,6 +58,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		if not s.reactions.is_empty():
 			return &"reaction_open"
 		return &""
+	if CARD_KINDS.has(kind):
+		return CardRules.gm_validate(s, p, kind)
 	if kind == SET_PROTECTION or kind == REMOVE_PROTECTION:
 		return _validate_protection(s, p, kind)
 	if kind == SET_WITCH_POTION or kind == SET_RESCUE or kind == REMOVE_RESCUE:
@@ -82,6 +91,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 			return &"wrong_phase"
 		if s.day_step == Phase.DAY_ENDED:
 			return &"day_already_ended"
+		if s.death_cards and (CardRules.window_open(s) or s.day_step == Phase.DAY_CARDS_END):
+			return &"card_window_open"  # das Kartenfenster ist offen: erst schließen, dann hinrichten
 	var target := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
 	if not s.players.has(target):
 		return &"unknown_player"
@@ -95,6 +106,9 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		EXECUTE:
 			if not player.alive:
 				return &"player_dead"
+			if ExecutionRules.needs_cerberus_decision(s, target) and not p.get("cerberus_defend") is bool:
+				return &"cerberus_decision_required"
+			return GuardRoles.validate_curse_field(s, target, p)
 		REVIVE:
 			if player.alive:
 				return &"player_alive"
@@ -332,6 +346,9 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			else:
 				mirror.ability_uses[ExecutionRules.MIRROR_USE_KEY] = 1
 			_log(ctx, kind, target, old, {"mirror_available": bool(p["available"])}, reason, false)
+		SET_CARD, REMOVE_CARD, SET_STACKS, SET_CARD_SHIELD, END_CARD_EFFECT:
+			var changed := CardRules.gm_execute(ctx, p, kind)
+			_log(ctx, kind, DictRead.get_int(p, "target_id", GameState.NO_TARGET), changed["old"], changed["new"], reason, false)
 		SET_WOLF_MODEL, REMOVE_WOLF_MODEL:
 			var child := DictRead.get_int(p, "child_id")
 			var bond := WolfChildRules.bond_of(s, child)
@@ -374,7 +391,7 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			_log(ctx, kind, target, {"alive": true}, {"alive": false}, reason, true)
 			s.day_step = Phase.DAY_EXECUTION_DECIDED
 			ctx.emit(GameEvent.EXECUTION_CONFIRMED, Visibility.PUBLIC, {"target_id": target, "day": s.day_number, "gm_override": true})
-			ExecutionRules.execute(ctx, target, KillEvent.SOURCE_GM)
+			ExecutionRules.execute(ctx, target, KillEvent.SOURCE_GM, DictRead.get_bool(p, "cerberus_defend"), DictRead.get_int(p, "sage_curse"))
 		SET_ROLE_FIELD:
 			var player := s.players[target]
 			var field := DictRead.get_string(p, "field")
@@ -382,12 +399,12 @@ static func execute(ctx: RuleContext, p: Dictionary) -> void:
 			player.set(field, StringName(DictRead.get_string(p, "value")))
 			_log(ctx, kind, target, old, {field: player.get(field)}, reason, false)
 		REVIVE:
+			# Decision Log „Rollenaudit · Wiederbelebung …“: jede Wiederbelebung setzt alle begrenzten
+			# Einsätze der Person zurück; Nominierungsstatus, Bindungen und eingereihte Reaktionen bleiben.
 			var player := s.players[target]
-			var old := {"alive": false, "death": player.death.to_dict() if player.death != null else null}
-			player.alive = true
-			player.death = null
-			_log(ctx, kind, target, old, {"alive": true, "death": null}, reason, false)
-			s.win_check_pending = true
+			var old := {"alive": false, "death": player.death.to_dict() if player.death != null else null, "ability_uses": player.ability_uses.duplicate()}
+			RoleTransition.revive(s, target)
+			_log(ctx, kind, target, old, {"alive": true, "death": null, "ability_uses": {}}, reason, false)
 		SET_ROLE:
 			var player := s.players[target]
 			var old := _role_fields(player)

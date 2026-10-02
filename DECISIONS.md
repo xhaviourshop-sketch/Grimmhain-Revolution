@@ -42,3 +42,23 @@ Nur wichtige Architektur-, Produkt-, Daten- oder Sicherheitsentscheidungen mit B
 **Warum:** Das Mockup V2 (`docs/assets/p1-mockup/`, Screenshots im Übergabeordner `mockup-v2/`) zeigte, dass diese Variante auf 24 Plätzen lesbar bleibt und zur eigenen Vorlage passt.
 
 **Folgen:** Die Regel „Verbergen zeigt nur Öffentliches“ muss P3 mit den bestehenden öffentlichen Sichten (`cockpit_view.gd`) umsetzen, nicht mit einer zweiten Regelquelle. Das Roadmap-Ziel „Geheimnisse nicht durch Highlight verraten“ gilt für den Verbergen-Zustand und für eine spätere öffentliche Zweitansicht, nicht für die offene Spielleitungsansicht.
+
+## 2026-10-01: Stil der Rollensymbole für alle 72 Rollen
+
+**Entscheidung (Markus, 01.10.2026):** Der Stil des Probeblatts `P2-04-role-emblems-probe-v1.png` gilt für alle 72 Rollensymbole: rundes Medaillon, dunkler Metallrand mit vier Rautenzieren, monochromes Silber auf dunklem Grund, ein Emblem statt einer Szene. Das Symbol 6 (Wolf mit Zipfelmütze, Wolfskind) wird nicht verwendet und neu erzeugt.
+
+**Warum:** Der Stil passt zu den Medaillons in `Full UI.png` und bleibt bei 40 px lesbar. Er löst die Übergangslösung mit Kartenausschnitten ab.
+
+**Folgen:** Die restlichen Symbole entstehen in Blättern zu je 12 (Schätzung in `docs/assets/P2-GRAFIKLISTE.md`). Die Motive leitet Markus aus den Rollen ab. Bis zur Lieferung zeigt die Leiste das Kreisbild aus `night-icons-circle/`. Die Bilder bleiben Kandidaten ohne Veröffentlichungsfreigabe.
+
+## 2026-10-01: Selbst erstellte KI-Bilder als interne Laufzeitassets (Status `intern-freigegeben`)
+
+**Entscheidung (Markus, 01.10.2026, Auftrag P3):** Markus bestätigt, alle Grafiken des Nachtbretts selbst per KI erstellt zu haben. Sie dürfen als Laufzeitassets in `godot/assets/night/` liegen, solange sie nur intern genutzt werden (Entwicklung, eigene Tests). Eine Veröffentlichung bleibt gesperrt.
+
+**Prüfung der Regeln:** Bisher durfte unter `godot/` nur Material mit Status `freigegeben` liegen (Prüfwerkzeug, `ASSET-REGISTER.md`), und der Decision Log nannte OpenAI-Porträts und Legacy-UI-Grafiken ausdrücklich „nicht nach Godot kopiert, Nutzung nicht freigegeben“. Beides beschreibt den Zustand ohne Herkunftsbestätigung, kein Verbot gegen eine Entscheidung des Product Owners. `freigegeben` wäre falsch, weil Dienst, Modell, Tarif, Prompt und Nutzungsbedingungen nicht belegt sind.
+
+**Folgen:**
+- Neuer Registerstatus `intern-freigegeben`: bestätigte Eigenerstellung, interne Nutzung, Veröffentlichung gesperrt. Er verlangt einen Eintrag in `po_freigabe`. Das Prüfwerkzeug erlaubt ihn unter `godot/`, mit `--release` ist jede solche Datei ein Befund. Die Releasecheckliste führt diese Prüfung.
+- Die 202 Dateien unter `godot/assets/night/` tragen diesen Status. Alle anderen Bilder (Mockups, Kandidaten in `docs/`) bleiben `ungeklärt`.
+- Ersetzt für diese Dateien die Aussage „werden nicht nach Godot kopiert“ im Decision Log. Nicht entschieden: wann daraus `freigegeben` wird (Nutzungsbedingungen des Dienstes zum Erstellungsdatum, Prompts, Rechteprüfung für den Store).
+

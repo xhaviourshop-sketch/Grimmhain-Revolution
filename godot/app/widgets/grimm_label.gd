@@ -1,7 +1,8 @@
 class_name GrimmLabel
 extends Label
 ## Beschriftung nur über Übersetzungsschlüssel. `format_values` füllt Platzhalter wie
-## `{version}`. Bricht Wörter um statt abzuschneiden und aktualisiert sich beim Sprachwechsel.
+## `{version}`; Werte vom Typ StringName gelten als Übersetzungsschlüssel (z. B. Rollenname).
+## Bricht Wörter um statt abzuschneiden und aktualisiert sich beim Sprachwechsel.
 ## Ohne Schlüssel ist der Text leer (z. B. eine Meldungszeile ohne aktuelle Meldung).
 
 @export var text_key: String = "":
@@ -38,4 +39,13 @@ func refresh_text() -> void:
 		text = ""
 		return
 	var translated := tr(text_key)
-	text = translated.format(format_values) if not format_values.is_empty() else translated
+	text = translated.format(translated_values(self, format_values)) if not format_values.is_empty() else translated
+
+
+## Platzhalterwerte mit übersetzten Schlüsseln (StringName) für `String.format`.
+static func translated_values(node: Node, values: Dictionary) -> Dictionary:
+	var out := {}
+	for k: Variant in values:
+		var v: Variant = values[k]
+		out[k] = node.tr(String(v)) if v is StringName else v
+	return out

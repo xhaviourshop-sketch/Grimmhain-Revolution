@@ -1,0 +1,88 @@
+# Herkunftsnotizen: Nachtbrett-Mockups (P1)
+
+**Stand:** 2026-10-01 · **Status aller Dateien:** Entwicklungsmaterial, **keine Veröffentlichungsfreigabe** · Register: `docs/masterplan/asset-register.csv` (nur versionierte Dateien, siehe `ASSET-REGISTER.md`)
+
+## 1. Eigene Designteile (Markus)
+
+Markus bestätigt am 2026-10-01, dass er diese Grafiken selbst per KI-Werkzeug hat erstellen lassen. Dienst, Modell, Tarif und Prompt sind **nicht belegt**. Das ist eine Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers; der Status bleibt `ungeklärt`, die Freigabe setzt nur der Product Owner.
+
+Quelle der Layout-Vorlage: `Grimmhain-Werwolf/Grimmhain Assets/Assets/Spielfeld.png` (Gesamtbrett) und `Full UI.png` (Komponentenblatt). Einzelteile liegen in `Grimmhain Assets/`. Dateien, die schon unter `app/public/assets/ui/` versioniert sind, tragen den Vermerk in ihrer Registerzeile (44 Zeilen `ui-*`, SHA-256 identisch). Alle anderen sind nicht versioniert und stehen deshalb hier statt im Register.
+
+Nicht verwenden: alles aus „Blood on the Clocktower“ / „Botc-react“ (anderes Spiel, fremde Marken). `Solo_*.png` und `Wolf_Male.png` nie als Platzporträt.
+
+## 2. ChatGPT-Kandidaten (P1)
+
+ChatGPT-Bildgenerierung am 2026-10-01 durch Markus, Prompts aus `BRIEFINGS-FUER-CHATGPT.md` (Übergabeordner). G1 mit `03-ziel-nacht.png` als Stimmungsreferenz, G2A und G3 mit G1 als Stilreferenz, G2B im selben Chat wie G2A. Bearbeitung im Mockup: G1 abgedunkelt und warme Reflexe per Shader gedämpft, G2 zugeschnitten (10 von 12 Gesichtern), G3 vom Magenta freigestellt und verkleinert.
+
+## 3. Im Mockup V2 verwendete Dateien (SHA-256, erste 16 Zeichen)
+
+| Datei | SHA-256 |
+|---|---|
+| `player-frame-neutral.png` | `5eb16ce18b0d2d6d` |
+| `ring-marked.png` | `abbee34d548c7f52` |
+| `ring-poisoned.png` | `b81bb78726ea091c` |
+| `ring-silenced.png` | `25486ef2548290da` |
+| `overlay-target.png` | `102a0aa1150d7b41` |
+| `overlay-active.png` | `fc1318f681d276a7` |
+| `overlay-protected.png` | `15b1ffe059459442` |
+| `overlay-selected.png` | `14a8df96a20e21f8` |
+| `overlay-dead.png` | `7a3324bc516e3887` |
+| `protocol-tab-de.png` | `592a3e6a767ed4ab` |
+| `options-tab.png` | `f7a9706c9473618f` |
+| `panel-protocol-open.png` | `de7f3b5397371885` |
+| `panel-options-open.png` | `5e641b3945a270eb` |
+| `action-frame-night.png` | `95bf3449c64ac7ae` |
+| `tooltip-frame.png` | `84bfc7033e43cc0e` |
+| `clock-cartouche.png` | `e11964fd603cbeb0` |
+| `btn-next-step.png` | `508e185e6a832325` |
+| `btn-undo.png` | `74d6ec06ca55667c` |
+| `nightorder-bar-frame.png` | `8fccc30e56fe7be8` |
+| `nightorder-slot-active.png` | `c13a49e2f4c6616a` |
+| `nightorder-slot-done.png` | `4755a98108b9464f` |
+| `nightorder-slot-inactive.png` | `b74733a7980cac64` |
+| `Assets/Spielfeld.png` | `93d74cbcfa2e234b` |
+| `Assets/Full UI.png` | `1ca82df6b13843b1` |
+| `production-pilot/role-art/portraits-512/portrait-werwolf.webp` | `2ae6308fa1df3ae7` |
+| `G1-village-night-v1.png` (Downloads) | `8386a51d8cee23fd` |
+| `G2A-portraits-v1.png` (Downloads) | `d20352b43d7863b5` |
+| `G2B-portraits-v1.png` (Downloads) | `f4f2892faa05a7d6` |
+| `G3-frame-action-card-v1.png` (Downloads) | `426d602bc5007f6b` |
+
+## 4. Qualitätsbefunde an den Teilen (für die Produktion)
+
+- `nightorder-slot-*.png`: Die Nummernsockel sind weiß gefüllt (im Mockup in einer Kopie dunkel ersetzt), am Rand weiße Säume und vereinzelte Pixelpunkte.
+- Rollen-Nachtsymbole (`night-icon-*.webp`): farbige Eckmarken von Karten sind noch sichtbar.
+- `options-tab.png` trägt den Text „OPTION“ (nicht „OPTIONEN“) im Bild, die Protokoll-Lasche den Text „PROTOKOLL“ (DE) bzw. „PROTOCOL“ (EN). Texte im Bild widersprechen der Roadmap (kein Text in generierten Bildern, DE/EN über Lokalisierung).
+- `portrait-werwolf.webp` (Rollenbild) ist nur vorläufig (`PILOT-STATUS.md`).
+
+## 5. ChatGPT-Kandidaten (P2)
+
+ChatGPT-Bildgenerierung am 2026-10-01 durch Markus, Prompts aus `P2-BRIEFINGS-FUER-CHATGPT.md` (Übergabeordner). **Status aller Dateien: ungeklärt**, Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers.
+
+| Bild | Block | Verwendung |
+|---|---|---|
+| `P2-01-portraits-C-v1.png` (4 × 2) | P2-1 | 8 Gesichter, alle in `faces/` |
+| `P2-02-portraits-D-v1.png` (4 × 2) | P2-2 | 8 Gesichter, 6 in `faces/` (D5 und D6 aussortiert) |
+| `P2-03-status-badges-v1.png` (3 × 2, Magenta) | P2-3 | 6 Abzeichen in `badges/` |
+| `P2-04-role-emblems-probe-v1.png` (4 × 3, Magenta) | P2-4 | 11 Symbole in `emblems/`, Symbol 6 nicht verwendet |
+
+Bearbeitung: Zuschnitt und Magenta-Freistellung per Skript (`p2-mockup/tools/`). Die Originalblätter liegen nur im Übergabeordner `Downloads/Grimmhain-P1-Nachtentwurf/`, nicht im Repository.
+
+Reparierte Teile (`p2-mockup/parts/`) stammen aus den Mediendateien in „Grimmhain Assets“ (Nutzerangabe wie in Abschnitt 1) und sind mit eigenen Skripten bearbeitet. Das Zahnrad in `tab-options.png` ist selbst gezeichnet.
+
+## 6. Nachtszene (P4 Atmosphäre)
+ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `szene-nacht-v2.png` (Downloads, 1536 x 1024, SHA-256 `9f20734a39fc9941`; v1 verworfen, Platz zu flach). Status der abgeleiteten Laufzeitdateien: `intern-freigegeben`, Veröffentlichung gesperrt.
+Bearbeitung: `tools/build_night_windows.py` erkennt die Fensterinseln, dunkelt sie im Grundbild ab (`scene-night-base.webp`) und schreibt die ID-Karte (`scene-night-windows.png`). Das Ausgangsbild liegt nur im Übergabeordner. Platzmitte im Bild bei etwa 50,8 % / 50,8 %; sie wird auf die Ringmitte gelegt.
+
+## 7. Oberflächenteile Hain (P5)
+ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `ui-paket-v1.png` (Downloads, 1774 x 887, echter Alphakanal, SHA-256 `33f8b4f01851567a`). Status der sieben abgeleiteten Teile in `godot/assets/ui/hain/`: `intern-freigegeben`, Veröffentlichung gesperrt.
+Bearbeitung: `tools/build_grove_ui.py` (Zuschnitt, dehnbare Teile aus Endstücken, Kartenrahmen links aus dem gespiegelten rechten Rand, Medaillon aus dem Medaillon der Karte freigestellt, Größenänderung in vormultipliziertem Alpha). Gemessene Geometrie steht in `godot/app/theme/grove_art_data.gd` (erzeugt). Das Ausgangsbild liegt nur im Übergabeordner.
+
+## 8. Bedienteile Nachtbrett (Paket 3)
+ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `ui-paket-v2.png` (Downloads, 1774 x 887, echter Alphakanal, SHA-256 `f8cb3d9b18068c77`). Abgeleitete Teile in `godot/assets/ui/hain/`: `side_tab`, `night_bar` (mit Mittelspange), `role_medallion`, `cartouche`, `icon_button_round`, `back_plate`. Status: `intern-freigegeben`, Veröffentlichung gesperrt.
+Zusätzlich `arrow_left` und `arrow_right`: der Bronzepfeil aus `assets/night/ui/arrow-left.png` (P3), nur auf Mondsilber umgefärbt (Helligkeit bleibt, Farbton ersetzt), damit kein Gold auf dem Brett bleibt.
+Bearbeitung: `tools/build_grove_ui.py` (zweite Quelle `--source2`). Die alten Bilder `bar-frame`, `slot-*`, `plate-frame`, `tab-*` unter `assets/night/ui/` sind auf dem Brett ungenutzt, aber nicht entfernt.
+
+## 9. Silbersymbole der 72 Rollen (P6c)
+ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): acht Bögen `symbole-01.png` bis `symbole-08.png` (Downloads/symbole, 1254 x 1254, 3 x 3 Motive, echter Alphakanal) mit Zuordnungsliste `symbol-boegen-zuordnung.csv`. Abgeleitete Dateien `godot/assets/night/emblems/<rollen_id>.png` (256 x 256): Status `intern-freigegeben`, Veröffentlichung gesperrt.
+Bearbeitung: `tools/build_role_emblems.py` (zusammenhängende Alpha-Bereiche statt fester Drittel, Schwerpunkt bestimmt die Zelle, kleine Teile zum nächsten Motiv, abgeschnittene Spitzen von Nachbarmotiven entfernt, quadratisch zentriert mit Rand). Kontrollbild `symbole/kontrolle-72.png`. Die sieben alten Symbole mit Bronzerand liegen unverändert in `emblems/_alt/` (ersetzt, ungenutzt).

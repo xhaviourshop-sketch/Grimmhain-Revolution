@@ -19,6 +19,8 @@ Pfade relativ zu `docs/specs/vertical-slice/`.
 - **B6**: Personen A–F, IDs 1–6, Sitzreihenfolge 1–6. A `werwolf`, B `trugbilderwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, F `dorfbewohner`. `reveal_role_on_death` = Nein.
 - **B9L**: Personen A–G, L, W, IDs 1–9, Sitzreihenfolge 1–9. A `werwolf`, B `werwolf`, C `schutzengel`, D `das-orakel`, E `waldhexe`, F `dorfbewohner`, G `dorfbewohner`, L `lehrling` (ID 8), W `wolfskind` (ID 9). `reveal_role_on_death` = Nein. Nachtreihenfolge Nacht 1: W (0.9) → L (1.1) → C (1.3) → Rudel (2.0) → E (3.4) → D (4.6).
 
+**PE-07 (30.09.2026, Regelversion 0.14):** In einer Startbesetzung kommt jede Rolle höchstens einmal vor, nur Die Gebundenen dürfen mehrfach beginnen. B9L mit zwei Werwölfen und zwei Dorfbewohnern ist deshalb kein gültiger Start mehr. Gültige Fassung **B9L′** mit denselben IDs und Nachtschritten: B `blutwolf` statt des zweiten `werwolf`, G `amalia` statt des zweiten `dorfbewohner`. Szenarien, die gleiche Rollen brauchen (AS-L03: drei Kandidaten mit derselben Rolle; zwei Lehrlinge, zwei Waldhexen, zwei Schutzengel), erzeugen sie nach dem Start durch die Spielleiterkorrektur „Rolle setzen“ (Testhilfe `Fixtures.with_copies`); so entstehen gleiche Rollen auch im Spiel. In den Szenarien AS-C01 bis AS-C12 steht B statt eines zweiten `werwolf` ein `blutwolf` und statt der Dorfbewohner C bis F je eine verschiedene wirkungsarme Dorfrolle (C `dorfbewohner`, D `amalia`, E `waechter-am-tor`, F `detektiv`; in AS-C03 C `amalia`, D `waechter-am-tor`, E `wahnsinniger-kutscher`, F `detektiv`). Die Erwartungen bleiben unverändert (`godot/tests/scenarios/*.json`).
+
 ---
 
 ## 1. Kern (Stufe C)
@@ -132,6 +134,7 @@ Undo/Redo gehört laut Masterplan in Phase 3. Die Szenarien sind mit dem Befehls
 - Given: 3 von 6 Personen haben `ConfirmRoleShown`.
 - When: Neustart.
 - Then: Rollenanzeige setzt bei der vierten Person fort; keine Rolle ist im Cockpit sichtbar, bis der Spielleiter die Anzeige verlässt.
+- Nachweis (29.09.2026): `test_role_shown::test_resume_continues_with_first_unconfirmed_person_in_seat_order`, `test_role_show::test_resume_after_restart_continues_with_first_unconfirmed_person`.
 
 ## 3. Rollen (Stufe V)
 
@@ -483,18 +486,22 @@ Im Regelkern umgesetzt und getestet (`../../../godot/tests/unit/test_spiegelwolf
 
 ## 6. Morgenbericht und Geheimhaltung (Stufe V, DR-04)
 
-**AS-M01 · Öffentlich nur der Name**
-- Given: `reveal_role_on_death` = Nein; Nacht mit Schutz auf F, Angriff auf F, Gift auf A.
+**AS-M01 · Öffentlich nur der Name (Wiederbelebungsrunde)** *(ersetzt am 29.09.2026, DI-01: statt `reveal_role_on_death` = Nein)*
+- Given: Wiederbelebungsrunde (die Startbesetzung enthält eine direkte Wiederbelebungsrolle); Nacht mit Schutz auf F, Angriff auf F, Gift auf A.
 - Then: Der öffentliche Teil nennt nur „A"; keine Rolle, keine Ursache. Der private Teil nennt Schutz, Angriff, Gift und Ursachen.
 
-**AS-M03 · Rolle bei Tod aufdecken**
-- Given: `reveal_role_on_death` = Ja; wie AS-M01.
+**AS-M03 · Rolle bei Tod aufdecken (Runde ohne Wiederbelebung)** *(ersetzt am 29.09.2026, DI-01: statt `reveal_role_on_death` = Ja)*
+- Given: Runde ohne Wiederbelebung (keine direkte Wiederbelebungsrolle in der Startbesetzung); wie AS-M01.
 - Then: Der öffentliche Teil nennt „A" und `werwolf`; weiterhin keine Ursache.
+
+**AS-M04 · Todeseffekt angesagt (DI-03)** *(neu, 29.09.2026)*
+- Given: Ritter stirbt durch den Rudelangriff, der nächste Wolf stirbt mit; einmal Wiederbelebungsrunde, einmal Runde ohne Wiederbelebung.
+- Then: Der öffentliche Teil enthält eine Ansage „Ritter … reißt … mit in den Tod“ mit Rolle zum Ereigniszeitpunkt, in beiden Runden. Die Todesansagen der beiden nennen die Rolle nur in der Runde ohne Wiederbelebung. Keine Ursache, kein Schutz, keine Markierung.
 
 **AS-M02 · Keine Geheimnisse in öffentlicher Projektion**
 - Given: beliebiger Zustand.
 - When: öffentliche Projektion wird erzeugt.
-- Then: keine Rollen lebender Personen, keine Rollen Toter bei `reveal_role_on_death` = Nein, keine Todesursachen, keine Effekte, keine Nachtziele, keine Lehrling-Bindungen, keine Informationsergebnisse (Negativtest über alle Felder).
+- Then: keine Rollen lebender Personen, keine Rollen Toter in Wiederbelebungsrunden (DI-01), keine Todesursachen, keine Effekte außer den ausdrücklich angesagten Todeseffekten (DI-03: Effekt und Rolle zum Ereigniszeitpunkt), keine Nachtziele, keine Lehrling-Bindungen, keine Informationsergebnisse (Negativtest über alle Felder).
 
 ## 7. Übersteuerung (Stufe V)
 

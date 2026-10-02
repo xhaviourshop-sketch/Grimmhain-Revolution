@@ -4,7 +4,7 @@ extends UiTestCase
 
 const FIXED_SEED := 777001
 const ROLE_IDS: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhexe", "das-orakel", "trugbilderwolf",
-		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf"]
+		"sensentraeger", "wolfskind", "lehrling", "manipulator", "spiegelwolf", "siegreicher-wolf", "doppelspion", "selbstmoerder", "dorfchronistin", "die-gebundenen", "waldlaeufer", "doktor", "wahnsinniger-kutscher", "nachtwaechter", "dorfwache", "ritter", "faehrtenleser", "besessener-wolf", "korrupter-richter", "waechter-am-tor", "blutwolf", "spuerhund", "parasit", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "henker", "traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen", "der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer", "seelentauscher", "daemonischer-wolf", "koenig-lykaon", "schicksalswolf", "kutscher", "dr-victor-frankenstein", "rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber", "rachsuechtiger-wolf", "zeitwaechter"]
 
 
 func _dialog(shell: Control) -> Control:
@@ -36,8 +36,9 @@ func _to_distribution(shell: Control, count: int = 8, counts: Dictionary = {}) -
 	if counts.is_empty():
 		await press(find_button(screen, "SuggestButton"))
 	else:
-		for role: Variant in counts:
-			s.call("set_role_count", StringName(str(role)), int(counts[role]))
+		var legal := Fixtures.legal_counts(counts)  # PE-07: Füllplätze werden zu verschiedenen Füllrollen
+		for role: Variant in legal:
+			s.call("set_role_count", StringName(str(role)), int(legal[role]))
 	# DR-08: jede Trugbilderwolf-Kopie (auch aus dem Vorschlag) erhält ausdrücklich eine Scheinrolle.
 	for d: Variant in (s.call("view") as Dictionary)["roles"].get("decoys", []):
 		s.call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"waldhexe")
@@ -193,7 +194,8 @@ func test_manual_distribution_with_picker_dialog() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
-	var screen := await _to_distribution(shell, 6, {"werwolf": 2, "manipulator": 1, "dorfbewohner": 3})
+	# Zwei Kopien einer Rolle gibt es beim Start nur bei Den Gebundenen (PE-07): sie tragen den Kopien-Nachweis der Auswahl.
+	var screen := await _to_distribution(shell, 6, {"werwolf": 1, "manipulator": 1, "die-gebundenen": 2, "dorfbewohner": 1, "amalia": 1})
 	var dialog := _dialog(shell)
 	await press(find_button(screen, "ModeManualButton"))
 	assert_false(dialog.visible, "ohne Zuordnung: Wechsel ohne Rückfrage")
@@ -215,24 +217,24 @@ func test_manual_distribution_with_picker_dialog() -> void:
 		if String(c.name).begins_with("Pick_"):
 			options.append(String(c.name).trim_prefix("Pick_"))
 	options.sort()
-	assert_eq(options, ["dorfbewohner", "manipulator", "werwolf"] as Array[String], "nur verfügbare Rollen des Pools")
+	assert_eq(options, ["amalia", "die-gebundenen", "dorfbewohner", "manipulator", "werwolf"] as Array[String], "nur verfügbare Rollen des Pools")
 	var owner := focus_owner()
 	assert_true(owner != null and dialog.is_ancestor_of(owner), "Fokus im Dialog")
 	for i: int in 8:
 		await key(KEY_TAB)
 		owner = focus_owner()
 		assert_true(owner != null and dialog.is_ancestor_of(owner), "Tab bleibt im Dialog (%d)" % i)
-	await press(find_button(dialog, "Pick_werwolf"))
+	await press(find_button(dialog, "Pick_die-gebundenen"))
 	assert_false(dialog.visible, "Auswahl schließt den Dialog")
-	assert_eq(str((_dist(shell)["assignment"] as Array)[0]["role"]), "werwolf", "zugewiesen")
+	assert_eq(str((_dist(shell)["assignment"] as Array)[0]["role"]), "die-gebundenen", "zugewiesen")
 	assert_true(find_button(_assignment_rows(screen)[0], "ChooseRoleButton").has_focus(), "Fokus zurück zur Zeile")
 	assert_eq(_label(_assignment_rows(screen)[0], "AssignmentStateLabel"), tr("ui.setup.distribution.assigned"), "Standardansicht verrät die Rolle nicht")
 	assert_true(_label(screen, "RemainingCountLabel").contains("5"), "Rest aktualisiert")
 	await _assert_public_texts_secret(shell, "manuell teilweise")
 	await press(find_button(_assignment_rows(screen)[1], "ChooseRoleButton"))
-	await press(find_button(dialog, "Pick_werwolf"))
+	await press(find_button(dialog, "Pick_die-gebundenen"))
 	await press(find_button(_assignment_rows(screen)[2], "ChooseRoleButton"))
-	assert_true(find_node(dialog, "Pick_werwolf") == null or not (find_node(dialog, "Pick_werwolf") as Control).is_visible_in_tree(), "vergebene Rolle nicht mehr angeboten")
+	assert_true(find_node(dialog, "Pick_die-gebundenen") == null or not (find_node(dialog, "Pick_die-gebundenen") as Control).is_visible_in_tree(), "beide Kopien vergeben: Rolle nicht mehr angeboten")
 	await key(KEY_ESCAPE)
 	assert_false(dialog.visible, "Escape bricht die Auswahl ab")
 	assert_eq(str(_view(shell)["step"]), "distribution", "Escape schließt nur den Dialog")

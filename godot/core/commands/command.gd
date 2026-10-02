@@ -17,6 +17,13 @@ const SKIP_STEP := &"SkipStep"
 const CANCEL_PROMPT := &"CancelPrompt"
 const GM_CORRECTION := &"GmCorrection"
 const OVERRIDE_SHOWN_ROLE := &"OverrideShownRole"
+const AMALIA_SACRIFICE := &"AmaliaSacrifice"
+const NAME_WOLF := &"NameWolf"  ## Nekromant benennt am Tag geheim einen Wolf (E-19)
+const CONFIRM_ROLE_SHOWN := &"ConfirmRoleShown"  ## Person hat ihre Rolle gesehen (Rollenanzeige, Fortschritt gespeichert)
+const ACK_NOTICE := &"AckNotice"  ## privater Hinweis wurde der betroffenen Person gezeigt (DI-04, DI-06, DI-07)
+const CARD_ACT := &"CardAct"  ## Kartenfenster: tote Person spielt, behält oder tauscht ihre Totenreichkarte
+const CARD_CLOSE_WINDOW := &"CardCloseWindow"  ## Kartenfenster schließen: alle übrigen behalten ihre Karte
+const CARD_TABLE_ACTION := &"CardTableAction"  ## gemeldeter Verstoß einer Tagesregel (Nebelhorn, Stummfilm)
 
 var type: StringName = &""
 var payload: Dictionary = {}
@@ -55,6 +62,12 @@ static func answer_stage_targets(prompt_id: int, stage: String, targets: Array) 
 	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "targets": targets})
 
 
+## Bestätigter Zufallsvorschlag (RM-DR-015.2): der Regelkern zieht erneut aus dem gespeicherten Generator und nimmt
+## nur an, wenn `targets` genau diesem Ergebnis entspricht (InfoSteps.random_choice).
+static func answer_random(prompt_id: int, stage: String, targets: Array) -> Command:
+	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "targets": targets, "random": true})
+
+
 ## Orakel-Prompt in der Stufe „Gezeigt“: gezeigtes Ergebnis übersteuern (Spielleiter,
 ## bestätigte Warnung und Begründung). Wahrheit und ermitteltes Ergebnis bleiben unverändert.
 static func override_shown_role(prompt_id: int, shown_role: String, reason: String) -> Command:
@@ -76,6 +89,11 @@ static func decide_execution(target_id: int) -> Command:
 
 static func end_day() -> Command:
 	return create(END_DAY)
+
+
+## Amalia opfert sich am Tag; `answer` ist die wahrheitsgemäße Ja/Nein-Antwort des Spielleiters (I-09).
+static func amalia_sacrifice(player_id: int, answer: bool) -> Command:
+	return create(AMALIA_SACRIFICE, {"player_id": player_id, "answer": answer})
 
 
 static func confirm_win(candidate_id: int) -> Command:
@@ -116,3 +134,32 @@ func to_dict() -> Dictionary:
 
 static func from_dict(d: Dictionary) -> Command:
 	return create(StringName(DictRead.get_string(d, "type")), DictRead.get_dict(d, "payload"))
+
+
+## Die Person `person_id` hat ihre Rolle gesehen und bewusst geschlossen (nicht: bloß geöffnet oder abgebrochen).
+static func confirm_role_shown(person_id: int) -> Command:
+	return create(CONFIRM_ROLE_SHOWN, {"person_id": person_id})
+
+
+## Der Hinweis `notice_id` wurde gezeigt; er verlässt die Warteschlange.
+static func ack_notice(notice_id: int) -> Command:
+	return create(ACK_NOTICE, {"notice_id": notice_id})
+
+
+## Kartenfenster: `action` ist `play`, `keep` oder `exchange`; `owner_id` ist die gerade gefragte tote Person.
+static func card_act(owner_id: int, action: String) -> Command:
+	return create(CARD_ACT, {"owner_id": owner_id, "action": action})
+
+
+static func card_close_window() -> Command:
+	return create(CARD_CLOSE_WINDOW)
+
+
+## Verstoß gegen eine Tagesregel einer Karte (`effect_id`) durch `person_id`.
+static func card_table_action(effect_id: int, person_id: int) -> Command:
+	return create(CARD_TABLE_ACTION, {"effect_id": effect_id, "person_id": person_id})
+
+
+## Nekromant `player_id` benennt am Tag `target_id` als Werwolf (höchstens einmal je Tag, geheim).
+static func name_wolf(player_id: int, target_id: int) -> Command:
+	return create(NAME_WOLF, {"player_id": player_id, "target_id": target_id})
