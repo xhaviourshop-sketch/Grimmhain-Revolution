@@ -677,7 +677,7 @@ static func from_dict(d: Dictionary) -> GameState:
 	s.hades_barriers = barriers
 	for key: String in ["pack_redirect_from", "pack_extra_redirect_from"]:
 		var from := DictRead.get_int(d, key, -1)
-		if from != -1 and (not s.players.has(from) or not SoloRules.has_ability(s, from, RoleCatalog.NEKROMANT)):
+		if from != -1 and not s.players.has(from):  # die Rolle kann der Seelentauscher nach der Umlenkung getauscht haben
 			return null
 		s.set(key, from)
 	# Schicksalswolf (DA-11 bis DA-15): Markierungen anderer Personen je lebendem Schicksalswolf, höchstens drei verschiedene
@@ -705,7 +705,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var fate_from := DictRead.get_int(item, "redirect_from", -1) if item is Dictionary else -2
 		if not (s.phase == Phase.NIGHT or s.phase == Phase.GAME_OVER) or s.night_number != RoleCatalog.FATE_NIGHT or not s.players.has(killer) or not s.players.has(fated) or killer == fated:
 			return null
-		if fate_from != -1 and (not s.players.has(fate_from) or not SoloRules.has_ability(s, fate_from, RoleCatalog.NEKROMANT)):
+		if fate_from != -1 and not s.players.has(fate_from):
 			return null
 		s.fate_kills.append({"wolf_id": killer, "target_id": fated, "redirect_from": fate_from})
 	for item: Variant in DictRead.get_array(d, "voodoo_dolls"):
