@@ -67,6 +67,24 @@ func test_public_part_without_roles_by_default() -> void:
 	assert_eq(notices, ["ui.morning.notice.bells"], "Glocken des Nachtwächters (Wolf sitzt neben ihm)")
 
 
+## AUDIT-2026-10-02 S-01: Die Reihenfolge der Ansage folgt dem Sitzplatz, nie der Auflösungsreihenfolge (Gift vor Rudel).
+## Das Rudel tötet Person 5 (Platz 5), die Hexe vergiftet Person 6 (Platz 6); aufgelöst wird zuerst das Gift.
+func test_deaths_are_announced_by_seat_not_by_resolution_order() -> void:
+	var session := _session(false)
+	session.start_night()
+	assert_true(session.answer_targets([7]).ok, "Schutz 7")
+	session.begin_next_step()
+	assert_true(session.answer_targets([5]).ok, "Rudel 5")
+	session.begin_next_step()
+	assert_true(session.answer_choice(false).ok, "kein Heiltrank")
+	assert_true(session.answer_choice(true).ok, "Gift")
+	assert_true(session.answer_targets([6]).ok, "Giftziel 6")
+	assert_true(session.answer_choice(true).ok, "bestätigt")
+	assert_true(session.end_night().ok, "Morgen")
+	var ids := (session.morning_report()["public"]["deaths"] as Array).map(func(d: Dictionary) -> int: return int(d["person_id"]))
+	assert_eq(ids, [5, 6], "Morgenansage nach Sitzplatz")
+
+
 func test_private_part_names_causes_and_rescues() -> void:
 	var session := _session(false)
 	_night(session)

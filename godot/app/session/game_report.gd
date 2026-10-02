@@ -103,7 +103,8 @@ static func _next_phase(events: Array[GameEvent], from: int, to: StringName) -> 
 
 
 ## Ereignisse eines Tages nach der Morgenansage bis zur nächsten Nacht.
-static func _day(s: GameState, span: Array[GameEvent], entries: Array) -> void:
+static func _day(s: GameState, raw_span: Array[GameEvent], entries: Array) -> void:
+	var span := _deaths_by_seat(s, raw_span)
 	for e: GameEvent in span:
 		var d := e.data
 		match e.type:
@@ -133,6 +134,30 @@ static func _day(s: GameState, span: Array[GameEvent], entries: Array) -> void:
 	if not cards.is_empty():
 		entries.append({"vis": "public", "kind": "cards", "cards": cards})
 	_corrections(s, span, entries)
+
+
+## Tode desselben Befehls stehen nach Sitzplatz, nicht in Auflösungsreihenfolge (Audit S-01): Die Plätze der Todesereignisse
+## bleiben, nur ihre Besetzung wird nach Sitzplatz sortiert.
+static func _deaths_by_seat(s: GameState, span: Array[GameEvent]) -> Array[GameEvent]:
+	var out: Array[GameEvent] = span.duplicate()
+	var by_command := {}
+	for i: int in out.size():
+		if out[i].type == GameEvent.SEAT_DIED:
+			var group: Array = by_command.get(out[i].command_index, [])
+			group.append(i)
+			by_command[out[i].command_index] = group
+	for command: Variant in by_command:
+		var slots: Array = by_command[command]
+		var deaths: Array[GameEvent] = []
+		for i: int in slots:
+			deaths.append(out[i])
+		deaths.sort_custom(func(a: GameEvent, b: GameEvent) -> bool:
+			var seat_a := s.seat_of(int(a.data["target_id"]))
+			var seat_b := s.seat_of(int(b.data["target_id"]))
+			return seat_a < seat_b if seat_a != seat_b else int(a.data["target_id"]) < int(b.data["target_id"]))
+		for k: int in slots.size():
+			out[slots[k]] = deaths[k]
+	return out
 
 
 static func _corrections(s: GameState, span: Array[GameEvent], entries: Array) -> void:

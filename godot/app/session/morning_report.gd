@@ -69,7 +69,7 @@ static func day_deaths(s: GameState, events: Array[GameEvent]) -> Array:
 		var entry := _person(s, int(e.data["target_id"]))
 		entry["role_id"] = str(e.data["role_id"]) if not s.revival_round else ""
 		out.append(entry)
-	return out
+	return by_seat(out)
 
 
 ## Öffentliche Kartenereignisse des laufenden Tages (nach dem Befehl, mit dem der Tag begann), in Ereignisreihenfolge.
@@ -163,7 +163,7 @@ static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 				notices.append({"key": "ui.morning.notice.bells"})
 			GameEvent.JUDGE_NOMINATION_PUBLIC:
 				notices.append({"key": "ui.morning.notice.judge", "person": _person(s, int(e.data["nominee_id"]))})
-	return {"deaths": deaths, "revived": revived, "notices": notices, "effects": effects_of(s, span), "reveal_roles": not s.revival_round,
+	return {"deaths": by_seat(deaths), "revived": revived, "notices": notices, "effects": effects_of(s, span), "reveal_roles": not s.revival_round,
 		"cards": CardView.public_lines(s, span)}
 
 
@@ -202,6 +202,17 @@ static func _step_role(step_id: String) -> String:
 	if parts.size() >= 4 and parts[0] == "night":
 		return "pack" if parts[3] == "pack2" else parts[3]
 	return "reaction" if step_id.begins_with("reaction:") else ""
+
+
+## Öffentliche Ansagen von Toten stehen nach Sitzplatz, nie in Auflösungsreihenfolge: Gift, Markierung und Rudel würden
+## sonst die Todesursache verraten (DR-04, Audit S-01). Gleicher Platz bleibt stabil nach Personen-ID.
+static func by_seat(entries: Array) -> Array:
+	var out := entries.duplicate()
+	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a["seat"]) != int(b["seat"]):
+			return int(a["seat"]) < int(b["seat"])
+		return int(a["person_id"]) < int(b["person_id"]))
+	return out
 
 
 static func _person(s: GameState, id: int) -> Dictionary:
