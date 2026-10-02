@@ -678,12 +678,14 @@ static func _answer_prompt(ctx: RuleContext, targets: Array[int]) -> void:
 				s.charms.append({"piper_id": prompt.actor_id, "target_id": id})
 			ctx.emit(GameEvent.CHARMED, Visibility.GM, {"piper_id": prompt.actor_id, "target_ids": targets.duplicate(), "night": s.night_number})
 			NoticeRules.queue(ctx, NoticeRules.PIPER_NEW, targets)  # DI-06; „Alle Verzauberten“ ist der Schritt StepQueue.PIPER_ALL (PE-06)
+			s.win_check_pending = true  # E-01: der Sieg kann ohne Tod erfüllt sein
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_PEST:
 			SoloRules.infect(s, target)
 			ctx.emit(GameEvent.INFECTED, Visibility.GM, {"pest_id": prompt.actor_id, "target_id": target, "night": s.night_number})
 			NoticeRules.queue(ctx, NoticeRules.PEST_INFECTED, [target] as Array[int])  # DI-07
+			s.win_check_pending = true  # E-02: der Sieg kann ohne Tod erfüllt sein
 			s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 			s.next_night_step += 1
 		PendingPrompt.OWNER_PROPHET:

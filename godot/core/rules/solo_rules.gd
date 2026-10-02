@@ -87,6 +87,7 @@ static func spread(ctx: RuleContext) -> void:
 		ctx.emit(GameEvent.PLAGUE_SPREAD, Visibility.GM, {"from_id": id, "target_id": target, "new": fresh, "night": s.night_number})
 		if fresh:
 			NoticeRules.queue(ctx, NoticeRules.PEST_INFECTED, [target] as Array[int])  # DI-07: auch nach der Ausbreitung
+			s.win_check_pending = true  # E-02: die Ausbreitung kann den Sieg ohne Tod erfüllen
 
 
 static func prophet_marks_of(s: GameState, prophet_id: int) -> Array[int]:
