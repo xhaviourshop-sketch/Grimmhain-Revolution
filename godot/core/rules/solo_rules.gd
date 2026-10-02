@@ -231,7 +231,7 @@ static func voodoo_on_death(s: GameState, dead_id: int) -> void:
 
 static func voodoo_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.VOODOO and s.alive_ids().size() <= RoleCatalog.VOODOO_MAX_LIVING
+	return p != null and p.alive and p.role_id == RoleCatalog.VOODOO and WinRules.effective_alive_ids(s).size() <= RoleCatalog.VOODOO_MAX_LIVING
 
 
 # --- Nekromant ------------------------------------------------------------------------------------
@@ -551,5 +551,6 @@ static func lone_wolf_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
 	if p == null or not p.alive or p.role_id != RoleCatalog.RACHSUECHTIGER_WOLF:
 		return false
-	var others := _others_alive(s, id)
+	var others := WinRules.effective_alive_ids(s)  # aufgeschobene Tote zählen als tot (wie in WinRules.evaluate)
+	others.erase(id)
 	return not others.any(func(o: int) -> bool: return s.players[o].counts_as_wolf) and RoleCatalog.parity_weight(p.role_id) >= others.size()

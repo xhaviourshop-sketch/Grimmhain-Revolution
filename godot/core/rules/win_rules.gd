@@ -20,10 +20,20 @@ extends RefCounted
 ## Spielleiter erklärt das Ergebnis per GmCorrection „declare_winner“.
 
 
+## Lebende ohne aufgeschobene Tote: Der Notanker (aufgeschobener Tod) zählt für ALLE Siegbedingungen und deren
+## Ladeprüfung bereits als tot (DECISION-LOG, Audit B-03/B-05/CM-01). Siegprüfungen zählen nie über `alive_ids()`.
+static func effective_alive_ids(state: GameState) -> Array[int]:
+	var deferred := CardHooks.deferred_ids(state)
+	var out: Array[int] = []
+	for id: int in state.alive_ids():
+		if not deferred.has(id):
+			out.append(id)
+	return out
+
+
 ## Alle erfüllten Siegbedingungen: [{kind, reason_key, reason_args, beneficiary_ids}].
 static func evaluate(state: GameState) -> Array:
-	var deferred := CardHooks.deferred_ids(state)  # Notanker: aufgeschobener Tod zählt für Siegbedingungen bereits als tot
-	var alive := state.alive_ids().filter(func(id: int) -> bool: return not deferred.has(id))
+	var alive := effective_alive_ids(state)
 	var living_wolves := 0
 	var wolves := 0  # Paritätswert: Siegreicher Wolf zählt doppelt (RoleCatalog.parity_weight)
 	var non_wolves := 0
@@ -117,19 +127,19 @@ static func eternal_co_winners(state: GameState, beneficiary: int) -> Array[int]
 ## Einzelsiegbedingung des Manipulators für Person `id` (DR-12): exakt drei Lebende.
 static func manipulator_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.MANIPULATOR and not p.ever_nominated and state.alive_ids().size() == 3
+	return p != null and p.alive and p.role_id == RoleCatalog.MANIPULATOR and not p.ever_nominated and effective_alive_ids(state).size() == 3
 
 
 ## Parasit (RM-DR-157): er lebt und höchstens drei Personen leben.
 static func parasite_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.PARASIT and state.alive_ids().size() <= 3
+	return p != null and p.alive and p.role_id == RoleCatalog.PARASIT and effective_alive_ids(state).size() <= 3
 
 
 ## Grabräuber (E-33): er lebt und höchstens drei Personen leben.
 static func grave_robber_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.GRABRAEUBER and state.alive_ids().size() <= RoleCatalog.GRAVE_ROBBER_MAX_LIVING
+	return p != null and p.alive and p.role_id == RoleCatalog.GRABRAEUBER and effective_alive_ids(state).size() <= RoleCatalog.GRAVE_ROBBER_MAX_LIVING
 
 
 ## Mindestzahl Toter unmittelbar vor der Hinrichtung des Selbstmörders (Rollentext „5+ Tote“, RM-DR-138.1).
@@ -153,7 +163,7 @@ static func double_agent_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
 	if p == null or not p.alive or p.role_id != RoleCatalog.DOPPELSPION:
 		return false
-	for other: int in state.alive_ids():
+	for other: int in effective_alive_ids(state):
 		if state.players[other].counts_as_wolf:
 			return false
 	return true
