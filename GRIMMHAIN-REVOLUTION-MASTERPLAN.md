@@ -6,11 +6,9 @@
 
 Der erste Meilenstein ist die vollständig bedienbare Offline-Partie. Danach folgen übrige Offline-Funktionen, Totenkarten/Kartenschlucker, lokale Clients und öffentliche Anzeige sowie Mediensteuerung und Plattformbasis. Blockierte Regelentscheidungen werden nicht als erledigt markiert. Finale Grafik, Atmosphäre und umfangreiche Layout-/QoL-Überarbeitung folgen als eigenes Gestaltungsprojekt; dessen Standardansicht soll 85 bis 90 Prozent Spielfeldfläche bieten.
 
-**Stand auseinanderhalten:** Dieser Checkout steht auf main `8197ee6`. Der neuere Funktionsstand liegt im Worktree `grimmhain-night-ui`, Branch `feature/night-ui-expansion`, zuletzt lokal geprüft `23c7044`. Die dafür gemeldeten 917 Tests sind kein Nachweis für den älteren main und keine Tablet-Abnahme. Der nächste Auftrag prüft den aktuellen Stand und erstellt die vollständige Restmatrix, bevor weitere Funktionspakete umgesetzt werden.
-
-**KONFLIKT (main/branch), Markus entscheidet:** Die beiden Absätze zum Repositorystand (main-Fassung oben, Branch-Fassung unten) beschreiben denselben Punkt zu verschiedenen Zeitpunkten und stimmen nach dem Merge nicht mehr; beide bleiben stehen.
-
 **Stand auseinanderhalten:** `main` steht auf `8197ee6` (nach PR #2). Der neuere Funktionsstand liegt im Branch `feature/night-ui-expansion` (PR #3, offen, zuletzt geprüft `23c7044`) und enthält `main`, den Rollenaudit und die Cloud-Integration vollständig. Die Abschlussmatrix [CODE-COMPLETION-MATRIX.md](docs/masterplan/CODE-COMPLETION-MATRIX.md) vom 29.09.2026 belegt den Ist-Stand je Anforderung. Die dort ausgeführte Vollsuite (917 Tests) war einmal rot (intermittierender Prüfungsfehler, Befund B-01) und einmal grün; das ist kein Nachweis für `main` und keine Tablet-Abnahme.
+
+**Früherer Stand (vor Merge 02.10.2026):** Dieser Checkout steht auf main `8197ee6`. Der neuere Funktionsstand liegt im Worktree `grimmhain-night-ui`, Branch `feature/night-ui-expansion`, zuletzt lokal geprüft `23c7044`. Die dafür gemeldeten 917 Tests sind kein Nachweis für den älteren main und keine Tablet-Abnahme. Der nächste Auftrag prüft den aktuellen Stand und erstellt die vollständige Restmatrix, bevor weitere Funktionspakete umgesetzt werden.
 
 **Stand:** 26. September 2026; Umsetzungsstand aktualisiert 27. September 2026 (main `1bc8016`)
 
