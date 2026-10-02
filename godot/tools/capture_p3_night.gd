@@ -2,7 +2,7 @@ extends SceneTree
 ## Spielt eine Nacht auf dem Nachtbrett (P3) mit den echten Bedienelementen durch und speichert Screenshots (Entwicklungswerkzeug,
 ## keine Produktionsassets). Braucht einen echten Renderer, headless gibt es keine Bildausgabe:
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy -s res://tools/capture_p3_night.gd -- \
-##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start]
+##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start] [--motion] [--hold=<Frames>]
 ## Die Partie startet über die Testfixtures (feste Rollen, fester Seed); jede Handlung läuft danach über die Knöpfe der Karte und
 ## das Antippen der Porträtplätze, nie über Befehle der Anwendungsschicht. Für die Prüfung der Sichtbarkeit zusätzlich ein Bild mit
 ## „Verbergen“ und eines mit gestartetem Timer.
@@ -14,6 +14,8 @@ const NAMES := ["Anna", "Ben", "Clara", "Dimitri", "Elif", "Frieda", "Gustav", "
 
 var _out: String = ""
 var _prefix: String = "n"
+var _hold: int = 0  ## --hold=N: nach dem ersten Bild N Frames ruhig weiterlaufen und beenden (für Movie Maker)
+var _motion: bool = false  ## --motion: Fensterschein und Nebel laufen (sonst stehen sie wie bei reduzierter Bewegung)
 var _size := Vector2i(1024, 768)
 var _shell: AppShell = null
 var _context: AppContext = null
@@ -39,6 +41,10 @@ func _initialize() -> void:
 			locale = arg.trim_prefix("--locale=")
 		elif arg.begins_with("--prefix="):
 			_prefix = arg.trim_prefix("--prefix=")
+		elif arg.begins_with("--hold="):
+			_hold = int(arg.trim_prefix("--hold="))
+		elif arg == "--motion":
+			_motion = true
 	if _out == "":
 		printerr("--out=<Ordner> fehlt")
 		quit(2)
@@ -58,7 +64,7 @@ func _run(players: int, locale: String) -> bool:
 		if root.get_visible_rect().size == Vector2(_size):
 			break
 	_context = AppContext.new()
-	_context.settings.set_reduced_motion(true)
+	_context.settings.set_reduced_motion(not _motion)
 	_context.settings.set_language(locale)
 	_context.saves.base_dir = OS.get_temp_dir().path_join("grimmhain-p3-capture")
 	_shell = (load(MAIN_SCENE) as PackedScene).instantiate() as AppShell
@@ -83,6 +89,9 @@ func _run(players: int, locale: String) -> bool:
 		return false
 	await _frames(6)
 	await _shot("01-vor-der-nacht")
+	if _hold > 0:
+		await _frames(_hold)
+		return true
 	var screen := _shell.current_screen()
 	var steps := 0
 	var shots := {"begin": false, "target": false, "chosen": false, "hidden": false, "timer": false}

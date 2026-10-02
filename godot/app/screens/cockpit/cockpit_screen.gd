@@ -77,7 +77,8 @@ var _timer_labels: Dictionary = {}  ## Wertanzeigen der Timer-Dauern im Menü ("
 @onready var _card: ActionCard = %ActionCard
 @onready var _overlay_host: Control = %OverlayHost
 @onready var _backdrop: Panel = %Backdrop
-@onready var _backdrop_art: TextureRect = %BackdropArt  ## Dorfplatz bei Nacht (G1), mit Abdunklung und Randdämpfung
+@onready var _backdrop_art: TextureRect = %BackdropArt  ## Dorfplatz bei Nacht (Fenster abgedunkelt), mit Fensterschein und Randdämpfung
+@onready var _backdrop_fog: ColorRect = %BackdropFog  ## ziehender Nebel über dem Hintergrund, hinter allen Bedienflächen
 @onready var _backdrop_shade: ColorRect = %BackdropShade
 @onready var _order_bar: NightOrderBar = %OrderBar
 @onready var _corner: Control = %CornerInfo
@@ -102,7 +103,7 @@ func _setup() -> void:
 	header.back_button().kind = GrimmButton.Kind.COMPACT  # schmale Kopfleiste: mehr Fläche für das Brett
 	(header.find_child("TitleLabel", true, false) as Control).visible = false  # nur der Zurück-Knopf steht in der Ecke
 	header.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	_backdrop_art.texture = NightArt.texture("bg/village-night.webp")
+	_backdrop_art.texture = NightArt.texture("bg/scene-night-base.webp")
 	_style_backdrop()
 	_card.primary_host = _next_host
 	_card.info_host = _make_info_corner()
@@ -283,7 +284,12 @@ func _update_backdrop(phase: String) -> void:
 func _style_backdrop() -> void:
 	var art := ShaderMaterial.new()
 	art.shader = load("res://app/theme/night_backdrop.gdshader") as Shader
+	art.set_shader_parameter("id_map", NightArt.texture("bg/scene-night-windows.png"))
 	_backdrop_art.material = art
+	var fog := ShaderMaterial.new()
+	fog.shader = load("res://app/theme/night_fog.gdshader") as Shader
+	_backdrop_fog.material = fog
+	_apply_motion_setting()
 	var shade := ShaderMaterial.new()
 	shade.shader = load("res://app/theme/night_vignette.gdshader") as Shader
 	_backdrop_shade.material = shade
@@ -748,6 +754,15 @@ func _on_settings_changed(key: StringName) -> void:
 		_apply_handedness()
 	elif key == &"show_night_timer":
 		_refresh_timer()
+	elif key == &"reduced_motion":
+		_apply_motion_setting()
+
+
+## Fensterschein und Nebel stehen still, wenn reduzierte Bewegung eingestellt ist.
+func _apply_motion_setting() -> void:
+	var animate := 0.0 if context.settings.reduced_motion else 1.0
+	(_backdrop_art.material as ShaderMaterial).set_shader_parameter("animate", animate)
+	(_backdrop_fog.material as ShaderMaterial).set_shader_parameter("animate", animate)
 
 
 # --- Bedienung --------------------------------------------------------------------------------------

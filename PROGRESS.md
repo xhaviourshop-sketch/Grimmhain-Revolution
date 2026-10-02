@@ -547,3 +547,9 @@ Offen (blockiert Abnahme 2): Tests nach der Kartenänderung (`cards_ui*`, `hande
 Lehre: Testläufe nicht mit Dateiänderungen in `godot/` überlappen; Python-Edits von CRLF-Dateien nur im Textmodus, Pfade für Python als Windows-Pfad (nicht `/tmp`).
 Neue Testregeln: siehe `CLAUDE.md` (Abschnitt „Testregeln“).
 
+
+## 2026-10-02: P4 Atmosphäre Nachtbrett (Paket 1)
+Branch `feature/visual-night-board`, lokal, kein Push. Nur Hintergrund, Licht und Nebel; Rahmen, Knöpfe und Karten unverändert.
+Neu: Nachtszene als Brett-Hintergrund (cover, zentriert), Fensterschein per ID-Karte und einem Shader (`night_backdrop.gdshader`, 47 Inseln, je Insel eigene Schwankung 85 bis 100 %, seltenes weiches Absacken), Nebelebene (`night_fog.gdshader`, 18 % am Rand, 40 % davon über dem Ring). Reduzierte Bewegung hält Schein und Nebel an. Keine Töne, keine Spiellogik.
+Wiederholbar: `python tools/build_night_windows.py` (erzeugt Grundbild, ID-Karte und Kontrollbild), danach `godot --path godot --import`. Herkunft: `docs/assets/ORIGIN-NOTES-NIGHT-BOARD.md` Abschnitt 6; die alte `village-night.webp` ist ungenutzt, aber nicht entfernt.
+Abnahme-Material: `Downloads/Grimmhain-P1-Nachtentwurf/p4-atmosphaere/` (Screenshots 24 Spieler in 3 Größen, Kontrollbild, Video 1024x768).
