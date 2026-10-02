@@ -33,6 +33,8 @@ const NEXT_BUTTON_SIZE := Vector2(200.0, 56.0)
 const DOCK_UNDO_SIZE := Vector2(112.0, 48.0)
 const CORNER_WIDTH := 176.0
 const PLATE_SIZE := Vector2(200.0, 52.0)
+const PLAZA_CENTER_UV := Vector2(0.508, 0.508)  ## Mitte des Dorfplatzes im Hintergrundbild (Nachtszene v2)
+const BACKDROP_OVERSCAN := 1.05                 ## etwas größer als „cover“, damit sich die Platzmitte auf die Ringmitte schieben lässt
 
 var _view: Dictionary = {}
 var _next_id: String = ""
@@ -388,6 +390,23 @@ func _arrange() -> void:
 	_save_row.position = Vector2(free_left, h - DOCK_MARGIN - _save_row.size.y)
 	_tools_menu.size = _tools_menu.get_combined_minimum_size()
 	_tools_menu.position = Vector2(w - TAB_WIDTH - _tools_menu.size.x - 4.0, clampf(tab_y, TOP_MARGIN, maxf(TOP_MARGIN, h - _tools_menu.size.y - TOP_MARGIN)))
+	_place_backdrop_art(_ring.position + _ring.size * 0.5)
+
+
+## Hintergrundbild füllt das Fenster ohne Verzerrung und ohne leere Ränder (cover mit kleiner Überdeckung); die Platzmitte liegt auf der
+## Mitte des Spielerrings, soweit das Bild es zulässt.
+func _place_backdrop_art(ring_center: Vector2) -> void:
+	var texture := _backdrop_art.texture
+	if texture == null:
+		return
+	var view := size
+	var image := Vector2(texture.get_size())
+	var scale := maxf(view.x / image.x, view.y / image.y) * BACKDROP_OVERSCAN
+	var art_size := image * scale
+	var wanted := ring_center - PLAZA_CENTER_UV * art_size
+	_backdrop_art.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_backdrop_art.size = art_size
+	_backdrop_art.position = Vector2(clampf(wanted.x, view.x - art_size.x, 0.0), clampf(wanted.y, view.y - art_size.y, 0.0))
 
 
 ## „i“-Ecke der Aktionskarte: eine Ebene über der Karte (PanelContainer legt alle Kinder übereinander), der Knopf oben rechts.

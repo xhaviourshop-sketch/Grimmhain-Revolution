@@ -71,5 +71,5 @@ Bearbeitung: Zuschnitt und Magenta-Freistellung per Skript (`p2-mockup/tools/`).
 Reparierte Teile (`p2-mockup/parts/`) stammen aus den Mediendateien in „Grimmhain Assets“ (Nutzerangabe wie in Abschnitt 1) und sind mit eigenen Skripten bearbeitet. Das Zahnrad in `tab-options.png` ist selbst gezeichnet.
 
 ## 6. Nachtszene (P4 Atmosphäre)
-ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `szene-nacht-v1.png` (Downloads, 1536 x 1024, SHA-256 `e4b81626a7ef0523`). Status der abgeleiteten Laufzeitdateien: `intern-freigegeben`, Veröffentlichung gesperrt.
-Bearbeitung: `tools/build_night_windows.py` erkennt die Fensterinseln, dunkelt sie im Grundbild ab (`scene-night-base.webp`) und schreibt die ID-Karte (`scene-night-windows.png`). Das Ausgangsbild liegt nur im Übergabeordner. Sichere Mitte des 3:2-Bilds (Schnittmenge aus 4:3- und 16:10-Zuschnitt): x 256 bis 1280, y 32 bis 992.
+ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `szene-nacht-v2.png` (Downloads, 1536 x 1024, SHA-256 `9f20734a39fc9941`; v1 verworfen, Platz zu flach). Status der abgeleiteten Laufzeitdateien: `intern-freigegeben`, Veröffentlichung gesperrt.
+Bearbeitung: `tools/build_night_windows.py` erkennt die Fensterinseln, dunkelt sie im Grundbild ab (`scene-night-base.webp`) und schreibt die ID-Karte (`scene-night-windows.png`). Das Ausgangsbild liegt nur im Übergabeordner. Platzmitte im Bild bei etwa 50,8 % / 50,8 %; sie wird auf die Ringmitte gelegt.

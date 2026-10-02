@@ -1,7 +1,7 @@
 shader_type canvas_item;
 // Nebel (P4): eine langsam ziehende Ebene über dem Hintergrund und hinter allen Bedienflächen. Am Rand dichter, über dem Spielerring
 // (Mitte) schwächer, damit Namen und Porträts ruhig stehen. Rein kosmetisch, ohne Ton.
-uniform float strength = 0.18;         // Deckkraft am Rand (Startwert 15 bis 20 %)
+uniform float strength = 0.25;         // Deckkraft am Rand
 uniform float center_factor = 0.4;     // Anteil davon in der Mitte
 uniform float animate = 1.0;           // 0 = stehender Nebel (reduzierte Bewegung)
 uniform vec4 fog_color : source_color = vec4(0.62, 0.7, 0.85, 1.0);

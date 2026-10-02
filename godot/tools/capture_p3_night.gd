@@ -14,6 +14,7 @@ const NAMES := ["Anna", "Ben", "Clara", "Dimitri", "Elif", "Frieda", "Gustav", "
 
 var _out: String = ""
 var _prefix: String = "n"
+var _only_start: bool = false  ## --shots=start: nur „vor der Nacht“ und „Rollenschritt“
 var _hold: int = 0  ## --hold=N: nach dem ersten Bild N Frames ruhig weiterlaufen und beenden (für Movie Maker)
 var _motion: bool = false  ## --motion: Fensterschein und Nebel laufen (sonst stehen sie wie bei reduzierter Bewegung)
 var _size := Vector2i(1024, 768)
@@ -41,6 +42,8 @@ func _initialize() -> void:
 			locale = arg.trim_prefix("--locale=")
 		elif arg.begins_with("--prefix="):
 			_prefix = arg.trim_prefix("--prefix=")
+		elif arg == "--shots=start":
+			_only_start = true
 		elif arg.begins_with("--hold="):
 			_hold = int(arg.trim_prefix("--hold="))
 		elif arg == "--motion":
@@ -90,6 +93,8 @@ func _run(players: int, locale: String) -> bool:
 	await _frames(6)
 	await _shot("01-vor-der-nacht")
 	if _hold > 0:
+		var art := _shell.current_screen().find_child("BackdropArt", true, false) as Control
+		_log.append("hintergrund position=%s size=%s" % [art.get_global_rect().position, art.get_global_rect().size])
 		await _frames(_hold)
 		return true
 	var screen := _shell.current_screen()
@@ -104,6 +109,8 @@ func _run(players: int, locale: String) -> bool:
 		if kind == "begin_step" and not shots["begin"]:
 			shots["begin"] = true
 			await _shot("02-rollenschritt")
+			if _only_start:
+				return true
 		if kind == "prompt" and str(next.get("answer")) == "targets" and not shots["target"]:
 			shots["target"] = true
 			await _shot("03-zielwahl")
