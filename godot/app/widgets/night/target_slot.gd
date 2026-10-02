@@ -19,7 +19,7 @@ func _init() -> void:
 	name = "TargetSlot"
 	add_theme_constant_override("separation", ThemeTokens.SPACE_S)
 	alignment = BoxContainer.ALIGNMENT_CENTER
-	_left = _arrow("TargetPrevButton", "ui/arrow-left.png", -1)
+	_left = _arrow("TargetPrevButton", "arrow_left", -1)
 	_face = TextureRect.new()
 	_face.name = "TargetFace"
 	_face.custom_minimum_size = Vector2(PORTRAIT, PORTRAIT)
@@ -35,13 +35,13 @@ func _init() -> void:
 	_name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_name.theme_type_variation = &"SectionLabel"
 	add_child(_name)
-	_right = _arrow("TargetNextButton", "ui/arrow-right.png", 1)
+	_right = _arrow("TargetNextButton", "arrow_right", 1)
 
 
 func _arrow(node_name: String, art: String, direction: int) -> TextureButton:
 	var b := TextureButton.new()
 	b.name = node_name
-	b.texture_normal = NightArt.texture(art)
+	b.texture_normal = GroveSkin.texture(art)
 	b.ignore_texture_size = true
 	b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	b.custom_minimum_size = Vector2(ThemeTokens.TOUCH_MIN, ThemeTokens.TOUCH_MIN)

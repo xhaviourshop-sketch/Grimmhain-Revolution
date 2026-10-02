@@ -5,8 +5,8 @@ extends Control
 ## ohne das Layout der Karte zu beeinflussen, und fängt keine Eingaben ab.
 
 const HEIGHT := 30.0
-const FADE := Color(0.03, 0.04, 0.07, 0.92)
-const ARROW := Color(0.88, 0.94, 1.0, 0.95)
+const FADE := ThemeTokens.SCROLL_FADE
+const ARROW := ThemeTokens.MOON_GLOW
 
 var _scroll: ScrollContainer = null
 var _more: bool = false
@@ -46,7 +46,8 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	var steps := 6
 	for i: int in steps:
-		var alpha := FADE.a * float(i + 1) / float(steps)
-		draw_rect(Rect2(0.0, HEIGHT * float(i) / float(steps), size.x, HEIGHT / float(steps) + 0.5), Color(FADE.r, FADE.g, FADE.b, alpha))
+		var tone := FADE
+		tone.a = FADE.a * float(i + 1) / float(steps)
+		draw_rect(Rect2(0.0, HEIGHT * float(i) / float(steps), size.x, HEIGHT / float(steps) + 0.5), tone)
 	var centre := Vector2(size.x * 0.5, HEIGHT - 9.0)
 	draw_polyline(PackedVector2Array([centre + Vector2(-7.0, -3.5), centre + Vector2(0.0, 3.5), centre + Vector2(7.0, -3.5)]), ARROW, 2.4, true)

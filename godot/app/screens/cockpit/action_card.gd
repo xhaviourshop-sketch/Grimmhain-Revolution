@@ -401,7 +401,11 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 	if bool(next.get("can_override_shown", false)):
 		buttons.append(_button("OverrideShownButton", "ui.cockpit.action.override_shown", GrimmButton.Kind.SECONDARY, &"override_shown"))
 	if bool(next.get("cancellable", false)):
-		buttons.append(_button("CancelPromptButton", "ui.cockpit.action.cancel_prompt", GrimmButton.Kind.SECONDARY, &"cancel_prompt"))
+		# Kurze Beschriftung, damit sie neben einem zweiten Knopf einzeilig bleibt; Bedienungshilfe und Tooltip tragen den vollen Text.
+		var cancel := _button("CancelPromptButton", "ui.cockpit.action.cancel_prompt.short", GrimmButton.Kind.SECONDARY, &"cancel_prompt")
+		cancel.tooltip_text = tr("ui.cockpit.action.cancel_prompt")
+		cancel.accessibility_name = cancel.tooltip_text
+		buttons.append(cancel)
 	_help(next, buttons)
 	_actions(buttons)
 

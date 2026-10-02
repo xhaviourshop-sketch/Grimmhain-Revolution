@@ -35,6 +35,18 @@ const NIGHT_BACKDROP := Color("#0a1022")     ## Cockpit-Hintergrund in der Nacht
 const DAY_BACKDROP := Color("#16120b")       ## Cockpit-Hintergrund am Morgen und Tag
 const BOARD_NEUTRAL := Color("#10131c")      ## Spielbrett ohne Tageszeit (Spielende, keine Partie)
 const BOARD_NIGHT := Color("#0e1530")        ## Spielbrett in der Nacht: tiefes Blau, heller als der Hintergrund
+const MOON_SILVER := Color("#c5cddb")        ## Nachtbrett: Zeichen, Ränder und Schrift auf den Hain-Teilen (kein Gold auf dem Brett)
+const MOON_SILVER_BRIGHT := Color("#e8edf6")  ## Mondsilber unter Finger, mit Fokus oder in Betrieb
+const MOON_SILVER_DIM := Color("#7f8899")    ## Mondsilber gedämpft: erledigt, gesperrt
+const BLOOD_RED := Color("#b3242d")          ## Nachtbrett: nur Aktives (Ring der aktiven Rolle, Verbergen an) und die Hauptaktion
+const BLOOD_RED_HALO := Color(0.7, 0.14, 0.18, 0.55)  ## Schein um den Ring der aktiven Rolle
+const TINT_RING_ACTIVE := Color(1.5, 0.42, 0.4)      ## Silberring der aktiven Rolle in Blutrot getönt
+const TINT_RING_DONE := Color(0.62, 0.64, 0.7)       ## Ring und Symbol einer erledigten Rolle
+const SCROLL_FADE := Color(0.03, 0.04, 0.07, 0.92)   ## Verlauf am unteren Rand eines scrollenden Kartentexts
+const MOON_GLOW := Color(0.88, 0.94, 1.0)            ## heller Mondsilber-Schein: gewähltes Ziel, Scrollpfeil
+const SEAT_SHIMMER := Color(0.72, 0.82, 1.0)         ## dezenter, kühler Schimmer wählbarer Plätze
+const BLOOD_GLOW := Color(0.78, 0.08, 0.1)           ## blutroter Schein am Ring der handelnden Person
+const TINT_SEAT_ACTOR := Color(1.0, 0.78, 0.78)      ## Silberring der handelnden Person leicht gerötet
 const BOARD_DAY := Color("#1c160d")          ## Spielbrett am Morgen und Tag: dunkles Dämmerbraun
 
 # --- Nachtbrett (P3): Tönungen und Flächen der Porträtplätze, Laschen und Leiste --------------------

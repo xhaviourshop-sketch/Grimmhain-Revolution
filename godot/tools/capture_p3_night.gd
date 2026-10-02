@@ -2,7 +2,7 @@ extends SceneTree
 ## Spielt eine Nacht auf dem Nachtbrett (P3) mit den echten Bedienelementen durch und speichert Screenshots (Entwicklungswerkzeug,
 ## keine Produktionsassets). Braucht einen echten Renderer, headless gibt es keine Bildausgabe:
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy -s res://tools/capture_p3_night.gd -- \
-##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start|target|chosen] [--motion] [--hold=<Frames>] [--logical] [--long-names] [--demo]
+##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start|target|chosen] [--motion] [--hold=<Frames>] [--logical] [--long-names] [--demo] [--bar-open]
 ## Die Partie startet über die Testfixtures (feste Rollen, fester Seed); jede Handlung läuft danach über die Knöpfe der Karte und
 ## das Antippen der Porträtplätze, nie über Befehle der Anwendungsschicht. Für die Prüfung der Sichtbarkeit zusätzlich ein Bild mit
 ## „Verbergen“ und eines mit gestartetem Timer.
@@ -18,6 +18,7 @@ var _out: String = ""
 var _prefix: String = "n"
 var _stop_after: String = ""  ## --shots=start: nur „vor der Nacht“ und „Rollenschritt“; --shots=target: zusätzlich „Zielwahl“; --shots=chosen: zusätzlich „Ziel gewählt“
 var _long_names: bool = false  ## --long-names: sehr lange Namen (Schild- und Kürzungsprüfung)
+var _bar_open: bool = false  ## --bar-open: nach „Rollenschritt“ die Nachtleiste ausklappen (4:3) und „08-leiste-offen“ aufnehmen
 var _demo: bool = false  ## --demo: im Bild „Zielwahl“ einen toten Platz und Abzeichen zeigen (nur Anzeige, ändert keine Partie)
 var _logical: bool = false  ## --logical: Skalierung aus, Fenstergröße = logische Größe (Layoutprüfung wie die Tests); sonst wie auf dem Gerät
 var _hold: int = 0  ## --hold=N: nach dem ersten Bild N Frames ruhig weiterlaufen und beenden (für Movie Maker)
@@ -49,6 +50,8 @@ func _initialize() -> void:
 			_prefix = arg.trim_prefix("--prefix=")
 		elif arg == "--long-names":
 			_long_names = true
+		elif arg == "--bar-open":
+			_bar_open = true
 		elif arg == "--demo":
 			_demo = true
 		elif arg == "--logical":
@@ -121,6 +124,12 @@ func _run(players: int, locale: String) -> bool:
 		if kind == "begin_step" and not shots["begin"]:
 			shots["begin"] = true
 			await _shot("02-rollenschritt")
+			if _bar_open:
+				var toggle := screen.find_child("ToggleButton", true, false) as BaseButton
+				toggle.pressed.emit()
+				await _frames(6)
+				await _shot("08-leiste-offen")
+				return true
 			if _stop_after == "start":
 				return true
 		if kind == "prompt" and str(next.get("answer")) == "targets" and not shots["target"]:

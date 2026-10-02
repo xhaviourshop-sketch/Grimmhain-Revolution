@@ -77,3 +77,8 @@ Bearbeitung: `tools/build_night_windows.py` erkennt die Fensterinseln, dunkelt s
 ## 7. Oberflächenteile Hain (P5)
 ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `ui-paket-v1.png` (Downloads, 1774 x 887, echter Alphakanal, SHA-256 `33f8b4f01851567a`). Status der sieben abgeleiteten Teile in `godot/assets/ui/hain/`: `intern-freigegeben`, Veröffentlichung gesperrt.
 Bearbeitung: `tools/build_grove_ui.py` (Zuschnitt, dehnbare Teile aus Endstücken, Kartenrahmen links aus dem gespiegelten rechten Rand, Medaillon aus dem Medaillon der Karte freigestellt, Größenänderung in vormultipliziertem Alpha). Gemessene Geometrie steht in `godot/app/theme/grove_art_data.gd` (erzeugt). Das Ausgangsbild liegt nur im Übergabeordner.
+
+## 8. Bedienteile Nachtbrett (Paket 3)
+ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `ui-paket-v2.png` (Downloads, 1774 x 887, echter Alphakanal, SHA-256 `f8cb3d9b18068c77`). Abgeleitete Teile in `godot/assets/ui/hain/`: `side_tab`, `night_bar` (mit Mittelspange), `role_medallion`, `cartouche`, `icon_button_round`, `back_plate`. Status: `intern-freigegeben`, Veröffentlichung gesperrt.
+Zusätzlich `arrow_left` und `arrow_right`: der Bronzepfeil aus `assets/night/ui/arrow-left.png` (P3), nur auf Mondsilber umgefärbt (Helligkeit bleibt, Farbton ersetzt), damit kein Gold auf dem Brett bleibt.
+Bearbeitung: `tools/build_grove_ui.py` (zweite Quelle `--source2`). Die alten Bilder `bar-frame`, `slot-*`, `plate-frame`, `tab-*` unter `assets/night/ui/` sind auf dem Brett ungenutzt, aber nicht entfernt.

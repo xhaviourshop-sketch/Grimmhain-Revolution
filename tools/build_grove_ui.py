@@ -1,8 +1,9 @@
 """Cuts the grove UI parts (seat ring, name plates, card frame, medallion, buttons) out of the AI-generated sheet (P5).
 
 Repeatable: run from the repository root
-    python tools/build_grove_ui.py [--source <png>] [--preview <folder>]
-Reads ui-paket-v1.png (1774x887, real alpha channel) and writes
+    python tools/build_grove_ui.py [--source <png>] [--source2 <png>] [--preview <folder>]
+Reads ui-paket-v1.png and ui-paket-v2.png (1774x887, real alpha channel; v2 carries the night board parts: side tab, night bar,
+role medallion, cartouche, round icon button, back plate) and writes
     godot/assets/ui/hain/*.png          the parts, prescaled to 2 texture pixels per logical unit
     godot/app/theme/grove_art_data.gd   measured geometry (hole centers, nine-slice margins), generated, do not edit by hand
 Stretchable parts are assembled from end pieces and a short middle slice, so every edge is stretchable and the ornaments stay
@@ -21,6 +22,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = ROOT + "/godot/assets/ui/hain/"
 DATA = ROOT + "/godot/app/theme/grove_art_data.gd"
 DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui-paket-v1.png"
+DEFAULT_SOURCE2 = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui-paket-v2.png"
 
 # regions of the sheet (x0, y0, x1, y1), measured on the 1774x887 sheet
 SEAT = (31, 32, 532, 493)         # silver ring with roots and number socket at the upper left
@@ -46,6 +48,30 @@ MID = 60                          # src px of the stretchable middle slice
 MEDALLION_CENTER = (740, 270)     # center of the card's medallion on the sheet
 MEDALLION_RADIUS = 140
 MEDALLION_CUT_X = 20              # crop columns left of this belong to the card frame bar, not to the medallion
+# sheet v2 (x0, y0, x1, y1), measured on the 1774x887 sheet
+SIDE_TAB = (74, 31, 222, 855)     # vertical tab: spiked ends with ropes, plain bar between
+NIGHT_BAR = (290, 114, 1741, 256)  # horizontal bar: ends, plain slices, clasp in the middle
+CARTOUCHE = (352, 349, 1662, 516)  # horizontal plate with the moon on the left
+ROLE_RING = (488, 567, 772, 836)   # silver ring with roots, transparent inside
+ICON_ROUND = (906, 583, 1145, 823)  # round iron button with a silver rim
+BACK_PLATE = (1325, 576, 1561, 822)  # small square plate with corner ornaments
+
+SIDE_TAB_SCALE = 0.6              # tab about 44 logical units wide
+SIDE_TAB_END = 210                # src px of each spiked end
+NIGHT_BAR_SCALE = 0.7             # bar about 50 logical units high
+NIGHT_BAR_LEFT = 250
+NIGHT_BAR_RIGHT = 221
+NIGHT_BAR_CLASP = (990, 1060)     # src x range of the middle clasp
+NIGHT_BAR_MID1 = 700              # src x of the plain slice left of the clasp
+NIGHT_BAR_MID2 = 1200             # src x of the plain slice right of the clasp
+CARTOUCHE_SCALE = 0.42            # plate about 35 logical units high
+CARTOUCHE_LEFT = 258
+CARTOUCHE_RIGHT = 222
+CARTOUCHE_MID = 800
+RING_SCALE = 0.394                # ring 112 texture px = 56 logical units
+ROUND_SCALE = 0.435               # round button 104 texture px = 52 logical units
+BACK_SCALE = 0.47                 # square plate about 55 logical units
+BACK_CORNER = 78                  # src px of each corner ornament
 CARD_FILL = (18, 21, 23)          # the card's flat dark fill around the medallion
 
 
@@ -61,6 +87,21 @@ def assemble(left, mid, right):
     out.paste(mid, (left.width, 0))
     out.paste(right, (left.width + mid.width, 0))
     return out
+
+
+ARROW_SOURCE = ROOT + "/godot/assets/night/ui/arrow-left.png"  # bronze arrow of the P3 board, recolored to moon silver
+SILVER = np.array([0.80, 0.84, 0.92])
+
+
+def silver_arrow():
+    """The old bronze arrow as a moon-silver one: luminance kept (stretched to a bright range), hue replaced, alpha untouched."""
+    arrow = np.asarray(Image.open(ARROW_SOURCE).convert("RGBA")).astype(float)
+    grey = arrow[..., :3] @ np.array([0.299, 0.587, 0.114]) / 255.0
+    solid = arrow[..., 3] > 128
+    low, high = np.percentile(grey[solid], 2), np.percentile(grey[solid], 98)
+    level = np.clip((grey - low) / max(high - low, 1e-3), 0.0, 1.0) * 0.75 + 0.25
+    arrow[..., :3] = np.clip(level[..., None] * SILVER * 255.0, 0, 255)
+    return Image.fromarray(arrow.astype(np.uint8))
 
 
 def mirrored(image):
@@ -104,9 +145,11 @@ def hole(alpha, seed):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", default=DEFAULT_SOURCE)
+    parser.add_argument("--source2", default=DEFAULT_SOURCE2)
     parser.add_argument("--preview", default=None)
     args = parser.parse_args()
     sheet = Image.open(args.source).convert("RGBA")
+    sheet2 = Image.open(args.source2).convert("RGBA")
     os.makedirs(OUT, exist_ok=True)
     data = {}
 
@@ -159,6 +202,56 @@ def main():
     card = scaled(assemble(mirrored(right_edge), sheet.crop((mid_x, y0, mid_x + MID, y1)), right_edge), CARD_SCALE)
     card.save(OUT + "card_frame.png", optimize=True)
     data["CARD_FRAME_MARGINS"] = "Vector4(%d, 90, %d, 90)" % (round(CARD_END * CARD_SCALE), round(CARD_END * CARD_SCALE))
+
+    # side tab: spiked ends (top and bottom as drawn), plain bar between
+    x0, y0, x1, y1 = SIDE_TAB
+    mid_y = (y0 + y1) // 2 - MID // 2
+    parts = (sheet2.crop((x0, y0, x1, y0 + SIDE_TAB_END)), sheet2.crop((x0, mid_y, x1, mid_y + MID)), sheet2.crop((x0, y1 - SIDE_TAB_END, x1, y1)))
+    tab = Image.new("RGBA", (x1 - x0, SIDE_TAB_END * 2 + MID), (0, 0, 0, 0))
+    tab.paste(parts[0], (0, 0))
+    tab.paste(parts[1], (0, SIDE_TAB_END))
+    tab.paste(parts[2], (0, SIDE_TAB_END + MID))
+    scaled(tab, SIDE_TAB_SCALE).save(OUT + "side_tab.png", optimize=True)
+    data["SIDE_TAB_MARGINS"] = "Vector4(0, %d, 0, %d)" % (round(SIDE_TAB_END * SIDE_TAB_SCALE), round(SIDE_TAB_END * SIDE_TAB_SCALE))
+
+    # night bar: left end | plain | clasp | plain | right end; the clasp stays unstretched, the plain slices stretch
+    x0, y0, x1, y1 = NIGHT_BAR
+    cx0, cx1 = NIGHT_BAR_CLASP
+    pieces = (sheet2.crop((x0, y0, x0 + NIGHT_BAR_LEFT, y1)), sheet2.crop((NIGHT_BAR_MID1, y0, NIGHT_BAR_MID1 + MID, y1)),
+              sheet2.crop((cx0, y0, cx1, y1)), sheet2.crop((NIGHT_BAR_MID2, y0, NIGHT_BAR_MID2 + MID, y1)),
+              sheet2.crop((x1 - NIGHT_BAR_RIGHT, y0, x1, y1)))
+    bar = Image.new("RGBA", (sum(p.width for p in pieces), y1 - y0), (0, 0, 0, 0))
+    cursor = 0
+    for piece in pieces:
+        bar.paste(piece, (cursor, 0))
+        cursor += piece.width
+    scaled(bar, NIGHT_BAR_SCALE).save(OUT + "night_bar.png", optimize=True)
+    data["NIGHT_BAR_MARGINS"] = "Vector4(%d, 0, %d, 0)" % (round(NIGHT_BAR_LEFT * NIGHT_BAR_SCALE), round(NIGHT_BAR_RIGHT * NIGHT_BAR_SCALE))
+    clasp_start = NIGHT_BAR_LEFT + MID
+    data["NIGHT_BAR_CLASP"] = "Vector2(%d, %d)" % (round(clasp_start * NIGHT_BAR_SCALE), round((cx1 - cx0) * NIGHT_BAR_SCALE))
+
+    # cartouche: moon end | plain | right end
+    x0, y0, x1, y1 = CARTOUCHE
+    parts = (sheet2.crop((x0, y0, x0 + CARTOUCHE_LEFT, y1)), sheet2.crop((CARTOUCHE_MID, y0, CARTOUCHE_MID + MID, y1)), sheet2.crop((x1 - CARTOUCHE_RIGHT, y0, x1, y1)))
+    scaled(assemble(*parts), CARTOUCHE_SCALE).save(OUT + "cartouche.png", optimize=True)
+    data["CARTOUCHE_MARGINS"] = "Vector4(%d, 0, %d, 0)" % (round(CARTOUCHE_LEFT * CARTOUCHE_SCALE), round(CARTOUCHE_RIGHT * CARTOUCHE_SCALE))
+
+    # role medallion: silver ring with roots, the inside stays transparent (the role symbol is drawn behind it)
+    ring_img = sheet2.crop(ROLE_RING)
+    scaled(ring_img, RING_SCALE).save(OUT + "role_medallion.png", optimize=True)
+    rx, ry, rr = hole(np.asarray(ring_img)[..., 3], (ring_img.width // 2, ring_img.height // 2))
+    data["ROLE_MEDALLION_HOLE_CENTER"] = "Vector2(%.4f, %.4f)" % (rx / ring_img.width, ry / ring_img.height)
+    data["ROLE_MEDALLION_HOLE_RADIUS"] = "%.4f" % (rr / ring_img.width)
+    data["ROLE_MEDALLION_ASPECT"] = "%.4f" % (ring_img.height / ring_img.width)
+
+    # round icon button and back plate
+    scaled(sheet2.crop(ICON_ROUND), ROUND_SCALE).save(OUT + "icon_button_round.png", optimize=True)
+    scaled(sheet2.crop(BACK_PLATE), BACK_SCALE).save(OUT + "back_plate.png", optimize=True)
+    data["BACK_PLATE_MARGINS"] = "Vector4(%d, %d, %d, %d)" % ((round(BACK_CORNER * BACK_SCALE),) * 4)
+
+    left_arrow = silver_arrow()
+    left_arrow.save(OUT + "arrow_left.png", optimize=True)
+    mirrored(left_arrow).save(OUT + "arrow_right.png", optimize=True)
 
     lines = ["class_name GroveArtData", "extends RefCounted",
              "## Gemessene Geometrie der Hain-Oberflächenteile (godot/assets/ui/hain/). Erzeugt von tools/build_grove_ui.py, nicht von Hand ändern.",

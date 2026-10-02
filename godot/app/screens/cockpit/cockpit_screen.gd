@@ -16,8 +16,8 @@ extends BaseScreen
 ##   - Rollen, Protokoll und die gezeigte Karte entstehen erst beim Öffnen als eigene Ebene und
 ##     werden beim Schließen, beim Sichtschutz und beim Verlassen der Ansicht entfernt.
 
-const BAR_SIDE := 128.0         ## Abstand der Nachtleiste zum Fensterrand (Laschen und Eckinfo daneben)
-const BAR_MAX_WIDTH := 840.0
+const BAR_SIDE := 88.0          ## Abstand der Nachtleiste zum Fensterrand (Zurück-Platte und Laschen daneben)
+const BAR_MAX_WIDTH := 980.0
 const TOP_MARGIN := 6.0
 const RING_SIDE := 58.0         ## Randabstand des Sitzkreises (Platz für Laschen)
 const BOTTOM_MARGIN := 68.0     ## unter dem Sitzkreis liegt das Dock (Rückgängig, Nächster Schritt) und die Phasen-Kartusche
@@ -27,7 +27,6 @@ const TAB_MAX_HEIGHT := 320.0
 const WIDE_ASPECT := 1.5        ## ab diesem Seitenverhältnis (16:10) ist die Leiste voll sichtbar, darunter (4:3) eingeklappt
 const MENU_WIDTH := 300.0
 const PLATE_MARGIN := 12.0
-const PLATE_TEXTURE_MARGIN := Vector2(18.0, 14.0)
 const CORNER_WIDTH := 176.0
 const PLATE_SIZE := Vector2(200.0, 52.0)
 const PLAZA_CENTER_UV := Vector2(0.508, 0.508)  ## Mitte des Dorfplatzes im Hintergrundbild (Nachtszene v2)
@@ -100,6 +99,8 @@ var _backdrop_tween: Tween = null
 
 func _setup() -> void:
 	header.back_button().kind = GrimmButton.Kind.COMPACT  # schmale Kopfleiste: mehr Fläche für das Brett
+	GroveSkin.skin_back_button(header.back_button())
+	header.add_theme_stylebox_override("panel", StyleBoxEmpty.new())  # die Platte ist der Rahmen, keine dunkle Kopfzeile dahinter
 	(header.find_child("TitleLabel", true, false) as Control).visible = false  # nur der Zurück-Knopf steht in der Ecke
 	header.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_backdrop_art.texture = NightArt.texture("bg/scene-night-base.webp")
@@ -423,22 +424,15 @@ func _style_card() -> void:
 		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", box)
 
 
-## Phasen-Kartusche unten: kleiner Rahmen aus dem Leistenbild (Mockup V3), Innenabstand für Phase und Timer. Die Rahmenbilder sind
-## in Anzeigegröße gebaut, weil 9-Slice-Ränder in Bildpunkten gezeichnet werden.
+## Phasen-Kartusche unten: Hain-Teil `cartouche` (Mond links, Mitte dehnbar), Innenabstand für Phase und Timer; ohne Bild bleibt der
+## Theme-Stil.
 func _style_plate() -> void:
-	var texture := NightArt.texture("ui/plate-frame.png")
-	if texture != null:
-		var box := StyleBoxTexture.new()
-		box.texture = texture
-		box.texture_margin_left = PLATE_TEXTURE_MARGIN.x
-		box.texture_margin_right = PLATE_TEXTURE_MARGIN.x
-		box.texture_margin_top = PLATE_TEXTURE_MARGIN.y
-		box.texture_margin_bottom = PLATE_TEXTURE_MARGIN.y
-		box.content_margin_left = PLATE_MARGIN + 2.0
-		box.content_margin_right = PLATE_MARGIN
-		box.content_margin_top = 4.0
-		box.content_margin_bottom = 4.0
+	var box := GroveSkin.cartouche_box()
+	if box != null:
+		box.native_height = float(GroveSkin.texture("cartouche").get_height()) / GroveArtData.TEXTURE_SCALE
 		_phase_area.add_theme_stylebox_override("panel", box)
+	(_phase_area.get_child(0) as BoxContainer).add_theme_constant_override("separation", 0)
+	(%PhaseValueLabel as Control).add_theme_font_size_override("font_size", ThemeTokens.FONT_COMPACT)  # passt in die Kartusche, ohne die Speicherzeile daneben zu verdrängen
 	GroveSkin.skin_button(_dock_undo, false)
 
 

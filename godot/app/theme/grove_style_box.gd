@@ -8,6 +8,8 @@ extends StyleBox
 var texture: Texture2D = null
 var margins: Vector4 = Vector4.ZERO  ## links, oben, rechts, unten in Texturpixeln
 var tint: Color = Color.WHITE
+var clasp: Vector2 = Vector2.ZERO  ## (Start, Breite) einer geschützten Mittelspange in Texturpixeln; nur waagerechte Leisten (Ränder oben und unten 0)
+var with_clasp: bool = true
 var native_height: float = 0.0  ## > 0: die Fläche wird nicht höher als das Bild (in logischen Einheiten) gezeichnet, sondern mittig; die Tippfläche bleibt die ganze Höhe
 
 
@@ -30,6 +32,9 @@ func _draw(to_canvas_item: RID, rect: Rect2) -> void:
 	var tex_size := texture.get_size()
 	if native_height > 0.0 and rect.size.y > native_height:
 		rect = Rect2(rect.position.x, rect.position.y + (rect.size.y - native_height) * 0.5, rect.size.x, native_height)
+	if clasp.y > 0.0 and margins.y == 0.0 and margins.w == 0.0:
+		_draw_clasp_bar(to_canvas_item, rect)
+		return
 	var left := edge(0)
 	var top := edge(1)
 	var right := edge(2)
@@ -53,6 +58,34 @@ func _draw(to_canvas_item: RID, rect: Rect2) -> void:
 			if dest.size.x <= 0.0 or dest.size.y <= 0.0 or src.size.x <= 0.0 or src.size.y <= 0.0:
 				continue
 			RenderingServer.canvas_item_add_texture_rect_region(to_canvas_item, dest, rid, src, tint)
+
+
+## Leiste mit Mittelspange: Enden und Spange bleiben unverzerrt, die glatten Abschnitte dazwischen werden gedehnt. `with_clasp` false
+## (Chip) überspringt die Spange und dehnt den linken glatten Abschnitt über die ganze Mitte.
+func _draw_clasp_bar(to_canvas_item: RID, rect: Rect2) -> void:
+	var tex_size := texture.get_size()
+	var left := edge(0)
+	var right := edge(2)
+	var clasp_w := clasp.y / GroveArtData.TEXTURE_SCALE
+	var fit := minf(1.0, rect.size.x / maxf(left + right + (clasp_w if with_clasp else 0.0), 0.001))
+	left *= fit
+	right *= fit
+	clasp_w *= fit
+	var rid := texture.get_rid()
+	var h := rect.size.y
+	var plain_end := clasp.x  ## Texturpixel: Ende des linken glatten Abschnitts
+	var inner := rect.size.x - left - right
+	RenderingServer.canvas_item_add_texture_rect_region(to_canvas_item, Rect2(rect.position.x, rect.position.y, left, h), rid, Rect2(0.0, 0.0, margins.x, tex_size.y), tint)
+	RenderingServer.canvas_item_add_texture_rect_region(to_canvas_item, Rect2(rect.end.x - right, rect.position.y, right, h), rid, Rect2(tex_size.x - margins.z, 0.0, margins.z, tex_size.y), tint)
+	if not with_clasp:
+		RenderingServer.canvas_item_add_texture_rect_region(to_canvas_item, Rect2(rect.position.x + left, rect.position.y, inner, h), rid, Rect2(margins.x, 0.0, plain_end - margins.x, tex_size.y), tint)
+		return
+	var plain_w := (inner - clasp_w) * 0.5
+	var mid := rect.position.x + left + plain_w
+	RenderingServer.canvas_item_add_texture_rect_region(to_canvas_item, Rect2(rect.position.x + left, rect.position.y, plain_w, h), rid, Rect2(margins.x, 0.0, plain_end - margins.x, tex_size.y), tint)
+	RenderingServer.canvas_item_add_texture_rect_region(to_canvas_item, Rect2(mid, rect.position.y, clasp_w, h), rid, Rect2(plain_end, 0.0, clasp.y, tex_size.y), tint)
+	var after := plain_end + clasp.y
+	RenderingServer.canvas_item_add_texture_rect_region(to_canvas_item, Rect2(mid + clasp_w, rect.position.y, plain_w, h), rid, Rect2(after, 0.0, tex_size.x - margins.z - after, tex_size.y), tint)
 
 
 func _get_minimum_size() -> Vector2:

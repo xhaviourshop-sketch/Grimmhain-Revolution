@@ -22,8 +22,8 @@ const STATE_VARIATIONS := {
 ## Auswahl zeigen der Ring (Schimmer, Schein) und das Häkchen; die Namen bleiben so lang wie möglich.
 const STATE_MARKS := {&"allowed": "› ", &"selected": "✓ ", &"actor": "• "}
 const PLATE_MARKS := {&"actor": "• "}
-const GLOW_SELECTED := Color(0.88, 0.94, 1.0)  ## heller Mondsilber-Schein um das gewählte Ziel
-const SHIMMER_ALLOWED := Color(0.72, 0.82, 1.0)  ## dezenter, kühler Schimmer wählbarer Plätze (ruhig, kein Pulsieren)
+const GLOW_SELECTED := ThemeTokens.MOON_GLOW  ## heller Mondsilber-Schein um das gewählte Ziel
+const SHIMMER_ALLOWED := ThemeTokens.SEAT_SHIMMER  ## dezenter, kühler Schimmer wählbarer Plätze (ruhig, kein Pulsieren)
 const FACE_OVERLAP := 1.04  ## das Porträt reicht etwas unter den Ring, damit kein Spalt bleibt
 const RING_RADIUS := PortraitRingLayout.RING_RADIUS  ## Anteil der Rahmenbreite bis zum äußeren Rand des Rings (Tippfläche, Fokus, Zustandsschein)
 const FACE_UV_SCALE := 0.62
@@ -32,7 +32,7 @@ const PLATE_PADDING := 6.0  ## Innenabstand im Namensschild (links und rechts zu
 const NUMBER_FONT_SIZE := 9
 const PLATE_FONT_SIZE_MIN := 10
 const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ zur Rahmenbreite
-const GLOW_ACTIVE := Color(0.78, 0.08, 0.1)  ## blutroter Schein am Ring der handelnden Person
+const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
 const RING_PRIORITY: Array[String] = ["marked", "poisoned", "silenced", "protected"]
 const _STYLE_STATES: Array[String] = ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]
 const _FONT_COLORS: Array[String] = ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color", "font_disabled_color"]
@@ -197,7 +197,7 @@ func _draw() -> void:
 	if frame != null:
 		var silver := GroveSkin.TINT_SEAT_SILVER * dim
 		if state == &"actor":
-			silver = Color(silver.r, silver.g * 0.78, silver.b * 0.78)
+			silver *= ThemeTokens.TINT_SEAT_ACTOR
 		draw_texture_rect(frame, frame_rect, false, silver)
 	_draw_state_ring(c, d)
 	_draw_socket(frame_rect, socket, d, GroveSkin.TINT_SEAT_SILVER * dim)  # in jedem Zustand über dem Ring, damit die Nummer lesbar bleibt
@@ -223,8 +223,9 @@ func _plate_cap() -> float:
 ## Weicher Schein um den Ring: mehrere dünne Bögen mit abnehmender Deckkraft.
 func _draw_glow(c: Vector2, d: float, color: Color, arcs: int, strength: float) -> void:
 	for i: int in arcs:
-		var alpha := strength * (1.0 - float(i) / float(arcs))
-		draw_arc(c, d * RING_RADIUS + 1.0 + 2.0 * float(i), 0.0, TAU, 56, Color(color.r, color.g, color.b, alpha), 2.6, true)
+		var tone := color
+		tone.a = strength * (1.0 - float(i) / float(arcs))
+		draw_arc(c, d * RING_RADIUS + 1.0 + 2.0 * float(i), 0.0, TAU, 56, tone, 2.6, true)
 
 
 func _draw_portrait(c: Vector2, d: float, tint: Color) -> void:

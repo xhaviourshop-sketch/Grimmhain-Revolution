@@ -1463,6 +1463,9 @@ msgstr "Gezeigtes Ergebnis ändern …"
 msgid "ui.cockpit.action.cancel_prompt"
 msgstr "Schritt abbrechen …"
 
+msgid "ui.cockpit.action.cancel_prompt.short"
+msgstr "Abbrechen …"
+
 msgid "ui.cockpit.action.confirm_targets"
 msgstr "Auswahl bestätigen"
 
