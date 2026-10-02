@@ -27,11 +27,14 @@ THRESHOLD = 24         # alpha above this counts as motif
 MERGE_GAP = 5          # dilation iterations that close thin gaps inside one motif
 SPECK_SHARE = 0.03     # a piece below this share that also lies far from the main body is a speck
 SPECK_DISTANCE = 8     # px (source) between a speck and the main body
+FLOAT_SHARE = 0.015   # a piece below this share of the main body that floats this far away is dropped
+FLOAT_DISTANCE = 6    # px
+EDGE_SHARE = 0.15     # pieces below this share of the motif that touch an inner grid line are cut-off tips of a neighbour
 EDGE = 3              # px: a small piece this close to an inner grid line counts as clipped
 STRAY_SHARE = 0.06     # only pieces below this share of the biggest piece can be strays
 STRAY_TOLERANCE = -0.03 # a piece centered this far (share of the cell) outside the cell still counts as inside
 CORE = 0.22            # half width of a cell's core, share of the cell size
-MARGIN = 0.07          # extra border around the motif, share of its side
+MARGIN = 0.043         # extra border around the motif, share of its side
 SIZE = 256
 
 
@@ -101,12 +104,23 @@ def drop_strays(mask, n, cell):
     bottom, right = round((n // 3 + 1) * cell), round((n % 3 + 1) * cell)
     drop = []
     for i, a in zip(ids, areas):
-        if a >= SPECK_SHARE * areas.max():
+        if a >= EDGE_SHARE * areas.max():
             continue
         ys, xs = np.nonzero(fine == i)
         if (n // 3 > 0 and ys.min() <= top + EDGE) or (n // 3 < 2 and ys.max() >= bottom - 1 - EDGE)                 or (n % 3 > 0 and xs.min() <= left + EDGE) or (n % 3 < 2 and xs.max() >= right - 1 - EDGE):
             drop.append(i)
-    return mask & ~np.isin(fine, drop)
+    mask = mask & ~np.isin(fine, drop)
+    # small pieces floating away from the motif (splinters of the neighbour that reached into this cell)
+    fine, count = ndi.label(ndi.binary_dilation(mask, iterations=2))
+    fine = fine * mask
+    ids = list(range(1, count + 1))
+    areas = np.array(ndi.sum(mask, fine, ids))
+    if count > 1:
+        main = ids[int(areas.argmax())]
+        far = ndi.distance_transform_edt(fine != main)
+        floating = [i for i, a in zip(ids, areas) if a < FLOAT_SHARE * areas.max() and far[fine == i].min() > FLOAT_DISTANCE]
+        mask = mask & ~np.isin(fine, floating)
+    return mask
 
 
 def emblem(rgba, mask, n, cell):
