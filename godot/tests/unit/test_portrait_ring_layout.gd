@@ -15,8 +15,9 @@ func _portrait_center(seat: Rect2, d: float, size: Vector2) -> Vector2:
 	return seat.position + Vector2(size.x * 0.5, PortraitRingLayout.NUMBER_BAND + d * 0.5)
 
 
-func _plate(seat: Rect2, d: float, width: float, size: Vector2) -> Rect2:
-	return Rect2(seat.position + Vector2((size.x - width) * 0.5, PortraitRingLayout.NUMBER_BAND + d - PortraitRingLayout.PLATE_DROP), Vector2(width, PortraitRingLayout.PLATE_HEIGHT))
+func _plate(seat: Rect2, d: float, width: float, size: Vector2, span: Vector2) -> Rect2:
+	var local := PortraitRingLayout.plate_rect_local(d, size, width, span)
+	return Rect2(seat.position + local.position, local.size)
 
 
 func test_diameter_by_group_size() -> void:
@@ -37,18 +38,19 @@ func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
 			var d := float(result["diameter"])
 			var size: Vector2 = result["token_size"]
 			var widths: Array = result["plate_widths"]
+			var spans: Array = result["plate_spans"]
 			assert_eq(seats.size(), count, "%d Plätze" % count)
 			assert_eq(widths.size(), count, "%d Schildbreiten" % count)
 			for i: int in count:
 				var seat: Rect2 = seats[i]
-				var plate := _plate(seat, d, float(widths[i]), size)
+				var plate := _plate(seat, d, float(widths[i]), size, spans[i])
 				var label := "%dx%d, %d Personen, Platz %d" % [int(area.x), int(area.y), count, i + 1]
 				assert_true(Rect2(Vector2.ZERO, area).encloses(Rect2(_portrait_center(seat, d, size) - Vector2.ONE * d * PortraitRingLayout.RING_RADIUS, Vector2.ONE * d * PortraitRingLayout.RING_RADIUS * 2.0)), "%s: Porträt im Feld" % label)
 				assert_true(Rect2(Vector2.ZERO, area).encloses(plate), "%s: Schild im Feld" % label)
 				assert_true(float(widths[i]) >= PortraitRingLayout.PLATE_MIN_WIDTH, "%s: Schild nicht schmaler als das Minimum" % label)
 				for j: int in range(i + 1, count):
 					var other: Rect2 = seats[j]
-					var other_plate := _plate(other, d, float(widths[j]), size)
+					var other_plate := _plate(other, d, float(widths[j]), size, spans[j])
 					assert_true(_portrait_center(seat, d, size).distance_to(_portrait_center(other, d, size)) >= d * PortraitRingLayout.RING_RADIUS * 2.0 - 0.5, "%s/%d: Porträts überlappen" % [label, j + 1])
 					assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * PortraitRingLayout.RING_RADIUS, other_plate), "%s/%d: Porträt berührt Schild" % [label, j + 1])
 					assert_false(_circle_hits_rect(_portrait_center(other, d, size), d * PortraitRingLayout.RING_RADIUS, plate), "%s/%d: Schild berührt Porträt" % [label, j + 1])
@@ -63,13 +65,14 @@ func test_center_is_free_of_every_seat_and_inside_the_area() -> void:
 			var d := float(result["diameter"])
 			var size: Vector2 = result["token_size"]
 			var widths: Array = result["plate_widths"]
+			var spans: Array = result["plate_spans"]
 			var label := "%dx%d, %d Personen" % [int(area.x), int(area.y), count]
 			assert_true(Rect2(Vector2.ZERO, area).encloses(center), "%s: Mitte im Feld" % label)
 			assert_true(center.size.x > 0.0 and center.size.y > 0.0, "%s: Mitte hat eine Fläche" % label)
 			for i: int in count:
 				var seat: Rect2 = (result["seats"] as Array)[i]
-				assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * 0.5, center), "%s: Mitte berührt Porträt %d" % [label, i + 1])
-				assert_false(_plate(seat, d, float(widths[i]), size).grow(-0.5).intersects(center), "%s: Mitte berührt Schild %d" % [label, i + 1])
+				assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * PortraitRingLayout.OBSTACLE_RADIUS, center), "%s: Mitte berührt Porträt %d" % [label, i + 1])
+				assert_false(_plate(seat, d, float(widths[i]), size, spans[i]).grow(-0.5).intersects(center), "%s: Mitte berührt Schild %d" % [label, i + 1])
 
 
 func test_center_is_large_enough_for_the_card_in_both_target_sizes() -> void:

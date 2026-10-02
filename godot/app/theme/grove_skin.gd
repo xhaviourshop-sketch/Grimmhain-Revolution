@@ -8,11 +8,12 @@ const ROOT := "res://assets/ui/hain/"
 const BUTTON_SIZE_PRIMARY := Vector2(214.0, 56.0)
 const BUTTON_SIZE_SECONDARY := Vector2(144.0, 56.0)
 const BUTTON_TEXT_INSET := 28.0   ## so weit reichen die Spitzen und Wurzeln in den Knopf; der Text bleibt innerhalb
-const CARD_INSET := Vector4(28.0, 24.0, 28.0, 24.0)  ## Textabstand der Aktionskarte (links, oben, rechts, unten)
+const CARD_INSET := Vector4(28.0, 18.0, 28.0, 18.0)  ## Textabstand der Aktionskarte (links, oben, rechts, unten)
 const TINT_HOVER := Color(1.14, 1.1, 1.06)
 const TINT_PRESSED := Color(0.74, 0.72, 0.74)
 const TINT_FOCUS := Color(1.3, 1.22, 1.08)
-const TINT_DISABLED := Color(0.5, 0.46, 0.48)
+const TINT_DISABLED := Color(0.68, 0.68, 0.72)  ## gesperrter Knopf: dunkle Nebenaktionsfläche, nur leicht gedämpft
+const TEXT_DISABLED := Color("#c3c6ce")        ## hellgraue Schrift auf dem gesperrten Knopf: lesbar, aber erkennbar inaktiv
 const TINT_SEAT_SILVER := Color(0.9, 0.92, 0.97)  ## dämpft das helle Silber, damit 24 Ringe ruhig wirken
 
 static var _cache: Dictionary = {}
@@ -46,24 +47,30 @@ static func plate_box() -> GroveStyleBox:
 	return GroveStyleBox.make(tex, GroveArtData.NAME_PLATE_SHORT_MARGINS) if tex != null else null
 
 
-## Knopf im Hain-Stil: Hauptaktion (rot) oder Nebenaktion (dunkel). Zustände nur über Tönung.
+## Knopf im Hain-Stil: Hauptaktion (rot) oder Nebenaktion (dunkel). Zustände (gedrückt, gesperrt, Fokus) nur über Tönung.
 static func skin_button(button: GrimmButton, primary: bool) -> void:
 	var tex := texture("button_primary" if primary else "button_secondary")
 	if tex == null:
 		return
 	var margins := GroveArtData.BUTTON_PRIMARY_MARGINS if primary else GroveArtData.BUTTON_SECONDARY_MARGINS
-	var tints := {"normal": Color.WHITE, "hover": TINT_HOVER, "pressed": TINT_PRESSED, "hover_pressed": TINT_PRESSED,
-		"focus": TINT_FOCUS, "disabled": TINT_DISABLED}
+	var tints := {"normal": Color.WHITE, "hover": TINT_HOVER, "pressed": TINT_PRESSED, "hover_pressed": TINT_PRESSED, "disabled": TINT_DISABLED}
+	var dark := texture("button_secondary")
 	for state: String in tints:
-		var box := GroveStyleBox.make(tex, margins, tints[state])
+		# Gesperrt: auch die Hauptaktion nimmt die dunkle Fläche (rot mit dunkler Schrift war unlesbar).
+		var disabled := state == "disabled" and dark != null
+		var box := GroveStyleBox.make(dark if disabled else tex, GroveArtData.BUTTON_SECONDARY_MARGINS if disabled else margins, tints[state])
 		box.native_height = tex.get_height() / GroveArtData.TEXTURE_SCALE
 		box.content_margin_left = BUTTON_TEXT_INSET
 		box.content_margin_right = BUTTON_TEXT_INSET
 		box.content_margin_top = 4.0
 		box.content_margin_bottom = 4.0
 		button.add_theme_stylebox_override(state, box)
+	# Fokus: Godot zeichnet den Fokusrahmen über jeden Zustand (auch über den gesperrten Knopf); deshalb leer, der Fokus zeigt sich über die Tönung.
+	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	button.focus_entered.connect(func() -> void: button.self_modulate = Color.WHITE if button.disabled else TINT_FOCUS)
+	button.focus_exited.connect(func() -> void: button.self_modulate = Color.WHITE)
 	for color: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
 		button.add_theme_color_override(color, ThemeTokens.TEXT_PRIMARY)
-	button.add_theme_color_override("font_disabled_color", ThemeTokens.TEXT_DISABLED)
+	button.add_theme_color_override("font_disabled_color", TEXT_DISABLED)
 	button.add_theme_font_size_override("font_size", ThemeTokens.FONT_CAPTION)
 	button.custom_minimum_size = BUTTON_SIZE_PRIMARY if primary else Vector2(maxf(button.custom_minimum_size.x, BUTTON_SIZE_SECONDARY.x), BUTTON_SIZE_SECONDARY.y)

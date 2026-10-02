@@ -10,6 +10,8 @@ extends RefCounted
 
 const NUMBER_BAND := 2.0   ## Rand oberhalb des Rahmens (die Nummer sitzt im Sockel des Rahmens, P5)
 const RING_RADIUS := 0.40  ## Anteil der Rahmenbreite bis zum äußeren Rand des Silberrings: gemeint ist der sichtbare Kreis, nicht das Bildrechteck
+const OBSTACLE_RADIUS := 0.44  ## Anteil der Rahmenbreite für die Tischmitte: Ring samt Wurzeln (das Bildrechteck ist größer als das Sichtbare)
+const PLATE_BIAS := 11.0  ## so viel (je Seite, also 2x insgesamt) darf ein Schild zur freieren Seite über die symmetrische Breite hinaus wachsen
 const PLATE_HEIGHT := 20.0
 const PLATE_DROP := 24.0   ## das Namensschild ragt so weit in den unteren Rahmenrand
 const SIDE_MARGIN := 6.0
@@ -17,7 +19,7 @@ const CENTER_MAX := Vector2(640.0, 400.0)  ## größte Tischmitte (bei wenigen P
 const CENTER_PREFERRED := Vector2(560.0, 340.0)  ## Größe, bis zu der eine größere Tischmitte nichts mehr bringt
 const CENTER_MIN_WIDTH := 200.0
 const CENTER_WIDTH_STEP := 8.0
-const PLATE_OVERHANG := 10.0  ## so weit ragt das Namensschild höchstens über den Rahmenrand
+const PLATE_OVERHANG := 20.0  ## so weit ragt das Namensschild höchstens über den Rahmenrand
 const PLATE_GAP := 2.0       ## Mindestabstand des Schilds zu Nachbarn
 const PLATE_MIN_WIDTH := 36.0
 const CENTER_GAP := 8.0     ## Abstand der Tischmitte zu Porträts und Schildern
@@ -34,7 +36,7 @@ static func diameter_for(count: int) -> float:
 
 
 static func token_size_for(diameter: float) -> Vector2:
-	return Vector2(maxf(diameter + 26.0, 90.0), NUMBER_BAND + diameter + PLATE_HEIGHT - PLATE_DROP)
+	return Vector2(maxf(diameter + 40.0, 90.0), NUMBER_BAND + diameter + PLATE_HEIGHT - PLATE_DROP)
 
 
 ## Breiteste Namensschild-Breite: schmaler als der Abstand benachbarter Plätze, auch bei langen Namen (der Text wird gekürzt).
@@ -61,43 +63,67 @@ static func layout(count: int, area: Vector2) -> Dictionary:
 	var centre := Vector2(area.x * 0.5, top + b)
 	for p: Vector2 in _ring_points(count, centre, a, b):
 		seats.append(Rect2(p - anchor, size))
-	return {"seats": seats, "diameter": d, "token_size": size, "center": _free_center(seats, d, size, centre, a, b), "plate_widths": _plate_widths(seats, d, size)}
+	var spans := _plate_spans(seats, d, size)
+	var widths: Array[float] = []
+	for span: Vector2 in spans:
+		widths.append(span.x + span.y)
+	return {"seats": seats, "diameter": d, "token_size": size, "center": _free_center(seats, d, size, centre, a, b, spans), "plate_widths": widths, "plate_spans": spans}
 
 
 ## Breite des Namensschilds je Platz: so breit wie möglich bis `plate_max_width`, aber so schmal, dass es weder den Porträtkreis eines
 ## Nachbarn noch dessen Schild berührt (am steilen Rand der Ellipse liegen Nachbarn dicht über- und nebeneinander). Lange Namen werden im
 ## Schild gekürzt, der volle Name steht auf der Karte.
-static func _plate_widths(seats: Array[Rect2], d: float, size: Vector2) -> Array[float]:
-	var out: Array[float] = []
+static func _plate_spans(seats: Array[Rect2], d: float, size: Vector2) -> Array[Vector2]:
+	var out: Array[Vector2] = []
 	var radius := d * RING_RADIUS
 	for i: int in seats.size():
 		var band_top := seats[i].position.y + NUMBER_BAND + d - PLATE_DROP
-		var half := plate_max_width(d) * 0.5
+		var cap := plate_max_width(d) * 0.5
+		var span := Vector2(cap, cap)  # (nach links, nach rechts) von der Mitte des Platzes; ein Nachbar beschränkt nur seine Seite
 		var x := seats[i].position.x + size.x * 0.5
 		for j: int in seats.size():
 			if j == i:
 				continue
 			var other := seats[j]
-			var dx := absf(other.position.x + size.x * 0.5 - x)
+			var signed_dx := other.position.x + size.x * 0.5 - x
+			var dx := absf(signed_dx)
+			var side := 1 if signed_dx > 0.0 else 0
 			var centre_y := other.position.y + NUMBER_BAND + d * 0.5
 			var dy := maxf(maxf(band_top - centre_y, centre_y - (band_top + PLATE_HEIGHT)), 0.0)
 			if dy < radius:
-				half = minf(half, dx - sqrt(radius * radius - dy * dy) - PLATE_GAP)
+				span[side] = minf(span[side], dx - sqrt(radius * radius - dy * dy) - PLATE_GAP)
 			var other_top := other.position.y + NUMBER_BAND + d - PLATE_DROP
 			if absf(other_top - band_top) < PLATE_HEIGHT:
-				half = minf(half, (dx - PLATE_GAP) * 0.5)
-		out.append(maxf(half * 2.0, PLATE_MIN_WIDTH))
+				span[side] = minf(span[side], (dx - PLATE_GAP) * 0.5)
+		span.x = maxf(span.x, 0.0)
+		span.y = maxf(span.y, 0.0)
+		var narrow := minf(span.x, span.y)
+		span = Vector2(minf(span.x, narrow + PLATE_BIAS), minf(span.y, narrow + PLATE_BIAS))  # zur freien Seite nur begrenzt wachsen (die Tischmitte braucht Platz)
+		if span.x + span.y < PLATE_MIN_WIDTH:
+			span = Vector2(PLATE_MIN_WIDTH * 0.5, PLATE_MIN_WIDTH * 0.5)
+		out.append(span)
 	return out
+
+
+## Schildrechteck im Steuerelement eines Platzes: Breite `width`, möglichst mittig unter dem Rahmen, aber innerhalb der Spanne
+## (nach links, nach rechts), die die Nachbarn lassen. So darf ein Schild an dichten Stellen zur freien Seite wachsen.
+static func plate_rect_local(d: float, size: Vector2, width: float, span: Vector2) -> Rect2:
+	var half := width * 0.5
+	var shift := clampf(0.0, -span.x + half, span.y - half)
+	return Rect2(size.x * 0.5 + shift - half, NUMBER_BAND + d - PLATE_DROP, width, PLATE_HEIGHT)
 
 
 ## Freies Rechteck um die Mitte, das kein Porträt (samt Nummer) und kein Namensschild berührt und im Bogen der Ellipse bleibt. Für jede
 ## Breite (von der größten abwärts) ergibt sich die höchste freie Höhe aus den Hindernissen in dieser Spalte; gewählt wird die Breite mit
 ## der besten Fläche bis zur bevorzugten Kartengröße (CENTER_PREFERRED), damit die Karte nicht schmal und flach wird.
-static func _free_center(seats: Array[Rect2], d: float, size: Vector2, centre: Vector2, a: float, b: float) -> Rect2:
+static func _free_center(seats: Array[Rect2], d: float, size: Vector2, centre: Vector2, a: float, b: float, spans: Array[Vector2]) -> Rect2:
 	var obstacles: Array[Rect2] = []
-	for r: Rect2 in seats:
-		obstacles.append(Rect2(r.position + Vector2((size.x - d) * 0.5, 0.0), Vector2(d, NUMBER_BAND + d)))
-		obstacles.append(Rect2(r.position + Vector2(0.0, NUMBER_BAND + d - PLATE_DROP), Vector2(size.x, PLATE_HEIGHT)))
+	var reach := d * OBSTACLE_RADIUS
+	for i: int in seats.size():
+		var r: Rect2 = seats[i]
+		var middle := r.position + Vector2(size.x * 0.5, NUMBER_BAND + d * 0.5)
+		obstacles.append(Rect2(middle - Vector2.ONE * reach, Vector2.ONE * reach * 2.0))
+		obstacles.append(Rect2(r.position + Vector2(size.x * 0.5 - spans[i].x, NUMBER_BAND + d - PLATE_DROP), Vector2(spans[i].x + spans[i].y, PLATE_HEIGHT)))
 	var best := Rect2(centre, Vector2.ZERO)
 	var best_score := -1.0
 	var width := minf(a * 2.0, CENTER_MAX.x)

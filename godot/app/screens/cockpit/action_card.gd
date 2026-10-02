@@ -23,6 +23,11 @@ var _content: VBoxContainer = null
 var _actions_box: HFlowContainer = null
 var _left_handed: bool = false
 var _art: RoleCardArt = null  ## Rollenbild (nur im Cockpit gesetzt, sonst unsichtbar)
+var _scroll: ScrollContainer = null  ## Textbereich der Karte
+var _hint: ScrollHint = null  ## „mehr“-Hinweis, nur wenn der Text trotz kleinster Schrift scrollt
+var _fit_step: int = 0  ## zuletzt nötiger Anpassungsschritt; die nächste Karte beginnt dort (weniger Flackern)
+var _fit_index: int = 0  ## Schritt der laufenden Textanpassung
+var _fit_wait: int = 0  ## Bilder bis zur nächsten Prüfung
 var _slot: TargetSlot = null  ## Zielplatz (nur im Cockpit, bei Personenwahl): gewählte Person mit Pfeilen
 var _lower: BoxContainer = null  ## Zielplatz und Aktionen: nebeneinander auf breiter Karte (mehr Platz für den Text), sonst untereinander
 ## Dockplatz der Hauptaktion (Cockpit, P3): Ist er gesetzt, steht der erste Button der Art PRIMARY dort („Nächster Schritt“ unten
@@ -35,6 +40,9 @@ var _info: GrimmButton = null
 
 const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
 const SIDE_BY_SIDE_WIDTH := 560.0  ## ab dieser Kartenbreite stehen Zielplatz und Nebenaktionen in einer Zeile
+## Schritte der Textanpassung (Schriftfaktor, Breite des Rollenbilds): erst kleinere Schrift, dann zusätzlich ein kleineres Rollenbild (mehr Textbreite), danach Scrollen
+const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Vector2(0.84, 88.0), Vector2(0.76, 76.0), Vector2(0.7, 64.0)]
+const FIT_MIN_FONT := 15  ## kleinste Schrift des Kartentexts (logische Einheiten)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
 
 
@@ -54,6 +62,11 @@ func _init() -> void:
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(scroll)
+	_scroll = scroll
+	_hint = ScrollHint.new()
+	_hint.bind(scroll)
+	add_child(_hint)
+	scroll.resized.connect(_fit_text)
 	_content = VBoxContainer.new()
 	_content.name = "Content"
 	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -90,6 +103,7 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_last_next = next
 	_last_context = context
 	_busy = false
+	_fit_text.call_deferred()
 	if _primary != null and is_instance_valid(_primary):
 		if _primary.get_parent() != null:
 			_primary.get_parent().remove_child(_primary)
@@ -146,9 +160,54 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_heading("ui.cockpit.card.none")
 
 
+## Der Text unter „Sag jetzt“ und die Anweisung sind immer vollständig sichtbar: Die Karte füllt schon die ganze freie Tischmitte (sie darf
+## keinen Platz verdecken), deshalb wird zuerst die Schrift schrittweise bis `FIT_MIN_FONT` verkleinert; erst wenn das nicht reicht, scrollt
+## der Text, mit sichtbarem Hinweis (`ScrollHint`).
+func _fit_text() -> void:
+	if _scroll == null or _content == null or not is_inside_tree():
+		return
+	_fit_index = _fit_step
+	_fit_apply()
+	_fit_wait = 2  # zwei Bilder, bis Layout und Scrollleiste den neuen Stand zeigen
+	set_process(true)
+
+
+## Schrittweise ohne `await` (die Karte kann zwischendurch verschwinden): `_process` prüft nach jedem Schritt, ob der Text noch scrollt.
+func _process(_delta: float) -> void:
+	if _scroll == null or not is_instance_valid(_scroll):
+		set_process(false)
+		return
+	_fit_wait -= 1
+	if _fit_wait > 0:
+		return
+	var bar := _scroll.get_v_scroll_bar()
+	if bar.max_value - bar.page <= 1.0 or _fit_index >= FIT_STEPS.size() - 1:
+		set_process(false)  # passt, oder die kleinste Schrift ist erreicht (dann scrollt der Text mit Hinweis)
+		return
+	_fit_index += 1
+	_fit_apply()
+	_fit_wait = 2
+
+
+func _fit_apply() -> void:
+	_fit_step = _fit_index
+	var step := FIT_STEPS[_fit_index]
+	_art.custom_minimum_size = Vector2(step.y, step.y / RoleCardArt.FRAME_ASPECT)
+	var tight := _fit_index >= 3  # letzte Schritte: auch die Abstände zwischen den Zeilen und zum Aktionsbereich schrumpfen
+	_content.add_theme_constant_override(&"separation", 1 if tight else 4)
+	_lower.add_theme_constant_override(&"separation", 2 if tight else ThemeTokens.SPACE_S)
+	for label: Node in _content.find_children("*", "Label", true, false):
+		if not label.has_meta(&"base_font"):
+			label.set_meta(&"base_font", (label as Label).get_theme_font_size(&"font_size"))
+		var base: int = label.get_meta(&"base_font")
+		(label as Label).add_theme_font_size_override(&"font_size", base if step.x >= 1.0 else maxi(mini(base, FIT_MIN_FONT), roundi(float(base) * step.x)))
+
+
 ## Kurzes Einblenden bei einer neuen Handlung (nicht bei Auswahländerungen derselben Karte). Abbrechbar:
 ## ein neues Rendern beendet das laufende Einblenden; bei reduzierter Bewegung kein Einblenden.
 func _fade_in(identity: String, reduced: bool) -> void:
+	if identity != _shown_kind:
+		_fit_step = 0  # neue Karte: wieder mit der größten Schrift beginnen
 	if _fade != null and _fade.is_valid():
 		_fade.kill()
 	modulate.a = 1.0
@@ -766,6 +825,8 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 		# Cockpit (Nachtbrett, P5): Hauptaktion rot, Nebenaktionen dunkel, beide im Hain-Rahmen; Nebenaktionen zwei je Reihe.
 		b.custom_minimum_size = Vector2(CARD_ACTION_MIN_WIDTH, ThemeTokens.TOUCH_MIN)
 		GroveSkin.skin_button(b, kind == GrimmButton.Kind.PRIMARY)
+		if kind != GrimmButton.Kind.PRIMARY:
+			b.custom_minimum_size.y = ThemeTokens.TOUCH_MIN  # Nebenaktionen auf der Karte: 48 hoch, zwei Zeilen Schrift passen; spart Platz für den Text
 	else:
 		b.custom_minimum_size.x = maxf(b.custom_minimum_size.x, ACTION_MIN_WIDTH)
 	b.pressed.connect(_emit.bind(action, payload, b))

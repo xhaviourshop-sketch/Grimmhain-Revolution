@@ -129,6 +129,7 @@ func _layout() -> void:
 		var token := _tokens[_order[i]]
 		token.diameter = float(result["diameter"])
 		token.plate_limit = float((result["plate_widths"] as Array)[i])
+		token.plate_span = (result["plate_spans"] as Array)[i]
 		token.position = r.position
 		token.size = r.size
 	var c: Rect2 = result["center"]

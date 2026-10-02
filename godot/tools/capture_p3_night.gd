@@ -2,7 +2,7 @@ extends SceneTree
 ## Spielt eine Nacht auf dem Nachtbrett (P3) mit den echten Bedienelementen durch und speichert Screenshots (Entwicklungswerkzeug,
 ## keine Produktionsassets). Braucht einen echten Renderer, headless gibt es keine Bildausgabe:
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy -s res://tools/capture_p3_night.gd -- \
-##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start|target] [--motion] [--hold=<Frames>] [--logical] [--long-names] [--demo]
+##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start|target|chosen] [--motion] [--hold=<Frames>] [--logical] [--long-names] [--demo]
 ## Die Partie startet über die Testfixtures (feste Rollen, fester Seed); jede Handlung läuft danach über die Knöpfe der Karte und
 ## das Antippen der Porträtplätze, nie über Befehle der Anwendungsschicht. Für die Prüfung der Sichtbarkeit zusätzlich ein Bild mit
 ## „Verbergen“ und eines mit gestartetem Timer.
@@ -16,7 +16,7 @@ const LONG_NAMES := ["Anna-Katharina von Hohenlohe", "Bartholomäus", "Clara-Sop
 
 var _out: String = ""
 var _prefix: String = "n"
-var _stop_after: String = ""  ## --shots=start: nur „vor der Nacht“ und „Rollenschritt“; --shots=target: zusätzlich „Zielwahl“
+var _stop_after: String = ""  ## --shots=start: nur „vor der Nacht“ und „Rollenschritt“; --shots=target: zusätzlich „Zielwahl“; --shots=chosen: zusätzlich „Ziel gewählt“
 var _long_names: bool = false  ## --long-names: sehr lange Namen (Schild- und Kürzungsprüfung)
 var _demo: bool = false  ## --demo: im Bild „Zielwahl“ einen toten Platz und Abzeichen zeigen (nur Anzeige, ändert keine Partie)
 var _logical: bool = false  ## --logical: Skalierung aus, Fenstergröße = logische Größe (Layoutprüfung wie die Tests); sonst wie auf dem Gerät
@@ -131,7 +131,11 @@ func _run(players: int, locale: String) -> bool:
 			if _stop_after == "target":
 				return true
 			await _select_targets(screen, next)
+			if _demo:
+				await _show_demo_states(screen, next, (next.get("allowed_ids", []) as Array).slice(0, 1))
 			await _shot("04-ziel-gewaehlt")
+			if _stop_after == "chosen":
+				return true
 			shots["chosen"] = true
 			var hide := screen.find_child("HideButton", true, false) as BaseButton
 			hide.button_pressed = true
@@ -153,13 +157,13 @@ func _run(players: int, locale: String) -> bool:
 
 
 ## Nur Anzeige für die Abnahmebilder: ein toter Platz und Abzeichen (die Partie bleibt unverändert).
-func _show_demo_states(screen: Node, next: Dictionary) -> void:
+func _show_demo_states(screen: Node, next: Dictionary, selected: Array = []) -> void:
 	var ring := screen.find_child("SeatRing", true, false) as GameSeatRing
 	var dead := ring.token_for(13)
 	dead.alive = false
 	dead.state = &"dead"
 	var allowed: Array = (next.get("allowed_ids", []) as Array).filter(func(id: Variant) -> bool: return int(id) != 13)
-	ring.set_marking(true, allowed, [], [])
+	ring.set_marking(true, allowed, selected, [])
 	ring.set_marks({3: ["protected"], 5: ["poisoned", "silenced"], 8: ["marked"]})
 	await _frames(3)
 
@@ -170,7 +174,7 @@ func _frames(count: int) -> void:
 
 
 func _shot(label: String) -> void:
-	await _frames(4)
+	await _frames(16)  # die Textanpassung der Karte braucht einige Bilder bis sie ruhig steht
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	var path := _out.path_join("%s-%s-%dx%d.png" % [_prefix, label, _size.x, _size.y])
