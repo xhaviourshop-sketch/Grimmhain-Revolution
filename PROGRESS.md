@@ -626,3 +626,8 @@ Ergebnis: 67 Funde (5 KRITISCH, 5 HOCH, 15 MITTEL, 42 NIEDRIG); 53 nachgestellt,
 Verifikation: Import Exit 0; Vollsuite einmal 1503 Tests, 1 Fehlschlag (`test_game_history::test_screen_and_public_export_have_the_same_scope`, CRLF im Windows-Arbeitsordner); Fuzz mit 3-facher Rundenzahl 1 Fehlschlag (Generatorlücke, kein Regelkern); alle 328 .gd laden ohne Parsefehler.
 Nicht geprüft: Tablet/Browser/iPad, Totenreichkarten einzeln, Rollendateien nur Stichproben (Details im Bericht, Abschnitt C).
 Nächste Schritte (nur nach Freigabe von Markus): KRITISCH B-01 bis B-03, S-01, S-02 beheben; danach HOCH; Entscheidungen zu B-06, B-07, B-08, S-05, S-06 einholen; Exportvorlagen 4.7.2 installieren (UI-01); Registerzeile für `plate-frame.png` (F-A01).
+
+## 2026-10-03 — Reparatur Paket A (Audit-Funde KRITISCH/HOCH)
+Status: umgesetzt, je Fund ein Commit auf main (kein Push): B-01 00ca5a8, B-02 9343c2b, B-03/B-05/CM-01 efd441d, B-04 78bc135, S-01 33732c1, S-02 7d84ea8, S-03 8e7c671, F-A01 7b904a1, X-01 224d755. Details und Tests je Fund: `docs/audit/AUDIT-2026-10-02.md` ("BEHOBEN in").
+Verifikation: je Fund gezielter Test vorher rot, nachher grün; Vollsuite einmal am Ende inkl. Fuzz: 1515 Tests, 0 Fehlschläge. UI-01 (Exportvorlagen) und Paket B (MITTEL/NIEDRIG) offen.
+Offen für Markus: Zuordnung von `plate-frame.png` zur P3-Freigabe bestätigen.
