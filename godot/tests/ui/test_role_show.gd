@@ -187,7 +187,10 @@ func test_resume_after_restart_continues_with_first_unconfirmed_person() -> void
 	assert_true(find_button(list, "RolePerson_4") != null, "Person 4 wählbar")
 
 
-func test_role_change_makes_person_unconfirmed_again() -> void:
+## AUDIT-2026-10-02 S-02 (Entscheidung Markus: Geheimhaltung geht vor): Nach einem geheimen Rollenwechsel bleibt die Person in der
+## neutralen Liste „gesehen“ und der Zähler unverändert (sonst verriete die Liste den Wechsel, z. B. den Lehrling). Nur die
+## private Karte zeigt, dass die neue Rolle noch nicht gesehen wurde, und erlaubt das erneute Zeigen.
+func test_role_change_keeps_person_seen_in_the_neutral_list() -> void:
 	var shell := await _cockpit()
 	if shell == null:
 		return
@@ -195,8 +198,10 @@ func test_role_change_makes_person_unconfirmed_again() -> void:
 	assert_true(s.confirm_role_shown(1).ok, "Person 1 gesehen")
 	assert_true(s.gm_correction({"kind": "set_role", "target_id": 1, "role_id": "waldhexe", "reason": "Test"}).ok, "Rollenwechsel")
 	var entry: Dictionary = s.role_show_list()["persons"][0]
-	assert_false(bool(entry["confirmed"]), "wieder unbestätigt")
-	assert_eq(int(s.role_show_list()["next_id"]), 1, "wieder erste offene Person")
+	assert_true(bool(entry["confirmed"]), "neutrale Liste: weiterhin gesehen")
+	assert_eq(int(s.role_show_list()["next_id"]), 2, "Fortsetzung unverändert bei Person 2")
+	assert_eq(int(s.role_show_list()["confirmed_count"]), 1, "Zähler unverändert")
+	assert_false(bool(s.role_show_card(1)["confirmed"]), "private Karte: neue Rolle noch nicht gesehen")
 	assert_true(s.confirm_role_shown(1).ok, "neue Rolle bestätigbar")
 
 

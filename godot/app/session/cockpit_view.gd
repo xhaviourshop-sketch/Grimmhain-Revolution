@@ -437,17 +437,20 @@ static func vote_hints(s: GameState) -> Array:
 
 
 ## Rollenanzeige, neutrale Liste: Personen in Sitzreihenfolge mit Bestätigungsstand, ohne jede Rolle. `next_id` ist die
-## erste Person ohne gültige Bestätigung (Fortsetzungspunkt), -1 wenn alle bestätigt sind.
+## erste Person, die ihre Rolle noch nie gesehen hat (Fortsetzungspunkt), -1 wenn alle sie gesehen haben. Ein geheimer
+## Rollenwechsel ändert die Liste nicht (Audit S-02); das erneute Zeigen steht nur in der privaten Karte (`role_show_card`).
 static func role_show_list(s: GameState) -> Dictionary:
 	var persons: Array = []
 	var confirmed := 0
+	var next_id := -1
 	for i: int in s.seat_order.size():
 		var id := s.seat_order[i]
-		var done := RoleShownRules.is_current(s, id)
+		var done := s.roles_shown.has(id)
 		confirmed += 1 if done else 0
 		persons.append({"person_id": id, "seat": i + 1, "name": s.players[id].name, "confirmed": done})
-	var pending := RoleShownRules.pending_ids(s)
-	return {"persons": persons, "next_id": pending[0] if not pending.is_empty() else -1, "confirmed_count": confirmed, "total": persons.size()}
+		if not done and next_id == -1:
+			next_id = id
+	return {"persons": persons, "next_id": next_id, "confirmed_count": confirmed, "total": persons.size()}
 
 
 ## Rollenanzeige, Karte einer Person: ausschließlich diese Person mit ihrer wahren Rolle (bei Rollen mit Scheinrolle nie
