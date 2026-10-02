@@ -387,6 +387,12 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 					# Karteneingaben und Handzeichen des Kartenschluckers: eigene Beschriftung je Option.
 					buttons.append(_button("OptionButton_%d" % i, CockpitText.card_option_key(option_kind, str(options[i])), GrimmButton.Kind.SECONDARY, &"option", {"index": i}))
 					continue
+				# Lehrling: Die Rollen der Optionen stehen nur auf der gesicherten Karte, nie auf der offenen Aktionskarte.
+				if str(next.get("owner")) == "lehrling":
+					var hidden := _button("OptionButton_%d" % i, "ui.cockpit.action.option_hidden", GrimmButton.Kind.SECONDARY, &"option", {"index": i})
+					hidden.format_values = {"number": i + 1}
+					buttons.append(hidden)
+					continue
 				var b := _button("OptionButton_%d" % i, "ui.cockpit.action.option", GrimmButton.Kind.SECONDARY, &"option", {"index": i})
 				b.format_values = {"number": i + 1, "role": CockpitText.role_name(str(options[i]))}
 				buttons.append(b)

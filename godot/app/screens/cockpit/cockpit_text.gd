@@ -172,6 +172,11 @@ static func info_value(line: Dictionary) -> Variant:
 			for v: Variant in value:
 				names.append(person(v))
 			return ", ".join(names) if not names.is_empty() else StringName("ui.prompt.value.nobody")
+		"roles":
+			var numbered: Array = []
+			for i: int in (value as Array).size():
+				numbered.append("%d: %s" % [i + 1, TranslationServer.translate(role_name(str((value as Array)[i])))])
+			return ", ".join(numbered)
 		"bool":
 			return StringName("ui.common.yes") if bool(value) else StringName("ui.common.no")
 		"direction":

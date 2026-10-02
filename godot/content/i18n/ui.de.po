@@ -1454,6 +1454,9 @@ msgstr "Zur Kenntnis genommen"
 msgid "ui.cockpit.action.option"
 msgstr "Option {number}: {role}"
 
+msgid "ui.cockpit.action.option_hidden"
+msgstr "Option {number}"
+
 msgid "ui.cockpit.action.show_card"
 msgstr "Karte zeigen"
 
@@ -1879,6 +1882,9 @@ msgstr "Wahre Rolle"
 
 msgid "ui.prompt.info.determined_role"
 msgstr "Ermitteltes Ergebnis"
+
+msgid "ui.prompt.info.options"
+msgstr "Optionen"
 
 msgid "ui.prompt.info.shown_role"
 msgstr "Zu zeigendes Ergebnis"

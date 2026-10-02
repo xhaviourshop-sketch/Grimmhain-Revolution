@@ -1454,6 +1454,9 @@ msgstr "Acknowledged"
 msgid "ui.cockpit.action.option"
 msgstr "Option {number}: {role}"
 
+msgid "ui.cockpit.action.option_hidden"
+msgstr "Option {number}"
+
 msgid "ui.cockpit.action.show_card"
 msgstr "Show card"
 
@@ -1879,6 +1882,9 @@ msgstr "True role"
 
 msgid "ui.prompt.info.determined_role"
 msgstr "Determined result"
+
+msgid "ui.prompt.info.options"
+msgstr "Options"
 
 msgid "ui.prompt.info.shown_role"
 msgstr "Result to show"

@@ -25,7 +25,7 @@ const ACK_STAGES: Array[StringName] = [&"confirm", &"shown"]
 const OPTION_STAGES: Array[StringName] = [&"option", &"role"]
 
 ## Teilantworten, die nur der Wiederaufnahme dienen und nichts zeigen.
-const HIDDEN_KEYS: Array[String] = ["rng_after", "options", "heal_offered", "poison_offered", "override_reason", "role_seen", "chosen_index", "option_person_ids"]
+const HIDDEN_KEYS: Array[String] = ["rng_after", "options", "heal_offered", "poison_offered", "override_reason", "role_seen", "chosen_index", "option_person_ids", "candidates"]
 const ROLE_KEYS: Array[String] = ["role_id", "victim_role", "truth_role", "determined_role", "shown_role"]
 
 ## Zeigbare Teilantworten je Besitzer (in der Stufe „Gezeigt“ bzw. bei der Waldhexe „reveal“).
@@ -44,6 +44,7 @@ const SHOW_KEYS := {
 	&"kriegerin-des-lichts": ["target_id", "is_wolf"],
 	&"blutpriester": ["revealed_ids"],
 	&"die-ewigen": ["target_id", "solo"],
+	&"lehrling": ["options"],  ## die drei Rollen zur Wahl; Personen (Kandidaten) nie
 }
 
 
@@ -156,7 +157,8 @@ static func info_lines(s: GameState, p: PendingPrompt) -> Array:
 
 ## Positivliste für die gezeigte Karte; leer, wenn in dieser Stufe nichts zu zeigen ist.
 static func show_lines(s: GameState, p: PendingPrompt) -> Array:
-	var shown_stage := p.stage == &"shown" or (p.owner == PendingPrompt.OWNER_WITCH and p.stage == &"reveal")
+	# Lehrling: Die Rollen der Optionen stehen in der Optionsstufe (und der Bestätigung) nur auf der gesicherten Karte.
+	var shown_stage := p.stage == &"shown" or (p.owner == PendingPrompt.OWNER_WITCH and p.stage == &"reveal") 			or (p.owner == PendingPrompt.OWNER_APPRENTICE and (p.stage == &"option" or p.stage == &"confirm"))
 	if not shown_stage or not SHOW_KEYS.has(p.owner):
 		return []
 	var out: Array = []
@@ -169,6 +171,11 @@ static func show_lines(s: GameState, p: PendingPrompt) -> Array:
 static func _line(s: GameState, key: String, value: Variant) -> Dictionary:
 	if ROLE_KEYS.has(key):
 		return {"key": key, "kind": "role", "value": str(value)}
+	if key == "options" and value is Array:
+		var roles: Array = []
+		for role: Variant in value:
+			roles.append(str(role))
+		return {"key": key, "kind": "roles", "value": roles}
 	if key.ends_with("_ids"):
 		var names: Array = []
 		for id: Variant in (value as Array if value is Array else []):
