@@ -1,5 +1,13 @@
 # Grimmhain Revolution · Verbindlicher Masterplan
 
+## Aktuelle Arbeitsreihenfolge: Spielfunktionen vor Gestaltung
+
+**Planungsupdate vom 29.09.2026:** Die technische Umsetzung wird ohne feste Tages- oder Wochenfrist in überprüfbaren Arbeitspaketen abgeschlossen. Aktuelle operative Roadmap: [CODE-COMPLETION-ROADMAP.md](docs/masterplan/CODE-COMPLETION-ROADMAP.md). Diese Reihenfolge ersetzt Kalenderannahmen und frühere nächste Schritte für die weitere Planung; Produktumfang und Abnahmeanforderungen dieses Masterplans bleiben erhalten.
+
+Der erste Meilenstein ist die vollständig bedienbare Offline-Partie. Danach folgen übrige Offline-Funktionen, Totenkarten/Kartenschlucker, lokale Clients und öffentliche Anzeige sowie Mediensteuerung und Plattformbasis. Blockierte Regelentscheidungen werden nicht als erledigt markiert. Finale Grafik, Atmosphäre und umfangreiche Layout-/QoL-Überarbeitung folgen als eigenes Gestaltungsprojekt; dessen Standardansicht soll 85 bis 90 Prozent Spielfeldfläche bieten.
+
+**Stand auseinanderhalten:** Dieser Checkout steht auf main `8197ee6`. Der neuere Funktionsstand liegt im Worktree `grimmhain-night-ui`, Branch `feature/night-ui-expansion`, zuletzt lokal geprüft `23c7044`. Die dafür gemeldeten 917 Tests sind kein Nachweis für den älteren main und keine Tablet-Abnahme. Der nächste Auftrag prüft den aktuellen Stand und erstellt die vollständige Restmatrix, bevor weitere Funktionspakete umgesetzt werden.
+
 **Stand:** 26. September 2026; Umsetzungsstand aktualisiert 27. September 2026 (main `1bc8016`)
 
 **Status:** Produktrichtung bestätigt; Analyse abgeschlossen. Umsetzung begonnen: Regelkern mit 11 Rollen (Phase 1) implementiert und automatisch getestet; Setup-Oberfläche für Spieler, Rollen, Verteilung und Sitzordnung (Teil von Phase 2) implementiert, automatisch getestet und grafisch skriptgesteuert geprüft. Spielstart (`StartGame`) aus dem bestätigten Setup umgesetzt und automatisch getestet (PR #2). Keine Tablet-Abnahme, keine spielbare Partie (Nacht/Tag) über die Oberfläche.
