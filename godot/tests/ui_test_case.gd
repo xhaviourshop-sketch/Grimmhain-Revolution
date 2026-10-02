@@ -256,13 +256,13 @@ func _collect_visible(node: Node, out: Array[Control]) -> void:
 		_collect_visible(child, out)
 
 
-## Sichtbarer Teil eines Controls: sein Rechteck, beschnitten auf alle umgebenden ScrollContainer (deren Inhalt
-## außerhalb der Scrollfläche nicht gezeichnet wird). Leeres Rechteck, wenn nichts davon sichtbar ist.
+## Sichtbarer Teil eines Controls: sein Rechteck, beschnitten auf alle umgebenden ScrollContainer und Controls mit `clip_contents`
+## (deren Inhalt außerhalb der Fläche nicht gezeichnet wird, z. B. das überstehende Hintergrundbild). Leeres Rechteck, wenn nichts davon sichtbar ist.
 func clipped_rect(c: Control) -> Rect2:
 	var r := rect_of(c)
 	var parent := c.get_parent()
 	while parent != null:
-		if parent is ScrollContainer:
+		if parent is ScrollContainer or (parent is Control and (parent as Control).clip_contents):
 			r = r.intersection(rect_of(parent as Control))
 			if not r.has_area():
 				return Rect2()

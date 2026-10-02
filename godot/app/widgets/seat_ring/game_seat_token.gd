@@ -284,7 +284,7 @@ func _draw_socket(frame_rect: Rect2, socket: Vector2, d: float, tint: Color) -> 
 func _draw_check(c: Vector2, d: float) -> void:
 	var centre := c + Vector2(d * 0.31, -d * 0.27)
 	draw_circle(centre, 8.5, ThemeTokens.NUMBER_BG)
-	draw_arc(centre, 8.5, 0.0, TAU, 24, GLOW_SELECTED, 1.4, true)
+	draw_arc(centre, 8.5, 0.0, TAU, 12 * 2, GLOW_SELECTED, 1.4, true)
 	draw_polyline(PackedVector2Array([centre + Vector2(-4.0, 0.5), centre + Vector2(-1.2, 3.4), centre + Vector2(4.2, -3.2)]), GLOW_SELECTED, 2.0, true)
 
 

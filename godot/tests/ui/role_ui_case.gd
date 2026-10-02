@@ -77,6 +77,7 @@ func live(node_name: String, root: Node = null) -> BaseButton:
 
 ## Drückt einen sichtbaren, freigegebenen Button; fehlt er, schlägt der Test fehl.
 func tap_button(node_name: String, root: Node = null) -> bool:
+	await tool_button(root if root != null else screen(), node_name)  # Werkzeuge im Optionenmenü: erst die Lasche öffnen
 	var b := live(node_name, root)
 	if b == null:
 		fail("Button %s nicht bedienbar (%s)" % [node_name, str(next().get("kind"))])
