@@ -254,7 +254,11 @@ func _show_save_status(status: Dictionary) -> void:
 	_retry_save.visible = not ok
 	_save_status.theme_type_variation = &"CaptionLabel" if ok else &"ErrorCaptionLabel"
 	_save_status.text_key = "ui.cockpit.save.ok" if ok else "ui.cockpit.save.error"
+	_save_status.self_modulate = ThemeTokens.TINT_QUIET if ok else ThemeTokens.TINT_NONE
+	_save_row.alignment = FlowContainer.ALIGNMENT_BEGIN if ok else FlowContainer.ALIGNMENT_CENTER
 	_arrange()  # die Zeile wird mit dem Wiederholen-Knopf höher
+	if not ok:
+		_arrange.call_deferred()  # Mindesthöhe der Zeile gilt erst nach dem Breitenwechsel; dann erst passt die Höhe
 
 
 ## Anschlussstelle für spätere Hintergrundebenen je Tageszeit: Bild über der Grundfarbe.
@@ -383,10 +387,17 @@ func _arrange() -> void:
 	_phase_area.position = Vector2(plate_x, h - DOCK_MARGIN - _phase_area.size.y)
 	var free_left := (_dock.position.x + _dock.size.x if left_handed else _phase_area.position.x + _phase_area.size.x) + PLATE_MARGIN
 	var free_right := (_phase_area.position.x if left_handed else _dock.position.x) - PLATE_MARGIN
+	if _retry_save.visible:
+		free_left -= PLATE_MARGIN - 4.0  # Fehlerzeile braucht die Breite, damit Text und Knopf in einer Zeile bleiben
 	_save_row.size = Vector2(maxf(free_right - free_left, 1.0), 0.0)
-	var row_height := maxf(_save_row.get_combined_minimum_size().y, float(ThemeTokens.TOUCH_MIN) if _retry_save.visible else 0.0)  # Mindesthöhe aktualisiert sich erst im nächsten Bild
+	var row_height := float(ThemeTokens.TOUCH_MIN) if _retry_save.visible else _save_row.get_combined_minimum_size().y  # Mindesthöhe aktualisiert sich erst im nächsten Bild (nach dem Wechsel der Breite wäre sie veraltet)
 	_save_row.size = Vector2(_save_row.size.x, row_height)
-	_save_row.position = Vector2(free_left, h - DOCK_MARGIN - _save_row.size.y)
+	if _retry_save.visible:
+		_save_row.position = Vector2(free_left, h - DOCK_MARGIN - _save_row.size.y)  # Fehler: breit und deutlich neben dem Dock
+	else:
+		# „Gespeichert“: kleiner, ruhiger Hinweis an fester Stelle, linksbündig über der Kartusche
+		_save_row.size = Vector2(_phase_area.size.x, _save_row.get_combined_minimum_size().y)
+		_save_row.position = Vector2(_phase_area.position.x + 4.0, _phase_area.position.y - _save_row.size.y - 2.0)
 	_tools_menu.size = _tools_menu.get_combined_minimum_size()
 	_tools_menu.position = Vector2(w - TAB_WIDTH - _tools_menu.size.x - 4.0, clampf(tab_y, TOP_MARGIN, maxf(TOP_MARGIN, h - _tools_menu.size.y - TOP_MARGIN)))
 	_place_backdrop_art(_ring.position + _ring.size * 0.5)
@@ -434,6 +445,15 @@ func _style_plate() -> void:
 	(_phase_area.get_child(0) as BoxContainer).add_theme_constant_override("separation", 0)
 	(%PhaseValueLabel as Control).add_theme_font_size_override("font_size", ThemeTokens.FONT_COMPACT)  # passt in die Kartusche, ohne die Speicherzeile daneben zu verdrängen
 	GroveSkin.skin_button(_dock_undo, false)
+	for label: Control in [%RoundLabel, %AliveLabel]:  # Statuszeile oben links: dezent hinterlegt, damit sie auf dem Pflaster lesbar bleibt
+		var back := StyleBoxFlat.new()
+		back.bg_color = ThemeTokens.PLATE_BG
+		back.set_corner_radius_all(ThemeTokens.RADIUS_S)
+		back.content_margin_left = 6.0
+		back.content_margin_right = 6.0
+		back.content_margin_top = 2.0
+		back.content_margin_bottom = 2.0
+		label.add_theme_stylebox_override("normal", back)
 
 
 ## Hauptaktion im Dock: ganzes Bild des roten Knopfs, Beschriftung und Zustand bleiben die des Buttons.

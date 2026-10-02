@@ -47,6 +47,7 @@ const MOON_GLOW := Color(0.88, 0.94, 1.0)            ## heller Mondsilber-Schein
 const SEAT_SHIMMER := Color(0.72, 0.82, 1.0)         ## dezenter, kühler Schimmer wählbarer Plätze
 const BLOOD_GLOW := Color(0.78, 0.08, 0.1)           ## blutroter Schein am Ring der handelnden Person
 const TINT_SEAT_ACTOR := Color(1.0, 0.78, 0.78)      ## Silberring der handelnden Person leicht gerötet
+const TINT_QUIET := Color(1, 1, 1, 0.72)             ## dezenter Hinweis („Gespeichert“)
 const BOARD_DAY := Color("#1c160d")          ## Spielbrett am Morgen und Tag: dunkles Dämmerbraun
 
 # --- Nachtbrett (P3): Tönungen und Flächen der Porträtplätze, Laschen und Leiste --------------------

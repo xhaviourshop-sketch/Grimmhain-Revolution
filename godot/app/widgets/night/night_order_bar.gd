@@ -9,15 +9,17 @@ extends Control
 
 signal expand_toggled(expanded: bool)
 
-const FULL_HEIGHT := 104.0
+const FULL_HEIGHT := 70.0
 const CHIP_SIZE := Vector2(400.0, 52.0)
-const MEDALLION := 56.0  ## Durchmesser des Rollenrings in der vollen Leiste
+const MEDALLION := 44.0  ## Durchmesser des Rollenrings in der vollen Leiste
 const CHIP_MEDALLION := 44.0
-const BAR_Y_CENTER := 28.0  ## Mitte der vollen Leiste (und der Medaillons) von oben
-const SLOT_PITCH_MIN := 70.0
-const SLOT_PITCH_MAX := 84.0
+const BAR_Y_CENTER := 26.0  ## Mitte der vollen Leiste (und der Medaillons) von oben
+const SLOT_PITCH_MIN := 62.0
+const SLOT_PITCH_MAX := 76.0
 const CLASP_GAP := 14.0  ## Luft links und rechts der Mittelspange
 const LABEL_SIZE := 11
+const LABEL_PLATE_HEIGHT := 18.0  ## Namensschild unter dem Medaillon (Teil `name_plate_short`)
+const LABEL_PLATE_PAD := 5.0
 const NUMBER_SIZE := 10
 const CHIP_FONT_SIZE := 17
 const ARROW_SIZE := 26.0
@@ -93,7 +95,7 @@ func size_for(expanded: bool) -> Vector2:
 ## Breite einer Hälfte (links oder rechts der Mittelspange), in der Medaillons stehen können.
 func _half_room() -> float:
 	var ends := minf(GroveArtData.NIGHT_BAR_MARGINS.x, GroveArtData.NIGHT_BAR_MARGINS.z) / GroveArtData.TEXTURE_SCALE
-	return size.x * 0.5 - _clasp_width() * 0.5 - CLASP_GAP - ends - ARROW_SIZE - 6.0
+	return size.x * 0.5 - _clasp_width() * 0.5 - CLASP_GAP - ends - ARROW_SIZE - 16.0
 
 
 func _clasp_width() -> float:
@@ -159,7 +161,8 @@ func _arrange() -> void:
 	_right.position = Vector2(size.x - margins.z - arrow.x - 2.0, y)
 	_right.size = arrow
 	_toggle.size = Vector2(ThemeTokens.TOUCH_MIN, ThemeTokens.TOUCH_MIN)
-	_toggle.position = Vector2((size.x - _toggle.size.x) * 0.5, size.y - _toggle.size.y + 4.0)
+	var toggle_y := (BAR_Y_CENTER + 8.0) if _expanded else (size.y - _toggle.size.y + 4.0)
+	_toggle.position = Vector2((size.x - _toggle.size.x) * 0.5, toggle_y)
 
 
 # --- Zeichnen -----------------------------------------------------------------------------------------
@@ -243,7 +246,24 @@ func _draw_slots() -> void:
 		draw_circle(Vector2(badge_x, badge_y), 8.0, ThemeTokens.NUMBER_BG)
 		draw_string(font, Vector2(badge_x - nw * 0.5, badge_y + NUMBER_SIZE * 0.35), number, HORIZONTAL_ALIGNMENT_LEFT, -1, NUMBER_SIZE, ThemeTokens.TEXT_PRIMARY)
 		var color := ThemeTokens.DANGER_TEXT if state == "active" else (ThemeTokens.TEXT_DISABLED if state == "done" else ThemeTokens.TEXT_MUTED)
-		_draw_fitted(font, _label_of(str(entry["role_id"])), Vector2(sx, BAR_Y_CENTER + MEDALLION * 0.5 + 14.0), _pitch(shown) - 4.0, LABEL_SIZE, color)
+		_draw_label_plate(font, _label_of(str(entry["role_id"])), Vector2(sx, BAR_Y_CENTER + MEDALLION * 0.5 + 13.0), _pitch(shown) + 4.0, color)
+
+
+## Name unter dem Medaillon auf einem schmalen dunklen Schild (gleiches Teil wie die Namensschilder der Plätze), damit er auf dem Pflaster lesbar bleibt.
+func _draw_label_plate(font: Font, text: String, centre: Vector2, limit: float, color: Color) -> void:
+	var box := GroveSkin.plate_box()
+	var text_limit := limit - LABEL_PLATE_PAD * 2.0
+	while font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE).x > text_limit and text.length() > 3:
+		text = text.trim_suffix("…")
+		text = text.left(text.length() - 1) + "…"
+	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE).x
+	var plate_w := w + LABEL_PLATE_PAD * 2.0
+	if box != null:
+		box.native_height = LABEL_PLATE_HEIGHT
+		draw_style_box(box, Rect2(centre.x - plate_w * 0.5, centre.y - LABEL_PLATE_HEIGHT * 0.5 - 3.0, plate_w, LABEL_PLATE_HEIGHT))
+	else:
+		draw_rect(Rect2(centre.x - plate_w * 0.5, centre.y - LABEL_PLATE_HEIGHT * 0.5 - 3.0, plate_w, LABEL_PLATE_HEIGHT), ThemeTokens.PLATE_BG)
+	draw_string(font, Vector2(centre.x - w * 0.5, centre.y + 1.0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE, color)
 
 
 func _draw_chip() -> void:
@@ -271,7 +291,7 @@ func _draw_fitted(font: Font, text: String, centre: Vector2, limit: float, font_
 func _draw_chevron() -> void:
 	if not _collapsible:
 		return
-	var c := Vector2(size.x * 0.5, size.y - 8.0)
+	var c := Vector2(size.x * 0.5, (BAR_Y_CENTER + 33.0) if _expanded else (size.y - 8.0))
 	var pts := PackedVector2Array([c + Vector2(-8.0, -3.0), c + Vector2(8.0, -3.0), c + Vector2(0.0, 5.0)])
 	if _expanded:
 		pts = PackedVector2Array([c + Vector2(-8.0, 5.0), c + Vector2(8.0, 5.0), c + Vector2(0.0, -3.0)])

@@ -43,11 +43,33 @@ static func image_key(role_id: String) -> String:
 	return role_id
 
 
-## Rollensymbol der Nachtleiste: Emblem, sonst Kreisbild (Übergang), sonst null.
+## Rollensymbol der Nachtleiste (klein): immer das Silbersymbol. Fehlt es, steht vorerst das Kreisbild der Rolle entsättigt und
+## abgedunkelt im Medaillon, damit die Leiste ruhig wirkt. Das gemalte Rollenbild gehört nur auf die große Aktionskarte (`role_art`).
 static func role_symbol(role_id: String) -> Texture2D:
 	var key := image_key(role_id)
 	var emblem := texture("emblems/%s.png" % key)
-	return emblem if emblem != null else texture("role-circle/%s.webp" % key)
+	return emblem if emblem != null else _muted_circle(key)
+
+
+static var _muted: Dictionary = {}
+const MUTED_BRIGHTNESS := 0.85
+
+
+static func _muted_circle(key: String) -> Texture2D:
+	if _muted.has(key):
+		return _muted[key]
+	var source := texture("role-circle/%s.webp" % key)
+	var result: Texture2D = null
+	if source != null:
+		var image := source.get_image()
+		if image != null:
+			if image.is_compressed():
+				image.decompress()
+			image.convert(Image.FORMAT_RGBA8)
+			image.adjust_bcs(MUTED_BRIGHTNESS, 1.0, 0.0)
+			result = ImageTexture.create_from_image(image)
+	_muted[key] = result
+	return result
 
 
 ## Rollenbild der Aktionskarte (vorläufig laut PILOT-STATUS) oder null.
