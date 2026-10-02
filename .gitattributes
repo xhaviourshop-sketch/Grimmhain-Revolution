@@ -18,3 +18,16 @@ assets/fonts/OFL-*.txt -whitespace
 
 # PE-07: echte Spielstand-Fixtures muessen bytegleich bleiben (kein Zeilenenden-Umbau).
 godot/tests/saves/** -text
+
+# Godot-Textdateien: im Repo und im Arbeitsordner LF, auch unter Windows (autocrlf). Tests enthalten Zeilenumbrueche in
+# Zeichenketten (z. B. test_game_history) und Godot schreibt *.import selbst mit LF; CRLF erzeugte falsche Fehlschlaege und Aenderungsrauschen.
+*.gd text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.po text eol=lf
+*.cfg text eol=lf
+*.godot text eol=lf
+*.import text eol=lf
+*.uid text eol=lf
+*.gdshader text eol=lf
+*.sh text eol=lf
