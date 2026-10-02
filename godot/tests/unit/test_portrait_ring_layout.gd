@@ -1,5 +1,5 @@
 extends TestCase
-## Geometrie des Porträtkreises (P3): reine Rechnung ohne Szene. Porträts mindestens 56 px (Ziel 66 ab 13 Personen), runde Porträts und
+## Geometrie des Porträtkreises (P3): reine Rechnung ohne Szene. Porträtfenster mindestens 56 px (Rahmenbreite 86 ab 13 Personen, P5), runde Porträts und
 ## Namensschilder überlappen sich nicht, die Tischmitte bleibt frei von Plätzen und im Feld.
 
 ## Felder des Sitzkreises: 1024x768 (Chip, 908 x 638), 1280x800 (volle Leiste, 1164 x 592) und größere Fenster.
@@ -20,12 +20,13 @@ func _plate(seat: Rect2, d: float, width: float, size: Vector2) -> Rect2:
 
 
 func test_diameter_by_group_size() -> void:
-	assert_eq(PortraitRingLayout.diameter_for(6), 88.0, "kleine Runde groß")
-	assert_eq(PortraitRingLayout.diameter_for(8), 76.0, "mittel ab 8")
-	assert_eq(PortraitRingLayout.diameter_for(13), 66.0, "Ziel 66 ab 13")
-	assert_eq(PortraitRingLayout.diameter_for(24), 66.0, "24 Personen")
+	assert_eq(PortraitRingLayout.diameter_for(6), 104.0, "kleine Runde groß")
+	assert_eq(PortraitRingLayout.diameter_for(8), 96.0, "mittel ab 8")
+	assert_eq(PortraitRingLayout.diameter_for(13), 86.0, "Ziel 86 ab 13")
+	assert_eq(PortraitRingLayout.diameter_for(24), 86.0, "24 Personen")
 	for count: int in range(1, 25):
-		assert_true(PortraitRingLayout.diameter_for(count) >= 56.0, "mindestens 56 px bei %d" % count)
+		var face := PortraitRingLayout.diameter_for(count) * GroveArtData.SEAT_HOLE_RADIUS * 2.0
+		assert_true(face >= 56.0, "Porträtfenster mindestens 56 px bei %d (%.1f)" % [count, face])
 
 
 func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
@@ -42,15 +43,15 @@ func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
 				var seat: Rect2 = seats[i]
 				var plate := _plate(seat, d, float(widths[i]), size)
 				var label := "%dx%d, %d Personen, Platz %d" % [int(area.x), int(area.y), count, i + 1]
-				assert_true(Rect2(Vector2.ZERO, area).encloses(Rect2(_portrait_center(seat, d, size) - Vector2.ONE * d * 0.5, Vector2.ONE * d)), "%s: Porträt im Feld" % label)
+				assert_true(Rect2(Vector2.ZERO, area).encloses(Rect2(_portrait_center(seat, d, size) - Vector2.ONE * d * PortraitRingLayout.RING_RADIUS, Vector2.ONE * d * PortraitRingLayout.RING_RADIUS * 2.0)), "%s: Porträt im Feld" % label)
 				assert_true(Rect2(Vector2.ZERO, area).encloses(plate), "%s: Schild im Feld" % label)
 				assert_true(float(widths[i]) >= PortraitRingLayout.PLATE_MIN_WIDTH, "%s: Schild nicht schmaler als das Minimum" % label)
 				for j: int in range(i + 1, count):
 					var other: Rect2 = seats[j]
 					var other_plate := _plate(other, d, float(widths[j]), size)
-					assert_true(_portrait_center(seat, d, size).distance_to(_portrait_center(other, d, size)) >= d - 0.5, "%s/%d: Porträts überlappen" % [label, j + 1])
-					assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * 0.5, other_plate), "%s/%d: Porträt berührt Schild" % [label, j + 1])
-					assert_false(_circle_hits_rect(_portrait_center(other, d, size), d * 0.5, plate), "%s/%d: Schild berührt Porträt" % [label, j + 1])
+					assert_true(_portrait_center(seat, d, size).distance_to(_portrait_center(other, d, size)) >= d * PortraitRingLayout.RING_RADIUS * 2.0 - 0.5, "%s/%d: Porträts überlappen" % [label, j + 1])
+					assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * PortraitRingLayout.RING_RADIUS, other_plate), "%s/%d: Porträt berührt Schild" % [label, j + 1])
+					assert_false(_circle_hits_rect(_portrait_center(other, d, size), d * PortraitRingLayout.RING_RADIUS, plate), "%s/%d: Schild berührt Porträt" % [label, j + 1])
 					assert_false(plate.grow(-0.5).intersects(other_plate.grow(-0.5)), "%s/%d: Schilder überlappen" % [label, j + 1])
 
 

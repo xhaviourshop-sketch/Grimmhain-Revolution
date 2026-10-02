@@ -8,27 +8,29 @@ extends RefCounted
 ## Porträt (Durchmesser `diameter`), darunter das Namensschild. Die Steuerelemente überlappen diagonal, die Tippfläche
 ## (Porträtkreis und Namensschild) nicht (siehe GameSeatToken._has_point).
 
-const NUMBER_BAND := 8.0   ## Höhe oberhalb des Porträts für das Nummern-Abzeichen
-const PLATE_HEIGHT := 18.0
-const PLATE_DROP := 2.0    ## das Namensschild ragt so weit in den unteren Porträtrand
+const NUMBER_BAND := 2.0   ## Rand oberhalb des Rahmens (die Nummer sitzt im Sockel des Rahmens, P5)
+const RING_RADIUS := 0.40  ## Anteil der Rahmenbreite bis zum äußeren Rand des Silberrings: gemeint ist der sichtbare Kreis, nicht das Bildrechteck
+const PLATE_HEIGHT := 20.0
+const PLATE_DROP := 24.0   ## das Namensschild ragt so weit in den unteren Rahmenrand
 const SIDE_MARGIN := 6.0
 const CENTER_MAX := Vector2(640.0, 400.0)  ## größte Tischmitte (bei wenigen Personen)
 const CENTER_PREFERRED := Vector2(560.0, 340.0)  ## Größe, bis zu der eine größere Tischmitte nichts mehr bringt
 const CENTER_MIN_WIDTH := 200.0
 const CENTER_WIDTH_STEP := 8.0
-const PLATE_OVERHANG := 6.0  ## so weit ragt das Namensschild höchstens über den Porträtrand
+const PLATE_OVERHANG := 10.0  ## so weit ragt das Namensschild höchstens über den Rahmenrand
 const PLATE_GAP := 2.0       ## Mindestabstand des Schilds zu Nachbarn
 const PLATE_MIN_WIDTH := 36.0
 const CENTER_GAP := 8.0     ## Abstand der Tischmitte zu Porträts und Schildern
 
 
-## Porträtdurchmesser nach Personenzahl: ab 13 Personen 66 (Mindestmaß 56, Ziel 66), mit weniger Personen größer.
+## Breite des Platzrahmens nach Personenzahl (Silberring samt Wurzeln, P5). Das Porträtfenster im Ring ist 0,656 davon: ab 13 Personen
+## 86 (Porträt 56,4, Mindestmaß 56), mit weniger Personen größer.
 static func diameter_for(count: int) -> float:
 	if count >= 13:
-		return 66.0
+		return 86.0
 	if count >= 8:
-		return 76.0
-	return 88.0
+		return 96.0
+	return 104.0
 
 
 static func token_size_for(diameter: float) -> Vector2:
@@ -67,7 +69,7 @@ static func layout(count: int, area: Vector2) -> Dictionary:
 ## Schild gekürzt, der volle Name steht auf der Karte.
 static func _plate_widths(seats: Array[Rect2], d: float, size: Vector2) -> Array[float]:
 	var out: Array[float] = []
-	var radius := d * 0.5
+	var radius := d * RING_RADIUS
 	for i: int in seats.size():
 		var band_top := seats[i].position.y + NUMBER_BAND + d - PLATE_DROP
 		var half := plate_max_width(d) * 0.5
@@ -77,7 +79,7 @@ static func _plate_widths(seats: Array[Rect2], d: float, size: Vector2) -> Array
 				continue
 			var other := seats[j]
 			var dx := absf(other.position.x + size.x * 0.5 - x)
-			var centre_y := other.position.y + NUMBER_BAND + radius
+			var centre_y := other.position.y + NUMBER_BAND + d * 0.5
 			var dy := maxf(maxf(band_top - centre_y, centre_y - (band_top + PLATE_HEIGHT)), 0.0)
 			if dy < radius:
 				half = minf(half, dx - sqrt(radius * radius - dy * dy) - PLATE_GAP)

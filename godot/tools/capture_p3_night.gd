@@ -2,7 +2,7 @@ extends SceneTree
 ## Spielt eine Nacht auf dem Nachtbrett (P3) mit den echten Bedienelementen durch und speichert Screenshots (Entwicklungswerkzeug,
 ## keine Produktionsassets). Braucht einen echten Renderer, headless gibt es keine Bildausgabe:
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy -s res://tools/capture_p3_night.gd -- \
-##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start] [--motion] [--hold=<Frames>] [--logical]
+##     --out=<Ordner> [--players=24] [--size=1024x768] [--locale=de] [--prefix=n24] [--shots=all|start|target] [--motion] [--hold=<Frames>] [--logical] [--long-names] [--demo]
 ## Die Partie startet über die Testfixtures (feste Rollen, fester Seed); jede Handlung läuft danach über die Knöpfe der Karte und
 ## das Antippen der Porträtplätze, nie über Befehle der Anwendungsschicht. Für die Prüfung der Sichtbarkeit zusätzlich ein Bild mit
 ## „Verbergen“ und eines mit gestartetem Timer.
@@ -12,9 +12,13 @@ const FIXTURES := "res://tests/fixtures.gd"
 const NAMES := ["Anna", "Ben", "Clara", "Dimitri", "Elif", "Frieda", "Gustav", "Hanna", "Ilja", "Jana", "Kemal", "Lena",
 	"Mats", "Nora", "Oskar", "Paula", "Quentin-Maximilian", "Rosa", "Sami", "Tilda", "Umut", "Vera", "Wolfgangamadeus", "Zoë"]
 
+const LONG_NAMES := ["Anna-Katharina von Hohenlohe", "Bartholomäus", "Clara-Sophie Müller-Lüdenscheidt", "Dimitrios Papadopoulos", "Elisabeth", "Friedrich-Wilhelm", "Gustav Adolf", "Hannelore Schmidt-Kowalski", "Ilja", "Johanna Magdalena", "Konstantin", "Leopoldine", "Maximilian-Joseph", "Nora", "Oskar", "Philippa-Charlotte", "Quentin-Maximilian", "Rosalinde", "Sebastian", "Theodora", "Ulrich von Ullersdorf", "Veronika", "Wolfgangamadeus Mozartstein", "Zacharias"]
+
 var _out: String = ""
 var _prefix: String = "n"
-var _only_start: bool = false  ## --shots=start: nur „vor der Nacht“ und „Rollenschritt“
+var _stop_after: String = ""  ## --shots=start: nur „vor der Nacht“ und „Rollenschritt“; --shots=target: zusätzlich „Zielwahl“
+var _long_names: bool = false  ## --long-names: sehr lange Namen (Schild- und Kürzungsprüfung)
+var _demo: bool = false  ## --demo: im Bild „Zielwahl“ einen toten Platz und Abzeichen zeigen (nur Anzeige, ändert keine Partie)
 var _logical: bool = false  ## --logical: Skalierung aus, Fenstergröße = logische Größe (Layoutprüfung wie die Tests); sonst wie auf dem Gerät
 var _hold: int = 0  ## --hold=N: nach dem ersten Bild N Frames ruhig weiterlaufen und beenden (für Movie Maker)
 var _motion: bool = false  ## --motion: Fensterschein und Nebel laufen (sonst stehen sie wie bei reduzierter Bewegung)
@@ -43,10 +47,14 @@ func _initialize() -> void:
 			locale = arg.trim_prefix("--locale=")
 		elif arg.begins_with("--prefix="):
 			_prefix = arg.trim_prefix("--prefix=")
+		elif arg == "--long-names":
+			_long_names = true
+		elif arg == "--demo":
+			_demo = true
 		elif arg == "--logical":
 			_logical = true
-		elif arg == "--shots=start":
-			_only_start = true
+		elif arg.begins_with("--shots="):
+			_stop_after = arg.trim_prefix("--shots=")
 		elif arg.begins_with("--hold="):
 			_hold = int(arg.trim_prefix("--hold="))
 		elif arg == "--motion":
@@ -87,7 +95,7 @@ func _run(players: int, locale: String) -> bool:
 	var order: Array[int] = []
 	for i: int in players:
 		map[str(i + 1)] = roles[i]
-		persons.append({"id": i + 1, "name": NAMES[i]})
+		persons.append({"id": i + 1, "name": LONG_NAMES[i] if _long_names else NAMES[i]})
 		order.append(i + 1)
 	var started: CommandResult = _context.session.submit(Command.start_game({"round_id": "p3-capture", "seed": 1, "assignment": "manual",
 		"players": persons, "seat_order": order, "roles": map}))
@@ -113,11 +121,15 @@ func _run(players: int, locale: String) -> bool:
 		if kind == "begin_step" and not shots["begin"]:
 			shots["begin"] = true
 			await _shot("02-rollenschritt")
-			if _only_start:
+			if _stop_after == "start":
 				return true
 		if kind == "prompt" and str(next.get("answer")) == "targets" and not shots["target"]:
 			shots["target"] = true
+			if _demo:
+				await _show_demo_states(screen, next)
 			await _shot("03-zielwahl")
+			if _stop_after == "target":
+				return true
 			await _select_targets(screen, next)
 			await _shot("04-ziel-gewaehlt")
 			shots["chosen"] = true
@@ -138,6 +150,18 @@ func _run(players: int, locale: String) -> bool:
 	await _shot("07-nacht-ende")
 	_log.append("ok: %d Schritte, Phase %s" % [steps, str((_context.session.cockpit_view() as Dictionary).get("phase"))])
 	return true
+
+
+## Nur Anzeige für die Abnahmebilder: ein toter Platz und Abzeichen (die Partie bleibt unverändert).
+func _show_demo_states(screen: Node, next: Dictionary) -> void:
+	var ring := screen.find_child("SeatRing", true, false) as GameSeatRing
+	var dead := ring.token_for(13)
+	dead.alive = false
+	dead.state = &"dead"
+	var allowed: Array = (next.get("allowed_ids", []) as Array).filter(func(id: Variant) -> bool: return int(id) != 13)
+	ring.set_marking(true, allowed, [], [])
+	ring.set_marks({3: ["protected"], 5: ["poisoned", "silenced"], 8: ["marked"]})
+	await _frames(3)
 
 
 func _frames(count: int) -> void:

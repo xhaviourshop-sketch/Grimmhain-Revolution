@@ -73,3 +73,7 @@ Reparierte Teile (`p2-mockup/parts/`) stammen aus den Mediendateien in „Grimmh
 ## 6. Nachtszene (P4 Atmosphäre)
 ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `szene-nacht-v2.png` (Downloads, 1536 x 1024, SHA-256 `9f20734a39fc9941`; v1 verworfen, Platz zu flach). Status der abgeleiteten Laufzeitdateien: `intern-freigegeben`, Veröffentlichung gesperrt.
 Bearbeitung: `tools/build_night_windows.py` erkennt die Fensterinseln, dunkelt sie im Grundbild ab (`scene-night-base.webp`) und schreibt die ID-Karte (`scene-night-windows.png`). Das Ausgangsbild liegt nur im Übergabeordner. Platzmitte im Bild bei etwa 50,8 % / 50,8 %; sie wird auf die Ringmitte gelegt.
+
+## 7. Oberflächenteile Hain (P5)
+ChatGPT-Bildgenerierung durch Markus (Nutzerangabe, kein Herkunftsnachweis im Sinn des Registers): `ui-paket-v1.png` (Downloads, 1774 x 887, echter Alphakanal, SHA-256 `33f8b4f01851567a`). Status der sieben abgeleiteten Teile in `godot/assets/ui/hain/`: `intern-freigegeben`, Veröffentlichung gesperrt.
+Bearbeitung: `tools/build_grove_ui.py` (Zuschnitt, dehnbare Teile aus Endstücken, Kartenrahmen links aus dem gespiegelten rechten Rand, Medaillon aus dem Medaillon der Karte freigestellt, Größenänderung in vormultipliziertem Alpha). Gemessene Geometrie steht in `godot/app/theme/grove_art_data.gd` (erzeugt). Das Ausgangsbild liegt nur im Übergabeordner.

@@ -28,9 +28,6 @@ const WIDE_ASPECT := 1.5        ## ab diesem Seitenverhältnis (16:10) ist die L
 const MENU_WIDTH := 300.0
 const PLATE_MARGIN := 12.0
 const PLATE_TEXTURE_MARGIN := Vector2(18.0, 14.0)
-const UNDO_TEXTURE_MARGIN := 28.0
-const NEXT_BUTTON_SIZE := Vector2(200.0, 56.0)
-const DOCK_UNDO_SIZE := Vector2(112.0, 48.0)
 const CORNER_WIDTH := 176.0
 const PLATE_SIZE := Vector2(200.0, 52.0)
 const PLAZA_CENTER_UV := Vector2(0.508, 0.508)  ## Mitte des Dorfplatzes im Hintergrundbild (Nachtszene v2)
@@ -136,6 +133,7 @@ func _setup() -> void:
 	_order_bar.expand_toggled.connect(_on_order_toggled)
 	_build_menu_extras()
 	_style_plate()
+	_style_card()
 	resized.connect(_arrange)
 	_refresh()
 	_arrange()
@@ -375,7 +373,7 @@ func _arrange() -> void:
 	_cover_button.size = knob
 	_cover_button.position = Vector2(w - knob.x - 2.0, tab_y + tab_h + 6.0 + knob.y + 4.0)
 	_phase_area.custom_minimum_size = PLATE_SIZE
-	_dock_undo.custom_minimum_size = DOCK_UNDO_SIZE
+	_dock_undo.custom_minimum_size = GroveSkin.BUTTON_SIZE_SECONDARY
 	_dock.size = _dock.get_combined_minimum_size()
 	_phase_area.size = _phase_area.get_combined_minimum_size()
 	var dock_x := DOCK_MARGIN if left_handed else w - DOCK_MARGIN - _dock.size.x
@@ -418,6 +416,13 @@ func _make_info_corner() -> Control:
 	return corner
 
 
+## Aktionskarte im Hain-Rahmen (P5): dehnbarer Kartenrahmen statt der flachen Fläche; ohne Bild bleibt der Theme-Stil.
+func _style_card() -> void:
+	var box := GroveSkin.card_box()
+	if box != null:
+		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", box)
+
+
 ## Phasen-Kartusche unten: kleiner Rahmen aus dem Leistenbild (Mockup V3), Innenabstand für Phase und Timer. Die Rahmenbilder sind
 ## in Anzeigegröße gebaut, weil 9-Slice-Ränder in Bildpunkten gezeichnet werden.
 func _style_plate() -> void:
@@ -434,7 +439,7 @@ func _style_plate() -> void:
 		box.content_margin_top = 4.0
 		box.content_margin_bottom = 4.0
 		_phase_area.add_theme_stylebox_override("panel", box)
-	_skin_button(_dock_undo, "ui/btn-undo.png", UNDO_TEXTURE_MARGIN, 16.0)
+	GroveSkin.skin_button(_dock_undo, false)
 
 
 ## Hauptaktion im Dock: ganzes Bild des roten Knopfs, Beschriftung und Zustand bleiben die des Buttons.
@@ -442,33 +447,9 @@ func _skin_primary(node: Node) -> void:
 	var button := node as GrimmButton
 	if button == null:
 		return
-	button.custom_minimum_size = NEXT_BUTTON_SIZE
 	button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	button.wrap = false
-	_skin_button(button, "ui/btn-next-step.png", 0.0, 12.0)
-
-
-## Knopf mit Bild als Rand: normal, gedrückt (heller), gesperrt (gedämpft). Ohne Bild bleibt der Theme-Stil.
-func _skin_button(button: GrimmButton, art: String, texture_margin: float, content_margin: float) -> void:
-	var texture := NightArt.texture(art)
-	if texture == null:
-		return
-	for state: String in ["normal", "hover", "pressed", "hover_pressed", "focus", "disabled"]:
-		var box := StyleBoxTexture.new()
-		box.texture = texture
-		box.texture_margin_left = texture_margin
-		box.texture_margin_right = texture_margin
-		box.content_margin_left = content_margin
-		box.content_margin_right = content_margin
-		if state == "pressed" or state == "hover_pressed" or state == "hover":
-			box.modulate_color = ThemeTokens.TINT_HOVER
-		elif state == "disabled":
-			box.modulate_color = ThemeTokens.TINT_DEAD
-		button.add_theme_stylebox_override(state, box)
-	for color: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
-		button.add_theme_color_override(color, ThemeTokens.TEXT_PRIMARY)
-	button.add_theme_color_override("font_disabled_color", ThemeTokens.TEXT_DISABLED)
-	button.add_theme_font_size_override("font_size", ThemeTokens.FONT_CAPTION)
+	GroveSkin.skin_button(button, true)
 
 
 # --- Optionen und Timer ------------------------------------------------------------------------------------

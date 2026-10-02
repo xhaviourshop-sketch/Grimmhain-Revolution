@@ -762,10 +762,10 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 	b.kind = kind
 	b.text_key = key
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	if primary_host != null and kind != GrimmButton.Kind.PRIMARY:
-		# Cockpit (Nachtbrett): schmale, flache Nebenaktionen, zwei je Reihe; so bleibt dem Text der Karte mehr Platz.
+	if primary_host != null:
+		# Cockpit (Nachtbrett, P5): Hauptaktion rot, Nebenaktionen dunkel, beide im Hain-Rahmen; Nebenaktionen zwei je Reihe.
 		b.custom_minimum_size = Vector2(CARD_ACTION_MIN_WIDTH, ThemeTokens.TOUCH_MIN)
-		b.add_theme_font_size_override("font_size", ThemeTokens.FONT_CAPTION)
+		GroveSkin.skin_button(b, kind == GrimmButton.Kind.PRIMARY)
 	else:
 		b.custom_minimum_size.x = maxf(b.custom_minimum_size.x, ACTION_MIN_WIDTH)
 	b.pressed.connect(_emit.bind(action, payload, b))
