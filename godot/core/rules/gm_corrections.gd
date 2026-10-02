@@ -136,6 +136,8 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 				return &"unknown_role"
 			if role == player.role_id:
 				return &"no_change"
+			if RoleCatalog.requires_cards(role) and not s.death_cards:
+				return &"role_needs_death_cards"
 			# Rolle und Scheinrolle werden gemeinsam gesetzt: Pflicht nur beim Trugbilderwolf.
 			if RoleCatalog.requires_appearance(role):
 				if not p.has("appears_as"):

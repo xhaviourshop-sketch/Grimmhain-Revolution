@@ -62,6 +62,8 @@ static func frankenstein_options(s: GameState) -> Array[String]:
 	for role: StringName in RoleCatalog.ROLES:
 		if RoleCatalog.counts_as_wolf(role) or RoleCatalog.requires_appearance(role):
 			continue
+		if RoleCatalog.requires_cards(role) and not s.death_cards:
+			continue  # Kartenrollen gibt es nur mit Totenreichkarten (sonst ist der Stand nicht ladbar)
 		if role == RoleCatalog.DORFBEWOHNER or not taken.has(role):
 			out.append(String(role))
 	out.sort()
