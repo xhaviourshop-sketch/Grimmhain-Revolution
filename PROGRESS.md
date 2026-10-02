@@ -617,3 +617,12 @@ Stand: Nachtbrett P3 bis P6c fertig (Leiste, Laschen, Kartusche, Knöpfe, 72 Sil
 ## 2026-10-02: Paket 5 iPad-Test per Web-Version (vorbereitet, Export wartet auf Vorlagen)
 Masterplan-Konfliktmarkierung aufgelöst (neuerer Stand gültig, älterer als "Früherer Stand"). Export-Preset "Web" in `godot/export_presets.cfg` (Threads aus, gl_compatibility laut project.godot, Querformat laut project.godot, Ziel `Downloads/Grimmhain-iPad-Web/index.html`; keine Build-Dateien im Repo). Startdatei `Downloads/Grimmhain-iPad-Web/START-IPAD-TEST.bat` (Python-Server Port 8080, zeigt die WLAN-Adresse).
 Blocker: Die Godot-4.7.2-Exportvorlagen für Web sind nicht installiert (`export_templates` leer, Export bricht mit "web_nothreads_release.zip nicht gefunden" ab). Markus muss sie im Editor installieren (Editor > Exportvorlagen verwalten > Herunterladen und installieren). Browser-Prüfung und Screenshot stehen noch aus.
+
+---
+
+## 2026-10-02 — Projekt-Audit (nur Analyse)
+Status: ERLEDIGT. Bericht: `docs/audit/AUDIT-2026-10-02.md`, Commit `e91e81c` (main, kein Push). Am Code nichts geändert.
+Ergebnis: 67 Funde (5 KRITISCH, 5 HOCH, 15 MITTEL, 42 NIEDRIG); 53 nachgestellt, 14 Verdacht.
+Verifikation: Import Exit 0; Vollsuite einmal 1503 Tests, 1 Fehlschlag (`test_game_history::test_screen_and_public_export_have_the_same_scope`, CRLF im Windows-Arbeitsordner); Fuzz mit 3-facher Rundenzahl 1 Fehlschlag (Generatorlücke, kein Regelkern); alle 328 .gd laden ohne Parsefehler.
+Nicht geprüft: Tablet/Browser/iPad, Totenreichkarten einzeln, Rollendateien nur Stichproben (Details im Bericht, Abschnitt C).
+Nächste Schritte (nur nach Freigabe von Markus): KRITISCH B-01 bis B-03, S-01, S-02 beheben; danach HOCH; Entscheidungen zu B-06, B-07, B-08, S-05, S-06 einholen; Exportvorlagen 4.7.2 installieren (UI-01); Registerzeile für `plate-frame.png` (F-A01).
