@@ -197,3 +197,61 @@ Inhalt: „Sitzordnung bestätigen“ beendet nur das Setup; danach steht in der
 Verifiziert (Windows, Godot 4.7.2): 470 Godot-Tests grün (456 + 8 Modell + 6 UI), keine SCRIPT-ERROR- oder ERROR-Zeilen, Register 313/313, `git diff --check` Exit 0. Grafisch: 5 Aufnahmen `docs/evidence/game-start/` und neu `seating-setup/08` (lokal, AMD-Renderer), angesehen; dabei Layoutfehler (Tischmitte bei 24 Personen/1024×768) und widersprüchliche Cockpit-Hinweise gefunden und behoben. Keine Touch- oder Tablet-Prüfung.
 Nicht enthalten: Speichern der Partie, Nacht-/Tagablauf in der Oberfläche, Beenden/Verwerfen einer laufenden Partie.
 Nächster Schritt: Cockpit-Sitzkreis mit der gestarteten Partie (öffentliche Sicht aus `GameSession`, ohne Rollen) oder `StartNight` über das Cockpit, je nach Priorität.
+
+---
+
+## 2026-09-29 - Paket 1 der Code-Abschluss-Roadmap (Abschlussmatrix)
+Status: Der Arbeitsstand liegt nicht in diesem Checkout (main `8197ee6`), sondern im Worktree `grimmhain-night-ui`, Branch `feature/night-ui-expansion`, Commit `1e92f91` (gepusht, PR #3 offen). Dort: `docs/masterplan/CODE-COMPLETION-MATRIX.md`, konkretisierte `CODE-COMPLETION-ROADMAP.md`, PROGRESS-Eintrag mit allen Details. Hier bleiben Roadmap und Masterplan-Update unveraendert lokal (nicht committet).
+Verifiziert (im Worktree, Godot 4.7.2 headless): Vollsuite 917 Tests, Lauf 1 mit 1 Fehlschlag (`test_prompt_coverage`, intermittierend, Ursache offen), Lauf 2 gruen; Asset-, Rollen-, Inhaltspruefer und `git diff --check` Exit 0. Keine Tablet-Abnahme.
+Naechster Schritt: Paket 2 (Rollen-zeigen-Modus, Spezialkorrekturen, Vorpruefung B-01) nach Antwort auf die Schema-Frage.
+
+---
+
+## Godot: Prüfung der visuellen Roadmap (01.10.2026)
+Status: PRÜFUNG ABGESCHLOSSEN, keine Umsetzung, keine Codeänderung
+Verifiziert: nur Lesen (Git, Szenen, Register, Roadmap). Kein Test, keine Bildgenerierung.
+Befund: `9ca16c2` (feature/night-ui-expansion, PR #3 offen) baut auf `8197ee6` (main) auf, kein Nachziehen nötig.
+Roadmap `docs/masterplan/entwurf-visuell/GRIMMHAIN-VISUELLE-ROADMAP.md` mit Änderungen machbar:
+P3 größer als beschrieben (runde Porträtplätze, 24 Namensschilder auf 4:3 knapp), Angriffsanimation nur bei
+öffentlichem Tod und standardmäßig ohne Krallen (Ursache geheim), Totenreichkarten-Schalter existiert (`role_step.gd`).
+Nächster Schritt: Freigabe von Auftrag 1 (P0+P1) und Entscheidung, wer die Bilder erzeugt (Higgsfield-MCP mit Credits
+oder Markus selbst). Keine Medien aus dem Altbestand sind freigegeben.
+
+## 2026-10-01: Visuelle Roadmap, Auftrag 1 (P0 + P1), Zwischenstand
+Status: Branch `feature/visual-night-board` (lokal, ab `9ca16c2`, kein Push, PR #3 unberührt). Nichts committet, kein Code in `godot/` geändert.
+Umgesetzt: Roadmap und Referenzen nach `docs/masterplan/entwurf-visuell/` kopiert; Art Direction `docs/assets/ART-DIRECTION-NIGHT-BOARD.md`; Bildbriefings für ChatGPT (G1 Nachtdorf, G2 Porträtblätter A und B, G3 Kartenrahmen) in `C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/BRIEFINGS-FUER-CHATGPT.md`.
+P0 gesehen (Screenshots in `.../p0-istzustand/`): Cockpit mit 24 Personen bei 1024x768: ein Ring aus 7 + 7 + 5 + 5 rechteckigen Textbuttons, die Ansagekarte füllt etwa 65 % der Brettfläche; Zielwahl zeigt alle wählbaren Plätze mit goldenem Rahmen. Totenreichkarten-Schalter existiert im Rollenschritt (kein Fehler).
+Platzvariante (Mockup mit alten Platzhalterbildern, außerhalb von `godot/`): Einring, Porträt 60 px, Nummer als Badge, Name auf Schild 84 px (V1b) empfohlen; versetzter Ring und zwei Ringe schlechter (Details in der Art Direction).
+Verifiziert: Screenshots mit Godot 4.7.2 (OpenGL, sichtbares Fenster) erzeugt und angesehen. Keine Testsuite (Dokumentation und Wegwerf-Mockup, kein Spielcode).
+Offen: Markus erzeugt die Bilder in ChatGPT; danach Mockup mit echten Bildern neu rendern und Abnahme 1. Kein Tablet-, Touch- oder Audiotest. Alte Medien (Hintergrund, Porträts) sind nur Platzhalter ohne Freigabe.
+
+## 2026-10-01: Mockup V1c mit Seitenleisten (Ergänzung zu Auftrag 1)
+Markus hat V1b als Platzaufteilung abgenommen. Mockup ergänzt um linke Leiste (Protokoll, Rollen, Spielleitung, Verbergen), rechte Leiste (Optionen, Ton, Hilfe mit Lexikon/Regelbuch), unten links Phasenanzeige mit Timer-Platz und „Legende“; die untere Werkzeugleiste entfällt. Nur Platzhalter ohne Funktion.
+Messung: Leistenbreite 52 px (48 px Bedienfläche); der Ring bleibt bei 1024x768 unverändert (a=458, b=284,5 wie V1b), 0 Überschneidungen der drei Bereiche mit den 24 Plätzen (ebenso bei 1280x800). Die Leisten sind nicht vollhoch, sondern enden über den äußersten Plätzen.
+Neue Entscheidung: Anzeige-Timer für Tagphase und Diskussion in `DECISIONS.md`, Roadmap P3 ergänzt (beide Kopien). Konflikt mit „Die App hat keinen Timer“ im Decision Log benannt, dort nicht geändert.
+Screenshots: `mockup-platzhalter/P1-V1c-seitenleisten-*.png`. Kein Code in `godot/`, nichts committet.
+
+## 2026-10-01: Mockup mit echten Bildern (Auftrag 1, Schritt 6)
+Eingebaut ins Mockup V1c (außerhalb von `godot/`, nichts committet): G1 als Hintergrund mit Abdunklung und Vignette per Shader (nicht neu generiert), 10 runde Porträts aus G2A (6) und G2B (oben 3, unten Mitte; die zwei Fast-Duplikate ausgelassen), G3 mit freigestelltem Magenta als 9-Slice-Kartenrahmen (Ecken 46 px bei 25 % Verkleinerung), Porträtring in Godot gezeichnet. Nachbarn haben nie dasselbe Gesicht (Schritt 3 durch 10 Gesichter).
+Screenshots: `C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/mockup-echt/` (1024x768, 1280x800), angesehen. Herkunft aller vier Bilder: ChatGPT-Bildgenerierung 01.10.2026, Prompts aus `BRIEFINGS-FUER-CHATGPT.md`; Kandidaten, keine Freigabe, nicht im Register.
+Decision Log: Satz „Die App hat keinen Timer“ verweist jetzt auf die Timer-Entscheidung in `DECISIONS.md`.
+Offen: Abnahme 1 durch Markus; Tablet-/Touchprüfung fehlt weiter.
+
+## 2026-10-01: Mockup V2 nach Spielfeld.png (Abnahme 1 erteilt)
+Markus bestätigt die Richtung; verbindliche Layout-Vorlage ist sein Design `Spielfeld.png` und `Full UI.png`. Mockup V2 (außerhalb von `godot/`, nichts committet) baut es mit den echten Teilen nach: G1-Hintergrund mit Abdunklung und gedämpften Randreflexen, Nachtreihenfolge-Leiste, Platzrahmen mit Statusringen, Laschen Protokoll/Optionen, Nacht und Timer, Rückgängig und Nächster Schritt, Aktionskarte A (Rollenbild) und B (G3-Rahmen), Porträts G2 gegen Village_*.
+Screenshots: `C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/mockup-v2/` (angesehen). Ergebnis und Empfehlungen im Bericht.
+Neu: Entscheidung Platzporträt-Auswahl in `DECISIONS.md`; Herkunftsvermerk (Nutzerangabe, keine Freigabe) in 44 Registerzeilen `ui-*` und in `docs/assets/ORIGIN-NOTES-NIGHT-BOARD.md` (nicht versionierte Teile, ChatGPT-Kandidaten). `node tools/check-asset-register.js`: Register vollständig und konsistent.
+Offen: Nacht-Timer (Design zeigt ihn, `DECISIONS.md` regelt nur Tag und Diskussion), öffentliche Statusringe und Rollenleiste gegen Geheimhaltung klären, Texte in den Laschenbildern. Kein Tablet-/Touchtest.
+
+## 2026-10-01: P0 und P1 abgeschlossen (Abnahme 1)
+Entscheidungen von Markus in `DECISIONS.md` (Karte A, G2-Porträts mit leichter Abdunklung, Leiste auf 4:3 einklappbar, Timer auch nachts abschaltbar, Tablet sieht nur die Spielleitung und „Verbergen“ blendet Geheimes aus, Spielfeld.png und Full UI.png verbindlich). Timer-Entscheidung ergänzt, Satz im Decision Log aktualisiert.
+Roadmap: P0 und P1 als erledigt markiert (Verweis auf mockup-v2); offen bleibt der Punkt, die Roadmap nach `docs/masterplan/VISUAL-EXPERIENCE-ROADMAP.md` zu übernehmen und im Masterplan zu verlinken.
+Abgelegt in `docs/assets/p1-mockup/` (Skripte, zugeschnittene Bilder, README, keine Laufzeitassets). 23 neue Medien im Register (Status `ungeklärt`, Herkunft als Nutzerangabe). `node tools/check-asset-register.js`: Register vollständig und konsistent (336 Zeilen). Mockup-Skript aus dem Repo-Ordner einmal gestartet (Screenshot erzeugt).
+Commit lokal auf `feature/visual-night-board`, nur Dokumentation und `docs/assets/`, kein Push, `CLAUDE.md` (Nutzeränderung) nicht enthalten.
+
+## 2026-10-01: P2 vorbereitet (nur Planung)
+Grafikliste `docs/assets/P2-GRAFIKLISTE.md`: Claude Code kann aus dem Bestand ableiten (nicht ausgeführt): textfreie Lasche Protokoll (vorhanden) und Optionen, bereinigte Nachtreihenfolge-Slots, Rollenbilder ohne Kartenecken als Übergangslösung, Rollenkartenrahmen ohne schwarzen Block. ChatGPT nötig: Porträtblätter C und D (je 8 Gesichter, ergibt 26 statt der nötigen 24), Statusabzeichen, Rollensymbol-Probeblatt (12). Briefings: `Downloads/Grimmhain-P1-Nachtentwurf/P2-BRIEFINGS-FUER-CHATGPT.md`. Nichts generiert, nichts repariert, nichts bestellt.
+Nächster Schritt: Markus erzeugt die vier Bilder P2-1 bis P2-4, danach P2-Ausführung (Reparaturen und Einbau ins Mockup) und P3.
+
+## 2026-10-01: Testregeln in CLAUDE.md
+Abschnitt „Testregeln (verbindlich, Markus 01.10.2026)“ ersetzt die vorläufige Testumfang-Vorgabe (Commit `f9c68a5` auf main). Keine Code- oder Testläufe. P3-Stand liegt auf `feature/visual-night-board` (siehe dortige PROGRESS.md).
