@@ -404,6 +404,30 @@ func open_new_game(shell: Control) -> Control:
 	return current_screen(shell)
 
 
+## Vorbereitung „Neue Partie“ nur über sichtbare Buttons bis zum Rollenschritt: Spielerzahl mit Plus/Minus, Akt-Karte, Weiter, Namen per
+## „Mehrere Namen einfügen“, Weiter; mit `cards` zusätzlich „Totenreichkarten verwenden“. Der Start („Spiel starten“ in der Fußzeile) bleibt
+## dem Aufrufer. Nur die Seed-Quelle ist fest. Liefert die Ansicht.
+func prepare_through_buttons(shell: Control, count: int, act: StringName = &"akt3", seed_value: int = 20260930, cards: bool = false) -> Control:
+	var screen := await open_new_game(shell)
+	var setup := setup_of(shell)
+	setup.set("seed_source", func() -> int: return seed_value)
+	for guard: int in 40:
+		var now := int((setup.call("view") as Dictionary)["player_count"])
+		if now == count:
+			break
+		await press(find_button(screen, "PlusButton" if now < count else "MinusButton"))
+	await press(find_button(screen, "ActCard_%s" % String(act)))
+	await press(find_button(screen, "NextButton"))
+	await press(find_button(screen, "ImportToggleButton"))
+	await type_text(find_node(screen, "ImportText") as TextEdit, ", ".join(numbered_names(count)))
+	await press(find_button(screen, "ImportConfirmButton"))
+	await press(find_button(screen, "NextButton"))
+	if cards:
+		await press(find_button(screen, "DeathCardsToggle"))
+		await frames(3)
+	return screen
+
+
 ## Personen direkt über die Anwendungsschicht anlegen (Vorbereitung, kein UI-Pfad).
 func seed_names(shell: Control, names: Array) -> void:
 	var s := setup_of(shell)

@@ -148,38 +148,16 @@ func _play_day(shell: Control, next: Dictionary) -> bool:
 
 # --- PE-07: von „Neue Partie“ bis zum ersten Tag über echte Buttons --------------------------------------------
 
-## Setup nur über sichtbare Buttons: Namen per Import, Vorschlag übernehmen, Scheinrolle (falls der Vorschlag einen Trugbilderwolf enthält)
-## über den Auswahldialog, Verteilung, Sitzordnung, Start. Nur die Seed-Quelle ist fest (wie in den Setup-Tests). Liefert die
-## Startdaten des Setups unmittelbar vor dem Start.
-func _new_game_through_buttons(shell: Control, count: int) -> Dictionary:
-	var screen := await open_new_game(shell)
+## Vorbereitung nur über sichtbare Buttons (Spielerzahl, Akt III, Namen per Einfügen, Spiel starten). Nur die Seed-Quelle ist fest.
+## Liefert die Startdaten des Setups unmittelbar vor dem Start.
+func _new_game_through_buttons(shell: Control, count: int, act: StringName = &"akt3") -> Dictionary:
+	var screen := await prepare_through_buttons(shell, count, act, SETUP_SEED)
 	var setup := setup_of(shell) as PlayerSetup
-	setup.seed_source = func() -> int: return SETUP_SEED
-	await press(find_button(screen, "ImportToggleButton"))
-	await type_text(find_node(screen, "ImportText") as TextEdit, ", ".join(numbered_names(count)))
-	await press(find_button(screen, "ImportConfirmButton"))
-	assert_eq(row_ids(screen).size(), count, "%d Personen erfasst" % count)
-	await press(find_button(screen, "ConfirmPlayersButton"))
-	await press(find_button(screen, "ToRolesButton"))
-	await press(find_button(screen, "SuggestButton"))
 	assert_eq(int(((setup.view() as Dictionary)["roles"] as Dictionary)["total"]), count, "Vorschlag passt zur Personenzahl")
-	var decoys: Array = (setup.view() as Dictionary)["roles"].get("decoys", [])
-	if not decoys.is_empty():
-		assert_false(find_button(screen, "ConfirmRolesButton").disabled, "%d: Scheinrolle vorbelegt, Rollen bestätigbar" % count)
-		await press(find_button(screen, "DecoyRevealButton"))
-		for row: Node in find_node(screen, "DecoyCopyList").get_children():
-			if row is Control and row.get("copy_id") != null and (row as Control).visible:
-				await press(find_button(row, "ChooseAppearanceButton"))
-				await press(find_button(shell.call("get_dialog") as Control, "Appear_waldhexe"))
-		await press(find_button(screen, "DecoyRevealButton"))
-	await press(find_button(screen, "ConfirmRolesButton"))
-	await press(find_button(screen, "DistributeButton"))
-	await press(find_button(screen, "ConfirmDistributionButton"))
-	await press(find_button(screen, "ToSeatingButton"))
-	await press(find_button(screen, "ConfirmSeatingButton"))
-	var data := setup.start_data()
+	assert_false(find_button(screen, "NextButton").disabled, "%d: Spiel starten möglich" % count)
+	var data := setup.prepare_start()  # verteilt mit dem gespeicherten Seed; „Spiel starten“ ergibt dieselbe Zuordnung
 	assert_true(data.ok, "%d: Startdaten vollständig" % count)
-	await press(find_button(screen, "StartGameButton"))
+	await press(find_button(screen, "NextButton"))
 	await frames(3)
 	assert_eq(String(current_id(shell)), "cockpit", "%d: Cockpit geöffnet" % count)
 	return data.details
@@ -204,7 +182,7 @@ func _check_started_game(shell: Control, details: Dictionary, count: int) -> voi
 		seen[state.players[id].role_id] = true
 	assert_eq(seen.keys().size(), count, "%d: verschiedene Rollen" % count)
 	var wolves := state.alive_ids().filter(func(id: int) -> bool: return state.players[id].counts_as_wolf).size()
-	assert_eq(wolves, RoleSuggestion.wolf_count(count), "%d: Wolfsrollen nach dem Vorschlag" % count)
+	assert_true(wolves >= RoleSuggestion.wolf_count(count), "%d: mindestens die Wolfsrollen der Staffel (kleine Akte füllen mit weiteren auf)" % count)
 
 
 ## Spielt über Buttons bis `stop` wahr ist; false bei nicht bedienbarer Karte oder ohne Ende.
@@ -241,12 +219,17 @@ func test_new_game_small_round_from_setup_to_first_day() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
-	var details := await _new_game_through_buttons(shell, 6)
+	var details := await _new_game_through_buttons(shell, 6, &"akt1")
 	_check_started_game(shell, details, 6)
-	# Der automatische Vorschlag für 6 Personen: Werwolf, Manipulator, Schutzengel, Orakel, Dorfbewohner, Waldhexe.
+	# Der Vorschlag von Akt I für 6 Personen wird gestartet, wie er ist.
 	var roles: Array = (details["roles"] as Dictionary).values()
 	roles.sort()
-	assert_eq(roles, ["das-orakel", "dorfbewohner", "manipulator", "schutzengel", "waldhexe", "werwolf"], "Rollen des Vorschlags für 6 Personen")
+	var proposal: Array = []
+	for key: String in RoleSuggestion.for_act(&"akt1", 6):
+		if int(RoleSuggestion.for_act(&"akt1", 6)[key]) > 0:
+			proposal.append(key)
+	proposal.sort()
+	assert_eq(roles, proposal, "Rollen des Vorschlags für 6 Personen")
 	await _first_night_morning_and_nomination(shell, 6)
 
 
@@ -257,11 +240,12 @@ func test_new_game_at_a_wolf_tier_boundary_with_decoy_wolf() -> void:
 		return
 	var details := await _new_game_through_buttons(shell, 13)
 	_check_started_game(shell, details, 13)
-	assert_eq((details["appearances"] as Dictionary).size(), 1, "eine ausdrücklich gewählte Scheinrolle")
+	assert_eq((details["appearances"] as Dictionary).size(), 1, "eine vorbelegte Scheinrolle (DA-88)")
 	var state := RulesEngine.replay((session_of(shell) as GameSession).commands()).state
 	for id: int in state.alive_ids():
 		if state.players[id].role_id == &"trugbilderwolf":
-			assert_eq(state.players[id].appears_as, &"waldhexe", "Scheinrolle wie im Dialog gewählt")
+			assert_eq(String(state.players[id].appears_as), str(details["appearances"][str(id)]), "Scheinrolle wie im Setup festgelegt")
+			assert_true(SetupRoleCatalog.is_village(state.players[id].appears_as), "vorbelegt mit einer Dorfrolle")
 	await _first_night_morning_and_nomination(shell, 13)
 
 
@@ -279,7 +263,7 @@ func test_new_game_can_be_saved_resumed_and_undone() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
-	var details := await _new_game_through_buttons(shell, 8)
+	var details := await _new_game_through_buttons(shell, 8, &"akt1")
 	_check_started_game(shell, details, 8)
 	var context := context_of(shell) as AppContext
 	var session := session_of(shell) as GameSession

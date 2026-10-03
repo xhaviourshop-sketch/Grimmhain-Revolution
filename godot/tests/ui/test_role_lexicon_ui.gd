@@ -136,25 +136,28 @@ func test_setup_opens_an_entry_without_changing_the_selection() -> void:
 	if shell == null:
 		return
 	var screen := await open_new_game(shell)
-	await seed_names(shell, numbered_names(6))
-	await press(find_button(screen, "ConfirmPlayersButton"))
-	await press(find_button(screen, "ToRolesButton"))
 	var setup := setup_of(shell)
-	assert_eq(str((setup.call("view") as Dictionary)["step"]), "roles", "Rollenwahl erreicht")
-	await press(find_button(screen, "PlusButton"))
+	setup.call("set_player_count", 6)
+	await seed_names(shell, numbered_names(6))
+	await press(find_button(screen, "NextButton"))
+	await press(find_button(screen, "NextButton"))
+	assert_eq(str((setup.call("view") as Dictionary)["step"]), "roles", "Rollenschritt erreicht")
 	var before := JSON.stringify(setup.call("view"))
-	await press(find_button(screen, "RoleInfoButton_das-orakel"))
+	var dialog := find_node(screen, "PrepDialog") as Control
+	await press(find_button(screen, "Role_das_orakel"))
+	await press(find_button(dialog, "RoleInfo"))
 	var layer := screen.call("lexicon_layer") as Control
 	assert_true(layer != null, "Ebene geöffnet")
 	assert_eq(_lexicon(layer).current_role(), &"das-orakel", "Eintrag der gewählten Zeile")
-	assert_eq(JSON.stringify(setup.call("view")), before, "Rollenwahl und Verteilung unverändert")
+	assert_eq(JSON.stringify(setup.call("view")), before, "Rollenauswahl unverändert")
 	await press(find_button(layer, "CloseLayerButton"))
 	assert_true(screen.call("lexicon_layer") == null, "Schließen entfernt die Ebene")
-	assert_eq(current_id(shell), &"new_game", "zurück im Setup")
-	await press(find_button(screen, "RoleInfoButton_werwolf"))
+	assert_eq(current_id(shell), &"new_game", "zurück in der Vorbereitung")
+	await press(find_button(screen, "Role_werwolf"))
+	await press(find_button(dialog, "RoleInfo"))
 	await go_back(shell)
 	assert_true(screen.call("lexicon_layer") == null, "Zurück schließt die Ebene")
-	assert_eq(str((setup.call("view") as Dictionary)["step"]), "roles", "gleicher Setup-Schritt")
+	assert_eq(str((setup.call("view") as Dictionary)["step"]), "roles", "gleicher Schritt")
 	assert_eq(JSON.stringify(setup.call("view")), before, "Besetzung weiter unverändert")
 
 
