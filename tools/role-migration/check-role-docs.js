@@ -23,6 +23,19 @@
 //     Produktentscheidungen, und jede offene Produktentscheidung ist in 10 genannt.
 
 "use strict";
+
+// Zeilen einer CSV-Datei, unabhängig von LF/CRLF (Windows-Checkout mit `* text=auto`).
+// trim() entfernt wie bisher auch ein führendes UTF-8-BOM.
+function csvLines(text) {
+  return text.trim().split(/\r?\n/);
+}
+
+// Beim Laden per require (Regressionstest) nur die Hilfsfunktion bereitstellen, keine Prüfung starten.
+if (require.main !== module) {
+  module.exports = { csvLines };
+  return;
+}
+
 const fs = require("fs");
 const path = require("path");
 
@@ -190,7 +203,7 @@ const csvPath = path.join(DOCS, "decision-status.csv");
 const csvRows = [];
 if (!fs.existsSync(csvPath)) err("decision-status.csv fehlt");
 else {
-  const lines = fs.readFileSync(csvPath, "utf8").trim().split("\n");
+  const lines = csvLines(fs.readFileSync(csvPath, "utf8"));
   if (lines[0] !== "id;teilfrage;rolle;status;quelle;hinweis") err("decision-status.csv: unerwarteter Kopf");
   for (const line of lines.slice(1)) {
     const cells = [];

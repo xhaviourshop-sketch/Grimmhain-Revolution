@@ -1,6 +1,6 @@
 # 09 · Zusammenfassung Rollenmigration
 
-**Stand:** Analyse 2026-09-26 (Basis `4673b0b`), konsolidiert 2026-09-27 gegen `origin/main` `5eb5f2a` · reine Planung, nichts entschieden, kein Code geändert
+**Stand:** Analyse 2026-09-26 (Basis `4673b0b`), konsolidiert 2026-09-27 gegen `origin/main` `5eb5f2a`, Antworten vom 3. Oktober 2026 eingetragen · Planung; entschieden ist nur, was mit Decision-Log-Quelle genannt ist; kein Code geändert
 
 ## 1. Aktueller Stand
 
@@ -69,17 +69,17 @@ Empfohlen ist weiterhin **Option B mit 25 Rollen** ([`05`](05-v1-role-options.md
 
 ## 5. Nächste Einheit
 
-Empfehlung: **K1a = `siegreicher-wolf` und `doppelspion`**, danach **K1b = `selbstmoerder`** ([`06`](06-implementation-batches.md) §3.1). Größe M, Risiko mittel (Schätzung; K1 gesamt M bis L). Die frühere Angabe „S bis M, niedrig“ für alle drei war zu optimistisch.
+Entschieden am 3. Oktober 2026 (RM-DR-017 = C): **K1a = `siegreicher-wolf` und `doppelspion`**, **K1b = `selbstmoerder`**, getrennt spezifiziert unter [`../specs/k1a-siegreicher-wolf-doppelspion/`](../specs/k1a-siegreicher-wolf-doppelspion/rules-register.md) und [`../specs/k1b-selbstmoerder/`](../specs/k1b-selbstmoerder/rules-register.md). Größe K1a M, Risiko mittel; K1 gesamt M bis L (Schätzung, [`06`](06-implementation-batches.md) §3.5).
 
 ## 6. Notwendige Entscheidungen
 
-Jetzt nur vier Fragen ([`10`](10-next-decisions.md)): RM-DR-017 (Umfang der nächsten Einheit), RM-DR-155.1 (muss der Doppelspion leben), RM-DR-155.3 (wird das Dorf zusätzlich vorgeschlagen), RM-DR-155.4 (was erfahren die Wölfe). Für den Selbstmörder später RM-DR-138.1, .3 und .4. Die früher genannten Blocker RM-DR-007 und RM-DR-016 sind keine: RM-DR-007 ist durch G-SIEG-1 bis G-SIEG-6, DR-02 und DR-14 entschieden, RM-DR-016 ist für diese Rollen nicht nötig.
+RM-DR-017, RM-DR-155.1, .3, .4 und RM-DR-138.1, .3, .4 sind entschieden. Offen sind drei Fragen ([`10`](10-next-decisions.md)): RM-DR-138.6 (gewinnt ein früh hingerichteter Selbstmörder später noch?), RM-DR-138.7 (zählt nach einer Wiederbelebung nur eine erneute Hinrichtung?) und RM-DR-155.6 (darf der Doppelspion bei der Opferwahl mitzeigen?). Die Siegregeln von K1a sind ohne weitere Antwort umsetzbar; RM-DR-155.6 betrifft nur den Ansagetext.
 
 ## 7. Realistischer nächster Schritt
 
-1. Der Product Owner beantwortet die vier Fragen aus [`10`](10-next-decisions.md).
-2. Grimmhain-2 schreibt die Spezifikation der gewählten Einheit (Regelregister DE/EN, Akzeptanzszenarien, Umsetzungsgrenze) nach dem Muster von `docs/specs/vertical-slice/`, ohne Godot-Code, und stimmt die Katalogerweiterung mit Grimmhain-1 ab.
-3. Erst nach Freigabe dieser Spezifikation folgt die testgetriebene Umsetzung im Kern.
+1. Der Product Owner gibt die Spezifikationen K1a und K1b frei und beantwortet RM-DR-138.6, .7 und RM-DR-155.6.
+2. Abstimmung mit Grimmhain-1 über die Katalogerweiterung ([`06`](06-implementation-batches.md) §3.7).
+3. Danach testgetriebene Umsetzung im Kern, zuerst K1a.
 
 ## 8. Spätere Änderungen an bestehenden Dokumenten (bewusst nicht vorgenommen)
 
@@ -91,9 +91,9 @@ Jetzt nur vier Fragen ([`10`](10-next-decisions.md)): RM-DR-017 (Umfang der näc
 | `docs/godot-migration/01-current-system-inventory.md` | F2 um sechs Wolfsrollen ergänzen; F7 „fünf Siegstellen“; `PackfatherBlockNextDay` „gelesen, nie gesetzt“ | [`04`](04-rule-conflicts.md) §6 |
 | `docs/godot-migration/04-rules-migration-matrix.md` | 32 Einstufungen, A-13, A-47/A-57, A-64; Hinweis auf diese Planung | [`04`](04-rule-conflicts.md) §5 und §6 |
 | `docs/godot-migration/07-open-questions.md` | Q4-Priorität als überholt markieren; Q1-Tabelle auf RM-DR verweisen | DECISION-LOG DR-02 |
-| `docs/masterplan/DECISION-LOG.md` | Einträge nach den Entscheidungen RM-DR-### | erst nach Product-Owner-Entscheidung |
+| `docs/masterplan/DECISION-LOG.md` | weitere Einträge nach den Entscheidungen RM-DR-### (K1 eingetragen am 3. Oktober 2026) | erst nach Product-Owner-Entscheidung |
 | `GRIMMHAIN-REVOLUTION-MASTERPLAN.md` Phase 0 | Checkbox „20 bis 30 Kandidaten auswählen“ erst nach Entscheidung zu [`05`](05-v1-role-options.md) abhaken | Auswahl ist nur vorgeschlagen |
-| `docs/masterplan/CLAUDE-PROMPTS.md` | Prompt für die nächste Rollenspezifikation ergänzen, sobald RM-DR-017 entschieden ist | Arbeitsvertrag |
+| `docs/masterplan/CLAUDE-PROMPTS.md` | Prompt für die Umsetzung von K1a und K1b ergänzen, sobald die Spezifikationen freigegeben sind | Arbeitsvertrag |
 | `NIGHT-REPORT-abilities.md`, `AUDIT.md`, `GRIMMHAIN_ANALYSE_2026-06-12.md` | als historisch kennzeichnen | mehrere Befunde behoben ([`04`](04-rule-conflicts.md) §6) |
 | `godot/tests/ui/test_role_model.gd` (Branch `claude/sleepy-babbage-u2o0i2`, Grimmhain-1) | feste Zahl „exakt elf produktive Rollen“ vor der ersten neuen Rolle anpassen oder aus dem Katalog ableiten | sonst rot, sobald eine Rolle in den `RoleCatalog` kommt ([`06`](06-implementation-batches.md) §3.7) |
 | `godot/content/i18n/ui.*.po`, `RolePresentation.ROLE_ORDER` (Grimmhain-1) | Namen, Kurztexte und Reihenfolge je neuer Rolle | Rollen-Setup zeigt sonst Rohschlüssel bzw. Reihenfolge nach ID |

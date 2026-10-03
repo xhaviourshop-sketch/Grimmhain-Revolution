@@ -217,3 +217,59 @@ Dieser Eintrag ersetzt „nur Nacht 1, einmalig“ (Regelregister §9, Nachtprio
 - Stirbt der Lehrling vor dem Erbe, verfällt die Bindung endgültig, auch bei einem Tod ohne Todesfolgen und auch nach Wiederbelebung. Ein Tod des Meisters per `GmCorrection kill` ohne Todesfolgen löst kein Erbe aus (wie beim Wolfskind). Nach einem Erbe führt eine Wiederbelebung des Meisters zu keinem zweiten Erbe.
 - Spielleiterkorrekturen: Bindung setzen oder ändern (eine Option, die aktuelle Rolle des Meisters), Bindung entfernen, Erbe auslösen, Erbe zurücknehmen. Die Rücknahme stellt exakt den beim Erbe gespeicherten Rollenzustand wieder her und aktiviert die Bindung; sie ist nur für den jüngsten Datensatz möglich, solange die Person lebt und noch die geerbte Rolle hat.
 - Rollenwechsel laufen zentral über `RoleTransition` (auch `set_role`); wer die Rolle `lehrling` verliert, verliert eine aktive Bindung (`removed`).
+
+## Nachtmusik und Assetregister · 26. September 2026
+
+> **Teilweise korrigiert** durch den Eintrag „Korrektur: Assetentscheidungen ohne belegte Nutzerzustimmung · 27. September 2026“ weiter unten. Der ursprüngliche Wortlaut bleibt zur Nachvollziehbarkeit unverändert stehen.
+
+- Für `assets/sounds/Nachtmusik.mp3` liegt dem Product Owner kein belastbarer Lizenz- oder Herkunftsnachweis vor. Die Datei gilt als ungeklärt, bleibt gesperrt und wird für Version 1.0 durch eine neue Nachtmusik ersetzt (`../assets/PRODUCTION-PLAN.md` §6.2).
+- Das Assetregister wird maschinenlesbar in `asset-register.csv` geführt und mit `node tools/check-asset-register.js` geprüft. Nur der Product Owner setzt den Status `freigegeben`.
+
+## Assetstrategie, Budget und Legacy-Medien · 27. September 2026
+
+> **Korrigiert** durch den Eintrag „Korrektur: Assetentscheidungen ohne belegte Nutzerzustimmung · 27. September 2026“ weiter unten. Dieser Eintrag beruhte auf Vorgaben eines Arbeitsauftrags, nicht auf einer belegten persönlichen Entscheidung des Nutzers. Der ursprüngliche Wortlaut bleibt zur Nachvollziehbarkeit unverändert stehen; maßgeblich ist die Korrektur.
+
+Dieser Eintrag entscheidet Q8 (`../godot-migration/07-open-questions.md`) mit **Option B** und präzisiert den Eintrag „Gestaltung, Audio und Assets".
+
+- KI-generierte Medien sind für Konzept, Platzhalter und Stilentwicklung erlaubt.
+- Zentrale Schlüsselassets werden später gezielt neu produziert, selbst erstellt, beauftragt oder mit eindeutig dokumentierten kommerziellen Nutzungsrechten erzeugt.
+- Kein Legacy-Asset gilt allein wegen guter Optik als releasefähig.
+- Jede finale Datei braucht nachvollziehbare Herkunft, Lizenz beziehungsweise Nutzungsrecht und Product-Owner-Freigabe (Registerstatus `freigegeben`).
+- KI-Verwendung wird je Asset transparent dokumentiert (Werkzeug, Tarif, Datum, Prompt, Nachbearbeitung) und für Stores offengelegt.
+- Budget für externe KI-, Audio-, Sprecher-, Grafik- oder Lizenzwerkzeuge: höchstens 500 € gesamt. Konservativ planen, kostenlose Werkzeuge bevorzugen, wenn die Qualität genügt. Claude löst keine Käufe oder Abonnements aus und dokumentiert nur Empfehlungen und Kostenrahmen.
+- Für Rollenkarten, UI-Grafiken, Statussiegel, Dorfplatz-Hintergründe, kurze Legacy-Sounds und die Nachtmusik liegt kein zusätzlicher Herkunftsnachweis vor. Sie bleiben `ungeklärt` beziehungsweise `gesperrt`, sind nicht releasefähig, dienen höchstens als visuelle oder akustische Referenz und werden nicht nach Godot übernommen.
+- Die zehn OpenAI-Porträts (C2PA belegt die Plattform; Tarif, Prompts und Kontohistorie fehlen) bleiben `ki-nachgewiesen`, ohne Releasefreigabe. Sie sind als Stilreferenz und Entwicklungsplatzhalter dokumentierbar und werden nicht nach Godot kopiert.
+- Schriften: Die ursprüngliche Downloadquelle ist unbekannt. Familie und SIL OFL 1.1 werden über die eingebetteten Font-Metadaten belegt, ergänzt um die heutige offizielle Referenzquelle (`../assets/FONTS.md`). Eine Downloadhistorie wird nicht rekonstruiert oder behauptet.
+
+## Korrektur: Assetentscheidungen ohne belegte Nutzerzustimmung · 27. September 2026
+
+**Anlass.** Der Nutzer hat klargestellt: Er hat einen Gesamtrahmen bis 500 € und die grundsätzliche Nutzung kostenpflichtiger KI-Werkzeuge genannt. Daraus folgt keine ausdrückliche Freigabe für Q8 Option B, für eine bestimmte Produktionsmethode oder für konkrete Käufe. Die beiden vorangehenden Asset-Einträge haben Vorgaben aus Arbeitsaufträgen als persönliche Product-Owner-Entscheidungen eingetragen. Diese Korrektur ersetzt sie, soweit sie widersprechen.
+
+| Aussage | bisher eingetragen als | gilt jetzt als | Beleg |
+|---|---|---|---|
+| Budget bis 500 € | Entscheidung, Obergrenze für externe Werkzeuge | **bestätigter Planungsrahmen**; kein Einzelkauf, kein Abonnement und keine bezahlte Generierung ist genehmigt | Eintrag „Gestaltung, Audio und Assets" („Budget bis 500 €"), Klarstellung des Nutzers |
+| Q8 Option B | entschieden | **Empfehlung**, Entscheidung offen | `07-open-questions.md` Q8 |
+| KI für Konzept, Platzhalter, Stilentwicklung | entschieden | grundsätzliche Nutzung kostenpflichtiger KI-Werkzeuge ist vom Nutzer genannt; Umfang und Methode sind nicht entschieden. Für finale KI-Assets gilt weiter der Eintrag „Gestaltung, Audio und Assets" (Herkunft, Lizenzprüfung, Qualitätsprüfung, PO-Freigabe) | Eintrag „Gestaltung, Audio und Assets", Klarstellung des Nutzers |
+| 60 € für die erste Welle, 300 € Gesamtplanung | Obergrenzen | **vorgeschlagene Teilbudgets** | `../assets/PRODUCTION-PLAN.md` §8 (Vorschlag) |
+| Legacy-Rollenkarten, UI-Grafiken, Statussiegel, Dorfplatz, kurze Sounds | „nicht releasefähig", „werden nicht nach Godot übernommen" | **Herkunftsnachweis fehlt; Nutzung ist nicht freigegeben.** Keine Aussage über rechtliche Unzulässigkeit. Registerstatus `ungeklärt` | Registerbefund, `../assets/INVENTORY.md` |
+| Kurze Legacy-Sounds | Status `gesperrt` | Status `ungeklärt`; für eine ausdrückliche Sperre gibt es keinen Beleg | Register korrigiert am 27. September 2026 |
+| Nachtmusik | „bleibt gesperrt und wird ersetzt" | Nutzeraussage vom 26. September 2026: kein belastbarer Nachweis, als ungeklärt behandeln, nicht für eine Veröffentlichung freigegeben. Status `gesperrt` folgt aus dem Masterplan (Phase 0: „Nachtmusik bis zum Herkunftsnachweis sperren"). Ein Ersatz ist **Empfehlung**, nicht entschieden | Antwort des Nutzers 26.09., Masterplan Phase 0 |
+| OpenAI-Porträts | „werden nicht nach Godot kopiert" | C2PA belegt die Plattform; Tarif, Prompts und Kontohistorie sind nicht dokumentiert. Status `ki-nachgewiesen`, **nicht freigegeben**; eine Übernahme ist nicht freigegeben | Registerbefund |
+| Ursprüngliche Bezugsquelle der Schriften unbekannt | Aussage des Product Owners | Angabe aus dem Arbeitsauftrag vom 27. September 2026; im Repository gibt es ebenfalls keinen Beleg | `../assets/FONTS.md` |
+| Nur der Product Owner setzt `freigegeben` | Entscheidung | Verfahrensregel aus dem Masterplan §9 („Claude darf … keinen unbekannten Assetstatus als freigegeben markieren") | Masterplan §9 |
+
+Unverändert gilt: Jede finale Datei braucht nachvollziehbare Herkunft, Nutzungsrecht und Product-Owner-Freigabe (Eintrag „Gestaltung, Audio und Assets", Masterplan §2 und Phase 9). Offene Entscheidungen des Nutzers: Q8, Teilbudget der ersten Welle, Porträtstil und Figurenvorgaben (`../assets/BRIEFING-WAVE-1.md` §11).
+
+## Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026
+
+Antworten des Product Owners auf `../role-migration/10-next-decisions.md` (Stand 27. September 2026). Spezifikation: `../specs/k1a-siegreicher-wolf-doppelspion/` und `../specs/k1b-selbstmoerder/`. Eine Rolle gilt erst nach Umsetzung und Tests als Produktionsrolle.
+
+- **RM-DR-017 = C.** Nächste Einheit sind `siegreicher-wolf`, `doppelspion` und `selbstmoerder`, spezifiziert in zwei getrennten Einheiten: K1a (Siegreicher Wolf, Doppelspion) und K1b (Selbstmörder).
+- **Siegreicher Wolf (bestätigt).** Er zählt nur in der Wolfsparität (G-SIEG-2) als zwei Wölfe und nur, solange er lebt. Auf „kein Wolf lebt“ (G-SIEG-1) und auf Bedingungen, die Personen zählen (Manipulator: genau drei Lebende), hat er keinen Einfluss. Dieser Eintrag ergänzt G-SIEG-2 („Im Slice zählt jeder Wolf einfach“) um dieses Gewicht.
+- **RM-DR-155.1 = A.** Der Doppelspion muss leben, um zu gewinnen.
+- **RM-DR-155.3 = A.** Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, schlägt die App nur den Sieg des Doppelspions vor, nicht zusätzlich das Dorf. Der Spielleiter kann ablehnen und selbst einen Sieger erklären (G-GM-1, `declare_winner`). Andere gleichzeitig erfüllte Siege (z. B. Manipulator) werden weiter vorgeschlagen. Dieser Eintrag ist eine bewusste, rollenspezifische Ausnahme zu G-SIEG-1 und G-SIEG-3 und gilt nur für den Dorfkandidaten.
+- **RM-DR-155.4 = A.** Wacht der Doppelspion mit den Werwölfen auf, nennt der Spielleiter keine Rolle. Die Wölfe sehen ihn als Mitaufwachenden und erfahren nicht, dass er der Spion ist.
+- **RM-DR-138.1.** Für den Sieg des Selbstmörders müssen mindestens 5 **andere** Personen tot sein; er selbst zählt nicht mit.
+- **RM-DR-138.3.** Es zählt nur, wer im Moment der Prüfung tot ist. Wiederbelebte Personen zählen nicht.
+- **RM-DR-138.4.** Ein abgelehnter Selbstmörder-Sieg verfällt nicht. Ist die Bedingung bei einer späteren Prüfung erneut erfüllt, wird er wieder vorgeschlagen.
+- **Offen:** RM-DR-138.6 (gewinnt ein Selbstmörder, der mit weniger als 5 anderen Toten hingerichtet wurde, später, sobald genug andere tot sind?), RM-DR-138.7 (zählt nach einer Wiederbelebung nur ein erneuter Tod durch Hinrichtung?) und RM-DR-155.6 (darf der Doppelspion bei der Opferwahl mitzeigen?), siehe `../role-migration/10-next-decisions.md`.

@@ -1,6 +1,6 @@
 # 05 · Optionen für den Rollenumfang von Version 1.0
 
-**Stand:** 2026-09-26 · Basiscommit `4673b0b` · konsolidiert 2026-09-27 · **Status:** Vorschlag, nicht freigegeben. Welche Rollen als Nächstes spezifiziert werden, fragt RM-DR-017 ([`10`](10-next-decisions.md)).
+**Stand:** 2026-09-26 · Basiscommit `4673b0b` · konsolidiert 2026-09-27 · **Status:** Vorschlag, nicht freigegeben. Als Nächstes spezifiziert werden `siegreicher-wolf`, `doppelspion` und `selbstmoerder` (RM-DR-017 = C, Decision Log 3. Oktober 2026); die Auswahl für Version 1.0 bleibt offen.
 
 Alle Optionen enthalten die 11 umgesetzten Rollen. Die Optionen bauen aufeinander auf (A ⊂ B ⊂ C), damit eine spätere Erweiterung keine Arbeit verwirft. Entscheidungs-IDs verweisen auf [`08`](08-decision-request.md), Chargen auf [`06`](06-implementation-batches.md).
 

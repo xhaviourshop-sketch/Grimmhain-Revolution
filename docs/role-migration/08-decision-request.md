@@ -1,6 +1,6 @@
 # 08 · Entscheidungsanfrage Rollenmigration
 
-**Stand:** Analyse 2026-09-26 (Basis `4673b0b`), **konsolidiert 2026-09-27** gegen `origin/main` `5eb5f2a`. Zwischen beiden Commits haben sich Regelkern (`godot/core/`), Regeltests (`godot/tests/unit/`), Spezifikationen (`docs/specs/`) und die Regelabschnitte des `DECISION-LOG.md` nicht geändert; neu ist dort nur ein Eintrag zu Nachtmusik und Assetregister.
+**Stand:** Analyse 2026-09-26 (Basis `4673b0b`), **konsolidiert 2026-09-27** gegen `origin/main` `5eb5f2a`; **Antworten vom 3. Oktober 2026 eingetragen** (Stand `origin/main` `8197ee6`). Zwischen beiden Commits haben sich Regelkern (`godot/core/`), Regeltests (`godot/tests/unit/`), Spezifikationen (`docs/specs/`) und die Regelabschnitte des `DECISION-LOG.md` nicht geändert; neu ist dort nur ein Eintrag zu Nachtmusik und Assetregister.
 
 **Wichtig:** Nichts in diesem Dokument ist durch den Product Owner entschieden, außer wo ausdrücklich eine bestehende Quelle genannt ist. Empfehlungen sind Vorschläge. Bestehender Code allein gilt nicht als Freigabe.
 
@@ -23,14 +23,16 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 2 | 12 |
-| produktentscheidung | 3 | 7 |
+| entschieden | 3 | 19 |
+| produktentscheidung | 2 | 3 |
 | technisch | 1 | 3 |
 | später | 65 | 162 |
 | quellenprüfung | 4 | 4 |
-| **gesamt** | **75** | **188** |
+| **gesamt** | **75** | **191** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
+
+Am 3. Oktober 2026 hat der Product Owner RM-DR-017, RM-DR-138.1, .3, .4 und RM-DR-155.1, .3, .4 entschieden (DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“). Aus diesen Antworten folgen drei neue Teilfragen: RM-DR-138.6 und .7 (Selbstmörder) und RM-DR-155.6 (Doppelspion bei der Opferwahl).
 
 ### Durch bestehende Quellen bereits beantwortet
 
@@ -47,6 +49,9 @@ Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017
 | RM-DR-145.2 | „Team“ ist die aktuelle Siegfraktion der Person | G-ID-2; DR-10; DECISION-LOG Lehrling (Fraktion wechselt sofort) |
 | RM-DR-155.2 | Einzelsiegrollen zählen in der Wolfsparität als Nicht-Wölfe | G-SIEG-2 |
 | RM-DR-138.5 | Stirbt der Selbstmörder durch eine Spiegelung, ist das keine Hinrichtung des Selbstmörders (Ursache `SPIEGELWOLF_RETALIATE`, hingerichtet ist der Spiegelwolf) | G-TOD-3; DECISION-LOG Spiegelwolf |
+| RM-DR-017 | C: Siegreicher Wolf, Doppelspion, Selbstmörder; spezifiziert als K1a und K1b | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“ |
+| RM-DR-138.1, .3, .4 | mindestens 5 andere Tote, er selbst zählt nicht; nur wer im Moment der Prüfung tot ist; ein abgelehnter Sieg verfällt nicht | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“ |
+| RM-DR-155.1, .3, .4 | muss leben; statt des Dorfs wird nur er vorgeschlagen, andere Siege weiter gleichzeitig; die Wölfe erfahren seine Rolle nicht | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“ |
 | Teil von RM-DR-138.2 | eine Hinrichtung per Spielleiterkorrektur bleibt eine Hinrichtung (`LYNCH`) | DECISION-LOG Korrekturrunde Regelkern 4 |
 | Teil von RM-DR-157.1 | keine feste Siegpriorität zwischen Einzelsieg und Fraktionen | DR-02 |
 | Teil von RM-DR-008 | keine digitale Stimmabgabe, keine Stimmgewichte | `implementation-boundary.md` D |
@@ -136,7 +141,7 @@ Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017
 
 ## RM-DR-007 · Dorf- und Wolfssieg bei lebenden Einzelsiegrollen
 
-- **Status:** entschieden. Die hier gestellte Grundfrage (Option A) ist bereits durch G-SIEG-1 bis G-SIEG-6, DR-02, DR-14 und den DECISION-LOG-Eintrag „Manipulator und Kandidatenmenge“ festgelegt. Offen ist nur eine rollenspezifische Ausnahme beim Doppelspion, geführt als RM-DR-155.3. Die Optionen B und C unten sind damit keine offene Wahl mehr, sondern würden eine bestehende Entscheidung ändern.
+- **Status:** entschieden. Die hier gestellte Grundfrage (Option A) ist bereits durch G-SIEG-1 bis G-SIEG-6, DR-02, DR-14 und den DECISION-LOG-Eintrag „Manipulator und Kandidatenmenge“ festgelegt. Die einzige rollenspezifische Ausnahme ist der Doppelspion (RM-DR-155.3, am 3. Oktober 2026 entschieden). Die Optionen B und C unten sind damit keine offene Wahl mehr, sondern würden eine bestehende Entscheidung ändern.
 - **Betroffene Rollen:** alle 13 fehlenden Einzelsiegrollen, zusätzlich der umgesetzte `manipulator`.
 - **Problem:** Legacy lässt das Dorf gewinnen, sobald kein Wolf lebt, auch wenn Einzelsiegrollen leben (Ausnahme Doppelspion). Godot erzeugt heute ebenfalls den Dorfkandidaten bei null Wölfen; es ist nicht entschieden, ob das so bleiben soll.
 - **Belege:** `js/ui/core.js:218-239`, `:287-337`; `godot/core/rules/win_rules.gd:18-37`; DR-02, DR-14.
@@ -258,14 +263,13 @@ Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017
 
 ## RM-DR-017 · Umfang der nächsten Rollenspezifikation
 
-- **Status:** produktentscheidung (neu).
+- **Status:** entschieden: **C** (DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“). Spezifiziert in zwei Einheiten: [`../specs/k1a-siegreicher-wolf-doppelspion/`](../specs/k1a-siegreicher-wolf-doppelspion/rules-register.md) und [`../specs/k1b-selbstmoerder/`](../specs/k1b-selbstmoerder/rules-register.md).
 - **Problem:** Die Optionen A/B/C in [`05`](05-v1-role-options.md) sind nicht freigegeben. Bevor Grimmhain-2 eine Spezifikation schreibt, muss feststehen, welche Rollen sie umfasst.
 - **Option A:** `siegreicher-wolf` und `doppelspion`.
 - **Option B:** nur `siegreicher-wolf`.
 - **Option C:** `siegreicher-wolf`, `doppelspion` und `selbstmoerder` (die bisherige Charge K1).
 - **Auswirkung:** A braucht zusätzlich RM-DR-155.1, .3 und .4; B braucht keine weitere Antwort; C braucht zusätzlich RM-DR-138.1, .3 und .4 und führt einen neuen Siegtyp ein, der vom Zeitpunkt der Hinrichtung abhängt.
-- **Empfehlung:** A. Begründung in [`06`](06-implementation-batches.md) §3.1.
-- **Blockiert:** jede weitere Rollenspezifikation.
+- **Empfehlung (damals):** A. Begründung in [`06`](06-implementation-batches.md) §3.1.
 
 ## 2. Rollenentscheidungen
 
@@ -1108,7 +1112,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `selbstmoerder`; Wechselwirkung laut Dossier: Feuerteufel (Brand vor Siegprüfung), Henker (Nebenhinrichtung), Voodoo (Puppe), alle Tötungsrollen (Totenzahl), Die …
 - **Belege:** [Dossier](dossiers/solos-a.md#selbstmoerder); RM-C-061, RM-C-062 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-007.
-- **RM-DR-138.1 · Zählbasis** · Status: produktentscheidung; Selbstmörder: Zählbasis
+- **RM-DR-138.1 · Zählbasis** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026); mindestens 5 andere Tote, er selbst zählt nicht
   - Option A: vorher (Code/EN)
   - Option B: inklusive eigenem Tod
   - Auswirkung: Balance: B einen Tod früher; Umsetzung: Zählpunkt
@@ -1118,12 +1122,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: auch Henker-Hinrichtung
   - Auswirkung: Balance: –; Umsetzung: ExecutionRules
   - Empfehlung: A
-- **RM-DR-138.3 · Wer zählt als tot, wenn Personen wiederbelebt wurden?** · Status: produktentscheidung; neu: wer zählt als tot (Wiederbelebung)
+- **RM-DR-138.3 · Wer zählt als tot, wenn Personen wiederbelebt wurden?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026); nur wer im Moment der Prüfung tot ist
   - Option A: alle Personen, die zum Zeitpunkt der Hinrichtung tot sind (Legacy zählt tote Sitze)
   - Option B: alle Todesfälle der Partie, auch wenn die Person inzwischen wieder lebt
   - Auswirkung: Balance: B macht den Sieg nach Wiederbelebungen leichter; Umsetzung: A: Zählung aus dem Zustand; B: Zählung aus dem Todesprotokoll
   - Empfehlung: A (entspricht Legacy und Text „sobald 5+ Tote sind“)
-- **RM-DR-138.4 · Was geschieht mit einem abgelehnten Selbstmörder-Kandidaten?** · Status: produktentscheidung; neu: abgelehnter Kandidat
+- **RM-DR-138.4 · Was geschieht mit einem abgelehnten Selbstmörder-Kandidaten?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026); verfällt nicht; erneut vorgeschlagen, wenn bei späterer Prüfung erfüllt
   - Option A: Er verfällt endgültig; nur eine erneute Hinrichtung derselben Person (nach Wiederbelebung) kann ihn wieder auslösen
   - Option B: Er wird nach jeder späteren Zustandsänderung erneut angeboten
   - Option C: Er bleibt als Hinweis sichtbar, entsteht aber nicht neu; der Spielleiter kann später per `declare_winner` entscheiden
@@ -1134,6 +1138,16 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: –
   - Auswirkung: Balance: –; Umsetzung: –
   - Empfehlung: entschieden: Ursache `SPIEGELWOLF_RETALIATE`, hingerichtet ist der Spiegelwolf
+- **RM-DR-138.6 · Gewinnt ein Selbstmörder, der mit weniger als 5 anderen Toten hingerichtet wurde, später, sobald genug andere tot sind?** · Status: produktentscheidung; neu: späterer Sieg nach Hinrichtung mit zu wenigen Toten
+  - Option A: Ja: Die Bedingung wird bei jeder verbindlichen Prüfung aus dem Zustand berechnet (er ist durch Hinrichtung tot, mindestens 5 andere sind tot). Das ist die wörtliche Folge aus RM-DR-138.1, .3 und .4
+  - Option B: Nein: Nur die verbindliche Prüfung direkt nach seiner Hinrichtung kann den Sieg begründen; war er dort erfüllt und wurde abgelehnt, wird er nach RM-DR-138.4 bei späteren Prüfungen wieder vorgeschlagen, solange er erfüllt ist
+  - Auswirkung: Balance: A macht ihn deutlich stärker: auch eine frühe Hinrichtung kann noch gewinnen; Umsetzung: A: reine Zustandsprüfung ohne neues gespeichertes Feld; B: gespeicherter Merker je Person, ob die Bedingung bei der ersten Prüfung nach der Hinrichtung erfüllt war
+  - Empfehlung: B. Rollentext DE „sobald 5+ Tote sind und er am Tage gelyncht wird“, EN „already dead“ und die Legacy-App binden den Sieg an den Moment der Hinrichtung. Die Antworten vom 3. Oktober 2026 lassen wörtlich A zu, deshalb Rückfrage statt Annahme
+- **RM-DR-138.7 · Zählt nach einer Wiederbelebung nur ein erneuter Tod durch Hinrichtung?** · Status: produktentscheidung; neu: Anspruch nach Wiederbelebung
+  - Option A: Ja: Maßgeblich ist sein aktueller Tod. Stirbt er nach der Wiederbelebung anders (z. B. Wolfsangriff), entsteht kein Kandidat
+  - Option B: Nein: Eine frühere Hinrichtung bleibt gültig; stirbt er später auf beliebige Weise, gilt er weiter als hingerichtet
+  - Auswirkung: Balance: B ist selten relevant, macht ihn aber stärker; Umsetzung: A: aus dem aktuellen Todesdatensatz ablesbar; B: dauerhafter, gespeicherter Personenstatus „wurde hingerichtet“
+  - Empfehlung: A. Passt zu RM-DR-138.3 (nur der aktuelle Zustand zählt) und braucht keinen neuen Spielstand
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** (1) Zählt „5+ Tote" vor oder nach seinem Tod? (2) Zählt nur „LYNCH" oder auch Henker/SL-Hinrichtung (DECISION-LOG: SL-Hinrichtung ist `LYNCH`)? (3) Zählen wiederbelebte Personen als Tote (Legacy: nur aktueller Status)?
 - **Charge:** K1. **In Option (nicht freigegeben):** A.
 
@@ -1532,7 +1546,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 - **Betroffene Rollen:** `doppelspion`; Wechselwirkung laut Dossier: Rachsüchtiger Wolf, Dämonischer Wolf (Fluch wirkungslos), Wolfskind/Lehrling (Wolfszählung), Orakel/Doktor/Spürhund (Erscheinung/Fraktion), Die Ewigen, …
 - **Belege:** [Dossier](dossiers/solos-a.md#doppelspion); RM-C-063, RM-C-064 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-007.
-- **RM-DR-155.1 · Muss er leben?** · Status: produktentscheidung; Doppelspion: muss er leben
+- **RM-DR-155.1 · Muss er leben?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026); A: muss leben
   - Option A: nur lebend (Code)
   - Option B: auch tot
   - Auswirkung: Balance: B macht ihn stärker; Umsetzung: WinCandidate
@@ -1542,13 +1556,13 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: neutral (zählt für keine Seite)
   - Auswirkung: Balance: A lässt Wölfe schwerer gewinnen; Umsetzung: `counts_as_wolf=false`
   - Empfehlung: A
-- **RM-DR-155.3 · Verhältnis zum Dorfsieg: welche anderen Kandidaten werden gleichzeitig angeboten?** · Status: produktentscheidung; Doppelspion: gleichzeitige Kandidaten
+- **RM-DR-155.3 · Verhältnis zum Dorfsieg: welche anderen Kandidaten werden gleichzeitig angeboten?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026); A: nur Doppelspion statt Dorf; andere Siege weiter gleichzeitig
   - Option A: Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, wird der Dorfkandidat nicht angeboten; nur Doppelspion-Kandidaten (je Person) entstehen. Rollenspezifische Ausnahme zu G-SIEG-1/G-SIEG-3; Legacy `core:227-230` verhält sich so
   - Option B: Dorf- und Doppelspion-Kandidat entstehen gemeinsam; der Spielleiter wählt nach dem Rollentext (bestehende Regel G-SIEG-3 ohne Ausnahme)
   - Option C: wie B, die App kennzeichnet den Doppelspion-Kandidaten als die nach Rollentext zutreffende Wahl
   - Auswirkung: Balance: A setzt die Rolle einheitlich durch; B und C hängen vom Spielleiter ab; Umsetzung: A: `WinRules` unterdrückt einen Kandidaten (neue Ausnahme, eigene Tests); B: nur ein weiterer Kandidat; C: B plus Kennzeichnung
   - Empfehlung: A. Der Text „gewinnt alleine, wenn alle Werwölfe tot sind“ beschreibt genau den Fall, in dem sonst das Dorf gewinnt; B würde bei jedem solchen Ende eine fehleranfällige Wahl verlangen. Der Spielleiter kann über `RejectWin` und `declare_winner` weiterhin anders entscheiden (G-GM-1). Wer bei Bestätigung gewinnt, ist davon unabhängig schon festgelegt: nur die begünstigte Person des Kandidaten
-- **RM-DR-155.4 · Was erfahren die Werwölfe über den Doppelspion, wenn er mit ihnen aufwacht?** · Status: produktentscheidung; neu: was erfahren die Wölfe
+- **RM-DR-155.4 · Was erfahren die Werwölfe über den Doppelspion, wenn er mit ihnen aufwacht?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026); A: keine Rolle genannt
   - Option A: Der Spielleiter nennt keine Rolle; die Wölfe sehen eine weitere wache Person und können ihn für einen Wolf halten
   - Option B: Der Spielleiter stellt ihn den Wölfen als Doppelspion vor
   - Option C: Er wacht nur zum Beobachten auf; die Wölfe sehen ihn nicht
@@ -1559,6 +1573,11 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: –
   - Auswirkung: Balance: –; Umsetzung: Hinweis im Rudelschritt
   - Empfehlung: A (technisch)
+- **RM-DR-155.6 · Darf der Doppelspion bei der Opferwahl am Tisch mitzeigen?** · Status: produktentscheidung; neu: darf er bei der Opferwahl mitzeigen (folgt aus RM-DR-155.4)
+  - Option A: Ja: Er darf mitzeigen, damit er nicht auffällt; seine Wahl zählt nicht. Der Spielleiter übernimmt das Opfer, auf das sich die Werwölfe einigen, ohne das anzusagen
+  - Option B: Nein: Er sieht nur zu und zeigt nicht
+  - Auswirkung: Balance: B verrät ihn den Wölfen schnell als Nicht-Wolf und schwächt RM-DR-155.4 = A; bei A können die Wölfe bei Uneinigkeit bemerken, dass seine Wahl nicht übernommen wurde; Umsetzung: nur Ansagetext und Hinweis für den Spielleiter im Rudelschritt; gespeichert wird in beiden Fällen nur das Opfer der Werwölfe (RM-DR-155.5)
+  - Empfehlung: A. Folgt dem Ziel von RM-DR-155.4 (die Wölfe sollen ihn für einen Wolf halten können). Weder Rollentext noch Legacy-App regeln es
 - **Weitere offene Fragen (Dossier, noch ohne eigene Unter-ID):** (1) Muss er für den Sieg leben? (2) Zählt er in der Parität als Nicht-Wolf? (3) Erscheint er dem Orakel als Wolf oder Doppelspion? (4) Darf das normale Rudel ihn angreifen? (5) Gewinnt das Dorf mit, wenn er gewinnt?
 - **Charge:** K1. **In Option (nicht freigegeben):** A.
 
