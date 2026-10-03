@@ -4,8 +4,8 @@ extends PanelContainer
 ## direkt unter ihrer Rollenzeile. Öffentlich sichtbar ist nur der Stand „Scheinrollen
 ## festgelegt: 1 von 2“. Kopien und Scheinrollen zeigt erst der bewusst geöffnete, als geheim
 ## markierte Bereich; Schließen nimmt ihm Sichtbarkeit, Fokus und Eingabe. Die Wahl läuft
-## über einen modalen Dialog mit allen Nicht-Wolf-Rollen des Katalogs (DR-08, keine
-## Vorbelegung). Alle Änderungen gehen über PlayerSetup.
+## über einen modalen Dialog mit allen Nicht-Wolf-Rollen des Katalogs (DR-08). Das Setup belegt jede
+## Kopie mit einer zufälligen Dorfrolle vor; der Spielleiter ändert sie hier. Alle Änderungen gehen über PlayerSetup.
 
 signal dialog_requested(request: DialogRequest)
 
@@ -144,7 +144,7 @@ func _on_remove_requested(copy_id: int) -> void:
 	var entry := _entry(copy_id)
 	if entry.is_empty():
 		return
-	if not bool(entry["configured"]):
+	if not bool(entry["configured"]) or bool(entry.get("auto", false)):
 		_setup.remove_decoy_copy(copy_id)
 		return
 	dialog_requested.emit(removal_request(copy_id, int(entry["number"])))

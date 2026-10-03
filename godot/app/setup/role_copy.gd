@@ -10,7 +10,8 @@ const KEY_SEPARATOR := "#"
 
 var copy_id: int = 0
 var role_id: StringName = &""
-var appears_as: StringName = &""   ## leer = noch nicht festgelegt; keine Vorbelegung
+var appears_as: StringName = &""   ## leer = noch nicht festgelegt
+var auto_chosen: bool = false       ## Vorbelegung durch das Setup (zufällige Dorfrolle des Pools); eine Wahl des Spielleiters setzt es zurück
 
 
 func _init(p_copy_id: int = 0, p_role_id: StringName = &"") -> void:

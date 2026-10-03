@@ -374,6 +374,7 @@ func _name_details(name: String) -> Dictionary:
 func _apply(error: StringName, details: Dictionary = {}) -> SetupResult:
 	if error != &"":
 		return SetupResult.failure(error, view(), details)
+	RoleSetup.autofill_appearances(_draft, seed_source)
 	_sync_seating(false)
 	_clamp_step()
 	var v := view()

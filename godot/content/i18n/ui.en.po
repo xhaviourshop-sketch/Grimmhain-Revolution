@@ -861,31 +861,31 @@ msgid "ui.setup.roles.factions"
 msgstr "Village {village} · Werewolves {wolves} · Solo {solo}"
 
 msgid "ui.setup.roles.issues"
-msgstr "Not valid yet: {issues}"
+msgstr "Still missing:\n{issues}"
 
 msgid "ui.setup.roles.issue.too_few_roles"
-msgstr "too few roles"
+msgstr "Too few roles are chosen. Every player needs exactly one role."
 
 msgid "ui.setup.roles.issue.too_many_roles"
-msgstr "more roles than players"
+msgstr "More roles are chosen than there are players. Remove some roles."
 
 msgid "ui.setup.roles.issue.missing_village"
-msgstr "no village role"
+msgstr "A village role is missing. The village is the side that has to find the wolves."
 
 msgid "ui.setup.roles.issue.missing_wolf"
-msgstr "no wolf role"
+msgstr "A wolf role is missing. Without a wolf the village has no opponent."
 
 msgid "ui.setup.roles.issue.missing_solo"
-msgstr "no solo role"
+msgstr "A solo-win role is missing, meaning one that wins all by itself (for example the Parasite). Every cast needs at least one."
 
 msgid "ui.setup.roles.issue.above_maximum"
-msgstr "Role chosen too often"
+msgstr "A role is chosen more often than allowed. Lower its number."
 
 msgid "ui.setup.roles.issue.negative_count"
-msgstr "negative count"
+msgstr "A role has an invalid number. Reset the selection."
 
 msgid "ui.setup.roles.issue.unknown_role"
-msgstr "unknown role"
+msgstr "A chosen role does not exist. Reset the selection."
 
 msgid "ui.setup.roles.suggest"
 msgstr "Use suggestion"
@@ -921,7 +921,7 @@ msgid "ui.setup.roles.over_limit"
 msgstr "Allowed only once at the start of the game, please reduce: {roles}"
 
 msgid "ui.setup.roles.status.invalid"
-msgstr "Role selection not valid yet."
+msgstr "Role selection not valid yet. See \"Still missing\"."
 
 msgid "ui.setup.roles.status.ready"
 msgstr "Ready to confirm."
@@ -945,10 +945,10 @@ msgid "ui.setup.error.roles_not_confirmed"
 msgstr "Please confirm the roles first."
 
 msgid "ui.setup.error.roles_invalid"
-msgstr "The role selection is not valid yet."
+msgstr "The role selection is not valid yet. The list under the roles says what is missing."
 
 msgid "ui.setup.error.above_maximum"
-msgstr "No more copies of this role are possible."
+msgstr "There cannot be more of this role."
 
 msgid "ui.setup.dialog.suggest.title"
 msgstr "Use suggestion?"
@@ -1122,7 +1122,7 @@ msgid "ui.setup.error.no_copy_available"
 msgstr "No copy of this role is left."
 
 msgid "ui.setup.roles.issue.missing_appearance"
-msgstr "decoy role missing"
+msgstr "The Decoy Wolf has no decoy role yet, meaning the role it pretends to be when checked. Choose one under \"Set decoy roles\"."
 
 msgid "ui.setup.decoy.status"
 msgstr "Decoy roles set: {configured} of {total}"
@@ -1134,13 +1134,13 @@ msgid "ui.setup.decoy.hide"
 msgstr "Hide decoy roles"
 
 msgid "ui.setup.decoy.hint"
-msgstr "Choose for each copy which role it shows when checked. Any role that does not count as a wolf is allowed."
+msgstr "The decoy role is the role a Decoy Wolf pretends to be when checked (for example by the Oracle). The game picked a random village role of this game for you; you can change it. Any role that does not count as a wolf is allowed."
 
 msgid "ui.setup.decoy.copy"
 msgstr "Decoy Wolf {number}"
 
 msgid "ui.setup.decoy.missing"
-msgstr "Decoy role missing"
+msgstr "Decoy role still open"
 
 msgid "ui.setup.decoy.chosen"
 msgstr "Decoy role: {role}"
@@ -7599,7 +7599,7 @@ msgid "ui.setup.roles.death_cards_hint"
 msgstr "The dead draw cards that are played in the card window. Also unlocks the Card Swallower role."
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
-msgstr "Card Swallower only with realm-of-the-dead cards"
+msgstr "The Card Swallower only plays with realm-of-the-dead cards. Switch the cards on or remove the role."
 
 msgid "ui.cockpit.secret.card"
 msgstr "A dead person's card is secret. Show it only when nobody is reading along."

@@ -113,8 +113,7 @@ func test_answer_names_match_catalog_ids() -> void:
 		assert_eq(String(RoleSuggestion.VILLAGE_ORDER[i]), VILLAGE_ORDER[i], "Dorfreihenfolge %d" % (i + 1))
 
 
-## Jeder Vorschlag ist über das Setup bis zum Start gültig: Rollen bestätigt (Scheinrolle des Trugbilderwolfs ausdrücklich über den
-## bestehenden Weg gewählt), verteilt, Sitzordnung bestätigt, StartGame vom Regelkern angenommen. Keine Nachtfähigkeit wird ausgeführt.
+## Jeder Vorschlag ist über das Setup bis zum Start gültig: Rollen bestätigt (Scheinrolle des Trugbilderwolfs vom Setup vorbelegt), verteilt, Sitzordnung bestätigt, StartGame vom Regelkern angenommen. Keine Nachtfähigkeit wird ausgeführt.
 func test_every_proposal_is_a_valid_start_for_the_core() -> void:
 	for persons: int in range(6, 25):
 		var setup := PlayerSetup.new()
@@ -129,9 +128,9 @@ func test_every_proposal_is_a_valid_start_for_the_core() -> void:
 		var decoys: Array = (setup.view() as Dictionary)["roles"].get("decoys", [])
 		assert_eq(decoys.size(), 1 if persons >= 13 else 0, "%d: Trugbilderwolf nur mit mindestens drei Wolfsrollen" % persons)
 		var open_issues: Array = (setup.view() as Dictionary)["roles"]["issues"]
-		assert_eq(open_issues, ["missing_appearance"] if persons >= 13 else [], "%d: offen ist nur die Scheinrolle (keine geheime Standardwahl)" % persons)
+		assert_eq(open_issues, [], "%d: nichts offen, die Scheinrolle ist vorbelegt" % persons)
 		for d: Variant in decoys:
-			assert_true(setup.set_decoy_appearance(int((d as Dictionary)["copy_id"]), &"waldhexe").ok, "%d: Scheinrolle ausdrücklich gewählt" % persons)
+			assert_true(bool((d as Dictionary)["configured"]) and bool((d as Dictionary)["auto"]), "%d: Scheinrolle vorbelegt" % persons)
 		assert_true(setup.confirm_roles().ok, "%d: Rollen bestätigt" % persons)
 		assert_true(setup.distribute_randomly().ok, "%d: verteilt" % persons)
 		assert_true(setup.confirm_distribution().ok, "%d: Verteilung bestätigt" % persons)
@@ -154,7 +153,7 @@ func test_every_proposal_is_a_valid_start_for_the_core() -> void:
 			assert_false(seen.has(state.players[id].role_id), "%d: %s höchstens einmal" % [persons, state.players[id].role_id])
 			seen[state.players[id].role_id] = true
 		assert_eq(_chosen(_counts_of(state)), _chosen(RoleSuggestion.for_count(persons)), "%d: gestartete Rollen = Vorschlag" % persons)
-		assert_eq(draws[0], 1, "%d: der Zufall wird nur für die bewusste Verteilung gebraucht" % persons)
+		assert_eq(draws[0], 2 if persons >= 13 else 1, "%d: Seed-Quelle für die Verteilung und die Vorbelegung der Scheinrolle" % persons)
 
 
 func _counts_of(state: GameState) -> Dictionary:

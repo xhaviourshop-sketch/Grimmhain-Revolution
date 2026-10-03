@@ -108,7 +108,7 @@ func _assert_public_secret(shell: Control, label: String) -> void:
 
 # --- Rollenschritt ------------------------------------------------------------------------------------
 
-func test_missing_appearance_is_shown_and_blocks() -> void:
+func test_prefilled_appearance_is_shown_and_changeable() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
@@ -125,9 +125,9 @@ func test_missing_appearance_is_shown_and_blocks() -> void:
 	var section := find_node(screen, "DecoySection") as Control
 	assert_true(section != null and section.is_visible_in_tree(), "Scheinrollen-Bereich erscheint mit der Kopie")
 	var status := _label(screen, "DecoyStatusLabel")
-	assert_eq(status, tr("ui.setup.decoy.status").format({"configured": 0, "total": 1}), "fehlende Auswahl als Text: %s" % status)
-	assert_true(_label(screen, "RoleIssuesLabel").contains(tr("ui.setup.roles.issue.missing_appearance")), "Fehlerliste nennt die fehlende Scheinrolle")
-	assert_true(find_button(screen, "ConfirmRolesButton").disabled, "Bestätigen gesperrt")
+	assert_eq(status, tr("ui.setup.decoy.status").format({"configured": 1, "total": 1}), "Vorbelegung als Text: %s" % status)
+	assert_false(_label(screen, "RoleIssuesLabel").contains(tr("ui.setup.roles.issue.missing_appearance")), "keine Fehlermeldung: Scheinrolle ist vorbelegt")
+	assert_false(find_button(screen, "ConfirmRolesButton").disabled, "Bestätigen frei")
 	var panel := find_node(screen, "DecoySecretPanel") as Control
 	assert_false(panel.is_visible_in_tree(), "geheimer Bereich zunächst geschlossen")
 	await _assert_public_secret(shell, "geschlossen")
@@ -136,7 +136,9 @@ func test_missing_appearance_is_shown_and_blocks() -> void:
 	var rows := _copy_rows(screen)
 	assert_eq(rows.size(), 1, "eine Kopie")
 	assert_eq(_label(rows[0], "DecoyCopyLabel"), tr("ui.setup.decoy.copy").format({"number": 1}), "„Trugbilderwolf 1“")
-	assert_eq(_label(rows[0], "DecoyAppearanceLabel"), tr("ui.setup.decoy.missing"), "„Scheinrolle fehlt“")
+	var prefilled := str((_view(shell)["roles"]["decoys"] as Array)[0]["appears_as"])
+	assert_ne(prefilled, "", "Scheinrolle vorbelegt")
+	assert_eq(_label(rows[0], "DecoyAppearanceLabel"), tr("ui.setup.decoy.chosen").format({"role": tr("ui.role.%s.name" % prefilled.replace("-", "_"))}), "Vorbelegung sichtbar")
 	var dialog := _dialog(shell)
 	var choose := find_button(rows[0], "ChooseAppearanceButton")
 	choose.grab_focus()
@@ -147,7 +149,8 @@ func test_missing_appearance_is_shown_and_blocks() -> void:
 	for b: BaseButton in visible_buttons(dialog):
 		if String(b.name).begins_with("Appear_"):
 			options.append(String(b.name).trim_prefix("Appear_"))
-			assert_eq(b.text, tr("ui.role.%s.name" % String(b.name).trim_prefix("Appear_").replace("-", "_")), "lokalisierter Name")
+			if String(b.name).trim_prefix("Appear_") != prefilled:
+				assert_eq(b.text, tr("ui.role.%s.name" % String(b.name).trim_prefix("Appear_").replace("-", "_")), "lokalisierter Name")
 	options.sort()
 	assert_eq(options, ["amalia", "blutpriester", "das-orakel", "der-weise", "detektiv", "die-ewigen", "die-gebundenen", "doktor", "doppelspion", "dorfbewohner", "dorfchronistin", "dorfschmied", "dorfwache", "dr-victor-frankenstein", "faehrtenleser", "feuerteufel", "grabraeuber", "hades", "henker", "koenig", "kopfgeldjaeger", "korrupter-richter", "kriegerin-des-lichts", "kutscher", "lehrling", "loki", "maertyrerin", "manipulator", "nachtwaechter", "nekromant", "parasit", "pestbringerin", "prophet-des-untergangs", "rattenfaenger", "ritter", "rotkaeppchen", "schutzengel", "schutzgeist", "seelentauscher", "selbstmoerder", "sensentraeger", "spuerhund", "todesprediger", "traumdeuter", "verdammniswaechter", "voodoo-priester", "waechter-am-tor", "wahnsinniger-kutscher", "waldhexe", "waldlaeufer", "wolfskind", "zeitwaechter"] as Array[String], "nur Nicht-Wolf-Rollen, auch außerhalb des Pools")
 	for i: int in 10:
@@ -155,12 +158,11 @@ func test_missing_appearance_is_shown_and_blocks() -> void:
 		assert_true(dialog.is_ancestor_of(focus_owner()), "Fokus bleibt im Dialog (%d)" % i)
 	await key(KEY_ESCAPE)
 	assert_false(dialog.visible, "Escape bricht ab")
-	assert_eq(str((_view(shell)["roles"]["decoys"] as Array)[0]["appears_as"]), "", "Abbruch wählt nichts")
+	assert_eq(str((_view(shell)["roles"]["decoys"] as Array)[0]["appears_as"]), prefilled, "Abbruch ändert nichts")
 	assert_true(choose.has_focus(), "Fokus zurück zur Kopie")
 	await _choose_appearance(shell, rows[0], "waldhexe")
 	assert_eq(_label(_copy_rows(screen)[0], "DecoyAppearanceLabel"), tr("ui.setup.decoy.chosen").format({"role": tr("ui.role.waldhexe.name")}), "gewählte Scheinrolle sichtbar")
-	assert_false(_label(_copy_rows(screen)[0], "DecoyAppearanceLabel").contains(tr("ui.setup.decoy.missing")), "keine Fehlmeldung mehr")
-	assert_false(find_button(screen, "ConfirmRolesButton").disabled, "jetzt bestätigbar")
+	assert_false(find_button(screen, "ConfirmRolesButton").disabled, "bestätigbar")
 	await _assert_public_secret(shell, "gewählt")
 
 

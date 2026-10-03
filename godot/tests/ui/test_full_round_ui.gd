@@ -165,7 +165,7 @@ func _new_game_through_buttons(shell: Control, count: int) -> Dictionary:
 	assert_eq(int(((setup.view() as Dictionary)["roles"] as Dictionary)["total"]), count, "Vorschlag passt zur Personenzahl")
 	var decoys: Array = (setup.view() as Dictionary)["roles"].get("decoys", [])
 	if not decoys.is_empty():
-		assert_true(find_button(screen, "ConfirmRolesButton").disabled, "%d: ohne Scheinrolle nicht bestätigbar (keine geheime Standardwahl)" % count)
+		assert_false(find_button(screen, "ConfirmRolesButton").disabled, "%d: Scheinrolle vorbelegt, Rollen bestätigbar" % count)
 		await press(find_button(screen, "DecoyRevealButton"))
 		for row: Node in find_node(screen, "DecoyCopyList").get_children():
 			if row is Control and row.get("copy_id") != null and (row as Control).visible:

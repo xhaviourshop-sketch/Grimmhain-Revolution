@@ -861,31 +861,31 @@ msgid "ui.setup.roles.factions"
 msgstr "Dorf {village} · Werwölfe {wolves} · Einzelsieg {solo}"
 
 msgid "ui.setup.roles.issues"
-msgstr "Noch nicht gültig: {issues}"
+msgstr "Das fehlt noch:\n{issues}"
 
 msgid "ui.setup.roles.issue.too_few_roles"
-msgstr "zu wenige Rollen"
+msgstr "Es sind zu wenige Rollen gewählt. Jede Person braucht genau eine Rolle."
 
 msgid "ui.setup.roles.issue.too_many_roles"
-msgstr "mehr Rollen als Personen"
+msgstr "Es sind mehr Rollen gewählt als Personen. Nimm Rollen heraus."
 
 msgid "ui.setup.roles.issue.missing_village"
-msgstr "keine Dorfrolle"
+msgstr "Es fehlt eine Dorfrolle. Das Dorf ist die Seite, die die Wölfe finden muss."
 
 msgid "ui.setup.roles.issue.missing_wolf"
-msgstr "keine Wolfsrolle"
+msgstr "Es fehlt eine Wolfsrolle. Ohne Wolf hat das Dorf keinen Gegner."
 
 msgid "ui.setup.roles.issue.missing_solo"
-msgstr "keine Einzelsiegrolle"
+msgstr "Es fehlt eine Rolle mit Einzelsieg, also eine, die ganz allein gewinnt (zum Beispiel der Parasit). Jede Besetzung braucht mindestens eine."
 
 msgid "ui.setup.roles.issue.above_maximum"
-msgstr "Rolle zu oft gewählt"
+msgstr "Eine Rolle ist öfter gewählt, als erlaubt ist. Verringere ihre Anzahl."
 
 msgid "ui.setup.roles.issue.negative_count"
-msgstr "negative Anzahl"
+msgstr "Eine Rolle hat eine ungültige Anzahl. Setze die Auswahl zurück."
 
 msgid "ui.setup.roles.issue.unknown_role"
-msgstr "unbekannte Rolle"
+msgstr "Eine gewählte Rolle gibt es nicht. Setze die Auswahl zurück."
 
 msgid "ui.setup.roles.suggest"
 msgstr "Vorschlag verwenden"
@@ -921,7 +921,7 @@ msgid "ui.setup.roles.over_limit"
 msgstr "Nur einmal zu Spielbeginn erlaubt, bitte verringern: {roles}"
 
 msgid "ui.setup.roles.status.invalid"
-msgstr "Rollenwahl noch nicht gültig."
+msgstr "Rollenwahl noch nicht gültig. Siehe „Das fehlt noch“."
 
 msgid "ui.setup.roles.status.ready"
 msgstr "Bereit zum Bestätigen."
@@ -945,10 +945,10 @@ msgid "ui.setup.error.roles_not_confirmed"
 msgstr "Bitte zuerst die Rollen bestätigen."
 
 msgid "ui.setup.error.roles_invalid"
-msgstr "Die Rollenwahl ist noch nicht gültig."
+msgstr "Die Rollenwahl ist noch nicht gültig. Unter der Rollenliste steht, was fehlt."
 
 msgid "ui.setup.error.above_maximum"
-msgstr "Mehr Kopien dieser Rolle sind nicht möglich."
+msgstr "Von dieser Rolle darf es nicht mehr geben."
 
 msgid "ui.setup.dialog.suggest.title"
 msgstr "Vorschlag übernehmen?"
@@ -1122,7 +1122,7 @@ msgid "ui.setup.error.no_copy_available"
 msgstr "Von dieser Rolle ist keine Kopie mehr frei."
 
 msgid "ui.setup.roles.issue.missing_appearance"
-msgstr "Scheinrolle fehlt"
+msgstr "Beim Trugbilderwolf fehlt die Scheinrolle, also die Rolle, die er bei einer Prüfung vortäuscht. Wähle sie unter „Scheinrollen festlegen“."
 
 msgid "ui.setup.decoy.status"
 msgstr "Scheinrollen festgelegt: {configured} von {total}"
@@ -1134,13 +1134,13 @@ msgid "ui.setup.decoy.hide"
 msgstr "Scheinrollen verbergen"
 
 msgid "ui.setup.decoy.hint"
-msgstr "Lege für jede Kopie fest, als welche Rolle sie bei einer Prüfung erscheint. Erlaubt ist jede Rolle, die nicht als Wolf zählt."
+msgstr "Die Scheinrolle ist die Rolle, die ein Trugbilderwolf bei einer Prüfung (zum Beispiel durch das Orakel) vortäuscht. Das Spiel hat zufällig eine Dorfrolle der Partie vorgeschlagen; du kannst sie ändern. Erlaubt ist jede Rolle, die nicht als Wolf zählt."
 
 msgid "ui.setup.decoy.copy"
 msgstr "Trugbilderwolf {number}"
 
 msgid "ui.setup.decoy.missing"
-msgstr "Scheinrolle fehlt"
+msgstr "Scheinrolle noch offen"
 
 msgid "ui.setup.decoy.chosen"
 msgstr "Scheinrolle: {role}"
@@ -7599,7 +7599,7 @@ msgid "ui.setup.roles.death_cards_hint"
 msgstr "Tote ziehen Karten, die im Kartenfenster gespielt werden. Schaltet auch die Rolle Kartenschlucker frei."
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
-msgstr "Kartenschlucker nur mit Totenreichkarten"
+msgstr "Der Kartenschlucker spielt nur mit Totenreichkarten. Schalte die Karten ein oder nimm ihn heraus."
 
 msgid "ui.cockpit.secret.card"
 msgstr "Die Karte einer toten Person ist geheim. Zeige sie erst an, wenn niemand mitliest."

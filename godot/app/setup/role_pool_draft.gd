@@ -246,6 +246,7 @@ func _copies_view() -> Array:
 			"role_id": String(copy.role_id),
 			"appears_as": String(copy.appears_as),
 			"configured": copy.is_configured(),
+			"auto": copy.auto_chosen,
 		})
 	return out
 

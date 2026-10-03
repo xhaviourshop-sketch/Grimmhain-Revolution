@@ -14,8 +14,8 @@ extends RefCounted
 ##   Pool erneut bestätigen → Verteilung bleibt nur bei identischen Verteilungseinheiten
 ##   Neu mischen → nur die Personenzuordnung ändert sich; Scheinrollen hängen an ihrer Kopie
 ##
-## Scheinrollen (DR-08): Der Spielleiter wählt sie für jede Kopie ausdrücklich. Es gibt keine
-## Vorbelegung und keine aus Zufall oder Seed abgeleitete Scheinrolle.
+## Scheinrollen (DR-08): Der Spielleiter kann sie für jede Kopie ausdrücklich wählen. Fehlt die Wahl, belegt das Setup
+## sie vor (`autofill_appearances`: zufällige Dorfrolle des Pools, Zufall über SeededRng); die Vorbelegung bleibt änderbar.
 
 
 # --- Personen -----------------------------------------------------------------------------------------
@@ -84,10 +84,35 @@ static func set_copy_appearance(d: SetupDraft, copy_id: int, appearance: StringN
 		return &"unknown_role"
 	if SetupRoleCatalog.counts_as_wolf(appearance):
 		return &"invalid_appearance"
+	copy.auto_chosen = false
 	if copy.appears_as != appearance:
 		copy.appears_as = appearance
 		_roles_changed(d)
 	return &""
+
+
+## Vorbelegung der Scheinrollen: Jede Kopie ohne Scheinrolle erhält eine zufällige Dorfrolle aus dem Pool dieser Partie.
+## Eine frühere Vorbelegung, deren Rolle nicht mehr im Pool steht, wird neu gezogen (gibt es keine Dorfrolle, wird sie
+## geleert). Wahlen des Spielleiters bleiben unberührt. Der Zufall kommt aus einem SeededRng mit `seed_source`; die
+## gezogene Rolle steht danach in der Kopie. Ändert nie die Bestätigung: Aufrufe folgen auf eine Rollenänderung.
+static func autofill_appearances(d: SetupDraft, seed_source: Callable) -> void:
+	var candidates: Array[StringName] = []
+	for id: StringName in d.roles.pool():
+		if SetupRoleCatalog.is_village(id) and RoleCatalog.is_valid_appearance(id) and not candidates.has(id):
+			candidates.append(id)
+	var rng: SeededRng = null
+	for copy: RoleCopy in d.roles.copies:
+		var stale := copy.auto_chosen and not candidates.has(copy.appears_as)
+		if copy.is_configured() and not stale:
+			continue
+		if candidates.is_empty():
+			copy.appears_as = &""
+			copy.auto_chosen = false
+			continue
+		if rng == null:
+			rng = SeededRng.new(int(seed_source.call()))
+		copy.appears_as = candidates[rng.next_int(0, candidates.size() - 1)]
+		copy.auto_chosen = true
 
 
 ## Totenreichkarten ein- oder ausschalten. Ausschalten nimmt den Kartenschlucker aus der Rollenwahl, denn er gibt es nur mit Karten.
@@ -162,14 +187,14 @@ static func _roles_changed(d: SetupDraft) -> void:
 	d.distribution.clear(DistributionDraft.INVALIDATED_ROLES)
 
 
-## Bis zu `wanted` unkonfigurierte Kopien der Rolle, von hinten gezählt.
+## Bis zu `wanted` Kopien der Rolle ohne eigene Wahl (unkonfiguriert oder nur vorbelegt), von hinten gezählt.
 static func _unconfigured_from_end(d: SetupDraft, role: StringName, wanted: int) -> Array[RoleCopy]:
 	var out: Array[RoleCopy] = []
 	var copies := d.roles.copies_of(role)
 	for i: int in range(copies.size() - 1, -1, -1):
 		if out.size() >= wanted:
 			break
-		if not copies[i].is_configured():
+		if not copies[i].is_configured() or copies[i].auto_chosen:
 			out.append(copies[i])
 	return out
 

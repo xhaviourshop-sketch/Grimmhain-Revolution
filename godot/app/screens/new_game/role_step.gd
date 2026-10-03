@@ -157,7 +157,7 @@ func _render_issues(roles: Dictionary) -> void:
 	var names: Array[String] = []
 	for issue: Variant in roles["issues"]:
 		if str(issue) != "too_few_roles" and str(issue) != "too_many_roles":
-			names.append(tr("ui.setup.roles.issue.%s" % str(issue)))
+			names.append("• " + tr("ui.setup.roles.issue.%s" % str(issue)))
 	var over: Array[String] = []
 	for role: Variant in roles.get("over_limit", []):
 		over.append(tr(RolePresentation.name_key(StringName(str(role)))))
@@ -166,7 +166,7 @@ func _render_issues(roles: Dictionary) -> void:
 	_over_limit.text_key = "ui.setup.roles.over_limit" if not over.is_empty() else ""
 	var show_issues := not names.is_empty() and not bool(roles["is_empty"])
 	_issues.visible = show_issues
-	_issues.format_values = {"issues": ", ".join(names)}
+	_issues.format_values = {"issues": "\n".join(names)}
 	_issues.text_key = "ui.setup.roles.issues" if show_issues else ""
 	var reason := str(roles["invalidated"])
 	_invalidated.visible = reason != "" and not bool(roles["confirmed"])

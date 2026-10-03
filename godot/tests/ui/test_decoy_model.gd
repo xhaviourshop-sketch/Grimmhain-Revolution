@@ -1,6 +1,6 @@
 extends UiTestCase
-## Trugbilderwolf-Scheinrolle nach DR-08: Der Spielleiter legt sie für jede Kopie ausdrücklich
-## fest; keine Vorbelegung, kein Zufall. Rolle und Scheinrolle bilden im Setup eine Kopie, die
+## Trugbilderwolf-Scheinrolle nach DR-08: Der Spielleiter kann sie für jede Kopie ausdrücklich
+## festlegen; fehlt die Wahl, belegt das Setup sie mit einer zufälligen Dorfrolle des Pools vor. Rolle und Scheinrolle bilden im Setup eine Kopie, die
 ## gemeinsam verteilt, gemischt und getauscht wird. Ohne Szenen, feste Seeds.
 
 const SETUP_SCRIPT := "res://app/setup/player_setup.gd"
@@ -102,7 +102,7 @@ func _check_follow(s: Object, label: String) -> void:
 
 # --- Auswahl ------------------------------------------------------------------------------------------
 
-func test_unconfigured_copy_blocks_role_confirmation() -> void:
+func test_new_copy_is_prefilled_with_a_village_role_of_the_pool() -> void:
 	var calls := [0]
 	var s := _make(8, {"werwolf": 1, "manipulator": 1, "dorfbewohner": 5}, FIXED_SEED, calls)
 	if s == null:
@@ -112,16 +112,42 @@ func test_unconfigured_copy_blocks_role_confirmation() -> void:
 	assert_eq(decoys.size(), 1, "eine Kopie angelegt")
 	if decoys.size() != 1:
 		return
-	assert_true(str(decoys[0]["appears_as"]) == "" and not bool(decoys[0]["configured"]), "keine Vorbelegung")
+	var village_in_pool: Array = []
+	for id: Variant in (_roles(s)["pool"] as Array):
+		if SetupRoleCatalog.is_village(StringName(str(id))):
+			village_in_pool.append(str(id))
+	assert_true(village_in_pool.has(str(decoys[0]["appears_as"])), "Vorbelegung ist eine Dorfrolle des Pools: %s" % str(decoys[0]["appears_as"]))
+	assert_true(bool(decoys[0]["configured"]) and bool(decoys[0]["auto"]), "als Vorbelegung gekennzeichnet")
 	assert_eq(int(decoys[0]["number"]), 1, "sichtbare Nummer 1")
+	assert_true(bool(_roles(s)["valid"]), "Pool gültig: %s" % str(_roles(s)["issues"]))
+	assert_eq(calls[0], 1, "Seed-Quelle genau einmal für die Vorbelegung")
+	var twin := _make(8, {"werwolf": 1, "manipulator": 1, "dorfbewohner": 5}, FIXED_SEED)
+	twin.call("change_role_count", DECOY, 1)
+	assert_eq(_config(twin).values(), _config(s).values(), "gleicher Seed: gleiche Vorbelegung")
+	_ok(s.call("set_decoy_appearance", _copy_id(s, 0), &"waldhexe"), "Scheinrolle außerhalb des Pools wählen")
+	assert_false(bool(_decoys(s)[0]["auto"]), "eigene Wahl ist keine Vorbelegung mehr")
+	_ok(s.call("change_role_count", &"dorfbewohner", -1), "Pool danach ändern")
+	_ok(s.call("change_role_count", &"dorfbewohner", 1), "und wiederherstellen")
+	assert_eq(_config(s).values(), ["waldhexe"], "eigene Wahl bleibt bei Poolwechsel")
+	assert_true(bool(_roles(s)["valid"]), "gültig")
+	_ok(s.call("confirm_roles"), "bestätigt")
+
+
+func test_copy_without_any_village_role_in_the_pool_stays_open_and_blocks() -> void:
+	var s := _make(6, {})
+	if s == null:
+		return
+	for role: StringName in [&"werwolf", &"giftwolf", &"blutwolf", &"manipulator", &"parasit", &"trugbilderwolf"]:
+		_ok(s.call("set_role_count", role, 1), "Rolle %s" % role)
+	var decoys := _decoys(s)
+	assert_eq(decoys.size(), 1, "eine Kopie")
+	if decoys.size() != 1:
+		return
+	assert_false(bool(decoys[0]["configured"]), "ohne Dorfrolle keine Vorbelegung")
 	var r := _roles(s)
-	assert_true(not bool(r["valid"]) and (r["issues"] as Array).has("missing_appearance"), "fehlende Scheinrolle macht den Pool ungültig: %s" % r["issues"])
+	assert_true((r["issues"] as Array).has("missing_appearance"), "fehlende Scheinrolle bleibt ein Befund: %s" % str(r["issues"]))
 	var before := JSON.stringify(s.call("view"))
 	_rejected(s, s.call("confirm_roles"), "roles_invalid", "Bestätigen ohne Scheinrolle", before)
-	assert_eq(calls[0], 0, "keine Seed-Quelle für die Scheinrolle")
-	_ok(s.call("set_decoy_appearance", _copy_id(s, 0), &"waldhexe"), "Scheinrolle außerhalb des Pools wählen")
-	assert_true(bool(_roles(s)["valid"]), "jetzt gültig")
-	_ok(s.call("confirm_roles"), "bestätigt")
 
 
 func test_appearance_choices_are_validated_atomically() -> void:
@@ -153,7 +179,8 @@ func test_single_copy_add_configure_remove_and_readd() -> void:
 		return
 	var a := _copy_id(s, 0)
 	assert_true(a > 0, "stabile Kopie mit ID")
-	assert_eq(_config(s), {a: ""}, "neue Kopie unkonfiguriert")
+	assert_eq(_config(s).keys(), [a], "eine Kopie")
+	assert_true(bool(_decoys(s)[0]["auto"]), "neue Kopie vorbelegt")
 	var full := JSON.stringify(s.call("view"))
 	_rejected(s, s.call("change_role_count", DECOY, 1), "above_maximum", "zweite Kopie beim Start", full)
 	_rejected(s, s.call("set_role_count", DECOY, 2), "above_maximum", "zweite Kopie per Anzahl", full)
@@ -170,9 +197,10 @@ func test_single_copy_add_configure_remove_and_readd() -> void:
 	_ok(s.call("change_role_count", DECOY, 1), "nach dem Entfernen wieder auswählbar")
 	var again := _copy_id(s, 0)
 	assert_true(again > a, "neue Kopie erhält eine neue ID (IDs sinken nie)")
-	assert_eq(_config(s), {again: ""}, "neue Kopie unkonfiguriert")
+	assert_eq(_config(s).keys(), [again], "eine neue Kopie")
+	assert_true(bool(_decoys(s)[0]["auto"]), "neue Kopie vorbelegt")
 	assert_eq(int(_decoys(s)[0]["number"]), 1, "sichtbare Nummer 1")
-	_ok(s.call("change_role_count", DECOY, -1), "unkonfigurierte Kopie ohne Rückfrage entfernen")
+	_ok(s.call("change_role_count", DECOY, -1), "vorbelegte Kopie ohne Rückfrage entfernen")
 	assert_true(_decoys(s).is_empty(), "wieder ohne Kopie")
 
 
@@ -182,7 +210,7 @@ func test_suggestion_and_reset_handle_copies() -> void:
 		return
 	_ok(s.call("apply_suggestion"), "Vorschlag für 18")
 	assert_eq(_decoys(s).size(), int(_roles(s)["counts"]["trugbilderwolf"]), "Kopien passend zum Vorschlag")
-	assert_eq(_roles(s)["issues"], ["missing_appearance"], "Vorschlag wählt keine Scheinrolle")
+	assert_eq(_roles(s)["issues"], [], "Vorschlag: Scheinrolle vorbelegt")
 	var copy := _copy_id(s, 0)
 	s.call("set_decoy_appearance", copy, &"lehrling")
 	_ok(s.call("apply_suggestion"), "gleicher Vorschlag")
@@ -223,7 +251,7 @@ func test_random_distribution_moves_copies_as_units() -> void:
 	other.call("distribute_randomly")
 	_check_follow(other, "anderer Seed")
 	assert_eq(_config(other), config, "Seed erzeugt keine Scheinrolle")
-	assert_eq(calls[0], 1, "Seed-Quelle nur für die Verteilung")
+	assert_eq(calls[0], 2, "Seed-Quelle: einmal für die Vorbelegung der Scheinrolle, einmal für die Verteilung")
 
 
 func test_manual_distribution_uses_specific_copies() -> void:
@@ -281,7 +309,7 @@ func test_rename_and_language_keep_configuration() -> void:
 
 
 func test_no_seed_derived_appearance_code() -> void:
-	# Die Setup-Schicht leitet keine Scheinrolle aus Zufall oder Seed ab.
+	# Die Vorbelegung wird gezogen und in der Kopie gespeichert; keine Scheinrolle wird aus einem Seed neu abgeleitet.
 	var forbidden := RegEx.create_from_string("appearance_for|appearances_for|APPEARANCE_SALT")
 	for path: String in files_in("res://app/setup", ".gd"):
 		for line: String in FileAccess.get_file_as_string(path).split("\n"):
