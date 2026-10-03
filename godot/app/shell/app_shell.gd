@@ -144,6 +144,9 @@ func go_back() -> void:
 ## Beenden: Desktop mit Rückfrage, Mobilgerät sofort (Systemverhalten beim Zurück in der Wurzel). Ist der letzte
 ## Stand der laufenden Partie nicht gespeichert, warnt die Rückfrage auf beiden Plattformen.
 func request_quit() -> void:
+	var screen := _router.current_screen()
+	if screen != null and screen.has_method("dialog_open") and bool(screen.call("dialog_open")):
+		return  # eine Ansicht mit eigenem Dialog (Vorbereitung): weitere Anfragen werden verworfen, wie beim Dialog der Shell
 	if _unsaved():
 		_open_unsaved_quit()
 		return

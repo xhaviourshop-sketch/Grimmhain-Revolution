@@ -1260,7 +1260,7 @@ msgid "ui.setup.seating.status.start_failed.game_already_started"
 msgstr "Start abgelehnt: Es läuft bereits eine Partie. Nichts wurde geändert."
 
 msgid "ui.setup.seating.status.start_failed.setup_incomplete"
-msgstr "Start abgelehnt: Das Setup ist nicht vollständig bestätigt. Nichts wurde geändert."
+msgstr "Start abgelehnt: Die Vorbereitung ist noch nicht vollständig. Es wurde nichts geändert."
 
 msgid "ui.setup.seating.status.start_failed.other"
 msgstr "Start abgelehnt (Code {code}). Nichts wurde geändert."
@@ -8224,3 +8224,277 @@ msgstr "Alle hinzufügen"
 
 msgid "ui.setup.review.remove"
 msgstr "Entfernen"
+
+# Vorbereitung „Neue Partie“ in drei Schritten (DA-89)
+msgid "ui.prep.title"
+msgstr "Neue Partie"
+
+msgid "ui.prep.step.label"
+msgstr "Schritt {number}: {name}"
+
+msgid "ui.prep.step.round"
+msgstr "Runde"
+
+msgid "ui.prep.step.names"
+msgstr "Namen"
+
+msgid "ui.prep.step.roles"
+msgstr "Rollen"
+
+msgid "ui.prep.next"
+msgstr "Weiter"
+
+msgid "ui.prep.next.names"
+msgstr "Weiter"
+
+msgid "ui.prep.next.roles"
+msgstr "Weiter"
+
+msgid "ui.prep.next.assign"
+msgstr "Weiter"
+
+msgid "ui.prep.start"
+msgstr "Spiel starten"
+
+msgid "ui.prep.round.heading"
+msgstr "Wie viele spielen mit?"
+
+msgid "ui.prep.round.range"
+msgstr "{min} bis {max} Personen"
+
+msgid "ui.prep.round.minus"
+msgstr "Eine Person weniger"
+
+msgid "ui.prep.round.plus"
+msgstr "Eine Person mehr"
+
+msgid "ui.prep.round.act_too_small"
+msgstr "{act} trägt höchstens {count} Personen. Wähle einen anderen Akt oder weniger Personen."
+
+msgid "ui.prep.act.heading"
+msgstr "Welchen Akt spielt ihr?"
+
+msgid "ui.prep.act.capacity"
+msgstr "Bis zu {count} Personen"
+
+msgid "ui.prep.act.too_small"
+msgstr "Reicht nur bis {count} Personen"
+
+msgid "ui.prep.mode.random"
+msgstr "App verteilt zufällig"
+
+msgid "ui.prep.mode.manual"
+msgstr "Echte Karten – ich weise zu"
+
+msgid "ui.prep.team.village"
+msgstr "Dorf"
+
+msgid "ui.prep.team.wolves"
+msgstr "Wölfe"
+
+msgid "ui.prep.team.solo"
+msgstr "Einzelgänger"
+
+msgid "ui.act.akt1.name"
+msgstr "Akt I"
+
+msgid "ui.act.akt1.title"
+msgstr "Howl of the Hollow"
+
+msgid "ui.act.akt1.subtitle"
+msgstr "Klassisches Werwolf · Einsteiger"
+
+msgid "ui.act.akt2.name"
+msgstr "Akt II"
+
+msgid "ui.act.akt2.title"
+msgstr "Veins of the Old Forest"
+
+msgid "ui.act.akt2.subtitle"
+msgstr "Blut, Flüche, Verwandlung · Fortgeschritten"
+
+msgid "ui.act.akt3.name"
+msgstr "Akt III"
+
+msgid "ui.act.akt3.title"
+msgstr "The Looking-Glass Choir"
+
+msgid "ui.act.akt3.subtitle"
+msgstr "Spiegel, Trugbilder, Wahnsinn · Komplex"
+
+msgid "ui.act.akt4.name"
+msgstr "Akt IV"
+
+msgid "ui.act.akt4.title"
+msgstr "Ash Crown of Grimmhain"
+
+msgid "ui.act.akt4.subtitle"
+msgstr "Götter, Höllenhunde, Mythos · Experte"
+
+msgid "ui.prep.names.count"
+msgstr "{count} von {total}"
+
+msgid "ui.prep.names.fit"
+msgstr "Spielerzahl auf {count} anpassen"
+
+msgid "ui.prep.names.shuffle"
+msgstr "Mischen"
+
+msgid "ui.prep.names.seat_hint"
+msgstr "Die Reihenfolge ist die Sitzordnung im Uhrzeigersinn. Schild antippen, dann verschieben."
+
+msgid "ui.prep.names.earlier"
+msgstr "Früher"
+
+msgid "ui.prep.names.later"
+msgstr "Später"
+
+msgid "ui.prep.names.edit"
+msgstr "Ändern"
+
+msgid "ui.prep.names.remove"
+msgstr "Entfernen"
+
+msgid "ui.prep.names.placeholder"
+msgstr "Namen eingeben"
+
+msgid "ui.prep.names.hint"
+msgstr "Tippen oder per Tastatur-Mikrofon diktieren. Mehrere Namen trennst du mit Komma oder „und“."
+
+msgid "ui.prep.names.plate"
+msgstr "{number}. {name}"
+
+msgid "ui.prep.names.plate_free"
+msgstr "Platz {number}, noch frei"
+
+msgid "ui.prep.names.free"
+msgstr "frei"
+
+msgid "ui.prep.names.missing"
+msgstr "Es fehlen noch {count} Namen."
+
+msgid "ui.prep.names.act_too_small"
+msgstr "Der gewählte Akt trägt diese Spielerzahl nicht. Geh zurück zur Runde und wähle einen anderen."
+
+msgid "ui.prep.roles.act"
+msgstr "{act}: {title}"
+
+msgid "ui.prep.roles.proposal"
+msgstr "Neuer Vorschlag"
+
+msgid "ui.prep.roles.team.village"
+msgstr "Dorf: {count}"
+
+msgid "ui.prep.roles.team.wolves"
+msgstr "Wölfe: {count}"
+
+msgid "ui.prep.roles.team.solo"
+msgstr "Einzelgänger: {count}"
+
+msgid "ui.prep.roles.add"
+msgstr "Rolle hinzufügen"
+
+msgid "ui.prep.roles.add.title"
+msgstr "Welche Rolle kommt dazu?"
+
+msgid "ui.prep.roles.swap.title"
+msgstr "{role} tauschen gegen …"
+
+msgid "ui.prep.roles.menu.title"
+msgstr "{role}"
+
+msgid "ui.prep.roles.menu.swap"
+msgstr "Tauschen"
+
+msgid "ui.prep.roles.menu.remove"
+msgstr "Entfernen"
+
+msgid "ui.prep.roles.menu.info"
+msgstr "Info"
+
+msgid "ui.prep.roles.picker.in_act"
+msgstr "Aus diesem Akt"
+
+msgid "ui.prep.roles.picker.others"
+msgstr "Aus anderen Akten"
+
+msgid "ui.prep.roles.picker.none"
+msgstr "Es gibt keine weitere Rolle dieses Teams."
+
+msgid "ui.prep.roles.special.heading"
+msgstr "Besonderes"
+
+msgid "ui.prep.roles.decoy.row"
+msgstr "Trugbilderwolf {number} gibt sich bei einer Prüfung als {role} aus."
+
+msgid "ui.prep.roles.decoy.row_open"
+msgstr "Trugbilderwolf {number}: Es ist noch offen, als welche Rolle er sich ausgibt."
+
+msgid "ui.prep.roles.decoy.change"
+msgstr "ändern"
+
+msgid "ui.prep.roles.cards"
+msgstr "Totenreichkarten verwenden"
+
+msgid "ui.prep.roles.cards.hint"
+msgstr "Der Kartenschlucker spielt nur mit Totenreichkarten."
+
+msgid "ui.prep.roles.warning.missing_solo"
+msgstr "Hinweis: Keine Rolle gewinnt allein (Einzelgänger). Starten ist trotzdem möglich."
+
+msgid "ui.prep.roles.act_too_small"
+msgstr "{act} trägt höchstens {count} Personen. Geh zurück und wähle einen anderen Akt."
+
+msgid "ui.prep.decoy.title"
+msgstr "Als welche Rolle gibt er sich aus?"
+
+msgid "ui.prep.decoy.message"
+msgstr "Trugbilderwolf {number}: Bei einer Prüfung, zum Beispiel durch das Orakel, erscheint er als diese Rolle."
+
+msgid "ui.prep.decoy.current"
+msgstr "{name} (jetzt)"
+
+msgid "ui.prep.tab.roles"
+msgstr "Rollen"
+
+msgid "ui.prep.tab.assign"
+msgstr "Zuordnung: {assigned} von {total}"
+
+msgid "ui.prep.assign.progress"
+msgstr "{assigned} von {total} zugeordnet"
+
+msgid "ui.prep.assign.hint"
+msgstr "Tippe einen Platz an, dann unten die Rolle."
+
+msgid "ui.prep.assign.bar"
+msgstr "Platz {number}: {name}"
+
+msgid "ui.prep.assign.clear"
+msgstr "Zuordnung löschen"
+
+msgid "ui.prep.blocker.names"
+msgstr "Die Namen sind noch nicht vollständig."
+
+msgid "ui.prep.blocker.too_few_roles"
+msgstr "Es fehlen noch {count} Rollen. Füge Rollen hinzu."
+
+msgid "ui.prep.blocker.too_many_roles"
+msgstr "Es sind {count} Rollen zu viel. Entferne Rollen."
+
+msgid "ui.prep.leave.title"
+msgstr "Vorbereitung verlassen?"
+
+msgid "ui.prep.leave.message"
+msgstr "Deine Eingaben bleiben erhalten, wenn du sie behältst. Du kannst sie auch verwerfen."
+
+msgid "ui.prep.leave.discard"
+msgstr "Eingaben verwerfen"
+
+msgid "ui.prep.leave.continue"
+msgstr "Weiter vorbereiten"
+
+msgid "ui.prep.leave.keep"
+msgstr "Eingaben behalten"
+
+msgid "ui.prep.number"
+msgstr "{value}"

@@ -1,17 +1,13 @@
 class_name RoleSetup
 extends RefCounted
-## Operationen des Rollen- und Verteilungsschritts auf einem SetupDraft, einschließlich der
-## zentralen Invalidierungsregeln. Jede Operation liefert &"" bei Erfolg oder einen
-## Fehlercode; bei Ablehnung bleibt der Entwurf unverändert. PlayerSetup ruft sie auf,
-## meldet Änderungen und baut daraus SetupResult und Sicht.
+## Operationen des Rollen- und Verteilungsteils auf einem SetupDraft, einschließlich der Verwerfungsregeln. Jede Operation
+## liefert &"" bei Erfolg oder einen Fehlercode; bei Ablehnung bleibt der Entwurf unverändert. PlayerSetup ruft sie auf, meldet
+## Änderungen und baut daraus SetupResult und Sicht.
 ##
-## Invalidierung:
-##   Person hinzufügen/entfernen → Verteilung verwerfen; bestätigter Pool, dessen Summe nicht
-##     mehr passt, verliert die Bestätigung (Grund person_count_changed)
-##   Name ändern → Pool, Scheinrollen und Verteilung bleiben (Zuordnung an der Personen-ID)
-##   Rollenanzahl, Kopie oder Scheinrolle ändern → Bestätigung aufheben (roles_changed),
-##     Verteilung verwerfen
-##   Pool erneut bestätigen → Verteilung bleibt nur bei identischen Verteilungseinheiten
+## Verwerfen der Zuordnung (es gibt keine Bestätigungen mehr):
+##   Person hinzufügen/entfernen → Verteilung verwerfen
+##   Name ändern oder Reihenfolge ändern → Pool, Scheinrollen und Verteilung bleiben (Zuordnung an der Personen-ID)
+##   Rollenanzahl, Kopie oder Scheinrolle ändern → Verteilung verwerfen
 ##   Neu mischen → nur die Personenzuordnung ändert sich; Scheinrollen hängen an ihrer Kopie
 ##
 ## Scheinrollen (DR-08): Der Spielleiter kann sie für jede Kopie ausdrücklich wählen. Fehlt die Wahl, belegt das Setup
@@ -21,10 +17,7 @@ extends RefCounted
 # --- Personen -----------------------------------------------------------------------------------------
 
 static func persons_changed(d: SetupDraft) -> void:
-	d.distribution.clear(DistributionDraft.INVALIDATED_PERSONS)
-	if d.roles.confirmed and d.roles.total() != d.persons.size():
-		d.roles.confirmed = false
-		d.roles.invalidated = RolePoolDraft.INVALIDATED_PERSONS
+	d.distribution.clear()
 
 
 # --- Rollenwahl ---------------------------------------------------------------------------------------
@@ -70,6 +63,43 @@ static func remove_copy(d: SetupDraft, copy_id: int) -> StringName:
 	d.roles.counts[copy.role_id] = d.roles.copies_of(copy.role_id).size()
 	_roles_changed(d)
 	return &""
+
+
+## Nimmt eine Kopie der Rolle aus der Auswahl (Antippen einer Rolle: entfernen). Bei Rollen mit Pflicht-Scheinrolle fällt die letzte
+## Kopie samt ihrer Scheinrolle weg, ohne Rückfrage: Die Wahl „entfernen“ war ausdrücklich.
+static func remove_one(d: SetupDraft, role: StringName) -> StringName:
+	if not SetupRoleCatalog.has_role(role):
+		return &"unknown_role"
+	var current: int = d.roles.counts.get(role, 0)
+	if current <= 0:
+		return &"role_not_in_pool"
+	if SetupRoleCatalog.requires_appearance(role):
+		return remove_copy(d, d.roles.copies_of(role)[-1].copy_id)
+	return set_role_count(d, role, current - 1)
+
+
+## Fügt eine Kopie der Rolle hinzu (Höchstzahl der Startbesetzung, Kartenschlucker nur mit Totenreichkarten).
+static func add_one(d: SetupDraft, role: StringName) -> StringName:
+	if not SetupRoleCatalog.has_role(role):
+		return &"unknown_role"
+	return set_role_count(d, role, d.roles.counts.get(role, 0) + 1)
+
+
+## Ersetzt eine Kopie von `old` durch eine Kopie von `new` (Antippen einer Rolle: tauschen). Atomar: ist `new` nicht wählbar, bleibt alles.
+static func replace_one(d: SetupDraft, old: StringName, new: StringName) -> StringName:
+	if old == new:
+		return &""
+	if not SetupRoleCatalog.has_role(new) or not SetupRoleCatalog.has_role(old):
+		return &"unknown_role"
+	if d.roles.counts.get(old, 0) <= 0:
+		return &"role_not_in_pool"
+	var current: int = d.roles.counts.get(new, 0)
+	if current + 1 > SetupRoleCatalog.copy_limit(new, d.persons.size()):
+		return &"above_maximum"
+	if RoleCatalog.requires_cards(new) and not d.roles.death_cards:
+		return &"cards_required"
+	var error := remove_one(d, old)
+	return error if error != &"" else add_one(d, new)
 
 
 ## Ausdrückliche Scheinrolle einer Kopie: bekannte Rolle, die nicht als Wolf zählt (auch
@@ -138,18 +168,20 @@ static func reset_roles(d: SetupDraft) -> StringName:
 	return &""
 
 
-## Vorschlag übernehmen; eine abweichende bestehende Auswahl nur mit `force`. Vorhandene
-## Kopien bleiben mit ihrer Scheinrolle erhalten, soweit der Vorschlag sie vorsieht; neue
-## Kopien sind unkonfiguriert.
+## Vorschlag des gewählten Aktes für die Personenzahl übernehmen; eine abweichende bestehende Auswahl nur mit `force`. Vorhandene
+## Kopien bleiben mit ihrer Scheinrolle erhalten, soweit der Vorschlag sie vorsieht; neue Kopien sind unkonfiguriert. Trägt der Akt
+## die Personenzahl nicht, bleibt alles unverändert (`act_too_small`).
 static func apply_suggestion(d: SetupDraft, force: bool) -> StringName:
 	var count := d.persons.size()
 	if count < PersonNameRules.MIN_PERSONS or count > PersonNameRules.MAX_PERSONS:
 		return &"too_few_persons" if count < PersonNameRules.MIN_PERSONS else &"too_many_persons"
+	var suggestion := RoleSuggestion.for_act(d.act, count, d.roles.death_cards)
+	if suggestion.is_empty():
+		return &"act_too_small"
 	if is_suggestion(d):
 		return &""
 	if d.roles.total() > 0 and not force:
 		return &"confirmation_required"
-	var suggestion := RoleSuggestion.for_count(count)
 	for id: StringName in d.roles.counts:
 		var wanted := int(suggestion.get(String(id), 0))
 		if SetupRoleCatalog.requires_appearance(id):
@@ -160,31 +192,17 @@ static func apply_suggestion(d: SetupDraft, force: bool) -> StringName:
 
 
 static func is_suggestion(d: SetupDraft) -> bool:
-	var suggestion := RoleSuggestion.for_count(d.persons.size())
+	var suggestion := RoleSuggestion.for_act(d.act, d.persons.size(), d.roles.death_cards)
+	if suggestion.is_empty():
+		return false
 	for id: StringName in d.roles.counts:
 		if d.roles.counts[id] != int(suggestion.get(String(id), 0)):
 			return false
 	return true
 
 
-static func confirm_roles(d: SetupDraft) -> StringName:
-	if not d.confirmed:
-		return &"players_not_confirmed"
-	if not d.roles.issues(d.persons.size()).is_empty():
-		return &"roles_invalid"
-	d.roles.confirmed = true
-	d.roles.invalidated = &""
-	if d.distribution.has_assignment() and d.distribution.pool != d.roles.keys():
-		d.distribution.clear(DistributionDraft.INVALIDATED_ROLES)
-	d.current_step = SetupDraft.STEP_DISTRIBUTION
-	return &""
-
-
 static func _roles_changed(d: SetupDraft) -> void:
-	if d.roles.confirmed:
-		d.roles.confirmed = false
-		d.roles.invalidated = RolePoolDraft.INVALIDATED_ROLES
-	d.distribution.clear(DistributionDraft.INVALIDATED_ROLES)
+	d.distribution.clear()
 
 
 ## Bis zu `wanted` Kopien der Rolle ohne eigene Wahl (unkonfiguriert oder nur vorbelegt), von hinten gezählt.
@@ -220,15 +238,13 @@ static func _resize_copies(d: SetupDraft, role: StringName, count: int) -> void:
 
 # --- Verteilung ---------------------------------------------------------------------------------------
 
-static func set_mode(d: SetupDraft, mode: StringName, force: bool) -> StringName:
+## Moduswechsel verwirft eine bestehende Zuordnung (die Wahl ist ausdrücklich, keine Rückfrage).
+static func set_mode(d: SetupDraft, mode: StringName) -> StringName:
 	if mode != DistributionDraft.RANDOM and mode != DistributionDraft.MANUAL:
 		return &"unknown_mode"
 	if mode == d.distribution.mode:
 		return &""
-	if d.distribution.has_assignment() and not force:
-		return &"confirmation_required"
 	d.distribution.clear()
-	d.distribution.invalidated = &""
 	d.distribution.mode = mode
 	return &""
 
@@ -315,22 +331,12 @@ static func swap_roles(d: SetupDraft, first_id: int, second_id: int) -> StringNa
 	return &""
 
 
-static func confirm_distribution(d: SetupDraft) -> StringName:
-	var error := _distribution_ready(d, d.distribution.mode)
-	if error != &"":
-		return error
-	if not d.distribution.is_complete(d.person_ids(), d.roles.keys()):
-		return &"distribution_incomplete"
-	d.distribution.confirmed = true
-	d.distribution.invalidated = &""
-	return &""
-
-
+## Verteilen setzt eine gültige Personenzahl und einen startbaren Pool voraus (keine Blocker, `RolePoolDraft.issues`).
 static func _distribution_ready(d: SetupDraft, mode: StringName) -> StringName:
-	if not d.confirmed:
-		return &"players_not_confirmed"
-	if not d.roles.confirmed:
-		return &"roles_not_confirmed"
+	if not d.validation()["valid"]:
+		return &"too_few_persons"
+	if not d.roles.issues(d.persons.size()).is_empty():
+		return &"roles_invalid"
 	if d.distribution.mode != mode:
 		return &"wrong_mode"
 	return &""
@@ -352,13 +358,8 @@ static func _random_fill(d: SetupDraft) -> void:
 	var dist := d.distribution
 	dist.pool = d.roles.keys()
 	dist.assignment = RoleDistribution.random_assignment(d.person_ids(), dist.pool, dist.effective_seed())
-	dist.confirmed = false
-	dist.invalidated = &""
 
 
-## Nach jeder manuellen Änderung: Pool merken und Bestätigung aufheben.
+## Nach jeder manuellen Änderung: Pool merken.
 static func _manual_changed(d: SetupDraft) -> void:
-	var dist := d.distribution
-	dist.pool = d.roles.keys()
-	dist.confirmed = false
-	dist.invalidated = &""
+	d.distribution.pool = d.roles.keys()

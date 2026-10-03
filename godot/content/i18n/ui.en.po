@@ -1260,7 +1260,7 @@ msgid "ui.setup.seating.status.start_failed.game_already_started"
 msgstr "Start rejected: a game is already running. Nothing was changed."
 
 msgid "ui.setup.seating.status.start_failed.setup_incomplete"
-msgstr "Start rejected: the setup is not fully confirmed. Nothing was changed."
+msgstr "Start rejected: the preparation is not complete yet. Nothing was changed."
 
 msgid "ui.setup.seating.status.start_failed.other"
 msgstr "Start rejected (code {code}). Nothing was changed."
@@ -8224,3 +8224,277 @@ msgstr "Add all"
 
 msgid "ui.setup.review.remove"
 msgstr "Remove"
+
+# Vorbereitung „Neue Partie“ in drei Schritten (DA-89)
+msgid "ui.prep.title"
+msgstr "New game"
+
+msgid "ui.prep.step.label"
+msgstr "Step {number}: {name}"
+
+msgid "ui.prep.step.round"
+msgstr "Round"
+
+msgid "ui.prep.step.names"
+msgstr "Names"
+
+msgid "ui.prep.step.roles"
+msgstr "Roles"
+
+msgid "ui.prep.next"
+msgstr "Next"
+
+msgid "ui.prep.next.names"
+msgstr "Next"
+
+msgid "ui.prep.next.roles"
+msgstr "Next"
+
+msgid "ui.prep.next.assign"
+msgstr "Next"
+
+msgid "ui.prep.start"
+msgstr "Start game"
+
+msgid "ui.prep.round.heading"
+msgstr "How many are playing?"
+
+msgid "ui.prep.round.range"
+msgstr "{min} to {max} people"
+
+msgid "ui.prep.round.minus"
+msgstr "One person fewer"
+
+msgid "ui.prep.round.plus"
+msgstr "One person more"
+
+msgid "ui.prep.round.act_too_small"
+msgstr "{act} holds {count} people at most. Pick another act or fewer people."
+
+msgid "ui.prep.act.heading"
+msgstr "Which act are you playing?"
+
+msgid "ui.prep.act.capacity"
+msgstr "Up to {count} people"
+
+msgid "ui.prep.act.too_small"
+msgstr "Only holds up to {count} people"
+
+msgid "ui.prep.mode.random"
+msgstr "App deals at random"
+
+msgid "ui.prep.mode.manual"
+msgstr "Real cards – I assign them"
+
+msgid "ui.prep.team.village"
+msgstr "Village"
+
+msgid "ui.prep.team.wolves"
+msgstr "Wolves"
+
+msgid "ui.prep.team.solo"
+msgstr "Loners"
+
+msgid "ui.act.akt1.name"
+msgstr "Act I"
+
+msgid "ui.act.akt1.title"
+msgstr "Howl of the Hollow"
+
+msgid "ui.act.akt1.subtitle"
+msgstr "Classic Werewolf · Beginner"
+
+msgid "ui.act.akt2.name"
+msgstr "Act II"
+
+msgid "ui.act.akt2.title"
+msgstr "Veins of the Old Forest"
+
+msgid "ui.act.akt2.subtitle"
+msgstr "Blood, curses, transformation · Advanced"
+
+msgid "ui.act.akt3.name"
+msgstr "Act III"
+
+msgid "ui.act.akt3.title"
+msgstr "The Looking-Glass Choir"
+
+msgid "ui.act.akt3.subtitle"
+msgstr "Mirrors, illusions, madness · Complex"
+
+msgid "ui.act.akt4.name"
+msgstr "Act IV"
+
+msgid "ui.act.akt4.title"
+msgstr "Ash Crown of Grimmhain"
+
+msgid "ui.act.akt4.subtitle"
+msgstr "Gods, hellhounds, myth · Expert"
+
+msgid "ui.prep.names.count"
+msgstr "{count} of {total}"
+
+msgid "ui.prep.names.fit"
+msgstr "Set player count to {count}"
+
+msgid "ui.prep.names.shuffle"
+msgstr "Shuffle"
+
+msgid "ui.prep.names.seat_hint"
+msgstr "The order is the seating, clockwise. Tap a plate, then move it."
+
+msgid "ui.prep.names.earlier"
+msgstr "Earlier"
+
+msgid "ui.prep.names.later"
+msgstr "Later"
+
+msgid "ui.prep.names.edit"
+msgstr "Edit"
+
+msgid "ui.prep.names.remove"
+msgstr "Remove"
+
+msgid "ui.prep.names.placeholder"
+msgstr "Enter names"
+
+msgid "ui.prep.names.hint"
+msgstr "Type or dictate with the keyboard microphone. Separate several names with a comma or “and”."
+
+msgid "ui.prep.names.plate"
+msgstr "{number}. {name}"
+
+msgid "ui.prep.names.plate_free"
+msgstr "Seat {number}, still free"
+
+msgid "ui.prep.names.free"
+msgstr "free"
+
+msgid "ui.prep.names.missing"
+msgstr "{count} names still missing."
+
+msgid "ui.prep.names.act_too_small"
+msgstr "The chosen act cannot hold this many people. Go back to the round and pick another."
+
+msgid "ui.prep.roles.act"
+msgstr "{act}: {title}"
+
+msgid "ui.prep.roles.proposal"
+msgstr "New proposal"
+
+msgid "ui.prep.roles.team.village"
+msgstr "Village: {count}"
+
+msgid "ui.prep.roles.team.wolves"
+msgstr "Wolves: {count}"
+
+msgid "ui.prep.roles.team.solo"
+msgstr "Loners: {count}"
+
+msgid "ui.prep.roles.add"
+msgstr "Add role"
+
+msgid "ui.prep.roles.add.title"
+msgstr "Which role should be added?"
+
+msgid "ui.prep.roles.swap.title"
+msgstr "Swap {role} for …"
+
+msgid "ui.prep.roles.menu.title"
+msgstr "{role}"
+
+msgid "ui.prep.roles.menu.swap"
+msgstr "Swap"
+
+msgid "ui.prep.roles.menu.remove"
+msgstr "Remove"
+
+msgid "ui.prep.roles.menu.info"
+msgstr "Info"
+
+msgid "ui.prep.roles.picker.in_act"
+msgstr "From this act"
+
+msgid "ui.prep.roles.picker.others"
+msgstr "From other acts"
+
+msgid "ui.prep.roles.picker.none"
+msgstr "There is no other role in this team."
+
+msgid "ui.prep.roles.special.heading"
+msgstr "Special"
+
+msgid "ui.prep.roles.decoy.row"
+msgstr "Decoy Wolf {number} shows up as {role} when checked."
+
+msgid "ui.prep.roles.decoy.row_open"
+msgstr "Decoy Wolf {number}: it is still open which role it shows up as."
+
+msgid "ui.prep.roles.decoy.change"
+msgstr "change"
+
+msgid "ui.prep.roles.cards"
+msgstr "Use realm-of-the-dead cards"
+
+msgid "ui.prep.roles.cards.hint"
+msgstr "The card swallower only plays with underworld cards."
+
+msgid "ui.prep.roles.warning.missing_solo"
+msgstr "Note: no role wins alone (loner). You can still start."
+
+msgid "ui.prep.roles.act_too_small"
+msgstr "{act} holds {count} people at most. Go back and pick another act."
+
+msgid "ui.prep.decoy.title"
+msgstr "Which role does it show up as?"
+
+msgid "ui.prep.decoy.message"
+msgstr "Decoy Wolf {number}: when checked, for example by the Oracle, it shows up as this role."
+
+msgid "ui.prep.decoy.current"
+msgstr "{name} (now)"
+
+msgid "ui.prep.tab.roles"
+msgstr "Roles"
+
+msgid "ui.prep.tab.assign"
+msgstr "Assignment: {assigned} of {total}"
+
+msgid "ui.prep.assign.progress"
+msgstr "{assigned} of {total} assigned"
+
+msgid "ui.prep.assign.hint"
+msgstr "Tap a seat, then pick the role below."
+
+msgid "ui.prep.assign.bar"
+msgstr "Seat {number}: {name}"
+
+msgid "ui.prep.assign.clear"
+msgstr "Clear assignment"
+
+msgid "ui.prep.blocker.names"
+msgstr "The names are not complete yet."
+
+msgid "ui.prep.blocker.too_few_roles"
+msgstr "{count} roles are still missing. Add roles."
+
+msgid "ui.prep.blocker.too_many_roles"
+msgstr "There are {count} roles too many. Remove roles."
+
+msgid "ui.prep.leave.title"
+msgstr "Leave the preparation?"
+
+msgid "ui.prep.leave.message"
+msgstr "Your entries stay if you keep them. You can also discard them."
+
+msgid "ui.prep.leave.discard"
+msgstr "Discard entries"
+
+msgid "ui.prep.leave.continue"
+msgstr "Keep preparing"
+
+msgid "ui.prep.leave.keep"
+msgstr "Keep entries"
+
+msgid "ui.prep.number"
+msgstr "{value}"

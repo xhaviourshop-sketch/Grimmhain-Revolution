@@ -64,6 +64,11 @@ func _draw() -> void:
 			draw_circle(c, r * 0.17, ink)
 			if active:
 				draw_line(c + Vector2(-w, h * 1.6), c + Vector2(w, -h * 1.6), ThemeTokens.BLOOD_RED, 3.0, true)
+		"plus":
+			draw_rect(Rect2(c + Vector2(-r * 0.5, -r * 0.07), Vector2(r, r * 0.14)), ink)
+			draw_rect(Rect2(c + Vector2(-r * 0.07, -r * 0.5), Vector2(r * 0.14, r)), ink)
+		"minus":
+			draw_rect(Rect2(c + Vector2(-r * 0.5, -r * 0.07), Vector2(r, r * 0.14)), ink)
 		"info":
 			draw_circle(c + Vector2(0.0, -r * 0.4), r * 0.11, ink)
 			draw_rect(Rect2(c + Vector2(-r * 0.09, -r * 0.18), Vector2(r * 0.18, r * 0.62)), ink)

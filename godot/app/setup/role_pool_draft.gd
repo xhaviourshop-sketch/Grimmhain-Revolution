@@ -1,21 +1,19 @@
 class_name RolePoolDraft
 extends RefCounted
-## Rollenwahl im Setup-Entwurf: Anzahl je Rollen-ID und Bestätigung. Der Pool selbst wird
+## Rollenwahl im Setup-Entwurf: Anzahl je Rollen-ID. Der Pool selbst wird
 ## aus den Anzahlen berechnet (`pool()`, kanonisch nach Rollen-ID sortiert, reine Daten).
 ## Rollen mit Pflicht-Scheinrolle (Trugbilderwolf) werden zusätzlich als einzelne Kopien
 ## (`copies`, RoleCopy) mit ausdrücklich gewählter Scheinrolle geführt; ihre Anzahl in
 ## `counts` entspricht immer der Zahl ihrer Kopien. `entries()` ist die Verteilungseinheit.
-## Validierung gegen die Personenzahl über `issues()`. Nur RoleSetup verändert den Entwurf.
+## Validierung gegen die Personenzahl über `issues()` (Blocker: der Start wäre technisch unmöglich) und `warnings()` (Hinweise ohne
+## Einfluss auf den Start, DA-89). Nur RoleSetup verändert den Entwurf.
 
-const INVALIDATED_ROLES := &"roles_changed"             ## Rollenanzahl nach Bestätigung geändert
-const INVALIDATED_PERSONS := &"person_count_changed"    ## Personenzahl passt nicht mehr
+const WARNING_MISSING_SOLO := &"missing_solo"                     ## keine Einzelgängerrolle: nur Warnung (DA-89)
 const HINT_COACH_SMALL_ROUND := &"coach_small_round"             ## Besetzungshinweis PE-04, siehe `hints`
 const HINT_SIMULTANEOUS_SOLO_WINS := &"simultaneous_solo_wins"   ## Besetzungshinweis PE-04, siehe `hints`
 const COACH_HINT_BELOW_PERSONS := 13                             ## Schwelle aus PE-04
 
 var counts: Dictionary[StringName, int] = {}
-var confirmed: bool = false
-var invalidated: StringName = &""   ## Grund, warum eine frühere Bestätigung aufgehoben wurde
 var copies: Array[RoleCopy] = []    ## Kopien mit Pflicht-Scheinrolle in Anlagereihenfolge
 var next_copy_id: int = 1           ## nächste Kopien-ID; sinkt nie
 var death_cards: bool = false       ## Partie mit Totenreichkarten (Kartenschlucker wählbar); Standard aus
@@ -131,12 +129,12 @@ func summary() -> Dictionary:
 	return {"factions": factions, "wolf_count": wolves}
 
 
-## Gründe, warum der Pool für `persons` Personen nicht gültig ist (leer = gültig).
+## Blocker: Gründe, warum der Pool für `persons` Personen nicht startbar ist (leer = startbar). Der Regelkern lehnt den Start in diesen
+## Fällen ab (Summe, Höchstzahl, Wolf, Dorf, Scheinrolle, Totenreichkarten) oder die Eingabe ist ungültig (unbekannte Rolle, negative Zahl).
 func issues(persons: int) -> Array[StringName]:
 	var out: Array[StringName] = []
 	var village := 0
 	var wolves := 0
-	var solo := 0
 	for id: StringName in counts:
 		var c := counts[id]
 		if not SetupRoleCatalog.has_role(id):
@@ -150,8 +148,6 @@ func issues(persons: int) -> Array[StringName]:
 			village += c
 		if SetupRoleCatalog.counts_as_wolf(id):
 			wolves += c
-		if SetupRoleCatalog.is_solo(id):
-			solo += c
 	var sum := total()
 	if sum < persons:
 		out.append(&"too_few_roles")
@@ -161,14 +157,25 @@ func issues(persons: int) -> Array[StringName]:
 		out.append(&"missing_village")
 	if wolves < 1:
 		out.append(&"missing_wolf")
-	if solo < 1:
-		out.append(&"missing_solo")
 	for copy: RoleCopy in copies:
 		if not copy.is_configured():
 			out.append(&"missing_appearance")
 			break
 	if not death_cards and counts.get(RoleCatalog.KARTENSCHLUCKER, 0) > 0:
 		out.append(&"role_needs_death_cards")
+	return out
+
+
+## Warnungen ohne Einfluss auf den Start, nur Anzeige: fehlende Einzelgängerrolle (DA-89) und die Besetzungshinweise (PE-04).
+func warnings(persons: int) -> Array[StringName]:
+	var out: Array[StringName] = []
+	var solo := 0
+	for id: StringName in counts:
+		if SetupRoleCatalog.has_role(id) and SetupRoleCatalog.is_solo(id):
+			solo += maxi(0, counts[id])
+	if solo < 1:
+		out.append(WARNING_MISSING_SOLO)
+	out.append_array(hints(persons))
 	return out
 
 
@@ -209,19 +216,20 @@ func view(persons: int) -> Dictionary:
 	var hint_names: Array[String] = []
 	for hint: StringName in hints(persons):
 		hint_names.append(String(hint))
+	var warning_names: Array[String] = []
+	for warning: StringName in warnings(persons):
+		warning_names.append(String(warning))
 	return {
 		"counts": string_counts,
 		"revival_round": is_revival_round(),
 		"hints": hint_names,
+		"warnings": warning_names,
 		"total": sum,
 		"persons": persons,
 		"death_cards": death_cards,
 		"free": persons - sum,
 		"valid": found.is_empty(),
 		"issues": issue_names,
-		"confirmed": confirmed,
-		"can_confirm": found.is_empty(),
-		"invalidated": String(invalidated),
 		"pool": pool_names,
 		"factions": s["factions"],
 		"wolf_count": s["wolf_count"],
