@@ -2,8 +2,8 @@ class_name RoleCatalog
 extends RefCounted
 ## Rollen-Stammdaten: `dorfbewohner`, `werwolf` (A-06), die Vertical-Slice-Rollen `sensentraeger`, `schutzengel`, `waldhexe`, `das-orakel`, `trugbilderwolf`, `wolfskind`, `spiegelwolf`, `manipulator` und `lehrling` sowie aus dem Rollenaudit `siegreicher-wolf`, `doppelspion`, `selbstmoerder`, `dorfchronistin`, `die-gebundenen`, `waldlaeufer`, `doktor`, `wahnsinniger-kutscher`, `nachtwaechter`, `dorfwache`, `besessener-wolf`, `ritter`, `faehrtenleser`, `blutwolf`, `korrupter-richter`, `waechter-am-tor`, `spuerhund`, `parasit`, `schattenhund`, `albtraumwolf`, `giftwolf`, `rudelvater`, `seuchenwolf`, `fenrir`, `cerberus`, `henker` sowie die Informationsrollen `traumdeuter`, `kopfgeldjaeger`, `koenig`, `kriegerin-des-lichts`, `blutpriester`, `amalia`, `detektiv` und `die-ewigen` und die Schutzrollen `der-weise`, `maertyrerin`, `schutzgeist`, `dorfschmied` und `verdammniswaechter` und die Bindungsrollen `loki`, `schwarze-witwe`, `rotkaeppchen` und `schattenwanderer` sowie `daemonischer-wolf`, `koenig-lykaon`, `seelentauscher`, `kutscher` und `dr-victor-frankenstein` sowie `rattenfaenger`, `pestbringerin`, `prophet-des-untergangs` und `todesprediger` sowie `feuerteufel`, `voodoo-priester`, `nekromant`, `hades` und `grabraeuber` sowie `schicksalswolf`, `rachsuechtiger-wolf` und `zeitwaechter`.
 ## IDs nach DR-01: deutsches ASCII-kebab-case. Anzeigenamen sind nicht Teil des Kerns.
-## Startbesetzung (PE-07, Option B): jede Rolle höchstens einmal, auch Dorfbewohner und Werwolf.
-## Einzige Ausnahme sind Die Gebundenen (`max_copies` UNLIMITED, 1 bis Personenzahl). Die Grenze gilt nur
+## Startbesetzung (PE-07, Option B): jede Rolle höchstens einmal, auch der Dorfbewohner.
+## Ausnahmen sind Die Gebundenen und der Werwolf (DA-90; `max_copies` UNLIMITED, 1 bis Personenzahl). Die Grenze gilt nur
 ## für StartGame; später durch Verwandlung, Erbe, Tausch, Diebstahl oder Korrektur entstehende gleiche
 ## Rollen regelt sie nicht (offen). Welche Rollen eine Partie nutzt, entscheidet das Setup.
 
@@ -225,7 +225,7 @@ const PACK_PRIORITY := 20
 
 const ROLES := {
 	DORFBEWOHNER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFBEWOHNER},
-	WERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": WERWOLF},
+	WERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": WERWOLF, "max_copies": UNLIMITED},
 	SCHUTZENGEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZENGEL, "night_priority": 13},
 	WALDHEXE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDHEXE, "night_priority": 34},
 	ORAKEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ORAKEL, "night_priority": 46},

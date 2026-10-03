@@ -44,7 +44,9 @@ func test_acts_match_the_role_catalog() -> void:
 				assert_eq(SetupRoleCatalog.faction_of(role), team, "%s: %s liegt im Team %s" % [act, role, team])
 		assert_eq(ActCatalog.roles(act).size(), seen.size(), "%s: Rollenliste ohne Dopplung" % act)
 		assert_true(ActCatalog.capacity(act, true) >= ActCatalog.capacity(act, false), "%s: Totenreichkarten verkleinern nie die Tragkraft" % act)
-	assert_eq(union.size(), SetupRoleCatalog.role_ids().size(), "die vier Akte decken alle Katalogrollen ab")
+	assert_false(union.has(RoleCatalog.DORFBEWOHNER), "kein Akt bietet den Dorfbewohner an (DA-90)")
+	assert_false(SetupRoleCatalog.is_offered(RoleCatalog.DORFBEWOHNER), "das Setup bietet den Dorfbewohner nirgends an")
+	assert_eq(union.size(), SetupRoleCatalog.role_ids().size() - SetupRoleCatalog.NOT_OFFERED.size(), "die vier Akte decken alle angebotenen Katalogrollen ab")
 
 
 func test_every_act_proposal_is_a_valid_start_for_the_core() -> void:
@@ -55,12 +57,15 @@ func test_every_act_proposal_is_a_valid_start_for_the_core() -> void:
 				assert_true(counts.is_empty(), "%s, %d: Akt zu klein, kein Vorschlag" % [act, count])
 				continue
 			var chosen: Array[StringName] = []
+			var persons := 0
 			for key: String in counts:
 				if int(counts[key]) > 0:
 					chosen.append(StringName(key))
+					persons += int(counts[key])
+					assert_ne(StringName(key), RoleCatalog.DORFBEWOHNER, "%s, %d: kein Dorfbewohner im Vorschlag" % [act, count])
 					assert_true(ActCatalog.contains(act, StringName(key)), "%s, %d: %s gehört zum Akt" % [act, count, key])
 					assert_false(RoleCatalog.requires_cards(StringName(key)), "%s, %d: keine Kartenrolle ohne Totenreichkarten" % [act, count])
-			assert_eq(chosen.size(), count, "%s, %d: eine Rolle je Person" % [act, count])
+			assert_eq(persons, count, "%s, %d: eine Rolle je Person" % [act, count])
 			var wolves := chosen.filter(func(r: StringName) -> bool: return RoleCatalog.counts_as_wolf(r)).size()
 			assert_true(wolves >= 1, "%s, %d: mindestens eine Wolfsrolle" % [act, count])
 			assert_true(chosen.any(func(r: StringName) -> bool: return SetupRoleCatalog.is_village(r)), "%s, %d: mindestens eine Dorfrolle" % [act, count])
@@ -71,15 +76,19 @@ func test_every_act_proposal_is_a_valid_start_for_the_core() -> void:
 			assert_true(result.ok, "%s, %d: Regelkern nimmt den Start an (%s)" % [act, count, result.error])
 
 
-func test_act_that_is_too_small_blocks_instead_of_borrowing_roles() -> void:
-	var small := ActCatalog.ACT_IDS.filter(func(a: StringName) -> bool: return ActCatalog.capacity(a, false) < PersonNameRules.MAX_PERSONS)
-	assert_false(small.is_empty(), "mindestens ein Akt trägt nicht 24 Personen")
-	var act: StringName = small[0]
-	var count := ActCatalog.capacity(act, false) + 1
-	var setup := _setup_with(count, act)
-	assert_true((setup.blockers() as Array[StringName]).has(&"act_too_small"), "Blocker act_too_small")
-	assert_false(setup.go_to_step(SetupDraft.STEP_ROLES).ok, "Rollenschritt gesperrt")
-	assert_false(bool(setup.view()["act_fits"]), "Sicht meldet: passt nicht")
+func test_every_act_carries_24_persons_and_fills_with_werewolves_then_the_bound() -> void:
+	for act: StringName in ActCatalog.ACT_IDS:
+		for cards: bool in [false, true]:
+			assert_eq(ActCatalog.capacity(act, cards), PersonNameRules.MAX_PERSONS, "%s (Karten %s): trägt 24 Personen" % [act, cards])
+	var full := RoleSuggestion.for_act(&"akt1", 24)
+	assert_eq(int(full["werwolf"]), 3, "Akt I, 24: weitere Werwölfe bis zur Wolfsquote (5 Wolfsrollen)")
+	assert_eq(int(full["die-gebundenen"]), 7, "Akt I, 24: Rest füllen Die Gebundenen")
+	var sum := 0
+	for key: String in full:
+		sum += int(full[key])
+	assert_eq(sum, 24, "Akt I, 24: eine Rolle je Person")
+	assert_eq(int(RoleSuggestion.for_act(&"akt1", 12)["werwolf"]), 1, "ohne Platzmangel bleibt es beim einen Werwolf")
+	assert_eq(int(RoleSuggestion.for_act(&"akt2", 24)["werwolf"]), 1, "Akt II hat genug besondere Rollen, kein weiterer Werwolf")
 
 
 func test_names_order_is_the_seating() -> void:

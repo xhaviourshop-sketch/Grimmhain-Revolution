@@ -390,7 +390,7 @@ func _open_picker(old: StringName, team: StringName, swap: bool) -> void:
 	var others: Array[StringName] = []
 	var act := StringName(str(_last_view["act"]))
 	for role: StringName in RolePresentation.sorted_roles():
-		if SetupRoleCatalog.faction_of(role) != team or role == old:
+		if SetupRoleCatalog.faction_of(role) != team or role == old or not SetupRoleCatalog.is_offered(role):
 			continue
 		if int(roles["counts"][String(role)]) + 1 > int(roles["limits"][String(role)]):
 			continue

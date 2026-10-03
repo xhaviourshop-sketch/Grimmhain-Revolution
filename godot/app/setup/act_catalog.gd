@@ -2,35 +2,35 @@ class_name ActCatalog
 extends RefCounted
 ## Die vier Akte als fertige Rollen-Sets der Vorbereitung (DA-89). Inhalt 1:1 aus `js/core/akte.js` (Quelle der Nutzerentscheidung),
 ## nach Team getrennt und in der Reihenfolge der Akt-Karte. Setup-Hilfe, keine Spielregel: Der Regelkern kennt keine Akte, er prüft nur
-## die gestartete Besetzung. Alle Rollen-IDs stehen im Katalog (Test `test_act_catalog`); Teamzuordnung und Katalog-Fraktion stimmen überein.
+## die gestartete Besetzung. Der Dorfbewohner steht in keinem Akt (DA-90). Alle Rollen-IDs stehen im Katalog (Test `test_act_catalog`); Teamzuordnung und Katalog-Fraktion stimmen überein.
 
 const ACT_IDS: Array[StringName] = [&"akt1", &"akt2", &"akt3", &"akt4"]
 
 const ACTS := {
 	&"akt1": {
 		"level": 1,
-		"village": [&"dorfbewohner", &"die-gebundenen", &"der-weise", &"sensentraeger", &"loki", &"ritter", &"schutzengel", &"spuerhund",
+		"village": [&"die-gebundenen", &"der-weise", &"sensentraeger", &"loki", &"ritter", &"schutzengel", &"spuerhund",
 			&"waldhexe", &"wolfskind", &"das-orakel", &"nachtwaechter"],
 		"wolves": [&"werwolf", &"koenig-lykaon", &"rachsuechtiger-wolf"],
 		"solo": [&"selbstmoerder", &"rattenfaenger"],
 	},
 	&"akt2": {
 		"level": 2,
-		"village": [&"dorfbewohner", &"blutpriester", &"waldhexe", &"seelentauscher", &"verdammniswaechter", &"korrupter-richter", &"kutscher",
+		"village": [&"blutpriester", &"waldhexe", &"seelentauscher", &"verdammniswaechter", &"korrupter-richter", &"kutscher",
 			&"dr-victor-frankenstein", &"die-ewigen", &"schutzgeist", &"maertyrerin", &"lehrling", &"loki", &"sensentraeger", &"der-weise"],
 		"wolves": [&"werwolf", &"rachsuechtiger-wolf", &"blutwolf", &"daemonischer-wolf", &"giftwolf", &"rudelvater", &"schattenwanderer"],
 		"solo": [&"pestbringerin", &"voodoo-priester", &"todesprediger", &"nekromant", &"grabraeuber"],
 	},
 	&"akt3": {
 		"level": 3,
-		"village": [&"dorfbewohner", &"detektiv", &"traumdeuter", &"dorfchronistin", &"faehrtenleser", &"zeitwaechter", &"wahnsinniger-kutscher",
+		"village": [&"detektiv", &"traumdeuter", &"dorfchronistin", &"faehrtenleser", &"zeitwaechter", &"wahnsinniger-kutscher",
 			&"rotkaeppchen", &"henker", &"koenig", &"lehrling", &"loki", &"sensentraeger", &"der-weise"],
 		"wolves": [&"werwolf", &"rachsuechtiger-wolf", &"trugbilderwolf", &"spiegelwolf", &"albtraumwolf", &"besessener-wolf", &"schattenhund"],
 		"solo": [&"manipulator", &"parasit", &"doppelspion", &"prophet-des-untergangs", &"kartenschlucker"],
 	},
 	&"akt4": {
 		"level": 4,
-		"village": [&"dorfbewohner", &"amalia", &"doktor", &"dorfschmied", &"dorfwache", &"kopfgeldjaeger", &"kriegerin-des-lichts", &"waldlaeufer",
+		"village": [&"amalia", &"doktor", &"dorfschmied", &"dorfwache", &"kopfgeldjaeger", &"kriegerin-des-lichts", &"waldlaeufer",
 			&"waechter-am-tor", &"koenig", &"verdammniswaechter", &"loki", &"sensentraeger", &"der-weise"],
 		"wolves": [&"werwolf", &"rachsuechtiger-wolf", &"fenrir", &"cerberus", &"schwarze-witwe", &"schicksalswolf", &"seuchenwolf",
 			&"siegreicher-wolf", &"albtraumwolf"],
@@ -81,9 +81,12 @@ static func usable(act: StringName, death_cards: bool) -> Array[StringName]:
 	return out
 
 
-## Größte Personenzahl, die der Akt allein tragen kann (jede Rolle höchstens einmal, PE-07).
+## Größte Personenzahl (6 bis 24), für die der Akt einen Vorschlag trägt (`RoleSuggestion`); 0, wenn keine.
 static func capacity(act: StringName, death_cards: bool) -> int:
-	return usable(act, death_cards).size()
+	for persons: int in range(PersonNameRules.MAX_PERSONS, PersonNameRules.MIN_PERSONS - 1, -1):
+		if not RoleSuggestion.for_act(act, persons, death_cards).is_empty():
+			return persons
+	return 0
 
 
 static func name_key(act: StringName) -> String:

@@ -18,7 +18,7 @@ Modus „Echte Karten“: im Schritt 3 zwei Seiten „Rollen“ und „Zuordnung
 
 ## Akte
 
-`ActCatalog` hält die vier Akte 1:1 aus `js/core/akte.js` (Test `test_prep_model`: alle Rollen im Katalog, Team = Katalog-Fraktion, Vereinigung = alle 72 Rollen). Ein Akt trägt höchstens so viele Personen, wie er Rollen hat (jede Rolle höchstens einmal, PE-07): Akt I bis 17, Akt II bis 27, Akt III bis 25, Akt IV bis 26 (mit Totenreichkarten je eine mehr). Darüber ist die Karte gesperrt und nennt die Grenze.
+`ActCatalog` hält die vier Akte 1:1 aus `js/core/akte.js` (Test `test_prep_model`: alle Rollen im Katalog, Team = Katalog-Fraktion, Vereinigung = alle 72 Rollen). Der Dorfbewohner steht in keinem Akt (DA-90). Jeder Akt trägt 24 Personen (`ActCatalog.capacity` fragt den Vorschlag): Fehlende Plätze füllen weitere Einzelgänger- und Wolfsrollen, weitere Werwölfe bis zur Wolfsquote und, nur in Akt I, weitere Gebundene (Akt I bei 24: 3 Werwölfe, 7 Gebundene). Darüber ist die Karte gesperrt und nennt die Grenze.
 
 `RoleSuggestion.for_act(akt, personen, totenreichkarten)`: Wolfsrollen nach der Staffel 1/2/3/4/5 ab 6/9/13/18/22 Personen (Reihenfolge der Akt-Karte), eine Einzelgängerrolle, Rest Dorf in der Reihenfolge aus PE-07; kleine Akte werden mit weiteren Einzelgänger- und Wolfsrollen des Aktes aufgefüllt. Deterministisch, ohne Zufall.
 

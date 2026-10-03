@@ -18,6 +18,15 @@ static func is_revival_role(role: StringName) -> bool:
 	return RoleCatalog.is_revival_role(role)
 
 
+## Rollen, die das Setup nirgends mehr anbietet (DA-90: jede Person bekommt eine besondere Rolle). Sie bleiben im Katalog, damit
+## alte Spielstände laden.
+const NOT_OFFERED: Array[StringName] = [RoleCatalog.DORFBEWOHNER]
+
+
+static func is_offered(role: StringName) -> bool:
+	return not NOT_OFFERED.has(role)
+
+
 ## Alle produktiven Rollen-IDs, kanonisch nach ID sortiert.
 static func role_ids() -> Array[StringName]:
 	var out: Array[StringName] = []

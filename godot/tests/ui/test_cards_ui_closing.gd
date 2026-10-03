@@ -5,7 +5,7 @@ extends UiTestCase
 ## bestimmter Karte, wie in den anderen Kartentests). Headless: geprüft werden Geometrie und Bedienbarkeit, keine Pixel, keine Touch-Eingabe.
 
 const NAMES := ["Anna", "Ben", "Cara", "Dirk", "Eva", "Finn", "Gina", "Hugo", "Ida", "Jan", "Kim", "Lea", "Max", "Nina", "Otto", "Pia", "Quin", "Rosa", "Sven", "Tina", "Uwe", "Vera", "Willi", "Xenia"]
-const SETUP_SEED := 20260930
+const SETUP_SEED := 20261001
 const PICK_CARD := "wende_01"  ## Wunsch einer Person: eine Personenwahl in beiden Fraktionsvarianten
 
 
