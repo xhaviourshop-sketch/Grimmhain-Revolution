@@ -56,6 +56,50 @@ func test_single_entry_button_and_enter() -> void:
 	assert_true(add != null and add.disabled, "Hinzufügen ohne Text gesperrt")
 
 
+func test_name_field_stays_in_edit_mode_after_enter_and_button() -> void:
+	# Web/Tablet: Nach Enter verließ das Feld den Bearbeitungsmodus, das erneute grab_focus() tat nichts und der
+	# nächste Name ging verloren, bis das Feld neu angetippt wurde.
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var screen := await open_new_game(shell)
+	var input := _input_of(screen)
+	await type_text(input, "Anna")
+	await key(KEY_ENTER)
+	assert_eq(row_ids(screen), [1] as Array[int], "Enter fügt hinzu")
+	assert_true(input.has_focus() and input.is_editing(), "nach Enter bleibt das Feld im Bearbeitungsmodus")
+	await _add_via_button(screen, "Ben")
+	assert_eq(row_ids(screen), [1, 2] as Array[int], "Hinzufügen fügt hinzu")
+	assert_true(input.has_focus() and input.is_editing(), "nach Hinzufügen bleibt das Feld im Bearbeitungsmodus")
+
+
+func test_several_names_in_one_text_are_reviewed_before_adding() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var screen := await open_new_game(shell)
+	var input := _input_of(screen)
+	await type_text(input, "Anna, Ben und Cara")
+	await key(KEY_ENTER)
+	assert_eq(row_ids(screen), [] as Array[int], "noch nichts hinzugefügt")
+	var card := find_node(screen, "NameReviewCard") as Control
+	assert_true(card != null and card.is_visible_in_tree(), "Prüfliste erscheint")
+	var fields := card.find_children("ReviewNameInput", "LineEdit", true, false)
+	assert_eq(fields.size(), 3, "drei erkannte Namen")
+	(fields[1] as LineEdit).text = "Benno"
+	(fields[1] as LineEdit).text_changed.emit("Benno")
+	await press(card.find_children("ReviewRemoveButton", "Button", true, false)[2] as BaseButton)
+	await press(find_button(card, "ReviewAddAllButton"))
+	assert_eq(row_ids(screen), [1, 2] as Array[int], "geänderte Liste ohne den entfernten Namen übernommen")
+	var names: Array[String] = []
+	for row: Control in person_rows(screen):
+		names.append(row_label(row, "NameLabel"))
+	assert_eq(names, ["Anna", "Benno"] as Array[String], "Namen wie in der Prüfliste")
+	assert_false(card.is_visible_in_tree(), "Prüfliste geschlossen")
+	assert_eq(input.text, "", "Eingabefeld geleert")
+	assert_true(input.has_focus() and input.is_editing(), "Feld bereit für den nächsten Namen")
+
+
 func test_double_press_adds_and_imports_once() -> void:
 	# 30
 	var shell := await spawn_shell()

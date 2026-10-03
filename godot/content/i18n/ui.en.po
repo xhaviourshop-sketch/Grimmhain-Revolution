@@ -189,7 +189,7 @@ msgid "ui.setup.entry.heading"
 msgstr "Add players"
 
 msgid "ui.setup.entry.hint"
-msgstr "Type a name and press Enter or “Add”."
+msgstr "Type a name and press Enter or “Add”. Several names: separate them with a comma or “and”."
 
 msgid "ui.setup.input.placeholder"
 msgstr "Enter a name"
@@ -921,7 +921,7 @@ msgid "ui.setup.roles.over_limit"
 msgstr "Allowed only once at the start of the game, please reduce: {roles}"
 
 msgid "ui.setup.roles.status.invalid"
-msgstr "Role selection not valid yet. See \"Still missing\"."
+msgstr "Role selection not valid yet."
 
 msgid "ui.setup.roles.status.ready"
 msgstr "Ready to confirm."
@@ -8212,3 +8212,15 @@ msgstr "%d · %s"
 
 msgid "ui.cockpit.card.target.none"
 msgstr "Choose a target"
+
+msgid "ui.setup.review.heading"
+msgstr "{count} names found"
+
+msgid "ui.setup.review.hint"
+msgstr "Check the names; change or remove any if needed."
+
+msgid "ui.setup.review.add_all"
+msgstr "Add all"
+
+msgid "ui.setup.review.remove"
+msgstr "Remove"

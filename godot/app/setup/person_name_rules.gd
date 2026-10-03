@@ -10,11 +10,13 @@ extends RefCounted
 ##   Länge           höchstens MAX_NAME_LENGTH Unicode-Zeichen nach Normalisierung → sonst `name_too_long`
 ##   Dubletten       erlaubt; Vergleich über den normalisierten Namen ohne Groß-/Kleinschreibung
 ## Mehrfachimport: Trennung an Zeilenumbruch, Komma und Semikolon; leere Einträge entfallen.
+## Diktat (`split_spoken`): zusätzlich Trennung an den ganzen Wörtern „und“ und „and“.
 
 const MIN_PERSONS := 6
 const MAX_PERSONS := 24
 const MAX_NAME_LENGTH := 32
 const IMPORT_SEPARATORS: Array[String] = ["\r\n", "\n", "\r", ",", ";"]
+const SPOKEN_CONJUNCTION := "(?i)\\s+(?:und|and)\\s+"   ## ganzes Wort mit Leerraum davor und danach
 
 ## Leerraum, der am Rand entfernt wird (ASCII-Leerraum, geschützte und typografische Leerzeichen).
 ## Andere Steuerzeichen bleiben stehen und werden als `invalid_characters` abgelehnt.
@@ -60,4 +62,17 @@ static func split_import(text: String) -> Array[String]:
 		var name := normalize(part)
 		if not name.is_empty():
 			out.append(name)
+	return out
+
+
+## Zerlegt einen eingegebenen oder diktierten Text in Namen: wie `split_import`, zusätzlich an „und“ und „and“ als ganzen
+## Wörtern („Sandra“ und „Anna Maria“ bleiben ganz). Ein Ergebnis mit mehr als einem Namen zeigt der Spieler-Schritt zur Prüfung.
+static func split_spoken(text: String) -> Array[String]:
+	var conjunction := RegEx.create_from_string(SPOKEN_CONJUNCTION)
+	var out: Array[String] = []
+	for part: String in split_import(text):
+		for piece: String in conjunction.sub(part, "\n", true).split("\n"):
+			var name := normalize(piece)
+			if not name.is_empty():
+				out.append(name)
 	return out

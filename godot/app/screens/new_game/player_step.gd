@@ -3,7 +3,8 @@ extends VBoxContainer
 ## Wizard-Schritt 1 „Spieler“: Personen erfassen, bearbeiten, entfernen und bestätigen.
 ## Die Wahrheit über Personen, IDs und Bestätigung liegt in PlayerSetup (AppContext); dieser
 ## Schritt stellt nur dar, ruft Operationen auf und zeigt deren Ergebnisse als Meldungen.
-## Linke Spalte, genau ein Modus: Einzeleingabe, Mehrfachimport, Bearbeiten oder gespeicherte Gruppen.
+## Linke Spalte, genau ein Modus: Einzeleingabe, Mehrfachimport, Bearbeiten, gespeicherte Gruppen oder die Prüfliste
+## für mehrere Namen aus einem Text (Komma, Zeilenumbruch, „und“/„and“).
 ## Rechte Spalte: Anzahl, Hinweise, scrollbare Liste; nach Bestätigung „Weiter zu den Rollen“.
 ## Fußzeile: Neu beginnen, Status, Bestätigen. Rückfragen und Meldungen gehen über den Host.
 
@@ -11,7 +12,7 @@ signal dialog_requested(request: DialogRequest)
 signal status_message_requested(text_key: String)
 signal roles_requested  ## „Weiter zu den Rollen“
 
-enum Mode { ENTRY, IMPORT, EDIT, GROUPS }
+enum Mode { ENTRY, IMPORT, EDIT, GROUPS, REVIEW }
 
 const ROW_SCENE := preload("res://app/screens/new_game/person_row.tscn")
 const IMPORT_ERROR_LIST_LIMIT := 3    ## höchstens so viele fehlerhafte Importeinträge einzeln nennen
@@ -23,6 +24,8 @@ var _feedback_key: String = ""
 var _feedback_values: Dictionary = {}
 var _feedback_variation: StringName = &"MutedLabel"
 var _import_result: SetupResult = null
+var _review_result: SetupResult = null
+var _review: NameReviewCard = null
 var _setup: PlayerSetup = null
 var _group_actions: GroupActions = null
 
@@ -76,6 +79,12 @@ func start(setup: PlayerSetup, groups: GroupStore) -> void:
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.follow_focus = true
 	_apply_placeholders()
+	_name_input.keep_editing_on_text_submit = true  # Tastatur bleibt offen, das Feld nimmt den nächsten Namen sofort an
+	_review = NameReviewCard.new()
+	_review.visible = false
+	(%SideColumn as Control).add_child(_review)
+	_review.add_all_requested.connect(_on_review_add_all)
+	_review.cancel_requested.connect(_on_review_cancel)
 	_name_input.text_changed.connect(func(_t: String) -> void: _update_controls(_setup_view()))
 	_name_input.text_submitted.connect(func(_t: String) -> void: _submit_single())
 	_add.pressed.connect(_on_add_pressed)
@@ -99,6 +108,7 @@ func _notification(what: int) -> void:
 		_apply_placeholders()
 		_show_feedback(_feedback_key, _feedback_values, _feedback_variation)
 		_show_import_feedback(_import_result)
+		_fill_error_label(_review.feedback_label(), _review_result)
 
 
 func default_focus() -> Control:
@@ -190,6 +200,7 @@ func _set_mode(mode: Mode) -> void:
 	_import_card.visible = mode == Mode.IMPORT
 	_edit_card.visible = mode == Mode.EDIT
 	_group_card.visible = mode == Mode.GROUPS
+	_review.visible = mode == Mode.REVIEW
 
 
 func _apply_placeholders() -> void:
@@ -211,9 +222,14 @@ func _show_feedback(key: String, values: Dictionary = {}, variation: StringName 
 ## Meldung eines abgelehnten Imports; fehlerhafte Einträge werden einzeln genannt.
 func _show_import_feedback(result: SetupResult) -> void:
 	_import_result = result
+	_fill_error_label(_import_feedback, result)
+
+
+## Schreibt die Fehlermeldung einer abgelehnten Mehrfachaufnahme in `label` (Import- oder Prüfkarte).
+func _fill_error_label(label: GrimmLabel, result: SetupResult) -> void:
 	if result == null or result.ok:
-		_import_feedback.text_key = ""
-		_import_feedback.visible = false
+		label.text_key = ""
+		label.visible = false
 		return
 	var values := result.details.duplicate()
 	var key := "ui.setup.error." + String(result.error)
@@ -234,9 +250,9 @@ func _show_import_feedback(result: SetupResult) -> void:
 			lines.append(tr("ui.setup.error.also_too_many").format(values))
 		values["count"] = result.entries.size()
 		values["entries"] = "\n".join(lines)
-	_import_feedback.format_values = values
-	_import_feedback.text_key = key
-	_import_feedback.visible = true
+	label.format_values = values
+	label.text_key = key
+	label.visible = true
 
 
 func _feedback_for_error(result: SetupResult) -> void:
@@ -267,6 +283,10 @@ func _on_add_pressed() -> void:
 
 
 func _submit_single() -> void:
+	var spoken := PersonNameRules.split_spoken(_name_input.text)
+	if spoken.size() > 1:
+		_open_review(spoken)
+		return
 	var result := _setup.add_person(_name_input.text)
 	if not result.ok:
 		_feedback_for_error(result)
@@ -280,6 +300,38 @@ func _submit_single() -> void:
 	_update_controls(_setup_view())
 	_name_input.grab_focus()
 	_scroll_to_row.call_deferred(result.person_ids[0])
+
+
+# --- Prüfliste für mehrere Namen in einem Text ---------------------------------------------------------
+
+func _open_review(entries: Array[String]) -> void:
+	_show_feedback("")
+	_review_result = null
+	_review.show_names(entries)
+	_set_mode(Mode.REVIEW)
+	_review.default_focus().grab_focus()
+
+
+func _on_review_add_all(entries: Array[String]) -> void:
+	if _mode != Mode.REVIEW or entries.is_empty():
+		return
+	var result := _setup.import_names("\n".join(entries))
+	_review_result = result
+	if not result.ok:
+		_fill_error_label(_review.feedback_label(), result)
+		return
+	_name_input.text = ""
+	_review_result = null
+	_set_mode(Mode.ENTRY)
+	var key := "ui.setup.info.imported_with_duplicates" if result.warnings.has(&"duplicate_name") else "ui.setup.info.imported"
+	_show_feedback(key, {"count": result.person_ids.size()}, &"WarningLabel" if result.warnings.has(&"duplicate_name") else &"MutedLabel")
+	_update_controls(_setup_view())
+	_name_input.grab_focus()
+
+
+func _on_review_cancel() -> void:
+	if _mode == Mode.REVIEW:
+		_leave_mode()  # der eingegebene Text bleibt zum Korrigieren im Feld
 
 
 func _scroll_to_row(person_id: int) -> void:
@@ -394,6 +446,7 @@ func _leave_mode() -> void:
 	_edit_id = -1
 	_show_feedback("")
 	_show_import_feedback(null)
+	_review_result = null
 	_set_mode(Mode.ENTRY)
 	_update_controls(_setup_view())
 	if was_edit:
