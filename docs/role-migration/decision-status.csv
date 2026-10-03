@@ -200,4 +200,7 @@ RM-DR-138.3;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";nur aktuell
 RM-DR-138.4;ja;selbstmoerder;E;"DECISION-LOG Rollenaudit 27.09.2026";erneut nach jeder Zustandsänderung
 RM-DR-138.5;ja;selbstmoerder;E;"rules-register G-TOD-3; DECISION-LOG Spiegelwolf";Tod durch Spiegelung ist keine Hinrichtung des Selbstmörders
 RM-DR-155.4;ja;doppelspion;E;"DECISION-LOG Rollenaudit 27.09.2026";keine Rollennennung
+RM-DR-138.6;ja;selbstmoerder;P;;neu: späterer Sieg nach Hinrichtung mit zu wenigen Toten
+RM-DR-138.7;ja;selbstmoerder;P;;neu: Anspruch nach Wiederbelebung
 RM-DR-155.5;ja;doppelspion;T;rules-register §2: nur Wölfe wählen das Rudelopfer;Hinweis im Rudelschritt, keine Teilnahme an der gespeicherten Wahl
+RM-DR-155.6;ja;doppelspion;P;;neu: darf er bei der Opferwahl mitzeigen (folgt aus RM-DR-155.4)

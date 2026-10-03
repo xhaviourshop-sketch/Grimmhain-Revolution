@@ -1372,3 +1372,16 @@ Regelversion `grimmhain-core-0.20`.
 
 Hinweis Zweig `vorschau-sonntag`: Die Notanker-Todesfolgen (Commit 803b1a1, Zweig `nacht-fixes2`) sind auf diesem Zweig nicht enthalten.
 Zweig `apk-test`: 803b1a1 am 18.10.2026 per cherry-pick übernommen.
+## Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026
+
+Antworten des Product Owners auf `../role-migration/10-next-decisions.md` (Stand 27. September 2026). Spezifikation: `../specs/k1a-siegreicher-wolf-doppelspion/` und `../specs/k1b-selbstmoerder/`. Eine Rolle gilt erst nach Umsetzung und Tests als Produktionsrolle.
+
+- **RM-DR-017 = C.** Nächste Einheit sind `siegreicher-wolf`, `doppelspion` und `selbstmoerder`, spezifiziert in zwei getrennten Einheiten: K1a (Siegreicher Wolf, Doppelspion) und K1b (Selbstmörder).
+- **Siegreicher Wolf (bestätigt).** Er zählt nur in der Wolfsparität (G-SIEG-2) als zwei Wölfe und nur, solange er lebt. Auf „kein Wolf lebt“ (G-SIEG-1) und auf Bedingungen, die Personen zählen (Manipulator: genau drei Lebende), hat er keinen Einfluss. Dieser Eintrag ergänzt G-SIEG-2 („Im Slice zählt jeder Wolf einfach“) um dieses Gewicht.
+- **RM-DR-155.1 = A.** Der Doppelspion muss leben, um zu gewinnen.
+- **RM-DR-155.3 = A.** Lebt mindestens ein Doppelspion, wenn kein Wolf mehr lebt, schlägt die App nur den Sieg des Doppelspions vor, nicht zusätzlich das Dorf. Der Spielleiter kann ablehnen und selbst einen Sieger erklären (G-GM-1, `declare_winner`). Andere gleichzeitig erfüllte Siege (z. B. Manipulator) werden weiter vorgeschlagen. Dieser Eintrag ist eine bewusste, rollenspezifische Ausnahme zu G-SIEG-1 und G-SIEG-3 und gilt nur für den Dorfkandidaten.
+- **RM-DR-155.4 = A.** Wacht der Doppelspion mit den Werwölfen auf, nennt der Spielleiter keine Rolle. Die Wölfe sehen ihn als Mitaufwachenden und erfahren nicht, dass er der Spion ist.
+- **RM-DR-138.1.** Für den Sieg des Selbstmörders müssen mindestens 5 **andere** Personen tot sein; er selbst zählt nicht mit.
+- **RM-DR-138.3.** Es zählt nur, wer im Moment der Prüfung tot ist. Wiederbelebte Personen zählen nicht.
+- **RM-DR-138.4.** Ein abgelehnter Selbstmörder-Sieg verfällt nicht. Ist die Bedingung bei einer späteren Prüfung erneut erfüllt, wird er wieder vorgeschlagen.
+- **Offen:** RM-DR-138.6 (gewinnt ein Selbstmörder, der mit weniger als 5 anderen Toten hingerichtet wurde, später, sobald genug andere tot sind?), RM-DR-138.7 (zählt nach einer Wiederbelebung nur ein erneuter Tod durch Hinrichtung?) und RM-DR-155.6 (darf der Doppelspion bei der Opferwahl mitzeigen?), siehe `../role-migration/10-next-decisions.md`.
