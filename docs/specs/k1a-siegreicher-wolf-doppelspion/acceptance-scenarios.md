@@ -1,6 +1,6 @@
 # K1a · Akzeptanzszenarien · Siegreicher Wolf und Doppelspion
 
-**Stand:** 2026-10-03 · **Status:** Spezifikation, nicht umgesetzt
+**Stand:** 2026-10-03 · **Status:** bereit zur Umsetzung, wartet auf Grimmhain-1; keine offene Produktfrage
 **Regeln:** `rules-register.md` · **Umfang:** `implementation-boundary.md` · **Abhängigkeiten:** `../../role-migration/06-implementation-batches.md` §3.3
 
 Pfade relativ zu `docs/specs/k1a-siegreicher-wolf-doppelspion/`.
@@ -145,7 +145,7 @@ Anna, Ben, Clara, David, Emil, Frieda, Gustav, Hanna mit IDs 1–8 in dieser Rei
 **AS-K1A-30 · Aufwachen mit dem Rudel** (§3.3 Tischablauf; RM-DR-155.4 = A, RM-DR-155.5)
 - Given: Nacht 1, Anna und Emil `werwolf`, Ben `doppelspion` leben.
 - When: Rudelschritt beginnt, Antwort mit Opfer Clara.
-- Then: Der Prompt nennt Ben dem Spielleiter als mitaufwachende Person (Sichtbarkeit nur Spielleiter). Handelnde Personen des Prompts sind nur Anna und Emil. Gespeichert wird Clara als Rudelopfer. Keine Projektion für Spieler und kein öffentliches Ereignis enthält „doppelspion“. Der Ansagetext nennt keine Rolle. Ob Ben mitzeigen darf, ist offen (RM-DR-155.6); das Szenario prüft nur den gespeicherten Zustand.
+- Then: Der Prompt nennt Ben dem Spielleiter als mitaufwachende Person (Sichtbarkeit nur Spielleiter). Handelnde Personen des Prompts sind nur Anna und Emil. Gespeichert wird Clara als Rudelopfer. Keine Projektion für Spieler und kein öffentliches Ereignis enthält „doppelspion“. Der Ansagetext nennt keine Rolle.
 
 **AS-K1A-31 · Toter Doppelspion wacht nicht auf**
 - Given: Ben `doppelspion` ist tot, Anna `werwolf` lebt.
@@ -181,3 +181,13 @@ Anna, Ben, Clara, David, Emil, Frieda, Gustav, Hanna mit IDs 1–8 in dieser Rei
 - Given: Ben `doppelspion` und Anna `werwolf` sind die letzten Lebenden.
 - When: `GmCorrection kill` Ben; der entstehende Kandidat „Werwölfe“ (1 gegen 0) wird abgelehnt; `GmCorrection kill` Anna.
 - Then: nach dem zweiten Tod kein Kandidat; `requires_gm_decision` = ja (DR-02).
+
+**AS-K1A-38 · Mitzeigen zählt nicht** (§3.3 Tischablauf; RM-DR-155.6 = Ja)
+- Given: Nacht 1, Anna und Emil `werwolf`, Ben `doppelspion` leben. Anna und Emil zeigen auf Clara, Ben zeigt auf David.
+- When: Rudelschritt; der Spielleiter antwortet mit Clara.
+- Then: Der Hinweis für den Spielleiter nennt Ben als mitaufwachend mit „darf mitzeigen, seine Wahl zählt nicht“ (nur Spielleiter-Sichtbarkeit). Gespeichert und in der Morgenauflösung angewandt wird nur Clara; David bleibt unberührt. Der Prompt kennt keine Antwort, die Ben als Wählenden einträgt.
+
+**AS-K1A-39 · Ausnahme bleibt auf den Doppelspion begrenzt** (RM-DR-155.3, Bestätigung 3. Oktober 2026)
+- Given: Besetzungen von AS-C03 (kein Doppelspion) und AS-K1A-23 (Doppelspion und Manipulator).
+- When: dieselben Befehle wie dort.
+- Then: AS-C03 liefert unverändert genau den Kandidaten „Dorf“; AS-K1A-23 liefert Ben und Gustav, aber kein „Dorf“. Nach `RejectWin` in AS-K1A-23 erklärt `GmCorrection declare_winner` Dorf die Partie (der Spielleiter kann die Ausnahme übersteuern).

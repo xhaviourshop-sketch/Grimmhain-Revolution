@@ -73,13 +73,12 @@ Entschieden am 3. Oktober 2026 (RM-DR-017 = C): **K1a = `siegreicher-wolf` und `
 
 ## 6. Notwendige Entscheidungen
 
-RM-DR-017, RM-DR-155.1, .3, .4 und RM-DR-138.1, .3, .4 sind entschieden. Offen sind drei Fragen ([`10`](10-next-decisions.md)): RM-DR-138.6 (gewinnt ein früh hingerichteter Selbstmörder später noch?), RM-DR-138.7 (zählt nach einer Wiederbelebung nur eine erneute Hinrichtung?) und RM-DR-155.6 (darf der Doppelspion bei der Opferwahl mitzeigen?). Die Siegregeln von K1a sind ohne weitere Antwort umsetzbar; RM-DR-155.6 betrifft nur den Ansagetext.
+RM-DR-017, RM-DR-155.1, .3, .4 und RM-DR-138.1, .3, .4 sind entschieden. Die Folgefragen RM-DR-138.6, .7 und RM-DR-155.6 sind ebenfalls entschieden (Ergänzung vom 3. Oktober 2026). Für K1 ist keine Produktfrage mehr offen: K1a und K1b: **bereit zur Umsetzung, wartet auf Grimmhain-1**.
 
 ## 7. Realistischer nächster Schritt
 
-1. Der Product Owner gibt die Spezifikationen K1a und K1b frei und beantwortet RM-DR-138.6, .7 und RM-DR-155.6.
-2. Abstimmung mit Grimmhain-1 über die Katalogerweiterung ([`06`](06-implementation-batches.md) §3.7).
-3. Danach testgetriebene Umsetzung im Kern, zuerst K1a.
+1. Abstimmung mit Grimmhain-1 über die Katalogerweiterung ([`06`](06-implementation-batches.md) §3.7).
+2. Danach testgetriebene Umsetzung im Kern, zuerst K1a.
 
 ## 8. Spätere Änderungen an bestehenden Dokumenten (bewusst nicht vorgenommen)
 
