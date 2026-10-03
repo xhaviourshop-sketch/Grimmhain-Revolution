@@ -42,7 +42,7 @@ Quelle: `rules-register.md` §2 (G-PH-6, G-SIEG-2); DECISION-LOG "Randfälle Rud
 | Sieg / Win | Wolfssieg wie beim Werwolf. | Wolf win as for the Werewolf. |
 | Beispiel 1 / Example 1 | Clara ist Trugbilderwolf mit der Scheinrolle "Waldhexe". Das Orakel prüft Clara und sieht "Waldhexe". | Clara is a Decoy Wolf with the false role "Witch of the Woods". The Oracle checks Clara and sees "Witch of the Woods". |
 | Beispiel 2 / Example 2 | Clara ist das Rudelopfer und wird von der Waldhexe gerettet. Die Waldhexe sieht "Clara: Trugbilderwolf". | Clara is the pack victim and is rescued by the Witch. The Witch sees "Clara: Decoy Wolf". |
-| Spielleitung / Game master | Die Scheinrolle wählst du im Setup pro Instanz, ohne Vorbelegung. Sie wird gespeichert und nie öffentlich gezeigt. Nur du kennst sie, der Trugbilderwolf erfährt sie nicht. | You choose the false role in setup per instance, with no default. It is saved and never shown in public. Only you know it, the Decoy Wolf does not learn it. |
+| Spielleitung / Game master | Das Setup schlägt pro Instanz zufällig eine Dorfrolle der Partie als Scheinrolle vor; du kannst sie ändern. Sie wird gespeichert und nie öffentlich gezeigt. Nur du kennst sie, der Trugbilderwolf erfährt sie nicht. | Setup suggests a random village role of the game as the false role per instance; you can change it. It is saved and never shown in public. Only you know it, the Decoy Wolf does not learn it. |
 
 Quelle: DECISION-LOG DR-08, "Korrekturrunde Regelkern" (Nr. 1), "Trugbilderwolf · Produktionsrolle und Scheinrolle im Setup"; wahre Zählung: "Rollenaudit · Informationsrollen" (I-02), "Rollenaudit · Waldläufer, Doktor ..." (Doktor).
 

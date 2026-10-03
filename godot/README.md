@@ -123,7 +123,7 @@ App lokal starten: `godot --path godot` (Hauptszene `res://app/main.tscn`) oder 
 | `tests/ui/test_role_model.gd` | Katalogadapter gegen `RoleCatalog`, Darstellungsschlüssel DE/EN, Rollenpool (Plus/Minus, Grenzen, Validierung, kanonisch), Schrittsperren, Vorschlag 6–24, Überschreiben nur mit Bestätigung, Personenänderungen, kein Zufall/keine Uhr im Setup | Rollen-Setup 1–36, 47, 73, 74 |
 | `tests/ui/test_role_step.gd` | Wizard (Schrittanzeige, Sperren, Doppelklick, Zurück, Verlassen), Rollenwahl-Oberfläche, Überschreib-Dialog, kein GameState/StartGame, Layout, Scrollen, Schlüssel | Rollen-Setup 22, 23, 33, 73–83, 86–89 |
 | `tests/ui/test_distribution_model.gd` | zufällige und manuelle Verteilung, Reproduzierbarkeit, Neu mischen, Moduswechsel, Invalidierung, Trugbilderwolf-Scheinrollen | Rollen-Setup 37–71 |
-| `tests/ui/test_decoy_model.gd` | Trugbilderwolf-Scheinrolle nach DR-08: keine Vorbelegung, Validierung, Kopien, Verteilung als Einheit, Invalidierung | Korrekturrunde DR-08 |
+| `tests/ui/test_decoy_model.gd` | Trugbilderwolf-Scheinrolle nach DR-08/DA-88: Vorbelegung aus dem Pool, Validierung, Kopien, Verteilung als Einheit, Invalidierung | Korrekturrunde DR-08 |
 | `tests/ui/test_decoy_step.gd` | geheimer Scheinrollen-Bereich, modale Wahl, Kopien in der Verteilung, Geheimhaltung, Layout | Korrekturrunde DR-08 |
 | `tests/ui/test_distribution_step.gd` | Verteilungs-Oberfläche, Geheimhaltung, modale Rollenauswahl, Zusammenfassung ohne Partie, Layout | Rollen-Setup 44, 53–57, 63, 64, 72, 74, 80, 81, 84–91 |
 | `tests/ui/test_seating_model.gd`, `tests/ui/test_seating_step.gd` | Sitzordnung: Identität beim Tausch, Invalidierung, Sitzkreis, Antippen und Drag-and-drop, Geheimhaltung, Layout | `../docs/ui/seating-setup.md` |

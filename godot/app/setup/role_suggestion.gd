@@ -8,7 +8,7 @@ extends RefCounted
 ##   3. Dorfrollen in der Reihenfolge VILLAGE_ORDER, so viele wie Personen übrig sind (Personen − Wolfsrollen − 1)
 ## Beispiel 6 Personen: Werwolf, Manipulator, Schutzengel, Orakel, Dorfbewohner, Waldhexe.
 ## Kein Zufall, keine Uhr: gleiche Personenzahl ergibt immer denselben Vorschlag. Der Trugbilderwolf braucht weiter eine
-## Scheinrolle; der Vorschlag wählt keine (offene Angabe im Rollenschritt, keine geheime Standardwahl).
+## Scheinrolle; das Setup belegt sie nach der Übernahme zufällig mit einer Dorfrolle des Pools vor (DA-88), änderbar.
 
 ## [ab Personenzahl, Wolfsrollen]; darunter gilt 1 Wolfsrolle.
 const WOLF_STEPS: Array[Vector2i] = [Vector2i(9, 2), Vector2i(13, 3), Vector2i(18, 4), Vector2i(22, 5)]
