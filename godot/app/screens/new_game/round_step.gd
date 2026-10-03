@@ -3,7 +3,8 @@ extends PrepStep
 ## Schritt 1 „Runde“: große Plus/Minus-Auswahl der Spielerzahl (6 bis 24), Zähler Dorf/Wölfe/Einzelgänger des Vorschlags, die vier
 ## Akt-Karten (fertige Rollen-Sets) und der Schalter „App verteilt zufällig“ / „Echte Karten – ich weise zu“. Alles ist vorbelegt und
 ## sofort änderbar; Weiter ist aktiv, solange der gewählte Akt die Zahl trägt. Die Wahrheit liegt in PlayerSetup, dieser Schritt
-## stellt nur dar und ruft Operationen auf. Die Seite scrollt, wenn das Fenster zu niedrig ist; nichts wird abgeschnitten.
+## stellt nur dar und ruft Operationen auf. Der Schalter steht links unter den Teamzählern, damit er bei 1024x768 ohne Scrollen sichtbar ist.
+## Die Seite scrollt, wenn das Fenster zu niedrig ist; nichts wird abgeschnitten.
 
 signal next_requested
 
@@ -38,6 +39,7 @@ func start(setup: PlayerSetup) -> void:
 	left.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
 	left.add_child(_count_block())
 	left.add_child(_team_counters())
+	left.add_child(_modes())
 	columns.add_child(left)
 	var right := VBoxContainer.new()
 	right.name = "ChoiceColumn"
@@ -45,7 +47,6 @@ func start(setup: PlayerSetup) -> void:
 	right.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
 	right.add_child(_heading("ActsHeading", "ui.prep.act.heading"))
 	right.add_child(_acts())
-	right.add_child(_modes())
 	columns.add_child(right)
 	_setup.changed.connect(_render)
 	_render(_setup.view())
@@ -134,9 +135,9 @@ func _acts() -> Control:
 
 
 func _modes() -> Control:
-	var row := HBoxContainer.new()
+	var row := VBoxContainer.new()
 	row.name = "ModeRow"
-	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_L)
+	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	var group := ButtonGroup.new()
 	_random = _mode_button(group, "RandomModeButton", "ui.prep.mode.random")
 	_manual = _mode_button(group, "ManualModeButton", "ui.prep.mode.manual")

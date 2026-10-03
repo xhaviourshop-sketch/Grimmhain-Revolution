@@ -109,7 +109,7 @@ func footer() -> Dictionary:
 		hint = "ui.prep.names.act_too_small"
 		error = true
 	elif not complete:
-		hint = "ui.prep.names.missing"
+		hint = "ui.prep.names.missing_one" if missing == 1 else "ui.prep.names.missing"
 		values = {"count": missing, "total": _last_view.get("player_count", 0)}
 		if int(_last_view.get("count", 0)) > int(_last_view.get("player_count", 0)):
 			hint = ""

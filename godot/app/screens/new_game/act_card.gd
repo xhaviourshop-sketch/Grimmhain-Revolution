@@ -85,8 +85,20 @@ func _skin() -> void:
 		var box := GroveStyleBox.make(tex, GroveArtData.CARD_FRAME_MARGINS, states[state])
 		add_theme_stylebox_override(state, box)
 	add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	focus_entered.connect(func() -> void: self_modulate = GroveSkin.TINT_FOCUS)
-	focus_exited.connect(func() -> void: self_modulate = ThemeTokens.TINT_NONE)
+	focus_entered.connect(_refresh_focus)
+	focus_exited.connect(_refresh_focus)
+
+
+## Fokusrahmen und Aufhellung nur bei Tastatur- oder Gamepadbedienung; ein Standardfokus ohne Eingabe (Betreten des Schritts) und Antippen
+## zeigen allein die rote Auswahl.
+func _refresh_focus() -> void:
+	self_modulate = GroveSkin.TINT_FOCUS if has_focus(true) else ThemeTokens.TINT_NONE
+	queue_redraw()
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and has_focus():
+		_refresh_focus.call_deferred()
 
 
 func _label(parent: Control, node_name: String, variation: StringName, key: String) -> GrimmLabel:
@@ -120,5 +132,5 @@ func _draw() -> void:
 		draw_circle(c, 11.0, ThemeTokens.NUMBER_BG)
 		draw_arc(c, 11.0, 0.0, TAU, 20, ThemeTokens.BLOOD_RED, 2.0, true)
 		draw_polyline(PackedVector2Array([c + Vector2(-5.0, 0.5), c + Vector2(-1.5, 4.0), c + Vector2(5.5, -4.0)]), ThemeTokens.MOON_SILVER_BRIGHT, 2.4, true)
-	if has_focus():
+	if has_focus(true):
 		draw_rect(Rect2(Vector2.ZERO, size).grow(-2.0), ThemeTokens.MOON_GLOW, false, float(ThemeTokens.FOCUS_WIDTH))

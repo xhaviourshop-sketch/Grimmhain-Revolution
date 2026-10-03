@@ -77,7 +77,7 @@ func navigate(id: StringName) -> bool:
 	_show(screen)
 	var focus := screen.default_focus()
 	if focus != null and focus.is_visible_in_tree():
-		focus.grab_focus()
+		focus.grab_focus(true)  # Fokusrahmen erst bei Tastatur- oder Gamepadbedienung
 	screen_changed.emit(id)
 	return true
 

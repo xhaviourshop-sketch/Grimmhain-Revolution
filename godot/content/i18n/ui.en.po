@@ -8373,6 +8373,9 @@ msgstr "free"
 msgid "ui.prep.names.missing"
 msgstr "{count} names still missing."
 
+msgid "ui.prep.names.missing_one"
+msgstr "1 name still missing."
+
 msgid "ui.prep.names.act_too_small"
 msgstr "The chosen act cannot hold this many people. Go back to the round and pick another."
 

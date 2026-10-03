@@ -1,6 +1,6 @@
 class_name TeamCounter
 extends HBoxContainer
-## Zähler eines Teams (Dorf, Wölfe, Einzelgänger): Teamsymbol im Mondsilber, große Zahl und Teamname. Reine Darstellung. Ohne Zahl (der
+## Zähler eines Teams (Dorf, Wölfe, Einzelgänger): Teamsymbol im Mondsilber, große Zahl und Teamname in einer Zeile. Reine Darstellung. Ohne Zahl (der
 ## gewählte Akt trägt die Personenzahl nicht) steht ein Gedankenstrich. Der Name des Teams steht immer als Text neben dem Symbol.
 
 var team: StringName = &""
@@ -26,8 +26,8 @@ func setup(p_team: StringName) -> void:
 	_symbol.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_symbol.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_symbol)
-	var column := VBoxContainer.new()
-	column.add_theme_constant_override(&"separation", 0)
+	var column := HBoxContainer.new()  # Zahl und Teamname in einer Zeile: die Zähler brauchen wenig Höhe (Schalter ohne Scrollen)
+	column.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	column.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	add_child(column)
 	_value = GrimmLabel.new()
@@ -39,6 +39,7 @@ func setup(p_team: StringName) -> void:
 	_caption.name = "TeamCaption"
 	_caption.theme_type_variation = &"HainCaptionLabel"
 	_caption.wrap = false
+	_caption.size_flags_vertical = Control.SIZE_SHRINK_END
 	_caption.text_key = "ui.prep.team.%s" % String(team)
 	column.add_child(_caption)
 	show_count(-1)

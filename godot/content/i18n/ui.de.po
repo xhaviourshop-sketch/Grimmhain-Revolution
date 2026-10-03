@@ -8373,6 +8373,9 @@ msgstr "frei"
 msgid "ui.prep.names.missing"
 msgstr "Es fehlen noch {count} Namen."
 
+msgid "ui.prep.names.missing_one"
+msgstr "Es fehlt noch 1 Name."
+
 msgid "ui.prep.names.act_too_small"
 msgstr "Der gewählte Akt trägt diese Spielerzahl nicht. Geh zurück zur Runde und wähle einen anderen."
 
