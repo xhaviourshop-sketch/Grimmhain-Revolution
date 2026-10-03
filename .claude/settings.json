@@ -16,5 +16,17 @@
       "Read(../)",
       "Edit(../)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$CLAUDE_CODE_REMOTE\" ] && bash \"$CLAUDE_PROJECT_DIR/tools/cloud/setup-godot.sh\" || true"
+          }
+        ]
+      }
+    ]
   }
 }

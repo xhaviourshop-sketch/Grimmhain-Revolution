@@ -76,3 +76,10 @@ Vorhandene `writing-plans`/`executing-plans` nur für tatsächlich komplexe Plan
 
 ## Ausgabedateien: Nutzerentscheidung vom 01.10.2026
 - Roadmaps, Berichte, Bilder, Archive und andere zur Übergabe erzeugte Dateien standardmäßig unter C:/Users/Marku/Downloads/ ablegen, bei mehreren zusammengehörigen Dateien in einem verständlich benannten Unterordner. Im Abschluss direkt auf die Datei in Downloads verlinken. Projektcode und notwendige versionierte Projektdateien bleiben im jeweiligen Repository; bei gewünschten Übergabedokumenten eine Kopie in Downloads bereitstellen. Bestehende Downloads nicht ungefragt überschreiben.
+
+## Cloud-Sitzungen
+- Godot kommt aus `tools/cloud/setup-godot.sh` (SessionStart-Hook in `.claude/settings.json`, nur bei `CLAUDE_CODE_REMOTE`): Godot 4.7.2 headless mit Prüfsumme nach `~/.local/godot`, Befehl `godot`, einmal `--import`. Fehlt `godot`, das Skript manuell starten.
+- Testregeln wie oben (Abschnitt Testregeln), Linux-Befehle aus `godot/README.md`.
+- Kein Web-Export und kein Vercel-Deploy aus der Cloud.
+- Screenshots headless nach `docs/screenshots/cloud/`.
+- Immer eigener Branch, nie direkt auf `main`.
