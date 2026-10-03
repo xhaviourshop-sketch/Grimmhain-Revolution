@@ -56,6 +56,9 @@ func _ready() -> void:
 	_cues.name = "AudioCuePlayer"
 	add_child(_cues)
 	_cues.setup(app_context)
+	var touch_scroll := TouchScrollPolicy.new()
+	touch_scroll.name = "TouchScrollPolicy"
+	add_child(touch_scroll)
 	_router.setup(app_context)
 	_router.back_requested.connect(go_back)
 	_router.quit_requested.connect(request_quit)

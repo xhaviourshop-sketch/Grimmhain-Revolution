@@ -89,7 +89,8 @@ const FONT_SHOW := 48                 ## gezeigte Karte: Ergebnis groß für die
 
 # --- Bedienflächen und Layout --------------------------------------------------------------------
 const TOUCH_MIN := 48                 ## Mindestgröße jeder Bedienfläche
-const BADGE_MIN := 24.0               ## kleinstes Zustandsabzeichen am Porträtplatz (Art Direction, Abschnitt 7)
+const TOUCH_DRAG_DEADZONE := 16       ## Weg in Pixeln, ab dem ein Ziehen scrollt statt einen Knopf auszulösen
+const BADGE_MIN := 24.0              ## kleinstes Zustandsabzeichen am Porträtplatz (Art Direction, Abschnitt 7)
 const BUTTON_SECONDARY_HEIGHT := 56
 const BUTTON_PRIMARY_HEIGHT := 64
 const BUTTON_PRIMARY_MIN_WIDTH := 240
