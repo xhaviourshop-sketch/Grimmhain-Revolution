@@ -78,7 +78,7 @@ Nicht als neues System geplant: Stimmsystem (ausgeschlossen, RM-DR-008), Besuchs
 
 **Rollen Charge K1 (3):** `siegreicher-wolf`, `selbstmoerder`, `doppelspion`
 
-**Entscheidung 3. Oktober 2026:** RM-DR-017 = C. Alle drei Rollen sind die nächste Einheit, spezifiziert als K1a ([`../specs/k1a-siegreicher-wolf-doppelspion/`](../specs/k1a-siegreicher-wolf-doppelspion/rules-register.md)) und K1b ([`../specs/k1b-selbstmoerder/`](../specs/k1b-selbstmoerder/rules-register.md)); dazu RM-DR-155.1, .3, .4 und RM-DR-138.1, .3, .4 (DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“). §3.1 bleibt als Entscheidungsgrundlage stehen; §3.2, §3.3 und §3.7 sind auf den neuen Stand gebracht.
+**Entscheidung 3. Oktober 2026:** RM-DR-017 = C. Alle drei Rollen sind die nächste Einheit, spezifiziert als K1a ([`../specs/k1a-siegreicher-wolf-doppelspion/`](../specs/k1a-siegreicher-wolf-doppelspion/rules-register.md)) und K1b ([`../specs/k1b-selbstmoerder/`](../specs/k1b-selbstmoerder/rules-register.md)); dazu RM-DR-155.1, .3, .4, .6 und RM-DR-138.1, .3, .4, .6, .7 (DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“). §3.1 bleibt als Entscheidungsgrundlage stehen; §3.2, §3.3 und §3.7 sind auf den neuen Stand gebracht.
 
 **Konsolidierung 2026-09-27:** Die frühere Fassung dieses Abschnitts nannte K1 als Ganzes die erste Einheit, schätzte „S bis M, Risiko niedrig“, legte die nächste Schemanummer fest und nannte RM-DR-007 und RM-DR-016 als Blocker. Diese Punkte sind korrigiert: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig, eine Schemanummer wird nicht vorab festgelegt, und die Größe ist unten neu begründet. Die Auswahl der Rollen ist eine Produktentscheidung (RM-DR-017) und nicht freigegeben.
 
@@ -100,8 +100,8 @@ Nicht als neues System geplant: Stimmsystem (ausgeschlossen, RM-DR-008), Besuchs
 | Rolle | Kernregel laut Legacy (Beleg) | Offene Punkte |
 |---|---|---|
 | `siegreicher-wolf` | zählt lebend in der Wolfsparität als zwei Wölfe; nicht bei „kein Wolf lebt“, nicht bei Zählungen anderer Rollen (`js/ui/core.js:21-29`, `:311-312`, [Dossier](dossiers/wolves-a.md#siegreicher-wolf)); das Regelregister sieht die Ausnahme bereits vor (G-SIEG-2: „Siegreicher Wolf ist nicht enthalten“) | keine Produktentscheidung |
-| `doppelspion` | zählt nie als Wolf; lebt er, wenn kein Wolf mehr lebt, gewinnt er statt des Dorfs (`js/ui/core.js:13`, `:227-230`, `:314-320`, [Dossier](dossiers/solos-a.md#doppelspion)); „wacht mit den Werwölfen auf“ ist eine Tischregel ohne App-Schritt | RM-DR-155.6 offen (nur Ansagetext); RM-DR-155.1, .3, .4 entschieden |
-| `selbstmoerder` | wird er gelyncht, während vorher mindestens 5 Personen tot sind, gewinnt er (`js/core/night.js:421-423`, `:474-482`, [Dossier](dossiers/solos-a.md#selbstmoerder)) | RM-DR-138.6, .7 offen; RM-DR-138.1, .3, .4 entschieden; RM-DR-138.2 nur für den späteren Henker |
+| `doppelspion` | zählt nie als Wolf; lebt er, wenn kein Wolf mehr lebt, gewinnt er statt des Dorfs (`js/ui/core.js:13`, `:227-230`, `:314-320`, [Dossier](dossiers/solos-a.md#doppelspion)); „wacht mit den Werwölfen auf“ ist eine Tischregel ohne App-Schritt | keine; RM-DR-155.1, .3, .4, .6 entschieden |
+| `selbstmoerder` | wird er gelyncht, während vorher mindestens 5 Personen tot sind, gewinnt er (`js/core/night.js:421-423`, `:474-482`, [Dossier](dossiers/solos-a.md#selbstmoerder)) | keine; RM-DR-138.1, .3, .4, .6, .7 entschieden; RM-DR-138.2 nur für den späteren Henker |
 
 ### 3.3 Vollständige Abhängigkeitsliste
 
@@ -112,17 +112,17 @@ Legende: **bestehend** = durch eine verbindliche Quelle beantwortet (Quelle gena
 | Grundregel mehrerer Siege | bestehend: G-SIEG-3, DR-02 | bestehend: G-SIEG-3, DR-02; Ausnahme für den Dorfkandidaten **entschieden** RM-DR-155.3 = A | bestehend: G-SIEG-3, DR-02 |
 | Muss die Person leben? | bestehend: Rollentext „solange er lebt“, am 3. Oktober 2026 bestätigt | **entschieden** RM-DR-155.1: ja | – (gewinnt durch seinen Tod) |
 | Zählung in der Parität | Gewicht 2, nur Parität: Standardauslegung ohne Widerspruch (G-SIEG-2 sieht sie vor) | bestehend: zählt als Nicht-Wolf (G-SIEG-2) | bestehend: Nicht-Wolf (G-SIEG-2) |
-| Bedingung | technisch: aus dem Zustand berechnet | bestehend: „kein Wolf lebt“ = G-SIEG-1 (`counts_as_wolf`) | **entschieden** RM-DR-138.1: mindestens 5 andere Tote; RM-DR-138.3: nur wer bei der Prüfung tot ist; **neu** RM-DR-138.6: Sieg bei einer späteren Prüfung nach einer Hinrichtung mit zu wenigen Toten |
+| Bedingung | technisch: aus dem Zustand berechnet | bestehend: „kein Wolf lebt“ = G-SIEG-1 (`counts_as_wolf`) | **entschieden** RM-DR-138.1: mindestens 5 andere Tote; RM-DR-138.3 und .6: nur wer im Moment seiner Hinrichtung tot ist; wer danach stirbt, zählt nicht |
 | Welche Hinrichtung zählt? | – | – | bestehend: Hinrichtung `LYNCH`, auch per Spielleiterkorrektur (Korrekturrunde 4); Tod durch Spiegelung zählt nicht (G-TOD-3, RM-DR-138.5); Henker später (RM-DR-138.2) |
 | Ablehnung durch den Spielleiter | bestehend: erneutes Angebot nur nach relevanter Zustandsänderung (Umsetzungsentscheidung 3 der README, AS-C04) | bestehend wie links | **entschieden** RM-DR-138.4: Ein abgelehnter Sieg verfällt nicht; ist er bei einer späteren Prüfung erfüllt, wird er wieder vorgeschlagen |
-| Wiederbelebung und erneuter Tod | technisch: tot zählt 0, wiederbelebt wieder 2 (G-SIEG-2 zählt lebende Wölfe) | technisch: wiederbelebt kann er wieder gewinnen (RM-DR-155.1) | **entschieden** RM-DR-138.3: Wiederbelebte zählen nicht als tot; **neu** RM-DR-138.7: zählt nach seiner eigenen Wiederbelebung nur ein erneuter Tod durch Hinrichtung? |
+| Wiederbelebung und erneuter Tod | technisch: tot zählt 0, wiederbelebt wieder 2 (G-SIEG-2 zählt lebende Wölfe) | technisch: wiederbelebt kann er wieder gewinnen (RM-DR-155.1) | **entschieden** RM-DR-138.3: Wiederbelebte zählen nicht als tot; **entschieden** RM-DR-138.7: seine Wiederbelebung lässt die frühere Hinrichtung verfallen |
 | Gleichzeitige Kandidaten | bestehend: Wolfskandidat neben Manipulator usw. (G-SIEG-3) | **entschieden** nur für das Dorf (RM-DR-155.3 = A); Manipulator bleibt bestehend | bestehend: z. B. Wolfsparität durch seinen Tod plus Selbstmörder-Kandidat (G-SIEG-3) |
 | Lehrling erbt die Rolle | bestehend: Gewicht sofort (Korrekturrunde Regelkern 2) | bestehend: Fraktion und Siegbedingung sofort | bestehend: Siegbedingung sofort; Erbe beim Tod des Meisters läuft vor der Siegprüfung (DECISION-LOG Lehrling) |
 | Mehrere Personen mit der Rolle (Setup oder Erbe) | technisch: jede zählt 2 | technisch: je Person ein Kandidat (Muster G-SIEG-3 „je Manipulator“) | technisch: je Person ein Kandidat |
 | Spielleiterkorrekturen | bestehend: `set_role`, `revive`, `kill` stoßen die Siegprüfung an (README Umsetzungsentscheidung 12) | bestehend wie links; `declare_winner` bleibt immer möglich (G-GM-1, DR-02) | bestehend: `execute` zählt als Hinrichtung; `kill` (Ursache `GM_CORRECTION`) ist keine Hinrichtung |
-| Speichern und Laden | technisch: Gewicht ist Katalogwissen, wird nicht gespeichert | technisch: neuer Kandidatengrund in Spielstand und Ladeprüfung | technisch: seit RM-DR-138.3 zählt die Totenzahl bei der Prüfung, nicht beim Hinrichtungsmoment; ob ein neues gespeichertes Feld nötig ist, hängt nur noch an RM-DR-138.6 (K1b-Umsetzungsgrenze) |
+| Speichern und Laden | technisch: Gewicht ist Katalogwissen, wird nicht gespeichert | technisch: neuer Kandidatengrund in Spielstand und Ladeprüfung | technisch: wegen RM-DR-138.6 muss das Ergebnis im Moment der Hinrichtung je Person gespeichert werden (K1b-Umsetzungsgrenze B-5) |
 | Orakel und Waldhexe | bestehend: Orakel sieht `werwolf` (DR-07), Waldhexe die echte Rolle | bestehend: Orakel sieht `doppelspion` (keine besondere Erscheinung, DR-07) | bestehend: echte Rolle |
-| Tischablauf | – | **entschieden** RM-DR-155.4: keine Rolle genannt; **neu** RM-DR-155.6: darf er bei der Opferwahl mitzeigen?; technisch: Hinweis im Rudelschritt, keine Teilnahme an der gespeicherten Rudelwahl (Regelregister §2, RM-DR-155.5) | – |
+| Tischablauf | – | **entschieden** RM-DR-155.4: keine Rolle genannt; **entschieden** RM-DR-155.6: darf mitzeigen, seine Wahl zählt nicht; technisch: Hinweis im Rudelschritt, keine Teilnahme an der gespeicherten Rudelwahl (Regelregister §2, RM-DR-155.5) | – |
 | Obergrenze im Setup | nicht nötig (RM-DR-016) | nicht nötig | nicht nötig |
 
 ### 3.4 Benötigte vorhandene Systeme
@@ -136,7 +136,7 @@ Legende: **bestehend** = durch eine verbindliche Quelle beantwortet (Quelle gena
 - Die Ereignisargumente `wolves` und `non_wolves` werden in drei Szenarien geprüft (`as-c01`, `as-c03`, `as-c04`). Die Spezifikation muss festlegen, ob diese Zahlen Köpfe oder Gewicht bedeuten, ohne die bestehenden Szenarien umzudeuten.
 - `WinCandidate.REASONS` ist eine feste Liste, und `state_is_consistent` prüft offene und bestätigte Manipulator-Kandidaten beim Laden gegen den Zustand. Jeder neue Kandidatengrund braucht eine eigene Ladeprüfung.
 - Offene Kandidaten verhindern die nächste Prüfung, und nach `RejectWin` wird erst nach einem weiteren Tod oder einer Korrektur neu geprüft (`finalize_if_ready`, README Umsetzungsentscheidungen 2 und 3). Ein Sieg, der an einem vergangenen Ereignis hängt, würde dabei erneut entstehen; für den Selbstmörder ist genau das gewollt (RM-DR-138.4).
-- `KillEvent` speichert heute Ursache, Quelle, Ziel, Phase, Nummer und Reihenfolge, aber keine Totenzahl. Für den Siegreichen Wolf ist voraussichtlich keine Änderung gespeicherter Daten nötig, für den Doppelspion nur der neue Kandidatengrund. Für den Selbstmörder reicht nach RM-DR-138.3 der aktuelle Todesdatensatz (`Player.death`), solange RM-DR-138.6 nicht anders entschieden wird.
+- `KillEvent` speichert heute Ursache, Quelle, Ziel, Phase, Nummer und Reihenfolge, aber keine Totenzahl. Für den Siegreichen Wolf ist voraussichtlich keine Änderung gespeicherter Daten nötig, für den Doppelspion nur der neue Kandidatengrund. Für den Selbstmörder ist wegen RM-DR-138.6 ein gespeicherter Wert je Person nötig (Ergebnis im Moment der Hinrichtung).
 - Jede Änderung am Regelverhalten erhöht die Regelversion; eine Änderung gespeicherter Felder erhöht zusätzlich die Schemaversion. **Welche Nummer** folgt, ergibt sich erst aus dem dann aktuellen Stand (andere Arbeiten können vorher eine Version belegen) und wird hier nicht festgelegt.
 - Die Rollen erscheinen automatisch im Rollen-Setup von Grimmhain-1, sobald sie im `RoleCatalog` stehen (§3.7).
 
@@ -172,7 +172,7 @@ Die frühere Angabe „S bis M, Risiko niedrig“ für K1 gesamt war zu optimist
 
 Keine Änderung nötig: `setup_role_catalog.gd` (liest den Katalog), `role_suggestion.gd` (`SOLO_ROLE = &"manipulator"` bleibt; der Vorschlag nutzt die neuen Rollen nicht). Ob der Vorschlag später auch einen Doppelspion oder Selbstmörder setzen soll, ist eine Oberflächenfrage für Grimmhain-1, keine Regelfrage.
 
-Hinweis für die Oberfläche (Regel, nicht UI-Entwurf): Der Doppelspion wacht mit den Werwölfen auf; im Rudelschritt nennt der Spielleiter keine Rolle (RM-DR-155.4). Ein Hinweis für den Spielleiter im Rudelschritt ist in der K1a-Spezifikation beschrieben.
+Hinweis für die Oberfläche (Regel, nicht UI-Entwurf): Der Doppelspion wacht mit den Werwölfen auf; im Rudelschritt nennt der Spielleiter keine Rolle (RM-DR-155.4); er darf mitzeigen, eingetragen wird nur die Wahl der echten Wölfe (RM-DR-155.6). Ein Hinweis für den Spielleiter im Rudelschritt ist in der K1a-Spezifikation beschrieben.
 
 Die Rollen gehen erst nach Abstimmung mit Grimmhain-1 in den Katalog, weil die oben genannten Tests sonst sofort rot werden.
 

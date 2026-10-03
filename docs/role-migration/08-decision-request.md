@@ -23,16 +23,16 @@ Ein Eintrag mit mehreren Teilfragen erhält den dringlichsten Status seiner Teil
 <!-- check:decision-status -->
 | Status | Einträge | Fragen (Einträge ohne Teilfragen plus Teilfragen) |
 |---|---:|---:|
-| entschieden | 3 | 19 |
-| produktentscheidung | 2 | 3 |
-| technisch | 1 | 3 |
-| später | 65 | 162 |
+| entschieden | 3 | 22 |
+| produktentscheidung | 0 | 0 |
+| technisch | 2 | 3 |
+| später | 66 | 162 |
 | quellenprüfung | 4 | 4 |
 | **gesamt** | **75** | **191** |
 
 Gegenüber der ersten Fassung (74 Einträge, 160 Teilfragen): neu sind RM-DR-017 (Umfang der nächsten Einheit), Unterteilungen von RM-DR-002, -009, -011, -015, -016 sowie die Teilfragen RM-DR-138.3 bis .5 und RM-DR-155.4 bis .5. Die frühere Aussage, K1 werde durch RM-DR-007 und RM-DR-016 blockiert, ist zurückgenommen: RM-DR-007 ist entschieden, RM-DR-016 ist für K1 nicht nötig.
 
-Am 3. Oktober 2026 hat der Product Owner RM-DR-017, RM-DR-138.1, .3, .4 und RM-DR-155.1, .3, .4 entschieden (DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“). Aus diesen Antworten folgen drei neue Teilfragen: RM-DR-138.6 und .7 (Selbstmörder) und RM-DR-155.6 (Doppelspion bei der Opferwahl).
+Am 3. Oktober 2026 hat der Product Owner RM-DR-017, RM-DR-138.1, .3, .4 und RM-DR-155.1, .3, .4 entschieden (DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“). Aus diesen Antworten folgten drei neue Teilfragen, RM-DR-138.6, .7 und RM-DR-155.6; der Product Owner hat sie noch am 3. Oktober 2026 beantwortet (Ergänzung zum selben Eintrag). Für die Rollen von K1 ist damit keine Produktfrage mehr offen.
 
 ### Durch bestehende Quellen bereits beantwortet
 
@@ -51,6 +51,8 @@ Am 3. Oktober 2026 hat der Product Owner RM-DR-017, RM-DR-138.1, .3, .4 und RM-D
 | RM-DR-138.5 | Stirbt der Selbstmörder durch eine Spiegelung, ist das keine Hinrichtung des Selbstmörders (Ursache `SPIEGELWOLF_RETALIATE`, hingerichtet ist der Spiegelwolf) | G-TOD-3; DECISION-LOG Spiegelwolf |
 | RM-DR-017 | C: Siegreicher Wolf, Doppelspion, Selbstmörder; spezifiziert als K1a und K1b | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“ |
 | RM-DR-138.1, .3, .4 | mindestens 5 andere Tote, er selbst zählt nicht; nur wer im Moment der Prüfung tot ist; ein abgelehnter Sieg verfällt nicht | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“ |
+| RM-DR-138.6, .7 | nur wenn im Moment der Hinrichtung schon 5 andere tot sind; eine Wiederbelebung lässt die frühere Hinrichtung verfallen | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“, Ergänzung |
+| RM-DR-155.6 | darf bei der Opferwahl mitzeigen, seine Wahl zählt nicht | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“, Ergänzung |
 | RM-DR-155.1, .3, .4 | muss leben; statt des Dorfs wird nur er vorgeschlagen, andere Siege weiter gleichzeitig; die Wölfe erfahren seine Rolle nicht | DECISION-LOG „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“ |
 | Teil von RM-DR-138.2 | eine Hinrichtung per Spielleiterkorrektur bleibt eine Hinrichtung (`LYNCH`) | DECISION-LOG Korrekturrunde Regelkern 4 |
 | Teil von RM-DR-157.1 | keine feste Siegpriorität zwischen Einzelsieg und Fraktionen | DR-02 |
@@ -1108,7 +1110,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-138 · `selbstmoerder`
 
-- **Status des Eintrags:** produktentscheidung.
+- **Status des Eintrags:** später (ab Charge K1).
 - **Betroffene Rollen:** `selbstmoerder`; Wechselwirkung laut Dossier: Feuerteufel (Brand vor Siegprüfung), Henker (Nebenhinrichtung), Voodoo (Puppe), alle Tötungsrollen (Totenzahl), Die …
 - **Belege:** [Dossier](dossiers/solos-a.md#selbstmoerder); RM-C-061, RM-C-062 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-007.
@@ -1138,12 +1140,12 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: –
   - Auswirkung: Balance: –; Umsetzung: –
   - Empfehlung: entschieden: Ursache `SPIEGELWOLF_RETALIATE`, hingerichtet ist der Spiegelwolf
-- **RM-DR-138.6 · Gewinnt ein Selbstmörder, der mit weniger als 5 anderen Toten hingerichtet wurde, später, sobald genug andere tot sind?** · Status: produktentscheidung; neu: späterer Sieg nach Hinrichtung mit zu wenigen Toten
+- **RM-DR-138.6 · Gewinnt ein Selbstmörder, der mit weniger als 5 anderen Toten hingerichtet wurde, später, sobald genug andere tot sind?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026, Ergänzung); Nein: nur wenn im Moment der Hinrichtung schon 5 andere tot sind
   - Option A: Ja: Die Bedingung wird bei jeder verbindlichen Prüfung aus dem Zustand berechnet (er ist durch Hinrichtung tot, mindestens 5 andere sind tot). Das ist die wörtliche Folge aus RM-DR-138.1, .3 und .4
   - Option B: Nein: Nur die verbindliche Prüfung direkt nach seiner Hinrichtung kann den Sieg begründen; war er dort erfüllt und wurde abgelehnt, wird er nach RM-DR-138.4 bei späteren Prüfungen wieder vorgeschlagen, solange er erfüllt ist
   - Auswirkung: Balance: A macht ihn deutlich stärker: auch eine frühe Hinrichtung kann noch gewinnen; Umsetzung: A: reine Zustandsprüfung ohne neues gespeichertes Feld; B: gespeicherter Merker je Person, ob die Bedingung bei der ersten Prüfung nach der Hinrichtung erfüllt war
   - Empfehlung: B. Rollentext DE „sobald 5+ Tote sind und er am Tage gelyncht wird“, EN „already dead“ und die Legacy-App binden den Sieg an den Moment der Hinrichtung. Die Antworten vom 3. Oktober 2026 lassen wörtlich A zu, deshalb Rückfrage statt Annahme
-- **RM-DR-138.7 · Zählt nach einer Wiederbelebung nur ein erneuter Tod durch Hinrichtung?** · Status: produktentscheidung; neu: Anspruch nach Wiederbelebung
+- **RM-DR-138.7 · Zählt nach einer Wiederbelebung nur ein erneuter Tod durch Hinrichtung?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026, Ergänzung); Ja: Wiederbelebung lässt die frühere Hinrichtung verfallen
   - Option A: Ja: Maßgeblich ist sein aktueller Tod. Stirbt er nach der Wiederbelebung anders (z. B. Wolfsangriff), entsteht kein Kandidat
   - Option B: Nein: Eine frühere Hinrichtung bleibt gültig; stirbt er später auf beliebige Weise, gilt er weiter als hingerichtet
   - Auswirkung: Balance: B ist selten relevant, macht ihn aber stärker; Umsetzung: A: aus dem aktuellen Todesdatensatz ablesbar; B: dauerhafter, gespeicherter Personenstatus „wurde hingerichtet“
@@ -1542,7 +1544,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
 
 ## RM-DR-155 · `doppelspion`
 
-- **Status des Eintrags:** produktentscheidung.
+- **Status des Eintrags:** technisch.
 - **Betroffene Rollen:** `doppelspion`; Wechselwirkung laut Dossier: Rachsüchtiger Wolf, Dämonischer Wolf (Fluch wirkungslos), Wolfskind/Lehrling (Wolfszählung), Orakel/Doktor/Spürhund (Erscheinung/Fraktion), Die Ewigen, …
 - **Belege:** [Dossier](dossiers/solos-a.md#doppelspion); RM-C-063, RM-C-064 in [`04`](04-rule-conflicts.md). Legacy-Befund `legacy-verified`.
 - **Querschnittsbezug:** RM-DR-002, RM-DR-007.
@@ -1573,7 +1575,7 @@ Je Rolle eine Sammelentscheidung mit Unter-IDs. Die Teilfragen stammen aus den W
   - Option B: –
   - Auswirkung: Balance: –; Umsetzung: Hinweis im Rudelschritt
   - Empfehlung: A (technisch)
-- **RM-DR-155.6 · Darf der Doppelspion bei der Opferwahl am Tisch mitzeigen?** · Status: produktentscheidung; neu: darf er bei der Opferwahl mitzeigen (folgt aus RM-DR-155.4)
+- **RM-DR-155.6 · Darf der Doppelspion bei der Opferwahl am Tisch mitzeigen?** · Status: entschieden; Quelle: DECISION-LOG Rollenmigration K1 (3. Oktober 2026, Ergänzung); Ja: darf mitzeigen, seine Wahl zählt nicht
   - Option A: Ja: Er darf mitzeigen, damit er nicht auffällt; seine Wahl zählt nicht. Der Spielleiter übernimmt das Opfer, auf das sich die Werwölfe einigen, ohne das anzusagen
   - Option B: Nein: Er sieht nur zu und zeigt nicht
   - Auswirkung: Balance: B verrät ihn den Wölfen schnell als Nicht-Wolf und schwächt RM-DR-155.4 = A; bei A können die Wölfe bei Uneinigkeit bemerken, dass seine Wahl nicht übernommen wurde; Umsetzung: nur Ansagetext und Hinweis für den Spielleiter im Rudelschritt; gespeichert wird in beiden Fällen nur das Opfer der Werwölfe (RM-DR-155.5)

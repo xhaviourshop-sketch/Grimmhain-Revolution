@@ -265,10 +265,10 @@ else {
   if (!f10) err("10-next-decisions.md fehlt");
   else {
     const t10 = docs[f10];
-    const mk = t10.match(/<!-- check:next-round ([^>]+) -->/);
+    const mk = t10.match(/<!-- check:next-round([^>]*) -->/);
     if (!mk) err("10: Marke <!-- check:next-round … --> fehlt");
     else {
-      const ids = mk[1].trim().split(/\s+/);
+      const ids = mk[1].trim().split(/\s+/).filter(Boolean); // leere Marke = keine offene Frage
       for (const id of ids) {
         const row = csvRows.find((r) => r.id === id) || csvRows.find((r) => r.id === id && !r.sub);
         if (!row) err(`10: ${id} nicht in decision-status.csv`);

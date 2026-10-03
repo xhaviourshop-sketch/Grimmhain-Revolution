@@ -74,9 +74,9 @@ Pfade relativ zu `docs/specs/vertical-slice/`. Zeilennummern (Commit `c5a9e98`) 
 
 | Regel | Inhalt | Quelle |
 |---|---|---|
-| G-SIEG-1 | **Dorf**: Kein lebender Mensch zählt als Wolf. | `checkWinConditions` in `../../../js/ui/core.js`; `04` D-1 |
+| G-SIEG-1 | **Dorf**: Kein lebender Mensch zählt als Wolf. Ausnahme ab K1a: Lebt ein Doppelspion, entsteht statt des Dorfkandidaten sein Kandidat (`../k1a-siegreicher-wolf-doppelspion/rules-register.md` K1-SIEG-4; DL 3. Oktober 2026, RM-DR-155.3). | `checkWinConditions` in `../../../js/ui/core.js`; `04` D-1 |
 | G-SIEG-2 | **Werwölfe**: Anzahl lebender Wölfe ≥ Anzahl lebender Nicht-Wölfe. Einzelsiegrollen zählen als Nicht-Wölfe. Im Slice zählt jeder Wolf einfach (Siegreicher Wolf ist nicht enthalten). | `countLivingWolfPower`, `checkWinConditions`; `04` D-2 |
-| G-SIEG-3 | Ein erkannter Sieg ist ein **Siegkandidat**. Alle gleichzeitig erfüllten Bedingungen bilden eine Kandidatenmenge (je Manipulator ein personenbezogener Kandidat). Der Spielleiter bestätigt genau einen Kandidaten (die übrigen gelten als nicht gewählt) oder lehnt alle offenen gemeinsam mit Grund ab; die Partie läuft dann weiter. | DL „Mögliche Siege werden erkannt, aber erst durch den Spielleiter bestätigt", DR-02 |
+| G-SIEG-3 | Ein erkannter Sieg ist ein **Siegkandidat**. Alle gleichzeitig erfüllten Bedingungen bilden eine Kandidatenmenge (je Manipulator ein personenbezogener Kandidat). Der Spielleiter bestätigt genau einen Kandidaten (die übrigen gelten als nicht gewählt) oder lehnt alle offenen gemeinsam mit Grund ab; die Partie läuft dann weiter. Einzige Ausnahme ab K1a: kein Dorfkandidat neben einem Doppelspion-Kandidaten (K1-SIEG-4, siehe G-SIEG-1). | DL „Mögliche Siege werden erkannt, aber erst durch den Spielleiter bestätigt", DR-02 |
 | G-SIEG-4 | Es gibt genau eine Siegprüfung. Ein bestätigter Sieg wird nicht überschrieben. | 07-T2 „zwei Siegprüfer" (Bug F7) |
 | G-SIEG-5 | Bei gleichzeitig erfüllten Siegbedingungen entscheidet der Spielleiter. Leben keine Personen mehr, entsteht kein automatischer Gewinner. | DR-02 |
 | G-SIEG-6 | Nach jedem Tod wird vorläufig geprüft. Offene Todesreaktionen und Fähigkeiten werden vollständig abgearbeitet; danach erfolgt die erneute verbindliche Prüfung vor der Spielleiterbestätigung. | DR-14 |

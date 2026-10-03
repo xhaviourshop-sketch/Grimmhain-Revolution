@@ -1,6 +1,6 @@
 # K1a · Regelregister · Siegreicher Wolf und Doppelspion
 
-**Stand:** 2026-10-03 · **Status:** Spezifikation, nicht umgesetzt; Freigabe durch den Product Owner ausstehend
+**Stand:** 2026-10-03 · **Status:** bereit zur Umsetzung, wartet auf Grimmhain-1; keine offene Produktfrage
 **Entscheidungen:** `../../masterplan/DECISION-LOG.md`, Eintrag „Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026“ · **Szenarien:** `acceptance-scenarios.md` · **Umfang:** `implementation-boundary.md`
 
 Pfade relativ zu `docs/specs/k1a-siegreicher-wolf-doppelspion/`. Alle Regeln aus `../vertical-slice/rules-register.md` (G-ID, G-INF, G-PH, G-TOD, G-TAG, G-SIEG, G-GM) gelten unverändert, soweit dieses Register nichts anderes sagt. Abweichungen stehen ausdrücklich in §1 und nennen ihre Entscheidung.
@@ -9,7 +9,6 @@ Pfade relativ zu `docs/specs/k1a-siegreicher-wolf-doppelspion/`. Alle Regeln aus
 
 - **Regeltext DE** ist verbindlich. **Regeltext EN** beschreibt dasselbe Verhalten.
 - **Quelle**: `Text` (Rollentext in `../../../js/core/roles.js`), `Code` (Legacy-Verhalten, belegt im Dossier), `DL` (Decision Log), `RM-DR-###` (Entscheidungsanfrage `../../role-migration/08-decision-request.md`).
-- **offen** markiert eine Frage, die der Product Owner noch nicht beantwortet hat. Für offene Punkte gibt es keine Standardannahme.
 
 ---
 
@@ -20,7 +19,7 @@ Pfade relativ zu `docs/specs/k1a-siegreicher-wolf-doppelspion/`. Alle Regeln aus
 | K1-SIEG-1 | **Gewicht in der Wolfsparität.** In G-SIEG-2 zählt jede lebende Person mit aktueller Rolle `siegreicher-wolf` als zwei Wölfe, jede andere lebende Person, die als Wolf zählt, als ein Wolf. Nicht-Wölfe zählen je Person einfach. Tote zählen nicht. | DL 3. Oktober 2026 (Bestätigung); Text; Code `countLivingWolfPower` |
 | K1-SIEG-2 | **Gewicht nur dort.** G-SIEG-1 („kein lebender Mensch zählt als Wolf“), die Manipulator-Bedingung („genau drei Personen leben“) und jede andere Zählung von Personen zählen den Siegreichen Wolf als eine Person. | DL 3. Oktober 2026 |
 | K1-SIEG-3 | **Doppelspion-Kandidat.** Lebt keine Person, die als Wolf zählt, entsteht für jede lebende Person mit aktueller Rolle `doppelspion` ein eigener personenbezogener Einzelsiegkandidat. Ein toter Doppelspion erzeugt keinen Kandidaten. | Text; RM-DR-155.1 = A |
-| K1-SIEG-4 | **Ausnahme zum Dorfkandidaten.** Entsteht nach K1-SIEG-3 mindestens ein Doppelspion-Kandidat, entsteht kein Dorfkandidat (G-SIEG-1). Alle übrigen gleichzeitig erfüllten Bedingungen (z. B. Manipulator) bleiben Kandidaten (G-SIEG-3). Der Spielleiter kann alle Kandidaten ablehnen und das Ergebnis selbst erklären (`GmCorrection declare_winner`, G-GM-1). | RM-DR-155.3 = A; bewusste Ausnahme zu G-SIEG-1 und G-SIEG-3 |
+| K1-SIEG-4 | **Ausnahme zum Dorfkandidaten (bestätigt).** Entsteht nach K1-SIEG-3 mindestens ein Doppelspion-Kandidat, entsteht kein Dorfkandidat (G-SIEG-1). Alle übrigen gleichzeitig erfüllten Bedingungen (z. B. Manipulator) bleiben Kandidaten (G-SIEG-3). Der Spielleiter kann alle Kandidaten ablehnen und das Ergebnis selbst erklären (`GmCorrection declare_winner`, G-GM-1). | RM-DR-155.3 = A, Ergänzung vom 3. Oktober 2026; bewusste Ausnahme zu G-SIEG-1 und G-SIEG-3, dort verwiesen |
 | K1-SIEG-5 | **Unverändert:** Kandidaten entstehen erst aus dem endgültigen Zustand nach allen Reaktionen (G-SIEG-6, DR-14); bei offenem Prompt oder offener Reaktion entsteht keiner (G-GM-3); lebt niemand, entsteht keiner (DR-02); nach `RejectWin` wird erst nach einer weiteren relevanten Zustandsänderung erneut geprüft (AS-C04). Bestätigt der Spielleiter einen Doppelspion-Kandidaten, gewinnt nur die begünstigte Person. | G-SIEG-3 bis G-SIEG-6, DR-02, DR-14 |
 | K1-SIEG-6 | **Ereigniswerte (technisch).** Die Werte `wolves` und `non_wolves` in den Siegereignissen sind die Seiten des Vergleichs aus K1-SIEG-1: `wolves` ist das Gewicht, `non_wolves` die Anzahl der Nicht-Wölfe. Ohne Siegreichen Wolf sind beide Zahlen identisch mit heute; AS-C01, AS-C03 und AS-C04 bleiben unverändert. | technisch, `../../role-migration/06-implementation-batches.md` §3.5 |
 
@@ -50,11 +49,11 @@ Pfade relativ zu `docs/specs/k1a-siegreicher-wolf-doppelspion/`. Alle Regeln aus
 
 | Feld | Inhalt |
 |---|---|
-| Regeltext DE | Der Doppelspion gehört zu keiner Seite und zählt nie als Werwolf. In der Nacht wacht er gemeinsam mit den Werwölfen auf; der Spielleiter nennt dabei keine Rolle. Lebt kein Werwolf mehr, während der Doppelspion lebt, gewinnt er allein statt des Dorfs. |
-| Regeltext EN | The Double Agent belongs to no side and never counts as a werewolf. At night they wake up together with the werewolves; the game master does not name their role. If no werewolf is alive while the Double Agent is alive, they win alone instead of the village. |
+| Regeltext DE | Der Doppelspion gehört zu keiner Seite und zählt nie als Werwolf. In der Nacht wacht er gemeinsam mit den Werwölfen auf; der Spielleiter nennt dabei keine Rolle. Er darf bei der Opferwahl mitzeigen, seine Wahl zählt aber nicht. Lebt kein Werwolf mehr, während der Doppelspion lebt, gewinnt er allein statt des Dorfs. |
+| Regeltext EN | The Double Agent belongs to no side and never counts as a werewolf. At night they wake up together with the werewolves; the game master does not name their role. They may point along when the victim is chosen, but their choice does not count. If no werewolf is alive while the Double Agent is alive, they win alone instead of the village. |
 | Fraktion | Einzelsieg. `counts_as_wolf` = nein; zählt in G-SIEG-2 als Nicht-Wolf (RM-DR-155.2) |
 | Nachtpriorität | kein eigener Schritt. Lebt er, nennt der Rudelschritt ihn dem Spielleiter als mitaufwachende Person (nur Spielleiter-Sichtbarkeit). Ein toter Doppelspion wacht nicht auf (G-PH-2) |
-| Gültige Ziele | keine. Gespeichert wird nur das Opfer der Werwölfe (Regelregister §2, RM-DR-155.5). **offen RM-DR-155.6:** ob er am Tisch mitzeigen darf; betrifft nur den Ansagetext |
+| Gültige Ziele | keine. Er darf bei der Opferwahl am Tisch mitzeigen, damit er nicht auffällt; seine Wahl zählt nicht. Der Spielleiter trägt nur die Wahl der echten Werwölfe ein, gespeichert wird nur deren Opfer (Regelregister §2, RM-DR-155.5, RM-DR-155.6) |
 | Dauer | passiv, solange er lebt und die Rolle hat |
 | Auflösung | Siegprüfung nach K1-SIEG-3 und K1-SIEG-4 |
 | Konflikte | Mehrere Doppelspione: je Person ein Kandidat, kein Dorfkandidat. Manipulator gleichzeitig erfüllt: beide Kandidaten. Verwandelt sich ein Wolfskind im selben Tod, lebt wieder ein Wolf und es entsteht kein Doppelspion-Kandidat. Das Rudel darf ihn als Opfer wählen |
@@ -78,4 +77,4 @@ Pfade relativ zu `docs/specs/k1a-siegreicher-wolf-doppelspion/`. Alle Regeln aus
 | Dorf zusätzlich vorgeschlagen? | nein; andere Siege weiter gleichzeitig | RM-DR-155.3 = A |
 | Was erfahren die Wölfe? | keine Rolle | RM-DR-155.4 = A |
 | Teilnahme an der gespeicherten Rudelwahl | nein | RM-DR-155.5 (technisch) |
-| Mitzeigen am Tisch | **offen** | RM-DR-155.6 |
+| Mitzeigen am Tisch | ja, seine Wahl zählt nicht | RM-DR-155.6 |

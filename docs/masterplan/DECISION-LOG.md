@@ -272,4 +272,9 @@ Antworten des Product Owners auf `../role-migration/10-next-decisions.md` (Stand
 - **RM-DR-138.1.** Für den Sieg des Selbstmörders müssen mindestens 5 **andere** Personen tot sein; er selbst zählt nicht mit.
 - **RM-DR-138.3.** Es zählt nur, wer im Moment der Prüfung tot ist. Wiederbelebte Personen zählen nicht.
 - **RM-DR-138.4.** Ein abgelehnter Selbstmörder-Sieg verfällt nicht. Ist die Bedingung bei einer späteren Prüfung erneut erfüllt, wird er wieder vorgeschlagen.
-- **Offen:** RM-DR-138.6 (gewinnt ein Selbstmörder, der mit weniger als 5 anderen Toten hingerichtet wurde, später, sobald genug andere tot sind?), RM-DR-138.7 (zählt nach einer Wiederbelebung nur ein erneuter Tod durch Hinrichtung?) und RM-DR-155.6 (darf der Doppelspion bei der Opferwahl mitzeigen?), siehe `../role-migration/10-next-decisions.md`.
+- **Ergänzung (Antworten des Product Owners auf die Folgefragen, 3. Oktober 2026):**
+  - **RM-DR-138.6 = Nein.** Der Selbstmörder gewinnt nur, wenn im Moment seiner Hinrichtung schon 5 andere Personen tot sind. Wer danach stirbt, macht keinen nachträglichen Sieg.
+  - **RM-DR-138.7 = Ja.** Wird der Selbstmörder wiederbelebt, verfällt seine frühere Hinrichtung. Stirbt er später auf anderem Weg, gewinnt er nicht.
+  - **RM-DR-155.6 = Ja.** Der Doppelspion darf bei der Opferwahl der Wölfe mitzeigen, damit er nicht auffällt. Seine Wahl zählt nicht; der Spielleiter trägt nur die Wahl der echten Wölfe ein.
+  - **RM-DR-155.3 bestätigt.** Die Ausnahme zu G-SIEG-1 und G-SIEG-3 ist gewollt. Das Regelregister des Vertical Slice verweist bei G-SIEG-1 und G-SIEG-3 darauf.
+  - **Lesart (Grimmhain-2):** Mit RM-DR-138.6 bezieht sich „im Moment der Prüfung“ aus RM-DR-138.3 auf den Moment der Hinrichtung; das entspricht Option A der Frage in `../role-migration/08-decision-request.md` („zum Zeitpunkt der Hinrichtung“). Ein dort erfüllter, abgelehnter Sieg wird nach RM-DR-138.4 bei jeder späteren Prüfung wieder vorgeschlagen, bis der Selbstmörder wiederbelebt wird.

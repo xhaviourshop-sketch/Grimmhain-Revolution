@@ -185,8 +185,8 @@ RM-DR-158.3;ja;todesprediger;S;;
 RM-DR-138.3;ja;selbstmoerder;E;DECISION-LOG Rollenmigration K1 (3. Oktober 2026);nur wer im Moment der Prüfung tot ist
 RM-DR-138.4;ja;selbstmoerder;E;DECISION-LOG Rollenmigration K1 (3. Oktober 2026);"verfällt nicht; erneut vorgeschlagen, wenn bei späterer Prüfung erfüllt"
 RM-DR-138.5;ja;selbstmoerder;E;"rules-register G-TOD-3; DECISION-LOG Spiegelwolf";Tod durch Spiegelung ist keine Hinrichtung des Selbstmörders
-RM-DR-138.6;ja;selbstmoerder;P;;neu: späterer Sieg nach Hinrichtung mit zu wenigen Toten
-RM-DR-138.7;ja;selbstmoerder;P;;neu: Anspruch nach Wiederbelebung
+RM-DR-138.6;ja;selbstmoerder;E;DECISION-LOG Rollenmigration K1 (3. Oktober 2026, Ergänzung);Nein: nur wenn im Moment der Hinrichtung schon 5 andere tot sind
+RM-DR-138.7;ja;selbstmoerder;E;DECISION-LOG Rollenmigration K1 (3. Oktober 2026, Ergänzung);Ja: Wiederbelebung lässt die frühere Hinrichtung verfallen
 RM-DR-155.4;ja;doppelspion;E;DECISION-LOG Rollenmigration K1 (3. Oktober 2026);A: keine Rolle genannt
 RM-DR-155.5;ja;doppelspion;T;rules-register §2: nur Wölfe wählen das Rudelopfer;Hinweis im Rudelschritt, keine Teilnahme an der gespeicherten Wahl
-RM-DR-155.6;ja;doppelspion;P;;neu: darf er bei der Opferwahl mitzeigen (folgt aus RM-DR-155.4)
+RM-DR-155.6;ja;doppelspion;E;DECISION-LOG Rollenmigration K1 (3. Oktober 2026, Ergänzung);Ja: darf mitzeigen, seine Wahl zählt nicht
