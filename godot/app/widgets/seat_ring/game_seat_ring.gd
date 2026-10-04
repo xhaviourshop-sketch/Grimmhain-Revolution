@@ -20,6 +20,12 @@ var _selected: Array = []
 var _actors: Array = []
 var _marks: Dictionary = {}
 var _secrets_visible: bool = true
+var _chosen: int = 0
+## Flacher Ring über der Rollenleiste (Zuordnung im Kartenmodus): kleinere Rahmen ohne Überlappung.
+var compact: bool = false:
+	set(value):
+		compact = value
+		_layout()
 
 @onready var _center: Control = %RingCenter
 
@@ -77,6 +83,12 @@ func secrets_visible() -> bool:
 	return _secrets_visible
 
 
+## Gewählter Platz (0 = keiner): roter Schein am Ring, unabhängig vom Auswahlmodus.
+func set_chosen(person_id: int) -> void:
+	_chosen = person_id
+	_apply_states()
+
+
 func clear_marking() -> void:
 	set_marking(false, [], [], [])
 
@@ -114,6 +126,7 @@ func _apply_states() -> void:
 		elif _actors.has(id) and _secrets_visible:
 			state = &"actor"
 		token.state = state
+		token.chosen = id == _chosen
 		token.secrets_visible = _secrets_visible
 		token.marks = _marks.get(id, []) if _secrets_visible else []
 		token.disabled = _selection_mode and not _allowed.has(id) and not _selected.has(id)
@@ -122,7 +135,7 @@ func _apply_states() -> void:
 func _layout() -> void:
 	if not is_node_ready():
 		return
-	var result := PortraitRingLayout.layout(_order.size(), size)
+	var result := PortraitRingLayout.layout(_order.size(), size, compact)
 	var rects: Array = result["seats"]
 	for i: int in _order.size():
 		var r: Rect2 = rects[i]

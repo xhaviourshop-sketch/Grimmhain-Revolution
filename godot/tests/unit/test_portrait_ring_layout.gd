@@ -80,3 +80,22 @@ func test_center_is_large_enough_for_the_card_in_both_target_sizes() -> void:
 	for cfg: Array in [[24, Vector2(908.0, 638.0)], [6, Vector2(908.0, 638.0)], [24, Vector2(1164.0, 592.0)], [6, Vector2(1164.0, 592.0)]]:
 		var center: Rect2 = PortraitRingLayout.layout(int(cfg[0]), cfg[1])["center"]
 		assert_true(center.size.x >= 440.0 and center.size.y >= 280.0, "%d Personen, Feld %s: Mitte %s" % [int(cfg[0]), str(cfg[1]), str(center.size)])
+
+
+## Kompakter Ring über der Rollenleiste (Kartenmodus): bei 6 bis 24 Personen auf flacher Fläche berühren sich keine zwei Porträtkreise,
+## und alle Plätze liegen in der Fläche.
+func test_compact_ring_has_no_overlap_for_6_to_24_persons() -> void:
+	for area: Vector2 in [Vector2(944.0, 190.0), Vector2(1100.0, 230.0)]:
+		for count: int in range(6, 25):
+			var result := PortraitRingLayout.layout(count, area, true)
+			var d: float = result["diameter"]
+			var seats: Array = result["seats"]
+			var anchor := PortraitRingLayout.portrait_center(d)
+			var worst := INF
+			for i: int in count:
+				var centre_i: Vector2 = (seats[i] as Rect2).position + anchor
+				assert_true(Rect2(Vector2.ZERO, area).grow(1.0).has_point(centre_i), "%d bei %s: Platz %d liegt in der Fläche" % [count, area, i + 1])
+				for j: int in range(i + 1, count):
+					worst = minf(worst, centre_i.distance_to((seats[j] as Rect2).position + anchor))
+			assert_true(worst >= d * PortraitRingLayout.RING_RADIUS * 2.0, "%d bei %s: Porträtkreise berühren sich nicht (Abstand %.1f, Rahmen %.1f)" % [count, area, worst, d])
+			assert_true(d >= PortraitRingLayout.COMPACT_MIN_DIAMETER, "%d bei %s: Rahmen nicht kleiner als das Mindestmaß" % [count, area])

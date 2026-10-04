@@ -144,7 +144,8 @@ func test_setup_opens_an_entry_without_changing_the_selection() -> void:
 	assert_eq(str((setup.call("view") as Dictionary)["step"]), "roles", "Rollenschritt erreicht")
 	var before := JSON.stringify(setup.call("view"))
 	var dialog := find_node(screen, "PrepDialog") as Control
-	await press(find_button(screen, "Role_das_orakel"))
+	(find_button(screen, "Tile_das_orakel") as RoleTile).info_requested.emit(&"das-orakel")  # langes Drücken
+	await frames(2)
 	await press(find_button(dialog, "RoleInfo"))
 	var layer := screen.call("lexicon_layer") as Control
 	assert_true(layer != null, "Ebene geöffnet")
@@ -153,7 +154,8 @@ func test_setup_opens_an_entry_without_changing_the_selection() -> void:
 	await press(find_button(layer, "CloseLayerButton"))
 	assert_true(screen.call("lexicon_layer") == null, "Schließen entfernt die Ebene")
 	assert_eq(current_id(shell), &"new_game", "zurück in der Vorbereitung")
-	await press(find_button(screen, "Role_werwolf"))
+	(find_button(screen, "Tile_werwolf") as RoleTile).info_requested.emit(&"werwolf")
+	await frames(2)
 	await press(find_button(dialog, "RoleInfo"))
 	await go_back(shell)
 	assert_true(screen.call("lexicon_layer") == null, "Zurück schließt die Ebene")

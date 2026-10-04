@@ -67,6 +67,7 @@ func test_real_cards_mode_starts_only_when_everyone_is_assigned() -> void:
 		setup.call("add_person", "Person %d" % (i + 1))
 	await frames(2)
 	await press(_next(screen))
+	await press(find_button(screen, "ProposalButton"))  # Schritt 3 startet leer: „Empfehlung übernehmen“
 	await press(_next(screen))  # Weiter zur Zuordnung
 	var ring := find_node(screen, "SeatRing")
 	var persons: Array = (setup.call("view") as Dictionary)["persons"]
@@ -85,3 +86,48 @@ func test_real_cards_mode_starts_only_when_everyone_is_assigned() -> void:
 	assert_eq(String(current_id(shell)), "cockpit", "Cockpit nach dem Start")
 	var commands: Array = session_of(shell).call("commands")
 	assert_eq(commands[0].payload["roles"], chosen, "gestartet mit der eingetragenen Zuordnung")
+
+
+func _counts(shell: Control) -> Dictionary:
+	return (setup_of(shell).call("view") as Dictionary)["roles"]["counts"]
+
+
+## Schritt 3 als Kachelraster (DA-91): startet leer, Antippen schaltet an und aus, Werwolf zählt mit − und +, Zähler und Kopfzeile stimmen,
+## „Empfehlung übernehmen“ füllt auf die Personenzahl. Keine Positions- oder Aussehenstests.
+func test_role_tiles_start_empty_toggle_count_and_recommendation_fills() -> void:
+	var shell := await spawn_shell(SIZE_4_3)
+	if shell == null:
+		return
+	var screen := await open_new_game(shell)
+	var setup := setup_of(shell)
+	setup.set("seed_source", func() -> int: return SEED)
+	await press(find_button(screen, "ActCard_akt1"))
+	await press(_next(screen))
+	for i: int in int((setup.call("view") as Dictionary)["player_count"]):
+		setup.call("add_person", "Person %d" % (i + 1))
+	await frames(2)
+	await press(_next(screen))
+	var target := int((setup.call("view") as Dictionary)["player_count"])
+	assert_eq(int((setup.call("view") as Dictionary)["roles"]["total"]), 0, "0 Rollen beim Öffnen")
+	assert_eq((find_node(screen, "SelectedCount") as Label).text, "0 / %d Rollen gewählt" % target, "Kopfzeile")
+	assert_eq(find_node(screen, "Warnings").get("visible"), false, "keine Warnungen ohne Rolle")
+	assert_true(find_node(screen, "Tile_dorfbewohner") == null, "kein Dorfbewohner als Kachel")
+	await press(find_button(screen, "Tile_schutzengel"))
+	assert_eq(int(_counts(shell)["schutzengel"]), 1, "Antippen wählt an")
+	await press(find_button(screen, "Tile_schutzengel"))
+	assert_eq(int(_counts(shell)["schutzengel"]), 0, "nochmal Antippen wählt ab")
+	await press(find_button(screen, "Tile_werwolf"))
+	assert_eq(int(_counts(shell)["werwolf"]), 1, "Werwolf gewählt")
+	assert_true(find_node(find_button(screen, "Tile_die_gebundenen"), "StepPlus") == null, "− und + nur auf einer gewählten Kachel")
+	await press(find_button(screen, "StepPlus"))
+	await press(find_button(screen, "StepPlus"))
+	assert_eq(int(_counts(shell)["werwolf"]), 3, "drei Werwölfe")
+	assert_eq((find_node(screen, "SelectedCount") as Label).text, "3 / %d Rollen gewählt" % target, "Kopfzeile zählt Kopien")
+	assert_eq(int((find_node(find_node(screen, "RolePoolView"), "TeamCounter_wolves") as TeamCounter).value()), 3, "Zähler Wölfe")
+	await press(find_button(screen, "StepMinus"))
+	assert_eq(int(_counts(shell)["werwolf"]), 2, "minus nimmt eine Kopie")
+	await press(find_button(screen, "Tile_werwolf"))
+	assert_eq(int(_counts(shell)["werwolf"]), 0, "Antippen einer gewählten Kachel wählt alle Kopien ab")
+	await press(find_button(screen, "ProposalButton"))
+	assert_eq(int((setup.call("view") as Dictionary)["roles"]["total"]), target, "Empfehlung füllt auf die Personenzahl")
+	assert_true(bool((setup.call("view") as Dictionary)["roles"]["is_suggestion"]), "Auswahl = Empfehlung")

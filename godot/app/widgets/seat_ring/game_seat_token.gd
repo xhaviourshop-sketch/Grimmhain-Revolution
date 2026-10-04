@@ -59,6 +59,10 @@ var marks: Array = []:  ## Zustandsabzeichen (Arten aus NightBoardView.KINDS), n
 	set(value):
 		marks = value
 		queue_redraw()
+var chosen: bool = false:  ## Platz, dem gerade eine Rolle zugeordnet wird: roter Schein wie bei der handelnden Person
+	set(value):
+		chosen = value
+		queue_redraw()
 var _nominated: bool = false
 var _seat: Dictionary = {}
 var _portrait: Texture2D = null
@@ -189,6 +193,8 @@ func _draw() -> void:
 			_draw_glow(c, d, GLOW_SELECTED, 6, 0.7)
 		&"allowed":
 			_draw_glow(c, d, SHIMMER_ALLOWED, 3, 0.26)
+	if chosen:
+		_draw_glow(c, d, GLOW_ACTIVE, 6, 0.8)
 	_draw_portrait(c, d, dim)
 	var frame_rect := _frame_rect(c, d)
 	var socket := frame_rect.position + GroveArtData.SEAT_SOCKET_CENTER * frame_rect.size

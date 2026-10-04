@@ -2,7 +2,7 @@ class_name ActCard
 extends GrimmButton
 ## Akt-Karte der Vorbereitung (DA-89): ein fertiges Rollen-Set auf dem Hain-Kartenrahmen. Zeigt Aktnummer, Titel, Untertitel,
 ## Schwierigkeit (Punkte, zusätzlich als Text im Untertitel) und die Tragkraft („bis 17 Personen“, wenn der Akt die Runde nicht trägt).
-## Der gewählte Akt trägt einen blutroten Rahmen und ein Häkchen (Blutrot nur für Aktives); ein Akt, der die Personenzahl nicht trägt,
+## Der gewählte Akt glüht blutrot entlang des Kartenrahmens (`SelectionGlow`) und trägt ein Häkchen (Blutrot nur für Aktives); ein Akt, der die Personenzahl nicht trägt,
 ## ist gedämpft und nicht wählbar. Verbinden über `pressed`; Auswahl setzt PlayerSetup.
 
 const MAX_LEVEL := 4
@@ -11,6 +11,7 @@ var act: StringName = &""
 var selected: bool = false:
 	set(value):
 		selected = value
+		SelectionGlow.set_on(self, "card_frame", GroveArtData.CARD_FRAME_MARGINS, value)
 		queue_redraw()
 var _title: GrimmLabel
 var _name: GrimmLabel
@@ -118,13 +119,6 @@ func _draw() -> void:
 		else:
 			draw_arc(centre, 5.0, 0.0, TAU, 16, ThemeTokens.MOON_SILVER_DIM, 1.5, true)
 	if selected:
-		var rect := Rect2(Vector2(5.0, 5.0), size - Vector2(10.0, 10.0))
-		var box := StyleBoxFlat.new()
-		box.draw_center = false
-		box.border_color = ThemeTokens.BLOOD_RED
-		box.set_border_width_all(3)
-		box.set_corner_radius_all(ThemeTokens.RADIUS_M)
-		draw_style_box(box, rect)
 		var c := Vector2(inset + 12.0, size.y - inset - 14.0)
 		draw_circle(c, 11.0, ThemeTokens.NUMBER_BG)
 		draw_arc(c, 11.0, 0.0, TAU, 20, ThemeTokens.BLOOD_RED, 2.0, true)

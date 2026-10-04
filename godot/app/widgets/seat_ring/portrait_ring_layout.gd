@@ -23,6 +23,8 @@ const PLATE_OVERHANG := 20.0  ## so weit ragt das Namensschild höchstens über 
 const PLATE_GAP := 2.0       ## Mindestabstand des Schilds zu Nachbarn
 const PLATE_MIN_WIDTH := 36.0
 const CENTER_GAP := 8.0     ## Abstand der Tischmitte zu Porträts und Schildern
+const COMPACT_MIN_DIAMETER := 44.0  ## kompakter Ring (flache Fläche über der Rollenleiste): kleinster Rahmen
+const COMPACT_SPACING := 0.94       ## kompakter Ring: Mindestabstand benachbarter Porträtmitten in Rahmenbreiten (der sichtbare Ring misst 0,8)
 
 
 ## Breite des Platzrahmens nach Personenzahl (Silberring samt Wurzeln, P5). Das Porträtfenster im Ring ist 0,656 davon: ab 13 Personen
@@ -50,8 +52,11 @@ static func portrait_center(diameter: float) -> Vector2:
 
 
 ## Ergebnis: {"seats": Array[Rect2], "diameter": float, "token_size": Vector2, "center": Rect2}. `area` ist die Fläche des Rings.
-static func layout(count: int, area: Vector2) -> Dictionary:
+## `compact`: flache Fläche (Rollenleiste offen): die Rahmen werden gleichmäßig so weit verkleinert, dass sich keine zwei Porträts berühren.
+static func layout(count: int, area: Vector2, compact: bool = false) -> Dictionary:
 	var d := diameter_for(count)
+	if compact:
+		d = _compact_diameter(count, area, d)
 	var size := token_size_for(d)
 	var seats: Array[Rect2] = []
 	var anchor := portrait_center(d)
@@ -61,13 +66,52 @@ static func layout(count: int, area: Vector2) -> Dictionary:
 	var a := maxf(1.0, area.x * 0.5 - size.x * 0.5 - SIDE_MARGIN)
 	var b := maxf(1.0, (area.y - top - bottom) * 0.5)
 	var centre := Vector2(area.x * 0.5, top + b)
-	for p: Vector2 in _ring_points(count, centre, a, b):
+	var points: Array[Vector2] = _row_points(count, area, size, top, bottom) if compact else _ring_points(count, centre, a, b)
+	for p: Vector2 in points:
 		seats.append(Rect2(p - anchor, size))
 	var spans := _plate_spans(seats, d, size)
 	var widths: Array[float] = []
 	for span: Vector2 in spans:
 		widths.append(span.x + span.y)
 	return {"seats": seats, "diameter": d, "token_size": size, "center": _free_center(seats, d, size, centre, a, b, spans), "plate_widths": widths, "plate_spans": spans}
+
+
+## Größter Rahmen bis `start`, bei dem benachbarte Porträtmitten auf der flachen Ellipse mindestens COMPACT_SPACING Rahmenbreiten auseinanderliegen.
+static func _compact_diameter(count: int, area: Vector2, start: float) -> float:
+	var d := start
+	while d > COMPACT_MIN_DIAMETER:
+		var size := token_size_for(d)
+		var top := NUMBER_BAND + d * 0.5
+		var bottom := d * 0.5 + PLATE_HEIGHT - PLATE_DROP + 2.0
+		if _compact_fits(_row_points(count, area, size, top, bottom), d):
+			return d
+		d -= 2.0
+	return COMPACT_MIN_DIAMETER
+
+
+## Flache Ellipse als zwei gleichmäßige Reihen (oben von links nach rechts, unten von rechts nach links, im Uhrzeigersinn): Enden und
+## Mitte haben denselben Abstand, nichts steht auf der steilen Seite einer schmalen Ellipse übereinander gedrängt.
+static func _row_points(count: int, area: Vector2, size: Vector2, top: float, bottom: float) -> Array[Vector2]:
+	var upper := (count + 1) / 2
+	var lower := count - upper
+	var left := size.x * 0.5 + SIDE_MARGIN
+	var width := maxf(1.0, area.x - size.x - SIDE_MARGIN * 2.0)
+	var out: Array[Vector2] = []
+	for k: int in upper:
+		out.append(Vector2(left + width * (float(k) + 0.5) / float(upper), top))
+	for k: int in lower:
+		out.append(Vector2(left + width * (1.0 - (float(k) + 0.5) / float(lower)), area.y - bottom))
+	return out
+
+
+## Kein Paar von Plätzen berührt sich: nebeneinander mindestens COMPACT_SPACING Rahmenbreiten Abstand, übereinander Platz für Porträt und Schild.
+static func _compact_fits(points: Array[Vector2], d: float) -> bool:
+	var stacked := d * RING_RADIUS * 2.0 + PLATE_HEIGHT - PLATE_DROP + 6.0
+	for i: int in points.size():
+		for j: int in range(i + 1, points.size()):
+			if absf(points[i].x - points[j].x) < d * COMPACT_SPACING and absf(points[i].y - points[j].y) < stacked:
+				return false
+	return true
 
 
 ## Breite des Namensschilds je Platz: so breit wie möglich bis `plate_max_width`, aber so schmal, dass es weder den Porträtkreis eines

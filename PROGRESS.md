@@ -671,3 +671,23 @@ Verifikation: gezielt `prep_model` 10, `prep_screen` 3, `ui_i18n` 6 grün; `chec
 Deploy: Web-Export neu, `grimmhain-ipad-test` (Produktion).
 Offen: nichts aus diesem Auftrag.
 
+
+## 2026-10-04: Feinschliff Vorbereitung (DA-91), Branch feature/vorbereitung-feinschliff (nicht gemergt)
+Stand: Eigener Ladebildschirm (boot_splash, `web/shell.html`, `tools/build_splash.py`, Register ergänzt), Hauptmenü mit Hain-Knöpfen, „Empfohlene Aufstellung“ in Schritt 1, weiches pulsierendes Glühen (`SelectionGlow`) statt rotem Rechteck, Schritt 3 startet leer und ist ein Kachelraster (`RoleTile`, `RolePoolView`), „Empfehlung übernehmen“, Rollenleiste im Kartenmodus 40 Prozent hoch in Teamfarben. Popup „Welche Rolle kommt dazu?“, Rollenmenü und 13 Übersetzungsschlüssel entfernt. Regelkern unverändert.
+Verifikation: gezielt grün: `prep_model` 11 (neu: Schritt 3 startet leer), `prep_screen` 4 (neu: Kacheln leer, Toggle, ×N, Zähler, Empfehlung), `unique_start`, `role_lexicon_ui`, `player_groups`, `full_round_ui`, `cards_ui_closing`, `dialog_focus`, `ui_layout`, `ui_theme`, `ui_i18n`, `ui_shell`, `ui_architecture`, `cockpit_gm`, `role_operation_kinds`, `settings_persistence`, `game_history`, `touch_scroll`, `rulebook`, `save_service`; `check-godot-i18n.js` und `check-asset-register.js` grün. Keine Vollsuite (Kern unverändert). Bestehende UI-Tests an den neuen Ablauf angepasst (leerer Schritt 3: erst „Empfehlung übernehmen“), nicht abgeschwächt. Screenshots 1024x768 in `Downloads/Grimmhain-Vorbereitung/neu/prep3/` (Ladebildschirm im Browser mit gedrosseltem Download, Hauptmenü, Schritt 1, Schritt 3 leer und gefüllt, Kartenmodus mit Leiste).
+Nicht geprüft: Safari/iPad (Langdruck, Glühen, Touch), Leistung des Glüh-Schein-Bildes im Browser (einmal berechnet, Viertelauflösung).
+Deploy: Web-Export neu, `grimmhain-ipad-test` (Produktion), `index.pck` 35964444 Byte wie lokal, eigene Ladeseite live.
+Offen: Schriftzug des Ladebilds ist Georgia Bold als Platzhalter für ein Markenlogo.
+
+## 2026-10-04: Lebendiger Startbildschirm und Fehlerkorrekturen (DA-92), Branch feature/vorbereitung-feinschliff (nicht gemergt)
+Stand: Fehler 1 (Kartenmodus, kompakter Ring in zwei Reihen ohne Überlappung, Mitteltext aus, gewählter Platz glüht), Fehler 2 (Teamfarben-Glühen der Rollenkacheln), Hilfszeile bei 0 Rollen. Startbilder geprüft (Logo und Nebel haben echte Alpha, „GRIMMHAIN“ richtig, Nebel hatte harte Kanten und Farbsäume: bereinigt und nahtlos gemacht) und eingebaut: `StartBackdrop` (Zoom, Mondglühen, 2 Nebelbänder, Wolfsaugen, Wetterleuchten), Startbildschirm mit Logo und glühendem „Eintreten“ (Nebel zieht zu), Hauptmenü mit Logo und abgedunkeltem Hintergrund, Ladebild mit Logo statt Georgia-Schriftzug. Regelkern unverändert.
+Verifikation: gezielt grün: `portrait` (9, neu: kompakter Ring 6 bis 24 Personen ohne Berührung), `prep_model` 11, `prep_screen` 4, `ui_shell`, `ui_i18n`, `ui_layout`, `ui_theme`, `board_layout`, `role_lexicon_ui`, `full_round_ui`, `player_groups`, `settings_persistence`, `cockpit_screen`, `cards_ui_closing`; `check-godot-i18n.js`, `check-asset-register.js` grün. Keine Vollsuite (Kern unverändert). Im Browser (Chromium, Service Worker blockiert) geprüft: Ladebildschirm mit Balken, Startbildschirm läuft ohne Konsolenfehler (ca. 6 Bilder/s bei Software-Rendering, kein Maß für das iPad), Wolfsaugen blenden auf. Screenshots 1024x768 und 2360x1640 sowie `start-bewegung.gif` (10 s) in `Downloads/Grimmhain-Vorbereitung/neu/prep4/`.
+Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 38037904 Byte wie lokal.
+Nicht geprüft: Safari/iPad (Flüssigkeit der Ebenen, Glühen, Touch). Offen: Eintreten-Übergang im Browser nicht aufgenommen (nur Code und Tests).
+
+
+## 2026-10-04: Abnahme Feinschliff, Nebel-Übergang und Logo-Lesbarkeit (DA-93), Branch feature/vorbereitung-feinschliff
+Stand: Markus hat den Feinschliff am iPad abgenommen. Nach „Eintreten“ zieht der Nebel zu und das Hauptmenü taucht aus dem Nebel auf (`StartBackdrop.fog_open`, 0,8 s, einmalig über `fog_open_pending`; bei reduzierter Bewegung hart). Hauptmenü-Logo liegt auf dem Mond: weiche dunkle Vignette hinter dem Logo (`LogoShade` in `main_menu_screen.gd`). Regelkern unverändert.
+Verifikation: Screenshots Hauptmenü 1024x768 und 2360x1640 geprüft (Logo lesbar) in `Downloads/grimmhain-menue-logo/`. Vollsuite vor Merge nach main läuft (Ergebnis folgt unten).
+Nicht geprüft: Nebel-Auftauchen im echten Ablauf (nur Code, kein Video), Safari/iPad.
+Offen: Vollsuite-Ergebnis, Merge nach main, Deploy.

@@ -1,7 +1,8 @@
 class_name RolesStep
 extends PrepStep
-## Schritt 3 „Rollen“: fertiger Vorschlag des gewählten Aktes, nach Team gruppiert (Dorf, Wölfe, Einzelgänger). Eine Rolle antippen öffnet
-## Tauschen, Entfernen und Info; „Rolle hinzufügen“ ergänzt; „Neuer Vorschlag“ ersetzt die Auswahl. Sonderfälle (der Trugbilderwolf gibt sich
+## Schritt 3 „Rollen“: startet leer. Alle Rollen des gewählten Aktes stehen als Kacheln (nach Team gruppiert, Dorf, Wölfe, Einzelgänger); Antippen
+## schaltet eine Rolle an oder aus, Werwolf und Die Gebundenen haben einen Zähler, langes Drücken zeigt die Beschreibung (DA-91). „Empfehlung
+## übernehmen“ füllt die Auswahl mit dem Vorschlag des Aktes. Hinweise und Warnungen erscheinen erst mit der ersten Rolle. Sonderfälle (der Trugbilderwolf gibt sich
 ## bei Prüfungen als andere Rolle aus, Totenreichkarten) stehen als Zeile mit „ändern“ in einfacher Sprache. Die Zähler oben zeigen die
 ## Teams der tatsächlichen Auswahl. Blocker (Start technisch unmöglich) stehen als Satz an der Fußzeile, Warnungen (keine Einzelgängerrolle,
 ## Hinweise zur Besetzung) als Hinweiszeilen ohne Einfluss auf den Start (DA-89).
@@ -13,11 +14,13 @@ signal start_requested
 
 enum Page { POOL, ASSIGN }
 
+const BAR_CHIP_SCALE := 1.35        ## Rollenleiste im Kartenmodus: größere Marken
+const BAR_HEIGHT_SHARE := 0.4       ## Rollenleiste: Anteil der Seitenhöhe
+
 var _page: Page = Page.POOL
 var _last_view: Dictionary = {}
 var _bar_person: int = 0
 
-var _act_label: GrimmLabel
 var _proposal: GrimmButton
 var _tabs: HBoxContainer
 var _pool_tab: ChoiceButton
@@ -31,6 +34,7 @@ var _ring: GameSeatRing
 var _progress: GrimmLabel
 var _assign_hint: GrimmLabel
 var _bar: PanelContainer
+var _assign_card: PanelContainer
 var _bar_title: GrimmLabel
 var _bar_chips: HFlowContainer
 var _bar_clear: GrimmButton
@@ -84,7 +88,9 @@ func footer() -> Dictionary:
 	var hint := ""
 	var values := {}
 	var error := false
-	if not blockers.is_empty():
+	if int(_last_view["roles"]["total"]) == 0:
+		hint = "ui.prep.roles.empty_hint"  # Hilfszeile statt Blocker-Satz, solange nichts gewählt ist
+	elif not blockers.is_empty():
 		hint = _blocker_key(str(blockers[0]))
 		values = _blocker_values(str(blockers[0]))
 		error = true
@@ -125,9 +131,6 @@ func _header() -> Control:
 	var row := HBoxContainer.new()
 	row.name = "RolesHeader"
 	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_L)
-	_act_label = GrimmLabel.new()
-	_act_label.name = "ActLabel"
-	_act_label.theme_type_variation = &"HainCaptionLabel"
 	row.add_child(_tabs)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -178,17 +181,17 @@ func _build_pool_page() -> ScrollContainer:
 	_pool_column = VBoxContainer.new()
 	_pool_column.name = "PoolColumn"
 	_pool_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_pool_column.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	_pool_column.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	scroll.add_child(_pool_column)
 	_warnings = VBoxContainer.new()
 	_warnings.name = "Warnings"
 	_warnings.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
-	_pool_column.add_child(_act_label)
 	_pool_column.add_child(_warnings)
 	_pool = RolePoolView.new()
 	_pool.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_pool.role_pressed.connect(_on_role_pressed)
-	_pool.add_pressed.connect(_on_add_pressed)
+	_pool.role_toggled.connect(_on_role_toggled)
+	_pool.count_step.connect(_on_count_step)
+	_pool.info_requested.connect(_on_role_info)
 	_pool.decoy_change_requested.connect(_on_decoy_change)
 	_pool.death_cards_toggled.connect(func(on: bool) -> void: _setup.set_death_cards(on))
 	_pool_column.add_child(_pool)
@@ -211,6 +214,7 @@ func _build_assign_page() -> Control:
 	page_control.add_child(_ring)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	var card := PanelContainer.new()
+	_assign_card = card
 	card.name = "AssignCard"
 	card.theme_type_variation = &"CardPanel"
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -270,7 +274,8 @@ func _build_bar() -> PanelContainer:
 	_bar_scroll = ScrollContainer.new()
 	_bar_scroll.name = "RoleBarScroll"
 	_bar_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_bar_scroll.custom_minimum_size.y = ThemeTokens.ROLE_CHIP_HEIGHT * 2 + ThemeTokens.SPACE_S
+	_bar_scroll.custom_minimum_size.y = ThemeTokens.ROLE_CHIP_HEIGHT * 2 + ThemeTokens.SPACE_S  # beim Öffnen auf 40 Prozent der Bildschirmhöhe gesetzt
+	_bar_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_bar_scroll.follow_focus = true
 	column.add_child(_bar_scroll)
 	_bar_chips = HFlowContainer.new()
@@ -287,8 +292,6 @@ func _build_bar() -> PanelContainer:
 func _render(view: Dictionary) -> void:
 	_last_view = view
 	var roles: Dictionary = view["roles"]
-	_act_label.format_values = {"act": StringName(ActCatalog.name_key(StringName(str(view["act"])))), "title": StringName(ActCatalog.title_key(StringName(str(view["act"]))))}
-	_act_label.text_key = "ui.prep.roles.act"
 	var manual := is_manual()
 	_tabs.visible = manual
 	if not manual and _page == Page.ASSIGN:
@@ -299,7 +302,7 @@ func _render(view: Dictionary) -> void:
 	_assign_tab.disabled = not (view["blockers"] as Array).is_empty()
 	if not (view["blockers"] as Array).is_empty() and _page == Page.ASSIGN:
 		_show_page(Page.POOL)
-	_pool.show_roles(roles, _act_has_cards(str(view["act"])))
+	_pool.show_roles(roles, int(view["player_count"]), _act_has_cards(str(view["act"])))
 	_render_warnings(view)
 	_render_assign(view)
 	footer_changed.emit()
@@ -316,7 +319,7 @@ func _render_warnings(view: Dictionary) -> void:
 	for child: Node in _warnings.get_children():
 		_warnings.remove_child(child)
 		child.queue_free()
-	var warnings: Array = view["warnings"]
+	var warnings: Array = view["warnings"] if int(view["roles"]["total"]) > 0 else []  # erst mit der ersten Rolle
 	for code: Variant in warnings:
 		var key := _warning_key(str(code))
 		if key == "":
@@ -367,51 +370,30 @@ func _show_page(page_id: Page) -> void:
 
 # --- Rollenaktionen ---------------------------------------------------------------------------------------
 
-func _on_role_pressed(role: StringName) -> void:
-	var request := DialogRequest.create("ui.prep.roles.menu.title", "", "")
+## Kachel angetippen: gewählte Rolle ganz abwählen (alle Kopien, ausdrücklich ohne Rückfrage), sonst eine Kopie wählen.
+func _on_role_toggled(role: StringName) -> void:
+	var count := int(_last_view["roles"]["counts"][String(role)])
+	if count <= 0:
+		_setup.add_role(role)
+		return
+	for i: int in count:
+		_setup.remove_role(role)
+
+
+## − oder + an einer Kachel mit Zähler; − bei einer Kopie wählt die Rolle ab.
+func _on_count_step(role: StringName, delta: int) -> void:
+	if delta > 0:
+		_setup.add_role(role)
+	else:
+		_setup.remove_role(role)
+
+
+## Langes Drücken: Rollenbeschreibung, dazu der Weg ins Lexikon.
+func _on_role_info(role: StringName) -> void:
+	var request := DialogRequest.create("ui.prep.roles.info.title", RolePresentation.short_key(role), "")
 	request.title_values = {"role": StringName(RolePresentation.name_key(role))}
-	request.options.append(DialogOption.create("RoleSwap", "ui.prep.roles.menu.swap", {}, _open_picker.bind(role, SetupRoleCatalog.faction_of(role), true)))
-	request.options.append(DialogOption.create("RoleRemove", "ui.prep.roles.menu.remove", {}, func() -> void: _setup.remove_role(role)))
 	request.options.append(DialogOption.create("RoleInfo", "ui.prep.roles.menu.info", {}, func() -> void: lexicon_requested.emit(role)))
 	dialog_requested.emit(request)
-
-
-func _on_add_pressed(team: StringName) -> void:
-	_open_picker(&"", team, false)
-
-
-## Auswahl einer Rolle des Teams: zuerst die Rollen des Aktes, dann weitere; nur solche, die noch gewählt werden können.
-func _open_picker(old: StringName, team: StringName, swap: bool) -> void:
-	var request := DialogRequest.create("ui.prep.roles.swap.title" if swap else "ui.prep.roles.add.title", "", "")
-	if swap:
-		request.title_values = {"role": StringName(RolePresentation.name_key(old))}
-	var roles: Dictionary = _last_view["roles"]
-	var in_act: Array[StringName] = []
-	var others: Array[StringName] = []
-	var act := StringName(str(_last_view["act"]))
-	for role: StringName in RolePresentation.sorted_roles():
-		if SetupRoleCatalog.faction_of(role) != team or role == old or not SetupRoleCatalog.is_offered(role):
-			continue
-		if int(roles["counts"][String(role)]) + 1 > int(roles["limits"][String(role)]):
-			continue
-		if RoleCatalog.requires_cards(role) and not bool(roles["death_cards"]):
-			continue
-		(in_act if ActCatalog.contains(act, role) else others).append(role)
-	if in_act.is_empty() and others.is_empty():
-		request.message_key = "ui.prep.roles.picker.none"
-	if not in_act.is_empty():
-		request.options.append(DialogOption.header("ui.prep.roles.picker.in_act"))
-		_append_picks(request, in_act, old, swap)
-	if not others.is_empty():
-		request.options.append(DialogOption.header("ui.prep.roles.picker.others"))
-		_append_picks(request, others, old, swap)
-	dialog_requested.emit(request)
-
-
-func _append_picks(request: DialogRequest, list: Array[StringName], old: StringName, swap: bool) -> void:
-	for role: StringName in list:
-		var apply: Callable = (func() -> void: _setup.replace_role(old, role)) if swap else (func() -> void: _setup.add_role(role))
-		request.options.append(DialogOption.create("Pick_%s" % String(role).replace("-", "_"), RolePresentation.name_key(role), {}, apply))
 
 
 func _on_decoy_change(copy_id: int) -> void:
@@ -437,12 +419,23 @@ func _on_decoy_change(copy_id: int) -> void:
 
 # --- Zuordnung (Echte Karten) -----------------------------------------------------------------------------
 
+## Höhe der Rollenleiste: etwa 40 Prozent der Bildschirmhöhe; der Sitzring rückt darüber.
+func _bar_height() -> float:
+	return get_viewport_rect().size.y * BAR_HEIGHT_SHARE
+
+
 func _on_seat_tapped(person_id: int) -> void:
 	_bar_person = person_id
+	_bar.custom_minimum_size.y = _bar_height()
+	_bar_scroll.custom_minimum_size.y = maxf(float(ThemeTokens.ROLE_CHIP_HEIGHT) * 2.0, _bar_height() - 132.0)
 	_bar.visible = true
+	_ring.offset_bottom = -_bar_height()
+	_ring.compact = true
+	_ring.set_chosen(person_id)
+	_assign_card.visible = false
 	_render_bar(_last_view)
 	if _bar_chips.get_child_count() > 0:
-		(_bar_chips.get_child(0) as Control).grab_focus()
+		(_bar_chips.get_child(0) as Control).grab_focus(true)
 
 
 func _render_bar(view: Dictionary) -> void:
@@ -463,7 +456,9 @@ func _render_bar(view: Dictionary) -> void:
 	for unit: Variant in d["remaining_units"]:
 		var u: Dictionary = unit
 		var chip := RoleChip.new()
+		chip.team_tint = true
 		chip.show_role(StringName(str(u["role_id"])), int(u["left"]))
+		chip.set_scale_factor(BAR_CHIP_SCALE)
 		chip.name = "Unit_%s" % str(u["unit"]).replace("-", "_").replace("#", "_")
 		var key := StringName(str(u["unit"]))
 		chip.pressed.connect(func() -> void: _assign(key))
@@ -489,6 +484,10 @@ func _close_bar() -> void:
 		return
 	_bar.visible = false
 	_bar_person = 0
+	_ring.offset_bottom = 0.0
+	_ring.compact = false
+	_ring.set_chosen(0)
+	_assign_card.visible = true
 
 
 func bar_visible() -> bool:

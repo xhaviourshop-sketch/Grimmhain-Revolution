@@ -36,7 +36,7 @@ func start(setup: PlayerSetup) -> void:
 	var left := VBoxContainer.new()
 	left.name = "CountColumn"
 	left.custom_minimum_size.x = ThemeTokens.PREP_COUNT_COLUMN_WIDTH
-	left.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	left.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	left.add_child(_count_block())
 	left.add_child(_team_counters())
 	left.add_child(_modes())
@@ -99,6 +99,7 @@ func _team_counters() -> Control:
 	var teams := VBoxContainer.new()
 	teams.name = "TeamCounters"
 	teams.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	teams.add_child(_heading("RecommendedHeading", "ui.prep.round.recommended"))
 	for team: StringName in [Faction.VILLAGE, Faction.WOLVES, Faction.SOLO]:
 		var counter_view := TeamCounter.new()
 		counter_view.setup(team)

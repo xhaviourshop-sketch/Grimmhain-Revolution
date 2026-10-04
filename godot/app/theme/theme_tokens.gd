@@ -130,6 +130,22 @@ const COUNTER_VALUE_FONT := 72        ## große Spielerzahl
 const ACT_CARD_MIN_WIDTH := 260       ## Akt-Karte: schmalste Breite, zwei Spalten
 const ACT_CARD_HEIGHT := 160
 const TEAM_SYMBOL_SIZE := 48          ## Teamsymbol im Zähler
+## Teamfarben der Rollenkacheln und Leistenmarken (Multiplikator auf das dunkle Namensschild `name_plate_short`, DA-91): gewählt volle Farbe,
+## nicht gewählt entsättigt und dunkel.
+const TEAM_PLATE_VILLAGE := Color(0.75, 1.45, 2.4)    ## kühles Mondblau
+const TEAM_PLATE_WOLVES := Color(2.3, 0.5, 0.52)     ## dunkles Blutrot
+const TEAM_PLATE_SOLO := Color(1.6, 1.0, 2.1)       ## gedämpftes Violett
+## Glühen der gewählten Rollenkachel in Teamfarbe (Dorf Mondblau, Wölfe Blutrot, Einzelgänger Violett); Akt-Karte, Modus und Namensschild glühen rot.
+## Startbildschirm (lebendiger Hintergrund): Mondschein, Wolfsaugen, ferner Schimmer, Nebelfarbe beim Zuziehen.
+const START_MOON_GLOW := Color(0.72, 0.82, 1.0)
+const START_EYES := Color(1.0, 0.14, 0.1)
+const START_FLASH := Color(0.62, 0.72, 1.0)
+const START_FOG_CLOSE := Color(0.1, 0.13, 0.2)
+const START_SHADE := Color(0.01, 0.014, 0.03)
+const GLOW_VILLAGE := Color(0.35, 0.6, 1.0)
+const GLOW_WOLVES := Color(0.82, 0.1, 0.14)
+const GLOW_SOLO := Color(0.66, 0.4, 0.95)
+const TEAM_PLATE_OFF := Color(0.72, 0.74, 0.8)       ## nicht gewählt
 const NAME_PLATE_HEIGHT := 56         ## Namensschild (Tippfläche)
 const NAME_PLATE_MIN_WIDTH := 196
 const ROLE_CHIP_HEIGHT := 56          ## Rollenmarke in der Rollenübersicht

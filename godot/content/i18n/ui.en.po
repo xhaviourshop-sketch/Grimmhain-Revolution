@@ -8262,6 +8262,9 @@ msgstr "How many are playing?"
 msgid "ui.prep.round.range"
 msgstr "{min} to {max} people"
 
+msgid "ui.prep.round.recommended"
+msgstr "Recommended setup"
+
 msgid "ui.prep.round.minus"
 msgstr "One person fewer"
 
@@ -8370,50 +8373,26 @@ msgstr "{count} names still missing."
 msgid "ui.prep.names.missing_one"
 msgstr "1 name still missing."
 
-msgid "ui.prep.roles.act"
-msgstr "{act}: {title}"
-
 msgid "ui.prep.roles.proposal"
-msgstr "New proposal"
+msgstr "Apply recommendation"
 
-msgid "ui.prep.roles.team.village"
-msgstr "Village: {count}"
+msgid "ui.prep.roles.selected"
+msgstr "{count} / {total} roles selected"
 
-msgid "ui.prep.roles.team.wolves"
-msgstr "Wolves: {count}"
+msgid "ui.prep.roles.empty_hint"
+msgstr "Apply the recommendation or pick roles"
 
-msgid "ui.prep.roles.team.solo"
-msgstr "Loners: {count}"
-
-msgid "ui.prep.roles.add"
-msgstr "Add role"
-
-msgid "ui.prep.roles.add.title"
-msgstr "Which role should be added?"
-
-msgid "ui.prep.roles.swap.title"
-msgstr "Swap {role} for …"
-
-msgid "ui.prep.roles.menu.title"
+msgid "ui.prep.roles.info.title"
 msgstr "{role}"
 
-msgid "ui.prep.roles.menu.swap"
-msgstr "Swap"
+msgid "ui.prep.roles.tile.less"
+msgstr "One copy less"
 
-msgid "ui.prep.roles.menu.remove"
-msgstr "Remove"
+msgid "ui.prep.roles.tile.more"
+msgstr "One copy more"
 
 msgid "ui.prep.roles.menu.info"
 msgstr "Info"
-
-msgid "ui.prep.roles.picker.in_act"
-msgstr "From this act"
-
-msgid "ui.prep.roles.picker.others"
-msgstr "From other acts"
-
-msgid "ui.prep.roles.picker.none"
-msgstr "There is no other role in this team."
 
 msgid "ui.prep.roles.special.heading"
 msgstr "Special"
