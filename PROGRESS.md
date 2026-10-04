@@ -664,3 +664,10 @@ Nächster Schritt: Markus prüft auf dem iPad; Ja/Nein-Frage zur fehlenden Dorfr
 Stand: Dorfbewohner aus allen Akten und Vorschlägen entfernt, Werwolf mehrfach (`max_copies` UNLIMITED), Vorschlag füllt mit besonderen Rollen, weiteren Werwölfen bis zur Wolfsquote, zuletzt (nur Akt I) mit Gebundenen; jeder Akt trägt 24 Personen. Schritt 1: Schalter links unter den Teamzählern (Zähler einzeilig), Akt-Karte zeigt Fokusrahmen nur bei Tastatur (`grab_focus(true)` im Router), Einzahl „1 Name“ (DE/EN). Entscheidung DA-90, Beschreibung `docs/ui/preparation.md`.
 Verifikation: gezielt grün: `unique_start` (8, neu: 3 Werwölfe Start, Siegprüfung, Speichern/Laden), `prep_model` (10, neu: jeder Akt trägt 24), `prep_screen`, `dialog_focus`, `ui_architecture`, `ui_i18n`, `ui_shell`, `siegreicher_wolf`. Vollsuite einmal am Ende (inkl. Fuzz): 1400 Tests, 1 Fehlschlag (`test_cards_ui_closing`: Karte `wende_01` war mit der neuen Besetzung bei Seed 20260930 nicht spielbar, kein Produktfehler); Seed auf 20261001 geändert, Datei danach 4/4 grün, keine zweite Vollsuite. Screenshots Schritt 1 und 3 (1024x768): `Downloads/Grimmhain-Vorbereitung/neu/prep2/`.
 Offen: Gebundene als Füller in Akt I (Ja/Nein), Rollenzähler „1 Rollen“ hat noch keine Einzahl.
+
+## 2026-10-04: Abnahme der Vorbereitung, Merge nach main
+Stand: Markus hat die Vorbereitung am iPad abgenommen. Akt I bleibt wie gebaut (Gebundene als letzter Füller, in DA-90 ergänzt). Blocker `act_too_small` samt Schlüsseln und Sperre der Akt-Karten entfernt (jeder Akt trägt 24, unerreichbar). Einzahl bei „1 Rolle fehlt/zu viel“ (DE/EN). Commit 72c0a76, danach Merge ohne Squash nach main.
+Verifikation: gezielt `prep_model` 10, `prep_screen` 3, `ui_i18n` 6 grün; `check-godot-i18n.js` konsistent; Vollsuite einmal inkl. Fuzz: 1400 Tests, 0 Fehlschläge (Exit 0). Safari/iPad nur durch Markus geprüft.
+Deploy: Web-Export neu, `grimmhain-ipad-test` (Produktion).
+Offen: nichts aus diesem Auftrag.
+
