@@ -8379,6 +8379,9 @@ msgstr "Apply recommendation"
 msgid "ui.prep.roles.selected"
 msgstr "{count} / {total} roles selected"
 
+msgid "ui.prep.roles.empty_hint"
+msgstr "Apply the recommendation or pick roles"
+
 msgid "ui.prep.roles.info.title"
 msgstr "{role}"
 

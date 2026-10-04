@@ -29,7 +29,8 @@ var _box: GroveStyleBox = null
 
 ## `part`: Name des Hain-Teils, `margins`: dessen Neun-Felder-Ränder (GroveArtData).
 ## `inset`: Abstand der geglühten Form zum Rand des Trägers (links, oben, rechts, unten).
-static func create(part: String, margins: Vector4, inset: Vector4 = Vector4.ZERO) -> SelectionGlow:
+## `color`: Farbe des Glühens, ohne Angabe (Alpha 0) das Blutrot des Shaders.
+static func create(part: String, margins: Vector4, inset: Vector4 = Vector4.ZERO, color: Color = ThemeTokens.INVISIBLE) -> SelectionGlow:
 	var glow := SelectionGlow.new()
 	glow.name = "SelectionGlow"
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -44,17 +45,19 @@ static func create(part: String, margins: Vector4, inset: Vector4 = Vector4.ZERO
 		var grown := Vector4.ONE * PAD * GroveArtData.TEXTURE_SCALE
 		glow._box = GroveStyleBox.make(tex, margins + grown)
 		glow.material = _material()
+		if color.a > 0.0:
+			(glow.material as ShaderMaterial).set_shader_parameter("glow_color", color)
 	glow.visible = false
 	return glow
 
 
 ## Hängt ein Glühen an `host` (einmal) und schaltet es; ohne Bild (Teil fehlt) bleibt es unsichtbar.
-static func set_on(host: Control, part: String, margins: Vector4, on: bool, inset: Vector4 = Vector4.ZERO) -> void:
+static func set_on(host: Control, part: String, margins: Vector4, on: bool, inset: Vector4 = Vector4.ZERO, color: Color = ThemeTokens.INVISIBLE) -> void:
 	var glow := host.get_node_or_null("SelectionGlow") as SelectionGlow
 	if glow == null:
 		if not on:
 			return
-		glow = create(part, margins, inset)
+		glow = create(part, margins, inset, color)
 		host.add_child(glow)
 	glow.visible = on and glow._box != null
 

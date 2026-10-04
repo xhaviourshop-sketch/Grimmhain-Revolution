@@ -21,7 +21,7 @@ var chosen: bool = true:
 	set(value):
 		chosen = value
 		if glow_when_chosen:
-			SelectionGlow.set_on(self, "name_plate_short", GroveArtData.NAME_PLATE_SHORT_MARGINS, value, Vector4(MEDALLION * 0.5 * k, (float(ThemeTokens.ROLE_CHIP_HEIGHT) - PLATE_HEIGHT) * 0.5 * k, 0.0, (float(ThemeTokens.ROLE_CHIP_HEIGHT) - PLATE_HEIGHT) * 0.5 * k))
+			SelectionGlow.set_on(self, "name_plate_short", GroveArtData.NAME_PLATE_SHORT_MARGINS, value, Vector4(MEDALLION * 0.5 * k, (float(ThemeTokens.ROLE_CHIP_HEIGHT) - PLATE_HEIGHT) * 0.5 * k, 0.0, (float(ThemeTokens.ROLE_CHIP_HEIGHT) - PLATE_HEIGHT) * 0.5 * k), _glow_color())
 		queue_redraw()
 var force_count: bool = false         ## „×N“ auch bei einer Kopie (Kachel mit Zähler)
 var k: float = 1.0                   ## Größenfaktor (Rollenleiste im Kartenmodus ist größer)
@@ -47,6 +47,15 @@ func set_scale_factor(factor: float) -> void:
 
 
 ## Farbe des Namensschilds: Teamfarbe (gewählt) oder entsättigt (nicht gewählt); ohne Teamfarbe unverändert.
+func _glow_color() -> Color:
+	match SetupRoleCatalog.faction_of(role):
+		Faction.WOLVES:
+			return ThemeTokens.GLOW_WOLVES
+		Faction.SOLO:
+			return ThemeTokens.GLOW_SOLO
+	return ThemeTokens.GLOW_VILLAGE
+
+
 func _plate_tint(base: Color) -> Color:
 	if not team_tint:
 		return base

@@ -8379,6 +8379,9 @@ msgstr "Empfehlung übernehmen"
 msgid "ui.prep.roles.selected"
 msgstr "{count} / {total} Rollen gewählt"
 
+msgid "ui.prep.roles.empty_hint"
+msgstr "Übernimm die Empfehlung oder wähle Rollen"
+
 msgid "ui.prep.roles.info.title"
 msgstr "{role}"
 

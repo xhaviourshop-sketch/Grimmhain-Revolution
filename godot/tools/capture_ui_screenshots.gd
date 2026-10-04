@@ -19,6 +19,10 @@ const SHOTS := [
 	["ui-foundation", "03-cockpit-1024x768-de.png", Vector2i(1024, 768), "de", &"cockpit", "", false],
 	["ui-foundation", "04-main-menu-1280x800-en.png", Vector2i(1280, 800), "en", &"main_menu", "", false],
 	["ui-foundation", "05-settings-1280x800-de.png", Vector2i(1280, 800), "de", &"settings", "", false],
+	["start", "start-1024x768.png", Vector2i(1024, 768), "de", &"start", "", false],
+	["start", "start-2360x1640.png", Vector2i(2360, 1640), "de", &"start", "", true],
+	["start", "menue-1024x768.png", Vector2i(1024, 768), "de", &"main_menu", "", false],
+	["start", "menue-2360x1640.png", Vector2i(2360, 1640), "de", &"main_menu", "", true],
 ]
 ## Vorbereitung „Neue Partie“ (DA-89): jeder Schritt in beiden Modi, auf den Gerätegrößen 1024×768 und 2360×1640 (skaliert). Datei =
 ## <Nr>-<Schritt>-<Modus>-<Breite>x<Höhe>.png; Aufruf mit --only=prep und --out=<Ordner>.
@@ -29,6 +33,7 @@ const PREP_SHOTS := [
 	["03-rollen-leer", "_prep_roles_random", "zufaellig"], ["03-rollen-leer", "_prep_roles_manual", "karten"],
 	["03-rollen-gefuellt", "_prep_roles_filled_random", "zufaellig"], ["03-rollen-gefuellt", "_prep_roles_filled_manual", "karten"],
 	["03-rollen-zuordnung", "_prep_assign", "karten"], ["03-rollen-leiste", "_prep_bar", "karten"],
+	["03-rollen-leiste-24", "_prep_bar_24", "karten"], ["03-rollen-gefuellt-24", "_prep_roles_filled_24", "zufaellig"],
 ]
 const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
 
@@ -109,6 +114,8 @@ func _capture(path: String, size: Vector2i, locale: String, screen: StringName, 
 	for i: int in 4:
 		await process_frame
 	if prepare != "":
+		_shot_count = 13
+		_shot_act = "akt3"
 		await call(prepare, shell)
 	for i: int in 8:
 		await process_frame
@@ -149,6 +156,7 @@ func _press(shell: AppShell, node_name: String) -> void:
 
 
 var _shot_act := "akt3"
+var _shot_count := 13
 
 
 ## Tablet-Runde: 13 Personen, Akt III (enthält Trugbilderwolf und Totenreichkarten-Rolle), nur über echte Buttons und die Anwendungsschicht.
@@ -156,7 +164,7 @@ func _prep_names_filled(shell: AppShell, manual: bool) -> void:
 	var setup := shell.get_app_context().setup
 	if manual:
 		await _press(shell, "ManualModeButton")
-	while int(setup.view()["player_count"]) < 13:
+	while int(setup.view()["player_count"]) < _shot_count:
 		await _press(shell, "PlusButton")
 	await _press(shell, "ActCard_%s" % _shot_act)
 
@@ -176,10 +184,14 @@ func _prep_names(shell: AppShell, manual: bool, complete: bool) -> void:
 	await _prep_names_filled(shell, manual)
 	await _press(shell, "NextButton")
 	var setup := shell.get_app_context().setup
-	for n: String in PREP_NAMES:
-		setup.add_person(n)
-	if complete:
-		setup.add_person("Mia")
+	if _shot_count > 13:
+		for n: String in NAMES.slice(0, _shot_count):
+			setup.add_person(n)
+	else:
+		for n: String in PREP_NAMES:
+			setup.add_person(n)
+		if complete:
+			setup.add_person("Mia")
 	await process_frame
 	var plate := _node(shell, "NamePlate_3") as BaseButton
 	if plate != null:
@@ -234,6 +246,21 @@ func _prep_assign(shell: AppShell) -> void:
 	for i: int in 7:
 		setup.assign_role(int(persons[i]["person_id"]), units[i])
 	await process_frame
+
+
+func _prep_bar_24(shell: AppShell) -> void:
+	_shot_count = 24
+	await _prep_assign(shell)
+	var persons: Array = shell.get_app_context().setup.view()["persons"]
+	var seat := _node(shell, "SeatRing").call("token_for", int(persons[9]["person_id"])) as BaseButton
+	if seat != null:
+		seat.pressed.emit()
+	await process_frame
+
+
+func _prep_roles_filled_24(shell: AppShell) -> void:
+	_shot_count = 24
+	await _prep_roles_filled_random(shell)
 
 
 func _prep_bar(shell: AppShell) -> void:

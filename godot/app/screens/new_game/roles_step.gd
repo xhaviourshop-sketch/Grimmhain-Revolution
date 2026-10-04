@@ -34,6 +34,7 @@ var _ring: GameSeatRing
 var _progress: GrimmLabel
 var _assign_hint: GrimmLabel
 var _bar: PanelContainer
+var _assign_card: PanelContainer
 var _bar_title: GrimmLabel
 var _bar_chips: HFlowContainer
 var _bar_clear: GrimmButton
@@ -87,7 +88,9 @@ func footer() -> Dictionary:
 	var hint := ""
 	var values := {}
 	var error := false
-	if not blockers.is_empty() and int(_last_view["roles"]["total"]) > 0:
+	if int(_last_view["roles"]["total"]) == 0:
+		hint = "ui.prep.roles.empty_hint"  # Hilfszeile statt Blocker-Satz, solange nichts gewählt ist
+	elif not blockers.is_empty():
 		hint = _blocker_key(str(blockers[0]))
 		values = _blocker_values(str(blockers[0]))
 		error = true
@@ -211,6 +214,7 @@ func _build_assign_page() -> Control:
 	page_control.add_child(_ring)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	var card := PanelContainer.new()
+	_assign_card = card
 	card.name = "AssignCard"
 	card.theme_type_variation = &"CardPanel"
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -426,6 +430,9 @@ func _on_seat_tapped(person_id: int) -> void:
 	_bar_scroll.custom_minimum_size.y = maxf(float(ThemeTokens.ROLE_CHIP_HEIGHT) * 2.0, _bar_height() - 132.0)
 	_bar.visible = true
 	_ring.offset_bottom = -_bar_height()
+	_ring.compact = true
+	_ring.set_chosen(person_id)
+	_assign_card.visible = false
 	_render_bar(_last_view)
 	if _bar_chips.get_child_count() > 0:
 		(_bar_chips.get_child(0) as Control).grab_focus(true)
@@ -478,6 +485,9 @@ func _close_bar() -> void:
 	_bar.visible = false
 	_bar_person = 0
 	_ring.offset_bottom = 0.0
+	_ring.compact = false
+	_ring.set_chosen(0)
+	_assign_card.visible = true
 
 
 func bar_visible() -> bool:
