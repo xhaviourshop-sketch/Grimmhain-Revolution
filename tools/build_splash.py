@@ -1,4 +1,5 @@
-"""Builds godot/assets/app/splash-grimmhain.png (boot splash and web loading page): start-hintergrund strongly darkened with a vignette
+"""SUPERSEDED by tools/build_brand_assets.py (wordmark + seal splash); do not run, it would overwrite the new splash.
+Builds godot/assets/app/splash-grimmhain.png (boot splash and web loading page): start-hintergrund strongly darkened with a vignette
 towards the splash colour, start-logo centred. Needs godot/assets/start/ (python tools/build_start_assets.py).
 Run from the repo root: python tools/build_splash.py"""
 from PIL import Image, ImageEnhance

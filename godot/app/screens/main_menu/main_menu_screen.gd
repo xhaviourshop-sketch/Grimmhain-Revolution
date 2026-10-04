@@ -7,7 +7,7 @@ extends BaseScreen
 @onready var _new_game: GrimmButton = %NewGameButton
 @onready var _quit: GrimmButton = %QuitButton
 
-const LOGO := "res://assets/start/start-logo.webp"
+const LOGO := "res://assets/brand/wortmarke.webp"
 const LOGO_HEIGHT := 84.0
 const LOGO_SHADE_ALPHA := 0.75
 const LOGO_SHADE_SPREAD := Vector2(110.0, 60.0)
