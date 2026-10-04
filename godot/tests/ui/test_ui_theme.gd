@@ -2,8 +2,8 @@ extends UiTestCase
 ## Theme-Tokens, Zustände, Kontrast, reduzierte Bewegung (Test 10) und Übergänge.
 
 const COLOR_TOKENS: Array[String] = [
-	"BG_APP", "BG_SURFACE", "BG_SURFACE_RAISED", "BG_OVERLAY", "BORDER_SUBTLE", "GOLD", "GOLD_BRIGHT", "GOLD_DEEP",
-	"DANGER", "DANGER_BRIGHT", "DANGER_DEEP", "TEXT_PRIMARY", "TEXT_MUTED", "TEXT_ON_GOLD", "TEXT_DISABLED",
+	"BG_APP", "BG_SURFACE", "BG_SURFACE_RAISED", "BG_OVERLAY", "BORDER_SUBTLE", "MOON_SILVER", "MOON_SILVER_BRIGHT", "MOON_SILVER_DIM", "BLOOD_RED", "BLOOD_RED_BRIGHT", "BLOOD_RED_DEEP",
+	"DANGER", "DANGER_BRIGHT", "DANGER_DEEP", "TEXT_PRIMARY", "TEXT_MUTED", "TEXT_DISABLED",
 	"FOCUS_RING", "DISABLED_FILL", "DISABLED_BORDER",
 ]
 const SIZE_TOKENS: Array[String] = [
@@ -58,6 +58,15 @@ func test_button_states_distinguishable() -> void:
 			normals.append(box.bg_color.to_html())
 
 
+func test_no_gold_tokens() -> void:
+	# Marken-Blatt: „Kein Gold. Nirgends.“ Kein Token darf Gold heißen oder in der Gold-Familie liegen.
+	var tokens := load_script(THEME_TOKENS_SCRIPT)
+	if tokens == null:
+		return
+	for name: String in tokens.get_script_constant_map():
+		assert_false(name.contains("GOLD") or name == "WARNING_TEXT", "Gold-Token %s darf nicht existieren" % name)
+
+
 func test_text_contrast() -> void:
 	# WCAG AA: Text ≥ 4,5:1, Fokusrahmen ≥ 3:1.
 	var tokens := load_script(THEME_TOKENS_SCRIPT)
@@ -66,11 +75,11 @@ func test_text_contrast() -> void:
 	var c := tokens.get_script_constant_map()
 	var pairs := [
 		["TEXT_PRIMARY", "BG_APP", 4.5], ["TEXT_PRIMARY", "BG_SURFACE", 4.5], ["TEXT_PRIMARY", "BG_SURFACE_RAISED", 4.5],
-		["TEXT_MUTED", "BG_SURFACE", 4.5], ["TEXT_MUTED", "BG_APP", 4.5], ["TEXT_ON_GOLD", "GOLD", 4.5],
-		["TEXT_ON_GOLD", "GOLD_BRIGHT", 4.5], ["TEXT_PRIMARY", "DANGER", 4.5], ["GOLD", "BG_SURFACE", 4.5],
+		["TEXT_MUTED", "BG_SURFACE", 4.5], ["TEXT_MUTED", "BG_APP", 4.5], ["TEXT_PRIMARY", "BLOOD_RED", 4.5],
+		["TEXT_PRIMARY", "BLOOD_RED_BRIGHT", 4.5], ["TEXT_PRIMARY", "DANGER", 4.5], ["MOON_SILVER", "BG_SURFACE", 4.5],
 		["FOCUS_RING", "BG_APP", 3.0], ["FOCUS_RING", "BG_SURFACE", 3.0],
-		["DANGER_TEXT", "BG_SURFACE", 4.5], ["DANGER_TEXT", "BG_APP", 4.5], ["WARNING_TEXT", "BG_SURFACE", 4.5],
-		["WARNING_TEXT", "BG_APP", 4.5], ["TEXT_PRIMARY", "BG_SURFACE_RAISED", 4.5], ["TEXT_MUTED", "BG_SURFACE_RAISED", 4.5],
+		["DANGER_TEXT", "BG_SURFACE", 4.5], ["DANGER_TEXT", "BG_APP", 4.5], ["MOON_SILVER_BRIGHT", "BG_SURFACE", 4.5],
+		["MOON_SILVER_BRIGHT", "BG_APP", 4.5], ["TEXT_PRIMARY", "BG_SURFACE_RAISED", 4.5], ["TEXT_MUTED", "BG_SURFACE_RAISED", 4.5],
 	]
 	for pair: Array in pairs:
 		if not (c.get(pair[0]) is Color and c.get(pair[1]) is Color):

@@ -53,18 +53,18 @@ static func _labels(theme: Theme) -> void:
 	theme.set_color("font_color", "Label", ThemeTokens.TEXT_PRIMARY)
 	theme.set_font_size("font_size", "Label", ThemeTokens.FONT_BODY)
 	var variations := {
-		&"TitleLabel": [ThemeTokens.FONT_TITLE, ThemeTokens.GOLD],
+		&"TitleLabel": [ThemeTokens.FONT_TITLE, ThemeTokens.MOON_SILVER],
 		&"SubtitleLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_MUTED],
 		&"HeadingLabel": [ThemeTokens.FONT_HEADING, ThemeTokens.TEXT_PRIMARY],
 		&"MutedLabel": [ThemeTokens.FONT_BODY, ThemeTokens.TEXT_MUTED],
 		&"CaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.TEXT_MUTED],
 		&"ErrorLabel": [ThemeTokens.FONT_BODY, ThemeTokens.DANGER_TEXT],
-		&"WarningLabel": [ThemeTokens.FONT_BODY, ThemeTokens.WARNING_TEXT],
-		&"BadgeLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.WARNING_TEXT],
+		&"WarningLabel": [ThemeTokens.FONT_BODY, ThemeTokens.MOON_SILVER_BRIGHT],
+		&"BadgeLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.MOON_SILVER_BRIGHT],
 		&"SectionLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_PRIMARY],
 		&"ErrorCaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.DANGER_TEXT],
 		&"ReadAloudLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_PRIMARY],
-		&"ShowValueLabel": [ThemeTokens.FONT_SHOW, ThemeTokens.GOLD_BRIGHT],
+		&"ShowValueLabel": [ThemeTokens.FONT_SHOW, ThemeTokens.MOON_SILVER_BRIGHT],
 		# Vorbereitung im Hain-Stil: Mondsilber statt Gold, Blutrot nur für Aktives (siehe ThemeTokens, DA-89).
 		&"HainLabel": [ThemeTokens.FONT_BODY, ThemeTokens.PREP_CARD_TEXT],
 		&"HainMutedLabel": [ThemeTokens.FONT_BODY, ThemeTokens.MOON_SILVER],
@@ -82,8 +82,8 @@ static func _labels(theme: Theme) -> void:
 ## Farben je Variation: [normal, hover, pressed, Text, Text gedrückt, Rahmen normal, Rahmen hover].
 static func _buttons(theme: Theme) -> void:
 	var palettes := {
-		&"PrimaryButton": [ThemeTokens.GOLD, ThemeTokens.GOLD_BRIGHT, ThemeTokens.GOLD_DEEP, ThemeTokens.TEXT_ON_GOLD, ThemeTokens.TEXT_ON_GOLD, ThemeTokens.GOLD_DEEP, ThemeTokens.GOLD],
-		&"SecondaryButton": [ThemeTokens.BG_SURFACE, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_APP, ThemeTokens.TEXT_PRIMARY, ThemeTokens.GOLD_BRIGHT, ThemeTokens.BORDER_SUBTLE, ThemeTokens.GOLD],
+		&"PrimaryButton": [ThemeTokens.BLOOD_RED, ThemeTokens.BLOOD_RED_BRIGHT, ThemeTokens.BLOOD_RED_DEEP, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.BLOOD_RED_DEEP, ThemeTokens.BLOOD_RED],
+		&"SecondaryButton": [ThemeTokens.BG_SURFACE, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_APP, ThemeTokens.TEXT_PRIMARY, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_SUBTLE, ThemeTokens.MOON_SILVER],
 		&"DangerButton": [ThemeTokens.DANGER, ThemeTokens.DANGER_BRIGHT, ThemeTokens.DANGER_DEEP, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.DANGER_DEEP, ThemeTokens.TEXT_MUTED],
 	}
 	for name: StringName in palettes:
@@ -105,7 +105,7 @@ static func _buttons(theme: Theme) -> void:
 	var seat_palettes := {
 		&"SeatButton": palettes[&"SecondaryButton"],
 		&"SeatSelectedButton": palettes[&"PrimaryButton"],
-		&"SeatTargetButton": [ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.GOLD_BRIGHT, ThemeTokens.GOLD_BRIGHT],
+		&"SeatTargetButton": [ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.MOON_SILVER_BRIGHT],
 		# Cockpit: tote Person (gedämpft, Text trägt zusätzlich „†“) und handelnde Person (Mondlicht).
 		&"SeatDeadButton": [ThemeTokens.BG_APP, ThemeTokens.BG_SURFACE, ThemeTokens.BG_APP, ThemeTokens.TEXT_MUTED, ThemeTokens.TEXT_MUTED, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_SUBTLE],
 		&"SeatActorButton": [ThemeTokens.NIGHT_SURFACE, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.NIGHT_SURFACE, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.NIGHT_ACCENT, ThemeTokens.NIGHT_ACCENT],
@@ -147,9 +147,9 @@ static func _button_type(theme: Theme, type: StringName, p: Array) -> void:
 static func _toggles(theme: Theme) -> void:
 	var type := &"CheckButton"
 	theme.set_stylebox("normal", type, _box(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("hover", type, _box(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("pressed", type, _box(ThemeTokens.BG_SURFACE, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("hover_pressed", type, _box(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD_BRIGHT, ThemeTokens.BORDER_THICK))
+	theme.set_stylebox("hover", type, _box(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK))
+	theme.set_stylebox("pressed", type, _box(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK))
+	theme.set_stylebox("hover_pressed", type, _box(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THICK))
 	theme.set_stylebox("disabled", type, _box(ThemeTokens.DISABLED_FILL, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_THIN))
 	theme.set_stylebox("focus", type, _focus_box())
 	for c: String in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
@@ -173,9 +173,9 @@ static func _switch_icon(on: bool, disabled: bool) -> ImageTexture:
 	var w := ThemeTokens.SWITCH_WIDTH
 	var h := ThemeTokens.SWITCH_HEIGHT
 	var image := Image.create_empty(w, h, false, Image.FORMAT_RGBA8)
-	var track := ThemeTokens.GOLD if on else ThemeTokens.BG_APP
-	var outline := ThemeTokens.GOLD if on else ThemeTokens.TEXT_MUTED
-	var knob := ThemeTokens.TEXT_ON_GOLD if on else ThemeTokens.TEXT_MUTED
+	var track := ThemeTokens.BLOOD_RED if on else ThemeTokens.BG_APP
+	var outline := ThemeTokens.BLOOD_RED if on else ThemeTokens.TEXT_MUTED
+	var knob := ThemeTokens.TEXT_PRIMARY if on else ThemeTokens.TEXT_MUTED
 	if disabled:
 		track = ThemeTokens.DISABLED_FILL
 		outline = ThemeTokens.DISABLED_BORDER
@@ -217,14 +217,14 @@ static func _panels(theme: Theme) -> void:
 		&"CardPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_L),
 		&"HeaderPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		&"PlaceholderPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_L),
-		&"StatusBadge": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S),
-		&"DialogPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
-		&"ToastPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
+		&"StatusBadge": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S),
+		&"DialogPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
+		&"ToastPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
 		&"PersonRowPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		&"WarningBadge": _panel(ThemeTokens.BG_APP, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_XS),
-		&"SummaryPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
+		&"WarningBadge": _panel(ThemeTokens.BG_APP, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_XS),
+		&"SummaryPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
 		&"ListPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		&"SecretPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		&"SecretPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		# Cockpit: Phasenleiste und Ansagekarte je Tageszeit, Schublade, Sichtschutz, gezeigte Karte.
 		&"NightPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.NIGHT_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		&"DayPanel": _panel(ThemeTokens.DAY_SURFACE, ThemeTokens.DAY_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
@@ -233,11 +233,11 @@ static func _panels(theme: Theme) -> void:
 		&"BoardPanel": _panel(ThemeTokens.BOARD_NEUTRAL, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
 		&"NightBoardPanel": _panel(ThemeTokens.BOARD_NIGHT, ThemeTokens.NIGHT_ACCENT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
 		&"DayBoardPanel": _panel(ThemeTokens.BOARD_DAY, ThemeTokens.DAY_ACCENT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
-		&"DrawerPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.WARNING_TEXT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_M),
+		&"DrawerPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_M),
 		&"CoverPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
-		&"ShowPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.GOLD, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
+		&"ShowPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
 		# Nachtbrett (P3): halbtransparente Aktionskarte und Optionenfläche über dem Dorfplatz.
-		&"NightCardPanel": _panel(ThemeTokens.CARD_BG, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
+		&"NightCardPanel": _panel(ThemeTokens.CARD_BG, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
 		&"NightBackdrop": _panel(ThemeTokens.NIGHT_BACKDROP, ThemeTokens.NIGHT_BACKDROP, 0, 0, 0),
 		&"DayBackdrop": _panel(ThemeTokens.DAY_BACKDROP, ThemeTokens.DAY_BACKDROP, 0, 0, 0),
 	}
@@ -280,8 +280,8 @@ static func _inputs(theme: Theme) -> void:
 		theme.set_color("font_color", type, ThemeTokens.TEXT_PRIMARY)
 		theme.set_color("font_readonly_color", type, ThemeTokens.TEXT_DISABLED)
 		theme.set_color("font_placeholder_color", type, ThemeTokens.TEXT_MUTED)
-		theme.set_color("caret_color", type, ThemeTokens.GOLD_BRIGHT)
-		theme.set_color("selection_color", type, Color(ThemeTokens.GOLD_DEEP, 0.55))
+		theme.set_color("caret_color", type, ThemeTokens.MOON_SILVER_BRIGHT)
+		theme.set_color("selection_color", type, Color(ThemeTokens.MOON_SILVER_DIM, 0.55))
 		theme.set_font_size("font_size", type, ThemeTokens.FONT_BODY)
 
 
@@ -309,12 +309,12 @@ static func _scrolling(theme: Theme) -> void:
 	track.content_margin_left = ThemeTokens.SCROLLBAR_WIDTH / 2.0
 	track.content_margin_right = ThemeTokens.SCROLLBAR_WIDTH / 2.0
 	theme.set_stylebox("scroll", "VScrollBar", track)
-	for state: Array in [["grabber", ThemeTokens.BORDER_SUBTLE], ["grabber_highlight", ThemeTokens.GOLD_DEEP], ["grabber_pressed", ThemeTokens.GOLD]]:
+	for state: Array in [["grabber", ThemeTokens.BORDER_SUBTLE], ["grabber_highlight", ThemeTokens.MOON_SILVER_DIM], ["grabber_pressed", ThemeTokens.MOON_SILVER]]:
 		var grabber := StyleBoxFlat.new()
 		grabber.bg_color = state[1]
 		grabber.set_corner_radius_all(ThemeTokens.RADIUS_S)
 		theme.set_stylebox(state[0], "VScrollBar", grabber)
 	theme.set_constant("scrollbar_h_separation", "ScrollContainer", ThemeTokens.SPACE_S)
-	theme.set_stylebox("panel", "TooltipPanel", _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.GOLD_DEEP, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S))
+	theme.set_stylebox("panel", "TooltipPanel", _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S))
 	theme.set_color("font_color", "TooltipLabel", ThemeTokens.TEXT_PRIMARY)
 	theme.set_font_size("font_size", "TooltipLabel", ThemeTokens.FONT_BODY)

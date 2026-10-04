@@ -171,7 +171,7 @@ func _page_titles() -> Control:
 		var col := _column(row)
 		col.add_child(_caption(_font_label(candidate[0], candidate[1])))
 		var title := _label("Grimmhain", ThemeTokens.FONT_TITLE - 8, font_or_null(candidate[1]))
-		title.add_theme_color_override("font_color", ThemeTokens.GOLD)
+		title.add_theme_color_override("font_color", ThemeTokens.MOON_SILVER_BRIGHT)
 		col.add_child(title)
 		col.add_child(_label("Die Nacht beginnt", ThemeTokens.FONT_HEADING, font_or_null(candidate[2])))
 		col.add_child(_card(font_or_null(candidate[1]), font_or_null(candidate[2])))

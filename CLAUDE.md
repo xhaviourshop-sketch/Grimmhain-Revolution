@@ -74,6 +74,7 @@ Vorhandene `writing-plans`/`executing-plans` nur für tatsächlich komplexe Plan
 5. Neue Tests nur für echte Logik, die still kaputtgehen kann (Speichern, Geheimhaltung, Regeln). Höchstens ein kleiner Test pro neuer Funktion, außer Markus verlangt mehr.
 6. Lange Testläufe im Hintergrund starten und einmal auf das Ende warten. Kein wiederholtes Nachschauen oder Neu-Starten von Wartebefehlen.
 7. Im Bericht immer angeben: welche Tests liefen und warum.
+8. „Nur wenn grün“ vor Merge oder Push heißt: Die Vollsuite läuft auf dem finalen Stand VOR dem Push grün. Gezielte Tests nach einem Fix ersetzen das nicht; nach einem roten Lauf und Fix die Vollsuite vor dem Push wiederholen.
 - Weiter gültig: Bekannte Fehler nicht ignorieren und Tests nie abschwächen, um Läufe zu sparen. Unveränderten grünen Stand nicht nachtesten, nur weil CI ebenfalls läuft; erforderliche CI bleibt aktiv. Nach ausreichender Prüfung abschließen, keine weitere Audit-Runde. Diese Regeln auch in künftige Arbeits- und Übergabeprompts übernehmen; ältere pauschale Testvorgaben (z. B. DE/EN-, Auflösungs- oder Fuzz-Matrizen) sind dadurch eingegrenzt.
 
 ## Ausgabedateien: Nutzerentscheidung vom 01.10.2026
