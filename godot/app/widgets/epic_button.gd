@@ -80,10 +80,10 @@ func _attach(button: GrimmButton, animated: bool) -> void:
 	for color: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
 		button.add_theme_color_override(color, ThemeTokens.TEXT_PRIMARY)
 	button.add_theme_color_override("font_disabled_color", ThemeTokens.TEXT_MUTED)
-	button.add_theme_color_override("font_outline_color", Color(0.04, 0.0, 0.0, 0.95))
+	button.add_theme_color_override("font_outline_color", ThemeTokens.EPIC_TEXT_OUTLINE)
 	button.add_theme_constant_override("outline_size", 8)
 	button.add_theme_font_size_override("font_size", ThemeTokens.FONT_HEADING + 4)
-	button.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.8))
+	button.add_theme_color_override("font_shadow_color", ThemeTokens.EPIC_TEXT_SHADOW)
 	button.add_theme_constant_override("shadow_offset_x", 0)
 	button.add_theme_constant_override("shadow_offset_y", 2)
 	button.pivot_offset = button.size * 0.5
@@ -141,7 +141,7 @@ func _refresh_boost() -> void:
 
 
 func _on_button_draw() -> void:
-	modulate = Color(0.55, 0.55, 0.6) if _button.disabled else Color.WHITE
+	modulate = ThemeTokens.TINT_EPIC_DISABLED if _button.disabled else ThemeTokens.TINT_NONE
 
 
 func _draw() -> void:

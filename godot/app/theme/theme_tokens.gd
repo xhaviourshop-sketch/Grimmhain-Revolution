@@ -52,6 +52,9 @@ const BOARD_DAY := Color("#1c160d")          ## Spielbrett am Morgen und Tag: du
 
 # --- Nachtbrett (P3): Tönungen und Flächen der Porträtplätze, Laschen und Leiste --------------------
 const INVISIBLE := Color(0, 0, 0, 0)         ## unsichtbar (Text, den ein selbstzeichnendes Element nicht doppelt zeigen soll)
+const EPIC_TEXT_OUTLINE := Color(0.04, 0.0, 0.0, 0.95)  ## epischer Knopf: dunkler Umriss der hellen Schrift
+const EPIC_TEXT_SHADOW := Color(0.0, 0.0, 0.0, 0.8)    ## epischer Knopf: Schlagschatten der Schrift
+const TINT_EPIC_DISABLED := Color(0.55, 0.55, 0.6)     ## epischer Knopf gesperrt
 const TINT_NONE := Color(1, 1, 1, 1)         ## Bild unverändert
 const TINT_DEAD := Color(0.5, 0.5, 0.55)     ## Porträt einer toten Person
 const TINT_DISABLED := Color(0.62, 0.62, 0.66)  ## nicht wählbare Person oder gesperrte Lasche
