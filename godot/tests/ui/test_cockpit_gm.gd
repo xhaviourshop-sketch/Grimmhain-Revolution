@@ -79,8 +79,7 @@ func test_undo_and_redo_with_plain_text() -> void:
 	if shell == null:
 		return
 	await _press(shell, "StartNightButton")
-	await press(_seat(shell, 4))
-	await _press(shell, "ConfirmTargetsButton")
+	await press(_seat(shell, 4))  # feste Anzahl: sofort übernommen
 	await _press(shell, "GmButton")
 	var undo := find_button(current_screen(shell), "UndoButton")
 	assert_eq(undo.text, "Rückgängig: Antwort im Schritt Schutzengel", "Klartext des Rücknehmbaren")
@@ -97,7 +96,7 @@ func test_undo_and_redo_with_plain_text() -> void:
 	await _press(shell, "RedoButton")
 	await press(find_node(dialog, "ConfirmButton") as BaseButton)
 	next = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
-	assert_eq(str(next["kind"]), "begin_step", "Antwort wiederhergestellt")
+	assert_eq(str(next["owner"]), "pack", "Antwort wiederhergestellt: der nächste Schritt (Rudel) ist offen")
 
 
 func test_set_role_and_declare_winner() -> void:

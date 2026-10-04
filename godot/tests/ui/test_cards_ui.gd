@@ -297,18 +297,15 @@ func test_card_swallower_shows_hand_signs_with_costs() -> void:
 		await _dialog_confirm(shell)
 	await _tap(shell, "StartNightButton")
 	for guard: int in 14:
-		var n := _next(shell)
+		var n := effective_of(_next(shell))
 		if str(n["kind"]) == "prompt" and str(n["owner"]) == "kartenschlucker":
 			break
-		if str(n["kind"]) == "begin_step":
-			await _tap(shell, "BeginStepButton")
-		elif str(n["kind"]) == "prompt":
-			# Rudelwahl: erste zulässige Person
+		if str(n["kind"]) == "prompt":
+			# Rudelwahl: erste zulässige Person, die feste Anzahl wird sofort übernommen
 			await press(_seat(shell, int((n["allowed_ids"] as Array)[0])))
-			await _tap(shell, "ConfirmTargetsButton")
 		else:
 			break
-	var act := _next(shell)
+	var act := effective_of(_next(shell))
 	assert_eq(str(act.get("owner")), "kartenschlucker", "Handzeichen-Prompt des Kartenschluckers")
 	assert_eq(str(act.get("answer")), "option", "Antwort: Option")
 	var options: Array = act["options"]
