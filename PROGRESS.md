@@ -693,3 +693,10 @@ Merge: ohne Squash nach main (66b8a9a), main gepusht.
 Deploy: Web-Export neu, `grimmhain-ipad-test` (Produktion), `index.pck` 38039584 Byte.
 Nicht geprüft: Nebel-Auftauchen im echten Ablauf (nur Code, kein Video), Safari/iPad.
 Offen: nichts aus diesem Auftrag.
+
+## 2026-10-04: Team-Kachelrahmen für Rollenkacheln (DA-94), Branch feature/team-kacheln (nicht gemergt)
+Stand: Neues ChatGPT-Bild mit drei leeren Rahmen geprüft (echte Transparenz außen, lange Kanten ohne Ornament; Inneres war nur zu 96 bis 99 Prozent deckend, im Zuschnitt auf voll gesetzt, Halo entfernt). Original nach `Downloads/Grimmhain-P1-Nachtentwurf/ui/team-kacheln.png`. `tools/build_grove_ui.py` (`build_team_tiles`, auch einzeln mit `--team-tiles-only`) erzeugt `godot/assets/ui/team_tile_village|wolves|solo.webp` (verlustfrei, 150 px hoch, Ende | Mittelstück | Ende) und `godot/app/theme/team_tile_art_data.gd` (Ränder, Fassung). Drei Registerzeilen (intern-freigegeben). `RoleChip` mit `team_tint` (Kachel in Schritt 3, Rollenleiste im Kartenmodus) zeichnet den Rahmen statt des eingefärbten `name_plate_short`; Symbol in der runden Fassung; nicht gewählt entsättigt und auf 45 Prozent Helligkeit, Text grau; gewählt volle Farbe, Glühen in Teamfarbe (`SelectionGlow`/`GroveStyleBox` mit `px_per_unit`). ×N, − und + (56 px) und Langdruck unverändert. Regelkern unverändert.
+Verifikation: gezielt grün: `prep_screen` 4, `ui_layout` 6, `ui_architecture` 4, `ui_theme` 8, `ui_shell` 12, `touch_scroll`, `cards_ui_closing` 4; `check-asset-register.js` grün. Dabei zwei eigene Fehler behoben (leere Rolle beim Anlegen der Kachel, Farbliteral außerhalb der Tokens), Tests nicht angepasst. Keine Vollsuite (Kern unverändert), keine neuen Tests (nur Aussehen). Screenshots 1024x768 und 2360x1640 in `Downloads/Grimmhain-Vorbereitung/neu/prep5/prep/` (Schritt 3 Akt I und Akt IV gefüllt mit gewählten und nicht gewählten Rollen, Kartenmodus mit offener Leiste).
+Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 38186752 Byte wie lokal.
+Nicht geprüft: Safari/iPad. Offen: Symbolgröße in der Fassung (ca. 22 logische Einheiten) am Gerät beurteilen.
+

@@ -1,7 +1,7 @@
 """Cuts the grove UI parts (seat ring, name plates, card frame, medallion, buttons) out of the AI-generated sheet (P5).
 
 Repeatable: run from the repository root
-    python tools/build_grove_ui.py [--source <png>] [--source2 <png>] [--preview <folder>]
+    python tools/build_grove_ui.py [--source <png>] [--source2 <png>] [--preview <folder>] [--team-tiles <png>] [--team-tiles-only]
 Reads ui-paket-v1.png and ui-paket-v2.png (1774x887, real alpha channel; v2 carries the night board parts: side tab, night bar,
 role medallion, cartouche, round icon button, back plate) and writes
     godot/assets/ui/hain/*.png          the parts, prescaled to 2 texture pixels per logical unit
@@ -9,6 +9,10 @@ role medallion, cartouche, round icon button, back plate) and writes
 Stretchable parts are assembled from end pieces and a short middle slice, so every edge is stretchable and the ornaments stay
 protected. The left edge of the card is the mirrored right edge (the sheet's left edge carries the medallion). Resizing happens in
 premultiplied alpha, so no color fringes appear at the edges.
+The three team tile frames (village, wolves, solo; sheet team-kacheln.png) are cut by build_team_tiles() into
+    godot/assets/ui/team_tile_*.webp    horizontal frames with a round socket on the left, stretchable between the ends
+    godot/app/theme/team_tile_art_data.gd  end margins and socket geometry, generated, do not edit by hand
+`--team-tiles-only` builds only these, leaving the hain parts (and their register hashes) untouched.
 Run `godot --path godot --import` afterwards so new files get their .import sidecars.
 """
 import argparse
@@ -22,6 +26,9 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = ROOT + "/godot/assets/ui/hain/"
 DATA = ROOT + "/godot/app/theme/grove_art_data.gd"
 DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui-paket-v1.png"
+TEAM_DATA = ROOT + "/godot/app/theme/team_tile_art_data.gd"
+TEAM_OUT = ROOT + "/godot/assets/ui/"
+DEFAULT_TEAM_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui/team-kacheln.png"
 DEFAULT_SOURCE2 = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui-paket-v2.png"
 
 # regions of the sheet (x0, y0, x1, y1), measured on the 1774x887 sheet
@@ -89,6 +96,19 @@ def assemble(left, mid, right):
     return out
 
 
+# team tile sheet (1774x887, real alpha): name, frame rows (y0, y1 of the solid part), socket center y and outer radius on the sheet
+TEAM_TILES = (("village", 28, 274, 144), ("wolves", 318, 563, 443), ("solo", 591, 849, 733))
+TEAM_SOCKET_X = 206               # socket center x on the sheet
+TEAM_SOCKET_OUTER = 71            # outer radius of the socket ring
+TEAM_SOCKET_HOLE = 60             # radius of the dark hole inside the ring (the role symbol sits here)
+TEAM_PAD = 6                      # transparent border around each cut
+TEAM_LEFT_END = 217               # src px from the cut's left edge: corner ornaments and the whole socket stay unstretched
+TEAM_RIGHT_END = 130              # src px of the right corner ornaments
+TEAM_MID_AT = 900                 # src x of the plain slice that gets stretched
+TEAM_TILE_HEIGHT = 150            # texture px of the cut's height (2.7 px per logical unit at the 56 unit chip height)
+TEAM_ALPHA_LOW, TEAM_ALPHA_HIGH = 40, 235  # the sheet's near-opaque body (alpha 245 to 253) becomes solid, its faint halo disappears
+
+
 ARROW_SOURCE = ROOT + "/godot/assets/night/ui/arrow-left.png"  # bronze arrow of the P3 board, recolored to moon silver
 SILVER = np.array([0.80, 0.84, 0.92])
 
@@ -142,12 +162,69 @@ def hole(alpha, seed):
     return float(xs.mean()), float(ys.mean()), float(np.sqrt(mask.sum() / np.pi))
 
 
+def clean_team_tile(sheet, box):
+    """One frame cut out of the sheet: halo ramped away, only the connected frame kept, edge colors taken from the solid frame (no fringes)."""
+    x0, y0, x1, y1 = box
+    rgba = np.asarray(sheet.crop(box)).astype(float)
+    alpha = rgba[..., 3]
+    ramp = np.clip((alpha - TEAM_ALPHA_LOW) / (TEAM_ALPHA_HIGH - TEAM_ALPHA_LOW), 0.0, 1.0)
+    labels, count = ndi.label(ramp > 0.02)
+    sizes = ndi.sum(ramp > 0.02, labels, range(1, count + 1))
+    keep = labels == (1 + int(np.argmax(sizes)))
+    ramp = ramp * keep
+    solid = ramp > 0.98
+    # transparent and edge pixels take the color of the nearest solid pixel
+    _, (iy, ix) = ndi.distance_transform_edt(~solid, return_indices=True)
+    rgb = rgba[..., :3].copy()
+    edge = ~solid
+    rgb[edge] = rgba[iy[edge], ix[edge], :3]
+    out = np.dstack([rgb, np.round(ramp * 255.0)]).clip(0, 255).astype(np.uint8)
+    return Image.fromarray(out)
+
+
+def build_team_tiles(source):
+    """The three team tile frames as WebP (left end | plain slice | right end) plus their geometry file."""
+    sheet = Image.open(source).convert("RGBA")
+    os.makedirs(TEAM_OUT, exist_ok=True)
+    lines = ["class_name TeamTileArtData", "extends RefCounted",
+             "## Gemessene Geometrie der Team-Kachelrahmen (godot/assets/ui/team_tile_*.webp). Erzeugt von tools/build_grove_ui.py, nicht von Hand ändern.",
+             "## Die Texturen werden gleichmäßig auf die Höhe der Kachel skaliert; nur die Mitte zwischen den Enden wird gedehnt.",
+             "## Je Team: Fassung (Mittelpunkt x, y und Loch-Radius als Anteil der Texturhöhe, x ab linker Kante) und Randbreiten.", ""]
+    ends = {}
+    for name, ty0, ty1, cy in TEAM_TILES:
+        cut = (0, 0, sheet.width, 0)
+        flat = np.asarray(sheet)[..., 3]
+        solid_cols = np.nonzero((flat[ty0:ty1] >= TEAM_ALPHA_LOW).any(0))[0]
+        box = (int(solid_cols.min()) - TEAM_PAD, ty0 - TEAM_PAD, int(solid_cols.max()) + 1 + TEAM_PAD, ty1 + TEAM_PAD)
+        tile = clean_team_tile(sheet, box)
+        mid = TEAM_MID_AT - box[0]
+        parts = (tile.crop((0, 0, TEAM_LEFT_END, tile.height)), tile.crop((mid, 0, mid + MID, tile.height)),
+                 tile.crop((tile.width - TEAM_RIGHT_END, 0, tile.width, tile.height)))
+        scale = TEAM_TILE_HEIGHT / tile.height
+        result = scaled(assemble(*parts), scale)
+        result.save(TEAM_OUT + "team_tile_%s.webp" % name, lossless=True, quality=100, method=6)
+        height = tile.height
+        ends[name] = (result.width, result.height)
+        lines.append("const %s_SOCKET := Vector3(%.4f, %.4f, %.4f)  ## Mitte x, Mitte y, Lochradius" % (
+            name.upper(), (TEAM_SOCKET_X - box[0]) / height, (cy - box[1]) / height, TEAM_SOCKET_HOLE / height))
+        lines.append("const %s_MARGINS := Vector4(%d, 0, %d, 0)  ## links, oben, rechts, unten in Texturpixeln (Höhe %d); nur die Mitte wird gedehnt" % (
+            name.upper(), round(TEAM_LEFT_END * scale), round(TEAM_RIGHT_END * scale), TEAM_TILE_HEIGHT))
+    with open(TEAM_DATA, "w", encoding="utf-8", newline="\n") as handle:
+        handle.write("\n".join(lines) + "\n")
+    print("team tiles", ends)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", default=DEFAULT_SOURCE)
     parser.add_argument("--source2", default=DEFAULT_SOURCE2)
     parser.add_argument("--preview", default=None)
+    parser.add_argument("--team-tiles", default=DEFAULT_TEAM_SOURCE)
+    parser.add_argument("--team-tiles-only", action="store_true")
     args = parser.parse_args()
+    if args.team_tiles_only:
+        build_team_tiles(args.team_tiles)
+        return
     sheet = Image.open(args.source).convert("RGBA")
     sheet2 = Image.open(args.source2).convert("RGBA")
     os.makedirs(OUT, exist_ok=True)
@@ -271,6 +348,7 @@ def main():
                     bg = Image.new("RGBA", part.size, color)
                     bg.alpha_composite(part)
                     bg.save(os.path.join(args.preview, "%s-%s.png" % (fname[:-4], tone)))
+    build_team_tiles(args.team_tiles)
     print("ok", data)
 
 
