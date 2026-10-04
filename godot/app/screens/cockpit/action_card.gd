@@ -37,12 +37,14 @@ var primary_host: Control = null
 var info_host: Control = null
 var _primary: GrimmButton = null
 var _info: GrimmButton = null
+var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel beginnen“ (der Cockpit-Rahmen blendet den Kartenrahmen aus)
 
 const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
 const SIDE_BY_SIDE_WIDTH := 560.0  ## ab dieser Kartenbreite stehen Zielplatz und Nebenaktionen in einer Zeile
 ## Schritte der Textanpassung (Schriftfaktor, Breite des Rollenbilds): erst kleinere Schrift, dann zusätzlich ein kleineres Rollenbild (mehr Textbreite), danach Scrollen
 const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Vector2(0.84, 88.0), Vector2(0.76, 76.0), Vector2(0.7, 64.0)]
 const FIT_MIN_FONT := 15  ## kleinste Schrift des Kartentexts (logische Einheiten)
+const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (vorerst button_primary, ein eigenes Knopfbild folgt)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
 
 
@@ -115,6 +117,9 @@ func render(next: Dictionary, context: Dictionary) -> void:
 		_info.queue_free()
 	_info = null
 	_slot.visible = false
+	_bare = false
+	_content.size_flags_vertical = Control.SIZE_FILL
+	_content.alignment = BoxContainer.ALIGNMENT_BEGIN
 	for arrow: Node in _slot.find_children("*", "BaseButton", true, false):
 		(arrow as BaseButton).disabled = false  # `lock` sperrt auch den Zielplatz bis zur nächsten Karte
 	for box: Node in [_content, _actions_box]:
@@ -280,7 +285,34 @@ func _covered(kind: String) -> void:
 	_actions([_button("RevealButton", "ui.cockpit.secret.reveal", GrimmButton.Kind.PRIMARY, &"reveal")])
 
 
+## Wahr, solange die Karte nur den großen Knopf „Spiel beginnen“ zeigt.
+func is_bare() -> bool:
+	return _bare
+
+
+## Spielbeginn: kein Textkasten, nur ein großer Knopf mit rotem Glühen in der Mitte. Rollen zeigen bleibt als Nebenknopf darunter.
+func _begin_game() -> void:
+	_bare = true
+	_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_content.alignment = BoxContainer.ALIGNMENT_CENTER
+	var big := _button("StartNightButton", "ui.cockpit.action.begin_game", GrimmButton.Kind.PRIMARY, &"start_night")
+	big.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	big.custom_minimum_size = BEGIN_BUTTON_SIZE
+	big.add_theme_font_size_override("font_size", ThemeTokens.FONT_HEADING)
+	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var box := big.get_theme_stylebox(state) as GroveStyleBox
+		if box != null:
+			box.native_height = 0.0  # die Platte füllt die ganze Höhe des großen Knopfes
+	SelectionGlow.set_on(big, "button_primary", GroveArtData.BUTTON_PRIMARY_MARGINS, true)
+	_content.add_child(big)
+	_primary = big  # Hauptaktion der Karte (Fokus, Tests), steht aber mittig statt im Dock
+	_actions([_button("ShowRolesButton", "ui.cockpit.action.show_roles", GrimmButton.Kind.SECONDARY, &"show_roles")])
+
+
 func _start_night(next: Dictionary, context: Dictionary) -> void:
+	if bool(next.get("first")) and not bool(next.get("revival_round", false)):
+		_begin_game()
+		return
 	_heading("ui.cockpit.card.start_night.heading", {"number": int(context.get("night_number", 0)) + 1})
 	_read_aloud("ui.call.night_falls_revival" if bool(next.get("revival_round", false)) else "ui.call.night_falls", {})
 	_text("ui.cockpit.card.start_night.do" if bool(next.get("first")) else "ui.cockpit.card.start_night.do_next")

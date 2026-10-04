@@ -430,6 +430,9 @@ func _make_info_corner() -> Control:
 
 ## Aktionskarte im Hain-Rahmen (P5): dehnbarer Kartenrahmen statt der flachen Fläche; ohne Bild bleibt der Theme-Stil.
 func _style_card() -> void:
+	if _card.is_bare():
+		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		return
 	var box := GroveSkin.card_box()
 	if box != null:
 		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", box)
@@ -650,6 +653,7 @@ func _render() -> void:
 		"day_cards": context.session.day_cards() if bool(_view.get("has_game")) else [],
 		"reduced_motion": context.settings.reduced_motion,
 	})
+	_style_card()  # ohne Text (Spielbeginn) verschwindet der Kartenrahmen, nur der große Knopf bleibt
 	_arrange()  # die Hauptaktion im Dock wechselt mit der Karte: Dock und Phasenplatte neu setzen
 	_restore_focus()
 

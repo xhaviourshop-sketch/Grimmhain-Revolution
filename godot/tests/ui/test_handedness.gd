@@ -26,13 +26,22 @@ func _cockpit(size: Vector2i, locale: String, roles: Array, hand_left: bool = fa
 	return shell
 
 
+## Der Spielbeginn zeigt nur den großen Knopf in der Mitte (Testrunde 1); die Hauptaktion im Dock gibt es ab dem ersten Schritt der Nacht.
+func _begin_game(shell: Control) -> void:
+	var start := find_button(_screen(shell), "StartNightButton")
+	if start != null:
+		await press(start)
+		await frames(2)
+
+
 func _rect(shell: Control, node_name: String) -> Rect2:
 	return rect_of(find_node(_screen(shell), node_name) as Control)
 
 
-## Liegt die Hauptaktion der ersten Karte (Nacht beginnen) in der linken Hälfte der Ansagekarte?
+## Liegt die Hauptaktion der Karte (erster Schritt der Nacht, im Dock) in der linken Hälfte der Ansagekarte?
 func _main_action_on_left(shell: Control) -> bool:
-	var action := rect_of(find_node(_screen(shell), "StartNightButton") as Control).get_center().x
+	var primary := find_node(_screen(shell), "ActionCard").call("primary_button") as Control
+	var action := rect_of(primary).get_center().x
 	return action < _rect(shell, "InstructionCard").get_center().x
 
 
@@ -111,6 +120,7 @@ func test_button_choice_reaches_the_cockpit_after_a_real_restart() -> void:
 		assert_true(r.ok, "Partie gestartet")
 		await navigate(second, &"main_menu")
 		await navigate(second, &"cockpit")
+		await _begin_game(second)
 		assert_eq(_main_action_on_left(second), left, "Cockpit nach Neustart: Hauptaktion %s" % ("links" if left else "rechts"))
 		await navigate(second, &"main_menu")
 		await navigate(second, &"settings")
@@ -138,6 +148,7 @@ func test_restart_applies_the_saved_side_to_the_cockpit() -> void:
 	var shell := await _cockpit(SIZE_16_10, "de", Fixtures.unique_roles(7), true)
 	if shell == null:
 		return
+	await _begin_game(shell)
 	assert_true(_main_action_on_left(shell), "gespeicherte Linkshändigkeit: Hauptaktion links")
 
 
@@ -145,6 +156,7 @@ func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> voi
 	var shell := await _cockpit(SIZE_16_10, "de", Fixtures.unique_roles(7))
 	if shell == null:
 		return
+	await _begin_game(shell)
 	var ids_before: Array = (session_of(shell).call("cockpit_view") as Dictionary)["seats"].map(func(s: Dictionary) -> Variant: return s["person_id"])
 	var commands_before := (session_of(shell).call("commands") as Array).size()
 	var state_before := str(session_of(shell).call("state_hash"))
