@@ -7,9 +7,14 @@ Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 ## UEBERGABE Nachtschritte neu (WIP, Branch feature/nachtschritte-neu, NICHT gemergt, 2026-10-04)
 - Phase 1 (Regelkern, Commit 6d8cda7): fertig. Unit, Szenarien und Fuzz waren gruen. Der .po-Mehrzeilenfehler aus diesem Commit ist im WIP-Commit repariert.
 - Phase 2 (Schablone): Code steht (action_card, cockpit_screen, cockpit_text, cockpit_view, prompt_view), 172 neue ui.night.* Texte DE/EN fuer alle Schritte.
-- UI-Tests: 422 Tests, 39 rot, 1 Datei nicht ladbar (Stand letzter Lauf --dir=ui). Rot: handedness 4, night_board 2, notice_cards 3, public_reaction_hint 3,
-  resume_scenarios 6, role_act_lines 2, role_operation_kinds 4, save_service 2, target_selection 6, timer_save 1, board_layout 1, cards_ui 1, cockpit_gm 1,
-  cockpit_model 1, cockpit_polish 2; test_prompt_coverage.gd nicht ladbar (CockpitText.reaction_key entfaellt, neue Keys night_base).
+- UI-Tests (Stand 2026-10-05, Vollsuite --dir=ui): 427 Tests, 16 rot, alle Dateien ladbar. Vorher 39 rot + test_prompt_coverage nicht ladbar.
+  Gruen migriert: handedness, night_board, notice_cards, public_reaction_hint, role_act_lines, save_service, timer_save, board_layout, cards_ui,
+  cockpit_gm, cockpit_model, cockpit_polish, prompt_coverage.
+  Noch rot (offen): resume_scenarios 6, role_operation_kinds 4, target_selection 6.
+- Migrationsentscheidungen: Hinweiskarten werden durch Schliessen der gezeigten Karte bestaetigt (kein AckNoticeButton); Pflichtwahl ohne Verzicht
+  (Besessener Wolf, Rudel); Pfeile/Zielplatz nur bei nicht festen Anzahlen; Apfel/Ketten-Erklaerung steht nicht mehr auf der Zuflucht-Karte (nur Lexikon).
+  Entfallene Pruefungen: ui.prompt.*-Anweisungen in den Lexikonzeilen (Keys abgeschafft); Auswahlmarkierung/Abwaehlen vor Bestaetigung bei fester Anzahl.
+  Code-Fix: action_card.gd zeigt keine Ansagezeile mit leerer Rolle bei anonymer Frage (Zuflucht). Lexikon-Aufruf des Lehrlings an Kartentext angeglichen.
 - Fehlt: Tests fuer Auto-Uebernahme, Rueckgaengig-Leiste, Loki-Art zuerst; verwaiste i18n-Keys/Code entfernen; FOCUS_RING Gold zu Mondsilber;
   Spalte tipps_neu in docs/audit/NACHTSCHRITTE-72.csv samt Neumessung; 7 Screenshots 1024x768 nach Downloads/Grimmhain-Nacht-neu; Vollsuite inkl. Fuzz; dann Merge, Export, Deploy.
 - Testmuster: Auto-Commit bei fester Anzahl, also kein ConfirmTargetsButton (Mehrfachwahl-Tests mit Spuerhund, 3 Personen); Schritte mit Vorschau zaehlen als Prompt
