@@ -40,20 +40,6 @@ func _tap_seat(shell: Control, person_id: int) -> void:
 	await press(find_node(_screen(shell), "SeatRing").call("token_for", person_id) as BaseButton)
 
 
-func _confirm(shell: Control) -> BaseButton:
-	return find_button(_screen(shell), "ConfirmTargetsButton")
-
-
-func _label_key(shell: Control, node_name: String) -> String:
-	var label := find_node(_screen(shell), node_name) as Control
-	return key_of(label) if label != null and label.is_visible_in_tree() else ""
-
-
-func _label_text(shell: Control, node_name: String) -> String:
-	var label := find_node(_screen(shell), node_name) as Control
-	return text_of(label) if label != null and label.is_visible_in_tree() else ""
-
-
 ## Bis zum Prompt von `owner`: Pflichtwahlen mit fester Anzahl werden angetippt (sofort übernommen), Ja/Nein und Hinweise per Knopf.
 ## Ein Schritt mit Vorschau gilt als offener Prompt (`effective_of`).
 func _advance_to(shell: Control, owner: String) -> bool:
