@@ -7,16 +7,16 @@ Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 ## UEBERGABE Nachtschritte neu (WIP, Branch feature/nachtschritte-neu, NICHT gemergt, 2026-10-04)
 - Phase 1 (Regelkern, Commit 6d8cda7): fertig. Unit, Szenarien und Fuzz waren gruen. Der .po-Mehrzeilenfehler aus diesem Commit ist im WIP-Commit repariert.
 - Phase 2 (Schablone): Code steht (action_card, cockpit_screen, cockpit_text, cockpit_view, prompt_view), 172 neue ui.night.* Texte DE/EN fuer alle Schritte.
-- UI-Tests (Stand 2026-10-05, Vollsuite --dir=ui): 427 Tests, 16 rot, alle Dateien ladbar. Vorher 39 rot + test_prompt_coverage nicht ladbar.
-  Gruen migriert: handedness, night_board, notice_cards, public_reaction_hint, role_act_lines, save_service, timer_save, board_layout, cards_ui,
-  cockpit_gm, cockpit_model, cockpit_polish, prompt_coverage.
-  Noch rot (offen): resume_scenarios 6, role_operation_kinds 4, target_selection 6.
+- UI-Tests (Stand 2026-10-05, Vollsuite --dir=ui): 431 Tests, 0 rot, alle Dateien ladbar. Vorher 16 rot (resume_scenarios 6, role_operation_kinds 4,
+  target_selection 6), davor 39 rot. Alle UI-Testdateien sind auf die Nacht-Schablone migriert. Neu: tests/ui/test_night_template.gd (Auto-Uebernahme,
+  Rueckgaengig-Leiste, Loki Art zuerst, Rudel ohne "Kein Opfer").
 - Migrationsentscheidungen: Hinweiskarten werden durch Schliessen der gezeigten Karte bestaetigt (kein AckNoticeButton); Pflichtwahl ohne Verzicht
-  (Besessener Wolf, Rudel); Pfeile/Zielplatz nur bei nicht festen Anzahlen; Apfel/Ketten-Erklaerung steht nicht mehr auf der Zuflucht-Karte (nur Lexikon).
+  (Besessener Wolf, Rudel); Pfeile/Zielplatz nur bei nicht festen Anzahlen; Zuflucht-Karte zeigt wieder den Namen der gefragten Person (AskedName) und einen Hilfesatz zu Apfel/Kette (RefugeHint, DE/EN); Rolle und Fragende bleiben verborgen.
   Entfallene Pruefungen: ui.prompt.*-Anweisungen in den Lexikonzeilen (Keys abgeschafft); Auswahlmarkierung/Abwaehlen vor Bestaetigung bei fester Anzahl.
   Code-Fix: action_card.gd zeigt keine Ansagezeile mit leerer Rolle bei anonymer Frage (Zuflucht). Lexikon-Aufruf des Lehrlings an Kartentext angeglichen.
-- Fehlt: Tests fuer Auto-Uebernahme, Rueckgaengig-Leiste, Loki-Art zuerst; verwaiste i18n-Keys/Code entfernen; FOCUS_RING Gold zu Mondsilber;
+- Fehlt: verwaiste i18n-Keys/Code entfernen (tools/check-godot-i18n.js meldet 2 Altbefunde zu ui.night.reaction.%s, cockpit_text.gd:62); FOCUS_RING Gold zu Mondsilber;
   Spalte tipps_neu in docs/audit/NACHTSCHRITTE-72.csv samt Neumessung; 7 Screenshots 1024x768 nach Downloads/Grimmhain-Nacht-neu; Vollsuite inkl. Fuzz; dann Merge, Export, Deploy.
+- Entfallene Pruefungen (zusaetzlich): Abbrechen auf Rollenkarten (nur Karteneingaben), Lehrling-Optionswahl (jetzt direkte Meisterwahl), Auswahlmarkierung bei fester Anzahl.
 - Testmuster: Auto-Commit bei fester Anzahl, also kein ConfirmTargetsButton (Mehrfachwahl-Tests mit Spuerhund, 3 Personen); Schritte mit Vorschau zaehlen als Prompt
   (effective_of / next() im Treiber), Schritt vorher per begin_open_step() beginnen, wenn der Zustand den Prompt braucht; Cancel/Skip/Clear nur noch bei Karteneingaben (owner card).
 - Rudelschritt in Vorbereitungen per Kernbefehl skip_next_step ueberspringen (nur Core, nicht in der UI); Loki: erst YesButton/NoButton (Art), dann 2 Personen.
