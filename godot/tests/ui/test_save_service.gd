@@ -429,7 +429,9 @@ func test_continue_screen_resumes_saved_game_after_restart() -> void:
 	assert_eq(session.state_hash(), hash_before, "gleicher Stand")
 	assert_eq(str(session.cockpit_view()["next"]["kind"]), "begin_step", "an derselben Stelle")
 	var status := find_node(current_screen(shell), "SaveStatusLabel") as Label
-	await press(find_button(current_screen(shell), "BeginStepButton"))
+	# Der Schritt zeigt seine Vorschau ohne „Schritt beginnen“; die feste Zielwahl wird beim Tippen sofort übernommen.
+	var shown := effective_of(session.cockpit_view()["next"])
+	await press(find_node(current_screen(shell), "SeatRing").call("token_for", int((shown["allowed_ids"] as Array)[0])) as BaseButton)
 	assert_eq(status.text, "Gespeichert", "Speicheranzeige nach dem nächsten Befehl")
 
 
@@ -479,7 +481,9 @@ func test_retry_save_button_after_failure_without_automatic_loop() -> void:
 	assert_eq((find_node(current_screen(shell), "SaveStatusLabel") as Label).text, "Fehler: nicht gespeichert", "Fehler bleibt sichtbar")
 	assert_true(retry.is_visible_in_tree(), "weiter angeboten")
 	assert_eq(ctx.session.state_hash(), hash, "Partie unverändert, nicht zurückgesetzt")
-	assert_false(visible_buttons(find_node(current_screen(shell), "ActionCard")).is_empty(), "Partie weiter bedienbar")
+	var shown := effective_of(ctx.session.cockpit_view()["next"])
+	var token := find_node(current_screen(shell), "SeatRing").call("token_for", int((shown["allowed_ids"] as Array)[0])) as BaseButton
+	assert_false(token.disabled, "Partie weiter bedienbar")
 	ctx.saves.simulate_failure = &""
 	await press(retry)
 	assert_eq((find_node(current_screen(shell), "SaveStatusLabel") as Label).text, "Gespeichert", "nach Behebung gespeichert")
