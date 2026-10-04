@@ -6,6 +6,7 @@ extends BaseScreen
 const LOGO := "res://assets/start/start-logo.webp"
 const LOGO_MIN_WIDTH := 620.0
 const FOG_SECONDS := 0.6
+const ENTER_SIZE := Vector2(400.0, 84.0)  ## epischer Knopf: Breite für Enden plus Schrift, Höhe über der Mindesthöhe 72
 
 @onready var _column: VBoxContainer = %Column
 @onready var _enter: GrimmButton = %EnterButton
@@ -32,11 +33,8 @@ func _setup() -> void:
 	logo.tooltip_text = tr("app.title")
 	_column.add_child(logo)
 	_column.move_child(logo, 0)
-	var height := _enter.custom_minimum_size.y
-	GroveSkin.skin_button(_enter, true)
-	_enter.custom_minimum_size = Vector2(maxf(_enter.custom_minimum_size.x, 300.0), maxf(_enter.custom_minimum_size.y, height))
-	var inset_y := maxf(0.0, (_enter.custom_minimum_size.y - 40.0) * 0.5)
-	SelectionGlow.set_on(_enter, "button_primary", GroveArtData.BUTTON_PRIMARY_MARGINS, true, Vector4(0.0, inset_y, 0.0, inset_y))
+	_enter.custom_minimum_size = Vector2(ENTER_SIZE.x, maxf(_enter.custom_minimum_size.y, ENTER_SIZE.y))
+	EpicButton.apply(_enter, _animated())
 	_enter.pressed.connect(_on_enter)
 
 

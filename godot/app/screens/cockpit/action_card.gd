@@ -44,7 +44,7 @@ const SIDE_BY_SIDE_WIDTH := 560.0  ## ab dieser Kartenbreite stehen Zielplatz un
 ## Schritte der Textanpassung (Schriftfaktor, Breite des Rollenbilds): erst kleinere Schrift, dann zusätzlich ein kleineres Rollenbild (mehr Textbreite), danach Scrollen
 const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Vector2(0.84, 88.0), Vector2(0.76, 76.0), Vector2(0.7, 64.0)]
 const FIT_MIN_FONT := 15  ## kleinste Schrift des Kartentexts (logische Einheiten)
-const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (vorerst button_primary, ein eigenes Knopfbild folgt)
+const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (epischer Knopf, `EpicButton`)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
 
 
@@ -290,7 +290,7 @@ func is_bare() -> bool:
 	return _bare
 
 
-## Spielbeginn: kein Textkasten, nur ein großer Knopf mit rotem Glühen in der Mitte. Rollen zeigen bleibt als Nebenknopf darunter.
+## Spielbeginn: kein Textkasten, nur der große epische Knopf (Lava pulsiert). Rollen zeigen bleibt als Nebenknopf darunter.
 func _begin_game() -> void:
 	_bare = true
 	_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -298,12 +298,7 @@ func _begin_game() -> void:
 	var big := _button("StartNightButton", "ui.cockpit.action.begin_game", GrimmButton.Kind.PRIMARY, &"start_night")
 	big.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	big.custom_minimum_size = BEGIN_BUTTON_SIZE
-	big.add_theme_font_size_override("font_size", ThemeTokens.FONT_HEADING)
-	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
-		var box := big.get_theme_stylebox(state) as GroveStyleBox
-		if box != null:
-			box.native_height = 0.0  # die Platte füllt die ganze Höhe des großen Knopfes
-	SelectionGlow.set_on(big, "button_primary", GroveArtData.BUTTON_PRIMARY_MARGINS, true)
+	EpicButton.apply(big, not bool(_last_context.get("reduced_motion", false)))
 	_content.add_child(big)
 	_primary = big  # Hauptaktion der Karte (Fokus, Tests), steht aber mittig statt im Dock
 	_actions([_button("ShowRolesButton", "ui.cockpit.action.show_roles", GrimmButton.Kind.SECONDARY, &"show_roles")])
