@@ -455,7 +455,7 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		if anonymous:
 			break
 		_text("ui.cockpit.card.info_line", {"label": StringName(CockpitText.info_key(str(line["key"]))), "value": CockpitText.info_value(line)}, &"WarningLabel")
-	if str(context.get("call_step", "")) != "" and str(next.get("step_id", "")) == str(context.get("call_step")) and owner != "reaction":
+	if str(context.get("call_step", "")) != "" and str(next.get("step_id", "")) == str(context.get("call_step")) and owner != "reaction" and role != "":
 		_text(CockpitText.call_key(role), {"role": CockpitText.role_name(role)}, &"ReadAloudLabel").name = "CallLine"
 	if owner == "kartenschlucker":
 		_swallower_status(next)
