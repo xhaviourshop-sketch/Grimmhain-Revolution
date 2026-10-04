@@ -36,12 +36,11 @@ func test_every_role_has_four_labelled_lines_in_both_languages() -> void:
 				assert_false(text.contains(term), "%s: %s enthält Codebegriff „%s“" % [lang, role, term])
 
 
-## Jede Rolle mit eigenem Vorlesetext nennt ihn wörtlich; jede Anweisung der Karte steht in ihren Zeilen.
+## Jede Rolle mit eigenem Vorlesetext nennt ihn wörtlich. (Die Prompt-Anweisungen `ui.prompt.*` sind mit der Schablone entfallen: Die Karte hat nur noch Satz und Hilfe `ui.night.*`.)
 func test_lines_agree_with_the_card_texts() -> void:
 	for lang: String in ["de", "en"]:
 		var po := _po(lang)
 		var with_call := 0
-		var with_prompts := 0
 		for role: Variant in RoleCatalog.ROLES:
 			var id := StringName(role)
 			var part := String(id).replace("-", "_")
@@ -50,16 +49,7 @@ func test_lines_agree_with_the_card_texts() -> void:
 			if po.has(call_key):
 				with_call += 1
 				assert_true(text.contains(str(po[call_key])), "%s: %s nennt den Vorlesetext der Karte" % [lang, role])
-			for key: Variant in po:
-				var prefix := "ui.prompt.%s." % part
-				if str(key).begins_with(prefix) and not text.contains(str(po[key])):
-					# Ausnahmen: Anweisungen, die an eine andere Person als die Spielleitung gerichtet sind oder als Reaktion/Zusatz
-					# formuliert werden, stehen sinngemäß in den Zeilen (Waldhexe, Lehrling, Rotkäppchen; Reaktion des Dorfschmieds).
-					assert_true(["waldhexe", "lehrling", "rotkaeppchen"].has(String(id)), "%s: %s nennt die Anweisung %s" % [lang, role, key])
-				elif str(key).begins_with(prefix):
-					with_prompts += 1
 		assert_true(with_call >= 40, "%s: Rollen mit Vorlesetext geprüft (%d)" % [lang, with_call])
-		assert_true(with_prompts >= 50, "%s: Anweisungen der Karten in den Zeilen gefunden (%d)" % [lang, with_prompts])
 
 
 ## NQ-06: Rotkäppchens Ablauf am Tisch ist entschieden und vollständig. Reihenfolge der Handlungen, keine hörbare Namensansage,
@@ -87,14 +77,11 @@ func test_red_riding_hood_flow_is_complete_in_order() -> void:
 		assert_true(text.contains("ohne ihren Namen" if lang == "de" else "without saying a name"), "%s: keine Namensnennung" % lang)
 		assert_false(po.has("ui.role.rotkaeppchen.lex.open"), "%s: kein offener Hinweis zu Rotkäppchen" % lang)
 		# Vertrauliche Anleitung bleibt von der Karte der gefragten Person und von öffentlichen Texten getrennt.
-		for key: String in ["ui.prompt.rotkaeppchen.grant", "ui.cockpit.card.red_grant.heading", "ui.cockpit.action.yes.rotkaeppchen.grant",
+		for key: String in ["ui.night.rotkaeppchen.grant.title", "ui.night.rotkaeppchen.grant.help", "ui.cockpit.card.red_grant.heading", "ui.cockpit.action.yes.rotkaeppchen.grant",
 				"ui.cockpit.action.no.rotkaeppchen.grant"]:
 			var card := str(po[key])
 			for secret: String in ["Augen", "eyes", "antippen", "tap the chosen", "Rotkäppchen", "Little Red"]:
 				assert_false(card.contains(secret), "%s: %s enthält keine Anleitung oder Rolle (%s)" % [lang, key, secret])
-		var gm_card := str(po["ui.prompt.rotkaeppchen.targets"])
-		assert_true(gm_card.contains("Augen schließen" if lang == "de" else "close their eyes") and gm_card.contains("unauffällig" if lang == "de" else "quietly"),
-			"%s: Spielleiterkarte nennt Augen und unauffälliges Antippen" % lang)
 	for role: Variant in RoleCatalog.ROLES:
 		for lang: String in ["de", "en"]:
 			var open_key := RolePresentation.lexicon_key(StringName(role), RolePresentation.LEXICON_OPEN)
