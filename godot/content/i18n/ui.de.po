@@ -8514,6 +8514,12 @@ msgstr "Jemand bittet um Zuflucht."
 msgid "ui.night.rotkaeppchen.grant.help"
 msgstr "Frage die Person leise: gewähren oder ablehnen?"
 
+msgid "ui.night.rotkaeppchen.grant.asked"
+msgstr "Gefragt wird: {names}"
+
+msgid "ui.night.rotkaeppchen.grant.hint"
+msgstr "Gewährst du Zuflucht, bekommst du einen Apfel (dein Schritt läuft in der nächsten Nacht doppelt) und eine Todeskette (stirbt einer von euch, stirbt der andere mit)."
+
 msgid "ui.night.schwarze_witwe.pick.title"
 msgstr "Die Schwarze Witwe wählt eine Person."
 

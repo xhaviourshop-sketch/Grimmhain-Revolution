@@ -8514,6 +8514,12 @@ msgstr "Someone asks for shelter."
 msgid "ui.night.rotkaeppchen.grant.help"
 msgstr "Ask the person quietly: grant or refuse?"
 
+msgid "ui.night.rotkaeppchen.grant.asked"
+msgstr "Asked: {names}"
+
+msgid "ui.night.rotkaeppchen.grant.hint"
+msgstr "If you grant shelter, you get an apple (your step runs twice next night) and a chain of death (if one of you dies, the other dies too)."
+
 msgid "ui.night.schwarze_witwe.pick.title"
 msgstr "The Black Widow chooses one person."
 

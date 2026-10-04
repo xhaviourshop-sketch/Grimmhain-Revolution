@@ -195,6 +195,8 @@ func test_refuge_card_asks_the_person_and_hides_the_asker() -> void:
 	assert_false(text.contains("Rotkäppchen"), "nennt nicht die Rolle: %s" % text)
 	assert_false(text.contains("2 · B"), "nennt nicht die fragende Person")
 	assert_true(text.contains("Zuflucht") and text.contains("gewähren oder ablehnen"), "Schablone: ein Satz und eine Hilfe: %s" % text)
+	assert_true(text.contains("4 · D"), "nennt die gefragte Person: %s" % text)
+	assert_true(text.contains("Apfel") and text.contains("Todeskette"), "ein Hilfesatz zu Apfel und Kette: %s" % text)
 	assert_false(text.contains("ui.role") and text.contains("erwache"), "keine Ansagezeile mit leerer Rolle: %s" % text)
 	var ring := find_node(current_screen(shell), "SeatRing")
 	assert_eq(String(ring.call("token_for", 4).get("state")), "actor", "die gefragte Person ist am Sitzkreis markiert")

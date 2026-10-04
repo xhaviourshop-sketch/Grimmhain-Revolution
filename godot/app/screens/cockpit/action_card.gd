@@ -443,6 +443,9 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	_decoys(next)
 	_heading(CockpitText.night_title_key(texts), {"role": CockpitText.role_name(role)}).name = "NightTitle"
 	_text(CockpitText.night_help_key(texts), {}, &"MutedLabel").name = "NightHelp"
+	if anonymous:  # Zuflucht: die gefragte Person steht auf der Karte, die fragende Person und die Rolle nicht
+		_text("ui.night.rotkaeppchen.grant.asked", {"names": CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))}, &"SectionLabel").name = "AskedName"
+		_text("ui.night.rotkaeppchen.grant.hint", {}, &"MutedLabel").name = "RefugeHint"
 	if GROUP_ROLES.has(role) and not anonymous:
 		var group := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
 		if group != "":
