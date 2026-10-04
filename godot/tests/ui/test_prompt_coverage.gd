@@ -80,8 +80,10 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 	# Jede Kombination hat eine eigene Anweisung, jede Nachtrolle einen eigenen Vorlesetext.
 	for combo: String in keys:
 		var parts := combo.split("/")
-		var key := CockpitText.reaction_key(parts[1]) if parts[0] == "reaction" else CockpitText.instruction_key(parts[0], parts[1], parts[2])
-		assert_false(key.begins_with("ui.prompt.generic."), "%s: eigene Anweisung statt %s" % [combo, key])
+		var probe := {"owner": "reaction", "reaction_kind": parts[1]} if parts[0] == "reaction" else {"owner": parts[0], "stage": parts[1], "answer": parts[2]}
+		var key := CockpitText.night_title_key(probe)
+		assert_false(key.begins_with("ui.night.generic."), "%s: eigener Titel statt %s" % [combo, key])
+		assert_false(CockpitText.night_help_key(probe).begins_with("ui.night.generic."), "%s: eigene Hilfe" % combo)
 		if parts[0] != "reaction":
 			assert_ne(CockpitText.call_key(parts[0] if parts[0] != "pack2" else "pack"), "ui.call.generic", "%s: eigener Vorlesetext" % combo)
 	print("      Prompt-Abdeckung (%d Kombinationen): %s" % [keys.size(), ", ".join(keys)])
@@ -91,11 +93,11 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 
 
 
-## Hinweiskarte: Zeigen und Bestätigen sind bedienbar, die Karte nennt keine fremden Rollen.
+## Hinweiskarte: Zeigen ist bedienbar (Schließen bestätigt), die Karte nennt keine fremden Rollen.
 func _check_notice_card(next: Dictionary) -> void:
 	_card.render(next, {"phase": "NIGHT", "seats": [], "selection": [], "revealed": true})
 	assert_true(_card.find_child("ShowNoticeButton", true, false) != null, "Hinweis: Karte zeigen bedienbar")
-	assert_true(_card.find_child("AckNoticeButton", true, false) != null, "Hinweis: Bestätigen bedienbar")
+	assert_true(_card.find_child("AckNoticeButton", true, false) == null, "Hinweis: Schließen der gezeigten Karte bestätigt, kein eigener Knopf")
 
 
 func _play(g: int, focus: String, count: int) -> bool:
@@ -251,19 +253,21 @@ func _render_once(combo: String, next: Dictionary) -> void:
 	var expected: Array[String] = []
 	match str(next["answer"]):
 		"targets":
-			expected = ["ConfirmTargetsButton"]
-			if int(next["min"]) == 0:
+			# Feste Anzahl wird beim Tippen sofort übernommen (kein Bestätigen); Verzicht nur, wo die Anzahl 0 zulässt.
+			if not CockpitText.auto_commit(next):
+				expected = ["ConfirmTargetsButton"]
+			if (next["counts"] as Array).has(0):
 				expected.append("DeclineButton")
 		"choice":
 			expected = ["YesButton", "NoButton"]
 		"ack":
-			expected = ["AckButton"]
+			expected.append("AckButton" if (str(next.get("owner")) == "card" or not names.has("ShowCardButton")) else "ShowCardButton")
 		"option":
 			for i: int in (next["options"] as Array).size():
 				expected.append("OptionButton_%d" % i)
 		"prediction":
 			expected = ["ConfirmPredictionButton", "PredictionNightButton", "PredictionDayButton"]
-	if bool(next["cancellable"]):
+	if bool(next["cancellable"]) and str(next.get("owner")) == "card":  # Abbrechen gibt es nur noch bei Karteneingaben
 		expected.append("CancelPromptButton")
 	for e: String in expected:
 		assert_true(names.has(e), "%s: Karte hat %s (%s)" % [combo, e, names])
@@ -454,7 +458,7 @@ func test_knight_tie_reaction_card() -> void:
 	_spawned.append(_card)
 	_card.render(next, {"phase": "DAWN_RESOLUTION", "seats": [], "selection": [], "revealed": true})
 	assert_true(_card.find_child("DeclineButton", true, false) == null, "kein Verzicht")
-	assert_eq(CockpitText.reaction_key("knight"), "ui.prompt.reaction.knight", "eigene Anweisung")
+	assert_true(CockpitText.has_key("ui.night.reaction.knight.title"), "eigener Titel")
 	assert_true(session.answer_targets([6]).ok, "Wolf 6 stirbt")
 
 
@@ -486,5 +490,5 @@ func test_smith_weapon_reaction_card() -> void:
 	session.begin_next_step()
 	next = session.cockpit_view()["next"]
 	assert_eq([int(next["min"]), next["allowed_ids"]], [1, [1, 2]], "Pflichtwahl eines lebenden Wolfs")
-	assert_eq(CockpitText.reaction_key("smith"), "ui.prompt.reaction.smith", "eigene Anweisung")
+	assert_true(CockpitText.has_key("ui.night.reaction.smith.title"), "eigener Titel")
 	assert_true(session.answer_targets([2]).ok, "Wolf 2 stirbt")
