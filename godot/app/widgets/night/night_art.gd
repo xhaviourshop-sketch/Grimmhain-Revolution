@@ -33,6 +33,11 @@ static func ring(name: String) -> Texture2D:
 	return texture("frames/ring-%s.png" % name)
 
 
+## Teamsymbol der Vorbereitung: `team` ist die Katalog-Fraktion (village, wolves, solo), Bild `team/team-<name>.png`.
+static func team(team_id: StringName) -> Texture2D:
+	return texture("team/team-%s.png" % String(team_id))
+
+
 ## Bildschlüssel einer Rolle: Gruppenschritte ohne eigenes Bild zeigen das Bild der zugehörigen Rolle („Alle Verzauberten“ den
 ## Rattenfänger, das Rudel den Werwolf).
 static func image_key(role_id: String) -> String:

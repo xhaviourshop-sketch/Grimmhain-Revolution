@@ -120,6 +120,27 @@ const DIALOG_LIST_RESERVED_HEIGHT := 300  ## Fensterhöhe für Titel, Text, Akti
 const WINDOW_MIN_WIDTH := 1024        ## Desktop-Mindestfenster (03 §8.2: 1024×640)
 const WINDOW_MIN_HEIGHT := 640
 
+# --- Vorbereitung „Neue Partie“ (Hain-Stil wie das Nachtbrett, kein Gold) ---------------------------------
+const PREP_SHADE := Color(0.01, 0.014, 0.034, 0.7)   ## Abdunklung des Nachthintergrunds hinter der Vorbereitung
+const PREP_CARD_TEXT := Color("#dde3ee")             ## Schrift auf den Hain-Karten (Mondsilber, etwas heller als MOON_SILVER)
+const PREP_DASH_FILL := Color(0.043, 0.051, 0.078, 0.5)  ## Fläche der Marke „Rolle hinzufügen“
+const MEDALLION_SIZE := 56            ## Schrittmedaillon oben (Tippfläche)
+const COUNTER_BUTTON_SIZE := 72       ## Plus und Minus der Spielerzahl
+const COUNTER_VALUE_FONT := 72        ## große Spielerzahl
+const ACT_CARD_MIN_WIDTH := 260       ## Akt-Karte: schmalste Breite, zwei Spalten
+const ACT_CARD_HEIGHT := 160
+const TEAM_SYMBOL_SIZE := 48          ## Teamsymbol im Zähler
+const NAME_PLATE_HEIGHT := 56         ## Namensschild (Tippfläche)
+const NAME_PLATE_MIN_WIDTH := 196
+const ROLE_CHIP_HEIGHT := 56          ## Rollenmarke in der Rollenübersicht
+const ROLE_CHIP_ICON := 40
+const ROLE_CHIP_MIN_WIDTH := 176
+const PREP_SIDE_WIDTH := 320          ## Namensschritt: Spalte für Eingabe und Gruppen
+const PREP_COUNT_COLUMN_WIDTH := 340   ## Runde: linke Spalte mit Spielerzahl und Teamzählern
+const PREP_CONTENT_WIDTH := 1100      ## breitester Inhalt der Vorbereitung auf großen Fenstern
+const FOOTER_HEIGHT := 72             ## Fußzeile mit Zurück und Weiter
+const ROLE_BAR_MAX_HEIGHT := 260      ## Rollenleiste beim Zuordnen
+
 # --- Bewegung ------------------------------------------------------------------------------------
 const TRANSITION_SECONDS := 0.2       ## Einblenden neuer Ansichten
 const TRANSITION_OFFSET := 12.0       ## kleine Positionsbewegung beim Einblenden

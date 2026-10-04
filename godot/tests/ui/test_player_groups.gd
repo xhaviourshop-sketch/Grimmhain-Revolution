@@ -1,5 +1,5 @@
 extends UiTestCase
-## Spielergruppen im Spielerschritt (Paket B): speichern, nach Neustart laden, umbenennen, aktualisieren, löschen,
+## Spielergruppen im Namensschritt der Vorbereitung (Paket B, DA-89): speichern, nach Neustart laden, umbenennen, aktualisieren, löschen,
 ## Rückfragen mit Abbruch, gleichnamige Gruppen, Schreib- und Dateifehler, Layout. Jede Test-Shell speichert in ein
 ## eigenes, danach entferntes Verzeichnis (nie echte Nutzerdateien).
 
@@ -26,7 +26,14 @@ func _groups(shell: Control) -> Array:
 
 
 func _dialog(shell: Control) -> Control:
-	return shell.call("get_dialog") as Control
+	return current_screen(shell).find_child("PrepDialog", true, false) as Control
+
+
+## Hauptmenü → Neue Partie → Schritt „Namen“ (die Gruppen gehören zum Namensschritt).
+func _open_names(shell: Control) -> Control:
+	var screen := await open_new_game(shell)
+	await press(find_button(screen, "NextButton"))
+	return screen
 
 
 func _names(shell: Control) -> Array:
@@ -104,7 +111,7 @@ func test_save_then_reuse_after_restart_reaches_a_started_game() -> void:
 	var first := await _shell(path)
 	if first == null:
 		return
-	var screen := await open_new_game(first)
+	var screen := await _open_names(first)
 	await seed_names(first, GROUP_NAMES)
 	var before := _names(first)
 	await _save(first, screen, "  Freitagsrunde ")
@@ -116,7 +123,7 @@ func test_save_then_reuse_after_restart_reaches_a_started_game() -> void:
 	await after_each()
 	# Neue App-Instanz: gleiche Datei, leerer Setup-Entwurf.
 	var second := await _shell(path)
-	screen = await open_new_game(second)
+	screen = await _open_names(second)
 	assert_eq(_names(second), [], "neuer Entwurf ist leer")
 	await _open_groups(screen)
 	assert_true(_card_visible(screen), "Gruppenkarte offen")
@@ -130,18 +137,9 @@ func test_save_then_reuse_after_restart_reaches_a_started_game() -> void:
 	assert_true(_feedback(screen).contains("Freitagsrunde"), "Meldung nennt die geladene Gruppe: %s" % _feedback(screen))
 	# Bedienweg bis zur gestarteten Partie mit genau diesen Namen.
 	setup_of(second).set("seed_source", func() -> int: return 4711)
-	await press(find_button(screen, "ConfirmPlayersButton"))
-	await press(find_button(screen, "ToRolesButton"))
-	await press(find_button(screen, "SuggestButton"))
-	for d: Variant in ((setup_of(second).call("view") as Dictionary)["roles"] as Dictionary).get("decoys", []):
-		setup_of(second).call("set_decoy_appearance", int((d as Dictionary)["copy_id"]), &"waldhexe")
+	await press(find_button(screen, "NextButton"))
 	await frames(2)
-	await press(find_button(screen, "ConfirmRolesButton"))
-	await press(find_button(screen, "DistributeButton"))
-	await press(find_button(screen, "ConfirmDistributionButton"))
-	await press(find_button(screen, "ToSeatingButton"))
-	await press(find_button(screen, "ConfirmSeatingButton"))
-	await press(find_button(screen, "StartGameButton"))
+	await press(find_button(screen, "NextButton"))
 	await frames(3)
 	var summary := session_of(second).call("summary") as Dictionary
 	assert_eq(summary["names"], GROUP_NAMES, "gestartete Partie mit den Namen der Gruppe")
@@ -154,12 +152,10 @@ func test_group_file_holds_only_names_after_a_full_setup() -> void:
 	var shell := await _shell(path)
 	if shell == null:
 		return
-	var screen := await open_new_game(shell)
+	var screen := await _open_names(shell)
 	await seed_names(shell, GROUP_NAMES)
-	await press(find_button(screen, "ConfirmPlayersButton"))
-	await press(find_button(screen, "ToRolesButton"))
-	await press(find_button(screen, "SuggestButton"))
-	await press(find_button(screen, "BackToPlayersButton"))
+	await press(find_button(screen, "NextButton"))
+	await press(find_button(screen, "BackStepButton"))
 	await _save(shell, screen, "Mit Rollen")
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
 	var group: Dictionary = (data["groups"] as Array)[0]
@@ -176,7 +172,7 @@ func test_save_needs_a_name_and_a_filled_list() -> void:
 	var shell := await _shell()
 	if shell == null:
 		return
-	var screen := await open_new_game(shell)
+	var screen := await _open_names(shell)
 	assert_true(find_button(screen, "SaveGroupButton").disabled, "leere Liste: Speichern gesperrt")
 	await seed_names(shell, GROUP_NAMES)
 	assert_false(find_button(screen, "SaveGroupButton").disabled, "gefüllte Liste: Speichern frei")
@@ -201,7 +197,7 @@ func _shell_with_group(name: String = "Alte Runde") -> Array:
 	if shell == null:
 		return []
 	_store(shell).call("create", name, GROUP_NAMES)
-	return [shell, await open_new_game(shell)]
+	return [shell, await _open_names(shell)]
 
 
 func test_loading_over_a_filled_list_needs_confirmation() -> void:
@@ -231,19 +227,16 @@ func test_load_discards_confirmed_roles_and_never_takes_old_state() -> void:
 		return
 	var shell: Control = made[0]
 	var screen: Control = made[1]
-	await seed_names(shell, ["Ein", "Zwei", "Drei", "Vier", "Fünf", "Sechs"])
-	await press(find_button(screen, "ConfirmPlayersButton"))
-	await press(find_button(screen, "ToRolesButton"))
-	await press(find_button(screen, "SuggestButton"))
-	await press(find_button(screen, "BackToPlayersButton"))
+	await seed_names(shell, ["Ein", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben", "Acht"])
+	await press(find_button(screen, "NextButton"))
+	await press(find_button(screen, "BackStepButton"))
 	assert_true(int(((setup_of(shell).call("view") as Dictionary)["roles"] as Dictionary)["total"]) > 0, "Vorbereitung: Rollenwahl vorhanden")
 	await _open_groups(screen)
 	await press(find_button(screen, "GroupLoadButton"))
 	await _confirm(shell)
 	var view := setup_of(shell).call("view") as Dictionary
 	assert_eq(int((view["roles"] as Dictionary)["total"]), 0, "keine alte Rollenwahl")
-	assert_false(bool(view["confirmed"]), "Namen nicht bestätigt")
-	assert_eq(String(view["step"]), "players", "Spielerschritt")
+	assert_eq(String(view["step"]), "names", "Namensschritt")
 	assert_eq(_person_ids(shell), [1, 2, 3, 4, 5, 6, 7, 8], "neue Personen-IDs")
 
 
@@ -267,7 +260,7 @@ func test_load_with_empty_group_list_shows_hint() -> void:
 	var shell := await _shell()
 	if shell == null:
 		return
-	var screen := await open_new_game(shell)
+	var screen := await _open_names(shell)
 	await _open_groups(screen)
 	assert_true(_card_visible(screen), "Karte offen")
 	assert_true((find_node(screen, "GroupEmptyLabel") as Control).visible, "Hinweis „Noch keine Gruppe“")
@@ -411,7 +404,7 @@ func test_corrupt_group_file_is_reported_not_loaded() -> void:
 	var shell := await _shell(path)
 	if shell == null:
 		return
-	var screen := await open_new_game(shell)
+	var screen := await _open_names(shell)
 	await _open_groups(screen)
 	var status := find_node(screen, "GroupStatusLabel") as Label
 	assert_true(status.visible and status.text.contains("nicht gelesen"), "Defekt sichtbar gemeldet: %s" % status.text)
@@ -461,7 +454,7 @@ func _check_layout(shell: Control, label: String) -> void:
 	var dialog := _dialog(shell)
 	var root: Control = dialog if dialog.visible else screen
 	var group_scroll := find_node(screen, "GroupScroll") as ScrollContainer
-	var person_scroll := find_node(screen, "PersonScroll") as ScrollContainer
+	var person_scroll := find_node(screen, "PlateScroll") as ScrollContainer
 	var buttons: Array[BaseButton] = []
 	for c: Control in visible_controls(root):
 		if c.size.x <= 0.0 or c.size.y <= 0.0:
@@ -485,7 +478,10 @@ func _check_layout(shell: Control, label: String) -> void:
 		for j: int in range(i + 1, buttons.size()):
 			assert_false(overlaps(rect_of(buttons[i]), rect_of(buttons[j])), "%s: %s und %s überlappen" % [label, buttons[i].name, buttons[j].name])
 	if root == screen:
-		for name: String in ["BackButton", "ConfirmPlayersButton", "RestartButton", "LoadGroupButton", "SaveGroupButton"]:
+		var card_open := (find_node(screen, "GroupCard") as Control).visible
+		for name: String in ["BackButton", "NextButton", "LoadGroupButton", "SaveGroupButton"]:
+			if card_open and (name == "LoadGroupButton" or name == "SaveGroupButton"):
+				continue  # offene Gruppenkarte ersetzt die Eingabe samt ihren Gruppenknöpfen
 			var c := find_node(screen, name) as Control
 			assert_true(c != null and c.is_visible_in_tree() and inside(rect_of(c), viewport), "%s: %s erreichbar" % [label, name])
 		var column := find_node(screen, "SideColumn") as Control
@@ -500,7 +496,7 @@ func test_layout_entry_and_group_card() -> void:
 				return
 			for i: int in 6:
 				_store(shell).call("create", "Gruppe mit einem sehr langen Namen Nr. %d" % i if i % 2 == 0 else "Runde %d" % i, GROUP_NAMES)
-			var screen := await open_new_game(shell)
+			var screen := await _open_names(shell)
 			await seed_names(shell, long_names(12))
 			await _check_layout(shell, "%s %s Eingabe mit Gruppenknöpfen" % [size, locale])
 			await _open_groups(screen)

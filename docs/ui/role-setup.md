@@ -1,5 +1,7 @@
 # Rollen-Setup · Rollen auswählen und verteilen
 
+> **Abgelöst (DA-89, 04.10.2026):** Dieser Wizard mit vier bestätigten Schritten wurde durch die Vorbereitung in drei Schritten ersetzt, siehe `preparation.md`. Der Text beschreibt den Stand davor.
+
 Stand: 27.09.2026 (Korrekturrunde DR-08) · Godot 4.7.2 · Projekt `godot/`
 
 „Neue Partie“ ist ein Wizard mit vier Schritten: **Spieler → Rollen → Verteilung → Sitzordnung** (Sitzordnung: `seating-setup.md`). Nach dem bestätigten Namensschritt (`player-setup.md`) stellt der Spielleiter einen Rollenpool für genau diese Personenzahl zusammen, verteilt ihn zufällig und reproduzierbar oder manuell und bestätigt die Verteilung. Das Ergebnis bleibt ein Entwurf im Speicher. Erst „Partie starten“ nach der Sitzordnung erzeugt `StartGame` (`game-start.md`); die Schritte hier ändern den Regelkern nicht.

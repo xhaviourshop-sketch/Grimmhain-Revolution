@@ -1,5 +1,7 @@
 # Sitzordnung · vierter Setup-Schritt
 
+> **Abgelöst (DA-89, 04.10.2026):** Dieser Wizard mit vier bestätigten Schritten wurde durch die Vorbereitung in drei Schritten ersetzt, siehe `preparation.md`. Der Text beschreibt den Stand davor.
+
 Stand: 27.09.2026 · Godot 4.7.2 · Projekt `godot/`
 
 Nach der bestätigten Rollenverteilung legt der Spielleiter die Sitzordnung für 6 bis 24 Personen fest. Grundlage im Decision Log („Personen, Sitze und Darstellung“): Zustände haften an der stabilen Personen-ID, nicht am Sitzplatz; Sitzplätze lassen sich per Drag-and-drop tauschen. Das Bestätigen erzeugt keinen Befehl. Erst „Partie starten“ danach sendet `StartGame` (`game-start.md`).

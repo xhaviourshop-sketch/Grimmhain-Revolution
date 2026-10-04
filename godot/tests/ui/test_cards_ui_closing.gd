@@ -5,7 +5,7 @@ extends UiTestCase
 ## bestimmter Karte, wie in den anderen Kartentests). Headless: geprüft werden Geometrie und Bedienbarkeit, keine Pixel, keine Touch-Eingabe.
 
 const NAMES := ["Anna", "Ben", "Cara", "Dirk", "Eva", "Finn", "Gina", "Hugo", "Ida", "Jan", "Kim", "Lea", "Max", "Nina", "Otto", "Pia", "Quin", "Rosa", "Sven", "Tina", "Uwe", "Vera", "Willi", "Xenia"]
-const SETUP_SEED := 20260930
+const SETUP_SEED := 20261001
 const PICK_CARD := "wende_01"  ## Wunsch einer Person: eine Personenwahl in beiden Fraktionsvarianten
 
 
@@ -72,34 +72,10 @@ func _state_of(shell: Control) -> GameState:
 
 # --- Englischer Ablauf von „Neue Partie“ bis zur gespielten Karte ----------------------------------------------------
 
-## Setup nur über sichtbare Buttons, mit eingeschalteten Totenreichkarten.
+## Vorbereitung nur über sichtbare Buttons, mit eingeschalteten Totenreichkarten (Akt IV kennt den Kartenschlucker).
 func _new_game_with_cards(shell: Control, count: int) -> void:
-	var screen := await open_new_game(shell)
-	var setup := setup_of(shell) as PlayerSetup
-	setup.seed_source = func() -> int: return SETUP_SEED
-	await press(find_button(screen, "ImportToggleButton"))
-	await type_text(find_node(screen, "ImportText") as TextEdit, ", ".join(numbered_names(count)))
-	await press(find_button(screen, "ImportConfirmButton"))
-	await press(find_button(screen, "ConfirmPlayersButton"))
-	await press(find_button(screen, "ToRolesButton"))
-	var toggle := find_node(screen, "DeathCardsToggle") as CheckButton
-	toggle.button_pressed = true
-	await frames(3)
-	await press(find_button(screen, "SuggestButton"))
-	var decoys: Array = (setup.view() as Dictionary)["roles"].get("decoys", [])
-	if not decoys.is_empty():
-		await press(find_button(screen, "DecoyRevealButton"))
-		for row: Node in find_node(screen, "DecoyCopyList").get_children():
-			if row is Control and row.get("copy_id") != null and (row as Control).visible:
-				await press(find_button(row, "ChooseAppearanceButton"))
-				await press(find_button(shell.call("get_dialog") as Control, "Appear_waldhexe"))
-		await press(find_button(screen, "DecoyRevealButton"))
-	await press(find_button(screen, "ConfirmRolesButton"))
-	await press(find_button(screen, "DistributeButton"))
-	await press(find_button(screen, "ConfirmDistributionButton"))
-	await press(find_button(screen, "ToSeatingButton"))
-	await press(find_button(screen, "ConfirmSeatingButton"))
-	await press(find_button(screen, "StartGameButton"))
+	var screen := await prepare_through_buttons(shell, count, &"akt4", SETUP_SEED, true)
+	await press(find_button(screen, "NextButton"))
 	await frames(3)
 
 
@@ -136,9 +112,15 @@ func test_english_game_from_setup_to_a_played_card_with_target_selection() -> vo
 	assert_eq(String(current_id(shell)), "cockpit", "Cockpit nach dem Start")
 	var state := _state_of(shell)
 	assert_true(state.death_cards, "Totenreichkarten aktiv")
-	# Ausgangszustand: Person 8 ist schon tot und hält eine Karte mit Personenwahl (wie in den anderen Kartentests).
-	_gm(shell, {"kind": "kill", "target_id": 8, "trigger_effects": false})
-	_gm(shell, {"kind": "set_card", "target_id": 8, "card_id": PICK_CARD})
+	# Ausgangszustand: eine Dorfperson (die zufällige Verteilung entscheidet, welche) ist schon tot und hält eine Karte mit Personenwahl.
+	var holder := 0
+	for id: int in state.alive_ids():
+		if state.players[id].faction == Faction.VILLAGE and not state.players[id].counts_as_wolf:
+			holder = id
+			break  # der niedrigste Sitz: sein Kartenfenster kommt zuerst
+	assert_ne(holder, 0, "es gibt eine Dorfperson")
+	_gm(shell, {"kind": "kill", "target_id": holder, "trigger_effects": false})
+	_gm(shell, {"kind": "set_card", "target_id": holder, "card_id": PICK_CARD})
 	var dead_before := _state_of(shell).alive_ids().size()
 	for guard: int in 80:
 		if str(_next(shell)["kind"]) in ["card_window", "day"]:
@@ -152,15 +134,17 @@ func test_english_game_from_setup_to_a_played_card_with_target_selection() -> vo
 	for guard: int in 30:
 		var next := _next(shell)
 		if str(next["kind"]) == "card_window":
+			if int(next["owner_id"]) != holder and not played and await _tap(shell, "CardKeepButton"):
+				continue  # andere Fenster (ein gezogenes Los einer lebenden Person) behält die Person, bis das Fenster der Karte kommt
 			if await _tap(shell, "ContinueDayButton"):
 				continue
 			if await _tap(shell, "RevealButton"):
-				if int(next["owner_id"]) == 8 and not played:
+				if int(next["owner_id"]) == holder and not played:
 					var name_label := find_node(current_screen(shell), "CardNameLabel") as Label
 					assert_eq(name_label.text, po_entries(PO_EN)["ui.card.%s.name" % PICK_CARD], "englischer Kartenname")
 					assert_ne(name_label.text, po_entries(PO_DE)["ui.card.%s.name" % PICK_CARD], "kein deutscher Kartenname")
 				continue
-			if int(next["owner_id"]) == 8 and not played:
+			if int(next["owner_id"]) == holder and not played:
 				played = await _tap(shell, "CardPlayButton")
 			else:
 				await _tap(shell, "CardKeepButton")

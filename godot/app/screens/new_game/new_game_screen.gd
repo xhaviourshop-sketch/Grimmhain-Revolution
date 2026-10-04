@@ -1,82 +1,87 @@
 class_name NewGameScreen
 extends BaseScreen
-## „Neue Partie“ als Setup-Wizard: Spieler → Rollen → Verteilung → Sitzordnung. Diese Ansicht ist
-## nur der Host: Kopfzeile, Schrittanzeige und genau ein sichtbarer Schritt (PlayerStep, RoleStep,
-## DistributionStep, SeatingStep). Welcher Schritt gilt und ob er erreichbar ist, entscheidet PlayerSetup
-## (`go_to_step`); Schritte haben keine eigenen Screen-IDs und lassen sich nicht überspringen.
-## Kein Schrittwechsel erzeugt einen Befehl, eine Partie oder einen GameState; nur „Partie starten“
-## in der Sitzordnung startet über GameStart die Partie und öffnet danach das Cockpit.
+## „Neue Partie“ als Vorbereitung in genau drei Schritten (Runde → Namen → Rollen) mit drei Medaillons oben, im Hain-Stil des Nachtbretts
+## (abgedunkelter Nachthintergrund, Mondsilber, Blutrot nur für Aktives, kein Gold). Diese Ansicht ist nur der Host: Kopfzeile, Medaillons,
+## genau ein sichtbarer Schritt (RoundStep, NamesStep, RolesStep) und die Fußzeile mit „Zurück“ und „Weiter“ (im letzten Schritt „Spiel
+## starten“). Keine Bestätigungsknöpfe zwischen den Schritten; Zurück verliert nichts. Welcher Schritt gilt und ob er erreichbar ist,
+## entscheidet PlayerSetup (`go_to_step`). Kein Schrittwechsel erzeugt einen Befehl oder einen GameState; nur „Spiel starten“ startet über
+## GameStart die Partie und öffnet danach das Cockpit. Rückfragen zeigt ein eigener Dialog im Hain-Stil.
 
-const TITLE_KEYS := {
-	&"players": "ui.setup.title",
-	&"roles": "ui.setup.title.roles",
-	&"distribution": "ui.setup.title.distribution",
-	&"seating": "ui.setup.title.seating",
-}
+const TITLE_KEY := "ui.prep.title"
 
 var _shown_step: StringName = &""
+var _steps: Dictionary[StringName, PrepStep] = {}
+var _medallions: StepMedallions = null
+var _backdrop: HainBackdrop = null
+var _dialog: ConfirmDialog = null
+var _back: GrimmButton = null
+var _hint: GrimmLabel = null
+var _next: GrimmButton = null
 var _lexicon_layer: Control = null  ## offene Lexikon-Ebene (Rollenwahl), sonst null
 
-@onready var _progress: WizardProgress = %WizardProgress
-@onready var _player_step: PlayerStep = %PlayerStep
-@onready var _role_step: RoleStep = %RoleStep
-@onready var _distribution_step: DistributionStep = %DistributionStep
-@onready var _seating_step: SeatingStep = %SeatingStep
+@onready var _content: VBoxContainer = %Content
+@onready var _footer: HBoxContainer = %Footer
 
 
 func _setup() -> void:
-	for step: Control in [_player_step, _role_step, _distribution_step, _seating_step]:
-		step.connect(&"dialog_requested", dialog_requested.emit)
-		step.connect(&"status_message_requested", status_message_requested.emit)
-	_player_step.roles_requested.connect(_go_to.bind(&"roles"))
-	_role_step.players_requested.connect(_go_to.bind(&"players"))
-	_role_step.lexicon_requested.connect(open_lexicon)
-	_distribution_step.roles_requested.connect(_go_to.bind(&"roles"))
-	_distribution_step.seating_requested.connect(_go_to.bind(&"seating"))
-	_seating_step.distribution_requested.connect(_go_to.bind(&"distribution"))
-	_seating_step.start_requested.connect(_on_start_requested)
-	_player_step.start(context.setup, context.groups)
-	_role_step.start(context.setup)
-	_distribution_step.start(context.setup)
-	_seating_step.start(context.setup)
+	_backdrop = HainBackdrop.new()
+	add_child(_backdrop)
+	move_child(_backdrop, 0)
+	_backdrop.set_animated(not context.settings.reduced_motion)
+	context.settings.changed.connect(_on_settings_changed)
+	header.back_button().kind = GrimmButton.Kind.COMPACT
+	GroveSkin.skin_back_button(header.back_button())
+	header.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	header.title_key = TITLE_KEY
+	_medallions = StepMedallions.new()
+	_medallions.step_requested.connect(_on_medallion)
+	(header.find_child("Actions", true, false) as Control).add_child(_medallions)
+	header.back_button().set_meta(HainStyle.META, true)  # die Platte trägt den Pfeil, der Text bleibt unsichtbar
+	HainStyle.apply(header)
+	_build_steps()
+	_build_footer()
+	_dialog = (load("res://app/widgets/confirm_dialog/confirm_dialog.tscn") as PackedScene).instantiate() as ConfirmDialog
+	_dialog.name = "PrepDialog"
+	add_child(_dialog)
+	HainStyle.apply(_dialog)
 	context.setup.changed.connect(_on_setup_changed)
 	_on_setup_changed(context.setup.view())
 
 
 func default_focus() -> Control:
-	return _current_step().call("default_focus") as Control
+	return _current_step().default_focus()
 
 
-## Zurück, Escape und System-Zurück: erst der Schritt selbst (offener Modus, Auswahl),
-## dann einen Schritt zurück; im Spielerschritt die Verlassen-Rückfrage wie bisher.
+## Zurück, Escape und System-Zurück: erst Dialog, Lexikon und der Schritt selbst (offener Modus, Rollenleiste, Zuordnung), dann einen
+## Schritt zurück; im ersten Schritt die Verlassen-Rückfrage, sobald Namen erfasst sind.
 func handle_back() -> bool:
+	if _dialog.is_open():
+		_dialog.cancel()
+		return true
 	if _lexicon_layer != null:
 		close_lexicon()
 		return true
-	if bool(_current_step().call("handle_back")):
+	if _current_step().handle_back():
 		return true
 	match _shown_step:
-		&"seating":
-			_go_to(&"distribution")
-			return true
-		&"distribution":
-			_go_to(&"roles")
-			return true
 		&"roles":
-			_go_to(&"players")
+			_go_to(&"names")
+			return true
+		&"names":
+			_go_to(&"round")
 			return true
 	if not context.setup.needs_leave_confirmation():
 		return false
-	var request := DialogRequest.create("ui.setup.dialog.leave.title", "ui.setup.dialog.leave.message", "ui.setup.dialog.leave.discard", _discard_and_leave, true)
-	request.cancel_key = "ui.setup.dialog.leave.continue"
-	request.alternative_key = "ui.setup.dialog.leave.keep"
+	var request := DialogRequest.create("ui.prep.leave.title", "ui.prep.leave.message", "ui.prep.leave.discard", _discard_and_leave, true)
+	request.cancel_key = "ui.prep.leave.continue"
+	request.alternative_key = "ui.prep.leave.keep"
 	request.on_alternative = navigate_requested.emit.bind(ScreenIds.MAIN_MENU)
-	dialog_requested.emit(request)
+	_dialog.open_request(request)
 	return true
 
 
-## Lexikoneintrag als Ebene über dem Setup. Liest nur Übersetzungen und Katalog; Rollenwahl, Verteilung und
-## Sitzordnung bleiben unverändert. Schließen und Zurück führen in denselben Setup-Zustand zurück.
+## Lexikoneintrag als Ebene über der Vorbereitung. Liest nur Übersetzungen und Katalog; Schritte und Entwurf bleiben unverändert.
+## Schließen und Zurück führen in denselben Zustand zurück.
 func open_lexicon(role: StringName) -> void:
 	close_lexicon()
 	_lexicon_layer = RoleLexicon.layer(context.settings, role)
@@ -102,41 +107,132 @@ func lexicon_layer() -> Control:
 	return _lexicon_layer
 
 
-func _go_to(step: StringName) -> void:
-	context.setup.go_to_step(step)
+func dialog() -> ConfirmDialog:
+	return _dialog
 
 
-func _current_step() -> Control:
-	match _shown_step:
-		&"roles":
-			return _role_step
-		&"distribution":
-			return _distribution_step
-		&"seating":
-			return _seating_step
-	return _player_step
+## Ein Dialog dieser Ansicht ist offen (die Shell verwirft dann weitere Anfragen, etwa zum Beenden).
+func dialog_open() -> bool:
+	return _dialog != null and _dialog.is_open()
+
+
+func step(id: StringName) -> PrepStep:
+	return _steps.get(id, null)
+
+
+func shown_step() -> StringName:
+	return _shown_step
+
+
+# --- Aufbau ----------------------------------------------------------------------------------------------
+
+func _build_steps() -> void:
+	var round_step := RoundStep.new()
+	var names_step := NamesStep.new()
+	var roles_step := RolesStep.new()
+	_steps = {&"round": round_step, &"names": names_step, &"roles": roles_step}
+	for id: StringName in _steps:
+		var prep: PrepStep = _steps[id]
+		_content.add_child(prep)
+		prep.visible = false
+		prep.dialog_requested.connect(_dialog_requested)
+		prep.status_message_requested.connect(status_message_requested.emit)
+		prep.footer_changed.connect(_refresh_footer.bind(id))
+		prep.lexicon_requested.connect(open_lexicon)
+	round_step.start(context.setup)
+	names_step.start(context.setup, context.groups)
+	roles_step.start(context.setup)
+	round_step.next_requested.connect(_go_to.bind(&"names"))
+	names_step.next_requested.connect(_go_to.bind(&"roles"))
+	roles_step.start_requested.connect(_on_start_requested)
+
+
+func _build_footer() -> void:
+	_back = GrimmButton.new()
+	_back.name = "BackStepButton"
+	_back.kind = GrimmButton.Kind.SECONDARY
+	_back.text_key = "ui.common.back"
+	_back.pressed.connect(_on_back_pressed)
+	_footer.add_child(_back)
+	_hint = GrimmLabel.new()
+	_hint.name = "FooterHint"
+	_hint.theme_type_variation = &"HainMutedLabel"
+	_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_hint.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_footer.add_child(_hint)
+	_next = GrimmButton.new()
+	_next.name = "NextButton"
+	_next.kind = GrimmButton.Kind.PRIMARY
+	_next.text_key = "ui.prep.next"
+	_next.pressed.connect(_on_next_pressed)
+	_footer.add_child(_next)
+	HainStyle.apply(_footer)
+	_footer.custom_minimum_size.y = ThemeTokens.FOOTER_HEIGHT
+
+
+func _current_step() -> PrepStep:
+	return _steps.get(_shown_step, _steps[&"round"])
+
+
+func _dialog_requested(request: DialogRequest) -> void:
+	_dialog.open_request(request)
+
+
+func _go_to(step_id: StringName) -> void:
+	context.setup.go_to_step(step_id)
+
+
+func _on_medallion(step_id: StringName) -> void:
+	_go_to(step_id)
+
+
+func _on_back_pressed() -> void:
+	back_requested.emit()
+
+
+func _on_next_pressed() -> void:
+	if not _next.disabled:
+		_current_step().activate_next()
+
+
+func _on_settings_changed(key: StringName) -> void:
+	if key == &"reduced_motion" and _backdrop != null:
+		_backdrop.set_animated(not context.settings.reduced_motion)
 
 
 func _on_setup_changed(view: Dictionary) -> void:
-	_progress.show_steps(view["steps"] as Array)
-	var step := StringName(str(view["step"]))
-	if step == _shown_step:
+	_medallions.show_steps(view["steps"] as Array)
+	var step_id := StringName(str(view["step"]))
+	if step_id == _shown_step:
 		return
 	var first := _shown_step == &""
-	_shown_step = step
-	_player_step.visible = step == &"players"
-	_role_step.visible = step == &"roles"
-	_distribution_step.visible = step == &"distribution"
-	_seating_step.visible = step == &"seating"
-	header.title_key = TITLE_KEYS.get(step, "ui.setup.title")
+	_shown_step = step_id
+	for id: StringName in _steps:
+		_steps[id].visible = id == step_id
+	_steps[step_id].entered()
+	_back.visible = step_id != &"round"
+	_refresh_footer(step_id)
 	if not first and is_inside_tree():
 		var target := default_focus()
 		if target != null:
 			_focus_later.call_deferred(target)
 
 
-## Verzögerter Fokus nur, solange das Ziel noch angezeigt wird (nach dem Spielstart verlässt die
-## Ansicht den Baum, bevor der Aufruf ausgeführt wird).
+## Fußzeile des angezeigten Schritts: Beschriftung und Zustand von „Weiter“, Hinweis (Fehler in Rosé, sonst gedämpft).
+func _refresh_footer(step_id: StringName) -> void:
+	if step_id != _shown_step:
+		return
+	var footer := _current_step().footer()
+	_next.text_key = str(footer["next_key"])
+	_next.disabled = not bool(footer["next_enabled"])
+	var hint_key := str(footer["hint_key"])
+	_hint.theme_type_variation = &"ErrorLabel" if bool(footer["hint_error"]) else &"HainMutedLabel"
+	_hint.format_values = footer["hint_values"]
+	_hint.text_key = hint_key
+
+
+## Verzögerter Fokus nur, solange das Ziel noch angezeigt wird (nach dem Spielstart verlässt die Ansicht den Baum, bevor der Aufruf läuft).
 func _focus_later(target: Control) -> void:
 	if is_instance_valid(target) and target.is_inside_tree():
 		target.grab_focus()
@@ -150,7 +246,15 @@ func _discard_and_leave() -> void:
 func _on_start_requested() -> void:
 	var result := GameStart.start(context.session, context.setup)
 	if not bool(result["ok"]):
-		_seating_step.show_start_failed(result["error"])
+		var error := StringName(result["error"])
+		var reason := "other"
+		if error == &"game_already_started":
+			reason = "game_already_started"
+		elif ["too_few_persons", "too_many_persons", "names_incomplete", "distribution_incomplete"].has(String(error)) or String(error).begins_with("too_") or String(error).begins_with("missing_"):
+			reason = "setup_incomplete"
+		_hint.theme_type_variation = &"ErrorLabel"
+		_hint.format_values = {"code": String(error)}
+		_hint.text_key = "ui.setup.seating.status.start_failed.%s" % reason
 		return
 	status_message_requested.emit("ui.setup.seating.toast.started")
 	navigate_requested.emit(ScreenIds.COCKPIT)

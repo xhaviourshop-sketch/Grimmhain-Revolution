@@ -1,26 +1,26 @@
 class_name SetupDraft
 extends RefCounted
-## Setup-Entwurf „Neue Partie“: Personen in Listenreihenfolge, nächster ID-Zähler,
-## Bearbeitungsstatus und Bestätigung des Namensschritts, aktueller Wizard-Schritt sowie
-## Rollenwahl (`roles`), Rollenverteilung (`distribution`) und Sitzordnung (`seating`). Das Validierungsergebnis wird
-## bei Bedarf aus der Personenliste berechnet (`validation()`), nicht getrennt gespeichert.
-## Nur PlayerSetup und RoleSetup verändern den Entwurf.
+## Setup-Entwurf „Neue Partie“ in drei Schritten (Runde, Namen, Rollen): Personen in Listenreihenfolge (= Sitzordnung im Uhrzeigersinn
+## ab Platz 1), nächster ID-Zähler, Zielzahl der Runde (`player_count`), gewählter Akt, aktueller Schritt, Rollenwahl (`roles`) und
+## Rollenverteilung (`distribution`). Es gibt keine Bestätigungen: Gültigkeit wird bei Bedarf aus dem Inhalt berechnet (`validation()`,
+## `RolePoolDraft.issues`), nicht getrennt gespeichert. Nur PlayerSetup und RoleSetup verändern den Entwurf.
 
-const STEP_PLAYERS := &"players"
+const STEP_ROUND := &"round"
+const STEP_NAMES := &"names"
 const STEP_ROLES := &"roles"
-const STEP_DISTRIBUTION := &"distribution"
-const STEP_SEATING := &"seating"
-const STEPS: Array[StringName] = [STEP_PLAYERS, STEP_ROLES, STEP_DISTRIBUTION, STEP_SEATING]
+const STEPS: Array[StringName] = [STEP_ROUND, STEP_NAMES, STEP_ROLES]
+const DEFAULT_PLAYER_COUNT := 8      ## Startwert des Zählers in Schritt 1 (nur Vorbelegung, jederzeit änderbar)
+const DEFAULT_ACT := &"akt1"         ## erste Akt-Karte, vorgewählt
 
 var persons: Array[SetupPerson] = []
 var next_person_id: int = 1       ## nächste zu vergebende ID; sinkt nie (außer beim Verwerfen)
-var confirmed: bool = false       ## Namensschritt bestätigt
-var has_unconfirmed_changes: bool = false  ## Änderungen seit der letzten Bestätigung bzw. dem Neubeginn
-var players_invalidated: bool = false  ## Personenliste nach einer Bestätigung geändert
-var current_step: StringName = STEP_PLAYERS
+var current_step: StringName = STEP_ROUND
+var player_count: int = DEFAULT_PLAYER_COUNT  ## Zielzahl der Runde (6 bis 24); die Namen müssen sie erreichen
+var act: StringName = DEFAULT_ACT
+var order_seed: int = DistributionDraft.NO_SEED  ## Seed der Namensreihenfolge (erstes „Mischen“), danach gespeichert
+var order_shuffles: int = 0       ## bewusste Neumischungen der Namensreihenfolge
 var roles: RolePoolDraft = RolePoolDraft.new()
 var distribution: DistributionDraft = DistributionDraft.new()
-var seating: SeatingDraft = SeatingDraft.new()
 
 
 func index_of(person_id: int) -> int:

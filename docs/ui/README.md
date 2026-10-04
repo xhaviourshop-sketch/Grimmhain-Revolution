@@ -2,7 +2,7 @@
 
 Stand: 26.09.2026 · Godot 4.7.2-stable · Projekt `godot/`
 
-Technisches Fundament der Tablet-App: App-Shell, Navigation, sechs Ansichten als Platzhalter, Theme, Lokalisierung DE/EN und eine schmale Anwendungsschicht zum Regelkern. Keine Spiellogik, keine Assets, kein Audio. Darauf aufgebaut ist der Setup-Wizard „Neue Partie“ (Spieler → Rollen → Verteilung → Sitzordnung, `player-setup.md`, `role-setup.md` und `seating-setup.md`) mit „Partie starten“ (`game-start.md`); der Spielablauf nach dem Start folgt in eigenen Arbeitspaketen.
+Technisches Fundament der Tablet-App: App-Shell, Navigation, sechs Ansichten als Platzhalter, Theme, Lokalisierung DE/EN und eine schmale Anwendungsschicht zum Regelkern. Keine Spiellogik, keine Assets, kein Audio. Darauf aufgebaut ist die Vorbereitung „Neue Partie“ in drei Schritten (Runde, Namen, Rollen, `preparation.md`) mit „Spiel starten“ (die Dokumente `player-setup.md`, `role-setup.md`, `seating-setup.md` und `game-start.md` beschreiben den früheren Vierschritt-Wizard); der Spielablauf nach dem Start folgt in eigenen Arbeitspaketen.
 
 ## Schichten
 
@@ -40,7 +40,7 @@ app/main.tscn                AppShell (Control, Vollbild)
 | `app/screens/start/` | Titel, Untertitel, „Eintreten“, Version |
 | `app/screens/main_menu/` | Neue Partie, Fortsetzen, Cockpit, Rollenlexikon, Einstellungen, Beenden (nur Desktop, abgesetzt) |
 | `app/screens/lexicon/` | Rollenlexikon als eigene Ansicht (Zurück schließt erst den Eintrag, dann zum Hauptmenü); Details in `cockpit.md` §Rollenlexikon |
-| `app/screens/new_game/` | Setup-Wizard: Host `new_game_screen` mit Schrittanzeige (`wizard_progress`) und genau einem Schritt: `player_step` (Namensschritt mit `person_row`, `player-setup.md`), `role_step` mit `role_row` (Rollenwahl) und `decoy_section` mit `decoy_copy_row` (geheime Trugbilderwolf-Scheinrollenwahl) und `distribution_step` mit `assignment_row` (Verteilung, geheimer Spielleiterbereich); Details in `role-setup.md` |
+| `app/screens/new_game/` | Vorbereitung: Host `new_game_screen` mit drei Medaillons (`step_medallions`) und genau einem Schritt: `round_step`, `names_step` (mit `name_plate`, `name_review_card`, `group_card`), `roles_step` (mit `role_pool_view`, `role_chip`, Sitzring für „Echte Karten“); Details in `preparation.md` |
 | `app/groups/`, `app/storage/`, `screens/new_game/group_card.*` | gespeicherte Spielergruppen im Spielerschritt (Paket B, `player-groups.md`); `SafeJsonFile` für sicheres Schreiben kleiner lokaler JSON-Dateien |
 | `app/rulebook/`, `app/widgets/rulebook/`, `app/screens/rulebook/` | allgemeines Regelbuch mit zwölf Kapiteln (Hauptmenü und Cockpit-Werkzeug, Paket C, `rulebook.md`) |
 | `app/history/`, `app/widgets/history/`, `app/screens/history/`, `app/session/game_report.gd` | Abschlussbericht, lokale Partiehistorie und Textexport (Paket D, `game-history.md`) |
@@ -166,8 +166,7 @@ Neue Theme-Variationen des Setups: `CompactButton` (Listenzeilen, 48 hoch, Schri
 ```bash
 godot/tests/run_all.sh                      # Regelkern und UI, Exit 0 = grün
 godot/tests/run_all.sh --filter=test_ui     # nur UI-Grundlage
-godot/tests/run_all.sh --filter=test_setup  # nur Spieler-Setup (siehe player-setup.md)
-godot/tests/run_all.sh --filter=test_role   # Rollenwahl (siehe role-setup.md)
+godot/tests/run_all.sh --filter=test_prep   # Vorbereitung in drei Schritten (siehe preparation.md)
 godot/tests/run_all.sh --filter=test_distribution  # Verteilung und Geheimhaltung
 ```
 

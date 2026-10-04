@@ -1,5 +1,7 @@
 # Spielstart · „Partie starten“
 
+> **Abgelöst (DA-89, 04.10.2026):** Dieser Wizard mit vier bestätigten Schritten wurde durch die Vorbereitung in drei Schritten ersetzt, siehe `preparation.md`. Der Text beschreibt den Stand davor.
+
 Stand: 27.09.2026 · Godot 4.7.2 · Projekt `godot/`
 
 Nach bestätigter Sitzordnung (`seating-setup.md`) startet der Spielleiter die Partie. Produktentscheidung vom 27.09.2026: „Sitzordnung bestätigen“ beendet nur das Setup. Erst der eigene Button „Partie starten“ sendet `StartGame`, damit die Sitzordnung vorher noch geprüft oder geändert werden kann.

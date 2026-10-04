@@ -1,5 +1,7 @@
 # Spieler-Setup · Namensschritt „Neue Partie“
 
+> **Abgelöst (DA-89, 04.10.2026):** Dieser Wizard mit vier bestätigten Schritten wurde durch die Vorbereitung in drei Schritten ersetzt, siehe `preparation.md`. Der Text beschreibt den Stand davor.
+
 Stand: 26.09.2026 · Godot 4.7.2 · Projekt `godot/`
 
 Schritt 1 des Setup-Wizards „Neue Partie“ (Spieler → Rollen → Verteilung): Der Spielleiter legt 6 bis 24 Personen an, bearbeitet und entfernt sie und bestätigt die Liste als Setup-Entwurf. Rollenwahl und Verteilung beschreibt `role-setup.md`; Sitzordnung beschreibt `seating-setup.md`, den Spielstart `game-start.md`.

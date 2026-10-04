@@ -257,10 +257,9 @@ func test_replace_persons_builds_new_draft_in_order() -> void:
 	for i: int in persons.size():
 		assert_eq(str((persons[i] as Dictionary)["name"]), NAMES[i], "Name %d in Reihenfolge" % (i + 1))
 		assert_eq(int((persons[i] as Dictionary)["number"]), i + 1, "Nummer")
-	assert_false(bool(setup.view()["confirmed"]), "nicht bestätigt")
 	assert_eq(int(setup.view()["roles"]["total"]), 0, "keine Rollenwahl übernommen")
-	assert_eq(String(setup.view()["step"]), "players", "Spielerschritt")
-	assert_true(bool(setup.view()["has_unconfirmed_changes"]), "wie beim Import unbestätigt")
+	assert_eq(String(setup.view()["step"]), "round", "erster Schritt")
+	assert_eq(int(setup.view()["player_count"]), NAMES.size(), "die Gruppe bestimmt die Spielerzahl")
 	assert_eq(old_ids.size(), 2, "Kontrolle: Vorher zwei Personen")
 
 

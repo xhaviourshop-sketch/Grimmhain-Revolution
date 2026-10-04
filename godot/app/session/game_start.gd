@@ -1,12 +1,12 @@
 class_name GameStart
 extends RefCounted
-## Schmaler Übergang vom bestätigten Setup-Entwurf zur Partie: baut aus `PlayerSetup.start_data()`
+## Schmaler Übergang vom Setup-Entwurf zur Partie: baut aus `PlayerSetup.prepare_start()` (verteilt im Modus „zufällig“ jetzt)
 ## genau einen StartGame-Befehl und reicht ihn über GameSession an den Regelkern. Keine eigene
 ## Regelprüfung: Annahme oder Ablehnung entscheidet allein der Regelkern.
 ##
 ## Zuordnung: immer `assignment = "manual"` mit der im Setup festgelegten Rolle je Personen-ID und
 ## den ausdrücklich gewählten Scheinrollen (`appearances`). Beim Start wird nicht erneut gemischt,
-## auch wenn die Verteilung im Setup zufällig entstand.
+## auch wenn die Verteilung im Setup zufällig entstand (Modus „App verteilt zufällig“).
 ## Die Rollenaufdeckung ist keine Setup-Option mehr (DI-01): Der Regelkern leitet die Wiederbelebungsrunde
 ## beim Start aus der Besetzung ab; der Befehl trägt keine Aufdeckungsangabe.
 ## Seed: ein neuer Wert aus `PlayerSetup.seed_source` (Standard AppPlatform.initial_seed, in Tests
@@ -18,10 +18,10 @@ const ROUND_ID_PREFIX := "grimmhain-round:"
 
 ## Startet die Partie aus dem Setup. Bei Annahme ist der Entwurf verbraucht und wird verworfen,
 ## sodass derselbe Entwurf keine zweite Partie starten kann. Bei Ablehnung (Setup unvollständig
-## oder Regelkern) bleiben Setup und Sitzung unverändert.
+## oder Regelkern) bleiben Namen und Rollenwahl und die Sitzung unverändert (im Modus „zufällig“ steht danach die Zuordnung im Entwurf).
 ## Ergebnis: {ok: bool, error: StringName}.
 static func start(session: GameSession, setup: PlayerSetup) -> Dictionary:
-	var data := setup.start_data()
+	var data := setup.prepare_start()
 	if not data.ok:
 		return {"ok": false, "error": data.error}
 	var seed_value := int(setup.seed_source.call())

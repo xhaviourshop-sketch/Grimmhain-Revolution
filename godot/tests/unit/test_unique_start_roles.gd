@@ -1,6 +1,6 @@
 extends TestCase
-## PE-07 (Option B): Bei Spielbeginn höchstens eine Kopie je Rolle, auch Dorfbewohner und Werwolf.
-## Einzige Ausnahme: Die Gebundenen, ohne Obergrenze (1 bis Personenzahl). Später durch Verwandlung,
+## PE-07 (Option B): Bei Spielbeginn höchstens eine Kopie je Rolle, auch der Dorfbewohner.
+## Ausnahmen ohne Obergrenze (1 bis Personenzahl): Die Gebundenen und, seit DA-90, der Werwolf. Später durch Verwandlung,
 ## Erbe, Tausch oder Korrektur entstehende gleiche Rollen sind nicht Gegenstand dieser Grenze.
 
 
@@ -31,9 +31,10 @@ func _expect_start(command: Command, label: String) -> GameState:
 	return result.state if result.ok else null
 
 
-func test_catalog_limit_is_one_except_the_bound() -> void:
+func test_catalog_limit_is_one_except_the_bound_and_the_werewolf() -> void:
 	for id: Variant in RoleCatalog.ROLES:
-		var expected := RoleCatalog.UNLIMITED if StringName(id) == RoleCatalog.DIE_GEBUNDENEN else 1
+		var unlimited := StringName(id) == RoleCatalog.DIE_GEBUNDENEN or StringName(id) == RoleCatalog.WERWOLF
+		var expected := RoleCatalog.UNLIMITED if unlimited else 1
 		assert_eq(RoleCatalog.max_copies(StringName(id)), expected, "Höchstzahl %s" % id)
 
 
@@ -44,11 +45,32 @@ func test_two_villagers_are_rejected() -> void:
 		"role_limit_exceeded", "zwei Dorfbewohner (zufällig)")
 
 
-func test_two_werewolves_are_rejected() -> void:
-	_expect_reject(_manual(["werwolf", "werwolf", "dorfbewohner", "das-orakel", "waldhexe", "schutzengel"]),
-		"role_limit_exceeded", "zwei Werwölfe (manuell)")
-	_expect_reject(_random(["werwolf", "werwolf", "dorfbewohner", "das-orakel", "waldhexe", "schutzengel"]),
-		"role_limit_exceeded", "zwei Werwölfe (zufällig)")
+func test_three_werewolves_start_count_for_the_win_and_reload() -> void:
+	var roles := ["werwolf", "werwolf", "werwolf", "das-orakel", "waldhexe", "schutzengel", "sensentraeger"]
+	for command: Command in [_manual(roles), _random(roles)]:
+		var state := _expect_start(command, "drei Werwölfe")
+		if state != null:
+			assert_eq(state.players.values().filter(func(p: Player) -> bool: return p.role_id == RoleCatalog.WERWOLF).size(), 3, "drei Werwölfe in der Partie")
+	var cmds: Array[Command] = [_manual(roles)]
+	for id: int in [1, 2]:
+		cmds.append(CorrectionFixtures.gm("kill", {"target_id": id, "trigger_effects": true}, "Test"))
+	var run := RulesEngine.replay(cmds)
+	assert_true(run.ok, "zwei Werwölfe getötet (%s)" % run.error)
+	if not run.ok:
+		return
+	assert_eq(run.state.open_candidates().size(), 0, "ein Werwolf lebt: kein Dorfsieg")
+	var loaded := StateCodec.decode(StateCodec.encode(run.state, cmds))
+	assert_true(loaded.ok, "Spielstand lädt (%s)" % loaded.error)
+	if loaded.ok:
+		assert_eq(CanonicalJson.stringify(loaded.state.to_dict()), CanonicalJson.stringify(run.state.to_dict()), "Zustand nach Laden identisch")
+	cmds.append(CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}, "Test"))
+	run = RulesEngine.replay(cmds)
+	assert_true(run.ok, "dritter Werwolf getötet (%s)" % run.error)
+	if run.ok:
+		var kinds: Array[String] = []
+		for c: WinCandidate in run.state.open_candidates():
+			kinds.append(String(c.kind))
+		assert_eq(kinds, ["village"] as Array[String], "Dorfsieg erst mit dem letzten Werwolf")
 
 
 func test_two_equal_special_roles_are_rejected() -> void:

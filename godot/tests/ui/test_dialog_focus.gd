@@ -79,25 +79,23 @@ func test_escape_cancels_and_focus_returns() -> void:
 
 
 func test_focus_returns_after_setup_dialogs() -> void:
-	# 50 für Entfernen und Neu beginnen
+	# 50 für Entfernen (Vorbereitung, eigener Dialog im Hain-Stil)
 	var shell := await spawn_shell()
 	if shell == null:
 		return
 	var screen := await open_new_game(shell)
+	await press(find_button(screen, "NextButton"))
 	await seed_names(shell, numbered_names(6))
-	var dialog := _dialog(shell)
-	var remove := find_button(person_rows(screen)[2], "RemoveButton")
+	var dialog := find_node(screen, "PrepDialog") as Control
+	var plate := find_button(screen, "NamePlate_3")
+	await press(plate)
+	var remove := find_button(screen, "RemoveButton")
 	remove.grab_focus()
 	await press(remove)
 	assert_true(dialog.visible and _in_dialog(dialog), "Entfernen-Dialog mit Fokus")
 	await key(KEY_ESCAPE)
 	assert_true(not dialog.visible and remove.has_focus(), "Fokus zurück zu Entfernen")
-	var restart := find_button(screen, "RestartButton")
-	restart.grab_focus()
-	await press(restart)
-	await key(KEY_ESCAPE)
-	assert_true(restart.has_focus(), "Fokus zurück zu Neu beginnen")
-	assert_eq(row_ids(screen).size(), 6, "nichts verändert")
+	assert_eq((setup_of(shell).call("view") as Dictionary)["count"], 6, "nichts verändert")
 
 
 func test_no_second_dialog() -> void:
@@ -106,11 +104,12 @@ func test_no_second_dialog() -> void:
 	if shell == null:
 		return
 	var screen := await open_new_game(shell)
+	await press(find_button(screen, "NextButton"))
 	await seed_names(shell, numbered_names(3))
-	var remove := find_button(person_rows(screen)[0], "RemoveButton")
+	await press(find_button(screen, "NamePlate_1"))
+	var remove := find_button(screen, "RemoveButton")
 	remove.pressed.emit()
 	remove.pressed.emit()
-	find_button(person_rows(screen)[1], "RemoveButton").pressed.emit()
 	shell.call("request_quit")
 	await frames(2)
 	var dialogs := 0
@@ -118,9 +117,10 @@ func test_no_second_dialog() -> void:
 		if node.get_script() != null and (node.get_script() as Script).get_global_name() == &"ConfirmDialog" and (node as Control).visible:
 			dialogs += 1
 	assert_eq(dialogs, 1, "genau ein offener Dialog")
-	var message := (find_node(_dialog(shell), "MessageLabel") as Label).text
+	var prep := find_node(screen, "PrepDialog") as Control
+	var message := (find_node(prep, "MessageLabel") as Label).text
 	assert_true(message.contains("Person 1"), "erste Anfrage bleibt gültig: %s" % message)
-	await press(find_button(_dialog(shell), "ConfirmButton"))
-	assert_eq(row_ids(screen), [2, 3] as Array[int], "nur die erste Anfrage ausgeführt")
+	await press(find_button(prep, "ConfirmButton"))
+	assert_eq((setup_of(shell).call("view") as Dictionary)["persons"].map(func(p: Dictionary) -> int: return int(p["person_id"])), [2, 3], "nur die erste Anfrage ausgeführt")
 	assert_eq(quit_calls, 0, "spätere Anfragen verworfen")
-	assert_false(_dialog(shell).visible, "Dialog geschlossen")
+	assert_false(prep.visible, "Dialog geschlossen")

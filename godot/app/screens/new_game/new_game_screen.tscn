@@ -2,11 +2,6 @@
 
 [ext_resource type="Script" path="res://app/screens/new_game/new_game_screen.gd" id="1_screen"]
 [ext_resource type="PackedScene" path="res://app/widgets/header_bar/header_bar.tscn" id="2_header"]
-[ext_resource type="PackedScene" path="res://app/screens/new_game/wizard_progress.tscn" id="3_progress"]
-[ext_resource type="PackedScene" path="res://app/screens/new_game/player_step.tscn" id="4_players"]
-[ext_resource type="PackedScene" path="res://app/screens/new_game/role_step.tscn" id="5_roles"]
-[ext_resource type="PackedScene" path="res://app/screens/new_game/distribution_step.tscn" id="6_distribution"]
-[ext_resource type="PackedScene" path="res://app/screens/new_game/seating_step.tscn" id="7_seating"]
 
 [node name="NewGameScreen" type="Control"]
 layout_mode = 3
@@ -18,42 +13,28 @@ grow_vertical = 2
 script = ExtResource("1_screen")
 screen_id = &"new_game"
 
-[node name="Layout" type="VBoxContainer" parent="."]
+[node name="Layout" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_type_variation = &"ScreenMargin"
 
-[node name="HeaderBar" parent="Layout" instance=ExtResource("2_header")]
-unique_name_in_owner = true
-layout_mode = 2
-title_key = "ui.setup.title"
-
-[node name="WizardProgress" parent="Layout" instance=ExtResource("3_progress")]
-unique_name_in_owner = true
+[node name="Column" type="VBoxContainer" parent="Layout"]
 layout_mode = 2
 
-[node name="PlayerStep" parent="Layout" instance=ExtResource("4_players")]
+[node name="HeaderBar" parent="Layout/Column" instance=ExtResource("2_header")]
+unique_name_in_owner = true
+layout_mode = 2
+title_key = "ui.prep.title"
+
+[node name="Content" type="VBoxContainer" parent="Layout/Column"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RoleStep" parent="Layout" instance=ExtResource("5_roles")]
+[node name="Footer" type="HBoxContainer" parent="Layout/Column"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DistributionStep" parent="Layout" instance=ExtResource("6_distribution")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="SeatingStep" parent="Layout" instance=ExtResource("7_seating")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_vertical = 3

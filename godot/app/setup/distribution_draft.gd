@@ -1,24 +1,19 @@
 class_name DistributionDraft
 extends RefCounted
-## Rollenverteilung im Setup-Entwurf: Modus, Zuordnung Personen-ID → Verteilungseinheit
-## (Rollen-ID oder Schlüssel einer Kopie mit Scheinrolle, siehe RoleCopy), Setup-Seed, Zahl
-## der bewussten Neumischungen und Bestätigung. Scheinrollen stehen nur an ihrer Kopie im
-## Rollenpool, nie hier.
+## Rollenverteilung im Setup-Entwurf: Modus (App verteilt zufällig / echte Karten, der Spielleiter weist zu), Zuordnung
+## Personen-ID → Verteilungseinheit (Rollen-ID oder Schlüssel einer Kopie mit Scheinrolle, siehe RoleCopy), Setup-Seed und Zahl
+## der bewussten Neumischungen. Scheinrollen stehen nur an ihrer Kopie im Rollenpool, nie hier.
 ## Nur RoleSetup verändert den Entwurf; alle Werte sind reine, speicherbare Daten.
 
 const RANDOM := &"random"
 const MANUAL := &"manual"
-const INVALIDATED_ROLES := &"roles_changed"            ## Rollenpool geändert, Zuordnung verworfen
-const INVALIDATED_PERSONS := &"person_count_changed"   ## Personen geändert, Zuordnung verworfen
 const NO_SEED := -1
 
 var mode: StringName = RANDOM
 var assignment: Dictionary[int, StringName] = {}   ## Personen-ID → Verteilungseinheit
-var confirmed: bool = false
 var base_seed: int = NO_SEED     ## beim ersten bewussten Verteilen gesetzt, danach gespeichert
 var shuffle_count: int = 0       ## bewusste Neumischungen seit dem ersten Seed
 var pool: Array[StringName] = [] ## Verteilungseinheiten, für die die Zuordnung gilt (kanonisch)
-var invalidated: StringName = &""
 
 
 func has_seed() -> bool:
@@ -33,13 +28,10 @@ func has_assignment() -> bool:
 	return not assignment.is_empty()
 
 
-## Verwirft Zuordnung und Bestätigung; Seed und Mischzähler bleiben.
-func clear(reason: StringName = &"") -> void:
-	if has_assignment() and reason != &"":
-		invalidated = reason
+## Verwirft die Zuordnung; Seed und Mischzähler bleiben.
+func clear() -> void:
 	assignment.clear()
 	pool.clear()
-	confirmed = false
 
 
 ## Noch nicht vergebene Einheiten je Schlüssel für die Einheiten `for_pool`.

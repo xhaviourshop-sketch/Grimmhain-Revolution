@@ -20,6 +20,7 @@ static func build() -> Theme:
 	_panels(theme)
 	_containers(theme)
 	_inputs(theme)
+	_hain_inputs(theme)
 	_scrolling(theme)
 	return theme
 
@@ -64,6 +65,13 @@ static func _labels(theme: Theme) -> void:
 		&"ErrorCaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.DANGER_TEXT],
 		&"ReadAloudLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_PRIMARY],
 		&"ShowValueLabel": [ThemeTokens.FONT_SHOW, ThemeTokens.GOLD_BRIGHT],
+		# Vorbereitung im Hain-Stil: Mondsilber statt Gold, Blutrot nur für Aktives (siehe ThemeTokens, DA-89).
+		&"HainLabel": [ThemeTokens.FONT_BODY, ThemeTokens.PREP_CARD_TEXT],
+		&"HainMutedLabel": [ThemeTokens.FONT_BODY, ThemeTokens.MOON_SILVER],
+		&"HainCaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.MOON_SILVER],
+		&"HainSectionLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.MOON_SILVER_BRIGHT],
+		&"HainHeadingLabel": [ThemeTokens.FONT_HEADING, ThemeTokens.MOON_SILVER_BRIGHT],
+		&"HainCounterLabel": [ThemeTokens.COUNTER_VALUE_FONT, ThemeTokens.MOON_SILVER_BRIGHT],
 	}
 	for name: StringName in variations:
 		theme.set_type_variation(name, &"Label")
@@ -274,6 +282,22 @@ static func _inputs(theme: Theme) -> void:
 		theme.set_color("font_placeholder_color", type, ThemeTokens.TEXT_MUTED)
 		theme.set_color("caret_color", type, ThemeTokens.GOLD_BRIGHT)
 		theme.set_color("selection_color", type, Color(ThemeTokens.GOLD_DEEP, 0.55))
+		theme.set_font_size("font_size", type, ThemeTokens.FONT_BODY)
+
+
+## Eingaben der Vorbereitung im Hain-Stil: dunkle Fläche, Mondsilber-Rahmen, helles Silber im Fokus, kein Gold.
+static func _hain_inputs(theme: Theme) -> void:
+	for base: StringName in [&"LineEdit", &"TextEdit"]:
+		var type := StringName("Hain" + String(base))
+		theme.set_type_variation(type, base)
+		var fill := Color(ThemeTokens.BG_APP, 0.86)
+		theme.set_stylebox("normal", type, _box(fill, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S))
+		theme.set_stylebox("focus", type, _box(fill, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.FOCUS_WIDTH, ThemeTokens.RADIUS_S))
+		theme.set_stylebox("read_only", type, _box(ThemeTokens.DISABLED_FILL, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S))
+		theme.set_color("font_color", type, ThemeTokens.PREP_CARD_TEXT)
+		theme.set_color("font_placeholder_color", type, ThemeTokens.MOON_SILVER)
+		theme.set_color("caret_color", type, ThemeTokens.MOON_SILVER_BRIGHT)
+		theme.set_color("selection_color", type, Color(ThemeTokens.BLOOD_RED, 0.55))
 		theme.set_font_size("font_size", type, ThemeTokens.FONT_BODY)
 
 
