@@ -38,7 +38,7 @@ func _quiet_night(s: GameState) -> GameState:
 		if s.pending_prompt == null:
 			s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Schritt")
 		else:
-			s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Verzicht")
+			s = _ok(s, _pass(s), "ohne Wirkung")
 	return _ok(s, Command.end_night(), "Morgen")
 
 
@@ -163,6 +163,14 @@ func _hangman_active() -> GameState:
 	return s
 
 
+## Antwort ohne Bedeutung auf den offenen Prompt: Rudelschritt mit Grund übersprungen, sonst Mindestantwort.
+func _pass(s: GameState) -> Command:
+	var p := s.pending_prompt
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")
+	return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
+
+
 func test_hangman_marks_after_three_executions() -> void:
 	var s := _hangman_active()
 	if s == null:
@@ -174,10 +182,10 @@ func test_hangman_marks_after_three_executions() -> void:
 		if s.pending_prompt == null:
 			s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Schritt")
 		elif StepQueue.step_kind(s.pending_prompt.step_id) == &"henker":
-			assert_true(s.pending_prompt.min_count == 0 and not s.pending_prompt.allowed_ids.has(2), "freiwillig, andere Lebende")
+			assert_true(s.pending_prompt.min_count == 1 and not s.pending_prompt.allowed_ids.has(2), "Pflicht (kein Verzicht), andere Lebende")
 			s = _ok(s, Command.answer_prompt(s.pending_prompt.id, [4]), "Markierung 4")
 		else:
-			s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Verzicht")
+			s = _ok(s, _pass(s), "ohne Wirkung")
 	s = _ok(s, Command.end_night(), "Morgen")
 	for id: int in [6, 7]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": false}), "Tod %d" % id)
@@ -204,7 +212,7 @@ func test_hangman_mark_expires_and_needs_living_hangman() -> void:
 		elif StepQueue.step_kind(s.pending_prompt.step_id) == &"henker":
 			s = _ok(s, Command.answer_prompt(s.pending_prompt.id, [5]), "Markierung 5")
 		else:
-			s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Verzicht")
+			s = _ok(s, _pass(s), "ohne Wirkung")
 	s = _ok(s, Command.end_night(), "Morgen")
 	var dead_hangman := _ok(s, _gm("kill", {"target_id": 2, "trigger_effects": false}), "Henker tot")
 	dead_hangman = _ok(dead_hangman, Command.nominate(3, 6), "Nominierung")

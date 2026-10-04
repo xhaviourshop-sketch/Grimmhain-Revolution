@@ -260,7 +260,7 @@ func test_dorfschmied_gives_weapon_in_night_six() -> void:
 func test_wolfskind_chooses_a_model() -> void:
 	if not await start(["wolfskind", W] + _villagers(5)):
 		return
-	await run({"wolfskind/": [3], "pack/": []}, until_event("WolfChildBound"))
+	await run({"wolfskind/": [3], "pack/": null}, until_event("WolfChildBound"))
 	assert_eq(int(_data("WolfChildBound").get("model_id", -1)), 3, "Vorbild 3")
 	await run({"day1": {"nominate": [4, 3], "execute": 3}}, until_kind("end_day"))
 	assert_true(state().players[1].counts_as_wolf, "Vorbild tot: Wolfskind verwandelt")

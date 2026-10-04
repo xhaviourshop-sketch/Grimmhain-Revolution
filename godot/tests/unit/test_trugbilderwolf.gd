@@ -41,12 +41,12 @@ func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
 	return out
 
 
-## Eine Nacht in B6T ohne Rudelopfer: Schutz auf 5, Waldhexe verzichtet, Orakel prüft `target`.
+## Eine Nacht in B6T: Schutz auf 5, das Rudel wählt 5 (geschützt, also ohne Tod), Waldhexe verzichtet, Orakel prüft `target`.
 ## `first_prompt` = ID des Schutzengel-Prompts dieser Nacht.
 func _night(n: int, first_prompt: int, target: int, override_role: String = "") -> Array[Command]:
 	var out: Array[Command] = [Command.start_night(), Command.answer_prompt(first_prompt, [5]),
-		Command.begin_step("night:%d:1:pack" % n), Command.answer_prompt(first_prompt + 1, []),
-		Command.begin_step("night:%d:2:waldhexe:5" % n), Command.answer_choice(first_prompt + 2, "poison", false),
+		Command.begin_step("night:%d:1:pack" % n), Command.answer_prompt(first_prompt + 1, [5]),
+		Command.begin_step("night:%d:2:waldhexe:5" % n), Command.answer_choice(first_prompt + 2, "heal", false), Command.answer_choice(first_prompt + 2, "poison", false),
 		Command.answer_choice(first_prompt + 2, "confirm", true), Command.begin_step("night:%d:3:das-orakel:4" % n),
 		Command.answer_stage_targets(first_prompt + 3, "target", [target])]
 	if override_role != "":
@@ -214,7 +214,7 @@ func test_two_decoys_keep_own_appearance() -> void:
 	var s := Fixtures.play(Fixtures.with_copies(["trugbilderwolf", "trugbilderwolf", "dorfbewohner", "das-orakel", "amalia", "detektiv"], [Command.start_night()] as Array[Command], 1, {"1": "waldhexe", "2": "schutzengel"}))
 	assert_eq(s.night_plan, [&"pack", &"das-orakel:4"] as Array[StringName], "ein gemeinsamer Rudelschritt")
 	assert_true(s.players[1].counts_as_wolf and s.players[2].counts_as_wolf, "beide zählen als Wolf")
-	s = apply_ok(apply_ok(s, Command.answer_prompt(1, []), "Rudel").state, Command.begin_step("night:1:1:das-orakel:4"), "Orakel").state
+	s = apply_ok(apply_ok(s, Command.answer_prompt(1, [5]), "Rudel").state, Command.begin_step("night:1:1:das-orakel:4"), "Orakel").state
 	var first := apply_ok(s, Command.answer_stage_targets(2, "target", [1]), "prüft 1").state
 	var second := apply_ok(s, Command.answer_stage_targets(2, "target", [2]), "prüft 2").state
 	assert_eq(str(first.pending_prompt.partial["determined_role"]), "waldhexe", "Scheinrolle von 1")
@@ -277,7 +277,7 @@ func test_parity_counts_decoy() -> void:
 func test_last_decoy_dies_village_wins() -> void:
 	# 21
 	var start := _manual(["trugbilderwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], {"1": "dorfbewohner"})
-	var run := _replay_ok([start, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), Command.nominate(2, 1),
+	var run := _replay_ok([start, Command.start_night(), Command.answer_prompt(1, [6]), Command.end_night(), Command.nominate(2, 1),
 		Command.decide_execution(1)] as Array[Command], "letzter Wolf")
 	if run.ok:
 		assert_true(sole_candidate(run.state) != null and String(sole_candidate(run.state).kind) == "village", "Dorfsieg")

@@ -26,14 +26,17 @@ func _kill(id: int, effects: bool = false) -> Command:
 	return CorrectionFixtures.gm("kill", {"target_id": id, "trigger_effects": effects}, "Test")
 
 
-## Sitzung mit Zähler der Hinweise; danach Nacht 1 ohne Opfer und Tag 1.
+## Sitzung mit Zähler der Hinweise; danach Nacht 1 und Tag 1. Das Rudel muss jede Nacht töten: Sein Opfer (der Dorfbewohner) wird am Tag
+## wiederbelebt, damit die Zählung der Toten wie vorgesehen bei null beginnt.
 func _day(roles: Array, cues: Array) -> GameSession:
 	var s := GameSession.new()
 	s.cue_requested.connect(func(cue: StringName) -> void: cues.append(String(cue)))
 	assert_true(s.submit(Fixtures.start_roles(roles, 1)).ok, "Start")
 	assert_true(s.submit(Command.start_night()).ok, "Nacht 1")
-	assert_true(s.submit(Command.answer_prompt(1, [])).ok, "kein Opfer")
+	var victim := roles.find("dorfbewohner") + 1
+	assert_true(s.submit(Command.answer_prompt(1, [victim])).ok, "Opfer ohne Bedeutung")
 	assert_true(s.submit(Command.end_night()).ok, "Tag 1")
+	_revive(s, victim)
 	assert_eq(String(s.view()["phase"]), "DAY", "Tag")
 	return s
 
@@ -96,7 +99,8 @@ func test_inherited_death_seeker_role_counts_and_dead_heir_does_not() -> void:
 			assert_eq(String(s.private_seats()[3]["role_id"]), SM, "Lehrling ist jetzt Selbstmörder")
 
 
-## Nacht 1 mit Bindung des Lehrlings (4) an den Selbstmörder (3), ohne Opfer, bis Tag 1 (Befehlsliste, am Zustand geführt).
+## Nacht 1 mit Bindung des Lehrlings (4) an den Selbstmörder (3) bis Tag 1 (Befehlsliste, am Zustand geführt). Das Rudel tötet 5; die
+## Person wird am Tag wiederbelebt, damit die Zählung der Toten bei null beginnt.
 func _night_one_with_bound_apprentice(roles: Array) -> Array[Command]:
 	var log: Array[Command] = [Fixtures.start_roles(roles, 1), Command.start_night()]
 	var state := RulesEngine.apply(GameState.new(), log[0]).state
@@ -110,22 +114,18 @@ func _night_one_with_bound_apprentice(roles: Array) -> Array[Command]:
 			var next := RulesEngine.next_step_id(state)
 			c = Command.end_night() if next == "" else Command.begin_step(next)
 		elif p.owner == &"lehrling":
-			var stage := str(p.to_dict().get("stage", ""))
-			if stage == "candidates":
-				c = Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "candidates", "targets": [3, 1, 2]})
-			elif stage == "option":
-				var mapping: Array = p.partial.get("option_person_ids", [])
-				c = Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "option", "option": maxi(0, mapping.find(3))})
-			else:
-				c = Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "confirm", "choice": true})
+			c = Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "master", "targets": [3]})
+		elif p.owner == &"pack":
+			c = Command.answer_prompt(p.id, [5])
 		else:
-			c = Command.answer_prompt(p.id, [])
+			c = Command.answer_prompt(p.id, Fixtures.pass_targets(state, p))
 		var r := RulesEngine.apply(state, c)
 		assert_true(r.ok, "Nachtbefehl %s angenommen (%s)" % [c.type, r.error])
 		if not r.ok:
 			break
 		state = r.state
 		log.append(c)
+	log.append(CorrectionFixtures.gm("revive", {"target_id": 5}, "Test"))
 	return log
 
 
@@ -428,7 +428,8 @@ func test_hint_has_no_effect_on_state_random_or_events() -> void:
 	var heard: Array = []
 	with_listener.cue_requested.connect(func(cue: StringName) -> void: heard.append(cue))
 	var silent := GameSession.new()
-	var commands: Array[Command] = [Fixtures.start_roles(_roles(), 1), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()]
+	var commands: Array[Command] = [Fixtures.start_roles(_roles(), 1), Command.start_night(), Command.answer_prompt(1, [4]), Command.end_night(),
+		CorrectionFixtures.gm("revive", {"target_id": 4}, "Test")]
 	for id: int in [4, 5, 6, 9, 10, 11]:
 		commands.append(_kill(id))
 	for c: Command in commands:

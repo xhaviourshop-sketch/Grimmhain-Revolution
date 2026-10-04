@@ -38,6 +38,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, String(p.stage), false)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -64,7 +68,7 @@ func _night(s: GameState, victim: int, answers: Dictionary = {}, log: Array[Game
 			var key := p.step_id.get_slice(":", 3) + (":" + p.step_id.get_slice(":", 4) if p.step_id.get_slice_count(":") > 4 else "")
 			var staged := "%s@%s" % [key, p.stage]
 			if p.owner == PendingPrompt.OWNER_PACK:
-				cmd = Command.answer_prompt(p.id, [victim] if victim != -1 else [])
+				cmd = Command.answer_prompt(p.id, [victim] if victim != -1 else [Fixtures.quiet_victim(s, p.allowed_ids, answers)])
 			elif answers.has(staged):
 				var a: Variant = answers[staged]
 				cmd = Command.answer_choice(p.id, String(p.stage), a) if a is bool else Command.answer_stage_targets(p.id, String(p.stage), a)
@@ -87,9 +91,17 @@ func _night(s: GameState, victim: int, answers: Dictionary = {}, log: Array[Game
 	return null
 
 
+## Morgen. Ohne ausdrückliches Opfer (`victim` -1) tötet das Rudel eine wirkungslose Person (die Wölfe müssen jede Nacht töten); sie wird
+## sofort wiederbelebt, damit alle leben wie in den Vorgaben der Tests.
 func _dawn(s: GameState, victim: int, answers: Dictionary = {}) -> CommandResult:
 	s = _night(s, victim, answers)
-	return apply_ok(s, Command.end_night(), "Morgen") if s != null else null
+	if s == null:
+		return null
+	var killed := s.pack_target_id
+	var r := apply_ok(s, Command.end_night(), "Morgen")
+	if r != null and r.ok and victim == -1 and killed != GameState.NO_TARGET and not r.state.players[killed].alive:
+		r.state = apply_ok(r.state, _gm("revive", {"target_id": killed}), "Rudelopfer wiederbelebt").state
+	return r
 
 
 func _codec_same(s: GameState, label: String) -> void:
@@ -138,7 +150,8 @@ func test_loki_binds_once_in_night_one() -> void:
 	assert_eq(s.pending_prompt.owner, &"loki", "Loki vor dem Rudel")
 	var p := s.pending_prompt
 	assert_eq(p.allowed_ids, [1, 2, 3, 4, 5, 6, 7] as Array[int], "alle Lebenden, auch er selbst")
-	assert_eq([p.min_count, p.max_count], [0, 2], "Verzicht oder zwei")
+	assert_eq([p.min_count, p.max_count], [2, 2], "immer genau zwei")
+	apply_rejected(s, Command.answer_stage_targets(p.id, "targets", []), "invalid_target_count", "kein Verzicht")
 	apply_rejected(s, Command.answer_stage_targets(p.id, "targets", [3]), "invalid_target_count", "nur einer")
 	s = _ok(s, Command.answer_stage_targets(p.id, "targets", [2, 3]), "er selbst und 3")
 	_codec_same(s, "Modus offen")
@@ -202,7 +215,8 @@ func test_black_widow_without_pair_does_nothing() -> void:
 	var r := _dawn(s, -1, {"loki:2@targets": [3, 4], "loki:2@mode": false, "schwarze-witwe:1": [5]})
 	if r == null:
 		return
-	assert_eq(events_of_type(r.events, "SeatDied").size(), 0, "kein Paar, kein Tod")
+	var deaths := events_of_type(r.events, "SeatDied").filter(func(e: GameEvent) -> bool: return String(e.data["cause"]) != "NIGHT_KILL")  # das Rudelopfer ist wiederbelebt
+	assert_eq(deaths.size(), 0, "kein Paar, kein Tod")
 	r = _dawn(r.state, -1, {"schwarze-witwe:1": [3]})
 	assert_eq(_died(r.events, 3) if r != null else "", "BLACK_WIDOW", "Rivalen zählen für die Witwe")
 	assert_eq(_died(r.events, 4) if r != null else "", "BLACK_WIDOW", "beide Rivalen")

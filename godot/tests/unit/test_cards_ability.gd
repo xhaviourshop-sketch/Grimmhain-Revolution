@@ -48,7 +48,7 @@ func test_segen_06_wolf_shows_the_oracle_a_random_village_role_for_the_next_wolf
 			assert_eq(String(shown.partial["override_reason"]), "card", "Grund: Karte")
 			seen = true
 		elif p.owner == PendingPrompt.OWNER_PACK:
-			g.do(Command.answer_prompt(p.id, []), "Rudel")
+			g.do(Command.skip_step(p.step_id, "Test: ruhige Nacht"), "Rudel")
 		else:
 			g.answer_default(p)
 	assert_true(seen, "Orakel hat geprüft")
@@ -165,7 +165,8 @@ func test_schicksal_10_restores_one_spent_use_of_a_living_member() -> void:
 
 func test_loki_07_clears_all_protections_and_returns_all_uses() -> void:
 	var g := _game({"6": "waldhexe"})
-	g.state.players[6].ability_uses["waldhexe:heal"] = 1
+	# Verbrauchter Heiltrank per Korrektur (ein Befehl): Mit Rudelopfer fragt die Waldhexe sonst im Replay erneut nach dem Heiltrank.
+	g.do(Command.gm_correction({"kind": "set_witch_potion", "witch_id": 6, "potion": "heal", "available": false, "reason": "Test", "confirmed": true}), "Heiltrank verbraucht")
 	g.arm(VILLAGE_OWNER, &"loki_07")
 	(g.state.cardsys["shields"] as Array).append(5)
 	g.play_with()

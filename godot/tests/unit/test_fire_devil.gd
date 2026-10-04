@@ -6,7 +6,7 @@ extends TestCase
 ##   RM-DR-131.3 Nachbarn = nächste lebende links und rechts (RM-DR-003)
 ##   RM-DR-131.4 jeder Feuerteufel wird als Nachbar verschont, kein Ersatz auf dieser Seite
 ##   RM-DR-131.5 Mitsieg lebend, kein Alleinsieg
-##   RM-DR-131.6 jede Nacht neu wählen oder behalten, Ziel eine andere lebende Person
+##   RM-DR-131.6 jede Nacht genau eine andere lebende Person markieren (Karte nennt keinen Verzicht; dieselbe Person erneut = behalten)
 ##   RM-DR-131.7 Markierung erlischt bei Tod oder Rollenverlust des Feuerteufels
 ##   RM-DR-131.8 mehrfach markiertes Ziel: genau ein Brand, alle Markierungen verbraucht
 
@@ -38,6 +38,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, "shown", true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -58,8 +62,12 @@ func _night(s: GameState, answers: Dictionary = {}) -> GameState:
 		if s.pending_prompt != null:
 			var p := s.pending_prompt
 			var key := p.step_id.get_slice(":", 3) + (":" + p.step_id.get_slice(":", 4) if p.step_id.get_slice_count(":") > 4 else "")
-			if answers.has(key) and p.stage == &"":
+			if key == "pack" and (not answers.has("pack") or (answers["pack"] as Array).is_empty()):
+				s = _ok(s, Command.skip_step(p.step_id, "Test: ruhige Nacht"), "Rudel")  # Wölfe ohne vorgesehenes Opfer
+			elif answers.has(key) and p.stage == &"":
 				s = _ok(s, Command.answer_prompt(p.id, answers[key]), "Antwort %s" % key)
+			elif p.owner == &"feuerteufel" and SoloRules.fire_mark_of(s, p.actor_id) != GameState.NO_TARGET and p.allowed_ids.has(SoloRules.fire_mark_of(s, p.actor_id)):
+				s = _ok(s, Command.answer_prompt(p.id, [SoloRules.fire_mark_of(s, p.actor_id)]), "Markierung behalten %s" % key)  # dieselbe Person erneut
 			else:
 				s = _ok(s, _auto(s), "ohne Wirkung %s" % key)
 			continue
@@ -107,7 +115,7 @@ func _dead(s: GameState) -> Array[int]:
 	return out
 
 
-## Feuerteufel `devil` markiert in der ersten Nacht `target`, ohne Rudelopfer.
+## Feuerteufel `devil` markiert in der ersten Nacht `target`; der Rudelschritt wird mit Grund übersprungen.
 func _marked(roles: Array, devil: int, target: int) -> GameState:
 	var r := _dawn(_state(roles), {"feuerteufel:%d" % devil: [target], "pack": []})
 	return r.state if r != null else null
@@ -130,24 +138,25 @@ func test_catalog_entry() -> void:
 func test_step_targets_keep_and_replace() -> void:
 	var s := _state([W, FT, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, Command.start_night(), "Nacht")
-	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
+	s = _ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Feuerteufel") if s != null else null
 	if s == null:
 		return
 	var p := s.pending_prompt
 	assert_eq(String(p.owner), FT, "eigener Prompt")
 	assert_eq(p.allowed_ids, [1, 3, 4, 5, 6] as Array[int], "andere Lebende")
-	assert_eq([p.min_count, p.max_count], [0, 1], "neu wählen oder behalten")
+	assert_eq([p.min_count, p.max_count], [1, 1], "jede Nacht genau eine Person")
 	apply_rejected(s, Command.answer_prompt(p.id, [2]), "invalid_target", "nie er selbst (E-09)")
 	apply_rejected(s, Command.answer_prompt(p.id, [3, 4]), "invalid_target_count", "genau ein Ziel")
+	apply_rejected(s, Command.answer_prompt(p.id, []), "invalid_target_count", "kein Verzicht: die Karte nennt keinen")
 	var r := apply_ok(s, Command.answer_prompt(p.id, [4]), "markiert 4")
 	for e: GameEvent in r.events:
 		assert_true(e.visibility != Visibility.PUBLIC, "Markierung geheim: %s" % e.type)
 	s = _ok(r.state, Command.end_night(), "Morgen")
 	assert_eq(_marks(s), [{"devil_id": 2, "target_id": 4}], "eine Markierung")
 	_codec_same(s, "Markierung")
-	# Nacht 2: behalten (0 Ziele).
-	var r2 := _dawn(s, {"feuerteufel:2": [], "pack": []})
+	# Nacht 2: dieselbe Person erneut markieren (behalten).
+	var r2 := _dawn(s, {"feuerteufel:2": [4], "pack": []})
 	s = r2.state if r2 != null else null
 	assert_eq(_marks(s), [{"devil_id": 2, "target_id": 4}], "behalten")
 	# Nacht 3: neues Ziel ersetzt die alte Markierung.

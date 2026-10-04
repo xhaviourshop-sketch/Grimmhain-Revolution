@@ -2,8 +2,8 @@ extends TestCase
 ## Produktionsrolle `lehrling` (Apprentice), rules-register.md §9, DR-11.
 ## LS: 1 Werwolf; 2, 3 Dorfbewohner; 4 Sensenträger; 5 wechselnde Rolle (Standard Dorfbewohner); 6 Lehrling.
 ##     Nacht 1: Prompt 1 Lehrling (StartNight), danach Rudel.
-## Kandidaten [1, 2, 4] ergeben die Optionen dorfbewohner (2), sensentraeger (4), werwolf (1).
-## Neue Felder werden über die Serialisierung (`apprentices`) gelesen; der Prompt über `partial`.
+## Der Lehrling wählt seinen Mentor direkt (eine Stufe `master`, DA Nachtschritte neu); stirbt der Mentor, erbt er dessen Rolle.
+## Neue Felder werden über die Serialisierung (`apprentices`) gelesen.
 
 const STEP_L := "night:1:0:lehrling:6"
 
@@ -28,16 +28,8 @@ func _equal_start(rest: Array[Command]) -> Array[Command]:
 	return Fixtures.with_copies(["werwolf", "dorfbewohner", "dorfbewohner", "sensentraeger", "dorfbewohner", "lehrling"], rest, 1)
 
 
-func _cands(prompt_id: int, ids: Array) -> Command:
-	return Command.create(Command.ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": "candidates", "targets": ids})
-
-
-func _opt(prompt_id: int, index: int) -> Command:
-	return Command.create(Command.ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": "option", "option": index})
-
-
-func _conf(prompt_id: int) -> Command:
-	return Command.create(Command.ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": "confirm", "choice": true})
+func _master(prompt_id: int, master: int) -> Command:
+	return Command.create(Command.ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": "master", "targets": [master]})
 
 
 func _gm(kind: String, fields: Dictionary, reason: String = "Korrektur am Tisch") -> Command:
@@ -73,12 +65,26 @@ func _steps(s: GameState, cmds: Array[Command], log: Array[Command], label: Stri
 	return s
 
 
-## Antwort auf den offenen Prompt. `picks` = {Lehrling-ID: {"cands": [...], "master": id}}.
+## Antwort auf den offenen Prompt. `picks` = {Lehrling-ID: {"master": id}}, optional "victim": Rudelopfer. Das Rudel tötet jede Nacht:
+## ohne Angabe wählt es eine Person, die weder Wolf noch Lehrling noch Sensenträger noch gewählter Mentor ist, damit die Bindungen
+## unberührt bleiben. Reaktionen am Morgen treffen ebenfalls eine solche Person.
+func _spare(s: GameState, p: PendingPrompt, picks: Dictionary) -> int:
+	var masters: Array = []
+	for k: Variant in picks:
+		if picks[k] is Dictionary:
+			masters.append(int((picks[k] as Dictionary).get("master", -1)))
+	var spare: Array = p.allowed_ids.filter(func(id: int) -> bool:
+		return not masters.has(id) and not [&"lehrling", &"sensentraeger"].has(s.players[id].role_id) and not s.players[id].counts_as_wolf)
+	return Fixtures.fodder(s, spare if not spare.is_empty() else p.allowed_ids)
+
+
 func _answer_for(s: GameState, p: PendingPrompt, picks: Dictionary) -> Command:
 	var stage := str(p.to_dict().get("stage", ""))
 	match String(p.owner):
-		"pack", "reaction":
-			return Command.answer_prompt(p.id, [])
+		"pack":
+			return Command.answer_prompt(p.id, [int(picks["victim"]) if picks.has("victim") else _spare(s, p, picks)])
+		"reaction":
+			return Command.answer_prompt(p.id, [_spare(s, p, picks)] if p.min_count > 0 else [])
 		"schutzengel", "wolfskind":
 			return Command.answer_prompt(p.id, [p.allowed_ids[0]])
 		"waldhexe":
@@ -87,13 +93,7 @@ func _answer_for(s: GameState, p: PendingPrompt, picks: Dictionary) -> Command:
 			return Command.answer_stage_targets(p.id, "target", [p.allowed_ids[0]]) if stage == "target" else Command.answer_choice(p.id, "shown", true)
 		"lehrling":
 			var pick: Dictionary = picks.get(p.actor_id, {})
-			if stage == "candidates":
-				return _cands(p.id, pick.get("cands", p.allowed_ids.slice(0, 3)))
-			if stage == "option":
-				var mapping: Array = p.partial.get("option_person_ids", [])
-				var index := mapping.find(int(pick.get("master", -1)))
-				return _opt(p.id, index if index >= 0 else 0)
-			return _conf(p.id)
+			return _master(p.id, int(pick.get("master", p.allowed_ids[0])))
 	return Command.end_night()
 
 
@@ -117,9 +117,8 @@ func _next_night(s: GameState, log: Array[Command]) -> GameState:
 	return _steps(s, [Command.decide_execution(-1), Command.end_day(), Command.start_night()] as Array[Command], log, "nächste Nacht")
 
 
-## Spielaufbau, Nacht 1 und Lehrling 6 an `master` gebunden (aus den Kandidaten `cands`).
-## Danach ist der Rest der Nacht offen.
-func _bound(master: int, cands: Array = [1, 2, 4], start: Command = null, log: Array[Command] = []) -> GameState:
+## Spielaufbau, Nacht 1 und Lehrling 6 an `master` gebunden. Danach ist der Rest der Nacht offen.
+func _bound(master: int, start: Command = null, log: Array[Command] = []) -> GameState:
 	var s := _steps(GameState.new(), [start if start != null else _ls(), Command.start_night()] as Array[Command], log, "Aufbau")
 	var guard := 0
 	while s != null and guard < 20:
@@ -132,7 +131,7 @@ func _bound(master: int, cands: Array = [1, 2, 4], start: Command = null, log: A
 			s = _step(s, Command.begin_step(next), log, "Schritt")
 			continue
 		if p.owner == &"lehrling" and p.actor_id == 6:
-			s = _step(s, _answer_for(s, p, {6: {"cands": cands, "master": master}}), log, "Lehrling")
+			s = _step(s, _answer_for(s, p, {6: {"master": master}}), log, "Lehrling")
 			if not _bond(s, 6).is_empty():
 				break
 		else:
@@ -173,25 +172,18 @@ func test_selection_flow() -> void:
 	if s == null:
 		return
 	assert_eq(s.night_plan, [&"lehrling:6", &"pack"] as Array[StringName], "Lehrlingsschritt vor dem Rudel")
-	assert_eq(_stage(s), "candidates", "Spielleiterteil")
+	assert_eq(_stage(s), "master", "eine Stufe: Mentor wählen")
 	assert_true(s.pending_prompt.actor_id == 6 and s.pending_prompt.allowed_ids == ([1, 2, 3, 4, 5] as Array[int])
-		and s.pending_prompt.min_count == 3 and s.pending_prompt.max_count == 3 and s.pending_prompt.cancellable, "drei andere Lebende")
+		and s.pending_prompt.min_count == 1 and s.pending_prompt.max_count == 1 and s.pending_prompt.cancellable, "genau eine andere lebende Person")
 	var draws := s.rng.draws
-	var o := _step(s, _cands(1, [1, 2, 4]), log)
-	assert_eq(_stage(o), "option", "Lehrlingsteil")
-	assert_eq(o.pending_prompt.partial.get("options"), ["dorfbewohner", "sensentraeger", "werwolf"], "nach Rollen-ID sortiert")
-	assert_eq(o.pending_prompt.partial.get("option_person_ids"), [2, 4, 1], "interne Zuordnung")
-	assert_eq(o.rng.draws, draws, "keine Ziehung ohne gleiche Rollen")
-	assert_true(_records(o).is_empty(), "noch keine Bindung")
-	var c := _step(o, _opt(1, 1), log)
-	assert_eq(_stage(c), "confirm", "Bestätigung")
-	var r := RulesEngine.apply(c, _conf(1))
-	assert_true(r.ok, "Bestätigung angenommen (%s)" % r.error)
+	var r := RulesEngine.apply(s, _master(1, 4))
+	assert_true(r.ok, "Mentorwahl angenommen (%s)" % r.error)
 	if not r.ok:
 		return
 	var b := _bond(r.state, 6)
-	assert_true(int(b.get("master_id", -1)) == 4 and str(b.get("status", "")) == "bound" and int(b.get("chosen_index", -1)) == 1
-		and b.get("options") == ["dorfbewohner", "sensentraeger", "werwolf"] and b.get("option_person_ids") == [2, 4, 1], "geheime Bindung gespeichert")
+	assert_true(int(b.get("master_id", -1)) == 4 and str(b.get("status", "")) == "bound" and int(b.get("chosen_index", -1)) == 0
+		and b.get("options") == ["sensentraeger"] and b.get("option_person_ids") == [4], "Bindung sofort gespeichert")
+	assert_eq(r.state.rng.draws, draws, "keine Ziehung")
 	var bound := events_of_type(r.events, "ApprenticeBound")
 	assert_true(bound.size() == 1 and String(bound[0].visibility) == "gm" and int(bound[0].data["master_id"]) == 4, "ApprenticeBound nur Spielleiter")
 	assert_eq(String(r.state.players[6].role_id), "lehrling", "Rolle bleibt lehrling")
@@ -199,20 +191,15 @@ func test_selection_flow() -> void:
 	assert_eq(RulesEngine.next_step_id(r.state), "night:1:1:pack", "danach das Rudel")
 
 
-func test_apprentice_sees_only_roles() -> void:
-	# 2, 3, AS-L02
+func test_apprentice_choice_stays_secret() -> void:
+	# 2, 3, AS-L02: Die Wahl steht nur im Spielleiterereignis; der Lehrling bekommt keine Personen, öffentlich steht nichts.
 	var log: Array[Command] = []
-	var s := _bound(4, [1, 2, 4], null, log)
+	var s := _bound(4, null, log)
 	if s == null:
 		return
 	s = _drive_night(s, log)
 	var events := RulesEngine.replay(log).events
-	var shown := events_of_type(events, "ApprenticeOptionsShown")
-	assert_true(shown.size() == 1 and String(shown[0].visibility) == "actor" and shown[0].actor_id == 6
-		and shown[0].data == {"options": ["dorfbewohner", "sensentraeger", "werwolf"]}, "nur Rollenoptionen")
-	var chosen := events_of_type(events, "ApprenticeChoiceConfirmed")
-	assert_true(chosen.size() == 1 and chosen[0].actor_id == 6
-		and chosen[0].data == {"options": ["dorfbewohner", "sensentraeger", "werwolf"], "chosen_role": "sensentraeger"}, "nur Optionen und gewählte Rolle")
+	assert_eq(events_of_type(events, "ApprenticeBound").size(), 1, "genau eine Bindung")
 	for e: GameEvent in events:
 		if e.visibility == &"actor" and e.actor_id == 6 and e.type != &"RoleAssigned":
 			assert_false(_has_int(e.data), "%s an den Lehrling ohne IDs" % e.type)
@@ -238,50 +225,39 @@ func _has_int(value: Variant) -> bool:
 	return false
 
 
-func test_invalid_candidates_rejected() -> void:
+func test_invalid_master_rejected() -> void:
 	# 4, 5
 	var s := Fixtures.play([_ls(), Command.start_night()] as Array[Command])
 	if s == null:
 		fail("Aufbau")
 		return
-	apply_rejected(s, _cands(1, [6, 1, 2]), "invalid_target", "Selbstwahl")
-	apply_rejected(s, _cands(1, [1, 1, 2]), "invalid_target", "doppelt")
-	apply_rejected(s, _cands(1, [1, 2, 99]), "invalid_target", "unbekannt")
-	apply_rejected(s, _cands(1, [1, 2]), "invalid_target_count", "zu wenige")
-	apply_rejected(s, _cands(1, [1, 2, 3, 5]), "invalid_target_count", "zu viele")
-	apply_rejected(s, Command.answer_prompt(1, [1, 2, 3]), "stage_mismatch", "ohne Stufe")
-	apply_rejected(s, _opt(1, 0), "stage_mismatch", "Option vor Kandidaten")
+	apply_rejected(s, _master(1, 6), "invalid_target", "Selbstwahl")
+	apply_rejected(s, _master(1, 99), "invalid_target", "unbekannt")
+	apply_rejected(s, Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "master", "targets": []}), "invalid_target_count", "niemand")
+	apply_rejected(s, Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "master", "targets": [1, 2]}), "invalid_target_count", "zwei")
+	apply_rejected(s, Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "master", "targets": [1, 1]}), "invalid_target_count", "doppelt")
+	apply_rejected(s, Command.answer_prompt(1, [1]), "stage_mismatch", "ohne Stufe")
+	apply_rejected(s, Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "option", "option": 0}), "stage_mismatch", "alte Stufe Option")
+	apply_rejected(s, Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "master", "choice": true}), "invalid_answer", "Ja/Nein statt Person")
 	var dead := Fixtures.play([_ls(), Command.start_night(), _kill(5, false), Command.begin_step(STEP_L)] as Array[Command])
 	assert_true(dead != null and not dead.pending_prompt.allowed_ids.has(5), "Tote nicht angeboten")
 	if dead != null:
-		apply_rejected(dead, _cands(2, [1, 2, 5]), "invalid_target", "tote Person")
-	var o := apply_ok(s, _cands(1, [1, 2, 4]), "Kandidaten").state
-	apply_rejected(o, _opt(1, 3), "invalid_answer", "Option außerhalb")
-	apply_rejected(o, _opt(1, -1), "invalid_answer", "negative Option")
-	apply_rejected(o, Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "option", "targets": [4]}), "invalid_answer", "Personen-ID statt Option")
+		apply_rejected(dead, _master(2, 5), "invalid_target", "tote Person")
 
 
-func test_duplicate_roles_separately_bound() -> void:
-	# 6, 7, AS-L03
+func test_master_is_the_chosen_person_even_with_equal_roles() -> void:
+	# 6, 7, AS-L03: Drei Dorfbewohner: Der Lehrling wählt eine bestimmte Person, es wird nichts gezogen.
 	var s := Fixtures.play(_equal_start([Command.start_night()] as Array[Command]))
 	if s == null:
 		fail("Aufbau")
 		return
 	var draws := s.rng.draws
-	var o := apply_ok(s, _cands(1, [2, 3, 5]), "drei Dorfbewohner").state
-	assert_eq(o.pending_prompt.partial.get("options"), ["dorfbewohner", "dorfbewohner", "dorfbewohner"], "gleiche Rollen")
-	var mapping: Array = o.pending_prompt.partial.get("option_person_ids", [])
-	var sorted := mapping.duplicate()
-	sorted.sort()
-	assert_eq(sorted, [2, 3, 5], "jede Option an eine andere Person")
-	assert_eq(o.rng.draws, draws, "Ziehung noch nicht verbraucht")
-	var done := apply_ok(apply_ok(o, _opt(1, 1), "Option 1").state, _conf(1), "Bestätigung").state
-	assert_eq(done.rng.draws, draws + 2, "zwei Ziehungen erst mit der Bestätigung")
-	assert_eq(int(_bond(done, 6).get("master_id", -1)), int(mapping[1]), "gewählte Option gehört zu ihrer Person")
-	var again := Fixtures.play(_equal_start([Command.start_night(), _cands(1, [2, 3, 5])] as Array[Command]))
-	assert_eq(again.pending_prompt.partial.get("option_person_ids"), mapping, "gleicher Seed, gleiche Zuordnung")
-	var loaded := StateCodec.decode(StateCodec.encode(o, _equal_start([Command.start_night(), _cands(1, [2, 3, 5])] as Array[Command])))
-	assert_true(loaded.ok and loaded.state.pending_prompt.partial.get("option_person_ids") == mapping, "Save/Load behält die Zuordnung")
+	var done := apply_ok(s, _master(1, 3), "Mentor 3").state
+	assert_eq(int(_bond(done, 6).get("master_id", -1)), 3, "die gewählte Person ist der Mentor")
+	assert_eq(done.rng.draws, draws, "keine Ziehung")
+	var cmds := _equal_start([Command.start_night(), _master(1, 3)] as Array[Command])
+	var loaded := StateCodec.decode(StateCodec.encode(done, cmds))
+	assert_true(loaded.ok and loaded.state.content_hash() == done.content_hash(), "Save/Load behält die Bindung")
 
 
 func test_cancel_restores_everything() -> void:
@@ -291,19 +267,10 @@ func test_cancel_restores_everything() -> void:
 		fail("Aufbau")
 		return
 	var base := apply_ok(s, Command.cancel_prompt(1, "zu früh"), "Abbruch vor Antwort").state
-	var paths := {
-		"nach Kandidaten": [_cands(1, [2, 3, 5])] as Array[Command],
-		"nach Option": [_cands(1, [2, 3, 5]), _opt(1, 2)] as Array[Command],
-	}
-	for label: String in paths:
-		var t := s
-		for c: Command in paths[label]:
-			t = apply_ok(t, c, label).state
-		var c2 := apply_ok(t, Command.cancel_prompt(1, "falsch"), "%s: Abbruch" % label).state
-		assert_eq(c2.content_hash(), base.content_hash(), "%s: Hash wie vor BeginStep" % label)
-		assert_eq(_json(c2.rng.to_dict()), _json(base.rng.to_dict()), "%s: RNG unverändert" % label)
-		assert_true(_records(c2).is_empty(), "%s: keine Bindung" % label)
-		assert_eq(RulesEngine.next_step_id(c2), STEP_L, "%s: derselbe Schritt" % label)
+	var again := apply_ok(base, Command.begin_step(STEP_L), "Schritt erneut").state
+	apply_ok(again, _master(2, 2), "danach gültig")
+	assert_true(_records(base).is_empty(), "keine Bindung")
+	assert_eq(RulesEngine.next_step_id(base), STEP_L, "derselbe Schritt")
 
 
 func test_not_skippable() -> void:
@@ -332,7 +299,7 @@ func test_multiple_apprentices_in_order() -> void:
 func test_binding_persists_over_nights() -> void:
 	# 11, 30
 	var log: Array[Command] = []
-	var s := _drive_night(_bound(4, [1, 2, 4], null, log), log)
+	var s := _drive_night(_bound(4, null, log), log)
 	s = _next_night(s, log)
 	if s == null:
 		return
@@ -347,7 +314,7 @@ func test_binding_persists_over_nights() -> void:
 func test_inherits_current_role_at_death() -> void:
 	# 12, 13, 14, AS-L05
 	var log: Array[Command] = []
-	var s := _bound(4, [1, 2, 4], null, log)
+	var s := _bound(4, null, log)
 	s = _step(s, _gm("set_role", {"target_id": 4, "role_id": "waldhexe"}, "Rolle am Tisch getauscht"), log)
 	s = _steps(s, [Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, [4])] as Array[Command], log)
 	if s == null:
@@ -378,7 +345,7 @@ func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
 func test_apprentice_dies_first() -> void:
 	# 15, F, AS-L06
 	var log: Array[Command] = []
-	var s := _bound(2, [1, 2, 4], null, log)
+	var s := _bound(2, null, log)
 	s = _steps(s, [_kill(6), _kill(2)] as Array[Command], log)
 	if s == null:
 		return
@@ -394,7 +361,7 @@ func test_apprentice_dies_first() -> void:
 func test_inherited_reaction_applies_immediately() -> void:
 	# 16, 22, AS-L16
 	var log: Array[Command] = []
-	var s := _drive_night(_bound(4, [1, 2, 4], null, log), log)
+	var s := _drive_night(_bound(4, null, log), log, {"victim": 5})
 	s = _steps(s, [Command.nominate(2, 4), Command.decide_execution(4)] as Array[Command], log)
 	if s == null:
 		return
@@ -413,7 +380,7 @@ func test_two_apprentices_same_master() -> void:
 	# 17
 	var log: Array[Command] = []
 	var s := _steps(GameState.new(), Fixtures.with_copies(["werwolf", "dorfbewohner", "amalia", "sensentraeger", "lehrling", "lehrling"], [Command.start_night()] as Array[Command]) as Array[Command], log)
-	s = _drive_night(s, log, {5: {"cands": [1, 2, 4], "master": 4}, 6: {"cands": [1, 2, 4], "master": 4}})
+	s = _drive_night(s, log, {5: {"master": 4}, 6: {"master": 4}})
 	if s == null:
 		return
 	var r := RulesEngine.apply(s, _kill(4))
@@ -424,17 +391,17 @@ func test_two_apprentices_same_master() -> void:
 # --- 18–28 geerbte Rollen ----------------------------------------------------------------------------
 
 func _inherit(role5: String, extra_before_kill: Array[Command] = [], log: Array[Command] = []) -> GameState:
-	var s := _bound(5, [1, 4, 5], _ls(role5), log)
+	var s := _bound(5, _ls(role5), log)
 	s = _steps(s, extra_before_kill, log, role5)
 	return _step(s, _kill(5), log, "Meister stirbt")
 
 
 func test_inherit_villager_and_werewolf() -> void:
 	# 18, 27, AS-L09
-	var v := _bound(2, [1, 2, 4])
+	var v := _bound(2)
 	var vr := RulesEngine.apply(v, _kill(2))
 	assert_true(vr.ok and vr.state.players[6].role_id == &"dorfbewohner", "Dorfbewohner geerbt")
-	var w := _bound(1, [1, 2, 4])
+	var w := _bound(1)
 	var wr := RulesEngine.apply(w, _kill(1))
 	if not wr.ok:
 		fail("Werwolf-Erbe")
@@ -489,8 +456,8 @@ func test_inherit_mirror_fresh() -> void:
 func test_inherit_manipulator_keeps_nomination_status() -> void:
 	# 23
 	var log: Array[Command] = []
-	var s := _drive_night(_bound(5, [1, 4, 5], _ls("manipulator"), log), log)
-	s = _steps(s, [Command.nominate(2, 6), _kill(5), _kill(3), _kill(2)] as Array[Command], log)
+	var s := _drive_night(_bound(5, _ls("manipulator"), log), log, {"victim": 3})  # 3 stirbt in der Nacht
+	s = _steps(s, [Command.nominate(2, 6), _kill(5), _kill(2)] as Array[Command], log)
 	if s == null:
 		return
 	assert_true(s.players[6].role_id == &"manipulator" and s.players[6].ever_nominated, "Status bleibt an der Person")
@@ -512,7 +479,7 @@ func test_inherit_transformed_wolf_child() -> void:
 	# 25, AS-L10, AS-L11
 	var log: Array[Command] = []
 	# Zwei Wölfe, damit der Tod des Vorbilds (Person 1) keinen Sieg auslöst.
-	var s := _bound(5, [1, 4, 5], _start(["werwolf", "blutwolf", "dorfbewohner", "sensentraeger", "wolfskind", "lehrling"]), log)
+	var s := _bound(5, _start(["werwolf", "blutwolf", "dorfbewohner", "sensentraeger", "wolfskind", "lehrling"]), log)
 	if s == null:
 		return
 	assert_eq(WolfChildRules.bond_of(s, 5).model_id, 1, "Wolfskind 5 wählt Vorbild 1")
@@ -537,7 +504,7 @@ func test_inherit_apprentice_again() -> void:
 	# 28
 	var log: Array[Command] = []
 	var s := _steps(GameState.new(), Fixtures.with_copies(["werwolf", "dorfbewohner", "amalia", "sensentraeger", "lehrling", "lehrling"], [Command.start_night()] as Array[Command]) as Array[Command], log)
-	s = _drive_night(s, log, {5: {"cands": [1, 2, 4], "master": 2}, 6: {"cands": [1, 4, 5], "master": 5}})
+	s = _drive_night(s, log, {5: {"master": 2}, 6: {"master": 5}})
 	if s == null:
 		return
 	s = _step(s, _kill(5), log)
@@ -556,8 +523,8 @@ func test_inherit_apprentice_again() -> void:
 
 func test_save_load_every_stage_and_replay() -> void:
 	# 29, 31, 32, AS-L12, AS-L13, AS-L15
-	var full: Array[Command] = [_ls("amalia", 4711), Command.start_night(), _cands(1, [2, 3, 5]), _opt(1, 0), _conf(1), Command.begin_step("night:1:1:pack"),
-		Command.answer_prompt(2, []), Command.end_night(), Command.decide_execution(-1), Command.end_day()]
+	var full: Array[Command] = [_ls("amalia", 4711), Command.start_night(), _master(1, 2), Command.begin_step("night:1:1:pack"),
+		Command.answer_prompt(2, [5]), Command.end_night(), Command.decide_execution(-1), Command.end_day()]
 	var run := RulesEngine.replay(full)
 	assert_true(run.ok, "Ablauf (%s @ %d)" % [run.error, run.failed_index])
 	if not run.ok:
@@ -565,7 +532,7 @@ func test_save_load_every_stage_and_replay() -> void:
 	var master := int(_bond(run.state, 6).get("master_id", -1))
 	full.append(_kill(master))
 	full.append(Command.start_night())
-	for n: int in [2, 3, 4, 5, 8, 11]:
+	for n: int in [2, 3, 4, 5, 6, 9]:
 		var prefix := full.slice(0, n)
 		var a := RulesEngine.replay(prefix)
 		if not a.ok:
@@ -615,20 +582,20 @@ func _tampered(commands: Array[Command], mutate: Callable) -> LoadResult:
 
 func test_corrupt_saves_rejected() -> void:
 	# 33
-	var bound: Array[Command] = [_ls(), Command.start_night(), _cands(1, [1, 2, 4]), _opt(1, 1), _conf(1)]
-	var option: Array[Command] = [_ls(), Command.start_night(), _cands(1, [2, 3, 5])]
+	var bound: Array[Command] = [_ls(), Command.start_night(), _master(1, 4)]
+	var open: Array[Command] = [_ls(), Command.start_night()]
 	var inherited := _concat(bound, [_kill(4, true)] as Array[Command])
 	var control := _tampered(bound, func(st: Dictionary) -> void: st["players"][0]["name"] = "Z")
 	assert_eq(String(control.error), "replay_mismatch", "Kontrolle: Hash und Integrität werden passiert")
 	var cases := {
 		"unbekannter Meister": [bound, func(st: Dictionary) -> void:
 			st["apprentices"][0]["master_id"] = 99
-			st["apprentices"][0]["option_person_ids"][1] = 99],
+			st["apprentices"][0]["option_person_ids"][0] = 99],
 		"Meister ist der Lehrling": [bound, func(st: Dictionary) -> void:
 			st["apprentices"][0]["master_id"] = 6
-			st["apprentices"][0]["option_person_ids"][1] = 6],
-		"Zuordnung widerspricht Meister": [bound, func(st: Dictionary) -> void: st["apprentices"][0]["option_person_ids"] = [4, 2, 1]],
-		"Optionen unsortiert": [bound, func(st: Dictionary) -> void: st["apprentices"][0]["options"] = ["werwolf", "sensentraeger", "dorfbewohner"]],
+			st["apprentices"][0]["option_person_ids"][0] = 6],
+		"Zuordnung widerspricht Meister": [bound, func(st: Dictionary) -> void: st["apprentices"][0]["option_person_ids"] = [2]],
+		"Optionen und Zuordnung verschieden lang": [bound, func(st: Dictionary) -> void: st["apprentices"][0]["options"] = ["sensentraeger", "werwolf"]],
 		"unbekannte Rolle": [bound, func(st: Dictionary) -> void: st["apprentices"][0]["options"][0] = "nicht-im-katalog"],
 		"gebunden, aber tot": [bound, func(st: Dictionary) -> void: st["players"][5]["alive"] = false],
 		"gebunden ohne Lehrlingsrolle": [bound, func(st: Dictionary) -> void:
@@ -640,14 +607,10 @@ func test_corrupt_saves_rejected() -> void:
 			(st["apprentices"] as Array).append(copy)],
 		"unbekannter Status": [bound, func(st: Dictionary) -> void: st["apprentices"][0]["status"] = "irgendwas"],
 		"Erbe ohne gültigen Schnappschuss": [inherited, func(st: Dictionary) -> void: st["apprentices"][0]["snapshot"]["role_id"] = "nicht-im-katalog"],
-		"Prompt mit manipulierten Optionen": [option, func(st: Dictionary) -> void: st["pending_prompt"]["partial"]["options"] = ["dorfbewohner", "dorfbewohner", "werwolf"]],
-		"Prompt mit manipulierter Zuordnung": [option, func(st: Dictionary) -> void:
-			var m: Array = st["pending_prompt"]["partial"]["option_person_ids"]
-			var tmp: Variant = m[0]
-			m[0] = m[1]
-			m[1] = tmp],
-		"Prompt mit manipuliertem RNG": [option, func(st: Dictionary) -> void: st["pending_prompt"]["partial"]["rng_after"]["draws"] = 99],
-		"Prompt mit Selbstkandidat": [option, func(st: Dictionary) -> void: st["pending_prompt"]["partial"]["candidates"] = [2, 3, 6]],
+		"Prompt mit Teilantwort": [open, func(st: Dictionary) -> void: st["pending_prompt"]["partial"] = {"candidates": [2, 3, 5]}],
+		"Prompt mit Selbstwahl erlaubt": [open, func(st: Dictionary) -> void: (st["pending_prompt"]["allowed_ids"] as Array).append(6)],
+		"Prompt mit zwei Wahlen": [open, func(st: Dictionary) -> void: st["pending_prompt"]["max_count"] = 2],
+		"Prompt in alter Stufe": [open, func(st: Dictionary) -> void: st["pending_prompt"]["stage"] = "option"],
 	}
 	for label: String in cases:
 		var commands: Array[Command] = []
@@ -663,7 +626,7 @@ func test_corrupt_saves_rejected() -> void:
 func test_gm_corrections() -> void:
 	# 34: setzen, ändern, entfernen, Erbe auslösen, Erbe zurücknehmen
 	var open: Array[Command] = [_ls(), Command.start_night()]
-	var bound: Array[Command] = [_ls(), Command.start_night(), _cands(1, [1, 2, 4]), _opt(1, 1), _conf(1)]
+	var bound: Array[Command] = [_ls(), Command.start_night(), _master(1, 4)]
 	var cases := {
 		"setzen": [open, _gm("set_apprentice_master", {"apprentice_id": 6, "target_id": 2}, "Auswahl am Tisch"), {"master_id": -1}, {"master_id": 2}],
 		"ändern": [bound, _gm("set_apprentice_master", {"apprentice_id": 6, "target_id": 2}), {"master_id": 4}, {"master_id": 2}],

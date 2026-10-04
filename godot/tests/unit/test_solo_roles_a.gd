@@ -39,6 +39,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, "shown", true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -129,7 +133,7 @@ func test_pied_piper_charms_and_wins_after_last_uncharmed_dies() -> void:
 func test_pied_piper_targets_and_dead_piper() -> void:
 	var s := _state([W, RF, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	s = _ok(s, Command.start_night(), "Nacht")
-	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
+	s = _ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Rattenfänger") if s != null else null
 	if s == null:
 		return
@@ -207,7 +211,7 @@ func test_prophet_marks_unlocks_kills_and_replaces_village_win() -> void:
 func test_death_preacher_wins_on_predicted_day() -> void:
 	var s := _state([W, TP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
-	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
+	s = _ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Todesprediger") if s != null else null
 	if s == null:
 		return

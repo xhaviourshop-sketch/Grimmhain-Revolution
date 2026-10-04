@@ -8,8 +8,12 @@ extends TestCase
 const EXPECTED_KEYS := ["effect", "replaced_id", "role_id", "source_id", "target_id"]
 
 
+## Tag 1. Das Rudel tötet in Nacht 1 den Dorfbewohner (die Wölfe müssen jede Nacht töten); er wird sofort wiederbelebt, damit der Tag mit
+## allen Lebenden beginnt wie in den Vorgaben der Tests.
 func _day_one(roles: Array) -> GameState:
-	return Fixtures.play([Fixtures.start_roles(roles), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	var victim := roles.size() if Fixtures.INERT_ROLES.has(StringName(roles[roles.size() - 1])) else roles.find("dorfbewohner") + 1
+	return Fixtures.play([Fixtures.start_roles(roles), Command.start_night(), Command.answer_prompt(1, [victim]), Command.end_night(),
+		CorrectionFixtures.gm("revive", {"target_id": victim}, "Test")] as Array[Command])
 
 
 ## Wendet Befehle an; liefert alle Ereignisse und den Endzustand.
@@ -71,16 +75,17 @@ func test_reaper_curse_is_announced_with_role_and_target() -> void:
 	assert_true(died != -1 and announced > died, "Ansage folgt dem Tod des Ziels")
 
 
-func test_reaper_declining_makes_no_announcement() -> void:
+func test_reaper_cannot_decline() -> void:
+	# Die Karte des Sensenträgers kennt keinen Verzicht (DA Nachtschritte neu): ohne Ziel gibt es keine Antwort, also auch keine Ansage.
 	var day := _day_one(["werwolf", "blutwolf", "sensentraeger", "dorfbewohner", "amalia", "detektiv"])
 	var st: GameState = _run(day, _lynch(3, 4))["state"]
 	st = _run(st, [Command.begin_step(RulesEngine.next_step_id(st))] as Array[Command])["state"]
-	var r := _run(st, [_answer_open(st, [])] as Array[Command])
-	assert_true(_effects(r["events"]).is_empty(), "Verzicht ohne sichtbare Folge: keine Ansage")
+	apply_rejected(st, Command.answer_prompt(st.pending_prompt.id, []), "invalid_target_count", "kein Verzicht")
 
 
 func test_prevented_curse_is_not_announced() -> void:
-	var day := _day_one(["werwolf", "blutwolf", "sensentraeger", "fenrir", "dorfbewohner", "amalia"])
+	# Acht Personen: Das Rudel tötet in Nacht 1 den letzten Platz; ohne ihn entstünde mit drei Wölfen sofort Parität.
+	var day := _day_one(["werwolf", "blutwolf", "sensentraeger", "fenrir", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	var s := day.duplicate_state()
 	s.growth[4] = RoleCatalog.FENRIR_SHIELD_STAGE
 	var st: GameState = _run(s, _lynch(3, 5))["state"]
@@ -226,7 +231,7 @@ func test_hidden_choices_and_ordinary_deaths_stay_silent() -> void:
 
 func test_announcements_survive_save_load_and_replay() -> void:
 	var commands: Array[Command] = [Fixtures.start_roles(["werwolf", "dorfbewohner", "wahnsinniger-kutscher", "amalia", "detektiv", "waechter-am-tor"]),
-		Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), Command.nominate(5, 3), Command.create(Command.DECIDE_EXECUTION, {"target_id": 3})]
+		Command.start_night(), Command.answer_prompt(1, [2]), Command.end_night(), Command.nominate(5, 3), Command.create(Command.DECIDE_EXECUTION, {"target_id": 3})]
 	var first := RulesEngine.replay(commands)
 	assert_true(first.ok, "Replay")
 	if not first.ok:

@@ -83,7 +83,7 @@ func test_skip_step_that_was_not_begun() -> void:
 func test_begin_step_outside_steps() -> void:
 	var setup := Fixtures.play([Fixtures.start_manual(6, [1])] as Array[Command])
 	apply_rejected(setup, Command.begin_step(PACK_STEP), "wrong_phase", "im Setup")
-	var answered := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, [])] as Array[Command])
+	var answered := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, [6])] as Array[Command])
 	apply_rejected(answered, Command.begin_step(PACK_STEP), "no_pending_step", "alle Schritte erledigt")
 	apply_rejected(answered, Command.skip_step(PACK_STEP, "zu spät"), "no_pending_step", "nichts zu überspringen")
 

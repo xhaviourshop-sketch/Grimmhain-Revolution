@@ -228,15 +228,10 @@ func test_guard_dies_by_poison_and_witch_can_heal() -> void:
 func test_apprentice_inherits_guard_immunity_immediately() -> void:
 	# Lehrling 3 bindet an Dorfwache 4; 4 stirbt am Tag; in der nächsten Nacht greift das Rudel 3 an.
 	var cmds: Array[Command] = [_start(["werwolf", "blutwolf", "lehrling", DW, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
-		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 4, 5])]
-	var run := _run(cmds, "Kandidaten")
-	if not run.ok:
-		return
-	var options: Array = run.state.pending_prompt.partial["options"]
-	cmds.append_array([Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "option", "option": options.find(DW)}),
-		Command.answer_choice(1, "confirm", true), Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(),
+		Command.start_night(), Command.answer_stage_targets(1, "master", [4])]
+	cmds.append_array([Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(),
 		Command.nominate(5, 4), Command.decide_execution(4), Command.end_day(), Command.start_night(), Command.answer_prompt(2, [3]), Command.end_night()])
-	run = _run(cmds, "Erbe")
+	var run := _run(cmds, "Erbe")
 	if run.ok:
 		assert_eq(String(run.state.players[3].role_id), DW, "Lehrling ist Dorfwache")
 		assert_true(run.state.players[3].alive, "geerbte Immunität wirkt")

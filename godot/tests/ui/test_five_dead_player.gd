@@ -14,7 +14,7 @@ func _day(shell: Control) -> GameSession:
 	var s := session_of(shell) as GameSession
 	assert_true(s.submit(Fixtures.start_roles(_roles(), 1)).ok, "Start")
 	assert_true(s.submit(Command.start_night()).ok, "Nacht 1")
-	assert_true(s.submit(Command.answer_prompt(1, [])).ok, "kein Opfer")
+	assert_true(s.submit(Command.skip_step("night:1:0:pack", "kein Opfer")).ok, "ruhige Nacht")
 	assert_true(s.submit(Command.end_night()).ok, "Tag 1")
 	return s
 

@@ -20,9 +20,9 @@ func _killed_by_pack() -> Array[Command]:
 	return [_s6(), Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night()]
 
 
-## Tag 1: Sensenträger (3) hingerichtet, nachdem Nacht 1 ohne Opfer blieb.
+## Tag 1: Sensenträger (3) hingerichtet, nachdem Nacht 1 ruhig blieb (Rudelschritt übersprungen).
 func _executed() -> Array[Command]:
-	return [_s6(), Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), Command.nominate(4, 3), Command.decide_execution(3)]
+	return [_s6(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night(), Command.nominate(4, 3), Command.decide_execution(3)]
 
 
 ## Typsichere Verkettung zweier Befehlslisten.
@@ -97,7 +97,7 @@ func test_execution_reacts_immediately() -> void:
 
 func test_gm_kill_with_effects() -> void:
 	# AS-G01, Zusatz 3
-	var day := Fixtures.play([_s6(), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	var day := Fixtures.play([_s6(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command])
 	var r := apply_ok(day, CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}), "GM-Tod mit Folgen")
 	assert_eq(events_of_type(r.events, "ReactionQueued").size(), 1, "Reaktion eingereiht")
 	assert_eq(RulesEngine.next_step_id(r.state), "reaction:1", "sofort am Tag")
@@ -105,7 +105,7 @@ func test_gm_kill_with_effects() -> void:
 
 func test_gm_kill_without_effects() -> void:
 	# AS-G02, Zusatz 4
-	var day := Fixtures.play([_s6(), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	var day := Fixtures.play([_s6(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command])
 	var r := apply_ok(day, CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": false}), "GM-Tod ohne Folgen")
 	assert_eq(events_of_type(r.events, "ReactionQueued").size(), 0, "keine Reaktion")
 	assert_true(r.state.reactions.is_empty(), "Warteschlange leer")
@@ -113,7 +113,7 @@ func test_gm_kill_without_effects() -> void:
 
 func test_gm_execute() -> void:
 	# Zusatz 5
-	var day := Fixtures.play([_s6(), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	var day := Fixtures.play([_s6(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command])
 	var r := apply_ok(day, CorrectionFixtures.gm("execute", {"target_id": 3}), "Hinrichtung per Übersteuerung")
 	assert_eq(events_of_type(r.events, "ReactionQueued").size(), 1, "Reaktion eingereiht")
 	assert_eq(RulesEngine.next_step_id(r.state), "reaction:1", "sofort am Tag")
@@ -121,7 +121,7 @@ func test_gm_execute() -> void:
 
 func test_night_death_by_poison_like_correction_reacts_at_dawn() -> void:
 	# AS-R37: Tod in der Nacht (Gift folgt mit der Waldhexe; hier Spielleiterkorrektur in der Nacht).
-	var run := _replay_ok([_s6(), Command.start_night(), Command.answer_prompt(1, []),
+	var run := _replay_ok([_s6(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"),
 		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true})] as Array[Command], "Nachttod")
 	if not run.ok:
 		return
@@ -134,17 +134,15 @@ func test_night_death_by_poison_like_correction_reacts_at_dawn() -> void:
 
 # --- Antwort ---------------------------------------------------------------------
 
-func test_decline() -> void:
-	# AS-R17, Zusatz 6
+func test_cannot_decline() -> void:
+	# AS-R17, Zusatz 6; DA Nachtschritte neu: Die Karte kennt keinen Verzicht, die Reaktion braucht ein Ziel.
 	var s := RulesEngine.replay(_killed_by_pack()).state
 	var begun := apply_ok(s, Command.begin_step("reaction:1"), "Reaktion").state
 	apply_rejected(begun, Command.skip_step("reaction:1", "egal"), "step_not_skippable", "kein Überspringen")
 	apply_rejected(begun, Command.cancel_prompt(2, "egal"), "prompt_not_cancellable", "kein Abbruch")
-	var r := apply_ok(begun, Command.answer_prompt(2, []), "Verzicht")
-	assert_eq(events_of_type(r.events, "SeatDied").size(), 0, "kein Tod")
-	var resolved := events_of_type(r.events, "ReactionResolved")
-	assert_true(resolved.size() == 1 and String(resolved[0].data["outcome"]) == "declined" and int(resolved[0].data["target_id"]) == -1,
-		"eindeutiges Verzichtsereignis")
+	apply_rejected(begun, Command.answer_prompt(2, []), "invalid_target_count", "kein Verzicht")
+	var r := apply_ok(begun, Command.answer_prompt(2, [4]), "Fluch auf 4")
+	assert_eq(events_of_type(r.events, "SeatDied").size(), 1, "ein Tod")
 	assert_true(r.state.reactions.is_empty(), "Reaktion erledigt")
 
 
@@ -189,7 +187,7 @@ func test_chain_of_two_reapers() -> void:
 	assert_eq(run.state.reactions[0].owner_id, 4, "Besitzer der Folgereaktion")
 	assert_eq(String(run.state.phase), "DAWN_RESOLUTION", "Morgen bleibt offen")
 	var begun := apply_ok(run.state, Command.begin_step("reaction:2"), "Folgereaktion").state
-	var done := apply_ok(begun, Command.answer_prompt(3, []), "Verzicht")
+	var done := apply_ok(begun, Command.answer_prompt(3, [7]), "zweite Reaktion trifft 7")
 	assert_eq(String(done.state.phase), "DAY", "Tag erst nach leerer Warteschlange")
 
 
@@ -221,7 +219,7 @@ func test_no_final_candidate_while_chain_open() -> void:
 	assert_true(sole_candidate(run.state) == null, "kein Kandidat, solange Folgereaktion offen")
 	assert_eq(events_of_type(run.events, "WinDetected").size(), 0, "nichts vorgelegt")
 	var begun := apply_ok(run.state, Command.begin_step("reaction:2"), "Folgereaktion").state
-	var declined := apply_ok(begun, Command.answer_prompt(3, []), "Verzicht")
+	var declined := apply_ok(begun, Command.answer_prompt(3, [6]), "zweite Reaktion trifft 6")
 	assert_eq(events_of_type(declined.events, "WinDetected").size(), 1, "erst nach leerer Warteschlange Kandidat")
 
 
@@ -258,7 +256,7 @@ func test_save_load_states() -> void:
 	var cases := {
 		"vor Beginn": base,
 		"Prompt offen": _concat(base, [Command.begin_step("reaction:1")] as Array[Command]),
-		"nach Verzicht": _concat(base, [Command.begin_step("reaction:1"), Command.answer_prompt(2, [])] as Array[Command]),
+		"nach Antwort": _concat(base, [Command.begin_step("reaction:1"), Command.answer_prompt(2, [4])] as Array[Command]),
 	}
 	for label: String in cases:
 		var commands: Array[Command] = []
@@ -289,8 +287,8 @@ func test_replay_single_and_chain() -> void:
 
 func test_no_secrets_in_public_or_foreign_events() -> void:
 	var run := _replay_ok(_s7([Command.start_night(), Command.answer_prompt(1, [3]), Command.end_night(),
-		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4]), Command.begin_step("reaction:2"), Command.answer_prompt(3, []),
-		Command.nominate(5, 1), Command.decide_execution(1), Command.end_day()] as Array[Command]) as Array[Command], "Partie")
+		Command.begin_step("reaction:1"), Command.answer_prompt(2, [4]), Command.begin_step("reaction:2"), Command.answer_prompt(3, [2]),
+		Command.nominate(5, 1), Command.decide_execution(1)] as Array[Command]) as Array[Command], "Partie")
 	if not run.ok:
 		return
 	for type: String in ["ReactionQueued", "ReactionResolved", "SeatDied", "PromptOpened", "PromptAnswered", "StepBegun", "WinStatusProvisional"]:

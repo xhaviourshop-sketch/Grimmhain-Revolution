@@ -33,7 +33,7 @@ func test_piper_win_is_detected_when_the_last_person_is_charmed() -> void:
 		elif s.pending_prompt.owner == PendingPrompt.OWNER_PIPER:
 			cmd = Command.answer_prompt(s.pending_prompt.id, [6])
 		elif s.pending_prompt.owner == PendingPrompt.OWNER_PACK:
-			cmd = Command.answer_prompt(s.pending_prompt.id, [])
+			cmd = Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht")
 		else:
 			cmd = Audit.auto(s)
 		s = Audit.ok(self, s, cmd, "night command")

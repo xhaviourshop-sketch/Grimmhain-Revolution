@@ -2,8 +2,8 @@ extends TestCase
 ## Gemeinsame Auswahlprüfung für die Aktionskarte: `RulesEngine.target_counts` nennt die zulässigen
 ## Anzahlen des offenen Personen-Prompts, `RulesEngine.check` prüft einen Befehl ohne ihn anzuwenden.
 ## Beide stammen aus derselben Validierung wie `apply`; die Oberfläche implementiert keine Rollenregel.
-##   Loki, Seelentauscher, Kutscher: keiner oder alle (0 oder Höchstzahl).
-##   Spürhund: keiner oder genau drei. Doktor: genau zwei.
+##   Seelentauscher, Kutscher: keiner oder alle (0 oder Höchstzahl). Loki: genau zwei. Spürhund: genau drei. Doktor: genau zwei.
+##   Rudel: genau ein Opfer.
 
 const D := "dorfbewohner"
 const W := "werwolf"
@@ -27,6 +27,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, "shown", true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -66,8 +70,8 @@ func _assert_counts(s: GameState, expected: Array[int], label: String) -> void:
 		assert_eq(checked == &"", expected.has(n), "%s: %d Personen %s" % [label, n, "zulässig" if expected.has(n) else "abgelehnt"])
 
 
-func test_loki_none_or_two() -> void:
-	_assert_counts(_to_owner(_state([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"loki"), [0, 2] as Array[int], "Loki")
+func test_loki_exactly_two() -> void:
+	_assert_counts(_to_owner(_state([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"loki"), [2] as Array[int], "Loki")
 
 
 func test_soul_swapper_none_or_two() -> void:
@@ -81,8 +85,8 @@ func test_coachman_none_or_three() -> void:
 	_assert_counts(_to_owner(s, &"kutscher"), [0, 3] as Array[int], "Kutscher")
 
 
-func test_hound_none_or_three() -> void:
-	_assert_counts(_to_owner(_state([W, "spuerhund", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"spuerhund"), [0, 3] as Array[int], "Spürhund")
+func test_hound_exactly_three() -> void:
+	_assert_counts(_to_owner(_state([W, "spuerhund", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), &"spuerhund"), [3] as Array[int], "Spürhund")
 
 
 func test_doctor_exactly_two() -> void:
@@ -92,8 +96,8 @@ func test_doctor_exactly_two() -> void:
 func test_plain_prompt_uses_min_and_max() -> void:
 	var s := _ok(_state([W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]), Command.start_night(), "Nacht")
 	assert_eq(s.pending_prompt.owner, &"pack", "Rudel offen")
-	assert_eq([s.pending_prompt.min_count, s.pending_prompt.max_count], [0, 1], "Rudel: kein oder ein Opfer")
-	assert_eq(RulesEngine.target_counts(s), [0, 1] as Array[int], "Rudel: min bis max")
+	assert_eq([s.pending_prompt.min_count, s.pending_prompt.max_count], [1, 1], "Rudel: genau ein Opfer (DA Nachtschritte neu)")
+	assert_eq(RulesEngine.target_counts(s), [1] as Array[int], "Rudel: genau ein Opfer")
 
 
 func test_no_prompt_has_no_counts() -> void:

@@ -5,7 +5,7 @@ extends TestCase
 
 
 func _day_one(roles_cmd: Command) -> GameState:
-	return Fixtures.play([roles_cmd, Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	return Fixtures.play([roles_cmd, Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command])
 
 
 func test_execute_without_nomination() -> void:

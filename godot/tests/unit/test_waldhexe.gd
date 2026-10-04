@@ -44,10 +44,13 @@ func _pick(stage: String, targets: Array, prompt_id: int = WITCH_PROMPT) -> Comm
 	return Command.create(Command.ANSWER_PROMPT, {"prompt_id": prompt_id, "stage": stage, "targets": targets})
 
 
-## Nacht 1 bis zum begonnenen Waldhexenschritt: Schutz auf `protect`, Rudel wählt `victim` (-1 = kein Opfer).
+## Nacht 1 bis zum begonnenen Waldhexenschritt: Schutz auf `protect`, Rudel wählt `victim` (-1 = Rudelschritt mit Grund übersprungen, kein Opfer).
 func _to_witch(start: Command, protect: int, victim: int) -> Array[Command]:
-	return [start, Command.start_night(), Command.answer_prompt(1, [protect]), Command.begin_step(PACK_1),
-		Command.answer_prompt(2, [] if victim < 0 else [victim]), Command.begin_step(WITCH_1)]
+	var out: Array[Command] = [start, Command.start_night(), Command.answer_prompt(1, [protect])]
+	out.append(Command.begin_step(PACK_1))
+	out.append(Command.skip_step(PACK_1, "kein Opfer") if victim < 0 else Command.answer_prompt(2, [victim]))
+	out.append(Command.begin_step(WITCH_1))
+	return out
 
 
 ## Vollständige Waldhexenantwort: Rettung ja/nein, Giftziel (-1 = kein Gift), Bestätigung.
@@ -194,7 +197,7 @@ func test_no_victim_and_poison_used_no_step() -> void:
 		Command.start_night(), Command.answer_prompt(4, [6]), Command.begin_step("night:2:1:pack")] as Array[Command])
 	var s := Fixtures.play(commands)
 	assert_eq(s.night_plan, [&"schutzengel:3", &"pack", &"waldhexe:5"] as Array[StringName], "Heiltrank noch da")
-	var r := apply_ok(s, Command.answer_prompt(5, []), "Rudel ohne Opfer")
+	var r := apply_ok(s, Command.skip_step("night:2:1:pack", "kein Opfer"), "Rudel ohne Opfer")
 	var dropped := events_of_type(r.events, "StepDropped")
 	assert_true(dropped.size() == 1 and String(dropped[0].data["step_id"]) == "night:2:2:waldhexe:5"
 		and String(dropped[0].data["reason"]) == "no_decision", "Schritt entfällt ohne mögliche Entscheidung")

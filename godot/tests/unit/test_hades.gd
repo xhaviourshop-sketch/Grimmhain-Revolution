@@ -49,6 +49,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, String(p.stage), false)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -78,7 +82,7 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			elif answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			else:
 				cmd = _auto(s)
 		else:
@@ -240,7 +244,7 @@ func test_no_step_below_two_lights_and_invalid_answers() -> void:
 	s = _ok(s, Command.decide_execution(-1), "keine Hinrichtung")
 	s = _ok(s, Command.end_day(), "Tagesende")
 	s = _ok(s, Command.start_night(), "Nacht")
-	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
+	s = _ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Hades") if s != null else null
 	if s == null:
 		return

@@ -228,6 +228,73 @@ static func with_copies(roles: Array, rest: Array[Command], seed_value: int = 1,
 	return out
 
 
+## Dorfrollen ohne Todesfolge, Nachtschritt oder Hinweis: Ihr Tod verändert in einem Test nichts außer der Zahl der Lebenden.
+const INERT_ROLES: Array[StringName] = [&"dorfbewohner", &"amalia", &"detektiv", &"nachtwaechter", &"waechter-am-tor", &"wahnsinniger-kutscher"]
+
+
+## Rudelopfer ohne Bedeutung für den Test. Seit der Entscheidung „Werwölfe töten jede Nacht ein Opfer“ gibt es kein „Kein Opfer“ mehr:
+## gewählt wird unter `allowed` die Person mit der höchsten ID und einer wirkungslosen Rolle (`INERT_ROLES`),
+## sonst die höchste Person ohne Wolfszählung, sonst die letzte.
+static func fodder(s: GameState, allowed: Array) -> int:
+	return last_villager(s, allowed)
+
+
+## Rudelopfer am Ende der Sitzordnung: höchste ID unter `allowed` mit wirkungsloser Rolle, sonst ohne Wolfszählung (Totenreich-Tests nutzen die
+## hinteren Plätze nie).
+static func last_villager(s: GameState, allowed: Array) -> int:
+	var best := -1
+	for id: int in allowed:
+		if INERT_ROLES.has(s.players[id].role_id) and id > best:
+			best = id
+	if best != -1:
+		return best
+	for id: int in allowed:
+		if not s.players[id].counts_as_wolf and id > best:
+			best = id
+	return best if best != -1 else int(allowed[allowed.size() - 1])
+
+
+## Rudelopfer, der in `answers` (Schlüssel "<rolle>:<id>…" und Ziellisten, auch verschachtelt) nicht vorkommt: höchste wirkungslose Person.
+static func quiet_victim(s: GameState, allowed: Array, answers: Dictionary = {}) -> int:
+	var avoid: Array = []
+	for key: Variant in answers:
+		var parts := String(key).split(":")
+		if parts.size() >= 2 and parts[1].split("@")[0].is_valid_int():
+			avoid.append(int(parts[1].split("@")[0]))
+		_collect_ids(answers[key], avoid)
+	var pool := allowed.filter(func(id: int) -> bool: return not avoid.has(id) and INERT_ROLES.has(s.players[id].role_id))
+	if pool.is_empty():
+		pool = allowed.filter(func(id: int) -> bool: return not avoid.has(id) and not s.players[id].counts_as_wolf)
+	return fodder(s, pool if not pool.is_empty() else allowed)
+
+
+static func _collect_ids(value: Variant, out: Array) -> void:
+	if value is Array:
+		for item: Variant in value:
+			_collect_ids(item, out)
+	elif value is int and not value is bool:
+		out.append(value)
+
+
+## Mindestantwort auf einen Prompt ohne Bedeutung für den Test: `min_count` Personen, bei Pflichtwahlen zuerst `fodder`.
+## Prompts ohne Mindestzahl (Verzicht erlaubt) bekommen eine leere Auswahl.
+static func pass_targets(s: GameState, p: PendingPrompt) -> Array:
+	var out: Array = []
+	if p.min_count <= 0 or p.allowed_ids.is_empty():
+		return out
+	if p.owner == &"feuerteufel":  # dieselbe Person erneut markieren = Markierung behalten
+		var kept := SoloRules.fire_mark_of(s, p.actor_id)
+		if p.allowed_ids.has(kept):
+			return [kept]
+	out.append(fodder(s, p.allowed_ids))
+	for id: int in p.allowed_ids:
+		if out.size() >= p.min_count:
+			break
+		if not out.has(id):
+			out.append(id)
+	return out
+
+
 ## Wendet Befehle nacheinander an und bricht beim ersten abgelehnten ab (dann null).
 static func play(commands: Array[Command]) -> GameState:
 	var result := RulesEngine.replay(commands)

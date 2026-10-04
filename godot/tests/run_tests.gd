@@ -8,6 +8,7 @@ extends SceneTree
 ##
 ## Aufruf:  godot --headless --path godot -s res://tests/run_tests.gd
 ## Optional: -- --filter=<teilstring>   (nur passende Testdateien)
+##           -- --dir=unit|ui           (nur dieses Verzeichnis)
 ## Jeder Laufzeitfehler (SCRIPT ERROR, Engine-Fehler) während eines Tests macht diesen Test rot
 ## (TestErrorLogger), auch wenn seine Prüfungen vorher bestanden haben.
 
@@ -16,11 +17,14 @@ const TEST_DIRS: Array[String] = ["res://tests/unit", "res://tests/ui"]
 
 func _initialize() -> void:
 	var filter := ""
+	var only_dir := ""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--filter="):
 			filter = arg.trim_prefix("--filter=")
+		elif arg.begins_with("--dir="):
+			only_dir = arg.trim_prefix("--dir=")
 
-	var files := _collect_test_files(filter)
+	var files := _collect_test_files(filter, only_dir)
 	var errors := TestErrorLogger.new()
 	OS.add_logger(errors)
 	var total := 0
@@ -71,9 +75,11 @@ func _initialize() -> void:
 	quit(0 if failed == 0 and broken_files == 0 and total > 0 else 1)
 
 
-func _collect_test_files(filter: String) -> Array[String]:
+func _collect_test_files(filter: String, only_dir: String = "") -> Array[String]:
 	var result: Array[String] = []
 	for test_dir: String in TEST_DIRS:
+		if only_dir != "" and not test_dir.ends_with("/" + only_dir):
+			continue
 		var dir := DirAccess.open(test_dir)
 		if dir == null:
 			continue

@@ -36,15 +36,13 @@ func _do(s: GameState, c: Command, log: Array[Command], events: Array[GameEvent]
 	return r.state
 
 
-## Lehrling: Kandidaten wählen, Option mit Rolle `role` wählen, bestätigen.
+## Lehrling wählt als Meister die erste Person aus `candidates` mit der Rolle `role`.
 func _apprentice(s: GameState, candidates: Array, role: String, log: Array[Command], events: Array[GameEvent]) -> GameState:
-	var id := s.pending_prompt.id
-	s = _do(s, Command.answer_stage_targets(id, "candidates", candidates), log, events, "Lehrling Kandidaten")
-	if s == null:
-		return null
-	var options: Array = s.pending_prompt.partial["options"]
-	s = _do(s, Command.create(Command.ANSWER_PROMPT, {"prompt_id": id, "stage": "option", "option": options.find(role)}), log, events, "Lehrling Option")
-	return _do(s, Command.answer_choice(id, "confirm", true), log, events, "Lehrling bestätigt")
+	var master := -1
+	for id: int in candidates:
+		if master == -1 and String(s.players[id].role_id) == role:
+			master = id
+	return _do(s, Command.answer_stage_targets(s.pending_prompt.id, "master", [master]), log, events, "Lehrling Meister")
 
 
 ## Beginnt den erwarteten Schritt, falls noch kein Prompt offen ist.
@@ -294,17 +292,7 @@ func _drive_night_with_save_load(s: GameState, log: Array[Command], ev: Array[Ga
 		if p == null:
 			c = Command.begin_step(RulesEngine.next_step_id(s))
 		elif p.owner == PendingPrompt.OWNER_APPRENTICE:
-			match String(p.stage):
-				"candidates":
-					var picks: Array = []
-					for id: int in s.alive_ids():
-						if id != p.actor_id and picks.size() < 3:
-							picks.append(id)
-					c = Command.answer_stage_targets(p.id, "candidates", picks)
-				"option":
-					c = Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "option", "option": 0})
-				_:
-					c = Command.answer_choice(p.id, "confirm", true)
+			c = Command.answer_stage_targets(p.id, "master", [p.allowed_ids[0]])
 		elif p.owner == PendingPrompt.OWNER_WITCH:
 			match String(p.stage):
 				"heal":
@@ -488,7 +476,7 @@ func test_revive_resets_all_limited_abilities() -> void:
 	# Sensenträger: Fluch nach erstem Tod eingelöst, Wiederbelebung, zweiter Tod → erneute Reaktion.
 	s = _do(s, _gm("kill", {"target_id": 4, "trigger_effects": true}), log, ev, "Sensenträger stirbt")
 	s = _do(s, Command.begin_step(RulesEngine.next_step_id(s)), log, ev, "Reaktion")
-	s = _do(s, Command.answer_prompt(s.pending_prompt.id, []), log, ev, "Verzicht")
+	s = _do(s, Command.answer_prompt(s.pending_prompt.id, Fixtures.pass_targets(s, s.pending_prompt)), log, ev, "Verzicht")
 	s = _do(s, _gm("revive", {"target_id": 4}), log, ev, "Wiederbelebung Sensenträger")
 	s = _do(s, _gm("kill", {"target_id": 4, "trigger_effects": true}), log, ev, "zweiter Tod")
 	if s == null:

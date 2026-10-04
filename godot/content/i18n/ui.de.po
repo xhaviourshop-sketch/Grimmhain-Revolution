@@ -3779,7 +3779,7 @@ msgid "ui.role.faehrtenleser.lex.open"
 msgstr "Ob „links“ am Tablet wirklich dem Uhrzeigersinn am Tisch entspricht, ist noch nicht am Gerät geprüft."
 
 msgid "ui.role.spuerhund.lex.night"
-msgstr "jede Nacht, freiwillig"
+msgstr "jede Nacht"
 
 msgid "ui.role.spuerhund.lex.wolf"
 msgstr "nein"
@@ -3788,7 +3788,7 @@ msgid "ui.role.spuerhund.lex.ability"
 msgstr "Prüft drei Personen auf Wolf oder Einzelsieg. Ein Fehlgriff kostet die Fähigkeit."
 
 msgid "ui.role.spuerhund.lex.timing"
-msgstr "Jede Nacht freiwillig, Verzicht ist möglich."
+msgstr "Jede Nacht. Er wählt immer genau drei Personen, einen Verzicht gibt es nicht. Leben weniger als vier Personen (er eingeschlossen), entfällt der Schritt."
 
 msgid "ui.role.spuerhund.lex.targets"
 msgstr "Drei verschiedene andere lebende Personen."
@@ -4367,7 +4367,7 @@ msgid "ui.role.sensentraeger.lex.ability"
 msgstr "Darf bei seinem Tod eine lebende Person verfluchen."
 
 msgid "ui.role.sensentraeger.lex.timing"
-msgstr "Einmal je Leben, freiwillig, Verzicht möglich. Nach einem Tod am Tag sofort, nach einem Tod in der Nacht (auch durch Gift) in der Morgenauflösung."
+msgstr "Einmal je Leben. Nach einem Tod am Tag sofort, nach einem Tod in der Nacht (auch durch Gift) in der Morgenauflösung. Einen Verzicht gibt es nicht."
 
 msgid "ui.role.sensentraeger.lex.targets"
 msgstr "Jede Person, die zum Zeitpunkt der Antwort lebt, außer dem Sensenträger selbst."
@@ -4379,10 +4379,11 @@ msgid "ui.role.sensentraeger.lex.win"
 msgstr "Mit dem Dorf."
 
 msgid "ui.role.sensentraeger.lex.example"
-msgstr "Der Sensenträger wird am Tag hingerichtet und wählt sofort Emil. Emil stirbt.\nDas Rudel tötet den Sensenträger in der Nacht. In der Morgenauflösung verzichtet er. Niemand sonst stirbt."
+msgstr "Der Sensenträger wird am Tag hingerichtet und wählt sofort Emil. Emil stirbt.
+Das Rudel tötet den Sensenträger in der Nacht. In der Morgenauflösung wählt er Ben. Ben stirbt."
 
 msgid "ui.role.sensentraeger.lex.gm"
-msgstr "Der Fluch ist ein Todeseffekt und wird öffentlich ausgespielt und angesagt, mit Rolle und Ziel. Bei Verzicht gibt es keine Ansage. Öffentlich zählen sonst nur die Namen der Toten."
+msgstr "Der Fluch ist ein Todeseffekt und wird öffentlich ausgespielt und angesagt, mit Rolle und Ziel. Öffentlich zählen sonst nur die Namen der Toten."
 
 msgid "ui.role.wolfskind.lex.night"
 msgstr "Vorbildwahl, nur solange ohne Vorbild"
@@ -4421,10 +4422,10 @@ msgid "ui.role.lehrling.lex.ability"
 msgstr "Wählt einen Meister und erbt bei dessen Tod die Rolle."
 
 msgid "ui.role.lehrling.lex.timing"
-msgstr "Die Auswahl kommt in der ersten verfügbaren Nacht ohne aktive Bindung. Sie darf nicht übersprungen werden. Gibt es weniger als drei andere Lebende, entfällt sie mit Protokolleintrag."
+msgstr "Die Auswahl kommt in der ersten verfügbaren Nacht ohne aktive Bindung. Sie darf nicht übersprungen werden. Lebt keine andere Person, entfällt sie mit Protokolleintrag."
 
 msgid "ui.role.lehrling.lex.targets"
-msgstr "Der Spielleiter wählt drei verschiedene andere lebende Personen. Der Lehrling sieht nur deren drei aktuelle Rollen, nach Rollen-ID sortiert, nie Namen. Er wählt eine Rolle, nie eine Person."
+msgstr "Der Lehrling wählt seinen Meister selbst: genau eine andere lebende Person. Er sieht dabei Namen, keine Rollen."
 
 msgid "ui.role.lehrling.lex.exceptions"
 msgstr "Stirbt der Meister mit Todesfolgen, erbt der Lehrling sofort die aktuelle Rolle: Fraktion, passive Eigenschaften, Siegbedingung und Todesreaktion gelten sofort, aktive Nachtfähigkeiten ab der folgenden Nacht, alle Einsätze frisch. Stirbt der Lehrling vor dem Erbe, verfällt die Bindung endgültig. Ein Meistertod per Korrektur ohne Todesfolgen vererbt nichts. Ein Wächter am Tor macht aus einer geerbten Wolfsrolle einen Dorfbewohner."
@@ -4433,7 +4434,8 @@ msgid "ui.role.lehrling.lex.win"
 msgstr "Vor dem Erbe mit dem Dorf, danach nach der geerbten Rolle."
 
 msgid "ui.role.lehrling.lex.example"
-msgstr "Der Spielleiter wählt Ben, Clara und Emil. Der Lehrling sieht „Dorfbewohner, Waldhexe, Werwolf“ und wählt „Waldhexe“, die zu Clara gehört. Stirbt Clara, wird der Lehrling Waldhexe mit frischen Tränken, einsetzbar ab der folgenden Nacht.\nDer Lehrling wählt „Werwolf“, die zu Emil gehört. Emil wird hingerichtet. Der Lehrling zählt sofort als Wolf und wacht ab der folgenden Nacht mit dem Rudel auf."
+msgstr "Der Lehrling wählt Clara, die Waldhexe. Stirbt Clara, wird der Lehrling Waldhexe mit frischen Tränken, einsetzbar ab der folgenden Nacht.
+Der Lehrling wählt Emil, einen Werwolf. Emil wird hingerichtet. Der Lehrling zählt sofort als Wolf und wacht ab der folgenden Nacht mit dem Rudel auf."
 
 msgid "ui.role.lehrling.lex.gm"
 msgstr "Die Bindung ist nur für dich sichtbar. Erbt der Lehrling Wolfskind, bleibt es unverwandelt, er wählt in der nächsten Nacht ein neues Vorbild. Erbt er Lehrling, folgt die neue Auswahl in der nächsten Nacht."
@@ -4448,7 +4450,7 @@ msgid "ui.role.loki.lex.ability"
 msgstr "Verbindet in der ersten Nacht zwei Personen als Liebende oder Rivalen."
 
 msgid "ui.role.loki.lex.timing"
-msgstr "Nur in Nacht 1 der Partie, freiwillig. Verpasst Loki die Nacht, verfällt die Fähigkeit."
+msgstr "Nur in Nacht 1 der Partie. Loki wählt immer genau zwei Personen, einen Verzicht gibt es nicht. Verpasst Loki die Nacht, verfällt die Fähigkeit."
 
 msgid "ui.role.loki.lex.targets"
 msgstr "Zwei verschiedene lebende Personen, Loki selbst ist erlaubt."
@@ -4607,7 +4609,7 @@ msgid "ui.role.wahnsinniger_kutscher.lex.gm"
 msgstr "Das Mitsterben der Nachbarn ist ein Todeseffekt und wird öffentlich angesagt, mit Rolle und den Namen der Mitgestorbenen."
 
 msgid "ui.role.henker.lex.night"
-msgstr "ab drei Hinrichtungen jede Nacht, freiwillig"
+msgstr "ab drei Hinrichtungen jede Nacht"
 
 msgid "ui.role.henker.lex.wolf"
 msgstr "nein"
@@ -4616,7 +4618,7 @@ msgid "ui.role.henker.lex.ability"
 msgstr "Ab drei Hinrichtungen markiert er nachts jemanden, der bei der nächsten mitstirbt."
 
 msgid "ui.role.henker.lex.timing"
-msgstr "Jede Nacht freiwillig, sobald in der Partie mindestens drei Hinrichtungen bestätigt wurden, auch vor dem Rollenerwerb. Unbegrenzt oft."
+msgstr "Jede Nacht, sobald in der Partie mindestens drei Hinrichtungen bestätigt wurden, auch vor dem Rollenerwerb. Unbegrenzt oft. Er wählt immer eine Person, einen Verzicht gibt es nicht."
 
 msgid "ui.role.henker.lex.targets"
 msgstr "Eine Person. Sie stirbt zusätzlich bei der Hinrichtung des folgenden Tages, wenn der Henker dabei lebt."
@@ -4673,7 +4675,7 @@ msgid "ui.role.werwolf.lex.timing"
 msgstr "Jede Nacht, solange mindestens eine lebende Person als Wolf zählt. Das Opfer stirbt erst in der Morgenauflösung."
 
 msgid "ui.role.werwolf.lex.targets"
-msgstr "Jede lebende Person, auch ein Wolf. Das Rudel darf auch ausdrücklich niemanden wählen. Alle Personen, die zu Beginn der Nacht als Wolf zählen, wachen mit auf."
+msgstr "Jede lebende Person, auch ein Wolf. Das Rudel wählt jede Nacht ein Opfer. Alle Personen, die zu Beginn der Nacht als Wolf zählen, wachen mit auf."
 
 msgid "ui.role.werwolf.lex.exceptions"
 msgstr "Schutz und Rettung können den Angriff verhindern. Ist das gewählte Opfer bis zum Morgen schon tot, findet kein Angriff statt und die Wahl wird nicht neu geöffnet. Wer erst während der Nacht zum Wolf wird, wacht ab der folgenden Nacht mit."
@@ -4685,7 +4687,7 @@ msgid "ui.role.werwolf.lex.example"
 msgstr "Emil und Fritz sind Wölfe und wählen Ben. Am Morgen stirbt Ben.\nEmil, Fritz, Clara und David leben. Emil und Fritz sind Wölfe. 2 Wölfe gegen 2 Nicht-Wölfe: Die Wölfe sind Siegkandidat."
 
 msgid "ui.role.werwolf.lex.gm"
-msgstr "Das Rudel einigt sich lautlos, du trägst das Ziel ein. Ein Verzicht des Rudels wird mit Grund protokolliert."
+msgstr "Das Rudel einigt sich lautlos, du trägst das Ziel ein. Einigen sie sich nicht, tippst du das Opfer an."
 
 msgid "ui.role.trugbilderwolf.lex.night"
 msgstr "kein eigener, Teil des Rudels"
@@ -4778,10 +4780,10 @@ msgid "ui.role.besessener_wolf.lex.ability"
 msgstr "Wolf im Rudel, reißt bei seinem Tod eine Person mit."
 
 msgid "ui.role.besessener_wolf.lex.timing"
-msgstr "Einmal je Leben, freiwillig. Nach einem Tod am Tag sofort, nachts in der Morgenauflösung. Voraussetzung: Unmittelbar vor seinem Tod leben mindestens 5 Personen, er eingeschlossen."
+msgstr "Einmal je Leben. Nach einem Tod am Tag sofort, nachts in der Morgenauflösung. Voraussetzung: Unmittelbar vor seinem Tod leben mindestens 5 Personen, er eingeschlossen."
 
 msgid "ui.role.besessener_wolf.lex.targets"
-msgstr "Eine andere lebende Person, auch ein Wolf, oder Verzicht."
+msgstr "Eine andere lebende Person, auch ein Wolf. Einen Verzicht gibt es nicht."
 
 msgid "ui.role.besessener_wolf.lex.exceptions"
 msgstr "Leben unmittelbar vor seinem Tod weniger als 5 Personen (er eingeschlossen), gibt es keine Reaktion."
@@ -4793,7 +4795,7 @@ msgid "ui.role.besessener_wolf.lex.example"
 msgstr "Sechs Personen leben. Fritz, der Besessene Wolf, wird hingerichtet und nimmt Ben mit. Ben stirbt sofort.\nNur vier Personen leben. Fritz stirbt ohne Mitnahme."
 
 msgid "ui.role.besessener_wolf.lex.gm"
-msgstr "Die Wahl der Mitnahme triffst du am Tablet. Die Mitnahme ist ein Todeseffekt und wird öffentlich angesagt, mit Rolle und Ziel. Bei Verzicht gibt es keine Ansage."
+msgstr "Die Wahl der Mitnahme triffst du am Tablet. Die Mitnahme ist ein Todeseffekt und wird öffentlich angesagt, mit Rolle und Ziel."
 
 msgid "ui.role.blutwolf.lex.night"
 msgstr "kein eigener, Teil des Rudels"
@@ -4958,7 +4960,7 @@ msgid "ui.role.schattenhund.lex.gm"
 msgstr "Die Schritte entfallen protokolliert. Blockierte Rollen werden trotzdem aufgerufen, damit der Tisch nichts erfährt."
 
 msgid "ui.role.albtraumwolf.lex.night"
-msgstr "jede Nacht, freiwillig, vor allen Dorfrollen"
+msgstr "jede Nacht, vor allen Dorfrollen"
 
 msgid "ui.role.albtraumwolf.lex.wolf"
 msgstr "ja"
@@ -4967,10 +4969,10 @@ msgid "ui.role.albtraumwolf.lex.ability"
 msgstr "Wolf im Rudel, blockiert jede Nacht die Fähigkeit einer Person."
 
 msgid "ui.role.albtraumwolf.lex.timing"
-msgstr "Jede Nacht freiwillig, unbegrenzt oft."
+msgstr "Jede Nacht, unbegrenzt oft. Er wählt immer eine Person, einen Verzicht gibt es nicht."
 
 msgid "ui.role.albtraumwolf.lex.targets"
-msgstr "Eine lebende Person, auch dieselbe wie in der Vornacht, oder Verzicht."
+msgstr "Eine andere lebende Person, auch dieselbe wie in der Vornacht."
 
 msgid "ui.role.albtraumwolf.lex.exceptions"
 msgstr "Die Wirkung trifft nur die Nachtschritte dieser Person, wenn sie Dorfrolle ist (protokolliert). Todesreaktionen und passive Fähigkeiten laufen weiter. Er handelt am Anfang der Nacht vor allen Dorfrollen."
@@ -5078,10 +5080,10 @@ msgid "ui.role.daemonischer_wolf.lex.ability"
 msgstr "Wolf im Rudel. Bei seinem Tod verflucht er jemanden, der dem Orakel als Werwolf erscheint."
 
 msgid "ui.role.daemonischer_wolf.lex.timing"
-msgstr "Todesreaktion bei jedem Tod mit Todesfolgen, einmal je Leben, freiwillig. Am Tag sofort, nachts in der Morgenauflösung."
+msgstr "Todesreaktion bei jedem Tod mit Todesfolgen, einmal je Leben. Am Tag sofort, nachts in der Morgenauflösung."
 
 msgid "ui.role.daemonischer_wolf.lex.targets"
-msgstr "Eine andere lebende Person, auch ein Wolf, oder Verzicht."
+msgstr "Eine andere lebende Person, auch ein Wolf. Einen Verzicht gibt es nicht."
 
 msgid "ui.role.daemonischer_wolf.lex.exceptions"
 msgstr "Nur Rollenauskünfte (Orakel) zeigen die verfluchte Person als Werwolf. Zählungen, Ja/Nein-Prüfungen, Wirkungen und Siege bleiben wahr. Der Fluch bleibt, bis die Person ihre Rolle wechselt (Erbe, Tausch, Lykaon, Korrektur). Eine Wiederbelebung löscht ihn nicht."
@@ -5096,7 +5098,7 @@ msgid "ui.role.daemonischer_wolf.lex.gm"
 msgstr "Der Fluch ist dir und dem Dämonischen Wolf bekannt, der ihn wählt. Die verfluchte Person erfährt nichts, und öffentlich wird der Fluch nicht angesagt."
 
 msgid "ui.role.koenig_lykaon.lex.night"
-msgstr "jede Nacht bis zur Nutzung"
+msgstr "in einer der ersten drei Nächte"
 
 msgid "ui.role.koenig_lykaon.lex.wolf"
 msgstr "ja"
@@ -5105,7 +5107,7 @@ msgid "ui.role.koenig_lykaon.lex.ability"
 msgstr "Wolf im Rudel. Macht mit einem Verbündeten einen Dorfbewohner zum Trugbilderwolf."
 
 msgid "ui.role.koenig_lykaon.lex.timing"
-msgstr "Einmal je Leben. Ab Nacht 1 wird er jede Nacht gefragt, bis er verwandelt hat. Er darf höchstens dreimal verzichten, bei der vierten Gelegenheit muss er wählen. Eine Nacht, in der sein Schritt mangels lebenden Verbündeten entfällt, zählt nicht."
+msgstr "Einmal je Leben, in einer der ersten drei Nächte. Er wird in jeder dieser Nächte gefragt, bis er gewählt hat, danach nie mehr. In Nacht 1 und 2 darf er verschieben, in Nacht 3 muss er wählen. Eine Nacht, in der sein Schritt mangels lebenden Verbündeten entfällt, ist trotzdem vorbei."
 
 msgid "ui.role.koenig_lykaon.lex.targets"
 msgstr "Voraussetzung: ein anderer Wolf lebt. Er nennt einen verbündeten lebenden Wolf (wird protokolliert) und wählt eine lebende Person der Fraktion Dorf."
@@ -5117,7 +5119,8 @@ msgid "ui.role.koenig_lykaon.lex.win"
 msgstr "Wolfssieg wie beim Werwolf."
 
 msgid "ui.role.koenig_lykaon.lex.example"
-msgstr "In Nacht 2 nennt König Lykaon den Verbündeten Emil und wählt Ben (Waldhexe). Ben wird Trugbilderwolf mit der Scheinrolle „Waldhexe“ und wacht ab Nacht 3 mit dem Rudel auf.\nKönig Lykaon verzichtet in drei Nächten. In der vierten Gelegenheit muss er wählen."
+msgstr "In Nacht 2 nennt König Lykaon den Verbündeten Emil und wählt Ben (Waldhexe). Ben wird Trugbilderwolf mit der Scheinrolle „Waldhexe“ und wacht ab Nacht 3 mit dem Rudel auf.
+König Lykaon verschiebt in Nacht 1 und 2. In Nacht 3 muss er wählen."
 
 msgid "ui.role.koenig_lykaon.lex.gm"
 msgstr "Der Tisch erfährt nichts von der Umwandlung. Die betroffene Person erhält eine private Mitteilung über ihre neue Rolle und wacht ab der folgenden Nacht mit dem Rudel auf, wo auch der Verbündete sie sieht."
@@ -5411,10 +5414,10 @@ msgid "ui.role.feuerteufel.lex.ability"
 msgstr "Markiert jede Nacht eine Person. Stirbt sie, verbrennen ihre Nachbarn. Gewinnt lebend mit."
 
 msgid "ui.role.feuerteufel.lex.timing"
-msgstr "Jede Nacht darf er ein neues Ziel wählen oder die bestehende Markierung behalten. Höchstens eine aktive Markierung je Feuerteufel."
+msgstr "Jede Nacht wählt er genau eine Person. Wählt er dieselbe Person noch einmal, bleibt die Markierung. Höchstens eine aktive Markierung je Feuerteufel."
 
 msgid "ui.role.feuerteufel.lex.targets"
-msgstr "Eine andere lebende Person, nie er selbst."
+msgstr "Eine andere lebende Person, nie er selbst. Einen Verzicht gibt es nicht."
 
 msgid "ui.role.feuerteufel.lex.exceptions"
 msgstr "Jeder tatsächliche Tod des Ziels löst den Brand aus, gleich welche Ursache (nicht bei Spielleiterkorrektur ohne Todesfolgen). Es verbrennen die nächsten lebenden Nachbarn links und rechts. Ein Feuerteufel als Nachbar wird verschont, auf dieser Seite brennt niemand. Überlebt das Ziel, brennt nichts. Mehrere Markierungen auf derselben Person lösen genau einen Brand aus. Stirbt der Feuerteufel oder verliert er die Rolle, erlischt die Markierung sofort."
@@ -5429,7 +5432,7 @@ msgid "ui.role.feuerteufel.lex.gm"
 msgstr "Wer markiert ist, siehst du. Öffentlich zeigt sich nur, wer stirbt, nie die Ursache."
 
 msgid "ui.role.voodoo_priester.lex.night"
-msgstr "jede Nacht ohne lebende Puppe, freiwillig"
+msgstr "jede Nacht ohne lebende Puppe"
 
 msgid "ui.role.voodoo_priester.lex.wolf"
 msgstr "nein"
@@ -5438,7 +5441,7 @@ msgid "ui.role.voodoo_priester.lex.ability"
 msgstr "Gibt nachts einer anderen Person eine geheime Puppe. Stirbt er, stirbt stattdessen die Puppe. Gewinnt allein unter den letzten drei."
 
 msgid "ui.role.voodoo_priester.lex.timing"
-msgstr "Höchstens eine lebende Puppe je Priester. Ist keine mehr da, darf er in der nächsten Nacht eine neue vergeben, ohne Abklingzeit, freiwillig."
+msgstr "Höchstens eine lebende Puppe je Priester. Ist keine mehr da, vergibt er in der nächsten Nacht eine neue, ohne Abklingzeit. Er wählt immer eine Person, einen Verzicht gibt es nicht."
 
 msgid "ui.role.voodoo_priester.lex.targets"
 msgstr "Eine andere lebende Person, nie er selbst. Geheim: außer dem Priester weiß es nur der Spielleiter, die Puppe erfährt es nicht vorab."

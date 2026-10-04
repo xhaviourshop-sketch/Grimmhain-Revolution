@@ -40,6 +40,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, "shown", true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -66,7 +70,7 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			if answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			else:
 				cmd = _auto(s)
 		else:
@@ -149,7 +153,7 @@ func test_catalog_entry() -> void:
 func test_marks_three_other_living_in_night_one_only() -> void:
 	var s := _state([FW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [8])
 	s = _ok(s, Command.start_night(), "Nacht")
-	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
+	s = _ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Schicksalswolf") if s != null else null
 	if s == null:
 		return

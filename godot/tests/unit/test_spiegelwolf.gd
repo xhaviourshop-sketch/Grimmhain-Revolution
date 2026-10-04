@@ -23,9 +23,10 @@ func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
 	return out
 
 
-## Nacht 1 ohne Opfer, danach Tag 1 (nur Rudelschritt im Nachtplan).
+## Nacht 1, danach Tag 1 (nur Rudelschritt im Nachtplan). Das Rudel tötet 5; die Person wird sofort wiederbelebt, damit der Tag mit
+## allen Lebenden beginnt wie in der Vorgabe.
 func _to_day(start: Command = null) -> Array[Command]:
-	return [start if start != null else _m6(), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()]
+	return [start if start != null else _m6(), Command.start_night(), Command.answer_prompt(1, [5]), Command.end_night(), _gm("revive", {"target_id": 5})]
 
 
 func _day1(nominator: int, nominee: int, start: Command = null) -> Array[Command]:
@@ -104,7 +105,7 @@ func test_production_role() -> void:
 func test_oracle_sees_werewolf() -> void:
 	# 5, AS-R10
 	var s := Fixtures.play([Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "das-orakel", "amalia", "detektiv"]),
-		Command.start_night(), Command.answer_prompt(1, []), Command.begin_step("night:1:1:das-orakel:4"), Command.answer_stage_targets(2, "target", [2])] as Array[Command])
+		Command.start_night(), Command.answer_prompt(1, [5]), Command.begin_step("night:1:1:das-orakel:4"), Command.answer_stage_targets(2, "target", [2])] as Array[Command])
 	assert_true(s != null and s.pending_prompt != null, "Orakel hat geprüft")
 	if s != null and s.pending_prompt != null:
 		assert_true(str(s.pending_prompt.partial["truth_role"]) == "spiegelwolf" and str(s.pending_prompt.partial["determined_role"]) == "werwolf", "Wahrheit spiegelwolf, ermittelt werwolf")
@@ -143,14 +144,16 @@ func test_mirror_on_execution() -> void:
 
 func test_revive_resets_mirror() -> void:
 	# 12, 13, 32, AS-R29
-	var commands := _concat(_day1(4, 2), [Command.decide_execution(2), Command.end_day(), Command.start_night(), Command.answer_prompt(2, []),
-		Command.end_night(), Command.nominate(3, 2), Command.decide_execution(2)] as Array[Command])
+	# Acht Personen: Das Rudel muss jede Nacht töten; ohne zwei zusätzliche Dorfpersonen entstünde durch sein Opfer sofort Parität.
+	var start := Fixtures.start_roles(["werwolf", "spiegelwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "nachtwaechter", "waechter-am-tor"])
+	var commands := _concat(_day1(4, 2, start), [Command.decide_execution(2), Command.end_day(), Command.start_night(), Command.answer_prompt(2, [7]),
+		Command.end_night(), _gm("revive", {"target_id": 7}), Command.nominate(3, 2), Command.decide_execution(2)] as Array[Command])
 	var day2 := _replay_ok(commands, "zweite Hinrichtung")
 	if not day2.ok:
 		return
 	_expect_lynched(day2.state, "Tag 2")
-	commands.append_array([_gm("revive", {"target_id": 2}), Command.end_day(), Command.start_night(), Command.answer_prompt(3, []), Command.end_night(),
-		Command.nominate(5, 2)] as Array[Command])
+	commands.append_array([_gm("revive", {"target_id": 2}), Command.end_day(), Command.start_night(), Command.answer_prompt(3, [7]), Command.end_night(),
+		_gm("revive", {"target_id": 7}), Command.nominate(5, 2)] as Array[Command])
 	var before := _replay_ok(commands, "nach Wiederbelebung")
 	if not before.ok:
 		return
@@ -167,7 +170,7 @@ func test_no_nomination_and_foreign_nominations() -> void:
 	# 14, 15, 16, 21, AS-R31
 	var cases := {
 		"keine Nominierung": _to_day(),
-		"Nominierung aus früherem Tag": _concat(_day1(4, 2), [Command.decide_execution(-1), Command.end_day(), Command.start_night(), Command.answer_prompt(2, []), Command.end_night()] as Array[Command]),
+		"Nominierung aus früherem Tag": _concat(_day1(4, 2), [Command.decide_execution(-1), Command.end_day(), Command.start_night(), Command.answer_prompt(2, [5]), Command.end_night(), _gm("revive", {"target_id": 5})] as Array[Command]),
 		"andere Person nominiert": _day1(4, 3),
 	}
 	for label: String in cases:
@@ -200,7 +203,8 @@ func test_self_nomination() -> void:
 	assert_eq(String(run.state.players[2].death.cause), "SPIEGELWOLF_RETALIATE", "Ursache Spiegelung")
 	assert_eq(int(run.state.players[2].death.source_id), 2, "Quelle er selbst")
 	assert_eq(_uses(run.state, 2), 1, "verbraucht")
-	assert_eq(events_of_type(run.events, "SeatDied").size(), 1, "genau ein Tod")
+	var deaths := events_of_type(run.events, "SeatDied").filter(func(e: GameEvent) -> bool: return int(e.data["target_id"]) != 5)  # 5: Rudelopfer der Nacht, wiederbelebt
+	assert_eq(deaths.size(), 1, "genau ein Tod")
 	assert_eq(events_of_type(run.events, "ExecutionRedirected").size(), 1, "eine Umleitung, keine Rekursion")
 	assert_eq(events_json(RulesEngine.replay(commands).events), events_json(run.events), "Replay bytegleich")
 
@@ -237,8 +241,8 @@ func test_mirror_target_reaper_reacts() -> void:
 func test_event_order_with_child_and_reaper() -> void:
 	# 24, 25: 3 ist Sensenträger und Vorbild des Wolfskinds 6.
 	var start := Fixtures.start_roles(["werwolf", "spiegelwolf", "sensentraeger", "dorfbewohner", "amalia", "wolfskind"])
-	var s := Fixtures.play([start, Command.start_night(), Command.answer_prompt(1, [3]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, []),
-		Command.end_night(), Command.nominate(3, 2)] as Array[Command])
+	var s := Fixtures.play([start, Command.start_night(), Command.answer_prompt(1, [3]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, [5]),
+		Command.end_night(), _gm("revive", {"target_id": 5}), Command.nominate(3, 2)] as Array[Command])
 	var r := apply_ok(s, Command.decide_execution(2), "Hinrichtung")
 	assert_eq(_types(r.events, ["ExecutionConfirmed", "ExecutionRedirected", "SeatDied", "WolfChildTransformed", "ReactionQueued", "WinStatusProvisional"]),
 		["ExecutionConfirmed", "ExecutionRedirected", "SeatDied", "WolfChildTransformed", "ReactionQueued", "WinStatusProvisional"] as Array[String], "Reihenfolge")
@@ -326,7 +330,7 @@ func test_parity_and_village_win() -> void:
 	if parity.ok:
 		assert_true(sole_candidate(parity.state) != null and String(sole_candidate(parity.state).kind) == "wolves" and int(sole_candidate(parity.state).reason_args["wolves"]) == 2, "Spiegelwolf zählt")
 	var alone := Fixtures.start_roles(["spiegelwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
-	var village := _replay_ok([alone, Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), _gm("execute", {"target_id": 1})] as Array[Command], "letzter Wolf")
+	var village := _replay_ok([alone, Command.start_night(), Command.answer_prompt(1, [2]), Command.end_night(), _gm("execute", {"target_id": 1})] as Array[Command], "letzter Wolf")
 	if village.ok:
 		assert_true(sole_candidate(village.state) != null and String(sole_candidate(village.state).kind) == "village", "Dorfsieg")
 

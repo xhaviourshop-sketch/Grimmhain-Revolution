@@ -65,15 +65,15 @@ func test_ranger_counts_living_wolf_persons_now() -> void:
 
 func test_ranger_every_night_and_marked_ranger_sleeps() -> void:
 	var cmds: Array[Command] = [_start(["werwolf", WL, "waldhexe", "dorfbewohner", "amalia", "detektiv"]), Command.start_night(),
-		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:waldhexe:3"), Command.answer_choice(2, "poison", false),
+		Command.answer_prompt(1, [6]), Command.begin_step("night:1:1:waldhexe:3"), Command.answer_choice(2, "heal", false), Command.answer_choice(2, "poison", false),
 		Command.answer_choice(2, "confirm", true), Command.begin_step("night:1:2:waldlaeufer:2"), Command.answer_choice(3, "shown", true),
-		Command.end_night(), Command.decide_execution(-1), Command.end_day(), Command.start_night()]
+		Command.end_night(), CorrectionFixtures.gm("revive", {"target_id": 6}, "Test"), Command.decide_execution(-1), Command.end_day(), Command.start_night()]
 	var run := _run(cmds, "Nacht 2")
 	if not run.ok:
 		return
 	assert_true(run.state.night_plan.has(&"waldlaeufer:2"), "Schritt auch in Nacht 2")
 	# Nacht 2: Waldhexe vergiftet den Waldläufer (Schritt 5.4 nach 3.4) → er wacht nicht mehr auf.
-	cmds.append_array([Command.skip_step("night:2:0:pack", "kein Opfer"), Command.begin_step("night:2:1:waldhexe:3"), Command.answer_choice(5, "poison", true),
+	cmds.append_array([Command.answer_prompt(4, [6]), Command.begin_step("night:2:1:waldhexe:3"), Command.answer_choice(5, "heal", false), Command.answer_choice(5, "poison", true),
 		Command.answer_stage_targets(5, "poison_target", [2]), Command.answer_choice(5, "confirm", true)])
 	run = _run(cmds, "Gift")
 	if run.ok:
@@ -83,7 +83,7 @@ func test_ranger_every_night_and_marked_ranger_sleeps() -> void:
 
 func test_ranger_corrupt_count_rejected() -> void:
 	var s := _run([_start(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", WL]), Command.start_night(),
-		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:waldlaeufer:6")] as Array[Command], "Prompt").state
+		Command.answer_prompt(1, [5]), Command.begin_step("night:1:1:waldlaeufer:6")] as Array[Command], "Prompt").state
 	if s == null:
 		return
 	var st: Dictionary = s.to_dict()
@@ -99,7 +99,7 @@ func _doctor(roles: Array, a: int, b: int, before: Array[Command] = [], appearan
 	# Wolfskind 8 erhält vorab ein Vorbild, damit sein Auswahlschritt nicht vor dem Rudel liegt.
 	var cmds: Array[Command] = [_start(roles, appearances), _gm("set_wolf_model", {"child_id": 8, "target_id": 4})]
 	cmds.append_array(before)
-	cmds.append_array([Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:doktor:2"),
+	cmds.append_array([Command.start_night(), Command.answer_prompt(1, [1]), Command.begin_step("night:1:1:doktor:2"),
 		Command.answer_stage_targets(2, "targets", [a, b])])
 	var run := _run(cmds, "Doktor %d/%d" % [a, b])
 	if not run.ok:
@@ -126,7 +126,7 @@ func test_doctor_same_team_rules() -> void:
 
 func test_doctor_invalid_targets_cancel_and_corrupt() -> void:
 	var s := _run([_start(["werwolf", DK, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _gm("kill", {"target_id": 6, "trigger_effects": false}),
-		Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:doktor:2")] as Array[Command], "Prompt").state
+		Command.start_night(), Command.answer_prompt(1, [5]), Command.begin_step("night:1:1:doktor:2")] as Array[Command], "Prompt").state
 	if s == null:
 		return
 	apply_rejected(s, Command.answer_stage_targets(2, "targets", [2, 3]), "invalid_target", "nicht sich selbst")
@@ -145,7 +145,7 @@ func test_doctor_invalid_targets_cancel_and_corrupt() -> void:
 
 func test_no_leak_public() -> void:
 	var run := _run([_start(["werwolf", DK, WL, "dorfbewohner", "amalia", "detektiv"]), Command.start_night(),
-		Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:doktor:2"), Command.answer_stage_targets(2, "targets", [1, 4]),
+		Command.answer_prompt(1, [6]), Command.begin_step("night:1:1:doktor:2"), Command.answer_stage_targets(2, "targets", [1, 4]),
 		Command.answer_choice(2, "shown", true), Command.begin_step("night:1:2:waldlaeufer:3"), Command.answer_choice(3, "shown", true), Command.end_night()] as Array[Command], "Partie")
 	if run.ok:
 		for e: GameEvent in run.events:

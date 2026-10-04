@@ -662,6 +662,9 @@ static func begin_night(ctx: RuleContext) -> void:
 	if not s.death_cards:
 		return
 	s.cardsys["abilities"] = (s.cardsys["abilities"] as Array).filter(func(a: Dictionary) -> bool: return int(a["night"]) >= s.night_number or int(a["night"]) == CardFxSolo.PERM)
+	for mark: Dictionary in s.fire_marks.duplicate():  # RM-DR-131.7: eine nur per Karte geliehene Fähigkeit endet, die Markierung mit ihr
+		if not SoloRules.acts_as(s, int(mark["devil_id"]), RoleCatalog.FEUERTEUFEL):
+			SoloRules.drop_fire_mark(s, int(mark["devil_id"]))
 	s.cardsys["pack_extra"] = []
 	CardEffects.on_night_start(ctx)
 	# Geblendetes Rudel (Schattenmantel, Dorf): ein zufälliges Opfer, auch ein Wolf, ersetzt die Zielwahl des Rudels (KS-107).

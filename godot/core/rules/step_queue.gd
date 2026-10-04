@@ -78,9 +78,9 @@ const SKIPPABLE_BY_KIND := {
 	PACK: true,                        # Rudel: kein Angriff, nur mit Grund
 	PACK2: true,                       # zweiter Rudelschritt wie das Rudel
 	RoleCatalog.SCHATTENHUND: false,   # Verzicht ist eine Antwort
-	RoleCatalog.ALBTRAUMWOLF: false,   # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.ALBTRAUMWOLF: false,   # Pflichtwahl einer anderen Person (kein Verzicht)
 	RoleCatalog.GIFTWOLF: false,       # Verzicht ist eine Antwort (0 Ziele)
-	RoleCatalog.HENKER: false,         # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.HENKER: false,         # Pflichtwahl (kein Verzicht)
 	RoleCatalog.SCHUTZENGEL: false,    # Pflichtauswahl (DR-05)
 	RoleCatalog.WALDHEXE: false,       # Verzicht auf beide Tränke ist eine Antwort im eigenen Prompt (DR-06)
 	RoleCatalog.ORAKEL: false,         # Pflichtprüfung einer anderen lebenden Person (DR-07)
@@ -92,7 +92,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.DOKTOR: false,         # Pflichtprüfung (wie Orakel)
 	RoleCatalog.FAEHRTENLESER: false,  # Verzicht ist eine Antwort im Prompt
 	RoleCatalog.KORRUPTER_RICHTER: false,  # Verzicht ist eine Antwort (0 Ziele)
-	RoleCatalog.SPUERHUND: false,      # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.SPUERHUND: false,      # Pflichtwahl genau dreier Personen (kein Verzicht)
 	RoleCatalog.PARASIT: false,        # Behalten ist eine Antwort (0 Ziele)
 	RoleCatalog.TRAUMDEUTER: false,    # Pflichtinformation (Spielleiter wählt drei Personen)
 	RoleCatalog.KOPFGELDJAEGER: false, # Pflichtinformation je offener Liste
@@ -105,11 +105,11 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SCHUTZGEIST: false,    # Pflichtwahl einer lebenden Person
 	RoleCatalog.VERDAMMNISWAECHTER: false,  # Pflichturteil zwischen zwei Personen
 	RoleCatalog.MAERTYRERIN: false,    # Verzicht ist eine Antwort (0 Ziele)
-	RoleCatalog.LOKI: false,           # Verzicht ist eine Antwort (0 Ziele)
+	RoleCatalog.LOKI: false,           # Pflichtwahl genau zweier Personen (kein Verzicht)
 	RoleCatalog.ROTKAEPPCHEN: false,   # Pflichtfrage nach Zuflucht
 	RoleCatalog.SCHWARZE_WITWE: false, # Pflichtwahl
 	RoleCatalog.SCHATTENWANDERER: false,  # „noch nicht“ ist eine Antwort (0 Ziele)
-	RoleCatalog.KOENIG_LYKAON: false,  # Verschieben ist eine Antwort (0 Ziele, höchstens dreimal)
+	RoleCatalog.KOENIG_LYKAON: false,  # Verschieben ist eine Antwort (0 Ziele) in Nacht 1 und 2, in Nacht 3 Pflicht
 	RoleCatalog.SEELENTAUSCHER: false,  # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.KUTSCHER: false,       # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.FRANKENSTEIN: false,   # Verzicht ist eine Antwort (0 Ziele)
@@ -117,8 +117,8 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.PESTBRINGERIN: false,  # Pflichtwahl
 	RoleCatalog.PROPHET: false,        # Markieren Pflicht, Töten mit Verzicht (0 Ziele)
 	RoleCatalog.TODESPREDIGER: false,  # Pflichtvorhersage
-	RoleCatalog.FEUERTEUFEL: false,    # Behalten ist eine Antwort (0 Ziele)
-	RoleCatalog.VOODOO: false,         # Verzicht ist eine Antwort (0 Ziele, E-21)
+	RoleCatalog.FEUERTEUFEL: false,    # Pflichtwahl (dieselbe Person erneut = behalten)
+	RoleCatalog.VOODOO: false,         # Pflichtwahl einer Person (kein Verzicht)
 	RoleCatalog.NEKROMANT: false,      # Verzicht ist eine Antwort (0 Tote)
 	RoleCatalog.HADES: false,          # Verzicht ist eine Antwort (0 Ziele, keine Barriere)
 	RoleCatalog.GRABRAEUBER: false,    # Verzicht ist eine Antwort (0 Tote)
@@ -126,7 +126,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.RACHSUECHTIGER_WOLF: false,  # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.ZEITWAECHTER: false,   # Nein ist eine Antwort
 	RoleCatalog.KARTENSCHLUCKER: false,  # Nichtstun ist eine Antwort (Kopfschütteln)
-	KIND_REACTION: false,              # Pflichtreaktion, Verzicht ist eine Antwort (DR-09)
+	KIND_REACTION: false,              # Pflichtreaktion, kein Verzicht (DR-09, DA Nachtschritte neu)
 }
 
 
@@ -185,7 +185,7 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue  # handelt nur tot (unten)
 		if role == RoleCatalog.SCHATTENWANDERER and p.ability_uses.has("schattenwanderer:link"):
 			continue
-		if role == RoleCatalog.KOENIG_LYKAON and p.ability_uses.has(BondSteps.LYCAON_USE_KEY):
+		if role == RoleCatalog.KOENIG_LYKAON and (p.ability_uses.has(BondSteps.LYCAON_USE_KEY) or s.night_number > RoleCatalog.LYCAON_LAST_NIGHT):
 			continue
 		if role == RoleCatalog.SEELENTAUSCHER and p.ability_uses.has(BondSteps.SWAP_USE_KEY):
 			continue
@@ -306,12 +306,14 @@ static func core_drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # Vorbild schon gesetzt oder verwandelt
 	if step_role(key) == RoleCatalog.LEHRLING and not (ApprenticeRules.needs_selection(s, actor) and ApprenticeRules.can_select(s, actor)):
 		return &"no_decision"  # schon gebunden oder weniger als drei andere Lebende
-	if [RoleCatalog.ORAKEL, RoleCatalog.SCHUTZENGEL, RoleCatalog.WOLFSKIND].has(step_role(key)) and s.alive_ids().size() < 2:
+	if [RoleCatalog.ORAKEL, RoleCatalog.SCHUTZENGEL, RoleCatalog.WOLFSKIND, RoleCatalog.HENKER, RoleCatalog.ALBTRAUMWOLF].has(step_role(key)) and s.alive_ids().size() < 2:
 		return &"no_decision"  # Pflichtwahl einer anderen lebenden Person unmöglich
 	if step_role(key) == RoleCatalog.FAEHRTENLESER and InfoSteps.tracker_used(s.players[actor]):
 		return &"no_decision"  # in diesem Leben schon genutzt
 	if step_role(key) == RoleCatalog.DOKTOR and s.alive_ids().size() < 3:
 		return &"no_decision"  # keine zwei anderen Lebenden
+	if step_role(key) == RoleCatalog.SPUERHUND and not InfoSteps.hound_lost(s.players[actor]) and s.alive_ids().size() < InfoSteps.HOUND_PICKS + 1:
+		return &"no_decision"  # die Karte verlangt genau drei andere Lebende
 	if (step_role(key) == RoleCatalog.TRAUMDEUTER or step_role(key) == RoleCatalog.KOPFGELDJAEGER) and not InfoSteps.triple_possible(s, actor):
 		return &"no_decision"  # keine drei anderen Lebenden mit mindestens einem Wolf
 	if step_role(key) == RoleCatalog.KOPFGELDJAEGER and int(s.bounty_credits.get(actor, 0)) < 1:
@@ -332,7 +334,7 @@ static func core_drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # keine andere lebende Person
 	if step_role(key) == RoleCatalog.SCHATTENWANDERER and s.players[actor].ability_uses.has("schattenwanderer:link"):
 		return &"no_decision"
-	if step_role(key) == RoleCatalog.KOENIG_LYKAON and (s.players[actor].ability_uses.has(BondSteps.LYCAON_USE_KEY) or BondSteps.lycaon_allies(s, actor).is_empty() or BondSteps.lycaon_targets(s).is_empty()):
+	if step_role(key) == RoleCatalog.KOENIG_LYKAON and (s.players[actor].ability_uses.has(BondSteps.LYCAON_USE_KEY) or s.night_number > RoleCatalog.LYCAON_LAST_NIGHT or BondSteps.lycaon_allies(s, actor).is_empty() or BondSteps.lycaon_targets(s).is_empty()):
 		return &"no_decision"  # ohne lebenden Verbündeten zählt die Nacht nicht (V-09)
 	if step_role(key) == RoleCatalog.SEELENTAUSCHER and s.players[actor].ability_uses.has(BondSteps.SWAP_USE_KEY):
 		return &"no_decision"
@@ -420,8 +422,9 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	prompt.max_count = 1
 	prompt.allowed_ids = s.alive_ids()
 	if is_reaction_step(step_id):
-		# Pflichtreaktion: 0 Ziele = Verzicht (DR-09); nicht abbrechbar. Der Besitzer ist
-		# nie Ziel seiner eigenen Reaktion, auch nicht nach einer Wiederbelebung.
+		# Pflichtreaktion (DA-Nachtschritte-neu: kein Verzicht, wo die Karte keinen vorsieht); nicht abbrechbar.
+		# Nur ohne mögliches Ziel sind 0 Ziele erlaubt. Der Besitzer ist nie Ziel seiner eigenen Reaktion,
+		# auch nicht nach einer Wiederbelebung.
 		prompt.owner = PendingPrompt.OWNER_REACTION
 		prompt.actor_id = s.reactions[0].owner_id
 		prompt.allowed_ids.erase(prompt.actor_id)
@@ -429,11 +432,10 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		if s.reactions[0].kind == Reaction.KIND_KNIGHT:
 			# Ritter bei Gleichstand: Pflichtwahl unter den jetzt gleich nahen Wölfen.
 			prompt.allowed_ids = Seats.closest_wolves(s, prompt.actor_id)
-			prompt.min_count = 1 if not prompt.allowed_ids.is_empty() else 0
 		elif s.reactions[0].kind == Reaction.KIND_SMITH:
 			# Schmiedewaffe: der Spielleiter wählt einen lebenden Wolf, der stirbt (S-06).
 			prompt.allowed_ids = prompt.allowed_ids.filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)
-			prompt.min_count = 1 if not prompt.allowed_ids.is_empty() else 0
+		prompt.min_count = 1 if not prompt.allowed_ids.is_empty() else 0
 	elif step_kind(step_id) == RoleCatalog.WALDHEXE:
 		# Waldhexe: mehrstufige, atomare Kette (WitchStep).
 		WitchStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
@@ -465,10 +467,12 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 				if SoloRules.prophet_marking(s, solo_actor):
 					prompt.min_count = RoleCatalog.PROPHET_MARKS
 					prompt.max_count = RoleCatalog.PROPHET_MARKS
-			RoleCatalog.FEUERTEUFEL:  # eine andere Lebende neu markieren oder behalten (0 Ziele)
+			RoleCatalog.FEUERTEUFEL:  # jede Nacht genau eine andere Lebende markieren (die Karte nennt keinen Verzicht)
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
-			RoleCatalog.VOODOO:  # Puppe: eine andere Lebende oder verzichten (E-14, E-21)
+				prompt.min_count = 1
+			RoleCatalog.VOODOO:  # Puppe: genau eine andere Lebende (die Karte nennt keinen Verzicht)
 				prompt.allowed_ids = SoloRules.fire_targets(s, solo_actor)
+				prompt.min_count = 1
 			RoleCatalog.RACHSUECHTIGER_WOLF:  # einen anderen lebenden Wolf reißen oder verzichten (DA-17)
 				prompt.allowed_ids = SoloRules.lone_targets(s, solo_actor)
 			RoleCatalog.SCHICKSALSWOLF:  # Nacht 1: genau drei andere markieren; Nacht 4: bis zu so viele Zusatzopfer
@@ -525,12 +529,14 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.owner = PendingPrompt.OWNER_HANGMAN
 		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
 		prompt.allowed_ids.erase(prompt.actor_id)
+		prompt.min_count = 1  # Karte: „nach 3 Hinrichtungen markiert er jede Nacht ein Ziel“, kein Verzicht
 		prompt.cancellable = true
 	elif step_kind(step_id) == RoleCatalog.ALBTRAUMWOLF or step_kind(step_id) == RoleCatalog.GIFTWOLF:
-		# Albtraumwolf blockiert, Giftwolf vergiftet: freiwillig eine andere lebende Person.
+		# Albtraumwolf blockiert jede Nacht genau eine andere Person (kein Verzicht); Giftwolf vergiftet freiwillig.
 		prompt.owner = PendingPrompt.OWNER_NIGHTMARE if step_kind(step_id) == RoleCatalog.ALBTRAUMWOLF else PendingPrompt.OWNER_POISON_WOLF
 		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
 		prompt.allowed_ids.erase(prompt.actor_id)
+		prompt.min_count = 1 if step_kind(step_id) == RoleCatalog.ALBTRAUMWOLF else 0
 		prompt.cancellable = true
 	elif step_kind(step_id) == RoleCatalog.PARASIT:
 		# Parasit: freiwillig einen anderen lebenden Wirt wählen; 0 Ziele = bisherigen Wirt behalten.
@@ -551,9 +557,11 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.min_count = 1
 		prompt.cancellable = true
 	elif s.night_plan[s.next_night_step] == PACK:
-		# Rudelschritt: 0 Ziele = ausdrücklich „kein Opfer“; jede lebende Person (rules-register §2).
+		# Rudelschritt: die Wölfe töten jede Nacht ein Opfer, kein „Kein Opfer“; einigen sie sich nicht, tippt
+		# der Spielleiter das Opfer an. Jede lebende Person ist wählbar (rules-register §2).
 		prompt.owner = PendingPrompt.OWNER_PACK
 		prompt.actor_id = -1
+		prompt.min_count = 1
 		prompt.cancellable = true
 		CardHooks.shape_pack_prompt(s, prompt)
 	else:

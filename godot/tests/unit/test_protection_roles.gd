@@ -43,6 +43,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, "shown", true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -65,7 +69,7 @@ func _night(s: GameState, victim: int, answers: Dictionary = {}) -> GameState:
 			var p := s.pending_prompt
 			var key := p.step_id.get_slice(":", 3) + (":" + p.step_id.get_slice(":", 4) if p.step_id.get_slice_count(":") > 4 else "")
 			if p.owner == PendingPrompt.OWNER_PACK:
-				s = _ok(s, Command.answer_prompt(p.id, [victim] if victim != -1 else []), "Rudel")
+				s = _ok(s, Command.answer_prompt(p.id, [victim]) if victim != -1 else Command.skip_step(p.step_id, "Test: ruhige Nacht"), "Rudel")
 			elif answers.has(key) and p.stage == &"":
 				s = _ok(s, Command.answer_prompt(p.id, answers[key]), "Antwort %s" % key)
 			else:

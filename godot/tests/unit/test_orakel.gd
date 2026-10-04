@@ -36,7 +36,7 @@ func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
 ## Nacht 1 bis zum begonnenen Orakelschritt: Schutz auf 6, Rudel ohne Opfer.
 func _to_oracle(start: Command = null) -> Array[Command]:
 	return [start if start != null else _o6(), Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step(PACK_1),
-		Command.answer_prompt(2, []), Command.begin_step(ORACLE_1)]
+		Command.answer_prompt(2, [6]), Command.begin_step(ORACLE_1)]
 
 
 func _target(id: int, prompt_id: int = ORACLE_PROMPT) -> Command:
@@ -114,7 +114,7 @@ func test_multiple_oracles_by_id() -> void:
 	# 3
 	var s := Fixtures.play(Fixtures.with_copies(["werwolf", "blutwolf", "das-orakel", "dorfbewohner", "das-orakel", "amalia"], [Command.start_night()] as Array[Command]) as Array[Command])
 	assert_eq(s.night_plan, [&"pack", &"das-orakel:3", &"das-orakel:5"] as Array[StringName], "nach Personen-ID")
-	s = apply_ok(s, Command.answer_prompt(1, []), "Rudel").state
+	s = apply_ok(s, Command.answer_prompt(1, [4]), "Rudel").state
 	s = apply_ok(s, Command.begin_step("night:1:1:das-orakel:3"), "erstes Orakel").state
 	assert_eq(int(s.pending_prompt.actor_id), 3, "erstes Orakel handelt")
 	s = apply_ok(apply_ok(s, _target(6, 2), "Ziel").state, _shown(2), "Gezeigt").state
@@ -155,7 +155,7 @@ func test_new_oracle_during_night_acts_next_night() -> void:
 	var s := Fixtures.play([_o6(), Command.start_night(), Command.answer_prompt(1, [6])] as Array[Command])
 	var r := apply_ok(s, CorrectionFixtures.gm("set_role", {"target_id": 5, "role_id": "das-orakel"}), "5 wird Orakel")
 	assert_eq(r.state.night_plan, s.night_plan, "Nachtplan unverändert")
-	var rest: Array[Command] = [Command.begin_step(PACK_1), Command.answer_prompt(2, []), Command.begin_step(ORACLE_1), _target(6), _shown(),
+	var rest: Array[Command] = [Command.begin_step(PACK_1), Command.answer_prompt(2, [6]), Command.begin_step(ORACLE_1), _target(6), _shown(),
 		Command.end_night(), Command.decide_execution(-1), Command.end_day(), Command.start_night()]
 	var state := r.state
 	for c: Command in rest:
@@ -293,7 +293,7 @@ func test_override_validation() -> void:
 	apply_rejected(s, _override("dorfbewohner", "x", true, 9), "prompt_mismatch", "falscher Prompt")
 	var done := apply_ok(s, _shown(), "Gezeigt").state
 	apply_rejected(done, _override("dorfbewohner"), "no_open_prompt", "nach Bestätigung")
-	var witch := Fixtures.play([_b6(), Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step(PACK_1), Command.answer_prompt(2, []),
+	var witch := Fixtures.play([_b6(), Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step(PACK_1), Command.answer_prompt(2, [6]),
 		Command.begin_step("night:1:2:waldhexe:5")] as Array[Command])
 	apply_rejected(witch, _override("dorfbewohner"), "not_overridable", "fremder Prompt")
 
@@ -463,7 +463,7 @@ func test_corrected_appearance_affects_later_checks() -> void:
 	var commands := _concat(_check(5), [Command.end_night(),
 		CorrectionFixtures.gm("set_role_field", {"target_id": 5, "field": "appears_as", "value": "werwolf"}, "Scheinrolle korrigiert"),
 		Command.decide_execution(-1), Command.end_day(), Command.start_night(), Command.answer_prompt(4, [6]),
-		Command.begin_step("night:2:1:pack"), Command.answer_prompt(5, []), Command.begin_step("night:2:2:das-orakel:4"),
+		Command.begin_step("night:2:1:pack"), Command.answer_prompt(5, [6]), Command.begin_step("night:2:2:das-orakel:4"),
 		_target(5, 6), _shown(6)] as Array[Command])
 	var run := _replay_ok(commands, "zwei Nächte")
 	if not run.ok:

@@ -408,7 +408,7 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs B-01 bis B-08, R-01 bis R-04). Es gelten: Todesfolgen ohne Entscheidung wirken sofort (RM-DR-009.1 = A), eine durch einen Tod beendete Bindung bleibt nach Wiederbelebung beendet (RM-DR-011.2), Nachttode mit Markierung in der Morgenauflösung.
 
 - **Loki, Zeitpunkt (B-01):** B. Nur in Nacht 1 der Partie (wie RM-DR-014); verpasst er sie, verfällt die Fähigkeit.
-- **Loki, Wahl (B-05):** B. Freiwillig; wählt er, dann zwei verschiedene lebende Personen, er selbst erlaubt, als Liebende oder Rivalen. Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache; Schutz gegen den Rudelangriff hilft nicht, persönliche Schilde schon).
+- **Loki, Wahl (B-05, ersetzt durch DA-Nachtschritte-neu: immer genau 2):** B. Freiwillig; wählt er, dann zwei verschiedene lebende Personen, er selbst erlaubt, als Liebende oder Rivalen. Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache; Schutz gegen den Rudelangriff hilft nicht, persönliche Schilde schon).
 - **Loki, Rivalen (B-02, RM-DR-101.1):** A. Rivalen haben keine eigene Wirkung; sie zählen nur für die Schwarze Witwe.
 - **Schwarze Witwe, Wirkung (B-03):** A. Jede Nacht wählt sie eine andere lebende Person; gehört diese zu einem lebenden Liebes- oder Rivalenpaar, erhalten beide eine Todesmarkierung und sterben in der Morgenauflösung (Ursache Schwarze Witwe); sie wachen in dieser Nacht nicht mehr auf.
 - **Schwarze Witwe, Setup und Paar (B-06, RM-DR-113.1):** A. Die Pflicht „Loki im Spiel“ kommt mit der vertagten Setup-Prüfung; im Regelkern wirkt ihre Wahl nur, wenn Ziel und Partner leben. RM-DR-113.2 (Zeitwächter) wird mit dem Zeitwächter entschieden.
@@ -1247,3 +1247,26 @@ Geisterhand-Stellvertretung) fanden nie ein Ziel.
 
 **Offen und nicht entschieden (nicht erfunden):** Einzelfälle, die die Arbeitsliste ausdrücklich als offen führt, bleiben offen; dazu zählen
 Kombinationen mehrerer Karten, die dort nicht beantwortet sind. Nicht geprüft: Tablet, Touch, visuelle Abnahme, Audio.
+
+## DA-Nachtschritte-neu: Kartentext gilt, Pflichtwahlen (Markus, 04.10.2026)
+
+Grundlage: `docs/audit/NACHTSCHRITTE-72.csv` und `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md`. Diese Entscheidung ersetzt B-05 (Loki freiwillig)
+und alle widersprechenden Lexikon-Einträge. Die Karte gilt: Wo sie keinen Verzicht vorsieht, gibt es keinen Verzichten-Knopf.
+
+1. **Kein Verzicht** bei Loki (immer genau 2 Personen), Spürhund (immer genau 3), Albtraumwolf, Besessener Wolf, Dämonischer Wolf,
+   Feuerteufel, Henker, Sensenträger und Voodoo-Priester. Der Kern lehnt eine leere Antwort mit `invalid_target_count` ab. Ohne mögliches
+   Ziel (weniger Lebende als nötig) entfällt der Schritt (`no_decision`) beziehungsweise gibt es keine Reaktion. Beim Feuerteufel
+   bedeutet dieselbe Person erneut zu wählen: Markierung behalten.
+2. **Die Werwölfe töten jede Nacht ein Opfer.** Es gibt kein „Kein Opfer“. Einigen sie sich nicht, tippt der Spielleiter das Opfer an.
+   Der Befehl `SkipStep` für den Rudelschritt bleibt als Ausweg der Spielleitung mit Begründung im Kern erhalten (die Oberfläche bietet
+   ihn nicht an).
+3. **Lehrling:** Er wählt seinen Meister direkt (genau 1 andere lebende Person, eine Stufe). Stirbt der Meister, übernimmt der Lehrling
+   dessen Rolle (Erbe unverändert). Die Drei-Rollen-Auswahl und die Bestätigung entfallen; ältere Spielstände mitten in dieser Wahl
+   sind nicht mehr ladbar.
+4. **König Lykaon** wählt in einer der ersten drei Nächte. Er wird in jeder dieser Nächte gefragt, bis er gewählt hat, danach nie mehr.
+   In Nacht 1 und 2 darf er verschieben, in Nacht 3 muss er wählen. Rollentext in der App: „in einer der ersten drei Nächte“. Markus passt
+   den gedruckten Kartentext selbst an.
+
+**Folgefehler, die dabei gefunden und behoben wurden:** Ein per Totenreichkarte für eine Nacht geliehener Feuerteufel-Schritt hinterließ
+eine Markierung, die beim Laden abgelehnt wurde (die Markierung endet jetzt mit der geliehenen Fähigkeit). „Totale Anarchie“ stellte die
+Einsätze eines Grabräubers zurück, sein gespeicherter Diebstahl wurde dann beim Laden abgelehnt.

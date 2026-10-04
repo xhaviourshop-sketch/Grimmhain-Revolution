@@ -12,7 +12,7 @@ const UNLIMITED := -1
 const DORFBEWOHNER := &"dorfbewohner"
 const WERWOLF := &"werwolf"
 ## Sensenträger / Reaper (rules-register.md §7, DR-09): Dorf, kein Nachtschritt,
-## freiwillige Todesreaktion (Fluch auf eine lebende Person oder Verzicht).
+## Todesreaktion (Fluch auf eine lebende Person, kein Verzicht).
 const SENSENTRAEGER := &"sensentraeger"
 ## Schutzengel / Guardian Angel (rules-register.md §3, DR-05): Dorf, Nachtschritt vor
 ## dem Rudel, schützt eine andere lebende Person nur vor dem Wolfsangriff dieser Nacht.
@@ -70,7 +70,7 @@ const NACHTWAECHTER := &"nachtwaechter"
 ## Dorfwache / Village Guard (RM-DR-119): Dorf; der Rudelangriff tötet sie nicht (KillPipeline).
 const DORFWACHE := &"dorfwache"
 ## Besessener Wolf / Possessed Wolf (RM-DR-124): Wölfe; beim Tod mit mindestens 5 Lebenden (er
-## eingeschlossen) Reaktion: eine andere lebende Person mitreißen oder verzichten.
+## eingeschlossen) Reaktion: eine andere lebende Person mitreißen (kein Verzicht).
 const BESESSENER_WOLF := &"besessener-wolf"
 const POSSESSED_MIN_LIVING := 5
 ## Ritter / Knight (RM-DR-136): Dorf; stirbt er durch Wolfsangriff, stirbt der nächste Wolf (KillPipeline).
@@ -151,7 +151,8 @@ const SCHATTENWANDERER := &"schattenwanderer"
 const DAEMONISCHER_WOLF := &"daemonischer-wolf"
 ## König Lykaon / King Lycaon (V-03, V-08, V-09): Wölfe; macht eine Dorfperson zum Trugbilderwolf (BondSteps).
 const KOENIG_LYKAON := &"koenig-lykaon"
-const LYCAON_MAX_SKIPS := 3
+const LYCAON_LAST_NIGHT := 3  ## DA-Nachtschritte-neu: gewählt wird in einer der ersten drei Nächte; jede wird gefragt, bis er gewählt hat
+const LYCAON_MAX_SKIPS := LYCAON_LAST_NIGHT - 1  ## Nächte 1 und 2 darf er verschieben, in Nacht 3 muss er wählen
 ## Seelentauscher / Soul Swapper (V-04 bis V-06): Dorf; tauscht einmal die Rollen zweier Personen (BondSteps).
 const SEELENTAUSCHER := &"seelentauscher"
 ## Kutscher / Coachman (W-02, W-03): Dorf; ab 10 Toten einmal drei Tote wiederbeleben, einer wird Werwolf (BondSteps).
