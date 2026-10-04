@@ -30,7 +30,9 @@ var _box: GroveStyleBox = null
 ## `part`: Name des Hain-Teils, `margins`: dessen Neun-Felder-Ränder (GroveArtData).
 ## `inset`: Abstand der geglühten Form zum Rand des Trägers (links, oben, rechts, unten).
 ## `color`: Farbe des Glühens, ohne Angabe (Alpha 0) das Blutrot des Shaders.
-static func create(part: String, margins: Vector4, inset: Vector4 = Vector4.ZERO, color: Color = ThemeTokens.INVISIBLE) -> SelectionGlow:
+## `px_per_unit`: Texturpixel je logische Einheit des Teils (0 = `GroveArtData.TEXTURE_SCALE`).
+static func create(part: String, margins: Vector4, inset: Vector4 = Vector4.ZERO, color: Color = ThemeTokens.INVISIBLE, px_per_unit: float = 0.0) -> SelectionGlow:
+	var density := px_per_unit if px_per_unit > 0.0 else GroveArtData.TEXTURE_SCALE
 	var glow := SelectionGlow.new()
 	glow.name = "SelectionGlow"
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -40,10 +42,11 @@ static func create(part: String, margins: Vector4, inset: Vector4 = Vector4.ZERO
 	glow.offset_top = inset.y - PAD
 	glow.offset_right = PAD - inset.z
 	glow.offset_bottom = PAD - inset.w
-	var tex := _glow_texture(part)
+	var tex := _glow_texture(part, density)
 	if tex != null:
-		var grown := Vector4.ONE * PAD * GroveArtData.TEXTURE_SCALE
+		var grown := Vector4.ONE * PAD * density
 		glow._box = GroveStyleBox.make(tex, margins + grown)
+		glow._box.px_per_unit = density
 		glow.material = _material()
 		if color.a > 0.0:
 			(glow.material as ShaderMaterial).set_shader_parameter("glow_color", color)
@@ -52,12 +55,12 @@ static func create(part: String, margins: Vector4, inset: Vector4 = Vector4.ZERO
 
 
 ## Hängt ein Glühen an `host` (einmal) und schaltet es; ohne Bild (Teil fehlt) bleibt es unsichtbar.
-static func set_on(host: Control, part: String, margins: Vector4, on: bool, inset: Vector4 = Vector4.ZERO, color: Color = ThemeTokens.INVISIBLE) -> void:
+static func set_on(host: Control, part: String, margins: Vector4, on: bool, inset: Vector4 = Vector4.ZERO, color: Color = ThemeTokens.INVISIBLE, px_per_unit: float = 0.0) -> void:
 	var glow := host.get_node_or_null("SelectionGlow") as SelectionGlow
 	if glow == null:
 		if not on:
 			return
-		glow = create(part, margins, inset, color)
+		glow = create(part, margins, inset, color, px_per_unit)
 		host.add_child(glow)
 	glow.visible = on and glow._box != null
 
@@ -76,22 +79,23 @@ static func _material() -> ShaderMaterial:
 	return m
 
 
-static func _glow_texture(part: String) -> Texture2D:
-	if _textures.has(part):
-		return _textures[part]
+static func _glow_texture(part: String, density: float) -> Texture2D:
+	var key := "%s@%.2f" % [part, density]
+	if _textures.has(key):
+		return _textures[key]
 	var source := GroveSkin.texture(part)
 	var result: Texture2D = null
 	if source != null:
 		var img := source.get_image()
 		if img != null:
-			result = ImageTexture.create_from_image(_blurred(img))
-	_textures[part] = result
+			result = ImageTexture.create_from_image(_blurred(img, density))
+	_textures[key] = result
 	return result
 
 
 ## Alpha des Teils, um den Schein-Rand erweitert und weichgezeichnet; innerhalb der Form stark abgeschwächt (Schein liegt hinter dem Rahmen).
-static func _blurred(src: Image) -> Image:
-	var pad := int(PAD * GroveArtData.TEXTURE_SCALE)
+static func _blurred(src: Image, density: float) -> Image:
+	var pad := int(PAD * density)
 	var full_w := src.get_width() + pad * 2
 	var full_h := src.get_height() + pad * 2
 	var small := src.duplicate() as Image

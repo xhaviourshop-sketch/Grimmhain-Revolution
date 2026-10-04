@@ -5,6 +5,7 @@ extends RefCounted
 ## übersetzter Text des Steuerelements; die Bilder tragen keinen Text.
 
 const ROOT := "res://assets/ui/hain/"
+const TEAM_TILE_ROOT := "res://assets/ui/"  ## Team-Kachelrahmen `team_tile_village|wolves|solo` (WebP)
 const BUTTON_SIZE_PRIMARY := Vector2(214.0, 56.0)
 const BUTTON_SIZE_SECONDARY := Vector2(144.0, 56.0)
 const BUTTON_TEXT_INSET := 28.0   ## so weit reichen die Spitzen und Wurzeln in den Knopf; der Text bleibt innerhalb
@@ -23,7 +24,7 @@ static var _cache: Dictionary = {}
 static func texture(part: String) -> Texture2D:
 	if _cache.has(part):
 		return _cache[part]
-	var path := ROOT + part + ".png"
+	var path := TEAM_TILE_ROOT + part + ".webp" if part.begins_with("team_tile_") else ROOT + part + ".png"
 	var tex: Texture2D = load(path) as Texture2D if ResourceLoader.exists(path) else null
 	_cache[part] = tex
 	return tex

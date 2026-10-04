@@ -34,6 +34,7 @@ const PREP_SHOTS := [
 	["03-rollen-gefuellt", "_prep_roles_filled_random", "zufaellig"], ["03-rollen-gefuellt", "_prep_roles_filled_manual", "karten"],
 	["03-rollen-zuordnung", "_prep_assign", "karten"], ["03-rollen-leiste", "_prep_bar", "karten"],
 	["03-rollen-leiste-24", "_prep_bar_24", "karten"], ["03-rollen-gefuellt-24", "_prep_roles_filled_24", "zufaellig"],
+	["03-rollen-gefuellt-akt4", "_prep_roles_filled_akt4", "zufaellig"],
 ]
 const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
 
@@ -256,6 +257,12 @@ func _prep_bar_24(shell: AppShell) -> void:
 	if seat != null:
 		seat.pressed.emit()
 	await process_frame
+
+
+func _prep_roles_filled_akt4(shell: AppShell) -> void:
+	_shot_act = "akt4"
+	await _prep_roles(shell, false)
+	await _press(shell, "ProposalButton")
 
 
 func _prep_roles_filled_24(shell: AppShell) -> void:

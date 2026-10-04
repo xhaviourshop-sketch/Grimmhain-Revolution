@@ -10,6 +10,7 @@ var margins: Vector4 = Vector4.ZERO  ## links, oben, rechts, unten in Texturpixe
 var tint: Color = Color.WHITE
 var clasp: Vector2 = Vector2.ZERO  ## (Start, Breite) einer geschützten Mittelspange in Texturpixeln; nur waagerechte Leisten (Ränder oben und unten 0)
 var with_clasp: bool = true
+var px_per_unit: float = 0.0  ## > 0: Texturpixel je logische Einheit statt `GroveArtData.TEXTURE_SCALE` (Team-Kachelrahmen, auf die Kachelhöhe skaliert)
 var native_height: float = 0.0  ## > 0: die Fläche wird nicht höher als das Bild (in logischen Einheiten) gezeichnet, sondern mittig; die Tippfläche bleibt die ganze Höhe
 
 
@@ -23,7 +24,7 @@ static func make(p_texture: Texture2D, p_margins: Vector4, p_tint: Color = Color
 
 ## Ränder in logischen Einheiten.
 func edge(side: int) -> float:
-	return margins[side] / GroveArtData.TEXTURE_SCALE
+	return margins[side] / (px_per_unit if px_per_unit > 0.0 else GroveArtData.TEXTURE_SCALE)
 
 
 func _draw(to_canvas_item: RID, rect: Rect2) -> void:
