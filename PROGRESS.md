@@ -706,3 +706,7 @@ Verifikation: gezielt `prep_screen` 4, `ui_layout` 6, `ui_theme` 8 grün; Vollsu
 Merge: ohne Squash nach main, main gepusht. Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion).
 Nicht geprüft: Safari/iPad. Offen: nichts aus diesem Auftrag.
 
+## 2026-10-04: Marke einbauen (feature/marke)
+Stand: Wortmarke ersetzt `start-logo` in Startbildschirm, Hauptmenü (mit Vignette) und Ladebild; Siegel klein über der Wortmarke im Ladebild. App-Symbol aus dem Siegel auf nachtschwarzem rundem Grund (`godot/assets/app/app-symbol-{32,60,120,144,180,512}.png`, `config/icon`, PWA-Symbole im Exportpreset). Das große Siegel war bei 60 und 32 px verwaschen: bis 120 px gilt eine Klein-Fassung (Kopf größer, kreisrund maskiert, nur Ring, Kontrast höher), ab 144 px das unveränderte Siegel. `start-logo.webp` und die alten `app-icon-*` bleiben im Repo, im Register als ersetzt markiert. Quelle: `tools/build_brand_assets.py`, `docs/brand/MARKE.md` (das Projekt-Dokument "marken-blatt-grimmhain" war nicht lesbar, Kurzfassung stützt sich auf Design-Tafel und ThemeTokens).
+Verifikation: `ui_layout` 6 grün, Start-/Menü-Tests (`start`-Filter) 9 grün, `node tools/check-asset-register.js` konsistent, Screenshots 1024x768 geprüft, Kontaktbogen `Downloads/Grimmhain-P1-Nachtentwurf/marke/kontrolle-marke.png`. Keine Vollsuite (nur Oberfläche und Assets).
+Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 38823900 Byte wie lokal. Nicht geprüft: Safari/iPad, Favicon im Browser-Tab.

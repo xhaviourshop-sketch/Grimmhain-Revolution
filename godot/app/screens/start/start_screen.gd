@@ -3,7 +3,7 @@ extends BaseScreen
 ## Startbildschirm: lebendiger Nachthintergrund (StartBackdrop), Logo, „Eintreten“ als Hain-Knopf mit pulsierendem Glühen, Version aus
 ## zentraler Quelle. Beim Antippen zieht der Nebel kurz zu (0,6 s), dann folgt das Hauptmenü; bei reduzierter Bewegung sofort.
 
-const LOGO := "res://assets/start/start-logo.webp"
+const LOGO := "res://assets/brand/wortmarke.webp"
 const LOGO_MIN_WIDTH := 620.0
 const FOG_SECONDS := 0.6
 

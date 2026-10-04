@@ -7,6 +7,8 @@
 - Umsetzung/Testbefehle: `godot/README.md`; UI: `docs/ui/`; Medien: `docs/assets/` und `docs/masterplan/ASSET-REGISTER.md`.
 - Empfehlungen, Legacy-Verhalten und Implementierungsberichte sind keine Nutzerfreigaben. Widersprüche benennen; bereits entschiedene Fragen nicht erneut eröffnen.
 
+Alle Texte und Assets folgen docs/brand/MARKE.md.
+
 ## Arbeitsweise und Kontextbudget
 - Zu Beginn `git status --short`, Branch und HEAD feststellen. Danach Auftrag und betroffene Dateien eingrenzen. Keine automatische Vollanalyse aller Dokumente oder Nachbarprojekte.
 - Ein Umsetzungsauftrag autorisiert erforderliche lokale Änderungen. Nicht jeden Schritt erneut bestätigen lassen. Bei offenen Spielregeln/erheblichen Umfangsänderungen gezielt nachfragen; unabhängige Arbeit fortsetzen.
