@@ -27,10 +27,22 @@ func _cockpit(size: Vector2i, locale: String, roles: Array, hand_left: bool = fa
 
 
 ## Der Spielbeginn zeigt nur den großen Knopf in der Mitte (Testrunde 1); die Hauptaktion im Dock gibt es ab dem ersten Schritt der Nacht.
+## Feste Zielwahlen werden sofort übernommen und haben keine Hauptaktion; deshalb weiter bis zum ersten Schritt mit Aktionsknopf.
 func _begin_game(shell: Control) -> void:
 	var start := find_button(_screen(shell), "StartNightButton")
 	if start != null:
 		await press(start)
+		await frames(2)
+	for _i in 6:
+		if find_node(_screen(shell), "ActionCard").call("primary_button") != null:
+			return
+		var next := effective_of((session_of(shell).call("cockpit_view") as Dictionary).get("next", {}))
+		var allowed: Array = next.get("allowed_ids", [])
+		if str(next.get("answer")) != "targets" or allowed.is_empty():
+			return
+		var picks: Array = allowed.slice(0, int(next.get("max", 1)))
+		for id: Variant in picks:
+			await press(find_node(_screen(shell), "SeatRing").call("token_for", int(id)) as BaseButton)
 		await frames(2)
 
 
@@ -132,6 +144,7 @@ func test_button_choice_reaches_the_cockpit_after_a_real_restart() -> void:
 ## Neue App-Instanz wie beim echten Start mit Einstellungsdatei unter `path` (nie die echte Datei, keine echten Spielstände).
 func _launch(path: String) -> Control:
 	await resize(SIZE_16_10)
+	CockpitScreen.double_tap_msec = 0
 	var shell := (load(MAIN_SCENE) as PackedScene).instantiate() as Control
 	shell.set("quit_handler", func() -> void: quit_calls += 1)
 	var context := AppContext.new()
@@ -190,7 +203,8 @@ func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> voi
 	assert_eq(_seat_rects(shell), seats_before, "Plätze nach dem Rückwechsel unverändert")
 
 
-func test_open_selection_stays_valid_and_confirms_exactly_once() -> void:
+## Feste Zielwahl wird sofort übernommen (Rückgängig-Leiste); ein Seitenwechsel dabei sendet nichts und lässt die Leiste stehen.
+func test_side_change_during_undo_bar_sends_nothing_and_keeps_the_bar() -> void:
 	var shell := await _cockpit(SIZE_16_10, "de", Fixtures.unique_roles(7))
 	if shell == null:
 		return
@@ -201,33 +215,22 @@ func test_open_selection_stays_valid_and_confirms_exactly_once() -> void:
 	var allowed: Array = next2.get("allowed_ids", [])
 	assert_false(allowed.is_empty(), "erlaubte Ziele vorhanden")
 	var target := int(allowed[0])
-	await press(ring.call("token_for", target) as BaseButton)
-	var confirm := find_button(_screen(shell), "ConfirmTargetsButton")
-	assert_false(confirm.disabled, "Auswahl gültig vor dem Wechsel")
 	var commands_before := (session_of(shell).call("commands") as Array).size()
+	await press(ring.call("token_for", target) as BaseButton)
+	var sent: Array = (session_of(shell).call("commands") as Array)
+	assert_eq(sent.size(), commands_before + 1, "feste Anzahl erreicht: genau ein Befehl")
+	assert_eq((sent.back() as Command).payload["targets"], [target], "das gewählte Ziel")
+	var card := find_node(_screen(shell), "ActionCard")
+	assert_true(bool(card.call("undo_visible")), "Rückgängig-Leiste sichtbar")
 	var state_before := str(session_of(shell).call("state_hash"))
 	settings_of(shell).call("set_left_handed", true)
 	await frames(3)
-	confirm = find_button(_screen(shell), "ConfirmTargetsButton")
-	assert_false(confirm.disabled, "Auswahl bleibt gültig nach dem Wechsel")
-	assert_eq((session_of(shell).call("commands") as Array).size(), commands_before, "Wechsel sendet keinen Befehl")
+	assert_eq((session_of(shell).call("commands") as Array).size(), commands_before + 1, "Wechsel sendet keinen Befehl")
 	assert_eq(str(session_of(shell).call("state_hash")), state_before, "Zustand unverändert")
-	assert_eq(_tapped_selection_marks(ring), [target], "gewähltes Ziel bleibt markiert")
-	await press(confirm)
-	var sent: Array = (session_of(shell).call("commands") as Array)
-	assert_eq(sent.size(), commands_before + 1, "Bestätigung genau einmal angenommen (keine doppelte Verbindung)")
-	assert_eq((sent.back() as Command).payload["targets"], [target], "das vor dem Wechsel gewählte Ziel")
+	assert_true(bool(find_node(_screen(shell), "ActionCard").call("undo_visible")), "Leiste bleibt nach dem Wechsel")
 	settings_of(shell).call("set_left_handed", false)
 	await frames(2)
 	assert_eq((session_of(shell).call("commands") as Array).size(), commands_before + 1, "zweiter Wechsel sendet nichts")
-
-
-func _tapped_selection_marks(ring: Node) -> Array:
-	var out: Array = []
-	for t: Node in ring.call("tokens"):
-		if t.get("state") == &"selected":
-			out.append(int(t.get("person_id")))
-	return out
 
 
 ## Spieler-Zeigekarte („Rollen zeigen“): Ein Seitenwechsel bei geöffneter Karte schließt sie nicht, verändert nichts und die Bestätigung
