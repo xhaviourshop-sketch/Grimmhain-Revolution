@@ -169,15 +169,13 @@ static func reset_roles(d: SetupDraft) -> StringName:
 
 
 ## Vorschlag des gewählten Aktes für die Personenzahl übernehmen; eine abweichende bestehende Auswahl nur mit `force`. Vorhandene
-## Kopien bleiben mit ihrer Scheinrolle erhalten, soweit der Vorschlag sie vorsieht; neue Kopien sind unkonfiguriert. Trägt der Akt
-## die Personenzahl nicht, bleibt alles unverändert (`act_too_small`).
+## Kopien bleiben mit ihrer Scheinrolle erhalten, soweit der Vorschlag sie vorsieht; neue Kopien sind unkonfiguriert. Jeder Akt trägt
+## 6 bis 24 Personen (DA-90), ein leerer Vorschlag ist im erlaubten Bereich nicht möglich.
 static func apply_suggestion(d: SetupDraft, force: bool) -> StringName:
 	var count := d.persons.size()
 	if count < PersonNameRules.MIN_PERSONS or count > PersonNameRules.MAX_PERSONS:
 		return &"too_few_persons" if count < PersonNameRules.MIN_PERSONS else &"too_many_persons"
 	var suggestion := RoleSuggestion.for_act(d.act, count, d.roles.death_cards)
-	if suggestion.is_empty():
-		return &"act_too_small"
 	if is_suggestion(d):
 		return &""
 	if d.roles.total() > 0 and not force:

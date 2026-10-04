@@ -8268,17 +8268,11 @@ msgstr "Eine Person weniger"
 msgid "ui.prep.round.plus"
 msgstr "Eine Person mehr"
 
-msgid "ui.prep.round.act_too_small"
-msgstr "{act} trägt höchstens {count} Personen. Wähle einen anderen Akt oder weniger Personen."
-
 msgid "ui.prep.act.heading"
 msgstr "Welchen Akt spielt ihr?"
 
 msgid "ui.prep.act.capacity"
 msgstr "Bis zu {count} Personen"
-
-msgid "ui.prep.act.too_small"
-msgstr "Reicht nur bis {count} Personen"
 
 msgid "ui.prep.mode.random"
 msgstr "App verteilt zufällig"
@@ -8376,9 +8370,6 @@ msgstr "Es fehlen noch {count} Namen."
 msgid "ui.prep.names.missing_one"
 msgstr "Es fehlt noch 1 Name."
 
-msgid "ui.prep.names.act_too_small"
-msgstr "Der gewählte Akt trägt diese Spielerzahl nicht. Geh zurück zur Runde und wähle einen anderen."
-
 msgid "ui.prep.roles.act"
 msgstr "{act}: {title}"
 
@@ -8445,9 +8436,6 @@ msgstr "Der Kartenschlucker spielt nur mit Totenreichkarten."
 msgid "ui.prep.roles.warning.missing_solo"
 msgstr "Hinweis: Keine Rolle gewinnt allein (Einzelgänger). Starten ist trotzdem möglich."
 
-msgid "ui.prep.roles.act_too_small"
-msgstr "{act} trägt höchstens {count} Personen. Geh zurück und wähle einen anderen Akt."
-
 msgid "ui.prep.decoy.title"
 msgstr "Als welche Rolle gibt er sich aus?"
 
@@ -8481,8 +8469,14 @@ msgstr "Die Namen sind noch nicht vollständig."
 msgid "ui.prep.blocker.too_few_roles"
 msgstr "Es fehlen noch {count} Rollen. Füge Rollen hinzu."
 
+msgid "ui.prep.blocker.too_few_roles_one"
+msgstr "Es fehlt noch 1 Rolle. Füge eine Rolle hinzu."
+
 msgid "ui.prep.blocker.too_many_roles"
 msgstr "Es sind {count} Rollen zu viel. Entferne Rollen."
+
+msgid "ui.prep.blocker.too_many_roles_one"
+msgstr "Es ist 1 Rolle zu viel. Entferne eine Rolle."
 
 msgid "ui.prep.leave.title"
 msgstr "Vorbereitung verlassen?"

@@ -55,14 +55,11 @@ func setup(p_act: StringName) -> void:
 	column.minimum_size_changed.connect(func() -> void: _fit_height(column))
 
 
-## `capacity`: größte Personenzahl, die der Akt trägt; `fits`: trägt er die gewählte Zahl.
-func show_state(is_selected: bool, capacity: int, fits: bool) -> void:
+## `capacity`: größte Personenzahl, die der Akt trägt.
+func show_state(is_selected: bool, capacity: int) -> void:
 	selected = is_selected
-	disabled = not fits and not is_selected
 	_limit.format_values = {"count": capacity}
-	_limit.text_key = "ui.prep.act.capacity" if fits else "ui.prep.act.too_small"
-	_limit.theme_type_variation = &"HainCaptionLabel" if fits else &"ErrorCaptionLabel"
-	modulate = ThemeTokens.TINT_NONE if fits or is_selected else ThemeTokens.TINT_DEAD
+	_limit.text_key = "ui.prep.act.capacity"
 	queue_redraw()
 
 

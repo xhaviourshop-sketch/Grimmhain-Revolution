@@ -29,7 +29,6 @@ Modus „Echte Karten“: im Schritt 3 zwei Seiten „Rollen“ und „Zuordnung
 | Blocker | Grund |
 |---|---|
 | `too_few_persons`, `too_many_persons`, `names_incomplete` | Personenzahl außerhalb 6 bis 24 oder Namen fehlen |
-| `act_too_small` | Akt trägt die Personenzahl nicht |
 | `too_few_roles`, `too_many_roles`, `above_maximum` | Summe oder Höchstzahl der Startbesetzung (Kern lehnt ab) |
 | `missing_wolf`, `missing_village` | Kern lehnt `missing_wolf_role` und `missing_village_role` ab |
 | `missing_appearance` | Trugbilderwolf ohne Scheinrolle |

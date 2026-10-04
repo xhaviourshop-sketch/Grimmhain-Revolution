@@ -100,24 +100,20 @@ func default_focus() -> Control:
 
 func footer() -> Dictionary:
 	var complete := bool(_last_view.get("names_complete", false))
-	var fits := bool(_last_view.get("act_fits", true))
 	var missing := int(_last_view.get("names_missing", 0))
 	var hint := ""
 	var values := {}
 	var error := false
-	if not fits:
-		hint = "ui.prep.names.act_too_small"
-		error = true
-	elif not complete:
+	if not complete:
 		hint = "ui.prep.names.missing_one" if missing == 1 else "ui.prep.names.missing"
 		values = {"count": missing, "total": _last_view.get("player_count", 0)}
 		if int(_last_view.get("count", 0)) > int(_last_view.get("player_count", 0)):
 			hint = ""
-	return {"next_key": "ui.prep.next.roles", "next_enabled": complete and fits, "next_primary": true, "hint_key": hint, "hint_values": values, "hint_error": error}
+	return {"next_key": "ui.prep.next.roles", "next_enabled": complete, "next_primary": true, "hint_key": hint, "hint_values": values, "hint_error": error}
 
 
 func activate_next() -> void:
-	if bool(_last_view.get("names_complete", false)) and bool(_last_view.get("act_fits", true)):
+	if bool(_last_view.get("names_complete", false)):
 		next_requested.emit()
 
 

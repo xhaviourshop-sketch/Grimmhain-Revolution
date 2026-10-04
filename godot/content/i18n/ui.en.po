@@ -8268,17 +8268,11 @@ msgstr "One person fewer"
 msgid "ui.prep.round.plus"
 msgstr "One person more"
 
-msgid "ui.prep.round.act_too_small"
-msgstr "{act} holds {count} people at most. Pick another act or fewer people."
-
 msgid "ui.prep.act.heading"
 msgstr "Which act are you playing?"
 
 msgid "ui.prep.act.capacity"
 msgstr "Up to {count} people"
-
-msgid "ui.prep.act.too_small"
-msgstr "Only holds up to {count} people"
 
 msgid "ui.prep.mode.random"
 msgstr "App deals at random"
@@ -8376,9 +8370,6 @@ msgstr "{count} names still missing."
 msgid "ui.prep.names.missing_one"
 msgstr "1 name still missing."
 
-msgid "ui.prep.names.act_too_small"
-msgstr "The chosen act cannot hold this many people. Go back to the round and pick another."
-
 msgid "ui.prep.roles.act"
 msgstr "{act}: {title}"
 
@@ -8445,9 +8436,6 @@ msgstr "The card swallower only plays with underworld cards."
 msgid "ui.prep.roles.warning.missing_solo"
 msgstr "Note: no role wins alone (loner). You can still start."
 
-msgid "ui.prep.roles.act_too_small"
-msgstr "{act} holds {count} people at most. Go back and pick another act."
-
 msgid "ui.prep.decoy.title"
 msgstr "Which role does it show up as?"
 
@@ -8481,8 +8469,14 @@ msgstr "The names are not complete yet."
 msgid "ui.prep.blocker.too_few_roles"
 msgstr "{count} roles are still missing. Add roles."
 
+msgid "ui.prep.blocker.too_few_roles_one"
+msgstr "1 role is still missing. Add a role."
+
 msgid "ui.prep.blocker.too_many_roles"
 msgstr "There are {count} roles too many. Remove roles."
+
+msgid "ui.prep.blocker.too_many_roles_one"
+msgstr "There is 1 role too many. Remove a role."
 
 msgid "ui.prep.leave.title"
 msgstr "Leave the preparation?"

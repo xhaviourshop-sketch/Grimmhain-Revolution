@@ -501,12 +501,10 @@ func _blocker_key(code: String) -> String:
 	match code:
 		"too_few_persons", "too_many_persons", "names_incomplete":
 			return "ui.prep.blocker.names"
-		"act_too_small":
-			return "ui.prep.roles.act_too_small"
 		"too_few_roles":
-			return "ui.prep.blocker.too_few_roles"
+			return "ui.prep.blocker.too_few_roles_one" if int(_last_view.get("roles", {}).get("free", 0)) == 1 else "ui.prep.blocker.too_few_roles"
 		"too_many_roles":
-			return "ui.prep.blocker.too_many_roles"
+			return "ui.prep.blocker.too_many_roles_one" if int(_last_view.get("roles", {}).get("free", 0)) == -1 else "ui.prep.blocker.too_many_roles"
 	return "ui.setup.roles.issue.%s" % code
 
 
@@ -517,6 +515,4 @@ func _blocker_values(code: String) -> Dictionary:
 			return {"count": int(roles.get("free", 0))}
 		"too_many_roles":
 			return {"count": -int(roles.get("free", 0))}
-		"act_too_small":
-			return {"act": StringName(ActCatalog.name_key(StringName(str(_last_view.get("act", "akt1"))))), "count": ActCatalog.capacity(StringName(str(_last_view.get("act", "akt1"))), bool(roles.get("death_cards", false)))}
 	return {}

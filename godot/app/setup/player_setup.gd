@@ -331,8 +331,6 @@ func blockers() -> Array[StringName]:
 		out.append(&"too_few_persons" if int(validation["count"]) < PersonNameRules.MIN_PERSONS else &"too_many_persons")
 	elif _draft.persons.size() != _draft.player_count:
 		out.append(&"names_incomplete")
-	if _act_capacity() < _draft.persons.size():
-		out.append(&"act_too_small")
 	out.append_array(_draft.roles.issues(_draft.persons.size()))
 	return out
 
@@ -371,7 +369,6 @@ func view() -> Dictionary:
 		"revival_round": _draft.roles.is_revival_round(),  # DI-01: aus der Rollenwahl abgeleitet, nicht wählbar
 		"act": String(_draft.act),
 		"acts": _acts_view(),
-		"act_fits": _act_capacity() >= _draft.player_count,
 		"proposal_teams": _proposal_teams(),
 		"mode": String(_draft.distribution.mode),
 		"step": String(_draft.current_step),
@@ -430,8 +427,6 @@ func _ensure_role_proposal() -> void:
 func _step_block(step: StringName) -> StringName:
 	if step == SetupDraft.STEP_ROUND:
 		return &""
-	if _act_capacity() < _draft.player_count:
-		return &"act_too_small"
 	if step == SetupDraft.STEP_NAMES:
 		return &""
 	if not _draft.validation()["valid"] or _draft.persons.size() != _draft.player_count:
@@ -443,10 +438,6 @@ func _step_block(step: StringName) -> StringName:
 func _clamp_step() -> void:
 	while _step_block(_draft.current_step) != &"":
 		_draft.current_step = SetupDraft.STEPS[SetupDraft.STEPS.find(_draft.current_step) - 1]
-
-
-func _act_capacity() -> int:
-	return ActCatalog.capacity(_draft.act, _draft.roles.death_cards)
 
 
 func _steps_view() -> Array:
@@ -463,7 +454,7 @@ func _acts_view() -> Array:
 	var out: Array = []
 	for act: StringName in ActCatalog.ACT_IDS:
 		var capacity := ActCatalog.capacity(act, _draft.roles.death_cards)
-		out.append({"id": String(act), "level": ActCatalog.level(act), "capacity": capacity, "fits": capacity >= _draft.player_count, "selected": act == _draft.act})
+		out.append({"id": String(act), "level": ActCatalog.level(act), "capacity": capacity, "selected": act == _draft.act})
 	return out
 
 

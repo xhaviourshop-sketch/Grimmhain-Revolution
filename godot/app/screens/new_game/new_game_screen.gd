@@ -250,7 +250,7 @@ func _on_start_requested() -> void:
 		var reason := "other"
 		if error == &"game_already_started":
 			reason = "game_already_started"
-		elif ["too_few_persons", "too_many_persons", "names_incomplete", "distribution_incomplete", "act_too_small"].has(String(error)) or String(error).begins_with("too_") or String(error).begins_with("missing_"):
+		elif ["too_few_persons", "too_many_persons", "names_incomplete", "distribution_incomplete"].has(String(error)) or String(error).begins_with("too_") or String(error).begins_with("missing_"):
 			reason = "setup_incomplete"
 		_hint.theme_type_variation = &"ErrorLabel"
 		_hint.format_values = {"code": String(error)}

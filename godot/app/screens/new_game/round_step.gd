@@ -57,23 +57,11 @@ func default_focus() -> Control:
 
 
 func footer() -> Dictionary:
-	var fits := bool(_last_view.get("act_fits", true))
-	var act := str(_last_view.get("act", ""))
-	var capacity := 0
-	for entry: Variant in _last_view.get("acts", []):
-		if str((entry as Dictionary)["id"]) == act:
-			capacity = int((entry as Dictionary)["capacity"])
-	return {
-		"next_key": "ui.prep.next.names", "next_enabled": fits, "next_primary": true,
-		"hint_key": "" if fits else "ui.prep.round.act_too_small",
-		"hint_values": {"act": StringName(ActCatalog.name_key(StringName(act))) if act != "" else &"", "count": capacity},
-		"hint_error": not fits,
-	}
+	return {"next_key": "ui.prep.next.names", "next_enabled": true, "next_primary": true, "hint_key": "", "hint_values": {}, "hint_error": false}
 
 
 func activate_next() -> void:
-	if bool(_last_view.get("act_fits", true)):
-		next_requested.emit()
+	next_requested.emit()
 
 
 func _count_block() -> Control:
@@ -196,7 +184,7 @@ func _render(view: Dictionary) -> void:
 	for entry: Variant in view["acts"]:
 		var act: Dictionary = entry
 		var card := _cards[StringName(str(act["id"]))]
-		card.show_state(bool(act["selected"]), int(act["capacity"]), bool(act["fits"]))
+		card.show_state(bool(act["selected"]), int(act["capacity"]))
 	var manual := str(view["mode"]) == String(DistributionDraft.MANUAL)
 	if _manual.button_pressed != manual:
 		_manual.set_pressed_no_signal(manual)
