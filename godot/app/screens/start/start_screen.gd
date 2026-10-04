@@ -51,4 +51,5 @@ func _animated() -> bool:
 func _on_enter() -> void:
 	_enter.disabled = true
 	await _backdrop.fog_close(FOG_SECONDS)
+	StartBackdrop.fog_open_pending = true
 	navigate_requested.emit(ScreenIds.MAIN_MENU)

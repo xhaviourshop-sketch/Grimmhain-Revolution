@@ -22,6 +22,7 @@ const ZOOM_TO := 1.04
 const ZOOM_SECONDS := 30.0
 const EYES_PERIOD := Vector2(8.0, 15.0)
 const EYES_FIRST := Vector2(3.0, 5.0)     ## das erste Aufblenden kommt früh, damit man die Augen kennenlernt
+const FOG_OPEN_SECONDS := 0.8
 const FLASH_PERIOD := Vector2(20.0, 40.0)
 
 var mode: Mode = Mode.START
@@ -40,6 +41,9 @@ var _shade: ColorRect
 var _cover: ColorRect
 var _fog_layers: Array[FogLayer] = []
 var _closing: bool = false
+
+## Vom Startbildschirm gesetzt: das nächste Hauptmenü-Backdrop taucht aus dem Nebel auf (einmalig).
+static var fog_open_pending: bool = false
 
 
 static func glow_texture() -> GradientTexture2D:
@@ -121,6 +125,11 @@ func _ready() -> void:
 	_layout()
 	if animated:
 		_start_motion()
+		if mode == Mode.MENU and fog_open_pending:
+			fog_open_pending = false
+			_fog_open(FOG_OPEN_SECONDS)
+	else:
+		fog_open_pending = false
 
 
 ## Bewegung an oder aus (reduzierte Bewegung). Vor dem Einhängen aufrufen.
@@ -142,6 +151,17 @@ func fog_close(seconds: float = 0.6) -> void:
 	for layer: FogLayer in _fog_layers:
 		tween.tween_property(layer, "alpha", minf(layer.alpha * 2.6, 0.95), seconds)
 	await tween.finished
+
+
+## Hauptmenü taucht aus dem Nebel auf: Decke und Nebelbänder starten dicht und lichten sich.
+func _fog_open(seconds: float) -> void:
+	_cover.color.a = 0.94
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(_cover, "color:a", 0.0, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	for layer: FogLayer in _fog_layers:
+		var target := layer.alpha
+		layer.alpha = minf(target * 2.6, 0.95)
+		tween.tween_property(layer, "alpha", target, seconds)
 
 
 func _glow(node_name: String, color: Color) -> TextureRect:
