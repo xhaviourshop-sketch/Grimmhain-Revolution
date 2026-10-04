@@ -79,8 +79,13 @@ static func _material() -> ShaderMaterial:
 	return m
 
 
-static func _glow_texture(part: String, density: float) -> Texture2D:
-	var key := "%s@%.2f" % [part, density]
+## Schein-Bild eines Teils für andere Glühformen (Feuer): um `pad_units` logische Einheiten über die Form hinaus erweitert und weichgezeichnet.
+static func glow_texture_for(part: String, density: float, pad_units: float) -> Texture2D:
+	return _glow_texture(part, density, pad_units)
+
+
+static func _glow_texture(part: String, density: float, pad_units: float = PAD) -> Texture2D:
+	var key := "%s@%.2f@%.1f" % [part, density, pad_units]
 	if _textures.has(key):
 		return _textures[key]
 	var source := GroveSkin.texture(part)
@@ -88,14 +93,14 @@ static func _glow_texture(part: String, density: float) -> Texture2D:
 	if source != null:
 		var img := source.get_image()
 		if img != null:
-			result = ImageTexture.create_from_image(_blurred(img, density))
+			result = ImageTexture.create_from_image(_blurred(img, density, pad_units))
 	_textures[key] = result
 	return result
 
 
 ## Alpha des Teils, um den Schein-Rand erweitert und weichgezeichnet; innerhalb der Form stark abgeschwächt (Schein liegt hinter dem Rahmen).
-static func _blurred(src: Image, density: float) -> Image:
-	var pad := int(PAD * density)
+static func _blurred(src: Image, density: float, pad_units: float) -> Image:
+	var pad := int(pad_units * density)
 	var full_w := src.get_width() + pad * 2
 	var full_h := src.get_height() + pad * 2
 	var small := src.duplicate() as Image

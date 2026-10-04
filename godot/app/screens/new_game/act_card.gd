@@ -2,16 +2,21 @@ class_name ActCard
 extends GrimmButton
 ## Akt-Karte der Vorbereitung (DA-89): ein fertiges Rollen-Set auf dem Hain-Kartenrahmen. Zeigt Aktnummer, Titel, Untertitel,
 ## Schwierigkeit (Punkte, zusätzlich als Text im Untertitel) und die Tragkraft („bis 17 Personen“, wenn der Akt die Runde nicht trägt).
-## Der gewählte Akt glüht blutrot entlang des Kartenrahmens (`SelectionGlow`) und trägt ein Häkchen (Blutrot nur für Aktives); ein Akt, der die Personenzahl nicht trägt,
+## Der gewählte Akt lodert als Feuer entlang des Kartenrahmens (`FireGlow`, Stärke nach Aktstufe: I Glut, II Flammen, III wild, IV sehr wild mit Funken)
+## und trägt ein Häkchen (Blutrot nur für Aktives); nicht gewählte Akte brennen nicht. Ein Akt, der die Personenzahl nicht trägt,
 ## ist gedämpft und nicht wählbar. Verbinden über `pressed`; Auswahl setzt PlayerSetup.
 
 const MAX_LEVEL := 4
 
 var act: StringName = &""
+var animated: bool = true:  ## aus bei reduzierter Bewegung: Flamme steht still, keine Funken
+	set(value):
+		animated = value
+		FireGlow.set_on(self, "card_frame", GroveArtData.CARD_FRAME_MARGINS, selected, _level, animated)
 var selected: bool = false:
 	set(value):
 		selected = value
-		SelectionGlow.set_on(self, "card_frame", GroveArtData.CARD_FRAME_MARGINS, value)
+		FireGlow.set_on(self, "card_frame", GroveArtData.CARD_FRAME_MARGINS, value, _level, animated)
 		queue_redraw()
 var _title: GrimmLabel
 var _name: GrimmLabel

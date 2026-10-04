@@ -1430,6 +1430,9 @@ msgstr "Die Partie ist beendet"
 msgid "ui.cockpit.action.start_night"
 msgstr "Nacht beginnen"
 
+msgid "ui.cockpit.action.begin_game"
+msgstr "Spiel beginnen"
+
 msgid "ui.cockpit.action.begin_step"
 msgstr "Schritt beginnen"
 

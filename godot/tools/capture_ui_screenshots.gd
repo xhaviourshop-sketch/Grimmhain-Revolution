@@ -35,6 +35,9 @@ const PREP_SHOTS := [
 	["03-rollen-zuordnung", "_prep_assign", "karten"], ["03-rollen-leiste", "_prep_bar", "karten"],
 	["03-rollen-leiste-24", "_prep_bar_24", "karten"], ["03-rollen-gefuellt-24", "_prep_roles_filled_24", "zufaellig"],
 	["03-rollen-gefuellt-akt4", "_prep_roles_filled_akt4", "zufaellig"],
+	["01-runde-akt1", "_prep_round_akt1", "zufaellig"], ["01-runde-akt2", "_prep_round_akt2", "zufaellig"],
+	["01-runde-akt3", "_prep_round_akt3", "zufaellig"], ["01-runde-akt4", "_prep_round_akt4", "zufaellig"],
+	["01-runde-akt4-bewegung", "_prep_round_akt4_motion", "zufaellig"],
 ]
 const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
 
@@ -172,6 +175,35 @@ func _prep_names_filled(shell: AppShell, manual: bool) -> void:
 
 func _prep_round_random(shell: AppShell) -> void:
 	await _prep_names_filled(shell, false)
+
+
+func _prep_round_akt(shell: AppShell, act: String) -> void:
+	_shot_act = act
+	await _prep_names_filled(shell, false)
+
+
+func _prep_round_akt1(shell: AppShell) -> void:
+	await _prep_round_akt(shell, "akt1")
+
+
+func _prep_round_akt2(shell: AppShell) -> void:
+	await _prep_round_akt(shell, "akt2")
+
+
+func _prep_round_akt3(shell: AppShell) -> void:
+	await _prep_round_akt(shell, "akt3")
+
+
+func _prep_round_akt4(shell: AppShell) -> void:
+	await _prep_round_akt(shell, "akt4")
+
+
+## Mit Bewegung (Flammen laufen, Funken steigen): ein paar Sekunden laufen lassen, damit Teilchen im Bild sind.
+func _prep_round_akt4_motion(shell: AppShell) -> void:
+	shell.get_app_context().settings.set_reduced_motion(false)
+	await _prep_round_akt(shell, "akt4")
+	for i: int in 90:
+		await process_frame
 
 
 func _prep_round_manual(shell: AppShell) -> void:

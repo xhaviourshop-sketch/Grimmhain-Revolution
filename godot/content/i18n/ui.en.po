@@ -1430,6 +1430,9 @@ msgstr "The game is over"
 msgid "ui.cockpit.action.start_night"
 msgstr "Begin night"
 
+msgid "ui.cockpit.action.begin_game"
+msgstr "Begin game"
+
 msgid "ui.cockpit.action.begin_step"
 msgstr "Begin step"
 

@@ -159,8 +159,8 @@ func test_main_action_sits_in_the_dock_and_secondary_actions_in_the_card() -> vo
 	var screen := _screen(shell)
 	var dock := find_node(screen, "NextHost") as Control
 	var start := find_button(screen, "StartNightButton")
-	assert_true(dock.is_ancestor_of(start), "Hauptaktion unten rechts im Dock")
-	assert_false(find_node(screen, "InstructionCard").is_ancestor_of(start), "nicht mehr in der Karte")
+	# Spielbeginn (Testrunde 1): kein Textkasten, der große Knopf „Spiel beginnen“ steht mittig statt im Dock.
+	assert_false(dock.is_ancestor_of(start), "Spielbeginn: großer Knopf nicht im Dock")
 	assert_true(start.size.y >= float(ThemeTokens.TOUCH_MIN), "Tippfläche mindestens 48 px")
 	await press(start)
 	var confirm := find_button(screen, "ConfirmTargetsButton")

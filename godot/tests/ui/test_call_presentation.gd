@@ -82,9 +82,18 @@ func test_dead_eyes_line_only_in_revival_rounds() -> void:
 		var next := UiGame.next_of(s)
 		assert_eq(str(next["kind"]), "start_night", "Nachtbeginn")
 		assert_eq(bool(next["revival_round"]), revival, "Modus auf der Karte (%s)" % revival)
+		if not revival:
+			# Spielbeginn ohne Wiederbelebung: kein Textkasten, nur der große Knopf (Testrunde 1); die Ansage steht ab Nacht 2 wieder auf der Karte.
+			var bare := _render(next)
+			assert_true(bare.is_bare(), "Spielbeginn: Karte ohne Text")
+			assert_false(_has_key(bare, "ui.call.night_falls"), "Spielbeginn: keine Ansage auf der Karte")
+			assert_true(bare.find_child("StartNightButton", true, false) != null, "Spielbeginn: großer Knopf")
+			assert_true(s.start_night().ok and UiGame.to_day(s) and s.decide_execution(-1).ok and s.end_day().ok, "Tag 1 beendet")
+			next = UiGame.next_of(s)
+			assert_eq(str(next["kind"]), "start_night", "Nachtbeginn von Nacht 2")
 		var card := _render(next)
 		assert_eq(_has_key(card, "ui.call.night_falls_revival"), revival, "Ansage „auch die Toten“ nur in Wiederbelebungsrunden (%s)" % revival)
-		assert_eq(_has_key(card, "ui.call.night_falls"), not revival, "sonst die gewöhnliche Ansage (%s)" % revival)
+		assert_eq(_has_key(card, "ui.call.night_falls"), not revival and str(next["kind"]) == "start_night", "sonst die gewöhnliche Ansage (%s)" % revival)
 
 
 func test_announcing_changes_nothing_in_state_or_randomness() -> void:

@@ -14,8 +14,7 @@ signal start_requested
 
 enum Page { POOL, ASSIGN }
 
-const BAR_CHIP_SCALE := 1.35        ## Rollenleiste im Kartenmodus: größere Marken
-const BAR_HEIGHT_SHARE := 0.4       ## Rollenleiste: Anteil der Seitenhöhe
+const BAR_CHIP_SCALE := 1.6         ## Rollenwahl im Kartenmodus: große Marken
 
 var _page: Page = Page.POOL
 var _last_view: Dictionary = {}
@@ -245,8 +244,7 @@ func _build_bar() -> PanelContainer:
 	bar.name = "RoleBar"
 	bar.theme_type_variation = &"CardPanel"
 	bar.visible = false
-	bar.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	bar.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)  # Testrunde 1: das Fenster deckt den Sitzring ganz ab, der Platz ist schon gewählt
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	bar.add_child(column)
@@ -254,7 +252,7 @@ func _build_bar() -> PanelContainer:
 	head.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
 	_bar_title = GrimmLabel.new()
 	_bar_title.name = "RoleBarTitle"
-	_bar_title.theme_type_variation = &"SectionLabel"
+	_bar_title.theme_type_variation = &"HeadingLabel"
 	_bar_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_bar_title.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(_bar_title)
@@ -274,7 +272,7 @@ func _build_bar() -> PanelContainer:
 	_bar_scroll = ScrollContainer.new()
 	_bar_scroll.name = "RoleBarScroll"
 	_bar_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_bar_scroll.custom_minimum_size.y = ThemeTokens.ROLE_CHIP_HEIGHT * 2 + ThemeTokens.SPACE_S  # beim Öffnen auf 40 Prozent der Bildschirmhöhe gesetzt
+	_bar_scroll.custom_minimum_size.y = ThemeTokens.ROLE_CHIP_HEIGHT * 2 + ThemeTokens.SPACE_S
 	_bar_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_bar_scroll.follow_focus = true
 	column.add_child(_bar_scroll)
@@ -419,18 +417,10 @@ func _on_decoy_change(copy_id: int) -> void:
 
 # --- Zuordnung (Echte Karten) -----------------------------------------------------------------------------
 
-## Höhe der Rollenleiste: etwa 40 Prozent der Bildschirmhöhe; der Sitzring rückt darüber.
-func _bar_height() -> float:
-	return get_viewport_rect().size.y * BAR_HEIGHT_SHARE
-
-
 func _on_seat_tapped(person_id: int) -> void:
 	_bar_person = person_id
-	_bar.custom_minimum_size.y = _bar_height()
-	_bar_scroll.custom_minimum_size.y = maxf(float(ThemeTokens.ROLE_CHIP_HEIGHT) * 2.0, _bar_height() - 132.0)
 	_bar.visible = true
-	_ring.offset_bottom = -_bar_height()
-	_ring.compact = true
+	_ring.visible = false  # das Fenster ersetzt den Sitzring, der Platz ist schon gewählt
 	_ring.set_chosen(person_id)
 	_assign_card.visible = false
 	_render_bar(_last_view)
@@ -484,8 +474,7 @@ func _close_bar() -> void:
 		return
 	_bar.visible = false
 	_bar_person = 0
-	_ring.offset_bottom = 0.0
-	_ring.compact = false
+	_ring.visible = true
 	_ring.set_chosen(0)
 	_assign_card.visible = true
 

@@ -17,6 +17,11 @@ var _random: ChoiceButton
 var _manual: ChoiceButton
 var _last_view: Dictionary = {}
 var _scroll: ScrollContainer
+var animated: bool = true:  ## aus bei reduzierter Bewegung (Feuer der Akt-Karten steht still)
+	set(value):
+		animated = value
+		for card: ActCard in _cards.values():
+			card.animated = value
 
 
 func start(setup: PlayerSetup) -> void:

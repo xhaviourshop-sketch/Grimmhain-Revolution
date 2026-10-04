@@ -128,6 +128,7 @@ func shown_step() -> StringName:
 
 func _build_steps() -> void:
 	var round_step := RoundStep.new()
+	round_step.animated = not context.settings.reduced_motion
 	var names_step := NamesStep.new()
 	var roles_step := RolesStep.new()
 	_steps = {&"round": round_step, &"names": names_step, &"roles": roles_step}
@@ -199,6 +200,7 @@ func _on_next_pressed() -> void:
 func _on_settings_changed(key: StringName) -> void:
 	if key == &"reduced_motion" and _backdrop != null:
 		_backdrop.set_animated(not context.settings.reduced_motion)
+		(_steps[&"round"] as RoundStep).animated = not context.settings.reduced_motion
 
 
 func _on_setup_changed(view: Dictionary) -> void:

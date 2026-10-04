@@ -57,6 +57,29 @@ func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
 					assert_false(plate.grow(-0.5).intersects(other_plate.grow(-0.5)), "%s/%d: Schilder überlappen" % [label, j + 1])
 
 
+## Nummern-Abzeichen (Sockel oben links am Rahmen) liegen nie unter einem Namensschild, Porträtring oder Abzeichen eines anderen Platzes,
+## bei 6 bis 24 Personen in allen Feldgrößen (Testrunde 1: Nummer 17 war vom Schild des Nachbarn verdeckt).
+func test_number_badges_never_overlap_names_or_portraits() -> void:
+	for area: Vector2 in AREAS:
+		for count: int in range(6, 25):
+			var result := PortraitRingLayout.layout(count, area)
+			var seats: Array = result["seats"]
+			var d := float(result["diameter"])
+			var size: Vector2 = result["token_size"]
+			var widths: Array = result["plate_widths"]
+			var spans: Array = result["plate_spans"]
+			var badge_radius := PortraitRingLayout.badge_radius(d)
+			for i: int in count:
+				var badge := _portrait_center(seats[i], d, size) + PortraitRingLayout.badge_offset(d)
+				for j: int in count:
+					if j == i:
+						continue
+					var label := "%dx%d, %d Personen, Nummer %d gegen Platz %d" % [int(area.x), int(area.y), count, i + 1, j + 1]
+					assert_false(_circle_hits_rect(badge, badge_radius, _plate(seats[j], d, float(widths[j]), size, spans[j])), "%s: Schild verdeckt die Nummer" % label)
+					assert_true(badge.distance_to(_portrait_center(seats[j], d, size)) >= d * PortraitRingLayout.RING_RADIUS + badge_radius - 0.5, "%s: Porträtring verdeckt die Nummer" % label)
+					assert_true(badge.distance_to(_portrait_center(seats[j], d, size) + PortraitRingLayout.badge_offset(d)) >= badge_radius * 2.0 - 0.5, "%s: Nummern berühren sich" % label)
+
+
 func test_center_is_free_of_every_seat_and_inside_the_area() -> void:
 	for area: Vector2 in AREAS:
 		for count: int in range(2, 25):

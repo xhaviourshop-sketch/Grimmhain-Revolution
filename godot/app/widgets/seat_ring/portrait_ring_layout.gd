@@ -23,6 +23,7 @@ const PLATE_OVERHANG := 20.0  ## so weit ragt das Namensschild höchstens über 
 const PLATE_GAP := 2.0       ## Mindestabstand des Schilds zu Nachbarn
 const PLATE_MIN_WIDTH := 36.0
 const CENTER_GAP := 8.0     ## Abstand der Tischmitte zu Porträts und Schildern
+const RING_SHAPE := 2.15 ## Exponent der Ringform: 2 = Ellipse, größer = kantiger. Rückt die Plätze in den Ecken nach außen (oben und unten mehr Abstand)
 const COMPACT_MIN_DIAMETER := 44.0  ## kompakter Ring (flache Fläche über der Rollenleiste): kleinster Rahmen
 const COMPACT_SPACING := 0.94       ## kompakter Ring: Mindestabstand benachbarter Porträtmitten in Rahmenbreiten (der sichtbare Ring misst 0,8)
 
@@ -35,6 +36,15 @@ static func diameter_for(count: int) -> float:
 	if count >= 8:
 		return 96.0
 	return 104.0
+
+
+## Nummern-Abzeichen: Mitte relativ zur Porträtmitte und Radius (Sockel des Rahmens, siehe GroveArtData.SEAT_SOCKET_*). Es ragt oben links über den Ring hinaus.
+static func badge_offset(d: float) -> Vector2:
+	return Vector2((GroveArtData.SEAT_SOCKET_CENTER.x - GroveArtData.SEAT_HOLE_CENTER.x) * d, (GroveArtData.SEAT_SOCKET_CENTER.y - GroveArtData.SEAT_HOLE_CENTER.y) * d * GroveArtData.SEAT_ASPECT)
+
+
+static func badge_radius(d: float) -> float:
+	return GroveArtData.SEAT_SOCKET_RADIUS * d * 1.05
 
 
 static func token_size_for(diameter: float) -> Vector2:
@@ -120,6 +130,7 @@ static func _compact_fits(points: Array[Vector2], d: float) -> bool:
 static func _plate_spans(seats: Array[Rect2], d: float, size: Vector2) -> Array[Vector2]:
 	var out: Array[Vector2] = []
 	var radius := d * RING_RADIUS
+	var badge_r := badge_radius(d)
 	for i: int in seats.size():
 		var band_top := seats[i].position.y + NUMBER_BAND + d - PLATE_DROP
 		var cap := plate_max_width(d) * 0.5
@@ -136,6 +147,12 @@ static func _plate_spans(seats: Array[Rect2], d: float, size: Vector2) -> Array[
 			var dy := maxf(maxf(band_top - centre_y, centre_y - (band_top + PLATE_HEIGHT)), 0.0)
 			if dy < radius:
 				span[side] = minf(span[side], dx - sqrt(radius * radius - dy * dy) - PLATE_GAP)
+			# Das Nummern-Abzeichen des Nachbarn (oben links an seinem Rahmen) bleibt ebenfalls frei.
+			var badge_x := signed_dx + badge_offset(d).x
+			var badge_dy := maxf(maxf(band_top - (centre_y + badge_offset(d).y), (centre_y + badge_offset(d).y) - (band_top + PLATE_HEIGHT)), 0.0)
+			if badge_dy < badge_r:
+				var badge_side := 1 if badge_x > 0.0 else 0
+				span[badge_side] = minf(span[badge_side], absf(badge_x) - sqrt(badge_r * badge_r - badge_dy * badge_dy) - PLATE_GAP)
 			var other_top := other.position.y + NUMBER_BAND + d - PLATE_DROP
 			if absf(other_top - band_top) < PLATE_HEIGHT:
 				span[side] = minf(span[side], (dx - PLATE_GAP) * 0.5)
@@ -197,8 +214,7 @@ static func _ring_points(count: int, centre: Vector2, a: float, b: float) -> Arr
 	var cum: Array[float] = [0.0]
 	var prev := Vector2(0.0, -b)
 	for i: int in range(1, samples + 1):
-		var t := -PI * 0.5 + TAU * float(i) / float(samples)
-		var pt := Vector2(cos(t) * a, sin(t) * b)
+		var pt := _shape_point(-PI * 0.5 + TAU * float(i) / float(samples), a, b)
 		cum.append(cum[i - 1] + prev.distance_to(pt))
 		prev = pt
 	var total: float = cum[samples]
@@ -210,6 +226,10 @@ static func _ring_points(count: int, centre: Vector2, a: float, b: float) -> Arr
 		var idx := 0
 		while idx < samples and cum[idx] < target:
 			idx += 1
-		var t := -PI * 0.5 + TAU * float(idx) / float(samples)
-		out.append(centre + Vector2(cos(t) * a, sin(t) * b))
+		out.append(centre + _shape_point(-PI * 0.5 + TAU * float(idx) / float(samples), a, b))
 	return out
+
+
+static func _shape_point(t: float, a: float, b: float) -> Vector2:
+	var power := 2.0 / RING_SHAPE
+	return Vector2(signf(cos(t)) * pow(absf(cos(t)), power) * a, signf(sin(t)) * pow(absf(sin(t)), power) * b)
