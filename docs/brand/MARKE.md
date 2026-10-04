@@ -1,41 +1,40 @@
 # Marke Grimmhain (Kurzfassung)
 
-Quellen: Design-Tafel `C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/marke/design-tafel.png` und das Projekt-Dokument "marken-blatt-grimmhain" (Markus). Das Dokument war beim Anlegen dieser Datei nicht lesbar; die Kurzfassung stützt sich auf die Tafel und die bestehenden ThemeTokens. Bei Abweichungen gilt das Marken-Blatt. Alle Texte und Assets folgen dieser Datei.
+Verbindlich ist das Marken-Blatt (Stand 04.10.2026, Markus): `C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/marke/marken-blatt.md`. Diese Datei ist die Kurzfassung im Repo; bei Abweichung gilt das Blatt. Bildvorlage: `marke/design-tafel.png` (bei jedem neuen Asset anhängen). Alle Texte und Assets folgen dieser Datei.
 
-## Gefühl
-Düstere Nacht, kalter Mond, Dornen und Eisen. Ernst, ruhig, bedrohlich, nie albern. Das Dorf schläft, etwas Altes erwacht. Untertitel der Tafel: "The Night Begins".
+## Produkt und Gefühl
+Eigenes gedrucktes Kartenspiel plus Spielleiter-App; die Marke muss auf iPad, App-Symbol, Kartenrückseite und Verpackung funktionieren. Gefühl: unheimlich und edel, wie ein altes, verfluchtes Buch. Dunkel, hochwertig, ruhig bedrohlich. Nicht laut, nicht comichaft, kein Action-Kitsch.
 
 ## Zeichen
-- **Wortmarke** GRIMMHAIN: gotische Mondstahl-Schrift mit Dornenranken. `godot/assets/brand/wortmarke.webp`. Ersetzt `start-logo` überall (Start, Hauptmenü, Ladebild).
-- **Siegel**: Wolfskopf im Dornenkranz. `godot/assets/brand/siegel.webp`. Klein über der Wortmarke im Ladebild, Grundlage des App-Symbols.
-- **App-Symbol** auf nachtschwarzem rundem Grund, `godot/assets/app/app-symbol-*.png`. Bis 120 px die Klein-Fassung (Kopf größer, nur Ring, Kontrast höher), ab 144 px das Siegel unverändert.
-- Wortmarke und Siegel nicht verzerren, nicht einfärben, nicht auf hellen Grund setzen.
+- **Bildzeichen (Siegel):** Wolfskopf in rundem Kranz aus Wurzeln und Dornen, Mondsilber auf Nachtschwarz. `godot/assets/brand/siegel.webp`. Unter 144 px gilt die vereinfachte Klein-Fassung (`godot/assets/app/app-symbol-*.png`).
+- **Wortmarke:** Fassung der Design-Tafel. `godot/assets/brand/wortmarke.webp`.
+- **Kombination:** Siegel über Wortmarke (Ladebild, Kartenrückseite); Siegel allein (App-Symbol, kleine Stellen).
+- **Kein Slogan festgelegt.** "The Night Begins" auf der Tafel ist nur Platzhalter und steht nirgends in der App.
 
-## Farben (= ThemeTokens, `godot/app/theme/theme_tokens.gd`)
-| Tafel | Token |
-|---|---|
-| Nachtschwarz | `BG_APP` #0b0d14 |
-| Nachtblau | `NIGHT_BACKDROP` #0a1022, `BOARD_NIGHT` #0e1530 |
-| Mondsilber | `MOON_SILVER` #c5cddb |
-| Blutrot | `BLOOD_RED` #b3242d (nur Aktives und Hauptaktion) |
-| Dorf | `TEAM_PLATE_VILLAGE`, `GLOW_VILLAGE` (kühles Mondblau) |
-| Wölfe | `TEAM_PLATE_WOLVES`, `GLOW_WOLVES` (dunkles Blutrot) |
-| Einzelgänger | `TEAM_PLATE_SOLO` (gedämpftes Violett) |
-
-Keine neuen Farbwerte im Code, nur Tokens.
+## Farben (verbindliche Werte: ThemeTokens, `godot/app/theme/theme_tokens.gd`)
+- Grund: Nachtblau bis Schwarz (`BG_APP`, `NIGHT_BACKDROP`, `BOARD_NIGHT`).
+- Hauptakzent: Mondsilber (`MOON_SILVER`).
+- Blutrot (`BLOOD_RED`): nur für Aktives (gewählt, Start, Gefahr), nie als Flächenfarbe.
+- Teams: Dorf Mondblau, Wölfe Blutrot, Einzelgänger Violett (`TEAM_PLATE_*`, `GLOW_*`).
+- Einziger warmer Ton: Fenster- und Laternenlicht in Bildern.
+- **Kein Gold. Nirgends.**
 
 ## Material
-Eisen (dunkel, gehämmert, Sterne und Kreuz), Wurzeln und Dornen, Silber (kühl, rissig), Glut (rotes Leuchten in dunklem Gestein). Rahmen sind Dornen und Eisen, Leisten mit rotem Rubin als Mitte.
+Geschmiedetes schwarzes Eisen, Wurzeln, Dornen, Mondsilber. Lava und Glut nur bei Start- und Feuer-Momenten. Ornamente nur an Ecken und Enden, damit Rahmen dehnbar bleiben.
 
 ## Schrift
-Gotische Wortmarke nur als Bild, nie als Fließtext. Untertitel und Zeilen in geweiteter, ruhiger Serifenlose; Fließtext in der Projektschrift der Oberfläche (gut lesbar auf dem Tablet).
+- Logo und große Titel: gotisch-geschmiedet, hohe spitze Buchstaben (wie die Wortmarke).
+- Alles andere: schlichte, gut lesbare Schrift. Nie gotisch in Fließtext oder Knöpfen.
 
 ## Bildstil
-Düstere Ölmalerei bei Nacht: Vollmond, Fachwerkdorf, nasses Kopfsteinpflaster, einzelne warme Laternen als einziger warmer Punkt. Symbole als Reliefs aus Silber und Eisen (Haus, Wolfskopf, Kapuzengestalt). Dunkle Vignette, wo Schrift auf Bild liegt.
+Wie der Startbildschirm: detailreich gemalt, nachtblau, Mondlicht, warme Fensterlichter als einziger warmer Ton. Gilt für Szenen, Porträts und gemalte Rollenbilder. Kleine Symbole bleiben Silber-Prägung.
 
-## Sprache: kurz und klar
-Kurze Sätze, direkte Anrede, Verben vorn, keine Füllwörter, kein Fachjargon im Spieltext. Eine Anweisung pro Satz.
+## Sprache (Spielleiter-App): kurz und klar
+Einfache Worte, keine Floskeln, kein Amtsdeutsch. Atmosphäre nur in Überschriften und Ansagen, nie in Bedientexten.
+- Erst die Fähigkeit in 1 Satz, dann höchstens 1 Satz Hilfe.
+- Keine Statuswörter für Programmierer ("Tu jetzt", "Handelnd 15").
+- Schlecht: "Wähle 0 bis 2 Personen. Auswahl leeren. Niemand/Verzichten."
+- Gut: "Loki bindet 2 Spieler. Erst Liebende oder Rivalen wählen, dann 2 Spieler antippen."
 
-Beispiel Loki (aus `docs/content-drafts/GUIDE-TEXTS.md`):
-- Spielleiter-Hinweis: "Nur Nacht 1: Frag, welche zwei Personen Liebende oder Rivalen werden."
-- Private Information: "Du und {name} seid Liebende: Stirbt eine Person, stirbt die andere."
+## Regeln für jedes neue Asset
+ChatGPT-Projekt "Grimmhain Assets", Design-Tafel als Vorlage anhängen, echte Transparenz, kein Text im Bild, kein Gold, Ornamente nur an den Enden.
