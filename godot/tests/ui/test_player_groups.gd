@@ -139,6 +139,7 @@ func test_save_then_reuse_after_restart_reaches_a_started_game() -> void:
 	setup_of(second).set("seed_source", func() -> int: return 4711)
 	await press(find_button(screen, "NextButton"))
 	await frames(2)
+	await press(find_button(screen, "ProposalButton"))
 	await press(find_button(screen, "NextButton"))
 	await frames(3)
 	var summary := session_of(second).call("summary") as Dictionary
@@ -229,6 +230,7 @@ func test_load_discards_confirmed_roles_and_never_takes_old_state() -> void:
 	var screen: Control = made[1]
 	await seed_names(shell, ["Ein", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben", "Acht"])
 	await press(find_button(screen, "NextButton"))
+	await press(find_button(screen, "ProposalButton"))
 	await press(find_button(screen, "BackStepButton"))
 	assert_true(int(((setup_of(shell).call("view") as Dictionary)["roles"] as Dictionary)["total"]) > 0, "Vorbereitung: Rollenwahl vorhanden")
 	await _open_groups(screen)

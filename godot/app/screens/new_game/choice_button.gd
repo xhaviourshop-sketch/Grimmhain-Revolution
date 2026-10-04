@@ -43,6 +43,9 @@ func _skin() -> void:
 
 
 func _draw() -> void:
+	var glow := get_node_or_null("SelectionGlow") as Control
+	if (glow != null and glow.visible) != button_pressed:  # auch bei set_pressed_no_signal
+		SelectionGlow.set_on(self, "button_primary", GroveArtData.BUTTON_PRIMARY_MARGINS, button_pressed)
 	if not button_pressed:
 		return
 	var c := Vector2(GroveSkin.BUTTON_TEXT_INSET * 0.5 + 4.0, size.y * 0.5)

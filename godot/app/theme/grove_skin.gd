@@ -137,7 +137,7 @@ static func skin_button(button: GrimmButton, primary: bool) -> void:
 		button.add_theme_stylebox_override(state, box)
 	# Fokus: Godot zeichnet den Fokusrahmen über jeden Zustand (auch über den gesperrten Knopf); deshalb leer, der Fokus zeigt sich über die Tönung.
 	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	button.focus_entered.connect(func() -> void: button.self_modulate = Color.WHITE if button.disabled else TINT_FOCUS)
+	button.focus_entered.connect(func() -> void: button.self_modulate = TINT_FOCUS if button.has_focus(true) and not button.disabled else Color.WHITE)
 	button.focus_exited.connect(func() -> void: button.self_modulate = Color.WHITE)
 	for color: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
 		button.add_theme_color_override(color, ThemeTokens.TEXT_PRIMARY)

@@ -258,7 +258,7 @@ func set_death_cards(on: bool) -> SetupResult:
 	return _apply(RoleSetup.set_death_cards(_draft, on), {"death_cards": on})
 
 
-## „Neuer Vorschlag“: ersetzt die Auswahl durch den Vorschlag des Aktes (die Wahl ist ausdrücklich, keine Rückfrage).
+## „Empfehlung übernehmen“: ersetzt die Auswahl durch den Vorschlag des Aktes (die Wahl ist ausdrücklich, keine Rückfrage).
 func apply_suggestion() -> SetupResult:
 	return _apply(RoleSetup.apply_suggestion(_draft, true), {"act": _draft.act})
 
@@ -415,11 +415,9 @@ func _apply(error: StringName, details: Dictionary = {}) -> SetupResult:
 	return SetupResult.success(v)
 
 
-## Beim Öffnen des Rollenschritts: leere oder zur Personenzahl nicht passende Auswahl durch den Vorschlag des Aktes ersetzen.
-## Eine passende Auswahl (auch eine geänderte) bleibt, damit Zurück und Weiter nichts verlieren.
+## Beim Öffnen des Rollenschritts: Die Auswahl startet leer (DA-91), nur die Scheinrollen werden vorbelegt. Eine vorhandene Auswahl bleibt, damit
+## Zurück und Weiter nichts verlieren; die Empfehlung kommt erst mit `apply_suggestion` („Empfehlung übernehmen“).
 func _ensure_role_proposal() -> void:
-	if _draft.roles.total() != _draft.persons.size():
-		RoleSetup.apply_suggestion(_draft, true)
 	RoleSetup.autofill_appearances(_draft, seed_source)
 
 

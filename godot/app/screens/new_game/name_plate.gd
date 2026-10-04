@@ -1,7 +1,7 @@
 class_name NamePlate
 extends GrimmButton
 ## Nummeriertes Namensschild im Namensschritt: runde Nummer links, Name auf dem Hain-Teil `name_plate_short`. Die Nummer ist der Sitzplatz im
-## Uhrzeigersinn. Ein freier Platz (noch kein Name) steht gedämpft mit „frei“; die gewählte Person trägt einen blutroten Rahmen und ein
+## Uhrzeigersinn. Ein freier Platz (noch kein Name) steht gedämpft mit „frei“; die gewählte Person glüht blutrot (`SelectionGlow`) und trägt ein
 ## Häkchen (Blutrot nur für Aktives), ein doppelter Name ein „!“. Der Button-Text (Nummer und Name) ist Bedienungshilfe, Tooltip und
 ## Testanker und wird nicht gezeichnet. Antippen wählt (`pressed`); was folgt, entscheidet der Schritt.
 
@@ -17,6 +17,8 @@ var empty: bool = true
 var selected: bool = false:
 	set(value):
 		selected = value
+		var inset_y := maxf(0.0, (float(ThemeTokens.NAME_PLATE_HEIGHT) - PLATE_HEIGHT) * 0.5)
+		SelectionGlow.set_on(self, "name_plate_short", GroveArtData.NAME_PLATE_SHORT_MARGINS, value, Vector4(NUMBER_RADIUS + 6.0, inset_y, 0.0, inset_y))
 		queue_redraw()
 var duplicate: bool = false
 
@@ -73,13 +75,6 @@ func _draw() -> void:
 		draw_style_box(GroveStyleBox.make(tex, GroveArtData.NAME_PLATE_SHORT_MARGINS, dim), plate_rect)
 	else:
 		draw_rect(plate_rect, ThemeTokens.PLATE_BG)
-	if selected:
-		var box := StyleBoxFlat.new()
-		box.draw_center = false
-		box.border_color = ThemeTokens.BLOOD_RED
-		box.set_border_width_all(3)
-		box.set_corner_radius_all(ThemeTokens.RADIUS_M)
-		draw_style_box(box, plate_rect.grow(3.0))
 	var centre := Vector2(NUMBER_RADIUS + 2.0, mid)
 	draw_circle(centre, NUMBER_RADIUS, ThemeTokens.NUMBER_BG)
 	draw_arc(centre, NUMBER_RADIUS, 0.0, TAU, 28, ThemeTokens.BLOOD_RED if selected else (ThemeTokens.MOON_SILVER_DIM if empty else ThemeTokens.MOON_SILVER), 2.0, true)

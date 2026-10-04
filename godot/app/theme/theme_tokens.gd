@@ -130,6 +130,12 @@ const COUNTER_VALUE_FONT := 72        ## große Spielerzahl
 const ACT_CARD_MIN_WIDTH := 260       ## Akt-Karte: schmalste Breite, zwei Spalten
 const ACT_CARD_HEIGHT := 160
 const TEAM_SYMBOL_SIZE := 48          ## Teamsymbol im Zähler
+## Teamfarben der Rollenkacheln und Leistenmarken (Multiplikator auf das dunkle Namensschild `name_plate_short`, DA-91): gewählt volle Farbe,
+## nicht gewählt entsättigt und dunkel.
+const TEAM_PLATE_VILLAGE := Color(0.75, 1.45, 2.4)    ## kühles Mondblau
+const TEAM_PLATE_WOLVES := Color(2.3, 0.5, 0.52)     ## dunkles Blutrot
+const TEAM_PLATE_SOLO := Color(1.6, 1.0, 2.1)       ## gedämpftes Violett
+const TEAM_PLATE_OFF := Color(0.72, 0.74, 0.8)       ## nicht gewählt
 const NAME_PLATE_HEIGHT := 56         ## Namensschild (Tippfläche)
 const NAME_PLATE_MIN_WIDTH := 196
 const ROLE_CHIP_HEIGHT := 56          ## Rollenmarke in der Rollenübersicht

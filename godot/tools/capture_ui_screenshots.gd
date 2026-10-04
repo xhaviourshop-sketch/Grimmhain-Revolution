@@ -26,7 +26,8 @@ const PREP_SIZES := [Vector2i(1024, 768), Vector2i(2360, 1640)]
 const PREP_SHOTS := [
 	["01-runde", "_prep_round_random", "zufaellig"], ["01-runde", "_prep_round_manual", "karten"],
 	["02-namen", "_prep_names_random", "zufaellig"], ["02-namen", "_prep_names_manual", "karten"],
-	["03-rollen", "_prep_roles_random", "zufaellig"], ["03-rollen", "_prep_roles_manual", "karten"],
+	["03-rollen-leer", "_prep_roles_random", "zufaellig"], ["03-rollen-leer", "_prep_roles_manual", "karten"],
+	["03-rollen-gefuellt", "_prep_roles_filled_random", "zufaellig"], ["03-rollen-gefuellt", "_prep_roles_filled_manual", "karten"],
 	["03-rollen-zuordnung", "_prep_assign", "karten"], ["03-rollen-leiste", "_prep_bar", "karten"],
 ]
 const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
@@ -147,6 +148,9 @@ func _press(shell: AppShell, node_name: String) -> void:
 	await process_frame
 
 
+var _shot_act := "akt3"
+
+
 ## Tablet-Runde: 13 Personen, Akt III (enthält Trugbilderwolf und Totenreichkarten-Rolle), nur über echte Buttons und die Anwendungsschicht.
 func _prep_names_filled(shell: AppShell, manual: bool) -> void:
 	var setup := shell.get_app_context().setup
@@ -154,7 +158,7 @@ func _prep_names_filled(shell: AppShell, manual: bool) -> void:
 		await _press(shell, "ManualModeButton")
 	while int(setup.view()["player_count"]) < 13:
 		await _press(shell, "PlusButton")
-	await _press(shell, "ActCard_akt3")
+	await _press(shell, "ActCard_%s" % _shot_act)
 
 
 func _prep_round_random(shell: AppShell) -> void:
@@ -197,15 +201,29 @@ func _prep_roles(shell: AppShell, manual: bool) -> void:
 
 
 func _prep_roles_random(shell: AppShell) -> void:
+	_shot_act = "akt1"
 	await _prep_roles(shell, false)
 
 
 func _prep_roles_manual(shell: AppShell) -> void:
+	_shot_act = "akt1"
 	await _prep_roles(shell, true)
+
+
+func _prep_roles_filled_random(shell: AppShell) -> void:
+	await _prep_roles_random(shell)
+	await _press(shell, "ProposalButton")
+
+
+func _prep_roles_filled_manual(shell: AppShell) -> void:
+	await _prep_roles_manual(shell)
+	await _press(shell, "ProposalButton")
 
 
 func _prep_assign(shell: AppShell) -> void:
+	_shot_act = "akt3"
 	await _prep_roles(shell, true)
+	await _press(shell, "ProposalButton")
 	await _press(shell, "NextButton")
 	var setup := shell.get_app_context().setup
 	var persons: Array = setup.view()["persons"]

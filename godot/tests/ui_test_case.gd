@@ -422,6 +422,7 @@ func prepare_through_buttons(shell: Control, count: int, act: StringName = &"akt
 	await type_text(find_node(screen, "ImportText") as TextEdit, ", ".join(numbered_names(count)))
 	await press(find_button(screen, "ImportConfirmButton"))
 	await press(find_button(screen, "NextButton"))
+	await press(find_button(screen, "ProposalButton"))  # Schritt 3 startet leer (DA-91): „Empfehlung übernehmen“
 	if cards:
 		await press(find_button(screen, "DeathCardsToggle"))
 		await frames(3)

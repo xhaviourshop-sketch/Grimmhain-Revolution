@@ -20,6 +20,11 @@ func _setup() -> void:
 	_quit.visible = AppPlatform.can_quit_from_menu()
 	(%QuitGroup as Control).visible = _quit.visible
 	_quit.pressed.connect(quit_requested.emit)
+	for node: Node in find_children("*", "GrimmButton", true, false):
+		var button := node as GrimmButton
+		var height := button.custom_minimum_size.y  # Tippfläche bleibt (Hauptaktion 64), der Rahmen wird mittig gezeichnet
+		GroveSkin.skin_button(button, button == _new_game)
+		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, height)
 
 
 func default_focus() -> Control:

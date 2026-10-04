@@ -21,6 +21,7 @@ func _ready_to_start(count: int, act: StringName = &"akt2") -> PlayerSetup:
 	var setup := _setup_with(count, act)
 	var result := setup.go_to_step(SetupDraft.STEP_ROLES)
 	assert_true(result.ok, "%d Personen, %s: Rollenschritt erreichbar (%s)" % [count, act, result.error])
+	assert_true(setup.apply_suggestion().ok, "Empfehlung übernehmen")  # Schritt 3 startet leer (DA-91)
 	return setup
 
 
@@ -111,6 +112,7 @@ func test_names_order_is_the_seating() -> void:
 	for id: int in ids:
 		assert_true(by_id.has(id), "Personen-ID %d bleibt" % id)
 	setup.go_to_step(SetupDraft.STEP_ROLES)
+	setup.apply_suggestion()
 	var data := setup.prepare_start()
 	assert_true(data.ok, "Start (%s)" % data.error)
 	assert_eq(data.details["seat_order"], setup.view()["persons"].map(func(p: Dictionary) -> int: return int(p["person_id"])), "Sitzordnung = Namensreihenfolge")
@@ -190,6 +192,7 @@ func test_random_mode_distributes_once_with_a_stored_seed() -> void:
 	for i: int in 8:
 		setup.add_person("Person %d" % (i + 1))
 	setup.go_to_step(SetupDraft.STEP_ROLES)
+	setup.apply_suggestion()
 	assert_eq(int(setup.view()["distribution"]["assigned_count"]), 0, "vor dem Start wird nichts verteilt")
 	var first := setup.prepare_start()
 	assert_true(first.ok, "Start (%s)" % first.error)
@@ -203,6 +206,7 @@ func test_random_mode_distributes_once_with_a_stored_seed() -> void:
 	for i: int in 8:
 		other.add_person("Person %d" % (i + 1))
 	other.go_to_step(SetupDraft.STEP_ROLES)
+	other.apply_suggestion()
 	assert_eq(JSON.stringify(other.prepare_start().details["roles"]), JSON.stringify(first.details["roles"]), "gleiche Eingabe, gleicher Seed: gleiche Zuordnung")
 
 
@@ -243,6 +247,22 @@ func test_role_actions_swap_remove_add_and_decoy() -> void:
 	assert_true(bool(setup.view()["roles"]["is_suggestion"]), "Auswahl = Vorschlag")
 
 
+func test_roles_step_starts_empty_and_the_recommendation_fills_it() -> void:
+	for mode: StringName in [DistributionDraft.RANDOM, DistributionDraft.MANUAL]:
+		var setup := _setup_with(10, &"akt1")
+		setup.set_distribution_mode(mode)
+		assert_true(setup.go_to_step(SetupDraft.STEP_ROLES).ok, "Rollenschritt (%s)" % mode)
+		var roles: Dictionary = setup.view()["roles"]
+		assert_eq(int(roles["total"]), 0, "%s: 0 Rollen beim Öffnen" % mode)
+		assert_false((setup.blockers() as Array).is_empty(), "%s: leer ist nicht startbar" % mode)
+		assert_true(setup.go_to_step(SetupDraft.STEP_NAMES).ok and setup.go_to_step(SetupDraft.STEP_ROLES).ok, "Zurück und wieder vor")
+		assert_eq(int(setup.view()["roles"]["total"]), 0, "%s: bleibt leer" % mode)
+		assert_true(setup.apply_suggestion().ok, "Empfehlung übernehmen")
+		assert_eq(int(setup.view()["roles"]["total"]), 10, "%s: füllt auf die Personenzahl" % mode)
+		assert_true(bool(setup.view()["roles"]["is_suggestion"]), "%s: Auswahl = Empfehlung des Aktes" % mode)
+		assert_true((setup.blockers() as Array).is_empty(), "%s: startbar (%s)" % [mode, setup.blockers()])
+
+
 func test_going_back_keeps_names_and_roles() -> void:
 	var setup := _ready_to_start(9, &"akt2")
 	setup.replace_role(&"werwolf", &"blutwolf") if int(setup.view()["roles"]["counts"]["blutwolf"]) == 0 else null
@@ -255,5 +275,7 @@ func test_going_back_keeps_names_and_roles() -> void:
 	setup.set_act(&"akt4")
 	assert_eq(int(setup.view()["roles"]["total"]), 0, "anderer Akt verwirft die Auswahl")
 	assert_true(setup.go_to_step(SetupDraft.STEP_NAMES).ok, "Namen")
-	assert_true(setup.go_to_step(SetupDraft.STEP_ROLES).ok, "neuer Vorschlag beim Öffnen")
-	assert_eq(int(setup.view()["roles"]["total"]), 9, "Vorschlag passt zur Personenzahl")
+	assert_true(setup.go_to_step(SetupDraft.STEP_ROLES).ok, "Rollenschritt")
+	assert_eq(int(setup.view()["roles"]["total"]), 0, "Schritt 3 startet leer, auch nach einem Aktwechsel")
+	assert_true(setup.apply_suggestion().ok, "Empfehlung übernehmen")
+	assert_eq(int(setup.view()["roles"]["total"]), 9, "Empfehlung passt zur Personenzahl")
