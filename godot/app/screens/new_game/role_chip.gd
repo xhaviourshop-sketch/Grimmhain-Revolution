@@ -10,7 +10,7 @@ const PLATE_HEIGHT := 38.0
 const PAD := 14.0
 const TILE_OFF_BRIGHTNESS := 0.45     ## nicht gewählter Teamrahmen: Helligkeit
 const TILE_OFF_DESATURATION := 0.85   ## nicht gewählter Teamrahmen: Anteil, der zu Grau gemischt wird
-const TILE_SYMBOL_FILL := 1.8         ## Symbolgröße im Verhältnis zum Lochradius der Fassung
+const TILE_SYMBOL_FILL := 2.3         ## Symbolgröße im Verhältnis zum Lochradius der Fassung
 
 static var _off_textures: Dictionary = {}
 
