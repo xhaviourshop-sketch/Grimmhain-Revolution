@@ -163,12 +163,22 @@ func test_main_action_sits_in_the_dock_and_secondary_actions_in_the_card() -> vo
 	assert_false(dock.is_ancestor_of(start), "Spielbeginn: großer Knopf nicht im Dock")
 	assert_true(start.size.y >= float(ThemeTokens.TOUCH_MIN), "Tippfläche mindestens 48 px")
 	await press(start)
-	var confirm := find_button(screen, "ConfirmTargetsButton")
-	assert_true(confirm != null and dock.is_ancestor_of(confirm), "Auswahl bestätigen im Dock (%s)" % str(confirm))
-	assert_true(confirm.disabled, "ohne Auswahl gesperrt")
+	# Feste Zielwahl: sofort übernommen, also weder „Auswahl bestätigen“ noch Hauptaktion; die erste Hauptaktion kommt mit dem nächsten Ja/Nein-Schritt.
+	assert_true(find_node(screen, "ConfirmTargetsButton") == null, "feste Zielwahl ohne Bestätigungsknopf")
+	var card := find_node(screen, "ActionCard")
+	for i: int in 6:
+		if card.call("primary_button") != null:
+			break
+		var next := effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
+		if str(next.get("answer")) != "targets":
+			break
+		await press(_ring(shell).call("token_for", int((next["allowed_ids"] as Array)[0])) as BaseButton)
+	var primary := card.call("primary_button") as Control
+	assert_true(primary != null and dock.is_ancestor_of(primary), "Hauptaktion im Dock (%s)" % str(primary))
 
 
-func test_target_slot_shows_the_choice_and_arrows_cycle_through_allowed_people() -> void:
+## Bei fester Anzahl ist der Zielplatz mit den Pfeilen verborgen; ein Tipp auf den Kreis übernimmt die Wahl sofort (Rückgängig-Leiste).
+func test_fixed_count_step_hides_the_target_slot_and_commits_on_tap() -> void:
 	var shell := await _cockpit(SIZE_16_10, 7)
 	if shell == null:
 		return
@@ -179,19 +189,13 @@ func test_target_slot_shows_the_choice_and_arrows_cycle_through_allowed_people()
 	assert_eq(str(next["answer"]), "targets", "Zielwahl")
 	assert_true(allowed.size() >= 2, "mindestens zwei wählbare Personen")
 	var slot := find_node(screen, "TargetSlot") as Control
-	assert_true(slot != null and slot.is_visible_in_tree(), "Zielplatz sichtbar")
-	await press(find_button(screen, "TargetNextButton"))
-	assert_true(find_node(screen, "SelectionLabel") != null, "Auswahl genannt")
-	var first_choice := (find_node(screen, "TargetNameLabel") as Label).text
-	assert_true(first_choice.begins_with("%d · " % int(allowed[0])), "Pfeil rechts wählt die erste wählbare Person (%s)" % first_choice)
-	assert_false(find_button(screen, "ConfirmTargetsButton").disabled, "Auswahl bestätigbar")
-	await press(find_button(screen, "TargetNextButton"))
-	var second_choice := (find_node(screen, "TargetNameLabel") as Label).text
-	assert_ne(second_choice, first_choice, "Pfeil wechselt zur nächsten Person")
-	await press(find_button(screen, "TargetPrevButton"))
-	assert_eq((find_node(screen, "TargetNameLabel") as Label).text, first_choice, "Pfeil links geht zurück")
-	var wanted := int(allowed[0])
-	assert_eq(String(_ring(shell).call("token_for", wanted).get("state")), "selected", "der Platz am Kreis ist gewählt")
+	assert_true(slot == null or not slot.is_visible_in_tree(), "Zielplatz bei fester Anzahl verborgen")
+	var commands_before := (session_of(shell).call("commands") as Array).size()
+	await press(_ring(shell).call("token_for", int(allowed[0])) as BaseButton)
+	var sent: Array = session_of(shell).call("commands")
+	assert_eq(sent.size(), commands_before + 1, "Tipp übernimmt die Wahl sofort")
+	assert_eq((sent.back() as Command).payload["targets"], [int(allowed[0])], "die getippte Person")
+	assert_true(bool(find_node(screen, "ActionCard").call("undo_visible")), "Rückgängig-Leiste sichtbar")
 
 
 # --- Verbergen -----------------------------------------------------------------------------------------
