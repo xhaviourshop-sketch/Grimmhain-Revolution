@@ -49,8 +49,7 @@ func test_card_fades_in_and_new_render_cancels() -> void:
 	await press(find_button(current_screen(shell), "StartNightButton"))
 	assert_true(card.modulate.a < 1.0, "neue Handlung blendet ein (%.2f)" % card.modulate.a)
 	# Sofort weiter: Auswahl ändert nur dieselbe Karte, kein erneutes Einblenden nötig.
-	await press(find_node(current_screen(shell), "SeatRing").call("token_for", 5) as BaseButton)
-	await press(find_button(current_screen(shell), "ConfirmTargetsButton"))
+	await press(find_node(current_screen(shell), "SeatRing").call("token_for", 5) as BaseButton)  # feste Anzahl: sofort übernommen
 	await wait_seconds(ThemeTokens.CARD_FADE_SECONDS + 0.15)
 	assert_eq(card.modulate.a, 1.0, "Einblenden beendet, nichts bleibt halb transparent")
 	var backdrop := find_node(current_screen(shell), "Backdrop") as Control
@@ -71,12 +70,20 @@ func test_focus_moves_to_next_card_action() -> void:
 	var shell := await _cockpit()
 	if shell == null:
 		return
-	var start := find_button(current_screen(shell), "StartNightButton")
-	start.grab_focus()
+	await press(find_button(current_screen(shell), "StartNightButton"))
+	var card := find_node(current_screen(shell), "ActionCard")
+	# Feste Zielwahlen haben keinen Aktionsknopf; weiter bis zum ersten Schritt mit Knopf, dann per Tastatur auslösen.
+	for _i in 6:
+		if card.call("primary_button") != null:
+			break
+		var next := effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
+		await press(find_node(current_screen(shell), "SeatRing").call("token_for", int((next["allowed_ids"] as Array)[0])) as BaseButton)
+	var primary := card.call("primary_button") as Control
+	assert_true(primary != null, "Schritt mit Hauptaktion erreicht")
+	primary.grab_focus()
 	await key(KEY_ENTER)
 	await frames(2)
 	var owner := focus_owner()
-	var card := find_node(current_screen(shell), "ActionCard")
 	# Die Hauptaktion steht im Dock (P3) und gehört zur Karte (`action_buttons`); alle anderen Aktionen liegen in ihr.
 	var on_card := owner != null and (card.is_ancestor_of(owner) or (card.call("action_buttons") as Array).has(owner))
 	assert_true(on_card, "Fokus auf der neuen Karte (%s)" % (owner.name if owner != null else "keiner"))
