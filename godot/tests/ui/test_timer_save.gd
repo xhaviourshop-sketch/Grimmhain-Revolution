@@ -149,7 +149,9 @@ func test_expiry_in_the_cockpit_changes_nothing_but_the_display() -> void:
 	assert_eq(button.text, "0:00", "Anzeige steht auf 0:00")
 	assert_eq(int((s.call("view") as Dictionary)["command_count"]), count_before, "kein Befehl durch Ablauf")
 	assert_eq(String(s.call("save_text")), core_before, "Regelstand unverändert")
-	assert_true(find_button(screen, "ConfirmTargetsButton") != null, "die Nacht ist weiter bedienbar")
+	var shown := effective_of((s.call("cockpit_view") as Dictionary)["next"])
+	var token := find_node(screen, "SeatRing").call("token_for", int((shown["allowed_ids"] as Array)[0])) as BaseButton
+	assert_false(token.disabled, "die Nacht ist weiter bedienbar")
 
 
 func test_night_timer_can_be_hidden_in_the_options_and_the_choice_is_saved() -> void:
