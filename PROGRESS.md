@@ -686,8 +686,10 @@ Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 38037
 Nicht geprüft: Safari/iPad (Flüssigkeit der Ebenen, Glühen, Touch). Offen: Eintreten-Übergang im Browser nicht aufgenommen (nur Code und Tests).
 
 
-## 2026-10-04: Abnahme Feinschliff, Nebel-Übergang und Logo-Lesbarkeit (DA-93), Branch feature/vorbereitung-feinschliff
+## 2026-10-04: Abnahme Feinschliff, Nebel-Übergang und Logo-Lesbarkeit (DA-93), gemergt nach main
 Stand: Markus hat den Feinschliff am iPad abgenommen. Nach „Eintreten“ zieht der Nebel zu und das Hauptmenü taucht aus dem Nebel auf (`StartBackdrop.fog_open`, 0,8 s, einmalig über `fog_open_pending`; bei reduzierter Bewegung hart). Hauptmenü-Logo liegt auf dem Mond: weiche dunkle Vignette hinter dem Logo (`LogoShade` in `main_menu_screen.gd`). Regelkern unverändert.
-Verifikation: Screenshots Hauptmenü 1024x768 und 2360x1640 geprüft (Logo lesbar) in `Downloads/grimmhain-menue-logo/`. Vollsuite vor Merge nach main läuft (Ergebnis folgt unten).
+Verifikation: Screenshots Hauptmenü 1024x768 und 2360x1640 geprüft (Logo lesbar) in `Downloads/grimmhain-menue-logo/`. Vollsuite vor Merge: erster Lauf 1403 Tests, 4 Fehlschläge (`ui_layout`: `LogoShade` ragte über den Bildrand, echter Fehler der Änderung); Schatten ins beschneidende Backdrop verlegt, `ui_layout` 6/6 grün, zweite Vollsuite inkl. Fuzz: 1403 Tests, 0 Fehlschläge (Exit 0). Test nicht abgeschwächt.
+Merge: ohne Squash nach main (66b8a9a), main gepusht.
+Deploy: Web-Export neu, `grimmhain-ipad-test` (Produktion), `index.pck` 38039584 Byte.
 Nicht geprüft: Nebel-Auftauchen im echten Ablauf (nur Code, kein Video), Safari/iPad.
-Offen: Vollsuite-Ergebnis, Merge nach main, Deploy.
+Offen: nichts aus diesem Auftrag.
