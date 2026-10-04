@@ -95,7 +95,9 @@ func test_private_card_keeps_details_and_reactions_stay_operable() -> void:
 	assert_eq(next["actor_ids"], [4], "Besitzer auf der Karte")
 	assert_eq(int(next["reactions_open"]), 2, "Anzahl auf der Karte")
 	assert_true(s.begin_next_step().ok, "Reaktion beginnen")
-	assert_true(s.answer_targets([]).ok, "Besessener Wolf verzichtet")
+	var possessed: Array = UiGame.next_of(s)["allowed_ids"]  # kein Verzicht: der Besessene Wolf muss wählen
+	assert_false(possessed.is_empty(), "Besessener Wolf hat Ziele")
+	assert_true(s.answer_targets([possessed[0]]).ok, "Besessener Wolf wählt")
 	_assert_neutral(s, DAWN_HINT, "zweite Reaktion")
 	assert_eq(str(UiGame.next_of(s)["reaction_kind"]), "curse", "zweite Reaktion auf der Karte")
 	assert_true(s.begin_next_step().ok, "zweite Reaktion beginnen")
@@ -103,8 +105,8 @@ func test_private_card_keeps_details_and_reactions_stay_operable() -> void:
 	assert_eq(str((s.view() as Dictionary)["phase"]), "DAY", "Tag nach den Reaktionen")
 	# DI-03: Der Todeseffekt wird öffentlich angesagt, sobald er eintritt.
 	var effects: Array = (s.morning_report()["public"] as Dictionary)["effects"]
-	assert_eq(effects.map(func(e: Dictionary) -> String: return str(e["effect"])), ["reaper_curse"], "Fluch öffentlich angesagt")
-	assert_eq(str(effects[0]["role_id"]), "sensentraeger", "mit Rolle (DI-03)")
+	assert_eq(effects.map(func(e: Dictionary) -> String: return str(e["effect"])), ["possessed_drag", "reaper_curse"], "Mitnahme und Fluch öffentlich angesagt")
+	assert_eq(str(effects[1]["role_id"]), "sensentraeger", "mit Rolle (DI-03)")
 
 
 func test_hint_stays_neutral_after_load_and_undo() -> void:
@@ -139,6 +141,9 @@ func test_warning_label_shows_the_neutral_text_in_both_languages() -> void:
 	await frames(2)
 	assert_eq(label.text, "The game master is preparing the morning.", "neutraler Text EN")
 	await press(find_button(current_screen(shell), "RevealButton"))
-	assert_true(find_button(current_screen(shell), "BeginStepButton").is_visible_in_tree(), "Reaktion nach „Show“ bedienbar")
+	assert_true(find_node(current_screen(shell), "RevealButton") == null, "Karte aufgedeckt")
+	var shown := effective_of((s.cockpit_view() as Dictionary)["next"])
+	assert_eq(str(shown.get("kind")), "prompt", "Reaktion nach „Show“ als Prompt auf der Karte (ohne „Schritt beginnen“)")
+	assert_true(find_node(current_screen(shell), "BeginStepButton") == null, "kein eigener Beginnen-Knopf")
 	settings_of(shell).call("set_language", "de")
 	await frames(2)
