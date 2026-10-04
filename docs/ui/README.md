@@ -112,7 +112,7 @@ Szenen enthalten keine Stilwerte (keine Farben, `theme_override_*`, Mindestgrö�
 | Gefahr | `DANGER` · `DANGER_BRIGHT` · `DANGER_DEEP` | `#9b3a3a` · `#ad4545` · `#7c2d2d` |
 | Meldungen | `DANGER_TEXT` (Fehler) · `WARNING_TEXT` (Hinweis) | `#ec9f97` · `#e0c26e`, immer mit Textpräfix „Fehler:“/„Hinweis:“ |
 | Text | `TEXT_PRIMARY` · `TEXT_MUTED` · `TEXT_ON_GOLD` · `TEXT_DISABLED` | `#ece7dc` · `#aaa393` · `#15110a` · `#6b675f` |
-| Fokus | `FOCUS_RING` | `#f3de9f`, Rahmen 3 px mit 4 px Abstand |
+| Fokus | `FOCUS_RING` | `#e8edf6`, Rahmen 3 px mit 4 px Abstand |
 | Deaktiviert | `DISABLED_FILL` · `DISABLED_BORDER` | `#181b23` · `#262a35` |
 | Abstände | `SPACE_XS/S/M/L/XL` | 4 · 8 · 16 · 24 · 32 |
 | Radien | `RADIUS_S/M/L` | 6 · 10 · 16 |

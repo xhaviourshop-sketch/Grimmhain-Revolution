@@ -4,7 +4,12 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
-## UEBERGABE Nachtschritte neu (WIP, Branch feature/nachtschritte-neu, NICHT gemergt, 2026-10-04)
+## 2026-10-05: Abschluss Nachtschritte neu, gemergt nach main
+Stand: Aufgeraeumt (Schluessel `ui.night.reaction.*` ueber die gemeinsame Vorlage `ui.night.<besitzer>.<stufe>`, i18n-Pruefung gruen; 14 ungenutzte `ui.cockpit.*`-Schluessel in DE/EN entfernt, zwei bleiben, weil das Regelbuch sie zitiert: `ui.cockpit.card.decoys.caption`, `ui.cockpit.card.notice.heading`). `FOCUS_RING` von Gold auf Mondsilber `#e8edf6` (DAY_ACCENT unberuehrt). Spalte `tipps_neu` in `docs/audit/NACHTSCHRITTE-72.csv`: Messung ueber die echte Oberflaeche (Nacht 1 bis 3, Tipps = Knopf- und Sitzdruecke je Rolle, bedingte Rollen mit vielen Toten); 67 vergleichbare Rollen 182 vorher, 106 nachher; nicht gemessen: besessener-wolf, daemonischer-wolf, henker, kopfgeldjaeger, sensentraeger.
+Verifikation: Vollsuite inkl. Fuzz auf dem finalen Stand: 1409 Tests, 0 Fehlschlaege (Exit 0); der erste Lauf war rot (Regelbuch zitierte zwei entfernte Schluessel), Schluessel wiederhergestellt, Lauf wiederholt. Screenshots 1024x768 in `Downloads/Grimmhain-Nacht-neu/`.
+Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als schmaler Streifen mit senkrecht umbrochenem Text und verdeckt kurz die Karte (3 s, Ursache im Layout der Leiste); Titel der Blutpriester-Karte wird vom Info-Knopf angeschnitten. Safari/iPad nicht geprueft.
+
+## UEBERGABE Nachtschritte neu (erledigt, siehe Abschluss oben, 2026-10-05)
 - Phase 1 (Regelkern, Commit 6d8cda7): fertig. Unit, Szenarien und Fuzz waren gruen. Der .po-Mehrzeilenfehler aus diesem Commit ist im WIP-Commit repariert.
 - Phase 2 (Schablone): Code steht (action_card, cockpit_screen, cockpit_text, cockpit_view, prompt_view), 172 neue ui.night.* Texte DE/EN fuer alle Schritte.
 - UI-Tests (Stand 2026-10-05, Vollsuite --dir=ui): 431 Tests, 0 rot, alle Dateien ladbar. Vorher 16 rot (resume_scenarios 6, role_operation_kinds 4,

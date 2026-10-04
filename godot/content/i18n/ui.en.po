@@ -143,26 +143,14 @@ msgstr "Transitions on"
 msgid "ui.settings.toast.save_failed"
 msgstr "Applied now, but could not be saved permanently"
 
-msgid "ui.cockpit.title"
-msgstr "Game master cockpit"
-
 msgid "ui.cockpit.no_game"
 msgstr "No game active"
-
-msgid "ui.cockpit.phase.label"
-msgstr "Phase"
 
 msgid "ui.cockpit.instruction.heading"
 msgstr "Instruction card"
 
 msgid "ui.cockpit.instruction.no_game"
 msgstr "Start a new game from the main menu. The next step will then appear here."
-
-msgid "ui.cockpit.seats.heading"
-msgstr "Seat circle"
-
-msgid "ui.cockpit.seats.placeholder"
-msgstr "Start a new game from the main menu. The seating circle then appears here."
 
 msgid "ui.phase.none"
 msgstr "No game"
@@ -1343,12 +1331,6 @@ msgstr "Everyone closes their eyes. The app then guides you through the night st
 msgid "ui.cockpit.card.start_night.do_next"
 msgstr "The day has ended. Begin the next night once everyone has closed their eyes."
 
-msgid "ui.cockpit.card.step.caption"
-msgstr "Next step · {index} of {total}"
-
-msgid "ui.cockpit.card.reaction.caption"
-msgstr "Reaction · {count} open"
-
 msgid "ui.cockpit.card.role_title"
 msgstr "{role}"
 
@@ -1657,15 +1639,6 @@ msgstr "Note: Nobody is alive any more. Declare the result as game master."
 
 msgid "ui.cockpit.dialog.reason_placeholder"
 msgstr "Reason (required)"
-
-msgid "ui.cockpit.dialog.skip.title"
-msgstr "Skip this step?"
-
-msgid "ui.cockpit.dialog.skip.message"
-msgstr "The step is skipped without effect and logged with the reason."
-
-msgid "ui.cockpit.dialog.skip.confirm"
-msgstr "Skip"
 
 msgid "ui.cockpit.dialog.cancel.title"
 msgstr "Cancel this step?"
@@ -3011,24 +2984,6 @@ msgstr "Note: Several roles in this setup win alone when at most three people ar
 msgid "ui.call.night_falls_revival"
 msgstr "“Night falls. Everyone closes their eyes, the dead included.”"
 
-msgid "ui.cockpit.card.decoys.caption"
-msgstr "Call first (announcement only)"
-
-msgid "ui.cockpit.card.decoys.hint"
-msgstr "These roles do nothing. They are only announced so the table learns nothing."
-
-msgid "ui.cockpit.card.notice.caption"
-msgstr "Notice, {count} open"
-
-msgid "ui.cockpit.card.notice.heading"
-msgstr "Private notice"
-
-msgid "ui.cockpit.card.notice.for"
-msgstr "For: {names}"
-
-msgid "ui.cockpit.card.notice.do"
-msgstr "Show the card only to the people named. Confirm afterwards that it was shown."
-
 msgid "ui.cockpit.action.show_notice"
 msgstr "Show card"
 
@@ -3058,9 +3013,6 @@ msgstr "You are infected. At the start of each morning you infect a neighbouring
 
 msgid "ui.cockpit.card.red_grant.heading"
 msgstr "Refuge"
-
-msgid "ui.cockpit.card.asked"
-msgstr "Asked: {names}"
 
 msgid "ui.effect.reaper_curse"
 msgstr "“{name} was {role} and curses {target}.”"
@@ -8741,3 +8693,9 @@ msgstr "Show the card to: {names}"
 
 msgid "ui.night.notice.help"
 msgstr "Show only to these people."
+
+msgid "ui.cockpit.card.decoys.caption"
+msgstr "Call first (announcement only)"
+
+msgid "ui.cockpit.card.notice.heading"
+msgstr "Private notice"

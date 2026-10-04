@@ -143,26 +143,14 @@ msgstr "Übergänge aktiv"
 msgid "ui.settings.toast.save_failed"
 msgstr "Gilt jetzt, konnte aber nicht dauerhaft gespeichert werden"
 
-msgid "ui.cockpit.title"
-msgstr "Spielleiter-Cockpit"
-
 msgid "ui.cockpit.no_game"
 msgstr "Keine Partie aktiv"
-
-msgid "ui.cockpit.phase.label"
-msgstr "Phase"
 
 msgid "ui.cockpit.instruction.heading"
 msgstr "Ansagekarte"
 
 msgid "ui.cockpit.instruction.no_game"
 msgstr "Starte im Hauptmenü eine neue Partie. Hier erscheint dann der nächste Schritt."
-
-msgid "ui.cockpit.seats.heading"
-msgstr "Sitzkreis"
-
-msgid "ui.cockpit.seats.placeholder"
-msgstr "Starte im Hauptmenü eine neue Partie. Dann erscheint hier der Sitzkreis."
 
 msgid "ui.phase.none"
 msgstr "Keine Partie"
@@ -1343,12 +1331,6 @@ msgstr "Alle schließen die Augen. Danach führt dich die App Schritt für Schri
 msgid "ui.cockpit.card.start_night.do_next"
 msgstr "Der Tag ist beendet. Beginne die nächste Nacht, wenn alle die Augen geschlossen haben."
 
-msgid "ui.cockpit.card.step.caption"
-msgstr "Nächster Schritt · {index} von {total}"
-
-msgid "ui.cockpit.card.reaction.caption"
-msgstr "Reaktion · {count} offen"
-
 msgid "ui.cockpit.card.role_title"
 msgstr "{role}"
 
@@ -1657,15 +1639,6 @@ msgstr "Hinweis: Niemand lebt mehr. Erkläre das Ergebnis über die Spielleitung
 
 msgid "ui.cockpit.dialog.reason_placeholder"
 msgstr "Begründung (Pflicht)"
-
-msgid "ui.cockpit.dialog.skip.title"
-msgstr "Schritt überspringen?"
-
-msgid "ui.cockpit.dialog.skip.message"
-msgstr "Der Schritt wird ohne Wirkung übersprungen und mit Begründung protokolliert."
-
-msgid "ui.cockpit.dialog.skip.confirm"
-msgstr "Überspringen"
 
 msgid "ui.cockpit.dialog.cancel.title"
 msgstr "Schritt abbrechen?"
@@ -3011,24 +2984,6 @@ msgstr "Hinweis: Mehrere Rollen dieser Besetzung gewinnen allein, wenn höchsten
 msgid "ui.call.night_falls_revival"
 msgstr "„Die Nacht bricht herein. Alle schließen die Augen, auch die Toten.“"
 
-msgid "ui.cockpit.card.decoys.caption"
-msgstr "Zuerst aufrufen (nur Ansage)"
-
-msgid "ui.cockpit.card.decoys.hint"
-msgstr "Diese Rollen tun nichts. Sie werden nur angesagt, damit der Tisch nichts erfährt."
-
-msgid "ui.cockpit.card.notice.caption"
-msgstr "Hinweis, noch {count} offen"
-
-msgid "ui.cockpit.card.notice.heading"
-msgstr "Privater Hinweis"
-
-msgid "ui.cockpit.card.notice.for"
-msgstr "Für: {names}"
-
-msgid "ui.cockpit.card.notice.do"
-msgstr "Zeige die Karte nur den genannten Personen. Bestätige danach, dass sie gezeigt wurde."
-
 msgid "ui.cockpit.action.show_notice"
 msgstr "Karte zeigen"
 
@@ -3058,9 +3013,6 @@ msgstr "Du bist infiziert. Zu Beginn jedes Morgens steckst du eine benachbarte l
 
 msgid "ui.cockpit.card.red_grant.heading"
 msgstr "Zuflucht"
-
-msgid "ui.cockpit.card.asked"
-msgstr "Gefragt: {names}"
 
 msgid "ui.effect.reaper_curse"
 msgstr "„{name} war {role} und verflucht {target}.“"
@@ -8741,3 +8693,9 @@ msgstr "Zeige die Karte: {names}"
 
 msgid "ui.night.notice.help"
 msgstr "Nur diesen Personen zeigen."
+
+msgid "ui.cockpit.card.decoys.caption"
+msgstr "Zuerst aufrufen (nur Ansage)"
+
+msgid "ui.cockpit.card.notice.heading"
+msgstr "Privater Hinweis"

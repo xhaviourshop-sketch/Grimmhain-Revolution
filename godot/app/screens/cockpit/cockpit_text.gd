@@ -58,9 +58,7 @@ static func call_key(role_id: String) -> String:
 ## der Rollenname bzw. der Hilfetext je Antwortart.
 static func night_base(next: Dictionary) -> String:
 	var owner := str(next.get("owner", ""))
-	if owner == "reaction":
-		return "ui.night.reaction.%s" % str(next.get("reaction_kind", ""))
-	var stage := str(next.get("stage", ""))
+	var stage := str(next.get("reaction_kind", "")) if owner == "reaction" else str(next.get("stage", ""))
 	return "ui.night.%s.%s" % [key_part(owner), stage if stage != "" else "pick"]
 
 
