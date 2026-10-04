@@ -41,7 +41,7 @@ func _to_day(shell: Control) -> void:
 	var s := session_of(shell)
 	s.call("start_night")
 	for i: int in 30:
-		var next: Dictionary = (s.call("cockpit_view") as Dictionary)["next"]
+		var next: Dictionary = effective_of((s.call("cockpit_view") as Dictionary)["next"])
 		match str(next["kind"]):
 			"day", "card_window":
 				break
@@ -60,7 +60,7 @@ func _to_day(shell: Control) -> void:
 ## Tauscht jede Karte im Fenster gegen eine Ersatzkarte, spielt diese mit der kleinsten gültigen Wahl und schließt das Fenster.
 func _exchange_all(s: Object) -> void:
 	for guard: int in 60:
-		var n: Dictionary = (s.call("cockpit_view") as Dictionary)["next"]
+		var n: Dictionary = effective_of((s.call("cockpit_view") as Dictionary)["next"])
 		match str(n["kind"]):
 			"card_window":
 				if bool(n["can_exchange"]):

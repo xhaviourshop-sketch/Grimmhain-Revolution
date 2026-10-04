@@ -6,19 +6,25 @@ extends UiTestCase
 ##
 ## Plan (Dictionary) für `run`: Schlüssel "<besitzer>/<stufe>" (einstufige Prompts: "<besitzer>/", Reaktionen:
 ## "reaction/<art>") mit Antwort:
-##   Array[int]         Sitzplätze antippen und „Bestätigen“; leeres Array = Verzicht-Button
+##   Array[int]         Sitzplätze antippen; eine feste Anzahl gilt sofort, sonst „Weiter“; leeres Array = Verzicht-Button
 ##   true / false       Ja- bzw. Nein-Button
 ##   {"option": i}      Options-Button i
 ##   {"prediction": ["night"|"day", n]}  Vorhersage über Art-Buttons und Plus
-##   "cancel"           Abbrechen mit Begründung im Dialog
-## "step/<rolle>": "skip" überspringt den Schritt mit Begründung. "day<N>": {"nominate": [von, an], "execute": id,
-## "cerberus": bool, "sage": n} für Tag N; sonst keine Hinrichtung. Ohne Plan: Verzicht, sonst Bestätigen/Nein,
-## sonst die ersten zulässigen Personen.
+##   "cancel"           Abbrechen mit Begründung im Dialog (nur Karteneingaben der Totenreichkarten)
+## Loki: "loki/targets" mit den zwei Personen, "loki/mode" mit true (Liebende) oder false (Rivalen); die Art wird zuerst getippt.
+## Karte zeigen: ein Tippen auf „Karte zeigen“ und das Schließen der gezeigten Karte erledigen die Auskunft (kein „Gezeigt“).
+## "day<N>": {"nominate": [von, an], "execute": id, "cerberus": bool, "sage": n} für Tag N; sonst keine Hinrichtung.
+## Ohne Plan: Verzicht, sonst die ersten zulässigen Personen bzw. Nein.
 
 const UiGame := preload("res://tests/ui/ui_game.gd")
 
 var shell: Control = null
 var trace: Array[String] = []
+var plan_loki_mode: bool = false  ## Art der Bindung für Loki (Plan "loki/mode"), gesetzt von `step`
+var quiet_nights: bool = false  ## Vorbereitung für lange Szenarien: das bedeutungslose Rudelopfer wird am Morgen per Korrektur wiederbelebt
+var _revived_day: int = -1
+var _revived_ids: Array[int] = []
+var plan_now: Dictionary = {}  ## Plan der laufenden Bedienhandlung (die Wölfe meiden Personen, die der Plan später braucht)
 
 
 ## Vorbereitung (Kernbefehle erlaubt): Start mit `roles` (Person i+1 hat roles[i], Sitzreihenfolge = IDs), Tote über
@@ -53,7 +59,29 @@ func screen() -> Control:
 	return current_screen(shell)
 
 
+## Nächste Handlung wie die Karte sie zeigt: Ein Schritt, dessen Prompt die Karte schon als Vorschau zeigt (Ansage und Aktion auf einem
+## Bildschirm, `BeginStep` geht erst mit der ersten Handlung), gilt hier als offener Prompt (`needs_begin`).
 func next() -> Dictionary:
+	var n: Dictionary = (session().cockpit_view() as Dictionary).get("next", {})
+	if str(n.get("kind")) == "begin_step" and not (n.get("preview", {}) as Dictionary).is_empty():
+		var shown: Dictionary = (n["preview"] as Dictionary).duplicate()
+		shown["needs_begin"] = true
+		shown["decoys"] = n.get("decoys", [])
+		shown["index"] = n.get("index", 0)
+		shown["total"] = n.get("total", 0)
+		return shown
+	return n
+
+
+## Vorbereitung für Tests, die den offenen Prompt im Zustand brauchen: beginnt den angekündigten Schritt (Kernbefehl).
+func begin_open_step() -> void:
+	if str(raw_next().get("kind")) == "begin_step":
+		assert_true(session().begin_next_step().ok, "Schritt begonnen")
+		await frames(2)
+
+
+## Unveränderte Sicht des Regelkerns (ein angekündigter Schritt bleibt `begin_step`).
+func raw_next() -> Dictionary:
 	return (session().cockpit_view() as Dictionary).get("next", {})
 
 
@@ -113,8 +141,25 @@ func _uncover() -> void:
 		await tap_button("RevealButton")
 
 
+## Szenariovorbereitung (Kernbefehl erlaubt, wie das Töten in `start`): Wer in der Nacht dem Rudel zum Opfer fiel, lebt am Tag wieder.
+func _revive_night_victims() -> void:
+	var day := int((session().cockpit_view() as Dictionary)["day_number"])
+	if day == _revived_day:
+		return
+	_revived_day = day
+	for e: Dictionary in events("SeatDied"):
+		var data: Dictionary = e["data"]
+		var id := int(data["target_id"])
+		if str(data.get("cause")) == "NIGHT_KILL" and not _revived_ids.has(id) and not state().players[id].alive:
+			_revived_ids.append(id)
+			session().submit(CorrectionFixtures.gm("revive", {"target_id": id}, "Vorbereitung"))
+
+
 ## Eine Bedienhandlung für die aktuelle Karte. Liefert false, wenn kein Weg gefunden wurde.
 func step(plan: Dictionary) -> bool:
+	plan_now = plan
+	if quiet_nights and str(next().get("kind")) == "day":
+		_revive_night_victims()
 	if live("ContinueDayButton") != null:
 		return await tap_button("ContinueDayButton")
 	var n := next()
@@ -123,15 +168,14 @@ func step(plan: Dictionary) -> bool:
 		"start_night":
 			return await tap_button("StartNightButton")
 		"begin_step":
-			# Invariante: Überspringen nur bei überspringbaren Schritten (Regelkern), nie bei Pflichtschritten.
-			assert_eq(live("SkipStepButton") != null, bool(n.get("skippable")), "Schritt %s: Überspringen nur wenn erlaubt" % str(n.get("step_id")))
-			if str(plan.get("step/%s" % str(n.get("role_id")), "")) == "skip":
-				return await tap_button("SkipStepButton") and await confirm_dialog()
+			# Nur ein Schritt ohne Prompt-Vorschau (entfällt oder endet sofort): „Weiter“; nie ein Knopf zum Überspringen.
+			assert_true(live("SkipStepButton") == null, "Schritt %s: kein Überspringen auf der Karte" % str(n.get("step_id")))
 			return await tap_button("BeginStepButton")
 		"prompt":
+			plan_loki_mode = bool(plan.get("loki/mode", false))
 			return await answer(plan.get(plan_key(n)))
 		"notice":
-			return await tap_button("AckNoticeButton")
+			return await show_and_close("ShowNoticeButton")
 		"end_night":
 			return await tap_button("EndNightButton")
 		"day":
@@ -148,13 +192,22 @@ func plan_key(n: Dictionary) -> String:
 	return "%s/%s" % [str(n.get("owner")), str(n.get("stage"))]
 
 
-## Antwort auf den offenen Prompt ausschließlich über die Karte.
+## Zeigt die Karte über `button` und schließt sie wieder: Das Schließen erledigt die Auskunft bzw. bestätigt den Hinweis.
+func show_and_close(button: String) -> bool:
+	if not await tap_button(button):
+		return false
+	return await tap_button("CloseLayerButton", shell)
+
+
+## Antwort auf den offenen Prompt (oder die Prompt-Vorschau `shown`) ausschließlich über die Karte.
 func answer(action: Variant) -> bool:
 	var n := next()
-	# Invarianten jeder Karte: Abbrechen genau bei abbrechbaren Prompts, Verzicht genau bei zulässiger Anzahl 0.
-	assert_eq(live("CancelPromptButton") != null, bool(n.get("cancellable")), "%s: Abbrechen nur wenn erlaubt" % plan_key(n))
+	# Invarianten jeder Karte: Abbrechen nur bei Karteneingaben, Verzicht genau bei zulässiger Anzahl 0, nie „Auswahl leeren“.
+	assert_eq(live("CancelPromptButton") != null, bool(n.get("cancellable")) and str(n.get("owner")) == "card", "%s: Abbrechen nur bei Karteneingaben" % plan_key(n))
+	assert_true(live("SkipStepButton") == null, "%s: kein Überspringen" % plan_key(n))
 	if str(n.get("answer")) == "targets":
 		assert_eq(live("DeclineButton") != null, (n.get("counts", []) as Array).has(0), "%s: Verzicht nur bei zulässiger Anzahl 0" % plan_key(n))
+		assert_eq(live("ClearSelectionButton") != null, false, "%s: kein „Auswahl leeren“" % plan_key(n))
 	if action is String and action == "cancel":
 		return await tap_button("CancelPromptButton") and await confirm_dialog()
 	match str(n.get("answer")):
@@ -162,16 +215,24 @@ func answer(action: Variant) -> bool:
 			var picks: Array = []
 			if action is Array:
 				picks = action
+			elif ["pack", "pack2"].has(str(n.get("owner"))):
+				picks = [Fixtures.quiet_victim(state(), n["allowed_ids"], plan_now)]  # die Wölfe töten jede Nacht: ohne Plan trifft es eine wirkungslose Person
 			elif live("DeclineButton") == null:
 				picks = (n["allowed_ids"] as Array).slice(0, int(n["min"]))
 			if picks.is_empty():
 				return await tap_button("DeclineButton")
+			if str(n.get("owner")) == "loki" and str(n.get("stage")) == "targets":
+				await tap_button("YesButton" if bool(plan_loki_mode) else "NoButton")  # erst Liebende oder Rivalen
 			for id: Variant in picks:
 				await tap_seat(int(id))
+			if CockpitText.auto_commit(n):
+				return true  # eine feste Anzahl gilt sofort
 			return await tap_button("ConfirmTargetsButton")
 		"choice":
 			return await tap_button("YesButton" if action is bool and action else "NoButton")
 		"ack":
+			if not (n.get("show", []) as Array).is_empty() and not ["die-gebundenen", "piper-all"].has(str(n.get("owner"))):
+				return await show_and_close("ShowCardButton")
 			return await tap_button("AckButton")
 		"option":
 			return await tap_button("OptionButton_%d" % (int((action as Dictionary)["option"]) if action is Dictionary else 0))

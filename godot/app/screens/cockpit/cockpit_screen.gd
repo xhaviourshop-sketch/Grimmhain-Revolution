@@ -32,11 +32,18 @@ const PLATE_SIZE := Vector2(200.0, 52.0)
 const PLAZA_CENTER_UV := Vector2(0.508, 0.508)  ## Mitte des Dorfplatzes im Hintergrundbild (Nachtszene v2)
 const BACKDROP_OVERSCAN := 1.05                 ## etwas größer als „cover“, damit sich die Platzmitte auf die Ringmitte schieben lässt
 
+static var double_tap_msec: int = 400  ## Sperre für die eben übernommene Person (feste Anzahl gilt sofort); Tests schalten sie ab
+
 var _view: Dictionary = {}
 var _next_id: String = ""
 var _selection: Array = []
 var _random: Variant = null  ## Zufallsvorschlag (Personen) der offenen Spielleiterwahl; nur bis zur nächsten Änderung
 var _revealed_id: String = ""
+var _loki_mode: Variant = null  ## Loki: gewählte Art der Bindung (true = Liebende) vor der Wahl der zwei Personen (nur Bedienzustand)
+var _committed_seat: int = -1  ## zuletzt automatisch übernommene Person (Schutz vor Doppeltippen)
+var _committed_until: int = 0
+var _call_step: String = ""  ## Schritt, dessen Ansage die Karte noch zeigt (der Schritt beginnt mit der ersten Handlung, die Ansage bleibt stehen)
+var _after_close: Callable = Callable()  ## Handlung nach dem Schließen der gezeigten Karte (Hinweis bestätigen, Auskunft erledigen)
 var _prediction := {"kind": "night", "number": 0}
 var _error_key: String = ""
 var _covered: bool = false
@@ -192,6 +199,8 @@ func _refresh() -> void:
 	for tool: String in ["LogButton", "PrivateButton", "RolesButton", "GmButton", "CoverButton", "HideButton"]:
 		(find_child(tool, true, false) as BaseButton).disabled = not active
 	var next: Dictionary = _view.get("next", {})
+	if str(_effective(next).get("owner")) != "loki":
+		_loki_mode = null
 	var identity := _identity(next)
 	if identity != _next_id:
 		_next_id = identity
@@ -623,12 +632,18 @@ func _render() -> void:
 		next = {"kind": "morning", "secret": false, "public": context.session.morning_report().get("public", {}),
 			"night_number": int(_view.get("night_number", 0))}
 		kind = "morning"
+	var eff := _effective(next)
+	if kind == "prompt" or kind == "begin_step":
+		if kind == "begin_step" and not (next.get("preview", {}) as Dictionary).is_empty():
+			_call_step = str(next.get("step_id", ""))
+	else:
+		_call_step = ""
 	if kind == "gm":
 		pass
 	elif kind == "day" and _day_mode != "":
 		_mark_day_mode(next)
-	elif kind == "prompt" and str(next.get("answer")) == "targets" and visible_secret:
-		_ring.set_marking(true, next.get("allowed_ids", []), _selection, next.get("actor_ids", []))
+	elif str(eff.get("kind")) == "prompt" and str(eff.get("answer")) == "targets" and visible_secret:
+		_ring.set_marking(true, eff.get("allowed_ids", []), _selection, eff.get("actor_ids", []))
 	elif (kind == "prompt" or kind == "begin_step") and visible_secret:
 		_ring.set_marking(false, [], [], next.get("actor_ids", []))
 	else:
@@ -645,6 +660,7 @@ func _render() -> void:
 		"revealed": _check_revealed if _day_mode == "execution_check" else _revealed_id == _next_id,
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
+		"pre_choice": _loki_mode, "call_step": _call_step,
 		"gm_mode": _gm_mode, "gm_effects": _gm_effects, "gm_role": _gm_role,
 		"status_fields": context.session.status_fields(int(_selection[0])) if _gm_mode == "status" and not _selection.is_empty() else [],
 		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
@@ -792,6 +808,8 @@ func _same_set(a: Array, b: Variant) -> bool:
 
 
 func _on_seat_tapped(person_id: int) -> void:
+	if person_id == _committed_seat and Time.get_ticks_msec() < _committed_until:
+		return  # Doppeltippen auf die eben übernommene Person wählt nicht schon im nächsten Schritt
 	var next: Dictionary = _view.get("next", {})
 	if _gm_mode != "" and _gm_mode != "declare_winner":
 		_selection = [] if _selection.has(person_id) else [person_id]
@@ -810,9 +828,17 @@ func _on_seat_tapped(person_id: int) -> void:
 					_selection = [] if _selection.has(person_id) else [person_id]
 		_render()
 		return
-	if str(next.get("kind")) != "prompt" or str(next.get("answer")) != "targets":
+	var eff := _effective(next)
+	if str(eff.get("kind")) != "prompt" or str(eff.get("answer")) != "targets":
 		return
-	var high := int(next.get("max", 0))
+	if str(eff.get("owner")) == "loki" and str(eff.get("stage")) == "targets" and _loki_mode == null:
+		return  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
+	if str(next.get("kind")) == "begin_step":
+		if not _ensure_begun():
+			return
+		next = _view.get("next", {})
+		eff = next
+	var high := int(eff.get("max", 0))
 	if _selection.has(person_id):
 		_selection.erase(person_id)
 	elif high == 1:
@@ -823,6 +849,9 @@ func _on_seat_tapped(person_id: int) -> void:
 		status_message_requested.emit("ui.cockpit.status.selection_full")
 		return
 	_random = null  # manuelle Änderung: ab jetzt eine Spielleiterwahl, keine Zufallsziehung
+	if CockpitText.auto_commit(eff) and _selection.size() == high and String(context.session.check_targets(_selection)) == "":
+		_commit_selection(eff)  # feste Anzahl erreicht: sofort übernommen, 3 Sekunden rückgängig
+		return
 	_render()
 
 
@@ -950,37 +979,44 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"begin_step":
 			_submit(s.begin_next_step)
 		&"show_notice":
+			var notice_id := int(payload.get("notice_id", -1))
 			open_layer(&"notice")
+			_after_close = func() -> void:
+				if _answer_chain([s.ack_notice.bind(notice_id)], false):
+					_card.show_undo()
 		&"show_roles":
 			open_layer(&"roles")
-		&"ack_notice":
-			close_layer()
-			_submit(s.ack_notice.bind(int(payload["notice_id"])))
-		&"skip_step":
-			_ask_reason("ui.cockpit.dialog.skip.title", "ui.cockpit.dialog.skip.message", "ui.cockpit.dialog.skip.confirm",
-				func(reason: String) -> void: _submit(s.skip_next_step.bind(reason)))
+		&"undo_last":
+			_card.hide_undo()
+			if s.undo():
+				status_message_requested.emit("ui.cockpit.status.undone")
+		&"loki_mode":
+			_loki_mode = bool(payload["choice"])
+			_render()
 		&"cancel_prompt":
 			_ask_reason("ui.cockpit.dialog.cancel.title", "ui.cockpit.dialog.cancel.message", "ui.cockpit.dialog.cancel.confirm",
 				func(reason: String) -> void: _submit(s.cancel_prompt.bind(reason)))
 		&"confirm_targets":
 			if _random != null and _same_set(_selection, _random):
-				_submit(s.answer_random.bind((_random as Array).duplicate()))
+				_answer_chain([s.answer_random.bind((_random as Array).duplicate())])
 			else:
-				_submit(s.answer_targets.bind(_selection.duplicate()))
+				_answer_chain([s.answer_targets.bind(_selection.duplicate())])
 		&"random_targets":
+			if not _ensure_begun():
+				return
 			_random = s.random_proposal()
 			_selection = (_random as Array).duplicate() if _random != null else []
 			_render()
 		&"decline":
-			_submit(s.answer_targets.bind([]))
+			_answer_chain([s.answer_targets.bind([])])
 		&"clear_selection":
 			_selection.clear()
 			_random = null
 			_render()
 		&"choice":
-			_submit(s.answer_choice.bind(bool(payload["choice"])))
+			_answer_chain([s.answer_choice.bind(bool(payload["choice"]))])
 		&"option":
-			_submit(s.answer_option.bind(int(payload["index"])))
+			_answer_chain([s.answer_option.bind(int(payload["index"]))])
 		&"prediction_kind":
 			_prediction["kind"] = str(payload["kind"])
 			_prediction["number"] = 0
@@ -989,9 +1025,15 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_prediction["number"] = int(payload["number"])
 			_render()
 		&"prediction":
-			_submit(s.answer_prediction.bind(str(payload["kind"]), int(payload["number"])))
+			_answer_chain([s.answer_prediction.bind(str(payload["kind"]), int(payload["number"]))])
 		&"show_card":
+			# „Karte zeigen“ genau einmal: Das Schließen der gezeigten Karte erledigt die Auskunft (kein zweites „Gezeigt“).
+			if not _ensure_begun():
+				return
+			var ack := str(_view.get("next", {}).get("answer")) == "ack"
 			open_layer(&"show")
+			if ack:
+				_after_close = func() -> void: _answer_chain([s.answer_choice.bind(true)])
 		&"continue_day":
 			_morning_done_day = int(_view.get("day_number", 0))
 			_render()
@@ -1010,6 +1052,62 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"reject_win":
 			_ask_reason("ui.cockpit.dialog.reject_win.title", "ui.cockpit.dialog.reject_win.message", "ui.cockpit.dialog.reject_win.confirm",
 				func(reason: String) -> void: _submit(s.reject_win.bind(reason)))
+
+
+## Das Gesicht der nächsten Handlung: bei einem Schritt mit Vorschau der Prompt, den sein Beginn öffnen würde.
+func _effective(next: Dictionary) -> Dictionary:
+	if str(next.get("kind")) == "begin_step" and not (next.get("preview", {}) as Dictionary).is_empty():
+		return next["preview"]
+	return next
+
+
+## Beginnt den angekündigten Schritt, wenn die Karte seinen Prompt nur als Vorschau zeigt (die erste Handlung beginnt ihn).
+func _ensure_begun() -> bool:
+	if str(_view.get("next", {}).get("kind")) != "begin_step":
+		return true
+	var r: CommandResult = context.session.begin_next_step()
+	return r != null and r.ok
+
+
+## Wahl übernehmen (feste Anzahl erreicht); bei Loki geht die gewählte Art der Bindung gleich mit.
+func _commit_selection(eff: Dictionary) -> void:
+	var s := context.session
+	var picks := _selection.duplicate()
+	_committed_seat = int(picks.back())
+	_committed_until = Time.get_ticks_msec() + double_tap_msec
+	var actions: Array[Callable] = [s.answer_targets.bind(picks)]
+	if str(eff.get("owner")) == "loki" and str(eff.get("stage")) == "targets":
+		actions.append(s.answer_choice.bind(bool(_loki_mode)))
+		_loki_mode = null
+	_answer_chain(actions)
+
+
+## Antwort auf einen Prompt: der Schritt beginnt bei Bedarf, die Befehle der Kette gehen nacheinander an den Kern. Eine Zusammenfassung
+## der Waldhexe wird gleich mitbestätigt (jede Antwort gilt sofort). Danach 3 Sekunden „Rückgängig“ (`with_undo`).
+func _answer_chain(actions: Array[Callable], with_undo: bool = true) -> bool:
+	if not _ensure_begun():
+		_render()
+		return false
+	_card.lock()
+	for a: Callable in actions:
+		var result: CommandResult = a.call()
+		if result == null or not result.ok:
+			_render()
+			return false
+	var guard := 0
+	while _witch_summary_open() and guard < 3:
+		guard += 1
+		var confirmed: CommandResult = context.session.answer_choice(true)
+		if confirmed == null or not confirmed.ok:
+			break
+	if with_undo:
+		_card.show_undo()
+	return true
+
+
+func _witch_summary_open() -> bool:
+	var next: Dictionary = context.session.cockpit_view().get("next", {})
+	return str(next.get("kind")) == "prompt" and str(next.get("owner")) == "waldhexe" and str(next.get("stage")) == "confirm"
 
 
 ## Sendet genau einen Befehl; die Karte ist bis zur neuen Sicht gesperrt (Mehrfachtippen).
@@ -1110,7 +1208,7 @@ func open_layer(kind: StringName) -> void:
 	_overlay_host.add_child(_layer)
 	var close := _layer.find_child("CloseLayerButton", true, false) as BaseButton
 	if close != null:
-		close.pressed.connect(close_layer)
+		close.pressed.connect(_on_layer_close_pressed)
 		close.grab_focus()
 	for b: Node in _layer.find_children("GmKind_*", "BaseButton", true, false):
 		(b as BaseButton).pressed.connect(_start_gm_mode.bind(str(b.get_meta("gm_kind"))))
@@ -1370,7 +1468,18 @@ func _on_secret_action(action: String, player_id: int) -> void:
 			_render()
 
 
+## Schließen über den Knopf der Ebene: Eine gezeigte Auskunft oder ein gezeigter Hinweis ist damit erledigt (`_after_close`);
+## jedes andere Schließen (Zurück, neue Ebene, Zustandswechsel) verwirft die Handlung.
+func _on_layer_close_pressed() -> void:
+	var after := _after_close
+	_after_close = Callable()
+	close_layer()
+	if after.is_valid():
+		after.call()
+
+
 func close_layer() -> void:
+	_after_close = Callable()
 	_tools_menu.visible = false
 	if _layer_kind == &"roles" or _layer_kind == &"role_card":
 		_revealed_id = ""  # nach der Rollenanzeige bleibt keine geheime Karte des Cockpits aufgedeckt

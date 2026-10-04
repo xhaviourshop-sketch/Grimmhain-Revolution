@@ -55,7 +55,7 @@ func _dialog_confirm(shell: Control) -> bool:
 
 
 func _next(shell: Control) -> Dictionary:
-	return (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+	return effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 
 
 func _gm(shell: Control, payload: Dictionary) -> void:
@@ -84,6 +84,10 @@ func _night_step(shell: Control) -> bool:
 	if await _dialog_confirm(shell):
 		return true
 	var next := _next(shell)
+	if str(next["kind"]) == "notice":
+		return await _tap(shell, "ShowNoticeButton") and await _tap(shell, "CloseLayerButton")  # Schließen bestätigt den Hinweis
+	if await _tap(shell, "ShowCardButton"):
+		return await _tap(shell, "CloseLayerButton")  # Schließen erledigt die Auskunft
 	for node_name: String in ["StartNightButton", "BeginStepButton", "EndNightButton", "AckButton", "ContinueDayButton"]:
 		if await _tap(shell, node_name):
 			return true
@@ -98,7 +102,11 @@ func _night_step(shell: Control) -> bool:
 			"targets":
 				var counts: Array = next.get("counts", [])
 				var need := maxi(int(counts[0]) if not counts.is_empty() else int(next["min"]), 1)
+				if str(next["owner"]) == "loki":
+					await _tap(shell, "YesButton")  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
 				await _tap_seats(shell, need)
+				if CockpitText.auto_commit(next):
+					return true  # eine feste Anzahl gilt sofort
 				return await _tap(shell, "ConfirmTargetsButton") or await _tap(shell, "DeclineButton")
 	return false
 
@@ -200,12 +208,15 @@ func _game24(locale: String, left: bool, cards: Dictionary) -> Control:
 	var s := session_of(shell)
 	s.call("start_night")
 	for guard: int in 200:
-		var next := _next(shell)
+		var next: Dictionary = (s.call("cockpit_view") as Dictionary)["next"]  # Vorbereitung: der Kern-Ablauf, nicht die Kartenvorschau
 		match str(next["kind"]):
 			"begin_step":
 				s.call("skip_next_step", "Test") if bool(next["skippable"]) else s.call("begin_next_step")
 			"prompt":
-				_answer_prompt_minimally(s, next)
+				if str(next["owner"]) == "pack":
+					s.call("skip_next_step", "Test")  # Vorbereitung: ruhige Nacht, kein Rudelopfer mit eigener Karte
+				else:
+					_answer_prompt_minimally(s, next)
 			"end_night":
 				s.call("end_night")
 			"notice":
@@ -357,6 +368,6 @@ func test_target_selection_with_24_persons_is_operable_for_both_hands_and_with_a
 		assert_true(await _tap(shell, "ConfirmTargetsButton"), "%s: Pflichtaktion bestätigen" % label)
 		var played := CardRules.records(_state_of(shell)).filter(func(r: Dictionary) -> bool: return int(r["owner"]) == 24 and String(r["status"]) == "played")
 		assert_eq(played.size(), 1, "%s: die Karte wurde trotz Speicherfehler gespielt" % label)
-		assert_eq(str(_next(shell)["kind"]), "day", "%s: weiter zum Tag" % label)
+		assert_eq(str(_next(shell)["kind"]), "day", "%s: weiter zum Tag (%s)" % [label, JSON.stringify(_next(shell)).left(300)])
 		if left:
 			ctx.saves.simulate_failure = &""

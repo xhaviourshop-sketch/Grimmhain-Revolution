@@ -92,6 +92,7 @@ func spawn_shell(size: Vector2i = SIZE_16_10, locale: String = "de", reduced_mot
 	if not ResourceLoader.exists(MAIN_SCENE):
 		fail("Hauptszene %s fehlt" % MAIN_SCENE)
 		return null
+	CockpitScreen.double_tap_msec = 0  # schnelle Testbedienung; der Doppeltipp-Test schaltet die Sperre selbst ein
 	var scene := load(MAIN_SCENE) as PackedScene
 	if scene == null:
 		fail("Hauptszene %s nicht ladbar" % MAIN_SCENE)
@@ -145,6 +146,17 @@ func context_of(shell: Control) -> Object:
 func settings_of(shell: Control) -> Object:
 	var ctx := context_of(shell)
 	return ctx.get("settings") as Object if ctx != null else null
+
+
+## Nächste Handlung wie die Karte sie zeigt: Ein noch nicht begonnener Schritt, dessen Prompt die Karte schon als Vorschau zeigt (Ansage
+## und Aktion auf einem Bildschirm; `BeginStep` geht erst mit der ersten Handlung), gilt als offener Prompt.
+static func effective_of(next: Dictionary) -> Dictionary:
+	if str(next.get("kind")) == "begin_step" and not (next.get("preview", {}) as Dictionary).is_empty():
+		var shown: Dictionary = (next["preview"] as Dictionary).duplicate()
+		shown["needs_begin"] = true
+		shown["decoys"] = next.get("decoys", [])
+		return shown
+	return next
 
 
 func session_of(shell: Control) -> Object:

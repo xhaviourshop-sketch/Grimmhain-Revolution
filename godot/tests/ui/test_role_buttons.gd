@@ -30,8 +30,7 @@ func test_dorfchronistin_shows_solo_count() -> void:
 		await tap_button("ShowCardButton")
 		var layer := find_node(screen(), "ShowLayer")
 		assert_true(layer != null, "Zeigekarte für die Chronistin")
-		await tap_button("CloseLayerButton", layer)
-		await tap_button("AckButton")
+		await tap_button("CloseLayerButton", layer)  # Schließen der gezeigten Karte erledigt die Auskunft
 	assert_eq(int(_data("ChronicleRevealed").get("solo_count", -1)), 1, "eine Einzelsiegperson")
 
 
@@ -150,7 +149,7 @@ func test_giftwolf_poisons_with_delay() -> void:
 func test_schwarze_witwe_strikes_the_lovers() -> void:
 	if not await start([W, "schwarze-witwe", "loki"] + _villagers(4)):
 		return
-	await run({"loki/targets": [4, 5], "loki/mode": true, "schwarze-witwe/": [4]}, until_event("WidowStruck"))
+	await run({"loki/targets": [4, 5], "loki/mode": true, "schwarze-witwe/": [4], "pack/": [4]}, until_event("WidowStruck"))
 	assert_eq(_data("WidowStruck").get("partner_ids"), [5], "Paar gefunden")
 	await run({}, until_kind("day"))
 	assert_false(alive(4) or alive(5), "Paar stirbt am Morgen")
@@ -183,6 +182,7 @@ func test_schicksalswolf_marks_three() -> void:
 func test_rachsuechtiger_wolf_strikes_in_night_three() -> void:
 	if not await start([W, "rachsuechtiger-wolf", W] + _villagers(5)):
 		return
+	quiet_nights = true
 	await run({"rachsuechtiger-wolf/": [3]}, until_event("LoneWolfStruck"))
 	assert_eq(int(_data("LoneWolfStruck").get("target_id", -1)), 3, "anderer Wolf gerissen")
 	assert_eq(int(_data("LoneWolfStruck").get("night", -1)), 3, "in Nacht 3")
@@ -211,8 +211,9 @@ func test_parasit_attaches_to_a_host() -> void:
 func test_henker_marks_after_three_executions() -> void:
 	if not await start(["henker", W] + _villagers(8)):
 		return
+	quiet_nights = true  # lange Szenarien: das Rudelopfer wird morgens wiederbelebt (Vorbereitung)
 	var plan := {"day1": {"nominate": [9, 3], "execute": 3}, "day2": {"nominate": [9, 4], "execute": 4}, "day3": {"nominate": [9, 5], "execute": 5},
-		"henker/": [6], "day4": {"nominate": [9, 7], "execute": 7}}
+		"henker/": [6], "pack/": [8], "day4": {"nominate": [9, 7], "execute": 7}}
 	await run(plan, until_event("HangmanMarked"))
 	assert_eq(int(_data("HangmanMarked").get("target_id", -1)), 6, "Markierung")
 	await run(plan, until_kind("end_day"))
@@ -266,12 +267,14 @@ func test_wolfskind_chooses_a_model() -> void:
 	assert_true(state().players[1].counts_as_wolf, "Vorbild tot: Wolfskind verwandelt")
 
 
-func test_lehrling_three_stage_choice() -> void:
+func test_lehrling_chooses_the_master_directly() -> void:
+	# DA Nachtschritte neu: eine Stufe, eine Person, eine feste Anzahl gilt sofort.
 	if not await start(["lehrling", W, "schutzengel", "das-orakel", "waldhexe"] + _villagers(2)):
 		return
-	await run({"lehrling/candidates": [3, 4, 5], "lehrling/option": {"option": 1}, "schutzengel/": [6], "das-orakel/target": [6]}, until_event("ApprenticeBound"))
+	await run({"lehrling/master": [4], "schutzengel/": [6], "das-orakel/target": [6]}, until_event("ApprenticeBound"))
 	var bond := ApprenticeRules.active_of(state(), 1)
-	assert_true(bond != null and [3, 4, 5].has(bond.master_id), "Meister unter den Kandidaten")
+	assert_true(bond != null and bond.master_id == 4, "Meister ist die gewählte Person")
+	assert_true(live("ConfirmTargetsButton") == null, "kein Bestätigen")
 
 
 func test_zeitwaechter_freezes_the_night() -> void:

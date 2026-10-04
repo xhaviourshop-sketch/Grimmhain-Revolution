@@ -144,7 +144,7 @@ func test_tokens_keep_order_identity_and_signals() -> void:
 	var tapped: Array = []
 	_ring(shell).connect("seat_tapped", func(id: int) -> void: tapped.append(id))
 	await _start_night(shell)
-	var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+	var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 	var allowed: Array = next["allowed_ids"]
 	await press(find_node(_ring(shell), "Seat_%d" % int(allowed[0])) as BaseButton)
 	assert_eq(tapped, [int(allowed[0])], "Antippen meldet die Personen-ID über dasselbe Signal")
@@ -174,7 +174,7 @@ func test_target_slot_shows_the_choice_and_arrows_cycle_through_allowed_people()
 		return
 	var screen := _screen(shell)
 	await _start_night(shell)
-	var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+	var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 	var allowed: Array = next["allowed_ids"]
 	assert_eq(str(next["answer"]), "targets", "Zielwahl")
 	assert_true(allowed.size() >= 2, "mindestens zwei wählbare Personen")
@@ -203,7 +203,7 @@ func _night_with_protection(shell: Control) -> void:
 	for i: int in 12:
 		if not (s.call("board_marks") as Dictionary).is_empty():
 			return
-		var next: Dictionary = (s.call("cockpit_view") as Dictionary)["next"]
+		var next: Dictionary = effective_of((s.call("cockpit_view") as Dictionary)["next"])
 		if str(next.get("kind")) == "prompt" and str(next.get("answer")) == "targets":
 			var ids: Array = next["allowed_ids"]
 			await press(find_node(_ring(shell), "Seat_%d" % int(ids[0])) as BaseButton)

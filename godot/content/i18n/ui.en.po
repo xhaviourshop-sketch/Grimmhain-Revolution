@@ -1434,7 +1434,7 @@ msgid "ui.cockpit.action.begin_game"
 msgstr "Begin game"
 
 msgid "ui.cockpit.action.begin_step"
-msgstr "Begin step"
+msgstr "Continue"
 
 msgid "ui.cockpit.action.skip_step"
 msgstr "Skip …"
@@ -1473,7 +1473,7 @@ msgid "ui.cockpit.action.cancel_prompt.short"
 msgstr "Cancel …"
 
 msgid "ui.cockpit.action.confirm_targets"
-msgstr "Confirm selection"
+msgstr "Continue"
 
 msgid "ui.cockpit.action.random_targets"
 msgstr "Pick at random"
@@ -1491,7 +1491,7 @@ msgid "ui.cockpit.error.random_not_supported"
 msgstr "This selection has no random pick."
 
 msgid "ui.cockpit.action.decline"
-msgstr "Nobody / decline"
+msgstr "Not today"
 
 msgid "ui.cockpit.action.clear_selection"
 msgstr "Clear selection"
@@ -1791,7 +1791,7 @@ msgid "ui.call.wolfskind"
 msgstr "“Wolf Child, wake up. Point to the person who shall be your role model.”"
 
 msgid "ui.call.lehrling"
-msgstr "“Apprentice, wake up. I will show you three roles. Choose your master.”"
+msgstr "“Apprentice, wake up. Choose your master.”"
 
 msgid "ui.prompt.generic.targets"
 msgstr "Select at least {min} and at most {max} people in the seating circle and confirm."
@@ -1807,48 +1807,6 @@ msgstr "Show the options and tap the chosen one."
 
 msgid "ui.prompt.generic.prediction"
 msgstr "Set the predicted point in time and confirm."
-
-msgid "ui.prompt.schutzengel.pick"
-msgstr "Tap the person the Guardian Angel points to and confirm. They may not protect themselves."
-
-msgid "ui.prompt.pack.pick"
-msgstr "Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”."
-
-msgid "ui.prompt.pack2.pick"
-msgstr "Second pack victim: tap the person and confirm. It pierces protection."
-
-msgid "ui.prompt.waldhexe.heal"
-msgstr "Show the Forest Witch the victim. Do they use the healing potion?"
-
-msgid "ui.prompt.waldhexe.reveal"
-msgstr "The Forest Witch saves. Now show them the victim’s role."
-
-msgid "ui.prompt.waldhexe.poison"
-msgstr "Does the Forest Witch use the poison potion?"
-
-msgid "ui.prompt.waldhexe.poison_target"
-msgstr "Tap the person the Forest Witch poisons and confirm."
-
-msgid "ui.prompt.waldhexe.confirm"
-msgstr "Check the summary. Only “Confirm” applies the potions."
-
-msgid "ui.prompt.das_orakel.target"
-msgstr "Tap the person the Oracle points to and confirm."
-
-msgid "ui.prompt.das_orakel.shown"
-msgstr "Show the Oracle the result, for example via “Show card”. Then tap “Shown”."
-
-msgid "ui.prompt.wolfskind.pick"
-msgstr "Tap the chosen role model and confirm."
-
-msgid "ui.prompt.lehrling.candidates"
-msgstr "For you only: choose three other living people whose roles the Apprentice can choose from."
-
-msgid "ui.prompt.lehrling.option"
-msgstr "Show the Apprentice the three roles (without names) and tap their choice."
-
-msgid "ui.prompt.lehrling.confirm"
-msgstr "Confirm the Apprentice’s choice. Only now is the bond created."
 
 msgid "ui.prompt.value.nobody"
 msgstr "nobody"
@@ -1949,12 +1907,6 @@ msgstr "Chosen dead"
 msgid "ui.prompt.info.wolves_available_ids"
 msgstr "Wolves among the choices (choose at least one)"
 
-msgid "ui.cockpit.action.decline.pack.pick"
-msgstr "No victim"
-
-msgid "ui.cockpit.action.decline.pack2.pick"
-msgstr "No second victim"
-
 msgid "ui.cockpit.action.yes.loki.mode"
 msgstr "Lovers"
 
@@ -2018,9 +1970,6 @@ msgstr "Do not link yet"
 msgid "ui.cockpit.action.decline.koenig_lykaon.ally"
 msgstr "Postpone"
 
-msgid "ui.cockpit.action.decline.feuerteufel.pick"
-msgstr "Keep the mark"
-
 msgid "ui.cockpit.action.decline.parasit.pick"
 msgstr "Keep the host"
 
@@ -2035,12 +1984,6 @@ msgstr "Name no wolf"
 
 msgid "ui.cockpit.action.decline.kriegerin_des_lichts.targets"
 msgstr "No attack tonight"
-
-msgid "ui.cockpit.action.decline.spuerhund.targets"
-msgstr "No sniffing tonight"
-
-msgid "ui.cockpit.action.decline.reaction.pick"
-msgstr "Declines"
 
 msgid "ui.call.albtraumwolf"
 msgstr "“Nightmare Wolf, wake up. Point to the person whose ability you block tonight.”"
@@ -2170,201 +2113,6 @@ msgstr "“Ranger, wake up. I will show you how many wolves are still alive.”"
 
 msgid "ui.call.zeitwaechter"
 msgstr "“Time Warden, wake up. Do you want to freeze this night?”"
-
-msgid "ui.prompt.albtraumwolf.pick"
-msgstr "Tap the person the Nightmare Wolf blocks. Without a choice: “Nobody / decline”."
-
-msgid "ui.prompt.blutpriester.targets"
-msgstr "Tap the Blood Priest’s sacrifice. They die in the morning. Without a sacrifice: decline."
-
-msgid "ui.prompt.blutpriester.reveal"
-msgstr "For you only: choose up to three living wolves to name to the Blood Priest."
-
-msgid "ui.prompt.blutpriester.shown"
-msgstr "Name the chosen wolves to the Blood Priest. Then tap “Shown”."
-
-msgid "ui.prompt.die_ewigen.targets"
-msgstr "Tap the person the Eternal check and confirm."
-
-msgid "ui.prompt.die_ewigen.shown"
-msgstr "Show the Eternal whether the person can win alone. Then tap “Shown”."
-
-msgid "ui.prompt.piper_all.shown"
-msgstr "The enchanted open their eyes and recognise each other. The list stays on this card and is shown to nobody. Then tap “Shown”."
-
-msgid "ui.prompt.die_gebundenen.shown"
-msgstr "The Bound see each other. Then tap “Shown”."
-
-msgid "ui.prompt.doktor.targets"
-msgstr "Tap the two people the Doctor points to and confirm."
-
-msgid "ui.prompt.doktor.shown"
-msgstr "Show the Doctor whether both belong to the same team. Then tap “Shown”."
-
-msgid "ui.prompt.dorfchronistin.shown"
-msgstr "Show the Village Chronicler the number. Then tap “Shown”."
-
-msgid "ui.prompt.dorfschmied.pick"
-msgstr "Tap the person who receives the weapon. Otherwise “Not yet”."
-
-msgid "ui.prompt.dr_victor_frankenstein.targets"
-msgstr "Tap the dead person Frankenstein brings back. Without a choice: decline."
-
-msgid "ui.prompt.dr_victor_frankenstein.role"
-msgstr "Choose the free role the person returns with."
-
-msgid "ui.prompt.faehrtenleser.use"
-msgstr "Does the Tracker read the trail tonight?"
-
-msgid "ui.prompt.faehrtenleser.shown"
-msgstr "Show the Tracker the direction. Then tap “Shown”."
-
-msgid "ui.prompt.feuerteufel.pick"
-msgstr "Tap the newly marked person. Otherwise “Keep the mark”."
-
-msgid "ui.prompt.giftwolf.pick"
-msgstr "Tap the person the Poison Wolf poisons. They die two nights later. Without a choice: decline."
-
-msgid "ui.prompt.grabraeuber.targets"
-msgstr "Tap the dead person whose night ability the Grave Robber steals. Without a choice: decline."
-
-msgid "ui.prompt.hades.targets"
-msgstr "Tap Hades’ victim (costs lights). Without a victim: decline."
-
-msgid "ui.prompt.hades.barrier"
-msgstr "Does Hades also buy a barrier?"
-
-msgid "ui.prompt.henker.pick"
-msgstr "Tap the person the Hangman marks. Without a choice: decline."
-
-msgid "ui.prompt.koenig_lykaon.ally"
-msgstr "Tap the allied wolf. “Postpone” is possible at most three times."
-
-msgid "ui.prompt.koenig_lykaon.targets"
-msgstr "Tap the villager who becomes an Illusion Wolf and confirm."
-
-msgid "ui.prompt.koenig.targets"
-msgstr "Tap the villager the King points to and confirm."
-
-msgid "ui.prompt.koenig.shown"
-msgstr "Show the King the person’s role. Then tap “Shown”."
-
-msgid "ui.prompt.kopfgeldjaeger.targets"
-msgstr "For you only: choose three other living people with at least one wolf for the list."
-
-msgid "ui.prompt.kopfgeldjaeger.shown"
-msgstr "Show the Bounty Hunter the three names. Then tap “Shown”."
-
-msgid "ui.prompt.korrupter_richter.pick"
-msgstr "Tap the person the Judge marks (may be themself). Without a choice: decline."
-
-msgid "ui.prompt.kriegerin_des_lichts.targets"
-msgstr "Tap the person the Warrior attacks. Without an attack: decline."
-
-msgid "ui.prompt.kriegerin_des_lichts.shown"
-msgstr "Show the Warrior whether they hit a wolf. Then tap “Shown”."
-
-msgid "ui.prompt.kutscher.targets"
-msgstr "Tap exactly three dead people to return, or decline completely."
-
-msgid "ui.prompt.kutscher.wolf"
-msgstr "Tap which of the three returns as a wolf."
-
-msgid "ui.prompt.loki.targets"
-msgstr "Tap exactly two people (Loki may choose themself) or decline completely."
-
-msgid "ui.prompt.loki.mode"
-msgstr "Do the two become lovers or rivals?"
-
-msgid "ui.prompt.maertyrerin.pick"
-msgstr "Does the Martyr sacrifice themself for this person? Then tap the person and confirm."
-
-msgid "ui.prompt.nekromant.targets"
-msgstr "Tap exactly three unsacrificed dead people or decline completely."
-
-msgid "ui.prompt.nekromant.redirect"
-msgstr "Does the Necromancer redirect the attack? Tap the new target, otherwise “Shield instead of redirect”."
-
-msgid "ui.prompt.parasit.pick"
-msgstr "Tap the new host. Otherwise “Keep the host”."
-
-msgid "ui.prompt.pestbringerin.pick"
-msgstr "Tap the person the Plague Bringer infects and confirm."
-
-msgid "ui.prompt.prophet_des_untergangs.pick"
-msgstr "Night 1: mark exactly three people; later: kill one person or decline."
-
-msgid "ui.prompt.rachsuechtiger_wolf.pick"
-msgstr "Tap the wolf the Vengeful Wolf tears. They die in the morning. Without a choice: decline."
-
-msgid "ui.prompt.rattenfaenger.pick"
-msgstr "Tap one or two people the Pied Piper charms and confirm."
-
-msgid "ui.prompt.rotkaeppchen.targets"
-msgstr "Tap the person Little Red Riding Hood seeks refuge with and confirm. Then let Little Red Riding Hood close their eyes, quietly tap the chosen person and show them the next card on the tablet."
-
-msgid "ui.prompt.rotkaeppchen.grant"
-msgstr "Someone asks you for refuge. If you grant it, you receive an apple (your next night step runs twice) and you are chained: if one of you dies, the other dies at once too. You may decline. You do not learn who asks."
-
-msgid "ui.prompt.schattenhund.use"
-msgstr "Does the Shadow Hound block all village abilities this night?"
-
-msgid "ui.prompt.schattenwanderer.pick"
-msgstr "Tap the person the Shadow Walker links with. Otherwise “Do not link yet”."
-
-msgid "ui.prompt.schicksalswolf.pick"
-msgstr "Night 1: mark exactly three people; night 4: choose up to the shown number of extra victims."
-
-msgid "ui.prompt.schutzgeist.pick"
-msgstr "Tap the person who receives the Guardian Spirit’s shield and confirm."
-
-msgid "ui.prompt.schwarze_witwe.pick"
-msgstr "Tap the person the Black Widow points to and confirm."
-
-msgid "ui.prompt.seelentauscher.targets"
-msgstr "Tap exactly two people (the dead too) or decline completely."
-
-msgid "ui.prompt.spuerhund.targets"
-msgstr "Tap exactly three people or decline completely."
-
-msgid "ui.prompt.spuerhund.shown"
-msgstr "Show the Sniffer Dog the result. Then tap “Shown”."
-
-msgid "ui.prompt.todesprediger.prediction"
-msgstr "Set night or day and the number the Death Preacher names, then confirm."
-
-msgid "ui.prompt.traumdeuter.targets"
-msgstr "For you only: choose three other living people with at least one wolf for the dream."
-
-msgid "ui.prompt.traumdeuter.shown"
-msgstr "Show the Dream Reader the three names. Then tap “Shown”."
-
-msgid "ui.prompt.verdammniswaechter.pick"
-msgstr "Choose whom the attack strikes: the wolves’ victim or the offered person."
-
-msgid "ui.prompt.voodoo_priester.pick"
-msgstr "Tap the person who receives the doll. Without a choice: decline."
-
-msgid "ui.prompt.waldlaeufer.shown"
-msgstr "Show the Ranger the number. Then tap “Shown”."
-
-msgid "ui.prompt.zeitwaechter.use"
-msgstr "Does the Time Warden freeze this night? All further night steps are then dropped."
-
-msgid "ui.prompt.reaction.curse"
-msgstr "The person may curse someone as they die. Tap the person or “Declines”."
-
-msgid "ui.prompt.reaction.possessed"
-msgstr "The Possessed Wolf drags someone along. Tap the person or “Declines”."
-
-msgid "ui.prompt.reaction.knight"
-msgstr "The Knight strikes the nearest wolf. Several are equally close: tap the wolf that is hit."
-
-msgid "ui.prompt.reaction.smith"
-msgstr "The Smith’s weapon repels the attack. Tap the wolf that dies."
-
-msgid "ui.prompt.reaction.demon"
-msgstr "The Demonic Wolf curses someone as they die. Tap the person or “Declines”."
 
 msgid "ui.prompt.info.lights"
 msgstr "Lights"
@@ -4379,8 +4127,7 @@ msgid "ui.role.sensentraeger.lex.win"
 msgstr "With the village."
 
 msgid "ui.role.sensentraeger.lex.example"
-msgstr "The Reaper is executed during the day and chooses Emil at once. Emil dies.
-The pack kills the Reaper at night. During the dawn resolution the Reaper chooses Ben. Ben dies."
+msgstr "The Reaper is executed during the day and chooses Emil at once. Emil dies.\nThe pack kills the Reaper at night. During the dawn resolution the Reaper chooses Ben. Ben dies."
 
 msgid "ui.role.sensentraeger.lex.gm"
 msgstr "The curse is a death effect and is played out and announced publicly, with role and target. Otherwise only the names of the dead count in public."
@@ -4434,8 +4181,7 @@ msgid "ui.role.lehrling.lex.win"
 msgstr "Before the inheritance with the village, afterwards according to the inherited role."
 
 msgid "ui.role.lehrling.lex.example"
-msgstr "The Apprentice chooses Clara, the Witch of the Woods. When Clara dies, the Apprentice becomes the Witch with fresh potions, usable from the following night.
-The Apprentice chooses Emil, a Werewolf. Emil is executed. The Apprentice counts as a wolf at once and wakes with the pack from the following night."
+msgstr "The Apprentice chooses Clara, the Witch of the Woods. When Clara dies, the Apprentice becomes the Witch with fresh potions, usable from the following night.\nThe Apprentice chooses Emil, a Werewolf. Emil is executed. The Apprentice counts as a wolf at once and wakes with the pack from the following night."
 
 msgid "ui.role.lehrling.lex.gm"
 msgstr "The bond is visible only to you. If the Apprentice inherits Wolf Child, it stays untransformed and they choose a new role model next night. If they inherit Apprentice, the new choice follows next night."
@@ -5119,8 +4865,7 @@ msgid "ui.role.koenig_lykaon.lex.win"
 msgstr "Wolf win as for the Werewolf."
 
 msgid "ui.role.koenig_lykaon.lex.example"
-msgstr "In night 2 King Lycaon names the ally Emil and chooses Ben (Witch of the Woods). Ben becomes a Decoy Wolf with the false role “Witch of the Woods” and wakes with the pack from night 3.
-King Lycaon postpones in nights 1 and 2. In night 3 they must choose."
+msgstr "In night 2 King Lycaon names the ally Emil and chooses Ben (Witch of the Woods). Ben becomes a Decoy Wolf with the false role “Witch of the Woods” and wakes with the pack from night 3.\nKing Lycaon postpones in nights 1 and 2. In night 3 they must choose."
 
 msgid "ui.role.koenig_lykaon.lex.gm"
 msgstr "The table learns nothing of the change. The affected person receives a private message about their new role and wakes with the pack from the following night, where the ally sees them too."
@@ -6607,12 +6352,6 @@ msgstr "Collects stacks from exchanged realm-of-the-dead cards and buys a kill, 
 
 msgid "ui.call.kartenschlucker"
 msgstr "“Card Swallower, wake up. Show with your fingers what you want to do: shaking your head means nothing, two fingers a kill, five fingers a shield, ten fingers the win.”"
-
-msgid "ui.prompt.kartenschlucker.act"
-msgstr "Tap the hand sign the Card Swallower shows: head shake, two, five or ten fingers. Signs that cost too much are locked."
-
-msgid "ui.prompt.kartenschlucker.target"
-msgstr "Tap the person the Card Swallower wants to kill."
 
 msgid "ui.role.kartenschlucker.lex.night"
 msgstr "every night, optional, once two stacks are available"
@@ -8480,3 +8219,519 @@ msgstr "Keep entries"
 
 msgid "ui.prep.number"
 msgstr "{value}"
+
+msgid "ui.night.pack.pick.title"
+msgstr "The werewolves choose a victim."
+
+msgid "ui.night.pack.pick.help"
+msgstr "Tap the person. If they cannot agree, you decide."
+
+msgid "ui.night.pack2.pick.title"
+msgstr "The pack chooses a second victim."
+
+msgid "ui.night.pack2.pick.help"
+msgstr "Tap the person. It pierces all protection."
+
+msgid "ui.night.schutzengel.pick.title"
+msgstr "The Guardian Angel protects one person."
+
+msgid "ui.night.schutzengel.pick.help"
+msgstr "Tap the person. The angel cannot protect themself."
+
+msgid "ui.night.waldhexe.heal.title"
+msgstr "The Witch of the Woods sees the victim."
+
+msgid "ui.night.waldhexe.heal.help"
+msgstr "Tell them the name. Do they heal?"
+
+msgid "ui.night.waldhexe.reveal.title"
+msgstr "The Witch of the Woods saves the victim."
+
+msgid "ui.night.waldhexe.reveal.help"
+msgstr "Show them the victim's role."
+
+msgid "ui.night.waldhexe.poison.title"
+msgstr "Does the Witch of the Woods poison someone?"
+
+msgid "ui.night.waldhexe.poison.help"
+msgstr "Use the poison or not."
+
+msgid "ui.night.waldhexe.poison_target.title"
+msgstr "The Witch of the Woods poisons one person."
+
+msgid "ui.night.waldhexe.poison_target.help"
+msgstr "Tap the person."
+
+msgid "ui.night.waldhexe.confirm.title"
+msgstr "The Witch of the Woods is done."
+
+msgid "ui.night.waldhexe.confirm.help"
+msgstr "Continue."
+
+msgid "ui.night.das_orakel.target.title"
+msgstr "The Oracle looks at one person."
+
+msgid "ui.night.das_orakel.target.help"
+msgstr "Tap the person."
+
+msgid "ui.night.das_orakel.shown.title"
+msgstr "The Oracle learns the role."
+
+msgid "ui.night.das_orakel.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.wolfskind.pick.title"
+msgstr "The Wolf Child chooses a role model."
+
+msgid "ui.night.wolfskind.pick.help"
+msgstr "Tap the person."
+
+msgid "ui.night.lehrling.master.title"
+msgstr "The Apprentice chooses a master."
+
+msgid "ui.night.lehrling.master.help"
+msgstr "Tap the person."
+
+msgid "ui.night.dorfchronistin.shown.title"
+msgstr "The Village Chronicler learns a number."
+
+msgid "ui.night.dorfchronistin.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.die_gebundenen.shown.title"
+msgstr "The Bound wake up."
+
+msgid "ui.night.die_gebundenen.shown.help"
+msgstr "They all recognise each other."
+
+msgid "ui.night.waldlaeufer.shown.title"
+msgstr "The Ranger learns the number of wolves."
+
+msgid "ui.night.waldlaeufer.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.doktor.targets.title"
+msgstr "The Doctor checks two people."
+
+msgid "ui.night.doktor.targets.help"
+msgstr "Tap two people."
+
+msgid "ui.night.doktor.shown.title"
+msgstr "The Doctor learns the result."
+
+msgid "ui.night.doktor.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.faehrtenleser.use.title"
+msgstr "Does the Tracker read the trail?"
+
+msgid "ui.night.faehrtenleser.use.help"
+msgstr "Read it now or not yet."
+
+msgid "ui.night.faehrtenleser.shown.title"
+msgstr "The Tracker learns the direction."
+
+msgid "ui.night.faehrtenleser.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.korrupter_richter.pick.title"
+msgstr "Does the Corrupt Judge mark someone?"
+
+msgid "ui.night.korrupter_richter.pick.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.spuerhund.targets.title"
+msgstr "The Scent Hound checks three people."
+
+msgid "ui.night.spuerhund.targets.help"
+msgstr "Tap three people."
+
+msgid "ui.night.spuerhund.shown.title"
+msgstr "The Scent Hound learns the result."
+
+msgid "ui.night.spuerhund.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.parasit.pick.title"
+msgstr "The Parasite chooses a host."
+
+msgid "ui.night.parasit.pick.help"
+msgstr "Tap the person or keep the old host."
+
+msgid "ui.night.schattenhund.use.title"
+msgstr "Does the Shadow Hound block the village?"
+
+msgid "ui.night.schattenhund.use.help"
+msgstr "Block now or not tonight."
+
+msgid "ui.night.albtraumwolf.pick.title"
+msgstr "The Nightmare Wolf blocks one person."
+
+msgid "ui.night.albtraumwolf.pick.help"
+msgstr "Tap the person, they can do nothing tonight."
+
+msgid "ui.night.giftwolf.pick.title"
+msgstr "Does the Poison Wolf poison someone?"
+
+msgid "ui.night.giftwolf.pick.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.henker.pick.title"
+msgstr "The Executioner marks one person."
+
+msgid "ui.night.henker.pick.help"
+msgstr "Tap the person. They die in the next execution."
+
+msgid "ui.night.traumdeuter.targets.title"
+msgstr "The Dreamer sees three names."
+
+msgid "ui.night.traumdeuter.targets.help"
+msgstr "Tap three people, at least one wolf, or choose chance."
+
+msgid "ui.night.traumdeuter.shown.title"
+msgstr "The Dreamer learns the names."
+
+msgid "ui.night.traumdeuter.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.kopfgeldjaeger.targets.title"
+msgstr "The Bounty Hunter gets a list."
+
+msgid "ui.night.kopfgeldjaeger.targets.help"
+msgstr "Tap three people, at least one wolf, or choose chance."
+
+msgid "ui.night.kopfgeldjaeger.shown.title"
+msgstr "The Bounty Hunter learns the list."
+
+msgid "ui.night.kopfgeldjaeger.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.koenig.targets.title"
+msgstr "The King gets to know a person from the village."
+
+msgid "ui.night.koenig.targets.help"
+msgstr "Tap the person."
+
+msgid "ui.night.koenig.shown.title"
+msgstr "The King learns the role."
+
+msgid "ui.night.koenig.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.kriegerin_des_lichts.targets.title"
+msgstr "Does the Warrior of Light attack?"
+
+msgid "ui.night.kriegerin_des_lichts.targets.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.kriegerin_des_lichts.shown.title"
+msgstr "The Warrior learns the result."
+
+msgid "ui.night.kriegerin_des_lichts.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.blutpriester.targets.title"
+msgstr "Does the Blood Priest sacrifice someone?"
+
+msgid "ui.night.blutpriester.targets.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.blutpriester.reveal.title"
+msgstr "The Blood Priest learns wolves."
+
+msgid "ui.night.blutpriester.reveal.help"
+msgstr "Tap up to three wolves, then Continue."
+
+msgid "ui.night.blutpriester.shown.title"
+msgstr "The Blood Priest learns the names."
+
+msgid "ui.night.blutpriester.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.die_ewigen.targets.title"
+msgstr "The Eternal Ones check one person."
+
+msgid "ui.night.die_ewigen.targets.help"
+msgstr "All Eternal Ones wake up. Tap the person."
+
+msgid "ui.night.die_ewigen.shown.title"
+msgstr "The Eternal Ones learn the result."
+
+msgid "ui.night.die_ewigen.shown.help"
+msgstr "Show the card."
+
+msgid "ui.night.piper_all.shown.title"
+msgstr "The charmed wake up."
+
+msgid "ui.night.piper_all.shown.help"
+msgstr "They all recognise each other."
+
+msgid "ui.night.dorfschmied.pick.title"
+msgstr "Does the Village Blacksmith give the weapon?"
+
+msgid "ui.night.dorfschmied.pick.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.schutzgeist.pick.title"
+msgstr "The Guardian Spirit gives one person a shield."
+
+msgid "ui.night.schutzgeist.pick.help"
+msgstr "Tap the person."
+
+msgid "ui.night.verdammniswaechter.pick.title"
+msgstr "The Doom Warden judges."
+
+msgid "ui.night.verdammniswaechter.pick.help"
+msgstr "Tap: pack victim or the offered person."
+
+msgid "ui.night.maertyrerin.pick.title"
+msgstr "Does the Martyr sacrifice themself for the victim?"
+
+msgid "ui.night.maertyrerin.pick.help"
+msgstr "Tap the victim or choose Not today."
+
+msgid "ui.night.loki.mode.title"
+msgstr "Loki binds two people."
+
+msgid "ui.night.loki.mode.help"
+msgstr "Lovers or rivals?"
+
+msgid "ui.night.loki.targets.title"
+msgstr "Loki binds two people."
+
+msgid "ui.night.loki.targets.help"
+msgstr "Tap two people."
+
+msgid "ui.night.rotkaeppchen.targets.title"
+msgstr "Little Red Riding Hood asks for shelter."
+
+msgid "ui.night.rotkaeppchen.targets.help"
+msgstr "Tap the person."
+
+msgid "ui.night.rotkaeppchen.grant.title"
+msgstr "Someone asks for shelter."
+
+msgid "ui.night.rotkaeppchen.grant.help"
+msgstr "Ask the person quietly: grant or refuse?"
+
+msgid "ui.night.schwarze_witwe.pick.title"
+msgstr "The Black Widow chooses one person."
+
+msgid "ui.night.schwarze_witwe.pick.help"
+msgstr "Tap the person."
+
+msgid "ui.night.schattenwanderer.pick.title"
+msgstr "The Shadowwalker links with one person."
+
+msgid "ui.night.schattenwanderer.pick.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.koenig_lykaon.ally.title"
+msgstr "Lycaon chooses an allied wolf."
+
+msgid "ui.night.koenig_lykaon.ally.help"
+msgstr "Tap the wolf or postpone."
+
+msgid "ui.night.koenig_lykaon.targets.title"
+msgstr "You choose who becomes a wolf."
+
+msgid "ui.night.koenig_lykaon.targets.help"
+msgstr "Tap the person from the village."
+
+msgid "ui.night.seelentauscher.targets.title"
+msgstr "Does the Soul Swapper swap two people?"
+
+msgid "ui.night.seelentauscher.targets.help"
+msgstr "Tap two people or choose Not today."
+
+msgid "ui.night.kutscher.targets.title"
+msgstr "Does the Coachman bring back three dead?"
+
+msgid "ui.night.kutscher.targets.help"
+msgstr "Tap three dead people or choose Not today."
+
+msgid "ui.night.kutscher.wolf.title"
+msgstr "Who returns as a wolf?"
+
+msgid "ui.night.kutscher.wolf.help"
+msgstr "Tap one of the three people."
+
+msgid "ui.night.dr_victor_frankenstein.targets.title"
+msgstr "Frankenstein brings one dead person back."
+
+msgid "ui.night.dr_victor_frankenstein.targets.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.dr_victor_frankenstein.role.title"
+msgstr "Frankenstein chooses the new role."
+
+msgid "ui.night.dr_victor_frankenstein.role.help"
+msgstr "Tap the role."
+
+msgid "ui.night.rattenfaenger.pick.title"
+msgstr "The Pied Piper charms 1 or 2 people."
+
+msgid "ui.night.rattenfaenger.pick.help"
+msgstr "Tap 1 or 2 people, then Continue."
+
+msgid "ui.night.pestbringerin.pick.title"
+msgstr "The Plague Bringer infects one person."
+
+msgid "ui.night.pestbringerin.pick.help"
+msgstr "Tap the person."
+
+msgid "ui.night.prophet_des_untergangs.pick.title"
+msgstr "The Prophet of Doom chooses people."
+
+msgid "ui.night.prophet_des_untergangs.pick.help"
+msgstr "Night 1: tap three people. Later: one person or Not today."
+
+msgid "ui.night.todesprediger.prediction.title"
+msgstr "The Death Prophet names the night of death."
+
+msgid "ui.night.todesprediger.prediction.help"
+msgstr "Choose night or day and the number."
+
+msgid "ui.night.feuerteufel.pick.title"
+msgstr "The Pyromaniac marks one person."
+
+msgid "ui.night.feuerteufel.pick.help"
+msgstr "Tap the person. The old mark ends."
+
+msgid "ui.night.voodoo_priester.pick.title"
+msgstr "The Voodoo Priest gives a doll."
+
+msgid "ui.night.voodoo_priester.pick.help"
+msgstr "Tap the person."
+
+msgid "ui.night.nekromant.targets.title"
+msgstr "Does the Necromancer sacrifice three dead?"
+
+msgid "ui.night.nekromant.targets.help"
+msgstr "Tap three dead people or choose Not today."
+
+msgid "ui.night.nekromant.redirect.title"
+msgstr "Does the Necromancer redirect the attack?"
+
+msgid "ui.night.nekromant.redirect.help"
+msgstr "Tap the new target or choose Shield instead."
+
+msgid "ui.night.hades.targets.title"
+msgstr "Does Hades take someone?"
+
+msgid "ui.night.hades.targets.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.hades.barrier.title"
+msgstr "Does Hades buy a barrier?"
+
+msgid "ui.night.hades.barrier.help"
+msgstr "Buy the barrier or not."
+
+msgid "ui.night.grabraeuber.targets.title"
+msgstr "Does the Grave Robber steal an ability?"
+
+msgid "ui.night.grabraeuber.targets.help"
+msgstr "Tap the dead person or choose Not today."
+
+msgid "ui.night.schicksalswolf.pick.title"
+msgstr "The Fate Wolf chooses people."
+
+msgid "ui.night.schicksalswolf.pick.help"
+msgstr "Night 1: tap three people. Night 4: choose extra victims or Not today."
+
+msgid "ui.night.rachsuechtiger_wolf.pick.title"
+msgstr "Does the Lone Wolf tear a wolf?"
+
+msgid "ui.night.rachsuechtiger_wolf.pick.help"
+msgstr "Tap the wolf or choose Not today."
+
+msgid "ui.night.zeitwaechter.use.title"
+msgstr "Does the Time Warden freeze the night?"
+
+msgid "ui.night.zeitwaechter.use.help"
+msgstr "Freeze the night or not."
+
+msgid "ui.night.kartenschlucker.act.title"
+msgstr "The Card Swallower shows fingers."
+
+msgid "ui.night.kartenschlucker.act.help"
+msgstr "Tap the sign."
+
+msgid "ui.night.kartenschlucker.target.title"
+msgstr "The Card Swallower kills."
+
+msgid "ui.night.kartenschlucker.target.help"
+msgstr "Tap the person."
+
+msgid "ui.night.reaction.curse.title"
+msgstr "The Reaper claims a soul."
+
+msgid "ui.night.reaction.curse.help"
+msgstr "Tap the person."
+
+msgid "ui.night.reaction.possessed.title"
+msgstr "The Possessed Wolf drags one person along."
+
+msgid "ui.night.reaction.possessed.help"
+msgstr "Tap the person."
+
+msgid "ui.night.reaction.knight.title"
+msgstr "The Knight strikes a wolf."
+
+msgid "ui.night.reaction.knight.help"
+msgstr "Several are equally close: tap the struck wolf."
+
+msgid "ui.night.reaction.smith.title"
+msgstr "The blacksmith's weapon strikes a wolf."
+
+msgid "ui.night.reaction.smith.help"
+msgstr "Tap the wolf that dies."
+
+msgid "ui.night.reaction.demon.title"
+msgstr "The Demonic Wolf curses one person."
+
+msgid "ui.night.reaction.demon.help"
+msgstr "Tap the person."
+
+msgid "ui.night.generic.title"
+msgstr "{role}"
+
+msgid "ui.night.generic.help.targets"
+msgstr "Tap the person."
+
+msgid "ui.night.generic.help.choice"
+msgstr "Ask the person and tap the answer."
+
+msgid "ui.night.generic.help.ack"
+msgstr "Show the card."
+
+msgid "ui.night.generic.help.option"
+msgstr "Tap the chosen option."
+
+msgid "ui.night.generic.help.prediction"
+msgstr "Choose night or day and the number."
+
+msgid "ui.night.decoys"
+msgstr "Announce first, nothing to do: {roles}"
+
+msgid "ui.night.names"
+msgstr "Waking up: {names}"
+
+msgid "ui.night.selected"
+msgstr "Chosen: {names}"
+
+msgid "ui.night.undo.done"
+msgstr "Done."
+
+msgid "ui.night.undo.button"
+msgstr "Undo"
+
+msgid "ui.night.action.next"
+msgstr "Continue"
+
+msgid "ui.night.notice.title"
+msgstr "Show the card to: {names}"
+
+msgid "ui.night.notice.help"
+msgstr "Show only to these people."

@@ -35,7 +35,7 @@ func test_target_selection_is_marked_by_text_for_living_people() -> void:
 		if shell == null:
 			return
 		await press(find_button(_screen(shell), "StartNightButton"))
-		var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+		var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 		assert_eq(str(next.get("answer")), "targets", "%s: Zielwahl offen" % locale)
 		var allowed: Array = next["allowed_ids"]
 		for t: Variant in _tokens(shell):

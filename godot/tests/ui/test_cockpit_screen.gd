@@ -120,29 +120,22 @@ func test_first_night_through_buttons() -> void:
 		return
 	await _press(shell, "StartNightButton")
 	assert_eq(str(_next(shell)["owner"]), "schutzengel", "Schutzengel-Prompt")
-	var confirm := find_button(_screen(shell), "ConfirmTargetsButton")
-	assert_true(confirm.disabled, "Bestätigen erst mit Auswahl")
+	assert_true(find_node(_screen(shell), "ConfirmTargetsButton") == null, "feste Anzahl: kein Bestätigen")
+	assert_true(find_node(_screen(shell), "SkipStepButton") == null, "kein Überspringen auf der Karte")
 	assert_true(_seat(shell, 3).disabled, "Schutzengel kann sich nicht selbst wählen (nicht antippbar)")
-	await _tap_seat(shell, 7)
-	assert_eq(_seat(shell, 7).theme_type_variation, &"SeatSelectedButton", "Auswahl sichtbar")
-	assert_true(_visible_texts(shell).contains("Gewählt: 4 · "), "Auswahl in der Karte")
-	await _press(shell, "ConfirmTargetsButton")
-	assert_eq(str(_next(shell)["kind"]), "begin_step", "Rudel angekündigt")
-	assert_true(_visible_texts(shell).contains("Werwölfe, erwacht"), "Vorlesetext des Rudels")
-	await _press(shell, "BeginStepButton")
+	await _tap_seat(shell, 7)  # eine feste Anzahl gilt sofort; 3 Sekunden Rückgängig
+	assert_true(find_node(_screen(shell), "UndoBarButton") != null, "Rückgängig-Leiste nach der Antwort")
+	assert_eq(str(_next(shell)["kind"]), "begin_step", "Rudel angekündigt, seine Aktion steht schon auf der Karte")
+	assert_true(_visible_texts(shell).contains("Werwölfe"), "Rudel auf der Karte")
 	await _tap_seat(shell, 6)
-	await _press(shell, "ConfirmTargetsButton")
-	await _press(shell, "BeginStepButton")
-	assert_eq(str(_next(shell)["stage"]), "heal", "Waldhexe: Heiltrank")
+	assert_eq(str(effective_of(_next(shell))["stage"]), "heal", "Waldhexe: Heiltrank")
 	await _press(shell, "NoButton")
-	assert_eq(str(_next(shell)["stage"]), "poison", "Gifttrank")
-	await _press(shell, "NoButton")
-	await _press(shell, "AckButton")
-	await _press(shell, "BeginStepButton")
+	assert_eq(str(effective_of(_next(shell))["stage"]), "poison", "Gifttrank")
+	await _press(shell, "NoButton")  # die Zusammenfassung wird gleich mitbestätigt
 	await _tap_seat(shell, 1)
-	await _press(shell, "ConfirmTargetsButton")
-	assert_eq(str(_next(shell)["stage"]), "shown", "Orakel: Ergebnis zeigen")
-	await _press(shell, "AckButton")
+	assert_eq(str(effective_of(_next(shell))["stage"]), "shown", "Orakel: Ergebnis zeigen")
+	await _press(shell, "ShowCardButton")
+	await _press(shell, "CloseLayerButton")  # Schließen erledigt die Auskunft
 	assert_eq(str(_next(shell)["kind"]), "end_night", "Nacht abschließen")
 	await _press(shell, "EndNightButton")
 	var view: Dictionary = session_of(shell).call("view")
@@ -173,16 +166,13 @@ func test_reaction_card_is_covered_outside_night() -> void:
 	var screen := _screen(shell)
 	assert_eq(str(_next(shell)["kind"]), "begin_step", "Reaktion angekündigt")
 	assert_true(find_button(screen, "RevealButton").is_visible_in_tree(), "Karte verdeckt")
-	assert_true(find_node(screen, "BeginStepButton") == null, "keine Aktion vor dem Aufdecken")
+	assert_true(find_node(screen, "BeginStepButton") == null and find_node(screen, "DeclineButton") == null, "keine Aktion vor dem Aufdecken")
 	_assert_no_roles(shell, "verdeckte Reaktion")
 	for token: Variant in find_node(screen, "SeatRing").call("tokens"):
 		assert_ne((token as Button).theme_type_variation, &"SeatActorButton", "keine Hervorhebung der handelnden Person vor dem Aufdecken")
 	await _press(shell, "RevealButton")
-	assert_true(find_button(screen, "BeginStepButton").is_visible_in_tree(), "nach „Anzeigen“ bedienbar")
-	await _press(shell, "BeginStepButton")
-	assert_true(find_button(screen, "RevealButton").is_visible_in_tree(), "neuer Prompt wieder verdeckt")
-	await _press(shell, "RevealButton")
-	await _press(shell, "DeclineButton")
+	assert_true(effective_of(_next(shell)).get("answer") == "targets" and find_node(screen, "NightTitle") != null, "nach „Anzeigen“ bedienbar (Aktion und Ansage auf einer Karte)")
+	await _tap_seat(shell, int((effective_of(_next(shell))["allowed_ids"] as Array)[0]))  # Sensenträger: Pflichtwahl, gilt sofort
 	assert_eq(str((s.call("view") as Dictionary)["phase"]), "DAY", "Tag nach der Reaktion")
 
 
@@ -263,29 +253,20 @@ func test_show_card_contains_only_positive_list() -> void:
 
 # --- Bedienung ----------------------------------------------------------------------------------------
 
-func test_skip_requires_reason_in_dialog() -> void:
+func test_undo_bar_takes_back_the_last_answer() -> void:
 	var shell := await _cockpit()
 	if shell == null:
 		return
 	var s := session_of(shell)
 	s.call("start_night")
-	s.call("answer_targets", [7])
 	await frames(2)
-	await _press(shell, "SkipStepButton")
-	var dialog := shell.call("get_dialog") as Control
-	assert_true(dialog.call("is_open"), "Rückfrage offen")
-	var confirm := find_node(dialog, "ConfirmButton") as BaseButton
-	var field := find_node(dialog, "InputField") as LineEdit
-	assert_true(field != null and field.is_visible_in_tree(), "Begründungsfeld")
-	assert_true(confirm.disabled, "ohne Begründung nicht bestätigbar")
-	await type_text(field, "   ")
-	assert_true(confirm.disabled, "Leerzeichen zählen nicht")
-	await type_text(field, "Wölfe uneinig")
-	assert_false(confirm.disabled, "mit Begründung bestätigbar")
-	await press(confirm)
-	assert_eq(str(_next(shell)["role_id"]), "waldhexe", "Rudel übersprungen, weiter mit der Waldhexe")
-	var log: Array = s.call("event_log")
-	assert_true(log.any(func(e: Dictionary) -> bool: return str(e["type"]) == "StepSkipped" and str(e["data"]["reason"]) == "Wölfe uneinig"), "Begründung protokolliert")
+	assert_true(find_node(_screen(shell), "SkipStepButton") == null, "kein Überspringen für Spielleitung auf der Karte")
+	var before := int((s.call("view") as Dictionary)["command_count"])
+	await _tap_seat(shell, 7)
+	assert_eq(int((s.call("view") as Dictionary)["command_count"]), before + 1, "Antwort sofort angenommen")
+	await _press(shell, "UndoBarButton")
+	assert_eq(int((s.call("view") as Dictionary)["command_count"]), before, "Rückgängig nimmt die Antwort zurück")
+	assert_eq(str(_next(shell)["owner"]), "schutzengel", "Prompt wieder offen")
 
 
 func test_double_tap_sends_one_command() -> void:
@@ -297,12 +278,12 @@ func test_double_tap_sends_one_command() -> void:
 	start.pressed.emit()
 	await frames(3)
 	assert_eq(int((session_of(shell).call("view") as Dictionary)["command_count"]), 2, "StartGame und genau ein StartNight")
-	await _tap_seat(shell, 7)
-	var confirm := find_button(_screen(shell), "ConfirmTargetsButton")
 	var rejected: Array = []
 	session_of(shell).connect("command_rejected", func(e: StringName) -> void: rejected.append(e))
-	confirm.pressed.emit()
-	confirm.pressed.emit()
+	CockpitScreen.double_tap_msec = 400
+	var seat := _seat(shell, 7)
+	seat.pressed.emit()
+	seat.pressed.emit()
 	await frames(3)
 	assert_eq(int((session_of(shell).call("view") as Dictionary)["command_count"]), 3, "genau eine Antwort")
 	assert_eq(rejected.size(), 0, "kein zweiter Befehl an den Regelkern")

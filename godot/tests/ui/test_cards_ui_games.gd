@@ -139,10 +139,15 @@ func _play_day(shell: Control, next: Dictionary) -> bool:
 func _act(shell: Control) -> bool:
 	if await _dialog_confirm(shell):
 		return true
-	var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+	var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 	var kind := str(next["kind"])
 	if kind == "card_window":
 		return await _card_window(shell)
+	if str(next["kind"]) == "notice":
+		return await _tap(shell, "ShowNoticeButton") and await _tap(shell, "CloseLayerButton")  # Schließen bestätigt den Hinweis
+	if await _tap(shell, "ShowCardButton"):
+		return await _tap(shell, "CloseLayerButton")  # Schließen erledigt die Auskunft
+
 	if kind == "day" and await _execution_flow(shell):
 		return true
 	for name: String in ["RevealButton", "StartNightButton", "BeginStepButton", "ContinueDayButton", "EndNightButton", "EndDayButton", "AckButton"]:
@@ -170,7 +175,11 @@ func _act(shell: Control) -> bool:
 				if str(next["owner"]) == "traumdeuter" or str(next["owner"]) == "card":
 					var state := _state_of(shell)
 					prefer = state.alive_ids().filter(func(id: int) -> bool: return state.players[id].counts_as_wolf)
+				if str(next["owner"]) == "loki":
+					await _tap(shell, "YesButton")  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
 				await _tap_seats(shell, need, prefer)
+				if CockpitText.auto_commit(next):
+					return true  # eine feste Anzahl gilt sofort
 				if await _tap(shell, "ConfirmTargetsButton"):
 					return true
 				return await _tap(shell, "DeclineButton")

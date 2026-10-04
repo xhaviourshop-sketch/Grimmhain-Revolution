@@ -71,6 +71,7 @@ func _check_role(role: String) -> void:
 	if not await start(c[0], c[1]):
 		return
 	assert_true(await run(c[2], until_prompt(role, c[3])), "%s: bis zur Auswahl" % role)
+	await begin_open_step()
 	var hash0 := session().state_hash()
 	var draws0 := state().rng.draws
 	var count0 := session().commands().size()
@@ -141,9 +142,8 @@ func _check_role(role: String) -> void:
 	assert_true(session().undo(), "%s: Rückgängig vor dem Abbrechen" % role)
 	await frames(2)
 	await tap_button("RandomTargetsButton")
-	await tap_button("CancelPromptButton")
-	await confirm_dialog()
-	assert_eq(state().rng.draws, draws0, "%s: Abbrechen verbraucht keine Ziehung" % role)
+	assert_true(live("CancelPromptButton") == null, "%s: kein Abbrechen auf der Karte" % role)
+	assert_eq(state().rng.draws, draws0, "%s: ein offener Vorschlag verbraucht keine Ziehung" % role)
 	if str(c[4]) != "":
 		assert_false(state().players[1].ability_uses.has(str(c[4])), "%s: Fähigkeit nicht verbraucht" % role)
 
@@ -174,6 +174,7 @@ func test_disabled_random_button_without_admissible_result() -> void:
 	if not await start(["traumdeuter", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
 	assert_true(await run({}, until_prompt("traumdeuter", "targets")), "Traumdeuter: Auswahl offen")
+	await begin_open_step()
 	var st := session()._state
 	for wolf: int in [2, 3]:
 		st.players[wolf].alive = false  # Testvorbereitung: keine Dreiergruppe mit Wolf mehr möglich
@@ -201,12 +202,9 @@ func test_disabled_random_button_without_admissible_result() -> void:
 	assert_eq(selection().size(), 3, "Personen weiter antippbar")
 	assert_true(find_button(screen(), "ConfirmTargetsButton").disabled, "Auswahl ohne Wolf nicht bestätigbar (I-01)")
 	assert_true(find_node(screen(), "SelectionBlockedLabel") != null, "Sperrgrund der manuellen Auswahl sichtbar")
-	assert_true(await tap_button("CancelPromptButton"), "Schritt abbrechen bedienbar")
-	assert_true(await confirm_dialog(), "Abbruch mit Begründung")
-	assert_eq(session().commands().size(), count0 + 1, "genau ein Befehl")
-	assert_eq(String(last_command().type), String(Command.CANCEL_PROMPT), "Abbruch gesendet")
-	assert_eq(session()._state.rng.draws, draws0, "Abbrechen ohne Ziehung")
-	assert_eq(session()._state.pending_prompt, null, "Prompt geschlossen")
+	assert_true(live("CancelPromptButton") == null, "kein Abbrechen auf der Karte")
+	assert_eq(session().commands().size(), count0, "kein Befehl gesendet")
+	assert_eq(session()._state.rng.draws, draws0, "keine Ziehung")
 
 
 ## Andere Rollen und die Opferwahl des Blutpriesters haben keinen Zufallsknopf.

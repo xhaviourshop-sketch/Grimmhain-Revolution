@@ -4,8 +4,8 @@ extends RefCounted
 ## Text je Antwortart. Welche Rollen eigene Texte haben, prüft test_cockpit_texts.
 ##   Rollenname          ui.role.<rolle>.name, Gruppen ui.cockpit.group.<gruppe>
 ##   Vorlesetext         ui.call.<rolle> (Rückfall ui.call.generic mit Rollenname)
-##   Anweisung           ui.prompt.<besitzer>.<stufe> (Stufe „pick“ für einstufige Prompts),
-##                       Rückfall ui.prompt.generic.<antwortart>
+##   Titel und Hilfe    ui.night.<besitzer>.<stufe>.title / .help (Stufe „pick“ für einstufige Prompts),
+##                       Rückfall ui.night.generic.title bzw. ui.night.generic.help.<antwortart>
 ##   Teilantwort         ui.prompt.info.<feld> (Rückfall ui.prompt.info.generic)
 
 const GROUPS := {"pack": "ui.cockpit.group.pack", "die-gebundenen": "ui.cockpit.group.bound", "die-ewigen": "ui.cockpit.group.eternal", "piper-all": "ui.cockpit.group.piper_all", "reaction": "ui.cockpit.group.reaction"}
@@ -53,9 +53,25 @@ static func call_key(role_id: String) -> String:
 	return key if has_key(key) else "ui.call.generic"
 
 
-static func instruction_key(owner: String, stage: String, answer: String) -> String:
-	var key := "ui.prompt.%s.%s" % [key_part(owner), stage if stage != "" else "pick"]
-	return key if has_key(key) else "ui.prompt.generic.%s" % answer
+## Titel und Hilfe der Nacht-Schablone: ui.night.<besitzer>.<stufe>.title und .help (Stufe „pick“ für einstufige Prompts, bei
+## Reaktionen Besitzer „reaction“ und Stufe = Art). Den Titel nennt `night_title_key`, die Hilfe `night_help_key`; ohne Eintrag
+## der Rollenname bzw. der Hilfetext je Antwortart.
+static func night_base(next: Dictionary) -> String:
+	var owner := str(next.get("owner", ""))
+	if owner == "reaction":
+		return "ui.night.reaction.%s" % str(next.get("reaction_kind", ""))
+	var stage := str(next.get("stage", ""))
+	return "ui.night.%s.%s" % [key_part(owner), stage if stage != "" else "pick"]
+
+
+static func night_title_key(next: Dictionary) -> String:
+	var key := night_base(next) + ".title"
+	return key if has_key(key) else "ui.night.generic.title"
+
+
+static func night_help_key(next: Dictionary) -> String:
+	var key := night_base(next) + ".help"
+	return key if has_key(key) else "ui.night.generic.help.%s" % str(next.get("answer", "targets"))
 
 
 ## Beschriftung einer Aktion mit rollenspezifischer Variante, z. B. Loki „Liebende“ statt „Ja“:
@@ -142,11 +158,6 @@ static func _card_value_line(key: String, value: Variant) -> Dictionary:
 	if value is String and has_key("ui.card.option.value.%s" % value):
 		return {"key": label_key, "values": {"value": StringName("ui.card.option.value.%s" % value)}}
 	return {"key": label_key, "values": {"value": str(value)}}
-
-
-static func reaction_key(kind: String) -> String:
-	var key := "ui.prompt.reaction.%s" % kind
-	return key if has_key(key) else "ui.prompt.generic.targets"
 
 
 static func info_key(field: String) -> String:
@@ -244,6 +255,16 @@ static func spoken_names(people: Array) -> String:
 		else:
 			names.append(TranslationServer.translate("ui.morning.name_with_role").format({"name": str(p["name"]), "role": TranslationServer.translate(role_name(role))}))
 	return ", ".join(names)
+
+
+## Feste Auswahl wird sofort übernommen („genau 2“, „genau 3“, 0 oder alle, eine Person mit Verzicht); dann gibt es kein Bestätigen.
+## Anzahlbereiche (1 bis 2), Zufallsvorschläge (müssen bestätigt werden, RM-DR-015.2) und Karteneingaben bestätigt die Spielleitung.
+static func auto_commit(next: Dictionary) -> bool:
+	if str(next.get("answer")) != "targets" or str(next.get("owner")) == "card" or bool(next.get("random", false)):
+		return false
+	var high := int(next.get("max", 0))
+	var counts: Array = next.get("counts", [])
+	return high >= 1 and not counts.is_empty() and counts.all(func(c: Variant) -> bool: return int(c) == 0 or int(c) == high)
 
 
 ## Zulässige Anzahlen als Text: [2] → „2“, [0, 3] → „0 oder 3“, [1, 2, 3] → „1 bis 3“.

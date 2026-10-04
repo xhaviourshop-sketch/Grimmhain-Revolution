@@ -272,6 +272,9 @@ static func _collect_ids(value: Variant, out: Array) -> void:
 	if value is Array:
 		for item: Variant in value:
 			_collect_ids(item, out)
+	elif value is Dictionary:
+		for item: Variant in (value as Dictionary).values():
+			_collect_ids(item, out)
 	elif value is int and not value is bool:
 		out.append(value)
 

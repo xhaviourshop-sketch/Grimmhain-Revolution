@@ -320,8 +320,14 @@ func check_targets(targets: Array) -> StringName:
 
 ## Zufallsvorschlag für die offene Spielleiterwahl (RM-DR-015.2), gezogen aus einer Kopie des gespeicherten Generators:
 ## Personen-IDs, oder null ohne Zufallsknopf bzw. ohne zulässiges Ergebnis. Ändert nichts; gleicher Zustand, gleicher Vorschlag.
+## Ein angekündigter Schritt, dessen Prompt die Karte schon zeigt, zählt mit (Vorschau über einen kopierten Beginn des Schritts).
 func random_proposal() -> Variant:
-	var r := InfoSteps.random_choice(_state)
+	var st := _state
+	if st.pending_prompt == null:
+		var begun := RulesEngine.apply(_state, Command.begin_step(RulesEngine.next_step_id(_state)))
+		if begun.ok:
+			st = begun.state
+	var r := InfoSteps.random_choice(st)
 	return (r["targets"] as Array).duplicate() if not r.is_empty() else null
 
 

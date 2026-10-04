@@ -4,6 +4,23 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## UEBERGABE Nachtschritte neu (WIP, Branch feature/nachtschritte-neu, NICHT gemergt, 2026-10-04)
+- Phase 1 (Regelkern, Commit 6d8cda7): fertig. Unit, Szenarien und Fuzz waren gruen. Der .po-Mehrzeilenfehler aus diesem Commit ist im WIP-Commit repariert.
+- Phase 2 (Schablone): Code steht (action_card, cockpit_screen, cockpit_text, cockpit_view, prompt_view), 172 neue ui.night.* Texte DE/EN fuer alle Schritte.
+- UI-Tests: 422 Tests, 39 rot, 1 Datei nicht ladbar (Stand letzter Lauf --dir=ui). Rot: handedness 4, night_board 2, notice_cards 3, public_reaction_hint 3,
+  resume_scenarios 6, role_act_lines 2, role_operation_kinds 4, save_service 2, target_selection 6, timer_save 1, board_layout 1, cards_ui 1, cockpit_gm 1,
+  cockpit_model 1, cockpit_polish 2; test_prompt_coverage.gd nicht ladbar (CockpitText.reaction_key entfaellt, neue Keys night_base).
+- Fehlt: Tests fuer Auto-Uebernahme, Rueckgaengig-Leiste, Loki-Art zuerst; verwaiste i18n-Keys/Code entfernen; FOCUS_RING Gold zu Mondsilber;
+  Spalte tipps_neu in docs/audit/NACHTSCHRITTE-72.csv samt Neumessung; 7 Screenshots 1024x768 nach Downloads/Grimmhain-Nacht-neu; Vollsuite inkl. Fuzz; dann Merge, Export, Deploy.
+- Testmuster: Auto-Commit bei fester Anzahl, also kein ConfirmTargetsButton (Mehrfachwahl-Tests mit Spuerhund, 3 Personen); Schritte mit Vorschau zaehlen als Prompt
+  (effective_of / next() im Treiber), Schritt vorher per begin_open_step() beginnen, wenn der Zustand den Prompt braucht; Cancel/Skip/Clear nur noch bei Karteneingaben (owner card).
+- Rudelschritt in Vorbereitungen per Kernbefehl skip_next_step ueberspringen (nur Core, nicht in der UI); Loki: erst YesButton/NoButton (Art), dann 2 Personen.
+- CockpitScreen.double_tap_msec = 0 in Tests (spawn_shell setzt es), nur der Doppeltipp-Test schaltet 400 ein.
+- Hinweise/Auskunft: ShowNoticeButton/ShowCardButton, dann CloseLayerButton erledigt sie; layer close ohne Knopf (close_layer) verwirft nur.
+- Alte Spielstaende in der Lehrling-Stufe sind nicht mehr ladbar.
+
+---
+
 ---
 
 ## Phase 0 — Diagnose (State-Karte)
