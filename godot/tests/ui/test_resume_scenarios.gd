@@ -43,13 +43,14 @@ func snapshot() -> Dictionary:
 		"morning": session().morning_report(), "roles": session().role_show_list(), "day_effects": session().day_effects()}
 
 
-## Genau ein Befehl nach dem Fortsetzen, Ergebnis wie ohne Unterbrechung, und er wurde gespeichert.
-func assert_one_effect(before: Dictionary, label: String) -> void:
+## Genau eine Bedienung nach dem Fortsetzen (ein Befehl; `commands` mehr, wenn die Karte eine Folgestufe selbst übernimmt),
+## Ergebnis wie ohne Unterbrechung, und er wurde gespeichert.
+func assert_one_effect(before: Dictionary, label: String, commands: int = 1) -> void:
 	var old: Array[Command] = before["commands"]
 	var now := session().commands()
-	assert_eq(now.size(), old.size() + 1, "%s: genau ein Befehl nach dem Fortsetzen" % label)
+	assert_eq(now.size(), old.size() + commands, "%s: genau %d Befehl(e) nach dem Fortsetzen" % [label, commands])
 	var expected: Array[Command] = old.duplicate()
-	expected.append(now.back())
+	expected.append_array(now.slice(old.size()))
 	var reference := RulesEngine.replay(expected)
 	assert_true(reference.ok, "%s: ununterbrochener Ablauf angenommen" % label)
 	assert_eq(session().state_hash(), reference.state.content_hash(), "%s: Zustand wie ohne Unterbrechung" % label)
@@ -63,35 +64,44 @@ func selection() -> Array:
 
 # --- offene Auswahl -------------------------------------------------------------------------------------
 
-## Einzelauswahl: angetippte, nicht bestätigte Person ist flüchtig und nach dem Neustart verworfen; die neue
-## Auswahl erzeugt den Befehl mit dem neuen Ziel (kein veraltetes Ziel).
+## Zufallsvorschlag des Traumdeuters (muss bestätigt werden, RM-DR-015.2): Der Vorschlag ist flüchtig und nach dem Neustart
+## verworfen; ein neuer Vorschlag wird bestätigt und erzeugt genau einen Befehl. Feste Anzahlen ohne Vorschlag werden sofort
+## übernommen und haben keine offene Auswahl, die ein Neustart verwerfen müsste.
 func test_open_single_selection_is_discarded_and_prompt_stays_open() -> void:
-	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, "amalia", "detektiv"]):
+	if not await start(["traumdeuter", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
-	assert_true(await run({}, until_prompt("pack")), "bis zum Rudel")
-	await tap_seat(5)
-	assert_eq(selection(), [5], "Person 5 angetippt, nicht bestätigt")
+	assert_true(await run({}, until_prompt("traumdeuter", "targets")), "bis zur Auswahl")
+	await begin_open_step()
+	await tap_button("RandomTargetsButton")
+	assert_eq(selection().size(), 3, "Vorschlag angezeigt, nicht bestätigt")
 	var before := await restart()
-	assert_eq(selection(), [], "flüchtige Auswahl verworfen")
-	assert_eq(str(next()["owner"]), "pack", "Rudel-Prompt weiter offen")
-	await tap_seat(6)
+	assert_eq(selection(), [], "flüchtiger Vorschlag verworfen")
+	assert_eq(str(next()["owner"]), "traumdeuter", "Prompt weiter offen")
+	await tap_button("RandomTargetsButton")
 	await tap_button("ConfirmTargetsButton")
-	assert_one_effect(before, "Einzelauswahl")
-	assert_eq(last_command().payload.get("targets"), [6], "Befehl mit der neuen, nicht der alten Auswahl")
+	assert_one_effect(before, "Zufallsvorschlag")
+	assert_true(bool(last_command().payload.get("random", false)), "Befehl mit dem neuen Vorschlag")
 
 
-## Mehrfachauswahl (Loki wählt zwei Personen): eine halbe Auswahl ist flüchtig.
+## Halbe Mehrfachauswahl (zwei von drei Personen): flüchtig und nach dem Neustart verworfen; erst die dritte Person
+## schließt die feste Anzahl, und sie wird sofort übernommen, ohne dass die zwei alten Personen noch zählen.
 func test_open_multi_selection_is_discarded() -> void:
-	if not await start([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
+	if not await start(["traumdeuter", W, "blutwolf", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
-	assert_true(await run({}, until_prompt("loki", "targets")), "bis Loki")
-	await tap_seat(3)
+	assert_true(await run({}, until_prompt("traumdeuter", "targets")), "bis zur Auswahl")
+	await begin_open_step()
+	await tap_seat(2)
+	await tap_seat(4)
+	assert_eq(selection(), [2, 4], "halbe Auswahl vorhanden")
 	var before := await restart()
 	assert_eq(selection(), [], "halbe Mehrfachauswahl verworfen")
-	assert_eq(str(next()["owner"]), "loki", "Loki-Prompt weiter offen")
-	await tap_seat(4)
+	assert_eq(str(next()["owner"]), "traumdeuter", "Prompt weiter offen")
 	await tap_seat(5)
-	await tap_button("ConfirmTargetsButton")
+	assert_eq(session().commands().size(), before["commands"].size(), "eine Person allein sendet nichts")
+	await tap_seat(2)
+	await tap_seat(4)
+	if live("ConfirmTargetsButton") != null:
+		await tap_button("ConfirmTargetsButton")
 	assert_one_effect(before, "Mehrfachauswahl")
 
 
@@ -105,7 +115,7 @@ func test_multistage_role_action_keeps_the_answered_stage() -> void:
 	var before := await restart()
 	assert_eq(str(next()["stage"]), "poison", "Giftstufe weiter offen, Heiltrankantwort erhalten")
 	assert_true(await answer(false), "Gift verworfen")
-	assert_one_effect(before, "Waldhexe")
+	assert_one_effect(before, "Waldhexe", 2)  # Giftverzicht, danach übernimmt die Karte die Bestätigungsstufe selbst
 
 
 ## Offene Todesreaktion (Sensenträger), einmal eingereiht und einmal mit offenem Prompt: nach dem Neustart genau
@@ -119,9 +129,9 @@ func test_open_death_reaction_survives_restart_once() -> void:
 	assert_eq(state().reactions.size(), 1, "Reaktion eingereiht")
 	var before := await restart()
 	assert_eq(state().reactions.size(), 1, "nach dem Neustart genau eine Reaktion")
-	assert_true(await step({}), "Reaktion beginnen")
-	assert_one_effect(before, "Reaktion eingereiht")
-	assert_eq(str(next()["owner"]), "reaction", "Reaktionsprompt offen")
+	assert_eq(str(next()["owner"]), "reaction", "Reaktion steht als Karte an (Vorschau)")
+	await begin_open_step()  # Vorbereitung ohne Karte: Die Karte beginnt den Schritt erst mit der ersten Bedienung
+	assert_eq(state().reactions.size(), 1, "Reaktion mit offenem Prompt noch eingereiht")
 	before = await restart()
 	assert_true(await step({"reaction/%s" % str(next()["reaction_kind"]): [4]}), "Ziel der Reaktion über die aufgedeckte Karte")
 	assert_one_effect(before, "Reaktionsprompt")
@@ -144,7 +154,8 @@ func test_unconfirmed_notice_stays_reachable_and_confirmed_one_is_not_asked_agai
 	var before := await restart()
 	assert_true(find_node(screen(), "NoticeLayer") == null, "private Karte nach dem Neustart nicht offen")
 	assert_eq(int(next()["notice_id"]), first, "derselbe unbestätigte Hinweis erreichbar")
-	await tap_button("AckNoticeButton")
+	await tap_button("ShowNoticeButton")
+	await tap_button("CloseLayerButton", find_node(screen(), "NoticeLayer"))  # Schließen der gezeigten Karte bestätigt den Hinweis
 	assert_one_effect(before, "Hinweis bestätigt")
 	assert_ne(int(next().get("notice_id", -1)), first, "erledigter Hinweis steht nicht mehr an")
 	assert_true(session().undo(), "Rückgängig nach dem Fortsetzen")
@@ -246,28 +257,25 @@ func test_open_win_candidate_is_decided_once_after_restart() -> void:
 func test_piper_flow_resumes_at_every_interruption_point() -> void:
 	if not await start([W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "das-orakel"]):
 		return
-	var at_step := func(role: String) -> Callable:
-		return func(n: Dictionary) -> bool: return str(n.get("kind")) == "begin_step" and str(n.get("role_id")) == role
-	assert_true(await run({}, at_step.call("rattenfaenger")), "vor dem Rattenfänger")
+	assert_true(await run({}, until_prompt("rattenfaenger")), "vor dem Rattenfänger")
 	var before := await restart()
 	assert_eq(str(next()["role_id"]), "rattenfaenger", "Rattenfänger steht weiter an")
-	await tap_button("BeginStepButton")
-	assert_one_effect(before, "Rattenfänger begonnen")
 	await tap_seat(4)
 	await tap_seat(5)
-	await tap_button("ConfirmTargetsButton")
+	await tap_button("ConfirmTargetsButton")  # Anzahl 1 bis 2: bestätigt die Spielleitung
+	assert_one_effect(before, "Rattenfänger", 2)  # Schritt beginnen und Auswahl übernehmen
 	assert_eq(str(next().get("notice_kind")), "piper_new", "nach der Aktion: Hinweis offen")
 	await tap_button("ShowNoticeButton")
 	before = await restart()
 	assert_true(find_node(screen(), "NoticeLayer") == null, "Hinweiskarte nach dem Neustart nicht wieder geöffnet")
 	assert_eq(str(next().get("notice_kind")), "piper_new", "derselbe Hinweis")
-	await tap_button("AckNoticeButton")
+	await tap_button("ShowNoticeButton")
+	await tap_button("CloseLayerButton", find_node(screen(), "NoticeLayer"))  # Schließen der gezeigten Karte bestätigt den Hinweis
 	assert_one_effect(before, "Hinweis bestätigt")
 	before = await restart()
 	assert_eq(str(next()["role_id"]), "piper-all", "zwischen den Phasen: „Alle Verzauberten“ steht an")
 	assert_eq(next()["actor_ids"], [4, 5], "dieselben Personen")
-	await tap_button("BeginStepButton")
-	assert_one_effect(before, "„Alle Verzauberten“ begonnen")
+	await begin_open_step()  # Vorbereitung ohne Karte: Die Karte beginnt den Schritt erst mit der ersten Bedienung
 	before = await restart()
 	assert_eq(str(next().get("owner")), "piper-all", "offene Karte bleibt offen")
 	assert_eq(next()["actor_ids"], [4, 5], "dieselben Personen nach dem Neustart")
