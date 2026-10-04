@@ -671,3 +671,11 @@ Verifikation: gezielt `prep_model` 10, `prep_screen` 3, `ui_i18n` 6 grün; `chec
 Deploy: Web-Export neu, `grimmhain-ipad-test` (Produktion).
 Offen: nichts aus diesem Auftrag.
 
+
+## 2026-10-04: Feinschliff Vorbereitung (DA-91), Branch feature/vorbereitung-feinschliff (nicht gemergt)
+Stand: Eigener Ladebildschirm (boot_splash, `web/shell.html`, `tools/build_splash.py`, Register ergänzt), Hauptmenü mit Hain-Knöpfen, „Empfohlene Aufstellung“ in Schritt 1, weiches pulsierendes Glühen (`SelectionGlow`) statt rotem Rechteck, Schritt 3 startet leer und ist ein Kachelraster (`RoleTile`, `RolePoolView`), „Empfehlung übernehmen“, Rollenleiste im Kartenmodus 40 Prozent hoch in Teamfarben. Popup „Welche Rolle kommt dazu?“, Rollenmenü und 13 Übersetzungsschlüssel entfernt. Regelkern unverändert.
+Verifikation: gezielt grün: `prep_model` 11 (neu: Schritt 3 startet leer), `prep_screen` 4 (neu: Kacheln leer, Toggle, ×N, Zähler, Empfehlung), `unique_start`, `role_lexicon_ui`, `player_groups`, `full_round_ui`, `cards_ui_closing`, `dialog_focus`, `ui_layout`, `ui_theme`, `ui_i18n`, `ui_shell`, `ui_architecture`, `cockpit_gm`, `role_operation_kinds`, `settings_persistence`, `game_history`, `touch_scroll`, `rulebook`, `save_service`; `check-godot-i18n.js` und `check-asset-register.js` grün. Keine Vollsuite (Kern unverändert). Bestehende UI-Tests an den neuen Ablauf angepasst (leerer Schritt 3: erst „Empfehlung übernehmen“), nicht abgeschwächt. Screenshots 1024x768 in `Downloads/Grimmhain-Vorbereitung/neu/prep3/` (Ladebildschirm im Browser mit gedrosseltem Download, Hauptmenü, Schritt 1, Schritt 3 leer und gefüllt, Kartenmodus mit Leiste).
+Nicht geprüft: Safari/iPad (Langdruck, Glühen, Touch), Leistung des Glüh-Schein-Bildes im Browser (einmal berechnet, Viertelauflösung).
+Deploy: Web-Export neu, `grimmhain-ipad-test` (Produktion), `index.pck` 35964444 Byte wie lokal, eigene Ladeseite live.
+Offen: Schriftzug des Ladebilds ist Georgia Bold als Platzhalter für ein Markenlogo.
+
