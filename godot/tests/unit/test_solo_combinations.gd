@@ -37,6 +37,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, "shown", true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -66,7 +70,7 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			elif answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			else:
 				cmd = _auto(s)
 		else:
@@ -204,10 +208,8 @@ func test_fire_devil_apple_doubles_step_one_mark_remains() -> void:
 
 func test_fire_devil_inherited_by_apprentice_starts_without_mark() -> void:
 	# Lehrling 3 bindet an Feuerteufel 2; Feuerteufel markiert 6, stirbt am Tag; 3 erbt ohne Markierung.
-	var candidates := func(p: PendingPrompt) -> Command: return Command.answer_stage_targets(p.id, "candidates", [2, 4, 5])
-	var option := func(p: PendingPrompt) -> Command: return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": "option", "option": (p.partial["options"] as Array).find(FT)})
-	var confirm := func(p: PendingPrompt) -> Command: return Command.answer_choice(p.id, "confirm", true)
-	var s := _dawn(_state([W, FT, "lehrling", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]), {"lehrling:3@candidates": candidates, "lehrling:3@option": option, "lehrling:3@confirm": confirm, "feuerteufel:2@": [6]})
+	var master := func(p: PendingPrompt) -> Command: return Command.answer_stage_targets(p.id, "master", [2])
+	var s := _dawn(_state([W, FT, "lehrling", D, "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]), {"lehrling:3@master": master, "feuerteufel:2@": [6]})
 	if s == null:
 		return
 	assert_eq(s.fire_marks, [{"devil_id": 2, "target_id": 6}], "Meister hat markiert")

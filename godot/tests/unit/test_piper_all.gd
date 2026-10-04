@@ -40,6 +40,8 @@ func _next_command(s: GameState, answers: Dictionary) -> Command:
 		return Command.answer_choice(p.id, String(p.stage), true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK and not answers.has(key):
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 	return Command.answer_prompt(p.id, answers.get(key, p.allowed_ids.slice(0, p.min_count)))
 
 

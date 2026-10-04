@@ -216,7 +216,7 @@ func test_fluch_02_village_forces_a_false_oracle_answer() -> void:
 			g.do(Command.answer_choice(p.id, "shown", true), "gezeigt")
 			break
 		if p != null and p.owner == PendingPrompt.OWNER_PACK:
-			g.do(Command.answer_prompt(p.id, []), "Rudel")
+			g.do(Command.skip_step(p.step_id, "Test: ruhige Nacht"), "Rudel")
 		elif p != null:
 			g.answer_default(p)
 		elif RulesEngine.next_step_id(g.state) != "":

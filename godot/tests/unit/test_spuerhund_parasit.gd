@@ -76,7 +76,7 @@ func test_hound_hit_and_miss() -> void:
 	assert_false(InfoSteps.hound_lost(revived.players[2]), "Wiederbelebung gibt die Fähigkeit zurück")
 
 
-func test_hound_decline_and_invalid() -> void:
+func test_hound_exactly_three_and_invalid() -> void:
 	var cmds: Array[Command] = [_start(["werwolf", SH, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), _gm("kill", {"target_id": 6, "trigger_effects": false}),
 		Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:spuerhund:2")]
 	var s := _run(cmds, "Prompt").state
@@ -85,10 +85,7 @@ func test_hound_decline_and_invalid() -> void:
 	apply_rejected(s, Command.answer_stage_targets(2, "targets", [1, 3]), "invalid_target_count", "genau drei")
 	apply_rejected(s, Command.answer_stage_targets(2, "targets", [2, 3, 4]), "invalid_target", "nicht sich selbst")
 	apply_rejected(s, Command.answer_stage_targets(2, "targets", [3, 4, 6]), "invalid_target", "keine Toten")
-	var declined := apply_ok(s, Command.answer_stage_targets(2, "targets", []), "Verzicht")
-	assert_eq(RulesEngine.next_step_id(declined.state), "", "Schritt erledigt")
-	assert_false(InfoSteps.hound_lost(declined.state.players[2]), "Verzicht verliert nichts")
-	assert_eq(events_of_type(declined.events, "HoundRevealed").size(), 0, "keine Information")
+	apply_rejected(s, Command.answer_stage_targets(2, "targets", []), "invalid_target_count", "kein Verzicht: immer genau drei")
 	var shown := apply_ok(s, Command.answer_stage_targets(2, "targets", [1, 3, 4]), "Prüfung").state
 	var st: Dictionary = shown.to_dict()
 	st["pending_prompt"]["partial"]["hit"] = false

@@ -29,10 +29,10 @@ func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
 	return out
 
 
-## Nacht 1 bis einschließlich Rudelwahl: Schutz auf `protect`, Rudel wählt `victim` (-1 = kein Opfer).
+## Nacht 1 bis einschließlich Rudelwahl: Schutz auf `protect`, Rudel wählt `victim` (-1 = Rudelschritt mit Grund übersprungen, kein Opfer).
 func _night_one(start: Command, protect: int, victim: int) -> Array[Command]:
-	return [start, Command.start_night(), Command.answer_prompt(1, [protect]), Command.begin_step(PACK_1),
-		Command.answer_prompt(2, [] if victim < 0 else [victim])]
+	var pack := Command.skip_step(PACK_1, "kein Opfer") if victim < 0 else Command.answer_prompt(2, [victim])
+	return [start, Command.start_night(), Command.answer_prompt(1, [protect]), Command.begin_step(PACK_1), pack]
 
 
 func _replay_ok(commands: Array[Command], label: String) -> ReplayResult:

@@ -76,7 +76,11 @@ func _dialog_confirm(shell: Control) -> bool:
 func _act(shell: Control) -> bool:
 	if await _dialog_confirm(shell):
 		return true
-	var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+	var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
+	if str(next["kind"]) == "notice":
+		return await _tap(shell, "ShowNoticeButton") and await _tap(shell, "CloseLayerButton")  # Schließen bestätigt den Hinweis
+	if await _tap(shell, "ShowCardButton"):
+		return await _tap(shell, "CloseLayerButton")  # Schließen erledigt die Auskunft
 	for name: String in ["RevealButton", "StartNightButton", "BeginStepButton", "ContinueDayButton", "EndNightButton", "EndDayButton", "AckButton"]:
 		if await _tap(shell, name):
 			return true
@@ -99,7 +103,11 @@ func _act(shell: Control) -> bool:
 				if str(next["owner"]) == "traumdeuter":
 					var state := RulesEngine.replay((session_of(shell) as GameSession).commands()).state
 					wolves = state.alive_ids().filter(func(id: int) -> bool: return state.players[id].counts_as_wolf)
+				if str(next["owner"]) == "loki":
+					await _tap(shell, "YesButton")  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
 				await _tap_seats(shell, need, [], wolves)
+				if CockpitText.auto_commit(next):
+					return true  # eine feste Anzahl gilt sofort
 				if await _tap(shell, "ConfirmTargetsButton"):
 					return true
 				return await _tap(shell, "DeclineButton")
@@ -191,10 +199,10 @@ func _play_until(shell: Control, stop: Callable, label: String) -> bool:
 		if stop.call(session_of(shell).call("cockpit_view")):
 			return true
 		if not await _act(shell):
-			var card: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+			var card: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 			fail("%s: keine bedienbare Aktion bei %s/%s/%s/%s (%s)" % [label, card["kind"], card.get("owner", ""), card.get("stage", ""), card.get("answer", ""), _trace.slice(-6)])
 			return false
-	fail("%s: Ziel nach %d Aktionen nicht erreicht" % [label, MAX_ACTIONS])
+	fail("%s: Ziel nach %d Aktionen nicht erreicht (zuletzt: %s)" % [label, MAX_ACTIONS, _trace.slice(-10)])
 	return false
 
 
@@ -282,8 +290,7 @@ func test_new_game_can_be_saved_resumed_and_undone() -> void:
 	assert_eq(fresh.session.commands().size(), commands_before, "gleicher Befehlsverlauf, kein zweiter Start")
 	assert_eq(JSON.stringify((fresh.session.cockpit_view() as Dictionary)["next"]), JSON.stringify((session.cockpit_view() as Dictionary)["next"]), "gleiche nächste Handlung")
 	# Rückgängig nach einer repräsentativen Aktion (das Rudel wählt): Spielleiterwerkzeug → Rückgängig → Bestätigen.
-	await _tap_seats(shell, 1)
-	assert_true(await _tap(shell, "ConfirmTargetsButton") or await _tap(shell, "DeclineButton"), "Rudel antwortet über Buttons")
+	await _tap_seats(shell, 1)  # eine feste Anzahl gilt sofort, kein Bestätigen
 	var after_answer := session.commands().size()
 	assert_eq(after_answer, commands_before + 1, "ein Befehl mehr")
 	assert_true(await _tap(shell, "GmButton"), "Spielleiterwerkzeuge")

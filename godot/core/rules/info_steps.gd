@@ -6,7 +6,7 @@ extends RefCounted
 ##   Waldläufer (jede Nacht): Anzahl lebender Personen, die als Wolf zählen (RM-DR-147).
 ##   Doktor (jede Nacht): zwei andere Lebende, gleiche aktuelle Fraktion ja/nein (RM-DR-145).
 ##   Fährtenleser (jede Nacht bis zur Nutzung, je Leben einmal): Stufe „use“ (ja/nein), dann Richtung (RM-DR-146).
-##   Spürhund (jede Nacht): drei andere Lebende oder Verzicht; ✓ bei Wolf/Einzelsieg, ✗ kostet die Fähigkeit.
+##   Spürhund (jede Nacht): genau drei andere Lebende, kein Verzicht; ✓ bei Wolf/Einzelsieg, ✗ kostet die Fähigkeit.
 ## Informationsrollen (DECISION-LOG „Rollenaudit · Informationsrollen“, 28.09.2026):
 ##   Traumdeuter (jede Nacht), Kopfgeldjäger (je offener Liste): der Spielleiter wählt drei andere Lebende,
 ##     mindestens eine zählt als Wolf; gezeigt werden nur die Namen („mindestens ein Wolf“).
@@ -31,6 +31,7 @@ const KING_USE_KEY := "koenig:learn"
 const WARRIOR_USE_KEY := "kriegerin-des-lichts:attack"
 const BLOOD_USE_KEY := "blutpriester:sacrifice"
 const BLOOD_MAX_REVEAL := 3
+const HOUND_PICKS := 3  ## Spürhund: genau drei andere Lebende (DA-Nachtschritte-neu, kein Verzicht)
 ## Auswahl von drei Personen mit mindestens einem Wolf (Traumdeuter, Kopfgeldjäger).
 const TRIPLE_OWNERS: Array[StringName] = [PendingPrompt.OWNER_DREAMER, PendingPrompt.OWNER_BOUNTY]
 ## Freiwillige Einmal-Aktion: 0 Ziele = Verzicht (nichts verbraucht).
@@ -158,8 +159,8 @@ static func open(s: GameState, prompt: PendingPrompt, owner: StringName, actor_i
 			return
 		prompt.stage = STAGE_TARGETS
 		prompt.allowed_ids = _others_alive(s, actor_id)
-		prompt.min_count = 0
-		prompt.max_count = 3
+		prompt.min_count = HOUND_PICKS
+		prompt.max_count = HOUND_PICKS
 		prompt.partial = {}
 		return
 	if owner == PendingPrompt.OWNER_TRACKER:
@@ -207,10 +208,8 @@ static func _info(s: GameState, owner: StringName) -> Dictionary:
 	return {"bound_ids": living_bound(s)}
 
 
-## Zulässige Anzahlen der aktuellen Stufe. Spürhund: keiner oder genau drei (Verzicht).
+## Zulässige Anzahlen der aktuellen Stufe (Spürhund: genau drei).
 static func target_counts(prompt: PendingPrompt) -> Array[int]:
-	if prompt.stage == STAGE_TARGETS and prompt.owner == PendingPrompt.OWNER_HOUND:
-		return [0, prompt.max_count]
 	return prompt.count_range()
 
 
@@ -370,9 +369,6 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 		return
 	if prompt.stage == STAGE_TARGETS and prompt.owner == PendingPrompt.OWNER_HOUND:
 		var picks: Array[int] = DictRead.to_int_array(p["targets"])
-		if picks.is_empty():
-			_decline(ctx, prompt)
-			return
 		prompt.partial = {"target_ids": [picks[0], picks[1], picks[2]], "hit": hound_hit(s, picks)}
 		_enter_shown(prompt)
 		ctx.emit(GameEvent.PROMPT_STAGE_ANSWERED, Visibility.GM, {
@@ -536,7 +532,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 		if hound_lost(actor):
 			return prompt.stage == STAGE_SHOWN and prompt.allowed_ids.is_empty() and prompt.partial == {"lost": true}
 		if prompt.stage == STAGE_TARGETS:
-			return prompt.partial.is_empty() and prompt.allowed_ids == _others_alive(s, actor.id) and prompt.min_count == 0 and prompt.max_count == 3
+			return prompt.partial.is_empty() and prompt.allowed_ids == _others_alive(s, actor.id) and prompt.min_count == HOUND_PICKS and prompt.max_count == HOUND_PICKS
 		var picks: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))
 		if picks == null or (picks as Array).size() != 3 or not prompt.allowed_ids.is_empty():
 			return false

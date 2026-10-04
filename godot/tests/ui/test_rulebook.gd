@@ -264,10 +264,10 @@ func test_longest_chapter_is_longer_than_the_area() -> void:
 # --- Cockpit -------------------------------------------------------------------------------------------------------
 
 func test_cockpit_tool_keeps_the_open_selection_and_sends_nothing() -> void:
-	if not await start([W, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
+	if not await start([W, "spuerhund", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
-	assert_true(await run({}, until_prompt("schutzengel")), "Schutzengel-Auswahl offen")
-	await tap_seat(3)
+	assert_true(await run({}, until_prompt("spuerhund")), "Spürhund-Auswahl offen")
+	await tap_seat(3)  # drei Personen nötig: die Auswahl bleibt offen
 	assert_eq(selection(), [3], "Person 3 ausgewählt")
 	var before := _fingerprint()
 	assert_true(await tap_button("RulebookButton"), "Werkzeug „Regelbuch“")
@@ -284,10 +284,10 @@ func test_cockpit_tool_keeps_the_open_selection_and_sends_nothing() -> void:
 	assert_eq(screen().call("layer_kind"), &"", "Ebene geschlossen")
 	assert_eq(selection(), [3], "Auswahl nach dem Schließen erhalten")
 	assert_eq(_fingerprint(), before, "Schließen sendet nichts")
-	assert_true(live("ConfirmTargetsButton") != null, "Auswahl weiter bestätigbar")
+	assert_eq(selection(), [3], "Auswahl weiter offen")
 	# Echte Zustandsänderung bei offenem Regelbuch: die bestehenden Regeln verwerfen die Auswahl.
 	assert_true(await tap_button("RulebookButton"), "Regelbuch erneut geöffnet")
-	var r := session().answer_targets([4])
+	var r := session().answer_targets([4, 5, 6])
 	assert_true(r.ok, "Zustand ändert sich (Vorbereitung über die Anwendungsschicht)")
 	await frames(2)
 	assert_true(selection().is_empty(), "veraltete Auswahl verworfen")

@@ -57,7 +57,7 @@ func test_set_role_field_cancels_prompt() -> void:
 
 func test_execute_cancels_reaction_prompt() -> void:
 	# Tag 1: Test-Sensenträger (3) hingerichtet, Reaktions-Prompt offen; dann Übersteuerung auf 4.
-	var s := Fixtures.play([Fixtures.start_reaper_game(), Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
+	var s := Fixtures.play([Fixtures.start_reaper_game(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night(),
 		Command.nominate(5, 3), Command.decide_execution(3), Command.begin_step("reaction:1")] as Array[Command])
 	assert_true(s.pending_prompt != null and s.pending_prompt.allowed_ids.has(4), "Reaktions-Prompt mit 4 offen")
 	var r := apply_ok(s, CorrectionFixtures.gm("execute", {"target_id": 4}), "Hinrichtung per Übersteuerung")

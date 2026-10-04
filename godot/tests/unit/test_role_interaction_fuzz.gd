@@ -538,11 +538,9 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 			if p.stage == InfoSteps.STAGE_USE:
 				return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.5)
 			if p.stage == InfoSteps.STAGE_TARGETS and p.owner == PendingPrompt.OWNER_HOUND:
-				var pool3 := _alive_in(s, p.allowed_ids, p.actor_id)
-				if pool3.size() < 3 or _rng.randf() < 0.2:
-					return Command.answer_stage_targets(p.id, String(p.stage), [])
+				var pool3 := _alive_in(s, p.allowed_ids, p.actor_id)  # immer genau drei (DA Nachtschritte neu); der Schritt entfällt bei weniger Lebenden
 				var picks: Array = []
-				while picks.size() < 3:
+				while picks.size() < InfoSteps.HOUND_PICKS and picks.size() < pool3.size():
 					var t: int = _pick(pool3)
 					if not picks.has(t):
 						picks.append(t)
@@ -603,28 +601,15 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 		PendingPrompt.OWNER_SHADOW, PendingPrompt.OWNER_TIME:
 			return Command.answer_choice(p.id, "use", _rng.randf() < 0.3)
 		PendingPrompt.OWNER_APPRENTICE:
-			match p.stage:
-				ApprenticeRules.STAGE_CANDIDATES:
-					var pool := _alive_in(s, p.allowed_ids, p.actor_id)
-					var chosen: Array = []
-					while chosen.size() < ApprenticeRules.OPTION_COUNT:
-						var candidate: int = _pick(pool)
-						if not chosen.has(candidate):
-							chosen.append(candidate)
-					return Command.answer_stage_targets(p.id, String(p.stage), chosen)
-				ApprenticeRules.STAGE_OPTION:
-					var options: Array = p.partial.get("options", [])
-					return Command.create(Command.ANSWER_PROMPT, {"prompt_id": p.id, "stage": String(p.stage), "option": _rng.randi_range(0, options.size() - 1)})
-				_:
-					return Command.answer_choice(p.id, String(p.stage), true)
+			return Command.answer_stage_targets(p.id, String(p.stage), [_pick(_alive_in(s, p.allowed_ids, p.actor_id))])
 	var pool := _alive_in(s, p.allowed_ids)
 	# König-Fokus: das Rudel verschont den König, damit er die Bedingung „mehr Tote als Lebende“ erlebt (KingRevealed).
 	if p.owner == PendingPrompt.OWNER_PACK and _focus == "koenig":
 		var spared := pool.filter(func(id: int) -> bool: return s.players[id].role_id != RoleCatalog.KOENIG)
 		if not spared.is_empty():
 			pool = spared
-	# Die Umlenkung des Nekromanten ist selten: in seinen Fokuspartien wählt das Rudel ihn oft, sobald drei Tote bereitliegen.
-	if p.owner == PendingPrompt.OWNER_PACK and _focus == "nekromant" and SoloRules.necro_pool(s).size() >= RoleCatalog.NECRO_SACRIFICE and _rng.randf() < 0.6:
+	# Die Umlenkung des Nekromanten ist selten: in seinen Fokuspartien wählt das Rudel ihn, sobald drei Tote bereitliegen (die Wölfe töten jede Nacht, die Partien sind kürzer).
+	if p.owner == PendingPrompt.OWNER_PACK and _focus == "nekromant" and SoloRules.necro_pool(s).size() >= RoleCatalog.NECRO_SACRIFICE:
 		var necros := pool.filter(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.NEKROMANT)
 		if not necros.is_empty():
 			return Command.answer_prompt(p.id, [_pick(necros)])

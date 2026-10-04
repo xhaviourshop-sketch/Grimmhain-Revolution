@@ -50,7 +50,7 @@ func _night(s: GameState, answers: Dictionary, label: String) -> GameState:
 		if answers.has(String(kind)):
 			c = (answers[String(kind)] as Callable).call(p)
 		elif kind == StepQueue.PACK or kind == StepQueue.PACK2:
-			c = Command.answer_prompt(p.id, [])
+			c = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 		elif p.stage == &"use":
 			c = Command.answer_choice(p.id, "use", false)
 		else:
@@ -118,10 +118,10 @@ func test_nightmare_wolf_blocks_one_village_person() -> void:
 		return
 	assert_eq(s.night_plan[0], &"albtraumwolf:1", "Albtraumwolf vor den Dorfrollen")
 	var p := s.pending_prompt
-	assert_true(p.min_count == 0 and not p.allowed_ids.has(1), "freiwillig, andere Lebende")
+	assert_true(p.min_count == 1 and not p.allowed_ids.has(1), "Pflicht (kein Verzicht), andere Lebende")
 	var r := apply_ok(s, Command.answer_prompt(p.id, [2]), "blockiert 2").state
 	r = apply_ok(r, Command.begin_step("night:1:1:pack"), "Rudel").state
-	var after := apply_ok(r, Command.answer_prompt(r.pending_prompt.id, []), "kein Opfer")
+	var after := apply_ok(r, Command.skip_step(r.pending_prompt.step_id, "Test: ruhige Nacht"), "kein Opfer")
 	var dropped := events_of_type(after.events, "StepDropped")
 	assert_true(not dropped.is_empty() and String(dropped[0].data["step_id"]) == "night:1:2:das-orakel:2" and String(dropped[0].data["reason"]) == "blocked", "Orakel 2 blockiert")
 	assert_eq(RulesEngine.next_step_id(after.state), "night:1:3:das-orakel:3", "Orakel 3 handelt")
@@ -136,7 +136,7 @@ func test_poison_wolf_delayed_unstoppable_death() -> void:
 		return
 	s = apply_ok(s, Command.answer_prompt(s.pending_prompt.id, [3]), "Schutz auf 3").state
 	s = apply_ok(s, Command.begin_step("night:1:1:pack"), "Rudel").state
-	s = apply_ok(s, Command.answer_prompt(s.pending_prompt.id, []), "kein Opfer").state
+	s = apply_ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "kein Opfer").state
 	s = apply_ok(s, Command.begin_step("night:1:2:giftwolf:1"), "Giftwolf").state
 	var r := apply_ok(s, Command.answer_prompt(s.pending_prompt.id, [3]), "Giftpranke auf 3")
 	var notice := events_of_type(r.events, "WolfPoisonNotice")
@@ -216,12 +216,13 @@ func test_packfather_lynch_gives_piercing_second_pack_step() -> void:
 func test_guard_is_killed_by_poison_paw() -> void:
 	# RM-DR-119.1 über RM-DR-004: Die Giftpranke ist kein Wolfsangriff; die Dorfwache stirbt daran.
 	var s := _run([_start([GW, "dorfwache", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night()] as Array[Command], "Start").state
-	var none := func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [])
-	s = _night(s, {"giftwolf": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [2]), "pack": none}, "Nacht 1")
+	var quiet_pack := func(p: PendingPrompt) -> Command: return Command.skip_step(p.step_id, "Test: ruhige Nacht")
+	var no_paw := func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [])
+	s = _night(s, {"giftwolf": func(p: PendingPrompt) -> Command: return Command.answer_prompt(p.id, [2]), "pack": quiet_pack}, "Nacht 1")
 	s = _day(s)
-	s = _night(s, {"giftwolf": none, "pack": none}, "Nacht 2")
+	s = _night(s, {"giftwolf": no_paw, "pack": quiet_pack}, "Nacht 2")
 	s = _day(s)
-	s = _night(s, {"giftwolf": none, "pack": none}, "Nacht 3")
+	s = _night(s, {"giftwolf": no_paw, "pack": quiet_pack}, "Nacht 3")
 	if s == null:
 		return
 	var d := s.players[2].death

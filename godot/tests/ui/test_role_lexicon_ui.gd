@@ -163,19 +163,19 @@ func test_setup_opens_an_entry_without_changing_the_selection() -> void:
 	assert_eq(JSON.stringify(setup.call("view")), before, "Besetzung weiter unverändert")
 
 
-## Schutzengel-Auswahl offen, eine Person angetippt: Kontexthilfe öffnet den passenden Eintrag, Lexikonbedienung ändert
+## Spürhund-Auswahl offen, eine von drei Personen angetippt: Kontexthilfe öffnet den passenden Eintrag, Lexikonbedienung ändert
 ## nichts, Schließen führt zur selben Auswahl zurück. Eine echte Zustandsänderung verwirft die Auswahl.
 func test_context_help_keeps_the_open_selection_and_sends_nothing() -> void:
-	if not await start([W, "schutzengel", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
+	if not await start([W, "spuerhund", D, "amalia", "detektiv", "wahnsinniger-kutscher"]):
 		return
-	assert_true(await run({}, until_prompt("schutzengel")), "Schutzengel-Auswahl offen")
-	await tap_seat(3)
+	assert_true(await run({}, until_prompt("spuerhund")), "Spürhund-Auswahl offen")
+	await tap_seat(3)  # drei Personen nötig: die Auswahl bleibt offen
 	assert_eq(selection(), [3], "Person 3 ausgewählt")
 	var before := _fingerprint()
 	assert_true(await tap_button("ContextHelpButton"), "Kontexthilfe auf der privaten Karte")
 	assert_eq(screen().call("layer_kind"), &"lexicon", "Lexikon als Ebene")
 	var lexicon := _lexicon(screen())
-	assert_eq(lexicon.current_role(), &"schutzengel", "Eintrag der handelnden Rolle")
+	assert_eq(lexicon.current_role(), &"spuerhund", "Eintrag der handelnden Rolle")
 	await press(find_button(lexicon, "LexiconBackToListButton"))
 	lexicon.set_search("wolf")
 	await press(find_button(lexicon, "LexiconFilter_solo"))
@@ -185,10 +185,10 @@ func test_context_help_keeps_the_open_selection_and_sends_nothing() -> void:
 	assert_eq(screen().call("layer_kind"), &"", "Ebene geschlossen")
 	assert_eq(selection(), [3], "Auswahl nach dem Schließen erhalten")
 	assert_eq(_fingerprint(), before, "Schließen sendet nichts")
-	assert_true(live("ConfirmTargetsButton") != null, "Auswahl weiter bestätigbar")
+	assert_eq(selection(), [3], "Auswahl weiter offen")
 	# Echte Zustandsänderung bei offener Hilfe: die bestehenden Regeln verwerfen die Auswahl.
 	assert_true(await tap_button("ContextHelpButton"), "Hilfe erneut geöffnet")
-	var r := session().answer_targets([4])
+	var r := session().answer_targets([4, 5, 6])
 	assert_true(r.ok, "Zustand ändert sich (Vorbereitung über die Anwendungsschicht)")
 	await frames(2)
 	assert_true(selection().is_empty(), "veraltete Auswahl verworfen")
@@ -224,7 +224,8 @@ func test_context_help_stays_private_and_cover_closes_it() -> void:
 	assert_eq(screen().call("layer_kind"), &"show", "gezeigte Karte")
 	assert_true(live("ContextHelpButton") == null, "keine Hilfe über der gezeigten Karte")
 	assert_true(screen().find_child("LexiconLayer", true, false) == null, "kein Lexikon auf der gezeigten Karte")
-	await tap_button("CloseLayerButton")
+	screen().call("close_layer")  # Zurück statt Schließen-Knopf: das Schließen der gezeigten Karte erledigt sonst die Auskunft
+	await frames(2)
 	assert_true(await tap_button("ContextHelpButton"), "Hilfe auf der privaten Karte")
 	var public_before := JSON.stringify(session().cockpit_view().get("warnings", []))
 	assert_true(await tap_button("CoverButton"), "Sichtschutz über dem offenen Lexikon")

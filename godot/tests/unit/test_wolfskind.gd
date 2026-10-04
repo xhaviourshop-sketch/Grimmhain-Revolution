@@ -141,7 +141,7 @@ func test_binding_persists_no_new_step() -> void:
 	assert_true(int(b["model_id"]) == 4 and int(b["bound_night"]) == 1, "Bindung gespeichert")
 	var bound := events_of_type(r.events, "WolfChildBound")
 	assert_true(bound.size() == 1 and String(bound[0].visibility) == "gm", "GM-intern protokolliert")
-	var run := _replay_ok(_concat(_bound(4), [Command.begin_step(PACK_1), Command.answer_prompt(2, []), Command.end_night(),
+	var run := _replay_ok(_concat(_bound(4), [Command.begin_step(PACK_1), Command.skip_step(PACK_1, "kein Opfer"), Command.end_night(),
 		Command.decide_execution(-1), Command.end_day(), Command.start_night()] as Array[Command]), "Nacht 2")
 	if run.ok:
 		assert_eq(run.state.night_plan, [&"pack"] as Array[StringName], "kein erneuter Auswahl-Schritt")
@@ -166,7 +166,7 @@ func test_pack_kill_transforms_before_provisional_win() -> void:
 func test_poison_transforms() -> void:
 	# 13
 	var run := _replay_ok([_k8(), Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step("night:1:1:schutzengel:3"),
-		Command.answer_prompt(2, [7]), Command.begin_step("night:1:2:pack"), Command.answer_prompt(3, []), Command.begin_step("night:1:3:waldhexe:5"),
+		Command.answer_prompt(2, [7]), Command.begin_step("night:1:2:pack"), Command.skip_step("night:1:2:pack", "kein Opfer"), Command.begin_step("night:1:3:waldhexe:5"),
 		Command.answer_choice(4, "poison", true), Command.answer_stage_targets(4, "poison_target", [6]), Command.answer_choice(4, "confirm", true)] as Array[Command], "Gift")
 	if not run.ok:
 		return
@@ -181,7 +181,7 @@ func test_poison_transforms() -> void:
 
 func test_execution_transforms_and_parity() -> void:
 	# 14, 19 (Tag), 23
-	var run := _replay_ok(_concat(_bound(4), [Command.begin_step(PACK_1), Command.answer_prompt(2, []), Command.end_night(),
+	var run := _replay_ok(_concat(_bound(4), [Command.begin_step(PACK_1), Command.skip_step(PACK_1, "kein Opfer"), Command.end_night(),
 		Command.nominate(3, 4), Command.decide_execution(4)] as Array[Command]), "Hinrichtung")
 	if not run.ok:
 		return
@@ -250,7 +250,7 @@ func test_multiple_children_same_model() -> void:
 func test_no_extra_pack_step_and_next_night() -> void:
 	# 24, 25, 26, AS-R20: Vorbild ist der einzige Werwolf; er wird am Tag hingerichtet.
 	var start := Fixtures.start_roles(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "wolfskind"])
-	var night: Array[Command] = [start, Command.start_night(), Command.answer_prompt(1, [1]), Command.begin_step(PACK_1), Command.answer_prompt(2, [])]
+	var night: Array[Command] = [start, Command.start_night(), Command.answer_prompt(1, [1]), Command.begin_step(PACK_1), Command.skip_step(PACK_1, "kein Opfer")]
 	var s := Fixtures.play(night)
 	var r := apply_ok(s, _gm("kill", {"target_id": 2, "trigger_effects": true}), "anderer Tod in der Nacht")
 	assert_eq(r.state.night_plan, s.night_plan, "Nachtplan unverändert")
@@ -263,7 +263,7 @@ func test_no_extra_pack_step_and_next_night() -> void:
 	if n2.ok:
 		assert_eq(n2.state.night_plan, [&"pack"] as Array[StringName], "verwandeltes Wolfskind allein erzeugt den Rudelschritt")
 	# 24: Vorbild stirbt nachts nach dem Rudelschritt → kein weiterer Rudelschritt in dieser Nacht.
-	var late := _replay_ok(_concat(_bound(4), [Command.begin_step(PACK_1), Command.answer_prompt(2, []), _gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command]), "nachts")
+	var late := _replay_ok(_concat(_bound(4), [Command.begin_step(PACK_1), Command.skip_step(PACK_1, "kein Opfer"), _gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command]), "nachts")
 	if late.ok:
 		_expect_turned(late.state.players[6], "nachts")
 		assert_eq(RulesEngine.next_step_id(late.state), "", "kein zusätzlicher Rudelschritt")
@@ -275,7 +275,7 @@ func test_no_extra_pack_step_and_next_night() -> void:
 ## K8 Nacht 1 bis zum begonnenen Orakel (Wolfskind wählt 6, Schutz 7, kein Rudelopfer, Waldhexe verzichtet).
 func _k8_to_oracle(extra_before_oracle: Array[Command] = []) -> Array[Command]:
 	var out: Array[Command] = [_k8(), Command.start_night(), Command.answer_prompt(1, [6]), Command.begin_step("night:1:1:schutzengel:3"),
-		Command.answer_prompt(2, [7]), Command.begin_step("night:1:2:pack"), Command.answer_prompt(3, []), Command.begin_step("night:1:3:waldhexe:5"),
+		Command.answer_prompt(2, [7]), Command.begin_step("night:1:2:pack"), Command.skip_step("night:1:2:pack", "kein Opfer"), Command.begin_step("night:1:3:waldhexe:5"),
 		Command.answer_choice(4, "poison", false), Command.answer_choice(4, "confirm", true)]
 	out.append_array(extra_before_oracle)
 	out.append(Command.begin_step("night:1:4:das-orakel:4"))
@@ -323,7 +323,7 @@ func test_role_changes() -> void:
 	_expect_unturned(fresh.players[3], "30")
 	assert_eq(fresh.night_plan, s.night_plan, "30: Nachtplan unverändert")
 	apply_rejected(s, _gm("set_role", {"target_id": 3, "role_id": "wolfskind", "appears_as": "werwolf"}), "appearance_not_allowed", "keine Scheinrolle")
-	var n2 := _replay_ok(_concat(_bound(4, _k6one()), [_gm("set_role", {"target_id": 3, "role_id": "wolfskind"}), Command.begin_step(PACK_1), Command.answer_prompt(2, []),
+	var n2 := _replay_ok(_concat(_bound(4, _k6one()), [_gm("set_role", {"target_id": 3, "role_id": "wolfskind"}), Command.begin_step(PACK_1), Command.skip_step(PACK_1, "kein Opfer"),
 		Command.end_night(), Command.decide_execution(-1), Command.end_day(), Command.start_night()] as Array[Command]), "Nacht 2")
 	if n2.ok:
 		assert_eq(n2.state.night_plan, [&"wolfskind:3", &"pack"] as Array[StringName], "30: Auswahl-Schritt erst in der nächsten Nacht")
@@ -447,7 +447,7 @@ func test_save_load_after_each_correction() -> void:
 		var commands: Array[Command] = cases[label]
 		var loaded := _roundtrip(commands, label)
 		if loaded != null:
-			_continue_both(commands, loaded.state, [Command.begin_step(PACK_1), Command.answer_prompt(2, []), Command.end_night()] as Array[Command], label)
+			_continue_both(commands, loaded.state, [Command.begin_step(PACK_1), Command.skip_step(PACK_1, "kein Opfer"), Command.end_night()] as Array[Command], label)
 
 
 # --- 46–50 Beschädigte Zustände ---------------------------------------------------------------------------

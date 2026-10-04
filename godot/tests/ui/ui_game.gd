@@ -59,6 +59,8 @@ static func step(s: GameSession, answers: Dictionary = {}) -> String:
 static func _answer(s: GameSession, next: Dictionary, answers: Dictionary) -> bool:
 	var key := "%s/%s" % [str(next["owner"]), str(next["stage"])]
 	var planned: Variant = answers.get(key)
+	if planned == null and ["pack", "pack2"].has(str(next["owner"])):
+		return s.skip_next_step("Test: ruhige Nacht").ok  # Wölfe ohne vorgesehenes Opfer (die Karte kennt keinen "Kein Opfer"-Knopf)
 	match str(next["answer"]):
 		"targets":
 			if planned is Array:

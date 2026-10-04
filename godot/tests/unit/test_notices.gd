@@ -31,6 +31,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, String(p.stage), false)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -56,7 +60,7 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			var key := p.step_id.get_slice(":", 3) + (":" + p.step_id.get_slice(":", 4) if p.step_id.get_slice_count(":") > 4 else "")
 			var staged := "%s@%s" % [key, p.stage]
 			if p.owner == PendingPrompt.OWNER_PACK:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			elif answers.has(staged):
 				var a: Variant = answers[staged]
 				cmd = Command.answer_choice(p.id, String(p.stage), a) if a is bool else Command.answer_stage_targets(p.id, String(p.stage), a)
@@ -97,12 +101,13 @@ func test_loki_love_notifies_both_persons_with_partner_and_kind() -> void:
 		assert_true(int(bonds[0]["id"]) < int(bonds[1]["id"]), "feste Reihenfolge")
 
 
-func test_loki_rivals_and_decline() -> void:
+func test_loki_rivals_and_no_decline() -> void:
 	var rivals := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [4, 6], "loki:2@mode": false})
 	var bonds := _notices_of(rivals, "loki_bond") if rivals != null else []
 	assert_true(bonds.size() == 2 and bonds[0]["data"]["bond"] == "rival" and bonds[1]["data"]["bond"] == "rival", "Rivalen erfahren die Art")
-	var declined := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": []})
-	assert_true(declined != null and declined.notices.is_empty(), "Verzicht: keine Hinweise")
+	var s := _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
+	s = _ok(s, Command.start_night(), "Nacht")
+	apply_rejected(s, Command.answer_stage_targets(s.pending_prompt.id, "targets", []), "invalid_target_count", "Loki wählt immer genau zwei")
 
 
 func test_loki_himself_in_the_pair_is_a_viewer_too() -> void:

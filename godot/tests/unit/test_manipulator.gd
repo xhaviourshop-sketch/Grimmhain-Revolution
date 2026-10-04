@@ -48,9 +48,14 @@ func _concat(a: Array[Command], b: Array[Command]) -> Array[Command]:
 	return out
 
 
-## Nacht 1 ohne Opfer, danach Tag 1 (nur Rudelschritt im Nachtplan).
+## Nacht 1, danach Tag 1 (nur Rudelschritt im Nachtplan). Das Rudel tötet den Dorfbewohner; er wird sofort wiederbelebt, damit der Tag
+## mit allen Lebenden beginnt wie in der Vorgabe.
 func _to_day(start: Command) -> Array[Command]:
-	return [start, Command.start_night(), Command.answer_prompt(1, []), Command.end_night()]
+	var victim := 0
+	for id: String in (start.payload["roles"] as Dictionary):
+		if String(start.payload["roles"][id]) == "dorfbewohner":
+			victim = int(id)
+	return [start, Command.start_night(), Command.answer_prompt(1, [victim]), Command.end_night(), _gm("revive", {"target_id": victim})]
 
 
 func _gm(kind: String, fields: Dictionary, reason: String = "Korrektur am Tisch") -> Command:
@@ -124,8 +129,8 @@ func test_production_role() -> void:
 func test_oracle_and_witch() -> void:
 	# 4, 5
 	var start := _start(["werwolf", "manipulator", "dorfbewohner", "das-orakel", "waldhexe", "amalia"])
-	var o := Fixtures.play([start, Command.start_night(), Command.answer_prompt(1, []), Command.begin_step("night:1:1:waldhexe:5"),
-		Command.answer_choice(2, "poison", false), Command.answer_choice(2, "confirm", true), Command.begin_step("night:1:2:das-orakel:4"),
+	var o := Fixtures.play([start, Command.start_night(), Command.answer_prompt(1, [3]), Command.begin_step("night:1:1:waldhexe:5"),
+		Command.answer_choice(2, "heal", false), Command.answer_choice(2, "poison", false), Command.answer_choice(2, "confirm", true), Command.begin_step("night:1:2:das-orakel:4"),
 		Command.answer_stage_targets(3, "target", [2])] as Array[Command])
 	assert_true(o != null and o.pending_prompt != null and str(o.pending_prompt.partial["determined_role"]) == "manipulator", "Orakel ermittelt manipulator")
 	var w := Fixtures.play([start, Command.start_night(), Command.answer_prompt(1, [2]), Command.begin_step("night:1:1:waldhexe:5"),
@@ -166,7 +171,7 @@ func test_execution_is_lynch() -> void:
 func test_nomination_death_transforms_wolf_child() -> void:
 	# 14
 	var start := _start(["werwolf", "manipulator", "dorfbewohner", "amalia", "detektiv", "wolfskind"])
-	var run := _replay_ok([start, Command.start_night(), Command.answer_prompt(1, [2]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, []),
+	var run := _replay_ok([start, Command.start_night(), Command.answer_prompt(1, [2]), Command.begin_step("night:1:1:pack"), Command.answer_prompt(2, [4]),
 		Command.end_night(), Command.nominate(3, 2)] as Array[Command], "Wolfskind")
 	if run.ok:
 		assert_true(run.state.players[6].counts_as_wolf, "Wolfskind verwandelt")
@@ -180,7 +185,7 @@ func test_nominated_revived_never_candidate() -> void:
 	assert_eq(run.state.alive_ids(), [1, 2, 3] as Array[int], "genau drei leben")
 	assert_eq(_describe(run.state), [] as Array[String], "kein Solo-Kandidat nach Nominierung")
 	var again := apply_ok(Fixtures.play(_concat(_to_day(_ma6()), [Command.nominate(3, 2), _gm("revive", {"target_id": 2}), Command.decide_execution(-1),
-		Command.end_day(), Command.start_night(), Command.answer_prompt(2, []), Command.end_night()] as Array[Command])), Command.nominate(4, 2), "erneute Nominierung")
+		Command.end_day(), Command.start_night(), Command.answer_prompt(2, [5]), Command.end_night()] as Array[Command])), Command.nominate(4, 2), "erneute Nominierung")
 	assert_eq(String(again.state.players[2].death.cause), "MANIPULATOR_NOMINATED", "stirbt erneut durch Nominierung")
 
 

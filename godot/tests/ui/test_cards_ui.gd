@@ -41,7 +41,7 @@ func _to_day(shell: Control) -> void:
 	var s := session_of(shell)
 	s.call("start_night")
 	for i: int in 30:
-		var next: Dictionary = (s.call("cockpit_view") as Dictionary)["next"]
+		var next: Dictionary = effective_of((s.call("cockpit_view") as Dictionary)["next"])
 		match str(next["kind"]):
 			"day", "card_window":
 				break
@@ -60,7 +60,7 @@ func _to_day(shell: Control) -> void:
 ## Tauscht jede Karte im Fenster gegen eine Ersatzkarte, spielt diese mit der kleinsten gültigen Wahl und schließt das Fenster.
 func _exchange_all(s: Object) -> void:
 	for guard: int in 60:
-		var n: Dictionary = (s.call("cockpit_view") as Dictionary)["next"]
+		var n: Dictionary = effective_of((s.call("cockpit_view") as Dictionary)["next"])
 		match str(n["kind"]):
 			"card_window":
 				if bool(n["can_exchange"]):
@@ -297,18 +297,15 @@ func test_card_swallower_shows_hand_signs_with_costs() -> void:
 		await _dialog_confirm(shell)
 	await _tap(shell, "StartNightButton")
 	for guard: int in 14:
-		var n := _next(shell)
+		var n := effective_of(_next(shell))
 		if str(n["kind"]) == "prompt" and str(n["owner"]) == "kartenschlucker":
 			break
-		if str(n["kind"]) == "begin_step":
-			await _tap(shell, "BeginStepButton")
-		elif str(n["kind"]) == "prompt":
-			# Rudelwahl: erste zulässige Person
+		if str(n["kind"]) == "prompt":
+			# Rudelwahl: erste zulässige Person, die feste Anzahl wird sofort übernommen
 			await press(_seat(shell, int((n["allowed_ids"] as Array)[0])))
-			await _tap(shell, "ConfirmTargetsButton")
 		else:
 			break
-	var act := _next(shell)
+	var act := effective_of(_next(shell))
 	assert_eq(str(act.get("owner")), "kartenschlucker", "Handzeichen-Prompt des Kartenschluckers")
 	assert_eq(str(act.get("answer")), "option", "Antwort: Option")
 	var options: Array = act["options"]

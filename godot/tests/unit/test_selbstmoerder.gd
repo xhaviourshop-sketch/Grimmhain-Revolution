@@ -176,17 +176,12 @@ func test_two_death_seekers_only_lynched_wins() -> void:
 func test_apprentice_inherits_and_wins_when_lynched() -> void:
 	var roles := _roles()
 	roles[3] = "lehrling"
-	var cmds: Array[Command] = [Fixtures.start_roles(roles, 1), Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 3, 5])]
-	var run := _run(cmds, "Kandidaten")
-	if not run.ok:
-		return
-	var options: Array = run.state.pending_prompt.partial["options"]
-	cmds.append_array([Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "option", "option": options.find(SM)}),
-		Command.answer_choice(1, "confirm", true), Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), _kill(3)])
+	var cmds: Array[Command] = [Fixtures.start_roles(roles, 1), Command.start_night(), Command.answer_stage_targets(1, "master", [3])]
+	cmds.append_array([Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), _kill(3)])
 	for id: int in [5, 6, 7, 8]:
 		cmds.append(_kill(id))
 	cmds.append_array([Command.nominate(9, 4), Command.decide_execution(4)])
-	run = _run(cmds, "Erbe hingerichtet")
+	var run := _run(cmds, "Erbe hingerichtet")
 	if run.ok:
 		assert_eq(String(run.state.players[4].death.cause), "LYNCH", "Erbe hingerichtet")
 		assert_eq(_open(run.state), [["solo", REASON, [4]]], "Erbe gewinnt (5 Tote vorher: 3, 5, 6, 7, 8)")

@@ -119,7 +119,8 @@ static func next_action(s: GameState) -> Dictionary:
 
 ## Ankündigung des erwarteten, noch nicht begonnenen Schritts (Nachtschritt oder Reaktion).
 static func step_announcement(s: GameState, step_id: String) -> Dictionary:
-	var out := {"kind": "begin_step", "secret": true, "step_id": step_id, "skippable": StepQueue.is_skippable(step_id), "decoys": _decoys(s)}
+	var out := {"kind": "begin_step", "secret": true, "step_id": step_id, "skippable": StepQueue.is_skippable(step_id), "decoys": _decoys(s),
+		"preview": _begin_preview(s, step_id)}
 	if StepQueue.is_reaction_step(step_id):
 		var r := s.reactions[0]
 		out["step_kind"] = "reaction"
@@ -153,6 +154,20 @@ static func step_announcement(s: GameState, step_id: String) -> Dictionary:
 			# Grabräuber: gestohlene Fähigkeit einer anderen Rolle (nur privat sichtbar).
 			out["own_role_id"] = String(s.players[actor].role_id)
 	return out
+
+
+## Vorschau des Prompts, den der Beginn des Schritts öffnen würde (Prompt-Sicht wie `PromptView.build`, auf einer Kopie des Zustands),
+## oder leer, wenn der Schritt keinen Prompt öffnet. Die Karte zeigt Ansage und Aktion so auf einem Bildschirm („Schritt beginnen“
+## entfällt); `BeginStep` wird erst mit der ersten Antwort gesendet.
+static func _begin_preview(s: GameState, step_id: String) -> Dictionary:
+	var r := RulesEngine.apply(s, Command.begin_step(step_id))
+	if not r.ok or r.state.pending_prompt == null:
+		return {}
+	var prompt := PromptView.build(r.state, r.state.pending_prompt)
+	prompt["kind"] = "prompt"
+	prompt["secret"] = true
+	prompt["decoys"] = []
+	return prompt
 
 
 ## Tarnaufrufe (DI-02) als Rollen-IDs: Rollen, die vor dem nächsten echten Schritt angesagt werden, ohne dass sie

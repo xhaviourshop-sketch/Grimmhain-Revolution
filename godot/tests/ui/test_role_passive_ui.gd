@@ -79,7 +79,7 @@ func test_waechter_am_tor_blocks_new_wolf() -> void:
 func test_rudelvater_lynch_gives_second_pack_step() -> void:
 	if not await start([W, "rudelvater"] + _villagers(6)):
 		return
-	await run({"day1": {"nominate": [3, 2], "execute": 2}, "pack/": [], "pack2/": [4]}, until_day(2))
+	await run({"day1": {"nominate": [3, 2], "execute": 2}, "pack/": null, "pack2/": [4]}, until_day(2))
 	assert_true(session().event_log().any(func(e: Dictionary) -> bool: return str(e["type"]) == "PromptOpened" and str(((e["data"] as Dictionary)["prompt"] as Dictionary).get("owner")) == "pack2"),
 		"zweiter Rudelschritt als Karte")
 	assert_false(alive(4), "Opfer des zweiten Rudelschritts")

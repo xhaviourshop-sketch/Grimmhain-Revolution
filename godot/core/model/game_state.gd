@@ -367,7 +367,8 @@ static func from_dict(d: Dictionary) -> GameState:
 		var stolen := StringName(DictRead.get_string(item, "role_id")) if item is Dictionary else &""
 		if not s.players.has(robber) or not s.players.has(robbed) or robber == robbed or not RoleCatalog.stealable(stolen):
 			return null
-		if not s.players[robber].alive or s.players[robber].role_id != RoleCatalog.GRABRAEUBER or not s.players[robber].ability_uses.has(SoloRules.GRAVE_USE_KEY):
+		# Die Karte „Totale Anarchie“ stellt verbrauchte Einsätze wieder her, die gestohlene Fähigkeit bleibt bis zum nächsten Diebstahl.
+		if not s.players[robber].alive or s.players[robber].role_id != RoleCatalog.GRABRAEUBER or not (s.players[robber].ability_uses.has(SoloRules.GRAVE_USE_KEY) or s.death_cards):
 			return null
 		if not s.grave_thefts.is_empty() and int(s.grave_thefts[-1]["robber_id"]) >= robber:
 			return null
@@ -725,7 +726,8 @@ static func from_dict(d: Dictionary) -> GameState:
 		# E-06, E-10: lebender Feuerteufel mit der Rolle, lebendes anderes Ziel, eine Markierung je Feuerteufel, aufsteigend.
 		if not s.players.has(devil) or not s.players.has(burning) or devil == burning:
 			return null
-		if not s.players[devil].alive or not SoloRules.has_ability(s, devil, RoleCatalog.FEUERTEUFEL) or not s.players[burning].alive:
+		# Mit Totenreichkarten kann die Fähigkeit auch eine für diese Nacht geliehene sein (cardsys wird erst später geladen).
+		if not s.players[devil].alive or not (SoloRules.has_ability(s, devil, RoleCatalog.FEUERTEUFEL) or s.death_cards) or not s.players[burning].alive:
 			return null
 		if not s.fire_marks.is_empty() and int(s.fire_marks[-1]["devil_id"]) >= devil:
 			return null

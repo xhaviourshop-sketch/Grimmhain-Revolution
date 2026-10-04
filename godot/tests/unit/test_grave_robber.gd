@@ -48,6 +48,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, String(p.stage), false)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -77,7 +81,7 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			elif answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			else:
 				cmd = _auto(s)
 		else:
@@ -138,7 +142,7 @@ func _at_robber_prompt(roles: Array, dead: Array) -> GameState:
 		if s == null or (s.pending_prompt != null and s.pending_prompt.owner == &"grabraeuber"):
 			return s
 		if s.pending_prompt != null:
-			s = _ok(s, _auto(s) if s.pending_prompt.owner != PendingPrompt.OWNER_PACK else Command.answer_prompt(s.pending_prompt.id, []), "vorher")
+			s = _ok(s, _auto(s) if s.pending_prompt.owner != PendingPrompt.OWNER_PACK else Command.answer_prompt(s.pending_prompt.id, Fixtures.pass_targets(s, s.pending_prompt)), "vorher")
 		else:
 			s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Schritt")
 	fail("kein Grabräuber-Prompt")
@@ -376,7 +380,7 @@ func _record_dawn(s: GameState, answers: Dictionary, recorder: Array) -> GameSta
 			if answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			else:
 				cmd = _auto(s)
 		else:

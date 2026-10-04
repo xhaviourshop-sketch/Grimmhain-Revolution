@@ -47,7 +47,7 @@ func test_random_assignment_derives_from_the_dealt_roles() -> void:
 
 
 func _day_one(roles: Array) -> GameState:
-	return Fixtures.play([_roles_start(roles), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	return Fixtures.play([_roles_start(roles), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command])
 
 
 func test_mode_stays_stable_through_the_game() -> void:

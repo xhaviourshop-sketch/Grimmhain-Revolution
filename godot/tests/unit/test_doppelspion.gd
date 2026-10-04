@@ -127,14 +127,9 @@ func test_manipulator_and_double_agent_together() -> void:
 func test_apprentice_inherits_double_agent() -> void:
 	# 1 Werwolf; 2 Doppelspion; 3 Lehrling; 4–7 Dorfbewohner.
 	var cmds: Array[Command] = [_start(["werwolf", DS, "lehrling", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
-		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 2, 4])]
-	var run := _run(cmds, "Kandidaten")
-	if not run.ok:
-		return
-	var options: Array = run.state.pending_prompt.partial["options"]
-	cmds.append_array([Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "option", "option": options.find(DS)}),
-		Command.answer_choice(1, "confirm", true), Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), _kill(2)])
-	run = _run(cmds, "Erbe")
+		Command.start_night(), Command.answer_stage_targets(1, "master", [2])]
+	cmds.append_array([Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), _kill(2)])
+	var run := _run(cmds, "Erbe")
 	if not run.ok:
 		return
 	assert_eq(String(run.state.players[3].role_id), DS, "Lehrling erbt Doppelspion")

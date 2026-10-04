@@ -44,7 +44,7 @@ func test_provisional_parity_is_lifted_by_reaction() -> void:
 func test_provisional_confirmed_after_reaction() -> void:
 	var s := RulesEngine.replay(_reaper_dies_at_parity()).state
 	var begun := apply_ok(s, Command.begin_step("reaction:1"), "Reaktion").state
-	var declined := apply_ok(begun, Command.answer_prompt(3, []), "Verzicht")
+	var declined := apply_ok(begun, Command.answer_prompt(3, [4]), "Fluch auf einen Dorfbewohner")
 	var detected := events_of_type(declined.events, "WinDetected")
 	assert_eq(detected.size(), 1, "erst jetzt Kandidat")
 	assert_true(sole_candidate(declined.state) != null and String(sole_candidate(declined.state).kind) == "wolves", "Kandidat Werwölfe")
@@ -54,7 +54,7 @@ func test_provisional_confirmed_after_reaction() -> void:
 
 func test_nobody_alive_has_no_automatic_winner() -> void:
 	# AS-R35 / DR-02: Nach abgelehnten Kandidaten stirbt die letzte Person.
-	var state := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	var state := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night()] as Array[Command])
 	var candidate_id := 0
 	for target: int in [2, 3, 4, 5, 6]:
 		var r := apply_ok(state, CorrectionFixtures.gm("kill", {"target_id": target, "trigger_effects": false}), "Korrektur Tod %d" % target)
@@ -80,7 +80,7 @@ func test_nobody_alive_has_no_automatic_winner() -> void:
 
 func test_single_death_without_reaction_detects_immediately() -> void:
 	# Ohne Reaktionen fallen vorläufige und verbindliche Prüfung in denselben Befehl.
-	var run := RulesEngine.replay([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, []),
+	var run := RulesEngine.replay([Fixtures.start_manual(6, [1]), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"),
 		Command.end_night(), Command.nominate(2, 1), Command.decide_execution(1)] as Array[Command])
 	assert_true(run.ok, "angenommen")
 	assert_eq(events_of_type(run.events, "WinStatusProvisional").size(), 1, "ein vorläufiger Status")

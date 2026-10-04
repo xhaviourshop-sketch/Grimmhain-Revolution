@@ -21,7 +21,10 @@ func _ok(s: GameState, c: Command, label: String) -> GameState:
 	return apply_ok(s, c, label).state if s != null else null
 
 
+## Leere Antwort auf den Rudelschritt = ruhige Nacht (SkipStep mit Grund; die Karte kennt keinen "Kein Opfer"-Knopf).
 func _answer(s: GameState, targets: Array) -> GameState:
+	if targets.is_empty() and s.pending_prompt.owner == PendingPrompt.OWNER_PACK:
+		return _ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "Rudel übersprungen")
 	return _ok(s, Command.answer_prompt(s.pending_prompt.id, targets), "Antwort")
 
 
@@ -81,7 +84,7 @@ func test_dropped_step_is_still_announced() -> void:
 	assert_eq(RulesEngine.next_step_id(s).get_slice(":", 3), "pack", "Schutzengel entfallen, Rudel folgt")
 	assert_eq(CallPolicy.decoy_calls(s), [&"schutzengel"] as Array[StringName], "entfallener Schutzengel wird angesagt")
 	s = _begin(s)
-	s = _answer(s, [])
+	s = _answer(s, [6])
 	assert_eq(RulesEngine.next_step_id(s), "", "Waldhexe und Orakel entfallen, keine Schritte mehr")
 	assert_eq(CallPolicy.decoy_calls(s), [&"waldhexe", &"das-orakel"] as Array[StringName], "entfallene Schritte vor dem Ende der Nacht")
 
@@ -100,7 +103,10 @@ func test_group_roles_and_first_night_roles_are_called_after_their_night() -> vo
 		guard += 1
 		if s.pending_prompt != null:
 			var p := s.pending_prompt
-			s = _ok(s, Command.answer_choice(p.id, String(p.stage), true) if p.stage == &"shown" else Command.answer_prompt(p.id, []), "Prompt")
+			if p.stage == &"shown":
+				s = _ok(s, Command.answer_choice(p.id, String(p.stage), true), "Prompt")
+			else:
+				s = _answer(s, Fixtures.pass_targets(s, p))
 		else:
 			s = _begin(s)
 	s = _ok(s, Command.end_night(), "Morgen")

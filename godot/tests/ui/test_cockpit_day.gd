@@ -28,7 +28,7 @@ func _quiet_night(shell: Control) -> void:
 	var s := session_of(shell)
 	s.call("start_night")
 	for i: int in 20:
-		var next: Dictionary = (s.call("cockpit_view") as Dictionary)["next"]
+		var next: Dictionary = effective_of((s.call("cockpit_view") as Dictionary)["next"])
 		match str(next["kind"]):
 			"day":
 				break

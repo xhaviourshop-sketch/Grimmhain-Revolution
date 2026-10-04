@@ -72,7 +72,7 @@ func test_phase_transitions_only_in_order() -> void:
 	var night := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night()] as Array[Command])
 	_expect_reject(night, Command.start_night(), "wrong_phase", "zweite Nacht während der Nacht")
 	_expect_reject(night, Command.decide_execution(2), "wrong_phase", "Hinrichtung nachts")
-	var day := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	var day := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, [6]), Command.end_night()] as Array[Command])
 	assert_eq(String(day.phase), "DAY", "nach der Morgenauflösung ist Tag")
 	_expect_reject(day, Command.start_night(), "day_not_ended", "Nacht vor Tagesende")
 	_expect_reject(day, Command.answer_prompt(1, []), "wrong_phase", "Prompt-Antwort am Tag")

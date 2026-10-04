@@ -38,6 +38,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, String(p.stage), false)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -65,7 +69,7 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			if answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			else:
 				cmd = _auto(s)
 		else:
@@ -162,16 +166,15 @@ func test_demon_curses_on_any_death_only_role_information_sees_it() -> void:
 	assert_true(s != null and not s.players[3].cursed, "Rollenwechsel löscht den Fluch")
 
 
-func test_demon_may_decline_and_needs_effects() -> void:
+func test_demon_must_choose_and_needs_effects() -> void:
 	var s := _day(_state([DW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]))
 	var quiet := apply_ok(s, _gm("kill", {"target_id": 1, "trigger_effects": false}), "ohne Folgen")
 	assert_true(quiet.state.reactions.is_empty(), "ohne Todesfolgen keine Reaktion")
 	var r := apply_ok(s, _gm("kill", {"target_id": 1, "trigger_effects": true}), "mit Folgen")
 	s = _ok(r.state, Command.begin_step(RulesEngine.next_step_id(r.state)), "Reaktion")
-	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Verzicht") if s != null else null
-	if s != null:
-		for id: int in s.players:
-			assert_false(s.players[id].cursed, "niemand verflucht (%d)" % id)
+	if s == null:
+		return
+	apply_rejected(s, Command.answer_prompt(s.pending_prompt.id, []), "invalid_target_count", "kein Verzicht: die Karte nennt keinen")
 
 
 # --- König Lykaon ---------------------------------------------------------------------------------
@@ -211,9 +214,10 @@ func test_lycaon_targets_and_gatewarden() -> void:
 		assert_false(t.players[4].counts_as_wolf, "kein neuer Wolf")
 
 
-func test_lycaon_postpones_at_most_three_times() -> void:
+func test_lycaon_is_asked_in_the_first_three_nights_and_must_choose_in_the_third() -> void:
+	# DA Nachtschritte neu: Wahl in einer der ersten drei Nächte; in Nacht 1 und 2 darf er verschieben, in Nacht 3 ist die Wahl Pflicht.
 	var s := _state([KL, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "nachtwaechter", "der-weise"])
-	for night: int in 3:
+	for night: int in 2:
 		s = _night(s, {"koenig-lykaon:1@ally": []})
 		if s == null:
 			return
@@ -222,7 +226,7 @@ func test_lycaon_postpones_at_most_three_times() -> void:
 	s = _to_owner(s, &"koenig-lykaon")
 	if s == null:
 		return
-	assert_eq(s.pending_prompt.min_count, 1, "vierte Gelegenheit: Pflicht")
+	assert_eq(s.pending_prompt.min_count, 1, "dritte Gelegenheit: Pflicht")
 	apply_rejected(s, Command.answer_stage_targets(s.pending_prompt.id, "ally", []), "invalid_target_count", "kein Verzicht mehr")
 
 

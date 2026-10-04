@@ -99,7 +99,7 @@ func test_full_first_night_through_session() -> void:
 	assert_eq([int(next["index"]), int(next["total"])], [2, 4], "Schritt 2 von 4")
 	assert_true(session.begin_next_step().ok, "BeginStep Rudel")
 	next = session.cockpit_view()["next"]
-	assert_eq([int(next["min"]), int(next["max"])], [0, 1], "Opfer oder kein Opfer")
+	assert_eq([int(next["min"]), int(next["max"])], [1, 1], "genau ein Opfer (kein Verzicht laut Kartentext)")
 	assert_true(session.answer_targets([7]).ok, "Rudel wählt 7")
 
 	assert_true(session.begin_next_step().ok, "BeginStep Waldhexe")

@@ -219,11 +219,8 @@
     },
     {
       "cmd": {
-        "type": "AnswerPrompt",
-        "payload": {
-          "prompt_id": 2,
-          "targets": []
-        }
+        "type": "SkipStep",
+        "payload": {"step_id": "night:2:0:pack", "reason": "ruhige Nacht"}
       }
     },
     {

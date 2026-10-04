@@ -4,6 +4,33 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## 2026-10-05: Abschluss Nachtschritte neu, gemergt nach main
+Stand: Aufgeraeumt (Schluessel `ui.night.reaction.*` ueber die gemeinsame Vorlage `ui.night.<besitzer>.<stufe>`, i18n-Pruefung gruen; 14 ungenutzte `ui.cockpit.*`-Schluessel in DE/EN entfernt, zwei bleiben, weil das Regelbuch sie zitiert: `ui.cockpit.card.decoys.caption`, `ui.cockpit.card.notice.heading`). `FOCUS_RING` von Gold auf Mondsilber `#e8edf6` (DAY_ACCENT unberuehrt). Spalte `tipps_neu` in `docs/audit/NACHTSCHRITTE-72.csv`: Messung ueber die echte Oberflaeche (Nacht 1 bis 3, Tipps = Knopf- und Sitzdruecke je Rolle, bedingte Rollen mit vielen Toten); 67 vergleichbare Rollen 182 vorher, 106 nachher; nicht gemessen: besessener-wolf, daemonischer-wolf, henker, kopfgeldjaeger, sensentraeger.
+Verifikation: Vollsuite inkl. Fuzz auf dem finalen Stand: 1409 Tests, 0 Fehlschlaege (Exit 0); der erste Lauf war rot (Regelbuch zitierte zwei entfernte Schluessel), Schluessel wiederhergestellt, Lauf wiederholt. Screenshots 1024x768 in `Downloads/Grimmhain-Nacht-neu/`.
+Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als schmaler Streifen mit senkrecht umbrochenem Text und verdeckt kurz die Karte (3 s, Ursache im Layout der Leiste); Titel der Blutpriester-Karte wird vom Info-Knopf angeschnitten. Safari/iPad nicht geprueft.
+
+## UEBERGABE Nachtschritte neu (erledigt, siehe Abschluss oben, 2026-10-05)
+- Phase 1 (Regelkern, Commit 6d8cda7): fertig. Unit, Szenarien und Fuzz waren gruen. Der .po-Mehrzeilenfehler aus diesem Commit ist im WIP-Commit repariert.
+- Phase 2 (Schablone): Code steht (action_card, cockpit_screen, cockpit_text, cockpit_view, prompt_view), 172 neue ui.night.* Texte DE/EN fuer alle Schritte.
+- UI-Tests (Stand 2026-10-05, Vollsuite --dir=ui): 431 Tests, 0 rot, alle Dateien ladbar. Vorher 16 rot (resume_scenarios 6, role_operation_kinds 4,
+  target_selection 6), davor 39 rot. Alle UI-Testdateien sind auf die Nacht-Schablone migriert. Neu: tests/ui/test_night_template.gd (Auto-Uebernahme,
+  Rueckgaengig-Leiste, Loki Art zuerst, Rudel ohne "Kein Opfer").
+- Migrationsentscheidungen: Hinweiskarten werden durch Schliessen der gezeigten Karte bestaetigt (kein AckNoticeButton); Pflichtwahl ohne Verzicht
+  (Besessener Wolf, Rudel); Pfeile/Zielplatz nur bei nicht festen Anzahlen; Zuflucht-Karte zeigt wieder den Namen der gefragten Person (AskedName) und einen Hilfesatz zu Apfel/Kette (RefugeHint, DE/EN); Rolle und Fragende bleiben verborgen.
+  Entfallene Pruefungen: ui.prompt.*-Anweisungen in den Lexikonzeilen (Keys abgeschafft); Auswahlmarkierung/Abwaehlen vor Bestaetigung bei fester Anzahl.
+  Code-Fix: action_card.gd zeigt keine Ansagezeile mit leerer Rolle bei anonymer Frage (Zuflucht). Lexikon-Aufruf des Lehrlings an Kartentext angeglichen.
+- Fehlt: verwaiste i18n-Keys/Code entfernen (tools/check-godot-i18n.js meldet 2 Altbefunde zu ui.night.reaction.%s, cockpit_text.gd:62); FOCUS_RING Gold zu Mondsilber;
+  Spalte tipps_neu in docs/audit/NACHTSCHRITTE-72.csv samt Neumessung; 7 Screenshots 1024x768 nach Downloads/Grimmhain-Nacht-neu; Vollsuite inkl. Fuzz; dann Merge, Export, Deploy.
+- Entfallene Pruefungen (zusaetzlich): Abbrechen auf Rollenkarten (nur Karteneingaben), Lehrling-Optionswahl (jetzt direkte Meisterwahl), Auswahlmarkierung bei fester Anzahl.
+- Testmuster: Auto-Commit bei fester Anzahl, also kein ConfirmTargetsButton (Mehrfachwahl-Tests mit Spuerhund, 3 Personen); Schritte mit Vorschau zaehlen als Prompt
+  (effective_of / next() im Treiber), Schritt vorher per begin_open_step() beginnen, wenn der Zustand den Prompt braucht; Cancel/Skip/Clear nur noch bei Karteneingaben (owner card).
+- Rudelschritt in Vorbereitungen per Kernbefehl skip_next_step ueberspringen (nur Core, nicht in der UI); Loki: erst YesButton/NoButton (Art), dann 2 Personen.
+- CockpitScreen.double_tap_msec = 0 in Tests (spawn_shell setzt es), nur der Doppeltipp-Test schaltet 400 ein.
+- Hinweise/Auskunft: ShowNoticeButton/ShowCardButton, dann CloseLayerButton erledigt sie; layer close ohne Knopf (close_layer) verwirft nur.
+- Alte Spielstaende in der Lehrling-Stufe sind nicht mehr ladbar.
+
+---
+
 ---
 
 ## Phase 0 — Diagnose (State-Karte)

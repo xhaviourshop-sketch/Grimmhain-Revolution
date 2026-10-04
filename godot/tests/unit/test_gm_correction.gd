@@ -4,7 +4,7 @@ extends TestCase
 
 
 func _day_one_reaper() -> GameState:
-	return Fixtures.play([Fixtures.start_reaper_game(), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	return Fixtures.play([Fixtures.start_reaper_game(), Command.start_night(), Command.answer_prompt(1, [4]), Command.end_night()] as Array[Command])
 
 
 func test_kill_with_effects_queues_reaction() -> void:
@@ -98,7 +98,7 @@ func test_set_role() -> void:
 
 
 func test_blocked_while_win_candidate_open() -> void:
-	var s := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
+	var s := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, [6]), Command.end_night(),
 		Command.nominate(2, 1), Command.decide_execution(1)] as Array[Command])
 	assert_true(sole_candidate(s) != null, "Kandidat offen")
 	apply_rejected(s, CorrectionFixtures.gm("revive", {"target_id": 1}), "win_candidate_open", "Korrektur bei offenem Kandidaten")
@@ -106,7 +106,7 @@ func test_blocked_while_win_candidate_open() -> void:
 
 func test_corrections_save_load_and_replay() -> void:
 	var commands: Array[Command] = [
-		Fixtures.start_reaper_game(4711), Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
+		Fixtures.start_reaper_game(4711), Command.start_night(), Command.answer_prompt(1, [4]), Command.end_night(),
 		CorrectionFixtures.gm("set_role", {"target_id": 2, "role_id": "dorfbewohner"}),
 		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}),
 	]

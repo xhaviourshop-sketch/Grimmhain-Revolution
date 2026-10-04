@@ -35,7 +35,7 @@ func test_target_selection_is_marked_by_text_for_living_people() -> void:
 		if shell == null:
 			return
 		await press(find_button(_screen(shell), "StartNightButton"))
-		var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+		var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 		assert_eq(str(next.get("answer")), "targets", "%s: Zielwahl offen" % locale)
 		var allowed: Array = next["allowed_ids"]
 		for t: Variant in _tokens(shell):
@@ -48,13 +48,11 @@ func test_target_selection_is_marked_by_text_for_living_people() -> void:
 				assert_false(token.text.begins_with("› ") or token.text.begins_with("✓ "), "%s: Person %d ohne Zielzeichen" % [locale, id])
 				assert_true(token.disabled, "%s: nicht wählbare Person %d gesperrt" % [locale, id])
 		var target := int(allowed[0])
+		# Feste Anzahl: Das Antippen übernimmt die Wahl sofort (Rückgängig-Leiste), es gibt keine Zwischenauswahl mehr.
+		var commands_before := (session_of(shell).call("commands") as Array).size()
 		await press(_token(shell, target))
-		assert_true(_token(shell, target).text.begins_with("✓ "), "%s: Auswahl trägt ein Textzeichen" % locale)
-		var sel := find_node(_screen(shell), "SelectionLabel") as Control
-		assert_true(sel != null and sel.is_visible_in_tree(), "%s: gewählte Person wird im Text genannt" % locale)
-		assert_false(find_button(_screen(shell), "ConfirmTargetsButton").disabled, "%s: Bestätigen möglich" % locale)
-		await press(_token(shell, target))
-		assert_false(_token(shell, target).text.begins_with("✓ "), "%s: Abwahl nimmt das Zeichen weg" % locale)
+		assert_eq((session_of(shell).call("commands") as Array).size(), commands_before + 1, "%s: Tipp übernimmt die Wahl sofort" % locale)
+		assert_true(find_node(_screen(shell), "ConfirmTargetsButton") == null, "%s: kein Bestätigungsknopf" % locale)
 
 
 func test_dead_people_are_marked_and_selectable_when_the_rules_allow_them() -> void:

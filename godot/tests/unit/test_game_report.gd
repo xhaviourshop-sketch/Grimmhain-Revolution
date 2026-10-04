@@ -229,7 +229,7 @@ func test_chosen_candidate_decides_condition_and_winners() -> void:
 	var texts := {}
 	for pick: int in [0, 1]:
 		var session := _start(roles, "wahl-%d" % pick)
-		for c: Command in [Command.start_night(), Command.answer_prompt(1, []), Command.end_night(), _kill(6), _kill(4), Command.begin_step("reaction:1"), Command.answer_prompt(2, [5])]:
+		for c: Command in [Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night(), _kill(6), _kill(4), Command.begin_step("reaction:1"), Command.answer_prompt(2, [5])]:
 			assert_true(session.submit(c).ok, "Vorbereitung angenommen")
 		var candidates: Array = session.cockpit_view()["next"]["candidates"]
 		assert_eq(candidates.size(), 2, "zwei offene Kandidaten")

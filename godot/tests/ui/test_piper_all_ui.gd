@@ -20,23 +20,23 @@ func _answers() -> int:
 	return session().commands().filter(func(c: Command) -> bool: return c.type == Command.ANSWER_PROMPT).size()
 
 
+## Stoppt an der Karte des Schritts `role` (ein noch nicht begonnener Schritt zeigt seinen Prompt schon als Vorschau).
 func _until_step(role: String) -> Callable:
-	return func(n: Dictionary) -> bool: return str(n.get("kind")) == "begin_step" and str(n.get("role_id")) == role
+	return func(n: Dictionary) -> bool: return ["begin_step", "prompt"].has(str(n.get("kind"))) and str(n.get("role_id")) == role
 
 
 func test_new_charm_through_the_cockpit() -> void:
 	if not await start([W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
 		return
 	assert_true(await run({}, _until_step("rattenfaenger")), "bis zum Rattenfänger")
-	assert_true(find_node(screen(), "DecoyCall_rattenfaenger") == null, "echter Aufruf, kein Tarnaufruf")
-	await tap_button("BeginStepButton")
+	assert_true(find_node(screen(), "DecoyLine") == null, "echter Aufruf, kein Tarnaufruf")
 	await tap_seat(4)
 	await tap_seat(5)
-	await tap_button("ConfirmTargetsButton")
+	await tap_button("ConfirmTargetsButton")  # 1 bis 2 Personen: erst „Weiter“
 	assert_eq(str(next().get("notice_kind")), "piper_new", "zuerst der Hinweis an die neu Verzauberten")
-	await tap_button("AckNoticeButton")
+	await show_and_close("ShowNoticeButton")  # Karte zeigen, Schließen bestätigt den Hinweis
 	var n := next()
-	assert_eq(str(n.get("kind")), "begin_step", "danach der Schritt, kein zweiter Hinweis")
+	assert_eq(str(n.get("kind")), "prompt", "danach der Schritt mit seiner Aktion, kein zweiter Hinweis")
 	assert_eq(str(n.get("role_id")), "piper-all", "„Alle Verzauberten“")
 	assert_true(bool(n.get("secret")), "Karte der Spielleitung")
 	assert_eq(n.get("decoys"), [], "kein Tarnaufruf")
@@ -45,13 +45,8 @@ func test_new_charm_through_the_cockpit() -> void:
 	assert_true(text.contains("Alle Verzauberten, öffnet die Augen"), "Ansage zum Vorlesen: %s" % text)
 	assert_true(text.contains("4 · D") and text.contains("5 · E"), "berechtigte Personen auf der Karte: %s" % text)
 	assert_true(live("SkipStepButton") == null, "Pflichtschritt, nicht überspringbar")
-	await tap_button("BeginStepButton")
-	n = next()
-	assert_true(str(n.get("kind")) == "prompt" and str(n.get("owner")) == "piper-all" and str(n.get("answer")) == "ack", "Bestätigungskarte")
-	await frames(2)
-	text = _card_text()
-	assert_true(text.contains("Lebende Verzauberte") and text.contains("4 · D") and text.contains("5 · E"), "Liste auf der Karte: %s" % text)
-	assert_true(text.contains("Danach „Gezeigt“"), "eindeutige Anweisung: %s" % text)
+	assert_true(str(n.get("owner")) == "piper-all" and str(n.get("answer")) == "ack", "Bestätigungskarte")
+	assert_true(text.contains("Alle erkennen einander"), "eine Hilfezeile: %s" % text)
 	assert_true(find_node(screen(), "ShowCardButton") == null, "keine Karte zum Zeigen: Liste wird niemandem eingeblendet")
 	# Doppeltippen im selben Frame (wie test_cockpit_screen): genau eine Bestätigung, kein zweiter Befehl an den Regelkern.
 	var before := _answers()
@@ -80,16 +75,15 @@ func test_decoy_call_comes_first_and_gives_no_reason() -> void:
 	var n := next()
 	assert_eq(n.get("decoys"), ["rattenfaenger"], "Rattenfänger als Tarnaufruf auf derselben Karte")
 	await frames(2)
-	assert_true(find_node(screen(), "DecoyCall_rattenfaenger") != null, "Ansage des Rattenfängers sichtbar")
+	assert_true(find_node(screen(), "DecoyLine") != null, "Ansage des Rattenfängers sichtbar")
 	var text := _card_text()
-	var piper_at := text.find("Rattenfänger, erwache")
+	var piper_at := text.find("Rattenfänger")
 	var all_at := text.find("Alle Verzauberten, öffnet die Augen")
 	assert_true(piper_at >= 0 and all_at > piper_at, "zuerst Rattenfänger, dann alle Verzauberten: %s" % text)
 	for word: String in ["Gift", "vergiftet", "blockiert", "gestorben", "entfällt", "entfallen"]:
 		assert_false(text.contains(word), "kein Grund für den Tarnaufruf („%s“)" % word)
 	assert_true(events("NoticeQueued").filter(func(e: Dictionary) -> bool: return int((e["data"] as Dictionary)["notice_id"]) > 1).is_empty(),
 		"keine neu Verzauberten in Nacht 2")
-	await tap_button("BeginStepButton")
 	assert_eq(next().get("actor_ids"), [4, 5], "alle Verzauberten")
 	await tap_button("AckButton")
 	assert_false((next().get("decoys", []) as Array).has("rattenfaenger"), "Rattenfänger nicht zweimal angesagt")

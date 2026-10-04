@@ -8,6 +8,11 @@ extends VBoxContainer
 ## Geheime Karten (`secret`) zeigt die Karte außerhalb der Nacht verdeckt, bis `revealed` gesetzt
 ## ist. Verdeckt entstehen keine Knoten mit geheimem Inhalt.
 ##
+## Nacht-Schablone (DA Nachtschritte neu): Titel (die Fähigkeit in 1 Satz), darunter höchstens 1 Satz Hilfe; Ansage und Aktion stehen auf
+## demselben Bildschirm (ein Schritt ohne Prompt-Vorschau zeigt nur „Weiter“). Eine feste Anzahl wird vom Cockpit sofort übernommen
+## (`CockpitText.auto_commit`), dann zeigt die Karte 3 Sekunden „Rückgängig“ (`show_undo`). Verzichten gibt es nur, wo die Karte es
+## vorsieht (ein Knopf, „Nicht heute“). Karte zeigen genau einmal: Das Schließen der gezeigten Karte erledigt den Schritt.
+##
 ## Aufbau: oben `Scroll` mit dem Text (`Content`), darunter der feste Bereich `Actions` mit allen Aktionsbuttons.
 ## Langer Text scrollt, die Aktionen bleiben immer sichtbar. Die Bedienhand bestimmt die Seite der Hauptaktion
 ## (rechts: Hauptaktion am rechten Ende, links: am linken); der Inhalt bleibt unverändert.
@@ -37,6 +42,9 @@ var primary_host: Control = null
 var info_host: Control = null
 var _primary: GrimmButton = null
 var _info: GrimmButton = null
+var _undo_bar: HBoxContainer = null  ## „Übernommen. Rückgängig“ für wenige Sekunden nach einer sofort übernommenen Auswahl
+var _undo_button: GrimmButton = null
+var _undo_serial: int = 0  ## unterscheidet das laufende vom früheren Einblenden (der Ablauf des alten Timers blendet nichts aus)
 var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel beginnen“ (der Cockpit-Rahmen blendet den Kartenrahmen aus)
 
 const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
@@ -46,6 +54,11 @@ const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Ve
 const FIT_MIN_FONT := 15  ## kleinste Schrift des Kartentexts (logische Einheiten)
 const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (epischer Knopf, `EpicButton`)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
+const UNDO_SECONDS := 3.0  ## so lange bleibt „Rückgängig“ nach einer sofort übernommenen Auswahl sichtbar
+## Gruppenrufe: Die Namen der Beteiligten stehen auf der Karte (Rudel, Gebundene, Ewige, Verzauberte).
+const GROUP_ROLES: Array[String] = ["pack", "die-gebundenen", "die-ewigen", "piper-all"]
+## Gruppenrufe ohne geheime Auskunft: ein Bildschirm mit Namen und „Weiter“, kein „Karte zeigen“ (die Beteiligten sehen einander).
+const OPEN_GROUP_OWNERS: Array[String] = ["die-gebundenen", "piper-all"]
 
 
 func _init() -> void:
@@ -76,6 +89,26 @@ func _init() -> void:
 	_slot = TargetSlot.new()
 	_slot.visible = false
 	_slot.stepped.connect(func(direction: int) -> void: requested.emit(&"cycle_target", {"direction": direction}))
+	_undo_bar = HBoxContainer.new()
+	_undo_bar.name = "UndoBar"
+	_undo_bar.visible = false
+	_undo_bar.alignment = BoxContainer.ALIGNMENT_END
+	_undo_bar.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	var undo_label := GrimmLabel.new()
+	undo_label.name = "UndoLabel"
+	undo_label.text_key = "ui.night.undo.done"
+	undo_label.theme_type_variation = &"MutedLabel"
+	_undo_bar.add_child(undo_label)
+	_undo_button = GrimmButton.new()
+	_undo_button.name = "UndoBarButton"
+	_undo_button.kind = GrimmButton.Kind.COMPACT
+	_undo_button.text_key = "ui.night.undo.button"
+	_undo_button.pressed.connect(func() -> void:
+		if _undo_bar.visible and not _undo_button.disabled:
+			hide_undo()
+			requested.emit(&"undo_last", {}))
+	_undo_bar.add_child(_undo_button)
+	add_child(_undo_bar)
 	_lower = BoxContainer.new()
 	_lower.name = "Lower"
 	_lower.vertical = true
@@ -122,6 +155,7 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_content.alignment = BoxContainer.ALIGNMENT_BEGIN
 	for arrow: Node in _slot.find_children("*", "BaseButton", true, false):
 		(arrow as BaseButton).disabled = false  # `lock` sperrt auch den Zielplatz bis zur nächsten Karte
+	_undo_button.disabled = false
 	for box: Node in [_content, _actions_box]:
 		for child: Node in box.get_children():
 			box.remove_child(child)
@@ -270,11 +304,35 @@ func _apply_hand(reorder: bool) -> void:
 func lock() -> void:
 	_busy = true
 	for b: Node in find_children("*", "BaseButton", true, false):
-		(b as BaseButton).disabled = true
+		if b != _undo_button:
+			(b as BaseButton).disabled = true
 	if _primary != null and is_instance_valid(_primary):
 		_primary.disabled = true
 	if _info != null and is_instance_valid(_info):
 		_info.disabled = true
+
+
+## Blendet „Übernommen. Rückgängig“ für `UNDO_SECONDS` ein; ein erneutes Einblenden startet die Zeit neu.
+func show_undo(seconds: float = UNDO_SECONDS) -> void:
+	_undo_serial += 1
+	var serial := _undo_serial
+	_undo_bar.visible = true
+	_undo_button.disabled = false
+	if not is_inside_tree():
+		return
+	get_tree().create_timer(seconds).timeout.connect(func() -> void:
+		if serial == _undo_serial:
+			hide_undo())
+
+
+func hide_undo() -> void:
+	_undo_serial += 1
+	if _undo_bar != null:
+		_undo_bar.visible = false
+
+
+func undo_visible() -> bool:
+	return _undo_bar != null and _undo_bar.visible
 
 
 # --- Kartenarten ------------------------------------------------------------------------------------
@@ -318,82 +376,173 @@ func _start_night(next: Dictionary, context: Dictionary) -> void:
 	_actions(buttons)
 
 
-## Tarnaufrufe (DI-02): Rollen, die vor dem nächsten echten Schritt nur angesagt werden. Sie führen nichts aus.
+## Tarnaufrufe (DI-02): Rollen, die vor dem nächsten echten Schritt nur angesagt werden. Sie führen nichts aus; die Karte nennt sie
+## in einer Zeile.
 func _decoys(next: Dictionary) -> void:
 	var roles: Array = next.get("decoys", [])
 	if roles.is_empty():
 		return
-	_caption("ui.cockpit.card.decoys.caption")
-	_text("ui.cockpit.card.decoys.hint", {}, &"MutedLabel")
-	for role: Variant in roles:
-		_text(CockpitText.call_key(str(role)), {"role": CockpitText.role_name(str(role))}, &"ReadAloudLabel").name = "DecoyCall_%s" % CockpitText.key_part(str(role))
+	var names: Array = roles.map(func(role: Variant) -> String: return tr(CockpitText.role_name(str(role))))
+	_text("ui.night.decoys", {"roles": ", ".join(names)}, &"MutedLabel").name = "DecoyLine"
 
 
-## Hinweis an betroffene Personen (DI-04, DI-06, DI-07): zeigen, dann als gezeigt bestätigen.
+## Hinweis an betroffene Personen (DI-04, DI-06, DI-07): „Karte zeigen“ genau einmal; das Schließen der Karte bestätigt den Hinweis.
 func _notice(next: Dictionary) -> void:
-	_caption("ui.cockpit.card.notice.caption", {"count": int(next.get("open", 1))})
-	_heading("ui.cockpit.card.notice.heading")
 	var names: Array = (next.get("viewers", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
-	_text("ui.cockpit.card.notice.for", {"names": ", ".join(names)}, &"MutedLabel")
-	_text("ui.cockpit.card.notice.do")
-	var buttons: Array[Control] = [
-		_button("ShowNoticeButton", "ui.cockpit.action.show_notice", GrimmButton.Kind.PRIMARY, &"show_notice"),
-		_button("AckNoticeButton", "ui.cockpit.action.ack_notice", GrimmButton.Kind.SECONDARY, &"ack_notice", {"notice_id": int(next.get("notice_id", -1))}),
-	]
+	_heading("ui.night.notice.title", {"names": ", ".join(names)}).name = "NoticeTitle"
+	_text("ui.night.notice.help", {}, &"MutedLabel")
+	var buttons: Array[Control] = [_button("ShowNoticeButton", "ui.cockpit.action.show_notice", GrimmButton.Kind.PRIMARY, &"show_notice", {"notice_id": int(next.get("notice_id", -1))})]
 	_help(next, buttons)
 	_actions(buttons)
 
 
+## Ein Schritt, der einen Prompt öffnet, zeigt Ansage und Aktion auf einem Bildschirm (Vorschau des Prompts); `BeginStep` sendet das
+## Cockpit mit der ersten Handlung. Nur ein Schritt ohne Prompt (er entfällt oder endet sofort) hat die Karte mit „Weiter“.
 func _begin_step(next: Dictionary, context: Dictionary) -> void:
+	var preview: Dictionary = next.get("preview", {})
+	if not preview.is_empty():
+		var merged := preview.duplicate()
+		merged["decoys"] = next.get("decoys", [])
+		merged["needs_begin"] = true
+		merged["step_kind"] = next.get("step_kind", "")
+		merged["repeat"] = next.get("repeat", false)
+		merged["own_role_id"] = next.get("own_role_id", merged.get("role_id", ""))
+		_prompt(merged, context)
+		return
 	var role := str(next.get("role_id"))
 	_decoys(next)
-	if str(next.get("step_kind")) == "reaction":
-		_caption("ui.cockpit.card.reaction.caption", {"count": int(next.get("reactions_open", 1))})
-	else:
-		_caption("ui.cockpit.card.step.caption", {"index": int(next.get("index", 0)), "total": int(next.get("total", 0))})
 	_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)})
-	var actors := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
-	_text("ui.cockpit.card.actors", {"names": actors if actors != "" else "–"}, &"MutedLabel")
 	if role != str(next.get("own_role_id", role)) and str(next.get("own_role_id", "")) != "":
 		_text("ui.cockpit.card.borrowed_ability", {"role": CockpitText.role_name(str(next["own_role_id"]))}, &"WarningLabel")
-	if bool(next.get("repeat", false)):
-		_text("ui.cockpit.card.repeat", {}, &"WarningLabel")
 	if str(next.get("step_kind")) != "reaction":
-		_read_aloud(CockpitText.call_key(role), {"role": CockpitText.role_name(role)})
+		_text(CockpitText.call_key(role), {"role": CockpitText.role_name(role)}, &"ReadAloudLabel")
 	var buttons: Array[Control] = [_button("BeginStepButton", "ui.cockpit.action.begin_step", GrimmButton.Kind.PRIMARY, &"begin_step")]
-	if bool(next.get("skippable", false)):
-		buttons.append(_button("SkipStepButton", "ui.cockpit.action.skip_step", GrimmButton.Kind.SECONDARY, &"skip_step"))
 	_help(next, buttons)
 	_actions(buttons)
 
 
 func _prompt(next: Dictionary, context: Dictionary) -> void:
+	if str(next.get("owner")) == "card":
+		_card_prompt(next, context)
+	else:
+		_night_prompt(next, context)
+
+
+## Nacht-Schablone eines Rollenprompts (auch Reaktionen, Kartenschlucker und die erste Stufe eines noch nicht begonnenen Schritts).
+func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	var role := str(next.get("role_id"))
+	var owner := str(next.get("owner"))
+	var stage := str(next.get("stage"))
 	var answer := str(next.get("answer"))
 	var anonymous := bool(next.get("anonymous_asker", false))
-	var is_card := str(next.get("owner")) == "card"
+	# Loki entscheidet zuerst Liebende oder Rivalen, dann folgen die zwei Personen (die Antwort geht gemeinsam an den Kern).
+	var pre_mode := owner == "loki" and stage == "targets" and context.get("pre_choice") == null
+	var texts := next.duplicate()
+	if pre_mode:
+		texts["stage"] = "mode"
 	_decoys(next)
-	_caption("ui.cockpit.card.prompt.caption")
-	# DI-05: Die Frage an die gefragte Person nennt weder Rolle noch die fragende Person.
-	if anonymous:
-		_heading("ui.cockpit.card.red_grant.heading")
-	elif is_card:
-		_card_prompt_head(next)
-	else:
-		_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)})
-	var actors := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
-	if actors != "":
-		_text("ui.cockpit.card.asked" if anonymous else "ui.cockpit.card.actors", {"names": actors}, &"MutedLabel")
+	_heading(CockpitText.night_title_key(texts), {"role": CockpitText.role_name(role)}).name = "NightTitle"
+	_text(CockpitText.night_help_key(texts), {}, &"MutedLabel").name = "NightHelp"
+	if anonymous:  # Zuflucht: die gefragte Person steht auf der Karte, die fragende Person und die Rolle nicht
+		_text("ui.night.rotkaeppchen.grant.asked", {"names": CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))}, &"SectionLabel").name = "AskedName"
+		_text("ui.night.rotkaeppchen.grant.hint", {}, &"MutedLabel").name = "RefugeHint"
+	if GROUP_ROLES.has(role) and not anonymous:
+		var group := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
+		if group != "":
+			_text("ui.night.names", {"names": group}, &"SectionLabel").name = "GroupNames"
+	if role != str(next.get("own_role_id", role)) and str(next.get("own_role_id", "")) != "":
+		_text("ui.cockpit.card.borrowed_ability", {"role": CockpitText.role_name(str(next["own_role_id"]))}, &"WarningLabel")
+	if bool(next.get("repeat", false)):
+		_text("ui.cockpit.card.repeat", {}, &"WarningLabel")
 	for line: Dictionary in next.get("info", []):
 		if anonymous:
 			break
 		_text("ui.cockpit.card.info_line", {"label": StringName(CockpitText.info_key(str(line["key"]))), "value": CockpitText.info_value(line)}, &"WarningLabel")
-	var instruction := CockpitText.reaction_key(str(next.get("reaction_kind"))) if str(next.get("owner")) == "reaction" \
-		else (CockpitText.card_instruction_key(next) if is_card else CockpitText.instruction_key(str(next.get("owner")), str(next.get("stage")), answer))
-	_text(instruction, {"min": int(next.get("min", 0)), "max": int(next.get("max", 0))})
-	if str(next.get("owner")) == "kartenschlucker":
+	if str(context.get("call_step", "")) != "" and str(next.get("step_id", "")) == str(context.get("call_step")) and owner != "reaction" and role != "":
+		_text(CockpitText.call_key(role), {"role": CockpitText.role_name(role)}, &"ReadAloudLabel").name = "CallLine"
+	if owner == "kartenschlucker":
 		_swallower_status(next)
-	if is_card and not (next.get("dice", []) as Array).is_empty():
+	var buttons: Array[Control] = []
+	if pre_mode:
+		buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, "mode"), GrimmButton.Kind.PRIMARY, &"loki_mode", {"choice": true}))
+		buttons.append(_button("NoButton", CockpitText.action_key("no", owner, "mode"), GrimmButton.Kind.SECONDARY, &"loki_mode", {"choice": false}))
+		_help(next, buttons)
+		_actions(buttons)
+		return
+	match answer:
+		"targets":
+			_night_targets_part(next, context, buttons)
+		"choice":
+			buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, stage), GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
+			buttons.append(_button("NoButton", CockpitText.action_key("no", owner, stage), GrimmButton.Kind.SECONDARY, &"choice", {"choice": false}))
+		"ack":
+			if not (next.get("show", []) as Array).is_empty() and not OPEN_GROUP_OWNERS.has(owner):
+				buttons.append(_button("ShowCardButton", "ui.cockpit.action.show_card", GrimmButton.Kind.PRIMARY, &"show_card"))
+			else:
+				buttons.append(_button("AckButton", "ui.night.action.next", GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
+		"option":
+			var options: Array = next.get("options", [])
+			var option_kind := str(next.get("option_kind", ""))
+			for i: int in options.size():
+				if option_kind != "" and option_kind != "role":
+					# Handzeichen des Kartenschluckers: eigene Beschriftung je Option.
+					buttons.append(_button("OptionButton_%d" % i, CockpitText.card_option_key(option_kind, str(options[i])), GrimmButton.Kind.SECONDARY, &"option", {"index": i}))
+					continue
+				var b := _button("OptionButton_%d" % i, "ui.cockpit.action.option", GrimmButton.Kind.SECONDARY, &"option", {"index": i})
+				b.format_values = {"number": i + 1, "role": CockpitText.role_name(str(options[i]))}
+				buttons.append(b)
+		"prediction":
+			_prediction_part(next, context, buttons)
+	if bool(next.get("can_override_shown", false)):
+		buttons.append(_button("OverrideShownButton", "ui.cockpit.action.override_shown", GrimmButton.Kind.SECONDARY, &"override_shown"))
+	_help(next, buttons)
+	_actions(buttons)
+
+
+## Auswahl der Nacht-Schablone: eine feste Anzahl wird sofort übernommen (kein Bestätigen), sonst „Weiter“. Antippen einer
+## gewählten Person wählt sie ab. Verzichten nur, wenn der Kern die Anzahl 0 zulässt.
+func _night_targets_part(next: Dictionary, context: Dictionary, buttons: Array[Control]) -> void:
+	var selection: Array = context.get("selection", [])
+	var counts: Array = next.get("counts", [])
+	var error := str(context.get("selection_error", ""))
+	var auto := CockpitText.auto_commit(next)
+	if not selection.is_empty() and not auto:
+		_text("ui.night.selected", {"names": CockpitText.names_of(selection, context.get("seats", []))}, &"SectionLabel").name = "SelectionLabel"
+	if not selection.is_empty() and error != "":
+		var key := "ui.cockpit.card.selection.blocked.%s" % error
+		_text(key if CockpitText.has_key(key) else "ui.cockpit.card.selection.blocked.generic", {"counts": CockpitText.count_list(counts)}, &"WarningLabel").name = "SelectionBlockedLabel"
+	if not auto:
+		_show_slot(next, context, selection)
+	var random_active := bool(context.get("random_active", false))
+	if random_active:
+		# Vorschlag der Zufallsziehung; übernommen wird er erst mit „Weiter“ (RM-DR-015.2).
+		_text("ui.cockpit.card.random.proposal", {}, &"MutedLabel").name = "RandomProposalLabel"
+	if not auto:
+		var confirm := _button("ConfirmTargetsButton", "ui.cockpit.action.confirm_targets", GrimmButton.Kind.PRIMARY, &"confirm_targets")
+		confirm.disabled = (selection.is_empty() and not random_active) or error != ""
+		buttons.append(confirm)
+	if bool(next.get("random", false)):
+		var random := _button("RandomTargetsButton", "ui.cockpit.action.random_targets", GrimmButton.Kind.SECONDARY, &"random_targets")
+		random.disabled = not bool(context.get("random_available", false))
+		buttons.append(random)
+		if random.disabled:
+			_text("ui.cockpit.card.random.none", {}, &"MutedLabel").name = "RandomUnavailableLabel"
+	if counts.has(0):
+		buttons.append(_button("DeclineButton", CockpitText.action_key("decline", str(next.get("owner")), str(next.get("stage"))), GrimmButton.Kind.SECONDARY, &"decline"))
+
+
+## Eingabekette einer Totenreichkarte (Kartenfenster-Aufgaben): unverändert die Karte „Tu jetzt“ mit Bestätigen.
+func _card_prompt(next: Dictionary, context: Dictionary) -> void:
+	var role := str(next.get("role_id"))
+	var answer := str(next.get("answer"))
+	_decoys(next)
+	_caption("ui.cockpit.card.prompt.caption")
+	_card_prompt_head(next)
+	var actors := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
+	if actors != "":
+		_text("ui.cockpit.card.actors", {"names": actors}, &"MutedLabel")
+	_text(CockpitText.card_instruction_key(next), {"min": int(next.get("min", 0)), "max": int(next.get("max", 0))})
+	if not (next.get("dice", []) as Array).is_empty():
 		_dice(next.get("dice", []))
 	var buttons: Array[Control] = []
 	match answer:
@@ -411,14 +560,7 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 			var option_kind := str(next.get("option_kind", ""))
 			for i: int in options.size():
 				if option_kind != "" and option_kind != "role":
-					# Karteneingaben und Handzeichen des Kartenschluckers: eigene Beschriftung je Option.
 					buttons.append(_button("OptionButton_%d" % i, CockpitText.card_option_key(option_kind, str(options[i])), GrimmButton.Kind.SECONDARY, &"option", {"index": i}))
-					continue
-				# Lehrling: Die Rollen der Optionen stehen nur auf der gesicherten Karte, nie auf der offenen Aktionskarte.
-				if str(next.get("owner")) == "lehrling":
-					var hidden := _button("OptionButton_%d" % i, "ui.cockpit.action.option_hidden", GrimmButton.Kind.SECONDARY, &"option", {"index": i})
-					hidden.format_values = {"number": i + 1}
-					buttons.append(hidden)
 					continue
 				var b := _button("OptionButton_%d" % i, "ui.cockpit.action.option", GrimmButton.Kind.SECONDARY, &"option", {"index": i})
 				b.format_values = {"number": i + 1, "role": CockpitText.role_name(str(options[i]))}
@@ -429,10 +571,6 @@ func _prompt(next: Dictionary, context: Dictionary) -> void:
 			buttons.append(roll)
 		"prediction":
 			_prediction_part(next, context, buttons)
-	if not (next.get("show", []) as Array).is_empty():
-		buttons.append(_button("ShowCardButton", "ui.cockpit.action.show_card", GrimmButton.Kind.SECONDARY, &"show_card"))
-	if bool(next.get("can_override_shown", false)):
-		buttons.append(_button("OverrideShownButton", "ui.cockpit.action.override_shown", GrimmButton.Kind.SECONDARY, &"override_shown"))
 	if bool(next.get("cancellable", false)):
 		# Kurze Beschriftung, damit sie neben einem zweiten Knopf einzeilig bleibt; Bedienungshilfe und Tooltip tragen den vollen Text.
 		var cancel := _button("CancelPromptButton", "ui.cockpit.action.cancel_prompt.short", GrimmButton.Kind.SECONDARY, &"cancel_prompt")

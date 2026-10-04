@@ -123,14 +123,9 @@ func test_apprentice_inherits_and_counts_twice_immediately() -> void:
 	# Korrekturrunde 2: Siegbedingungen der geerbten Rolle gelten sofort.
 	# 1 Siegreicher; 2 Werwolf; 3 Lehrling; 4–8 Dorfbewohner. Nacht 1: Lehrling wählt den Siegreichen.
 	var cmds: Array[Command] = [_start([SW, "werwolf", "lehrling", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "der-weise"]),
-		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 2, 4])]
-	var run := _run(cmds, "Kandidaten")
-	if not run.ok:
-		return
-	var options: Array = run.state.pending_prompt.partial["options"]
-	cmds.append_array([Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "option", "option": options.find(SW)}),
-		Command.answer_choice(1, "confirm", true), Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), _kill(1)])
-	run = _run(cmds, "Erbe")
+		Command.start_night(), Command.answer_stage_targets(1, "master", [1])]
+	cmds.append_array([Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(), _kill(1)])
+	var run := _run(cmds, "Erbe")
 	if not run.ok:
 		return
 	assert_eq(String(run.state.players[3].role_id), SW, "Lehrling erbt")

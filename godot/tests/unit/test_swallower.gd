@@ -34,7 +34,7 @@ func _to_swallower(g: CardGame, victim: int = -1) -> PendingPrompt:
 			if p.owner == PendingPrompt.OWNER_SWALLOWER:
 				return p
 			if p.owner == PendingPrompt.OWNER_PACK:
-				g.do(Command.answer_prompt(p.id, [victim] if victim != -1 else []), "Rudel")
+				g.do(Command.answer_prompt(p.id, [victim] if victim != -1 else Fixtures.pass_targets(g.state, p)), "Rudel")
 			else:
 				g.answer_default(p)
 		elif RulesEngine.next_step_id(g.state) != "":
@@ -51,7 +51,7 @@ func _finish(g: CardGame) -> void:
 		var p := g.state.pending_prompt
 		if p != null:
 			if p.owner == PendingPrompt.OWNER_PACK:
-				g.do(Command.answer_prompt(p.id, []), "Rudel")
+				g.do(Command.answer_prompt(p.id, Fixtures.pass_targets(g.state, p)), "Rudel")
 			else:
 				g.answer_default(p)
 		elif RulesEngine.next_step_id(g.state) != "":

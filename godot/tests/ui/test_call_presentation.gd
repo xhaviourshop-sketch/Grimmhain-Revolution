@@ -16,11 +16,10 @@ func _render(next: Dictionary) -> ActionCard:
 	return card
 
 
-func _decoy_nodes(card: ActionCard) -> Array[String]:
-	var out: Array[String] = []
-	for n: Node in card.find_children("DecoyCall_*", "", true, false):
-		out.append(String(n.name))
-	return out
+## Die Tarnaufrufe stehen in einer Zeile („Zuerst nur ansagen: …“); geliefert werden die genannten Rollennamen.
+func _decoy_names(card: ActionCard) -> String:
+	var line := card.find_child("DecoyLine", true, false) as GrimmLabel
+	return "" if line == null else str(line.format_values.get("roles", ""))
 
 
 func _has_key(root: Node, key: String) -> bool:
@@ -46,8 +45,8 @@ func test_first_night_only_role_is_announced_on_the_first_card_of_later_nights()
 	assert_eq(str(next["owner"]), "schutzengel", "Schutzengel handelt zuerst")
 	assert_eq(next["decoys"], ["loki"], "Loki hat keinen Schritt mehr und wird nur angesagt")
 	var card := _render(next)
-	assert_eq(_decoy_nodes(card), ["DecoyCall_loki"], "Tarnaufruf steht auf der Karte")
-	assert_true(_has_key(card, "ui.cockpit.card.decoys.caption"), "als Ansage gekennzeichnet")
+	assert_eq(_decoy_names(card), tr(CockpitText.role_name("loki")), "Tarnaufruf steht in einer Zeile auf der Karte")
+	assert_true(_has_key(card, "ui.night.decoys"), "als Ansage gekennzeichnet")
 	# Nach dem Schritt des Schutzengels steht der Tarnaufruf nicht mehr an.
 	assert_true(UiGame.step(s) == "prompt", "Schutzengel antwortet")
 	var after := UiGame.next_of(s)
@@ -61,7 +60,7 @@ func test_trailing_call_stands_on_the_end_of_night_card() -> void:
 	var next := UiGame.next_of(s)
 	assert_eq(next["decoys"], ["henker"], "Henker ohne Schritt wird vor dem Ende angesagt")
 	var card := _render(next)
-	assert_eq(_decoy_nodes(card), ["DecoyCall_henker"], "auf der Karte")
+	assert_eq(_decoy_names(card), tr(CockpitText.role_name("henker")), "auf der Karte")
 	assert_true(card.find_child("EndNightButton", true, false) != null, "Nacht beenden bleibt bedienbar")
 
 

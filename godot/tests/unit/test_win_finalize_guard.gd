@@ -5,7 +5,7 @@ extends TestCase
 
 ## Zustand mit erfüllter Siegbedingung (Dorf: kein Wolf lebt) und ausstehender Prüfung.
 func _winning_state() -> GameState:
-	var s := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, []), Command.end_night()] as Array[Command])
+	var s := Fixtures.play([Fixtures.start_manual(6, [1]), Command.start_night(), Command.answer_prompt(1, [6]), Command.end_night()] as Array[Command])
 	s.players[1].alive = false
 	s.win_check_pending = true
 	return s

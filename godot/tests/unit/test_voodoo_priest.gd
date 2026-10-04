@@ -39,6 +39,10 @@ func _auto(s: GameState) -> Command:
 		return Command.answer_choice(p.id, "shown", true)
 	if p.stage != &"":
 		return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
+	if p.owner == PendingPrompt.OWNER_PACK or p.owner == PendingPrompt.OWNER_PACK2:
+		return Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
+	if p.owner == &"feuerteufel":
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	return Command.answer_prompt(p.id, p.allowed_ids.slice(0, p.min_count))
 
 
@@ -66,7 +70,7 @@ func _night(s: GameState, answers: Dictionary = {}, log: Array[GameEvent] = []) 
 			if answers.has(staged):
 				cmd = Command.answer_prompt(p.id, answers[staged]) if p.stage == &"" else Command.answer_stage_targets(p.id, String(p.stage), answers[staged])
 			elif p.owner == PendingPrompt.OWNER_PACK:
-				cmd = Command.answer_prompt(p.id, [])
+				cmd = Command.skip_step(p.step_id, "Test: ruhige Nacht")  # Wölfe ohne vorgesehenes Opfer
 			else:
 				cmd = _auto(s)
 		else:
@@ -139,14 +143,15 @@ func test_catalog_entry() -> void:
 func test_giving_is_voluntary_secret_and_only_without_living_doll() -> void:
 	var s := _state([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht")
-	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, []), "Rudel") if s != null else null
+	s = _ok(s, Command.skip_step("night:1:0:pack", "Test: ruhige Nacht"), "Rudel") if s != null else null
 	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Priester") if s != null else null
 	if s == null:
 		return
 	var p := s.pending_prompt
 	assert_eq(String(p.owner), VP, "eigener Prompt")
 	assert_eq(p.allowed_ids, [1, 3, 4, 5, 6, 7] as Array[int], "andere Lebende")
-	assert_eq([p.min_count, p.max_count], [0, 1], "freiwillig, eine Puppe (E-21)")
+	assert_eq([p.min_count, p.max_count], [1, 1], "genau eine Puppe, kein Verzicht (DA Nachtschritte neu)")
+	apply_rejected(s, Command.answer_prompt(p.id, []), "invalid_target_count", "kein Verzicht")
 	var rejected := RulesEngine.apply(s, Command.answer_prompt(p.id, [2]))
 	assert_false(rejected.ok, "nie er selbst (E-14)")
 	assert_true(rejected.events.is_empty(), "Ablehnung ohne Ereignisse")
@@ -155,15 +160,14 @@ func test_giving_is_voluntary_secret_and_only_without_living_doll() -> void:
 	var r := apply_ok(s, Command.answer_prompt(p.id, [5]), "Puppe 5")
 	for e: GameEvent in r.events:
 		assert_true(e.visibility == Visibility.GM, "geheim, auch nicht für die Puppe: %s" % e.type)
-	s = _ok(r.state, Command.end_night(), "Morgen")
-	assert_eq(_dolls(s), [{"priest_id": 2, "doll_id": 5}], "eine Puppe")
-	s = _night(s)
+	var morning := _ok(r.state, Command.end_night(), "Morgen")
+	assert_eq(_dolls(morning), [{"priest_id": 2, "doll_id": 5}], "eine Puppe")
+	s = _night(morning)
 	assert_false(s != null and s.night_plan.has(&"voodoo-priester:2"), "kein Schritt mit lebender Puppe")
-	# Verzicht: in der nächsten Nacht wieder gefragt.
-	var t := _dawn(_state([W, VP, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"voodoo-priester:2@": []})
-	assert_eq(_dolls(t), [], "Verzicht")
+	# Stirbt die Puppe, wird der Priester in der nächsten Nacht wieder gefragt.
+	var t := _ok(morning, _gm("kill", {"target_id": 5, "trigger_effects": false}), "Puppe stirbt")
 	t = _night(t)
-	assert_true(t != null and t.night_plan.has(&"voodoo-priester:2"), "erneut gefragt")
+	assert_true(t != null and t.night_plan.has(&"voodoo-priester:2"), "ohne lebende Puppe erneut gefragt")
 
 
 # --- Umlenkung ----------------------------------------------------------------------------------

@@ -52,16 +52,12 @@ func test_reaction_prompt_resolves_with_kill() -> void:
 	assert_eq(String(shot.state.phase), "DAY", "danach beginnt der Tag")
 
 
-func test_reaction_can_be_declined() -> void:
+func test_reaction_cannot_be_declined() -> void:
+	# DA Nachtschritte neu: Die Karte kennt keinen Verzicht; ohne mögliches Ziel gibt es keine Reaktion.
 	var s := RulesEngine.replay(_reaper_killed_at_dawn()).state
 	var begun := apply_ok(s, Command.begin_step("reaction:1"), "Reaktion beginnen").state
-	var declined := apply_ok(begun, Command.answer_prompt(begun.pending_prompt.id, []), "Verzicht")
-	assert_eq(events_of_type(declined.events, "SeatDied").size(), 0, "kein Tod")
-	var resolved := events_of_type(declined.events, "ReactionResolved")
-	assert_eq(resolved.size(), 1, "Verzicht protokolliert")
-	if resolved.size() == 1:
-		assert_eq(int(resolved[0].data["target_id"]), -1, "kein Ziel")
-	assert_eq(String(declined.state.phase), "DAY", "Tag beginnt")
+	assert_eq(begun.pending_prompt.min_count, 1, "genau ein Ziel")
+	apply_rejected(begun, Command.answer_prompt(begun.pending_prompt.id, []), "invalid_target_count", "kein Verzicht")
 
 
 func test_chained_reactions_in_fifo_order() -> void:
@@ -76,14 +72,14 @@ func test_chained_reactions_in_fifo_order() -> void:
 	assert_eq(run.state.reactions.size(), 1, "Folgereaktion eingereiht")
 	assert_eq(RulesEngine.next_step_id(run.state), "reaction:2", "Folgereaktion ist der nächste Schritt")
 	var done := apply_ok(run.state, Command.begin_step("reaction:2"), "zweite Reaktion").state
-	var day := apply_ok(done, Command.answer_prompt(3, []), "Verzicht")
+	var day := apply_ok(done, Command.answer_prompt(3, [5]), "zweite Reaktion trifft 5")
 	assert_eq(String(day.state.phase), "DAY", "Tag nach vollständiger Abarbeitung")
 
 
 func test_multiple_pending_reactions_keep_order() -> void:
 	# Zwei Tode während einer offenen Reaktion: stabile Reihenfolge nach Einreihung.
 	var run := RulesEngine.replay(Fixtures.with_copies(["werwolf", "blutwolf", "sensentraeger", "sensentraeger", "dorfbewohner", "amalia", "detektiv"],
-		[Command.start_night(), Command.answer_prompt(1, []), Command.end_night(),
+		[Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night(),
 		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}),
 		CorrectionFixtures.gm("kill", {"target_id": 4, "trigger_effects": true})] as Array[Command], 1))
 	assert_true(run.ok, "Korrekturen angenommen (%s @ %d)" % [run.error, run.failed_index])
@@ -101,7 +97,7 @@ func test_night_death_reacts_at_dawn() -> void:
 	var run := RulesEngine.replay([Fixtures.start_reaper_game(), Command.start_night(),
 		CorrectionFixtures.gm("kill", {"target_id": 3, "trigger_effects": true}),
 		# Die Korrektur bricht den offenen Rudel-Prompt ab (state_changed_by_gm_correction).
-		Command.begin_step("night:1:0:pack"), Command.answer_prompt(2, [])] as Array[Command])
+		Command.skip_step("night:1:0:pack", "kein Opfer")] as Array[Command])
 	assert_true(run.ok, "Nacht angenommen (%s @ %d)" % [run.error, run.failed_index])
 	if not run.ok:
 		return
@@ -113,7 +109,7 @@ func test_night_death_reacts_at_dawn() -> void:
 
 
 func test_reaction_after_execution_is_immediate() -> void:
-	var run := RulesEngine.replay([Fixtures.start_reaper_game(), Command.start_night(), Command.answer_prompt(1, []),
+	var run := RulesEngine.replay([Fixtures.start_reaper_game(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"),
 		Command.end_night(), Command.nominate(4, 3), Command.decide_execution(3)] as Array[Command])
 	assert_true(run.ok, "Hinrichtung angenommen (%s @ %d)" % [run.error, run.failed_index])
 	if not run.ok:

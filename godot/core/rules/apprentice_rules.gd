@@ -1,26 +1,19 @@
 class_name ApprenticeRules
 extends RefCounted
-## Lehrling / Apprentice (rules-register.md §9, DR-11): verdeckte Auswahl, Bindung, Erbe.
+## Lehrling / Apprentice (rules-register.md §9, DR-11): Mentorwahl, Bindung, Erbe.
 ## Auswahlbedarf ist zustandsbasiert: lebend, Rolle `lehrling`, ohne aktive Bindung. Jede
 ## solche Person erhält in ihrer ersten verfügbaren Nacht einen eigenen, nicht
 ## überspringbaren Schritt (Nachtpriorität 1.1), auch nach einem späteren Rollenwechsel.
-## Mehrstufiger Prompt:
-##   candidates  Spielleiter wählt genau drei verschiedene andere lebende Personen; daraus
-##               entstehen die Optionen (nach Rollen-ID sortiert, gleiche Rollen mit einer
-##               Kopie des gespeicherten SeededRng gemischt) und der RNG-Zustand danach
-##   option      Lehrling wählt eine Option (Index), nie eine Person
-##   confirm     Bestätigung: erst jetzt Bindung speichern und den RNG übernehmen
-## Ein Abbruch verwirft alles (kein Datensatz, keine verbrauchte Ziehung).
-## Erbe: unmittelbare Todesfolge in der KillPipeline (nach Wolfskind-Verwandlungen, vor der
-## Todesreaktion des Meisters): Jeder lebende gebundene Lehrling des Toten übernimmt dessen
-## aktuelle Rolle, stabil nach Personen-ID. Aktive Nachtfähigkeiten gelten erst ab der
-## nächsten Nacht, weil der Nachtplan ein Snapshot ist.
+## Einstufiger Prompt (DA-Nachtschritte-neu, Kartentext „wählt einen Mentor“): Der Spielleiter
+## tippt für den Lehrling genau eine andere lebende Person als Mentor an; die Bindung gilt sofort.
+## Ein Abbruch verwirft alles (kein Datensatz).
+## Erbe: Stirbt der Mentor, übernimmt der Lehrling dessen Rolle. Unmittelbare Todesfolge in der
+## KillPipeline (nach Wolfskind-Verwandlungen, vor der Todesreaktion des Meisters): Jeder lebende
+## gebundene Lehrling des Toten übernimmt dessen aktuelle Rolle, stabil nach Personen-ID. Aktive
+## Nachtfähigkeiten gelten erst ab der nächsten Nacht, weil der Nachtplan ein Snapshot ist.
 
-const STAGE_CANDIDATES := &"candidates"
-const STAGE_OPTION := &"option"
-const STAGE_CONFIRM := &"confirm"
-const STAGES: Array[StringName] = [STAGE_CANDIDATES, STAGE_OPTION, STAGE_CONFIRM]
-const OPTION_COUNT := 3
+const STAGE_MASTER := &"master"
+const STAGES: Array[StringName] = [STAGE_MASTER]
 
 
 ## Aktive Bindung der Person oder null.
@@ -46,11 +39,11 @@ static func needs_selection(s: GameState, apprentice_id: int) -> bool:
 	return p != null and p.alive and p.role_id == RoleCatalog.LEHRLING and active_of(s, apprentice_id) == null
 
 
-## Genug andere Lebende für drei Optionen.
+## Mindestens eine andere lebende Person als Mentor.
 static func can_select(s: GameState, apprentice_id: int) -> bool:
 	var others := s.alive_ids()
 	others.erase(apprentice_id)
-	return others.size() >= OPTION_COUNT
+	return not others.is_empty()
 
 
 ## Beendet eine aktive Bindung (Tod des Lehrlings, Rollenwechsel, Korrektur).
@@ -69,124 +62,45 @@ static func open(s: GameState, prompt: PendingPrompt, apprentice_id: int) -> voi
 	prompt.actor_id = apprentice_id
 	prompt.cancellable = true
 	prompt.partial = {}
-	prompt.stage = STAGE_CANDIDATES
+	prompt.stage = STAGE_MASTER
 	prompt.allowed_ids = s.alive_ids()
 	prompt.allowed_ids.erase(apprentice_id)
-	prompt.min_count = OPTION_COUNT
-	prompt.max_count = OPTION_COUNT
-
-
-## Optionen aus den Kandidaten: nach Rollen-ID sortiert; Personen gleicher Rolle werden
-## (ausgehend von aufsteigender ID) mit einer Kopie von `s.rng` gemischt. Liefert
-## {options, option_person_ids, rng_after}; `s.rng` selbst bleibt unverändert.
-static func compute_options(s: GameState, candidates: Array[int]) -> Dictionary:
-	var by_role := {}
-	var ids := candidates.duplicate()
-	ids.sort()
-	for id: int in ids:
-		var role := String(s.players[id].role_id)
-		if not by_role.has(role):
-			by_role[role] = []
-		(by_role[role] as Array).append(id)
-	var roles: Array = by_role.keys()
-	roles.sort()
-	var probe := SeededRng.from_dict(s.rng.to_dict())
-	var options: Array = []
-	var mapping: Array = []
-	for role: String in roles:
-		var group: Array = by_role[role]
-		if group.size() > 1:
-			group = probe.shuffled(group)
-		for id: Variant in group:
-			options.append(role)
-			mapping.append(int(id))
-	return {"options": options, "option_person_ids": mapping, "rng_after": probe.to_dict()}
+	prompt.min_count = 1
+	prompt.max_count = 1
 
 
 static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) -> StringName:
 	if DictRead.get_string(p, "stage") != String(prompt.stage):
 		return &"stage_mismatch"
-	match prompt.stage:
-		STAGE_CANDIDATES:
-			if p.has("choice") or p.has("option") or not p.get("targets") is Array:
-				return &"invalid_answer"
-			var targets: Variant = DictRead.to_int_array(p["targets"])
-			if targets == null:
-				return &"invalid_target"
-			var list: Array[int] = targets
-			if list.size() != OPTION_COUNT:
-				return &"invalid_target_count"
-			var seen: Array[int] = []
-			for t: int in list:
-				# Nur zum Zeitpunkt der Antwort lebende andere Personen, jede nur einmal.
-				if t == prompt.actor_id or seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t) or not s.players[t].alive:
-					return &"invalid_target"
-				seen.append(t)
-		STAGE_OPTION:
-			if p.has("targets") or p.has("choice") or p.get("option") is bool or not DictRead.is_int_like(p.get("option")):
-				return &"invalid_answer"
-			var index := int(p["option"])
-			if index < 0 or index >= (prompt.partial.get("options", []) as Array).size():
-				return &"invalid_answer"
-		STAGE_CONFIRM:
-			if p.has("targets") or p.has("option") or not (p.get("choice") is bool and bool(p["choice"])):
-				return &"invalid_answer"  # zurück nur per CancelPrompt
+	if p.has("choice") or p.has("option") or not p.get("targets") is Array:
+		return &"invalid_answer"
+	var targets: Variant = DictRead.to_int_array(p["targets"])
+	if targets == null:
+		return &"invalid_target"
+	var list: Array[int] = targets
+	if list.size() != 1:
+		return &"invalid_target_count"
+	# Nur eine zum Zeitpunkt der Antwort lebende andere Person.
+	var t := list[0]
+	if t == prompt.actor_id or not prompt.allowed_ids.has(t) or not s.players.has(t) or not s.players[t].alive:
+		return &"invalid_target"
 	return &""
 
 
 static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	var s := ctx.state
 	var prompt := s.pending_prompt
-	match prompt.stage:
-		STAGE_CANDIDATES:
-			var candidates: Array[int] = DictRead.to_int_array(p["targets"])
-			var computed := compute_options(s, candidates)
-			prompt.partial = {
-				"candidates": candidates.duplicate(),
-				"options": computed["options"],
-				"option_person_ids": computed["option_person_ids"],
-				"rng_after": computed["rng_after"],
-			}
-			_enter_stage(prompt, STAGE_OPTION)
-			ctx.emit(GameEvent.PROMPT_STAGE_ANSWERED, Visibility.GM, {
-				"prompt_id": prompt.id, "step_id": prompt.step_id, "stage": STAGE_CANDIDATES, "answer": {"targets": candidates}, "next_stage": STAGE_OPTION,
-			})
-			# Der Lehrling sieht ausschließlich die Rollen, nie Personen.
-			ctx.emit(GameEvent.APPRENTICE_OPTIONS_SHOWN, Visibility.ACTOR, {"options": computed["options"]}, prompt.actor_id)
-		STAGE_OPTION:
-			prompt.partial["chosen_index"] = int(p["option"])
-			_enter_stage(prompt, STAGE_CONFIRM)
-			ctx.emit(GameEvent.PROMPT_STAGE_ANSWERED, Visibility.GM, {
-				"prompt_id": prompt.id, "step_id": prompt.step_id, "stage": STAGE_OPTION, "answer": {"option": int(p["option"])}, "next_stage": STAGE_CONFIRM,
-			})
-		STAGE_CONFIRM:
-			_confirm(ctx)
-
-
-static func _enter_stage(prompt: PendingPrompt, stage: StringName) -> void:
-	prompt.stage = stage
-	prompt.allowed_ids = []
-	prompt.min_count = 0
-	prompt.max_count = 0
-
-
-static func _confirm(ctx: RuleContext) -> void:
-	var s := ctx.state
-	var prompt := s.pending_prompt
 	s.pending_prompt = null
-	var partial := prompt.partial
-	ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {"prompt_id": prompt.id, "owner": prompt.owner, "stage": STAGE_CONFIRM})
+	var master_id: int = DictRead.to_int_array(p["targets"])[0]
+	ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {"prompt_id": prompt.id, "owner": prompt.owner, "stage": STAGE_MASTER, "targets": [master_id]})
 	var b := ApprenticeBond.new()
 	b.apprentice_id = prompt.actor_id
-	b.options.assign(partial["options"])
-	b.option_person_ids.assign(partial["option_person_ids"])
-	b.chosen_index = int(partial["chosen_index"])
-	b.master_id = b.option_person_ids[b.chosen_index]
+	b.master_id = master_id
+	b.options.append(String(s.players[master_id].role_id))
+	b.option_person_ids.append(master_id)
+	b.chosen_index = 0
 	_add(ctx, b)
-	# Erst mit der Bestätigung gilt die Zufallsziehung als verbraucht.
-	s.rng = SeededRng.from_dict(partial["rng_after"])
 	ctx.emit(GameEvent.APPRENTICE_BOUND, Visibility.GM, b.to_dict())
-	ctx.emit(GameEvent.APPRENTICE_CHOICE_CONFIRMED, Visibility.ACTOR, {"options": b.options, "chosen_role": b.options[b.chosen_index]}, b.apprentice_id)
 	s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 	s.next_night_step += 1
 
@@ -324,9 +238,7 @@ static func snapshot_is_valid(snapshot: Dictionary) -> bool:
 	return true
 
 
-## Ein offener Auswahl-Prompt gehört zum erwarteten Schritt eines Lehrlings mit
-## Auswahlbedarf; gespeicherte Optionen, Zuordnung und RNG-Zustand ergeben sich exakt
-## aus Kandidaten und `s.rng`.
+## Ein offener Auswahl-Prompt gehört zum erwarteten Schritt eines Lehrlings mit Auswahlbedarf.
 static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if s.phase != Phase.NIGHT or s.next_night_step >= s.night_plan.size() or prompt.kind != PendingPrompt.KIND_APPRENTICE_CHAIN:
 		return false
@@ -337,27 +249,4 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 		return false
 	var allowed := s.alive_ids()
 	allowed.erase(prompt.actor_id)
-	if prompt.stage == STAGE_CANDIDATES:
-		return prompt.partial.is_empty() and prompt.allowed_ids == allowed and prompt.min_count == OPTION_COUNT and prompt.max_count == OPTION_COUNT
-	if not prompt.allowed_ids.is_empty() or prompt.min_count != 0 or prompt.max_count != 0:
-		return false
-	var partial := prompt.partial
-	var candidates: Variant = DictRead.to_int_array(DictRead.get_array(partial, "candidates"))
-	if candidates == null or (candidates as Array[int]).size() != OPTION_COUNT:
-		return false
-	var seen: Array[int] = []
-	for id: int in (candidates as Array[int]):
-		if seen.has(id) or not allowed.has(id):
-			return false
-		seen.append(id)
-	var computed := compute_options(s, candidates)
-	for field: String in ["options", "option_person_ids", "rng_after"]:
-		if CanonicalJson.stringify(partial.get(field)) != CanonicalJson.stringify(computed[field]):
-			return false
-	var expected_keys := 4
-	if prompt.stage == STAGE_CONFIRM:
-		expected_keys = 5
-		var chosen: Variant = partial.get("chosen_index")
-		if chosen is bool or not DictRead.is_int_like(chosen) or int(chosen) < 0 or int(chosen) >= OPTION_COUNT:
-			return false
-	return partial.size() == expected_keys
+	return prompt.stage == STAGE_MASTER and prompt.partial.is_empty() and prompt.allowed_ids == allowed and prompt.min_count == 1 and prompt.max_count == 1

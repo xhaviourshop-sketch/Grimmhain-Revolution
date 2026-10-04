@@ -63,8 +63,8 @@ func gm_set_role(id: int, role: String) -> void:
 	do(Command.gm_correction({"kind": "set_role", "target_id": id, "role_id": role, "reason": "Test", "confirmed": true}), "set_role %d" % id)
 
 
-## Spielt eine Nacht bis zum Tag durch. `victim` ist das Rudelopfer (-1 = kein Opfer). Andere Prompts werden mit
-## „nichts“ beantwortet (leere Auswahl, Nein).
+## Spielt eine Nacht bis zum Tag durch. `victim` ist das Rudelopfer (-1 = ruhige Nacht: Rudelschritt mit Grund übersprungen, kein Opfer).
+## Andere Prompts werden mit dem Mindestnötigen beantwortet.
 func night(victim: Variant = -1, card_answers: Array = []) -> void:
 	do(Command.start_night(), "StartNight")
 	night_rest(victim, card_answers)
@@ -78,9 +78,11 @@ func night_rest(victim: Variant = -1, card_answers: Array = []) -> void:
 		guard += 1
 		if state.pending_prompt != null:
 			var p := state.pending_prompt
-			if p.owner == PendingPrompt.OWNER_PACK:
-				var choice: Array = victim if victim is Array else ([victim] if int(victim) != -1 else [])
-				if not choice.is_empty() and not choice.all(func(v: int) -> bool: return p.allowed_ids.has(v)):
+			if p.owner == PendingPrompt.OWNER_PACK and victim is int and int(victim) == -1:
+				do(Command.skip_step(p.step_id, "Test: ruhige Nacht"), "pack übersprungen")
+			elif p.owner == PendingPrompt.OWNER_PACK:
+				var choice: Array = victim if victim is Array else [victim]
+				if not choice.all(func(v: int) -> bool: return p.allowed_ids.has(v)):
 					choice = [p.allowed_ids[0]]  # Karten können die Rudelwahl einschränken (Verrat)
 				do(Command.answer_prompt(p.id, choice), "pack")
 			elif p.owner == PendingPrompt.OWNER_CARD and next_answer < card_answers.size():

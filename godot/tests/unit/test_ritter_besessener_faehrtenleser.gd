@@ -70,7 +70,7 @@ func test_possessed_lynched_drags_chosen_person() -> void:
 	if not run.ok:
 		return
 	var p := run.state.pending_prompt
-	assert_true(p.allowed_ids.has(2) and not p.allowed_ids.has(1) and p.min_count == 0 and not p.cancellable, "auch Wölfe wählbar, Verzicht erlaubt, nicht abbrechbar")
+	assert_true(p.allowed_ids.has(2) and not p.allowed_ids.has(1) and p.min_count == 1 and not p.cancellable, "auch Wölfe wählbar, kein Verzicht, nicht abbrechbar")
 	cmds.append(Command.answer_prompt(p.id, [2]))
 	var r := _last(cmds)
 	if r != null:
@@ -96,15 +96,15 @@ func test_possessed_threshold_five_living_including_him() -> void:
 		assert_eq(run.state.reactions.size(), 0, "4 Lebende: keine Mitnahme")
 
 
-func test_possessed_night_death_at_dawn_decline_and_revive() -> void:
-	# Rudel frisst den Besessenen: Reaktion am Morgen, Verzicht; Wiederbelebung, zweiter Tod → erneut.
+func test_possessed_night_death_at_dawn_drag_and_revive() -> void:
+	# Rudel frisst den Besessenen: Reaktion am Morgen, Mitnahme; Wiederbelebung, zweiter Tod → erneut.
 	var cmds: Array[Command] = [_start([BW, "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]), Command.start_night(),
 		Command.answer_prompt(1, [1]), Command.end_night()]
 	var run := _run(cmds, "Nacht")
 	if not run.ok:
 		return
 	assert_eq(RulesEngine.next_step_id(run.state), "reaction:1", "Reaktion am Morgen fällig")
-	cmds.append_array([Command.begin_step("reaction:1"), Command.answer_prompt(2, []), _gm("revive", {"target_id": 1}), _gm("kill", {"target_id": 1, "trigger_effects": true})])
+	cmds.append_array([Command.begin_step("reaction:1"), Command.answer_prompt(2, [3]), _gm("revive", {"target_id": 1}), _gm("kill", {"target_id": 1, "trigger_effects": true})])
 	run = _run(cmds, "zweiter Tod")
 	if run.ok:
 		assert_eq(run.state.reactions.size(), 1, "nach Wiederbelebung erneut")

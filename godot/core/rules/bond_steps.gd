@@ -1,11 +1,11 @@
 class_name BondSteps
 extends RefCounted
 ## Mehrstufige Wahlschritte (DECISION-LOG „Rollenaudit · Bindungsrollen“ und „· Verwandlungsrollen“):
-##   Loki (nur Nacht 1): „targets“ (0 = Verzicht oder zwei verschiedene Lebende, er selbst erlaubt),
+##   Loki (nur Nacht 1): „targets“ (genau zwei verschiedene Lebende, er selbst erlaubt, kein Verzicht),
 ##     dann „mode“ (Ja = Liebende, Nein = Rivalen).
 ##   Rotkäppchen (jede Nacht): „targets“ (genau eine andere lebende Person), dann „grant“ (gewährt die
 ##     Person Zuflucht?). Ja: Todeskette ersetzt die bisherige, Apfel für die folgende Nacht; Nein: nichts.
-##   König Lykaon (bis zur Nutzung): „ally“ (ein anderer lebender Wolf; höchstens dreimal 0 = verschieben),
+##   König Lykaon (Nacht 1 bis 3, bis zur Nutzung): „ally“ (ein anderer lebender Wolf; 0 = verschieben in Nacht 1 und 2, Nacht 3 Pflicht),
 ##     dann „targets“ (eine lebende Dorfperson) → Trugbilderwolf mit alter Rolle als Scheinrolle.
 ##   Seelentauscher (bis zur Nutzung): „targets“ (0 oder zwei verschiedene Personen, lebend oder tot).
 ##   Kutscher (ab 10 Toten, bis zur Nutzung): „targets“ (0 oder drei Tote), dann „wolf“ (einer davon).
@@ -105,13 +105,13 @@ static func _first_stage(owner: StringName) -> StringName:
 static func _first_stage_shape(s: GameState, owner: StringName, actor_id: int) -> Array:
 	match owner:
 		PendingPrompt.OWNER_LOKI:
-			return [s.alive_ids(), 0, 2]
+			return [s.alive_ids(), 2, 2]  # Loki wählt immer genau zwei (DA-Nachtschritte-neu)
 		PendingPrompt.OWNER_RED:
 			var others := s.alive_ids()
 			others.erase(actor_id)
 			return [others, 1, 1]
 		PendingPrompt.OWNER_LYKAON:
-			var must := lycaon_skips(s.players[actor_id]) >= RoleCatalog.LYCAON_MAX_SKIPS
+			var must := s.night_number >= RoleCatalog.LYCAON_LAST_NIGHT
 			return [lycaon_allies(s, actor_id), 1 if must else 0, 1]
 	if owner == PendingPrompt.OWNER_COACH:
 		return [dead_ids(s), 0, RoleCatalog.COACH_REVIVALS]
@@ -175,7 +175,7 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 ## Zulässige Anzahlen der aktuellen Stufe. Loki, Seelentauscher, Kutscher, Nekromant: keiner oder alle.
 static func target_counts(prompt: PendingPrompt) -> Array[int]:
 	var out := prompt.count_range()
-	if prompt.stage == STAGE_TARGETS and prompt.max_count > 1:
+	if prompt.stage == STAGE_TARGETS and prompt.max_count > 1 and prompt.owner != PendingPrompt.OWNER_LOKI:
 		return out.filter(func(n: int) -> bool: return n == 0 or n == prompt.max_count)
 	return out
 

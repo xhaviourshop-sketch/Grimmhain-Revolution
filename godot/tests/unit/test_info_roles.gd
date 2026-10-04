@@ -73,13 +73,14 @@ func _to_step(s: GameState, key: String) -> GameState:
 func _auto(s: GameState) -> Command:
 	var p := s.pending_prompt
 	if p.stage == &"":
-		return Command.answer_prompt(p.id, [])
+		return Command.answer_prompt(p.id, Fixtures.pass_targets(s, p))
 	if p.stage == &"shown":
 		return Command.answer_choice(p.id, "shown", true)
 	return Command.answer_stage_targets(p.id, String(p.stage), p.allowed_ids.slice(0, p.min_count))
 
 
-## Rest der Nacht ohne Aktionen, dann Morgen.
+## Rest der Nacht ohne Aktionen, dann Morgen. Das Rudel muss töten: Sein Opfer wird am Morgen sofort wiederbelebt, damit der Tag mit allen
+## Lebenden beginnt wie in den Vorgaben der Tests.
 func _finish_night(s: GameState) -> GameState:
 	for guard: int in 40:
 		if s == null:
@@ -88,7 +89,11 @@ func _finish_night(s: GameState) -> GameState:
 			s = _ok(s, _auto(s), "kein Ziel")
 			continue
 		if RulesEngine.next_step_id(s) == "":
-			return _ok(s, Command.end_night(), "Morgen")
+			var victim := s.pack_target_id
+			s = _ok(s, Command.end_night(), "Morgen")
+			if s != null and victim != GameState.NO_TARGET and not s.players[victim].alive:
+				s = _ok(s, _gm("revive", {"target_id": victim}), "Rudelopfer wiederbelebt")
+			return s
 		s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Schritt")
 	fail("Nacht endet nicht")
 	return null
@@ -204,7 +209,7 @@ func test_dreamer_true_wolf_count_and_drop_without_enough_targets() -> void:
 	if t == null:
 		return
 	assert_true(_plan_has(t, "%s:2" % TD), "geplant")
-	var r := apply_ok(t, Command.answer_prompt(t.pending_prompt.id, []), "Rudel")
+	var r := apply_ok(t, Command.answer_prompt(t.pending_prompt.id, Fixtures.pass_targets(t, t.pending_prompt)), "Rudel")
 	assert_eq(_dropped_reason(r.events, "%s:2" % TD), "no_decision", "entfällt protokolliert")
 	assert_eq(RulesEngine.next_step_id(r.state), "", "kein weiterer Schritt")
 
@@ -212,7 +217,8 @@ func test_dreamer_true_wolf_count_and_drop_without_enough_targets() -> void:
 # --- Kopfgeldjäger --------------------------------------------------------------------------------
 
 func test_bounty_hunter_gets_one_list_per_wolf_lynch() -> void:
-	var s := _state([W, "blutwolf", "rudelvater", KG, D, "amalia", "detektiv", "wahnsinniger-kutscher"])
+	# Neun Personen: Ein Rudelopfer (jede Nacht) soll keine Wolfsparität erzeugen.
+	var s := _state([W, "blutwolf", "rudelvater", KG, D, "amalia", "detektiv", "wahnsinniger-kutscher", "nachtwaechter"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
 	assert_false(_plan_has(s, "%s:4" % KG), "ohne Lynch kein Schritt")
 	s = _finish_night(s)
@@ -229,7 +235,7 @@ func test_bounty_hunter_gets_one_list_per_wolf_lynch() -> void:
 	if s == null:
 		return
 	var p := s.pending_prompt
-	assert_eq(p.allowed_ids, [2, 3, 5, 7, 8] as Array[int], "andere Lebende")
+	assert_eq(p.allowed_ids, [2, 3, 5, 7, 8, 9] as Array[int], "andere Lebende")
 	apply_rejected(s, Command.answer_stage_targets(p.id, "targets", [5, 7, 8]), "no_wolf_selected", "Freigabe erst mit Wolf")
 	s = _ok(s, Command.answer_stage_targets(p.id, "targets", [2, 3, 5]), "zwei Wölfe erlaubt (I-06)")
 	r = apply_ok(s, Command.answer_choice(p.id, "shown", true), "Gezeigt")
@@ -252,7 +258,8 @@ func test_bounty_hunter_only_counts_real_wolf_lynch_while_holding_role() -> void
 
 
 func test_bounty_list_expires_with_notice_and_survives_block() -> void:
-	var s := _state([W, "blutwolf", KG, D, "amalia", "detektiv", "albtraumwolf"])
+	# Acht Personen: Ein Rudelopfer (jede Nacht) soll keine Wolfsparität erzeugen.
+	var s := _state([W, "blutwolf", KG, D, "amalia", "detektiv", "albtraumwolf", "nachtwaechter"])
 	s = _next_day(s)
 	var r := _lynch(s, 4, 1)
 	if r == null:
@@ -266,10 +273,10 @@ func test_bounty_list_expires_with_notice_and_survives_block() -> void:
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, [3]), "blockiert 3")
 	s = _finish_night_before_end(s)
 	assert_eq(int(s.bounty_credits.get(3, 0)) if s != null else -1, 1, "blockiert: Guthaben bleibt")
-	s = _ok(s, Command.end_night(), "Morgen")
+	s = _end_night_revived(s)
 	s = _ok(_ok(s, Command.decide_execution(-1), "keine"), Command.end_day(), "Ende")
 	# Nur noch Wolf 2, Kopfgeldjäger 3 und Dorfbewohner 4 leben → Liste verfällt mit Hinweis.
-	for id: int in [7, 5, 6]:
+	for id: int in [7, 5, 6, 8]:
 		s = _ok(s, _gm("kill", {"target_id": id, "trigger_effects": false}), "tot %d" % id)
 	r = apply_ok(s, Command.start_night(), "Nacht 3")
 	var all: Array[GameEvent] = r.events.duplicate()
@@ -277,7 +284,7 @@ func test_bounty_list_expires_with_notice_and_survives_block() -> void:
 	for guard: int in 10:
 		if s == null or s.phase != Phase.NIGHT or (s.pending_prompt == null and RulesEngine.next_step_id(s) == ""):
 			break
-		var cr := apply_ok(s, Command.answer_prompt(s.pending_prompt.id, []) if s.pending_prompt != null else Command.begin_step(RulesEngine.next_step_id(s)), "weiter")
+		var cr := apply_ok(s, Command.answer_prompt(s.pending_prompt.id, Fixtures.pass_targets(s, s.pending_prompt)) if s.pending_prompt != null else Command.begin_step(RulesEngine.next_step_id(s)), "weiter")
 		all.append_array(cr.events)
 		s = cr.state
 	assert_eq(_dropped_reason(all, "%s:3" % KG), "no_decision", "ohne genug Ziele entfallen")
@@ -353,8 +360,18 @@ func test_warrior_wrong_dies_at_dawn() -> void:
 	s = _ok(s, Command.answer_choice(s.pending_prompt.id, "shown", true), "Gezeigt")
 	assert_true(s != null and s.players[3].alive, "nachts noch am Leben")
 	var r := apply_ok(_finish_night_before_end(s), Command.end_night(), "Morgen")
-	var died := events_of_type(r.events, "SeatDied")
+	# Das Rudel tötet jede Nacht zusätzlich (NIGHT_KILL); gezählt wird nur der Tod durch den Irrtum der Kriegerin.
+	var died := events_of_type(r.events, "SeatDied").filter(func(e: GameEvent) -> bool: return String(e.data["cause"]) != "NIGHT_KILL")
 	assert_true(died.size() == 1 and int(died[0].data["target_id"]) == 3 and String(died[0].data["cause"]) == "WARRIOR_WRONG", "stirbt am Morgen")
+
+
+## Nacht beenden; das Rudelopfer wird am Morgen sofort wiederbelebt (siehe `_finish_night`).
+func _end_night_revived(s: GameState) -> GameState:
+	var victim := s.pack_target_id
+	s = _ok(s, Command.end_night(), "Morgen")
+	if s != null and victim != GameState.NO_TARGET and not s.players[victim].alive:
+		s = _ok(s, _gm("revive", {"target_id": victim}), "Rudelopfer wiederbelebt")
+	return s
 
 
 func _finish_night_before_end(s: GameState) -> GameState:
@@ -383,7 +400,8 @@ func test_sacrificed_person_sleeps_rest_of_night() -> void:
 	assert_true(r.state.players[3].alive, "Opfer lebt bis zum Morgen")
 	_codec_same(r.state, "Markierung")
 	r = apply_ok(r.state, Command.end_night(), "Morgen")
-	var died := events_of_type(r.events, "SeatDied")
+	# Das Rudel tötet jede Nacht zusätzlich (NIGHT_KILL); gezählt wird nur der Tod durch die Markierung.
+	var died := events_of_type(r.events, "SeatDied").filter(func(e: GameEvent) -> bool: return String(e.data["cause"]) != "NIGHT_KILL")
 	assert_true(died.size() == 1 and String(died[0].data["cause"]) == "BLOOD_SACRIFICE" and int(died[0].data["source_id"]) == 2, "Blutopfer am Morgen")
 
 
@@ -590,7 +608,7 @@ func test_shadow_hound_blocks_shared_village_steps() -> void:
 	for guard: int in 10:
 		if s.pending_prompt == null and RulesEngine.next_step_id(s) == "":
 			break
-		var cr := apply_ok(s, Command.answer_prompt(s.pending_prompt.id, []) if s.pending_prompt != null else Command.begin_step(RulesEngine.next_step_id(s)), "weiter")
+		var cr := apply_ok(s, Command.answer_prompt(s.pending_prompt.id, Fixtures.pass_targets(s, s.pending_prompt)) if s.pending_prompt != null else Command.begin_step(RulesEngine.next_step_id(s)), "weiter")
 		events.append_array(cr.events)
 		s = cr.state
 	assert_eq(_dropped_reason(events, "die-gebundenen"), "blocked", "Gebundene blockiert")

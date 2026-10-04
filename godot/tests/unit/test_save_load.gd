@@ -6,7 +6,7 @@ func _commands_until_night_two() -> Array[Command]:
 	return [
 		Fixtures.start_manual(6, [1, 2], 99),
 		Command.start_night(),
-		Command.answer_prompt(1, []),  # kein Opfer, damit keine Parität entsteht
+		Command.skip_step("night:1:0:pack", "kein Opfer"),  # ruhige Nacht (Rudelschritt übersprungen), damit keine Parität entsteht
 		Command.end_night(),
 		Command.nominate(3, 5),
 		Command.decide_execution(5),

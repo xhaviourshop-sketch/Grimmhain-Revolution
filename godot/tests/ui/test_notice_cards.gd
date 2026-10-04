@@ -66,7 +66,7 @@ func test_loki_cards_show_only_the_own_partner_and_are_confirmed_one_by_one() ->
 	assert_eq(str(next["text_key"]), "ui.notice.loki_bond.love", "Text für Liebende")
 	assert_eq((next["viewers"] as Array).map(func(v: Dictionary) -> int: return int(v["person_id"])), [3], "erste Karte für Person 3")
 	assert_eq(int((next["values"] as Dictionary)["partner"]["person_id"]), 5, "Partner ist Person 5")
-	assert_true(find_button(screen, "ShowNoticeButton") != null and find_button(screen, "AckNoticeButton") != null, "Zeigen und Bestätigen bedienbar")
+	assert_true(find_button(screen, "ShowNoticeButton") != null and find_node(screen, "AckNoticeButton") == null, "nur Zeigen; Schließen der Karte bestätigt")
 	_assert_no_role_names(_texts(screen), "Hinweiskarte der Spielleitung")
 	await press(find_button(screen, "ShowNoticeButton"))
 	var layer := find_node(screen, "NoticeLayer")
@@ -76,8 +76,7 @@ func test_loki_cards_show_only_the_own_partner_and_are_confirmed_one_by_one() ->
 	assert_false(shown.contains("3 · C"), "nennt nicht die betrachtende Person selbst als Dritte")
 	assert_false(shown.contains("2 · B"), "nennt nicht Loki")
 	_assert_no_role_names(shown, "gezeigte Karte")
-	await press(find_button(layer, "CloseLayerButton"))
-	await press(find_button(screen, "AckNoticeButton"))
+	await press(find_button(layer, "CloseLayerButton"))  # Schließen der gezeigten Karte bestätigt sie
 	next = UiGame.next_of(s)
 	assert_eq(str(next["kind"]), "notice", "zweite Karte")
 	assert_eq(int(((next["viewers"] as Array)[0] as Dictionary)["person_id"]), 5, "für Person 5")
@@ -138,7 +137,6 @@ func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
 	var first := _texts(find_node(screen, "NoticeLayer"))
 	assert_false(first.contains("3 · C") or first.contains("4 · D"), "erste Phase nennt keine Namen: %s" % first)
 	await press(find_button(find_node(screen, "NoticeLayer"), "CloseLayerButton"))
-	await press(find_button(screen, "AckNoticeButton"))
 	next = UiGame.next_of(s)
 	assert_eq(str(next["kind"]), "begin_step", "danach kein zweiter Hinweis, sondern der Schritt")
 	assert_eq(str(next["role_id"]), "piper-all", "Schritt „Alle Verzauberten“")
@@ -179,7 +177,7 @@ func test_plague_notice_at_night_and_after_the_spread_and_hidden_until_revealed(
 
 # --- Rotkäppchen ------------------------------------------------------------------------------------
 
-func test_refuge_card_explains_apple_and_chain_and_hides_the_asker() -> void:
+func test_refuge_card_asks_the_person_and_hides_the_asker() -> void:
 	var shell := await _cockpit([W, "rotkaeppchen", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
@@ -196,8 +194,12 @@ func test_refuge_card_explains_apple_and_chain_and_hides_the_asker() -> void:
 	var text := _texts(find_node(current_screen(shell), "ActionCard"))  # nur die Karte, der Sitzkreis nennt alle Namen öffentlich
 	assert_false(text.contains("Rotkäppchen"), "nennt nicht die Rolle: %s" % text)
 	assert_false(text.contains("2 · B"), "nennt nicht die fragende Person")
-	assert_true(text.contains("Apfel") and text.contains("verkettet"), "erklärt Apfel und Kette: %s" % text)
-	assert_true(text.contains("4 · D"), "nennt die gefragte Person")
+	assert_true(text.contains("Zuflucht") and text.contains("gewähren oder ablehnen"), "Schablone: ein Satz und eine Hilfe: %s" % text)
+	assert_true(text.contains("4 · D"), "nennt die gefragte Person: %s" % text)
+	assert_true(text.contains("Apfel") and text.contains("Todeskette"), "ein Hilfesatz zu Apfel und Kette: %s" % text)
+	assert_false(text.contains("ui.role") and text.contains("erwache"), "keine Ansagezeile mit leerer Rolle: %s" % text)
+	var ring := find_node(current_screen(shell), "SeatRing")
+	assert_eq(String(ring.call("token_for", 4).get("state")), "actor", "die gefragte Person ist am Sitzkreis markiert")
 	var screen := current_screen(shell)
 	assert_true(find_button(screen, "YesButton") != null and find_button(screen, "NoButton") != null, "Zustimmen und Ablehnen bedienbar")
 	assert_true(s.answer_choice(true).ok, "Zustimmung")

@@ -46,7 +46,7 @@ static func start_night() -> Command:
 	return create(START_NIGHT)
 
 
-## targets: leeres Array = ausdrücklich „kein Opfer“.
+## targets: leeres Array = Verzicht, nur wo die Karte ihn vorsieht (min_count 0); sonst `invalid_target_count`.
 static func answer_prompt(prompt_id: int, targets: Array) -> Command:
 	return create(ANSWER_PROMPT, {"prompt_id": prompt_id, "targets": targets})
 

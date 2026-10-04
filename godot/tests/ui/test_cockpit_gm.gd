@@ -79,8 +79,7 @@ func test_undo_and_redo_with_plain_text() -> void:
 	if shell == null:
 		return
 	await _press(shell, "StartNightButton")
-	await press(_seat(shell, 4))
-	await _press(shell, "ConfirmTargetsButton")
+	await press(_seat(shell, 4))  # feste Anzahl: sofort übernommen
 	await _press(shell, "GmButton")
 	var undo := find_button(current_screen(shell), "UndoButton")
 	assert_eq(undo.text, "Rückgängig: Antwort im Schritt Schutzengel", "Klartext des Rücknehmbaren")
@@ -91,13 +90,13 @@ func test_undo_and_redo_with_plain_text() -> void:
 	# Undo setzt nur den Spielstand zurück; Gezeigtes oder Angesagtes bleibt den Spielern bekannt.
 	assert_true(text_of(find_node(dialog, "MessageLabel") as Control).contains("bleibt den Spielern bekannt"), "Grenze von Rückgängig genannt")
 	await press(find_node(dialog, "ConfirmButton") as BaseButton)
-	var next: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
+	var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 	assert_eq(str(next["owner"]), "schutzengel", "Schutzengel-Prompt wieder offen")
 	await _press(shell, "GmButton")
 	await _press(shell, "RedoButton")
 	await press(find_node(dialog, "ConfirmButton") as BaseButton)
-	next = (session_of(shell).call("cockpit_view") as Dictionary)["next"]
-	assert_eq(str(next["kind"]), "begin_step", "Antwort wiederhergestellt")
+	next = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
+	assert_eq(str(next["owner"]), "pack", "Antwort wiederhergestellt: der nächste Schritt (Rudel) ist offen")
 
 
 func test_set_role_and_declare_winner() -> void:

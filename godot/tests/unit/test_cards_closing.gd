@@ -50,7 +50,7 @@ func test_exchange_cannot_be_confirmed_a_second_time() -> void:
 
 ## Spielt den Phoenix der Besitzerin 12 und liefert Würfelnotiz und Tag des Spielens. `at_day_end` spielt im zweiten Fenster.
 func _phoenix(seed_value: int, at_day_end: bool) -> Array:
-	var g := _game({}, seed_value)
+	var g := CardGame.started(self, COUNT, WOLVES, seed_value)
 	for id: int in [5, 6, 7, 8]:
 		g.gm_kill(id, false)
 	g.arm(VILLAGE_OWNER, &"loki_10", -1, not at_day_end)
@@ -155,7 +155,7 @@ func test_notanker_master_keeps_acting_and_the_win_check_counts_him_as_dead() ->
 			break
 		if p != null:
 			if p.owner == PendingPrompt.OWNER_PACK:
-				g.do(Command.answer_prompt(p.id, []), "Rudel")
+				g.do(Command.skip_step(p.step_id, "Test: ruhige Nacht"), "Rudel")
 			else:
 				g.answer_default(p)
 		elif RulesEngine.next_step_id(g.state) != "":

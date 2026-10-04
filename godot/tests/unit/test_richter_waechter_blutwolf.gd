@@ -162,15 +162,10 @@ func test_gatewarden_blocks_wolf_child_transformation() -> void:
 func test_gatewarden_blocks_apprentice_wolf_inheritance_only() -> void:
 	# 1 Werwolf, 2 Wächter, 3 Lehrling wählt den Werwolf; 1 stirbt → 3 wird Dorfbewohner.
 	var cmds: Array[Command] = [_start(["werwolf", WT, "lehrling", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"]),
-		Command.start_night(), Command.answer_stage_targets(1, "candidates", [1, 5, 6])]
-	var run := _run(cmds, "Kandidaten")
-	if not run.ok:
-		return
-	var options: Array = run.state.pending_prompt.partial["options"]
-	cmds.append_array([Command.create(Command.ANSWER_PROMPT, {"prompt_id": 1, "stage": "option", "option": options.find("werwolf")}),
-		Command.answer_choice(1, "confirm", true), Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(),
+		Command.start_night(), Command.answer_stage_targets(1, "master", [1])]
+	cmds.append_array([Command.skip_step("night:1:1:pack", "kein Opfer"), Command.end_night(),
 		Command.nominate(5, 1), Command.decide_execution(1)])
-	run = _run(cmds, "Erbe")
+	var run := _run(cmds, "Erbe")
 	if run.ok:
 		assert_true(run.state.players[3].role_id == &"dorfbewohner" and not run.state.players[3].counts_as_wolf, "Erbe einer Wolfsrolle blockiert")
 		var loaded := StateCodec.decode(StateCodec.encode(run.state, cmds))
