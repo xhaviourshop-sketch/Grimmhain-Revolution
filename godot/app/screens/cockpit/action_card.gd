@@ -92,16 +92,22 @@ func _init() -> void:
 	_undo_bar = HBoxContainer.new()
 	_undo_bar.name = "UndoBar"
 	_undo_bar.visible = false
-	_undo_bar.alignment = BoxContainer.ALIGNMENT_END
+	_undo_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL  # volle Breite, einzeilig: Text links, „Rückgängig“ rechts
+	_undo_bar.size_flags_vertical = Control.SIZE_SHRINK_END
 	_undo_bar.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	var undo_label := GrimmLabel.new()
 	undo_label.name = "UndoLabel"
 	undo_label.text_key = "ui.night.undo.done"
 	undo_label.theme_type_variation = &"MutedLabel"
+	undo_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	undo_label.wrap = false
+	undo_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_undo_bar.add_child(undo_label)
 	_undo_button = GrimmButton.new()
 	_undo_button.name = "UndoBarButton"
 	_undo_button.kind = GrimmButton.Kind.COMPACT
+	_undo_button.custom_minimum_size.x = 140.0  # sonst bricht der Text Zeichen für Zeichen um und die Leiste wird hoch
+	_undo_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_undo_button.text_key = "ui.night.undo.button"
 	_undo_button.pressed.connect(func() -> void:
 		if _undo_bar.visible and not _undo_button.disabled:
