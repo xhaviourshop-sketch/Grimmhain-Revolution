@@ -531,6 +531,9 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 		PendingPrompt.OWNER_ORACLE:
 			if p.stage == OracleStep.STAGE_TARGET:
 				return Command.answer_stage_targets(p.id, String(p.stage), [_pick(_alive_in(s, p.allowed_ids, p.actor_id))])
+			if CardHooks.false_info_pending(s, p.actor_id) and not bool(p.partial.get("overridden", false)):  # CM-08: Pflicht immer erfüllen
+				var shown := String(p.partial.get("shown_role", ""))
+				return Command.override_shown_role(p.id, "werwolf" if shown == "dorfbewohner" else "dorfbewohner", "Fuzz: Pflicht")
 			if _rng.randf() < 0.1 and _override_allowed(p):
 				return Command.override_shown_role(p.id, "dorfbewohner", "Fuzz: Übersteuerung")
 			return Command.answer_choice(p.id, String(p.stage), true)
