@@ -359,6 +359,14 @@ func hide_undo() -> void:
 		undo_changed.emit()
 
 
+## Solange eine Ebene (Protokoll, Schublade, Karte) offen ist, liegt kein „mehr“-Hinweis der Aktionskarte darüber.
+func set_hint_suspended(suspended: bool) -> void:
+	if _hint != null:
+		_hint.set_process(not suspended)
+		if suspended:
+			_hint.visible = false
+
+
 func undo_visible() -> bool:
 	return _undo_bar != null and _undo_bar.visible
 
@@ -489,6 +497,8 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 			continue
 		_text("ui.cockpit.card.info_line", {"label": StringName(CockpitText.info_key(str(line["key"]))), "value": CockpitText.info_value(line)}, &"WarningLabel")
 	_warnings(context)
+	if role == "kriegerin-des-lichts" and str(context.get("victim_names", "")) != "" and not anonymous:
+		_text("ui.cockpit.card.victim", {"names": str(context["victim_names"])}, &"WarningLabel").name = "VictimLine"
 	if owner == "kartenschlucker":
 		_swallower_status(next)
 	var buttons: Array[Control] = []
@@ -733,14 +743,20 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 	execute.disabled = (next.get("execution_candidates", []) as Array).is_empty() or bool(next.get("execution_cancelled", false))
 	var nominate := _button("NominateButton", "ui.cockpit.action.nominate", GrimmButton.Kind.SECONDARY, &"start_nominate")
 	nominate.disabled = (next.get("nominator_ids", []) as Array).is_empty()  # alle haben schon nominiert: still gesperrt
-	var day_buttons: Array[Control] = [
-		nominate,
-		execute,
-		_button("NoExecutionButton", "ui.cockpit.action.no_execution", GrimmButton.Kind.SECONDARY, &"no_execution"),
-	]
+	# Sichtbar von oben nach unten: „Nominieren“, weitere Aktionen, Abstand, „Keine Hinrichtung“ (folgenreich, darum abgesetzt).
+	var day_buttons: Array[Control] = [nominate, execute]
 	day_buttons.append_array(extra_buttons)
 	if bool(next.get("cards", false)):
 		day_buttons.append(_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"))
+	var gap := Control.new()
+	gap.name = "ActionGap"
+	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	gap.custom_minimum_size = Vector2(DAY_ACTION_MIN_WIDTH, ThemeTokens.SPACE_M)
+	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	day_buttons.append(gap)
+	day_buttons.append(_button("NoExecutionButton", "ui.cockpit.action.no_execution", GrimmButton.Kind.SECONDARY, &"no_execution"))
+	if not _left_handed:
+		day_buttons.reverse()  # Rechtshänder: `_apply_hand` kehrt die Reihenfolge um
 	_actions(day_buttons)
 
 
@@ -871,7 +887,7 @@ func _execution_check(context: Dictionary) -> void:
 	confirm.disabled = not ready
 	buttons.append(confirm)
 	buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))
-	_actions(buttons)
+	_actions(buttons, true)  # „Hinrichten“ steht in der Karte neben „Abbrechen“, nicht zusätzlich im Dock
 
 
 ## Hinweise zu Kartenwirkungen auf die Hinrichtung; gibt zurück, ob mindestens einer angezeigt wurde.
@@ -1175,9 +1191,9 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 	return b
 
 
-func _actions(buttons: Array[Control]) -> void:
+func _actions(buttons: Array[Control], all_in_card: bool = false) -> void:
 	for b: Control in buttons:
-		if primary_host != null and _primary == null and b is GrimmButton and (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY:
+		if not all_in_card and primary_host != null and _primary == null and b is GrimmButton and (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY:
 			_primary = b as GrimmButton
 			primary_host.add_child(b)
 			continue

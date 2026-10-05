@@ -263,3 +263,21 @@ func test_undo_drops_open_execution_check() -> void:
 	assert_true(find_node(current_screen(shell), "ConfirmExecutionButton") == null, "keine veraltete Prüfkarte")
 	assert_false(_texts(shell).contains("Keine Besonderheit"), "keine veraltete Vorschau")
 	assert_true(find_node(current_screen(shell), "NominateButton") != null, "Tageskarte des neuen Zustands")
+
+
+## Nach einer Nominierung zeigt das Dock „Rückgängig“, sobald die 3-Sekunden-Leiste der Karte abgelaufen ist.
+func test_dock_undo_is_visible_after_nomination() -> void:
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	await _press(shell, "NominateButton")
+	await press(_seat(shell, 3))
+	await press(_seat(shell, 1))
+	await _press(shell, "ConfirmNominationButton")
+	await frames(3)
+	var dock := find_node(shell, "DockUndoButton") as Control
+	var bar := find_node(shell, "UndoBar") as Control
+	assert_true(dock.is_visible_in_tree() or (bar != null and bar.is_visible_in_tree()), "Rückgängig sofort erreichbar (Dock oder Leiste)")
+	await wait_seconds(3.4)
+	assert_true(dock.is_visible_in_tree(), "Rückgängig im Dock nach Ablauf der Leiste")
