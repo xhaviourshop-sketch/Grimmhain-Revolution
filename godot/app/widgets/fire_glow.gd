@@ -17,14 +17,15 @@ const BASE_SPARKS := 8
 const SPARK_SPEED := Vector2(14.0, 30.0)  ## Funkentempo bei Stufe 1 (kleinste, größte); höhere Stufen steigen etwas schneller
 const SPARK_LIFETIME := 3.0
 const SPARK_SCALE := Vector2(0.05, 0.1)  ## Größe im Verhältnis zum weichen Glühbild (128 Pixel)
-## Stile (nur Vergleich für die Wahl, Standard bleibt `fire`): Farben je Stufe I bis IV und Besonderheiten.
-## `ghost`: blaues Geisterfeuer. `ember`: Glut mit Rauch (ruhiger, rote Glut, graue Rauchfahnen).
+## Stile: Farben je Stufe I bis IV und Besonderheiten. `ghost`: blaues Geisterfeuer. `ember`: Glut mit Rauch (ruhiger, rote Glut, graue Rauchfahnen).
+## Standard (DA-101): Akt I bis III `fire`, Akt IV `ghost` mit denselben Stärkewerten der Stufe 4.
 const STYLES := {
 	&"fire": {"flame": ThemeTokens.FIRE_FLAME, "core": ThemeTokens.FIRE_CORE, "calm": 1.0, "dim": 1.0, "lift": 1.0, "smoke": false},
 	&"ghost": {"flame": ThemeTokens.FIRE_GHOST_FLAME, "core": ThemeTokens.FIRE_GHOST_CORE, "calm": 1.0, "dim": 1.0, "lift": 1.0, "smoke": false},
 	&"ember": {"flame": ThemeTokens.FIRE_EMBER_FLAME, "core": ThemeTokens.FIRE_EMBER_CORE, "calm": 0.45, "dim": 0.6, "lift": 0.25, "smoke": true},
 }
 static var style: StringName = &"fire"  ## aktiver Stil; nur das Screenshot-Werkzeug stellt ihn um
+const TOP_LEVEL_STYLE := &"ghost"  ## Stil der höchsten Stufe (Akt IV), solange der Standardstil `fire` gilt
 const SHADER := """
 shader_type canvas_item;
 uniform vec4 flame_color : source_color = vec4(1.0, 0.3, 0.05, 1.0);
@@ -117,7 +118,8 @@ static func create(part: String, margins: Vector4, p_level: int) -> FireGlow:
 ## Werte einer Stufe (1 bis 4) im aktiven Stil: jede Größe wächst linear mit der Stufe, Akt IV ist also viermal so stark wie Akt I.
 static func _params(p_level: int) -> Dictionary:
 	var l := float(clampi(p_level, 1, 4))
-	var def: Dictionary = STYLES[style] if STYLES.has(style) else STYLES[&"fire"]
+	var active := TOP_LEVEL_STYLE if style == &"fire" and int(l) == 4 else style
+	var def: Dictionary = STYLES[active] if STYLES.has(active) else STYLES[&"fire"]
 	var calm := float(def["calm"])
 	return {"reach": BASE_REACH * l, "strength": BASE_STRENGTH * l, "bright": BASE_BRIGHT * l * float(def["dim"]), "lift": float(def["lift"]), "amp": BASE_AMP * l * calm, "speed": BASE_SPEED * l * calm,
 		"sparks": BASE_SPARKS * int(l), "velocity": SPARK_SPEED * (0.75 + 0.25 * l), "smoke": bool(def["smoke"]),

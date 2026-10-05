@@ -76,6 +76,26 @@ static func log_drawer(events: Array, seats: Array) -> Control:
 	return drawer
 
 
+## Teamsymbol vor einem gezeigten Ergebnis (DA-101): Zahl der Wölfe, Wolf ja/nein, Einzelsieg.
+const SHOW_TEAMS := {"wolf_count": &"wolves", "is_wolf": &"wolves", "solo_count": &"solo", "solo": &"solo"}
+const SHOW_ICON := 96.0
+
+
+## Ergebniszeichen der gezeigten Karte: Haken (Mondsilber) für Ja, Kreuz (Blutrot) für Nein.
+class ResultMark extends Control:
+	var yes: bool = false
+
+	func _draw() -> void:
+		var r := Rect2(Vector2.ZERO, size).grow(-size.x * 0.12)
+		var width := maxf(size.x * 0.1, 6.0)
+		if yes:
+			draw_polyline(PackedVector2Array([r.position + Vector2(0.0, r.size.y * 0.55), r.position + Vector2(r.size.x * 0.38, r.size.y * 0.9),
+				r.position + Vector2(r.size.x, r.size.y * 0.1)]), ThemeTokens.MOON_SILVER_BRIGHT, width, true)
+		else:
+			draw_line(r.position, r.end, ThemeTokens.BLOOD_RED, width, true)
+			draw_line(Vector2(r.end.x, r.position.y), Vector2(r.position.x, r.end.y), ThemeTokens.BLOOD_RED, width, true)
+
+
 ## Karte für die handelnde Person: Rollenname und ausschließlich die freigegebenen Werte. Erhält nur
 ## diese beiden Angaben, nie den ganzen Prompt (Wahrheit, Teilantworten).
 static func show_card(role_id: String, lines: Array) -> Control:
@@ -90,13 +110,36 @@ static func show_card(role_id: String, lines: Array) -> Control:
 	title.add_theme_font_size_override(&"font_size", ThemeTokens.FONT_SHOW_TITLE)
 	for line: Dictionary in lines:
 		_label(column, CockpitText.info_key(str(line["key"])), {}, &"ShowCaptionLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		var row := HBoxContainer.new()
+		row.name = "ShowResult_%s" % str(line["key"])
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+		column.add_child(row)
+		var team: StringName = SHOW_TEAMS.get(str(line["key"]), &"")
+		if team != &"" and NightArt.team(team) != null:
+			var icon := TextureRect.new()
+			icon.texture = NightArt.team(team)
+			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icon.custom_minimum_size = Vector2(SHOW_ICON, SHOW_ICON)
+			icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			row.add_child(icon)
+		if str(line["kind"]) == "bool":
+			# Ja/Nein als Zeichen (Haken bzw. Kreuz) statt Wort; die Bedienungshilfe nennt das Wort.
+			var mark := ResultMark.new()
+			mark.yes = bool(line["value"])
+			mark.custom_minimum_size = Vector2(SHOW_ICON, SHOW_ICON) * 1.4
+			mark.accessibility_name = TranslationServer.translate("ui.common.yes" if mark.yes else "ui.common.no")
+			row.add_child(mark)
+			continue
 		var value := GrimmLabel.new()
 		value.theme_type_variation = &"ShowNumberLabel"
 		value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var shown: Variant = CockpitText.info_value(line)
 		value.format_values = {"value": shown}
 		value.text_key = "ui.cockpit.show.value"
-		column.add_child(value)
+		value.size_flags_horizontal = Control.SIZE_EXPAND_FILL if team == &"" else Control.SIZE_FILL
+		row.add_child(value)
 	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
 	return root
 

@@ -11,6 +11,7 @@ const BUTTON_SIZE_SECONDARY := Vector2(144.0, 56.0)
 const BUTTON_TEXT_INSET := 28.0   ## so weit reichen die Spitzen und Wurzeln in den Knopf; der Text bleibt innerhalb
 const BACK_SIZE := 56.0           ## Zurück-Platte: Tippfläche mindestens 56
 const CARD_INSET := Vector4(28.0, 18.0, 28.0, 18.0)  ## Textabstand der Aktionskarte (links, oben, rechts, unten)
+const CARD_INSET_MINI := Vector4(18.0, 12.0, 14.0, 14.0)  ## Mini-Nachtkarte (DA-101): schmaler Rahmen, mehr Platz für Name und Aktion
 const TINT_HOVER := Color(1.14, 1.1, 1.06)
 const TINT_PRESSED := Color(0.74, 0.72, 0.74)
 const TINT_FOCUS := Color(1.22, 1.24, 1.32)
@@ -31,15 +32,15 @@ static func texture(part: String) -> Texture2D:
 
 
 ## Rahmen der Aktionskarte; null, wenn das Bild fehlt.
-static func card_box() -> StyleBox:
+static func card_box(inset: Vector4 = CARD_INSET) -> StyleBox:
 	var tex := texture("card_frame")
 	if tex == null:
 		return null
 	var box := GroveStyleBox.make(tex, GroveArtData.CARD_FRAME_MARGINS)
-	box.content_margin_left = CARD_INSET.x
-	box.content_margin_top = CARD_INSET.y
-	box.content_margin_right = CARD_INSET.z
-	box.content_margin_bottom = CARD_INSET.w
+	box.content_margin_left = inset.x
+	box.content_margin_top = inset.y
+	box.content_margin_right = inset.z
+	box.content_margin_bottom = inset.w
 	return box
 
 

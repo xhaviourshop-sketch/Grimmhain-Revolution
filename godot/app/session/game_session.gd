@@ -102,6 +102,18 @@ func cockpit_view() -> Dictionary:
 	return CockpitView.build(_state)
 
 
+## Warnungen der Mini-Nachtkarte zur Karte `next` und der aktuellen Auswahl (nur Spielleitung), siehe NightWarnings.
+func night_warnings(next: Dictionary, selection: Array) -> Array:
+	return NightWarnings.build(_state, next, selection)
+
+
+## Nur Rollen-Vorschau (Einstellungen): ändert den Zustand einer Wegwerf-Partie ohne Befehl, um einen Sonderfall (z. B. Schutz,
+## Liebende) zu zeigen. Nie in echten Partien; die Vorschau speichert nichts. `change` erhält den GameState.
+func preview_apply(change: Callable) -> void:
+	change.call(_state)
+	view_changed.emit(view())
+
+
 ## Morgenbericht der letzten Nacht (öffentlicher und privater Teil getrennt), siehe MorningReport.
 func morning_report() -> Dictionary:
 	return MorningReport.build(_state, _events)

@@ -46,7 +46,7 @@ func test_first_night_only_role_is_announced_on_the_first_card_of_later_nights()
 	assert_eq(next["decoys"], ["loki"], "Loki hat keinen Schritt mehr und wird nur angesagt")
 	var card := _render(next)
 	assert_eq(_decoy_names(card), tr(CockpitText.role_name("loki")), "Tarnaufruf steht in einer Zeile auf der Karte")
-	assert_true(_has_key(card, "ui.night.decoys"), "als Ansage gekennzeichnet")
+	assert_true(_has_key(card, "ui.night.mini.decoys"), "als Ansage gekennzeichnet (Mini-Karte: „Erst ansagen“)")
 	# Nach dem Schritt des Schutzengels steht der Tarnaufruf nicht mehr an.
 	assert_true(UiGame.step(s) == "prompt", "Schutzengel antwortet")
 	var after := UiGame.next_of(s)

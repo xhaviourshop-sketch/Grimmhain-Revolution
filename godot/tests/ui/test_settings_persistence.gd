@@ -232,7 +232,7 @@ func test_settings_file_holds_no_game_data_and_game_untouched() -> void:
 	assert_true(data is Dictionary, "Einstellungsdatei ist JSON")
 	var keys: Array = (data as Dictionary).keys()
 	keys.sort()
-	assert_eq(keys, ["format", "language", "left_handed", "reduced_motion", "show_night_timer", "version"], "nur Geräteeinstellungen")
+	assert_eq(keys, ["format", "language", "left_handed", "reduced_motion", "show_calls", "show_night_timer", "version"], "nur Geräteeinstellungen")
 	assert_eq(int(ctx.settings_store.last_status.get("ok", false)), 1, "letztes Speichern erfolgreich")
 	TranslationServer.set_locale("de")
 

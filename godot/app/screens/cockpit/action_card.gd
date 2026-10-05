@@ -8,7 +8,9 @@ extends VBoxContainer
 ## Geheime Karten (`secret`) zeigt die Karte außerhalb der Nacht verdeckt, bis `revealed` gesetzt
 ## ist. Verdeckt entstehen keine Knoten mit geheimem Inhalt.
 ##
-## Nacht-Schablone (DA Nachtschritte neu): Titel (die Fähigkeit in 1 Satz), darunter bis zu 3 kurze Regelzeilen der Rolle (`NightRules`, ohne Bedienwörter); Ansage und Aktion stehen auf
+## Mini-Nachtkarte (DA-101, ersetzt die Regelzeilen): Rollensymbol und eine Zeile „Name · Rolle · Aktion“ (1 bis 3 Wörter, `ui.night.<besitzer>.<stufe>.short`),
+## darunter nur, was gerade nötig ist: zuschaltbare Ansage („Ansagen anzeigen“), Teilantworten, bis zu 3 rote Warnungen (`NightWarnings`) und die nötigen
+## Knöpfe. Regeltext nur hinter dem „i“. Die Karte ist schmal (`is_compact`), das Cockpit setzt sie an den Rand der freien Ringmitte. Ansage und Aktion stehen auf
 ## demselben Bildschirm (ein Schritt ohne Prompt-Vorschau zeigt nur „Weiter“). Eine feste Anzahl wird vom Cockpit sofort übernommen
 ## (`CockpitText.auto_commit`), dann zeigt die Karte 3 Sekunden „Rückgängig“ (`show_undo`). Verzichten gibt es nur, wo die Karte es
 ## vorsieht (ein Knopf, „Nicht heute“). Karte zeigen genau einmal: Das Schließen der gezeigten Karte erledigt den Schritt.
@@ -46,6 +48,8 @@ var _undo_bar: HBoxContainer = null  ## „Übernommen. Rückgängig“ für wen
 var _undo_button: GrimmButton = null
 var _undo_serial: int = 0  ## unterscheidet das laufende vom früheren Einblenden (der Ablauf des alten Timers blendet nichts aus)
 var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel beginnen“ (der Cockpit-Rahmen blendet den Kartenrahmen aus)
+var _compact: bool = false  ## Mini-Nachtkarte (DA-101): schmal, ohne Scrollen, nur Zeile, Warnungen und Knöpfe
+var _mini_row: HBoxContainer = null  ## obere Zeile der Mini-Karte; dort steht auch der „i“-Knopf
 
 const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
 const SIDE_BY_SIDE_WIDTH := 560.0  ## ab dieser Kartenbreite stehen Zielplatz und Nebenaktionen in einer Zeile
@@ -54,9 +58,8 @@ const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Ve
 const FIT_MIN_FONT := 15  ## kleinste Schrift des Kartentexts (logische Einheiten)
 const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (epischer Knopf, `EpicButton`)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
+const MINI_SYMBOL := 34.0  ## Rollensymbol der Mini-Nachtkarte
 const UNDO_SECONDS := 3.0  ## so lange bleibt „Rückgängig“ nach einer sofort übernommenen Auswahl sichtbar
-## Gruppenrufe: Die Namen der Beteiligten stehen auf der Karte (Rudel, Gebundene, Ewige, Verzauberte).
-const GROUP_ROLES: Array[String] = ["pack", "die-gebundenen", "die-ewigen", "piper-all"]
 ## Gruppenrufe ohne geheime Auskunft: ein Bildschirm mit Namen und „Weiter“, kein „Karte zeigen“ (die Beteiligten sehen einander).
 const OPEN_GROUP_OWNERS: Array[String] = ["die-gebundenen", "piper-all"]
 
@@ -157,6 +160,8 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_info = null
 	_slot.visible = false
 	_bare = false
+	_compact = false
+	_mini_row = null
 	_content.size_flags_vertical = Control.SIZE_FILL
 	_content.alignment = BoxContainer.ALIGNMENT_BEGIN
 	for arrow: Node in _slot.find_children("*", "BaseButton", true, false):
@@ -200,13 +205,17 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_text("ui.cockpit.instruction.no_game", {}, &"MutedLabel")
 		_:
 			_heading("ui.cockpit.card.none")
+	# Mini-Karte: ohne Scrollen, damit die Karte so hoch wird wie ihr Inhalt (das Cockpit setzt die Größe); in der schmalen Karte steht nur
+	# der Knopf „Rückgängig“, ohne „Übernommen.“.
+	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED if _compact else ScrollContainer.SCROLL_MODE_AUTO
+	(_undo_bar.get_node("UndoLabel") as Control).visible = not _compact
 
 
 ## Der Text unter „Sag jetzt“ und die Anweisung sind immer vollständig sichtbar: Die Karte füllt schon die ganze freie Tischmitte (sie darf
 ## keinen Platz verdecken), deshalb wird zuerst die Schrift schrittweise bis `FIT_MIN_FONT` verkleinert; erst wenn das nicht reicht, scrollt
 ## der Text, mit sichtbarem Hinweis (`ScrollHint`).
 func _fit_text() -> void:
-	if _scroll == null or _content == null or not is_inside_tree():
+	if _scroll == null or _content == null or not is_inside_tree() or _compact:
 		return
 	_fit_index = _fit_step
 	_fit_apply()
@@ -340,6 +349,11 @@ func undo_visible() -> bool:
 
 # --- Kartenarten ------------------------------------------------------------------------------------
 
+## Wahr bei der Mini-Nachtkarte (Schritt, Rollenprompt, Hinweis in der Nacht).
+func is_compact() -> bool:
+	return _compact
+
+
 ## Wahr, solange die Karte nur den großen Knopf „Spiel beginnen“ zeigt.
 func is_bare() -> bool:
 	return _bare
@@ -380,14 +394,14 @@ func _decoys(next: Dictionary) -> void:
 	if roles.is_empty():
 		return
 	var names: Array = roles.map(func(role: Variant) -> String: return tr(CockpitText.role_name(str(role))))
-	_text("ui.night.decoys", {"roles": ", ".join(names)}, &"MutedLabel").name = "DecoyLine"
+	_text("ui.night.mini.decoys" if _compact else "ui.night.decoys", {"roles": ", ".join(names)}, &"CaptionLabel" if _compact else &"MutedLabel").name = "DecoyLine"
 
 
 ## Hinweis an betroffene Personen (DI-04, DI-06, DI-07): „Karte zeigen“ genau einmal; das Schließen der Karte bestätigt den Hinweis.
 func _notice(next: Dictionary) -> void:
-	var names: Array = (next.get("viewers", []) as Array).map(func(v: Variant) -> String: return CockpitText.person(v))
-	_heading("ui.night.notice.title", {"names": ", ".join(names)}).name = "NoticeTitle"
-	_text("ui.night.notice.help", {}, &"MutedLabel")
+	_compact = true
+	var names: Array = (next.get("viewers", []) as Array).map(func(v: Variant) -> String: return str((v as Dictionary).get("name", "")))
+	_mini_line(CockpitText.help_role(next), ", ".join(names), "ui.night.notice.short").name = "NoticeTitle"
 	var buttons: Array[Control] = [_button("ShowNoticeButton", "ui.cockpit.action.show_notice", GrimmButton.Kind.PRIMARY, &"show_notice", {"notice_id": int(next.get("notice_id", -1))})]
 	_help(next, buttons)
 	_actions(buttons)
@@ -407,12 +421,12 @@ func _begin_step(next: Dictionary, context: Dictionary) -> void:
 		_prompt(merged, context)
 		return
 	var role := str(next.get("role_id"))
-	_decoys(next)
-	_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)}).suffix = _actor_suffix(next, context)
-	if role != str(next.get("own_role_id", role)) and str(next.get("own_role_id", "")) != "":
-		_text("ui.cockpit.card.borrowed_ability", {"role": CockpitText.role_name(str(next["own_role_id"]))}, &"WarningLabel")
+	_compact = true
+	_role_head(role, role, next, context, "ui.night.generic.short.step").name = "NightTitle"
 	if str(next.get("step_kind")) != "reaction":
-		_text(CockpitText.call_key(role), {"role": CockpitText.role_name(role)}, &"ReadAloudLabel")
+		_call_line(role, context)
+	_decoys(next)
+	_warnings(context)
 	var buttons: Array[Control] = [_button("BeginStepButton", "ui.cockpit.action.begin_step", GrimmButton.Kind.PRIMARY, &"begin_step")]
 	_help(next, buttons)
 	_actions(buttons)
@@ -437,33 +451,23 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	var texts := next.duplicate()
 	if pre_mode:
 		texts["stage"] = "mode"
-	_decoys(next)
-	var title := _heading(CockpitText.night_title_key(texts), {"role": CockpitText.role_name(role)})
+	_compact = true
+	# Zuflucht (DI-05): die gefragte Person steht auf der Karte, die fragende Person und die Rolle nicht.
+	var short := CockpitText.night_short_key(texts)
+	var title := _mini_line("", _names(next, context), short) if anonymous else _role_head(role, CockpitText.help_role(next), next, context, short)
 	title.name = "NightTitle"
-	if not anonymous:
-		title.suffix = _actor_suffix(next, context)
-	var rules_key := CockpitText.night_rules_key(role)
-	if rules_key != "":
-		_text(rules_key, {}, &"MutedLabel").name = "NightRules"
-	else:
-		_text(CockpitText.night_help_key(texts), {}, &"MutedLabel").name = "NightHelp"
-	if anonymous:  # Zuflucht: die gefragte Person steht auf der Karte, die fragende Person und die Rolle nicht
-		_text("ui.night.rotkaeppchen.grant.asked", {"names": CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))}, &"SectionLabel").name = "AskedName"
-		_text("ui.night.rotkaeppchen.grant.hint", {}, &"MutedLabel").name = "RefugeHint"
-	if GROUP_ROLES.has(role) and not anonymous:
-		var group := CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))
-		if group != "":
-			_text("ui.night.names", {"names": group}, &"SectionLabel").name = "GroupNames"
-	if role != str(next.get("own_role_id", role)) and str(next.get("own_role_id", "")) != "":
-		_text("ui.cockpit.card.borrowed_ability", {"role": CockpitText.role_name(str(next["own_role_id"]))}, &"WarningLabel")
-	if bool(next.get("repeat", false)):
-		_text("ui.cockpit.card.repeat", {}, &"WarningLabel")
+	if str(context.get("call_step", "")) != "" and str(next.get("step_id", "")) == str(context.get("call_step")) and owner != "reaction" and role != "" and not anonymous:
+		_call_line(role, context)
+	_decoys(next)
+	# Teilantworten (z. B. das Opfer für die Waldhexe, die wahre Rolle); Ergebnisse zum Zeigen stehen nur im Fenster „Karte zeigen“.
+	var shown_keys: Array = [] if OPEN_GROUP_OWNERS.has(owner) else (next.get("show", []) as Array).map(func(l: Dictionary) -> String: return str(l["key"]))
 	for line: Dictionary in next.get("info", []):
 		if anonymous:
 			break
+		if shown_keys.has(str(line["key"])):
+			continue
 		_text("ui.cockpit.card.info_line", {"label": StringName(CockpitText.info_key(str(line["key"]))), "value": CockpitText.info_value(line)}, &"WarningLabel")
-	if str(context.get("call_step", "")) != "" and str(next.get("step_id", "")) == str(context.get("call_step")) and owner != "reaction" and role != "":
-		_text(CockpitText.call_key(role), {"role": CockpitText.role_name(role)}, &"ReadAloudLabel").name = "CallLine"
+	_warnings(context)
 	if owner == "kartenschlucker":
 		_swallower_status(next)
 	var buttons: Array[Control] = []
@@ -511,13 +515,9 @@ func _night_targets_part(next: Dictionary, context: Dictionary, buttons: Array[C
 	var counts: Array = next.get("counts", [])
 	var error := str(context.get("selection_error", ""))
 	var auto := CockpitText.auto_commit(next)
-	if not selection.is_empty() and not auto:
-		_text("ui.night.selected", {"names": CockpitText.names_of(selection, context.get("seats", []))}, &"SectionLabel").name = "SelectionLabel"
-	if not selection.is_empty() and error != "":
+	if not selection.is_empty() and error != "":  # die Auswahl selbst zeigt der Sitzkreis
 		var key := "ui.cockpit.card.selection.blocked.%s" % error
-		_text(key if CockpitText.has_key(key) else "ui.cockpit.card.selection.blocked.generic", {"counts": CockpitText.count_list(counts)}, &"WarningLabel").name = "SelectionBlockedLabel"
-	if not auto:
-		_show_slot(next, context, selection)
+		_text(key if CockpitText.has_key(key) else "ui.cockpit.card.selection.blocked.generic", {"counts": CockpitText.count_list(counts)}, &"NightWarningLabel").name = "SelectionBlockedLabel"
 	var random_active := bool(context.get("random_active", false))
 	if random_active:
 		# Vorschlag der Zufallsziehung; übernommen wird er erst mit „Weiter“ (RM-DR-015.2).
@@ -975,6 +975,11 @@ func _help(next: Dictionary, buttons: Array[Control]) -> void:
 	info.tooltip_text = tr("ui.cockpit.action.help")
 	info.pressed.connect(_emit.bind(&"help", {"role_id": role}, info))
 	_info = info
+	if _compact and _mini_row != null:  # Mini-Karte: das „i“ steht in der oberen Zeile, keine Ecke über dem Text
+		info.custom_minimum_size = Vector2(ThemeTokens.TOUCH_MIN, ThemeTokens.TOUCH_MIN)
+		info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		_mini_row.add_child(info)
+		return
 	info_host.add_child(info)
 	info.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	info.offset_left = -float(ThemeTokens.TOUCH_MIN) - 6.0
@@ -983,14 +988,90 @@ func _help(next: Dictionary, buttons: Array[Control]) -> void:
 	info.offset_bottom = 6.0 + float(ThemeTokens.TOUCH_MIN)
 
 
-## Namen der handelnden Personen in Klammern hinter dem Kartentitel, z. B. „ (Anna)“; bei mehreren Personen alle Namen.
-func _actor_suffix(next: Dictionary, context: Dictionary) -> String:
+## Kopf der Mini-Nachtkarte (zwei Zeilen): oben Rollensymbol, Name(n) bzw. Gruppe und der „i“-Knopf, darunter „Rolle · Aktion“ bzw. nur die
+## Aktion. Gibt die obere Zeile zurück (`NightTitle`).
+func _mini_line(role: String, top: Variant, action: String, with_role: String = "") -> GrimmLabel:
+	_mini_row = HBoxContainer.new()
+	_mini_row.name = "MiniHead"
+	_mini_row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	var symbol := NightArt.role_symbol(role) if role != "" else null
+	if symbol != null:
+		var icon := TextureRect.new()
+		icon.name = "RoleSymbol"
+		icon.texture = symbol
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.custom_minimum_size = Vector2(MINI_SYMBOL, MINI_SYMBOL)
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		_mini_row.add_child(icon)
+	var label := GrimmLabel.new()
+	label.theme_type_variation = &"NightLineLabel"
+	label.format_values = {"value": top}
+	label.text_key = "ui.night.mini.top"
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_mini_row.add_child(label)
+	_content.add_child(_mini_row)
+	var second := _text("ui.night.mini.role_action" if with_role != "" else "ui.night.mini.action",
+		{"role": CockpitText.role_name(with_role) if with_role != "" else "", "action": StringName(action)}, &"NightActionLabel")
+	second.name = "NightAction"
+	return label
+
+
+## Obere Zeile: Name(n) der handelnden Personen; beim Rudel die Gruppe (die Personen zeigt der Feuerring am Sitzkreis).
+func _names(next: Dictionary, context: Dictionary) -> String:
 	var names: Array[String] = []
 	for id: Variant in next.get("actor_ids", []):
 		for seat: Dictionary in context.get("seats", []):
 			if int(seat["person_id"]) == int(id):
 				names.append(str(seat["name"]))
-	return " (%s)" % ", ".join(names) if not names.is_empty() else ""
+	return ", ".join(names)
+
+
+## Kopf für eine Rolle: das Rudel mit Gruppennamen oben und nur der Aktion darunter, sonst Namen oben und „Rolle · Aktion“ darunter.
+func _role_head(role: String, symbol_role: String, next: Dictionary, context: Dictionary, action: String) -> GrimmLabel:
+	if role == "pack" or _names(next, context) == "":
+		return _mini_line(symbol_role, CockpitText.role_name(role), action)
+	return _mini_line(symbol_role, _names(next, context), action, role)
+
+
+## Vorlesesatz klein unter der Zeile, nur mit der Einstellung „Ansagen anzeigen“.
+func _call_line(role: String, context: Dictionary) -> void:
+	if not bool(context.get("show_calls", false)) or role == "":
+		return
+	_text(CockpitText.call_key(role), {"role": CockpitText.role_name(role)}, &"NightCallLabel").name = "CallLine"
+
+
+## Rote Warnzeilen mit Symbol (höchstens 3, aus `NightWarnings`).
+func _warnings(context: Dictionary) -> void:
+	var lines: Array = context.get("warnings", [])
+	for i: int in mini(lines.size(), NightWarnings.MAX_LINES):
+		var w: Dictionary = lines[i]
+		var row := HBoxContainer.new()
+		row.name = "NightWarning_%d" % i
+		row.add_to_group(&"night_warning")
+		row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+		var icon := WarnIcon.new()
+		icon.custom_minimum_size = Vector2(22.0, 22.0)
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(icon)
+		var label := GrimmLabel.new()
+		label.theme_type_variation = &"NightWarningLabel"
+		label.format_values = w.get("values", {})
+		label.text_key = str(w["key"])
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(label)
+		_content.add_child(row)
+
+
+## Warnsymbol: rotes Dreieck mit Ausrufezeichen (gezeichnet, keine Schriftzeichen nötig).
+class WarnIcon extends Control:
+	func _draw() -> void:
+		var s := size
+		var tri := PackedVector2Array([Vector2(s.x * 0.5, 1.0), Vector2(s.x - 1.0, s.y - 1.0), Vector2(1.0, s.y - 1.0)])
+		draw_colored_polygon(tri, ThemeTokens.DANGER)
+		draw_line(Vector2(s.x * 0.5, s.y * 0.35), Vector2(s.x * 0.5, s.y * 0.66), ThemeTokens.TEXT_PRIMARY, 2.0, true)
+		draw_circle(Vector2(s.x * 0.5, s.y * 0.8), 1.4, ThemeTokens.TEXT_PRIMARY)
 
 
 ## Der Titel oben auf der Karte lässt rechts Platz für den runden „i“-Knopf (Cockpit), damit er nie überdeckt wird.
@@ -1105,7 +1186,7 @@ func _swallower_status(next: Dictionary) -> void:
 	if info.is_empty():
 		return
 	_text("ui.cards.swallower.status", {"balance": int(info["balance"]), "total": int(info["total"]),
-		"shield": StringName("ui.common.yes" if bool(info["shield"]) else "ui.common.no")}, &"WarningLabel").name = "SwallowerStatusLabel"
+		"shield": StringName("ui.common.yes" if bool(info["shield"]) else "ui.common.no")}, &"CaptionLabel").name = "SwallowerStatusLabel"
 
 
 ## Kartenfenster: die gefragte tote Person mit ihrer Originalkarte. Spielen, aufbewahren, tauschen (nur mit lebendem

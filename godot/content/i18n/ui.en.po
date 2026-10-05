@@ -8900,3 +8900,303 @@ msgstr "Nobody wins"
 
 msgid "ui.cockpit.victory.winners"
 msgstr "Winners: {names}"
+
+msgid "ui.night.pack.pick.short"
+msgstr "choose their victim"
+
+msgid "ui.night.pack2.pick.short"
+msgstr "choose a second victim"
+
+msgid "ui.night.schutzengel.pick.short"
+msgstr "protects"
+
+msgid "ui.night.waldhexe.heal.short"
+msgstr "saves?"
+
+msgid "ui.night.waldhexe.reveal.short"
+msgstr "sees the victim"
+
+msgid "ui.night.waldhexe.poison.short"
+msgstr "poisons?"
+
+msgid "ui.night.waldhexe.poison_target.short"
+msgstr "poisons"
+
+msgid "ui.night.waldhexe.confirm.short"
+msgstr "is done"
+
+msgid "ui.night.das_orakel.target.short"
+msgstr "looks"
+
+msgid "ui.night.das_orakel.shown.short"
+msgstr "sees the role"
+
+msgid "ui.night.wolfskind.pick.short"
+msgstr "picks a role model"
+
+msgid "ui.night.lehrling.master.short"
+msgstr "picks a master"
+
+msgid "ui.night.dorfchronistin.shown.short"
+msgstr "sees a number"
+
+msgid "ui.night.die_gebundenen.shown.short"
+msgstr "wake up"
+
+msgid "ui.night.waldlaeufer.shown.short"
+msgstr "counts wolves"
+
+msgid "ui.night.doktor.targets.short"
+msgstr "checks two"
+
+msgid "ui.night.doktor.shown.short"
+msgstr "sees the result"
+
+msgid "ui.night.faehrtenleser.use.short"
+msgstr "tracks?"
+
+msgid "ui.night.faehrtenleser.shown.short"
+msgstr "sees the direction"
+
+msgid "ui.night.korrupter_richter.pick.short"
+msgstr "marks?"
+
+msgid "ui.night.spuerhund.targets.short"
+msgstr "checks three"
+
+msgid "ui.night.spuerhund.shown.short"
+msgstr "sees the result"
+
+msgid "ui.night.parasit.pick.short"
+msgstr "picks a host"
+
+msgid "ui.night.schattenhund.use.short"
+msgstr "blocks the village?"
+
+msgid "ui.night.albtraumwolf.pick.short"
+msgstr "blocks"
+
+msgid "ui.night.giftwolf.pick.short"
+msgstr "poisons?"
+
+msgid "ui.night.henker.pick.short"
+msgstr "marks"
+
+msgid "ui.night.traumdeuter.targets.short"
+msgstr "gets three names"
+
+msgid "ui.night.traumdeuter.shown.short"
+msgstr "sees the names"
+
+msgid "ui.night.kopfgeldjaeger.targets.short"
+msgstr "gets a list"
+
+msgid "ui.night.kopfgeldjaeger.shown.short"
+msgstr "sees the list"
+
+msgid "ui.night.koenig.targets.short"
+msgstr "meets someone"
+
+msgid "ui.night.koenig.shown.short"
+msgstr "sees the role"
+
+msgid "ui.night.kriegerin_des_lichts.targets.short"
+msgstr "attacks"
+
+msgid "ui.night.kriegerin_des_lichts.shown.short"
+msgstr "sees the result"
+
+msgid "ui.night.blutpriester.targets.short"
+msgstr "sacrifices?"
+
+msgid "ui.night.blutpriester.reveal.short"
+msgstr "names wolves"
+
+msgid "ui.night.blutpriester.shown.short"
+msgstr "sees the names"
+
+msgid "ui.night.die_ewigen.targets.short"
+msgstr "check someone"
+
+msgid "ui.night.die_ewigen.shown.short"
+msgstr "see the result"
+
+msgid "ui.night.piper_all.shown.short"
+msgstr "wake up"
+
+msgid "ui.night.dorfschmied.pick.short"
+msgstr "gives the weapon?"
+
+msgid "ui.night.schutzgeist.pick.short"
+msgstr "grants a shield"
+
+msgid "ui.night.verdammniswaechter.pick.short"
+msgstr "judges"
+
+msgid "ui.night.maertyrerin.pick.short"
+msgstr "sacrifices herself?"
+
+msgid "ui.night.loki.mode.short"
+msgstr "lovers or rivals"
+
+msgid "ui.night.loki.targets.short"
+msgstr "binds two"
+
+msgid "ui.night.rotkaeppchen.targets.short"
+msgstr "asks for refuge"
+
+msgid "ui.night.rotkaeppchen.grant.short"
+msgstr "is asked for refuge"
+
+msgid "ui.night.schwarze_witwe.pick.short"
+msgstr "chooses"
+
+msgid "ui.night.schattenwanderer.pick.short"
+msgstr "links up"
+
+msgid "ui.night.koenig_lykaon.ally.short"
+msgstr "picks an ally"
+
+msgid "ui.night.koenig_lykaon.targets.short"
+msgstr "turns a wolf"
+
+msgid "ui.night.seelentauscher.targets.short"
+msgstr "swaps two?"
+
+msgid "ui.night.kutscher.targets.short"
+msgstr "brings back the dead?"
+
+msgid "ui.night.kutscher.wolf.short"
+msgstr "picks the wolf"
+
+msgid "ui.night.dr_victor_frankenstein.targets.short"
+msgstr "raises the dead"
+
+msgid "ui.night.dr_victor_frankenstein.role.short"
+msgstr "picks the role"
+
+msgid "ui.night.rattenfaenger.pick.short"
+msgstr "charms"
+
+msgid "ui.night.pestbringerin.pick.short"
+msgstr "infects"
+
+msgid "ui.night.prophet_des_untergangs.pick.short"
+msgstr "picks people"
+
+msgid "ui.night.todesprediger.prediction.short"
+msgstr "names the death night"
+
+msgid "ui.night.feuerteufel.pick.short"
+msgstr "marks"
+
+msgid "ui.night.voodoo_priester.pick.short"
+msgstr "gives a doll"
+
+msgid "ui.night.nekromant.targets.short"
+msgstr "sacrifices the dead?"
+
+msgid "ui.night.nekromant.redirect.short"
+msgstr "redirects?"
+
+msgid "ui.night.hades.targets.short"
+msgstr "takes someone?"
+
+msgid "ui.night.hades.barrier.short"
+msgstr "buys a barrier?"
+
+msgid "ui.night.grabraeuber.targets.short"
+msgstr "steals?"
+
+msgid "ui.night.schicksalswolf.pick.short"
+msgstr "picks people"
+
+msgid "ui.night.rachsuechtiger_wolf.pick.short"
+msgstr "mauls a wolf?"
+
+msgid "ui.night.zeitwaechter.use.short"
+msgstr "freezes the night?"
+
+msgid "ui.night.kartenschlucker.act.short"
+msgstr "shows fingers"
+
+msgid "ui.night.kartenschlucker.target.short"
+msgstr "kills"
+
+msgid "ui.night.reaction.curse.short"
+msgstr "reaps a soul"
+
+msgid "ui.night.reaction.possessed.short"
+msgstr "drags someone along"
+
+msgid "ui.night.reaction.knight.short"
+msgstr "strikes a wolf"
+
+msgid "ui.night.reaction.smith.short"
+msgstr "strikes a wolf"
+
+msgid "ui.night.reaction.demon.short"
+msgstr "curses"
+
+msgid "ui.night.generic.short.targets"
+msgstr "chooses"
+
+msgid "ui.night.generic.short.choice"
+msgstr "decides"
+
+msgid "ui.night.generic.short.ack"
+msgstr "sees the card"
+
+msgid "ui.night.generic.short.option"
+msgstr "picks a role"
+
+msgid "ui.night.generic.short.prediction"
+msgstr "names a time"
+
+msgid "ui.night.generic.short.step"
+msgstr "wakes up"
+
+msgid "ui.night.notice.short"
+msgstr "show the card"
+
+msgid "ui.night.mini.decoys"
+msgstr "Call first: {roles}"
+
+msgid "ui.warn.blocked"
+msgstr "{role} blocks {name}"
+
+msgid "ui.warn.repeat"
+msgstr "{name} acts once more"
+
+msgid "ui.warn.borrowed"
+msgstr "{name} acts as {role}"
+
+msgid "ui.warn.protected"
+msgstr "{name} is protected"
+
+msgid "ui.warn.lovers"
+msgstr "{a} and {b} are lovers"
+
+msgid "ui.warn.cursed"
+msgstr "{name} is cursed"
+
+msgid "ui.settings.display.calls"
+msgstr "Show announcements"
+
+msgid "ui.settings.display.calls_hint"
+msgstr "Shows the read-aloud line small on the night card."
+
+msgid "ui.settings.toast.calls_on"
+msgstr "Announcements are shown."
+
+msgid "ui.settings.toast.calls_off"
+msgstr "Announcements are hidden."
+
+msgid "ui.night.mini.top"
+msgstr "{value}"
+
+msgid "ui.night.mini.role_action"
+msgstr "{role} · {action}"
+
+msgid "ui.night.mini.action"
+msgstr "{action}"
