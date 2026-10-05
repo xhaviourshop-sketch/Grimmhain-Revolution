@@ -46,6 +46,14 @@ func _build_display(settings: AppSettings) -> void:
 	hint.text_key = "ui.settings.display.calls_hint"
 	column.add_child(hint)
 	column.move_child(hint, 2)
+	# Rollen-Vorschau (Feedback 7): alle Bildschirme der Spielleitung je Rolle, nur hier erreichbar, nicht im Spielablauf.
+	var preview := GrimmButton.new()
+	preview.name = "RolePreviewButton"
+	preview.kind = GrimmButton.Kind.SECONDARY
+	preview.text_key = "ui.preview.open"
+	preview.pressed.connect(func() -> void: navigate_requested.emit(ScreenIds.ROLE_PREVIEW))
+	column.add_child(preview)
+	column.move_child(preview, 3)
 
 
 func _on_language_toggled(pressed: bool, code: String) -> void:

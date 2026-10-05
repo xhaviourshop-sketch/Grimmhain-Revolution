@@ -9200,3 +9200,54 @@ msgstr "{role} · {action}"
 
 msgid "ui.night.mini.action"
 msgstr "{action}"
+
+msgid "ui.preview.title"
+msgstr "Rollen-Vorschau"
+
+msgid "ui.preview.open"
+msgstr "Rollen-Vorschau"
+
+msgid "ui.preview.hint"
+msgstr "Tippe eine Rolle an: Du siehst nacheinander die Bildschirme der Spielleitung. Nichts wird gespeichert."
+
+msgid "ui.preview.role"
+msgstr "{name}"
+
+msgid "ui.preview.role_gap"
+msgstr "{name} (Lücke)"
+
+msgid "ui.preview.gap.start"
+msgstr "Partie lässt sich nicht aufbauen"
+
+msgid "ui.preview.gap.unreached"
+msgstr "Keine Bildschirme erreicht"
+
+msgid "ui.preview.gap.night"
+msgstr "Nachtschritt nicht erreicht"
+
+msgid "ui.preview.tag"
+msgstr "VORSCHAU"
+
+msgid "ui.preview.back"
+msgstr "Zurück"
+
+msgid "ui.preview.next"
+msgstr "Weiter"
+
+msgid "ui.preview.prev_role"
+msgstr "◀ Rolle"
+
+msgid "ui.preview.next_role"
+msgstr "Rolle ▶"
+
+msgid "ui.preview.special"
+msgstr "Sonderfall"
+
+msgid "ui.preview.list"
+msgstr "Liste"
+
+msgid "ui.preview.position"
+msgstr "{role}\nBildschirm {n} von {total}"
+
+msgid "ui.preview.empty"
+msgstr "{role} · kein Bildschirm"

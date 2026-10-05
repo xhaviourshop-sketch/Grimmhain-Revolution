@@ -110,8 +110,7 @@ func _night(role: String, label: String, roles: Array, calls: bool = false, love
 	if lovers:
 		var n: Dictionary = _effective()
 		var ids: Array = n.get("allowed_ids", [])
-		ctx.session.preview_apply(func(s: GameState) -> void:
-			s.loki_pairs.append({"loki_id": int(ids[0]), "a": int(ids[0]), "b": int(ids[1]), "kind": "love", "ended": false}))
+		ctx.session.preview_special(["lovers"], ids, -1)
 	await _fr(30)
 	await _save(label)
 
