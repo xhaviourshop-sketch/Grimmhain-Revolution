@@ -18,8 +18,8 @@ static func lines(report: Dictionary, version: String, reveal: bool = true) -> A
 	var out: Array[Dictionary] = []
 	out.append({"style": "title", "text": _t("ui.report.title.gm" if gm else "ui.report.title.public")})
 	out.append({"style": "note", "text": _t("ui.report.note.gm" if gm else ("ui.report.note.public" if reveal else "ui.report.note.public_locked"))})
-	out.append({"style": "line", "text": _t("ui.report.game_id", {"id": str(report.get("game_id", ""))})})
-	out.append({"style": "line", "text": _t("ui.report.participants", {"count": int(report.get("players", 0)), "names": ", ".join(PackedStringArray(report.get("names", [])))})})
+	out.append({"style": "line", "text": _t("ui.log.line.game_started", {"count": int(report.get("players", 0))})})  # dieselbe Formulierung wie im Protokoll; die Partie-ID ist kein Anzeigetext
+	out.append({"style": "line", "text": _t("ui.report.participants", {"names": ", ".join(PackedStringArray(report.get("names", [])))})})
 	out.append({"style": "line", "text": _t("ui.report.played", {"nights": int(report.get("nights", 0)), "days": int(report.get("days", 0))})})
 	var winner: Dictionary = report.get("winner", {})
 	if show_end:  # S-08: eine wieder geöffnete Partie nennt öffentlich keinen Sieger mehr
@@ -37,7 +37,7 @@ static func lines(report: Dictionary, version: String, reveal: bool = true) -> A
 		if not roles.is_empty():  # ältere oder unvollständige Berichte werden nicht ergänzt
 			out.append({"style": "heading", "text": _t("ui.report.heading.roles")})
 		for r: Dictionary in roles:
-			var text := _t("ui.report.role_line", {"seat": int(r.get("seat", 0)), "name": str(r.get("name", "")), "role": StringName(str(CockpitText.role_name(str(r.get("role_id", "")))))})
+			var text := _t("ui.report.role_line", {"name": str(r.get("name", "")), "role": StringName(str(CockpitText.role_name(str(r.get("role_id", "")))))})
 			if gm and str(r.get("original_role_id", "")) != str(r.get("role_id", "")):
 				text += " " + _t("ui.report.role_original", {"role": StringName(str(CockpitText.role_name(str(r.get("original_role_id", "")))))})
 			if not bool(r.get("alive", true)):
@@ -91,24 +91,24 @@ static func _entry(entry: Dictionary, out: Array[Dictionary]) -> bool:
 		"judge_nominator":
 			out.append({"style": "line", "text": _t("ui.report.judge_nominator", {"judge": str(entry["judge"]), "nominee": str(entry["nominee"])})})
 		"execution":
-			out.append({"style": "line", "text": _t("ui.report.execution", {"name": str(entry["name"])})})
+			out.append({"style": "line", "text": LogText.executed(str(entry["name"]))})
 		"execution_override":
 			out.append({"style": "line", "text": _t("ui.report.execution_override", {"name": str(entry["name"])})})
 		"execution_redirected":
 			out.append({"style": "line", "text": _t("ui.report.execution_redirected", {"name": str(entry["name"]), "other": str(entry["other"])})})
 		"no_execution":
-			out.append({"style": "line", "text": _t("ui.report.no_execution")})
+			out.append({"style": "line", "text": LogText.no_execution()})
 		"death":
 			var role := str(entry.get("role_id", ""))
 			if role == "":
-				out.append({"style": "line", "text": _t("ui.report.death", {"name": str(entry["name"])})})
+				out.append({"style": "line", "text": LogText.died(str(entry["name"]))})
 			else:
-				out.append({"style": "line", "text": _t("ui.report.death_role", {"name": str(entry["name"]), "role": StringName(str(CockpitText.role_name(role)))})})
+				out.append({"style": "line", "text": LogText.died(str(entry["name"]), role)})
 		"death_cause":
-			out.append({"style": "line", "text": _t("ui.morning.private.death", {"name": str(entry["name"]), "cause": StringName("ui.cause.%s" % str(entry["cause"]).to_lower()),
+			out.append({"style": "line", "text": _t("ui.morning.private.death", {"name": str(entry["name"]), "cause": _cause_key(str(entry["cause"])),
 				"role": StringName(str(CockpitText.role_name(str(entry["role_id"]))))})})
 		"revived":
-			out.append({"style": "line", "text": _t("ui.report.revived", {"name": str(entry["name"])})})
+			out.append({"style": "line", "text": LogText.revived(str(entry["name"]))})
 		"effects":
 			for e: Dictionary in entry.get("effects", []):
 				var line := CockpitText.effect_line(e)
@@ -124,7 +124,11 @@ static func _entry(entry: Dictionary, out: Array[Dictionary]) -> bool:
 			var name := str(entry.get("name", ""))
 			out.append({"style": "line", "text": _t("ui.report.correction" if name != "" else "ui.report.correction_general", {"what": what, "name": name, "reason": str(entry.get("reason", ""))})})
 		"win_rejected":
-			out.append({"style": "line", "text": _t("ui.report.win_rejected", {"reason": str(entry.get("reason", ""))})})
+			var why := str(entry.get("reason", ""))
+			if why == String(WinCandidate.STATUS_NOT_CHOSEN):  # technischer Ablehnungsgrund: kein Text der Spielleitung
+				out.append({"style": "line", "text": _t("ui.report.win_not_chosen")})
+			else:
+				out.append({"style": "line", "text": _t("ui.report.win_rejected", {"reason": why})})
 		"win":
 			out.append({"style": "line", "text": _t("ui.report.win", {"side": StringName(_side_key(str(entry.get("side", "none"))))})})
 		_:
@@ -142,7 +146,7 @@ static func _private_line(line: Dictionary) -> String:
 	if line.has("role_id"):
 		values["role"] = StringName(str(CockpitText.role_name(str(line["role_id"])))) if str(line["role_id"]) != "" else ""
 	if line.has("cause"):
-		values["cause"] = StringName("ui.cause.%s" % str(line["cause"]).to_lower())
+		values["cause"] = _cause_key(str(line["cause"]))
 	if line.has("reason"):
 		values["reason"] = str(line["reason"])
 	if line.has("drop"):
@@ -153,7 +157,13 @@ static func _private_line(line: Dictionary) -> String:
 static func _correction_label(kind: String) -> String:
 	var key := "ui.cockpit.gm.start.%s" % kind
 	var text := str(TranslationServer.translate(key))
-	return text.trim_suffix(" …").strip_edges() if text != key else kind
+	return text.trim_suffix(" …").strip_edges() if text != key else _t("ui.report.correction_other")
+
+
+## Ursache als Übersetzungsschlüssel; eine unbekannte Ursache zeigt nie ihren Namen.
+static func _cause_key(cause: String) -> StringName:
+	var key := "ui.cause.%s" % cause.to_lower()
+	return StringName(key if CockpitText.has_key(key) else "ui.report.cause_other")
 
 
 static func _side_key(side: String) -> String:

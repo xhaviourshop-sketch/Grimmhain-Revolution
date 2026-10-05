@@ -1568,6 +1568,96 @@ msgstr "öffentlich"
 msgid "ui.log.visibility.actor"
 msgstr "handelnde Person"
 
+msgid "ui.log.when.night"
+msgstr "Nacht {n}"
+
+msgid "ui.log.when.day"
+msgstr "Tag {n}"
+
+msgid "ui.log.with_when"
+msgstr "{when}: {text}"
+
+msgid "ui.log.someone"
+msgstr "jemand"
+
+msgid "ui.log.unknown"
+msgstr "Etwas ist geschehen."
+
+msgid "ui.log.line.game_started"
+msgstr "Partie gestartet mit {count} Personen."
+
+msgid "ui.log.line.role_assigned"
+msgstr "{name} hat die Rolle {role}."
+
+msgid "ui.log.line.night_begins"
+msgstr "Die Nacht beginnt."
+
+msgid "ui.log.line.day_begins"
+msgstr "Der Tag beginnt."
+
+msgid "ui.log.line.game_over"
+msgstr "Die Partie ist zu Ende."
+
+msgid "ui.log.line.died"
+msgstr "{name} ist gestorben."
+
+msgid "ui.log.line.died_role"
+msgstr "{name} ist gestorben ({role})."
+
+msgid "ui.log.line.died_cause"
+msgstr "{name} ist gestorben ({cause})."
+
+msgid "ui.log.line.saved"
+msgstr "Der Angriff auf {name} wurde abgewehrt."
+
+msgid "ui.log.line.protected"
+msgstr "{guardian} beschützt {name}."
+
+msgid "ui.log.line.no_night_kill"
+msgstr "Das Rudel hat niemanden angegriffen."
+
+msgid "ui.log.line.nominated"
+msgstr "{nominator} nominiert {nominee}."
+
+msgid "ui.log.line.nominated_hidden"
+msgstr "{nominee} wurde nominiert."
+
+msgid "ui.log.line.judge_nominated"
+msgstr "{judge} hat {nominee} verdeckt nominiert."
+
+msgid "ui.log.line.executed"
+msgstr "{name} wurde hingerichtet."
+
+msgid "ui.log.line.redirected"
+msgstr "Die Hinrichtung von {name} wurde gespiegelt, {other} starb stattdessen."
+
+msgid "ui.log.line.no_execution"
+msgstr "Niemand wurde hingerichtet."
+
+msgid "ui.log.line.day_ended"
+msgstr "Der Tag ist zu Ende."
+
+msgid "ui.log.line.revived"
+msgstr "{name} ist zurück im Spiel."
+
+msgid "ui.log.line.role_changed"
+msgstr "{name} ist jetzt {role}."
+
+msgid "ui.log.line.wolf_child"
+msgstr "{name} wurde zum Werwolf."
+
+msgid "ui.log.line.win_confirmed"
+msgstr "Sieg bestätigt: {side}."
+
+msgid "ui.log.line.win_rejected"
+msgstr "Der Sieg wurde nicht bestätigt."
+
+msgid "ui.log.line.corrected"
+msgstr "Die Spielleitung hat {name} korrigiert."
+
+msgid "ui.log.line.corrected_general"
+msgstr "Die Spielleitung hat etwas korrigiert."
+
 msgid "ui.cockpit.show.heading"
 msgstr "{role}"
 
@@ -6149,14 +6239,11 @@ msgstr "Die Siegbestätigung wurde zurückgenommen. Diese Fassung enthält nur A
 msgid "ui.report.note.gm"
 msgstr "Nur für die Spielleitung. Diese Fassung enthält alle Rollen, Ursachen und geheimen Angaben."
 
-msgid "ui.report.game_id"
-msgstr "Partie: {id}"
-
 msgid "ui.report.participants"
-msgstr "Teilnehmende: {count} ({names})"
+msgstr "Dabei: {names}"
 
 msgid "ui.report.played"
-msgstr "Gespielt: {nights} Nächte, {days} Tage"
+msgstr "Nächte: {nights}, Tage: {days}"
 
 msgid "ui.report.result"
 msgstr "Sieger: {side}"
@@ -6171,7 +6258,7 @@ msgid "ui.report.heading.roles"
 msgstr "Rollen zum Spielende"
 
 msgid "ui.report.role_line"
-msgstr "{seat} · {name}: {role}"
+msgstr "{name}: {role}"
 
 msgid "ui.report.role_original"
 msgstr "(ursprünglich {role})"
@@ -6188,26 +6275,11 @@ msgstr "Tag {number}"
 msgid "ui.report.judge_nominator"
 msgstr "Verdeckte Nominierung: {judge} hat {nominee} nominiert."
 
-msgid "ui.report.execution"
-msgstr "Hinrichtung: {name}."
-
 msgid "ui.report.execution_override"
 msgstr "Diese Hinrichtung von {name} war eine Spielleiterkorrektur ohne Nominierung."
 
 msgid "ui.report.execution_redirected"
 msgstr "Die Hinrichtung von {name} wurde gespiegelt: Stattdessen starb {other}."
-
-msgid "ui.report.no_execution"
-msgstr "Keine Hinrichtung an diesem Tag."
-
-msgid "ui.report.death"
-msgstr "Gestorben: {name}."
-
-msgid "ui.report.death_role"
-msgstr "Gestorben: {name} ({role})."
-
-msgid "ui.report.revived"
-msgstr "Wiederbelebt: {name}."
 
 msgid "ui.report.correction"
 msgstr "Spielleiterkorrektur „{what}“ an {name}. Begründung: {reason}"
@@ -6215,14 +6287,23 @@ msgstr "Spielleiterkorrektur „{what}“ an {name}. Begründung: {reason}"
 msgid "ui.report.correction_general"
 msgstr "Spielleiterkorrektur „{what}“. Begründung: {reason}"
 
+msgid "ui.report.correction_other"
+msgstr "Änderung"
+
+msgid "ui.report.cause_other"
+msgstr "unbekannte Ursache"
+
 msgid "ui.report.win_rejected"
 msgstr "Sieg abgelehnt. Begründung: {reason}"
+
+msgid "ui.report.win_not_chosen"
+msgstr "Sieg nicht bestätigt: Ein anderer Sieg wurde gewählt."
 
 msgid "ui.report.win"
 msgstr "Sieg bestätigt: {side}."
 
 msgid "ui.report.other_events"
-msgstr "{count} weitere technische Einzelereignisse sind hier nicht aufgeführt."
+msgstr "Weitere Einzelheiten der Spielleitung stehen nicht im Bericht."
 
 msgid "ui.report.no_history"
 msgstr "Zu dieser Fassung gibt es keine Einträge."
