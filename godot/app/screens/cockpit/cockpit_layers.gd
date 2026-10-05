@@ -85,12 +85,24 @@ static func _log_row(item: Dictionary) -> Control:
 	label.add_to_group(&"user_content")  # fertiger Satz aus LogText mit Namen der Personen
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.text = str(item["text"])
-	row.get_child(0).add_child(label)
+	var column := row.get_child(0) as VBoxContainer
+	if _log_row_height(item) > LIST_ROW_HEIGHT:
+		for pad: int in 2:  # zwei Textzeilen: Innenabstand oben und unten, damit der Text nicht an den Dornen klebt
+			var gap := Control.new()
+			gap.custom_minimum_size.y = 8.0
+			gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			column.add_child(gap)
+			if pad == 0:
+				column.add_child(label)
+	else:
+		column.add_child(label)
 	return row
 
 
+## Zeilen mit zwei Textzeilen bekommen Innenabstand, damit der Text nicht an den Dornen der Zeile klebt.
 static func _log_row_height(item: Dictionary) -> float:
-	return 12.0 + 27.0 * ceilf(float(str(item["text"]).length() + 4) / 34.0)
+	var lines := ceilf(float(str(item["text"]).length() + 4) / 34.0)
+	return LIST_ROW_HEIGHT if lines <= 1.0 else 30.0 + 27.0 * lines
 
 
 const DRAWER_CHROME := 300.0  ## Rahmen, Titelzeile, Hinweis und Blätterleiste der Schublade
@@ -224,16 +236,18 @@ static func show_card(role_id: String, lines: Array) -> Control:
 	var layer := _window_layer("ShowLayer", 600.0, tall)
 	var root: Control = layer[0]
 	var column: VBoxContainer = layer[1]
-	var title := _fit_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"GothicTitleLabel", ThemeTokens.FONT_SHOW_TITLE)
+	# Mit Kartenbild werden Titel und Name kleiner, damit das Bild so groß wie möglich wird (ohne Scrollen).
+	var title := _fit_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"GothicTitleLabel",
+		ThemeTokens.FONT_GOTHIC - 8 if tall else ThemeTokens.FONT_SHOW_TITLE)
 	title.name = "ShowTitle"
 	for line: Dictionary in lines:
-		_show_line(column, line)
+		_show_line(column, line, ThemeTokens.FONT_SHOW - 14 if tall else ThemeTokens.FONT_SHOW)
 	(layer[2] as VBoxContainer).add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
 	return root
 
 
 ## Eine freigegebene Zeile: Namen als Text, Rolle als Kartenbild, Ja/Nein als Zeichen, Zahlen neben ihrem Teamsymbol.
-static func _show_line(column: VBoxContainer, line: Dictionary) -> void:
+static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int = ThemeTokens.FONT_SHOW) -> void:
 	var key := str(line["key"])
 	var kind := str(line["kind"])
 	match kind:
@@ -245,7 +259,7 @@ static func _show_line(column: VBoxContainer, line: Dictionary) -> void:
 			if names.size() > 3:
 				names = [", ".join(names)]
 			for entry: String in names:
-				_fit_label(column, "ui.cockpit.show.value", {"value": entry}, &"ShowValueLabel", ThemeTokens.FONT_SHOW).name = "ShowName"
+				_fit_label(column, "ui.cockpit.show.value", {"value": entry}, &"ShowValueLabel", name_size).name = "ShowName"
 			return
 		"role":
 			var card := RoleCardImage.new()
@@ -299,6 +313,10 @@ static func notice_card(card: Dictionary) -> Control:
 	var root: Control = layer[0]
 	var column: VBoxContainer = layer[1]
 	_fit_label(column, "ui.cockpit.notice.heading.group" if bool(card.get("group", false)) else "ui.cockpit.notice.heading", {}, &"GothicTitleLabel", ThemeTokens.FONT_GOTHIC)
+	var viewers: Array = card.get("viewers", [])
+	if picture != null and viewers.size() == 2:  # nur die Bindung von Loki nennt ihr Paar; andere Hinweise nie (DI-06)
+		_fit_label(column, "ui.cockpit.notice.pair", {"first": CockpitText.person(viewers[0]), "second": CockpitText.person(viewers[1])},
+			&"ShowCaptionLabel", ThemeTokens.FONT_SHOW).name = "NoticePair"
 	if picture != null:
 		picture.size_flags_stretch_ratio = 3.0
 		column.add_child(picture)
@@ -557,6 +575,8 @@ static func _drawer(node_name: String, heading_key: String, scrolling: bool = tr
 	var title := _label(head, heading_key, {}, &"HeadingLabel")
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var close := _button("CloseLayerButton", "ui.cockpit.layer.close", GrimmButton.Kind.SECONDARY)
+	close.custom_minimum_size.x = 200.0  # sonst frisst der Dornenrahmen die Breite und „Schließen“ wird winzig
+	close.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(close)
 	var list := VBoxContainer.new()
 	list.name = "DrawerList"

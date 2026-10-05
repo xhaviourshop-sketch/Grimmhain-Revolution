@@ -31,6 +31,8 @@ func _initialize() -> void:
 	await _day("tag-baender-24", 24, false, false)
 	await _day("hinrichtung", 24, true, false)
 	await _day("timer", 6, false, true)
+	await _real_day("tag-rueckgaengig")
+	await _kriegerin_card("kriegerin-karte")
 	quit(0)
 
 
@@ -96,6 +98,66 @@ func _day(label: String, count: int, execute: bool, timer: bool) -> void:
 		var cockpit := shell.current_screen()
 		cockpit.call("_select_execution_target", 13)
 		await _fr(20)
+	await _save(label)
+	shell.queue_free()
+	await _fr(3)
+
+
+## Tag nach einer echten Nominierung (Befehle wie im Spiel): „Rückgängig“ muss im Dock stehen, auch nach Ablauf der 3-Sekunden-Leiste.
+func _real_day(label: String) -> void:
+	await _boot()
+	var game: GDScript = load("res://tests/ui/ui_game.gd")
+	var roles := ["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]
+	var map := {}
+	var persons: Array = []
+	var order: Array[int] = []
+	for i: int in roles.size():
+		map[str(i + 1)] = roles[i]
+		persons.append({"id": i + 1, "name": NAMES[i]})
+		order.append(i + 1)
+	ctx.session.submit(Command.start_game({"round_id": "cap8f2", "seed": 3, "assignment": "manual",
+		"players": persons, "seat_order": order, "roles": map}))
+	ctx.session.start_night()
+	game.call("to_day", ctx.session)
+	shell.navigate(&"main_menu")
+	shell.navigate(&"cockpit")
+	await _fr(15)
+	var cont := shell.find_child("ContinueDayButton", true, false) as BaseButton
+	if cont != null:
+		cont.pressed.emit()
+		await _fr(10)
+	var nominated: CommandResult = ctx.session.nominate(3, 1)
+	if not nominated.ok:
+		printerr("Nominierung abgelehnt: ", nominated.error)
+	await create_timer(3.5).timeout
+	await _fr(10)
+	await _save(label)
+	shell.queue_free()
+	await _fr(3)
+
+
+## Nachtkarte der Kriegerin des Lichts mit dem roten Opfer-Zeichen am Kreis und der Zeile „Opfer: …“ in der Karte.
+func _kriegerin_card(label: String) -> void:
+	await _boot()
+	var game: GDScript = load("res://tests/ui/ui_game.gd")
+	var roles := ["kriegerin-des-lichts", "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"]
+	var map := {}
+	var persons: Array = []
+	var order: Array[int] = []
+	for i: int in roles.size():
+		map[str(i + 1)] = roles[i]
+		persons.append({"id": i + 1, "name": NAMES[i]})
+		order.append(i + 1)
+	ctx.session.submit(Command.start_game({"round_id": "cap8f3", "seed": 3, "assignment": "manual",
+		"players": persons, "seat_order": order, "roles": map}))
+	ctx.session.start_night()
+	var stop: Callable = func(n: Dictionary) -> bool: return str(n.get("kind")) == "prompt" and str(n.get("owner")) == "kriegerin-des-lichts"
+	if not game.call("run_until", ctx.session, stop, {}):
+		printerr("Keine Karte der Kriegerin")
+	(ctx.session.get("_state") as GameState).pack_target_id = 3  # nur für die Anzeige: das Opfer des Rudels trägt das rote Zeichen
+	shell.navigate(&"main_menu")
+	shell.navigate(&"cockpit")
+	await _fr(20)
 	await _save(label)
 	shell.queue_free()
 	await _fr(3)

@@ -1313,6 +1313,9 @@ msgstr "Second pass from Little Red Riding Hood’s apple."
 msgid "ui.cockpit.card.info_line"
 msgstr "{label}: {value}"
 
+msgid "ui.cockpit.card.victim"
+msgstr "Victim: {names}"
+
 msgid "ui.cockpit.card.selection.none"
 msgstr "Nobody selected yet. Tap a person in the seating circle."
 
@@ -1548,10 +1551,10 @@ msgid "ui.cockpit.log.empty"
 msgstr "No entries yet."
 
 msgid "ui.cockpit.log.prev"
-msgstr "Back"
+msgstr "Before"
 
 msgid "ui.cockpit.log.next"
-msgstr "Next"
+msgstr "After"
 
 msgid "ui.cockpit.log.page"
 msgstr "Page {page} of {total}"
@@ -2887,6 +2890,9 @@ msgstr "Notice for you"
 
 msgid "ui.cockpit.notice.heading.group"
 msgstr "Notice for you all"
+
+msgid "ui.cockpit.notice.pair"
+msgstr "{first} and {second}"
 
 msgid "ui.cockpit.notice.close"
 msgstr "Close"

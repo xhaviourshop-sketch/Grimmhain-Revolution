@@ -395,6 +395,8 @@ func _update_status(active: bool) -> void:
 	else:
 		_round.text_key = ""
 		_alive.text_key = ""
+	_round.visible = _round.text_key != ""  # ohne Text bliebe von der gemalten Zeile ein leerer Winzling
+	_alive.visible = _alive.text_key != ""
 	_refresh_timer()
 	var warnings: Array = _view.get("warnings", [])
 	_warnings.visible = not warnings.is_empty()
@@ -538,12 +540,12 @@ func _style_plate() -> void:
 	_phase_area.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	(_phase_area.get_child(0) as BoxContainer).add_theme_constant_override("separation", ThemeTokens.SPACE_XS)
 	(%PhaseValueLabel as Control).add_theme_font_size_override("font_size", ThemeTokens.FONT_COMPACT)  # passt neben den Timer, ohne die Speicherzeile daneben zu verdrängen
-	_row_plate(%PhaseValueLabel as Label, 16.0, 2.0)
+	_row_plate(%PhaseValueLabel as Label, 26.0, 2.0)
 	GroveSkin.skin_button(_dock_undo, false)
 	for label: GrimmLabel in [%RoundLabel, %AliveLabel]:
 		label.wrap = false  # eine Zeile auf der gemalten Zeile; die Ecke wächst mit dem Text
 		label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN  # jede Zeile so breit wie ihr Text
-		_row_plate(label, 22.0, 3.0)
+		_row_plate(label, 34.0, 3.0)  # genug Abstand zu den Dornenenden der Zeile
 
 
 ## Gemalte Zeile als Grund eines Labels (Haut, `SkinArt.row_box`), mit Innenabstand für den Text.
@@ -702,6 +704,18 @@ func _process(delta: float) -> void:
 		_timer_button.show_time(context.timer.remaining, context.timer.running, context.timer.is_set(), context.timer.is_expired())
 
 
+## Namen der Personen mit dem roten Opfer-Zeichen am Sitzkreis (nur Nacht, nicht bei „Verbergen“): erklärt das Zeichen auf der Karte.
+func _victim_names(phase: String) -> String:
+	if _hidden or phase != "NIGHT" or not bool(_view.get("has_game", false)):
+		return ""
+	var ids: Array = []
+	var marks: Dictionary = context.session.board_marks()
+	for id: Variant in marks:
+		if (marks[id] as Array).has(&"marked") or (marks[id] as Array).has("marked"):
+			ids.append(id)
+	return CockpitText.names_of(ids, _view.get("seats", []))
+
+
 func _render() -> void:
 	var next: Dictionary = _view.get("next", {})
 	var phase := str(_view.get("phase", ""))
@@ -758,6 +772,7 @@ func _render() -> void:
 		"reduced_motion": context.settings.reduced_motion,
 		"warnings": context.session.night_warnings(next, _selection) if bool(_view.get("has_game")) else [],
 		"show_calls": context.settings.show_calls,
+		"victim_names": _victim_names(phase),
 	})
 	_style_card()  # ohne Text (Spielbeginn) verschwindet der Kartenrahmen, nur der große Knopf bleibt
 	_place_card()
@@ -1335,6 +1350,7 @@ func open_layer(kind: StringName) -> void:
 		_layout.visible = true
 		return
 	_layer_kind = kind
+	_card.set_hint_suspended(true)
 	GroveWindow.dress(_layer)
 	_overlay_host.add_child(_layer)
 	var close := _layer.find_child("CloseLayerButton", true, false) as BaseButton
@@ -1610,6 +1626,7 @@ func close_layer() -> void:
 		_layer.queue_free()
 	_layer = null
 	_layer_kind = &""
+	_card.set_hint_suspended(false)
 	_layout.visible = not _covered
 
 

@@ -1313,6 +1313,9 @@ msgstr "Zweiter Durchgang durch den Apfel des Rotkäppchens."
 msgid "ui.cockpit.card.info_line"
 msgstr "{label}: {value}"
 
+msgid "ui.cockpit.card.victim"
+msgstr "Opfer: {names}"
+
 msgid "ui.cockpit.card.selection.none"
 msgstr "Noch niemand gewählt. Tippe im Sitzkreis auf eine Person."
 
@@ -2887,6 +2890,9 @@ msgstr "Hinweis für dich"
 
 msgid "ui.cockpit.notice.heading.group"
 msgstr "Hinweis für euch"
+
+msgid "ui.cockpit.notice.pair"
+msgstr "{first} und {second}"
 
 msgid "ui.cockpit.notice.close"
 msgstr "Schließen"
