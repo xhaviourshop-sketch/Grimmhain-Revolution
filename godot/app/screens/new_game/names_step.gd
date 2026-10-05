@@ -276,7 +276,12 @@ func _list_column() -> VBoxContainer:
 ## Rechter Rand des Namensfelds bleibt für das Mikrofon frei, damit der Text nicht darunterläuft.
 func _leave_room_for_mic() -> void:
 	for style_name: String in ["normal", "focus", "read_only"]:
-		var box := _name_input.get_theme_stylebox(style_name).duplicate() as StyleBox
+		var src := _name_input.get_theme_stylebox(style_name) as SkinBarBox
+		var box := SkinBarBox.make(src.texture, src.end_width, src.fit_height, src.tint)
+		box.max_height = src.max_height
+		box.content_margin_left = src.content_margin_left
+		box.content_margin_top = src.content_margin_top
+		box.content_margin_bottom = src.content_margin_bottom
 		box.content_margin_right = float(ThemeTokens.TOUCH_MIN) + 12.0
 		_name_input.add_theme_stylebox_override(style_name, box)
 
