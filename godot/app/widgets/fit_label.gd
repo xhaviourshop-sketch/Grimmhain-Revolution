@@ -13,7 +13,10 @@ extends GrimmLabel
 	set(value):
 		max_font_size = value
 		_fit()
+const MAX_RUNS := 8  ## Schutz vor einer Layout-Schleife: Anpassungen je Text und Themenstand (Zähler beginnt bei neuem Text von vorn)
 var _fitting: bool = false
+var _fitted_for: Array = []  ## [Größe, Text] der letzten Anpassung
+var _runs: int = 0
 
 
 func _init() -> void:
@@ -30,11 +33,14 @@ func _ready() -> void:
 
 func refresh_text() -> void:
 	super.refresh_text()
+	_runs = 0
 	_fit()
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_THEME_CHANGED:
+	if what == NOTIFICATION_THEME_CHANGED and not _fitting:
+		_fitted_for = []
+		_runs = 0
 		_fit()
 
 
@@ -48,7 +54,8 @@ static func best_size(font: Font, text: String, box: Vector2, max_size: int, min
 		var mid := (low + high + 1) / 2
 		var fits: bool
 		if wrapped:
-			fits = box.y <= 0.0 or font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, box.x, mid).y <= box.y
+			# 8 % Zuschlag für den Zeilenabstand des Labels, sonst fällt die letzte Zeile aus der Höhe und wird abgeschnitten.
+			fits = box.y <= 0.0 or font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, box.x, mid).y * 1.08 <= box.y
 		else:
 			fits = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, mid).x <= box.x
 		if fits:
@@ -59,13 +66,16 @@ static func best_size(font: Font, text: String, box: Vector2, max_size: int, min
 
 
 func _fit() -> void:
-	if _fitting or not is_inside_tree():
+	if _fitting or not is_inside_tree() or (_fitted_for == [size, text] or _runs >= MAX_RUNS):
 		return
 	_fitting = true
-	# Ohne Typangabe würde die Suche den eigenen Override finden; mit Typ liefert sie die Größe aus dem Theme.
-	var type := theme_type_variation if theme_type_variation != &"" else &"Label"
-	var limit := max_font_size if max_font_size > 0 else get_theme_font_size(&"font_size", type)
-	var chosen := best_size(get_theme_font(&"font", type), text, size, limit, min_font_size, autowrap_mode != TextServer.AUTOWRAP_OFF)
-	if not has_theme_font_size_override(&"font_size") or get_theme_font_size(&"font_size") != chosen:
-		add_theme_font_size_override(&"font_size", chosen)
+	_runs += 1
+	# Die eigene, schon verkleinerte Überschreibung vor dem Messen entfernen, sonst läse die Suche sie als Ursprungsgröße
+	# und der Text könnte bei mehr Platz nie wieder wachsen.
+	if has_theme_font_size_override(&"font_size"):
+		remove_theme_font_size_override(&"font_size")
+	var limit := max_font_size if max_font_size > 0 else get_theme_font_size(&"font_size")
+	var chosen := best_size(get_theme_font(&"font"), text, size, limit, min_font_size, autowrap_mode != TextServer.AUTOWRAP_OFF)
+	add_theme_font_size_override(&"font_size", chosen)
+	_fitted_for = [size, text]
 	_fitting = false

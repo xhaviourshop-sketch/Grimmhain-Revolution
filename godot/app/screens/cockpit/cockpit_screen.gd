@@ -1311,7 +1311,7 @@ func open_layer(kind: StringName) -> void:
 				"last_change": context.session.last_command_events().filter(func(e: Dictionary) -> bool: return str(e["type"]) != "PromptCancelled")
 					if str(undo.get("type", "")) == "GmCorrection" else []}, _view.get("seats", []))
 		&"log":
-			_layer = CockpitLayers.log_drawer(context.session.event_log(), _view.get("seats", []))
+			_layer = CockpitLayers.log_drawer(context.session.log_lines())
 		&"show":
 			var next: Dictionary = _view.get("next", {})
 			_layer = CockpitLayers.show_card(str(next.get("role_id", "")), next.get("show", []))
@@ -1348,29 +1348,25 @@ func open_layer(kind: StringName) -> void:
 		if node != null:
 			node.pressed.connect(pair[1])
 	for b: Node in _layer.find_children("RolePerson_*", "BaseButton", true, false):
-		(b as BaseButton).pressed.connect(_open_role_card.bind(int(b.get_meta("person_id")), false))
+		(b as BaseButton).pressed.connect(_open_role_card.bind(int(b.get_meta("person_id"))))
 	_wire_role_card()
 	for b: Node in _layer.find_children("SecretAction_*", "BaseButton", true, false):
 		(b as BaseButton).pressed.connect(_on_secret_action.bind(str(b.get_meta("action")), int(b.get_meta("player_id"))))
 
 
 # --- Rollenanzeige ------------------------------------------------------------------------------------------
-# Liste (neutral) → Vorderseite (neutral, nur Name) → Rolle nach bewusster Aktion → Schließen zurück zur Liste. Nur „Gesehen“
-# sendet ConfirmRoleShown. Die Karte mit Rolle entsteht erst beim Zeigen und wird bei jedem Zustandswechsel, Undo, Laden,
+# Liste (neutral, nur Namen) → Person antippen → großes Kartenbild → Antippen schließt zurück zur Liste und gilt als „gesehen“
+# (ConfirmRoleShown, nur beim ersten Mal). Die Karte mit Rolle entsteht erst beim Antippen und wird bei jedem Zustandswechsel, Undo, Laden,
 # Sichtschutz und Verlassen der Ansicht verworfen; die Liste schließt nie in einen privaten Bereich.
 
-## Öffnet die Karte einer Person; `revealed` erst nach der bewussten Aktion.
-func _open_role_card(person_id: int, revealed: bool) -> void:
-	var card := context.session.role_show_card(person_id) if revealed else {}
-	if not revealed:
-		for entry: Dictionary in context.session.role_show_list().get("persons", []):
-			if int(entry["person_id"]) == person_id:
-				card = entry
+## Öffnet die Karte einer Person: das große Bild ihrer Rollenkarte, erst nach dem Antippen der Person gebaut.
+func _open_role_card(person_id: int) -> void:
+	var card := context.session.role_show_card(person_id)
 	if card.is_empty():
 		open_layer.call_deferred(&"roles")
 		return
 	close_layer()
-	_layer = CockpitLayers.role_card(card, revealed)
+	_layer = CockpitLayers.role_card(card)
 	_layer_kind = &"role_card"
 	_role_card_person = person_id
 	_layout.visible = false
@@ -1382,16 +1378,13 @@ func _open_role_card(person_id: int, revealed: bool) -> void:
 		(first[0] as Control).grab_focus()
 
 
+## Ein Tipp auf die Karte schließt sie: `ConfirmRoleButton` meldet dabei „gesehen“, `CloseRoleButton` (schon gesehen) schließt nur.
 func _wire_role_card() -> void:
 	if _layer == null or _layer.name != "RoleCardLayer":
 		return
-	var reveal := _layer.find_child("RevealRoleButton", true, false) as BaseButton
-	if reveal != null:
-		reveal.pressed.connect(func() -> void: _open_role_card.call_deferred(_role_card_person, true))
-	for button_name: String in ["CancelRoleButton", "CloseRoleButton", "CloseWithoutConfirmButton"]:
-		var b := _layer.find_child(button_name, true, false) as BaseButton
-		if b != null:
-			b.pressed.connect(open_layer.bind(&"roles"), CONNECT_DEFERRED)
+	var close := _layer.find_child("CloseRoleButton", true, false) as BaseButton
+	if close != null:
+		close.pressed.connect(open_layer.bind(&"roles"), CONNECT_DEFERRED)
 	var confirm := _layer.find_child("ConfirmRoleButton", true, false) as BaseButton
 	if confirm != null:
 		confirm.pressed.connect(_confirm_role.bind(_role_card_person), CONNECT_DEFERRED)

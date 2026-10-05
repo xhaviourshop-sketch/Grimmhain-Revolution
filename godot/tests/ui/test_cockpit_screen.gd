@@ -244,7 +244,8 @@ func test_show_card_contains_only_positive_list() -> void:
 	assert_true(find_node(screen, "ShowLayer") != null, "gezeigte Karte offen")
 	assert_false((find_node(screen, "Layout") as Control).is_visible_in_tree(), "Cockpit vollständig ersetzt")
 	var shown := _visible_texts(shell)
-	assert_true(shown.contains("Dorfbewohner"), "gezeigtes Ergebnis")
+	var picture := find_node(screen, "ShowRoleCard") as RoleCardImage
+	assert_true(picture != null and picture.role_id == "dorfbewohner", "gezeigtes Ergebnis: Kartenbild des Dorfbewohners")
 	assert_false(shown.contains("Trugbilderwolf"), "keine Wahrheit auf der gezeigten Karte")
 	assert_false(shown.contains("Werwolf"), "keine andere Rolle")
 	await _press(shell, "CloseLayerButton")
@@ -433,8 +434,8 @@ func test_log_uses_readable_labels() -> void:
 	var texts := ""
 	for c: Control in text_controls(layer):
 		texts += text_of(c) + "\n"
-	assert_true(texts.contains("Phasenwechsel (öffentlich)"), "lesbare Bezeichnung: %s" % texts.substr(0, 300))
-	assert_true(texts.contains("Partie gestartet (Spielleitung)"), "Startereignis")
-	assert_false(texts.contains("PhaseChanged ("), "kein technischer Name, wenn eine Bezeichnung existiert")
+	assert_true(texts.contains("Nacht 1"), "Alltagssatz mit Zeitraum: %s" % texts.substr(0, 300))
+	assert_false(texts.contains("PhaseChanged") and texts.contains("#"), "kein technischer Name, keine Nummer")
+	assert_false(texts.contains("(Spielleitung)") or texts.contains("(öffentlich)"), "keine Sichtbarkeitsmarke")
 	# Das Protokoll enthält alle geheimen Ereignisse: derselbe Warnhinweis wie im Rollenbereich.
 	assert_true(texts.contains("Schließe ihn, bevor jemand mitliest"), "Warnhinweis im Protokoll")

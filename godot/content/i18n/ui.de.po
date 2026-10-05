@@ -1527,10 +1527,10 @@ msgid "ui.cockpit.private.warning"
 msgstr "Hinweis: Dieser Bereich zeigt alle Rollen. Schließe ihn, bevor jemand mitliest."
 
 msgid "ui.cockpit.private.row"
-msgstr "{seat} · {name}: {role} ({faction})"
+msgstr "{name}: {role} ({faction})"
 
 msgid "ui.cockpit.private.row_dead"
-msgstr "{seat} · † {name}: {role} ({faction})"
+msgstr "† {name}: {role} ({faction})"
 
 msgid "ui.cockpit.private.original_role"
 msgstr "Ursprüngliche Rolle: {role}"
@@ -1547,17 +1547,14 @@ msgstr "Protokoll · nur Spielleitung"
 msgid "ui.cockpit.log.empty"
 msgstr "Noch keine Einträge."
 
-msgid "ui.log.event.generic"
-msgstr "#{index} {type} ({visibility})"
+msgid "ui.cockpit.log.prev"
+msgstr "Davor"
 
-msgid "ui.log.visibility.gm"
-msgstr "Spielleitung"
+msgid "ui.cockpit.log.next"
+msgstr "Danach"
 
-msgid "ui.log.visibility.public"
-msgstr "öffentlich"
-
-msgid "ui.log.visibility.actor"
-msgstr "handelnde Person"
+msgid "ui.cockpit.log.page"
+msgstr "Seite {page} von {total}"
 
 msgid "ui.log.when.night"
 msgstr "Nacht {n}"
@@ -2837,123 +2834,6 @@ msgstr "Umlenkung"
 msgid "ui.gm.stage.barrier"
 msgstr "Barriere"
 
-msgid "ui.log.event.seat_died"
-msgstr "#{index} Tod ({visibility})"
-
-msgid "ui.log.event.kill_prevented"
-msgstr "#{index} Tod verhindert ({visibility})"
-
-msgid "ui.log.event.protection_set"
-msgstr "#{index} Schutz gesetzt ({visibility})"
-
-msgid "ui.log.event.witch_acted"
-msgstr "#{index} Entscheidung der Waldhexe ({visibility})"
-
-msgid "ui.log.event.info_recorded"
-msgstr "#{index} Information gezeigt ({visibility})"
-
-msgid "ui.log.event.step_skipped"
-msgstr "#{index} Schritt übersprungen ({visibility})"
-
-msgid "ui.log.event.step_dropped"
-msgstr "#{index} Schritt entfallen ({visibility})"
-
-msgid "ui.log.event.step_begun"
-msgstr "#{index} Schritt begonnen ({visibility})"
-
-msgid "ui.log.event.prompt_opened"
-msgstr "#{index} Eingabe geöffnet ({visibility})"
-
-msgid "ui.log.event.prompt_answered"
-msgstr "#{index} Eingabe beantwortet ({visibility})"
-
-msgid "ui.log.event.prompt_stage_answered"
-msgstr "#{index} Teilantwort ({visibility})"
-
-msgid "ui.log.event.prompt_cancelled"
-msgstr "#{index} Schritt abgebrochen ({visibility})"
-
-msgid "ui.log.event.phase_changed"
-msgstr "#{index} Phasenwechsel ({visibility})"
-
-msgid "ui.log.event.game_started"
-msgstr "#{index} Partie gestartet ({visibility})"
-
-msgid "ui.log.event.role_assigned"
-msgstr "#{index} Rolle zugeteilt ({visibility})"
-
-msgid "ui.log.event.nomination_recorded"
-msgstr "#{index} Nominierung ({visibility})"
-
-msgid "ui.log.event.execution_confirmed"
-msgstr "#{index} Hinrichtung ({visibility})"
-
-msgid "ui.log.event.no_execution"
-msgstr "#{index} Keine Hinrichtung ({visibility})"
-
-msgid "ui.log.event.day_ended"
-msgstr "#{index} Tag beendet ({visibility})"
-
-msgid "ui.log.event.reaction_queued"
-msgstr "#{index} Reaktion eingereiht ({visibility})"
-
-msgid "ui.log.event.reaction_resolved"
-msgstr "#{index} Reaktion erledigt ({visibility})"
-
-msgid "ui.log.event.gm_corrected"
-msgstr "#{index} Spielleiterkorrektur ({visibility})"
-
-msgid "ui.log.event.win_detected"
-msgstr "#{index} Sieg erkannt ({visibility})"
-
-msgid "ui.log.event.win_confirmed"
-msgstr "#{index} Sieg bestätigt ({visibility})"
-
-msgid "ui.log.event.win_rejected"
-msgstr "#{index} Sieg abgelehnt ({visibility})"
-
-msgid "ui.log.event.win_status_provisional"
-msgstr "#{index} Vorläufiger Siegstatus ({visibility})"
-
-msgid "ui.log.event.win_status_final"
-msgstr "#{index} Verbindliche Siegprüfung ({visibility})"
-
-msgid "ui.log.event.no_night_kill"
-msgstr "#{index} Kein Rudelangriff ({visibility})"
-
-msgid "ui.log.event.kill_ignored"
-msgstr "#{index} Tod ohne Wirkung (bereits tot) ({visibility})"
-
-msgid "ui.log.event.role_changed"
-msgstr "#{index} Rollenwechsel ({visibility})"
-
-msgid "ui.log.event.wolf_child_bound"
-msgstr "#{index} Vorbild des Wolfskinds ({visibility})"
-
-msgid "ui.log.event.wolf_child_transformed"
-msgstr "#{index} Wolfskind verwandelt ({visibility})"
-
-msgid "ui.log.event.apprentice_bound"
-msgstr "#{index} Meister des Lehrlings ({visibility})"
-
-msgid "ui.log.event.player_revived"
-msgstr "#{index} Wiederbelebung ({visibility})"
-
-msgid "ui.log.event.info_overridden"
-msgstr "#{index} Gezeigtes Ergebnis geändert ({visibility})"
-
-msgid "ui.log.event.execution_redirected"
-msgstr "#{index} Hinrichtung gespiegelt ({visibility})"
-
-msgid "ui.log.event.amalia_answered"
-msgstr "#{index} Amalias Frage beantwortet ({visibility})"
-
-msgid "ui.log.event.detective_hint"
-msgstr "#{index} Hinweis des Detektivs ({visibility})"
-
-msgid "ui.log.event.alarm_bells"
-msgstr "#{index} Glocken des Nachtwächters ({visibility})"
-
 msgid "ui.cockpit.gm.start.status"
 msgstr "Status ändern …"
 
@@ -3059,59 +2939,23 @@ msgstr "Rollen zeigen"
 msgid "ui.cockpit.roles.heading"
 msgstr "Rollen zeigen"
 
-msgid "ui.cockpit.roles.hint"
-msgstr "Die Spielleitung behält das Gerät und zeigt einer Person gezielt ihre Karte. Es gibt keine Pflicht, alle Rollen vor der ersten Nacht zu zeigen."
-
 msgid "ui.cockpit.roles.progress"
-msgstr "{done} von {total} Personen haben ihre Rolle gesehen."
+msgstr "{done} von {total} gesehen"
 
 msgid "ui.cockpit.roles.person"
-msgstr "{seat} · {name}"
-
-msgid "ui.cockpit.roles.person_next"
-msgstr "{seat} · {name} (als Nächste)"
-
-msgid "ui.cockpit.roles.person_done"
-msgstr "{seat} · {name} (gesehen)"
+msgstr "{name}"
 
 msgid "ui.cockpit.roles.next_marker"
-msgstr "Weiter bei dieser Person:"
+msgstr "Als Nächste"
 
 msgid "ui.cockpit.roles.done"
 msgstr "Fertig"
-
-msgid "ui.cockpit.roles.front.heading"
-msgstr "Karte für {seat} · {name}"
-
-msgid "ui.cockpit.roles.front.text"
-msgstr "Nur {name} schaut jetzt auf den Bildschirm. Erst dann „Rolle anzeigen“ tippen."
-
-msgid "ui.cockpit.roles.reveal"
-msgstr "Rolle anzeigen"
-
-msgid "ui.cockpit.roles.cancel"
-msgstr "Abbrechen"
-
-msgid "ui.cockpit.roles.card.heading"
-msgstr "Deine Rolle, {name}"
-
-msgid "ui.cockpit.roles.role_value"
-msgstr "{role}"
-
-msgid "ui.cockpit.roles.confirm"
-msgstr "Fertig"
-
-msgid "ui.cockpit.roles.close_unconfirmed"
-msgstr "Schließen"
 
 msgid "ui.cockpit.roles.close"
 msgstr "Schließen"
 
 msgid "ui.gm.command.confirm_role_shown"
 msgstr "Rolle gezeigt: {names}"
-
-msgid "ui.log.event.role_shown_confirmed"
-msgstr "#{index} Rolle gezeigt ({visibility})"
 
 msgid "ui.cockpit.error.role_already_confirmed"
 msgstr "Fehler: Diese Person hat ihre aktuelle Rolle schon gesehen. Nichts wurde geändert."
@@ -5543,13 +5387,13 @@ msgid "ui.rulebook.c03.b02"
 msgstr "1. Die Liste zeigt nur Namen und den Stand „gesehen“, nie eine Rolle. Die nächste offene Person ist hervorgehoben."
 
 msgid "ui.rulebook.c03.b03"
-msgstr "2. Tippe eine Person an. Es erscheint eine neutrale Vorderseite „Karte für Sitz · Name“."
+msgstr "2. Tippe eine Person an. Das große Bild ihrer Rollenkarte erscheint, ohne Text."
 
 msgid "ui.rulebook.c03.b04"
-msgstr "3. Nur diese Person schaut auf den Bildschirm und tippt „Rolle anzeigen“. Sie sieht ihren Namen, ihre Rolle und einen Kurztext."
+msgstr "3. Nur diese Person schaut auf den Bildschirm und liest ihre Karte."
 
 msgid "ui.rulebook.c03.b05"
-msgstr "4. „Fertig“ merkt sich, dass die Person ihre Rolle kennt, und führt zur Liste zurück. „Schließen“ merkt sich nichts."
+msgstr "4. Ein Tipp auf die Karte schließt sie, merkt sich, dass die Person ihre Rolle kennt, und führt zur Liste zurück."
 
 msgid "ui.rulebook.c03.b06"
 msgstr "Das Zeigen der Rollen ist keine Pflicht: Die erste Nacht kann auch ohne jede Bestätigung beginnen. Wer seine Rolle schon bestätigt hat, kann sie nachlesen. Eine Person, deren Rolle sich später ändert, gilt danach wieder als noch nicht gesehen."
@@ -7768,72 +7612,6 @@ msgstr "Seite: {value}"
 
 msgid "ui.card.public.value.extra_votes"
 msgstr "Zusätzliche Stimmen: {value}"
-
-msgid "ui.log.event.card_drawn"
-msgstr "#{index} Karte gezogen ({visibility})"
-
-msgid "ui.log.event.card_pool_empty"
-msgstr "#{index} Kein passender Kartenvorrat ({visibility})"
-
-msgid "ui.log.event.card_window_opened"
-msgstr "#{index} Kartenfenster geöffnet ({visibility})"
-
-msgid "ui.log.event.card_window_closed"
-msgstr "#{index} Kartenfenster geschlossen ({visibility})"
-
-msgid "ui.log.event.card_played"
-msgstr "#{index} Karte gespielt ({visibility})"
-
-msgid "ui.log.event.card_kept"
-msgstr "#{index} Karte aufbewahrt ({visibility})"
-
-msgid "ui.log.event.card_exchanged"
-msgstr "#{index} Karte getauscht ({visibility})"
-
-msgid "ui.log.event.card_dice_rolled"
-msgstr "#{index} Würfel geworfen ({visibility})"
-
-msgid "ui.log.event.card_announced"
-msgstr "#{index} Kartenwirkung angesagt ({visibility})"
-
-msgid "ui.log.event.card_role_revealed"
-msgstr "#{index} Rolle durch Karte enthüllt ({visibility})"
-
-msgid "ui.log.event.card_question"
-msgstr "#{index} Öffentliche Frage durch Karte ({visibility})"
-
-msgid "ui.log.event.card_marker"
-msgstr "#{index} Verdachtsmarker ({visibility})"
-
-msgid "ui.log.event.card_excluded"
-msgstr "#{index} Aus der Diskussion ausgeschlossen ({visibility})"
-
-msgid "ui.log.event.card_table_report"
-msgstr "#{index} Verstoß gegen Tagesregel gemeldet ({visibility})"
-
-msgid "ui.log.event.card_effect_note"
-msgstr "#{index} Wirkung für die Spielleitung ({visibility})"
-
-msgid "ui.log.event.card_notice"
-msgstr "#{index} Private Mitteilung zu einer Karte ({visibility})"
-
-msgid "ui.log.event.card_revived"
-msgstr "#{index} Rückkehr durch Karte ({visibility})"
-
-msgid "ui.log.event.card_stack_gained"
-msgstr "#{index} Kartenschlucker erhält einen Stapel ({visibility})"
-
-msgid "ui.log.event.card_swallower_acted"
-msgstr "#{index} Nachtaktion des Kartenschluckers ({visibility})"
-
-msgid "ui.log.event.swallower_announced"
-msgstr "#{index} Stapelzahl angesagt ({visibility})"
-
-msgid "ui.log.event.night_skipped_by_card"
-msgstr "#{index} Nacht durch Karte ausgefallen ({visibility})"
-
-msgid "ui.log.event.execution_prevented_by_card"
-msgstr "#{index} Hinrichtung durch Karte verhindert ({visibility})"
 
 msgid "ui.cards.pack_victim"
 msgstr "Rudelopfer: {name}, Rolle: {role}"
