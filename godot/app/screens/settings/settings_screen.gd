@@ -10,7 +10,6 @@ extends BaseScreen
 @onready var _music: GrimmToggle = %MusicToggle
 @onready var _hand_right: GrimmButton = %HandRightButton
 @onready var _hand_left: GrimmButton = %HandLeftButton
-@onready var _hand_status: GrimmLabel = %HandStatusLabel
 @onready var _display: PanelContainer = %DisplayCard
 var _calls: GrimmToggle = null  ## „Ansagen anzeigen“ (DA-101)
 
@@ -81,7 +80,6 @@ func _on_hand_toggled(pressed: bool, left: bool) -> void:
 func _show_hand(left: bool) -> void:
 	_hand_right.set_pressed_no_signal(not left)
 	_hand_left.set_pressed_no_signal(left)
-	_hand_status.text_key = "ui.settings.hand.active_left" if left else "ui.settings.hand.active_right"
 
 
 func _report(success_key: String) -> void:
