@@ -2,11 +2,11 @@
 // Runs only the tests that belong to files changed against main (plus uncommitted changes).
 // Mapping: tools/test-map.json (prefix -> filters); changed test files run themselves; other .gd files
 // fall back to tests whose name contains the file's base name. "unit" in the map runs --dir=unit (use sparingly).
-// Usage: node tools/test-changed [--base=main] [--list]
+// Usage: node tools/test-changed [--base=main] [--list]   (runs in parallel processes via tools/test-full)
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const { run, summarize } = require("./test-quiet");
+const { runFiles, allTestFiles } = require("./test-full");
 
 const root = path.resolve(__dirname, "..");
 const args = process.argv.slice(2);
@@ -40,16 +40,13 @@ if (args.includes("--list") || !list.length) {
   console.log(list.length ? list.join("\n") : "Keine zugeordneten Tests (nichts zu tun).");
   process.exit(0);
 }
-let bad = 0, total = 0;
-for (const f of list) {
-  const res = run(f === "unit" ? ["--dir=unit"] : [`--filter=${f}`]);
-  if (!res) process.exit(2);
-  const { failures, sum } = summarize(res.text);
-  const m = sum.match(/^(\d+) Tests, (\d+) fehlgeschlagen, (\d+)/);
-  const n = m ? Number(m[1]) : 0;
-  total += n;
-  if (failures.length) console.log(failures.join("\n"));
-  if (!m || n === 0 || Number(m[2]) || Number(m[3]) || failures.length) { bad++; console.log(`[${f}] ${sum || "kein Ergebnis"}${n === 0 ? " (keine Tests getroffen)" : ""}`); }
-}
-console.log(`test-changed: ${list.length} Filter, ${total} Tests, ${bad} Filter rot/leer`);
-process.exit(bad ? 1 : 0);
+// One import, all matching files in parallel Godot processes (tools/test-full).
+const unitFiles = fs.readdirSync(path.join(root, "godot", "tests", "unit")).filter((f) => /^test_.*\.gd$/.test(f));
+const files = allTestFiles().filter((f) => list.some((x) => (x === "unit" ? unitFiles.includes(f) : f.includes(x))));
+const empty = list.filter((x) => x !== "unit" && !files.some((f) => f.includes(x)));
+runFiles(files, Math.max(1, Math.floor(require("os").cpus().length / 2))).then((r) => {
+  if (r.failures.length) console.log(r.failures.join("\n"));
+  if (empty.length) console.log(`Keine Tests getroffen: ${empty.join(", ")}`);
+  console.log(`test-changed: ${list.length} Filter, ${files.length} Dateien, ${r.total} Tests, ${r.failed} fehlgeschlagen, ${r.broken} nicht ladbar`);
+  process.exit(r.failed || r.broken || r.problem || r.failures.length || empty.length || r.total === 0 ? 1 : 0);
+});

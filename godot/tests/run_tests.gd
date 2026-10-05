@@ -9,6 +9,7 @@ extends SceneTree
 ## Aufruf:  godot --headless --path godot -s res://tests/run_tests.gd
 ## Optional: -- --filter=<teilstring>   (nur passende Testdateien)
 ##           -- --dir=unit|ui           (nur dieses Verzeichnis)
+##           -- --files=<a.gd>,<b.gd>   (genau diese Testdateien, für tools/test-full)
 ## Jeder Laufzeitfehler (SCRIPT ERROR, Engine-Fehler) während eines Tests macht diesen Test rot
 ## (TestErrorLogger), auch wenn seine Prüfungen vorher bestanden haben.
 
@@ -18,13 +19,22 @@ const TEST_DIRS: Array[String] = ["res://tests/unit", "res://tests/ui"]
 func _initialize() -> void:
 	var filter := ""
 	var only_dir := ""
+	var only_files: PackedStringArray = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--filter="):
 			filter = arg.trim_prefix("--filter=")
 		elif arg.begins_with("--dir="):
 			only_dir = arg.trim_prefix("--dir=")
+		elif arg.begins_with("--files="):
+			only_files = arg.trim_prefix("--files=").split(",", false)
 
 	var files := _collect_test_files(filter, only_dir)
+	if not only_files.is_empty():
+		var picked: Array[String] = []
+		for path: String in files:
+			if only_files.has(path.get_file()):
+				picked.append(path)
+		files = picked
 	var errors := TestErrorLogger.new()
 	OS.add_logger(errors)
 	var total := 0
@@ -32,6 +42,7 @@ func _initialize() -> void:
 	var broken_files := 0
 
 	for path: String in files:
+		var file_start := Time.get_ticks_msec()
 		var script: Script = load(path)
 		if script == null or not script.can_instantiate():
 			print("FAIL  %s  (Skript nicht ladbar)" % path)
@@ -68,6 +79,7 @@ func _initialize() -> void:
 				print("FAIL  %s" % label)
 				for f: String in instance.failures:
 					print("      - %s" % f)
+		print("time  %s  %d" % [path.get_file(), Time.get_ticks_msec() - file_start])
 
 	OS.remove_logger(errors)
 	print("")
