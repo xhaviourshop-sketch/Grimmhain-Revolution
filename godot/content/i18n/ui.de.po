@@ -9289,13 +9289,10 @@ msgid "ui.preview.open"
 msgstr "Rollen-Vorschau"
 
 msgid "ui.preview.hint"
-msgstr "Tippe eine Rolle an: Du siehst nacheinander die Bildschirme der Spielleitung. Nichts wird gespeichert."
+msgstr "Rolle antippen. Nichts wird gespeichert."
 
 msgid "ui.preview.role"
 msgstr "{name}"
-
-msgid "ui.preview.role_gap"
-msgstr "{name} (Lücke)"
 
 msgid "ui.preview.gap.start"
 msgstr "Partie lässt sich nicht aufbauen"
@@ -9310,10 +9307,10 @@ msgid "ui.preview.tag"
 msgstr "VORSCHAU"
 
 msgid "ui.preview.back"
-msgstr "Zurück"
+msgstr "Davor"
 
 msgid "ui.preview.next"
-msgstr "Weiter"
+msgstr "Danach"
 
 msgid "ui.preview.prev_role"
 msgstr "◀ Rolle"

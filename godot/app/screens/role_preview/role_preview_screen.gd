@@ -2,13 +2,17 @@ class_name RolePreviewScreen
 extends BaseScreen
 ## Rollen-Vorschau (Einstellungen > „Rollen-Vorschau“, Feedback 7): Liste aller Rollen nach Team; ein Tippen baut mit `RolePreview` eine
 ## Wegwerf-Partie und zeigt nacheinander die echten Bildschirme der Spielleitung (das echte Cockpit in einer eigenen Sitzung). Unten eine
-## Leiste, klar als Vorschau markiert: Zurück, Weiter, Rolle davor/danach, Name und „Bildschirm n von m“, „Sonderfall“ bei Rollen mit
+## Leiste, klar als Vorschau markiert: Davor, Danach, Rolle davor/danach, Name und „Bildschirm n von m“, „Sonderfall“ bei Rollen mit
 ## Warnungen. Nichts wird gespeichert: die Vorschau-Sitzung hat kein automatisches Speichern und keine Historie mit Pfad; echte Spielstände
 ## und die laufende Partie bleiben unberührt.
 
-const BAR_HEIGHT := 64.0
+const COLUMNS := 5  ## Spalten je Team in der Rollenliste
+const ROW_MIN := 30.0  ## Mindesthöhe einer Listenzeile; darunter passt die Liste nicht mehr ohne Scrollen auf 1024x768
+const ROW_INSET := 20.0  ## Abstand von den Dornen-Enden des Knopfes bis zu Symbol und Name
+const ICON_SIZE := 24.0
 
 @onready var _layout: Control = %Layout
+@onready var _stage_column: VBoxContainer = %StageColumn
 @onready var _list: VBoxContainer = %RoleList
 @onready var _stage: Control = %Stage
 
@@ -41,58 +45,97 @@ func handle_back() -> bool:
 	return false
 
 
+## Rollenliste ohne Scrollen: je Team ein Abschnitt, die Rollen alphabetisch spaltenweise in `COLUMNS` Spalten. Die Abschnitte teilen die
+## Höhe nach ihrer Zeilenzahl; jede Zeile ist ein gemalter Knopf mit Symbol und Namen, der Name passt sich seinem Platz an.
 func _build_list() -> void:
 	_list.add_child(_label("ui.preview.hint", &"MutedLabel"))
 	for team: StringName in [Faction.VILLAGE, Faction.WOLVES, Faction.SOLO]:
-		_list.add_child(_label(RolePresentation.faction_key(team), &"SectionLabel"))
-		var flow := HFlowContainer.new()
-		flow.add_theme_constant_override(&"h_separation", ThemeTokens.SPACE_S)
-		flow.add_theme_constant_override(&"v_separation", ThemeTokens.SPACE_S)
-		_list.add_child(flow)
-		for i: int in _roles.size():
-			var role := _roles[i]
-			if SetupRoleCatalog.faction_of(role) != team:
-				continue
-			var b := GrimmButton.new()
-			b.name = "PreviewRole_%s" % String(role)
-			b.kind = GrimmButton.Kind.COMPACT
-			b.wrap = false
-			b.icon = NightArt.role_symbol(String(role))
-			b.expand_icon = true
-			b.custom_minimum_size = Vector2(230.0, ThemeTokens.TOUCH_MIN)
-			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-			var gap := str((_plans[role] as Dictionary)["gap"])
-			b.format_values = {"name": StringName(RolePresentation.name_key(role))}
-			b.text_key = "ui.preview.role_gap" if gap != "" else "ui.preview.role"
-			if gap != "":
-				b.tooltip_text = tr("ui.preview.gap.%s" % gap)
-			b.pressed.connect(open_role.bind(i))
-			flow.add_child(b)
+		var members: Array[StringName] = []
+		for role: StringName in _roles:
+			if SetupRoleCatalog.faction_of(role) == team:
+				members.append(role)
+		members.sort_custom(func(a: StringName, b: StringName) -> bool: return tr(RolePresentation.name_key(a)).naturalnocasecmp_to(tr(RolePresentation.name_key(b))) < 0)
+		var rows := ceili(float(members.size()) / float(COLUMNS))
+		var section := VBoxContainer.new()
+		section.name = "Team_%s" % String(team)
+		section.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		section.size_flags_stretch_ratio = float(rows)
+		section.add_theme_constant_override(&"separation", 0)
+		_list.add_child(section)
+		section.add_child(_label(RolePresentation.faction_key(team), &"SectionLabel"))
+		var columns := HBoxContainer.new()
+		columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		columns.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
+		section.add_child(columns)
+		var column_boxes: Array[VBoxContainer] = []
+		for c: int in COLUMNS:
+			var box := VBoxContainer.new()
+			box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			box.add_theme_constant_override(&"separation", 0)
+			columns.add_child(box)
+			column_boxes.append(box)
+		for n: int in members.size():
+			column_boxes[n / rows].add_child(_role_button(members[n]))
 
 
-## Steuerleiste der Vorschau (unten): Vorschau-Zeichen, Rolle davor, Zurück, Name und Position, Weiter, Rolle danach, Sonderfall, Liste.
+## Eine Zeile der Rollenliste: gemalter Knopf (ohne eigenen Text), darüber Symbol und Name.
+func _role_button(role: StringName) -> GrimmButton:
+	var b := GrimmButton.new()
+	b.name = "PreviewRole_%s" % String(role)
+	b.kind = GrimmButton.Kind.COMPACT
+	b.wrap = false
+	b.custom_minimum_size = Vector2(0.0, ROW_MIN)
+	b.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var gap := str((_plans[role] as Dictionary)["gap"])
+	if gap != "":
+		b.tooltip_text = tr("ui.preview.gap.%s" % gap)
+	b.pressed.connect(open_role.bind(_roles.find(role)))
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	row.offset_left = ROW_INSET
+	row.offset_right = -ROW_INSET
+	row.offset_top = 2.0
+	row.offset_bottom = -2.0
+	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
+	b.add_child(row)
+	var icon := TextureRect.new()
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon.texture = NightArt.role_symbol(String(role))
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.custom_minimum_size = Vector2(ICON_SIZE, 0.0)
+	row.add_child(icon)
+	var label := FitLabel.new()
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.text_key = RolePresentation.name_key(role)
+	label.max_font_size = ThemeTokens.FONT_COMPACT
+	label.min_font_size = 11
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(label)
+	return b
+
+
+## Steuerleiste der Vorschau (unten, unter dem Cockpit, nimmt ihm genau ihre Höhe): Vorschau-Zeichen, Rolle davor, Schritt davor,
+## Name und Position, Schritt danach, Rolle danach, Sonderfall, Liste.
 func _build_bar() -> void:
+	_stage_column.add_theme_constant_override(&"separation", 0)
 	_bar = PanelContainer.new()
 	_bar.name = "PreviewBar"
-	var style := StyleBoxFlat.new()
-	style.bg_color = ThemeTokens.BG_APP
-	style.border_color = ThemeTokens.BLOOD_RED
-	style.border_width_top = 3
-	style.content_margin_left = ThemeTokens.SPACE_S
-	style.content_margin_right = ThemeTokens.SPACE_S
-	style.content_margin_top = ThemeTokens.SPACE_XS
-	style.content_margin_bottom = ThemeTokens.SPACE_XS
-	_bar.add_theme_stylebox_override("panel", style)
-	_bar.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	_bar.offset_top = -BAR_HEIGHT
-	_stage.add_child(_bar)
+	_bar.theme_type_variation = &"BarPanel"
+	_bar.size_flags_vertical = Control.SIZE_SHRINK_END
+	_stage_column.add_child(_bar)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	_bar.add_child(row)
-	var tag := _label("ui.preview.tag", &"ErrorLabel")
+	var tag := _label("ui.preview.tag", &"HainCaptionLabel")
 	tag.name = "PreviewTag"
 	tag.wrap = false  # einzeilig: sonst bricht der Text Zeichen für Zeichen um und die Leiste wird hoch
 	tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var margin := Control.new()  # Abstand zum Leistenrand, sonst klebt das Zeichen an der Dornenkante
+	margin.custom_minimum_size.x = ThemeTokens.SPACE_M
+	row.add_child(margin)
 	row.add_child(tag)
 	for spec: Array in [["PreviewPrevRole", "ui.preview.prev_role", _step_role.bind(-1)], ["PreviewBack", "ui.preview.back", _step_stop.bind(-1)]]:
 		row.add_child(_bar_button(spec[0], spec[1], spec[2]))
@@ -211,10 +254,9 @@ func _show_stop() -> void:
 		RolePreview.apply_special(_ctx.session, role)
 	_cockpit = (load(ScreenIds.scene_path(ScreenIds.COCKPIT)) as PackedScene).instantiate() as BaseScreen
 	_cockpit.setup(_ctx)
-	_stage.add_child(_cockpit)
-	_stage.move_child(_cockpit, 0)
-	_cockpit.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_cockpit.offset_bottom = -BAR_HEIGHT
+	_stage_column.add_child(_cockpit)
+	_stage_column.move_child(_cockpit, 0)
+	_cockpit.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_cockpit.navigate_requested.connect(func(_id: StringName) -> void: close_preview.call_deferred())
 	_cockpit.back_requested.connect(close_preview, CONNECT_DEFERRED)
 	_cockpit.dialog_requested.connect(dialog_requested.emit)
@@ -240,7 +282,7 @@ func _apply_ui(kind: String) -> void:
 
 func _drop_cockpit() -> void:
 	if _cockpit != null and is_instance_valid(_cockpit):
-		_stage.remove_child(_cockpit)
+		_stage_column.remove_child(_cockpit)
 		_cockpit.queue_free()
 	_cockpit = null
 	_ctx = null
