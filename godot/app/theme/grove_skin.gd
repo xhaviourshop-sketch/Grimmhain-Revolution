@@ -119,32 +119,7 @@ static func _draw_back_arrow(canvas: Control, button: GrimmButton) -> void:
 	canvas.draw_line(c + Vector2(-7.0, 0.0), c + Vector2(11.0, 0.0), color, 3.5, true)
 
 
-## Knopf im Hain-Stil: Hauptaktion (rot) oder Nebenaktion (dunkel). Zustände (gedrückt, gesperrt, Fokus) nur über Tönung.
+## Knopf eines Hain-Bildschirms (Feedback 8): die Grafik kommt aus dem Theme; hier nur Hauptaktion (Rubinstein) und Mindestgröße.
 static func skin_button(button: GrimmButton, primary: bool) -> void:
-	var tex := texture("button_primary" if primary else "button_secondary")
-	if tex == null:
-		return
-	var margins := GroveArtData.BUTTON_PRIMARY_MARGINS if primary else GroveArtData.BUTTON_SECONDARY_MARGINS
-	var tints := {"normal": Color.WHITE, "hover": TINT_HOVER, "pressed": TINT_PRESSED, "hover_pressed": TINT_PRESSED, "disabled": TINT_DISABLED}
-	var dark := texture("button_secondary")
-	for state: String in tints:
-		# Gesperrt: auch die Hauptaktion nimmt die dunkle Fläche (rot mit dunkler Schrift war unlesbar).
-		var disabled := state == "disabled" and dark != null
-		var box := GroveStyleBox.make(dark if disabled else tex, GroveArtData.BUTTON_SECONDARY_MARGINS if disabled else margins, tints[state])
-		box.native_height = tex.get_height() / GroveArtData.TEXTURE_SCALE
-		box.content_margin_left = BUTTON_TEXT_INSET
-		box.content_margin_right = BUTTON_TEXT_INSET
-		box.content_margin_top = 4.0
-		box.content_margin_bottom = 4.0
-		button.add_theme_stylebox_override(state, box)
-	# Fokus: Godot zeichnet den Fokusrahmen über jeden Zustand (auch über den gesperrten Knopf); deshalb leer, der Fokus zeigt sich über die Tönung.
-	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	if not button.has_meta(&"grove_focus_wired"):  # erneutes Anziehen (Rückfrage wechselt die Art des Knopfs) verbindet nicht doppelt
-		button.set_meta(&"grove_focus_wired", true)
-		button.focus_entered.connect(func() -> void: button.self_modulate = TINT_FOCUS if button.has_focus(true) and not button.disabled else Color.WHITE)
-		button.focus_exited.connect(func() -> void: button.self_modulate = Color.WHITE)
-	for color: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
-		button.add_theme_color_override(color, ThemeTokens.TEXT_PRIMARY)
-	button.add_theme_color_override("font_disabled_color", TEXT_DISABLED)
-	button.add_theme_font_size_override("font_size", ThemeTokens.FONT_CAPTION)
+	button.main = button.main or primary
 	button.custom_minimum_size = BUTTON_SIZE_PRIMARY if primary else Vector2(maxf(button.custom_minimum_size.x, BUTTON_SIZE_SECONDARY.x), BUTTON_SIZE_SECONDARY.y)

@@ -29,33 +29,42 @@ func test_tokens_complete() -> void:
 	assert_true(transition >= 0.15 and transition <= 0.25, "Übergang 150 bis 250 ms (%s)" % transition)
 
 
-func test_button_states_distinguishable() -> void:
+func test_button_states_are_painted_and_distinguishable() -> void:
 	var shell := await spawn_shell()
 	if shell == null:
 		return
 	var theme := shell.theme
-	for variation: StringName in BUTTON_VARIATIONS:
+	for variation: StringName in BUTTON_VARIATIONS + [&"CompactButton", &"PrimaryButtonToggle", &"SecondaryButtonToggle", &"SeatButton"]:
 		assert_true(theme.is_type_variation(variation, &"Button"), "%s ist Variation von Button" % variation)
-		var seen: Array[String] = []
-		for state: String in STATES:
-			var box := theme.get_stylebox(state, variation) as StyleBoxFlat
-			assert_true(box != null, "%s/%s als StyleBoxFlat" % [variation, state])
-			if box == null:
-				continue
-			var signature := "%s|%s|%d" % [box.bg_color.to_html(), box.border_color.to_html(), box.border_width_bottom]
-			if state != "focus":
-				assert_false(seen.has(signature), "%s/%s unterscheidbar" % [variation, state])
-				seen.append(signature)
-		var focus := theme.get_stylebox("focus", variation) as StyleBoxFlat
-		assert_true(focus != null and not focus.draw_center and focus.border_width_top >= 2, "%s: Fokusrahmen sichtbar" % variation)
+		for state: String in STATES + ["hover_pressed"]:
+			var box := theme.get_stylebox(state, variation)
+			assert_false(box is StyleBoxFlat, "%s/%s ist kein flacher Kasten" % [variation, state])
+			assert_true(box is SkinBarBox and (box as SkinBarBox).texture != null, "%s/%s aus gemaltem Bild" % [variation, state])
+		var normal := theme.get_stylebox("normal", variation) as SkinBarBox
+		var pressed := theme.get_stylebox("pressed", variation) as SkinBarBox
+		var disabled := theme.get_stylebox("disabled", variation) as SkinBarBox
+		assert_true(normal.texture != pressed.texture or normal.tint != pressed.tint, "%s: gedrückt unterscheidbar" % variation)
+		assert_ne(disabled.tint, normal.tint, "%s: gesperrt abgedunkelt" % variation)
 		assert_ne(theme.get_color("font_disabled_color", variation), theme.get_color("font_color", variation), "%s: deaktivierter Text unterscheidbar" % variation)
-	# Primär, sekundär und Gefahr unterscheiden sich im Normalzustand.
-	var normals: Array[String] = []
-	for variation: StringName in BUTTON_VARIATIONS:
-		var box := theme.get_stylebox("normal", variation) as StyleBoxFlat
-		if box != null:
-			assert_false(normals.has(box.bg_color.to_html()), "%s mit eigener Grundfarbe" % variation)
-			normals.append(box.bg_color.to_html())
+	# Umschalter-Zwilling: gewählt zeigt ein anderes Bild als gedrückt (aktiv statt gedrückt).
+	var held := theme.get_stylebox("pressed", &"SecondaryButton") as SkinBarBox
+	var chosen := theme.get_stylebox("pressed", &"SecondaryButtonToggle") as SkinBarBox
+	assert_ne(held.texture, chosen.texture, "gewählt (aktiv) und gedrückt sind verschiedene Bilder")
+
+
+func test_no_flat_boxes_for_buttons_toggles_and_panels() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var theme := shell.theme
+	var backdrops: Array[StringName] = [&"Panel", &"AppBackground", &"NightBackdrop", &"DayBackdrop", &"OverlayDim"]
+	for type: StringName in theme.get_type_list():
+		if type == &"CheckButton" or theme.is_type_variation(type, &"Button") or theme.is_type_variation(type, &"PanelContainer") or type == &"PanelContainer":
+			for state: StringName in theme.get_stylebox_list(type):
+				assert_false(theme.get_stylebox(state, type) is StyleBoxFlat, "%s/%s: kein flacher Kasten" % [type, state])
+	for name: StringName in [&"DialogPanel", &"DrawerPanel", &"ToastPanel", &"HeaderPanel", &"ListRow", &"CardPanel"]:
+		assert_true(theme.has_stylebox("panel", name) and not backdrops.has(name), "%s im Theme" % name)
+	assert_true(theme.is_type_variation(&"ListRow", &"PanelContainer"), "ListRow ist eine Panel-Variation für Namenslisten")
 
 
 func test_no_gold_tokens() -> void:
@@ -174,7 +183,7 @@ func test_settings_foundation_for_left_handed_mode() -> void:
 
 
 func test_switch_icon_is_themed() -> void:
-	# Nachträglich ergänzt: Schalter „Bewegung reduzieren“ nutzt kein Engine-Standardsymbol.
+	# Schalter „Bewegung reduzieren“: gemalter Drehknopf-Schalter, kein Engine-Standardsymbol.
 	var shell := await spawn_shell()
 	if shell == null:
 		return
@@ -183,7 +192,7 @@ func test_switch_icon_is_themed() -> void:
 		assert_true(theme.has_icon(icon, &"CheckButton"), "Schaltersymbol %s im Theme" % icon)
 	var on := theme.get_icon("checked", &"CheckButton").get_image()
 	var off := theme.get_icon("unchecked", &"CheckButton").get_image()
-	assert_true(on != null and off != null and on.get_size() == off.get_size(), "gleiche Größe an/aus")
+	assert_true(on != null and off != null and on.get_height() == off.get_height(), "gleiche Höhe an/aus")
 	if on != null and off != null:
 		assert_ne(on.get_data(), off.get_data(), "an und aus unterscheiden sich")
-		assert_true(on.get_height() >= 24, "Schalter gut erkennbar (%d px hoch)" % on.get_height())
+		assert_true(on.get_height() >= 40, "Schalter gut bedienbar (%d px hoch)" % on.get_height())

@@ -46,15 +46,13 @@ class DiceFace extends Control:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	func _draw() -> void:
-		var box := StyleBoxFlat.new()
-		box.bg_color = ThemeTokens.TEXT_PRIMARY
-		box.set_corner_radius_all(14)
-		box.set_border_width_all(3)
-		box.border_color = ThemeTokens.MOON_SILVER
-		draw_style_box(box, Rect2(Vector2.ZERO, size))
+		# Würfelfläche: dunkle Tafel aus dem Skin (kein Kasten); die Augen sind mondsilbern.
+		var face := SkinArt.texture("tafel_grund")
+		if face != null:
+			draw_texture_rect(face, Rect2(Vector2.ZERO, size), false)
 		var pad := size.x * 0.22
 		var step := (size.x - pad * 2.0) / 2.0
 		for cell: Vector2i in DiceRow.PIPS[value]:
-			draw_circle(Vector2(pad + cell.x * step, pad + cell.y * step), DiceRow.PIP_RADIUS, ThemeTokens.BG_APP)
+			draw_circle(Vector2(pad + cell.x * step, pad + cell.y * step), DiceRow.PIP_RADIUS, ThemeTokens.MOON_SILVER_BRIGHT)
 		# Zahl zusätzlich als Text (Lesbarkeit ohne Bild, Screenreader über den Tooltip).
-		draw_string(ThemeDB.fallback_font, Vector2(size.x - 22.0, size.y - 8.0), str(value), HORIZONTAL_ALIGNMENT_LEFT, -1, ThemeTokens.FONT_CAPTION, ThemeTokens.BG_SURFACE_RAISED)
+		draw_string(ThemeDB.fallback_font, Vector2(size.x - 22.0, size.y - 8.0), str(value), HORIZONTAL_ALIGNMENT_LEFT, -1, ThemeTokens.FONT_CAPTION, ThemeTokens.MOON_SILVER)
