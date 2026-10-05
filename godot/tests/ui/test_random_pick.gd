@@ -192,7 +192,7 @@ func test_disabled_random_button_without_admissible_result() -> void:
 	var hash0 := session().state_hash()
 	var count0 := session().commands().size()
 	var draws0 := st.rng.draws
-	await press(random)   # Signal wie Touch
+	await press_blocked(random)   # Signal wie Touch
 	await click(random)   # Klick über den Viewport
 	assert_eq([session().state_hash(), session().commands().size(), st.rng.draws], [hash0, count0, draws0], "kein Befehl, keine Ziehung")
 	assert_true(selection().is_empty() and find_node(screen(), "RandomProposalLabel") == null, "kein Vorschlag übernommen")

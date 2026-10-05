@@ -440,7 +440,7 @@ func test_undo_locks_the_release_and_a_new_completion_replaces_the_old_roles() -
 		assert_false(locked.contains(hidden), "gesperrt: %s nicht öffentlich" % hidden)
 	assert_true(locked.contains("Hinrichtung: Dörte"), "Chronik bleibt lesbar")
 	assert_true(find_button(screen, "HistoryExportButton").disabled, "Export gesperrt")
-	await press(find_button(screen, "HistoryExportButton"))
+	await press_blocked(find_button(screen, "HistoryExportButton"))
 	assert_false(DirAccess.dir_exists_absolute(ctx.exports_dir) and not DirAccess.get_files_at(ctx.exports_dir).is_empty(), "keine Datei entstanden")
 	# Spielweg ändern: andere Rolle für Person 6, danach neuer Abschluss.
 	await navigate(shell, &"main_menu")

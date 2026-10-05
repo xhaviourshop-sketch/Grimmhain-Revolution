@@ -247,7 +247,7 @@ func test_placeholders_emit_no_game_events() -> void:
 		for b: BaseButton in visible_buttons(current_screen(shell)):
 			if ["BackButton", "QuitButton"].has(String(b.name)) or MENU_BUTTONS.values().has(String(b.name)) or b.name == &"EnterButton":
 				continue
-			await press(b)
+			await press_blocked(b)
 			await navigate(shell, id)
 	var view: Dictionary = session.call("view")
 	assert_false(bool(view.get("has_game", true)), "keine Partie entstanden")
