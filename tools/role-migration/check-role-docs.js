@@ -218,6 +218,7 @@ else {
       else if (ch === '"') q = true; else if (ch === ";") { cells.push(cur); cur = ""; } else cur += ch;
     }
     cells.push(cur);
+    if (cells.length !== 6) err(`decision-status.csv: ${cells[0]} hat ${cells.length} statt 6 Spalten (Semikolon im Hinweis in Anführungszeichen setzen)`);
     const [id, sub, role, status, src] = cells;
     if (!/^RM-DR-\d{3}(\.\d+)?$/.test(id)) err(`decision-status.csv: ungültige ID ${id}`);
     if (!STATUS_NAMES[status]) err(`decision-status.csv: ${id} hat unbekannten Status ${status}`);
