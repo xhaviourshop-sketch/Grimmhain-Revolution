@@ -32,7 +32,7 @@ var _warnings: VBoxContainer
 var _pool: RolePoolView
 var _assign_page: Control
 var _ring: GameSeatRing
-var _progress: GrimmLabel
+var _head_progress: GrimmLabel  ## „Zuordnung: x von y“ steht nur hier in der Kopfzeile (nie zusätzlich in der Mitte oder unten)
 var _assign_hint: GrimmLabel
 var _bar: PanelContainer
 var _assign_card: PanelContainer
@@ -105,10 +105,6 @@ func footer() -> Dictionary:
 		hint = _blocker_key(str(blockers[0]))
 		values = _blocker_values(str(blockers[0]))
 		error = true
-	elif is_manual() and _page == Page.ASSIGN and not bool(_last_view.get("can_start", false)):
-		var d: Dictionary = _last_view["distribution"]
-		hint = "ui.prep.assign.progress"
-		values = {"assigned": d["assigned_count"], "total": d["person_count"]}
 	if is_manual() and _page == Page.POOL:
 		return {"next_key": "ui.prep.next.assign", "next_enabled": blockers.is_empty(), "next_primary": true, "hint_key": hint, "hint_values": values, "hint_error": error}
 	return {"next_key": "ui.prep.start", "next_enabled": bool(_last_view.get("can_start", false)), "next_primary": true, "hint_key": hint, "hint_values": values, "hint_error": error}
@@ -184,6 +180,13 @@ func _tab_row() -> HBoxContainer:
 			_show_page(Page.ASSIGN)
 			footer_changed.emit())
 	row.add_child(_assign_tab)
+	_head_progress = GrimmLabel.new()
+	_head_progress.name = "AssignHeadProgress"
+	_head_progress.theme_type_variation = &"HeadingLabel"
+	_head_progress.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_head_progress.wrap = false
+	_head_progress.visible = false
+	row.add_child(_head_progress)
 	return row
 
 
@@ -238,14 +241,9 @@ func _build_assign_page() -> Control:
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
 	column.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	card.add_child(column)
-	_progress = GrimmLabel.new()
-	_progress.name = "AssignProgress"
-	_progress.theme_type_variation = &"HeadingLabel"
-	_progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(_progress)
 	_assign_hint = GrimmLabel.new()
 	_assign_hint.name = "AssignHint"
-	_assign_hint.theme_type_variation = &"CaptionLabel"
+	_assign_hint.theme_type_variation = &"HeadingLabel"
 	_assign_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_assign_hint.text_key = "ui.prep.assign.hint"
 	column.add_child(_assign_hint)
@@ -365,8 +363,8 @@ func _render_assign(view: Dictionary) -> void:
 			assigned.append(int(person["person_id"]))
 	_ring.show_seats(seats)
 	_ring.set_marking(true, ids, assigned, [])
-	_progress.format_values = {"assigned": d["assigned_count"], "total": d["person_count"]}
-	_progress.text_key = "ui.prep.assign.progress"
+	_head_progress.format_values = {"assigned": d["assigned_count"], "total": d["person_count"]}
+	_head_progress.text_key = "ui.prep.tab.assign"
 	if _bar.visible:
 		_render_bar(view)
 
@@ -376,6 +374,9 @@ func _show_page(page_id: Page) -> void:
 	_pool_page.visible = page_id == Page.POOL
 	_header_row.visible = page_id == Page.POOL  # „Empfehlung übernehmen“ gehört zur Rollenwahl; die Zuordnung braucht die Höhe
 	_assign_page.visible = page_id == Page.ASSIGN
+	if _assign_tab != null:
+		_assign_tab.visible = page_id == Page.POOL  # auf der Zuordnungsseite steht der Stand als schlichter Text statt als rotes Band
+		_head_progress.visible = page_id == Page.ASSIGN
 	if page_id == Page.POOL:
 		_close_bar()
 	if _pool_tab != null and is_manual():
