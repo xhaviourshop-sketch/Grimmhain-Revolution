@@ -138,7 +138,7 @@ func test_execute_without_nomination_uses_check_card() -> void:
 	await _press(shell, "GmKind_execute")
 	await press(_seat(shell, 1))
 	await _press(shell, "GmConfirmButton")
-	assert_true(_texts(current_screen(shell)).contains("Keine Besonderheit: 1 · A stirbt"), "Vorschau des Regelkerns")
+	assert_true(_texts(current_screen(shell)).split("\n").has("Keine Besonderheit: A stirbt durch die Hinrichtung."), "Vorschau des Regelkerns")
 	await _press(shell, "ConfirmExecutionButton")
 	await _confirm_with_reason(shell, "Nominierung vergessen")
 	assert_false(_alive(shell, 1), "hingerichtet")

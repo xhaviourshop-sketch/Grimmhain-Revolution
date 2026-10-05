@@ -1413,13 +1413,13 @@ msgid "ui.cockpit.action.show_card"
 msgstr "Show card"
 
 msgid "ui.cockpit.action.override_shown"
-msgstr "Change shown result …"
+msgstr "Change result"
 
 msgid "ui.cockpit.action.cancel_prompt"
 msgstr "Cancel step …"
 
 msgid "ui.cockpit.action.cancel_prompt.short"
-msgstr "Cancel …"
+msgstr "Cancel"
 
 msgid "ui.cockpit.action.confirm_targets"
 msgstr "Continue"
@@ -1455,7 +1455,7 @@ msgid "ui.cockpit.action.confirm_win"
 msgstr "Confirm win: {side}"
 
 msgid "ui.cockpit.action.reject_win"
-msgstr "Reject all …"
+msgstr "Reject all"
 
 msgid "ui.cockpit.win.kind.village"
 msgstr "Village"
@@ -1998,13 +1998,13 @@ msgid "ui.cockpit.action.decline.maertyrerin.pick"
 msgstr "Does not sacrifice"
 
 msgid "ui.cockpit.action.decline.blutpriester.targets"
-msgstr "No sacrifice tonight"
+msgstr "No victim"
 
 msgid "ui.cockpit.action.decline.blutpriester.reveal"
 msgstr "Name no wolf"
 
 msgid "ui.cockpit.action.decline.kriegerin_des_lichts.targets"
-msgstr "No attack tonight"
+msgstr "No attack"
 
 msgid "ui.call.albtraumwolf"
 msgstr "“Nightmare Wolf, wake up. Point to the person whose ability you block tonight.”"
@@ -2349,7 +2349,7 @@ msgid "ui.cockpit.card.day.execute.heading"
 msgstr "Execution"
 
 msgid "ui.cockpit.card.day.execute.do"
-msgstr "Tap the person who is executed after your vote. Only people nominated today can be chosen. You can also tap a nominated person in the seat circle right away."
+msgstr "Tap the person to be executed."
 
 msgid "ui.cockpit.card.day.name_wolf.heading"
 msgstr "Necromancer names a wolf"
@@ -2379,13 +2379,13 @@ msgid "ui.cockpit.card.end_day.do"
 msgstr "End the day once all announcements are made."
 
 msgid "ui.cockpit.action.nominate"
-msgstr "Record nomination"
+msgstr "Nominate"
 
 msgid "ui.cockpit.action.execute"
-msgstr "Execution …"
+msgstr "Execution"
 
 msgid "ui.cockpit.action.no_execution"
-msgstr "No one"
+msgstr "No execution"
 
 msgid "ui.cockpit.action.confirm_nomination"
 msgstr "Confirm nomination"
@@ -7905,7 +7905,10 @@ msgid "ui.cockpit.menu.plus_five"
 msgstr "+5"
 
 msgid "ui.cockpit.card.target.named"
-msgstr "%d · %s"
+msgstr "Target: {name}"
+
+msgid "ui.cockpit.card.target.plain"
+msgstr "{name}"
 
 msgid "ui.cockpit.card.target.none"
 msgstr "Choose a target"

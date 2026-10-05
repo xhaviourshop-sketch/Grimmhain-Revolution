@@ -98,7 +98,7 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	assert_true(find_children_of_type(current_screen(shell), "SpinBox").is_empty(), "kein Zählfeld")
 	await _press(shell, "NominateButton")
 	await press(_seat(shell, 3))
-	assert_true(_texts(shell).contains("3 · Cara nominiert"), "Nominierende Person gewählt")
+	assert_true(_texts(shell).contains("Cara nominiert"), "Nominierende Person gewählt")
 	assert_true(_seat(shell, 3).disabled, "Cara kann sich nicht selbst nominieren")
 	await press(_seat(shell, 1))
 	var confirm := find_button(current_screen(shell), "ConfirmNominationButton")
@@ -107,7 +107,7 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	await frames(3)
 	var noms: Array = _view(shell)["next"]["nominations"]
 	assert_eq(noms.size(), 1, "genau eine Nominierung trotz Doppeltippen")
-	assert_true(_texts(shell).contains("3 · Cara nominiert 1 · Anna"), "öffentliche Nominierungsliste")
+	assert_true(_texts(shell).contains("Cara nominiert Anna"), "öffentliche Nominierungsliste")
 	assert_true(_texts(shell).contains("Alle Nominierten dürfen sich jetzt nacheinander verteidigen."), "Vorlesezeile zur Verteidigung")
 	await _press(shell, "NominateButton")
 	assert_true(_seat(shell, 3).disabled, "wer heute nominiert hat, ist still gesperrt")
@@ -119,7 +119,7 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	assert_true(_seat(shell, 2).disabled, "nicht Nominierte nicht wählbar")
 	await press(_seat(shell, 1))
 	assert_true(find_node(current_screen(shell), "RevealButton") == null, "Prüfkarte ohne Verdecken (Fenster-Diät)")
-	assert_true(_texts(shell).contains("Keine Besonderheit: 1 · Anna stirbt"), "Vorschau des Regelkerns")
+	assert_true(_texts(shell).contains("Keine Besonderheit: Anna stirbt"), "Vorschau des Regelkerns")
 	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
 	assert_false(_seat(shell, 1).get("alive"), "Anna hingerichtet")
 	assert_true(_texts(shell).contains("„Heute gestorben: Anna (Werwolf).“"), "Runde ohne Wiederbelebung: Ansage mit Rolle (DI-01)")
@@ -147,7 +147,7 @@ func test_mirror_wolf_preview_names_real_victim() -> void:
 	session_of(shell).call("nominate", 4, 1)
 	await frames(2)
 	await press(_seat(shell, 1))  # zwei Tipps: Person antippen, dann „Hinrichten“
-	assert_true(_texts(shell).contains("Stattdessen stirbt 4 · Dirk"), "Spiegelung in der Vorschau")
+	assert_true(_texts(shell).contains("Stattdessen stirbt Dirk"), "Spiegelung in der Vorschau")
 	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
 	assert_true(_seat(shell, 1).get("alive") and not _seat(shell, 4).get("alive"), "Dirk statt des Spiegelwolfs")
 
