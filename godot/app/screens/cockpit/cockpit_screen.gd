@@ -488,6 +488,7 @@ func _place_card() -> void:
 		panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 		return
 	var day := _card.is_day_card()
+	_card.set_max_height(_ring.center().size.y)  # die Karte liegt ganz in der freien Ringmitte: sonst kleiner, nie höher
 	var width := minf(maxf(size.x * (DAY_CARD_SHARE if day else MINI_CARD_SHARE), DAY_CARD_MIN_WIDTH if day else MINI_CARD_MIN_WIDTH), _ring.center().size.x)
 	panel.anchor_left = 0.5
 	panel.anchor_right = 0.5
