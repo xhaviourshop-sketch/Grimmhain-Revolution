@@ -2985,10 +2985,10 @@ msgid "ui.cockpit.notice.close"
 msgstr "Close"
 
 msgid "ui.notice.loki_bond.love"
-msgstr "You and {partner} are lovers. If one of you dies, the other dies at once too."
+msgstr "You are lovers. If one of you dies, the other dies too."
 
 msgid "ui.notice.loki_bond.rival"
-msgstr "You and {partner} are rivals. The bond has no effect of its own, it only matters to the Black Widow."
+msgstr "You are rivals. Neither of you can win while the other lives."
 
 msgid "ui.notice.piper_new"
 msgstr "You are enchanted. The Pied Piper wins when all other living people are enchanted."
@@ -8425,13 +8425,13 @@ msgid "ui.night.maertyrerin.pick.help"
 msgstr "Tap the victim or choose Not today."
 
 msgid "ui.night.loki.mode.title"
-msgstr "Loki binds two people."
+msgstr "Loki binds two people as lovers or rivals."
 
 msgid "ui.night.loki.mode.help"
 msgstr "Lovers or rivals?"
 
 msgid "ui.night.loki.targets.title"
-msgstr "Loki binds two people."
+msgstr "Loki binds two people as lovers or rivals."
 
 msgid "ui.night.loki.targets.help"
 msgstr "Tap two people."
@@ -8681,3 +8681,228 @@ msgstr "Call first (announcement only)"
 
 msgid "ui.cockpit.card.notice.heading"
 msgstr "Private notice"
+
+msgid "ui.night.rules.albtraumwolf"
+msgstr "· He picks someone every night, the same person as before is allowed. No skipping.\n· Only blocks night steps, and only if the person is a village role.\n· Death reactions and passive abilities still work."
+
+msgid "ui.night.rules.amalia"
+msgstr "· Only by day, while at least three living people count as wolves.\n· Amalia dies at once and asks the yes/no question aloud.\n· The storyteller answers truthfully, the app records it."
+
+msgid "ui.night.rules.besessener_wolf"
+msgstr "· Once per life, only if at least 5 people are alive just before his death.\n· Works at once after a death by day, at dawn after a death at night.\n· The victim can be a wolf. No skipping."
+
+msgid "ui.night.rules.blutpriester"
+msgstr "· Once per life, optional. The victim may be a wolf.\n· The victim dies at dawn. Not a pack attack, the Guardian Angel does not help.\n· The storyteller picks 0 to 3 wolves, only the Blood Priest learns the names."
+
+msgid "ui.night.rules.blutwolf"
+msgstr "· Applies at every vote while he lives.\n· His vote counts +1 for each directly adjacent dead seat.\n· The app does not count votes, the storyteller does."
+
+msgid "ui.night.rules.cerberus"
+msgstr "· +1 head every dawn, at most 3.\n· With 3 heads at an execution the app asks whether he fends it off.\n· On yes he survives, heads drop to 0, the execution counts as done."
+
+msgid "ui.night.rules.daemonischer_wolf"
+msgstr "· Once per life at any death with consequences, by day at once, at night at dawn.\n· Only role readings (Oracle) show the person as a werewolf, everything else stays true.\n· The curse lasts until the role changes, even after a revival."
+
+msgid "ui.night.rules.das_orakel"
+msgstr "· Mandatory every night, cannot be skipped. Checking oneself is forbidden.\n· Shows the Decoy Wolf's fake role. Wolves appear as Werewolf.\n· The Wolf Child only appears as Werewolf after the transformation."
+
+msgid "ui.night.rules.der_weise"
+msgstr "· Survives the first pack attack once per life, silently. Piercing attacks kill him.\n· If executed, the storyteller sets 0 to 3 nights and days of curse.\n· During the curse the village is silenced, shield, weapon, heartbreak and chain still work."
+
+msgid "ui.night.rules.detektiv"
+msgstr "· After every wolf death, if another wolf still lives.\n· Announcement: direction to the nearest living wolf, dead seats count.\n· On a tie: “both sides equally far”. One hint per wolf death."
+
+msgid "ui.night.rules.die_ewigen"
+msgstr "· One shared step for all living Eternal Ones, every night.\n· They only learn yes (solo-win role) or no.\n· If a person checked yes wins alone, all Eternal Ones win too, even dead ones."
+
+msgid "ui.night.rules.die_gebundenen"
+msgstr "· Only in night 1, one shared step.\n· Every living Bound sees all other living Bound.\n· If only one lives, she learns “no others”."
+
+msgid "ui.night.rules.doktor"
+msgstr "· Every night exactly two different other living people.\n· Team means true faction: village, werewolves or solo. Two solo players count as one team.\n· A Decoy Wolf's fake role does not fool him."
+
+msgid "ui.night.rules.doppelspion"
+msgstr "· Wakes with the pack at every pack step. The wolves only see one more awake person.\n· Counts as a non-wolf for parity.\n· If no wolf lives, his solo win is proposed, not the village win."
+
+msgid "ui.night.rules.dorfbewohner"
+msgstr "· No night ability, no use."
+
+msgid "ui.night.rules.dorfchronistin"
+msgstr "· Only in night 1. Anyone who does not act then loses the ability.\n· Counts all solo-win roles, living and dead.\n· A block cancels the step."
+
+msgid "ui.night.rules.dorfschmied"
+msgstr "· Once per life, asked every night from night 6 until the weapon is given.\n· The weapon repels the next pack attack on the holder, even piercing ones.\n· The storyteller picks a living wolf who dies in the process."
+
+msgid "ui.night.rules.dorfwache"
+msgstr "· The pack attack does not kill her while she lives.\n· Piercing attacks and the poison claw kill her.\n· Execution, witch poison and other deaths work as usual."
+
+msgid "ui.night.rules.dr_victor_frankenstein"
+msgstr "· Once per life, optional, every night until used.\n· The dead person gets a role nobody currently has. Never a wolf role.\n· Starts fresh and acts from the next night. Visible to all at dawn."
+
+msgid "ui.night.rules.faehrtenleser"
+msgstr "· Once per life, asked every night until used.\n· Shows left or right to the nearest wolf, dead seats count.\n· On a tie: “both sides equally far”."
+
+msgid "ui.night.rules.fenrir"
+msgstr "· +1 level at every dawn he lives through.\n· From level 3 he survives any death once, except storyteller corrections.\n· A revival resets level and protection."
+
+msgid "ui.night.rules.feuerteufel"
+msgstr "· Every night exactly one other person, never himself. No skipping.\n· If the marked person dies, the nearest living neighbours burn too.\n· Only one mark per Pyromaniac. If he dies, it fades."
+
+msgid "ui.night.rules.giftwolf"
+msgstr "· Two poison claws per life, at most one per night, optional.\n· The target learns at once and dies at dawn after night N+2.\n· Unstoppable, only an earlier death ends it. The Village Guard dies of it."
+
+msgid "ui.night.rules.grabraeuber"
+msgstr "· Once per life, picks a dead person with a recurring night step.\n· The step applies from the next night on, permanently, with fresh uses.\n· Not allowed: Loki, Chronicler, Death Prophet, Prophet of Doom, Fate Wolf, Guardian Spirit, Wolf Child, Apprentice."
+
+msgid "ui.night.rules.hades"
+msgstr "· Every actual death of another person gives 1 light, including his own kills.\n· Kill: at most one per night, dies at dawn. Pack protection does not work, personal shields do.\n· Barrier: at most one active, stops his next death. Wins at 10 lights."
+
+msgid "ui.night.rules.henker"
+msgstr "· Active once three executions are confirmed. Every night one person, no skipping.\n· That person dies with the next day's execution if the Executioner lives.\n· With no execution the next day, the mark expires."
+
+msgid "ui.night.rules.kartenschlucker"
+msgstr "· Only with death-realm cards, each night only with at least 2 stacks.\n· One action: nothing, 2 stacks for a kill, 5 for a shield, 10 for the win.\n· Stacks belong to the person, not the role."
+
+msgid "ui.night.rules.koenig"
+msgstr "· Once per life, in the first night with more dead than living.\n· The storyteller picks a living person from the village.\n· If there is none, the step is skipped and the ability stays unused."
+
+msgid "ui.night.rules.koenig_lykaon"
+msgstr "· Once per life in the first three nights, only if another wolf lives.\n· In nights 1 and 2 he may postpone, in night 3 he must choose.\n· The person becomes a Decoy Wolf and wakes with the pack from the next night."
+
+msgid "ui.night.rules.kopfgeldjaeger"
+msgstr "· Every execution of a wolf gives a list on a following night.\n· The storyteller picks three other living people, at least one wolf.\n· Only “at least one wolf” is shown. Mirroring and Cerberus fending off do not count."
+
+msgid "ui.night.rules.korrupter_richter"
+msgstr "· Every night optional, at most one mark, the old one is cleared.\n· The marked person counts as nominated by day, with +1 vote.\n· The storyteller counts votes."
+
+msgid "ui.night.rules.kriegerin_des_lichts"
+msgstr "· Once per life, optional, one other living person.\n· Only she learns whether the target is a wolf. A wolf survives.\n· If the target is no wolf, the Warrior dies at dawn."
+
+msgid "ui.night.rules.kutscher"
+msgstr "· Once per life, optional, from a night with at least 10 dead.\n· Three dead return, one of them as a Werewolf (he decides who).\n· They act from the next night, visible to all at dawn."
+
+msgid "ui.night.rules.lehrling"
+msgstr "· Mandatory, in the first night without a bond. He sees names, no roles.\n· If the master dies, he inherits the role at once, night abilities from the next night.\n· If the Apprentice dies first, the bond ends."
+
+msgid "ui.night.rules.loki"
+msgstr "· Loki may choose himself.\n· Lovers: If one dies, the other dies of heartbreak.\n· Rivals: Neither can win while the other lives."
+
+msgid "ui.night.rules.maertyrerin"
+msgstr "· Only at the end of the night and only if the first pack victim would really die.\n· If a protection works, she is not asked.\n· If she sacrifices herself, she dies in place of the victim. The Elder's curse prevents it."
+
+msgid "ui.night.rules.manipulator"
+msgstr "· If nominated, he dies at once. The day continues.\n· Wins when exactly three people live and he was never nominated.\n· “Never nominated” holds even after revival and role change."
+
+msgid "ui.night.rules.nachtwaechter"
+msgstr "· Every morning after dawn, while he lives.\n· If a wolf or solo player sits right next to him, the bells ring, without names.\n· Neighbours are the nearest living people, dead seats are skipped."
+
+msgid "ui.night.rules.nekromant"
+msgstr "· Shield: sacrifice three dead, stops the next death of any kind, expires with the next night.\n· Redirect only if the pack attack would kill him. If he declines, he dies.\n· Each dead person can be sacrificed once. By day: one try to name a wolf."
+
+msgid "ui.night.rules.parasit"
+msgstr "· Every night a new host or stay with the old one.\n· With a living host he survives any cause of death, only the host's death kills him.\n· Wins in the final 3. The apple has no effect on him."
+
+msgid "ui.night.rules.pestbringerin"
+msgstr "· Every night one other living, healthy person.\n· At the start of every dawn each infected person infects a neighbour (random).\n· The plague is not deadly. The apple doubles the step."
+
+msgid "ui.night.rules.prophet_des_untergangs"
+msgstr "· Night 1: mark exactly three other living people.\n· Once all three are dead, he may kill one person each night, death at dawn.\n· Pack protection does not work, personal shields do."
+
+msgid "ui.night.rules.rachsuechtiger_wolf"
+msgstr "· Only in nights 3, 6, 9 …, optional, one other wolf.\n· Not a pack attack: the Guardian Angel does not work, personal shields do.\n· Counts as a wolf. If he is the last wolf, his solo win is proposed."
+
+msgid "ui.night.rules.rattenfaenger"
+msgstr "· Every night 1 or 2 other living people who are not yet enchanted.\n· The enchantment is permanent, not even the doll lifts it.\n· He wins once all living people are enchanted. The apple doubles the step."
+
+msgid "ui.night.rules.ritter"
+msgstr "· Once per life, only on death by the pack attack, not by poison.\n· Hits the nearest living person who counts as a wolf, dead seats count.\n· On a tie the storyteller chooses. Silenced during the Elder's curse."
+
+msgid "ui.night.rules.rotkaeppchen"
+msgstr "· Every night one other living person, a wolf too. They may refuse.\n· If they grant shelter: death chain, if one dies the other dies too.\n· Apple: their next recurring night step runs twice, only in the following night."
+
+msgid "ui.night.rules.rudelvater"
+msgstr "· Survives once per life the first death that is neither pack attack nor execution.\n· If executed, there is a second pack step in the following night.\n· That extra victim pierces protection."
+
+msgid "ui.night.rules.schattenhund"
+msgstr "· Once per life, asked every night until used.\n· Blocks all night steps of village roles for the whole night.\n· Death reactions and passive abilities still work. Wolves and solo players are unaffected."
+
+msgid "ui.night.rules.schattenwanderer"
+msgstr "· Once per life, every night until used, optional.\n· If one of the two dies, the other dies instead, then the chain is used up.\n· Storyteller corrections are not redirected."
+
+msgid "ui.night.rules.schicksalswolf"
+msgstr "· Night 1: mark exactly three other living people, wolves too.\n· Night 4: as many extra victims as marked people are among the first three dead. Skipping allowed.\n· Extra victims are pack attacks: protection works, they do not pierce."
+
+msgid "ui.night.rules.schutzengel"
+msgstr "· Mandatory, every night exactly one other living person, cannot be skipped.\n· Only protects against the pack attack, not poison or other deaths.\n· Piercing attacks break the protection."
+
+msgid "ui.night.rules.schutzgeist"
+msgstr "· Only as a dead player, once per life, in the first night after death.\n· The shield works from the following night against the next pack attack.\n· If she picks a wolf, dawn announces it publicly without a name."
+
+msgid "ui.night.rules.schwarze_witwe"
+msgstr "· Every night one other living person.\n· Only works if the person belongs to a living lovers or rivals pair.\n· Both die at dawn and do not wake again that night."
+
+msgid "ui.night.rules.seelentauscher"
+msgstr "· Once per life, optional, two different people, living or dead, himself allowed.\n· Both get the new role with fresh uses, without bonds.\n· Living players learn their new role at once and privately."
+
+msgid "ui.night.rules.selbstmoerder"
+msgstr "· Wins if 5 or more people are already dead at his execution.\n· An execution by storyteller correction counts too.\n· An extra death by the Executioner does not count."
+
+msgid "ui.night.rules.sensentraeger"
+msgstr "· Once per life, at once after a death by day, at dawn after a death at night.\n· Any living person except him. No skipping.\n· The Guardian Angel does not protect. Silenced during the Elder's curse."
+
+msgid "ui.night.rules.seuchenwolf"
+msgstr "· After his death the next pack attack pierces all protections.\n· A night without a pack victim uses nothing up. Several do not stack.\n· Not pierced: the Blacksmith's weapon, personal shields, redirects."
+
+msgid "ui.night.rules.siegreicher_wolf"
+msgstr "· Counts double only in wolf parity.\n· Otherwise counts once: for “no wolf lives”, Manipulator, Ranger.\n· The Oracle sees “Werewolf”."
+
+msgid "ui.night.rules.spiegelwolf"
+msgstr "· Mirrors the first confirmed execution once per life onto the nominating person.\n· The day's execution counts as done, he survives.\n· No nomination that day, or the nominator is dead: normal death."
+
+msgid "ui.night.rules.spuerhund"
+msgstr "· Every night exactly three other living people, no skipping. Under four alive the step is skipped.\n· Checkmark if at least one is a wolf or solo player (true faction).\n· On a cross he loses the ability but is still called every night."
+
+msgid "ui.night.rules.todesprediger"
+msgstr "· Only in night 1, secret with the storyteller. Anyone who does not act then loses it.\n· Day N follows night N. Deaths at dawn count for night N.\n· Any kind of death counts, except a correction without consequences."
+
+msgid "ui.night.rules.traumdeuter"
+msgstr "· Every night the storyteller picks three other living people, at least one wolf.\n· He only learns “at least one wolf”, never the number. True wolf count applies.\n· Fewer than three others or no wolf: the step is skipped."
+
+msgid "ui.night.rules.trugbilderwolf"
+msgstr "· The storyteller sets the fake role at game setup, never at random.\n· Only the Oracle sees it. Counts and checks use the true wolf count.\n· The Witch sees the true role when saving."
+
+msgid "ui.night.rules.verdammniswaechter"
+msgstr "· Mandatory, every night: pack victim or the person offered by the app.\n· Only affects the first pack victim. The verdict bypasses protection but stays a pack attack.\n· If he is the victim himself or there is no offer, the step is skipped."
+
+msgid "ui.night.rules.voodoo_priester"
+msgstr "· At most one living doll. With no doll he gives a new one next night.\n· Secret: the doll is not told. Another person, never himself.\n· His death hits the doll instead. Without a doll he dies himself."
+
+msgid "ui.night.rules.waechter_am_tor"
+msgstr "· While he lives, no new wolf can arise: the person becomes a Villager.\n· Blocks Wolf Child, Apprentice inheritance, King Lycaon, Soul Swapper and Coachman revivals.\n· Storyteller corrections are not blocked. Only the person is told."
+
+msgid "ui.night.rules.wahnsinniger_kutscher"
+msgstr "· When he is executed, both direct neighbours die with him.\n· Neighbours are the nearest living people, dead seats are skipped.\n· A mirror on him is not an execution. Silenced during the Elder's curse."
+
+msgid "ui.night.rules.waldhexe"
+msgstr "· One potion of each kind per life, both may be used in the same night.\n· Heal only the current pack victim, she learns their true role. Poison works at dawn.\n· A revival refills the potions."
+
+msgid "ui.night.rules.waldlaeufer"
+msgstr "· Every night while he lives. No choice.\n· Counts living people who count as wolves.\n· The Victorious Wolf counts once, an untransformed Wolf Child does not."
+
+msgid "ui.night.rules.werwolf"
+msgstr "· Every night, while at least one living person counts as a wolf.\n· Any living person can be chosen, a wolf too. The victim dies at dawn.\n· If the pack cannot agree, the storyteller decides the victim. Protection and rescue can prevent it."
+
+msgid "ui.night.rules.wolfskind"
+msgstr "· Mandatory: picks a role model, another living person, not themself.\n· If the role model dies with consequences, they count as a wolf at once and appear as Werewolf.\n· They wake with the pack from the following night. A Gatewarden makes them a Villager."
+
+msgid "ui.night.rules.zeitwaechter"
+msgstr "· Once per life, as the first step. Skipping keeps the ability.\n· All night steps of all roles are cancelled, no one dies at dawn from this night.\n· Effects due from earlier nights still happen. The night number keeps counting."
+
+msgid "ui.setup.voice.tooltip"
+msgstr "Enter a name by voice"
+
+msgid "ui.setup.voice.denied"
+msgstr "The microphone is not allowed. Allow it in the browser settings."
+
+msgid "ui.setup.voice.none"
+msgstr "Nothing understood. Try again."

@@ -2,7 +2,7 @@ class_name ActCard
 extends GrimmButton
 ## Akt-Karte der Vorbereitung (DA-89): ein fertiges Rollen-Set auf dem Hain-Kartenrahmen. Zeigt Aktnummer, Titel, Untertitel,
 ## Schwierigkeit (Punkte, zusätzlich als Text im Untertitel) und die Tragkraft („bis 17 Personen“, wenn der Akt die Runde nicht trägt).
-## Der gewählte Akt lodert als Feuer entlang des Kartenrahmens (`FireGlow`, Stärke nach Aktstufe: I Glut, II Flammen, III wild, IV sehr wild mit Funken)
+## Der gewählte Akt lodert als Feuer entlang des Kartenrahmens (`FireGlow`, Stärke nach Aktstufe: schon I lodert kräftig, bis IV steigert sich Glut, Höhe, Unruhe und Funkenflug)
 ## und trägt ein Häkchen (Blutrot nur für Aktives); nicht gewählte Akte brennen nicht. Ein Akt, der die Personenzahl nicht trägt,
 ## ist gedämpft und nicht wählbar. Verbinden über `pressed`; Auswahl setzt PlayerSetup.
 

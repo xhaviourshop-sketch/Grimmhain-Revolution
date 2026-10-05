@@ -108,9 +108,27 @@ static func notice_card(card: Dictionary) -> Control:
 	var panel: DetailPanel = layer[1]
 	var column := panel.content
 	_label(column, "ui.cockpit.notice.heading.group" if bool(card.get("group", false)) else "ui.cockpit.notice.heading", {}, &"HeadingLabel")
+	var picture := _bond_picture(str(card["text_key"]))
+	if picture != null:
+		column.add_child(picture)
 	_label(column, str(card["text_key"]), CockpitText.notice_values(card.get("values", {})), &"ShowValueLabel").name = "NoticeText"
 	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.notice.close", GrimmButton.Kind.PRIMARY))
 	return root
+
+
+## Bild der Loki-Bindung (`assets/ui/bund-liebende.png`, `bund-rivalen.png`), solange das Bild fehlt, bleibt die Karte ohne Bild.
+static func _bond_picture(text_key: String) -> TextureRect:
+	var file := "bund-liebende" if text_key.ends_with(".love") else "bund-rivalen" if text_key.ends_with(".rival") else ""
+	var path := "res://assets/ui/%s.png" % file
+	if file == "" or not ResourceLoader.exists(path):
+		return null
+	var picture := TextureRect.new()
+	picture.name = "BondPicture"
+	picture.texture = load(path) as Texture2D
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.custom_minimum_size = Vector2(0.0, 160.0)
+	return picture
 
 
 ## Rollenanzeige, neutrale Liste (`CockpitView.role_show_list`): eine Schaltfläche je Person, die nächste offene Person

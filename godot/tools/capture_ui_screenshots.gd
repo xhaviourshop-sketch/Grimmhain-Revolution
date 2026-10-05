@@ -37,7 +37,8 @@ const PREP_SHOTS := [
 	["03-rollen-gefuellt-akt4", "_prep_roles_filled_akt4", "zufaellig"],
 	["01-runde-akt1", "_prep_round_akt1", "zufaellig"], ["01-runde-akt2", "_prep_round_akt2", "zufaellig"],
 	["01-runde-akt3", "_prep_round_akt3", "zufaellig"], ["01-runde-akt4", "_prep_round_akt4", "zufaellig"],
-	["01-runde-akt4-bewegung", "_prep_round_akt4_motion", "zufaellig"],
+	["01-runde-akt4-bewegung", "_prep_round_akt4_motion", "zufaellig"], ["01-runde-akt1-bewegung", "_prep_round_akt1_motion", "zufaellig"],
+	["02-namen-mikrofon", "_prep_names_mic", "zufaellig"],
 ]
 const SCREENSHOT_SEED := 20260926  ## fester Setup-Seed, damit die Bilder reproduzierbar sind
 
@@ -65,7 +66,7 @@ func _initialize() -> void:
 		var ok: bool = await _capture(path, shot[2], shot[3], shot[4], shot[5], shot[6])
 		if not ok:
 			failures += 1
-	if only == "" or "prep".contains(only) or only.begins_with("prep"):
+	if true:  # die Vorbereitungsbilder filtert `--only` unten über den Pfad
 		for size: Vector2i in PREP_SIZES:
 			for shot: Array in PREP_SHOTS:
 				var path := out_root.path_join("prep").path_join("%s-%s-%dx%d.png" % [shot[0], shot[2], size.x, size.y])
@@ -204,6 +205,25 @@ func _prep_round_akt4_motion(shell: AppShell) -> void:
 	await _prep_round_akt(shell, "akt4")
 	for i: int in 90:
 		await process_frame
+
+
+func _prep_round_akt1_motion(shell: AppShell) -> void:
+	shell.get_app_context().settings.set_reduced_motion(false)
+	await _prep_round_akt(shell, "akt1")
+	for i: int in 90:
+		await process_frame
+
+
+## Namensschritt mit Mikrofon im Namensfeld (im Editor ist die Spracherkennung nicht verfügbar, das Symbol wird für das Bild eingeblendet).
+func _prep_names_mic(shell: AppShell) -> void:
+	await _prep_names(shell, false, false)
+	var mic := _node(shell, "MicButton")
+	if mic != null:
+		mic.visible = true
+	var input := _node(shell, "NameInput") as LineEdit
+	if input != null:
+		input.text = "Timo"
+	await process_frame
 
 
 func _prep_round_manual(shell: AppShell) -> void:

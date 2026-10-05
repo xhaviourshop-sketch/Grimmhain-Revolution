@@ -303,9 +303,8 @@ static func _answer_choice(ctx: RuleContext, prompt: PendingPrompt, yes: bool) -
 		s.loki_pairs.append({"loki_id": prompt.actor_id, "a": int(ids[0]), "b": int(ids[1]), "kind": kind, "ended": false})
 		s.players[prompt.actor_id].ability_uses[LOKI_USE_KEY] = 1
 		ctx.emit(GameEvent.LOKI_BOUND, Visibility.GM, {"loki_id": prompt.actor_id, "target_ids": ids.duplicate(), "kind": kind, "night": night})
-		# DI-04: beide Personen erfahren Partner und Bindungsart.
-		NoticeRules.queue(ctx, NoticeRules.LOKI_BOND, [int(ids[0])] as Array[int], {"partner_id": int(ids[1]), "bond": kind})
-		NoticeRules.queue(ctx, NoticeRules.LOKI_BOND, [int(ids[1])] as Array[int], {"partner_id": int(ids[0]), "bond": kind})
+		# DI-04: beide Personen erfahren die Bindungsart, auf einer gemeinsamen Karte („Ihr seid …“), also nur ein Hinweis.
+		NoticeRules.queue(ctx, NoticeRules.LOKI_BOND, [int(ids[0]), int(ids[1])] as Array[int], {"bond": kind})
 		_finish(ctx, prompt, STAGE_MODE, {"choice": yes})
 		return
 	var partner := int(ids[0])

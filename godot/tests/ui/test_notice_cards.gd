@@ -52,7 +52,7 @@ func _assert_no_role_names(text: String, label: String) -> void:
 
 # --- Loki -------------------------------------------------------------------------------------------
 
-func test_loki_cards_show_only_the_own_partner_and_are_confirmed_one_by_one() -> void:
+func test_loki_shows_one_joint_card_for_the_pair() -> void:
 	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
@@ -64,27 +64,21 @@ func test_loki_cards_show_only_the_own_partner_and_are_confirmed_one_by_one() ->
 	var next := UiGame.next_of(s)
 	assert_eq(str(next["kind"]), "notice", "Hinweiskarte folgt sofort")
 	assert_eq(str(next["text_key"]), "ui.notice.loki_bond.love", "Text für Liebende")
-	assert_eq((next["viewers"] as Array).map(func(v: Dictionary) -> int: return int(v["person_id"])), [3], "erste Karte für Person 3")
-	assert_eq(int((next["values"] as Dictionary)["partner"]["person_id"]), 5, "Partner ist Person 5")
+	assert_eq((next["viewers"] as Array).map(func(v: Dictionary) -> int: return int(v["person_id"])), [3, 5], "eine Karte für beide Personen")
+	assert_true(bool(next["group"]), "gemeinsame Karte")
 	assert_true(find_button(screen, "ShowNoticeButton") != null and find_node(screen, "AckNoticeButton") == null, "nur Zeigen; Schließen der Karte bestätigt")
 	_assert_no_role_names(_texts(screen), "Hinweiskarte der Spielleitung")
 	await press(find_button(screen, "ShowNoticeButton"))
 	var layer := find_node(screen, "NoticeLayer")
-	assert_true(layer != null, "Karte für die Person")
+	assert_true(layer != null, "Karte für das Paar")
 	var shown := _texts(layer)
-	assert_true(shown.contains("5 · E"), "nennt den eigenen Partner: %s" % shown)
-	assert_false(shown.contains("3 · C"), "nennt nicht die betrachtende Person selbst als Dritte")
+	assert_true(shown.contains(tr("ui.notice.loki_bond.love")), "Text „Ihr seid Liebende“: %s" % shown)
 	assert_false(shown.contains("2 · B"), "nennt nicht Loki")
 	_assert_no_role_names(shown, "gezeigte Karte")
 	await press(find_button(layer, "CloseLayerButton"))  # Schließen der gezeigten Karte bestätigt sie
-	next = UiGame.next_of(s)
-	assert_eq(str(next["kind"]), "notice", "zweite Karte")
-	assert_eq(int(((next["viewers"] as Array)[0] as Dictionary)["person_id"]), 5, "für Person 5")
-	assert_eq(int((next["values"] as Dictionary)["partner"]["person_id"]), 3, "Partner ist Person 3")
-	assert_true(UiGame.step(s) == "notice", "auch die zweite wird bestätigt")
-	assert_ne(str(UiGame.next_of(s)["kind"]), "notice", "danach geht die Nacht weiter")
+	assert_ne(str(UiGame.next_of(s)["kind"]), "notice", "danach geht die Nacht weiter, kein zweiter Hinweis")
 	var acks := s.commands().filter(func(c: Command) -> bool: return c.type == Command.ACK_NOTICE)
-	assert_eq(acks.size(), 2, "zwei AckNotice im Befehlsverlauf")
+	assert_eq(acks.size(), 1, "ein AckNotice im Befehlsverlauf")
 
 
 func test_loki_rivals_card_names_the_kind() -> void:
@@ -93,7 +87,7 @@ func test_loki_rivals_card_names_the_kind() -> void:
 	assert_true(s.answer_targets([4, 6]).ok and s.answer_choice(false).ok, "Rivalen")
 	var next := UiGame.next_of(s)
 	assert_eq(str(next["text_key"]), "ui.notice.loki_bond.rival", "Text für Rivalen")
-	assert_eq(int(((next["values"] as Dictionary)["partner"] as Dictionary)["person_id"]), 6, "Partner")
+	assert_eq((next["viewers"] as Array).size(), 2, "beide Personen auf einer Karte")
 
 
 func test_notice_survives_navigation_restart_and_undo() -> void:

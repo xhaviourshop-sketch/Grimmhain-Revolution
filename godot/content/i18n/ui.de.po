@@ -2985,10 +2985,10 @@ msgid "ui.cockpit.notice.close"
 msgstr "Schließen"
 
 msgid "ui.notice.loki_bond.love"
-msgstr "Du und {partner} seid Liebende. Stirbt eine Person von euch, stirbt die andere sofort mit."
+msgstr "Ihr seid Liebende. Stirbt einer von euch, stirbt der andere mit."
 
 msgid "ui.notice.loki_bond.rival"
-msgstr "Du und {partner} seid Rivalen. Die Bindung hat keine eigene Wirkung, sie zählt nur für die Schwarze Witwe."
+msgstr "Ihr seid Rivalen. Keiner von euch kann gewinnen, solange der andere lebt."
 
 msgid "ui.notice.piper_new"
 msgstr "Ihr seid verzaubert. Der Rattenfänger gewinnt, wenn alle anderen Lebenden verzaubert sind."
@@ -8425,13 +8425,13 @@ msgid "ui.night.maertyrerin.pick.help"
 msgstr "Tippe das Opfer oder wähle Nicht heute."
 
 msgid "ui.night.loki.mode.title"
-msgstr "Loki verbindet zwei Personen."
+msgstr "Loki verbindet zwei Personen als Liebende oder Rivalen."
 
 msgid "ui.night.loki.mode.help"
 msgstr "Liebende oder Rivalen?"
 
 msgid "ui.night.loki.targets.title"
-msgstr "Loki verbindet zwei Personen."
+msgstr "Loki verbindet zwei Personen als Liebende oder Rivalen."
 
 msgid "ui.night.loki.targets.help"
 msgstr "Tippe zwei Personen."
@@ -8681,3 +8681,228 @@ msgstr "Zuerst aufrufen (nur Ansage)"
 
 msgid "ui.cockpit.card.notice.heading"
 msgstr "Privater Hinweis"
+
+msgid "ui.night.rules.albtraumwolf"
+msgstr "· Er wählt jede Nacht, auch dieselbe Person wie zuvor. Verzicht gibt es nicht.\n· Blockiert nur Nachtschritte, wenn die Person Dorfrolle ist.\n· Todesreaktionen und passive Fähigkeiten laufen weiter."
+
+msgid "ui.night.rules.amalia"
+msgstr "· Nur am Tag, solange mindestens drei Lebende als Wolf zählen.\n· Amalia stirbt sofort und stellt die Ja-/Nein-Frage laut.\n· Der Spielleiter antwortet wahrheitsgemäß, die App protokolliert es."
+
+msgid "ui.night.rules.besessener_wolf"
+msgstr "· Einmal je Leben, nur wenn unmittelbar vor dem Tod mindestens 5 Personen leben.\n· Wirkt nach einem Tod am Tag sofort, nachts am Morgen.\n· Das Opfer kann auch ein Wolf sein. Verzicht gibt es nicht."
+
+msgid "ui.night.rules.blutpriester"
+msgstr "· Einmal je Leben, freiwillig. Das Opfer darf auch ein Wolf sein.\n· Das Opfer stirbt am Morgen. Kein Rudelangriff, der Schutzengel hilft nicht.\n· Der Spielleiter wählt 0 bis 3 Wölfe, nur der Blutpriester erfährt die Namen."
+
+msgid "ui.night.rules.blutwolf"
+msgstr "· Gilt bei jeder Abstimmung, solange er lebt.\n· Seine Stimme zählt +1 je direkt benachbartem toten Platz.\n· Stimmen zählt die App nicht, der Spielleiter zählt selbst."
+
+msgid "ui.night.rules.cerberus"
+msgstr "· +1 Kopf in jeder Morgenauflösung, höchstens 3.\n· Bei 3 Köpfen und Hinrichtung fragt die App, ob er abwehrt.\n· Bei Ja überlebt er, Köpfe auf 0, die Hinrichtung gilt als erfolgt."
+
+msgid "ui.night.rules.daemonischer_wolf"
+msgstr "· Einmal je Leben bei jedem Tod mit Todesfolgen, am Tag sofort, nachts am Morgen.\n· Nur Rollenauskünfte (Orakel) zeigen die Person als Werwolf, alles andere bleibt wahr.\n· Der Fluch bleibt bis zum Rollenwechsel, auch nach einer Wiederbelebung."
+
+msgid "ui.night.rules.das_orakel"
+msgstr "· Pflicht in jeder Nacht, nicht überspringbar. Selbstprüfung ist verboten.\n· Zeigt die Scheinrolle des Trugbilderwolfs. Wölfe erscheinen als Werwolf.\n· Das Wolfskind erscheint erst nach der Verwandlung als Werwolf."
+
+msgid "ui.night.rules.der_weise"
+msgstr "· Überlebt einmal je Leben den ersten Rudelangriff, still. Durchdringende Angriffe töten ihn.\n· Wird er hingerichtet, legt der Spielleiter 0 bis 3 Nächte und Tage Fluch fest.\n· Im Fluch ruht alles beim Dorf, Schild, Waffe, Liebeskummer und Kette wirken weiter."
+
+msgid "ui.night.rules.detektiv"
+msgstr "· Nach jedem Tod eines Wolfs, wenn danach noch ein Wolf lebt.\n· Ansage: Richtung zum nächsten lebenden Wolf, tote Plätze zählen mit.\n· Bei gleichem Abstand: „beide Seiten gleich weit“. Ein Hinweis je Wolfstod."
+
+msgid "ui.night.rules.die_ewigen"
+msgstr "· Ein gemeinsamer Schritt aller lebenden Ewigen, jede Nacht.\n· Sie erfahren nur Ja (Einzelsieg-Rolle) oder Nein.\n· Gewinnt eine mit Ja geprüfte Person allein, gewinnen alle Ewigen mit, auch tote."
+
+msgid "ui.night.rules.die_gebundenen"
+msgstr "· Nur in Nacht 1, ein gemeinsamer Schritt.\n· Jede lebende Gebundene sieht alle anderen lebenden Gebundenen.\n· Lebt nur eine, erfährt sie „keine anderen“."
+
+msgid "ui.night.rules.doktor"
+msgstr "· Jede Nacht genau zwei verschiedene andere Lebende.\n· Team heißt wahre Fraktion: Dorf, Werwölfe oder Einzelsieg. Zwei Einzelsieger sind ein Team.\n· Die Scheinrolle eines Trugbilderwolfs täuscht nicht."
+
+msgid "ui.night.rules.doppelspion"
+msgstr "· Wacht bei jedem Rudelschritt mit. Die Wölfe sehen nur eine weitere wache Person.\n· Zählt in der Parität als Nicht-Wolf.\n· Lebt kein Wolf mehr, wird sein Alleinsieg vorgeschlagen, nicht der Dorfsieg."
+
+msgid "ui.night.rules.dorfbewohner"
+msgstr "· Keine Nachtfähigkeit, kein Einsatz."
+
+msgid "ui.night.rules.dorfchronistin"
+msgstr "· Nur in Nacht 1. Wer da nicht handelt, verliert die Fähigkeit.\n· Gezählt werden alle Einzelsieg-Rollen, lebend und tot.\n· Eine Blockade lässt den Schritt entfallen."
+
+msgid "ui.night.rules.dorfschmied"
+msgstr "· Einmal je Leben, ab Nacht 6 jede Nacht gefragt, bis die Waffe vergeben ist.\n· Die Waffe wehrt den nächsten Rudelangriff auf den Träger ab, auch durchdringende.\n· Der Spielleiter wählt einen lebenden Wolf, der dabei stirbt."
+
+msgid "ui.night.rules.dorfwache"
+msgstr "· Der Rudelangriff tötet sie nicht, solange sie lebt.\n· Durchdringende Angriffe und die Giftpranke töten sie.\n· Hinrichtung, Waldhexengift und andere Tode wirken normal."
+
+msgid "ui.night.rules.dr_victor_frankenstein"
+msgstr "· Einmal je Leben, freiwillig, jede Nacht bis zur Nutzung.\n· Die tote Person erhält eine Rolle, die gerade niemand hat. Nie eine Wolfsrolle.\n· Sie startet frisch und handelt ab der folgenden Nacht. Am Morgen öffentlich sichtbar."
+
+msgid "ui.night.rules.faehrtenleser"
+msgstr "· Einmal je Leben, jede Nacht gefragt, bis er es nutzt.\n· Zeigt links oder rechts zum nächsten Wolf, tote Plätze zählen mit.\n· Bei gleichem Abstand: „beide Seiten gleich weit“."
+
+msgid "ui.night.rules.fenrir"
+msgstr "· +1 Stufe in jeder Morgenauflösung, in der er lebt.\n· Ab Stufe 3 überlebt er einmal jeden Tod, außer Spielleiterkorrekturen.\n· Eine Wiederbelebung setzt Stufe und Schutz zurück."
+
+msgid "ui.night.rules.feuerteufel"
+msgstr "· Jede Nacht genau eine andere Person, nie er selbst. Verzicht gibt es nicht.\n· Stirbt die Markierte, brennen die nächsten lebenden Nachbarn mit.\n· Nur eine Markierung je Feuerteufel. Stirbt er, erlischt sie."
+
+msgid "ui.night.rules.giftwolf"
+msgstr "· Zwei Giftpranken je Leben, höchstens eine pro Nacht, freiwillig.\n· Das Ziel erfährt es sofort und stirbt am Morgen nach Nacht N+2.\n· Unaufhaltsam, nur ein früherer Tod beendet es. Die Dorfwache stirbt daran."
+
+msgid "ui.night.rules.grabraeuber"
+msgstr "· Einmal je Leben, wählt eine tote Person mit wiederkehrendem Nachtschritt.\n· Der Schritt gilt ab der nächsten Nacht dauerhaft, mit frischen Einsätzen.\n· Nicht wählbar: Loki, Chronistin, Todesprediger, Prophet, Schicksalswolf, Schutzgeist, Wolfskind, Lehrling."
+
+msgid "ui.night.rules.hades"
+msgstr "· Jeder tatsächliche Tod einer anderen Person gibt 1 Licht, auch eigene Tötungen.\n· Tötung: höchstens eine pro Nacht, Tod am Morgen. Der Rudelschutz wirkt nicht, persönliche Schilde schon.\n· Barriere: höchstens eine aktive, verhindert seinen nächsten Tod. Bei 10 Lichtern Sieg."
+
+msgid "ui.night.rules.henker"
+msgstr "· Aktiv, sobald drei Hinrichtungen bestätigt wurden. Jede Nacht eine Person, kein Verzicht.\n· Sie stirbt bei der Hinrichtung des Folgetags mit, wenn der Henker lebt.\n· Ohne Hinrichtung am Folgetag verfällt die Markierung."
+
+msgid "ui.night.rules.kartenschlucker"
+msgstr "· Nur mit Totenreichkarten, jede Nacht nur mit mindestens 2 Stapeln.\n· Eine Aktion: nichts, 2 Stapel Tötung, 5 Stapel Schild, 10 Stapel Sieg.\n· Stapel gehören der Person, nicht der Rolle."
+
+msgid "ui.night.rules.koenig"
+msgstr "· Einmal je Leben, in der ersten Nacht mit mehr Toten als Lebenden.\n· Der Spielleiter wählt eine lebende Person aus dem Dorf.\n· Gibt es keine, entfällt der Schritt und die Fähigkeit bleibt ungenutzt."
+
+msgid "ui.night.rules.koenig_lykaon"
+msgstr "· Einmal je Leben in den ersten drei Nächten, nur wenn ein anderer Wolf lebt.\n· In Nacht 1 und 2 darf er verschieben, in Nacht 3 muss er wählen.\n· Die Person wird Trugbilderwolf und wacht ab der folgenden Nacht mit dem Rudel auf."
+
+msgid "ui.night.rules.kopfgeldjaeger"
+msgstr "· Jede Hinrichtung eines Wolfs ergibt eine Liste in einer folgenden Nacht.\n· Der Spielleiter wählt drei andere Lebende, mindestens einen Wolf.\n· Angezeigt wird nur „mindestens ein Wolf“. Spiegelung und Cerberus-Abwehr zählen nicht."
+
+msgid "ui.night.rules.korrupter_richter"
+msgstr "· Jede Nacht freiwillig, höchstens eine Markierung, die alte wird gelöscht.\n· Die Markierte gilt am Tag als nominiert, mit +1 Stimme.\n· Stimmen zählt der Spielleiter selbst."
+
+msgid "ui.night.rules.kriegerin_des_lichts"
+msgstr "· Einmal je Leben, freiwillig, eine andere lebende Person.\n· Nur sie erfährt, ob das Ziel ein Wolf ist. Ein Wolf überlebt.\n· Ist das Ziel kein Wolf, stirbt die Kriegerin am Morgen."
+
+msgid "ui.night.rules.kutscher"
+msgstr "· Einmal je Leben, freiwillig, ab einer Nacht mit mindestens 10 Toten.\n· Drei Tote kehren zurück, einer davon als Werwolf (er bestimmt wer).\n· Sie handeln ab der folgenden Nacht, am Morgen öffentlich sichtbar."
+
+msgid "ui.night.rules.lehrling"
+msgstr "· Pflicht, in der ersten Nacht ohne Bindung. Er sieht Namen, keine Rollen.\n· Stirbt der Meister, erbt er die Rolle sofort, Nachtfähigkeiten ab der folgenden Nacht.\n· Stirbt der Lehrling zuerst, verfällt die Bindung."
+
+msgid "ui.night.rules.loki"
+msgstr "· Loki darf sich selbst wählen.\n· Liebende: Stirbt einer, stirbt der andere aus Liebeskummer mit.\n· Rivalen: Keiner kann gewinnen, solange der andere lebt."
+
+msgid "ui.night.rules.maertyrerin"
+msgstr "· Nur am Ende der Nacht und nur, wenn das erste Rudelopfer wirklich sterben würde.\n· Greift ein Schutz, wird sie nicht gefragt.\n· Opfert sie sich, stirbt sie als Ersatzopfer. Der Fluch des Weisen verhindert es."
+
+msgid "ui.night.rules.manipulator"
+msgstr "· Wird er nominiert, stirbt er sofort. Der Tag bleibt aktiv.\n· Siegt, wenn genau drei Personen leben und er nie nominiert wurde.\n· „Nie nominiert“ bleibt auch nach Wiederbelebung und Rollenwechsel."
+
+msgid "ui.night.rules.nachtwaechter"
+msgstr "· Jeden Morgen nach der Morgenauflösung, solange er lebt.\n· Sitzt ein Wolf oder Einzelsieger direkt neben ihm, läuten die Glocken, ohne Namen.\n· Nachbarn sind die nächsten Lebenden, tote Plätze werden übersprungen."
+
+msgid "ui.night.rules.nekromant"
+msgstr "· Schild: drei Tote opfern, verhindert den nächsten Tod jeder Art, verfällt mit der nächsten Nacht.\n· Umlenkung nur, wenn der Rudelangriff ihn töten würde. Verzichtet er, stirbt er.\n· Jede tote Person lässt sich nur einmal opfern. Am Tag: ein Versuch, einen Wolf zu nennen."
+
+msgid "ui.night.rules.parasit"
+msgstr "· Jede Nacht neuer Wirt oder beim alten bleiben.\n· Mit lebendem Wirt überlebt er jede Todesursache, nur der Tod des Wirts tötet ihn.\n· Siegt in den Final 3. Der Apfel wirkt nicht bei ihm."
+
+msgid "ui.night.rules.pestbringerin"
+msgstr "· Jede Nacht eine andere lebende, gesunde Person.\n· Zu Beginn jeder Morgenauflösung steckt jede Infizierte einen Nachbarn an (Zufall).\n· Die Seuche ist nicht tödlich. Der Apfel verdoppelt den Schritt."
+
+msgid "ui.night.rules.prophet_des_untergangs"
+msgstr "· Nacht 1: genau drei andere Lebende markieren.\n· Sind alle drei tot, tötet er jede Nacht freiwillig eine Person, Tod am Morgen.\n· Der Rudelschutz wirkt nicht, persönliche Schilde schon."
+
+msgid "ui.night.rules.rachsuechtiger_wolf"
+msgstr "· Nur in den Nächten 3, 6, 9 …, freiwillig, einen anderen Wolf.\n· Kein Rudelangriff: Der Schutzengel wirkt nicht, persönliche Schilde schon.\n· Er zählt als Wolf. Ist er der letzte Wolf, wird sein Alleinsieg vorgeschlagen."
+
+msgid "ui.night.rules.rattenfaenger"
+msgstr "· Jede Nacht 1 oder 2 andere Lebende, die noch nicht verzaubert sind.\n· Die Verzauberung bleibt dauerhaft, auch die Puppe hebt sie nicht auf.\n· Sind alle Lebenden verzaubert, gewinnt er. Der Apfel verdoppelt den Schritt."
+
+msgid "ui.night.rules.ritter"
+msgstr "· Einmal je Leben, nur bei einem Tod durch den Rudelangriff, nicht durch Gift.\n· Trifft die nächste lebende Person, die als Wolf zählt, tote Plätze zählen mit.\n· Bei Gleichstand wählt der Spielleiter. Im Fluch des Weisen ruht es."
+
+msgid "ui.night.rules.rotkaeppchen"
+msgstr "· Jede Nacht eine andere lebende Person, auch ein Wolf. Sie darf ablehnen.\n· Gewährt sie Zuflucht: Todeskette, stirbt eine, stirbt die andere mit.\n· Apfel: Ihr nächster wiederkehrender Nachtschritt läuft doppelt, nur in der folgenden Nacht."
+
+msgid "ui.night.rules.rudelvater"
+msgstr "· Überlebt einmal je Leben den ersten Tod, der weder Rudelangriff noch Hinrichtung ist.\n· Wird er hingerichtet, gibt es in der folgenden Nacht einen zweiten Rudelschritt.\n· Dieses Zusatzopfer durchdringt den Schutz."
+
+msgid "ui.night.rules.schattenhund"
+msgstr "· Einmal je Leben, jede Nacht gefragt, bis er es nutzt.\n· Blockiert alle Nachtschritte von Dorfrollen für die ganze Nacht.\n· Todesreaktionen und passive Fähigkeiten wirken weiter. Wölfe und Einzelsieger bleiben frei."
+
+msgid "ui.night.rules.schattenwanderer"
+msgstr "· Einmal je Leben, jede Nacht bis zur Nutzung, freiwillig.\n· Stirbt einer von beiden, stirbt stattdessen der andere, danach ist die Kette verbraucht.\n· Spielleiterkorrekturen werden nicht umgelenkt."
+
+msgid "ui.night.rules.schicksalswolf"
+msgstr "· Nacht 1: genau drei andere Lebende markieren, auch Wölfe.\n· Nacht 4: so viele Zusatzopfer, wie Markierte unter den ersten drei Toten sind. Verzicht möglich.\n· Zusatzopfer sind Rudelangriffe: Schutz wirkt, sie durchdringen nicht."
+
+msgid "ui.night.rules.schutzengel"
+msgstr "· Pflicht, jede Nacht genau eine andere lebende Person, nicht überspringbar.\n· Schützt nur vor dem Rudelangriff, nicht vor Gift oder anderen Toden.\n· Durchdringende Angriffe brechen den Schutz."
+
+msgid "ui.night.rules.schutzgeist"
+msgstr "· Nur als Tote, einmal je Leben, in der ersten Nacht nach dem Tod.\n· Das Schild wirkt ab der folgenden Nacht gegen den nächsten Rudelangriff.\n· Wählt sie einen Wolf, verkündet der Morgen es öffentlich ohne Namen."
+
+msgid "ui.night.rules.schwarze_witwe"
+msgstr "· Jede Nacht eine andere lebende Person.\n· Wirkt nur, wenn sie zu einem lebenden Liebes- oder Rivalenpaar gehört.\n· Beide sterben am Morgen und wachen in dieser Nacht nicht mehr auf."
+
+msgid "ui.night.rules.seelentauscher"
+msgstr "· Einmal je Leben, freiwillig, zwei verschiedene Personen, lebend oder tot, er selbst erlaubt.\n· Beide erhalten die neue Rolle mit frischen Einsätzen, ohne Bindungen.\n· Lebende erfahren ihre neue Rolle sofort und privat."
+
+msgid "ui.night.rules.selbstmoerder"
+msgstr "· Siegt, wenn bei seiner Hinrichtung schon 5 oder mehr Personen tot sind.\n· Auch eine Hinrichtung per Spielleiterkorrektur zählt.\n· Ein zusätzlicher Tod durch den Henker zählt nicht."
+
+msgid "ui.night.rules.sensentraeger"
+msgstr "· Einmal je Leben, nach einem Tod am Tag sofort, nachts am Morgen.\n· Jede lebende Person außer ihm. Verzicht gibt es nicht.\n· Der Schutzengel schützt nicht. Im Fluch des Weisen ruht es."
+
+msgid "ui.night.rules.seuchenwolf"
+msgstr "· Nach seinem Tod durchdringt der nächste Rudelangriff alle Schutzeffekte.\n· Eine Nacht ohne Rudelopfer verbraucht nichts. Mehrere stapeln nicht.\n· Nicht durchdrungen: Waffe des Schmieds, persönliche Schilde, Umlenkungen."
+
+msgid "ui.night.rules.siegreicher_wolf"
+msgstr "· Zählt nur in der Wolfsparität doppelt.\n· Sonst zählt er einmal: bei „kein Wolf lebt“, beim Manipulator, beim Waldläufer.\n· Das Orakel sieht „Werwolf“."
+
+msgid "ui.night.rules.spiegelwolf"
+msgstr "· Spiegelt einmal je Leben die erste bestätigte Hinrichtung auf die nominierende Person.\n· Die Hinrichtung des Tages gilt als erfolgt, er überlebt.\n· Ohne Nominierung dieses Tages oder bei toter nominierender Person: normaler Tod."
+
+msgid "ui.night.rules.spuerhund"
+msgstr "· Jede Nacht genau drei andere Lebende, kein Verzicht. Unter vier Lebenden entfällt der Schritt.\n· Häkchen, wenn mindestens eine Person Wolf oder Einzelsieger ist (wahre Fraktion).\n· Bei Kreuz verliert er die Fähigkeit, wird aber weiter aufgerufen."
+
+msgid "ui.night.rules.todesprediger"
+msgstr "· Nur in Nacht 1, geheim beim Spielleiter. Wer da nicht handelt, verliert sie.\n· Tag N folgt auf Nacht N. Tode der Morgenauflösung zählen zur Nacht N.\n· Jede Todesart zählt, außer einer Korrektur ohne Todesfolgen."
+
+msgid "ui.night.rules.traumdeuter"
+msgstr "· Jede Nacht wählt der Spielleiter drei andere Lebende, mindestens ein Wolf.\n· Er erfährt nur „mindestens ein Wolf“, nie die Anzahl. Es gilt die wahre Wolfszählung.\n· Weniger als drei Andere oder kein Wolf: Der Schritt entfällt."
+
+msgid "ui.night.rules.trugbilderwolf"
+msgstr "· Die Scheinrolle legt der Spielleiter beim Spielaufbau fest, nie zufällig.\n· Nur das Orakel sieht sie. Zählungen und Prüfungen nutzen die wahre Wolfszählung.\n· Die Waldhexe sieht bei einer Rettung die wahre Rolle."
+
+msgid "ui.night.rules.verdammniswaechter"
+msgstr "· Pflicht, jede Nacht: Rudelopfer oder die von der App angebotene Person.\n· Betrifft nur das erste Rudelopfer. Das Urteil umgeht den Schutz, bleibt aber ein Rudelangriff.\n· Ist er selbst das Opfer oder gibt es kein Angebot, entfällt der Schritt."
+
+msgid "ui.night.rules.voodoo_priester"
+msgstr "· Höchstens eine lebende Puppe. Ohne Puppe vergibt er in der nächsten Nacht eine neue.\n· Geheim: Die Puppe erfährt es nicht. Eine andere Person, nie er selbst.\n· Sein Tod trifft stattdessen die Puppe. Ohne Puppe stirbt er selbst."
+
+msgid "ui.night.rules.waechter_am_tor"
+msgstr "· Solange er lebt, wird kein neuer Wolf entstehen: Die Person wird Dorfbewohner.\n· Blockiert Wolfskind, Lehrling-Erbe, König Lykaon, Seelentauscher und Kutscher-Wiederbelebte.\n· Spielleiterkorrekturen werden nicht blockiert. Nur die Person erfährt es."
+
+msgid "ui.night.rules.wahnsinniger_kutscher"
+msgstr "· Bei seiner Hinrichtung sterben beide direkten Nachbarn mit.\n· Nachbarn sind die nächsten Lebenden, tote Plätze werden übersprungen.\n· Eine Spiegelung auf ihn ist keine Hinrichtung. Im Fluch des Weisen ruht es."
+
+msgid "ui.night.rules.waldhexe"
+msgstr "· Je ein Trank je Leben, beide dürfen in derselben Nacht genutzt werden.\n· Heilen nur das aktuelle Rudelopfer, sie erfährt dessen wahre Rolle. Gift wirkt am Morgen.\n· Wiederbelebung füllt die Tränke wieder auf."
+
+msgid "ui.night.rules.waldlaeufer"
+msgstr "· Jede Nacht, solange er lebt. Keine Wahl.\n· Gezählt werden lebende Personen, die als Wolf zählen.\n· Der Siegreiche Wolf zählt einmal, ein unverwandeltes Wolfskind nicht."
+
+msgid "ui.night.rules.werwolf"
+msgstr "· Jede Nacht, solange mindestens eine lebende Person als Wolf zählt.\n· Jede lebende Person ist wählbar, auch ein Wolf. Das Opfer stirbt am Morgen.\n· Einigt sich das Rudel nicht, bestimmt der Spielleiter das Opfer. Schutz und Rettung können es verhindern."
+
+msgid "ui.night.rules.wolfskind"
+msgstr "· Pflicht: wählt ein Vorbild, eine andere lebende Person, nicht sich selbst.\n· Stirbt das Vorbild mit Todesfolgen, zählt es sofort als Wolf und erscheint als Werwolf.\n· Es wacht ab der folgenden Nacht mit dem Rudel auf. Ein Wächter am Tor macht es zum Dorfbewohner."
+
+msgid "ui.night.rules.zeitwaechter"
+msgstr "· Einmal je Leben, als erster Schritt. Verzicht behält die Fähigkeit.\n· Alle Nachtschritte aller Rollen entfallen, am Morgen stirbt niemand aus dieser Nacht.\n· Fällige Wirkungen früherer Nächte treten ein. Die Nachtnummer zählt weiter."
+
+msgid "ui.setup.voice.tooltip"
+msgstr "Namen per Sprache eingeben"
+
+msgid "ui.setup.voice.denied"
+msgstr "Das Mikrofon ist nicht erlaubt. Erlaube es in den Browser-Einstellungen."
+
+msgid "ui.setup.voice.none"
+msgstr "Nichts verstanden. Noch einmal versuchen."

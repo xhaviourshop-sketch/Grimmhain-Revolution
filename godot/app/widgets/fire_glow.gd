@@ -2,17 +2,17 @@ class_name FireGlow
 extends Control
 ## Lodernde Flammen statt gleichmäßigem Glühen für den gewählten Akt (Testrunde 1). Wie `SelectionGlow` folgt der Schein der Form eines
 ## Hain-Teils (weichgezeichnete Alpha-Kanten als Neun-Felder-Raster hinter dem Rahmen), aber ein Shader lässt ihn mit Rauschen flackern und nach
-## oben züngeln, dazu wenige Funken (CPUParticles2D, höchstens 30 Teilchen). Die Stärke steigt mit der Stufe des Aktes: 1 ruhige Glut, 2 deutliche
-## Flammen, 3 wild, 4 sehr wild mit aufsteigenden Funken. Nicht gewählt: kein Knoten sichtbar, keine Teilchen. Bei reduzierter Bewegung steht die
+## oben züngeln, dazu wenige Funken (CPUParticles2D, höchstens 60 Teilchen). Die Stärke steigt mit der Stufe des Aktes: schon Akt 1 lodert kräftig mit Funken (Rückmeldung iPad-Test), danach
+## mehr Glut, höhere Flammen, unruhigeres Flackern und mehr Funken; Akt 4 ist am stärksten. Nicht gewählt: kein Knoten sichtbar, keine Teilchen. Bei reduzierter Bewegung steht die
 ## Flamme still und es gibt keine Funken. Fängt keine Eingaben ab.
 
-const MAX_SPARKS := 30
+const MAX_SPARKS := 60
 ## Je Stufe: Stärke, Rauschanteil, Tempo, Reichweite über den Rahmen (logische Einheiten), Funken, Funkentempo (kleinste, größte), Flammenfarbe, Kernfarbe
 const LEVELS := {
-	1: {"strength": 0.75, "amp": 0.25, "speed": 0.6, "reach": 14.0, "sparks": 0, "velocity": Vector2(20.0, 40.0), "flame": ThemeTokens.FIRE_FLAME[0], "core": ThemeTokens.FIRE_CORE[0]},
-	2: {"strength": 1.0, "amp": 0.55, "speed": 1.1, "reach": 20.0, "sparks": 6, "velocity": Vector2(30.0, 65.0), "flame": ThemeTokens.FIRE_FLAME[1], "core": ThemeTokens.FIRE_CORE[1]},
-	3: {"strength": 1.3, "amp": 0.85, "speed": 1.8, "reach": 28.0, "sparks": 14, "velocity": Vector2(45.0, 95.0), "flame": ThemeTokens.FIRE_FLAME[2], "core": ThemeTokens.FIRE_CORE[2]},
-	4: {"strength": 1.6, "amp": 1.0, "speed": 2.6, "reach": 34.0, "sparks": 28, "velocity": Vector2(60.0, 130.0), "flame": ThemeTokens.FIRE_FLAME[3], "core": ThemeTokens.FIRE_CORE[3]},
+	1: {"strength": 1.6, "amp": 1.0, "speed": 2.6, "reach": 34.0, "sparks": 28, "velocity": Vector2(60.0, 130.0), "flame": ThemeTokens.FIRE_FLAME[0], "core": ThemeTokens.FIRE_CORE[0]},
+	2: {"strength": 1.9, "amp": 1.15, "speed": 3.2, "reach": 42.0, "sparks": 36, "velocity": Vector2(75.0, 160.0), "flame": ThemeTokens.FIRE_FLAME[1], "core": ThemeTokens.FIRE_CORE[1]},
+	3: {"strength": 2.2, "amp": 1.3, "speed": 3.9, "reach": 50.0, "sparks": 46, "velocity": Vector2(90.0, 190.0), "flame": ThemeTokens.FIRE_FLAME[2], "core": ThemeTokens.FIRE_CORE[2]},
+	4: {"strength": 2.6, "amp": 1.5, "speed": 4.6, "reach": 58.0, "sparks": 60, "velocity": Vector2(110.0, 230.0), "flame": ThemeTokens.FIRE_FLAME[3], "core": ThemeTokens.FIRE_CORE[3]},
 }
 const SPARK_LIFETIME := 1.3
 const SPARK_SCALE := Vector2(0.05, 0.1)  ## Größe im Verhältnis zum weichen Glühbild (128 Pixel)

@@ -4,9 +4,12 @@ extends SceneTree
 ## Je Szene wird die Karte der Rolle (Rolle plus Füller, Nacht 1) mit der Oberfläche bedient, bis sie erscheint; die Rückgängig-Leiste
 ## vom Schritt davor läuft vor dem Bild ab. Szene: [Dateiname, Rolle, Stufe]. Neue Szenen in SCENES ergänzen.
 var OUT := "user://shots"
+var ONLY: PackedStringArray = []  ## --only=loki,werwolf: nur diese Szenen (Dateinamen)
 const FILL := ["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "doktor"]
+const WOLF_FILL := ["siegreicher-wolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]  ## Rudelbild: mehrere Wölfe
 const SCENES := [["loki", "loki", ""], ["spuerhund", "spuerhund", ""], ["werwolf", "werwolf", ""], ["lehrling", "lehrling", ""],
-	["die-gebundenen", "die-gebundenen", ""], ["blutpriester", "blutpriester", ""], ["waldhexe", "waldhexe", ""], ["zuflucht", "rotkaeppchen", "grant"]]
+	["die-gebundenen", "die-gebundenen", ""], ["blutpriester", "blutpriester", ""], ["waldhexe", "waldhexe", ""], ["zuflucht", "rotkaeppchen", "grant"],
+	["loki-bund", "loki", ""], ["lykaon", "koenig-lykaon", "ally"]]
 var ctx: AppContext
 var shell: AppShell
 
@@ -15,6 +18,8 @@ func _initialize() -> void:
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
 			OUT = a.trim_prefix("--out=")
+		elif a.begins_with("--only="):
+			ONLY = a.trim_prefix("--only=").split(",")
 	DirAccess.make_dir_recursive_absolute(OUT)
 	var ok := await _all()
 	quit(0 if ok else 1)
@@ -27,9 +32,25 @@ func _fr(n: int) -> void:
 
 func _all() -> bool:
 	for sc: Array in SCENES:
+		if not ONLY.is_empty() and not ONLY.has(str(sc[0])):
+			continue
 		if not await _scene(str(sc[0]), str(sc[1]), str(sc[2])):
 			print("FAIL ", sc[0])
 	return true
+
+
+## Wartet, bis die Rückgängig-Leiste des Vorschritts weg ist, und speichert das Bild.
+func _shoot(label: String, kind: String, n: Dictionary) -> void:
+	var t0 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - t0 < 4000:
+		await process_frame
+	await _fr(10)
+	await RenderingServer.frame_post_draw
+	var path := OUT.path_join("%s-1024x768.png" % label)
+	root.get_texture().get_image().save_png(path)
+	print("bild ", label, " ", kind, " ", n.get("stage"))
+	shell.queue_free()
+	await _fr(3)
 
 
 func _scene(label: String, role: String, stage: String) -> bool:
@@ -46,7 +67,7 @@ func _scene(label: String, role: String, stage: String) -> bool:
 	shell.navigate(&"cockpit")
 	await _fr(4)
 	var roles: Array = [role]
-	for f: String in FILL:
+	for f: String in (WOLF_FILL if label == "werwolf" else FILL):
 		if f != role and roles.size() < 8:
 			roles.append(f)
 	var fx: GDScript = load("res://tests/fixtures.gd") as GDScript
@@ -65,18 +86,21 @@ func _scene(label: String, role: String, stage: String) -> bool:
 			rid = str(n.get("owner", ""))
 		if role == "werwolf" and str(n.get("owner", "")) == "pack":
 			rid = "werwolf"
-		if kind in ["begin_step", "prompt"] and rid == role and (stage == "" or str(n.get("stage")) == stage):
+		if label == "loki-bund" and kind == "prompt" and str(n.get("owner")) == "loki":  # Bindung direkt über die Sitzung beantworten
+			var pair: Array = (n.get("allowed_ids", []) as Array).slice(0, 2)
+			ctx.session.answer_targets(pair)
+			ctx.session.answer_choice(true)
+			await _fr(8)
+			continue
+		if label == "loki-bund" and kind == "notice":  # Fenster „Ihr seid Liebende“ geöffnet
+			(screen.find_child("ShowNoticeButton", true, false) as BaseButton).pressed.emit()
 			await _fr(20)
-			var t0 := Time.get_ticks_msec()
-			while Time.get_ticks_msec() - t0 < 4000:
-				await process_frame
-			await _fr(10)
-			await RenderingServer.frame_post_draw
-			var path := OUT.path_join("%s-1024x768.png" % label)
-			root.get_texture().get_image().save_png(path)
-			print("bild ", label, " ", kind, " ", n.get("stage"))
-			shell.queue_free()
-			await _fr(3)
+			await _shoot(label, kind, n)
+			return true
+		var shown_stage := str(n.get("stage", (n.get("preview", {}) as Dictionary).get("stage", "")))  # Vorschau eines noch nicht begonnenen Schritts
+		if label != "loki-bund" and kind in ["begin_step", "prompt"] and rid == role and (stage == "" or shown_stage == stage):
+			await _fr(20)
+			await _shoot(label, kind, n)
 			return true
 		if kind in ["day", "game_over", "win_decision"]:
 			break

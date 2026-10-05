@@ -33,6 +33,8 @@ const NUMBER_FONT_SIZE := 9
 const PLATE_FONT_SIZE_MIN := 10
 const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ zur Rahmenbreite
 const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
+const HUNT_PULSE_SPEED := 3.4  ## Pulse je Sekunde im Bogenmaß
+const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
 const RING_PRIORITY: Array[String] = ["marked", "poisoned", "silenced", "protected"]
 const _STYLE_STATES: Array[String] = ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]
 const _FONT_COLORS: Array[String] = ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color", "font_disabled_color"]
@@ -63,6 +65,17 @@ var chosen: bool = false:  ## Platz, dem gerade eine Rolle zugeordnet wird: rote
 	set(value):
 		chosen = value
 		queue_redraw()
+var hunt: bool = false:  ## Werwolf-Phase und König Lykaon: starker, pulsierender Feuerring um die gezeigten Wölfe (nur bei `secrets_visible`)
+	set(value):
+		hunt = value
+		_apply_hunt_motion()
+		queue_redraw()
+var hunt_animated: bool = true:  ## aus bei reduzierter Bewegung: der Ring steht still
+	set(value):
+		hunt_animated = value
+		_apply_hunt_motion()
+		queue_redraw()
+var _hunt_time: float = 0.0
 var _nominated: bool = false
 var _seat: Dictionary = {}
 var _portrait: Texture2D = null
@@ -99,6 +112,7 @@ func setup(p_person_id: int) -> void:
 		add_theme_color_override(color, ThemeTokens.INVISIBLE)
 	_portrait = NightArt.portrait(p_person_id)
 	pressed.connect(func() -> void: tapped.emit(person_id))
+	set_process(false)  # nur der Feuerring animiert (`hunt`)
 	state = &"normal"
 
 
@@ -195,6 +209,8 @@ func _draw() -> void:
 			_draw_glow(c, d, SHIMMER_ALLOWED, 3, 0.26)
 	if chosen:
 		_draw_glow(c, d, GLOW_ACTIVE, 6, 0.8)
+	if hunt and secrets_visible:
+		_draw_hunt(c, d)
 	_draw_portrait(c, d, dim)
 	var frame_rect := _frame_rect(c, d)
 	var socket := frame_rect.position + GroveArtData.SEAT_SOCKET_CENTER * frame_rect.size
@@ -232,6 +248,30 @@ func _draw_glow(c: Vector2, d: float, color: Color, arcs: int, strength: float) 
 		var tone := color
 		tone.a = strength * (1.0 - float(i) / float(arcs))
 		draw_arc(c, d * RING_RADIUS + 1.0 + 2.0 * float(i), 0.0, TAU, 56, tone, 2.6, true)
+
+
+## Feuerring der Wölfe: blutroter Schein mit heißem Kern, pulsierend (bei reduzierter Bewegung ruhig und voll).
+func _draw_hunt(c: Vector2, d: float) -> void:
+	var pulse := 1.0
+	if hunt_animated:
+		pulse = 0.75 + 0.25 * sin(_hunt_time * HUNT_PULSE_SPEED) + 0.08 * sin(_hunt_time * 11.0)
+	var radius := d * RING_RADIUS
+	for i: int in HUNT_ARCS:
+		var tone := ThemeTokens.HUNT_FLAME
+		tone.a = clampf(1.1 * pulse * (1.0 - float(i) / float(HUNT_ARCS)), 0.0, 1.0)
+		draw_arc(c, radius + 1.0 + 3.2 * float(i) * (0.8 + 0.4 * pulse), 0.0, TAU, 64, tone, 4.4, true)
+	var core := ThemeTokens.HUNT_CORE
+	core.a = 0.7 + 0.3 * pulse
+	draw_arc(c, radius + 1.5, 0.0, TAU, 64, core, 5.0, true)
+
+
+func _apply_hunt_motion() -> void:
+	set_process(hunt and hunt_animated)
+
+
+func _process(delta: float) -> void:
+	_hunt_time += delta
+	queue_redraw()
 
 
 func _draw_portrait(c: Vector2, d: float, tint: Color) -> void:

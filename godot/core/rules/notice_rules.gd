@@ -6,7 +6,7 @@ extends RefCounted
 ## `AckNotice` schließt einen Hinweis als gezeigt ab. Er blockiert den Ablauf im Regelkern nicht, die
 ## Oberfläche zeigt offene Hinweise zuerst. Stirbt eine Person, verlässt sie die Betrachterliste, ein leerer
 ## Hinweis entfällt (protokolliert).
-##   loki_bond      Betrachter: eine Person des Paares; data {partner_id, bond: love|rival}
+##   loki_bond      Betrachter: beide Personen des Paares (eine gemeinsame Karte); data {bond: love|rival}
 ##   piper_new      Betrachter: die in dieser Nacht neu Verzauberten („Alle Verzauberten“ ist ein Nachtschritt, PE-06)
 ##   pest_infected  Betrachter: eine neu infizierte Person
 
@@ -83,7 +83,7 @@ static func from_list(s: GameState, list: Array) -> Variant:
 				return null
 		var data := DictRead.get_dict(n, "data")
 		if kind == LOKI_BOND:
-			if not s.players.has(DictRead.get_int(data, "partner_id", -1)) or not ["love", "rival"].has(DictRead.get_string(data, "bond")):
+			if not ["love", "rival"].has(DictRead.get_string(data, "bond")):
 				return null
 		seen[id] = true
 		out.append({"id": id, "kind": kind, "viewer_ids": viewers, "data": data.duplicate(true)})

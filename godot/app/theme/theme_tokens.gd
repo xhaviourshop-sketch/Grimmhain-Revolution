@@ -143,8 +143,11 @@ const START_FLASH := Color(0.62, 0.72, 1.0)
 const START_FOG_CLOSE := Color(0.1, 0.13, 0.2)
 const START_SHADE := Color(0.01, 0.014, 0.03)
 ## Feuer der gewählten Akt-Karte nach Stufe I bis IV (`FireGlow`): Flammenfarbe außen, Kernfarbe nahe am Rahmen.
-const FIRE_FLAME: Array[Color] = [Color(0.85, 0.2, 0.05), Color(0.95, 0.25, 0.04), Color(1.0, 0.3, 0.04), Color(1.0, 0.34, 0.05)]
-const FIRE_CORE: Array[Color] = [Color(1.0, 0.55, 0.15), Color(1.0, 0.65, 0.2), Color(1.0, 0.75, 0.25), Color(1.0, 0.85, 0.4)]
+const FIRE_FLAME: Array[Color] = [Color(1.0, 0.34, 0.05), Color(1.0, 0.3, 0.05), Color(0.98, 0.26, 0.04), Color(0.95, 0.22, 0.04)]
+const FIRE_CORE: Array[Color] = [Color(1.0, 0.82, 0.36), Color(1.0, 0.78, 0.3), Color(1.0, 0.74, 0.26), Color(1.0, 0.7, 0.24)]
+## Feuerring der Wölfe im Sitzkreis (Werwolf-Phase, König Lykaon): Flamme außen, heißer Kern am Ring.
+const HUNT_FLAME := Color(0.92, 0.1, 0.06)
+const HUNT_CORE := Color(1.0, 0.42, 0.16)
 const GLOW_VILLAGE := Color(0.35, 0.6, 1.0)
 const GLOW_WOLVES := Color(0.82, 0.1, 0.14)
 const GLOW_SOLO := Color(0.66, 0.4, 0.95)
