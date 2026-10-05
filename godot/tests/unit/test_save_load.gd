@@ -63,3 +63,12 @@ func test_rng_position_survives_save() -> void:
 	assert_true(loaded.ok, "Laden erfolgreich")
 	assert_eq(loaded.state.rng.draws, run.state.rng.draws, "Ziehposition")
 	assert_eq(loaded.state.rng.next_int(0, 1000000), run.state.rng.next_int(0, 1000000), "nächste Ziehung identisch")
+
+
+## CM-04: Eine unbekannte `original_role_id` lehnt das Laden der Person sauber ab (statt eines Skriptfehlers im Katalog).
+func test_player_with_unknown_original_role_is_rejected() -> void:
+	var run := RulesEngine.replay(_commands_until_night_two())
+	var d: Dictionary = (run.state.players[1] as Player).to_dict()
+	assert_true(Player.from_dict(d) != null, "unveränderte Person ladbar")
+	d["original_role_id"] = "gibt_es_nicht"
+	assert_true(Player.from_dict(d) == null, "unbekannte Ursprungsrolle abgelehnt")

@@ -53,18 +53,6 @@ msgstr "Warning: The latest state of the running game is not saved. Quitting los
 msgid "ui.dialog.quit.confirm"
 msgstr "Quit"
 
-msgid "ui.new_game.title"
-msgstr "New game"
-
-msgid "ui.new_game.heading"
-msgstr "Setup coming next"
-
-msgid "ui.new_game.body"
-msgstr "Player names, roles and seating will be set up in the next work package."
-
-msgid "ui.new_game.hint"
-msgstr "This page does not create a game yet."
-
 msgid "ui.continue.title"
 msgstr "Continue game"
 

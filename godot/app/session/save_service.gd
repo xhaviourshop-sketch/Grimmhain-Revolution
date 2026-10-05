@@ -105,14 +105,18 @@ func load_game(round_id: String) -> Dictionary:
 			return _result(from_tmp, "tmp", set_aside)
 		if bool(from_tmp.get("incompatible", false)):
 			return _incompatible(from_tmp, set_aside)
-		set_aside.append(_set_aside(tmp))
+		var moved_tmp := _set_aside(tmp)
+		if moved_tmp != "":
+			set_aside.append(moved_tmp)
 	if FileAccess.file_exists(path):
 		var main := _read(path)
 		if bool(main["ok"]):
 			return _result(main, "", set_aside)
 		if bool(main.get("incompatible", false)):
 			return _incompatible(main, set_aside)
-		set_aside.append(_set_aside(path))
+		var moved := _set_aside(path)
+		if moved != "":
+			set_aside.append(moved)
 	if FileAccess.file_exists(bak):
 		var backup := _read(bak)
 		if bool(backup["ok"]):
@@ -141,8 +145,8 @@ func list() -> Array:
 		for candidate: String in [path_for(id) + ".tmp", path_for(id), path_for(id) + ".bak"]:
 			var env := _envelope(candidate)
 			if not env.is_empty():
-				entry["summary"] = env.get("summary", {})
-				entry["saved_at"] = int(env.get("saved_at", 0))
+				entry["summary"] = DictRead.get_dict(env, "summary")
+				entry["saved_at"] = DictRead.get_int(env, "saved_at")
 				entry["readable"] = true
 				var compat := _compatibility(env)
 				entry["compatible"] = bool(compat["compatible"])
@@ -239,7 +243,8 @@ func _set_aside(path: String) -> String:
 	while FileAccess.file_exists(target):
 		target = "%s.corrupt-%d-%d" % [path, int(Time.get_unix_time_from_system()), n]
 		n += 1
-	DirAccess.rename_absolute(path, target)
+	if DirAccess.rename_absolute(path, target) != OK:
+		return ""  # G-08: kein Pfad melden, wenn das Umbenennen scheitert
 	return target
 
 

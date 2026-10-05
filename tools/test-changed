@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+// Runs only the tests that belong to files changed against main (plus uncommitted changes).
+// Mapping: tools/test-map.json (prefix -> filters); changed test files run themselves; other .gd files
+// fall back to tests whose name contains the file's base name. "unit" in the map runs --dir=unit (use sparingly).
+// Usage: node tools/test-changed [--base=main] [--list]
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+const { run, summarize } = require("./test-quiet");
+
+const root = path.resolve(__dirname, "..");
+const args = process.argv.slice(2);
+const base = (args.find((a) => a.startsWith("--base=")) || "--base=main").slice(7);
+const git = (c) => execSync(c, { cwd: root, encoding: "utf8" }).split(/\r?\n/).filter(Boolean);
+const changed = [...new Set([...git(`git diff --name-only ${base}...HEAD`), ...git("git diff --name-only HEAD"), ...git("git ls-files --others --exclude-standard")])];
+const map = JSON.parse(fs.readFileSync(path.join(__dirname, "test-map.json"), "utf8"));
+delete map._comment;
+
+const testFiles = [];
+(function walk(d) {
+  for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+    const p = path.join(d, e.name);
+    if (e.isDirectory()) walk(p);
+    else if (/^test_.*\.gd$/.test(e.name)) testFiles.push(e.name.replace(/\.gd$/, ""));
+  }
+})(path.join(root, "godot", "tests"));
+
+const filters = new Set();
+for (const f of changed) {
+  if (!f.startsWith("godot/") || !/\.(gd|tscn|po)$/.test(f)) continue;
+  const b = path.basename(f).replace(/\.(gd|tscn|po)$/, "");
+  if (/^test_/.test(b)) { filters.add(b); continue; }
+  const keys = Object.keys(map).filter((k) => f.startsWith(k)).sort((a, c) => c.length - a.length);
+  if (keys.length) { map[keys[0]].forEach((x) => filters.add(x)); continue; }
+  const hits = testFiles.filter((t) => t.includes(b.replace(/^test_/, "")));
+  hits.forEach((t) => filters.add(t));
+}
+const list = [...filters];
+if (args.includes("--list") || !list.length) {
+  console.log(list.length ? list.join("\n") : "Keine zugeordneten Tests (nichts zu tun).");
+  process.exit(0);
+}
+let bad = 0, total = 0;
+for (const f of list) {
+  const res = run(f === "unit" ? ["--dir=unit"] : [`--filter=${f}`]);
+  if (!res) process.exit(2);
+  const { failures, sum } = summarize(res.text);
+  const m = sum.match(/^(\d+) Tests, (\d+) fehlgeschlagen, (\d+)/);
+  const n = m ? Number(m[1]) : 0;
+  total += n;
+  if (failures.length) console.log(failures.join("\n"));
+  if (!m || n === 0 || Number(m[2]) || Number(m[3]) || failures.length) { bad++; console.log(`[${f}] ${sum || "kein Ergebnis"}${n === 0 ? " (keine Tests getroffen)" : ""}`); }
+}
+console.log(`test-changed: ${list.length} Filter, ${total} Tests, ${bad} Filter rot/leer`);
+process.exit(bad ? 1 : 0);

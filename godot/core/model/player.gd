@@ -63,6 +63,8 @@ static func from_dict(d: Dictionary) -> Player:
 			return null
 	if p.id < 1 or p.name.strip_edges() == "" or not RoleCatalog.has_role(p.role_id) or not RoleCatalog.has_role(p.appears_as):
 		return null
+	if p.original_role_id != &"" and not RoleCatalog.has_role(p.original_role_id):  # CM-04
+		return null
 	# Eine Rolle mit Scheinrolle (Trugbilderwolf) braucht eine zulässige, nicht wölfische.
 	if RoleCatalog.requires_appearance(p.role_id) and not RoleCatalog.is_valid_appearance(p.appears_as):
 		return null

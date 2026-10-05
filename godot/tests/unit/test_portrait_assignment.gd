@@ -13,10 +13,11 @@ func test_faces_are_unique_for_up_to_24_people() -> void:
 
 
 func test_assignment_is_stable_and_independent_of_the_seat() -> void:
-	for id: int in range(1, 25):
-		assert_eq(PortraitAssignment.face_number(id), PortraitAssignment.face_number(id), "Person %d stabil" % id)
-	# Auch eine Lücke in den IDs (entfernte Person im Setup) ändert keine andere Zuordnung.
-	assert_eq(PortraitAssignment.face_number(7), PortraitAssignment.face_number(7), "ID bestimmt das Gesicht, nicht die Reihenfolge")
+	# F-T04: feste Erwartungswerte (Schrittweite 5 über 24 Gesichter) statt eines Vergleichs der Funktion mit sich selbst. Das Gesicht
+	# hängt nur an der Personen-ID: Gespeicherte Partien behalten ihre Porträts, auch wenn eine ID im Setup fehlt.
+	var expected := {1: 1, 2: 6, 3: 11, 5: 21, 6: 2, 7: 7, 24: 20}
+	for id: int in expected:
+		assert_eq(PortraitAssignment.face_number(id), expected[id], "Person %d bekommt Gesicht %d" % [id, expected[id]])
 
 
 func test_consecutive_and_wrapping_ids_never_share_a_face() -> void:

@@ -359,3 +359,15 @@ func test_board_texts_come_from_the_translation_in_both_languages() -> void:
 			var shown: String = b.tooltip_text if b.text == "" else b.text
 			assert_true(shown != "" and not shown.begins_with("ui."), "%s (%s): übersetzter Text (%s)" % [node_name, locale, shown])
 		after_each_shell(shell)
+
+
+## F-A09: Jede Rolle des Katalogs hat ihr Kartenbild und ihr Kreisbild (NightArt liefert sonst still null).
+func test_every_catalog_role_has_card_and_circle_art() -> void:
+	var missing: Array[String] = []
+	for id: Variant in RoleCatalog.ROLES:
+		var key := NightArt.image_key(String(id))
+		if NightArt.role_art(String(id)) == null:
+			missing.append("role-art/%s" % key)
+		if NightArt.texture("role-circle/%s.webp" % key) == null:
+			missing.append("role-circle/%s" % key)
+	assert_eq(missing, [], "fehlende Rollenbilder")

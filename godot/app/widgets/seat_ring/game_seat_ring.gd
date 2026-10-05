@@ -40,6 +40,7 @@ func show_seats(seats: Array) -> void:
 		ids.append(int((seat as Dictionary)["person_id"]))
 	for id: int in _tokens.keys():
 		if not ids.has(id):
+			remove_child(_tokens[id])  # G-07: sofort aus dem Baum, sonst bleibt der Token ein Bild lang klickbar und der Name belegt
 			_tokens[id].queue_free()
 			_tokens.erase(id)
 	for seat: Variant in seats:

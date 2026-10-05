@@ -216,9 +216,26 @@ func tool_button(screen: Node, node_name: String) -> BaseButton:
 	return b
 
 
-## Löst die Aktion eines Buttons so aus, wie Maus und Touch es tun (Signal `pressed`).
+## Löst die Aktion eines Buttons so aus, wie Maus und Touch es tun (Signal `pressed`). Ein fehlender oder gesperrter
+## Button ist ein Fehler des Tests (F-T01): echte Bedienung kann ihn nicht auslösen.
 func press(button: BaseButton) -> void:
 	if button == null:
+		fail("press: Button fehlt")
+		return
+	if button.disabled:
+		fail("press: Button %s ist gesperrt" % button.name)
+		return
+	if button.toggle_mode:
+		button.button_pressed = not button.button_pressed
+	else:
+		button.pressed.emit()
+	await frames(3)
+
+
+## Wie `press`, aber ohne Prüfung: für Tests, die gerade belegen, dass ein gesperrter Button nichts auslöst.
+func press_blocked(button: BaseButton) -> void:
+	if button == null:
+		fail("press_blocked: Button fehlt")
 		return
 	if button.toggle_mode:
 		button.button_pressed = not button.button_pressed

@@ -89,7 +89,7 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 
 | ID | Funktion/Anforderung | Stufe | Status | Implementierungsbeleg | Testbeleg | Konkrete Restlücke | Paket | Voraussetzung / Entscheidung |
 |---|---|---|---|---|---|---|---|---|
-| R-01 | 71 Rollen im Regelkern | Offline | AUTO | `core/rules/role_catalog.gd` (71 Einträge), Regeldateien | je Rolle ein Einzeltest plus `test_role_interaction_fuzz` (alle 71) | keine | - | - |
+| R-01 | 72 Rollen im Regelkern | Offline | AUTO | `core/rules/role_catalog.gd` (72 Einträge), Regeldateien | je Rolle ein Einzeltest plus `test_role_interaction_fuzz` (alle 71) | keine | - | - |
 | R-02 | **Nachgewiesen in Paket 3.** Alle 71 Rollen über die Oberfläche bedienbar (Buttonweg) | Offline | AUTO | `action_card.gd` für alle Antwortarten, Treiber `tests/ui/role_ui_case.gd` (nur Sitzplätze, Kartenbuttons, Dialog) | 45 aktive Rollen je ein festes Szenario mit Ereignis- und Zustandsprüfung (`test_role_buttons`); 12 passive und Morgenbericht-Rollen über ihren Auslöser (`test_role_passive_ui`); frühere Button-Tests für 14 weitere; Bedienarten, Abbruch, Doppeltippen, Undo, Rollenwechsel (`test_role_operation_kinds`); Invarianten Überspringen/Verzicht/Abbrechen bei jeder Karte | Geräte- und Touchabnahme (GERÄT); Zufallsknopf R-06 | **P3** erledigt | - |
 | R-03 | Kartenschlucker (72. Rolle) | Karten | BLOCKIERT | nicht im `RoleCatalog`, im Setup nicht wählbar | keiner | Totenkartenmodell (RM-DR-013, RM-DR-143.1/.2) | P8 | **Nutzerentscheidung:** Grundregeln des Kartenschluckers am 30.09.2026 entschieden (Decision Log); offen: Schild-Details, Tötung, Ansage, Sieg-Einzelfälle, Karteninhalte (Überarbeitung aller 80 Karten) |
 | R-04 | Totenkarten / Totenkarten-Assistent (Ziehen, Besitz, Tausch, Verbrauch) | Karten | BLOCKIERT | keiner; `docs/ui/cockpit.md`: „Totenreichkarten sind nicht definiert“ | keiner | gesamtes Kartenmodell | P8 | **Nutzerentscheidung**, gleiche wie R-03 |
@@ -182,7 +182,7 @@ Diese Matrix ist Paket 1 von `CODE-COMPLETION-ROADMAP.md`. Sie ordnet jede noch 
 
 **Legende.** *Kern:* Einzeltest in `godot/tests/unit/` (Namen ohne `test_`); zusätzlich läuft jede Rolle im Fuzztest (Save/Load per `StateCodec`, Replay, Geheimhaltungs-Invarianten nach jedem Befehl). *Bedienweg:* `B` = Button-/Screen-Test (`test_full_round_ui`, `test_cockpit_screen`, `test_target_selection`, `test_cockpit_day`, `test_notice_cards`), `K` = nur Kartendaten über `GameSession` (`test_prompt_coverage`), `A` = passiv oder ohne Fähigkeit, keine Bedienung nötig, `M` = automatisch im Morgenbericht. *Querbezüge:* Anzahl weiterer Unit-Testdateien, die die Rolle nennen (Indikator, kein Beweis). *Undo:* „generisch“ heißt: Rückgängig ist Replay der verkürzten Befehlsfolge (`test_undo`), für die Rolle nicht einzeln getestet. *Spielerinformation:* „Positivliste“ = UI-Test prüft, dass nur Erlaubtes angezeigt wird; „Kern-Test“ = Informationsmodell im Kern getestet, Anzeige nicht einzeln.
 
-Alle 71 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Restlücke“ nennt nur, was über diese Regel hinaus fehlt. Gemeinsame Lücke aller Rollen: Rollenübergabe an Spieler (S-08) fehlt. Das Lexikon (C-04) ist seit Paket 5b im Programm, die redaktionelle Endabnahme steht aus.
+Alle 72 implementierten Rollen: Kern ja, Save/Load per Fuzz ja. Die Spalte „Restlücke“ nennt nur, was über diese Regel hinaus fehlt. Gemeinsame Lücke aller Rollen: Rollenübergabe an Spieler (S-08) fehlt. Das Lexikon (C-04) ist seit Paket 5b im Programm, die redaktionelle Endabnahme steht aus.
 
 | Rolle | Kern (Einzeltest, zusätzlich Fuzz) | Bedienweg | Querbezüge (Unit-Tests) | Save/Load, Undo | Spielerinformation | Restlücke |
 |---|---|---|---|---|---|---|
@@ -302,7 +302,7 @@ Nicht beantwortet, nicht durch diesen Auftrag entschieden:
 5. Redaktionelle Endabnahme der integrierten Rollenlexikon-Texte und Freigabe der Guide-Texte (C-04, C-05). Offene Punkte je Rolle stehen im Lexikon und in `docs/content-drafts/INTEGRATION-STATUS.md`.
 6. Inhalt von Szenarien, Beispielrunde, Definition Expertenmodus, Timer-Vorgaben (S-04, C-07, C-08, C-10).
 7. Kartenregeln (R-03 bis R-05, P8).
-8. Endgültige Rollenauswahl 20 bis 30 für Version 1.0 gegenüber 71 implementierten Rollen (Decision Log, „nicht blockierende Punkte“).
+8. Endgültige Rollenauswahl 20 bis 30 für Version 1.0 gegenüber 72 implementierten Rollen (Decision Log, „nicht blockierende Punkte“).
 9. *(Entschieden am 29.09.2026: nicht blockierender Hinweis im Setup, Decision Log PE-04; umgesetzt am 29.09.2026, DA-47 bis DA-49.)* Unverträgliche Rollenkombinationen als Setup-Regel (R-07).
 10. *(Entschieden am 30.09.2026: jetzt in den Optionen, NQ-04; umgesetzt, DA-83.)* Linkshänder-Schalter jetzt oder im Gestaltungsprojekt (D-10).
 

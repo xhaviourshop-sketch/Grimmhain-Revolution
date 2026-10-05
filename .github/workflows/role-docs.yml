@@ -1,0 +1,29 @@
+name: Role docs
+
+# Rollen-Migrationsdokumente (docs/role-migration): Verweise, IDs, Statusliste (decision-status.csv, 6 Spalten).
+on:
+  push:
+    paths:
+      - "docs/role-migration/**"
+      - "tools/role-migration/**"
+      - "tests/check-role-docs.test.js"
+      - ".github/workflows/role-docs.yml"
+  pull_request:
+    paths:
+      - "docs/role-migration/**"
+      - "tools/role-migration/**"
+      - "tests/check-role-docs.test.js"
+      - ".github/workflows/role-docs.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Regressionstests des Prüfwerkzeugs
+        run: node --test tests/check-role-docs.test.js
+      - name: Rollen-Dokumente prüfen
+        run: node tools/role-migration/check-role-docs.js
