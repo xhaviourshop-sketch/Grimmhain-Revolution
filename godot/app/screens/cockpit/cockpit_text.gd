@@ -159,9 +159,9 @@ static func info_key(field: String) -> String:
 	return key if has_key(key) else "ui.prompt.info.generic"
 
 
-## „3 · Anna“ aus einem Personeneintrag {seat, name} (Nutzerdaten, keine Übersetzung).
+## „Anna“ aus einem Personeneintrag {seat, name} (Nutzerdaten, keine Übersetzung). Nie mit Sitzplatznummer: Die Person ist ihr Name.
 static func person(label: Dictionary) -> String:
-	return "%d · %s" % [int(label.get("seat", 0)), str(label.get("name", ""))]
+	return str(label.get("name", ""))
 
 
 ## Anzeigewert einer Info-Zeile {key, kind, value} als Text bzw. Schlüssel (StringName).
@@ -249,7 +249,7 @@ static func effect_line(e: Dictionary) -> Dictionary:
 		"replaced": str((e.get("replaced", {}) as Dictionary).get("name", ""))}}
 
 
-## Werte einer Hinweiskarte (DI-04, DI-06, DI-07): Personen als „3 · Anna“, Listen als kommagetrennter Text.
+## Werte einer Hinweiskarte (DI-04, DI-06, DI-07): Personen als Name, Listen als kommagetrennter Text.
 static func notice_values(values: Dictionary) -> Dictionary:
 	var out := {}
 	for k: Variant in values:
@@ -320,7 +320,7 @@ static func command_label(info: Dictionary) -> Dictionary:
 		"kind": StringName("ui.gm.kind.%s" % str(info["kind"])) if str(info.get("kind", "")) != "" else ""}}
 
 
-## Bisheriger Wert einer Spezialkorrektur ({key, values}) als Text: Personenlabels als „3 · Anna“, Schlüssel und Wahrheitswerte übersetzt.
+## Bisheriger Wert einer Spezialkorrektur ({key, values}) als Text: Personenlabels als Name, Schlüssel und Wahrheitswerte übersetzt.
 static func state_text(state: Dictionary) -> String:
 	if state.is_empty():
 		return ""
@@ -338,7 +338,7 @@ static func state_text(state: Dictionary) -> String:
 	return TranslationServer.translate(str(state["key"])).format(values)
 
 
-## Personen-IDs als „3 · Anna, 5 · Ben“ aus den öffentlichen Sitzdaten.
+## Personen-IDs als „Anna, Ben“ aus den öffentlichen Sitzdaten.
 static func names_of(ids: Array, seats: Array) -> String:
 	var names: Array = []
 	for id: Variant in ids:

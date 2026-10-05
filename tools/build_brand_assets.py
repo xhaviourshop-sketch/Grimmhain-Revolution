@@ -1,4 +1,4 @@
-"""Builds the brand media from C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/marke/ (wortmarke.png, siegel.png):
+"""Builds the brand media from C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/marke/ (wortmarke.png, siegel.png):
  - godot/assets/brand/wortmarke.webp, siegel.webp (cropped to alpha box)
  - godot/assets/app/app-symbol-{32,60,120,144,180,512}.png: seal on a round night-black ground; sizes up to 120 px use the
    simplified small version (ring only, higher contrast, head larger), the large version stays unchanged
@@ -8,7 +8,7 @@ import sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
-SRC = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/marke/"
+SRC = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/marke/"
 BRAND = "godot/assets/brand/"
 APP = "godot/assets/app/"
 NIGHT_BLACK = (5, 7, 13)

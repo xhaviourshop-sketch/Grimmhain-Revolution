@@ -25,11 +25,11 @@ from scipy import ndimage as ndi
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = ROOT + "/godot/assets/ui/hain/"
 DATA = ROOT + "/godot/app/theme/grove_art_data.gd"
-DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui-paket-v1.png"
+DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/ui-paket-v1.png"
 TEAM_DATA = ROOT + "/godot/app/theme/team_tile_art_data.gd"
 TEAM_OUT = ROOT + "/godot/assets/ui/"
-DEFAULT_TEAM_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui/team-kacheln.png"
-DEFAULT_SOURCE2 = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui-paket-v2.png"
+DEFAULT_TEAM_SOURCE = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/ui/team-kacheln.png"
+DEFAULT_SOURCE2 = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/ui-paket-v2.png"
 
 # regions of the sheet (x0, y0, x1, y1), measured on the 1774x887 sheet
 SEAT = (31, 32, 532, 493)         # silver ring with roots and number socket at the upper left

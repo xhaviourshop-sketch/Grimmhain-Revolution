@@ -245,7 +245,14 @@ func test_placeholders_emit_no_game_events() -> void:
 	session.connect("events_applied", func(_events: Array) -> void: counter[0] += 1)
 	for id: StringName in SCREEN_IDS:
 		await navigate(shell, id)
-		for b: BaseButton in visible_buttons(current_screen(shell)):
+		# Pages and tabs rebuild their buttons when pressed: query the visible buttons again after every press.
+		var i := 0
+		while true:
+			var buttons := visible_buttons(current_screen(shell))
+			if i >= buttons.size():
+				break
+			var b := buttons[i]
+			i += 1
 			if ["BackButton", "QuitButton"].has(String(b.name)) or MENU_BUTTONS.values().has(String(b.name)) or b.name == &"EnterButton":
 				continue
 			await press_blocked(b)

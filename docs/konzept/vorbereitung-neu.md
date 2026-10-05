@@ -1,7 +1,7 @@
 # Spielvorbereitung neu denken: Analyse und Konzept
 
 Stand: 03.10.2026. Nur Analyse und Konzept, es wurde kein Code geändert. Alle Bilder liegen in
-`C:/Users/Marku/Downloads/Grimmhain-Vorbereitung/` (1024x768, Dateinamen unten). Nichts hier ist eine
+`C:/Users/Marku/Downloads/Grimmhain/Vorbereitung/` (1024x768, Dateinamen unten). Nichts hier ist eine
 Produktentscheidung; offene Punkte stehen in Abschnitt 6.
 
 ## 1. Heutiger Ablauf in Godot (Neue Partie bis Nachtbrett)

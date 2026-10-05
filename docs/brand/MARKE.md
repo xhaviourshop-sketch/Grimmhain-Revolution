@@ -1,6 +1,6 @@
 # Marke Grimmhain (Kurzfassung)
 
-Verbindlich ist das Marken-Blatt (Stand 04.10.2026, Markus): `C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/marke/marken-blatt.md`. Diese Datei ist die Kurzfassung im Repo; bei Abweichung gilt das Blatt. Bildvorlage: `marke/design-tafel.png` (bei jedem neuen Asset anhängen). Alle Texte und Assets folgen dieser Datei.
+Verbindlich ist das Marken-Blatt (Stand 04.10.2026, Markus): `C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/marke/marken-blatt.md`. Diese Datei ist die Kurzfassung im Repo; bei Abweichung gilt das Blatt. Bildvorlage: `marke/design-tafel.png` (bei jedem neuen Asset anhängen). Alle Texte und Assets folgen dieser Datei.
 
 ## Produkt und Gefühl
 Eigenes gedrucktes Kartenspiel plus Spielleiter-App; die Marke muss auf iPad, App-Symbol, Kartenrückseite und Verpackung funktionieren. Gefühl: unheimlich und edel, wie ein altes, verfluchtes Buch. Dunkel, hochwertig, ruhig bedrohlich. Nicht laut, nicht comichaft, kein Action-Kitsch.

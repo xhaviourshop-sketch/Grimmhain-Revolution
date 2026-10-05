@@ -15,7 +15,8 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const project = path.join(root, "godot");
 const FUZZ = "test_role_interaction_fuzz.gd";
-const state = path.join(os.tmpdir(), "grimmhain-test-full");
+// One state folder per checkout (worktrees run in parallel), one APPDATA per run and process.
+const state = path.join(os.tmpdir(), "grimmhain-test-full", require("crypto").createHash("sha1").update(root).digest("hex").slice(0, 10));
 const timesFile = path.join(state, "times.json");
 const failedFile = path.join(state, "failed.json");
 
@@ -51,7 +52,7 @@ function split(files, jobs) {
 }
 
 function runShard(bin, files, index) {
-  const appdata = path.join(state, `w${index}`);
+  const appdata = path.join(state, `w${process.pid}-${index}`);
   fs.rmSync(appdata, { recursive: true, force: true });
   fs.mkdirSync(appdata, { recursive: true });
   return new Promise((resolve) => {
@@ -72,6 +73,7 @@ async function runFiles(files, jobs) {
   spawnSync(bin, ["--headless", "--path", project, "--import"], { encoding: "buffer", maxBuffer: 1 << 28 });
   const shards = split(files, jobs);
   const results = await Promise.all(shards.map((s, i) => runShard(bin, s, i)));
+  shards.forEach((s, i) => { try { fs.rmSync(path.join(state, `w${process.pid}-${i}`), { recursive: true, force: true }); } catch {} });
   const times = readJson(timesFile, {});
   const failures = [], failedFiles = new Set();
   let total = 0, failed = 0, broken = 0, problem = false;

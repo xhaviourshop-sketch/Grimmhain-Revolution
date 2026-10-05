@@ -2,7 +2,7 @@ class_name GameSeatRing
 extends Control
 ## Sitzkreis des Cockpits: Porträtplätze der laufenden Partie im Uhrzeigersinn auf einer Ellipse (PortraitRingLayout),
 ## in der Mitte ein freier Bereich `%RingCenter`. Reine Darstellung:
-##   show_seats(seats)            öffentliche Sitzdaten (ohne Rollen)
+##   show_seats(seats)            öffentliche Sitzdaten (ohne Rollen); `nominated_by` zeichnet das Nominierungsband (öffentlich, hinter den Plätzen)
 ##   set_marks(marks)             geheime Zustandsabzeichen je Person (Person-ID → Arten), nur für die Spielleitung
 ##   set_secrets_visible(on)      aus bei „Verbergen“: keine Abzeichen, keine Statusringe, keine Hervorhebung handelnder Personen
 ##   set_hunt(ids, animated)      Feuerring um Wölfe (Werwolf-Phase, König Lykaon), nur sichtbar, solange Geheimes sichtbar ist
@@ -25,6 +25,7 @@ var _secrets_visible: bool = true
 var _chosen: int = 0
 var _hunt: Array = []
 var _hunt_animated: bool = true
+var _bands: Array[Vector2i] = []  ## Nominierungsbänder: (nominierende Person, nominierte Person), nur lebende Ziele
 ## Flacher Ring über der Rollenleiste (Zuordnung im Kartenmodus): kleinere Rahmen ohne Überlappung.
 var compact: bool = false:
 	set(value):
@@ -59,8 +60,28 @@ func show_seats(seats: Array) -> void:
 			_tokens[id] = token
 		_tokens[id].show_seat(d)
 	_order = ids
+	_bands = bands_of(seats)
 	_layout()
 	_apply_states()
+
+
+## Nominierungsbänder aus den Sitzdaten: Paare (nominierende, nominierte Person). Verdeckte Richter-Nominierungen tragen kein
+## `nominated_by` und erzeugen kein Band; wer nach der Hinrichtung nicht mehr lebt, trägt keines mehr.
+static func bands_of(seats: Array) -> Array[Vector2i]:
+	var alive := {}
+	for seat: Variant in seats:
+		alive[int((seat as Dictionary)["person_id"])] = bool((seat as Dictionary).get("alive", true))
+	var out: Array[Vector2i] = []
+	for seat: Variant in seats:
+		var d: Dictionary = seat
+		var by := int(d.get("nominated_by", 0))
+		if by > 0 and bool(d.get("alive", true)) and alive.has(by):
+			out.append(Vector2i(by, int(d["person_id"])))
+	return out
+
+
+func bands() -> Array[Vector2i]:
+	return _bands
 
 
 ## Auswahlmodus an (`allowed` nicht leer oder `selection_mode`) oder aus.
@@ -172,3 +193,63 @@ func _layout() -> void:
 	var c: Rect2 = result["center"]
 	_center.position = c.position
 	_center.size = c.size
+	queue_redraw()
+
+
+# --- Nominierungsband -----------------------------------------------------------------------------------
+
+const BAND_SAMPLES := 36
+const BAND_PULL := 0.6  ## wie weit die Mitte des Bands zur Ringmitte gezogen wird (Bogen statt Gerade, Bänder liegen so nicht übereinander)
+const BAND_GLOW_WIDTH := 15.0
+const BAND_BODY_WIDTH := 7.0
+const BAND_CORE_WIDTH := 3.2
+const BAND_FROM := ThemeTokens.SEAT_SHIMMER  ## Mondblau beim Nominierenden
+const BAND_TO := ThemeTokens.BLOOD_RED_BRIGHT  ## Blutrot beim Ziel
+
+
+func _draw() -> void:
+	for band: Vector2i in _bands:
+		if _tokens.has(band.x) and _tokens.has(band.y):
+			_draw_band(_tokens[band.x], _tokens[band.y])
+
+
+## Gemaltes Band vom Nominierenden zur nominierten Person: weicher Schein, Körper und zwei verdrillte Fäden, Farbverlauf von Mondblau
+## zu Blutrot, Spitze am Ring des Ziels. Liegt unter den Plätzen, verdeckt also weder Porträts noch Namen.
+func _draw_band(from: GameSeatToken, to: GameSeatToken) -> void:
+	var a := from.position + from.portrait_center()
+	var b := to.position + to.portrait_center()
+	var centre := _center.position + _center.size * 0.5
+	var control := (a + b) * 0.5 + (centre - (a + b) * 0.5) * BAND_PULL
+	var points := PackedVector2Array()
+	var colors := PackedColorArray()
+	for i: int in BAND_SAMPLES + 1:
+		var u := float(i) / float(BAND_SAMPLES)
+		points.append(a.lerp(control, u).lerp(control.lerp(b, u), u))
+		colors.append(BAND_FROM.lerp(BAND_TO, pow(u, 1.15)))
+	var glow := colors.duplicate()
+	var body := colors.duplicate()
+	for i: int in glow.size():
+		glow[i].a = 0.2
+		body[i].a = 0.78
+	draw_polyline_colors(points, glow, BAND_GLOW_WIDTH, true)
+	draw_polyline_colors(points, body, BAND_BODY_WIDTH, true)
+	for strand: int in 2:
+		var twisted := PackedVector2Array()
+		var lights := PackedColorArray()
+		for i: int in points.size():
+			var prev := points[maxi(i - 1, 0)]
+			var next := points[mini(i + 1, points.size() - 1)]
+			var normal := (next - prev).normalized().orthogonal()
+			var wave := sin(float(i) * 0.9 + PI * float(strand)) * BAND_BODY_WIDTH * 0.28
+			twisted.append(points[i] + normal * wave)
+			lights.append(colors[i].lightened(0.35 + 0.15 * float(strand)))
+		draw_polyline_colors(twisted, lights, BAND_CORE_WIDTH * 0.55, true)
+	# Spitze: knapp vor dem Ring des Ziels, in Fahrtrichtung.
+	var reach := to.diameter * GameSeatToken.RING_RADIUS + 5.0
+	var tip := points.size() - 1
+	while tip > 1 and points[tip].distance_to(b) < reach:
+		tip -= 1
+	var dir := (points[tip] - points[maxi(tip - 3, 0)]).normalized()
+	var side := dir.orthogonal()
+	var tip_point := points[tip] + dir * 4.0
+	draw_colored_polygon(PackedVector2Array([tip_point, points[tip] - dir * 7.0 + side * 6.5, points[tip] - dir * 7.0 - side * 6.5]), BAND_TO)

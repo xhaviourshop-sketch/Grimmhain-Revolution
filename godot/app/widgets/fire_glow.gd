@@ -9,6 +9,7 @@ const MAX_SPARKS := 40
 ## Stärke je Stufe als Vielfaches von Akt I (Feedback 5): Akt II doppelt, Akt III dreifach, Akt IV vierfach (Reichweite = Flammenhöhe und Fläche,
 ## Hitze, Helligkeit, Bewegung, Funkenzahl). Funken steigen langsam und treiben leicht zur Seite.
 const BASE_REACH := 28.0  ## Reichweite über den Rahmen in logischen Einheiten bei Stufe 1
+const MAX_REACH := 12.0   ## Obergrenze der Reichweite (Feedback 8): das Feuer bleibt an seiner Karte und läuft nicht in die Nachbarkarte
 const BASE_STRENGTH := 1.0
 const BASE_BRIGHT := 0.4
 const BASE_AMP := 0.35
@@ -21,7 +22,7 @@ const SPARK_SCALE := Vector2(0.05, 0.1)  ## Größe im Verhältnis zum weichen G
 ## Standard (DA-101): Akt I bis III `fire`, Akt IV `ghost` mit denselben Stärkewerten der Stufe 4.
 const STYLES := {
 	&"fire": {"flame": ThemeTokens.FIRE_FLAME, "core": ThemeTokens.FIRE_CORE, "calm": 1.0, "dim": 1.0, "lift": 1.0, "smoke": false},
-	&"ghost": {"flame": ThemeTokens.FIRE_GHOST_FLAME, "core": ThemeTokens.FIRE_GHOST_CORE, "calm": 1.0, "dim": 1.0, "lift": 1.0, "smoke": false},
+	&"ghost": {"flame": ThemeTokens.FIRE_GHOST_FLAME, "core": ThemeTokens.FIRE_GHOST_CORE, "calm": 1.0, "dim": 0.38, "lift": 1.0, "smoke": false, "soften": 0.6},
 	&"ember": {"flame": ThemeTokens.FIRE_EMBER_FLAME, "core": ThemeTokens.FIRE_EMBER_CORE, "calm": 0.45, "dim": 0.6, "lift": 0.25, "smoke": true},
 }
 static var style: StringName = &"fire"  ## aktiver Stil; nur das Screenshot-Werkzeug stellt ihn um
@@ -97,6 +98,7 @@ static func create(part: String, margins: Vector4, p_level: int) -> FireGlow:
 	fire.level = clampi(p_level, 1, 4)
 	fire.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fire.show_behind_parent = true
+	fire.clip_contents = true  # Schein und Funken enden am eigenen Rand (DA-101 (6)): nie über der Nachbarkarte
 	var params := _params(fire.level)
 	var reach := float(params["reach"])
 	fire.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -121,9 +123,12 @@ static func _params(p_level: int) -> Dictionary:
 	var active := TOP_LEVEL_STYLE if style == &"fire" and int(l) == 4 else style
 	var def: Dictionary = STYLES[active] if STYLES.has(active) else STYLES[&"fire"]
 	var calm := float(def["calm"])
-	return {"reach": BASE_REACH * l, "strength": BASE_STRENGTH * l, "bright": BASE_BRIGHT * l * float(def["dim"]), "lift": float(def["lift"]), "amp": BASE_AMP * l * calm, "speed": BASE_SPEED * l * calm,
+	var flame: Color = (def["flame"] as Array)[int(l) - 1]
+	var core: Color = (def["core"] as Array)[int(l) - 1]
+	core = core.lerp(flame, float(def.get("soften", 0.0)))  # kein weißer Kern: das Geisterfeuer soll nicht grell sein
+	return {"reach": minf(BASE_REACH * l, MAX_REACH), "strength": BASE_STRENGTH * l, "bright": BASE_BRIGHT * l * float(def["dim"]), "lift": float(def["lift"]), "amp": BASE_AMP * l * calm, "speed": BASE_SPEED * l * calm,
 		"sparks": BASE_SPARKS * int(l), "velocity": SPARK_SPEED * (0.75 + 0.25 * l), "smoke": bool(def["smoke"]),
-		"flame": (def["flame"] as Array)[int(l) - 1], "core": (def["core"] as Array)[int(l) - 1]}
+		"flame": flame, "core": core}
 
 
 static func _material(params: Dictionary, lift: float) -> ShaderMaterial:

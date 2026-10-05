@@ -246,7 +246,7 @@ print(f"Saved: {ref_path}")
 # ──────────────────────────────────────────────────────────────────
 # 2. Grimmhain_Roles_EN.html — ORDER object updaten
 # ──────────────────────────────────────────────────────────────────
-en_path = "C:/Users/Marku/Downloads/Grimmhain-Cards/Grimmhain_Roles_EN.html"
+en_path = "C:/Users/Marku/Downloads/Grimmhain/Karten/Grimmhain_Roles_EN.html"
 with open(en_path, "r", encoding="utf-8") as f:
     en = f.read()
 

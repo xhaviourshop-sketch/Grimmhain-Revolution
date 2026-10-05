@@ -72,6 +72,7 @@ func _attach(button: GrimmButton, animated: bool) -> void:
 	material = _material
 	button.add_child(self)
 	button.wrap = false
+	button.main = false  # der Lava-Knopf trägt keinen Rubinstein
 	button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, MIN_HEIGHT)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	button.clip_contents = false

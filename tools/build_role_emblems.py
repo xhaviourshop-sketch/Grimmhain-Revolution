@@ -22,7 +22,7 @@ from scipy import ndimage as ndi
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = ROOT + "/godot/assets/night/emblems/"
-DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/symbole/"
+DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/symbole/"
 THRESHOLD = 24         # alpha above this counts as motif
 MERGE_GAP = 5          # dilation iterations that close thin gaps inside one motif
 SPECK_SHARE = 0.03     # a piece below this share that also lies far from the main body is a speck

@@ -2,7 +2,7 @@ import cv2, os, json
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-D = r"C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/"
+D = r"C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/"
 SC = r"C:/Users/Marku/AppData/Local/Temp/claude/C--Users-Marku-Desktop-Grimmhain-Grimmhain---Revolution/0dbb4350-77d8-481f-8ba2-e35a00044365/scratchpad/"
 OUT = SC + "cand/"
 os.makedirs(OUT, exist_ok=True)

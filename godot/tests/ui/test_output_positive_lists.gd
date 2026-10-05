@@ -14,7 +14,7 @@ const SUMMARY_KEYS := ["alive_count", "command_count", "day_number", "names", "n
 const LIST_KEYS := ["compatible", "expected", "expected_label", "found_label", "readable", "round_id", "saved_at", "schema", "summary"]
 const COCKPIT_KEYS := ["alive_count", "day_number", "day_step", "has_game", "next", "night_number", "night_progress", "phase",
 	"player_count", "revival_round", "seats", "warnings"]
-const SEAT_KEYS := ["alive", "name", "nominated_someone_today", "nominated_today", "person_id", "seat"]
+const SEAT_KEYS := ["alive", "name", "nominated_by", "nominated_someone_today", "nominated_today", "person_id", "seat"]
 
 
 ## Partie mit Geheimnissen bis zum Morgen: Loki bindet 6 und 7, Schutzengel schützt 5, Rudel greift 6 an.

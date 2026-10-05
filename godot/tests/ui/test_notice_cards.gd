@@ -30,6 +30,11 @@ func _texts(root: Node) -> String:
 	return "\n".join(out)
 
 
+## Ganzes Wort (Namen sind hier ein einzelner Buchstabe; „contains“ träfe jeden Text).
+func _has_word(text: String, word: String) -> bool:
+	return RegEx.create_from_string("(^|[^\\p{L}])%s($|[^\\p{L}])" % word).search(text) != null
+
+
 func _is_notice(kind: String = "") -> Callable:
 	return func(n: Dictionary) -> bool: return str(n.get("kind")) == "notice" and (kind == "" or str(n.get("notice_kind")) == kind)
 
@@ -52,6 +57,20 @@ func _assert_no_role_names(text: String, label: String) -> void:
 
 # --- Loki -------------------------------------------------------------------------------------------
 
+## Leiste und Karte nennen denselben Schritt: Der Hinweis nach Loki gehört zu Loki, nicht zum nächsten Schritt der Nacht.
+func test_order_bar_names_the_role_of_the_notice() -> void:
+	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
+	if shell == null:
+		return
+	var s := session_of(shell) as GameSession
+	assert_true(s.start_night().ok, "Nacht 1")
+	assert_true(s.answer_targets([3, 5]).ok and s.answer_choice(true).ok, "Loki bindet 3 und 5")
+	await frames(3)
+	assert_eq(str(UiGame.next_of(s)["kind"]), "notice", "Hinweiskarte")
+	var active: Array = (find_node(current_screen(shell), "OrderBar").call("entries") as Array).filter(func(e: Dictionary) -> bool: return str(e["state"]) == "active")
+	assert_eq(active.map(func(e: Dictionary) -> String: return str(e["role_id"])), ["loki"], "die Leiste zeigt Loki als aktiv")
+
+
 func test_loki_shows_one_joint_card_for_the_pair() -> void:
 	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
@@ -73,7 +92,7 @@ func test_loki_shows_one_joint_card_for_the_pair() -> void:
 	assert_true(layer != null, "Karte für das Paar")
 	var shown := _texts(layer)
 	assert_true(shown.contains(tr("ui.notice.loki_bond.love")), "Text „Ihr seid Liebende“: %s" % shown)
-	assert_false(shown.contains("2 · B"), "nennt nicht Loki")
+	assert_false(_has_word(shown, "B"), "nennt nicht Loki")
 	_assert_no_role_names(shown, "gezeigte Karte")
 	await press(find_button(layer, "CloseLayerButton"))  # Schließen der gezeigten Karte bestätigt sie
 	assert_ne(str(UiGame.next_of(s)["kind"]), "notice", "danach geht die Nacht weiter, kein zweiter Hinweis")
@@ -129,7 +148,7 @@ func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
 	assert_true((next["values"] as Dictionary).is_empty(), "ohne Namen")
 	await press(find_button(screen, "ShowNoticeButton"))
 	var first := _texts(find_node(screen, "NoticeLayer"))
-	assert_false(first.contains("3 · C") or first.contains("4 · D"), "erste Phase nennt keine Namen: %s" % first)
+	assert_false(_has_word(first, "C") or _has_word(first, "D"), "erste Phase nennt keine Namen: %s" % first)
 	await press(find_button(find_node(screen, "NoticeLayer"), "CloseLayerButton"))
 	next = UiGame.next_of(s)
 	assert_eq(str(next["kind"]), "begin_step", "danach kein zweiter Hinweis, sondern der Schritt")
@@ -184,7 +203,7 @@ func test_refuge_card_asks_the_person_and_hides_the_asker() -> void:
 	assert_eq(str(next["role_id"]), "", "keine Rolle auf der Karte")
 	var text := _texts(find_node(current_screen(shell), "ActionCard"))  # nur die Karte, der Sitzkreis nennt alle Namen öffentlich
 	assert_false(text.contains("Rotkäppchen"), "nennt nicht die Rolle: %s" % text)
-	assert_false(text.contains("2 · B"), "nennt nicht die fragende Person")
+	assert_false(_has_word(text, "B"), "nennt nicht die fragende Person")
 	assert_true(text.contains("Zuflucht"), "Mini-Karte (DA-101): kurze Aktion: %s" % text)
 	assert_true(text.begins_with("D
 "), "nennt die gefragte Person: %s" % text)

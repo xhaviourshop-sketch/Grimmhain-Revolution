@@ -178,8 +178,8 @@ func test_public_version_first_private_only_after_confirmation() -> void:
 	assert_eq(view.current_version(), ReportText.PUBLIC, "öffentliche Fassung zuerst")
 	assert_true(find_button(screen, "HistoryPublicButton").button_pressed and not find_button(screen, "HistoryGmButton").button_pressed, "private Fassung nicht vorausgewählt")
 	var text := _report_text(shell)
-	assert_true(text.contains("Abschlussbericht (öffentliche Fassung)") and text.contains("Werwölfe") and text.contains("Hinrichtung: Dörte"), "öffentlicher Inhalt")
-	for released: String in ["Rollen zum Spielende", "2 · Bärbel: Blutwolf", "5 · Émile: Detektiv", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden."]:
+	assert_true(text.contains("Abschlussbericht (öffentliche Fassung)") and text.contains("Werwölfe") and text.contains("Dörte wurde hingerichtet"), "öffentlicher Inhalt")
+	for released: String in ["Rollen zum Spielende", "Bärbel: Blutwolf", "Émile: Detektiv", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden."]:
 		assert_true(text.contains(released), "nach bestätigtem Spielende öffentlich: %s" % released)
 	for secret: String in ["Rudelangriff", "ursprünglich", "Spielleiterkorrektur"]:
 		assert_false(text.contains(secret), "öffentlich ohne %s" % secret)
@@ -195,7 +195,7 @@ func test_public_version_first_private_only_after_confirmation() -> void:
 	await press(find_button(_dialog(shell), "ConfirmButton"))
 	assert_eq(view.current_version(), ReportText.GM, "private Fassung nach Bestätigung")
 	text = _report_text(shell)
-	assert_true(text.contains("Spielleiterfassung") and text.contains("Rudelangriff") and text.contains("4 · Dörte: Amalia") and text.contains("Siegbedingung"), "privater Inhalt")
+	assert_true(text.contains("Spielleiterfassung") and text.contains("Rudelangriff") and text.contains("Dörte: Amalia") and text.contains("Siegbedingung"), "privater Inhalt")
 	assert_eq(find_node(screen, "HistoryExportButton").get("text_key"), "ui.history.export.gm", "Exportknopf nennt die Spielleiterfassung")
 	assert_eq(find_node(screen, "HistoryExportInfoLabel").get("text_key"), "ui.history.export_info.gm", "Hinweis zur Fassung vor dem Export")
 	# Erneutes Öffnen beginnt wieder öffentlich.
@@ -368,7 +368,7 @@ func test_language_switch_keeps_report_and_version() -> void:
 	assert_true(text.contains("Final report (game master version)") and text.contains("Night 1") and text.contains("Winner: Werewolves"), "englischer Text: %s" % text.left(80))
 
 
-func test_report_fits_and_scrolls_at_1024x768() -> void:
+func test_report_fits_and_pages_at_1024x768() -> void:
 	for lang: String in ["de", "en"]:
 		var made := await _shell_with_finished_game(SIZE_4_3, lang)
 		if made.is_empty():
@@ -386,14 +386,17 @@ func test_report_fits_and_scrolls_at_1024x768() -> void:
 			var c := find_node(screen, name) as Control
 			assert_true(c != null and c.is_visible_in_tree() and inside(rect_of(c), viewport), "%s: %s im Fenster" % [lang, name])
 			assert_true(c.size.x >= 47.5 and c.size.y >= 47.5, "%s: %s mindestens 48×48" % [lang, name])
-		var scroll := find_node(screen, "HistoryReportScroll") as ScrollContainer
-		var body := find_node(screen, "HistoryReport") as Control
-		assert_true(scroll.size.y >= 150.0, "%s: Berichtsfläche behält Platz (%.0f)" % [lang, scroll.size.y])
-		assert_true(body.size.x <= scroll.size.x + 0.5, "%s: kein horizontaler Überlauf" % lang)
-		scroll.scroll_vertical = int(body.size.y)
-		await frames(2)
-		var last := body.get_child(body.get_child_count() - 1) as Control
-		assert_true(inside(rect_of(last), rect_of(scroll), 1.0), "%s: letzte Zeile nach Scrollen sichtbar" % lang)
+		assert_true(find_node(screen, "HistoryReportHost").find_children("*", "ScrollContainer", true, false).is_empty(), "%s: keine Scrollleiste" % lang)
+		var host := find_node(screen, "HistoryReportHost") as Control
+		var next := find_button(screen, "NextPageButton")
+		assert_true(next != null, "%s: der Bericht blättert" % lang)
+		var guard := 0
+		while next != null and not next.disabled and guard < 20:
+			await press(next)
+			guard += 1
+		var page := find_node(screen, "PageBody") as Control
+		var last := page.get_child(page.get_child_count() - 1) as Control
+		assert_true(inside(rect_of(last), rect_of(host), 1.0), "%s: letzte Zeile auf der letzten Seite sichtbar" % lang)
 		await after_each()
 
 
@@ -417,7 +420,7 @@ func test_screen_and_public_export_have_the_same_scope() -> void:
 		if line != "" and not line.begins_with("=") and not line.begins_with("-"):
 			file_lines.append(line)
 	assert_eq(file_lines, on_screen, "gleiche Zeilen auf dem Bildschirm und in der Datei")
-	assert_true(exported.contains("4 · Dörte: Amalia †") and exported.contains("Sieger: Werwölfe"), "Datei nennt Rollen und Sieger")
+	assert_true(exported.contains("Dörte: Amalia †") and exported.contains("Sieger: Werwölfe"), "Datei nennt Rollen und Sieger")
 	for secret: String in ["Rudelangriff", "ursprünglich", "Spielleiterkorrektur"]:
 		assert_false(exported.contains(secret), "Datei ohne %s" % secret)
 
@@ -438,7 +441,7 @@ func test_undo_locks_the_release_and_a_new_completion_replaces_the_old_roles() -
 	var locked := _report_text(shell)
 	for hidden: String in ["Rollen zum Spielende", "Blutwolf", "Detektiv", "Wahnsinniger Kutscher", "Siegbedingung:"]:
 		assert_false(locked.contains(hidden), "gesperrt: %s nicht öffentlich" % hidden)
-	assert_true(locked.contains("Hinrichtung: Dörte"), "Chronik bleibt lesbar")
+	assert_true(locked.contains("Dörte wurde hingerichtet"), "Chronik bleibt lesbar")
 	assert_true(find_button(screen, "HistoryExportButton").disabled, "Export gesperrt")
 	await press_blocked(find_button(screen, "HistoryExportButton"))
 	assert_false(DirAccess.dir_exists_absolute(ctx.exports_dir) and not DirAccess.get_files_at(ctx.exports_dir).is_empty(), "keine Datei entstanden")
@@ -452,7 +455,7 @@ func test_undo_locks_the_release_and_a_new_completion_replaces_the_old_roles() -
 	await navigate(shell, &"history")
 	await press(find_node(current_screen(shell), "HistoryList").get_child(0) as BaseButton)
 	var again := _report_text(shell)
-	assert_true(again.contains("6 · Fjörd: Dorfbewohner") and not again.contains("Wahnsinniger Kutscher"), "neue Rolle zum Spielende, keine alte")
+	assert_true(again.contains("Fjörd: Dorfbewohner") and not again.contains("Wahnsinniger Kutscher"), "neue Rolle zum Spielende, keine alte")
 	assert_false(find_button(current_screen(shell), "HistoryExportButton").disabled, "Export wieder frei")
 	assert_eq(ctx.history.list().size(), 1, "derselbe Eintrag, kein zweiter")
 
@@ -466,5 +469,5 @@ func test_stored_report_without_roles_is_not_filled_up() -> void:
 	var text := ReportText.plain_text(report, ReportText.PUBLIC)
 	for line: Dictionary in ReportText.lines(report, ReportText.PUBLIC):
 		assert_false(str(line["style"]) == "heading" and str(line["text"]) == "Rollen zum Spielende", "keine Rollenüberschrift ohne gespeicherte Rollen")
-	assert_true(RegEx.create_from_string("(?m)^[0-9]+ · ").search(text) == null, "keine erfundene Rollenzeile")
-	assert_true(text.contains("Sieger: Werwölfe") and text.contains("Hinrichtung: Dörte"), "übrige Angaben bleiben")
+	assert_false(text.contains("Anna: Werwolf") or text.contains("Dörte: Amalia"), "keine erfundene Rollenzeile")
+	assert_true(text.contains("Sieger: Werwölfe") and text.contains("Dörte wurde hingerichtet"), "übrige Angaben bleiben")

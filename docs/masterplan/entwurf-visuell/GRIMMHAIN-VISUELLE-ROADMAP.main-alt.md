@@ -154,7 +154,7 @@ Reihenfolge: P0 → P1 → P2 → P3. Danach P4/P5/P6 auf derselben gestalterisc
 
 **Abnahme 1 durch Markus:** „Diese Richtung ist das gewünschte Spiel.“ Eine gebündelte Korrekturrunde. Erst danach große Serienproduktion.
 
-**Erledigt am 01.10.2026 (Abnahme 1 erteilt).** Nachweis: Mockup V2 (`docs/assets/p1-mockup/`, Screenshots `Downloads/Grimmhain-P1-Nachtentwurf/mockup-v2/`), Entscheidungen in `DECISIONS.md`. Verbindliche Layoutvorlage ist `Spielfeld.png` und `Full UI.png` aus „Grimmhain Assets“, nicht die ursprünglichen Zielbilder. Hinweis: Die Porträts waren Mockup-Material, 24 eindeutige Gesichter fehlen noch (P2).
+**Erledigt am 01.10.2026 (Abnahme 1 erteilt).** Nachweis: Mockup V2 (`docs/assets/p1-mockup/`, Screenshots `Downloads/Grimmhain/Archiv/P1-Nachtentwurf/mockup-v2/`), Entscheidungen in `DECISIONS.md`. Verbindliche Layoutvorlage ist `Spielfeld.png` und `Full UI.png` aus „Grimmhain Assets“, nicht die ursprünglichen Zielbilder. Hinweis: Die Porträts waren Mockup-Material, 24 eindeutige Gesichter fehlen noch (P2).
 
 ### P2: Minimales zusammenhängendes Grafikpaket
 

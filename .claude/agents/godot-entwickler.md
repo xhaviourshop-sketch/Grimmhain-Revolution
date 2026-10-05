@@ -35,7 +35,7 @@ Grimmhain-Architektur und Tests haben Vorrang vor allgemeinen Beispielen.
 
 ## Screenshots
 
-Für jeden geänderten Bildschirm 1024x768 nach `C:/Users/Marku/Downloads/Grimmhain-<auftrag>/` (Muster: `godot/tools/capture_feedback7.gd`, ein Godot-Start für alle Bilder). Diese Bilder prüfen danach die Prüfer.
+Für jeden geänderten Bildschirm 1024x768 nach `C:/Users/Marku/Downloads/Grimmhain/Screenshots/Feedback-N/<teil>/` (Muster: `godot/tools/capture_feedback7.gd`, ein Godot-Start für alle Bilder). Diese Bilder prüfen danach die Prüfer.
 
 ## Bericht (kurz)
 

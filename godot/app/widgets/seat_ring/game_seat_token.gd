@@ -1,8 +1,8 @@
 class_name GameSeatToken
 extends GrimmButton
-## Ein Platz im Cockpit-Sitzkreis als Porträtplatz (P3): rundes Porträt im Rahmen, Nummern-Abzeichen oben, Namensschild unten,
+## Ein Platz im Cockpit-Sitzkreis als Porträtplatz (P3): rundes Porträt im Rahmen, Namensschild unten (nie eine Sitznummer: der Sitz ist nur Anordnung),
 ## Zustände als Ring über dem Porträt, kleine Zustandsabzeichen unten rechts. Zeigt nie eine Rolle. Bleibt ein Button
-## mit Personen-ID und Signal `tapped`; der Button-Text (Nummer, Name, Zeichen) dient der Bedienungshilfe, den Tests und dem
+## mit Personen-ID und Signal `tapped`; der Button-Text (Name, Zeichen) dient der Bedienungshilfe, den Tests und dem
 ## Tooltip und wird nicht gezeichnet. Information hängt nie allein an der Farbe: Das Schild trägt Tod („†“), Nominierung
 ## („(N)“), wählbares Ziel („›“), Auswahl („✓“) und handelnde Person („•“); die Abzeichen unterscheiden sich durch Form.
 ##
@@ -27,16 +27,25 @@ const SHIMMER_ALLOWED := ThemeTokens.SEAT_SHIMMER  ## dezenter, kühler Schimmer
 const FACE_OVERLAP := 1.04  ## das Porträt reicht etwas unter den Ring, damit kein Spalt bleibt
 const RING_RADIUS := PortraitRingLayout.RING_RADIUS  ## Anteil der Rahmenbreite bis zum äußeren Rand des Rings (Tippfläche, Fokus, Zustandsschein)
 const FACE_UV_SCALE := 0.62
+const GLOW_DENSE_DIAMETER := 90.0  ## ab 13 Personen (Rahmen 86) gilt der schmale Schein
+const GLOW_STEP_DENSE := 0.85
 const PLATE_FONT_SIZE := 13
 const PLATE_PADDING := 6.0  ## Innenabstand im Namensschild (links und rechts zusammen, ohne die Eisenkappen)
-const NUMBER_FONT_SIZE := 9
-const PLATE_FONT_SIZE_MIN := 10
+const PLATE_FONT_SIZE_FLOOR := 8  ## kleinste Schrift im Schild, wenn ein langer Name sonst nicht passt
 const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ zur Rahmenbreite
 const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
 const HUNT_PULSE_SPEED := 3.4  ## Pulse je Sekunde im Bogenmaß
 const ACTIVE_PULSE_SPEED := 2.1  ## langsames Auf und Ab der aktiven Person (rund drei Sekunden je Zug)
 const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
-const RING_PRIORITY: Array[String] = ["marked", "poisoned", "silenced", "protected"]
+## Statusringe gibt es nur für Gift, Stille und Schutz. Das Fadenkreuz (Opfer, Markierung) bleibt ein Abzeichen: Ein roter Ring heißt am Platz
+## nur „nominiert“ (Tag) oder „gewählt“ (Zuordnung), nie ein Opfer der Nacht (Feedback 8, L3/L11).
+const RING_PRIORITY: Array[String] = ["poisoned", "silenced", "protected"]
+## Gemalte Bundzeichen der Liebenden und Rivalen am Ring (nur Spielleitung, nachts).
+const BOND_ART := {"lovers": "res://assets/ui/skin/bund_liebende.webp", "rivals": "res://assets/ui/skin/bund_rivalen.webp"}
+const BOND_SCALE := 0.34  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite
+const BADGE_SCALE := 0.3  ## Kantenlänge der Zustandsabzeichen relativ zur Rahmenbreite (sie bleiben im eigenen Ring)
+const BADGE_FIRST_ANGLE := 50.0  ## Winkel des ersten Abzeichens (Grad, 0 = rechts, 90 = unten)
+const BADGE_STEP_ANGLE := 55.0
 const _STYLE_STATES: Array[String] = ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]
 const _FONT_COLORS: Array[String] = ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color", "font_disabled_color"]
 
@@ -149,7 +158,7 @@ func show_seat(seat: Dictionary) -> void:
 func _show() -> void:
 	if _seat.is_empty():
 		return
-	format_values = {"mark": STATE_MARKS.get(state, ""), "number": int(_seat["seat"]), "name": str(_seat["name"])}
+	format_values = {"mark": STATE_MARKS.get(state, ""), "name": str(_seat["name"])}
 	var key := "ui.cockpit.seat.alive"
 	if not alive:
 		key = "ui.cockpit.seat.dead"
@@ -228,14 +237,12 @@ func _draw() -> void:
 	_draw_portrait(c, d, dim)
 	var frame_rect := _frame_rect(c, d)
 	var socket := frame_rect.position + GroveArtData.SEAT_SOCKET_CENTER * frame_rect.size
-	draw_circle(socket, GroveArtData.SEAT_SOCKET_RADIUS * d * 1.05, ThemeTokens.NUMBER_BG)
+	draw_circle(socket, GroveArtData.SEAT_SOCKET_RADIUS * d * 1.05, ThemeTokens.NUMBER_BG)  # leerer Sockel, keine Nummer
 	var frame := GroveSkin.texture("seat_frame")
 	if frame != null:
 		var silver := GroveSkin.TINT_SEAT_SILVER * dim
 		draw_texture_rect(frame, frame_rect, false, silver)
 	_draw_state_ring(c, d)
-	_draw_socket(frame_rect, socket, d, GroveSkin.TINT_SEAT_SILVER * dim)  # in jedem Zustand über dem Ring, damit die Nummer lesbar bleibt
-	_draw_number(socket, d)
 	if state == &"selected":
 		_draw_check(c, d)
 	if alive and locked:
@@ -258,10 +265,11 @@ func _plate_cap() -> float:
 
 ## Weicher Schein um den Ring: mehrere dünne Bögen mit abnehmender Deckkraft.
 func _draw_glow(c: Vector2, d: float, color: Color, arcs: int, strength: float) -> void:
+	var step := GLOW_STEP_DENSE if d < GLOW_DENSE_DIAMETER else 2.0  # dichte Ringe: der Schein bleibt schmal, sonst berühren sich die Scheine der Nachbarn (DA-92)
 	for i: int in arcs:
 		var tone := color
 		tone.a = strength * (1.0 - float(i) / float(arcs))
-		draw_arc(c, d * RING_RADIUS + 1.0 + 2.0 * float(i), 0.0, TAU, 56, tone, 2.6, true)
+		draw_arc(c, d * RING_RADIUS + 1.0 + step * float(i), 0.0, TAU, 56, tone, step * 1.3, true)
 
 
 ## Feuerring der Wölfe: blutroter Schein mit heißem Kern, pulsierend (bei reduzierter Bewegung ruhig und voll).
@@ -349,20 +357,6 @@ func _draw_state_ring(c: Vector2, d: float) -> void:
 		draw_texture_rect(texture, Rect2(c - Vector2.ONE * side * 0.5, Vector2.ONE * side), false)
 
 
-## Nummernsockel noch einmal über Zustandsring und Abzeichen: dunkle Scheibe, dann der Sockelausschnitt des Rahmens.
-func _draw_socket(frame_rect: Rect2, socket: Vector2, d: float, tint: Color) -> void:
-	draw_circle(socket, GroveArtData.SEAT_SOCKET_RADIUS * d * 1.05, ThemeTokens.NUMBER_BG)
-	var frame := GroveSkin.texture("seat_frame")
-	if frame == null:
-		return
-	var tex := frame.get_size()
-	var reach := GroveArtData.SEAT_SOCKET_RADIUS * 1.5 * tex.x
-	var centre := GroveArtData.SEAT_SOCKET_CENTER * tex
-	var src := Rect2(centre - Vector2.ONE * reach, Vector2.ONE * reach * 2.0)
-	var scale := frame_rect.size / tex
-	draw_texture_rect_region(frame, Rect2(frame_rect.position + src.position * scale, src.size * scale), src, tint)
-
-
 ## Häkchen am Ring des gewählten Ziels: die Auswahl hängt nicht an der Farbe allein.
 func _draw_check(c: Vector2, d: float) -> void:
 	var centre := c + Vector2(d * 0.31, -d * 0.27)
@@ -380,21 +374,24 @@ func _draw_lock(c: Vector2, d: float) -> void:
 	draw_rect(Rect2(centre + Vector2(-4.0, -1.6), Vector2(8.0, 6.0)), ThemeTokens.MOON_SILVER)
 
 
-func _draw_number(socket: Vector2, d: float) -> void:
-	var text := str(int(_seat["seat"]))
-	var font := _plate_font()
-	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUMBER_FONT_SIZE).x
-	draw_string(font, Vector2(socket.x - w * 0.5, socket.y + NUMBER_FONT_SIZE * 0.36), text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUMBER_FONT_SIZE, ThemeTokens.TEXT_PRIMARY)
-
-
 func _draw_badges(c: Vector2, d: float) -> void:
 	if not secrets_visible or marks.is_empty() or not alive:
 		return
-	var size_px := maxf(ThemeTokens.BADGE_MIN, d * 0.37)
+	var size_px := maxf(ThemeTokens.BADGE_MIN, d * BADGE_SCALE)
 	var i := 0
 	for kind: Variant in marks:
-		var rect := Rect2(c.x + d * 0.5 - size_px * 0.85 - float(i) * size_px * 0.7, c.y + d * 0.5 - size_px * 0.85, size_px, size_px)
-		var texture := NightArt.badge(str(kind))
+		var bond := _bond_texture(str(kind))
+		var side := maxf(size_px, d * BOND_SCALE) if bond != null else size_px
+		# Das Abzeichen liegt ganz im eigenen Ring unten rechts (weitere reihen sich nach links unten auf), nie über dem Nachbarn.
+		var angle := deg_to_rad(BADGE_FIRST_ANGLE + float(i) * BADGE_STEP_ANGLE)
+		var rect := Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS - side * 0.5) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
+		var texture := bond if bond != null else NightArt.badge(str(kind))
+		if bond != null:  # das Bild ist dunkler Stahl: heller Mondgrund, damit es auf dem Nachtbrett lesbar bleibt
+			var disc := ThemeTokens.MOON_SILVER
+			disc.a = 0.9
+			draw_circle(rect.get_center(), side * 0.5, disc)
+			draw_arc(rect.get_center(), side * 0.5, 0.0, TAU, 32, ThemeTokens.NUMBER_BG, 1.6, true)
+			rect = rect.grow(-side * 0.06)
 		if texture != null:
 			draw_texture_rect(texture, rect, false)
 		else:
@@ -402,7 +399,19 @@ func _draw_badges(c: Vector2, d: float) -> void:
 		i += 1
 
 
-## Abzeichen ohne Bilddatei (Liebende, Rivalen, verzaubert): dunkle Scheibe, Silberring und ein Silberzeichen, das sich in der Form unterscheidet.
+static var _bond_cache: Dictionary = {}
+
+
+static func _bond_texture(kind: String) -> Texture2D:
+	if not BOND_ART.has(kind):
+		return null
+	if not _bond_cache.has(kind):
+		var path: String = BOND_ART[kind]
+		_bond_cache[kind] = load(path) as Texture2D if ResourceLoader.exists(path) else null
+	return _bond_cache[kind]
+
+
+## Abzeichen ohne Bilddatei (verzaubert): dunkle Scheibe, Silberring und ein Silberzeichen.
 func _draw_glyph_badge(kind: String, rect: Rect2) -> void:
 	var c := rect.get_center()
 	var r := rect.size.x * 0.46
@@ -411,17 +420,6 @@ func _draw_glyph_badge(kind: String, rect: Rect2) -> void:
 	var s := r * 0.55
 	var silver := ThemeTokens.MOON_SILVER_BRIGHT
 	match kind:
-		"lovers":  # Herz
-			var heart := PackedVector2Array()
-			for k: int in 24:
-				var a := TAU * float(k) / 24.0
-				heart.append(c + Vector2(16.0 * pow(sin(a), 3.0), -(13.0 * cos(a) - 5.0 * cos(2.0 * a) - 2.0 * cos(3.0 * a) - cos(4.0 * a))) * s / 16.0)
-			draw_colored_polygon(heart, silver)
-		"rivals":  # gekreuzte Klingen
-			draw_line(c + Vector2(-s, -s), c + Vector2(s, s), silver, 2.2, true)
-			draw_line(c + Vector2(s, -s), c + Vector2(-s, s), silver, 2.2, true)
-			draw_line(c + Vector2(-s * 0.95, -s * 0.35), c + Vector2(-s * 0.35, -s * 0.95), silver, 1.6, true)
-			draw_line(c + Vector2(s * 0.95, -s * 0.35), c + Vector2(s * 0.35, -s * 0.95), silver, 1.6, true)
 		"charmed":  # Note (Flöte des Rattenfängers)
 			draw_circle(c + Vector2(-s * 0.35, s * 0.55), s * 0.38, silver)
 			draw_line(c + Vector2(s * 0.0, s * 0.55), c + Vector2(s * 0.0, -s * 0.9), silver, 1.8, true)
@@ -451,11 +449,8 @@ func _draw_plate() -> void:
 	var font := _plate_font()
 	var limit := rect.size.x - 2.0 * _plate_cap() - PLATE_PADDING
 	var font_size := PLATE_FONT_SIZE
-	while font_size > PLATE_FONT_SIZE_MIN and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > limit:
-		font_size -= 1  # lange Namen: erst Schrift bis zur Mindestgröße verkleinern, dann kürzen
-	while font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > limit and text.length() > 3:
-		text = text.trim_suffix("…")
-		text = text.left(text.length() - 1) + "…"
+	while font_size > PLATE_FONT_SIZE_FLOOR and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > limit:
+		font_size -= 1  # lange Namen: die Schrift schrumpft, der Name wird nie mit „…“ gekürzt
 	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 	var color := ThemeTokens.TEXT_MUTED if not alive else ThemeTokens.TEXT_PRIMARY
 	draw_string(font, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + float(font_size) * 0.72) * 0.5), text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)

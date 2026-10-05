@@ -10,7 +10,7 @@ import shutil
 from PIL import Image
 
 SRC_WK = "C:/Users/Marku/Desktop/Grimmhain/Grimmhain-Werwolf/Grimmhain Assets/"
-SRC_DL = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/"
+SRC_DL = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/"
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 P2 = ROOT + "/docs/assets/p2-mockup/"
 P1 = ROOT + "/docs/assets/p1-mockup/"

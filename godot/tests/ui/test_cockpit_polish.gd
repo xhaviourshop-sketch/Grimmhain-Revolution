@@ -50,11 +50,18 @@ func test_card_fades_in_and_new_render_cancels() -> void:
 	assert_true(card.modulate.a < 1.0, "neue Handlung blendet ein (%.2f)" % card.modulate.a)
 	# Sofort weiter: Auswahl ändert nur dieselbe Karte, kein erneutes Einblenden nötig.
 	await press(find_node(current_screen(shell), "SeatRing").call("token_for", 5) as BaseButton)  # feste Anzahl: sofort übernommen
-	await wait_seconds(ThemeTokens.CARD_FADE_SECONDS + 0.15)
+	await _until_opaque(card)  # wartet auf das Ende des Tweens statt auf eine feste Zeit (unter Last sonst unzuverlässig)
 	assert_eq(card.modulate.a, 1.0, "Einblenden beendet, nichts bleibt halb transparent")
 	var backdrop := find_node(current_screen(shell), "Backdrop") as Control
-	await wait_seconds(ThemeTokens.BACKDROP_FADE_SECONDS)
+	await _until_opaque(backdrop)
 	assert_eq(backdrop.modulate.a, 1.0, "Hintergrundwechsel beendet")
+
+
+## Wartet bildweise, bis das Einblenden fertig ist (höchstens 5 Sekunden; ein hängender Tween bleibt so ein Fehlschlag).
+func _until_opaque(node: Control) -> void:
+	var start := Time.get_ticks_msec()
+	while node.modulate.a < 1.0 and Time.get_ticks_msec() - start < 5000:
+		await frames(1)
 
 
 func test_reduced_motion_shows_card_immediately() -> void:

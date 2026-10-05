@@ -2,7 +2,7 @@ extends "res://tools/capture_ui_screenshots.gd"
 ## P0 scratch: real cockpit with 24 persons, start of night and a target selection.
 
 func _initialize() -> void:
-	var out := "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/p0-istzustand"
+	var out := "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/p0-istzustand"
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			out = arg.trim_prefix("--out=")

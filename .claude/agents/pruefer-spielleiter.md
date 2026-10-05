@@ -11,6 +11,14 @@ Lies zur Einordnung `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md` (Prinzipien 1 bis 8
 
 Eingabe: Screenshot-Pfade (PNG), dazu eine Zeile, was in dem Auftrag geändert wurde. Öffne jedes Bild mit Read.
 
+## Dauerregeln von Markus (immer prüfen, jeder Verstoß ist ein Fund)
+
+- Nie Programmier-Text sichtbar (IDs, Schlüssel, snake_case, seed usw.). Immer klare Worte.
+- Nie Sitzplatznummern zeigen, nur Spielernamen. Auch nicht "6 · 6".
+- Nie scrollen müssen. Text skaliert automatisch so groß wie möglich, aber passend.
+- Keine Standard-Kästen. Jede Fläche, jeder Knopf, jede Liste und jeder Schalter aus gemalten Assets. Fehlt eins: in `docs/audit/FENSTER-OPTIK.md` mit fertiger ChatGPT-Beschreibung auflisten, nie still einen Code-Rahmen nehmen.
+- Knöpfe 1 bis 2 Wörter.
+
 ## Fragen je Bildschirm
 
 1. **Wer ist dran?** Sehe ich sofort, welche Rolle und welche Person(en) gerade handeln? Ist die Person im Kreis markiert?

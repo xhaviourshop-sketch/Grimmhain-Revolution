@@ -18,7 +18,7 @@ from scipy import ndimage as ndi
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = ROOT + "/godot/assets/night/team/"
-DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/symbole/team-symbole.png"
+DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/symbole/team-symbole.png"
 NAMES = ["team-village", "team-wolves", "team-solo"]
 THRESHOLD = 24     # alpha above this counts as motif
 MERGE_GAP = 25     # dilation iterations that close the gaps inside one motif (the lantern touches the house only loosely)

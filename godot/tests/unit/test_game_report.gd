@@ -106,12 +106,13 @@ func test_report_has_winner_counts_and_chronological_public_entries() -> void:
 func test_public_version_shows_end_roles_winner_and_condition_but_no_other_secret() -> void:
 	var report := _finished().game_report()
 	var text := _all_text(report, ReportText.PUBLIC)
-	for expected: String in ["Abschlussbericht (öffentliche Fassung)", "bericht-1", "6", "Anna", "Bärbel", "Çelik", "Dörte", "Émile", "Fjörd", "Nacht 1", "Tag 1",
-			"In dieser Nacht ist gestorben", "Çelik", "Anna nominiert Dörte", "Hinrichtung: Dörte", "Werwölfe"]:
+	for expected: String in ["Abschlussbericht (öffentliche Fassung)", "Partie gestartet mit 6 Personen.", "Anna", "Bärbel", "Çelik", "Dörte", "Émile", "Fjörd", "Nacht 1", "Tag 1",
+			"In dieser Nacht ist gestorben", "Çelik", "Anna nominiert Dörte", "Dörte wurde hingerichtet", "Werwölfe"]:
 		assert_true(text.contains(expected), "öffentlich vorhanden: %s" % expected)
-	assert_true(text.contains("Dörte (Amalia)"), "Rolle beim Tod in einer Runde ohne Wiederbelebung (wie am Tisch angesagt)")
-	for expected: String in ["Rollen zum Spielende", "1 · Anna: Werwolf", "2 · Bärbel: Blutwolf", "3 · Çelik: Dorfbewohner †", "4 · Dörte: Amalia †", "5 · Émile: Detektiv",
-			"6 · Fjörd: Wahnsinniger Kutscher", "Sieger: Werwölfe", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden."]:
+	assert_false(text.contains("bericht-1") or text.contains(" · "), "keine Partie-ID und keine Platznummer im Text")
+	assert_true(text.contains("Dörte wurde hingerichtet (Amalia)."), "Rolle beim Tod in einer Runde ohne Wiederbelebung (wie am Tisch angesagt)")
+	for expected: String in ["Rollen zum Spielende", "Anna: Werwolf", "Bärbel: Blutwolf", "Çelik: Dorfbewohner †", "Dörte: Amalia †", "Émile: Detektiv",
+			"Fjörd: Wahnsinniger Kutscher", "Sieger: Werwölfe", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden."]:
 		assert_true(text.contains(expected), "nach bestätigtem Spielende öffentlich: %s" % expected)
 	for secret: String in ["Rudelangriff", "Spielleiterkorrektur", "ursprünglich", "Nur für die Spielleitung", "Verdeckte Nominierung", "Begünstigte", "technische Einzelereignisse"]:
 		assert_false(text.contains(secret), "weiterhin nicht öffentlich: %s" % secret)
@@ -120,13 +121,23 @@ func test_public_version_shows_end_roles_winner_and_condition_but_no_other_secre
 	assert_true(str(lines[1]["text"]).contains("alle Rollen zum Spielende"), "Hinweis nennt die Freigabe nach dem Spielende")
 
 
+## Eine Hinrichtung ist ein Satz, in beiden Fassungen; die Spielleiterfassung nennt darin die Rolle.
+func test_an_execution_is_one_sentence_in_both_versions() -> void:
+	var report := _finished().game_report()
+	for version: String in [ReportText.PUBLIC, ReportText.GM]:
+		var text := _all_text(report, version)
+		assert_eq(text.count("Dörte wurde hingerichtet"), 1, "%s: ein Satz" % version)
+		assert_false(text.contains("Dörte ist gestorben"), "%s: kein zweiter und dritter Satz zur Hinrichtung" % version)
+	assert_true(_all_text(report, ReportText.GM).contains("Dörte wurde hingerichtet (Amalia)."), "Spielleiterfassung mit Rolle")
+
+
 ## Ohne Freigabe (Siegbestätigung zurückgenommen) fehlen Rollen, Sieger und Siegbedingung in der öffentlichen Fassung wieder.
 func test_public_version_without_release_has_no_roles_winner_or_condition() -> void:
 	var report := _finished().game_report()
 	var text := _all_text_locked(report)
-	for hidden: String in ["Rollen zum Spielende", "Wahnsinniger Kutscher", "Blutwolf", "Detektiv", "Siegbedingung:", "Gewinnende", "1 · Anna", "Sieger:"]:
+	for hidden: String in ["Rollen zum Spielende", "Wahnsinniger Kutscher", "Blutwolf", "Detektiv", "Siegbedingung:", "Gewinnende", "Anna: Werwolf", "Sieger:"]:
 		assert_false(text.contains(hidden), "ohne Freigabe nicht öffentlich: %s" % hidden)
-	assert_true(text.contains("Anna nominiert Dörte") and text.contains("Hinrichtung: Dörte"), "öffentliche Chronik bleibt")
+	assert_true(text.contains("Anna nominiert Dörte") and text.contains("Dörte wurde hingerichtet"), "öffentliche Chronik bleibt")
 	assert_true(text.contains("Die Siegbestätigung wurde zurückgenommen"), "Hinweis auf die fehlende Freigabe")
 	assert_true(_all_text(report, ReportText.PUBLIC).length() > text.length(), "Freigabe erweitert die Fassung")
 
@@ -137,9 +148,9 @@ func test_revival_round_keeps_death_roles_out_of_the_chronicle_but_lists_end_rol
 	var report := _finished(REVIVAL_ROLES).game_report()
 	assert_true(bool(report["revival_round"]), "Wiederbelebungsrunde")
 	var text := _all_text(report, ReportText.PUBLIC)
-	assert_true(text.contains("Gestorben: Dörte.") and text.contains("Çelik"), "Tote ohne Rolle genannt")
+	assert_true(text.contains("Dörte wurde hingerichtet.") and text.contains("Çelik"), "Tote ohne Rolle genannt")
 	assert_false(text.contains("Dörte (") or text.contains("Çelik ("), "Chronik nennt keine Rolle der Toten")
-	assert_true(text.contains("4 · Dörte: Amalia †") and text.contains("3 · Çelik: Kutscher †"), "Rollenliste nach dem Spielende nennt alle Rollen")
+	assert_true(text.contains("Dörte: Amalia †") and text.contains("Çelik: Kutscher †"), "Rollenliste nach dem Spielende nennt alle Rollen")
 	assert_false(_all_text_locked(report).contains("Amalia"), "ohne Freigabe bleibt die Rolle verdeckt")
 	var gm := _all_text(report, ReportText.GM)
 	assert_true(gm.contains("Kutscher") and gm.contains("Amalia"), "Spielleiterfassung nennt die Rollen")
@@ -148,8 +159,8 @@ func test_revival_round_keeps_death_roles_out_of_the_chronicle_but_lists_end_rol
 func test_game_master_version_adds_roles_causes_and_reason() -> void:
 	var report := _finished().game_report()
 	var text := _all_text(report, ReportText.GM)
-	for expected: String in ["Abschlussbericht (Spielleiterfassung)", "Nur für die Spielleitung", "Rollen", "3 · Çelik: Dorfbewohner", "4 · Dörte: Amalia", "Rudelangriff",
-			"Hinrichtung", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden.", "Sieger: Werwölfe", "Wahnsinniger Kutscher", "Blutwolf"]:
+	for expected: String in ["Abschlussbericht (Spielleiterfassung)", "Nur für die Spielleitung", "Rollen", "Çelik: Dorfbewohner", "Dörte: Amalia", "Rudelangriff",
+			"hingerichtet", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden.", "Sieger: Werwölfe", "Wahnsinniger Kutscher", "Blutwolf"]:
 		assert_true(text.contains(expected), "Spielleiterfassung enthält: %s" % expected)
 	# Die Spielleiterfassung enthält alles Öffentliche (außer dem Hinweis der Fassung) und zusätzlich Ursachen, Ursprungsrollen und Korrekturen.
 	for line: Dictionary in ReportText.lines(report, ReportText.PUBLIC):
@@ -211,11 +222,11 @@ func test_role_change_before_the_end_shows_the_end_role_publicly() -> void:
 	assert_eq(str(report["roles"][5]["role_id"]), "dorfbewohner", "Rolle zum Spielende")
 	assert_eq(str(report["roles"][5]["original_role_id"]), "wahnsinniger-kutscher", "ursprüngliche Rolle nur im Bericht der Spielleitung")
 	var text := _all_text(report, ReportText.PUBLIC)
-	assert_true(text.contains("6 · Fjörd: Dorfbewohner"), "öffentlich: Rolle zum Spielende")
+	assert_true(text.contains("Fjörd: Dorfbewohner"), "öffentlich: Rolle zum Spielende")
 	for secret: String in ["Wahnsinniger Kutscher", "ursprünglich", "Karte vertauscht", "Spielleiterkorrektur"]:
 		assert_false(text.contains(secret), "öffentlich ohne %s" % secret)
 	var gm := _all_text(report, ReportText.GM)
-	assert_true(gm.contains("6 · Fjörd: Dorfbewohner (ursprünglich Wahnsinniger Kutscher)") and gm.contains("Karte vertauscht"), "Spielleiterfassung mit ursprünglicher Rolle und Korrektur")
+	assert_true(gm.contains("Fjörd: Dorfbewohner (ursprünglich Wahnsinniger Kutscher)") and gm.contains("Karte vertauscht"), "Spielleiterfassung mit ursprünglicher Rolle und Korrektur")
 
 
 func _kill(id: int) -> Command:

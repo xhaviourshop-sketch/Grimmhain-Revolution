@@ -28,6 +28,14 @@ Regeln, Testregeln und Verweise. Erklärungen: `docs/development/` (`CLAUDE-STAC
 4. `planer` ordnet die Funde zu; Funde werden behoben (höchstens 3 Fix-Runden), erst dann Bericht an Markus mit offenen Funden.
 5. Hauptsitzung merged die Zweige in den Auftragszweig und führt die eine Vollsuite am Ende aus. Kleine Einzeländerungen (eine Datei, kein sichtbarer Text) ohne Team.
 
+## Dauerregeln von Markus (sichtbare App)
+- NIE Programmier-Text sichtbar (IDs, Schlüssel, snake_case, seed usw.). Immer klare Worte.
+- NIE Sitzplatznummern zeigen, nur Spielernamen. Auch nicht "6 · 6".
+- NIE scrollen müssen. Text skaliert automatisch so groß wie möglich, aber passend.
+- KEINE Standard-Kästen. Jede Fläche, jeder Knopf, jede Liste und jeder Schalter aus gemalten Assets. Fehlt eins: in `docs/audit/FENSTER-OPTIK.md` mit fertiger ChatGPT-Beschreibung auflisten, nie still einen Code-Rahmen nehmen.
+- Knöpfe 1 bis 2 Wörter.
+- Screenshots und Asset-Ablage: `C:/Users/Marku/Downloads/Grimmhain/` (`Assets/ui`, `Assets/start`, `Karten`, `Screenshots/Feedback-N/`, `Vorbereitung`, `Archiv`, Web-Export `Web`).
+
 ## Qualitätsgrenzen
 - Regelkern bleibt unabhängig von Szenen, UI, Audio und Dateizugriff. Vorhandene Befehle, Ereignisse und Anwendungsschicht nutzen; keine zweite Regelimplementierung in der UI.
 - Personen-ID ist Identität, Sitzplatz nur Anordnung. Zufall nur über den gespeicherten Generator. Öffentliche Ansichten und Audio verraten keine geheimen Ereignisse.

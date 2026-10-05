@@ -15,6 +15,7 @@
   ],
   "godot/app/widgets/seat_ring/": [
     "board_layout",
+    "cockpit_day",
     "night_board"
   ],
   "godot/app/widgets/night/": [
@@ -45,5 +46,29 @@
   "godot/app/history/": [
     "history",
     "game_report"
+  ],
+  "godot/app/screens/settings/": [
+    "settings_persistence",
+    "settings"
+  ],
+  "godot/app/screens/role_preview/": [
+    "role_preview"
+  ],
+  "godot/app/preview/": [
+    "role_preview"
+  ],
+  "godot/app/screens/new_game/": [
+    "prep_screen",
+    "prep_model",
+    "player_groups"
+  ],
+  "godot/app/session/game_report": [
+    "game_report",
+    "game_history"
+  ],
+  "godot/app/screens/cockpit/cockpit_layers": [
+    "role_show",
+    "notice_cards",
+    "info_roles"
   ]
 }

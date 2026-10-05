@@ -49,8 +49,12 @@ var _covered: bool = false
 ## Rollenbild auf der Aktionskarte: aus seit der Nachtschablone (Markus 05.10.2026: die Nachtkarte zeigt kein Rollenbild; Titel und Hilfe
 ## nennen die Fähigkeit). Auf `true` setzen, um es wiederzubringen.
 const ROLE_ART_ON_CARD := false
-const MINI_CARD_SHARE := 0.25  ## Mini-Nachtkarte: Anteil an der Bildschirmbreite (DA-101)
-const MINI_CARD_MIN_WIDTH := 256.0  ## schmaler brechen Name, Rolle und Aktion zu oft um
+const MINI_CARD_SHARE := 0.3  ## Mini-Nachtkarte: Anteil an der Bildschirmbreite (DA-101)
+const MINI_CARD_MIN_WIDTH := 288.0  ## schmaler schrumpfen Name, Rolle und Aktion zu stark
+const DAY_CARD_SHARE := 0.46  ## Tageskarte nach Inhalt: breit genug für drei Knöpfe, schmal genug für die Nominierungsbänder
+const DAY_CARD_MIN_WIDTH := 400.0
+## Befehle, nach denen es nichts zurückzunehmen gibt, was die Spielleitung gewählt hätte: das Dock zeigt „Rückgängig“ erst nach einer Auswahl.
+const NO_CHOICE_COMMANDS: Array[StringName] = [Command.START_NIGHT, Command.BEGIN_STEP]
 const PEEK_MSEC := 3000  ## so lange bleiben die Abzeichen einer angetippten Person am Tag sichtbar
 var _peek_id: int = 0
 var _peek_until: int = 0
@@ -132,6 +136,7 @@ func _setup() -> void:
 	_retry_save.pressed.connect(context.autosave)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	_card.requested.connect(_on_card_requested)
+	_card.undo_changed.connect(_update_dock_undo)
 	for tool: GrimmButton in [%PrivateButton, %RolesButton, %GmButton, %LexiconButton, %RulebookButton]:
 		tool.custom_minimum_size.x = MENU_WIDTH - 2.0 * ThemeTokens.SPACE_S
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
@@ -219,10 +224,22 @@ func _refresh() -> void:
 	_apply_marks(active)
 	_ring.set_secrets_visible(not _hidden)
 	_update_order(active)
-	_dock_undo.disabled = not (active and context.session.can_undo())
+	_update_dock_undo()
 	_hidden_label.visible = active and _hidden
 	_arrange()
 	_render()
+
+
+## „Rückgängig“ im Dock: nur einmal sichtbar (nicht, solange die Karte ihren Knopf zeigt) und erst nach einer Auswahl.
+func _update_dock_undo() -> void:
+	var can := bool(_view.get("has_game", false)) and context.session.can_undo()
+	var chosen := false
+	if can:
+		var commands := context.session.commands()
+		chosen = not commands.is_empty() and not NO_CHOICE_COMMANDS.has(commands.back().type)
+	_dock_undo.disabled = not can
+	_dock_undo.visible = chosen and not _card.undo_visible()
+	_arrange()
 
 
 ## Abzeichen am Sitzkreis (S-05, DA-93): in der Nacht alle, tagsüber verborgen; ein Tipp auf eine Person blendet ihre Abzeichen kurz ein.
@@ -249,9 +266,29 @@ func _peek_marks(person_id: int) -> void:
 func _update_order(active: bool) -> void:
 	var in_night := active and str(_view.get("phase", "")) == "NIGHT"
 	var order: Array = context.session.night_order() if in_night else []
+	order = _order_for_card(order, _view.get("next", {}))
 	_order_bar.show_order(order, _bar_is_full(), _bar_collapsible())
 	var anonymous := bool(_effective(_view.get("next", {})).get("anonymous_asker", false))  # S-04 (DA-93): die Leiste verriete die Rolle der Fragenden
 	_order_bar.visible = in_night and not _hidden and not order.is_empty() and not anonymous
+
+
+## Ein Hinweis (DI-04, DI-06, DI-07) gehört zur Rolle, die ihn auslöst (Loki, Rattenfänger, Pestbringerin): Die Leiste zeigt diese Rolle als aktiv,
+## damit Leiste und Karte denselben Schritt nennen. Nur Darstellung, die Reihenfolge der Nacht bleibt unberührt.
+func _order_for_card(order: Array, next: Dictionary) -> Array:
+	if str(next.get("kind")) != "notice":
+		return order
+	var role := CockpitText.help_role(next)
+	if role == "" or not order.any(func(e: Dictionary) -> bool: return str(e["role_id"]) == role):
+		return order
+	var out: Array = []
+	for entry: Dictionary in order:
+		var copy := entry.duplicate()
+		if str(entry["role_id"]) == role:
+			copy["state"] = "active"
+		elif str(entry["state"]) == "active":
+			copy["state"] = "upcoming"
+		out.append(copy)
+	return out
 
 
 func _bar_collapsible() -> bool:
@@ -358,6 +395,8 @@ func _update_status(active: bool) -> void:
 	else:
 		_round.text_key = ""
 		_alive.text_key = ""
+	_round.visible = _round.text_key != ""  # ohne Text bliebe von der gemalten Zeile ein leerer Winzling
+	_alive.visible = _alive.text_key != ""
 	_refresh_timer()
 	var warnings: Array = _view.get("warnings", [])
 	_warnings.visible = not warnings.is_empty()
@@ -440,24 +479,26 @@ func _arrange() -> void:
 	_place_card()
 
 
-## Mini-Nachtkarte (DA-101): schmal (höchstens ein Viertel der Breite) am unteren Rand der freien Ringmitte, so hoch wie ihr Inhalt; sie
-## verdeckt keinen Sitz. Alle anderen Karten füllen die freie Mitte wie bisher.
+## Mini-Nachtkarte (DA-101, Feedback 8: mittig auf dem Dorfplatz) und Tageskarte nach Inhalt: schmal, in der Mitte der freien Ringmitte,
+## so hoch wie ihr Inhalt; sie verdeckt keinen Sitz und lässt die Nominierungsbänder erkennbar. Alle anderen Karten füllen die freie Mitte.
 func _place_card() -> void:
 	var panel := %InstructionCard as PanelContainer
 	if not _card.is_compact():
 		panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 		return
-	var width := minf(maxf(size.x * MINI_CARD_SHARE, MINI_CARD_MIN_WIDTH), _ring.center().size.x)
+	var day := _card.is_day_card()
+	_card.set_max_height(_ring.center().size.y)  # die Karte liegt ganz in der freien Ringmitte: sonst kleiner, nie höher
+	var width := minf(maxf(size.x * (DAY_CARD_SHARE if day else MINI_CARD_SHARE), DAY_CARD_MIN_WIDTH if day else MINI_CARD_MIN_WIDTH), _ring.center().size.x)
 	panel.anchor_left = 0.5
 	panel.anchor_right = 0.5
-	panel.anchor_top = 1.0
-	panel.anchor_bottom = 1.0
+	panel.anchor_top = 0.5
+	panel.anchor_bottom = 0.5
 	panel.offset_left = -width * 0.5
 	panel.offset_right = width * 0.5
 	panel.offset_top = 0.0
 	panel.offset_bottom = 0.0
-	panel.grow_vertical = Control.GROW_DIRECTION_BEGIN  # wächst mit dem Inhalt nach oben
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH  # wächst mit dem Inhalt nach oben und unten
 
 
 ## Hintergrundbild füllt das Fenster ohne Verzerrung und ohne leere Ränder (cover mit kleiner Überdeckung); die Platzmitte liegt auf der
@@ -485,35 +526,37 @@ func _make_info_corner() -> Control:
 	return corner
 
 
-## Aktionskarte im Hain-Rahmen (P5): dehnbarer Kartenrahmen statt der flachen Fläche; ohne Bild bleibt der Theme-Stil.
+## Aktionskarte: Dornenrahmen und Tafel kommen aus dem Theme (`NightCardPanel`, gemalte Haut); nur der Spielbeginn zeigt keinen Rahmen.
 func _style_card() -> void:
+	var panel := %InstructionCard as PanelContainer
 	if _card.is_bare():
-		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-		return
-	var box := GroveSkin.card_box(GroveSkin.CARD_INSET_MINI if _card.is_compact() else GroveSkin.CARD_INSET)
-	if box != null:
-		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", box)
+		panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	else:
+		panel.remove_theme_stylebox_override("panel")
 
 
-## Phasen-Kartusche unten: Hain-Teil `cartouche` (Mond links, Mitte dehnbar), Innenabstand für Phase und Timer; ohne Bild bleibt der
-## Theme-Stil.
+## Phase und Timer unten links: die Phase auf einer gemalten Zeile (Listenzeile der Haut), daneben der Timer als gemalter Knopf; keine
+## eigene Platte dahinter. Statuszeile oben links ebenfalls auf der gemalten Zeile, damit sie auf dem Pflaster lesbar bleibt.
 func _style_plate() -> void:
-	var box := GroveSkin.cartouche_box()
-	if box != null:
-		box.native_height = float(GroveSkin.texture("cartouche").get_height()) / GroveArtData.TEXTURE_SCALE
-		_phase_area.add_theme_stylebox_override("panel", box)
-	(_phase_area.get_child(0) as BoxContainer).add_theme_constant_override("separation", 0)
-	(%PhaseValueLabel as Control).add_theme_font_size_override("font_size", ThemeTokens.FONT_COMPACT)  # passt in die Kartusche, ohne die Speicherzeile daneben zu verdrängen
+	_phase_area.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	(_phase_area.get_child(0) as BoxContainer).add_theme_constant_override("separation", ThemeTokens.SPACE_XS)
+	(%PhaseValueLabel as Control).add_theme_font_size_override("font_size", ThemeTokens.FONT_COMPACT)  # passt neben den Timer, ohne die Speicherzeile daneben zu verdrängen
+	_row_plate(%PhaseValueLabel as Label, 26.0, 2.0)
 	GroveSkin.skin_button(_dock_undo, false)
-	for label: Control in [%RoundLabel, %AliveLabel]:  # Statuszeile oben links: dezent hinterlegt, damit sie auf dem Pflaster lesbar bleibt
-		var back := StyleBoxFlat.new()
-		back.bg_color = ThemeTokens.PLATE_BG
-		back.set_corner_radius_all(ThemeTokens.RADIUS_S)
-		back.content_margin_left = 6.0
-		back.content_margin_right = 6.0
-		back.content_margin_top = 2.0
-		back.content_margin_bottom = 2.0
-		label.add_theme_stylebox_override("normal", back)
+	for label: GrimmLabel in [%RoundLabel, %AliveLabel]:
+		label.wrap = false  # eine Zeile auf der gemalten Zeile; die Ecke wächst mit dem Text
+		label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN  # jede Zeile so breit wie ihr Text
+		_row_plate(label, 34.0, 3.0)  # genug Abstand zu den Dornenenden der Zeile
+
+
+## Gemalte Zeile als Grund eines Labels (Haut, `SkinArt.row_box`), mit Innenabstand für den Text.
+func _row_plate(label: Label, side: float, vertical: float) -> void:
+	var back := SkinArt.row_box()
+	back.content_margin_left = side
+	back.content_margin_right = side
+	back.content_margin_top = vertical
+	back.content_margin_bottom = vertical
+	label.add_theme_stylebox_override("normal", back)
 
 
 ## Hauptaktion im Dock: ganzes Bild des roten Knopfs, Beschriftung und Zustand bleiben die des Buttons.
@@ -662,6 +705,18 @@ func _process(delta: float) -> void:
 		_timer_button.show_time(context.timer.remaining, context.timer.running, context.timer.is_set(), context.timer.is_expired())
 
 
+## Namen der Personen mit dem roten Opfer-Zeichen am Sitzkreis (nur Nacht, nicht bei „Verbergen“): erklärt das Zeichen auf der Karte.
+func _victim_names(phase: String) -> String:
+	if _hidden or phase != "NIGHT" or not bool(_view.get("has_game", false)):
+		return ""
+	var ids: Array = []
+	var marks: Dictionary = context.session.board_marks()
+	for id: Variant in marks:
+		if (marks[id] as Array).has(&"marked") or (marks[id] as Array).has("marked"):
+			ids.append(id)
+	return CockpitText.names_of(ids, _view.get("seats", []))
+
+
 func _render() -> void:
 	var next: Dictionary = _view.get("next", {})
 	var phase := str(_view.get("phase", ""))
@@ -718,6 +773,7 @@ func _render() -> void:
 		"reduced_motion": context.settings.reduced_motion,
 		"warnings": context.session.night_warnings(next, _selection) if bool(_view.get("has_game")) else [],
 		"show_calls": context.settings.show_calls,
+		"victim_names": _victim_names(phase),
 	})
 	_style_card()  # ohne Text (Spielbeginn) verschwindet der Kartenrahmen, nur der große Knopf bleibt
 	_place_card()
@@ -1271,7 +1327,7 @@ func open_layer(kind: StringName) -> void:
 				"last_change": context.session.last_command_events().filter(func(e: Dictionary) -> bool: return str(e["type"]) != "PromptCancelled")
 					if str(undo.get("type", "")) == "GmCorrection" else []}, _view.get("seats", []))
 		&"log":
-			_layer = CockpitLayers.log_drawer(context.session.event_log(), _view.get("seats", []))
+			_layer = CockpitLayers.log_drawer(context.session.log_lines())
 		&"show":
 			var next: Dictionary = _view.get("next", {})
 			_layer = CockpitLayers.show_card(str(next.get("role_id", "")), next.get("show", []))
@@ -1295,6 +1351,7 @@ func open_layer(kind: StringName) -> void:
 		_layout.visible = true
 		return
 	_layer_kind = kind
+	_card.set_hint_suspended(true)
 	GroveWindow.dress(_layer)
 	_overlay_host.add_child(_layer)
 	var close := _layer.find_child("CloseLayerButton", true, false) as BaseButton
@@ -1308,29 +1365,25 @@ func open_layer(kind: StringName) -> void:
 		if node != null:
 			node.pressed.connect(pair[1])
 	for b: Node in _layer.find_children("RolePerson_*", "BaseButton", true, false):
-		(b as BaseButton).pressed.connect(_open_role_card.bind(int(b.get_meta("person_id")), false))
+		(b as BaseButton).pressed.connect(_open_role_card.bind(int(b.get_meta("person_id"))))
 	_wire_role_card()
 	for b: Node in _layer.find_children("SecretAction_*", "BaseButton", true, false):
 		(b as BaseButton).pressed.connect(_on_secret_action.bind(str(b.get_meta("action")), int(b.get_meta("player_id"))))
 
 
 # --- Rollenanzeige ------------------------------------------------------------------------------------------
-# Liste (neutral) → Vorderseite (neutral, nur Name) → Rolle nach bewusster Aktion → Schließen zurück zur Liste. Nur „Gesehen“
-# sendet ConfirmRoleShown. Die Karte mit Rolle entsteht erst beim Zeigen und wird bei jedem Zustandswechsel, Undo, Laden,
+# Liste (neutral, nur Namen) → Person antippen → großes Kartenbild → Antippen schließt zurück zur Liste und gilt als „gesehen“
+# (ConfirmRoleShown, nur beim ersten Mal). Die Karte mit Rolle entsteht erst beim Antippen und wird bei jedem Zustandswechsel, Undo, Laden,
 # Sichtschutz und Verlassen der Ansicht verworfen; die Liste schließt nie in einen privaten Bereich.
 
-## Öffnet die Karte einer Person; `revealed` erst nach der bewussten Aktion.
-func _open_role_card(person_id: int, revealed: bool) -> void:
-	var card := context.session.role_show_card(person_id) if revealed else {}
-	if not revealed:
-		for entry: Dictionary in context.session.role_show_list().get("persons", []):
-			if int(entry["person_id"]) == person_id:
-				card = entry
+## Öffnet die Karte einer Person: das große Bild ihrer Rollenkarte, erst nach dem Antippen der Person gebaut.
+func _open_role_card(person_id: int) -> void:
+	var card := context.session.role_show_card(person_id)
 	if card.is_empty():
 		open_layer.call_deferred(&"roles")
 		return
 	close_layer()
-	_layer = CockpitLayers.role_card(card, revealed)
+	_layer = CockpitLayers.role_card(card)
 	_layer_kind = &"role_card"
 	_role_card_person = person_id
 	_layout.visible = false
@@ -1342,16 +1395,13 @@ func _open_role_card(person_id: int, revealed: bool) -> void:
 		(first[0] as Control).grab_focus()
 
 
+## Ein Tipp auf die Karte schließt sie: `ConfirmRoleButton` meldet dabei „gesehen“, `CloseRoleButton` (schon gesehen) schließt nur.
 func _wire_role_card() -> void:
 	if _layer == null or _layer.name != "RoleCardLayer":
 		return
-	var reveal := _layer.find_child("RevealRoleButton", true, false) as BaseButton
-	if reveal != null:
-		reveal.pressed.connect(func() -> void: _open_role_card.call_deferred(_role_card_person, true))
-	for button_name: String in ["CancelRoleButton", "CloseRoleButton", "CloseWithoutConfirmButton"]:
-		var b := _layer.find_child(button_name, true, false) as BaseButton
-		if b != null:
-			b.pressed.connect(open_layer.bind(&"roles"), CONNECT_DEFERRED)
+	var close := _layer.find_child("CloseRoleButton", true, false) as BaseButton
+	if close != null:
+		close.pressed.connect(open_layer.bind(&"roles"), CONNECT_DEFERRED)
 	var confirm := _layer.find_child("ConfirmRoleButton", true, false) as BaseButton
 	if confirm != null:
 		confirm.pressed.connect(_confirm_role.bind(_role_card_person), CONNECT_DEFERRED)
@@ -1458,10 +1508,10 @@ func _ask_pick(payload: Dictionary, field: Dictionary) -> void:
 		var seat := int(id)
 		var option := DialogOption.new()
 		option.node_name = "Pick_%d" % seat
-		option.text_key = "ui.cockpit.roles.person"
+		option.text_key = "ui.cockpit.card.target.plain"
 		for entry: Dictionary in _view.get("seats", []):
 			if int(entry["person_id"]) == seat:
-				option.values = {"seat": int(entry["seat"]), "name": str(entry["name"])}
+				option.values = {"name": str(entry["name"])}
 		option.on_select = func() -> void:
 			if context.session.state_hash() != revision:
 				status_message_requested.emit("ui.cockpit.status.stale_selection")
@@ -1577,6 +1627,7 @@ func close_layer() -> void:
 		_layer.queue_free()
 	_layer = null
 	_layer_kind = &""
+	_card.set_hint_suspended(false)
 	_layout.visible = not _covered
 
 

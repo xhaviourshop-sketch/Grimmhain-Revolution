@@ -10,7 +10,7 @@ extends Control
 signal expand_toggled(expanded: bool)
 
 const FULL_HEIGHT := 80.0  ## Platz für zweizeilige Rollennamen unter den Medaillons
-const CHIP_SIZE := Vector2(460.0, 52.0)  ## breit genug für „6 · Wahnsinniger Kutscher“ (Schrift wird zuerst kleiner)
+const CHIP_SIZE := Vector2(460.0, 52.0)  ## breit genug für „Wahnsinniger Kutscher“ (Schrift wird zuerst kleiner)
 const MEDALLION := 44.0  ## Durchmesser des Rollenrings in der vollen Leiste
 const CHIP_MEDALLION := 44.0
 const BAR_Y_CENTER := 26.0  ## Mitte der vollen Leiste (und der Medaillons) von oben
@@ -308,7 +308,7 @@ func _draw_chip() -> void:
 	var left := margins.x + ARROW_SIZE + 16.0
 	var right := size.x - margins.z - ARROW_SIZE - 8.0
 	_draw_medallion(Vector2(left + CHIP_MEDALLION * 0.5, size.y * 0.5), CHIP_MEDALLION, entry)
-	var text := "%d · %s" % [_peek + 1, _label_of(str(entry["role_id"]))]
+	var text := _label_of(str(entry["role_id"]))  # nur der Name der Rolle, keine Nummer (sie könnte für einen Sitzplatz gehalten werden)
 	var color := ThemeTokens.DANGER_TEXT if str(entry["state"]) == "active" else ThemeTokens.TEXT_MUTED
 	var from := left + CHIP_MEDALLION + 8.0
 	var font_size := CHIP_FONT_SIZE

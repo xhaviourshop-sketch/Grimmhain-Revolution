@@ -1,5 +1,5 @@
 """Builds the start-screen media in godot/assets/start/ from the ChatGPT originals in
-C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/start/ (start-hintergrund.png, start-nebel.png, start-logo.png).
+C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/start/ (start-hintergrund.png, start-nebel.png, start-logo.png).
 Run from the repo root: python tools/build_start_assets.py
  - hintergrund: WebP, unchanged size (1536 px wide)
  - logo: cropped to its alpha box, 1600 px wide, WebP with alpha
@@ -9,7 +9,7 @@ Run from the repo root: python tools/build_start_assets.py
 import numpy as np
 from PIL import Image, ImageFilter
 
-SRC = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/start/"
+SRC = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/start/"
 OUT = "godot/assets/start/"
 
 

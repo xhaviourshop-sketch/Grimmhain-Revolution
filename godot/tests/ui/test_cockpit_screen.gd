@@ -102,7 +102,7 @@ func test_seat_ring_shows_started_game_without_roles() -> void:
 	for i: int in tokens.size():
 		var token := tokens[i] as Button
 		var name := str(Fixtures.players(7)[SEATS[i] - 1]["name"])
-		assert_eq(token.text, "%d · %s" % [i + 1, name], "Platz %d zeigt Nummer und Namen" % (i + 1))
+		assert_eq(token.text, name, "Platz %d zeigt nur den Namen, nie die Sitznummer" % (i + 1))
 	assert_eq((find_node(screen, "PhaseValueLabel") as Label).text, "Vorbereitung", "Phase")
 	assert_true(find_button(screen, "StartNightButton").is_visible_in_tree(), "nächster Schritt: Nacht beginnen")
 	_assert_no_roles(shell, "Start")
@@ -244,7 +244,8 @@ func test_show_card_contains_only_positive_list() -> void:
 	assert_true(find_node(screen, "ShowLayer") != null, "gezeigte Karte offen")
 	assert_false((find_node(screen, "Layout") as Control).is_visible_in_tree(), "Cockpit vollständig ersetzt")
 	var shown := _visible_texts(shell)
-	assert_true(shown.contains("Dorfbewohner"), "gezeigtes Ergebnis")
+	var picture := find_node(screen, "ShowRoleCard") as RoleCardImage
+	assert_true(picture != null and picture.role_id == "dorfbewohner", "gezeigtes Ergebnis: Kartenbild des Dorfbewohners")
 	assert_false(shown.contains("Trugbilderwolf"), "keine Wahrheit auf der gezeigten Karte")
 	assert_false(shown.contains("Werwolf"), "keine andere Rolle")
 	await _press(shell, "CloseLayerButton")
@@ -433,8 +434,8 @@ func test_log_uses_readable_labels() -> void:
 	var texts := ""
 	for c: Control in text_controls(layer):
 		texts += text_of(c) + "\n"
-	assert_true(texts.contains("Phasenwechsel (öffentlich)"), "lesbare Bezeichnung: %s" % texts.substr(0, 300))
-	assert_true(texts.contains("Partie gestartet (Spielleitung)"), "Startereignis")
-	assert_false(texts.contains("PhaseChanged ("), "kein technischer Name, wenn eine Bezeichnung existiert")
+	assert_true(texts.contains("Nacht 1"), "Alltagssatz mit Zeitraum: %s" % texts.substr(0, 300))
+	assert_false(texts.contains("PhaseChanged") and texts.contains("#"), "kein technischer Name, keine Nummer")
+	assert_false(texts.contains("(Spielleitung)") or texts.contains("(öffentlich)"), "keine Sichtbarkeitsmarke")
 	# Das Protokoll enthält alle geheimen Ereignisse: derselbe Warnhinweis wie im Rollenbereich.
 	assert_true(texts.contains("Schließe ihn, bevor jemand mitliest"), "Warnhinweis im Protokoll")

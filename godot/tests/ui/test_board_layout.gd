@@ -133,12 +133,8 @@ func test_closing_a_private_role_card_returns_to_a_board_without_roles() -> void
 		role_names.append(TranslationServer.translate(String(RolePresentation.name_key(role))))
 	await press(find_button(screen, "ShowRolesButton"))
 	await press(find_button(find_node(screen, "RoleListLayer"), "RolePerson_2"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "RevealRoleButton"))
-	var card_texts: Array[String] = []
-	for c: Control in text_controls(find_node(screen, "RoleCardLayer")):
-		card_texts.append(text_of(c))
-	assert_true("\n".join(card_texts).length() > 0, "Rollenkarte zeigte Inhalt")
-	await press(find_button(find_node(screen, "RoleCardLayer"), "CloseWithoutConfirmButton"))
+	assert_true(find_node(screen, "RoleCardPicture") != null, "Rollenkarte zeigte das Kartenbild")
+	await press(find_button(find_node(screen, "RoleCardLayer"), "ConfirmRoleButton"))  # Tippen schließt die Karte
 	assert_true(find_node(screen, "RoleListLayer") != null, "zurück zur neutralen Liste")
 	await press(find_button(find_node(screen, "RoleListLayer"), "CloseLayerButton"))
 	assert_eq(String(screen.call("layer_kind")), "", "keine Ebene offen")

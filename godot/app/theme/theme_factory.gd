@@ -1,13 +1,13 @@
 class_name ThemeFactory
 extends RefCounted
 ## Baut das Grimmhain-Theme aus ThemeTokens (keine .tres-Kopie der Werte). Variationen:
-##   Buttons:  PrimaryButton (Gold gefüllt), SecondaryButton (Fläche mit Rahmen), DangerButton (gedämpftes Rot)
+##   Buttons:  PrimaryButton, SecondaryButton, DangerButton, CompactButton und je ein "…Toggle"-Zwilling (gewählt = aktiv-Bild);
+##             alle aus gemalten Leisten (SkinArt, SkinBarBox), Hauptaktion über den Rubinstein (GrimmButton.main)
 ##   Labels:   TitleLabel, SubtitleLabel, HeadingLabel, MutedLabel, CaptionLabel
-##   Panels:   CardPanel, HeaderPanel, PlaceholderPanel, StatusBadge, DialogPanel, ToastPanel, AppBackground
+##   Panels:   Fenster (SkinWindowBox: CardPanel, DialogPanel, DrawerPanel, ...), Leisten und Listenzeilen (SkinBarBox: HeaderPanel,
+##             ToastPanel, ListRow, PersonRowPanel, ...), AppBackground (einfarbig)
 ##   Container: ScreenColumn (großer Abstand), ScreenMargin (Innenrand)
-## Jeder Button-Zustand (normal, hover, pressed, focus, disabled) hat eine eigene StyleBox;
-## Primär/Sekundär unterscheiden sich zusätzlich in der Form (gefüllt/umrandet), nicht nur
-## in der Farbe. Fokus ist ein separater, heller Rahmen mit Abstand.
+## Jeder Button-Zustand (normal, hover, pressed, focus, disabled) hat eine eigene StyleBox aus einem gemalten Bild.
 
 
 
@@ -36,16 +36,6 @@ static func _box(bg: Color, border: Color, border_width: int, radius: int = Them
 	box.content_margin_top = ThemeTokens.SPACE_S
 	box.content_margin_bottom = ThemeTokens.SPACE_S
 	box.anti_aliasing = true
-	return box
-
-
-static func _focus_box() -> StyleBoxFlat:
-	var box := StyleBoxFlat.new()
-	box.draw_center = false
-	box.border_color = ThemeTokens.FOCUS_RING
-	box.set_border_width_all(ThemeTokens.FOCUS_WIDTH)
-	box.set_corner_radius_all(ThemeTokens.RADIUS_M + ThemeTokens.FOCUS_WIDTH)
-	box.set_expand_margin_all(ThemeTokens.FOCUS_WIDTH + 1)
 	return box
 
 
@@ -92,167 +82,162 @@ static func _labels(theme: Theme) -> void:
 		theme.set_font("font", &"GothicTitleLabel", load(ThemeTokens.GOTHIC_FONT) as Font)
 
 
-## Farben je Variation: [normal, hover, pressed, Text, Text gedrückt, Rahmen normal, Rahmen hover].
+const BUTTON_MARGIN_X := 42  ## Text bleibt zwischen den Dornen-Enden der Knopfleiste
+const BUTTON_MARGIN_Y := 6
+const SEAT_MARGIN_X := 36
+
+
+## Knöpfe (Feedback 8): alle Zustände aus gemalten Leisten (`SkinBarBox`), nie Flat. Ruhe = normal, gedrückt = gedrückt-Bild,
+## gewählt (Umschalter, Hauptaktion gewählt) = aktiv-Bild; gesperrt = Ruhebild abgedunkelt, Hover und Fokus heller.
+## Die Hauptaktion unterscheidet sich durch den Rubinstein (GrimmButton.main), nicht durch eine rote Fläche.
 static func _buttons(theme: Theme) -> void:
-	var palettes := {
-		&"PrimaryButton": [ThemeTokens.BLOOD_RED, ThemeTokens.BLOOD_RED_BRIGHT, ThemeTokens.BLOOD_RED_DEEP, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.BLOOD_RED_DEEP, ThemeTokens.BLOOD_RED],
-		&"SecondaryButton": [ThemeTokens.BG_SURFACE, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_APP, ThemeTokens.TEXT_PRIMARY, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_SUBTLE, ThemeTokens.MOON_SILVER],
-		&"DangerButton": [ThemeTokens.DANGER, ThemeTokens.DANGER_BRIGHT, ThemeTokens.DANGER_DEEP, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.DANGER_DEEP, ThemeTokens.TEXT_MUTED],
-	}
-	for name: StringName in palettes:
-		var p: Array = palettes[name]
-		if name != &"SecondaryButton":
+	var text := ThemeTokens.TEXT_PRIMARY
+	var bright := ThemeTokens.MOON_SILVER_BRIGHT
+	for name: StringName in [&"Button", &"SecondaryButton", &"PrimaryButton", &"DangerButton", &"CompactButton"]:
+		if name != &"Button":
 			theme.set_type_variation(name, &"Button")
-		_button_type(theme, name, p)
-	# Kompakter Sekundärbutton für Listenzeilen (48 hoch, kleinere Schrift, schmaler Innenrand).
-	theme.set_type_variation(&"CompactButton", &"Button")
-	_button_type(theme, &"CompactButton", palettes[&"SecondaryButton"])
-	theme.set_font_size("font_size", &"CompactButton", ThemeTokens.FONT_COMPACT)
-	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
-		var box := theme.get_stylebox(state, &"CompactButton") as StyleBoxFlat
-		box.content_margin_left = ThemeTokens.SPACE_M
-		box.content_margin_right = ThemeTokens.SPACE_M
-	# Platzsymbole der Sitzordnung: normal (wie Sekundärbutton), ausgewählt (Gold, wie Primäraktion)
-	# und Ablageziel beim Ziehen (angehobene Fläche mit hellem Goldrahmen). Kompaktschrift, schmaler
-	# Innenrand, damit Namen auch bei 24 Plätzen auf 1024×768 möglichst vollständig lesbar bleiben.
-	var seat_palettes := {
-		&"SeatButton": palettes[&"SecondaryButton"],
-		&"SeatSelectedButton": palettes[&"PrimaryButton"],
-		&"SeatTargetButton": [ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.MOON_SILVER_BRIGHT],
-		# Cockpit: tote Person (gedämpft, Text trägt zusätzlich „†“) und handelnde Person (Mondlicht).
-		&"SeatDeadButton": [ThemeTokens.BG_APP, ThemeTokens.BG_SURFACE, ThemeTokens.BG_APP, ThemeTokens.TEXT_MUTED, ThemeTokens.TEXT_MUTED, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_SUBTLE],
-		&"SeatActorButton": [ThemeTokens.NIGHT_SURFACE, ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.NIGHT_SURFACE, ThemeTokens.TEXT_PRIMARY, ThemeTokens.TEXT_PRIMARY, ThemeTokens.NIGHT_ACCENT, ThemeTokens.NIGHT_ACCENT],
+		var font := ThemeTokens.DANGER_TEXT if name == &"DangerButton" else text
+		var margin := ThemeTokens.SPACE_XL + ThemeTokens.SPACE_S if name == &"CompactButton" else BUTTON_MARGIN_X
+		_skin_button_type(theme, name, "normal", "gedrueckt", "gedrueckt", font, bright, Color.WHITE, margin)
+		if name == &"CompactButton":
+			theme.set_font_size("font_size", name, ThemeTokens.FONT_COMPACT)
+		# Umschalter-Zwilling (GrimmButton mit toggle_mode): gewählt zeigt das aktiv-Bild.
+		if name != &"Button":
+			var twin := StringName(String(name) + "Toggle")
+			theme.set_type_variation(twin, &"Button")
+			_skin_button_type(theme, twin, "normal", "aktiv", "aktiv", font, bright, Color.WHITE, margin)
+			if name == &"CompactButton":
+				theme.set_font_size("font_size", twin, ThemeTokens.FONT_COMPACT)
+	# Platzsymbole der Sitzordnung: Ruhe, gewählt (aktiv), Ablageziel (gedrückt), tot (abgedunkelt), handelnd (aktiv).
+	var seats := {
+		&"SeatButton": ["normal", "gedrueckt", Color.WHITE, text],
+		&"SeatSelectedButton": ["aktiv", "aktiv", Color.WHITE, text],
+		&"SeatTargetButton": ["gedrueckt", "gedrueckt", Color.WHITE, text],
+		&"SeatDeadButton": ["normal", "gedrueckt", SkinArt.TINT_DEAD, ThemeTokens.TEXT_MUTED],
+		&"SeatActorButton": ["aktiv", "aktiv", Color.WHITE, text],
 	}
-	for name: StringName in seat_palettes:
+	for name: StringName in seats:
+		var d: Array = seats[name]
 		theme.set_type_variation(name, &"Button")
-		_button_type(theme, name, seat_palettes[name])
+		_skin_button_type(theme, name, d[0], d[1], d[1], d[3], bright, d[2], SEAT_MARGIN_X)
 		theme.set_font_size("font_size", name, ThemeTokens.FONT_COMPACT)
-		for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
-			var box := theme.get_stylebox(state, name) as StyleBoxFlat
-			box.content_margin_left = ThemeTokens.SPACE_S
-			box.content_margin_right = ThemeTokens.SPACE_S
-			if not [&"SeatButton", &"SeatDeadButton"].has(name) and state != "disabled":
-				box.set_border_width_all(ThemeTokens.FOCUS_WIDTH)
-	# Der Grundtyp Button entspricht dem Sekundärbutton.
 	theme.set_type_variation(&"SecondaryButton", &"Button")
-	_button_type(theme, &"Button", palettes[&"SecondaryButton"])
 
 
-static func _button_type(theme: Theme, type: StringName, p: Array) -> void:
-	theme.set_stylebox("normal", type, _box(p[0], p[5], ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("hover", type, _box(p[1], p[6], ThemeTokens.BORDER_THICK))
-	var pressed := _box(p[2], p[6], ThemeTokens.FOCUS_WIDTH)
-	theme.set_stylebox("pressed", type, pressed)
-	theme.set_stylebox("hover_pressed", type, pressed)
-	theme.set_stylebox("disabled", type, _box(ThemeTokens.DISABLED_FILL, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_THIN))
-	theme.set_stylebox("focus", type, _focus_box())
-	theme.set_color("font_color", type, p[3])
-	theme.set_color("font_hover_color", type, p[3])
-	theme.set_color("font_focus_color", type, p[3])
-	theme.set_color("font_pressed_color", type, p[4])
-	theme.set_color("font_hover_pressed_color", type, p[4])
+## Eine Knopf-Variation: Ruhebild `rest`, Bild beim Drücken `down`, Bild gedrückt-und-darüber `hover_down`; `rest_tint` färbt das Ruhebild.
+static func _skin_button_type(theme: Theme, type: StringName, rest: String, down: String, hover_down: String, font: Color, font_down: Color, rest_tint: Color, margin_x: int) -> void:
+	var boxes := {
+		"normal": SkinArt.button_box(rest, rest_tint),
+		"hover": SkinArt.button_box(rest, rest_tint * SkinArt.TINT_HOVER),
+		"pressed": SkinArt.button_box(down, rest_tint),
+		"hover_pressed": SkinArt.button_box(hover_down, rest_tint * SkinArt.TINT_HOVER),
+		"disabled": SkinArt.button_box(rest, rest_tint * SkinArt.TINT_DISABLED),
+		"focus": SkinArt.button_box(rest, SkinArt.TINT_FOCUS),
+	}
+	for state: String in boxes:
+		var box := boxes[state] as SkinBarBox
+		box.content_margin_left = margin_x
+		box.content_margin_right = margin_x
+		box.content_margin_top = BUTTON_MARGIN_Y
+		box.content_margin_bottom = BUTTON_MARGIN_Y
+		theme.set_stylebox(state, type, box)
+	theme.set_color("font_color", type, font)
+	theme.set_color("font_hover_color", type, font)
+	theme.set_color("font_focus_color", type, font)
+	theme.set_color("font_pressed_color", type, font_down)
+	theme.set_color("font_hover_pressed_color", type, font_down)
 	theme.set_color("font_disabled_color", type, ThemeTokens.TEXT_DISABLED)
 	theme.set_font_size("font_size", type, ThemeTokens.FONT_BUTTON)
 	theme.set_constant("h_separation", type, ThemeTokens.SPACE_S)
 
 
-## Umschalter (CheckButton): Zustand über Schalterform und Beschriftung, nicht nur Farbe.
+## Umschalter (CheckButton): der gemalte Drehknopf-Schalter zeigt den Zustand (an = roter Hebel, aus = dunkel), die Beschriftung steht daneben.
 static func _toggles(theme: Theme) -> void:
 	var type := &"CheckButton"
-	theme.set_stylebox("normal", type, _box(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("hover", type, _box(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("pressed", type, _box(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("hover_pressed", type, _box(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THICK))
-	theme.set_stylebox("disabled", type, _box(ThemeTokens.DISABLED_FILL, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_THIN))
-	theme.set_stylebox("focus", type, _focus_box())
+	var empty := StyleBoxEmpty.new()
+	empty.content_margin_top = ThemeTokens.SPACE_S
+	empty.content_margin_bottom = ThemeTokens.SPACE_S
+	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
+		theme.set_stylebox(state, type, empty)
 	for c: String in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
 		theme.set_color(c, type, ThemeTokens.TEXT_PRIMARY)
 	theme.set_color("font_disabled_color", type, ThemeTokens.TEXT_DISABLED)
 	theme.set_font_size("font_size", type, ThemeTokens.FONT_BUTTON)
 	theme.set_constant("h_separation", type, ThemeTokens.SPACE_M)
-	# Eigener Schalter statt Engine-Symbol: an = goldene Bahn, Knopf rechts; aus = Rahmen, Knopf links.
-	theme.set_icon("checked", type, _switch_icon(true, false))
-	theme.set_icon("unchecked", type, _switch_icon(false, false))
-	theme.set_icon("checked_disabled", type, _switch_icon(true, true))
-	theme.set_icon("unchecked_disabled", type, _switch_icon(false, true))
-	theme.set_icon("checked_mirrored", type, _switch_icon(true, false))
-	theme.set_icon("unchecked_mirrored", type, _switch_icon(false, false))
-	theme.set_icon("checked_disabled_mirrored", type, _switch_icon(true, true))
-	theme.set_icon("unchecked_disabled_mirrored", type, _switch_icon(false, true))
+	var on := SkinArt.switch_icon(true)
+	var off := SkinArt.switch_icon(false)
+	for suffix: String in ["", "_mirrored"]:
+		theme.set_icon("checked" + suffix, type, on)
+		theme.set_icon("unchecked" + suffix, type, off)
+		theme.set_icon("checked_disabled" + suffix, type, on)
+		theme.set_icon("unchecked_disabled" + suffix, type, off)
 
 
-## Schaltersymbol aus einfachen Formen (keine Bilddatei): Bahn als Pille, runder Knopf.
-static func _switch_icon(on: bool, disabled: bool) -> ImageTexture:
-	var w := ThemeTokens.SWITCH_WIDTH
-	var h := ThemeTokens.SWITCH_HEIGHT
-	var image := Image.create_empty(w, h, false, Image.FORMAT_RGBA8)
-	var track := ThemeTokens.BLOOD_RED if on else ThemeTokens.BG_APP
-	var outline := ThemeTokens.BLOOD_RED if on else ThemeTokens.TEXT_MUTED
-	var knob := ThemeTokens.TEXT_PRIMARY if on else ThemeTokens.TEXT_MUTED
-	if disabled:
-		track = ThemeTokens.DISABLED_FILL
-		outline = ThemeTokens.DISABLED_BORDER
-		knob = ThemeTokens.TEXT_DISABLED
-	var r := h / 2.0
-	var knob_center := Vector2(w - r if on else r, r)
-	var knob_radius := r - ThemeTokens.SPACE_XS - ThemeTokens.BORDER_THICK
-	for y: int in h:
-		for x: int in w:
-			var p := Vector2(x + 0.5, y + 0.5)
-			# Abstand zur Pille (Rechteck mit Halbkreisen).
-			var cx := clampf(p.x, r, w - r)
-			var d := p.distance_to(Vector2(cx, r))
-			var color := Color(0, 0, 0, 0)
-			if d <= r:
-				color = outline if d > r - ThemeTokens.BORDER_THICK else track
-				color.a *= clampf(r - d + 0.5, 0.0, 1.0)
-			var dk := p.distance_to(knob_center)
-			if dk <= knob_radius + 0.5:
-				color = color.blend(Color(knob, clampf(knob_radius - dk + 0.5, 0.0, 1.0)))
-			image.set_pixelv(Vector2i(x, y), color)
-	return ImageTexture.create_from_image(image)
-
-
-static func _panel(color: Color, border: Color, border_width: int, radius: int, padding: int) -> StyleBoxFlat:
-	var box := _box(color, border, border_width, radius)
-	box.content_margin_left = padding
-	box.content_margin_right = padding
-	box.content_margin_top = padding
-	box.content_margin_bottom = padding
+## Fensterfläche: gekachelter Grund im Dornenrahmen; `inset` = Textabstand (links, oben, rechts, unten).
+static func _window(inset: Vector4, tint: Color = Color.WHITE, small: bool = false) -> SkinWindowBox:
+	var box := SkinArt.window_box(tint, small)
+	box.content_margin_left = inset.x
+	box.content_margin_top = inset.y
+	box.content_margin_right = inset.z
+	box.content_margin_bottom = inset.w
 	return box
 
 
+## Schmale Leiste oder Listenzeile aus dem gemalten Streifen; `pad` = Textabstand (waagerecht, senkrecht).
+static func _bar(pad_x: int, pad_y: int, tint: Color = Color.WHITE) -> SkinBarBox:
+	var box := SkinArt.row_box(tint)
+	box.content_margin_left = pad_x
+	box.content_margin_right = pad_x
+	box.content_margin_top = pad_y
+	box.content_margin_bottom = pad_y
+	return box
+
+
+## Einfarbiger Bildschirmgrund (kein Fenster, kein Kasten).
+static func _flat_backdrop(color: Color) -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = color
+	return box
+
+
+const WINDOW_INSET := Vector4(36.0, 28.0, 36.0, 28.0)
+const BOARD_INSET := Vector4(16.0, 14.0, 16.0, 14.0)
+
+
 static func _panels(theme: Theme) -> void:
-	theme.set_stylebox("panel", "PanelContainer", _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_L))
-	theme.set_stylebox("panel", "Panel", _panel(ThemeTokens.BG_APP, ThemeTokens.BG_APP, 0, 0, 0))
+	# Fenster, Karten und Flächen: Grund und Dornenrahmen (SkinWindowBox).
+	theme.set_stylebox("panel", "PanelContainer", _window(WINDOW_INSET))
+	theme.set_stylebox("panel", "Panel", _flat_backdrop(ThemeTokens.BG_APP))
+	var night := SkinArt.TINT_NIGHT
+	var day := SkinArt.TINT_DAY
 	var variations := {
-		&"AppBackground": _panel(ThemeTokens.BG_APP, ThemeTokens.BG_APP, 0, 0, 0),
-		&"CardPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_L),
-		&"HeaderPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		&"PlaceholderPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_L),
-		&"StatusBadge": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S),
-		&"DialogPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
-		&"ToastPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
-		&"PersonRowPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		&"WarningBadge": _panel(ThemeTokens.BG_APP, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_XS),
-		&"SummaryPanel": _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_M),
-		&"ListPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		&"SecretPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		# Cockpit: Phasenleiste und Ansagekarte je Tageszeit, Schublade, Sichtschutz, gezeigte Karte.
-		&"NightPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.NIGHT_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		&"DayPanel": _panel(ThemeTokens.DAY_SURFACE, ThemeTokens.DAY_ACCENT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		# Spielbrett: Tischfläche je Tageszeit und schmale Leisten darüber und darunter (Cockpit).
-		&"BarPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.BAR_GAP),
-		&"BoardPanel": _panel(ThemeTokens.BOARD_NEUTRAL, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
-		&"NightBoardPanel": _panel(ThemeTokens.BOARD_NIGHT, ThemeTokens.NIGHT_ACCENT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
-		&"DayBoardPanel": _panel(ThemeTokens.BOARD_DAY, ThemeTokens.DAY_ACCENT, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_XS),
-		&"DrawerPanel": _panel(ThemeTokens.BG_SURFACE, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_M),
-		&"CoverPanel": _panel(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
-		&"ShowPanel": _panel(ThemeTokens.NIGHT_SURFACE, ThemeTokens.MOON_SILVER, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_L, ThemeTokens.SPACE_XL),
-		# Nachtbrett (P3): halbtransparente Aktionskarte und Optionenfläche über dem Dorfplatz.
-		&"NightCardPanel": _panel(ThemeTokens.CARD_BG, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_M, ThemeTokens.SPACE_S),
-		&"NightBackdrop": _panel(ThemeTokens.NIGHT_BACKDROP, ThemeTokens.NIGHT_BACKDROP, 0, 0, 0),
-		&"DayBackdrop": _panel(ThemeTokens.DAY_BACKDROP, ThemeTokens.DAY_BACKDROP, 0, 0, 0),
+		&"CardPanel": _window(WINDOW_INSET),
+		&"PlaceholderPanel": _window(WINDOW_INSET),
+		&"DialogPanel": _window(Vector4(48.0, 36.0, 48.0, 36.0)),
+		&"DrawerPanel": _window(WINDOW_INSET),
+		&"ShowPanel": _window(Vector4(48.0, 36.0, 48.0, 36.0), night),
+		&"SummaryPanel": _window(WINDOW_INSET),
+		&"ListPanel": _window(Vector4(28.0, 22.0, 28.0, 22.0), Color.WHITE, true),
+		&"SecretPanel": _window(WINDOW_INSET),
+		&"CoverPanel": _window(Vector4(48.0, 36.0, 48.0, 36.0)),
+		&"NightCardPanel": _window(Vector4(30.0, 24.0, 30.0, 24.0), night, true),
+		&"BoardPanel": _window(BOARD_INSET, Color.WHITE, true),
+		&"NightBoardPanel": _window(BOARD_INSET, night, true),
+		&"DayBoardPanel": _window(BOARD_INSET, day, true),
+		# Leisten, Plaketten und Listenzeilen: der gemalte Streifen (SkinBarBox).
+		&"HeaderPanel": _bar(40, 8),
+		&"BarPanel": _bar(28, 6),
+		&"StatusBadge": _bar(32, 4),
+		&"WarningBadge": _bar(28, 4),
+		&"NightPanel": _bar(40, 8, night),
+		&"DayPanel": _bar(40, 8, day),
+		&"ToastPanel": _bar(48, 10),
+		&"PersonRowPanel": _bar(40, 6),
+		&"ListRow": _bar(40, 6),
+		# Bildschirm-Hintergründe bleiben einfarbig (keine Fensterfläche).
+		&"AppBackground": _flat_backdrop(ThemeTokens.BG_APP),
+		&"NightBackdrop": _flat_backdrop(ThemeTokens.NIGHT_BACKDROP),
+		&"DayBackdrop": _flat_backdrop(ThemeTokens.DAY_BACKDROP),
 	}
 	for name: StringName in variations:
 		var base := &"Panel" if name in [&"AppBackground", &"NightBackdrop", &"DayBackdrop"] else &"PanelContainer"
@@ -328,6 +313,6 @@ static func _scrolling(theme: Theme) -> void:
 		grabber.set_corner_radius_all(ThemeTokens.RADIUS_S)
 		theme.set_stylebox(state[0], "VScrollBar", grabber)
 	theme.set_constant("scrollbar_h_separation", "ScrollContainer", ThemeTokens.SPACE_S)
-	theme.set_stylebox("panel", "TooltipPanel", _panel(ThemeTokens.BG_SURFACE_RAISED, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S, ThemeTokens.SPACE_S))
+	theme.set_stylebox("panel", "TooltipPanel", _bar(32, 6))
 	theme.set_color("font_color", "TooltipLabel", ThemeTokens.TEXT_PRIMARY)
 	theme.set_font_size("font_size", "TooltipLabel", ThemeTokens.FONT_BODY)

@@ -11,10 +11,18 @@ Lies zuerst `docs/brand/MARKE.md`. Bei Bedarf Farbwerte in `godot/app/theme/them
 
 Eingabe: Screenshot-Pfade (PNG). Öffne jedes Bild mit Read und sieh es dir vollständig an.
 
+## Dauerregeln von Markus (immer prüfen, jeder Verstoß ist ein Fund)
+
+- Nie Programmier-Text sichtbar (IDs, Schlüssel, snake_case, seed usw.). Immer klare Worte.
+- Nie Sitzplatznummern zeigen, nur Spielernamen. Auch nicht "6 · 6".
+- Nie scrollen müssen. Text skaliert automatisch so groß wie möglich, aber passend.
+- Keine Standard-Kästen. Jede Fläche, jeder Knopf, jede Liste und jeder Schalter aus gemalten Assets. Fehlt eins: in `docs/audit/FENSTER-OPTIK.md` mit fertiger ChatGPT-Beschreibung auflisten, nie still einen Code-Rahmen nehmen.
+- Knöpfe 1 bis 2 Wörter.
+
 ## Prüfpunkte je Bild
 
 1. **Kein Gold.** Keine gelben, goldenen oder messingfarbenen Rahmen, Schriften, Flächen oder Leuchten. Ausnahme: Sprachflaggen in echten Farben (DA-101). Warmes Fenster- und Laternenlicht in gemalten Bildern und Lava/Glut bei Start- und Feuer-Momenten sind erlaubt.
-2. **Kein Standard-Fenster.** Jedes Fenster, jede Rückfrage, Schublade und Liste nutzt den Rahmen `GroveWindow` (geschmiedetes Eisen, Mondsilber-Kante, dunkler Grund). Graue Godot-Standardfenster, weiße Flächen oder flache Systemknöpfe sind Funde.
+2. **Kein Standard-Fenster.** Jedes Fenster, jede Rückfrage und Schublade nutzt den Rahmen `GroveWindow` (gemalter Rahmen, Tafelgrund). Ganze Bildschirme brauchen keinen GroveWindow, aber gemalte Knöpfe, Schalter und Listenzeilen. Graue Godot-Standardfenster, flache Kästen, weiße Flächen oder flache Systemknöpfe sind Funde.
 3. **Blutrot nur aktiv.** Blutrot nur für Gewähltes, Start, Gefahr, Warnungen. Nie als große Fläche, nie für ruhige Elemente.
 4. **Gotisch nur in Titeln.** Grenze Gotisch nur in großen Überschriften; Fließtext, Knöpfe, Namen und Warnungen in schlichter Schrift.
 5. **Nichts abgeschnitten.** Kein Text endet mitten im Wort, kein Knopf ragt aus dem Bild, kein Symbol ist halb sichtbar, keine "..."-Kürzung bei wichtiger Info.

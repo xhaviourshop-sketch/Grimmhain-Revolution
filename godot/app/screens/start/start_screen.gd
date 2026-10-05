@@ -14,6 +14,7 @@ const ENTER_SIZE := Vector2(400.0, 84.0)  ## epischer Knopf: Breite für Enden p
 
 var _backdrop: StartBackdrop = null
 var _music: ScreenMusic = null
+var _music_tried := false
 
 
 func _setup() -> void:
@@ -37,12 +38,23 @@ func _setup() -> void:
 	_enter.custom_minimum_size = Vector2(ENTER_SIZE.x, maxf(_enter.custom_minimum_size.y, ENTER_SIZE.y))
 	EpicButton.apply(_enter, _animated())
 	_enter.pressed.connect(_on_enter)
-	_music = ScreenMusic.attach(self, ScreenMusic.START)  # ohne Datei still
 	if context != null:
 		var flags := LanguageFlags.new()
 		flags.setup(context.settings)
 		flags.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, ThemeTokens.SAFE_MARGIN)
 		add_child(flags)
+
+
+## Musik erst ab dem ersten Tippen (Web/Safari erlaubt Ton erst nach einer Geste); nur wenn „Musik“ an ist, ohne Datei still.
+func _input(event: InputEvent) -> void:
+	if _music != null or _music_tried:
+		return
+	var tapped := (event is InputEventMouseButton and (event as InputEventMouseButton).pressed) 		or (event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed) 		or (event is InputEventKey and (event as InputEventKey).pressed)
+	if not tapped:
+		return
+	_music_tried = true
+	if context == null or context.settings.music_enabled:
+		_music = ScreenMusic.attach(self, ScreenMusic.START)
 
 
 func default_focus() -> Control:

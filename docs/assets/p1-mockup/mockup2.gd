@@ -4,8 +4,8 @@ extends SceneTree
 
 const WK := "C:/Users/Marku/Desktop/Grimmhain/Grimmhain-Werwolf/Grimmhain Assets/"
 var SP := ProjectSettings.globalize_path("res://").path_join("../docs/assets/p1-mockup/").simplify_path() + "/"
-const BG_G1 := "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/G1-village-night-v1.png"
-const OUT := "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/mockup-v2"
+const BG_G1 := "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/G1-village-night-v1.png"
+const OUT := "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/mockup-v2"
 const NAMES: Array[String] = ["Anna", "Ben", "Clara", "Dimitri", "Elif", "Frieda", "Gustav", "Hanna", "Ilja", "Jana", "Kemal", "Lena",
 	"Mats", "Nora", "Oskar", "Paula", "Quentin-Maximilian", "Rosa", "Sami", "Tilda", "Umut", "Vera", "Wolfgangamadeus", "Zoë"]
 const GOLD := Color("#c9a84c")

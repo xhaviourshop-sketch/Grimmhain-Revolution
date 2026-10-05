@@ -79,20 +79,12 @@ func test_settings_controls_switch_both_modes_immediately() -> void:
 	var settings := settings_of(shell)
 	assert_false(bool(settings.get("left_handed")), "Standard rechtshändig")
 	assert_eq(_hand_state(shell), [true, false], "Rechtshändig als aktuelle Auswahl erkennbar")
-	var status := find_node(_screen(shell), "HandStatusLabel") as Control
-	assert_eq(key_of(status), "ui.settings.hand.active_right", "Statuszeile nennt die aktive Bedienhand")
-	assert_eq(text_of(status), "Aktiv: Rechtshändig", "Statuszeile DE")
 	await press(find_button(_screen(shell), "HandLeftButton"))
 	assert_true(bool(settings.get("left_handed")), "Linkshändig sofort gesetzt")
 	assert_eq(_hand_state(shell), [false, true], "genau ein Button gewählt")
-	assert_eq(text_of(status), "Aktiv: Linkshändig", "Statuszeile folgt sofort")
 	await press(find_button(_screen(shell), "HandRightButton"))
 	assert_false(bool(settings.get("left_handed")), "Rechtshändig sofort zurück")
 	assert_eq(_hand_state(shell), [true, false], "Auswahl folgt")
-	settings.call("set_language", "en")
-	await frames(2)
-	assert_eq(text_of(status), "Active: right-handed", "Statuszeile EN")
-	settings.call("set_language", "de")
 
 
 func test_choice_survives_restart_and_uses_only_the_temp_file() -> void:
@@ -246,7 +238,7 @@ func test_open_role_card_survives_a_side_change_and_confirms_once() -> void:
 	assert_true(list != null, "Rollenliste geöffnet")
 	await press(find_button(list, "RolePerson_2"))
 	var card := find_node(screen, "RoleCardLayer")
-	assert_true(card != null, "neutrale Vorderseite geöffnet")
+	assert_true(card != null, "Karte geöffnet")
 	var before := (session.commands() as Array).size()
 	var hash_before := session.state_hash()
 	settings_of(shell).call("set_left_handed", true)
@@ -255,8 +247,6 @@ func test_open_role_card_survives_a_side_change_and_confirms_once() -> void:
 	assert_true(card != null, "Karte bleibt nach dem Seitenwechsel offen")
 	assert_eq((session.commands() as Array).size(), before, "Seitenwechsel sendet nichts")
 	assert_eq(session.state_hash(), hash_before, "Zustand unverändert")
-	await press(find_button(card, "RevealRoleButton"))
-	card = find_node(screen, "RoleCardLayer")
 	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
 	for b: BaseButton in visible_buttons(card):
 		assert_true(inside(clipped_rect(b), viewport), "%s im Viewport" % b.name)
