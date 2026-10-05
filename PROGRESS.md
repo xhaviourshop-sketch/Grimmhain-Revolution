@@ -10,6 +10,22 @@ Verifikation: Vollsuite inkl. Fuzz auf dem finalen Stand: 1409 Tests, 0 Fehlschl
 Merge: ohne Squash nach main (51b779f), main gepusht. Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 39783520 Byte wie lokal.
 Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als schmaler Streifen mit senkrecht umbrochenem Text und verdeckt kurz die Karte (3 s, Ursache im Layout der Leiste); Titel der Blutpriester-Karte wird vom Info-Knopf angeschnitten. Safari/iPad nicht geprueft.
 
+## MORGEN-ZUSAMMENFASSUNG Nachtschicht (2026-10-05, Branch chore/nachtschicht, gemergt)
+- Erledigt: CLAUDE.md auf 51 Zeilen (Erklaerungen nach docs/development/), `tools/test-quiet`, `tools/test-changed` (+ `tools/test-map.json`), vier Projekt-Skills, Marken-Check-Hook (`tools/check-brand.js`), Standard-Screenshotwerkzeug `godot/tools/capture_standard_set.gd`.
+- Darstellung: Rueckgaengig-Leiste ist wieder eine volle Zeile (Ursache: Umbruch bei 1 px Breite), Kartentitel laeuft nie unter den Info-Knopf (DE/EN, 37 von 72 Rollen in Nacht 1 geprueft, die uebrigen teilen den Code).
+- Audit Paket B (57 Funde MITTEL/NIEDRIG): 5 vorher erledigt, 19 behoben, 22 fuer Markus, 11 offen. Einzelstand: docs/audit/AUDIT-2026-10-02.md.
+- Vollsuite inkl. Fuzz auf dem finalen Stand: 1414 Tests, 0 Fehlschlaege (Runde 1 gruen). Merge ohne Squash (fe1d635), Deploy grimmhain-ipad-test ja (index.pck 39783744 Byte wie lokal). Nicht geprueft: Safari/iPad.
+- Fuer Markus (Ja/Nein, Beispiel):
+  1. Seuchenwolf-Durchdringung nur verbrauchen, wenn das Rudelopfer lebt (A-01)? Bsp: Rudel und Hexengift treffen Person 6, geschuetzte Person 7 ueberlebt Nacht 3.
+  2. Schild des Schutzgeists bei durchdringendem Rudelangriff entfernen (A-02)? Bsp: Fenrir ueberlebt Nacht 3.
+  3. Verliert der Parasit mit der Rolle auch die Bindung an den Wirt (B-06)? Bsp: Wirt stirbt, frueherer Parasit stirbt mit.
+  4. Markierungen am Sitzkreis tagsueber verbergen (S-05)? Bsp: Giftabzeichen sichtbar, waehrend alle nominieren.
+  5. Nachtleiste bei der anonymen Rotkaeppchen-Frage ausblenden (S-04)? Bsp: Leiste zeigt Rotkaeppchen als aktiv.
+  6. Verdeckte Karten alle mit demselben Text (S-07, S-06, S-09)? Bsp: "Eine Siegbedingung ist erfuellt" verraet eine offene Siegentscheidung.
+  7. Beenden-Knopf im Web ausblenden (UI-02) und Export-Weg auf dem iPad klaeren (UI-03)? Bsp: Knopf friert die Seite ein.
+  8. Ungenutzte Bilder (25 Dateien, 1,8 MB) aus dem Export nehmen (F-A03) und Favicon setzen (UI-04)? Bsp: Godot-Symbol im Browsertab.
+  9. Rechtfertigt eine Regelaenderung RULES_VERSION-Erhoehung statt "beschaedigt" (CM-05)? Bsp: alter Stand erscheint als defekt.
+
 ## UEBERGABE Nachtschritte neu (erledigt, siehe Abschluss oben, 2026-10-05)
 - Phase 1 (Regelkern, Commit 6d8cda7): fertig. Unit, Szenarien und Fuzz waren gruen. Der .po-Mehrzeilenfehler aus diesem Commit ist im WIP-Commit repariert.
 - Phase 2 (Schablone): Code steht (action_card, cockpit_screen, cockpit_text, cockpit_view, prompt_view), 172 neue ui.night.* Texte DE/EN fuer alle Schritte.
