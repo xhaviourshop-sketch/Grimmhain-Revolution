@@ -69,14 +69,16 @@ static func ensure_dir(dir: String) -> bool:
 
 
 ## Legt unlesbare Dateien (Datei und Sicherung) als `.corrupt` beiseite, damit ein späteres Speichern sie nicht
-## überschreibt. Ein früheres `.corrupt` wird dabei ersetzt.
+## überschreibt. Ein früheres `.corrupt` bleibt erhalten, die neue Fassung heißt dann `.corrupt-2`, `.corrupt-3` usw.
 static func set_aside(path: String) -> void:
 	for suffix: String in ["", ".bak"]:
 		var source := path + suffix
 		if FileAccess.file_exists(source):
 			var target := source + ".corrupt"
-			if FileAccess.file_exists(target):
-				DirAccess.remove_absolute(target)
+			var n := 2
+			while FileAccess.file_exists(target):
+				target = "%s.corrupt-%d" % [source, n]
+				n += 1
 			DirAccess.rename_absolute(source, target)
 
 

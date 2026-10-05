@@ -168,6 +168,18 @@ func test_write_failures_keep_last_valid_state() -> void:
 	_cleanup()
 
 
+## CM-07: Ein zweites unlesbares Ereignis ersetzt die zuerst beiseitegelegte Fassung nicht.
+func test_second_set_aside_keeps_the_first_corrupt_copy() -> void:
+	var path := _path()
+	_write_raw(path, "erste kaputte Fassung")
+	SafeJsonFile.set_aside(path)
+	_write_raw(path, "zweite kaputte Fassung")
+	SafeJsonFile.set_aside(path)
+	assert_eq(FileAccess.get_file_as_string(path + ".corrupt"), "erste kaputte Fassung", "erste Fassung bleibt")
+	assert_eq(FileAccess.get_file_as_string(path + ".corrupt-2"), "zweite kaputte Fassung", "zweite Fassung daneben")
+	_cleanup()
+
+
 func test_corrupt_file_is_reported_and_set_aside() -> void:
 	var path := _path()
 	_write_raw(path, "{ das ist kein JSON")
