@@ -1,6 +1,6 @@
 # Assets und Audio · Bestandsaufnahme
 
-**Stand:** 2026-09-26 · **Umfang:** alle 266 versionierten Mediendateien (Bild, Audio, Schrift) im Repository. Keine Datei wurde verändert, verschoben oder in das Godot-Projekt übernommen.
+**Stand:** 2026-09-26 (historisch, aktuelle Zählung in `docs/masterplan/ASSET-REGISTER.md`) · **Umfang:** alle 266 versionierten Mediendateien (Bild, Audio, Schrift) im Repository. Keine Datei wurde verändert, verschoben oder in das Godot-Projekt übernommen.
 **Detailregister (eine Zeile je Datei):** [`../masterplan/asset-register.csv`](../masterplan/asset-register.csv) · **Regeln:** [`../masterplan/ASSET-REGISTER.md`](../masterplan/ASSET-REGISTER.md) · **Prüfung:** `node tools/check-asset-register.js`
 
 Kennzeichnung: **[B]** Beobachtung aus Datei oder Code, **[S]** Schlussfolgerung, **[E]** Empfehlung.

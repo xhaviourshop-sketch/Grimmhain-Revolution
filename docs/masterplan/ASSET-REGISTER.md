@@ -42,7 +42,7 @@ Es gibt keine Pfad-Ausnahme: Jede neue Mediendatei braucht eine Registerzeile im
 
 Nur der Product Owner setzt `freigegeben` und `intern-freigegeben`. Claude trägt `intern-freigegeben` nur auf ausdrücklichen Auftrag des Product Owners ein (Auftrag P3, 2026-10-01, siehe `../../DECISIONS.md`) und nie `freigegeben`.
 
-Stand 2026-09-27 (Werkzeugausgabe nach Spielstart): 313 Dateien, **0 freigegeben**, 228 ungeklärt, 24 ki-nachgewiesen, 1 gesperrt (Nachtmusik), 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 56 prüfartefakt. Die neun kurzen Legacy-Sounds standen bis zur Korrektur vom 27.09. ohne Beleg auf `gesperrt`.
+Aktueller Stand (2026-10-05, `node tools/check-asset-register.js`): 772 Registerzeilen, 370 ungeklärt, 24 ki-nachgewiesen, 4 lizenz-belegt, 1 gesperrt, 56 prüfartefakt, 317 intern-freigegeben. Historischer Stand 2026-09-27 (Werkzeugausgabe nach Spielstart): 313 Dateien, **0 freigegeben**, 228 ungeklärt, 24 ki-nachgewiesen, 1 gesperrt (Nachtmusik), 4 lizenz-belegt (Schriften, siehe `../assets/FONTS.md`), 56 prüfartefakt. Die neun kurzen Legacy-Sounds standen bis zur Korrektur vom 27.09. ohne Beleg auf `gesperrt`.
 
 | Asset-ID | Datei | Zweck | Ersteller/Dienst | Erstellungsdatum | Tarif/Modell | Lizenzquelle | Bearbeitung | Releasefreigabe | Ersatz nötig |
 |---|---|---|---|---|---|---|---|---|---|
