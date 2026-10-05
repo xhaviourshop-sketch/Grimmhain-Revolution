@@ -53,18 +53,6 @@ msgstr "Achtung: Der letzte Stand der laufenden Partie ist nicht gespeichert. Be
 msgid "ui.dialog.quit.confirm"
 msgstr "Beenden"
 
-msgid "ui.new_game.title"
-msgstr "Neue Partie"
-
-msgid "ui.new_game.heading"
-msgstr "Einrichtung folgt"
-
-msgid "ui.new_game.body"
-msgstr "Spielernamen, Rollen und Sitzordnung werden im nächsten Arbeitspaket eingerichtet."
-
-msgid "ui.new_game.hint"
-msgstr "Diese Seite legt noch keine Partie an."
-
 msgid "ui.continue.title"
 msgstr "Partie fortsetzen"
 
