@@ -1568,6 +1568,96 @@ msgstr "public"
 msgid "ui.log.visibility.actor"
 msgstr "acting person"
 
+msgid "ui.log.when.night"
+msgstr "Night {n}"
+
+msgid "ui.log.when.day"
+msgstr "Day {n}"
+
+msgid "ui.log.with_when"
+msgstr "{when}: {text}"
+
+msgid "ui.log.someone"
+msgstr "someone"
+
+msgid "ui.log.unknown"
+msgstr "Something happened."
+
+msgid "ui.log.line.game_started"
+msgstr "Game started with {count} people."
+
+msgid "ui.log.line.role_assigned"
+msgstr "{name} has the role {role}."
+
+msgid "ui.log.line.night_begins"
+msgstr "The night begins."
+
+msgid "ui.log.line.day_begins"
+msgstr "The day begins."
+
+msgid "ui.log.line.game_over"
+msgstr "The game is over."
+
+msgid "ui.log.line.died"
+msgstr "{name} died."
+
+msgid "ui.log.line.died_role"
+msgstr "{name} died ({role})."
+
+msgid "ui.log.line.died_cause"
+msgstr "{name} died ({cause})."
+
+msgid "ui.log.line.saved"
+msgstr "The attack on {name} was stopped."
+
+msgid "ui.log.line.protected"
+msgstr "{guardian} protects {name}."
+
+msgid "ui.log.line.no_night_kill"
+msgstr "The pack attacked no one."
+
+msgid "ui.log.line.nominated"
+msgstr "{nominator} nominates {nominee}."
+
+msgid "ui.log.line.nominated_hidden"
+msgstr "{nominee} was nominated."
+
+msgid "ui.log.line.judge_nominated"
+msgstr "{judge} secretly nominated {nominee}."
+
+msgid "ui.log.line.executed"
+msgstr "{name} was executed."
+
+msgid "ui.log.line.redirected"
+msgstr "The execution of {name} was mirrored, {other} died instead."
+
+msgid "ui.log.line.no_execution"
+msgstr "No one was executed."
+
+msgid "ui.log.line.day_ended"
+msgstr "The day is over."
+
+msgid "ui.log.line.revived"
+msgstr "{name} is back in the game."
+
+msgid "ui.log.line.role_changed"
+msgstr "{name} is now {role}."
+
+msgid "ui.log.line.wolf_child"
+msgstr "{name} became a werewolf."
+
+msgid "ui.log.line.win_confirmed"
+msgstr "Win confirmed: {side}."
+
+msgid "ui.log.line.win_rejected"
+msgstr "The win was not confirmed."
+
+msgid "ui.log.line.corrected"
+msgstr "The game master corrected {name}."
+
+msgid "ui.log.line.corrected_general"
+msgstr "The game master corrected something."
+
 msgid "ui.cockpit.show.heading"
 msgstr "{role}"
 
@@ -6149,14 +6239,11 @@ msgstr "The win confirmation was taken back. This version only contains details 
 msgid "ui.report.note.gm"
 msgstr "For the game master only. This version contains all roles, causes and secret details."
 
-msgid "ui.report.game_id"
-msgstr "Game: {id}"
-
 msgid "ui.report.participants"
-msgstr "Participants: {count} ({names})"
+msgstr "Players: {names}"
 
 msgid "ui.report.played"
-msgstr "Played: {nights} nights, {days} days"
+msgstr "Nights: {nights}, days: {days}"
 
 msgid "ui.report.result"
 msgstr "Winner: {side}"
@@ -6171,7 +6258,7 @@ msgid "ui.report.heading.roles"
 msgstr "Roles at the end of the game"
 
 msgid "ui.report.role_line"
-msgstr "{seat} · {name}: {role}"
+msgstr "{name}: {role}"
 
 msgid "ui.report.role_original"
 msgstr "(originally {role})"
@@ -6188,26 +6275,11 @@ msgstr "Day {number}"
 msgid "ui.report.judge_nominator"
 msgstr "Covered nomination: {judge} nominated {nominee}."
 
-msgid "ui.report.execution"
-msgstr "Execution: {name}."
-
 msgid "ui.report.execution_override"
 msgstr "This execution of {name} was a game master correction without a nomination."
 
 msgid "ui.report.execution_redirected"
 msgstr "The execution of {name} was mirrored: {other} died instead."
-
-msgid "ui.report.no_execution"
-msgstr "No execution on this day."
-
-msgid "ui.report.death"
-msgstr "Died: {name}."
-
-msgid "ui.report.death_role"
-msgstr "Died: {name} ({role})."
-
-msgid "ui.report.revived"
-msgstr "Revived: {name}."
 
 msgid "ui.report.correction"
 msgstr "Game master correction “{what}” on {name}. Reason: {reason}"
@@ -6215,14 +6287,23 @@ msgstr "Game master correction “{what}” on {name}. Reason: {reason}"
 msgid "ui.report.correction_general"
 msgstr "Game master correction “{what}”. Reason: {reason}"
 
+msgid "ui.report.correction_other"
+msgstr "change"
+
+msgid "ui.report.cause_other"
+msgstr "unknown cause"
+
 msgid "ui.report.win_rejected"
 msgstr "Win rejected. Reason: {reason}"
+
+msgid "ui.report.win_not_chosen"
+msgstr "Win not confirmed: another win was chosen."
 
 msgid "ui.report.win"
 msgstr "Win confirmed: {side}."
 
 msgid "ui.report.other_events"
-msgstr "{count} further technical single events are not listed here."
+msgstr "Further game master details are not part of the report."
 
 msgid "ui.report.no_history"
 msgstr "There are no entries for this version."
