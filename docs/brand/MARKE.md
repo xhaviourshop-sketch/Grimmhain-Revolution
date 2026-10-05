@@ -17,7 +17,7 @@ Eigenes gedrucktes Kartenspiel plus Spielleiter-App; die Marke muss auf iPad, Ap
 - Blutrot (`BLOOD_RED`): nur für Aktives (gewählt, Start, Gefahr), nie als Flächenfarbe.
 - Teams: Dorf Mondblau, Wölfe Blutrot, Einzelgänger Violett (`TEAM_PLATE_*`, `GLOW_*`).
 - Einziger warmer Ton: Fenster- und Laternenlicht in Bildern.
-- **Kein Gold. Nirgends.** Ausnahme (DA-101): Flaggen dürfen ihre echten Farben haben; das Gelb der deutschen Sprachflagge bleibt.
+- **Kein Gold. Nirgends.** Ausnahme (DA-101): Flaggen dürfen ihre echten Farben haben; das Gelb der deutschen Sprachflagge bleibt. Ausnahme (DA-103): Die Rollenkarten-Bilder bleiben unverändert, auch mit gelbem Titel; gedruckte Karten sind ein eigenes Produkt.
 
 ## Material
 Geschmiedetes schwarzes Eisen, Wurzeln, Dornen, Mondsilber. Lava und Glut nur bei Start- und Feuer-Momenten. Ornamente nur an Ecken und Enden, damit Rahmen dehnbar bleiben.
