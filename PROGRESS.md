@@ -10,6 +10,14 @@ Verifikation: Vollsuite inkl. Fuzz auf dem finalen Stand: 1409 Tests, 0 Fehlschl
 Merge: ohne Squash nach main (51b779f), main gepusht. Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 39783520 Byte wie lokal.
 Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als schmaler Streifen mit senkrecht umbrochenem Text und verdeckt kurz die Karte (3 s, Ursache im Layout der Leiste); Titel der Blutpriester-Karte wird vom Info-Knopf angeschnitten. Safari/iPad nicht geprueft.
 
+## STAND Web-Build-Kennung und erzwungenes Update (2026-10-05, Branch feat/web-build-version)
+- Startbildschirm zeigt unten rechts Datum und Commit-Hash des Builds (z. B. "05.10. · 7d8e541", `*` = uncommittete Änderungen). `tools/export-web.js` schreibt `godot/build_info.json` vor dem Export und löscht sie danach (gitignored), stempelt die Kennung in `index.html` (`web/shell.html`, Platzhalter `___BUILD_ID___`) und schreibt `version.json`. Ohne Datei (Editor, Tests) gilt die Projektversion.
+- Erzwungenes Update: Beim Start vergleicht die Seite `version.json` (no-store) mit ihrer Kennung; bei Abweichung werden Service Worker und Caches verworfen und sofort neu geladen (eine Schleifenbremse pro Zielstand, offline startet die App wie bisher). Der Service Worker bekommt `skipWaiting` und `clients.claim`; Godot ändert `CACHE_VERSION` pro Export.
+- `godot/web/vercel.json`: `Cache-Control: no-cache` für `/`, `index.html`, Service Worker, Manifest, Offline-Seite, `version.json`; große Dateien bleiben cachebar. Skill `grimmhain-deploy` nutzt jetzt `node tools/export-web.js`.
+- Loki-Nachtkarte geprüft und korrigiert: Rollenbild von der Nachtkarte entfernt (`ROLE_ART_ON_CARD` in `cockpit_screen.gd`, gilt für alle Nachtkarten), Liebende/Rivalen beide in der Karte statt einer unten rechts. Bild: `Downloads/Grimmhain-Nacht-neu/loki-neu-1024x768.png`.
+- Verifikation: gezielte Tests grün (119), Vollsuite inkl. Fuzz läuft, Ergebnis, Merge und Live-Hash folgen unten.
+- Nächste Schritte: iPad, das noch den alten Stand ohne Prüfung hat, App ganz schließen und zweimal öffnen; danach aktualisiert sich jeder Deploy von selbst. Nicht geprüft: Safari/iPad.
+
 ## STAND Audit-Entscheidungen (DA-93, 2026-10-05, Branch fix/audit-entscheidungen)
 - Umgesetzt (je ein Commit): A-02 Schild bricht (Test rot-grün), B-06 Parasit-Bindung endet mit der Rolle (rot-grün), S-05 Abzeichen tagsüber verborgen, Tipp zeigt 3 s, S-04 keine Nachtleiste bei anonymer Frage (rot-grün), S-07 ein Text für alle verdeckten Karten (rot-grün), S-09 neutrale Ablehnung, UI-02 kein Beenden im Web, F-A03 25 Bilder aus dem Export (pck -1,08 MB), CM-05 RULES_VERSION 0.16.
 - A-01 ohne Code (entspricht schon DA-93). UI-04 schon erledigt (config/icon). UI-03 Notiz: Exportweg der Berichte auf dem iPad klären (Download statt user://exports).

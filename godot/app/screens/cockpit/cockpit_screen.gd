@@ -47,6 +47,9 @@ var _after_close: Callable = Callable()  ## Handlung nach dem Schließen der gez
 var _prediction := {"kind": "night", "number": 0}
 var _error_key: String = ""
 var _covered: bool = false
+## Rollenbild auf der Aktionskarte: aus seit der Nachtschablone (Markus 05.10.2026: die Nachtkarte zeigt kein Rollenbild; Titel und Hilfe
+## nennen die Fähigkeit). Auf `true` setzen, um es wiederzubringen.
+const ROLE_ART_ON_CARD := false
 const PEEK_MSEC := 3000  ## so lange bleiben die Abzeichen einer angetippten Person am Tag sichtbar
 var _peek_id: int = 0
 var _peek_until: int = 0
@@ -676,7 +679,7 @@ func _render() -> void:
 	var selection_error := ""
 	if kind == "prompt" and str(next.get("answer")) == "targets" and not _selection.is_empty():
 		selection_error = String(context.session.check_targets(_selection))
-	_card.role_art().show_role(_card_role(next, kind, phase, visible_secret))
+	_card.role_art().show_role(_card_role(next, kind, phase, visible_secret) if ROLE_ART_ON_CARD else "")
 	_card.render(next, {
 		"phase": phase, "seats": _view.get("seats", []), "selection": _selection, "selection_error": selection_error,
 		"random_active": _random != null and _same_set(_selection, _random),
