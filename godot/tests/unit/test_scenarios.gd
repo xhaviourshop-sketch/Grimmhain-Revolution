@@ -48,8 +48,13 @@ func _run_scenario(path: String) -> void:
 			_check_expectations(where, state, result.events, all_events, step["expect"])
 
 
+const EXPECT_KEYS: Array[String] = ["phase", "night_number", "day_number", "alive", "win_candidate", "winner", "nominations", "events", "no_event_types", "forbidden_key_substrings"]
+
+
 func _check_expectations(where: String, state: GameState, step_events: Array[GameEvent], all_events: Array[GameEvent], expect: Dictionary) -> void:
 	var sd := state.to_dict()
+	for key: Variant in expect:  # F-T02: ein Tippfehler im Schlüssel darf eine Erwartung nicht still entfallen lassen
+		assert_true(EXPECT_KEYS.has(String(key)), "%s: unbekannter Erwartungsschlüssel '%s'" % [where, key])
 	if expect.has("phase"):
 		assert_eq(String(state.phase), String(expect["phase"]), "%s: Phase" % where)
 	if expect.has("night_number"):
