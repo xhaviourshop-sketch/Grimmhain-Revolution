@@ -972,8 +972,19 @@ func _help(next: Dictionary, buttons: Array[Control]) -> void:
 	info.offset_bottom = 6.0 + float(ThemeTokens.TOUCH_MIN)
 
 
+## Der Titel oben auf der Karte lässt rechts Platz für den runden „i“-Knopf (Cockpit), damit er nie überdeckt wird.
 func _heading(key: String, values: Dictionary = {}) -> GrimmLabel:
-	return _text(key, values, &"HeadingLabel")
+	var first := _content.get_child_count() <= 1
+	var label := _text(key, values, &"HeadingLabel")
+	if info_host != null and first:
+		var box := MarginContainer.new()
+		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		box.add_theme_constant_override(&"margin_right", ThemeTokens.TOUCH_MIN + 12)
+		_content.add_child(box)
+		_content.move_child(box, label.get_index())
+		_content.remove_child(label)
+		box.add_child(label)
+	return label
 
 
 func _caption(key: String, values: Dictionary = {}) -> GrimmLabel:
