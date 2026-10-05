@@ -17,7 +17,7 @@ var _backdrop: StartBackdrop = null
 
 func _setup() -> void:
 	_column.custom_minimum_size.x = ThemeTokens.MENU_COLUMN_WIDTH
-	_version.format_values = {"version": AppPlatform.app_version()}
+	_version.format_values = {"version": AppPlatform.build_label()}
 	_backdrop = StartBackdrop.new(StartBackdrop.Mode.START)
 	_backdrop.animated = _animated()
 	add_child(_backdrop)

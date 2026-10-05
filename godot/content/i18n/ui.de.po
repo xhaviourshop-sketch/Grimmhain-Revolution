@@ -15,7 +15,7 @@ msgid "ui.start.enter"
 msgstr "Eintreten"
 
 msgid "ui.start.version"
-msgstr "Version {version}"
+msgstr "{version}"
 
 msgid "ui.menu.title"
 msgstr "Hauptmenü"

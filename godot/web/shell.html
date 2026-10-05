@@ -136,6 +136,35 @@ const GODOT_CONFIG = $GODOT_CONFIG;
 const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
 const engine = new Engine(GODOT_CONFIG);
 
+// Erzwungenes Update: Liegt auf dem Server ein anderer Build (version.json), werden Service Worker und Caches verworfen und die Seite
+// sofort neu geladen, ohne Hinweis. Offline schlägt der Abruf fehl und die App startet wie gewohnt. `tools/export-web.js` setzt die Kennung.
+(function () {
+	const BUILD_ID = '___BUILD_ID___';
+	if (BUILD_ID.indexOf('___') === 0 || !window.fetch) {
+		return;
+	}
+	fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).then(async (v) => {
+		if (!v || !v.id || v.id === BUILD_ID) {
+			return;
+		}
+		let tried = '';
+		try { tried = sessionStorage.getItem('grimmhain-update-tried') || ''; } catch (e) { /* ignore */ }
+		if (tried === v.id) {
+			return; // eine Schleife vermeiden: pro Zielstand nur ein Versuch
+		}
+		try { sessionStorage.setItem('grimmhain-update-tried', v.id); } catch (e) { /* ignore */ }
+		if (navigator.serviceWorker) {
+			const regs = await navigator.serviceWorker.getRegistrations();
+			await Promise.all(regs.map((reg) => reg.unregister()));
+		}
+		if (window.caches) {
+			const keys = await caches.keys();
+			await Promise.all(keys.map((key) => caches.delete(key)));
+		}
+		location.reload();
+	}).catch(() => { /* offline: weiter mit dem vorhandenen Stand */ });
+})();
+
 (function () {
 	const statusOverlay = document.getElementById('status');
 	const statusProgress = document.getElementById('status-progress');

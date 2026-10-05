@@ -38,3 +38,6 @@ ios/App/build/
 npm-debug.log*
 
 .vercel
+
+# Build info written by tools/export-web.js
+godot/build_info.json

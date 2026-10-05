@@ -30,6 +30,17 @@ static func can_quit_from_menu() -> bool:
 	return not is_mobile() and not OS.has_feature("web")
 
 
+## Kennung des Builds für den Startbildschirm, z. B. „05.10. · 7d8e541“. `tools/export-web.js` schreibt `build_info.json` beim Export
+## (nie von Hand, nicht im Repository); ohne Datei (Editor, Tests) gilt die Projektversion.
+static func build_label() -> String:
+	var path := "res://build_info.json"
+	if FileAccess.file_exists(path):
+		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if data is Dictionary and str((data as Dictionary).get("hash", "")) != "":
+			return "%s · %s" % [str((data as Dictionary).get("date", "")), str((data as Dictionary)["hash"])]
+	return app_version()
+
+
 ## Zentrale Versionsquelle: `application/config/version` in project.godot.
 static func app_version() -> String:
 	return str(ProjectSettings.get_setting("application/config/version", "0.0.0"))
