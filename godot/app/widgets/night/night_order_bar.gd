@@ -9,8 +9,8 @@ extends Control
 
 signal expand_toggled(expanded: bool)
 
-const FULL_HEIGHT := 70.0
-const CHIP_SIZE := Vector2(400.0, 52.0)
+const FULL_HEIGHT := 80.0  ## Platz für zweizeilige Rollennamen unter den Medaillons
+const CHIP_SIZE := Vector2(460.0, 52.0)  ## breit genug für „6 · Wahnsinniger Kutscher“ (Schrift wird zuerst kleiner)
 const MEDALLION := 44.0  ## Durchmesser des Rollenrings in der vollen Leiste
 const CHIP_MEDALLION := 44.0
 const BAR_Y_CENTER := 26.0  ## Mitte der vollen Leiste (und der Medaillons) von oben
@@ -18,10 +18,12 @@ const SLOT_PITCH_MIN := 62.0
 const SLOT_PITCH_MAX := 76.0
 const CLASP_GAP := 14.0  ## Luft links und rechts der Mittelspange
 const LABEL_SIZE := 11
+const LABEL_SIZE_MIN := 9  ## lange Namen: erst kleiner, dann zweizeilig, erst zuletzt gekürzt
 const LABEL_PLATE_HEIGHT := 18.0  ## Namensschild unter dem Medaillon (Teil `name_plate_short`)
 const LABEL_PLATE_PAD := 5.0
 const NUMBER_SIZE := 10
 const CHIP_FONT_SIZE := 17
+const CHIP_FONT_SIZE_MIN := 12
 const ARROW_SIZE := 26.0
 
 var _entries: Array = []
@@ -253,17 +255,50 @@ func _draw_slots() -> void:
 func _draw_label_plate(font: Font, text: String, centre: Vector2, limit: float, color: Color) -> void:
 	var box := GroveSkin.plate_box()
 	var text_limit := limit - LABEL_PLATE_PAD * 2.0
-	while font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE).x > text_limit and text.length() > 3:
+	var lines := label_lines(font, text, text_limit)
+	var font_size: int = lines[0]
+	var rows: Array = lines.slice(1)
+	var w := 0.0
+	for row: String in rows:
+		w = maxf(w, font.get_string_size(row, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+	var plate_w := w + LABEL_PLATE_PAD * 2.0
+	var plate_h := LABEL_PLATE_HEIGHT + float(font_size + 1) * float(rows.size() - 1)
+	var plate := Rect2(centre.x - plate_w * 0.5, centre.y - LABEL_PLATE_HEIGHT * 0.5 - 3.0, plate_w, plate_h)
+	if box != null:
+		box.native_height = plate_h
+		draw_style_box(box, plate)
+	else:
+		draw_rect(plate, ThemeTokens.PLATE_BG)
+	for k: int in rows.size():
+		var rw := font.get_string_size(rows[k], HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		draw_string(font, Vector2(centre.x - rw * 0.5, centre.y + 1.0 + float(k * (font_size + 1))), rows[k], HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
+
+
+## Name unter einem Medaillon: [Schriftgröße, Zeile 1, (Zeile 2)]. Erst wird die Schrift bis `LABEL_SIZE_MIN` kleiner, dann bricht der Name
+## an einem Leerzeichen oder Bindestrich in zwei Zeilen; erst wenn auch das nicht passt, wird gekürzt.
+static func label_lines(font: Font, text: String, limit: float) -> Array:
+	for size: int in range(LABEL_SIZE, LABEL_SIZE_MIN - 1, -1):
+		if font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= limit:
+			return [size, text]
+	var best: Array = []
+	for i: int in text.length():
+		if text[i] != " " and text[i] != "-":
+			continue
+		var first := text.left(i + 1).strip_edges() if text[i] == "-" else text.left(i)
+		var second := text.substr(i + 1).strip_edges()
+		var wide := maxf(font.get_string_size(first, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE_MIN).x, font.get_string_size(second, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE_MIN).x)
+		if best.is_empty() or wide < float(best[0]):
+			best = [wide, first, second]
+	if best.is_empty():
+		return [LABEL_SIZE_MIN, _trimmed(font, text, limit, LABEL_SIZE_MIN)]
+	return [LABEL_SIZE_MIN, _trimmed(font, str(best[1]), limit, LABEL_SIZE_MIN), _trimmed(font, str(best[2]), limit, LABEL_SIZE_MIN)]
+
+
+static func _trimmed(font: Font, text: String, limit: float, size: int) -> String:
+	while font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > limit and text.length() > 3:
 		text = text.trim_suffix("…")
 		text = text.left(text.length() - 1) + "…"
-	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE).x
-	var plate_w := w + LABEL_PLATE_PAD * 2.0
-	if box != null:
-		box.native_height = LABEL_PLATE_HEIGHT
-		draw_style_box(box, Rect2(centre.x - plate_w * 0.5, centre.y - LABEL_PLATE_HEIGHT * 0.5 - 3.0, plate_w, LABEL_PLATE_HEIGHT))
-	else:
-		draw_rect(Rect2(centre.x - plate_w * 0.5, centre.y - LABEL_PLATE_HEIGHT * 0.5 - 3.0, plate_w, LABEL_PLATE_HEIGHT), ThemeTokens.PLATE_BG)
-	draw_string(font, Vector2(centre.x - w * 0.5, centre.y + 1.0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE, color)
+	return text
 
 
 func _draw_chip() -> void:
@@ -276,7 +311,10 @@ func _draw_chip() -> void:
 	var text := "%d · %s" % [_peek + 1, _label_of(str(entry["role_id"]))]
 	var color := ThemeTokens.DANGER_TEXT if str(entry["state"]) == "active" else ThemeTokens.TEXT_MUTED
 	var from := left + CHIP_MEDALLION + 8.0
-	_draw_fitted(font, text, Vector2((from + right) * 0.5, size.y * 0.5 + CHIP_FONT_SIZE * 0.35), right - from, CHIP_FONT_SIZE, color)
+	var font_size := CHIP_FONT_SIZE
+	while font_size > CHIP_FONT_SIZE_MIN and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > right - from:
+		font_size -= 1  # lange Rollennamen: erst kleiner, erst danach gekürzt
+	_draw_fitted(font, text, Vector2((from + right) * 0.5, size.y * 0.5 + font_size * 0.35), right - from, font_size, color)
 
 
 ## Text mittig bei `centre` (Grundlinie), bei Bedarf mit Auslassungspunkten gekürzt.

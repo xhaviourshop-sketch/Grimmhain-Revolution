@@ -48,7 +48,10 @@ func snapshot() -> Dictionary:
 func assert_one_effect(before: Dictionary, label: String, commands: int = 1) -> void:
 	var old: Array[Command] = before["commands"]
 	var now := session().commands()
-	assert_eq(now.size(), old.size() + commands, "%s: genau %d Befehl(e) nach dem Fortsetzen" % [label, commands])
+	# Nachtende und eindeutiger Sieg folgen einer Kartenhandlung von selbst (Fenster-Diät) und zählen nicht als eigene Handlung.
+	var added := now.slice(old.size())
+	var own := added.filter(func(c: Command) -> bool: return c == added[0] or (c.type != Command.END_NIGHT and c.type != Command.CONFIRM_WIN))
+	assert_eq(own.size(), commands, "%s: genau %d Befehl(e) nach dem Fortsetzen" % [label, commands])
 	var expected: Array[Command] = old.duplicate()
 	expected.append_array(now.slice(old.size()))
 	var reference := RulesEngine.replay(expected)
@@ -207,7 +210,7 @@ func test_morning_report_is_identical_after_restart() -> void:
 	assert_one_effect(before, "Tag nach dem Morgenbericht")
 
 
-## Offene Nominierung bleibt (bestätigter Befehl); eine aufgedeckte, nicht bestätigte Hinrichtungsprüfung ist flüchtig.
+## Offene Nominierung bleibt (bestätigter Befehl); eine offene, nicht bestätigte Hinrichtungsprüfung ist flüchtig.
 func test_open_nomination_survives_and_execution_check_is_discarded() -> void:
 	if not await start([W, "schutzengel", "waldhexe", "das-orakel", D, "amalia", "detektiv"]):
 		return
@@ -218,7 +221,6 @@ func test_open_nomination_survives_and_execution_check_is_discarded() -> void:
 	await tap_button("ExecuteButton")
 	await tap_seat(1)
 	await tap_button("ConfirmExecutionTargetButton")
-	await tap_button("RevealButton")  # geheime Prüfkarte offen, Hinrichtung nicht bestätigt
 	var before := await restart()
 	assert_eq((next()["nominations"] as Array).size(), 1, "Nominierung erhalten")
 	assert_true(live("ConfirmExecutionButton") == null, "Prüfkarte verworfen")
@@ -239,8 +241,7 @@ func test_open_win_candidate_is_decided_once_after_restart() -> void:
 	assert_eq(str(next()["kind"]), "win_decision", "Siegentscheidung offen")
 	var before := await restart()
 	var candidate := int((next()["candidates"] as Array)[0]["id"])
-	await tap_button("ConfirmWinButton_%d" % candidate)
-	await confirm_dialog()
+	await tap_button("ConfirmWinButton_%d" % candidate)  # ein Tipp, keine Rückfrage
 	assert_one_effect(before, "Sieg")
 	assert_eq(str(next()["kind"]), "game_over", "Spielende")
 	assert_true(session().undo(), "Rückgängig nach dem Fortsetzen")

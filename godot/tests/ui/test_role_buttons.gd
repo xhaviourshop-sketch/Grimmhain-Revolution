@@ -63,7 +63,7 @@ func test_faehrtenleser_uses_tracking_once() -> void:
 		return
 	await run({"faehrtenleser/use": true}, until_event("TrackerRevealed"))
 	assert_true(has_event("TrackerRevealed"), "Richtung gezeigt")
-	await run({}, until_kind("end_night"))
+	await run({}, until_night_end())
 	assert_true(InfoSteps.tracker_used(state().players[1]), "Fähigkeit verbraucht")
 
 
@@ -124,7 +124,7 @@ func test_die_ewigen_check_for_solo() -> void:
 func test_albtraumwolf_blocks_one_person() -> void:
 	if not await start([W, "albtraumwolf", "das-orakel"] + _villagers(4)):
 		return
-	await run({"albtraumwolf/": [3]}, until_kind("end_night"))
+	await run({"albtraumwolf/": [3]}, until_night_end())
 	assert_eq(int(_data("NightBlocked").get("target_id", -1)), 3, "Orakel blockiert")
 	assert_false(has_event("InfoRevealed"), "blockiertes Orakel erfährt nichts")
 
@@ -132,7 +132,7 @@ func test_albtraumwolf_blocks_one_person() -> void:
 func test_schattenhund_blocks_village_steps() -> void:
 	if not await start([W, "schattenhund", "das-orakel"] + _villagers(4)):
 		return
-	await run({"schattenhund/use": true}, until_kind("end_night"))
+	await run({"schattenhund/use": true}, until_night_end())
 	assert_eq(str(_data("NightBlocked").get("by")), "schattenhund", "Blockade")
 	assert_false(has_event("InfoRevealed"), "Dorfschritt entfällt")
 

@@ -1283,3 +1283,15 @@ Antworten auf die neun Fragen aus der Morgen-Zusammenfassung der Nachtschicht (A
 7. **UI-02:** Der Beenden-Knopf entfällt im Web. **UI-03** (Exportweg auf dem iPad): nur Notiz für später.
 8. **F-A03:** Ungenutzte Bilder verlassen den Export. **UI-04:** Das Favicon ist eine Klein-Fassung des Siegels.
 9. **CM-05:** Nach einer Regeländerung wird `RULES_VERSION` erhöht; alte Stände erscheinen als „ältere Version“ statt „beschädigt“.
+
+## DA-94 Fenster-Diät und Morgenbericht (Markus, 05.10.2026, Feedback iPad-Test Teil 2)
+
+Grundsatz: Jedes Fenster, das nur ankündigt, fragt, ob es etwas sagen darf, oder nichts Neues enthält, entfällt. Liste: `docs/audit/FENSTER-DIAET.md`.
+
+1. **Keine verdeckten Karten mehr** (ersetzt DA-93 Punkt 6 für S-06/S-07): Karten mit geheimem Inhalt erscheinen auch am Morgen und am Tag direkt; die Hinrichtungsprüfung ebenso. Schutz vor Mitlesen: Sichtschutz und „Verbergen“. S-05 (Abzeichen tagsüber verborgen, Tipp zeigt 3 s) bleibt.
+2. **Nachtende automatisch:** Nach dem letzten Nachtschritt endet die Nacht ohne Karte. Tarnaufrufe danach stehen oben auf der Morgenkarte. Nach Rückgängig oder Laden bleibt die Karte „Nacht abschließen“, sonst würde Rückgängig sofort wieder beenden.
+3. **Sieg automatisch:** Ein eindeutiger Sieg nach einer Handlung auf der Karte gilt sofort, danach der Siegbildschirm mit dem Gewinner-Team. Die Siegkarte bleibt bei mehreren Kandidaten und nach Rückgängig oder Laden; ein Tipp bestätigt ohne Rückfrage.
+4. **Morgenbericht in zwei Teilen auf einer Karte:** „Fürs Dorf“ (vorlesen) und „Für dich“ (geheim), ein Satz pro Punkt mit Namen, nie interne Daten. Ansagekarte und „Private Details“ entfallen.
+5. **Keine Rückfrage** bei „Hinrichten“, „Keine Hinrichtung“ und Sieg bestätigen.
+6. **Dauer-Markierungen:** eigene Silberzeichen für Liebende, Rivalen und Verzaubert (statt eines gemeinsamen „Sonderzustand“).
+7. **Gezeigte Karte im Grimmhain-Stil:** Eisenrahmen der Aktionskarte (Ornamente nur an den Ecken), Knöpfe im Hain-Stil, Titel als `GothicTitleLabel`. Die gotische Schrift (UnifrakturMaguntia, SIL OFL 1.1) liegt zur Freigabe in `Downloads/Grimmhain-Feedback-2/schrift-zur-freigabe/`; ohne Freigabe kein Eintrag ins Godot-Projekt (Assetregister), bis dahin Grundschrift.

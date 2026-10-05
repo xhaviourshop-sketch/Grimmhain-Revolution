@@ -23,6 +23,8 @@ static func has_key(key: String) -> bool:
 static func role_name(role_id: String) -> StringName:
 	if GROUPS.has(role_id):
 		return StringName(GROUPS[role_id])
+	if role_id.begins_with("card_"):  # Schutz durch eine Totenreichkarte („card_segen_11“): Name der Karte
+		return StringName(CardCatalog.name_key(StringName(role_id.trim_prefix("card_"))))
 	return StringName("ui.role.%s.name" % key_part(role_id))
 
 
@@ -222,6 +224,30 @@ static func morning_lines(pub: Dictionary) -> Array:
 	for e: Dictionary in pub.get("effects", []):
 		out.append(effect_line(e))
 	out.append_array(card_lines(pub.get("cards", [])))
+	return out
+
+
+## Zeilen „Für dich“ des Morgenberichts [{key, values}]: ein Satz je Punkt mit Namen (ohne Platznummer). Einträge ohne Schlüssel
+## (übrige Ereignisse, nur im Protokoll) entfallen; Rohdaten erscheinen nie.
+static func private_lines(lines: Array) -> Array:
+	var out: Array = []
+	for line: Dictionary in lines:
+		if str(line.get("key", "")) == "":
+			continue
+		var values := {}
+		if line.has("person"):
+			values["name"] = str((line["person"] as Dictionary).get("name", ""))
+		if line.has("target"):
+			values["target"] = str((line["target"] as Dictionary).get("name", ""))
+		if line.has("role_id"):
+			values["role"] = role_name(str(line["role_id"])) if str(line["role_id"]) != "" else ""
+		if line.has("cause"):
+			values["cause"] = StringName("ui.cause.%s" % str(line["cause"]).to_lower())
+		if line.has("reason"):
+			values["reason"] = str(line["reason"])
+		if line.has("drop"):
+			values["drop"] = StringName("ui.morning.drop.%s" % str(line["drop"]))
+		out.append({"key": str(line["key"]), "values": values})
 	return out
 
 

@@ -1289,15 +1289,6 @@ msgstr "To main menu"
 msgid "ui.cockpit.status.selection_full"
 msgstr "Note: The maximum is reached. Tap a selected person to deselect them."
 
-msgid "ui.cockpit.secret.heading"
-msgstr "Game master only"
-
-msgid "ui.cockpit.secret.step"
-msgstr "The next step contains secret information. Show it only when nobody can read along."
-
-msgid "ui.cockpit.secret.reveal"
-msgstr "Show"
-
 msgid "ui.cockpit.card.none"
 msgstr "No step open"
 
@@ -1642,15 +1633,6 @@ msgstr "The game continues. A win is checked again only after the next relevant 
 
 msgid "ui.cockpit.dialog.reject_win.confirm"
 msgstr "Reject"
-
-msgid "ui.cockpit.dialog.confirm_win.title"
-msgstr "Confirm the win?"
-
-msgid "ui.cockpit.dialog.confirm_win.message"
-msgstr "The game ends with this winner. All other candidates count as not chosen."
-
-msgid "ui.cockpit.dialog.confirm_win.confirm"
-msgstr "Confirm win"
 
 msgid "ui.cockpit.dialog.override.title"
 msgstr "Change the shown result"
@@ -2081,23 +2063,8 @@ msgstr "Reaction"
 msgid "ui.cockpit.card.morning.caption"
 msgstr "Morning after night {number}"
 
-msgid "ui.cockpit.card.morning.heading"
-msgstr "Morning report"
-
 msgid "ui.cockpit.action.continue_day"
 msgstr "Continue to the day"
-
-msgid "ui.cockpit.action.show_announcement"
-msgstr "Show announcement card"
-
-msgid "ui.cockpit.action.morning_details"
-msgstr "Private details …"
-
-msgid "ui.cockpit.announcement.heading"
-msgstr "Morning after night {number}"
-
-msgid "ui.cockpit.morning.heading"
-msgstr "Morning report · game master only"
 
 msgid "ui.morning.read.intro"
 msgstr "“The sun rises. The village wakes up.”"
@@ -2136,16 +2103,16 @@ msgid "ui.morning.private.death"
 msgstr "{name} died: {cause}. Role: {role}."
 
 msgid "ui.morning.private.saved"
-msgstr "{name} was saved by: {role}."
+msgstr "{name} was saved: {role}."
 
 msgid "ui.morning.private.no_attack"
 msgstr "The pack attacked nobody."
 
 msgid "ui.morning.private.step_skipped"
-msgstr "Skipped: {role}. Reason: {reason}"
+msgstr "{role} was skipped: {reason}"
 
 msgid "ui.morning.private.step_dropped"
-msgstr "Dropped: {role} ({drop})."
+msgstr "{role} did not happen: {drop}."
 
 msgid "ui.morning.private.reaction.declined"
 msgstr "{name}: reaction without target (declined)."
@@ -2309,9 +2276,6 @@ msgstr "Tap the person the Necromancer secretly names as a wolf."
 msgid "ui.cockpit.card.day.check.heading"
 msgstr "Check execution: {name}"
 
-msgid "ui.cockpit.card.day.check.covered"
-msgstr "This check is for the game master only. Show it when nobody can read along."
-
 msgid "ui.cockpit.card.day.check.redirected"
 msgstr "Attention: The execution is mirrored. {name} dies instead."
 
@@ -2362,24 +2326,6 @@ msgstr "Confirm naming"
 
 msgid "ui.cockpit.action.end_day"
 msgstr "End day"
-
-msgid "ui.cockpit.dialog.execute.title"
-msgstr "Confirm the execution?"
-
-msgid "ui.cockpit.dialog.execute.message"
-msgstr "{name} is executed. The votes were counted at the table."
-
-msgid "ui.cockpit.dialog.execute.confirm"
-msgstr "Execute"
-
-msgid "ui.cockpit.dialog.no_execution.title"
-msgstr "No execution today?"
-
-msgid "ui.cockpit.dialog.no_execution.message"
-msgstr "Nobody dies by execution today. The day can then be ended."
-
-msgid "ui.cockpit.dialog.no_execution.confirm"
-msgstr "No execution"
 
 msgid "ui.cockpit.dialog.amalia.title"
 msgstr "Amalia sacrifices themself"
@@ -5555,7 +5501,7 @@ msgid "ui.rulebook.c04.b06"
 msgstr "3. Enter the answer of the called person the way the card shows: tap people in the seating circle and “Confirm selection”, “Yes” or “No”, tap an option, “Shown”, or confirm a prediction."
 
 msgid "ui.rulebook.c04.b07"
-msgstr "4. The app opens the next step. After the last step “End night” appears."
+msgstr "4. The app opens the next step. After the last step the night ends by itself and the morning report appears."
 
 msgid "ui.rulebook.c04.b08"
 msgstr "Choosing people"
@@ -5582,7 +5528,7 @@ msgid "ui.rulebook.c04.b15"
 msgstr "In a round without revival, roles that no living person holds any more are not called any more. In a revival round the roles of the dead are called too."
 
 msgid "ui.rulebook.c04.b16"
-msgstr "An open step blocks “End night”. If steps have dropped out or been skipped, the card points that out."
+msgstr "The night only ends when no step is open. If steps dropped out or were skipped, the morning report names the role and the reason under “For you”."
 
 msgid "ui.rulebook.c05.title"
 msgstr "Showing private information"
@@ -5594,7 +5540,7 @@ msgid "ui.rulebook.c05.b02"
 msgstr "Night and day"
 
 msgid "ui.rulebook.c05.b03"
-msgstr "At night everyone has their eyes closed, so cards with secret content can be read openly. In the morning and during the day everyone can see along. There such cards are covered (“Game master only”) and open only with “Show”. With the next action they are covered again."
+msgstr "Cards always appear directly, also in the morning and during the day; there is no covered intermediate card. If someone could read along during the day, use the “Privacy cover” or “Hide secrets”."
 
 msgid "ui.rulebook.c05.b04"
 msgstr "Privacy cover and hiding secrets"
@@ -5606,7 +5552,7 @@ msgid "ui.rulebook.c05.b06"
 msgstr "Private notices"
 
 msgid "ui.rulebook.c05.b07"
-msgstr "Some roles trigger private notices (Loki, Pied Piper, Plague Bringer, Little Red Riding Hood). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, “Shown” confirms. Each person sees only what is meant for them. During the day the content stays covered until you tap “Show”. For Little Red Riding Hood you quietly tap the chosen person after the choice and show them the anonymous question; you record the answer with “Refuge granted” or “No refuge”."
+msgstr "Some roles trigger private notices (Loki, Pied Piper, Plague Bringer, Little Red Riding Hood). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, closing it confirms. Each person sees only what is meant for them. For Little Red Riding Hood you quietly tap the chosen person after the choice and show them the anonymous question; you record the answer with “Refuge granted” or “No refuge”."
 
 msgid "ui.rulebook.c05.b08"
 msgstr "Areas with all secrets"
@@ -5618,10 +5564,10 @@ msgid "ui.rulebook.c06.title"
 msgstr "Morning and revival round"
 
 msgid "ui.rulebook.c06.b01"
-msgstr "“End night” evaluates the night: first the attack of the pack is checked. A rescue by the Witch of the Woods or a protection by the Guardian Angel prevents it; only the game master learns that. Then come immediate consequences of deaths, then open reactions one after another, and only at the end does the app check for a win."
+msgstr "After the last step the app evaluates the night: first the attack of the pack is checked. A rescue by the Witch of the Woods or a protection by the Guardian Angel prevents it; only the game master learns that. Then come immediate consequences of deaths, then open reactions one after another, and only at the end does the app check for a win."
 
 msgid "ui.rulebook.c06.b02"
-msgstr "Open reactions (such as Reaper, Possessed Wolf, Knight, Village Blacksmith, Demonic Wolf) appear as covered cards. “Show”, then tap the person the card names, or “Declines”. Each reaction may stay voluntary and can trigger further deaths."
+msgstr "Open reactions (such as Reaper, Possessed Wolf, Knight, Village Blacksmith, Demonic Wolf) appear as their own card. Tap the person the card names, or “Declines”. Each reaction may stay voluntary and can trigger further deaths."
 
 msgid "ui.rulebook.c06.b03"
 msgstr "Morning report"
@@ -5630,16 +5576,16 @@ msgid "ui.rulebook.c06.b04"
 msgstr "The morning report comes before the day actions. The reading text names the people who died in the night or “Nobody died this night”. A role is only named in rounds without revival, a cause never."
 
 msgid "ui.rulebook.c06.b05"
-msgstr "“Show announcement card” shows the public part full-screen at the table: names of the dead, revived people and explicitly public notices."
+msgstr "The morning report has two parts. You read “For the village” aloud: who died, who is back, who was chosen (for example by the Judge) and other public events."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "“Private details …” shows only the game master causes, rescues, dropped steps, reactions and role changes."
+msgstr "“For you” is for the game master only: who is in love, who is whose rival, who was charmed, protected, poisoned or saved, causes and dropped steps. One sentence per point with names."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "“Continue to the day” starts the day."
 
 msgid "ui.rulebook.c06.b08"
-msgstr "Visible consequences of a death are announced publicly, also in revival rounds, for example the Reaper's curse, the Knight's effect or heartbreak. The announcement names the effect and the role it comes from. Secret choices without a visible consequence stay covered."
+msgstr "Visible consequences of a death are announced publicly, also in revival rounds, for example the Reaper's curse, the Knight's effect or heartbreak. The announcement names the effect and the role it comes from. Secret choices without a visible consequence are not announced."
 
 msgid "ui.rulebook.c06.b09"
 msgstr "Revival round"
@@ -5690,7 +5636,7 @@ msgid "ui.rulebook.c08.b01"
 msgstr "After the vote at the table you tap “Execution …”, then the person to be executed, then “Continue to check”. Only people nominated today can be chosen. An execution without nomination is only possible as a game master correction (chapter 10)."
 
 msgid "ui.rulebook.c08.b02"
-msgstr "A covered check card always follows. It appears on every execution so that its appearance reveals nothing about certain roles. “Show” reveals it to the game master: either it names a special case (such as a mirroring, a defence question or the question about the curse duration) or “Nothing special”. Answer the question on the card and tap “Confirm execution”. A confirmation guards against mistakes."
+msgstr "A check card always follows, on every execution, so that its appearance reveals nothing about certain roles. Either it names a special case (such as a mirroring, a defence question or the question about the curse duration) or “Nothing special”. Answer the question on the card and tap “Confirm execution”; the execution applies at once."
 
 msgid "ui.rulebook.c08.b03"
 msgstr "If nobody is to be executed, tap “No execution today …” and confirm the question. Only after this decision, and when no step or reaction is open any more, “End day” is possible."
@@ -5699,7 +5645,7 @@ msgid "ui.rulebook.c08.b04"
 msgstr "Death reactions"
 
 msgid "ui.rulebook.c08.b05"
-msgstr "After every death the app first works through the immediate consequences without a decision, then the open reactions one after another. Reactions appear as covered cards. The reacting person decides voluntarily: the card names whom to tap, or “Declines”."
+msgstr "After every death the app first works through the immediate consequences without a decision, then the open reactions one after another. Each reaction appears as its own card. The reacting person decides voluntarily: the card names whom to tap, or “Declines”."
 
 msgid "ui.rulebook.c08.b06"
 msgstr "Every reaction can trigger further deaths and consequences. Only when nothing is open any more does the app check for a win (chapter 9). Visible consequences are announced publicly (chapter 6)."
@@ -5711,10 +5657,10 @@ msgid "ui.rulebook.c09.title"
 msgstr "Confirming a win"
 
 msgid "ui.rulebook.c09.b01"
-msgstr "After every death the app checks provisionally whether a win condition is met. Open reactions and abilities are worked through first, then the check becomes binding. If a condition is met, the covered card “Possible end of game” appears."
+msgstr "After every change (death, execution, bond) the app checks by itself whether a win condition is met. Open reactions and abilities are worked through first, then the check becomes binding. If exactly one win is reached, the victory screen with the winning team appears directly."
 
 msgid "ui.rulebook.c09.b02"
-msgstr "“Show” shows every win candidate with the reason, for example: the wolves are at least as many as all the other living people. Check the condition at the table."
+msgstr "If several wins are possible at once, or the win arose after “Undo”, the card shows every win candidate with the reason, for example: the wolves are at least as many as all other living people. One tap confirms a win."
 
 msgid "ui.rulebook.c09.b03"
 msgstr "“Confirm win: …” with the confirmation that follows confirms exactly one candidate. The game is over, winner and reason are saved."
@@ -5810,7 +5756,7 @@ msgid "ui.rulebook.c12.b02"
 msgstr "In the lexicon you search by the role name in the chosen language and filter by All, Village, Werewolves and Solo. An entry names the faction, a short text and the sections Night step, Counts as a wolf, Ability, Timing and uses, Targets, Exceptions, Win, Examples, Procedure at the table and Notes for the game master. For some roles “Not yet settled or implemented” is added."
 
 msgid "ui.rulebook.c12.b03"
-msgstr "On the private card of a step “Read the rule” opens the entry of the acting role. A covered card has no help. On a shown card (show card, announcement card, role display) there is no help because the card replaces the cockpit."
+msgstr "On the card of a step “Read the rule” opens the entry of the acting role. On a shown card (show card, role display) there is no help because the card replaces the cockpit."
 
 msgid "ui.rulebook.c12.b04"
 msgstr "What help does and does not do"
@@ -8906,3 +8852,51 @@ msgstr "The microphone is not allowed. Allow it in the browser settings."
 
 msgid "ui.setup.voice.none"
 msgstr "Nothing understood. Try again."
+
+msgid "ui.morning.private.lovers"
+msgstr "{name} and {target} are lovers."
+
+msgid "ui.morning.private.rivals"
+msgstr "{name} and {target} are rivals."
+
+msgid "ui.morning.private.charmed"
+msgstr "{name} was charmed."
+
+msgid "ui.morning.private.protected"
+msgstr "{name} was protected."
+
+msgid "ui.morning.private.wolf_poisoned"
+msgstr "{name} was poisoned by the poison wolf."
+
+msgid "ui.morning.private.infected"
+msgstr "{name} was infected."
+
+msgid "ui.morning.private.parasite_host"
+msgstr "{name} carries the parasite."
+
+msgid "ui.morning.private.voodoo_doll"
+msgstr "{name} is the voodoo doll."
+
+msgid "ui.morning.private.nothing"
+msgstr "Nothing else happened in secret."
+
+msgid "ui.cockpit.card.morning.village"
+msgstr "For the village"
+
+msgid "ui.cockpit.card.morning.private"
+msgstr "For you"
+
+msgid "ui.cockpit.victory.title.village"
+msgstr "The village wins"
+
+msgid "ui.cockpit.victory.title.wolves"
+msgstr "The werewolves win"
+
+msgid "ui.cockpit.victory.title.solo"
+msgstr "Solo victory"
+
+msgid "ui.cockpit.victory.title.none"
+msgstr "Nobody wins"
+
+msgid "ui.cockpit.victory.winners"
+msgstr "Winners: {names}"

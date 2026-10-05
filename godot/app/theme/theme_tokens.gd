@@ -86,6 +86,10 @@ const FONT_HEADING := 30
 const FONT_SUBTITLE := 24
 const FONT_TITLE := 64
 const FONT_SHOW := 48                 ## gezeigte Karte: Ergebnis groß für die handelnde Person
+const FONT_GOTHIC := 46               ## gotische Titel (gezeigte Karten, Siegbildschirm), nie im Fließtext (MARKE.md)
+## Gotische Titelschrift (SIL OFL 1.1). Liegt erst nach Freigabe durch den Product Owner im Projekt (Assetregister); bis dahin
+## zeichnet `GothicTitleLabel` mit der Grundschrift.
+const GOTHIC_FONT := "res://assets/fonts/UnifrakturMaguntia-Book.ttf"
 
 # --- Bedienflächen und Layout --------------------------------------------------------------------
 const TOUCH_MIN := 48                 ## Mindestgröße jeder Bedienfläche

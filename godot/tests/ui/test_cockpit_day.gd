@@ -112,12 +112,9 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	assert_true(_seat(shell, 2).disabled, "nicht Nominierte nicht wählbar")
 	await press(_seat(shell, 1))
 	await _press(shell, "ConfirmExecutionTargetButton")
-	assert_true(find_button(current_screen(shell), "RevealButton").is_visible_in_tree(), "Prüfkarte verdeckt")
-	assert_false(_texts(shell).contains("Keine Besonderheit"), "Vorschau erst nach dem Aufdecken")
-	await _press(shell, "RevealButton")
+	assert_true(find_node(current_screen(shell), "RevealButton") == null, "Prüfkarte ohne Verdecken (Fenster-Diät)")
 	assert_true(_texts(shell).contains("Keine Besonderheit: 1 · Anna stirbt"), "Vorschau des Regelkerns")
-	await _press(shell, "ConfirmExecutionButton")
-	await _confirm_dialog(shell)
+	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
 	assert_false(_seat(shell, 1).get("alive"), "Anna hingerichtet")
 	assert_true(_texts(shell).contains("„Heute gestorben: Anna (Werwolf).“"), "Runde ohne Wiederbelebung: Ansage mit Rolle (DI-01)")
 	await _press(shell, "EndDayButton")
@@ -126,18 +123,13 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	assert_eq(int(_view(shell)["night_number"]), 2, "Nacht 2")
 
 
-func test_no_execution_needs_confirmation() -> void:
+func test_no_execution_applies_directly() -> void:
 	var shell := await _cockpit(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
 	await _quiet_night(shell)
 	await _press(shell, "NoExecutionButton")
-	var dialog := shell.call("get_dialog") as Control
-	assert_true(dialog.call("is_open"), "Rückfrage")
-	await press(find_node(dialog, "CancelButton") as BaseButton)
-	assert_eq(str(_view(shell)["day_step"]), "DISCUSSION", "Abbrechen ändert nichts")
-	await _press(shell, "NoExecutionButton")
-	await _confirm_dialog(shell)
+	assert_false((shell.call("get_dialog") as Control).call("is_open"), "keine Rückfrage")
 	assert_eq(str(_view(shell)["next"]["kind"]), "end_day", "Entscheidung gefallen")
 
 
@@ -151,10 +143,8 @@ func test_mirror_wolf_preview_names_real_victim() -> void:
 	await _press(shell, "ExecuteButton")
 	await press(_seat(shell, 1))
 	await _press(shell, "ConfirmExecutionTargetButton")
-	await _press(shell, "RevealButton")
 	assert_true(_texts(shell).contains("Stattdessen stirbt 4 · Dirk"), "Spiegelung in der Vorschau")
-	await _press(shell, "ConfirmExecutionButton")
-	await _confirm_dialog(shell)
+	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
 	assert_true(_seat(shell, 1).get("alive") and not _seat(shell, 4).get("alive"), "Dirk statt des Spiegelwolfs")
 
 
@@ -168,12 +158,10 @@ func test_sage_curse_length_is_required() -> void:
 	await _press(shell, "ExecuteButton")
 	await press(_seat(shell, 2))
 	await _press(shell, "ConfirmExecutionTargetButton")
-	await _press(shell, "RevealButton")
 	assert_true(find_button(current_screen(shell), "ConfirmExecutionButton").disabled, "ohne Fluchdauer nicht bestätigbar")
 	await _press(shell, "SageCurse2")
 	assert_false(find_button(current_screen(shell), "ConfirmExecutionButton").disabled, "mit Fluchdauer")
-	await _press(shell, "ConfirmExecutionButton")
-	await _confirm_dialog(shell)
+	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
 	var log: Array = session_of(shell).call("event_log")
 	assert_true(log.any(func(e: Dictionary) -> bool: return str(e["type"]) == "SageCursed" and int(e["data"]["length"]) == 2), "Fluch mit zwei Tagen")
 
@@ -194,7 +182,8 @@ func test_amalia_secret_day_action() -> void:
 	assert_true(log.any(func(e: Dictionary) -> bool: return str(e["type"]) == "AmaliaAnswered" and e["data"]["answer"] == false), "Antwort Nein gespeichert")
 
 
-func test_win_candidate_is_covered_then_confirmed() -> void:
+## Fenster-Diät (Markus 05.10.2026): Ein eindeutiger Sieg nach einer Handlung auf der Karte führt direkt zum Siegbildschirm.
+func test_win_after_card_action_goes_straight_to_victory_screen() -> void:
 	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
 	if shell == null:
 		return
@@ -206,15 +195,30 @@ func test_win_candidate_is_covered_then_confirmed() -> void:
 	s.call("end_day")
 	s.call("start_night")
 	s.call("answer_targets", [4])
+	await frames(3)
+	await _press(shell, "EndNightButton")  # nach Steuerung über die Sitzung bleibt die Karte; ihr Knopf ist eine Kartenhandlung
+	assert_eq(str(_view(shell)["phase"]), "GAME_OVER", "Wolfsparität: Sieg ohne Rückfrage")
+	assert_true(find_node(current_screen(shell), "ConfirmWinButton_1") == null, "kein Fenster „Mögliches Spielende“")
+	assert_true(_texts(shell).contains("Die Werwölfe siegen"), "Siegbildschirm mit Gewinner-Team: %s" % _texts(shell))
+
+
+## Entsteht der Sieg ohne Kartenhandlung (Steuerung über die Sitzung, Rückgängig), bleibt die Siegkarte: ein Tipp bestätigt, ohne Rückfrage.
+func test_win_card_without_card_action_confirms_with_one_tap() -> void:
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	var s := session_of(shell)
+	s.call("nominate", 1, 3)
+	s.call("decide_execution", 3)
+	s.call("end_day")
+	s.call("start_night")
+	s.call("answer_targets", [4])
 	s.call("end_night")
 	await frames(3)
 	assert_eq(str(_view(shell)["next"]["kind"]), "win_decision", "Wolfsparität erkannt")
-	assert_true(find_button(current_screen(shell), "RevealButton").is_visible_in_tree(), "Siegkarte verdeckt")
-	await _press(shell, "RevealButton")
 	await _press(shell, "ConfirmWinButton_1")
-	await _confirm_dialog(shell)
-	assert_eq(str(_view(shell)["phase"]), "GAME_OVER", "Spielende nach Bestätigung")
-	assert_true(_texts(shell).contains("Die Partie ist beendet"), "Spielende-Karte")
+	assert_eq(str(_view(shell)["phase"]), "GAME_OVER", "Spielende nach einem Tipp")
 
 
 func find_children_of_type(root: Node, type: String) -> Array[Node]:
@@ -233,9 +237,8 @@ func test_necromancer_names_wolf_secretly() -> void:
 	await _press(shell, "ConfirmNameWolfButton")
 	var log: Array = session_of(shell).call("event_log")
 	assert_true(log.any(func(e: Dictionary) -> bool: return str(e["type"]) == "NecroNamed" and str(e["visibility"]) == "gm"), "Benennung nur für die Spielleitung")
-	# Treffer (E-19): Siegkandidat des Nekromanten, verdeckt bis zum Aufdecken.
-	assert_eq(str(_view(shell)["next"]["kind"]), "win_decision", "Siegkandidat nach richtiger Benennung")
-	assert_true(find_button(current_screen(shell), "RevealButton").is_visible_in_tree(), "verdeckt")
+	# Treffer (E-19): eindeutiger Sieg des Nekromanten, direkt der Siegbildschirm.
+	assert_eq(str(_view(shell)["phase"]), "GAME_OVER", "Sieg nach richtiger Benennung")
 
 
 ## Rückgängig ersetzt den Zustand: eine offene Bedienung (hier die Prüfkarte einer Hinrichtung mit
@@ -250,7 +253,6 @@ func test_undo_drops_open_execution_check() -> void:
 	await _press(shell, "ExecuteButton")
 	await press(_seat(shell, 1))
 	await _press(shell, "ConfirmExecutionTargetButton")
-	await _press(shell, "RevealButton")
 	assert_true(find_button(current_screen(shell), "ConfirmExecutionButton").is_visible_in_tree(), "Prüfkarte offen")
 	await _press(shell, "GmButton")
 	await _press(shell, "UndoButton")

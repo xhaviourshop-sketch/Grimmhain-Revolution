@@ -169,9 +169,6 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	var kind := str(next.get("kind", "none"))
 	if str(context.get("error_key", "")) != "":
 		_text(str(context["error_key"]), {}, &"ErrorLabel").name = "ErrorLabel"
-	if bool(next.get("secret", false)) and not bool(context.get("revealed", false)) and str(context.get("phase")) != "NIGHT":
-		_covered(kind)
-		return
 	_fade_in(kind + str(next.get("prompt_id", "")) + str(next.get("stage", "")) + str(next.get("step_id", "")), bool(context.get("reduced_motion", false)))
 	match kind:
 		"start_night":
@@ -342,13 +339,6 @@ func undo_visible() -> bool:
 
 
 # --- Kartenarten ------------------------------------------------------------------------------------
-
-## Verdeckte Karte (S-07, DA-93): ein einheitlicher Text für jede Art, der nichts über den Inhalt verrät.
-func _covered(_kind: String) -> void:
-	_heading("ui.cockpit.secret.heading")
-	_text("ui.cockpit.secret.step", {}, &"MutedLabel")
-	_actions([_button("RevealButton", "ui.cockpit.secret.reveal", GrimmButton.Kind.PRIMARY, &"reveal")])
-
 
 ## Wahr, solange die Karte nur den großen Knopf „Spiel beginnen“ zeigt.
 func is_bare() -> bool:
@@ -663,18 +653,21 @@ func _end_night(next: Dictionary) -> void:
 	_actions([_button("EndNightButton", "ui.cockpit.action.end_night", GrimmButton.Kind.PRIMARY, &"end_night")])
 
 
-## Morgenbericht: Vorlesetext aus dem öffentlichen Teil, zeigbare Ansagekarte, private Details.
+## Morgenbericht in zwei Teilen (Markus 05.10.2026): „Fürs Dorf“ zum Vorlesen, „Für dich“ nur für die Spielleitung, je ein Satz mit
+## Namen. Tarnaufrufe nach dem letzten Nachtschritt stehen davor, weil die Nacht ohne eigene Karte endet.
 func _morning(next: Dictionary) -> void:
+	_decoys(next)
 	_caption("ui.cockpit.card.morning.caption", {"number": int(next.get("night_number", 0))})
-	_heading("ui.cockpit.card.morning.heading")
-	_caption("ui.cockpit.card.say_now")
+	_heading("ui.cockpit.card.morning.village").name = "MorningVillage"
 	for line: Dictionary in CockpitText.morning_lines(next.get("public", {})):
 		_text(str(line["key"]), line["values"], &"ReadAloudLabel")
-	_actions([
-		_button("ContinueDayButton", "ui.cockpit.action.continue_day", GrimmButton.Kind.PRIMARY, &"continue_day"),
-		_button("ShowAnnouncementButton", "ui.cockpit.action.show_announcement", GrimmButton.Kind.SECONDARY, &"show_announcement"),
-		_button("MorningDetailsButton", "ui.cockpit.action.morning_details", GrimmButton.Kind.SECONDARY, &"morning_details"),
-	])
+	var own := CockpitText.private_lines(next.get("private", []))
+	_heading("ui.cockpit.card.morning.private").name = "MorningPrivate"
+	if own.is_empty():
+		_text("ui.morning.private.nothing", {}, &"MutedLabel")
+	for line: Dictionary in own:
+		_text(str(line["key"]), line["values"], &"SectionLabel").add_to_group(&"morning_private")
+	_actions([_button("ContinueDayButton", "ui.cockpit.action.continue_day", GrimmButton.Kind.PRIMARY, &"continue_day")])
 
 
 ## Tag: Nominierungen (öffentlich), heutige Tode, Aktionen. Unterzustände der Bedienung kommen aus
@@ -777,18 +770,12 @@ func _day_pick(context: Dictionary, heading: String, instruction: String, confir
 	_actions([confirm, _button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
 
 
-## Verdeckte Prüfung jeder Hinrichtung: Vorschau des Regelkerns und seine Pflichtfragen. Verdeckt,
-## bis die Spielleitung aufdeckt, damit ihr Auftauchen nichts über die Rolle verrät.
+## Prüfung jeder Hinrichtung: Vorschau des Regelkerns und seine Pflichtfragen (seit der Fenster-Diät nicht mehr verdeckt).
 func _execution_check(context: Dictionary) -> void:
 	var seats: Array = context.get("seats", [])
 	var preview: Dictionary = context.get("preview", {})
 	var target := CockpitText.names_of([int(preview.get("target_id", -1))], seats)
 	_heading("ui.cockpit.card.day.check.heading", {"name": target})
-	if not bool(context.get("revealed", false)):
-		_text("ui.cockpit.card.day.check.covered", {}, &"MutedLabel")
-		_actions([_button("RevealButton", "ui.cockpit.secret.reveal", GrimmButton.Kind.PRIMARY, &"reveal"),
-			_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
-		return
 	var extra: Dictionary = context.get("exec_extra", {})
 	var ready := true
 	var buttons: Array[Control] = []
@@ -937,12 +924,19 @@ func _win_decision(next: Dictionary) -> void:
 	_actions(buttons)
 
 
+## Siegbildschirm: gotischer Titel mit dem Gewinner-Team, darunter Grund und die Namen der Gewinner.
 func _game_over(next: Dictionary) -> void:
-	_heading("ui.cockpit.card.game_over.heading")
 	var winner: Dictionary = next.get("winner", {})
-	if not winner.is_empty():
-		_text("ui.cockpit.card.win.candidate", {"side": StringName("ui.cockpit.win.kind.%s" % str(winner["kind"])),
-			"reason": StringName(_reason_key(str(winner["reason_key"]))), "names": ", ".join(winner.get("beneficiaries", []))}, &"SectionLabel")
+	if winner.is_empty():
+		_heading("ui.cockpit.card.game_over.heading")
+	else:
+		var title := _text("ui.cockpit.victory.title.%s" % str(winner["kind"]), {}, &"GothicTitleLabel")
+		title.name = "VictoryTitle"
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_text(_reason_key(str(winner["reason_key"])), {}, &"SectionLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		var names: Array = winner.get("beneficiaries", [])
+		if not names.is_empty():
+			_text("ui.cockpit.victory.winners", {"names": ", ".join(names)}, &"ReadAloudLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var buttons: Array[Control] = [_button("OpenReportButton", "ui.cockpit.action.open_report", GrimmButton.Kind.PRIMARY, &"open_report")]
 	_actions(buttons)
 

@@ -65,7 +65,7 @@ func test_one_shot_ability_is_consumed_only_by_use() -> void:
 		var actor := int((next()["actor_ids"] as Array)[0])
 		assert_true(live("CancelPromptButton") == null, "%s: Rollenkarte ohne Abbrechen" % owner)
 		assert_false(_uses(actor, str(spec[3])), "%s: vor der Nutzung nichts verbraucht" % owner)
-		await run(spec[2], until_kind("end_night"))
+		await run(spec[2], until_night_end())
 		assert_true(_uses(actor, str(spec[3])), "%s: danach genutzt und verbraucht" % owner)
 		await after_each()
 
@@ -115,7 +115,9 @@ func test_double_tap_sends_one_command_for_each_answer_kind() -> void:
 				await _double_tap_seat(int(str(c[5]).trim_prefix("seat:")))
 			else:
 				await _double_tap(str(c[5]))
-			assert_eq(session().commands().size(), before + 1, "%s/%s: genau ein Befehl" % [c[2], c[3]])
+			# Nachtende und eindeutiger Sieg folgen von selbst (Fenster-Diät); gezählt wird nur, was das Tippen ausgelöst hat.
+			var sent := session().commands().slice(before).filter(func(cmd: Command) -> bool: return cmd.type != Command.END_NIGHT and cmd.type != Command.CONFIRM_WIN)
+			assert_eq(sent.size(), 1, "%s/%s: genau ein Befehl" % [c[2], c[3]])
 		await after_each()
 
 

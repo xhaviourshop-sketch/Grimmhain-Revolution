@@ -239,14 +239,13 @@ func test_context_help_stays_private_and_cover_closes_it() -> void:
 
 
 ## Außerhalb der Nacht ist eine geheime Karte verdeckt: dann gibt es keine Hilfe, erst nach dem Aufdecken.
-func test_covered_secret_card_has_no_context_help() -> void:
+## Fenster-Diät (Markus 05.10.2026): keine verdeckte Karte mehr, auch am Tag steht die Hilfe direkt auf der Karte.
+func test_secret_card_by_day_shows_context_help_directly() -> void:
 	var card := ActionCard.new()
 	tree.root.add_child(card)
 	var next := {"kind": "prompt", "secret": true, "role_id": "das-orakel", "owner": "das-orakel", "stage": "", "answer": "ack"}
-	card.render(next, {"phase": "DAY", "revealed": false})
-	assert_true(card.find_child("ContextHelpButton", true, false) == null, "verdeckt: keine Hilfe, keine Rolle")
-	card.render(next, {"phase": "DAY", "revealed": true})
-	assert_true(card.find_child("ContextHelpButton", true, false) != null, "aufgedeckt: Hilfe vorhanden")
+	card.render(next, {"phase": "DAY"})
+	assert_true(card.find_child("ContextHelpButton", true, false) != null, "Hilfe ohne Aufdecken")
 	card.queue_free()
 
 

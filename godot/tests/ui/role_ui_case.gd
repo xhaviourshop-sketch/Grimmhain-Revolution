@@ -135,12 +135,6 @@ func confirm_dialog(reason: String = "Testlauf") -> bool:
 	return await tap_button("ConfirmButton", dialog())
 
 
-## Verdeckte Karte (außerhalb der Nacht) zuerst aufdecken.
-func _uncover() -> void:
-	if live("RevealButton") != null and next().get("kind") != "day":
-		await tap_button("RevealButton")
-
-
 ## Szenariovorbereitung (Kernbefehl erlaubt, wie das Töten in `start`): Wer in der Nacht dem Rudel zum Opfer fiel, lebt am Tag wieder.
 func _revive_night_victims() -> void:
 	var day := int((session().cockpit_view() as Dictionary)["day_number"])
@@ -163,7 +157,6 @@ func step(plan: Dictionary) -> bool:
 	if live("ContinueDayButton") != null:
 		return await tap_button("ContinueDayButton")
 	var n := next()
-	await _uncover()
 	match str(n.get("kind")):
 		"start_night":
 			return await tap_button("StartNightButton")
@@ -248,7 +241,7 @@ func answer(action: Variant) -> bool:
 	return false
 
 
-## Tag: Nominierung und Hinrichtung über Karte und Sitzplätze, sonst „Keine Hinrichtung“ mit Rückfrage.
+## Tag: Nominierung und Hinrichtung über Karte und Sitzplätze, sonst „Keine Hinrichtung“ (ohne Rückfrage).
 func day(plan: Dictionary) -> bool:
 	var n := next()
 	var target := int(plan.get("execute", -1))
@@ -256,19 +249,18 @@ func day(plan: Dictionary) -> bool:
 		await tap_button("ExecuteButton")
 		await tap_seat(target)
 		await tap_button("ConfirmExecutionTargetButton")
-		await tap_button("RevealButton")
 		if plan.has("cerberus"):
 			await tap_button("CerberusDefend%s" % ("Yes" if bool(plan["cerberus"]) else "No"))
 		if plan.has("sage"):
 			await tap_button("SageCurse%d" % int(plan["sage"]))
-		return await tap_button("ConfirmExecutionButton") and await confirm_dialog()
+		return await tap_button("ConfirmExecutionButton")
 	var pair: Array = plan.get("nominate", [])
 	if not pair.is_empty() and not (n.get("nominations", []) as Array).any(func(x: Dictionary) -> bool: return int(x["nominee_id"]) == int(pair[1])):
 		await tap_button("NominateButton")
 		await tap_seat(int(pair[0]))
 		await tap_seat(int(pair[1]))
 		return await tap_button("ConfirmNominationButton")
-	return await tap_button("NoExecutionButton") and await confirm_dialog()
+	return await tap_button("NoExecutionButton")
 
 
 ## Bedient Karten, bis `stop` (erhält die nächste Handlung) wahr ist. Bricht bei Spielende, Siegentscheidung oder
@@ -286,8 +278,8 @@ func run(plan: Dictionary, stop: Callable, max_steps: int = 120) -> bool:
 			fail("Spur: %s" % ", ".join(trace.slice(-12)))
 			return false
 		if session().commands().size() == count and live("ContinueDayButton") == null and not str(n.get("kind")) in ["day"]:
-			# Aufdecken oder Weiterschalten ohne Befehl ist erlaubt; ein ausbleibender Befehl bei derselben Karte nicht.
-			if JSON.stringify(next()) == JSON.stringify(n) and live("RevealButton") == null:
+			# Weiterschalten ohne Befehl ist erlaubt; ein ausbleibender Befehl bei derselben Karte nicht.
+			if JSON.stringify(next()) == JSON.stringify(n):
 				fail("Bedienung ohne Wirkung bei %s; Spur: %s" % [str(n.get("kind")), ", ".join(trace.slice(-12))])
 				return false
 	fail("Ziel nicht erreicht; Spur: %s" % ", ".join(trace.slice(-12)))
@@ -320,3 +312,8 @@ func last_command() -> Command:
 
 func alive(id: int) -> bool:
 	return state().players[id].alive
+
+
+## Stoppt am Ende der laufenden Nacht: Nach Kartenhandlungen endet sie von selbst (Fenster-Diät), sonst steht die Karte „Nacht abschließen“.
+func until_night_end() -> Callable:
+	return func(n: Dictionary) -> bool: return str(n.get("kind")) == "end_night" or (state().night_number >= 1 and state().phase != Phase.NIGHT)
