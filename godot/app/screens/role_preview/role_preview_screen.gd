@@ -6,8 +6,8 @@ extends BaseScreen
 ## Warnungen. Nichts wird gespeichert: die Vorschau-Sitzung hat kein automatisches Speichern und keine Historie mit Pfad; echte Spielstände
 ## und die laufende Partie bleiben unberührt.
 
-const COLUMNS := 5  ## Spalten je Team in der Rollenliste
-const ROW_MIN := 30.0  ## Mindesthöhe einer Listenzeile; darunter passt die Liste nicht mehr ohne Scrollen auf 1024x768
+const COLUMNS := 4  ## Spalten je Team-Seite in der Rollenliste
+const ROW_MIN := 48.0  ## Zeilenhöhe: Daumengröße (ThemeTokens.TOUCH_MIN)
 const ROW_INSET := 20.0  ## Abstand von den Dornen-Enden des Knopfes bis zu Symbol und Name
 const ICON_SIZE := 24.0
 
@@ -17,6 +17,7 @@ const ICON_SIZE := 24.0
 @onready var _stage: Control = %Stage
 
 var _roles: Array[StringName] = []
+var _pages: Dictionary = {}  ## Team → Seite der Rollenliste
 var _plans: Dictionary = {}  ## Rolle → Plan (Haltepunkte, Lücke), beim Öffnen der Liste einmal berechnet
 var _index: int = -1  ## Rolle der laufenden Vorschau
 var _stop: int = 0
@@ -45,10 +46,15 @@ func handle_back() -> bool:
 	return false
 
 
-## Rollenliste ohne Scrollen: je Team ein Abschnitt, die Rollen alphabetisch spaltenweise in `COLUMNS` Spalten. Die Abschnitte teilen die
-## Höhe nach ihrer Zeilenzahl; jede Zeile ist ein gemalter Knopf mit Symbol und Namen, der Name passt sich seinem Platz an.
+## Rollenliste ohne Scrollen: drei Reiter (Dorf, Wölfe, Einzelsieg), jede Seite zeigt nur ihr Team, alphabetisch und spaltenweise in
+## `COLUMNS` Spalten mit Zeilen von Daumengröße. Das größte Team (Dorf, 39 Rollen) füllt 10 Zeilen und passt auf eine Seite.
 func _build_list() -> void:
 	_list.add_child(_label("ui.preview.hint", &"MutedLabel"))
+	var tabs := HBoxContainer.new()
+	tabs.name = "TeamTabs"
+	tabs.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	_list.add_child(tabs)
+	var group := ButtonGroup.new()
 	for team: StringName in [Faction.VILLAGE, Faction.WOLVES, Faction.SOLO]:
 		var members: Array[StringName] = []
 		for role: StringName in _roles:
@@ -56,26 +62,33 @@ func _build_list() -> void:
 				members.append(role)
 		members.sort_custom(func(a: StringName, b: StringName) -> bool: return tr(RolePresentation.name_key(a)).naturalnocasecmp_to(tr(RolePresentation.name_key(b))) < 0)
 		var rows := ceili(float(members.size()) / float(COLUMNS))
-		var section := VBoxContainer.new()
-		section.name = "Team_%s" % String(team)
-		section.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		section.size_flags_stretch_ratio = float(rows)
-		section.add_theme_constant_override(&"separation", 0)
-		_list.add_child(section)
-		section.add_child(_label(RolePresentation.faction_key(team), &"SectionLabel"))
-		var columns := HBoxContainer.new()
-		columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		columns.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
-		section.add_child(columns)
+		var page := HBoxContainer.new()
+		page.name = "Team_%s" % String(team)
+		page.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
+		page.visible = team == Faction.VILLAGE
+		_list.add_child(page)
+		_pages[team] = page
 		var column_boxes: Array[VBoxContainer] = []
 		for c: int in COLUMNS:
 			var box := VBoxContainer.new()
 			box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			box.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 			box.add_theme_constant_override(&"separation", 0)
-			columns.add_child(box)
+			page.add_child(box)
 			column_boxes.append(box)
 		for n: int in members.size():
 			column_boxes[n / rows].add_child(_role_button(members[n]))
+		var tab := GrimmButton.new()
+		tab.name = "PreviewTab_%s" % String(team)
+		tab.kind = GrimmButton.Kind.COMPACT
+		tab.toggle_mode = true
+		tab.button_group = group
+		tab.button_pressed = team == Faction.VILLAGE
+		tab.wrap = false
+		tab.text_key = RolePresentation.faction_key(team)
+		tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tab.toggled.connect(func(on: bool) -> void: (_pages[team] as Control).visible = on)
+		tabs.add_child(tab)
 
 
 ## Eine Zeile der Rollenliste: gemalter Knopf (ohne eigenen Text), darüber Symbol und Name.
@@ -85,7 +98,6 @@ func _role_button(role: StringName) -> GrimmButton:
 	b.kind = GrimmButton.Kind.COMPACT
 	b.wrap = false
 	b.custom_minimum_size = Vector2(0.0, ROW_MIN)
-	b.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var gap := str((_plans[role] as Dictionary)["gap"])
 	if gap != "":
 		b.tooltip_text = tr("ui.preview.gap.%s" % gap)

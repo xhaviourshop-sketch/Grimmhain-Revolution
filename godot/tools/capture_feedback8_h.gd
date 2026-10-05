@@ -27,7 +27,13 @@ func _initialize() -> void:
 	(shell.find_child("RolePreviewButton", true, false) as BaseButton).pressed.emit()
 	await _fr(10)
 	var screen := shell.current_screen() as RolePreviewScreen
-	await _save("rollenliste")
+	await _save("rollenliste-dorf")
+	for team: String in ["wolves", "solo"]:
+		(screen.find_child("PreviewTab_%s" % team, true, false) as BaseButton).button_pressed = true
+		await _fr(6)
+		await _save("rollenliste-%s" % team)
+	(screen.find_child("PreviewTab_village", true, false) as BaseButton).button_pressed = true
+	await _fr(4)
 	var missing: Array[String] = []
 	for r: StringName in SetupRoleCatalog.role_ids():
 		if NightArt.texture("emblems/%s.png" % NightArt.image_key(String(r))) == null:
