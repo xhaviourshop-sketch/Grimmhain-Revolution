@@ -1,0 +1,11 @@
+{
+  "_comment": "Maps changed paths (prefix match on repo-relative path) to test file name filters. Unmapped .gd files fall back to tests whose file name contains the changed file's base name.",
+  "godot/core/": ["unit"],
+  "godot/app/theme/": ["ui_theme", "ui_layout"],
+  "godot/app/screens/cockpit/": ["cockpit", "night_template", "notice_cards", "role_buttons"],
+  "godot/app/widgets/seat_ring/": ["board_layout", "night_board"],
+  "godot/app/widgets/night/": ["night_board", "night_template"],
+  "godot/app/session/": ["cockpit", "morning_report"],
+  "godot/content/i18n/": ["i18n", "rulebook"],
+  "godot/tests/": []
+}

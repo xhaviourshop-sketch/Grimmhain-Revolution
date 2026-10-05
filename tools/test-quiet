@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+// Quiet Godot test runner: prints only failures plus one summary line.
+// Usage: node tools/test-quiet [--filter=<part>] [--dir=unit|ui]   (no args: full suite)
+// Godot binary: GODOT_BIN, else the pinned Windows console build in Downloads, else `godot`.
+// Exit code: 0 green, 1 failures or script errors, 2 runner problem.
+const { spawnSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+const root = path.resolve(__dirname, "..");
+const project = path.join(root, "godot");
+
+function godotBin() {
+  if (process.env.GODOT_BIN) return process.env.GODOT_BIN;
+  const win = path.join(process.env.USERPROFILE || "", "Downloads", "Godot_v4.7.2-stable_win64.exe", "Godot_v4.7.2-stable_win64_console.exe");
+  return fs.existsSync(win) ? win : "godot";
+}
+
+function run(args) {
+  const bin = godotBin();
+  spawnSync(bin, ["--headless", "--path", project, "--import"], { encoding: "buffer", maxBuffer: 1 << 28 });
+  const r = spawnSync(bin, ["--headless", "--path", project, "-s", "res://tests/run_tests.gd", ...(args.length ? ["--", ...args] : [])],
+    { encoding: "buffer", maxBuffer: 1 << 29 });
+  if (r.error) { console.error("Godot nicht startbar: " + r.error.message); return null; }
+  const text = Buffer.concat([r.stdout, r.stderr]).toString("utf8");
+  return { text, status: r.status };
+}
+
+function summarize(text) {
+  const lines = text.split(/\r?\n/);
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
+    if (/^FAIL/.test(l)) {
+      out.push(l);
+      for (let j = i + 1; j < lines.length && /^\s+- /.test(lines[j]); j++) out.push(lines[j]);
+    } else if (/SCRIPT ERROR|Parse Error|Failed to load script/.test(l)) out.push(l);
+  }
+  const sum = lines.reverse().find((l) => /Tests, \d+ fehlgeschlagen/.test(l)) || "";
+  return { failures: out, sum: sum.trim() };
+}
+
+module.exports = { run, summarize };
+
+if (require.main === module) {
+  const res = run(process.argv.slice(2));
+  if (!res) process.exit(2);
+  const { failures, sum } = summarize(res.text);
+  if (failures.length) console.log(failures.join("\n"));
+  console.log(sum || "Keine Summenzeile gefunden (Runner abgebrochen?)");
+  const m = sum.match(/^(\d+) Tests, (\d+) fehlgeschlagen, (\d+)/);
+  const ran = m && Number(m[1]) > 0;
+  process.exit(m && ran && Number(m[2]) === 0 && Number(m[3]) === 0 && !failures.length && res.status === 0 ? 0 : 1);
+}
