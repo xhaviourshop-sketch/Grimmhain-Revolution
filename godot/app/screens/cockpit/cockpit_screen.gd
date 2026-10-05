@@ -47,6 +47,9 @@ var _after_close: Callable = Callable()  ## Handlung nach dem Schließen der gez
 var _prediction := {"kind": "night", "number": 0}
 var _error_key: String = ""
 var _covered: bool = false
+const PEEK_MSEC := 3000  ## so lange bleiben die Abzeichen einer angetippten Person am Tag sichtbar
+var _peek_id: int = 0
+var _peek_until: int = 0
 var _hidden: bool = false  ## „Verbergen“: nur Namen, Porträts, tot oder lebendig (nur Bedienzustand, nie gespeichert)
 var _bar_expanded: bool = false  ## Nachtleiste auf 4:3 ausgeklappt (Überlagerung, nur Bedienzustand)
 var _layer: Control = null
@@ -210,13 +213,33 @@ func _refresh() -> void:
 		_prediction = {"kind": "night", "number": 0}
 	_update_status(active)
 	_ring.show_seats(_view.get("seats", []))
-	_ring.set_marks(context.session.board_marks() if active else {})
+	_apply_marks(active)
 	_ring.set_secrets_visible(not _hidden)
 	_update_order(active)
 	_dock_undo.disabled = not (active and context.session.can_undo())
 	_hidden_label.visible = active and _hidden
 	_arrange()
 	_render()
+
+
+## Abzeichen am Sitzkreis (S-05, DA-93): in der Nacht alle, tagsüber verborgen; ein Tipp auf eine Person blendet ihre Abzeichen kurz ein.
+func _apply_marks(active: bool) -> void:
+	var marks: Dictionary = context.session.board_marks() if active else {}
+	if active and str(_view.get("phase", "")) != "NIGHT":
+		var shown := {}
+		if _peek_id > 0 and Time.get_ticks_msec() < _peek_until and marks.has(_peek_id):
+			shown[_peek_id] = marks[_peek_id]
+		marks = shown
+	_ring.set_marks(marks)
+
+
+func _peek_marks(person_id: int) -> void:
+	_peek_id = person_id
+	_peek_until = Time.get_ticks_msec() + PEEK_MSEC
+	_apply_marks(bool(_view.get("has_game", false)))
+	get_tree().create_timer(PEEK_MSEC / 1000.0 + 0.05).timeout.connect(func() -> void:
+		if is_inside_tree():
+			_apply_marks(bool(_view.get("has_game", false))))
 
 
 ## Nachtreihenfolge: nur in der Nacht, nur für die Spielleitung (bei „Verbergen“ aus).
@@ -830,6 +853,8 @@ func _on_seat_tapped(person_id: int) -> void:
 		return
 	var eff := _effective(next)
 	if str(eff.get("kind")) != "prompt" or str(eff.get("answer")) != "targets":
+		if str(_view.get("phase", "")) != "NIGHT":
+			_peek_marks(person_id)  # S-05: tagsüber zeigt ein Tipp die Abzeichen der Person kurz
 		return
 	if str(eff.get("owner")) == "loki" and str(eff.get("stage")) == "targets" and _loki_mode == null:
 		return  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
