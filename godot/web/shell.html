@@ -130,6 +130,15 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
+		<script>
+// Ladebild: liegt ladebild.png neben der Seite (godot/assets/ui/ladebild.png, kopiert vom Export), ersetzt es das Startbild; sonst bleibt alles wie bisher.
+(function () {
+	const splash = document.getElementById('status-splash');
+	const probe = new Image();
+	probe.onload = function () { splash.src = 'ladebild.png'; };
+	probe.src = 'ladebild.png';
+})();
+		</script>
 		<script src="$GODOT_URL"></script>
 		<script>
 const GODOT_CONFIG = $GODOT_CONFIG;

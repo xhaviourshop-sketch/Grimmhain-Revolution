@@ -58,7 +58,7 @@ Gleicher Seed, gleiche Personenliste und gleicher Rollenpool erzeugen dieselbe Z
 |---|---|
 | 2.1 | Die Spielleitung behält das Tablet und wählt in einer neutralen Liste (nur Namen und Stand „gesehen“, keine Rollen) gezielt eine Person. Die App zeigt eine neutrale Vorderseite „Karte für *Sitz · Name*“. Der frühere Wortlaut „Gib das Tablet weiter“ ist keine Pflicht, das Gerät herumzureichen. |
 | 2.2 | Die Person öffnet die Karte mit einer bewussten Aktion, die nicht versehentlich ausgelöst werden kann (Geste wird in Phase 2 festgelegt), und sieht nur Name, Rolle und Kurztext ihrer Rolle. |
-| 2.3 | „Gesehen, Karte schließen“ sendet `ConfirmRoleShown(person)` und führt zurück zur neutralen Liste. „Abbrechen“ (Vorderseite) und „Ohne Bestätigung schließen“ senden nichts. Ein erneutes Nachlesen einer bereits bestätigten Rolle braucht keinen Befehl und verändert keine Spielressource. |
+| 2.3 | „Fertig“ sendet `ConfirmRoleShown(person)` und führt zurück zur neutralen Liste. „Abbrechen“ (Vorderseite) und „Schließen“ senden nichts. Ein erneutes Nachlesen einer bereits bestätigten Rolle braucht keinen Befehl und verändert keine Spielressource. |
 | 2.4 | Nach einem Abbruch oder Neustart setzt die App bei der ersten Person ohne gültige Bestätigung fort (Sitzreihenfolge). |
 | 2.5 | Keine Pflicht: `StartNight` ist auch ohne jede Bestätigung erlaubt. Der Befehl ist reine Darstellung (kein Zufall, keine Ressource), auch in Nacht und Tag möglich und wird nur nach Spielende oder vor dem Start abgelehnt. Eine offene Karte verfällt bei jedem Zustandswechsel, Rückgängig, Laden und Sichtschutz. Beim Trugbilderwolf zeigt die Karte die wahre Rolle, nie die Scheinrolle (DI-08). |
 

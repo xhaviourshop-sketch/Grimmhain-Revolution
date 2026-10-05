@@ -87,6 +87,9 @@ const FONT_HEADING := 30
 const FONT_SUBTITLE := 24
 const FONT_TITLE := 64
 const FONT_SHOW := 48                 ## gezeigte Karte: Ergebnis groß für die handelnde Person
+const FONT_SHOW_NUMBER := 112         ## gezeigte Karte (Karte zeigen): die Zahl, mehr als doppelt so groß wie FONT_SHOW
+const FONT_SHOW_CAPTION := 32         ## gezeigte Karte: Beschriftung über der Zahl
+const FONT_SHOW_TITLE := 64           ## gezeigte Karte: gotischer Titel mit dem Rollennamen
 const FONT_GOTHIC := 46               ## gotische Titel (gezeigte Karten, Siegbildschirm), nie im Fließtext (MARKE.md)
 ## Gotische Titelschrift Grenze Gotisch (SIL OFL 1.1, intern freigegeben, DA-97; Lizenztext `assets/fonts/OFL-GrenzeGotisch.txt`).
 ## Nur für `GothicTitleLabel` (Titel und große Überschriften), nie Fließtext oder Knöpfe (MARKE.md).
@@ -149,6 +152,22 @@ const START_FOG_CLOSE := Color(0.1, 0.13, 0.2)
 const START_SHADE := Color(0.01, 0.014, 0.03)
 ## Feuer der gewählten Akt-Karte nach Stufe I bis IV (`FireGlow`): Flammenfarbe außen, Kernfarbe nahe am Rahmen.
 const FIRE_FLAME: Array[Color] = [Color(1.0, 0.34, 0.05), Color(1.0, 0.3, 0.05), Color(0.98, 0.26, 0.04), Color(0.95, 0.22, 0.04)]
+## Feuer-Alternativen zum Vergleich (nur Screenshots, Standard bleibt `FIRE_*`): blaues Geisterfeuer, Glut mit Rauch.
+const FIRE_GHOST_FLAME: Array[Color] = [Color(0.2, 0.45, 1.0), Color(0.18, 0.5, 1.0), Color(0.2, 0.58, 1.0), Color(0.25, 0.65, 1.0)]
+const FIRE_GHOST_CORE: Array[Color] = [Color(0.75, 0.92, 1.0), Color(0.78, 0.94, 1.0), Color(0.82, 0.96, 1.0), Color(0.88, 0.98, 1.0)]
+const FIRE_EMBER_FLAME: Array[Color] = [Color(0.85, 0.16, 0.03), Color(0.9, 0.18, 0.03), Color(0.95, 0.2, 0.03), Color(1.0, 0.22, 0.04)]
+const FIRE_EMBER_CORE: Array[Color] = [Color(1.0, 0.5, 0.14), Color(1.0, 0.54, 0.16), Color(1.0, 0.58, 0.18), Color(1.0, 0.62, 0.2)]
+const SMOKE_MID := Color(0.5, 0.5, 0.54, 0.4)  ## Rauchfahne der Glut: Mitte des Verlaufs
+const SMOKE_EDGE := Color(0.5, 0.5, 0.54, 0.0)
+const SMOKE_END := Color(0.4, 0.4, 0.44, 0.0)
+## Sprachflaggen (Startbildschirm), gedämpft im Silber-Stil: Schwarz-Rot-Gold und Silberfeld mit rotem Kreuz.
+const FLAG_BLACK := Color(0.07, 0.07, 0.09)
+const FLAG_RED := Color(0.62, 0.13, 0.16)
+const FLAG_BAND_LOW := Color(0.78, 0.6, 0.22)
+const FLAG_SILVER := Color(0.78, 0.81, 0.87)
+const FLAG_BACK := Color(0.03, 0.03, 0.05)
+const FLAG_SHEEN := Color(1.0, 1.0, 1.0, 0.09)
+const FLAG_SHADE := Color(0.0, 0.0, 0.0, 0.22)
 const FIRE_CORE: Array[Color] = [Color(1.0, 0.82, 0.36), Color(1.0, 0.78, 0.3), Color(1.0, 0.74, 0.26), Color(1.0, 0.7, 0.24)]
 ## Feuerring der Wölfe im Sitzkreis (Werwolf-Phase, König Lykaon): Flamme außen, heißer Kern am Ring.
 const HUNT_FLAME := Color(0.92, 0.1, 0.06)

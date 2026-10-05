@@ -85,11 +85,13 @@ static func show_card(role_id: String, lines: Array) -> Control:
 	var root: Control = layer[0]
 	var panel: DetailPanel = layer[1]
 	var column := panel.content
-	_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"GothicTitleLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var title := _label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"GothicTitleLabel")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override(&"font_size", ThemeTokens.FONT_SHOW_TITLE)
 	for line: Dictionary in lines:
-		_label(column, CockpitText.info_key(str(line["key"])), {}, &"CaptionLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_label(column, CockpitText.info_key(str(line["key"])), {}, &"ShowCaptionLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var value := GrimmLabel.new()
-		value.theme_type_variation = &"ShowValueLabel"
+		value.theme_type_variation = &"ShowNumberLabel"
 		value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var shown: Variant = CockpitText.info_value(line)
 		value.format_values = {"value": shown}

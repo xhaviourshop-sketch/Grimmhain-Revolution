@@ -408,7 +408,7 @@ func _begin_step(next: Dictionary, context: Dictionary) -> void:
 		return
 	var role := str(next.get("role_id"))
 	_decoys(next)
-	_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)})
+	_heading("ui.cockpit.card.role_title", {"role": CockpitText.role_name(role)}).suffix = _actor_suffix(next, context)
 	if role != str(next.get("own_role_id", role)) and str(next.get("own_role_id", "")) != "":
 		_text("ui.cockpit.card.borrowed_ability", {"role": CockpitText.role_name(str(next["own_role_id"]))}, &"WarningLabel")
 	if str(next.get("step_kind")) != "reaction":
@@ -438,7 +438,10 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	if pre_mode:
 		texts["stage"] = "mode"
 	_decoys(next)
-	_heading(CockpitText.night_title_key(texts), {"role": CockpitText.role_name(role)}).name = "NightTitle"
+	var title := _heading(CockpitText.night_title_key(texts), {"role": CockpitText.role_name(role)})
+	title.name = "NightTitle"
+	if not anonymous:
+		title.suffix = _actor_suffix(next, context)
 	var rules_key := CockpitText.night_rules_key(role)
 	if rules_key != "":
 		_text(rules_key, {}, &"MutedLabel").name = "NightRules"
@@ -978,6 +981,16 @@ func _help(next: Dictionary, buttons: Array[Control]) -> void:
 	info.offset_right = -6.0
 	info.offset_top = 6.0
 	info.offset_bottom = 6.0 + float(ThemeTokens.TOUCH_MIN)
+
+
+## Namen der handelnden Personen in Klammern hinter dem Kartentitel, z. B. „ (Anna)“; bei mehreren Personen alle Namen.
+func _actor_suffix(next: Dictionary, context: Dictionary) -> String:
+	var names: Array[String] = []
+	for id: Variant in next.get("actor_ids", []):
+		for seat: Dictionary in context.get("seats", []):
+			if int(seat["person_id"]) == int(id):
+				names.append(str(seat["name"]))
+	return " (%s)" % ", ".join(names) if not names.is_empty() else ""
 
 
 ## Der Titel oben auf der Karte lässt rechts Platz für den runden „i“-Knopf (Cockpit), damit er nie überdeckt wird.

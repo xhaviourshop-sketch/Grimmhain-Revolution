@@ -14,6 +14,10 @@ extends Label
 		wrap = value
 		autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if value else TextServer.AUTOWRAP_OFF
 
+var suffix: String = "":  ## wird ohne Übersetzung an den Text gehängt (z. B. Namen in Klammern im Kartentitel)
+	set(value):
+		suffix = value
+		refresh_text()
 var format_values: Dictionary = {}:
 	set(value):
 		format_values = value
@@ -39,7 +43,7 @@ func refresh_text() -> void:
 		text = ""
 		return
 	var translated := tr(text_key)
-	text = translated.format(translated_values(self, format_values)) if not format_values.is_empty() else translated
+	text = (translated.format(translated_values(self, format_values)) if not format_values.is_empty() else translated) + suffix
 
 
 ## Platzhalterwerte mit übersetzten Schlüsseln (StringName) für `String.format`.

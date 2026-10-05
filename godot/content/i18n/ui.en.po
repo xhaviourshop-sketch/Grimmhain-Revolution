@@ -1575,7 +1575,7 @@ msgid "ui.cockpit.show.value"
 msgstr "{value}"
 
 msgid "ui.cockpit.show.close"
-msgstr "Back to game master"
+msgstr "Done"
 
 msgid "ui.cockpit.cover.heading"
 msgstr "Privacy screen"
@@ -1584,7 +1584,7 @@ msgid "ui.cockpit.cover.message"
 msgstr "The cockpit is hidden. The game continues unchanged."
 
 msgid "ui.cockpit.cover.resume"
-msgstr "Show cockpit again"
+msgstr "Continue"
 
 msgid "ui.cockpit.layer.close"
 msgstr "Close"
@@ -2064,7 +2064,7 @@ msgid "ui.cockpit.card.morning.caption"
 msgstr "Morning after night {number}"
 
 msgid "ui.cockpit.action.continue_day"
-msgstr "Continue to the day"
+msgstr "Continue"
 
 msgid "ui.morning.read.intro"
 msgstr "“The sun rises. The village wakes up.”"
@@ -3018,13 +3018,13 @@ msgid "ui.cockpit.roles.role_value"
 msgstr "{role}"
 
 msgid "ui.cockpit.roles.confirm"
-msgstr "Seen, close card"
+msgstr "Done"
 
 msgid "ui.cockpit.roles.close_unconfirmed"
-msgstr "Close without confirming"
+msgstr "Close"
 
 msgid "ui.cockpit.roles.close"
-msgstr "Close card"
+msgstr "Close"
 
 msgid "ui.gm.command.confirm_role_shown"
 msgstr "Role shown: {names}"
@@ -5208,7 +5208,7 @@ msgid "ui.groups.delete"
 msgstr "Delete"
 
 msgid "ui.groups.close"
-msgstr "Back to entry"
+msgstr "Close"
 
 msgid "ui.groups.status.unreadable"
 msgstr "The saved groups could not be read. The damaged file was set aside and the list is empty."
@@ -5468,7 +5468,7 @@ msgid "ui.rulebook.c03.b04"
 msgstr "3. Only this person looks at the screen and taps “Show role”. They see their name, their role and a short text."
 
 msgid "ui.rulebook.c03.b05"
-msgstr "4. “Seen, close card” records that the person knows their role and returns to the list. “Close without confirming” records nothing."
+msgstr "4. “Done” records that the person knows their role and returns to the list. “Close” records nothing."
 
 msgid "ui.rulebook.c03.b06"
 msgstr "Showing roles is not mandatory: the first night can begin without any confirmation. Someone who has already confirmed can read their role again. A person whose role changes later counts as not yet seen again."
@@ -5534,7 +5534,7 @@ msgid "ui.rulebook.c05.title"
 msgstr "Showing private information"
 
 msgid "ui.rulebook.c05.b01"
-msgstr "Some steps end with information that only one person may see. The card then shows “Show card”. This opens a full-screen card that contains only what this person may see. “Back to game master” closes it. Then you confirm with “Shown”."
+msgstr "Some steps end with information that only one person may see. The card then shows “Show card”. This opens a full-screen card that contains only what this person may see. “Done” closes it. Then you confirm with “Shown”."
 
 msgid "ui.rulebook.c05.b02"
 msgstr "Night and day"
@@ -5546,7 +5546,7 @@ msgid "ui.rulebook.c05.b04"
 msgstr "Privacy cover and hiding secrets"
 
 msgid "ui.rulebook.c05.b05"
-msgstr "“Privacy cover” hides the whole cockpit and closes all open layers. The game continues unchanged. “Show cockpit again” brings it back. “Hide secrets” (the eye at the edge) keeps the board and only hides what is secret: state badges, status rings, the acting person, the night order and the role image of the card. Names, portraits and whether a person is dead or alive stay visible."
+msgstr "“Privacy cover” hides the whole cockpit and closes all open layers. The game continues unchanged. “Continue” brings it back. “Hide secrets” (the eye at the edge) keeps the board and only hides what is secret: state badges, status rings, the acting person, the night order and the role image of the card. Names, portraits and whether a person is dead or alive stay visible."
 
 msgid "ui.rulebook.c05.b06"
 msgstr "Private notices"
@@ -5582,7 +5582,7 @@ msgid "ui.rulebook.c06.b06"
 msgstr "“For you” is for the game master only: who is in love, who is whose rival, who was charmed, protected, poisoned or saved, causes and dropped steps. One sentence per point with names."
 
 msgid "ui.rulebook.c06.b07"
-msgstr "“Continue to the day” starts the day."
+msgstr "“Continue” starts the day."
 
 msgid "ui.rulebook.c06.b08"
 msgstr "Visible consequences of a death are announced publicly, also in revival rounds, for example the Reaper's curse, the Knight's effect or heartbreak. The announcement names the effect and the role it comes from. Secret choices without a visible consequence are not announced."
@@ -5600,7 +5600,7 @@ msgid "ui.rulebook.c07.title"
 msgstr "Day, nomination and physical vote"
 
 msgid "ui.rulebook.c07.b01"
-msgstr "After “Continue to the day” the day begins. Discussion and voting happen at the table. The app has no vote field, counts no votes and calculates no majority. The game master counts and records only the nominations and the result."
+msgstr "After “Continue” the day begins. Discussion and voting happen at the table. The app has no vote field, counts no votes and calculates no majority. The game master counts and records only the nominations and the result."
 
 msgid "ui.rulebook.c07.b02"
 msgstr "The card shows as reading text who died today (“Died today: …”) and the public list of today's nominations. Nominated players carry a blood-red ring in the seat circle until they are executed. Below the list is the reading text “All nominated players may now defend themselves, one after another.”"

@@ -149,6 +149,7 @@ func _apply_states() -> void:
 		token.chosen = id == _chosen
 		token.hunt_animated = _hunt_animated
 		token.hunt = _hunt.has(id)
+		token.active = _actors.has(id) and _secrets_visible
 		token.secrets_visible = _secrets_visible
 		token.marks = _marks.get(id, []) if _secrets_visible else []
 		token.disabled = _selection_mode and not _allowed.has(id) and not _selected.has(id)

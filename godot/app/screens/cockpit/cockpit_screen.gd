@@ -1267,6 +1267,7 @@ func open_layer(kind: StringName) -> void:
 		_layout.visible = true
 		return
 	_layer_kind = kind
+	GroveWindow.dress(_layer)
 	_overlay_host.add_child(_layer)
 	var close := _layer.find_child("CloseLayerButton", true, false) as BaseButton
 	if close != null:
@@ -1305,6 +1306,7 @@ func _open_role_card(person_id: int, revealed: bool) -> void:
 	_layer_kind = &"role_card"
 	_role_card_person = person_id
 	_layout.visible = false
+	GroveWindow.dress(_layer)
 	_overlay_host.add_child(_layer)
 	_wire_role_card()
 	var first := _layer.find_children("*", "BaseButton", true, false)
@@ -1557,6 +1559,7 @@ func open_lexicon(role: StringName) -> void:
 	close_layer()
 	_layer = RoleLexicon.layer(context.settings, role)
 	_layer_kind = &"lexicon"
+	GroveWindow.dress(_layer)
 	_overlay_host.add_child(_layer)
 	var lexicon := _layer.find_child("RoleLexicon", true, false) as RoleLexicon
 	lexicon.close_requested.connect(close_layer)
@@ -1569,6 +1572,7 @@ func open_rulebook() -> void:
 	close_layer()
 	_layer = RuleBook.layer(context.settings)
 	_layer_kind = &"rulebook"
+	GroveWindow.dress(_layer)
 	_overlay_host.add_child(_layer)
 	var book := _layer.find_child("RuleBook", true, false) as RuleBook
 	book.close_requested.connect(close_layer)
@@ -1588,6 +1592,7 @@ func cover() -> void:
 	_layout.visible = false
 	_layer = CockpitLayers.cover_panel()
 	_layer_kind = &"cover"
+	GroveWindow.dress(_layer)
 	_overlay_host.add_child(_layer)
 	var resume := _layer.find_child("UncoverButton", true, false) as BaseButton
 	resume.pressed.connect(uncover)

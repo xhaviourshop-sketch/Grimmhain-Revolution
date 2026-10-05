@@ -2,20 +2,29 @@ class_name FireGlow
 extends Control
 ## Lodernde Flammen statt gleichmäßigem Glühen für den gewählten Akt (Testrunde 1). Wie `SelectionGlow` folgt der Schein der Form eines
 ## Hain-Teils (weichgezeichnete Alpha-Kanten als Neun-Felder-Raster hinter dem Rahmen), aber ein Shader lässt ihn mit Rauschen flackern und nach
-## oben züngeln, dazu wenige Funken (CPUParticles2D, höchstens 60 Teilchen). Die Stärke steigt mit der Stufe des Aktes: schon Akt 1 lodert kräftig mit Funken (Rückmeldung iPad-Test), danach
-## mehr Glut, höhere Flammen, unruhigeres Flackern und mehr Funken; Akt 4 ist am stärksten. Nicht gewählt: kein Knoten sichtbar, keine Teilchen. Bei reduzierter Bewegung steht die
+## oben züngeln, dazu wenige Funken (CPUParticles2D, höchstens 40 Teilchen). Die Stärke wächst linear mit der Stufe des Aktes (Akt II doppelt, III dreifach, IV vierfach, siehe unten). Nicht gewählt: kein Knoten sichtbar, keine Teilchen. Bei reduzierter Bewegung steht die
 ## Flamme still und es gibt keine Funken. Fängt keine Eingaben ab.
 
-const MAX_SPARKS := 60
-## Je Stufe: Stärke, Rauschanteil, Tempo, Reichweite über den Rahmen (logische Einheiten), Funken, Funkentempo (kleinste, größte), Flammenfarbe, Kernfarbe
-const LEVELS := {
-	1: {"strength": 1.6, "amp": 1.0, "speed": 2.6, "reach": 34.0, "sparks": 28, "velocity": Vector2(60.0, 130.0), "flame": ThemeTokens.FIRE_FLAME[0], "core": ThemeTokens.FIRE_CORE[0]},
-	2: {"strength": 1.9, "amp": 1.15, "speed": 3.2, "reach": 42.0, "sparks": 36, "velocity": Vector2(75.0, 160.0), "flame": ThemeTokens.FIRE_FLAME[1], "core": ThemeTokens.FIRE_CORE[1]},
-	3: {"strength": 2.2, "amp": 1.3, "speed": 3.9, "reach": 50.0, "sparks": 46, "velocity": Vector2(90.0, 190.0), "flame": ThemeTokens.FIRE_FLAME[2], "core": ThemeTokens.FIRE_CORE[2]},
-	4: {"strength": 2.6, "amp": 1.5, "speed": 4.6, "reach": 58.0, "sparks": 60, "velocity": Vector2(110.0, 230.0), "flame": ThemeTokens.FIRE_FLAME[3], "core": ThemeTokens.FIRE_CORE[3]},
-}
-const SPARK_LIFETIME := 1.3
+const MAX_SPARKS := 40
+## Stärke je Stufe als Vielfaches von Akt I (Feedback 5): Akt II doppelt, Akt III dreifach, Akt IV vierfach (Reichweite = Flammenhöhe und Fläche,
+## Hitze, Helligkeit, Bewegung, Funkenzahl). Funken steigen langsam und treiben leicht zur Seite.
+const BASE_REACH := 28.0  ## Reichweite über den Rahmen in logischen Einheiten bei Stufe 1
+const BASE_STRENGTH := 1.0
+const BASE_BRIGHT := 0.4
+const BASE_AMP := 0.35
+const BASE_SPEED := 0.7
+const BASE_SPARKS := 8
+const SPARK_SPEED := Vector2(14.0, 30.0)  ## Funkentempo bei Stufe 1 (kleinste, größte); höhere Stufen steigen etwas schneller
+const SPARK_LIFETIME := 3.0
 const SPARK_SCALE := Vector2(0.05, 0.1)  ## Größe im Verhältnis zum weichen Glühbild (128 Pixel)
+## Stile (nur Vergleich für die Wahl, Standard bleibt `fire`): Farben je Stufe I bis IV und Besonderheiten.
+## `ghost`: blaues Geisterfeuer. `ember`: Glut mit Rauch (ruhiger, rote Glut, graue Rauchfahnen).
+const STYLES := {
+	&"fire": {"flame": ThemeTokens.FIRE_FLAME, "core": ThemeTokens.FIRE_CORE, "calm": 1.0, "dim": 1.0, "lift": 1.0, "smoke": false},
+	&"ghost": {"flame": ThemeTokens.FIRE_GHOST_FLAME, "core": ThemeTokens.FIRE_GHOST_CORE, "calm": 1.0, "dim": 1.0, "lift": 1.0, "smoke": false},
+	&"ember": {"flame": ThemeTokens.FIRE_EMBER_FLAME, "core": ThemeTokens.FIRE_EMBER_CORE, "calm": 0.45, "dim": 0.6, "lift": 0.25, "smoke": true},
+}
+static var style: StringName = &"fire"  ## aktiver Stil; nur das Screenshot-Werkzeug stellt ihn um
 const SHADER := """
 shader_type canvas_item;
 uniform vec4 flame_color : source_color = vec4(1.0, 0.3, 0.05, 1.0);
@@ -24,6 +33,8 @@ uniform float strength = 1.0;
 uniform float amp = 0.5;
 uniform float speed = 1.0;
 uniform float animate = 1.0;
+uniform float bright = 1.0;
+uniform float lift = 0.0;  // Flammenhöhe als Anteil der Bildhöhe
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 }
@@ -37,17 +48,20 @@ float fbm(vec2 p) {
 	return noise(p) * 0.6 + noise(p * 2.1 + 7.3) * 0.3 + noise(p * 4.3 + 3.1) * 0.1;
 }
 void fragment() {
-	float a = texture(TEXTURE, UV).a;
 	float t = TIME * speed * animate;
 	vec2 p = FRAGCOORD.xy * vec2(0.045, 0.028);
 	float n = fbm(vec2(p.x, p.y + t * 1.6)) + 0.35 * fbm(vec2(p.x * 1.7 + 4.0, p.y * 1.3 + t * 2.4));
 	n = clamp(n / 1.35, 0.0, 1.0);
+	// Zungen: die Flamme liest den Schein von weiter unten ab, je nach Rauschen verschieden hoch (so wächst sie über den Rahmen hinaus nach oben).
+	float tongue_noise = noise(vec2(FRAGCOORD.x * 0.035, t * 1.1));
+	float off = lift * (0.2 + 0.8 * n * (0.5 + 0.5 * tongue_noise));
+	float a = max(texture(TEXTURE, UV).a, max(texture(TEXTURE, UV + vec2(0.0, off * 0.5)).a * 0.9, texture(TEXTURE, UV + vec2(0.0, off)).a * 0.75));
 	float heat = a * strength;  // nah am Rahmen heißer, nach außen kühler
 	float tongue = heat * (1.0 - amp * 0.6 + amp * 1.6 * n);  // das Rauschen bestimmt, wie weit die Zungen reichen
 	float k = smoothstep(0.12, 0.5, tongue);
 	float haze = clamp(a * 0.3 * strength, 0.0, 0.45);
-	vec3 col = mix(flame_color.rgb, core_color.rgb, smoothstep(0.35, 0.95, tongue));
-	COLOR = vec4(col, clamp(max(k, haze), 0.0, 1.0));
+	vec3 col = mix(flame_color.rgb, core_color.rgb, smoothstep(0.7, 2.4, tongue)) * (0.7 + 0.3 * bright);
+	COLOR = vec4(col, clamp(max(k, haze) * bright, 0.0, 1.0));
 }
 """
 
@@ -60,6 +74,7 @@ var animated: bool = true:
 		_apply_motion()
 var _box: GroveStyleBox = null
 var _sparks: CPUParticles2D = null
+var _smoke: CPUParticles2D = null
 
 
 ## Hängt (einmal) ein Feuer an `host` und schaltet es. `part`/`margins`: Hain-Teil und dessen Neun-Felder-Ränder wie bei `SelectionGlow`.
@@ -81,7 +96,7 @@ static func create(part: String, margins: Vector4, p_level: int) -> FireGlow:
 	fire.level = clampi(p_level, 1, 4)
 	fire.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fire.show_behind_parent = true
-	var params: Dictionary = LEVELS[fire.level]
+	var params := _params(fire.level)
 	var reach := float(params["reach"])
 	fire.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	fire.offset_left = -reach
@@ -93,13 +108,23 @@ static func create(part: String, margins: Vector4, p_level: int) -> FireGlow:
 	if tex != null:
 		fire._box = GroveStyleBox.make(tex, margins + Vector4.ONE * reach * density)
 		fire._box.px_per_unit = density
-		fire.material = _material(params)
+		fire.material = _material(params, reach * density * 0.6 * float(params["lift"]) / float(tex.get_height()))
 	fire._build_sparks(params)
 	fire.visible = false
 	return fire
 
 
-static func _material(params: Dictionary) -> ShaderMaterial:
+## Werte einer Stufe (1 bis 4) im aktiven Stil: jede Größe wächst linear mit der Stufe, Akt IV ist also viermal so stark wie Akt I.
+static func _params(p_level: int) -> Dictionary:
+	var l := float(clampi(p_level, 1, 4))
+	var def: Dictionary = STYLES[style] if STYLES.has(style) else STYLES[&"fire"]
+	var calm := float(def["calm"])
+	return {"reach": BASE_REACH * l, "strength": BASE_STRENGTH * l, "bright": BASE_BRIGHT * l * float(def["dim"]), "lift": float(def["lift"]), "amp": BASE_AMP * l * calm, "speed": BASE_SPEED * l * calm,
+		"sparks": BASE_SPARKS * int(l), "velocity": SPARK_SPEED * (0.75 + 0.25 * l), "smoke": bool(def["smoke"]),
+		"flame": (def["flame"] as Array)[int(l) - 1], "core": (def["core"] as Array)[int(l) - 1]}
+
+
+static func _material(params: Dictionary, lift: float) -> ShaderMaterial:
 	if _shader == null:
 		_shader = Shader.new()
 		_shader.code = SHADER
@@ -110,6 +135,8 @@ static func _material(params: Dictionary) -> ShaderMaterial:
 	m.set_shader_parameter("strength", params["strength"])
 	m.set_shader_parameter("amp", params["amp"])
 	m.set_shader_parameter("speed", params["speed"])
+	m.set_shader_parameter("bright", params["bright"])
+	m.set_shader_parameter("lift", lift)
 	return m
 
 
@@ -126,13 +153,18 @@ func _build_sparks(params: Dictionary) -> void:
 	_sparks.name = "Sparks"
 	_sparks.amount = count
 	_sparks.lifetime = SPARK_LIFETIME
+	_sparks.lifetime_randomness = 0.6
 	_sparks.emitting = false
 	_sparks.direction = Vector2.UP
-	_sparks.spread = 35.0
-	_sparks.gravity = Vector2(0.0, -25.0)
+	_sparks.spread = 28.0
+	_sparks.gravity = Vector2(0.0, -6.0)
 	var velocity: Vector2 = params["velocity"]
 	_sparks.initial_velocity_min = velocity.x
 	_sparks.initial_velocity_max = velocity.y
+	_sparks.damping_min = 4.0  # bremst die Funken ab, sie schweben statt zu schießen
+	_sparks.damping_max = 10.0
+	_sparks.tangential_accel_min = -6.0  # leichtes Treiben zur Seite, keine Kreisbahnen
+	_sparks.tangential_accel_max = 6.0
 	_sparks.scale_amount_min = SPARK_SCALE.x
 	_sparks.scale_amount_max = SPARK_SCALE.y
 	_sparks.texture = StartBackdrop.glow_texture()
@@ -149,6 +181,27 @@ func _build_sparks(params: Dictionary) -> void:
 	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	_sparks.material = additive
 	add_child(_sparks)
+	if bool(params["smoke"]):
+		_smoke = CPUParticles2D.new()
+		_smoke.name = "Smoke"
+		_smoke.amount = count
+		_smoke.lifetime = 5.0
+		_smoke.lifetime_randomness = 0.4
+		_smoke.emitting = false
+		_smoke.direction = Vector2.UP
+		_smoke.spread = 18.0
+		_smoke.gravity = Vector2(0.0, -4.0)
+		_smoke.initial_velocity_min = 8.0
+		_smoke.initial_velocity_max = 20.0
+		_smoke.scale_amount_min = 0.5
+		_smoke.scale_amount_max = 1.0
+		_smoke.texture = StartBackdrop.glow_texture()
+		_smoke.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+		var puff := Gradient.new()
+		puff.offsets = PackedFloat32Array([0.0, 0.3, 1.0])
+		puff.colors = PackedColorArray([ThemeTokens.SMOKE_EDGE, ThemeTokens.SMOKE_MID, ThemeTokens.SMOKE_END])
+		_smoke.color_ramp = puff
+		add_child(_smoke)
 	resized.connect(_place_sparks)
 	_place_sparks()
 
@@ -159,6 +212,9 @@ func _place_sparks() -> void:
 		return
 	_sparks.position = Vector2(size.x * 0.5, offset_top * -1.0 + 4.0)
 	_sparks.emission_rect_extents = Vector2(maxf(size.x * 0.5 - 20.0, 4.0), 3.0)
+	if _smoke != null:
+		_smoke.position = _sparks.position
+		_smoke.emission_rect_extents = _sparks.emission_rect_extents
 
 
 func _apply_motion() -> void:
@@ -166,3 +222,5 @@ func _apply_motion() -> void:
 		(material as ShaderMaterial).set_shader_parameter("animate", 1.0 if animated else 0.0)
 	if _sparks != null:
 		_sparks.emitting = visible and animated
+	if _smoke != null:
+		_smoke.emitting = visible and animated
