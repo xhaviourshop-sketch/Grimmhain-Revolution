@@ -56,6 +56,15 @@ var _probe_accepted := 0
 var last_log: Array[Command] = []  ## Befehle der zuletzt gespielten Partie (test_resume_every_command startet sie nach jedem Befehl neu)
 
 
+## F-T05: Jede Rolle des Katalogs steht in den Rollenlisten des Fuzz (eine neue Rolle würde sonst nie gefuzzt).
+func test_fuzz_role_lists_cover_the_catalog() -> void:
+	var missing: Array[String] = []
+	for id: Variant in RoleCatalog.ROLES:
+		if not ROLES.has(String(id)) and not WOLF_ROLES.has(String(id)) and not String(id) in ["kartenschlucker"]:  # nur mit Totenreichkarten, eigene Kartentests
+			missing.append(String(id))
+	assert_eq(missing, [], "Rollen des Katalogs ohne Fuzz-Abdeckung")
+
+
 func test_random_games_keep_invariants() -> void:
 	var GAMES := FOCUS_ROUNDS * ROLES.size()
 	var games_over := 0
