@@ -72,7 +72,7 @@ func test_real_cards_mode_starts_only_when_everyone_is_assigned() -> void:
 	var ring := find_node(screen, "SeatRing")
 	var persons: Array = (setup.call("view") as Dictionary)["persons"]
 	for i: int in persons.size():
-		assert_true(_next(screen).disabled, "Platz %d: noch nicht alle zugeordnet, kein Start" % (i + 1))
+		assert_true(_next(screen).disabled, "Person %d: noch nicht alle zugeordnet, kein Start" % (i + 1))
 		await press(ring.call("token_for", int(persons[i]["person_id"])) as BaseButton)
 		var chips := find_node(screen, "RoleBarChips").get_children()
 		assert_false(chips.is_empty(), "Rollenleiste zeigt Rollen")
@@ -86,6 +86,18 @@ func test_real_cards_mode_starts_only_when_everyone_is_assigned() -> void:
 	assert_eq(String(current_id(shell)), "cockpit", "Cockpit nach dem Start")
 	var commands: Array = session_of(shell).call("commands")
 	assert_eq(commands[0].payload["roles"], chosen, "gestartet mit der eingetragenen Zuordnung")
+
+
+func test_name_plates_show_names_and_free_slots_never_numbers() -> void:
+	var shell := await spawn_shell(SIZE_4_3)
+	if shell == null:
+		return
+	var screen := await open_new_game(shell)
+	await press(_next(screen))
+	setup_of(shell).call("add_person", "Anna")
+	await frames(2)
+	assert_eq(find_button(screen, "NamePlate_1").text, "Anna", "die Zeile trägt nur den Namen")
+	assert_eq(find_button(screen, "NamePlate_2").text, "noch frei", "ein freier Platz heißt „noch frei“, ohne Nummer")
 
 
 func _counts(shell: Control) -> Dictionary:

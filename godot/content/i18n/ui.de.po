@@ -165,7 +165,7 @@ msgid "ui.setup.add"
 msgstr "Hinzufügen"
 
 msgid "ui.setup.import.open"
-msgstr "Mehrere Namen einfügen"
+msgstr "Namen einfügen"
 
 msgid "ui.setup.import.heading"
 msgstr "Mehrere Namen einfügen"
@@ -183,7 +183,7 @@ msgid "ui.setup.edit.heading"
 msgstr "Name bearbeiten"
 
 msgid "ui.setup.edit.person"
-msgstr "Spieler Nr. {number}"
+msgstr "{name}"
 
 msgid "ui.setup.edit.placeholder"
 msgstr "Name"
@@ -321,7 +321,7 @@ msgid "ui.setup.dialog.remove.title"
 msgstr "Spieler entfernen?"
 
 msgid "ui.setup.dialog.remove.message"
-msgstr "„{name}“ (Nr. {number}) wird aus der Liste entfernt."
+msgstr "„{name}“ wird aus der Liste entfernt."
 
 msgid "ui.setup.dialog.remove.confirm"
 msgstr "Entfernen"
@@ -7975,10 +7975,10 @@ msgid "ui.prep.act.capacity"
 msgstr "Bis zu {count} Personen"
 
 msgid "ui.prep.mode.random"
-msgstr "App verteilt zufällig"
+msgstr "App verteilt"
 
 msgid "ui.prep.mode.manual"
-msgstr "Echte Karten – ich weise zu"
+msgstr "Echte Karten"
 
 msgid "ui.prep.team.village"
 msgstr "Dorf"
@@ -8029,13 +8029,13 @@ msgid "ui.prep.names.count"
 msgstr "{count} von {total}"
 
 msgid "ui.prep.names.fit"
-msgstr "Spielerzahl auf {count} anpassen"
+msgstr "Auf {count} anpassen"
 
 msgid "ui.prep.names.shuffle"
 msgstr "Mischen"
 
 msgid "ui.prep.names.seat_hint"
-msgstr "Die Reihenfolge ist die Sitzordnung im Uhrzeigersinn. Schild antippen, dann verschieben."
+msgstr "Die Reihenfolge ist die Sitzordnung im Uhrzeigersinn. Name antippen, dann verschieben."
 
 msgid "ui.prep.names.earlier"
 msgstr "Früher"
@@ -8056,10 +8056,10 @@ msgid "ui.prep.names.hint"
 msgstr "Tippen oder per Tastatur-Mikrofon diktieren. Mehrere Namen trennst du mit Komma oder „und“."
 
 msgid "ui.prep.names.plate"
-msgstr "{number}. {name}"
+msgstr "{name}"
 
 msgid "ui.prep.names.plate_free"
-msgstr "Platz {number}, noch frei"
+msgstr "noch frei"
 
 msgid "ui.prep.names.free"
 msgstr "frei"
@@ -8134,7 +8134,7 @@ msgid "ui.prep.assign.hint"
 msgstr "Tippe einen Platz an, dann unten die Rolle."
 
 msgid "ui.prep.assign.bar"
-msgstr "Platz {number}: {name}"
+msgstr "{name}"
 
 msgid "ui.prep.assign.clear"
 msgstr "Zuordnung löschen"

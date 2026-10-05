@@ -22,6 +22,8 @@ var _bar_person: int = 0
 
 var _proposal: GrimmButton
 var _tabs: HBoxContainer
+var _tabs_host: HBoxContainer  ## Träger der Reiter in der Kopfzeile des Hosts
+var _header_row: Control
 var _pool_tab: ChoiceButton
 var _assign_tab: ChoiceButton
 var _pool_page: ScrollContainer
@@ -45,7 +47,12 @@ func start(setup: PlayerSetup) -> void:
 	_setup = setup
 	name = "RolesStep"
 	_tabs = _tab_row()
-	add_child(_header())
+	_tabs_host = HBoxContainer.new()
+	_tabs_host.name = "TabsHost"
+	_tabs_host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_tabs_host.add_child(_tabs)
+	_header_row = _header()
+	add_child(_header_row)
 	_pool_page = _build_pool_page()
 	add_child(_pool_page)
 	_assign_page = _build_assign_page()
@@ -68,6 +75,11 @@ func entered() -> void:
 
 func default_focus() -> Control:
 	return _proposal
+
+
+## „Rollen“ und „Zuordnung: X von Y“ sitzen in der Kopfzeile neben dem Titel; so bleibt die ganze Höhe für den Sitzkreis.
+func header_extra() -> Control:
+	return _tabs_host
 
 
 func is_manual() -> bool:
@@ -130,7 +142,6 @@ func _header() -> Control:
 	var row := HBoxContainer.new()
 	row.name = "RolesHeader"
 	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_L)
-	row.add_child(_tabs)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(spacer)
@@ -152,6 +163,9 @@ func _tab_row() -> HBoxContainer:
 	_pool_tab = ChoiceButton.new()
 	_pool_tab.name = "PoolTab"
 	_pool_tab.button_group = group
+	_pool_tab.kind = GrimmButton.Kind.COMPACT
+	_pool_tab.fit_width = true
+	_pool_tab.min_width = 120.0
 	_pool_tab.text_key = "ui.prep.tab.roles"
 	_pool_tab.toggled.connect(func(on: bool) -> void:
 		if on:
@@ -159,7 +173,9 @@ func _tab_row() -> HBoxContainer:
 			footer_changed.emit())
 	row.add_child(_pool_tab)
 	_assign_tab = ChoiceButton.new()
-	_assign_tab.custom_minimum_size.x = 340.0
+	_assign_tab.kind = GrimmButton.Kind.COMPACT
+	_assign_tab.fit_width = true
+	_assign_tab.min_width = 200.0
 	_assign_tab.name = "AssignTab"
 	_assign_tab.button_group = group
 	_assign_tab.text_key = "ui.prep.tab.assign"
@@ -358,6 +374,7 @@ func _render_assign(view: Dictionary) -> void:
 func _show_page(page_id: Page) -> void:
 	_page = page_id
 	_pool_page.visible = page_id == Page.POOL
+	_header_row.visible = page_id == Page.POOL  # „Empfehlung übernehmen“ gehört zur Rollenwahl; die Zuordnung braucht die Höhe
 	_assign_page.visible = page_id == Page.ASSIGN
 	if page_id == Page.POOL:
 		_close_bar()

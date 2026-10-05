@@ -1,24 +1,25 @@
 class_name NamePlate
 extends GrimmButton
-## Nummeriertes Namensschild im Namensschritt: runde Nummer links, Name auf dem Hain-Teil `name_plate_short`. Die Nummer ist der Sitzplatz im
-## Uhrzeigersinn. Ein freier Platz (noch kein Name) steht gedämpft mit „frei“; die gewählte Person glüht blutrot (`SelectionGlow`) und trägt ein
-## Häkchen (Blutrot nur für Aktives), ein doppelter Name ein „!“. Der Button-Text (Nummer und Name) ist Bedienungshilfe, Tooltip und
-## Testanker und wird nicht gezeichnet. Antippen wählt (`pressed`); was folgt, entscheidet der Schritt.
+## Namenszeile im Namensschritt: der Name auf der gemalten Listenzeile (Skin `listenzeile`), nie eine Nummer. Die Reihenfolge der Zeilen ist
+## die Sitzordnung im Uhrzeigersinn, sie zeigt sich nur durch die Stellung. Ein freier Platz steht gedämpft mit „noch frei“; die gewählte
+## Person trägt den glühenden Rubinstein der Haut (aktiv) rechts, ein doppelter Name ein „!“. Lange Namen verkleinern die Schrift, statt
+## gekürzt zu werden. Der Button-Text ist Bedienungshilfe, Tooltip und Testanker und wird nicht gezeichnet. Antippen wählt (`pressed`);
+## was folgt, entscheidet der Schritt.
 
-const NUMBER_RADIUS := 18.0
-const PLATE_HEIGHT := 40.0
-const TEXT_PAD := 14.0     ## Abstand des Namens zu Nummer und rechtem Rand
-const MARKER_WIDTH := 26.0  ## Platz für Häkchen oder „!“ rechts
+const MIN_HEIGHT := 36.0
+const MAX_ROW_HEIGHT := 52.0   ## höhere Flächen zeichnen die Zeile mittig in dieser Höhe, die Tippfläche bleibt ganz
+const TEXT_LEFT := 26.0
+const MARKER_WIDTH := 40.0     ## Platz für Rubinstein oder „!“ rechts
+const STONE_SIZE := 26.0
+const FIT_MIN_FONT := 12
 
 var person_id: int = 0
-var number: int = 0
+var number: int = 0  ## Platz in der Reihenfolge (intern), wird nie angezeigt
 var person_name: String = ""
 var empty: bool = true
 var selected: bool = false:
 	set(value):
 		selected = value
-		var inset_y := maxf(0.0, (float(ThemeTokens.NAME_PLATE_HEIGHT) - PLATE_HEIGHT) * 0.5)
-		SelectionGlow.set_on(self, "name_plate_short", GroveArtData.NAME_PLATE_SHORT_MARGINS, value, Vector4(NUMBER_RADIUS + 6.0, inset_y, 0.0, inset_y))
 		queue_redraw()
 var duplicate: bool = false
 
@@ -27,8 +28,9 @@ func _init() -> void:
 	kind = Kind.COMPACT
 	wrap = false
 	clip_text = true
-	custom_minimum_size = Vector2(ThemeTokens.NAME_PLATE_MIN_WIDTH, ThemeTokens.NAME_PLATE_HEIGHT)
+	custom_minimum_size = Vector2(150.0, MIN_HEIGHT)
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	for style: String in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
 		add_theme_stylebox_override(style, StyleBoxEmpty.new())
 	for color: String in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color", "font_disabled_color"]:
@@ -41,7 +43,7 @@ func show_person(entry: Dictionary) -> void:
 	person_name = str(entry["name"])
 	empty = false
 	duplicate = bool(entry.get("duplicate", false))
-	format_values = {"number": number, "name": person_name}
+	format_values = {"name": person_name}
 	text_key = "ui.prep.names.plate"
 	tooltip_text = person_name
 	disabled = false
@@ -56,7 +58,7 @@ func show_empty(p_number: int) -> void:
 	empty = true
 	duplicate = false
 	selected = false
-	format_values = {"number": number}
+	format_values = {}
 	text_key = "ui.prep.names.plate_free"
 	tooltip_text = ""
 	disabled = true
@@ -64,54 +66,35 @@ func show_empty(p_number: int) -> void:
 
 
 func _draw() -> void:
-	var mid := size.y * 0.5
-	var dim := ThemeTokens.TINT_NONE if not empty else ThemeTokens.TINT_DEAD
-	if is_hovered() and not empty:
-		dim = ThemeTokens.TINT_HOVER
-	var plate_left := NUMBER_RADIUS + 6.0
-	var plate_rect := Rect2(plate_left, mid - PLATE_HEIGHT * 0.5, size.x - plate_left, PLATE_HEIGHT)
-	var tex := GroveSkin.texture("name_plate_short")
-	if tex != null:
-		draw_style_box(GroveStyleBox.make(tex, GroveArtData.NAME_PLATE_SHORT_MARGINS, dim), plate_rect)
-	else:
-		draw_rect(plate_rect, ThemeTokens.PLATE_BG)
-	var centre := Vector2(NUMBER_RADIUS + 2.0, mid)
-	draw_circle(centre, NUMBER_RADIUS, ThemeTokens.NUMBER_BG)
-	draw_arc(centre, NUMBER_RADIUS, 0.0, TAU, 28, ThemeTokens.BLOOD_RED if selected else (ThemeTokens.MOON_SILVER_DIM if empty else ThemeTokens.MOON_SILVER), 2.0, true)
-	var font := get_theme_default_font()
-	var digits := str(number)
-	var digit_size := ThemeTokens.FONT_COMPACT
-	var digit_width := font.get_string_size(digits, HORIZONTAL_ALIGNMENT_LEFT, -1, digit_size).x
-	draw_string(font, Vector2(centre.x - digit_width * 0.5, centre.y + digit_size * 0.36), digits, HORIZONTAL_ALIGNMENT_LEFT, -1, digit_size, ThemeTokens.MOON_SILVER_DIM if empty else ThemeTokens.MOON_SILVER_BRIGHT)
-	var text_left := plate_left + TEXT_PAD
-	var text_right := size.x - TEXT_PAD - (MARKER_WIDTH if duplicate or selected else 0.0)
-	var text := tr("ui.prep.names.free") if empty else person_name
+	var row_height := minf(size.y, MAX_ROW_HEIGHT)
+	var row := Rect2(0.0, (size.y - row_height) * 0.5, size.x, row_height)
+	var tint := ThemeTokens.TINT_NONE
+	if empty:
+		tint = ThemeTokens.TINT_DEAD
+	elif is_hovered():
+		tint = ThemeTokens.TINT_HOVER
+	var box := SkinArt.row_box(tint)
+	if box.texture != null:
+		draw_style_box(box, row)
+		if has_focus(true):
+			draw_style_box(SkinArt.row_box(SkinArt.TINT_FOCUS), row)
+	var marker := MARKER_WIDTH if duplicate or selected else 0.0
+	var text := tr("ui.prep.names.plate_free") if empty else person_name
 	var ink := ThemeTokens.MOON_SILVER_DIM if empty else ThemeTokens.PREP_CARD_TEXT
-	var font_size := ThemeTokens.FONT_COMPACT
-	var shown := text
-	while shown.length() > 1 and font.get_string_size(shown, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > text_right - text_left:
-		shown = shown.left(shown.length() - 2).strip_edges() + "…"
-		if shown == "…":
-			break
-	draw_string(font, Vector2(text_left, mid + font_size * 0.36), shown, HORIZONTAL_ALIGNMENT_LEFT, text_right - text_left, font_size, ink)
+	var room := size.x - TEXT_LEFT - TEXT_LEFT - marker
+	var font := get_theme_default_font()
+	var font_size := FitLabel.best_size(font, text, Vector2(room, 0.0), ThemeTokens.FONT_BODY, FIT_MIN_FONT, false)
+	var baseline := row.position.y + row_height * 0.5 + float(font_size) * 0.36
+	draw_string(font, Vector2(TEXT_LEFT, baseline), text, HORIZONTAL_ALIGNMENT_LEFT, room, font_size, ink)
+	var centre := Vector2(size.x - TEXT_LEFT - STONE_SIZE * 0.5 + 6.0, row.position.y + row_height * 0.5)
 	if selected:
-		var c := Vector2(size.x - TEXT_PAD - 8.0, mid)
-		draw_polyline(PackedVector2Array([c + Vector2(-6.0, 0.5), c + Vector2(-2.0, 4.5), c + Vector2(6.5, -5.0)]), ThemeTokens.MOON_SILVER_BRIGHT, 2.6, true)
+		var stone := SkinArt.stone("aktiv")
+		if stone != null:
+			var side := Vector2(stone.get_size() * STONE_SIZE / stone.get_size().y)
+			draw_texture_rect(stone, Rect2(centre - side * 0.5, side), false)
 	elif duplicate:
-		var c2 := Vector2(size.x - TEXT_PAD - 8.0, mid)
-		draw_arc(c2, 9.0, 0.0, TAU, 18, ThemeTokens.MOON_SILVER, 1.8, true)
-		draw_string(font, c2 + Vector2(-3.0, 5.5), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, ThemeTokens.FONT_CAPTION, ThemeTokens.MOON_SILVER_BRIGHT)
-	if has_focus():
-		draw_style_box(_focus_box(), plate_rect.grow(4.0))
-
-
-static func _focus_box() -> StyleBoxFlat:
-	var box := StyleBoxFlat.new()
-	box.draw_center = false
-	box.border_color = ThemeTokens.MOON_GLOW
-	box.set_border_width_all(ThemeTokens.FOCUS_WIDTH)
-	box.set_corner_radius_all(ThemeTokens.RADIUS_M)
-	return box
+		draw_arc(centre, 10.0, 0.0, TAU, 18, ThemeTokens.MOON_SILVER, 1.8, true)
+		draw_string(font, centre + Vector2(-3.0, 6.0), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, ThemeTokens.FONT_CAPTION, ThemeTokens.MOON_SILVER_BRIGHT)
 
 
 func _notification(what: int) -> void:

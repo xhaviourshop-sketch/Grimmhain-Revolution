@@ -27,6 +27,11 @@ func activate_next() -> void:
 	pass
 
 
+## Bedienelemente, die der Host in seiner Kopfzeile neben dem Titel zeigt (nur solange dieser Schritt angezeigt wird); null = keine.
+func header_extra() -> Control:
+	return null
+
+
 ## Control, das beim Anzeigen den Tastaturfokus erhält.
 func default_focus() -> Control:
 	return null

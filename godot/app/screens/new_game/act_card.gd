@@ -131,7 +131,7 @@ func _draw() -> void:
 		else:
 			draw_arc(centre, 5.0, 0.0, TAU, 16, ThemeTokens.MOON_SILVER_DIM, 1.5, true)
 	if selected:
-		var c := Vector2(inset + 12.0, size.y - inset - 14.0)
+		var c := Vector2(size.x - inset - 12.0, size.y - inset - 14.0)  # Ecke unten rechts, nie auf dem Text
 		draw_circle(c, 11.0, ThemeTokens.NUMBER_BG)
 		draw_arc(c, 11.0, 0.0, TAU, 20, ThemeTokens.BLOOD_RED, 2.0, true)
 		draw_polyline(PackedVector2Array([c + Vector2(-5.0, 0.5), c + Vector2(-1.5, 4.0), c + Vector2(5.5, -4.0)]), ThemeTokens.MOON_SILVER_BRIGHT, 2.4, true)
