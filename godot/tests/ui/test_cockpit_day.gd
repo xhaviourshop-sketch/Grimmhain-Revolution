@@ -118,7 +118,6 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	await _press(shell, "ExecuteButton")
 	assert_true(_seat(shell, 2).disabled, "nicht Nominierte nicht wählbar")
 	await press(_seat(shell, 1))
-	await _press(shell, "ConfirmExecutionTargetButton")
 	assert_true(find_node(current_screen(shell), "RevealButton") == null, "Prüfkarte ohne Verdecken (Fenster-Diät)")
 	assert_true(_texts(shell).contains("Keine Besonderheit: 1 · Anna stirbt"), "Vorschau des Regelkerns")
 	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
@@ -147,9 +146,7 @@ func test_mirror_wolf_preview_names_real_victim() -> void:
 	await _quiet_night(shell)
 	session_of(shell).call("nominate", 4, 1)
 	await frames(2)
-	await _press(shell, "ExecuteButton")
-	await press(_seat(shell, 1))
-	await _press(shell, "ConfirmExecutionTargetButton")
+	await press(_seat(shell, 1))  # zwei Tipps: Person antippen, dann „Hinrichten“
 	assert_true(_texts(shell).contains("Stattdessen stirbt 4 · Dirk"), "Spiegelung in der Vorschau")
 	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
 	assert_true(_seat(shell, 1).get("alive") and not _seat(shell, 4).get("alive"), "Dirk statt des Spiegelwolfs")
@@ -164,7 +161,6 @@ func test_sage_curse_length_is_required() -> void:
 	await frames(2)
 	await _press(shell, "ExecuteButton")
 	await press(_seat(shell, 2))
-	await _press(shell, "ConfirmExecutionTargetButton")
 	assert_true(find_button(current_screen(shell), "ConfirmExecutionButton").disabled, "ohne Fluchdauer nicht bestätigbar")
 	await _press(shell, "SageCurse2")
 	assert_false(find_button(current_screen(shell), "ConfirmExecutionButton").disabled, "mit Fluchdauer")
@@ -259,7 +255,6 @@ func test_undo_drops_open_execution_check() -> void:
 	await frames(2)
 	await _press(shell, "ExecuteButton")
 	await press(_seat(shell, 1))
-	await _press(shell, "ConfirmExecutionTargetButton")
 	assert_true(find_button(current_screen(shell), "ConfirmExecutionButton").is_visible_in_tree(), "Prüfkarte offen")
 	await _press(shell, "GmButton")
 	await _press(shell, "UndoButton")

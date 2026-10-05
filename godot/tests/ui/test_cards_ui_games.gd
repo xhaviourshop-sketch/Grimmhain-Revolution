@@ -115,8 +115,6 @@ func _execution_flow(shell: Control) -> bool:
 
 
 func _play_day(shell: Control, next: Dictionary) -> bool:
-	if await _tap(shell, "ConfirmExecutionTargetButton"):
-		return true
 	if bool(next.get("execution_cancelled", false)):
 		return await _tap(shell, "NoExecutionButton")
 	if (next["nominations"] as Array).is_empty():
@@ -131,9 +129,7 @@ func _play_day(shell: Control, next: Dictionary) -> bool:
 	if not await _tap(shell, "ExecuteButton"):
 		return await _tap(shell, "NoExecutionButton")
 	await _tap_seats(shell, 1)
-	if await _tap(shell, "ConfirmExecutionTargetButton"):
-		return true
-	return false
+	return true
 
 
 func _act(shell: Control) -> bool:

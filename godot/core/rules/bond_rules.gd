@@ -23,6 +23,19 @@ static func living_partners(s: GameState, id: int) -> Array[int]:
 	return out
 
 
+## Rivalen (DA-96): Eine Person mit lebendem Rivalen kann nicht gewinnen. Stirbt einer, endet das Paar (on_death) und die Sperre fällt.
+static func has_living_rival(s: GameState, id: int) -> bool:
+	if not s.players.has(id) or not s.players[id].alive:
+		return false
+	for pair: Dictionary in s.loki_pairs:
+		if bool(pair["ended"]) or pair["kind"] != "rival":
+			continue
+		var other := int(pair["b"]) if int(pair["a"]) == id else (int(pair["a"]) if int(pair["b"]) == id else -1)
+		if other != -1 and s.players[other].alive:
+			return true
+	return false
+
+
 ## Verknüpfte Person, die statt `target_id` stirbt, oder −1; verbraucht die Verknüpfung.
 static func shadow_partner(s: GameState, target_id: int, source_kind: StringName, chain: Array[int] = []) -> int:
 	if source_kind == KillEvent.SOURCE_GM:

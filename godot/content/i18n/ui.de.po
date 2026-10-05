@@ -2268,7 +2268,7 @@ msgid "ui.cockpit.card.day.execute.heading"
 msgstr "Hinrichtung"
 
 msgid "ui.cockpit.card.day.execute.do"
-msgstr "Tippe die Person an, die nach eurer Abstimmung hingerichtet wird. Wählbar sind nur heute Nominierte."
+msgstr "Tippe die Person an, die nach eurer Abstimmung hingerichtet wird. Wählbar sind nur heute Nominierte. Du kannst auch gleich eine nominierte Person im Sitzkreis antippen."
 
 msgid "ui.cockpit.card.day.name_wolf.heading"
 msgstr "Nekromant benennt einen Wolf"
@@ -2277,7 +2277,7 @@ msgid "ui.cockpit.card.day.name_wolf.do"
 msgstr "Tippe die Person an, die der Nekromant geheim als Wolf benennt."
 
 msgid "ui.cockpit.card.day.check.heading"
-msgstr "Hinrichtung prüfen: {name}"
+msgstr "Hinrichtung: {name}"
 
 msgid "ui.cockpit.card.day.check.redirected"
 msgstr "Achtung: Die Hinrichtung wird gespiegelt. Stattdessen stirbt {name}."
@@ -2309,11 +2309,8 @@ msgstr "Niemand"
 msgid "ui.cockpit.action.confirm_nomination"
 msgstr "Nominierung bestätigen"
 
-msgid "ui.cockpit.action.check_execution"
-msgstr "Weiter zur Prüfung"
-
 msgid "ui.cockpit.action.confirm_execution"
-msgstr "Hinrichtung bestätigen"
+msgstr "Hinrichten"
 
 msgid "ui.cockpit.action.cerberus.yes"
 msgstr "Wehrt ab"
@@ -4088,13 +4085,13 @@ msgid "ui.role.loki.lex.targets"
 msgstr "Zwei verschiedene lebende Personen, Loki selbst ist erlaubt."
 
 msgid "ui.role.loki.lex.exceptions"
-msgstr "Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache). Der Schutz gegen den Rudelangriff hilft dagegen nicht, persönliche Schilde schon. Rivalen haben keine eigene Wirkung, sie zählen nur für die Schwarze Witwe. Liebeskummer wirkt auch im Fluch des Weisen. Eine einmal durch Tod beendete Bindung bleibt nach einer Wiederbelebung beendet."
+msgstr "Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache). Der Schutz gegen den Rudelangriff hilft dagegen nicht, persönliche Schilde schon. Rivalen können nicht gewinnen, solange der andere Rivale lebt; die Siegprüfung zählt sie dann nicht als Gewinner. Stirbt einer, gilt für den anderen wieder sein Team. Außerdem zählen sie für die Schwarze Witwe. Liebeskummer wirkt auch im Fluch des Weisen. Eine einmal durch Tod beendete Bindung bleibt nach einer Wiederbelebung beendet."
 
 msgid "ui.role.loki.lex.win"
 msgstr "Mit dem Dorf."
 
 msgid "ui.role.loki.lex.example"
-msgstr "Loki verbindet Anna und Ben als Liebende. An Tag 2 wird Anna hingerichtet. Ben stirbt sofort an Liebeskummer.\nLoki verbindet Clara und David als Rivalen. Stirbt Clara, geschieht mit David nichts."
+msgstr "Loki verbindet Anna und Ben als Liebende. An Tag 2 wird Anna hingerichtet. Ben stirbt sofort an Liebeskummer.\nLoki verbindet Clara und David als Rivalen. Clara und David leben, das Dorf siegt: Beide stehen nicht unter den Gewinnern. Stirbt Clara, gewinnt David wieder mit dem Dorf."
 
 msgid "ui.role.loki.lex.gm"
 msgstr "Einen echten Schritt hat Loki nur in Nacht 1. In späteren Nächten wird Loki weiter aufgerufen, aber nur angesagt, damit der Tisch nichts erfährt; die App zeigt diese Ansage. Liebende und Rivalen erfahren privat ihren Partner und die Art der Bindung. Der Tod durch Liebeskummer ist ein Todeseffekt und wird öffentlich angesagt. Die Ansage nennt Loki als Rolle, von der die Bindung stammt, nie die Rolle der sterbenden Person."
@@ -5636,10 +5633,10 @@ msgid "ui.rulebook.c08.title"
 msgstr "Hinrichtung und Todesreaktionen"
 
 msgid "ui.rulebook.c08.b01"
-msgstr "Nach der Abstimmung am Tisch tippst du „Hinrichtung …“, dann die Person, die hingerichtet wird, und „Weiter zur Prüfung“. Wählbar sind nur Personen, die heute nominiert wurden. Eine Hinrichtung ohne Nominierung ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
+msgstr "Nach der Abstimmung am Tisch tippst du die nominierte Person im Sitzkreis an, die hingerichtet wird, und dann „Hinrichten“. (Auch „Hinrichtung …“ führt zur Personenwahl.) Wählbar sind nur Personen, die heute nominiert wurden. Eine Hinrichtung ohne Nominierung ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
 
 msgid "ui.rulebook.c08.b02"
-msgstr "Es folgt immer eine Prüfkarte, bei jeder Hinrichtung, damit ihr Auftauchen nichts über bestimmte Rollen verrät. Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichtung bestätigen“; die Hinrichtung gilt sofort."
+msgstr "Nach dem Antippen erscheint sofort eine Karte, bei jeder Hinrichtung gleich aufgebaut, damit ihr Auftauchen nichts über bestimmte Rollen verrät. Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichten“; die Hinrichtung gilt sofort, ihr Ergebnis (wer stirbt, was ausgelöst wird) steht danach in der Tageskarte. Mit „Rückgängig“ nimmst du sie kurz zurück."
 
 msgid "ui.rulebook.c08.b03"
 msgstr "Soll niemand hingerichtet werden, tippst du „Niemand“. Erst nach dieser Entscheidung, und wenn kein Schritt und keine Reaktion mehr offen ist, ist „Tag beenden“ möglich."
@@ -5842,7 +5839,7 @@ msgid "ui.role.das_orakel.lex.act"
 msgstr "Aufruf: (jede Nacht, nach allen Waldhexenschritten) Die App kündigt die Rolle „Das Orakel“ in der Nachtreihenfolge an. Lies vor: „Orakel, erwache. Zeige auf die Person, deren Wesen du schauen willst.“\nAuswählen oder ablesen: Tippe die Person an, auf die das Orakel zeigt, und bestätige.\nVorlesen oder zeigen: Zeige dem Orakel das Ergebnis, zum Beispiel über „Karte zeigen“. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.der_weise.lex.act"
-msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Die Rolle wirkt passiv. Wird der Weise hingerichtet, fragt die verdeckte Prüfkarte nach der Fluchdauer: „Wie viele Tage (0 bis 3)?“ Frage die Person und tippe die Zahl.\nVorlesen oder zeigen: Der Fluch wird als sichtbare Todesfolge öffentlich angesagt (Regelbuch, Kapitel 6).\nBeenden: Tippe „Hinrichtung bestätigen“ auf der Prüfkarte."
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Die Rolle wirkt passiv. Wird der Weise hingerichtet, fragt die Karte der Hinrichtung nach der Fluchdauer: „Wie viele Tage (0 bis 3)?“ Frage die Person und tippe die Zahl.\nVorlesen oder zeigen: Der Fluch wird als sichtbare Todesfolge öffentlich angesagt (Regelbuch, Kapitel 6).\nBeenden: Tippe „Hinrichtung bestätigen“ auf der Prüfkarte."
 
 msgid "ui.role.detektiv.lex.act"
 msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Nach dem Tod einer Person, die als Wolf zählt, erscheint im Morgenbericht oder am Tag ein öffentlicher Hinweis mit der Richtung zum nächsten Wolf, nie mit einer Rolle. Lies ihn mit vor.\nBeenden: Es gibt nichts zu beenden."

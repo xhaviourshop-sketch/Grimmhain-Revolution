@@ -100,6 +100,8 @@ static func evaluate(state: GameState) -> Array:
 	for id: int in alive:
 		if manipulator_wins(state, id):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_MANIPULATOR), "reason_args": {"living": alive.size()}, "beneficiary_ids": [id]})
+	# DA-96: Rivalen können nicht gewinnen, solange der andere Rivale lebt; ihr Einzelsieg wird nicht erkannt.
+	results = results.filter(func(r: Dictionary) -> bool: return r["kind"] != String(Faction.SOLO) or not BondRules.has_living_rival(state, int(r["beneficiary_ids"][0])))
 	for result: Dictionary in results:
 		if result["kind"] == String(Faction.SOLO):
 			(result["beneficiary_ids"] as Array).append_array(eternal_co_winners(state, int(result["beneficiary_ids"][0])))
@@ -108,6 +110,15 @@ static func evaluate(state: GameState) -> Array:
 		for result: Dictionary in results:
 			result["co_winner_ids"] = devils.duplicate()
 	return results
+
+
+## Personen, die mit dem Kandidaten gewinnen (Begünstigte, Mitglieder der siegenden Seite), aufsteigend nach Personen-ID.
+## Eine Person mit lebendem Rivalen zählt nie dazu (DA-96).
+static func winner_ids(state: GameState, chosen: WinCandidate) -> Array[int]:
+	var ids: Array[int] = []
+	ids.assign(state.players.keys())
+	ids.sort()
+	return ids.filter(func(id: int) -> bool: return CardFxSolo.person_wins(state, chosen, id))
 
 
 ## Mitsieger eines Einzelsiegs von `beneficiary`: alle Ewigen, wenn sie ihn mit Ja geprüft haben.

@@ -119,12 +119,17 @@ func test_no_hardcoded_styles_outside_theme() -> void:
 
 
 func test_no_unlicensed_fonts_embedded() -> void:
-	# Schriftentscheidung offen: keine Schriftdatei im Godot-Projekt, Engine-Standardschrift.
-	for ext: String in [".ttf", ".otf", ".woff", ".woff2"]:
+	# Nur die freigegebene gotische Titelschrift (DA-97) darf im Projekt liegen, und nur das Titel-Label nutzt sie.
+	for ext: String in [".otf", ".woff", ".woff2"]:
 		assert_eq(files_in("res://", ext).size(), 0, "keine %s-Datei im Godot-Projekt" % ext)
+	var fonts: Array = files_in("res://", ".ttf")
+	assert_eq(fonts.size(), 1, "genau eine Schriftdatei")
+	assert_true(fonts.size() == 1 and str(fonts[0]).ends_with("GrenzeGotisch-Variable.ttf"), "es ist Grenze Gotisch")
 	var shell := await spawn_shell()
 	if shell != null:
 		assert_true(shell.theme.default_font == null, "keine eigene Schrift im Theme")
+		assert_true(shell.theme.has_font("font", &"GothicTitleLabel"), "Titel-Label trägt die gotische Schrift")
+		assert_false(shell.theme.has_font("font", &"ReadAloudLabel") or shell.theme.has_font("font", &"PrimaryButton"), "kein Fließtext und kein Knopf in der gotischen Schrift")
 
 
 func test_reduced_motion_disables_transitions() -> void:

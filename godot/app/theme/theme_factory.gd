@@ -77,7 +77,7 @@ static func _labels(theme: Theme) -> void:
 		theme.set_type_variation(name, &"Label")
 		theme.set_font_size("font_size", name, variations[name][0])
 		theme.set_color("font_color", name, variations[name][1])
-	# Gotischer Titel (Marke: große Titel gotisch-geschmiedet, Mondsilber); ohne Schriftdatei bleibt es die Grundschrift.
+	# Gotischer Titel (Marke: große Titel gotisch-geschmiedet, Mondsilber); fehlt die Schriftdatei, bleibt es die Grundschrift.
 	theme.set_type_variation(&"GothicTitleLabel", &"Label")
 	theme.set_font_size("font_size", &"GothicTitleLabel", ThemeTokens.FONT_GOTHIC)
 	theme.set_color("font_color", &"GothicTitleLabel", ThemeTokens.MOON_SILVER_BRIGHT)

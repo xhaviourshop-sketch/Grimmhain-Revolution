@@ -678,7 +678,9 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 			_day_nominate(context)
 			return
 		"execute":
-			_day_pick(context, "ui.cockpit.card.day.execute.heading", "ui.cockpit.card.day.execute.do", "ConfirmExecutionTargetButton", "ui.cockpit.action.check_execution", &"check_execution")
+			_heading("ui.cockpit.card.day.execute.heading")
+			_text("ui.cockpit.card.day.execute.do", {}, &"MutedLabel")
+			_actions([_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
 			return
 		"name_wolf":
 			_day_pick(context, "ui.cockpit.card.day.name_wolf.heading", "ui.cockpit.card.day.name_wolf.do", "ConfirmNameWolfButton", "ui.cockpit.action.confirm_name_wolf", &"confirm_name_wolf")
@@ -726,7 +728,8 @@ func _day_public(next: Dictionary, context: Dictionary) -> void:
 				_text("ui.cockpit.card.day.nomination_hidden", {"nominee": nominee}, &"SectionLabel")
 			else:
 				_text("ui.cockpit.card.day.nomination", {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}, &"SectionLabel")
-		_text("ui.cockpit.card.day.defend", {}, &"ReadAloudLabel").name = "DefendLine"
+		if str(next.get("kind")) == "day":  # nach der Entscheidung nicht mehr
+			_text("ui.cockpit.card.day.defend", {}, &"ReadAloudLabel").name = "DefendLine"
 	var deaths: Array = context.get("day_deaths", [])
 	var effects: Array = context.get("day_effects", [])
 	if not deaths.is_empty() or not effects.is_empty():
@@ -773,7 +776,8 @@ func _day_pick(context: Dictionary, heading: String, instruction: String, confir
 	_actions([confirm, _button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
 
 
-## Prüfung jeder Hinrichtung: Vorschau des Regelkerns und seine Pflichtfragen (seit der Fenster-Diät nicht mehr verdeckt).
+## Karte jeder Hinrichtung (DA-98): erscheint sofort nach dem Antippen der Person, immer gleich aufgebaut. Sie zeigt die Vorschau des
+## Regelkerns samt Pflichtfragen; „Hinrichten“ vollzieht, das Ergebnis steht danach in der Tageskarte.
 func _execution_check(context: Dictionary) -> void:
 	var seats: Array = context.get("seats", [])
 	var preview: Dictionary = context.get("preview", {})
@@ -937,7 +941,8 @@ func _game_over(next: Dictionary) -> void:
 		title.name = "VictoryTitle"
 		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_text(_reason_key(str(winner["reason_key"])), {}, &"SectionLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		var names: Array = winner.get("beneficiaries", [])
+		var team := str(winner["kind"]) == "village" or str(winner["kind"]) == "wolves"
+		var names: Array = winner.get("winners", []) if team else winner.get("beneficiaries", [])
 		if not names.is_empty():
 			_text("ui.cockpit.victory.winners", {"names": ", ".join(names)}, &"ReadAloudLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var buttons: Array[Control] = [_button("OpenReportButton", "ui.cockpit.action.open_report", GrimmButton.Kind.PRIMARY, &"open_report")]
@@ -983,6 +988,7 @@ func _heading(key: String, values: Dictionary = {}) -> GrimmLabel:
 		var box := MarginContainer.new()
 		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		box.add_theme_constant_override(&"margin_right", ThemeTokens.TOUCH_MIN + 12)
+		box.custom_minimum_size.y = ThemeTokens.TOUCH_MIN + 12  # auch bei kurzem Titel beginnt der Text unterhalb des „i“-Knopfs
 		_content.add_child(box)
 		_content.move_child(box, label.get_index())
 		_content.remove_child(label)

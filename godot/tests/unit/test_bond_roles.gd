@@ -182,6 +182,19 @@ func test_heartbreak_and_rivals() -> void:
 	assert_eq(_died(k.events, 6) if k != null else "x", "", "Rivalen sterben nicht mit")
 
 
+func test_rivals_do_not_win_while_the_other_lives() -> void:
+	# DA-96: lebende Rivalen stehen nicht unter den Gewinnern ihres Teams; stirbt einer, gewinnt der andere wieder mit dem Team.
+	var s := _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
+	var r := _dawn(s, -1, {"loki:2@targets": [3, 4], "loki:2@mode": false})
+	if r == null:
+		return
+	var village := WinCandidate.new()
+	village.kind = Faction.VILLAGE
+	assert_eq(WinRules.winner_ids(r.state, village), [2, 5, 6, 7, 8] as Array[int], "Rivalen 3 und 4 nicht unter den Gewinnern")
+	var k := apply_ok(r.state, _gm("kill", {"target_id": 3, "trigger_effects": true}), "Rivale 3 stirbt")
+	assert_eq(WinRules.winner_ids(k.state, village), [2, 3, 4, 5, 6, 7, 8] as Array[int], "Rivale 4 gewinnt wieder mit dem Dorf")
+
+
 func test_heartbreak_during_sage_curse() -> void:
 	# B-08: Liebeskummer wirkt auch im Fluch des Weisen.
 	var s := _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])

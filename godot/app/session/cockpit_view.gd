@@ -498,6 +498,7 @@ static func _candidate(s: GameState, c: WinCandidate) -> Dictionary:
 		"reason_args": c.reason_args.duplicate(true),
 		"beneficiaries": names.call(c.beneficiary_ids),
 		"co_winners": names.call(c.co_winner_ids),
+		"winners": names.call(WinRules.winner_ids(s, c)),  # wer mit dem Kandidaten gewinnt; lebende Rivalen nie (DA-96)
 		"status": String(c.status),
 	}
 

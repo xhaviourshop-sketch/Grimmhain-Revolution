@@ -254,6 +254,8 @@ static func may_nominate_dead(s: GameState, person_id: int) -> bool:
 
 ## Person gewinnt mit dem bestätigten Kandidaten: Begünstigte oder Mitglieder der siegenden Seite (Dorf, Wölfe).
 static func person_wins(s: GameState, chosen: WinCandidate, person_id: int) -> bool:
+	if BondRules.has_living_rival(s, person_id):
+		return false  # Rivalen können nicht gewinnen, solange der andere Rivale lebt (DA-96)
 	if chosen.beneficiary_ids.has(person_id):
 		return true
 	if not s.players.has(person_id):
