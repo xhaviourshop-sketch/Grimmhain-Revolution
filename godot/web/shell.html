@@ -70,6 +70,47 @@ body {
 	display: none;
 }
 
+/* Ladebild (ladebild.webp, 3:2) als Hintergrund, per cover beschnitten; Siegel und Wortmarke darüber, die Mitte leicht abgedunkelt.
+   Fehlt das Bild, bleibt das Startbild von Godot (#status-splash) wie bisher. */
+#status.has-ladebild {
+	background-color: #060810;
+	background-image: radial-gradient(ellipse at center, rgba(6, 8, 16, 0.55) 0%, rgba(6, 8, 16, 0) 70%), url('ladebild.webp');
+	background-size: cover, cover;
+	background-position: center, center;
+	background-repeat: no-repeat;
+}
+
+#status.has-ladebild #status-splash {
+	display: none;
+}
+
+#status-brand {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	gap: 2.5vh;
+	margin-bottom: 8vh;
+	pointer-events: none;
+}
+
+#status.has-ladebild #status-brand {
+	display: flex;
+}
+
+#status-brand img {
+	display: block;
+	max-width: 80vw;
+	height: auto;
+}
+
+#status-brand .siegel {
+	width: min(24vh, 30vw);
+}
+
+#status-brand .wortmarke {
+	width: min(58vh, 70vw);
+}
+
 /* Schmaler Ladebalken in Mondsilber (Grimmhain) */
 #status-progress {
 	bottom: 11%;
@@ -125,18 +166,21 @@ body {
 		</noscript>
 
 		<div id="status">
+			<div id="status-brand">
+				<img class="siegel" src="siegel.webp" alt="" onerror="this.style.display='none'">
+				<img class="wortmarke" src="wortmarke.webp" alt="" onerror="this.style.display='none'">
+			</div>
 			<img id="status-splash" class="$GODOT_SPLASH_CLASSES" src="$GODOT_SPLASH" alt="">
 			<progress id="status-progress"></progress>
 			<div id="status-notice"></div>
 		</div>
 
 		<script>
-// Ladebild: liegt ladebild.png neben der Seite (godot/assets/ui/ladebild.png, kopiert vom Export), ersetzt es das Startbild; sonst bleibt alles wie bisher.
+// Ladebild: liegt ladebild.webp neben der Seite (godot/web/ladebild.webp, kopiert vom Export), wird es Hintergrund der Ladeseite; sonst bleibt alles wie bisher.
 (function () {
-	const splash = document.getElementById('status-splash');
 	const probe = new Image();
-	probe.onload = function () { splash.src = 'ladebild.png'; };
-	probe.src = 'ladebild.png';
+	probe.onload = function () { document.getElementById('status').classList.add('has-ladebild'); };
+	probe.src = 'ladebild.webp';
 })();
 		</script>
 		<script src="$GODOT_URL"></script>

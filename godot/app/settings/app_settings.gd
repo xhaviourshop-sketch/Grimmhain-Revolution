@@ -15,6 +15,8 @@ var left_handed: bool = false     ## Bedienseite: true = Ansagekarte und Werkzeu
 var show_night_timer: bool = true  ## Anzeige-Timer auch in der Nacht zeigen (DECISIONS.md, Ergänzung zur Timer-Entscheidung); nur Anzeige
 var show_calls: bool = false  ## „Ansagen anzeigen“ (DA-101): Vorlesesatz klein auf der Nachtkarte; Standard aus, der Spielleiter spricht frei
 
+var music_enabled: bool = true  ## „Musik“: Hintergrundmusik der Bildschirme; Standard an, auch für alte Stände ohne das Feld
+
 
 ## Setzt die Sprache. Nur unterstützte Sprachen; liefert false bei Ablehnung.
 func set_language(code: String) -> bool:
@@ -52,6 +54,13 @@ func set_show_calls(value: bool) -> void:
 		return
 	show_calls = value
 	changed.emit(&"show_calls")
+
+
+func set_music_enabled(value: bool) -> void:
+	if music_enabled == value:
+		return
+	music_enabled = value
+	changed.emit(&"music_enabled")
 
 
 ## Wendet die aktuelle Sprache an (App-Start).

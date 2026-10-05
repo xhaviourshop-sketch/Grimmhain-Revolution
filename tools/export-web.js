@@ -55,8 +55,10 @@ if (!sw.includes(a) || !sw.includes(b)) { console.error("service worker template
 sw = sw.replace(a, "self.skipWaiting();\n\t" + a).replace(b, b + "\n\tevent.waitUntil(self.clients.claim());");
 fs.writeFileSync(swPath, sw);
 fs.copyFileSync(path.join(project, "web", "vercel.json"), path.join(out, "vercel.json"));
-// Optional loading screen background: godot/assets/ui/ladebild.png is shown by web/shell.html while the game loads (no file, no change).
-const loadingImage = path.join(project, "assets", "ui", "ladebild.png");
+// Loading page: web/shell.html shows godot/web/ladebild.webp as background with the brand seal and wordmark on top (not packed into the pck, see exclude_filter "web/*").
+for (const [src, name] of [["web/ladebild.webp", "ladebild.webp"], ["assets/brand/siegel.webp", "siegel.webp"], ["assets/brand/wortmarke.webp", "wortmarke.webp"]]) {
+  fs.rmSync(path.join(out, name), { force: true });
+  if (fs.existsSync(path.join(project, src))) fs.copyFileSync(path.join(project, src), path.join(out, name));
+}
 fs.rmSync(path.join(out, "ladebild.png"), { force: true });
-if (fs.existsSync(loadingImage)) fs.copyFileSync(loadingImage, path.join(out, "ladebild.png"));
 console.log(`export ok: ${id}  pck ${fs.statSync(path.join(out, "index.pck")).size} bytes`);

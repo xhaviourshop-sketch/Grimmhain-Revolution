@@ -83,9 +83,6 @@ msgstr "Bewegung"
 msgid "ui.settings.motion.reduce"
 msgstr "Bewegung reduzieren"
 
-msgid "ui.settings.motion.hint"
-msgstr "Schaltet Bildschirmübergänge und Einblendungen ab."
-
 msgid "ui.settings.hand.heading"
 msgstr "Bedienhand"
 
@@ -104,14 +101,11 @@ msgstr "Aktiv: Linkshändig"
 msgid "ui.settings.audio.heading"
 msgstr "Audio"
 
-msgid "ui.settings.audio.placeholder"
-msgstr "Lautstärke und Klänge folgen in einem späteren Arbeitspaket."
+msgid "ui.settings.audio.music"
+msgstr "Musik"
 
 msgid "ui.settings.display.heading"
 msgstr "Anzeige"
-
-msgid "ui.settings.display.placeholder"
-msgstr "Schriftgröße und Dunkelraummodus folgen später."
 
 msgid "ui.settings.toast.language"
 msgstr "Sprache geändert"
@@ -124,6 +118,12 @@ msgstr "Rechtshändig aktiv"
 
 msgid "ui.settings.toast.hand_left"
 msgstr "Linkshändig aktiv"
+
+msgid "ui.settings.toast.music_on"
+msgstr "Musik an"
+
+msgid "ui.settings.toast.music_off"
+msgstr "Musik aus"
 
 msgid "ui.settings.toast.motion_off"
 msgstr "Übergänge aktiv"
