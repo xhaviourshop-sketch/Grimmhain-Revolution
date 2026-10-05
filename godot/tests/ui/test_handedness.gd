@@ -79,20 +79,12 @@ func test_settings_controls_switch_both_modes_immediately() -> void:
 	var settings := settings_of(shell)
 	assert_false(bool(settings.get("left_handed")), "Standard rechtshändig")
 	assert_eq(_hand_state(shell), [true, false], "Rechtshändig als aktuelle Auswahl erkennbar")
-	var status := find_node(_screen(shell), "HandStatusLabel") as Control
-	assert_eq(key_of(status), "ui.settings.hand.active_right", "Statuszeile nennt die aktive Bedienhand")
-	assert_eq(text_of(status), "Aktiv: Rechtshändig", "Statuszeile DE")
 	await press(find_button(_screen(shell), "HandLeftButton"))
 	assert_true(bool(settings.get("left_handed")), "Linkshändig sofort gesetzt")
 	assert_eq(_hand_state(shell), [false, true], "genau ein Button gewählt")
-	assert_eq(text_of(status), "Aktiv: Linkshändig", "Statuszeile folgt sofort")
 	await press(find_button(_screen(shell), "HandRightButton"))
 	assert_false(bool(settings.get("left_handed")), "Rechtshändig sofort zurück")
 	assert_eq(_hand_state(shell), [true, false], "Auswahl folgt")
-	settings.call("set_language", "en")
-	await frames(2)
-	assert_eq(text_of(status), "Active: right-handed", "Statuszeile EN")
-	settings.call("set_language", "de")
 
 
 func test_choice_survives_restart_and_uses_only_the_temp_file() -> void:

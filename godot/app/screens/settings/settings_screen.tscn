@@ -79,13 +79,6 @@ button_group = SubResource("ButtonGroup_language")
 script = ExtResource("2_button")
 text_key = "ui.settings.language.english"
 
-[node name="LanguageStatusLabel" type="Label" parent="Layout/Columns/Primary/LanguageCard/Column"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"MutedLabel"
-script = ExtResource("3_label")
-text_key = "ui.settings.language.active"
-
 [node name="MotionCard" type="PanelContainer" parent="Layout/Columns/Primary"]
 layout_mode = 2
 theme_type_variation = &"CardPanel"
@@ -177,10 +170,3 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_hand")
 script = ExtResource("2_button")
 text_key = "ui.settings.hand.left"
-
-[node name="HandStatusLabel" type="Label" parent="Layout/Columns/Secondary/HandCard/Column"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"MutedLabel"
-script = ExtResource("3_label")
-text_key = "ui.settings.hand.active_right"

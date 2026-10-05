@@ -108,12 +108,11 @@ func test_language_switch_updates_visible_texts() -> void:
 	assert_eq(button.text, "New game", "sofort Englisch ohne Neuladen der Ansicht")
 	await navigate(shell, &"settings")
 	var screen := current_screen(shell)
-	var status := find_node(screen, "LanguageStatusLabel") as Label
-	assert_true(status != null and status.text == "Active language: English", "Statuszeile Englisch")
+	assert_true(find_button(screen, "LanguageEnglishButton").button_pressed, "gewählter Knopf zeigt Englisch")
 	await press(find_button(screen, "LanguageGermanButton"))
 	assert_eq(TranslationServer.get_locale(), "de", "Umschalten über die Einstellungen")
 	assert_eq(str(settings_of(shell).get("language")), "de", "Einstellung gespeichert (nur im Speicher)")
-	assert_true(status != null and status.text == "Aktive Sprache: Deutsch", "Statuszeile Deutsch")
+	assert_true(find_button(screen, "LanguageGermanButton").button_pressed, "gewählter Knopf zeigt Deutsch")
 	var back := find_node(screen, "BackButton") as Button
 	assert_true(back != null and back.text == "Zurück", "Kopfzeile Deutsch")
 	await press(find_button(screen, "LanguageEnglishButton"))

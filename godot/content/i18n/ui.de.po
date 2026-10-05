@@ -74,9 +74,6 @@ msgstr "Deutsch"
 msgid "ui.settings.language.english"
 msgstr "English"
 
-msgid "ui.settings.language.active"
-msgstr "Aktive Sprache: Deutsch"
-
 msgid "ui.settings.motion.heading"
 msgstr "Bewegung"
 
@@ -91,12 +88,6 @@ msgstr "Rechtshändig"
 
 msgid "ui.settings.hand.left"
 msgstr "Linkshändig"
-
-msgid "ui.settings.hand.active_right"
-msgstr "Aktiv: Rechtshändig"
-
-msgid "ui.settings.hand.active_left"
-msgstr "Aktiv: Linkshändig"
 
 msgid "ui.settings.audio.heading"
 msgstr "Audio"
