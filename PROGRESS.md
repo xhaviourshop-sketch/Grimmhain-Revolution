@@ -5,7 +5,7 @@ nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
 ## 2026-10-06: Feedback-Runde 9 (Branch feat/feedback-9): in Arbeit
-Stand: Planer-Verteilplan mit 6 Teilen (A Assets, P Paketgröße, D Entscheidungen, X Texte und Listen, T Theme, C Cockpit-Rand, R Ring). D erledigt: DA-103 (Schalter ohne Wort, Teamfarben in Rollenlisten, kein „(N)“, Kartenbilder unverändert mit Ausnahme in MARKE.md), Commit e696f8b. A gemergt (f5588c8: 11 neue Hautteile als WebP, Register, SkinArt-Zugriffe; ui_theme/ui_layout 16 Tests grün, Register-Prüfung Exit 0). X, P, T, C laufen in Worktrees, R folgt nach X.
+Stand: Planer-Verteilplan mit 6 Teilen (A Assets, P Paketgröße, D Entscheidungen, X Texte und Listen, T Theme, C Cockpit-Rand, R Ring). D erledigt: DA-103 (Schalter ohne Wort, Teamfarben in Rollenlisten, kein „(N)“, Kartenbilder unverändert mit Ausnahme in MARKE.md), Commit e696f8b. A gemergt (f5588c8: 11 neue Hautteile als WebP, Register, SkinArt-Zugriffe; ui_theme/ui_layout 16 Tests grün, Register-Prüfung Exit 0). X gemergt (2822ded: kein „(N)“, „Für dich“ gekürzt, Zwischentitel nie allein am Seitenende, einheitliche Namensgröße in der Vorschau, Teamfarben in Rollenlisten; 172 gezielte Tests grün). P, T, C, R laufen in Worktrees.
 Verifikation bisher: Teil A gezielt grün (siehe oben); Vollsuite steht aus.
 Nächster Schritt: A und X mergen, dann P, T, C, R; Prüfer; Vollsuite mit Fuzz; Merge, Push, Deploy.
 
