@@ -198,6 +198,7 @@ func test_refuge_card_asks_the_person_and_hides_the_asker() -> void:
 	assert_true(text.contains("4 · D"), "nennt die gefragte Person: %s" % text)
 	assert_true(text.contains("Apfel") and text.contains("Todeskette"), "ein Hilfesatz zu Apfel und Kette: %s" % text)
 	assert_false(text.contains("ui.role") and text.contains("erwache"), "keine Ansagezeile mit leerer Rolle: %s" % text)
+	assert_false((find_node(current_screen(shell), "OrderBar") as Control).visible, "S-04: keine Nachtleiste bei der anonymen Frage")
 	var ring := find_node(current_screen(shell), "SeatRing")
 	assert_eq(String(ring.call("token_for", 4).get("state")), "actor", "die gefragte Person ist am Sitzkreis markiert")
 	var screen := current_screen(shell)

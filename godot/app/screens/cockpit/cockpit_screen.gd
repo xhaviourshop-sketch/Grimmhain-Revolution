@@ -247,7 +247,8 @@ func _update_order(active: bool) -> void:
 	var in_night := active and str(_view.get("phase", "")) == "NIGHT"
 	var order: Array = context.session.night_order() if in_night else []
 	_order_bar.show_order(order, _bar_is_full(), _bar_collapsible())
-	_order_bar.visible = in_night and not _hidden and not order.is_empty()
+	var anonymous := bool(_effective(_view.get("next", {})).get("anonymous_asker", false))  # S-04 (DA-93): die Leiste verriete die Rolle der Fragenden
+	_order_bar.visible = in_night and not _hidden and not order.is_empty() and not anonymous
 
 
 func _bar_collapsible() -> bool:
