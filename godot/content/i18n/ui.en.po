@@ -1527,10 +1527,10 @@ msgid "ui.cockpit.private.warning"
 msgstr "Note: This area shows all roles. Close it before anyone can read along."
 
 msgid "ui.cockpit.private.row"
-msgstr "{seat} · {name}: {role} ({faction})"
+msgstr "{name}: {role} ({faction})"
 
 msgid "ui.cockpit.private.row_dead"
-msgstr "{seat} · † {name}: {role} ({faction})"
+msgstr "† {name}: {role} ({faction})"
 
 msgid "ui.cockpit.private.original_role"
 msgstr "Original role: {role}"
@@ -1547,17 +1547,14 @@ msgstr "Log · game master only"
 msgid "ui.cockpit.log.empty"
 msgstr "No entries yet."
 
-msgid "ui.log.event.generic"
-msgstr "#{index} {type} ({visibility})"
+msgid "ui.cockpit.log.prev"
+msgstr "Back"
 
-msgid "ui.log.visibility.gm"
-msgstr "game master"
+msgid "ui.cockpit.log.next"
+msgstr "Next"
 
-msgid "ui.log.visibility.public"
-msgstr "public"
-
-msgid "ui.log.visibility.actor"
-msgstr "acting person"
+msgid "ui.cockpit.log.page"
+msgstr "Page {page} of {total}"
 
 msgid "ui.log.when.night"
 msgstr "Night {n}"
@@ -2837,123 +2834,6 @@ msgstr "redirect"
 msgid "ui.gm.stage.barrier"
 msgstr "barrier"
 
-msgid "ui.log.event.seat_died"
-msgstr "#{index} Death ({visibility})"
-
-msgid "ui.log.event.kill_prevented"
-msgstr "#{index} Death prevented ({visibility})"
-
-msgid "ui.log.event.protection_set"
-msgstr "#{index} Protection set ({visibility})"
-
-msgid "ui.log.event.witch_acted"
-msgstr "#{index} Forest Witch decision ({visibility})"
-
-msgid "ui.log.event.info_recorded"
-msgstr "#{index} Information shown ({visibility})"
-
-msgid "ui.log.event.step_skipped"
-msgstr "#{index} Step skipped ({visibility})"
-
-msgid "ui.log.event.step_dropped"
-msgstr "#{index} Step dropped ({visibility})"
-
-msgid "ui.log.event.step_begun"
-msgstr "#{index} Step begun ({visibility})"
-
-msgid "ui.log.event.prompt_opened"
-msgstr "#{index} Input opened ({visibility})"
-
-msgid "ui.log.event.prompt_answered"
-msgstr "#{index} Input answered ({visibility})"
-
-msgid "ui.log.event.prompt_stage_answered"
-msgstr "#{index} Partial answer ({visibility})"
-
-msgid "ui.log.event.prompt_cancelled"
-msgstr "#{index} Step cancelled ({visibility})"
-
-msgid "ui.log.event.phase_changed"
-msgstr "#{index} Phase change ({visibility})"
-
-msgid "ui.log.event.game_started"
-msgstr "#{index} Game started ({visibility})"
-
-msgid "ui.log.event.role_assigned"
-msgstr "#{index} Role assigned ({visibility})"
-
-msgid "ui.log.event.nomination_recorded"
-msgstr "#{index} Nomination ({visibility})"
-
-msgid "ui.log.event.execution_confirmed"
-msgstr "#{index} Execution ({visibility})"
-
-msgid "ui.log.event.no_execution"
-msgstr "#{index} No execution ({visibility})"
-
-msgid "ui.log.event.day_ended"
-msgstr "#{index} Day ended ({visibility})"
-
-msgid "ui.log.event.reaction_queued"
-msgstr "#{index} Reaction queued ({visibility})"
-
-msgid "ui.log.event.reaction_resolved"
-msgstr "#{index} Reaction resolved ({visibility})"
-
-msgid "ui.log.event.gm_corrected"
-msgstr "#{index} Game master correction ({visibility})"
-
-msgid "ui.log.event.win_detected"
-msgstr "#{index} Win detected ({visibility})"
-
-msgid "ui.log.event.win_confirmed"
-msgstr "#{index} Win confirmed ({visibility})"
-
-msgid "ui.log.event.win_rejected"
-msgstr "#{index} Win rejected ({visibility})"
-
-msgid "ui.log.event.win_status_provisional"
-msgstr "#{index} Provisional win status ({visibility})"
-
-msgid "ui.log.event.win_status_final"
-msgstr "#{index} Final win check ({visibility})"
-
-msgid "ui.log.event.no_night_kill"
-msgstr "#{index} No pack attack ({visibility})"
-
-msgid "ui.log.event.kill_ignored"
-msgstr "#{index} Death without effect (already dead) ({visibility})"
-
-msgid "ui.log.event.role_changed"
-msgstr "#{index} Role change ({visibility})"
-
-msgid "ui.log.event.wolf_child_bound"
-msgstr "#{index} Wolf Child’s model ({visibility})"
-
-msgid "ui.log.event.wolf_child_transformed"
-msgstr "#{index} Wolf Child transformed ({visibility})"
-
-msgid "ui.log.event.apprentice_bound"
-msgstr "#{index} Apprentice’s master ({visibility})"
-
-msgid "ui.log.event.player_revived"
-msgstr "#{index} Revival ({visibility})"
-
-msgid "ui.log.event.info_overridden"
-msgstr "#{index} Shown result changed ({visibility})"
-
-msgid "ui.log.event.execution_redirected"
-msgstr "#{index} Execution mirrored ({visibility})"
-
-msgid "ui.log.event.amalia_answered"
-msgstr "#{index} Amalia’s question answered ({visibility})"
-
-msgid "ui.log.event.detective_hint"
-msgstr "#{index} Detective clue ({visibility})"
-
-msgid "ui.log.event.alarm_bells"
-msgstr "#{index} Night watchman’s bells ({visibility})"
-
 msgid "ui.cockpit.gm.start.status"
 msgstr "Change status …"
 
@@ -3059,59 +2939,23 @@ msgstr "Show roles"
 msgid "ui.cockpit.roles.heading"
 msgstr "Show roles"
 
-msgid "ui.cockpit.roles.hint"
-msgstr "The game master keeps the device and shows one person their card. Showing every role before the first night is not required."
-
 msgid "ui.cockpit.roles.progress"
-msgstr "{done} of {total} people have seen their role."
+msgstr "{done} of {total} seen"
 
 msgid "ui.cockpit.roles.person"
-msgstr "{seat} · {name}"
-
-msgid "ui.cockpit.roles.person_next"
-msgstr "{seat} · {name} (next)"
-
-msgid "ui.cockpit.roles.person_done"
-msgstr "{seat} · {name} (seen)"
+msgstr "{name}"
 
 msgid "ui.cockpit.roles.next_marker"
-msgstr "Continue with this person:"
+msgstr "Next up"
 
 msgid "ui.cockpit.roles.done"
 msgstr "Done"
-
-msgid "ui.cockpit.roles.front.heading"
-msgstr "Card for {seat} · {name}"
-
-msgid "ui.cockpit.roles.front.text"
-msgstr "Only {name} looks at the screen now. Then tap “Show role”."
-
-msgid "ui.cockpit.roles.reveal"
-msgstr "Show role"
-
-msgid "ui.cockpit.roles.cancel"
-msgstr "Cancel"
-
-msgid "ui.cockpit.roles.card.heading"
-msgstr "Your role, {name}"
-
-msgid "ui.cockpit.roles.role_value"
-msgstr "{role}"
-
-msgid "ui.cockpit.roles.confirm"
-msgstr "Done"
-
-msgid "ui.cockpit.roles.close_unconfirmed"
-msgstr "Close"
 
 msgid "ui.cockpit.roles.close"
 msgstr "Close"
 
 msgid "ui.gm.command.confirm_role_shown"
 msgstr "Role shown: {names}"
-
-msgid "ui.log.event.role_shown_confirmed"
-msgstr "#{index} Role shown ({visibility})"
 
 msgid "ui.cockpit.error.role_already_confirmed"
 msgstr "Error: This person has already seen their current role. Nothing was changed."
@@ -5543,13 +5387,13 @@ msgid "ui.rulebook.c03.b02"
 msgstr "1. The list shows only names and the “seen” state, never a role. The next open person is highlighted."
 
 msgid "ui.rulebook.c03.b03"
-msgstr "2. Tap a person. A neutral front side “Card for seat · name” appears."
+msgstr "2. Tap a person. The large picture of their role card appears, without text."
 
 msgid "ui.rulebook.c03.b04"
-msgstr "3. Only this person looks at the screen and taps “Show role”. They see their name, their role and a short text."
+msgstr "3. Only this person looks at the screen and reads their card."
 
 msgid "ui.rulebook.c03.b05"
-msgstr "4. “Done” records that the person knows their role and returns to the list. “Close” records nothing."
+msgstr "4. A tap on the card closes it, records that the person knows their role and returns to the list."
 
 msgid "ui.rulebook.c03.b06"
 msgstr "Showing roles is not mandatory: the first night can begin without any confirmation. Someone who has already confirmed can read their role again. A person whose role changes later counts as not yet seen again."
@@ -7768,72 +7612,6 @@ msgstr "Side: {value}"
 
 msgid "ui.card.public.value.extra_votes"
 msgstr "Additional votes: {value}"
-
-msgid "ui.log.event.card_drawn"
-msgstr "#{index} Card drawn ({visibility})"
-
-msgid "ui.log.event.card_pool_empty"
-msgstr "#{index} No matching card pool ({visibility})"
-
-msgid "ui.log.event.card_window_opened"
-msgstr "#{index} Card window opened ({visibility})"
-
-msgid "ui.log.event.card_window_closed"
-msgstr "#{index} Card window closed ({visibility})"
-
-msgid "ui.log.event.card_played"
-msgstr "#{index} Card played ({visibility})"
-
-msgid "ui.log.event.card_kept"
-msgstr "#{index} Card kept ({visibility})"
-
-msgid "ui.log.event.card_exchanged"
-msgstr "#{index} Card exchanged ({visibility})"
-
-msgid "ui.log.event.card_dice_rolled"
-msgstr "#{index} Dice rolled ({visibility})"
-
-msgid "ui.log.event.card_announced"
-msgstr "#{index} Card effect announced ({visibility})"
-
-msgid "ui.log.event.card_role_revealed"
-msgstr "#{index} Role revealed by card ({visibility})"
-
-msgid "ui.log.event.card_question"
-msgstr "#{index} Public question by card ({visibility})"
-
-msgid "ui.log.event.card_marker"
-msgstr "#{index} Suspicion marker ({visibility})"
-
-msgid "ui.log.event.card_excluded"
-msgstr "#{index} Excluded from the discussion ({visibility})"
-
-msgid "ui.log.event.card_table_report"
-msgstr "#{index} Day rule violation reported ({visibility})"
-
-msgid "ui.log.event.card_effect_note"
-msgstr "#{index} Effect note for the game master ({visibility})"
-
-msgid "ui.log.event.card_notice"
-msgstr "#{index} Private notice about a card ({visibility})"
-
-msgid "ui.log.event.card_revived"
-msgstr "#{index} Return by card ({visibility})"
-
-msgid "ui.log.event.card_stack_gained"
-msgstr "#{index} Card Swallower gains a stack ({visibility})"
-
-msgid "ui.log.event.card_swallower_acted"
-msgstr "#{index} Card Swallower night action ({visibility})"
-
-msgid "ui.log.event.swallower_announced"
-msgstr "#{index} Stack total announced ({visibility})"
-
-msgid "ui.log.event.night_skipped_by_card"
-msgstr "#{index} Night skipped by card ({visibility})"
-
-msgid "ui.log.event.execution_prevented_by_card"
-msgstr "#{index} Execution prevented by card ({visibility})"
 
 msgid "ui.cards.pack_victim"
 msgstr "Pack victim: {name}, role: {role}"

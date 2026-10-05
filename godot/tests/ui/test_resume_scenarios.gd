@@ -177,18 +177,16 @@ func test_partial_role_show_continues_with_the_first_unconfirmed_person() -> voi
 	for id: int in [1, 2]:
 		await tap_button("RolesButton")
 		await tap_button("RolePerson_%d" % id, find_node(screen(), "RoleListLayer"))
-		await tap_button("RevealRoleButton", find_node(screen(), "RoleCardLayer"))
 		await tap_button("ConfirmRoleButton", find_node(screen(), "RoleCardLayer"))
 		await tap_button("CloseLayerButton", find_node(screen(), "RoleListLayer"))
 	await tap_button("RolesButton")
 	await tap_button("RolePerson_3", find_node(screen(), "RoleListLayer"))
-	await tap_button("RevealRoleButton", find_node(screen(), "RoleCardLayer"))  # Karte offen, nicht bestätigt
+	# Karte offen, nicht bestätigt
 	var before := await restart()
 	assert_true(find_node(screen(), "RoleCardLayer") == null, "offene Rollenkarte nach dem Neustart verworfen")
 	assert_eq(int(session().role_show_list()["next_id"]), 3, "Fortsetzung bei Person 3")
 	await tap_button("RolesButton")
 	await tap_button("RolePerson_3", find_node(screen(), "RoleListLayer"))
-	await tap_button("RevealRoleButton", find_node(screen(), "RoleCardLayer"))
 	await tap_button("ConfirmRoleButton", find_node(screen(), "RoleCardLayer"))
 	assert_one_effect(before, "Rollenanzeige")
 	assert_eq(int(session().role_show_list()["next_id"]), 4, "danach Person 4")

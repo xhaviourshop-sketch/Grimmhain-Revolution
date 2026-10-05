@@ -1,8 +1,8 @@
 extends UiTestCase
 ## Rollenanzeige („Rollen zeigen“, vertical-slice-flow.md §2): Die Spielleitung behält das Tablet und zeigt gezielt einer
-## Person ihre Karte. Neutrale Vorderseite mit Namen, Rolle und Kurztext erst nach bewusster Aktion, Schließen führt
-## zurück zur neutralen Liste, nur das bewusste Schließen wird als `ConfirmRoleShown` gespeichert. Trugbilderwolf: nie die
-## Scheinrolle. Jede Zustandsänderung (Undo, Laden, Korrektur) verwirft eine offene Karte.
+## Person ihre Karte. Neutrale Namensliste (nur Namen), Antippen zeigt groß das Bild der Rollenkarte ohne Text, Antippen der Karte
+## schließt zurück zur Liste und gilt als „gesehen“ (`ConfirmRoleShown`). Trugbilderwolf: nie die Scheinrolle. Jede
+## Zustandsänderung (Undo, Laden, Korrektur) verwirft eine offene Karte.
 
 const UiGame := preload("res://tests/ui/ui_game.gd")
 const W := "werwolf"
@@ -48,6 +48,12 @@ func _shown_count(s: GameSession) -> int:
 	return s.commands().filter(func(c: Command) -> bool: return c.type == Command.CONFIRM_ROLE_SHOWN).size()
 
 
+## Rolle auf dem großen Kartenbild der offenen Karte ("" ohne Bild).
+func _card_role(screen: Node) -> String:
+	var picture := find_node(screen, "RoleCardPicture") as RoleCardImage
+	return picture.role_id if picture != null else ""
+
+
 func _open_list(shell: Control) -> Node:
 	var screen := current_screen(shell)
 	await press(find_button(screen, "RolesButton"))
@@ -88,7 +94,7 @@ func test_trugbilderwolf_card_shows_true_role_never_the_appearance() -> void:
 
 # --- Bedienweg über die Buttons ---------------------------------------------------------------------------
 
-func test_full_operation_confirm_persists_and_returns_to_neutral_list() -> void:
+func test_tapping_the_card_confirms_once_and_returns_to_a_list_without_numbers() -> void:
 	var shell := await _cockpit()
 	if shell == null:
 		return
@@ -98,24 +104,14 @@ func test_full_operation_confirm_persists_and_returns_to_neutral_list() -> void:
 	assert_true(list != null, "Liste geöffnet")
 	assert_eq(str((screen as CockpitScreen).layer_kind()), "roles", "Ebene Rollenliste")
 	_assert_no_role_names(_texts(list), "Liste")
+	assert_false(_texts(list).contains("·"), "keine Sitzplatznummer in der Liste: %s" % _texts(list))
 	assert_true(find_button(list, "RolePerson_1") != null and find_button(list, "RolePerson_6") != null, "alle Personen wählbar")
 	await press(find_button(list, "RolePerson_2"))
 	var card := find_node(screen, "RoleCardLayer")
-	assert_true(card != null, "neutrale Vorderseite")
-	assert_true(_texts(card).contains("2 · B"), "Vorderseite nennt den Namen")
-	_assert_no_role_names(_texts(card), "Vorderseite")
-	assert_true(find_node(screen, "RoleName") == null, "Rollenname noch nicht im Baum")
-	assert_true(find_button(card, "RevealRoleButton") != null and find_button(card, "CancelRoleButton") != null, "Zeigen und Abbrechen")
+	assert_true(card != null, "Karte offen")
+	assert_eq(_card_role(screen), W, "Bild der eigenen Rollenkarte")
+	assert_eq(_texts(card).strip_edges(), "", "kein Text auf der Karte")
 	assert_eq(_shown_count(s), 0, "Öffnen bestätigt nichts")
-	await press(find_button(card, "RevealRoleButton"))
-	card = find_node(screen, "RoleCardLayer")
-	var revealed := _texts(card)
-	assert_true(revealed.contains(TranslationServer.translate("ui.role.werwolf.name")), "zeigt die eigene Rolle: %s" % revealed)
-	assert_true(revealed.contains(TranslationServer.translate("ui.role.werwolf.short")), "zeigt den Kurztext")
-	_assert_no_role_names(revealed, "Rollenkarte", ["werwolf"])
-	for other: String in ["1 · A", "3 · C", "4 · D"]:
-		assert_false(revealed.contains(other), "keine andere Person: %s" % other)
-	assert_eq(_shown_count(s), 0, "Zeigen bestätigt noch nichts")
 	await press(find_button(card, "ConfirmRoleButton"))
 	await frames(2)
 	assert_eq(_shown_count(s), 1, "genau ein ConfirmRoleShown")
@@ -129,7 +125,7 @@ func test_full_operation_confirm_persists_and_returns_to_neutral_list() -> void:
 	assert_true((screen.find_child("Layout", true, false) as Control).visible, "Layout sichtbar")
 
 
-func test_cancel_and_close_without_confirmation_change_nothing() -> void:
+func test_closing_the_open_card_by_back_changes_nothing() -> void:
 	var shell := await _cockpit()
 	if shell == null:
 		return
@@ -138,13 +134,10 @@ func test_cancel_and_close_without_confirmation_change_nothing() -> void:
 	var before := s.state_hash()
 	var list := await _open_list(shell)
 	await press(find_button(list, "RolePerson_3"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "CancelRoleButton"))
-	assert_true(find_node(screen, "RoleListLayer") != null and find_node(screen, "RoleCardLayer") == null, "Abbruch führt zur Liste")
-	await press(find_button(find_node(screen, "RoleListLayer"), "RolePerson_3"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "RevealRoleButton"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "CloseWithoutConfirmButton"))
+	assert_true(find_node(screen, "RoleCardLayer") != null, "Karte offen")
+	await go_back(shell)
 	assert_true(find_node(screen, "RoleCardLayer") == null, "Karte weg")
-	_assert_no_role_names(_texts(screen), "nach Schließen ohne Bestätigung")
+	_assert_no_role_names(_texts(screen), "nach Zurück")
 	assert_eq(_shown_count(s), 0, "nichts bestätigt")
 	assert_eq(s.state_hash(), before, "Zustand unverändert")
 	assert_eq(int(s.role_show_list()["next_id"]), 1, "Fortsetzung weiter bei Person 1")
@@ -161,9 +154,8 @@ func test_reread_of_confirmed_role_needs_no_command_and_changes_no_state() -> vo
 	var commands_before := s.commands().size()
 	var list := await _open_list(shell)
 	await press(find_button(list, "RolePerson_3"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "RevealRoleButton"))
 	var card := find_node(screen, "RoleCardLayer")
-	assert_true(_texts(card).contains(TranslationServer.translate("ui.role.waldhexe.name")), "Rolle erneut lesbar")
+	assert_eq(_card_role(screen), "waldhexe", "Rolle erneut lesbar")
 	assert_true(find_node(card, "ConfirmRoleButton") == null, "keine zweite Bestätigung angeboten")
 	await press(find_button(card, "CloseRoleButton"))
 	assert_eq(s.commands().size(), commands_before, "kein neuer Befehl")
@@ -213,21 +205,19 @@ func test_open_card_is_discarded_on_state_change_and_undo() -> void:
 	var screen := current_screen(shell)
 	var list := await _open_list(shell)
 	await press(find_button(list, "RolePerson_2"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "RevealRoleButton"))
-	assert_true(_texts(find_node(screen, "RoleCardLayer")).contains(TranslationServer.translate("ui.role.werwolf.name")), "Karte zeigt die Rolle")
+	assert_eq(_card_role(screen), W, "Karte zeigt die Rolle")
 	# Zustandswechsel im Hintergrund (Rollenwechsel per Korrektur): die alte Karte darf nicht stehen bleiben.
 	assert_true(s.gm_correction({"kind": "set_role", "target_id": 2, "role_id": "schutzengel", "reason": "Test"}).ok, "Rollenwechsel")
 	await frames(2)
 	assert_true(find_node(screen, "RoleCardLayer") == null, "Karte verworfen")
-	assert_true(find_node(screen, "RoleName") == null, "kein Rollenname mehr im Baum")
+	assert_eq(_card_role(screen), "", "kein Kartenbild mehr im Baum")
 	_assert_no_role_names(_texts(screen), "nach Zustandswechsel")
 	assert_true(find_node(screen, "RoleListLayer") != null, "neutrale Liste")
 	# Rückgängig ersetzt den Zustand: auch dann keine alte Karte.
 	await press(find_button(find_node(screen, "RoleListLayer"), "RolePerson_2"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "RevealRoleButton"))
 	assert_true(s.undo(), "Rückgängig")
 	await frames(2)
-	assert_true(find_node(screen, "RoleCardLayer") == null and find_node(screen, "RoleName") == null, "Karte nach Undo verworfen")
+	assert_true(find_node(screen, "RoleCardLayer") == null and _card_role(screen) == "", "Karte nach Undo verworfen")
 	_assert_no_role_names(_texts(screen), "nach Undo")
 
 
@@ -238,10 +228,9 @@ func test_cover_closes_role_layers_and_screen_exit_removes_them() -> void:
 	var screen := current_screen(shell)
 	var list := await _open_list(shell)
 	await press(find_button(list, "RolePerson_2"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "RevealRoleButton"))
 	(screen as CockpitScreen).cover()
 	await frames(2)
-	assert_true(find_node(screen, "RoleCardLayer") == null and find_node(screen, "RoleName") == null, "Sichtschutz entfernt die Karte")
+	assert_true(find_node(screen, "RoleCardLayer") == null and _card_role(screen) == "", "Sichtschutz entfernt die Karte")
 	_assert_no_role_names(_texts(screen), "im Sichtschutz")
 
 
@@ -252,10 +241,7 @@ func test_trugbilderwolf_card_through_buttons_never_shows_appearance() -> void:
 	var screen := current_screen(shell)
 	var list := await _open_list(shell)
 	await press(find_button(list, "RolePerson_2"))
-	await press(find_button(find_node(screen, "RoleCardLayer"), "RevealRoleButton"))
-	var shown := _texts(find_node(screen, "RoleCardLayer"))
-	assert_true(shown.contains(TranslationServer.translate("ui.role.trugbilderwolf.name")), "wahre Rolle")
-	assert_false(shown.contains(TranslationServer.translate("ui.role.schutzengel.name")), "nicht die Scheinrolle")
+	assert_eq(_card_role(screen), "trugbilderwolf", "wahre Rolle, nicht die Scheinrolle")
 
 
 func test_no_obligation_start_night_works_without_any_confirmation() -> void:
@@ -280,5 +266,5 @@ func test_entry_button_is_disabled_without_game_and_has_both_languages() -> void
 	assert_true(find_button(current_screen(shell), "RolesButton").disabled, "ohne Partie gesperrt")
 	for path: String in [PO_DE, PO_EN]:
 		var po := po_entries(path)
-		for key: String in ["ui.cockpit.tools.roles", "ui.cockpit.roles.heading", "ui.cockpit.roles.reveal", "ui.cockpit.roles.confirm", "ui.cockpit.action.show_roles"]:
+		for key: String in ["ui.cockpit.tools.roles", "ui.cockpit.roles.heading", "ui.cockpit.roles.progress", "ui.cockpit.action.show_roles"]:
 			assert_true(po.has(key) and str(po[key]) != "", "%s: %s" % [path.get_file(), key])

@@ -194,6 +194,12 @@ func event_log() -> Array:
 	return out
 
 
+## Protokoll der Partie in Alltagssätzen („Nacht 1: Anna hat die Rolle Wolfskind.“), nur für die Spielleitung (nennt Geheimes),
+## siehe LogText. Nur lesend.
+func log_lines() -> Array[String]:
+	return LogText.lines(event_log(), _state) if _state.is_started() else ([] as Array[String])
+
+
 ## Fachlicher Hash des aktuellen Zustands (Prüfung und spätere Speicheranzeige).
 func state_hash() -> String:
 	return _state.content_hash()
