@@ -46,8 +46,8 @@ class DiceFace extends Control:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	func _draw() -> void:
-		# Würfelfläche: dunkle Tafel aus dem Skin (kein Kasten); die Augen sind mondsilbern.
-		var face := SkinArt.texture("tafel_grund")
+		# Würfelfläche: gemalter leerer Würfel aus dem Skin (kein Kasten); die Augen sind mondsilbern.
+		var face := SkinArt.die_face()
 		if face != null:
 			draw_texture_rect(face, Rect2(Vector2.ZERO, size), false)
 		var pad := size.x * 0.22
