@@ -4,6 +4,12 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## 2026-10-05: Feedback-Runde 8 (Branch feat/feedback-8), IN ARBEIT
+Stand: Vorab-Schritte committet (dce1f97): Ablage `Downloads/Grimmhain/` (Archiv/P1-Nachtentwurf, Vorbereitung, Web als Exportziel, Karten, Screenshots/Feedback-N), Verweise umgestellt; Dauerregeln von Markus in CLAUDE.md und Prüfern; pruefer-sprache auf Sonnet mit i18n-Diff. `tools/build_ui_skin.py` baut gemalte Haut (`godot/assets/ui/skin/`: Knöpfe 3 Zustände normiert, Mittelstein je Zustand, Listenzeile, Schalter, Rahmen, Tafelgrund nahtlos, Bund-Bilder), `godot/web/ladebild.webp`, `musik-start.ogg`, Rollenkarten nach Rollen-ID (`godot/assets/cards/{de,en}`, Eigentum Markus, freigegeben). Register grün (932 Zeilen).
+Teil B (Protokoll/Bericht in Alltagssprache, `LogText`) gemergt (c67c57b), gezielte Tests Exit 0, 114 Tests.
+Offen: Welle 1 Teile A (Haut), C (Start/Musik/Einstellungen), D (Ring/Nominierungsband) laufen; danach Welle 2 F, E, G, H; Prüfer, Fixes, Vollsuite mit Fuzz, Merge, Push, Deploy (freigegeben). Alter Ordner `Downloads/Grimmhain-iPad-Web` leer, aber noch gesperrt.
+Nächster Schritt: Welle 1 mergen, Welle 2 starten (Worktrees starten auf main, Agenten müssen auf feat/feedback-8 vorspulen).
+
 ## 2026-10-05: Agenten-Team und Tempo (Branch feat/team-tempo)
 Stand: 5 Agenten in `.claude/agents/` (planer Opus, godot-entwickler Sonnet mit eigenem Worktree, pruefer-sprache Haiku, pruefer-marke Sonnet, pruefer-spielleiter Sonnet), Ablauf in CLAUDE.md "Team-Ablauf", Erklärung, Prüfstufen und Lizenzen `docs/development/AGENTEN.md`. GodotPrompter-Skills godot-ui, responsive-ui, export-pipeline, godot-optimization, godot-code-review unverändert kopiert (MIT, `docs/development/skill-sources/jame581--GodotPrompter/`); Claude-Code-Game-Studios nur als Ideenquelle (MIT). Keine Spielfunktion geändert.
 Tempo (`docs/development/TEMPO.md`): `tools/test-full` verteilt die Suite auf 6 Prozesse mit eigenem APPDATA (`--merge` mit Fuzz, `--failed` nur rote Dateien), `test-changed` nutzt es, `run_tests.gd` kennt `--files=` und meldet die Dauer je Datei, `tools/capture-all` für mehrere Screenshot-Werkzeuge. Vollsuite mit Fuzz 558 s -> 174 s, gezielte Tests (4 Filter) 81 s -> 33 s; Export 6 s und Godot-Start 3 s unverändert; Deploy nicht gemessen.
