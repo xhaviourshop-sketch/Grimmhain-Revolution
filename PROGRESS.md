@@ -14,6 +14,7 @@ Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als s
 - Umgesetzt (je ein Commit): A-02 Schild bricht (Test rot-grün), B-06 Parasit-Bindung endet mit der Rolle (rot-grün), S-05 Abzeichen tagsüber verborgen, Tipp zeigt 3 s, S-04 keine Nachtleiste bei anonymer Frage (rot-grün), S-07 ein Text für alle verdeckten Karten (rot-grün), S-09 neutrale Ablehnung, UI-02 kein Beenden im Web, F-A03 25 Bilder aus dem Export (pck -1,08 MB), CM-05 RULES_VERSION 0.16.
 - A-01 ohne Code (entspricht schon DA-93). UI-04 schon erledigt (config/icon). UI-03 Notiz: Exportweg der Berichte auf dem iPad klären (Download statt user://exports).
 - Offen: S-06 (Kartenansage nennt Fraktionsvariante, braucht konkrete Vorgabe); die 11 "offen"-Funde der Nachtschicht nicht bearbeitet (Zeitlimit).
+- Vollsuite inkl. Fuzz: Runde 1 rot (Regelbuch zitierte die alte S-09-Meldung, Zitat angepasst), Runde 2 grün: 1418 Tests, 0 Fehlschläge. Merge ohne Squash (d7c763e), Deploy grimmhain-ipad-test ja (index.pck 38702840 Byte wie lokal). Nicht geprüft: Safari/iPad.
 - Alte Spielstände (Regeln 0.15) erscheinen als "andere Version", nicht als beschädigt.
 
 ## MORGEN-ZUSAMMENFASSUNG Nachtschicht (2026-10-05, Branch chore/nachtschicht, gemergt)
