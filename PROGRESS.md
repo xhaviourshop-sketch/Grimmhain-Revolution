@@ -4,6 +4,11 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## 2026-10-06: Feedback-Runde 9 (Branch feat/feedback-9): in Arbeit
+Stand: Planer-Verteilplan mit 6 Teilen (A Assets, P Paketgröße, D Entscheidungen, X Texte und Listen, T Theme, C Cockpit-Rand, R Ring). D erledigt: DA-103 (Schalter ohne Wort, Teamfarben in Rollenlisten, kein „(N)“, Kartenbilder unverändert mit Ausnahme in MARKE.md), Commit e696f8b. A und X laufen in Worktrees.
+Verifikation: noch keine Tests in dieser Runde (D ist reine Doku).
+Nächster Schritt: A und X mergen, dann P, T, C, R; Prüfer; Vollsuite mit Fuzz; Merge, Push, Deploy.
+
 ## 2026-10-06: Feedback-Runde 8 (Branch feat/feedback-8): gemalte Haut, Rollenkarten, Prüfer-Funde
 Stand: Entscheidung DA-102 (Dauerregeln von Markus, Rollenkarten Eigentum Markus und freigegeben, Rollen zeigen mit Kartenbild, Mini-Karte mittig, Ring-Markierungen nur Spielleiter, Stein nur bei Hauptknöpfen, Nominierungsbänder, Ablage `Downloads/Grimmhain/`). Team-Ablauf: 8 Teile (A Haut, B Klartext, C Start/Musik/Einstellungen, D Ring, E Cockpit-Fenster, F Cockpit-Karten, G Vorbereitung, H Rollen-Vorschau), 2 Prüferrunden, Fix-Runde 1 (K1 bis K4) und 2 (Tageskarte).
 Neu: `tools/build_ui_skin.py` (Knöpfe 3 Zustände normiert, Mittelstein, Listenzeile, Schalter, Rahmen, Tafelgrund nahtlos, Bund-Bilder, Ladebild, `musik-start.ogg`, 72 Rollenkarten DE/EN nach Rollen-ID, Import verlustbehaftet 0,8), Theme `SkinBarBox`/`SkinWindowBox`/`ListRow`/`GrimmButton.main`, `FitLabel` (wächst und schrumpft), `LogText` (Protokoll in Alltagssprache, `GameSession.log_lines()`), `RoleCardImage`, Blättern statt Scrollen (Protokoll, privat, Bericht, Rollenliste mit Reitern). Sitznummern überall entfernt. `tools/test-full` je Checkout und Lauf isoliert (parallele Worktrees).
