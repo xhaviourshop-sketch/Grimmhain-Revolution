@@ -38,7 +38,6 @@ var _view: Dictionary = {}
 var _next_id: String = ""
 var _selection: Array = []
 var _random: Variant = null  ## Zufallsvorschlag (Personen) der offenen Spielleiterwahl; nur bis zur nächsten Änderung
-var _revealed_id: String = ""
 var _loki_mode: Variant = null  ## Loki: gewählte Art der Bindung (true = Liebende) vor der Wahl der zwei Personen (nur Bedienzustand)
 var _committed_seat: int = -1  ## zuletzt automatisch übernommene Person (Schutz vor Doppeltippen)
 var _committed_until: int = 0
@@ -58,6 +57,7 @@ var _bar_expanded: bool = false  ## Nachtleiste auf 4:3 ausgeklappt (Überlageru
 var _layer: Control = null
 var _layer_kind: StringName = &""
 var _morning_done_day: int = -1  ## Tag, dessen Morgenbericht die Spielleitung weitergeschaltet hat (nur Bedienzustand)
+var _dawn_decoys: Array = []  ## Tarnaufrufe nach dem letzten Nachtschritt; die Morgenkarte nennt sie zuerst (nur Bedienzustand)
 ## Bedienzustand am Tag: "" | nominate_from | nominate_to | execute | execution_check | name_wolf
 var _day_mode: String = ""
 var _nominator: int = -1
@@ -65,7 +65,6 @@ var _necromancer: int = -1
 var _card_effect: int = -1  ## Tagesregel einer Karte, für die ein Verstoß gemeldet wird (nur Bedienzustand)
 var _preview: Dictionary = {}
 var _exec_extra: Dictionary = {}
-var _check_revealed: bool = false
 var _gm_execute: bool = false  ## Prüfkarte gehört zu einer Hinrichtung ohne Nominierung (Korrektur)
 ## Geführte Korrektur: "" | kill | revive | set_role | execute | declare_winner
 var _gm_mode: String = ""
@@ -212,7 +211,6 @@ func _refresh() -> void:
 		_next_id = identity
 		_selection.clear()
 		_random = null
-		_revealed_id = ""
 		_prediction = {"kind": "night", "number": 0}
 	_update_status(active)
 	_ring.show_seats(_view.get("seats", []))
@@ -644,7 +642,6 @@ func _process(delta: float) -> void:
 func _render() -> void:
 	var next: Dictionary = _view.get("next", {})
 	var phase := str(_view.get("phase", ""))
-	var visible_secret := not bool(next.get("secret", false)) or phase == "NIGHT" or _revealed_id == _next_id
 	if not bool(_view.get("has_game", false)):
 		_card.render({"kind": "no_game"}, {})
 		_ring.clear_marking()
@@ -656,8 +653,9 @@ func _render() -> void:
 		kind = "gm"
 		_mark_gm_mode()
 	elif (kind == "day" or kind == "card_window") and _morning_pending():
-		next = {"kind": "morning", "secret": false, "public": context.session.morning_report().get("public", {}),
-			"night_number": int(_view.get("night_number", 0))}
+		var report := context.session.morning_report()
+		next = {"kind": "morning", "secret": false, "public": report.get("public", {}), "private": report.get("private", []),
+			"night_number": int(_view.get("night_number", 0)), "decoys": _dawn_decoys}
 		kind = "morning"
 	var eff := _effective(next)
 	if kind == "prompt" or kind == "begin_step":
@@ -669,23 +667,22 @@ func _render() -> void:
 		pass
 	elif kind == "day" and _day_mode != "":
 		_mark_day_mode(next)
-	elif str(eff.get("kind")) == "prompt" and str(eff.get("answer")) == "targets" and visible_secret:
+	elif str(eff.get("kind")) == "prompt" and str(eff.get("answer")) == "targets":
 		_ring.set_marking(true, eff.get("allowed_ids", []), _selection, eff.get("actor_ids", []))
-	elif (kind == "prompt" or kind == "begin_step") and visible_secret:
+	elif kind == "prompt" or kind == "begin_step":
 		_ring.set_marking(false, [], [], next.get("actor_ids", []))
 	else:
 		_ring.clear_marking()
-	_ring.set_hunt(_hunt_ids(eff, kind) if visible_secret else [], not context.settings.reduced_motion)
+	_ring.set_hunt(_hunt_ids(eff, kind), not context.settings.reduced_motion)
 	# Ob die Auswahl bestätigt werden kann, entscheidet der Regelkern (Prüfung ohne Senden).
 	var selection_error := ""
 	if kind == "prompt" and str(next.get("answer")) == "targets" and not _selection.is_empty():
 		selection_error = String(context.session.check_targets(_selection))
-	_card.role_art().show_role(_card_role(next, kind, phase, visible_secret) if ROLE_ART_ON_CARD else "")
+	_card.role_art().show_role(_card_role(next, kind, phase) if ROLE_ART_ON_CARD else "")
 	_card.render(next, {
 		"phase": phase, "seats": _view.get("seats", []), "selection": _selection, "selection_error": selection_error,
 		"random_active": _random != null and _same_set(_selection, _random),
 		"random_available": bool(next.get("random", false)) and context.session.random_proposal() != null,
-		"revealed": _check_revealed if _day_mode == "execution_check" else _revealed_id == _next_id,
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
 		"pre_choice": _loki_mode, "call_step": _call_step,
@@ -704,8 +701,8 @@ func _render() -> void:
 
 ## Rolle für das Rollenbild der Karte: nur in der Nacht, bei einer Rollenhandlung, solange nicht verborgen und die Karte sichtbar ist.
 ## Nie bei der anonymen Frage (DI-05) und nie bei Karten der Totenreichkarten.
-func _card_role(next: Dictionary, kind: String, phase: String, visible_secret: bool) -> String:
-	if _hidden or not visible_secret or phase != "NIGHT" or _gm_mode != "":
+func _card_role(next: Dictionary, kind: String, phase: String) -> String:
+	if _hidden or phase != "NIGHT" or _gm_mode != "":
 		return ""
 	if kind != "begin_step" and kind != "prompt":
 		return ""
@@ -759,7 +756,6 @@ func _reset_day_mode() -> void:
 	_preview = {}
 	_exec_extra = {}
 	_card_effect = -1
-	_check_revealed = false
 	_selection.clear()
 
 
@@ -895,12 +891,6 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"open_report":
 			context.history_focus = s.round_id()  # Abschlussbericht der beendeten Partie in der Historienansicht öffnen
 			navigate_requested.emit(ScreenIds.HISTORY)
-		&"reveal":
-			if _day_mode == "execution_check":
-				_check_revealed = true
-			else:
-				_revealed_id = _next_id
-			_render()
 		&"start_nominate":
 			_reset_day_mode()
 			_day_mode = "nominate_from"
@@ -985,17 +975,11 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"confirm_execution":
 			var target := int(_preview.get("target_id", -1))
 			var extra := _exec_extra.duplicate()
-			var r := DialogRequest.create("ui.cockpit.dialog.execute.title", "ui.cockpit.dialog.execute.message", "ui.cockpit.dialog.execute.confirm",
-				func() -> void:
-					_reset_day_mode()
-					_submit(s.decide_execution.bind(target, extra)), true)
-			r.message_values = {"name": CockpitText.names_of([target], _view.get("seats", []))}
-			dialog_requested.emit(r)
+			_reset_day_mode()
+			_submit(s.decide_execution.bind(target, extra))
 		&"no_execution":
-			dialog_requested.emit(DialogRequest.create("ui.cockpit.dialog.no_execution.title", "ui.cockpit.dialog.no_execution.message",
-				"ui.cockpit.dialog.no_execution.confirm", func() -> void:
-					_reset_day_mode()
-					_submit(s.decide_execution.bind(-1))))
+			_reset_day_mode()
+			_submit(s.decide_execution.bind(-1))
 		&"confirm_name_wolf":
 			var necro := _necromancer
 			var named := int(_selection[0])
@@ -1067,18 +1051,13 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"continue_day":
 			_morning_done_day = int(_view.get("day_number", 0))
 			_render()
-		&"show_announcement":
-			open_layer(&"announcement")
-		&"morning_details":
-			open_layer(&"morning")
 		&"override_shown":
 			_ask_override()
 		&"end_night":
+			_dawn_decoys = []  # die Karte „Nacht abschließen“ hat die Tarnaufrufe schon genannt
 			_submit(s.end_night)
 		&"confirm_win":
-			var r := DialogRequest.create("ui.cockpit.dialog.confirm_win.title", "ui.cockpit.dialog.confirm_win.message", "ui.cockpit.dialog.confirm_win.confirm",
-				func() -> void: _submit(s.confirm_win.bind(int(payload["candidate_id"]))))
-			dialog_requested.emit(r)
+			_submit(s.confirm_win.bind(int(payload["candidate_id"])))
 		&"reject_win":
 			_ask_reason("ui.cockpit.dialog.reject_win.title", "ui.cockpit.dialog.reject_win.message", "ui.cockpit.dialog.reject_win.confirm",
 				func(reason: String) -> void: _submit(s.reject_win.bind(reason)))
@@ -1143,6 +1122,7 @@ func _answer_chain(actions: Array[Callable], with_undo: bool = true) -> bool:
 			break
 	if with_undo:
 		_card.show_undo()
+	_auto_advance()
 	return true
 
 
@@ -1174,6 +1154,26 @@ func _submit(action: Callable) -> void:
 	var result: CommandResult = action.call()
 	if result == null or not result.ok:
 		_render()
+		return
+	_auto_advance()
+
+
+## Fenster-Diät (Markus 05.10.2026): Nach einer Handlung der Spielleitung sagt die App direkt an, statt nachzufragen. Sind alle
+## Nachtschritte erledigt, endet die Nacht (Tarnaufrufe danach wandern auf die Morgenkarte); ist genau ein Sieg erreicht, gilt er.
+## Nur nach eigenen Befehlen, nie nach Rückgängig oder Laden: dort bleiben die Karten „Nacht abschließen“ und „Mögliches Spielende“.
+func _auto_advance() -> void:
+	var s := context.session
+	for guard: int in 3:
+		var next: Dictionary = s.cockpit_view().get("next", {})
+		var result: CommandResult = null
+		match str(next.get("kind")):
+			"end_night":
+				_dawn_decoys = next.get("decoys", [])
+				result = s.end_night()
+			"win_decision" when (next.get("candidates", []) as Array).size() == 1:
+				result = s.confirm_win(int((next["candidates"] as Array)[0]["id"]))
+		if result == null or not result.ok:
+			return
 
 
 func _on_rejected(error: StringName) -> void:
@@ -1236,12 +1236,6 @@ func open_layer(kind: StringName) -> void:
 				_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
 		&"cards":
 			_layer = CockpitLayers.cards_drawer(context.session.card_overview(), context.session.card_swallowers())
-		&"announcement":
-			var report := context.session.morning_report()
-			_layer = CockpitLayers.announcement(int(report.get("night_number", 0)), report.get("public", {}))
-			_layout.visible = false
-		&"morning":
-			_layer = CockpitLayers.morning_drawer(context.session.morning_report(), _view.get("seats", []))
 	if _layer == null:
 		_layout.visible = true
 		return
@@ -1349,7 +1343,6 @@ func _confirm_gm_mode() -> void:
 			_gm_mode = ""
 			_preview = context.session.execution_preview(target)
 			_day_mode = "execution_check"
-			_check_revealed = true  # die Spielleitung hat die Korrektur bewusst geöffnet
 			_render()
 
 
@@ -1522,8 +1515,6 @@ func _on_layer_close_pressed() -> void:
 func close_layer() -> void:
 	_after_close = Callable()
 	_tools_menu.visible = false
-	if _layer_kind == &"roles" or _layer_kind == &"role_card":
-		_revealed_id = ""  # nach der Rollenanzeige bleibt keine geheime Karte des Cockpits aufgedeckt
 	if _layer != null:
 		_overlay_host.remove_child(_layer)
 		_layer.queue_free()
@@ -1566,7 +1557,6 @@ func cover() -> void:
 	if not bool(_view.get("has_game", false)):
 		return
 	close_layer()
-	_revealed_id = ""
 	_covered = true
 	_layout.visible = false
 	_layer = CockpitLayers.cover_panel()

@@ -119,15 +119,13 @@ func _all_text(shell: Control) -> String:
 	return "\n".join(out)
 
 
-func test_window_is_covered_then_shows_the_card_with_all_actions() -> void:
+func test_window_shows_the_card_with_all_actions_at_once() -> void:
 	var shell := await _game({10: "schicksal_03"})
 	if shell == null:
 		return
 	await _to_day(shell)
 	assert_eq(str(_next(shell)["kind"]), "card_window", "Kartenfenster statt Tag")
-	assert_true(find_node(current_screen(shell), "CardPlayButton") == null, "verdeckt: kein Spielen-Button")
-	assert_true(find_node(current_screen(shell), "RevealButton") != null, "Aufdecken angeboten")
-	await _tap(shell, "RevealButton")
+	assert_true(find_node(current_screen(shell), "RevealButton") == null, "keine verdeckte Karte (Fenster-Diät)")
 	var name_label := find_node(current_screen(shell), "CardNameLabel") as Label
 	assert_eq(name_label.text, tr("ui.card.schicksal_03.name"), "Kartenname")
 	assert_eq((find_node(current_screen(shell), "CardTextLabel") as Label).text, tr("ui.card.schicksal_03.neutral.text"), "Kartentext")
@@ -144,7 +142,6 @@ func test_keep_leaves_the_card_and_opens_the_day() -> void:
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	await _tap(shell, "CardKeepButton")
 	assert_eq(str(_next(shell)["kind"]), "day", "danach der Tag")
 	var held := CardRules.held_of(session_of(shell).get("_state"), 10)
@@ -156,7 +153,6 @@ func test_play_amnesty_cancels_todays_execution() -> void:
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	await _tap(shell, "CardPlayButton")
 	assert_eq(str(_next(shell)["kind"]), "day", "nach dem Spielen der Tag")
 	assert_true(find_node(current_screen(shell), "ExecutionCancelledLabel") != null, "Hinweis: Hinrichtung entfällt")
@@ -170,17 +166,14 @@ func test_revival_pick_is_made_on_the_seat_ring_and_confirmed() -> void:
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	# Person 10 hält Wiedergeburt (Dorf): die Spielleitung wählt eine tote Person der Fraktion.
 	var first_owner := int(_next(shell)["owner_id"])
 	if first_owner != 10:
 		await _tap(shell, "CardKeepButton")
-		await _tap(shell, "RevealButton")
 	await _tap(shell, "CardPlayButton")
 	assert_eq(str(_next(shell)["kind"]), "prompt", "Karteneingabe als Prompt")
 	assert_eq(str(_next(shell)["owner"]), "card", "Besitzer Karte")
 	assert_eq(str(_next(shell)["answer"]), "targets", "Antwort: Personen")
-	await _tap(shell, "RevealButton")
 	var target := int((_next(shell)["allowed_ids"] as Array)[0])
 	var seat := _seat(shell, target)
 	assert_true(seat != null and not seat.disabled, "Tote Person im Sitzkreis antippbar")
@@ -197,18 +190,15 @@ func test_dice_are_rolled_stored_and_drawn() -> void:
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	for i: int in 3:
 		if int(_next(shell).get("owner_id", -1)) == 10:
 			break
 		await _tap(shell, "CardKeepButton")
-		await _tap(shell, "RevealButton")
 	await _tap(shell, "CardPlayButton")
-	await _tap(shell, "RevealButton")
 	assert_true(find_button(current_screen(shell), "RollButton") != null, "Würfeln-Button")
 	assert_true(find_node(current_screen(shell), "DiceRow") == null or (find_node(current_screen(shell), "DiceRow") as Control).get_child_count() == 0, "vor dem Wurf keine Würfel")
 	await _tap(shell, "RollButton")
-	await _tap(shell, "RevealButton") if find_button(current_screen(shell), "RevealButton") != null else await frames(1)
+	await frames(1)
 	var row := find_node(current_screen(shell), "DiceRow") as Control
 	assert_true(row != null and row.get_child_count() == 2, "zwei sichtbare Würfel")
 	var stored: Array = (_next(shell)["dice"] as Array)
@@ -229,7 +219,6 @@ func test_rule_card_report_violation_kills_after_selecting_the_person() -> void:
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	await _tap(shell, "CardPlayButton")
 	assert_eq(str(_next(shell)["kind"]), "day", "Tag mit Tagesregel")
 	var report := current_screen(shell).find_children("CardReportButton_*", "BaseButton", true, false)
@@ -246,7 +235,6 @@ func test_close_window_asks_and_keeps_cards() -> void:
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	await _tap(shell, "CardCloseWindowButton")
 	await _dialog_confirm(shell)
 	assert_eq(str(_next(shell)["kind"]), "day", "Fenster zu, der Tag läuft")
@@ -260,7 +248,6 @@ func test_overview_and_card_face_layers() -> void:
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	await _tap(shell, "CardOverviewButton")
 	var layer := find_node(shell, "CardsLayer")
 	assert_true(layer != null, "Überblick offen")
@@ -290,7 +277,6 @@ func test_card_swallower_shows_hand_signs_with_costs() -> void:
 		await _tap(shell, "CardCloseWindowButton")
 		await _dialog_confirm(shell)
 	await _tap(shell, "NoExecutionButton")
-	await _dialog_confirm(shell)
 	await _tap(shell, "EndDayButton")
 	if str(_next(shell)["kind"]) == "card_window":
 		await _tap(shell, "CardCloseWindowButton")
@@ -322,7 +308,6 @@ func test_exchange_by_buttons_plays_the_replacement_at_once_and_moves_on() -> vo
 	if shell == null:
 		return
 	await _to_day(shell)
-	await _tap(shell, "RevealButton")
 	assert_eq(int(_next(shell)["owner_id"]), 9, "erste gefragte Person")
 	assert_true(find_node(current_screen(shell), "CardExchangeButton") != null, "Tauschen angeboten")
 	await _tap(shell, "CardExchangeButton")
@@ -335,7 +320,6 @@ func test_exchange_by_buttons_plays_the_replacement_at_once_and_moves_on() -> vo
 	assert_eq(SwallowerRules.balance_of(state, 3), 1, "ein Stapel für den Kartenschlucker")
 	assert_eq(int(_next(shell).get("owner_id", -1)), 10, "danach die nächste Person")
 	# Die Ersatzkarte ist nicht erneut tauschbar; die zweite Person darf tauschen.
-	await _tap(shell, "RevealButton")
 	assert_true(find_node(current_screen(shell), "CardExchangeButton") != null, "zweite Person darf tauschen")
 
 
@@ -351,7 +335,6 @@ func test_card_window_fits_for_both_hands_and_languages() -> void:
 				return
 			settings_of(shell).call("set_left_handed", left)
 			await _to_day(shell)
-			await _tap(shell, "RevealButton")
 			var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
 			var card := rect_of(find_node(current_screen(shell), "InstructionCard") as Control)
 			var scroll := find_node(current_screen(shell), "Scroll") as ScrollContainer

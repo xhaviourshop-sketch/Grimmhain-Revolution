@@ -10,8 +10,9 @@ extends RefCounted
 ##   poisoned   Giftwolf-Vergiftung, Gifttrank der Waldhexe dieser Nacht
 ##   marked     Opfer des Rudels, Markierung durch Richter, Henker, Feuerteufel, Prophet, Tod am Morgen
 ##   silenced   in dieser Nacht blockiert (Albtraumwolf)
-##   special    verzaubert (Rattenfänger), infiziert, Parasitenwirt, Voodoo-Puppe, Loki-Paar
-const KINDS: Array[StringName] = [&"protected", &"poisoned", &"marked", &"silenced", &"special"]
+##   lovers     Liebende (Loki), rivals  Rivalen (Loki), charmed  verzaubert (Rattenfänger)
+##   special    infiziert, Parasitenwirt, Voodoo-Puppe
+const KINDS: Array[StringName] = [&"protected", &"poisoned", &"marked", &"silenced", &"lovers", &"rivals", &"charmed", &"special"]
 
 
 ## Abzeichen je lebender Person: Personen-ID → Liste der Arten (in KINDS-Reihenfolge). Personen ohne Abzeichen fehlen.
@@ -42,7 +43,7 @@ static func marks(s: GameState) -> Dictionary:
 	for id: int in s.blocked_ids:
 		_add(by_kind, &"silenced", id)
 	for c: Variant in s.charms:
-		_add(by_kind, &"special", int((c as Dictionary).get("target_id", -1)))
+		_add(by_kind, &"charmed", int((c as Dictionary).get("target_id", -1)))
 	for id: int in s.infected:
 		_add(by_kind, &"special", id)
 	for h: Variant in s.parasite_hosts:
@@ -52,8 +53,9 @@ static func marks(s: GameState) -> Dictionary:
 	for pair: Variant in s.loki_pairs:
 		var entry: Dictionary = pair
 		if not bool(entry.get("ended", false)):
-			_add(by_kind, &"special", int(entry.get("a", -1)))
-			_add(by_kind, &"special", int(entry.get("b", -1)))
+			var bond: StringName = &"lovers" if str(entry.get("kind", "")) == "love" else &"rivals"
+			_add(by_kind, bond, int(entry.get("a", -1)))
+			_add(by_kind, bond, int(entry.get("b", -1)))
 	var out := {}
 	for id: int in s.seat_order:
 		if not s.players[id].alive:

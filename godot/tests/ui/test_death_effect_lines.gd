@@ -90,13 +90,8 @@ func test_public_part_contains_only_the_positive_list() -> void:
 	var json := JSON.stringify(public)
 	for secret: String in ["KNIGHT_STRIKE", "NIGHT_KILL", "cause", "protection", "Schutz"]:
 		assert_false(json.contains(secret), "öffentlicher Teil nennt keine Ursache: %s" % secret)
-	var layer := CockpitLayers.announcement(1, public)
-	assert_true(layer != null, "zeigbare Ansagekarte")
-	var shown: Array[String] = []
-	for c: Control in text_controls(layer):
-		shown.append(text_of(c))
-	layer.free()
-	assert_false("\n".join(shown).contains("NIGHT_KILL"), "Ansagekarte ohne Ursache")
+	var shown: Array = CockpitText.morning_lines(public).map(func(l: Dictionary) -> String: return CockpitLayers._format(l))
+	assert_false("\n".join(shown).contains("NIGHT_KILL"), "Teil „Fürs Dorf“ ohne Ursache")
 
 
 func test_coachman_crash_is_one_announcement_with_all_neighbours() -> void:

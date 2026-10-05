@@ -21,26 +21,35 @@ func _texts(root: Node) -> String:
 	return "\n".join(out)
 
 
-func _kinds(n: Dictionary) -> Array:
-	return (n.get("candidates", []) as Array).map(func(c: Dictionary) -> String: return str(c["kind"]))
+## Gewinner-Team auf dem Siegbildschirm (ein eindeutiger Sieg gilt nach der Kartenhandlung sofort, Fenster-Diät 05.10.2026).
+func _winner_kind(n: Dictionary) -> String:
+	return str((n.get("winner", {}) as Dictionary).get("kind", ""))
+
+
+## Vorlesezeilen „Fürs Dorf“ der Morgenkarte (bis zur Überschrift „Für dich“).
+func _village_text() -> String:
+	var card := find_node(screen(), "ActionCard")
+	var labels := card.find_children("*", "Label", true, false)
+	var start := labels.find(find_node(card, "MorningVillage"))
+	var stop := labels.find(find_node(card, "MorningPrivate"))
+	if start == -1 or stop == -1:
+		return ""
+	return "\n".join(labels.slice(start, stop).map(func(l: Label) -> String: return l.text))
 
 
 func test_siegreicher_wolf_counts_double_for_parity() -> void:
 	if not await start(["siegreicher-wolf"] + _villagers(5), [4, 5]):
 		return
-	await run({"day1": {"nominate": [2, 3], "execute": 3}}, until_kind("win_decision"))
-	assert_eq(_kinds(next()), ["wolves"], "ein Siegreicher Wolf gegen zwei Dorfpersonen: Wolfssieg")
-	await tap_button("RevealButton")
-	await tap_button("ConfirmWinButton_%d" % int((next()["candidates"] as Array)[0]["id"]))
-	await confirm_dialog()
-	assert_eq(str(next().get("kind")), "game_over", "Sieg über die Karte bestätigt")
+	await run({"day1": {"nominate": [2, 3], "execute": 3}}, until_kind("game_over"))
+	assert_eq(_winner_kind(next()), "wolves", "ein Siegreicher Wolf gegen zwei Dorfpersonen: Wolfssieg ohne Rückfrage")
+	assert_true(find_node(screen(), "VictoryTitle") != null, "Siegbildschirm")
 
 
 func test_doppelspion_wins_alone_when_no_wolf_lives() -> void:
 	if not await start(["doppelspion", W] + _villagers(4)):
 		return
-	await run({"day1": {"nominate": [3, 2], "execute": 2}}, until_kind("win_decision"))
-	assert_eq(_kinds(next()), ["solo"], "nur der Doppelspion, kein Dorfsieg")
+	await run({"day1": {"nominate": [3, 2], "execute": 2}}, until_kind("game_over"))
+	assert_eq(_winner_kind(next()), "solo", "nur der Doppelspion, kein Dorfsieg")
 
 
 func test_selbstmoerder_fulfilled_by_execution_with_five_dead() -> void:
@@ -101,15 +110,12 @@ func test_fenrir_survives_death_from_stage_three() -> void:
 	assert_true(alive(2), "Fenrir überlebt die Hinrichtung an Tag 3")
 
 
-func test_nachtwaechter_bells_in_announcement_card() -> void:
+func test_nachtwaechter_bells_in_village_part() -> void:
 	if not await start([D, W, "nachtwaechter"] + _villagers(4)):
 		return
 	await run({"pack/": [4]}, until_kind("day"))
 	if has_event("AlarmBells"):
-		await tap_button("ShowAnnouncementButton")
-		var layer := find_node(screen(), "AnnouncementLayer")
-		assert_true(layer != null and _texts(layer).length() > 0, "Ansagekarte mit Glocken")
-		assert_true(_texts(layer).contains(TranslationServer.translate("ui.morning.notice.bells")), "Glocken angesagt")
+		assert_true(_village_text().contains(TranslationServer.translate("ui.morning.notice.bells")), "Glocken im Teil „Fürs Dorf“")
 	else:
 		fail("keine Glocken ausgelöst")
 
@@ -119,13 +125,12 @@ func test_detektiv_hint_in_public_morning_card() -> void:
 		return
 	await run({"waldhexe/heal": false, "waldhexe/poison": true, "waldhexe/poison_target": [2]}, until_kind("day"))
 	assert_true(has_event("DetectiveHint"), "Richtungshinweis nach Wolfstod")
-	await tap_button("ShowAnnouncementButton")
-	var layer := find_node(screen(), "AnnouncementLayer")
-	assert_true(layer != null and _texts(layer).contains(TranslationServer.translate("ui.prompt.direction.%s" % str((events("DetectiveHint")[0]["data"] as Dictionary)["direction"]))),
-		"Ansagekarte nennt die Richtung")
+	var village := _village_text()
+	assert_true(village.contains(TranslationServer.translate("ui.prompt.direction.%s" % str((events("DetectiveHint")[0]["data"] as Dictionary)["direction"]))),
+		"Teil „Fürs Dorf“ nennt die Richtung")
 	# Die Rolle des Toten wird in Runden ohne Wiederbelebung angesagt (Entscheidung 29.09.2026); andere Rollen nie.
 	for role: String in ["detektiv", "waldhexe"]:
-		assert_false(_texts(layer).contains(TranslationServer.translate("ui.role.%s.name" % role)), "Ansagekarte ohne Rolle %s" % role)
+		assert_false(village.contains(TranslationServer.translate("ui.role.%s.name" % role)), "Teil „Fürs Dorf“ ohne Rolle %s" % role)
 
 
 ## RM-DR-008: Stimmen werden physisch gezählt; die Spielleitung sieht Boni als Hinweis (Blutwolf, Korrupter Richter),

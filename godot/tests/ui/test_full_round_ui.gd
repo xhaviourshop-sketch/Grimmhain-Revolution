@@ -149,8 +149,6 @@ func _play_day(shell: Control, next: Dictionary) -> bool:
 	await _tap_seats(shell, 1)
 	if not await _tap(shell, "ConfirmExecutionTargetButton"):
 		return false
-	if not await _tap(shell, "RevealButton"):
-		return false
 	return await _tap(shell, "ConfirmExecutionButton")
 
 

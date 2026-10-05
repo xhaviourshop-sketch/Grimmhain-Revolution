@@ -58,9 +58,9 @@ func test_new_charm_through_the_cockpit() -> void:
 	await frames(3)
 	assert_eq(_answers(), before + 1, "genau eine Bestätigung")
 	assert_eq(rejected.size(), 0, "kein zweiter Befehl")
-	assert_eq(str(next().get("kind")), "end_night", "danach weiter mit dem nächsten Schritt (Nachtende)")
-	assert_false((next().get("decoys", []) as Array).has("rattenfaenger"), "Rattenfänger nicht erneut angesagt")
-	await tap_button("EndNightButton")
+	assert_true(str(state().phase) != "NIGHT", "letzter Schritt: die Nacht endet ohne Fenster")
+	var decoy := find_node(screen(), "DecoyLine") as Label
+	assert_true(decoy == null or not decoy.text.contains(tr(CockpitText.role_name("rattenfaenger"))), "Rattenfänger nicht erneut angesagt")
 	var public := JSON.stringify((session().morning_report() as Dictionary).get("public", {}))
 	assert_false(public.contains("piper") or public.contains("charm"), "Morgenbericht ohne Verzauberte: %s" % public)
 

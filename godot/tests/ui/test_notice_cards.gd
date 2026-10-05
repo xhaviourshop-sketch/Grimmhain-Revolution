@@ -138,7 +138,7 @@ func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
 
 # --- Pestbringerin ----------------------------------------------------------------------------------
 
-func test_plague_notice_at_night_and_after_the_spread_and_hidden_until_revealed() -> void:
+func test_plague_notice_at_night_and_after_the_spread() -> void:
 	var shell := await _cockpit([W, "pestbringerin", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
 	if shell == null:
 		return
@@ -161,12 +161,9 @@ func test_plague_notice_at_night_and_after_the_spread_and_hidden_until_revealed(
 	assert_eq(str(next["kind"]), "notice", "Hinweis nach der Ausbreitung")
 	assert_true(fresh.has(int(((next["viewers"] as Array)[0] as Dictionary)["person_id"])), "für die neu Angesteckte")
 	var screen := current_screen(shell)
-	# Im Sichtschutz (Tag) bleibt der Inhalt verdeckt, bis die Spielleitung ausdrücklich aufdeckt.
-	assert_true(find_node(screen, "ShowNoticeButton") == null, "vor dem Aufdecken keine Hinweisbedienung")
-	var covered := _texts(find_node(screen, "ActionCard"))
-	assert_false(covered.contains("infiziert") or covered.contains("infected"), "Inhalt verdeckt: %s" % covered)
-	await press(find_button(screen, "RevealButton"))
-	assert_true(find_button(screen, "ShowNoticeButton") != null, "nach dem Aufdecken bedienbar")
+	# Fenster-Diät (Markus 05.10.2026): auch am Tag keine verdeckte Karte, der Hinweis ist sofort bedienbar.
+	assert_true(find_node(screen, "RevealButton") == null, "keine verdeckte Karte")
+	assert_true(find_button(screen, "ShowNoticeButton") != null, "sofort bedienbar")
 
 
 # --- Rotkäppchen ------------------------------------------------------------------------------------
@@ -227,19 +224,3 @@ func test_decoy_wolf_gets_no_card_and_public_view_shows_no_appearance() -> void:
 	var private: Array = s.private_seats()
 	var wolf: Dictionary = private.filter(func(p: Dictionary) -> bool: return int(p["person_id"]) == 2)[0]
 	assert_true(JSON.stringify(wolf["notes"]).contains("waldhexe"), "nur der private Spielleiterbereich nennt die Scheinrolle")
-
-
-## S-07 (DA-93): Verdeckte Karten tragen für jede Art denselben Text (eine offene Siegentscheidung ist nicht erkennbar).
-func test_covered_cards_share_one_text() -> void:
-	var card := ActionCard.new()
-	tree.root.add_child(card)
-	var texts: Array[String] = []
-	for kind: String in ["win_decision", "card_window", "begin_step"]:
-		card.render({"kind": kind, "secret": true}, {"revealed": false, "phase": "DAY"})
-		var parts: Array[String] = []
-		for c: Control in text_controls(card):
-			parts.append(key_of(c))
-		texts.append("|".join(parts))
-	assert_eq(texts[0], texts[1], "Siegentscheidung wie Kartenfenster")
-	assert_eq(texts[0], texts[2], "Siegentscheidung wie Schritt")
-	card.queue_free()

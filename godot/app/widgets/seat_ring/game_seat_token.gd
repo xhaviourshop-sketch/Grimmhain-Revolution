@@ -347,10 +347,39 @@ func _draw_badges(c: Vector2, d: float) -> void:
 	var size_px := maxf(ThemeTokens.BADGE_MIN, d * 0.37)
 	var i := 0
 	for kind: Variant in marks:
+		var rect := Rect2(c.x + d * 0.5 - size_px * 0.85 - float(i) * size_px * 0.7, c.y + d * 0.5 - size_px * 0.85, size_px, size_px)
 		var texture := NightArt.badge(str(kind))
 		if texture != null:
-			draw_texture_rect(texture, Rect2(c.x + d * 0.5 - size_px * 0.85 - float(i) * size_px * 0.7, c.y + d * 0.5 - size_px * 0.85, size_px, size_px), false)
+			draw_texture_rect(texture, rect, false)
+		else:
+			_draw_glyph_badge(str(kind), rect)
 		i += 1
+
+
+## Abzeichen ohne Bilddatei (Liebende, Rivalen, verzaubert): dunkle Scheibe, Silberring und ein Silberzeichen, das sich in der Form unterscheidet.
+func _draw_glyph_badge(kind: String, rect: Rect2) -> void:
+	var c := rect.get_center()
+	var r := rect.size.x * 0.46
+	draw_circle(c, r, ThemeTokens.NUMBER_BG)
+	draw_arc(c, r, 0.0, TAU, 32, ThemeTokens.MOON_SILVER, 1.6, true)
+	var s := r * 0.55
+	var silver := ThemeTokens.MOON_SILVER_BRIGHT
+	match kind:
+		"lovers":  # Herz
+			var heart := PackedVector2Array()
+			for k: int in 24:
+				var a := TAU * float(k) / 24.0
+				heart.append(c + Vector2(16.0 * pow(sin(a), 3.0), -(13.0 * cos(a) - 5.0 * cos(2.0 * a) - 2.0 * cos(3.0 * a) - cos(4.0 * a))) * s / 16.0)
+			draw_colored_polygon(heart, silver)
+		"rivals":  # gekreuzte Klingen
+			draw_line(c + Vector2(-s, -s), c + Vector2(s, s), silver, 2.2, true)
+			draw_line(c + Vector2(s, -s), c + Vector2(-s, s), silver, 2.2, true)
+			draw_line(c + Vector2(-s * 0.95, -s * 0.35), c + Vector2(-s * 0.35, -s * 0.95), silver, 1.6, true)
+			draw_line(c + Vector2(s * 0.95, -s * 0.35), c + Vector2(s * 0.35, -s * 0.95), silver, 1.6, true)
+		"charmed":  # Note (Flöte des Rattenfängers)
+			draw_circle(c + Vector2(-s * 0.35, s * 0.55), s * 0.38, silver)
+			draw_line(c + Vector2(s * 0.0, s * 0.55), c + Vector2(s * 0.0, -s * 0.9), silver, 1.8, true)
+			draw_line(c + Vector2(s * 0.0, -s * 0.9), c + Vector2(s * 0.7, -s * 0.5), silver, 1.8, true)
 
 
 func _draw_plate() -> void:

@@ -6,12 +6,10 @@ extends RefCounted
 ##   log_drawer      Protokoll aller Ereignisse
 ##   show_card       Karte für die handelnde Person: nur die Positivliste des Prompts (`show`)
 ##   cover_panel     Sichtschutz über dem ganzen Cockpit
-##   announcement    zeigbare Ansagekarte des Morgens: nur der öffentliche Teil des Berichts
-##   morning_drawer  private Details des Morgenberichts (Ursachen, Rettungen, entfallene Schritte)
 ##   role_list       Rollenanzeige, neutrale Personenliste (nur Namen und Bestätigungsstand, nie Rollen)
 ##   role_card       Rollenanzeige, Karte einer Person: neutrale Vorderseite oder (nach bewusster Aktion) Rolle und Kurztext
 ## Jede Ebene hat einen `CloseLayerButton` (bzw. `UncoverButton`); die Ansicht verbindet ihn.
-## Karten- und Ansageebenen (show_card, notice_card, role_card, announcement, card_face) sind `DetailPanel`s: der Text scrollt,
+## Karten- und Ansageebenen (show_card, notice_card, role_card, card_face) sind `DetailPanel`s: der Text scrollt,
 ## die Buttons stehen in einem festen Bereich darunter.
 
 
@@ -87,11 +85,12 @@ static func show_card(role_id: String, lines: Array) -> Control:
 	var root: Control = layer[0]
 	var panel: DetailPanel = layer[1]
 	var column := panel.content
-	_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"HeadingLabel")
+	_label(column, "ui.cockpit.show.heading", {"role": CockpitText.role_name(role_id)}, &"GothicTitleLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	for line: Dictionary in lines:
-		_label(column, CockpitText.info_key(str(line["key"])), {}, &"CaptionLabel")
+		_label(column, CockpitText.info_key(str(line["key"])), {}, &"CaptionLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var value := GrimmLabel.new()
 		value.theme_type_variation = &"ShowValueLabel"
+		value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var shown: Variant = CockpitText.info_value(line)
 		value.format_values = {"value": shown}
 		value.text_key = "ui.cockpit.show.value"
@@ -107,7 +106,7 @@ static func notice_card(card: Dictionary) -> Control:
 	var root: Control = layer[0]
 	var panel: DetailPanel = layer[1]
 	var column := panel.content
-	_label(column, "ui.cockpit.notice.heading.group" if bool(card.get("group", false)) else "ui.cockpit.notice.heading", {}, &"HeadingLabel")
+	_label(column, "ui.cockpit.notice.heading.group" if bool(card.get("group", false)) else "ui.cockpit.notice.heading", {}, &"GothicTitleLabel").horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var picture := _bond_picture(str(card["text_key"]))
 	if picture != null:
 		column.add_child(picture)
@@ -199,22 +198,6 @@ static func role_card(card: Dictionary, revealed: bool) -> Control:
 	return root
 
 
-## Zeigbare Ansagekarte: ausschließlich die Vorlesezeilen aus dem öffentlichen Teil des Berichts.
-## Erhält nur diesen Teil, nie die privaten Details.
-static func announcement(night_number: int, public: Dictionary) -> Control:
-	if public.is_empty():
-		return null
-	var layer := _detail_layer("AnnouncementLayer")
-	var root: Control = layer[0]
-	var panel: DetailPanel = layer[1]
-	var column := panel.content
-	_label(column, "ui.cockpit.announcement.heading", {"number": night_number}, &"HeadingLabel")
-	for line: Dictionary in CockpitText.morning_lines(public):
-		_label(column, str(line["key"]), line["values"], &"ReadAloudLabel")
-	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
-	return root
-
-
 ## Karte der toten Person zum Zeigen am Tisch: Name der Besitzerin, Name der Karte und ihr Text (Regeltext der Fraktionsvariante).
 static func card_face(card: Dictionary, owner: Dictionary) -> Control:
 	if card.is_empty():
@@ -224,7 +207,7 @@ static func card_face(card: Dictionary, owner: Dictionary) -> Control:
 	var panel: DetailPanel = layer[1]
 	var column := panel.content
 	_label(column, "ui.cards.face.heading", {"name": str(owner.get("name", ""))}, &"CaptionLabel")
-	_label(column, str(card["name_key"]), {}, &"HeadingLabel").name = "CardFaceName"
+	_label(column, str(card["name_key"]), {}, &"GothicTitleLabel").name = "CardFaceName"
 	var value := _label(column, str(card["text_key"]), {}, &"ShowValueLabel")
 	value.name = "CardFaceText"
 	panel.actions.add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
@@ -247,33 +230,6 @@ static func cards_drawer(cards: Array, swallowers: Array) -> Control:
 		_label(row, "ui.cards.overview.row", {"name": CockpitText.person(c["owner"]), "card": StringName(str(c["name_key"])), "status": StringName(str(c["status_key"]))}, &"SectionLabel")
 		_label(row, str(c["text_key"]), {}, &"CaptionLabel")
 		list.add_child(row)
-	return drawer
-
-
-static func morning_drawer(report: Dictionary, seats: Array) -> Control:
-	var drawer := _drawer("MorningLayer", "ui.cockpit.morning.heading")
-	var list := drawer.find_child("DrawerList", true, false) as VBoxContainer
-	var lines: Array = report.get("private", [])
-	if lines.is_empty():
-		_label(list, "ui.cockpit.log.empty", {}, &"MutedLabel")
-	for line: Dictionary in lines:
-		if str(line.get("key", "")) == "":
-			_label(list, "ui.morning.private.other", {"type": str(line["type"]), "details": _details(line.get("data", {}), seats)}, &"CaptionLabel")
-			continue
-		var values := {}
-		if line.has("person"):
-			values["name"] = CockpitText.person(line["person"])
-		if line.has("target"):
-			values["target"] = CockpitText.person(line["target"]) if not (line["target"] as Dictionary).is_empty() else ""
-		if line.has("role_id"):
-			values["role"] = CockpitText.role_name(str(line["role_id"])) if str(line["role_id"]) != "" else ""
-		if line.has("cause"):
-			values["cause"] = StringName("ui.cause.%s" % str(line["cause"]).to_lower())
-		if line.has("reason"):
-			values["reason"] = str(line["reason"])
-		if line.has("drop"):
-			values["drop"] = StringName("ui.morning.drop.%s" % str(line["drop"]))
-		_label(list, str(line["key"]), values, &"SectionLabel")
 	return drawer
 
 

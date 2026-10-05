@@ -1289,15 +1289,6 @@ msgstr "Zum Hauptmenü"
 msgid "ui.cockpit.status.selection_full"
 msgstr "Hinweis: Die Höchstzahl ist erreicht. Tippe eine gewählte Person an, um sie abzuwählen."
 
-msgid "ui.cockpit.secret.heading"
-msgstr "Nur für die Spielleitung"
-
-msgid "ui.cockpit.secret.step"
-msgstr "Der nächste Schritt enthält geheime Informationen. Zeige ihn erst an, wenn niemand mitliest."
-
-msgid "ui.cockpit.secret.reveal"
-msgstr "Anzeigen"
-
 msgid "ui.cockpit.card.none"
 msgstr "Kein Schritt offen"
 
@@ -1642,15 +1633,6 @@ msgstr "Die Partie läuft weiter. Ein Sieg wird erst nach der nächsten relevant
 
 msgid "ui.cockpit.dialog.reject_win.confirm"
 msgstr "Ablehnen"
-
-msgid "ui.cockpit.dialog.confirm_win.title"
-msgstr "Sieg bestätigen?"
-
-msgid "ui.cockpit.dialog.confirm_win.message"
-msgstr "Die Partie endet mit diesem Sieger. Alle übrigen Kandidaten gelten als nicht gewählt."
-
-msgid "ui.cockpit.dialog.confirm_win.confirm"
-msgstr "Sieg bestätigen"
 
 msgid "ui.cockpit.dialog.override.title"
 msgstr "Gezeigtes Ergebnis ändern"
@@ -2081,23 +2063,8 @@ msgstr "Reaktion"
 msgid "ui.cockpit.card.morning.caption"
 msgstr "Morgen nach Nacht {number}"
 
-msgid "ui.cockpit.card.morning.heading"
-msgstr "Morgenbericht"
-
 msgid "ui.cockpit.action.continue_day"
 msgstr "Weiter zum Tag"
-
-msgid "ui.cockpit.action.show_announcement"
-msgstr "Ansagekarte zeigen"
-
-msgid "ui.cockpit.action.morning_details"
-msgstr "Private Details …"
-
-msgid "ui.cockpit.announcement.heading"
-msgstr "Morgen nach Nacht {number}"
-
-msgid "ui.cockpit.morning.heading"
-msgstr "Morgenbericht · nur Spielleitung"
 
 msgid "ui.morning.read.intro"
 msgstr "„Die Sonne geht auf. Das Dorf erwacht.“"
@@ -2136,16 +2103,16 @@ msgid "ui.morning.private.death"
 msgstr "{name} ist gestorben: {cause}. Rolle: {role}."
 
 msgid "ui.morning.private.saved"
-msgstr "{name} wurde gerettet durch: {role}."
+msgstr "{name} wurde gerettet: {role}."
 
 msgid "ui.morning.private.no_attack"
 msgstr "Das Rudel hat niemanden angegriffen."
 
 msgid "ui.morning.private.step_skipped"
-msgstr "Übersprungen: {role}. Begründung: {reason}"
+msgstr "{role} wurde übersprungen: {reason}"
 
 msgid "ui.morning.private.step_dropped"
-msgstr "Entfallen: {role} ({drop})."
+msgstr "{role} ist ausgefallen: {drop}."
 
 msgid "ui.morning.private.reaction.declined"
 msgstr "{name}: Reaktion ohne Ziel (verzichtet)."
@@ -2309,9 +2276,6 @@ msgstr "Tippe die Person an, die der Nekromant geheim als Wolf benennt."
 msgid "ui.cockpit.card.day.check.heading"
 msgstr "Hinrichtung prüfen: {name}"
 
-msgid "ui.cockpit.card.day.check.covered"
-msgstr "Diese Prüfung ist nur für die Spielleitung. Zeige sie an, wenn niemand mitliest."
-
 msgid "ui.cockpit.card.day.check.redirected"
 msgstr "Achtung: Die Hinrichtung wird gespiegelt. Stattdessen stirbt {name}."
 
@@ -2362,24 +2326,6 @@ msgstr "Benennung bestätigen"
 
 msgid "ui.cockpit.action.end_day"
 msgstr "Tag beenden"
-
-msgid "ui.cockpit.dialog.execute.title"
-msgstr "Hinrichtung bestätigen?"
-
-msgid "ui.cockpit.dialog.execute.message"
-msgstr "{name} wird hingerichtet. Die Stimmen wurden am Tisch gezählt."
-
-msgid "ui.cockpit.dialog.execute.confirm"
-msgstr "Hinrichten"
-
-msgid "ui.cockpit.dialog.no_execution.title"
-msgstr "Keine Hinrichtung heute?"
-
-msgid "ui.cockpit.dialog.no_execution.message"
-msgstr "Heute stirbt niemand durch Hinrichtung. Danach kann der Tag beendet werden."
-
-msgid "ui.cockpit.dialog.no_execution.confirm"
-msgstr "Keine Hinrichtung"
 
 msgid "ui.cockpit.dialog.amalia.title"
 msgstr "Amalia opfert sich"
@@ -5555,7 +5501,7 @@ msgid "ui.rulebook.c04.b06"
 msgstr "3. Erfasse die Antwort der aufgerufenen Person, so wie die Karte es zeigt: Personen im Sitzkreis antippen und „Auswahl bestätigen“, „Ja“ oder „Nein“, eine Option antippen, „Gezeigt“ oder eine Vorhersage bestätigen."
 
 msgid "ui.rulebook.c04.b07"
-msgstr "4. Die App öffnet den nächsten Schritt. Nach dem letzten Schritt erscheint „Nacht abschließen“."
+msgstr "4. Die App öffnet den nächsten Schritt. Nach dem letzten Schritt endet die Nacht von selbst und der Morgenbericht erscheint."
 
 msgid "ui.rulebook.c04.b08"
 msgstr "Personen auswählen"
@@ -5582,7 +5528,7 @@ msgid "ui.rulebook.c04.b15"
 msgstr "In einer Runde ohne Wiederbelebung werden Rollen, die keine lebende Person mehr hält, nicht mehr aufgerufen. In einer Wiederbelebungsrunde werden auch Rollen Toter aufgerufen."
 
 msgid "ui.rulebook.c04.b16"
-msgstr "Ein offener Schritt blockiert „Nacht abschließen“. Sind Schritte entfallen oder übersprungen worden, weist die Karte darauf hin."
+msgstr "Die Nacht endet erst, wenn kein Schritt mehr offen ist. Sind Schritte entfallen oder übersprungen worden, nennt der Morgenbericht unter „Für dich“ die Rolle und den Grund."
 
 msgid "ui.rulebook.c05.title"
 msgstr "Private Informationen zeigen"
@@ -5594,7 +5540,7 @@ msgid "ui.rulebook.c05.b02"
 msgstr "Nacht und Tag"
 
 msgid "ui.rulebook.c05.b03"
-msgstr "In der Nacht haben alle die Augen geschlossen, deshalb sind Karten mit geheimem Inhalt offen lesbar. Im Morgen und am Tag sehen alle mit. Dort sind solche Karten verdeckt („Nur für die Spielleitung“) und öffnen sich erst mit „Anzeigen“. Mit der nächsten Handlung sind sie wieder verdeckt."
+msgstr "Karten erscheinen immer direkt, auch am Morgen und am Tag; es gibt keine verdeckte Zwischenkarte. Wenn am Tag jemand mitlesen könnte, nutze den Sichtschutz oder „Verbergen“."
 
 msgid "ui.rulebook.c05.b04"
 msgstr "Sichtschutz und Verbergen"
@@ -5606,7 +5552,7 @@ msgid "ui.rulebook.c05.b06"
 msgstr "Private Hinweise"
 
 msgid "ui.rulebook.c05.b07"
-msgstr "Einige Rollen lösen private Hinweise aus (Loki, Rattenfänger, Pestbringerin, Rotkäppchen). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, „Gezeigt“ bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Am Tag bleibt der Inhalt verdeckt, bis du „Anzeigen“ tippst. Bei Rotkäppchen tippst du die gewählte Person nach der Wahl unauffällig an und zeigst ihr die anonyme Frage; die Antwort erfasst du mit „Zuflucht gewährt“ oder „Keine Zuflucht“."
+msgstr "Einige Rollen lösen private Hinweise aus (Loki, Rattenfänger, Pestbringerin, Rotkäppchen). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, das Schließen bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Bei Rotkäppchen tippst du die gewählte Person nach der Wahl unauffällig an und zeigst ihr die anonyme Frage; die Antwort erfasst du mit „Zuflucht gewährt“ oder „Keine Zuflucht“."
 
 msgid "ui.rulebook.c05.b08"
 msgstr "Bereiche mit allen Geheimnissen"
@@ -5618,10 +5564,10 @@ msgid "ui.rulebook.c06.title"
 msgstr "Morgen und Wiederbelebungsrunde"
 
 msgid "ui.rulebook.c06.b01"
-msgstr "„Nacht abschließen“ wertet die Nacht aus: Zuerst wird der Angriff des Rudels geprüft. Eine Rettung durch die Waldhexe oder ein Schutz durch den Schutzengel verhindert ihn; das erfährt nur die Spielleitung. Danach folgen sofortige Todesfolgen, dann offene Reaktionen der Reihe nach, und erst am Ende prüft die App verbindlich auf einen Sieg."
+msgstr "Nach dem letzten Schritt wertet die App die Nacht aus: Zuerst wird der Angriff des Rudels geprüft. Eine Rettung durch die Waldhexe oder ein Schutz durch den Schutzengel verhindert ihn; das erfährt nur die Spielleitung. Danach folgen sofortige Todesfolgen, dann offene Reaktionen der Reihe nach, und erst am Ende prüft die App verbindlich auf einen Sieg."
 
 msgid "ui.rulebook.c06.b02"
-msgstr "Offene Reaktionen (etwa Sensenträger, Besessener Wolf, Ritter, Dorfschmied, Dämonischer Wolf) erscheinen als verdeckte Karten. „Anzeigen“, dann die Person antippen, die die Karte nennt, oder „Verzichtet“. Jede Reaktion darf freiwillig bleiben und kann weitere Tode auslösen."
+msgstr "Offene Reaktionen (etwa Sensenträger, Besessener Wolf, Ritter, Dorfschmied, Dämonischer Wolf) erscheinen als eigene Karte. Tippe die Person an, die die Karte nennt, oder „Verzichtet“. Jede Reaktion darf freiwillig bleiben und kann weitere Tode auslösen."
 
 msgid "ui.rulebook.c06.b03"
 msgstr "Morgenbericht"
@@ -5630,16 +5576,16 @@ msgid "ui.rulebook.c06.b04"
 msgstr "Der Morgenbericht steht vor den Tagesaktionen. Der Vorlesetext nennt die Namen der in der Nacht Gestorbenen oder „In dieser Nacht ist niemand gestorben“. Eine Rolle wird nur in Runden ohne Wiederbelebung genannt, eine Ursache nie."
 
 msgid "ui.rulebook.c06.b05"
-msgstr "„Ansagekarte zeigen“ zeigt den öffentlichen Teil vollflächig am Tisch: Namen der Toten, Wiederbelebte und ausdrücklich öffentliche Hinweise."
+msgstr "Der Morgenbericht hat zwei Teile. „Fürs Dorf“ liest du vor: wer gestorben ist, wer zurück ist, wer ausgewählt wurde (etwa vom Richter) und andere öffentliche Ereignisse."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "„Private Details …“ zeigt nur der Spielleitung Ursachen, Rettungen, entfallene Schritte, Reaktionen und Rollenwechsel."
+msgstr "„Für dich“ ist nur für die Spielleitung: wer verliebt ist, wer Rivale von wem ist, wer verzaubert, geschützt, vergiftet oder gerettet wurde, Ursachen und ausgefallene Schritte. Ein Satz pro Punkt mit Namen."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "„Weiter zum Tag“ beginnt den Tag."
 
 msgid "ui.rulebook.c06.b08"
-msgstr "Sichtbare Folgen eines Todes werden öffentlich angesagt, auch in Wiederbelebungsrunden, zum Beispiel der Fluch des Sensenträgers, die Wirkung des Ritters oder der Liebeskummer. Die Ansage nennt den Effekt und die Rolle, von der er stammt. Geheime Wahlen ohne sichtbare Folge bleiben verdeckt."
+msgstr "Sichtbare Folgen eines Todes werden öffentlich angesagt, auch in Wiederbelebungsrunden, zum Beispiel der Fluch des Sensenträgers, die Wirkung des Ritters oder der Liebeskummer. Die Ansage nennt den Effekt und die Rolle, von der er stammt. Geheime Wahlen ohne sichtbare Folge werden nicht angesagt."
 
 msgid "ui.rulebook.c06.b09"
 msgstr "Wiederbelebungsrunde"
@@ -5690,7 +5636,7 @@ msgid "ui.rulebook.c08.b01"
 msgstr "Nach der Abstimmung am Tisch tippst du „Hinrichtung …“, dann die Person, die hingerichtet wird, und „Weiter zur Prüfung“. Wählbar sind nur Personen, die heute nominiert wurden. Eine Hinrichtung ohne Nominierung ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
 
 msgid "ui.rulebook.c08.b02"
-msgstr "Es folgt immer eine verdeckte Prüfkarte. Sie erscheint bei jeder Hinrichtung, damit ihr Auftauchen nichts über bestimmte Rollen verrät. „Anzeigen“ zeigt sie der Spielleitung: Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichtung bestätigen“. Eine Rückfrage schützt vor Fehlern."
+msgstr "Es folgt immer eine Prüfkarte, bei jeder Hinrichtung, damit ihr Auftauchen nichts über bestimmte Rollen verrät. Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichtung bestätigen“; die Hinrichtung gilt sofort."
 
 msgid "ui.rulebook.c08.b03"
 msgstr "Soll niemand hingerichtet werden, tippst du „Keine Hinrichtung heute …“ und bestätigst die Rückfrage. Erst nach dieser Entscheidung, und wenn kein Schritt und keine Reaktion mehr offen ist, ist „Tag beenden“ möglich."
@@ -5699,7 +5645,7 @@ msgid "ui.rulebook.c08.b04"
 msgstr "Todesreaktionen"
 
 msgid "ui.rulebook.c08.b05"
-msgstr "Nach jedem Tod arbeitet die App zuerst die sofortigen Folgen ohne Entscheidung ab, danach die offenen Reaktionen der Reihe nach. Reaktionen erscheinen als verdeckte Karten. Die Person, die reagiert, entscheidet freiwillig: die Karte nennt, wen du antippen sollst, oder „Verzichtet“."
+msgstr "Nach jedem Tod arbeitet die App zuerst die sofortigen Folgen ohne Entscheidung ab, danach die offenen Reaktionen der Reihe nach. Jede Reaktion erscheint als eigene Karte. Die Person, die reagiert, entscheidet freiwillig: die Karte nennt, wen du antippen sollst, oder „Verzichtet“."
 
 msgid "ui.rulebook.c08.b06"
 msgstr "Jede Reaktion kann weitere Tode und Folgen auslösen. Erst wenn nichts mehr offen ist, prüft die App verbindlich, ob jemand gewonnen hat (Kapitel 9). Sichtbare Folgen werden öffentlich angesagt (Kapitel 6)."
@@ -5711,10 +5657,10 @@ msgid "ui.rulebook.c09.title"
 msgstr "Sieg bestätigen"
 
 msgid "ui.rulebook.c09.b01"
-msgstr "Nach jedem Tod prüft die App vorläufig, ob eine Siegbedingung erfüllt ist. Offene Reaktionen und Fähigkeiten werden zuerst abgearbeitet, danach gilt die Prüfung verbindlich. Ist eine Bedingung erfüllt, erscheint die verdeckte Karte „Mögliches Spielende“."
+msgstr "Nach jeder Änderung (Tod, Hinrichtung, Bindung) prüft die App selbst, ob eine Siegbedingung erfüllt ist. Offene Reaktionen und Fähigkeiten werden zuerst abgearbeitet, danach gilt die Prüfung verbindlich. Ist genau ein Sieg erreicht, erscheint direkt der Siegbildschirm mit dem Gewinner-Team."
 
 msgid "ui.rulebook.c09.b02"
-msgstr "„Anzeigen“ zeigt jeden Siegkandidaten mit dem Grund, zum Beispiel: Die Wölfe sind mindestens so viele wie alle anderen Lebenden. Prüfe die Bedingung am Tisch."
+msgstr "Sind mehrere Siege gleichzeitig möglich, oder entstand der Sieg nach „Rückgängig“, zeigt die Karte jeden Siegkandidaten mit dem Grund, zum Beispiel: Die Wölfe sind mindestens so viele wie alle anderen Lebenden. Ein Tipp bestätigt einen Sieg."
 
 msgid "ui.rulebook.c09.b03"
 msgstr "„Sieg bestätigen: …“ mit anschließender Rückfrage bestätigt genau einen Kandidaten. Die Partie ist beendet, Sieger und Grund sind gespeichert."
@@ -5810,7 +5756,7 @@ msgid "ui.rulebook.c12.b02"
 msgstr "Im Lexikon suchst du nach dem Rollennamen der gewählten Sprache und filterst nach Alle, Dorf, Werwölfe und Einzelsieg. Ein Eintrag nennt die Fraktion, einen Kurztext und die Abschnitte Nachtschritt, Zählt als Wolf, Fähigkeit, Zeitpunkt und Einsätze, Ziele, Ausnahmen, Sieg, Beispiele, Ablauf am Tisch und Hinweise für die Spielleitung. Bei einigen Rollen steht zusätzlich „Noch nicht geklärt oder umgesetzt“."
 
 msgid "ui.rulebook.c12.b03"
-msgstr "Auf der privaten Karte eines Schritts öffnet „Regel nachlesen“ den Eintrag der handelnden Rolle. Eine verdeckte Karte hat keine Hilfe. Auf einer gezeigten Karte (Karte zeigen, Ansagekarte, Rollenanzeige) gibt es keine Hilfe, denn die Karte ersetzt das Cockpit."
+msgstr "Auf der Karte eines Schritts öffnet „Regel nachlesen“ den Eintrag der handelnden Rolle. Auf einer gezeigten Karte (Karte zeigen, Rollenanzeige) gibt es keine Hilfe, denn die Karte ersetzt das Cockpit."
 
 msgid "ui.rulebook.c12.b04"
 msgstr "Was Hilfe tut und nicht tut"
@@ -8906,3 +8852,51 @@ msgstr "Das Mikrofon ist nicht erlaubt. Erlaube es in den Browser-Einstellungen.
 
 msgid "ui.setup.voice.none"
 msgstr "Nichts verstanden. Noch einmal versuchen."
+
+msgid "ui.morning.private.lovers"
+msgstr "{name} und {target} sind Liebende."
+
+msgid "ui.morning.private.rivals"
+msgstr "{name} und {target} sind Rivalen."
+
+msgid "ui.morning.private.charmed"
+msgstr "{name} wurde verzaubert."
+
+msgid "ui.morning.private.protected"
+msgstr "{name} wurde geschützt."
+
+msgid "ui.morning.private.wolf_poisoned"
+msgstr "{name} wurde vom Giftwolf vergiftet."
+
+msgid "ui.morning.private.infected"
+msgstr "{name} wurde angesteckt."
+
+msgid "ui.morning.private.parasite_host"
+msgstr "{name} trägt den Parasiten."
+
+msgid "ui.morning.private.voodoo_doll"
+msgstr "{name} ist die Voodoo-Puppe."
+
+msgid "ui.morning.private.nothing"
+msgstr "Sonst ist nichts Geheimes passiert."
+
+msgid "ui.cockpit.card.morning.village"
+msgstr "Fürs Dorf"
+
+msgid "ui.cockpit.card.morning.private"
+msgstr "Für dich"
+
+msgid "ui.cockpit.victory.title.village"
+msgstr "Das Dorf siegt"
+
+msgid "ui.cockpit.victory.title.wolves"
+msgstr "Die Werwölfe siegen"
+
+msgid "ui.cockpit.victory.title.solo"
+msgstr "Einzelsieg"
+
+msgid "ui.cockpit.victory.title.none"
+msgstr "Niemand siegt"
+
+msgid "ui.cockpit.victory.winners"
+msgstr "Gewonnen haben: {names}"

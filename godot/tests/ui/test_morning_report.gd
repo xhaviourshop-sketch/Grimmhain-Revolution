@@ -180,3 +180,52 @@ func test_without_reveal_no_role_in_public_data() -> void:
 	for role: String in ["dorfbewohner", "doktor", "koenig", "werwolf", "schutzengel", "waldhexe", "nachtwaechter"]:
 		assert_false(strings.has(role), "zeigbare Daten ohne %s" % role)
 	assert_eq(session.day_deaths().map(func(d: Dictionary) -> String: return str(d["role_id"])), ["", ""], "Tagesansagen ohne Rolle")
+
+
+## Fenster-Diät (Markus 05.10.2026): Der Bericht spricht Alltagssprache. Kein Text zeigt interne Daten wie Ereignisnamen („LokiBound“),
+## Schlüssel in snake_case, „_id“, geschweifte Klammern oder unübersetzte Schlüssel; Loki-Paar und Schutz stehen als Satz mit Namen da.
+func test_morning_text_has_no_internal_data() -> void:
+	var map := {}
+	var roles := ["werwolf", "loki", "schutzengel", "waldhexe", "dorfbewohner", "amalia", "detektiv"]
+	for i: int in roles.size():
+		map[str(i + 1)] = roles[i]
+	var session := GameSession.new()
+	assert_true(session.submit(Command.start_game({"round_id": "r", "seed": 5, "assignment": "manual", "players": Fixtures.players(7),
+		"seat_order": [1, 2, 3, 4, 5, 6, 7], "roles": map})).ok, "Start")
+	session.start_night()
+	for guard: int in 40:
+		var next: Dictionary = session.cockpit_view().get("next", {})
+		match str(next.get("kind")):
+			"begin_step":
+				session.begin_next_step()
+			"notice":
+				session.ack_notice(int(next["notice_id"]))
+			"end_night":
+				session.end_night()
+			"prompt":
+				if str(next.get("answer")) == "targets":
+					var want := 1
+					for c: Variant in next.get("counts", []):
+						if int(c) > 0:
+							want = int(c)
+							break
+					session.answer_targets((next.get("allowed_ids", []) as Array).slice(0, want))
+				elif str(next.get("answer")) == "option":
+					session.answer_option(0)
+				else:
+					session.answer_choice(true)
+			_:
+				break
+	var report := session.morning_report()
+	assert_false(report.is_empty(), "Morgen erreicht")
+	var lines: Array = CockpitText.morning_lines(report.get("public", {}))
+	var own := CockpitText.private_lines(report.get("private", []))
+	lines.append_array(own)
+	var text := "\n".join(lines.map(func(l: Dictionary) -> String: return CockpitLayers._format(l)))
+	var snake := RegEx.create_from_string("[A-Za-z]+_[A-Za-z_]+")
+	assert_true(snake.search(text) == null, "kein snake_case im Bericht: %s" % text)
+	for bad: String in ["{", "}", "_id", "LokiBound", "kind", "win_detection", "candidate", "beneficiary", "ui."]:
+		assert_false(text.contains(bad), "Bericht ohne „%s“" % bad)
+	var bond := own.filter(func(l: Dictionary) -> bool: return str(l["key"]) in ["ui.morning.private.lovers", "ui.morning.private.rivals"])
+	assert_eq(bond.size(), 1, "Loki-Paar als ein Satz")
+	assert_true(bond.size() == 1 and str((bond[0]["values"] as Dictionary)["name"]) != "" and str((bond[0]["values"] as Dictionary)["target"]) != "", "mit beiden Namen")

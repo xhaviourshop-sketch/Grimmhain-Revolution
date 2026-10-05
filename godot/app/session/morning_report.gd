@@ -191,8 +191,31 @@ static func _private(s: GameState, span: Array[GameEvent]) -> Array:
 			GameEvent.ROLE_CHANGED, GameEvent.WOLF_CHILD_TRANSFORMED:
 				var who := int(d.get("player_id", d.get("child_id", GameState.NO_TARGET)))
 				out.append({"key": "ui.morning.private.role_changed", "person": _person(s, who), "role_id": String(s.players[who].role_id) if s.players.has(who) else ""})
+			GameEvent.NIGHT_STEP_SKIPPED:
+				out.append({"key": "ui.morning.private.step_dropped", "role_id": "pack", "drop": str(d["reason"])})
+			GameEvent.LOKI_BOUND:
+				var pair: Array = d["target_ids"]
+				out.append({"key": "ui.morning.private.lovers" if str(d["kind"]) == "love" else "ui.morning.private.rivals",
+					"person": _person(s, int(pair[0])), "target": _person(s, int(pair[1]))})
+			GameEvent.CHARMED:
+				for id: Variant in d["target_ids"]:
+					out.append({"key": "ui.morning.private.charmed", "person": _person(s, int(id))})
+			GameEvent.PROTECTION_SET:
+				out.append({"key": "ui.morning.private.protected", "person": _person(s, int(d["target_id"]))})
+			GameEvent.WOLF_POISONED:
+				out.append({"key": "ui.morning.private.wolf_poisoned", "person": _person(s, int(d["target_id"]))})
+			GameEvent.INFECTED:
+				out.append({"key": "ui.morning.private.infected", "person": _person(s, int(d["target_id"]))})
+			GameEvent.PARASITE_ATTACHED:
+				if int(d["host_id"]) > 0:
+					out.append({"key": "ui.morning.private.parasite_host", "person": _person(s, int(d["host_id"]))})
+			GameEvent.VOODOO_DOLL_GIVEN:
+				if int(d["doll_id"]) > 0:
+					out.append({"key": "ui.morning.private.voodoo_doll", "person": _person(s, int(d["doll_id"]))})
 			_:
-				out.append({"key": "", "type": String(e.type), "data": d.duplicate(true)})
+				# Alle übrigen Ereignisse stehen im Protokoll; der Bericht nennt nur, was die Spielleitung am Morgen wissen muss,
+				# und zeigt nie Rohdaten (Ereignisnamen, Schlüssel).
+				out.append({"key": "", "type": String(e.type)})
 	return out
 
 
