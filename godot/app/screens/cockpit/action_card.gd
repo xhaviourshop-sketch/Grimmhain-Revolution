@@ -53,13 +53,18 @@ var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel begin
 var _compact: bool = false  ## Mini-Nachtkarte (DA-101): schmal, ohne Scrollen, nur Zeile, Warnungen und Knöpfe
 var _mini_row: HBoxContainer = null  ## obere Zeile der Mini-Karte; dort steht auch der „i“-Knopf
 var _day_card: bool = false  ## Tageskarte nach Inhalt (breiter als die Nachtkarte): lässt die Nominierungsbänder des Rings sichtbar
+var _max_height: float = 0.0  ## Höchsthöhe der kompakten Karte (freie Ringmitte); 0 = unbegrenzt
+var _nom_lines: int = MAX_NOMINATION_LINES  ## Nominierungszeilen der Tageskarte; sinkt, wenn die Karte sonst nicht in die Ringmitte passt
+var _nom_count: int = -1
 var _info_gap: bool = true  ## Titel lässt rechts Platz für das „i“ (nur Karten mit Kontexthilfe)
 
 const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
 const SIDE_BY_SIDE_WIDTH := 560.0  ## ab dieser Kartenbreite stehen Zielplatz und Nebenaktionen in einer Zeile
 ## Schritte der Textanpassung (Schriftfaktor, Breite des Rollenbilds): erst kleinere Schrift, dann zusätzlich ein kleineres Rollenbild (mehr Textbreite), danach Scrollen
-const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Vector2(0.84, 88.0), Vector2(0.76, 76.0), Vector2(0.7, 64.0)]
-const FIT_MIN_FONT := 15  ## kleinste Schrift des Kartentexts (logische Einheiten)
+const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Vector2(0.84, 88.0), Vector2(0.76, 76.0), Vector2(0.7, 64.0),
+	Vector2(0.62, 56.0), Vector2(0.55, 48.0)]
+const COMPACT_SHRINK_STEPS := 2  ## Tageskarte: so viele Schriftschritte, danach fallen Nominierungszeilen weg
+const FIT_MIN_FONT := 12  ## kleinste Schrift des Kartentexts (logische Einheiten)
 const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (epischer Knopf, `EpicButton`)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
 const DAY_ACTION_MIN_WIDTH := 300.0  ## Tageskarte: je Knopf eine Zeile, damit „Keine Hinrichtung“ einzeilig bleibt
@@ -156,6 +161,10 @@ func _notification(what: int) -> void:
 func render(next: Dictionary, context: Dictionary) -> void:
 	_last_next = next
 	_last_context = context
+	var nom_count := (next.get("nominations", []) as Array).size()
+	if nom_count != _nom_count:  # neue Nominierung: wieder mit allen Zeilen beginnen
+		_nom_count = nom_count
+		_nom_lines = MAX_NOMINATION_LINES
 	_busy = false
 	_fit_text.call_deferred()
 	if _primary != null and is_instance_valid(_primary):
@@ -227,7 +236,7 @@ func render(next: Dictionary, context: Dictionary) -> void:
 ## keinen Platz verdecken), deshalb wird zuerst die Schrift schrittweise bis `FIT_MIN_FONT` verkleinert; erst wenn das nicht reicht, scrollt
 ## der Text, mit sichtbarem Hinweis (`ScrollHint`).
 func _fit_text() -> void:
-	if _scroll == null or _content == null or not is_inside_tree() or _compact:
+	if _scroll == null or _content == null or not is_inside_tree() or (_compact and _max_height <= 0.0):
 		return
 	_fit_index = _fit_step
 	_fit_apply()
@@ -244,12 +253,36 @@ func _process(_delta: float) -> void:
 	if _fit_wait > 0:
 		return
 	var bar := _scroll.get_v_scroll_bar()
-	if bar.max_value - bar.page <= 1.0 or _fit_index >= FIT_STEPS.size() - 1:
-		set_process(false)  # passt, oder die kleinste Schrift ist erreicht (dann scrollt der Text mit Hinweis)
+	var fits := _compact_height() <= _max_height if _compact else bar.max_value - bar.page <= 1.0
+	if fits:
+		set_process(false)
+		return
+	if _compact and _day_card and _nom_lines > 1 and _fit_index >= COMPACT_SHRINK_STEPS:
+		set_process(false)  # Tageskarte: lieber eine Nominierungszeile weniger (die Bänder am Ring zeigen alle) als winzige Schrift
+		_nom_lines -= 1
+		render.call_deferred(_last_next, _last_context)
+		return
+	if _fit_index >= FIT_STEPS.size() - 1:
+		set_process(false)  # kleinste Schrift erreicht (bei Textkarten scrollt der Text dann mit Hinweis)
 		return
 	_fit_index += 1
 	_fit_apply()
 	_fit_wait = 2
+
+
+## Höhe der kompakten Karte samt Rahmen (das Cockpit setzt die Höchsthöhe über `set_max_height`).
+func _compact_height() -> float:
+	var parent := get_parent_control()
+	return parent.get_combined_minimum_size().y if parent != null else get_combined_minimum_size().y
+
+
+## Höchsthöhe der kompakten Karte: die freie Ringmitte. Passt der Inhalt nicht, wird erst die Schrift, dann die Zeilenzahl kleiner.
+func set_max_height(height: float) -> void:
+	if is_equal_approx(height, _max_height):
+		return
+	_max_height = height
+	if _compact:
+		_fit_text.call_deferred()
 
 
 func _fit_apply() -> void:
@@ -773,7 +806,7 @@ func _day_public(next: Dictionary, context: Dictionary) -> void:
 		_text("ui.cockpit.card.day.no_nominations", {}, &"MutedLabel")
 	else:
 		var seats: Array = context.get("seats", [])
-		for n: Dictionary in nominations.slice(maxi(nominations.size() - MAX_NOMINATION_LINES, 0)):
+		for n: Dictionary in nominations.slice(maxi(nominations.size() - _nom_lines, 0)):
 			var nominee := CockpitText.names_of([int(n["nominee_id"])], seats)
 			if int(n["nominator_id"]) == -1:
 				_one_line("ui.cockpit.card.day.nomination_hidden", {"nominee": nominee}, &"SectionLabel", 13)
