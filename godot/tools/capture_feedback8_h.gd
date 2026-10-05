@@ -41,6 +41,7 @@ func _initialize() -> void:
 	print("EMBLEM FEHLT: ", missing)
 	await _role(screen, "kriegerin-des-lichts", "vorschau-kriegerin", 3)
 	await _role(screen, "loki", "vorschau-loki", 4)
+	await _role(screen, "henker", "vorschau-henker", 0)
 	quit(0)
 
 
@@ -49,9 +50,11 @@ func _role(screen: RolePreviewScreen, role: String, label: String, shot: int) ->
 	await _fr(10)
 	for i: int in screen.stop_count():
 		await _fr(20)
-		if i + 1 == shot:
-			await _save("%s-%d" % [label, shot])
-			break
+		print("BAR ", (screen.find_child("PreviewBar", true, false) as Control).get_combined_minimum_size(), " COCKPIT ", screen.cockpit().size)
+		if shot == 0 or i + 1 == shot:
+			await _save("%s-%d" % [label, i + 1])
+			if shot != 0:
+				break
 		(screen.find_child("PreviewNext", true, false) as BaseButton).pressed.emit()
 	(screen.find_child("PreviewList", true, false) as BaseButton).pressed.emit()
 	await _fr(6)
