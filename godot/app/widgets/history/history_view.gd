@@ -184,6 +184,11 @@ func _report_line(line: Dictionary) -> Control:
 	return label
 
 
+## Zwischentitel und Überschriften bleiben mit der nächsten Zeile zusammen.
+func _is_heading(line: Dictionary) -> bool:
+	return str(line["style"]) in ["title", "heading"]
+
+
 ## Geschätzte Höhe einer Berichtszeile für die Seiteneinteilung.
 func _line_height(line: Dictionary) -> float:
 	var text_length := float(str(line["text"]).length())
@@ -308,7 +313,7 @@ func _render_report() -> void:
 	_export.disabled = reopened
 	_report_lines = ReportText.lines(report, _version, not reopened)
 	var pager := CockpitLayers.Pager.new()
-	pager.setup(_report_lines, _report_line, _line_height, _page_room(REPORT_CHROME), false)
+	pager.setup(_report_lines, _report_line, _line_height, _page_room(REPORT_CHROME), false, _is_heading)
 	_report_host.add_child(pager)
 
 

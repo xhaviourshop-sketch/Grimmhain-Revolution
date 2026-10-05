@@ -204,6 +204,9 @@ func _build_list(column: VBoxContainer) -> void:
 		b.format_values = {"name": StringName(RolePresentation.name_key(role)),
 			"faction": StringName(RolePresentation.faction_key(SetupRoleCatalog.faction_of(role)))}
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		var read := ThemeTokens.team_read_color(SetupRoleCatalog.faction_of(role))
+		for state: StringName in [&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color", &"font_hover_pressed_color"]:
+			b.add_theme_color_override(state, read)
 		b.pressed.connect(open_role.bind(role))
 		list.add_child(b)
 		_rows[role] = b
