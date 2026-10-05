@@ -5,6 +5,7 @@ extends Control
 ##   show_seats(seats)            öffentliche Sitzdaten (ohne Rollen)
 ##   set_marks(marks)             geheime Zustandsabzeichen je Person (Person-ID → Arten), nur für die Spielleitung
 ##   set_secrets_visible(on)      aus bei „Verbergen“: keine Abzeichen, keine Statusringe, keine Hervorhebung handelnder Personen
+##   set_hunt(ids, animated)      Feuerring um Wölfe (Werwolf-Phase, König Lykaon), nur sichtbar, solange Geheimes sichtbar ist
 ##   set_marking(mode, allowed, selected, actors)
 ##                                mit Auswahlmodus: nur `allowed` antippbar, `selected` gold; ohne
 ##                                Auswahlmodus: handelnde Personen (`actors`) hervorgehoben.
@@ -21,6 +22,8 @@ var _actors: Array = []
 var _marks: Dictionary = {}
 var _secrets_visible: bool = true
 var _chosen: int = 0
+var _hunt: Array = []
+var _hunt_animated: bool = true
 ## Flacher Ring über der Rollenleiste (Zuordnung im Kartenmodus): kleinere Rahmen ohne Überlappung.
 var compact: bool = false:
 	set(value):
@@ -90,8 +93,16 @@ func set_chosen(person_id: int) -> void:
 	_apply_states()
 
 
+## Wölfe mit Feuerring (Werwolf-Phase, König Lykaon), unabhängig vom Auswahlmodus; leer = keiner.
+func set_hunt(ids: Array, animated: bool = true) -> void:
+	_hunt = ids.duplicate()
+	_hunt_animated = animated
+	_apply_states()
+
+
 func clear_marking() -> void:
 	set_marking(false, [], [], [])
+	set_hunt([])
 
 
 func tokens() -> Array[GameSeatToken]:
@@ -128,6 +139,8 @@ func _apply_states() -> void:
 			state = &"actor"
 		token.state = state
 		token.chosen = id == _chosen
+		token.hunt_animated = _hunt_animated
+		token.hunt = _hunt.has(id)
 		token.secrets_visible = _secrets_visible
 		token.marks = _marks.get(id, []) if _secrets_visible else []
 		token.disabled = _selection_mode and not _allowed.has(id) and not _selected.has(id)

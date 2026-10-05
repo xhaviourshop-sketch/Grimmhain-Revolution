@@ -16,7 +16,7 @@ Je Rolle wurde die echte Aktionskarte der App gerendert (Nacht 1 bis 3, Tod, und
 
 ## Prinzipien der neuen Schablone
 
-1. **Oben die Fähigkeit in 1 Satz, darunter höchstens 1 Satz Hilfe.** Keine Status-Wörter wie "Tu jetzt", "Handelnd: 15", "Zulässige Anzahl gewählter Personen".
+1. **Oben die Fähigkeit in 1 Satz, darunter bis zu 3 kurze Regelzeilen** mit dem, was der Spielleiter wissen muss (Sonderfälle, Wechselwirkungen). Ersetzt "höchstens 1 Satz Hilfe" (Rückmeldung iPad-Test 05.10.2026: die Karte war zu 90 % leer). Die Zeilen sind aus den Regeltexten im Repo abgeleitet, nichts erfunden; Quelle der Texte `ui.night.rules.<rolle>` in den Übersetzungsdateien, Übersicht in der Spalte `nachtkarte_regeln` von `NACHTSCHRITTE-72.csv`. Keine Bedienwörter wie "Tippe", "Tu jetzt", "Handelnd: 15", "Zulässige Anzahl gewählter Personen". Beispiel Loki: "Loki verbindet zwei Personen als Liebende oder Rivalen." / "· Loki darf sich selbst wählen." / "· Liebende: Stirbt einer, stirbt der andere aus Liebeskummer mit." / "· Rivalen: Keiner kann gewinnen, solange der andere lebt."
 2. **Feste Anzahl wird direkt übernommen**, sobald sie erreicht ist ("genau 2", "genau 3"). Kein extra "Auswahl bestätigen"; stattdessen 3 Sekunden rückgängig machbar. Kein "Auswahl leeren" (Antippen wählt ab).
 3. **Verzichten nur, wenn der Rollentext es erlaubt.** Dann genau ein Knopf mit klarem Wort ("Nicht heute"), nie zusätzlich "Niemand / verzichten" im Text und "Abbrechen" daneben. Wo der Text zwingt (Loki, Spürhund, Werwolf, Albtraumwolf), entfällt der Knopf; das ist eine Produktentscheidung (siehe unten).
 4. **Entscheidungen vor der Spielerwahl** (Loki: Liebende oder Rivalen zuerst, dann die zwei Personen).

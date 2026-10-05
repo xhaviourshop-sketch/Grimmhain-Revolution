@@ -8,7 +8,7 @@ extends VBoxContainer
 ## Geheime Karten (`secret`) zeigt die Karte außerhalb der Nacht verdeckt, bis `revealed` gesetzt
 ## ist. Verdeckt entstehen keine Knoten mit geheimem Inhalt.
 ##
-## Nacht-Schablone (DA Nachtschritte neu): Titel (die Fähigkeit in 1 Satz), darunter höchstens 1 Satz Hilfe; Ansage und Aktion stehen auf
+## Nacht-Schablone (DA Nachtschritte neu): Titel (die Fähigkeit in 1 Satz), darunter bis zu 3 kurze Regelzeilen der Rolle (`NightRules`, ohne Bedienwörter); Ansage und Aktion stehen auf
 ## demselben Bildschirm (ein Schritt ohne Prompt-Vorschau zeigt nur „Weiter“). Eine feste Anzahl wird vom Cockpit sofort übernommen
 ## (`CockpitText.auto_commit`), dann zeigt die Karte 3 Sekunden „Rückgängig“ (`show_undo`). Verzichten gibt es nur, wo die Karte es
 ## vorsieht (ein Knopf, „Nicht heute“). Karte zeigen genau einmal: Das Schließen der gezeigten Karte erledigt den Schritt.
@@ -449,7 +449,11 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		texts["stage"] = "mode"
 	_decoys(next)
 	_heading(CockpitText.night_title_key(texts), {"role": CockpitText.role_name(role)}).name = "NightTitle"
-	_text(CockpitText.night_help_key(texts), {}, &"MutedLabel").name = "NightHelp"
+	var rules_key := CockpitText.night_rules_key(role)
+	if rules_key != "":
+		_text(rules_key, {}, &"MutedLabel").name = "NightRules"
+	else:
+		_text(CockpitText.night_help_key(texts), {}, &"MutedLabel").name = "NightHelp"
 	if anonymous:  # Zuflucht: die gefragte Person steht auf der Karte, die fragende Person und die Rolle nicht
 		_text("ui.night.rotkaeppchen.grant.asked", {"names": CockpitText.names_of(next.get("actor_ids", []), context.get("seats", []))}, &"SectionLabel").name = "AskedName"
 		_text("ui.night.rotkaeppchen.grant.hint", {}, &"MutedLabel").name = "RefugeHint"

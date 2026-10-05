@@ -1,6 +1,6 @@
 extends TestCase
 ## DI-04, DI-06, DI-07 (Antworten des Product Owners vom 29.09.2026): Private Hinweise an Betroffene.
-##   Loki: beide Personen des Paares erfahren Partner und Bindungsart.
+##   Loki: beide Personen des Paares erfahren die Bindungsart auf einer gemeinsamen Karte (ein Hinweis, früher zwei).
 ##   Rattenfänger: die neu Verzauberten; „Alle Verzauberten“ ist seit PE-06 ein Nachtschritt (test_piper_all).
 ##   Pestbringerin: jede neu infizierte Person, auch durch die Ausbreitung am Morgen.
 ## Ein Hinweis ist Teil des Spielstands (`notices`), wird mit `AckNotice` als gezeigt abgeschlossen und ist
@@ -92,19 +92,16 @@ func test_loki_love_notifies_both_persons_with_partner_and_kind() -> void:
 	if s == null:
 		return
 	var bonds := _notices_of(s, "loki_bond")
-	assert_eq(bonds.size(), 2, "ein Hinweis je Person")
-	if bonds.size() == 2:
-		assert_eq(bonds[0]["viewer_ids"], [3], "erster Hinweis nur für Person 3")
-		assert_eq(bonds[0]["data"], {"partner_id": 5, "bond": "love"}, "Partner und Art für 3")
-		assert_eq(bonds[1]["viewer_ids"], [5], "zweiter Hinweis nur für Person 5")
-		assert_eq(bonds[1]["data"], {"partner_id": 3, "bond": "love"}, "Partner und Art für 5")
-		assert_true(int(bonds[0]["id"]) < int(bonds[1]["id"]), "feste Reihenfolge")
+	assert_eq(bonds.size(), 1, "nur ein Hinweis für das Paar (er erschien zuvor doppelt)")
+	if bonds.size() == 1:
+		assert_eq(bonds[0]["viewer_ids"], [3, 5], "beide Personen sehen dieselbe Karte")
+		assert_eq(bonds[0]["data"], {"bond": "love"}, "nur die Art der Bindung")
 
 
 func test_loki_rivals_and_no_decline() -> void:
 	var rivals := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [4, 6], "loki:2@mode": false})
 	var bonds := _notices_of(rivals, "loki_bond") if rivals != null else []
-	assert_true(bonds.size() == 2 and bonds[0]["data"]["bond"] == "rival" and bonds[1]["data"]["bond"] == "rival", "Rivalen erfahren die Art")
+	assert_true(bonds.size() == 1 and bonds[0]["data"]["bond"] == "rival" and bonds[0]["viewer_ids"] == [4, 6], "Rivalen erfahren die Art auf einer Karte")
 	var s := _state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	s = _ok(s, Command.start_night(), "Nacht")
 	apply_rejected(s, Command.answer_stage_targets(s.pending_prompt.id, "targets", []), "invalid_target_count", "Loki wählt immer genau zwei")
@@ -113,7 +110,9 @@ func test_loki_rivals_and_no_decline() -> void:
 func test_loki_himself_in_the_pair_is_a_viewer_too() -> void:
 	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [2, 3], "loki:2@mode": true})
 	var bonds := _notices_of(s, "loki_bond") if s != null else []
-	assert_eq(bonds.size(), 2, "beide Personen des Paares, auch Loki selbst")
+	assert_eq(bonds.size(), 1, "eine Karte für beide Personen des Paares")
+	if bonds.size() == 1:
+		assert_eq(bonds[0]["viewer_ids"], [2, 3], "auch Loki selbst sieht sie")
 
 
 # --- Rattenfänger -----------------------------------------------------------------------------------
@@ -167,8 +166,13 @@ func test_plague_notifies_each_newly_infected_including_spread() -> void:
 
 # --- Bestätigen, Sichtbarkeit, Aufräumen -----------------------------------------------------------
 
+## Zwei offene Hinweise: Lokis gemeinsamer Hinweis für das Paar (4, 5) und die Ansteckung der Person 6 durch die Pestbringerin.
+func _two_notices(log: Array[GameEvent] = []) -> GameState:
+	return _night(_state([W, LO, PB, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [4, 5], "loki:2@mode": true, "pestbringerin:3": [6]}, log)
+
+
 func test_ack_removes_notice_and_rejects_unknown_ids() -> void:
-	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
+	var s := _two_notices()
 	if s == null or s.notices.size() != 2:
 		fail("Vorbereitung")
 		return
@@ -186,7 +190,7 @@ func test_ack_removes_notice_and_rejects_unknown_ids() -> void:
 
 func test_notices_never_appear_in_public_events() -> void:
 	var log: Array[GameEvent] = []
-	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true}, log)
+	var s := _two_notices(log)
 	assert_true(s != null, "Nacht")
 	var queued := 0
 	for e: GameEvent in log:
@@ -236,12 +240,24 @@ func test_death_removes_the_viewer_and_drops_empty_notices() -> void:
 
 
 func test_notices_survive_save_load_and_replay() -> void:
-	var commands: Array[Command] = [Fixtures.start_roles([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 1), Command.start_night()]
-	var s := RulesEngine.replay(commands).state
-	var p := s.pending_prompt
-	commands.append(Command.answer_stage_targets(p.id, "targets", [3, 5]))
-	commands.append(Command.answer_choice(p.id, "mode", true))
+	var commands: Array[Command] = [Fixtures.start_roles([W, LO, PB, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"], 1), Command.start_night()]
 	var first := RulesEngine.replay(commands)
+	for guard: int in 30:
+		if not first.ok or first.state.notices.size() >= 2:
+			break
+		var p := first.state.pending_prompt
+		if p == null:
+			var step := RulesEngine.next_step_id(first.state)
+			if step == "":
+				break
+			commands.append(Command.begin_step(step))
+		elif p.owner == &"loki" and p.stage == &"targets":
+			commands.append(Command.answer_stage_targets(p.id, "targets", [4, 5]))
+		elif p.owner == &"loki":
+			commands.append(Command.answer_choice(p.id, "mode", true))
+		else:
+			commands.append(_auto(first.state))
+		first = RulesEngine.replay(commands)
 	assert_true(first.ok and first.state.notices.size() == 2, "zwei Hinweise")
 	if not first.ok:
 		return
@@ -260,7 +276,7 @@ func test_notices_survive_save_load_and_replay() -> void:
 
 
 func test_load_rejects_inconsistent_notices() -> void:
-	var s := _night(_state([W, LO, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), {"loki:2@targets": [3, 5], "loki:2@mode": true})
+	var s := _two_notices()
 	if s == null:
 		return
 	var d := s.to_dict()

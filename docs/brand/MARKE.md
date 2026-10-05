@@ -31,7 +31,7 @@ Wie der Startbildschirm: detailreich gemalt, nachtblau, Mondlicht, warme Fenster
 
 ## Sprache (Spielleiter-App): kurz und klar
 Einfache Worte, keine Floskeln, kein Amtsdeutsch. Atmosphäre nur in Überschriften und Ansagen, nie in Bedientexten.
-- Erst die Fähigkeit in 1 Satz, dann höchstens 1 Satz Hilfe.
+- Nachtkarte: erst die Fähigkeit in 1 Satz, dann bis zu 3 kurze Regelzeilen für den Spielleiter (Sonderfälle, Wechselwirkungen), siehe `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md`. Sonst höchstens 1 Satz Hilfe.
 - Keine Statuswörter für Programmierer ("Tu jetzt", "Handelnd 15").
 - Schlecht: "Wähle 0 bis 2 Personen. Auswahl leeren. Niemand/Verzichten."
 - Gut: "Loki bindet 2 Spieler. Erst Liebende oder Rivalen wählen, dann 2 Spieler antippen."

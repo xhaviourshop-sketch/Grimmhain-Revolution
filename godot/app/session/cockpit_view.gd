@@ -180,7 +180,7 @@ static func _decoys(s: GameState) -> Array:
 
 
 ## Erster offener privater Hinweis (DI-04, DI-06, DI-07) als Karte für die betroffenen Personen. Der Kartentext
-## enthält nur, was die Betrachter erfahren dürfen: den eigenen Partner (Loki) bzw. den eigenen Zustand; nie Rollen
+## enthält nur, was die Betrachter erfahren dürfen: die Bindungsart (Loki, eine Karte für das ganze Paar) bzw. den eigenen Zustand; nie Rollen
 ## anderer Personen. „Alle Verzauberten“ ist ein Nachtschritt (PE-06), kein Hinweis.
 static func notice_card(s: GameState) -> Dictionary:
 	var n: Dictionary = s.notices[0]
@@ -193,7 +193,6 @@ static func notice_card(s: GameState) -> Dictionary:
 	match str(n["kind"]):
 		NoticeRules.LOKI_BOND:
 			text_key = "ui.notice.loki_bond.%s" % str((n["data"] as Dictionary)["bond"])
-			values = {"partner": PromptView.person_label(s, int((n["data"] as Dictionary)["partner_id"]))}
 		NoticeRules.PIPER_NEW:
 			text_key = "ui.notice.piper_new"
 		NoticeRules.PEST_INFECTED:

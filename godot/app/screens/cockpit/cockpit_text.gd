@@ -67,6 +67,13 @@ static func night_title_key(next: Dictionary) -> String:
 	return key if has_key(key) else "ui.night.generic.title"
 
 
+## Regelzeilen der Rolle (bis zu 3, ohne Bedienwörter) unter dem Titel der Nachtkarte: `ui.night.rules.<rolle>`. Ersetzt die Hilfe der Stufe,
+## sobald die Rolle Zeilen hat.
+static func night_rules_key(role: String) -> String:
+	var key := "ui.night.rules.%s" % ("werwolf" if role == "pack" else key_part(role))  # der Rudelschritt zeigt die Regeln des Werwolfs
+	return key if has_key(key) else ""
+
+
 static func night_help_key(next: Dictionary) -> String:
 	var key := night_base(next) + ".help"
 	return key if has_key(key) else "ui.night.generic.help.%s" % str(next.get("answer", "targets"))

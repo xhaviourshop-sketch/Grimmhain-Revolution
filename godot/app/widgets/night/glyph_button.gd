@@ -1,7 +1,8 @@
 class_name GlyphButton
 extends GrimmButton
 ## Runder Randknopf auf dem Hain-Teil `icon_button_round` mit gezeichnetem Mondsilber-Zeichen: „hide“ = Auge (Verbergen, Umschalter;
-## aktiv mit Schrägstrich), „cover“ = Schloss (Sichtschutz), „info“ = i (Details der Aktionskarte). Der Text (Übersetzung) bleibt
+## aktiv mit Schrägstrich), „cover“ = Schloss (Sichtschutz), „info“ = i (Details der Aktionskarte), „mic“ = Mikrofon (Namen per Sprache;
+## als Umschalter zeigt der rote Ring die laufende Aufnahme). Der Text (Übersetzung) bleibt
 ## Tooltip und Bedienungshilfe und wird nicht gezeichnet. Zustand nie nur über Farbe: aktives Verbergen zeigt den Schrägstrich und
 ## einen blutroten Ring.
 
@@ -72,6 +73,13 @@ func _draw() -> void:
 		"info":
 			draw_circle(c + Vector2(0.0, -r * 0.4), r * 0.11, ink)
 			draw_rect(Rect2(c + Vector2(-r * 0.09, -r * 0.18), Vector2(r * 0.18, r * 0.62)), ink)
+		"mic":
+			draw_rect(Rect2(c + Vector2(-r * 0.2, -r * 0.5), Vector2(r * 0.4, r * 0.5)), ink)
+			draw_circle(c + Vector2(0.0, -r * 0.5), r * 0.2, ink)
+			draw_circle(c + Vector2(0.0, 0.0), r * 0.2, ink)
+			draw_arc(c + Vector2(0.0, -r * 0.08), r * 0.4, 0.0, PI, 20, ink, 2.0, true)
+			draw_line(c + Vector2(0.0, r * 0.32), c + Vector2(0.0, r * 0.58), ink, 2.0, true)
+			draw_line(c + Vector2(-r * 0.24, r * 0.58), c + Vector2(r * 0.24, r * 0.58), ink, 2.0, true)
 		"cover":
 			var body := Rect2(c + Vector2(-r * 0.36, -r * 0.02), Vector2(r * 0.72, r * 0.5))
 			draw_rect(body, ink)

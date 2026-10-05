@@ -675,6 +675,7 @@ func _render() -> void:
 		_ring.set_marking(false, [], [], next.get("actor_ids", []))
 	else:
 		_ring.clear_marking()
+	_ring.set_hunt(_hunt_ids(eff, kind) if visible_secret else [], not context.settings.reduced_motion)
 	# Ob die Auswahl bestätigt werden kann, entscheidet der Regelkern (Prüfung ohne Senden).
 	var selection_error := ""
 	if kind == "prompt" and str(next.get("answer")) == "targets" and not _selection.is_empty():
@@ -1084,6 +1085,17 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 
 
 ## Das Gesicht der nächsten Handlung: bei einem Schritt mit Vorschau der Prompt, den sein Beginn öffnen würde.
+## Feuerring im Sitzkreis: beim Rudelschritt alle Wölfe der Nacht, bei König Lykaon (Stufe „ally“) alle wählbaren Wölfe.
+func _hunt_ids(eff: Dictionary, kind: String) -> Array:
+	if kind != "prompt" and kind != "begin_step":
+		return []
+	if str(eff.get("role_id")) == String(CockpitView.GROUP_PACK):
+		return eff.get("actor_ids", [])
+	if str(eff.get("owner")) == "koenig-lykaon" and str(eff.get("stage")) == "ally":
+		return eff.get("allowed_ids", [])
+	return []
+
+
 func _effective(next: Dictionary) -> Dictionary:
 	if str(next.get("kind")) == "begin_step" and not (next.get("preview", {}) as Dictionary).is_empty():
 		return next["preview"]

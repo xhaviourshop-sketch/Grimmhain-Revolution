@@ -2,6 +2,12 @@
 
 Neue Einträge oben einfügen. Nur bewiesene, wiederverwendbare Erkenntnisse aufnehmen.
 
+## 2026-10-05: iPad/Web: Feld per Code geleert, nächster Tastendruck hängt alten Text an
+- Symptom: Nach "Timo" + Enter und `LineEdit.text = ""` ergab das nächste Tippen "TimoJ".
+- Ursache: Der Web-Export schreibt Tastatureingaben über ein verstecktes `<input>` (bzw. `<textarea>`) vor dem Canvas und behält dessen Wert; `LineEdit.text` ändert es nicht. Quelle: `platform/web/js/libs/library_godot_display.js`.
+- Lösung: `AppPlatform.sync_keyboard_text(text)` setzt den Wert dieser Felder mit; Fokus danach `grab_focus()` plus `edit()`.
+- Vermeidung: Jedes Feld, das per Code geleert oder gesetzt wird, während die Bildschirmtastatur offen sein kann, gleicht ab. Nicht headless prüfbar.
+
 ## 2026-09-29: Laufzeitfehler nach bestandener Prüfung galten als grün
 - Symptom: Ein Test mit `SCRIPT ERROR` nach der ersten Prüfung meldete „ok“; nur die Log-Suche fand den Fehler.
 - Lösung: `tests/error_logger.gd` (Godot-`Logger`) im Runner; jeder Engine- oder Skriptfehler während eines Tests macht ihn rot.

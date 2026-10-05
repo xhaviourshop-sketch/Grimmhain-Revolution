@@ -30,6 +30,15 @@ static func can_quit_from_menu() -> bool:
 	return not is_mobile() and not OS.has_feature("web")
 
 
+## Web/iPad: Godot schreibt Tastatureingaben über ein verstecktes Eingabefeld des Browsers und behält dessen Text, wenn ein Feld per Code geleert
+## oder gesetzt wird. Ohne Abgleich hängt der nächste Tastendruck an den alten Text an („Timo“ + „J“ ergibt „TimoJ“). Setzt den Text dieses
+## versteckten Felds auf `text` (Cursor ans Ende). Auf allen anderen Plattformen ohne Wirkung.
+static func sync_keyboard_text(text: String) -> void:
+	if not OS.has_feature("web"):
+		return
+	JavaScriptBridge.eval("(function(t){document.querySelectorAll('input[type=text],textarea').forEach(function(e){e.value=t;if(e.style.display!=='none'){e.setSelectionRange(t.length,t.length);}});})(%s)" % JSON.stringify(text), true)
+
+
 ## Kennung des Builds für den Startbildschirm, z. B. „05.10. · 7d8e541“. `tools/export-web.js` schreibt `build_info.json` beim Export
 ## (nie von Hand, nicht im Repository); ohne Datei (Editor, Tests) gilt die Projektversion.
 static func build_label() -> String:

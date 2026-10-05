@@ -31,6 +31,8 @@ var _side: VBoxContainer
 var _list_col: VBoxContainer
 var _entry_card: PanelContainer
 var _name_input: LineEdit
+var _mic: GlyphButton = null  ## Mikrofon im Namensfeld (nur im Web mit Spracherkennung sichtbar)
+var _voice: VoiceName = null
 var _add: GrimmButton
 var _import_toggle: GrimmButton
 var _load_group: GrimmButton
@@ -80,6 +82,7 @@ func start(setup: PlayerSetup, groups: GroupStore) -> void:
 	_group_card.start(_group_actions)
 	_group_card.close_requested.connect(_leave_mode)
 	_name_input.keep_editing_on_text_submit = true  # Tastatur bleibt offen, das Feld nimmt den nächsten Namen sofort an
+	_leave_room_for_mic()
 	_apply_placeholders()
 	_setup.changed.connect(_render)
 	_set_mode(Mode.ENTRY)
@@ -145,6 +148,7 @@ func _side_column() -> VBoxContainer:
 	_name_input.text_changed.connect(func(_t: String) -> void: _update_controls(_last_view))
 	_name_input.text_submitted.connect(func(_t: String) -> void: _submit_single())
 	entry.add_child(_name_input)
+	_build_mic()
 	_add = _button("AddButton", GrimmButton.Kind.PRIMARY, "ui.setup.add")
 	_add.pressed.connect(_on_add_pressed)
 	entry.add_child(_add)
@@ -268,6 +272,54 @@ func _list_column() -> VBoxContainer:
 	return column
 
 
+## Rechter Rand des Namensfelds bleibt für das Mikrofon frei, damit der Text nicht darunterläuft.
+func _leave_room_for_mic() -> void:
+	for style_name: String in ["normal", "focus", "read_only"]:
+		var box := _name_input.get_theme_stylebox(style_name).duplicate() as StyleBox
+		box.content_margin_right = float(ThemeTokens.TOUCH_MIN) + 12.0
+		_name_input.add_theme_stylebox_override(style_name, box)
+
+
+## Mikrofon in der rechten Ecke des Namensfelds (Silber-Prägung). Antippen, Namen sagen, der Name steht im Feld. Ohne Spracherkennung unsichtbar.
+func _build_mic() -> void:
+	_mic = GlyphButton.new()
+	_mic.name = "MicButton"
+	_mic.glyph = "mic"
+	_mic.toggle_mode = true
+	_mic.text_key = "ui.setup.voice.tooltip"
+	_mic.tooltip_text = tr("ui.setup.voice.tooltip")
+	_mic.visible = VoiceName.supported()
+	_mic.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
+	_mic.offset_left = -float(ThemeTokens.TOUCH_MIN) - 4.0
+	_mic.offset_right = -4.0
+	_mic.offset_top = -float(ThemeTokens.TOUCH_MIN) * 0.5
+	_mic.offset_bottom = float(ThemeTokens.TOUCH_MIN) * 0.5
+	_mic.toggled.connect(_on_mic_toggled)
+	_name_input.add_child(_mic)
+	_voice = VoiceName.new()
+	_voice.finished.connect(_on_voice_finished)
+
+
+func _on_mic_toggled(on: bool) -> void:
+	if on:
+		_voice.start()
+	else:
+		_voice.stop()
+
+
+func _on_voice_finished(spoken: String, error: String) -> void:
+	_mic.set_pressed_no_signal(false)
+	if spoken != "":
+		_set_name_text(spoken)
+		_show_feedback("")
+		_update_controls(_last_view)
+		_focus_name_input()
+	elif error == "not-allowed" or error == "service-not-allowed":
+		_show_feedback("ui.setup.voice.denied", {}, &"WarningLabel")
+	else:
+		_show_feedback("ui.setup.voice.none", {}, &"MutedLabel")
+
+
 func _card(node_name: String) -> PanelContainer:
 	var card := PanelContainer.new()
 	card.name = node_name
@@ -352,6 +404,7 @@ func _build_plates(view: Dictionary) -> void:
 func _update_controls(view: Dictionary) -> void:
 	var can_add := bool(view.get("can_add", true))
 	_name_input.editable = can_add
+	_mic.disabled = not can_add
 	_add.disabled = not can_add or PersonNameRules.normalize(_name_input.text).is_empty()
 	_import_toggle.disabled = not can_add
 	_import_confirm.disabled = PersonNameRules.split_import(_import_text.text).is_empty()
@@ -533,14 +586,28 @@ func _submit_single() -> void:
 		_feedback_for_error(result)
 		_name_input.grab_focus()
 		return
-	_name_input.text = ""
+	_set_name_text("")
 	if result.warnings.has(&"duplicate_name"):
 		_show_feedback("ui.setup.warning.duplicate_added", {"name": _name_of(result.person_ids[0])}, &"WarningLabel")
 	else:
 		_show_feedback("")
 	_update_controls(_last_view)
-	_name_input.grab_focus()
+	_focus_name_input()
 	_scroll_to_person.call_deferred(result.person_ids[0])
+
+
+## Namensfeld setzen oder leeren, auch im versteckten Eingabefeld des Browsers (siehe `AppPlatform.sync_keyboard_text`).
+func _set_name_text(text: String) -> void:
+	_name_input.text = text
+	_name_input.caret_column = text.length()
+	AppPlatform.sync_keyboard_text(text)
+
+
+## Fokus zurück ins Namensfeld; im Web öffnet `edit()` die Tastatur wieder, falls das Antippen von „Hinzufügen“ sie geschlossen hat.
+func _focus_name_input() -> void:
+	_name_input.grab_focus()
+	if OS.has_feature("web"):
+		_name_input.edit()
 
 
 func _open_review(entries: Array[String]) -> void:
@@ -559,12 +626,12 @@ func _on_review_add_all(entries: Array[String]) -> void:
 	if not result.ok:
 		_fill_error_label(_review.feedback_label(), result)
 		return
-	_name_input.text = ""
+	_set_name_text("")
 	_review_result = null
 	_set_mode(Mode.ENTRY)
 	_show_imported(result)
 	_update_controls(_last_view)
-	_name_input.grab_focus()
+	_focus_name_input()
 
 
 func _on_review_cancel() -> void:
@@ -603,17 +670,19 @@ func _on_import_confirm() -> void:
 		_import_text.grab_focus()
 		return
 	_import_text.text = ""
+	AppPlatform.sync_keyboard_text("")
 	_show_import_feedback(null)
 	_set_mode(Mode.ENTRY)
 	_show_imported(result)
 	_update_controls(_last_view)
-	_name_input.grab_focus()
+	_focus_name_input()
 
 
 func _on_import_cancel() -> void:
 	if _mode != Mode.IMPORT:
 		return
 	_import_text.text = ""
+	AppPlatform.sync_keyboard_text("")
 	_leave_mode()
 
 
