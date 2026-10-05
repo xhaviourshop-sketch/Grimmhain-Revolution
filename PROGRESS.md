@@ -17,6 +17,7 @@ Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als s
 - Loki-Nachtkarte geprüft und korrigiert: Rollenbild von der Nachtkarte entfernt (`ROLE_ART_ON_CARD` in `cockpit_screen.gd`, gilt für alle Nachtkarten), Liebende/Rivalen beide in der Karte statt einer unten rechts. Bild: `Downloads/Grimmhain-Nacht-neu/loki-neu-1024x768.png`.
 - Live-Check fand einen echten Fehler: `epic_button.gd:63` rief ein nacktes `free()` auf, im Web-Export ein Parse-Fehler, der Startbildschirm lud nicht (vermutlich seit dem Epic-Button vom 04.10.). Behoben mit `queue_free()` (Branch fix/web-epic-button), lokal im Browser bestätigt: Startbild mit "05.10. · 9eae89e".
 - Verifikation: gezielte Tests grün (119); Vollsuite vor dem Fix 1418/0 Fehlschläge, auf dem Fix-Stand läuft sie erneut, danach Merge, Export, Deploy und Live-Hash.
+- Abschluss: Vollsuite auf dem Fix-Stand 1418 Tests, 0 Fehlschläge. Merge ohne Squash (05cb43b), Deploy grimmhain-ipad-test, live "05.10. · 05cb43b" (= main HEAD), `index.pck` 38703360 Byte. Der Headless-Browser, der vorher Build 212dc17 gecacht hatte, wechselte beim Öffnen selbständig auf 05cb43b (erzwungenes Update). Loki-Karte lokal geprüft, nicht im Live-Spiel (Setup per Canvas nicht automatisiert).
 - Nächste Schritte: iPad, das noch den alten Stand ohne Prüfung hat, App ganz schließen und zweimal öffnen; danach aktualisiert sich jeder Deploy von selbst. Nicht geprüft: Safari/iPad.
 
 ## STAND Audit-Entscheidungen (DA-93, 2026-10-05, Branch fix/audit-entscheidungen)
