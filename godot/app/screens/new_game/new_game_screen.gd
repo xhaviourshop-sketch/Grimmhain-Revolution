@@ -11,6 +11,7 @@ const TITLE_KEY := "ui.prep.title"
 
 var _shown_step: StringName = &""
 var _steps: Dictionary[StringName, PrepStep] = {}
+var _header_extras: Dictionary[StringName, Control] = {}  ## Kopfzeilen-Elemente der Schritte (z. B. Reiter der Rollen), nur beim eigenen Schritt sichtbar
 var _medallions: StepMedallions = null
 var _backdrop: HainBackdrop = null
 var _dialog: ConfirmDialog = null
@@ -33,6 +34,7 @@ func _setup() -> void:
 	GroveSkin.skin_back_button(header.back_button())
 	header.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	header.title_key = TITLE_KEY
+	(header.find_child("TitleLabel", true, false) as GrimmLabel).wrap = false  # der Titel bricht nie um, die Reiter nehmen den Rest
 	_medallions = StepMedallions.new()
 	_medallions.step_requested.connect(_on_medallion)
 	(header.find_child("Actions", true, false) as Control).add_child(_medallions)
@@ -144,6 +146,13 @@ func _build_steps() -> void:
 	round_step.start(context.setup)
 	names_step.start(context.setup, context.groups)
 	roles_step.start(context.setup)
+	var actions := header.find_child("Actions", true, false) as Control
+	for id: StringName in _steps:
+		var extra := _steps[id].header_extra()
+		if extra != null:
+			_header_extras[id] = extra
+			actions.add_child(extra)
+			actions.move_child(extra, 0)
 	round_step.next_requested.connect(_go_to.bind(&"names"))
 	names_step.next_requested.connect(_go_to.bind(&"roles"))
 	roles_step.start_requested.connect(_on_start_requested)
@@ -213,6 +222,8 @@ func _on_setup_changed(view: Dictionary) -> void:
 	_shown_step = step_id
 	for id: StringName in _steps:
 		_steps[id].visible = id == step_id
+		if _header_extras.has(id):
+			_header_extras[id].visible = id == step_id
 	_steps[step_id].entered()
 	_back.visible = step_id != &"round"
 	_refresh_footer(step_id)

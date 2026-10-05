@@ -1,7 +1,7 @@
 class_name NamesStep
 extends PrepStep
-## Schritt 2 „Namen“: Namen eintragen, einfügen oder diktieren (Tastatur-Diktat) und als nummerierte Namensschilder ordnen. Die
-## Reihenfolge der Schilder ist die Sitzordnung im Uhrzeigersinn ab Platz 1 (kein eigener Sitzschritt); ein Schild antippen, dann früher oder
+## Schritt 2 „Namen“: Namen eintragen, einfügen oder diktieren (Tastatur-Diktat) und als Namenszeilen ordnen. Die
+## Reihenfolge der Zeilen ist die Sitzordnung im Uhrzeigersinn (nie mit Nummern gezeigt) (kein eigener Sitzschritt); ein Schild antippen, dann früher oder
 ## später schieben, ändern oder entfernen; „Mischen“ ordnet über den gespeicherten Generator neu. Der Zähler „9 von 14“ zeigt, wie viele
 ## Namen zur Spielerzahl fehlen; ein Knopf gleicht die Spielerzahl an die Namen an. Namen bleiben Pflicht (keine Platzhalter).
 ## Linke Spalte, genau ein Modus: Eingabe, Liste einfügen, Namen ändern, gespeicherte Gruppen oder die Prüfliste für mehrere Namen
@@ -69,7 +69,7 @@ func start(setup: PlayerSetup, groups: GroupStore) -> void:
 	var body := HBoxContainer.new()
 	body.name = "NamesBody"
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	body.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	body.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	add_child(body)
 	_side = _side_column()
 	_list_col = _list_column()
@@ -226,13 +226,13 @@ func _list_column() -> VBoxContainer:
 	_count = _label("CountLabel", &"HeadingLabel", "ui.prep.names.count")
 	_count.wrap = false
 	header.add_child(_count)
-	_fit = _button("FitButton", GrimmButton.Kind.SECONDARY, "ui.prep.names.fit")
+	_fit = _button("FitButton", GrimmButton.Kind.COMPACT, "ui.prep.names.fit")
 	_fit.pressed.connect(_on_fit_pressed)
 	header.add_child(_fit)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(spacer)
-	_shuffle = _button("ShuffleButton", GrimmButton.Kind.SECONDARY, "ui.prep.names.shuffle")
+	_shuffle = _button("ShuffleButton", GrimmButton.Kind.COMPACT, "ui.prep.names.shuffle")
 	_shuffle.pressed.connect(_on_shuffle_pressed)
 	header.add_child(_shuffle)
 	column.add_child(header)
@@ -243,29 +243,30 @@ func _list_column() -> VBoxContainer:
 	_scroll = ScrollContainer.new()
 	_scroll.name = "PlateScroll"
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED  # nie scrollen: die Zeilen teilen sich die Höhe (Mindesthöhe je Zeile)
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_scroll.follow_focus = true
 	column.add_child(_scroll)
 	_grid = GridContainer.new()
 	_grid.name = "PlateGrid"
 	_grid.columns = 3
 	_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_grid.add_theme_constant_override(&"h_separation", ThemeTokens.SPACE_S)
-	_grid.add_theme_constant_override(&"v_separation", ThemeTokens.SPACE_S)
+	_grid.add_theme_constant_override(&"v_separation", ThemeTokens.SPACE_XS)
 	_scroll.add_child(_grid)
 	var tools := HBoxContainer.new()
 	tools.name = "PlateTools"
-	tools.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
-	_earlier = _button("EarlierButton", GrimmButton.Kind.SECONDARY, "ui.prep.names.earlier")
+	tools.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
+	_earlier = _button("EarlierButton", GrimmButton.Kind.COMPACT, "ui.prep.names.earlier")
 	_earlier.pressed.connect(func() -> void: _move(-1))
 	tools.add_child(_earlier)
-	_later = _button("LaterButton", GrimmButton.Kind.SECONDARY, "ui.prep.names.later")
+	_later = _button("LaterButton", GrimmButton.Kind.COMPACT, "ui.prep.names.later")
 	_later.pressed.connect(func() -> void: _move(1))
 	tools.add_child(_later)
-	_edit = _button("EditButton", GrimmButton.Kind.SECONDARY, "ui.prep.names.edit")
+	_edit = _button("EditButton", GrimmButton.Kind.COMPACT, "ui.prep.names.edit")
 	_edit.pressed.connect(_on_edit_requested)
 	tools.add_child(_edit)
-	_remove = _button("RemoveButton", GrimmButton.Kind.SECONDARY, "ui.prep.names.remove")
+	_remove = _button("RemoveButton", GrimmButton.Kind.COMPACT, "ui.prep.names.remove")
 	_remove.pressed.connect(_on_remove_requested)
 	tools.add_child(_remove)
 	column.add_child(tools)
@@ -715,7 +716,7 @@ func _on_edit_requested() -> void:
 	_show_import_feedback(null)
 	_show_feedback("")
 	_edit_id = plate.person_id
-	_edit_number.format_values = {"number": plate.number}
+	_edit_number.format_values = {"name": plate.person_name}
 	_edit_input.text = plate.person_name
 	_set_mode(Mode.EDIT)
 	_edit_input.grab_focus()
@@ -768,7 +769,7 @@ func _on_remove_requested() -> void:
 	if plate == null:
 		return
 	var request := DialogRequest.create("ui.setup.dialog.remove.title", "ui.setup.dialog.remove.message", "ui.setup.dialog.remove.confirm", _remove_person.bind(plate.person_id), true)
-	request.message_values = {"name": plate.person_name, "number": plate.number}
+	request.message_values = {"name": plate.person_name}
 	dialog_requested.emit(request)
 
 

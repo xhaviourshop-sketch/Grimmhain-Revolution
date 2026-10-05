@@ -192,6 +192,8 @@ func _draw() -> void:
 		tint = ThemeTokens.TINT_DEAD
 	elif is_hovered():
 		tint = ThemeTokens.TINT_HOVER
+	if has_focus(true):
+		tint *= GroveSkin.TINT_FOCUS  # Fokus zeigt sich als Aufhellung der gemalten Fläche, nicht als Rahmen
 	if team_tint and _tile_texture(true) != null:
 		_draw_team_tile(tint)
 		return
@@ -212,13 +214,6 @@ func _draw() -> void:
 		ink = ThemeTokens.MOON_SILVER_DIM
 	var font_size := _font_size()
 	draw_string(font, Vector2(left, mid + float(font_size) * 0.36), _label, HORIZONTAL_ALIGNMENT_LEFT, size.x - left - PAD * 0.5, font_size, ink * (ThemeTokens.TINT_DEAD if dimmed else ThemeTokens.TINT_NONE))
-	if has_focus(true):
-		var box := StyleBoxFlat.new()
-		box.draw_center = false
-		box.border_color = ThemeTokens.MOON_GLOW
-		box.set_border_width_all(ThemeTokens.FOCUS_WIDTH)
-		box.set_corner_radius_all(ThemeTokens.RADIUS_M)
-		draw_style_box(box, Rect2(Vector2.ZERO, size).grow(-1.0))
 
 
 func _draw_team_tile(tint: Color) -> void:
@@ -242,13 +237,6 @@ func _draw_team_tile(tint: Color) -> void:
 	var text_left := left + 4.0
 	var ink := ThemeTokens.PREP_CARD_TEXT if chosen else ThemeTokens.MOON_SILVER_DIM
 	draw_string(get_theme_default_font(), Vector2(text_left, size.y * 0.5 + float(font_size) * 0.36), _label, HORIZONTAL_ALIGNMENT_LEFT, size.x - text_left - right * 0.5, font_size, ink * (ThemeTokens.TINT_DEAD if dimmed else ThemeTokens.TINT_NONE))
-	if has_focus(true):
-		var box := StyleBoxFlat.new()
-		box.draw_center = false
-		box.border_color = ThemeTokens.MOON_GLOW
-		box.set_border_width_all(ThemeTokens.FOCUS_WIDTH)
-		box.set_corner_radius_all(ThemeTokens.RADIUS_M)
-		draw_style_box(box, Rect2(Vector2.ZERO, size).grow(-1.0))
 
 
 func _draw_medallion(centre: Vector2, p_tint: Color) -> void:

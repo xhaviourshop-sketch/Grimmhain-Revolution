@@ -174,7 +174,7 @@ msgid "ui.setup.add"
 msgstr "Add"
 
 msgid "ui.setup.import.open"
-msgstr "Paste several names"
+msgstr "Paste names"
 
 msgid "ui.setup.import.heading"
 msgstr "Paste several names"
@@ -192,7 +192,7 @@ msgid "ui.setup.edit.heading"
 msgstr "Edit name"
 
 msgid "ui.setup.edit.person"
-msgstr "Player no. {number}"
+msgstr "{name}"
 
 msgid "ui.setup.edit.placeholder"
 msgstr "Name"
@@ -330,7 +330,7 @@ msgid "ui.setup.dialog.remove.title"
 msgstr "Remove player?"
 
 msgid "ui.setup.dialog.remove.message"
-msgstr "“{name}” (no. {number}) will be removed from the list."
+msgstr "“{name}” will be removed from the list."
 
 msgid "ui.setup.dialog.remove.confirm"
 msgstr "Remove"
@@ -7984,10 +7984,10 @@ msgid "ui.prep.act.capacity"
 msgstr "Up to {count} people"
 
 msgid "ui.prep.mode.random"
-msgstr "App deals at random"
+msgstr "App deals"
 
 msgid "ui.prep.mode.manual"
-msgstr "Real cards – I assign them"
+msgstr "Real cards"
 
 msgid "ui.prep.team.village"
 msgstr "Village"
@@ -8038,13 +8038,13 @@ msgid "ui.prep.names.count"
 msgstr "{count} of {total}"
 
 msgid "ui.prep.names.fit"
-msgstr "Set player count to {count}"
+msgstr "Set to {count}"
 
 msgid "ui.prep.names.shuffle"
 msgstr "Shuffle"
 
 msgid "ui.prep.names.seat_hint"
-msgstr "The order is the seating, clockwise. Tap a plate, then move it."
+msgstr "The order is the seating, clockwise. Tap a name, then move it."
 
 msgid "ui.prep.names.earlier"
 msgstr "Earlier"
@@ -8065,10 +8065,10 @@ msgid "ui.prep.names.hint"
 msgstr "Type or dictate with the keyboard microphone. Separate several names with a comma or “and”."
 
 msgid "ui.prep.names.plate"
-msgstr "{number}. {name}"
+msgstr "{name}"
 
 msgid "ui.prep.names.plate_free"
-msgstr "Seat {number}, still free"
+msgstr "still free"
 
 msgid "ui.prep.names.free"
 msgstr "free"
@@ -8143,7 +8143,7 @@ msgid "ui.prep.assign.hint"
 msgstr "Tap a seat, then pick the role below."
 
 msgid "ui.prep.assign.bar"
-msgstr "Seat {number}: {name}"
+msgstr "{name}"
 
 msgid "ui.prep.assign.clear"
 msgstr "Clear assignment"
