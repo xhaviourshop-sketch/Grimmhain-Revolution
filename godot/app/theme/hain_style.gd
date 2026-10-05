@@ -1,7 +1,7 @@
 class_name HainStyle
 extends RefCounted
-## Überzieht Bauteile der Vorbereitung mit dem Hain-Stil des Nachtbretts: Knöpfe auf den Hain-Teilen (Hauptaktion rot, übrige dunkel), Karten
-## im Wurzelrahmen, Eingabefelder und Beschriftungen in Mondsilber. Gold gibt es hier nicht (DA-89). Wirkt rekursiv und auch auf später
+## Überzieht Bauteile der Vorbereitung mit dem Hain-Stil des Nachtbretts: Hauptknöpfe (Rubinstein; Knopf- und Kartenflächen kommen aus dem Theme),
+## Eingabefelder und Beschriftungen in Mondsilber. Gold gibt es hier nicht (DA-89). Wirkt rekursiv und auch auf später
 ## eingehängte Kinder (`watch`), damit wiederverwendete Bauteile (Namensprüfliste, gespeicherte Gruppen) ohne eigene Umbauten passen.
 ## Jeder Knoten wird höchstens einmal behandelt; ohne Bilddatei bleibt der Theme-Stil stehen.
 
@@ -45,7 +45,3 @@ static func _style(node: Node) -> void:
 			label.theme_type_variation = LABELS[label.theme_type_variation]
 	elif node is LineEdit or node is TextEdit:
 		(node as Control).theme_type_variation = &"HainLineEdit" if node is LineEdit else &"HainTextEdit"
-	elif node is PanelContainer and [&"CardPanel", &"SecretPanel", &"DialogPanel"].has((node as PanelContainer).theme_type_variation):
-		var box := GroveSkin.card_box()
-		if box != null:
-			(node as PanelContainer).add_theme_stylebox_override("panel", box)

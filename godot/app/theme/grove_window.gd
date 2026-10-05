@@ -1,8 +1,8 @@
 class_name GroveWindow
 extends RefCounted
-## Gemeinsamer Baustein für alle Fenster (Feedback 5): dunkler Grund im Eisenrahmen mit Ecken-Ornament (Rahmen der Aktionskarte) und
-## Grimmhain-Knöpfe. `frame` rahmt ein Fenster, `dress` rahmt alle bekannten Fensterflächen unter einem Knoten und zieht die Knöpfe an.
-## Fehlt das Rahmenbild, bleibt das Fenster beim Theme. Mehrfaches Anwenden ist unschädlich.
+## Gemeinsamer Baustein für alle Fenster (Feedback 5, Feedback 8): gekachelter Grund im Dornenrahmen (Theme, SkinWindowBox) und
+## Hauptknöpfe mit Rubinstein. Die Fläche kommt aus dem Theme; `frame` setzt nur den Textabstand eines Fensters, `dress` tut das für alle
+## bekannten Fensterflächen unter einem Knoten und markiert die Hauptknöpfe. Mehrfaches Anwenden ist unschädlich.
 
 ## Fensterflächen des Themes, die den Rahmen tragen (Rückfragen, Schubladen, gezeigte Karten, Rollenliste).
 const FRAMED_VARIATIONS: Array[StringName] = [&"DialogPanel", &"DrawerPanel", &"ShowPanel"]
@@ -10,13 +10,11 @@ const INSET_DEFAULT := Vector4(48.0, 36.0, 48.0, 36.0)  ## Textabstand im Rahmen
 const INSET_SIDE := Vector4(36.0, 28.0, 36.0, 28.0)  ## Schubladen und große Lesefenster
 
 
-## Eisenrahmen mit Ecken-Ornament um `panel`; `inset` ist der Textabstand zum Rahmen.
+## Dornenrahmen um `panel`; `inset` ist der Textabstand zum Rahmen.
 static func frame(panel: PanelContainer, inset: Vector4 = INSET_DEFAULT) -> void:
 	if panel.has_theme_stylebox_override(&"panel"):
 		return
-	var box := GroveSkin.card_box()
-	if box == null:
-		return
+	var box := SkinArt.window_box()
 	box.content_margin_left = inset.x
 	box.content_margin_top = inset.y
 	box.content_margin_right = inset.z
