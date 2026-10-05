@@ -2406,7 +2406,7 @@ msgid "ui.cockpit.private.action.name_wolf"
 msgstr "{name}: Nekromant benennt einen Wolf …"
 
 msgid "ui.cockpit.error.already_nominated_today"
-msgstr "Fehler: Diese Person hat heute schon nominiert. Nichts wurde geändert."
+msgstr "Fehler: Diese Nominierung ist heute nicht möglich. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.already_nominee_today"
 msgstr "Fehler: Diese Person wurde heute schon nominiert. Nichts wurde geändert."
