@@ -6,10 +6,14 @@ extends BaseScreen
 ## Warnungen. Nichts wird gespeichert: die Vorschau-Sitzung hat kein automatisches Speichern und keine Historie mit Pfad; echte Spielstände
 ## und die laufende Partie bleiben unberührt.
 
+const ROW_INSET_RIGHT := 42.0  ## rechts weiter, die Dornen reichen dort tiefer in den Knopf
+const ROW_MIN_FONT := 12  ## kleinste Schrift der Rollennamen
+const ROW_WRAP_BELOW := 17  ## Einzeiler kleiner als das: zweizeilig setzen
+const ROW_TWO_LINE_FONT := 15  ## größte Schrift bei zwei Zeilen (passt in ROW_MIN)
 const COLUMNS := 4  ## Spalten je Team-Seite in der Rollenliste
 const ROW_MIN := 48.0  ## Zeilenhöhe: Daumengröße (ThemeTokens.TOUCH_MIN)
-const ROW_INSET := 20.0  ## Abstand von den Dornen-Enden des Knopfes bis zu Symbol und Name
-const ICON_SIZE := 24.0
+const ROW_INSET := 30.0  ## Abstand von den Dornen-Enden des Knopfes bis zu Symbol und Name
+const ICON_SIZE := 36.0
 
 @onready var _layout: Control = %Layout
 @onready var _stage_column: VBoxContainer = %StageColumn
@@ -36,6 +40,7 @@ func _setup() -> void:
 	_build_list()
 	_build_bar()
 	_stage.visible = false
+	_stage.clip_contents = true  # das Cockpit bekommt genau die Bildschirmbreite
 
 
 ## Zurück: offene Vorschau schließt zur Liste, sonst zu den Einstellungen.
@@ -104,11 +109,12 @@ func _role_button(role: StringName) -> GrimmButton:
 	b.pressed.connect(open_role.bind(_roles.find(role)))
 	var row := HBoxContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.clip_contents = true
 	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	row.offset_left = ROW_INSET
-	row.offset_right = -ROW_INSET
-	row.offset_top = 2.0
-	row.offset_bottom = -2.0
+	row.offset_right = -ROW_INSET_RIGHT
+	row.offset_top = 1.0
+	row.offset_bottom = -1.0
 	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
 	b.add_child(row)
 	var icon := TextureRect.new()
@@ -118,15 +124,53 @@ func _role_button(role: StringName) -> GrimmButton:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.custom_minimum_size = Vector2(ICON_SIZE, 0.0)
 	row.add_child(icon)
-	var label := FitLabel.new()
+	var label := GrimmLabel.new()
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.text_key = RolePresentation.name_key(role)
-	label.max_font_size = ThemeTokens.FONT_COMPACT
-	label.min_font_size = 11
+	label.wrap = false
+	label.clip_text = true
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.resized.connect(_fit_role_name.bind(label))
 	row.add_child(label)
 	return b
+
+
+## Name einer Rolle in der Liste: eine Zeile in Listengröße; passt sie nicht, bei Leerzeichen lieber zweizeilig (Zeilen in etwa gleich lang)
+## als deutlich kleiner, sonst nur kleiner bis `ROW_MIN_FONT`.
+func _fit_role_name(label: GrimmLabel) -> void:
+	var full := tr(label.text_key)
+	var width := label.size.x
+	if width <= 0.0 or label.has_meta(&"fit_width") and is_equal_approx(float(label.get_meta(&"fit_width")), width):
+		return
+	label.set_meta(&"fit_width", width)
+	var font := label.get_theme_font(&"font")
+	var one := FitLabel.best_size(font, full, Vector2(width, 0.0), ThemeTokens.FONT_COMPACT, ROW_MIN_FONT, false)
+	var text := full
+	var chosen := one
+	if one < ROW_WRAP_BELOW and full.contains(" "):
+		var best := ""
+		var best_diff := INF
+		for i: int in full.length():
+			if full[i] == " ":
+				var diff := absf(font.get_string_size(full.substr(0, i), HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x - font.get_string_size(full.substr(i + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x)
+				if diff < best_diff:
+					best_diff = diff
+					best = full.substr(0, i) + "
+" + full.substr(i + 1)
+		var longest := ""
+		for line: String in best.split("
+"):
+			if line.length() > longest.length():
+				longest = line
+		var two := FitLabel.best_size(font, longest, Vector2(width, 0.0), ROW_TWO_LINE_FONT, ROW_MIN_FONT, false)
+		if two > one:
+			text = best
+			chosen = two
+	label.text = text
+	label.add_theme_font_size_override(&"font_size", chosen)
+	label.add_theme_constant_override(&"line_spacing", -4 if text.contains("
+") else 0)  # zwei Zeilen bleiben in der Zeilenhöhe
 
 
 ## Steuerleiste der Vorschau (unten, unter dem Cockpit, nimmt ihm genau ihre Höhe): Vorschau-Zeichen, Rolle davor, Schritt davor,
@@ -138,19 +182,25 @@ func _build_bar() -> void:
 	_bar.theme_type_variation = &"BarPanel"
 	_bar.size_flags_vertical = Control.SIZE_SHRINK_END
 	_stage_column.add_child(_bar)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
-	_bar.add_child(row)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
+	_bar.add_child(column)
+	# Kopfzeile: Vorschau-Zeichen links (mit Abstand zum Rand), Rolle und Bildschirm daneben; die Knöpfe darunter müssen in 1024 px passen.
+	var top := Control.new()  # Abstand zur oberen Zierleiste der Leiste
+	top.custom_minimum_size.y = ThemeTokens.SPACE_S
+	column.add_child(top)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	head.alignment = BoxContainer.ALIGNMENT_CENTER
+	column.add_child(head)
 	var tag := _label("ui.preview.tag", &"HainCaptionLabel")
 	tag.name = "PreviewTag"
 	tag.wrap = false  # einzeilig: sonst bricht der Text Zeichen für Zeichen um und die Leiste wird hoch
-	tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var margin := Control.new()  # Abstand zum Leistenrand, sonst klebt das Zeichen an der Dornenkante
+	tag.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	var margin := Control.new()
 	margin.custom_minimum_size.x = ThemeTokens.SPACE_M
-	row.add_child(margin)
-	row.add_child(tag)
-	for spec: Array in [["PreviewPrevRole", "ui.preview.prev_role", _step_role.bind(-1)], ["PreviewBack", "ui.preview.back", _step_stop.bind(-1)]]:
-		row.add_child(_bar_button(spec[0], spec[1], spec[2]))
+	head.add_child(margin)
+	head.add_child(tag)
 	_position = _label("", &"")
 	_position.name = "PreviewPosition"
 	_position.wrap = false
@@ -158,22 +208,35 @@ func _build_bar() -> void:
 	_position.clip_text = true
 	_position.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_position.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_position.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_child(_position)
+	_position.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	head.add_child(_position)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	column.add_child(row)
+	row.add_child(_bar_button("PreviewPrevRole", "ui.preview.prev_role", _step_role.bind(-1), "◀"))
+	row.add_child(_bar_button("PreviewBack", "ui.preview.back", _step_stop.bind(-1)))
+	var gap := Control.new()  # schiebt „Danach“ und die rechten Knöpfe nach rechts
+	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(gap)
 	row.add_child(_bar_button("PreviewNext", "ui.preview.next", _step_stop.bind(1)))
-	row.add_child(_bar_button("PreviewNextRole", "ui.preview.next_role", _step_role.bind(1)))
+	row.add_child(_bar_button("PreviewNextRole", "ui.preview.next_role", _step_role.bind(1), "▶"))
 	_special_button = _bar_button("PreviewSpecial", "ui.preview.special", _toggle_special)
 	_special_button.toggle_mode = true
 	row.add_child(_special_button)
 	row.add_child(_bar_button("PreviewList", "ui.preview.list", close_preview))
 
 
-func _bar_button(node_name: String, key: String, action: Callable) -> GrimmButton:
+## Mit `symbol` zeigt der Knopf nur das Zeichen (spart Breite, die Leiste muss in 1024 px passen); der Text steht dann im Tooltip.
+func _bar_button(node_name: String, key: String, action: Callable, symbol: String = "") -> GrimmButton:
 	var b := GrimmButton.new()
 	b.name = node_name
 	b.kind = GrimmButton.Kind.COMPACT
 	b.wrap = false
-	b.text_key = key
+	if symbol == "":
+		b.text_key = key
+	else:
+		b.text = symbol
+		b.tooltip_text = tr(key)
 	b.custom_minimum_size = Vector2(0.0, ThemeTokens.TOUCH_MIN)
 	b.pressed.connect(action)
 	return b
@@ -275,6 +338,8 @@ func _show_stop() -> void:
 	_cockpit.status_message_requested.connect(status_message_requested.emit)
 	_position.format_values = {"role": StringName(RolePresentation.name_key(StringName(role))), "n": mini(_stop + 1, maxi(stops.size(), 1)), "total": maxi(stops.size(), 1)}
 	_position.text_key = "ui.preview.position" if not stops.is_empty() else "ui.preview.empty"
+	_position.text = _position.text.replace("
+", " · ")  # eine Zeile in der Kopfzeile der Leiste
 	_apply_ui(str(stop["kind"]))
 
 
