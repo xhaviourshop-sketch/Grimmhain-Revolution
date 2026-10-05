@@ -19,6 +19,7 @@ var _selection_mode: bool = false
 var _allowed: Array = []
 var _selected: Array = []
 var _actors: Array = []
+var _locked: Array = []
 var _marks: Dictionary = {}
 var _secrets_visible: bool = true
 var _chosen: int = 0
@@ -68,6 +69,13 @@ func set_marking(selection_mode: bool, allowed: Array, selected: Array, actors: 
 	_allowed = allowed.duplicate()
 	_selected = selected.duplicate()
 	_actors = actors.duplicate()
+	_locked = []
+	_apply_states()
+
+
+## Gesperrte Plätze (Nominierung): stark abgedunkelt mit Schloss. Nach `set_marking` aufrufen, denn dieses hebt die Sperre auf.
+func set_locked(ids: Array) -> void:
+	_locked = ids.duplicate()
 	_apply_states()
 
 
@@ -144,6 +152,7 @@ func _apply_states() -> void:
 		token.secrets_visible = _secrets_visible
 		token.marks = _marks.get(id, []) if _secrets_visible else []
 		token.disabled = _selection_mode and not _allowed.has(id) and not _selected.has(id)
+		token.locked = _selection_mode and _locked.has(id)
 
 
 func _layout() -> void:

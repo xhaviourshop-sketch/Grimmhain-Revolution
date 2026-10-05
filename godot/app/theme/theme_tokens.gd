@@ -55,6 +55,7 @@ const TINT_EPIC_DISABLED := Color(0.55, 0.55, 0.6)     ## epischer Knopf gesperr
 const TINT_NONE := Color(1, 1, 1, 1)         ## Bild unverändert
 const TINT_DEAD := Color(0.5, 0.5, 0.55)     ## Porträt einer toten Person
 const TINT_DISABLED := Color(0.62, 0.62, 0.66)  ## nicht wählbare Person oder gesperrte Lasche
+const TINT_LOCKED := Color(0.36, 0.36, 0.42)    ## Person, die bei der Nominierung gesperrt ist (stärker abgedunkelt als TINT_DISABLED)
 const TINT_HOVER := Color(1.25, 1.2, 1.1)    ## Lasche unter Finger oder Zeiger
 const TINT_ART_DONE := Color(0.8, 0.8, 0.84)  ## erledigter Schritt der Nachtleiste
 const TINT_ART_OPEN := Color(1.3, 1.3, 1.3)  ## Rollensymbol der Nachtleiste, heller als das dunkle Medaillon
@@ -87,9 +88,9 @@ const FONT_SUBTITLE := 24
 const FONT_TITLE := 64
 const FONT_SHOW := 48                 ## gezeigte Karte: Ergebnis groß für die handelnde Person
 const FONT_GOTHIC := 46               ## gotische Titel (gezeigte Karten, Siegbildschirm), nie im Fließtext (MARKE.md)
-## Gotische Titelschrift (SIL OFL 1.1). Liegt erst nach Freigabe durch den Product Owner im Projekt (Assetregister); bis dahin
-## zeichnet `GothicTitleLabel` mit der Grundschrift.
-const GOTHIC_FONT := "res://assets/fonts/UnifrakturMaguntia-Book.ttf"
+## Gotische Titelschrift Grenze Gotisch (SIL OFL 1.1, intern freigegeben, DA-97; Lizenztext `assets/fonts/OFL-GrenzeGotisch.txt`).
+## Nur für `GothicTitleLabel` (Titel und große Überschriften), nie Fließtext oder Knöpfe (MARKE.md).
+const GOTHIC_FONT := "res://assets/fonts/GrenzeGotisch-Variable.ttf"
 
 # --- Bedienflächen und Layout --------------------------------------------------------------------
 const TOUCH_MIN := 48                 ## Mindestgröße jeder Bedienfläche

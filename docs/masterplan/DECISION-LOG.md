@@ -409,7 +409,7 @@ Vom Product Owner in der Claude-Code-Sitzung per Auswahl beantwortet (Fragen-IDs
 
 - **Loki, Zeitpunkt (B-01):** B. Nur in Nacht 1 der Partie (wie RM-DR-014); verpasst er sie, verfällt die Fähigkeit.
 - **Loki, Wahl (B-05, ersetzt durch DA-Nachtschritte-neu: immer genau 2):** B. Freiwillig; wählt er, dann zwei verschiedene lebende Personen, er selbst erlaubt, als Liebende oder Rivalen. Stirbt ein Liebender, stirbt der andere sofort an Liebeskummer (eigene Ursache; Schutz gegen den Rudelangriff hilft nicht, persönliche Schilde schon).
-- **Loki, Rivalen (B-02, RM-DR-101.1):** A. Rivalen haben keine eigene Wirkung; sie zählen nur für die Schwarze Witwe.
+- **Loki, Rivalen (B-02, RM-DR-101.1):** A. Rivalen haben keine eigene Wirkung; sie zählen nur für die Schwarze Witwe. *Ersetzt durch DA-96: Rivalen können nicht gewinnen, solange der andere lebt.*
 - **Schwarze Witwe, Wirkung (B-03):** A. Jede Nacht wählt sie eine andere lebende Person; gehört diese zu einem lebenden Liebes- oder Rivalenpaar, erhalten beide eine Todesmarkierung und sterben in der Morgenauflösung (Ursache Schwarze Witwe); sie wachen in dieser Nacht nicht mehr auf.
 - **Schwarze Witwe, Setup und Paar (B-06, RM-DR-113.1):** A. Die Pflicht „Loki im Spiel“ kommt mit der vertagten Setup-Prüfung; im Regelkern wirkt ihre Wahl nur, wenn Ziel und Partner leben. RM-DR-113.2 (Zeitwächter) wird mit dem Zeitwächter entschieden.
 - **Schattenwanderer (B-04, B-07, RM-DR-110):** A. Jede Nacht bis zur Nutzung (einmal je Leben) verknüpft er sich mit einer anderen lebenden Person. Stirbt einer von beiden tatsächlich (nach allen Schutzwirkungen und persönlichen Schilden), stirbt stattdessen der andere mit der ursprünglichen Ursache und Quelle; danach ist die Verknüpfung verbraucht. Spielleiterkorrekturen werden nicht umgelenkt.
@@ -1304,3 +1304,19 @@ Bestätigt und ergänzt DR-03. Abstimmung bleibt am Tisch (RM-DR-008); die App k
 2. **Nominierte** tragen am Sitzkreis einen Blutrot-Ring, solange sie leben und der Tag läuft (bis zur Hinrichtung; der Tageswechsel setzt die Nominierung zurück).
 3. **Verteidigung:** Unter der Nominierungsliste steht der Vorlesetext „Alle Nominierten dürfen sich jetzt nacheinander verteidigen.“ Kein eigenes Fenster.
 4. **Entscheidung:** Der Spielleiter tippt nach der Handzeichen-Abstimmung am Tisch die hingerichtete Person an oder „Niemand“ (vorher „Keine Hinrichtung heute …“). Die Prüfkarte bei jeder Hinrichtung bleibt (DA-94). Die Siegprüfung läuft danach automatisch (DA-94 Punkt 3).
+
+## DA-96 Rivalen (Markus, 05.10.2026, Feedback iPad-Test Teil 4)
+
+Ersetzt B-02 (Rivalen ohne eigene Wirkung). Rivalen können nicht gewinnen, solange der andere Rivale lebt. Die Siegprüfung zählt eine Person mit lebendem Rivalen nie als Gewinner (`BondRules.has_living_rival`, `WinRules.winner_ids`); ein Einzelsieg einer solchen Person wird nicht erkannt. Die Rivalen zählen weiter für Wolfsparität und Dorfsieg, nur ihr persönlicher Gewinn ruht. Stirbt einer, endet das Paar und der andere gewinnt wieder normal mit seinem Team. Die Schwarze Witwe wirkt wie bisher. `RULES_VERSION` 0.18 (ältere Stände erscheinen als „andere Version“). Der Siegbildschirm nennt bei Dorf und Werwölfen die Gewinner mit Namen.
+
+## DA-97 Gotische Titelschrift (Markus, 05.10.2026, Feedback iPad-Test Teil 4)
+
+Statt UnifrakturMaguntia gilt **Grenze Gotisch** (Omnibus-Type, Google Fonts, SIL OFL 1.1), von Markus intern freigegeben und im Assetregister mit Lizenz eingetragen (`godot/assets/fonts/GrenzeGotisch-Variable.ttf`, Lizenztext `OFL-GrenzeGotisch.txt`). Nur für Titel und große Überschriften (`GothicTitleLabel`), nie für Fließtext oder Knöpfe (MARKE.md). UnifrakturMaguntia aus `schrift-zur-freigabe/` wird nicht eingebaut. Ersetzt den offenen Punkt aus DA-94 Punkt 7.
+
+## DA-98 Hinrichtung in zwei Tipps (Markus, 05.10.2026, Feedback iPad-Test Teil 4)
+
+Passt DA-94 an. Person antippen (nominierte Person im Sitzkreis, auch ohne vorheriges „Hinrichtung …“), dann „Hinrichten“. Die Prüfung des Regelkerns läuft beim Antippen im selben Schritt; ihr Ergebnis steht sofort in der Karte der Hinrichtung (Spiegelung, Pflichtfragen wie Cerberus oder Fluchdauer des Weisen). Entfallen sind „Weiter zur Prüfung“ und „Hinrichtung bestätigen“; „Hinrichten“ vollzieht, das Ergebnis (wer stirbt, ausgelöste Wirkungen) steht danach in der Tageskarte. Die Karte erscheint bei jeder Hinrichtung gleich aufgebaut, damit ihr Auftauchen nichts verrät. „Rückgängig“ (3-Sekunden-Leiste) bleibt. Die Spielleiterkorrektur „Hinrichtung ohne Nominierung“ nutzt dieselbe Karte.
+
+## DA-99 Nominierung, gesperrte Sitze (Markus, 05.10.2026, Feedback iPad-Test Teil 4)
+
+Ergänzt DA-95: Bei der Nominierung gesperrte Sitze sind stärker abgedunkelt und tragen ein kleines Silber-Schloss. Der Korrupte Richter bleibt verdeckt (sein Sitz wird nicht gesperrt).

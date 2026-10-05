@@ -248,7 +248,6 @@ func day(plan: Dictionary) -> bool:
 	if target != -1 and (n.get("execution_candidates", []) as Array).has(target):
 		await tap_button("ExecuteButton")
 		await tap_seat(target)
-		await tap_button("ConfirmExecutionTargetButton")
 		if plan.has("cerberus"):
 			await tap_button("CerberusDefend%s" % ("Yes" if bool(plan["cerberus"]) else "No"))
 		if plan.has("sage"):

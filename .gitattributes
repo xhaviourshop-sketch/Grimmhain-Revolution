@@ -31,3 +31,6 @@ godot/tests/saves/** -text
 *.uid text eol=lf
 *.gdshader text eol=lf
 *.sh text eol=lf
+
+# Lizenztexte von Drittschriften bleiben wörtlich (Leerzeichen am Zeilenende gehören zum Original).
+godot/assets/fonts/OFL-*.txt -whitespace

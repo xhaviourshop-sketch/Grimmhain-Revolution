@@ -2268,7 +2268,7 @@ msgid "ui.cockpit.card.day.execute.heading"
 msgstr "Execution"
 
 msgid "ui.cockpit.card.day.execute.do"
-msgstr "Tap the person who is executed after your vote. Only people nominated today can be chosen."
+msgstr "Tap the person who is executed after your vote. Only people nominated today can be chosen. You can also tap a nominated person in the seat circle right away."
 
 msgid "ui.cockpit.card.day.name_wolf.heading"
 msgstr "Necromancer names a wolf"
@@ -2277,7 +2277,7 @@ msgid "ui.cockpit.card.day.name_wolf.do"
 msgstr "Tap the person the Necromancer secretly names as a wolf."
 
 msgid "ui.cockpit.card.day.check.heading"
-msgstr "Check execution: {name}"
+msgstr "Execution: {name}"
 
 msgid "ui.cockpit.card.day.check.redirected"
 msgstr "Attention: The execution is mirrored. {name} dies instead."
@@ -2309,11 +2309,8 @@ msgstr "No one"
 msgid "ui.cockpit.action.confirm_nomination"
 msgstr "Confirm nomination"
 
-msgid "ui.cockpit.action.check_execution"
-msgstr "Continue to check"
-
 msgid "ui.cockpit.action.confirm_execution"
-msgstr "Confirm execution"
+msgstr "Execute"
 
 msgid "ui.cockpit.action.cerberus.yes"
 msgstr "Repels"
@@ -4088,13 +4085,13 @@ msgid "ui.role.loki.lex.targets"
 msgstr "Two different living people, Loki themself is allowed."
 
 msgid "ui.role.loki.lex.exceptions"
-msgstr "If one lover dies, the other dies at once of heartbreak (own cause). Protection against the pack attack does not help against it, personal shields do. Rivals have no effect of their own, they matter only to the Black Widow. Heartbreak also works during the Elder's curse. A bond once ended by death stays ended after a revival."
+msgstr "If one lover dies, the other dies at once of heartbreak (own cause). Protection against the pack attack does not help against it, personal shields do. Rivals cannot win while the other rival lives; the win check does not count them as winners then. If one dies, the other wins with their team again. They also matter to the Black Widow. Heartbreak also works during the Elder's curse. A bond once ended by death stays ended after a revival."
 
 msgid "ui.role.loki.lex.win"
 msgstr "With the village."
 
 msgid "ui.role.loki.lex.example"
-msgstr "Loki links Anna and Ben as lovers. On day 2 Anna is executed. Ben dies at once of heartbreak.\nLoki links Clara and David as rivals. If Clara dies, nothing happens to David."
+msgstr "Loki links Anna and Ben as lovers. On day 2 Anna is executed. Ben dies at once of heartbreak.\nLoki links Clara and David as rivals. Clara and David are alive and the village wins: neither is among the winners. If Clara dies, David wins with the village again."
 
 msgid "ui.role.loki.lex.gm"
 msgstr "Loki has a real step only in night 1. In later nights Loki is still called, but only announced, so that the table learns nothing; the app shows this announcement. Lovers and rivals learn their partner and the kind of bond privately. The death by heartbreak is a death effect and is announced publicly. The announcement names Loki as the role the bond comes from, never the role of the dying person."
@@ -5636,10 +5633,10 @@ msgid "ui.rulebook.c08.title"
 msgstr "Execution and death reactions"
 
 msgid "ui.rulebook.c08.b01"
-msgstr "After the vote at the table you tap “Execution …”, then the person to be executed, then “Continue to check”. Only people nominated today can be chosen. An execution without nomination is only possible as a game master correction (chapter 10)."
+msgstr "After the vote at the table you tap the nominated person to be executed in the seat circle, then “Execute”. (“Execution …” also leads to the person choice.) Only people nominated today can be chosen. An execution without nomination is only possible as a game master correction (chapter 10)."
 
 msgid "ui.rulebook.c08.b02"
-msgstr "A check card always follows, on every execution, so that its appearance reveals nothing about certain roles. Either it names a special case (such as a mirroring, a defence question or the question about the curse duration) or “Nothing special”. Answer the question on the card and tap “Confirm execution”; the execution applies at once."
+msgstr "A card appears right after the tap, built the same way for every execution, so that its appearance reveals nothing about certain roles. Either it names a special case (such as a mirroring, a defence question or the question about the curse duration) or “Nothing special”. Answer the question on the card and tap “Execute”; the execution applies at once, and its result (who dies, what is triggered) then stands in the day card. “Undo” takes it back briefly."
 
 msgid "ui.rulebook.c08.b03"
 msgstr "If nobody is to be executed, tap “No one”. Only after this decision, and when no step or reaction is open any more, “End day” is possible."
@@ -5842,7 +5839,7 @@ msgid "ui.role.das_orakel.lex.act"
 msgstr "Call: (every night, after all Witch steps) The app announces the role “The Oracle” in the night order. Read out: “Oracle, wake up. Point to the person whose nature you want to see.”\nSelect or read: Tap the person the Oracle points to and confirm.\nRead out or show: Show the Oracle the result, for example via “Show card”. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
 
 msgid "ui.role.der_weise.lex.act"
-msgstr "Call: No call, no night step.\nSelect or read: The role acts passively. If the Sage is executed, the covered check card asks for the curse duration: “how many days (0 to 3)?” Ask the person and tap the number.\nRead out or show: The curse is announced publicly as a visible consequence of a death (rulebook, chapter 6).\nFinish: Tap “Confirm execution” on the check card."
+msgstr "Call: No call, no night step.\nSelect or read: The role acts passively. If the Sage is executed, the execution card asks for the curse duration: “how many days (0 to 3)?” Ask the person and tap the number.\nRead out or show: The curse is announced publicly as a visible consequence of a death (rulebook, chapter 6).\nFinish: Tap “Confirm execution” on the check card."
 
 msgid "ui.role.detektiv.lex.act"
 msgstr "Call: No call, no night step.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: After the death of a person who counts as a wolf, a public notice with the direction to the nearest wolf, never with a role, appears in the morning report or during the day. Read it out with the report.\nFinish: There is nothing to finish."

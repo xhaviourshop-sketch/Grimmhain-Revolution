@@ -65,6 +65,10 @@ var chosen: bool = false:  ## Platz, dem gerade eine Rolle zugeordnet wird: rote
 	set(value):
 		chosen = value
 		queue_redraw()
+var locked: bool = false:  ## Nominierung: für diese Eingabe gesperrt, stark abgedunkelt mit kleinem Silber-Schloss
+	set(value):
+		locked = value
+		queue_redraw()
 var hunt: bool = false:  ## Werwolf-Phase und König Lykaon: starker, pulsierender Feuerring um die gezeigten Wölfe (nur bei `secrets_visible`)
 	set(value):
 		hunt = value
@@ -200,6 +204,8 @@ func _draw() -> void:
 	var dim := ThemeTokens.TINT_NONE
 	if alive and disabled:
 		dim = ThemeTokens.TINT_DISABLED  # tote Plätze entsättigt das Material (siehe `state`)
+	if alive and locked:
+		dim = ThemeTokens.TINT_LOCKED
 	match state:
 		&"actor":
 			_draw_glow(c, d, GLOW_ACTIVE, 6, 0.55)
@@ -228,6 +234,8 @@ func _draw() -> void:
 	_draw_number(socket, d)
 	if state == &"selected":
 		_draw_check(c, d)
+	if alive and locked:
+		_draw_lock(c, d)
 	_draw_badges(c, d)
 	_draw_plate()
 	if has_focus():
@@ -340,6 +348,15 @@ func _draw_check(c: Vector2, d: float) -> void:
 	draw_circle(centre, 8.5, ThemeTokens.NUMBER_BG)
 	draw_arc(centre, 8.5, 0.0, TAU, 12 * 2, GLOW_SELECTED, 1.4, true)
 	draw_polyline(PackedVector2Array([centre + Vector2(-4.0, 0.5), centre + Vector2(-1.2, 3.4), centre + Vector2(4.2, -3.2)]), GLOW_SELECTED, 2.0, true)
+
+
+## Kleines Schloss in Silber (Körper und Bügel), an derselben Stelle wie das Häkchen.
+func _draw_lock(c: Vector2, d: float) -> void:
+	var centre := c + Vector2(d * 0.31, -d * 0.27)
+	draw_circle(centre, 9.0, ThemeTokens.NUMBER_BG)
+	draw_arc(centre, 9.0, 0.0, TAU, 24, ThemeTokens.MOON_SILVER, 1.2, true)
+	draw_arc(centre + Vector2(0.0, -1.6), 3.0, PI, TAU, 10, ThemeTokens.MOON_SILVER, 1.8, true)
+	draw_rect(Rect2(centre + Vector2(-4.0, -1.6), Vector2(8.0, 6.0)), ThemeTokens.MOON_SILVER)
 
 
 func _draw_number(socket: Vector2, d: float) -> void:

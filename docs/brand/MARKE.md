@@ -23,7 +23,7 @@ Eigenes gedrucktes Kartenspiel plus Spielleiter-App; die Marke muss auf iPad, Ap
 Geschmiedetes schwarzes Eisen, Wurzeln, Dornen, Mondsilber. Lava und Glut nur bei Start- und Feuer-Momenten. Ornamente nur an Ecken und Enden, damit Rahmen dehnbar bleiben.
 
 ## Schrift
-- Logo und große Titel: gotisch-geschmiedet, hohe spitze Buchstaben (wie die Wortmarke).
+- Logo und große Titel: gotisch-geschmiedet, hohe spitze Buchstaben (wie die Wortmarke). Titelschrift in der App: Grenze Gotisch (SIL OFL 1.1, intern freigegeben), nur für `GothicTitleLabel`.
 - Alles andere: schlichte, gut lesbare Schrift. Nie gotisch in Fließtext oder Knöpfen.
 
 ## Bildstil

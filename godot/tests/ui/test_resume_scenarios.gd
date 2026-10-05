@@ -220,7 +220,7 @@ func test_open_nomination_survives_and_execution_check_is_discarded() -> void:
 	assert_true(await day({"nominate": [2, 1]}), "Nominierung über Sitzplätze")
 	await tap_button("ExecuteButton")
 	await tap_seat(1)
-	await tap_button("ConfirmExecutionTargetButton")
+	assert_true(live("ConfirmExecutionButton") != null, "Karte der Hinrichtung offen")
 	var before := await restart()
 	assert_eq((next()["nominations"] as Array).size(), 1, "Nominierung erhalten")
 	assert_true(live("ConfirmExecutionButton") == null, "Prüfkarte verworfen")
