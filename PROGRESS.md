@@ -9,6 +9,7 @@ Stand: 5 Agenten in `.claude/agents/` (planer Opus, godot-entwickler Sonnet mit 
 Tempo (`docs/development/TEMPO.md`): `tools/test-full` verteilt die Suite auf 6 Prozesse mit eigenem APPDATA (`--merge` mit Fuzz, `--failed` nur rote Dateien), `test-changed` nutzt es, `run_tests.gd` kennt `--files=` und meldet die Dauer je Datei, `tools/capture-all` für mehrere Screenshot-Werkzeuge. Vollsuite mit Fuzz 558 s -> 174 s, gezielte Tests (4 Filter) 81 s -> 33 s; Export 6 s und Godot-Start 3 s unverändert; Deploy nicht gemessen.
 Prüfer-Erstlauf auf Feedback-6/-7: 45 Funde (Marke 21, Spielleiter 18, Sprache 6), nur aufgelistet in `docs/audit/PRUEFER-ERSTLAUF.md`.
 Verifikation: Vollsuite parallel mehrfach grün (1423 mit Fuzz, 1420 ohne), Rot-Pfad mit Wegwerf-Test (Exit 1, `--failed` wiederholt nur ihn), gleiche Testzahl gezielt alt/neu (103), Screenshots neben Tests geprüft. Neue Agenten von Claude Code erkannt (Typliste).
+Vollsuite parallel inkl. Fuzz auf dem finalen Stand (b4dc06c): 1423 Tests, 0 Fehlschläge, 182 s (Exit 0); i18n-Prüfung grün. Merge ohne Squash nach main (344a01c), gepusht. Kein Deploy (nicht beauftragt).
 Nächster Schritt: Markus entscheidet über die Prüfer-Funde; nächster Auftrag im Team-Ablauf.
 
 ## 2026-10-05: Feedback-Runde 7 (Branch feat/feedback-6-7, Teil 2): Rollen-Vorschau
