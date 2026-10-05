@@ -65,6 +65,8 @@ static func _labels(theme: Theme) -> void:
 		&"ErrorCaptionLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.DANGER_TEXT],
 		&"ReadAloudLabel": [ThemeTokens.FONT_SUBTITLE, ThemeTokens.TEXT_PRIMARY],
 		&"ShowValueLabel": [ThemeTokens.FONT_SHOW, ThemeTokens.MOON_SILVER_BRIGHT],
+		&"ShowNumberLabel": [ThemeTokens.FONT_SHOW_NUMBER, ThemeTokens.MOON_SILVER_BRIGHT],
+		&"ShowCaptionLabel": [ThemeTokens.FONT_SHOW_CAPTION, ThemeTokens.MOON_SILVER],
 		# Vorbereitung im Hain-Stil: Mondsilber statt Gold, Blutrot nur für Aktives (siehe ThemeTokens, DA-89).
 		&"HainLabel": [ThemeTokens.FONT_BODY, ThemeTokens.PREP_CARD_TEXT],
 		&"HainMutedLabel": [ThemeTokens.FONT_BODY, ThemeTokens.MOON_SILVER],

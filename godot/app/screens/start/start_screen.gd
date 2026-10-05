@@ -13,6 +13,7 @@ const ENTER_SIZE := Vector2(400.0, 84.0)  ## epischer Knopf: Breite für Enden p
 @onready var _version: GrimmLabel = %VersionLabel
 
 var _backdrop: StartBackdrop = null
+var _music: ScreenMusic = null
 
 
 func _setup() -> void:
@@ -36,6 +37,12 @@ func _setup() -> void:
 	_enter.custom_minimum_size = Vector2(ENTER_SIZE.x, maxf(_enter.custom_minimum_size.y, ENTER_SIZE.y))
 	EpicButton.apply(_enter, _animated())
 	_enter.pressed.connect(_on_enter)
+	_music = ScreenMusic.attach(self, ScreenMusic.START)  # ohne Datei still
+	if context != null:
+		var flags := LanguageFlags.new()
+		flags.setup(context.settings)
+		flags.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, ThemeTokens.SAFE_MARGIN)
+		add_child(flags)
 
 
 func default_focus() -> Control:
@@ -48,6 +55,8 @@ func _animated() -> bool:
 
 func _on_enter() -> void:
 	_enter.disabled = true
+	if _music != null:
+		_music.fade_out(FOG_SECONDS)
 	await _backdrop.fog_close(FOG_SECONDS)
 	StartBackdrop.fog_open_pending = true
 	navigate_requested.emit(ScreenIds.MAIN_MENU)

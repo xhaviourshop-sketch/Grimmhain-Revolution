@@ -1575,7 +1575,7 @@ msgid "ui.cockpit.show.value"
 msgstr "{value}"
 
 msgid "ui.cockpit.show.close"
-msgstr "Zurück zur Spielleitung"
+msgstr "Fertig"
 
 msgid "ui.cockpit.cover.heading"
 msgstr "Sichtschutz"
@@ -1584,7 +1584,7 @@ msgid "ui.cockpit.cover.message"
 msgstr "Das Cockpit ist verborgen. Die Partie läuft unverändert weiter."
 
 msgid "ui.cockpit.cover.resume"
-msgstr "Cockpit wieder anzeigen"
+msgstr "Weiter"
 
 msgid "ui.cockpit.layer.close"
 msgstr "Schließen"
@@ -2064,7 +2064,7 @@ msgid "ui.cockpit.card.morning.caption"
 msgstr "Morgen nach Nacht {number}"
 
 msgid "ui.cockpit.action.continue_day"
-msgstr "Weiter zum Tag"
+msgstr "Weiter"
 
 msgid "ui.morning.read.intro"
 msgstr "„Die Sonne geht auf. Das Dorf erwacht.“"
@@ -3018,13 +3018,13 @@ msgid "ui.cockpit.roles.role_value"
 msgstr "{role}"
 
 msgid "ui.cockpit.roles.confirm"
-msgstr "Gesehen, Karte schließen"
+msgstr "Fertig"
 
 msgid "ui.cockpit.roles.close_unconfirmed"
-msgstr "Ohne Bestätigung schließen"
+msgstr "Schließen"
 
 msgid "ui.cockpit.roles.close"
-msgstr "Karte schließen"
+msgstr "Schließen"
 
 msgid "ui.gm.command.confirm_role_shown"
 msgstr "Rolle gezeigt: {names}"
@@ -5208,7 +5208,7 @@ msgid "ui.groups.delete"
 msgstr "Löschen"
 
 msgid "ui.groups.close"
-msgstr "Zurück zur Eingabe"
+msgstr "Schließen"
 
 msgid "ui.groups.status.unreadable"
 msgstr "Die gespeicherten Gruppen konnten nicht gelesen werden. Die beschädigte Datei wurde beiseitegelegt, die Liste ist leer."
@@ -5468,7 +5468,7 @@ msgid "ui.rulebook.c03.b04"
 msgstr "3. Nur diese Person schaut auf den Bildschirm und tippt „Rolle anzeigen“. Sie sieht ihren Namen, ihre Rolle und einen Kurztext."
 
 msgid "ui.rulebook.c03.b05"
-msgstr "4. „Gesehen, Karte schließen“ merkt sich, dass die Person ihre Rolle kennt, und führt zur Liste zurück. „Ohne Bestätigung schließen“ merkt sich nichts."
+msgstr "4. „Fertig“ merkt sich, dass die Person ihre Rolle kennt, und führt zur Liste zurück. „Schließen“ merkt sich nichts."
 
 msgid "ui.rulebook.c03.b06"
 msgstr "Das Zeigen der Rollen ist keine Pflicht: Die erste Nacht kann auch ohne jede Bestätigung beginnen. Wer seine Rolle schon bestätigt hat, kann sie nachlesen. Eine Person, deren Rolle sich später ändert, gilt danach wieder als noch nicht gesehen."
@@ -5534,7 +5534,7 @@ msgid "ui.rulebook.c05.title"
 msgstr "Private Informationen zeigen"
 
 msgid "ui.rulebook.c05.b01"
-msgstr "Manche Schritte enden mit einer Information, die nur eine Person sehen darf. Dann zeigt die Karte „Karte zeigen“. Das öffnet eine Vollbildkarte, die nur enthält, was diese Person sehen darf. „Zurück zur Spielleitung“ schließt sie. Danach bestätigst du mit „Gezeigt“."
+msgstr "Manche Schritte enden mit einer Information, die nur eine Person sehen darf. Dann zeigt die Karte „Karte zeigen“. Das öffnet eine Vollbildkarte, die nur enthält, was diese Person sehen darf. „Fertig“ schließt sie. Danach bestätigst du mit „Gezeigt“."
 
 msgid "ui.rulebook.c05.b02"
 msgstr "Nacht und Tag"
@@ -5546,7 +5546,7 @@ msgid "ui.rulebook.c05.b04"
 msgstr "Sichtschutz und Verbergen"
 
 msgid "ui.rulebook.c05.b05"
-msgstr "„Sichtschutz“ blendet das ganze Cockpit aus und schließt alle offenen Ebenen. Die Partie läuft unverändert weiter. „Cockpit wieder anzeigen“ bringt es zurück. „Verbergen“ (das Auge am Rand) lässt das Brett stehen und blendet nur Geheimes aus: Zustandsabzeichen, Statusringe, die handelnde Person, die Nachtreihenfolge und das Rollenbild der Karte. Es bleiben Namen, Porträts und ob eine Person tot oder lebendig ist."
+msgstr "„Sichtschutz“ blendet das ganze Cockpit aus und schließt alle offenen Ebenen. Die Partie läuft unverändert weiter. „Weiter“ bringt es zurück. „Verbergen“ (das Auge am Rand) lässt das Brett stehen und blendet nur Geheimes aus: Zustandsabzeichen, Statusringe, die handelnde Person, die Nachtreihenfolge und das Rollenbild der Karte. Es bleiben Namen, Porträts und ob eine Person tot oder lebendig ist."
 
 msgid "ui.rulebook.c05.b06"
 msgstr "Private Hinweise"
@@ -5582,7 +5582,7 @@ msgid "ui.rulebook.c06.b06"
 msgstr "„Für dich“ ist nur für die Spielleitung: wer verliebt ist, wer Rivale von wem ist, wer verzaubert, geschützt, vergiftet oder gerettet wurde, Ursachen und ausgefallene Schritte. Ein Satz pro Punkt mit Namen."
 
 msgid "ui.rulebook.c06.b07"
-msgstr "„Weiter zum Tag“ beginnt den Tag."
+msgstr "„Weiter“ beginnt den Tag."
 
 msgid "ui.rulebook.c06.b08"
 msgstr "Sichtbare Folgen eines Todes werden öffentlich angesagt, auch in Wiederbelebungsrunden, zum Beispiel der Fluch des Sensenträgers, die Wirkung des Ritters oder der Liebeskummer. Die Ansage nennt den Effekt und die Rolle, von der er stammt. Geheime Wahlen ohne sichtbare Folge werden nicht angesagt."
@@ -5600,7 +5600,7 @@ msgid "ui.rulebook.c07.title"
 msgstr "Tag, Nominierung und physische Abstimmung"
 
 msgid "ui.rulebook.c07.b01"
-msgstr "Nach „Weiter zum Tag“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Nominierungen und das Ergebnis."
+msgstr "Nach „Weiter“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Nominierungen und das Ergebnis."
 
 msgid "ui.rulebook.c07.b02"
 msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Nominierungen des Tages. Nominierte tragen einen Blutrot-Ring am Sitzkreis, bis sie hingerichtet werden. Unter der Liste steht der Vorlesetext „Alle Nominierten dürfen sich jetzt nacheinander verteidigen.“"

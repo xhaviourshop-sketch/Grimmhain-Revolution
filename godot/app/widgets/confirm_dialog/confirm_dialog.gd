@@ -37,6 +37,9 @@ var _return_focus: Control = null
 func _ready() -> void:
 	visible = false
 	_panel.custom_minimum_size.x = ThemeTokens.DIALOG_WIDTH
+	GroveWindow.frame(_panel)
+	_title.theme_type_variation = &"GothicTitleLabel"
+	_title.add_theme_font_size_override(&"font_size", ThemeTokens.FONT_GOTHIC - 8)
 	_confirm.pressed.connect(_on_confirm)
 	_cancel.pressed.connect(cancel)
 	_alternative.pressed.connect(_on_alternative)
@@ -71,6 +74,8 @@ func open_request(request: DialogRequest) -> bool:
 	_confirm.visible = request.confirm_key != ""
 	_confirm.kind = GrimmButton.Kind.DANGER if request.confirm_danger else GrimmButton.Kind.PRIMARY
 	_cancel.text_key = request.cancel_key
+	_confirm.remove_meta(&"grove_skinned")  # die Art des Knopfs (rot oder dunkel) wechselt je Rückfrage
+	GroveWindow.dress(self)
 	var has_alternative := request.alternative_key != ""
 	_alternative.visible = has_alternative
 	if has_alternative:

@@ -15,14 +15,8 @@ var _fit_queued: bool = false
 func _init() -> void:
 	theme_type_variation = &"ShowPanel"
 	custom_minimum_size.x = ThemeTokens.DIALOG_WIDE_WIDTH
-	# Grimmhain-Stil (Markus 05.10.2026): dunkler Grund im Eisenrahmen, Ornamente nur an den Ecken (Teil der Aktionskarte).
-	var frame := GroveSkin.card_box()
-	if frame != null:
-		frame.content_margin_left = ThemeTokens.SPACE_XL * 2.0
-		frame.content_margin_right = ThemeTokens.SPACE_XL * 2.0
-		frame.content_margin_top = ThemeTokens.SPACE_XL * 1.5
-		frame.content_margin_bottom = ThemeTokens.SPACE_XL * 1.5
-		add_theme_stylebox_override(&"panel", frame)
+	# Grimmhain-Stil (Markus 05.10.2026): dunkler Grund im Eisenrahmen, Ornamente nur an den Ecken (Teil der Aktionskarte); gemeinsamer Baustein aller Fenster.
+	GroveWindow.frame(self)
 	_column = VBoxContainer.new()
 	_column.theme_type_variation = &"ScreenColumn"
 	add_child(_column)
@@ -43,9 +37,7 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	for b: Node in actions.get_children():  # Knöpfe im Hain-Stil wie auf der Aktionskarte
-		if b is GrimmButton:
-			GroveSkin.skin_button(b as GrimmButton, (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY)
+	GroveWindow.dress(self)  # Knöpfe im Hain-Stil wie auf der Aktionskarte
 	content.minimum_size_changed.connect(_queue_fit)
 	actions.minimum_size_changed.connect(_queue_fit)
 	if get_parent() is Control:

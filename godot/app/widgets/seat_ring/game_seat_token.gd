@@ -34,6 +34,7 @@ const PLATE_FONT_SIZE_MIN := 10
 const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ zur Rahmenbreite
 const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
 const HUNT_PULSE_SPEED := 3.4  ## Pulse je Sekunde im Bogenmaß
+const ACTIVE_PULSE_SPEED := 2.1  ## langsames Auf und Ab der aktiven Person (rund drei Sekunden je Zug)
 const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
 const RING_PRIORITY: Array[String] = ["marked", "poisoned", "silenced", "protected"]
 const _STYLE_STATES: Array[String] = ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]
@@ -77,6 +78,11 @@ var hunt: bool = false:  ## Werwolf-Phase und König Lykaon: starker, pulsierend
 var hunt_animated: bool = true:  ## aus bei reduzierter Bewegung: der Ring steht still
 	set(value):
 		hunt_animated = value
+		_apply_hunt_motion()
+		queue_redraw()
+var active: bool = false:  ## handelnde Person: Bildrahmen und Namensschild leuchten langsam in Mondsilber auf und ab (nur bei `secrets_visible`)
+	set(value):
+		active = value
 		_apply_hunt_motion()
 		queue_redraw()
 var _hunt_time: float = 0.0
@@ -207,8 +213,6 @@ func _draw() -> void:
 	if alive and locked:
 		dim = ThemeTokens.TINT_LOCKED
 	match state:
-		&"actor":
-			_draw_glow(c, d, GLOW_ACTIVE, 6, 0.55)
 		&"selected":
 			_draw_glow(c, d, GLOW_SELECTED, 6, 0.7)
 		&"allowed":
@@ -217,6 +221,8 @@ func _draw() -> void:
 		_draw_glow(c, d, GLOW_ACTIVE, 6, 0.8)
 	if hunt and secrets_visible:
 		_draw_hunt(c, d)
+	if active:
+		_draw_active(c, d)
 	if _nominated and alive:
 		_draw_nominated(c, d)
 	_draw_portrait(c, d, dim)
@@ -226,8 +232,6 @@ func _draw() -> void:
 	var frame := GroveSkin.texture("seat_frame")
 	if frame != null:
 		var silver := GroveSkin.TINT_SEAT_SILVER * dim
-		if state == &"actor":
-			silver *= ThemeTokens.TINT_SEAT_ACTOR
 		draw_texture_rect(frame, frame_rect, false, silver)
 	_draw_state_ring(c, d)
 	_draw_socket(frame_rect, socket, d, GroveSkin.TINT_SEAT_SILVER * dim)  # in jedem Zustand über dem Ring, damit die Nummer lesbar bleibt
@@ -275,6 +279,23 @@ func _draw_hunt(c: Vector2, d: float) -> void:
 	draw_arc(c, radius + 1.5, 0.0, TAU, 64, core, 5.0, true)
 
 
+## Aktive Person: Mondsilber-Schein um den Bildrahmen, pulsierend (bei reduzierter Bewegung ruhig und voll). Das Schild leuchtet in `_draw_plate`.
+func _active_pulse() -> float:
+	return 0.5 + 0.5 * sin(_hunt_time * ACTIVE_PULSE_SPEED) if hunt_animated else 0.85
+
+
+func _draw_active(c: Vector2, d: float) -> void:
+	var pulse := _active_pulse()
+	var radius := d * RING_RADIUS
+	for i: int in 8:
+		var tone := ThemeTokens.MOON_GLOW
+		tone.a = (0.35 + 0.55 * pulse) * (1.0 - float(i) / 8.0)
+		draw_arc(c, radius + 1.0 + 2.6 * float(i), 0.0, TAU, 64, tone, 3.2, true)
+	var rim := ThemeTokens.MOON_SILVER_BRIGHT
+	rim.a = 0.55 + 0.45 * pulse
+	draw_arc(c, radius + 1.5, 0.0, TAU, 64, rim, 3.0, true)
+
+
 ## Nominiert (öffentlich): ruhiger Blutrot-Ring, solange die Person lebt; der Tageswechsel setzt die Nominierung zurück.
 func _draw_nominated(c: Vector2, d: float) -> void:
 	_draw_glow(c, d, ThemeTokens.BLOOD_GLOW, 5, 0.8)
@@ -282,7 +303,7 @@ func _draw_nominated(c: Vector2, d: float) -> void:
 
 
 func _apply_hunt_motion() -> void:
-	set_process(hunt and hunt_animated)
+	set_process((hunt or active) and hunt_animated)
 
 
 func _process(delta: float) -> void:
@@ -409,6 +430,15 @@ func _draw_glyph_badge(kind: String, rect: Rect2) -> void:
 
 func _draw_plate() -> void:
 	var rect := plate_rect()
+	if active:
+		var glow := StyleBoxFlat.new()
+		var pulse := _active_pulse()
+		glow.bg_color = ThemeTokens.INVISIBLE
+		glow.set_corner_radius_all(9)
+		glow.shadow_color = ThemeTokens.MOON_GLOW
+		glow.shadow_color.a = 0.35 + 0.5 * pulse
+		glow.shadow_size = int(6.0 + 6.0 * pulse)
+		draw_style_box(glow, rect.grow(1.0))
 	var box := GroveSkin.plate_box()
 	if box != null:
 		draw_style_box(box, rect)

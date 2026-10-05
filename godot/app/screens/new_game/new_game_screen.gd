@@ -85,6 +85,7 @@ func handle_back() -> bool:
 func open_lexicon(role: StringName) -> void:
 	close_lexicon()
 	_lexicon_layer = RoleLexicon.layer(context.settings, role)
+	GroveWindow.dress(_lexicon_layer)
 	add_child(_lexicon_layer)
 	var lexicon := _lexicon_layer.find_child("RoleLexicon", true, false) as RoleLexicon
 	lexicon.close_requested.connect(close_lexicon)

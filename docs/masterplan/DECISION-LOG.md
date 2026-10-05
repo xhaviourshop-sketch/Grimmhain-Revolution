@@ -1320,3 +1320,7 @@ Passt DA-94 an. Person antippen (nominierte Person im Sitzkreis, auch ohne vorhe
 ## DA-99 Nominierung, gesperrte Sitze (Markus, 05.10.2026, Feedback iPad-Test Teil 4)
 
 Ergänzt DA-95: Bei der Nominierung gesperrte Sitze sind stärker abgedunkelt und tragen ein kleines Silber-Schloss. Der Korrupte Richter bleibt verdeckt (sein Sitz wird nicht gesperrt).
+
+## DA-100 Optik-Runde: aktive Person, Akt-Feuer, Fenster-Baustein (Markus, 05.10.2026, Feedback iPad-Test Teil 5)
+
+(1) Die handelnde Person (bei Gruppenschritten alle) leuchtet im Sitzkreis langsam in Mondsilber auf und ab (Bildrahmen und Namensschild, `GameSeatToken.active`); der Kartentitel nennt die Namen in Klammern. Der blutrote Schein der handelnden Person entfällt, der Feuerring der Wölfe bleibt. (2) Akt-Feuer wächst linear mit der Aktstufe (Akt II doppelt, III dreifach, IV vierfach: Flammenhöhe, Fläche, Helligkeit, Bewegung, Funkenzahl), Funken langsam und treibend. Die Alternativen „blaues Geisterfeuer“ und „Glut mit Rauch“ gibt es nur als Vergleichsbilder (`FireGlow.style`); Standard bleibt das jetzige Feuer, Markus wählt. (3) Alle Fenster teilen den Baustein `GroveWindow` (Eisenrahmen, Hain-Knöpfe); Liste in `docs/audit/FENSTER-OPTIK.md`. (4) „Karte zeigen“: größere Zahl und Schrift, Knopf „Fertig“; Knopftexte mit Programmierersprache sind auf Fertig, Schließen, Weiter umgestellt. (5) Sprachflaggen DE/EN oben rechts auf dem Startbildschirm. (6) Plätze für Ladebild und Musik ohne Wirkung, solange die Dateien fehlen.
