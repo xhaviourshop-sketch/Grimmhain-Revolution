@@ -152,6 +152,11 @@ static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: St
 	var s := ctx.state
 	var kind := pack_protection(s, target_id, pierce)
 	if kind == &"":
+		if pierce and not CardHooks.protections_paused(s, target_id):
+			for i: int in s.shields.size():  # A-02 (DA-93): der durchdringende Angriff bricht den Schild
+				if int(s.shields[i]["holder_id"]) == target_id and int(s.shields[i]["night"]) < s.night_number:
+					s.shields.remove_at(i)
+					break
 		return false
 	if kind != GuardRoles.REPEATABLE:
 		_use_one_time_protection(ctx, target_id, kind)

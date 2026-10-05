@@ -260,6 +260,21 @@ func test_sage_curse_zero_and_silenced_sage() -> void:
 
 # --- Mehrere Schutzwirkungen ---------------------------------------------------------------------
 
+## A-02 (DA-93): Ein durchdringender Rudelangriff bricht den Schild des Schutzgeists, und das Opfer stirbt.
+func test_piercing_attack_breaks_the_shield_and_the_victim_dies() -> void:
+	var s := _state([W, D, SM, SG, "amalia", "detektiv", "blutwolf", "dorfchronistin"])
+	if s == null:
+		return
+	s.shields.append({"holder_id": 2, "source_id": 4, "night": 0})
+	s.plague_pierce_pending = true
+	var r := _dawn(s, 2)
+	if r == null:
+		return
+	assert_eq(_prevented_by(r.events, 2), "", "nichts verhindert den Angriff")
+	assert_eq(_died(r.events, 2), "NIGHT_KILL", "Opfer stirbt")
+	assert_eq(r.state.shields.size(), 0, "Schild ist gebrochen")
+
+
 func test_one_time_protection_order_weapon_shield_sage() -> void:
 	# Weiser 2 trägt Waffe (Schmied 3) und Schild (Schutzgeist 4) per Spielablauf; hier per Zustand vorbereitet.
 	var s := _state([W, WE, SM, SG, D, "amalia", "detektiv", "blutwolf"])
