@@ -368,7 +368,7 @@ func test_language_switch_keeps_report_and_version() -> void:
 	assert_true(text.contains("Final report (game master version)") and text.contains("Night 1") and text.contains("Winner: Werewolves"), "englischer Text: %s" % text.left(80))
 
 
-func test_report_fits_and_scrolls_at_1024x768() -> void:
+func test_report_fits_and_pages_at_1024x768() -> void:
 	for lang: String in ["de", "en"]:
 		var made := await _shell_with_finished_game(SIZE_4_3, lang)
 		if made.is_empty():
@@ -386,14 +386,17 @@ func test_report_fits_and_scrolls_at_1024x768() -> void:
 			var c := find_node(screen, name) as Control
 			assert_true(c != null and c.is_visible_in_tree() and inside(rect_of(c), viewport), "%s: %s im Fenster" % [lang, name])
 			assert_true(c.size.x >= 47.5 and c.size.y >= 47.5, "%s: %s mindestens 48×48" % [lang, name])
-		var scroll := find_node(screen, "HistoryReportScroll") as ScrollContainer
-		var body := find_node(screen, "HistoryReport") as Control
-		assert_true(scroll.size.y >= 150.0, "%s: Berichtsfläche behält Platz (%.0f)" % [lang, scroll.size.y])
-		assert_true(body.size.x <= scroll.size.x + 0.5, "%s: kein horizontaler Überlauf" % lang)
-		scroll.scroll_vertical = int(body.size.y)
-		await frames(2)
-		var last := body.get_child(body.get_child_count() - 1) as Control
-		assert_true(inside(rect_of(last), rect_of(scroll), 1.0), "%s: letzte Zeile nach Scrollen sichtbar" % lang)
+		assert_true(find_node(screen, "HistoryReportHost").find_children("*", "ScrollContainer", true, false).is_empty(), "%s: keine Scrollleiste" % lang)
+		var host := find_node(screen, "HistoryReportHost") as Control
+		var next := find_button(screen, "NextPageButton")
+		assert_true(next != null, "%s: der Bericht blättert" % lang)
+		var guard := 0
+		while next != null and not next.disabled and guard < 20:
+			await press(next)
+			guard += 1
+		var page := find_node(screen, "PageBody") as Control
+		var last := page.get_child(page.get_child_count() - 1) as Control
+		assert_true(inside(rect_of(last), rect_of(host), 1.0), "%s: letzte Zeile auf der letzten Seite sichtbar" % lang)
 		await after_each()
 
 

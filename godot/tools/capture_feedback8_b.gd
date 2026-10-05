@@ -46,23 +46,27 @@ func _initialize() -> void:
 	shell.navigate(&"history")
 	await _fr(8)
 	await _save("verlauf-liste")
+	await _page("verlauf-liste-seite2")
 	var list := shell.find_child("HistoryList", true, false)
 	(list.get_child(0) as BaseButton).pressed.emit()
 	await _fr(10)
 	await _save("bericht-oeffentlich")
-	await _scroll("bericht-oeffentlich-verlauf")
+	await _page("bericht-oeffentlich-seite2")
 	(shell.find_child("HistoryGmButton", true, false) as BaseButton).set_pressed(true)
 	await _fr(6)
 	(shell.find_child("ConfirmButton", true, false) as BaseButton).pressed.emit()
 	await _fr(10)
 	await _save("bericht-spielleitung")
-	await _scroll("bericht-spielleitung-verlauf")
+	await _page("bericht-spielleitung-seite2")
 	quit(0)
 
 
-func _scroll(label: String) -> void:
-	var scroll := shell.find_child("HistoryReportScroll", true, false) as ScrollContainer
-	scroll.scroll_vertical = 100000
+func _page(label: String) -> void:
+	var next := shell.find_child("NextPageButton", true, false) as BaseButton
+	if next == null or next.disabled:
+		print("keine zweite Seite: ", label)
+		return
+	next.pressed.emit()
 	await _save(label)
 
 

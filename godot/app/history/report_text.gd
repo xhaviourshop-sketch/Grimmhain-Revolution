@@ -45,7 +45,7 @@ static func lines(report: Dictionary, version: String, reveal: bool = true) -> A
 			out.append({"style": "line", "text": text})
 	out.append({"style": "heading", "text": _t("ui.report.heading.history")})
 	var any := false
-	for entry: Dictionary in report.get("entries", []):
+	for entry: Dictionary in _fold_executions(report.get("entries", []), gm):
 		if not gm and str(entry.get("vis", "")) != PUBLIC:
 			continue
 		any = _entry(entry, out) or any
@@ -91,7 +91,11 @@ static func _entry(entry: Dictionary, out: Array[Dictionary]) -> bool:
 		"judge_nominator":
 			out.append({"style": "line", "text": _t("ui.report.judge_nominator", {"judge": str(entry["judge"]), "nominee": str(entry["nominee"])})})
 		"execution":
-			out.append({"style": "line", "text": LogText.executed(str(entry["name"]))})
+			var role := str(entry.get("role_id", ""))
+			var said := LogText.executed(str(entry["name"]))
+			if role != "":  # die Rolle im selben Satz
+				said = said.trim_suffix(".") + " (%s)." % _t(str(CockpitText.role_name(role)))
+			out.append({"style": "line", "text": said})
 		"execution_override":
 			out.append({"style": "line", "text": _t("ui.report.execution_override", {"name": str(entry["name"])})})
 		"execution_redirected":
@@ -134,6 +138,30 @@ static func _entry(entry: Dictionary, out: Array[Dictionary]) -> bool:
 		_:
 			return false
 	return true
+
+
+## Eine Hinrichtung ist ein Satz: Tod und Todesursache derselben Person direkt danach (bis zur nächsten Überschrift) gehen in den
+## Hinrichtungseintrag auf; dieser trägt dann die Rolle: öffentlich nur, wenn sie am Tisch angesagt wurde, in der Spielleiterfassung
+## immer. Das gespeicherte Format bleibt.
+static func _fold_executions(entries: Array, gm: bool) -> Array:
+	var out: Array = []
+	var dropped := {}
+	for i: int in entries.size():
+		if dropped.has(i):
+			continue
+		var entry: Dictionary = entries[i]
+		if str(entry.get("kind", "")) == "execution":
+			entry = entry.duplicate()
+			var j := i + 1
+			while j < entries.size() and not ["night", "day"].has(str((entries[j] as Dictionary).get("kind", ""))):
+				var other: Dictionary = entries[j]
+				if ["death", "death_cause"].has(str(other.get("kind", ""))) and str(other.get("name", "")) == str(entry["name"]):
+					dropped[j] = true
+					if str(other["kind"]) == ("death_cause" if gm else "death"):
+						entry["role_id"] = str(other.get("role_id", ""))
+				j += 1
+		out.append(entry)
+	return out
 
 
 ## Zeile des privaten Nachtberichts (Schlüssel und Werte wie im Cockpit-Morgenbereich).
