@@ -12,6 +12,7 @@ const COCKPIT := &"cockpit"
 const LEXICON := &"lexicon"
 const RULEBOOK := &"rulebook"
 const HISTORY := &"history"
+const ROLE_PREVIEW := &"role_preview"  ## Rollen-Vorschau, nur über die Einstellungen erreichbar
 
 const _SCENES := {
 	START: "res://app/screens/start/start_screen.tscn",
@@ -23,6 +24,7 @@ const _SCENES := {
 	LEXICON: "res://app/screens/lexicon/lexicon_screen.tscn",
 	RULEBOOK: "res://app/screens/rulebook/rulebook_screen.tscn",
 	HISTORY: "res://app/screens/history/history_screen.tscn",
+	ROLE_PREVIEW: "res://app/screens/role_preview/role_preview_screen.tscn",
 }
 
 const _PARENTS := {
@@ -35,11 +37,12 @@ const _PARENTS := {
 	LEXICON: MAIN_MENU,
 	RULEBOOK: MAIN_MENU,
 	HISTORY: MAIN_MENU,
+	ROLE_PREVIEW: SETTINGS,
 }
 
 
 static func all() -> Array[StringName]:
-	return [START, MAIN_MENU, NEW_GAME, CONTINUE, SETTINGS, COCKPIT, LEXICON, RULEBOOK, HISTORY]
+	return [START, MAIN_MENU, NEW_GAME, CONTINUE, SETTINGS, COCKPIT, LEXICON, RULEBOOK, HISTORY, ROLE_PREVIEW]
 
 
 static func has(id: StringName) -> bool:

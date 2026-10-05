@@ -4,8 +4,8 @@ extends RefCounted
 ## Text je Antwortart. Welche Rollen eigene Texte haben, prüft test_cockpit_texts.
 ##   Rollenname          ui.role.<rolle>.name, Gruppen ui.cockpit.group.<gruppe>
 ##   Vorlesetext         ui.call.<rolle> (Rückfall ui.call.generic mit Rollenname)
-##   Titel und Hilfe    ui.night.<besitzer>.<stufe>.title / .help (Stufe „pick“ für einstufige Prompts),
-##                       Rückfall ui.night.generic.title bzw. ui.night.generic.help.<antwortart>
+##   Kurz-Aktion         ui.night.<besitzer>.<stufe>.short (Stufe „pick“ für einstufige Prompts),
+##                       Rückfall ui.night.generic.short.<antwortart>
 ##   Teilantwort         ui.prompt.info.<feld> (Rückfall ui.prompt.info.generic)
 
 const GROUPS := {"pack": "ui.cockpit.group.pack", "die-gebundenen": "ui.cockpit.group.bound", "die-ewigen": "ui.cockpit.group.eternal", "piper-all": "ui.cockpit.group.piper_all", "reaction": "ui.cockpit.group.reaction"}
@@ -55,30 +55,17 @@ static func call_key(role_id: String) -> String:
 	return key if has_key(key) else "ui.call.generic"
 
 
-## Titel und Hilfe der Nacht-Schablone: ui.night.<besitzer>.<stufe>.title und .help (Stufe „pick“ für einstufige Prompts, bei
-## Reaktionen Besitzer „reaction“ und Stufe = Art). Den Titel nennt `night_title_key`, die Hilfe `night_help_key`; ohne Eintrag
-## der Rollenname bzw. der Hilfetext je Antwortart.
+## Kurz-Aktion der Mini-Nachtkarte (DA-101, 1 bis 3 Wörter): ui.night.<besitzer>.<stufe>.short (Stufe „pick“ für einstufige Prompts, bei
+## Reaktionen Besitzer „reaction“ und Stufe = Art); ohne Eintrag die Kurz-Aktion je Antwortart.
 static func night_base(next: Dictionary) -> String:
 	var owner := str(next.get("owner", ""))
 	var stage := str(next.get("reaction_kind", "")) if owner == "reaction" else str(next.get("stage", ""))
 	return "ui.night.%s.%s" % [key_part(owner), stage if stage != "" else "pick"]
 
 
-static func night_title_key(next: Dictionary) -> String:
-	var key := night_base(next) + ".title"
-	return key if has_key(key) else "ui.night.generic.title"
-
-
-## Regelzeilen der Rolle (bis zu 3, ohne Bedienwörter) unter dem Titel der Nachtkarte: `ui.night.rules.<rolle>`. Ersetzt die Hilfe der Stufe,
-## sobald die Rolle Zeilen hat.
-static func night_rules_key(role: String) -> String:
-	var key := "ui.night.rules.%s" % ("werwolf" if role == "pack" else key_part(role))  # der Rudelschritt zeigt die Regeln des Werwolfs
-	return key if has_key(key) else ""
-
-
-static func night_help_key(next: Dictionary) -> String:
-	var key := night_base(next) + ".help"
-	return key if has_key(key) else "ui.night.generic.help.%s" % str(next.get("answer", "targets"))
+static func night_short_key(next: Dictionary) -> String:
+	var key := night_base(next) + ".short"
+	return key if has_key(key) else "ui.night.generic.short.%s" % str(next.get("answer", "targets"))
 
 
 ## Beschriftung einer Aktion mit rollenspezifischer Variante, z. B. Loki „Liebende“ statt „Ja“:

@@ -17,7 +17,7 @@ Eigenes gedrucktes Kartenspiel plus Spielleiter-App; die Marke muss auf iPad, Ap
 - Blutrot (`BLOOD_RED`): nur für Aktives (gewählt, Start, Gefahr), nie als Flächenfarbe.
 - Teams: Dorf Mondblau, Wölfe Blutrot, Einzelgänger Violett (`TEAM_PLATE_*`, `GLOW_*`).
 - Einziger warmer Ton: Fenster- und Laternenlicht in Bildern.
-- **Kein Gold. Nirgends.**
+- **Kein Gold. Nirgends.** Ausnahme (DA-101): Flaggen dürfen ihre echten Farben haben; das Gelb der deutschen Sprachflagge bleibt.
 
 ## Material
 Geschmiedetes schwarzes Eisen, Wurzeln, Dornen, Mondsilber. Lava und Glut nur bei Start- und Feuer-Momenten. Ornamente nur an Ecken und Enden, damit Rahmen dehnbar bleiben.
@@ -31,7 +31,7 @@ Wie der Startbildschirm: detailreich gemalt, nachtblau, Mondlicht, warme Fenster
 
 ## Sprache (Spielleiter-App): kurz und klar
 Einfache Worte, keine Floskeln, kein Amtsdeutsch. Atmosphäre nur in Überschriften und Ansagen, nie in Bedientexten.
-- Nachtkarte: erst die Fähigkeit in 1 Satz, dann bis zu 3 kurze Regelzeilen für den Spielleiter (Sonderfälle, Wechselwirkungen), siehe `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md`. Sonst höchstens 1 Satz Hilfe.
+- Nachtkarte (DA-101): Mini-Karte mit Rollensymbol, Name, 1 bis 3 Wörtern Aktion; Warnungen höchstens 6 Wörter, ohne Kommas und Fachwörter, immer mit Namen. Kein Vorlesesatz (zuschaltbar), keine Regelzeilen, siehe `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md`.
 - Keine Statuswörter für Programmierer ("Tu jetzt", "Handelnd 15").
 - Schlecht: "Wähle 0 bis 2 Personen. Auswahl leeren. Niemand/Verzichten."
 - Gut: "Loki bindet 2 Spieler. Erst Liebende oder Rivalen wählen, dann 2 Spieler antippen."

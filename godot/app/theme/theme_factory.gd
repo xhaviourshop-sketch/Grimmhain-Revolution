@@ -67,6 +67,11 @@ static func _labels(theme: Theme) -> void:
 		&"ShowValueLabel": [ThemeTokens.FONT_SHOW, ThemeTokens.MOON_SILVER_BRIGHT],
 		&"ShowNumberLabel": [ThemeTokens.FONT_SHOW_NUMBER, ThemeTokens.MOON_SILVER_BRIGHT],
 		&"ShowCaptionLabel": [ThemeTokens.FONT_SHOW_CAPTION, ThemeTokens.MOON_SILVER],
+		# Mini-Nachtkarte (DA-101): Zeile „Name · Rolle · Aktion“, Warnungen in lesbarem Rot, zuschaltbare Ansage klein.
+		&"NightLineLabel": [ThemeTokens.FONT_BUTTON, ThemeTokens.TEXT_PRIMARY],
+		&"NightActionLabel": [ThemeTokens.FONT_BODY, ThemeTokens.MOON_SILVER_BRIGHT],
+		&"NightWarningLabel": [ThemeTokens.FONT_BODY, ThemeTokens.DANGER_TEXT],
+		&"NightCallLabel": [ThemeTokens.FONT_CAPTION, ThemeTokens.MOON_SILVER],
 		# Vorbereitung im Hain-Stil: Mondsilber statt Gold, Blutrot nur für Aktives (siehe ThemeTokens, DA-89).
 		&"HainLabel": [ThemeTokens.FONT_BODY, ThemeTokens.PREP_CARD_TEXT],
 		&"HainMutedLabel": [ThemeTokens.FONT_BODY, ThemeTokens.MOON_SILVER],

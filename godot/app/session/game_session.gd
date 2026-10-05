@@ -102,6 +102,39 @@ func cockpit_view() -> Dictionary:
 	return CockpitView.build(_state)
 
 
+## Warnungen der Mini-Nachtkarte zur Karte `next` und der aktuellen Auswahl (nur Spielleitung), siehe NightWarnings.
+func night_warnings(next: Dictionary, selection: Array) -> Array:
+	return NightWarnings.build(_state, next, selection)
+
+
+## Nur Rollen-Vorschau (Einstellungen): ändert den Zustand einer Wegwerf-Partie ohne Befehl, damit ein Sonderfall der Nachtkarte sichtbar
+## wird (Warnungsarten aus NightWarnings.kinds_for_role). Nie in echten Partien; die Vorschau speichert nichts. `targets`: wählbare
+## Personen ohne die Rolle; `holder`: Person mit der Rolle. „protected“ gibt der ersten Person ein Schild, „cursed“ verflucht sie,
+## „lovers“ verbindet die ersten beiden als Liebende, „blocked“ blockiert die Rolle (ihr noch nicht begonnener Schritt entfällt, die nächste
+## Karte trägt die Warnung). Ergebnis: ob etwas geändert wurde. Jeder Eintrag besteht die Zustandsprüfung (`GameState.from_dict`).
+func preview_special(kinds: Array, targets: Array, holder: int) -> bool:
+	var changed := false
+	if not targets.is_empty() and (kinds.has("protected") or kinds.has("cursed") or kinds.has("lovers")):
+		var first := int(targets[0])
+		if kinds.has("protected"):
+			_state.shields.append({"holder_id": first, "source_id": first, "night": maxi(_state.night_number - 1, 0)})
+		if kinds.has("cursed"):
+			_state.players[first].cursed = true
+		if kinds.has("lovers") and targets.size() >= 2:
+			_state.loki_pairs.append({"loki_id": first, "a": first, "b": int(targets[1]), "kind": "love", "ended": false})
+		changed = true
+	elif kinds.has("blocked"):
+		var i := _state.next_night_step
+		if _state.phase == Phase.NIGHT and _state.pending_prompt == null and i < _state.night_plan.size() - 1 and _state.players.has(holder):
+			_state.blocked_ids.append(holder)
+			_state.night_step_status[i] = StepQueue.STATUS_SKIPPED
+			_state.next_night_step = i + 1
+			changed = true
+	if changed:
+		view_changed.emit(view())
+	return changed
+
+
 ## Morgenbericht der letzten Nacht (öffentlicher und privater Teil getrennt), siehe MorningReport.
 func morning_report() -> Dictionary:
 	return MorningReport.build(_state, _events)

@@ -8900,3 +8900,354 @@ msgstr "Niemand siegt"
 
 msgid "ui.cockpit.victory.winners"
 msgstr "Gewonnen haben: {names}"
+
+msgid "ui.night.pack.pick.short"
+msgstr "wählen ihr Opfer"
+
+msgid "ui.night.pack2.pick.short"
+msgstr "wählen ein zweites Opfer"
+
+msgid "ui.night.schutzengel.pick.short"
+msgstr "schützt"
+
+msgid "ui.night.waldhexe.heal.short"
+msgstr "rettet?"
+
+msgid "ui.night.waldhexe.reveal.short"
+msgstr "sieht das Opfer"
+
+msgid "ui.night.waldhexe.poison.short"
+msgstr "vergiftet?"
+
+msgid "ui.night.waldhexe.poison_target.short"
+msgstr "vergiftet"
+
+msgid "ui.night.waldhexe.confirm.short"
+msgstr "ist fertig"
+
+msgid "ui.night.das_orakel.target.short"
+msgstr "schaut"
+
+msgid "ui.night.das_orakel.shown.short"
+msgstr "sieht die Rolle"
+
+msgid "ui.night.wolfskind.pick.short"
+msgstr "wählt ein Vorbild"
+
+msgid "ui.night.lehrling.master.short"
+msgstr "wählt einen Meister"
+
+msgid "ui.night.dorfchronistin.shown.short"
+msgstr "sieht eine Zahl"
+
+msgid "ui.night.die_gebundenen.shown.short"
+msgstr "wachen auf"
+
+msgid "ui.night.waldlaeufer.shown.short"
+msgstr "zählt Wölfe"
+
+msgid "ui.night.doktor.targets.short"
+msgstr "prüft zwei"
+
+msgid "ui.night.doktor.shown.short"
+msgstr "sieht das Ergebnis"
+
+msgid "ui.night.faehrtenleser.use.short"
+msgstr "liest die Fährte?"
+
+msgid "ui.night.faehrtenleser.shown.short"
+msgstr "sieht die Richtung"
+
+msgid "ui.night.korrupter_richter.pick.short"
+msgstr "markiert?"
+
+msgid "ui.night.spuerhund.targets.short"
+msgstr "prüft drei"
+
+msgid "ui.night.spuerhund.shown.short"
+msgstr "sieht das Ergebnis"
+
+msgid "ui.night.parasit.pick.short"
+msgstr "wählt einen Wirt"
+
+msgid "ui.night.schattenhund.use.short"
+msgstr "blockiert das Dorf?"
+
+msgid "ui.night.albtraumwolf.pick.short"
+msgstr "blockiert"
+
+msgid "ui.night.giftwolf.pick.short"
+msgstr "vergiftet?"
+
+msgid "ui.night.henker.pick.short"
+msgstr "markiert"
+
+msgid "ui.night.traumdeuter.targets.short"
+msgstr "bekommt drei Namen"
+
+msgid "ui.night.traumdeuter.shown.short"
+msgstr "sieht die Namen"
+
+msgid "ui.night.kopfgeldjaeger.targets.short"
+msgstr "bekommt eine Liste"
+
+msgid "ui.night.kopfgeldjaeger.shown.short"
+msgstr "sieht die Liste"
+
+msgid "ui.night.koenig.targets.short"
+msgstr "lernt jemanden kennen"
+
+msgid "ui.night.koenig.shown.short"
+msgstr "sieht die Rolle"
+
+msgid "ui.night.kriegerin_des_lichts.targets.short"
+msgstr "greift an"
+
+msgid "ui.night.kriegerin_des_lichts.shown.short"
+msgstr "sieht das Ergebnis"
+
+msgid "ui.night.blutpriester.targets.short"
+msgstr "opfert?"
+
+msgid "ui.night.blutpriester.reveal.short"
+msgstr "nennt Wölfe"
+
+msgid "ui.night.blutpriester.shown.short"
+msgstr "sieht die Namen"
+
+msgid "ui.night.die_ewigen.targets.short"
+msgstr "prüfen jemanden"
+
+msgid "ui.night.die_ewigen.shown.short"
+msgstr "sehen das Ergebnis"
+
+msgid "ui.night.piper_all.shown.short"
+msgstr "wachen auf"
+
+msgid "ui.night.dorfschmied.pick.short"
+msgstr "gibt die Waffe?"
+
+msgid "ui.night.schutzgeist.pick.short"
+msgstr "schenkt ein Schild"
+
+msgid "ui.night.verdammniswaechter.pick.short"
+msgstr "urteilt"
+
+msgid "ui.night.maertyrerin.pick.short"
+msgstr "opfert sich?"
+
+msgid "ui.night.loki.mode.short"
+msgstr "Liebende oder Rivalen"
+
+msgid "ui.night.loki.targets.short"
+msgstr "verbindet zwei"
+
+msgid "ui.night.rotkaeppchen.targets.short"
+msgstr "bittet um Zuflucht"
+
+msgid "ui.night.rotkaeppchen.grant.short"
+msgstr "wird um Zuflucht gebeten"
+
+msgid "ui.night.schwarze_witwe.pick.short"
+msgstr "wählt"
+
+msgid "ui.night.schattenwanderer.pick.short"
+msgstr "verbindet sich"
+
+msgid "ui.night.koenig_lykaon.ally.short"
+msgstr "wählt einen Verbündeten"
+
+msgid "ui.night.koenig_lykaon.targets.short"
+msgstr "macht einen Wolf"
+
+msgid "ui.night.seelentauscher.targets.short"
+msgstr "tauscht zwei?"
+
+msgid "ui.night.kutscher.targets.short"
+msgstr "holt Tote zurück?"
+
+msgid "ui.night.kutscher.wolf.short"
+msgstr "wählt den Wolf"
+
+msgid "ui.night.dr_victor_frankenstein.targets.short"
+msgstr "holt einen Toten"
+
+msgid "ui.night.dr_victor_frankenstein.role.short"
+msgstr "wählt die Rolle"
+
+msgid "ui.night.rattenfaenger.pick.short"
+msgstr "verzaubert"
+
+msgid "ui.night.pestbringerin.pick.short"
+msgstr "steckt an"
+
+msgid "ui.night.prophet_des_untergangs.pick.short"
+msgstr "wählt Personen"
+
+msgid "ui.night.todesprediger.prediction.short"
+msgstr "nennt die Todesnacht"
+
+msgid "ui.night.feuerteufel.pick.short"
+msgstr "markiert"
+
+msgid "ui.night.voodoo_priester.pick.short"
+msgstr "gibt eine Puppe"
+
+msgid "ui.night.nekromant.targets.short"
+msgstr "opfert Tote?"
+
+msgid "ui.night.nekromant.redirect.short"
+msgstr "lenkt um?"
+
+msgid "ui.night.hades.targets.short"
+msgstr "holt jemanden?"
+
+msgid "ui.night.hades.barrier.short"
+msgstr "kauft eine Barriere?"
+
+msgid "ui.night.grabraeuber.targets.short"
+msgstr "stiehlt?"
+
+msgid "ui.night.schicksalswolf.pick.short"
+msgstr "wählt Personen"
+
+msgid "ui.night.rachsuechtiger_wolf.pick.short"
+msgstr "reißt einen Wolf?"
+
+msgid "ui.night.zeitwaechter.use.short"
+msgstr "friert die Nacht ein?"
+
+msgid "ui.night.kartenschlucker.act.short"
+msgstr "zeigt Finger"
+
+msgid "ui.night.kartenschlucker.target.short"
+msgstr "tötet"
+
+msgid "ui.night.reaction.curse.short"
+msgstr "erntet eine Seele"
+
+msgid "ui.night.reaction.possessed.short"
+msgstr "reißt jemanden mit"
+
+msgid "ui.night.reaction.knight.short"
+msgstr "trifft einen Wolf"
+
+msgid "ui.night.reaction.smith.short"
+msgstr "trifft einen Wolf"
+
+msgid "ui.night.reaction.demon.short"
+msgstr "verflucht"
+
+msgid "ui.night.generic.short.targets"
+msgstr "wählt"
+
+msgid "ui.night.generic.short.choice"
+msgstr "entscheidet"
+
+msgid "ui.night.generic.short.ack"
+msgstr "sieht die Karte"
+
+msgid "ui.night.generic.short.option"
+msgstr "wählt eine Rolle"
+
+msgid "ui.night.generic.short.prediction"
+msgstr "nennt einen Zeitpunkt"
+
+msgid "ui.night.generic.short.step"
+msgstr "wacht auf"
+
+msgid "ui.night.notice.short"
+msgstr "Karte zeigen"
+
+msgid "ui.night.mini.decoys"
+msgstr "Erst ansagen: {roles}"
+
+msgid "ui.warn.blocked"
+msgstr "{role} blockiert {name}"
+
+msgid "ui.warn.repeat"
+msgstr "{name} handelt noch einmal"
+
+msgid "ui.warn.borrowed"
+msgstr "{name} handelt als {role}"
+
+msgid "ui.warn.protected"
+msgstr "{name} ist geschützt"
+
+msgid "ui.warn.lovers"
+msgstr "{a} und {b} sind Liebende"
+
+msgid "ui.warn.cursed"
+msgstr "{name} ist verflucht"
+
+msgid "ui.settings.display.calls"
+msgstr "Ansagen anzeigen"
+
+msgid "ui.settings.display.calls_hint"
+msgstr "Zeigt den Vorlesesatz klein auf der Nachtkarte."
+
+msgid "ui.settings.toast.calls_on"
+msgstr "Ansagen werden angezeigt."
+
+msgid "ui.settings.toast.calls_off"
+msgstr "Ansagen sind ausgeblendet."
+
+msgid "ui.night.mini.top"
+msgstr "{value}"
+
+msgid "ui.night.mini.role_action"
+msgstr "{role} · {action}"
+
+msgid "ui.night.mini.action"
+msgstr "{action}"
+
+msgid "ui.preview.title"
+msgstr "Rollen-Vorschau"
+
+msgid "ui.preview.open"
+msgstr "Rollen-Vorschau"
+
+msgid "ui.preview.hint"
+msgstr "Tippe eine Rolle an: Du siehst nacheinander die Bildschirme der Spielleitung. Nichts wird gespeichert."
+
+msgid "ui.preview.role"
+msgstr "{name}"
+
+msgid "ui.preview.role_gap"
+msgstr "{name} (Lücke)"
+
+msgid "ui.preview.gap.start"
+msgstr "Partie lässt sich nicht aufbauen"
+
+msgid "ui.preview.gap.unreached"
+msgstr "Keine Bildschirme erreicht"
+
+msgid "ui.preview.gap.night"
+msgstr "Nachtschritt nicht erreicht"
+
+msgid "ui.preview.tag"
+msgstr "VORSCHAU"
+
+msgid "ui.preview.back"
+msgstr "Zurück"
+
+msgid "ui.preview.next"
+msgstr "Weiter"
+
+msgid "ui.preview.prev_role"
+msgstr "◀ Rolle"
+
+msgid "ui.preview.next_role"
+msgstr "Rolle ▶"
+
+msgid "ui.preview.special"
+msgstr "Sonderfall"
+
+msgid "ui.preview.list"
+msgstr "Liste"
+
+msgid "ui.preview.position"
+msgstr "{role}\nBildschirm {n} von {total}"
+
+msgid "ui.preview.empty"
+msgstr "{role} · kein Bildschirm"

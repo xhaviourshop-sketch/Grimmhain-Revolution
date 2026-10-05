@@ -113,19 +113,35 @@ func _team_counters() -> Control:
 	return teams
 
 
+## Akt-Karten im Raster; das Feuer der gewählten Karte liegt in einer eigenen Ebene dahinter (`FireLayer`), damit es keine Nachbarkarte überdeckt.
 func _acts() -> Control:
+	var holder := MarginContainer.new()
+	holder.name = "ActCardsHolder"
+	var fires := Control.new()
+	fires.name = "FireLayer"
+	fires.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.add_child(fires)
 	var row := GridContainer.new()
 	row.name = "ActCards"
 	row.columns = 2
 	row.add_theme_constant_override(&"h_separation", ThemeTokens.SPACE_M)
 	row.add_theme_constant_override(&"v_separation", ThemeTokens.SPACE_M)
+	holder.add_child(row)
 	for act: StringName in ActCatalog.ACT_IDS:
 		var card := ActCard.new()
+		var spot := Control.new()
+		spot.name = "Fire_%s" % String(act)
+		spot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fires.add_child(spot)
+		card.fire_host = spot
+		card.item_rect_changed.connect(func() -> void:
+			spot.position = card.position
+			spot.size = card.size)
 		card.setup(act)
 		card.pressed.connect(func() -> void: _setup.set_act(act))
 		row.add_child(card)
 		_cards[act] = card
-	return row
+	return holder
 
 
 func _modes() -> Control:

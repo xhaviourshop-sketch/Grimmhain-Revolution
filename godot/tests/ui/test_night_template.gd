@@ -44,6 +44,20 @@ func test_pack_has_no_decline_and_undo_bar_takes_the_choice_back() -> void:
 	assert_eq(str(next().get("owner")), "pack", "Rudel wieder offen")
 
 
+## Warnungen der Mini-Nachtkarte (DA-101) kommen aus dem Kernzustand: vor der Wahl nennt die Karte das geschützte mögliche Rudelopfer
+## (die Wahl gilt beim Antippen sofort), nach einer Wahl zählt nur die gewählte Person.
+func test_night_warnings_follow_core_state() -> void:
+	if not await start(PACK_ROLES):
+		return
+	assert_true(await run({"schutzengel/": [4]}, until_prompt("pack")), "bis zum Rudel, Person 4 geschützt")
+	var keys := func(sel: Array) -> Array: return session().night_warnings(next(), sel).map(func(w: Dictionary) -> String: return str(w["key"]))
+	assert_true((keys.call([]) as Array).has("ui.warn.protected"), "vor der Wahl: geschütztes mögliches Opfer")
+	assert_true((keys.call([4]) as Array).has("ui.warn.protected"), "gewähltes geschütztes Ziel")
+	assert_false((keys.call([5]) as Array).has("ui.warn.protected"), "ungeschütztes Ziel nicht")
+	assert_false(shell.get_tree().get_nodes_in_group(&"night_warning").is_empty(), "rote Zeile auf der Karte")
+	assert_true(_texts_of_card().contains("ist geschützt"), "Text der Warnung: %s" % _texts_of_card())
+
+
 ## Die Leiste verschwindet nach der eingestellten Zeit von selbst (Standard 3 s, hier verkürzt).
 func test_undo_bar_disappears_after_its_time() -> void:
 	if not await start(PACK_ROLES):

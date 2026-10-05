@@ -22,7 +22,7 @@ const SIZE_16_10 := Vector2i(1280, 800)
 const SIZE_WIDE := Vector2i(1920, 1080)
 
 ## Alle sechs Ansichten mit ihren erwarteten stabilen IDs.
-const SCREEN_IDS: Array[StringName] = [&"start", &"main_menu", &"new_game", &"continue", &"settings", &"cockpit", &"lexicon", &"rulebook", &"history"]
+const SCREEN_IDS: Array[StringName] = [&"start", &"main_menu", &"new_game", &"continue", &"settings", &"cockpit", &"lexicon", &"rulebook", &"history", &"role_preview"]
 const SUB_SCREENS: Array[StringName] = [&"new_game", &"continue", &"settings", &"cockpit", &"lexicon", &"rulebook", &"history"]
 
 var tree: SceneTree

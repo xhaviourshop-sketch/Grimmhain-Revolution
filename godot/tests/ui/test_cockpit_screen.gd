@@ -167,7 +167,12 @@ func test_reaction_card_is_shown_directly_outside_night() -> void:
 	assert_eq(str(_next(shell)["kind"]), "begin_step", "Reaktion angekündigt")
 	assert_true(find_node(screen, "RevealButton") == null, "keine verdeckte Karte")
 	assert_true(effective_of(_next(shell)).get("answer") == "targets" and find_node(screen, "NightTitle") != null, "sofort bedienbar (Aktion und Ansage auf einer Karte)")
-	assert_true((find_node(screen, "NightTitle") as Label).text.ends_with(")"), "Kartentitel nennt die handelnde Person in Klammern")
+	var actor := int((effective_of(_next(shell))["actor_ids"] as Array)[0])
+	var actor_name := ""
+	for seat: Dictionary in (s.call("cockpit_view") as Dictionary)["seats"]:
+		if int(seat["person_id"]) == actor:
+			actor_name = str(seat["name"])
+	assert_true((find_node(screen, "NightTitle") as Label).text == actor_name, "obere Kartenzeile nennt die handelnde Person (DA-101)")
 	await _tap_seat(shell, int((effective_of(_next(shell))["allowed_ids"] as Array)[0]))  # Sensenträger: Pflichtwahl, gilt sofort
 	assert_eq(str((s.call("view") as Dictionary)["phase"]), "DAY", "Tag nach der Reaktion")
 

@@ -13,6 +13,7 @@ var language: String = DEFAULT_LANGUAGE
 var reduced_motion: bool = false  ## schaltet Bildschirmübergänge und Einblendungen ab
 var left_handed: bool = false     ## Bedienseite: true = Ansagekarte und Werkzeuge des Cockpits links vom Sitzkreis (NQ-04)
 var show_night_timer: bool = true  ## Anzeige-Timer auch in der Nacht zeigen (DECISIONS.md, Ergänzung zur Timer-Entscheidung); nur Anzeige
+var show_calls: bool = false  ## „Ansagen anzeigen“ (DA-101): Vorlesesatz klein auf der Nachtkarte; Standard aus, der Spielleiter spricht frei
 
 
 ## Setzt die Sprache. Nur unterstützte Sprachen; liefert false bei Ablehnung.
@@ -44,6 +45,13 @@ func set_show_night_timer(value: bool) -> void:
 		return
 	show_night_timer = value
 	changed.emit(&"show_night_timer")
+
+
+func set_show_calls(value: bool) -> void:
+	if show_calls == value:
+		return
+	show_calls = value
+	changed.emit(&"show_calls")
 
 
 ## Wendet die aktuelle Sprache an (App-Start).

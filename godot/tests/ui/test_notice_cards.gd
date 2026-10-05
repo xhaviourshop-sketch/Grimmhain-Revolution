@@ -185,9 +185,10 @@ func test_refuge_card_asks_the_person_and_hides_the_asker() -> void:
 	var text := _texts(find_node(current_screen(shell), "ActionCard"))  # nur die Karte, der Sitzkreis nennt alle Namen öffentlich
 	assert_false(text.contains("Rotkäppchen"), "nennt nicht die Rolle: %s" % text)
 	assert_false(text.contains("2 · B"), "nennt nicht die fragende Person")
-	assert_true(text.contains("Zuflucht") and text.contains("gewähren oder ablehnen"), "Schablone: ein Satz und eine Hilfe: %s" % text)
-	assert_true(text.contains("4 · D"), "nennt die gefragte Person: %s" % text)
-	assert_true(text.contains("Apfel") and text.contains("Todeskette"), "ein Hilfesatz zu Apfel und Kette: %s" % text)
+	assert_true(text.contains("Zuflucht"), "Mini-Karte (DA-101): kurze Aktion: %s" % text)
+	assert_true(text.begins_with("D
+"), "nennt die gefragte Person: %s" % text)
+	assert_false(text.contains("Apfel") or text.contains("Todeskette"), "keine Hilfesätze auf der Mini-Karte (DA-101): %s" % text)
 	assert_false(text.contains("ui.role") and text.contains("erwache"), "keine Ansagezeile mit leerer Rolle: %s" % text)
 	assert_false((find_node(current_screen(shell), "OrderBar") as Control).visible, "S-04: keine Nachtleiste bei der anonymen Frage")
 	var ring := find_node(current_screen(shell), "SeatRing")

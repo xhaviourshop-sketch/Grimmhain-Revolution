@@ -9,14 +9,17 @@ extends GrimmButton
 const MAX_LEVEL := 4
 
 var act: StringName = &""
+## Träger des Feuers: ein Platzhalter mit derselben Fläche in einer Ebene hinter allen Akt-Karten (sonst überdeckt das Feuer von Akt IV
+## die Karte darüber). Ohne Träger hängt das Feuer an der Karte selbst.
+var fire_host: Control = null
 var animated: bool = true:  ## aus bei reduzierter Bewegung: Flamme steht still, keine Funken
 	set(value):
 		animated = value
-		FireGlow.set_on(self, "card_frame", GroveArtData.CARD_FRAME_MARGINS, selected, _level, animated)
+		FireGlow.set_on(_fire_target(), "card_frame", GroveArtData.CARD_FRAME_MARGINS, selected, _level, animated)
 var selected: bool = false:
 	set(value):
 		selected = value
-		FireGlow.set_on(self, "card_frame", GroveArtData.CARD_FRAME_MARGINS, value, _level, animated)
+		FireGlow.set_on(_fire_target(), "card_frame", GroveArtData.CARD_FRAME_MARGINS, value, _level, animated)
 		queue_redraw()
 var _title: GrimmLabel
 var _name: GrimmLabel
@@ -59,6 +62,10 @@ func setup(p_act: StringName) -> void:
 	column.add_child(spacer)
 	_limit = _label(column, "ActLimit", &"HainCaptionLabel", "")
 	column.minimum_size_changed.connect(func() -> void: _fit_height(column))
+
+
+func _fire_target() -> Control:
+	return fire_host if fire_host != null else self
 
 
 ## `capacity`: größte Personenzahl, die der Akt trägt.

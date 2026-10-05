@@ -49,6 +49,8 @@ var _covered: bool = false
 ## Rollenbild auf der Aktionskarte: aus seit der Nachtschablone (Markus 05.10.2026: die Nachtkarte zeigt kein Rollenbild; Titel und Hilfe
 ## nennen die Fähigkeit). Auf `true` setzen, um es wiederzubringen.
 const ROLE_ART_ON_CARD := false
+const MINI_CARD_SHARE := 0.25  ## Mini-Nachtkarte: Anteil an der Bildschirmbreite (DA-101)
+const MINI_CARD_MIN_WIDTH := 256.0  ## schmaler brechen Name, Rolle und Aktion zu oft um
 const PEEK_MSEC := 3000  ## so lange bleiben die Abzeichen einer angetippten Person am Tag sichtbar
 var _peek_id: int = 0
 var _peek_until: int = 0
@@ -435,6 +437,27 @@ func _arrange() -> void:
 	_tools_menu.size = _tools_menu.get_combined_minimum_size()
 	_tools_menu.position = Vector2(w - TAB_WIDTH - _tools_menu.size.x - 4.0, clampf(tab_y, TOP_MARGIN, maxf(TOP_MARGIN, h - _tools_menu.size.y - TOP_MARGIN)))
 	_place_backdrop_art(_ring.position + _ring.size * 0.5)
+	_place_card()
+
+
+## Mini-Nachtkarte (DA-101): schmal (höchstens ein Viertel der Breite) am unteren Rand der freien Ringmitte, so hoch wie ihr Inhalt; sie
+## verdeckt keinen Sitz. Alle anderen Karten füllen die freie Mitte wie bisher.
+func _place_card() -> void:
+	var panel := %InstructionCard as PanelContainer
+	if not _card.is_compact():
+		panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+		return
+	var width := minf(maxf(size.x * MINI_CARD_SHARE, MINI_CARD_MIN_WIDTH), _ring.center().size.x)
+	panel.anchor_left = 0.5
+	panel.anchor_right = 0.5
+	panel.anchor_top = 1.0
+	panel.anchor_bottom = 1.0
+	panel.offset_left = -width * 0.5
+	panel.offset_right = width * 0.5
+	panel.offset_top = 0.0
+	panel.offset_bottom = 0.0
+	panel.grow_vertical = Control.GROW_DIRECTION_BEGIN  # wächst mit dem Inhalt nach oben
 
 
 ## Hintergrundbild füllt das Fenster ohne Verzerrung und ohne leere Ränder (cover mit kleiner Überdeckung); die Platzmitte liegt auf der
@@ -467,7 +490,7 @@ func _style_card() -> void:
 	if _card.is_bare():
 		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 		return
-	var box := GroveSkin.card_box()
+	var box := GroveSkin.card_box(GroveSkin.CARD_INSET_MINI if _card.is_compact() else GroveSkin.CARD_INSET)
 	if box != null:
 		(%InstructionCard as PanelContainer).add_theme_stylebox_override("panel", box)
 
@@ -693,8 +716,11 @@ func _render() -> void:
 		"day_effects": context.session.day_effects() if bool(_view.get("has_game")) else [],
 		"day_cards": context.session.day_cards() if bool(_view.get("has_game")) else [],
 		"reduced_motion": context.settings.reduced_motion,
+		"warnings": context.session.night_warnings(next, _selection) if bool(_view.get("has_game")) else [],
+		"show_calls": context.settings.show_calls,
 	})
 	_style_card()  # ohne Text (Spielbeginn) verschwindet der Kartenrahmen, nur der große Knopf bleibt
+	_place_card()
 	_arrange()  # die Hauptaktion im Dock wechselt mit der Karte: Dock und Phasenplatte neu setzen
 	_restore_focus()
 
@@ -838,6 +864,8 @@ func _on_settings_changed(key: StringName) -> void:
 		_refresh_timer()
 	elif key == &"reduced_motion":
 		_apply_motion_setting()
+	elif key == &"show_calls":
+		_render()
 
 
 ## Fensterschein und Nebel stehen still, wenn reduzierte Bewegung eingestellt ist.

@@ -65,7 +65,7 @@ func test_screen_ids_unique_and_complete() -> void:
 	if ids == null:
 		return
 	var all: Array = ids.call("all")
-	assert_eq(all.size(), SCREEN_IDS.size(), "genau neun Ansichten")
+	assert_eq(all.size(), SCREEN_IDS.size(), "genau zehn Ansichten")
 	var seen := {}
 	var paths := {}
 	for id: Variant in all:
@@ -79,6 +79,7 @@ func test_screen_ids_unique_and_complete() -> void:
 	assert_eq(StringName(ids.call("parent_of", &"main_menu")), &"start", "Hauptmenü zurück zum Start")
 	for id: StringName in SUB_SCREENS:
 		assert_eq(StringName(ids.call("parent_of", id)), &"main_menu", "%s zurück zum Hauptmenü" % id)
+	assert_eq(StringName(ids.call("parent_of", &"role_preview")), &"settings", "Rollen-Vorschau zurück zu den Einstellungen")
 	assert_eq(str(ids.call("scene_path", &"gibt-es-nicht")), "", "unbekannte ID ohne Szene")
 
 

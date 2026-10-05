@@ -77,13 +77,12 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 			fail("Rolle %s erschien in keiner eigenen Fokuspartie und hat kein festes Szenario" % role)
 	var keys := _combos.keys()
 	keys.sort()
-	# Jede Kombination hat eine eigene Anweisung, jede Nachtrolle einen eigenen Vorlesetext.
+	# Jede Kombination hat eine eigene Kurz-Aktion (Mini-Nachtkarte), jede Nachtrolle einen eigenen Vorlesetext.
 	for combo: String in keys:
 		var parts := combo.split("/")
 		var probe := {"owner": "reaction", "reaction_kind": parts[1]} if parts[0] == "reaction" else {"owner": parts[0], "stage": parts[1], "answer": parts[2]}
-		var key := CockpitText.night_title_key(probe)
-		assert_false(key.begins_with("ui.night.generic."), "%s: eigener Titel statt %s" % [combo, key])
-		assert_false(CockpitText.night_help_key(probe).begins_with("ui.night.generic."), "%s: eigene Hilfe" % combo)
+		var key := CockpitText.night_short_key(probe)
+		assert_false(key.begins_with("ui.night.generic."), "%s: eigene Kurz-Aktion statt %s" % [combo, key])
 		if parts[0] != "reaction":
 			assert_ne(CockpitText.call_key(parts[0] if parts[0] != "pack2" else "pack"), "ui.call.generic", "%s: eigener Vorlesetext" % combo)
 	print("      Prompt-Abdeckung (%d Kombinationen): %s" % [keys.size(), ", ".join(keys)])

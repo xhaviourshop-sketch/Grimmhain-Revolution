@@ -42,11 +42,11 @@ func test_new_charm_through_the_cockpit() -> void:
 	assert_eq(n.get("decoys"), [], "kein Tarnaufruf")
 	await frames(2)
 	var text := _card_text()
-	assert_true(text.contains("Alle Verzauberten, öffnet die Augen"), "Ansage zum Vorlesen: %s" % text)
-	assert_true(text.contains("4 · D") and text.contains("5 · E"), "berechtigte Personen auf der Karte: %s" % text)
+	assert_true(text.contains("Alle Verzauberten · wachen auf"), "Mini-Karte: Gruppe und Aktion (DA-101): %s" % text)
+	assert_true(text.contains("D, E"), "berechtigte Personen auf der Karte: %s" % text)
 	assert_true(live("SkipStepButton") == null, "Pflichtschritt, nicht überspringbar")
 	assert_true(str(n.get("owner")) == "piper-all" and str(n.get("answer")) == "ack", "Bestätigungskarte")
-	assert_true(text.contains("Alle erkennen einander"), "eine Hilfezeile: %s" % text)
+	assert_false(text.contains("Alle erkennen einander"), "keine Hilfezeile auf der Mini-Karte (DA-101): %s" % text)
 	assert_true(find_node(screen(), "ShowCardButton") == null, "keine Karte zum Zeigen: Liste wird niemandem eingeblendet")
 	# Doppeltippen im selben Frame (wie test_cockpit_screen): genau eine Bestätigung, kein zweiter Befehl an den Regelkern.
 	var before := _answers()
@@ -77,9 +77,7 @@ func test_decoy_call_comes_first_and_gives_no_reason() -> void:
 	await frames(2)
 	assert_true(find_node(screen(), "DecoyLine") != null, "Ansage des Rattenfängers sichtbar")
 	var text := _card_text()
-	var piper_at := text.find("Rattenfänger")
-	var all_at := text.find("Alle Verzauberten, öffnet die Augen")
-	assert_true(piper_at >= 0 and all_at > piper_at, "zuerst Rattenfänger, dann alle Verzauberten: %s" % text)
+	assert_true(text.contains("Erst ansagen: Rattenfänger"), "zuerst Rattenfänger, dann alle Verzauberten: %s" % text)
 	for word: String in ["Gift", "vergiftet", "blockiert", "gestorben", "entfällt", "entfallen"]:
 		assert_false(text.contains(word), "kein Grund für den Tarnaufruf („%s“)" % word)
 	assert_true(events("NoticeQueued").filter(func(e: Dictionary) -> bool: return int((e["data"] as Dictionary)["notice_id"]) > 1).is_empty(),
