@@ -471,7 +471,8 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		_swallower_status(next)
 	var buttons: Array[Control] = []
 	if pre_mode:
-		buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, "mode"), GrimmButton.Kind.PRIMARY, &"loki_mode", {"choice": true}))
+		# Beide Antworten stehen in der Karte (nicht die erste im Dock unten rechts).
+		buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, "mode"), GrimmButton.Kind.SECONDARY, &"loki_mode", {"choice": true}))
 		buttons.append(_button("NoButton", CockpitText.action_key("no", owner, "mode"), GrimmButton.Kind.SECONDARY, &"loki_mode", {"choice": false}))
 		_help(next, buttons)
 		_actions(buttons)
