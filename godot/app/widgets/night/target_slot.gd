@@ -12,7 +12,7 @@ const PORTRAIT := 40.0
 var _left: TextureButton
 var _right: TextureButton
 var _face: TextureRect
-var _name: GrimmLabel
+var _name: FitLabel
 
 
 func _init() -> void:
@@ -27,11 +27,12 @@ func _init() -> void:
 	_face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_face.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	add_child(_face)
-	_name = GrimmLabel.new()
+	_name = FitLabel.new()
 	_name.name = "TargetNameLabel"
-	_name.wrap = false
-	_name.clip_text = true
+	_name.min_font_size = 14
+	_name.max_font_size = ThemeTokens.FONT_SUBTITLE  # fest, siehe ActionCard.FIT_MAX
 	_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_name.theme_type_variation = &"SectionLabel"
 	add_child(_name)
@@ -52,19 +53,20 @@ func _arrow(node_name: String, art: String, direction: int) -> TextureButton:
 
 
 ## `selected`: gewählte Person als {person_id, seat, name} oder leer; `names`: Text bei Mehrfachwahl (leer = Einzelwahl);
-## `can_step`: Pfeile anzeigen (Einzelwahl mit mindestens zwei wählbaren Personen).
-func show_selection(selected: Dictionary, names: String, can_step: bool) -> void:
+## `can_step`: Pfeile anzeigen (Einzelwahl mit mindestens zwei wählbaren Personen); `label_key`: Beschriftung mit `{name}`
+## („Opfer: Anna“, „Ziel: Anna“). Der Name steht mittig, nie mit Sitzplatznummer.
+func show_selection(selected: Dictionary, names: String, can_step: bool, label_key: String = "ui.cockpit.card.target.named") -> void:
 	_left.visible = can_step
 	_right.visible = can_step
 	if names != "":
 		_face.visible = false
-		_name.text_key = ""
-		_name.text = names
+		_name.format_values = {"name": names}
+		_name.text_key = "ui.cockpit.card.target.plain"
 		return
 	_face.visible = not selected.is_empty()
 	if selected.is_empty():
 		_name.text_key = "ui.cockpit.card.target.none"
 		return
 	_face.texture = NightArt.portrait(int(selected["person_id"]))
-	_name.text_key = ""
-	_name.text = tr("ui.cockpit.card.target.named") % [int(selected["seat"]), str(selected["name"])]
+	_name.format_values = {"name": str(selected["name"])}
+	_name.text_key = label_key

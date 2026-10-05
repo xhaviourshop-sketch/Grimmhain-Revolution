@@ -21,6 +21,11 @@ func _texts(root: Node) -> String:
 	return "\n".join(out)
 
 
+## Ganzes Wort (Namen sind hier ein einzelner Buchstabe; „contains“ träfe jeden Text).
+func _has_word(text: String, word: String) -> bool:
+	return RegEx.create_from_string("(^|[^\\p{L}])%s($|[^\\p{L}])" % word).search(text) != null
+
+
 ## Gewinner-Team auf dem Siegbildschirm (ein eindeutiger Sieg gilt nach der Kartenhandlung sofort, Fenster-Diät 05.10.2026).
 func _winner_kind(n: Dictionary) -> String:
 	return str((n.get("winner", {}) as Dictionary).get("kind", ""))
@@ -66,7 +71,7 @@ func test_wahnsinniger_kutscher_takes_neighbours_on_lynch() -> void:
 	assert_false(alive(2) or alive(4), "beide Nachbarn sterben mit")
 	var effects: Array = session().day_effects()
 	assert_true(effects.any(func(e: Dictionary) -> bool: return str(e["effect"]) == "coachman_crash"), "öffentlich angesagter Todeseffekt")
-	assert_true(_texts(screen()).contains("2 · B") or _texts(screen()).contains("B"), "Tageskarte nennt die Mitgerissenen")
+	assert_true(_has_word(_texts(screen()), "B"), "Tageskarte nennt die Mitgerissenen")
 
 
 func test_dorfwache_survives_pack_attack() -> void:

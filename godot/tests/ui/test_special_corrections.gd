@@ -72,6 +72,11 @@ func _texts(node: Node) -> String:
 	return "\n".join(out)
 
 
+## Ganzes Wort (Namen sind hier ein einzelner Buchstabe; „contains“ träfe jeden Text).
+func _has_word(text: String, word: String) -> bool:
+	return RegEx.create_from_string("(^|[^\\p{L}])%s($|[^\\p{L}])" % word).search(text) != null
+
+
 func _corrections(shell: Control) -> Array:
 	return (session_of(shell) as GameSession).commands().filter(func(c: Command) -> bool: return c.type == Command.GM_CORRECTION)
 
@@ -236,11 +241,11 @@ func test_confirmation_shows_person_change_and_requires_reason() -> void:
 	await _open_status(shell, 3)
 	await press(find_button(current_screen(shell), "GmField_set_protection"))
 	var pick_dialog := _texts(_dialog(shell))
-	assert_true(pick_dialog.contains("3 · C"), "Zielwahl nennt die betroffene Person: %s" % pick_dialog)
+	assert_true(_has_word(pick_dialog, "C"), "Zielwahl nennt die betroffene Person: %s" % pick_dialog)
 	await press(find_button(_dialog(shell), "Pick_8"))
 	await frames(2)
 	var reason_dialog := _texts(_dialog(shell))
-	assert_true(reason_dialog.contains("3 · C") and reason_dialog.contains("8 · H"), "Rückfrage nennt Person und Ziel: %s" % reason_dialog)
+	assert_true(_has_word(reason_dialog, "C") and _has_word(reason_dialog, "H"), "Rückfrage nennt Person und Ziel: %s" % reason_dialog)
 	assert_true(find_button(_dialog(shell), "ConfirmButton").disabled, "ohne Begründung gesperrt")
 	await press(find_button(_dialog(shell), "CancelButton"))
 

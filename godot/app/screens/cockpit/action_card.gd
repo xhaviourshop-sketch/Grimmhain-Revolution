@@ -10,7 +10,8 @@ extends VBoxContainer
 ##
 ## Mini-Nachtkarte (DA-101, ersetzt die Regelzeilen): Rollensymbol und eine Zeile „Name · Rolle · Aktion“ (1 bis 3 Wörter, `ui.night.<besitzer>.<stufe>.short`),
 ## darunter nur, was gerade nötig ist: zuschaltbare Ansage („Ansagen anzeigen“), Teilantworten, bis zu 3 rote Warnungen (`NightWarnings`) und die nötigen
-## Knöpfe. Regeltext nur hinter dem „i“. Die Karte ist schmal (`is_compact`), das Cockpit setzt sie an den Rand der freien Ringmitte. Ansage und Aktion stehen auf
+## Knöpfe. Regeltext nur hinter dem „i“. Die Karte ist schmal (`is_compact`), das Cockpit setzt sie in die Mitte der freien Ringmitte. Die Tageskarte (`is_day_card`) ist ebenso eine Karte nach Inhalt, ohne Regelzeilen,
+## damit die Nominierungsbänder des Rings erkennbar bleiben. Ansage und Aktion stehen auf
 ## demselben Bildschirm (ein Schritt ohne Prompt-Vorschau zeigt nur „Weiter“). Eine feste Anzahl wird vom Cockpit sofort übernommen
 ## (`CockpitText.auto_commit`), dann zeigt die Karte 3 Sekunden „Rückgängig“ (`show_undo`). Verzichten gibt es nur, wo die Karte es
 ## vorsieht (ein Knopf, „Nicht heute“). Karte zeigen genau einmal: Das Schließen der gezeigten Karte erledigt den Schritt.
@@ -20,6 +21,7 @@ extends VBoxContainer
 ## (rechts: Hauptaktion am rechten Ende, links: am linken); der Inhalt bleibt unverändert.
 
 signal requested(action: StringName, payload: Dictionary)
+signal undo_changed  ## „Rückgängig“ in der Karte erscheint oder verschwindet (das Cockpit zeigt den Knopf im Dock nur, solange die Karte ihn nicht zeigt)
 
 var _busy: bool = false
 var _last_next: Dictionary = {}
@@ -50,6 +52,8 @@ var _undo_serial: int = 0  ## unterscheidet das laufende vom früheren Einblende
 var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel beginnen“ (der Cockpit-Rahmen blendet den Kartenrahmen aus)
 var _compact: bool = false  ## Mini-Nachtkarte (DA-101): schmal, ohne Scrollen, nur Zeile, Warnungen und Knöpfe
 var _mini_row: HBoxContainer = null  ## obere Zeile der Mini-Karte; dort steht auch der „i“-Knopf
+var _day_card: bool = false  ## Tageskarte nach Inhalt (breiter als die Nachtkarte): lässt die Nominierungsbänder des Rings sichtbar
+var _info_gap: bool = true  ## Titel lässt rechts Platz für das „i“ (nur Karten mit Kontexthilfe)
 
 const ACTION_MIN_WIDTH := 184.0  ## Aktionen laufen in Reihen; schmaler würden umbrochene Beschriftungen unlesbar
 const SIDE_BY_SIDE_WIDTH := 560.0  ## ab dieser Kartenbreite stehen Zielplatz und Nebenaktionen in einer Zeile
@@ -58,7 +62,13 @@ const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Ve
 const FIT_MIN_FONT := 15  ## kleinste Schrift des Kartentexts (logische Einheiten)
 const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (epischer Knopf, `EpicButton`)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
+const DAY_ACTION_MIN_WIDTH := 300.0  ## Tageskarte: je Knopf eine Zeile, damit „Keine Hinrichtung“ einzeilig bleibt
 const MINI_SYMBOL := 34.0  ## Rollensymbol der Mini-Nachtkarte
+## Größte Schrift der Einzeiler je Theme-Variante. `FitLabel` liest sie sonst aus dem Theme, findet dabei aber seine eigene (schon verkleinerte)
+## Überschreibung und könnte nie mehr wachsen; mit festem `max_font_size` bleibt die Anpassung stabil.
+const FIT_MAX := {&"HeadingLabel": ThemeTokens.FONT_HEADING, &"SectionLabel": ThemeTokens.FONT_SUBTITLE, &"NightLineLabel": ThemeTokens.FONT_BUTTON,
+	&"NightActionLabel": ThemeTokens.FONT_BODY}
+const MAX_NOMINATION_LINES := 4  ## Tageskarte: die letzten Nominierungen als Zeilen (die Bänder am Ring zeigen alle)
 const UNDO_SECONDS := 3.0  ## so lange bleibt „Rückgängig“ nach einer sofort übernommenen Auswahl sichtbar
 ## Gruppenrufe ohne geheime Auskunft: ein Bildschirm mit Namen und „Weiter“, kein „Karte zeigen“ (die Beteiligten sehen einander).
 const OPEN_GROUP_OWNERS: Array[String] = ["die-gebundenen", "piper-all"]
@@ -162,6 +172,8 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_bare = false
 	_compact = false
 	_mini_row = null
+	_day_card = false
+	_info_gap = true
 	_content.size_flags_vertical = Control.SIZE_FILL
 	_content.alignment = BoxContainer.ALIGNMENT_BEGIN
 	for arrow: Node in _slot.find_children("*", "BaseButton", true, false):
@@ -248,6 +260,8 @@ func _fit_apply() -> void:
 	_content.add_theme_constant_override(&"separation", 1 if tight else 4)
 	_lower.add_theme_constant_override(&"separation", 2 if tight else ThemeTokens.SPACE_S)
 	for label: Node in _content.find_children("*", "Label", true, false):
+		if label is FitLabel:
+			continue  # passt seine Schrift selbst an
 		if not label.has_meta(&"base_font"):
 			label.set_meta(&"base_font", (label as Label).get_theme_font_size(&"font_size"))
 		var base: int = label.get_meta(&"base_font")
@@ -330,6 +344,7 @@ func show_undo(seconds: float = UNDO_SECONDS) -> void:
 	var serial := _undo_serial
 	_undo_bar.visible = true
 	_undo_button.disabled = false
+	undo_changed.emit()
 	if not is_inside_tree():
 		return
 	get_tree().create_timer(seconds).timeout.connect(func() -> void:
@@ -339,8 +354,9 @@ func show_undo(seconds: float = UNDO_SECONDS) -> void:
 
 func hide_undo() -> void:
 	_undo_serial += 1
-	if _undo_bar != null:
+	if _undo_bar != null and _undo_bar.visible:
 		_undo_bar.visible = false
+		undo_changed.emit()
 
 
 func undo_visible() -> bool:
@@ -349,9 +365,14 @@ func undo_visible() -> bool:
 
 # --- Kartenarten ------------------------------------------------------------------------------------
 
-## Wahr bei der Mini-Nachtkarte (Schritt, Rollenprompt, Hinweis in der Nacht).
+## Wahr bei der Mini-Nachtkarte (Schritt, Rollenprompt, Hinweis in der Nacht) und bei der Tageskarte nach Inhalt.
 func is_compact() -> bool:
 	return _compact
+
+
+## Wahr bei der Tageskarte nach Inhalt: etwas breiter als die Nachtkarte, aber nie so groß, dass sie die Bänder des Rings verdeckt.
+func is_day_card() -> bool:
+	return _day_card
 
 
 ## Wahr, solange die Karte nur den großen Knopf „Spiel beginnen“ zeigt.
@@ -482,7 +503,9 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		"targets":
 			_night_targets_part(next, context, buttons)
 		"choice":
-			buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, stage), GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
+			# Loki („Liebende“ oder „Rivalen“) hat keine Hauptantwort: zwei gleich große Knöpfe.
+			var equal := owner == "loki" and stage == "mode"
+			buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, stage), GrimmButton.Kind.SECONDARY if equal else GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
 			buttons.append(_button("NoButton", CockpitText.action_key("no", owner, stage), GrimmButton.Kind.SECONDARY, &"choice", {"choice": false}))
 		"ack":
 			if not (next.get("show", []) as Array).is_empty() and not OPEN_GROUP_OWNERS.has(owner):
@@ -676,6 +699,9 @@ func _morning(next: Dictionary) -> void:
 ## Tag: Nominierungen (öffentlich), heutige Tode, Aktionen. Unterzustände der Bedienung kommen aus
 ## `context.day_mode` (Nominierung in zwei Schritten, Hinrichtung wählen, verdeckte Prüfung).
 func _day(next: Dictionary, context: Dictionary) -> void:
+	# Tageskarte nach Inhalt (kein Scrollen, keine Regelzeilen): so klein, dass die Nominierungsbänder des Rings erkennbar bleiben.
+	# Nur Karten mit öffentlichen Kartenregeln (viel Text) füllen weiter die Tischmitte.
+	_set_day_card(str(context.get("day_mode", "")) != "" or (next.get("card_rules", []) as Array).is_empty())
 	match str(context.get("day_mode", "")):
 		"nominate_from", "nominate_to":
 			_day_nominate(context)
@@ -694,7 +720,8 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 		"execution_check":
 			_execution_check(context)
 			return
-	_heading("ui.cockpit.card.day.heading", {"number": int(context.get("day_number", 0))})
+	if not _day_card:  # „Tag n“ steht schon auf der Statusplatte; die kleine Karte spart die Zeile
+		_heading("ui.cockpit.card.day.heading", {"number": int(context.get("day_number", 0))})
 	_day_public(next, context)
 	var extra_buttons: Array[Control] = []
 	_card_rules(next.get("card_rules", []), extra_buttons)
@@ -702,7 +729,6 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 		_text("ui.cards.exec.cancelled", {}, &"WarningLabel").name = "ExecutionCancelledLabel"
 	if bool(next.get("dead_nominate", false)):
 		_text("ui.cards.exec.dead_nominate", {}, &"WarningLabel").name = "DeadNominateLabel"
-	_text("ui.cockpit.card.day.do", {}, &"MutedLabel")
 	var execute := _button("ExecuteButton", "ui.cockpit.action.execute", GrimmButton.Kind.PRIMARY, &"start_execute")
 	execute.disabled = (next.get("execution_candidates", []) as Array).is_empty() or bool(next.get("execution_cancelled", false))
 	var nominate := _button("NominateButton", "ui.cockpit.action.nominate", GrimmButton.Kind.SECONDARY, &"start_nominate")
@@ -718,21 +744,27 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 	_actions(day_buttons)
 
 
+## Tageskarte nach Inhalt: `on` macht die Karte kompakt (Cockpit setzt Größe und Platz), ohne Platz für das „i“ im Titel.
+func _set_day_card(on: bool) -> void:
+	_compact = on
+	_day_card = on
+	_info_gap = not on
+
+
 func _day_public(next: Dictionary, context: Dictionary) -> void:
 	var nominations: Array = next.get("nominations", [])
 	if nominations.is_empty():
 		_text("ui.cockpit.card.day.no_nominations", {}, &"MutedLabel")
 	else:
-		_caption("ui.cockpit.card.day.nominations")
 		var seats: Array = context.get("seats", [])
-		for n: Dictionary in nominations:
+		for n: Dictionary in nominations.slice(maxi(nominations.size() - MAX_NOMINATION_LINES, 0)):
 			var nominee := CockpitText.names_of([int(n["nominee_id"])], seats)
 			if int(n["nominator_id"]) == -1:
-				_text("ui.cockpit.card.day.nomination_hidden", {"nominee": nominee}, &"SectionLabel")
+				_one_line("ui.cockpit.card.day.nomination_hidden", {"nominee": nominee}, &"SectionLabel", 13)
 			else:
-				_text("ui.cockpit.card.day.nomination", {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}, &"SectionLabel")
+				_one_line("ui.cockpit.card.day.nomination", {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}, &"SectionLabel", 13)
 		if str(next.get("kind")) == "day":  # nach der Entscheidung nicht mehr
-			_text("ui.cockpit.card.day.defend", {}, &"ReadAloudLabel").name = "DefendLine"
+			_text("ui.cockpit.card.day.defend", {}, &"WarningLabel").name = "DefendLine"  # Vorlesezeile, bricht um (zu lang für eine Zeile)
 	var deaths: Array = context.get("day_deaths", [])
 	var effects: Array = context.get("day_effects", [])
 	if not deaths.is_empty() or not effects.is_empty():
@@ -914,9 +946,9 @@ func _gm(context: Dictionary) -> void:
 
 
 func _end_day(next: Dictionary, context: Dictionary) -> void:
+	_set_day_card((next.get("card_rules", []) as Array).is_empty())
 	_heading("ui.cockpit.card.end_day.heading", {"number": int(context.get("day_number", 0))})
 	_day_public(next, context)
-	_text("ui.cockpit.card.end_day.do", {}, &"MutedLabel")
 	_actions([_button("EndDayButton", "ui.cockpit.action.end_day", GrimmButton.Kind.PRIMARY, &"end_day")])
 
 
@@ -1004,7 +1036,9 @@ func _mini_line(role: String, top: Variant, action: String, with_role: String = 
 		icon.custom_minimum_size = Vector2(MINI_SYMBOL, MINI_SYMBOL)
 		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		_mini_row.add_child(icon)
-	var label := GrimmLabel.new()
+	var label := FitLabel.new()  # eine Zeile, die Schrift schrumpft bis zum Mindestmaß statt umzubrechen („Die Werwölfe“)
+	label.min_font_size = 14
+	label.max_font_size = int(FIT_MAX[&"NightLineLabel"])
 	label.theme_type_variation = &"NightLineLabel"
 	label.format_values = {"value": top}
 	label.text_key = "ui.night.mini.top"
@@ -1012,8 +1046,8 @@ func _mini_line(role: String, top: Variant, action: String, with_role: String = 
 	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_mini_row.add_child(label)
 	_content.add_child(_mini_row)
-	var second := _text("ui.night.mini.role_action" if with_role != "" else "ui.night.mini.action",
-		{"role": CockpitText.role_name(with_role) if with_role != "" else "", "action": StringName(action)}, &"NightActionLabel")
+	var second := _one_line("ui.night.mini.role_action" if with_role != "" else "ui.night.mini.action",
+		{"role": CockpitText.role_name(with_role) if with_role != "" else "", "action": StringName(action)}, &"NightActionLabel", 12)
 	second.name = "NightAction"
 	return label
 
@@ -1077,8 +1111,8 @@ class WarnIcon extends Control:
 ## Der Titel oben auf der Karte lässt rechts Platz für den runden „i“-Knopf (Cockpit), damit er nie überdeckt wird.
 func _heading(key: String, values: Dictionary = {}) -> GrimmLabel:
 	var first := _content.get_child_count() <= 1
-	var label := _text(key, values, &"HeadingLabel")
-	if info_host != null and first:
+	var label := _one_line(key, values, &"HeadingLabel", 16)
+	if info_host != null and first and _info_gap:
 		var box := MarginContainer.new()
 		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		box.add_theme_constant_override(&"margin_right", ThemeTokens.TOUCH_MIN + 12)
@@ -1097,6 +1131,19 @@ func _caption(key: String, values: Dictionary = {}) -> GrimmLabel:
 func _read_aloud(key: String, values: Dictionary) -> void:
 	_caption("ui.cockpit.card.say_now")
 	_text(key, values, &"ReadAloudLabel")
+
+
+## Eine Zeile ohne Umbruch und ohne Kürzung: Die Schrift schrumpft bis `min_size`, damit der Text in die Breite passt (`FitLabel`).
+func _one_line(key: String, values: Dictionary, variation: StringName, min_size: int) -> FitLabel:
+	var label := FitLabel.new()
+	label.min_font_size = min_size
+	label.max_font_size = int(FIT_MAX.get(variation, 0))
+	label.format_values = values
+	label.text_key = key
+	label.theme_type_variation = variation
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_content.add_child(label)
+	return label
 
 
 func _text(key: String, values: Dictionary = {}, variation: StringName = &"") -> GrimmLabel:
@@ -1118,7 +1165,7 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if primary_host != null:
 		# Cockpit (Nachtbrett, P5): Hauptaktion rot, Nebenaktionen dunkel, beide im Hain-Rahmen; Nebenaktionen zwei je Reihe.
-		b.custom_minimum_size = Vector2(CARD_ACTION_MIN_WIDTH, ThemeTokens.TOUCH_MIN)
+		b.custom_minimum_size = Vector2(DAY_ACTION_MIN_WIDTH if _day_card else CARD_ACTION_MIN_WIDTH, ThemeTokens.TOUCH_MIN)
 		GroveSkin.skin_button(b, kind == GrimmButton.Kind.PRIMARY)
 		if kind != GrimmButton.Kind.PRIMARY:
 			b.custom_minimum_size.y = ThemeTokens.TOUCH_MIN  # Nebenaktionen auf der Karte: 48 hoch, zwei Zeilen Schrift passen; spart Platz für den Text
