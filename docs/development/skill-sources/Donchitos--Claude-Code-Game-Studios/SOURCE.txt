@@ -1,0 +1,4 @@
+Source: https://github.com/Donchitos/Claude-Code-Game-Studios
+Commit: b21fa0f7f289fc3e726cf36fb12b9bc1e7a51e4d
+License: MIT (see LICENSE)
+No files copied. Ideas adapted: agent model tiers (haiku/sonnet/opus), review modes minimal/standard/full, role split qa/ux/writer/art-director.

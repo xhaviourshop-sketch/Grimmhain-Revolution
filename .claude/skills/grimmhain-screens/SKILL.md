@@ -12,4 +12,5 @@ Werkzeug: `godot/tools/capture_standard_set.gd`. Headless gibt es kein Bild, ein
 - Ausgabe: `<szene>-1024x768.png` je Szene; Zeilen `bild ...` im Log, `FAIL <szene>` wenn die Karte nicht erreicht wurde.
 - Neue Szene: Eintrag in `SCENES` ([Dateiname, Rolle, Stufe]).
 - Vor dem Bild wartet das Werkzeug 4 s, damit die Rückgängig-Leiste des Vorschritts weg ist.
+- Mehrere Werkzeuge mit einem Befehl: `node tools/capture-all <Ordner> capture_standard_set capture_feedback7` (nacheinander; nie zwei Godot-Fenster gleichzeitig, das ist 8x langsamer). Darf neben `tools/test-full` laufen.
 - Bilder ansehen (Read), nicht nur Existenz prüfen: Text abgeschnitten, Überdeckung, Karte lesbar. Ausgabe nach Downloads, im Bericht verlinken.

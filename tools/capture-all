@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+// Runs several screenshot tools (godot/tools/capture_*.gd) one after another with one command, 1024x768 with a real renderer.
+// Not in parallel: two Godot windows at once slow each other down on Windows (measured 290 s instead of 35 s).
+// It can run next to the headless tests (tools/test-full, tools/test-changed). Each tool gets its own APPDATA,
+// so settings written by one tool never leak into another or into the real app.
+// Usage: node tools/capture-all <out-dir> <capture_a> [<capture_b> ...]
+//   e.g. node tools/capture-all C:/Users/Marku/Downloads/Grimmhain-Feedback-8 capture_feedback6 capture_feedback7
+// Exit code: 0 all tools finished, 1 a tool failed or timed out (5 min each).
+const { spawn } = require("child_process");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+
+const root = path.resolve(__dirname, "..");
+const project = path.join(root, "godot");
+const [out, ...tools] = process.argv.slice(2);
+if (!out || !tools.length) { console.log("Usage: node tools/capture-all <out-dir> <capture_a> [<capture_b> ...]"); process.exit(2); }
+
+function godotBin() {
+  if (process.env.GODOT_BIN) return process.env.GODOT_BIN;
+  const win = path.join(process.env.USERPROFILE || "", "Downloads", "Godot_v4.7.2-stable_win64.exe", "Godot_v4.7.2-stable_win64_console.exe");
+  return fs.existsSync(win) ? win : "godot";
+}
+
+function capture(t, i) {
+  return new Promise((resolve) => {
+    const appdata = path.join(os.tmpdir(), "grimmhain-capture-all", `w${i}`);
+    fs.rmSync(appdata, { recursive: true, force: true });
+    fs.mkdirSync(appdata, { recursive: true });
+    const p = spawn(godotBin(), ["--path", project, "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--resolution", "1024x768",
+      "-s", `res://tools/${t.replace(/\.gd$/, "")}.gd`, "--", `--out=${out}`], { env: { ...process.env, APPDATA: appdata } });
+    let text = "";
+    p.stdout.on("data", (c) => (text += c));
+    p.stderr.on("data", (c) => (text += c));
+    const timer = setTimeout(() => p.kill(), 5 * 60 * 1000);
+    p.on("error", (e) => { clearTimeout(timer); resolve({ t, ok: false, info: e.message }); });
+    p.on("close", (code) => {
+      clearTimeout(timer);
+      const shots = (text.match(/^bild /gm) || []).length;
+      const fails = text.split(/\r?\n/).filter((l) => /^FAIL|SCRIPT ERROR/.test(l));
+      resolve({ t, ok: code === 0 && !fails.length, info: `${shots} Bilder${fails.length ? ", " + fails.join("; ") : ""}${code !== 0 ? `, Exit ${code}` : ""}` });
+    });
+  });
+}
+
+const start = Date.now();
+(async () => {
+  const rs = [];
+  for (const [i, t] of tools.entries()) rs.push(await capture(t, i));
+  rs.forEach((r) => console.log(`${r.ok ? "ok  " : "FAIL"} ${r.t}: ${r.info}`));
+  console.log(`capture-all: ${tools.length} Werkzeuge, ${Math.round((Date.now() - start) / 1000)} s, Ausgabe ${out}`);
+  process.exit(rs.every((r) => r.ok) ? 0 : 1);
+})();

@@ -2,6 +2,12 @@
 
 Neue Einträge oben einfügen. Nur bewiesene, wiederverwendbare Erkenntnisse aufnehmen.
 
+## 2026-10-05: Parallele Godot-Läufe unter Windows
+- Zwei Godot-Fenster (Screenshot-Werkzeuge) gleichzeitig: 290 s statt 35 s nacheinander. Fenster nie parallel starten; neben fensterlosen Tests laufen sie normal (41 s).
+- Parallele headless Testprozesse teilen sich `user://`. Lösung in `tools/test-full`: eigenes `APPDATA` je Prozess (Godot nimmt `user://` unter Windows aus `APPDATA`).
+- 6 Prozesse sind auf 12 Kernen schneller als 9 (174 s gegen 194 s); der Fuzz-Test allein bestimmt die Untergrenze.
+- Neue Agenten in `.claude/agents/` sind nicht sofort aufrufbar; Claude Code lädt sie verzögert. Bis dahin als allgemeiner Agent mit der Agentendatei als Anweisung.
+
 ## 2026-10-05: iPad/Web: Feld per Code geleert, nächster Tastendruck hängt alten Text an
 - Symptom: Nach "Timo" + Enter und `LineEdit.text = ""` ergab das nächste Tippen "TimoJ".
 - Ursache: Der Web-Export schreibt Tastatureingaben über ein verstecktes `<input>` (bzw. `<textarea>`) vor dem Canvas und behält dessen Wert; `LineEdit.text` ändert es nicht. Quelle: `platform/web/js/libs/library_godot_display.js`.

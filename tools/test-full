@@ -1,0 +1,126 @@
+#!/usr/bin/env node
+// Parallel Godot test runner: one import, then the test files spread over several Godot processes
+// (longest files first, balanced by the durations of the previous run). Prints only failures plus one summary line.
+// Usage: node tools/test-full            full suite without the fuzz test (during work, at most once per order)
+//        node tools/test-full --merge    full suite including fuzz (before a merge to main)
+//        node tools/test-full --failed   only the files that were red in the previous run (then run once completely)
+//        --jobs=<n>                      number of Godot processes (default: CPU cores / 2, at least 1)
+// Each process gets its own APPDATA, so user:// (saves, settings, history) never collides between processes.
+// Exit code: 0 green, 1 failures or script errors, 2 runner problem.
+const { spawn, spawnSync } = require("child_process");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+
+const root = path.resolve(__dirname, "..");
+const project = path.join(root, "godot");
+const FUZZ = "test_role_interaction_fuzz.gd";
+const state = path.join(os.tmpdir(), "grimmhain-test-full");
+const timesFile = path.join(state, "times.json");
+const failedFile = path.join(state, "failed.json");
+
+function godotBin() {
+  if (process.env.GODOT_BIN) return process.env.GODOT_BIN;
+  const win = path.join(process.env.USERPROFILE || "", "Downloads", "Godot_v4.7.2-stable_win64.exe", "Godot_v4.7.2-stable_win64_console.exe");
+  return fs.existsSync(win) ? win : "godot";
+}
+
+function allTestFiles() {
+  const out = [];
+  for (const dir of ["unit", "ui"]) {
+    for (const f of fs.readdirSync(path.join(project, "tests", dir)).sort()) {
+      if (/^test_.*\.gd$/.test(f)) out.push(f);
+    }
+  }
+  return out;
+}
+
+const readJson = (p, d) => { try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { return d; } };
+
+// Longest processing time first: each file goes to the currently lightest process.
+function split(files, jobs) {
+  const times = readJson(timesFile, {});
+  const cost = (f) => times[f] || 2000;
+  const bins = Array.from({ length: Math.min(jobs, files.length) }, () => ({ load: 0, files: [] }));
+  for (const f of [...files].sort((a, b) => cost(b) - cost(a))) {
+    const bin = bins.reduce((m, b) => (b.load < m.load ? b : m));
+    bin.files.push(f);
+    bin.load += cost(f);
+  }
+  return bins.map((b) => b.files);
+}
+
+function runShard(bin, files, index) {
+  const appdata = path.join(state, `w${index}`);
+  fs.rmSync(appdata, { recursive: true, force: true });
+  fs.mkdirSync(appdata, { recursive: true });
+  return new Promise((resolve) => {
+    const p = spawn(bin, ["--headless", "--path", project, "-s", "res://tests/run_tests.gd", "--", `--files=${files.join(",")}`],
+      { env: { ...process.env, APPDATA: appdata } });
+    const chunks = [];
+    p.stdout.on("data", (c) => chunks.push(c));
+    p.stderr.on("data", (c) => chunks.push(c));
+    p.on("error", (e) => resolve({ text: "", status: -1, error: e }));
+    p.on("close", (status) => resolve({ text: Buffer.concat(chunks).toString("utf8"), status }));
+  });
+}
+
+// Runs the given test files (file names like test_x.gd) in parallel. Returns null on runner problems.
+async function runFiles(files, jobs) {
+  const bin = godotBin();
+  fs.mkdirSync(state, { recursive: true });
+  spawnSync(bin, ["--headless", "--path", project, "--import"], { encoding: "buffer", maxBuffer: 1 << 28 });
+  const shards = split(files, jobs);
+  const results = await Promise.all(shards.map((s, i) => runShard(bin, s, i)));
+  const times = readJson(timesFile, {});
+  const failures = [], failedFiles = new Set();
+  let total = 0, failed = 0, broken = 0, problem = false;
+  results.forEach((r, i) => {
+    if (r.error) { console.error("Godot nicht startbar: " + r.error.message); problem = true; return; }
+    const lines = r.text.split(/\r?\n/);
+    const sum = [...lines].reverse().find((l) => /Tests, \d+ fehlgeschlagen/.test(l));
+    const m = sum && sum.match(/(\d+) Tests, (\d+) fehlgeschlagen, (\d+)/);
+    if (!m) { failures.push(`Prozess ${i + 1}: keine Summenzeile (abgebrochen?), Dateien: ${shards[i].join(",")}`); shards[i].forEach((f) => failedFiles.add(f)); problem = true; return; }
+    total += Number(m[1]); failed += Number(m[2]); broken += Number(m[3]);
+    for (let j = 0; j < lines.length; j++) {
+      const l = lines[j];
+      const t = l.match(/^time {2}(\S+) {2}(\d+)/);
+      if (t) times[t[1]] = Number(t[2]);
+      if (/^FAIL/.test(l)) {
+        failures.push(l);
+        for (let k = j + 1; k < lines.length && /^\s+- /.test(lines[k]); k++) failures.push(lines[k]);
+        const f = l.match(/^FAIL {2}(?:res:\/\/tests\/\w+\/)?(test_[^:\s]+?)(?:\.gd)?(?:::|\s)/);
+        if (f) failedFiles.add(f[1] + ".gd");
+      } else if (/SCRIPT ERROR|Parse Error|Failed to load script/.test(l)) failures.push(l);
+    }
+    if (r.status !== 0 && !Number(m[2]) && !Number(m[3])) { failures.push(`Prozess ${i + 1}: Exit ${r.status}`); problem = true; }
+  });
+  fs.writeFileSync(timesFile, JSON.stringify(times));
+  return { total, failed, broken, failures, failedFiles: [...failedFiles], problem, jobs: shards.length };
+}
+
+module.exports = { runFiles, allTestFiles };
+
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const jobsArg = args.find((a) => a.startsWith("--jobs="));
+  const jobs = jobsArg ? Math.max(1, Number(jobsArg.slice(7))) : Math.max(1, Math.floor(os.cpus().length / 2));
+  let files = allTestFiles();
+  if (!args.includes("--merge")) files = files.filter((f) => f !== FUZZ);
+  if (args.includes("--failed")) {
+    const last = readJson(failedFile, []);
+    if (!last.length) { console.log("Kein roter Vorlauf gespeichert (nichts zu tun)."); process.exit(0); }
+    files = files.filter((f) => last.includes(f));
+    if (!files.length) { console.log("Die roten Dateien gibt es nicht mehr; einmal komplett laufen lassen."); process.exit(1); }
+  }
+  const start = Date.now();
+  runFiles(files, jobs).then((r) => {
+    if (r.failures.length) console.log(r.failures.join("\n"));
+    fs.writeFileSync(failedFile, JSON.stringify(r.failedFiles));
+    const secs = Math.round((Date.now() - start) / 1000);
+    console.log(`${r.total} Tests, ${r.failed} fehlgeschlagen, ${r.broken} Testdateien nicht ladbar (${files.length} Dateien, ${r.jobs} Prozesse, ${secs} s${args.includes("--merge") ? ", mit Fuzz" : ", ohne Fuzz"})`);
+    const red = r.failed || r.broken || r.problem || r.failures.length || r.total === 0;
+    if (red) console.log("Rot: erst `node tools/test-full --failed`, nach grün einmal komplett.");
+    process.exit(red ? 1 : 0);
+  });
+}

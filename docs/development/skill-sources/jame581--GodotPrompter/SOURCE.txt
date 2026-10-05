@@ -1,0 +1,4 @@
+Source: https://github.com/jame581/GodotPrompter
+Commit: 1e73eeafb31c7a8543aa67b4102d861efde6ce04
+License: MIT (see LICENSE)
+Copied unmodified: skills/godot-ui, skills/responsive-ui, skills/export-pipeline, skills/godot-optimization, skills/godot-code-review -> .claude/skills/<name>
