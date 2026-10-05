@@ -5672,7 +5672,7 @@ msgid "ui.rulebook.c07.b06"
 msgstr "3. Tap the nominated person, then “Confirm nomination”."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. The app rejects violations with a message (“This person has already nominated today”). An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
+msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. The app rejects violations with a message (“This nomination is not possible today”). An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Vote hints"
