@@ -56,3 +56,26 @@ Regeln für jedes Bild (`docs/brand/MARKE.md`): ChatGPT-Projekt „Grimmhain Ass
 | `godot/assets/ui/sichtschutz.png` (neuer Platz, noch nicht im Code) | Sichtschutz-Fenster | noch nicht angeschlossen (erst nach Freigabe bauen) | „Quadratisch 1:1, transparenter Hintergrund: ein geschlossenes schwarzes Eisentor mit Wurzeln und Dornen im Mondlicht, davor leichter Nebel. Kein Text, kein Gold, nachtblau und Mondsilber.“ |
 
 Musik: `godot/assets/audio/musik-start.ogg` (Startbildschirm, Schleife, blendet leise ein, nach dem Tippen auf „Eintreten“ aus) und `musik-laden.ogg` (Platz benannt in `ScreenMusic.LOADING`, noch an keinen Bildschirm angeschlossen, weil die App keinen eigenen Ladebildschirm hat; die Web-Ladeseite läuft vor dem Start der Engine und kann keine Godot-Musik spielen). Ohne Dateien bleibt alles still wie bisher.
+
+## Feedback 8: gemalte Haut (05.10.2026)
+
+Geliefert und eingebaut (`tools/build_ui_skin.py`, `godot/assets/ui/skin/`): Knopf normal, gedrückt, aktiv (Enden angeglichen, Mitte dehnbar), Mittelstein je Zustand (nur Hauptknöpfe), Listenzeile, Schalter an und aus, Fensterrahmen, Tafelgrund (nahtlos), Bund Liebende und Rivalen, Ladebild (`godot/web/ladebild.webp`), Startmusik (`godot/assets/audio/musik-start.ogg`). Die Zeilen oben für Ladebild und Bund-Bilder sind damit erledigt. Theme: `SkinBarBox` (Knöpfe, Zeilen), `SkinWindowBox` (Fenster), Variante `ListRow`, `GrimmButton.main` (Stein).
+
+Ganze Bildschirme brauchen keinen Rahmen (Entscheidung Markus), nur Fenster.
+
+### Noch fehlende gemalte Bilder (Markus erstellt)
+
+Bis dahin nutzen die Stellen das nächstpassende gemalte Teil oder, wo genannt, noch Standard-Optik.
+
+| Datei (Vorschlag) | Wofür | Heute | Beschreibung für ChatGPT |
+|---|---|---|---|
+| `Assets/ui/eingabefeld.png` | Namen eingeben, Namen einfügen, Ändern (LineEdit/TextEdit) | Godot-Standard | „Dunkles, leicht aufgerautes Schieferfeld, breit (etwa 640x96), links und rechts dieselben Dornen-Enden wie die Listenzeile, Mitte glatt und dehnbar, innen ein flacher dunkler Einschub mit schwachem Silberrand, ohne Text, transparenter Hintergrund.“ |
+| `Assets/ui/trennlinie.png` | Trennlinien in Fenstern | Standard-Linie | „Dünne waagerechte Trennlinie aus geschmiedetem Eisen mit einem kleinen Dornen-Ornament in der Mitte, transparenter Hintergrund, 640x24, Mitte nahtlos dehnbar.“ |
+| `Assets/ui/wuerfel.png` | Würfelfläche (Zufallswahl) | Tafelgrund ohne Rahmen | „Quadratische dunkle Steinfläche 256x256 mit Eisen-Dornenkante, leer ohne Augen, transparente Ecken.“ |
+| `Assets/ui/plakette.png` | Tooltip, kleine Hinweise | Listenzeile | „Kleine waagerechte Eisenplakette mit kurzen Dornen-Enden, dunkle Mitte, 320x72, Mitte dehnbar, transparenter Hintergrund.“ |
+| `Assets/ui/randknopf.png` | Runde Randknöpfe im Cockpit (Auge, Schloss, „i“) | alte Hain-Bilder | „Runder Knopf aus dunklem Eisen mit Dornenkranz und Mondsilber-Kante, leere dunkle Mitte, quadratisch 256x256, transparenter Hintergrund.“ |
+| `Assets/ui/randlasche.png` | Senkrechte Laschen links und rechts (Protokoll, Optionen) | alte Hain-Bilder | „Schmale senkrechte Eisenleiste mit Dornen am oberen und unteren Ende, glatte dehnbare Mitte, 120x600, transparenter Hintergrund.“ |
+| `Assets/ui/nachtleiste.png` | Nachtleiste oben im Cockpit | alte Hain-Bilder | „Waagerechte Eisenleiste mit Dornen-Enden und kleiner Mittelspange, Mitte dehnbar, 1600x120, transparenter Hintergrund.“ |
+| `Assets/ui/sitzrahmen.png` | Porträtrahmen am Ring ohne eingemalten Nummernsockel | alter Rahmen, Sockel bleibt leer | „Runder Silberrahmen mit Dornenwurzeln für ein Porträt, quadratisch, transparenter Hintergrund, KEIN Nummernkreis oben links, im Stil der bestehenden Sitzrahmen.“ |
+| `Assets/ui/bund-*-klein.png` | Bund-Zeichen klein am Ring | Bild auf heller Mondscheibe | „Wie bund-liebende bzw. bund-rivalen, aber mit kräftiger Mondsilber-Kontur, damit es klein (64 px) auf dunklem Pflaster lesbar ist, transparenter Hintergrund.“ |
+| `Assets/ui/scrollleiste.png` | nur falls lange Listen doch scrollen (Regelbuch, Lexikon) | Godot-Standard | „Senkrechte Bahn aus dunklem Eisen mit kleinem Dornen-Griff, Bahn 32x512, Griff 32x96, Zustände normal und aktiv (roter Schein), transparenter Hintergrund.“ |
