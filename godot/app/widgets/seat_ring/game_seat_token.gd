@@ -211,6 +211,8 @@ func _draw() -> void:
 		_draw_glow(c, d, GLOW_ACTIVE, 6, 0.8)
 	if hunt and secrets_visible:
 		_draw_hunt(c, d)
+	if _nominated and alive:
+		_draw_nominated(c, d)
 	_draw_portrait(c, d, dim)
 	var frame_rect := _frame_rect(c, d)
 	var socket := frame_rect.position + GroveArtData.SEAT_SOCKET_CENTER * frame_rect.size
@@ -263,6 +265,12 @@ func _draw_hunt(c: Vector2, d: float) -> void:
 	var core := ThemeTokens.HUNT_CORE
 	core.a = 0.7 + 0.3 * pulse
 	draw_arc(c, radius + 1.5, 0.0, TAU, 64, core, 5.0, true)
+
+
+## Nominiert (öffentlich): ruhiger Blutrot-Ring, solange die Person lebt; der Tageswechsel setzt die Nominierung zurück.
+func _draw_nominated(c: Vector2, d: float) -> void:
+	_draw_glow(c, d, ThemeTokens.BLOOD_GLOW, 5, 0.8)
+	draw_arc(c, d * RING_RADIUS + 1.5, 0.0, TAU, 64, ThemeTokens.BLOOD_RED_BRIGHT, 5.0, true)
 
 
 func _apply_hunt_motion() -> void:

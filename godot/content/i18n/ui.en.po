@@ -2237,6 +2237,9 @@ msgstr "Discussion and voting happen at the table. You count the votes yourself 
 msgid "ui.cockpit.card.day.no_nominations"
 msgstr "No nomination yet today."
 
+msgid "ui.cockpit.card.day.defend"
+msgstr "All nominated players may now defend themselves, one after another."
+
 msgid "ui.cockpit.card.day.nominations"
 msgstr "Nominations today"
 
@@ -2301,7 +2304,7 @@ msgid "ui.cockpit.action.execute"
 msgstr "Execution …"
 
 msgid "ui.cockpit.action.no_execution"
-msgstr "No execution today …"
+msgstr "No one"
 
 msgid "ui.cockpit.action.confirm_nomination"
 msgstr "Confirm nomination"
@@ -5603,7 +5606,7 @@ msgid "ui.rulebook.c07.b01"
 msgstr "After “Continue to the day” the day begins. Discussion and voting happen at the table. The app has no vote field, counts no votes and calculates no majority. The game master counts and records only the nominations and the result."
 
 msgid "ui.rulebook.c07.b02"
-msgstr "The card shows as reading text who died today (“Died today: …”) and the public list of today's nominations."
+msgstr "The card shows as reading text who died today (“Died today: …”) and the public list of today's nominations. Nominated players carry a blood-red ring in the seat circle until they are executed. Below the list is the reading text “All nominated players may now defend themselves, one after another.”"
 
 msgid "ui.rulebook.c07.b03"
 msgstr "Recording a nomination"
@@ -5618,7 +5621,7 @@ msgid "ui.rulebook.c07.b06"
 msgstr "3. Tap the nominated person, then “Confirm nomination”."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. The app rejects violations with a message (“This nomination is not possible today”). An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
+msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. Anyone who has already nominated or been nominated today is greyed out in the seat circle; the app blocks it silently. An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Vote hints"
@@ -5639,7 +5642,7 @@ msgid "ui.rulebook.c08.b02"
 msgstr "A check card always follows, on every execution, so that its appearance reveals nothing about certain roles. Either it names a special case (such as a mirroring, a defence question or the question about the curse duration) or “Nothing special”. Answer the question on the card and tap “Confirm execution”; the execution applies at once."
 
 msgid "ui.rulebook.c08.b03"
-msgstr "If nobody is to be executed, tap “No execution today …” and confirm the question. Only after this decision, and when no step or reaction is open any more, “End day” is possible."
+msgstr "If nobody is to be executed, tap “No one”. Only after this decision, and when no step or reaction is open any more, “End day” is possible."
 
 msgid "ui.rulebook.c08.b04"
 msgstr "Death reactions"

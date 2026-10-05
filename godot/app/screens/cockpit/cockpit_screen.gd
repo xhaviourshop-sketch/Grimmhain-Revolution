@@ -719,7 +719,8 @@ func _mark_day_mode(next: Dictionary) -> void:
 		"nominate_from":
 			_ring.set_marking(true, next.get("nominator_ids", alive), [], [])
 		"nominate_to":
-			_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != _nominator), _selection, [_nominator])
+			var nominated := _seat_ids_where("nominated_today")  # jede Person wird pro Tag nur einmal nominiert: still ausgegraut
+			_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != _nominator and not nominated.has(id)), _selection, [_nominator])
 		"execute":
 			_ring.set_marking(true, next.get("execution_candidates", []), _selection, [])
 		"name_wolf":
@@ -732,6 +733,11 @@ func _mark_day_mode(next: Dictionary) -> void:
 				_ring.set_marking(true, alive.filter(func(id: int) -> bool: return id != int(_preview.get("target_id", -1))), _selection, [])
 			else:
 				_ring.set_marking(false, [], [], [])
+
+
+## Personen mit gesetztem öffentlichem Sitzmerkmal.
+func _seat_ids_where(flag: String) -> Array:
+	return (_view.get("seats", []) as Array).filter(func(s: Dictionary) -> bool: return bool(s.get(flag, false))).map(func(s: Dictionary) -> int: return int(s["person_id"]))
 
 
 func _mark_gm_mode() -> void:
