@@ -43,14 +43,17 @@ static func build(s: GameState) -> Dictionary:
 
 ## Sitzkreis in Sitzreihenfolge: Personen-ID, Platz (ab 1), Name, lebend, heute nominiert.
 ## Nominierungen sind öffentlich (DR-03); eine Richter-Nominierung nennt keinen Nominierenden.
+## `nominated_by`: Personen-ID der nominierenden Person für das Nominierungsband (0 = keine oder verdeckte Richter-Nominierung).
 static func seats(s: GameState) -> Array:
 	var nominated := {}
+	var by := {}
 	var nominators := {}
 	if s.phase == Phase.DAY:
 		for n: Nomination in s.nominations_on_day(s.day_number):
 			nominated[n.nominee_id] = true
 			if not n.by_judge:
 				nominators[n.nominator_id] = true
+				by[n.nominee_id] = n.nominator_id
 	var out: Array = []
 	for i: int in s.seat_order.size():
 		var id := s.seat_order[i]
@@ -62,6 +65,7 @@ static func seats(s: GameState) -> Array:
 			"alive": p.alive,
 			"nominated_today": nominated.has(id),
 			"nominated_someone_today": nominators.has(id),
+			"nominated_by": int(by.get(id, 0)),
 		})
 	return out
 

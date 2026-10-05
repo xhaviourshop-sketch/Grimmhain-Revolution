@@ -220,3 +220,30 @@ func test_stolen_ability_is_announced_with_own_role() -> void:
 		elif str(next["kind"]) == "begin_step":
 			session.begin_next_step()
 	assert_true(found, "gestohlener Waldhexenschritt angekündigt")
+
+
+## Nominierungsband (Feedback 8): normale Nominierung trägt die nominierende Person, die verdeckte Richter-Nominierung keine.
+func test_nomination_band_pairs_never_name_the_judge() -> void:
+	var session := _session()
+	var state: GameState = session.get("_state")
+	state.phase = Phase.DAY
+	state.day_number = 1
+	var normal := Nomination.new()
+	normal.nominator_id = 3
+	normal.nominee_id = 1
+	normal.day = 1
+	var judge := Nomination.new()
+	judge.nominator_id = 4
+	judge.nominee_id = 2
+	judge.day = 1
+	judge.by_judge = true
+	state.nominations.append(normal)
+	state.nominations.append(judge)
+	var seats: Array = session.cockpit_view()["seats"]
+	var by := {}
+	for seat: Dictionary in seats:
+		by[int(seat["person_id"])] = int(seat["nominated_by"])
+	assert_eq(by[1], 3, "normale Nominierung nennt die nominierende Person")
+	assert_eq(by[2], 0, "Richter-Nominierung nennt niemanden")
+	assert_true(bool((seats.filter(func(s: Dictionary) -> bool: return int(s["person_id"]) == 2)[0] as Dictionary)["nominated_today"]), "die nominierte Person bleibt öffentlich sichtbar")
+	assert_eq(GameSeatRing.bands_of(seats), [Vector2i(3, 1)] as Array[Vector2i], "genau ein Band, nur für die normale Nominierung")

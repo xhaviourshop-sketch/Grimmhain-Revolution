@@ -102,7 +102,7 @@ func test_seat_ring_shows_started_game_without_roles() -> void:
 	for i: int in tokens.size():
 		var token := tokens[i] as Button
 		var name := str(Fixtures.players(7)[SEATS[i] - 1]["name"])
-		assert_eq(token.text, "%d · %s" % [i + 1, name], "Platz %d zeigt Nummer und Namen" % (i + 1))
+		assert_eq(token.text, name, "Platz %d zeigt nur den Namen, nie die Sitznummer" % (i + 1))
 	assert_eq((find_node(screen, "PhaseValueLabel") as Label).text, "Vorbereitung", "Phase")
 	assert_true(find_button(screen, "StartNightButton").is_visible_in_tree(), "nächster Schritt: Nacht beginnen")
 	_assert_no_roles(shell, "Start")
