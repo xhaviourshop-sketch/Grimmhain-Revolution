@@ -16,6 +16,7 @@ const FORBIDDEN := [
 	["(?<![\\w.])(randi|randf|randi_range|randf_range|randomize|randfn|seed)\\s*\\(", "globaler Zufall"],
 	["\\bprint(_rich|err|raw)?\\s*\\(|\\bpush_(error|warning)\\s*\\(", "Konsolenausgabe"],
 	["\\b(await|signal)\\b", "Signale/Nebenläufigkeit"],
+	["\\.(shuffle|pick_random)\\s*\\(", "globaler Zufall (shuffle, pick_random; RandomNumberGenerator nur in seeded_rng.gd)"],  # F-T03
 ]
 
 
