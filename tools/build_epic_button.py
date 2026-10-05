@@ -1,4 +1,4 @@
-"""Cuts Markus' epic button image (C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui/start-knopf.png, 2172x724) into
+"""Cuts Markus' epic button image (C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/ui/start-knopf.png, 2172x724) into
 godot/assets/ui/epic_button_{left,mid,right}.webp: left end (wolf), tileable lava middle, right end (claw marks).
 Ends are never stretched; the middle repeats. The middle is cross-faded at its seam so it tiles without an edge; the inner
 edge of each end fades to transparent so it blends over the middle tile (the middle is drawn underneath, across the join).
@@ -6,7 +6,7 @@ Run from the repo root: python tools/build_epic_button.py"""
 import numpy as np
 from PIL import Image
 
-SRC = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/ui/start-knopf.png"
+SRC = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/ui/start-knopf.png"
 OUT = "godot/assets/ui/epic_button_"
 Y0, Y1 = 112, 587          # full ornament height (spikes included); the bars span y 185..508
 LEFT_END, MID_END = 600, 1640

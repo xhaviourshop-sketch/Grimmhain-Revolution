@@ -11,7 +11,7 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const project = path.join(root, "godot");
-const out = "C:/Users/Marku/Downloads/Grimmhain-iPad-Web";
+const out = "C:/Users/Marku/Downloads/Grimmhain/Web";
 const sh = (c) => execSync(c, { cwd: root, encoding: "utf8" }).trim();
 
 const hash = sh("git rev-parse --short=7 HEAD");

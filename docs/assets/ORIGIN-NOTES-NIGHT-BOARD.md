@@ -66,7 +66,7 @@ ChatGPT-Bildgenerierung am 2026-10-01 durch Markus, Prompts aus `P2-BRIEFINGS-FU
 | `P2-03-status-badges-v1.png` (3 × 2, Magenta) | P2-3 | 6 Abzeichen in `badges/` |
 | `P2-04-role-emblems-probe-v1.png` (4 × 3, Magenta) | P2-4 | 11 Symbole in `emblems/`, Symbol 6 nicht verwendet |
 
-Bearbeitung: Zuschnitt und Magenta-Freistellung per Skript (`p2-mockup/tools/`). Die Originalblätter liegen nur im Übergabeordner `Downloads/Grimmhain-P1-Nachtentwurf/`, nicht im Repository.
+Bearbeitung: Zuschnitt und Magenta-Freistellung per Skript (`p2-mockup/tools/`). Die Originalblätter liegen nur im Übergabeordner `Downloads/Grimmhain/Archiv/P1-Nachtentwurf/`, nicht im Repository.
 
 Reparierte Teile (`p2-mockup/parts/`) stammen aus den Mediendateien in „Grimmhain Assets“ (Nutzerangabe wie in Abschnitt 1) und sind mit eigenen Skripten bearbeitet. Das Zahnrad in `tab-options.png` ist selbst gezeichnet.
 

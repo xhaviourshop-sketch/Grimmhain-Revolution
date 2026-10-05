@@ -6,7 +6,7 @@ Fünf feste Agenten in `.claude/agents/`. Ablauf (verbindlich) steht in `CLAUDE.
 |---|---|---|---|
 | `planer` | Opus | Auftrag in Teile mit festen Dateien zerlegen, Prüfstufe wählen, danach Zweige und Funde zusammenführen | nein |
 | `godot-entwickler` | Sonnet | einen Teil umsetzen, eigener Worktree (`isolation: worktree`) und Zweig `team/<auftrag>-<teil>`, gezielte Tests, Screenshots | ja, nur zugewiesene Dateien |
-| `pruefer-sprache` | Haiku | sichtbare Texte gegen `docs/brand/MARKE.md` und `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md`, Funde mit Datei und Zeile | nein |
+| `pruefer-sprache` | Sonnet | sichtbare Texte gegen `docs/brand/MARKE.md` und `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md`, Funde mit Datei und Zeile | nein |
 | `pruefer-marke` | Sonnet | Screenshots gegen MARKE.md: kein Gold, GroveWindow, Blutrot nur aktiv, gotisch nur Titel, nichts abgeschnitten oder verdeckt | nein |
 | `pruefer-spielleiter` | Sonnet | Screenshots aus Sicht eines Spielleiters vor 20 Leuten: wer ist dran, was tippe ich, unnötige Klicks, fehlende Info | nein |
 

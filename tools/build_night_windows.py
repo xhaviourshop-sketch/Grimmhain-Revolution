@@ -19,8 +19,8 @@ from scipy import ndimage as ndi
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = ROOT + "/godot/assets/night/bg/"
-DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/szene-nacht-v2.png"
-DEFAULT_CONTROL = "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/p4-atmosphaere/kontrolle-fenster.png"
+DEFAULT_SOURCE = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/szene-nacht-v2.png"
+DEFAULT_CONTROL = "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/p4-atmosphaere/kontrolle-fenster.png"
 
 RED_MIN = 125          # warm bright pixels: red channel at least this
 WARM_MIN = 55          # and red minus blue at least this

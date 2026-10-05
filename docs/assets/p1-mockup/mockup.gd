@@ -87,7 +87,7 @@ class MockSeat extends Control:
 
 
 func _initialize() -> void:
-	var out := "C:/Users/Marku/Downloads/Grimmhain-P1-Nachtentwurf/mockup-platzhalter"
+	var out := "C:/Users/Marku/Downloads/Grimmhain/Archiv/P1-Nachtentwurf/mockup-platzhalter"
 	var bg_path := ASSETS + "bg/bg-village-night.webp"
 	var portrait_paths: Array[String] = []
 	for f: String in PORTRAIT_FILES:

@@ -2,7 +2,7 @@
 
 **Stand:** 2026-10-01 · **Status:** P2 ausgeführt (Ergebnis in `p2-mockup/`, Mockup V3), offen siehe Abschnitt „Für P3 noch offen“ · Grundlage: Mockup V2 (`p1-mockup/`) und `ORIGIN-NOTES-NIGHT-BOARD.md`
 
-Alle Dateien sind Entwicklungsmaterial ohne Veröffentlichungsfreigabe. „Claude Code“ heißt: aus dem Bestand ableitbar (Zuschnitt, Maske, Säuberung per Skript), kein neues Bild. „ChatGPT“: Markus erzeugt es, Briefings in `Downloads/Grimmhain-P1-Nachtentwurf/P2-BRIEFINGS-FUER-CHATGPT.md`.
+Alle Dateien sind Entwicklungsmaterial ohne Veröffentlichungsfreigabe. „Claude Code“ heißt: aus dem Bestand ableitbar (Zuschnitt, Maske, Säuberung per Skript), kein neues Bild. „ChatGPT“: Markus erzeugt es, Briefings in `Downloads/Grimmhain/Archiv/P1-Nachtentwurf/P2-BRIEFINGS-FUER-CHATGPT.md`.
 
 | Grafik | Befund | Weg | Anmerkung |
 |---|---|---|---|
