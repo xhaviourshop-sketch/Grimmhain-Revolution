@@ -143,6 +143,10 @@ const TEAM_SYMBOL_SIZE := 48          ## Teamsymbol im Zähler
 const TEAM_PLATE_VILLAGE := Color(0.75, 1.45, 2.4)    ## kühles Mondblau
 const TEAM_PLATE_WOLVES := Color(2.3, 0.5, 0.52)     ## dunkles Blutrot
 const TEAM_PLATE_SOLO := Color(1.6, 1.0, 2.1)       ## gedämpftes Violett
+## Lesefarben der Teams für Schrift in Rollenlisten (DA-103): kräftig, mindestens 4,5:1 auf dem dunklen Listengrund (`BG_SURFACE`).
+const TEAM_READ_VILLAGE := Color("#8cc4ff")   ## Mondblau
+const TEAM_READ_WOLVES := Color("#ff6464")    ## Blutrot, aufgehellt
+const TEAM_READ_SOLO := Color("#c89cff")      ## Violett
 ## Glühen der gewählten Rollenkachel in Teamfarbe (Dorf Mondblau, Wölfe Blutrot, Einzelgänger Violett); Akt-Karte, Modus und Namensschild glühen rot.
 ## Startbildschirm (lebendiger Hintergrund): Mondschein, Wolfsaugen, ferner Schimmer, Nebelfarbe beim Zuziehen.
 const START_MOON_GLOW := Color(0.72, 0.82, 1.0)
@@ -194,3 +198,13 @@ const TOAST_FADE_SECONDS := 0.15
 const TOAST_VISIBLE_SECONDS := 2.5
 const CARD_FADE_SECONDS := 0.15       ## Einblenden der Ansagekarte bei neuer Handlung
 const BACKDROP_FADE_SECONDS := 0.3    ## Wechsel des Hintergrunds zwischen Nacht und Tag
+
+
+## Lesefarbe eines Teams für Rollennamen in Listen.
+static func team_read_color(team: StringName) -> Color:
+	match team:
+		Faction.WOLVES:
+			return TEAM_READ_WOLVES
+		Faction.SOLO:
+			return TEAM_READ_SOLO
+	return TEAM_READ_VILLAGE

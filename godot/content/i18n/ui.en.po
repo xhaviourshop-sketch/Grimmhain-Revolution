@@ -1257,7 +1257,7 @@ msgid "ui.cockpit.seat.dead"
 msgstr "{mark}† {name}"
 
 msgid "ui.cockpit.seat.nominated"
-msgstr "{mark}{name} (N)"
+msgstr "{mark}{name}"
 
 msgid "ui.cockpit.tools.log"
 msgstr "Log"
@@ -2181,31 +2181,31 @@ msgid "ui.morning.notice.judge"
 msgstr "“{name} counts as nominated today.”"
 
 msgid "ui.morning.private.death"
-msgstr "{name} died: {cause}. Role: {role}."
+msgstr "{name} died: {cause} ({role})."
 
 msgid "ui.morning.private.saved"
-msgstr "{name} was saved: {role}."
+msgstr "{name} saved: {role}."
 
 msgid "ui.morning.private.no_attack"
-msgstr "The pack attacked nobody."
+msgstr "No pack attack."
 
 msgid "ui.morning.private.step_skipped"
-msgstr "{role} was skipped: {reason}"
+msgstr "{role} skipped: {reason}"
 
 msgid "ui.morning.private.step_dropped"
-msgstr "{role} did not happen: {drop}."
+msgstr "{role} dropped: {drop}"
 
 msgid "ui.morning.private.reaction.declined"
-msgstr "{name}: reaction without target (declined)."
+msgstr "{name} declines the reaction."
 
 msgid "ui.morning.private.reaction.killed"
-msgstr "{name} took {target} along in death."
+msgstr "{name} takes {target} along."
 
 msgid "ui.morning.private.reaction.cursed"
-msgstr "{name} cursed {target}."
+msgstr "{name} curses {target}."
 
 msgid "ui.morning.private.role_changed"
-msgstr "{name} now has the role: {role}."
+msgstr "{name} is now {role}."
 
 msgid "ui.morning.private.other"
 msgstr "{type}: {details}"
@@ -5510,7 +5510,7 @@ msgid "ui.rulebook.c06.b05"
 msgstr "The morning report has two parts. You read “For the village” aloud: who died, who is back, who was chosen (for example by the Judge) and other public events."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "“For you” is for the game master only: who is in love, who is whose rival, who was charmed, protected, poisoned or saved, causes and dropped steps. One sentence per point with names."
+msgstr "“For you” is for the game master only: lovers and rivals, charmed, protected, poisoned and saved people, plus causes and dropped steps. One short line per point, with names."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "“Continue” starts the day."
@@ -7629,7 +7629,7 @@ msgid "ui.cockpit.seat.plate.dead"
 msgstr "{mark}† {name}"
 
 msgid "ui.cockpit.seat.plate.nominated"
-msgstr "{mark}{name} (N)"
+msgstr "{mark}{name}"
 
 msgid "ui.cockpit.tools.options"
 msgstr "Options"
@@ -8713,22 +8713,22 @@ msgid "ui.setup.voice.none"
 msgstr "Nothing understood. Try again."
 
 msgid "ui.morning.private.lovers"
-msgstr "{name} and {target} are lovers."
+msgstr "{name} and {target}: lovers."
 
 msgid "ui.morning.private.rivals"
-msgstr "{name} and {target} are rivals."
+msgstr "{name} and {target}: rivals."
 
 msgid "ui.morning.private.charmed"
-msgstr "{name} was charmed."
+msgstr "{name} charmed."
 
 msgid "ui.morning.private.protected"
-msgstr "{name} was protected."
+msgstr "{name} protected."
 
 msgid "ui.morning.private.wolf_poisoned"
-msgstr "{name} was poisoned by the poison wolf."
+msgstr "{name} poisoned (poison wolf)."
 
 msgid "ui.morning.private.infected"
-msgstr "{name} was infected."
+msgstr "{name} infected."
 
 msgid "ui.morning.private.parasite_host"
 msgstr "{name} carries the parasite."
@@ -8737,7 +8737,7 @@ msgid "ui.morning.private.voodoo_doll"
 msgstr "{name} is the voodoo doll."
 
 msgid "ui.morning.private.nothing"
-msgstr "Nothing else happened in secret."
+msgstr "Nothing else in secret."
 
 msgid "ui.cockpit.card.morning.village"
 msgstr "For the village"

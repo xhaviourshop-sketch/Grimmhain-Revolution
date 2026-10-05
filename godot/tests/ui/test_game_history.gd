@@ -471,3 +471,19 @@ func test_stored_report_without_roles_is_not_filled_up() -> void:
 		assert_false(str(line["style"]) == "heading" and str(line["text"]) == "Rollen zum Spielende", "keine Rollenüberschrift ohne gespeicherte Rollen")
 	assert_false(text.contains("Anna: Werwolf") or text.contains("Dörte: Amalia"), "keine erfundene Rollenzeile")
 	assert_true(text.contains("Sieger: Werwölfe") and text.contains("Dörte wurde hingerichtet"), "übrige Angaben bleiben")
+
+
+func test_page_break_keeps_a_heading_with_its_next_line() -> void:
+	var items: Array = [{"h": false}, {"h": false}, {"h": true}, {"h": false}, {"h": false}]
+	var build := func(_item: Dictionary) -> Control: return Control.new()
+	var weigh := func(_item: Dictionary) -> float: return 10.0
+	var room := 3.0 * (10.0 + float(ThemeTokens.SPACE_S))
+	var plain := CockpitLayers.Pager.new()
+	plain.setup(items, build, weigh, room, false)
+	assert_eq(plain.page_indices(0), [0, 1, 2], "ohne Regel steht der Zwischentitel allein am Seitenende")
+	plain.free()
+	var kept := CockpitLayers.Pager.new()
+	kept.setup(items, build, weigh, room, false, func(item: Dictionary) -> bool: return bool(item["h"]))
+	assert_eq(kept.page_indices(0), [0, 1], "Zwischentitel wandert auf die nächste Seite")
+	assert_eq(kept.page_indices(1), [2, 3, 4], "und steht dort vor seiner Zeile")
+	kept.free()

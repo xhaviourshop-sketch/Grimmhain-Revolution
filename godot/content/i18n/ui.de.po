@@ -1257,7 +1257,7 @@ msgid "ui.cockpit.seat.dead"
 msgstr "{mark}† {name}"
 
 msgid "ui.cockpit.seat.nominated"
-msgstr "{mark}{name} (N)"
+msgstr "{mark}{name}"
 
 msgid "ui.cockpit.tools.log"
 msgstr "Protokoll"
@@ -2181,31 +2181,31 @@ msgid "ui.morning.notice.judge"
 msgstr "„{name} gilt heute als nominiert.“"
 
 msgid "ui.morning.private.death"
-msgstr "{name} ist gestorben: {cause}. Rolle: {role}."
+msgstr "{name} starb: {cause} ({role})."
 
 msgid "ui.morning.private.saved"
-msgstr "{name} wurde gerettet: {role}."
+msgstr "{name} gerettet: {role}."
 
 msgid "ui.morning.private.no_attack"
-msgstr "Das Rudel hat niemanden angegriffen."
+msgstr "Kein Angriff des Rudels."
 
 msgid "ui.morning.private.step_skipped"
-msgstr "{role} wurde übersprungen: {reason}"
+msgstr "{role} übersprungen: {reason}"
 
 msgid "ui.morning.private.step_dropped"
-msgstr "{role} ist ausgefallen: {drop}."
+msgstr "{role} entfällt: {drop}"
 
 msgid "ui.morning.private.reaction.declined"
-msgstr "{name}: Reaktion ohne Ziel (verzichtet)."
+msgstr "{name} verzichtet auf die Reaktion."
 
 msgid "ui.morning.private.reaction.killed"
-msgstr "{name} hat {target} mit in den Tod gerissen."
+msgstr "{name} reißt {target} mit."
 
 msgid "ui.morning.private.reaction.cursed"
-msgstr "{name} hat {target} verflucht."
+msgstr "{name} verflucht {target}."
 
 msgid "ui.morning.private.role_changed"
-msgstr "{name} hat jetzt die Rolle: {role}."
+msgstr "{name} ist jetzt {role}."
 
 msgid "ui.morning.private.other"
 msgstr "{type}: {details}"
@@ -5510,7 +5510,7 @@ msgid "ui.rulebook.c06.b05"
 msgstr "Der Morgenbericht hat zwei Teile. „Fürs Dorf“ liest du vor: wer gestorben ist, wer zurück ist, wer ausgewählt wurde (etwa vom Richter) und andere öffentliche Ereignisse."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "„Für dich“ ist nur für die Spielleitung: wer verliebt ist, wer Rivale von wem ist, wer verzaubert, geschützt, vergiftet oder gerettet wurde, Ursachen und ausgefallene Schritte. Ein Satz pro Punkt mit Namen."
+msgstr "„Für dich“ ist nur für die Spielleitung: Liebende und Rivalen, Verzauberte, Geschützte, Vergiftete und Gerettete, dazu Ursachen und ausgefallene Schritte. Eine kurze Zeile pro Punkt, mit Namen."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "„Weiter“ beginnt den Tag."
@@ -7629,7 +7629,7 @@ msgid "ui.cockpit.seat.plate.dead"
 msgstr "{mark}† {name}"
 
 msgid "ui.cockpit.seat.plate.nominated"
-msgstr "{mark}{name} (N)"
+msgstr "{mark}{name}"
 
 msgid "ui.cockpit.tools.options"
 msgstr "Optionen"
@@ -8713,22 +8713,22 @@ msgid "ui.setup.voice.none"
 msgstr "Nichts verstanden. Noch einmal versuchen."
 
 msgid "ui.morning.private.lovers"
-msgstr "{name} und {target} sind Liebende."
+msgstr "{name} und {target}: Liebende."
 
 msgid "ui.morning.private.rivals"
-msgstr "{name} und {target} sind Rivalen."
+msgstr "{name} und {target}: Rivalen."
 
 msgid "ui.morning.private.charmed"
-msgstr "{name} wurde verzaubert."
+msgstr "{name} verzaubert."
 
 msgid "ui.morning.private.protected"
-msgstr "{name} wurde geschützt."
+msgstr "{name} geschützt."
 
 msgid "ui.morning.private.wolf_poisoned"
-msgstr "{name} wurde vom Giftwolf vergiftet."
+msgstr "{name} vergiftet (Giftwolf)."
 
 msgid "ui.morning.private.infected"
-msgstr "{name} wurde angesteckt."
+msgstr "{name} angesteckt."
 
 msgid "ui.morning.private.parasite_host"
 msgstr "{name} trägt den Parasiten."
@@ -8737,7 +8737,7 @@ msgid "ui.morning.private.voodoo_doll"
 msgstr "{name} ist die Voodoo-Puppe."
 
 msgid "ui.morning.private.nothing"
-msgstr "Sonst ist nichts Geheimes passiert."
+msgstr "Sonst nichts Geheimes."
 
 msgid "ui.cockpit.card.morning.village"
 msgstr "Fürs Dorf"

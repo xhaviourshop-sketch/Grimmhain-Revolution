@@ -4,7 +4,7 @@ extends GrimmButton
 ## Zustände als Ring über dem Porträt, kleine Zustandsabzeichen unten rechts. Zeigt nie eine Rolle. Bleibt ein Button
 ## mit Personen-ID und Signal `tapped`; der Button-Text (Name, Zeichen) dient der Bedienungshilfe, den Tests und dem
 ## Tooltip und wird nicht gezeichnet. Information hängt nie allein an der Farbe: Das Schild trägt Tod („†“), Nominierung
-## („(N)“), wählbares Ziel („›“), Auswahl („✓“) und handelnde Person („•“); die Abzeichen unterscheiden sich durch Form.
+## (roter Ring und Band, ohne Zusatz im Namen), wählbares Ziel („›“), Auswahl („✓“) und handelnde Person („•“); die Abzeichen unterscheiden sich durch Form.
 ##
 ## Geheime Zustände (`marks`, handelnde Person) zeichnet der Platz nur, solange `secrets_visible` gilt („Verbergen“ schaltet es ab).
 
