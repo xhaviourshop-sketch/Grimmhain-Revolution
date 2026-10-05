@@ -141,6 +141,18 @@ func test_parasite_dies_with_host_and_is_normal_without() -> void:
 		assert_false(run.state.players[2].alive, "ohne Wirt normal verwundbar")
 
 
+## B-06 (DA-93): Verliert der Parasit die Rolle, endet auch die Bindung an den Wirt; der Wirt stirbt dann ohne Folgen für ihn.
+func test_parasite_losing_the_role_ends_the_bond() -> void:
+	var roles := ["werwolf", PA, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
+	var cmds := _attach(roles, 3)
+	cmds.append(_gm("set_role", {"target_id": 2, "role_id": "dorfbewohner"}))
+	cmds.append_array([Command.nominate(4, 3), Command.decide_execution(3)])
+	var run := _run(cmds, "Rolle weg, Wirt stirbt")
+	if run.ok:
+		assert_true(run.state.parasite_hosts.is_empty(), "Bindung beendet")
+		assert_true(run.state.players[2].alive, "frühere Parasit-Person lebt")
+
+
 func test_parasite_changes_host() -> void:
 	var roles := ["werwolf", PA, "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]
 	var cmds := _attach(roles, 3)

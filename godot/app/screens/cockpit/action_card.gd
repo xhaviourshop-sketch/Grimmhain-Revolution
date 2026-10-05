@@ -343,9 +343,10 @@ func undo_visible() -> bool:
 
 # --- Kartenarten ------------------------------------------------------------------------------------
 
-func _covered(kind: String) -> void:
+## Verdeckte Karte (S-07, DA-93): ein einheitlicher Text für jede Art, der nichts über den Inhalt verrät.
+func _covered(_kind: String) -> void:
 	_heading("ui.cockpit.secret.heading")
-	_text("ui.cockpit.secret.%s" % ("win" if kind == "win_decision" else ("card" if kind == "card_window" else "step")), {}, &"MutedLabel")
+	_text("ui.cockpit.secret.step", {}, &"MutedLabel")
 	_actions([_button("RevealButton", "ui.cockpit.secret.reveal", GrimmButton.Kind.PRIMARY, &"reveal")])
 
 

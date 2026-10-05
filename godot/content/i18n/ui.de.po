@@ -1295,9 +1295,6 @@ msgstr "Nur für die Spielleitung"
 msgid "ui.cockpit.secret.step"
 msgstr "Der nächste Schritt enthält geheime Informationen. Zeige ihn erst an, wenn niemand mitliest."
 
-msgid "ui.cockpit.secret.win"
-msgstr "Eine Siegbedingung ist erfüllt. Die Einzelheiten sind geheim, bis du sie anzeigst."
-
 msgid "ui.cockpit.secret.reveal"
 msgstr "Anzeigen"
 
@@ -2409,7 +2406,7 @@ msgid "ui.cockpit.private.action.name_wolf"
 msgstr "{name}: Nekromant benennt einen Wolf …"
 
 msgid "ui.cockpit.error.already_nominated_today"
-msgstr "Fehler: Diese Person hat heute schon nominiert. Nichts wurde geändert."
+msgstr "Fehler: Diese Nominierung ist heute nicht möglich. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.already_nominee_today"
 msgstr "Fehler: Diese Person wurde heute schon nominiert. Nichts wurde geändert."
@@ -5675,7 +5672,7 @@ msgid "ui.rulebook.c07.b06"
 msgstr "3. Tippe die nominierte Person an und dann „Nominierung bestätigen“."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal nominieren und wird pro Tag höchstens einmal nominiert. Verstöße lehnt die App mit einer Meldung ab („Diese Person hat heute schon nominiert“). Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Nominierung nimmst du mit „Rückgängig“ zurück."
+msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal nominieren und wird pro Tag höchstens einmal nominiert. Verstöße lehnt die App mit einer Meldung ab („Diese Nominierung ist heute nicht möglich“). Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Nominierung nimmst du mit „Rückgängig“ zurück."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Stimmhinweise"
@@ -7285,9 +7282,6 @@ msgstr "Tote ziehen Karten, die im Kartenfenster gespielt werden. Schaltet auch 
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
 msgstr "Der Kartenschlucker spielt nur mit Totenreichkarten. Schalte die Karten ein oder nimm ihn heraus."
-
-msgid "ui.cockpit.secret.card"
-msgstr "Die Karte einer toten Person ist geheim. Zeige sie erst an, wenn niemand mitliest."
 
 msgid "ui.cards.window.caption.start"
 msgstr "Kartenfenster vor der Tagesdiskussion"

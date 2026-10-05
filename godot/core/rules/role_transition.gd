@@ -29,6 +29,8 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 		WolfChildRules.create_bond(s, player_id)
 	if previous == RoleCatalog.LEHRLING and role != RoleCatalog.LEHRLING:
 		ApprenticeRules.end_active(s, player_id, ApprenticeBond.STATUS_REMOVED)
+	if previous == RoleCatalog.PARASIT and role != RoleCatalog.PARASIT:
+		s.parasite_hosts = s.parasite_hosts.filter(func(b: Dictionary) -> bool: return int(b["parasite_id"]) != player_id)  # B-06 (DA-93)
 	if role != RoleCatalog.FEUERTEUFEL:
 		SoloRules.drop_fire_mark(s, player_id)  # Markierung erlischt mit der Rolle (RM-DR-131.7)
 	if role != RoleCatalog.VOODOO:

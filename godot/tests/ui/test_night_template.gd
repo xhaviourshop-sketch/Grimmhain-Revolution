@@ -85,3 +85,18 @@ func _texts_of_card() -> String:
 	for c: Control in text_controls(find_node(screen(), "ActionCard")):
 		out.append(text_of(c))
 	return "\n".join(out)
+
+
+## S-05 (DA-93): Tagsüber sind die Abzeichen am Sitzkreis verborgen; ein Tipp auf die Person blendet ihre Abzeichen ein.
+func test_day_hides_marks_until_a_seat_is_tapped() -> void:
+	if not await start([W, "parasit", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]):
+		return
+	for c: Command in [Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.begin_step("night:1:1:parasit:2")]:
+		assert_true(session().submit(c).ok, "Vorbereitung")
+	assert_true(session().submit(Command.answer_prompt(2, [3])).ok and session().submit(Command.end_night()).ok, "Wirt gewählt, Nacht beendet")
+	await frames(4)
+	var ring: Node = find_node(screen(), "SeatRing")
+	assert_eq(str(session().cockpit_view().get("phase")), "DAY", "Tag")
+	assert_true((ring.get("_marks") as Dictionary).is_empty(), "Tag: keine Abzeichen")
+	await tap_seat(3)
+	assert_true((ring.get("_marks") as Dictionary).has(3), "Tipp zeigt das Abzeichen des Wirts")

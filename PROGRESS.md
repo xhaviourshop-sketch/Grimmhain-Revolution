@@ -10,6 +10,12 @@ Verifikation: Vollsuite inkl. Fuzz auf dem finalen Stand: 1409 Tests, 0 Fehlschl
 Merge: ohne Squash nach main (51b779f), main gepusht. Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 39783520 Byte wie lokal.
 Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als schmaler Streifen mit senkrecht umbrochenem Text und verdeckt kurz die Karte (3 s, Ursache im Layout der Leiste); Titel der Blutpriester-Karte wird vom Info-Knopf angeschnitten. Safari/iPad nicht geprueft.
 
+## STAND Audit-Entscheidungen (DA-93, 2026-10-05, Branch fix/audit-entscheidungen)
+- Umgesetzt (je ein Commit): A-02 Schild bricht (Test rot-grün), B-06 Parasit-Bindung endet mit der Rolle (rot-grün), S-05 Abzeichen tagsüber verborgen, Tipp zeigt 3 s, S-04 keine Nachtleiste bei anonymer Frage (rot-grün), S-07 ein Text für alle verdeckten Karten (rot-grün), S-09 neutrale Ablehnung, UI-02 kein Beenden im Web, F-A03 25 Bilder aus dem Export (pck -1,08 MB), CM-05 RULES_VERSION 0.16.
+- A-01 ohne Code (entspricht schon DA-93). UI-04 schon erledigt (config/icon). UI-03 Notiz: Exportweg der Berichte auf dem iPad klären (Download statt user://exports).
+- Offen: S-06 (Kartenansage nennt Fraktionsvariante, braucht konkrete Vorgabe); die 11 "offen"-Funde der Nachtschicht nicht bearbeitet (Zeitlimit).
+- Alte Spielstände (Regeln 0.15) erscheinen als "andere Version", nicht als beschädigt.
+
 ## MORGEN-ZUSAMMENFASSUNG Nachtschicht (2026-10-05, Branch chore/nachtschicht, gemergt)
 - Erledigt: CLAUDE.md auf 51 Zeilen (Erklaerungen nach docs/development/), `tools/test-quiet`, `tools/test-changed` (+ `tools/test-map.json`), vier Projekt-Skills, Marken-Check-Hook (`tools/check-brand.js`), Standard-Screenshotwerkzeug `godot/tools/capture_standard_set.gd`.
 - Darstellung: Rueckgaengig-Leiste ist wieder eine volle Zeile (Ursache: Umbruch bei 1 px Breite), Kartentitel laeuft nie unter den Info-Knopf (DE/EN, 37 von 72 Rollen in Nacht 1 geprueft, die uebrigen teilen den Code).

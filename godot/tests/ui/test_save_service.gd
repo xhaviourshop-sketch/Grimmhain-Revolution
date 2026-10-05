@@ -327,7 +327,7 @@ func _install_pe07_fixture(ctx: AppContext) -> String:
 	return path
 
 
-## PE-07: Ein Stand mit doppelten Startrollen (Regelversion 0.13, Schema 14) ist seit den Totenreichkarten (Schema 15, Regeln 0.15)
+## PE-07: Ein Stand mit doppelten Startrollen (Regelversion 0.13, Schema 14) ist seit den Totenreichkarten (Schema 15, Regeln 0.15, seit DA-93 0.16)
 ## eine ältere Version, keine beschädigte Datei: keine Migration, keine neue Verteilung, Datei bleibt bytegleich, nichts beiseitegelegt.
 func test_pe07_rules_0_13_save_is_incompatible_and_left_untouched() -> void:
 	var ctx := _context()
@@ -338,7 +338,7 @@ func test_pe07_rules_0_13_save_is_incompatible_and_left_untouched() -> void:
 	assert_true(bool(entries[0]["readable"]) and not bool(entries[0]["compatible"]), "lesbar, aber nicht kompatibel")
 	assert_eq(int(entries[0]["schema"]), 14, "gefundenes Schema")
 	assert_eq(str(entries[0]["found_label"]), "Schema 14, 0.13", "gefundene Version benannt")
-	assert_eq(str(entries[0]["expected_label"]), "Schema 15, 0.15", "erwartete Version benannt")
+	assert_eq(str(entries[0]["expected_label"]), "Schema 15, 0.16", "erwartete Version benannt")
 	var loaded := ctx.saves.load_game("test-round")
 	assert_false(bool(loaded["ok"]), "nicht ladbar")
 	assert_eq(str(loaded["error"]), "incompatible", "als andere Version gemeldet, nicht als beschädigt")
@@ -352,7 +352,7 @@ func test_pe07_rules_0_13_save_is_incompatible_and_left_untouched() -> void:
 const CORE_014_FIXTURE := "res://tests/saves/core-0.14-night-and-day.json"
 
 
-## Totenreichkarten (Schema 15, Regeln 0.15): Ein echter Stand der Regelversion 0.14 mit Nacht und Tag bleibt unberührt und wird als
+## Totenreichkarten (Schema 15, Regeln 0.15, seit DA-93 0.16): Ein echter Stand der Regelversion 0.14 mit Nacht und Tag bleibt unberührt und wird als
 ## ältere Version gemeldet, nicht als beschädigt; es gibt keine Migration und keine Neuverteilung.
 func test_core_0_14_save_is_incompatible_and_left_untouched() -> void:
 	var ctx := _context()
@@ -367,7 +367,7 @@ func test_core_0_14_save_is_incompatible_and_left_untouched() -> void:
 	assert_eq(entries.size(), 1, "in der Liste")
 	assert_true(bool(entries[0]["readable"]) and not bool(entries[0]["compatible"]), "lesbar, aber nicht kompatibel")
 	assert_eq(str(entries[0]["found_label"]), "Schema 14, 0.14", "gefundene Version benannt")
-	assert_eq(str(entries[0]["expected_label"]), "Schema 15, 0.15", "erwartete Version benannt")
+	assert_eq(str(entries[0]["expected_label"]), "Schema 15, 0.16", "erwartete Version benannt")
 	var loaded := ctx.saves.load_game("test-round")
 	assert_false(bool(loaded["ok"]), "nicht ladbar")
 	assert_eq(str(loaded["error"]), "incompatible", "als andere Version gemeldet, nicht als beschädigt")
@@ -388,7 +388,7 @@ func test_continue_screen_shows_pe07_save_as_other_version() -> void:
 	var screen := current_screen(shell)
 	var note := find_node(screen, "IncompatibleLabel") as Label
 	assert_true(note != null and note.is_visible_in_tree(), "Hinweis sichtbar")
-	assert_true(note != null and note.text.contains("anderen Version") and note.text.contains("0.13") and note.text.contains("0.15"), "Text nennt andere Version, gespeichert und erwartet: %s" % (note.text if note != null else ""))
+	assert_true(note != null and note.text.contains("anderen Version") and note.text.contains("0.13") and note.text.contains("0.16"), "Text nennt andere Version, gespeichert und erwartet: %s" % (note.text if note != null else ""))
 	assert_true((find_button(screen, "ResumeButton_test-round") as BaseButton).disabled, "Fortsetzen gesperrt")
 	assert_true(find_button(screen, "DiscardButton_test-round") != null, "Verwerfen weiter möglich")
 	assert_eq(FileAccess.get_file_as_bytes(path), bytes_before, "Datei bytegleich")

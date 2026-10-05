@@ -1270,3 +1270,16 @@ und alle widersprechenden Lexikon-Einträge. Die Karte gilt: Wo sie keinen Verzi
 **Folgefehler, die dabei gefunden und behoben wurden:** Ein per Totenreichkarte für eine Nacht geliehener Feuerteufel-Schritt hinterließ
 eine Markierung, die beim Laden abgelehnt wurde (die Markierung endet jetzt mit der geliehenen Fähigkeit). „Totale Anarchie“ stellte die
 Einsätze eines Grabräubers zurück, sein gespeicherter Diebstahl wurde dann beim Laden abgelehnt.
+
+
+## DA-93 Audit-Entscheidungen (Markus, 05.10.2026)
+Antworten auf die neun Fragen aus der Morgen-Zusammenfassung der Nachtschicht (Audit-Funde in `docs/audit/AUDIT-2026-10-02.md`). Verbindlich.
+1. **A-01 Seuchenwolf:** Die Durchdringung wird immer verbraucht, sobald das Rudel angreift, auch wenn das Opfer ohnehin stirbt.
+2. **A-02 Schutzgeist:** Bei durchdringendem Rudelangriff bricht der Schild und das Opfer stirbt.
+3. **B-06 Parasit:** Verliert er die Rolle, endet auch die Bindung an den Wirt.
+4. **S-05:** Markierungen am Sitzkreis sind tagsüber verborgen und per Tipp kurz einblendbar.
+5. **S-04:** Die Nachtleiste wird bei der anonymen Rotkäppchen-Frage ausgeblendet.
+6. **S-06, S-07, S-09:** Verdeckte Karten zeigen einen einheitlichen Text, der nichts verrät.
+7. **UI-02:** Der Beenden-Knopf entfällt im Web. **UI-03** (Exportweg auf dem iPad): nur Notiz für später.
+8. **F-A03:** Ungenutzte Bilder verlassen den Export. **UI-04:** Das Favicon ist eine Klein-Fassung des Siegels.
+9. **CM-05:** Nach einer Regeländerung wird `RULES_VERSION` erhöht; alte Stände erscheinen als „ältere Version“ statt „beschädigt“.

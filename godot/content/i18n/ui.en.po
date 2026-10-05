@@ -1295,9 +1295,6 @@ msgstr "Game master only"
 msgid "ui.cockpit.secret.step"
 msgstr "The next step contains secret information. Show it only when nobody can read along."
 
-msgid "ui.cockpit.secret.win"
-msgstr "A win condition is met. The details stay secret until you show them."
-
 msgid "ui.cockpit.secret.reveal"
 msgstr "Show"
 
@@ -2409,7 +2406,7 @@ msgid "ui.cockpit.private.action.name_wolf"
 msgstr "{name}: Necromancer names a wolf …"
 
 msgid "ui.cockpit.error.already_nominated_today"
-msgstr "Error: This person has already nominated today. Nothing was changed."
+msgstr "Error: This nomination is not possible today. Nothing was changed."
 
 msgid "ui.cockpit.error.already_nominee_today"
 msgstr "Error: This person has already been nominated today. Nothing was changed."
@@ -5675,7 +5672,7 @@ msgid "ui.rulebook.c07.b06"
 msgstr "3. Tap the nominated person, then “Confirm nomination”."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. The app rejects violations with a message (“This person has already nominated today”). An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
+msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. The app rejects violations with a message (“This nomination is not possible today”). An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Vote hints"
@@ -7285,9 +7282,6 @@ msgstr "The dead draw cards that are played in the card window. Also unlocks the
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
 msgstr "The Card Swallower only plays with realm-of-the-dead cards. Switch the cards on or remove the role."
-
-msgid "ui.cockpit.secret.card"
-msgstr "A dead person's card is secret. Show it only when nobody is reading along."
 
 msgid "ui.cards.window.caption.start"
 msgstr "Card window before the day discussion"

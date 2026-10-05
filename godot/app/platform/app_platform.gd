@@ -23,9 +23,11 @@ static func is_mobile() -> bool:
 	return OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")
 
 
-## Beenden-Button nur auf Desktop; auf Mobilgeräten beendet das System die App.
+## Beenden-Button nur auf Desktop; auf Mobilgeräten beendet das System die App, im Web friert `quit()` die Seite ein (UI-02, DA-93).
 static func can_quit_from_menu() -> bool:
-	return not is_mobile()
+	if _override != &"":
+		return _override != MOBILE
+	return not is_mobile() and not OS.has_feature("web")
 
 
 ## Zentrale Versionsquelle: `application/config/version` in project.godot.
