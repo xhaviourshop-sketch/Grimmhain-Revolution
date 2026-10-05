@@ -233,3 +233,19 @@ func test_decoy_wolf_gets_no_card_and_public_view_shows_no_appearance() -> void:
 	var private: Array = s.private_seats()
 	var wolf: Dictionary = private.filter(func(p: Dictionary) -> bool: return int(p["person_id"]) == 2)[0]
 	assert_true(JSON.stringify(wolf["notes"]).contains("waldhexe"), "nur der private Spielleiterbereich nennt die Scheinrolle")
+
+
+## S-07 (DA-93): Verdeckte Karten tragen für jede Art denselben Text (eine offene Siegentscheidung ist nicht erkennbar).
+func test_covered_cards_share_one_text() -> void:
+	var card := ActionCard.new()
+	tree.root.add_child(card)
+	var texts: Array[String] = []
+	for kind: String in ["win_decision", "card_window", "begin_step"]:
+		card.render({"kind": kind, "secret": true}, {"revealed": false, "phase": "DAY"})
+		var parts: Array[String] = []
+		for c: Control in text_controls(card):
+			parts.append(key_of(c))
+		texts.append("|".join(parts))
+	assert_eq(texts[0], texts[1], "Siegentscheidung wie Kartenfenster")
+	assert_eq(texts[0], texts[2], "Siegentscheidung wie Schritt")
+	card.queue_free()

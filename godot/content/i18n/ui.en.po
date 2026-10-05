@@ -1295,9 +1295,6 @@ msgstr "Game master only"
 msgid "ui.cockpit.secret.step"
 msgstr "The next step contains secret information. Show it only when nobody can read along."
 
-msgid "ui.cockpit.secret.win"
-msgstr "A win condition is met. The details stay secret until you show them."
-
 msgid "ui.cockpit.secret.reveal"
 msgstr "Show"
 
@@ -7285,9 +7282,6 @@ msgstr "The dead draw cards that are played in the card window. Also unlocks the
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
 msgstr "The Card Swallower only plays with realm-of-the-dead cards. Switch the cards on or remove the role."
-
-msgid "ui.cockpit.secret.card"
-msgstr "A dead person's card is secret. Show it only when nobody is reading along."
 
 msgid "ui.cards.window.caption.start"
 msgstr "Card window before the day discussion"

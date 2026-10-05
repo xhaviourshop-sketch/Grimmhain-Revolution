@@ -1295,9 +1295,6 @@ msgstr "Nur für die Spielleitung"
 msgid "ui.cockpit.secret.step"
 msgstr "Der nächste Schritt enthält geheime Informationen. Zeige ihn erst an, wenn niemand mitliest."
 
-msgid "ui.cockpit.secret.win"
-msgstr "Eine Siegbedingung ist erfüllt. Die Einzelheiten sind geheim, bis du sie anzeigst."
-
 msgid "ui.cockpit.secret.reveal"
 msgstr "Anzeigen"
 
@@ -7285,9 +7282,6 @@ msgstr "Tote ziehen Karten, die im Kartenfenster gespielt werden. Schaltet auch 
 
 msgid "ui.setup.roles.issue.role_needs_death_cards"
 msgstr "Der Kartenschlucker spielt nur mit Totenreichkarten. Schalte die Karten ein oder nimm ihn heraus."
-
-msgid "ui.cockpit.secret.card"
-msgstr "Die Karte einer toten Person ist geheim. Zeige sie erst an, wenn niemand mitliest."
 
 msgid "ui.cards.window.caption.start"
 msgstr "Kartenfenster vor der Tagesdiskussion"
