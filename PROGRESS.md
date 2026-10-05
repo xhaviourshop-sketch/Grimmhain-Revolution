@@ -15,7 +15,8 @@ Offen: Die Rueckgaengig-Leiste erscheint direkt nach einer Auto-Uebernahme als s
 - Erzwungenes Update: Beim Start vergleicht die Seite `version.json` (no-store) mit ihrer Kennung; bei Abweichung werden Service Worker und Caches verworfen und sofort neu geladen (eine Schleifenbremse pro Zielstand, offline startet die App wie bisher). Der Service Worker bekommt `skipWaiting` und `clients.claim`; Godot ändert `CACHE_VERSION` pro Export.
 - `godot/web/vercel.json`: `Cache-Control: no-cache` für `/`, `index.html`, Service Worker, Manifest, Offline-Seite, `version.json`; große Dateien bleiben cachebar. Skill `grimmhain-deploy` nutzt jetzt `node tools/export-web.js`.
 - Loki-Nachtkarte geprüft und korrigiert: Rollenbild von der Nachtkarte entfernt (`ROLE_ART_ON_CARD` in `cockpit_screen.gd`, gilt für alle Nachtkarten), Liebende/Rivalen beide in der Karte statt einer unten rechts. Bild: `Downloads/Grimmhain-Nacht-neu/loki-neu-1024x768.png`.
-- Verifikation: gezielte Tests grün (119), Vollsuite inkl. Fuzz läuft, Ergebnis, Merge und Live-Hash folgen unten.
+- Live-Check fand einen echten Fehler: `epic_button.gd:63` rief ein nacktes `free()` auf, im Web-Export ein Parse-Fehler, der Startbildschirm lud nicht (vermutlich seit dem Epic-Button vom 04.10.). Behoben mit `queue_free()` (Branch fix/web-epic-button), lokal im Browser bestätigt: Startbild mit "05.10. · 9eae89e".
+- Verifikation: gezielte Tests grün (119); Vollsuite vor dem Fix 1418/0 Fehlschläge, auf dem Fix-Stand läuft sie erneut, danach Merge, Export, Deploy und Live-Hash.
 - Nächste Schritte: iPad, das noch den alten Stand ohne Prüfung hat, App ganz schließen und zweimal öffnen; danach aktualisiert sich jeder Deploy von selbst. Nicht geprüft: Safari/iPad.
 
 ## STAND Audit-Entscheidungen (DA-93, 2026-10-05, Branch fix/audit-entscheidungen)

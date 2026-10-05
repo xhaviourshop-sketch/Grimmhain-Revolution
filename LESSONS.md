@@ -21,3 +21,6 @@ Neue Einträge oben einfügen. Nur bewiesene, wiederverwendbare Erkenntnisse auf
 - Ursache: `Array.shuffle()` nutzt den globalen Generator, den Godot bei jedem Start zufällig setzt. Eine `rg`-Suche nach `randi`/`randf` fand ihn nicht. Zusätzlich hängt der König-Schritt am Überleben (mehr Tote als Lebende).
 - Lösung: Mischen über den seedbaren Test-Generator; Fokusrolle wird nicht übersprungen oder als Ziel gewählt; bedingte Nachtrollen mit festen Szenarien; Regressionstest (gleiche Partie unter mehreren globalen Seeds muss gleich sein).
 - Vermeidung: In Tests und Kern auch nach `.shuffle()`, `pick_random()` und `randomize()` suchen. Einen roten Lauf nicht durch grüne Wiederholung erklären, sondern die Gegenprobe mit dem alten Verhalten führen.
+
+## Web-Export: Headless-Tests sehen Parse-Fehler des Exports nicht (2026-10-05)
+Symptom: Startbildschirm der Web-App lud nicht, Konsole: "Function free() not found in base self" in `epic_button.gd`. Ursache: nacktes `free()` im eigenen Skript; Editor und Headless-Tests kompilieren es, der Web-Export nicht. Lösung: `queue_free()`. Vermeidung: Nach jedem Deploy die Live-URL im Browser öffnen und die Konsole auf Skriptfehler prüfen (Skill grimmhain-deploy), nicht nur Dateigrößen vergleichen.

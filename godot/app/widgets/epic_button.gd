@@ -60,7 +60,7 @@ func _attach(button: GrimmButton, animated: bool) -> void:
 	_mid = load(MID) as Texture2D
 	_right = load(RIGHT) as Texture2D
 	if _left == null or _mid == null or _right == null:
-		free()
+		queue_free()  # nicht free(): im Web-Export ist das ein Parse-Fehler (Startbildschirm lud nicht)
 		return
 	_button = button
 	_animated = animated
