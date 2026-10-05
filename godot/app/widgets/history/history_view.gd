@@ -18,17 +18,22 @@ var _back: GrimmButton
 var _list_view: VBoxContainer
 var _status: GrimmLabel
 var _empty: GrimmLabel
-var _list: VBoxContainer
+var _list_host: VBoxContainer
 var _report_view: VBoxContainer
 var _public_button: GrimmButton
 var _gm_button: GrimmButton
 var _export_info: GrimmLabel
 var _reopened: GrimmLabel
-var _report_scroll: ScrollContainer
-var _report_body: VBoxContainer
+var _report_host: VBoxContainer
+var _report_lines: Array[Dictionary] = []
 var _export: GrimmButton
 var _delete: GrimmButton
 var _feedback: GrimmLabel
+
+
+const LIST_ENTRY_HEIGHT := 64.0
+const LIST_CHROME := 300.0
+const REPORT_CHROME := 400.0  ## Rahmen, Kopf, Fassungswahl, Hinweiszeile, Blätterleiste und Knopfzeile
 
 
 func _init(p_context: AppContext = null) -> void:
@@ -81,19 +86,16 @@ func show_list() -> void:
 
 func refresh_list() -> void:
 	_status.theme_type_variation = &"WarningLabel"
-	for child: Node in _list.get_children():
-		_list.remove_child(child)
+	for child: Node in _list_host.get_children():
+		_list_host.remove_child(child)
 		child.queue_free()
 	var entries := context.history.list()
 	_empty.visible = entries.is_empty()
-	for entry: Dictionary in entries:
-		var b := _button("Report_%s" % _node_part(str(entry["game_id"])), "ui.history.entry_reopened" if str(entry["status"]) == HistoryStore.STATUS_REOPENED else "ui.history.entry", true)
-		b.format_values = {"names": ", ".join(PackedStringArray(entry["names"])), "count": int(entry["players"]), "date": _date(int(entry["saved_at"])),
-			"side": StringName("ui.cockpit.win.kind.%s" % str(entry["side"]))}
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.set_meta("game_id", str(entry["game_id"]))
-		b.pressed.connect(open_report.bind(str(entry["game_id"])))
-		_list.add_child(b)
+	if not entries.is_empty():
+		var pager := CockpitLayers.Pager.new()
+		pager.setup(entries, _list_entry, func(_entry: Dictionary) -> float: return LIST_ENTRY_HEIGHT, _page_room(LIST_CHROME), false)
+		_list_host.add_child(pager)
+		pager.find_child("PageBody", true, false).name = "HistoryList"  # die Zeilen der sichtbaren Seite
 	var load := context.history.load_status
 	var problem := not bool(load["ok"]) or int(load["skipped"]) > 0 or str(load["recovered"]) != ""
 	_status.visible = problem
@@ -148,15 +150,54 @@ func choose_version(version: String) -> void:
 ## Sichtbare Zeilen des geöffneten Berichts (für Tests).
 func report_texts() -> Array[String]:
 	var out: Array[String] = []
-	if _report_body != null:
-		for label: Node in _report_body.get_children():
-			out.append((label as Label).text)
+	for line: Dictionary in _report_lines:
+		out.append(str(line["text"]))
 	return out
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and _title != null and is_report_open():
 		_render_report()
+
+
+func _list_entry(entry: Dictionary) -> Control:
+	var b := _button("Report_%s" % _node_part(str(entry["game_id"])), "ui.history.entry_reopened" if str(entry["status"]) == HistoryStore.STATUS_REOPENED else "ui.history.entry", true)
+	b.format_values = {"names": ", ".join(PackedStringArray(entry["names"])), "count": int(entry["players"]), "date": _date(int(entry["saved_at"])),
+		"side": StringName("ui.cockpit.win.kind.%s" % str(entry["side"]))}
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.set_meta("game_id", str(entry["game_id"]))
+	b.pressed.connect(open_report.bind(str(entry["game_id"])))
+	return b
+
+
+func _report_line(line: Dictionary) -> Control:
+	var label := Label.new()
+	label.add_to_group(&"user_content")  # Text aus Partiedaten, nicht aus festen Übersetzungsschlüsseln
+	label.text = str(line["text"])
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	match str(line["style"]):
+		"title", "heading":
+			label.theme_type_variation = &"HeadingLabel" if str(line["style"]) == "title" else &"SectionLabel"
+		"note":
+			label.theme_type_variation = &"CaptionLabel"
+	return label
+
+
+## Geschätzte Höhe einer Berichtszeile für die Seiteneinteilung.
+func _line_height(line: Dictionary) -> float:
+	var text_length := float(str(line["text"]).length())
+	match str(line["style"]):
+		"title", "heading":
+			return 8.0 + 36.0 * ceilf((text_length + 2.0) / 50.0)
+		"note":
+			return 4.0 + 24.0 * ceilf(text_length / 88.0)
+	return 4.0 + 28.0 * ceilf(text_length / 70.0)
+
+
+## Platz für Listenzeilen auf einer Seite: Fensterhöhe minus der übrigen Teile der Ansicht.
+func _page_room(chrome: float) -> float:
+	return maxf((Engine.get_main_loop() as SceneTree).root.get_visible_rect().size.y - chrome, 3.0 * LIST_ENTRY_HEIGHT)
 
 
 func _build_list(column: VBoxContainer) -> void:
@@ -175,16 +216,10 @@ func _build_list(column: VBoxContainer) -> void:
 	_empty.theme_type_variation = &"MutedLabel"
 	_empty.text_key = "ui.history.empty"
 	_list_view.add_child(_empty)
-	var scroll := ScrollContainer.new()
-	scroll.name = "HistoryScroll"
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.follow_focus = true
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_list_view.add_child(scroll)
-	_list = VBoxContainer.new()
-	_list.name = "HistoryList"
-	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(_list)
+	_list_host = VBoxContainer.new()
+	_list_host.name = "HistoryListHost"
+	_list_host.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_list_view.add_child(_list_host)
 
 
 func _build_report(column: VBoxContainer) -> void:
@@ -219,14 +254,14 @@ func _build_report(column: VBoxContainer) -> void:
 	_report_view.add_child(_reopened)
 	_export_info = GrimmLabel.new()
 	_export_info.name = "HistoryExportInfoLabel"
-	_export_info.theme_type_variation = &"CaptionLabel"
+	_export_info.theme_type_variation = &"BadgeLabel"  # Mondsilber hell: der gedämpfte Hilfstext ist auf dem Tafelgrund zu blass
+	_export_info.set_meta(&"keep_style", true)
+	_export_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_report_view.add_child(_export_info)
-	_report_scroll = ScrollContainer.new()
-	_report_scroll.name = "HistoryReportScroll"
-	_report_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_report_scroll.follow_focus = true
-	_report_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_report_view.add_child(_report_scroll)
+	_report_host = VBoxContainer.new()
+	_report_host.name = "HistoryReportHost"
+	_report_host.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_report_view.add_child(_report_host)
 	var actions := HBoxContainer.new()
 	actions.name = "HistoryActions"
 	actions.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
@@ -271,32 +306,19 @@ func _render_report() -> void:
 	_export_info.text_key = "ui.history.export_info.gm" if gm else "ui.history.export_info.public"
 	_export.text_key = "ui.history.export.gm" if gm else "ui.history.export.public"
 	_export.disabled = reopened
-	_report_body = VBoxContainer.new()
-	_report_body.name = "HistoryReport"
-	_report_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_report_body.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
-	_report_scroll.add_child(_report_body)
-	for line: Dictionary in ReportText.lines(report, _version, not reopened):
-		var label := Label.new()
-		label.add_to_group(&"user_content")  # Text aus Partiedaten, nicht aus festen Übersetzungsschlüsseln
-		label.text = str(line["text"])
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		match str(line["style"]):
-			"title", "heading":
-				label.theme_type_variation = &"HeadingLabel" if str(line["style"]) == "title" else &"SectionLabel"
-			"note":
-				label.theme_type_variation = &"CaptionLabel"
-		_report_body.add_child(label)
+	_report_lines = ReportText.lines(report, _version, not reopened)
+	var pager := CockpitLayers.Pager.new()
+	pager.setup(_report_lines, _report_line, _line_height, _page_room(REPORT_CHROME), false)
+	_report_host.add_child(pager)
 
 
 func _clear_report() -> void:
-	if _report_scroll == null:
+	if _report_host == null:
 		return
-	for child: Node in _report_scroll.get_children():
-		_report_scroll.remove_child(child)
+	for child: Node in _report_host.get_children():
+		_report_host.remove_child(child)
 		child.queue_free()
-	_report_body = null
+	_report_lines = []
 	_reopened.visible = false
 
 
