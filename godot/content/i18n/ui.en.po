@@ -9280,13 +9280,10 @@ msgid "ui.preview.open"
 msgstr "Role preview"
 
 msgid "ui.preview.hint"
-msgstr "Tap a role to see the game master screens one by one. Nothing is saved."
+msgstr "Tap a role. Nothing is saved."
 
 msgid "ui.preview.role"
 msgstr "{name}"
-
-msgid "ui.preview.role_gap"
-msgstr "{name} (gap)"
 
 msgid "ui.preview.gap.start"
 msgstr "Game cannot be built"
@@ -9301,10 +9298,10 @@ msgid "ui.preview.tag"
 msgstr "PREVIEW"
 
 msgid "ui.preview.back"
-msgstr "Back"
+msgstr "Before"
 
 msgid "ui.preview.next"
-msgstr "Next"
+msgstr "After"
 
 msgid "ui.preview.prev_role"
 msgstr "◀ Role"
