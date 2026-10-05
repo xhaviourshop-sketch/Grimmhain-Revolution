@@ -124,7 +124,7 @@ func test_public_version_shows_end_roles_winner_and_condition_but_no_other_secre
 func test_public_version_without_release_has_no_roles_winner_or_condition() -> void:
 	var report := _finished().game_report()
 	var text := _all_text_locked(report)
-	for hidden: String in ["Rollen zum Spielende", "Wahnsinniger Kutscher", "Blutwolf", "Detektiv", "Siegbedingung:", "Gewinnende", "1 · Anna"]:
+	for hidden: String in ["Rollen zum Spielende", "Wahnsinniger Kutscher", "Blutwolf", "Detektiv", "Siegbedingung:", "Gewinnende", "1 · Anna", "Sieger:"]:
 		assert_false(text.contains(hidden), "ohne Freigabe nicht öffentlich: %s" % hidden)
 	assert_true(text.contains("Anna nominiert Dörte") and text.contains("Hinrichtung: Dörte"), "öffentliche Chronik bleibt")
 	assert_true(text.contains("Die Siegbestätigung wurde zurückgenommen"), "Hinweis auf die fehlende Freigabe")

@@ -22,8 +22,8 @@ static func lines(report: Dictionary, version: String, reveal: bool = true) -> A
 	out.append({"style": "line", "text": _t("ui.report.participants", {"count": int(report.get("players", 0)), "names": ", ".join(PackedStringArray(report.get("names", [])))})})
 	out.append({"style": "line", "text": _t("ui.report.played", {"nights": int(report.get("nights", 0)), "days": int(report.get("days", 0))})})
 	var winner: Dictionary = report.get("winner", {})
-	out.append({"style": "line", "text": _t("ui.report.result", {"side": StringName(_side_key(str(winner.get("side", "none"))))})})
-	if show_end:
+	if show_end:  # S-08: eine wieder geöffnete Partie nennt öffentlich keinen Sieger mehr
+		out.append({"style": "line", "text": _t("ui.report.result", {"side": StringName(_side_key(str(winner.get("side", "none"))))})})
 		var reason := str(winner.get("reason_key", ""))
 		if reason != "":
 			out.append({"style": "line", "text": _t("ui.report.win_reason", {"reason": StringName(_reason_key(reason))})})
