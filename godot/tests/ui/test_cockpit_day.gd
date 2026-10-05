@@ -108,6 +108,13 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	var noms: Array = _view(shell)["next"]["nominations"]
 	assert_eq(noms.size(), 1, "genau eine Nominierung trotz Doppeltippen")
 	assert_true(_texts(shell).contains("3 · Cara nominiert 1 · Anna"), "öffentliche Nominierungsliste")
+	assert_true(_texts(shell).contains("Alle Nominierten dürfen sich jetzt nacheinander verteidigen."), "Vorlesezeile zur Verteidigung")
+	await _press(shell, "NominateButton")
+	assert_true(_seat(shell, 3).disabled, "wer heute nominiert hat, ist still gesperrt")
+	assert_false(_seat(shell, 2).disabled, "andere dürfen weiter nominieren")
+	await press(_seat(shell, 2))
+	assert_true(_seat(shell, 1).disabled, "wer heute nominiert wurde, ist als Ziel still gesperrt")
+	await _press(shell, "CancelModeButton")
 	await _press(shell, "ExecuteButton")
 	assert_true(_seat(shell, 2).disabled, "nicht Nominierte nicht wählbar")
 	await press(_seat(shell, 1))

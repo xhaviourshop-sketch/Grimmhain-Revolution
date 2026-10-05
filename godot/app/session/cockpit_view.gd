@@ -503,11 +503,17 @@ static func _candidate(s: GameState, c: WinCandidate) -> Dictionary:
 
 
 ## Personen, die heute nominieren dürfen: Lebende, mit Totengericht nur Tote, mit Geisterstimme zusätzlich die Besitzerin.
-## Ob die Nominierung gilt, entscheidet der Regelkern; dies sind nur die antippbaren Personen.
+## Wer heute schon nominiert hat, fehlt (jede Person nur einmal). Ob die Nominierung gilt, entscheidet der Regelkern.
 static func nominator_ids(s: GameState) -> Array:
 	var out: Array = []
 	var dead_rule := s.death_cards and CardFxDead.dead_rule_active(s)
+	var used := {}
+	for n: Nomination in s.nominations_on_day(s.day_number):
+		if not n.by_judge:
+			used[n.nominator_id] = true
 	for id: int in s.seat_order:
+		if used.has(id):
+			continue
 		var alive := s.players[id].alive
 		if dead_rule:
 			if not alive:

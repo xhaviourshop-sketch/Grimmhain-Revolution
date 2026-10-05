@@ -700,8 +700,10 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 	_text("ui.cockpit.card.day.do", {}, &"MutedLabel")
 	var execute := _button("ExecuteButton", "ui.cockpit.action.execute", GrimmButton.Kind.PRIMARY, &"start_execute")
 	execute.disabled = (next.get("execution_candidates", []) as Array).is_empty() or bool(next.get("execution_cancelled", false))
+	var nominate := _button("NominateButton", "ui.cockpit.action.nominate", GrimmButton.Kind.SECONDARY, &"start_nominate")
+	nominate.disabled = (next.get("nominator_ids", []) as Array).is_empty()  # alle haben schon nominiert: still gesperrt
 	var day_buttons: Array[Control] = [
-		_button("NominateButton", "ui.cockpit.action.nominate", GrimmButton.Kind.SECONDARY, &"start_nominate"),
+		nominate,
 		execute,
 		_button("NoExecutionButton", "ui.cockpit.action.no_execution", GrimmButton.Kind.SECONDARY, &"no_execution"),
 	]
@@ -724,6 +726,7 @@ func _day_public(next: Dictionary, context: Dictionary) -> void:
 				_text("ui.cockpit.card.day.nomination_hidden", {"nominee": nominee}, &"SectionLabel")
 			else:
 				_text("ui.cockpit.card.day.nomination", {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}, &"SectionLabel")
+		_text("ui.cockpit.card.day.defend", {}, &"ReadAloudLabel").name = "DefendLine"
 	var deaths: Array = context.get("day_deaths", [])
 	var effects: Array = context.get("day_effects", [])
 	if not deaths.is_empty() or not effects.is_empty():

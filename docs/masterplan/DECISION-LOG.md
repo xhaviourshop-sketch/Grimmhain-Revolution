@@ -1295,3 +1295,12 @@ Grundsatz: Jedes Fenster, das nur ankündigt, fragt, ob es etwas sagen darf, ode
 5. **Keine Rückfrage** bei „Hinrichten“, „Keine Hinrichtung“ und Sieg bestätigen.
 6. **Dauer-Markierungen:** eigene Silberzeichen für Liebende, Rivalen und Verzaubert (statt eines gemeinsamen „Sonderzustand“).
 7. **Gezeigte Karte im Grimmhain-Stil:** Eisenrahmen der Aktionskarte (Ornamente nur an den Ecken), Knöpfe im Hain-Stil, Titel als `GothicTitleLabel`. Die gotische Schrift (UnifrakturMaguntia, SIL OFL 1.1) liegt zur Freigabe in `Downloads/Grimmhain-Feedback-2/schrift-zur-freigabe/`; ohne Freigabe kein Eintrag ins Godot-Projekt (Assetregister), bis dahin Grundschrift.
+
+## DA-95 Nominierung am Tag (Markus, 05.10.2026, Feedback iPad-Test Teil 3)
+
+Bestätigt und ergänzt DR-03. Abstimmung bleibt am Tisch (RM-DR-008); die App kennt keine Stimmen, keinen Abstimmungsschritt und keine Mehrheit. Im Code gab es keine digitale Abstimmungslogik, die zu entfernen war; geändert wurden Bedienung und Texte.
+
+1. **Nominieren:** Beliebig viele Nominierungen am Tag. Jede Person nominiert höchstens einmal und wird höchstens einmal nominiert. Die Oberfläche sperrt alles andere still (ausgegraute Sitze, „Nominierung erfassen“ gesperrt, wenn niemand mehr nominieren darf), kein Fehlerfenster. Der Regelkern lehnt Verstöße weiter ab. Eingabe: erst wer nominiert, dann wen. Ausnahme: Die verdeckte Nominierung des Korrupten Richters sperrt den Richter nicht sichtbar, sonst würde er verraten.
+2. **Nominierte** tragen am Sitzkreis einen Blutrot-Ring, solange sie leben und der Tag läuft (bis zur Hinrichtung; der Tageswechsel setzt die Nominierung zurück).
+3. **Verteidigung:** Unter der Nominierungsliste steht der Vorlesetext „Alle Nominierten dürfen sich jetzt nacheinander verteidigen.“ Kein eigenes Fenster.
+4. **Entscheidung:** Der Spielleiter tippt nach der Handzeichen-Abstimmung am Tisch die hingerichtete Person an oder „Niemand“ (vorher „Keine Hinrichtung heute …“). Die Prüfkarte bei jeder Hinrichtung bleibt (DA-94). Die Siegprüfung läuft danach automatisch (DA-94 Punkt 3).

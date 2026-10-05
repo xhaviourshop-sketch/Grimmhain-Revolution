@@ -2237,6 +2237,9 @@ msgstr "Diskussion und Abstimmung finden am Tisch statt. Du zählst die Stimmen 
 msgid "ui.cockpit.card.day.no_nominations"
 msgstr "Heute noch keine Nominierung."
 
+msgid "ui.cockpit.card.day.defend"
+msgstr "Alle Nominierten dürfen sich jetzt nacheinander verteidigen."
+
 msgid "ui.cockpit.card.day.nominations"
 msgstr "Nominierungen heute"
 
@@ -2301,7 +2304,7 @@ msgid "ui.cockpit.action.execute"
 msgstr "Hinrichtung …"
 
 msgid "ui.cockpit.action.no_execution"
-msgstr "Keine Hinrichtung heute …"
+msgstr "Niemand"
 
 msgid "ui.cockpit.action.confirm_nomination"
 msgstr "Nominierung bestätigen"
@@ -5603,7 +5606,7 @@ msgid "ui.rulebook.c07.b01"
 msgstr "Nach „Weiter zum Tag“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Nominierungen und das Ergebnis."
 
 msgid "ui.rulebook.c07.b02"
-msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Nominierungen des Tages."
+msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Nominierungen des Tages. Nominierte tragen einen Blutrot-Ring am Sitzkreis, bis sie hingerichtet werden. Unter der Liste steht der Vorlesetext „Alle Nominierten dürfen sich jetzt nacheinander verteidigen.“"
 
 msgid "ui.rulebook.c07.b03"
 msgstr "Nominierung erfassen"
@@ -5618,7 +5621,7 @@ msgid "ui.rulebook.c07.b06"
 msgstr "3. Tippe die nominierte Person an und dann „Nominierung bestätigen“."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal nominieren und wird pro Tag höchstens einmal nominiert. Verstöße lehnt die App mit einer Meldung ab („Diese Nominierung ist heute nicht möglich“). Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Nominierung nimmst du mit „Rückgängig“ zurück."
+msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal nominieren und wird pro Tag höchstens einmal nominiert. Wer heute schon nominiert hat oder nominiert wurde, ist im Sitzkreis ausgegraut; die App sperrt es still. Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Nominierung nimmst du mit „Rückgängig“ zurück."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Stimmhinweise"
@@ -5639,7 +5642,7 @@ msgid "ui.rulebook.c08.b02"
 msgstr "Es folgt immer eine Prüfkarte, bei jeder Hinrichtung, damit ihr Auftauchen nichts über bestimmte Rollen verrät. Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichtung bestätigen“; die Hinrichtung gilt sofort."
 
 msgid "ui.rulebook.c08.b03"
-msgstr "Soll niemand hingerichtet werden, tippst du „Keine Hinrichtung heute …“ und bestätigst die Rückfrage. Erst nach dieser Entscheidung, und wenn kein Schritt und keine Reaktion mehr offen ist, ist „Tag beenden“ möglich."
+msgstr "Soll niemand hingerichtet werden, tippst du „Niemand“. Erst nach dieser Entscheidung, und wenn kein Schritt und keine Reaktion mehr offen ist, ist „Tag beenden“ möglich."
 
 msgid "ui.rulebook.c08.b04"
 msgstr "Todesreaktionen"
