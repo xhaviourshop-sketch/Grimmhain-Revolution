@@ -27,9 +27,11 @@ const SHIMMER_ALLOWED := ThemeTokens.SEAT_SHIMMER  ## dezenter, kühler Schimmer
 const FACE_OVERLAP := 1.04  ## das Porträt reicht etwas unter den Ring, damit kein Spalt bleibt
 const RING_RADIUS := PortraitRingLayout.RING_RADIUS  ## Anteil der Rahmenbreite bis zum äußeren Rand des Rings (Tippfläche, Fokus, Zustandsschein)
 const FACE_UV_SCALE := 0.62
+const GLOW_DENSE_DIAMETER := 90.0  ## ab 13 Personen (Rahmen 86) gilt der schmale Schein
+const GLOW_STEP_DENSE := 0.85
 const PLATE_FONT_SIZE := 13
 const PLATE_PADDING := 6.0  ## Innenabstand im Namensschild (links und rechts zusammen, ohne die Eisenkappen)
-const PLATE_FONT_SIZE_MIN := 10
+const PLATE_FONT_SIZE_FLOOR := 8  ## kleinste Schrift im Schild, wenn ein langer Name sonst nicht passt
 const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ zur Rahmenbreite
 const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
 const HUNT_PULSE_SPEED := 3.4  ## Pulse je Sekunde im Bogenmaß
@@ -40,7 +42,10 @@ const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
 const RING_PRIORITY: Array[String] = ["poisoned", "silenced", "protected"]
 ## Gemalte Bundzeichen der Liebenden und Rivalen am Ring (nur Spielleitung, nachts).
 const BOND_ART := {"lovers": "res://assets/ui/skin/bund_liebende.webp", "rivals": "res://assets/ui/skin/bund_rivalen.webp"}
-const BOND_SCALE := 0.44  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite
+const BOND_SCALE := 0.34  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite
+const BADGE_SCALE := 0.3  ## Kantenlänge der Zustandsabzeichen relativ zur Rahmenbreite (sie bleiben im eigenen Ring)
+const BADGE_FIRST_ANGLE := 50.0  ## Winkel des ersten Abzeichens (Grad, 0 = rechts, 90 = unten)
+const BADGE_STEP_ANGLE := 55.0
 const _STYLE_STATES: Array[String] = ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]
 const _FONT_COLORS: Array[String] = ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color", "font_disabled_color"]
 
@@ -260,10 +265,11 @@ func _plate_cap() -> float:
 
 ## Weicher Schein um den Ring: mehrere dünne Bögen mit abnehmender Deckkraft.
 func _draw_glow(c: Vector2, d: float, color: Color, arcs: int, strength: float) -> void:
+	var step := GLOW_STEP_DENSE if d < GLOW_DENSE_DIAMETER else 2.0  # dichte Ringe: der Schein bleibt schmal, sonst berühren sich die Scheine der Nachbarn (DA-92)
 	for i: int in arcs:
 		var tone := color
 		tone.a = strength * (1.0 - float(i) / float(arcs))
-		draw_arc(c, d * RING_RADIUS + 1.0 + 2.0 * float(i), 0.0, TAU, 56, tone, 2.6, true)
+		draw_arc(c, d * RING_RADIUS + 1.0 + step * float(i), 0.0, TAU, 56, tone, step * 1.3, true)
 
 
 ## Feuerring der Wölfe: blutroter Schein mit heißem Kern, pulsierend (bei reduzierter Bewegung ruhig und voll).
@@ -371,14 +377,14 @@ func _draw_lock(c: Vector2, d: float) -> void:
 func _draw_badges(c: Vector2, d: float) -> void:
 	if not secrets_visible or marks.is_empty() or not alive:
 		return
-	var size_px := maxf(ThemeTokens.BADGE_MIN, d * 0.37)
+	var size_px := maxf(ThemeTokens.BADGE_MIN, d * BADGE_SCALE)
 	var i := 0
 	for kind: Variant in marks:
 		var bond := _bond_texture(str(kind))
 		var side := maxf(size_px, d * BOND_SCALE) if bond != null else size_px
-		var rect := Rect2(c.x + d * 0.5 - side * 0.8 - float(i) * size_px * 0.7, c.y + d * 0.5 - side * 0.85, side, side)
-		if BOND_ART.has(str(kind)):
-			rect.position.y -= d * 0.22  # höher am Rand: der nächste Platz im Kreis deckt die untere Ecke sonst zur Hälfte ab
+		# Das Abzeichen liegt ganz im eigenen Ring unten rechts (weitere reihen sich nach links unten auf), nie über dem Nachbarn.
+		var angle := deg_to_rad(BADGE_FIRST_ANGLE + float(i) * BADGE_STEP_ANGLE)
+		var rect := Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS - side * 0.5) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
 		var texture := bond if bond != null else NightArt.badge(str(kind))
 		if bond != null:  # das Bild ist dunkler Stahl: heller Mondgrund, damit es auf dem Nachtbrett lesbar bleibt
 			var disc := ThemeTokens.MOON_SILVER
@@ -443,11 +449,8 @@ func _draw_plate() -> void:
 	var font := _plate_font()
 	var limit := rect.size.x - 2.0 * _plate_cap() - PLATE_PADDING
 	var font_size := PLATE_FONT_SIZE
-	while font_size > PLATE_FONT_SIZE_MIN and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > limit:
-		font_size -= 1  # lange Namen: erst Schrift bis zur Mindestgröße verkleinern, dann kürzen
-	while font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > limit and text.length() > 3:
-		text = text.trim_suffix("…")
-		text = text.left(text.length() - 1) + "…"
+	while font_size > PLATE_FONT_SIZE_FLOOR and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > limit:
+		font_size -= 1  # lange Namen: die Schrift schrumpft, der Name wird nie mit „…“ gekürzt
 	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 	var color := ThemeTokens.TEXT_MUTED if not alive else ThemeTokens.TEXT_PRIMARY
 	draw_string(font, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + float(font_size) * 0.72) * 0.5), text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)

@@ -131,6 +131,10 @@ static func _plate_spans(seats: Array[Rect2], d: float, size: Vector2) -> Array[
 	var out: Array[Vector2] = []
 	var radius := d * RING_RADIUS
 	var badge_r := badge_radius(d)
+	var mid_x := 0.0
+	for seat: Rect2 in seats:
+		mid_x += seat.position.x + size.x * 0.5
+	mid_x /= float(maxi(seats.size(), 1))
 	for i: int in seats.size():
 		var band_top := seats[i].position.y + NUMBER_BAND + d - PLATE_DROP
 		var cap := plate_max_width(d) * 0.5
@@ -158,8 +162,16 @@ static func _plate_spans(seats: Array[Rect2], d: float, size: Vector2) -> Array[
 				span[side] = minf(span[side], (dx - PLATE_GAP) * 0.5)
 		span.x = maxf(span.x, 0.0)
 		span.y = maxf(span.y, 0.0)
+		var raw := span
 		var narrow := minf(span.x, span.y)
-		span = Vector2(minf(span.x, narrow + PLATE_BIAS), minf(span.y, narrow + PLATE_BIAS))  # zur freien Seite nur begrenzt wachsen (die Tischmitte braucht Platz)
+		# Zur Tischmitte hin nur begrenzt wachsen (die Mitte braucht Platz); nach außen am Rand des Rings darf das Schild bis zur Obergrenze
+		# wachsen, damit auch dicht gedrängte Namen vollständig stehen (nie gekürzt).
+		var outward := signf(x - mid_x) if absf(x - mid_x) > d else 0.0
+		span = Vector2(minf(span.x, narrow + PLATE_BIAS), minf(span.y, narrow + PLATE_BIAS))
+		if outward < 0.0:
+			span.x = minf(raw.x, cap)
+		elif outward > 0.0:
+			span.y = minf(raw.y, cap)
 		if span.x + span.y < PLATE_MIN_WIDTH:
 			span = Vector2(PLATE_MIN_WIDTH * 0.5, PLATE_MIN_WIDTH * 0.5)
 		out.append(span)

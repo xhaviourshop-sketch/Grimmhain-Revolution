@@ -9,7 +9,7 @@ const MAX_SPARKS := 40
 ## Stärke je Stufe als Vielfaches von Akt I (Feedback 5): Akt II doppelt, Akt III dreifach, Akt IV vierfach (Reichweite = Flammenhöhe und Fläche,
 ## Hitze, Helligkeit, Bewegung, Funkenzahl). Funken steigen langsam und treiben leicht zur Seite.
 const BASE_REACH := 28.0  ## Reichweite über den Rahmen in logischen Einheiten bei Stufe 1
-const MAX_REACH := 16.0   ## Obergrenze der Reichweite (Feedback 8): das Feuer bleibt an seiner Karte und läuft nicht in die Nachbarkarte
+const MAX_REACH := 12.0   ## Obergrenze der Reichweite (Feedback 8): das Feuer bleibt an seiner Karte und läuft nicht in die Nachbarkarte
 const BASE_STRENGTH := 1.0
 const BASE_BRIGHT := 0.4
 const BASE_AMP := 0.35
@@ -98,6 +98,7 @@ static func create(part: String, margins: Vector4, p_level: int) -> FireGlow:
 	fire.level = clampi(p_level, 1, 4)
 	fire.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fire.show_behind_parent = true
+	fire.clip_contents = true  # Schein und Funken enden am eigenen Rand (DA-101 (6)): nie über der Nachbarkarte
 	var params := _params(fire.level)
 	var reach := float(params["reach"])
 	fire.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
