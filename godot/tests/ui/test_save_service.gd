@@ -244,6 +244,25 @@ func test_list_shows_public_summary_only_and_discard_renames() -> void:
 	assert_eq(ctx.saves.list().size(), 0, "nicht mehr in der Liste")
 
 
+## CM-02/CM-03: Ein Umschlag mit falsch typisiertem `saved_at` oder `summary` lässt die Liste nicht abbrechen.
+func test_list_survives_wrong_typed_envelope_fields() -> void:
+	var ctx := _context()
+	_start(ctx)
+	ctx.session.start_night()
+	var path := ctx.saves.path_for(ctx.session.round_id())
+	var env: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	env["saved_at"] = [1, 2]
+	env["summary"] = "kein Dictionary"
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(env))
+	file.close()
+	var games := ctx.saves.list()
+	assert_eq(games.size(), 1, "die Partie bleibt in der Liste")
+	if games.size() == 1:
+		assert_true(games[0]["summary"] is Dictionary, "Zusammenfassung ist ein Dictionary")
+		assert_eq(games[0]["saved_at"], 0, "saved_at fällt auf 0 zurück")
+
+
 # --- Spielstand anderer Version (DI-01, Schema 13) -----------------------------------------------------
 
 ## Schreibt die laufende Partie mit Schema 12 (Stand vor der Wiederbelebungsrunde) auf den Datenträger.

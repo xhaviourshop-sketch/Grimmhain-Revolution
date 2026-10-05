@@ -141,8 +141,8 @@ func list() -> Array:
 		for candidate: String in [path_for(id) + ".tmp", path_for(id), path_for(id) + ".bak"]:
 			var env := _envelope(candidate)
 			if not env.is_empty():
-				entry["summary"] = env.get("summary", {})
-				entry["saved_at"] = int(env.get("saved_at", 0))
+				entry["summary"] = DictRead.get_dict(env, "summary")
+				entry["saved_at"] = DictRead.get_int(env, "saved_at")
 				entry["readable"] = true
 				var compat := _compatibility(env)
 				entry["compatible"] = bool(compat["compatible"])
