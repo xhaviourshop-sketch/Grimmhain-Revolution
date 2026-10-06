@@ -4,6 +4,8 @@ extends TestCase
 
 ## Felder des Sitzkreises: 1024x768 (Chip, 908 x 638), 1280x800 (volle Leiste, 1164 x 592) und größere Fenster.
 const AREAS: Array[Vector2] = [Vector2(908.0, 638.0), Vector2(1164.0, 592.0), Vector2(1164.0, 560.0), Vector2(1700.0, 900.0)]
+## Die langen Testnamen der Aufnahmen (capture_feedback9_c.gd --long-names): 24 Personen, einer davon an der Namensgrenze von 32 Zeichen.
+const LONG_NAMES: Array[String] = ["Anna-Katharina von Hohenlohe", "Bartholomäus", "Clara-Sophie Müller-Lüdenscheidt", "Dimitrios Papadopoulos", "Elisabeth", "Friedrich-Wilhelm", "Gustav Adolf", "Hannelore Schmidt-Kowalski", "Ilja", "Johanna Magdalena", "Konstantin", "Leopoldine", "Maximilian-Joseph", "Nora", "Oskar", "Philippa-Charlotte", "Quentin-Maximilian", "Rosalinde", "Sebastian", "Theodora", "Ulrich von Ullersdorf", "Veronika", "Wolfgangamadeus Mozartstein", "Zacharias"]
 
 
 func _circle_hits_rect(center: Vector2, radius: float, rect: Rect2) -> bool:
@@ -24,11 +26,11 @@ func test_diameter_by_group_size() -> void:
 	assert_eq(PortraitRingLayout.diameter_for(6), 104.0, "kleine Runde groß")
 	assert_eq(PortraitRingLayout.diameter_for(8), 96.0, "mittel ab 8")
 	assert_eq(PortraitRingLayout.diameter_for(13), 86.0, "Ziel 86 ab 13")
-	assert_eq(PortraitRingLayout.diameter_for(24), 80.0, "24 Personen: etwas kleiner, damit zweizeilige Schilder (DA-104) zwischen die Nachbarn passen")
+	assert_eq(PortraitRingLayout.diameter_for(24), 72.0, "24 Personen: etwas kleiner, damit mehrzeilige Schilder (DA-104) zwischen die Nachbarn passen")
 	for count: int in range(1, 25):
 		var face := PortraitRingLayout.diameter_for(count) * GameSeatToken.FRAME_SCALE * SkinArt.SEAT_PORTRAIT_RADIUS * 2.0
-		# ab 20 Personen reichen 80 (zweizeilige Schilder brauchen die Höhe); darunter bleibt es bei 48 px
-		assert_true(face >= (48.0 if count < 20 else 45.0), "Porträt groß genug bei %d (%.1f)" % [count, face])
+		# ab 20 Personen reichen 72 (dreizeilige Schilder brauchen die Höhe); darunter bleibt es bei 48 px
+		assert_true(face >= (48.0 if count < 20 else 41.0), "Porträt groß genug bei %d (%.1f)" % [count, face])
 
 
 func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
@@ -40,11 +42,14 @@ func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
 
 ## `mixed`: jeder dritte Name braucht zwei Zeilen, die anderen eine; sonst rechnet jeder Platz mit zwei Zeilen.
 func _check_no_overlap(area: Vector2, count: int, mixed: bool) -> void:
-	var needs: Array[float] = []
+	var needs: Array = []
 	if mixed:
 		for i: int in count:
-			needs.append(200.0 if i % 3 == 0 else 40.0)
-	var result := PortraitRingLayout.layout(count, area, false, needs)
+			needs.append([200.0, 140.0, 100.0] if i % 3 == 0 else [40.0, 40.0, 40.0])
+	_check_result(area, count, PortraitRingLayout.layout(count, area, false, needs))
+
+
+func _check_result(area: Vector2, count: int, result: Dictionary) -> void:
 	var seats: Array = result["seats"]
 	var d := float(result["diameter"])
 	var size: Vector2 = result["token_size"]
@@ -119,8 +124,8 @@ func _grow_x(rect: Rect2) -> Rect2:
 	return rect.grow_individual(h, 0.0, h, 0.0)
 
 
-## Namen am Ring: Schrift mindestens 14 px; passt ein Name nicht in eine Zeile, wird er an Leerzeichen oder Bindestrich in zwei Zeilen
-## getrennt (Bindestrich bleibt in Zeile 1), jede Zeile passt. Nur wenn zwei Zeilen nicht reichen, steht „…“ am Ende von Zeile 2.
+## Namen am Ring: Schrift mindestens 14 px; passt ein Name nicht in eine Zeile, wird er an Leerzeichen oder Bindestrich in zwei, dann drei Zeilen
+## getrennt (Bindestrich bleibt am Zeilenende), jede Zeile passt. „…“ steht nur, wenn auch drei Zeilen nicht reichen.
 func test_plate_text_wraps_to_two_lines_and_keeps_font_size() -> void:
 	assert_true(GameSeatToken.PLATE_FONT_SIZE_FLOOR >= 14 and GameSeatToken.PLATE_FONT_SIZE >= 14, "Schrift mindestens 14 px")
 	var font := ThemeDB.fallback_font
@@ -136,6 +141,41 @@ func test_plate_text_wraps_to_two_lines_and_keeps_font_size() -> void:
 	for lines: Array[String] in [hyphen, spaced, word]:
 		for line: String in lines:
 			assert_true(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= 90.0, "Zeile passt: %s" % line)
-	var cut := GameSeatToken.plate_lines("Wolfgangamadeus Mozartstein", font, 60.0)
-	assert_true(cut.size() == 2 and (cut[1] as String).ends_with("…"), "reicht nichts, wird Zeile 2 gekürzt: %s" % str(cut))
-	assert_true(font.get_string_size(cut[1], HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= 60.0, "gekürzte Zeile passt")
+	var three := GameSeatToken.plate_lines("Clara-Sophie Müller-Lüdenscheidt", font, 90.0)
+	assert_true(three.size() == 3 and not (three[2] as String).ends_with("…"), "drei Zeilen statt Kürzen: %s" % str(three))
+	var cut := GameSeatToken.plate_lines("Wolfgangamadeus Mozartstein", font, 50.0)
+	assert_true(cut.size() == 3 and (cut[2] as String).ends_with("…"), "reicht nichts, wird die letzte Zeile gekürzt: %s" % str(cut))
+	assert_true(font.get_string_size(cut[2], HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= 50.0, "gekürzte Zeile passt")
+
+
+## 24 Personen, alle mit Namen an der Grenze von 32 Zeichen (jeder dritte ein einziges Wort): auch wenn nicht alles passt, überlappt nichts.
+func test_ring_without_overlap_for_24_maximum_names() -> void:
+	var font := ThemeDB.fallback_font
+	var rim := 2.0 * GroveArtData.NAME_PLATE_SHORT_MARGINS.x / GroveArtData.TEXTURE_SCALE + GameSeatToken.PLATE_PADDING
+	for area: Vector2 in AREAS:
+		var needs: Array = []
+		for i: int in 24:
+			var widths: Array[float] = []
+			for w: float in GameSeatToken.plate_line_widths("Wolfgangamadeusmozartsalieri%04d" % i if i % 3 == 0 else "Maximiliane-Friederike von Ho%03d" % i, font):
+				widths.append(w + rim)
+			needs.append(widths)
+		_check_result(area, 24, PortraitRingLayout.layout(24, area, false, needs))
+
+
+## 24 Personen mit den langen Testnamen: kein Name gekürzt, Schrift 14 px, jede Zeile passt in ihr Schild, nichts überlappt (DA-104).
+func test_long_names_at_24_persons_are_never_cut() -> void:
+	var font := ThemeDB.fallback_font
+	var rim := 2.0 * GroveArtData.NAME_PLATE_SHORT_MARGINS.x / GroveArtData.TEXTURE_SCALE + GameSeatToken.PLATE_PADDING
+	for area: Vector2 in [Vector2(876.0, 606.0), Vector2(908.0, 638.0), Vector2(1164.0, 592.0)]:
+		var needs: Array = []
+		for name: String in LONG_NAMES:
+			var widths: Array[float] = []
+			for w: float in GameSeatToken.plate_line_widths(name, font):
+				widths.append(w + rim)
+			needs.append(widths)
+		var result := PortraitRingLayout.layout(24, area, false, needs)
+		_check_result(area, 24, result)
+		for i: int in 24:
+			var lines := GameSeatToken.plate_lines(LONG_NAMES[i], font, float((result["plate_widths"] as Array)[i]) - rim, int((result["plate_lines"] as Array)[i]))
+			for line: String in lines:
+				assert_false(line.ends_with("…"), "%s bei %s: nicht gekürzt (%s)" % [LONG_NAMES[i], str(area), str(lines)])

@@ -180,9 +180,9 @@ func _apply_states() -> void:
 func _layout() -> void:
 	if not is_node_ready():
 		return
-	var needs: Array[float] = []
+	var needs: Array = []
 	for id: int in _order:
-		needs.append(_tokens[id].single_line_plate_width())
+		needs.append(_tokens[id].plate_needs())
 	var result := PortraitRingLayout.layout(_order.size(), size, compact, needs)
 	var rects: Array = result["seats"]
 	for i: int in _order.size():
@@ -191,6 +191,7 @@ func _layout() -> void:
 		token.diameter = float(result["diameter"])
 		token.plate_limit = float((result["plate_widths"] as Array)[i])
 		token.plate_span = (result["plate_spans"] as Array)[i]
+		token.plate_max_lines = int((result["plate_lines"] as Array)[i])
 		token.position = r.position
 		token.size = r.size
 	var c: Rect2 = result["center"]
