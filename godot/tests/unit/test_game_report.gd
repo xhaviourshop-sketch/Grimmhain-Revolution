@@ -114,7 +114,7 @@ func test_public_version_shows_end_roles_winner_and_condition_but_no_other_secre
 	for expected: String in ["Rollen zum Spielende", "Anna: Werwolf", "Bärbel: Blutwolf", "Çelik: Dorfbewohner †", "Dörte: Amalia †", "Émile: Detektiv",
 			"Fjörd: Wahnsinniger Kutscher", "Sieger: Werwölfe", "Siegbedingung: Die Wölfe sind mindestens so viele wie alle anderen Lebenden."]:
 		assert_true(text.contains(expected), "nach bestätigtem Spielende öffentlich: %s" % expected)
-	for secret: String in ["Rudelangriff", "Spielleiterkorrektur", "ursprünglich", "Nur für die Spielleitung", "Verdeckte Nominierung", "Begünstigte", "technische Einzelereignisse"]:
+	for secret: String in ["Rudelangriff", "Spielleiterkorrektur", "ursprünglich", "Nur für die Spielleitung", "Verdeckte Anklage", "Begünstigte", "technische Einzelereignisse"]:
 		assert_false(text.contains(secret), "weiterhin nicht öffentlich: %s" % secret)
 	assert_eq(text.count("Amalia"), 2, "Rolle des Hingerichteten in der Chronik und in der Rollenliste")
 	var lines := ReportText.lines(report, ReportText.PUBLIC)

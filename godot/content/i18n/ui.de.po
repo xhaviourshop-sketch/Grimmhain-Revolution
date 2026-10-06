@@ -2307,7 +2307,7 @@ msgid "ui.cause.spiegelwolf_retaliate"
 msgstr "gespiegelte Hinrichtung (Spiegelwolf)"
 
 msgid "ui.cause.manipulator_nominated"
-msgstr "Nominierung des Manipulators"
+msgstr "Anklage des Manipulators"
 
 msgid "ui.cockpit.card.day.heading"
 msgstr "Tag {number}"
@@ -2751,7 +2751,7 @@ msgid "ui.gm.command.end_night"
 msgstr "Nacht abschließen"
 
 msgid "ui.gm.command.nominate"
-msgstr "Nominierung: {names}"
+msgstr "Anklage: {names}"
 
 msgid "ui.gm.command.decide_execution"
 msgstr "Entscheidung zur Hinrichtung: {names}"
@@ -5534,22 +5534,22 @@ msgid "ui.rulebook.c07.b01"
 msgstr "Nach „Weiter“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Nominierungen und das Ergebnis."
 
 msgid "ui.rulebook.c07.b02"
-msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Nominierungen des Tages. Nominierte tragen einen Blutrot-Ring am Sitzkreis, bis sie hingerichtet werden. Unter der Liste steht der Vorlesetext „Alle Angeklagten dürfen sich jetzt nacheinander verteidigen.“"
+msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Anklagen des Tages. Angeklagte tragen einen Blutrot-Ring am Sitzkreis, bis sie hingerichtet werden. Unter der Liste steht der Vorlesetext „Alle Angeklagten dürfen sich jetzt nacheinander verteidigen.“"
 
 msgid "ui.rulebook.c07.b03"
-msgstr "Nominierung erfassen"
+msgstr "Anklage erfassen"
 
 msgid "ui.rulebook.c07.b04"
 msgstr "1. Tippe „Anklage erfassen“."
 
 msgid "ui.rulebook.c07.b05"
-msgstr "2. Tippe im Sitzkreis die Person an, die nominiert."
+msgstr "2. Tippe im Sitzkreis die Person an, die anklagt."
 
 msgid "ui.rulebook.c07.b06"
-msgstr "3. Tippe die nominierte Person an und dann „Anklage bestätigen“."
+msgstr "3. Tippe die angeklagte Person an und dann „Anklage bestätigen“."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal nominieren und wird pro Tag höchstens einmal nominiert. Wer heute schon nominiert hat oder nominiert wurde, ist im Sitzkreis ausgegraut; die App sperrt es still. Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Nominierung nimmst du mit „Rückgängig“ zurück."
+msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal anklagen und wird pro Tag höchstens einmal angeklagt. Wer heute schon angeklagt hat oder angeklagt wurde, ist im Sitzkreis ausgegraut; die App sperrt es still. Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Anklage nimmst du mit „Rückgängig“ zurück."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Stimmhinweise"
@@ -5564,7 +5564,7 @@ msgid "ui.rulebook.c08.title"
 msgstr "Hinrichtung und Todesreaktionen"
 
 msgid "ui.rulebook.c08.b01"
-msgstr "Nach der Abstimmung am Tisch tippst du die nominierte Person im Sitzkreis an, die hingerichtet wird, und dann „Hinrichten“. (Auch „Hinrichtung …“ führt zur Personenwahl.) Wählbar sind nur Personen, die heute nominiert wurden. Eine Hinrichtung ohne Nominierung ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
+msgstr "Nach der Abstimmung am Tisch tippst du die angeklagte Person im Sitzkreis an, die hingerichtet wird, und dann „Hinrichten“. (Auch „Hinrichtung …“ führt zur Personenwahl.) Wählbar sind nur Personen, die heute angeklagt wurden. Eine Hinrichtung ohne Anklage ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
 
 msgid "ui.rulebook.c08.b02"
 msgstr "Nach dem Antippen erscheint sofort eine Karte, bei jeder Hinrichtung gleich aufgebaut, damit ihr Auftauchen nichts über bestimmte Rollen verrät. Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichten“; die Hinrichtung gilt sofort, ihr Ergebnis (wer stirbt, was ausgelöst wird) steht danach in der Tageskarte. Mit „Rückgängig“ nimmst du sie kurz zurück."
@@ -6114,10 +6114,10 @@ msgid "ui.report.day"
 msgstr "Tag {number}"
 
 msgid "ui.report.judge_nominator"
-msgstr "Verdeckte Nominierung: {judge} hat {nominee} nominiert."
+msgstr "Verdeckte Anklage: {judge} hat {nominee} angeklagt."
 
 msgid "ui.report.execution_override"
-msgstr "Diese Hinrichtung von {name} war eine Spielleiterkorrektur ohne Nominierung."
+msgstr "Diese Hinrichtung von {name} war eine Spielleiterkorrektur ohne Anklage."
 
 msgid "ui.report.execution_redirected"
 msgstr "Die Hinrichtung von {name} wurde gespiegelt: Stattdessen starb {other}."
@@ -7590,7 +7590,7 @@ msgid "ui.card.public.value.rejected_id"
 msgstr "Abgelehnt vom Dorf: {value}"
 
 msgid "ui.card.public.value.nominee_ids"
-msgstr "Nominiert: {value}"
+msgstr "Angeklagt: {value}"
 
 msgid "ui.card.public.value.count"
 msgstr "Anzahl: {value}"

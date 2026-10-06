@@ -2307,7 +2307,7 @@ msgid "ui.cause.spiegelwolf_retaliate"
 msgstr "mirrored execution (Mirror Wolf)"
 
 msgid "ui.cause.manipulator_nominated"
-msgstr "Manipulator nominated"
+msgstr "Manipulator accused"
 
 msgid "ui.cockpit.card.day.heading"
 msgstr "Day {number}"
@@ -2751,7 +2751,7 @@ msgid "ui.gm.command.end_night"
 msgstr "End night"
 
 msgid "ui.gm.command.nominate"
-msgstr "Nomination: {names}"
+msgstr "Accusation: {names}"
 
 msgid "ui.gm.command.decide_execution"
 msgstr "Execution decision: {names}"
@@ -5534,22 +5534,22 @@ msgid "ui.rulebook.c07.b01"
 msgstr "After “Continue” the day begins. Discussion and voting happen at the table. The app has no vote field, counts no votes and calculates no majority. The game master counts and records only the nominations and the result."
 
 msgid "ui.rulebook.c07.b02"
-msgstr "The card shows as reading text who died today (“Died today: …”) and the public list of today's nominations. Nominated players carry a blood-red ring in the seat circle until they are executed. Below the list is the reading text “All accused players may now defend themselves, one after another.”"
+msgstr "The card shows as reading text who died today (“Died today: …”) and the public list of today's accusations. Accused players carry a blood-red ring in the seat circle until they are executed. Below the list is the reading text “All accused players may now defend themselves, one after another.”"
 
 msgid "ui.rulebook.c07.b03"
-msgstr "Recording a nomination"
+msgstr "Recording an accusation"
 
 msgid "ui.rulebook.c07.b04"
 msgstr "1. Tap “Record accusation”."
 
 msgid "ui.rulebook.c07.b05"
-msgstr "2. Tap the person who nominates in the seating circle."
+msgstr "2. Tap the person who accuses in the seating circle."
 
 msgid "ui.rulebook.c07.b06"
-msgstr "3. Tap the nominated person, then “Confirm accusation”."
+msgstr "3. Tap the accused person, then “Confirm accusation”."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Both people must be alive. Each person may nominate once per day and be nominated at most once per day. Anyone who has already nominated or been nominated today is greyed out in the seat circle; the app blocks it silently. An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded nomination with “Undo”."
+msgstr "Both people must be alive. Each person may accuse once per day and be accused at most once per day. Anyone who has already accused or been accused today is greyed out in the seat circle; the app blocks it silently. An exception is only possible as a game master correction with a reason (chapter 10). You take back an accidentally recorded accusation with “Undo”."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Vote hints"
@@ -5564,7 +5564,7 @@ msgid "ui.rulebook.c08.title"
 msgstr "Execution and death reactions"
 
 msgid "ui.rulebook.c08.b01"
-msgstr "After the vote at the table you tap the nominated person to be executed in the seat circle, then “Execute”. (“Execution …” also leads to the person choice.) Only people nominated today can be chosen. An execution without nomination is only possible as a game master correction (chapter 10)."
+msgstr "After the vote at the table you tap the accused person to be executed in the seat circle, then “Execute”. (“Execution …” also leads to the person choice.) Only people accused today can be chosen. An execution without accusation is only possible as a game master correction (chapter 10)."
 
 msgid "ui.rulebook.c08.b02"
 msgstr "A card appears right after the tap, built the same way for every execution, so that its appearance reveals nothing about certain roles. Either it names a special case (such as a mirroring, a defence question or the question about the curse duration) or “Nothing special”. Answer the question on the card and tap “Execute”; the execution applies at once, and its result (who dies, what is triggered) then stands in the day card. “Undo” takes it back briefly."
@@ -6114,10 +6114,10 @@ msgid "ui.report.day"
 msgstr "Day {number}"
 
 msgid "ui.report.judge_nominator"
-msgstr "Covered nomination: {judge} nominated {nominee}."
+msgstr "Covered accusation: {judge} accused {nominee}."
 
 msgid "ui.report.execution_override"
-msgstr "This execution of {name} was a game master correction without a nomination."
+msgstr "This execution of {name} was a game master correction without an accusation."
 
 msgid "ui.report.execution_redirected"
 msgstr "The execution of {name} was mirrored: {other} died instead."
@@ -7590,7 +7590,7 @@ msgid "ui.card.public.value.rejected_id"
 msgstr "Refused by the village: {value}"
 
 msgid "ui.card.public.value.nominee_ids"
-msgstr "Nominated: {value}"
+msgstr "Accused: {value}"
 
 msgid "ui.card.public.value.count"
 msgstr "Number: {value}"
