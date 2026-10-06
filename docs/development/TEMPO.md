@@ -41,3 +41,23 @@ Reine Wartezeit auf Werkzeuge (Messwerte oben, Ablauf wie in PROGRESS.md beschri
 | **Summe Wartezeit** | **ca. 32 min** | **ca. 10 min** |
 
 Dazu kommt die Umsetzung selbst. Mit zwei parallelen Entwicklern (Feedback-6 und -7 berühren verschiedene Dateien) und Prüfern, die gleichzeitig laufen (Erstlauf: 2 bis 3 min), schätze ich einen Auftrag dieser Größe auf **ca. 60 statt ca. 100 Minuten**. Die Umsetzungszeit ist geschätzt, nicht gemessen.
+
+## Paketgröße (Feedback 9, Teil P, 06.10.2026)
+
+Web-Export `index.pck` (nur Export in einen Temp-Ordner, kein Deploy), gleicher Stand f5588c8:
+
+| Posten | Vorher | Nachher |
+|---|---|---|
+| `index.pck` gesamt | 55 807 276 Byte | 40 807 244 Byte (Ziel unter 42 MB erreicht) |
+| Rollenbilder `night/role-art` (72 Bilder, 512x512) im Import | 17 642 354 Byte (verlustfrei) | 2 642 240 Byte (verlustarm, Qualität 0,8) |
+| Rollenkarten `cards/de` + `cards/en` (144 Bilder) | 12 779 742 Byte | unverändert |
+| Wappen `night/emblems` (72 PNG) | 4 391 596 Byte | unverändert |
+| `.godot/imported` gesamt | 55 170 571 Byte | ca. 40 170 457 Byte |
+
+Größte Einzelposten in `.godot/imported` vorher: musik-start 2,88 MB, scene-night-base 2,17 MB, village-night 2,02 MB, start-hintergrund 1,49 MB, ladebild 1,08 MB, wortmarke 0,81 MB, start-nebel 0,71 MB, start-logo 0,63 MB, epic_button_mid 0,33 MB, splash-grimmhain 0,32 MB. Die Liste bleibt nach der Änderung gleich; die 72 Rollenbilder waren einzeln nie unter den Größten, zusammen aber der größte Block.
+
+Entscheidungen:
+- **Rollenbilder:** Sie sind nicht sichtbar (`ROLE_ART_ON_CARD := false`), lagen aber verlustfrei im Paket. Nur die `.import`-Dateien wurden auf verlustarm (Modus 1, Qualität 0,8) gestellt, die Quellbilder bleiben unverändert. Das allein bringt 15,0 MB.
+- **Rollenkarten bleiben bei 1024 Pixel Höhe.** Die Vollbildkarte ist in App-Einheiten rund 735 hoch (768 minus Rand). Der Stretch-Modus ist `canvas_items`, die Zeichenfläche im Web hat Gerätepixel: auf einem iPad mit 1536 Pixel Höhe sind das etwa 1470 Pixel. 1024 liegt also schon unter der Anzeige; ein Verkleinern auf 768 würde sichtbar weicher. Da das Ziel ohne die Karten erreicht ist, bleiben sie unverändert (Bilder 1024x768 in `Screenshots/Feedback-9/P`).
+- **Wappen bleiben verlustfrei:** Die scharfen Silberkanten bekämen bei verlustarmer Kompression Ränder. Das Ziel ist ohne sie erreicht, der Gewinn (ca. 3 MB) rechtfertigt das Risiko nicht.
+- **Karten erst laden, wenn gebraucht:** Karten werden nur per `load()` in `role_card_image.gd` geladen (beim Öffnen der Karte), nirgends per `preload` oder beim Start. Das `.pck` wird im Web aber immer ganz heruntergeladen; ein zweites Paket zum Nachladen wurde nicht gebaut und bringt erst bei deutlich mehr Inhalt etwas.
