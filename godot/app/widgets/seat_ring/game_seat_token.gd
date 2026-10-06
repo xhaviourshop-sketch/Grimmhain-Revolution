@@ -603,7 +603,7 @@ static func _break_options(text: String, any_break: bool) -> Array[Vector3i]:
 		elif prev == "-":
 			if text[i] != " ":
 				out.append(Vector3i(i, i, 0))
-		elif any_break and text[i] != " " and text[i] != "-" and i >= 3 and text.length() - i >= 3:
+		elif any_break and text[i] != " " and text[i] != "-" and _letters_before(text, i) >= 3 and _letters_after(text, i) >= 3:
 			out.append(Vector3i(i, i, 1))
 	return out
 
@@ -629,6 +629,8 @@ static func _best_split(text: String, font: Font, k: int, any_break: bool, memo:
 			var middle := o2.x - o1.y
 			if middle < 1 or ((o1.z == 1 or o2.z == 1) and middle < 3):
 				continue
+			if o1.z == 1 and o2.z == 1 and _letters_after(text, o1.y) >= middle:
+				continue  # ein Wort wird nicht zweimal zerlegt
 			var candidate3: Array[String] = [first, text.substr(o1.y, middle) + ("-" if o2.z == 1 else ""), text.substr(o2.y)]
 			var widest3 := _memo_widest(candidate3, font, memo)
 			var score3 := widest3 + (MIDWORD_PENALTY * float(o1.z + o2.z) if room < INF else 0.0)
@@ -636,6 +638,21 @@ static func _best_split(text: String, font: Font, k: int, any_break: bool, memo:
 				best = candidate3
 				best_width = score3
 	return best
+
+
+## Buchstaben des Wortteils (zwischen Leerzeichen und Bindestrichen) vor und ab der Stelle `i`: eine Trennung im Wort lässt auf jeder Seite mindestens drei.
+static func _letters_before(text: String, i: int) -> int:
+	var n := 0
+	while i - n - 1 >= 0 and text[i - n - 1] != " " and text[i - n - 1] != "-":
+		n += 1
+	return n
+
+
+static func _letters_after(text: String, i: int) -> int:
+	var n := 0
+	while i + n < text.length() and text[i + n] != " " and text[i + n] != "-":
+		n += 1
+	return n
 
 
 static func _memo_widest(lines: Array[String], font: Font, memo: Dictionary) -> float:
