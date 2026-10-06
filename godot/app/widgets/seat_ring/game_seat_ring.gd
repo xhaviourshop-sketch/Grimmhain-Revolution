@@ -180,7 +180,10 @@ func _apply_states() -> void:
 func _layout() -> void:
 	if not is_node_ready():
 		return
-	var result := PortraitRingLayout.layout(_order.size(), size, compact)
+	var needs: Array[float] = []
+	for id: int in _order:
+		needs.append(_tokens[id].single_line_plate_width())
+	var result := PortraitRingLayout.layout(_order.size(), size, compact, needs)
 	var rects: Array = result["seats"]
 	for i: int in _order.size():
 		var r: Rect2 = rects[i]
