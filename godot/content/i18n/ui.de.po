@@ -2178,7 +2178,7 @@ msgid "ui.morning.notice.bells"
 msgstr "„Die Glocken des Nachtwächters läuten.“"
 
 msgid "ui.morning.notice.judge"
-msgstr "„{name} gilt heute als nominiert.“"
+msgstr "„{name} gilt heute als angeklagt.“"
 
 msgid "ui.morning.private.death"
 msgstr "{name} war {role} und ist gestorben: {cause}."
@@ -2568,7 +2568,7 @@ msgid "ui.cockpit.gm.start.set_role"
 msgstr "Rolle ändern …"
 
 msgid "ui.cockpit.gm.start.execute"
-msgstr "Hinrichten ohne Nominierung …"
+msgstr "Hinrichten ohne Anklage …"
 
 msgid "ui.cockpit.gm.start.declare_winner"
 msgstr "Sieger erklären …"
@@ -2586,7 +2586,7 @@ msgid "ui.gm.kind.kill"
 msgstr "Person töten"
 
 msgid "ui.gm.kind.execute"
-msgstr "Hinrichten ohne Nominierung"
+msgstr "Hinrichten ohne Anklage"
 
 msgid "ui.gm.kind.revive"
 msgstr "Person wiederbeleben"
@@ -5630,7 +5630,7 @@ msgid "ui.rulebook.c10.b05"
 msgstr "Korrekturen"
 
 msgid "ui.rulebook.c10.b06"
-msgstr "Unter „Korrekturen (mit Begründung, protokolliert)“ stehen: „Person töten …“ (mit oder ohne Todesfolgen), „Person wiederbeleben …“, „Rolle ändern …“, „Status ändern …“, „Hinrichten ohne Nominierung …“ (nur am Tag) und „Sieger erklären …“. „Status ändern …“ bietet nur Korrekturen an, die die App für diese Person im aktuellen Zustand annimmt."
+msgstr "Unter „Korrekturen (mit Begründung, protokolliert)“ stehen: „Person töten …“ (mit oder ohne Todesfolgen), „Person wiederbeleben …“, „Rolle ändern …“, „Status ändern …“, „Hinrichten ohne Anklage …“ (nur am Tag) und „Sieger erklären …“. „Status ändern …“ bietet nur Korrekturen an, die die App für diese Person im aktuellen Zustand annimmt."
 
 msgid "ui.rulebook.c10.b07"
 msgstr "Der Ablauf: Art wählen, Person im Sitzkreis antippen, Pflichtangaben machen, Warnung lesen und eine Begründung eingeben. Danach zeigt „Letzte Korrektur: das hat sich geändert“ die Folgen. Ändert sich der Spielstand zwischen Auswahl und Bestätigung, wird die Auswahl verworfen und nichts geändert."
@@ -5833,7 +5833,7 @@ msgid "ui.role.kopfgeldjaeger.lex.act"
 msgstr "Aufruf: (Nacht nach einer Hinrichtung) Die App kündigt die Rolle „Kopfgeldjäger“ in der Nachtreihenfolge an. Lies vor: „Kopfgeldjäger, erwache. Hier ist deine Liste.“\nAuswählen oder ablesen: Nur für dich: Wähle drei andere Lebende mit mindestens einem Wolf für die Liste.\nVorlesen oder zeigen: Zeige dem Kopfgeldjäger die drei Namen. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.korrupter_richter.lex.act"
-msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Korrupter Richter“ in der Nachtreihenfolge an. Lies vor: „Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“\nAuswählen oder ablesen: Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten. Die verdeckte Nominierung erscheint öffentlich nur als „… gilt heute als nominiert“; ihr Stimmhinweis steht im Bereich „Rollen“ unter „Stimmhinweise“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Korrupter Richter“ in der Nachtreihenfolge an. Lies vor: „Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“\nAuswählen oder ablesen: Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten. Die verdeckte Nominierung erscheint öffentlich nur als „… gilt heute als angeklagt“; ihr Stimmhinweis steht im Bereich „Rollen“ unter „Stimmhinweise“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.kriegerin_des_lichts.lex.act"
 msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Kriegerin des Lichts“ in der Nachtreihenfolge an. Lies vor: „Kriegerin des Lichts, erwache. Willst du heute angreifen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, die die Kriegerin angreift. Ohne Angriff: verzichten.\nVorlesen oder zeigen: Zeige der Kriegerin, ob sie einen Wolf getroffen hat. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."

@@ -2178,7 +2178,7 @@ msgid "ui.morning.notice.bells"
 msgstr "“The night watchman’s bells are ringing.”"
 
 msgid "ui.morning.notice.judge"
-msgstr "“{name} counts as nominated today.”"
+msgstr "“{name} counts as accused today.”"
 
 msgid "ui.morning.private.death"
 msgstr "{name} was {role} and died: {cause}."
@@ -2568,7 +2568,7 @@ msgid "ui.cockpit.gm.start.set_role"
 msgstr "Change a role …"
 
 msgid "ui.cockpit.gm.start.execute"
-msgstr "Execute without nomination …"
+msgstr "Execute without accusation …"
 
 msgid "ui.cockpit.gm.start.declare_winner"
 msgstr "Declare the winner …"
@@ -2586,7 +2586,7 @@ msgid "ui.gm.kind.kill"
 msgstr "Kill a person"
 
 msgid "ui.gm.kind.execute"
-msgstr "Execute without nomination"
+msgstr "Execute without accusation"
 
 msgid "ui.gm.kind.revive"
 msgstr "Revive a person"
@@ -5630,7 +5630,7 @@ msgid "ui.rulebook.c10.b05"
 msgstr "Corrections"
 
 msgid "ui.rulebook.c10.b06"
-msgstr "Under “Corrections (with reason, logged)” you find: “Kill a person …” (with or without consequences), “Revive a person …”, “Change a role …”, “Change status …”, “Execute without nomination …” (during the day only) and “Declare the winner …”. “Change status …” only offers corrections the app accepts for this person in the current state."
+msgstr "Under “Corrections (with reason, logged)” you find: “Kill a person …” (with or without consequences), “Revive a person …”, “Change a role …”, “Change status …”, “Execute without accusation …” (during the day only) and “Declare the winner …”. “Change status …” only offers corrections the app accepts for this person in the current state."
 
 msgid "ui.rulebook.c10.b07"
 msgstr "The flow: choose the kind, tap a person in the seating circle, give the required details, read the warning and enter a reason. Afterwards “Last correction: what changed” shows the consequences. If the game state changes between selection and confirmation, the selection is discarded and nothing is changed."
@@ -5833,7 +5833,7 @@ msgid "ui.role.kopfgeldjaeger.lex.act"
 msgstr "Call: (night after an execution) The app announces the role “Bounty Hunter” in the night order. Read out: “Bounty Hunter, wake up. Here is your list.”\nSelect or read: For you only: choose three other living people with at least one wolf for the list.\nRead out or show: Show the Bounty Hunter the three names. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
 
 msgid "ui.role.korrupter_richter.lex.act"
-msgstr "Call: (every night, optional) The app announces the role “Corrupt Judge” in the night order. Read out: “Corrupt Judge, wake up. Point to the person who counts as nominated tomorrow.”\nSelect or read: Tap the person the Judge marks (may be themself). Without a choice: decline. Publicly the covered nomination only appears as “… counts as nominated today”; its vote hint is in the “Roles” area under “Vote hints”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+msgstr "Call: (every night, optional) The app announces the role “Corrupt Judge” in the night order. Read out: “Corrupt Judge, wake up. Point to the person who counts as nominated tomorrow.”\nSelect or read: Tap the person the Judge marks (may be themself). Without a choice: decline. Publicly the covered nomination only appears as “… counts as accused today”; its vote hint is in the “Roles” area under “Vote hints”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
 
 msgid "ui.role.kriegerin_des_lichts.lex.act"
 msgstr "Call: (every night until used, optional) The app announces the role “Warrior of Light” in the night order. Read out: “Warrior of Light, wake up. Do you want to attack tonight? Point to the person.”\nSelect or read: Tap the person the Warrior attacks. Without an attack: decline.\nRead out or show: Show the Warrior whether they hit a wolf. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
