@@ -2,10 +2,13 @@ extends SceneTree
 ## Screenshots Feedback 9b, Teil A (Sitzring), 1024x768 (24 Personen auch 1280x800), braucht einen echten Renderer:
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy --resolution 1024x768 -s res://tools/capture_feedback9b_a.gd -- --out=<Ordner>
 ## Bilder: Ring mit 8, 16 und 24 Personen (Nacht, lange Namen), Liebende und Rivalen am Ring, voller Name bei aufliegendem Finger,
-## Tag mit Nominierung. Druckt je Ring die kleinste Schriftgröße und die Zahl gekürzter Namen.
+## Tag mit Nominierung. Druckt je Ring die Schriftgröße und wie viele Schilder ein-, zwei- und dreizeilig oder gekürzt sind.
+## Der gedrückte volle Name (voller-name-gedrueckt) zeigt einen Namen an der Grenze von 32 Zeichen in einem Wort, der auch in drei Zeilen nicht passt.
 var OUT := "user://shots"
 var ctx: AppContext
 var shell: AppShell
+var _long_first: bool = false  ## Platz 1 trägt den langen Namen für „voller-name-gedrueckt“
+const LONG_FIRST := "Wolfgangamadeusmozartsalieri00"
 const NAMES := ["Maximilian", "Friederike", "Konstantin", "Anna", "Tom", "Lena", "Paul", "Mia", "Jonas", "Clara", "Felix", "Sophie",
 	"Leopold", "Annabelle", "Bartholomäus", "Katharina", "Ben", "Elif", "Sami", "Nora", "Oskar", "Johanna", "Theodor", "Zoë"]
 
@@ -26,10 +29,6 @@ func _initialize() -> void:
 			_ring().set_marks({6: ["poisoned"], 3: ["marked"], 2: ["lovers", "poisoned"]})
 			await _save("weitere-markierungen")
 		if n == 24:
-			var token := _ring().token_for(1)
-			token.set_full_name_shown(true)
-			await _save("voller-name-gedrueckt")
-			token.set_full_name_shown(false)
 			_ring().set_marks({1: ["lovers"], 14: ["lovers"], 2: ["rivals"], 3: ["rivals"], 12: ["rivals"]})
 			await _save("bund-24")
 	root.size = Vector2i(1280, 800)
@@ -37,6 +36,14 @@ func _initialize() -> void:
 	_report(24)
 	await _save("ring-24")
 	root.size = Vector2i(1024, 768)
+	_long_first = true
+	await _boot(24, "b9a-24l")
+	var token := _ring().token_for(1)
+	print("gedrueckt: ", token.tooltip_text, " gekuerzt ", token.is_name_truncated(), " Zeilen ", token.call("_plate_lines"))
+	token.set_full_name_shown(true)
+	await _save("voller-name-gedrueckt")
+	token.set_full_name_shown(false)
+	_long_first = false
 	await _nominated()
 	quit(0)
 
@@ -47,18 +54,14 @@ func _ring() -> GameSeatRing:
 
 func _report(n: int) -> void:
 	var cut := 0
-	var two := 0
-	var mid := 0
+	var by_lines := [0, 0, 0]
 	for t: GameSeatToken in _ring().tokens():
+		var ls: Array[String] = t.call("_plate_lines")
+		by_lines[mini(ls.size(), 3) - 1] += 1
 		if t.is_name_truncated():
 			cut += 1
-			print("  gekuerzt: ", t.tooltip_text, " Schildbreite ", t.plate_limit, " Zeilen ", t.call("_plate_lines"))
-		if t.plate_rect().size.y > PortraitRingLayout.PLATE_HEIGHT + 1.0:
-			two += 1
-			var ls: Array[String] = t.call("_plate_lines")
-			if ls[0].ends_with("-") and not t.tooltip_text.contains(ls[0] + ls[1]) and not ls[1].ends_with("…"):
-				mid += 1
-	print("ring %d (%dx%d): kleinste Schrift %d px, zweizeilig %d, davon in Wortmitte getrennt %d, gekuerzt %d von %d" % [n, root.size.x, root.size.y, GameSeatToken.PLATE_FONT_SIZE, two, mid, cut, n])
+			print("  gekuerzt: ", t.tooltip_text, " Schildbreite ", t.plate_limit, " Zeilen ", ls)
+	print("ring %d (%dx%d): Schrift %d px, einzeilig %d, zweizeilig %d, dreizeilig %d, gekuerzt %d von %d" % [n, root.size.x, root.size.y, GameSeatToken.PLATE_FONT_SIZE, by_lines[0], by_lines[1], by_lines[2], cut, n])
 
 
 func _boot(n: int, round_id: String) -> void:
@@ -86,7 +89,7 @@ func _boot(n: int, round_id: String) -> void:
 	var order: Array[int] = []
 	for i: int in n:
 		map[str(i + 1)] = roles[i]
-		persons.append({"id": i + 1, "name": NAMES[i]})
+		persons.append({"id": i + 1, "name": LONG_FIRST if i == 0 and _long_first else NAMES[i]})
 		order.append(i + 1)
 	var r: CommandResult = ctx.session.submit(Command.start_game({"round_id": round_id, "seed": 5, "assignment": "manual",
 		"players": persons, "seat_order": order, "roles": map}))
