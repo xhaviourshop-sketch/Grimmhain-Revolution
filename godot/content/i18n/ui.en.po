@@ -156,7 +156,7 @@ msgid "ui.setup.entry.heading"
 msgstr "Enter names"
 
 msgid "ui.setup.entry.hint"
-msgstr "Type a name and press Enter or “Add”. Several names: separate them with a comma or “and”."
+msgstr "Type a name. Separate several with commas."
 
 msgid "ui.setup.input.placeholder"
 msgstr "Enter a name"
@@ -174,7 +174,7 @@ msgid "ui.setup.import.hint"
 msgstr "One name per line."
 
 msgid "ui.setup.import.placeholder"
-msgstr "Anna, Ben; Clara …"
+msgstr "Anna\nBen\nClara"
 
 msgid "ui.setup.import.confirm"
 msgstr "Add names"
@@ -5510,7 +5510,7 @@ msgid "ui.rulebook.c06.b05"
 msgstr "The morning report has two parts. You read “For the village” aloud: who died, who is back, who was chosen (for example by the Judge) and other public events."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "“For you” is for the game master only. It lists bonds, protection, poison and rescues. It also lists causes and dropped steps. One sentence per point, with names."
+msgstr "“For you” is for the game master only. It lists bonds, protection, poison, rescues, causes and skipped steps. One sentence per point, with names."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "“Continue” starts the day."
@@ -5994,10 +5994,10 @@ msgid "ui.history.version.gm"
 msgstr "Game master report"
 
 msgid "ui.history.export_info.public"
-msgstr "The public version is exported: what was made known at the table plus all roles at the end of the game, the winners and the winning condition. A file that has already been passed on cannot be recalled."
+msgstr "Saves what was known at the table. Also all roles and the winners. A shared file cannot be recalled."
 
 msgid "ui.history.export_info.gm"
-msgstr "The game master version is exported: it contains all roles, causes and secret details."
+msgstr "Saves everything, secrets included."
 
 msgid "ui.history.export.public"
 msgstr "Save text"

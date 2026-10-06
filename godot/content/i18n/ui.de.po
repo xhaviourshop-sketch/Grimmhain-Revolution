@@ -156,7 +156,7 @@ msgid "ui.setup.entry.heading"
 msgstr "Namen eingeben"
 
 msgid "ui.setup.entry.hint"
-msgstr "Einen Namen eingeben und mit Enter oder „Hinzufügen“ übernehmen. Mehrere Namen: mit Komma oder „und“ trennen."
+msgstr "Namen eingeben. Mehrere mit Komma trennen."
 
 msgid "ui.setup.input.placeholder"
 msgstr "Name eingeben"
@@ -174,7 +174,7 @@ msgid "ui.setup.import.hint"
 msgstr "Ein Name pro Zeile."
 
 msgid "ui.setup.import.placeholder"
-msgstr "Anna, Ben; Clara …"
+msgstr "Anna\nBen\nClara"
 
 msgid "ui.setup.import.confirm"
 msgstr "Namen übernehmen"
@@ -5994,10 +5994,10 @@ msgid "ui.history.version.gm"
 msgstr "Spielleiterbericht"
 
 msgid "ui.history.export_info.public"
-msgstr "Exportiert wird die öffentliche Fassung: die am Tisch bekannten Angaben sowie alle Rollen zum Spielende, die Sieger und die Siegbedingung. Eine schon weitergegebene Datei lässt sich nicht zurückrufen."
+msgstr "Speichert, was am Tisch bekannt war. Dazu alle Rollen und die Sieger. Weitergegebenes lässt sich nicht zurückholen."
 
 msgid "ui.history.export_info.gm"
-msgstr "Exportiert wird die Spielleiterfassung: Sie enthält alle Rollen, Ursachen und geheimen Angaben."
+msgstr "Speichert alles, auch Geheimes."
 
 msgid "ui.history.export.public"
 msgstr "Text speichern"
