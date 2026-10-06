@@ -1,5 +1,5 @@
 extends SceneTree
-## Screenshots Feedback 9, Teil R (Sitzring), 1024x768, braucht einen echten Renderer:
+## Screenshots Feedback 9, Teil R (Sitzring), 1024x768 (24 Personen auch 1280x800), braucht einen echten Renderer:
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy --resolution 1024x768 -s res://tools/capture_feedback9_r.gd -- --out=<Ordner>
 ## Bilder: Ring mit 8, 16 und 24 Personen (Nacht, lange Namen), Liebende und Rivalen am Ring, voller Name bei aufliegendem Finger,
 ## Tag mit Nominierung. Druckt je Ring die kleinste Schriftgröße und die Zahl gekürzter Namen.
@@ -21,13 +21,22 @@ func _initialize() -> void:
 		_report(n)
 		await _save("ring-%d" % n)
 		if n == 8:
-			_ring().set_marks({1: ["lovers"], 4: ["lovers"], 2: ["rivals"], 6: ["rivals", "poisoned"], 3: ["protected"]})
+			_ring().set_marks({1: ["lovers"], 4: ["lovers"], 2: ["rivals"], 6: ["rivals"]})
 			await _save("bund-liebende-rivalen")
+			_ring().set_marks({6: ["poisoned"], 3: ["marked"], 2: ["lovers", "poisoned"]})
+			await _save("weitere-markierungen")
 		if n == 24:
 			var token := _ring().token_for(1)
 			token.set_full_name_shown(true)
 			await _save("voller-name-gedrueckt")
 			token.set_full_name_shown(false)
+			_ring().set_marks({1: ["lovers"], 14: ["lovers"], 2: ["rivals"], 3: ["rivals"], 12: ["rivals"]})
+			await _save("bund-24")
+	root.size = Vector2i(1280, 800)
+	await _boot(24, "r9-24w")
+	_report(24)
+	await _save("ring-24")
+	root.size = Vector2i(1024, 768)
 	await _nominated()
 	quit(0)
 
@@ -105,5 +114,5 @@ func _fr(n: int) -> void:
 func _save(label: String) -> void:
 	await _fr(10)
 	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png(OUT.path_join("%s-1024x768.png" % label))
+	root.get_texture().get_image().save_png(OUT.path_join("%s-%dx%d.png" % [label, root.size.x, root.size.y]))
 	print("bild ", label)
