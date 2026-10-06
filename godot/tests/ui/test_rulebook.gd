@@ -191,24 +191,25 @@ func test_language_switch_keeps_the_open_chapter() -> void:
 
 # --- Layout --------------------------------------------------------------------------------------------------------
 
-## Kopf und Fuß bleiben im Fenster, der Text scrollt, nichts läuft seitlich über.
+## Kopf und Fuß bleiben im Fenster, der Text blättert (keine Scrollfläche), jede Seite liegt ganz in der Textfläche.
 func _check_chapter_layout(book: RuleBook, label: String) -> void:
 	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
-	var scroll := find_node(book, "RulebookChapterScroll") as ScrollContainer
-	var body := find_node(book, "RulebookChapter") as Control
+	var host := find_node(book, "RulebookChapterHost") as Control
 	assert_true(inside(rect_of(book), viewport), "%s: Regelbuch im Fenster (%s)" % [label, rect_of(book)])
-	assert_true(body.size.x <= scroll.size.x + 0.5, "%s: kein horizontaler Überlauf" % label)
+	assert_true(host.find_children("*", "ScrollContainer", true, false).is_empty(), "%s: nichts scrollt" % label)
 	for name: String in ["RulebookBackToTocButton", "RulebookLanguageButton", "RulebookPrevButton", "RulebookNextButton", "RulebookPositionLabel"]:
 		var c := find_node(book, name) as Control
 		assert_true(c != null and c.is_visible_in_tree() and inside(rect_of(c), viewport), "%s: %s sichtbar im Fenster" % [label, name])
 		if c is BaseButton:
 			assert_true(c.size.x >= 47.5 and c.size.y >= 47.5, "%s: %s mindestens 48×48" % [label, name])
-	assert_true(scroll.size.y >= 150.0, "%s: Text behält Platz (%.0f)" % [label, scroll.size.y])
-	scroll.scroll_vertical = int(body.size.y)
-	await frames(2)
-	var last := body.get_child(body.get_child_count() - 1) as Control
-	assert_true(inside(rect_of(last), rect_of(scroll), 1.0), "%s: letzter Absatz nach Scrollen sichtbar" % label)
-	scroll.scroll_vertical = 0
+	assert_true(host.size.y >= 150.0, "%s: Text behält Platz (%.0f)" % [label, host.size.y])
+	for page: int in book.page_count():
+		var body := find_node(book, "PageBody") as Control
+		for block: Node in body.get_children():
+			assert_true(inside(rect_of(block as Control), rect_of(host), 1.0), "%s Seite %d: %s liegt in der Fläche" % [label, page + 1, block.name])
+		var next := find_node(book, "NextPageButton") as BaseButton
+		if next != null and not next.disabled:
+			await press(next)
 
 
 func test_every_chapter_fits_and_scrolls_at_1024x768() -> void:
@@ -255,10 +256,8 @@ func test_longest_chapter_is_longer_than_the_area() -> void:
 			longest = i
 	book.open_chapter(longest)
 	await frames(3)
-	var scroll := find_node(book, "RulebookChapterScroll") as ScrollContainer
-	var body := find_node(book, "RulebookChapter") as Control
-	assert_true(body.size.y > scroll.size.y, "langes Kapitel %d ist länger als die Fläche (%d > %d)" % [longest + 1, body.size.y, scroll.size.y])
-	assert_true(scroll.get_v_scroll_bar().max_value > scroll.size.y, "Scrollleiste vorhanden")
+	assert_true(book.page_count() > 1, "langes Kapitel %d braucht mehrere Seiten (%d)" % [longest + 1, book.page_count()])
+	assert_true(find_node(book, "RulebookChapterHost").find_children("*", "ScrollContainer", true, false).is_empty(), "keine Scrollfläche")
 
 
 # --- Cockpit -------------------------------------------------------------------------------------------------------

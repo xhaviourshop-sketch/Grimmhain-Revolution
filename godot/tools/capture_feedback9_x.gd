@@ -1,8 +1,8 @@
 extends SceneTree
-## Screenshots Feedback 9, Teil X (Texte und Listen), 1024x768, braucht einen echten Renderer:
+## Screenshots Feedback 9, Fix-Runde F2 (Listen und Seiten), 1024x768, braucht einen echten Renderer:
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy --resolution 1024x768 -s res://tools/capture_feedback9_x.gd -- --out=<Ordner>
-## Bilder: Morgenbericht (Für dich), Partiebericht über den Seitenwechsel, Rollen-Vorschau (drei Reiter), Lexikon-Liste,
-## Regelbuch-Kapitel Morgenbericht DE und EN, Tag mit nominierter Person.
+## Bilder: Regelbuch Kapitel 6 (alle Seiten), Lexikon-Liste mit Suchfeld (erste und letzte Seite), Partiebericht mit Seitenwechsel,
+## Rollen-Vorschau (Dorf, Wölfe, Einzelgänger).
 var OUT := "user://shots"
 var ctx: AppContext
 var shell: AppShell
@@ -16,13 +16,10 @@ func _initialize() -> void:
 			OUT = a.trim_prefix("--out=")
 	DirAccess.make_dir_recursive_absolute(OUT)
 	root.size = Vector2i(1024, 768)
-	await _morning()
 	await _report()
 	await _preview()
 	await _lexicon()
 	await _rulebook("de")
-	await _rulebook("en")
-	await _nominated()
 	quit(0)
 
 
@@ -115,11 +112,24 @@ func _preview() -> void:
 		tab.set_pressed(true)
 		await _fr(10)
 		await _save("rollen-vorschau-%s" % team)
+	var screen := shell.find_children("*", "RolePreviewScreen", true, false)[0] as RolePreviewScreen
+	screen.open_role(0)
+	await _fr(20)
+	await _save("rollen-vorschau-leiste")
 
 
 func _lexicon() -> void:
 	await _boot(&"lexicon")
-	await _save("lexikon-liste")
+	await _save("lexikon-liste-seite1")
+	var n := 2
+	while true:
+		var next := shell.find_child("NextPageButton", true, false) as BaseButton
+		if next == null or next.disabled:
+			break
+		next.pressed.emit()
+		await _fr(3)
+		n += 1
+	await _save("lexikon-liste-letzte-seite%d" % (n - 1))
 
 
 func _rulebook(language: String) -> void:
@@ -127,27 +137,15 @@ func _rulebook(language: String) -> void:
 	var button := shell.find_child("RulebookChapter_c06", true, false) as BaseButton
 	button.pressed.emit()
 	await _fr(10)
-	await _save("regelbuch-morgenbericht-%s" % language)
-
-
-func _nominated() -> void:
-	await _boot(&"main_menu")
-	var game: GDScript = load("res://tests/ui/ui_game.gd")
-	_start(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"], [1, 2, 3, 4, 5, 6, 7, 8], "cap9x-tag")
-	ctx.session.start_night()
-	game.call("to_day", ctx.session)
-	shell.navigate(&"cockpit")
-	await _fr(15)
-	var cont := shell.find_child("ContinueDayButton", true, false) as BaseButton
-	if cont != null:
-		cont.pressed.emit()
-		await _fr(10)
-	var nominated: CommandResult = ctx.session.nominate(3, 1)
-	if not nominated.ok:
-		printerr("Nominierung abgelehnt: ", nominated.error)
-	await create_timer(3.5).timeout
-	await _fr(10)
-	await _save("tag-nominiert")
+	var n := 1
+	while true:
+		await _save("regelbuch-kapitel6-seite%d-%s" % [n, language])
+		var next := shell.find_child("NextPageButton", true, false) as BaseButton
+		if next == null or next.disabled:
+			break
+		next.pressed.emit()
+		await _fr(3)
+		n += 1
 
 
 func _fr(n: int) -> void:

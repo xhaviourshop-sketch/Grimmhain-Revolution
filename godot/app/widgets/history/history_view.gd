@@ -189,15 +189,18 @@ func _is_heading(line: Dictionary) -> bool:
 	return str(line["style"]) in ["title", "heading"]
 
 
-## Geschätzte Höhe einer Berichtszeile für die Seiteneinteilung.
+## Höhe einer Berichtszeile für die Seiteneinteilung: gemessen in der Schrift ihres Stils bei der Breite der Seite.
 func _line_height(line: Dictionary) -> float:
-	var text_length := float(str(line["text"]).length())
+	var width := (Engine.get_main_loop() as SceneTree).root.get_visible_rect().size.x - RuleBook.SIDE_CHROME
+	var type: StringName = &"Label"
 	match str(line["style"]):
-		"title", "heading":
-			return 8.0 + 36.0 * ceilf((text_length + 2.0) / 50.0)
+		"title":
+			type = &"HeadingLabel"
+		"heading":
+			type = &"SectionLabel"
 		"note":
-			return 4.0 + 24.0 * ceilf(text_length / 88.0)
-	return 4.0 + 28.0 * ceilf(text_length / 70.0)
+			type = &"CaptionLabel"
+	return RuleBook.text_height(self, str(line["text"]), type, width)
 
 
 ## Platz für Listenzeilen auf einer Seite: Fensterhöhe minus der übrigen Teile der Ansicht.
