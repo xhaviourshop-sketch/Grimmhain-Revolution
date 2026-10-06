@@ -8,6 +8,7 @@ extends BaseScreen
 ## GameStart die Partie und öffnet danach das Cockpit. Rückfragen zeigt ein eigener Dialog im Hain-Stil.
 
 const TITLE_KEY := "ui.prep.title"
+const FOOTER_BUTTON_MIN_WIDTH := 190  ## breit genug, dass kurze Texte frei von den Dornen-Enden stehen
 
 var _shown_step: StringName = &""
 var _steps: Dictionary[StringName, PrepStep] = {}
@@ -163,6 +164,7 @@ func _build_footer() -> void:
 	_back.name = "BackStepButton"
 	_back.kind = GrimmButton.Kind.SECONDARY
 	_back.text_key = "ui.common.back"
+	_back.custom_minimum_size.x = FOOTER_BUTTON_MIN_WIDTH
 	_back.pressed.connect(_on_back_pressed)
 	_footer.add_child(_back)
 	_hint = GrimmLabel.new()
@@ -176,6 +178,7 @@ func _build_footer() -> void:
 	_next.name = "NextButton"
 	_next.kind = GrimmButton.Kind.PRIMARY
 	_next.text_key = "ui.prep.next"
+	_next.custom_minimum_size.x = FOOTER_BUTTON_MIN_WIDTH
 	_next.pressed.connect(_on_next_pressed)
 	_footer.add_child(_next)
 	HainStyle.apply(_footer)
