@@ -30,6 +30,7 @@ func _initialize() -> void:
 		ctx.session.submit(c)
 	await _fr(10)
 	var screen := shell.current_screen()
+	await _save("basis-ohne-karte")  # Vergleich: Cockpit ohne Kartenebene (kein BlurBackdrop)
 	# 1) Rollenkarte aus der Rollenanzeige
 	var roles_button := shell.find_child("RolesButton", true, false) as BaseButton
 	if roles_button == null or not roles_button.is_visible_in_tree():
