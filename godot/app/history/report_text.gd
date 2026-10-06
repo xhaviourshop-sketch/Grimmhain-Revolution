@@ -176,9 +176,9 @@ static func _private_line(line: Dictionary) -> String:
 	if line.has("cause"):
 		values["cause"] = _cause_key(str(line["cause"]))
 	if line.has("reason"):
-		values["reason"] = str(line["reason"])
+		values["reason"] = CockpitText.drop_key(str(line["reason"]))
 	if line.has("drop"):
-		values["drop"] = StringName("ui.morning.drop.%s" % str(line["drop"]))
+		values["drop"] = CockpitText.drop_key(str(line["drop"]))
 	return _t(str(line["key"]), values)
 
 

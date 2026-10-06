@@ -1,10 +1,11 @@
 class_name ContinueScreen
 extends BaseScreen
 ## Gespeicherte Partien fortsetzen (SaveService): je Partie eine Karte mit Namen, Phase, Runde und
-## Speicherzeit, „Fortsetzen“ und „Verwerfen …“. Ohne Spielstand der leere Zustand. Die Liste zeigt
+## Speicherzeit, „Fortsetzen“ (beendet: „Bericht“) und „Löschen“. Ohne Spielstand der leere Zustand. Die Liste zeigt
 ## nur öffentliche Angaben (keine Rollen). Verwerfen benennt die Dateien nur um.
 
-const MAX_LISTED := 8  ## die neuesten Partien; ältere bleiben auf dem Datenträger
+const MAX_LISTED := 3  ## die neuesten Partien (mehr passen nicht ohne Scrollen auf den Bildschirm); ältere bleiben auf dem Datenträger
+const BUTTON_WIDTH := 170  ## Breite jedes Knopfes einer Zeile: das gemalte Band braucht Platz neben dem Text
 
 @onready var _list: VBoxContainer = %SaveSlotList
 @onready var _empty: Control = %EmptyStateLabel
@@ -37,9 +38,13 @@ func _slot(game: Dictionary) -> Control:
 	var summary: Dictionary = game.get("summary", {})
 	var panel := PanelContainer.new()
 	panel.name = "Slot_%s" % id
-	panel.theme_type_variation = &"PersonRowPanel"
+	panel.theme_type_variation = &"ListPanel"  # Fläche aus Grund und Rahmen (neun Felder), wächst mit dem Inhalt ohne Verzerrung
+	var line := HBoxContainer.new()  # links die Angaben, rechts die Knöpfe: niedrige Zeile, nie scrollen
+	panel.add_child(line)
 	var column := VBoxContainer.new()
-	panel.add_child(column)
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	line.add_child(column)
 	var names: Array = summary.get("names", [])
 	var title := GrimmLabel.new()
 	title.theme_type_variation = &"SectionLabel"
@@ -62,23 +67,54 @@ func _slot(game: Dictionary) -> Control:
 		note.format_values = {"found": str(game.get("found_label", "")), "expected": str(game.get("expected_label", ""))}
 		note.text_key = "ui.continue.slot.incompatible"
 		column.add_child(note)
-	var row := HBoxContainer.new()
-	row.theme_type_variation = &"ButtonRow"
-	column.add_child(row)
-	var resume := GrimmButton.new()
-	resume.name = "ResumeButton_%s" % id
-	resume.kind = GrimmButton.Kind.PRIMARY
-	resume.text_key = "ui.continue.resume"
-	resume.disabled = not compatible  # Spielstand anderer Version: nicht fortsetzbar, Datei bleibt unverändert
-	resume.pressed.connect(_resume.bind(id))
-	row.add_child(resume)
+	var row := VBoxContainer.new()  # Knöpfe übereinander: mehr Breite für die Angaben, niedrigere Zeile
+	row.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	line.add_child(row)
+	var buttons := slot_buttons(str(summary.get("phase", "")), context.history.has(id))
+	if buttons.has(&"resume"):
+		var resume := GrimmButton.new()
+		resume.name = "ResumeButton_%s" % id
+		resume.kind = GrimmButton.Kind.COMPACT
+		resume.text_key = "ui.continue.resume"
+		resume.disabled = not compatible  # Spielstand anderer Version: nicht fortsetzbar, Datei bleibt unverändert
+		resume.custom_minimum_size.x = BUTTON_WIDTH
+		resume.pressed.connect(_resume.bind(id))
+		row.add_child(resume)
+	if buttons.has(&"report"):
+		var report := GrimmButton.new()
+		report.name = "ReportButton_%s" % id
+		report.kind = GrimmButton.Kind.COMPACT
+		report.text_key = "ui.continue.report"
+		report.custom_minimum_size.x = BUTTON_WIDTH
+		report.pressed.connect(_open_report.bind(id))
+		row.add_child(report)
 	var discard := GrimmButton.new()
 	discard.name = "DiscardButton_%s" % id
 	discard.kind = GrimmButton.Kind.DANGER
 	discard.text_key = "ui.continue.discard"
+	discard.custom_minimum_size.x = BUTTON_WIDTH
 	discard.pressed.connect(_ask_discard.bind(id))
 	row.add_child(discard)
 	return panel
+
+
+## Knöpfe einer Zeile: laufende Partie „Fortsetzen“, beendete Partie „Bericht“ (nur mit gespeichertem Bericht), immer „Löschen“.
+## Eine beendete Partie wird nie fortgesetzt.
+static func slot_buttons(phase: String, has_report: bool) -> Array[StringName]:
+	var out: Array[StringName] = []
+	if phase == String(Phase.GAME_OVER):
+		if has_report:
+			out.append(&"report")
+	else:
+		out.append(&"resume")
+	out.append(&"discard")
+	return out
+
+
+func _open_report(id: String) -> void:
+	context.history_focus = id
+	navigate_requested.emit(ScreenIds.HISTORY)
 
 
 ## Ortszeit „29.09.2026 21:40“ (Nutzerdaten, keine Übersetzung nötig).
@@ -105,6 +141,9 @@ func _load(id: String) -> void:
 	if not bool(result["ok"]):
 		status_message_requested.emit("ui.continue.status.incompatible" if str(result.get("error", "")) == "incompatible" else "ui.continue.status.failed")
 		_render()
+		return
+	if context.session.is_over():  # nie in eine beendete Partie zurück: der Bericht ist ihr Ziel
+		_open_report(context.session.round_id())
 		return
 	match str(result.get("recovered", "")):
 		"backup":

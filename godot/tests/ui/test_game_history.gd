@@ -487,3 +487,31 @@ func test_page_break_keeps_a_heading_with_its_next_line() -> void:
 	assert_eq(kept.page_indices(0), [0, 1], "Zwischentitel wandert auf die nächste Seite")
 	assert_eq(kept.page_indices(1), [2, 3, 4], "und steht dort vor seiner Zeile")
 	kept.free()
+
+
+## Nach beendeter Partie gelingt der Start einer neuen: die Sitzung wird vorher zurückgesetzt, Spielstand und Bericht bleiben gesichert.
+func test_new_game_can_start_after_a_finished_one() -> void:
+	var paths := _paths()
+	var ctx := _context(paths)
+	_win(ctx)
+	assert_true(ctx.session.is_over(), "Partie beendet")
+	var old_id := ctx.session.round_id()
+	var setup := PlayerSetup.new()
+	setup.seed_source = func() -> int: return 77
+	setup.set_act(&"akt2")
+	setup.set_player_count(6)
+	for i: int in 6:
+		setup.add_person("Person %d" % (i + 1))
+	assert_true(setup.go_to_step(SetupDraft.STEP_ROLES).ok, "Rollenschritt")
+	assert_true(setup.apply_suggestion().ok, "Empfehlung")
+	var result := GameStart.start(ctx.session, setup)
+	assert_true(bool(result["ok"]), "Start nach Spielende angenommen (%s)" % result["error"])
+	assert_false(ctx.session.is_over(), "neue Partie läuft")
+	assert_true(ctx.history.has(old_id), "Bericht der alten Partie bleibt gesichert")
+
+
+## Knöpfe der Spielstände-Liste: beendet nie „Fortsetzen“, Bericht nur mit gespeichertem Bericht, „Löschen“ immer.
+func test_continue_slot_buttons_by_phase() -> void:
+	assert_eq(ContinueScreen.slot_buttons("NIGHT", false), [&"resume", &"discard"], "laufend: Fortsetzen und Löschen")
+	assert_eq(ContinueScreen.slot_buttons("GAME_OVER", true), [&"report", &"discard"], "beendet mit Bericht: Bericht und Löschen")
+	assert_eq(ContinueScreen.slot_buttons("GAME_OVER", false), [&"discard"], "beendet ohne Bericht: nur Löschen")

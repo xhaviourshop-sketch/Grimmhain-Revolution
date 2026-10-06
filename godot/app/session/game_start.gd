@@ -19,11 +19,14 @@ const ROUND_ID_PREFIX := "grimmhain-round:"
 ## Startet die Partie aus dem Setup. Bei Annahme ist der Entwurf verbraucht und wird verworfen,
 ## sodass derselbe Entwurf keine zweite Partie starten kann. Bei Ablehnung (Setup unvollständig
 ## oder Regelkern) bleiben Namen und Rollenwahl und die Sitzung unverändert (im Modus „zufällig“ steht danach die Zuordnung im Entwurf).
+## Eine beendete Partie (GAME_OVER) wird vor dem Start verworfen: ihr Spielstand und Bericht liegen schon im Speicher.
 ## Ergebnis: {ok: bool, error: StringName}.
 static func start(session: GameSession, setup: PlayerSetup) -> Dictionary:
 	var data := setup.prepare_start()
 	if not data.ok:
 		return {"ok": false, "error": data.error}
+	if session.is_over():
+		session.reset()  # Die Anwendungsschicht räumt die beendete Partie ab; der Regelkern bleibt unverändert
 	var seed_value := int(setup.seed_source.call())
 	var result := session.submit(build_command(data.details, seed_value))
 	if not result.ok:

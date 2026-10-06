@@ -261,16 +261,19 @@ func _discard_and_leave() -> void:
 
 
 func _on_start_requested() -> void:
+	if context.session.is_over():
+		context.autosave()  # Spielstand und Abschlussbericht sind gesichert, bevor die beendete Partie der neuen weicht
+		context.sync_history()
 	var result := GameStart.start(context.session, context.setup)
 	if not bool(result["ok"]):
 		var error := StringName(result["error"])
 		var reason := "other"
-		if error == &"game_already_started":
-			reason = "game_already_started"
+		if error == &"game_already_started" or error == &"game_over":
+			reason = String(error)
 		elif ["too_few_persons", "too_many_persons", "names_incomplete", "distribution_incomplete"].has(String(error)) or String(error).begins_with("too_") or String(error).begins_with("missing_"):
 			reason = "setup_incomplete"
 		_hint.theme_type_variation = &"ErrorLabel"
-		_hint.format_values = {"code": String(error)}
+		_hint.format_values = {}
 		_hint.text_key = "ui.setup.seating.status.start_failed.%s" % reason
 		return
 	status_message_requested.emit("ui.setup.seating.toast.started")
