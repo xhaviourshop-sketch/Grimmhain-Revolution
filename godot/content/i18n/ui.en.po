@@ -2535,7 +2535,19 @@ msgid "ui.continue.slot.unreadable"
 msgstr "Save not readable"
 
 msgid "ui.continue.slot.detail"
-msgstr "{phase} · night {night} · day {day} · {alive} alive · saved {saved}"
+msgstr "{alive} alive · saved {saved}"
+
+msgid "ui.continue.slot.status.night"
+msgstr "Running · Night {n}"
+
+msgid "ui.continue.slot.status.day"
+msgstr "Running · Day {n}"
+
+msgid "ui.continue.slot.status.running"
+msgstr "Running"
+
+msgid "ui.continue.slot.status.over"
+msgstr "Finished"
 
 msgid "ui.continue.resume"
 msgstr "Continue"
@@ -2580,7 +2592,7 @@ msgid "ui.continue.discard_dialog.title"
 msgstr "Delete the game?"
 
 msgid "ui.continue.discard_dialog.message"
-msgstr "The game disappears from the list. The files are only renamed, not deleted."
+msgstr "The game disappears from the list. The files are only kept under a new name."
 
 msgid "ui.continue.discard_dialog.confirm"
 msgstr "Delete"
