@@ -2,7 +2,7 @@
 // Web export with build identification and forced updates.
 // 1. writes godot/build_info.json (date, short commit hash, id) so the start screen shows the build, removed again afterwards
 // 2. runs the Godot web export (preset "Web", target see godot/export_presets.cfg)
-// 3. stamps the build id into index.html, writes version.json, lets the service worker take over at once (skipWaiting, claim)
+// 3. stamps the build id into index.html, writes version.json, replaces Godot's service worker with web/service-worker.js (network first, cache per build)
 // 4. copies godot/web/vercel.json (no-cache for html, service worker, manifest, version.json) next to the export
 // Usage: node tools/export-web.js        Godot binary: GODOT_BIN, else the pinned Windows console build in Downloads, else `godot`.
 const { execSync, spawnSync } = require("child_process");
@@ -47,13 +47,10 @@ if (!html.includes("___BUILD_ID___")) { console.error("index.html lacks the ___B
 fs.writeFileSync(htmlPath, html.replace("___BUILD_ID___", id));
 fs.writeFileSync(path.join(out, "version.json"), JSON.stringify({ id, date, hash: shownHash }));
 
-const swPath = path.join(out, "index.service.worker.js");
-let sw = fs.readFileSync(swPath, "utf8");
-const a = "event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CACHED_FILES)));";
-const b = "self.addEventListener('activate', (event) => {";
-if (!sw.includes(a) || !sw.includes(b)) { console.error("service worker template changed, patch needs an update"); process.exit(1); }
-sw = sw.replace(a, "self.skipWaiting();\n\t" + a).replace(b, b + "\n\tevent.waitUntil(self.clients.claim());");
-fs.writeFileSync(swPath, sw);
+// Godot's generated service worker serves index.html from the cache first and keeps old builds alive; ours is network first (web/service-worker.js).
+const swTemplate = fs.readFileSync(path.join(project, "web", "service-worker.js"), "utf8");
+if (!swTemplate.includes("___BUILD_ID___")) { console.error("web/service-worker.js lacks the ___BUILD_ID___ placeholder"); process.exit(1); }
+fs.writeFileSync(path.join(out, "index.service.worker.js"), swTemplate.replace("___BUILD_ID___", id));
 fs.copyFileSync(path.join(project, "web", "vercel.json"), path.join(out, "vercel.json"));
 // Loading page: web/shell.html shows godot/web/ladebild.webp as background with the brand seal and wordmark on top (not packed into the pck, see exclude_filter "web/*").
 for (const [src, name] of [["web/ladebild.webp", "ladebild.webp"], ["assets/brand/siegel.webp", "siegel.webp"], ["assets/brand/wortmarke.webp", "wortmarke.webp"]]) {
