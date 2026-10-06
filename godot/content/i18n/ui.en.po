@@ -153,7 +153,7 @@ msgid "ui.setup.title"
 msgstr "New game · Players"
 
 msgid "ui.setup.entry.heading"
-msgstr "Add players"
+msgstr "Enter names"
 
 msgid "ui.setup.entry.hint"
 msgstr "Type a name and press Enter or “Add”. Several names: separate them with a comma or “and”."
@@ -171,7 +171,7 @@ msgid "ui.setup.import.heading"
 msgstr "Paste several names"
 
 msgid "ui.setup.import.hint"
-msgstr "Separate names with line breaks, commas or semicolons. Empty entries are ignored."
+msgstr "One name per line."
 
 msgid "ui.setup.import.placeholder"
 msgstr "Anna, Ben; Clara …"
@@ -2181,19 +2181,19 @@ msgid "ui.morning.notice.judge"
 msgstr "“{name} counts as nominated today.”"
 
 msgid "ui.morning.private.death"
-msgstr "{name} died: {cause} ({role})."
+msgstr "{name} ({role}) died: {cause}."
 
 msgid "ui.morning.private.saved"
-msgstr "{name} saved: {role}."
+msgstr "{name} was saved: {role}."
 
 msgid "ui.morning.private.no_attack"
-msgstr "No pack attack."
+msgstr "The pack does not attack."
 
 msgid "ui.morning.private.step_skipped"
-msgstr "{role} skipped: {reason}"
+msgstr "{role} sits out: {reason}."
 
 msgid "ui.morning.private.step_dropped"
-msgstr "{role} dropped: {drop}"
+msgstr "{role} sits out: {drop}."
 
 msgid "ui.morning.private.reaction.declined"
 msgstr "{name} declines the reaction."
@@ -5157,7 +5157,7 @@ msgid "ui.groups.dialog.save.title"
 msgstr "Save group"
 
 msgid "ui.groups.dialog.save.message"
-msgstr "The current list of {count} names is saved under a group name. Roles and seats are not saved."
+msgstr "Saves the {count} names as a group. Without roles and seats."
 
 msgid "ui.groups.dialog.save.confirm"
 msgstr "Save"
@@ -5510,7 +5510,7 @@ msgid "ui.rulebook.c06.b05"
 msgstr "The morning report has two parts. You read “For the village” aloud: who died, who is back, who was chosen (for example by the Judge) and other public events."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "“For you” is for the game master only: lovers and rivals, charmed, protected, poisoned and saved people, plus causes and dropped steps. One short line per point, with names."
+msgstr "“For you” is for the game master only. It lists bonds, protection, poison and rescues. It also lists causes and dropped steps. One sentence per point, with names."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "“Continue” starts the day."
@@ -6003,7 +6003,7 @@ msgid "ui.history.export.public"
 msgstr "Save public version as text"
 
 msgid "ui.history.export.gm"
-msgstr "Save game master version as text"
+msgstr "Save text"
 
 msgid "ui.history.delete"
 msgstr "Delete report …"
@@ -8713,22 +8713,22 @@ msgid "ui.setup.voice.none"
 msgstr "Nothing understood. Try again."
 
 msgid "ui.morning.private.lovers"
-msgstr "{name} and {target}: lovers."
+msgstr "{name} and {target} are lovers."
 
 msgid "ui.morning.private.rivals"
-msgstr "{name} and {target}: rivals."
+msgstr "{name} and {target} are rivals."
 
 msgid "ui.morning.private.charmed"
-msgstr "{name} charmed."
+msgstr "{name} is charmed."
 
 msgid "ui.morning.private.protected"
-msgstr "{name} protected."
+msgstr "{name} is protected."
 
 msgid "ui.morning.private.wolf_poisoned"
-msgstr "{name} poisoned (poison wolf)."
+msgstr "{name} is poisoned (poison wolf)."
 
 msgid "ui.morning.private.infected"
-msgstr "{name} infected."
+msgstr "{name} is infected."
 
 msgid "ui.morning.private.parasite_host"
 msgstr "{name} carries the parasite."
@@ -8737,7 +8737,7 @@ msgid "ui.morning.private.voodoo_doll"
 msgstr "{name} is the voodoo doll."
 
 msgid "ui.morning.private.nothing"
-msgstr "Nothing else in secret."
+msgstr "Nothing else is secret."
 
 msgid "ui.cockpit.card.morning.village"
 msgstr "For the village"
@@ -9067,7 +9067,7 @@ msgid "ui.preview.open"
 msgstr "Role preview"
 
 msgid "ui.preview.hint"
-msgstr "Tap a role. Nothing is saved."
+msgstr "Tap a role."
 
 msgid "ui.preview.role"
 msgstr "{name}"

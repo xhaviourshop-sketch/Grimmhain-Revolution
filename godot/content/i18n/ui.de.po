@@ -153,7 +153,7 @@ msgid "ui.setup.title"
 msgstr "Neue Partie · Spieler"
 
 msgid "ui.setup.entry.heading"
-msgstr "Spieler erfassen"
+msgstr "Namen eingeben"
 
 msgid "ui.setup.entry.hint"
 msgstr "Einen Namen eingeben und mit Enter oder „Hinzufügen“ übernehmen. Mehrere Namen: mit Komma oder „und“ trennen."
@@ -171,7 +171,7 @@ msgid "ui.setup.import.heading"
 msgstr "Mehrere Namen einfügen"
 
 msgid "ui.setup.import.hint"
-msgstr "Namen durch Zeilenumbruch, Komma oder Semikolon trennen. Leere Einträge werden ignoriert."
+msgstr "Ein Name pro Zeile."
 
 msgid "ui.setup.import.placeholder"
 msgstr "Anna, Ben; Clara …"
@@ -2181,19 +2181,19 @@ msgid "ui.morning.notice.judge"
 msgstr "„{name} gilt heute als nominiert.“"
 
 msgid "ui.morning.private.death"
-msgstr "{name} starb: {cause} ({role})."
+msgstr "{name} ({role}) ist gestorben: {cause}."
 
 msgid "ui.morning.private.saved"
-msgstr "{name} gerettet: {role}."
+msgstr "{name} wurde gerettet: {role}."
 
 msgid "ui.morning.private.no_attack"
-msgstr "Kein Angriff des Rudels."
+msgstr "Das Rudel greift nicht an."
 
 msgid "ui.morning.private.step_skipped"
-msgstr "{role} übersprungen: {reason}"
+msgstr "{role} setzt aus: {reason}."
 
 msgid "ui.morning.private.step_dropped"
-msgstr "{role} entfällt: {drop}"
+msgstr "{role} setzt aus: {drop}."
 
 msgid "ui.morning.private.reaction.declined"
 msgstr "{name} verzichtet auf die Reaktion."
@@ -5157,7 +5157,7 @@ msgid "ui.groups.dialog.save.title"
 msgstr "Gruppe speichern"
 
 msgid "ui.groups.dialog.save.message"
-msgstr "Die aktuelle Liste mit {count} Namen wird unter einem Gruppennamen gespeichert. Rollen und Sitzplätze werden nicht gespeichert."
+msgstr "Speichert die {count} Namen als Gruppe. Ohne Rollen und Plätze."
 
 msgid "ui.groups.dialog.save.confirm"
 msgstr "Speichern"
@@ -5510,7 +5510,7 @@ msgid "ui.rulebook.c06.b05"
 msgstr "Der Morgenbericht hat zwei Teile. „Fürs Dorf“ liest du vor: wer gestorben ist, wer zurück ist, wer ausgewählt wurde (etwa vom Richter) und andere öffentliche Ereignisse."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "„Für dich“ ist nur für die Spielleitung: Liebende und Rivalen, Verzauberte, Geschützte, Vergiftete und Gerettete, dazu Ursachen und ausgefallene Schritte. Eine kurze Zeile pro Punkt, mit Namen."
+msgstr "„Für dich“ ist nur für die Spielleitung. Dort stehen Bindungen, Schutz, Gift und Rettungen. Dazu kommen Ursachen und ausgefallene Schritte. Pro Punkt ein Satz mit Namen."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "„Weiter“ beginnt den Tag."
@@ -6003,7 +6003,7 @@ msgid "ui.history.export.public"
 msgstr "Öffentliche Fassung als Text speichern"
 
 msgid "ui.history.export.gm"
-msgstr "Spielleiterfassung als Text speichern"
+msgstr "Text speichern"
 
 msgid "ui.history.delete"
 msgstr "Bericht löschen …"
@@ -8713,22 +8713,22 @@ msgid "ui.setup.voice.none"
 msgstr "Nichts verstanden. Noch einmal versuchen."
 
 msgid "ui.morning.private.lovers"
-msgstr "{name} und {target}: Liebende."
+msgstr "{name} und {target} sind Liebende."
 
 msgid "ui.morning.private.rivals"
-msgstr "{name} und {target}: Rivalen."
+msgstr "{name} und {target} sind Rivalen."
 
 msgid "ui.morning.private.charmed"
-msgstr "{name} verzaubert."
+msgstr "{name} ist verzaubert."
 
 msgid "ui.morning.private.protected"
-msgstr "{name} geschützt."
+msgstr "{name} ist geschützt."
 
 msgid "ui.morning.private.wolf_poisoned"
-msgstr "{name} vergiftet (Giftwolf)."
+msgstr "{name} ist vergiftet (Giftwolf)."
 
 msgid "ui.morning.private.infected"
-msgstr "{name} angesteckt."
+msgstr "{name} ist angesteckt."
 
 msgid "ui.morning.private.parasite_host"
 msgstr "{name} trägt den Parasiten."
@@ -8737,7 +8737,7 @@ msgid "ui.morning.private.voodoo_doll"
 msgstr "{name} ist die Voodoo-Puppe."
 
 msgid "ui.morning.private.nothing"
-msgstr "Sonst nichts Geheimes."
+msgstr "Sonst ist nichts geheim."
 
 msgid "ui.cockpit.card.morning.village"
 msgstr "Fürs Dorf"
@@ -9067,7 +9067,7 @@ msgid "ui.preview.open"
 msgstr "Rollen-Vorschau"
 
 msgid "ui.preview.hint"
-msgstr "Rolle antippen. Nichts wird gespeichert."
+msgstr "Rolle antippen."
 
 msgid "ui.preview.role"
 msgstr "{name}"
