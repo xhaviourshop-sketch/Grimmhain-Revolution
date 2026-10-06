@@ -20,6 +20,7 @@ var _prefix: String = "n"
 var _stop_after: String = ""  ## --shots=start: nur „vor der Nacht“ und „Rollenschritt“; --shots=target: zusätzlich „Zielwahl“; --shots=chosen: zusätzlich „Ziel gewählt“
 var _long_names: bool = false  ## --long-names: sehr lange Namen (Schild- und Kürzungsprüfung)
 var _bar_open: bool = false  ## --bar-open: nach „Rollenschritt“ die Nachtleiste ausklappen (4:3) und „08-leiste-offen“ aufnehmen
+var _extra: bool = false  ## --extra: zusätzlich Vollbild-Rollenkarte, Spiel bis zum Tag, dort „Verbergen“ (Fix-Runde F4)
 var _demo: bool = false  ## --demo: im Bild „Zielwahl“ einen toten Platz und Abzeichen zeigen (nur Anzeige, ändert keine Partie)
 var _logical: bool = false  ## --logical: Skalierung aus, Fenstergröße = logische Größe (Layoutprüfung wie die Tests); sonst wie auf dem Gerät
 var _hold: int = 0  ## --hold=N: nach dem ersten Bild N Frames ruhig weiterlaufen und beenden (für Movie Maker)
@@ -53,6 +54,8 @@ func _initialize() -> void:
 			_long_names = true
 		elif arg == "--bar-open":
 			_bar_open = true
+		elif arg == "--extra":
+			_extra = true
 		elif arg == "--demo":
 			_demo = true
 		elif arg == "--logical":
@@ -121,6 +124,14 @@ func _run(players: int, locale: String) -> bool:
 		var next: Dictionary = (_context.session.cockpit_view() as Dictionary).get("next", {})
 		var kind := str(next.get("kind", ""))
 		if kind == "day" or kind == "card_window" or kind == "game_over" or kind == "win_decision":
+			if _extra:
+				await _frames(6)
+				await _shot("10-tag")
+				var day_hide := screen.find_child("HideButton", true, false) as BaseButton
+				day_hide.button_pressed = true
+				await _frames(4)
+				await _shot("11-tag-verbergen")
+				return true
 			break
 		if (kind == "begin_step" or kind == "prompt") and not shots["begin"]:
 			shots["begin"] = true
@@ -136,8 +147,15 @@ func _run(players: int, locale: String) -> bool:
 				toggle.pressed.emit()
 				await _frames(6)
 				await _shot("08-leiste-offen")
-			return true
-			if _stop_after == "start":
+				toggle.pressed.emit()
+				await _frames(6)
+			if _extra:
+				screen.call("_open_role_card", 1)
+				await _frames(6)
+				await _shot("09-vollbildkarte")
+				screen.call("_discard_role_card")
+				await _frames(4)
+			else:
 				return true
 		if kind == "prompt" and str(next.get("answer")) == "targets" and not shots["target"]:
 			shots["target"] = true
@@ -167,6 +185,13 @@ func _run(players: int, locale: String) -> bool:
 			_log.append("FAIL: keine Aktion für %s" % kind)
 			await _shot("fehler-%s" % kind)
 			return false
+	if _extra:  # Tag erreicht, aber nicht über „day“: trotzdem „Verbergen“ am Morgen fotografieren
+		var late_hide := screen.find_child("HideButton", true, false) as BaseButton
+		await _shot("10-tag")
+		late_hide.button_pressed = true
+		await _frames(4)
+		await _shot("11-tag-verbergen")
+		return true
 	await _shot("07-nacht-ende")
 	_log.append("ok: %d Schritte, Phase %s" % [steps, str((_context.session.cockpit_view() as Dictionary).get("phase"))])
 	return true

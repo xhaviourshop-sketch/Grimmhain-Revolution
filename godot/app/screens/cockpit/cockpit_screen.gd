@@ -49,8 +49,8 @@ var _covered: bool = false
 ## Rollenbild auf der Aktionskarte: aus seit der Nachtschablone (Markus 05.10.2026: die Nachtkarte zeigt kein Rollenbild; Titel und Hilfe
 ## nennen die Fähigkeit). Auf `true` setzen, um es wiederzubringen.
 const ROLE_ART_ON_CARD := false
-const MINI_CARD_SHARE := 0.3  ## Mini-Nachtkarte: Anteil an der Bildschirmbreite (DA-101)
-const MINI_CARD_MIN_WIDTH := 288.0  ## schmaler schrumpfen Name, Rolle und Aktion zu stark
+const MINI_CARD_SHARE := 0.38  ## Mini-Nachtkarte: Anteil an der Bildschirmbreite (DA-101)
+const MINI_CARD_MIN_WIDTH := 360.0  ## schmaler schrumpfen Name, Rolle und Aktion zu stark
 const DAY_CARD_SHARE := 0.46  ## Tageskarte nach Inhalt: breit genug für drei Knöpfe, schmal genug für die Nominierungsbänder
 const DAY_CARD_MIN_WIDTH := 400.0
 ## Befehle, nach denen es nichts zurückzunehmen gibt, was die Spielleitung gewählt hätte: das Dock zeigt „Rückgängig“ erst nach einer Auswahl.
@@ -226,6 +226,7 @@ func _refresh() -> void:
 	_update_order(active)
 	_update_dock_undo()
 	_hidden_label.visible = active and _hidden
+	(%InstructionCard as Control).visible = not (active and _hidden)  # „Verbergen“: keine Rolle, Aktion oder Ergebnis in der Mitte; die Hauptaktion bleibt im Dock
 	_arrange()
 	_render()
 
@@ -542,6 +543,7 @@ func _style_plate() -> void:
 	(_phase_area.get_child(0) as BoxContainer).add_theme_constant_override("separation", ThemeTokens.SPACE_XS)
 	(%PhaseValueLabel as Control).add_theme_font_size_override("font_size", ThemeTokens.FONT_COMPACT)  # passt neben den Timer, ohne die Speicherzeile daneben zu verdrängen
 	_row_plate(%PhaseValueLabel as Label, 26.0, 2.0)
+	_row_plate(_hidden_label, 34.0, 3.0)  # Hinweis „Verbergen“ liegt auf dem Pflaster: gemalte Zeile als Grund
 	GroveSkin.skin_button(_dock_undo, false)
 	for label: GrimmLabel in [%RoundLabel, %AliveLabel]:
 		label.wrap = false  # eine Zeile auf der gemalten Zeile; die Ecke wächst mit dem Text

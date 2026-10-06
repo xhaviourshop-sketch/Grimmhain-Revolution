@@ -1086,7 +1086,8 @@ func _mini_line(role: String, top: Variant, action: String, with_role: String = 
 		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		_mini_row.add_child(icon)
 	var label := FitLabel.new()  # eine Zeile, die Schrift schrumpft bis zum Mindestmaß statt umzubrechen („Die Werwölfe“)
-	label.min_font_size = 14
+	label.min_font_size = 12  # übliches Mindestmaß; erst darunter kürzt „…“ (sehr lange Namen), nie hart abgeschnitten
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	label.max_font_size = int(FIT_MAX[&"NightLineLabel"])
 	label.theme_type_variation = &"NightLineLabel"
 	label.format_values = {"value": top}
