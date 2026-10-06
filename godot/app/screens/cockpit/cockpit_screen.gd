@@ -53,6 +53,11 @@ const MINI_CARD_SHARE := 0.38  ## Mini-Nachtkarte: Anteil an der Bildschirmbreit
 const MINI_CARD_MIN_WIDTH := 360.0  ## schmaler schrumpfen Name, Rolle und Aktion zu stark
 const DAY_CARD_SHARE := 0.46  ## Tageskarte nach Inhalt: breit genug für drei Knöpfe, schmal genug für die Nominierungsbänder
 const DAY_CARD_MIN_WIDTH := 400.0
+const STRIP_MAX_WIDTH := 820.0  ## Tagesleiste oben: Anklagen und Verteidigungszeile, klein und durchscheinend; die Mitte bleibt für die Bänder frei
+const STRIP_MAX_HEIGHT := 82.0  ## höher darf sie nicht werden: darunter beginnen die obersten Porträts
+const STRIP_UNDO_WIDTH := 100.0  ## „Rückgängig“ im Dock ist neben der Tagesleiste schmaler
+const STRIP_VERTICAL := 14.0
+const STRIP_SIDE := 34.0  ## Innenabstand links und rechts: Platz für die Dornenenden der gemalten Zeile
 ## Befehle, nach denen es nichts zurückzunehmen gibt, was die Spielleitung gewählt hätte: das Dock zeigt „Rückgängig“ erst nach einer Auswahl.
 const NO_CHOICE_COMMANDS: Array[StringName] = [Command.START_NIGHT, Command.BEGIN_STEP]
 const PEEK_MSEC := 3000  ## so lange bleiben die Abzeichen einer angetippten Person am Tag sichtbar
@@ -110,6 +115,7 @@ var _timer_labels: Dictionary = {}  ## Wertanzeigen der Timer-Dauern im Menü ("
 @onready var _next_host: Control = %NextHost
 @onready var _tools_menu: PanelContainer = %ToolsMenu
 @onready var _menu_column: VBoxContainer = %MenuColumn
+var _day_bar: HBoxContainer = null  ## Nebenknöpfe der Tagesleiste, unten in der Lücke zwischen Timer und Rückgängig
 
 var _backdrop_phase: String = ""
 var _backdrop_tween: Tween = null
@@ -123,6 +129,13 @@ func _setup() -> void:
 	header.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_backdrop_art.texture = NightArt.texture("bg/scene-night-base.webp")
 	_style_backdrop()
+	_day_bar = HBoxContainer.new()
+	_day_bar.name = "DayBar"
+	_day_bar.add_theme_constant_override(&"separation", 4)
+	_day_bar.alignment = BoxContainer.ALIGNMENT_CENTER
+	_layout.add_child(_day_bar)
+	_card.secondary_host = _day_bar
+	_ring.center().resized.connect(_place_card)  # die Leiste oben misst ihren Ort an der Ringmitte
 	_card.primary_host = _next_host
 	_card.info_host = _make_info_corner()
 	_next_host.child_entered_tree.connect(_skin_primary)
@@ -226,9 +239,8 @@ func _refresh() -> void:
 	_update_order(active)
 	_update_dock_undo()
 	_hidden_label.visible = active and _hidden
-	(%InstructionCard as Control).visible = not (active and _hidden)  # „Verbergen“: keine Rolle, Aktion oder Ergebnis in der Mitte; die Hauptaktion bleibt im Dock
 	_arrange()
-	_render()
+	_render()  # setzt auch die Sichtbarkeit der Karte
 
 
 ## „Rückgängig“ im Dock: nur einmal sichtbar (nicht, solange die Karte ihren Knopf zeigt) und erst nach einer Auswahl.
@@ -455,6 +467,15 @@ func _arrange() -> void:
 	_cover_button.position = Vector2(w - knob.x - 2.0, tab_y + tab_h + 6.0 + knob.y + 4.0)
 	_phase_area.custom_minimum_size = PLATE_SIZE
 	_dock_undo.custom_minimum_size = GroveSkin.BUTTON_SIZE_SECONDARY
+	if _day_bar_shown():  # mehr Platz für die Knöpfe in der Lücke daneben: „Rückgängig“ so klein wie sie
+		if _dock_undo.kind != GrimmButton.Kind.COMPACT:
+			_dock_undo.kind = GrimmButton.Kind.COMPACT
+			ActionCard.tighten_button(_dock_undo)
+		_dock_undo.custom_minimum_size = Vector2(STRIP_UNDO_WIDTH, ActionCard.STRIP_BUTTON_HEIGHT)
+	elif _dock_undo.kind == GrimmButton.Kind.COMPACT:
+		ActionCard.loosen_button(_dock_undo)
+		_dock_undo.kind = GrimmButton.Kind.SECONDARY
+		GroveSkin.skin_button(_dock_undo, false)
 	_dock.size = _dock.get_combined_minimum_size()
 	_phase_area.size = _phase_area.get_combined_minimum_size()
 	var dock_x := DOCK_MARGIN if left_handed else w - DOCK_MARGIN - _dock.size.x
@@ -474,10 +495,31 @@ func _arrange() -> void:
 		# „Gespeichert“: kleiner, ruhiger Hinweis an fester Stelle, linksbündig über der Kartusche
 		_save_row.size = Vector2(_phase_area.size.x, _save_row.get_combined_minimum_size().y)
 		_save_row.position = Vector2(_phase_area.position.x + 4.0, _phase_area.position.y - _save_row.size.y - 2.0)
+	_arrange_day_bar(free_left, free_right, h)
 	_tools_menu.size = _tools_menu.get_combined_minimum_size()
 	_tools_menu.position = Vector2(w - TAB_WIDTH - _tools_menu.size.x - 4.0, clampf(tab_y, TOP_MARGIN, maxf(TOP_MARGIN, h - _tools_menu.size.y - TOP_MARGIN)))
 	_place_backdrop_art(_ring.position + _ring.size * 0.5)
 	_place_card()
+
+
+func _day_bar_shown() -> bool:
+	return _card.is_strip() and _day_bar.get_child_count() > 0 and not _hidden
+
+
+## Nebenknöpfe der Tagesleiste: in der freien Lücke unten zwischen Timer und Rückgängig, auf Höhe des Docks.
+func _arrange_day_bar(free_left: float, free_right: float, h: float) -> void:
+	_day_bar.visible = _day_bar_shown()
+	var wanted := _day_bar.get_combined_minimum_size()
+	var left := free_left - PLATE_MARGIN + 6.0  # die Lücke ist schmal: der Abstand zu Timer und Rückgängig darf kleiner sein
+	var right := free_right + PLATE_MARGIN - 6.0
+	var width := maxf(minf(wanted.x, right - left), 1.0)
+	var spare := (right - left) - wanted.x  # ist Platz übrig (z. B. ein einzelner Knopf), bekommt der Text mehr Rand zu den Dornen
+	if spare > 1.0:
+		for b: Node in _day_bar.get_children():
+			if b is Control and not b.is_queued_for_deletion():
+				(b as Control).custom_minimum_size.x = maxf((b as Control).custom_minimum_size.x, (b as Control).get_minimum_size().x + minf(spare / float(_day_bar.get_child_count()), ActionCard.STRIP_BUTTON_PAD))
+	_day_bar.size = Vector2(width, wanted.y)
+	_day_bar.position = Vector2(left + (right - left - width) * 0.5, h - DOCK_MARGIN - wanted.y - (56.0 - wanted.y) * 0.5)
 
 
 ## Mini-Nachtkarte (DA-101, Feedback 8: mittig auf dem Dorfplatz) und Tageskarte nach Inhalt: schmal, in der Mitte der freien Ringmitte,
@@ -487,6 +529,9 @@ func _place_card() -> void:
 	if not _card.is_compact():
 		panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+		return
+	if _card.is_strip():
+		_place_strip(panel)
 		return
 	var day := _card.is_day_card()
 	_card.set_max_height(_ring.center().size.y)  # die Karte liegt ganz in der freien Ringmitte: sonst kleiner, nie höher
@@ -501,6 +546,24 @@ func _place_card() -> void:
 	panel.offset_bottom = 0.0
 	panel.grow_vertical = Control.GROW_DIRECTION_BOTH  # wächst mit dem Inhalt nach oben und unten
 	panel.size.y = 0.0  # auf die Mindesthöhe zurück: gleiche Ränder setzen die Größe nicht neu
+
+
+## Tagesleiste: schmal und durchscheinend oben in der Mitte über den obersten Porträts. Die Ringmitte bleibt frei, alle Bänder sind zu sehen.
+func _place_strip(panel: PanelContainer) -> void:
+	_card.set_max_height(STRIP_MAX_HEIGHT)
+	var width := minf(size.x - 2.0 * BAR_SIDE, STRIP_MAX_WIDTH)
+	var origin := _ring.position + _ring.center().position  # Ringmitte in Bildschirmkoordinaten (die Karte hängt an ihr)
+	panel.anchor_left = 0.0
+	panel.anchor_right = 0.0
+	panel.anchor_top = 0.0
+	panel.anchor_bottom = 0.0
+	panel.offset_left = (size.x - width) * 0.5 - origin.x
+	panel.offset_right = panel.offset_left + width
+	panel.offset_top = TOP_MARGIN - origin.y
+	panel.offset_bottom = panel.offset_top
+	panel.grow_horizontal = Control.GROW_DIRECTION_END
+	panel.grow_vertical = Control.GROW_DIRECTION_END  # wächst mit dem Inhalt nach unten
+	panel.size.y = 0.0
 
 
 ## Hintergrundbild füllt das Fenster ohne Verzerrung und ohne leere Ränder (cover mit kleiner Überdeckung); die Platzmitte liegt auf der
@@ -533,6 +596,13 @@ func _style_card() -> void:
 	var panel := %InstructionCard as PanelContainer
 	if _card.is_bare():
 		panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	elif _card.is_strip():
+		var row := SkinArt.row_box(ThemeTokens.TINT_STRIP)  # gemalte Listenzeile, durchscheinend
+		row.content_margin_left = STRIP_SIDE
+		row.content_margin_right = STRIP_SIDE
+		row.content_margin_top = STRIP_VERTICAL  # die gemalte Zeile ist nur zu rund zwei Dritteln Fläche: Innenabstand, damit der Text darin sitzt
+		row.content_margin_bottom = STRIP_VERTICAL
+		panel.add_theme_stylebox_override("panel", row)
 	else:
 		panel.remove_theme_stylebox_override("panel")
 
@@ -724,11 +794,19 @@ func _victim_names(phase: String) -> String:
 	return CockpitText.names_of(ids, _view.get("seats", []))
 
 
+## „Verbergen“: keine Rolle, Aktion oder Ergebnis in der Mitte (die Hauptaktion bleibt im Dock). Ein Fenster ohne Inhalt wird nie gezeigt,
+## sonst stünde eine leere Tafel im Bild.
+func _update_card_visibility() -> void:
+	var active := bool(_view.get("has_game", false))
+	(%InstructionCard as Control).visible = not (active and _hidden) and _card.has_content()
+
+
 func _render() -> void:
 	var next: Dictionary = _view.get("next", {})
 	var phase := str(_view.get("phase", ""))
 	if not bool(_view.get("has_game", false)):
 		_card.render({"kind": "no_game"}, {})
+		_update_card_visibility()
 		_ring.clear_marking()
 		_card.role_art().show_role("")
 		return
@@ -783,8 +861,10 @@ func _render() -> void:
 		"victim_names": _victim_names(phase),
 	})
 	_style_card()  # ohne Text (Spielbeginn) verschwindet der Kartenrahmen, nur der große Knopf bleibt
+	_update_card_visibility()
 	_place_card()
 	_arrange()  # die Hauptaktion im Dock wechselt mit der Karte: Dock und Phasenplatte neu setzen
+	_arrange.call_deferred()  # Mindestgrößen von Dock und Tagesleiste stimmen erst im nächsten Bild
 	_restore_focus()
 
 
