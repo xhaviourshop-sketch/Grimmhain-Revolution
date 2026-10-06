@@ -221,13 +221,12 @@ func _base_plate_rect() -> Rect2:
 	return PortraitRingLayout.plate_rect_local(diameter, size, w, span, height)
 
 
-## Schildbreite, die der Name in einer Zeile braucht (längste Fassung, also mit „†“): der Ring gibt sie dem Layout, damit nur Plätze mit
+## Schildbreite, die der Name in einer Zeile braucht (so, wie er gerade steht; der Ring ordnet bei jeder Sitzänderung neu): der Ring gibt sie dem Layout, damit nur Plätze mit
 ## langem Namen zwei Zeilen reservieren.
 func single_line_plate_width() -> float:
 	if _seat.is_empty():
 		return 0.0
-	var text := tr("ui.cockpit.seat.plate.dead").format({"mark": "", "name": str(_seat["name"])})
-	return _text_width(text, _plate_font()) + 2.0 * _plate_cap() + PLATE_PADDING
+	return _text_width(_plate_text(), _plate_font()) + 2.0 * _plate_cap() + PLATE_PADDING
 
 
 func _plate_limit() -> float:
@@ -558,7 +557,7 @@ static func plate_lines(text: String, font: Font, room: float) -> Array[String]:
 		return best
 	best_width = INF
 	best = []
-	for i: int in range(2, text.length() - 1):
+	for i: int in range(3, text.length() - 2):
 		if text[i - 1] == " " or text[i - 1] == "-" or text[i] == " ":
 			continue
 		var first := text.substr(0, i) + "-"
@@ -577,24 +576,19 @@ static func _text_width(text: String, font: Font) -> float:
 
 
 static func _lines_with_ellipsis(text: String, font: Font, room: float) -> Array[String]:
+	# Zeile 1: das längste ganze Wortstück bis zum letzten Leerzeichen oder Bindestrich, das noch passt.
+	for i: int in range(text.length() - 1, 2, -1):
+		var first := ""
+		if text[i - 1] == " ":
+			first = text.substr(0, i - 1)
+		elif text[i - 1] == "-":
+			first = text.substr(0, i)
+		if first.length() >= 3 and first != "†" and _text_width(first, font) <= room:
+			return [first, fitted_plate_text(text.substr(i), font, room)]
 	var n := text.length() - 1
-	while n > 2 and _text_width(text.substr(0, n) + "-", font) > room:
+	while n > 3 and _text_width(text.substr(0, n) + "-", font) > room:
 		n -= 1
-	var cut := n
-	while cut > n / 2 and text[cut - 1] != " " and text[cut - 1] != "-":
-		cut -= 1
-	var first := ""
-	var rest := ""
-	if cut > n / 2 and text[cut - 1] == " ":
-		first = text.substr(0, cut - 1)
-		rest = text.substr(cut)
-	elif cut > n / 2:
-		first = text.substr(0, cut)
-		rest = text.substr(cut)
-	else:
-		first = text.substr(0, n) + "-"
-		rest = text.substr(n)
-	return [first, fitted_plate_text(rest, font, room)]
+	return [text.substr(0, n) + "-", fitted_plate_text(text.substr(n), font, room)]
 
 
 func _notification(what: int) -> void:
