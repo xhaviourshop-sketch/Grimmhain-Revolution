@@ -118,6 +118,31 @@ layout_mode = 2
 script = ExtResource("5_toggle")
 text_key = "ui.settings.audio.music"
 
+[node name="MusicVolumeRow" type="HBoxContainer" parent="Layout/Columns/Primary/AudioCard/Column"]
+layout_mode = 2
+
+[node name="MusicQuieterButton" type="Button" parent="Layout/Columns/Primary/AudioCard/Column/MusicVolumeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.settings.audio.quieter"
+
+[node name="MusicLevelLabel" type="Label" parent="Layout/Columns/Primary/AudioCard/Column/MusicVolumeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_label")
+
+[node name="MusicLouderButton" type="Button" parent="Layout/Columns/Primary/AudioCard/Column/MusicVolumeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_button")
+text_key = "ui.settings.audio.louder"
+
 [node name="Secondary" type="VBoxContainer" parent="Layout/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
