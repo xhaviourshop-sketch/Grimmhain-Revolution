@@ -54,6 +54,7 @@ func test_howl_needs_files_and_leaves_the_game_untouched() -> void:
 	await navigate(shell, &"main_menu")
 	await navigate(shell, &"cockpit")
 	assert_eq(music.current_track(), AppMusic.TRACK_NIGHT, "Nachtmusik im Cockpit")
+	music.howl_source = func() -> Array[AudioStream]: return [] as Array[AudioStream]
 	assert_false(music.howl(), "ohne Heulen-Dateien kein Abspielen")
 	music.howl_source = func() -> Array[AudioStream]: return [_tone()] as Array[AudioStream]
 	var before := s.state_hash()
@@ -61,3 +62,35 @@ func test_howl_needs_files_and_leaves_the_game_untouched() -> void:
 	assert_true(music.howl(), "zweites Heulen")
 	assert_eq(music.howl_count(), 2, "gezählt")
 	assert_eq(s.state_hash(), before, "Zustand und Generator der Partie unverändert")
+
+
+func test_howl_varies_file_pitch_and_volume() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var music := shell.call("get_music") as AppMusic
+	var s := session_of(shell) as GameSession
+	assert_true(s.submit(Fixtures.start_roles(["werwolf", "blutwolf"] + Fixtures.village_fillers(10), 1)).ok, "Start")
+	assert_true(s.submit(Command.start_night()).ok, "Nacht 1")
+	music.unlock()
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	var near := _tone()
+	near.resource_path = "res://assets/audio/heulen/heulen-1.ogg"
+	var far := _tone()
+	far.resource_path = "res://assets/audio/heulen/heulen-2-fern.ogg"
+	var streams: Array[AudioStream] = [near, far]
+	music.howl_source = func() -> Array[AudioStream]: return streams
+	var last: AudioStream = null
+	var far_db: Array[float] = []
+	var near_db: Array[float] = []
+	for i in 40:
+		assert_true(music.howl(), "Heulen %d" % i)
+		var picked: AudioStream = (music.get_node("HowlPlayer") as AudioStreamPlayer).stream
+		assert_ne(picked, last, "nie zweimal dieselbe Datei hintereinander")
+		last = picked
+		assert_true(music.last_howl_pitch() >= 0.9 and music.last_howl_pitch() <= 1.1, "Tonhöhe")
+		(far_db if picked == far else near_db).append(music.last_howl_db())
+	assert_true(near_db.min() >= -27.0 and near_db.max() <= -21.0, "nahes Heulen leise")
+	assert_true(far_db.max() < near_db.min(), "fernes Heulen immer leiser")
+	assert_true(near_db.max() > near_db.min(), "Lautstärke schwankt")

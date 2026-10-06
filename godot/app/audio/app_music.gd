@@ -19,6 +19,10 @@ const TRACK_NIGHT := &"night"
 const SILENT_DB := -60.0
 const VOLUME_DB: Array[float] = [-28.0, -21.0, -14.0, -10.0, -7.0]  ## Stufe 1 bis 5; Stufe 3 = bisheriger Wert, unter der Stimme
 const HOWL_DB := -24.0
+const HOWL_JITTER_DB := 3.0  ## Lautstärke schwankt leicht um HOWL_DB
+const HOWL_FAR_DB := -8.0  ## Dateien mit „fern“ im Namen sind immer leiser
+const HOWL_PITCH_MIN := 0.9
+const HOWL_PITCH_MAX := 1.1
 const HOWL_PAN := 0.8
 const HOWL_MIN_SECONDS := 30.0
 const HOWL_MAX_SECONDS := 90.0
@@ -41,6 +45,9 @@ var _howl_player: AudioStreamPlayer = null
 var _howl_panner: AudioEffectPanner = null
 var _howl_right := false
 var _howl_count := 0
+var _howl_last: AudioStream = null
+var _howl_last_db := 0.0
+var _howl_last_pitch := 1.0
 
 
 func setup(context: AppContext, router: ScreenRouter) -> void:
@@ -77,6 +84,15 @@ func is_unlocked() -> bool:
 
 func howl_count() -> int:
 	return _howl_count
+
+
+## Lautstärke (dB) und Tonhöhe des zuletzt gespielten Heulens.
+func last_howl_db() -> float:
+	return _howl_last_db
+
+
+func last_howl_pitch() -> float:
+	return _howl_last_pitch
 
 
 ## Erste Berührung, Klick oder Taste: Ton freigeben, Eingabe bleibt unberührt.
@@ -205,7 +221,18 @@ func howl() -> bool:
 	_ensure_howl_bus()
 	_howl_right = not _howl_right
 	_howl_panner.pan = HOWL_PAN if _howl_right else -HOWL_PAN
-	_howl_player.stream = streams[_rng.randi_range(0, streams.size() - 1)]
+	var pool := streams.duplicate()
+	if pool.size() > 1:
+		pool.erase(_howl_last)  # nie zweimal dieselbe Datei hintereinander
+	var stream := pool[_rng.randi_range(0, pool.size() - 1)] as AudioStream
+	_howl_last = stream
+	_howl_last_db = HOWL_DB + _rng.randf_range(-HOWL_JITTER_DB, HOWL_JITTER_DB)
+	if stream.resource_path.get_file().contains("fern"):
+		_howl_last_db += HOWL_FAR_DB
+	_howl_last_pitch = _rng.randf_range(HOWL_PITCH_MIN, HOWL_PITCH_MAX)
+	_howl_player.stream = stream
+	_howl_player.volume_db = _howl_last_db
+	_howl_player.pitch_scale = _howl_last_pitch
 	_howl_player.play()
 	_howl_count += 1
 	return true

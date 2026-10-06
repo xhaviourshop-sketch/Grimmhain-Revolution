@@ -4,6 +4,10 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## 2026-10-06: Wolfsheulen eingebaut (Branch feat/howl, KLEIN)
+Stand: `heulen-1`, `heulen-2-fern`, `heulen-3` (Pixabay, Pixabay-Lizenz, im Register `intern-freigegeben` nach Angabe von Markus) als OGG in `godot/assets/audio/heulen/`. `AppMusic.howl()`: nie zweimal dieselbe Datei hintereinander, Tonhöhe 0,9 bis 1,1, Lautstärke -24 dB ± 3, Dateien mit „fern“ im Namen zusätzlich -8 dB; Takt 30 bis 90 s, links/rechts wie zuvor, eigener Zufallsgenerator.
+Verifikation: `test-changed` 7 Tests grün (neu: Dateiwechsel, Tonhöhe, fernes Heulen leiser), `check-asset-register.js` grün, Import ohne Fehler. Keine Vollsuite (Regelkern unverändert). Nicht geprüft: Hören auf dem iPad, Heulen im Web-Export (Dateiliste über `ResourceLoader.list_directory`).
+
 ## 2026-10-06: Musik durchgehend (Branch feat/music, MITTEL)
 Stand: Ein Knoten `AppMusic` an der Shell (`godot/app/audio/app_music.gd`): Ton ab der ersten Berührung irgendwo, Startmusik durchgehend über Start, Menü und Vorbereitung ohne Neustart; Nachtmusik (`musik-nacht.ogg`, `intern-freigegeben` nach Angabe von Markus: selbst erstellt, nur intern) mit 3,5 s Überblendung bei Nacht, Tag, Morgendämmerung und Spielende still, zurück im Menü wieder Startmusik; Heulen aus `godot/assets/audio/heulen/` (derzeit leer, also still) alle 30 bis 90 s, leise, links/rechts über den Bus `AppHowl`, eigener Zufallsgenerator ohne Wirkung auf die Partie. `ScreenMusic` entfällt. Lautstärke: Einstellung `music_volume`, 5 Stufen (-28 bis -7 dB, Standard 3), Knöpfe „Leiser/Lauter“ und Stufenwort, bei Musik aus „Aus“. Einstellungsbildschirm neu verteilt (Audio links unten, passt ohne Scrollen); der Hinweisbalken weicht Knöpfen aus (`toast_host.gd`, gilt für alle Bildschirme).
 Entscheidungen: Spielende still; Lautstärke als Stufen, bis ein gemalter Regler existiert (Eintrag mit ChatGPT-Beschreibung in `docs/audit/FENSTER-OPTIK.md`).
