@@ -98,7 +98,7 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	assert_true(find_children_of_type(current_screen(shell), "SpinBox").is_empty(), "kein Zählfeld")
 	await _press(shell, "NominateButton")
 	await press(_seat(shell, 3))
-	assert_true(_texts(shell).contains("Cara nominiert"), "Nominierende Person gewählt")
+	assert_true(_texts(shell).contains("Cara klagt an"), "Nominierende Person gewählt")
 	assert_true(_seat(shell, 3).disabled, "Cara kann sich nicht selbst nominieren")
 	await press(_seat(shell, 1))
 	var confirm := find_button(current_screen(shell), "ConfirmNominationButton")
@@ -107,8 +107,8 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	await frames(3)
 	var noms: Array = _view(shell)["next"]["nominations"]
 	assert_eq(noms.size(), 1, "genau eine Nominierung trotz Doppeltippen")
-	assert_true(_texts(shell).contains("Cara nominiert Anna"), "öffentliche Nominierungsliste")
-	assert_true(_texts(shell).contains("Alle Nominierten dürfen sich jetzt nacheinander verteidigen."), "Vorlesezeile zur Verteidigung")
+	assert_true(_texts(shell).contains("Cara klagt Anna an"), "öffentliche Nominierungsliste")
+	assert_true(_texts(shell).contains("Alle Angeklagten dürfen sich jetzt nacheinander verteidigen."), "Vorlesezeile zur Verteidigung")
 	await _press(shell, "NominateButton")
 	assert_true(_seat(shell, 3).disabled, "wer heute nominiert hat, ist still gesperrt")
 	assert_false(_seat(shell, 2).disabled, "andere dürfen weiter nominieren")
@@ -281,3 +281,16 @@ func test_dock_undo_is_visible_after_nomination() -> void:
 	assert_true(dock.is_visible_in_tree() or (bar != null and bar.is_visible_in_tree()), "Rückgängig sofort erreichbar (Dock oder Leiste)")
 	await wait_seconds(3.4)
 	assert_true(dock.is_visible_in_tree(), "Rückgängig im Dock nach Ablauf der Leiste")
+
+
+## Die Tageskarte schrumpft nach dem ersten Schritt der Anklage wieder auf ihren Inhalt (sie blieb zuvor als hoher Streifen stehen).
+func test_day_card_stays_as_tall_as_its_content_in_the_second_nomination_step() -> void:
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	await _press(shell, "NominateButton")
+	await press(_seat(shell, 3))
+	await frames(20)
+	var panel := find_node(current_screen(shell), "InstructionCard") as Control
+	assert_true(panel.size.y <= panel.get_combined_minimum_size().y + 1.0, "Karte so hoch wie ihr Inhalt (%s statt %s)" % [panel.size.y, panel.get_combined_minimum_size().y])

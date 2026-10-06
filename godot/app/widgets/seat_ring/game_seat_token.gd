@@ -4,7 +4,7 @@ extends GrimmButton
 ## Zustände als Ring über dem Porträt, kleine Zustandsabzeichen unten rechts. Zeigt nie eine Rolle. Bleibt ein Button
 ## mit Personen-ID und Signal `tapped`; der Button-Text (Name, Zeichen) dient der Bedienungshilfe, den Tests und dem
 ## Tooltip und wird nicht gezeichnet. Information hängt nie allein an der Farbe: Das Schild trägt Tod („†“), Nominierung
-## (roter Ring und Band, ohne Zusatz im Namen), wählbares Ziel („›“), Auswahl („✓“) und handelnde Person („•“); die Abzeichen unterscheiden sich durch Form.
+## (roter Ring und Band, ohne Zusatz im Namen), wählbares Ziel („›“), Auswahl („✓“); die handelnde Person trägt nur das Leuchten (kein Zeichen); die Abzeichen unterscheiden sich durch Form.
 ##
 ## Geheime Zustände (`marks`, handelnde Person) zeichnet der Platz nur, solange `secrets_visible` gilt („Verbergen“ schaltet es ab).
 
@@ -21,7 +21,7 @@ const STATE_VARIATIONS := {
 ## Zeichen im Text des Buttons (Bedienungshilfe, Tests). Auf dem Schild steht nur das Zeichen der handelnden Person: Wählbarkeit und
 ## Auswahl zeigen der Ring (Schimmer, Schein) und das Häkchen; die Namen bleiben so lang wie möglich.
 const STATE_MARKS := {&"allowed": "› ", &"selected": "✓ ", &"actor": "• "}
-const PLATE_MARKS := {&"actor": "• "}
+const PLATE_MARKS := {}  ## Zeichen im Schild: keines (die handelnde Person zeigt das Leuchten, DA-104)
 const GLOW_SELECTED := ThemeTokens.MOON_GLOW  ## heller Mondsilber-Schein um das gewählte Ziel
 const SHIMMER_ALLOWED := ThemeTokens.SEAT_SHIMMER  ## dezenter, kühler Schimmer wählbarer Plätze (ruhig, kein Pulsieren)
 const FRAME_SCALE := 0.95  ## Kantenlänge des Rahmenbilds relativ zur Rahmenbreite des Platzes (der sichtbare Ring misst dann rund 0,40)
@@ -29,10 +29,11 @@ const RING_RADIUS := PortraitRingLayout.RING_RADIUS  ## Anteil der Rahmenbreite 
 const FACE_UV_SCALE := 0.62
 const GLOW_DENSE_DIAMETER := 90.0  ## ab 13 Personen (Rahmen 86) gilt der schmale Schein
 const GLOW_STEP_DENSE := 0.85
-const PLATE_FONT_SIZE := 14  ## Schrift im Schild (Basisauflösung 1024x768); nie kleiner, lange Namen werden gekürzt
+const PLATE_FONT_SIZE := 14  ## Schrift im Schild (Basisauflösung 1024x768); nie kleiner, lange Namen laufen in eine zweite und dritte Zeile
 const PLATE_PADDING := 2.0  ## Innenabstand im Namensschild (links und rechts zusammen, ohne die Eisenkappen)
 const PLATE_FONT_SIZE_FLOOR := 14  ## kleinste Schrift im Schild (Markus: mindestens 14 px)
 const ELLIPSIS := "…"
+const MIDWORD_PENALTY := 1000.0  ## bei der Wahl der Zeilen zählt jede Trennung mitten im Wort mehr als jede Breite: Trennstellen im Wort nur, wo es sein muss
 const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ zur Rahmenbreite
 const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
 const HUNT_PULSE_SPEED := 3.4  ## Pulse je Sekunde im Bogenmaß
@@ -66,6 +67,10 @@ var plate_span: Vector2 = Vector2.ZERO:  ## (links, rechts): so weit darf das Sc
 	set(value):
 		plate_span = value
 		queue_redraw()
+var plate_max_lines: int = 2:  ## so viele Zeilen darf der Name im Schild haben (der Ring setzt sie je Platz nach dem Layout)
+	set(value):
+		plate_max_lines = value
+		queue_redraw()
 var secrets_visible: bool = true:
 	set(value):
 		secrets_visible = value
@@ -98,6 +103,10 @@ var active: bool = false:  ## handelnde Person: Bildrahmen und Namensschild leuc
 		_apply_hunt_motion()
 		queue_redraw()
 var _hunt_time: float = 0.0
+var _lines_key: String = ""  ## Zwischenspeicher für `_plate_lines` (die Berechnung ist aufwendig, `plate_rect` fragt sie bei jedem Tippen)
+var _lines_cache: Array[String] = []
+var _needs_key: String = ""
+var _needs_cache: Array[float] = []
 var _show_full_name: bool = false  ## solange der Finger aufliegt: das Schild zeigt den vollen Namen (nur wenn er gekürzt wäre)
 var _nominated: bool = false
 var _seat: Dictionary = {}
@@ -184,7 +193,10 @@ func set_full_name_shown(on: bool) -> void:
 
 
 func is_name_truncated() -> bool:
-	return fitted_plate_text(_plate_text(), _plate_font(), _text_room(_base_plate_rect().size.x)) != _plate_text()
+	for line: String in _plate_lines():
+		if line.ends_with(ELLIPSIS):
+			return true
+	return false
 
 
 # --- Geometrie ----------------------------------------------------------------------------------------
@@ -202,15 +214,51 @@ func plate_rect() -> Rect2:
 	if _show_full_name:
 		var full := _plate_text_width() + 2.0 * _plate_cap() + PLATE_PADDING
 		var base := _base_plate_rect()
-		return Rect2(base.get_center().x - full * 0.5, base.position.y, full, base.size.y)
+		return Rect2(base.get_center().x - full * 0.5, base.position.y, full, PortraitRingLayout.PLATE_HEIGHT)
 	return _base_plate_rect()
 
 
 func _base_plate_rect() -> Rect2:
-	var limit := plate_limit if plate_limit > 0.0 else PortraitRingLayout.plate_max_width(diameter)
-	var w := minf(minf(size.x, limit), _plate_text_width() + 2.0 * _plate_cap() + PLATE_PADDING)
+	var limit := _plate_limit()
+	var lines := _plate_lines()
+	var widest := 0.0
+	for line: String in lines:
+		widest = maxf(widest, _line_width(line))
+	var w := minf(limit, widest + 2.0 * _plate_cap() + PLATE_PADDING)
 	var span := plate_span if plate_span != Vector2.ZERO else Vector2(limit * 0.5, limit * 0.5)
-	return PortraitRingLayout.plate_rect_local(diameter, size, w, span)
+	return PortraitRingLayout.plate_rect_local(diameter, size, w, span, PortraitRingLayout.plate_height(lines.size()))
+
+
+## Schildbreite, die der Name in einer, zwei und drei Zeilen braucht (so, wie er gerade steht; der Ring ordnet bei jeder Sitzänderung neu): der Ring gibt sie dem
+## Layout, damit jeder Platz nur so viele Zeilen reserviert, wie sein Name braucht.
+func plate_needs() -> Array[float]:
+	if _seat.is_empty():
+		return [0.0, 0.0, 0.0]
+	var text := _plate_text()
+	if _needs_key != text:
+		_needs_key = text
+		_needs_cache = []
+		for w: float in plate_line_widths(text, _plate_font()):
+			_needs_cache.append(w + 2.0 * _plate_cap() + PLATE_PADDING)  # (INF bleibt INF)
+	return _needs_cache
+
+
+func _plate_limit() -> float:
+	return plate_limit if plate_limit > 0.0 else PortraitRingLayout.plate_max_width(diameter)
+
+
+## Zeilen des Namens im Schild: so viele, wie das Layout erlaubt (`plate_max_lines`); „…“ nur, wenn der Name auch so nicht passt.
+func _plate_lines() -> Array[String]:
+	var room := _text_room(_plate_limit())
+	var key := "%s|%.1f|%d" % [_plate_text(), room, plate_max_lines]
+	if key != _lines_key:
+		_lines_key = key
+		_lines_cache = plate_lines(_plate_text(), _plate_font(), room, plate_max_lines)
+	return _lines_cache
+
+
+func _line_width(line: String) -> float:
+	return _plate_font().get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE).x
 
 
 ## Tippen zählt nur auf dem Porträtkreis und dem Schild; die Steuerelemente überlappen diagonal, die Tippflächen nicht.
@@ -475,10 +523,17 @@ func _draw_plate() -> void:
 		pill.set_corner_radius_all(9)
 		draw_style_box(pill, rect)
 	var font := _plate_font()
-	var text := fitted_plate_text(_plate_text(), font, _text_room(rect.size.x))
-	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE).x
+	var lines: Array[String] = [_plate_text()] if _show_full_name else _plate_lines()
 	var color := ThemeTokens.TEXT_MUTED if not alive else ThemeTokens.TEXT_PRIMARY
-	draw_string(font, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + float(PLATE_FONT_SIZE) * 0.72) * 0.5), text, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE, color)
+	if lines.size() < 2:
+		var w := _line_width(lines[0])
+		draw_string(font, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + float(PLATE_FONT_SIZE) * 0.72) * 0.5), lines[0], HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE, color)
+		return
+	var line_h := float(PLATE_FONT_SIZE) + 1.0  # enger als die Zeilenhöhe der Schrift: beide Zeilen bleiben im Rahmen des Schilds
+	var top := rect.position.y + (rect.size.y - line_h * float(lines.size())) * 0.5 + font.get_ascent(PLATE_FONT_SIZE) - 1.0
+	for k: int in lines.size():
+		var w := _line_width(lines[k])
+		draw_string(font, Vector2(rect.position.x + (rect.size.x - w) * 0.5, top + line_h * float(k)), lines[k], HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE, color)
 
 
 ## Platz für den Text im Schild der Breite `plate_width`.
@@ -494,6 +549,140 @@ static func fitted_plate_text(text: String, font: Font, room: float) -> String:
 	while n > 1 and font.get_string_size(text.substr(0, n).strip_edges(false, true) + ELLIPSIS, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE).x > room:
 		n -= 1
 	return text.substr(0, n).strip_edges(false, true) + ELLIPSIS
+
+
+## Name in höchstens `max_lines` Zeilen zu je `room` Pixel (Schrift fest PLATE_FONT_SIZE). Reihenfolge: eine Zeile; getrennt nur an Leerzeichen oder
+## Bindestrich (zwei, dann drei Zeilen, möglichst gleich breit, der Bindestrich bleibt am Ende der Zeile); dann auch mitten im Wort mit „-“ (mindestens
+## drei Buchstaben auf jeder Seite); „…“ nur als letzte Rückfallstufe, wenn der Name auch so nicht passt (über 32 Zeichen, die Namensgrenze).
+static func plate_lines(text: String, font: Font, room_exact: float, max_lines: int = 3) -> Array[String]:
+	var room := room_exact + 0.5  # halbes Pixel Spiel: das Layout rechnet ebenso (Rundung der Schildbreite)
+	if _text_width(text, font) <= room:
+		return [text]
+	var memo := {}
+	for any_break: bool in [false, true]:
+		for k: int in range(2, max_lines + 1):
+			var best := _best_split(text, font, k, any_break, memo, room)
+			if not best.is_empty() and _widest(best, font) <= room:
+				return best
+	return _lines_with_ellipsis(text, font, room, max_lines)
+
+
+## Breiten (ohne Schildrand): [eine Zeile, höchstens zwei, höchstens drei Zeilen (nie zunehmend), nur an Leerzeichen und Bindestrich in zwei, ebenso in drei
+## Zeilen (INF, wo es keine Trennstelle gibt)]. Die ersten drei sind das Mindestmaß, die letzten beiden die Breite für die schönere Aufteilung.
+static func plate_line_widths(text: String, font: Font) -> Array[float]:
+	var memo := {}
+	var out: Array[float] = [_text_width(text, font)]
+	for k: int in range(2, 4):
+		var best := _best_split(text, font, k, true, memo)
+		out.append(minf(out[k - 2], _widest(best, font) if not best.is_empty() else INF))
+	for k: int in range(2, 4):
+		var nice := _best_split(text, font, k, false, memo)
+		out.append(_widest(nice, font) if not nice.is_empty() else INF)
+	return out
+
+
+static func _text_width(text: String, font: Font) -> float:
+	return font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE).x
+
+
+static func _widest(lines: Array[String], font: Font) -> float:
+	var widest := 0.0
+	for line: String in lines:
+		widest = maxf(widest, _text_width(line, font))
+	return widest
+
+
+## Mögliche Trennstellen: Vector3i(Ende der Zeile davor, Anfang der nächsten, 1 = mitten im Wort mit Trennstrich).
+static func _break_options(text: String, any_break: bool) -> Array[Vector3i]:
+	var out: Array[Vector3i] = []
+	for i: int in range(1, text.length()):
+		var prev := text[i - 1]
+		if prev == " ":
+			if i > 1 and text[i] != " ":
+				out.append(Vector3i(i - 1, i, 0))
+		elif prev == "-":
+			if text[i] != " ":
+				out.append(Vector3i(i, i, 0))
+		elif any_break and text[i] != " " and text[i] != "-" and _letters_before(text, i) >= 3 and _letters_after(text, i) >= 3:
+			out.append(Vector3i(i, i, 1))
+	return out
+
+
+## Beste Aufteilung in genau `k` Zeilen (die schmalste breiteste Zeile), leer, wenn es keine gibt.
+static func _best_split(text: String, font: Font, k: int, any_break: bool, memo: Dictionary, room: float = INF) -> Array[String]:
+	var options := _break_options(text, any_break)
+	var best: Array[String] = []
+	var best_width := INF
+	for o1: Vector3i in options:
+		var first := text.substr(0, o1.x) + ("-" if o1.z == 1 else "")
+		if first == "†":
+			continue
+		if k == 2:
+			var candidate: Array[String] = [first, text.substr(o1.y)]
+			var widest := _memo_widest(candidate, font, memo)
+			var score := widest + (MIDWORD_PENALTY * float(o1.z) if room < INF else 0.0)
+			if widest <= room and score < best_width:
+				best = candidate
+				best_width = score
+			continue
+		for o2: Vector3i in options:
+			var middle := o2.x - o1.y
+			if middle < 1 or ((o1.z == 1 or o2.z == 1) and middle < 3):
+				continue
+			if o1.z == 1 and o2.z == 1 and _letters_after(text, o1.y) >= middle:
+				continue  # ein Wort wird nicht zweimal zerlegt
+			var candidate3: Array[String] = [first, text.substr(o1.y, middle) + ("-" if o2.z == 1 else ""), text.substr(o2.y)]
+			var widest3 := _memo_widest(candidate3, font, memo)
+			var score3 := widest3 + (MIDWORD_PENALTY * float(o1.z + o2.z) if room < INF else 0.0)
+			if widest3 <= room and score3 < best_width:
+				best = candidate3
+				best_width = score3
+	return best
+
+
+## Buchstaben des Wortteils (zwischen Leerzeichen und Bindestrichen) vor und ab der Stelle `i`: eine Trennung im Wort lässt auf jeder Seite mindestens drei.
+static func _letters_before(text: String, i: int) -> int:
+	var n := 0
+	while i - n - 1 >= 0 and text[i - n - 1] != " " and text[i - n - 1] != "-":
+		n += 1
+	return n
+
+
+static func _letters_after(text: String, i: int) -> int:
+	var n := 0
+	while i + n < text.length() and text[i + n] != " " and text[i + n] != "-":
+		n += 1
+	return n
+
+
+static func _memo_widest(lines: Array[String], font: Font, memo: Dictionary) -> float:
+	var widest := 0.0
+	for line: String in lines:
+		if not memo.has(line):
+			memo[line] = _text_width(line, font)
+		widest = maxf(widest, float(memo[line]))
+	return widest
+
+
+## Rückfallstufe für Namen, die in `max_lines` Zeilen nicht passen: jede Zeile so voll wie möglich (lieber an Leerzeichen oder Bindestrich),
+## die letzte mit „…“ gekürzt.
+static func _lines_with_ellipsis(text: String, font: Font, room: float, max_lines: int) -> Array[String]:
+	var lines: Array[String] = []
+	var rest := text
+	while lines.size() < max_lines - 1 and _text_width(rest, font) > room:
+		var cut := Vector3i(-1, -1, 0)
+		for o: Vector3i in _break_options(rest, true):
+			var line := rest.substr(0, o.x) + ("-" if o.z == 1 else "")
+			if _text_width(line, font) > room or line == "†":
+				continue
+			if cut.x < 0 or (o.z == 0 and cut.z == 1) or (o.z == cut.z and o.x > cut.x):
+				cut = o
+		if cut.x < 0:
+			break
+		lines.append(rest.substr(0, cut.x) + ("-" if cut.z == 1 else ""))
+		rest = rest.substr(cut.y)
+	lines.append(fitted_plate_text(rest, font, room))
+	return lines
 
 
 func _notification(what: int) -> void:

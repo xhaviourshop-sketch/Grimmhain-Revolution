@@ -16,7 +16,9 @@
   "godot/app/widgets/seat_ring/": [
     "board_layout",
     "cockpit_day",
-    "night_board"
+    "cockpit_screen",
+    "night_board",
+    "portrait_ring_layout"
   ],
   "godot/app/widgets/night/": [
     "night_board",

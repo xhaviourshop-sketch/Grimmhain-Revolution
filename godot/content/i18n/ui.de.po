@@ -1608,13 +1608,13 @@ msgid "ui.log.line.no_night_kill"
 msgstr "Das Rudel hat niemanden angegriffen."
 
 msgid "ui.log.line.nominated"
-msgstr "{nominator} nominiert {nominee}."
+msgstr "{nominator} klagt {nominee} an."
 
 msgid "ui.log.line.nominated_hidden"
-msgstr "{nominee} wurde nominiert."
+msgstr "{nominee} wurde angeklagt."
 
 msgid "ui.log.line.judge_nominated"
-msgstr "{judge} hat {nominee} verdeckt nominiert."
+msgstr "{judge} hat {nominee} verdeckt angeklagt."
 
 msgid "ui.log.line.executed"
 msgstr "{name} wurde hingerichtet."
@@ -2178,7 +2178,7 @@ msgid "ui.morning.notice.bells"
 msgstr "„Die Glocken des Nachtwächters läuten.“"
 
 msgid "ui.morning.notice.judge"
-msgstr "„{name} gilt heute als nominiert.“"
+msgstr "„{name} gilt heute als angeklagt.“"
 
 msgid "ui.morning.private.death"
 msgstr "{name} war {role} und ist gestorben: {cause}."
@@ -2307,43 +2307,43 @@ msgid "ui.cause.spiegelwolf_retaliate"
 msgstr "gespiegelte Hinrichtung (Spiegelwolf)"
 
 msgid "ui.cause.manipulator_nominated"
-msgstr "Nominierung des Manipulators"
+msgstr "Anklage des Manipulators"
 
 msgid "ui.cockpit.card.day.heading"
 msgstr "Tag {number}"
 
 msgid "ui.cockpit.card.day.do"
-msgstr "Diskussion und Abstimmung finden am Tisch statt. Du zählst die Stimmen selbst und erfasst nur Nominierungen und das Ergebnis."
+msgstr "Diskussion und Abstimmung finden am Tisch statt. Du zählst die Stimmen selbst und erfasst nur Anklagen und das Ergebnis."
 
 msgid "ui.cockpit.card.day.no_nominations"
-msgstr "Heute noch keine Nominierung."
+msgstr "Heute noch keine Anklage."
 
 msgid "ui.cockpit.card.day.defend"
-msgstr "Alle Nominierten dürfen sich jetzt nacheinander verteidigen."
+msgstr "Alle Angeklagten dürfen sich jetzt nacheinander verteidigen."
 
 msgid "ui.cockpit.card.day.nominations"
-msgstr "Nominierungen heute"
+msgstr "Anklagen heute"
 
 msgid "ui.cockpit.card.day.nomination"
-msgstr "{nominator} nominiert {nominee}"
+msgstr "{nominator} klagt {nominee} an"
 
 msgid "ui.cockpit.card.day.nomination_hidden"
-msgstr "{nominee} gilt als nominiert"
+msgstr "{nominee} gilt als angeklagt"
 
 msgid "ui.cockpit.card.day.deaths"
 msgstr "„Heute gestorben: {names}.“"
 
 msgid "ui.cockpit.card.day.nominate.heading"
-msgstr "Nominierung erfassen"
+msgstr "Anklage erfassen"
 
 msgid "ui.cockpit.card.day.nominate.from"
-msgstr "Tippe im Sitzkreis die Person an, die nominiert."
+msgstr "Tippe im Sitzkreis die Person an, die anklagt."
 
 msgid "ui.cockpit.card.day.nominate.to"
-msgstr "{nominator} nominiert. Tippe jetzt die nominierte Person an."
+msgstr "{nominator} klagt an. Tippe jetzt die angeklagte Person an."
 
 msgid "ui.cockpit.card.day.nominate.summary"
-msgstr "{nominator} nominiert {nominee}"
+msgstr "{nominator} klagt {nominee} an"
 
 msgid "ui.cockpit.card.day.execute.heading"
 msgstr "Hinrichtung"
@@ -2379,7 +2379,7 @@ msgid "ui.cockpit.card.end_day.do"
 msgstr "Beende den Tag, wenn alle Ansagen gemacht sind."
 
 msgid "ui.cockpit.action.nominate"
-msgstr "Nominieren"
+msgstr "Anklagen"
 
 msgid "ui.cockpit.action.execute"
 msgstr "Hinrichtung"
@@ -2388,7 +2388,7 @@ msgid "ui.cockpit.action.no_execution"
 msgstr "Keine Hinrichtung"
 
 msgid "ui.cockpit.action.confirm_nomination"
-msgstr "Nominierung bestätigen"
+msgstr "Anklage bestätigen"
 
 msgid "ui.cockpit.action.confirm_execution"
 msgstr "Hinrichten"
@@ -2433,13 +2433,13 @@ msgid "ui.cockpit.private.action.name_wolf"
 msgstr "{name}: Nekromant benennt einen Wolf …"
 
 msgid "ui.cockpit.error.already_nominated_today"
-msgstr "Fehler: Diese Nominierung ist heute nicht möglich. Nichts wurde geändert."
+msgstr "Fehler: Diese Anklage ist heute nicht möglich. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.already_nominee_today"
-msgstr "Fehler: Diese Person wurde heute schon nominiert. Nichts wurde geändert."
+msgstr "Fehler: Diese Person wurde heute schon angeklagt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.not_nominated_today"
-msgstr "Fehler: Hinrichten geht nur mit Nominierung von heute (sonst Spielleiterkorrektur). Nichts wurde geändert."
+msgstr "Fehler: Hinrichten geht nur mit Anklage von heute (sonst Spielleiterkorrektur). Nichts wurde geändert."
 
 msgid "ui.cockpit.error.execution_already_decided"
 msgstr "Fehler: Über die Hinrichtung ist heute schon entschieden. Nichts wurde geändert."
@@ -2568,7 +2568,7 @@ msgid "ui.cockpit.gm.start.set_role"
 msgstr "Rolle ändern …"
 
 msgid "ui.cockpit.gm.start.execute"
-msgstr "Hinrichten ohne Nominierung …"
+msgstr "Hinrichten ohne Anklage …"
 
 msgid "ui.cockpit.gm.start.declare_winner"
 msgstr "Sieger erklären …"
@@ -2586,7 +2586,7 @@ msgid "ui.gm.kind.kill"
 msgstr "Person töten"
 
 msgid "ui.gm.kind.execute"
-msgstr "Hinrichten ohne Nominierung"
+msgstr "Hinrichten ohne Anklage"
 
 msgid "ui.gm.kind.revive"
 msgstr "Person wiederbeleben"
@@ -2751,7 +2751,7 @@ msgid "ui.gm.command.end_night"
 msgstr "Nacht abschließen"
 
 msgid "ui.gm.command.nominate"
-msgstr "Nominierung: {names}"
+msgstr "Anklage: {names}"
 
 msgid "ui.gm.command.decide_execution"
 msgstr "Entscheidung zur Hinrichtung: {names}"
@@ -5534,22 +5534,22 @@ msgid "ui.rulebook.c07.b01"
 msgstr "Nach „Weiter“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Nominierungen und das Ergebnis."
 
 msgid "ui.rulebook.c07.b02"
-msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Nominierungen des Tages. Nominierte tragen einen Blutrot-Ring am Sitzkreis, bis sie hingerichtet werden. Unter der Liste steht der Vorlesetext „Alle Nominierten dürfen sich jetzt nacheinander verteidigen.“"
+msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Anklagen des Tages. Angeklagte tragen einen Blutrot-Ring am Sitzkreis, bis sie hingerichtet werden. Unter der Liste steht der Vorlesetext „Alle Angeklagten dürfen sich jetzt nacheinander verteidigen.“"
 
 msgid "ui.rulebook.c07.b03"
-msgstr "Nominierung erfassen"
+msgstr "Anklage erfassen"
 
 msgid "ui.rulebook.c07.b04"
-msgstr "1. Tippe „Nominierung erfassen“."
+msgstr "1. Tippe „Anklage erfassen“."
 
 msgid "ui.rulebook.c07.b05"
-msgstr "2. Tippe im Sitzkreis die Person an, die nominiert."
+msgstr "2. Tippe im Sitzkreis die Person an, die anklagt."
 
 msgid "ui.rulebook.c07.b06"
-msgstr "3. Tippe die nominierte Person an und dann „Nominierung bestätigen“."
+msgstr "3. Tippe die angeklagte Person an und dann „Anklage bestätigen“."
 
 msgid "ui.rulebook.c07.b07"
-msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal nominieren und wird pro Tag höchstens einmal nominiert. Wer heute schon nominiert hat oder nominiert wurde, ist im Sitzkreis ausgegraut; die App sperrt es still. Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Nominierung nimmst du mit „Rückgängig“ zurück."
+msgstr "Beide Personen müssen leben. Jede Person darf pro Tag einmal anklagen und wird pro Tag höchstens einmal angeklagt. Wer heute schon angeklagt hat oder angeklagt wurde, ist im Sitzkreis ausgegraut; die App sperrt es still. Eine Ausnahme ist nur als Spielleiterkorrektur mit Begründung möglich (Kapitel 10). Eine versehentlich erfasste Anklage nimmst du mit „Rückgängig“ zurück."
 
 msgid "ui.rulebook.c07.b08"
 msgstr "Stimmhinweise"
@@ -5564,7 +5564,7 @@ msgid "ui.rulebook.c08.title"
 msgstr "Hinrichtung und Todesreaktionen"
 
 msgid "ui.rulebook.c08.b01"
-msgstr "Nach der Abstimmung am Tisch tippst du die nominierte Person im Sitzkreis an, die hingerichtet wird, und dann „Hinrichten“. (Auch „Hinrichtung …“ führt zur Personenwahl.) Wählbar sind nur Personen, die heute nominiert wurden. Eine Hinrichtung ohne Nominierung ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
+msgstr "Nach der Abstimmung am Tisch tippst du die angeklagte Person im Sitzkreis an, die hingerichtet wird, und dann „Hinrichten“. (Auch „Hinrichtung …“ führt zur Personenwahl.) Wählbar sind nur Personen, die heute angeklagt wurden. Eine Hinrichtung ohne Anklage ist nur als Spielleiterkorrektur möglich (Kapitel 10)."
 
 msgid "ui.rulebook.c08.b02"
 msgstr "Nach dem Antippen erscheint sofort eine Karte, bei jeder Hinrichtung gleich aufgebaut, damit ihr Auftauchen nichts über bestimmte Rollen verrät. Entweder steht dort eine Besonderheit (etwa eine Spiegelung, eine Abwehrfrage oder die Frage nach der Fluchdauer) oder „Keine Besonderheit“. Beantworte die Frage der Karte und tippe „Hinrichten“; die Hinrichtung gilt sofort, ihr Ergebnis (wer stirbt, was ausgelöst wird) steht danach in der Tageskarte. Mit „Rückgängig“ nimmst du sie kurz zurück."
@@ -5630,7 +5630,7 @@ msgid "ui.rulebook.c10.b05"
 msgstr "Korrekturen"
 
 msgid "ui.rulebook.c10.b06"
-msgstr "Unter „Korrekturen (mit Begründung, protokolliert)“ stehen: „Person töten …“ (mit oder ohne Todesfolgen), „Person wiederbeleben …“, „Rolle ändern …“, „Status ändern …“, „Hinrichten ohne Nominierung …“ (nur am Tag) und „Sieger erklären …“. „Status ändern …“ bietet nur Korrekturen an, die die App für diese Person im aktuellen Zustand annimmt."
+msgstr "Unter „Korrekturen (mit Begründung, protokolliert)“ stehen: „Person töten …“ (mit oder ohne Todesfolgen), „Person wiederbeleben …“, „Rolle ändern …“, „Status ändern …“, „Hinrichten ohne Anklage …“ (nur am Tag) und „Sieger erklären …“. „Status ändern …“ bietet nur Korrekturen an, die die App für diese Person im aktuellen Zustand annimmt."
 
 msgid "ui.rulebook.c10.b07"
 msgstr "Der Ablauf: Art wählen, Person im Sitzkreis antippen, Pflichtangaben machen, Warnung lesen und eine Begründung eingeben. Danach zeigt „Letzte Korrektur: das hat sich geändert“ die Folgen. Ändert sich der Spielstand zwischen Auswahl und Bestätigung, wird die Auswahl verworfen und nichts geändert."
@@ -5833,7 +5833,7 @@ msgid "ui.role.kopfgeldjaeger.lex.act"
 msgstr "Aufruf: (Nacht nach einer Hinrichtung) Die App kündigt die Rolle „Kopfgeldjäger“ in der Nachtreihenfolge an. Lies vor: „Kopfgeldjäger, erwache. Hier ist deine Liste.“\nAuswählen oder ablesen: Nur für dich: Wähle drei andere Lebende mit mindestens einem Wolf für die Liste.\nVorlesen oder zeigen: Zeige dem Kopfgeldjäger die drei Namen. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.korrupter_richter.lex.act"
-msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Korrupter Richter“ in der Nachtreihenfolge an. Lies vor: „Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“\nAuswählen oder ablesen: Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten. Die verdeckte Nominierung erscheint öffentlich nur als „… gilt heute als nominiert“; ihr Stimmhinweis steht im Bereich „Rollen“ unter „Stimmhinweise“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Korrupter Richter“ in der Nachtreihenfolge an. Lies vor: „Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“\nAuswählen oder ablesen: Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten. Die verdeckte Nominierung erscheint öffentlich nur als „… gilt heute als angeklagt“; ihr Stimmhinweis steht im Bereich „Rollen“ unter „Stimmhinweise“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.kriegerin_des_lichts.lex.act"
 msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Kriegerin des Lichts“ in der Nachtreihenfolge an. Lies vor: „Kriegerin des Lichts, erwache. Willst du heute angreifen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, die die Kriegerin angreift. Ohne Angriff: verzichten.\nVorlesen oder zeigen: Zeige der Kriegerin, ob sie einen Wolf getroffen hat. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
@@ -6114,10 +6114,10 @@ msgid "ui.report.day"
 msgstr "Tag {number}"
 
 msgid "ui.report.judge_nominator"
-msgstr "Verdeckte Nominierung: {judge} hat {nominee} nominiert."
+msgstr "Verdeckte Anklage: {judge} hat {nominee} angeklagt."
 
 msgid "ui.report.execution_override"
-msgstr "Diese Hinrichtung von {name} war eine Spielleiterkorrektur ohne Nominierung."
+msgstr "Diese Hinrichtung von {name} war eine Spielleiterkorrektur ohne Anklage."
 
 msgid "ui.report.execution_redirected"
 msgstr "Die Hinrichtung von {name} wurde gespiegelt: Stattdessen starb {other}."
@@ -7590,7 +7590,7 @@ msgid "ui.card.public.value.rejected_id"
 msgstr "Abgelehnt vom Dorf: {value}"
 
 msgid "ui.card.public.value.nominee_ids"
-msgstr "Nominiert: {value}"
+msgstr "Angeklagt: {value}"
 
 msgid "ui.card.public.value.count"
 msgstr "Anzahl: {value}"

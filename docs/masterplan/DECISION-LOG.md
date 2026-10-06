@@ -1336,3 +1336,7 @@ Dauerregeln (auch in CLAUDE.md und allen Prüfern): kein Programmier-Text sichtb
 ## DA-103 Antworten zu Feedback 8 (Markus, 06.10.2026, Feedback iPad-Test Teil 9)
 
 Beantwortet die offenen Fragen aus Feedback-Runde 8. (1) Schalter tragen kein Wort („An“/„Aus“), das Glühen des gemalten Schalters reicht. (2) Rollenlisten (Lexikon, Rollen-Vorschau) zeigen Rollennamen in kräftigen Teamfarben: Dorf Mondblau, Wölfe Blutrot, Einzelgänger Violett, gut lesbar auf dunklem Grund. (3) Der Zusatz „(N)“ hinter nominierten Namen am Ring entfällt; roter Ring und Nominierungsband (DA-102 Punkt 7) reichen. (4) Die Rollenkarten-Bilder bleiben unverändert, auch mit ihrem gelben Titel: Gedruckte Karten sind ein eigenes Produkt (Ausnahme zu „Kein Gold“ in MARKE.md).
+
+## DA-104 Antworten zu Feedback 9 (Markus, 06.10.2026, Feedback iPad-Test Teil 9b)
+
+Beantwortet die offenen Fragen aus Feedback-Runde 9. (1) Schutzring und Schutzschild am Ring sind Mondblau statt Gold. (2) Kein Punkt „•“ vor dem Namen der handelnden Person; das Leuchten (DA-100) reicht. (3) Der Knopf „Nominieren“ im Tag heißt „Anklagen“ (EN „Accuse“). (4) Die Vollbildkarte bekommt keinen Hinweis „Antippen schließt“ (DA-102 Punkt 2 bleibt: Antippen schließt). (5) Am Ring wird kein Name stark gekürzt: auch bei 24 Personen ist jeder Name ganz lesbar, mindestens 14 px, notfalls zweizeilig oder mit etwas kleineren Porträts.

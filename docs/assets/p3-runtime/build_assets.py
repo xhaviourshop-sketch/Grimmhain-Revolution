@@ -7,6 +7,8 @@ All outputs are development material with the register status `intern-freigegebe
 """
 import os
 import shutil
+import subprocess
+import sys
 from PIL import Image
 
 SRC_WK = "C:/Users/Marku/Desktop/Grimmhain/Grimmhain-Werwolf/Grimmhain Assets/"
@@ -76,6 +78,8 @@ def main():
     fit(bar, height=60).save(out("ui/plate-frame.png"), optimize=True)
     for side in ("left", "right"):
         fit(trimmed(Image.open(SRC_WK + "arrow-%s.png" % side).convert("RGBA")), height=96).save(out("ui/arrow-%s.png" % side), optimize=True)
+    # DA-104: protection ring and shield are moon blue, not gold; recolor after every rebuild
+    subprocess.run([sys.executable, os.path.join(ROOT, "tools", "recolor_protected_marks.py")], check=True)
     total = sum(os.path.getsize(os.path.join(d, f)) for d, _, fs in os.walk(OUT) for f in fs)
     print("ok, %d KB" % (total // 1024))
 
