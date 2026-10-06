@@ -55,7 +55,8 @@ fs.copyFileSync(path.join(project, "web", "vercel.json"), path.join(out, "vercel
 // Loading page: web/shell.html shows godot/web/ladebild.webp as background with the brand seal and wordmark on top (not packed into the pck, see exclude_filter "web/*").
 for (const [src, name] of [["web/ladebild.webp", "ladebild.webp"], ["assets/brand/siegel.webp", "siegel.webp"], ["assets/brand/wortmarke.webp", "wortmarke.webp"]]) {
   fs.rmSync(path.join(out, name), { force: true });
-  if (fs.existsSync(path.join(project, src))) fs.copyFileSync(path.join(project, src), path.join(out, name));
+  if (!fs.existsSync(path.join(project, src))) { console.error(`loading page file missing: godot/${src}`); process.exit(1); }
+  fs.copyFileSync(path.join(project, src), path.join(out, name));
 }
 fs.rmSync(path.join(out, "ladebild.png"), { force: true });
 console.log(`export ok: ${id}  pck ${fs.statSync(path.join(out, "index.pck")).size} bytes`);
