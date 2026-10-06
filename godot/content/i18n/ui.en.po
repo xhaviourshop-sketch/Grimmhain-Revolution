@@ -2631,7 +2631,7 @@ msgid "ui.gm.kind.set_mirror"
 msgstr "Change the mirror"
 
 msgid "ui.gm.kind.set_ever_nominated"
-msgstr "Change accusation status"
+msgstr "Change accusation"
 
 msgid "ui.gm.kind.set_apprentice_master"
 msgstr "Set the Apprentice’s master"
@@ -4220,7 +4220,7 @@ msgid "ui.role.korrupter_richter.lex.example"
 msgstr "In night 3 the Judge marks Emil. At the start of day 4 Emil is accused. In public it is only said that Emil is accused.\nThe Judge marks themself. They are accused at the start of the day."
 
 msgid "ui.role.korrupter_richter.lex.gm"
-msgstr "You never say who accused. At the start of the night the app clears the old marking."
+msgstr "You never say who made the accusation. At the start of the night the app clears the old marking."
 
 msgid "ui.role.werwolf.lex.night"
 msgstr "pack step every night"
@@ -4283,7 +4283,7 @@ msgid "ui.role.spiegelwolf.lex.wolf"
 msgstr "yes"
 
 msgid "ui.role.spiegelwolf.lex.ability"
-msgstr "Pack wolf, redirects one execution onto the accusing person once."
+msgstr "Pack wolf that redirects one execution onto the accuser."
 
 msgid "ui.role.spiegelwolf.lex.timing"
 msgstr "The Mirror Wolf's first confirmed execution, once per life. It is used up only with the confirmed execution."
@@ -6921,10 +6921,10 @@ msgid "ui.card.solo_11.name"
 msgstr "Judge from the Realm of the Dead"
 
 msgid "ui.card.solo_11.solo.text"
-msgstr "After every vote you may accuse once more. Only if at least 50% of the players agree is this person additionally lynched."
+msgstr "After every vote you may accuse one more person. If at least 50% of the players agree, they are additionally lynched."
 
 msgid "ui.card.solo_11.solo.guide"
-msgstr "After the day's vote the card player may accuse once more. If at least half agree, the person is executed. You enter the person and the agreement."
+msgstr "After the day's vote the card player may accuse one more person. If at least half agree, the person is executed. You enter the person and the agreement."
 
 msgid "ui.card.solo_13.name"
 msgstr "The Realm of the Dead Rules"
@@ -7314,7 +7314,7 @@ msgid "ui.prompt.generic.roll"
 msgstr "Tap “Roll”. The result is stored and never rolled again."
 
 msgid "ui.card.task.puppet_nominate.heading"
-msgstr "Task: puppeteer accusations"
+msgstr "Task: puppeteer accuses"
 
 msgid "ui.card.task.protect_pick.heading"
 msgstr "Task: choose the protected person"

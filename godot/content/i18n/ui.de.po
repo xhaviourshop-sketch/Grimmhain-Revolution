@@ -2631,7 +2631,7 @@ msgid "ui.gm.kind.set_mirror"
 msgstr "Spiegelung ändern"
 
 msgid "ui.gm.kind.set_ever_nominated"
-msgstr "Anklagestatus ändern"
+msgstr "Anklage ändern"
 
 msgid "ui.gm.kind.set_apprentice_master"
 msgstr "Meister des Lehrlings setzen"
@@ -6921,10 +6921,10 @@ msgid "ui.card.solo_11.name"
 msgstr "Richter aus dem Totenreich"
 
 msgid "ui.card.solo_11.solo.text"
-msgstr "Nach jeder Abstimmung darfst du erneut einmal anklagen, nur wenn mindestens 50% der Spieler dafür sind, wird diese Person zusätzlich gelyncht."
+msgstr "Nach jeder Abstimmung darfst du eine weitere Person anklagen. Stimmen mindestens 50% der Spieler zu, wird sie zusätzlich gelyncht."
 
 msgid "ui.card.solo_11.solo.guide"
-msgstr "Nach der Abstimmung des Tages darf die Kartenspielerin noch einmal anklagen. Stimmt mindestens die Hälfte zu, wird die Person hingerichtet. Du trägst Person und Zustimmung ein."
+msgstr "Nach der Abstimmung des Tages darf die Kartenspielerin noch eine Person anklagen. Stimmt mindestens die Hälfte zu, wird die Person hingerichtet. Du trägst Person und Zustimmung ein."
 
 msgid "ui.card.solo_13.name"
 msgstr "Das Totenreich Regiert"
@@ -7314,7 +7314,7 @@ msgid "ui.prompt.generic.roll"
 msgstr "Tippe „Würfeln“. Das Ergebnis wird gespeichert und nicht neu gewürfelt."
 
 msgid "ui.card.task.puppet_nominate.heading"
-msgstr "Aufgabe: Anklagen des Puppenspielers"
+msgstr "Aufgabe: Puppenspieler klagt an"
 
 msgid "ui.card.task.protect_pick.heading"
 msgstr "Aufgabe: Geschützte Person wählen"

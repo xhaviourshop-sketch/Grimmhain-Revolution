@@ -14,7 +14,7 @@ Lesende Ansicht mit Inhaltsverzeichnis und zwölf Kapiteln (`RuleBook`, Katalog 
 4. Nacht führen und Tarnaufrufe
 5. Private Informationen zeigen
 6. Morgen und Wiederbelebungsrunde
-7. Tag, Nominierung und physische Abstimmung
+7. Tag, Anklage und physische Abstimmung
 8. Hinrichtung und Todesreaktionen
 9. Sieg bestätigen
 10. Spielleiterkorrekturen und Undo
