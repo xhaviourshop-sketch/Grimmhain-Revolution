@@ -479,7 +479,7 @@ static func _name_row(person_id: int, person_name: String, done: bool, is_next: 
 	return host
 
 
-## Rollenanzeige, Karte einer Person (erst nach dem Antippen gebaut): nur das große Bild ihrer Rollenkarte, kein Text. Ein Tipp irgendwo
+## Rollenanzeige, Karte einer Person (erst nach dem Antippen gebaut): oben klein der Name der Person, darunter das große Bild ihrer Rollenkarte. Ein Tipp irgendwo
 ## schließt die Karte; war die Rolle noch nicht gesehen (`confirmed` false), gilt das Schließen als „gesehen“ (`ConfirmRoleButton`),
 ## sonst schließt `CloseRoleButton` nur.
 static func role_card(card: Dictionary) -> Control:
@@ -491,11 +491,19 @@ static func role_card(card: Dictionary) -> Control:
 		margin.add_theme_constant_override("margin_%s" % side, ThemeTokens.SAFE_MARGIN)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(margin)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override(&"separation", 2)
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_child(column)
+	var person := _fit_label(column, "ui.cockpit.show.value", {"value": str(card.get("name", ""))}, &"ShowValueLabel", BARE_NAME_SIZE)
+	person.name = "ShowName"
+	person.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var image := RoleCardImage.new()
 	image.name = "RoleCardPicture"
 	image.role_id = str(card["role_id"])
+	image.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(image)
+	column.add_child(image)
 	var tap := _button("CloseRoleButton" if bool(card.get("confirmed", false)) else "ConfirmRoleButton", "", GrimmButton.Kind.SECONDARY)
 	tap.set_meta(&"grove_skinned", true)
 	tap.accessibility_name = TranslationServer.translate("ui.cockpit.roles.close")
