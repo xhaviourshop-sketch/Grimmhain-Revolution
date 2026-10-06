@@ -6000,7 +6000,7 @@ msgid "ui.history.export_info.gm"
 msgstr "The game master version is exported: it contains all roles, causes and secret details."
 
 msgid "ui.history.export.public"
-msgstr "Save public version as text"
+msgstr "Save text"
 
 msgid "ui.history.export.gm"
 msgstr "Save text"

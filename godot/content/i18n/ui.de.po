@@ -6000,7 +6000,7 @@ msgid "ui.history.export_info.gm"
 msgstr "Exportiert wird die Spielleiterfassung: Sie enthält alle Rollen, Ursachen und geheimen Angaben."
 
 msgid "ui.history.export.public"
-msgstr "Öffentliche Fassung als Text speichern"
+msgstr "Text speichern"
 
 msgid "ui.history.export.gm"
 msgstr "Text speichern"
