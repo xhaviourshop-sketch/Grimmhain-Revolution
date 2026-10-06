@@ -43,6 +43,7 @@ Größe nennt Markus im Auftrag, sonst schätzt Claude sie zu Beginn und schreib
 - NIE scrollen müssen. Text skaliert automatisch so groß wie möglich, aber passend.
 - KEINE Standard-Kästen. Jede Fläche, jeder Knopf, jede Liste und jeder Schalter aus gemalten Assets. Fehlt eins: in `docs/audit/FENSTER-OPTIK.md` mit fertiger ChatGPT-Beschreibung auflisten, nie still einen Code-Rahmen nehmen.
 - Knöpfe 1 bis 2 Wörter.
+- Kartenbilder von Markus (`godot/assets/cards/`, auch die Zahl oben links = Nachtreihenfolge) NIE verändern, nicht übermalen, nicht neu komprimieren. Fehler an einer Karte melden, Markus liefert ein neues Bild.
 - Screenshots und Asset-Ablage: `C:/Users/Marku/Downloads/Grimmhain/` (`Assets/ui`, `Assets/start`, `Karten`, `Screenshots/Feedback-N/`, `Vorbereitung`, `Archiv`, Web-Export `Web`).
 
 ## Qualitätsgrenzen
