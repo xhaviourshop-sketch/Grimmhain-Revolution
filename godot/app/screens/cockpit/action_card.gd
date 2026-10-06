@@ -44,6 +44,7 @@ var _lower: BoxContainer = null  ## Zielplatz und Aktionen: nebeneinander auf br
 var primary_host: Control = null
 ## Eckplatz des „i“ (Cockpit): Ist er gesetzt, steht die Kontexthilfe der Rolle als runder Knopf mit „i“ oben rechts auf der Karte.
 var info_host: Control = null
+var secondary_host: Control = null  ## Leiste unten zwischen Timer und Rückgängig: Nebenknöpfe der Tageskarte (nur im Cockpit)
 var _primary: GrimmButton = null
 var _info: GrimmButton = null
 var _undo_bar: HBoxContainer = null  ## „Übernommen. Rückgängig“ für wenige Sekunden nach einer sofort übernommenen Auswahl
@@ -53,6 +54,7 @@ var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel begin
 var _compact: bool = false  ## Mini-Nachtkarte (DA-101): schmal, ohne Scrollen, nur Zeile, Warnungen und Knöpfe
 var _mini_row: HBoxContainer = null  ## obere Zeile der Mini-Karte; dort steht auch der „i“-Knopf
 var _day_card: bool = false  ## Tageskarte nach Inhalt (breiter als die Nachtkarte): lässt die Nominierungsbänder des Rings sichtbar
+var _strip: bool = false  ## Tageskarte als schmale Leiste oben ohne Tafel; die Knöpfe stehen unten in `secondary_host` bzw. im Dock
 var _max_height: float = 0.0  ## Höchsthöhe der kompakten Karte (freie Ringmitte); 0 = unbegrenzt
 var _nom_lines: int = MAX_NOMINATION_LINES  ## Nominierungszeilen der Tageskarte; sinkt, wenn die Karte sonst nicht in die Ringmitte passt
 var _nom_count: int = -1
@@ -67,12 +69,20 @@ const COMPACT_SHRINK_STEPS := 2  ## Tageskarte: so viele Schriftschritte, danach
 const FIT_MIN_FONT := 12  ## kleinste Schrift des Kartentexts (logische Einheiten)
 const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (epischer Knopf, `EpicButton`)
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
+const STRIP_LINE_FONT := 17  ## Anklagezeilen in der Tagesleiste: klein, damit mehrere untereinander passen
+const STRIP_BUTTON_FONT := 16
+const STRIP_BUTTON_PAD := 44.0  ## zusätzliche Breite je Knopf, wenn Platz ist (der Text soll nicht auf den Dornen-Enden liegen)
+const STRIP_BUTTON_MARGIN := 20.0  ## Textrand der Knöpfe in der Tagesleiste (Standard: Breite des Dornen-Endes)
+const STRIP_BUTTON_HEIGHT := 44.0  ## Knöpfe der Tagesleiste unten: niedriger und kleiner, damit sie samt Timer, Rückgängig und Hauptknopf in die Zeile passen
+const STRIP_START_STEP := 3  ## Tagesleiste: Textanpassung beginnt bei diesem Schritt (klein, die Mitte bleibt frei)
+const STRIP_ACTION_MIN_WIDTH := 96.0  ## Nebenknöpfe der Tagesleiste unten (schmale Lücke zwischen Timer und Rückgängig)
 const DAY_ACTION_MIN_WIDTH := 300.0  ## Tageskarte: je Knopf eine Zeile, damit „Keine Hinrichtung“ einzeilig bleibt
 const MINI_SYMBOL := 34.0  ## Rollensymbol der Mini-Nachtkarte
 ## Größte Schrift der Einzeiler je Theme-Variante. `FitLabel` liest sie sonst aus dem Theme, findet dabei aber seine eigene (schon verkleinerte)
 ## Überschreibung und könnte nie mehr wachsen; mit festem `max_font_size` bleibt die Anpassung stabil.
 const FIT_MAX := {&"HeadingLabel": ThemeTokens.FONT_HEADING, &"SectionLabel": ThemeTokens.FONT_SUBTITLE, &"NightLineLabel": ThemeTokens.FONT_BUTTON,
 	&"NightActionLabel": ThemeTokens.FONT_BODY}
+const STRIP_MAX_NOMINATIONS := 3  ## Tagesleiste: die letzten Anklagen in einer Zeile (die Bänder am Ring zeigen alle)
 const MAX_NOMINATION_LINES := 4  ## Tageskarte: die letzten Nominierungen als Zeilen (die Bänder am Ring zeigen alle)
 const UNDO_SECONDS := 3.0  ## so lange bleibt „Rückgängig“ nach einer sofort übernommenen Auswahl sichtbar
 ## Gruppenrufe ohne geheime Auskunft: ein Bildschirm mit Namen und „Weiter“, kein „Karte zeigen“ (die Beteiligten sehen einander).
@@ -182,13 +192,16 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_compact = false
 	_mini_row = null
 	_day_card = false
+	_strip = false
 	_info_gap = true
 	_content.size_flags_vertical = Control.SIZE_FILL
 	_content.alignment = BoxContainer.ALIGNMENT_BEGIN
 	for arrow: Node in _slot.find_children("*", "BaseButton", true, false):
 		(arrow as BaseButton).disabled = false  # `lock` sperrt auch den Zielplatz bis zur nächsten Karte
 	_undo_button.disabled = false
-	for box: Node in [_content, _actions_box]:
+	for box: Node in [_content, _actions_box, secondary_host]:
+		if box == null:
+			continue
 		for child: Node in box.get_children():
 			box.remove_child(child)
 			child.queue_free()
@@ -230,6 +243,7 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	# der Knopf „Rückgängig“, ohne „Übernommen.“.
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED if _compact else ScrollContainer.SCROLL_MODE_AUTO
 	(_undo_bar.get_node("UndoLabel") as Control).visible = not _compact
+	_lower.visible = not _strip  # die Leiste oben hat keinen Aktionsbereich (die Knöpfe stehen unten); sein Abstand würde sie nur höher machen
 
 
 ## Der Text unter „Sag jetzt“ und die Anweisung sind immer vollständig sichtbar: Die Karte füllt schon die ganze freie Tischmitte (sie darf
@@ -238,7 +252,7 @@ func render(next: Dictionary, context: Dictionary) -> void:
 func _fit_text() -> void:
 	if _scroll == null or _content == null or not is_inside_tree() or (_compact and _max_height <= 0.0):
 		return
-	_fit_index = _fit_step
+	_fit_index = maxi(_fit_step, STRIP_START_STEP) if _strip else _fit_step  # die Leiste beginnt klein
 	_fit_apply()
 	_fit_wait = 2  # zwei Bilder, bis Layout und Scrollleiste den neuen Stand zeigen
 	set_process(true)
@@ -257,7 +271,7 @@ func _process(_delta: float) -> void:
 	if fits:
 		set_process(false)
 		return
-	if _compact and _day_card and _nom_lines > 1 and _fit_index >= COMPACT_SHRINK_STEPS:
+	if _compact and _day_card and _nom_lines > 1 and _fit_index >= (FIT_STEPS.size() - 1 if _strip else COMPACT_SHRINK_STEPS):
 		set_process(false)  # Tageskarte: lieber eine Nominierungszeile weniger (die Bänder am Ring zeigen alle) als winzige Schrift
 		_nom_lines -= 1
 		render.call_deferred(_last_next, _last_context)
@@ -332,6 +346,10 @@ func action_buttons() -> Array[BaseButton]:
 	for b: Node in _actions_box.get_children():
 		if b is BaseButton and not b.is_queued_for_deletion():
 			out.append(b as BaseButton)
+	if secondary_host != null:
+		for b: Node in secondary_host.get_children():
+			if b is BaseButton and not b.is_queued_for_deletion():
+				out.append(b as BaseButton)
 	if not _left_handed:
 		out.reverse()
 	if _primary != null and is_instance_valid(_primary) and not _primary.is_queued_for_deletion():
@@ -362,7 +380,10 @@ func _apply_hand(reorder: bool) -> void:
 ## Sperrt alle Aktionen bis zum nächsten `render` (Schutz gegen Mehrfachtippen).
 func lock() -> void:
 	_busy = true
-	for b: Node in find_children("*", "BaseButton", true, false):
+	var buttons := find_children("*", "BaseButton", true, false)
+	if secondary_host != null:
+		buttons.append_array(secondary_host.find_children("*", "BaseButton", true, false))
+	for b: Node in buttons:
 		if b != _undo_button:
 			(b as BaseButton).disabled = true
 	if _primary != null and is_instance_valid(_primary):
@@ -414,6 +435,43 @@ func is_compact() -> bool:
 ## Wahr bei der Tageskarte nach Inhalt: etwas breiter als die Nachtkarte, aber nie so groß, dass sie die Bänder des Rings verdeckt.
 func is_day_card() -> bool:
 	return _day_card
+
+
+## Wahr, solange die Tageskarte als schmale Leiste oben steht (keine Tafel in der Mitte, Knöpfe unten).
+func is_strip() -> bool:
+	return _strip
+
+
+## Schmale Dornen-Enden für die Knöpfe der Tagesleiste: derselbe gemalte Knopf, nur weniger Rand um den Text, damit drei Knöpfe samt Timer
+## und Hauptknopf in die untere Zeile passen. `loosen_button` stellt das Theme wieder her.
+static func tighten_button(button: BaseButton) -> void:
+	var boxes := {
+		"normal": SkinArt.button_box("normal"),
+		"hover": SkinArt.button_box("normal", SkinArt.TINT_HOVER),
+		"pressed": SkinArt.button_box("gedrueckt"),
+		"hover_pressed": SkinArt.button_box("gedrueckt", SkinArt.TINT_HOVER),
+		"disabled": SkinArt.button_box("normal", SkinArt.TINT_DISABLED),
+		"focus": SkinArt.button_box("normal", SkinArt.TINT_FOCUS),
+	}
+	for state: String in boxes:
+		var box := boxes[state] as SkinBarBox
+		box.content_margin_left = STRIP_BUTTON_MARGIN
+		box.content_margin_right = STRIP_BUTTON_MARGIN
+		box.content_margin_top = ThemeFactory.BUTTON_MARGIN_Y
+		box.content_margin_bottom = ThemeFactory.BUTTON_MARGIN_Y
+		button.add_theme_stylebox_override(state, box)
+	button.add_theme_font_size_override(&"font_size", STRIP_BUTTON_FONT)
+
+
+static func loosen_button(button: BaseButton) -> void:
+	button.remove_theme_font_size_override(&"font_size")
+	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
+		button.remove_theme_stylebox_override(state)
+
+
+## Wahr, solange die Karte etwas zeigt (Text, Zielplatz oder Knöpfe); eine Karte ohne Inhalt wird nicht angezeigt.
+func has_content() -> bool:
+	return _content.get_child_count() > 0 or _actions_box.get_child_count() > 0 or _slot.visible
 
 
 ## Wahr, solange die Karte nur den großen Knopf „Spiel beginnen“ zeigt.
@@ -745,12 +803,14 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 	# Tageskarte nach Inhalt (kein Scrollen, keine Regelzeilen): so klein, dass die Nominierungsbänder des Rings erkennbar bleiben.
 	# Nur Karten mit öffentlichen Kartenregeln (viel Text) füllen weiter die Tischmitte.
 	_set_day_card(str(context.get("day_mode", "")) != "" or (next.get("card_rules", []) as Array).is_empty())
+	# Ohne Vorlesetext (Tote, Wirkungen, Karten) genügt die Leiste oben; mit Vorlesetext bleibt die kleine Karte, damit er lesbar ist.
+	_strip = _day_card and (str(context.get("day_mode", "")) != "" or not _has_spoken_text(context))
 	match str(context.get("day_mode", "")):
 		"nominate_from", "nominate_to":
 			_day_nominate(context)
 			return
 		"execute":
-			_heading("ui.cockpit.card.day.execute.heading")
+			_strip_heading("ui.cockpit.card.day.execute.heading")
 			_text("ui.cockpit.card.day.execute.do", {}, &"MutedLabel")
 			_actions([_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
 			return
@@ -781,12 +841,13 @@ func _day(next: Dictionary, context: Dictionary) -> void:
 	day_buttons.append_array(extra_buttons)
 	if bool(next.get("cards", false)):
 		day_buttons.append(_button("CardOverviewButton", "ui.cards.action.overview", GrimmButton.Kind.COMPACT, &"card_overview"))
-	var gap := Control.new()
-	gap.name = "ActionGap"
-	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	gap.custom_minimum_size = Vector2(DAY_ACTION_MIN_WIDTH, ThemeTokens.SPACE_M)
-	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	day_buttons.append(gap)
+	if not _strip:
+		var gap := Control.new()
+		gap.name = "ActionGap"
+		gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		gap.custom_minimum_size = Vector2(DAY_ACTION_MIN_WIDTH, ThemeTokens.SPACE_M)
+		gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		day_buttons.append(gap)
 	day_buttons.append(_button("NoExecutionButton", "ui.cockpit.action.no_execution", GrimmButton.Kind.SECONDARY, &"no_execution"))
 	if not _left_handed:
 		day_buttons.reverse()  # Rechtshänder: `_apply_hand` kehrt die Reihenfolge um
@@ -800,18 +861,34 @@ func _set_day_card(on: bool) -> void:
 	_info_gap = not on
 
 
+func _has_spoken_text(context: Dictionary) -> bool:
+	return not (context.get("day_deaths", []) as Array).is_empty() or not (context.get("day_effects", []) as Array).is_empty() 		or not CockpitText.card_lines(context.get("day_cards", [])).is_empty()
+
+
+## In der Leiste oben steht keine Überschrift (nur der Hinweis); auf der Karte in der Mitte bleibt sie.
+func _strip_heading(key: String) -> void:
+	if not _strip:
+		_heading(key)
+
+
 func _day_public(next: Dictionary, context: Dictionary) -> void:
 	var nominations: Array = next.get("nominations", [])
 	if nominations.is_empty():
 		_text("ui.cockpit.card.day.no_nominations", {}, &"MutedLabel")
 	else:
 		var seats: Array = context.get("seats", [])
-		for n: Dictionary in nominations.slice(maxi(nominations.size() - _nom_lines, 0)):
+		var sentences: Array[String] = []
+		for n: Dictionary in nominations.slice(maxi(nominations.size() - (STRIP_MAX_NOMINATIONS if _strip else _nom_lines), 0)):
 			var nominee := CockpitText.names_of([int(n["nominee_id"])], seats)
-			if int(n["nominator_id"]) == -1:
-				_one_line("ui.cockpit.card.day.nomination_hidden", {"nominee": nominee}, &"SectionLabel", 13)
+			var hidden := int(n["nominator_id"]) == -1
+			var key := "ui.cockpit.card.day.nomination_hidden" if hidden else "ui.cockpit.card.day.nomination"
+			var values := {"nominee": nominee} if hidden else {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}
+			if _strip:
+				sentences.append(tr(key).format(values))
 			else:
-				_one_line("ui.cockpit.card.day.nomination", {"nominator": CockpitText.names_of([int(n["nominator_id"])], seats), "nominee": nominee}, &"SectionLabel", 13)
+				_one_line(key, values, &"SectionLabel", 13)
+		if _strip:  # alle Anklagen in einer Zeile, die Schrift passt sich der Breite an
+			_one_line("ui.cockpit.card.day.nomination_line", {"lines": "   ·   ".join(sentences)}, &"SectionLabel", 12).name = "NominationLine"
 		if str(next.get("kind")) == "day":  # nach der Entscheidung nicht mehr
 			_text("ui.cockpit.card.day.defend", {}, &"WarningLabel").name = "DefendLine"  # Vorlesezeile, bricht um (zu lang für eine Zeile)
 	var deaths: Array = context.get("day_deaths", [])
@@ -833,7 +910,7 @@ func _day_public(next: Dictionary, context: Dictionary) -> void:
 func _day_nominate(context: Dictionary) -> void:
 	var seats: Array = context.get("seats", [])
 	var from := int(context.get("nominator", -1))
-	_heading("ui.cockpit.card.day.nominate.heading")
+	_strip_heading("ui.cockpit.card.day.nominate.heading")
 	if str(context.get("day_mode")) == "nominate_from":
 		_text("ui.cockpit.card.day.nominate.from", {}, &"SectionLabel")
 		_actions([_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
@@ -848,7 +925,7 @@ func _day_nominate(context: Dictionary) -> void:
 
 
 func _day_pick(context: Dictionary, heading: String, instruction: String, confirm_name: String, confirm_key: String, action: StringName) -> void:
-	_heading(heading)
+	_strip_heading(heading)
 	_text(instruction, {}, &"MutedLabel")
 	var selection: Array = context.get("selection", [])
 	if selection.is_empty():
@@ -918,9 +995,10 @@ func _execution_check(context: Dictionary) -> void:
 			buttons.append(_button("NoRunnerUpButton", "ui.cards.action.no_runner_up", GrimmButton.Kind.SECONDARY, &"exec_runner_up", {"id": -1}))
 	var confirm := _button("ConfirmExecutionButton", confirm_key, GrimmButton.Kind.PRIMARY, &"confirm_execution")
 	confirm.disabled = not ready
+	_strip = buttons.is_empty()  # ohne Pflichtfragen nur Leiste oben; mit Fragen bleibt die Karte, „Hinrichten“ steht dann in ihr
 	buttons.append(confirm)
 	buttons.append(_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode"))
-	_actions(buttons, true)  # „Hinrichten“ steht in der Karte neben „Abbrechen“, nicht zusätzlich im Dock
+	_actions(buttons, true)  # „Hinrichten“ steht in der Karte neben „Abbrechen“, nicht zusätzlich im Dock (in der Leiste im Dock)
 
 
 ## Hinweise zu Kartenwirkungen auf die Hinrichtung; gibt zurück, ob mindestens einer angezeigt wurde.
@@ -1187,7 +1265,7 @@ func _read_aloud(key: String, values: Dictionary) -> void:
 func _one_line(key: String, values: Dictionary, variation: StringName, min_size: int) -> FitLabel:
 	var label := FitLabel.new()
 	label.min_font_size = min_size
-	label.max_font_size = int(FIT_MAX.get(variation, 0))
+	label.max_font_size = mini(int(FIT_MAX.get(variation, 0)), STRIP_LINE_FONT) if _strip else int(FIT_MAX.get(variation, 0))
 	label.format_values = values
 	label.text_key = key
 	label.theme_type_variation = variation
@@ -1226,18 +1304,33 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 
 
 func _actions(buttons: Array[Control], all_in_card: bool = false) -> void:
+	var in_bar := _strip and secondary_host != null  # Tageskarte ohne Tafel: Nebenknöpfe stehen unten in der Leiste
 	for b: Control in buttons:
-		if not all_in_card and primary_host != null and _primary == null and b is GrimmButton and (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY:
+		if (in_bar or not all_in_card) and primary_host != null and _primary == null and b is GrimmButton and (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY:
 			_primary = b as GrimmButton
 			primary_host.add_child(b)
 			continue
-		_actions_box.add_child(b)
+		if in_bar:
+			if b is GrimmButton:
+				(b as GrimmButton).kind = GrimmButton.Kind.COMPACT  # schmalere Enden und kleinere Schrift als der Standardknopf
+				(b as GrimmButton).wrap = false  # eine Zeile; der Knopf wird so breit wie sein Text
+			tighten_button(b as BaseButton)
+			b.custom_minimum_size = Vector2(STRIP_ACTION_MIN_WIDTH, STRIP_BUTTON_HEIGHT)
+			b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			secondary_host.add_child(b)
+		else:
+			_actions_box.add_child(b)
+	if in_bar and not _left_handed:  # Rechtshänder bekommen die Reihenfolge umgekehrt geliefert: links steht die erste Aktion
+		var children := secondary_host.get_children()
+		children.reverse()
+		for i: int in children.size():
+			secondary_host.move_child(children[i], i)
 	_apply_hand(not _left_handed)
 
 
 ## Ein Tippen zählt nur auf einem Button der aktuellen Karte, solange sie nicht gesperrt ist.
 func _emit(action: StringName, payload: Dictionary, source: BaseButton) -> void:
-	if _busy or source.disabled or source.is_queued_for_deletion() or not (is_ancestor_of(source) or source == _primary or source == _info):
+	if _busy or source.disabled or source.is_queued_for_deletion() or not (is_ancestor_of(source) or source == _primary or source == _info or (secondary_host != null and secondary_host.is_ancestor_of(source))):
 		return
 	requested.emit(action, payload)
 

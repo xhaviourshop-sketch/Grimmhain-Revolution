@@ -55,6 +55,7 @@ const TINT_EPIC_DISABLED := Color(0.55, 0.55, 0.6)     ## epischer Knopf gesperr
 const TINT_NONE := Color(1, 1, 1, 1)         ## Bild unverändert
 const TINT_DEAD := Color(0.5, 0.5, 0.55)     ## Porträt einer toten Person
 const TINT_DISABLED := Color(0.62, 0.62, 0.66)  ## nicht wählbare Person oder gesperrte Lasche
+const TINT_STRIP := Color(1, 1, 1, 0.72)         ## Tagesleiste oben: gemalte Zeile, durchscheinend
 const TINT_LOCKED := Color(0.36, 0.36, 0.42)    ## Person, die bei der Nominierung gesperrt ist (stärker abgedunkelt als TINT_DISABLED)
 const TINT_HOVER := Color(1.25, 1.2, 1.1)    ## Lasche unter Finger oder Zeiger
 const TINT_ART_DONE := Color(0.8, 0.8, 0.84)  ## erledigter Schritt der Nachtleiste

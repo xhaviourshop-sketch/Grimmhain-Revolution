@@ -294,3 +294,48 @@ func test_day_card_stays_as_tall_as_its_content_in_the_second_nomination_step() 
 	await frames(20)
 	var panel := find_node(current_screen(shell), "InstructionCard") as Control
 	assert_true(panel.size.y <= panel.get_combined_minimum_size().y + 1.0, "Karte so hoch wie ihr Inhalt (%s statt %s)" % [panel.size.y, panel.get_combined_minimum_size().y])
+
+
+## Tag ohne Tafel in der Mitte (Feedback 10): Anklagen und „Keine Hinrichtung“ stehen unten in der Leiste, Text und Hauptknopf bleiben getrennt;
+## Abbrechen steht in allen Schritten dort, die Karte ist die schmale Leiste oben.
+func test_day_actions_stand_in_the_bottom_bar_without_a_center_card() -> void:
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	var screen := current_screen(shell)
+	var bar := find_node(screen, "DayBar")
+	var card := find_node(screen, "ActionCard") as ActionCard
+	assert_true(card.is_strip(), "Tag: schmale Leiste statt Tafel")
+	assert_true(bar.is_ancestor_of(find_button(screen, "NominateButton")), "Anklagen in der unteren Leiste")
+	assert_true(bar.is_ancestor_of(find_button(screen, "NoExecutionButton")), "Keine Hinrichtung in der unteren Leiste")
+	assert_false(bar.is_ancestor_of(find_button(screen, "ExecuteButton")), "Hinrichtung bleibt der Hauptknopf im Dock")
+	await _press(shell, "NominateButton")
+	assert_true(bar.is_ancestor_of(find_button(screen, "CancelModeButton")), "Abbrechen in der unteren Leiste")
+	await _press(shell, "CancelModeButton")
+	assert_true(session_of(shell).call("nominate", 3, 1).ok, "Anklage")
+	await frames(3)
+	await _press(shell, "ExecuteButton")
+	assert_true(card.is_strip(), "Hinrichtung: Hinweis als Leiste, alle Bänder frei")
+	assert_true(_texts(shell).contains(tr("ui.cockpit.card.day.execute.do")), "Hinweis zur Hinrichtung steht in der Leiste")
+	assert_true(bar.is_ancestor_of(find_button(screen, "CancelModeButton")), "Abbrechen in der unteren Leiste")
+
+
+## Ein Fenster ohne Inhalt wird nie gezeigt: Die Karte ist genau dann sichtbar, wenn sie etwas enthält (leere Tafel über die ganze Höhe).
+func test_card_is_visible_only_with_content() -> void:
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
+	if shell == null:
+		return
+	var screen := current_screen(shell)
+	var panel := find_node(screen, "InstructionCard") as Control
+	var card := find_node(screen, "ActionCard") as ActionCard
+	assert_eq(panel.visible, card.has_content(), "Spielbeginn")
+	await _quiet_night(shell)
+	assert_true(card.has_content() and panel.visible, "Tag mit Inhalt")
+	await _press(shell, "NominateButton")
+	await press(_seat(shell, 3))
+	await frames(20)
+	assert_true(card.has_content() and panel.visible, "zweiter Anklageschritt mit Inhalt")
+	var empty := ActionCard.new()
+	assert_false(empty.has_content(), "Karte ohne Inhalt meldet das")
+	empty.free()

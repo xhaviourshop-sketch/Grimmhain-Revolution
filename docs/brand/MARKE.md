@@ -22,6 +22,10 @@ Eigenes gedrucktes Kartenspiel plus Spielleiter-App; die Marke muss auf iPad, Ap
 ## Material
 Geschmiedetes schwarzes Eisen, Wurzeln, Dornen, Mondsilber. Lava und Glut nur bei Start- und Feuer-Momenten. Ornamente nur an Ecken und Enden, damit Rahmen dehnbar bleiben.
 
+**Ausnahme von der Fensterregel (DA-105):** Die gezeigte Rollenkarte („Karte zeigen“, z. B. Orakel) hat kein Fenster. Nachtgrund, oben klein der Name der Person, das Kartenbild nimmt rund 90 % der Höhe, darunter nur „Fertig“. Gilt wie die Vollbildkarte der Rollenanzeige (DA-102 Punkt 5).
+
+Die Tagesleiste (DA-105) ist kein Fenster: eine schmale, durchscheinende gemalte Zeile oben mit den Anklagen und der Verteidigungszeile; ihre Knöpfe stehen unten zwischen Timer und „Rückgängig“. Die Mitte bleibt für die Anklagebänder frei.
+
 ## Schrift
 - Logo und große Titel: gotisch-geschmiedet, hohe spitze Buchstaben (wie die Wortmarke). Titelschrift in der App: Grenze Gotisch (SIL OFL 1.1, intern freigegeben), nur für `GothicTitleLabel`.
 - Alles andere: schlichte, gut lesbare Schrift. Nie gotisch in Fließtext oder Knöpfen.

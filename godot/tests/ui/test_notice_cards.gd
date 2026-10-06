@@ -133,7 +133,7 @@ func test_notice_survives_navigation_restart_and_undo() -> void:
 
 # --- Rattenfänger -----------------------------------------------------------------------------------
 
-func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
+func test_piper_shows_new_enchanted_with_their_names_then_the_all_step() -> void:
 	var shell := await _cockpit([W, "rattenfaenger", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
 		return
@@ -145,10 +145,11 @@ func test_piper_shows_new_enchanted_without_names_then_the_all_step() -> void:
 	var next := UiGame.next_of(s)
 	assert_eq(str(next["text_key"]), "ui.notice.piper_new", "neu Verzauberte")
 	assert_true(bool(next["group"]), "Gruppenkarte")
-	assert_true((next["values"] as Dictionary).is_empty(), "ohne Namen")
+	assert_true((next["values"] as Dictionary).is_empty(), "Satz des Hinweises ohne Werte (die Namen stehen darunter)")
 	await press(find_button(screen, "ShowNoticeButton"))
 	var first := _texts(find_node(screen, "NoticeLayer"))
-	assert_false(_has_word(first, "C") or _has_word(first, "D"), "erste Phase nennt keine Namen: %s" % first)
+	assert_true(_has_word(first, "C") and _has_word(first, "D"), "unter dem Hinweis stehen die in dieser Nacht Verzauberten (Feedback 10): %s" % first)
+	assert_false(_has_word(first, "E") or _has_word(first, "B"), "keine anderen Personen: %s" % first)
 	await press(find_button(find_node(screen, "NoticeLayer"), "CloseLayerButton"))
 	next = UiGame.next_of(s)
 	assert_eq(str(next["kind"]), "begin_step", "danach kein zweiter Hinweis, sondern der Schritt")

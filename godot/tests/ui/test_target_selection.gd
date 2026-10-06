@@ -144,6 +144,22 @@ func test_hound_needs_none_or_three() -> void:
 	assert_eq(hit.map(func(l: Dictionary) -> bool: return bool(l["value"])), [true], "Spürhund: Wolf 1 unter den dreien")
 
 
+## Teilauswahl beim Spürhund (zweite Person von drei): Die Karte bleibt so hoch wie ihr Inhalt, keine leere Tafel über die ganze Höhe.
+func test_hound_partial_selection_keeps_the_card_small() -> void:
+	var shell := await _cockpit([W, "spuerhund", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
+	if shell == null or not await _advance_to(shell, "spuerhund"):
+		return
+	await _begin_open_step(shell)
+	var panel := find_node(_screen(shell), "InstructionCard") as Control
+	var card := find_node(_screen(shell), "ActionCard") as ActionCard
+	for id: int in [1, 3]:
+		await _tap_seat(shell, id)
+		await frames(20)
+		assert_true(panel.visible and card.has_content(), "Karte zeigt ihren Text")
+		assert_true(panel.size.y <= panel.get_combined_minimum_size().y + 1.0, "Karte so hoch wie ihr Inhalt (%s statt %s)" % [panel.size.y, panel.get_combined_minimum_size().y])
+		assert_true(panel.size.y < panel.get_parent_control().size.y, "Karte füllt nicht die ganze Höhe der Mitte")
+
+
 ## Mehr als die Höchstzahl lässt der Sitzkreis nicht zu.
 func test_selection_beyond_maximum_is_refused() -> void:
 	var shell := await _cockpit([W, "loki", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])

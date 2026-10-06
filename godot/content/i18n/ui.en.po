@@ -2324,6 +2324,9 @@ msgstr "All accused players may now defend themselves, one after another."
 msgid "ui.cockpit.card.day.nominations"
 msgstr "Accusations today"
 
+msgid "ui.cockpit.card.day.nomination_line"
+msgstr "{lines}"
+
 msgid "ui.cockpit.card.day.nomination"
 msgstr "{nominator} accuses {nominee}"
 
@@ -2905,6 +2908,9 @@ msgstr "You are rivals. Neither of you can win while the other lives."
 
 msgid "ui.notice.piper_new"
 msgstr "You are enchanted. The Pied Piper wins when all other living people are enchanted."
+
+msgid "ui.notice.piper_new.names"
+msgstr "Enchanted: {names}"
 
 msgid "ui.notice.pest_infected"
 msgstr "You are infected. At the start of each morning you infect a neighbouring living person, as long as you live. Whether you tell the village is up to you."

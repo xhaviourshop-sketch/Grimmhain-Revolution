@@ -2324,6 +2324,9 @@ msgstr "Alle Angeklagten dürfen sich jetzt nacheinander verteidigen."
 msgid "ui.cockpit.card.day.nominations"
 msgstr "Anklagen heute"
 
+msgid "ui.cockpit.card.day.nomination_line"
+msgstr "{lines}"
+
 msgid "ui.cockpit.card.day.nomination"
 msgstr "{nominator} klagt {nominee} an"
 
@@ -2905,6 +2908,9 @@ msgstr "Ihr seid Rivalen. Keiner von euch kann gewinnen, solange der andere lebt
 
 msgid "ui.notice.piper_new"
 msgstr "Ihr seid verzaubert. Der Rattenfänger gewinnt, wenn alle anderen Lebenden verzaubert sind."
+
+msgid "ui.notice.piper_new.names"
+msgstr "Verzaubert: {names}"
 
 msgid "ui.notice.pest_infected"
 msgstr "Du bist infiziert. Zu Beginn jedes Morgens steckst du eine benachbarte lebende Person an, solange du lebst. Ob du es im Dorf sagst, entscheidest du."

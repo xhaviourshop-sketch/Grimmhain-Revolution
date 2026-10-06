@@ -215,6 +215,8 @@ class Pager extends VBoxContainer:
 
 ## Teamsymbol vor einem gezeigten Ergebnis (DA-101): Zahl der Wölfe, Wolf ja/nein, Einzelsieg.
 const SHOW_TEAMS := {"wolf_count": &"wolves", "is_wolf": &"wolves", "solo_count": &"solo", "solo": &"solo"}
+const BARE_BUTTON_HEIGHT := 48.0  ## „Fertig“ unter der fensterlosen Karte: niedrig, damit das Bild rund 90 % der Höhe bekommt
+const BARE_NAME_SIZE := 22  ## Name über der fensterlosen Karte: klein, das Bild nimmt die Höhe
 const SHOW_ICON := 96.0
 const SHOW_MARK := 112.0
 const SHOW_NO_CAPTION: Array[String] = ["hit", "is_wolf"]  ## Ergebnisse, die ohne Beschriftung eindeutig sind (Treffer: Haken oder Kreuz)
@@ -243,6 +245,8 @@ static func show_card(role_id: String, lines: Array) -> Control:
 	if lines.is_empty():
 		return null
 	var tall := lines.any(func(line: Dictionary) -> bool: return str(line["kind"]) == "role")
+	if tall:
+		return _bare_show_card(lines)
 	var layer := _window_layer("ShowLayer", 600.0, tall)
 	var root: Control = layer[0]
 	var column: VBoxContainer = layer[1]
@@ -253,6 +257,44 @@ static func show_card(role_id: String, lines: Array) -> Control:
 	for line: Dictionary in lines:
 		_show_line(column, line, ThemeTokens.FONT_SHOW - 14 if tall else ThemeTokens.FONT_SHOW)
 	(layer[2] as VBoxContainer).add_child(_button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY))
+	return root
+
+
+## Karte mit Rollenbild ohne Fenster (Ausnahme von der Fensterregel, MARKE.md): Nachtgrund, oben klein der Name der Person, das Kartenbild
+## nimmt fast die ganze Höhe, darunter nur „Fertig“.
+static func _bare_show_card(lines: Array) -> Control:
+	var root := _full_rect("ShowLayer")
+	var dim := Panel.new()
+	dim.name = "Dim"
+	dim.theme_type_variation = &"OverlayDim"
+	var night := StyleBoxFlat.new()
+	night.bg_color = ThemeTokens.NIGHT_BACKDROP
+	night.bg_color.a = 0.96
+	dim.add_theme_stylebox_override(&"panel", night)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(dim)
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for side: String in ["left", "top", "right", "bottom"]:
+		margin.add_theme_constant_override("margin_%s" % side, 4)
+	root.add_child(margin)
+	var column := VBoxContainer.new()
+	column.name = "BareContent"
+	column.add_theme_constant_override(&"separation", 2)
+	margin.add_child(column)
+	var order := ["person", "persons", "role"]
+	var sorted: Array = lines.duplicate()
+	sorted.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var ia := order.find(str(a["kind"]))
+		var ib := order.find(str(b["kind"]))
+		return (ia if ia >= 0 else order.size()) < (ib if ib >= 0 else order.size()))
+	for line: Dictionary in sorted:
+		_show_line(column, line, BARE_NAME_SIZE)
+	var done := _button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY)
+	done.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	done.custom_minimum_size.y = BARE_BUTTON_HEIGHT
+	column.add_child(done)
 	return root
 
 
@@ -336,6 +378,11 @@ static func notice_card(card: Dictionary) -> Control:
 	text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	text.size_flags_stretch_ratio = 2.0
 	text.custom_minimum_size.y = 120.0
+	if str(card.get("notice_kind", "")) == "piper_new":  # die in dieser Nacht Verzauberten stehen unter dem Hinweis
+		var names: Array[String] = []
+		for v: Dictionary in viewers:
+			names.append(CockpitText.person(v))
+		_fit_label(column, "ui.notice.piper_new.names", {"names": ", ".join(names)}, &"ShowCaptionLabel", ThemeTokens.FONT_SHOW).name = "NoticeNames"
 	(layer[2] as VBoxContainer).add_child(_button("CloseLayerButton", "ui.cockpit.notice.close", GrimmButton.Kind.PRIMARY))
 	return root
 
