@@ -264,16 +264,7 @@ static func show_card(role_id: String, lines: Array) -> Control:
 ## nimmt fast die ganze Höhe, darunter nur „Fertig“.
 static func _bare_show_card(lines: Array) -> Control:
 	var root := _full_rect("ShowLayer")
-	var dim := Panel.new()
-	dim.name = "Dim"
-	dim.theme_type_variation = &"OverlayDim"
-	var night := StyleBoxFlat.new()
-	night.bg_color = ThemeTokens.NIGHT_BACKDROP
-	night.bg_color.a = 0.96
-	dim.add_theme_stylebox_override(&"panel", night)
-	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(dim)
+	root.add_child(BlurBackdrop.new())
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left", "top", "right", "bottom"]:
@@ -493,16 +484,7 @@ static func _name_row(person_id: int, person_name: String, done: bool, is_next: 
 ## sonst schließt `CloseRoleButton` nur.
 static func role_card(card: Dictionary) -> Control:
 	var root := _full_rect("RoleCardLayer")
-	var dim := Panel.new()
-	dim.name = "Dim"
-	dim.theme_type_variation = &"OverlayDim"
-	var night := StyleBoxFlat.new()  # Grund der Vollbildkarte: tiefes Nachtblau statt grauer Abdunklung
-	night.bg_color = ThemeTokens.NIGHT_BACKDROP
-	night.bg_color.a = 0.96
-	dim.add_theme_stylebox_override(&"panel", night)
-	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(dim)
+	root.add_child(BlurBackdrop.new())  # Grund der Vollbildkarte: das Dorf dahinter, abgedunkelt und leicht unscharf
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left", "top", "right", "bottom"]:
