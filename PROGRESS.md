@@ -7,6 +7,7 @@ Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 ## 2026-10-06: Anklagen überall + Testumfang nach Auftragsgröße (Branch chore/accuse-wording, KLEIN)
 Stand: Alle sichtbaren „nominieren/Nominierung“ in `ui.de.po`/`ui.en.po` (Lexikon, Rollentexte, Ereigniskarten, Regelbuch, Nachtansage Richter) sagen jetzt „anklagen/Anklage“ bzw. „accuse/accusation“; Code-Bezeichner und Kartenbilder unverändert. `CLAUDE.md` hat die Regel „Testumfang nach Auftragsgröße“ (KLEIN/MITTEL/GROSS, Zeitgrenze), Agenten in `.claude/agents/` verweisen darauf.
 Verifikation: `node tools/test-changed --base main` 17 Tests grün (Regelbuch-Test erwartet jetzt „Tag, Anklage und physische Abstimmung“), i18n-Prüfung konsistent, `git diff --check` sauber, `pruefer-sprache` eine Runde (Funde aus der Umstellung behoben; ältere Formulierungen wie „gilt als erfolgt“ bewusst nicht angefasst). Keine Vollsuite (Stufe KLEIN, kein Regelkern).
+Merge ohne Squash nach main (6d00cf0), gepusht. Deploy grimmhain-ipad-test, live 06.10. · 6d00cf0, `index.pck` 40819236 Byte wie lokal, no-cache geprüft. Nicht geprüft: Safari/iPad.
 Nächster Schritt: Markus prüft die Texte auf dem iPad.
 
 ## 2026-10-06: Feedback-Runde 9b (Branch feat/feedback-9b, gemergt und deployt): Antworten von Markus (DA-104)
