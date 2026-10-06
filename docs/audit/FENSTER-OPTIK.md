@@ -55,7 +55,7 @@ Regeln für jedes Bild (`docs/brand/MARKE.md`): ChatGPT-Projekt „Grimmhain Ass
 | `godot/assets/ui/bund-rivalen.png` | Hinweiskarte „Ihr seid Rivalen“ | wie oben | „Quadratisch, transparenter Hintergrund, kleines gemaltes Emblem: zwei gekreuzte, gezackte Dolche aus Mondsilber, dazwischen ein Riss aus Dornenranken, schwarzes geschmiedetes Eisen. Kein Text, kein Gold.“ |
 | `godot/assets/ui/sichtschutz.png` (neuer Platz, noch nicht im Code) | Sichtschutz-Fenster | noch nicht angeschlossen (erst nach Freigabe bauen) | „Quadratisch 1:1, transparenter Hintergrund: ein geschlossenes schwarzes Eisentor mit Wurzeln und Dornen im Mondlicht, davor leichter Nebel. Kein Text, kein Gold, nachtblau und Mondsilber.“ |
 
-Musik: `godot/assets/audio/musik-start.ogg` (Startbildschirm, Schleife, blendet leise ein, nach dem Tippen auf „Eintreten“ aus) und `musik-laden.ogg` (Platz benannt in `ScreenMusic.LOADING`, noch an keinen Bildschirm angeschlossen, weil die App keinen eigenen Ladebildschirm hat; die Web-Ladeseite läuft vor dem Start der Engine und kann keine Godot-Musik spielen). Ohne Dateien bleibt alles still wie bisher.
+Musik: `godot/assets/audio/musik-start.ogg` (Startmusik in allen Menüs, Schleife, durchgehend) und `musik-nacht.ogg` (Nacht einer laufenden Partie), gesteuert von `AppMusic` (`godot/app/audio/app_music.gd`, Kreuzblende 3,5 s, Ton erst nach der ersten Berührung). `musik-laden.ogg` ist nicht eingebaut, weil die App keinen eigenen Ladebildschirm hat; die Web-Ladeseite läuft vor dem Start der Engine und kann keine Godot-Musik spielen. Wolfsheulen: Dateien in `godot/assets/audio/heulen/`, alle 30 bis 90 s eines leise in der Nacht. Ohne Dateien bleibt alles still.
 
 ## Feedback 8: gemalte Haut (05.10.2026)
 
