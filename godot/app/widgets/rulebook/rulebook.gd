@@ -1,7 +1,7 @@
 class_name RuleBook
 extends PanelContainer
-## Allgemeines Regelbuch: Inhaltsverzeichnis mit zwölf Kapiteln, darunter das gewählte Kapitel als scrollbarer Text mit
-## Vor- und Zurück-Knöpfen. Die Inhalte kommen ausschließlich aus den Übersetzungen (RulebookCatalog); das Regelbuch kennt keine
+## Allgemeines Regelbuch: Inhaltsverzeichnis mit zwölf Kapiteln, darunter das gewählte Kapitel seitenweise (nichts scrollt,
+## „Davor/Danach“ blättert) mit Vor- und Zurück-Knöpfen für die Kapitel. Die Inhalte kommen ausschließlich aus den Übersetzungen (RulebookCatalog); das Regelbuch kennt keine
 ## Partie, keine Personen und keinen Spielstand. Öffnen, Blättern, Sprachwechsel und Schließen senden daher nie einen Befehl und
 ## verbrauchen keinen Zufall. Der Sprachknopf wechselt die App-Sprache; das geöffnete Kapitel bleibt.
 ## Ebenen (Cockpit) entstehen über `layer()`; der Schließen-Button heißt dort wie im Lexikon `CloseLayerButton`.
@@ -17,8 +17,8 @@ var _back_to_toc: GrimmButton
 var _language: GrimmButton
 var _close: GrimmButton
 var _toc_scroll: ScrollContainer
-var _chapter_scroll: ScrollContainer
-var _chapter_body: VBoxContainer
+var _chapter_host: VBoxContainer
+var _pager: CockpitLayers.Pager = null
 var _footer: HBoxContainer
 var _prev: GrimmButton
 var _next: GrimmButton
@@ -54,12 +54,10 @@ func _init(p_settings: AppSettings = null, show_close: bool = true) -> void:
 	_close.visible = show_close
 	head.add_child(_close)
 	_build_toc(column)
-	_chapter_scroll = ScrollContainer.new()
-	_chapter_scroll.name = "RulebookChapterScroll"
-	_chapter_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_chapter_scroll.follow_focus = true
-	_chapter_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	column.add_child(_chapter_scroll)
+	_chapter_host = VBoxContainer.new()
+	_chapter_host.name = "RulebookChapterHost"
+	_chapter_host.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	column.add_child(_chapter_host)
 	_build_footer(column)
 	show_toc()
 
@@ -87,8 +85,7 @@ func open_chapter(index: int) -> void:
 	_chapter = index
 	_build_chapter()
 	_toc_scroll.visible = false
-	_chapter_scroll.visible = true
-	_chapter_scroll.scroll_vertical = 0
+	_chapter_host.visible = true
 	_footer.visible = true
 	_back_to_toc.visible = true
 	_title.visible = true
@@ -102,12 +99,9 @@ func open_chapter(index: int) -> void:
 
 func show_toc() -> void:
 	_chapter = -1
-	for child: Node in _chapter_scroll.get_children():
-		_chapter_scroll.remove_child(child)
-		child.queue_free()
-	_chapter_body = null
+	_clear_chapter()
 	_toc_scroll.visible = true
-	_chapter_scroll.visible = false
+	_chapter_host.visible = false
 	_footer.visible = false
 	_back_to_toc.visible = false
 	_title.text_key = "ui.rulebook.title"
@@ -117,15 +111,23 @@ func show_toc() -> void:
 ## Kapiteltexte des offenen Kapitels in Reihenfolge (Überschrift zuerst), für Tests.
 func chapter_texts() -> Array[String]:
 	var out: Array[String] = []
-	if _chapter_body != null:
-		for label: Node in _chapter_body.find_children("*", "Label", true, false):
-			out.append((label as Label).text)
+	if _chapter >= 0:
+		for i: int in RulebookCatalog.kinds(_chapter).length():
+			out.append(tr(RulebookCatalog.block_key(_chapter, i)))
 	return out
+
+
+## Anzahl der Seiten des offenen Kapitels (0 im Verzeichnis).
+func page_count() -> int:
+	return _pager.page_count() if _pager != null else 0
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and _title != null and _chapter >= 0:
 		_title.text_key = RulebookCatalog.title_key(_chapter)
+		_build_chapter()  # andere Sprache, andere Textlängen: Seiten neu einteilen
+	elif what == NOTIFICATION_ENTER_TREE and _chapter >= 0:
+		_build_chapter()  # erst im Baum gilt das Theme mit den echten Schriften
 
 
 func _build_toc(column: VBoxContainer) -> void:
@@ -173,25 +175,51 @@ func _build_footer(column: VBoxContainer) -> void:
 	_footer.add_child(_next)
 
 
-func _build_chapter() -> void:
-	for child: Node in _chapter_scroll.get_children():
-		_chapter_scroll.remove_child(child)
+const CHAPTER_CHROME := 350.0  ## Rahmen, Kopfzeile, Blätterleiste und Kapitelleiste des Regelbuchs
+const SIDE_CHROME := 72.0 + 2.0 * ThemeTokens.SPACE_L  ## Fensterrand links und rechts
+
+
+func _clear_chapter() -> void:
+	_pager = null
+	for child: Node in _chapter_host.get_children():
+		_chapter_host.remove_child(child)
 		child.queue_free()
-	_chapter_body = VBoxContainer.new()
-	_chapter_body.name = "RulebookChapter"
-	_chapter_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_chapter_body.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
-	_chapter_scroll.add_child(_chapter_body)
+
+
+## Kapitel in Seiten einteilen (Höhen aus den echten Schriften); Zwischentitel bleiben bei ihrem Absatz.
+func _build_chapter() -> void:
+	_clear_chapter()
+	var root_size := (Engine.get_main_loop() as SceneTree).root.get_visible_rect().size
+	var width := root_size.x - SIDE_CHROME
 	var kinds := RulebookCatalog.kinds(_chapter)
+	var blocks: Array = []
 	for i: int in kinds.length():
-		var label := GrimmLabel.new()
-		label.name = "Block%02d" % (i + 1)
-		label.text_key = RulebookCatalog.block_key(_chapter, i)
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		match kinds[i]:
-			"h":
-				label.theme_type_variation = &"SectionLabel"
-		_chapter_body.add_child(label)
+		blocks.append({"index": i, "heading": kinds[i] == "h"})
+	_pager = CockpitLayers.Pager.new()
+	_pager.setup(blocks, _block_label,
+		func(block: Dictionary) -> float: return text_height(self, tr(RulebookCatalog.block_key(_chapter, int(block["index"]))),
+			&"SectionLabel" if bool(block["heading"]) else &"Label", width),
+		maxf(root_size.y - CHAPTER_CHROME, 200.0), false, func(block: Dictionary) -> bool: return bool(block["heading"]))
+	_chapter_host.add_child(_pager)
+
+
+func _block_label(block: Dictionary) -> Control:
+	var label := GrimmLabel.new()
+	label.name = "Block%02d" % (int(block["index"]) + 1)
+	label.text_key = RulebookCatalog.block_key(_chapter, int(block["index"]))
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if bool(block["heading"]):
+		label.theme_type_variation = &"SectionLabel"
+	return label
+
+
+## Höhe eines umbrochenen Textes in der Schrift von `type` bei Breite `width` (für die Seiteneinteilung ohne Scrollen).
+static func text_height(node: Control, text: String, type: StringName, width: float) -> float:
+	var font := node.get_theme_font(&"font", type)
+	var font_size := node.get_theme_font_size(&"font_size", type)
+	var block := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size).y
+	var lines := roundf(block / font.get_height(font_size))
+	return block + lines * float(node.get_theme_constant(&"line_spacing", type)) + 4.0  # Zeilenabstand des Labels zählt je Zeile
 
 
 func _toggle_language() -> void:

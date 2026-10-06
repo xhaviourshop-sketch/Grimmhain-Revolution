@@ -9,6 +9,9 @@ extends PanelContainer
 
 signal close_requested
 
+const PAIR_HEIGHT := 56.0  ## Zeile mit zwei Rollenknöpfen
+const LIST_CHROME := 440.0  ## Rahmen, Kopfzeile, Suchfeld, Filter und Blätterleiste
+
 const FILTER_ALL := &"all"
 
 var settings: AppSettings = null
@@ -24,8 +27,8 @@ var _list_view: VBoxContainer
 var _search: LineEdit
 var _filters: Dictionary = {}
 var _empty: GrimmLabel
-var _rows: Dictionary = {}
-var _list_scroll: ScrollContainer
+var _visible: Array[StringName] = []  ## Rollen, die Suche und Filter durchlassen, in Anzeigereihenfolge
+var _list_host: VBoxContainer
 var _entry_scroll: ScrollContainer
 var _entry: VBoxContainer
 
@@ -145,11 +148,7 @@ func set_faction(faction: StringName) -> void:
 
 ## Sichtbare Rollen der Liste in Anzeigereihenfolge (für Tests und Fokus).
 func visible_roles() -> Array[StringName]:
-	var out: Array[StringName] = []
-	for role: StringName in RolePresentation.sorted_roles():
-		if (_rows[role] as Control).visible:
-			out.append(role)
-	return out
+	return _visible.duplicate()
 
 
 func _notification(what: int) -> void:
@@ -190,26 +189,33 @@ func _build_list(column: VBoxContainer) -> void:
 	_empty.theme_type_variation = &"MutedLabel"
 	_empty.text_key = "ui.lexicon.empty"
 	_list_view.add_child(_empty)
-	_list_scroll = ScrollContainer.new()
-	_list_scroll.name = "LexiconListScroll"
-	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_list_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_list_view.add_child(_list_scroll)
-	var list := VBoxContainer.new()
-	list.name = "LexiconRoleList"
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_list_scroll.add_child(list)
-	for role: StringName in RolePresentation.sorted_roles():
-		var b := _button("LexiconRole_%s" % String(role), "ui.lexicon.row", true)
-		b.format_values = {"name": StringName(RolePresentation.name_key(role)),
-			"faction": StringName(RolePresentation.faction_key(SetupRoleCatalog.faction_of(role)))}
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		var read := ThemeTokens.team_read_color(SetupRoleCatalog.faction_of(role))
-		for state: StringName in [&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color", &"font_hover_pressed_color"]:
-			b.add_theme_color_override(state, read)
-		b.pressed.connect(open_role.bind(role))
-		list.add_child(b)
-		_rows[role] = b
+	_list_host = VBoxContainer.new()
+	_list_host.name = "LexiconListHost"
+	_list_host.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_list_view.add_child(_list_host)
+
+
+## Zwei Rollen nebeneinander je Zeile; die Seite zeigt nur, was ohne Scrollen passt.
+func _role_pair(pair: Array) -> Control:
+	var row := HBoxContainer.new()
+	row.name = "LexiconPair_%s" % String(pair[0])
+	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
+	for role: StringName in pair:
+		row.add_child(_role_button(role))
+	return row
+
+
+func _role_button(role: StringName) -> GrimmButton:
+	var b := _button("LexiconRole_%s" % String(role), "ui.lexicon.row", true)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.format_values = {"name": StringName(RolePresentation.name_key(role)),
+		"faction": StringName(RolePresentation.faction_key(SetupRoleCatalog.faction_of(role)))}
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	var read := ThemeTokens.team_read_color(SetupRoleCatalog.faction_of(role))
+	for state: StringName in [&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color", &"font_hover_pressed_color"]:
+		b.add_theme_color_override(state, read)
+	b.pressed.connect(open_role.bind(role))
+	return b
 
 
 func _build_entry() -> void:
@@ -238,15 +244,26 @@ func _apply_filter() -> void:
 	if _search == null:
 		return
 	var query := _search.text.strip_edges().to_lower()
-	var any := false
+	_visible.clear()
 	for role: StringName in RolePresentation.sorted_roles():
 		var fits := _faction == FILTER_ALL or SetupRoleCatalog.faction_of(role) == _faction
 		if fits and query != "":
 			fits = tr(RolePresentation.name_key(role)).to_lower().contains(query)
-		(_rows[role] as Control).visible = fits
-		any = any or fits
-	_empty.visible = not any
-	_list_scroll.visible = any
+		if fits:
+			_visible.append(role)
+	_empty.visible = _visible.is_empty()
+	for child: Node in _list_host.get_children():
+		_list_host.remove_child(child)
+		child.queue_free()
+	if _visible.is_empty():
+		return
+	var pairs: Array = []
+	for i: int in range(0, _visible.size(), 2):
+		pairs.append(_visible.slice(i, i + 2))
+	var pager := CockpitLayers.Pager.new()
+	pager.setup(pairs, _role_pair, func(_pair: Array) -> float: return PAIR_HEIGHT,
+		maxf((Engine.get_main_loop() as SceneTree).root.get_visible_rect().size.y - LIST_CHROME, 3.0 * PAIR_HEIGHT), false)
+	_list_host.add_child(pager)
 
 
 func _toggle_language() -> void:

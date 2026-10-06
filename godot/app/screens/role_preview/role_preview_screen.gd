@@ -6,14 +6,16 @@ extends BaseScreen
 ## Warnungen. Nichts wird gespeichert: die Vorschau-Sitzung hat kein automatisches Speichern und keine Historie mit Pfad; echte Spielstände
 ## und die laufende Partie bleiben unberührt.
 
-const ROW_INSET_RIGHT := 42.0  ## rechts weiter, die Dornen reichen dort tiefer in den Knopf
-const ROW_MIN_FONT := 12  ## kleinste Schrift der Rollennamen
-const ROW_WRAP_BELOW := 17  ## Einzeiler kleiner als das: zweizeilig setzen
-const ROW_TWO_LINE_FONT := 15  ## größte Schrift bei zwei Zeilen (passt in ROW_MIN)
+const ROW_INSET_RIGHT := 36.0  ## rechts weiter, die Dornen reichen dort tiefer in den Knopf
+const ROW_MIN_FONT := 14  ## kleinste Schrift der Rollennamen
+const ROW_WRAP_BELOW := 19  ## Einzeiler kleiner als das: zweizeilig setzen
+const ROW_TWO_LINE_FONT := 16  ## größte Schrift bei zwei Zeilen (passt mit vollem Zeilenabstand in ROW_MIN)
+const ROW_MAX_FONT := 20  ## größte Schrift eines Einzeilers
+const BAR_INSET := 20.0  ## Abstand der Knopfreihe zu den Rahmenspitzen der Steuerleiste
 const COLUMNS := 4  ## Spalten je Team-Seite in der Rollenliste
-const ROW_MIN := 48.0  ## Zeilenhöhe: Daumengröße (ThemeTokens.TOUCH_MIN)
-const ROW_INSET := 30.0  ## Abstand von den Dornen-Enden des Knopfes bis zu Symbol und Name
-const ICON_SIZE := 36.0
+const ROW_MIN := 52.0  ## Zeilenhöhe: Daumengröße (ThemeTokens.TOUCH_MIN)
+const ROW_INSET := 26.0  ## Abstand von den Dornen-Enden des Knopfes bis zu Symbol und Name
+const ICON_SIZE := 32.0
 
 @onready var _layout: Control = %Layout
 @onready var _stage_column: VBoxContainer = %StageColumn
@@ -165,7 +167,7 @@ func _fit_page(team: StringName) -> void:
 		var label: GrimmLabel = labels[i]
 		label.text = texts[i]
 		label.add_theme_font_size_override(&"font_size", page_size)
-		label.add_theme_constant_override(&"line_spacing", -4 if texts[i].contains("\n") else 0)  # zwei Zeilen bleiben in der Zeilenhöhe
+		label.add_theme_constant_override(&"line_spacing", 0)  # voller Zeilenabstand: Umlaute in zwei Zeilen werden nicht beschnitten
 
 
 ## Text und größte passende Schrift eines einzelnen Namens bei der Breite seiner Zeile.
@@ -173,7 +175,7 @@ func _fit_role_name(label: GrimmLabel) -> Dictionary:
 	var full := tr(label.text_key)
 	var width := label.size.x
 	var font := label.get_theme_font(&"font")
-	var one := FitLabel.best_size(font, full, Vector2(width, 0.0), ThemeTokens.FONT_COMPACT, ROW_MIN_FONT, false)
+	var one := FitLabel.best_size(font, full, Vector2(width, 0.0), ROW_MAX_FONT, ROW_MIN_FONT, false)
 	var text := full
 	var chosen := one
 	if one < ROW_WRAP_BELOW and full.contains(" "):
@@ -236,6 +238,9 @@ func _build_bar() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 	column.add_child(row)
+	var lead := Control.new()  # Abstand zur Rahmenspitze der Leiste, damit der erste Knopf sie nicht überlagert
+	lead.custom_minimum_size.x = BAR_INSET
+	row.add_child(lead)
 	row.add_child(_bar_button("PreviewPrevRole", "ui.preview.prev_role", _step_role.bind(-1), "◀"))
 	row.add_child(_bar_button("PreviewBack", "ui.preview.back", _step_stop.bind(-1)))
 	var gap := Control.new()  # schiebt „Danach“ und die rechten Knöpfe nach rechts
@@ -247,6 +252,9 @@ func _build_bar() -> void:
 	_special_button.toggle_mode = true
 	row.add_child(_special_button)
 	row.add_child(_bar_button("PreviewList", "ui.preview.list", close_preview))
+	var trail := Control.new()
+	trail.custom_minimum_size.x = BAR_INSET
+	row.add_child(trail)
 
 
 ## Mit `symbol` zeigt der Knopf nur das Zeichen (spart Breite, die Leiste muss in 1024 px passen); der Text steht dann im Tooltip.
