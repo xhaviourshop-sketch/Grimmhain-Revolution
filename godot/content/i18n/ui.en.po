@@ -116,6 +116,9 @@ msgstr "Loud"
 msgid "ui.settings.audio.level.5"
 msgstr "Very loud"
 
+msgid "ui.settings.audio.level.off"
+msgstr "Off"
+
 msgid "ui.settings.toast.music_volume"
 msgstr "Volume changed"
 
