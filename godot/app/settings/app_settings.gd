@@ -15,6 +15,11 @@ var left_handed: bool = false     ## Bedienseite: true = Ansagekarte und Werkzeu
 var show_night_timer: bool = true  ## Anzeige-Timer auch in der Nacht zeigen (DECISIONS.md, Ergänzung zur Timer-Entscheidung); nur Anzeige
 var show_calls: bool = false  ## „Ansagen anzeigen“ (DA-101): Vorlesesatz klein auf der Nachtkarte; Standard aus, der Spielleiter spricht frei
 
+const MUSIC_VOLUME_MIN := 1
+const MUSIC_VOLUME_MAX := 5
+const MUSIC_VOLUME_DEFAULT := 3
+
+var music_volume: int = MUSIC_VOLUME_DEFAULT  ## Lautstärke der Musik in 5 Stufen (1 bis 5); getrennt von „Musik an/aus“
 var music_enabled: bool = true  ## „Musik“: Hintergrundmusik der Bildschirme; Standard an, auch für alte Stände ohne das Feld
 
 
@@ -61,6 +66,14 @@ func set_music_enabled(value: bool) -> void:
 		return
 	music_enabled = value
 	changed.emit(&"music_enabled")
+
+
+func set_music_volume(value: int) -> void:
+	value = clampi(value, MUSIC_VOLUME_MIN, MUSIC_VOLUME_MAX)
+	if music_volume == value:
+		return
+	music_volume = value
+	changed.emit(&"music_volume")
 
 
 ## Wendet die aktuelle Sprache an (App-Start).

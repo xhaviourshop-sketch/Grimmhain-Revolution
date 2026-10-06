@@ -95,6 +95,30 @@ msgstr "Audio"
 msgid "ui.settings.audio.music"
 msgstr "Music"
 
+msgid "ui.settings.audio.quieter"
+msgstr "Quieter"
+
+msgid "ui.settings.audio.louder"
+msgstr "Louder"
+
+msgid "ui.settings.audio.level.1"
+msgstr "Very quiet"
+
+msgid "ui.settings.audio.level.2"
+msgstr "Quiet"
+
+msgid "ui.settings.audio.level.3"
+msgstr "Medium"
+
+msgid "ui.settings.audio.level.4"
+msgstr "Loud"
+
+msgid "ui.settings.audio.level.5"
+msgstr "Very loud"
+
+msgid "ui.settings.toast.music_volume"
+msgstr "Volume changed"
+
 msgid "ui.settings.display.heading"
 msgstr "Display"
 

@@ -8,6 +8,9 @@ extends BaseScreen
 @onready var _english: GrimmButton = %LanguageEnglishButton
 @onready var _motion: GrimmToggle = %ReducedMotionToggle
 @onready var _music: GrimmToggle = %MusicToggle
+@onready var _quieter: GrimmButton = %MusicQuieterButton
+@onready var _louder: GrimmButton = %MusicLouderButton
+@onready var _level: GrimmLabel = %MusicLevelLabel
 @onready var _hand_right: GrimmButton = %HandRightButton
 @onready var _hand_left: GrimmButton = %HandLeftButton
 @onready var _display: PanelContainer = %DisplayCard
@@ -21,6 +24,9 @@ func _setup() -> void:
 	_motion.set_pressed_no_signal(settings.reduced_motion)
 	_music.set_pressed_no_signal(settings.music_enabled)
 	_music.toggled.connect(_on_music_toggled)
+	_quieter.pressed.connect(_on_volume_step.bind(-1))
+	_louder.pressed.connect(_on_volume_step.bind(1))
+	_show_volume()
 	_german.toggled.connect(_on_language_toggled.bind("de"))
 	_english.toggled.connect(_on_language_toggled.bind("en"))
 	_motion.toggled.connect(_on_motion_toggled)
@@ -60,7 +66,22 @@ func _on_language_toggled(pressed: bool, code: String) -> void:
 
 func _on_music_toggled(pressed: bool) -> void:
 	context.settings.set_music_enabled(pressed)
+	_show_volume()
 	_report("ui.settings.toast.music_on" if pressed else "ui.settings.toast.music_off")
+
+
+func _on_volume_step(step: int) -> void:
+	context.settings.set_music_volume(context.settings.music_volume + step)
+	_show_volume()
+	_report("ui.settings.toast.music_volume")
+
+
+## Stufe in Worten; bei Musik aus sind beide Knöpfe gesperrt, an den Enden je einer.
+func _show_volume() -> void:
+	var settings := context.settings
+	_level.text_key = "ui.settings.audio.level.%d" % settings.music_volume
+	_quieter.disabled = not settings.music_enabled or settings.music_volume <= AppSettings.MUSIC_VOLUME_MIN
+	_louder.disabled = not settings.music_enabled or settings.music_volume >= AppSettings.MUSIC_VOLUME_MAX
 
 
 func _on_motion_toggled(pressed: bool) -> void:

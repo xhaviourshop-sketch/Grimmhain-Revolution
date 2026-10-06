@@ -232,7 +232,7 @@ func test_settings_file_holds_no_game_data_and_game_untouched() -> void:
 	assert_true(data is Dictionary, "Einstellungsdatei ist JSON")
 	var keys: Array = (data as Dictionary).keys()
 	keys.sort()
-	assert_eq(keys, ["format", "language", "left_handed", "music_enabled", "reduced_motion", "show_calls", "show_night_timer", "version"], "nur Geräteeinstellungen")
+	assert_eq(keys, ["format", "language", "left_handed", "music_enabled", "music_volume", "reduced_motion", "show_calls", "show_night_timer", "version"], "nur Geräteeinstellungen")
 	assert_eq(int(ctx.settings_store.last_status.get("ok", false)), 1, "letztes Speichern erfolgreich")
 	TranslationServer.set_locale("de")
 
@@ -252,6 +252,31 @@ func test_music_off_survives_restart_and_old_file_defaults_on() -> void:
 	var old := AppSettings.new()
 	store.load_into(old)
 	assert_true(old.music_enabled, "alter Stand ohne Feld: Standard an")
+
+
+func test_music_volume_survives_restart_is_clamped_and_old_file_defaults() -> void:
+	var path := _store_path()
+	var store := _store(path) as SettingsStore
+	var s := AppSettings.new()
+	assert_eq(s.music_volume, 3, "Standard: mittlere Stufe")
+	s.set_music_volume(99)
+	assert_eq(s.music_volume, 5, "nach oben begrenzt")
+	s.set_music_volume(-4)
+	assert_eq(s.music_volume, 1, "nach unten begrenzt")
+	s.set_music_volume(4)
+	assert_true(store.save(s).get("ok", false), "gespeichert")
+	var fresh := AppSettings.new()
+	store.load_into(fresh)
+	assert_eq(fresh.music_volume, 4, "Stufe bleibt nach Neustart")
+	_write(path, '{"format": "grimmhain-settings", "version": 1, "language": "de", "music_volume": 40}')
+	var wild := AppSettings.new()
+	store.load_into(wild)
+	assert_eq(wild.music_volume, 5, "ungültiger Wert wird begrenzt")
+	DirAccess.remove_absolute(path + ".bak")
+	_write(path, '{"format": "grimmhain-settings", "version": 1, "language": "de"}')
+	var old := AppSettings.new()
+	store.load_into(old)
+	assert_eq(old.music_volume, 3, "alter Stand ohne Feld: Standard")
 
 
 func test_production_default_path_is_separate_from_saves() -> void:
