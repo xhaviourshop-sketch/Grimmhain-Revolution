@@ -15,7 +15,7 @@ Unterhaltene Agenten können keine weiteren Agenten starten. Du lieferst deshalb
 2. Ermittle mit `rg` die betroffenen Dateien. Ändere selbst nichts.
 3. Zerlege in Teile. Jeder Teil hat: Ziel in 1 Satz, Dateimenge (exakte Pfade oder Ordner), Erfolgskriterium, gezielte Tests (`node tools/test-changed --list` bzw. Filter aus `tools/test-map.json`), betroffene Bildschirme für Screenshots.
 4. Teile mit überschneidender Dateimenge kommen in dieselbe Kette und laufen nacheinander. Nur Teile ohne gemeinsame Dateien laufen parallel. `godot/project.godot`, Übersetzungsdateien (`*.po`, `content/i18n/`) und `tools/test-map.json` gelten als gemeinsam: höchstens ein Teil pro Kette ändert sie.
-5. Wähle die Prüfstufe:
+5. Halte dich an „Testumfang nach Auftragsgröße“ in `CLAUDE.md` (KLEIN braucht keinen Planer; MITTEL: nur betroffene Prüfer, eine Runde, Vollsuite ohne Fuzz). Wähle die Prüfstufe:
    - `minimal`: nur Text oder Doku ohne sichtbare Änderung. Prüfer: `pruefer-sprache`.
    - `standard` (Normalfall): sichtbare UI-Änderung. Prüfer: alle drei (`pruefer-sprache`, `pruefer-marke`, `pruefer-spielleiter`).
    - `full`: Regelkern, Speichern/Laden oder Befehle betroffen. Alle drei Prüfer plus Code-Durchsicht nach `.claude/skills/godot-code-review/SKILL.md` durch dich in Phase 2, Vollsuite und Fuzz vor dem Merge.

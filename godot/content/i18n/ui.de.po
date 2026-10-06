@@ -438,13 +438,13 @@ msgid "ui.role.manipulator.name"
 msgstr "Manipulator"
 
 msgid "ui.role.manipulator.short"
-msgstr "Gewinnt allein bei genau drei Lebenden, stirbt bei Nominierung."
+msgstr "Gewinnt allein bei genau drei Lebenden, stirbt bei Anklage."
 
 msgid "ui.role.spiegelwolf.name"
 msgstr "Spiegelwolf"
 
 msgid "ui.role.spiegelwolf.short"
-msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die nominierende Person."
+msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die anklagende Person."
 
 msgid "ui.role.siegreicher_wolf.name"
 msgstr "Siegreicher Wolf"
@@ -528,7 +528,7 @@ msgid "ui.role.korrupter_richter.name"
 msgstr "Korrupter Richter"
 
 msgid "ui.role.korrupter_richter.short"
-msgstr "Markiert nachts eine Person, die am Tag als nominiert gilt."
+msgstr "Markiert nachts eine Person, die am Tag als angeklagt gilt."
 
 msgid "ui.role.waechter_am_tor.name"
 msgstr "Wächter am Tor"
@@ -1482,7 +1482,7 @@ msgid "ui.cockpit.win.reason.no_wolves_alive"
 msgstr "Es lebt kein Wolf mehr."
 
 msgid "ui.cockpit.win.reason.manipulator_three_alive"
-msgstr "Genau drei leben und der Manipulator wurde nie nominiert."
+msgstr "Genau drei leben und der Manipulator wurde nie angeklagt."
 
 msgid "ui.cockpit.win.reason.gm_declared"
 msgstr "Von der Spielleitung erklärt."
@@ -2058,7 +2058,7 @@ msgid "ui.call.kopfgeldjaeger"
 msgstr "„Kopfgeldjäger, erwache. Hier ist deine Liste.“"
 
 msgid "ui.call.korrupter_richter"
-msgstr "„Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“"
+msgstr "„Korrupter Richter, erwache. Zeige auf die Person, die morgen als angeklagt gilt.“"
 
 msgid "ui.call.kriegerin_des_lichts"
 msgstr "„Kriegerin des Lichts, erwache. Willst du heute angreifen? Zeige auf die Person.“"
@@ -2631,7 +2631,7 @@ msgid "ui.gm.kind.set_mirror"
 msgstr "Spiegelung ändern"
 
 msgid "ui.gm.kind.set_ever_nominated"
-msgstr "Nominierungsstatus ändern"
+msgstr "Anklagestatus ändern"
 
 msgid "ui.gm.kind.set_apprentice_master"
 msgstr "Meister des Lehrlings setzen"
@@ -2850,7 +2850,7 @@ msgid "ui.cockpit.card.gm.choose"
 msgstr "wählen …"
 
 msgid "ui.gm.field.ever_nominated"
-msgstr "Jemals nominiert"
+msgstr "Jemals angeklagt"
 
 msgid "ui.gm.field.potion_heal"
 msgstr "Heiltrank verfügbar"
@@ -4202,7 +4202,7 @@ msgid "ui.role.korrupter_richter.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.korrupter_richter.lex.ability"
-msgstr "Markiert nachts eine Person, die am Tag als nominiert gilt."
+msgstr "Markiert nachts eine Person, die am Tag als angeklagt gilt."
 
 msgid "ui.role.korrupter_richter.lex.timing"
 msgstr "Jede Nacht freiwillig. Bei Nachtbeginn wird die alte Markierung gelöscht, es gibt höchstens eine."
@@ -4211,16 +4211,16 @@ msgid "ui.role.korrupter_richter.lex.targets"
 msgstr "Eine lebende Person, der Richter selbst ist erlaubt."
 
 msgid "ui.role.korrupter_richter.lex.exceptions"
-msgstr "Bei Tagesbeginn gilt die markierte Person als vom Richter nominiert (normale Nominierung: Tageslimit, Manipulator-Tod, Spiegelung wie sonst). Öffentlich erscheint nur die Nominierung der markierten Person, nicht der Richter. Der Apfel von Rotkäppchen wirkt hier nicht. Die Spielleiteransicht zeigt einen Hinweis „+1 Stimme auf die markierte Person“, die Stimmen zählst du selbst."
+msgstr "Bei Tagesbeginn gilt die markierte Person als vom Richter angeklagt (normale Anklage: Tageslimit, Manipulator-Tod, Spiegelung wie sonst). Öffentlich erscheint nur die Anklage der markierten Person, nicht der Richter. Der Apfel von Rotkäppchen wirkt hier nicht. Die Spielleiteransicht zeigt einen Hinweis „+1 Stimme auf die markierte Person“, die Stimmen zählst du selbst."
 
 msgid "ui.role.korrupter_richter.lex.win"
 msgstr "Mit dem Dorf."
 
 msgid "ui.role.korrupter_richter.lex.example"
-msgstr "In Nacht 3 markiert der Richter Emil. Zu Beginn von Tag 4 ist Emil nominiert. Öffentlich heißt es nur, dass Emil nominiert ist.\nDer Richter markiert sich selbst. Er ist zu Beginn des Tages nominiert."
+msgstr "In Nacht 3 markiert der Richter Emil. Zu Beginn von Tag 4 ist Emil angeklagt. Öffentlich heißt es nur, dass Emil angeklagt ist.\nDer Richter markiert sich selbst. Er ist zu Beginn des Tages angeklagt."
 
 msgid "ui.role.korrupter_richter.lex.gm"
-msgstr "Wer nominiert hat, sagst du nie. Bei Nachtbeginn löscht die App die alte Markierung."
+msgstr "Wer angeklagt hat, sagst du nie. Bei Nachtbeginn löscht die App die alte Markierung."
 
 msgid "ui.role.werwolf.lex.night"
 msgstr "Rudelschritt jede Nacht"
@@ -4283,25 +4283,25 @@ msgid "ui.role.spiegelwolf.lex.wolf"
 msgstr "ja"
 
 msgid "ui.role.spiegelwolf.lex.ability"
-msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die nominierende Person."
+msgstr "Wolf im Rudel, lenkt einmal eine Hinrichtung auf die anklagende Person."
 
 msgid "ui.role.spiegelwolf.lex.timing"
 msgstr "Die erste bestätigte Hinrichtung des Spiegelwolfs, einmal je Leben. Verbraucht wird sie erst mit der bestätigten Hinrichtung."
 
 msgid "ui.role.spiegelwolf.lex.targets"
-msgstr "Die Person, die den Spiegelwolf an diesem Tag nominiert hat. Sie stirbt mit der Ursache Spiegelung, der Spiegelwolf überlebt, die Hinrichtung des Tages gilt als erfolgt."
+msgstr "Die Person, die den Spiegelwolf an diesem Tag angeklagt hat. Sie stirbt mit der Ursache Spiegelung, der Spiegelwolf überlebt, die Hinrichtung des Tages gilt als erfolgt."
 
 msgid "ui.role.spiegelwolf.lex.exceptions"
-msgstr "Keine Spiegelung, normaler Tod: bei bereits verbrauchter Spiegelung, ohne Nominierung dieses Tages auf ihn, oder wenn die nominierende Person bei der Hinrichtung tot oder unbekannt ist. Bei Selbstnominierung wird gespiegelt, und er selbst stirbt, genau ein Tod. Schutzengel und Hexenrettung verhindern die Spiegelung nicht."
+msgstr "Keine Spiegelung, normaler Tod: bei bereits verbrauchter Spiegelung, ohne Anklage dieses Tages gegen ihn, oder wenn die anklagende Person bei der Hinrichtung tot oder unbekannt ist. Bei Selbstanklage wird gespiegelt, und er selbst stirbt, genau ein Tod. Schutzengel und Hexenrettung verhindern die Spiegelung nicht."
 
 msgid "ui.role.spiegelwolf.lex.win"
 msgstr "Wolfssieg wie beim Werwolf."
 
 msgid "ui.role.spiegelwolf.lex.example"
-msgstr "Ben nominiert Fritz, den Spiegelwolf. Fritz soll hingerichtet werden. Stattdessen stirbt Ben, Fritz lebt.\nDie Spiegelung von Fritz ist schon verbraucht. Die nächste Hinrichtung von Fritz tötet ihn normal."
+msgstr "Ben klagt Fritz, den Spiegelwolf, an. Fritz soll hingerichtet werden. Stattdessen stirbt Ben, Fritz lebt.\nDie Spiegelung von Fritz ist schon verbraucht. Die nächste Hinrichtung von Fritz tötet ihn normal."
 
 msgid "ui.role.spiegelwolf.lex.gm"
-msgstr "Öffentlich erscheint nur der Tod der nominierenden Person, keine Ursache. Der Tisch sieht allerdings, dass statt des Spiegelwolfs die nominierende Person stirbt; das lässt sich nicht verbergen. Mit Wiederbelebung stehen die Einsätze wieder bereit."
+msgstr "Öffentlich erscheint nur der Tod der anklagenden Person, keine Ursache. Der Tisch sieht allerdings, dass statt des Spiegelwolfs die anklagende Person stirbt; das lässt sich nicht verbergen. Mit Wiederbelebung stehen die Einsätze wieder bereit."
 
 msgid "ui.role.siegreicher_wolf.lex.night"
 msgstr "kein eigener, Teil des Rudels"
@@ -4751,25 +4751,25 @@ msgid "ui.role.manipulator.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.manipulator.lex.ability"
-msgstr "Gewinnt allein bei genau drei Lebenden, stirbt bei Nominierung."
+msgstr "Gewinnt allein bei genau drei Lebenden, stirbt bei Anklage."
 
 msgid "ui.role.manipulator.lex.timing"
-msgstr "Bei jeder Nominierung, unbegrenzt oft. Der Sieg wird geprüft, sobald genau drei Personen leben."
+msgstr "Bei jeder Anklage, unbegrenzt oft. Der Sieg wird geprüft, sobald genau drei Personen leben."
 
 msgid "ui.role.manipulator.lex.targets"
 msgstr "Keine."
 
 msgid "ui.role.manipulator.lex.exceptions"
-msgstr "Wird er nominiert, wird zuerst die Nominierung gespeichert, dann stirbt er sofort (Quelle: die nominierende Person). Der Tag bleibt aktiv. „Jemals nominiert“ ist ein dauerhafter Status, den auch Wiederbelebung und Rollenwechsel nicht ändern. Mehrere Manipulatoren sind getrennte Siegkandidaten. Eine Hinrichtung per Korrektur ohne Nominierung löst keinen Manipulator-Tod aus."
+msgstr "Wird er angeklagt, wird zuerst die Anklage gespeichert, dann stirbt er sofort (Quelle: die anklagende Person). Der Tag bleibt aktiv. „Jemals angeklagt“ ist ein dauerhafter Status, den auch Wiederbelebung und Rollenwechsel nicht ändern. Mehrere Manipulatoren sind getrennte Siegkandidaten. Eine Hinrichtung per Korrektur ohne Anklage löst keinen Manipulator-Tod aus."
 
 msgid "ui.role.manipulator.lex.win"
-msgstr "Er gewinnt allein, wenn genau drei Personen leben, er lebt und nie nominiert wurde."
+msgstr "Er gewinnt allein, wenn genau drei Personen leben, er lebt und nie angeklagt wurde."
 
 msgid "ui.role.manipulator.lex.example"
-msgstr "Anna, Ben (Manipulator) und Clara leben. Ben wurde nie nominiert. Der Manipulator-Sieg ist Kandidat.\nAn Tag 2 nominiert Anna den Ben. Ben stirbt sofort, die Beratung geht weiter."
+msgstr "Anna, Ben (Manipulator) und Clara leben. Ben wurde nie angeklagt. Der Manipulator-Sieg ist Kandidat.\nAn Tag 2 klagt Anna den Ben an. Ben stirbt sofort, die Beratung geht weiter."
 
 msgid "ui.role.manipulator.lex.gm"
-msgstr "Trifft der Manipulator-Sieg mit Wolfssieg oder Dorfsieg zusammen, entscheidest du. Den Tod bei Nominierung nennst du öffentlich nicht als Rollenwirkung; der Tisch sieht aber, dass die nominierte Person sofort stirbt."
+msgstr "Trifft der Manipulator-Sieg mit Wolfssieg oder Dorfsieg zusammen, entscheidest du. Den Tod bei Anklage nennst du öffentlich nicht als Rollenwirkung; der Tisch sieht aber, dass die angeklagte Person sofort stirbt."
 
 msgid "ui.role.doppelspion.lex.night"
 msgstr "keiner eigener, wacht mit dem Rudel nur als Ansage"
@@ -5333,7 +5333,7 @@ msgid "ui.rulebook.c01.b10"
 msgstr "3. Nacht führen (Kapitel 4 und 5), Morgen abschließen (Kapitel 6)."
 
 msgid "ui.rulebook.c01.b11"
-msgstr "4. Tag mit Nominierung und Abstimmung am Tisch, Hinrichtung (Kapitel 7 und 8)."
+msgstr "4. Tag mit Anklage und Abstimmung am Tisch, Hinrichtung (Kapitel 7 und 8)."
 
 msgid "ui.rulebook.c01.b12"
 msgstr "5. Nacht und Tag wechseln sich ab, bis die Spielleitung einen Sieg bestätigt (Kapitel 9)."
@@ -5528,10 +5528,10 @@ msgid "ui.rulebook.c06.b11"
 msgstr "In einer Runde ohne Wiederbelebung wird beim Tod die Rolle aufgedeckt, und zwar die Rolle zum Zeitpunkt des Todes. Die Toten müssen nachts die Augen nicht schließen."
 
 msgid "ui.rulebook.c07.title"
-msgstr "Tag, Nominierung und physische Abstimmung"
+msgstr "Tag, Anklage und physische Abstimmung"
 
 msgid "ui.rulebook.c07.b01"
-msgstr "Nach „Weiter“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Nominierungen und das Ergebnis."
+msgstr "Nach „Weiter“ beginnt der Tag. Diskussion und Abstimmung finden am Tisch statt. Die App hat kein Stimmfeld, zählt keine Stimmen und rechnet keine Mehrheit aus. Die Spielleitung zählt selbst und erfasst nur die Anklagen und das Ergebnis."
 
 msgid "ui.rulebook.c07.b02"
 msgstr "Die Karte zeigt als Vorlesetext, wer heute gestorben ist („Heute gestorben: …“), und die öffentliche Liste der Anklagen des Tages. Angeklagte tragen einen Blutrot-Ring am Sitzkreis, bis sie hingerichtet werden. Unter der Liste steht der Vorlesetext „Alle Angeklagten dürfen sich jetzt nacheinander verteidigen.“"
@@ -5833,7 +5833,7 @@ msgid "ui.role.kopfgeldjaeger.lex.act"
 msgstr "Aufruf: (Nacht nach einer Hinrichtung) Die App kündigt die Rolle „Kopfgeldjäger“ in der Nachtreihenfolge an. Lies vor: „Kopfgeldjäger, erwache. Hier ist deine Liste.“\nAuswählen oder ablesen: Nur für dich: Wähle drei andere Lebende mit mindestens einem Wolf für die Liste.\nVorlesen oder zeigen: Zeige dem Kopfgeldjäger die drei Namen. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.korrupter_richter.lex.act"
-msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Korrupter Richter“ in der Nachtreihenfolge an. Lies vor: „Korrupter Richter, erwache. Zeige auf die Person, die morgen als nominiert gilt.“\nAuswählen oder ablesen: Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten. Die verdeckte Nominierung erscheint öffentlich nur als „… gilt heute als angeklagt“; ihr Stimmhinweis steht im Bereich „Rollen“ unter „Stimmhinweise“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Korrupter Richter“ in der Nachtreihenfolge an. Lies vor: „Korrupter Richter, erwache. Zeige auf die Person, die morgen als angeklagt gilt.“\nAuswählen oder ablesen: Tippe die Person an, die der Richter markiert (auch sich selbst). Ohne Wahl: verzichten. Die verdeckte Anklage erscheint öffentlich nur als „… gilt heute als angeklagt“; ihr Stimmhinweis steht im Bereich „Rollen“ unter „Stimmhinweise“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.kriegerin_des_lichts.lex.act"
 msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Kriegerin des Lichts“ in der Nachtreihenfolge an. Lies vor: „Kriegerin des Lichts, erwache. Willst du heute angreifen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, die die Kriegerin angreift. Ohne Angriff: verzichten.\nVorlesen oder zeigen: Zeige der Kriegerin, ob sie einen Wolf getroffen hat. Danach „Gezeigt“.\nBeenden: Tippe „Gezeigt“. Danach öffnet die App den nächsten Schritt."
@@ -5851,7 +5851,7 @@ msgid "ui.role.maertyrerin.lex.act"
 msgstr "Aufruf: (am Ende der Nacht) Die App kündigt die Rolle „Märtyrerin“ in der Nachtreihenfolge an. Lies vor: „Märtyrerin, erwache. Willst du dich für das Opfer der Nacht opfern?“\nAuswählen oder ablesen: Opfert sich die Märtyrerin für diese Person? Dann Person antippen und bestätigen.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.manipulator.lex.act"
-msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Erfasse Nominierungen wie immer. Wird der Manipulator nominiert, stirbt er sofort; das wendet die App an.\nVorlesen oder zeigen: Den Tod nennst du nicht als Rollenwirkung; der Tisch sieht aber, dass die nominierte Person sofort stirbt.\nBeenden: Es gibt nichts zu beenden."
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Erfasse Anklagen wie immer. Wird der Manipulator angeklagt, stirbt er sofort; das wendet die App an.\nVorlesen oder zeigen: Den Tod nennst du nicht als Rollenwirkung; der Tisch sieht aber, dass die angeklagte Person sofort stirbt.\nBeenden: Es gibt nichts zu beenden."
 
 msgid "ui.role.nachtwaechter.lex.act"
 msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Nichts auswählen. Die App wendet die Fähigkeit selbst an.\nVorlesen oder zeigen: Jeden Morgen nach der Morgenauflösung steht im Morgenbericht: „Die Glocken des Nachtwächters läuten.“ Die Ansage nennt nicht, bei welcher Seite etwas nicht stimmt.\nBeenden: Es gibt nichts zu beenden."
@@ -6309,10 +6309,10 @@ msgid "ui.card.segen_11.name"
 msgstr "Spiegelschutz"
 
 msgid "ui.card.segen_11.wolf.text"
-msgstr "Sollte am nächsten Tag ein Wolf gelyncht werden, stirbt stattdessen derjenige, der die Nominierung ausgesprochen hat."
+msgstr "Sollte am nächsten Tag ein Wolf gelyncht werden, stirbt stattdessen derjenige, der die Anklage erhoben hat."
 
 msgid "ui.card.segen_11.wolf.guide"
-msgstr "Wird am nächsten Tag ein Wolf gelyncht, stirbt stattdessen die nominierende Person. Die App setzt es bei der Hinrichtung um."
+msgstr "Wird am nächsten Tag ein Wolf gelyncht, stirbt stattdessen die anklagende Person. Die App setzt es bei der Hinrichtung um."
 
 msgid "ui.card.segen_11.dorf.text"
 msgstr "Sollten die Werwölfe in der Folgenacht einen Dorfbewohner erwischen, stirbt stattdessen einer von ihnen."
@@ -6825,10 +6825,10 @@ msgid "ui.card.schicksal_09.name"
 msgstr "Stimmentausch"
 
 msgid "ui.card.schicksal_09.neutral.text"
-msgstr "Beim nächsten Lynch zählt jede Stimme für den Spieler links daneben statt für den Nominierten."
+msgstr "Beim nächsten Lynch zählt jede Stimme für den Spieler links daneben statt für den Angeklagten."
 
 msgid "ui.card.schicksal_09.neutral.guide"
-msgstr "Bei der betroffenen Hinrichtung zählen die Stimmen für die Person links neben der Nominierten. Du trägst die Nominierte ein, die App wendet das Ziel links an."
+msgstr "Bei der betroffenen Hinrichtung zählen die Stimmen für die Person links neben der Angeklagten. Du trägst die Angeklagte ein, die App wendet das Ziel links an."
 
 msgid "ui.card.schicksal_11.name"
 msgstr "Kettenreaktion"
@@ -6852,16 +6852,16 @@ msgid "ui.card.loki_01.name"
 msgstr "Spiegelwelt"
 
 msgid "ui.card.loki_01.neutral.text"
-msgstr "Alle Lynch-Stimmen heute zählen für den Spieler links daneben statt für den Nominierten. Niemand weiß, wer wirklich stirbt, bis der Spielleiter es verkündet."
+msgstr "Alle Lynch-Stimmen heute zählen für den Spieler links daneben statt für den Angeklagten. Niemand weiß, wer wirklich stirbt, bis der Spielleiter es verkündet."
 
 msgid "ui.card.loki_01.neutral.guide"
-msgstr "Heute zählen alle Stimmen für die Person links neben der Nominierten. Niemand erfährt vorher, wer wirklich stirbt. Du verkündest es."
+msgstr "Heute zählen alle Stimmen für die Person links neben der Angeklagten. Niemand erfährt vorher, wer wirklich stirbt. Du verkündest es."
 
 msgid "ui.card.loki_02.name"
 msgstr "Stille Abstimmung"
 
 msgid "ui.card.loki_02.neutral.text"
-msgstr "Der Tag wird auf 60 Sekunden verkürzt. Gibt es nicht mindestens 3 Nominierungen, sterben 1-5 zufällige Spieler. Werden Nominierung und Lynchung nicht innerhalb der 60 Sekunden abgeschlossen, sterben alle 3 Nominierten."
+msgstr "Der Tag wird auf 60 Sekunden verkürzt. Gibt es nicht mindestens 3 Anklagen, sterben 1-5 zufällige Spieler. Werden Anklage und Lynchung nicht innerhalb der 60 Sekunden abgeschlossen, sterben alle 3 Angeklagten."
 
 msgid "ui.card.loki_02.neutral.guide"
 msgstr "Der Tag hat 60 Sekunden. Am Tagesende fragt die App, ob die Zeit eingehalten wurde, und setzt die Tode um."
@@ -6894,10 +6894,10 @@ msgid "ui.card.schicksal_12.name"
 msgstr "Totengericht"
 
 msgid "ui.card.schicksal_12.neutral.text"
-msgstr "Der nächste Tag wird von den Toten geleitet, nur tote Spieler dürfen nominieren und abstimmen. Lebende Spieler hören schweigend zu."
+msgstr "Der nächste Tag wird von den Toten geleitet, nur tote Spieler dürfen anklagen und abstimmen. Lebende Spieler hören schweigend zu."
 
 msgid "ui.card.schicksal_12.neutral.guide"
-msgstr "Am nächsten Tag nominieren nur tote Personen. Lebende hören schweigend zu. Die App erlaubt nur Nominierungen durch Tote."
+msgstr "Am nächsten Tag klagen nur tote Personen an. Lebende hören schweigend zu. Die App erlaubt nur Anklagen durch Tote."
 
 msgid "ui.card.loki_05.name"
 msgstr "Totenerwachen"
@@ -6912,28 +6912,28 @@ msgid "ui.card.solo_06.name"
 msgstr "Geisterstimme"
 
 msgid "ui.card.solo_06.solo.text"
-msgstr "Du agierst ab sofort vom Totenreich aus, du darfst in den folgenden drei Tagen nominieren und mit abstimmen, dazu zählt deine Stimme doppelt. Sollte es dir gelingen, dadurch jemanden zu lynchen, wirst du mit einer neuen Solo-Rolle wiederbelebt."
+msgstr "Du agierst ab sofort vom Totenreich aus, du darfst in den folgenden drei Tagen anklagen und mit abstimmen, dazu zählt deine Stimme doppelt. Sollte es dir gelingen, dadurch jemanden zu lynchen, wirst du mit einer neuen Solo-Rolle wiederbelebt."
 
 msgid "ui.card.solo_06.solo.guide"
-msgstr "Drei Tage darf die Kartenspielerin nominieren und mitstimmen (Stimme doppelt, am Tisch). Wird jemand hingerichtet, den sie nominiert hat, kehrt sie mit einer neuen Einzelsiegrolle zurück."
+msgstr "Drei Tage darf die Kartenspielerin anklagen und mitstimmen (Stimme doppelt, am Tisch). Wird jemand hingerichtet, den sie angeklagt hat, kehrt sie mit einer neuen Einzelsiegrolle zurück."
 
 msgid "ui.card.solo_11.name"
 msgstr "Richter aus dem Totenreich"
 
 msgid "ui.card.solo_11.solo.text"
-msgstr "Nach jeder Abstimmung darfst du erneut einmal nominieren, nur wenn mindestens 50% der Spieler dafür sind, wird diese Person zusätzlich gelyncht."
+msgstr "Nach jeder Abstimmung darfst du erneut einmal anklagen, nur wenn mindestens 50% der Spieler dafür sind, wird diese Person zusätzlich gelyncht."
 
 msgid "ui.card.solo_11.solo.guide"
-msgstr "Nach der Abstimmung des Tages darf die Kartenspielerin noch einmal nominieren. Stimmt mindestens die Hälfte zu, wird die Person hingerichtet. Du trägst Person und Zustimmung ein."
+msgstr "Nach der Abstimmung des Tages darf die Kartenspielerin noch einmal anklagen. Stimmt mindestens die Hälfte zu, wird die Person hingerichtet. Du trägst Person und Zustimmung ein."
 
 msgid "ui.card.solo_13.name"
 msgstr "Das Totenreich Regiert"
 
 msgid "ui.card.solo_13.solo.text"
-msgstr "Die nächsten 2 Tagphasen werden von den Toten regiert, nur diese dürfen reden, nominieren und lynchen."
+msgstr "Die nächsten 2 Tagphasen werden von den Toten regiert, nur diese dürfen reden, anklagen und lynchen."
 
 msgid "ui.card.solo_13.solo.guide"
-msgstr "Heute und morgen nominieren nur Tote. Lebende hören schweigend zu. Die App erlaubt nur Nominierungen durch Tote."
+msgstr "Heute und morgen klagen nur Tote an. Lebende hören schweigend zu. Die App erlaubt nur Anklagen durch Tote."
 
 msgid "ui.card.schicksal_01.name"
 msgstr "Nebelhorn"
@@ -6966,10 +6966,10 @@ msgid "ui.card.schicksal_13.name"
 msgstr "Stille Wahl"
 
 msgid "ui.card.schicksal_13.neutral.text"
-msgstr "Heute findet keine Diskussion statt, lediglich Nominierung und sofortige Abstimmung. Kein Spieler darf zuvor das Wort ergreifen."
+msgstr "Heute findet keine Diskussion statt, lediglich Anklage und sofortige Abstimmung. Kein Spieler darf zuvor das Wort ergreifen."
 
 msgid "ui.card.schicksal_13.neutral.guide"
-msgstr "Heute gibt es nur Nominierung und sofortige Abstimmung, keine Diskussion. Du achtest am Tisch darauf."
+msgstr "Heute gibt es nur Anklage und sofortige Abstimmung, keine Diskussion. Du achtest am Tisch darauf."
 
 msgid "ui.card.loki_11.name"
 msgstr "Stummfilm"
@@ -6984,10 +6984,10 @@ msgid "ui.card.loki_09.name"
 msgstr "Puppenspieler"
 
 msgid "ui.card.loki_09.neutral.text"
-msgstr "Der Spielleiter nominiert am nächsten Tag 5 Spieler, es ist mindestens einer aus jeder Fraktion darunter."
+msgstr "Der Spielleiter klagt am nächsten Tag 5 Spieler an, es ist mindestens einer aus jeder Fraktion darunter."
 
 msgid "ui.card.loki_09.neutral.guide"
-msgstr "Am nächsten Tag nominierst du fünf Personen, mindestens eine aus jeder Fraktion. Die App nimmt die Nominierungen entgegen."
+msgstr "Am nächsten Tag klagst du fünf Personen an, mindestens eine aus jeder Fraktion. Die App nimmt die Anklagen entgegen."
 
 msgid "ui.card.segen_02.name"
 msgstr "Flüsterwind"
@@ -7065,10 +7065,10 @@ msgid "ui.card.solo_03.name"
 msgstr "Racheschwur"
 
 msgid "ui.card.solo_03.solo.text"
-msgstr "Der Spieler der dich zuletzt nominiert hat (oder dich nachts angegriffen hat) erhält dauerhaft +3 Startstimmen gegen sich bei jedem zukünftigen Lynch. Der Fluch endet erst, wenn er stirbt."
+msgstr "Der Spieler der dich zuletzt angeklagt hat (oder dich nachts angegriffen hat) erhält dauerhaft +3 Startstimmen gegen sich bei jedem zukünftigen Lynch. Der Fluch endet erst, wenn er stirbt."
 
 msgid "ui.card.solo_03.solo.guide"
-msgstr "Du trägst die Person ein, die die Kartenspielerin zuletzt nominiert oder angegriffen hat. Die App sagt öffentlich an: +3 Stimmen gegen sie, bis sie stirbt. Du zählst am Tisch."
+msgstr "Du trägst die Person ein, die die Kartenspielerin zuletzt angeklagt oder angegriffen hat. Die App sagt öffentlich an: +3 Stimmen gegen sie, bis sie stirbt. Du zählst am Tisch."
 
 msgid "ui.card.solo_04.name"
 msgstr "Apokalyptischer Abgang"
@@ -7113,7 +7113,7 @@ msgid "ui.card.solo_09.solo.text"
 msgstr "Würfle laut einen Würfel. Die gewürfelte Zahl entspricht der Anzahl Spieler, die heute durch Lynchung sterben müssen."
 
 msgid "ui.card.solo_09.solo.guide"
-msgstr "Ein App-Würfel bestimmt, wie viele Hinrichtungen heute stattfinden. Der Tag bleibt offen, bis alle erfolgt sind oder niemand mehr nominiert ist."
+msgstr "Ein App-Würfel bestimmt, wie viele Hinrichtungen heute stattfinden. Der Tag bleibt offen, bis alle erfolgt sind oder niemand mehr angeklagt ist."
 
 msgid "ui.card.solo_10.name"
 msgstr "Einsames Erbe"
@@ -7239,7 +7239,7 @@ msgid "ui.cards.exec.cancelled"
 msgstr "Die Hinrichtung entfällt heute durch eine Karte."
 
 msgid "ui.cards.exec.dead_nominate"
-msgstr "Heute nominieren nur Tote. Lebende hören schweigend zu."
+msgstr "Heute klagen nur Tote an. Lebende hören schweigend zu."
 
 msgid "ui.cards.exec.reveal"
 msgstr "Wachsame Augen: Die Rolle der Person wird zuerst öffentlich enthüllt. Danach entscheidet das Dorf."
@@ -7314,7 +7314,7 @@ msgid "ui.prompt.generic.roll"
 msgstr "Tippe „Würfeln“. Das Ergebnis wird gespeichert und nicht neu gewürfelt."
 
 msgid "ui.card.task.puppet_nominate.heading"
-msgstr "Aufgabe: Nominierungen des Puppenspielers"
+msgstr "Aufgabe: Anklagen des Puppenspielers"
 
 msgid "ui.card.task.protect_pick.heading"
 msgstr "Aufgabe: Geschützte Person wählen"
@@ -7344,7 +7344,7 @@ msgid "ui.card.task.solo_judge.heading"
 msgstr "Aufgabe: Richter aus dem Totenreich"
 
 msgid "ui.card.task.puppet_nominate.targets"
-msgstr "Wähle fünf Personen, mindestens eine aus jeder Fraktion. Sie werden nominiert."
+msgstr "Wähle fünf Personen, mindestens eine aus jeder Fraktion. Sie werden angeklagt."
 
 msgid "ui.card.task.protect_pick.target_id"
 msgstr "Wähle geheim die Person, die geschützt wird."
@@ -7368,13 +7368,13 @@ msgid "ui.card.task.bad_omen_pick.target_id"
 msgstr "Wähle den Wolf, der stirbt, oder niemanden."
 
 msgid "ui.card.task.short_vote_check.in_time"
-msgstr "Wurden Nominierung und Hinrichtung in 60 Sekunden abgeschlossen?"
+msgstr "Wurden Anklage und Hinrichtung in 60 Sekunden abgeschlossen?"
 
 msgid "ui.card.task.solo_rebirth.role"
 msgstr "Wähle die neue Einzelsiegrolle der zurückkehrenden Person."
 
 msgid "ui.card.task.solo_judge.target_id"
-msgstr "Wähle die Person, die zusätzlich nominiert wird, oder niemanden."
+msgstr "Wähle die Person, die zusätzlich angeklagt wird, oder niemanden."
 
 msgid "ui.card.task.solo_judge.agrees"
 msgstr "Stimmen mindestens 50 Prozent der Spieler zu?"
@@ -7449,7 +7449,7 @@ msgid "ui.card.solo_01.input.target_id"
 msgstr "Wähle die Person, deren Name auf dem Zettel steht."
 
 msgid "ui.card.solo_03.input.target_id"
-msgstr "Wähle die Person, die zuletzt nominiert oder angegriffen hat."
+msgstr "Wähle die Person, die zuletzt angeklagt oder angegriffen hat."
 
 msgid "ui.card.solo_05.input.target_id"
 msgstr "Wähle die Erbin oder den Erben."
@@ -8578,7 +8578,7 @@ msgid "ui.night.rules.kopfgeldjaeger"
 msgstr "· Jede Hinrichtung eines Wolfs ergibt eine Liste in einer folgenden Nacht.\n· Der Spielleiter wählt drei andere Lebende, mindestens einen Wolf.\n· Angezeigt wird nur „mindestens ein Wolf“. Spiegelung und Cerberus-Abwehr zählen nicht."
 
 msgid "ui.night.rules.korrupter_richter"
-msgstr "· Jede Nacht freiwillig, höchstens eine Markierung, die alte wird gelöscht.\n· Die Markierte gilt am Tag als nominiert, mit +1 Stimme.\n· Stimmen zählt der Spielleiter selbst."
+msgstr "· Jede Nacht freiwillig, höchstens eine Markierung, die alte wird gelöscht.\n· Die Markierte gilt am Tag als angeklagt, mit +1 Stimme.\n· Stimmen zählt der Spielleiter selbst."
 
 msgid "ui.night.rules.kriegerin_des_lichts"
 msgstr "· Einmal je Leben, freiwillig, eine andere lebende Person.\n· Nur sie erfährt, ob das Ziel ein Wolf ist. Ein Wolf überlebt.\n· Ist das Ziel kein Wolf, stirbt die Kriegerin am Morgen."
@@ -8596,7 +8596,7 @@ msgid "ui.night.rules.maertyrerin"
 msgstr "· Nur am Ende der Nacht und nur, wenn das erste Rudelopfer wirklich sterben würde.\n· Greift ein Schutz, wird sie nicht gefragt.\n· Opfert sie sich, stirbt sie als Ersatzopfer. Der Fluch des Weisen verhindert es."
 
 msgid "ui.night.rules.manipulator"
-msgstr "· Wird er nominiert, stirbt er sofort. Der Tag bleibt aktiv.\n· Siegt, wenn genau drei Personen leben und er nie nominiert wurde.\n· „Nie nominiert“ bleibt auch nach Wiederbelebung und Rollenwechsel."
+msgstr "· Wird er angeklagt, stirbt er sofort. Der Tag bleibt aktiv.\n· Siegt, wenn genau drei Personen leben und er nie angeklagt wurde.\n· „Nie angeklagt“ bleibt auch nach Wiederbelebung und Rollenwechsel."
 
 msgid "ui.night.rules.nachtwaechter"
 msgstr "· Jeden Morgen nach der Morgenauflösung, solange er lebt.\n· Sitzt ein Wolf oder Einzelsieger direkt neben ihm, läuten die Glocken, ohne Namen.\n· Nachbarn sind die nächsten Lebenden, tote Plätze werden übersprungen."
@@ -8662,7 +8662,7 @@ msgid "ui.night.rules.siegreicher_wolf"
 msgstr "· Zählt nur in der Wolfsparität doppelt.\n· Sonst zählt er einmal: bei „kein Wolf lebt“, beim Manipulator, beim Waldläufer.\n· Das Orakel sieht „Werwolf“."
 
 msgid "ui.night.rules.spiegelwolf"
-msgstr "· Spiegelt einmal je Leben die erste bestätigte Hinrichtung auf die nominierende Person.\n· Die Hinrichtung des Tages gilt als erfolgt, er überlebt.\n· Ohne Nominierung dieses Tages oder bei toter nominierender Person: normaler Tod."
+msgstr "· Spiegelt einmal je Leben die erste bestätigte Hinrichtung auf die anklagende Person.\n· Die Hinrichtung des Tages gilt als erfolgt, er überlebt.\n· Ohne Anklage dieses Tages oder bei toter anklagender Person: normaler Tod."
 
 msgid "ui.night.rules.spuerhund"
 msgstr "· Jede Nacht genau drei andere Lebende, kein Verzicht. Unter vier Lebenden entfällt der Schritt.\n· Häkchen, wenn mindestens eine Person Wolf oder Einzelsieger ist (wahre Fraktion).\n· Bei Kreuz verliert er die Fähigkeit, wird aber weiter aufgerufen."

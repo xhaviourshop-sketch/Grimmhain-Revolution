@@ -29,7 +29,7 @@ Grimmhain-Architektur und Tests haben Vorrang vor allgemeinen Beispielen.
 
 ## Tests
 
-- Nur gezielt: `node tools/test-changed` (leise). Nie die Vollsuite, nie Fuzz; das macht die Hauptsitzung einmal am Ende.
+- Nur gezielt: `node tools/test-changed` (leise). Nie die Vollsuite, nie Fuzz; das macht die Hauptsitzung einmal am Ende, je nach „Testumfang nach Auftragsgröße“ in `CLAUDE.md`.
 - Bug: erst reproduzierender Test rot, dann Fix. Neue Tests nur für Logik, die still kaputtgehen kann, höchstens einer pro neuer Funktion. Keine Tests für Positionen oder Aussehen.
 - Nach 2 gescheiterten Versuchen am selben Problem: stoppen und melden.
 

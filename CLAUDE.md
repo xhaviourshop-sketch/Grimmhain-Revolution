@@ -21,7 +21,16 @@ Regeln, Testregeln und Verweise. Erklärungen: `docs/development/` (`CLAUDE-STAC
 - Skills nur bei passender Aufgabe laden: `docs/development/CLAUDE-SKILLS.md`.
 - Kein Commit, Push, Merge oder Kauf ohne Auftrag. Fremde und uncommittete Änderungen erhalten, besonders `godot/project.godot`.
 
-## Team-Ablauf (jeder Umsetzungsauftrag; Agenten in `.claude/agents/`, Erklärung `docs/development/AGENTEN.md`)
+## Testumfang nach Auftragsgröße (Hauptsitzung und alle Agenten, Markus 06.10.2026)
+Größe nennt Markus im Auftrag, sonst schätzt Claude sie zu Beginn und schreibt sie in die erste Antwortzeile.
+- KLEIN (Texte, Farben, Größen, Umbenennungen, bis ca. 5 Dateien, kein Regelkern): nur `node tools/test-changed`, keine Vollsuite, kein Fuzz. Kein Planer, keine Entwickler-Agenten, Hauptsitzung macht es selbst. Prüfer nur bei geänderten sichtbaren Texten: `pruefer-sprache`, einmal. Höchstens 3 Screenshots.
+- MITTEL (neue Oberfläche, mehrere Bildschirme, kein Regelkern): gezielte Tests, am Ende einmal Vollsuite ohne Fuzz. Nur die betroffenen Prüfer, eine Runde.
+- GROSS (neue Funktionen, Regelkern, mehr als ca. 15 Dateien): Team-Ablauf unten, Vollsuite mit Fuzz einmal am Ende, alle Prüfer.
+- IMMER: Änderung am Regelkern = mindestens Vollsuite ohne Fuzz. Merge/Deploy nur bei grünem Ergebnis der jeweiligen Stufe.
+- ZEITGRENZE: Dauert ein Auftrag mehr als doppelt so lange wie seine Stufe (klein 15, mittel 40, groß 90 Min), anhalten und kurz berichten.
+- Diese Regel geht den Testregeln und dem Team-Ablauf bei Widerspruch vor.
+
+## Team-Ablauf (Aufträge MITTEL und GROSS; Agenten in `.claude/agents/`, Erklärung `docs/development/AGENTEN.md`)
 1. `planer` zerlegt den Auftrag in Teile mit festen Dateien, Prüfstufe (minimal/standard/full) und Tests.
 2. `godot-entwickler` setzen die Teile parallel um, je eigener Worktree und Zweig. Teile mit denselben Dateien laufen nacheinander.
 3. Danach laufen die Prüfer gleichzeitig auf Diff und Screenshots: `pruefer-sprache`, `pruefer-marke`, `pruefer-spielleiter` (bei minimal nur Sprache).

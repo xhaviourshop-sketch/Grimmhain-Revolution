@@ -438,13 +438,13 @@ msgid "ui.role.manipulator.name"
 msgstr "Manipulator"
 
 msgid "ui.role.manipulator.short"
-msgstr "Wins alone with exactly three alive, dies when nominated."
+msgstr "Wins alone with exactly three alive, dies when accused."
 
 msgid "ui.role.spiegelwolf.name"
 msgstr "Mirror Wolf"
 
 msgid "ui.role.spiegelwolf.short"
-msgstr "Pack wolf that once turns an execution onto the nominator."
+msgstr "Pack wolf that once turns an execution onto the accuser."
 
 msgid "ui.role.siegreicher_wolf.name"
 msgstr "Victorious Wolf"
@@ -528,7 +528,7 @@ msgid "ui.role.korrupter_richter.name"
 msgstr "Corrupt Judge"
 
 msgid "ui.role.korrupter_richter.short"
-msgstr "Marks someone at night who counts as nominated next day."
+msgstr "Marks someone at night who counts as accused next day."
 
 msgid "ui.role.waechter_am_tor.name"
 msgstr "Gatewarden"
@@ -1482,7 +1482,7 @@ msgid "ui.cockpit.win.reason.no_wolves_alive"
 msgstr "No wolf is alive any more."
 
 msgid "ui.cockpit.win.reason.manipulator_three_alive"
-msgstr "Exactly three are alive and the Manipulator was never nominated."
+msgstr "Exactly three are alive and the Manipulator was never accused."
 
 msgid "ui.cockpit.win.reason.gm_declared"
 msgstr "Declared by the game master."
@@ -2058,7 +2058,7 @@ msgid "ui.call.kopfgeldjaeger"
 msgstr "“Bounty Hunter, wake up. Here is your list.”"
 
 msgid "ui.call.korrupter_richter"
-msgstr "“Corrupt Judge, wake up. Point to the person who counts as nominated tomorrow.”"
+msgstr "“Corrupt Judge, wake up. Point to the person who counts as accused tomorrow.”"
 
 msgid "ui.call.kriegerin_des_lichts"
 msgstr "“Warrior of Light, wake up. Do you want to attack tonight? Point to the person.”"
@@ -2631,7 +2631,7 @@ msgid "ui.gm.kind.set_mirror"
 msgstr "Change the mirror"
 
 msgid "ui.gm.kind.set_ever_nominated"
-msgstr "Change nomination status"
+msgstr "Change accusation status"
 
 msgid "ui.gm.kind.set_apprentice_master"
 msgstr "Set the Apprentice’s master"
@@ -2850,7 +2850,7 @@ msgid "ui.cockpit.card.gm.choose"
 msgstr "choose …"
 
 msgid "ui.gm.field.ever_nominated"
-msgstr "Ever nominated"
+msgstr "Ever accused"
 
 msgid "ui.gm.field.potion_heal"
 msgstr "Healing potion available"
@@ -4202,7 +4202,7 @@ msgid "ui.role.korrupter_richter.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.korrupter_richter.lex.ability"
-msgstr "Marks a person at night who counts as nominated during the day."
+msgstr "Marks a person at night who counts as accused during the day."
 
 msgid "ui.role.korrupter_richter.lex.timing"
 msgstr "Every night, optional. At the start of the night the old marking is cleared, there is at most one."
@@ -4211,16 +4211,16 @@ msgid "ui.role.korrupter_richter.lex.targets"
 msgstr "One living person, the Judge themself is allowed."
 
 msgid "ui.role.korrupter_richter.lex.exceptions"
-msgstr "At the start of the day the marked person counts as nominated by the Judge (normal nomination: daily limit, Manipulator death, reflection as usual). Only the marked person's nomination appears in public, not the Judge. Little Red Riding Hood's apple has no effect here. The game master view shows a reminder “+1 vote on the marked person”; you count the votes yourself."
+msgstr "At the start of the day the marked person counts as accused by the Judge (normal accusation: daily limit, Manipulator death, reflection as usual). Only the marked person's accusation appears in public, not the Judge. Little Red Riding Hood's apple has no effect here. The game master view shows a reminder “+1 vote on the marked person”; you count the votes yourself."
 
 msgid "ui.role.korrupter_richter.lex.win"
 msgstr "With the village."
 
 msgid "ui.role.korrupter_richter.lex.example"
-msgstr "In night 3 the Judge marks Emil. At the start of day 4 Emil is nominated. In public it is only said that Emil is nominated.\nThe Judge marks themself. They are nominated at the start of the day."
+msgstr "In night 3 the Judge marks Emil. At the start of day 4 Emil is accused. In public it is only said that Emil is accused.\nThe Judge marks themself. They are accused at the start of the day."
 
 msgid "ui.role.korrupter_richter.lex.gm"
-msgstr "You never say who nominated. At the start of the night the app clears the old marking."
+msgstr "You never say who accused. At the start of the night the app clears the old marking."
 
 msgid "ui.role.werwolf.lex.night"
 msgstr "pack step every night"
@@ -4283,25 +4283,25 @@ msgid "ui.role.spiegelwolf.lex.wolf"
 msgstr "yes"
 
 msgid "ui.role.spiegelwolf.lex.ability"
-msgstr "Pack wolf, redirects one execution onto the nominating person once."
+msgstr "Pack wolf, redirects one execution onto the accusing person once."
 
 msgid "ui.role.spiegelwolf.lex.timing"
 msgstr "The Mirror Wolf's first confirmed execution, once per life. It is used up only with the confirmed execution."
 
 msgid "ui.role.spiegelwolf.lex.targets"
-msgstr "The person who nominated the Mirror Wolf on that day. They die with the cause reflection, the Mirror Wolf survives, the day's execution counts as done."
+msgstr "The person who accused the Mirror Wolf on that day. They die with the cause reflection, the Mirror Wolf survives, the day's execution counts as done."
 
 msgid "ui.role.spiegelwolf.lex.exceptions"
-msgstr "No reflection, normal death: if the reflection is already used, without a nomination of that day on them, or if the nominating person is dead or unknown at the execution. With self-nomination the reflection triggers and the Mirror Wolf themself dies, exactly one death. Guardian Angel and Witch rescue do not prevent the reflection."
+msgstr "No reflection, normal death: if the reflection is already used, without an accusation against them that day, or if the accusing person is dead or unknown at the execution. With self-accusation the reflection triggers and the Mirror Wolf themself dies, exactly one death. Guardian Angel and Witch rescue do not prevent the reflection."
 
 msgid "ui.role.spiegelwolf.lex.win"
 msgstr "Wolf win as for the Werewolf."
 
 msgid "ui.role.spiegelwolf.lex.example"
-msgstr "Ben nominates Fritz, the Mirror Wolf. Fritz is to be executed. Instead Ben dies, Fritz lives.\nFritz's reflection is already used. The next execution of Fritz kills them normally."
+msgstr "Ben accuses Fritz, the Mirror Wolf. Fritz is to be executed. Instead Ben dies, Fritz lives.\nFritz's reflection is already used. The next execution of Fritz kills them normally."
 
 msgid "ui.role.spiegelwolf.lex.gm"
-msgstr "In public only the nominating person's death appears, no cause. The table does see, however, that the nominating person dies instead of the Mirror Wolf; that cannot be hidden. After a revival the uses are available again."
+msgstr "In public only the accusing person's death appears, no cause. The table does see, however, that the accusing person dies instead of the Mirror Wolf; that cannot be hidden. After a revival the uses are available again."
 
 msgid "ui.role.siegreicher_wolf.lex.night"
 msgstr "none of its own, part of the pack"
@@ -4751,25 +4751,25 @@ msgid "ui.role.manipulator.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.manipulator.lex.ability"
-msgstr "Wins alone with exactly three living people, dies when nominated."
+msgstr "Wins alone with exactly three living people, dies when accused."
 
 msgid "ui.role.manipulator.lex.timing"
-msgstr "At every nomination, without limit. The win is checked as soon as exactly three people are alive."
+msgstr "At every accusation, without limit. The win is checked as soon as exactly three people are alive."
 
 msgid "ui.role.manipulator.lex.targets"
 msgstr "None."
 
 msgid "ui.role.manipulator.lex.exceptions"
-msgstr "If nominated, the nomination is stored first, then the Manipulator dies at once (source: the nominating person). The day stays active. “Ever nominated” is a permanent status that neither revival nor role change alters. Several Manipulators are separate win candidates. An execution by correction without a nomination does not trigger a Manipulator death."
+msgstr "If accused, the accusation is stored first, then the Manipulator dies at once (source: the accusing person). The day stays active. “Ever accused” is a permanent status that neither revival nor role change alters. Several Manipulators are separate win candidates. An execution by correction without an accusation does not trigger a Manipulator death."
 
 msgid "ui.role.manipulator.lex.win"
-msgstr "They win alone if exactly three people are alive, they are alive and were never nominated."
+msgstr "They win alone if exactly three people are alive, they are alive and were never accused."
 
 msgid "ui.role.manipulator.lex.example"
-msgstr "Anna, Ben (Manipulator) and Clara are alive. Ben was never nominated. The Manipulator win is a candidate.\nOn day 2 Anna nominates Ben. Ben dies at once, the discussion continues."
+msgstr "Anna, Ben (Manipulator) and Clara are alive. Ben was never accused. The Manipulator win is a candidate.\nOn day 2 Anna accuses Ben. Ben dies at once, the discussion continues."
 
 msgid "ui.role.manipulator.lex.gm"
-msgstr "If the Manipulator win coincides with a wolf win or village win, you decide. You do not name the death at nomination as a role effect in public; the table does see, however, that the nominated person dies at once."
+msgstr "If the Manipulator win coincides with a wolf win or village win, you decide. You do not name the death at accusation as a role effect in public; the table does see, however, that the accused person dies at once."
 
 msgid "ui.role.doppelspion.lex.night"
 msgstr "none of its own, wakes with the pack as an announcement only"
@@ -5333,7 +5333,7 @@ msgid "ui.rulebook.c01.b10"
 msgstr "3. Run the night (chapters 4 and 5), close the morning (chapter 6)."
 
 msgid "ui.rulebook.c01.b11"
-msgstr "4. Day with nomination and a vote at the table, execution (chapters 7 and 8)."
+msgstr "4. Day with accusation and a vote at the table, execution (chapters 7 and 8)."
 
 msgid "ui.rulebook.c01.b12"
 msgstr "5. Night and day alternate until the game master confirms a win (chapter 9)."
@@ -5528,10 +5528,10 @@ msgid "ui.rulebook.c06.b11"
 msgstr "In a round without revival the role is revealed on death, namely the role at the time of death. The dead do not have to close their eyes at night."
 
 msgid "ui.rulebook.c07.title"
-msgstr "Day, nomination and physical vote"
+msgstr "Day, accusation and physical vote"
 
 msgid "ui.rulebook.c07.b01"
-msgstr "After “Continue” the day begins. Discussion and voting happen at the table. The app has no vote field, counts no votes and calculates no majority. The game master counts and records only the nominations and the result."
+msgstr "After “Continue” the day begins. Discussion and voting happen at the table. The app has no vote field, counts no votes and calculates no majority. The game master counts and records only the accusations and the result."
 
 msgid "ui.rulebook.c07.b02"
 msgstr "The card shows as reading text who died today (“Died today: …”) and the public list of today's accusations. Accused players carry a blood-red ring in the seat circle until they are executed. Below the list is the reading text “All accused players may now defend themselves, one after another.”"
@@ -5833,7 +5833,7 @@ msgid "ui.role.kopfgeldjaeger.lex.act"
 msgstr "Call: (night after an execution) The app announces the role “Bounty Hunter” in the night order. Read out: “Bounty Hunter, wake up. Here is your list.”\nSelect or read: For you only: choose three other living people with at least one wolf for the list.\nRead out or show: Show the Bounty Hunter the three names. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
 
 msgid "ui.role.korrupter_richter.lex.act"
-msgstr "Call: (every night, optional) The app announces the role “Corrupt Judge” in the night order. Read out: “Corrupt Judge, wake up. Point to the person who counts as nominated tomorrow.”\nSelect or read: Tap the person the Judge marks (may be themself). Without a choice: decline. Publicly the covered nomination only appears as “… counts as accused today”; its vote hint is in the “Roles” area under “Vote hints”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+msgstr "Call: (every night, optional) The app announces the role “Corrupt Judge” in the night order. Read out: “Corrupt Judge, wake up. Point to the person who counts as accused tomorrow.”\nSelect or read: Tap the person the Judge marks (may be themself). Without a choice: decline. Publicly the covered accusation only appears as “… counts as accused today”; its vote hint is in the “Roles” area under “Vote hints”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
 
 msgid "ui.role.kriegerin_des_lichts.lex.act"
 msgstr "Call: (every night until used, optional) The app announces the role “Warrior of Light” in the night order. Read out: “Warrior of Light, wake up. Do you want to attack tonight? Point to the person.”\nSelect or read: Tap the person the Warrior attacks. Without an attack: decline.\nRead out or show: Show the Warrior whether they hit a wolf. Then tap “Shown”.\nFinish: Tap “Shown”. The app then opens the next step."
@@ -5851,7 +5851,7 @@ msgid "ui.role.maertyrerin.lex.act"
 msgstr "Call: (at the end of the night) The app announces the role “Martyr” in the night order. Read out: “Martyr, wake up. Do you want to sacrifice yourself for tonight’s victim?”\nSelect or read: Does the Martyr sacrifice themself for this person? Then tap the person and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
 
 msgid "ui.role.manipulator.lex.act"
-msgstr "Call: No call, no night step.\nSelect or read: Record nominations as usual. If the Manipulator is nominated he dies immediately; the app applies that.\nRead out or show: You do not name the death as a role effect; the table sees, though, that the nominated person dies immediately.\nFinish: There is nothing to finish."
+msgstr "Call: No call, no night step.\nSelect or read: Record accusations as usual. If the Manipulator is accused he dies immediately; the app applies that.\nRead out or show: You do not name the death as a role effect; the table sees, though, that the accused person dies immediately.\nFinish: There is nothing to finish."
 
 msgid "ui.role.nachtwaechter.lex.act"
 msgstr "Call: No call, no night step.\nSelect or read: Select nothing. The app applies the ability itself.\nRead out or show: Every morning after the dawn resolution the morning report says: “The night watchman’s bells are ringing.” The announcement does not say on which side something is wrong.\nFinish: There is nothing to finish."
@@ -6309,10 +6309,10 @@ msgid "ui.card.segen_11.name"
 msgstr "Mirror Shield"
 
 msgid "ui.card.segen_11.wolf.text"
-msgstr "If a wolf is lynched on the next day, the person who made the nomination dies instead."
+msgstr "If a wolf is lynched on the next day, the person who made the accusation dies instead."
 
 msgid "ui.card.segen_11.wolf.guide"
-msgstr "If a wolf is lynched on the next day, the nominating person dies instead. The app applies it at the execution."
+msgstr "If a wolf is lynched on the next day, the accusing person dies instead. The app applies it at the execution."
 
 msgid "ui.card.segen_11.dorf.text"
 msgstr "If the werewolves catch a villager in the following night, one of them dies instead."
@@ -6861,7 +6861,7 @@ msgid "ui.card.loki_02.name"
 msgstr "Silent Vote"
 
 msgid "ui.card.loki_02.neutral.text"
-msgstr "The day is shortened to 60 seconds. If there are not at least 3 nominations, 1 to 5 random players die. If nomination and lynching are not completed within the 60 seconds, all 3 nominees die."
+msgstr "The day is shortened to 60 seconds. If there are not at least 3 accusations, 1 to 5 random players die. If accusation and lynching are not completed within the 60 seconds, all 3 accused die."
 
 msgid "ui.card.loki_02.neutral.guide"
 msgstr "The day has 60 seconds. At the end of the day the app asks whether the time was kept and applies the deaths."
@@ -6894,10 +6894,10 @@ msgid "ui.card.schicksal_12.name"
 msgstr "Court of the Dead"
 
 msgid "ui.card.schicksal_12.neutral.text"
-msgstr "The next day is led by the dead. Only dead players may nominate and vote. Living players listen in silence."
+msgstr "The next day is led by the dead. Only dead players may accuse and vote. Living players listen in silence."
 
 msgid "ui.card.schicksal_12.neutral.guide"
-msgstr "On the next day only dead people nominate. The living listen in silence. The app only allows nominations by the dead."
+msgstr "On the next day only dead people accuse. The living listen in silence. The app only allows accusations by the dead."
 
 msgid "ui.card.loki_05.name"
 msgstr "Awakening of the Dead"
@@ -6912,28 +6912,28 @@ msgid "ui.card.solo_06.name"
 msgstr "Ghost Voice"
 
 msgid "ui.card.solo_06.solo.text"
-msgstr "From now on you act from the realm of the dead: in the following three days you may nominate and vote, and your vote counts double. If you manage to get someone lynched this way, you are revived with a new solo role."
+msgstr "From now on you act from the realm of the dead: in the following three days you may accuse and vote, and your vote counts double. If you manage to get someone lynched this way, you are revived with a new solo role."
 
 msgid "ui.card.solo_06.solo.guide"
-msgstr "For three days the card player may nominate and vote (vote doubled, at the table). If someone she nominated is executed, she returns with a new solo role."
+msgstr "For three days the card player may accuse and vote (vote doubled, at the table). If someone she accused is executed, she returns with a new solo role."
 
 msgid "ui.card.solo_11.name"
 msgstr "Judge from the Realm of the Dead"
 
 msgid "ui.card.solo_11.solo.text"
-msgstr "After every vote you may nominate once more. Only if at least 50% of the players agree is this person additionally lynched."
+msgstr "After every vote you may accuse once more. Only if at least 50% of the players agree is this person additionally lynched."
 
 msgid "ui.card.solo_11.solo.guide"
-msgstr "After the day's vote the card player may nominate once more. If at least half agree, the person is executed. You enter the person and the agreement."
+msgstr "After the day's vote the card player may accuse once more. If at least half agree, the person is executed. You enter the person and the agreement."
 
 msgid "ui.card.solo_13.name"
 msgstr "The Realm of the Dead Rules"
 
 msgid "ui.card.solo_13.solo.text"
-msgstr "The next 2 day phases are ruled by the dead. Only they may speak, nominate and lynch."
+msgstr "The next 2 day phases are ruled by the dead. Only they may speak, accuse and lynch."
 
 msgid "ui.card.solo_13.solo.guide"
-msgstr "Today and tomorrow only the dead nominate. The living listen in silence. The app only allows nominations by the dead."
+msgstr "Today and tomorrow only the dead accuse. The living listen in silence. The app only allows accusations by the dead."
 
 msgid "ui.card.schicksal_01.name"
 msgstr "Foghorn"
@@ -6966,10 +6966,10 @@ msgid "ui.card.schicksal_13.name"
 msgstr "Silent Election"
 
 msgid "ui.card.schicksal_13.neutral.text"
-msgstr "There is no discussion today, only nomination and an immediate vote. No player may speak beforehand."
+msgstr "There is no discussion today, only accusation and an immediate vote. No player may speak beforehand."
 
 msgid "ui.card.schicksal_13.neutral.guide"
-msgstr "Today there is only nomination and an immediate vote, no discussion. You watch for it at the table."
+msgstr "Today there is only accusation and an immediate vote, no discussion. You watch for it at the table."
 
 msgid "ui.card.loki_11.name"
 msgstr "Silent Film"
@@ -6984,10 +6984,10 @@ msgid "ui.card.loki_09.name"
 msgstr "Puppeteer"
 
 msgid "ui.card.loki_09.neutral.text"
-msgstr "On the next day the game master nominates 5 players, at least one from each faction among them."
+msgstr "On the next day the game master accuses 5 players, at least one from each faction among them."
 
 msgid "ui.card.loki_09.neutral.guide"
-msgstr "On the next day you nominate five people, at least one from each faction. The app takes the nominations."
+msgstr "On the next day you accuse five people, at least one from each faction. The app takes the accusations."
 
 msgid "ui.card.segen_02.name"
 msgstr "Whispering Wind"
@@ -7065,10 +7065,10 @@ msgid "ui.card.solo_03.name"
 msgstr "Oath of Revenge"
 
 msgid "ui.card.solo_03.solo.text"
-msgstr "The player who nominated you last (or attacked you at night) permanently receives +3 starting votes against them at every future lynching. The curse ends only when they die."
+msgstr "The player who accused you last (or attacked you at night) permanently receives +3 starting votes against them at every future lynching. The curse ends only when they die."
 
 msgid "ui.card.solo_03.solo.guide"
-msgstr "You enter the person who last nominated or attacked the card player. The app announces publicly: +3 votes against them until they die. You count at the table."
+msgstr "You enter the person who last accused or attacked the card player. The app announces publicly: +3 votes against them until they die. You count at the table."
 
 msgid "ui.card.solo_04.name"
 msgstr "Apocalyptic Exit"
@@ -7113,7 +7113,7 @@ msgid "ui.card.solo_09.solo.text"
 msgstr "Roll a die aloud. The number rolled is the number of players who must die by lynching today."
 
 msgid "ui.card.solo_09.solo.guide"
-msgstr "An app die decides how many executions take place today. The day stays open until all are done or nobody is left nominated."
+msgstr "An app die decides how many executions take place today. The day stays open until all are done or nobody is left accused."
 
 msgid "ui.card.solo_10.name"
 msgstr "Lonely Inheritance"
@@ -7239,7 +7239,7 @@ msgid "ui.cards.exec.cancelled"
 msgstr "The execution is cancelled today by a card."
 
 msgid "ui.cards.exec.dead_nominate"
-msgstr "Today only the dead nominate. The living listen in silence."
+msgstr "Today only the dead accuse. The living listen in silence."
 
 msgid "ui.cards.exec.reveal"
 msgstr "Watchful Eyes: the person's role is revealed publicly first. Then the village decides."
@@ -7314,7 +7314,7 @@ msgid "ui.prompt.generic.roll"
 msgstr "Tap “Roll”. The result is stored and never rolled again."
 
 msgid "ui.card.task.puppet_nominate.heading"
-msgstr "Task: puppeteer nominations"
+msgstr "Task: puppeteer accusations"
 
 msgid "ui.card.task.protect_pick.heading"
 msgstr "Task: choose the protected person"
@@ -7344,7 +7344,7 @@ msgid "ui.card.task.solo_judge.heading"
 msgstr "Task: judge from the realm of the dead"
 
 msgid "ui.card.task.puppet_nominate.targets"
-msgstr "Choose five people, at least one from each faction. They are nominated."
+msgstr "Choose five people, at least one from each faction. They are accused."
 
 msgid "ui.card.task.protect_pick.target_id"
 msgstr "Secretly choose the person who is protected."
@@ -7368,13 +7368,13 @@ msgid "ui.card.task.bad_omen_pick.target_id"
 msgstr "Choose the wolf who dies, or nobody."
 
 msgid "ui.card.task.short_vote_check.in_time"
-msgstr "Were nomination and execution completed within 60 seconds?"
+msgstr "Were accusation and execution completed within 60 seconds?"
 
 msgid "ui.card.task.solo_rebirth.role"
 msgstr "Choose the new solo role of the returning person."
 
 msgid "ui.card.task.solo_judge.target_id"
-msgstr "Choose the person who is additionally nominated, or nobody."
+msgstr "Choose the person who is additionally accused, or nobody."
 
 msgid "ui.card.task.solo_judge.agrees"
 msgstr "Do at least 50 percent of the players agree?"
@@ -7449,7 +7449,7 @@ msgid "ui.card.solo_01.input.target_id"
 msgstr "Choose the person whose name is on the slip."
 
 msgid "ui.card.solo_03.input.target_id"
-msgstr "Choose the person who last nominated or attacked."
+msgstr "Choose the person who last accused or attacked."
 
 msgid "ui.card.solo_05.input.target_id"
 msgstr "Choose the heir."
@@ -8578,7 +8578,7 @@ msgid "ui.night.rules.kopfgeldjaeger"
 msgstr "· Every execution of a wolf gives a list on a following night.\n· The storyteller picks three other living people, at least one wolf.\n· Only “at least one wolf” is shown. Mirroring and Cerberus fending off do not count."
 
 msgid "ui.night.rules.korrupter_richter"
-msgstr "· Every night optional, at most one mark, the old one is cleared.\n· The marked person counts as nominated by day, with +1 vote.\n· The storyteller counts votes."
+msgstr "· Every night optional, at most one mark, the old one is cleared.\n· The marked person counts as accused by day, with +1 vote.\n· The storyteller counts votes."
 
 msgid "ui.night.rules.kriegerin_des_lichts"
 msgstr "· Once per life, optional, one other living person.\n· Only she learns whether the target is a wolf. A wolf survives.\n· If the target is no wolf, the Warrior dies at dawn."
@@ -8596,7 +8596,7 @@ msgid "ui.night.rules.maertyrerin"
 msgstr "· Only at the end of the night and only if the first pack victim would really die.\n· If a protection works, she is not asked.\n· If she sacrifices herself, she dies in place of the victim. The Elder's curse prevents it."
 
 msgid "ui.night.rules.manipulator"
-msgstr "· If nominated, he dies at once. The day continues.\n· Wins when exactly three people live and he was never nominated.\n· “Never nominated” holds even after revival and role change."
+msgstr "· If accused, he dies at once. The day continues.\n· Wins when exactly three people live and he was never accused.\n· “Never accused” holds even after revival and role change."
 
 msgid "ui.night.rules.nachtwaechter"
 msgstr "· Every morning after dawn, while he lives.\n· If a wolf or solo player sits right next to him, the bells ring, without names.\n· Neighbours are the nearest living people, dead seats are skipped."
@@ -8662,7 +8662,7 @@ msgid "ui.night.rules.siegreicher_wolf"
 msgstr "· Counts double only in wolf parity.\n· Otherwise counts once: for “no wolf lives”, Manipulator, Ranger.\n· The Oracle sees “Werewolf”."
 
 msgid "ui.night.rules.spiegelwolf"
-msgstr "· Mirrors the first confirmed execution once per life onto the nominating person.\n· The day's execution counts as done, he survives.\n· No nomination that day, or the nominator is dead: normal death."
+msgstr "· Mirrors the first confirmed execution once per life onto the accusing person.\n· The day's execution counts as done, he survives.\n· No accusation that day, or the accuser is dead: normal death."
 
 msgid "ui.night.rules.spuerhund"
 msgstr "· Every night exactly three other living people, no skipping. Under four alive the step is skipped.\n· Checkmark if at least one is a wolf or solo player (true faction).\n· On a cross he loses the ability but is still called every night."
