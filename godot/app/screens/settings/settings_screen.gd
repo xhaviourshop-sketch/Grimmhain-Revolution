@@ -79,7 +79,7 @@ func _on_volume_step(step: int) -> void:
 ## Stufe in Worten; bei Musik aus sind beide Knöpfe gesperrt, an den Enden je einer.
 func _show_volume() -> void:
 	var settings := context.settings
-	_level.text_key = "ui.settings.audio.level.%d" % settings.music_volume
+	_level.text_key = "ui.settings.audio.level.%d" % settings.music_volume if settings.music_enabled else "ui.settings.audio.level.off"
 	_quieter.disabled = not settings.music_enabled or settings.music_volume <= AppSettings.MUSIC_VOLUME_MIN
 	_louder.disabled = not settings.music_enabled or settings.music_volume >= AppSettings.MUSIC_VOLUME_MAX
 
