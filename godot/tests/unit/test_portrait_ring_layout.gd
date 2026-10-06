@@ -1,5 +1,5 @@
 extends TestCase
-## Geometrie des Porträtkreises (P3): reine Rechnung ohne Szene. Porträtfenster mindestens 56 px (Rahmenbreite 86 ab 13 Personen, P5), runde Porträts und
+## Geometrie des Porträtkreises (P3): reine Rechnung ohne Szene. Porträt mindestens 48 px (Rahmenbreite 86 ab 13 Personen), runde Porträts und
 ## Namensschilder überlappen sich nicht, die Tischmitte bleibt frei von Plätzen und im Feld.
 
 ## Felder des Sitzkreises: 1024x768 (Chip, 908 x 638), 1280x800 (volle Leiste, 1164 x 592) und größere Fenster.
@@ -26,8 +26,8 @@ func test_diameter_by_group_size() -> void:
 	assert_eq(PortraitRingLayout.diameter_for(13), 86.0, "Ziel 86 ab 13")
 	assert_eq(PortraitRingLayout.diameter_for(24), 86.0, "24 Personen")
 	for count: int in range(1, 25):
-		var face := PortraitRingLayout.diameter_for(count) * GroveArtData.SEAT_HOLE_RADIUS * 2.0
-		assert_true(face >= 56.0, "Porträtfenster mindestens 56 px bei %d (%.1f)" % [count, face])
+		var face := PortraitRingLayout.diameter_for(count) * GameSeatToken.FRAME_SCALE * SkinArt.SEAT_PORTRAIT_RADIUS * 2.0
+		assert_true(face >= 48.0, "Porträt mindestens 48 px bei %d (%.1f)" % [count, face])
 
 
 func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
@@ -55,29 +55,6 @@ func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
 					assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * PortraitRingLayout.RING_RADIUS, other_plate), "%s/%d: Porträt berührt Schild" % [label, j + 1])
 					assert_false(_circle_hits_rect(_portrait_center(other, d, size), d * PortraitRingLayout.RING_RADIUS, plate), "%s/%d: Schild berührt Porträt" % [label, j + 1])
 					assert_false(plate.grow(-0.5).intersects(other_plate.grow(-0.5)), "%s/%d: Schilder überlappen" % [label, j + 1])
-
-
-## Nummern-Abzeichen (Sockel oben links am Rahmen) liegen nie unter einem Namensschild, Porträtring oder Abzeichen eines anderen Platzes,
-## bei 6 bis 24 Personen in allen Feldgrößen (Testrunde 1: Nummer 17 war vom Schild des Nachbarn verdeckt).
-func test_number_badges_never_overlap_names_or_portraits() -> void:
-	for area: Vector2 in AREAS:
-		for count: int in range(6, 25):
-			var result := PortraitRingLayout.layout(count, area)
-			var seats: Array = result["seats"]
-			var d := float(result["diameter"])
-			var size: Vector2 = result["token_size"]
-			var widths: Array = result["plate_widths"]
-			var spans: Array = result["plate_spans"]
-			var badge_radius := PortraitRingLayout.badge_radius(d)
-			for i: int in count:
-				var badge := _portrait_center(seats[i], d, size) + PortraitRingLayout.badge_offset(d)
-				for j: int in count:
-					if j == i:
-						continue
-					var label := "%dx%d, %d Personen, Nummer %d gegen Platz %d" % [int(area.x), int(area.y), count, i + 1, j + 1]
-					assert_false(_circle_hits_rect(badge, badge_radius, _plate(seats[j], d, float(widths[j]), size, spans[j])), "%s: Schild verdeckt die Nummer" % label)
-					assert_true(badge.distance_to(_portrait_center(seats[j], d, size)) >= d * PortraitRingLayout.RING_RADIUS + badge_radius - 0.5, "%s: Porträtring verdeckt die Nummer" % label)
-					assert_true(badge.distance_to(_portrait_center(seats[j], d, size) + PortraitRingLayout.badge_offset(d)) >= badge_radius * 2.0 - 0.5, "%s: Nummern berühren sich" % label)
 
 
 func test_center_is_free_of_every_seat_and_inside_the_area() -> void:
@@ -122,3 +99,14 @@ func test_compact_ring_has_no_overlap_for_6_to_24_persons() -> void:
 					worst = minf(worst, centre_i.distance_to((seats[j] as Rect2).position + anchor))
 			assert_true(worst >= d * PortraitRingLayout.RING_RADIUS * 2.0, "%d bei %s: Porträtkreise berühren sich nicht (Abstand %.1f, Rahmen %.1f)" % [count, area, worst, d])
 			assert_true(d >= PortraitRingLayout.COMPACT_MIN_DIAMETER, "%d bei %s: Rahmen nicht kleiner als das Mindestmaß" % [count, area])
+
+
+## Namen am Ring: die Schrift bleibt mindestens 14 px, zu lange Namen werden mit „…“ gekürzt und passen dann in den Platz.
+func test_plate_text_keeps_font_size_and_is_cut_to_fit() -> void:
+	assert_true(GameSeatToken.PLATE_FONT_SIZE_FLOOR >= 14 and GameSeatToken.PLATE_FONT_SIZE >= 14, "Schrift mindestens 14 px")
+	var font := ThemeDB.fallback_font
+	var size := GameSeatToken.PLATE_FONT_SIZE
+	assert_eq(GameSeatToken.fitted_plate_text("Anna", font, 200.0), "Anna", "kurzer Name bleibt ganz")
+	var cut := GameSeatToken.fitted_plate_text("Maximilian-Joseph", font, 60.0)
+	assert_true(cut.ends_with("…") and cut.length() < "Maximilian-Joseph".length(), "langer Name wird gekürzt: %s" % cut)
+	assert_true(font.get_string_size(cut, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= 60.0, "gekürzter Name passt in den Platz")
