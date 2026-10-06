@@ -54,7 +54,7 @@ func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
 					assert_true(_portrait_center(seat, d, size).distance_to(_portrait_center(other, d, size)) >= d * PortraitRingLayout.RING_RADIUS * 2.0 - 0.5, "%s/%d: Porträts überlappen" % [label, j + 1])
 					assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * PortraitRingLayout.RING_RADIUS, other_plate), "%s/%d: Porträt berührt Schild" % [label, j + 1])
 					assert_false(_circle_hits_rect(_portrait_center(other, d, size), d * PortraitRingLayout.RING_RADIUS, plate), "%s/%d: Schild berührt Porträt" % [label, j + 1])
-					assert_false(plate.grow(-0.5).intersects(other_plate.grow(-0.5)), "%s/%d: Schilder überlappen" % [label, j + 1])
+					assert_false(_grow_x(plate).intersects(_grow_x(other_plate)), "%s/%d: Schilder haben weniger als 4 px Abstand" % [label, j + 1])
 
 
 func test_center_is_free_of_every_seat_and_inside_the_area() -> void:
@@ -99,6 +99,12 @@ func test_compact_ring_has_no_overlap_for_6_to_24_persons() -> void:
 					worst = minf(worst, centre_i.distance_to((seats[j] as Rect2).position + anchor))
 			assert_true(worst >= d * PortraitRingLayout.RING_RADIUS * 2.0, "%d bei %s: Porträtkreise berühren sich nicht (Abstand %.1f, Rahmen %.1f)" % [count, area, worst, d])
 			assert_true(d >= PortraitRingLayout.COMPACT_MIN_DIAMETER, "%d bei %s: Rahmen nicht kleiner als das Mindestmaß" % [count, area])
+
+
+## Schild seitlich um den halben Mindestabstand (minus Rundungsspiel) verbreitert: zwei Schilder in einer Höhe haben dann mindestens PLATE_GAP Abstand.
+func _grow_x(rect: Rect2) -> Rect2:
+	var h := PortraitRingLayout.PLATE_GAP * 0.5 - 0.25
+	return rect.grow_individual(h, 0.0, h, 0.0)
 
 
 ## Namen am Ring: die Schrift bleibt mindestens 14 px, zu lange Namen werden mit „…“ gekürzt und passen dann in den Platz.

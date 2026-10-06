@@ -20,7 +20,7 @@ const CENTER_PREFERRED := Vector2(560.0, 340.0)  ## Größe, bis zu der eine gr�
 const CENTER_MIN_WIDTH := 200.0
 const CENTER_WIDTH_STEP := 8.0
 const PLATE_OVERHANG := 20.0  ## so weit ragt das Namensschild höchstens über den Rahmenrand
-const PLATE_GAP := 2.0       ## Mindestabstand des Schilds zu Nachbarn
+const PLATE_GAP := 4.0       ## Mindestabstand des Schilds zu Nachbarn
 const PLATE_MIN_WIDTH := 36.0
 const CENTER_GAP := 8.0     ## Abstand der Tischmitte zu Porträts und Schildern
 const RING_SHAPE := 2.15 ## Exponent der Ringform: 2 = Ellipse, größer = kantiger. Rückt die Plätze in den Ecken nach außen (oben und unten mehr Abstand)

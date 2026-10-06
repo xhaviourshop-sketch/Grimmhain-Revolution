@@ -42,7 +42,9 @@ const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
 ## nur „nominiert“ (Tag) oder „gewählt“ (Zuordnung), nie ein Opfer der Nacht (Feedback 8, L3/L11).
 const RING_PRIORITY: Array[String] = ["poisoned", "silenced", "protected"]
 ## Gemalte kleine Bundzeichen der Liebenden und Rivalen am Ring (nur Spielleitung, nachts): SkinArt.bond_small.
-const BOND_SCALE := 0.4  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite
+const BOND_SCALE := 0.6  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite
+const BOND_FIRST_ANGLE := -20.0  ## Winkel des ersten Bundzeichens (Grad, 0 = rechts, negativ = nach oben): außen am Ring, nie über Gesicht oder Schild
+const BOND_STEP_ANGLE := -45.0
 const BADGE_SCALE := 0.3  ## Kantenlänge der Zustandsabzeichen relativ zur Rahmenbreite (sie bleiben im eigenen Ring)
 const BADGE_FIRST_ANGLE := 50.0  ## Winkel des ersten Abzeichens (Grad, 0 = rechts, 90 = unten)
 const BADGE_STEP_ANGLE := 55.0
@@ -401,12 +403,18 @@ func _draw_badges(c: Vector2, d: float) -> void:
 		return
 	var size_px := maxf(ThemeTokens.BADGE_MIN, d * BADGE_SCALE)
 	var i := 0
+	var bonds := 0
 	for kind: Variant in marks:
 		var bond := SkinArt.bond_small(str(kind))
 		var side := maxf(size_px, d * BOND_SCALE) if bond != null else size_px
-		# Das Abzeichen sitzt am eigenen Ring unten rechts (ragt kaum darüber) (weitere reihen sich nach links unten auf), nie über dem Nachbarn.
+		# Zustandsabzeichen sitzen am eigenen Ring unten rechts (weitere reihen sich nach links unten auf). Bundzeichen sind größer und liegen
+		# außen rechts neben dem Ring (das Gesicht bleibt frei, das Namensschild darunter ebenso).
 		var angle := deg_to_rad(BADGE_FIRST_ANGLE + float(i) * BADGE_STEP_ANGLE)
 		var rect := Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS - side * 0.35) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
+		if bond != null:
+			angle = deg_to_rad(BOND_FIRST_ANGLE + float(bonds) * BOND_STEP_ANGLE)
+			rect = Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS + side * 0.35) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
+			bonds += 1
 		var texture := bond if bond != null else NightArt.badge(str(kind))
 		if texture != null:
 			draw_texture_rect(texture, rect, false)
