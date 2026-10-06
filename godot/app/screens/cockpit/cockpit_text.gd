@@ -19,6 +19,12 @@ static func has_key(key: String) -> bool:
 	return TranslationServer.translate(key) != StringName(key)
 
 
+## Grund, warum ein Nachtschritt entfällt, als Übersetzungsschlüssel; ein unbekannter Grund zeigt nie seinen Namen.
+static func drop_key(reason: String) -> StringName:
+	var key := "ui.morning.drop.%s" % reason
+	return StringName(key if has_key(key) else "ui.morning.drop.generic")
+
+
 ## Rollen- oder Gruppenname als Schlüssel (StringName, damit GrimmLabel ihn übersetzt).
 static func role_name(role_id: String) -> StringName:
 	if GROUPS.has(role_id):
@@ -231,9 +237,9 @@ static func private_lines(lines: Array) -> Array:
 		if line.has("cause"):
 			values["cause"] = StringName("ui.cause.%s" % str(line["cause"]).to_lower())
 		if line.has("reason"):
-			values["reason"] = str(line["reason"])
+			values["reason"] = drop_key(str(line["reason"]))
 		if line.has("drop"):
-			values["drop"] = StringName("ui.morning.drop.%s" % str(line["drop"]))
+			values["drop"] = drop_key(str(line["drop"]))
 		out.append({"key": str(line["key"]), "values": values})
 	return out
 

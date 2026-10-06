@@ -1257,7 +1257,10 @@ msgid "ui.setup.seating.status.start_failed.setup_incomplete"
 msgstr "Start abgelehnt: Die Vorbereitung ist noch nicht vollständig. Es wurde nichts geändert."
 
 msgid "ui.setup.seating.status.start_failed.other"
-msgstr "Start abgelehnt (Code {code}). Nichts wurde geändert."
+msgstr "Start abgelehnt. Es wurde nichts geändert."
+
+msgid "ui.setup.seating.status.start_failed.game_over"
+msgstr "Diese Partie ist schon beendet. Es wurde nichts geändert."
 
 msgid "ui.common.yes"
 msgstr "Ja"
@@ -2261,6 +2264,18 @@ msgstr "Rolle gewechselt"
 msgid "ui.morning.drop.no_living_wolf"
 msgstr "kein Wolf lebt"
 
+msgid "ui.morning.drop.generic"
+msgstr "Grund nicht genannt"
+
+msgid "ui.morning.drop.not_called"
+msgstr "nicht gerufen"
+
+msgid "ui.morning.drop.card_blocked"
+msgstr "durch eine Karte gesperrt"
+
+msgid "ui.morning.drop.card_sleep"
+msgstr "durch eine Karte ausgesetzt"
+
 msgid "ui.cause.night_kill"
 msgstr "Rudelangriff"
 
@@ -2520,13 +2535,28 @@ msgid "ui.continue.slot.unreadable"
 msgstr "Spielstand nicht lesbar"
 
 msgid "ui.continue.slot.detail"
-msgstr "{phase} · Nacht {night} · Tag {day} · {alive} leben · gespeichert {saved}"
+msgstr "{alive} leben · gespeichert {saved}"
+
+msgid "ui.continue.slot.status.night"
+msgstr "Läuft · Nacht {n}"
+
+msgid "ui.continue.slot.status.day"
+msgstr "Läuft · Tag {n}"
+
+msgid "ui.continue.slot.status.running"
+msgstr "Läuft"
+
+msgid "ui.continue.slot.status.over"
+msgstr "Beendet"
 
 msgid "ui.continue.resume"
 msgstr "Fortsetzen"
 
 msgid "ui.continue.discard"
-msgstr "Verwerfen …"
+msgstr "Löschen"
+
+msgid "ui.continue.report"
+msgstr "Bericht"
 
 msgid "ui.continue.unsaved.title"
 msgstr "Aktuelle Partie nicht gespeichert"
@@ -2556,16 +2586,16 @@ msgid "ui.continue.status.resumed"
 msgstr "Partie fortgesetzt"
 
 msgid "ui.continue.status.discarded"
-msgstr "Partie verworfen. Die Dateien bleiben umbenannt erhalten."
+msgstr "Partie gelöscht. Die Dateien bleiben umbenannt erhalten."
 
 msgid "ui.continue.discard_dialog.title"
-msgstr "Partie verwerfen?"
+msgstr "Partie löschen?"
 
 msgid "ui.continue.discard_dialog.message"
-msgstr "Die Partie verschwindet aus der Liste. Die Dateien werden nur umbenannt, nicht gelöscht."
+msgstr "Die Partie verschwindet aus der Liste. Die Dateien bleiben nur umbenannt erhalten."
 
 msgid "ui.continue.discard_dialog.confirm"
-msgstr "Verwerfen"
+msgstr "Löschen"
 
 msgid "ui.cockpit.tools.gm"
 msgstr "Spielleitung"
@@ -5687,7 +5717,7 @@ msgid "ui.rulebook.c11.b02"
 msgstr "Fortsetzen"
 
 msgid "ui.rulebook.c11.b03"
-msgstr "Im Hauptmenü zeigt „Partie fortsetzen“ die gespeicherten Partien mit Namen, Personenzahl, Phase, Nacht, Tag, Lebenden und Speicherzeit, aber ohne Rollen. „Fortsetzen“ führt an dieselbe Stelle zurück, auch mitten in einem Schritt oder bei einer offenen Reaktion. „Verwerfen …“ fragt nach und benennt die Dateien nur um."
+msgstr "Im Hauptmenü zeigt „Partie fortsetzen“ die gespeicherten Partien mit Namen, Personenzahl, Phase, Nacht, Tag, Lebenden und Speicherzeit, aber ohne Rollen. „Fortsetzen“ führt an dieselbe Stelle zurück, auch mitten in einem Schritt oder bei einer offenen Reaktion. Bei beendeten Partien öffnet „Bericht“ den Abschlussbericht. „Löschen“ fragt nach und benennt die Dateien nur um."
 
 msgid "ui.rulebook.c11.b04"
 msgstr "Wenn das Speichern scheitert"
@@ -5705,7 +5735,7 @@ msgid "ui.rulebook.c11.b08"
 msgstr "Eine beschädigte Datei wird nie überschrieben, sondern beiseitegelegt. Die App lädt dann die Sicherung und weist darauf hin, dass es ein älterer Stand ist und die zuletzt ausgeführten Schritte erneut gemacht werden müssen. Gibt es keine gültige Sicherung, meldet die App einen Fehler, und nichts wird gelöscht."
 
 msgid "ui.rulebook.c11.b09"
-msgstr "Ein Spielstand aus einer anderen Version der App bleibt unverändert und lässt sich hier nicht fortsetzen. „Verwerfen“ bleibt möglich. Eine laufende Partie wird nie still durch eine andere ersetzt."
+msgstr "Ein Spielstand aus einer anderen Version der App bleibt unverändert und lässt sich hier nicht fortsetzen. „Löschen“ bleibt möglich. Eine laufende Partie wird nie still durch eine andere ersetzt."
 
 msgid "ui.rulebook.c11.b10"
 msgstr "Einstellungen wie die Sprache und „Bewegung reduzieren“, gespeicherte Spielergruppen und die Partiehistorie liegen getrennt von den Spielständen."
