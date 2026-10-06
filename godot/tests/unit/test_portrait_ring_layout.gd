@@ -54,7 +54,7 @@ func test_seats_do_not_overlap_and_stay_in_the_area() -> void:
 					assert_true(_portrait_center(seat, d, size).distance_to(_portrait_center(other, d, size)) >= d * PortraitRingLayout.RING_RADIUS * 2.0 - 0.5, "%s/%d: Porträts überlappen" % [label, j + 1])
 					assert_false(_circle_hits_rect(_portrait_center(seat, d, size), d * PortraitRingLayout.RING_RADIUS, other_plate), "%s/%d: Porträt berührt Schild" % [label, j + 1])
 					assert_false(_circle_hits_rect(_portrait_center(other, d, size), d * PortraitRingLayout.RING_RADIUS, plate), "%s/%d: Schild berührt Porträt" % [label, j + 1])
-					assert_false(_grow_x(plate).intersects(_grow_x(other_plate)), "%s/%d: Schilder haben weniger als 4 px Abstand" % [label, j + 1])
+					assert_false(_grow_x(plate).intersects(_grow_x(other_plate)), "%s/%d: Schilder haben weniger als den Mindestabstand" % [label, j + 1])
 
 
 func test_center_is_free_of_every_seat_and_inside_the_area() -> void:

@@ -42,9 +42,10 @@ const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
 ## nur „nominiert“ (Tag) oder „gewählt“ (Zuordnung), nie ein Opfer der Nacht (Feedback 8, L3/L11).
 const RING_PRIORITY: Array[String] = ["poisoned", "silenced", "protected"]
 ## Gemalte kleine Bundzeichen der Liebenden und Rivalen am Ring (nur Spielleitung, nachts): SkinArt.bond_small.
-const BOND_SCALE := 0.6  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite
-const BOND_FIRST_ANGLE := -20.0  ## Winkel des ersten Bundzeichens (Grad, 0 = rechts, negativ = nach oben): außen am Ring, nie über Gesicht oder Schild
-const BOND_STEP_ANGLE := -45.0
+const BOND_SCALE := 0.55  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite (lockerer Ring)
+const BOND_SCALE_DENSE := 0.42  ## dichter Ring (ab 13 Personen): kleiner, damit es nie ein Nachbarporträt berührt
+const BOND_STEP_ANGLE := 40.0  ## weitere Bundzeichen am selben Rahmen rücken so viele Grad zur Senkrechten
+const BOND_SINK := 0.2  ## Anteil der Zeichengröße, um den es außerhalb der Ringkante sitzt (der Rest liegt auf dem eigenen Rahmenrand)
 const BADGE_SCALE := 0.3  ## Kantenlänge der Zustandsabzeichen relativ zur Rahmenbreite (sie bleiben im eigenen Ring)
 const BADGE_FIRST_ANGLE := 50.0  ## Winkel des ersten Abzeichens (Grad, 0 = rechts, 90 = unten)
 const BADGE_STEP_ANGLE := 55.0
@@ -406,14 +407,15 @@ func _draw_badges(c: Vector2, d: float) -> void:
 	var bonds := 0
 	for kind: Variant in marks:
 		var bond := SkinArt.bond_small(str(kind))
-		var side := maxf(size_px, d * BOND_SCALE) if bond != null else size_px
-		# Zustandsabzeichen sitzen am eigenen Ring unten rechts (weitere reihen sich nach links unten auf). Bundzeichen sind größer und liegen
-		# außen rechts neben dem Ring (das Gesicht bleibt frei, das Namensschild darunter ebenso).
+		var side := size_px
+		# Zustandsabzeichen sitzen am eigenen Ring unten rechts (weitere reihen sich nach links unten auf). Bundzeichen sitzen als Abzeichen
+		# auf dem eigenen Rahmenrand, in Richtung der freien Seite (siehe `_bond_angle`), nie zwischen zwei Porträts.
 		var angle := deg_to_rad(BADGE_FIRST_ANGLE + float(i) * BADGE_STEP_ANGLE)
 		var rect := Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS - side * 0.35) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
 		if bond != null:
-			angle = deg_to_rad(BOND_FIRST_ANGLE + float(bonds) * BOND_STEP_ANGLE)
-			rect = Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS + side * 0.35) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
+			side = d * (BOND_SCALE_DENSE if d < GLOW_DENSE_DIAMETER else BOND_SCALE)
+			angle = _bond_angle(bonds)
+			rect = Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS + side * BOND_SINK) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
 			bonds += 1
 		var texture := bond if bond != null else NightArt.badge(str(kind))
 		if texture != null:
@@ -421,6 +423,21 @@ func _draw_badges(c: Vector2, d: float) -> void:
 		else:
 			_draw_glyph_badge(str(kind), rect)
 		i += 1
+
+
+## Richtung des k-ten Bundzeichens am eigenen Rahmen (Bogenmaß, 0 = rechts, negativ = oben): in der oberen Ringhälfte nach außen, in der unteren
+## zur Ringmitte, also immer nach oben und nie auf das Namensschild; weitere rücken zur Senkrechten. Die Nachbarn liegen seitlich entlang
+## des Rings, die Richtung zeigt nach oben oder zur Seite, nie zu ihnen hin.
+func _bond_angle(k: int) -> float:
+	var angle := deg_to_rad(-90.0)
+	var holder := get_parent() as Control
+	if holder != null and holder.size.x > 0.0:
+		var away := position + portrait_center() - holder.size * 0.5
+		if away.y > 0.0:
+			away = -away
+		angle = clampf(away.angle(), deg_to_rad(-165.0), deg_to_rad(-15.0))
+	var turn := deg_to_rad(BOND_STEP_ANGLE) * float(k)
+	return angle + (-turn if cos(angle) > 0.05 else turn)
 
 
 ## Abzeichen ohne Bilddatei (verzaubert): dunkle Scheibe, Silberring und ein Silberzeichen.
