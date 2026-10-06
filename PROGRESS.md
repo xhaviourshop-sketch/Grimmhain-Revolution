@@ -4,6 +4,11 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## 2026-10-06: Feedback-Runde 9b (Branch feat/feedback-9b): Antworten von Markus, in Arbeit
+Stand: DA-104 (Schutz Mondblau, kein „•“, „Anklagen“, kein Schließen-Hinweis, keine stark gekürzten Ringnamen) committet (fd6b765). Planer verteilt die Umsetzung.
+Verifikation: noch keine.
+Nächster Schritt: Teile umsetzen, Prüfer, Vollsuite mit Fuzz, Merge, Push, Deploy.
+
 ## 2026-10-06: Feedback-Runde 9 (Branch feat/feedback-9, gemergt und deployt): neue Haut-Assets, Paketgröße, Ringnamen, DA-103
 Stand: Team-Ablauf mit 7 Teilen (A Assets, D Entscheidungen, X Texte/Listen, P Paketgröße, T Theme, C Cockpit-Rand, R Ring) und 2 Fix-Runden (F1 bis F7 plus Nacharbeit in der Hauptsitzung). DA-103: Schalter ohne Wort, Teamfarben in Rollenlisten, kein „(N)“, Kartenbilder unverändert mit gelbem Titel (Ausnahme in MARKE.md).
 Neu: 11 gemalte Teile (Eingabefeld, Randknopf, Randlasche, Nachtleiste mit Spange, Sitzrahmen ohne Sockel, Trennlinie, Plakette, Würfel, kleine Bund-Zeichen) über `tools/build_ui_skin.py` und `SkinArt`; mehrzeiliges Einfügefeld als gemalte Fensterfläche (Leiste wäre verzerrt). Regelbuch und Lexikon blättern statt scrollen; Verbergen blendet die Karte in der Mitte aus (vorher Rolle sichtbar); Ringnamen 14 px bei 8/16/24 (bei 24 Personen 7 gekürzt, Vollname beim Fingerauflegen); Nachtleiste 14 px; Morgenbericht „Für dich“ kurze Sätze, „geschützt“ entfällt bei „gerettet“; Zwischentitel nie allein am Seitenende.
