@@ -107,7 +107,7 @@ func test_public_version_shows_end_roles_winner_and_condition_but_no_other_secre
 	var report := _finished().game_report()
 	var text := _all_text(report, ReportText.PUBLIC)
 	for expected: String in ["Abschlussbericht (öffentliche Fassung)", "Partie gestartet mit 6 Personen.", "Anna", "Bärbel", "Çelik", "Dörte", "Émile", "Fjörd", "Nacht 1", "Tag 1",
-			"In dieser Nacht ist gestorben", "Çelik", "Anna nominiert Dörte", "Dörte wurde hingerichtet", "Werwölfe"]:
+			"In dieser Nacht ist gestorben", "Çelik", "Anna klagt Dörte an", "Dörte wurde hingerichtet", "Werwölfe"]:
 		assert_true(text.contains(expected), "öffentlich vorhanden: %s" % expected)
 	assert_false(text.contains("bericht-1") or text.contains(" · "), "keine Partie-ID und keine Platznummer im Text")
 	assert_true(text.contains("Dörte wurde hingerichtet (Amalia)."), "Rolle beim Tod in einer Runde ohne Wiederbelebung (wie am Tisch angesagt)")
@@ -137,7 +137,7 @@ func test_public_version_without_release_has_no_roles_winner_or_condition() -> v
 	var text := _all_text_locked(report)
 	for hidden: String in ["Rollen zum Spielende", "Wahnsinniger Kutscher", "Blutwolf", "Detektiv", "Siegbedingung:", "Gewinnende", "Anna: Werwolf", "Sieger:"]:
 		assert_false(text.contains(hidden), "ohne Freigabe nicht öffentlich: %s" % hidden)
-	assert_true(text.contains("Anna nominiert Dörte") and text.contains("Dörte wurde hingerichtet"), "öffentliche Chronik bleibt")
+	assert_true(text.contains("Anna klagt Dörte an") and text.contains("Dörte wurde hingerichtet"), "öffentliche Chronik bleibt")
 	assert_true(text.contains("Die Siegbestätigung wurde zurückgenommen"), "Hinweis auf die fehlende Freigabe")
 	assert_true(_all_text(report, ReportText.PUBLIC).length() > text.length(), "Freigabe erweitert die Fassung")
 

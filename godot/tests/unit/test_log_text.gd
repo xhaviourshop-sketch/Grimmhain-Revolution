@@ -27,7 +27,7 @@ func test_typical_events_become_plain_sentences_with_names() -> void:
 	var played := _played()
 	var lines := LogText.lines(played["events"], played["state"])
 	var text := "\n".join(lines)
-	for expected: String in ["Partie gestartet mit 6 Personen.", "Anna hat die Rolle Werwolf.", "Nacht 1: Çelik ist gestorben", "Tag 1: Anna nominiert Dörte.", "Tag 1: Dörte wurde hingerichtet."]:
+	for expected: String in ["Partie gestartet mit 6 Personen.", "Anna hat die Rolle Werwolf.", "Nacht 1: Çelik ist gestorben", "Tag 1: Anna klagt Dörte an.", "Tag 1: Dörte wurde hingerichtet."]:
 		assert_true(text.contains(expected), "Satz vorhanden: %s" % expected)
 	for line: String in lines:
 		assert_false(_technical(line), "kein Programmiertext: %s" % line)
