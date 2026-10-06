@@ -31,7 +31,11 @@ func restart() -> Dictionary:
 	(context_of(shell) as AppContext).saves.base_dir = dir
 	await navigate(shell, &"main_menu")
 	await navigate(shell, &"continue")
-	await tap_button("ResumeButton_%s" % round)
+	if find_node(screen(), "ResumeButton_%s" % round) != null:
+		await tap_button("ResumeButton_%s" % round)
+	else:  # beendete Partie: die Liste bietet bewusst kein „Fortsetzen“ (nur Bericht); hier geht es um den gespeicherten Zustand
+		assert_true(bool((context_of(shell) as AppContext).resume(round)["ok"]), "beendete Partie ladbar")
+		await navigate(shell, &"cockpit")
 	assert_eq(String(current_id(shell)), "cockpit", "Fortsetzen öffnet das Cockpit")
 	assert_eq(snapshot(), before["snapshot"], "persistenter Zustand nach dem Neustart identisch")
 	assert_true(screen().get("_layer") == null, "keine private Ebene nach dem Fortsetzen geöffnet")

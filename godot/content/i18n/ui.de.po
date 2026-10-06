@@ -2535,7 +2535,19 @@ msgid "ui.continue.slot.unreadable"
 msgstr "Spielstand nicht lesbar"
 
 msgid "ui.continue.slot.detail"
-msgstr "{phase} · Nacht {night} · Tag {day} · {alive} leben · gespeichert {saved}"
+msgstr "{alive} leben · gespeichert {saved}"
+
+msgid "ui.continue.slot.status.night"
+msgstr "Läuft · Nacht {n}"
+
+msgid "ui.continue.slot.status.day"
+msgstr "Läuft · Tag {n}"
+
+msgid "ui.continue.slot.status.running"
+msgstr "Läuft"
+
+msgid "ui.continue.slot.status.over"
+msgstr "Beendet"
 
 msgid "ui.continue.resume"
 msgstr "Fortsetzen"
@@ -2580,7 +2592,7 @@ msgid "ui.continue.discard_dialog.title"
 msgstr "Partie löschen?"
 
 msgid "ui.continue.discard_dialog.message"
-msgstr "Die Partie verschwindet aus der Liste. Die Dateien werden nur umbenannt, nicht gelöscht."
+msgstr "Die Partie verschwindet aus der Liste. Die Dateien bleiben nur umbenannt erhalten."
 
 msgid "ui.continue.discard_dialog.confirm"
 msgstr "Löschen"

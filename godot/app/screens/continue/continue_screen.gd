@@ -36,67 +36,83 @@ func _render() -> void:
 func _slot(game: Dictionary) -> Control:
 	var id := str(game["round_id"])
 	var summary: Dictionary = game.get("summary", {})
+	var readable := bool(game["readable"])
+	var compatible := bool(game.get("compatible", true))
 	var panel := PanelContainer.new()
 	panel.name = "Slot_%s" % id
 	panel.theme_type_variation = &"ListPanel"  # Fläche aus Grund und Rahmen (neun Felder), wächst mit dem Inhalt ohne Verzerrung
-	var line := HBoxContainer.new()  # links die Angaben, rechts die Knöpfe: niedrige Zeile, nie scrollen
-	panel.add_child(line)
 	var column := VBoxContainer.new()
-	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	column.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	line.add_child(column)
+	panel.add_child(column)
+	column.add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
 	var names: Array = summary.get("names", [])
+	if readable:  # Zustand zuerst und groß, damit man nicht die falsche Partie greift
+		var status := GrimmLabel.new()
+		status.name = "StatusLabel"
+		status.theme_type_variation = &"HeadingLabel"
+		status.format_values = {"n": status_number(summary)}
+		status.text_key = status_key(str(summary.get("phase", "")))
+		column.add_child(status)
 	var title := GrimmLabel.new()
 	title.theme_type_variation = &"SectionLabel"
 	title.format_values = {"names": ", ".join(names.slice(0, 5)) + (" …" if names.size() > 5 else ""), "count": int(summary.get("player_count", names.size()))}
-	title.text_key = "ui.continue.slot.title" if bool(game["readable"]) else "ui.continue.slot.unreadable"
+	title.text_key = "ui.continue.slot.title" if readable else "ui.continue.slot.unreadable"
 	column.add_child(title)
-	if bool(game["readable"]):
-		var detail := GrimmLabel.new()
-		detail.theme_type_variation = &"MutedLabel"
-		detail.format_values = {"phase": StringName("ui.phase.%s" % str(summary.get("phase", "")).to_lower()),
-			"night": int(summary.get("night_number", 0)), "day": int(summary.get("day_number", 0)),
-			"alive": int(summary.get("alive_count", 0)), "saved": _time_text(int(game["saved_at"]))}
-		detail.text_key = "ui.continue.slot.detail"
-		column.add_child(detail)
-	var compatible := bool(game.get("compatible", true))
-	if bool(game["readable"]) and not compatible:
+	if readable and not compatible:
 		var note := GrimmLabel.new()
 		note.name = "IncompatibleLabel"
 		note.theme_type_variation = &"WarningLabel"
 		note.format_values = {"found": str(game.get("found_label", "")), "expected": str(game.get("expected_label", ""))}
 		note.text_key = "ui.continue.slot.incompatible"
 		column.add_child(note)
-	var row := VBoxContainer.new()  # Knöpfe übereinander: mehr Breite für die Angaben, niedrigere Zeile
-	row.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
-	line.add_child(row)
+	# Unterste Zeile: „Löschen“ links, Angaben in der Mitte, Hauptknopf rechts (räumlich getrennt: kein Fehltippen).
+	var line := HBoxContainer.new()
+	column.add_child(line)
+	line.add_child(_button("DiscardButton_%s" % id, "ui.continue.discard", _ask_discard.bind(id)))
+	var detail := GrimmLabel.new()
+	detail.theme_type_variation = &"MutedLabel"
+	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	detail.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	if readable:
+		detail.format_values = {"alive": int(summary.get("alive_count", 0)), "saved": _time_text(int(game["saved_at"]))}
+		detail.text_key = "ui.continue.slot.detail"
+	line.add_child(detail)
 	var buttons := slot_buttons(str(summary.get("phase", "")), context.history.has(id))
 	if buttons.has(&"resume"):
-		var resume := GrimmButton.new()
-		resume.name = "ResumeButton_%s" % id
-		resume.kind = GrimmButton.Kind.COMPACT
-		resume.text_key = "ui.continue.resume"
+		var resume := _button("ResumeButton_%s" % id, "ui.continue.resume", _resume.bind(id))
 		resume.disabled = not compatible  # Spielstand anderer Version: nicht fortsetzbar, Datei bleibt unverändert
-		resume.custom_minimum_size.x = BUTTON_WIDTH
-		resume.pressed.connect(_resume.bind(id))
-		row.add_child(resume)
+		line.add_child(resume)
 	if buttons.has(&"report"):
-		var report := GrimmButton.new()
-		report.name = "ReportButton_%s" % id
-		report.kind = GrimmButton.Kind.COMPACT
-		report.text_key = "ui.continue.report"
-		report.custom_minimum_size.x = BUTTON_WIDTH
-		report.pressed.connect(_open_report.bind(id))
-		row.add_child(report)
-	var discard := GrimmButton.new()
-	discard.name = "DiscardButton_%s" % id
-	discard.kind = GrimmButton.Kind.DANGER
-	discard.text_key = "ui.continue.discard"
-	discard.custom_minimum_size.x = BUTTON_WIDTH
-	discard.pressed.connect(_ask_discard.bind(id))
-	row.add_child(discard)
+		line.add_child(_button("ReportButton_%s" % id, "ui.continue.report", _open_report.bind(id)))
 	return panel
+
+
+## Knopf einer Zeile: alle gleich groß und gleiche Schrift.
+func _button(button_name: String, key: String, on_pressed: Callable) -> GrimmButton:
+	var button := GrimmButton.new()
+	button.name = button_name
+	button.kind = GrimmButton.Kind.COMPACT
+	button.text_key = key
+	button.custom_minimum_size.x = BUTTON_WIDTH
+	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	button.pressed.connect(on_pressed)
+	return button
+
+
+## Zustandszeile einer Partie: laufend mit Runde, Vorbereitung, beendet.
+static func status_key(phase: String) -> String:
+	match phase:
+		String(Phase.NIGHT), String(Phase.DAWN_RESOLUTION):
+			return "ui.continue.slot.status.night"
+		String(Phase.DAY):
+			return "ui.continue.slot.status.day"
+		String(Phase.GAME_OVER):
+			return "ui.continue.slot.status.over"
+	return "ui.continue.slot.status.running"
+
+
+static func status_number(summary: Dictionary) -> int:
+	return int(summary.get("day_number", 0)) if str(summary.get("phase", "")) == String(Phase.DAY) else int(summary.get("night_number", 0))
 
 
 ## Knöpfe einer Zeile: laufende Partie „Fortsetzen“, beendete Partie „Bericht“ (nur mit gespeichertem Bericht), immer „Löschen“.
@@ -123,7 +139,7 @@ func _time_text(unix: int) -> String:
 		return "–"
 	var bias := int(Time.get_time_zone_from_system().get("bias", 0)) * 60
 	var d := Time.get_datetime_dict_from_unix_time(unix + bias)
-	return "%02d.%02d.%04d %02d:%02d" % [d["day"], d["month"], d["year"], d["hour"], d["minute"]]
+	return "%02d.%02d.%04d %02d:%02d" % [d["day"], d["month"], d["year"], d["hour"], d["minute"]]  # fester Leerraum: Datum und Uhrzeit brechen nicht auseinander
 
 
 func _resume(id: String) -> void:
