@@ -7,7 +7,7 @@ const W := "werwolf"
 const D := "dorfbewohner"
 const CHAPTER_TITLES_DE: Array[String] = ["Vorbereitung", "Personen, Rollenwahl, Verteilung und Sitzordnung", "Rollen sicher zeigen",
 		"Nacht führen und Tarnaufrufe", "Private Informationen zeigen", "Morgen und Wiederbelebungsrunde",
-		"Tag, Nominierung und physische Abstimmung", "Hinrichtung und Todesreaktionen", "Sieg bestätigen",
+		"Tag, Anklage und physische Abstimmung", "Hinrichtung und Todesreaktionen", "Sieg bestätigen",
 		"Spielleiterkorrekturen und Undo", "Speichern, Fortsetzen und Fehlerbehandlung", "Rollenlexikon und Hilfe nutzen",
 		"Totenreichkarten und Kartenschlucker"]
 ## Begriffe aus Code und Planungsdokumenten haben im Regelbuch nichts zu suchen (verständliche Sprache).

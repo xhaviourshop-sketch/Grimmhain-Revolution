@@ -4,6 +4,11 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## 2026-10-06: Anklagen überall + Testumfang nach Auftragsgröße (Branch chore/accuse-wording, KLEIN)
+Stand: Alle sichtbaren „nominieren/Nominierung“ in `ui.de.po`/`ui.en.po` (Lexikon, Rollentexte, Ereigniskarten, Regelbuch, Nachtansage Richter) sagen jetzt „anklagen/Anklage“ bzw. „accuse/accusation“; Code-Bezeichner und Kartenbilder unverändert. `CLAUDE.md` hat die Regel „Testumfang nach Auftragsgröße“ (KLEIN/MITTEL/GROSS, Zeitgrenze), Agenten in `.claude/agents/` verweisen darauf.
+Verifikation: `node tools/test-changed --base main` 17 Tests grün (Regelbuch-Test erwartet jetzt „Tag, Anklage und physische Abstimmung“), i18n-Prüfung konsistent, `git diff --check` sauber, `pruefer-sprache` eine Runde (Funde aus der Umstellung behoben; ältere Formulierungen wie „gilt als erfolgt“ bewusst nicht angefasst). Keine Vollsuite (Stufe KLEIN, kein Regelkern).
+Nächster Schritt: Markus prüft die Texte auf dem iPad.
+
 ## 2026-10-06: Feedback-Runde 9b (Branch feat/feedback-9b, gemergt und deployt): Antworten von Markus (DA-104)
 Stand: DA-104 umgesetzt im Team-Ablauf (A Ring, B Anklagen, C Schutz Mondblau, 3 Fix-Runden). Schutzring und -schild per `tools/recolor_protected_marks.py` mondblau (Register aktualisiert, `build_assets.py` färbt beim Neubau mit). Kein „•“ vor der handelnden Person. Tagesablauf, Knöpfe, Fehler, Protokoll, Bericht, GM-Korrektur „Hinrichten ohne Anklage“, Richter-Hinweis und Regelbuch Kapitel 7/8 sagen Anklage/anklagen (EN accuse). Ringnamen fest 14 px, bis 3 Zeilen (erst an Leerzeichen/Bindestrich, im Wort nur mit mindestens 3 Buchstaben je Teil), Plätze ab 20 Personen nach Schildbedarf verteilt, Porträt bei 24 Personen 72; bei 24 Personen 0 gekürzte Namen (1024x768: 3 zweizeilig; 1280x800: alle einzeilig).
 Gefunden und behoben: Tageskarte blieb im zweiten Anklageschritt 1801 px hoch (seit Runde 9 auf main; Regressionstest in `test_cockpit_day`). `tools/test-map.json`: Ringänderungen starten jetzt auch `cockpit_screen` und `portrait_ring_layout` (ein rotes 24-Personen-Layout war sonst durchgerutscht).

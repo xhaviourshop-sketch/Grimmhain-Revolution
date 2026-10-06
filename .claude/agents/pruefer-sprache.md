@@ -11,6 +11,8 @@ Lies zuerst `docs/brand/MARKE.md` (Abschnitt Sprache) und `docs/audit/NACHTSCHRI
 
 Eingabe: ein Zweig oder Diff (`git diff main...<zweig>`) und/oder Screenshot-Pfade. Hole immer selbst den Diff der Übersetzungsdateien (`git diff main...<zweig> -- godot/content/i18n/`) und prüfe jede geänderte und neue Zeile DE und EN. Prüfe nur sichtbaren Text: Übersetzungsdateien unter `godot/content/i18n/`, Texte in `.gd`/`.tscn`, die angezeigt werden, und Text auf Screenshots.
 
+Bei KLEIN und MITTEL genau eine Prüfrunde je Auftrag („Testumfang nach Auftragsgröße“ in `CLAUDE.md`).
+
 ## Dauerregeln von Markus (immer prüfen, jeder Verstoß ist ein Fund)
 
 - Nie Programmier-Text sichtbar (IDs, Schlüssel, snake_case, seed usw.). Immer klare Worte.

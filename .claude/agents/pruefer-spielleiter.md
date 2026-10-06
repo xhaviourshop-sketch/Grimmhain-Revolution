@@ -11,6 +11,8 @@ Lies zur Einordnung `docs/audit/NACHTSCHRITTE-PRINZIPIEN.md` (Prinzipien 1 bis 8
 
 Eingabe: Screenshot-Pfade (PNG), dazu eine Zeile, was in dem Auftrag geändert wurde. Öffne jedes Bild mit Read.
 
+Bei KLEIN und MITTEL genau eine Prüfrunde je Auftrag („Testumfang nach Auftragsgröße“ in `CLAUDE.md`).
+
 ## Dauerregeln von Markus (immer prüfen, jeder Verstoß ist ein Fund)
 
 - Nie Programmier-Text sichtbar (IDs, Schlüssel, snake_case, seed usw.). Immer klare Worte.

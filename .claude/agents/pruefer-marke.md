@@ -11,6 +11,8 @@ Lies zuerst `docs/brand/MARKE.md`. Bei Bedarf Farbwerte in `godot/app/theme/them
 
 Eingabe: Screenshot-Pfade (PNG). Öffne jedes Bild mit Read und sieh es dir vollständig an.
 
+Bei KLEIN und MITTEL genau eine Prüfrunde je Auftrag („Testumfang nach Auftragsgröße“ in `CLAUDE.md`).
+
 ## Dauerregeln von Markus (immer prüfen, jeder Verstoß ist ein Fund)
 
 - Nie Programmier-Text sichtbar (IDs, Schlüssel, snake_case, seed usw.). Immer klare Worte.
