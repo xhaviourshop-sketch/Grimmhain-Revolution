@@ -188,6 +188,10 @@ def start_media() -> None:
 		"-c:a", "libvorbis", "-q:a", "3", "godot/assets/audio/musik-start.ogg"], check=True)
 	subprocess.run([ff, "-y", "-loglevel", "error", "-i", SRC + "audio/musik-nacht.mp3", "-ac", "2", "-ar", "44100",
 		"-c:a", "libvorbis", "-q:a", "3", "godot/assets/audio/musik-nacht.ogg"], check=True)
+	os.makedirs("godot/assets/audio/heulen", exist_ok=True)
+	for name in ("heulen-1", "heulen-2-fern", "heulen-3"):
+		subprocess.run([ff, "-y", "-loglevel", "error", "-i", SRC + "audio/heulen/" + name + ".mp3", "-ac", "2", "-ar", "44100",
+			"-c:a", "libvorbis", "-q:a", "3", "godot/assets/audio/heulen/" + name + ".ogg"], check=True)
 
 
 CARD_EN_EXCEPTIONS = {"doppelspion": "Doppelspion.webp", "kartenschlucker": "The_Collector.webp",
