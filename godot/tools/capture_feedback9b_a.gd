@@ -48,13 +48,17 @@ func _ring() -> GameSeatRing:
 func _report(n: int) -> void:
 	var cut := 0
 	var two := 0
+	var mid := 0
 	for t: GameSeatToken in _ring().tokens():
 		if t.is_name_truncated():
 			cut += 1
 			print("  gekuerzt: ", t.tooltip_text, " Schildbreite ", t.plate_limit, " Zeilen ", t.call("_plate_lines"))
 		if t.plate_rect().size.y > PortraitRingLayout.PLATE_HEIGHT + 1.0:
 			two += 1
-	print("ring %d (%dx%d): kleinste Schrift %d px, zweizeilig %d, gekuerzt %d von %d" % [n, root.size.x, root.size.y, GameSeatToken.PLATE_FONT_SIZE, two, cut, n])
+			var ls: Array[String] = t.call("_plate_lines")
+			if ls[0].ends_with("-") and not t.tooltip_text.contains(ls[0] + ls[1]) and not ls[1].ends_with("…"):
+				mid += 1
+	print("ring %d (%dx%d): kleinste Schrift %d px, zweizeilig %d, davon in Wortmitte getrennt %d, gekuerzt %d von %d" % [n, root.size.x, root.size.y, GameSeatToken.PLATE_FONT_SIZE, two, mid, cut, n])
 
 
 func _boot(n: int, round_id: String) -> void:

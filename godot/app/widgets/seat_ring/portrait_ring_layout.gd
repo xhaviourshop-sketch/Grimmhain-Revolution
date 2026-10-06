@@ -11,8 +11,8 @@ extends RefCounted
 const NUMBER_BAND := 2.0   ## schmaler Rand oberhalb des Rahmens (Rahmen ohne Nummernsockel)
 const RING_RADIUS := 0.40  ## Anteil der Rahmenbreite bis zum äußeren Rand des Silberrings: gemeint ist der sichtbare Kreis, nicht das Bildrechteck
 const OBSTACLE_RADIUS := 0.44  ## Anteil der Rahmenbreite für die Tischmitte: Ring samt Wurzeln (das Bildrechteck ist größer als das Sichtbare)
-const PLATE_BIAS := 11.0  ## so viel (je Seite, also 2x insgesamt) darf ein Schild zur freieren Seite über die symmetrische Breite hinaus wachsen
-const PLATE_BIAS_TWO := 24.0  ## wie PLATE_BIAS, aber für Plätze mit zweizeiligem Schild
+const PLATE_BIAS := 40.0  ## so viel (je Seite, also 2x insgesamt) darf ein Schild zur freieren Seite über die symmetrische Breite hinaus wachsen
+const PLATE_BIAS_TWO := 80.0  ## wie PLATE_BIAS, aber für Plätze mit zweizeiligem Schild
 const PLATE_HEIGHT := 22.0  ## Schild mit einer Zeile
 const PLATE_HEIGHT_TWO := 36.0  ## Schild mit zwei Zeilen; so hoch rechnet das Layout jeden Platz (Platz für lange Namen, DA-104)
 const PLATE_DROP := 12.0 * 2.0   ## das Namensschild ragt so weit in den unteren Rahmenrand
