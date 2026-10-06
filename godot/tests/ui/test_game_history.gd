@@ -508,3 +508,10 @@ func test_new_game_can_start_after_a_finished_one() -> void:
 	assert_true(bool(result["ok"]), "Start nach Spielende angenommen (%s)" % result["error"])
 	assert_false(ctx.session.is_over(), "neue Partie läuft")
 	assert_true(ctx.history.has(old_id), "Bericht der alten Partie bleibt gesichert")
+
+
+## Knöpfe der Spielstände-Liste: beendet nie „Fortsetzen“, Bericht nur mit gespeichertem Bericht, „Löschen“ immer.
+func test_continue_slot_buttons_by_phase() -> void:
+	assert_eq(ContinueScreen.slot_buttons("NIGHT", false), [&"resume", &"discard"], "laufend: Fortsetzen und Löschen")
+	assert_eq(ContinueScreen.slot_buttons("GAME_OVER", true), [&"report", &"discard"], "beendet mit Bericht: Bericht und Löschen")
+	assert_eq(ContinueScreen.slot_buttons("GAME_OVER", false), [&"discard"], "beendet ohne Bericht: nur Löschen")
