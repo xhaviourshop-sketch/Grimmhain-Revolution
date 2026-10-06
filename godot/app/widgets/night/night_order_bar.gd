@@ -11,6 +11,8 @@ signal expand_toggled(expanded: bool)
 
 const FULL_HEIGHT := 80.0  ## Platz für zweizeilige Rollennamen unter den Medaillons
 const CHIP_SIZE := Vector2(460.0, 52.0)  ## breit genug für „Wahnsinniger Kutscher“ (Schrift wird zuerst kleiner)
+const BAR_HEIGHT := 66.0  ## Rechteckhöhe der gemalten Leiste (voll); Dornen-Enden ragen darüber hinaus, die dünne Stange läuft hinter den Medaillons
+const CHIP_BAR_HEIGHT := 58.0  ## dasselbe eingeklappt (Chip ist nur 52 hoch, die Dornen sollen nicht abgeschnitten wirken)
 const MEDALLION := 44.0  ## Durchmesser des Rollenrings in der vollen Leiste
 const CHIP_MEDALLION := 44.0
 const BAR_Y_CENTER := 26.0  ## Mitte der vollen Leiste (und der Medaillons) von oben
@@ -96,12 +98,26 @@ func size_for(expanded: bool) -> Vector2:
 
 ## Breite einer Hälfte (links oder rechts der Mittelspange), in der Medaillons stehen können.
 func _half_room() -> float:
-	var ends := minf(GroveArtData.NIGHT_BAR_MARGINS.x, GroveArtData.NIGHT_BAR_MARGINS.z) / GroveArtData.TEXTURE_SCALE
+	var ends := _end_width()
 	return size.x * 0.5 - _clasp_width() * 0.5 - CLASP_GAP - ends - ARROW_SIZE - 16.0
 
 
 func _clasp_width() -> float:
-	return GroveArtData.NIGHT_BAR_CLASP.y / GroveArtData.TEXTURE_SCALE
+	return float(SkinArt.texture("nachtleiste_spange").get_width()) * _bar_scale()
+
+
+## Gezeichnete Rechteckhöhe der Leiste und Maßstab Bild zu Bildschirm.
+func _bar_height() -> float:
+	return BAR_HEIGHT if _expanded else CHIP_BAR_HEIGHT
+
+
+func _bar_scale() -> float:
+	return _bar_height() / SkinArt.NIGHT_BAR_FIT_HEIGHT
+
+
+## Breite eines Dornen-Endes auf dem Bildschirm.
+func _end_width() -> float:
+	return SkinArt.NIGHT_BAR_END * _bar_scale()
 
 
 ## Anzahl der Slots, die bei der aktuellen Breite nebeneinander passen (gleich viele links und rechts der Spange).
@@ -157,10 +173,10 @@ func _arrange() -> void:
 	_right.disabled = (_first >= _entries.size() - visible_slots()) if _expanded else (_peek >= _entries.size() - 1)
 	var arrow := Vector2(ARROW_SIZE, ARROW_SIZE + 20.0)
 	var y := (BAR_Y_CENTER if _expanded else size.y * 0.5) - arrow.y * 0.5
-	var margins := GroveArtData.NIGHT_BAR_MARGINS / GroveArtData.TEXTURE_SCALE
-	_left.position = Vector2(margins.x + 2.0, y)
+	var end := _end_width()
+	_left.position = Vector2(end + 2.0, y)
 	_left.size = arrow
-	_right.position = Vector2(size.x - margins.z - arrow.x - 2.0, y)
+	_right.position = Vector2(size.x - end - arrow.x - 2.0, y)
 	_right.size = arrow
 	_toggle.size = Vector2(ThemeTokens.TOUCH_MIN, ThemeTokens.TOUCH_MIN)
 	var toggle_y := (BAR_Y_CENTER + 8.0) if _expanded else (size.y - _toggle.size.y + 4.0)
@@ -170,11 +186,10 @@ func _arrange() -> void:
 # --- Zeichnen -----------------------------------------------------------------------------------------
 
 func _draw() -> void:
-	var box := GroveSkin.night_bar_box(_expanded)
+	var box := GroveSkin.night_bar_box(_expanded, SkinArt.NIGHT_BAR_FIT_HEIGHT)
 	if box != null:
-		var bar_h := float(box.texture.get_height()) / GroveArtData.TEXTURE_SCALE
 		var centre_y := BAR_Y_CENTER if _expanded else size.y * 0.5
-		draw_style_box(box, Rect2(0.0, centre_y - bar_h * 0.5, size.x, bar_h))
+		draw_style_box(box, Rect2(0.0, centre_y - _bar_height() * 0.5, size.x, _bar_height()))
 	if _entries.is_empty():
 		return
 	if _expanded:
@@ -304,9 +319,8 @@ static func _trimmed(font: Font, text: String, limit: float, size: int) -> Strin
 func _draw_chip() -> void:
 	var font := get_theme_default_font()
 	var entry: Dictionary = _entries[clampi(_peek, 0, _entries.size() - 1)]
-	var margins := GroveArtData.NIGHT_BAR_MARGINS / GroveArtData.TEXTURE_SCALE
-	var left := margins.x + ARROW_SIZE + 16.0
-	var right := size.x - margins.z - ARROW_SIZE - 8.0
+	var left := _end_width() + ARROW_SIZE + 16.0
+	var right := size.x - _end_width() - ARROW_SIZE - 8.0
 	_draw_medallion(Vector2(left + CHIP_MEDALLION * 0.5, size.y * 0.5), CHIP_MEDALLION, entry)
 	var text := _label_of(str(entry["role_id"]))  # nur der Name der Rolle, keine Nummer (sie könnte für einen Sitzplatz gehalten werden)
 	var color := ThemeTokens.DANGER_TEXT if str(entry["state"]) == "active" else ThemeTokens.TEXT_MUTED
@@ -314,6 +328,11 @@ func _draw_chip() -> void:
 	var font_size := CHIP_FONT_SIZE
 	while font_size > CHIP_FONT_SIZE_MIN and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > right - from:
 		font_size -= 1  # lange Rollennamen: erst kleiner, erst danach gekürzt
+	var plate := GroveSkin.plate_box()
+	if plate != null:  # Namensschild, damit die Stange der Leiste nicht durch den Text läuft
+		var plate_w := minf(font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + 24.0, right - from)
+		plate.native_height = 28.0
+		draw_style_box(plate, Rect2((from + right) * 0.5 - plate_w * 0.5, size.y * 0.5 - 14.0, plate_w, 28.0))
 	_draw_fitted(font, text, Vector2((from + right) * 0.5, size.y * 0.5 + font_size * 0.35), right - from, font_size, color)
 
 

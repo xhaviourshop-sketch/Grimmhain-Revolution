@@ -50,20 +50,16 @@ static func plate_box() -> GroveStyleBox:
 	return GroveStyleBox.make(tex, GroveArtData.NAME_PLATE_SHORT_MARGINS) if tex != null else null
 
 
-## Senkrechte Lasche (Protokoll, Optionen): Enden geschützt, Mitte dehnbar.
-static func side_tab_box(tint: Color = Color.WHITE) -> GroveStyleBox:
-	var tex := texture("side_tab")
-	return GroveStyleBox.make(tex, GroveArtData.SIDE_TAB_MARGINS, tint) if tex != null else null
+## Senkrechte Lasche (Protokoll, Optionen): Enden geschützt, Mitte dehnbar. `fit_width` ist die Bildbreite, die der Rechteckbreite entspricht.
+static func side_tab_box(tint: Color = Color.WHITE, fit_width: float = SkinArt.SIDE_TAB_FIT_WIDTH) -> StyleBox:
+	return SkinArt.side_tab_box(tint, fit_width)
 
 
-## Nachtleiste: Enden und Mittelspange geschützt; `with_clasp` false (Chip) lässt die Spange weg.
-static func night_bar_box(with_clasp: bool = true) -> GroveStyleBox:
-	var tex := texture("night_bar")
-	if tex == null:
-		return null
-	var box := GroveStyleBox.make(tex, GroveArtData.NIGHT_BAR_MARGINS)
-	box.clasp = GroveArtData.NIGHT_BAR_CLASP
-	box.with_clasp = with_clasp
+## Nachtleiste mit Mittelspange; `with_clasp` false (Chip) lässt die Spange weg. `fit_height` ist die Bildhöhe, die der Rechteckhöhe entspricht.
+static func night_bar_box(with_clasp: bool = true, fit_height: float = SkinArt.NIGHT_BAR_FIT_HEIGHT) -> SkinBarBox:
+	var box := SkinArt.night_bar_box(ThemeTokens.TINT_NONE, fit_height)
+	if not with_clasp:
+		box.set("clasp", null)
 	return box
 
 

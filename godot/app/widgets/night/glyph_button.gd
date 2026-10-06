@@ -1,6 +1,6 @@
 class_name GlyphButton
 extends GrimmButton
-## Runder Randknopf auf dem Hain-Teil `icon_button_round` mit gezeichnetem Mondsilber-Zeichen: „hide“ = Auge (Verbergen, Umschalter;
+## Runder Randknopf auf dem gemalten Randknopf (`randknopf`) mit gezeichnetem Mondsilber-Zeichen: „hide“ = Auge (Verbergen, Umschalter;
 ## aktiv mit Schrägstrich), „cover“ = Schloss (Sichtschutz), „info“ = i (Details der Aktionskarte), „mic“ = Mikrofon (Namen per Sprache;
 ## als Umschalter zeigt der rote Ring die laufende Aufnahme). Der Text (Übersetzung) bleibt
 ## Tooltip und Bedienungshilfe und wird nicht gezeichnet. Zustand nie nur über Farbe: aktives Verbergen zeigt den Schrägstrich und
@@ -38,8 +38,10 @@ func _draw() -> void:
 	var ink := ThemeTokens.MOON_SILVER_BRIGHT if (active or is_hovered() or has_focus()) else ThemeTokens.MOON_SILVER
 	if disabled:
 		ink = ThemeTokens.MOON_SILVER_DIM
-	var tex := GroveSkin.texture("icon_button_round")
+	var tex := SkinArt.edge_knob()
 	if tex != null:
+		if is_pressed() or active:  # Glühen hinter dem Rand, nicht nur Farbe
+			draw_circle(c, r + 3.0, ThemeTokens.BLOOD_RED_HALO if active else ThemeTokens.MOON_GLOW)
 		var tint := ThemeTokens.TINT_DEAD if disabled else (ThemeTokens.TINT_HOVER if (is_pressed() or is_hovered()) else ThemeTokens.TINT_NONE)
 		draw_texture_rect(tex, Rect2(c - Vector2(r, r), Vector2(r, r) * 2.0), false, tint)
 	else:
@@ -49,7 +51,7 @@ func _draw() -> void:
 		draw_arc(c, r - 3.0, 0.0, TAU, 40, ThemeTokens.BLOOD_RED, 3.5, true)
 	if has_focus():
 		draw_arc(c, r + 1.0, 0.0, TAU, 40, ThemeTokens.FOCUS_RING, float(ThemeTokens.FOCUS_WIDTH), true)
-	r *= 0.84  # Zeichen im dunklen Innenraum des Eisenknopfs
+	r *= 0.8  # Zeichen mittig im leeren Innenraum des Randknopfs
 	match glyph:
 		"hide":
 			var w := r * 0.62
