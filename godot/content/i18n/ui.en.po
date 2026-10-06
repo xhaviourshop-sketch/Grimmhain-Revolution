@@ -1257,7 +1257,10 @@ msgid "ui.setup.seating.status.start_failed.setup_incomplete"
 msgstr "Start rejected: the preparation is not complete yet. Nothing was changed."
 
 msgid "ui.setup.seating.status.start_failed.other"
-msgstr "Start rejected (code {code}). Nothing was changed."
+msgstr "Start rejected. Nothing was changed."
+
+msgid "ui.setup.seating.status.start_failed.game_over"
+msgstr "This game is already over. Nothing was changed."
 
 msgid "ui.common.yes"
 msgstr "Yes"
@@ -2261,6 +2264,18 @@ msgstr "role changed"
 msgid "ui.morning.drop.no_living_wolf"
 msgstr "no wolf alive"
 
+msgid "ui.morning.drop.generic"
+msgstr "no reason given"
+
+msgid "ui.morning.drop.not_called"
+msgstr "not called"
+
+msgid "ui.morning.drop.card_blocked"
+msgstr "blocked by a card"
+
+msgid "ui.morning.drop.card_sleep"
+msgstr "skipped by a card"
+
 msgid "ui.cause.night_kill"
 msgstr "pack attack"
 
@@ -2526,7 +2541,10 @@ msgid "ui.continue.resume"
 msgstr "Continue"
 
 msgid "ui.continue.discard"
-msgstr "Discard …"
+msgstr "Delete"
+
+msgid "ui.continue.report"
+msgstr "Report"
 
 msgid "ui.continue.unsaved.title"
 msgstr "Current game not saved"
@@ -2556,16 +2574,16 @@ msgid "ui.continue.status.resumed"
 msgstr "Game resumed"
 
 msgid "ui.continue.status.discarded"
-msgstr "Game discarded. The files are kept under a new name."
+msgstr "Game deleted. The files are kept under a new name."
 
 msgid "ui.continue.discard_dialog.title"
-msgstr "Discard the game?"
+msgstr "Delete the game?"
 
 msgid "ui.continue.discard_dialog.message"
 msgstr "The game disappears from the list. The files are only renamed, not deleted."
 
 msgid "ui.continue.discard_dialog.confirm"
-msgstr "Discard"
+msgstr "Delete"
 
 msgid "ui.cockpit.tools.gm"
 msgstr "Game master"
@@ -5687,7 +5705,7 @@ msgid "ui.rulebook.c11.b02"
 msgstr "Resuming"
 
 msgid "ui.rulebook.c11.b03"
-msgstr "In the main menu “Continue game” shows the saved games with names, number of people, phase, night, day, living people and save time, but without roles. “Continue” returns to the same place, even in the middle of a step or with an open reaction. “Discard …” asks first and only renames the files."
+msgstr "In the main menu “Continue game” shows the saved games with names, number of people, phase, night, day, living people and save time, but without roles. “Continue” returns to the same place, even in the middle of a step or with an open reaction. For finished games “Report” opens the final report. “Delete” asks first and only renames the files."
 
 msgid "ui.rulebook.c11.b04"
 msgstr "When saving fails"
@@ -5705,7 +5723,7 @@ msgid "ui.rulebook.c11.b08"
 msgstr "A damaged file is never overwritten but set aside. The app then loads the backup and points out that it is an older state and the last steps must be done again. If there is no valid backup the app reports an error and nothing is deleted."
 
 msgid "ui.rulebook.c11.b09"
-msgstr "A save from another version of the app stays unchanged and cannot be resumed here. “Discard” remains possible. A running game is never replaced silently by another one."
+msgstr "A save from another version of the app stays unchanged and cannot be resumed here. “Delete” remains possible. A running game is never replaced silently by another one."
 
 msgid "ui.rulebook.c11.b10"
 msgstr "Settings such as the language and “Reduce motion”, saved player groups and the game history are stored separately from the game saves."
