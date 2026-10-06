@@ -15,6 +15,7 @@ from PIL import Image
 
 SRC = "C:/Users/Marku/Downloads/Grimmhain/Assets/"
 OUT = "godot/assets/ui/skin/"
+NIGHT_SCALE = 0.5
 CANVAS_H, BAR_H, CAP_W, MID_W, FEATHER = 128, 72, 96, 128, 24
 
 # bar rows (alpha > 200), end of left cap, start of right cap, plain strip, stone centre (source pixels)
@@ -132,6 +133,52 @@ def bonds() -> None:
 		save(im, "bund_%s.webp" % n)
 
 
+def bar_crop(name: str, scale: float) -> Image.Image:
+	im = Image.open(SRC + "ui/%s.png" % name).convert("RGBA")
+	im = im.crop(im.getbbox())
+	return im.resize((max(1, round(im.size[0] * scale)), max(1, round(im.size[1] * scale))), Image.LANCZOS)
+
+
+def ui_parts() -> None:
+	"""Feedback 9 parts: input field, plaque, divider, side tab, night bar (+ separate clasp), edge knob, die face,
+	seat frame and the small bond marks. Scales keep every part at most twice its display size."""
+	for name, scale, out in (("eingabefeld", 0.75, "eingabefeld"), ("plakette", 0.5, "plakette"),
+			("trennlinie", 0.4, "trennlinie"), ("randlasche", 0.4, "randlasche")):
+		im = bar_crop(name, scale)
+		save(im, out + ".webp")
+		print(out, im.size)
+	# night bar: the centre clasp is cut out and kept as its own picture, so the stretched middle never distorts it
+	src = Image.open(SRC + "ui/nachtleiste.png").convert("RGBA")
+	a = arr(src)
+	box = src.getbbox()
+	cx0, cx1 = 925, 1060                       # clasp columns (source pixels), clasp rows 313..462, bar rows 371..413
+	mid = (371 + 413) // 2                     # bar centre row: crops are symmetric around it so the bar sits in the picture middle
+	half = max(mid - box[1], box[3] - mid)
+	clasp = Image.fromarray(a[mid - 79:mid + 80, cx0:cx1].astype(np.uint8), "RGBA")
+	plain = a.copy()
+	plain[:, cx0:cx1] = a[:, cx0 - (cx1 - cx0):cx0]  # plain bar from the left of the clasp
+	bar = Image.fromarray(plain.astype(np.uint8), "RGBA").crop((box[0], mid - half, box[2], mid + half))
+	for im, out in ((bar, "nachtleiste"), (clasp, "nachtleiste_spange")):
+		scaled = im.resize((round(im.size[0] * NIGHT_SCALE), round(im.size[1] * NIGHT_SCALE)), Image.LANCZOS)
+		save(scaled, out + ".webp")
+		print(out, scaled.size)
+	for name, size, out in (("randknopf", 160, "randknopf"), ("sitzrahmen", 256, "sitzrahmen"), ("wuerfel", 256, "wuerfel"),
+			("bund-liebende-klein", 128, "bund_liebende_klein"), ("bund-rivalen-klein", 128, "bund_rivalen_klein")):
+		im = Image.open(SRC + "ui/%s.png" % name).convert("RGBA").resize((size, size), Image.LANCZOS)
+		save(im, out + ".webp")
+	# seat frame hole: circle fitted to the inner edge, measured on the finished picture (fractions of the width)
+	f = np.asarray(Image.open(OUT + "sitzrahmen.webp").convert("RGBA"))[..., 3] > 40
+	h, w = f.shape
+	yy, xx = np.mgrid[0:h, 0:w]
+	cy, cx = yy[f].mean(), xx[f].mean()
+	m = f & (np.hypot(xx - cx, yy - cy) < w * 0.36)
+	X, Y = xx[m], yy[m]
+	sol = np.linalg.lstsq(np.c_[2 * X, 2 * Y, np.ones(len(X))], X ** 2 + Y ** 2, rcond=None)[0]
+	hx, hy = sol[0], sol[1]
+	d = np.hypot(xx[f] - hx, yy[f] - hy)
+	print("sitzrahmen hole centre %.4f %.4f  clear radius %.4f  1st percentile %.4f" % (hx / w, hy / h, d.min() / w, np.percentile(d, 1) / w))
+
+
 def start_media() -> None:
 	im = Image.open(SRC + "start/ladebild.png").convert("RGB")
 	im.save("godot/web/ladebild.webp", quality=85, method=6)
@@ -176,6 +223,7 @@ if __name__ == "__main__":
 	frame()
 	board()
 	bonds()
+	ui_parts()
 	start_media()
 	cards()
 	print("ok")

@@ -8,11 +8,11 @@ extends RefCounted
 ## Porträt (Durchmesser `diameter`), darunter das Namensschild. Die Steuerelemente überlappen diagonal, die Tippfläche
 ## (Porträtkreis und Namensschild) nicht (siehe GameSeatToken._has_point).
 
-const NUMBER_BAND := 2.0   ## Rand oberhalb des Rahmens (die Nummer sitzt im Sockel des Rahmens, P5)
+const NUMBER_BAND := 2.0   ## schmaler Rand oberhalb des Rahmens (Rahmen ohne Nummernsockel)
 const RING_RADIUS := 0.40  ## Anteil der Rahmenbreite bis zum äußeren Rand des Silberrings: gemeint ist der sichtbare Kreis, nicht das Bildrechteck
 const OBSTACLE_RADIUS := 0.44  ## Anteil der Rahmenbreite für die Tischmitte: Ring samt Wurzeln (das Bildrechteck ist größer als das Sichtbare)
 const PLATE_BIAS := 11.0  ## so viel (je Seite, also 2x insgesamt) darf ein Schild zur freieren Seite über die symmetrische Breite hinaus wachsen
-const PLATE_HEIGHT := 20.0
+const PLATE_HEIGHT := 22.0
 const PLATE_DROP := 12.0 * 2.0   ## das Namensschild ragt so weit in den unteren Rahmenrand
 const SIDE_MARGIN := 6.0
 const CENTER_MAX := Vector2(640.0, 400.0)  ## größte Tischmitte (bei wenigen Personen)
@@ -20,7 +20,7 @@ const CENTER_PREFERRED := Vector2(560.0, 340.0)  ## Größe, bis zu der eine gr�
 const CENTER_MIN_WIDTH := 200.0
 const CENTER_WIDTH_STEP := 8.0
 const PLATE_OVERHANG := 20.0  ## so weit ragt das Namensschild höchstens über den Rahmenrand
-const PLATE_GAP := 2.0       ## Mindestabstand des Schilds zu Nachbarn
+const PLATE_GAP := 8.0       ## Mindestabstand des Schilds zu Nachbarn
 const PLATE_MIN_WIDTH := 36.0
 const CENTER_GAP := 8.0     ## Abstand der Tischmitte zu Porträts und Schildern
 const RING_SHAPE := 2.15 ## Exponent der Ringform: 2 = Ellipse, größer = kantiger. Rückt die Plätze in den Ecken nach außen (oben und unten mehr Abstand)
@@ -36,15 +36,6 @@ static func diameter_for(count: int) -> float:
 	if count >= 8:
 		return 96.0
 	return 104.0
-
-
-## Nummern-Abzeichen: Mitte relativ zur Porträtmitte und Radius (Sockel des Rahmens, siehe GroveArtData.SEAT_SOCKET_*). Es ragt oben links über den Ring hinaus.
-static func badge_offset(d: float) -> Vector2:
-	return Vector2((GroveArtData.SEAT_SOCKET_CENTER.x - GroveArtData.SEAT_HOLE_CENTER.x) * d, (GroveArtData.SEAT_SOCKET_CENTER.y - GroveArtData.SEAT_HOLE_CENTER.y) * d * GroveArtData.SEAT_ASPECT)
-
-
-static func badge_radius(d: float) -> float:
-	return GroveArtData.SEAT_SOCKET_RADIUS * d * 1.05
 
 
 static func token_size_for(diameter: float) -> Vector2:
@@ -130,7 +121,6 @@ static func _compact_fits(points: Array[Vector2], d: float) -> bool:
 static func _plate_spans(seats: Array[Rect2], d: float, size: Vector2) -> Array[Vector2]:
 	var out: Array[Vector2] = []
 	var radius := d * RING_RADIUS
-	var badge_r := badge_radius(d)
 	var mid_x := 0.0
 	for seat: Rect2 in seats:
 		mid_x += seat.position.x + size.x * 0.5
@@ -151,12 +141,6 @@ static func _plate_spans(seats: Array[Rect2], d: float, size: Vector2) -> Array[
 			var dy := maxf(maxf(band_top - centre_y, centre_y - (band_top + PLATE_HEIGHT)), 0.0)
 			if dy < radius:
 				span[side] = minf(span[side], dx - sqrt(radius * radius - dy * dy) - PLATE_GAP)
-			# Das Nummern-Abzeichen des Nachbarn (oben links an seinem Rahmen) bleibt ebenfalls frei.
-			var badge_x := signed_dx + badge_offset(d).x
-			var badge_dy := maxf(maxf(band_top - (centre_y + badge_offset(d).y), (centre_y + badge_offset(d).y) - (band_top + PLATE_HEIGHT)), 0.0)
-			if badge_dy < badge_r:
-				var badge_side := 1 if badge_x > 0.0 else 0
-				span[badge_side] = minf(span[badge_side], absf(badge_x) - sqrt(badge_r * badge_r - badge_dy * badge_dy) - PLATE_GAP)
 			var other_top := other.position.y + NUMBER_BAND + d - PLATE_DROP
 			if absf(other_top - band_top) < PLATE_HEIGHT:
 				span[side] = minf(span[side], (dx - PLATE_GAP) * 0.5)

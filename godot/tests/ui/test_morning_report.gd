@@ -95,6 +95,15 @@ func test_private_part_names_causes_and_rescues() -> void:
 	assert_true(saved.size() == 1 and int(saved[0]["person"]["person_id"]) == 5 and str(saved[0]["role_id"]) == "schutzengel", "Rettung durch den Schutzengel")
 
 
+func test_rescued_person_gets_no_extra_protected_line() -> void:
+	var session := _session(false)
+	_night(session)
+	var lines: Array = session.morning_report()["private"]
+	var protected_lines: Array = lines.filter(func(l: Dictionary) -> bool:
+		return str(l["key"]) == "ui.morning.private.protected" and int(l["person"]["person_id"]) == 5)
+	assert_eq(protected_lines.size(), 0, "gerettete Person nicht zusätzlich als geschützt")
+
+
 func test_reveal_option_adds_role_of_the_dead() -> void:
 	var session := _session(true)
 	_night(session)

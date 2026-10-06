@@ -4,7 +4,7 @@ extends GrimmButton
 ## Zustände als Ring über dem Porträt, kleine Zustandsabzeichen unten rechts. Zeigt nie eine Rolle. Bleibt ein Button
 ## mit Personen-ID und Signal `tapped`; der Button-Text (Name, Zeichen) dient der Bedienungshilfe, den Tests und dem
 ## Tooltip und wird nicht gezeichnet. Information hängt nie allein an der Farbe: Das Schild trägt Tod („†“), Nominierung
-## („(N)“), wählbares Ziel („›“), Auswahl („✓“) und handelnde Person („•“); die Abzeichen unterscheiden sich durch Form.
+## (roter Ring und Band, ohne Zusatz im Namen), wählbares Ziel („›“), Auswahl („✓“) und handelnde Person („•“); die Abzeichen unterscheiden sich durch Form.
 ##
 ## Geheime Zustände (`marks`, handelnde Person) zeichnet der Platz nur, solange `secrets_visible` gilt („Verbergen“ schaltet es ab).
 
@@ -24,14 +24,15 @@ const STATE_MARKS := {&"allowed": "› ", &"selected": "✓ ", &"actor": "• "}
 const PLATE_MARKS := {&"actor": "• "}
 const GLOW_SELECTED := ThemeTokens.MOON_GLOW  ## heller Mondsilber-Schein um das gewählte Ziel
 const SHIMMER_ALLOWED := ThemeTokens.SEAT_SHIMMER  ## dezenter, kühler Schimmer wählbarer Plätze (ruhig, kein Pulsieren)
-const FACE_OVERLAP := 1.04  ## das Porträt reicht etwas unter den Ring, damit kein Spalt bleibt
+const FRAME_SCALE := 0.95  ## Kantenlänge des Rahmenbilds relativ zur Rahmenbreite des Platzes (der sichtbare Ring misst dann rund 0,40)
 const RING_RADIUS := PortraitRingLayout.RING_RADIUS  ## Anteil der Rahmenbreite bis zum äußeren Rand des Rings (Tippfläche, Fokus, Zustandsschein)
 const FACE_UV_SCALE := 0.62
 const GLOW_DENSE_DIAMETER := 90.0  ## ab 13 Personen (Rahmen 86) gilt der schmale Schein
 const GLOW_STEP_DENSE := 0.85
-const PLATE_FONT_SIZE := 13
-const PLATE_PADDING := 6.0  ## Innenabstand im Namensschild (links und rechts zusammen, ohne die Eisenkappen)
-const PLATE_FONT_SIZE_FLOOR := 8  ## kleinste Schrift im Schild, wenn ein langer Name sonst nicht passt
+const PLATE_FONT_SIZE := 14  ## Schrift im Schild (Basisauflösung 1024x768); nie kleiner, lange Namen werden gekürzt
+const PLATE_PADDING := 2.0  ## Innenabstand im Namensschild (links und rechts zusammen, ohne die Eisenkappen)
+const PLATE_FONT_SIZE_FLOOR := 14  ## kleinste Schrift im Schild (Markus: mindestens 14 px)
+const ELLIPSIS := "…"
 const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ zur Rahmenbreite
 const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
 const HUNT_PULSE_SPEED := 3.4  ## Pulse je Sekunde im Bogenmaß
@@ -40,9 +41,11 @@ const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
 ## Statusringe gibt es nur für Gift, Stille und Schutz. Das Fadenkreuz (Opfer, Markierung) bleibt ein Abzeichen: Ein roter Ring heißt am Platz
 ## nur „nominiert“ (Tag) oder „gewählt“ (Zuordnung), nie ein Opfer der Nacht (Feedback 8, L3/L11).
 const RING_PRIORITY: Array[String] = ["poisoned", "silenced", "protected"]
-## Gemalte Bundzeichen der Liebenden und Rivalen am Ring (nur Spielleitung, nachts).
-const BOND_ART := {"lovers": "res://assets/ui/skin/bund_liebende.webp", "rivals": "res://assets/ui/skin/bund_rivalen.webp"}
-const BOND_SCALE := 0.34  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite
+## Gemalte kleine Bundzeichen der Liebenden und Rivalen am Ring (nur Spielleitung, nachts): SkinArt.bond_small.
+const BOND_SCALE := 0.55  ## Kantenlänge des Bundzeichens relativ zur Rahmenbreite (lockerer Ring)
+const BOND_SCALE_DENSE := 0.42  ## dichter Ring (ab 13 Personen): kleiner, damit es nie ein Nachbarporträt berührt
+const BOND_STEP_ANGLE := 40.0  ## weitere Bundzeichen am selben Rahmen rücken so viele Grad zur Senkrechten
+const BOND_SINK := 0.2  ## Anteil der Zeichengröße, um den es außerhalb der Ringkante sitzt (der Rest liegt auf dem eigenen Rahmenrand)
 const BADGE_SCALE := 0.3  ## Kantenlänge der Zustandsabzeichen relativ zur Rahmenbreite (sie bleiben im eigenen Ring)
 const BADGE_FIRST_ANGLE := 50.0  ## Winkel des ersten Abzeichens (Grad, 0 = rechts, 90 = unten)
 const BADGE_STEP_ANGLE := 55.0
@@ -95,6 +98,7 @@ var active: bool = false:  ## handelnde Person: Bildrahmen und Namensschild leuc
 		_apply_hunt_motion()
 		queue_redraw()
 var _hunt_time: float = 0.0
+var _show_full_name: bool = false  ## solange der Finger aufliegt: das Schild zeigt den vollen Namen (nur wenn er gekürzt wäre)
 var _nominated: bool = false
 var _seat: Dictionary = {}
 var _portrait: Texture2D = null
@@ -131,6 +135,8 @@ func setup(p_person_id: int) -> void:
 		add_theme_color_override(color, ThemeTokens.INVISIBLE)
 	_portrait = NightArt.portrait(p_person_id)
 	pressed.connect(func() -> void: tapped.emit(person_id))
+	button_down.connect(func() -> void: set_full_name_shown(true))
+	button_up.connect(func() -> void: set_full_name_shown(false))
 	set_process(false)  # nur der Feuerring animiert (`hunt`)
 	state = &"normal"
 
@@ -167,6 +173,20 @@ func _show() -> void:
 	text_key = key
 
 
+## Voller Name in der Plakette (Finger liegt auf): nur wenn das Schild den Namen kürzt; liegt über den Nachbarn. Löst kein Antippen aus.
+func set_full_name_shown(on: bool) -> void:
+	var show := on and is_name_truncated()
+	if show == _show_full_name:
+		return
+	_show_full_name = show
+	z_index = 20 if show else 0
+	queue_redraw()
+
+
+func is_name_truncated() -> bool:
+	return fitted_plate_text(_plate_text(), _plate_font(), _text_room(_base_plate_rect().size.x)) != _plate_text()
+
+
 # --- Geometrie ----------------------------------------------------------------------------------------
 
 ## Mittelpunkt, Porträtkreis und Schild im Koordinatensystem des Steuerelements.
@@ -179,6 +199,14 @@ func portrait_rect() -> Rect2:
 
 
 func plate_rect() -> Rect2:
+	if _show_full_name:
+		var full := _plate_text_width() + 2.0 * _plate_cap() + PLATE_PADDING
+		var base := _base_plate_rect()
+		return Rect2(base.get_center().x - full * 0.5, base.position.y, full, base.size.y)
+	return _base_plate_rect()
+
+
+func _base_plate_rect() -> Rect2:
 	var limit := plate_limit if plate_limit > 0.0 else PortraitRingLayout.plate_max_width(diameter)
 	var w := minf(minf(size.x, limit), _plate_text_width() + 2.0 * _plate_cap() + PLATE_PADDING)
 	var span := plate_span if plate_span != Vector2.ZERO else Vector2(limit * 0.5, limit * 0.5)
@@ -236,12 +264,9 @@ func _draw() -> void:
 		_draw_nominated(c, d)
 	_draw_portrait(c, d, dim)
 	var frame_rect := _frame_rect(c, d)
-	var socket := frame_rect.position + GroveArtData.SEAT_SOCKET_CENTER * frame_rect.size
-	draw_circle(socket, GroveArtData.SEAT_SOCKET_RADIUS * d * 1.05, ThemeTokens.NUMBER_BG)  # leerer Sockel, keine Nummer
-	var frame := GroveSkin.texture("seat_frame")
+	var frame := SkinArt.seat_frame()
 	if frame != null:
-		var silver := GroveSkin.TINT_SEAT_SILVER * dim
-		draw_texture_rect(frame, frame_rect, false, silver)
+		draw_texture_rect(frame, frame_rect, false, dim)
 	_draw_state_ring(c, d)
 	if state == &"selected":
 		_draw_check(c, d)
@@ -253,10 +278,10 @@ func _draw() -> void:
 		draw_arc(c, d * RING_RADIUS + 3.0, 0.0, TAU, 48, ThemeTokens.FOCUS_RING, float(ThemeTokens.FOCUS_WIDTH), true)
 
 
-## Rechteck des Rahmenbilds so, dass das Porträtfenster des Rings auf der Porträtmitte liegt.
+## Rechteck des Rahmenbilds so, dass die Öffnung des Rings auf der Porträtmitte liegt.
 func _frame_rect(c: Vector2, d: float) -> Rect2:
-	var frame_size := Vector2(d, d * GroveArtData.SEAT_ASPECT)
-	return Rect2(c - GroveArtData.SEAT_HOLE_CENTER * frame_size, frame_size)
+	var frame_size := Vector2.ONE * d * FRAME_SCALE
+	return Rect2(c - SkinArt.SEAT_HOLE_CENTER * frame_size, frame_size)
 
 
 func _plate_cap() -> float:
@@ -320,7 +345,7 @@ func _process(delta: float) -> void:
 
 
 func _draw_portrait(c: Vector2, d: float, tint: Color) -> void:
-	var radius := d * GroveArtData.SEAT_HOLE_RADIUS * FACE_OVERLAP
+	var radius := d * FRAME_SCALE * SkinArt.SEAT_PORTRAIT_RADIUS  # reicht etwas unter den Rahmen, der darüber gezeichnet wird
 	if _portrait == null:
 		draw_circle(c, radius, ThemeTokens.BG_SURFACE)
 		return
@@ -379,19 +404,20 @@ func _draw_badges(c: Vector2, d: float) -> void:
 		return
 	var size_px := maxf(ThemeTokens.BADGE_MIN, d * BADGE_SCALE)
 	var i := 0
+	var bonds := 0
 	for kind: Variant in marks:
-		var bond := _bond_texture(str(kind))
-		var side := maxf(size_px, d * BOND_SCALE) if bond != null else size_px
-		# Das Abzeichen liegt ganz im eigenen Ring unten rechts (weitere reihen sich nach links unten auf), nie über dem Nachbarn.
+		var bond := SkinArt.bond_small(str(kind))
+		var side := size_px
+		# Zustandsabzeichen sitzen am eigenen Ring unten rechts (weitere reihen sich nach links unten auf). Bundzeichen sitzen als Abzeichen
+		# auf dem eigenen Rahmenrand, in Richtung der freien Seite (siehe `_bond_angle`), nie zwischen zwei Porträts.
 		var angle := deg_to_rad(BADGE_FIRST_ANGLE + float(i) * BADGE_STEP_ANGLE)
-		var rect := Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS - side * 0.5) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
+		var rect := Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS - side * 0.35) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
+		if bond != null:
+			side = d * (BOND_SCALE_DENSE if d < GLOW_DENSE_DIAMETER else BOND_SCALE)
+			angle = _bond_angle(bonds)
+			rect = Rect2(c + Vector2.from_angle(angle) * (d * RING_RADIUS + side * BOND_SINK) - Vector2.ONE * side * 0.5, Vector2.ONE * side)
+			bonds += 1
 		var texture := bond if bond != null else NightArt.badge(str(kind))
-		if bond != null:  # das Bild ist dunkler Stahl: heller Mondgrund, damit es auf dem Nachtbrett lesbar bleibt
-			var disc := ThemeTokens.MOON_SILVER
-			disc.a = 0.9
-			draw_circle(rect.get_center(), side * 0.5, disc)
-			draw_arc(rect.get_center(), side * 0.5, 0.0, TAU, 32, ThemeTokens.NUMBER_BG, 1.6, true)
-			rect = rect.grow(-side * 0.06)
 		if texture != null:
 			draw_texture_rect(texture, rect, false)
 		else:
@@ -399,16 +425,19 @@ func _draw_badges(c: Vector2, d: float) -> void:
 		i += 1
 
 
-static var _bond_cache: Dictionary = {}
-
-
-static func _bond_texture(kind: String) -> Texture2D:
-	if not BOND_ART.has(kind):
-		return null
-	if not _bond_cache.has(kind):
-		var path: String = BOND_ART[kind]
-		_bond_cache[kind] = load(path) as Texture2D if ResourceLoader.exists(path) else null
-	return _bond_cache[kind]
+## Richtung des k-ten Bundzeichens am eigenen Rahmen (Bogenmaß, 0 = rechts, negativ = oben): in der oberen Ringhälfte nach außen, in der unteren
+## zur Ringmitte, also immer nach oben und nie auf das Namensschild; weitere rücken zur Senkrechten. Die Nachbarn liegen seitlich entlang
+## des Rings, die Richtung zeigt nach oben oder zur Seite, nie zu ihnen hin.
+func _bond_angle(k: int) -> float:
+	var angle := deg_to_rad(-90.0)
+	var holder := get_parent() as Control
+	if holder != null and holder.size.x > 0.0:
+		var away := position + portrait_center() - holder.size * 0.5
+		if away.y > 0.0:
+			away = -away
+		angle = clampf(away.angle(), deg_to_rad(-165.0), deg_to_rad(-15.0))
+	var turn := deg_to_rad(BOND_STEP_ANGLE) * float(k)
+	return angle + (-turn if cos(angle) > 0.05 else turn)
 
 
 ## Abzeichen ohne Bilddatei (verzaubert): dunkle Scheibe, Silberring und ein Silberzeichen.
@@ -445,15 +474,26 @@ func _draw_plate() -> void:
 		pill.bg_color = ThemeTokens.PLATE_BG
 		pill.set_corner_radius_all(9)
 		draw_style_box(pill, rect)
-	var text := _plate_text()
 	var font := _plate_font()
-	var limit := rect.size.x - 2.0 * _plate_cap() - PLATE_PADDING
-	var font_size := PLATE_FONT_SIZE
-	while font_size > PLATE_FONT_SIZE_FLOOR and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > limit:
-		font_size -= 1  # lange Namen: die Schrift schrumpft, der Name wird nie mit „…“ gekürzt
-	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	var text := fitted_plate_text(_plate_text(), font, _text_room(rect.size.x))
+	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE).x
 	var color := ThemeTokens.TEXT_MUTED if not alive else ThemeTokens.TEXT_PRIMARY
-	draw_string(font, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + float(font_size) * 0.72) * 0.5), text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
+	draw_string(font, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + float(PLATE_FONT_SIZE) * 0.72) * 0.5), text, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE, color)
+
+
+## Platz für den Text im Schild der Breite `plate_width`.
+func _text_room(plate_width: float) -> float:
+	return plate_width - 2.0 * _plate_cap() - PLATE_PADDING
+
+
+## Text in Schriftgröße PLATE_FONT_SIZE, bei Bedarf mit „…“ gekürzt, sodass er in `room` Pixel passt (die Schrift schrumpft nie).
+static func fitted_plate_text(text: String, font: Font, room: float) -> String:
+	if font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE).x <= room:
+		return text
+	var n := text.length()
+	while n > 1 and font.get_string_size(text.substr(0, n).strip_edges(false, true) + ELLIPSIS, HORIZONTAL_ALIGNMENT_LEFT, -1, PLATE_FONT_SIZE).x > room:
+		n -= 1
+	return text.substr(0, n).strip_edges(false, true) + ELLIPSIS
 
 
 func _notification(what: int) -> void:

@@ -1,10 +1,12 @@
 class_name NightTab
 extends GrimmButton
-## Lasche am Rand des Bretts (Protokoll links, Optionen rechts). Zeichnet die senkrechte Hain-Lasche (`side_tab`, Enden geschützt, Mitte
-## dehnbar) mit einem Mondsilber-Symbol (Buch, Zahnrad); die Beschriftung (Übersetzung) bleibt als Button-Text für Bedienungshilfe und
+## Lasche am Rand des Bretts (Protokoll links, Optionen rechts). Zeichnet die senkrechte gemalte Lasche (`randlasche`, Dornen-Enden unverzerrt, Mitte
+## gedehnt) mit einem Mondsilber-Symbol (Buch, Zahnrad); die Beschriftung (Übersetzung) bleibt als Button-Text für Bedienungshilfe und
 ## Tooltip erhalten, wird aber nicht gezeichnet. Die Tippfläche ist breiter als das Bild: mindestens `ThemeTokens.TOUCH_MIN` (48 px).
 
-const ART_WIDTH := 44.0
+const ART_WIDTH := 110.0  ## Breite des Laschenbilds (Bild ist 220 breit; die Dornen nehmen davon etwa ein Drittel ein)
+const STRIPE_CENTER := 0.602  ## senkrechte Mittelspange im Bild als Anteil der Bildbreite
+const BEAD_RADIUS := 17.0  ## dunkle Scheibe unter dem Symbol auf der schmalen Spange
 const GEAR_TEETH := 8
 const GLYPH_SCALE := 1.2  ## Symbol im Innenraum der Lasche
 const _STYLE_STATES: Array[String] = ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]
@@ -22,7 +24,7 @@ func _init() -> void:
 		add_theme_stylebox_override(style, StyleBoxEmpty.new())
 	for color: String in _FONT_COLORS:
 		add_theme_color_override(color, ThemeTokens.INVISIBLE)
-	custom_minimum_size = Vector2(maxf(ThemeTokens.TOUCH_MIN + 4.0, ART_WIDTH), 220.0)
+	custom_minimum_size = Vector2(ThemeTokens.TOUCH_MIN + 4.0, 220.0)
 	button_down.connect(queue_redraw)
 	button_up.connect(queue_redraw)
 
@@ -32,22 +34,23 @@ func _has_point(point: Vector2) -> bool:
 
 
 func _draw() -> void:
-	var box := GroveSkin.side_tab_box(_tint())
-	var x := size.x - ART_WIDTH if at_right else 0.0
-	var art := Rect2(x, 0.0, ART_WIDTH, size.y)
+	var box := GroveSkin.side_tab_box(_tint(), SkinArt.SIDE_TAB_FIT_WIDTH)
+	var art := Rect2(size.x * 0.5 - ART_WIDTH * STRIPE_CENTER, 0.0, ART_WIDTH, size.y)  # Spange mittig in der Tippfläche
 	if box == null:
 		draw_rect(Rect2(Vector2.ZERO, size), ThemeTokens.BG_SURFACE)
 	else:
 		draw_style_box(box, art)
 	var color := ThemeTokens.MOON_SILVER_DIM if disabled else (ThemeTokens.MOON_SILVER_BRIGHT if (is_hovered() or is_pressed()) else ThemeTokens.MOON_SILVER)
-	draw_set_transform(art.get_center(), 0.0, Vector2(GLYPH_SCALE, GLYPH_SCALE))
+	var mid := Vector2(size.x * 0.5, size.y * 0.5)
+	draw_circle(mid, BEAD_RADIUS, ThemeTokens.NUMBER_BG)
+	draw_set_transform(mid, 0.0, Vector2(GLYPH_SCALE, GLYPH_SCALE))
 	if glyph == "options":
 		_draw_gear(Vector2.ZERO, color)
 	else:
 		_draw_book(Vector2.ZERO, color)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if has_focus():
-		draw_rect(art.grow(1.0), ThemeTokens.FOCUS_RING, false, float(ThemeTokens.FOCUS_WIDTH))
+		draw_rect(Rect2(Vector2.ZERO, size).grow(1.0), ThemeTokens.FOCUS_RING, false, float(ThemeTokens.FOCUS_WIDTH))
 
 
 func _tint() -> Color:

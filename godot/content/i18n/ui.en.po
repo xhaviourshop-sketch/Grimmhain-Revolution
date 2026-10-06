@@ -153,10 +153,10 @@ msgid "ui.setup.title"
 msgstr "New game · Players"
 
 msgid "ui.setup.entry.heading"
-msgstr "Add players"
+msgstr "Enter names"
 
 msgid "ui.setup.entry.hint"
-msgstr "Type a name and press Enter or “Add”. Several names: separate them with a comma or “and”."
+msgstr "Type a name. Separate several with commas."
 
 msgid "ui.setup.input.placeholder"
 msgstr "Enter a name"
@@ -171,10 +171,10 @@ msgid "ui.setup.import.heading"
 msgstr "Paste several names"
 
 msgid "ui.setup.import.hint"
-msgstr "Separate names with line breaks, commas or semicolons. Empty entries are ignored."
+msgstr "One name per line."
 
 msgid "ui.setup.import.placeholder"
-msgstr "Anna, Ben; Clara …"
+msgstr "Anna\nBen\nClara"
 
 msgid "ui.setup.import.confirm"
 msgstr "Add names"
@@ -1257,7 +1257,7 @@ msgid "ui.cockpit.seat.dead"
 msgstr "{mark}† {name}"
 
 msgid "ui.cockpit.seat.nominated"
-msgstr "{mark}{name} (N)"
+msgstr "{mark}{name}"
 
 msgid "ui.cockpit.tools.log"
 msgstr "Log"
@@ -2181,31 +2181,31 @@ msgid "ui.morning.notice.judge"
 msgstr "“{name} counts as nominated today.”"
 
 msgid "ui.morning.private.death"
-msgstr "{name} died: {cause}. Role: {role}."
+msgstr "{name} was {role} and died: {cause}."
 
 msgid "ui.morning.private.saved"
 msgstr "{name} was saved: {role}."
 
 msgid "ui.morning.private.no_attack"
-msgstr "The pack attacked nobody."
+msgstr "The pack does not attack."
 
 msgid "ui.morning.private.step_skipped"
-msgstr "{role} was skipped: {reason}"
+msgstr "{role} sits out: {reason}."
 
 msgid "ui.morning.private.step_dropped"
-msgstr "{role} did not happen: {drop}."
+msgstr "{role} sits out: {drop}."
 
 msgid "ui.morning.private.reaction.declined"
-msgstr "{name}: reaction without target (declined)."
+msgstr "{name} declines the reaction."
 
 msgid "ui.morning.private.reaction.killed"
-msgstr "{name} took {target} along in death."
+msgstr "{name} takes {target} along."
 
 msgid "ui.morning.private.reaction.cursed"
-msgstr "{name} cursed {target}."
+msgstr "{name} curses {target}."
 
 msgid "ui.morning.private.role_changed"
-msgstr "{name} now has the role: {role}."
+msgstr "{name} is now {role}."
 
 msgid "ui.morning.private.other"
 msgstr "{type}: {details}"
@@ -5157,7 +5157,7 @@ msgid "ui.groups.dialog.save.title"
 msgstr "Save group"
 
 msgid "ui.groups.dialog.save.message"
-msgstr "The current list of {count} names is saved under a group name. Roles and seats are not saved."
+msgstr "Saves the {count} names as a group. Without roles and seats."
 
 msgid "ui.groups.dialog.save.confirm"
 msgstr "Save"
@@ -5510,7 +5510,7 @@ msgid "ui.rulebook.c06.b05"
 msgstr "The morning report has two parts. You read “For the village” aloud: who died, who is back, who was chosen (for example by the Judge) and other public events."
 
 msgid "ui.rulebook.c06.b06"
-msgstr "“For you” is for the game master only: who is in love, who is whose rival, who was charmed, protected, poisoned or saved, causes and dropped steps. One sentence per point with names."
+msgstr "“For you” is for the game master only. It lists bonds, protection, poison, rescues, causes and skipped steps. One sentence per point, with names."
 
 msgid "ui.rulebook.c06.b07"
 msgstr "“Continue” starts the day."
@@ -5994,16 +5994,16 @@ msgid "ui.history.version.gm"
 msgstr "Game master report"
 
 msgid "ui.history.export_info.public"
-msgstr "The public version is exported: what was made known at the table plus all roles at the end of the game, the winners and the winning condition. A file that has already been passed on cannot be recalled."
+msgstr "Saves what was known at the table. Also all roles and the winners. A shared file cannot be recalled."
 
 msgid "ui.history.export_info.gm"
-msgstr "The game master version is exported: it contains all roles, causes and secret details."
+msgstr "Saves everything, secrets included."
 
 msgid "ui.history.export.public"
-msgstr "Save public version as text"
+msgstr "Save text"
 
 msgid "ui.history.export.gm"
-msgstr "Save game master version as text"
+msgstr "Save text"
 
 msgid "ui.history.delete"
 msgstr "Delete report …"
@@ -7629,7 +7629,7 @@ msgid "ui.cockpit.seat.plate.dead"
 msgstr "{mark}† {name}"
 
 msgid "ui.cockpit.seat.plate.nominated"
-msgstr "{mark}{name} (N)"
+msgstr "{mark}{name}"
 
 msgid "ui.cockpit.tools.options"
 msgstr "Options"
@@ -8719,16 +8719,16 @@ msgid "ui.morning.private.rivals"
 msgstr "{name} and {target} are rivals."
 
 msgid "ui.morning.private.charmed"
-msgstr "{name} was charmed."
+msgstr "{name} is charmed."
 
 msgid "ui.morning.private.protected"
-msgstr "{name} was protected."
+msgstr "{name} is protected."
 
 msgid "ui.morning.private.wolf_poisoned"
-msgstr "{name} was poisoned by the poison wolf."
+msgstr "{name} is poisoned (poison wolf)."
 
 msgid "ui.morning.private.infected"
-msgstr "{name} was infected."
+msgstr "{name} is infected."
 
 msgid "ui.morning.private.parasite_host"
 msgstr "{name} carries the parasite."
@@ -8737,7 +8737,7 @@ msgid "ui.morning.private.voodoo_doll"
 msgstr "{name} is the voodoo doll."
 
 msgid "ui.morning.private.nothing"
-msgstr "Nothing else happened in secret."
+msgstr "Nothing else is secret."
 
 msgid "ui.cockpit.card.morning.village"
 msgstr "For the village"
@@ -9067,7 +9067,7 @@ msgid "ui.preview.open"
 msgstr "Role preview"
 
 msgid "ui.preview.hint"
-msgstr "Tap a role. Nothing is saved."
+msgstr "Tap a role."
 
 msgid "ui.preview.role"
 msgstr "{name}"

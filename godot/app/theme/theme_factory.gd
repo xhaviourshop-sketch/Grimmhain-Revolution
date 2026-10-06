@@ -82,9 +82,10 @@ static func _labels(theme: Theme) -> void:
 		theme.set_font("font", &"GothicTitleLabel", load(ThemeTokens.GOTHIC_FONT) as Font)
 
 
-const BUTTON_MARGIN_X := 42  ## Text bleibt zwischen den Dornen-Enden der Knopfleiste
+const BUTTON_END_SHARE := 0.85  ## Anteil des Dornen-Endes, den der Text frei lässt (die äußersten Spitzen sind dünn)
 const BUTTON_MARGIN_Y := 6
 const SEAT_MARGIN_X := 36
+const DIVIDER_PAD := 18  ## halbe Höhe der Silber-Trennlinie in Pixeln
 
 
 ## Knöpfe (Feedback 8): alle Zustände aus gemalten Leisten (`SkinBarBox`), nie Flat. Ruhe = normal, gedrückt = gedrückt-Bild,
@@ -97,7 +98,12 @@ static func _buttons(theme: Theme) -> void:
 		if name != &"Button":
 			theme.set_type_variation(name, &"Button")
 		var font := ThemeTokens.DANGER_TEXT if name == &"DangerButton" else text
-		var margin := ThemeTokens.SPACE_XL + ThemeTokens.SPACE_S if name == &"CompactButton" else BUTTON_MARGIN_X
+		var min_height := ThemeTokens.BUTTON_SECONDARY_HEIGHT
+		if name == &"CompactButton":
+			min_height = ThemeTokens.TOUCH_MIN
+		elif name == &"PrimaryButton":
+			min_height = ThemeTokens.BUTTON_PRIMARY_HEIGHT
+		var margin := _end_margin(min_height)
 		_skin_button_type(theme, name, "normal", "gedrueckt", "gedrueckt", font, bright, Color.WHITE, margin)
 		if name == &"CompactButton":
 			theme.set_font_size("font_size", name, ThemeTokens.FONT_COMPACT)
@@ -122,6 +128,12 @@ static func _buttons(theme: Theme) -> void:
 		_skin_button_type(theme, name, d[0], d[1], d[1], d[3], bright, d[2], SEAT_MARGIN_X)
 		theme.set_font_size("font_size", name, ThemeTokens.FONT_COMPACT)
 	theme.set_type_variation(&"SecondaryButton", &"Button")
+
+
+## Textrand links und rechts: so breit wie das gemalte Dornen-Ende bei dieser Knopfhöhe (das Ende wächst mit der Höhe, wie in SkinBarBox).
+static func _end_margin(height: float) -> int:
+	var drawn := minf(height, SkinArt.BUTTON_MAX_HEIGHT)
+	return int(ceil(SkinArt.BUTTON_END * drawn / SkinArt.BUTTON_FIT_HEIGHT * BUTTON_END_SHARE))
 
 
 ## Eine Knopf-Variation: Ruhebild `rest`, Bild beim Drücken `down`, Bild gedrückt-und-darüber `hover_down`; `rest_tint` färbt das Ruhebild.
@@ -243,10 +255,11 @@ static func _panels(theme: Theme) -> void:
 		var base := &"Panel" if name in [&"AppBackground", &"NightBackdrop", &"DayBackdrop"] else &"PanelContainer"
 		theme.set_type_variation(name, base)
 		theme.set_stylebox("panel", name, variations[name])
-	var line := StyleBoxLine.new()
-	line.color = ThemeTokens.BORDER_SUBTLE
-	line.thickness = ThemeTokens.BORDER_THIN
-	theme.set_stylebox("separator", "HSeparator", line)
+	var divider := SkinArt.divider_box(ThemeTokens.MOON_SILVER_BRIGHT)  # hell, damit die Silberlinie auch auf Nachtblau klar liest
+	divider.content_margin_top = DIVIDER_PAD  # Separator zeichnet die Box nur in Höhe ihrer Mindestgröße (Linie ca. 1,6-fach)
+	divider.content_margin_bottom = DIVIDER_PAD
+	theme.set_stylebox("separator", "HSeparator", divider)
+	theme.set_constant("separation", "HSeparator", int(DIVIDER_PAD * 2.0))
 	var overlay := StyleBoxFlat.new()
 	overlay.bg_color = ThemeTokens.BG_OVERLAY
 	theme.set_type_variation(&"OverlayDim", &"Panel")
@@ -269,12 +282,10 @@ static func _containers(theme: Theme) -> void:
 		theme.set_constant(side, &"ScreenMargin", ThemeTokens.SCREEN_PADDING)
 
 
-## Texteingaben (LineEdit, TextEdit): dunkle Fläche, Goldrahmen im Fokus, gut lesbarer Platzhalter.
+## Texteingaben (LineEdit, TextEdit): gemaltes Eingabefeld, im Fokus heller Mondsilber-Schein, gut lesbarer Platzhalter.
 static func _inputs(theme: Theme) -> void:
 	for type: StringName in [&"LineEdit", &"TextEdit"]:
-		theme.set_stylebox("normal", type, _box(ThemeTokens.BG_APP, ThemeTokens.BORDER_SUBTLE, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S))
-		theme.set_stylebox("focus", type, _box(ThemeTokens.BG_APP, ThemeTokens.FOCUS_RING, ThemeTokens.FOCUS_WIDTH, ThemeTokens.RADIUS_S))
-		theme.set_stylebox("read_only", type, _box(ThemeTokens.DISABLED_FILL, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S))
+		_input_boxes(theme, type)
 		theme.set_color("font_color", type, ThemeTokens.TEXT_PRIMARY)
 		theme.set_color("font_readonly_color", type, ThemeTokens.TEXT_DISABLED)
 		theme.set_color("font_placeholder_color", type, ThemeTokens.TEXT_MUTED)
@@ -283,15 +294,40 @@ static func _inputs(theme: Theme) -> void:
 		theme.set_font_size("font_size", type, ThemeTokens.FONT_BODY)
 
 
-## Eingaben der Vorbereitung im Hain-Stil: dunkle Fläche, Mondsilber-Rahmen, helles Silber im Fokus, kein Gold.
+## Gemaltes Eingabefeld in allen Zuständen; der Fokus leuchtet (helle Tönung) statt eines Rahmens.
+static func _input_boxes(theme: Theme, type: StringName) -> void:
+	var glow := Color(ThemeTokens.MOON_SILVER_BRIGHT).lerp(Color.WHITE, 0.5) * 1.15
+	glow.a = 1.0
+	var states := {
+		"normal": Color(ThemeTokens.MOON_SILVER).darkened(0.1),
+		"focus": glow,
+		"read_only": Color(ThemeTokens.TEXT_DISABLED),
+	}
+	for state: String in states:
+		if type.ends_with("TextEdit"):
+			# Mehrzeilig: eine gemalte Fläche (die Leiste würde bei mehreren Zeilen riesige Enden bekommen und die Spalte aufweiten).
+			var area := SkinArt.window_box(states[state], true)
+			area.content_margin_left = 28
+			area.content_margin_right = 28
+			area.content_margin_top = 20
+			area.content_margin_bottom = 20
+			theme.set_stylebox(state, type, area)
+			continue
+		var box := SkinArt.input_box(states[state])
+		box.content_margin_left = 46  # Text und Platzhalter weg von den Dornen
+		box.content_margin_right = 46
+		box.content_margin_top = 12
+		box.content_margin_bottom = 12
+		box.max_height = 72.0
+		theme.set_stylebox(state, type, box)
+
+
+## Eingaben der Vorbereitung im Hain-Stil: gemaltes Feld, Fokus als Mondsilber-Schein, kein Gold.
 static func _hain_inputs(theme: Theme) -> void:
 	for base: StringName in [&"LineEdit", &"TextEdit"]:
 		var type := StringName("Hain" + String(base))
 		theme.set_type_variation(type, base)
-		var fill := Color(ThemeTokens.BG_APP, 0.86)
-		theme.set_stylebox("normal", type, _box(fill, ThemeTokens.MOON_SILVER_DIM, ThemeTokens.BORDER_THICK, ThemeTokens.RADIUS_S))
-		theme.set_stylebox("focus", type, _box(fill, ThemeTokens.MOON_SILVER_BRIGHT, ThemeTokens.FOCUS_WIDTH, ThemeTokens.RADIUS_S))
-		theme.set_stylebox("read_only", type, _box(ThemeTokens.DISABLED_FILL, ThemeTokens.DISABLED_BORDER, ThemeTokens.BORDER_THIN, ThemeTokens.RADIUS_S))
+		_input_boxes(theme, type)
 		theme.set_color("font_color", type, ThemeTokens.PREP_CARD_TEXT)
 		theme.set_color("font_placeholder_color", type, ThemeTokens.MOON_SILVER)
 		theme.set_color("caret_color", type, ThemeTokens.MOON_SILVER_BRIGHT)
@@ -313,6 +349,11 @@ static func _scrolling(theme: Theme) -> void:
 		grabber.set_corner_radius_all(ThemeTokens.RADIUS_S)
 		theme.set_stylebox(state[0], "VScrollBar", grabber)
 	theme.set_constant("scrollbar_h_separation", "ScrollContainer", ThemeTokens.SPACE_S)
-	theme.set_stylebox("panel", "TooltipPanel", _bar(32, 6))
+	var plaque := SkinArt.plaque_box()
+	plaque.content_margin_left = 36
+	plaque.content_margin_right = 36
+	plaque.content_margin_top = 14
+	plaque.content_margin_bottom = 14
+	theme.set_stylebox("panel", "TooltipPanel", plaque)
 	theme.set_color("font_color", "TooltipLabel", ThemeTokens.TEXT_PRIMARY)
 	theme.set_font_size("font_size", "TooltipLabel", ThemeTokens.FONT_BODY)

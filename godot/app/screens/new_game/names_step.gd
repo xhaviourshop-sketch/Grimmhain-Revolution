@@ -13,6 +13,8 @@ enum Mode { ENTRY, IMPORT, EDIT, GROUPS, REVIEW }
 
 const GROUP_CARD_SCENE := preload("res://app/screens/new_game/group_card.tscn")
 const IMPORT_ERROR_LIST_LIMIT := 3    ## höchstens so viele fehlerhafte Importeinträge einzeln nennen
+const IMPORT_SIDE_WIDTH := 412.0  ## Beim Einfügen braucht der Knopf „Namen übernehmen“ mehr Platz als die Standardspalte; die Schilder treten solange zurück
+const IMPORT_TEXT_ROWS_HEIGHT := 200.0  ## Einfügefeld zeigt mindestens vier Zeilen, damit man nie scrollen muss
 const IMPORT_ERROR_NAME_PREVIEW := 20  ## Zeichen eines fehlerhaften Namens in der Meldung
 
 var _mode: Mode = Mode.ENTRY
@@ -133,6 +135,12 @@ func handle_back() -> bool:
 
 # --- Aufbau ----------------------------------------------------------------------------------------------
 
+func _side_width(mode: Mode) -> float:
+	if mode == Mode.GROUPS:
+		return 0.0
+	return IMPORT_SIDE_WIDTH if mode in [Mode.IMPORT, Mode.REVIEW] else float(ThemeTokens.PREP_SIDE_WIDTH)
+
+
 func _side_column() -> VBoxContainer:
 	var side := VBoxContainer.new()
 	side.name = "SideColumn"
@@ -169,7 +177,7 @@ func _side_column() -> VBoxContainer:
 	imp.add_child(_label("ImportHint", &"CaptionLabel", "ui.setup.import.hint"))
 	_import_text = TextEdit.new()
 	_import_text.name = "ImportText"
-	_import_text.custom_minimum_size.y = ThemeTokens.IMPORT_TEXT_MIN_HEIGHT
+	_import_text.custom_minimum_size.y = IMPORT_TEXT_ROWS_HEIGHT
 	_import_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_import_text.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
 	_import_text.add_to_group(&"user_content")
@@ -276,7 +284,12 @@ func _list_column() -> VBoxContainer:
 ## Rechter Rand des Namensfelds bleibt für das Mikrofon frei, damit der Text nicht darunterläuft.
 func _leave_room_for_mic() -> void:
 	for style_name: String in ["normal", "focus", "read_only"]:
-		var box := _name_input.get_theme_stylebox(style_name).duplicate() as StyleBox
+		var src := _name_input.get_theme_stylebox(style_name) as SkinBarBox
+		var box := SkinBarBox.make(src.texture, src.end_width, src.fit_height, src.tint)
+		box.max_height = src.max_height
+		box.content_margin_left = src.content_margin_left
+		box.content_margin_top = src.content_margin_top
+		box.content_margin_bottom = src.content_margin_bottom
 		box.content_margin_right = float(ThemeTokens.TOUCH_MIN) + 12.0
 		_name_input.add_theme_stylebox_override(style_name, box)
 
@@ -429,8 +442,8 @@ func _set_mode(mode: Mode) -> void:
 	_group_card.visible = mode == Mode.GROUPS
 	_review.visible = mode == Mode.REVIEW
 	# Die Gruppenkarte braucht die volle Breite (vier Knöpfe nebeneinander); die Namensschilder treten solange zurück.
-	_list_col.visible = mode != Mode.GROUPS
-	_side.custom_minimum_size.x = 0.0 if mode == Mode.GROUPS else ThemeTokens.PREP_SIDE_WIDTH
+	_list_col.visible = mode not in [Mode.GROUPS, Mode.IMPORT, Mode.REVIEW]  # beim Einfügen ist die breitere Karte allein, die Schilder würden den Bildschirm sprengen
+	_side.custom_minimum_size.x = _side_width(mode)
 	_side.size_flags_horizontal = Control.SIZE_EXPAND_FILL if mode == Mode.GROUPS else Control.SIZE_FILL
 
 

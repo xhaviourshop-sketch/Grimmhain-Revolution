@@ -7,6 +7,9 @@ extends PanelContainer
 signal add_all_requested(names: Array[String])
 signal cancel_requested
 
+const NAME_FIELD_MIN_WIDTH := 290  ## Feld inklusive Dornenrand: übliche Namen (bis etwa 14 Zeichen) bleiben ganz sichtbar
+const REMOVE_MIN_WIDTH := 200  ## Platz neben dem Feld nutzen: der Text bleibt frei von den Dornen-Enden
+
 var _heading: GrimmLabel
 var _scroll: ScrollContainer
 var _list: VBoxContainer
@@ -86,13 +89,14 @@ func _make_row(entry: String) -> HBoxContainer:
 	input.name = "ReviewNameInput"
 	input.text = entry
 	input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	input.custom_minimum_size.y = ThemeTokens.INPUT_HEIGHT
+	input.custom_minimum_size = Vector2(NAME_FIELD_MIN_WIDTH, ThemeTokens.INPUT_HEIGHT)
 	input.keep_editing_on_text_submit = true
 	input.add_to_group(&"user_content")
 	input.text_changed.connect(func(_t: String) -> void: _refresh())
 	row.add_child(input)
 	var remove := _button("ReviewRemoveButton", GrimmButton.Kind.COMPACT, "ui.setup.review.remove")
 	remove.wrap = false
+	remove.custom_minimum_size.x = REMOVE_MIN_WIDTH
 	remove.pressed.connect(func() -> void:
 		_list.remove_child(row)
 		row.queue_free()

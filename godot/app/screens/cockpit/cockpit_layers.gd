@@ -136,7 +136,8 @@ class Pager extends VBoxContainer:
 	var _status: GrimmLabel = null
 
 	## `weigh(item)` schätzt die Zeilenhöhe; Seiten füllen sich bis `room`. `last`: mit der letzten Seite beginnen.
-	func setup(items: Array, build: Callable, weigh: Callable, room: float, last: bool) -> void:
+	## `keep_next(item)` (optional): Zeilen, die mit der nächsten Zeile zusammenbleiben (Zwischentitel stehen nie allein am Seitenende).
+	func setup(items: Array, build: Callable, weigh: Callable, room: float, last: bool, keep_next: Callable = Callable()) -> void:
 		name = "Pager"
 		_items = items
 		_build = build
@@ -147,9 +148,14 @@ class Pager extends VBoxContainer:
 		for i: int in items.size():
 			var h: float = float(weigh.call(items[i])) + float(ThemeTokens.SPACE_S)
 			if not page.is_empty() and used + h > room:
+				var carry: Array = []
+				if keep_next.is_valid() and page.size() > 1 and bool(keep_next.call(items[page[page.size() - 1]])):
+					carry.append(page.pop_back())
 				_pages.append(page)
-				page = []
+				page = carry
 				used = 0.0
+				for c: int in carry:
+					used += float(weigh.call(items[c])) + float(ThemeTokens.SPACE_S)
 			page.append(i)
 			used += h
 		if not page.is_empty():
@@ -177,6 +183,10 @@ class Pager extends VBoxContainer:
 
 	func page_count() -> int:
 		return _pages.size()
+
+	## Indizes der Einträge auf Seite `i`.
+	func page_indices(i: int) -> Array:
+		return _pages[i]
 
 	func _nav(node_name: String, key: String, step: int) -> GrimmButton:
 		var b := GrimmButton.new()
@@ -439,6 +449,10 @@ static func role_card(card: Dictionary) -> Control:
 	var dim := Panel.new()
 	dim.name = "Dim"
 	dim.theme_type_variation = &"OverlayDim"
+	var night := StyleBoxFlat.new()  # Grund der Vollbildkarte: tiefes Nachtblau statt grauer Abdunklung
+	night.bg_color = ThemeTokens.NIGHT_BACKDROP
+	night.bg_color.a = 0.96
+	dim.add_theme_stylebox_override(&"panel", night)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.add_child(dim)

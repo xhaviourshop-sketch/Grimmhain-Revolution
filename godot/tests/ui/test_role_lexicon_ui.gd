@@ -118,6 +118,7 @@ func test_language_switch_keeps_the_open_entry() -> void:
 	await navigate(shell, &"main_menu")
 	await navigate(shell, &"lexicon")
 	var lexicon := _lexicon(current_screen(shell))
+	lexicon.set_search("Rattenf")  # die Liste blättert: die Suche holt die Rolle auf die erste Seite
 	await press(find_button(lexicon, "LexiconRole_rattenfaenger"))
 	var ability := find_node(lexicon, "LexiconField_ability") as Label
 	var german := ability.text
@@ -179,6 +180,7 @@ func test_context_help_keeps_the_open_selection_and_sends_nothing() -> void:
 	await press(find_button(lexicon, "LexiconBackToListButton"))
 	lexicon.set_search("wolf")
 	await press(find_button(lexicon, "LexiconFilter_solo"))
+	lexicon.set_search("Rattenf")  # die Liste blättert: die Suche holt die Rolle auf die erste Seite
 	await press(find_button(lexicon, "LexiconRole_rattenfaenger"))
 	assert_eq(_fingerprint(), before, "Öffnen, Suchen, Filtern: kein Befehl, kein Zufall, keine Ressource")
 	await tap_button("CloseLayerButton")

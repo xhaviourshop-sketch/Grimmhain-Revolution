@@ -216,7 +216,13 @@ static func _private(s: GameState, span: Array[GameEvent]) -> Array:
 				# Alle übrigen Ereignisse stehen im Protokoll; der Bericht nennt nur, was die Spielleitung am Morgen wissen muss,
 				# und zeigt nie Rohdaten (Ereignisnamen, Schlüssel).
 				out.append({"key": "", "type": String(e.type)})
-	return out
+	# Wer gerettet wurde, braucht keine zweite Zeile "geschützt".
+	var rescued: Array = []
+	for line: Dictionary in out:
+		if str(line["key"]) == "ui.morning.private.saved":
+			rescued.append(int(line["person"]["person_id"]))
+	return out.filter(func(line: Dictionary) -> bool:
+		return str(line["key"]) != "ui.morning.private.protected" or not rescued.has(int(line["person"]["person_id"])))
 
 
 ## Nachtschritt-ID "night:<n>:<i>:<schritt>[:<person>]" → Rolle bzw. Gruppe des Schritts.
