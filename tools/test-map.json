@@ -3,6 +3,10 @@
   "godot/core/": [
     "unit"
   ],
+  "godot/app/audio/": [
+    "app_music",
+    "five_dead_player"
+  ],
   "godot/app/theme/": [
     "ui_theme",
     "ui_layout"

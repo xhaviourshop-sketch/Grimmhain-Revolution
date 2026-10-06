@@ -13,8 +13,6 @@ const ENTER_SIZE := Vector2(400.0, 84.0)  ## epischer Knopf: Breite für Enden p
 @onready var _version: GrimmLabel = %VersionLabel
 
 var _backdrop: StartBackdrop = null
-var _music: ScreenMusic = null
-var _music_tried := false
 
 
 func _setup() -> void:
@@ -45,18 +43,6 @@ func _setup() -> void:
 		add_child(flags)
 
 
-## Musik erst ab dem ersten Tippen (Web/Safari erlaubt Ton erst nach einer Geste); nur wenn „Musik“ an ist, ohne Datei still.
-func _input(event: InputEvent) -> void:
-	if _music != null or _music_tried:
-		return
-	var tapped := (event is InputEventMouseButton and (event as InputEventMouseButton).pressed) 		or (event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed) 		or (event is InputEventKey and (event as InputEventKey).pressed)
-	if not tapped:
-		return
-	_music_tried = true
-	if context == null or context.settings.music_enabled:
-		_music = ScreenMusic.attach(self, ScreenMusic.START)
-
-
 func default_focus() -> Control:
 	return _enter
 
@@ -67,8 +53,6 @@ func _animated() -> bool:
 
 func _on_enter() -> void:
 	_enter.disabled = true
-	if _music != null:
-		_music.fade_out(FOG_SECONDS)
 	await _backdrop.fog_close(FOG_SECONDS)
 	StartBackdrop.fog_open_pending = true
 	navigate_requested.emit(ScreenIds.MAIN_MENU)
