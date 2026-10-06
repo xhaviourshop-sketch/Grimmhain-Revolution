@@ -2181,7 +2181,7 @@ msgid "ui.morning.notice.judge"
 msgstr "“{name} counts as nominated today.”"
 
 msgid "ui.morning.private.death"
-msgstr "{name} ({role}) died: {cause}."
+msgstr "{name} was {role} and died: {cause}."
 
 msgid "ui.morning.private.saved"
 msgstr "{name} was saved: {role}."

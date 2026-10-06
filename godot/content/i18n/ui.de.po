@@ -2181,7 +2181,7 @@ msgid "ui.morning.notice.judge"
 msgstr "„{name} gilt heute als nominiert.“"
 
 msgid "ui.morning.private.death"
-msgstr "{name} ({role}) ist gestorben: {cause}."
+msgstr "{name} war {role} und ist gestorben: {cause}."
 
 msgid "ui.morning.private.saved"
 msgstr "{name} wurde gerettet: {role}."
