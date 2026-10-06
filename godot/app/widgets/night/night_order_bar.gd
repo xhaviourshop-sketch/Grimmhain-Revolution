@@ -9,21 +9,21 @@ extends Control
 
 signal expand_toggled(expanded: bool)
 
-const FULL_HEIGHT := 80.0  ## Platz für zweizeilige Rollennamen unter den Medaillons
+const FULL_HEIGHT := 92.0  ## Platz für zweizeilige Rollennamen unter den Medaillons
 const CHIP_SIZE := Vector2(460.0, 52.0)  ## breit genug für „Wahnsinniger Kutscher“ (Schrift wird zuerst kleiner)
 const BAR_HEIGHT := 66.0  ## Rechteckhöhe der gemalten Leiste (voll); Dornen-Enden ragen darüber hinaus, die dünne Stange läuft hinter den Medaillons
 const CHIP_BAR_HEIGHT := 58.0  ## dasselbe eingeklappt (Chip ist nur 52 hoch, die Dornen sollen nicht abgeschnitten wirken)
 const MEDALLION := 44.0  ## Durchmesser des Rollenrings in der vollen Leiste
 const CHIP_MEDALLION := 44.0
 const BAR_Y_CENTER := 26.0  ## Mitte der vollen Leiste (und der Medaillons) von oben
-const SLOT_PITCH_MIN := 62.0
-const SLOT_PITCH_MAX := 76.0
+const SLOT_PITCH_MIN := 108.0  ## Namen mit 14 px brauchen Platz; passt weniger hinein, blättern die Pfeile
+const SLOT_PITCH_MAX := 118.0
 const CLASP_GAP := 14.0  ## Luft links und rechts der Mittelspange
-const LABEL_SIZE := 11
-const LABEL_SIZE_MIN := 9  ## lange Namen: erst kleiner, dann zweizeilig, erst zuletzt gekürzt
-const LABEL_PLATE_HEIGHT := 18.0  ## Namensschild unter dem Medaillon (Teil `name_plate_short`)
+const LABEL_SIZE := 14
+const LABEL_SIZE_MIN := 13  ## lange Namen: erst kleiner, dann zweizeilig, erst zuletzt gekürzt
+const LABEL_PLATE_HEIGHT := 22.0  ## Namensschild unter dem Medaillon (Teil `name_plate_short`)
 const LABEL_PLATE_PAD := 5.0
-const NUMBER_SIZE := 10
+const NUMBER_SIZE := 13
 const CHIP_FONT_SIZE := 17
 const CHIP_FONT_SIZE_MIN := 12
 const ARROW_SIZE := 26.0
@@ -260,7 +260,7 @@ func _draw_slots() -> void:
 		var number := str(i + 1)
 		var badge_x := sx - MEDALLION * 0.5 + 4.0
 		var nw := font.get_string_size(number, HORIZONTAL_ALIGNMENT_LEFT, -1, NUMBER_SIZE).x
-		draw_circle(Vector2(badge_x, badge_y), 8.0, ThemeTokens.NUMBER_BG)
+		draw_circle(Vector2(badge_x, badge_y), 10.0, ThemeTokens.NUMBER_BG)
 		draw_string(font, Vector2(badge_x - nw * 0.5, badge_y + NUMBER_SIZE * 0.35), number, HORIZONTAL_ALIGNMENT_LEFT, -1, NUMBER_SIZE, ThemeTokens.TEXT_PRIMARY)
 		var color := ThemeTokens.DANGER_TEXT if state == "active" else (ThemeTokens.TEXT_DISABLED if state == "done" else ThemeTokens.TEXT_MUTED)
 		_draw_label_plate(font, _label_of(str(entry["role_id"])), Vector2(sx, BAR_Y_CENTER + MEDALLION * 0.5 + 13.0), _pitch(shown) + 4.0, color)

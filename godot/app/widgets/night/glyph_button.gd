@@ -83,10 +83,10 @@ func _draw() -> void:
 			draw_line(c + Vector2(0.0, r * 0.32), c + Vector2(0.0, r * 0.58), ink, 2.0, true)
 			draw_line(c + Vector2(-r * 0.24, r * 0.58), c + Vector2(r * 0.24, r * 0.58), ink, 2.0, true)
 		"cover":
-			var body := Rect2(c + Vector2(-r * 0.36, -r * 0.02), Vector2(r * 0.72, r * 0.5))
+			var body := Rect2(c + Vector2(-r * 0.56, -r * 0.02), Vector2(r * 1.12, r * 0.78))
 			draw_rect(body, ink)
-			draw_arc(c + Vector2(0.0, -r * 0.02), r * 0.25, PI, TAU, SHACKLE_POINTS, ink, 2.5, true)
-			draw_circle(body.get_center() + Vector2(0.0, -1.0), r * 0.07, ThemeTokens.NUMBER_BG)
+			draw_arc(c + Vector2(0.0, -r * 0.04), r * 0.4, PI, TAU, SHACKLE_POINTS, ink, 3.0, true)
+			draw_circle(body.get_center() + Vector2(0.0, -1.0), r * 0.09, ThemeTokens.NUMBER_BG)
 
 
 func _notification(what: int) -> void:

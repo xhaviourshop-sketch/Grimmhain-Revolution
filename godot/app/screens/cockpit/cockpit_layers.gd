@@ -449,6 +449,9 @@ static func role_card(card: Dictionary) -> Control:
 	var dim := Panel.new()
 	dim.name = "Dim"
 	dim.theme_type_variation = &"OverlayDim"
+	var night := StyleBoxFlat.new()  # Grund der Vollbildkarte: tiefes Nachtblau statt grauer Abdunklung
+	night.bg_color = Color(ThemeTokens.NIGHT_BACKDROP, 0.96)
+	dim.add_theme_stylebox_override(&"panel", night)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.add_child(dim)

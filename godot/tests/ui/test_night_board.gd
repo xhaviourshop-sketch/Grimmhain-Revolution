@@ -245,6 +245,7 @@ func test_hiding_removes_every_secret_and_keeps_names_portraits_and_death() -> v
 	assert_false(bar.is_visible_in_tree(), "Nachtreihenfolge verborgen")
 	assert_false((find_node(screen, "RoleCardArt") as Control).is_visible_in_tree(), "Rollenbild der Karte verborgen")
 	assert_true((find_node(screen, "HiddenLabel") as Control).is_visible_in_tree(), "Hinweis, dass verborgen ist")
+	assert_false((find_node(screen, "InstructionCard") as Control).is_visible_in_tree(), "Karte mit Rolle und Aktion verborgen")
 	# Öffentliches bleibt: Namen, Porträts, tot oder lebendig.
 	var dead := ring.call("token_for", 3) as Control
 	assert_false(bool(dead.get("alive")), "tot bleibt sichtbar tot")
@@ -256,6 +257,7 @@ func test_hiding_removes_every_secret_and_keeps_names_portraits_and_death() -> v
 	await press(hide)
 	assert_false((token.get("marks") as Array).is_empty(), "Abzeichen wieder da")
 	assert_true(bar.is_visible_in_tree(), "Nachtreihenfolge wieder da")
+	assert_true((find_node(screen, "InstructionCard") as Control).is_visible_in_tree(), "Karte wieder da")
 
 
 func test_no_hidden_text_names_a_role_while_hiding() -> void:
