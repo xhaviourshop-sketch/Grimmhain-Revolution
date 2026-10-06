@@ -28,6 +28,8 @@ func _ready() -> void:
 func show_message(text_key: String) -> void:
 	_label.text_key = text_key
 	_panel.visible = true
+	(%Bottom as Control).offset_bottom = -ThemeTokens.TOAST_BOTTOM_OFFSET
+	_dodge_buttons.call_deferred()
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
 	var duration := fade_duration()
@@ -38,6 +40,22 @@ func show_message(text_key: String) -> void:
 	else:
 		_panel.modulate.a = 1.0
 	_timer.start()
+
+
+## Verdeckt die Meldung an ihrer Stelle einen sichtbaren Knopf oder Schalter, rutscht sie an den unteren Rand.
+func _dodge_buttons() -> void:
+	if not _panel.visible or not is_inside_tree():
+		return
+	var rect := _panel.get_global_rect()
+	var stack: Array[Node] = [get_parent()]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node == self:
+			continue
+		if node is BaseButton and (node as BaseButton).is_visible_in_tree() and (node as BaseButton).get_global_rect().intersects(rect):
+			(%Bottom as Control).offset_bottom = -ThemeTokens.SPACE_M
+			return
+		stack.append_array(node.get_children())
 
 
 ## Dauer des Einblendens; 0 bei reduzierter Bewegung.

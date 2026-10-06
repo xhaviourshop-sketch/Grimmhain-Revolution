@@ -25,6 +25,7 @@ var _settings_applied: bool = false
 @onready var _toast: ToastHost = %ToastHost
 
 var _cues: AudioCuePlayer = null
+var _music: AppMusic = null
 
 
 ## Einstellungen laden und anwenden, bevor Kindknoten und erste Ansicht entstehen (_enter_tree des Elternknotens
@@ -60,6 +61,10 @@ func _ready() -> void:
 	touch_scroll.name = "TouchScrollPolicy"
 	add_child(touch_scroll)
 	_router.setup(app_context)
+	_music = AppMusic.new()
+	_music.name = "AppMusic"
+	add_child(_music)
+	_music.setup(app_context, _router)
 	_router.back_requested.connect(go_back)
 	_router.quit_requested.connect(request_quit)
 	_router.status_message_requested.connect(_toast.show_message)
@@ -110,6 +115,10 @@ func get_toast() -> ToastHost:
 
 func get_cue_player() -> AudioCuePlayer:
 	return _cues
+
+
+func get_music() -> AppMusic:
+	return _music
 
 
 func current_screen_id() -> StringName:

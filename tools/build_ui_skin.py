@@ -186,6 +186,8 @@ def start_media() -> None:
 	os.makedirs("godot/assets/audio", exist_ok=True)
 	subprocess.run([ff, "-y", "-loglevel", "error", "-i", SRC + "start/musik-start.mp3", "-ac", "2", "-ar", "44100",
 		"-c:a", "libvorbis", "-q:a", "3", "godot/assets/audio/musik-start.ogg"], check=True)
+	subprocess.run([ff, "-y", "-loglevel", "error", "-i", SRC + "audio/musik-nacht.mp3", "-ac", "2", "-ar", "44100",
+		"-c:a", "libvorbis", "-q:a", "3", "godot/assets/audio/musik-nacht.ogg"], check=True)
 
 
 CARD_EN_EXCEPTIONS = {"doppelspion": "Doppelspion.webp", "kartenschlucker": "The_Collector.webp",

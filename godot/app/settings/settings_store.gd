@@ -1,7 +1,7 @@
 class_name SettingsStore
 extends RefCounted
 ## Dauerhafte Geräteeinstellungen (Paket 5a), getrennt von Spielständen: eine kleine JSON-Datei
-## `user://settings.json` mit {format, version, language, reduced_motion, left_handed, show_night_timer, show_calls, music_enabled}. Keine Rollen, Namen,
+## `user://settings.json` mit {format, version, language, reduced_motion, left_handed, show_night_timer, show_calls, music_enabled, music_volume}. Keine Rollen, Namen,
 ## Spielstände oder Geheimnisse; `version` betrifft nur dieses Format, nicht Spielschema oder Regelversion.
 ##
 ## Laden setzt nur gültige Werte direkt in AppSettings (ohne `changed`, also ohne Speicher-/Signalfolge) und
@@ -56,6 +56,12 @@ func load_into(settings: AppSettings) -> Dictionary:
 				settings.set(key, data[key])
 			else:
 				rejected.append(key)
+	if data.has("music_volume"):
+		var volume: Variant = data["music_volume"]
+		if volume is int or volume is float:
+			settings.music_volume = clampi(int(volume), AppSettings.MUSIC_VOLUME_MIN, AppSettings.MUSIC_VOLUME_MAX)
+		else:
+			rejected.append("music_volume")
 	result["rejected"] = rejected
 	return result
 
@@ -71,7 +77,7 @@ func _save(settings: AppSettings) -> Dictionary:
 	if not DirAccess.dir_exists_absolute(dir) and DirAccess.make_dir_recursive_absolute(dir) != OK:
 		return {"ok": false, "error": "no_directory"}
 	var text := JSON.stringify({"format": FORMAT, "version": VERSION, "language": settings.language,
-		"reduced_motion": settings.reduced_motion, "left_handed": settings.left_handed, "show_night_timer": settings.show_night_timer, "show_calls": settings.show_calls, "music_enabled": settings.music_enabled})
+		"reduced_motion": settings.reduced_motion, "left_handed": settings.left_handed, "show_night_timer": settings.show_night_timer, "show_calls": settings.show_calls, "music_enabled": settings.music_enabled, "music_volume": settings.music_volume})
 	var tmp := path + ".tmp"
 	var file := FileAccess.open(tmp, FileAccess.WRITE) if simulate_failure != &"write" else null
 	if file == null:
