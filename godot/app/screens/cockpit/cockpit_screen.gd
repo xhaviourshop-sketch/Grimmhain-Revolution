@@ -500,6 +500,7 @@ func _place_card() -> void:
 	panel.offset_top = 0.0
 	panel.offset_bottom = 0.0
 	panel.grow_vertical = Control.GROW_DIRECTION_BOTH  # wächst mit dem Inhalt nach oben und unten
+	panel.size.y = 0.0  # auf die Mindesthöhe zurück: gleiche Ränder setzen die Größe nicht neu
 
 
 ## Hintergrundbild füllt das Fenster ohne Verzerrung und ohne leere Ränder (cover mit kleiner Überdeckung); die Platzmitte liegt auf der
@@ -702,6 +703,10 @@ func _refresh_timer() -> void:
 
 ## Der Timer läuft mit der Anzeige: je Frame vergeht die Frame-Zeit. Reine Anzeige, kein Befehl.
 func _process(delta: float) -> void:
+	# Eine verankerte Karte wächst von selbst mit ihrem Inhalt, schrumpft aber nie wieder (kurz zu hoher Inhalt beim Umbau ließ sie als Streifen stehen).
+	var panel := %InstructionCard as Control
+	if _card.is_compact() and panel.size.y > panel.get_combined_minimum_size().y + 1.0:
+		_place_card()
 	if context != null and context.timer.running:
 		context.timer.tick(delta)
 		_timer_button.show_time(context.timer.remaining, context.timer.running, context.timer.is_set(), context.timer.is_expired())

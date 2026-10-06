@@ -281,3 +281,16 @@ func test_dock_undo_is_visible_after_nomination() -> void:
 	assert_true(dock.is_visible_in_tree() or (bar != null and bar.is_visible_in_tree()), "Rückgängig sofort erreichbar (Dock oder Leiste)")
 	await wait_seconds(3.4)
 	assert_true(dock.is_visible_in_tree(), "Rückgängig im Dock nach Ablauf der Leiste")
+
+
+## Die Tageskarte schrumpft nach dem ersten Schritt der Anklage wieder auf ihren Inhalt (sie blieb zuvor als hoher Streifen stehen).
+func test_day_card_stays_as_tall_as_its_content_in_the_second_nomination_step() -> void:
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	await _press(shell, "NominateButton")
+	await press(_seat(shell, 3))
+	await frames(20)
+	var panel := find_node(current_screen(shell), "InstructionCard") as Control
+	assert_true(panel.size.y <= panel.get_combined_minimum_size().y + 1.0, "Karte so hoch wie ihr Inhalt (%s statt %s)" % [panel.size.y, panel.get_combined_minimum_size().y])
