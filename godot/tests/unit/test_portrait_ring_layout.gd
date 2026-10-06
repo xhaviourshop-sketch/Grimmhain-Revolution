@@ -143,6 +143,18 @@ func test_plate_text_wraps_to_two_lines_and_keeps_font_size() -> void:
 			assert_true(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= 90.0, "Zeile passt: %s" % line)
 	var three := GameSeatToken.plate_lines("Clara-Sophie Müller-Lüdenscheidt", font, 90.0)
 	assert_true(three.size() == 3 and not (three[2] as String).ends_with("…"), "drei Zeilen statt Kürzen: %s" % str(three))
+	# Trennung im Wort nie nach weniger als drei Buchstaben, kein Wort dreifach zerlegt, an Leer- und Bindestrichen zuerst
+	for name: String in LONG_NAMES:
+		for room: float in [40.0, 55.0, 70.0, 85.0, 100.0]:
+			var parts := GameSeatToken.plate_lines(name, font, room)
+			for k: int in parts.size() - 1:
+				var line := parts[k] as String
+				if line.ends_with("-") and name.contains(line.trim_suffix("-") + (parts[k + 1] as String)):
+					var tail := line.trim_suffix("-").split(" ")[-1].split("-")[-1]
+					var head := (parts[k + 1] as String).split(" ")[0].split("-")[0]
+					assert_true(tail.length() >= 3 and head.length() >= 3, "%s bei %.0f: Wortteile am Trennstrich mindestens 3 Buchstaben: %s" % [name, room, str(parts)])
+	var split_first := GameSeatToken.plate_lines("Philippa-Charlotte", font, 80.0)
+	assert_eq(split_first, ["Philippa-", "Charlotte"], "zuerst am Bindestrich, nicht im Wort")
 	var cut := GameSeatToken.plate_lines("Wolfgangamadeus Mozartstein", font, 50.0)
 	assert_true(cut.size() == 3 and (cut[2] as String).ends_with("…"), "reicht nichts, wird die letzte Zeile gekürzt: %s" % str(cut))
 	assert_true(font.get_string_size(cut[2], HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= 50.0, "gekürzte Zeile passt")
