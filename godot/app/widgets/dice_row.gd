@@ -53,6 +53,6 @@ class DiceFace extends Control:
 		var pad := size.x * 0.22
 		var step := (size.x - pad * 2.0) / 2.0
 		for cell: Vector2i in DiceRow.PIPS[value]:
-			draw_circle(Vector2(pad + cell.x * step, pad + cell.y * step), DiceRow.PIP_RADIUS, ThemeTokens.MOON_SILVER_BRIGHT)
-		# Zahl zusätzlich als Text (Lesbarkeit ohne Bild, Screenreader über den Tooltip).
-		draw_string(ThemeDB.fallback_font, Vector2(size.x - 22.0, size.y - 8.0), str(value), HORIZONTAL_ALIGNMENT_LEFT, -1, ThemeTokens.FONT_CAPTION, ThemeTokens.MOON_SILVER)
+			var center := Vector2(pad + cell.x * step, pad + cell.y * step)
+			draw_circle(center, DiceRow.PIP_RADIUS + 1.5, ThemeTokens.NIGHT_BACKDROP)  # dunkle Kontur
+			draw_circle(center, DiceRow.PIP_RADIUS, ThemeTokens.MOON_SILVER)

@@ -38,11 +38,15 @@ func _initialize() -> void:
 	step.call("_on_import_toggle")
 	await _fr(5)
 	(shell.find_child("ImportText", true, false) as TextEdit).text = "Anna\nTom\nLena"
+	(shell.find_child("ImportText", true, false) as TextEdit).text_changed.emit()
 	await _shot("3-namen-einfuegen")
 	step.call("_on_import_confirm")
 	await _fr(5)
+	input.text = "Marlene, Jonas und Eva"
+	step.call("_submit_single")
+	await _fr(5)
 	await _shot("4-namen-pruefkarte")
-	step.call("_on_import_cancel")
+	step.call("_on_review_cancel")
 	ctx.setup.replace_persons(["Anna", "Tom", "Lena", "Paul"])
 	await _fr(5)
 	(shell.find_child("PlateGrid", true, false).get_child(1) as NamePlate).pressed.emit()

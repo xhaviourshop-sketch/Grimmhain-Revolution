@@ -85,6 +85,7 @@ static func _labels(theme: Theme) -> void:
 const BUTTON_MARGIN_X := 42  ## Text bleibt zwischen den Dornen-Enden der Knopfleiste
 const BUTTON_MARGIN_Y := 6
 const SEAT_MARGIN_X := 36
+const DIVIDER_PAD := 18  ## halbe Höhe der Silber-Trennlinie in Pixeln
 
 
 ## Knöpfe (Feedback 8): alle Zustände aus gemalten Leisten (`SkinBarBox`), nie Flat. Ruhe = normal, gedrückt = gedrückt-Bild,
@@ -243,11 +244,11 @@ static func _panels(theme: Theme) -> void:
 		var base := &"Panel" if name in [&"AppBackground", &"NightBackdrop", &"DayBackdrop"] else &"PanelContainer"
 		theme.set_type_variation(name, base)
 		theme.set_stylebox("panel", name, variations[name])
-	var divider := SkinArt.divider_box(Color(ThemeTokens.MOON_SILVER).darkened(0.15))
-	divider.content_margin_top = SkinArt.DIVIDER_FIT_HEIGHT * 0.5  # Separator zeichnet die Box nur in Höhe ihrer Mindestgröße
-	divider.content_margin_bottom = SkinArt.DIVIDER_FIT_HEIGHT * 0.5
+	var divider := SkinArt.divider_box(ThemeTokens.MOON_SILVER_BRIGHT)  # hell, damit die Silberlinie auch auf Nachtblau klar liest
+	divider.content_margin_top = DIVIDER_PAD  # Separator zeichnet die Box nur in Höhe ihrer Mindestgröße (Linie ca. 1,6-fach)
+	divider.content_margin_bottom = DIVIDER_PAD
 	theme.set_stylebox("separator", "HSeparator", divider)
-	theme.set_constant("separation", "HSeparator", int(SkinArt.DIVIDER_FIT_HEIGHT))
+	theme.set_constant("separation", "HSeparator", int(DIVIDER_PAD * 2.0))
 	var overlay := StyleBoxFlat.new()
 	overlay.bg_color = ThemeTokens.BG_OVERLAY
 	theme.set_type_variation(&"OverlayDim", &"Panel")
@@ -292,13 +293,21 @@ static func _input_boxes(theme: Theme, type: StringName) -> void:
 		"read_only": Color(ThemeTokens.TEXT_DISABLED),
 	}
 	for state: String in states:
+		if type.ends_with("TextEdit"):
+			# Mehrzeilig: eine gemalte Fläche (die Leiste würde bei mehreren Zeilen riesige Enden bekommen und die Spalte aufweiten).
+			var area := SkinArt.window_box(states[state], true)
+			area.content_margin_left = 28
+			area.content_margin_right = 28
+			area.content_margin_top = 20
+			area.content_margin_bottom = 20
+			theme.set_stylebox(state, type, area)
+			continue
 		var box := SkinArt.input_box(states[state])
-		box.content_margin_left = 40 if type.ends_with("LineEdit") else 64
-		box.content_margin_right = box.content_margin_left
-		box.content_margin_top = 12 if type.ends_with("LineEdit") else 22  # mehrzeilig: Text weg von den Dornen
-		box.content_margin_bottom = box.content_margin_top
-		if type.ends_with("LineEdit"):
-			box.max_height = 72.0
+		box.content_margin_left = 46  # Text und Platzhalter weg von den Dornen
+		box.content_margin_right = 46
+		box.content_margin_top = 12
+		box.content_margin_bottom = 12
+		box.max_height = 72.0
 		theme.set_stylebox(state, type, box)
 
 
