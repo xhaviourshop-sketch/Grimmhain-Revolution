@@ -89,6 +89,16 @@ func _initialize() -> void:
 	le.placeholder_text = "Leeres Feld"
 	col.add_child(le)
 	await _shot("7-tooltip-trennlinie-wuerfel")
+	for child: Node in col.get_children():
+		col.remove_child(child)
+		child.queue_free()
+	for spec: Array in [["Karte zeigen", &"PrimaryButton"], ["Zurück", &"SecondaryButton"], ["Namen übernehmen", &"SecondaryButton"], ["Abbrechen", &"SecondaryButton"], ["Entfernen", &"CompactButton"]]:
+		var b := Button.new()
+		b.theme_type_variation = spec[1]
+		b.text = spec[0]
+		b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		col.add_child(b)
+	await _shot("8-knoepfe-alle-arten")
 	quit(0)
 
 

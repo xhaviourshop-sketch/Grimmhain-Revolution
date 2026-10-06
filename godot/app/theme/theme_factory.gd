@@ -82,7 +82,7 @@ static func _labels(theme: Theme) -> void:
 		theme.set_font("font", &"GothicTitleLabel", load(ThemeTokens.GOTHIC_FONT) as Font)
 
 
-const BUTTON_MARGIN_X := 42  ## Text bleibt zwischen den Dornen-Enden der Knopfleiste
+const BUTTON_END_SHARE := 0.85  ## Anteil des Dornen-Endes, den der Text frei lässt (die äußersten Spitzen sind dünn)
 const BUTTON_MARGIN_Y := 6
 const SEAT_MARGIN_X := 36
 const DIVIDER_PAD := 18  ## halbe Höhe der Silber-Trennlinie in Pixeln
@@ -98,7 +98,12 @@ static func _buttons(theme: Theme) -> void:
 		if name != &"Button":
 			theme.set_type_variation(name, &"Button")
 		var font := ThemeTokens.DANGER_TEXT if name == &"DangerButton" else text
-		var margin := ThemeTokens.SPACE_XL + ThemeTokens.SPACE_S if name == &"CompactButton" else BUTTON_MARGIN_X
+		var min_height := ThemeTokens.BUTTON_SECONDARY_HEIGHT
+		if name == &"CompactButton":
+			min_height = ThemeTokens.TOUCH_MIN
+		elif name == &"PrimaryButton":
+			min_height = ThemeTokens.BUTTON_PRIMARY_HEIGHT
+		var margin := _end_margin(min_height)
 		_skin_button_type(theme, name, "normal", "gedrueckt", "gedrueckt", font, bright, Color.WHITE, margin)
 		if name == &"CompactButton":
 			theme.set_font_size("font_size", name, ThemeTokens.FONT_COMPACT)
@@ -123,6 +128,12 @@ static func _buttons(theme: Theme) -> void:
 		_skin_button_type(theme, name, d[0], d[1], d[1], d[3], bright, d[2], SEAT_MARGIN_X)
 		theme.set_font_size("font_size", name, ThemeTokens.FONT_COMPACT)
 	theme.set_type_variation(&"SecondaryButton", &"Button")
+
+
+## Textrand links und rechts: so breit wie das gemalte Dornen-Ende bei dieser Knopfhöhe (das Ende wächst mit der Höhe, wie in SkinBarBox).
+static func _end_margin(height: float) -> int:
+	var drawn := minf(height, SkinArt.BUTTON_MAX_HEIGHT)
+	return int(ceil(SkinArt.BUTTON_END * drawn / SkinArt.BUTTON_FIT_HEIGHT * BUTTON_END_SHARE))
 
 
 ## Eine Knopf-Variation: Ruhebild `rest`, Bild beim Drücken `down`, Bild gedrückt-und-darüber `hover_down`; `rest_tint` färbt das Ruhebild.
