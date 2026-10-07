@@ -8,6 +8,10 @@ extends Node
 const DAY_FADE_SECONDS := 2.0
 
 var _day_art: TextureRect = null
+var _tone: ShaderMaterial = null  ## Tönung der gemalten Lichter im Nachtbild (Wolfsschritt, Akt IV)
+var _wolf_level: float = 0.0
+var _cold_level: float = 0.0
+var _tone_tween: Tween = null
 var _map := VillageMap.new()
 var _parts: Array[VillagePart] = []
 var _night: bool = false
@@ -17,8 +21,12 @@ var _phase_known: bool = false
 var _day_tween: Tween = null
 
 
-## Verbindet Tagbild und Dorf-Ebene (`layer`, volle Fläche hinter allen Bedienflächen) und legt die drei Ebenen an.
-func configure(day_art: TextureRect, layer: Control) -> void:
+## Verbindet Nacht- und Tagbild und Dorf-Ebene (`layer`, volle Fläche hinter allen Bedienflächen) und legt die drei Ebenen an.
+func configure(night_art: TextureRect, day_art: TextureRect, layer: Control) -> void:
+	_tone = ShaderMaterial.new()
+	_tone.shader = load("res://app/theme/village_light_tone.gdshader") as Shader
+	_tone.set_shader_parameter("cold_color", ThemeTokens.FIRE_GHOST_FLAME[2])
+	night_art.material = _tone
 	_day_art = day_art
 	_day_art.modulate.a = 0.0
 	for part: VillagePart in [VillageLights.new(), VillageMotion.new(), VillageLife.new()]:
@@ -106,6 +114,38 @@ func _fade_day(animated: bool) -> void:
 func _refresh(animated: bool) -> void:
 	for part: VillagePart in _parts:
 		part._refresh(animated)
+	_retone(animated)
+
+
+## Gemalte Lichter: im Wolfsschritt gedimmt und rötlich, in Akt IV kalt. Mit „Effekte aus“ unverändert.
+func _retone(animated: bool) -> void:
+	if _tone == null or _parts.is_empty():
+		return
+	var on := _parts[0].enabled and _night
+	var wolf_target := 1.0 if (on and _parts[0].wolf) else 0.0
+	var cold_target := 1.0 if (on and _parts[0].act_level >= 4) else 0.0
+	if is_equal_approx(wolf_target, _wolf_level) and is_equal_approx(cold_target, _cold_level):
+		return
+	if _tone_tween != null and _tone_tween.is_valid():
+		_tone_tween.kill()
+	if animated and is_inside_tree():
+		_tone_tween = create_tween().set_parallel()
+		_tone_tween.tween_method(_set_wolf_level, _wolf_level, wolf_target, ThemeTokens.VILLAGE_LIGHT_FADE_SECONDS)
+		_tone_tween.tween_method(_set_cold_level, _cold_level, cold_target, DAY_FADE_SECONDS)
+	else:
+		_set_wolf_level(wolf_target)
+		_set_cold_level(cold_target)
+
+
+func _set_wolf_level(value: float) -> void:
+	_wolf_level = value
+	_tone.set_shader_parameter("gain", lerpf(1.0, ThemeTokens.VILLAGE_WOLF_GAIN, value))
+	_tone.set_shader_parameter("tint", Color.WHITE.lerp(ThemeTokens.VILLAGE_WOLF_TINT, value))
+
+
+func _set_cold_level(value: float) -> void:
+	_cold_level = value
+	_tone.set_shader_parameter("cold", value)
 
 
 func _on_resized(layer: Control) -> void:

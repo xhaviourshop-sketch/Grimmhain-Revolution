@@ -380,7 +380,7 @@ func _update_backdrop(phase: String) -> void:
 ## Abdunklung und Randdämpfung des Dorfplatzes als eigene Ebene (Abnahme 1): Das Bild bleibt unverändert, die Ebenen darüber dämpfen
 ## warme Reflexe auf dem Pflaster und die Ränder. Shader in `res://app/theme/`.
 func _style_backdrop() -> void:
-	_ambience.configure(_backdrop_day, _village_layer)
+	_ambience.configure(_backdrop_art, _backdrop_day, _village_layer)
 	_ambience.set_reduced_motion(context.settings.reduced_motion)
 	_ambience.set_enabled(context.settings.effects_enabled, false)
 	var shade := ShaderMaterial.new()

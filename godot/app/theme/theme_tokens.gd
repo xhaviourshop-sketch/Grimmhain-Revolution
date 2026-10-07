@@ -201,6 +201,9 @@ const TOAST_FADE_SECONDS := 0.15
 const TOAST_VISIBLE_SECONDS := 2.5
 const CARD_FADE_SECONDS := 0.15       ## Einblenden der Ansagekarte bei neuer Handlung
 const BACKDROP_FADE_SECONDS := 0.3    ## Wechsel des Hintergrunds zwischen Nacht und Tag
+const VILLAGE_WOLF_GAIN := 0.6        ## Lichter im Dorf während eines Wolfsschritts (Anteil der vollen Helligkeit)
+const VILLAGE_WOLF_TINT := Color(1.0, 0.72, 0.68)  ## leicht rötliche Tönung der Dorflichter im Wolfsschritt
+const VILLAGE_LIGHT_FADE_SECONDS := 1.5  ## Übergang der Dorflichter beim Wolfsschritt
 
 
 ## Lesefarbe eines Teams für Rollennamen in Listen.
