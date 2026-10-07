@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/waechter_am_tor.webp-8399f1cf8e9afd02fe71cb33
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.8
+compress/lossy_quality=0.4
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

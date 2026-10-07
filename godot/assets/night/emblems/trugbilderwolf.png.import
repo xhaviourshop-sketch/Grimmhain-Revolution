@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/trugbilderwolf.png-642eeb3064566d9a3118e7a46e
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.75
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

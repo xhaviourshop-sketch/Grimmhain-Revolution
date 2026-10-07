@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/der_weise.webp-9124f67563d88f8405f3aac135ec0f
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.8
+compress/lossy_quality=0.4
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

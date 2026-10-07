@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/rudelvater.webp-59d12effdce0a0111f465e3b3c271
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.8
+compress/lossy_quality=0.4
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

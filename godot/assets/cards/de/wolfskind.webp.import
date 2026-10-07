@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/wolfskind.webp-0b38d5f6623ac8ceb6e12a3d3aabee
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.8
+compress/lossy_quality=0.4
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

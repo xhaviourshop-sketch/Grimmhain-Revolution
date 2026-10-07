@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/rudelvater.png-4c4fb5972f94203896d9e03d83a740
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.75
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

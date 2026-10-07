@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/die_gebundenen.webp-2a5e2015b9c97bbfd8e4957b6
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.8
+compress/lossy_quality=0.4
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/grabraeuber.webp-e68adadb7e0b5077db18398c2bec
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.8
+compress/lossy_quality=0.55
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

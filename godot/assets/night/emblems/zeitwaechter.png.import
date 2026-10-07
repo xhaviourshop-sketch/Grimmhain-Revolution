@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/zeitwaechter.png-e21bd068e7da05bb7bae52ac0ec5
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.75
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

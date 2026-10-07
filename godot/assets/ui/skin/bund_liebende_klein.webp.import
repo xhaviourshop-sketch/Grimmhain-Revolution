@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/bund_liebende_klein.webp-4a4c836f5a690d34f985
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.78
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
