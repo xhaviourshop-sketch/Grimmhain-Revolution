@@ -21,6 +21,7 @@ const MUSIC_VOLUME_DEFAULT := 3
 
 var music_volume: int = MUSIC_VOLUME_DEFAULT  ## Lautstärke der Musik in 5 Stufen (1 bis 5); getrennt von „Musik an/aus“
 var music_enabled: bool = true  ## „Musik“: Hintergrundmusik der Bildschirme; Standard an, auch für alte Stände ohne das Feld
+var effects_enabled: bool = true  ## „Effekte“: Nachtstimmung im Dorf (Nebel, Wolken, Fenster, Wolfsschimmer); Standard an, aus für schwache Geräte
 
 
 ## Setzt die Sprache. Nur unterstützte Sprachen; liefert false bei Ablehnung.
@@ -66,6 +67,13 @@ func set_music_enabled(value: bool) -> void:
 		return
 	music_enabled = value
 	changed.emit(&"music_enabled")
+
+
+func set_effects_enabled(value: bool) -> void:
+	if effects_enabled == value:
+		return
+	effects_enabled = value
+	changed.emit(&"effects_enabled")
 
 
 func set_music_volume(value: int) -> void:
