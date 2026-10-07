@@ -87,6 +87,12 @@ func set_game(act_level: int, dead_count: int) -> void:
 	_refresh(not _reduced)
 
 
+## Zahl der Spieler; wirkt beim nächsten Sitzplatzbericht (`set_seat_rects`).
+func set_players(count: int) -> void:
+	for part: VillagePart in _parts:
+		part.player_count = count
+
+
 ## Sitzplätze (Porträt und Name) in globalen Koordinaten; nichts aus dem Dorf darf hineinragen.
 func set_seat_rects(global_rects: Array[Rect2], layer: Control) -> void:
 	var inv := layer.get_global_transform().affine_inverse()

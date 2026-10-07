@@ -12,10 +12,11 @@ const END_H := 210.0              ## Bildpixel: Höhe am Ende des Aufstiegs
 const RISE := 170.0               ## Bildpixel Aufstieg
 const DRIFT := 50.0               ## Bildpixel Wehen nach rechts
 const SMOKE_ALPHA := 0.95
+const NIGHT_SIZE := 1.25          ## nachts breitere, dichtere Fahne
 const CLOUD_TRAVEL := 25.0        ## Sekunden für einen Zug über das Bild
 const FADE := 2.0
 
-var _smoke_tint_night: Color = ThemeTokens.TINT_NONE.darkened(0.12)   ## nachts etwas dunkler, damit der Rauch nicht leuchtet
+var _smoke_tint_night: Color = Color.from_hsv(0.6, 0.12, 1.5)   ## nachts heller (kühles Mondlicht), aber nicht leuchtend
 var _smoke_tint_day: Color = ThemeTokens.TINT_NONE
 var _chimneys: Array[Dictionary] = []   ## {"p": Vector2 lokal, "puffs": Array[TextureRect]}
 var _cloud: TextureRect = null
@@ -167,7 +168,7 @@ func _update_smoke() -> void:
 			var ph := fmod(_time / PERIOD + float(n) / float(PUFFS) + _chimney_phase(c), 1.0)
 			if reduced:
 				ph = 0.2 + 0.25 * float(n)   # Standbild: drei Stufen übereinander
-			var h := lerpf(START_H, END_H, ph) * sc * k
+			var h := lerpf(START_H, END_H, ph) * sc * k * lerpf(1.0, NIGHT_SIZE, _tone)
 			var w := h * float(SMOKE.get_width()) / float(SMOKE.get_height())
 			var base: Vector2 = c["p"]
 			var pos := base + Vector2(DRIFT * ph * sc * k, -RISE * ph * sc * k)

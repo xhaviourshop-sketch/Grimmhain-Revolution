@@ -27,6 +27,9 @@ const CROWD_SPOTS: Array[Vector4] = [
 	Vector4(400, 810, 3, 1),
 ]
 const CROWD_HEIGHT := 105.0          ## Bildpixel; Personen etwa so groß wie eine Haustür
+const CROWD_PUSH_MAX := 0.3          ## bei 24 Spielern rücken die Standplätze um diesen Anteil weiter vom Bildmittelpunkt weg (vor die Hauswände)
+const CROWD_SHRINK_MAX := 0.3        ## ... und werden um diesen Anteil kleiner
+const GALLOWS_SHRINK_MAX := 0.3
 ## Farbtöne ohne Farbliteral (Theme-Datei gehört nicht zu diesem Teil): leicht abgedunkelt und bläulich entsättigt.
 var CROWD_TINT := Color.from_hsv(0.58, 0.1, 0.82)
 
@@ -101,24 +104,44 @@ func spawn_flock_now() -> void:
 	_update_process()
 
 
+## Dichte 0 bis 1 nach Spielerzahl (6 oder weniger = 0, 24 = 1): je dichter der Ring, desto weiter außen und kleiner die Gruppen.
+func _density() -> float:
+	return clampf(float(player_count - 6) / 18.0, 0.0, 1.0)
+
+
 func _relayout() -> void:
 	if not _built or map == null:
 		return
 	var s := map.scale()
+	var d := _density()
+	var center := VillageMap.IMAGE_SIZE * 0.5
 	for f: Folk in _folk:
 		var region := CROWD_REGIONS[int(f.sprite.get_meta("region"))]
-		var k := CROWD_HEIGHT * s / region.size.y
-		f.base_scale = k
-		var foot := map.to_local(f.spot)
-		var w := region.size.x * k
-		var h := region.size.y * k
-		var rect := Rect2(foot.x - w * 0.5, foot.y - h, w, h + 6.0 * s)
-		var inside := map.visible_px(f.spot, 4.0) and Rect2(Vector2.ZERO, map.area).encloses(rect)
-		f.fits = inside and not map.hits_seat(rect)
-		f.sprite.position = foot
-		f.sprite.scale = Vector2(k, k)
-		f.shadow.position = foot + Vector2(0, 2.0 * s)
-		f.shadow.scale = Vector2(w * 0.5 / 32.0, 6.0 * s / 32.0)
+		f.fits = false
+		## Erst weit nach außen und klein (je nach Dichte), dann schrittweise zurück; danach als Notlösung ungeachtet der Dichte weiter
+		## nach außen. Die erste Stellung ohne Sitzplatz im Weg gilt.
+		var pushes: Array[float] = []
+		for push: float in [1.0, 0.85, 0.7, 0.55, 0.4, 0.25, 0.1, 0.0]:
+			pushes.append(CROWD_PUSH_MAX * d * push)
+		pushes.append_array([0.08, 0.15, 0.22, CROWD_PUSH_MAX])
+		for out: float in pushes:
+			for shrink: float in [1.0, 0.85, 0.7, 0.55]:
+				var spot: Vector2 = center + (f.spot - center) * (1.0 + out)
+				var k := CROWD_HEIGHT * (1.0 - CROWD_SHRINK_MAX * d) * shrink * s / region.size.y
+				var foot := map.to_local(spot)
+				var w := region.size.x * k
+				var h := region.size.y * k
+				var rect := Rect2(foot.x - w * 0.5, foot.y - h, w, h + 6.0 * s)
+				if map.visible_px(spot, 4.0) and Rect2(Vector2.ZERO, map.area).encloses(rect) and not map.hits_seat(rect):
+					f.fits = true
+					f.base_scale = k
+					f.sprite.position = foot
+					f.sprite.scale = Vector2(k, k)
+					f.shadow.position = foot + Vector2(0, 2.0 * s)
+					f.shadow.scale = Vector2(w * 0.5 / 32.0, 6.0 * s / 32.0)
+					break
+			if f.fits:
+				break
 		f.sprite.visible = f.fits
 		f.shadow.visible = f.fits
 	_place_gallows(s)
@@ -128,15 +151,19 @@ func _place_gallows(s: float) -> void:
 	var size := GALLOWS.get_size()
 	var shown := false
 	var a := map.area
-	## Größte Höhe zuerst (lokale Pixel, mindestens 100), am unteren Platzrand quer, Mitte zuerst. Geprüft wird die Körperbreite
-	## (die transparenten Ränder des Bildes zählen nicht).
-	for height: float in [130.0, 115.0, 100.0]:
-		for dx: float in [0.0, 12.0, -12.0, 24.0, -24.0, 36.0, -36.0, 48.0, -48.0, 60.0, -60.0, 80.0, -80.0, 100.0, -100.0]:
+	var d := _density()
+	## Größte Höhe zuerst (lokale Pixel), am unteren Platzrand quer, Mitte zuerst. Bei vielen Spielern beginnt die Suche kleiner und
+	## darf bis zur Randhöhe 55 schrumpfen. Geprüft wird die Körperbreite (die transparenten Ränder des Bildes zählen nicht).
+	var heights: Array[float] = [130.0, 115.0, 100.0, 85.0, 70.0, 55.0]
+	for height: float in heights:
+		var h := height * (1.0 - GALLOWS_SHRINK_MAX * d)
+		var k := h / size.y
+		for step: int in 80:
+			var dx := 12.0 * ceilf(step * 0.5) * (1.0 if step % 2 == 0 else -1.0)
 			for dy: float in [-2.0, -20.0, -40.0]:
 				var foot := Vector2(a.x * 0.5 + dx, a.y + dy)
-				var k := height / size.y
 				var body := Rect2(foot.x - size.x * k * 0.3, foot.y - size.y * k, size.x * k * 0.6, size.y * k)
-				if not map.hits_seat(body):
+				if Rect2(Vector2.ZERO, a).encloses(body) and not map.hits_seat(body):
 					_gallows.position = foot
 					_gallows.scale = Vector2(k, k)
 					_gallows_shadow.position = foot + Vector2(0, 2.0 * s)

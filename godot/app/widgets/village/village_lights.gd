@@ -5,15 +5,15 @@ extends VillagePart
 ## Ein einziges `_process` für alle Lichter, nur wenn sichtbar und nicht reduziert. Rein kosmetisch.
 
 static var WARM := Color.from_rgba8(255, 158, 66)          ## Kerzen- und Laternenlicht
-static var WOLF_WARM := Color.from_rgba8(255, 92, 56)     ## Wolfsschritt: leicht rötlich
+static var WOLF_WARM := Color.from_rgba8(255, 56, 36)     ## Wolfsschritt: kräftig rötlich
 static var WALL_DARK := Color.from_rgba8(18, 14, 14)  ## Wand um ein erloschenes Fenster (deckt das gemalte Licht ab)
 static var COLD_DARK := Color.from_rgba8(10, 18, 38)    ## Akt IV: dunkles Blau über dem gemalten warmen Licht
 static var CORE_WARM := Color.from_rgba8(255, 217, 140)  ## heller Kern der Flamme
-static var CORE_WOLF := Color.from_rgba8(255, 153, 115)
+static var CORE_WOLF := Color.from_rgba8(255, 104, 80)
 const NIGHT_SECONDS := 2.0
 const WOLF_SECONDS := 1.5
 const WINDOW_OUT_SECONDS := 3.0
-const WOLF_LEVEL := 0.6                        ## Helligkeit im Wolfsschritt
+const WOLF_LEVEL := 0.35                       ## Helligkeit im Wolfsschritt
 const ACT_OFF_SHARE: Array[float] = [0.0, 0.0, 0.2, 0.4, 0.55]  ## Anteil dauerhaft dunkler Fenster je Akt (Index = Akt)
 const SHUFFLE_SEED := 7341                     ## feste Reihenfolge, in der Fenster ausgehen
 const LANTERN_GLOW := Vector2(230.0, 120.0)    ## Bildpixel, flach auf dem Pflaster

@@ -10,6 +10,7 @@ var enabled: bool = true          ## Einstellung „Effekte“
 var reduced: bool = false         ## Einstellung „Bewegung reduzieren“: nichts bewegt sich, Ebenen stehen still
 var wolf: bool = false            ## Wolfsschritt läuft
 var act_level: int = 1            ## Akt I bis IV der Partie
+var player_count: int = 0          ## Zahl der Sitzplätze; bei vielen rücken Menge und Galgen nach außen
 var dead_count: int = 0           ## Tote der Partie (für verlöschende Fenster)
 var rng := RandomNumberGenerator.new()
 

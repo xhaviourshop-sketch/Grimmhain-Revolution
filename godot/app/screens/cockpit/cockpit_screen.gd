@@ -842,6 +842,7 @@ func _render() -> void:
 	_ring.set_hunt(hunt, not context.settings.reduced_motion)
 	_ambience.set_wolf(not hunt.is_empty())
 	_ambience.set_game(context.session.act_level(), _dead_count())
+	_ambience.set_players((_view.get("seats", []) as Array).size())
 	_send_seat_rects.call_deferred()
 	# Ob die Auswahl bestätigt werden kann, entscheidet der Regelkern (Prüfung ohne Senden).
 	var selection_error := ""
