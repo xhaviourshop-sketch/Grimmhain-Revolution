@@ -96,4 +96,3 @@ func _save(label: String) -> void:
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png(OUT.path_join("%s.png" % label))
 	print("bild ", label)
-
