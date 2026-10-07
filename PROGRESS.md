@@ -4,6 +4,10 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## 2026-10-07: Ladezeit Web-App (direkt auf main, MITTEL)
+Stand: `index.pck` von 45 333 176 auf 20 098 200 Byte (Details und Top 20 in `docs/development/LADEZEIT.md`): Bilder außer Karten verlustbehaftet importiert, Karten im Paket Qualität 0,4 (Quelle unverändert; an 3 Karten PSNR 32 dB, SSIM 0,93 bis 0,94, nur minimal weichere Schrift), Musik Vorbis Stufe 0,5 ohne Titelbild, ungenutzte Hintergründe und `assets/app/*` ausgeschlossen, Engine-Startbild abgeschaltet. Karten werden schon jetzt erst bei Anzeige geladen. Vercel liefert wasm, pck und js bereits mit Brotli. `index.wasm` (39,5 MB, 9,6 MB komprimiert) nicht reduzierbar.
+Verifikation: Export grün, `test_cockpit_screen` 13 Tests grün, `check-asset-register` grün (SHA der zwei Musikdateien aktualisiert). Deploy live „07.10. · da31507“, `index.pck` 20098200 Byte wie lokal; Download pck warm etwa 10 s, wasm 2 s auf dieser Leitung. Nicht geprüft: echte Startzeit im Browser, Musik abgehört, Safari/iPad. Ziel „unter 20 MB“ knapp verfehlt (20,1 MB dezimal, 19,2 MiB); Musik Stufe 0 würde 19,6 MB geben, klingt aber dünner.
+
 ## 2026-10-07: Lebendiges Dorf Runde 2 (direkt auf main, MITTEL)
 Stand: Wolfsschritt Lichter auf 35 % (vorher 60 %) und kräftig rötlich (Shader-Gain 0,35, Ton 1,0/0,45/0,38; Sprites `WOLF_LEVEL` 0,35). Menge und Galgen nach Spielerzahl (`NightAmbience.set_players`, `VillagePart.player_count`): Standplätze bis 30 % weiter nach außen und bis 30 % kleiner, Suche mit Notlösung weiter außen. Gemessen für 6 bis 24 Spieler: 4 bis 9 Gruppen (kleinstes 4 bei 21, 22 und 24), Galgen immer sichtbar (Höhe 130 bis 54 px). Galgen bleibt den ganzen Tag. Rauch nachts heller (Ton 1,5) und 25 % breiter. 7 `.uid`-Dateien alter Capture-Skripte entfernt.
 Verifikation: `node tools/test-changed` 146 Tests, 0 rot; Screenshots `Downloads/Grimmhain/Screenshots/Dorf-lebendig/runde2/`. Keine Vollsuite (Regelkern unverändert). Nicht geprüft: Bewegung live, Safari/iPad.
