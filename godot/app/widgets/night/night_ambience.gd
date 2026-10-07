@@ -140,7 +140,7 @@ func _retone(animated: bool) -> void:
 func _set_wolf_level(value: float) -> void:
 	_wolf_level = value
 	_tone.set_shader_parameter("gain", lerpf(1.0, ThemeTokens.VILLAGE_WOLF_GAIN, value))
-	_tone.set_shader_parameter("tint", Color.WHITE.lerp(ThemeTokens.VILLAGE_WOLF_TINT, value))
+	_tone.set_shader_parameter("tint", ThemeTokens.TINT_NONE.lerp(ThemeTokens.VILLAGE_WOLF_TINT, value))
 
 
 func _set_cold_level(value: float) -> void:
