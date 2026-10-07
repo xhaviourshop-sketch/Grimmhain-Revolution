@@ -232,7 +232,7 @@ func test_settings_file_holds_no_game_data_and_game_untouched() -> void:
 	assert_true(data is Dictionary, "Einstellungsdatei ist JSON")
 	var keys: Array = (data as Dictionary).keys()
 	keys.sort()
-	assert_eq(keys, ["format", "language", "left_handed", "music_enabled", "music_volume", "reduced_motion", "show_calls", "show_night_timer", "version"], "nur Geräteeinstellungen")
+	assert_eq(keys, ["effects_enabled", "format", "language", "left_handed", "music_enabled", "music_volume", "reduced_motion", "show_calls", "show_night_timer", "version"], "nur Geräteeinstellungen")
 	assert_eq(int(ctx.settings_store.last_status.get("ok", false)), 1, "letztes Speichern erfolgreich")
 	TranslationServer.set_locale("de")
 
@@ -286,3 +286,23 @@ func test_production_default_path_is_separate_from_saves() -> void:
 	var default_path := str(script.get("DEFAULT_PATH"))
 	assert_eq(default_path, "user://settings.json", "fester Speicherort")
 	assert_false(default_path.begins_with(SaveService.DEFAULT_DIR), "nicht im Spielstandverzeichnis")
+
+
+func test_effects_off_survives_restart_old_file_defaults_on_wrong_type_rejected() -> void:
+	var path := _store_path()
+	var store := _store(path) as SettingsStore
+	var s := AppSettings.new()
+	assert_true(s.effects_enabled, "Standard: Effekte an")
+	s.set_effects_enabled(false)
+	assert_true(store.save(s).get("ok", false), "gespeichert")
+	var fresh := AppSettings.new()
+	store.load_into(fresh)
+	assert_false(fresh.effects_enabled, "Effekte aus bleiben nach Neustart aus")
+	_write(path, '{"format": "grimmhain-settings", "version": 1, "language": "de"}')
+	var old := AppSettings.new()
+	store.load_into(old)
+	assert_true(old.effects_enabled, "alter Stand ohne Feld: Standard an")
+	_write(path, '{"format": "grimmhain-settings", "version": 1, "effects_enabled": "no"}')
+	var bad := AppSettings.new()
+	assert_eq(store.load_into(bad)["rejected"], ["effects_enabled"], "falscher Typ abgelehnt")
+	assert_true(bad.effects_enabled, "falscher Typ: Standard an")
