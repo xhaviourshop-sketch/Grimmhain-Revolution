@@ -209,8 +209,6 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue  # nur einmal stehlen (E-32)
 		if role == RoleCatalog.HADES and SoloRules.hades_light_count(s, id) < RoleCatalog.HADES_KILL_COST:
 			continue  # ohne 2 Lichter nichts zu kaufen (E-30, E-31)
-		if role == RoleCatalog.ZEITWAECHTER:
-			priority = 0  # E-36: Entscheidung als allererster Nachtschritt
 		if role == RoleCatalog.VERDAMMNISWAECHTER:
 			priority = CardHooks.guard_priority(s, priority)  # braucht das Rudelopfer, auch wenn das Rudel als letztes ruft
 		entries.append([priority, id, personal_step_key(role, id)])

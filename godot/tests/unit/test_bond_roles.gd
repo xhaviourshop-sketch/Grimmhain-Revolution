@@ -130,7 +130,7 @@ func _dropped_reason(events: Array[GameEvent], key: String) -> String:
 # --- Katalog --------------------------------------------------------------------------------------
 
 func test_catalog_entries() -> void:
-	var expect := {LO: [Faction.VILLAGE, false, 4], SW: [Faction.WOLVES, true, 28], SH: [Faction.WOLVES, true, 26], RK: [Faction.VILLAGE, false, 74]}
+	var expect := {LO: [Faction.VILLAGE, false, 1], SW: [Faction.WOLVES, true, 28], SH: [Faction.WOLVES, true, 26], RK: [Faction.VILLAGE, false, 74]}
 	for role: String in expect:
 		assert_true(RoleCatalog.has_role(StringName(role)), "%s im Katalog" % role)
 		if RoleCatalog.has_role(StringName(role)):
