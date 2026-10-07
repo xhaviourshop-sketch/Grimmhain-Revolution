@@ -21,14 +21,12 @@ const CROWD_REGIONS: Array[Rect2] = [
 ## Standplätze der Gruppen (Fußpunkt in Dorfbild-Pixeln, Tagbild): Pflaster direkt vor der Hausreihe, außerhalb des Sitzrings.
 ## Format: x, y, Region, gespiegelt (0/1).
 const CROWD_SPOTS: Array[Vector4] = [
-	Vector4(300, 215, 0, 0), Vector4(860, 118, 3, 1), Vector4(1250, 215, 2, 0), Vector4(1410, 430, 5, 1),
+	Vector4(300, 215, 0, 0), Vector4(860, 118, 3, 1), Vector4(1270, 217, 2, 0), Vector4(1142, 217, 1, 1), Vector4(1225, 818, 4, 0), Vector4(432, 800, 5, 1), Vector4(1410, 430, 5, 1),
 	Vector4(1395, 640, 0, 0), Vector4(480, 905, 4, 1), Vector4(1160, 915, 1, 1), Vector4(330, 430, 1, 0),
 	Vector4(335, 660, 5, 0), Vector4(1050, 130, 4, 0), Vector4(640, 120, 2, 1), Vector4(1330, 800, 3, 0),
 	Vector4(400, 810, 3, 1),
 ]
 const CROWD_HEIGHT := 105.0          ## Bildpixel; Personen etwa so groß wie eine Haustür
-const GALLOWS_FOOT := Vector2(836.0, 925.0)
-const GALLOWS_HEIGHT := 150.0
 ## Farbtöne ohne Farbliteral (Theme-Datei gehört nicht zu diesem Teil): leicht abgedunkelt und bläulich entsättigt.
 var CROWD_TINT := Color.from_hsv(0.58, 0.1, 0.82)
 
@@ -58,6 +56,7 @@ var _folk: Array[Folk] = []
 var _gallows: Sprite2D = null
 var _gallows_shadow: Sprite2D = null
 var _shadow_tex: GradientTexture2D = null
+var _halo_tex: GradientTexture2D = null
 var _crowd_tween: Tween = null
 var _timer: Timer = null
 var _time: float = 0.0
@@ -126,18 +125,27 @@ func _relayout() -> void:
 
 
 func _place_gallows(s: float) -> void:
-	var foot := map.to_local(GALLOWS_FOOT)
 	var size := GALLOWS.get_size()
 	var shown := false
-	for shrink: float in [1.0, 0.85, 0.7, 0.6]:
-		var k := GALLOWS_HEIGHT * shrink * s / size.y
-		var rect := Rect2(foot.x - size.x * k * 0.5, foot.y - size.y * k, size.x * k, size.y * k)
-		if not map.hits_seat(rect):
-			_gallows.position = foot
-			_gallows.scale = Vector2(k, k)
-			_gallows_shadow.position = foot + Vector2(0, 2.0 * s)
-			_gallows_shadow.scale = Vector2(size.x * k * 0.4 / 32.0, 7.0 * s / 32.0)
-			shown = true
+	var a := map.area
+	## Größte Höhe zuerst (lokale Pixel, mindestens 100), am unteren Platzrand quer, Mitte zuerst. Geprüft wird die Körperbreite
+	## (die transparenten Ränder des Bildes zählen nicht).
+	for height: float in [130.0, 115.0, 100.0]:
+		for dx: float in [0.0, 12.0, -12.0, 24.0, -24.0, 36.0, -36.0, 48.0, -48.0, 60.0, -60.0, 80.0, -80.0, 100.0, -100.0]:
+			for dy: float in [-2.0, -20.0, -40.0]:
+				var foot := Vector2(a.x * 0.5 + dx, a.y + dy)
+				var k := height / size.y
+				var body := Rect2(foot.x - size.x * k * 0.3, foot.y - size.y * k, size.x * k * 0.6, size.y * k)
+				if not map.hits_seat(body):
+					_gallows.position = foot
+					_gallows.scale = Vector2(k, k)
+					_gallows_shadow.position = foot + Vector2(0, 2.0 * s)
+					_gallows_shadow.scale = Vector2(size.x * k * 0.3 / 32.0, 7.0 * s / 32.0)
+					shown = true
+					break
+			if shown:
+				break
+		if shown:
 			break
 	_gallows.visible = shown
 	_gallows_shadow.visible = shown
@@ -156,6 +164,15 @@ func _build() -> void:
 	var grad := Gradient.new()
 	grad.colors = PackedColorArray([Color.from_hsv(0.0, 0.0, 0.0, 0.38), Color.from_hsv(0.0, 0.0, 0.0, 0.0)])
 	_shadow_tex.gradient = grad
+	_halo_tex = GradientTexture2D.new()
+	_halo_tex.width = 64
+	_halo_tex.height = 64
+	_halo_tex.fill = GradientTexture2D.FILL_RADIAL
+	_halo_tex.fill_from = Vector2(0.5, 0.5)
+	_halo_tex.fill_to = Vector2(1.0, 0.5)
+	var halo_grad := Gradient.new()
+	halo_grad.colors = PackedColorArray([Color.from_hsv(0.6, 0.2, 1.0, 0.55), Color.from_hsv(0.6, 0.2, 1.0, 0.0)])
+	_halo_tex.gradient = halo_grad
 	_crowd_root = Node2D.new()
 	_crowd_root.modulate.a = 0.0
 	_crowd_root.visible = false
@@ -252,28 +269,36 @@ func _flock_active() -> bool:
 	return not _flock.is_empty()
 
 
-## Flugbahn: von Rand zu Rand oberhalb der Dachreihe, bevorzugt ohne Sitzplatz zu kreuzen.
+## Flugbahn: schräg über eine Dachecke oder seitlich über die Häuser, durch keine Sperrzone (Sitzplätze, Bedienflächen).
 func _start_flock() -> void:
 	if _flock_active() or map == null:
 		return
 	var a := map.area
-	var lanes: Array[float] = [0.015, 0.05, 0.085, 0.12]
-	lanes.shuffle()
-	var left_to_right := rng.randf() < 0.5
-	var chosen := -1.0
-	for y: float in lanes:
-		var band := Rect2(-40.0, a.y * y - 40.0, a.x + 80.0, 100.0)
-		if not map.hits_seat(band):
-			chosen = y
-			break
-	if chosen < 0.0:
-		chosen = lanes[0]
-	var y0 := a.y * chosen
-	var x0 := -60.0 if left_to_right else a.x + 60.0
-	var x1 := a.x + 60.0 if left_to_right else -60.0
-	_flock_a = Vector2(x0, y0 + rng.randf_range(-6.0, 6.0))
-	_flock_b = Vector2(x1, y0 + rng.randf_range(-6.0, 6.0))
-	_flock_dur = rng.randf_range(3.5, 5.0)
+	var paths: Array = [
+		[Vector2(0.70, -0.06), Vector2(1.06, 0.24)], [Vector2(0.73, 0.075), Vector2(1.06, 0.13)],
+		[Vector2(0.74, 0.11), Vector2(1.06, 0.04)], [Vector2(0.80, -0.06), Vector2(1.06, 0.15)],
+	]
+	paths.shuffle()
+	var best := 99
+	for path: Array in paths:
+		var p0: Vector2 = path[0] * a
+		var p1: Vector2 = path[1] * a
+		var hits := 0
+		for i: int in 13:
+			var c := p0.lerp(p1, i / 12.0)
+			if Rect2(Vector2.ZERO, a).has_point(c) and map.hits_seat(Rect2(c - Vector2(20, 20), Vector2(40, 40))):
+				hits += 1
+		if hits < best:
+			best = hits
+			_flock_a = p0
+			_flock_b = p1
+	if best > 3:
+		return
+	if rng.randf() < 0.5:
+		var t := _flock_a
+		_flock_a = _flock_b
+		_flock_b = t
+	_flock_dur = rng.randf_range(2.8, 3.8)
 	_flock_t = 0.0
 	_flock_bats = night
 	var frames := _bat_frames if night else _crow_frames
@@ -287,10 +312,17 @@ func _start_flock() -> void:
 		fl.lane = rng.randf_range(-22.0, 22.0)
 		fl.lag = rng.randf_range(0.0, 0.18)
 		fl.wave_phase = rng.randf() * TAU
-		var span := rng.randf_range(22.0, 32.0) if night else rng.randf_range(26.0, 34.0)
-		fl.span = span / 66.0 * minf(s / 0.816, 1.4)
+		var span := rng.randf_range(34.0, 44.0) if night else rng.randf_range(34.0, 42.0)
+		fl.span = span / 66.0 * clampf(s / 0.78, 0.8, 1.4)
 		fl.sprite.scale = Vector2(fl.span, fl.span)
-		fl.sprite.modulate = Color.from_hsv(0.6, 0.0, 1.0, 0.95) if night else Color.from_hsv(0.6, 0.06, 0.88, 0.95)
+		## Nachts kühles Mondlicht (Wert über 1 hellt die dunkle Silhouette auf), am Tag nur leicht heller; dazu ein weicher heller Hof.
+		fl.sprite.modulate = Color.from_hsv(0.6, 0.35, 4.0, 1.0) if night else Color.from_hsv(0.6, 0.1, 1.6, 1.0)
+		var halo := Sprite2D.new()
+		halo.texture = _halo_tex
+		halo.show_behind_parent = true
+		halo.scale = Vector2(2.2, 2.2)
+		halo.modulate = Color.from_hsv(0.6, 0.3, 0.9, 0.5)
+		fl.sprite.add_child(halo)
 		_flock_root.add_child(fl.sprite)
 		_flock.append(fl)
 

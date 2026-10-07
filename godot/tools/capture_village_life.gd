@@ -21,7 +21,7 @@ func _initialize() -> void:
 	var amb: NightAmbience = shell.current_screen().get("_ambience")
 	var life: VillageLife = amb._parts[2]
 	life.spawn_flock_now()
-	await create_timer(0.9).timeout
+	await create_timer(1.5).timeout
 	await _save("5-nacht-schwarm")
 	var game: GDScript = load("res://tests/ui/ui_game.gd")
 	game.call("to_day", ctx.session)
@@ -31,7 +31,7 @@ func _initialize() -> void:
 	amb = shell.current_screen().get("_ambience")
 	life = amb._parts[2]
 	life.spawn_flock_now()
-	await create_timer(2.0).timeout
+	await create_timer(1.4).timeout
 	await _save("7-tag-kraehen")
 	var shown := 0
 	for f: VillageLife.Folk in life._folk:
