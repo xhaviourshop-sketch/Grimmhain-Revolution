@@ -1028,12 +1028,16 @@ func _dead_count() -> int:
 	return dead
 
 
-## Sitzplätze (Porträt und Name) global, mit etwas Rand, nach dem Layout des Sitzkreises: das Dorf hält sie frei.
+## Sitzplätze (Porträt und Name) und Bedienflächen am Rand global, mit etwas Rand, nach dem Layout: das Dorf hält sie frei.
 func _send_seat_rects() -> void:
 	var out: Array[Rect2] = []
 	for token: GameSeatToken in _ring.tokens():
 		if token.visible:
 			out.append(token.get_global_rect().grow(8.0))
+	for c: Control in [_order_bar, _phase_area, _round, _alive, _save_row, _status_strip, _log_tab, _options_tab, _hide_button,
+			_cover_button, _timer_button, _dock, _day_bar, header.back_button()]:
+		if c != null and c.is_visible_in_tree():
+			out.append(c.get_global_rect().grow(6.0))
 	_ambience.set_seat_rects(out, _village_layer)
 
 
