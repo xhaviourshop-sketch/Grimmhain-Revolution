@@ -1,12 +1,13 @@
 class_name SettingsScreen
 extends BaseScreen
-## Einstellungen: Sprache (Deutsch/Englisch), Bewegung reduzieren, Musik, Bedienhand und
+## Einstellungen: Sprache (Deutsch/Englisch), Bewegung reduzieren, Effekte, Musik, Bedienhand und
 ## Anzeige (alles auf einem Bildschirm, ohne Scrollen). Wirkt sofort auf AppSettings; der AppContext speichert jede Änderung dauerhaft. Scheitert das
 ## Speichern, gilt die Einstellung trotzdem für diese Sitzung und die Meldung sagt das statt „geändert“.
 
 @onready var _german: GrimmButton = %LanguageGermanButton
 @onready var _english: GrimmButton = %LanguageEnglishButton
 @onready var _motion: GrimmToggle = %ReducedMotionToggle
+@onready var _effects: GrimmToggle = %EffectsToggle
 @onready var _music: GrimmToggle = %MusicToggle
 @onready var _quieter: GrimmButton = %MusicQuieterButton
 @onready var _louder: GrimmButton = %MusicLouderButton
@@ -30,6 +31,8 @@ func _setup() -> void:
 	_german.toggled.connect(_on_language_toggled.bind("de"))
 	_english.toggled.connect(_on_language_toggled.bind("en"))
 	_motion.toggled.connect(_on_motion_toggled)
+	_effects.set_pressed_no_signal(settings.effects_enabled)
+	_effects.toggled.connect(_on_effects_toggled)
 	_show_hand(settings.left_handed)
 	_hand_right.toggled.connect(_on_hand_toggled.bind(false))
 	_hand_left.toggled.connect(_on_hand_toggled.bind(true))
@@ -87,6 +90,11 @@ func _show_volume() -> void:
 func _on_motion_toggled(pressed: bool) -> void:
 	context.settings.set_reduced_motion(pressed)
 	_report("ui.settings.toast.motion_on" if pressed else "ui.settings.toast.motion_off")
+
+
+func _on_effects_toggled(pressed: bool) -> void:
+	context.settings.set_effects_enabled(pressed)
+	_report("ui.settings.toast.effects_on" if pressed else "ui.settings.toast.effects_off")
 
 
 ## Nur das gedrückte Ende der Gruppe zählt; die Auswahl ändert allein AppSettings.left_handed (kein Spielbefehl).

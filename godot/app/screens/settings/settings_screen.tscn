@@ -191,3 +191,8 @@ layout_mode = 2
 script = ExtResource("5_toggle")
 text_key = "ui.settings.motion.reduce"
 
+[node name="EffectsToggle" type="CheckButton" parent="Layout/Columns/Secondary/MotionCard/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("5_toggle")
+text_key = "ui.settings.motion.effects"
