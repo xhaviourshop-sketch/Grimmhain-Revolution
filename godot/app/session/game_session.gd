@@ -166,7 +166,7 @@ func day_cards() -> Array:
 
 
 ## Akt I bis IV der laufenden Partie für die Dorfstimmung: der kleinste Akt, der alle Startrollen enthält (der Akt selbst steht nicht im
-## Spielstand). Passt kein Akt, gilt IV. Ohne Partie 1.
+## Spielstand). Passt kein einzelner Akt (gemischte Rollen) oder gibt es keine Partie, gilt I.
 func act_level() -> int:
 	if not _state.is_started():
 		return 1
@@ -178,7 +178,7 @@ func act_level() -> int:
 				break
 		if fits:
 			return ActCatalog.level(act)
-	return 4
+	return 1
 
 
 ## Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
