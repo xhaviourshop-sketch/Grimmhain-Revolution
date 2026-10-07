@@ -165,6 +165,22 @@ func day_cards() -> Array:
 	return MorningReport.day_cards(_state, _events)
 
 
+## Akt I bis IV der laufenden Partie für die Dorfstimmung: der kleinste Akt, der alle Startrollen enthält (der Akt selbst steht nicht im
+## Spielstand). Passt kein einzelner Akt (gemischte Rollen) oder gibt es keine Partie, gilt I.
+func act_level() -> int:
+	if not _state.is_started():
+		return 1
+	for act: StringName in ActCatalog.ACT_IDS:
+		var fits := true
+		for p: Player in _state.players.values():
+			if not ActCatalog.contains(act, p.original_role_id):
+				fits = false
+				break
+		if fits:
+			return ActCatalog.level(act)
+	return 1
+
+
 ## Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
 func private_seats() -> Array:
 	return CockpitView.private_seats(_state) if _state.is_started() else []

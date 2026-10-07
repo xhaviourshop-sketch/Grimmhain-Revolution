@@ -98,10 +98,10 @@ var _timer_labels: Dictionary = {}  ## Wertanzeigen der Timer-Dauern im Menü ("
 @onready var _card: ActionCard = %ActionCard
 @onready var _overlay_host: Control = %OverlayHost
 @onready var _backdrop: Panel = %Backdrop
-@onready var _backdrop_art: TextureRect = %BackdropArt  ## Dorfplatz bei Nacht (Fenster abgedunkelt), mit Fensterschein und Randdämpfung
-@onready var _backdrop_fog: ColorRect = %BackdropFog  ## ziehender Nebel über dem Hintergrund, hinter allen Bedienflächen
+@onready var _backdrop_art: TextureRect = %BackdropArt  ## Dorfplatz bei Nacht
+@onready var _backdrop_day: TextureRect = %BackdropDay  ## Dorfplatz bei Tag, deckungsgleich, blendet über das Nachtbild
+@onready var _village_layer: Control = %VillageLayer  ## Licht, Rauch, Vögel und Menge des lebendigen Dorfs, hinter allen Bedienflächen
 @onready var _backdrop_shade: ColorRect = %BackdropShade
-@onready var _backdrop_wolf: ColorRect = %BackdropWolf  ## roter Schimmer am Rand während eines Wolfsschritts
 @onready var _order_bar: NightOrderBar = %OrderBar
 @onready var _corner: Control = %CornerInfo
 @onready var _status_strip: Control = %StatusStrip
@@ -120,7 +120,7 @@ var _day_bar: HBoxContainer = null  ## Nebenknöpfe der Tagesleiste, unten in de
 
 var _backdrop_phase: String = ""
 var _backdrop_tween: Tween = null
-var _ambience: NightAmbience = null  ## Nebel, Wolke, Fensterwahl und Wolfsschimmer (rein kosmetisch)
+var _ambience: NightAmbience = null  ## lebendiges Dorf: Licht, Bewegung, Leben (rein kosmetisch)
 
 
 func _setup() -> void:
@@ -129,9 +129,11 @@ func _setup() -> void:
 	header.add_theme_stylebox_override("panel", StyleBoxEmpty.new())  # die Platte ist der Rahmen, keine dunkle Kopfzeile dahinter
 	(header.find_child("TitleLabel", true, false) as Control).visible = false  # nur der Zurück-Knopf steht in der Ecke
 	header.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	_backdrop_art.texture = NightArt.texture("bg/scene-night-base.webp")
+	_backdrop_art.texture = load("res://assets/village/village-night.webp") as Texture2D
+	_backdrop_day.texture = load("res://assets/village/village-day.webp") as Texture2D
 	_ambience = NightAmbience.new()
 	add_child(_ambience)
+	_ring.resized.connect(func() -> void: _send_seat_rects.call_deferred())
 	_style_backdrop()
 	_day_bar = HBoxContainer.new()
 	_day_bar.name = "DayBar"
@@ -378,11 +380,7 @@ func _update_backdrop(phase: String) -> void:
 ## Abdunklung und Randdämpfung des Dorfplatzes als eigene Ebene (Abnahme 1): Das Bild bleibt unverändert, die Ebenen darüber dämpfen
 ## warme Reflexe auf dem Pflaster und die Ränder. Shader in `res://app/theme/`.
 func _style_backdrop() -> void:
-	var art := ShaderMaterial.new()
-	art.shader = load("res://app/theme/night_backdrop.gdshader") as Shader
-	art.set_shader_parameter("id_map", NightArt.texture("bg/scene-night-windows.png"))
-	_backdrop_art.material = art
-	_ambience.configure(art, _backdrop_fog, _backdrop_wolf)
+	_ambience.configure(_backdrop_art, _backdrop_day, _village_layer)
 	_ambience.set_reduced_motion(context.settings.reduced_motion)
 	_ambience.set_enabled(context.settings.effects_enabled, false)
 	var shade := ShaderMaterial.new()
@@ -843,6 +841,8 @@ func _render() -> void:
 	var hunt := _hunt_ids(eff, kind)
 	_ring.set_hunt(hunt, not context.settings.reduced_motion)
 	_ambience.set_wolf(not hunt.is_empty())
+	_ambience.set_game(context.session.act_level(), _dead_count())
+	_send_seat_rects.call_deferred()
 	# Ob die Auswahl bestätigt werden kann, entscheidet der Regelkern (Prüfung ohne Senden).
 	var selection_error := ""
 	if kind == "prompt" and str(next.get("answer")) == "targets" and not _selection.is_empty():
@@ -1017,6 +1017,28 @@ func _on_settings_changed(key: StringName) -> void:
 		_ambience.set_enabled(context.settings.effects_enabled)
 	elif key == &"show_calls":
 		_render()
+
+
+## Tote der Partie (für verlöschende Fenster im Dorf).
+func _dead_count() -> int:
+	var dead := 0
+	for seat: Dictionary in _view.get("seats", []):
+		if not bool(seat.get("alive", true)):
+			dead += 1
+	return dead
+
+
+## Sitzplätze (Porträt und Name) und Bedienflächen am Rand global, mit etwas Rand, nach dem Layout: das Dorf hält sie frei.
+func _send_seat_rects() -> void:
+	var out: Array[Rect2] = []
+	for token: GameSeatToken in _ring.tokens():
+		if token.visible:
+			out.append(token.get_global_rect().grow(8.0))
+	for c: Control in [_order_bar, _phase_area, _round, _alive, _save_row, _status_strip, _log_tab, _options_tab, _hide_button,
+			_cover_button, _timer_button, _dock, _day_bar, header.back_button()]:
+		if c != null and c.is_visible_in_tree():
+			out.append(c.get_global_rect().grow(6.0))
+	_ambience.set_seat_rects(out, _village_layer)
 
 
 # --- Bedienung --------------------------------------------------------------------------------------

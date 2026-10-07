@@ -1,6 +1,6 @@
 extends SceneTree
 ## Screenshots lebendiges Dorf (1024x768, echter Renderer):
-##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy --resolution 1024x768 -s res://tools/capture_night_ambience.gd -- --out=<Ordner>
+##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy --resolution 1024x768 -s res://tools/capture_village_motion.gd -- --out=<Ordner>
 ## Bilder: 1-nacht-ruhig, 2-nacht-wolf, 3-nacht-akt4, 4-tag. Wolfsschritt und Akt werden direkt an `NightAmbience` geschaltet.
 var OUT := "user://shots"
 var ctx: AppContext
@@ -17,7 +17,9 @@ func _initialize() -> void:
 	await _boot(8, "amb-n")
 	ctx.session.start_night()
 	await _fr(10)
-	await create_timer(6.0).timeout
+	var mo: VillageMotion = shell.current_screen().get("_ambience").get("_parts")[1]
+	mo.launch_cloud()
+	await create_timer(9.0).timeout
 	await _save("1-nacht-ruhig")
 	var amb: NightAmbience = shell.current_screen().get("_ambience")
 	amb.set_wolf(true)
@@ -32,7 +34,9 @@ func _initialize() -> void:
 	var game: GDScript = load("res://tests/ui/ui_game.gd")
 	game.call("to_day", ctx.session)
 	shell.navigate(&"cockpit")
-	await create_timer(3.0).timeout
+	mo = shell.current_screen().get("_ambience").get("_parts")[1]
+	mo.launch_cloud()
+	await create_timer(9.0).timeout
 	await _save("4-tag")
 	quit(0)
 
