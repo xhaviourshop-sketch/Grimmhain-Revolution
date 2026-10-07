@@ -831,7 +831,7 @@ msgid "ui.role.zeitwaechter.name"
 msgstr "Zeitwächter"
 
 msgid "ui.role.zeitwaechter.short"
-msgstr "Kann einmal die Nacht einfrieren: Alle späteren Nachtschritte entfallen."
+msgstr "Kann einmal zu Beginn der Nacht einfrieren: Alle Nachtschritte entfallen."
 
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
@@ -3959,7 +3959,7 @@ msgid "ui.role.zeitwaechter.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.zeitwaechter.lex.ability"
-msgstr "Kann einmal die Nacht einfrieren: Alle Nachtschritte nach ihm entfallen."
+msgstr "Kann einmal die Nacht einfrieren: Alle Nachtschritte dieser Nacht entfallen."
 
 msgid "ui.role.zeitwaechter.lex.timing"
 msgstr "Einmal je Leben. Ein Verzicht behält die Fähigkeit."
@@ -3968,16 +3968,16 @@ msgid "ui.role.zeitwaechter.lex.targets"
 msgstr "Keine."
 
 msgid "ui.role.zeitwaechter.lex.exceptions"
-msgstr "Seine Kartenzahl ist 9,5. Alle späteren Nachtschritte entfallen für alle Rollen, nach Kartenzahl ist das nur noch Hades. Was vorher in der Nacht geschah, wirkt am Morgen wie sonst. Fenrir und Cerberus wachsen nicht. Fällige Wirkungen früherer Nächte (Giftpranke, Pest-Ausbreitung) treten ein. Die Nachtnummer zählt weiter. Im Fluch des Weisen ruht die Fähigkeit."
+msgstr "Er kommt als allererster Nachtschritt, noch vor Loki. Seine Karte zeigt noch 9,5. Die App ruft ihn trotzdem zuerst. Friert er ein, entfallen alle Nachtschritte dieser Nacht. Aus dieser Nacht stirbt niemand. Fenrir und Cerberus wachsen nicht. Fällige Wirkungen früherer Nächte (Giftpranke, Pest-Ausbreitung) treten ein. Die Nachtnummer zählt weiter. Im Fluch des Weisen ruht die Fähigkeit."
 
 msgid "ui.role.zeitwaechter.lex.win"
 msgstr "Mit dem Dorf."
 
 msgid "ui.role.zeitwaechter.lex.example"
-msgstr "In Nacht 4 friert der Zeitwächter die Nacht ein. Hades wird nicht mehr geweckt. Am Morgen wird öffentlich gemeldet, dass die Nacht eingefroren war.\nDer Giftwolf hat Clara in Nacht 2 vergiftet. Nacht 4 ist eingefroren. Das Gift wirkt trotzdem planmäßig, Clara stirbt am Morgen nach Nacht 4."
+msgstr "In Nacht 4 friert der Zeitwächter die Nacht ein. Danach wird niemand mehr geweckt. Am Morgen wird öffentlich gemeldet, dass die Nacht eingefroren war. Aus dieser Nacht ist niemand gestorben.\nDer Giftwolf hat Clara in Nacht 2 vergiftet. Nacht 4 ist eingefroren. Das Gift wirkt trotzdem planmäßig, Clara stirbt am Morgen nach Nacht 4."
 
 msgid "ui.role.zeitwaechter.lex.gm"
-msgstr "Der Zeitwächter kommt fast zuletzt. Nur Hades folgt. Die öffentliche Meldung nennt keinen Namen."
+msgstr "Der Zeitwächter kommt als Erster, noch vor Loki. Die öffentliche Meldung nennt keinen Namen."
 
 msgid "ui.role.zeitwaechter.lex.open"
 msgstr "Einzelheiten (einmal je Leben, Verhalten im Fluch des Weisen) sind technisch abgeleitet und noch nicht bestätigt."
@@ -5809,7 +5809,7 @@ msgstr "Die Spielleitung nimmt sein Handzeichen entgegen: Kopf schütteln (nicht
 # --- Ablauf am Tisch je Rolle (OI-18) ---
 
 msgid "ui.role.albtraumwolf.lex.act"
-msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Albtraumwolf“ in der Nachtreihenfolge an. Lies vor: „Albtraumwolf, erwache. Zeige auf die Person, deren Fähigkeit du heute Nacht blockierst.“\nAuswählen oder ablesen: Tippe die Person an, die der Albtraumwolf blockiert. Ohne Wahl: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (jede Nacht, Pflicht) Die App kündigt die Rolle „Albtraumwolf“ in der Nachtreihenfolge an. Lies vor: „Albtraumwolf, erwache. Zeige auf die Person, deren Fähigkeit du heute Nacht blockierst.“\nAuswählen oder ablesen: Tippe die Person an, die der Albtraumwolf blockiert. Einen Verzicht gibt es nicht.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.amalia.lex.act"
 msgstr "Aufruf: Kein Aufruf, keine Nachtaktion. Es ist eine Tagesaktion.\nAuswählen oder ablesen: Öffne den Bereich „Rollen“ und darin unter „Geheime Tagesaktionen“ den Eintrag „Amalia opfert sich …“. Beantworte im Dialog Amalias Frage wahrheitsgemäß mit „Antwort: Ja“ oder „Antwort: Nein“.\nVorlesen oder zeigen: Frage und Antwort sind öffentlich; das macht die Fähigkeit sichtbar. Amalias Tod wird wie jeder Tod angesagt.\nBeenden: Mit der Antwort ist die Aktion beendet. Amalia stirbt sofort."
@@ -6019,7 +6019,7 @@ msgid "ui.role.wolfskind.lex.act"
 msgstr "Aufruf: (Vorbildwahl, nur solange ohne Vorbild) Die App kündigt die Rolle „Wolfskind“ in der Nachtreihenfolge an. Lies vor: „Wolfskind, erwache. Zeige auf die Person, die dein Vorbild sein soll.“\nAuswählen oder ablesen: Tippe das gewählte Vorbild an und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.zeitwaechter.lex.act"
-msgstr "Aufruf: (einmal je Leben, freiwillig) Die App kündigt die Rolle „Zeitwächter“ in der Nachtreihenfolge an. Lies vor: „Zeitwächter, erwache. Willst du diese Nacht einfrieren?“\nAuswählen oder ablesen: Friert der Zeitwächter diese Nacht ein? Dann entfallen alle weiteren Nachtschritte.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Nacht einfrieren“ oder „Nicht einfrieren“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (einmal je Leben, als allererster Schritt einer Nacht, freiwillig) Die App kündigt die Rolle „Zeitwächter“ in der Nachtreihenfolge an. Lies vor: „Zeitwächter, erwache. Willst du diese Nacht einfrieren?“\nAuswählen oder ablesen: Friert der Zeitwächter diese Nacht ein? Dann entfallen alle weiteren Nachtschritte.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Nacht einfrieren“ oder „Nicht einfrieren“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.lexicon.field.act"
 msgstr "Ablauf am Tisch"
@@ -8764,7 +8764,7 @@ msgid "ui.night.rules.wolfskind"
 msgstr "· Pflicht: wählt ein Vorbild, eine andere lebende Person, nicht sich selbst.\n· Stirbt das Vorbild mit Todesfolgen, zählt es sofort als Wolf und erscheint als Werwolf.\n· Es wacht ab der folgenden Nacht mit dem Rudel auf. Ein Wächter am Tor macht es zum Dorfbewohner."
 
 msgid "ui.night.rules.zeitwaechter"
-msgstr "· Einmal je Leben. Verzicht behält die Fähigkeit.\n· Alle späteren Nachtschritte entfallen, nur noch Hades.\n· Fällige Wirkungen früherer Nächte treten ein. Die Nachtnummer zählt weiter."
+msgstr "· Einmal je Leben. Verzicht behält die Fähigkeit.\n· Kommt als Erster: Alle Nachtschritte dieser Nacht entfallen.\n· Fällige Wirkungen früherer Nächte treten ein. Die Nachtnummer zählt weiter."
 
 msgid "ui.setup.voice.tooltip"
 msgstr "Namen per Sprache eingeben"

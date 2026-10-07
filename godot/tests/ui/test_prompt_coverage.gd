@@ -68,12 +68,12 @@ func test_all_prompt_kinds_are_operable_through_the_card() -> void:
 	# Alle Rollen mit eigenem Nachtschritt müssen mindestens einmal als Prompt erschienen sein,
 	# sonst belegt der Test ihre Bedienbarkeit nicht.
 	for role: Variant in roles:
-		if SetupRoleCatalog.night_priority(StringName(role)) > 0 and not _owners.has(str(role)):
+		if SetupRoleCatalog.has_night_step(StringName(role)) and not _owners.has(str(role)):
 			fail("Rolle %s erschien nie als Prompt" % role)
 	# Zusätzlich darf keine Pflichtabdeckung allein von Füllrollen anderer Partien leben: Jede Nachtrolle erschien entweder
 	# in ihrer eigenen Fokuspartie oder hat ein festes Szenario (REACH_SCENARIOS, geprüft im eigenen Test).
 	for role: Variant in roles:
-		if SetupRoleCatalog.night_priority(StringName(role)) > 0 and not _focus_hit.has(str(role)) and not REACH_SCENARIOS.has(str(role)):
+		if SetupRoleCatalog.has_night_step(StringName(role)) and not _focus_hit.has(str(role)) and not REACH_SCENARIOS.has(str(role)):
 			fail("Rolle %s erschien in keiner eigenen Fokuspartie und hat kein festes Szenario" % role)
 	var keys := _combos.keys()
 	keys.sort()

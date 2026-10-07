@@ -282,7 +282,7 @@ func test_zeitwaechter_freezes_the_night() -> void:
 		return
 	await run({"zeitwaechter/use": true}, until_kind("day"))
 	assert_true(has_event("NightFreezeUsed"), "Nacht eingefroren")
-	assert_true(has_event("InfoRevealed"), "Orakel (4,6) handelt vor dem Einfrieren (9,5, DA-106)")
+	assert_false(has_event("InfoRevealed"), "keine Nachtschritte, Zeitwächter zuerst (DA-107)")
 	assert_true(has_event("NightFrozen"), "öffentliche Ansage am Morgen")
 
 

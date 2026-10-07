@@ -104,7 +104,7 @@ static func apply(ctx: RuleContext, rec: Dictionary, window: StringName, got: Di
 		&"solo_05":
 			var heir := int(got["target_id"])
 			var role := s.players[owner].role_id
-			if RoleCatalog.stealable(role) and RoleCatalog.night_priority(role) > 0:
+			if RoleCatalog.stealable(role):
 				(s.cardsys["abilities"] as Array).append({"player_id": heir, "role_id": String(role), "night": PERM})
 			CardEffects.add_effect(ctx, rec, "legacy", now, CardEffects.FOREVER, {"heir_id": heir})
 			ctx.emit(GameEvent.CARD_NOTICE, Visibility.ACTOR, {"card_id": rec["card"], "role_id": String(role)}, heir)

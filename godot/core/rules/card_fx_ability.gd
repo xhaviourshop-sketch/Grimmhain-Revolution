@@ -143,7 +143,7 @@ static func _members(s: GameState, variant: StringName) -> Array[int]:
 
 static func _has_repeatable(s: GameState, id: int) -> bool:
 	var role := SoloRules.ability_role(s, id)
-	return RoleCatalog.night_priority(role) > 0 and not RoleCatalog.first_night_only(role)
+	return RoleCatalog.has_night_step(role) and not RoleCatalog.first_night_only(role)
 
 
 ## Personen der Fraktion, die einen weiteren Einsatz erhalten können: lebende mit eigenem Nachtschritt.

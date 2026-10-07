@@ -327,7 +327,7 @@ func _install_pe07_fixture(ctx: AppContext) -> String:
 	return path
 
 
-## PE-07: Ein Stand mit doppelten Startrollen (Regelversion 0.13, Schema 14) ist seit den Totenreichkarten (Schema 15, Regeln 0.15, seit DA-93 0.16, Loki-Hinweis 0.17, Rivalen 0.18, Nachtreihenfolge 0.19)
+## PE-07: Ein Stand mit doppelten Startrollen (Regelversion 0.13, Schema 14) ist seit den Totenreichkarten (Schema 15, Regeln 0.15, seit DA-93 0.16, Loki-Hinweis 0.17, Rivalen 0.18, Nachtreihenfolge 0.19, Zeitwächter zuerst 0.20)
 ## eine ältere Version, keine beschädigte Datei: keine Migration, keine neue Verteilung, Datei bleibt bytegleich, nichts beiseitegelegt.
 func test_pe07_rules_0_13_save_is_incompatible_and_left_untouched() -> void:
 	var ctx := _context()
@@ -352,7 +352,7 @@ func test_pe07_rules_0_13_save_is_incompatible_and_left_untouched() -> void:
 const CORE_014_FIXTURE := "res://tests/saves/core-0.14-night-and-day.json"
 
 
-## Totenreichkarten (Schema 15, Regeln 0.15, seit DA-93 0.16, Loki-Hinweis 0.17, Rivalen 0.18, Nachtreihenfolge 0.19): Ein echter Stand der Regelversion 0.14 mit Nacht und Tag bleibt unberührt und wird als
+## Totenreichkarten (Schema 15, Regeln 0.15, seit DA-93 0.16, Loki-Hinweis 0.17, Rivalen 0.18, Nachtreihenfolge 0.19, Zeitwächter zuerst 0.20): Ein echter Stand der Regelversion 0.14 mit Nacht und Tag bleibt unberührt und wird als
 ## ältere Version gemeldet, nicht als beschädigt; es gibt keine Migration und keine Neuverteilung.
 func test_core_0_14_save_is_incompatible_and_left_untouched() -> void:
 	var ctx := _context()

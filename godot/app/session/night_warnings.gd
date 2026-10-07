@@ -70,7 +70,7 @@ static func build(s: GameState, next: Dictionary, selection: Array) -> Array:
 static func kinds_for_role(role: String) -> Array[String]:
 	var out: Array[String] = []
 	var id := StringName(role)
-	if SetupRoleCatalog.faction_of(id) == Faction.VILLAGE and SetupRoleCatalog.night_priority(id) > 0 and id != RoleCatalog.MAERTYRERIN:
+	if SetupRoleCatalog.faction_of(id) == Faction.VILLAGE and SetupRoleCatalog.has_night_step(id) and id != RoleCatalog.MAERTYRERIN:
 		out.append("blocked")
 	if role == String(RoleCatalog.WERWOLF):
 		out.append("protected")

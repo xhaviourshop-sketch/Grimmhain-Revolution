@@ -48,8 +48,8 @@ static func counts_as_wolf(role: StringName) -> bool:
 	return RoleCatalog.counts_as_wolf(role)
 
 
-static func night_priority(role: StringName) -> int:
-	return RoleCatalog.night_priority(role)
+static func has_night_step(role: StringName) -> bool:
+	return RoleCatalog.has_night_step(role)
 
 
 static func requires_appearance(role: StringName) -> bool:
