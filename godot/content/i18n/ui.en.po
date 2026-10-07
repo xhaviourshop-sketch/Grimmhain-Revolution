@@ -831,7 +831,7 @@ msgid "ui.role.zeitwaechter.name"
 msgstr "Time Warden"
 
 msgid "ui.role.zeitwaechter.short"
-msgstr "Can freeze the night once: all later night steps are dropped."
+msgstr "Can freeze the night once, at its start: all night steps are dropped."
 
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
@@ -3959,7 +3959,7 @@ msgid "ui.role.zeitwaechter.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.zeitwaechter.lex.ability"
-msgstr "Can freeze the night once: all night steps after them are dropped."
+msgstr "Can freeze the night once: all night steps of this night are dropped."
 
 msgid "ui.role.zeitwaechter.lex.timing"
 msgstr "Once per life. Declining keeps the ability."
@@ -3968,16 +3968,16 @@ msgid "ui.role.zeitwaechter.lex.targets"
 msgstr "None."
 
 msgid "ui.role.zeitwaechter.lex.exceptions"
-msgstr "Their card number is 9.5. All later night steps are dropped for all roles; by card number that is only Hades. What happened earlier in the night takes effect in the morning as usual. Fenrir and Cerberus do not grow. Due effects from earlier nights (poison paw, plague spread) take place. The night number keeps counting. During the Elder's curse the ability rests."
+msgstr "They come as the very first night step, even before Loki. Their card still shows 9.5. The app calls them first anyway. If they freeze, all night steps of this night are dropped. No one dies from this night. Fenrir and Cerberus do not grow. Due effects from earlier nights (poison paw, plague spread) take place. The night number keeps counting. During the Elder's curse the ability rests."
 
 msgid "ui.role.zeitwaechter.lex.win"
 msgstr "With the village."
 
 msgid "ui.role.zeitwaechter.lex.example"
-msgstr "In night 4 the Time Warden freezes the night. Hades is not woken any more. In the morning it is announced publicly that the night was frozen.\nThe Poison Wolf poisoned Clara in night 2. Night 4 is frozen. Clara's poison still works on schedule, Clara dies in the morning after night 4."
+msgstr "In night 4 the Time Warden freezes the night. After that no one is woken. In the morning it is announced publicly that the night was frozen. No one died from this night.\nThe Poison Wolf poisoned Clara in night 2. Night 4 is frozen. Clara's poison still works on schedule, Clara dies in the morning after night 4."
 
 msgid "ui.role.zeitwaechter.lex.gm"
-msgstr "The Time Warden comes almost last. Only Hades follows. The public announcement names no one."
+msgstr "The Time Warden comes first, even before Loki. The public announcement names no one."
 
 msgid "ui.role.zeitwaechter.lex.open"
 msgstr "Details (once per life, behaviour during the Elder's curse) are technically derived and not yet confirmed."
@@ -5809,7 +5809,7 @@ msgstr "The game master takes their hand sign: shake the head (nothing), two fin
 # --- Procedure at the table per role (OI-18) ---
 
 msgid "ui.role.albtraumwolf.lex.act"
-msgstr "Call: (every night, optional) The app announces the role “Nightmare Wolf” in the night order. Read out: “Nightmare Wolf, wake up. Point to the person whose ability you block tonight.”\nSelect or read: Tap the person the Nightmare Wolf blocks. Without a choice: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+msgstr "Call: (every night, mandatory) The app announces the role “Nightmare Wolf” in the night order. Read out: “Nightmare Wolf, wake up. Point to the person whose ability you block tonight.”\nSelect or read: Tap the person the Nightmare Wolf blocks. Declining is not possible.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
 
 msgid "ui.role.amalia.lex.act"
 msgstr "Call: No call, no night action. It is a day action.\nSelect or read: Open the “Roles” area and in it under “Secret day actions” the entry “Amalia sacrifices themself …”. In the dialog answer Amalia's question truthfully with “Answer: yes” or “Answer: no”.\nRead out or show: Question and answer are public; that makes the ability visible. Amalia's death is announced like any death.\nFinish: With the answer the action is finished. Amalia dies immediately."
@@ -6019,7 +6019,7 @@ msgid "ui.role.wolfskind.lex.act"
 msgstr "Call: (role model choice, only while without a role model) The app announces the role “Wolf Child” in the night order. Read out: “Wolf Child, wake up. Point to the person who shall be your role model.”\nSelect or read: Tap the chosen role model and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
 
 msgid "ui.role.zeitwaechter.lex.act"
-msgstr "Call: (once per life, optional) The app announces the role “Time Warden” in the night order. Read out: “Time Warden, wake up. Do you want to freeze this night?”\nSelect or read: Does the Time Warden freeze this night? All further night steps are then dropped.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Freeze the night” or “Do not freeze”. The app then opens the next step."
+msgstr "Call: (once per life, as the very first step of a night, optional) The app announces the role “Time Warden” in the night order. Read out: “Time Warden, wake up. Do you want to freeze this night?”\nSelect or read: Does the Time Warden freeze this night? All further night steps are then dropped.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Freeze the night” or “Do not freeze”. The app then opens the next step."
 
 msgid "ui.lexicon.field.act"
 msgstr "Procedure at the table"
@@ -8764,7 +8764,7 @@ msgid "ui.night.rules.wolfskind"
 msgstr "· Mandatory: picks a role model, another living person, not themself.\n· If the role model dies with consequences, they count as a wolf at once and appear as Werewolf.\n· They wake with the pack from the following night. A Gatewarden makes them a Villager."
 
 msgid "ui.night.rules.zeitwaechter"
-msgstr "· Once per life. Skipping keeps the ability.\n· All later night steps are cancelled, only Hades is left.\n· Effects due from earlier nights still happen. The night number keeps counting."
+msgstr "· Once per life. Skipping keeps the ability.\n· Comes first: all night steps of this night are dropped.\n· Effects due from earlier nights still happen. The night number keeps counting."
 
 msgid "ui.setup.voice.tooltip"
 msgstr "Enter a name by voice"

@@ -23,6 +23,8 @@ const CARDS := {
 ## Karte mit Zahl, aber ohne eigenen Schritt: Werwolf (Rudelschritt), Ewige (gemeinsamer Schritt), Amalia (Tagesaktion).
 const NO_OWN_STEP := ["werwolf", "die-ewigen", "amalia"]
 const X_CALLED := {"kutscher": 38}  ## Gebundene: gemeinsamer Schritt auf BOUND_PRIORITY (unten)
+## Einzige erlaubte Abweichung von der Karte (DA-107): Zeitwächter als allererster Schritt vor Loki 0,1.
+const EXCEPTIONS := {"zeitwaechter": 0}
 
 
 func test_every_role_follows_its_card_number() -> void:
@@ -32,8 +34,11 @@ func test_every_role_follows_its_card_number() -> void:
 		var id := StringName(role)
 		assert_true(RoleCatalog.has_role(id), "%s im Katalog" % role)
 		var card: Variant = CARDS[role]
+		if EXCEPTIONS.has(role):
+			card = EXCEPTIONS[role]
 		if card is int:
 			assert_eq(int(RoleCatalog.CARD_NUMBERS.get(id, -1)), card, "%s: Tabelle = Karte" % role)
+			assert_eq(RoleCatalog.has_night_step(id), not NO_OWN_STEP.has(role), "%s: eigener Schritt" % role)
 			assert_eq(RoleCatalog.night_priority(id), 0 if NO_OWN_STEP.has(role) else card, "%s: Priorität = Kartenzahl mal 10" % role)
 		else:
 			assert_false(RoleCatalog.CARD_NUMBERS.has(id), "%s: ohne Kartenzahl" % role)
@@ -41,7 +46,10 @@ func test_every_role_follows_its_card_number() -> void:
 	assert_eq(RoleCatalog.PACK_PRIORITY, 20, "Rudel auf 2,0")
 	assert_eq(RoleCatalog.ETERNAL_PRIORITY, 48, "Ewige auf 4,8")
 	assert_eq(RoleCatalog.BOUND_PRIORITY, 5, "Gebundene bedingt auf 0,5")
-	assert_eq(CallPolicy.slot_priority(&"zeitwaechter"), 95, "Zeitwächter ohne Vorzug")
+	assert_eq(CallPolicy.slot_priority(&"zeitwaechter"), 0, "Zeitwächter allererster Schritt (DA-107)")
+	for role: String in CARDS:
+		if role != "zeitwaechter" and RoleCatalog.has_night_step(StringName(role)):
+			assert_true(RoleCatalog.night_priority(StringName(role)) > 0, "%s nach dem Zeitwächter" % role)
 
 
 func test_blocks_only_hit_later_steps() -> void:

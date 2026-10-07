@@ -152,9 +152,9 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		var id: int = pair[0]
 		var p := s.players[id]
 		var role: StringName = pair[1]
-		var priority := RoleCatalog.night_priority(role)
-		if priority == 0:
+		if not RoleCatalog.has_night_step(role):
 			continue
+		var priority := RoleCatalog.night_priority(role)
 		if role == RoleCatalog.WALDHEXE and not WitchStep.has_any_potion(p):
 			continue
 		if role == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, id):

@@ -185,17 +185,17 @@ func test_dead_piper_in_revival_round_is_called_as_decoy_with_follow_up() -> voi
 	assert_true(s != null and CallPolicy.decoy_calls(s).has(&"rattenfaenger"), "Tarnaufruf des Rattenfängers vor dem Folgeschritt")
 
 
-func test_follow_up_comes_before_the_time_warden() -> void:
-	# DA-106: „Alle Verzauberten“ steht auf dem Platz des Rattenfängers (4,2), vor dem Zeitwächter (9,5);
-	# ein Einfrieren kann den Folgeschritt nicht mehr treffen.
+func test_frozen_night_still_follows_the_decoy_call() -> void:
+	# DA-107: Der Zeitwächter friert als allererster Schritt ein; die Rollen werden aber weiter angesagt (DI-02).
+	# „Alle Verzauberten“ ist keine Fähigkeit, sondern folgt auf den Aufruf (PE-06).
 	var commands := _start([W, RF, "zeitwaechter", D, "amalia", "detektiv", "wahnsinniger-kutscher"])
 	_run(commands, {"rattenfaenger:2": [4]}, func(_s: GameState) -> bool: return false)
 	_next_night(commands)
 	var s := _run(commands, {"zeitwaechter:3@use": true}, _at_piper_all)
+	assert_true(s != null and s.night_frozen, "Nacht eingefroren")
 	if s == null:
 		return
-	assert_false(s.night_frozen, "noch nicht eingefroren")
-	assert_true(s.night_plan.find(StringName(PIPER_ALL)) < s.night_plan.find(&"zeitwaechter:3"), "Folgeschritt vor dem Zeitwächter")
+	assert_true(CallPolicy.decoy_calls(s).has(&"rattenfaenger"), "Tarnaufruf des Rattenfängers")
 	s = apply_ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Folgeschritt").state
 	assert_true((s.pending_prompt.partial["charmed_ids"] as Array).has(4), "Verzauberte erkennen einander")
 

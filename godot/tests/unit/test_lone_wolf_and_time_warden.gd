@@ -2,8 +2,8 @@ extends TestCase
 ## Rachsüchtiger Wolf (RM-DR-106) und Zeitwächter (RM-DR-150):
 ##   E-35 (RM-DR-106.1): Er zählt als Wolf; ist er beim Wolfssieg der einzige lebende Wolf, wird statt des Wolfssiegs sein
 ##     Alleinsieg vorgeschlagen; leben andere Wölfe, gewinnen die Werwölfe ohne ihn.
-##   E-36 (RM-DR-150.1–.4, RM-DR-113.2) mit DA-106: Der Zeitwächter entscheidet einmal je Leben auf seiner Kartenzahl 9,5;
-##     Ja: alle späteren Nachtschritte entfallen, Früheres wirkt am Morgen normal, Fenrir/Cerberus wachsen nicht;
+##   E-36 (RM-DR-150.1–.4, RM-DR-113.2) mit DA-107: Der Zeitwächter entscheidet einmal je Leben als allererster Nachtschritt
+##     (vor Loki 0,1); Ja: alle Nachtschritte dieser Nacht entfallen, keine Tode aus dieser Nacht, Fenrir/Cerberus wachsen nicht;
 ##     fällige Wirkungen früherer Nächte (Giftpranke, Pest-Ausbreitung) treten ein; Nachtnummer zählt weiter;
 ##     öffentliche Meldung am Morgen.
 ## Abgeleitet (delegierte Autorisierung, Decision Log DA-16 bis DA-20): feste Nächte 3, 6, 9 … (RM-DR-106.2/.3 nach
@@ -200,32 +200,39 @@ func test_lone_wolf_wins_alone_only_as_last_wolf() -> void:
 
 # --- Zeitwächter ------------------------------------------------------------------------------------
 
-func test_time_warden_catalog_and_card_slot() -> void:
+func test_time_warden_catalog_and_first_step() -> void:
 	assert_true(RoleCatalog.has_role(&"zeitwaechter"), "im Katalog")
 	if not RoleCatalog.has_role(&"zeitwaechter"):
 		return
 	assert_eq(RoleCatalog.faction_of(&"zeitwaechter"), Faction.VILLAGE, "Dorf")
 	assert_true(RoleCatalog.stealable(&"zeitwaechter"), "stehlbar")
 	var s := _ok(_state([W, "schattenhund", ZW, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night(), "Nacht")
-	assert_eq(s.night_plan if s != null else [] as Array[StringName], [&"schattenhund:2", &"pack", &"zeitwaechter:3"] as Array[StringName], "Kartenzahl 9,5: nach Schattenhund und Rudel (DA-106)")
+	assert_eq(s.night_plan if s != null else [] as Array[StringName], [&"zeitwaechter:3", &"schattenhund:2", &"pack"] as Array[StringName], "allererster Nachtschritt, vor dem Schattenhund (DA-107)")
+	s = _ok(_state(["loki", ZW, W, D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"]), Command.start_night(), "Nacht mit Loki")
+	assert_eq(s.night_plan.slice(0, 2) if s != null else [] as Array[StringName], [&"zeitwaechter:2", &"loki:1"] as Array[StringName], "vor Loki 0,1 (DA-107)")
 
 
-func test_freeze_drops_later_steps_but_keeps_earlier_effects() -> void:
-	# DA-106: Der Zeitwächter (9,5) friert erst nach dem Rudel (2,0) ein; dessen Opfer stirbt trotzdem.
+func test_freeze_drops_all_steps_no_deaths_no_growth() -> void:
+	# DA-107: Der Zeitwächter friert als allererster Schritt ein; alle übrigen Schritte der Nacht entfallen.
 	var s := _state([W, ZW, SE, "fenrir", "schwarze-witwe", D, "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
-	var log: Array[GameEvent] = []
-	s = _night(s, {"schutzengel:3@": [7], "pack@": [6], "zeitwaechter:2@use": true}, log)
+	s = _ok(s, Command.start_night(), "Nacht 1")
 	if s == null:
 		return
-	assert_eq(_opened(log, "zeitwaechter:2").size(), 1, "Frage einfrieren?")
-	_codec_same(s, "eingefroren")
-	var dawn := apply_ok(s, Command.end_night(), "Morgen")
-	assert_eq(_deaths(dawn.events), [[6, "NIGHT_KILL"]], "Rudelopfer vor dem Einfrieren stirbt")
+	var p := s.pending_prompt
+	assert_true(p != null and String(p.owner) == ZW and p.stage == &"use", "Frage einfrieren?")
+	_codec_same(s, "offene Frage")
+	var r := apply_ok(s, Command.answer_choice(p.id, "use", true), "einfrieren")
+	var dropped := events_of_type(r.events, "StepDropped")
+	assert_true(dropped.size() >= 3 and dropped.all(func(e: GameEvent) -> bool: return String(e.data["reason"]) == "frozen"), "alle übrigen Schritte entfallen (auch Rudel, Witwe)")
+	assert_eq(RulesEngine.next_step_id(r.state), "", "nichts mehr zu tun")
+	_codec_same(r.state, "eingefroren")
+	var dawn := apply_ok(r.state, Command.end_night(), "Morgen")
+	assert_eq(_deaths(dawn.events), [], "keine Tode")
 	var public := events_of_type(dawn.events, "NightFrozen")
 	assert_true(public.size() == 1 and public[0].visibility == Visibility.PUBLIC, "öffentliche Meldung")
 	assert_eq(int(dawn.state.growth.get(4, 0)), 0, "Fenrir wächst nicht")
 	# Einmal je Leben: in Nacht 2 kein Schritt mehr.
-	log = []
+	var log: Array[GameEvent] = []
 	s = _dawn(dawn.state, {"pack@": [8]}, log)
 	assert_eq(_opened(log, "zeitwaechter:2").size(), 0, "nur einmal")
 	assert_eq(_deaths(log), [[8, "NIGHT_KILL"]], "Nacht 2 normal")

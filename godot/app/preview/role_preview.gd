@@ -77,7 +77,7 @@ static func plan(role: String) -> Dictionary:
 		return {"stops": [], "gap": "start"}
 	var own := holders(role)
 	var stops: Array = []
-	var needs_night := SetupRoleCatalog.night_priority(StringName(role)) > 0
+	var needs_night := SetupRoleCatalog.has_night_step(StringName(role))
 	var acted := false
 	var died := false
 	if ACTS_DEAD.has(role):
@@ -149,7 +149,7 @@ static func _mine(n: Dictionary, role: String, own: Array[int]) -> bool:
 	var actors: Array = n.get("actor_ids", [])
 	if owner == "pack" or owner == "pack2":
 		# Das Rudel ist der Schritt der Wölfe ohne eigenen Nachtschritt.
-		return RoleCatalog.counts_as_wolf(StringName(role)) and SetupRoleCatalog.night_priority(StringName(role)) <= 0 and own.any(func(id: int) -> bool: return actors.has(id))
+		return RoleCatalog.counts_as_wolf(StringName(role)) and not SetupRoleCatalog.has_night_step(StringName(role)) and own.any(func(id: int) -> bool: return actors.has(id))
 	if owner == "card" or owner == "kartenschlucker" and role != "kartenschlucker":
 		return false
 	return owner == role or own.any(func(id: int) -> bool: return actors.has(id))

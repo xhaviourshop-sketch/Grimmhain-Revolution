@@ -211,6 +211,8 @@ const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUM
 
 ## Nachtreihenfolge (DA-106): die Zahl oben links auf Markus' Rollenkarten mal 10, einzige Quelle aller Nachtprioritäten.
 ## Nicht enthalten: Dorfbewohner (keine Zahl) und Rollen mit „X“ (kein Nachtaufruf). Amalia trägt 5,8, handelt aber am Tag.
+## Einzige Ausnahme (DA-107): Zeitwächter 0 = allererster Schritt vor Loki 0,1, damit sein Einfrieren die ganze Nacht stoppt;
+## seine Karte zeigt noch 9,5 (Neudruck folgt).
 const CARD_NUMBERS := {
 	LOKI: 1, DORFCHRONISTIN: 3, SCHATTENHUND: 7, WOLFSKIND: 9, LEHRLING: 11, SCHUTZENGEL: 13, KORRUPTER_RICHTER: 15,
 	DORFSCHMIED: 17, WERWOLF: 20, ALBTRAUMWOLF: 21, RACHSUECHTIGER_WOLF: 22, VERDAMMNISWAECHTER: 23, KOENIG_LYKAON: 24,
@@ -219,7 +221,7 @@ const CARD_NUMBERS := {
 	DOKTOR: 50, FAEHRTENLESER: 52, WALDLAEUFER: 54, SCHUTZGEIST: 56, AMALIA: 58, KRIEGERIN: 60, PARASIT: 62,
 	GRABRAEUBER: 64, TODESPREDIGER: 66, SPUERHUND: 68, TRAUMDEUTER: 70, PESTBRINGERIN: 72, ROTKAEPPCHEN: 74,
 	FEUERTEUFEL: 76, HENKER: 78, SEELENTAUSCHER: 80, BLUTPRIESTER: 82, VOODOO: 84, PROPHET: 86, MAERTYRERIN: 90,
-	ZEITWAECHTER: 95, HADES: 99,
+	ZEITWAECHTER: 0, HADES: 99,
 }
 ## Rollen mit „X“ auf der Karte, die die App trotzdem bedingt aufruft (unverändert, DA-106): Gebundene nur in Nacht 1,
 ## Kutscher nur mit erfüllter Wiederbelebungsbedingung.
@@ -347,11 +349,17 @@ static func death_reaction(role_id: StringName) -> StringName:
 
 
 ## Nachtpriorität des eigenen Schritts jeder lebenden Person mit dieser Rolle (Kartenzahl mal 10, DA-106;
-## vergleichbar mit PACK_PRIORITY) oder 0 ohne eigenen Nachtschritt.
+## vergleichbar mit PACK_PRIORITY) oder 0 ohne eigenen Nachtschritt. 0 hat auch der Zeitwächter (DA-107), deshalb
+## entscheidet `has_night_step`, ob es einen Schritt gibt.
 static func night_priority(role_id: StringName) -> int:
-	if not (ROLES[role_id] as Dictionary).get("night_step", false):
+	if not has_night_step(role_id):
 		return 0
 	return CARD_NUMBERS.get(role_id, X_CARD_PRIORITY.get(role_id, 0))
+
+
+## true, wenn die Rolle einen eigenen Nachtschritt mit Kartenzahl (oder bedingtem X-Aufruf) hat.
+static func has_night_step(role_id: StringName) -> bool:
+	return (ROLES[role_id] as Dictionary).get("night_step", false) and (CARD_NUMBERS.has(role_id) or X_CARD_PRIORITY.has(role_id))
 
 
 ## true, wenn der persönliche Schritt der Rolle nur in Nacht 1 stattfindet (RM-DR-014 = B).
@@ -363,7 +371,7 @@ static func first_night_only(role_id: StringName) -> bool:
 ## Nur-Nacht-1-Rollen, Prophet und Schicksalswolf (markieren nur in Nacht 1), Schutzgeist (handelt nur tot), Wolfskind und Lehrling
 ## (ihre Fähigkeit ist ein eigener Rollenwechsel) und der Grabräuber selbst.
 static func stealable(role_id: StringName) -> bool:
-	if not has_role(role_id) or night_priority(role_id) == 0 or first_night_only(role_id):
+	if not has_role(role_id) or not has_night_step(role_id) or first_night_only(role_id):
 		return false
 	return not [PROPHET, SCHICKSALSWOLF, SCHUTZGEIST, WOLFSKIND, LEHRLING, GRABRAEUBER, KARTENSCHLUCKER].has(role_id)
 
