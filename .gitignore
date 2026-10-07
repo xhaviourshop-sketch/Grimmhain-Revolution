@@ -41,3 +41,10 @@ npm-debug.log*
 
 # Build info written by tools/export-web.js
 godot/build_info.json
+godot/tools/capture_feedback10.gd.uid
+godot/tools/capture_feedback9_f1.gd.uid
+godot/tools/capture_feedback9b_a.gd.uid
+godot/tools/capture_feedback9b_b.gd.uid
+godot/tools/capture_feedback9b_c.gd.uid
+godot/tools/capture_k1.gd.uid
+godot/tools/capture_night_ambience.gd.uid
