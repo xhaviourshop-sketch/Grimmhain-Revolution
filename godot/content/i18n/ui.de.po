@@ -585,7 +585,7 @@ msgid "ui.role.schattenhund.name"
 msgstr "Schattenhund"
 
 msgid "ui.role.schattenhund.short"
-msgstr "Wolf im Rudel, blockiert einmal alle Dorf-Fähigkeiten einer Nacht."
+msgstr "Wolf im Rudel, blockiert einmal alle späteren Dorf-Fähigkeiten einer Nacht."
 
 msgid "ui.role.albtraumwolf.name"
 msgstr "Albtraumwolf"
@@ -831,7 +831,7 @@ msgid "ui.role.zeitwaechter.name"
 msgstr "Zeitwächter"
 
 msgid "ui.role.zeitwaechter.short"
-msgstr "Kann einmal zu Beginn einer Nacht die Nacht einfrieren: alle Nachtaktionen entfallen, niemand stirbt in dieser Nacht."
+msgstr "Kann einmal die Nacht einfrieren: Alle späteren Nachtschritte entfallen."
 
 msgid "ui.setup.roles.heading"
 msgstr "Rollen auswählen"
@@ -3281,7 +3281,7 @@ msgid "ui.role.dorfchronistin.lex.targets"
 msgstr "Keine Wahl. Es zählen alle Personen mit Einzelsiegrolle, lebend und tot."
 
 msgid "ui.role.dorfchronistin.lex.exceptions"
-msgstr "Mehrere Chronistinnen erfahren die Zahl jeweils für sich. Eine Blockade (Schattenhund, Albtraumwolf) lässt den Schritt entfallen."
+msgstr "Mehrere Chronistinnen erfahren die Zahl jeweils für sich. Schattenhund und Albtraumwolf können sie nicht blockieren, weil sie vor ihnen handelt."
 
 msgid "ui.role.dorfchronistin.lex.win"
 msgstr "Mit dem Dorf."
@@ -3953,13 +3953,13 @@ msgid "ui.role.waechter_am_tor.lex.gm"
 msgstr "Der Tisch erfährt nichts. Nur die betroffene Person sieht die Mitteilung auf ihrer Karte."
 
 msgid "ui.role.zeitwaechter.lex.night"
-msgstr "einmal je Leben, als allererster Schritt einer Nacht, freiwillig"
+msgstr "einmal je Leben, freiwillig"
 
 msgid "ui.role.zeitwaechter.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.zeitwaechter.lex.ability"
-msgstr "Kann einmal zu Beginn einer Nacht die Nacht einfrieren: Alle Nachtaktionen entfallen, aus dieser Nacht stirbt niemand."
+msgstr "Kann einmal die Nacht einfrieren: Alle Nachtschritte nach ihm entfallen."
 
 msgid "ui.role.zeitwaechter.lex.timing"
 msgstr "Einmal je Leben. Ein Verzicht behält die Fähigkeit."
@@ -3968,19 +3968,19 @@ msgid "ui.role.zeitwaechter.lex.targets"
 msgstr "Keine."
 
 msgid "ui.role.zeitwaechter.lex.exceptions"
-msgstr "Alle Nachtschritte entfallen für alle Rollen, auch Wölfe, Einzelsieg und Schwarze Witwe. Am Morgen sterben keine Personen aus dieser Nacht, Fenrir und Cerberus wachsen nicht, Äpfel dieser Nacht verfallen. Fällige Wirkungen früherer Nächte (Giftpranke, Pest-Ausbreitung) treten ein. Die Nachtnummer zählt weiter. Das Zusatzopfer eines hingerichteten Rudelvaters entfällt. Im Fluch des Weisen ruht die Fähigkeit."
+msgstr "Seine Kartenzahl ist 9,5. Alle späteren Nachtschritte entfallen für alle Rollen, nach Kartenzahl ist das nur noch Hades. Was vorher in der Nacht geschah, wirkt am Morgen wie sonst. Fenrir und Cerberus wachsen nicht. Fällige Wirkungen früherer Nächte (Giftpranke, Pest-Ausbreitung) treten ein. Die Nachtnummer zählt weiter. Im Fluch des Weisen ruht die Fähigkeit."
 
 msgid "ui.role.zeitwaechter.lex.win"
 msgstr "Mit dem Dorf."
 
 msgid "ui.role.zeitwaechter.lex.example"
-msgstr "In Nacht 4 friert der Zeitwächter die Nacht ein. Am Morgen wird öffentlich gemeldet, dass die Nacht eingefroren war. Niemand aus dieser Nacht ist gestorben.\nDer Giftwolf hat Clara in Nacht 2 vergiftet. Nacht 4 ist eingefroren. Das Gift wirkt trotzdem planmäßig, Clara stirbt am Morgen nach Nacht 4."
+msgstr "In Nacht 4 friert der Zeitwächter die Nacht ein. Hades wird nicht mehr geweckt. Am Morgen wird öffentlich gemeldet, dass die Nacht eingefroren war.\nDer Giftwolf hat Clara in Nacht 2 vergiftet. Nacht 4 ist eingefroren. Das Gift wirkt trotzdem planmäßig, Clara stirbt am Morgen nach Nacht 4."
 
 msgid "ui.role.zeitwaechter.lex.gm"
-msgstr "Ruf den Zeitwächter noch vor dem Schattenhund auf. Die öffentliche Meldung nennt keinen Namen."
+msgstr "Der Zeitwächter kommt fast zuletzt. Nur Hades folgt. Die öffentliche Meldung nennt keinen Namen."
 
 msgid "ui.role.zeitwaechter.lex.open"
-msgstr "Einzelheiten (einmal je Leben, Verhalten im Fluch des Weisen, Zusatzopfer des Rudelvaters) sind technisch abgeleitet und noch nicht bestätigt."
+msgstr "Einzelheiten (einmal je Leben, Verhalten im Fluch des Weisen) sind technisch abgeleitet und noch nicht bestätigt."
 
 msgid "ui.role.sensentraeger.lex.night"
 msgstr "keiner, Todesreaktion"
@@ -4499,7 +4499,7 @@ msgid "ui.role.rudelvater.lex.example"
 msgstr "Die Waldhexe vergiftet Emil, den Rudelvater. Es ist sein erster solcher Tod, er überlebt.\nEmil wird an Tag 3 hingerichtet. In Nacht 4 wählt das Rudel zuerst Ben, dann in einem zweiten Schritt Clara. Ein Schutz kann Ben retten. Clara stirbt am Morgen trotz Schutzengel oder Rettung, weil das Zusatzopfer Schutz durchdringt."
 
 msgid "ui.role.rudelvater.lex.gm"
-msgstr "Der zweite Rudelschritt kommt nur nach einer Hinrichtung. Ein Zeitwächter-Einfrieren hebt ihn auf."
+msgstr "Der zweite Rudelschritt kommt nur nach einer Hinrichtung."
 
 msgid "ui.role.fenrir.lex.night"
 msgstr "kein eigener, Teil des Rudels"
@@ -4556,22 +4556,22 @@ msgid "ui.role.cerberus.lex.gm"
 msgstr "Die Frage „abwehren?“ erscheint nur dir."
 
 msgid "ui.role.schattenhund.lex.night"
-msgstr "jede Nacht bis zur Nutzung, freiwillig, vor allen Dorfrollen"
+msgstr "jede Nacht bis zur Nutzung, freiwillig"
 
 msgid "ui.role.schattenhund.lex.wolf"
 msgstr "ja"
 
 msgid "ui.role.schattenhund.lex.ability"
-msgstr "Wolf im Rudel, blockiert einmal alle Dorf-Fähigkeiten einer Nacht."
+msgstr "Wolf im Rudel, blockiert einmal alle späteren Dorf-Fähigkeiten einer Nacht."
 
 msgid "ui.role.schattenhund.lex.timing"
-msgstr "Einmal je Leben. Jede Nacht, auch Nacht 1, kommt die Frage „jetzt blockieren?“, bis er es genutzt hat. Die Blockade gilt für die ganze Nacht."
+msgstr "Einmal je Leben. Jede Nacht, auch Nacht 1, kommt die Frage „jetzt blockieren?“, bis er es genutzt hat. Die Blockade gilt für alle Schritte, die in dieser Nacht nach ihm kommen."
 
 msgid "ui.role.schattenhund.lex.targets"
-msgstr "Keine Wahl, alle Nachtschritte von Dorfrollen dieser Nacht."
+msgstr "Keine Wahl, alle späteren Nachtschritte von Dorfrollen dieser Nacht."
 
 msgid "ui.role.schattenhund.lex.exceptions"
-msgstr "Die Blockade lässt nur aktive Nachtschritte von Dorfrollen entfallen (protokolliert). Todesreaktionen und passive Fähigkeiten wirken weiter. Wölfe und Einzelsieg sind nicht betroffen. Der Schattenhund handelt ganz am Anfang der Nacht, nach dem Zeitwächter."
+msgstr "Die Blockade lässt nur aktive Nachtschritte von Dorfrollen entfallen (protokolliert). Todesreaktionen und passive Fähigkeiten wirken weiter. Wölfe und Einzelsieg sind nicht betroffen. Seine Kartenzahl ist 0,7. Loki, Dorfchronistin und Gebundene waren schon dran und sind nicht betroffen."
 
 msgid "ui.role.schattenhund.lex.win"
 msgstr "Wolfssieg wie beim Werwolf."
@@ -4583,7 +4583,7 @@ msgid "ui.role.schattenhund.lex.gm"
 msgstr "Die Schritte entfallen protokolliert. Blockierte Rollen werden trotzdem aufgerufen, damit der Tisch nichts erfährt."
 
 msgid "ui.role.albtraumwolf.lex.night"
-msgstr "jede Nacht, vor allen Dorfrollen"
+msgstr "jede Nacht"
 
 msgid "ui.role.albtraumwolf.lex.wolf"
 msgstr "ja"
@@ -4598,7 +4598,7 @@ msgid "ui.role.albtraumwolf.lex.targets"
 msgstr "Eine andere lebende Person, auch dieselbe wie in der Vornacht."
 
 msgid "ui.role.albtraumwolf.lex.exceptions"
-msgstr "Die Wirkung trifft nur die Nachtschritte dieser Person, wenn sie Dorfrolle ist (protokolliert). Todesreaktionen und passive Fähigkeiten laufen weiter. Er handelt am Anfang der Nacht vor allen Dorfrollen."
+msgstr "Die Wirkung trifft nur die Nachtschritte dieser Person, wenn sie Dorfrolle ist (protokolliert). Todesreaktionen und passive Fähigkeiten laufen weiter. Seine Kartenzahl ist 2,1, er kommt nach dem Rudel. War die Person in dieser Nacht schon dran, wirkt die Blockade nicht mehr."
 
 msgid "ui.role.albtraumwolf.lex.win"
 msgstr "Wolfssieg wie beim Werwolf."
@@ -4652,7 +4652,7 @@ msgid "ui.role.schwarze_witwe.lex.targets"
 msgstr "Eine andere lebende Person."
 
 msgid "ui.role.schwarze_witwe.lex.exceptions"
-msgstr "Wirkt nur, wenn die Person zu einem lebenden Liebes- oder Rivalenpaar gehört und der Partner lebt. Beide erhalten eine Todesmarkierung, sterben in der Morgenauflösung (Ursache Schwarze Witwe) und wachen in dieser Nacht nicht mehr auf. Ein Zeitwächter-Einfrieren hebt die Nacht auf."
+msgstr "Wirkt nur, wenn die Person zu einem lebenden Liebes- oder Rivalenpaar gehört und der Partner lebt. Beide erhalten eine Todesmarkierung, sterben in der Morgenauflösung (Ursache Schwarze Witwe) und wachen in dieser Nacht nicht mehr auf."
 
 msgid "ui.role.schwarze_witwe.lex.win"
 msgstr "Wolfssieg wie beim Werwolf."
@@ -5809,7 +5809,7 @@ msgstr "Die Spielleitung nimmt sein Handzeichen entgegen: Kopf schütteln (nicht
 # --- Ablauf am Tisch je Rolle (OI-18) ---
 
 msgid "ui.role.albtraumwolf.lex.act"
-msgstr "Aufruf: (jede Nacht, freiwillig, vor allen Dorfrollen) Die App kündigt die Rolle „Albtraumwolf“ in der Nachtreihenfolge an. Lies vor: „Albtraumwolf, erwache. Zeige auf die Person, deren Fähigkeit du heute Nacht blockierst.“\nAuswählen oder ablesen: Tippe die Person an, die der Albtraumwolf blockiert. Ohne Wahl: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (jede Nacht, freiwillig) Die App kündigt die Rolle „Albtraumwolf“ in der Nachtreihenfolge an. Lies vor: „Albtraumwolf, erwache. Zeige auf die Person, deren Fähigkeit du heute Nacht blockierst.“\nAuswählen oder ablesen: Tippe die Person an, die der Albtraumwolf blockiert. Ohne Wahl: „Niemand / verzichten“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.amalia.lex.act"
 msgstr "Aufruf: Kein Aufruf, keine Nachtaktion. Es ist eine Tagesaktion.\nAuswählen oder ablesen: Öffne den Bereich „Rollen“ und darin unter „Geheime Tagesaktionen“ den Eintrag „Amalia opfert sich …“. Beantworte im Dialog Amalias Frage wahrheitsgemäß mit „Antwort: Ja“ oder „Antwort: Nein“.\nVorlesen oder zeigen: Frage und Antwort sind öffentlich; das macht die Fähigkeit sichtbar. Amalias Tod wird wie jeder Tod angesagt.\nBeenden: Mit der Antwort ist die Aktion beendet. Amalia stirbt sofort."
@@ -5947,7 +5947,7 @@ msgid "ui.role.rudelvater.lex.act"
 msgstr "Aufruf: Kein eigener Aufruf. Die Werwölfe werden gemeinsam im Rudelschritt aufgerufen. Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer der Werwölfe an und bestätige. Ohne Einigung: „Niemand / verzichten“. Nach einer Hinrichtung des Rudelvaters folgt in der nächsten Nacht direkt nach dem Rudel ein zweiter Rudelschritt: Zweites Opfer des Rudels: Tippe die Person an und bestätige. Es durchdringt Schutz.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“ oder, ohne Einigung, „Kein Opfer“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.schattenhund.lex.act"
-msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig, vor allen Dorfrollen) Die App kündigt die Rolle „Schattenhund“ in der Nachtreihenfolge an. Lies vor: „Schattenhund, erwache. Willst du das Dorf heute Nacht blockieren?“\nAuswählen oder ablesen: Blockiert der Schattenhund in dieser Nacht alle Dorffähigkeiten?\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Jetzt blockieren“ oder „Nicht in dieser Nacht“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (jede Nacht bis zur Nutzung, freiwillig) Die App kündigt die Rolle „Schattenhund“ in der Nachtreihenfolge an. Lies vor: „Schattenhund, erwache. Willst du das Dorf heute Nacht blockieren?“\nAuswählen oder ablesen: Blockiert der Schattenhund in dieser Nacht alle späteren Dorffähigkeiten?\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Jetzt blockieren“ oder „Nicht in dieser Nacht“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.schattenwanderer.lex.act"
 msgstr "Aufruf: (jede Nacht bis zur Nutzung) Die App kündigt die Rolle „Schattenwanderer“ in der Nachtreihenfolge an. Lies vor: „Schattenwanderer, erwache. Willst du dich mit jemandem verknüpfen? Zeige auf die Person.“\nAuswählen oder ablesen: Tippe die Person an, mit der sich der Schattenwanderer verknüpft. Sonst „Noch nicht verknüpfen“.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
@@ -6019,7 +6019,7 @@ msgid "ui.role.wolfskind.lex.act"
 msgstr "Aufruf: (Vorbildwahl, nur solange ohne Vorbild) Die App kündigt die Rolle „Wolfskind“ in der Nachtreihenfolge an. Lies vor: „Wolfskind, erwache. Zeige auf die Person, die dein Vorbild sein soll.“\nAuswählen oder ablesen: Tippe das gewählte Vorbild an und bestätige.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe „Auswahl bestätigen“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.role.zeitwaechter.lex.act"
-msgstr "Aufruf: (einmal je Leben, als allererster Schritt einer Nacht, freiwillig) Die App kündigt die Rolle „Zeitwächter“ in der Nachtreihenfolge an. Lies vor: „Zeitwächter, erwache. Willst du diese Nacht einfrieren?“\nAuswählen oder ablesen: Friert der Zeitwächter diese Nacht ein? Dann entfallen alle weiteren Nachtschritte.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Nacht einfrieren“ oder „Nicht einfrieren“. Danach öffnet die App den nächsten Schritt."
+msgstr "Aufruf: (einmal je Leben, freiwillig) Die App kündigt die Rolle „Zeitwächter“ in der Nachtreihenfolge an. Lies vor: „Zeitwächter, erwache. Willst du diese Nacht einfrieren?“\nAuswählen oder ablesen: Friert der Zeitwächter diese Nacht ein? Dann entfallen alle weiteren Nachtschritte.\nVorlesen oder zeigen: Außer dem Aufruf wird in diesem Schritt nichts vorgelesen oder gezeigt.\nBeenden: Tippe die Antwort: „Nacht einfrieren“ oder „Nicht einfrieren“. Danach öffnet die App den nächsten Schritt."
 
 msgid "ui.lexicon.field.act"
 msgstr "Ablauf am Tisch"
@@ -8551,7 +8551,7 @@ msgid "ui.cockpit.card.notice.heading"
 msgstr "Privater Hinweis"
 
 msgid "ui.night.rules.albtraumwolf"
-msgstr "· Er wählt jede Nacht, auch dieselbe Person wie zuvor. Verzicht gibt es nicht.\n· Blockiert nur Nachtschritte, wenn die Person Dorfrolle ist.\n· Todesreaktionen und passive Fähigkeiten laufen weiter."
+msgstr "· Er wählt jede Nacht, auch dieselbe Person wie zuvor. Verzicht gibt es nicht.\n· Blockiert nur spätere Nachtschritte, wenn die Person Dorfrolle ist.\n· Todesreaktionen und passive Fähigkeiten laufen weiter."
 
 msgid "ui.night.rules.amalia"
 msgstr "· Nur am Tag, solange mindestens drei Lebende als Wolf zählen.\n· Amalia stirbt sofort und stellt die Ja-/Nein-Frage laut.\n· Der Spielleiter antwortet wahrheitsgemäß, die App protokolliert es."
@@ -8692,7 +8692,7 @@ msgid "ui.night.rules.rudelvater"
 msgstr "· Überlebt einmal je Leben den ersten Tod, der weder Rudelangriff noch Hinrichtung ist.\n· Wird er hingerichtet, gibt es in der folgenden Nacht einen zweiten Rudelschritt.\n· Dieses Zusatzopfer durchdringt den Schutz."
 
 msgid "ui.night.rules.schattenhund"
-msgstr "· Einmal je Leben, jede Nacht gefragt, bis er es nutzt.\n· Blockiert alle Nachtschritte von Dorfrollen für die ganze Nacht.\n· Todesreaktionen und passive Fähigkeiten wirken weiter. Wölfe und Einzelsieger bleiben frei."
+msgstr "· Einmal je Leben, jede Nacht gefragt, bis er es nutzt.\n· Blockiert alle späteren Nachtschritte von Dorfrollen in dieser Nacht.\n· Todesreaktionen und passive Fähigkeiten wirken weiter. Wölfe und Einzelsieger bleiben frei."
 
 msgid "ui.night.rules.schattenwanderer"
 msgstr "· Einmal je Leben, jede Nacht bis zur Nutzung, freiwillig.\n· Stirbt einer von beiden, stirbt stattdessen der andere, danach ist die Kette verbraucht.\n· Spielleiterkorrekturen werden nicht umgelenkt."
@@ -8764,7 +8764,7 @@ msgid "ui.night.rules.wolfskind"
 msgstr "· Pflicht: wählt ein Vorbild, eine andere lebende Person, nicht sich selbst.\n· Stirbt das Vorbild mit Todesfolgen, zählt es sofort als Wolf und erscheint als Werwolf.\n· Es wacht ab der folgenden Nacht mit dem Rudel auf. Ein Wächter am Tor macht es zum Dorfbewohner."
 
 msgid "ui.night.rules.zeitwaechter"
-msgstr "· Einmal je Leben, als erster Schritt. Verzicht behält die Fähigkeit.\n· Alle Nachtschritte aller Rollen entfallen, am Morgen stirbt niemand aus dieser Nacht.\n· Fällige Wirkungen früherer Nächte treten ein. Die Nachtnummer zählt weiter."
+msgstr "· Einmal je Leben. Verzicht behält die Fähigkeit.\n· Alle späteren Nachtschritte entfallen, nur noch Hades.\n· Fällige Wirkungen früherer Nächte treten ein. Die Nachtnummer zählt weiter."
 
 msgid "ui.setup.voice.tooltip"
 msgstr "Namen per Sprache eingeben"

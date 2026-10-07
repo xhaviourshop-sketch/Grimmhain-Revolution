@@ -69,8 +69,8 @@ func test_production_roles() -> void:
 	for role: StringName in [&"schattenhund", &"albtraumwolf", &"giftwolf", &"rudelvater", &"seuchenwolf"]:
 		assert_eq(RoleCatalog.faction_of(role), Faction.WOLVES, "%s Wölfe" % role)
 		assert_true(RoleCatalog.counts_as_wolf(role), "%s zählt als Wolf" % role)
-	assert_eq(RoleCatalog.night_priority(&"schattenhund"), 1, "Schattenhund zuerst")
-	assert_eq(RoleCatalog.night_priority(&"albtraumwolf"), 2, "Albtraumwolf danach")
+	assert_eq(RoleCatalog.night_priority(&"schattenhund"), 7, "Schattenhund 0,7 (DA-106)")
+	assert_eq(RoleCatalog.night_priority(&"albtraumwolf"), 21, "Albtraumwolf 2,1 nach dem Rudel (DA-106)")
 	assert_eq(RoleCatalog.night_priority(&"giftwolf"), 27, "Giftwolf nach dem Rudel")
 
 
@@ -116,12 +116,12 @@ func test_nightmare_wolf_blocks_one_village_person() -> void:
 	var s := _run(Fixtures.with_copies([AW, "das-orakel", "das-orakel", "dorfbewohner", "amalia", "detektiv"], [Command.start_night()] as Array[Command], 1), "Start").state
 	if s == null:
 		return
-	assert_eq(s.night_plan[0], &"albtraumwolf:1", "Albtraumwolf vor den Dorfrollen")
+	assert_eq(s.night_plan.slice(0, 2), [&"pack", &"albtraumwolf:1"] as Array[StringName], "Albtraumwolf 2,1 direkt nach dem Rudel (DA-106)")
+	s = apply_ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "kein Opfer").state
+	s = apply_ok(s, Command.begin_step("night:1:1:albtraumwolf:1"), "Albtraumwolf").state
 	var p := s.pending_prompt
 	assert_true(p.min_count == 1 and not p.allowed_ids.has(1), "Pflicht (kein Verzicht), andere Lebende")
-	var r := apply_ok(s, Command.answer_prompt(p.id, [2]), "blockiert 2").state
-	r = apply_ok(r, Command.begin_step("night:1:1:pack"), "Rudel").state
-	var after := apply_ok(r, Command.skip_step(r.pending_prompt.step_id, "Test: ruhige Nacht"), "kein Opfer")
+	var after := apply_ok(s, Command.answer_prompt(p.id, [2]), "blockiert 2")
 	var dropped := events_of_type(after.events, "StepDropped")
 	assert_true(not dropped.is_empty() and String(dropped[0].data["step_id"]) == "night:1:2:das-orakel:2" and String(dropped[0].data["reason"]) == "blocked", "Orakel 2 blockiert")
 	assert_eq(RulesEngine.next_step_id(after.state), "night:1:3:das-orakel:3", "Orakel 3 handelt")

@@ -1,5 +1,7 @@
 # Nachtreihenfolge: Kartenzahlen gegen App
 
+**Umgesetzt mit DA-106 (07.10.2026):** Kartenzahl gilt; Loki, Schattenhund, Albtraumwolf, Kartenschlucker und Zeitwächter (bisher als allererster Schritt vorgezogen) folgen jetzt ihrer Karte, Amalia und die X-Rollen bleiben wie unten beschrieben.
+
 Stand 06.10.2026, nur geprüft, nichts geändert. Die Zahl oben links auf den Rollenkarten (`godot/assets/cards/de|en`, DE und EN gleich) ist die Nachtreihenfolge von Markus, `X` heißt: kein Nachtaufruf. Die App ruft nachts nach `night_priority` in `godot/core/rules/role_catalog.gd` auf (aufsteigend, Rudel 20, Gebundene 5, Ewige 48; `StepQueue`). Verglichen wurde Zahl mal 10 mit dieser Priorität.
 
 Ergebnis: **7 Abweichungen**. Bei 43 von 47 Rollen mit Zahl und Nachtaufruf stimmt die Priorität genau mit der Kartenzahl mal 10 überein.

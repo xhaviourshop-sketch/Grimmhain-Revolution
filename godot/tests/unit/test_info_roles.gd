@@ -269,7 +269,10 @@ func test_bounty_list_expires_with_notice_and_survives_block() -> void:
 	s = _ok(s, Command.start_night(), "Nacht 2")
 	if s == null:
 		return
-	assert_eq(s.pending_prompt.owner, &"albtraumwolf", "Albtraumwolf zuerst")
+	assert_eq(s.pending_prompt.owner, PendingPrompt.OWNER_PACK, "Rudel zuerst (2,0)")
+	s = _ok(s, Command.skip_step(s.pending_prompt.step_id, "Test: ruhige Nacht"), "kein Opfer")
+	s = _ok(s, Command.begin_step(RulesEngine.next_step_id(s)), "Albtraumwolf")
+	assert_eq(s.pending_prompt.owner if s != null else &"", &"albtraumwolf", "Albtraumwolf nach dem Rudel (2,1), vor dem Kopfgeldjäger (3,2)")
 	s = _ok(s, Command.answer_prompt(s.pending_prompt.id, [3]), "blockiert 3")
 	s = _finish_night_before_end(s)
 	assert_eq(int(s.bounty_credits.get(3, 0)) if s != null else -1, 1, "blockiert: Guthaben bleibt")
@@ -597,23 +600,31 @@ func test_eternal_co_win_with_found_person_only() -> void:
 
 
 func test_shadow_hound_blocks_shared_village_steps() -> void:
-	# Regression (RM-DR-010): der Schattenhund blockiert auch gemeinsame Dorfschritte (Gebundene, Ewige).
+	# Regression (RM-DR-010, DA-106): der Schattenhund (0,7) blockiert auch gemeinsame Dorfschritte nach ihm (Ewige 4,8),
+	# nicht aber die Gebundenen (0,5), die vor ihm dran sind.
 	var s := _state(["schattenhund", "die-gebundenen", "die-gebundenen", EW, EW, D, "amalia"])
 	s = _ok(s, Command.start_night(), "Nacht 1")
 	if s == null:
 		return
-	var r := apply_ok(s, Command.answer_choice(s.pending_prompt.id, "use", true), "blockieren")
-	var events: Array[GameEvent] = r.events.duplicate()
-	s = r.state
-	for guard: int in 10:
-		if s.pending_prompt == null and RulesEngine.next_step_id(s) == "":
+	var events: Array[GameEvent] = []
+	for guard: int in 12:
+		if s == null or (s.pending_prompt == null and RulesEngine.next_step_id(s) == ""):
 			break
-		var cr := apply_ok(s, Command.answer_prompt(s.pending_prompt.id, Fixtures.pass_targets(s, s.pending_prompt)) if s.pending_prompt != null else Command.begin_step(RulesEngine.next_step_id(s)), "weiter")
+		var c: Command
+		if s.pending_prompt == null:
+			c = Command.begin_step(RulesEngine.next_step_id(s))
+		elif s.pending_prompt.owner == &"schattenhund":
+			c = Command.answer_choice(s.pending_prompt.id, "use", true)
+		elif s.pending_prompt.stage != &"":
+			c = Command.answer_choice(s.pending_prompt.id, String(s.pending_prompt.stage), true)
+		else:
+			c = Command.answer_prompt(s.pending_prompt.id, Fixtures.pass_targets(s, s.pending_prompt))
+		var cr := apply_ok(s, c, "weiter")
 		events.append_array(cr.events)
 		s = cr.state
-	assert_eq(_dropped_reason(events, "die-gebundenen"), "blocked", "Gebundene blockiert")
+	assert_eq(_dropped_reason(events, "die-gebundenen"), "", "Gebundene vor der Blockade nicht betroffen")
 	assert_eq(_dropped_reason(events, EW), "blocked", "Ewige blockiert")
-	assert_eq(events_of_type(events, "BoundRevealed").size(), 0, "keine Gebundenen-Information")
+	assert_eq(events_of_type(events, "NightBlocked").size(), 1, "Schattenhund hat blockiert")
 
 
 # --- Zufallsknopf (RM-DR-015.2, Matrix R-06) --------------------------------------------------------

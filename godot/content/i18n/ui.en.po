@@ -585,7 +585,7 @@ msgid "ui.role.schattenhund.name"
 msgstr "Shadow Hound"
 
 msgid "ui.role.schattenhund.short"
-msgstr "Pack wolf, once blocks all village abilities for a night."
+msgstr "Pack wolf, once blocks all later village abilities for a night."
 
 msgid "ui.role.albtraumwolf.name"
 msgstr "Nightmare Wolf"
@@ -831,7 +831,7 @@ msgid "ui.role.zeitwaechter.name"
 msgstr "Time Warden"
 
 msgid "ui.role.zeitwaechter.short"
-msgstr "Once, at the start of a night, may freeze it: all night actions are cancelled and nobody dies that night."
+msgstr "Can freeze the night once: all later night steps are dropped."
 
 msgid "ui.setup.roles.heading"
 msgstr "Choose roles"
@@ -3281,7 +3281,7 @@ msgid "ui.role.dorfchronistin.lex.targets"
 msgstr "No choice. All people with a solo role count, living and dead."
 
 msgid "ui.role.dorfchronistin.lex.exceptions"
-msgstr "Several Chroniclers each learn the number separately. A block (Shadow Hound, Nightmare Wolf) cancels the step."
+msgstr "Several Chroniclers each learn the number separately. Shadow Hound and Nightmare Wolf cannot block the Chronicler, who acts before them."
 
 msgid "ui.role.dorfchronistin.lex.win"
 msgstr "With the village."
@@ -3953,13 +3953,13 @@ msgid "ui.role.waechter_am_tor.lex.gm"
 msgstr "The table learns nothing. Only the affected person sees the message on their card."
 
 msgid "ui.role.zeitwaechter.lex.night"
-msgstr "once per life, as the very first step of a night, optional"
+msgstr "once per life, optional"
 
 msgid "ui.role.zeitwaechter.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.zeitwaechter.lex.ability"
-msgstr "Can once at the start of a night freeze the night: all night actions are dropped, no one dies from this night."
+msgstr "Can freeze the night once: all night steps after them are dropped."
 
 msgid "ui.role.zeitwaechter.lex.timing"
 msgstr "Once per life. Declining keeps the ability."
@@ -3968,19 +3968,19 @@ msgid "ui.role.zeitwaechter.lex.targets"
 msgstr "None."
 
 msgid "ui.role.zeitwaechter.lex.exceptions"
-msgstr "All night steps are dropped for all roles, including wolves, solo and Black Widow. In the morning no people from this night die, Fenrir and Cerberus do not grow, this night's apples expire. Due effects from earlier nights (poison paw, plague spread) take place. The night number keeps counting. The extra victim of an executed Packfather lapses. During the Elder's curse the ability rests."
+msgstr "Their card number is 9.5. All later night steps are dropped for all roles; by card number that is only Hades. What happened earlier in the night takes effect in the morning as usual. Fenrir and Cerberus do not grow. Due effects from earlier nights (poison paw, plague spread) take place. The night number keeps counting. During the Elder's curse the ability rests."
 
 msgid "ui.role.zeitwaechter.lex.win"
 msgstr "With the village."
 
 msgid "ui.role.zeitwaechter.lex.example"
-msgstr "In night 4 the Time Warden freezes the night. In the morning it is announced publicly that the night was frozen. No one died from this night.\nThe Poison Wolf poisoned Clara in night 2. Night 4 is frozen. Clara's poison still works on schedule, Clara dies in the morning after night 4."
+msgstr "In night 4 the Time Warden freezes the night. Hades is not woken any more. In the morning it is announced publicly that the night was frozen.\nThe Poison Wolf poisoned Clara in night 2. Night 4 is frozen. Clara's poison still works on schedule, Clara dies in the morning after night 4."
 
 msgid "ui.role.zeitwaechter.lex.gm"
-msgstr "Call the Time Warden before the Shadow Hound. The public announcement names no one."
+msgstr "The Time Warden comes almost last. Only Hades follows. The public announcement names no one."
 
 msgid "ui.role.zeitwaechter.lex.open"
-msgstr "Details (once per life, behaviour during the Elder's curse, the Packfather's extra victim) are technically derived and not yet confirmed."
+msgstr "Details (once per life, behaviour during the Elder's curse) are technically derived and not yet confirmed."
 
 msgid "ui.role.sensentraeger.lex.night"
 msgstr "none, death reaction"
@@ -4499,7 +4499,7 @@ msgid "ui.role.rudelvater.lex.example"
 msgstr "The Witch poisons Emil, the Packfather. It is their first such death, they survive.\nEmil is executed on day 3. In night 4 the pack chooses Ben first, then Clara in a second step. A protection can save Ben. Clara dies in the morning despite Guardian Angel or rescue, because the extra victim pierces protection."
 
 msgid "ui.role.rudelvater.lex.gm"
-msgstr "The second pack step comes only after an execution. A Time Warden freeze cancels it."
+msgstr "The second pack step comes only after an execution."
 
 msgid "ui.role.fenrir.lex.night"
 msgstr "none of its own, part of the pack"
@@ -4556,22 +4556,22 @@ msgid "ui.role.cerberus.lex.gm"
 msgstr "The question “ward off?” appears only to you."
 
 msgid "ui.role.schattenhund.lex.night"
-msgstr "every night until used, optional, before all village roles"
+msgstr "every night until used, optional"
 
 msgid "ui.role.schattenhund.lex.wolf"
 msgstr "yes"
 
 msgid "ui.role.schattenhund.lex.ability"
-msgstr "Pack wolf, blocks all village abilities of one night, once."
+msgstr "Pack wolf, blocks all later village abilities of one night, once."
 
 msgid "ui.role.schattenhund.lex.timing"
-msgstr "Once per life. Every night, night 1 included, the question “block now?” appears until used. The block lasts the whole night."
+msgstr "Once per life. Every night, night 1 included, the question “block now?” appears until used. The block covers all steps that come after the Shadow Hound this night."
 
 msgid "ui.role.schattenhund.lex.targets"
-msgstr "No choice, all night steps of village roles this night."
+msgstr "No choice, all later night steps of village roles this night."
 
 msgid "ui.role.schattenhund.lex.exceptions"
-msgstr "The block only drops active night steps of village roles (logged). Death reactions and passive abilities keep working. Wolves and solo roles are not affected. The Shadow Hound acts at the very start of the night, after the Time Warden."
+msgstr "The block only drops active night steps of village roles (logged). Death reactions and passive abilities keep working. Wolves and solo roles are not affected. Its card number is 0.7. Loki, Village Chronicler and the Bound have already acted and are not affected."
 
 msgid "ui.role.schattenhund.lex.win"
 msgstr "Wolf win as for the Werewolf."
@@ -4583,7 +4583,7 @@ msgid "ui.role.schattenhund.lex.gm"
 msgstr "The steps drop and are logged. Blocked roles are still called so that the table learns nothing."
 
 msgid "ui.role.albtraumwolf.lex.night"
-msgstr "every night, before all village roles"
+msgstr "every night"
 
 msgid "ui.role.albtraumwolf.lex.wolf"
 msgstr "yes"
@@ -4598,7 +4598,7 @@ msgid "ui.role.albtraumwolf.lex.targets"
 msgstr "One other living person, the same as the night before is allowed."
 
 msgid "ui.role.albtraumwolf.lex.exceptions"
-msgstr "The effect hits only that person's night steps, if they are a village role (logged). Death reactions and passive abilities keep running. They act at the start of the night before all village roles."
+msgstr "The effect hits only that person's night steps, if they are a village role (logged). Death reactions and passive abilities keep running. Their card number is 2.1, after the pack. If the person has already acted this night, the block has no effect."
 
 msgid "ui.role.albtraumwolf.lex.win"
 msgstr "Wolf win as for the Werewolf."
@@ -4652,7 +4652,7 @@ msgid "ui.role.schwarze_witwe.lex.targets"
 msgstr "One other living person."
 
 msgid "ui.role.schwarze_witwe.lex.exceptions"
-msgstr "Works only if the person belongs to a living lover or rival pair and the partner is alive. Both get a death marker, die in the dawn resolution (cause Black Widow) and do not wake again this night. A Time Warden freeze cancels the night."
+msgstr "Works only if the person belongs to a living lover or rival pair and the partner is alive. Both get a death marker, die in the dawn resolution (cause Black Widow) and do not wake again this night."
 
 msgid "ui.role.schwarze_witwe.lex.win"
 msgstr "Wolf win as for the Werewolf."
@@ -5809,7 +5809,7 @@ msgstr "The game master takes their hand sign: shake the head (nothing), two fin
 # --- Procedure at the table per role (OI-18) ---
 
 msgid "ui.role.albtraumwolf.lex.act"
-msgstr "Call: (every night, optional, before all village roles) The app announces the role “Nightmare Wolf” in the night order. Read out: “Nightmare Wolf, wake up. Point to the person whose ability you block tonight.”\nSelect or read: Tap the person the Nightmare Wolf blocks. Without a choice: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
+msgstr "Call: (every night, optional) The app announces the role “Nightmare Wolf” in the night order. Read out: “Nightmare Wolf, wake up. Point to the person whose ability you block tonight.”\nSelect or read: Tap the person the Nightmare Wolf blocks. Without a choice: “Nobody / decline”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
 
 msgid "ui.role.amalia.lex.act"
 msgstr "Call: No call, no night action. It is a day action.\nSelect or read: Open the “Roles” area and in it under “Secret day actions” the entry “Amalia sacrifices themself …”. In the dialog answer Amalia's question truthfully with “Answer: yes” or “Answer: no”.\nRead out or show: Question and answer are public; that makes the ability visible. Amalia's death is announced like any death.\nFinish: With the answer the action is finished. Amalia dies immediately."
@@ -5947,7 +5947,7 @@ msgid "ui.role.rudelvater.lex.act"
 msgstr "Call: No call of its own. The werewolves are called together in the pack step. Read out: “Werewolves, wake up. Silently agree on a victim and point to them.”\nSelect or read: Tap the werewolves’ victim and confirm. Without agreement: “Nobody / decline”. After the Pack Father is executed a second pack step follows in the next night right after the pack: Second pack victim: tap the person and confirm. It pierces protection.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection” or, without agreement, “No victim”. The app then opens the next step."
 
 msgid "ui.role.schattenhund.lex.act"
-msgstr "Call: (every night until used, optional, before all village roles) The app announces the role “Shadow Hound” in the night order. Read out: “Shadow Hound, wake up. Do you want to block the village tonight?”\nSelect or read: Does the Shadow Hound block all village abilities this night?\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Block now” or “Not this night”. The app then opens the next step."
+msgstr "Call: (every night until used, optional) The app announces the role “Shadow Hound” in the night order. Read out: “Shadow Hound, wake up. Do you want to block the village tonight?”\nSelect or read: Does the Shadow Hound block all later village abilities this night?\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Block now” or “Not this night”. The app then opens the next step."
 
 msgid "ui.role.schattenwanderer.lex.act"
 msgstr "Call: (every night until used) The app announces the role “Shadowwalker” in the night order. Read out: “Shadow Walker, wake up. Do you want to link with someone? Point to the person.”\nSelect or read: Tap the person the Shadow Walker links with. Otherwise “Do not link yet”.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
@@ -6019,7 +6019,7 @@ msgid "ui.role.wolfskind.lex.act"
 msgstr "Call: (role model choice, only while without a role model) The app announces the role “Wolf Child” in the night order. Read out: “Wolf Child, wake up. Point to the person who shall be your role model.”\nSelect or read: Tap the chosen role model and confirm.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap “Confirm selection”. The app then opens the next step."
 
 msgid "ui.role.zeitwaechter.lex.act"
-msgstr "Call: (once per life, as the very first step of a night, optional) The app announces the role “Time Warden” in the night order. Read out: “Time Warden, wake up. Do you want to freeze this night?”\nSelect or read: Does the Time Warden freeze this night? All further night steps are then dropped.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Freeze the night” or “Do not freeze”. The app then opens the next step."
+msgstr "Call: (once per life, optional) The app announces the role “Time Warden” in the night order. Read out: “Time Warden, wake up. Do you want to freeze this night?”\nSelect or read: Does the Time Warden freeze this night? All further night steps are then dropped.\nRead out or show: Apart from the call, nothing is read out or shown in this step.\nFinish: Tap the answer: “Freeze the night” or “Do not freeze”. The app then opens the next step."
 
 msgid "ui.lexicon.field.act"
 msgstr "Procedure at the table"
@@ -8551,7 +8551,7 @@ msgid "ui.cockpit.card.notice.heading"
 msgstr "Private notice"
 
 msgid "ui.night.rules.albtraumwolf"
-msgstr "· He picks someone every night, the same person as before is allowed. No skipping.\n· Only blocks night steps, and only if the person is a village role.\n· Death reactions and passive abilities still work."
+msgstr "· He picks someone every night, the same person as before is allowed. No skipping.\n· Only blocks later night steps, and only if the person is a village role.\n· Death reactions and passive abilities still work."
 
 msgid "ui.night.rules.amalia"
 msgstr "· Only by day, while at least three living people count as wolves.\n· Amalia dies at once and asks the yes/no question aloud.\n· The storyteller answers truthfully, the app records it."
@@ -8692,7 +8692,7 @@ msgid "ui.night.rules.rudelvater"
 msgstr "· Survives once per life the first death that is neither pack attack nor execution.\n· If executed, there is a second pack step in the following night.\n· That extra victim pierces protection."
 
 msgid "ui.night.rules.schattenhund"
-msgstr "· Once per life, asked every night until used.\n· Blocks all night steps of village roles for the whole night.\n· Death reactions and passive abilities still work. Wolves and solo players are unaffected."
+msgstr "· Once per life, asked every night until used.\n· Blocks all later night steps of village roles this night.\n· Death reactions and passive abilities still work. Wolves and solo players are unaffected."
 
 msgid "ui.night.rules.schattenwanderer"
 msgstr "· Once per life, every night until used, optional.\n· If one of the two dies, the other dies instead, then the chain is used up.\n· Storyteller corrections are not redirected."
@@ -8764,7 +8764,7 @@ msgid "ui.night.rules.wolfskind"
 msgstr "· Mandatory: picks a role model, another living person, not themself.\n· If the role model dies with consequences, they count as a wolf at once and appear as Werewolf.\n· They wake with the pack from the following night. A Gatewarden makes them a Villager."
 
 msgid "ui.night.rules.zeitwaechter"
-msgstr "· Once per life, as the first step. Skipping keeps the ability.\n· All night steps of all roles are cancelled, no one dies at dawn from this night.\n· Effects due from earlier nights still happen. The night number keeps counting."
+msgstr "· Once per life. Skipping keeps the ability.\n· All later night steps are cancelled, only Hades is left.\n· Effects due from earlier nights still happen. The night number keeps counting."
 
 msgid "ui.setup.voice.tooltip"
 msgstr "Enter a name by voice"

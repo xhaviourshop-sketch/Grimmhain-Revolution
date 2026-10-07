@@ -27,8 +27,6 @@ static func slot_priority(role_id: StringName) -> int:
 		return RoleCatalog.night_priority(RoleCatalog.RATTENFAENGER)  # PE-06: Platz des Rattenfängers, Tarnaufruf davor
 	if not RoleCatalog.has_role(role_id):
 		return -1
-	if role_id == RoleCatalog.ZEITWAECHTER:
-		return 0  # E-36: als allererster Nachtschritt
 	var priority := RoleCatalog.night_priority(role_id)
 	return priority if priority > 0 else -1
 

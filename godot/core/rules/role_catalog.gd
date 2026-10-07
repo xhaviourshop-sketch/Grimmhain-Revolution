@@ -89,9 +89,9 @@ const SPUERHUND := &"spuerhund"
 ## Parasit / Parasite (RM-DR-157): Einzelsieg; Wirt jede Nacht wählbar, mit lebendem Wirt unverwundbar,
 ## stirbt mit dem Wirt; Sieg bei höchstens drei Lebenden (KillPipeline, WinRules).
 const PARASIT := &"parasit"
-## Schattenhund / Shadow Hound (RM-DR-123): Wölfe; einmal je Leben alle Dorf-Nachtschritte einer Nacht blockieren.
+## Schattenhund / Shadow Hound (RM-DR-123, DA-106): Wölfe; einmal je Leben alle späteren Dorf-Nachtschritte einer Nacht blockieren.
 const SCHATTENHUND := &"schattenhund"
-## Albtraumwolf / Nightmare Wolf (RM-DR-134): Wölfe; jede Nacht freiwillig eine Person blockieren.
+## Albtraumwolf / Nightmare Wolf (RM-DR-134, DA-106): Wölfe; jede Nacht freiwillig die späteren Schritte einer Person blockieren.
 const ALBTRAUMWOLF := &"albtraumwolf"
 ## Giftwolf / Poison Wolf (RM-DR-111): Wölfe; zwei verzögerte, unaufhaltbare Vergiftungen je Leben.
 const GIFTWOLF := &"giftwolf"
@@ -199,7 +199,7 @@ const FATE_NIGHT := 4
 ## Alleinsieg statt des Wolfssiegs, wenn er der einzige lebende Wolf ist.
 const RACHSUECHTIGER_WOLF := &"rachsuechtiger-wolf"
 const LONE_WOLF_EVERY := 3
-## Zeitwächter / Time Warden (E-36, DA-19, DA-20): einmal je Leben als allererster Nachtschritt die Nacht einfrieren.
+## Zeitwächter / Time Warden (E-36, DA-19, DA-20, DA-106): einmal je Leben auf seinem Platz 9,5 die restliche Nacht einfrieren.
 const ZEITWAECHTER := &"zeitwaechter"
 ## Kartenschlucker / Card Swallower (72. Rolle, Decision Log „Kartenschlucker, Grundregeln“): Einzelsieg, sammelt Stapel aus
 ## Tauschaktionen der Totenreichkarten und kauft jede Nacht höchstens eine Aktion (SwallowerRules). Nur mit Totenreichkarten.
@@ -208,8 +208,24 @@ const KARTENSCHLUCKER := &"kartenschlucker"
 ## ausgenommen Rollen mit nur einem Ergebnis (Richter, Parasit, Verdammniswächter, Rotkäppchen).
 const APPLE_ROLES: Array[StringName] = [SCHUTZENGEL, ORAKEL, SPUERHUND, ALBTRAUMWOLF, HENKER, WALDLAEUFER, DOKTOR, TRAUMDEUTER, SCHWARZE_WITWE,
 	RATTENFAENGER, PESTBRINGERIN, PROPHET, FEUERTEUFEL]  ## Prophet nur freigeschaltet (Tötung jede Nacht)
-const BOUND_PRIORITY := 5
-const ETERNAL_PRIORITY := 48  ## gemeinsamer Schritt der Ewigen (Legacy-Stufe 4.8)
+
+## Nachtreihenfolge (DA-106): die Zahl oben links auf Markus' Rollenkarten mal 10, einzige Quelle aller Nachtprioritäten.
+## Nicht enthalten: Dorfbewohner (keine Zahl) und Rollen mit „X“ (kein Nachtaufruf). Amalia trägt 5,8, handelt aber am Tag.
+const CARD_NUMBERS := {
+	LOKI: 1, DORFCHRONISTIN: 3, SCHATTENHUND: 7, WOLFSKIND: 9, LEHRLING: 11, SCHUTZENGEL: 13, KORRUPTER_RICHTER: 15,
+	DORFSCHMIED: 17, WERWOLF: 20, ALBTRAUMWOLF: 21, RACHSUECHTIGER_WOLF: 22, VERDAMMNISWAECHTER: 23, KOENIG_LYKAON: 24,
+	SCHICKSALSWOLF: 25, SCHATTENWANDERER: 26, GIFTWOLF: 27, SCHWARZE_WITWE: 28, NEKROMANT: 30, KOPFGELDJAEGER: 32,
+	WALDHEXE: 34, FRANKENSTEIN: 36, KARTENSCHLUCKER: 40, RATTENFAENGER: 42, KOENIG: 44, ORAKEL: 46, DIE_EWIGEN: 48,
+	DOKTOR: 50, FAEHRTENLESER: 52, WALDLAEUFER: 54, SCHUTZGEIST: 56, AMALIA: 58, KRIEGERIN: 60, PARASIT: 62,
+	GRABRAEUBER: 64, TODESPREDIGER: 66, SPUERHUND: 68, TRAUMDEUTER: 70, PESTBRINGERIN: 72, ROTKAEPPCHEN: 74,
+	FEUERTEUFEL: 76, HENKER: 78, SEELENTAUSCHER: 80, BLUTPRIESTER: 82, VOODOO: 84, PROPHET: 86, MAERTYRERIN: 90,
+	ZEITWAECHTER: 95, HADES: 99,
+}
+## Rollen mit „X“ auf der Karte, die die App trotzdem bedingt aufruft (unverändert, DA-106): Gebundene nur in Nacht 1,
+## Kutscher nur mit erfüllter Wiederbelebungsbedingung.
+const X_CARD_PRIORITY := {DIE_GEBUNDENEN: 5, KUTSCHER: 38}
+const BOUND_PRIORITY: int = X_CARD_PRIORITY[DIE_GEBUNDENEN]
+const ETERNAL_PRIORITY: int = CARD_NUMBERS[DIE_EWIGEN]  ## gemeinsamer Schritt der Ewigen
 
 ## Alle begrenzten Einsätze in `Player.ability_uses` (G-ID-3), je höchstens einmal pro Person.
 const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhexe:heal", "waldhexe:poison", "spiegelwolf:mirror",
@@ -220,18 +236,17 @@ const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhe
 	"koenig-lykaon:skip1", "koenig-lykaon:skip2", "koenig-lykaon:skip3", "seelentauscher:swap", "kutscher:revive",
 	"dr-victor-frankenstein:revive", "todesprediger:predict", "grabraeuber:steal", "zeitwaechter:freeze"]
 
-## Nachtpriorität persönlicher Schritte (vertical-slice-flow.md §3, ×10 als Ganzzahl):
-## Wolfskind 0.9 (nur mit Auswahlbedarf), Lehrling 1.1 (nur mit Auswahlbedarf), Schutzengel 1.3, Rudel 2.0, Waldhexe 3.4, Orakel 4.6. Gleiche Priorität: nach Personen-ID.
-const PACK_PRIORITY := 20
+## Rudelschritt auf der Zahl des Werwolfs (2,0). Gleiche Priorität: nach Personen-ID.
+const PACK_PRIORITY: int = CARD_NUMBERS[WERWOLF]
 
 const ROLES := {
 	DORFBEWOHNER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFBEWOHNER},
 	WERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": WERWOLF, "max_copies": UNLIMITED},
-	SCHUTZENGEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZENGEL, "night_priority": 13},
-	WALDHEXE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDHEXE, "night_priority": 34},
-	ORAKEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ORAKEL, "night_priority": 46},
-	WOLFSKIND: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WOLFSKIND, "night_priority": 9},
-	LEHRLING: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": LEHRLING, "night_priority": 11},
+	SCHUTZENGEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZENGEL, "night_step": true},
+	WALDHEXE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDHEXE, "night_step": true},
+	ORAKEL: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ORAKEL, "night_step": true},
+	WOLFSKIND: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WOLFSKIND, "night_step": true},
+	LEHRLING: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": LEHRLING, "night_step": true},
 	MANIPULATOR: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": MANIPULATOR},
 	SPIEGELWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SPIEGELWOLF},
 	TRUGBILDERWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": TRUGBILDERWOLF, "requires_appearance": true},
@@ -239,64 +254,64 @@ const ROLES := {
 	SIEGREICHER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SIEGREICHER_WOLF, "parity_weight": 2},
 	DOPPELSPION: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": DOPPELSPION},
 	SELBSTMOERDER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": SELBSTMOERDER},
-	DORFCHRONISTIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFCHRONISTIN, "night_priority": 3, "first_night_only": true},
+	DORFCHRONISTIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFCHRONISTIN, "night_step": true, "first_night_only": true},
 	DIE_GEBUNDENEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_GEBUNDENEN, "max_copies": UNLIMITED},
-	WALDLAEUFER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDLAEUFER, "night_priority": 54},
-	DOKTOR: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DOKTOR, "night_priority": 50},
+	WALDLAEUFER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WALDLAEUFER, "night_step": true},
+	DOKTOR: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DOKTOR, "night_step": true},
 	WAHNSINNIGER_KUTSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WAHNSINNIGER_KUTSCHER},
 	NACHTWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": NACHTWAECHTER},
 	DORFWACHE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFWACHE},
 	BESESSENER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": BESESSENER_WOLF, "death_reaction": Reaction.KIND_POSSESSED},
 	RITTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": RITTER},
-	FAEHRTENLESER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": FAEHRTENLESER, "night_priority": 52},
+	FAEHRTENLESER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": FAEHRTENLESER, "night_step": true},
 	BLUTWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": BLUTWOLF},
-	KORRUPTER_RICHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KORRUPTER_RICHTER, "night_priority": 15},
+	KORRUPTER_RICHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KORRUPTER_RICHTER, "night_step": true},
 	WAECHTER_AM_TOR: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": WAECHTER_AM_TOR},
-	SPUERHUND: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SPUERHUND, "night_priority": 68},
-	PARASIT: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PARASIT, "night_priority": 62},
-	SCHATTENHUND: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHATTENHUND, "night_priority": 1},
-	ALBTRAUMWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": ALBTRAUMWOLF, "night_priority": 2},
-	GIFTWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": GIFTWOLF, "night_priority": 27},
+	SPUERHUND: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SPUERHUND, "night_step": true},
+	PARASIT: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PARASIT, "night_step": true},
+	SCHATTENHUND: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHATTENHUND, "night_step": true},
+	ALBTRAUMWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": ALBTRAUMWOLF, "night_step": true},
+	GIFTWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": GIFTWOLF, "night_step": true},
 	RUDELVATER: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": RUDELVATER},
 	SEUCHENWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SEUCHENWOLF},
 	FENRIR: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": FENRIR},
 	CERBERUS: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": CERBERUS},
-	HENKER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": HENKER, "night_priority": 78},
-	TRAUMDEUTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": TRAUMDEUTER, "night_priority": 70},
-	KOPFGELDJAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KOPFGELDJAEGER, "night_priority": 32},
-	KOENIG: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KOENIG, "night_priority": 44},
-	KRIEGERIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KRIEGERIN, "night_priority": 60},
-	BLUTPRIESTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": BLUTPRIESTER, "night_priority": 82},
+	HENKER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": HENKER, "night_step": true},
+	TRAUMDEUTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": TRAUMDEUTER, "night_step": true},
+	KOPFGELDJAEGER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KOPFGELDJAEGER, "night_step": true},
+	KOENIG: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KOENIG, "night_step": true},
+	KRIEGERIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KRIEGERIN, "night_step": true},
+	BLUTPRIESTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": BLUTPRIESTER, "night_step": true},
 	AMALIA: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": AMALIA},
 	DETEKTIV: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DETEKTIV},
 	DIE_EWIGEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DIE_EWIGEN},
 	DER_WEISE: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DER_WEISE},
-	MAERTYRERIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": MAERTYRERIN, "night_priority": 90},
-	SCHUTZGEIST: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZGEIST, "night_priority": 56},
-	DORFSCHMIED: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFSCHMIED, "night_priority": 17},
-	VERDAMMNISWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": VERDAMMNISWAECHTER, "night_priority": 23},
-	LOKI: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": LOKI, "night_priority": 4, "first_night_only": true},
-	SCHWARZE_WITWE: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHWARZE_WITWE, "night_priority": 28},
-	ROTKAEPPCHEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ROTKAEPPCHEN, "night_priority": 74},
-	SCHATTENWANDERER: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHATTENWANDERER, "night_priority": 26},
+	MAERTYRERIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": MAERTYRERIN, "night_step": true},
+	SCHUTZGEIST: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SCHUTZGEIST, "night_step": true},
+	DORFSCHMIED: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": DORFSCHMIED, "night_step": true},
+	VERDAMMNISWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": VERDAMMNISWAECHTER, "night_step": true},
+	LOKI: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": LOKI, "night_step": true, "first_night_only": true},
+	SCHWARZE_WITWE: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHWARZE_WITWE, "night_step": true},
+	ROTKAEPPCHEN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ROTKAEPPCHEN, "night_step": true},
+	SCHATTENWANDERER: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHATTENWANDERER, "night_step": true},
 	DAEMONISCHER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": DAEMONISCHER_WOLF, "death_reaction": Reaction.KIND_DEMON},
-	KOENIG_LYKAON: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": KOENIG_LYKAON, "night_priority": 24},
-	SEELENTAUSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SEELENTAUSCHER, "night_priority": 80},
-	KUTSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KUTSCHER, "night_priority": 38},
-	FRANKENSTEIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": FRANKENSTEIN, "night_priority": 36},
-	RATTENFAENGER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": RATTENFAENGER, "night_priority": 42},
-	PESTBRINGERIN: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PESTBRINGERIN, "night_priority": 72},
-	PROPHET: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PROPHET, "night_priority": 86},
-	TODESPREDIGER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": TODESPREDIGER, "night_priority": 66, "first_night_only": true},
-	FEUERTEUFEL: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": FEUERTEUFEL, "night_priority": 76},
-	VOODOO: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": VOODOO, "night_priority": 84},
-	NEKROMANT: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": NEKROMANT, "night_priority": 30},
-	RACHSUECHTIGER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": RACHSUECHTIGER_WOLF, "night_priority": 22},  ## Legacy-Stufe 2.2
-	ZEITWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ZEITWAECHTER, "night_priority": 95},  ## Legacy-Stufe 9.5; E-36: im Nachtplan zuerst
-	SCHICKSALSWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHICKSALSWOLF, "night_priority": 25},  ## Legacy-Stufe 2.5
-	GRABRAEUBER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": GRABRAEUBER, "night_priority": 64},  ## Legacy-Stufe 6.4
-	HADES: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": HADES, "night_priority": 99},  ## Legacy-Stufe 9.9: zuletzt
-	KARTENSCHLUCKER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": KARTENSCHLUCKER, "night_priority": 58, "requires_cards": true},  ## nach dem Schutzgeist (56), vor der Kriegerin (60)
+	KOENIG_LYKAON: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": KOENIG_LYKAON, "night_step": true},
+	SEELENTAUSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": SEELENTAUSCHER, "night_step": true},
+	KUTSCHER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": KUTSCHER, "night_step": true},
+	FRANKENSTEIN: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": FRANKENSTEIN, "night_step": true},
+	RATTENFAENGER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": RATTENFAENGER, "night_step": true},
+	PESTBRINGERIN: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PESTBRINGERIN, "night_step": true},
+	PROPHET: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": PROPHET, "night_step": true},
+	TODESPREDIGER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": TODESPREDIGER, "night_step": true, "first_night_only": true},
+	FEUERTEUFEL: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": FEUERTEUFEL, "night_step": true},
+	VOODOO: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": VOODOO, "night_step": true},
+	NEKROMANT: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": NEKROMANT, "night_step": true},
+	RACHSUECHTIGER_WOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": RACHSUECHTIGER_WOLF, "night_step": true},
+	ZEITWAECHTER: {"faction": Faction.VILLAGE, "counts_as_wolf": false, "appears_as": ZEITWAECHTER, "night_step": true},
+	SCHICKSALSWOLF: {"faction": Faction.WOLVES, "counts_as_wolf": true, "appears_as": SCHICKSALSWOLF, "night_step": true},
+	GRABRAEUBER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": GRABRAEUBER, "night_step": true},
+	HADES: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": HADES, "night_step": true},
+	KARTENSCHLUCKER: {"faction": Faction.SOLO, "counts_as_wolf": false, "appears_as": KARTENSCHLUCKER, "night_step": true, "requires_cards": true},
 }
 
 
@@ -331,10 +346,12 @@ static func death_reaction(role_id: StringName) -> StringName:
 	return (ROLES[role_id] as Dictionary).get("death_reaction", &"")
 
 
-## Nachtpriorität des eigenen Schritts jeder lebenden Person mit dieser Rolle
-## (vergleichbar mit PACK_PRIORITY) oder 0 ohne eigenen Nachtschritt.
+## Nachtpriorität des eigenen Schritts jeder lebenden Person mit dieser Rolle (Kartenzahl mal 10, DA-106;
+## vergleichbar mit PACK_PRIORITY) oder 0 ohne eigenen Nachtschritt.
 static func night_priority(role_id: StringName) -> int:
-	return (ROLES[role_id] as Dictionary).get("night_priority", 0)
+	if not (ROLES[role_id] as Dictionary).get("night_step", false):
+		return 0
+	return CARD_NUMBERS.get(role_id, X_CARD_PRIORITY.get(role_id, 0))
 
 
 ## true, wenn der persönliche Schritt der Rolle nur in Nacht 1 stattfindet (RM-DR-014 = B).
