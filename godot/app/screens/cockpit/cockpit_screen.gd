@@ -101,6 +101,7 @@ var _timer_labels: Dictionary = {}  ## Wertanzeigen der Timer-Dauern im Menü ("
 @onready var _backdrop_art: TextureRect = %BackdropArt  ## Dorfplatz bei Nacht (Fenster abgedunkelt), mit Fensterschein und Randdämpfung
 @onready var _backdrop_fog: ColorRect = %BackdropFog  ## ziehender Nebel über dem Hintergrund, hinter allen Bedienflächen
 @onready var _backdrop_shade: ColorRect = %BackdropShade
+@onready var _backdrop_wolf: ColorRect = %BackdropWolf  ## roter Schimmer am Rand während eines Wolfsschritts
 @onready var _order_bar: NightOrderBar = %OrderBar
 @onready var _corner: Control = %CornerInfo
 @onready var _status_strip: Control = %StatusStrip
@@ -119,6 +120,7 @@ var _day_bar: HBoxContainer = null  ## Nebenknöpfe der Tagesleiste, unten in de
 
 var _backdrop_phase: String = ""
 var _backdrop_tween: Tween = null
+var _ambience: NightAmbience = null  ## Nebel, Wolke, Fensterwahl und Wolfsschimmer (rein kosmetisch)
 
 
 func _setup() -> void:
@@ -128,6 +130,8 @@ func _setup() -> void:
 	(header.find_child("TitleLabel", true, false) as Control).visible = false  # nur der Zurück-Knopf steht in der Ecke
 	header.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_backdrop_art.texture = NightArt.texture("bg/scene-night-base.webp")
+	_ambience = NightAmbience.new()
+	add_child(_ambience)
 	_style_backdrop()
 	_day_bar = HBoxContainer.new()
 	_day_bar.name = "DayBar"
@@ -359,6 +363,7 @@ func _update_backdrop(phase: String) -> void:
 	if group == _backdrop_phase:
 		return
 	_backdrop_phase = group
+	_ambience.set_phase(group)
 	_backdrop.theme_type_variation = &"NightBackdrop" if group == "night" else (&"DayBackdrop" if group == "day" else &"AppBackground")
 	if _backdrop_tween != null and _backdrop_tween.is_valid():
 		_backdrop_tween.kill()
@@ -377,10 +382,9 @@ func _style_backdrop() -> void:
 	art.shader = load("res://app/theme/night_backdrop.gdshader") as Shader
 	art.set_shader_parameter("id_map", NightArt.texture("bg/scene-night-windows.png"))
 	_backdrop_art.material = art
-	var fog := ShaderMaterial.new()
-	fog.shader = load("res://app/theme/night_fog.gdshader") as Shader
-	_backdrop_fog.material = fog
-	_apply_motion_setting()
+	_ambience.configure(art, _backdrop_fog, _backdrop_wolf)
+	_ambience.set_reduced_motion(context.settings.reduced_motion)
+	_ambience.set_enabled(context.settings.effects_enabled, false)
 	var shade := ShaderMaterial.new()
 	shade.shader = load("res://app/theme/night_vignette.gdshader") as Shader
 	_backdrop_shade.material = shade
@@ -836,7 +840,9 @@ func _render() -> void:
 		_ring.set_marking(false, [], [], next.get("actor_ids", []))
 	else:
 		_ring.clear_marking()
-	_ring.set_hunt(_hunt_ids(eff, kind), not context.settings.reduced_motion)
+	var hunt := _hunt_ids(eff, kind)
+	_ring.set_hunt(hunt, not context.settings.reduced_motion)
+	_ambience.set_wolf(not hunt.is_empty())
 	# Ob die Auswahl bestätigt werden kann, entscheidet der Regelkern (Prüfung ohne Senden).
 	var selection_error := ""
 	if kind == "prompt" and str(next.get("answer")) == "targets" and not _selection.is_empty():
@@ -1006,16 +1012,11 @@ func _on_settings_changed(key: StringName) -> void:
 	elif key == &"show_night_timer":
 		_refresh_timer()
 	elif key == &"reduced_motion":
-		_apply_motion_setting()
+		_ambience.set_reduced_motion(context.settings.reduced_motion)
+	elif key == &"effects_enabled":
+		_ambience.set_enabled(context.settings.effects_enabled)
 	elif key == &"show_calls":
 		_render()
-
-
-## Fensterschein und Nebel stehen still, wenn reduzierte Bewegung eingestellt ist.
-func _apply_motion_setting() -> void:
-	var animate := 0.0 if context.settings.reduced_motion else 1.0
-	(_backdrop_art.material as ShaderMaterial).set_shader_parameter("animate", animate)
-	(_backdrop_fog.material as ShaderMaterial).set_shader_parameter("animate", animate)
 
 
 # --- Bedienung --------------------------------------------------------------------------------------

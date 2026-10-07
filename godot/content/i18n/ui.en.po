@@ -74,9 +74,6 @@ msgstr "Deutsch"
 msgid "ui.settings.language.english"
 msgstr "English"
 
-msgid "ui.settings.motion.heading"
-msgstr "Motion"
-
 msgid "ui.settings.motion.reduce"
 msgstr "Reduce motion"
 
@@ -9170,3 +9167,12 @@ msgstr "{role}\nscreen {n} of {total}"
 
 msgid "ui.preview.empty"
 msgstr "{role} · no screen"
+
+msgid "ui.settings.motion.effects"
+msgstr "Effects"
+
+msgid "ui.settings.toast.effects_on"
+msgstr "Effects on"
+
+msgid "ui.settings.toast.effects_off"
+msgstr "Effects off"
