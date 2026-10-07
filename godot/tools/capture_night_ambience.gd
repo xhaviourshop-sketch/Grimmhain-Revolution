@@ -1,7 +1,7 @@
 extends SceneTree
-## Screenshots Nacht-Atmosphäre (1024x768, echter Renderer):
+## Screenshots lebendiges Dorf (1024x768, echter Renderer):
 ##   godot --path godot --rendering-driver opengl3 --audio-driver Dummy --resolution 1024x768 -s res://tools/capture_night_ambience.gd -- --out=<Ordner>
-## Bilder: 1-nacht-ruhig, 2-nacht-wolf (Schimmer am Rand), 3-tag. Der Wolfsschimmer wird direkt am Cockpit-Knoten geschaltet.
+## Bilder: 1-nacht-ruhig, 2-nacht-wolf, 3-nacht-akt4, 4-tag. Wolfsschritt und Akt werden direkt an `NightAmbience` geschaltet.
 var OUT := "user://shots"
 var ctx: AppContext
 var shell: AppShell
@@ -24,11 +24,16 @@ func _initialize() -> void:
 	await create_timer(1.6).timeout
 	await _save("2-nacht-wolf")
 	amb.set_wolf(false)
+	await create_timer(2.0).timeout
+	amb.set_game(4, 2)
+	await create_timer(4.0).timeout
+	await _save("3-nacht-akt4")
+	amb.set_game(1, 0)
 	var game: GDScript = load("res://tests/ui/ui_game.gd")
 	game.call("to_day", ctx.session)
 	shell.navigate(&"cockpit")
 	await create_timer(3.0).timeout
-	await _save("3-tag")
+	await _save("4-tag")
 	quit(0)
 
 
