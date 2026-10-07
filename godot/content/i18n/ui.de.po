@@ -74,9 +74,6 @@ msgstr "Deutsch"
 msgid "ui.settings.language.english"
 msgstr "English"
 
-msgid "ui.settings.motion.heading"
-msgstr "Bewegung"
-
 msgid "ui.settings.motion.reduce"
 msgstr "Bewegung reduzieren"
 

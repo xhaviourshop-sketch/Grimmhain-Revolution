@@ -179,12 +179,6 @@ theme_type_variation = &"CardPanel"
 [node name="Column" type="VBoxContainer" parent="Layout/Columns/Secondary/MotionCard"]
 layout_mode = 2
 
-[node name="MotionHeading" type="Label" parent="Layout/Columns/Secondary/MotionCard/Column"]
-layout_mode = 2
-theme_type_variation = &"HeadingLabel"
-script = ExtResource("3_label")
-text_key = "ui.settings.motion.heading"
-
 [node name="ReducedMotionToggle" type="CheckButton" parent="Layout/Columns/Secondary/MotionCard/Column"]
 unique_name_in_owner = true
 layout_mode = 2

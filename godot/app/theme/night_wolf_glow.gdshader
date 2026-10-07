@@ -7,7 +7,7 @@ uniform float pulse_seconds = 2.5;
 uniform float animate = 1.0;           // 0 = gleichmäßiger Schein (reduzierte Bewegung)
 
 void fragment() {
-	float edge = smoothstep(0.45, 1.05, length((UV - vec2(0.5)) * vec2(1.0, 1.15)) * 1.6);
+	float edge = smoothstep(0.62, 1.05, length((UV - vec2(0.5)) * vec2(1.0, 1.15)) * 1.6);
 	float pulse = mix(0.8, 0.65 + 0.35 * sin(TIME * 6.2832 / pulse_seconds), animate);
 	COLOR = vec4(glow_color.rgb, max_alpha * strength * edge * pulse);
 }

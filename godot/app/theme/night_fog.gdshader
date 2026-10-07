@@ -29,7 +29,7 @@ float fbm3(vec2 p) {
 }
 
 void fragment() {
-	float ground = smoothstep(0.45, 1.0, UV.y);   // oben praktisch nichts
+	float ground = smoothstep(0.35, 1.0, UV.y);   // oben praktisch nichts
 	if (ground < 0.01 || strength < 0.001) {
 		COLOR = vec4(0.0);
 	} else {
