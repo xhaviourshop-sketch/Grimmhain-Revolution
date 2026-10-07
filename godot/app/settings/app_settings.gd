@@ -21,7 +21,7 @@ const MUSIC_VOLUME_DEFAULT := 3
 
 var music_volume: int = MUSIC_VOLUME_DEFAULT  ## Lautstärke der Musik in 5 Stufen (1 bis 5); getrennt von „Musik an/aus“
 var music_enabled: bool = true  ## „Musik“: Hintergrundmusik der Bildschirme; Standard an, auch für alte Stände ohne das Feld
-var effects_enabled: bool = true  ## „Effekte“: Nachtstimmung im Dorf (Nebel, Wolken, Fenster, Wolfsschimmer); Standard an, aus für schwache Geräte
+var effects_enabled: bool = true  ## „Effekte“: lebendiges Dorf (Licht, Rauch, Wolkenschatten, Vögel, Menge, Galgen); Standard an, aus für schwache Geräte
 
 
 ## Setzt die Sprache. Nur unterstützte Sprachen; liefert false bei Ablehnung.
