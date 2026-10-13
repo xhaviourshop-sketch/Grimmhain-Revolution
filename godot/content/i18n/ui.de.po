@@ -9270,7 +9270,7 @@ msgid "ui.role.classic_seherin.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.classic_seherin.lex.ability"
-msgstr "Zeigt auf eine andere Person und sieht deren wahre Rolle."
+msgstr "Zeigt auf eine andere Person und sieht deren wahre Rolle, auch bei Urwolf und Weißem Wolf."
 
 msgid "ui.role.classic_seherin.lex.timing"
 msgstr "Jede Nacht, solange die Seherin lebt."
@@ -9285,7 +9285,7 @@ msgid "ui.role.classic_seherin.lex.win"
 msgstr "Mit dem Dorf."
 
 msgid "ui.role.classic_seherin.lex.example"
-msgstr "Die Seherin prüft Clara. Der Spielleiter zeigt ihr „Der Werwolf“."
+msgstr "Die Seherin prüft Clara, die der Urwolf ist. Der Spielleiter zeigt ihr „Der Urwolf“."
 
 msgid "ui.role.classic_seherin.lex.act"
 msgstr "Aufruf: Lies vor: „Seherin, erwache. Zeige auf die Person, deren Rolle du sehen willst.“\nAuswählen oder ablesen: Tippe die Person an und bestätige.\nVorlesen oder zeigen: Zeige der Seherin das Ergebnis über „Karte zeigen“.\nBeenden: Tippe „Gezeigt“."

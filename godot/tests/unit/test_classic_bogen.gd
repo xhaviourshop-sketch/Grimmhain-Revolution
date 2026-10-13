@@ -44,6 +44,25 @@ func _night(s: GameState, victim: int, stop_at: Callable = Callable()) -> GameSt
 	return s
 
 
+## Seherin: erfährt die tatsächliche Rolle, auch bei Urwolf und Weißem Wolf.
+func test_seherin_sees_the_true_role_of_special_wolves() -> void:
+	var roles := ["classic-seherin", "classic-urwolf", "classic-weisser-wolf", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"]
+	var s := Fixtures.play([Fixtures.start_roles(roles)])
+	var seher := s.players[_id_of(s, "classic-seherin")]
+	for role: String in ["classic-urwolf", "classic-weisser-wolf"]:
+		var target := s.players[_id_of(s, role)]
+		assert_eq(InformationRules.determine_role(target, seher), StringName(role), "Seherin sieht %s" % role)
+		assert_eq(InformationRules.determine_role(target), RoleCatalog.WERWOLF, "ohne Seherin bleibt es „Werwolf“ (Grundspiel)")
+	var urwolf := _id_of(s, "classic-urwolf")
+	s = _night(s, _id_of(s, "classic-dorfbewohner"), func(st: GameState, p: PendingPrompt) -> bool:
+		if p.owner == PendingPrompt.OWNER_ORACLE and String(p.stage) != "shown":
+			return true
+		return false)
+	assert_true(s.pending_prompt != null and s.pending_prompt.owner == PendingPrompt.OWNER_ORACLE, "Seherin-Schritt offen")
+	s = _apply(s, _targets(s.pending_prompt, [urwolf]))
+	assert_eq(String(s.pending_prompt.partial["determined_role"]), "classic-urwolf", "gezeigt wird der Urwolf")
+
+
 ## Jäger: Der Schuss bei seinem Tod ist freiwillig, Verzicht ist möglich.
 func test_hunter_shot_is_optional() -> void:
 	var s := Fixtures.play([Fixtures.start_roles(C14)])

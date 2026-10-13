@@ -9270,7 +9270,7 @@ msgid "ui.role.classic_seherin.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.classic_seherin.lex.ability"
-msgstr "Points at another person and sees their true role."
+msgstr "Points at another person and sees their true role, including the Vile Wolve Father and the White Wolf."
 
 msgid "ui.role.classic_seherin.lex.timing"
 msgstr "Every night while the Seer lives."
@@ -9285,7 +9285,7 @@ msgid "ui.role.classic_seherin.lex.win"
 msgstr "With the village."
 
 msgid "ui.role.classic_seherin.lex.example"
-msgstr "The Seer checks Clara. The game master shows her “The Werewolf”."
+msgstr "The Seer checks Clara, who is the Vile Wolve Father. The Game Master shows her “The Vile Wolve Father”."
 
 msgid "ui.role.classic_seherin.lex.act"
 msgstr "Call: Read out: “Seer, wake up. Point to the person whose role you want to see.”\nSelect or read: Tap the person and confirm.\nRead out or show: Show the Seer the result via “Show card”.\nFinish: Tap “Shown”."

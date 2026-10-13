@@ -64,7 +64,7 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 		_confirm(ctx)
 		return
 	var target := s.players[(DictRead.to_int_array(p["targets"]) as Array[int])[0]]
-	var determined := InformationRules.determine_role(target)
+	var determined := InformationRules.determine_role(target, s.players[prompt.actor_id])
 	var cloaked := CardHooks.oracle_cloak(ctx, target)  # Schattenmantel / Schattenvorteil (Totenreichkarten)
 	prompt.partial = {
 		"target_id": target.id,
@@ -176,7 +176,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if DictRead.get_string(partial, "truth_role") != String(target.role_id):
 		return false
 	var determined := DictRead.get_string(partial, "determined_role")
-	if determined != String(InformationRules.determine_role(target)):
+	if determined != String(InformationRules.determine_role(target, oracle)):
 		return false
 	var shown := StringName(DictRead.get_string(partial, "shown_role"))
 	if not RoleCatalog.has_role(shown) or not partial.get("overridden") is bool or not partial.get("override_reason") is String:
