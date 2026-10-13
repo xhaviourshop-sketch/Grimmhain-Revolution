@@ -161,6 +161,8 @@ func _run(session: GameSession, g: int, focus: String, stop_on_focus: bool) -> b
 func _answer(session: GameSession, next: Dictionary, label: String) -> bool:
 	var combo := "%s/%s/%s" % [next["owner"], next["stage"] if str(next["owner"]) != "reaction" else next["reaction_kind"], next["answer"]]
 	_owners[str(next["owner"])] = true
+	if str(next.get("role_id", "")).begins_with("classic-"):
+		_owners[str(next["role_id"])] = true  # Classic-Schritte: Besitzer ist die Mechanik, die Rolle der Schrittkarte die Classic-ID
 	_render_once(combo, next)
 	var r := _try(session, next, label)
 	if r == null or not r.ok:
@@ -279,12 +281,13 @@ func _start(focus: String, count: int) -> Command:
 	var pool: Array = FUZZ.ROLES
 	var wolves: Array = FUZZ.WOLF_ROLES
 	# PE-07: jede Rolle höchstens einmal beim Start; gezogene, schon vergebene Rollen weichen auf die nächste freie des Pools aus.
-	var roles: Array = [focus]
+	var roles: Array = []
+	FUZZ._append_role(roles, focus)  # Classic-Gruppenrollen kommen nur vollständig
 	if not wolves.has(focus):
 		FUZZ.add_unique(roles, ["werwolf"], 0)
 	FUZZ.add_unique(roles, ["dorfbewohner"], 0)
 	while roles.size() < count:
-		FUZZ.add_unique(roles, pool, _rng.randi_range(0, pool.size() - 1))
+		FUZZ.add_unique(roles, pool, _rng.randi_range(0, pool.size() - 1), count)
 	var map := {}
 	var appearances := {}
 	var order: Array = []
@@ -318,6 +321,7 @@ const REACH_SCENARIOS := {
 	"rachsuechtiger-wolf": {"count": 8},                           # nur jede dritte Nacht
 	"dorfchronistin": {"count": 8},                                # nur Nacht 1
 	"loki": {"count": 8},
+	"dorfschmied": {"count": 8},                                    # Fokuspartie hängt am Zufall der Besetzung (Classic-Rollen im Pool)
 	"nekromant": {"count": 8},
 	"grabraeuber": {"count": 8},
 }

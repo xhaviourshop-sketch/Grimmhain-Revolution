@@ -8,7 +8,7 @@ extends UiTestCase
 
 const Fuzz := preload("res://tests/unit/test_role_interaction_fuzz.gd")
 ## Fokusrollen der gewählten Mischpartien (je Fokus die erste Fuzz-Partie): Hinweise, Wiederbelebung, Rollenwechsel, Tränke.
-const FOCUS := ["loki", "rattenfaenger", "dr-victor-frankenstein", "wolfskind", "seelentauscher", "waldhexe"]
+const FOCUS := ["loki", "rattenfaenger", "dr-victor-frankenstein", "wolfskind", "seelentauscher", "waldhexe", "sensentraeger"]
 ## Übergänge, die mindestens einmal vorkommen müssen, sonst belegt der Test nichts.
 const REQUIRED := ["role_change", "revival", "WitchActed", "GmCorrected", "RoleShownConfirmed", "NoticeAcked",
 	"ReactionQueued", "chain_death"]
