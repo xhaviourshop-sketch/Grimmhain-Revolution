@@ -41,4 +41,4 @@ static func kinds(index: int) -> String:
 
 
 static func block_key(index: int, block: int) -> String:
-	return "ui.rulebook.%s.b%02d" % [chapter_id(index), block + 1]
+	return ClassicNames.key("ui.rulebook.%s.b%02d" % [chapter_id(index), block + 1])

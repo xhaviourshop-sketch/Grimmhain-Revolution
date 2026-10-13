@@ -15,7 +15,10 @@ signal state_replaced                             ## Zustand durch Rückgängig/
 ## Neuzeichnen; er trägt nur seine Kennung und ändert nichts am Zustand.
 signal cue_requested(cue: StringName)
 
-var _state: GameState = GameState.new()
+var _state: GameState = GameState.new():
+	set(value):
+		_state = value
+		ClassicNames.active = ClassicNames.detect(value)  # Anzeige: Classic-Namen in Regelbuch und Karten
 var _commands: Array[Command] = []
 var _events: Array[GameEvent] = []
 var _redo: Array[Command] = []  ## zurückgenommene Befehle, letzter zuerst wiederholbar

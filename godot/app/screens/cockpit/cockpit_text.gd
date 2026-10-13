@@ -127,7 +127,7 @@ static func card_lines(public_cards: Array) -> Array:
 				var variant := StringName(str(c["variant"]))
 				out.append({"key": "ui.card.public.played", "values": {"card": card_name}})
 				if CardCatalog.CARDS.has(StringName(card_id)):
-					out.append({"key": CardCatalog.text_key(StringName(card_id), variant), "values": {}})
+					out.append({"key": ClassicNames.key(CardCatalog.text_key(StringName(card_id), variant)), "values": {}})
 				var values: Dictionary = c.get("values", {})
 				var keys := values.keys()
 				keys.sort()
