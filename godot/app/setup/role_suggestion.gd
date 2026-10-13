@@ -23,6 +23,10 @@ const VILLAGE_ORDER: Array[StringName] = [&"schutzengel", &"das-orakel", &"waldh
 const CLASSIC_VILLAGE_ORDER: Array[StringName] = [RoleCatalog.CLASSIC_SEHERIN, RoleCatalog.CLASSIC_HEXE, RoleCatalog.CLASSIC_ENGEL,
 	RoleCatalog.CLASSIC_JAEGER, RoleCatalog.CLASSIC_AMOR, RoleCatalog.CLASSIC_ALTE, RoleCatalog.CLASSIC_MAEDCHEN]
 const CLASSIC_GROUPS: Array[StringName] = [RoleCatalog.CLASSIC_DREI_BRUEDER, RoleCatalog.CLASSIC_ZWEI_SCHWESTERN]
+## Danach, nur solange noch ein Platz für einen einfachen Classic-Dorfbewohner bleibt: Wildes Kind, Ritter mit dem verrosteten Schwert und
+## ab 12 Personen der Selbstmörder (er braucht fünf Tote, vorher ist er ohne Wirkung).
+const CLASSIC_EXTRAS: Array[StringName] = [RoleCatalog.CLASSIC_WILDES_KIND, RoleCatalog.CLASSIC_RITTER, RoleCatalog.CLASSIC_SELBSTMOERDER]
+const CLASSIC_SOLO_MIN_PERSONS := 12
 
 
 static func wolf_count(persons: int) -> int:
@@ -90,6 +94,10 @@ static func _classic(persons: int) -> Dictionary:
 		if free >= size:
 			counts[String(group)] = size
 			free -= size
+	for role: StringName in CLASSIC_EXTRAS:
+		if free > 1 and (role != RoleCatalog.CLASSIC_SELBSTMOERDER or persons >= CLASSIC_SOLO_MIN_PERSONS):
+			counts[String(role)] = 1
+			free -= 1
 	counts[String(RoleCatalog.CLASSIC_DORFBEWOHNER)] = free
 	return counts
 

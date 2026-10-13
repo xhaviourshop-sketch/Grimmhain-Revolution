@@ -36,16 +36,23 @@ static func remove_bond(s: GameState, child_id: int) -> void:
 		s.wolf_children.erase(b)
 
 
-## Rollenfelder passend zum Verwandlungszustand; `role_id` bleibt `wolfskind`.
+## Rollenfelder passend zum Verwandlungszustand; `role_id` bleibt die Wolfskind-Rolle. Erscheinung: die eigene Rolle, nach der
+## Verwandlung der Werwolf (beim Wilden Kind der Classic nach `turns_into`, Akt Classic DA-108).
 static func set_fields(p: Player, transformed: bool) -> void:
 	p.faction = Faction.WOLVES if transformed else Faction.VILLAGE
 	p.counts_as_wolf = transformed
-	p.appears_as = RoleCatalog.WERWOLF if transformed else RoleCatalog.WOLFSKIND
+	p.appears_as = _appearance(p, transformed)
 
 
 static func fields_match(p: Player, transformed: bool) -> bool:
 	return p.faction == (Faction.WOLVES if transformed else Faction.VILLAGE) and p.counts_as_wolf == transformed \
-		and p.appears_as == (RoleCatalog.WERWOLF if transformed else RoleCatalog.WOLFSKIND)
+		and p.appears_as == _appearance(p, transformed)
+
+
+static func _appearance(p: Player, transformed: bool) -> StringName:
+	if not transformed:
+		return p.role_id
+	return RoleCatalog.param(p.role_id, "turns_into", RoleCatalog.WERWOLF)
 
 
 ## Bestätigte Vorbildwahl im eigenen Nachtschritt.

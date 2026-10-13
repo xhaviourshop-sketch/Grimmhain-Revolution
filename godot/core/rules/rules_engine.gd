@@ -882,7 +882,7 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 	s.death_marks.clear()
 	# Giftwolf: fällige Vergiftungen (zwei Nächte nach der Giftpranke), unaufhaltbar.
 	for entry: Dictionary in s.wolf_poisons.duplicate():
-		if int(entry["due_night"]) == s.night_number:
+		if int(entry["due_night"]) == s.night_number and not ClassicRules.is_tetanus(s, entry):
 			s.wolf_poisons.erase(entry)
 			KillPipeline.request_kill(ctx, int(entry["target_id"]), KillEvent.CAUSE_WOLF_POISON, KillEvent.SOURCE_PLAYER, int(entry["source_id"]))
 	if s.pack_target_id != GameState.NO_TARGET:
@@ -913,6 +913,11 @@ static func _resolve_dawn(ctx: RuleContext) -> void:
 			break  # Stille Nacht (Dorf): auch zusätzliche aktive Wolfstötungen entfallen
 		KillPipeline.request_kill(ctx, int(fate["target_id"]), KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1, true, false, _redirect_chain(int(fate["redirect_from"])))
 	s.fate_kills.clear()
+	# Classic: Tetanus des Ritters mit dem verrosteten Schwert, nach allen Rudelopfern der Nacht, unaufhaltbar.
+	for entry: Dictionary in s.wolf_poisons.duplicate():
+		if int(entry["due_night"]) == s.night_number and ClassicRules.is_tetanus(s, entry):
+			s.wolf_poisons.erase(entry)
+			KillPipeline.request_kill(ctx, int(entry["target_id"]), KillEvent.CAUSE_TETANUS, KillEvent.SOURCE_PLAYER, int(entry["source_id"]))
 	s.pack_target_id = GameState.NO_TARGET
 	s.pack_extra_target_id = GameState.NO_TARGET
 	s.pack_redirect_from = -1
@@ -938,7 +943,7 @@ static func _resolve_skipped_night(ctx: RuleContext) -> void:
 	for entry: Dictionary in s.wolf_poisons.duplicate():
 		if int(entry["due_night"]) <= s.night_number:
 			s.wolf_poisons.erase(entry)
-			KillPipeline.request_kill(ctx, int(entry["target_id"]), KillEvent.CAUSE_WOLF_POISON, KillEvent.SOURCE_PLAYER, int(entry["source_id"]))
+			KillPipeline.request_kill(ctx, int(entry["target_id"]), ClassicRules.poison_cause(s, entry), KillEvent.SOURCE_PLAYER, int(entry["source_id"]))
 	s.pack_target_id = GameState.NO_TARGET
 	s.pack_extra_target_id = GameState.NO_TARGET
 	s.death_marks.clear()

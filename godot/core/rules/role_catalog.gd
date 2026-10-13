@@ -332,11 +332,17 @@ const CLASSIC_ALTE := &"classic-alte"
 const CLASSIC_AMOR := &"classic-amor"
 const CLASSIC_DREI_BRUEDER := &"classic-drei-brueder"
 const CLASSIC_ZWEI_SCHWESTERN := &"classic-zwei-schwestern"
+const CLASSIC_SELBSTMOERDER := &"classic-selbstmoerder"
+const CLASSIC_WILDES_KIND := &"classic-wildes-kind"
+const CLASSIC_RITTER := &"classic-ritter"
 
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
 ##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
 ##   group_size    Gruppenrolle: genau so viele Personen in der Startbesetzung, Schritt nur für diese Gruppe
+##   model_night_one  Wildes Kind: Das Vorbild wird nur in Nacht 1 gewählt (nicht in der ersten verfügbaren Nacht)
+##   turns_into    Wildes Kind: Rolle, als die es nach der Verwandlung erscheint
+##   rusty         Ritter mit dem verrosteten Schwert: Tetanus statt sofortigem Tod des nächsten Wolfs (ClassicRules)
 const CLASSIC_ROLES := {
 	CLASSIC_DORFBEWOHNER: {"mechanic": DORFBEWOHNER, "max_copies": UNLIMITED},
 	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
@@ -349,6 +355,9 @@ const CLASSIC_ROLES := {
 	CLASSIC_AMOR: {"mechanic": LOKI, "lovers_only": true},
 	CLASSIC_DREI_BRUEDER: {"mechanic": DIE_GEBUNDENEN, "group_size": 3, "max_copies": 3},
 	CLASSIC_ZWEI_SCHWESTERN: {"mechanic": DIE_GEBUNDENEN, "group_size": 2, "max_copies": 2},
+	CLASSIC_SELBSTMOERDER: {"mechanic": SELBSTMOERDER},
+	CLASSIC_WILDES_KIND: {"mechanic": WOLFSKIND, "model_night_one": true, "turns_into": CLASSIC_WERWOLF},
+	CLASSIC_RITTER: {"mechanic": RITTER, "rusty": true},
 }
 
 ## Gruppenrollen mit gemeinsamem Erkennungsschritt in Nacht 1, in fester Reihenfolge des Nachtplans.

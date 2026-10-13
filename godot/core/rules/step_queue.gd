@@ -164,6 +164,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if role == RoleCatalog.WOLFSKIND and not WolfChildRules.needs_model(s, id):
 			continue
+		if role == RoleCatalog.WOLFSKIND and s.night_number != 1 and bool(RoleCatalog.param(p.role_id, "model_night_one", false)):
+			continue  # Wildes Kind (Classic): Vorbild nur in Nacht 1
 		if role == RoleCatalog.LEHRLING and not ApprenticeRules.needs_selection(s, id):
 			continue
 		if RoleCatalog.first_night_only(role) and s.night_number != 1:

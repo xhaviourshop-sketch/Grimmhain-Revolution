@@ -2288,6 +2288,9 @@ msgstr "dragged along by the Possessed Wolf"
 msgid "ui.cause.knight_strike"
 msgstr "strike of the dying Knight"
 
+msgid "ui.cause.tetanus"
+msgstr "Tetanus"
+
 msgid "ui.cause.wolf_poison"
 msgstr "Poison Wolf’s poison"
 
@@ -8784,6 +8787,9 @@ msgstr "{name} is charmed."
 msgid "ui.morning.private.protected"
 msgstr "{name} is protected."
 
+msgid "ui.morning.private.tetanus"
+msgstr "{name} is infected with tetanus and dies the following night (Rusty Knight)."
+
 msgid "ui.morning.private.wolf_poisoned"
 msgstr "{name} is poisoned (poison wolf)."
 
@@ -9575,6 +9581,114 @@ msgstr "Call: Read out: “Sisters, wake up and look at each other.”\nSelect o
 msgid "ui.role.classic_zwei_schwestern.lex.gm"
 msgstr "The app offers the sisters only when two places are free."
 
+msgid "ui.role.classic_selbstmoerder.name"
+msgstr "The Death Seeker"
+
+msgid "ui.role.classic_selbstmoerder.short"
+msgstr "Wants to be hanged by day once five players are dead."
+
+msgid "ui.role.classic_selbstmoerder.lex.night"
+msgstr "never"
+
+msgid "ui.role.classic_selbstmoerder.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.classic_selbstmoerder.lex.ability"
+msgstr "Wins alone if the village hangs them by day after at least five players have died."
+
+msgid "ui.role.classic_selbstmoerder.lex.timing"
+msgstr "Counts at their execution by day. The five dead must have died before their own death."
+
+msgid "ui.role.classic_selbstmoerder.lex.targets"
+msgstr "None."
+
+msgid "ui.role.classic_selbstmoerder.lex.exceptions"
+msgstr "Revived players do not count. If they die any other way or before the fifth death, they do not win."
+
+msgid "ui.role.classic_selbstmoerder.lex.win"
+msgstr "Alone, if hanged with at least five dead."
+
+msgid "ui.role.classic_selbstmoerder.lex.example"
+msgstr "Five players are dead. Ben, the Death Seeker, is hanged. They win alone.\nOnly four players are dead. Ben's execution does not win."
+
+msgid "ui.role.classic_selbstmoerder.lex.act"
+msgstr "Call: No night step.\nChoose or read: Nothing.\nRead aloud or show: Nothing.\nFinish: At their execution the app checks the win."
+
+msgid "ui.role.classic_selbstmoerder.lex.gm"
+msgstr "You decide when the win is announced. Nobody learns beforehand who the Death Seeker is."
+
+msgid "ui.role.classic_wildes_kind.name"
+msgstr "The Wild Child"
+
+msgid "ui.role.classic_wildes_kind.short"
+msgstr "Chooses a role model on night 1. If the model dies, the child becomes a werewolf."
+
+msgid "ui.role.classic_wildes_kind.lex.night"
+msgstr "night 1 only"
+
+msgid "ui.role.classic_wildes_kind.lex.wolf"
+msgstr "only after the change"
+
+msgid "ui.role.classic_wildes_kind.lex.ability"
+msgstr "Chooses a role model. If the model dies, the wild child becomes a werewolf."
+
+msgid "ui.role.classic_wildes_kind.lex.timing"
+msgstr "The choice happens on night 1 only and cannot be skipped."
+
+msgid "ui.role.classic_wildes_kind.lex.targets"
+msgstr "Exactly one other living player."
+
+msgid "ui.role.classic_wildes_kind.lex.exceptions"
+msgstr "If the model dies, the child becomes a werewolf at once and wakes with the pack from the next night. A death by correction without consequences does not change them."
+
+msgid "ui.role.classic_wildes_kind.lex.win"
+msgstr "With the village before the change, with the werewolves after."
+
+msgid "ui.role.classic_wildes_kind.lex.example"
+msgstr "On night 1 Clara, the wild child, chooses Ben as role model. On day 3 Ben is hanged. Clara becomes a werewolf."
+
+msgid "ui.role.classic_wildes_kind.lex.act"
+msgstr "Call: Read aloud: “Wild Child, wake up. Point at the player who becomes your role model.”\nChoose or read: Tap the player and confirm.\nRead aloud or show: Nothing.\nFinish: Tap “Confirm”."
+
+msgid "ui.role.classic_wildes_kind.lex.gm"
+msgstr "Only you and the child know the role model. The Seer sees “The Wild Child” before the change and “The Werewolf” after."
+
+msgid "ui.role.classic_ritter.name"
+msgstr "The Rusty Knight"
+
+msgid "ui.role.classic_ritter.short"
+msgstr "If eaten at night, the werewolf to their left dies of tetanus."
+
+msgid "ui.role.classic_ritter.lex.night"
+msgstr "never"
+
+msgid "ui.role.classic_ritter.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.classic_ritter.lex.ability"
+msgstr "If the werewolves eat the knight, the nearest werewolf to their left is infected and dies the following night."
+
+msgid "ui.role.classic_ritter.lex.timing"
+msgstr "Once. The infection happens at dawn after the attack, the death in the night after that, after the werewolves' victims."
+
+msgid "ui.role.classic_ritter.lex.targets"
+msgstr "The nearest living werewolf clockwise from the knight's seat."
+
+msgid "ui.role.classic_ritter.lex.exceptions"
+msgstr "Poison and executions trigger nothing. If no werewolf lives, nothing happens. If the werewolf dies earlier, the infection ends."
+
+msgid "ui.role.classic_ritter.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.classic_ritter.lex.example"
+msgstr "The werewolves eat Ben, the knight. Emil is the next werewolf to his left. The following night Emil dies."
+
+msgid "ui.role.classic_ritter.lex.act"
+msgstr "Call: No night step.\nChoose or read: Nothing, the app picks the werewolf.\nRead aloud or show: Announce the death in the following night without naming the cause.\nFinish: Tap next."
+
+msgid "ui.role.classic_ritter.lex.gm"
+msgstr "Only you see the infection. Publicly only the death is announced, not the cause or role."
+
 msgid "ui.act.classic.name"
 msgstr "Classic"
 
@@ -9604,6 +9718,9 @@ msgstr "“Brothers, wake up and look at each other.”"
 
 msgid "ui.call.classic_zwei_schwestern"
 msgstr "“Sisters, wake up and look at each other.”"
+
+msgid "ui.call.classic_wildes_kind"
+msgstr "“Wild Child, wake up. Point at the player who becomes your role model.”"
 
 msgid "ui.setup.roles.issue.role_group_incomplete"
 msgstr "The Three Brothers and the Two Sisters only play complete. Take the whole group or none."

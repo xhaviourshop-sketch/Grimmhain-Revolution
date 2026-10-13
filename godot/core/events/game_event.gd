@@ -64,6 +64,7 @@ const HOUND_REVEALED := &"HoundRevealed"      ## Ergebnis ✓/✗ für den Spür
 const PARASITE_ATTACHED := &"ParasiteAttached"  ## Wirtwahl des Parasiten (nur Spielleiter)
 const NIGHT_BLOCKED := &"NightBlocked"          ## Blockade durch Schattenhund oder Albtraumwolf (nur Spielleiter)
 const WOLF_POISONED := &"WolfPoisoned"          ## Giftpranke des Giftwolfs (nur Spielleiter)
+const TETANUS_INFECTED := &"TetanusInfected"    ## Ritter mit dem verrosteten Schwert infiziert einen Wolf (Classic, nur Spielleiter)
 const WOLF_POISON_NOTICE := &"WolfPoisonNotice"  ## private Mitteilung an das vergiftete Ziel (actor)
 const GROWTH_CHANGED := &"GrowthChanged"        ## Fenrir-Stufe oder Cerberus-Köpfe (nur Spielleiter)
 const EXECUTION_DEFENDED := &"ExecutionDefended"  ## Cerberus wehrt eine Hinrichtung ab (nur Spielleiter)
