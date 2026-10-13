@@ -5,7 +5,7 @@ Unklare Stellen des Charakterbogens (`Downloads/Grimmhain/Classic/charakterbogen
 ## Allgemein
 - **Weißer Wolf, Name:** Der Bogen schreibt „WEIßE WOLF“ (ohne Artikel). In der App heißt die Rolle „Der Weiße Wolf“. Alternative: „Weißer Werwolf“ oder genau „Weiße Wolf“.
 - **Selbstmörder, englischer Name:** Der Bogen nennt nur den deutschen Namen. In der App „The Death Seeker“ (wie im Grundspiel gewählt). Alternative: „The Suicide“.
-- **Alter, Fähigkeitsverlust:** Der Bogen sagt, nach seinem Lynch verlieren alle aus Gram ihre Fähigkeiten, ohne Dauer. Umgesetzt ist die Entscheidung DA-108 Punkt 3 (wie Der Weise, 0 bis 3 Nächte und Tage). Wörtlichste Lesart wäre „dauerhaft“.
+- **Alter, Fähigkeitsverlust:** Der Bogen sagt „verlieren alle aus Gram ihre Fähigkeiten“ ohne Dauer. Umgesetzt (Auftrag Markus 13.10.): dauerhaft für den Rest der Partie, für alle Personen der Dorf-Fraktion; keine Dauerfrage. Die frühere Lesart aus DA-108 Punkt 3 (0 bis 3 Nächte, wie Der Weise) gilt für die Classic-Alte nicht mehr. Alternative: auch Werwölfe und Einzelgänger verlieren ihre Fähigkeiten (der Bogen sagt „alle“).
 - **Nachtreihenfolge:** Der Bogen nennt keine Zahlen. Bestehende Classic-Rollen übernehmen die Reihenfolge ihrer Mechanik, neue Rollen eine begründete Nummer (siehe je Gruppe).
 - **Amor:** Der Bogen kennt nur Liebende; es gibt keine Auswahl der Art, die Person darf sich selbst wählen („evtl. auch sich selbst“).
 - **Hauptmann:** bewusst nicht gebaut (Phase 2).
@@ -93,8 +93,14 @@ Nachgelesen am 13.10.2026 im Bogen (300 dpi): Wortlaut „Jede zweite Nacht erwa
 Alternative: Nur ein anderer Werwolf darf sein Ziel sein. Nur umzusetzen, wenn Markus das so festlegt; Umbau ist klein (`lone_any` in `RoleCatalog.CLASSIC_ROLES` auf false setzen).
 
 ## Weißer Wolf, Sieg
-Gewählt: Einzelsieg nur, wenn er die einzige lebende Person ist. Er ist der einzige Wolf, aber andere leben: Es gewinnt niemand, das Spiel geht weiter. Leben außer ihm weitere Werwölfe, bleibt der Wolfssieg des Rudels (Grundverhalten, er zählt als Wolf).
-Alternative: Beim Wolfssieg des Rudels gewinnt er nicht mit; oder der Sieg gilt schon, wenn nur er und Dorfbewohner leben.
+Bogen: „Sein fester Wille ist es, als einziger am Ende übrig zu bleiben. Selbst andere Werwölfe stehen ihm dabei im Weg.“ Umgesetzt (Auftrag Markus 13.10.): Er spielt allein und gewinnt nur als Einziger Überlebender. Solange er lebt, gewinnt das Rudel nie (keine Wolfsparität) und das Dorf erst, wenn er tot ist. Leben nur er und weitere Werwölfe, geht das Spiel weiter, bis er sie getötet hat.
+Alternative: Beim Wolfssieg des Rudels gewinnt er mit (frühere Lesart bis 13.10.); oder der Sieg gilt schon, wenn nur er und Dorfbewohner leben.
 
 ## Bildzeichen
 Erwartet: `godot/assets/night/role-circle/classic-urwolf.webp` und `classic-weisser-wolf.webp` (laut Koordinator bereits in classic-akt). Ohne Datei zeigt die Nachtleiste kein Zeichen.
+
+## Nachtrag 13.10.2026: vier Rollen nach Wortlaut des Bogens
+- **Alte:** siehe „Alter, Fähigkeitsverlust“ oben. Ruht bereits ein Fluch, gibt es keinen zweiten; der Fluch der Classic-Alten hat keine Dauer und wird nie verlängert oder beendet.
+- **Weißer Wolf:** siehe „Weißer Wolf, Sieg“. Das Ziel seines Zusatzschritts bleibt „jede andere lebende Person“, weil der Bogen nur „sein Unwesen treiben“ sagt.
+- **Seherin:** Sie erfährt die tatsächliche Rolle (Rollen-ID der Person), auch bei Urwolf und Weißem Wolf. Das verwandelte Wilde Kind zeigt sie als „Das wilde Kind“ (die Rolle bleibt, nur die Fraktion wechselt). Alternative: als „Werwolf“, weil es nun zu den Wölfen zählt.
+- **Jäger:** Der Schuss ist freiwillig. Der Bogen sagt „kann“; das Grundspiel (Sensenträger) bleibt bei Pflicht, nur Classic hat den Verzicht (Parameter `optional_shot`). Der Verzicht erscheint auf der Schusskarte als Knopf „Kein Schuss“.
