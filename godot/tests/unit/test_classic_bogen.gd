@@ -44,6 +44,40 @@ func _night(s: GameState, victim: int, stop_at: Callable = Callable()) -> GameSt
 	return s
 
 
+## Löst offene Reaktionen (z. B. Jägerschuss) ohne Wirkung auf.
+func _clear_reactions(s: GameState) -> GameState:
+	for guard: int in 6:
+		if not StepQueue.reactions_due(s):
+			break
+		s = _apply(s, Command.begin_step(StepQueue.next_step_id(s)))
+		s = _apply(s, Command.answer_prompt(s.pending_prompt.id, []))
+	return s
+
+
+## Alte: Der Lynch lässt alle Dorf-Personen ihre Fähigkeiten dauerhaft verlieren, ohne Frage nach einer Dauer.
+func test_alte_lynch_silences_the_village_forever_without_asking_a_duration() -> void:
+	var s := Fixtures.play([Fixtures.start_roles(C14)])
+	var alte := _id_of(s, "classic-alte")
+	var hexe := _id_of(s, "classic-hexe")
+	s = _night(s, _id_of(s, "classic-maedchen"))
+	s = _apply(s, Command.end_night())
+	s = _clear_reactions(s)
+	s = _apply(s, Command.nominate(hexe, alte))
+	s = _apply(s, Command.decide_execution(alte))  # ohne `sage_curse`: keine Dauerfrage
+	assert_false(s.players[alte].alive, "Alte gelyncht")
+	assert_true(s.sage_curse_to >= GuardRoles.CURSE_FOREVER, "Fluch ohne Ende")
+	s.day_number += 40
+	assert_true(GuardRoles.silenced(s, hexe), "Die Hexe verliert ihre Fähigkeit dauerhaft (auch viel später)")
+	# Grundspiel unverändert: Der Weise verlangt weiter die Fluchdauer.
+	var base := Fixtures.play([Fixtures.start_roles(["der-weise", "werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])])
+	base = _night(base, 3)
+	base = _apply(base, Command.end_night())
+	base = _apply(base, Command.nominate(4, 1))
+	var r := RulesEngine.apply(base, Command.decide_execution(1))
+	assert_false(r.ok, "Der Weise braucht die Fluchdauer")
+	assert_eq(String(r.error), "sage_curse_required", "Grundspiel fragt weiter")
+
+
 ## Weißer Wolf: Das Rudel gewinnt nie, solange er lebt; er gewinnt nur als Letzter.
 func test_white_wolf_wins_only_alone_never_with_the_pack() -> void:
 	var s := Fixtures.play([Fixtures.start_roles(["classic-weisser-wolf", "classic-werwolf", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"])])

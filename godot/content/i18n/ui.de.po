@@ -9441,7 +9441,7 @@ msgid "ui.role.classic_alte.name"
 msgstr "Der Alte"
 
 msgid "ui.role.classic_alte.short"
-msgstr "Übersteht einen Angriff der Werwölfe. Wird er gehängt, verliert das Dorf seine Fähigkeiten."
+msgstr "Übersteht einen Angriff der Werwölfe. Wird er gehängt, verliert das Dorf dauerhaft seine Fähigkeiten."
 
 msgid "ui.role.classic_alte.lex.night"
 msgstr "nie"
@@ -9453,13 +9453,13 @@ msgid "ui.role.classic_alte.lex.ability"
 msgstr "Überlebt den ersten Angriff der Werwölfe."
 
 msgid "ui.role.classic_alte.lex.timing"
-msgstr "Der Schutz gilt einmal. Wird er hingerichtet, ruhen die Fähigkeiten des Dorfes 0 bis 3 Nächte und Tage."
+msgstr "Der Schutz gilt einmal. Wird er hingerichtet, verlieren alle Dorfbewohner ihre Fähigkeiten dauerhaft."
 
 msgid "ui.role.classic_alte.lex.targets"
 msgstr "Keine."
 
 msgid "ui.role.classic_alte.lex.exceptions"
-msgstr "Das Gift der Hexe tötet ihn. Die Zahl der Nächte und Tage legst du bei der Hinrichtung fest."
+msgstr "Das Gift der Hexe tötet ihn. Werwölfe und Einzelgänger behalten ihre Fähigkeiten."
 
 msgid "ui.role.classic_alte.lex.win"
 msgstr "Mit dem Dorf."
@@ -9468,7 +9468,7 @@ msgid "ui.role.classic_alte.lex.example"
 msgstr "Die Werwölfe wählen den Alten. Am Morgen lebt er noch, niemand ist gestorben."
 
 msgid "ui.role.classic_alte.lex.act"
-msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Bei seiner Hinrichtung fragt die App, wie lange die Fähigkeiten ruhen.\nVorlesen oder zeigen: Verkünde, dass das Dorf seine Fähigkeiten verliert.\nBeenden: Bestätige die Zahl."
+msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Bei seiner Hinrichtung fragt die App nichts, der Verlust gilt für den Rest der Partie.\nVorlesen oder zeigen: Verkünde, dass das Dorf seine Fähigkeiten verliert.\nBeenden: Bestätige die Hinrichtung."
 
 msgid "ui.role.classic_alte.lex.gm"
 msgstr "Seine Rettung geschieht still, nur du erfährst es."

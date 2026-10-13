@@ -9441,7 +9441,7 @@ msgid "ui.role.classic_alte.name"
 msgstr "The Elder"
 
 msgid "ui.role.classic_alte.short"
-msgstr "Survives one werewolf attack. If he is hanged, the village loses its abilities."
+msgstr "Survives one attack by the werewolves. If hanged, the village loses its abilities for good."
 
 msgid "ui.role.classic_alte.lex.night"
 msgstr "never"
@@ -9453,13 +9453,13 @@ msgid "ui.role.classic_alte.lex.ability"
 msgstr "Survives the first werewolf attack."
 
 msgid "ui.role.classic_alte.lex.timing"
-msgstr "The protection works once. If he is executed, the village’s abilities rest for 0 to 3 nights and days."
+msgstr "The protection works once. If the Elder is hanged, all villagers lose their abilities for good."
 
 msgid "ui.role.classic_alte.lex.targets"
 msgstr "None."
 
 msgid "ui.role.classic_alte.lex.exceptions"
-msgstr "The Witch’s poison kills him. You set the number of nights and days at the execution."
+msgstr "The Witch's poison kills them. Werewolves and loners keep their abilities."
 
 msgid "ui.role.classic_alte.lex.win"
 msgstr "With the village."
@@ -9468,7 +9468,7 @@ msgid "ui.role.classic_alte.lex.example"
 msgstr "The werewolves choose the Elder. In the morning he is still alive and nobody died."
 
 msgid "ui.role.classic_alte.lex.act"
-msgstr "Call: No night step.\nSelect or read: At his execution the app asks how long the abilities rest.\nRead out or show: Announce that the village loses its abilities.\nFinish: Confirm the number."
+msgstr "Call: No night step.\nChoose or read: At the hanging the app asks nothing; the loss lasts for the rest of the game.\nRead or show: Announce that the village loses its abilities.\nFinish: Confirm the execution."
 
 msgid "ui.role.classic_alte.lex.gm"
 msgstr "His rescue happens silently, only you learn about it."

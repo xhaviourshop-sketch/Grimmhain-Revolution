@@ -32,13 +32,28 @@ static func silenced(s: GameState, id: int) -> bool:
 	return s.players.has(id) and s.players[id].faction == Faction.VILLAGE and curse_active(s)
 
 
-## Hinrichtung verlangt die Fluchdauer: der Tod träfe durch Lynch einen Weisen, dessen Fähigkeit nicht ruht.
-static func needs_sage_decision(s: GameState, target_id: int) -> bool:
+## Der Weise (oder Classic-Alte), den diese Hinrichtung per Lynch träfe und dessen Fähigkeit nicht ruht, sonst null.
+static func _lynched_sage(s: GameState, target_id: int) -> Player:
 	if not s.players.has(target_id) or not s.players[target_id].alive:
-		return false
+		return null
 	var r := ExecutionRules.preview(s, target_id, KillEvent.SOURCE_VILLAGE)
 	var dying: Player = s.players.get(int(r["death_target_id"]))
-	return String(r["cause"]) == String(KillEvent.CAUSE_LYNCH) and dying != null and dying.mech_role() == RoleCatalog.DER_WEISE and not silenced(s, dying.id)
+	if String(r["cause"]) == String(KillEvent.CAUSE_LYNCH) and dying != null and dying.mech_role() == RoleCatalog.DER_WEISE and not silenced(s, dying.id):
+		return dying
+	return null
+
+
+## Hinrichtung verlangt die Fluchdauer: der Tod träfe durch Lynch einen Weisen, dessen Fähigkeit nicht ruht.
+## Die Classic-Alte (`curse_forever`) hat keine Dauer: ihr Fluch gilt dauerhaft, die Spielleitung wird nicht gefragt.
+static func needs_sage_decision(s: GameState, target_id: int) -> bool:
+	var dying := _lynched_sage(s, target_id)
+	return dying != null and not RoleCatalog.param(dying.role_id, "curse_forever", false)
+
+
+## true, wenn diese Hinrichtung die Classic-Alte per Lynch trifft: Alle Dorf-Personen verlieren ihre Fähigkeiten dauerhaft.
+static func lynch_curses_forever(s: GameState, target_id: int) -> bool:
+	var dying := _lynched_sage(s, target_id)
+	return dying != null and RoleCatalog.param(dying.role_id, "curse_forever", false)
 
 
 ## Fehlergrund für das Feld `sage_curse` einer Hinrichtung oder &"".
@@ -51,6 +66,9 @@ static func validate_curse_field(s: GameState, target_id: int, p: Dictionary) ->
 		return &"invalid_sage_curse"
 	return &""
 
+
+## Länge des dauerhaften Fluchs der Classic-Alten (Nächte und Tage bis weit über jede Partie hinaus).
+const CURSE_FOREVER := 100000
 
 ## Fluch nach dem Lynch-Tod eines Weisen am Tag d: Nächte und Tage d+1 bis d+n (verlängert einen laufenden).
 static func start_curse(ctx: RuleContext, sage_id: int, length: int) -> void:

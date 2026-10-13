@@ -344,6 +344,7 @@ const CLASSIC_BAERENFUEHRER := &"classic-baerenfuehrer"
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
 ##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
+##   curse_forever Classic-Alte: Lynch lässt alle Dorf-Personen ihre Fähigkeiten dauerhaft verlieren (Bogen: „verlieren alle aus Gram ihre Fähigkeiten“), keine Dauerfrage
 ##   true_role     Classic-Seherin: erfährt die tatsächliche Rolle auch bei Wölfen (Bogen: „wahre Identität“)
 ##   optional_shot Classic-Jäger: der Schuss bei seinem Tod ist freiwillig (Bogen: „kann“), Verzicht erlaubt
 ##   group_size    Gruppenrolle: genau so viele Personen in der Startbesetzung, Schritt nur für diese Gruppe
@@ -366,7 +367,7 @@ const CLASSIC_ROLES := {
 	CLASSIC_JAEGER: {"mechanic": SENSENTRAEGER, "optional_shot": true},
 	CLASSIC_ENGEL: {"mechanic": SCHUTZENGEL},
 	CLASSIC_MAEDCHEN: {"mechanic": DORFBEWOHNER},
-	CLASSIC_ALTE: {"mechanic": DER_WEISE},
+	CLASSIC_ALTE: {"mechanic": DER_WEISE, "curse_forever": true},
 	CLASSIC_AMOR: {"mechanic": LOKI, "lovers_only": true},
 	CLASSIC_DREI_BRUEDER: {"mechanic": DIE_GEBUNDENEN, "group_size": 3, "max_copies": 3},
 	CLASSIC_ZWEI_SCHWESTERN: {"mechanic": DIE_GEBUNDENEN, "group_size": 2, "max_copies": 2},

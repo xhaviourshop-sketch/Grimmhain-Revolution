@@ -87,6 +87,7 @@ static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, c
 		ctx.emit(GameEvent.EXECUTION_DEFENDED, Visibility.GM, {"target_id": target_id, "by": String(RoleCatalog.CERBERUS), "day": s.day_number})
 		_hangman_extras(ctx)
 		return
+	var forever := GuardRoles.lynch_curses_forever(s, target_id)  # Classic-Alte: dauerhafter Fluch ohne Frage
 	var sage := GuardRoles.needs_sage_decision(s, target_id)  # vor dem Verbrauch einer Spiegelung
 	var r := preview(s, target_id, source_kind)
 	var target: Player = s.players[target_id]
@@ -112,8 +113,8 @@ static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, c
 		for e: Dictionary in CardLynch.for_today(s, "lynch_swap_nominator"):
 			CardEffects.remove_effect(s, int(e["id"]))
 	var record := KillPipeline.request_kill(ctx, death_id, StringName(r["cause"]), StringName(r["source_kind"]), int(r["source_id"]))
-	if sage and record != null:
-		GuardRoles.start_curse(ctx, record.target_id, sage_curse)
+	if (sage or forever) and record != null:
+		GuardRoles.start_curse(ctx, record.target_id, GuardRoles.CURSE_FOREVER if forever else sage_curse)
 	if cards:
 		CardLynch.after_execution(ctx, payload, record)
 	_hangman_extras(ctx)
