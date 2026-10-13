@@ -78,6 +78,11 @@ static func night_base(next: Dictionary) -> String:
 
 
 static func night_short_key(next: Dictionary) -> String:
+	var role := str(next.get("role_id", ""))
+	if RoleCatalog.is_classic(StringName(role)):  # Classic-Rolle mit eigener Kurz-Aktion (ohne Grundspiel-Namen), sonst die der Mechanik
+		var own := night_base(next).replace("ui.night.%s." % key_part(str(next.get("owner", ""))), "ui.night.%s." % key_part(role)) + ".short"
+		if has_key(own):
+			return own
 	var key := night_base(next) + ".short"
 	return key if has_key(key) else "ui.night.generic.short.%s" % str(next.get("answer", "targets"))
 

@@ -27,6 +27,9 @@ const CLASSIC_GROUPS: Array[StringName] = [RoleCatalog.CLASSIC_DREI_BRUEDER, Rol
 ## ab 12 Personen der Selbstmörder (er braucht fünf Tote, vorher ist er ohne Wirkung).
 const CLASSIC_EXTRAS: Array[StringName] = [RoleCatalog.CLASSIC_WILDES_KIND, RoleCatalog.CLASSIC_RITTER, RoleCatalog.CLASSIC_SELBSTMOERDER]
 const CLASSIC_SOLO_MIN_PERSONS := 12
+## Fuchs und Bärenführer kommen erst nach den Gruppen dazu, damit bestehende Besetzungen gleich bleiben. Der Flötenspieler (Einzelgänger)
+## wird nie vorgeschlagen, sondern bewusst gewählt.
+const CLASSIC_EXTRA_ORDER: Array[StringName] = [RoleCatalog.CLASSIC_FUCHS, RoleCatalog.CLASSIC_BAERENFUEHRER]
 
 
 static func wolf_count(persons: int) -> int:
@@ -94,7 +97,7 @@ static func _classic(persons: int) -> Dictionary:
 		if free >= size:
 			counts[String(group)] = size
 			free -= size
-	for role: StringName in CLASSIC_EXTRAS:
+	for role: StringName in CLASSIC_EXTRAS + CLASSIC_EXTRA_ORDER:
 		if free > 1 and (role != RoleCatalog.CLASSIC_SELBSTMOERDER or persons >= CLASSIC_SOLO_MIN_PERSONS):
 			counts[String(role)] = 1
 			free -= 1

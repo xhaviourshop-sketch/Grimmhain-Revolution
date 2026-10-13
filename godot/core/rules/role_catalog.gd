@@ -337,6 +337,9 @@ const CLASSIC_WILDES_KIND := &"classic-wildes-kind"
 const CLASSIC_RITTER := &"classic-ritter"
 const CLASSIC_URWOLF := &"classic-urwolf"
 const CLASSIC_WEISSER_WOLF := &"classic-weisser-wolf"
+const CLASSIC_FUCHS := &"classic-fuchs"
+const CLASSIC_FLOETENSPIELER := &"classic-floetenspieler"
+const CLASSIC_BAERENFUEHRER := &"classic-baerenfuehrer"
 
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
@@ -349,6 +352,10 @@ const CLASSIC_WEISSER_WOLF := &"classic-weisser-wolf"
 ##   every         Weißer Wolf: Zusatzschritt in jeder n-ten Nacht (Rachsüchtiger Wolf: 3)
 ##   lone_any      Weißer Wolf: Opfer ist jede andere lebende Person, nicht nur ein Wolf
 ##   sole_win      Weißer Wolf: gewinnt nur, wenn er als einzige Person lebt
+##   fox           Fuchs: wählt eine Person, geprüft wird sie mit ihren beiden Nachbarn auf einen Werwolf (Bogen)
+##   pipe_two      Flötenspieler: verzaubert in jeder Nacht genau zwei (bei nur einer übrigen Person diese)
+##   piper_all     false: kein Schritt „Alle Verzauberten“ (der Bogen kennt ihn nicht)
+##   bear          Bärenführer: knurrt jeden Morgen, wenn ein Werwolf unmittelbar neben ihm sitzt
 const CLASSIC_ROLES := {
 	CLASSIC_DORFBEWOHNER: {"mechanic": DORFBEWOHNER, "max_copies": UNLIMITED},
 	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
@@ -366,6 +373,9 @@ const CLASSIC_ROLES := {
 	CLASSIC_RITTER: {"mechanic": RITTER, "rusty": true},
 	CLASSIC_URWOLF: {"mechanic": WERWOLF, "transform": true},
 	CLASSIC_WEISSER_WOLF: {"mechanic": RACHSUECHTIGER_WOLF, "every": 2, "lone_any": true, "sole_win": true},
+	CLASSIC_FUCHS: {"mechanic": SPUERHUND, "fox": true},
+	CLASSIC_FLOETENSPIELER: {"mechanic": RATTENFAENGER, "pipe_two": true, "piper_all": false},
+	CLASSIC_BAERENFUEHRER: {"mechanic": DORFBEWOHNER, "bear": true},
 }
 
 ## Gruppenrollen mit gemeinsamem Erkennungsschritt in Nacht 1, in fester Reihenfolge des Nachtplans.

@@ -972,6 +972,7 @@ static func _finish_dawn_if_ready(ctx: RuleContext) -> void:
 	if s.phase == Phase.DAWN_RESOLUTION and s.reactions.is_empty() and s.pending_prompt == null and not CardRules.tasks_open(s):
 		PhaseMachine.enter(ctx, Phase.DAY)
 		_ring_alarm_bells(ctx)
+		_growl_bears(ctx)
 		_judge_nominations(ctx)
 		CardRules.begin_day(ctx)  # Karteneffekte des Tagesbeginns, erstes Kartenfenster
 
@@ -1009,6 +1010,28 @@ static func _ring_alarm_bells(ctx: RuleContext) -> void:
 	suspects.sort()
 	ctx.emit(GameEvent.ALARM_BELLS_DETAIL, Visibility.GM, {"watchman_ids": watchmen, "neighbour_ids": suspects, "day": s.day_number})
 	ctx.emit(GameEvent.ALARM_BELLS, Visibility.PUBLIC, {"day": s.day_number})
+
+
+## Classic-Bärenführer (Bogen): Jeden Morgen knurrt der Spielleiter, wenn ein lebender Bärenführer unmittelbar neben einem
+## Werwolf sitzt. Öffentlich nur das Knurren, die Einzelheiten erhält der Spielleiter.
+static func _growl_bears(ctx: RuleContext) -> void:
+	var s := ctx.state
+	var bears: Array[int] = []
+	var wolves: Array[int] = []
+	for id: int in s.alive_ids():
+		if not RoleCatalog.param(s.players[id].role_id, "bear", false) or GuardRoles.silenced(s, id):
+			continue
+		for n: int in Seats.living_neighbours(s, id):
+			if s.players[n].counts_as_wolf:
+				if not bears.has(id):
+					bears.append(id)
+				if not wolves.has(n):
+					wolves.append(n)
+	if bears.is_empty():
+		return
+	wolves.sort()
+	ctx.emit(GameEvent.BEAR_GROWL_DETAIL, Visibility.GM, {"bear_ids": bears, "wolf_ids": wolves, "day": s.day_number})
+	ctx.emit(GameEvent.BEAR_GROWL, Visibility.PUBLIC, {"day": s.day_number})
 
 
 ## Umlenkungskette eines Rudelangriffs, den ein Nekromant umgelenkt hat (E-20: nie zurück zu ihm).

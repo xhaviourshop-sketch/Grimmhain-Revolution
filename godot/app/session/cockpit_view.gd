@@ -201,6 +201,9 @@ static func notice_card(s: GameState) -> Dictionary:
 			text_key = "ui.notice.loki_bond.%s" % str((n["data"] as Dictionary)["bond"])
 		NoticeRules.PIPER_NEW:
 			text_key = "ui.notice.piper_new"
+			for id: int in s.alive_ids():
+				if s.players[id].role_id == RoleCatalog.CLASSIC_FLOETENSPIELER:
+					text_key = "ui.notice.piper_new_classic"  # ohne den Namen der Grundspiel-Rolle
 		NoticeRules.PEST_INFECTED:
 			text_key = "ui.notice.pest_infected"
 	return {"kind": "notice", "secret": true, "notice_id": int(n["id"]), "notice_kind": str(n["kind"]), "open": s.notices.size(),

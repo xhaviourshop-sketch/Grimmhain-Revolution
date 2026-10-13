@@ -241,13 +241,24 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 		entries.append([RoleCatalog.ETERNAL_PRIORITY, 0, ETERNAL])
 	# PE-06: nach jedem Aufruf des Rattenfängers (echter Schritt oder Tarnaufruf), hinter allen Rattenfänger-Schritten.
 	# Auch ohne Verzauberte bei Nachtbeginn, weil der Rattenfänger in dieser Nacht die ersten verzaubern kann.
-	if CallPolicy.called_roles(s).has(RoleCatalog.RATTENFAENGER) or entries.any(func(e: Array) -> bool: return step_role(e[2]) == RoleCatalog.RATTENFAENGER):
+	if _piper_all_wanted(s) and (CallPolicy.called_roles(s).has(RoleCatalog.RATTENFAENGER) or entries.any(func(e: Array) -> bool: return step_role(e[2]) == RoleCatalog.RATTENFAENGER)):
 		entries.append([RoleCatalog.night_priority(RoleCatalog.RATTENFAENGER), PIPER_ALL_ORDER, PIPER_ALL])
 	entries.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and a[1] < b[1]))
 	var plan: Array[StringName] = []
 	for entry: Array in entries:
 		plan.append(entry[2])
 	return plan
+
+
+## „Alle Verzauberten“ (PE-06) gibt es nicht, wenn jeder Rattenfänger-Inhaber eine Classic-Rolle ohne diesen Schritt hat (Flötenspieler).
+static func _piper_all_wanted(s: GameState) -> bool:
+	var holders := 0
+	for p: Player in s.players.values():
+		if p.mech_role() == RoleCatalog.RATTENFAENGER or RoleCatalog.mech(p.original_role_id) == RoleCatalog.RATTENFAENGER:
+			holders += 1
+			if bool(RoleCatalog.param(p.role_id, "piper_all", true)):
+				return true
+	return holders == 0
 
 
 ## Grund, warum der Nachtschritt `index` entfällt, oder &"" wenn er auszuführen ist.
@@ -324,7 +335,9 @@ static func core_drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision"  # in diesem Leben schon genutzt
 	if step_role(key) == RoleCatalog.DOKTOR and s.alive_ids().size() < 3:
 		return &"no_decision"  # keine zwei anderen Lebenden
-	if step_role(key) == RoleCatalog.SPUERHUND and not InfoSteps.hound_lost(s.players[actor]) and s.alive_ids().size() < InfoSteps.HOUND_PICKS + 1:
+	if step_role(key) == RoleCatalog.SPUERHUND and InfoSteps.is_fox(s.players[actor]) and not InfoSteps.hound_lost(s.players[actor]) and s.alive_ids().size() < 2:
+		return &"no_decision"  # Fuchs: ohne zweite lebende Person gibt es kein Trio
+	if step_role(key) == RoleCatalog.SPUERHUND and not InfoSteps.is_fox(s.players[actor]) and not InfoSteps.hound_lost(s.players[actor]) and s.alive_ids().size() < InfoSteps.HOUND_PICKS + 1:
 		return &"no_decision"  # die Karte verlangt genau drei andere Lebende
 	if (step_role(key) == RoleCatalog.TRAUMDEUTER or step_role(key) == RoleCatalog.KOPFGELDJAEGER) and not InfoSteps.triple_possible(s, actor):
 		return &"no_decision"  # keine drei anderen Lebenden mit mindestens einem Wolf
@@ -471,6 +484,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 				prompt.allowed_ids = SoloRules.charm_targets(s, solo_actor)
 				prompt.min_count = 1
 				prompt.max_count = mini(2, prompt.allowed_ids.size())
+				if RoleCatalog.param(s.players[solo_actor].role_id, "pipe_two", false):
+					prompt.min_count = prompt.max_count  # Bogen: in jeder Nacht zwei Spieler
 			RoleCatalog.PESTBRINGERIN:  # eine noch gesunde andere Lebende
 				prompt.allowed_ids = SoloRules.pest_targets(s, solo_actor)
 				prompt.min_count = 1

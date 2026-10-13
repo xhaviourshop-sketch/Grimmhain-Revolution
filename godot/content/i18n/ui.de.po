@@ -9826,3 +9826,125 @@ msgstr "Tippe die Person oder wähle Nicht heute."
 
 msgid "ui.night.classic_weisser_wolf.pick.short"
 msgstr "erledigt jemanden?"
+msgid "ui.role.classic_fuchs.name"
+msgstr "Der Fuchs"
+
+msgid "ui.role.classic_fuchs.short"
+msgstr "Erfährt, ob bei einer Person und ihren Nachbarn ein Werwolf sitzt."
+
+msgid "ui.role.classic_fuchs.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.classic_fuchs.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_fuchs.lex.ability"
+msgstr "Wählt eine Person. Der Spielleiter sagt ihm, ob unter ihr und ihren beiden Nachbarn mindestens ein Werwolf ist. Nur Ja oder Nein, nie wer."
+
+msgid "ui.role.classic_fuchs.lex.timing"
+msgstr "Jede Nacht, solange er die Fähigkeit hat."
+
+msgid "ui.role.classic_fuchs.lex.targets"
+msgstr "Eine lebende Person, auch er selbst. Nachbarn sind die beiden nächsten lebenden Plätze."
+
+msgid "ui.role.classic_fuchs.lex.exceptions"
+msgstr "Sitzt im Trio kein Werwolf, verliert er seine Fähigkeit. Er wird aber weiter aufgerufen."
+
+msgid "ui.role.classic_fuchs.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_fuchs.lex.example"
+msgstr "Der Fuchs wählt Clara. Unter Clara und ihren Nachbarn sitzt ein Werwolf. Er erfährt: Ja."
+
+msgid "ui.role.classic_fuchs.lex.act"
+msgstr "Aufruf: Lies vor: „Fuchs, erwache. Zeige auf eine Person. Ich sage dir, ob bei ihr oder ihren Nachbarn ein Werwolf sitzt.“\nAuswählen oder ablesen: Tippe die Person an und bestätige.\nVorlesen oder zeigen: Zeige dem Fuchs Ja oder Nein.\nBeenden: Tippe „Gezeigt“."
+
+msgid "ui.role.classic_fuchs.lex.gm"
+msgstr "Nur du siehst das Ergebnis. Bei Nein verliert der Fuchs seine Fähigkeit, der Aufruf bleibt."
+
+msgid "ui.role.classic_floetenspieler.name"
+msgstr "Der Flötenspieler"
+
+msgid "ui.role.classic_floetenspieler.short"
+msgstr "Verzaubert jede Nacht zwei Personen. Gewinnt, wenn alle verzaubert sind."
+
+msgid "ui.role.classic_floetenspieler.lex.night"
+msgstr "jede Nacht"
+
+msgid "ui.role.classic_floetenspieler.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_floetenspieler.lex.ability"
+msgstr "Verzaubert in jeder Nacht zwei Personen."
+
+msgid "ui.role.classic_floetenspieler.lex.timing"
+msgstr "Jede Nacht. Die Verzauberung bleibt."
+
+msgid "ui.role.classic_floetenspieler.lex.targets"
+msgstr "Zwei lebende Personen, die noch nicht verzaubert sind. Bleibt nur eine übrig, wählt er diese."
+
+msgid "ui.role.classic_floetenspieler.lex.exceptions"
+msgstr "Er gewinnt allein, sobald alle anderen Lebenden verzaubert sind."
+
+msgid "ui.role.classic_floetenspieler.lex.win"
+msgstr "Allein: wenn alle Lebenden verzaubert sind."
+
+msgid "ui.role.classic_floetenspieler.lex.example"
+msgstr "Der Flötenspieler verzaubert Anna und Ben. Sind am Ende alle verzaubert, gewinnt er."
+
+msgid "ui.role.classic_floetenspieler.lex.act"
+msgstr "Aufruf: Lies vor: „Flötenspieler, erwache. Zeige auf zwei Personen, die du verzaubern willst.“\nAuswählen oder ablesen: Tippe zwei Personen an und bestätige.\nVorlesen oder zeigen: Die Verzauberten erfahren es durch eine Karte.\nBeenden: Bestätige die Wahl."
+
+msgid "ui.role.classic_floetenspieler.lex.gm"
+msgstr "Die App prüft nach jeder Wahl, ob alle verzaubert sind."
+
+msgid "ui.role.classic_baerenfuehrer.name"
+msgstr "Der Bärenführer"
+
+msgid "ui.role.classic_baerenfuehrer.short"
+msgstr "Der Spielleiter knurrt, wenn ein Werwolf neben ihm sitzt."
+
+msgid "ui.role.classic_baerenfuehrer.lex.night"
+msgstr "nie"
+
+msgid "ui.role.classic_baerenfuehrer.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_baerenfuehrer.lex.ability"
+msgstr "Sitzt am Morgen ein Werwolf unmittelbar neben ihm, knurrt der Spielleiter."
+
+msgid "ui.role.classic_baerenfuehrer.lex.timing"
+msgstr "Jeden Morgen, solange er lebt."
+
+msgid "ui.role.classic_baerenfuehrer.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.classic_baerenfuehrer.lex.exceptions"
+msgstr "Das Knurren sagt nicht, wer der Werwolf ist oder auf welcher Seite er sitzt."
+
+msgid "ui.role.classic_baerenfuehrer.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_baerenfuehrer.lex.example"
+msgstr "Neben dem Bärenführer sitzt ein Werwolf. Am Morgen knurrt der Spielleiter."
+
+msgid "ui.role.classic_baerenfuehrer.lex.act"
+msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Nichts. Die App meldet das Knurren am Morgen.\nVorlesen oder zeigen: Knurre laut am Tisch.\nBeenden: Nichts zu tun."
+
+msgid "ui.role.classic_baerenfuehrer.lex.gm"
+msgstr "Du siehst, wer neben ihm sitzt. Der Tisch hört nur das Knurren."
+
+msgid "ui.call.classic_fuchs"
+msgstr "„Fuchs, erwache. Zeige auf eine Person. Ich sage dir, ob bei ihr oder ihren Nachbarn ein Werwolf sitzt.“"
+
+msgid "ui.call.classic_floetenspieler"
+msgstr "„Flötenspieler, erwache. Zeige auf zwei Personen, die du verzaubern willst.“"
+
+msgid "ui.night.classic_fuchs.targets.short"
+msgstr "prüft ein Trio"
+
+msgid "ui.morning.notice.growl"
+msgstr "Der Spielleiter knurrt."
+
+msgid "ui.notice.piper_new_classic"
+msgstr "Ihr seid verzaubert. Der Flötenspieler gewinnt, wenn alle anderen Lebenden verzaubert sind."
