@@ -461,6 +461,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 			# Schmiedewaffe: der Spielleiter wählt einen lebenden Wolf, der stirbt (S-06).
 			prompt.allowed_ids = prompt.allowed_ids.filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)
 		prompt.min_count = 1 if not prompt.allowed_ids.is_empty() else 0
+		if RoleCatalog.param(s.players[prompt.actor_id].role_id, "optional_shot", false):
+			prompt.min_count = 0  # Classic-Jäger (Bogen: „kann“): der Schuss ist freiwillig, Verzicht möglich
 	elif step_kind(step_id) == RoleCatalog.WALDHEXE:
 		# Waldhexe: mehrstufige, atomare Kette (WitchStep).
 		WitchStep.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))

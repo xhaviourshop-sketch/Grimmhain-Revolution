@@ -9333,7 +9333,7 @@ msgid "ui.role.classic_jaeger.name"
 msgstr "Der Jäger"
 
 msgid "ui.role.classic_jaeger.short"
-msgstr "Nimmt bei seinem Tod eine Person mit ins Grab."
+msgstr "Darf bei seinem Tod eine Person mit ins Grab nehmen."
 
 msgid "ui.role.classic_jaeger.lex.night"
 msgstr "nie"
@@ -9342,13 +9342,13 @@ msgid "ui.role.classic_jaeger.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.classic_jaeger.lex.ability"
-msgstr "Stirbt der Jäger, zeigt er auf eine lebende Person. Sie stirbt mit ihm."
+msgstr "Stirbt der Jäger, darf er auf eine lebende Person zeigen. Sie stirbt mit ihm. Er darf auch verzichten."
 
 msgid "ui.role.classic_jaeger.lex.timing"
 msgstr "Einmal, sofort nach seinem Tod am Tag oder am Morgen nach seinem Tod in der Nacht."
 
 msgid "ui.role.classic_jaeger.lex.targets"
-msgstr "Eine lebende Person außer ihm selbst."
+msgstr "Eine lebende Person außer ihm selbst, oder niemand."
 
 msgid "ui.role.classic_jaeger.lex.exceptions"
 msgstr "Der Engel schützt nicht davor. Ruhen die Fähigkeiten des Dorfes nach dem Tod des Alten, schießt er nicht."
@@ -9360,10 +9360,10 @@ msgid "ui.role.classic_jaeger.lex.example"
 msgstr "Der Jäger wird hingerichtet und zeigt auf Clara. Clara stirbt ebenfalls."
 
 msgid "ui.role.classic_jaeger.lex.act"
-msgstr "Aufruf: Kein Nachtschritt. Nach seinem Tod fragt die App nach seinem Ziel.\nAuswählen oder ablesen: Tippe die Person an, auf die er zeigt.\nVorlesen oder zeigen: Verkünde den zweiten Tod.\nBeenden: Bestätige die Wahl."
+msgstr "Aufruf: Kein Nachtschritt. Nach seinem Tod fragt die App nach seinem Ziel.\nAuswählen oder ablesen: Tippe die Person an, auf die er zeigt, oder wähle den Verzicht.\nVorlesen oder zeigen: Verkünde den zweiten Tod, falls es einen gibt.\nBeenden: Bestätige die Wahl."
 
 msgid "ui.role.classic_jaeger.lex.gm"
-msgstr "Er darf nicht verzichten."
+msgstr "Er darf verzichten, dann gibt es keinen zweiten Tod."
 
 msgid "ui.role.classic_engel.name"
 msgstr "Der Engel"
@@ -9987,3 +9987,6 @@ msgstr "Tippe zwei Personen."
 
 msgid "ui.night.classic_amor.targets.short"
 msgstr "verliebt zwei"
+
+msgid "ui.cockpit.action.decline.reaction.pick"
+msgstr "Kein Schuss"

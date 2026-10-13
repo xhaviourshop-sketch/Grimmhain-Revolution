@@ -344,6 +344,7 @@ const CLASSIC_BAERENFUEHRER := &"classic-baerenfuehrer"
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
 ##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
+##   optional_shot Classic-Jäger: der Schuss bei seinem Tod ist freiwillig (Bogen: „kann“), Verzicht erlaubt
 ##   group_size    Gruppenrolle: genau so viele Personen in der Startbesetzung, Schritt nur für diese Gruppe
 ##   model_night_one  Wildes Kind: Das Vorbild wird nur in Nacht 1 gewählt (nicht in der ersten verfügbaren Nacht)
 ##   turns_into    Wildes Kind: Rolle, als die es nach der Verwandlung erscheint
@@ -361,7 +362,7 @@ const CLASSIC_ROLES := {
 	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
 	CLASSIC_SEHERIN: {"mechanic": ORAKEL},
 	CLASSIC_HEXE: {"mechanic": WALDHEXE, "witch_reveal": false},
-	CLASSIC_JAEGER: {"mechanic": SENSENTRAEGER},
+	CLASSIC_JAEGER: {"mechanic": SENSENTRAEGER, "optional_shot": true},
 	CLASSIC_ENGEL: {"mechanic": SCHUTZENGEL},
 	CLASSIC_MAEDCHEN: {"mechanic": DORFBEWOHNER},
 	CLASSIC_ALTE: {"mechanic": DER_WEISE},

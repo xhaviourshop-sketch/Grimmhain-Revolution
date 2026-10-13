@@ -9333,7 +9333,7 @@ msgid "ui.role.classic_jaeger.name"
 msgstr "The Hunter"
 
 msgid "ui.role.classic_jaeger.short"
-msgstr "Takes one person into the grave when he dies."
+msgstr "May take one person with them when they die."
 
 msgid "ui.role.classic_jaeger.lex.night"
 msgstr "never"
@@ -9342,13 +9342,13 @@ msgid "ui.role.classic_jaeger.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.classic_jaeger.lex.ability"
-msgstr "When the Hunter dies, he points at a living person. That person dies with him."
+msgstr "When the Hunter dies, they may point at a living person, who dies too. They may also decline."
 
 msgid "ui.role.classic_jaeger.lex.timing"
 msgstr "Once, right after his death by day, or in the morning after his death at night."
 
 msgid "ui.role.classic_jaeger.lex.targets"
-msgstr "One living person other than himself."
+msgstr "A living person other than themselves, or nobody."
 
 msgid "ui.role.classic_jaeger.lex.exceptions"
 msgstr "The Angel does not protect against it. While the village’s abilities rest after the Elder’s death, he does not shoot."
@@ -9360,10 +9360,10 @@ msgid "ui.role.classic_jaeger.lex.example"
 msgstr "The Hunter is executed and points at Clara. Clara dies too."
 
 msgid "ui.role.classic_jaeger.lex.act"
-msgstr "Call: No night step. After his death the app asks for his target.\nSelect or read: Tap the person he points at.\nRead out or show: Announce the second death.\nFinish: Confirm the choice."
+msgstr "Call: No night step. After their death the app asks for their target.\nChoose or read: Tap the person they point at, or choose to decline.\nRead or show: Announce the second death, if there is one.\nFinish: Confirm the choice."
 
 msgid "ui.role.classic_jaeger.lex.gm"
-msgstr "He may not pass."
+msgstr "The Hunter may decline; then there is no second death."
 
 msgid "ui.role.classic_engel.name"
 msgstr "The Angel"
@@ -9987,3 +9987,6 @@ msgstr "Tap two people."
 
 msgid "ui.night.classic_amor.targets.short"
 msgstr "enamors two"
+
+msgid "ui.cockpit.action.decline.reaction.pick"
+msgstr "No shot"
