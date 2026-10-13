@@ -23,7 +23,7 @@ static func five_dead_reached(s: GameState) -> bool:
 ## Eine lebende Person hat aktuell die Rolle Selbstmörder.
 static func five_dead_eligible(s: GameState) -> bool:
 	for id: int in s.alive_ids():
-		if s.players[id].role_id == RoleCatalog.SELBSTMOERDER:
+		if s.players[id].mech_role() == RoleCatalog.SELBSTMOERDER:
 			return true
 	return false
 
@@ -32,6 +32,6 @@ static func five_dead_eligible(s: GameState) -> bool:
 ## Eine Wiederbelebung ohne Rollenwechsel zählt nicht.
 static func death_seeker_gained(before: GameState, after: GameState) -> bool:
 	for id: int in after.alive_ids():
-		if after.players[id].role_id == RoleCatalog.SELBSTMOERDER and (not before.players.has(id) or before.players[id].role_id != RoleCatalog.SELBSTMOERDER):
+		if after.players[id].mech_role() == RoleCatalog.SELBSTMOERDER and (not before.players.has(id) or before.players[id].mech_role() != RoleCatalog.SELBSTMOERDER):
 			return true
 	return false

@@ -379,6 +379,9 @@ static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent,
 static func _knight_strike(ctx: RuleContext, target: Player, record: KillEvent) -> void:
 	if target.mech_role() != RoleCatalog.RITTER or record.cause != KillEvent.CAUSE_NIGHT_KILL or GuardRoles.silenced(ctx.state, target.id):
 		return
+	if bool(RoleCatalog.param(target.role_id, "rusty", false)):
+		ClassicRules.rusty_infect(ctx, target)  # Classic: Tetanus statt sofortigem Tod (DA-108)
+		return
 	var use_key := "ritter:death_reaction"
 	if int(target.ability_uses.get(use_key, 0)) >= 1:
 		return

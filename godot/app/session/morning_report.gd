@@ -204,6 +204,8 @@ static func _private(s: GameState, span: Array[GameEvent]) -> Array:
 				out.append({"key": "ui.morning.private.protected", "person": _person(s, int(d["target_id"]))})
 			GameEvent.WOLF_POISONED:
 				out.append({"key": "ui.morning.private.wolf_poisoned", "person": _person(s, int(d["target_id"]))})
+			GameEvent.TETANUS_INFECTED:
+				out.append({"key": "ui.morning.private.tetanus", "person": _person(s, int(d["target_id"]))})
 			GameEvent.INFECTED:
 				out.append({"key": "ui.morning.private.infected", "person": _person(s, int(d["target_id"]))})
 			GameEvent.PARASITE_ATTACHED:

@@ -2288,6 +2288,9 @@ msgstr "vom Besessenen Wolf mitgerissen"
 msgid "ui.cause.knight_strike"
 msgstr "Schlag des sterbenden Ritters"
 
+msgid "ui.cause.tetanus"
+msgstr "Tetanus"
+
 msgid "ui.cause.wolf_poison"
 msgstr "Gift des Giftwolfs"
 
@@ -8784,6 +8787,9 @@ msgstr "{name} ist verzaubert."
 msgid "ui.morning.private.protected"
 msgstr "{name} ist geschützt."
 
+msgid "ui.morning.private.tetanus"
+msgstr "{name} ist mit Tetanus infiziert und stirbt in der folgenden Nacht (Ritter mit dem verrosteten Schwert)."
+
 msgid "ui.morning.private.wolf_poisoned"
 msgstr "{name} ist vergiftet (Giftwolf)."
 
@@ -9575,6 +9581,114 @@ msgstr "Aufruf: Lies vor: „Schwestern, erwacht und seht einander an.“\nAusw�
 msgid "ui.role.classic_zwei_schwestern.lex.gm"
 msgstr "Die App bietet die Schwestern nur an, wenn zwei Plätze frei sind."
 
+msgid "ui.role.classic_selbstmoerder.name"
+msgstr "Der Selbstmörder"
+
+msgid "ui.role.classic_selbstmoerder.short"
+msgstr "Will am Tag gehängt werden, sobald fünf Personen tot sind."
+
+msgid "ui.role.classic_selbstmoerder.lex.night"
+msgstr "nie"
+
+msgid "ui.role.classic_selbstmoerder.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_selbstmoerder.lex.ability"
+msgstr "Gewinnt allein, wenn das Dorf ihn am Tag hängt, nachdem mindestens fünf Personen gestorben sind."
+
+msgid "ui.role.classic_selbstmoerder.lex.timing"
+msgstr "Zählt bei seiner Hinrichtung am Tag. Die fünf Toten müssen vor seinem Tod gestorben sein."
+
+msgid "ui.role.classic_selbstmoerder.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.classic_selbstmoerder.lex.exceptions"
+msgstr "Wiederbelebte zählen nicht mit. Stirbt er auf andere Weise oder vor dem fünften Toten, gewinnt er nicht."
+
+msgid "ui.role.classic_selbstmoerder.lex.win"
+msgstr "Allein, wenn er mit mindestens fünf Toten gehängt wird."
+
+msgid "ui.role.classic_selbstmoerder.lex.example"
+msgstr "Fünf Personen sind tot. Ben, der Selbstmörder, wird gehängt. Er gewinnt allein.\nErst vier Personen sind tot. Bens Hinrichtung bringt ihm keinen Sieg."
+
+msgid "ui.role.classic_selbstmoerder.lex.act"
+msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Nichts.\nVorlesen oder zeigen: Nichts.\nBeenden: Bei seiner Hinrichtung prüft die App den Sieg."
+
+msgid "ui.role.classic_selbstmoerder.lex.gm"
+msgstr "Du entscheidest, ob der Sieg verkündet wird. Öffentlich erfährt niemand vorher, wer der Selbstmörder ist."
+
+msgid "ui.role.classic_wildes_kind.name"
+msgstr "Das wilde Kind"
+
+msgid "ui.role.classic_wildes_kind.short"
+msgstr "Wählt in Nacht 1 ein Vorbild. Stirbt es, wird das Kind zum Werwolf."
+
+msgid "ui.role.classic_wildes_kind.lex.night"
+msgstr "nur Nacht 1"
+
+msgid "ui.role.classic_wildes_kind.lex.wolf"
+msgstr "erst nach der Verwandlung"
+
+msgid "ui.role.classic_wildes_kind.lex.ability"
+msgstr "Wählt ein Vorbild. Stirbt das Vorbild, wird das wilde Kind zum Werwolf."
+
+msgid "ui.role.classic_wildes_kind.lex.timing"
+msgstr "Die Wahl geschieht nur in Nacht 1 und darf nicht übersprungen werden."
+
+msgid "ui.role.classic_wildes_kind.lex.targets"
+msgstr "Genau eine andere lebende Person."
+
+msgid "ui.role.classic_wildes_kind.lex.exceptions"
+msgstr "Stirbt das Vorbild, wird das Kind sofort ein Werwolf und wacht ab der folgenden Nacht mit dem Rudel auf. Ein Tod per Korrektur ohne Todesfolgen verwandelt nicht."
+
+msgid "ui.role.classic_wildes_kind.lex.win"
+msgstr "Vor der Verwandlung mit dem Dorf, danach mit den Werwölfen."
+
+msgid "ui.role.classic_wildes_kind.lex.example"
+msgstr "In Nacht 1 wählt Clara, das wilde Kind, Ben als Vorbild. An Tag 3 wird Ben gehängt. Clara wird zum Werwolf."
+
+msgid "ui.role.classic_wildes_kind.lex.act"
+msgstr "Aufruf: Lies vor: „Wildes Kind, erwache. Zeige auf die Person, die dein Vorbild wird.“\nAuswählen oder ablesen: Tippe die Person an und bestätige.\nVorlesen oder zeigen: Nichts.\nBeenden: Tippe „Bestätigen“."
+
+msgid "ui.role.classic_wildes_kind.lex.gm"
+msgstr "Wer das Vorbild ist, wissen nur du und das Kind. Die Seherin sieht vor der Verwandlung „Das wilde Kind“, danach „Der Werwolf“."
+
+msgid "ui.role.classic_ritter.name"
+msgstr "Der Ritter mit dem verrosteten Schwert"
+
+msgid "ui.role.classic_ritter.short"
+msgstr "Wird er nachts gefressen, stirbt der Werwolf links von ihm an Tetanus."
+
+msgid "ui.role.classic_ritter.lex.night"
+msgstr "nie"
+
+msgid "ui.role.classic_ritter.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_ritter.lex.ability"
+msgstr "Fressen die Werwölfe den Ritter, infiziert er den nächsten Werwolf zu seiner Linken. Dieser stirbt in der folgenden Nacht."
+
+msgid "ui.role.classic_ritter.lex.timing"
+msgstr "Einmal. Die Infektion geschieht am Morgen nach dem Angriff, der Tod in der darauf folgenden Nacht, nach den Opfern der Werwölfe."
+
+msgid "ui.role.classic_ritter.lex.targets"
+msgstr "Der nächste lebende Werwolf im Uhrzeigersinn vom Platz des Ritters aus."
+
+msgid "ui.role.classic_ritter.lex.exceptions"
+msgstr "Gift und Hinrichtung lösen nichts aus. Gibt es keinen lebenden Werwolf, geschieht nichts. Stirbt der Werwolf vorher, endet die Infektion."
+
+msgid "ui.role.classic_ritter.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_ritter.lex.example"
+msgstr "Die Werwölfe fressen Ben, den Ritter. Links von ihm sitzt als nächster Werwolf Emil. In der folgenden Nacht stirbt Emil."
+
+msgid "ui.role.classic_ritter.lex.act"
+msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Nichts, die App bestimmt den Werwolf.\nVorlesen oder zeigen: Verkünde in der folgenden Nacht den Tod, ohne die Ursache zu nennen.\nBeenden: Tippe weiter."
+
+msgid "ui.role.classic_ritter.lex.gm"
+msgstr "Die Infektion siehst nur du. Öffentlich wird nur der Tod angesagt, nicht Ursache oder Rolle."
+
 msgid "ui.act.classic.name"
 msgstr "Classic"
 
@@ -9604,6 +9718,9 @@ msgstr "„Brüder, erwacht und seht einander an.“"
 
 msgid "ui.call.classic_zwei_schwestern"
 msgstr "„Schwestern, erwacht und seht einander an.“"
+
+msgid "ui.call.classic_wildes_kind"
+msgstr "„Wildes Kind, erwache. Zeige auf die Person, die dein Vorbild wird.“"
 
 msgid "ui.setup.roles.issue.role_group_incomplete"
 msgstr "Die drei Brüder und die zwei Schwestern spielen nur vollständig. Nimm die ganze Gruppe oder keine."
