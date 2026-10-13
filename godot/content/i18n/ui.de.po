@@ -9948,3 +9948,30 @@ msgstr "Der Spielleiter knurrt."
 
 msgid "ui.notice.piper_new_classic"
 msgstr "Ihr seid verzaubert. Der Flötenspieler gewinnt, wenn alle anderen Lebenden verzaubert sind."
+
+msgid "ui.rulebook.classic.c02.b06"
+msgstr "Stelle genau so viele Rollen zusammen, wie Personen mitspielen. Eine gültige Besetzung enthält mindestens eine Dorfrolle, eine Wolfsrolle und eine Einzelsiegrolle. Jede Rolle kommt beim Start höchstens einmal vor; nur „Die drei Brüder“ und „Die zwei Schwestern“ dürfen mehrfach gewählt werden. Die Karte zeigt, was noch fehlt."
+
+msgid "ui.rulebook.classic.c05.b07"
+msgstr "Einige Rollen lösen private Hinweise aus (Amor, Flötenspieler, Pestbringerin, Rotkäppchen). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, das Schließen bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Bei Rotkäppchen tippst du die gewählte Person nach der Wahl unauffällig an und zeigst ihr die anonyme Frage; die Antwort erfasst du mit „Zuflucht gewährt“ oder „Keine Zuflucht“."
+
+msgid "ui.rulebook.classic.c06.b01"
+msgstr "Nach dem letzten Schritt wertet die App die Nacht aus: Zuerst wird der Angriff des Rudels geprüft. Eine Rettung durch die Hexe oder ein Schutz durch den Engel verhindert ihn; das erfährt nur die Spielleitung. Danach folgen sofortige Todesfolgen, dann offene Reaktionen der Reihe nach, und erst am Ende prüft die App verbindlich auf einen Sieg."
+
+msgid "ui.rulebook.classic.c06.b02"
+msgstr "Offene Reaktionen (etwa der Jäger, Besessener Wolf, Ritter, Dorfschmied, Dämonischer Wolf) erscheinen als eigene Karte. Tippe die Person an, die die Karte nennt. Jede Reaktion verlangt eine Wahl und kann weitere Tode auslösen."
+
+msgid "ui.rulebook.classic.c06.b08"
+msgstr "Sichtbare Folgen eines Todes werden öffentlich angesagt, auch in Wiederbelebungsrunden, zum Beispiel der Fluch des Jägers, die Wirkung des Ritters oder der Liebeskummer. Die Ansage nennt den Effekt und die Rolle, von der er stammt. Geheime Wahlen ohne sichtbare Folge werden nicht angesagt."
+
+msgid "ui.card.segen_06.wolf.text.classic"
+msgstr "Das nächste Mal, wenn ein Werwolf von der Seherin gesehen werden würde, wird er ihr als eine zufällige noch lebende Dorfbewohnerrolle angezeigt."
+
+msgid "ui.card.segen_06.wolf.guide.classic"
+msgstr "Der nächste Wolf, den die Seherin prüft, erscheint ihr als zufällige lebende Dorfrolle. Die App setzt die Anzeige selbst."
+
+msgid "ui.card.segen_13.wolf.guide.classic"
+msgstr "Die erste schädliche Fähigkeit, die in der nächsten Nacht einen Wolf trifft, missglückt, auch eine Prüfung der Seherin."
+
+msgid "ui.card.fluch_02.dorf.guide.classic"
+msgstr "Die Kartenspielerin wählt eine Seherin. In der nächsten Nacht legst du deren Rollenauskunft per Übersteuerung falsch fest."

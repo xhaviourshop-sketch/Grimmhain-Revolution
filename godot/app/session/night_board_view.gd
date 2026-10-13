@@ -11,7 +11,7 @@ extends RefCounted
 ##   marked     Opfer des Rudels, Markierung durch Richter, Henker, Feuerteufel, Prophet, Tod am Morgen
 ##   silenced   in dieser Nacht blockiert (Albtraumwolf)
 ##   lovers     Liebende (Loki), rivals  Rivalen (Loki), charmed  verzaubert (Rattenfänger)
-##   special    infiziert, Parasitenwirt, Voodoo-Puppe
+##   special    infiziert (auch mit Tetanus, Classic), Parasitenwirt, Voodoo-Puppe
 const KINDS: Array[StringName] = [&"protected", &"poisoned", &"marked", &"silenced", &"lovers", &"rivals", &"charmed", &"special"]
 
 
@@ -31,7 +31,8 @@ static func marks(s: GameState) -> Dictionary:
 	for ns: Variant in s.necro_shields:
 		_add(by_kind, &"protected", int((ns as Dictionary).get("necro_id", -1)))
 	for w: Variant in s.wolf_poisons:
-		_add(by_kind, &"poisoned", int((w as Dictionary).get("target_id", -1)))
+		var tetanus := ClassicRules.is_tetanus(s, w as Dictionary)  # Classic: „mit Tetanus infiziert“, kein Gift
+		_add(by_kind, &"special" if tetanus else &"poisoned", int((w as Dictionary).get("target_id", -1)))
 	for wa: WitchAction in s.witch_actions:
 		if wa.poison_used and wa.night == s.night_number:
 			_add(by_kind, &"poisoned", wa.poison_target_id)

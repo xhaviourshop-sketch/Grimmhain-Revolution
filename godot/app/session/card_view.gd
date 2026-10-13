@@ -22,7 +22,7 @@ static func card_info(rec: Dictionary) -> Dictionary:
 	var variant := StringName(rec["variant"])
 	return {
 		"record_id": int(rec["id"]), "card_id": String(card_id), "variant": String(variant),
-		"name_key": CardCatalog.name_key(card_id), "text_key": CardCatalog.text_key(card_id, variant), "guide_key": CardCatalog.guide_key(card_id, variant),
+		"name_key": CardCatalog.name_key(card_id), "text_key": ClassicNames.key(CardCatalog.text_key(card_id, variant)), "guide_key": ClassicNames.key(CardCatalog.guide_key(card_id, variant)),
 		"status": String(rec["status"]), "origin": String(rec["origin"]), "exchanged": bool(rec["exchanged"]), "must_play": bool(rec["must_play"]),
 	}
 
@@ -80,12 +80,12 @@ static func rules(s: GameState) -> Array:
 		for e: Dictionary in CardEffects.active(s, kind):
 			var reportable := ["no_role_talk", "no_speaking"].has(kind)
 			out.append({"effect_id": int(e["id"]), "kind": kind, "card_id": String(e["card"]), "variant": String(e["variant"]),
-				"name_key": CardCatalog.name_key(StringName(e["card"])), "text_key": CardCatalog.text_key(StringName(e["card"]), StringName(e["variant"])),
+				"name_key": CardCatalog.name_key(StringName(e["card"])), "text_key": ClassicNames.key(CardCatalog.text_key(StringName(e["card"]), StringName(e["variant"]))),
 				"reportable": reportable, "excluded": _names(s, (e["data"] as Dictionary).get("excluded", []))})
 	for e: Dictionary in CardEffects.effects(s, "dead_rule"):
 		if CardFxDead.dead_rule_active(s):
 			out.append({"effect_id": int(e["id"]), "kind": "dead_rule", "card_id": String(e["card"]), "variant": String(e["variant"]),
-				"name_key": CardCatalog.name_key(StringName(e["card"])), "text_key": CardCatalog.text_key(StringName(e["card"]), StringName(e["variant"])),
+				"name_key": CardCatalog.name_key(StringName(e["card"])), "text_key": ClassicNames.key(CardCatalog.text_key(StringName(e["card"]), StringName(e["variant"]))),
 				"reportable": false, "excluded": []})
 			break
 	return out

@@ -53,6 +53,8 @@ static func help_role(next: Dictionary) -> String:
 				role = String(RoleCatalog.RATTENFAENGER)
 		"notice":
 			role = str(NOTICE_HELP.get(str(next.get("notice_kind", "")), ""))
+			if str(next.get("text_key", "")) == "ui.notice.piper_new_classic":  # Hilfe des Flötenspielers statt der Rattenfänger-Mechanik
+				role = String(RoleCatalog.CLASSIC_FLOETENSPIELER)
 	return role if RoleCatalog.has_role(StringName(role)) else ""
 
 
@@ -127,7 +129,7 @@ static func card_lines(public_cards: Array) -> Array:
 				var variant := StringName(str(c["variant"]))
 				out.append({"key": "ui.card.public.played", "values": {"card": card_name}})
 				if CardCatalog.CARDS.has(StringName(card_id)):
-					out.append({"key": CardCatalog.text_key(StringName(card_id), variant), "values": {}})
+					out.append({"key": ClassicNames.key(CardCatalog.text_key(StringName(card_id), variant)), "values": {}})
 				var values: Dictionary = c.get("values", {})
 				var keys := values.keys()
 				keys.sort()
