@@ -60,6 +60,7 @@ const OWNER_GRAVE := &"grabraeuber"
 const OWNER_FATE := &"schicksalswolf"
 const OWNER_LONE := &"rachsuechtiger-wolf"
 const OWNER_TIME := &"zeitwaechter"
+const OWNER_URWOLF := &"classic-urwolf"  ## Classic: Urwolf verwandelt das Rudelopfer (ClassicWolfRules)
 const OWNER_PREACHER := &"todesprediger"
 const OWNER_CARD := &"card"  ## Eingabekette einer Totenreichkarte (CardSteps)
 const OWNER_SWALLOWER := &"kartenschlucker"  ## Nachtaktion des Kartenschluckers (SwallowerRules)
@@ -135,7 +136,7 @@ static func from_dict(d: Dictionary) -> PendingPrompt:
 	elif p.owner == OWNER_SWALLOWER:
 		if not SwallowerRules.STAGES.has(p.stage):
 			return null
-	elif p.owner == OWNER_SHADOW or p.owner == OWNER_TIME:
+	elif p.owner == OWNER_SHADOW or p.owner == OWNER_TIME or p.owner == OWNER_URWOLF:
 		if p.stage != &"use":
 			return null
 	elif InfoSteps.OWNERS.has(p.owner):

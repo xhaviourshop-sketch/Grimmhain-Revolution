@@ -71,6 +71,9 @@ static func call_key(role_id: String) -> String:
 static func night_base(next: Dictionary) -> String:
 	var owner := str(next.get("owner", ""))
 	var stage := str(next.get("reaction_kind", "")) if owner == "reaction" else str(next.get("stage", ""))
+	var classic := str(next.get("role_id", ""))
+	if RoleCatalog.is_classic(StringName(classic)) and has_key("ui.night.%s.%s.short" % [key_part(classic), stage if stage != "" else "pick"]):
+		owner = classic  # eigener Classic-Text statt Grundspiel-Text
 	return "ui.night.%s.%s" % [key_part(owner), stage if stage != "" else "pick"]
 
 

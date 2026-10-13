@@ -290,7 +290,7 @@ static func _validate_answer(s: GameState, p: Dictionary) -> StringName:
 		return InfoSteps.validate_answer(s, prompt, p)
 	if BondSteps.OWNERS.has(prompt.owner):
 		return BondSteps.validate_answer(s, prompt, p)
-	if prompt.owner == PendingPrompt.OWNER_SHADOW or prompt.owner == PendingPrompt.OWNER_TIME:
+	if prompt.owner == PendingPrompt.OWNER_SHADOW or prompt.owner == PendingPrompt.OWNER_TIME or prompt.owner == PendingPrompt.OWNER_URWOLF:
 		if DictRead.get_string(p, "stage") != "use":
 			return &"stage_mismatch"
 		return &"" if (not p.has("targets") and p.get("choice") is bool) else &"invalid_answer"
@@ -418,6 +418,8 @@ static func _execute(ctx: RuleContext, c: Command) -> void:
 				_answer_shadow(ctx, bool(p["choice"]))
 			elif s.pending_prompt.owner == PendingPrompt.OWNER_TIME:
 				_answer_time(ctx, bool(p["choice"]))
+			elif s.pending_prompt.owner == PendingPrompt.OWNER_URWOLF:
+				_answer_urwolf(ctx, bool(p["choice"]))
 			else:
 				_answer_prompt(ctx, DictRead.to_int_array(p["targets"]))
 		Command.BEGIN_STEP:
@@ -535,6 +537,18 @@ static func _answer_time(ctx: RuleContext, use: bool) -> void:
 		s.night_frozen = true
 		s.players[prompt.actor_id].ability_uses[TIME_USE_KEY] = 1
 		ctx.emit(GameEvent.NIGHT_FREEZE_USED, Visibility.GM, {"warden_id": prompt.actor_id, "night": s.night_number})
+	s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
+	s.next_night_step += 1
+
+
+## Urwolf (Classic): Ja verwandelt das Rudelopfer in einen Werwolf statt es zu töten (einmal im Spiel).
+static func _answer_urwolf(ctx: RuleContext, use: bool) -> void:
+	var s := ctx.state
+	var prompt := s.pending_prompt
+	s.pending_prompt = null
+	ctx.emit(GameEvent.PROMPT_ANSWERED, Visibility.GM, {"prompt_id": prompt.id, "owner": prompt.owner, "stage": "use", "choice": use})
+	if use:
+		ClassicWolfRules.turn(ctx, prompt.actor_id)
 	s.night_step_status[s.next_night_step] = StepQueue.STATUS_DONE
 	s.next_night_step += 1
 

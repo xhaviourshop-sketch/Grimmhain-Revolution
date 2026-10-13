@@ -14,7 +14,7 @@ const ROLE_ORDER: Array[StringName] = [
 	&"manipulator", &"doppelspion", &"selbstmoerder", &"parasit", &"rattenfaenger", &"pestbringerin", &"prophet-des-untergangs", &"todesprediger", &"feuerteufel", &"voodoo-priester", &"nekromant", &"hades", &"grabraeuber",
 	# Akt Classic (DA-108), nur in `sorted_roles(true)`
 	&"classic-dorfbewohner", &"classic-seherin", &"classic-hexe", &"classic-engel", &"classic-jaeger", &"classic-amor", &"classic-alte",
-	&"classic-maedchen", &"classic-drei-brueder", &"classic-zwei-schwestern", &"classic-wildes-kind", &"classic-ritter", &"classic-selbstmoerder", &"classic-werwolf",
+	&"classic-maedchen", &"classic-drei-brueder", &"classic-zwei-schwestern", &"classic-wildes-kind", &"classic-ritter", &"classic-selbstmoerder", &"classic-werwolf", &"classic-urwolf", &"classic-weisser-wolf",
 ]
 
 

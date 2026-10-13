@@ -610,7 +610,7 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 				if not bond_picks.has(b):
 					bond_picks.append(b)
 			return Command.answer_stage_targets(p.id, String(p.stage), bond_picks)
-		PendingPrompt.OWNER_SHADOW, PendingPrompt.OWNER_TIME:
+		PendingPrompt.OWNER_SHADOW, PendingPrompt.OWNER_TIME, PendingPrompt.OWNER_URWOLF:
 			return Command.answer_choice(p.id, "use", _rng.randf() < 0.3)
 		PendingPrompt.OWNER_APPRENTICE:
 			return Command.answer_stage_targets(p.id, String(p.stage), [_pick(_alive_in(s, p.allowed_ids, p.actor_id))])

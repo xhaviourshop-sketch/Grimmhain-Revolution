@@ -335,6 +335,8 @@ const CLASSIC_ZWEI_SCHWESTERN := &"classic-zwei-schwestern"
 const CLASSIC_SELBSTMOERDER := &"classic-selbstmoerder"
 const CLASSIC_WILDES_KIND := &"classic-wildes-kind"
 const CLASSIC_RITTER := &"classic-ritter"
+const CLASSIC_URWOLF := &"classic-urwolf"
+const CLASSIC_WEISSER_WOLF := &"classic-weisser-wolf"
 
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
@@ -343,6 +345,10 @@ const CLASSIC_RITTER := &"classic-ritter"
 ##   model_night_one  Wildes Kind: Das Vorbild wird nur in Nacht 1 gewählt (nicht in der ersten verfügbaren Nacht)
 ##   turns_into    Wildes Kind: Rolle, als die es nach der Verwandlung erscheint
 ##   rusty         Ritter mit dem verrosteten Schwert: Tetanus statt sofortigem Tod des nächsten Wolfs (ClassicRules)
+##   transform     Urwolf: einmal im Spiel das Rudelopfer verwandeln statt töten (ClassicWolfRules)
+##   every         Weißer Wolf: Zusatzschritt in jeder n-ten Nacht (Rachsüchtiger Wolf: 3)
+##   lone_any      Weißer Wolf: Opfer ist jede andere lebende Person, nicht nur ein Wolf
+##   sole_win      Weißer Wolf: gewinnt nur, wenn er als einzige Person lebt
 const CLASSIC_ROLES := {
 	CLASSIC_DORFBEWOHNER: {"mechanic": DORFBEWOHNER, "max_copies": UNLIMITED},
 	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
@@ -358,6 +364,8 @@ const CLASSIC_ROLES := {
 	CLASSIC_SELBSTMOERDER: {"mechanic": SELBSTMOERDER},
 	CLASSIC_WILDES_KIND: {"mechanic": WOLFSKIND, "model_night_one": true, "turns_into": CLASSIC_WERWOLF},
 	CLASSIC_RITTER: {"mechanic": RITTER, "rusty": true},
+	CLASSIC_URWOLF: {"mechanic": WERWOLF, "transform": true},
+	CLASSIC_WEISSER_WOLF: {"mechanic": RACHSUECHTIGER_WOLF, "every": 2, "lone_any": true, "sole_win": true},
 }
 
 ## Gruppenrollen mit gemeinsamem Erkennungsschritt in Nacht 1, in fester Reihenfolge des Nachtplans.

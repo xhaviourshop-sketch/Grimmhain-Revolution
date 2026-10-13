@@ -9724,3 +9724,105 @@ msgstr "„Wildes Kind, erwache. Zeige auf die Person, die dein Vorbild wird.“
 
 msgid "ui.setup.roles.issue.role_group_incomplete"
 msgstr "Die drei Brüder und die zwei Schwestern spielen nur vollständig. Nimm die ganze Gruppe oder keine."
+
+msgid "ui.role.classic_urwolf.name"
+msgstr "Der Urwolf"
+
+msgid "ui.role.classic_urwolf.short"
+msgstr "Verwandelt einmal das Opfer in einen Werwolf."
+
+msgid "ui.role.classic_urwolf.lex.night"
+msgstr "jede Nacht im Rudel, einmal die Verwandlung"
+
+msgid "ui.role.classic_urwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.classic_urwolf.lex.ability"
+msgstr "Er wählt mit dem Rudel. Einmal im Spiel kann er das Opfer nicht fressen lassen, sondern in einen Werwolf verwandeln."
+
+msgid "ui.role.classic_urwolf.lex.timing"
+msgstr "Direkt nach der Wahl der Werwölfe, solange die Fähigkeit nicht verbraucht ist."
+
+msgid "ui.role.classic_urwolf.lex.targets"
+msgstr "Das Opfer der Werwölfe, wenn es kein Werwolf ist."
+
+msgid "ui.role.classic_urwolf.lex.exceptions"
+msgstr "Das Opfer stirbt nicht, auch nicht durch Schutz oder Trank. Wer verwandelt wird, gehört ab sofort zum Rudel."
+
+msgid "ui.role.classic_urwolf.lex.win"
+msgstr "Wie die Werwölfe: Sie gewinnen, wenn mindestens so viele Werwölfe leben wie übrige Personen."
+
+msgid "ui.role.classic_urwolf.lex.example"
+msgstr "Die Werwölfe zeigen auf Ben. Der Urwolf gibt ein Zeichen. Ben stirbt nicht und ist ab jetzt ein Werwolf."
+
+msgid "ui.role.classic_urwolf.lex.act"
+msgstr "Aufruf: Nach dem Rudel lies vor: „Urwolf, erwache. Gibst du mir ein Zeichen, dass das Opfer ein Werwolf wird?“\nAuswählen oder ablesen: Gibt er das Zeichen, tippe „Verwandeln“, sonst „Nicht jetzt“.\nVorlesen oder zeigen: Nichts. Wecke das Opfer leise und sag ihm, dass es nun Werwolf ist.\nBeenden: Die App öffnet den nächsten Schritt."
+
+msgid "ui.role.classic_urwolf.lex.gm"
+msgstr "Nur einmal im Spiel. Mehrere Urwölfe haben jeder eine eigene Verwandlung."
+
+msgid "ui.call.classic_urwolf"
+msgstr "„Urwolf, erwache. Gibst du mir ein Zeichen, dass das Opfer ein Werwolf wird?“"
+
+msgid "ui.role.classic_weisser_wolf.name"
+msgstr "Der Weiße Wolf"
+
+msgid "ui.role.classic_weisser_wolf.short"
+msgstr "Will als Einziger übrig bleiben, reißt jede zweite Nacht."
+
+msgid "ui.role.classic_weisser_wolf.lex.night"
+msgstr "jede Nacht im Rudel, jede zweite Nacht allein"
+
+msgid "ui.role.classic_weisser_wolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.classic_weisser_wolf.lex.ability"
+msgstr "Er wählt mit dem Rudel. In jeder zweiten Nacht erwacht er allein und kann eine andere Person töten."
+
+msgid "ui.role.classic_weisser_wolf.lex.timing"
+msgstr "In den Nächten 2, 4, 6 und so weiter, nach den Werwölfen."
+
+msgid "ui.role.classic_weisser_wolf.lex.targets"
+msgstr "Jede andere lebende Person, auch ein Werwolf. Verzicht ist erlaubt."
+
+msgid "ui.role.classic_weisser_wolf.lex.exceptions"
+msgstr "Der Engel schützt nicht, denn es ist kein Angriff des Rudels. Die Person stirbt am Morgen."
+
+msgid "ui.role.classic_weisser_wolf.lex.win"
+msgstr "Er gewinnt allein, wenn er als Einziger lebt. Gewinnen Werwölfe oder Dorf zuvor, bleibt es bei deren Sieg."
+
+msgid "ui.role.classic_weisser_wolf.lex.example"
+msgstr "In Nacht 2 zeigt der Weiße Wolf auf einen Werwolf. Am Morgen ist dieser tot."
+
+msgid "ui.role.classic_weisser_wolf.lex.act"
+msgstr "Aufruf: Lies vor: „Weißer Wolf, erwache. Zeige auf die Person, die du erledigen willst, oder verzichte.“\nAuswählen oder ablesen: Tippe die Person oder „Nicht heute“.\nVorlesen oder zeigen: Nichts.\nBeenden: Tippe „Auswahl bestätigen“."
+
+msgid "ui.role.classic_weisser_wolf.lex.gm"
+msgstr "Zählt für die Werwölfe als Wolf, will aber allein gewinnen. Der Sieg wird nur vorgeschlagen, wenn sonst niemand lebt."
+
+msgid "ui.call.classic_weisser_wolf"
+msgstr "„Weißer Wolf, erwache. Zeige auf die Person, die du erledigen willst, oder verzichte.“"
+
+msgid "ui.cockpit.action.yes.classic_urwolf.use"
+msgstr "Verwandeln"
+
+msgid "ui.cockpit.action.no.classic_urwolf.use"
+msgstr "Nicht jetzt"
+
+msgid "ui.night.classic_urwolf.use.title"
+msgstr "Der Urwolf verwandelt das Opfer?"
+
+msgid "ui.night.classic_urwolf.use.help"
+msgstr "Gibt er das Zeichen? Dann stirbt das Opfer nicht und wird Werwolf."
+
+msgid "ui.night.classic_urwolf.use.short"
+msgstr "verwandelt das Opfer?"
+
+msgid "ui.night.classic_weisser_wolf.pick.title"
+msgstr "Der Weiße Wolf erledigt jemanden?"
+
+msgid "ui.night.classic_weisser_wolf.pick.help"
+msgstr "Tippe die Person oder wähle Nicht heute."
+
+msgid "ui.night.classic_weisser_wolf.pick.short"
+msgstr "erledigt jemanden?"

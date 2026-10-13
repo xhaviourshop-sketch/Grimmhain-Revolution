@@ -127,6 +127,7 @@ const HADES_ACTED := &"HadesActed"              ## Hades tötet und/oder kauft d
 const FATE_MARKED := &"FateMarked"              ## Schicksalswolf markiert drei Personen (nur Spielleiter)
 const FATE_KILLS_CHOSEN := &"FateKillsChosen"    ## Schicksalswolf wählt Zusatzopfer in Nacht 4 (nur Spielleiter)
 const LONE_WOLF_STRUCK := &"LoneWolfStruck"      ## Rachsüchtiger Wolf reißt einen Wolf, Tod am Morgen (nur Spielleiter)
+const WOLF_TURNED := &"WolfTurned"            ## Urwolf verwandelt das Rudelopfer in einen Werwolf (Classic, nur Spielleiter)
 const NIGHT_FREEZE_USED := &"NightFreezeUsed"    ## Zeitwächter friert die Nacht ein (nur Spielleiter)
 const NIGHT_FROZEN := &"NightFrozen"            ## öffentlich am Morgen: die Nacht war eingefroren (ohne Namen)
 const GRAVE_ROBBED := &"GraveRobbed"            ## Grabräuber übernimmt die Nachtfähigkeit einer toten Person (nur Spielleiter)
