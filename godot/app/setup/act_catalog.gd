@@ -44,9 +44,9 @@ const ACTS := {
 		"level": 1,
 		"village": [RoleCatalog.CLASSIC_DORFBEWOHNER, RoleCatalog.CLASSIC_SEHERIN, RoleCatalog.CLASSIC_HEXE, RoleCatalog.CLASSIC_ENGEL,
 			RoleCatalog.CLASSIC_JAEGER, RoleCatalog.CLASSIC_AMOR, RoleCatalog.CLASSIC_ALTE, RoleCatalog.CLASSIC_MAEDCHEN,
-			RoleCatalog.CLASSIC_DREI_BRUEDER, RoleCatalog.CLASSIC_ZWEI_SCHWESTERN],
+			RoleCatalog.CLASSIC_DREI_BRUEDER, RoleCatalog.CLASSIC_ZWEI_SCHWESTERN, RoleCatalog.CLASSIC_FUCHS, RoleCatalog.CLASSIC_BAERENFUEHRER],
 		"wolves": [RoleCatalog.CLASSIC_WERWOLF],
-		"solo": [],
+		"solo": [RoleCatalog.CLASSIC_FLOETENSPIELER],
 	},
 }
 

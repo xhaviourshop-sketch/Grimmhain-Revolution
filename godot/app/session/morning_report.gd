@@ -161,6 +161,8 @@ static func _public(s: GameState, span: Array[GameEvent]) -> Dictionary:
 				notices.append({"key": "ui.morning.notice.frozen"})
 			GameEvent.ALARM_BELLS:
 				notices.append({"key": "ui.morning.notice.bells"})
+			GameEvent.BEAR_GROWL:
+				notices.append({"key": "ui.morning.notice.growl"})
 			GameEvent.JUDGE_NOMINATION_PUBLIC:
 				notices.append({"key": "ui.morning.notice.judge", "person": _person(s, int(e.data["nominee_id"]))})
 	return {"deaths": by_seat(deaths), "revived": revived, "notices": notices, "effects": effects_of(s, span), "reveal_roles": not s.revival_round,

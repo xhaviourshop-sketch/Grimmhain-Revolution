@@ -23,6 +23,9 @@ const VILLAGE_ORDER: Array[StringName] = [&"schutzengel", &"das-orakel", &"waldh
 const CLASSIC_VILLAGE_ORDER: Array[StringName] = [RoleCatalog.CLASSIC_SEHERIN, RoleCatalog.CLASSIC_HEXE, RoleCatalog.CLASSIC_ENGEL,
 	RoleCatalog.CLASSIC_JAEGER, RoleCatalog.CLASSIC_AMOR, RoleCatalog.CLASSIC_ALTE, RoleCatalog.CLASSIC_MAEDCHEN]
 const CLASSIC_GROUPS: Array[StringName] = [RoleCatalog.CLASSIC_DREI_BRUEDER, RoleCatalog.CLASSIC_ZWEI_SCHWESTERN]
+## Fuchs und Bärenführer kommen erst nach den Gruppen dazu, damit bestehende Besetzungen gleich bleiben. Der Flötenspieler (Einzelgänger)
+## wird nie vorgeschlagen, sondern bewusst gewählt.
+const CLASSIC_EXTRA_ORDER: Array[StringName] = [RoleCatalog.CLASSIC_FUCHS, RoleCatalog.CLASSIC_BAERENFUEHRER]
 
 
 static func wolf_count(persons: int) -> int:
@@ -90,6 +93,10 @@ static func _classic(persons: int) -> Dictionary:
 		if free >= size:
 			counts[String(group)] = size
 			free -= size
+	for role: StringName in CLASSIC_EXTRA_ORDER:
+		if free > 1:  # mindestens ein einfacher Dorfbewohner bleibt
+			counts[String(role)] = 1
+			free -= 1
 	counts[String(RoleCatalog.CLASSIC_DORFBEWOHNER)] = free
 	return counts
 

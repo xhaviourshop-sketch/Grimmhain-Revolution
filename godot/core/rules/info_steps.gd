@@ -87,6 +87,25 @@ static func hound_hit(s: GameState, ids: Array) -> bool:
 	return false
 
 
+## Classic-Fuchs (Bogen): Er wählt eine Person; geprüft wird sie samt ihren beiden lebenden Sitznachbarn auf mindestens einen Werwolf.
+static func is_fox(p: Player) -> bool:
+	return bool(RoleCatalog.param(p.role_id, "fox", false))
+
+
+## Das Trio des Fuchses: die gewählte Person und ihre lebenden Nachbarn (höchstens drei), aufsteigend.
+static func fox_trio(s: GameState, pick: int) -> Array[int]:
+	var trio: Array[int] = [pick]
+	for n: int in Seats.living_neighbours(s, pick):
+		if not trio.has(n):
+			trio.append(n)
+	trio.sort()
+	return trio
+
+
+static func fox_hit(s: GameState, trio: Array) -> bool:
+	return trio.any(func(id: Variant) -> bool: return s.players[int(id)].counts_as_wolf)
+
+
 static func _others_alive(s: GameState, actor_id: int) -> Array[int]:
 	var allowed := s.alive_ids()
 	allowed.erase(actor_id)
@@ -159,10 +178,15 @@ static func open(s: GameState, prompt: PendingPrompt, owner: StringName, actor_i
 			prompt.partial = {"lost": true}
 			return
 		prompt.stage = STAGE_TARGETS
+		prompt.partial = {}
+		if is_fox(s.players[actor_id]):
+			prompt.allowed_ids = s.alive_ids()
+			prompt.min_count = 1
+			prompt.max_count = 1
+			return
 		prompt.allowed_ids = _others_alive(s, actor_id)
 		prompt.min_count = HOUND_PICKS
 		prompt.max_count = HOUND_PICKS
-		prompt.partial = {}
 		return
 	if owner == PendingPrompt.OWNER_TRACKER:
 		prompt.stage = STAGE_USE
@@ -295,7 +319,7 @@ static func validate_answer(s: GameState, prompt: PendingPrompt, p: Dictionary) 
 		var list: Array[int] = targets
 		var seen: Array[int] = []
 		for t: int in list:
-			if t == prompt.actor_id or seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t) or not s.players[t].alive:
+			if (t == prompt.actor_id and not (prompt.owner == PendingPrompt.OWNER_HOUND and is_fox(s.players[t]))) or seen.has(t) or not prompt.allowed_ids.has(t) or not s.players.has(t) or not s.players[t].alive:
 				return &"invalid_target"
 			seen.append(t)
 		if not target_counts(prompt).has(list.size()):
@@ -377,7 +401,11 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 		return
 	if prompt.stage == STAGE_TARGETS and prompt.owner == PendingPrompt.OWNER_HOUND:
 		var picks: Array[int] = DictRead.to_int_array(p["targets"])
-		prompt.partial = {"target_ids": [picks[0], picks[1], picks[2]], "hit": hound_hit(s, picks)}
+		if is_fox(s.players[prompt.actor_id]):
+			var trio := fox_trio(s, picks[0])
+			prompt.partial = {"pick_id": picks[0], "target_ids": trio, "hit": fox_hit(s, trio)}
+		else:
+			prompt.partial = {"target_ids": [picks[0], picks[1], picks[2]], "hit": hound_hit(s, picks)}
 		_enter_shown(prompt)
 		ctx.emit(GameEvent.PROMPT_STAGE_ANSWERED, Visibility.GM, {
 			"prompt_id": prompt.id, "step_id": prompt.step_id, "stage": STAGE_TARGETS, "answer": {"targets": picks.duplicate()}, "next_stage": STAGE_SHOWN,
@@ -539,6 +567,14 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.owner == PendingPrompt.OWNER_HOUND:
 		if hound_lost(actor):
 			return prompt.stage == STAGE_SHOWN and prompt.allowed_ids.is_empty() and prompt.partial == {"lost": true}
+		if is_fox(actor):
+			if prompt.stage == STAGE_TARGETS:
+				return prompt.partial.is_empty() and prompt.allowed_ids == s.alive_ids() and prompt.min_count == 1 and prompt.max_count == 1
+			var pick := DictRead.get_int(prompt.partial, "pick_id", -1)
+			if not s.players.has(pick) or not s.players[pick].alive or not prompt.allowed_ids.is_empty():
+				return false
+			var trio := fox_trio(s, pick)
+			return Array(DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))) == Array(trio) 				and prompt.partial.get("hit") is bool and bool(prompt.partial["hit"]) == fox_hit(s, trio)
 		if prompt.stage == STAGE_TARGETS:
 			return prompt.partial.is_empty() and prompt.allowed_ids == _others_alive(s, actor.id) and prompt.min_count == HOUND_PICKS and prompt.max_count == HOUND_PICKS
 		var picks: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "target_ids"))

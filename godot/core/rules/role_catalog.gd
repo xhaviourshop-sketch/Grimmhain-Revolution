@@ -332,11 +332,18 @@ const CLASSIC_ALTE := &"classic-alte"
 const CLASSIC_AMOR := &"classic-amor"
 const CLASSIC_DREI_BRUEDER := &"classic-drei-brueder"
 const CLASSIC_ZWEI_SCHWESTERN := &"classic-zwei-schwestern"
+const CLASSIC_FUCHS := &"classic-fuchs"
+const CLASSIC_FLOETENSPIELER := &"classic-floetenspieler"
+const CLASSIC_BAERENFUEHRER := &"classic-baerenfuehrer"
 
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
 ##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
 ##   group_size    Gruppenrolle: genau so viele Personen in der Startbesetzung, Schritt nur für diese Gruppe
+##   fox           Fuchs: wählt eine Person, geprüft wird sie mit ihren beiden Nachbarn auf einen Werwolf (Bogen)
+##   pipe_two      Flötenspieler: verzaubert in jeder Nacht genau zwei (bei nur einer übrigen Person diese)
+##   piper_all     false: kein Schritt „Alle Verzauberten“ (der Bogen kennt ihn nicht)
+##   bear          Bärenführer: knurrt jeden Morgen, wenn ein Werwolf unmittelbar neben ihm sitzt
 const CLASSIC_ROLES := {
 	CLASSIC_DORFBEWOHNER: {"mechanic": DORFBEWOHNER, "max_copies": UNLIMITED},
 	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
@@ -349,6 +356,9 @@ const CLASSIC_ROLES := {
 	CLASSIC_AMOR: {"mechanic": LOKI, "lovers_only": true},
 	CLASSIC_DREI_BRUEDER: {"mechanic": DIE_GEBUNDENEN, "group_size": 3, "max_copies": 3},
 	CLASSIC_ZWEI_SCHWESTERN: {"mechanic": DIE_GEBUNDENEN, "group_size": 2, "max_copies": 2},
+	CLASSIC_FUCHS: {"mechanic": SPUERHUND, "fox": true},
+	CLASSIC_FLOETENSPIELER: {"mechanic": RATTENFAENGER, "pipe_two": true, "piper_all": false},
+	CLASSIC_BAERENFUEHRER: {"mechanic": DORFBEWOHNER, "bear": true},
 }
 
 ## Gruppenrollen mit gemeinsamem Erkennungsschritt in Nacht 1, in fester Reihenfolge des Nachtplans.

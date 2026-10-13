@@ -9607,3 +9607,126 @@ msgstr "“Sisters, wake up and look at each other.”"
 
 msgid "ui.setup.roles.issue.role_group_incomplete"
 msgstr "The Three Brothers and the Two Sisters only play complete. Take the whole group or none."
+
+msgid "ui.role.classic_fuchs.name"
+msgstr "The Fox"
+
+msgid "ui.role.classic_fuchs.short"
+msgstr "Learns whether a werewolf sits by one person or their neighbours."
+
+msgid "ui.role.classic_fuchs.lex.night"
+msgstr "every night"
+
+msgid "ui.role.classic_fuchs.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.classic_fuchs.lex.ability"
+msgstr "Chooses one person. The narrator tells him whether that person or one of their two neighbours is a werewolf. Only yes or no, never who."
+
+msgid "ui.role.classic_fuchs.lex.timing"
+msgstr "Every night, as long as he has the ability."
+
+msgid "ui.role.classic_fuchs.lex.targets"
+msgstr "One living person, himself included. Neighbours are the two nearest living seats."
+
+msgid "ui.role.classic_fuchs.lex.exceptions"
+msgstr "If the trio holds no werewolf, he loses his ability. He is still called."
+
+msgid "ui.role.classic_fuchs.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.classic_fuchs.lex.example"
+msgstr "The Fox chooses Clara. A werewolf sits among Clara and her neighbours. He learns: yes."
+
+msgid "ui.role.classic_fuchs.lex.act"
+msgstr "Call: Read aloud: “Fox, wake up. Point to one person. I will tell you whether a werewolf sits by them or their neighbours.”\nChoose or read: Tap the person and confirm.\nRead or show: Show the Fox yes or no.\nFinish: Tap “Shown”."
+
+msgid "ui.role.classic_fuchs.lex.gm"
+msgstr "Only you see the result. On no, the Fox loses his ability, the call stays."
+
+msgid "ui.role.classic_floetenspieler.name"
+msgstr "The Pipe"
+
+msgid "ui.role.classic_floetenspieler.short"
+msgstr "Enchants two people every night. Wins when all are enchanted."
+
+msgid "ui.role.classic_floetenspieler.lex.night"
+msgstr "every night"
+
+msgid "ui.role.classic_floetenspieler.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.classic_floetenspieler.lex.ability"
+msgstr "Enchants two people every night."
+
+msgid "ui.role.classic_floetenspieler.lex.timing"
+msgstr "Every night. The enchantment stays."
+
+msgid "ui.role.classic_floetenspieler.lex.targets"
+msgstr "Two living people who are not yet enchanted. If only one is left, he chooses that one."
+
+msgid "ui.role.classic_floetenspieler.lex.exceptions"
+msgstr "He wins alone as soon as all other living people are enchanted."
+
+msgid "ui.role.classic_floetenspieler.lex.win"
+msgstr "Alone: when all living people are enchanted."
+
+msgid "ui.role.classic_floetenspieler.lex.example"
+msgstr "The Pipe enchants Anna and Ben. If everyone is enchanted in the end, he wins."
+
+msgid "ui.role.classic_floetenspieler.lex.act"
+msgstr "Call: Read aloud: “Pipe, wake up. Point to two people you want to enchant.”\nChoose or read: Tap two people and confirm.\nRead or show: The enchanted learn it from a card.\nFinish: Confirm the choice."
+
+msgid "ui.role.classic_floetenspieler.lex.gm"
+msgstr "The app checks after every choice whether all are enchanted."
+
+msgid "ui.role.classic_baerenfuehrer.name"
+msgstr "The Bear Trainer"
+
+msgid "ui.role.classic_baerenfuehrer.short"
+msgstr "The narrator growls when a werewolf sits next to him."
+
+msgid "ui.role.classic_baerenfuehrer.lex.night"
+msgstr "never"
+
+msgid "ui.role.classic_baerenfuehrer.lex.wolf"
+msgstr "no"
+
+msgid "ui.role.classic_baerenfuehrer.lex.ability"
+msgstr "If a werewolf sits right next to him in the morning, the narrator growls."
+
+msgid "ui.role.classic_baerenfuehrer.lex.timing"
+msgstr "Every morning, as long as he lives."
+
+msgid "ui.role.classic_baerenfuehrer.lex.targets"
+msgstr "None."
+
+msgid "ui.role.classic_baerenfuehrer.lex.exceptions"
+msgstr "The growl does not say who the werewolf is or on which side he sits."
+
+msgid "ui.role.classic_baerenfuehrer.lex.win"
+msgstr "With the village."
+
+msgid "ui.role.classic_baerenfuehrer.lex.example"
+msgstr "A werewolf sits next to the Bear Trainer. In the morning the narrator growls."
+
+msgid "ui.role.classic_baerenfuehrer.lex.act"
+msgstr "Call: No night step.\nChoose or read: Nothing. The app announces the growl in the morning.\nRead or show: Growl out loud at the table.\nFinish: Nothing to do."
+
+msgid "ui.role.classic_baerenfuehrer.lex.gm"
+msgstr "You see who sits next to him. The table only hears the growl."
+
+msgid "ui.call.classic_fuchs"
+msgstr "“Fox, wake up. Point to one person. I will tell you whether a werewolf sits by them or their neighbours.”"
+
+msgid "ui.call.classic_floetenspieler"
+msgstr "“Pipe, wake up. Point to two people you want to enchant.”"
+
+msgid "ui.night.classic_fuchs.targets.short"
+msgstr "checks a trio"
+
+msgid "ui.morning.notice.growl"
+msgstr "The narrator growls."
+
+msgid "ui.notice.piper_new_classic"
+msgstr "You are enchanted. The Pipe wins when all other living people are enchanted."
