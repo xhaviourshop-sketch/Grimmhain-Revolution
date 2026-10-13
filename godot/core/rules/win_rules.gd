@@ -63,8 +63,11 @@ static func evaluate(state: GameState) -> Array:
 		# E-35: Ist der einzige lebende Wolf ein Rachsüchtiger Wolf, ersetzt sein Alleinsieg den Wolfssieg; leben nur
 		# Rachsüchtige Wölfe (mehrere), gewinnt noch niemand (DA-18); sonst gewinnen die Werwölfe ohne sie.
 		var lone: Array[int] = alive.filter(func(id: int) -> bool: return state.players[id].counts_as_wolf and state.players[id].mech_role() == RoleCatalog.RACHSUECHTIGER_WOLF)
+		# Weißer Wolf (Classic, Bogen: „als einziger am Ende übrig zu bleiben“): Solange er lebt, gewinnt das Rudel nie; er gewinnt nur allein.
+		var sole_wolf_alive := alive.any(func(id: int) -> bool: return state.players[id].counts_as_wolf and RoleCatalog.param(state.players[id].role_id, "sole_win", false))
 		if lone.is_empty() or lone.size() < living_wolves:
-			results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
+			if not sole_wolf_alive:
+				results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
 		elif lone.size() == 1 and (alive.size() == 1 or not RoleCatalog.param(state.players[lone[0]].role_id, "sole_win", false)):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_LONE_WOLF), "reason_args": args.duplicate(), "beneficiary_ids": [lone[0]]})
 	# RM-DR-138.4, F-11: ein erfüllter Selbstmörder-Sieg wird bei jeder Prüfung vorgeschlagen.

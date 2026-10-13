@@ -9789,7 +9789,7 @@ msgid "ui.role.classic_weisser_wolf.lex.exceptions"
 msgstr "Der Engel schützt nicht, denn es ist kein Angriff des Rudels. Die Person stirbt am Morgen."
 
 msgid "ui.role.classic_weisser_wolf.lex.win"
-msgstr "Er gewinnt allein, wenn er als Einziger lebt. Gewinnen Werwölfe oder Dorf zuvor, bleibt es bei deren Sieg."
+msgstr "Er gewinnt nur allein, wenn er als Einziger lebt. Das Rudel gewinnt nie, solange er lebt."
 
 msgid "ui.role.classic_weisser_wolf.lex.example"
 msgstr "In Nacht 2 zeigt der Weiße Wolf auf einen Werwolf. Am Morgen ist dieser tot."
@@ -9798,7 +9798,7 @@ msgid "ui.role.classic_weisser_wolf.lex.act"
 msgstr "Aufruf: Lies vor: „Weißer Wolf, erwache. Zeige auf die Person, die du erledigen willst, oder verzichte.“\nAuswählen oder ablesen: Tippe die Person oder „Nicht heute“.\nVorlesen oder zeigen: Nichts.\nBeenden: Tippe „Auswahl bestätigen“."
 
 msgid "ui.role.classic_weisser_wolf.lex.gm"
-msgstr "Zählt für die Werwölfe als Wolf, will aber allein gewinnen. Der Sieg wird nur vorgeschlagen, wenn sonst niemand lebt."
+msgstr "Zählt für die Werwölfe als Wolf, will aber allein gewinnen. Solange er lebt, gewinnt weder das Rudel noch das Dorf. Der Sieg wird nur vorgeschlagen, wenn sonst niemand lebt."
 
 msgid "ui.call.classic_weisser_wolf"
 msgstr "„Weißer Wolf, erwache. Zeige auf die Person, die du erledigen willst, oder verzichte.“"

@@ -44,6 +44,27 @@ func _night(s: GameState, victim: int, stop_at: Callable = Callable()) -> GameSt
 	return s
 
 
+## Weißer Wolf: Das Rudel gewinnt nie, solange er lebt; er gewinnt nur als Letzter.
+func test_white_wolf_wins_only_alone_never_with_the_pack() -> void:
+	var s := Fixtures.play([Fixtures.start_roles(["classic-weisser-wolf", "classic-werwolf", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"])])
+	var control := Fixtures.play([Fixtures.start_roles(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher"])])
+	for state: GameState in [s, control]:
+		for id: int in [4, 5, 6]:
+			state.players[id].alive = false  # Parität: zwei Wölfe gegen eine Person
+	var kinds := WinRules.evaluate(s).map(func(r: Dictionary) -> String: return str(r["kind"]))
+	assert_false(kinds.has(str(Faction.WOLVES)), "Parität mit dem Rudel zählt nicht für den Weißen Wolf")
+	var control_kinds := WinRules.evaluate(control).map(func(r: Dictionary) -> String: return str(r["kind"]))
+	assert_true(control_kinds.has(str(Faction.WOLVES)), "Grundspiel: Wolfssieg bei Parität bleibt")
+	var ww := _id_of(s, "classic-weisser-wolf")
+	for id: int in s.players:
+		if id != ww:
+			s.players[id].alive = false
+	var alone := WinRules.evaluate(s)
+	assert_eq(alone.size(), 1, "ein Kandidat")
+	assert_eq(str(alone[0]["kind"]), str(Faction.SOLO), "Alleinsieg")
+	assert_eq(alone[0]["beneficiary_ids"], [ww], "der Weiße Wolf")
+
+
 ## Seherin: erfährt die tatsächliche Rolle, auch bei Urwolf und Weißem Wolf.
 func test_seherin_sees_the_true_role_of_special_wolves() -> void:
 	var roles := ["classic-seherin", "classic-urwolf", "classic-weisser-wolf", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"]

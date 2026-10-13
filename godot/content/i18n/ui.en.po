@@ -9789,7 +9789,7 @@ msgid "ui.role.classic_weisser_wolf.lex.exceptions"
 msgstr "The angel does not protect, as this is not a pack attack. The person dies in the morning."
 
 msgid "ui.role.classic_weisser_wolf.lex.win"
-msgstr "He wins alone if he is the only one alive. If werewolves or village win first, their win stands."
+msgstr "Wins only alone, as the last person alive. The pack never wins while the White Wolf lives."
 
 msgid "ui.role.classic_weisser_wolf.lex.example"
 msgstr "On night 2 the White Wolf points at a werewolf. That werewolf is dead in the morning."
@@ -9798,7 +9798,7 @@ msgid "ui.role.classic_weisser_wolf.lex.act"
 msgstr "Call: Read: “White Wolf, wake up. Point at the person you want to finish off, or pass.”\nChoose or read: Tap the person or “Not today”.\nRead aloud or show: Nothing.\nFinish: Tap “Confirm choice”."
 
 msgid "ui.role.classic_weisser_wolf.lex.gm"
-msgstr "Counts as a wolf for the werewolves but wants to win alone. His win is only suggested if nobody else lives."
+msgstr "Counts as a wolf for the werewolves but wants to win alone. While the White Wolf lives, neither the pack nor the village wins. The win is only proposed when nobody else is alive."
 
 msgid "ui.call.classic_weisser_wolf"
 msgstr "\"White Wolf, wake up. Point at the person you want to finish off, or pass.\""
