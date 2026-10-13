@@ -322,7 +322,7 @@ static func command_info(before: GameState, c: Command) -> Dictionary:
 				info["stage"] = String(before.pending_prompt.stage)
 		Command.BEGIN_STEP, Command.SKIP_STEP:
 			var step := DictRead.get_string(p, "step_id")
-			info["role_id"] = MorningReport._step_role(step)
+			info["role_id"] = MorningReport._step_role(step, before)
 		Command.NOMINATE:
 			person.call("nominator_id")
 			person.call("nominee_id")

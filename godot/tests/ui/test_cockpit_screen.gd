@@ -399,7 +399,7 @@ func test_morning_report_public_and_private_parts() -> void:
 	assert_true(public_text.contains("In dieser Nacht ist gestorben: E."), "Vorlesetext nennt die Tote: %s" % public_text)
 	assert_false(public_text.contains("Gift") or public_text.contains("gerettet"), "Dorfteil ohne Ursache und Rettung")
 	var private_text := "\n".join((Engine.get_main_loop() as SceneTree).get_nodes_in_group(&"morning_private").map(func(l: Label) -> String: return l.text))
-	assert_true(private_text.contains("Gifttrank der Waldhexe"), "private Ursache: %s" % private_text)
+	assert_true(private_text.contains("Gifttrank der Hexe"), "private Ursache: %s" % private_text)
 	assert_true(private_text.contains("gerettet: Schutzengel"), "private Rettung: %s" % private_text)
 	assert_true(find_node(screen, "ShowAnnouncementButton") == null and find_node(screen, "MorningDetailsButton") == null, "keine Zusatzfenster")
 	await _press(shell, "ContinueDayButton")

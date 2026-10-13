@@ -60,6 +60,21 @@ static func entry_role(key: StringName) -> StringName:
 	return StepQueue.step_role(key)
 
 
+## Name, unter dem ein Eintrag angesagt wird: Hält die Partie die Classic-Rolle zu dieser Mechanik (DA-108), gilt deren ID statt der
+## Mechanik-ID, damit jede Rolle nur einmal erscheint. Ohne Classic-Besetzung unverändert; nur Darstellung, keine Zustandsänderung.
+static func display_role(s: GameState, role: StringName) -> StringName:
+	if role == &"" or RoleCatalog.is_classic(role):
+		return role
+	var found := &""
+	for p: Player in s.players.values():
+		for held: StringName in [p.role_id, p.original_role_id]:
+			if held == role:
+				return role
+			if RoleCatalog.is_classic(held) and RoleCatalog.mech(held) == role:
+				found = held
+	return found if found != &"" else role
+
+
 static func entry_slot(key: StringName) -> int:
 	if key == StepQueue.PACK or key == StepQueue.PACK2:
 		return RoleCatalog.PACK_PRIORITY
@@ -77,7 +92,7 @@ static func decoy_calls(s: GameState) -> Array[StringName]:
 	var low := -1
 	var covered := {}
 	for j: int in s.night_plan.size():
-		var role := entry_role(s.night_plan[j])
+		var role := display_role(s, entry_role(s.night_plan[j]))
 		if j >= index:
 			covered[role] = true
 		elif s.night_step_status[j] == StepQueue.STATUS_DONE:

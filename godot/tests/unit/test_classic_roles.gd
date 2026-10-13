@@ -129,3 +129,46 @@ func test_classic_setup_plays_to_first_execution() -> void:
 	s = _apply(s, Command.nominate(nominator, wolf))
 	s = _apply(s, Command.decide_execution(wolf))
 	assert_false(s.players[wolf].alive, "erste Hinrichtung: ein Werwolf stirbt")
+
+
+## Block 1: Jede Classic-Rolle steht in Nachtleiste und Tarnaufrufen genau einmal, mit ihrer Classic-ID (nie mit der Mechanik-ID).
+func test_night_bar_and_decoys_use_classic_ids() -> void:
+	var s := _night_one()
+	var ids: Array = NightBoardView.night_order(s).map(func(e: Dictionary) -> String: return str(e["role_id"]))
+	for want: String in ["classic-amor", "classic-engel", "classic-hexe", "classic-seherin", "classic-drei-brueder", "classic-zwei-schwestern"]:
+		assert_eq(ids.count(want), 1, "%s genau einmal in der Leiste" % want)
+	for mech: String in ["loki", "schutzengel", "waldhexe", "das-orakel", "die-gebundenen"]:
+		assert_false(ids.has(mech), "Mechanik-ID %s nicht in der Leiste" % mech)
+	for role: StringName in CallPolicy.decoy_calls(s):
+		assert_false(["loki", "schutzengel", "waldhexe", "das-orakel"].has(String(role)), "Tarnaufruf nennt die Mechanik: %s" % role)
+
+
+## Block 1: Schrittkarte und Vorschau tragen die Classic-ID; Amor fragt nie nach Liebenden oder Rivalen.
+func test_step_card_names_the_classic_role() -> void:
+	var s := _night_one()
+	var first := PromptView.build(s, s.pending_prompt)  # Nacht 1 öffnet den Amor-Schritt gleich
+	assert_eq(str(first["role_id"]), "classic-amor", "Amor-Karte")
+	assert_false(CockpitText.asks_bond_mode(first), "keine Frage nach der Bindungsart")
+	s = _apply(s, _targets(s.pending_prompt, [1, 4]))
+	var group := CockpitView.step_announcement(s, StepQueue.next_step_id(s))
+	assert_eq(str(group["preview"]["role_id"]), "classic-drei-brueder", "Brüder-Karte nennt die Gruppe, nicht die Gebundenen")
+
+
+## Block 1: Texte der Classic-Rollen und die gemeinsamen Meldungen nennen in Deutsch und Englisch keinen Grundspiel-Namen.
+func test_classic_texts_have_no_base_game_names() -> void:
+	var banned := ["Loki", "Schutzengel", "Orakel", "Waldhexe", "Gebundenen", "Weise", "Sensenträger", "Guardian Angel", "Oracle", "Forest Witch", "Sage", "Scythe", "Bound"]
+	var keys: Array[String] = ["ui.cause.hunter_shot", "ui.cause.lover_heartbreak", "ui.cause.witch_poison", "ui.morning.drop.cursed",
+		"ui.cockpit.card.day.check.sage", "ui.cockpit.error.cursed", "ui.cockpit.error.sage_curse_required", "ui.prompt.info.bound_ids"]
+	for role: StringName in RoleCatalog.CLASSIC_ROLES:
+		var part := CockpitText.key_part(String(role))
+		keys.append_array(["ui.role.%s.name" % part, "ui.role.%s.short" % part, "ui.call.%s" % part])
+	for locale: String in ["de", "en"]:
+		TranslationServer.set_locale(locale)
+		for key: String in keys:
+			if key.begins_with("ui.call.") and not CockpitText.has_key(key):
+				continue  # Dorfbewohner, Werwolf, Jäger, Alte, Mädchen haben keine eigene Ansage
+			var text := TranslationServer.translate(key)
+			assert_ne(String(text), key, "%s (%s) übersetzt" % [key, locale])
+			for word: String in banned:
+				assert_false(String(text).contains(word), "%s (%s) nennt %s" % [key, locale, word])
+	TranslationServer.set_locale("de")

@@ -568,7 +568,7 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	var answer := str(next.get("answer"))
 	var anonymous := bool(next.get("anonymous_asker", false))
 	# Loki entscheidet zuerst Liebende oder Rivalen, dann folgen die zwei Personen (die Antwort geht gemeinsam an den Kern).
-	var pre_mode := owner == "loki" and stage == "targets" and context.get("pre_choice") == null
+	var pre_mode := CockpitText.asks_bond_mode(next) and context.get("pre_choice") == null
 	var texts := next.duplicate()
 	if pre_mode:
 		texts["stage"] = "mode"

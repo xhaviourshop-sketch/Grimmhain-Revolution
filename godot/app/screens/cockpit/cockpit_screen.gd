@@ -297,8 +297,13 @@ func _order_for_card(order: Array, next: Dictionary) -> Array:
 	if str(next.get("kind")) != "notice":
 		return order
 	var role := CockpitText.help_role(next)
-	if role == "" or not order.any(func(e: Dictionary) -> bool: return str(e["role_id"]) == role):
+	var shown := ""
+	for entry: Dictionary in order:
+		if str(entry["role_id"]) == role or RoleCatalog.mech(StringName(str(entry["role_id"]))) == StringName(role):
+			shown = str(entry["role_id"])  # Classic-Amor steht für den Hinweis der Liebenden (DA-108)
+	if role == "" or shown == "":
 		return order
+	role = shown
 	var out: Array = []
 	for entry: Dictionary in order:
 		var copy := entry.duplicate()
@@ -1086,7 +1091,7 @@ func _on_seat_tapped(person_id: int) -> void:
 		if str(_view.get("phase", "")) != "NIGHT":
 			_peek_marks(person_id)  # S-05: tagsüber zeigt ein Tipp die Abzeichen der Person kurz
 		return
-	if str(eff.get("owner")) == "loki" and str(eff.get("stage")) == "targets" and _loki_mode == null:
+	if CockpitText.asks_bond_mode(eff) and _loki_mode == null:
 		return  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
 	if str(next.get("kind")) == "begin_step":
 		if not _ensure_begun():
@@ -1319,7 +1324,7 @@ func _commit_selection(eff: Dictionary) -> void:
 	_committed_seat = int(picks.back())
 	_committed_until = Time.get_ticks_msec() + double_tap_msec
 	var actions: Array[Callable] = [s.answer_targets.bind(picks)]
-	if str(eff.get("owner")) == "loki" and str(eff.get("stage")) == "targets":
+	if CockpitText.asks_bond_mode(eff):
 		actions.append(s.answer_choice.bind(bool(_loki_mode)))
 		_loki_mode = null
 	_answer_chain(actions)

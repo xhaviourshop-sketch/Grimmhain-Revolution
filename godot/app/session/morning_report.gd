@@ -178,13 +178,13 @@ static func _private(s: GameState, span: Array[GameEvent]) -> Array:
 				out.append({"key": "ui.morning.private.death", "person": _person(s, int(d["target_id"])), "cause": str(d["cause"]),
 					"role_id": str(d["role_id"])})
 			GameEvent.KILL_PREVENTED:
-				out.append({"key": "ui.morning.private.saved", "person": _person(s, int(d["target_id"])), "role_id": str(d.get("protection", ""))})
+				out.append({"key": "ui.morning.private.saved", "person": _person(s, int(d["target_id"])), "role_id": String(CallPolicy.display_role(s, StringName(str(d.get("protection", "")))))})
 			GameEvent.NO_NIGHT_KILL:
 				out.append({"key": "ui.morning.private.no_attack"})
 			GameEvent.STEP_SKIPPED:
-				out.append({"key": "ui.morning.private.step_skipped", "role_id": _step_role(str(d["step_id"])), "reason": str(d["reason"])})
+				out.append({"key": "ui.morning.private.step_skipped", "role_id": _step_role(str(d["step_id"]), s), "reason": str(d["reason"])})
 			GameEvent.STEP_DROPPED:
-				out.append({"key": "ui.morning.private.step_dropped", "role_id": _step_role(str(d["step_id"])), "drop": str(d["reason"])})
+				out.append({"key": "ui.morning.private.step_dropped", "role_id": _step_role(str(d["step_id"]), s), "drop": str(d["reason"])})
 			GameEvent.REACTION_RESOLVED:
 				out.append({"key": "ui.morning.private.reaction.%s" % str(d["outcome"]), "person": _person(s, int(d["owner_id"])),
 					"target": _person(s, int(d["target_id"])) if int(d["target_id"]) != GameState.NO_TARGET else {}})
@@ -226,9 +226,14 @@ static func _private(s: GameState, span: Array[GameEvent]) -> Array:
 
 
 ## Nachtschritt-ID "night:<n>:<i>:<schritt>[:<person>]" → Rolle bzw. Gruppe des Schritts.
-static func _step_role(step_id: String) -> String:
+## Mit Zustand `s` nennt der Schritt einer Classic-Rolle die Classic-ID der handelnden Person (DA-108).
+static func _step_role(step_id: String, s: GameState = null) -> String:
 	var parts := step_id.split(":")
 	if parts.size() >= 4 and parts[0] == "night":
+		if s != null and parts.size() >= 5 and parts[4].is_valid_int() and s.players.has(int(parts[4])):
+			var held: StringName = s.players[int(parts[4])].role_id
+			if RoleCatalog.mech(held) == StringName(parts[3]):
+				return String(held)
 		return "pack" if parts[3] == "pack2" else parts[3]
 	return "reaction" if step_id.begins_with("reaction:") else ""
 

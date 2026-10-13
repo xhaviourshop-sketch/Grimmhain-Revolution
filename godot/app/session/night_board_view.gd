@@ -83,7 +83,7 @@ static func night_order(s: GameState) -> Array:
 	var entries := {}  # role_id → {"role_id", "slot", "state"}
 	for j: int in s.night_plan.size():
 		var key := s.night_plan[j]
-		var role := CallPolicy.entry_role(key)
+		var role := CallPolicy.display_role(s, CallPolicy.entry_role(key))
 		var role_id := String(role) if role != &"" else String(RoleCatalog.WERWOLF)
 		var state := "upcoming"
 		if s.night_step_status[j] != StepQueue.STATUS_PENDING:

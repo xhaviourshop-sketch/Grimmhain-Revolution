@@ -132,6 +132,11 @@ static func role_of(s: GameState, p: PendingPrompt) -> String:
 			return String(CockpitView.GROUP_PACK)
 		PendingPrompt.OWNER_REACTION:
 			return String(s.players[p.actor_id].role_id) if s.players.has(p.actor_id) else ""
+		PendingPrompt.OWNER_BOUND:
+			return String(InfoSteps.current_group(s))  # Gebundene oder Classic-Brüder und -Schwestern (DA-108)
+	# Classic-Rolle (DA-108): Die Karte nennt die Rolle der handelnden Person, nicht die Mechanik, auf die sie verweist.
+	if s.players.has(p.actor_id) and RoleCatalog.mech(s.players[p.actor_id].role_id) == p.owner:
+		return String(s.players[p.actor_id].role_id)
 	return String(p.owner)
 
 

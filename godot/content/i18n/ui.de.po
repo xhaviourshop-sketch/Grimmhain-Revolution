@@ -1917,7 +1917,7 @@ msgid "ui.prompt.info.wolf_count"
 msgstr "Lebende Wölfe"
 
 msgid "ui.prompt.info.bound_ids"
-msgstr "Lebende Gebundene"
+msgstr "Erwachen"
 
 msgid "ui.prompt.info.charmed_ids"
 msgstr "Lebende Verzauberte"
@@ -2247,7 +2247,7 @@ msgid "ui.morning.drop.blocked"
 msgstr "blockiert"
 
 msgid "ui.morning.drop.cursed"
-msgstr "Fluch des Weisen"
+msgstr "Fluch über dem Dorf"
 
 msgid "ui.morning.drop.actor_dead"
 msgstr "Person tot"
@@ -2280,7 +2280,7 @@ msgid "ui.cause.lynch"
 msgstr "Hinrichtung"
 
 msgid "ui.cause.hunter_shot"
-msgstr "Fluch im Sterben (Sensenträger)"
+msgstr "Mitgenommen im Sterben"
 
 msgid "ui.cause.possessed_drag"
 msgstr "vom Besessenen Wolf mitgerissen"
@@ -2316,7 +2316,7 @@ msgid "ui.cause.martyr_sacrifice"
 msgstr "Opfer der Märtyrerin"
 
 msgid "ui.cause.lover_heartbreak"
-msgstr "Liebeskummer (Loki)"
+msgstr "Liebeskummer"
 
 msgid "ui.cause.black_widow"
 msgstr "Schwarze Witwe"
@@ -2340,7 +2340,7 @@ msgid "ui.cause.gm_correction"
 msgstr "Spielleiterkorrektur"
 
 msgid "ui.cause.witch_poison"
-msgstr "Gifttrank der Waldhexe"
+msgstr "Gifttrank der Hexe"
 
 msgid "ui.cause.spiegelwolf_retaliate"
 msgstr "gespiegelte Hinrichtung (Spiegelwolf)"
@@ -2412,7 +2412,7 @@ msgid "ui.cockpit.card.day.check.cerberus"
 msgstr "Cerberus kann die Hinrichtung abwehren. Frage die Person geheim: Wehrt sie ab?"
 
 msgid "ui.cockpit.card.day.check.sage"
-msgstr "Der Weise verflucht das Dorf. Frage die Person: Wie viele Tage (0 bis {max})?"
+msgstr "Der Fluch trifft das Dorf. Frage die Person: Wie viele Tage (0 bis {max})?"
 
 msgid "ui.cockpit.card.end_day.heading"
 msgstr "Tag {number}: Entscheidung gefallen"
@@ -2499,13 +2499,13 @@ msgid "ui.cockpit.error.cerberus_decision_required"
 msgstr "Fehler: Die Abwehrfrage des Cerberus fehlt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.sage_curse_required"
-msgstr "Fehler: Die Fluchdauer des Weisen fehlt. Nichts wurde geändert."
+msgstr "Fehler: Die Fluchdauer fehlt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.too_few_wolves"
 msgstr "Fehler: Amalia kann sich erst bei mindestens drei lebenden Wölfen opfern. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.cursed"
-msgstr "Fehler: Die Fähigkeit ruht durch den Fluch des Weisen. Nichts wurde geändert."
+msgstr "Fehler: Die Fähigkeit ruht durch den Fluch. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.already_named_today"
 msgstr "Fehler: Der Nekromant hat heute schon benannt. Nichts wurde geändert."
@@ -2664,7 +2664,7 @@ msgid "ui.gm.kind.remove_protection"
 msgstr "Schutz entfernen"
 
 msgid "ui.gm.kind.set_witch_potion"
-msgstr "Trank der Waldhexe ändern"
+msgstr "Trank der Hexe ändern"
 
 msgid "ui.gm.kind.set_rescue"
 msgstr "Rettung setzen"
@@ -3072,19 +3072,19 @@ msgid "ui.gm.state.nobody"
 msgstr "niemand"
 
 msgid "ui.cockpit.error.not_a_guardian"
-msgstr "Fehler: Diese Person ist kein Schutzengel. Nichts wurde geändert."
+msgstr "Fehler: Diese Person ist kein Engel. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.no_guard_step"
-msgstr "Fehler: Für diesen Schutzengel gibt es in dieser Nacht keinen Schritt. Nichts wurde geändert."
+msgstr "Fehler: Für diesen Engel gibt es in dieser Nacht keinen Schritt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.step_not_completed"
 msgstr "Fehler: Der Schritt dieser Rolle ist in dieser Nacht noch nicht erledigt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.not_a_witch"
-msgstr "Fehler: Diese Person ist keine Waldhexe. Nichts wurde geändert."
+msgstr "Fehler: Diese Person ist keine Hexe. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.no_witch_step"
-msgstr "Fehler: Für diese Waldhexe gibt es in dieser Nacht keinen Schritt. Nichts wurde geändert."
+msgstr "Fehler: Für diese Hexe gibt es in dieser Nacht keinen Schritt. Nichts wurde geändert."
 
 msgid "ui.cockpit.error.no_pack_target"
 msgstr "Fehler: Das Rudel hat in dieser Nacht kein Opfer gewählt. Nichts wurde geändert."

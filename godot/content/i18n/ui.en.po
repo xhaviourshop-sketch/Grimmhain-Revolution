@@ -1917,7 +1917,7 @@ msgid "ui.prompt.info.wolf_count"
 msgstr "Living wolves"
 
 msgid "ui.prompt.info.bound_ids"
-msgstr "Living Bound"
+msgstr "Waking"
 
 msgid "ui.prompt.info.charmed_ids"
 msgstr "Living enchanted"
@@ -2247,7 +2247,7 @@ msgid "ui.morning.drop.blocked"
 msgstr "blocked"
 
 msgid "ui.morning.drop.cursed"
-msgstr "curse of the Sage"
+msgstr "curse over the village"
 
 msgid "ui.morning.drop.actor_dead"
 msgstr "person dead"
@@ -2280,7 +2280,7 @@ msgid "ui.cause.lynch"
 msgstr "execution"
 
 msgid "ui.cause.hunter_shot"
-msgstr "dying curse (Scythe Bearer)"
+msgstr "taken along in dying"
 
 msgid "ui.cause.possessed_drag"
 msgstr "dragged along by the Possessed Wolf"
@@ -2316,7 +2316,7 @@ msgid "ui.cause.martyr_sacrifice"
 msgstr "Martyr’s sacrifice"
 
 msgid "ui.cause.lover_heartbreak"
-msgstr "heartbreak (Loki)"
+msgstr "heartbreak"
 
 msgid "ui.cause.black_widow"
 msgstr "Black Widow"
@@ -2340,7 +2340,7 @@ msgid "ui.cause.gm_correction"
 msgstr "game master correction"
 
 msgid "ui.cause.witch_poison"
-msgstr "Forest Witch’s poison"
+msgstr "witch’s poison"
 
 msgid "ui.cause.spiegelwolf_retaliate"
 msgstr "mirrored execution (Mirror Wolf)"
@@ -2412,7 +2412,7 @@ msgid "ui.cockpit.card.day.check.cerberus"
 msgstr "Cerberus can repel the execution. Ask the person secretly: do they repel it?"
 
 msgid "ui.cockpit.card.day.check.sage"
-msgstr "The Sage curses the village. Ask the person: how many days (0 to {max})?"
+msgstr "The curse hits the village. Ask the person: how many days (0 to {max})?"
 
 msgid "ui.cockpit.card.end_day.heading"
 msgstr "Day {number}: decision made"
@@ -2499,13 +2499,13 @@ msgid "ui.cockpit.error.cerberus_decision_required"
 msgstr "Error: The Cerberus defence question is missing. Nothing was changed."
 
 msgid "ui.cockpit.error.sage_curse_required"
-msgstr "Error: The Sage’s curse length is missing. Nothing was changed."
+msgstr "Error: The curse length is missing. Nothing was changed."
 
 msgid "ui.cockpit.error.too_few_wolves"
 msgstr "Error: Amalia can only sacrifice themself with at least three living wolves. Nothing was changed."
 
 msgid "ui.cockpit.error.cursed"
-msgstr "Error: The ability is suspended by the Sage’s curse. Nothing was changed."
+msgstr "Error: The ability is suspended by the curse. Nothing was changed."
 
 msgid "ui.cockpit.error.already_named_today"
 msgstr "Error: The Necromancer has already named someone today. Nothing was changed."
@@ -2664,7 +2664,7 @@ msgid "ui.gm.kind.remove_protection"
 msgstr "Remove protection"
 
 msgid "ui.gm.kind.set_witch_potion"
-msgstr "Change a Forest Witch potion"
+msgstr "Change a witch potion"
 
 msgid "ui.gm.kind.set_rescue"
 msgstr "Set rescue"
@@ -3072,19 +3072,19 @@ msgid "ui.gm.state.nobody"
 msgstr "nobody"
 
 msgid "ui.cockpit.error.not_a_guardian"
-msgstr "Error: This person is not a guardian angel. Nothing was changed."
+msgstr "Error: This person is not an angel. Nothing was changed."
 
 msgid "ui.cockpit.error.no_guard_step"
-msgstr "Error: This guardian angel has no step tonight. Nothing was changed."
+msgstr "Error: This angel has no step tonight. Nothing was changed."
 
 msgid "ui.cockpit.error.step_not_completed"
 msgstr "Error: This role's step is not finished tonight. Nothing was changed."
 
 msgid "ui.cockpit.error.not_a_witch"
-msgstr "Error: This person is not a forest witch. Nothing was changed."
+msgstr "Error: This person is not a witch. Nothing was changed."
 
 msgid "ui.cockpit.error.no_witch_step"
-msgstr "Error: This forest witch has no step tonight. Nothing was changed."
+msgstr "Error: This witch has no step tonight. Nothing was changed."
 
 msgid "ui.cockpit.error.no_pack_target"
 msgstr "Error: The pack chose no victim tonight. Nothing was changed."

@@ -56,6 +56,11 @@ static func help_role(next: Dictionary) -> String:
 	return role if RoleCatalog.has_role(StringName(role)) else ""
 
 
+## true, wenn die Spielleitung bei dieser Karte erst die Art der Bindung wählt (Loki). Amor (Classic, nur Liebende) fragt nie danach (DA-108).
+static func asks_bond_mode(next: Dictionary) -> bool:
+	return str(next.get("owner")) == "loki" and str(next.get("stage")) == "targets" 		and not bool(RoleCatalog.param(StringName(str(next.get("role_id", ""))), "lovers_only", false))
+
+
 static func call_key(role_id: String) -> String:
 	var key := "ui.call.%s" % key_part(role_id)
 	return key if has_key(key) else "ui.call.generic"
