@@ -78,6 +78,8 @@ static func display_role(s: GameState, role: StringName) -> StringName:
 static func entry_slot(key: StringName) -> int:
 	if key == StepQueue.PACK or key == StepQueue.PACK2:
 		return RoleCatalog.PACK_PRIORITY
+	if StepQueue.step_role(key) == RoleCatalog.CLASSIC_URWOLF:
+		return RoleCatalog.PACK_PRIORITY  # Urwolf-Schritt gehört zum Rudel (kein eigener Aufruf)
 	return slot_priority(entry_role(key))
 
 

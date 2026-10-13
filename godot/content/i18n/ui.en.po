@@ -9607,3 +9607,105 @@ msgstr "“Sisters, wake up and look at each other.”"
 
 msgid "ui.setup.roles.issue.role_group_incomplete"
 msgstr "The Three Brothers and the Two Sisters only play complete. Take the whole group or none."
+
+msgid "ui.role.classic_urwolf.name"
+msgstr "The Vile Wolve Father"
+
+msgid "ui.role.classic_urwolf.short"
+msgstr "Once turns the victim into a werewolf."
+
+msgid "ui.role.classic_urwolf.lex.night"
+msgstr "every night with the pack, once the transformation"
+
+msgid "ui.role.classic_urwolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.classic_urwolf.lex.ability"
+msgstr "He chooses with the pack. Once per game he can turn the victim into a werewolf instead of letting them be eaten."
+
+msgid "ui.role.classic_urwolf.lex.timing"
+msgstr "Right after the werewolves choose, as long as the ability is unused."
+
+msgid "ui.role.classic_urwolf.lex.targets"
+msgstr "The werewolves' victim, if they are not a werewolf."
+
+msgid "ui.role.classic_urwolf.lex.exceptions"
+msgstr "The victim does not die, not even through protection or a potion. Whoever is turned joins the pack from now on."
+
+msgid "ui.role.classic_urwolf.lex.win"
+msgstr "Like the werewolves: they win when at least as many werewolves live as other people."
+
+msgid "ui.role.classic_urwolf.lex.example"
+msgstr "The werewolves point at Ben. The Wolve Father gives a sign. Ben does not die and is a werewolf from now on."
+
+msgid "ui.role.classic_urwolf.lex.act"
+msgstr "Call: After the pack, read: “Wolve Father, wake up. Do you give me the sign to turn the victim into a werewolf?”\nChoose or read: If he gives the sign, tap “Turn”, otherwise “Not now”.\nRead aloud or show: Nothing. Quietly wake the victim and tell them they are now a werewolf.\nFinish: The app opens the next step."
+
+msgid "ui.role.classic_urwolf.lex.gm"
+msgstr "Only once per game. Several Wolve Fathers each have their own transformation."
+
+msgid "ui.call.classic_urwolf"
+msgstr "\"Wolve Father, wake up. Do you give me the sign to turn the victim into a werewolf?\""
+
+msgid "ui.role.classic_weisser_wolf.name"
+msgstr "The White Wolf"
+
+msgid "ui.role.classic_weisser_wolf.short"
+msgstr "Wants to be the last one standing, strikes every second night."
+
+msgid "ui.role.classic_weisser_wolf.lex.night"
+msgstr "every night with the pack, every second night alone"
+
+msgid "ui.role.classic_weisser_wolf.lex.wolf"
+msgstr "yes"
+
+msgid "ui.role.classic_weisser_wolf.lex.ability"
+msgstr "He chooses with the pack. Every second night he wakes alone and may kill another person."
+
+msgid "ui.role.classic_weisser_wolf.lex.timing"
+msgstr "On nights 2, 4, 6 and so on, after the werewolves."
+
+msgid "ui.role.classic_weisser_wolf.lex.targets"
+msgstr "Any other living person, even a werewolf. Passing is allowed."
+
+msgid "ui.role.classic_weisser_wolf.lex.exceptions"
+msgstr "The angel does not protect, as this is not a pack attack. The person dies in the morning."
+
+msgid "ui.role.classic_weisser_wolf.lex.win"
+msgstr "He wins alone if he is the only one alive. If werewolves or village win first, their win stands."
+
+msgid "ui.role.classic_weisser_wolf.lex.example"
+msgstr "On night 2 the White Wolf points at a werewolf. That werewolf is dead in the morning."
+
+msgid "ui.role.classic_weisser_wolf.lex.act"
+msgstr "Call: Read: “White Wolf, wake up. Point at the person you want to finish off, or pass.”\nChoose or read: Tap the person or “Not today”.\nRead aloud or show: Nothing.\nFinish: Tap “Confirm choice”."
+
+msgid "ui.role.classic_weisser_wolf.lex.gm"
+msgstr "Counts as a wolf for the werewolves but wants to win alone. His win is only suggested if nobody else lives."
+
+msgid "ui.call.classic_weisser_wolf"
+msgstr "\"White Wolf, wake up. Point at the person you want to finish off, or pass.\""
+
+msgid "ui.cockpit.action.yes.classic_urwolf.use"
+msgstr "Turn"
+
+msgid "ui.cockpit.action.no.classic_urwolf.use"
+msgstr "Not now"
+
+msgid "ui.night.classic_urwolf.use.title"
+msgstr "The Wolve Father turns the victim?"
+
+msgid "ui.night.classic_urwolf.use.help"
+msgstr "Does he give the sign? Then the victim does not die and becomes a werewolf."
+
+msgid "ui.night.classic_urwolf.use.short"
+msgstr "turns the victim?"
+
+msgid "ui.night.classic_weisser_wolf.pick.title"
+msgstr "The White Wolf finishes someone off?"
+
+msgid "ui.night.classic_weisser_wolf.pick.help"
+msgstr "Tap the person or choose Not today."
+
+msgid "ui.night.classic_weisser_wolf.pick.short"
+msgstr "finishes someone off?"

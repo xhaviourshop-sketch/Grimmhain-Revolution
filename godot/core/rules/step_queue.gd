@@ -130,6 +130,7 @@ const SKIPPABLE_BY_KIND := {
 	RoleCatalog.SCHICKSALSWOLF: false,  # Markieren Pflicht, Zusatzopfer mit Verzicht (0 Ziele)
 	RoleCatalog.RACHSUECHTIGER_WOLF: false,  # Verzicht ist eine Antwort (0 Ziele)
 	RoleCatalog.ZEITWAECHTER: false,   # Nein ist eine Antwort
+	RoleCatalog.CLASSIC_URWOLF: false, # Nein ist eine Antwort (Classic)
 	RoleCatalog.KARTENSCHLUCKER: false,  # Nichtstun ist eine Antwort (Kopfschütteln)
 	KIND_REACTION: false,              # Pflichtreaktion, kein Verzicht (DR-09, DA Nachtschritte neu)
 }
@@ -202,7 +203,7 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			continue
 		if role == RoleCatalog.VOODOO and SoloRules.doll_of(s, id) != GameState.NO_TARGET:
 			continue  # nur ohne lebende Puppe (E-13)
-		if role == RoleCatalog.RACHSUECHTIGER_WOLF and not SoloRules.lone_night(s):
+		if role == RoleCatalog.RACHSUECHTIGER_WOLF and not SoloRules.lone_night(s, id):
 			continue  # nur jede dritte Nacht (DA-16)
 		if role == RoleCatalog.ZEITWAECHTER and p.ability_uses.has(RulesEngine.TIME_USE_KEY):
 			continue  # einmal je Leben (E-36)
@@ -227,6 +228,8 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			entries.append([pack_slot[0], pack_slot[1], PACK])
 			if s.pack_bonus_pending:
 				entries.append([pack_slot[0], int(pack_slot[1]) + 1, PACK2])
+			for urwolf: int in ClassicWolfRules.ready_ids(s):  # Classic: Verwandlung des Rudelopfers direkt hinter dem Rudel
+				entries.append([pack_slot[0], int(pack_slot[1]) + ClassicWolfRules.AFTER_PACK, personal_step_key(RoleCatalog.CLASSIC_URWOLF, urwolf)])
 			break
 	if s.night_number == 1:
 		for g: int in RoleCatalog.BOUND_GROUPS.size():
@@ -293,6 +296,8 @@ static func core_drop_reason(s: GameState, index: int) -> StringName:
 		return &"cursed" if GuardRoles.silenced(s, actor) else &""
 	if not s.players.has(actor) or not s.players[actor].alive:
 		return &"actor_dead"
+	if step_role(key) == RoleCatalog.CLASSIC_URWOLF:
+		return &"marked_for_death" if is_marked(s, actor) else ClassicWolfRules.drop_reason(s, actor)
 	# Vergiftete oder geopferte Personen wachen in dieser Nacht nicht mehr auf (Decision Log „Nachttode“).
 	if is_marked(s, actor):
 		return &"marked_for_death"
@@ -504,6 +509,12 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		# Zweiter Rudelschritt (Rudelvater): wie das Rudel, Opfer durchdringt Schutz.
 		prompt.owner = PendingPrompt.OWNER_PACK2
 		prompt.actor_id = -1
+		prompt.cancellable = true
+	elif step_kind(step_id) == RoleCatalog.CLASSIC_URWOLF:
+		prompt.owner = PendingPrompt.OWNER_URWOLF
+		prompt.actor_id = step_actor(s.night_plan[s.next_night_step])
+		prompt.stage = &"use"
+		prompt.allowed_ids = []
 		prompt.cancellable = true
 	elif step_kind(step_id) == RoleCatalog.SCHATTENHUND or step_kind(step_id) == RoleCatalog.ZEITWAECHTER:
 		prompt.owner = PendingPrompt.OWNER_SHADOW if step_kind(step_id) == RoleCatalog.SCHATTENHUND else PendingPrompt.OWNER_TIME

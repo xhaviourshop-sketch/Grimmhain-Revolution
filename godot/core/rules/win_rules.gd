@@ -65,7 +65,7 @@ static func evaluate(state: GameState) -> Array:
 		var lone: Array[int] = alive.filter(func(id: int) -> bool: return state.players[id].counts_as_wolf and state.players[id].mech_role() == RoleCatalog.RACHSUECHTIGER_WOLF)
 		if lone.is_empty() or lone.size() < living_wolves:
 			results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
-		elif lone.size() == 1:
+		elif lone.size() == 1 and (alive.size() == 1 or not RoleCatalog.param(state.players[lone[0]].role_id, "sole_win", false)):
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(WinCandidate.REASON_LONE_WOLF), "reason_args": args.duplicate(), "beneficiary_ids": [lone[0]]})
 	# RM-DR-138.4, F-11: ein erfüllter Selbstmörder-Sieg wird bei jeder Prüfung vorgeschlagen.
 	for id: int in state.death_seeker_wins:

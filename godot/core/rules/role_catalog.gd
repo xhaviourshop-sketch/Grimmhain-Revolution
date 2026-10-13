@@ -332,11 +332,17 @@ const CLASSIC_ALTE := &"classic-alte"
 const CLASSIC_AMOR := &"classic-amor"
 const CLASSIC_DREI_BRUEDER := &"classic-drei-brueder"
 const CLASSIC_ZWEI_SCHWESTERN := &"classic-zwei-schwestern"
+const CLASSIC_URWOLF := &"classic-urwolf"
+const CLASSIC_WEISSER_WOLF := &"classic-weisser-wolf"
 
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
 ##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
 ##   group_size    Gruppenrolle: genau so viele Personen in der Startbesetzung, Schritt nur für diese Gruppe
+##   transform     Urwolf: einmal im Spiel das Rudelopfer verwandeln statt töten (ClassicWolfRules)
+##   every         Weißer Wolf: Zusatzschritt in jeder n-ten Nacht (Rachsüchtiger Wolf: 3)
+##   lone_any      Weißer Wolf: Opfer ist jede andere lebende Person, nicht nur ein Wolf
+##   sole_win      Weißer Wolf: gewinnt nur, wenn er als einzige Person lebt
 const CLASSIC_ROLES := {
 	CLASSIC_DORFBEWOHNER: {"mechanic": DORFBEWOHNER, "max_copies": UNLIMITED},
 	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
@@ -349,6 +355,8 @@ const CLASSIC_ROLES := {
 	CLASSIC_AMOR: {"mechanic": LOKI, "lovers_only": true},
 	CLASSIC_DREI_BRUEDER: {"mechanic": DIE_GEBUNDENEN, "group_size": 3, "max_copies": 3},
 	CLASSIC_ZWEI_SCHWESTERN: {"mechanic": DIE_GEBUNDENEN, "group_size": 2, "max_copies": 2},
+	CLASSIC_URWOLF: {"mechanic": WERWOLF, "transform": true},
+	CLASSIC_WEISSER_WOLF: {"mechanic": RACHSUECHTIGER_WOLF, "every": 2, "lone_any": true, "sole_win": true},
 }
 
 ## Gruppenrollen mit gemeinsamem Erkennungsschritt in Nacht 1, in fester Reihenfolge des Nachtplans.

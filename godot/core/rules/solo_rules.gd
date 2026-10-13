@@ -539,12 +539,15 @@ static func fate_drop(s: GameState, wolf_id: int) -> void:
 
 ## Opfer: andere Lebende, die als Wolf zählen (DA-17).
 static func lone_targets(s: GameState, wolf_id: int) -> Array[int]:
+	if RoleCatalog.param(s.players[wolf_id].role_id, "lone_any", false):
+		return _others_alive(s, wolf_id)  # Weißer Wolf (Classic): jede andere lebende Person
 	return _others_alive(s, wolf_id).filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)
 
 
 ## Schritt nur in den Nächten 3, 6, 9 … (DA-16, Rollentext „jede dritte Nacht“).
-static func lone_night(s: GameState) -> bool:
-	return s.night_number % RoleCatalog.LONE_WOLF_EVERY == 0
+static func lone_night(s: GameState, wolf_id: int = -1) -> bool:
+	var every := int(RoleCatalog.param(s.players[wolf_id].role_id, "every", RoleCatalog.LONE_WOLF_EVERY)) if s.players.has(wolf_id) else RoleCatalog.LONE_WOLF_EVERY
+	return s.night_number % every == 0
 
 
 ## E-35: Wolfsparität ist erfüllt und er ist der einzige lebende Wolf.
@@ -554,4 +557,6 @@ static func lone_wolf_wins(s: GameState, id: int) -> bool:
 		return false
 	var others := WinRules.effective_alive_ids(s)  # aufgeschobene Tote zählen als tot (wie in WinRules.evaluate)
 	others.erase(id)
+	if RoleCatalog.param(p.role_id, "sole_win", false):
+		return others.is_empty()  # Weißer Wolf (Classic): als Einziger übrig
 	return not others.any(func(o: int) -> bool: return s.players[o].counts_as_wolf) and RoleCatalog.parity_weight(p.role_id) >= others.size()
