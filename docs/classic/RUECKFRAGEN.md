@@ -89,7 +89,8 @@ Alternative: Titel genau wie auf dem Bogen schreiben.
 
 ## Weißer Wolf, „sein Unwesen treiben“
 Gewählt: Jede zweite Nacht (2, 4, 6 …) erwacht er nach dem Rudel allein und darf eine beliebige andere lebende Person töten, mit Verzicht. Tod am Morgen, der Engel wirkt nicht (kein Rudelangriff), wie beim Rachsüchtigen Wolf.
-Alternative: Nur ein anderer Werwolf darf sein Ziel sein („Selbst andere Werwölfe stehen ihm im Weg“).
+Nachgelesen am 13.10.2026 im Bogen (300 dpi): Wortlaut „Jede zweite Nacht erwacht er ein zusätzliches Mal, um sein Unwesen zu treiben.“ Der Bogen nennt dort KEIN Ziel und sagt nicht, dass er einen anderen Werwolf tötet; der Satz „Selbst andere Werwölfe stehen ihm dabei im Weg“ beschreibt sein Ziel, als Einziger übrig zu bleiben, nicht die Zielwahl des Zusatzschritts. Deshalb bleibt die Lesart „jede andere lebende Person“.
+Alternative: Nur ein anderer Werwolf darf sein Ziel sein. Nur umzusetzen, wenn Markus das so festlegt; Umbau ist klein (`lone_any` in `RoleCatalog.CLASSIC_ROLES` auf false setzen).
 
 ## Weißer Wolf, Sieg
 Gewählt: Einzelsieg nur, wenn er die einzige lebende Person ist. Er ist der einzige Wolf, aber andere leben: Es gewinnt niemand, das Spiel geht weiter. Leben außer ihm weitere Werwölfe, bleibt der Wolfssieg des Rudels (Grundverhalten, er zählt als Wolf).
