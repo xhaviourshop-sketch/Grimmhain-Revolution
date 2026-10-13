@@ -19,8 +19,9 @@ const ROLES: Array[String] = ["dorfbewohner", "werwolf", "schutzengel", "waldhex
 	"traumdeuter", "kopfgeldjaeger", "koenig", "kriegerin-des-lichts", "blutpriester", "amalia", "detektiv", "die-ewigen",
 	"der-weise", "maertyrerin", "schutzgeist", "dorfschmied", "verdammniswaechter", "loki", "rotkaeppchen", "schwarze-witwe", "schattenwanderer",
 	"seelentauscher", "daemonischer-wolf", "koenig-lykaon", "kutscher", "dr-victor-frankenstein",
-	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber", "schicksalswolf", "rachsuechtiger-wolf", "zeitwaechter"]
-const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon", "schicksalswolf", "rachsuechtiger-wolf"]
+	"rattenfaenger", "pestbringerin", "prophet-des-untergangs", "todesprediger", "feuerteufel", "voodoo-priester", "nekromant", "hades", "grabraeuber", "schicksalswolf", "rachsuechtiger-wolf", "zeitwaechter",
+	"classic-dorfbewohner", "classic-werwolf", "classic-seherin", "classic-hexe", "classic-jaeger", "classic-engel", "classic-maedchen", "classic-alte", "classic-amor", "classic-drei-brueder", "classic-zwei-schwestern", "classic-selbstmoerder", "classic-wildes-kind", "classic-ritter", "classic-urwolf", "classic-weisser-wolf", "classic-fuchs", "classic-floetenspieler", "classic-baerenfuehrer"]
+const WOLF_ROLES: Array[String] = ["werwolf", "trugbilderwolf", "spiegelwolf", "siegreicher-wolf", "besessener-wolf", "blutwolf", "schattenhund", "albtraumwolf", "giftwolf", "rudelvater", "seuchenwolf", "fenrir", "cerberus", "schwarze-witwe", "schattenwanderer", "daemonischer-wolf", "koenig-lykaon", "schicksalswolf", "rachsuechtiger-wolf", "classic-werwolf", "classic-urwolf", "classic-weisser-wolf"]
 const COUNTS: Array[int] = [6, 7, 8, 10, 12, 16, 24]
 ## Volle Fokusrunden: jede Rolle ist gleich oft Fokusrolle, auch wenn der Rollenpool wächst.
 const FOCUS_ROUNDS := 3
@@ -72,7 +73,7 @@ func test_random_games_keep_invariants() -> void:
 	var deaths := 0
 	for g: int in GAMES:
 		_rng.seed = 7919 * (g + 1)
-		var count := COUNTS[g % COUNTS.size()]
+		var count := COUNTS[(g + g / ROLES.size()) % COUNTS.size()]  # Runde verschiebt die Größe, damit jede Rolle verschieden große Tische sieht (auch wenn ROLES.size() ein Vielfaches von 7 ist)
 		var result := _play_game(g, count)
 		total_commands += int(result["commands"])
 		deaths += int(result["deaths"])
@@ -169,6 +170,9 @@ func _play_game(g: int, count: int) -> Dictionary:
 
 
 func _start_command(g: int, count: int) -> Command:
+	var focus_role: String = ROLES[g % ROLES.size()]
+	if focus_role == "nekromant":
+		count = maxi(count, 12)  # die Umlenkung braucht drei Tote und ein Rudel, das ihn trifft: kleine Tische enden zu früh
 	var roles: Array[String] = []
 	# Fokusrolle: jede Katalogrolle ist reihum sicher in mehreren Partien (Abdeckung wächst mit dem Pool).
 	var focus: String = ROLES[g % ROLES.size()]
@@ -176,19 +180,19 @@ func _start_command(g: int, count: int) -> Command:
 	_focus_goal_met = false
 	# PE-07: jede Rolle höchstens einmal in der Startbesetzung, Die Gebundenen ausgenommen. Die Fokusrolle steht zuerst (einmal); jede
 	# gezogene Rolle, die schon vergeben ist, wird durch die nächste freie des Pools ersetzt. Die Zahl der Ziehungen bleibt gleich.
-	roles.append(focus)
+	_append_role(roles, focus)
 	var wolves := 1 + _rng.randi_range(0, maxi(0, count / 5))
 	if focus == "amalia":
 		wolves = maxi(wolves, RoleCatalog.AMALIA_MIN_WOLVES)  # ihre Tagesaktion braucht drei Wölfe
 	for i: int in wolves:
-		add_unique(roles, WOLF_ROLES, _rng.randi_range(0, WOLF_ROLES.size() - 1))
+		add_unique(roles, WOLF_ROLES, _rng.randi_range(0, WOLF_ROLES.size() - 1), count)
 	var villagers: Array[String] = ["schutzengel", "waldhexe", "das-orakel", "wolfskind", "lehrling", "sensentraeger"]
 	if _rng.randf() < 0.3:
 		add_unique(roles, ["dorfbewohner"], 0)
 	else:
 		add_unique(roles, villagers, _rng.randi_range(0, 5))
 	while roles.size() < count:
-		add_unique(roles, ROLES, _rng.randi_range(0, ROLES.size() - 1))
+		add_unique(roles, ROLES, _rng.randi_range(0, ROLES.size() - 1), count)
 	# Mischen im Test (nicht im Kern): Sitz- und ID-Verteilung variieren.
 	for i: int in range(roles.size() - 1, 0, -1):
 		var j := _rng.randi_range(0, i)
@@ -232,13 +236,22 @@ func _start_command(g: int, count: int) -> Command:
 # --- Befehlserzeugung (nur gültige Befehle) ------------------------------------------------------
 
 ## Hängt die Rolle an Position `start` des Pools an; ist sie schon vergeben, die nächste freie in Poolreihenfolge.
-## Ohne freie Rolle im Pool passiert nichts (der Aufrufer prüft die Personenzahl).
-static func add_unique(roles: Array, pool: Array, start: int) -> void:
+## Ohne freie Rolle im Pool passiert nichts (der Aufrufer prüft die Personenzahl). Classic-Gruppenrollen kommen nur vollständig
+## (alle Mitglieder zusammen) und nur, wenn die Gruppe unter `limit` Personen noch Platz hat (limit -1: ohne Grenze).
+static func add_unique(roles: Array, pool: Array, start: int, limit: int = -1) -> void:
 	for k: int in pool.size():
 		var candidate: String = pool[(start + k) % pool.size()]
 		if candidate == "die-gebundenen" or not roles.has(candidate):
-			roles.append(candidate)
+			if limit >= 0 and roles.size() + maxi(1, RoleCatalog.group_size(StringName(candidate))) > limit:
+				continue
+			_append_role(roles, candidate)
 			return
+
+
+## Eine Rolle, bei Gruppenrollen alle Mitglieder (Brüder 3, Schwestern 2).
+static func _append_role(roles: Array, role: String) -> void:
+	for i: int in maxi(1, RoleCatalog.group_size(StringName(role))):
+		roles.append(role)
 
 
 func _pick(list: Array) -> Variant:
@@ -549,6 +562,8 @@ func _answer(s: GameState, p: PendingPrompt) -> Command:
 		PendingPrompt.OWNER_CHRONICLER, PendingPrompt.OWNER_BOUND, PendingPrompt.OWNER_PIPER_ALL, PendingPrompt.OWNER_RANGER, PendingPrompt.OWNER_DOCTOR, PendingPrompt.OWNER_TRACKER, PendingPrompt.OWNER_HOUND:
 			if p.stage == InfoSteps.STAGE_USE:
 				return Command.answer_choice(p.id, String(p.stage), _rng.randf() < 0.5)
+			if p.stage == InfoSteps.STAGE_TARGETS and p.owner == PendingPrompt.OWNER_HOUND and InfoSteps.is_fox(s.players[p.actor_id]):
+				return Command.answer_stage_targets(p.id, String(p.stage), [_pick(_alive_in(s, p.allowed_ids))])  # Fuchs: eine Person, auch sich selbst
 			if p.stage == InfoSteps.STAGE_TARGETS and p.owner == PendingPrompt.OWNER_HOUND:
 				var pool3 := _alive_in(s, p.allowed_ids, p.actor_id)  # immer genau drei (DA Nachtschritte neu); der Schritt entfällt bei weniger Lebenden
 				var picks: Array = []
@@ -676,7 +691,7 @@ func _check_after(before: GameState, s: GameState, events: Array[GameEvent], lab
 	for id: int in s.players:
 		var p: Player = s.players[id]
 		assert_eq(p.death == null, p.alive, "%s: Todesdatensatz passt zu lebend/tot (%d)" % [label, id])
-		if p.role_id == RoleCatalog.WOLFSKIND:
+		if p.mech_role() == RoleCatalog.WOLFSKIND:
 			var bond := WolfChildRules.bond_of(s, id)
 			assert_true(bond != null and WolfChildRules.fields_match(p, bond.transformed), "%s: Wolfskind-Felder (%d)" % [label, id])
 		else:
@@ -710,8 +725,8 @@ func _check_prompt_actor(s: GameState, prompt: Dictionary, label: String) -> voi
 		_seen["StolenStepOpened"] = int(_seen.get("StolenStepOpened", 0)) + 1  # Grabräuber nutzt die gestohlene Fähigkeit
 	# Ausnahme zu G-PH-2: der Schutzgeist handelt in der ersten Nacht nach seinem Tod (S-04).
 	assert_true(s.players[actor].alive != (role == RoleCatalog.SCHUTZGEIST), "%s: %s nur für Lebende (Schutzgeist: nur tot)" % [label, step])
-	assert_true(SoloRules.acts_as(s, actor, role), "%s: %s nur mit geplanter Rolle, gestohlener oder durch eine Karte verliehener Fähigkeit (%s statt %s)" % [label, step, SoloRules.ability_role(s, actor), role])
-	assert_false((prompt["allowed_ids"] as Array).has(actor) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER, RoleCatalog.LOKI, RoleCatalog.SEELENTAUSCHER].has(role), "%s: %s ohne Selbstwahl" % [label, step])
+	assert_true(SoloRules.acts_as(s, actor, role) or SoloRules.acts_as(s, actor, RoleCatalog.mech(role)), "%s: %s nur mit geplanter Rolle, gestohlener oder durch eine Karte verliehener Fähigkeit (%s statt %s)" % [label, step, SoloRules.ability_role(s, actor), role])
+	assert_false((prompt["allowed_ids"] as Array).has(actor) and not InfoSteps.is_fox(s.players[actor]) and not [RoleCatalog.WALDHEXE, RoleCatalog.KORRUPTER_RICHTER, RoleCatalog.LOKI, RoleCatalog.SEELENTAUSCHER].has(role), "%s: %s ohne Selbstwahl" % [label, step])
 
 
 func _check_codec(s: GameState, log: Array[Command], label: String) -> void:
