@@ -236,7 +236,7 @@ const ABILITY_USE_KEYS: Array[String] = ["sensentraeger:death_reaction", "waldhe
 	"koenig:learn", "kriegerin-des-lichts:attack", "blutpriester:sacrifice", "der-weise:survive", "schutzgeist:shield",
 	"dorfschmied:weapon", "loki:bind", "schattenwanderer:link", "daemonischer-wolf:death_reaction", "koenig-lykaon:convert",
 	"koenig-lykaon:skip1", "koenig-lykaon:skip2", "koenig-lykaon:skip3", "seelentauscher:swap", "kutscher:revive",
-	"dr-victor-frankenstein:revive", "todesprediger:predict", "grabraeuber:steal", "zeitwaechter:freeze"]
+	"dr-victor-frankenstein:revive", "todesprediger:predict", "grabraeuber:steal", "zeitwaechter:freeze", "classic-urwolf:turn"]
 
 ## Rudelschritt auf der Zahl des Werwolfs (2,0). Gleiche Priorität: nach Personen-ID.
 const PACK_PRIORITY: int = CARD_NUMBERS[WERWOLF]
