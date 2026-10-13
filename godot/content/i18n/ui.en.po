@@ -9953,7 +9953,7 @@ msgid "ui.rulebook.classic.c02.b06"
 msgstr "Choose exactly as many roles as there are people. A valid cast contains at least one village role, one wolf role and one solo role. Each role appears at most once at the start; only “The Three Brothers” and “The Two Sisters” may be chosen several times. The card shows what is still missing."
 
 msgid "ui.rulebook.classic.c05.b07"
-msgstr "Some roles trigger private notices (Cupid, The Pipe, Plague Bringer, Little Red Riding Hood). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, closing it confirms. Each person sees only what is meant for them. For Little Red Riding Hood you quietly tap the chosen person after the choice and show them the anonymous question; you record the answer with “Refuge granted” or “No refuge”."
+msgstr "Some roles trigger private notices (Cupid, The Pipe). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, closing it confirms. Each person sees only what is meant for them. For Little Red Riding Hood you quietly tap the chosen person after the choice and show them the anonymous question; you record the answer with “Refuge granted” or “No refuge”."
 
 msgid "ui.rulebook.classic.c06.b01"
 msgstr "After the last step the app evaluates the night: first the attack of the pack is checked. A rescue by the Witch or a protection by the Angel prevents it; only the game master learns that. Then come immediate consequences of deaths, then open reactions one after another, and only at the end does the app check for a win."
@@ -9975,3 +9975,15 @@ msgstr "The first harmful ability that hits a wolf in the next night fails, incl
 
 msgid "ui.card.fluch_02.dorf.guide.classic"
 msgstr "The card player chooses a Seer. In the next night you set their role information to a false value by override."
+
+msgid "ui.notice.loki_bond.classic.love"
+msgstr "You are in love. If one of you dies, the other dies of a broken heart."
+
+msgid "ui.night.classic_amor.targets.title"
+msgstr "Cupid makes two people fall in love."
+
+msgid "ui.night.classic_amor.targets.help"
+msgstr "Tap two people."
+
+msgid "ui.night.classic_amor.targets.short"
+msgstr "enamors two"

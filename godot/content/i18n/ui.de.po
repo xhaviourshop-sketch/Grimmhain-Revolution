@@ -9953,7 +9953,7 @@ msgid "ui.rulebook.classic.c02.b06"
 msgstr "Stelle genau so viele Rollen zusammen, wie Personen mitspielen. Eine gültige Besetzung enthält mindestens eine Dorfrolle, eine Wolfsrolle und eine Einzelsiegrolle. Jede Rolle kommt beim Start höchstens einmal vor; nur „Die drei Brüder“ und „Die zwei Schwestern“ dürfen mehrfach gewählt werden. Die Karte zeigt, was noch fehlt."
 
 msgid "ui.rulebook.classic.c05.b07"
-msgstr "Einige Rollen lösen private Hinweise aus (Amor, Flötenspieler, Pestbringerin, Rotkäppchen). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, das Schließen bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Bei Rotkäppchen tippst du die gewählte Person nach der Wahl unauffällig an und zeigst ihr die anonyme Frage; die Antwort erfasst du mit „Zuflucht gewährt“ oder „Keine Zuflucht“."
+msgstr "Einige Rollen lösen private Hinweise aus (Amor, Flötenspieler). Die Karte „Privater Hinweis“ erscheint vor dem nächsten Schritt. „Karte zeigen“ zeigt sie der betroffenen Person, das Schließen bestätigt. Jede Person sieht nur das, was für sie bestimmt ist. Bei Rotkäppchen tippst du die gewählte Person nach der Wahl unauffällig an und zeigst ihr die anonyme Frage; die Antwort erfasst du mit „Zuflucht gewährt“ oder „Keine Zuflucht“."
 
 msgid "ui.rulebook.classic.c06.b01"
 msgstr "Nach dem letzten Schritt wertet die App die Nacht aus: Zuerst wird der Angriff des Rudels geprüft. Eine Rettung durch die Hexe oder ein Schutz durch den Engel verhindert ihn; das erfährt nur die Spielleitung. Danach folgen sofortige Todesfolgen, dann offene Reaktionen der Reihe nach, und erst am Ende prüft die App verbindlich auf einen Sieg."
@@ -9975,3 +9975,15 @@ msgstr "Die erste schädliche Fähigkeit, die in der nächsten Nacht einen Wolf 
 
 msgid "ui.card.fluch_02.dorf.guide.classic"
 msgstr "Die Kartenspielerin wählt eine Seherin. In der nächsten Nacht legst du deren Rollenauskunft per Übersteuerung falsch fest."
+
+msgid "ui.notice.loki_bond.classic.love"
+msgstr "Ihr seid Verliebte. Stirbt einer von euch, stirbt der andere aus Liebeskummer mit."
+
+msgid "ui.night.classic_amor.targets.title"
+msgstr "Amor lässt zwei Personen sich ineinander verlieben."
+
+msgid "ui.night.classic_amor.targets.help"
+msgstr "Tippe zwei Personen."
+
+msgid "ui.night.classic_amor.targets.short"
+msgstr "verliebt zwei"

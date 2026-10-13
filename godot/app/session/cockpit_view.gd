@@ -199,6 +199,9 @@ static func notice_card(s: GameState) -> Dictionary:
 	match str(n["kind"]):
 		NoticeRules.LOKI_BOND:
 			text_key = "ui.notice.loki_bond.%s" % str((n["data"] as Dictionary)["bond"])
+			for id: int in s.players:
+				if s.players[id].role_id == RoleCatalog.CLASSIC_AMOR:
+					text_key = "ui.notice.loki_bond.classic.%s" % str((n["data"] as Dictionary)["bond"])  # Hilfe und Text ohne Loki
 		NoticeRules.PIPER_NEW:
 			text_key = "ui.notice.piper_new"
 			for id: int in s.alive_ids():

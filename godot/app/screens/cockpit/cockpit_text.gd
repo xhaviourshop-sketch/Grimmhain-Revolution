@@ -53,6 +53,8 @@ static func help_role(next: Dictionary) -> String:
 				role = String(RoleCatalog.RATTENFAENGER)
 		"notice":
 			role = str(NOTICE_HELP.get(str(next.get("notice_kind", "")), ""))
+			if str(next.get("text_key", "")).begins_with("ui.notice.loki_bond.classic."):  # Hilfe von Amor statt Loki
+				role = String(RoleCatalog.CLASSIC_AMOR)
 			if str(next.get("text_key", "")) == "ui.notice.piper_new_classic":  # Hilfe des Flötenspielers statt der Rattenfänger-Mechanik
 				role = String(RoleCatalog.CLASSIC_FLOETENSPIELER)
 	return role if RoleCatalog.has_role(StringName(role)) else ""
