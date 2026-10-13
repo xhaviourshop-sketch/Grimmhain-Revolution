@@ -42,7 +42,7 @@ static func charm_targets(s: GameState, piper_id: int) -> Array[int]:
 
 static func piper_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.RATTENFAENGER and not _others_alive(s, id).is_empty() and charm_targets(s, id).is_empty()
+	return p != null and p.alive and p.mech_role() == RoleCatalog.RATTENFAENGER and not _others_alive(s, id).is_empty() and charm_targets(s, id).is_empty()
 
 
 ## Pestbringerin: andere Lebende, die noch nicht infiziert sind.
@@ -52,7 +52,7 @@ static func pest_targets(s: GameState, id: int) -> Array[int]:
 
 static func pest_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.PESTBRINGERIN and not _others_alive(s, id).is_empty() and pest_targets(s, id).is_empty()
+	return p != null and p.alive and p.mech_role() == RoleCatalog.PESTBRINGERIN and not _others_alive(s, id).is_empty() and pest_targets(s, id).is_empty()
 
 
 ## Alle lebenden verzauberten Personen, aufsteigend (Rattenfänger, DI-06).
@@ -105,7 +105,7 @@ static func prophet_marking(s: GameState, id: int) -> bool:
 
 static func prophet_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.PROPHET and s.prophet_unlocked.has(id)
+	return p != null and p.alive and p.mech_role() == RoleCatalog.PROPHET and s.prophet_unlocked.has(id)
 
 
 static func prophecy_of(s: GameState, preacher_id: int) -> Dictionary:
@@ -137,7 +137,7 @@ static func on_death(ctx: RuleContext, target: Player, record: KillEvent, trigge
 			s.prophet_unlocked.append(id)
 			s.prophet_unlocked.sort()
 			ctx.emit(GameEvent.PROPHET_UNLOCKED, Visibility.GM, {"prophet_id": id})
-	if not trigger_effects or target.role_id != RoleCatalog.TODESPREDIGER or s.preacher_wins.has(target.id):
+	if not trigger_effects or target.mech_role() != RoleCatalog.TODESPREDIGER or s.preacher_wins.has(target.id):
 		return
 	var q := prophecy_of(s, target.id)
 	if q.is_empty():
@@ -178,7 +178,7 @@ static func drop_fire_mark(s: GameState, devil_id: int) -> void:
 static func fire_co_winners(s: GameState) -> Array[int]:
 	var out: Array[int] = []
 	for id: int in s.alive_ids():
-		if s.players[id].role_id == RoleCatalog.FEUERTEUFEL:
+		if s.players[id].mech_role() == RoleCatalog.FEUERTEUFEL:
 			out.append(id)
 	out.sort()
 	return out
@@ -232,7 +232,7 @@ static func voodoo_on_death(s: GameState, dead_id: int) -> void:
 
 static func voodoo_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.VOODOO and WinRules.effective_alive_ids(s).size() <= RoleCatalog.VOODOO_MAX_LIVING
+	return p != null and p.alive and p.mech_role() == RoleCatalog.VOODOO and WinRules.effective_alive_ids(s).size() <= RoleCatalog.VOODOO_MAX_LIVING
 
 
 # --- Nekromant ------------------------------------------------------------------------------------
@@ -325,7 +325,7 @@ static func validate_name_wolf(s: GameState, p: Dictionary) -> StringName:
 		return &"unknown_player"
 	if not s.players[id].alive:
 		return &"player_dead"
-	if s.players[id].role_id != RoleCatalog.NEKROMANT:
+	if s.players[id].mech_role() != RoleCatalog.NEKROMANT:
 		return &"not_necromancer"
 	if int(s.necro_named.get(id, 0)) == s.day_number:
 		return &"already_named_today"
@@ -422,7 +422,7 @@ static func hades_drop(s: GameState, id: int) -> void:
 
 static func hades_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.HADES and hades_light_count(s, id) >= RoleCatalog.HADES_WIN_LIGHTS
+	return p != null and p.alive and p.mech_role() == RoleCatalog.HADES and hades_light_count(s, id) >= RoleCatalog.HADES_WIN_LIGHTS
 
 
 # --- Grabräuber -----------------------------------------------------------------------------------
@@ -438,7 +438,7 @@ static func stolen_role(s: GameState, id: int) -> StringName:
 ## Rolle, deren Nachtschritt die Person ausführt: die gestohlene beim Grabräuber, sonst die eigene.
 static func ability_role(s: GameState, id: int) -> StringName:
 	var stolen := stolen_role(s, id)
-	return stolen if stolen != &"" else s.players[id].role_id
+	return stolen if stolen != &"" else s.players[id].mech_role()
 
 
 ## Personen mit ihrer Nachtrolle für den Nachtplan: eigene bzw. gestohlene Rolle jeder lebenden Person, dazu zusätzliche
@@ -468,7 +468,7 @@ static func acts_as(s: GameState, id: int, role: StringName) -> bool:
 
 ## true, wenn die Person die Nachtfähigkeit `role` hat (eigene Rolle oder vom Grabräuber gestohlen).
 static func has_ability(s: GameState, id: int, role: StringName) -> bool:
-	return s.players.has(id) and (s.players[id].role_id == role or stolen_role(s, id) == role)
+	return s.players.has(id) and (s.players[id].mech_role() == role or stolen_role(s, id) == role)
 
 
 ## Tote mit stehlbarer Rolle (E-34), aufsteigend.
@@ -550,7 +550,7 @@ static func lone_night(s: GameState) -> bool:
 ## E-35: Wolfsparität ist erfüllt und er ist der einzige lebende Wolf.
 static func lone_wolf_wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	if p == null or not p.alive or p.role_id != RoleCatalog.RACHSUECHTIGER_WOLF:
+	if p == null or not p.alive or p.mech_role() != RoleCatalog.RACHSUECHTIGER_WOLF:
 		return false
 	var others := WinRules.effective_alive_ids(s)  # aufgeschobene Tote zählen als tot (wie in WinRules.evaluate)
 	others.erase(id)

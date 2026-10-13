@@ -44,6 +44,11 @@ static func step_actor(key: StringName) -> int:
 	return int(parts[1]) if parts.size() == 2 and parts[1].is_valid_int() else -1
 
 
+## true für den gemeinsamen Schritt einer Gruppenrolle (Gebundene, Classic-Brüder und -Schwestern; DA-108).
+static func is_bound_key(key: StringName) -> bool:
+	return RoleCatalog.BOUND_GROUPS.has(key)
+
+
 static func night_step_id(s: GameState, index: int) -> String:
 	return "night:%d:%d:%s" % [s.night_number, index, s.night_plan[index]]
 
@@ -223,8 +228,10 @@ static func build_night_plan(s: GameState) -> Array[StringName]:
 			if s.pack_bonus_pending:
 				entries.append([pack_slot[0], int(pack_slot[1]) + 1, PACK2])
 			break
-	if s.night_number == 1 and not InfoSteps.living_bound(s).is_empty():
-		entries.append([RoleCatalog.BOUND_PRIORITY, 0, BOUND])
+	if s.night_number == 1:
+		for g: int in RoleCatalog.BOUND_GROUPS.size():
+			if not InfoSteps.living_bound(s, RoleCatalog.BOUND_GROUPS[g]).is_empty():
+				entries.append([RoleCatalog.BOUND_PRIORITY, g, RoleCatalog.BOUND_GROUPS[g]])
 	if not InfoSteps.living_eternal(s).is_empty():
 		entries.append([RoleCatalog.ETERNAL_PRIORITY, 0, ETERNAL])
 	# PE-06: nach jedem Aufruf des Rattenfängers (echter Schritt oder Tarnaufruf), hinter allen Rattenfänger-Schritten.
@@ -256,8 +263,8 @@ static func core_drop_reason(s: GameState, index: int) -> StringName:
 		return &"no_decision" if SoloRules.charmed_living(s).is_empty() else &""
 	if s.night_frozen:
 		return &"frozen"  # Zeitwächter (E-36): alle Nachtschritte dieser Nacht entfallen
-	if key == BOUND:
-		if InfoSteps.living_bound(s).is_empty():
+	if is_bound_key(key):
+		if InfoSteps.living_bound(s, key).is_empty():
 			return &"no_decision"
 		if s.village_blocked:
 			return &"blocked"  # Blockade gemeinsamer Dorfschritte (RM-DR-010)
@@ -443,7 +450,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 	elif step_kind(step_id) == RoleCatalog.LEHRLING:
 		# Lehrling: Kandidaten, Option, Bestätigung (ApprenticeRules).
 		ApprenticeRules.open(s, prompt, step_actor(s.night_plan[s.next_night_step]))
-	elif s.night_plan[s.next_night_step] == BOUND:
+	elif is_bound_key(s.night_plan[s.next_night_step]):
 		InfoSteps.open(s, prompt, PendingPrompt.OWNER_BOUND, -1)
 	elif BondSteps.OWNERS.has(step_kind(step_id)):
 		BondSteps.open(s, prompt, step_kind(step_id), step_actor(s.night_plan[s.next_night_step]))

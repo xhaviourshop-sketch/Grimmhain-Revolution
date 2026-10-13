@@ -17,7 +17,7 @@ static func bond_of(s: GameState, child_id: int) -> WolfChildBond:
 static func needs_model(s: GameState, child_id: int) -> bool:
 	var p: Player = s.players.get(child_id)
 	var b := bond_of(s, child_id)
-	return p != null and p.alive and p.role_id == RoleCatalog.WOLFSKIND and b != null and not b.transformed and b.model_id == -1
+	return p != null and p.alive and p.mech_role() == RoleCatalog.WOLFSKIND and b != null and not b.transformed and b.model_id == -1
 
 
 ## Neuer, unverwandelter Zustand ohne Vorbild (Spielaufbau, `set_role`).
@@ -84,7 +84,7 @@ static func on_death(ctx: RuleContext, record: KillEvent) -> void:
 	var blocked: Array[int] = []
 	for b: WolfChildBond in s.wolf_children:  # nach child_id sortiert
 		var child: Player = s.players.get(b.child_id)
-		if b.model_id == record.target_id and not b.transformed and child != null and child.alive and child.role_id == RoleCatalog.WOLFSKIND and not GuardRoles.silenced(s, child.id):
+		if b.model_id == record.target_id and not b.transformed and child != null and child.alive and child.mech_role() == RoleCatalog.WOLFSKIND and not GuardRoles.silenced(s, child.id):
 			if Gatewarden.active(s):
 				blocked.append(b.child_id)
 			else:
@@ -101,7 +101,7 @@ static func state_is_consistent(s: GameState) -> bool:
 	var seen := {}
 	for b: WolfChildBond in s.wolf_children:
 		var p: Player = s.players.get(b.child_id)
-		if seen.has(b.child_id) or p == null or p.role_id != RoleCatalog.WOLFSKIND:
+		if seen.has(b.child_id) or p == null or p.mech_role() != RoleCatalog.WOLFSKIND:
 			return false
 		seen[b.child_id] = true
 		if b.model_id != -1 and (not s.players.has(b.model_id) or b.model_id == b.child_id):
@@ -109,7 +109,7 @@ static func state_is_consistent(s: GameState) -> bool:
 		if b.bound_night > s.night_number or not fields_match(p, b.transformed):
 			return false
 	for id: int in s.players:
-		if s.players[id].role_id == RoleCatalog.WOLFSKIND and not seen.has(id):
+		if s.players[id].mech_role() == RoleCatalog.WOLFSKIND and not seen.has(id):
 			return false
 	return true
 

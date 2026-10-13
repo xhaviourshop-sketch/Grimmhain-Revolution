@@ -207,9 +207,11 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	match answered:
 		STAGE_HEAL:
 			prompt.partial["heal"] = bool(p["choice"])
-			if bool(p["choice"]):
+			if bool(p["choice"]) and RoleCatalog.param(s.players[prompt.actor_id].role_id, "witch_reveal", true):
 				# Rettet sie, erfährt sie zusätzlich die Rolle des Opfers (DR-06 d).
 				prompt.partial["victim_role"] = String(s.players[int(prompt.partial["victim_id"])].role_id)
+			elif bool(p["choice"]):
+				prompt.partial["role_seen"] = true  # Classic-Hexe: keine Rollenauskunft nach der Rettung (DA-108)
 			recorded = {"choice": bool(p["choice"])}
 		STAGE_REVEAL:
 			prompt.partial["role_seen"] = true

@@ -55,7 +55,7 @@ static func called_roles(s: GameState) -> Array[StringName]:
 static func entry_role(key: StringName) -> StringName:
 	if key == StepQueue.PACK or key == StepQueue.PACK2:
 		return &""
-	if key == StepQueue.BOUND or key == StepQueue.ETERNAL or key == StepQueue.PIPER_ALL:
+	if StepQueue.is_bound_key(key) or key == StepQueue.ETERNAL or key == StepQueue.PIPER_ALL:
 		return key
 	return StepQueue.step_role(key)
 

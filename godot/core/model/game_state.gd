@@ -368,7 +368,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		if not s.players.has(robber) or not s.players.has(robbed) or robber == robbed or not RoleCatalog.stealable(stolen):
 			return null
 		# Die Karte „Totale Anarchie“ stellt verbrauchte Einsätze wieder her, die gestohlene Fähigkeit bleibt bis zum nächsten Diebstahl.
-		if not s.players[robber].alive or s.players[robber].role_id != RoleCatalog.GRABRAEUBER or not (s.players[robber].ability_uses.has(SoloRules.GRAVE_USE_KEY) or s.death_cards):
+		if not s.players[robber].alive or s.players[robber].mech_role() != RoleCatalog.GRABRAEUBER or not (s.players[robber].ability_uses.has(SoloRules.GRAVE_USE_KEY) or s.death_cards):
 			return null
 		if not s.grave_thefts.is_empty() and int(s.grave_thefts[-1]["robber_id"]) >= robber:
 			return null
@@ -690,7 +690,7 @@ static func from_dict(d: Dictionary) -> GameState:
 		var fate_wolf := DictRead.get_int(item, "wolf_id", -1) if item is Dictionary else -1
 		var fate_target := DictRead.get_int(item, "target_id", -1) if item is Dictionary else -1
 		if not s.players.has(fate_wolf) or not s.players.has(fate_target) or fate_wolf == fate_target or not s.players[fate_wolf].alive \
-				or s.players[fate_wolf].role_id != RoleCatalog.SCHICKSALSWOLF:
+				or s.players[fate_wolf].mech_role() != RoleCatalog.SCHICKSALSWOLF:
 			return null
 		s.fate_marks.append({"wolf_id": fate_wolf, "target_id": fate_target})
 	var first_dead: Variant = DictRead.to_int_array(DictRead.get_array(d, "fate_first_dead"))

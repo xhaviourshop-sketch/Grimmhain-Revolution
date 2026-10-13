@@ -317,6 +317,72 @@ const ROLES := {
 }
 
 
+## Akt Classic (DA-108): eigene Rollen-IDs mit eigenen Namen, Texten und Bildern, deren Regel die Mechanik einer bestehenden
+## Rolle ist (`mechanic`). Der Regelkern fragt über `mech` bzw. `Player.mech_role` die Mechanik ab; bestehende Rollen sind
+## ihre eigene Mechanik. Abweichende Einzelheiten stehen als Parameter am Eintrag (`param`). Bewusst nicht in `ROLES`, damit
+## Listen über alle 72 Rollen (Setup, Totenreichkarten, Frankenstein, Lexikon) unverändert bleiben.
+const CLASSIC_DORFBEWOHNER := &"classic-dorfbewohner"
+const CLASSIC_WERWOLF := &"classic-werwolf"
+const CLASSIC_SEHERIN := &"classic-seherin"
+const CLASSIC_HEXE := &"classic-hexe"
+const CLASSIC_JAEGER := &"classic-jaeger"
+const CLASSIC_ENGEL := &"classic-engel"
+const CLASSIC_MAEDCHEN := &"classic-maedchen"
+const CLASSIC_ALTE := &"classic-alte"
+const CLASSIC_AMOR := &"classic-amor"
+const CLASSIC_DREI_BRUEDER := &"classic-drei-brueder"
+const CLASSIC_ZWEI_SCHWESTERN := &"classic-zwei-schwestern"
+
+## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
+##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
+##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
+##   group_size    Gruppenrolle: genau so viele Personen in der Startbesetzung, Schritt nur für diese Gruppe
+const CLASSIC_ROLES := {
+	CLASSIC_DORFBEWOHNER: {"mechanic": DORFBEWOHNER, "max_copies": UNLIMITED},
+	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
+	CLASSIC_SEHERIN: {"mechanic": ORAKEL},
+	CLASSIC_HEXE: {"mechanic": WALDHEXE, "witch_reveal": false},
+	CLASSIC_JAEGER: {"mechanic": SENSENTRAEGER},
+	CLASSIC_ENGEL: {"mechanic": SCHUTZENGEL},
+	CLASSIC_MAEDCHEN: {"mechanic": DORFBEWOHNER},
+	CLASSIC_ALTE: {"mechanic": DER_WEISE},
+	CLASSIC_AMOR: {"mechanic": LOKI, "lovers_only": true},
+	CLASSIC_DREI_BRUEDER: {"mechanic": DIE_GEBUNDENEN, "group_size": 3, "max_copies": 3},
+	CLASSIC_ZWEI_SCHWESTERN: {"mechanic": DIE_GEBUNDENEN, "group_size": 2, "max_copies": 2},
+}
+
+## Gruppenrollen mit gemeinsamem Erkennungsschritt in Nacht 1, in fester Reihenfolge des Nachtplans.
+const BOUND_GROUPS: Array[StringName] = [DIE_GEBUNDENEN, CLASSIC_DREI_BRUEDER, CLASSIC_ZWEI_SCHWESTERN]
+
+
+## Mechanik einer Rolle: bei Classic-Rollen die verwiesene Rolle, sonst die Rolle selbst.
+static func mech(role_id: StringName) -> StringName:
+	return CLASSIC_ROLES[role_id]["mechanic"] if CLASSIC_ROLES.has(role_id) else role_id
+
+
+static func is_classic(role_id: StringName) -> bool:
+	return CLASSIC_ROLES.has(role_id)
+
+
+## Parameter einer Rolle (Classic-Abweichung) oder `default`.
+static func param(role_id: StringName, key: String, default: Variant) -> Variant:
+	return (CLASSIC_ROLES[role_id] as Dictionary).get(key, default) if CLASSIC_ROLES.has(role_id) else default
+
+
+## Größe einer Gruppenrolle oder 0.
+static func group_size(role_id: StringName) -> int:
+	return int(param(role_id, "group_size", 0))
+
+
+static func _entry(role_id: StringName) -> Dictionary:
+	if not CLASSIC_ROLES.has(role_id):
+		return ROLES[role_id]
+	var out: Dictionary = (ROLES[mech(role_id)] as Dictionary).duplicate()
+	out.merge(CLASSIC_ROLES[role_id], true)
+	out["appears_as"] = role_id
+	return out
+
+
 ## Direkte Wiederbelebungsrollen (DI-01): Sie lösen die Wiederbelebungsrunde aus. Erbe (Lehrling), Tausch
 ## (Seelentauscher), Diebstahl (Grabräuber) und Spielleiterkorrekturen tun das ausdrücklich nicht.
 ## Totenkarten sind noch nicht definiert (RM-DR-013) und stehen hier bewusst nicht.
@@ -328,24 +394,24 @@ static func is_revival_role(role_id: StringName) -> bool:
 
 
 static func has_role(role_id: StringName) -> bool:
-	return ROLES.has(role_id)
+	return ROLES.has(role_id) or CLASSIC_ROLES.has(role_id)
 
 
 static func faction_of(role_id: StringName) -> StringName:
-	return ROLES[role_id]["faction"]
+	return _entry(role_id)["faction"]
 
 
 static func counts_as_wolf(role_id: StringName) -> bool:
-	return ROLES[role_id]["counts_as_wolf"]
+	return _entry(role_id)["counts_as_wolf"]
 
 
 static func appears_as(role_id: StringName) -> StringName:
-	return ROLES[role_id]["appears_as"]
+	return _entry(role_id)["appears_as"]
 
 
 ## Art der Todesreaktion oder &"" ohne Reaktion.
 static func death_reaction(role_id: StringName) -> StringName:
-	return (ROLES[role_id] as Dictionary).get("death_reaction", &"")
+	return _entry(role_id).get("death_reaction", &"")
 
 
 ## Nachtpriorität des eigenen Schritts jeder lebenden Person mit dieser Rolle (Kartenzahl mal 10, DA-106;
@@ -354,17 +420,17 @@ static func death_reaction(role_id: StringName) -> StringName:
 static func night_priority(role_id: StringName) -> int:
 	if not has_night_step(role_id):
 		return 0
-	return CARD_NUMBERS.get(role_id, X_CARD_PRIORITY.get(role_id, 0))
+	return CARD_NUMBERS.get(mech(role_id), X_CARD_PRIORITY.get(mech(role_id), 0))
 
 
 ## true, wenn die Rolle einen eigenen Nachtschritt mit Kartenzahl (oder bedingtem X-Aufruf) hat.
 static func has_night_step(role_id: StringName) -> bool:
-	return (ROLES[role_id] as Dictionary).get("night_step", false) and (CARD_NUMBERS.has(role_id) or X_CARD_PRIORITY.has(role_id))
+	return _entry(role_id).get("night_step", false) and (CARD_NUMBERS.has(mech(role_id)) or X_CARD_PRIORITY.has(mech(role_id)))
 
 
 ## true, wenn der persönliche Schritt der Rolle nur in Nacht 1 stattfindet (RM-DR-014 = B).
 static func first_night_only(role_id: StringName) -> bool:
-	return (ROLES[role_id] as Dictionary).get("first_night_only", false)
+	return _entry(role_id).get("first_night_only", false)
 
 
 ## Grabräuber (E-34, abgeleitet): Rollen mit wiederkehrendem eigenem Nachtschritt einer lebenden Person. Nicht:
@@ -378,7 +444,7 @@ static func stealable(role_id: StringName) -> bool:
 
 ## true, wenn jede Instanz der Rolle eine vom Spielleiter festgelegte Scheinrolle braucht.
 static func requires_appearance(role_id: StringName) -> bool:
-	return (ROLES[role_id] as Dictionary).get("requires_appearance", false)
+	return _entry(role_id).get("requires_appearance", false)
 
 
 ## Zulässige Scheinrolle: eine bekannte Rolle, die nicht als Wolf zählt
@@ -391,14 +457,14 @@ static func is_valid_appearance(role_id: StringName) -> bool:
 ## Gewicht einer lebenden Person dieser Rolle in der Wolfsparität (G-SIEG-2), sonst 1.
 ## Nur für Rollen, die als Wolf zählen; Personenzählungen (DR-12) nutzen es nie.
 static func parity_weight(role_id: StringName) -> int:
-	return (ROLES[role_id] as Dictionary).get("parity_weight", 1)
+	return _entry(role_id).get("parity_weight", 1)
 
 
 ## true, wenn die Rolle nur in Partien mit Totenreichkarten sinnvoll ist (Kartenschlucker).
 static func requires_cards(role_id: StringName) -> bool:
-	return (ROLES[role_id] as Dictionary).get("requires_cards", false)
+	return _entry(role_id).get("requires_cards", false)
 
 
 ## Höchstzahl in der Startbesetzung: 1 (PE-07), UNLIMITED nur für Rollen mit ausdrücklicher Ausnahme.
 static func max_copies(role_id: StringName) -> int:
-	return (ROLES[role_id] as Dictionary).get("max_copies", 1)
+	return _entry(role_id).get("max_copies", 1)

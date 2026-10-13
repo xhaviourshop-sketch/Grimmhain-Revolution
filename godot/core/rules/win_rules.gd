@@ -62,7 +62,7 @@ static func evaluate(state: GameState) -> Array:
 	if wolves >= non_wolves:
 		# E-35: Ist der einzige lebende Wolf ein Rachsüchtiger Wolf, ersetzt sein Alleinsieg den Wolfssieg; leben nur
 		# Rachsüchtige Wölfe (mehrere), gewinnt noch niemand (DA-18); sonst gewinnen die Werwölfe ohne sie.
-		var lone: Array[int] = alive.filter(func(id: int) -> bool: return state.players[id].counts_as_wolf and state.players[id].role_id == RoleCatalog.RACHSUECHTIGER_WOLF)
+		var lone: Array[int] = alive.filter(func(id: int) -> bool: return state.players[id].counts_as_wolf and state.players[id].mech_role() == RoleCatalog.RACHSUECHTIGER_WOLF)
 		if lone.is_empty() or lone.size() < living_wolves:
 			results.append({"kind": String(Faction.WOLVES), "reason_key": String(WinCandidate.REASON_WOLF_PARITY), "reason_args": args.duplicate(), "beneficiary_ids": []})
 		elif lone.size() == 1:
@@ -130,7 +130,7 @@ static func eternal_co_winners(state: GameState, beneficiary: int) -> Array[int]
 	ids.assign(state.players.keys())
 	ids.sort()
 	for id: int in ids:
-		if id != beneficiary and state.players[id].role_id == RoleCatalog.DIE_EWIGEN:
+		if id != beneficiary and state.players[id].mech_role() == RoleCatalog.DIE_EWIGEN:
 			out.append(id)
 	return out
 
@@ -138,19 +138,19 @@ static func eternal_co_winners(state: GameState, beneficiary: int) -> Array[int]
 ## Einzelsiegbedingung des Manipulators für Person `id` (DR-12): exakt drei Lebende.
 static func manipulator_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.MANIPULATOR and not p.ever_nominated and effective_alive_ids(state).size() == 3
+	return p != null and p.alive and p.mech_role() == RoleCatalog.MANIPULATOR and not p.ever_nominated and effective_alive_ids(state).size() == 3
 
 
 ## Parasit (RM-DR-157): er lebt und höchstens drei Personen leben.
 static func parasite_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.PARASIT and effective_alive_ids(state).size() <= 3
+	return p != null and p.alive and p.mech_role() == RoleCatalog.PARASIT and effective_alive_ids(state).size() <= 3
 
 
 ## Grabräuber (E-33): er lebt und höchstens drei Personen leben.
 static func grave_robber_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
-	return p != null and p.alive and p.role_id == RoleCatalog.GRABRAEUBER and effective_alive_ids(state).size() <= RoleCatalog.GRAVE_ROBBER_MAX_LIVING
+	return p != null and p.alive and p.mech_role() == RoleCatalog.GRABRAEUBER and effective_alive_ids(state).size() <= RoleCatalog.GRAVE_ROBBER_MAX_LIVING
 
 
 ## Mindestzahl Toter unmittelbar vor der Hinrichtung des Selbstmörders (Rollentext „5+ Tote“, RM-DR-138.1).
@@ -161,7 +161,7 @@ const DEATH_SEEKER_MIN_DEAD := 5
 ## per Spielleiter), während mindestens 5 Personen tot sind; er selbst zählt nicht mit.
 static func record_death_seeker(ctx: RuleContext, target: Player, record: KillEvent, dead_before: int) -> void:
 	var s := ctx.state
-	if record.cause != KillEvent.CAUSE_LYNCH or target.role_id != RoleCatalog.SELBSTMOERDER or dead_before < DEATH_SEEKER_MIN_DEAD:
+	if record.cause != KillEvent.CAUSE_LYNCH or target.mech_role() != RoleCatalog.SELBSTMOERDER or dead_before < DEATH_SEEKER_MIN_DEAD:
 		return
 	if not s.death_seeker_wins.has(target.id):
 		s.death_seeker_wins.append(target.id)
@@ -172,7 +172,7 @@ static func record_death_seeker(ctx: RuleContext, target: Player, record: KillEv
 ## Einzelsieg des Doppelspions für Person `id` (RM-DR-155.1): er lebt und kein Wolf lebt.
 static func double_agent_wins(state: GameState, id: int) -> bool:
 	var p: Player = state.players.get(id)
-	if p == null or not p.alive or p.role_id != RoleCatalog.DOPPELSPION:
+	if p == null or not p.alive or p.mech_role() != RoleCatalog.DOPPELSPION:
 		return false
 	for other: int in effective_alive_ids(state):
 		if state.players[other].counts_as_wolf:

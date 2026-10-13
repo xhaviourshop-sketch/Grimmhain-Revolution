@@ -32,7 +32,7 @@ const OPT_WIN := "win"
 static func living_bearers(s: GameState) -> Array[int]:
 	var out: Array[int] = []
 	for id: int in s.alive_ids():
-		if s.players[id].role_id == RoleCatalog.KARTENSCHLUCKER:
+		if s.players[id].mech_role() == RoleCatalog.KARTENSCHLUCKER:
 			out.append(id)
 	return out
 
@@ -175,7 +175,7 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step) or StepQueue.step_role(key) != RoleCatalog.KARTENSCHLUCKER or StepQueue.step_actor(key) != prompt.actor_id:
 		return false
 	var actor: Player = s.players.get(prompt.actor_id)
-	if actor == null or not actor.alive or actor.role_id != RoleCatalog.KARTENSCHLUCKER:
+	if actor == null or not actor.alive or actor.mech_role() != RoleCatalog.KARTENSCHLUCKER:
 		return false
 	if prompt.stage == STAGE_ACT:
 		return prompt.partial.size() == 1 and DictRead.get_array(prompt.partial, "options") == Array(options(s, actor.id)) and prompt.allowed_ids.is_empty() and prompt.min_count == 0 and prompt.max_count == 0
@@ -212,4 +212,4 @@ static func announce(ctx: RuleContext) -> void:
 
 static func wins(s: GameState, id: int) -> bool:
 	var p: Player = s.players.get(id)
-	return s.death_cards and p != null and p.alive and p.role_id == RoleCatalog.KARTENSCHLUCKER and (s.cardsys["swallower_wins"] as Array).has(id)
+	return s.death_cards and p != null and p.alive and p.mech_role() == RoleCatalog.KARTENSCHLUCKER and (s.cardsys["swallower_wins"] as Array).has(id)

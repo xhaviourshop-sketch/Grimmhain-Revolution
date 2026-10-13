@@ -187,6 +187,8 @@ static func _validate_start_game(p: Dictionary) -> StringName:
 		var limit := RoleCatalog.max_copies(r)
 		if limit != RoleCatalog.UNLIMITED and int(counts[r]) > limit:
 			return &"role_limit_exceeded"
+		if RoleCatalog.group_size(r) > 0 and int(counts[r]) != RoleCatalog.group_size(r):
+			return &"role_group_incomplete"  # Classic-Gruppenrollen nur vollständig (DA-108)
 		has_wolf = has_wolf or RoleCatalog.counts_as_wolf(r)
 		has_village = has_village or RoleCatalog.faction_of(r) == Faction.VILLAGE
 	# Pflicht einer Einzelsiegrolle (DECISION-LOG) ist im Core-Slice nicht erfüllbar,
@@ -314,7 +316,7 @@ static func _validate_amalia(s: GameState, p: Dictionary) -> StringName:
 		return &"unknown_player"
 	if not s.players[id].alive:
 		return &"player_dead"
-	if s.players[id].role_id != RoleCatalog.AMALIA:
+	if s.players[id].mech_role() != RoleCatalog.AMALIA:
 		return &"not_amalia"
 	if not p.get("answer") is bool:
 		return &"invalid_answer"
@@ -503,7 +505,7 @@ static func _record_nomination(ctx: RuleContext, nominator: int, nominee: int, b
 	else:
 		ctx.emit(GameEvent.NOMINATION_RECORDED, Visibility.PUBLIC, n.to_dict())
 	# Manipulator stirbt sofort bei seiner Nominierung; der Tag bleibt aktiv.
-	if s.players[n.nominee_id].role_id == RoleCatalog.MANIPULATOR:
+	if s.players[n.nominee_id].mech_role() == RoleCatalog.MANIPULATOR:
 		KillPipeline.request_kill(ctx, n.nominee_id, KillEvent.CAUSE_MANIPULATOR_NOMINATED, KillEvent.SOURCE_PLAYER, n.nominator_id)
 
 
@@ -583,7 +585,7 @@ static func _start_game(ctx: RuleContext, p: Dictionary) -> void:
 		player.counts_as_wolf = RoleCatalog.counts_as_wolf(player.role_id)
 		player.appears_as = StringName(str(entry["appears_as"])) if RoleCatalog.requires_appearance(player.role_id) else RoleCatalog.appears_as(player.role_id)
 		s.players[player.id] = player
-		if player.role_id == RoleCatalog.WOLFSKIND:
+		if player.mech_role() == RoleCatalog.WOLFSKIND:
 			WolfChildRules.create_bond(s, player.id)
 	s.seat_order = DictRead.to_int_array(DictRead.get_array(p, "seat_order"))
 	# DI-01: Wiederbelebungsrunde nur aus der Startbesetzung (direkte Wiederbelebungsrollen); Erbe, Tausch,
@@ -975,7 +977,7 @@ static func _ring_alarm_bells(ctx: RuleContext) -> void:
 	var watchmen: Array[int] = []
 	var suspects: Array[int] = []
 	for id: int in s.alive_ids():
-		if s.players[id].role_id != RoleCatalog.NACHTWAECHTER or GuardRoles.silenced(s, id):
+		if s.players[id].mech_role() != RoleCatalog.NACHTWAECHTER or GuardRoles.silenced(s, id):
 			continue
 		for n: int in Seats.living_neighbours(s, id):
 			if s.players[n].faction != Faction.VILLAGE:

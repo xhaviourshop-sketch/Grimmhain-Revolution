@@ -25,23 +25,23 @@ static func change_role(s: GameState, player_id: int, role: StringName, appearan
 	s.bounty_credits.erase(player_id)  # offene Listen gehören dem bisherigen Kopfgeldjäger
 	p.cursed = false  # neue Rolle, neue Erscheinung (V-07)
 	WolfChildRules.remove_bond(s, player_id)
-	if role == RoleCatalog.WOLFSKIND:
+	if RoleCatalog.mech(role) == RoleCatalog.WOLFSKIND:
 		WolfChildRules.create_bond(s, player_id)
-	if previous == RoleCatalog.LEHRLING and role != RoleCatalog.LEHRLING:
+	if RoleCatalog.mech(previous) == RoleCatalog.LEHRLING and RoleCatalog.mech(role) != RoleCatalog.LEHRLING:
 		ApprenticeRules.end_active(s, player_id, ApprenticeBond.STATUS_REMOVED)
-	if previous == RoleCatalog.PARASIT and role != RoleCatalog.PARASIT:
+	if RoleCatalog.mech(previous) == RoleCatalog.PARASIT and RoleCatalog.mech(role) != RoleCatalog.PARASIT:
 		s.parasite_hosts = s.parasite_hosts.filter(func(b: Dictionary) -> bool: return int(b["parasite_id"]) != player_id)  # B-06 (DA-93)
-	if role != RoleCatalog.FEUERTEUFEL:
+	if RoleCatalog.mech(role) != RoleCatalog.FEUERTEUFEL:
 		SoloRules.drop_fire_mark(s, player_id)  # Markierung erlischt mit der Rolle (RM-DR-131.7)
-	if role != RoleCatalog.VOODOO:
+	if RoleCatalog.mech(role) != RoleCatalog.VOODOO:
 		SoloRules.drop_priest_doll(s, player_id)  # Puppe endet mit der Rolle (RM-DR-132.8)
-	if role != RoleCatalog.NEKROMANT:
+	if RoleCatalog.mech(role) != RoleCatalog.NEKROMANT:
 		SoloRules.necro_drop_shields(s, player_id)  # Schild erlischt mit der Rolle (RM-DR-142.9)
-	if role != RoleCatalog.HADES or previous != RoleCatalog.HADES:
+	if RoleCatalog.mech(role) != RoleCatalog.HADES or RoleCatalog.mech(previous) != RoleCatalog.HADES:
 		SoloRules.hades_drop(s, player_id)  # Lichter und Barriere gehören der bisherigen Rolle
-	if role != RoleCatalog.SCHICKSALSWOLF or previous != RoleCatalog.SCHICKSALSWOLF:
+	if RoleCatalog.mech(role) != RoleCatalog.SCHICKSALSWOLF or RoleCatalog.mech(previous) != RoleCatalog.SCHICKSALSWOLF:
 		SoloRules.fate_drop(s, player_id)  # Markierungen gehören der bisherigen Rolle
-	if role != RoleCatalog.GRABRAEUBER or previous != RoleCatalog.GRABRAEUBER:
+	if RoleCatalog.mech(role) != RoleCatalog.GRABRAEUBER or RoleCatalog.mech(previous) != RoleCatalog.GRABRAEUBER:
 		SoloRules.grave_drop(s, player_id)  # gestohlene Fähigkeit endet mit der Rolle
 
 
@@ -66,17 +66,17 @@ static func restore(s: GameState, player_id: int, snapshot: Dictionary) -> void:
 	p.appears_as = StringName(DictRead.get_string(snapshot, "appears_as"))
 	p.ability_uses = DictRead.get_dict(snapshot, "ability_uses").duplicate()
 	WolfChildRules.remove_bond(s, player_id)
-	if p.role_id != RoleCatalog.FEUERTEUFEL:
+	if p.mech_role() != RoleCatalog.FEUERTEUFEL:
 		SoloRules.drop_fire_mark(s, player_id)
-	if p.role_id != RoleCatalog.VOODOO:
+	if p.mech_role() != RoleCatalog.VOODOO:
 		SoloRules.drop_priest_doll(s, player_id)
-	if p.role_id != RoleCatalog.NEKROMANT:
+	if p.mech_role() != RoleCatalog.NEKROMANT:
 		SoloRules.necro_drop_shields(s, player_id)
-	if p.role_id != RoleCatalog.HADES:
+	if p.mech_role() != RoleCatalog.HADES:
 		SoloRules.hades_drop(s, player_id)
-	if p.role_id != RoleCatalog.GRABRAEUBER:
+	if p.mech_role() != RoleCatalog.GRABRAEUBER:
 		SoloRules.grave_drop(s, player_id)
-	if p.role_id != RoleCatalog.SCHICKSALSWOLF:
+	if p.mech_role() != RoleCatalog.SCHICKSALSWOLF:
 		SoloRules.fate_drop(s, player_id)
 
 

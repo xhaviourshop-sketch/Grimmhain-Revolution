@@ -69,3 +69,8 @@ static func from_dict(d: Dictionary) -> Player:
 	if RoleCatalog.requires_appearance(p.role_id) and not RoleCatalog.is_valid_appearance(p.appears_as):
 		return null
 	return p
+
+
+## Mechanik der Rolle (Akt Classic, DA-108): bei Classic-Rollen die verwiesene Rolle, sonst `role_id`.
+func mech_role() -> StringName:
+	return RoleCatalog.mech(role_id)

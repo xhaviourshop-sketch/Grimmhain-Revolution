@@ -49,10 +49,11 @@ static func solo_count(s: GameState) -> int:
 	return n
 
 
-static func living_bound(s: GameState) -> Array:
+## Lebende einer Gruppenrolle (Gebundene oder Classic-Gruppe, DA-108); jede Gruppe erkennt nur sich selbst.
+static func living_bound(s: GameState, group: StringName = RoleCatalog.DIE_GEBUNDENEN) -> Array:
 	var out: Array = []
 	for id: int in s.alive_ids():
-		if s.players[id].role_id == RoleCatalog.DIE_GEBUNDENEN:
+		if s.players[id].role_id == group:
 			out.append(id)
 	return out
 
@@ -122,7 +123,7 @@ static func used(p: Player, key: String) -> bool:
 
 
 static func living_eternal(s: GameState) -> Array[int]:
-	return s.alive_ids().filter(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.DIE_EWIGEN)
+	return s.alive_ids().filter(func(id: int) -> bool: return s.players[id].mech_role() == RoleCatalog.DIE_EWIGEN)
 
 
 ## Lebende Ewige, die in dieser Nacht handeln können (nicht blockiert, nicht todesmarkiert).
@@ -132,7 +133,7 @@ static func awake_eternal(s: GameState) -> Array[int]:
 
 ## Die Ewigen prüfen eine lebende Person, die nicht zu den Ewigen gehört (I-11).
 static func eternal_targets(s: GameState) -> Array[int]:
-	return s.alive_ids().filter(func(id: int) -> bool: return s.players[id].role_id != RoleCatalog.DIE_EWIGEN)
+	return s.alive_ids().filter(func(id: int) -> bool: return s.players[id].mech_role() != RoleCatalog.DIE_EWIGEN)
 
 
 static func _living_wolves_except(s: GameState, actor_id: int) -> Array[int]:
@@ -205,7 +206,14 @@ static func _info(s: GameState, owner: StringName) -> Dictionary:
 			return {"wolf_count": living_wolf_count(s)}
 		PendingPrompt.OWNER_PIPER_ALL:
 			return {"charmed_ids": SoloRules.charmed_living(s)}
-	return {"bound_ids": living_bound(s)}
+	return {"bound_ids": living_bound(s, current_group(s))}
+
+
+## Gruppe des laufenden Gruppenschritts (Gebundene oder Classic-Gruppe).
+static func current_group(s: GameState) -> StringName:
+	if s.phase == Phase.NIGHT and s.next_night_step < s.night_plan.size() and StepQueue.is_bound_key(s.night_plan[s.next_night_step]):
+		return s.night_plan[s.next_night_step]
+	return RoleCatalog.DIE_GEBUNDENEN
 
 
 ## Zulässige Anzahlen der aktuellen Stufe (Spürhund: genau drei).
@@ -506,10 +514,10 @@ static func matches_state(s: GameState, prompt: PendingPrompt) -> bool:
 	if prompt.step_id != StepQueue.night_step_id(s, s.next_night_step):
 		return false
 	if prompt.owner == PendingPrompt.OWNER_BOUND:
-		if key != StepQueue.BOUND or prompt.actor_id != -1 or prompt.stage != STAGE_SHOWN or not prompt.allowed_ids.is_empty():
+		if not StepQueue.is_bound_key(key) or prompt.actor_id != -1 or prompt.stage != STAGE_SHOWN or not prompt.allowed_ids.is_empty():
 			return false
 		var stored: Variant = DictRead.to_int_array(DictRead.get_array(prompt.partial, "bound_ids"))
-		return stored != null and Array(stored) == living_bound(s)
+		return stored != null and Array(stored) == living_bound(s, key)
 	if prompt.owner == PendingPrompt.OWNER_PIPER_ALL:
 		if key != StepQueue.PIPER_ALL or prompt.actor_id != -1 or prompt.stage != STAGE_SHOWN or not prompt.allowed_ids.is_empty():
 			return false

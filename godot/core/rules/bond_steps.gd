@@ -292,6 +292,8 @@ static func answer(ctx: RuleContext, p: Dictionary) -> void:
 	prompt.partial = {"target_ids": chosen.duplicate()}
 	var none: Array[int] = []
 	_next_stage(ctx, prompt, STAGE_TARGETS, chosen, STAGE_MODE if prompt.owner == PendingPrompt.OWNER_LOKI else STAGE_GRANT, none, 0)
+	if prompt.owner == PendingPrompt.OWNER_LOKI and RoleCatalog.param(s.players[prompt.actor_id].role_id, "lovers_only", false):
+		_answer_choice(ctx, prompt, true)  # Amor (DA-108): immer Liebende, keine Frage nach der Bindungsart
 
 
 static func _answer_choice(ctx: RuleContext, prompt: PendingPrompt, yes: bool) -> void:

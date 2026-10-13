@@ -1355,3 +1355,11 @@ Grundsatz: Die Zahl oben links auf Markus' Rollenkarten ist die verbindliche Nac
 2. Albtraumwolf: Er muss jede Nacht eine Person blockieren, ohne Verzicht. Der Regelkern verlangte das schon (Pflichtwahl, kein Verzichtknopf); der Ablauftext im Lexikon nannte noch „Niemand / verzichten“ und ist korrigiert. Der Lexikontext „kein Verzicht“ bleibt.
 
 Regelversion `grimmhain-core-0.20`.
+
+## DA-108 Akt Classic (Markus, 13.10.2026)
+
+1. Neuer Akt „Classic“ mit den Rollen des Charakterbogens „Die Werwölfe von Düsterwald“, ohne Hauptmann (Phase 2). Nur additiv, auf Zweig `classic-akt`.
+2. Aufbau: eigene Rollen-IDs (`classic-*`) mit eigenen Namen, Texten und Bildern und einem Mechanik-Verweis auf eine bestehende Rolle; Abweichungen als Parameter. Bestehende Rollen bleiben unverändert.
+3. Der Alte: wie Der Weise (überlebt einmal das Rudel; sein Lynch lässt 0 bis 3 Nächte und Tage die Fähigkeiten der Dorfpersonen ruhen).
+4. Bärenführer: jeden Morgen (Text des Bogens), nicht nur am ersten (Symbol).
+5. Tests: während der Arbeit `test-changed`, am Ende jeder Phase eine Vollsuite ohne Fuzz.

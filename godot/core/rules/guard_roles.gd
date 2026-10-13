@@ -38,7 +38,7 @@ static func needs_sage_decision(s: GameState, target_id: int) -> bool:
 		return false
 	var r := ExecutionRules.preview(s, target_id, KillEvent.SOURCE_VILLAGE)
 	var dying: Player = s.players.get(int(r["death_target_id"]))
-	return String(r["cause"]) == String(KillEvent.CAUSE_LYNCH) and dying != null and dying.role_id == RoleCatalog.DER_WEISE and not silenced(s, dying.id)
+	return String(r["cause"]) == String(KillEvent.CAUSE_LYNCH) and dying != null and dying.mech_role() == RoleCatalog.DER_WEISE and not silenced(s, dying.id)
 
 
 ## Fehlergrund für das Feld `sage_curse` einer Hinrichtung oder &"".
@@ -73,7 +73,7 @@ static func ghost_night(p: Player) -> int:
 
 
 static func ghost_can_act(s: GameState, p: Player) -> bool:
-	return not p.alive and p.role_id == RoleCatalog.SCHUTZGEIST and not p.ability_uses.has(GHOST_USE_KEY) and ghost_night(p) == s.night_number
+	return not p.alive and p.mech_role() == RoleCatalog.SCHUTZGEIST and not p.ability_uses.has(GHOST_USE_KEY) and ghost_night(p) == s.night_number
 
 
 static func smith_can_give(s: GameState, p: Player) -> bool:

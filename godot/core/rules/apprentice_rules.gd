@@ -36,7 +36,7 @@ static func latest_of(s: GameState, apprentice_id: int) -> ApprenticeBond:
 ## true, wenn die Person jetzt einen Meister wählen muss.
 static func needs_selection(s: GameState, apprentice_id: int) -> bool:
 	var p: Player = s.players.get(apprentice_id)
-	return p != null and p.alive and p.role_id == RoleCatalog.LEHRLING and active_of(s, apprentice_id) == null
+	return p != null and p.alive and p.mech_role() == RoleCatalog.LEHRLING and active_of(s, apprentice_id) == null
 
 
 ## Mindestens eine andere lebende Person als Mentor.
@@ -147,7 +147,7 @@ static func on_master_death(ctx: RuleContext, record: KillEvent) -> void:
 	heirs.sort_custom(func(a: ApprenticeBond, c: ApprenticeBond) -> bool: return a.apprentice_id < c.apprentice_id)
 	for b: ApprenticeBond in heirs:
 		var heir: Player = ctx.state.players.get(b.apprentice_id)
-		if heir != null and heir.alive and heir.role_id == RoleCatalog.LEHRLING and not GuardRoles.silenced(ctx.state, heir.id):
+		if heir != null and heir.alive and heir.mech_role() == RoleCatalog.LEHRLING and not GuardRoles.silenced(ctx.state, heir.id):
 			inherit(ctx, b, record.order_index, "master_death")
 
 
@@ -208,7 +208,7 @@ static func state_is_consistent(s: GameState) -> bool:
 				return false
 		match b.status:
 			ApprenticeBond.STATUS_BOUND:
-				if active.has(b.apprentice_id) or not heir.alive or heir.role_id != RoleCatalog.LEHRLING:
+				if active.has(b.apprentice_id) or not heir.alive or heir.mech_role() != RoleCatalog.LEHRLING:
 					return false
 				active[b.apprentice_id] = true
 			ApprenticeBond.STATUS_INHERITED:

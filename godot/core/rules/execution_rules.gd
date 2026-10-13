@@ -36,7 +36,7 @@ static func preview(s: GameState, target_id: int, source_kind: StringName) -> Di
 		"reason": REASON_NOT_MIRROR_WOLF, "random_wolf": false, "card_reason": "shifted" if effective != target_id else "",
 	}
 	var target: Player = s.players.get(effective)
-	if target != null and target.role_id == RoleCatalog.SPIEGELWOLF:
+	if target != null and target.mech_role() == RoleCatalog.SPIEGELWOLF:
 		if not mirror_available(target):
 			result["reason"] = REASON_MIRROR_USED
 		else:
@@ -70,7 +70,7 @@ static func preview(s: GameState, target_id: int, source_kind: StringName) -> Di
 ## true, wenn die Hinrichtung von `target_id` eine Entscheidung „abwehren?“ verlangt (Cerberus mit 3 Köpfen).
 static func needs_cerberus_decision(s: GameState, target_id: int) -> bool:
 	var p: Player = s.players.get(target_id)
-	return p != null and p.alive and p.role_id == RoleCatalog.CERBERUS and int(s.growth.get(target_id, 0)) >= RoleCatalog.CERBERUS_MAX_HEADS
+	return p != null and p.alive and p.mech_role() == RoleCatalog.CERBERUS and int(s.growth.get(target_id, 0)) >= RoleCatalog.CERBERUS_MAX_HEADS
 
 
 ## Führt die (bereits bestätigte) Hinrichtung nach der Vorschau aus. Zählt jede Hinrichtung (Henker),
@@ -96,7 +96,7 @@ static func execute(ctx: RuleContext, target_id: int, source_kind: StringName, c
 			"target_id": target_id, "death_target_id": r["death_target_id"], "nominator_id": r["nominator_id"],
 			"mirror_wolf_id": target_id, "mirror_used": true,
 		})
-	elif target.role_id == RoleCatalog.SPIEGELWOLF:
+	elif target.mech_role() == RoleCatalog.SPIEGELWOLF:
 		ctx.emit(GameEvent.MIRROR_NOT_TRIGGERED, Visibility.GM, {
 			"target_id": target_id, "nominator_id": r["nominator_id"], "reason": r["reason"],
 		})

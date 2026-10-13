@@ -117,7 +117,7 @@ static func actor_ids(s: GameState, p: PendingPrompt) -> Array:
 		PendingPrompt.OWNER_PACK, PendingPrompt.OWNER_PACK2:
 			return s.night_wolf_ids.filter(func(id: int) -> bool: return s.players[id].alive)
 		PendingPrompt.OWNER_BOUND:
-			return InfoSteps.living_bound(s)
+			return InfoSteps.living_bound(s, InfoSteps.current_group(s))
 		PendingPrompt.OWNER_ETERNAL:
 			return InfoSteps.awake_eternal(s)
 		PendingPrompt.OWNER_PIPER_ALL:

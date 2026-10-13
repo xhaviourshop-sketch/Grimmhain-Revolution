@@ -9,7 +9,6 @@ extends RefCounted
 ##   private_seats()  Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
 
 const GROUP_PACK := &"pack"
-const GROUP_BOUND := &"die-gebundenen"
 const GROUP_ETERNAL := &"die-ewigen"
 const GROUP_PIPER_ALL := &"piper-all"
 
@@ -138,13 +137,14 @@ static func step_announcement(s: GameState, step_id: String) -> Dictionary:
 	out["index"] = s.next_night_step + 1
 	out["total"] = s.night_plan.size()
 	out["repeat"] = s.apple_steps.has(s.next_night_step)
+	if StepQueue.is_bound_key(key):
+		out["role_id"] = String(key)  # Gebundene oder Classic-Gruppe (DA-108)
+		out["actor_ids"] = InfoSteps.living_bound(s, key)
+		return out
 	match key:
 		StepQueue.PACK, StepQueue.PACK2:
 			out["role_id"] = String(GROUP_PACK)
 			out["actor_ids"] = s.night_wolf_ids.filter(func(id: int) -> bool: return s.players[id].alive)
-		StepQueue.BOUND:
-			out["role_id"] = String(GROUP_BOUND)
-			out["actor_ids"] = InfoSteps.living_bound(s)
 		StepQueue.ETERNAL:
 			out["role_id"] = String(GROUP_ETERNAL)
 			out["actor_ids"] = InfoSteps.living_eternal(s)
@@ -154,6 +154,8 @@ static func step_announcement(s: GameState, step_id: String) -> Dictionary:
 		_:
 			var actor := StepQueue.step_actor(key)
 			out["role_id"] = String(StepQueue.step_role(key))
+			if RoleCatalog.mech(s.players[actor].role_id) == StepQueue.step_role(key):
+				out["role_id"] = String(s.players[actor].role_id)  # Classic-Rolle zeigt ihren eigenen Namen (DA-108)
 			out["actor_ids"] = [actor]
 			# Grabräuber: gestohlene Fähigkeit einer anderen Rolle (nur privat sichtbar).
 			out["own_role_id"] = String(s.players[actor].role_id)

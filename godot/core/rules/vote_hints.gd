@@ -12,7 +12,7 @@ static func hints(s: GameState) -> Array:
 	var out: Array = []
 	var n := s.seat_order.size()
 	for id: int in s.alive_ids():
-		if s.players[id].role_id != RoleCatalog.BLUTWOLF:
+		if s.players[id].mech_role() != RoleCatalog.BLUTWOLF:
 			continue
 		var seat := s.seat_order.find(id)
 		var dead := 0

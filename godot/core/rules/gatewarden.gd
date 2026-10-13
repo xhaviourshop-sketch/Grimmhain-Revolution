@@ -8,7 +8,7 @@ extends RefCounted
 
 static func active(s: GameState) -> bool:
 	for id: int in s.alive_ids():
-		if s.players[id].role_id == RoleCatalog.WAECHTER_AM_TOR and not GuardRoles.silenced(s, id):
+		if s.players[id].mech_role() == RoleCatalog.WAECHTER_AM_TOR and not GuardRoles.silenced(s, id):
 			return true
 	return false
 

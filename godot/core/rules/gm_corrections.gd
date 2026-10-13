@@ -79,7 +79,7 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 		var mirror := DictRead.get_int(p, "target_id", GameState.NO_TARGET)
 		if not s.players.has(mirror):
 			return &"unknown_player"
-		if s.players[mirror].role_id != RoleCatalog.SPIEGELWOLF:
+		if s.players[mirror].mech_role() != RoleCatalog.SPIEGELWOLF:
 			return &"not_a_mirror_wolf"
 		if not p.get("available") is bool:
 			return &"invalid_correction"
@@ -114,7 +114,7 @@ static func validate(s: GameState, p: Dictionary) -> StringName:
 				return &"player_alive"
 		SET_ROLE_FIELD:
 			# Beim Wolfskind folgt die Erscheinung allein dem Verwandlungszustand.
-			if player.role_id == RoleCatalog.WOLFSKIND:
+			if player.mech_role() == RoleCatalog.WOLFSKIND:
 				return &"field_not_correctable"
 			var field := DictRead.get_string(p, "field")
 			if not CORRECTABLE_ROLE_FIELDS.has(field):
@@ -158,7 +158,7 @@ static func _validate_protection(s: GameState, p: Dictionary, kind: String) -> S
 	var guardian := DictRead.get_int(p, "guardian_id", GameState.NO_TARGET)
 	if not s.players.has(guardian):
 		return &"unknown_player"
-	if s.players[guardian].role_id != RoleCatalog.SCHUTZENGEL:
+	if s.players[guardian].mech_role() != RoleCatalog.SCHUTZENGEL:
 		return &"not_a_guardian"
 	var index := s.night_plan.find(StepQueue.personal_step_key(RoleCatalog.SCHUTZENGEL, guardian))
 	if index == -1:
@@ -188,7 +188,7 @@ static func _validate_witch(s: GameState, p: Dictionary, kind: String) -> String
 	var witch := DictRead.get_int(p, "witch_id", GameState.NO_TARGET)
 	if not s.players.has(witch):
 		return &"unknown_player"
-	if s.players[witch].role_id != RoleCatalog.WALDHEXE:
+	if s.players[witch].mech_role() != RoleCatalog.WALDHEXE:
 		return &"not_a_witch"
 	if kind == SET_WITCH_POTION:
 		var potion := DictRead.get_string(p, "potion")
@@ -223,7 +223,7 @@ static func _validate_wolf_child(s: GameState, p: Dictionary, kind: String) -> S
 	var child := DictRead.get_int(p, "child_id", GameState.NO_TARGET)
 	if not s.players.has(child):
 		return &"unknown_player"
-	if s.players[child].role_id != RoleCatalog.WOLFSKIND:
+	if s.players[child].mech_role() != RoleCatalog.WOLFSKIND:
 		return &"not_a_wolf_child"
 	var bond := WolfChildRules.bond_of(s, child)
 	match kind:
@@ -264,7 +264,7 @@ static func _validate_apprentice(s: GameState, p: Dictionary, kind: String) -> S
 		if not player.alive or player.role_id != latest.inherited_role:
 			return &"stale_inheritance"
 		return &""
-	if player.role_id != RoleCatalog.LEHRLING:
+	if player.mech_role() != RoleCatalog.LEHRLING:
 		return &"not_an_apprentice"
 	if not player.alive:
 		return &"player_dead"

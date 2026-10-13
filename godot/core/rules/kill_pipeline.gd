@@ -96,9 +96,9 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 	SoloRules.hades_on_death(ctx, target, source_kind)
 	SoloRules.grave_drop(s, target.id)
 	NoticeRules.on_death(ctx, target.id)
-	if trigger_effects and target.role_id == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
+	if trigger_effects and target.mech_role() == RoleCatalog.RUDELVATER and cause == KillEvent.CAUSE_LYNCH:
 		s.pack_bonus_pending = true
-	if trigger_effects and target.role_id == RoleCatalog.SEUCHENWOLF:
+	if trigger_effects and target.mech_role() == RoleCatalog.SEUCHENWOLF:
 		s.plague_pierce_pending = true
 	WinRules.record_death_seeker(ctx, target, record, dead_before)
 	if trigger_effects:
@@ -184,7 +184,7 @@ static func _prevented_by_protection(ctx: RuleContext, target_id: int, cause: St
 
 ## Dorfwache: der Rudelangriff tötet sie nicht (RM-DR-119), außer ihre Fähigkeit ruht (Fluch des Weisen).
 static func _guard_immune(s: GameState, target_id: int) -> bool:
-	return s.players[target_id].role_id == RoleCatalog.DORFWACHE and not GuardRoles.silenced(s, target_id)
+	return s.players[target_id].mech_role() == RoleCatalog.DORFWACHE and not GuardRoles.silenced(s, target_id)
 
 
 ## Welche Schutzwirkung einen Rudelangriff auf `target_id` jetzt abfinge (reine Abfrage, S-10/S-11):
@@ -206,7 +206,7 @@ static func pack_protection(s: GameState, target_id: int, pierce: bool) -> Strin
 	if s.shields.any(func(sh: Dictionary) -> bool: return int(sh["holder_id"]) == target_id and int(sh["night"]) < night):
 		return RoleCatalog.SCHUTZGEIST
 	var p := s.players[target_id]
-	if p.role_id == RoleCatalog.DER_WEISE and not p.ability_uses.has(GuardRoles.SAGE_USE_KEY) and not GuardRoles.silenced(s, target_id):
+	if p.mech_role() == RoleCatalog.DER_WEISE and not p.ability_uses.has(GuardRoles.SAGE_USE_KEY) and not GuardRoles.silenced(s, target_id):
 		return RoleCatalog.DER_WEISE
 	return &""
 
@@ -245,13 +245,13 @@ static func survives_any_death(s: GameState, p: Player) -> bool:
 	if SoloRules.has_ability(s, p.id, RoleCatalog.PARASIT):
 		var host := host_of(s, p.id)
 		return host != GameState.NO_TARGET and s.players[host].alive
-	return p.role_id == RoleCatalog.FENRIR and not p.ability_uses.has("fenrir:survive") and int(s.growth.get(p.id, 0)) >= RoleCatalog.FENRIR_SHIELD_STAGE
+	return p.mech_role() == RoleCatalog.FENRIR and not p.ability_uses.has("fenrir:survive") and int(s.growth.get(p.id, 0)) >= RoleCatalog.FENRIR_SHIELD_STAGE
 
 
 ## Rudelvater (RM-DR-112): überlebt einmal je Leben einen Tod, der weder Rudelangriff noch Lynch
 ## noch Spielleiterkorrektur ist.
 static func _packfather_survives(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
-	if target.role_id != RoleCatalog.RUDELVATER or source_kind == KillEvent.SOURCE_GM or cause == KillEvent.CAUSE_LYNCH:
+	if target.mech_role() != RoleCatalog.RUDELVATER or source_kind == KillEvent.SOURCE_GM or cause == KillEvent.CAUSE_LYNCH:
 		return false
 	if cause == KillEvent.CAUSE_NIGHT_KILL and source_kind == KillEvent.SOURCE_PACK:
 		return false
@@ -267,7 +267,7 @@ static func _packfather_survives(ctx: RuleContext, target: Player, cause: String
 
 ## Fenrir (RM-DR-125): ab Stufe 3 überlebt er einmal je Leben jeden Tod außer Spielleiterkorrekturen.
 static func _fenrir_survives(ctx: RuleContext, target: Player, cause: StringName, source_kind: StringName) -> bool:
-	if target.role_id != RoleCatalog.FENRIR or source_kind == KillEvent.SOURCE_GM or target.ability_uses.has("fenrir:survive"):
+	if target.mech_role() != RoleCatalog.FENRIR or source_kind == KillEvent.SOURCE_GM or target.ability_uses.has("fenrir:survive"):
 		return false
 	if int(ctx.state.growth.get(target.id, 0)) < RoleCatalog.FENRIR_SHIELD_STAGE:
 		return false
@@ -337,7 +337,7 @@ static func _bounty_credit(ctx: RuleContext, target: Player, record: KillEvent) 
 ## nächsten lebenden Wolf öffentlich; nachts erst in der Morgenauflösung. Ein Hinweis je Tod.
 static func _detective_hint(ctx: RuleContext, target: Player) -> void:
 	var s := ctx.state
-	if not target.counts_as_wolf or not s.alive_ids().any(func(id: int) -> bool: return s.players[id].role_id == RoleCatalog.DETEKTIV and not GuardRoles.silenced(s, id)):
+	if not target.counts_as_wolf or not s.alive_ids().any(func(id: int) -> bool: return s.players[id].mech_role() == RoleCatalog.DETEKTIV and not GuardRoles.silenced(s, id)):
 		return
 	var direction := Seats.wolf_direction(s, target.id)
 	if direction == "none":
@@ -352,7 +352,7 @@ static func _detective_hint(ctx: RuleContext, target: Player) -> void:
 ## Wahnsinniger Kutscher: Stirbt er durch Hinrichtung (LYNCH), sterben seine nächsten lebenden
 ## Nachbarn mit (im Uhrzeigersinn zuerst), Ursache `COACHMAN_CRASH`, Quelle der Kutscher.
 static func _coachman_crash(ctx: RuleContext, target: Player, record: KillEvent) -> void:
-	if record.cause != KillEvent.CAUSE_LYNCH or target.role_id != RoleCatalog.WAHNSINNIGER_KUTSCHER or GuardRoles.silenced(ctx.state, target.id):
+	if record.cause != KillEvent.CAUSE_LYNCH or target.mech_role() != RoleCatalog.WAHNSINNIGER_KUTSCHER or GuardRoles.silenced(ctx.state, target.id):
 		return
 	for id: int in Seats.living_neighbours(ctx.state, target.id):
 		request_kill(ctx, id, KillEvent.CAUSE_COACHMAN_CRASH, KillEvent.SOURCE_PLAYER, target.id)
@@ -367,7 +367,7 @@ static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent,
 		return
 	if kind == Reaction.KIND_POSSESSED and alive_before < RoleCatalog.POSSESSED_MIN_LIVING:
 		return
-	var use_key := "%s:death_reaction" % target.role_id
+	var use_key := "%s:death_reaction" % target.mech_role()
 	if int(target.ability_uses.get(use_key, 0)) >= 1:
 		return
 	target.ability_uses[use_key] = int(target.ability_uses.get(use_key, 0)) + 1
@@ -377,7 +377,7 @@ static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent,
 ## Ritter: stirbt er durch den Rudelangriff, stirbt sofort der nächste Wolf (Abstand in Sitzen
 ## einschließlich toter Plätze); bei Gleichstand wählt der Spielleiter (Reaktion). Einmal je Leben.
 static func _knight_strike(ctx: RuleContext, target: Player, record: KillEvent) -> void:
-	if target.role_id != RoleCatalog.RITTER or record.cause != KillEvent.CAUSE_NIGHT_KILL or GuardRoles.silenced(ctx.state, target.id):
+	if target.mech_role() != RoleCatalog.RITTER or record.cause != KillEvent.CAUSE_NIGHT_KILL or GuardRoles.silenced(ctx.state, target.id):
 		return
 	var use_key := "ritter:death_reaction"
 	if int(target.ability_uses.get(use_key, 0)) >= 1:
