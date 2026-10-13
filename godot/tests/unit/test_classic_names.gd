@@ -55,3 +55,10 @@ func test_tetanus_is_not_shown_as_poison() -> void:
 	var kinds: Array = NightBoardView.marks(s).get(target, [])
 	assert_false(kinds.has("poisoned"), "Tetanus ist kein Gift")
 	assert_true(kinds.has("special"), "Tetanus erscheint als Infektion")
+
+
+func test_classic_piper_notice_opens_the_piper_help() -> void:
+	var classic := CockpitText.help_role({"kind": "notice", "notice_kind": "piper_new", "text_key": "ui.notice.piper_new_classic"})
+	assert_eq(classic, String(RoleCatalog.CLASSIC_FLOETENSPIELER), "Classic: Hilfe des Flötenspielers")
+	var base := CockpitText.help_role({"kind": "notice", "notice_kind": "piper_new", "text_key": "ui.notice.piper_new"})
+	assert_eq(base, String(RoleCatalog.RATTENFAENGER), "Grundspiel: Hilfe des Rattenfängers")
