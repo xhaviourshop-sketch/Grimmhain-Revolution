@@ -80,14 +80,17 @@ func _team_group(team: StringName, counts: Dictionary, roles: Dictionary, in_act
 	tiles.name = "Tiles"
 	tiles.add_theme_constant_override(&"h_separation", ThemeTokens.SPACE_S)
 	tiles.add_theme_constant_override(&"v_separation", ThemeTokens.SPACE_S)
-	for role: StringName in RolePresentation.sorted_roles():
+	for role: StringName in RolePresentation.sorted_roles(true):
 		if SetupRoleCatalog.faction_of(role) != team or not in_act.has(String(role)):
 			continue
 		var count := int(counts.get(String(role), 0))
 		var unlimited := RoleCatalog.max_copies(role) == RoleCatalog.UNLIMITED
+		var usable := cards_on or not RoleCatalog.requires_cards(role)
+		if RoleCatalog.group_size(role) > 0 and count == 0 and not bool((roles.get("can_increase", {}) as Dictionary).get(String(role), false)):
+			continue  # Brüder und Schwestern nur anbieten, wenn genug Plätze für die ganze Gruppe frei sind (DA-108)
 		var tile := RoleTile.new()
 		tile.set_scale_factor(TILE_SCALE)
-		tile.show_tile(role, count, unlimited, cards_on or not RoleCatalog.requires_cards(role))
+		tile.show_tile(role, count, unlimited, usable)
 		tile.toggled_role.connect(func(r: StringName) -> void: role_toggled.emit(r))
 		tile.count_step.connect(func(r: StringName, delta: int) -> void: count_step.emit(r, delta))
 		tile.info_requested.connect(func(r: StringName) -> void: info_requested.emit(r))

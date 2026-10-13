@@ -545,6 +545,7 @@ func _begin_step(next: Dictionary, context: Dictionary) -> void:
 	_role_head(role, role, next, context, "ui.night.generic.short.step").name = "NightTitle"
 	if str(next.get("step_kind")) != "reaction":
 		_call_line(role, context)
+	_girl_line(role, context)
 	_decoys(next)
 	_warnings(context)
 	var buttons: Array[Control] = [_button("BeginStepButton", "ui.cockpit.action.begin_step", GrimmButton.Kind.PRIMARY, &"begin_step")]
@@ -578,6 +579,7 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	title.name = "NightTitle"
 	if str(context.get("call_step", "")) != "" and str(next.get("step_id", "")) == str(context.get("call_step")) and owner != "reaction" and role != "" and not anonymous:
 		_call_line(role, context)
+	_girl_line(role, context)
 	_decoys(next)
 	# Teilantworten (z. B. das Opfer für die Waldhexe, die wahre Rolle); Ergebnisse zum Zeigen stehen nur im Fenster „Karte zeigen“.
 	var shown_keys: Array = [] if OPEN_GROUP_OWNERS.has(owner) else (next.get("show", []) as Array).map(func(l: Dictionary) -> String: return str(l["key"]))
@@ -1202,6 +1204,12 @@ func _call_line(role: String, context: Dictionary) -> void:
 	if not bool(context.get("show_calls", false)) or role == "":
 		return
 	_text(CockpitText.call_key(role), {"role": CockpitText.role_name(role)}, &"NightCallLabel").name = "CallLine"
+
+
+## Akt Classic (DA-108): Lebt das Mädchen, liest der Spielleiter im Werwolf-Schritt einen schlichten Hinweis vor; keine Mechanik.
+func _girl_line(role: String, context: Dictionary) -> void:
+	if role == String(CockpitView.GROUP_PACK) and bool(context.get("girl_alive", false)):
+		_text("ui.call.pack.classic_maedchen", {}, &"NightCallLabel").name = "GirlLine"
 
 
 ## Rote Warnzeilen mit Symbol (höchstens 3, aus `NightWarnings`).

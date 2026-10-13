@@ -4,7 +4,8 @@ extends GrimmButton
 ## Schwierigkeit (Punkte, zusätzlich als Text im Untertitel) und die Tragkraft („bis 17 Personen“, wenn der Akt die Runde nicht trägt).
 ## Der gewählte Akt lodert als Feuer entlang des Kartenrahmens (`FireGlow`, Stärke nach Aktstufe: schon I lodert kräftig, bis IV steigert sich Glut, Höhe, Unruhe und Funkenflug)
 ## und trägt ein Häkchen (Blutrot nur für Aktives); nicht gewählte Akte brennen nicht. Ein Akt, der die Personenzahl nicht trägt,
-## ist gedämpft und nicht wählbar. Verbinden über `pressed`; Auswahl setzt PlayerSetup.
+## ist gedämpft und nicht wählbar. Verbinden über `pressed`; Auswahl setzt PlayerSetup. Der Akt Classic brennt nicht, er funkelt als
+## silbriger Sternenstaub (`StarDust`, DA-108), nur mit eingeschaltetem Schalter „Effekte“.
 
 const MAX_LEVEL := 4
 
@@ -15,12 +16,17 @@ var fire_host: Control = null
 var animated: bool = true:  ## aus bei reduzierter Bewegung: Flamme steht still, keine Funken
 	set(value):
 		animated = value
-		FireGlow.set_on(_fire_target(), "card_frame", GroveArtData.CARD_FRAME_MARGINS, selected, _level, animated)
+		_glow()
 var selected: bool = false:
 	set(value):
 		selected = value
-		FireGlow.set_on(_fire_target(), "card_frame", GroveArtData.CARD_FRAME_MARGINS, value, _level, animated)
+		_glow()
 		queue_redraw()
+var effects: bool = true:  ## Schalter „Effekte“; nur der Sternenstaub des Aktes Classic hängt daran
+	set(value):
+		effects = value
+		_glow()
+var _star_dust: StarDust = null
 var _title: GrimmLabel
 var _name: GrimmLabel
 var _subtitle: GrimmLabel
@@ -62,6 +68,36 @@ func setup(p_act: StringName) -> void:
 	column.add_child(spacer)
 	_limit = _label(column, "ActLimit", &"HainCaptionLabel", "")
 	column.minimum_size_changed.connect(func() -> void: _fit_height(column))
+	if act == ActCatalog.CLASSIC:
+		_as_strip(column)
+		_star_dust = StarDust.new()
+		add_child(_star_dust)
+	_glow()
+
+
+## Akt Classic: flacher Streifen neben der Überschrift, nur mit dem Namen; Titel, Untertitel und Tragkraft entfallen (er trägt immer
+## 6 bis 24 Personen), sonst bräche der Text aus dem Rahmen.
+func _as_strip(column: VBoxContainer) -> void:
+	custom_minimum_size.y = ThemeTokens.ACT_STRIP_HEIGHT
+	size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	column.alignment = BoxContainer.ALIGNMENT_CENTER
+	column.offset_top = ThemeTokens.SPACE_S
+	column.offset_bottom = -ThemeTokens.SPACE_S
+	_name.visible = false
+	_subtitle.visible = false
+	_limit.visible = false
+	for child: Node in column.get_children():
+		if not child is GrimmLabel:
+			column.remove_child(child)  # Abstandhalter entfällt
+			child.queue_free()
+
+
+func _glow() -> void:
+	if _star_dust == null:
+		FireGlow.set_on(_fire_target(), "card_frame", GroveArtData.CARD_FRAME_MARGINS, selected, _level, animated)
+		return
+	_star_dust.visible = selected and effects
+	_star_dust.animated = animated
 
 
 func _fire_target() -> Control:
@@ -78,6 +114,8 @@ func show_state(is_selected: bool, capacity: int) -> void:
 
 ## Die Karte wächst mit ihrem Text (lange Untertitel, DE und EN), nie unter die Mindesthöhe.
 func _fit_height(column: Control) -> void:
+	if act == ActCatalog.CLASSIC:
+		return  # Streifen mit fester Höhe
 	var wanted := maxf(float(ThemeTokens.ACT_CARD_HEIGHT), column.get_combined_minimum_size().y + column.offset_top - column.offset_bottom + float(ThemeTokens.SPACE_S))
 	if not is_equal_approx(custom_minimum_size.y, wanted):
 		custom_minimum_size.y = wanted
@@ -124,14 +162,17 @@ func _label(parent: Control, node_name: String, variation: StringName, key: Stri
 func _draw() -> void:
 	var inset := 14.0
 	# Schwierigkeit: vier Punkte rechts oben, gefüllt je Stufe (zusätzlich steht sie im Untertitel).
+	var strip := act == ActCatalog.CLASSIC  # Streifen: Punkte und Häkchen mittig in einer Reihe
 	for i: int in MAX_LEVEL:
-		var centre := Vector2(size.x - inset - 12.0 - float(MAX_LEVEL - 1 - i) * 14.0, inset + 14.0)
+		var centre := Vector2(size.x - inset - 12.0 - float(MAX_LEVEL - 1 - i) * 14.0, size.y * 0.5 if strip else inset + 14.0)
 		if i < _level:
 			draw_circle(centre, 5.0, ThemeTokens.MOON_SILVER_BRIGHT)
 		else:
 			draw_arc(centre, 5.0, 0.0, TAU, 16, ThemeTokens.MOON_SILVER_DIM, 1.5, true)
 	if selected:
 		var c := Vector2(size.x - inset - 12.0, size.y - inset - 14.0)  # Ecke unten rechts, nie auf dem Text
+		if strip:
+			c = Vector2(size.x - inset - 12.0 - float(MAX_LEVEL) * 14.0 - 14.0, size.y * 0.5)
 		draw_circle(c, 11.0, ThemeTokens.NUMBER_BG)
 		draw_arc(c, 11.0, 0.0, TAU, 20, ThemeTokens.BLOOD_RED, 2.0, true)
 		draw_polyline(PackedVector2Array([c + Vector2(-5.0, 0.5), c + Vector2(-1.5, 4.0), c + Vector2(5.5, -4.0)]), ThemeTokens.MOON_SILVER_BRIGHT, 2.4, true)

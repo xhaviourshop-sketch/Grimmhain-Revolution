@@ -863,6 +863,7 @@ func _render() -> void:
 		"day_effects": context.session.day_effects() if bool(_view.get("has_game")) else [],
 		"day_cards": context.session.day_cards() if bool(_view.get("has_game")) else [],
 		"reduced_motion": context.settings.reduced_motion,
+		"girl_alive": context.session.has_living_role(RoleCatalog.CLASSIC_MAEDCHEN),
 		"warnings": context.session.night_warnings(next, _selection) if bool(_view.get("has_game")) else [],
 		"show_calls": context.settings.show_calls,
 		"victim_names": _victim_names(phase),

@@ -73,6 +73,8 @@ static func remove_one(d: SetupDraft, role: StringName) -> StringName:
 	var current: int = d.roles.counts.get(role, 0)
 	if current <= 0:
 		return &"role_not_in_pool"
+	if RoleCatalog.group_size(role) > 0:
+		return set_role_count(d, role, 0)  # Gruppenrolle geht nur ganz (DA-108)
 	if SetupRoleCatalog.requires_appearance(role):
 		return remove_copy(d, d.roles.copies_of(role)[-1].copy_id)
 	return set_role_count(d, role, current - 1)
@@ -82,6 +84,11 @@ static func remove_one(d: SetupDraft, role: StringName) -> StringName:
 static func add_one(d: SetupDraft, role: StringName) -> StringName:
 	if not SetupRoleCatalog.has_role(role):
 		return &"unknown_role"
+	var group := RoleCatalog.group_size(role)
+	if group > 0:  # Gruppenrolle kommt nur ganz und nur, wenn genug Plätze frei sind (DA-108)
+		if d.roles.counts.get(role, 0) > 0 or d.roles.total() + group > d.persons.size():
+			return &"above_maximum"
+		return set_role_count(d, role, group)
 	return set_role_count(d, role, d.roles.counts.get(role, 0) + 1)
 
 
@@ -93,6 +100,8 @@ static func replace_one(d: SetupDraft, old: StringName, new: StringName) -> Stri
 		return &"unknown_role"
 	if d.roles.counts.get(old, 0) <= 0:
 		return &"role_not_in_pool"
+	if RoleCatalog.group_size(old) > 0 or RoleCatalog.group_size(new) > 0:
+		return &"above_maximum"  # einzelne Kopie einer Gruppe nie tauschen (DA-108)
 	var current: int = d.roles.counts.get(new, 0)
 	if current + 1 > SetupRoleCatalog.copy_limit(new, d.persons.size()):
 		return &"above_maximum"

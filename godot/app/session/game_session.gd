@@ -181,6 +181,14 @@ func act_level() -> int:
 	return 1
 
 
+## true, wenn eine lebende Person die Rolle hat (Mädchen-Hinweis im Werwolf-Schritt, DA-108; nur für die Spielleitung).
+func has_living_role(role: StringName) -> bool:
+	for p: Player in _state.players.values():
+		if p.alive and p.role_id == role:
+			return true
+	return false
+
+
 ## Rollen je Person, nur für den ausdrücklich geöffneten Spielleiterbereich.
 func private_seats() -> Array:
 	return CockpitView.private_seats(_state) if _state.is_started() else []

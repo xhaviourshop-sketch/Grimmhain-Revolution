@@ -73,3 +73,59 @@ func test_witch_heal_reveals_no_role() -> void:
 	s = _apply(s, Command.answer_choice(s.pending_prompt.id, "heal", true))
 	assert_false(s.pending_prompt.partial.has("victim_role"), "keine Rolle des Opfers")
 	assert_ne(String(s.pending_prompt.stage), "reveal", "keine Offenlegung")
+
+
+## Kurzer Durchlauf (Phase 1): Vorbereitung mit Akt Classic und Empfehlung, Start über die Anwendungsschicht, Nacht 1 bis zur ersten
+## Hinrichtung. Die Gruppen kommen nur ganz und nur mit genug freien Plätzen.
+func test_classic_setup_plays_to_first_execution() -> void:
+	var setup := PlayerSetup.new()
+	setup.seed_source = func() -> int: return 7
+	setup.set_act(ActCatalog.CLASSIC)
+	setup.set_player_count(14)
+	for i: int in 14:
+		setup.add_person("Person %d" % (i + 1))
+	assert_true(setup.go_to_step(SetupDraft.STEP_ROLES).ok, "Rollenschritt")
+	assert_true(setup.apply_suggestion().ok, "Empfehlung")
+	var counts: Dictionary = setup.view()["roles"]["counts"]
+	assert_eq(int(counts["classic-werwolf"]), 3, "drei Werwölfe bei 14")
+	assert_eq(int(counts["classic-drei-brueder"]), 3, "Brüder ganz")
+	assert_eq(int(counts["classic-zwei-schwestern"]), 0, "für die Schwestern ist kein Platz")
+	assert_false(bool(setup.view()["roles"]["can_increase"]["classic-zwei-schwestern"]), "Schwestern nicht angeboten")
+	setup.remove_role(&"classic-drei-brueder")
+	assert_eq(int(setup.view()["roles"]["counts"]["classic-drei-brueder"]), 0, "Brüder gehen nur ganz")
+	assert_true(bool(setup.view()["roles"]["can_increase"]["classic-zwei-schwestern"]), "jetzt ist Platz für die Schwestern")
+	setup.add_role(&"classic-drei-brueder")
+	var session := GameSession.new()
+	var started := GameStart.start(session, setup)
+	assert_true(bool(started["ok"]), "Classic-Partie startet (%s)" % started.get("error"))
+	var s: GameState = session._state
+	s = _apply(s, Command.start_night())
+	for guard: int in 40:
+		if s == null or (s.pending_prompt == null and StepQueue.next_step_id(s) == ""):
+			break
+		if s.pending_prompt == null:
+			s = _apply(s, Command.begin_step(StepQueue.next_step_id(s)))
+			continue
+		var p := s.pending_prompt
+		if p.stage != &"" and p.stage != &"shown" and p.max_count == 0:
+			s = _apply(s, Command.answer_choice(p.id, String(p.stage), p.stage == &"confirm"))  # Ja/Nein-Stufe (Hexe: kein Trank, Abschluss mit Ja)
+			continue
+		# Opfer: ein Dorfbewohner außerhalb der Amor-Paare, damit weder Jägerschuss noch Liebestod dazwischenkommt.
+		var paired: Array = []
+		for pair: Dictionary in s.loki_pairs:
+			paired.append_array([int(pair["a"]), int(pair["b"])])
+		var wolf_victim := s.players.keys().filter(func(id: int) -> bool:
+			return s.players[id].role_id == &"classic-dorfbewohner" and not paired.has(id))
+		s = _apply(s, _targets(p, [wolf_victim[0]] if p.owner == PendingPrompt.OWNER_PACK else Fixtures.pass_targets(s, p)))
+	s = _apply(s, Command.end_night())
+	assert_eq(s.phase, Phase.DAY, "Morgen erreicht")
+	var wolf := -1
+	var nominator := -1
+	for id: int in s.players:
+		if s.players[id].alive and s.players[id].counts_as_wolf and wolf == -1:
+			wolf = id
+		elif s.players[id].alive and not s.players[id].counts_as_wolf and nominator == -1:
+			nominator = id
+	s = _apply(s, Command.nominate(nominator, wolf))
+	s = _apply(s, Command.decide_execution(wolf))
+	assert_false(s.players[wolf].alive, "erste Hinrichtung: ein Werwolf stirbt")

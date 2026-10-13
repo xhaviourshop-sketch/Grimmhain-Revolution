@@ -11,7 +11,7 @@ const INTERNAL_REFS := "Decision Log|decision log|\\b(DI|DA|OI|PE)-\\d|RM-DR|Reg
 
 func _role_parts() -> Dictionary:
 	var out := {}
-	for id: Variant in RoleCatalog.ROLES:
+	for id: Variant in RoleCatalog.ROLES.keys() + RoleCatalog.CLASSIC_ROLES.keys():
 		out[String(id).replace("-", "_")] = StringName(id)
 	return out
 

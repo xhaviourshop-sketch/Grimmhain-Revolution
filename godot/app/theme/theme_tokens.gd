@@ -140,6 +140,7 @@ const COUNTER_BUTTON_SIZE := 72       ## Plus und Minus der Spielerzahl
 const COUNTER_VALUE_FONT := 72        ## große Spielerzahl
 const ACT_CARD_MIN_WIDTH := 260       ## Akt-Karte: schmalste Breite, zwei Spalten
 const ACT_CARD_HEIGHT := 160
+const ACT_STRIP_HEIGHT := 64           ## Akt Classic als flacher Streifen unter den vier Akt-Karten (DA-108), damit nichts scrollt
 const TEAM_SYMBOL_SIZE := 48          ## Teamsymbol im Zähler
 ## Teamfarben der Rollenkacheln und Leistenmarken (Multiplikator auf das dunkle Namensschild `name_plate_short`, DA-91): gewählt volle Farbe,
 ## nicht gewählt entsättigt und dunkel.

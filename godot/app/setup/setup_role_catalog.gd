@@ -36,6 +36,15 @@ static func role_ids() -> Array[StringName]:
 	return out
 
 
+## Rollen-IDs des Setup-Entwurfs: alle Katalogrollen und dahinter die Classic-Rollen (DA-108), damit der Akt Classic sie zählen und
+## verteilen kann. Listen über die 72 Rollen (Lexikon, Scheinrollen, Spielleiterlisten) nutzen weiter `role_ids`.
+static func setup_role_ids() -> Array[StringName]:
+	var out := role_ids()
+	for id: Variant in RoleCatalog.CLASSIC_ROLES:
+		out.append(StringName(id))
+	return out
+
+
 static func has_role(role: StringName) -> bool:
 	return RoleCatalog.has_role(role)
 

@@ -47,7 +47,7 @@ func test_acts_match_the_role_catalog() -> void:
 		assert_true(ActCatalog.capacity(act, true) >= ActCatalog.capacity(act, false), "%s: Totenreichkarten verkleinern nie die Tragkraft" % act)
 	assert_false(union.has(RoleCatalog.DORFBEWOHNER), "kein Akt bietet den Dorfbewohner an (DA-90)")
 	assert_false(SetupRoleCatalog.is_offered(RoleCatalog.DORFBEWOHNER), "das Setup bietet den Dorfbewohner nirgends an")
-	assert_eq(union.size(), SetupRoleCatalog.role_ids().size() - SetupRoleCatalog.NOT_OFFERED.size(), "die vier Akte decken alle angebotenen Katalogrollen ab")
+	assert_eq(union.size(), SetupRoleCatalog.setup_role_ids().size() - SetupRoleCatalog.NOT_OFFERED.size(), "die Akte (mit Classic, DA-108) decken alle angebotenen Rollen ab")
 
 
 func test_every_act_proposal_is_a_valid_start_for_the_core() -> void:

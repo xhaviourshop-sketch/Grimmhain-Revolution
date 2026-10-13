@@ -17,11 +17,17 @@ var _random: ChoiceButton
 var _manual: ChoiceButton
 var _last_view: Dictionary = {}
 var _scroll: ScrollContainer
+var _act_head: HBoxContainer
 var animated: bool = true:  ## aus bei reduzierter Bewegung (Feuer der Akt-Karten steht still)
 	set(value):
 		animated = value
 		for card: ActCard in _cards.values():
 			card.animated = value
+var effects: bool = true:  ## Schalter „Effekte“ (Sternenstaub des Aktes Classic)
+	set(value):
+		effects = value
+		for card: ActCard in _cards.values():
+			card.effects = value
 
 
 func start(setup: PlayerSetup) -> void:
@@ -50,7 +56,14 @@ func start(setup: PlayerSetup) -> void:
 	right.name = "ChoiceColumn"
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
-	right.add_child(_heading("ActsHeading", "ui.prep.act.heading"))
+	_act_head = HBoxContainer.new()
+	_act_head.name = "ActsHead"
+	_act_head.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	var acts_heading := _heading("ActsHeading", "ui.prep.act.heading")
+	acts_heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	acts_heading.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_act_head.add_child(acts_heading)
+	right.add_child(_act_head)
 	right.add_child(_acts())
 	columns.add_child(right)
 	_setup.changed.connect(_render)
@@ -138,8 +151,9 @@ func _acts() -> Control:
 			spot.position = card.position
 			spot.size = card.size)
 		card.setup(act)
+		card.effects = effects
 		card.pressed.connect(func() -> void: _setup.set_act(act))
-		row.add_child(card)
+		(_act_head if act == ActCatalog.CLASSIC else row).add_child(card)  # Classic als Streifen neben der Überschrift (DA-108)
 		_cards[act] = card
 	return holder
 

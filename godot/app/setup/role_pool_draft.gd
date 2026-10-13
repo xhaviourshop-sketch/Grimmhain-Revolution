@@ -20,7 +20,7 @@ var death_cards: bool = false       ## Partie mit Totenreichkarten (Kartenschluc
 
 
 func _init() -> void:
-	for id: StringName in SetupRoleCatalog.role_ids():
+	for id: StringName in SetupRoleCatalog.setup_role_ids():
 		counts[id] = 0
 
 
@@ -58,7 +58,7 @@ func total() -> int:
 ## Kanonischer Pool: jede Kopie einmal, nach Rollen-ID sortiert, unabhängig von der Sprache.
 func pool() -> Array[StringName]:
 	var out: Array[StringName] = []
-	for id: StringName in SetupRoleCatalog.role_ids():
+	for id: StringName in SetupRoleCatalog.setup_role_ids():
 		for i: int in maxi(0, counts.get(id, 0)):
 			out.append(id)
 	return out
@@ -69,7 +69,7 @@ func pool() -> Array[StringName]:
 ## Kopien mit Pflicht-Scheinrolle ihren eigenen Schlüssel (RoleCopy.key()).
 func entries() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
-	for id: StringName in SetupRoleCatalog.role_ids():
+	for id: StringName in SetupRoleCatalog.setup_role_ids():
 		if SetupRoleCatalog.requires_appearance(id):
 			for copy: RoleCopy in copies_of(id):
 				out.append({"key": copy.key(), "role_id": id, "appears_as": copy.appears_as})
@@ -163,6 +163,11 @@ func issues(persons: int) -> Array[StringName]:
 			break
 	if not death_cards and counts.get(RoleCatalog.KARTENSCHLUCKER, 0) > 0:
 		out.append(&"role_needs_death_cards")
+	for id: StringName in counts:
+		var group := RoleCatalog.group_size(id) if SetupRoleCatalog.has_role(id) else 0
+		if group > 0 and counts[id] != 0 and counts[id] != group:
+			out.append(&"role_group_incomplete")  # Brüder und Schwestern nur vollständig (DA-108), der Regelkern lehnt sonst ab
+			break
 	return out
 
 
@@ -183,7 +188,7 @@ func warnings(persons: int) -> Array[StringName]:
 ## Entwurf nicht leer; der Entwurf wird nie still gekürzt, die Namen stehen in der Fehlerliste.
 func over_limit(persons: int) -> Array[StringName]:
 	var out: Array[StringName] = []
-	for id: StringName in SetupRoleCatalog.role_ids():
+	for id: StringName in SetupRoleCatalog.setup_role_ids():
 		if SetupRoleCatalog.has_role(id) and counts.get(id, 0) > SetupRoleCatalog.copy_limit(id, persons):
 			out.append(id)
 	return out
@@ -194,12 +199,15 @@ func view(persons: int) -> Dictionary:
 	var can_increase := {}
 	var can_decrease := {}
 	var limits := {}
-	for id: StringName in SetupRoleCatalog.role_ids():
+	for id: StringName in SetupRoleCatalog.setup_role_ids():
 		var c: int = counts.get(id, 0)
 		var limit := SetupRoleCatalog.copy_limit(id, persons)
 		string_counts[String(id)] = c
 		limits[String(id)] = limit
 		can_increase[String(id)] = c < limit and (death_cards or not RoleCatalog.requires_cards(id))
+		var group := RoleCatalog.group_size(id)
+		if group > 0:
+			can_increase[String(id)] = c == 0 and persons - total() >= group  # Gruppe nur, wenn genug Plätze frei sind
 		can_decrease[String(id)] = c > 0
 	var found := issues(persons)
 	var over_names: Array[String] = []

@@ -18,6 +18,11 @@ const WOLF_STEPS: Array[Vector2i] = [Vector2i(9, 2), Vector2i(13, 3), Vector2i(1
 const VILLAGE_ORDER: Array[StringName] = [&"schutzengel", &"das-orakel", &"waldhexe", &"dorfwache", &"sensentraeger",
 	&"ritter", &"lehrling", &"nachtwaechter", &"wolfskind", &"waldlaeufer", &"doktor", &"detektiv", &"faehrtenleser", &"der-weise",
 	&"dorfchronistin", &"wahnsinniger-kutscher", &"traumdeuter"]
+## Akt Classic (DA-108): Wolfsquote wie oben mit Classic-Werwölfen, dann die Dorfrollen in dieser Reihenfolge, danach die drei Brüder
+## und die zwei Schwestern, soweit noch genug Plätze für die ganze Gruppe frei sind, und den Rest füllen Classic-Dorfbewohner.
+const CLASSIC_VILLAGE_ORDER: Array[StringName] = [RoleCatalog.CLASSIC_SEHERIN, RoleCatalog.CLASSIC_HEXE, RoleCatalog.CLASSIC_ENGEL,
+	RoleCatalog.CLASSIC_JAEGER, RoleCatalog.CLASSIC_AMOR, RoleCatalog.CLASSIC_ALTE, RoleCatalog.CLASSIC_MAEDCHEN]
+const CLASSIC_GROUPS: Array[StringName] = [RoleCatalog.CLASSIC_DREI_BRUEDER, RoleCatalog.CLASSIC_ZWEI_SCHWESTERN]
 
 
 static func wolf_count(persons: int) -> int:
@@ -33,6 +38,8 @@ static func wolf_count(persons: int) -> int:
 static func for_act(act: StringName, persons: int, death_cards: bool = false) -> Dictionary:
 	if not ActCatalog.has_act(act):
 		return {}
+	if act == ActCatalog.CLASSIC:
+		return _classic(persons)
 	var wolves := _usable(ActCatalog.wolves(act), death_cards)
 	var solo := _usable(ActCatalog.solo(act), death_cards)
 	var village := _village_priority(_usable(ActCatalog.village(act), death_cards))
@@ -64,6 +71,26 @@ static func for_act(act: StringName, persons: int, death_cards: bool = false) ->
 		counts[String(RoleCatalog.WERWOLF)] = 1 + extra_werewolves
 	if extra_bound > 0:
 		counts[String(RoleCatalog.DIE_GEBUNDENEN)] = 1 + extra_bound
+	return counts
+
+
+static func _classic(persons: int) -> Dictionary:
+	var counts := {}
+	for id: StringName in SetupRoleCatalog.setup_role_ids():
+		counts[String(id)] = 0
+	var wolves := wolf_count(persons)
+	counts[String(RoleCatalog.CLASSIC_WERWOLF)] = wolves
+	var free := persons - wolves
+	for role: StringName in CLASSIC_VILLAGE_ORDER:
+		if free > 0:
+			counts[String(role)] = 1
+			free -= 1
+	for group: StringName in CLASSIC_GROUPS:
+		var size := RoleCatalog.group_size(group)
+		if free >= size:
+			counts[String(group)] = size
+			free -= size
+	counts[String(RoleCatalog.CLASSIC_DORFBEWOHNER)] = free
 	return counts
 
 

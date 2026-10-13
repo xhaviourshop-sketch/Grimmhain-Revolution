@@ -4,7 +4,11 @@ extends RefCounted
 ## nach Team getrennt und in der Reihenfolge der Akt-Karte. Setup-Hilfe, keine Spielregel: Der Regelkern kennt keine Akte, er prüft nur
 ## die gestartete Besetzung. Der Dorfbewohner steht in keinem Akt (DA-90). Alle Rollen-IDs stehen im Katalog (Test `test_act_catalog`); Teamzuordnung und Katalog-Fraktion stimmen überein.
 
-const ACT_IDS: Array[StringName] = [&"akt1", &"akt2", &"akt3", &"akt4"]
+## Akt Classic (DA-108): die Rollen des Charakterbogens „Die Werwölfe von Düsterwald“ mit eigenen Rollen-IDs (`classic-*`); nur er
+## kennt den Classic-Dorfbewohner und die Gruppenrollen. Er steht hinten, damit die Zuordnung der Akte I bis IV unverändert bleibt.
+const CLASSIC := &"classic"
+
+const ACT_IDS: Array[StringName] = [&"akt1", &"akt2", &"akt3", &"akt4", CLASSIC]
 
 const ACTS := {
 	&"akt1": {
@@ -35,6 +39,14 @@ const ACTS := {
 		"wolves": [&"werwolf", &"rachsuechtiger-wolf", &"fenrir", &"cerberus", &"schwarze-witwe", &"schicksalswolf", &"seuchenwolf",
 			&"siegreicher-wolf", &"albtraumwolf"],
 		"solo": [&"hades", &"feuerteufel", &"kartenschlucker", &"prophet-des-untergangs"],
+	},
+	CLASSIC: {
+		"level": 1,
+		"village": [RoleCatalog.CLASSIC_DORFBEWOHNER, RoleCatalog.CLASSIC_SEHERIN, RoleCatalog.CLASSIC_HEXE, RoleCatalog.CLASSIC_ENGEL,
+			RoleCatalog.CLASSIC_JAEGER, RoleCatalog.CLASSIC_AMOR, RoleCatalog.CLASSIC_ALTE, RoleCatalog.CLASSIC_MAEDCHEN,
+			RoleCatalog.CLASSIC_DREI_BRUEDER, RoleCatalog.CLASSIC_ZWEI_SCHWESTERN],
+		"wolves": [RoleCatalog.CLASSIC_WERWOLF],
+		"solo": [],
 	},
 }
 

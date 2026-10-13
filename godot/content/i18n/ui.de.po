@@ -9176,3 +9176,434 @@ msgstr "Effekte an"
 
 msgid "ui.settings.toast.effects_off"
 msgstr "Effekte aus"
+
+# Akt Classic (DA-108)
+
+msgid "ui.role.classic_dorfbewohner.name"
+msgstr "Der Dorfbewohner"
+
+msgid "ui.role.classic_dorfbewohner.short"
+msgstr "Teil des Dorfes, ohne Fähigkeit."
+
+msgid "ui.role.classic_dorfbewohner.lex.night"
+msgstr "nie"
+
+msgid "ui.role.classic_dorfbewohner.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_dorfbewohner.lex.ability"
+msgstr "Keine Fähigkeit. Berät am Tag mit dem Dorf und stimmt ab."
+
+msgid "ui.role.classic_dorfbewohner.lex.timing"
+msgstr "Nie."
+
+msgid "ui.role.classic_dorfbewohner.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.classic_dorfbewohner.lex.exceptions"
+msgstr "Keine."
+
+msgid "ui.role.classic_dorfbewohner.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_dorfbewohner.lex.example"
+msgstr "Anna ist Dorfbewohnerin. Sie schläft nachts durch und sucht am Tag mit den anderen die Werwölfe."
+
+msgid "ui.role.classic_dorfbewohner.lex.act"
+msgstr "Aufruf: Kein Aufruf, kein Nachtschritt.\nAuswählen oder ablesen: Es ist nichts zu bedienen.\nVorlesen oder zeigen: Nichts.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.classic_dorfbewohner.lex.gm"
+msgstr "Füllt die Runde auf. Mehrere Dorfbewohner sind erlaubt."
+
+msgid "ui.role.classic_werwolf.name"
+msgstr "Der Werwolf"
+
+msgid "ui.role.classic_werwolf.short"
+msgstr "Wählt jede Nacht mit den anderen Werwölfen ein Opfer."
+
+msgid "ui.role.classic_werwolf.lex.night"
+msgstr "jede Nacht, gemeinsam im Werwolf-Schritt"
+
+msgid "ui.role.classic_werwolf.lex.wolf"
+msgstr "ja"
+
+msgid "ui.role.classic_werwolf.lex.ability"
+msgstr "Die Werwölfe einigen sich jede Nacht still auf ein Opfer."
+
+msgid "ui.role.classic_werwolf.lex.timing"
+msgstr "Jede Nacht, solange ein Werwolf lebt."
+
+msgid "ui.role.classic_werwolf.lex.targets"
+msgstr "Eine lebende Person."
+
+msgid "ui.role.classic_werwolf.lex.exceptions"
+msgstr "Der Engel kann das Opfer schützen, die Hexe kann es retten."
+
+msgid "ui.role.classic_werwolf.lex.win"
+msgstr "Die Werwölfe gewinnen, wenn mindestens so viele Werwölfe leben wie übrige Personen."
+
+msgid "ui.role.classic_werwolf.lex.example"
+msgstr "Die Werwölfe zeigen auf Ben. Der Spielleiter tippt Ben an. Ben stirbt am Morgen, wenn ihn niemand rettet."
+
+msgid "ui.role.classic_werwolf.lex.act"
+msgstr "Aufruf: Lies vor: „Werwölfe, erwacht. Einigt euch still auf ein Opfer und zeigt es mir.“\nAuswählen oder ablesen: Tippe das Opfer an und bestätige.\nVorlesen oder zeigen: Lebt das Mädchen, lies den Hinweis für das Mädchen vor.\nBeenden: Tippe „Auswahl bestätigen“."
+
+msgid "ui.role.classic_werwolf.lex.gm"
+msgstr "Mehrere Werwölfe sind erlaubt. Die Seherin sieht sie als Werwolf."
+
+msgid "ui.role.classic_seherin.name"
+msgstr "Die Seherin"
+
+msgid "ui.role.classic_seherin.short"
+msgstr "Erfährt jede Nacht die wahre Rolle einer Person."
+
+msgid "ui.role.classic_seherin.lex.night"
+msgstr "jede Nacht, als letzte"
+
+msgid "ui.role.classic_seherin.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_seherin.lex.ability"
+msgstr "Zeigt auf eine andere Person und sieht deren wahre Rolle."
+
+msgid "ui.role.classic_seherin.lex.timing"
+msgstr "Jede Nacht, solange die Seherin lebt."
+
+msgid "ui.role.classic_seherin.lex.targets"
+msgstr "Genau eine andere lebende Person."
+
+msgid "ui.role.classic_seherin.lex.exceptions"
+msgstr "Sich selbst prüfen darf sie nicht."
+
+msgid "ui.role.classic_seherin.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_seherin.lex.example"
+msgstr "Die Seherin prüft Clara. Der Spielleiter zeigt ihr „Der Werwolf“."
+
+msgid "ui.role.classic_seherin.lex.act"
+msgstr "Aufruf: Lies vor: „Seherin, erwache. Zeige auf die Person, deren Rolle du sehen willst.“\nAuswählen oder ablesen: Tippe die Person an und bestätige.\nVorlesen oder zeigen: Zeige der Seherin das Ergebnis über „Karte zeigen“.\nBeenden: Tippe „Gezeigt“."
+
+msgid "ui.role.classic_seherin.lex.gm"
+msgstr "Nur du siehst das Ergebnis. Es erscheint nie auf dem öffentlichen Bildschirm."
+
+msgid "ui.role.classic_hexe.name"
+msgstr "Die Hexe"
+
+msgid "ui.role.classic_hexe.short"
+msgstr "Hat einen Heiltrank und einen Gifttrank."
+
+msgid "ui.role.classic_hexe.lex.night"
+msgstr "jede Nacht, nach den Werwölfen"
+
+msgid "ui.role.classic_hexe.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_hexe.lex.ability"
+msgstr "Sieht das Opfer der Werwölfe. Kann es mit dem Heiltrank retten und mit dem Gifttrank eine Person töten."
+
+msgid "ui.role.classic_hexe.lex.timing"
+msgstr "Jeder Trank einmal im Spiel. In einer Nacht keinen, einen oder beide."
+
+msgid "ui.role.classic_hexe.lex.targets"
+msgstr "Heilen: nur das Opfer dieser Nacht. Vergiften: eine lebende Person."
+
+msgid "ui.role.classic_hexe.lex.exceptions"
+msgstr "Rettet sie das Opfer, erfährt sie dessen Rolle nicht. Die vergiftete Person stirbt am Morgen."
+
+msgid "ui.role.classic_hexe.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_hexe.lex.example"
+msgstr "Die Werwölfe wählen Ben. Die Hexe rettet ihn mit dem Heiltrank. Am Morgen lebt Ben."
+
+msgid "ui.role.classic_hexe.lex.act"
+msgstr "Aufruf: Lies vor: „Hexe, erwache. Ich zeige dir das Opfer der Nacht. Willst du einen Trank nutzen?“\nAuswählen oder ablesen: Tippe Heilen oder Vergiften und die Person.\nVorlesen oder zeigen: Zeige ihr das Opfer.\nBeenden: Bestätige die Wahl."
+
+msgid "ui.role.classic_hexe.lex.gm"
+msgstr "Die App merkt sich, welche Tränke schon verbraucht sind."
+
+msgid "ui.role.classic_jaeger.name"
+msgstr "Der Jäger"
+
+msgid "ui.role.classic_jaeger.short"
+msgstr "Nimmt bei seinem Tod eine Person mit ins Grab."
+
+msgid "ui.role.classic_jaeger.lex.night"
+msgstr "nie"
+
+msgid "ui.role.classic_jaeger.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_jaeger.lex.ability"
+msgstr "Stirbt der Jäger, zeigt er auf eine lebende Person. Sie stirbt mit ihm."
+
+msgid "ui.role.classic_jaeger.lex.timing"
+msgstr "Einmal, sofort nach seinem Tod am Tag oder am Morgen nach seinem Tod in der Nacht."
+
+msgid "ui.role.classic_jaeger.lex.targets"
+msgstr "Eine lebende Person außer ihm selbst."
+
+msgid "ui.role.classic_jaeger.lex.exceptions"
+msgstr "Der Engel schützt nicht davor. Ruhen die Fähigkeiten des Dorfes nach dem Tod des Alten, schießt er nicht."
+
+msgid "ui.role.classic_jaeger.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_jaeger.lex.example"
+msgstr "Der Jäger wird hingerichtet und zeigt auf Clara. Clara stirbt ebenfalls."
+
+msgid "ui.role.classic_jaeger.lex.act"
+msgstr "Aufruf: Kein Nachtschritt. Nach seinem Tod fragt die App nach seinem Ziel.\nAuswählen oder ablesen: Tippe die Person an, auf die er zeigt.\nVorlesen oder zeigen: Verkünde den zweiten Tod.\nBeenden: Bestätige die Wahl."
+
+msgid "ui.role.classic_jaeger.lex.gm"
+msgstr "Er darf nicht verzichten."
+
+msgid "ui.role.classic_engel.name"
+msgstr "Der Engel"
+
+msgid "ui.role.classic_engel.short"
+msgstr "Schützt jede Nacht eine andere Person vor den Werwölfen."
+
+msgid "ui.role.classic_engel.lex.night"
+msgstr "jede Nacht, vor den Werwölfen"
+
+msgid "ui.role.classic_engel.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_engel.lex.ability"
+msgstr "Zeigt auf eine Person. Sie ist in dieser Nacht vor den Werwölfen geschützt."
+
+msgid "ui.role.classic_engel.lex.timing"
+msgstr "Jede Nacht, solange der Engel lebt."
+
+msgid "ui.role.classic_engel.lex.targets"
+msgstr "Genau eine andere lebende Person, nicht er selbst."
+
+msgid "ui.role.classic_engel.lex.exceptions"
+msgstr "Schützt nur vor den Werwölfen, nicht vor dem Gift der Hexe."
+
+msgid "ui.role.classic_engel.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_engel.lex.example"
+msgstr "Der Engel schützt Anna. Die Werwölfe wählen Anna. Am Morgen lebt Anna."
+
+msgid "ui.role.classic_engel.lex.act"
+msgstr "Aufruf: Lies vor: „Engel, erwache. Zeige auf die Person, die du heute Nacht beschützen willst.“\nAuswählen oder ablesen: Tippe die Person an und bestätige.\nVorlesen oder zeigen: Nichts.\nBeenden: Tippe „Auswahl bestätigen“."
+
+msgid "ui.role.classic_engel.lex.gm"
+msgstr "Der Schutz gilt nur für diese Nacht."
+
+msgid "ui.role.classic_maedchen.name"
+msgstr "Das Mädchen"
+
+msgid "ui.role.classic_maedchen.short"
+msgstr "Darf blinzelnd die Werwölfe beobachten."
+
+msgid "ui.role.classic_maedchen.lex.night"
+msgstr "nie eigener Schritt"
+
+msgid "ui.role.classic_maedchen.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_maedchen.lex.ability"
+msgstr "Darf während des Werwolf-Schritts blinzeln und die Werwölfe heimlich beobachten."
+
+msgid "ui.role.classic_maedchen.lex.timing"
+msgstr "Jede Nacht im Werwolf-Schritt, solange das Mädchen lebt."
+
+msgid "ui.role.classic_maedchen.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.classic_maedchen.lex.exceptions"
+msgstr "Keine Mechanik in der App. Wer sie erwischt, darf es am Tag sagen."
+
+msgid "ui.role.classic_maedchen.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_maedchen.lex.example"
+msgstr "Das Mädchen blinzelt und sieht, dass Clara die Augen offen hat."
+
+msgid "ui.role.classic_maedchen.lex.act"
+msgstr "Aufruf: Kein eigener Aufruf.\nAuswählen oder ablesen: Nichts.\nVorlesen oder zeigen: Im Werwolf-Schritt liest du den Hinweis für das Mädchen vor.\nBeenden: Es gibt nichts zu beenden."
+
+msgid "ui.role.classic_maedchen.lex.gm"
+msgstr "Achte darauf, dass sie nicht zu offen schaut."
+
+msgid "ui.role.classic_alte.name"
+msgstr "Der Alte"
+
+msgid "ui.role.classic_alte.short"
+msgstr "Übersteht einen Angriff der Werwölfe. Wird er gehängt, verliert das Dorf seine Fähigkeiten."
+
+msgid "ui.role.classic_alte.lex.night"
+msgstr "nie"
+
+msgid "ui.role.classic_alte.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_alte.lex.ability"
+msgstr "Überlebt den ersten Angriff der Werwölfe."
+
+msgid "ui.role.classic_alte.lex.timing"
+msgstr "Der Schutz gilt einmal. Wird er hingerichtet, ruhen die Fähigkeiten des Dorfes 0 bis 3 Nächte und Tage."
+
+msgid "ui.role.classic_alte.lex.targets"
+msgstr "Keine."
+
+msgid "ui.role.classic_alte.lex.exceptions"
+msgstr "Das Gift der Hexe tötet ihn. Die Zahl der Nächte und Tage legst du bei der Hinrichtung fest."
+
+msgid "ui.role.classic_alte.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_alte.lex.example"
+msgstr "Die Werwölfe wählen den Alten. Am Morgen lebt er noch, niemand ist gestorben."
+
+msgid "ui.role.classic_alte.lex.act"
+msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Bei seiner Hinrichtung fragt die App, wie lange die Fähigkeiten ruhen.\nVorlesen oder zeigen: Verkünde, dass das Dorf seine Fähigkeiten verliert.\nBeenden: Bestätige die Zahl."
+
+msgid "ui.role.classic_alte.lex.gm"
+msgstr "Seine Rettung geschieht still, nur du erfährst es."
+
+msgid "ui.role.classic_amor.name"
+msgstr "Amor"
+
+msgid "ui.role.classic_amor.short"
+msgstr "Verliebt in der ersten Nacht zwei Personen ineinander."
+
+msgid "ui.role.classic_amor.lex.night"
+msgstr "nur Nacht 1, als erster"
+
+msgid "ui.role.classic_amor.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_amor.lex.ability"
+msgstr "Zeigt auf zwei Personen, auch sich selbst. Sie verlieben sich. Stirbt eine, stirbt die andere aus Liebeskummer."
+
+msgid "ui.role.classic_amor.lex.timing"
+msgstr "Nur in Nacht 1."
+
+msgid "ui.role.classic_amor.lex.targets"
+msgstr "Zwei verschiedene lebende Personen, Amor selbst ist erlaubt."
+
+msgid "ui.role.classic_amor.lex.exceptions"
+msgstr "Es sind immer Verliebte."
+
+msgid "ui.role.classic_amor.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_amor.lex.example"
+msgstr "Amor wählt Anna und Ben. Ben wird gehängt, Anna stirbt aus Liebeskummer."
+
+msgid "ui.role.classic_amor.lex.act"
+msgstr "Aufruf: Lies vor: „Amor, erwache. Zeige auf zwei Personen, die sich verlieben.“\nAuswählen oder ablesen: Tippe beide Personen an und bestätige.\nVorlesen oder zeigen: Wecke die Verliebten kurz, damit sie sich sehen.\nBeenden: Tippe „Auswahl bestätigen“."
+
+msgid "ui.role.classic_amor.lex.gm"
+msgstr "Es sind immer Verliebte, die App fragt nicht nach der Art."
+
+msgid "ui.role.classic_drei_brueder.name"
+msgstr "Die drei Brüder"
+
+msgid "ui.role.classic_drei_brueder.short"
+msgstr "Erkennen sich in der ersten Nacht."
+
+msgid "ui.role.classic_drei_brueder.lex.night"
+msgstr "nur Nacht 1, gemeinsam"
+
+msgid "ui.role.classic_drei_brueder.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_drei_brueder.lex.ability"
+msgstr "Die drei Brüder erwachen zusammen und erkennen sich. Sonst sind sie Dorfbewohner."
+
+msgid "ui.role.classic_drei_brueder.lex.timing"
+msgstr "Nur in Nacht 1."
+
+msgid "ui.role.classic_drei_brueder.lex.targets"
+msgstr "Keine Wahl."
+
+msgid "ui.role.classic_drei_brueder.lex.exceptions"
+msgstr "Nur zu dritt wählbar."
+
+msgid "ui.role.classic_drei_brueder.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_drei_brueder.lex.example"
+msgstr "Anna, Ben und Clara öffnen die Augen und sehen sich."
+
+msgid "ui.role.classic_drei_brueder.lex.act"
+msgstr "Aufruf: Lies vor: „Brüder, erwacht und seht einander an.“\nAuswählen oder ablesen: Nichts.\nVorlesen oder zeigen: Nichts.\nBeenden: Tippe weiter."
+
+msgid "ui.role.classic_drei_brueder.lex.gm"
+msgstr "Die App bietet die Brüder nur an, wenn drei Plätze frei sind."
+
+msgid "ui.role.classic_zwei_schwestern.name"
+msgstr "Die zwei Schwestern"
+
+msgid "ui.role.classic_zwei_schwestern.short"
+msgstr "Erkennen sich in der ersten Nacht."
+
+msgid "ui.role.classic_zwei_schwestern.lex.night"
+msgstr "nur Nacht 1, gemeinsam"
+
+msgid "ui.role.classic_zwei_schwestern.lex.wolf"
+msgstr "nein"
+
+msgid "ui.role.classic_zwei_schwestern.lex.ability"
+msgstr "Die zwei Schwestern erwachen zusammen und erkennen sich. Sonst sind sie Dorfbewohnerinnen."
+
+msgid "ui.role.classic_zwei_schwestern.lex.timing"
+msgstr "Nur in Nacht 1."
+
+msgid "ui.role.classic_zwei_schwestern.lex.targets"
+msgstr "Keine Wahl."
+
+msgid "ui.role.classic_zwei_schwestern.lex.exceptions"
+msgstr "Nur zu zweit wählbar."
+
+msgid "ui.role.classic_zwei_schwestern.lex.win"
+msgstr "Mit dem Dorf."
+
+msgid "ui.role.classic_zwei_schwestern.lex.example"
+msgstr "Dora und Eva öffnen die Augen und sehen sich."
+
+msgid "ui.role.classic_zwei_schwestern.lex.act"
+msgstr "Aufruf: Lies vor: „Schwestern, erwacht und seht einander an.“\nAuswählen oder ablesen: Nichts.\nVorlesen oder zeigen: Nichts.\nBeenden: Tippe weiter."
+
+msgid "ui.role.classic_zwei_schwestern.lex.gm"
+msgstr "Die App bietet die Schwestern nur an, wenn zwei Plätze frei sind."
+
+msgid "ui.act.classic.name"
+msgstr "Classic"
+
+msgid "ui.act.classic.title"
+msgstr "Das klassische Werwolfspiel"
+
+msgid "ui.act.classic.subtitle"
+msgstr "Die bekannten Grundrollen · Einsteiger"
+
+msgid "ui.call.pack.classic_maedchen"
+msgstr "„Das Mädchen darf jetzt blinzeln. Lass dich nicht erwischen.“"
+
+msgid "ui.call.classic_seherin"
+msgstr "„Seherin, erwache. Zeige auf die Person, deren Rolle du sehen willst.“"
+
+msgid "ui.call.classic_hexe"
+msgstr "„Hexe, erwache. Ich zeige dir das Opfer der Nacht. Willst du einen Trank nutzen?“"
+
+msgid "ui.call.classic_engel"
+msgstr "„Engel, erwache. Zeige auf die Person, die du heute Nacht beschützen willst.“"
+
+msgid "ui.call.classic_amor"
+msgstr "„Amor, erwache. Zeige auf zwei Personen, die sich verlieben.“"
+
+msgid "ui.call.classic_drei_brueder"
+msgstr "„Brüder, erwacht und seht einander an.“"
+
+msgid "ui.call.classic_zwei_schwestern"
+msgstr "„Schwestern, erwacht und seht einander an.“"
+
+msgid "ui.setup.roles.issue.role_group_incomplete"
+msgstr "Die drei Brüder und die zwei Schwestern spielen nur vollständig. Nimm die ganze Gruppe oder keine."

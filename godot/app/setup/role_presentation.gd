@@ -12,13 +12,16 @@ const ROLE_ORDER: Array[StringName] = [
 	&"dorfbewohner", &"schutzengel", &"das-orakel", &"waldhexe", &"sensentraeger", &"wolfskind", &"lehrling", &"dorfchronistin", &"die-gebundenen", &"waldlaeufer", &"doktor", &"nachtwaechter", &"dorfwache", &"wahnsinniger-kutscher", &"ritter", &"faehrtenleser", &"korrupter-richter", &"waechter-am-tor", &"spuerhund", &"henker", &"traumdeuter", &"kopfgeldjaeger", &"koenig", &"kriegerin-des-lichts", &"blutpriester", &"amalia", &"detektiv", &"die-ewigen", &"der-weise", &"maertyrerin", &"schutzgeist", &"dorfschmied", &"verdammniswaechter", &"loki", &"rotkaeppchen", &"seelentauscher", &"kutscher", &"dr-victor-frankenstein", &"zeitwaechter",
 	&"werwolf", &"spiegelwolf", &"trugbilderwolf", &"siegreicher-wolf", &"besessener-wolf", &"blutwolf", &"schattenhund", &"albtraumwolf", &"giftwolf", &"rudelvater", &"seuchenwolf", &"fenrir", &"cerberus", &"schwarze-witwe", &"schattenwanderer", &"daemonischer-wolf", &"koenig-lykaon", &"schicksalswolf", &"rachsuechtiger-wolf",
 	&"manipulator", &"doppelspion", &"selbstmoerder", &"parasit", &"rattenfaenger", &"pestbringerin", &"prophet-des-untergangs", &"todesprediger", &"feuerteufel", &"voodoo-priester", &"nekromant", &"hades", &"grabraeuber",
+	# Akt Classic (DA-108), nur in `sorted_roles(true)`
+	&"classic-dorfbewohner", &"classic-seherin", &"classic-hexe", &"classic-engel", &"classic-jaeger", &"classic-amor", &"classic-alte",
+	&"classic-maedchen", &"classic-drei-brueder", &"classic-zwei-schwestern", &"classic-werwolf",
 ]
 
 
 ## Alle Katalogrollen in Oberflächenreihenfolge: nach Fraktion gruppiert, darin nach ROLE_ORDER.
-## Eine Katalogrolle ohne Eintrag in ROLE_ORDER steht am Ende ihrer Gruppe (nach ID).
-static func sorted_roles() -> Array[StringName]:
-	var roles := SetupRoleCatalog.role_ids()
+## Eine Katalogrolle ohne Eintrag in ROLE_ORDER steht am Ende ihrer Gruppe (nach ID). `with_classic`: dazu die Classic-Rollen (Rollenwahl).
+static func sorted_roles(with_classic: bool = false) -> Array[StringName]:
+	var roles := SetupRoleCatalog.setup_role_ids() if with_classic else SetupRoleCatalog.role_ids()
 	roles.sort_custom(func(a: StringName, b: StringName) -> bool:
 		var fa := FACTION_ORDER.find(SetupRoleCatalog.faction_of(a))
 		var fb := FACTION_ORDER.find(SetupRoleCatalog.faction_of(b))
