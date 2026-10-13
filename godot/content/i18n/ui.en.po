@@ -9949,19 +9949,19 @@ msgstr "The narrator growls."
 msgid "ui.notice.piper_new_classic"
 msgstr "You are enchanted. The Pipe wins when all other living people are enchanted."
 
-msgid "ui.rulebook.c02.b06.classic"
+msgid "ui.rulebook.classic.c02.b06"
 msgstr "Choose exactly as many roles as there are people. A valid cast contains at least one village role, one wolf role and one solo role. Each role appears at most once at the start; only “The Three Brothers” and “The Two Sisters” may be chosen several times. The card shows what is still missing."
 
-msgid "ui.rulebook.c05.b07.classic"
+msgid "ui.rulebook.classic.c05.b07"
 msgstr "Some roles trigger private notices (Cupid, The Pipe, Plague Bringer, Little Red Riding Hood). The card “Private notice” appears before the next step. “Show card” shows it to the affected person, closing it confirms. Each person sees only what is meant for them. For Little Red Riding Hood you quietly tap the chosen person after the choice and show them the anonymous question; you record the answer with “Refuge granted” or “No refuge”."
 
-msgid "ui.rulebook.c06.b01.classic"
+msgid "ui.rulebook.classic.c06.b01"
 msgstr "After the last step the app evaluates the night: first the attack of the pack is checked. A rescue by the Witch or a protection by the Angel prevents it; only the game master learns that. Then come immediate consequences of deaths, then open reactions one after another, and only at the end does the app check for a win."
 
-msgid "ui.rulebook.c06.b02.classic"
+msgid "ui.rulebook.classic.c06.b02"
 msgstr "Open reactions (such as the Hunter, Possessed Wolf, Knight, Village Blacksmith, Demonic Wolf) appear as their own card. Tap the person the card names. Each reaction requires a choice and can trigger further deaths."
 
-msgid "ui.rulebook.c06.b08.classic"
+msgid "ui.rulebook.classic.c06.b08"
 msgstr "Visible consequences of a death are announced publicly, also in revival rounds, for example the Hunter's curse, the Knight's effect or heartbreak. The announcement names the effect and the role it comes from. Secret choices without a visible consequence are not announced."
 
 msgid "ui.card.segen_06.wolf.text.classic"

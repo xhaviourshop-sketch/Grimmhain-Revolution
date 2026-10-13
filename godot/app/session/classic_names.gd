@@ -1,8 +1,8 @@
 class_name ClassicNames
 extends RefCounted
 ## Anzeigeschalter für Classic-Partien: Läuft eine Partie mit Classic-Rollen, zeigen Regelbuch und Totenreichkarten die Namen des
-## Charakterbogens statt der Grundspiel-Namen. Reine Anzeige: Die Textvarianten stehen in den Übersetzungen unter `<Schlüssel>.classic`;
-## fehlt eine, gilt der normale Text. Der Schalter folgt dem Zustand der Sitzung (GameSession) und verändert keinen Spielstand.
+## Charakterbogens statt der Grundspiel-Namen. Reine Anzeige: Die Textvarianten stehen in den Übersetzungen unter `<Schlüssel>.classic`
+## (Regelbuch: `ui.rulebook.classic.<Kapitel>.<Block>`); fehlt eine, gilt der normale Text. Der Schalter folgt dem Zustand der Sitzung (GameSession) und verändert keinen Spielstand.
 
 static var active: bool = false
 
@@ -18,8 +18,8 @@ static func detect(s: GameState) -> bool:
 
 
 ## Schlüssel der Classic-Variante, wenn die Partie Classic ist und die Variante existiert, sonst der Schlüssel selbst.
-static func key(base: String) -> String:
+static func key(base: String, own_variant: String = "") -> String:
 	if not active:
 		return base
-	var variant := base + ".classic"
+	var variant := own_variant if own_variant != "" else base + ".classic"
 	return variant if TranslationServer.translate(variant) != StringName(variant) else base
