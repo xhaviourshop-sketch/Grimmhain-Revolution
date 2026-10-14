@@ -10122,3 +10122,6 @@ msgstr "The cockpit is available once a game is running."
 
 msgid "ui.prep.roles.applied"
 msgstr "Recommendation applied. Change only what does not fit."
+
+msgid "ui.cockpit.notice.tap_close"
+msgstr "Tap to close"

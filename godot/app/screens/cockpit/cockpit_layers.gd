@@ -413,7 +413,17 @@ static func notice_card(card: Dictionary) -> Control:
 		for v: Dictionary in viewers:
 			names.append(CockpitText.person(v))
 		_fit_label(column, "ui.notice.piper_new.names", {"names": ", ".join(names)}, &"ShowCaptionLabel", ThemeTokens.FONT_SHOW).name = "NoticeNames"
-	(layer[2] as VBoxContainer).add_child(_button("CloseLayerButton", "ui.cockpit.notice.close", GrimmButton.Kind.PRIMARY))
+	# Ein Tipp irgendwo schließt (wie die Rollenkarte): unsichtbare Fläche statt „Schließen“, darunter nur ein Hinweis.
+	var hint := _label(layer[2] as VBoxContainer, "ui.cockpit.notice.tap_close", {}, &"MutedLabel")
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var tap := _button("CloseLayerButton", "", GrimmButton.Kind.SECONDARY)
+	tap.set_meta(&"grove_skinned", true)
+	tap.accessibility_name = TranslationServer.translate("ui.cockpit.notice.close")
+	tap.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for state: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
+		tap.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	root.add_child(tap)
 	return root
 
 

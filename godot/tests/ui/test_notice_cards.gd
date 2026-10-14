@@ -90,6 +90,8 @@ func test_loki_shows_one_joint_card_for_the_pair() -> void:
 	await press(find_button(screen, "ShowNoticeButton"))
 	var layer := find_node(screen, "NoticeLayer")
 	assert_true(layer != null, "Karte für das Paar")
+	var tap := find_button(layer, "CloseLayerButton")
+	assert_true(tap != null and tap.size.x >= layer.size.x - 1.0 and tap.size.y >= layer.size.y - 1.0, "ein Tipp irgendwo schließt (F-09), kein eigener Schließen-Knopf")
 	var shown := _texts(layer)
 	assert_true(shown.contains(tr("ui.notice.loki_bond.love")), "Text „Ihr seid Liebende“: %s" % shown)
 	assert_false(_has_word(shown, "B"), "nennt nicht Loki")

@@ -10122,3 +10122,6 @@ msgstr "Das Cockpit gibt es erst, wenn eine Partie läuft."
 
 msgid "ui.prep.roles.applied"
 msgstr "Empfehlung übernommen. Ändere nur, was nicht passt."
+
+msgid "ui.cockpit.notice.tap_close"
+msgstr "Tippen zum Schließen"
