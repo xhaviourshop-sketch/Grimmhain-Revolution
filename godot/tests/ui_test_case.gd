@@ -92,6 +92,7 @@ func spawn_shell(size: Vector2i = SIZE_16_10, locale: String = "de", reduced_mot
 	if not ResourceLoader.exists(MAIN_SCENE):
 		fail("Hauptszene %s fehlt" % MAIN_SCENE)
 		return null
+	RoundStep.last_act = &""  # kein gemerkter Akt aus einem früheren Test
 	CockpitScreen.double_tap_msec = 0  # schnelle Testbedienung; der Doppeltipp-Test schaltet die Sperre selbst ein
 	CockpitScreen.confirm_actions = false  # schnelle Testbedienung; die Tests der zweiten Bestätigung schalten sie selbst ein
 	var scene := load(MAIN_SCENE) as PackedScene

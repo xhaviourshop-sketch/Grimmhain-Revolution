@@ -8,6 +8,9 @@ extends PrepStep
 
 signal next_requested
 
+## Zuletzt gewählter Akt (nur innerhalb der laufenden App-Sitzung, nichts wird gespeichert): eine neue Partie öffnet damit.
+static var last_act: StringName = &""
+
 var _minus: GlyphButton
 var _plus: GlyphButton
 var _value: GrimmLabel
@@ -66,6 +69,8 @@ func start(setup: PlayerSetup) -> void:
 	right.add_child(_act_head)
 	right.add_child(_acts())
 	columns.add_child(right)
+	if last_act != &"" and ActCatalog.ACT_IDS.has(last_act) and str(_setup.view().get("act", "")) != String(last_act):
+		_setup.set_act(last_act)  # Modus der vorigen Partie dieser Sitzung (scheitert die Spielerzahl, bleibt es beim Vorgabe-Akt)
 	_setup.changed.connect(_render)
 	_render(_setup.view())
 
@@ -152,7 +157,9 @@ func _acts() -> Control:
 			spot.size = card.size)
 		card.setup(act)
 		card.effects = effects
-		card.pressed.connect(func() -> void: _setup.set_act(act))
+		card.pressed.connect(func() -> void:
+			last_act = act
+			_setup.set_act(act))
 		(_act_head if act == ActCatalog.CLASSIC else row).add_child(card)  # Classic als Streifen neben der Überschrift (DA-108)
 		_cards[act] = card
 	return holder

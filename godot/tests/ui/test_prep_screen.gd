@@ -233,3 +233,16 @@ func test_several_clear_names_are_added_directly_and_unclear_ones_open_the_revie
 	await frames(2)
 	assert_eq(((setup.call("view") as Dictionary)["persons"] as Array).size(), 3, "Doppelname: noch nichts übernommen")
 	assert_true((find_node(screen, "NameReviewCard") as Control).is_visible_in_tree(), "Prüfliste bei Doppelname")
+
+
+## F-08: Der zuletzt gewählte Akt (Modus) wird innerhalb der Sitzung gemerkt, aber nicht gespeichert.
+func test_last_chosen_act_is_remembered_within_the_session() -> void:
+	var shell := await spawn_shell(SIZE_4_3)
+	if shell == null:
+		return
+	var screen := await open_new_game(shell)
+	await press(find_button(screen, "ActCard_classic"))
+	assert_eq(RoundStep.last_act, &"classic", "Classic gemerkt")
+	await navigate(shell, &"main_menu")
+	screen = await open_new_game(shell)
+	assert_eq(str((setup_of(shell).call("view") as Dictionary)["act"]), "classic", "neue Partie öffnet mit dem zuletzt gewählten Modus")
