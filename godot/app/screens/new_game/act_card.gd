@@ -69,7 +69,6 @@ func setup(p_act: StringName) -> void:
 	_limit = _label(column, "ActLimit", &"HainCaptionLabel", "")
 	column.minimum_size_changed.connect(func() -> void: _fit_height(column))
 	if act == ActCatalog.CLASSIC:
-		_as_strip(column)
 		_star_dust = StarDust.new()
 		add_child(_star_dust)
 	_glow()

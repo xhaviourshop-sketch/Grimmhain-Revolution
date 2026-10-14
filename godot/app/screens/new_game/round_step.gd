@@ -160,7 +160,7 @@ func _acts() -> Control:
 		card.pressed.connect(func() -> void:
 			last_act = act
 			_setup.set_act(act))
-		(_act_head if act == ActCatalog.CLASSIC else row).add_child(card)  # Classic als Streifen neben der Überschrift (DA-108)
+		row.add_child(card)  # Classic ist eine gleich aussehende Auswahlkarte wie die Akte (F-08)
 		_cards[act] = card
 	return holder
 
