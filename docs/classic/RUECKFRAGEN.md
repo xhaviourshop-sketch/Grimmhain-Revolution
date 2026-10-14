@@ -118,3 +118,6 @@ Erwartet: `godot/assets/night/role-circle/classic-urwolf.webp` und `classic-weis
   3. `godot/assets/night/role-circle/dorfbewohner.webp` und `godot/assets/night/role-art/dorfbewohner.webp` (128 und 512 px, ein Mann mit Fackel vor Fachwerkhaus): Rolle "Dorfbewohner".
   4. `godot/assets/night/role-circle/classic-dorfbewohner.webp` (128 px, Piktogramm aus dem Bogen): Classic-Dorfbewohner in Listen und als Ersatz, wenn keine Karte vorliegt (jetzt gibt es eine Karte).
   Frage an Markus: In welchem Bildschirm genau sieht er das Bild (Rollenwahl, Nachtleiste, Lexikon, Karte)? Dann ist es mit einem Satz entfernt (nur die Anzeige, keine Datei).
+
+## Ritter, neu festgelegt (Markus, 14.10.2026)
+Die Tetanus-Lesart oben ist ersetzt: Stirbt der Ritter nachts durch die Werwölfe, wählt die Spielleitung am Morgen nach der Todesmeldung Links oder Rechts, der nächste lebende Wolf in dieser Richtung stirbt sofort (siehe FAEHIGKEITEN.md, Nr. 14). Offen geblieben: Bei nur einem lebenden Wolf entfällt die Frage und er stirbt (gewählt statt zwei gleicher Knöpfe).

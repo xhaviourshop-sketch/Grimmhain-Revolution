@@ -1,7 +1,7 @@
 extends TestCase
 ## Akt Classic, Gruppe A (DA-108): Selbstmörder, wildes Kind, Ritter mit dem verrosteten Schwert.
 ## Selbstmörder: Mechanik `selbstmoerder`; wildes Kind: Mechanik `wolfskind`, Wahl nur in Nacht 1;
-## Ritter: eigene Classic-Regel (Tetanus statt sofortigem Tod), siehe ClassicRules.
+## Ritter: eigene Classic-Regel (Spielleiter wählt Links oder Rechts, der Wolf dort stirbt am Morgen), siehe ClassicRules.
 
 const SM := "classic-selbstmoerder"
 const KID := "classic-wildes-kind"
@@ -91,31 +91,58 @@ func _knight_start() -> Command:
 		"classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"])
 
 
-func test_rusty_knight_infects_left_wolf_who_dies_next_night_after_the_victims() -> void:
-	var cmds: Array[Command] = [_knight_start(), Command.start_night(), Command.answer_prompt(1, [2]),
-		Command.end_night()]
-	var run := _run(cmds, "Nacht 1")
+func _knight_morning(pick: int) -> Array[Command]:
+	return [_knight_start(), Command.start_night(), Command.answer_prompt(1, [2]), Command.end_night(), Command.begin_step("reaction:1"), Command.answer_prompt(2, [pick])]
+
+
+func test_rusty_knight_killed_at_night_gm_picks_direction_and_that_wolf_dies() -> void:
+	var cmds: Array[Command] = [_knight_start(), Command.start_night(), Command.answer_prompt(1, [2]), Command.end_night(), Command.begin_step("reaction:1")]
+	var run := _run(cmds, "Morgen")
 	if not run.ok:
 		return
 	assert_false(run.state.players[2].alive, "Ritter gefressen")
-	assert_true(run.state.players[4].alive and run.state.players[1].alive, "Wolf links lebt noch, kein Sofortschlag")
-	assert_eq(events_of_type(run.events, "TetanusInfected").size(), 1, "Infektion protokolliert")
-	cmds.append_array([Command.decide_execution(-1), Command.end_day(), Command.start_night(),
-		Command.answer_prompt(2, [5]), Command.end_night()])
-	var next := _run(cmds, "Nacht 2")
-	if not next.ok:
+	assert_eq(run.state.phase, Phase.DAWN_RESOLUTION, "Fenster noch in der Morgenphase, vor dem Tag")
+	var p := run.state.pending_prompt
+	assert_eq(p.allowed_ids, [4, 1] as Array[int], "links Wolf 4, rechts Wolf 1")
+	assert_true(p.min_count == 1 and not p.cancellable, "Pflichtwahl")
+	for pick: int in [4, 1]:
+		var res := _run(_knight_morning(pick), "Wahl %d" % pick)
+		if res.ok:
+			var other := 1 if pick == 4 else 4
+			assert_false(res.state.players[pick].alive, "gewählter Wolf stirbt")
+			assert_eq(res.state.players[pick].death.cause, KillEvent.CAUSE_KNIGHT_STRIKE, "Ursache Schlag des Ritters")
+			assert_true(res.state.players[other].alive, "der andere Wolf lebt")
+			assert_true(res.state.wolf_poisons.is_empty(), "keine Tetanus-Infektion mehr")
+			assert_eq(res.state.phase, Phase.DAY, "danach beginnt der Tag")
+
+
+func test_rusty_knight_single_wolf_dies_without_question_and_village_wins() -> void:
+	var cmds: Array[Command] = [Fixtures.start_roles(["classic-dorfbewohner", KNIGHT, "classic-dorfbewohner", "classic-werwolf", "classic-dorfbewohner",
+		"classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"]), Command.start_night(), Command.answer_prompt(1, [2]), Command.end_night()]
+	var run := _run(cmds, "ein Wolf")
+	if not run.ok:
 		return
-	var s := next.state
-	assert_false(s.players[4].alive, "infizierter Wolf tot")
-	assert_eq(s.players[4].death.cause, KillEvent.CAUSE_TETANUS, "Todesursache Tetanus")
-	assert_true(s.players[4].death.order_index > s.players[5].death.order_index, "nach dem Rudelopfer")
-	assert_true(s.players[1].alive, "der andere Wolf bleibt unberührt")
+	assert_true(run.state.reactions.is_empty(), "keine Frage bei einem Wolf")
+	assert_false(run.state.players[4].alive, "der Wolf stirbt")
+	assert_eq(run.state.players[4].death.cause, KillEvent.CAUSE_KNIGHT_STRIKE, "Ursache Schlag des Ritters")
+	assert_false(run.state.open_candidates().is_empty(), "Siegprüfung nach beiden Toden: Dorf gewinnt")
 
 
-func test_rusty_knight_hanged_infects_nobody() -> void:
+func test_rusty_knight_with_no_living_wolf_triggers_nothing() -> void:
+	var s := RulesEngine.replay([_knight_start()]).state
+	s.players[1].alive = false
+	s.players[4].alive = false
+	assert_true(ClassicRules.rusty_choices(s, 2).is_empty(), "kein Wolf wählbar")
+	var ctx := RuleContext.new(s, s.command_count)
+	KillPipeline.request_kill(ctx, 2, KillEvent.CAUSE_NIGHT_KILL, KillEvent.SOURCE_PACK, -1)
+	assert_true(s.reactions.is_empty(), "kein Fenster")
+	assert_eq(s.alive_ids().size(), 5, "nur der Ritter ist gestorben")
+
+
+func test_rusty_knight_hanged_triggers_nothing() -> void:
 	var cmds: Array[Command] = [_knight_start(), Command.start_night(), Command.skip_step("night:1:0:pack", "kein Opfer"), Command.end_night(),
 		Command.nominate(3, 2), Command.decide_execution(2)]
 	var run := _run(cmds, "Ritter gehängt")
 	if run.ok:
-		assert_true(run.state.wolf_poisons.is_empty(), "keine Infektion bei Hinrichtung")
-		assert_true(run.state.players[4].alive, "Wolf lebt")
+		assert_true(run.state.wolf_poisons.is_empty() and run.state.reactions.is_empty(), "keine Wirkung bei Hinrichtung")
+		assert_true(run.state.players[4].alive and run.state.players[1].alive, "beide Wölfe leben")

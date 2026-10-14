@@ -83,6 +83,9 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 			out["options"].append(str(role))
 	if p.owner == PendingPrompt.OWNER_REACTION and not s.reactions.is_empty():
 		out["reaction_kind"] = String(s.reactions[0].kind)
+		if s.reactions[0].kind == Reaction.KIND_KNIGHT and bool(RoleCatalog.param(s.players[s.reactions[0].owner_id].role_id, "rusty", false)):
+			var w := Seats.nearest_wolves(s, s.reactions[0].owner_id)  # Classic-Ritter: Wolf links (Uhrzeigersinn) und rechts
+			out["knight_dirs"] = {"left": int(w["cw"]), "right": int(w["ccw"])}
 	if p.owner == PendingPrompt.OWNER_ORACLE and p.stage == OracleStep.STAGE_SHOWN:
 		out["can_override_shown"] = true
 	if p.owner == RoleCatalog.RACHSUECHTIGER_WOLF and s.players.has(p.actor_id) and RoleCatalog.param(s.players[p.actor_id].role_id, "lone_any", false):

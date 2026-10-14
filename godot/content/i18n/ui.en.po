@@ -9657,7 +9657,7 @@ msgid "ui.role.classic_ritter.name"
 msgstr "The Rusty Knight"
 
 msgid "ui.role.classic_ritter.short"
-msgstr "If eaten at night, the werewolf to their left dies of tetanus."
+msgstr "If killed by the werewolves at night, the werewolf in the direction you choose dies."
 
 msgid "ui.role.classic_ritter.lex.night"
 msgstr "never"
@@ -9666,28 +9666,28 @@ msgid "ui.role.classic_ritter.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.classic_ritter.lex.ability"
-msgstr "If the werewolves eat the knight, the nearest werewolf to their left is infected and dies the following night."
+msgstr "If the werewolves kill the knight at night, the game master picks Left or Right in the morning. The nearest living werewolf in that direction dies."
 
 msgid "ui.role.classic_ritter.lex.timing"
-msgstr "Once. The infection happens at dawn after the attack, the death in the night after that, after the werewolves' victims."
+msgstr "Once. In the morning right after the knight's death announcement, before accusation and vote."
 
 msgid "ui.role.classic_ritter.lex.targets"
-msgstr "The nearest living werewolf clockwise from the knight's seat."
+msgstr "Left or Right of the knight's seat. The buttons show the name of the nearest living werewolf; the circle wraps around."
 
 msgid "ui.role.classic_ritter.lex.exceptions"
-msgstr "Poison and executions trigger nothing. If no werewolf lives, nothing happens. If the werewolf dies earlier, the infection ends."
+msgstr "Only a night kill by the werewolves triggers it, not execution, witch, hunter or heartbreak. If only one werewolf lives, they die without a question. If none lives, nothing happens. The Primal Wolf counts too."
 
 msgid "ui.role.classic_ritter.lex.win"
 msgstr "With the village."
 
 msgid "ui.role.classic_ritter.lex.example"
-msgstr "The werewolves eat Ben, the knight. Emil is the next werewolf to his left. The following night Emil dies."
+msgstr "The werewolves kill Ben, the knight. In the morning you pick Left, where Emil is the next werewolf. Emil dies."
 
 msgid "ui.role.classic_ritter.lex.act"
-msgstr "Call: No night step.\nChoose or read: Nothing, the app picks the werewolf.\nRead aloud or show: Announce the death in the following night without naming the cause.\nFinish: Tap next."
+msgstr "Call: No night step.\nChoose or read: In the morning after the death announcement, tap Left or Right and confirm.\nRead aloud or show: Announce the second death.\nFinish: Tap next."
 
 msgid "ui.role.classic_ritter.lex.gm"
-msgstr "Only you see the infection. Publicly only the death is announced, not the cause or role."
+msgstr "Only you make the choice. Publicly only the death is announced."
 
 msgid "ui.act.classic.name"
 msgstr "Classic"
@@ -10071,3 +10071,18 @@ msgstr "Werewolves wear the fire ring."
 
 msgid "ui.cockpit.confirm.mode_targets"
 msgstr "{mode}: {names}"
+
+msgid "ui.cockpit.action.knight_dir.left"
+msgstr "Left: {name}"
+
+msgid "ui.cockpit.action.knight_dir.right"
+msgstr "Right: {name}"
+
+msgid "ui.night.classic_ritter.knight.short"
+msgstr "picks a direction"
+
+msgid "ui.night.classic_ritter.knight.title"
+msgstr "The Knight picks a direction: Left or Right."
+
+msgid "ui.night.classic_ritter.knight.help"
+msgstr "The next werewolf in that direction dies. Tap Left or Right."

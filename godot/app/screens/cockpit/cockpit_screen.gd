@@ -1271,6 +1271,8 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 				_answer_chain([s.answer_random.bind((_random as Array).duplicate())], true, {"kind": "targets", "ids": (_random as Array).duplicate()})
 			else:
 				_answer_chain([s.answer_targets.bind(_selection.duplicate())], true, {"kind": "targets", "ids": _selection.duplicate()})
+		&"knight_dir":
+			_answer_chain([s.answer_targets.bind([int(payload["id"])])], true, {"kind": "targets", "ids": [int(payload["id"])]})
 		&"random_targets":
 			if not _ensure_begun():
 				return

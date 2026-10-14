@@ -4,20 +4,17 @@ extends RefCounted
 ## fragen vorher den Classic-Parameter der Rolle ab (`RoleCatalog.param`). Entfernt man den Akt, entfällt diese Datei mit den Aufrufen.
 
 
-## Ritter mit dem verrosteten Schwert: Wird er in der Nacht vom Rudel gefressen, infiziert er den nächsten lebenden Werwolf links von
-## ihm (Sitzreihenfolge im Uhrzeigersinn, Sitz statt Personen-ID) mit Tetanus. Dieser stirbt in der folgenden Nacht, nach den Rudelopfern.
-## Einmal je Leben. Der Eintrag liegt wie die Giftpranke in `wolf_poisons`; die Quelle ist der Ritter (siehe `is_tetanus`).
-static func rusty_infect(ctx: RuleContext, knight: Player) -> void:
-	var s := ctx.state
-	var use_key := "ritter:death_reaction"
-	if int(knight.ability_uses.get(use_key, 0)) >= 1:
-		return
-	var left: int = Seats.nearest_wolves(s, knight.id)["cw"]
-	if left == GameState.NO_TARGET:
-		return
-	knight.ability_uses[use_key] = 1
-	s.wolf_poisons.append({"target_id": left, "source_id": knight.id, "due_night": s.night_number + 1})
-	ctx.emit(GameEvent.TETANUS_INFECTED, Visibility.GM, {"knight_id": knight.id, "target_id": left, "due_night": s.night_number + 1})
+## Ritter mit dem verrosteten Schwert: Wird er in der Nacht vom Rudel gefressen, wählt die Spielleitung in der Morgenphase Links oder
+## Rechts; der nächste lebende Wolf in dieser Richtung stirbt (Kreis läuft rund, Sitzreihenfolge im Uhrzeigersinn = links). Hier die
+## wählbaren Wölfe: links (Uhrzeigersinn), rechts, ohne Doppelte; leer ohne lebenden Wolf. Die Tetanus-Infektion früherer Fassungen
+## entsteht nicht mehr; geladene alte Stände mit Eintrag in `wolf_poisons` behalten die Wirkung (siehe `is_tetanus`).
+static func rusty_choices(s: GameState, knight_id: int) -> Array[int]:
+	var w := Seats.nearest_wolves(s, knight_id)
+	var out: Array[int] = []
+	for key: String in ["cw", "ccw"]:
+		if int(w[key]) != GameState.NO_TARGET and not out.has(int(w[key])):
+			out.append(int(w[key]))
+	return out
 
 
 ## true, wenn der Eintrag aus `wolf_poisons` eine Tetanus-Infektion des Classic-Ritters ist (Quelle trägt die Classic-Rolle).

@@ -455,8 +455,8 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 		prompt.allowed_ids.erase(prompt.actor_id)
 		prompt.cancellable = false
 		if s.reactions[0].kind == Reaction.KIND_KNIGHT:
-			# Ritter bei Gleichstand: Pflichtwahl unter den jetzt gleich nahen Wölfen.
-			prompt.allowed_ids = Seats.closest_wolves(s, prompt.actor_id)
+			# Ritter bei Gleichstand: Pflichtwahl unter den jetzt gleich nahen Wölfen; Classic: links oder rechts.
+			prompt.allowed_ids = ClassicRules.rusty_choices(s, prompt.actor_id) if bool(RoleCatalog.param(s.players[prompt.actor_id].role_id, "rusty", false)) else Seats.closest_wolves(s, prompt.actor_id)
 		elif s.reactions[0].kind == Reaction.KIND_SMITH:
 			# Schmiedewaffe: der Spielleiter wählt einen lebenden Wolf, der stirbt (S-06).
 			prompt.allowed_ids = prompt.allowed_ids.filter(func(id: int) -> bool: return s.players[id].counts_as_wolf)

@@ -9657,7 +9657,7 @@ msgid "ui.role.classic_ritter.name"
 msgstr "Der Ritter mit dem verrosteten Schwert"
 
 msgid "ui.role.classic_ritter.short"
-msgstr "Wird er nachts gefressen, stirbt der Werwolf links von ihm an Tetanus."
+msgstr "Wird er nachts von den Werwölfen getötet, stirbt der Werwolf in der Richtung, die du wählst."
 
 msgid "ui.role.classic_ritter.lex.night"
 msgstr "nie"
@@ -9666,28 +9666,28 @@ msgid "ui.role.classic_ritter.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.classic_ritter.lex.ability"
-msgstr "Fressen die Werwölfe den Ritter, infiziert er den nächsten Werwolf zu seiner Linken. Dieser stirbt in der folgenden Nacht."
+msgstr "Töten die Werwölfe den Ritter in der Nacht, wählt die Spielleitung am Morgen Links oder Rechts. Der nächste lebende Werwolf in dieser Richtung stirbt."
 
 msgid "ui.role.classic_ritter.lex.timing"
-msgstr "Einmal. Die Infektion geschieht am Morgen nach dem Angriff, der Tod in der darauf folgenden Nacht, nach den Opfern der Werwölfe."
+msgstr "Einmal. Am Morgen direkt nach der Todesmeldung des Ritters, vor Anklage und Abstimmung."
 
 msgid "ui.role.classic_ritter.lex.targets"
-msgstr "Der nächste lebende Werwolf im Uhrzeigersinn vom Platz des Ritters aus."
+msgstr "Links oder Rechts vom Platz des Ritters. Die Knöpfe zeigen den Namen des nächsten lebenden Werwolfs; der Kreis läuft rund."
 
 msgid "ui.role.classic_ritter.lex.exceptions"
-msgstr "Gift und Hinrichtung lösen nichts aus. Gibt es keinen lebenden Werwolf, geschieht nichts. Stirbt der Werwolf vorher, endet die Infektion."
+msgstr "Nur der Tod durch die Werwölfe in der Nacht löst aus, nicht Hinrichtung, Hexe, Jäger oder Liebestod. Lebt nur ein Werwolf, stirbt er ohne Frage. Lebt keiner, geschieht nichts. Auch der Urwolf zählt."
 
 msgid "ui.role.classic_ritter.lex.win"
 msgstr "Mit dem Dorf."
 
 msgid "ui.role.classic_ritter.lex.example"
-msgstr "Die Werwölfe fressen Ben, den Ritter. Links von ihm sitzt als nächster Werwolf Emil. In der folgenden Nacht stirbt Emil."
+msgstr "Die Werwölfe töten Ben, den Ritter. Am Morgen wählst du Links, dort sitzt als nächster Werwolf Emil. Emil stirbt."
 
 msgid "ui.role.classic_ritter.lex.act"
-msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Nichts, die App bestimmt den Werwolf.\nVorlesen oder zeigen: Verkünde in der folgenden Nacht den Tod, ohne die Ursache zu nennen.\nBeenden: Tippe weiter."
+msgstr "Aufruf: Kein Nachtschritt.\nAuswählen oder ablesen: Am Morgen nach der Todesmeldung tippe Links oder Rechts und bestätige.\nVorlesen oder zeigen: Verkünde den zweiten Tod.\nBeenden: Tippe weiter."
 
 msgid "ui.role.classic_ritter.lex.gm"
-msgstr "Die Infektion siehst nur du. Öffentlich wird nur der Tod angesagt, nicht Ursache oder Rolle."
+msgstr "Die Wahl triffst nur du. Öffentlich wird nur der Tod angesagt."
 
 msgid "ui.act.classic.name"
 msgstr "Classic"
@@ -10071,3 +10071,18 @@ msgstr "Werwölfe tragen den Feuerring."
 
 msgid "ui.cockpit.confirm.mode_targets"
 msgstr "{mode}: {names}"
+
+msgid "ui.cockpit.action.knight_dir.left"
+msgstr "Links: {name}"
+
+msgid "ui.cockpit.action.knight_dir.right"
+msgstr "Rechts: {name}"
+
+msgid "ui.night.classic_ritter.knight.short"
+msgstr "wählt die Richtung"
+
+msgid "ui.night.classic_ritter.knight.title"
+msgstr "Der Ritter wählt die Richtung: Links oder Rechts."
+
+msgid "ui.night.classic_ritter.knight.help"
+msgstr "Der nächste Werwolf in dieser Richtung stirbt. Tippe Links oder Rechts."

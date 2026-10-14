@@ -376,16 +376,15 @@ static func _queue_reaction(ctx: RuleContext, target: Player, record: KillEvent,
 
 ## Ritter: stirbt er durch den Rudelangriff, stirbt sofort der nächste Wolf (Abstand in Sitzen
 ## einschließlich toter Plätze); bei Gleichstand wählt der Spielleiter (Reaktion). Einmal je Leben.
+## Classic (rostiges Schwert): Der Spielleiter wählt links oder rechts (Reaktion); gibt es nur einen Wolf, stirbt er sofort.
 static func _knight_strike(ctx: RuleContext, target: Player, record: KillEvent) -> void:
 	if target.mech_role() != RoleCatalog.RITTER or record.cause != KillEvent.CAUSE_NIGHT_KILL or GuardRoles.silenced(ctx.state, target.id):
-		return
-	if bool(RoleCatalog.param(target.role_id, "rusty", false)):
-		ClassicRules.rusty_infect(ctx, target)  # Classic: Tetanus statt sofortigem Tod (DA-108)
 		return
 	var use_key := "ritter:death_reaction"
 	if int(target.ability_uses.get(use_key, 0)) >= 1:
 		return
-	var wolves := Seats.closest_wolves(ctx.state, target.id)
+	var rusty := bool(RoleCatalog.param(target.role_id, "rusty", false))
+	var wolves := ClassicRules.rusty_choices(ctx.state, target.id) if rusty else Seats.closest_wolves(ctx.state, target.id)
 	if wolves.is_empty():
 		return
 	target.ability_uses[use_key] = 1

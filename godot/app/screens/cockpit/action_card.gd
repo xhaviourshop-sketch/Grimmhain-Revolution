@@ -615,7 +615,10 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		return
 	match answer:
 		"targets":
-			_night_targets_part(next, context, buttons)
+			if next.has("knight_dirs"):
+				_knight_dirs_part(next, context, buttons)
+			else:
+				_night_targets_part(next, context, buttons)
 		"choice":
 			# Loki („Liebende“ oder „Rivalen“) hat keine Hauptantwort: zwei gleich große Knöpfe.
 			var equal := owner == "loki" and stage == "mode"
@@ -646,6 +649,16 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		buttons.append(_button("OverrideShownButton", "ui.cockpit.action.override_shown", GrimmButton.Kind.SECONDARY, &"override_shown"))
 	_help(next, buttons)
 	_actions(buttons)
+
+
+## Classic-Ritter (rostiges Schwert): zwei Knöpfe, Links und Rechts, jeweils mit dem Namen des Wolfs in dieser Richtung.
+func _knight_dirs_part(next: Dictionary, context: Dictionary, buttons: Array[Control]) -> void:
+	var dirs: Dictionary = next["knight_dirs"]
+	for side: String in ["left", "right"]:
+		var id := int(dirs[side])
+		var b := _button("KnightDir_%s" % side, "ui.cockpit.action.knight_dir.%s" % side, GrimmButton.Kind.SECONDARY, &"knight_dir", {"id": id})
+		b.format_values = {"name": CockpitText.names_of([id], context.get("seats", []))}
+		buttons.append(b)
 
 
 ## Auswahl der Nacht-Schablone: eine feste Anzahl wird sofort übernommen (kein Bestätigen), sonst „Weiter“. Antippen einer
