@@ -91,7 +91,12 @@ func test_navigation_reaches_all_screens() -> void:
 	await press(find_button(current_screen(shell), "EnterButton"))
 	assert_eq(current_id(shell), &"main_menu", "Start → Hauptmenü")
 	for id: StringName in MENU_BUTTONS:
-		await press(find_button(current_screen(shell), MENU_BUTTONS[id]))
+		var entry := find_button(current_screen(shell), MENU_BUTTONS[id])
+		if entry.disabled:
+			assert_true(id == &"continue" or id == &"cockpit", "%s: nur Fortsetzen und Cockpit sind ohne Partie ausgegraut" % id)
+			assert_true(find_node(current_screen(shell), "MenuHintLabel") != null, "ein Satz erklärt, warum ausgegraut")
+			continue
+		await press(entry)
 		assert_eq(current_id(shell), id, "Hauptmenü → %s" % id)
 		await press(find_button(current_screen(shell), "BackButton"))
 		assert_eq(current_id(shell), &"main_menu", "%s → zurück zum Hauptmenü" % id)

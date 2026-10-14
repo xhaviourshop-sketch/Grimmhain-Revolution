@@ -10110,3 +10110,12 @@ msgstr "Grimmhain wird quer gespielt. Drehe das Gerät ins Querformat."
 
 msgid "ui.portrait.continue"
 msgstr "Trotzdem weiter"
+
+msgid "ui.menu.hint.none"
+msgstr "Starte zuerst eine Partie oder lade eine gespeicherte."
+
+msgid "ui.menu.hint.no_save"
+msgstr "Keine gespeicherte Partie vorhanden."
+
+msgid "ui.menu.hint.no_game"
+msgstr "Das Cockpit gibt es erst, wenn eine Partie läuft."

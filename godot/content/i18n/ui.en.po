@@ -10110,3 +10110,12 @@ msgstr "Grimmhain is played in landscape. Turn your device sideways."
 
 msgid "ui.portrait.continue"
 msgstr "Continue anyway"
+
+msgid "ui.menu.hint.none"
+msgstr "Start a game first or load a saved one."
+
+msgid "ui.menu.hint.no_save"
+msgstr "There is no saved game yet."
+
+msgid "ui.menu.hint.no_game"
+msgstr "The cockpit is available once a game is running."

@@ -43,6 +43,7 @@ func _setup() -> void:
 	(%RulebookButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.RULEBOOK))
 	(%HistoryButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.HISTORY))
 	(%SettingsButton as GrimmButton).pressed.connect(navigate_requested.emit.bind(ScreenIds.SETTINGS))
+	_dim_unavailable()
 	_quit.visible = AppPlatform.can_quit_from_menu()
 	(%QuitGroup as Control).visible = _quit.visible
 	_quit.pressed.connect(quit_requested.emit)
@@ -51,6 +52,33 @@ func _setup() -> void:
 		var height := button.custom_minimum_size.y  # Tippfläche bleibt (Hauptaktion 64), der Rahmen wird mittig gezeichnet
 		GroveSkin.skin_button(button, button == _new_game)
 		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, height)
+
+
+## „Partie fortsetzen“ ohne gespeicherte Partie und „Spielleiter-Cockpit“ ohne laufende Partie sind ausgegraut; ein Satz sagt, warum.
+func _dim_unavailable() -> void:
+	if context == null:
+		return
+	var resume := %ContinueButton as GrimmButton
+	var cockpit := %CockpitButton as GrimmButton
+	resume.disabled = context.saves.list().is_empty()
+	cockpit.disabled = not bool(context.session.view().get("has_game", false))
+	var hint_key := ""
+	if resume.disabled and cockpit.disabled:
+		hint_key = "ui.menu.hint.none"
+	elif resume.disabled:
+		hint_key = "ui.menu.hint.no_save"
+	elif cockpit.disabled:
+		hint_key = "ui.menu.hint.no_game"
+	if hint_key == "":
+		return
+	var hint := GrimmLabel.new()
+	hint.name = "MenuHintLabel"
+	hint.text_key = hint_key
+	hint.theme_type_variation = &"MutedLabel"
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cockpit.get_parent().add_child(hint)
+	cockpit.get_parent().move_child(hint, cockpit.get_index() + 1)
 
 
 ## Weiche dunkle Vignette hinter dem Logo, damit es auch über dem hellen Mond lesbar bleibt.
