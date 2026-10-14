@@ -227,3 +227,23 @@ func test_state_change_discards_selection() -> void:
 	assert_eq(str(_next(shell)["owner"]), "loki", "Loki nach Wiederholen offen")
 	await _choose_art(shell)
 	await _assert_selection_empty(shell, 3, "Auswahl nach Rückgängig/Wiederholen verworfen")
+
+
+## Classic-Ritter: Der Sitzkreis markiert nur den Wolf links und rechts; ein Tipp darauf wählt die Richtung (wie der Knopf),
+## statt nur eine Markierung zu setzen, die nichts auslöst.
+func test_rusty_knight_seat_tap_picks_the_direction() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	var session := session_of(shell)
+	var roles := ["classic-werwolf", "classic-ritter", "classic-dorfbewohner", "classic-werwolf", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"]
+	for cmd: Command in [Fixtures.start_roles(roles, 1), Command.start_night(), Command.answer_prompt(1, [2]), Command.end_night()]:
+		assert_true((session.call("submit", cmd) as CommandResult).ok, "Vorbereitung")
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	await _begin_open_step(shell)
+	assert_true(_next(shell).has("knight_dirs"), "Richtungswahl offen")
+	assert_true((find_node(_screen(shell), "SeatRing").call("token_for", 3) as BaseButton).disabled, "andere Personen sind gesperrt")
+	await _tap_seat(shell, 4)
+	await frames(3)
+	assert_false(_next(shell).has("knight_dirs"), "Tipp auf den Wolf links beantwortet die Frage")
