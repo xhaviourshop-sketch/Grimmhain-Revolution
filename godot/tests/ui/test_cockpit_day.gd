@@ -129,6 +129,23 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	assert_eq(int(_view(shell)["night_number"]), 2, "Nacht 2")
 
 
+func test_accused_may_accuse_back_by_tapping() -> void:
+	var shell := await _cockpit(["werwolf", "blutwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor", "der-weise"])
+	if shell == null:
+		return
+	await _quiet_night(shell)
+	assert_true((session_of(shell).call("nominate", 3, 1) as CommandResult).ok, "Cara klagt Anna an")
+	await frames(3)
+	await _press(shell, "NominateButton")
+	assert_false(_seat(shell, 1).disabled, "die Angeklagte darf selbst anklagen")
+	await press(_seat(shell, 1))
+	assert_false(_seat(shell, 3).disabled, "die Anklägerin steht wieder zur Wahl")
+	await press(_seat(shell, 3))
+	await _press(shell, "ConfirmNominationButton")
+	await frames(3)
+	assert_eq((_view(shell)["next"]["nominations"] as Array).size(), 2, "beide Anklagen stehen")
+
+
 func test_no_execution_applies_directly() -> void:
 	var shell := await _cockpit(["werwolf", "dorfbewohner", "amalia", "detektiv", "wahnsinniger-kutscher", "waechter-am-tor"])
 	if shell == null:
