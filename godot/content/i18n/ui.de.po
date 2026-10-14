@@ -9990,3 +9990,27 @@ msgstr "verliebt zwei"
 
 msgid "ui.cockpit.action.decline.reaction.pick"
 msgstr "Kein Schuss"
+
+msgid "ui.cockpit.confirm.title"
+msgstr "Stimmt das?"
+
+msgid "ui.cockpit.confirm.yes"
+msgstr "Bestätigen"
+
+msgid "ui.cockpit.confirm.message"
+msgstr "{what}\n{answer}"
+
+msgid "ui.cockpit.confirm.nominate"
+msgstr "{from} klagt {to} an."
+
+msgid "ui.cockpit.confirm.execute"
+msgstr "{name} wird hingerichtet."
+
+msgid "ui.cockpit.confirm.no_execution"
+msgstr "Heute wird niemand hingerichtet."
+
+msgid "ui.cockpit.confirm.name_wolf"
+msgstr "Als Wolf benannt: {name}."
+
+msgid "ui.cockpit.confirm.card_report"
+msgstr "Gemeldet: {name}."

@@ -9990,3 +9990,27 @@ msgstr "enamors two"
 
 msgid "ui.cockpit.action.decline.reaction.pick"
 msgstr "No shot"
+
+msgid "ui.cockpit.confirm.title"
+msgstr "Is that right?"
+
+msgid "ui.cockpit.confirm.yes"
+msgstr "Confirm"
+
+msgid "ui.cockpit.confirm.message"
+msgstr "{what}\n{answer}"
+
+msgid "ui.cockpit.confirm.nominate"
+msgstr "{from} accuses {to}."
+
+msgid "ui.cockpit.confirm.execute"
+msgstr "{name} is executed."
+
+msgid "ui.cockpit.confirm.no_execution"
+msgstr "Nobody is executed today."
+
+msgid "ui.cockpit.confirm.name_wolf"
+msgstr "Named as wolf: {name}."
+
+msgid "ui.cockpit.confirm.card_report"
+msgstr "Reported: {name}."

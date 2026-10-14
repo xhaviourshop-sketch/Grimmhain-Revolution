@@ -16,6 +16,7 @@ extends BaseScreen
 ##   - Rollen, Protokoll und die gezeigte Karte entstehen erst beim Öffnen als eigene Ebene und
 ##     werden beim Schließen, beim Sichtschutz und beim Verlassen der Ansicht entfernt.
 
+const CONFIRM_LOCK_MSEC := 600   ## Sperre nach „Bestätigen“ gegen Doppelklick
 const BAR_SIDE := 88.0          ## Abstand der Nachtleiste zum Fensterrand (Zurück-Platte und Laschen daneben)
 const BAR_MAX_WIDTH := 980.0
 const TOP_MARGIN := 6.0
@@ -32,6 +33,7 @@ const PLATE_SIZE := Vector2(200.0, 52.0)
 const PLAZA_CENTER_UV := Vector2(0.508, 0.508)  ## Mitte des Dorfplatzes im Hintergrundbild (Nachtszene v2)
 const BACKDROP_OVERSCAN := 1.05                 ## etwas größer als „cover“, damit sich die Platzmitte auf die Ringmitte schieben lässt
 
+static var confirm_actions: bool = true  ## zweite Bestätigung vor jeder Entscheidung der Spielleitung; Tests schalten sie ab, außer in den Tests der Bestätigung selbst
 static var double_tap_msec: int = 400  ## Sperre für die eben übernommene Person (feste Anzahl gilt sofort); Tests schalten sie ab
 
 var _view: Dictionary = {}
@@ -39,6 +41,7 @@ var _next_id: String = ""
 var _selection: Array = []
 var _random: Variant = null  ## Zufallsvorschlag (Personen) der offenen Spielleiterwahl; nur bis zur nächsten Änderung
 var _loki_mode: Variant = null  ## Loki: gewählte Art der Bindung (true = Liebende) vor der Wahl der zwei Personen (nur Bedienzustand)
+var _confirm_until: int = 0  ## bis hierhin (Millisekunden) nimmt die Spielleitung nach „Bestätigen“ nichts Neues an
 var _committed_seat: int = -1  ## zuletzt automatisch übernommene Person (Schutz vor Doppeltippen)
 var _committed_until: int = 0
 var _call_step: String = ""  ## Schritt, dessen Ansage die Karte noch zeigt (der Schritt beginnt mit der ersten Handlung, die Ansage bleibt stehen)
@@ -1151,8 +1154,11 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"confirm_nomination":
 			var nominee := int(_selection[0])
 			var from := _nominator
-			_reset_day_mode()
-			_submit(s.nominate.bind(from, nominee))
+			var seats: Array = _view.get("seats", [])
+			_day_confirm("ui.cockpit.confirm.nominate", {"from": CockpitText.names_of([from], seats), "to": CockpitText.names_of([nominee], seats)},
+				func() -> void:
+					_reset_day_mode()
+					_submit(s.nominate.bind(from, nominee)))
 		&"exec_extra":
 			_exec_extra[str(payload["field"])] = payload["value"]
 			_render()
@@ -1185,8 +1191,9 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"confirm_card_report":
 			var effect_id := _card_effect
 			var person_id := int(_selection[0])
-			_reset_day_mode()
-			_submit(s.card_table_action.bind(effect_id, person_id))
+			_day_confirm("ui.cockpit.confirm.card_report", {"name": CockpitText.names_of([person_id], _view.get("seats", []))}, func() -> void:
+				_reset_day_mode()
+				_submit(s.card_table_action.bind(effect_id, person_id)))
 		&"confirm_execution" when _gm_execute:
 			var payload_gm := {"kind": "execute", "target_id": int(_preview.get("target_id", -1))}
 			payload_gm.merge(_exec_extra)
@@ -1203,17 +1210,21 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"confirm_execution":
 			var target := int(_preview.get("target_id", -1))
 			var extra := _exec_extra.duplicate()
-			_reset_day_mode()
-			_submit(s.decide_execution.bind(target, extra))
+			_day_confirm("ui.cockpit.confirm.execute", {"name": CockpitText.names_of([target], _view.get("seats", []))},
+				func() -> void:
+					_reset_day_mode()
+					_submit(s.decide_execution.bind(target, extra)))
 		&"no_execution":
-			_reset_day_mode()
-			_submit(s.decide_execution.bind(-1))
+			_day_confirm("ui.cockpit.confirm.no_execution", {}, func() -> void:
+				_reset_day_mode()
+				_submit(s.decide_execution.bind(-1)))
 		&"confirm_name_wolf":
 			var necro := _necromancer
 			var named := int(_selection[0])
-			_reset_day_mode()
-			_submit(s.name_wolf.bind(necro, named))
-			status_message_requested.emit("ui.cockpit.status.saved_secretly")
+			_day_confirm("ui.cockpit.confirm.name_wolf", {"name": CockpitText.names_of([named], _view.get("seats", []))}, func() -> void:
+				_reset_day_mode()
+				_submit(s.name_wolf.bind(necro, named))
+				status_message_requested.emit("ui.cockpit.status.saved_secretly"))
 		&"end_day":
 			_submit(s.end_day)
 		&"start_night":
@@ -1240,9 +1251,9 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 				func(reason: String) -> void: _submit(s.cancel_prompt.bind(reason)))
 		&"confirm_targets":
 			if _random != null and _same_set(_selection, _random):
-				_answer_chain([s.answer_random.bind((_random as Array).duplicate())])
+				_answer_chain([s.answer_random.bind((_random as Array).duplicate())], true, {"kind": "targets", "ids": (_random as Array).duplicate()})
 			else:
-				_answer_chain([s.answer_targets.bind(_selection.duplicate())])
+				_answer_chain([s.answer_targets.bind(_selection.duplicate())], true, {"kind": "targets", "ids": _selection.duplicate()})
 		&"random_targets":
 			if not _ensure_begun():
 				return
@@ -1250,15 +1261,15 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_selection = (_random as Array).duplicate() if _random != null else []
 			_render()
 		&"decline":
-			_answer_chain([s.answer_targets.bind([])])
+			_answer_chain([s.answer_targets.bind([])], true, {"kind": "decline"})
 		&"clear_selection":
 			_selection.clear()
 			_random = null
 			_render()
 		&"choice":
-			_answer_chain([s.answer_choice.bind(bool(payload["choice"]))])
+			_answer_chain([s.answer_choice.bind(bool(payload["choice"]))], true, {"kind": "choice", "value": bool(payload["choice"])})
 		&"option":
-			_answer_chain([s.answer_option.bind(int(payload["index"]))])
+			_answer_chain([s.answer_option.bind(int(payload["index"]))], true, {"kind": "option", "index": int(payload["index"])})
 		&"prediction_kind":
 			_prediction["kind"] = str(payload["kind"])
 			_prediction["number"] = 0
@@ -1267,7 +1278,7 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_prediction["number"] = int(payload["number"])
 			_render()
 		&"prediction":
-			_answer_chain([s.answer_prediction.bind(str(payload["kind"]), int(payload["number"]))])
+			_answer_chain([s.answer_prediction.bind(str(payload["kind"]), int(payload["number"]))], true, {"kind": "prediction", "pkind": str(payload["kind"]), "number": int(payload["number"])})
 		&"show_card":
 			# „Karte zeigen“ genau einmal: Das Schließen der gezeigten Karte erledigt die Auskunft (kein zweites „Gezeigt“).
 			if not _ensure_begun():
@@ -1324,15 +1335,78 @@ func _commit_selection(eff: Dictionary) -> void:
 	_committed_seat = int(picks.back())
 	_committed_until = Time.get_ticks_msec() + double_tap_msec
 	var actions: Array[Callable] = [s.answer_targets.bind(picks)]
+	var answer := {"kind": "targets", "ids": picks}
 	if CockpitText.asks_bond_mode(eff):
 		actions.append(s.answer_choice.bind(bool(_loki_mode)))
+		answer["mode"] = bool(_loki_mode)
 		_loki_mode = null
-	_answer_chain(actions)
+	_answer_chain(actions, true, answer)
 
 
 ## Antwort auf einen Prompt: der Schritt beginnt bei Bedarf, die Befehle der Kette gehen nacheinander an den Kern. Eine Zusammenfassung
 ## der Waldhexe wird gleich mitbestätigt (jede Antwort gilt sofort). Danach 3 Sekunden „Rückgängig“ (`with_undo`).
-func _answer_chain(actions: Array[Callable], with_undo: bool = true) -> bool:
+func _answer_chain(actions: Array[Callable], with_undo: bool = true, answer: Dictionary = {}) -> bool:
+	if not answer.is_empty() and confirm_actions and not (str(answer["kind"]) == "choice" and str(_effective(_view.get("next", {})).get("answer")) == "ack"):
+		if Time.get_ticks_msec() < _confirm_until:
+			return false  # eben bestätigt: ein zweiter Tipp rutscht nicht durch
+		_ask_answer_confirm(answer, func() -> void: _run_chain(actions, with_undo))
+		return false
+	return _run_chain(actions, with_undo)
+
+
+## Die zweite Bestätigung: Zusammenfassung der Wahl, „Bestätigen“ führt aus, „Zurück“ verwirft die Auswahl. Danach kurz gesperrt.
+func _ask_confirm(message_key: String, values: Dictionary, on_confirm: Callable) -> void:
+	var request := DialogRequest.create("ui.cockpit.confirm.title", message_key, "ui.cockpit.confirm.yes", func() -> void:
+		_confirm_until = Time.get_ticks_msec() + CONFIRM_LOCK_MSEC
+		on_confirm.call())
+	request.cancel_key = "ui.common.back"
+	request.message_values = values
+	request.on_cancel = func() -> void:
+		_selection.clear()
+		_random = null
+		_render()
+	dialog_requested.emit(request)
+
+
+## Tag-Aktionen: gleiche zweite Bestätigung, bei abgeschalteter Bestätigung (Tests) sofort.
+func _day_confirm(message_key: String, values: Dictionary, on_confirm: Callable) -> void:
+	if not confirm_actions:
+		on_confirm.call()
+	elif Time.get_ticks_msec() >= _confirm_until:
+		_ask_confirm(message_key, values, on_confirm)
+
+
+func _ask_answer_confirm(answer: Dictionary, on_confirm: Callable) -> void:
+	var eff := _effective(_view.get("next", {}))
+	var seats: Array = _view.get("seats", [])
+	var owner := str(eff.get("owner", ""))
+	var stage := str(eff.get("stage", ""))
+	var text := ""
+	match str(answer["kind"]):
+		"targets":
+			text = CockpitText.names_of(answer["ids"], seats)
+			if answer.has("mode"):
+				text = "%s: %s" % [tr(CockpitText.action_key("yes" if bool(answer["mode"]) else "no", owner, "mode")), text]
+		"decline":
+			text = tr(CockpitText.action_key("decline", owner, stage))
+		"choice":
+			text = tr(CockpitText.action_key("yes" if bool(answer["value"]) else "no", owner, stage))
+		"option":
+			var options: Array = eff.get("options", [])
+			var index := int(answer["index"])
+			var kind := str(eff.get("option_kind", ""))
+			if index >= 0 and index < options.size():
+				text = tr(CockpitText.card_option_key(kind, str(options[index]))) if kind != "" and kind != "role" else tr(CockpitText.role_name(str(options[index])))
+		"prediction":
+			text = tr("ui.cockpit.card.prediction.value").format({"when": tr("ui.cockpit.card.prediction.%s" % str(answer["pkind"])), "number": int(answer["number"])})
+	var role := str(eff.get("role_id", ""))
+	var head := tr(CockpitText.night_short_key(eff))
+	if role != "" and not bool(eff.get("anonymous_asker", false)):
+		head = "%s · %s" % [tr(CockpitText.role_name(role)), head]
+	_ask_confirm("ui.cockpit.confirm.message", {"what": head, "answer": text}, on_confirm)
+
+
+func _run_chain(actions: Array[Callable], with_undo: bool) -> bool:
 	if not _ensure_begun():
 		_render()
 		return false

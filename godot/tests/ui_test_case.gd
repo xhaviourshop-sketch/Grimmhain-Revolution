@@ -93,6 +93,7 @@ func spawn_shell(size: Vector2i = SIZE_16_10, locale: String = "de", reduced_mot
 		fail("Hauptszene %s fehlt" % MAIN_SCENE)
 		return null
 	CockpitScreen.double_tap_msec = 0  # schnelle Testbedienung; der Doppeltipp-Test schaltet die Sperre selbst ein
+	CockpitScreen.confirm_actions = false  # schnelle Testbedienung; die Tests der zweiten Bestätigung schalten sie selbst ein
 	var scene := load(MAIN_SCENE) as PackedScene
 	if scene == null:
 		fail("Hauptszene %s nicht ladbar" % MAIN_SCENE)
