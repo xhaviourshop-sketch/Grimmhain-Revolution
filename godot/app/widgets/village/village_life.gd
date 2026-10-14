@@ -288,6 +288,7 @@ func _update_flock_schedule() -> void:
 
 func _on_timer() -> void:
 	if enabled and not reduced and (night or day):
+		_build()  # nachts kommt der erste Schwarm vor jeder Tagesansicht: Flugwurzel und Bilder müssen existieren
 		_start_flock()
 		_update_process()
 
