@@ -334,6 +334,12 @@ static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int =
 				_fit_label(column, "ui.cockpit.show.value", {"value": entry}, &"ShowValueLabel", name_size).name = "ShowName"
 			return
 		"role":
+			if NightArt.TEXT_CARD_ROLES.has(str(line["value"])):
+				var box := role_text_card(str(line["value"]), name_size)
+				box.name = "ShowRoleTextCard"
+				box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+				column.add_child(box)
+				return
 			if not ResourceLoader.exists(RoleCardImage.path_for(str(line["value"]))):
 				# Kein Kartenbild für diese Rolle: der Rollenname als Text (Rückfall).
 				_fit_label(column, CockpitText.role_name(str(line["value"])), {}, &"ShowValueLabel", name_size).name = "ShowRoleName"
@@ -531,12 +537,19 @@ static func role_card(card: Dictionary) -> Control:
 	var person := _fit_label(column, "ui.cockpit.show.value", {"value": str(card.get("name", ""))}, &"ShowValueLabel", BARE_NAME_SIZE)
 	person.name = "ShowName"
 	person.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var image := RoleCardImage.new()
-	image.name = "RoleCardPicture"
-	image.role_id = str(card["role_id"])
-	image.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(image)
+	if NightArt.TEXT_CARD_ROLES.has(str(card["role_id"])):
+		var text_card := role_text_card(str(card["role_id"]), ThemeTokens.FONT_SHOW)
+		text_card.name = "RoleTextCard"
+		text_card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		text_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		column.add_child(text_card)
+	else:
+		var image := RoleCardImage.new()
+		image.name = "RoleCardPicture"
+		image.role_id = str(card["role_id"])
+		image.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		column.add_child(image)
 	var tap := _button("CloseRoleButton" if bool(card.get("confirmed", false)) else "ConfirmRoleButton", "", GrimmButton.Kind.SECONDARY)
 	tap.set_meta(&"grove_skinned", true)
 	tap.accessibility_name = TranslationServer.translate("ui.cockpit.roles.close")
@@ -724,6 +737,24 @@ static func _window_layer(node_name: String, width: float, tall: bool) -> Array:
 
 
 ## Beschriftung, die ihre Schrift an den Platz anpasst (FitLabel), mittig.
+## Textkasten statt Kartenbild (Rollen in `NightArt.TEXT_CARD_ROLES`): Rollenname, Team und Kurztext der Rolle im Fensterstil.
+static func role_text_card(role_id: String, name_size: int) -> PanelContainer:
+	var panel := PanelContainer.new()
+	GroveWindow.frame(panel)
+	var column := VBoxContainer.new()
+	column.alignment = BoxContainer.ALIGNMENT_CENTER
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(column)
+	var name_key := String(CockpitText.role_name(role_id))
+	var team := _fit_label(column, "ui.faction.%s" % String(SetupRoleCatalog.faction_of(StringName(role_id))), {}, &"ShowCaptionLabel", ThemeTokens.FONT_SHOW_CAPTION)
+	team.name = "RoleTextTeam"
+	_fit_label(column, name_key, {}, &"ShowValueLabel", name_size).name = "RoleTextName"
+	var ability := _fit_label(column, name_key.trim_suffix(".name") + ".short", {}, &"ShowCaptionLabel", ThemeTokens.FONT_SHOW_CAPTION)
+	ability.name = "RoleTextAbility"
+	ability.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	return panel
+
+
 static func _fit_label(parent: Node, key: String, values: Dictionary, variation: StringName, max_size: int) -> FitLabel:
 	var label := FitLabel.new()
 	label.theme_type_variation = variation

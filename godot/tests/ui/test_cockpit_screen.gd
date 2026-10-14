@@ -244,8 +244,7 @@ func test_show_card_contains_only_positive_list() -> void:
 	assert_true(find_node(screen, "ShowLayer") != null, "gezeigte Karte offen")
 	assert_false((find_node(screen, "Layout") as Control).is_visible_in_tree(), "Cockpit vollständig ersetzt")
 	var shown := _visible_texts(shell)
-	var picture := find_node(screen, "ShowRoleCard") as RoleCardImage
-	assert_true(picture != null and picture.role_id == "dorfbewohner", "gezeigtes Ergebnis: Kartenbild des Dorfbewohners")
+	assert_true(find_node(screen, "ShowRoleTextCard") != null and find_node(screen, "ShowRoleCard") == null, "gezeigtes Ergebnis: Textkasten des Dorfbewohners statt Kartenbild")
 	assert_true(find_node(screen, "DetailContent") == null, "Karte mit Rollenbild ohne Fenster drumherum (Feedback 10)")
 	assert_true(find_node(screen, "ShowName") != null, "oben der Name der Person")
 	assert_eq(visible_buttons(find_node(screen, "ShowLayer")).size(), 1, "darunter nur „Fertig“")

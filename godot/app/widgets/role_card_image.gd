@@ -29,6 +29,11 @@ static func path_for(id: String) -> String:
 	return "res://assets/cards/%s/%s.webp" % [lang, id.replace("-", "_")]
 
 
+## Ob diese Rolle ein gemaltes Kartenbild zeigt; sonst steht ein Textkasten (`CockpitLayers.role_text_card`).
+static func has_picture(id: String) -> bool:
+	return not NightArt.TEXT_CARD_ROLES.has(id) and ResourceLoader.exists(path_for(id))
+
+
 func _refresh() -> void:
 	if role_id == "":
 		texture = null

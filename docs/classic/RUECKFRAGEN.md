@@ -137,3 +137,6 @@ Unklar, nicht abgeschaltet (bitte entscheiden):
 - **Gemalte Rollenkarten** `godot/assets/cards/de|en/dorfbewohner.webp` und `classic_dorfbewohner.webp` (deine Kartenbilder, mit Text im Bild). Sie erscheinen bei „Karte zeigen“ und in der Kartenansicht (`RoleCardImage`, `cockpit_layers.gd`). Ohne sie hätte die Person keine Karte zum Vorzeigen. Alternative: für den Dorfbewohner einen reinen Textkasten statt der Karte zeigen. Kartenbilder werden nie verändert.
 - **Teamsymbol „Dorf“** (`godot/assets/night/team/team-village.png`, `godot/assets/ui/team_tile_village.webp`): zeigt die Fraktion, nicht die Rolle. Unverändert.
 - **Rollenbilder anderer Dorf-Rollen** (z. B. Mädchen, Bärenführer, Drei Brüder) sind eigene Rollen und bleiben.
+
+## Block G: Dorfbewohner als Textkasten, gewählte Lesart, Alternative
+Gewählt: Dorfbewohner und Classic-Dorfbewohner zeigen überall, wo die Rollenkarte als Bild käme (Karte zeigen, Rollenkarte der Spielleitung, Vorbereitung, Spielende), einen Textkasten im Fensterstil mit Team „Dorf“, Rollenname und Kurztext der Rolle (sie haben keine Fähigkeit). Schalter: `NightArt.TEXT_CARD_ROLES`; die Kartenbilder unter `assets/cards/` bleiben liegen. Alternative: Der Kurztext entfällt und der Kasten zeigt nur Team und Namen, oder die Karten werden ganz ausgeblendet.

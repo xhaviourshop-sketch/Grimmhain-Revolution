@@ -268,3 +268,22 @@ func test_entry_button_is_disabled_without_game_and_has_both_languages() -> void
 		var po := po_entries(path)
 		for key: String in ["ui.cockpit.tools.roles", "ui.cockpit.roles.heading", "ui.cockpit.roles.progress", "ui.cockpit.action.show_roles"]:
 			assert_true(po.has(key) and str(po[key]) != "", "%s: %s" % [path.get_file(), key])
+
+
+## Block G: Dorfbewohner und Classic-Dorfbewohner zeigen einen Textkasten (Name, Team, Kurztext), alle anderen Rollen weiter das Kartenbild.
+func test_villager_cards_are_text_boxes_others_keep_pictures() -> void:
+	var shell := await spawn_shell()
+	if shell == null:
+		return
+	for role: String in ["dorfbewohner", "classic-dorfbewohner", "waldhexe", "classic-seherin"]:
+		var layer := CockpitLayers.role_card({"name": "Anna", "role_id": role, "confirmed": false})
+		shell.add_child(layer)
+		await frames(2)
+		var texty := role.ends_with("dorfbewohner")
+		assert_eq(find_node(layer, "RoleTextCard") != null, texty, "%s: Textkasten" % role)
+		assert_eq(find_node(layer, "RoleCardPicture") != null, not texty, "%s: Kartenbild" % role)
+		if texty:
+			var shown := " ".join(text_controls(layer).map(func(c: Control) -> String: return text_of(c)))
+			assert_true(shown.contains("Dorf") and shown.contains("Dorfbewohner"), "%s: Name und Team" % role)
+		layer.queue_free()
+

@@ -13,6 +13,10 @@ const BADGE_KINDS: Array[String] = ["protected", "poisoned", "marked", "silenced
 ## Die Bilddateien bleiben liegen.
 const IMAGELESS_ROLES: Array[String] = ["dorfbewohner", "classic-dorfbewohner"]
 
+## Rollen, deren Rollenkarte (Karte zeigen, Rollenkarte der Vorbereitung) als Textkasten statt als gemaltes Kartenbild erscheint (Markus 14.10.2026, Block G).
+## Die Kartenbilder unter `assets/cards/` bleiben liegen.
+const TEXT_CARD_ROLES: Array[String] = ["dorfbewohner", "classic-dorfbewohner"]
+
 static var _cache: Dictionary = {}
 
 
