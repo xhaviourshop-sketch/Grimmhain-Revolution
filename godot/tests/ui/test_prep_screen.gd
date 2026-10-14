@@ -212,3 +212,24 @@ func test_dragging_a_name_onto_another_swaps_the_two_seats() -> void:
 	swapped[2] = ids[0]
 	assert_eq(_order(setup), swapped, "Plätze 1 und 3 getauscht, alle anderen bleiben")
 	assert_eq(((setup.call("view") as Dictionary)["persons"] as Array).map(func(p: Dictionary) -> int: return int(p["number"])).slice(0, 3), [1, 2, 3], "Nummern folgen dem Platz")
+
+
+## F-04: Mehrere eindeutige Namen mit Enter gehen direkt in die Liste; nur Unklares (Doppelname) öffnet die Prüfliste.
+func test_several_clear_names_are_added_directly_and_unclear_ones_open_the_review() -> void:
+	var shell := await spawn_shell(SIZE_4_3)
+	if shell == null:
+		return
+	var screen := await open_new_game(shell)
+	var setup := setup_of(shell)
+	await press(_next(screen))
+	var input := find_node(screen, "NameInput") as LineEdit
+	input.text = "Anna, Ben und Cora"
+	input.text_submitted.emit(input.text)
+	await frames(2)
+	assert_eq(((setup.call("view") as Dictionary)["persons"] as Array).size(), 3, "drei Namen direkt übernommen")
+	assert_true(find_node(screen, "NameReviewCard") == null or not (find_node(screen, "NameReviewCard") as Control).is_visible_in_tree(), "keine Prüfliste bei klaren Namen")
+	input.text = "Dirk, Anna"
+	input.text_submitted.emit(input.text)
+	await frames(2)
+	assert_eq(((setup.call("view") as Dictionary)["persons"] as Array).size(), 3, "Doppelname: noch nichts übernommen")
+	assert_true((find_node(screen, "NameReviewCard") as Control).is_visible_in_tree(), "Prüfliste bei Doppelname")

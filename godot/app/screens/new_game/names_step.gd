@@ -639,6 +639,15 @@ func _on_add_pressed() -> void:
 func _submit_single() -> void:
 	var spoken := PersonNameRules.split_spoken(_name_input.text)
 	if spoken.size() > 1:
+		if _entries_are_clear(spoken):
+			var imported := _setup.import_names("
+".join(spoken))
+			if imported.ok:  # eindeutige Namen gehen direkt in die Liste, die Prüfliste bleibt für Unklares
+				_set_name_text("")
+				_show_imported(imported)
+				_update_controls(_last_view)
+				_focus_name_input()
+				return
 		_open_review(spoken)
 		return
 	var result := _setup.add_person(_name_input.text)
@@ -668,6 +677,21 @@ func _focus_name_input() -> void:
 	_name_input.grab_focus()
 	if OS.has_feature("web"):
 		_name_input.edit()
+
+
+## Alle Namen eindeutig (kein Doppelname untereinander oder zur Liste, kein leerer Name) und es ist Platz: dann ohne Prüffenster übernehmen.
+func _entries_are_clear(entries: Array[String]) -> bool:
+	var seen: Dictionary = {}
+	for person: Dictionary in (_last_view.get("persons", []) as Array):
+		seen[str(person.get("name", "")).strip_edges().to_lower()] = true
+	if entries.size() > int(_last_view.get("player_count", 0)) - (_last_view.get("persons", []) as Array).size():
+		return false
+	for entry: String in entries:
+		var key := entry.strip_edges().to_lower()
+		if key == "" or seen.has(key):
+			return false
+		seen[key] = true
+	return true
 
 
 func _open_review(entries: Array[String]) -> void:
