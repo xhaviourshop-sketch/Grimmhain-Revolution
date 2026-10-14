@@ -124,3 +124,16 @@ Die Tetanus-Lesart oben ist ersetzt: Stirbt der Ritter nachts durch die Werwölf
 
 ## Überlange Listen scrollen (Markus, 14.10.2026, Block F)
 Abweichung von der Dauerregel "nie scrollen müssen": Die Seiten bleiben so geschnitten, dass sie normalerweise passen und blättern ("Davor/Danach"). Ist eine Seite trotzdem höher als der Platz (Handy hochkant, lange Namen), scrollt sie, statt unten abgeschnitten zu enden. Die Tests des Regelbuchs prüfen deshalb "Ende erreichbar" statt "kein Scrollbereich".
+
+## Dorfbewohner-Bilder abgeschaltet (14.10.2026, Auftrag Markus)
+
+Die Anzeige ist abgeschaltet, keine Datei ist gelöscht. Rückfall ist reiner Text. Amor, Hexe, Seherin und alle anderen Rollensymbole bleiben.
+
+Abgeschaltet:
+- **Menschengruppen im Dorfleben** (Kapuzenfiguren im Kreis auf dem Pflaster, Tagbild des Dorfes): `godot/app/widgets/village/village_life.gd`, Konstante `SHOW_FOLK := false`. Das Bild `godot/assets/village/crowd.webp` bleibt liegen. Galgen und Fledermaus-/Krähenschwarm laufen weiter. Gefunden als wahrscheinlicher Ursprung deines Screenshots, ich habe das Bild gegen die Datei abgeglichen.
+- **Rollenbild auf der Aktionskarte** (Medaillon), **kleines Symbol in der Nachtleiste**, **Symbol auf der Karte (Kopfzeile)**, **Symbol in der Rollenkachel der Vorbereitung und im Rollenmedaillon**, **Symbol in der Rollenvorschau**: alles für `dorfbewohner` und `classic-dorfbewohner`, zentral in `godot/app/widgets/night/night_art.gd` (`IMAGELESS_ROLES`; `role_art`, `role_symbol`, `has_emblem` liefern nichts). Betroffene Bilddateien (bleiben liegen): `godot/assets/night/role-art/dorfbewohner.webp`, `godot/assets/night/role-circle/classic-dorfbewohner.webp`, `godot/assets/night/role-circle/dorfbewohner.webp`, `godot/assets/night/emblems/dorfbewohner.png`.
+
+Unklar, nicht abgeschaltet (bitte entscheiden):
+- **Gemalte Rollenkarten** `godot/assets/cards/de|en/dorfbewohner.webp` und `classic_dorfbewohner.webp` (deine Kartenbilder, mit Text im Bild). Sie erscheinen bei „Karte zeigen“ und in der Kartenansicht (`RoleCardImage`, `cockpit_layers.gd`). Ohne sie hätte die Person keine Karte zum Vorzeigen. Alternative: für den Dorfbewohner einen reinen Textkasten statt der Karte zeigen. Kartenbilder werden nie verändert.
+- **Teamsymbol „Dorf“** (`godot/assets/night/team/team-village.png`, `godot/assets/ui/team_tile_village.webp`): zeigt die Fraktion, nicht die Rolle. Unverändert.
+- **Rollenbilder anderer Dorf-Rollen** (z. B. Mädchen, Bärenführer, Drei Brüder) sind eigene Rollen und bleiben.

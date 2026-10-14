@@ -174,7 +174,10 @@ func test_main_action_sits_in_the_dock_and_secondary_actions_in_the_card() -> vo
 			break
 		await press(_ring(shell).call("token_for", int((next["allowed_ids"] as Array)[0])) as BaseButton)
 	var primary := card.call("primary_button") as Control
-	assert_true(primary != null and dock.is_ancestor_of(primary), "Hauptaktion im Dock (%s)" % str(primary))
+	# Block B (14.10.2026): Antwortschritte tragen alle Antworten im Fenster; das Dock bleibt ohne Hauptaktion.
+	var window := find_node(screen, "Actions") as Control
+	assert_true(primary != null and window.is_ancestor_of(primary) and not dock.is_ancestor_of(primary), "Hauptantwort in der Reihe im Fenster (%s)" % str(primary))
+	assert_eq(dock.find_children("*", "BaseButton", true, false).size(), 0, "Dock ohne Hauptaktion")
 
 
 ## Bei fester Anzahl ist der Zielplatz mit den Pfeilen verborgen; ein Tipp auf den Kreis übernimmt die Wahl sofort (Rückgängig-Leiste).
@@ -368,8 +371,16 @@ func test_every_catalog_role_has_card_and_circle_art() -> void:
 	var missing: Array[String] = []
 	for id: Variant in RoleCatalog.ROLES:
 		var key := NightArt.image_key(String(id))
-		if NightArt.role_art(String(id)) == null:
+		if NightArt.texture("role-art/%s.webp" % key) == null:
 			missing.append("role-art/%s" % key)
 		if NightArt.texture("role-circle/%s.webp" % key) == null:
 			missing.append("role-circle/%s" % key)
 	assert_eq(missing, [], "fehlende Rollenbilder")
+
+
+## Dorfbewohner und Classic-Dorfbewohner zeigen nirgends ein Bild (Markus 14.10.2026), die Dateien bleiben; Amor und Hexe behalten ihr Symbol.
+func test_villager_roles_have_no_image_shown() -> void:
+	for id: String in ["dorfbewohner", "classic-dorfbewohner"]:
+		assert_true(NightArt.role_art(id) == null and NightArt.role_symbol(id) == null and not NightArt.has_emblem(id), "%s ohne Bild" % id)
+	for id: String in ["classic-amor", "classic-hexe", "classic-seherin"]:
+		assert_true(NightArt.role_symbol(id) != null, "%s behält sein Symbol" % id)

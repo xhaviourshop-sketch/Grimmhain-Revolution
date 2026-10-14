@@ -8,6 +8,7 @@ const FLYERS := preload("res://assets/village/flyers.webp")
 const CROWD := preload("res://assets/village/crowd.webp")
 const GALLOWS := preload("res://assets/village/gallows.webp")
 
+const SHOW_FOLK := false  ## Menschengruppen am Platzrand: abgeschaltet (Markus 14.10.2026, schlecht gemacht), Bild und Daten bleiben; Galgen und Schwarm laufen weiter
 const FADE_SECONDS := 2.0
 const FLOCK_WAIT_MIN := 30.0
 const FLOCK_WAIT_MAX := 90.0
@@ -206,7 +207,7 @@ func _build() -> void:
 	add_child(_crowd_root)
 	var spot_rng := RandomNumberGenerator.new()
 	spot_rng.seed = 4711
-	for v: Vector4 in CROWD_SPOTS:
+	for v: Vector4 in (CROWD_SPOTS if SHOW_FOLK else [] as Array[Vector4]):
 		var f := Folk.new()
 		f.spot = Vector2(v.x, v.y)
 		f.flip = v.w > 0.5

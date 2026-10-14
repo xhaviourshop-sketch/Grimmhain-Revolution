@@ -9,6 +9,10 @@ const ROOT := "res://assets/night/"
 ## Abzeichenarten, für die es ein Bild gibt (siehe NightBoardView.KINDS und „dead“).
 const BADGE_KINDS: Array[String] = ["protected", "poisoned", "marked", "silenced", "special", "dead"]
 
+## Rollen ohne Bild: Die Anzeige von Dorfbewohner und Classic-Dorfbewohner ist abgeschaltet (Markus 14.10.2026), überall steht dann nur der Text.
+## Die Bilddateien bleiben liegen.
+const IMAGELESS_ROLES: Array[String] = ["dorfbewohner", "classic-dorfbewohner"]
+
 static var _cache: Dictionary = {}
 
 
@@ -51,6 +55,8 @@ static func image_key(role_id: String) -> String:
 ## Rollensymbol der Nachtleiste (klein): immer das Silbersymbol. Fehlt es, steht vorerst das Kreisbild der Rolle entsättigt und
 ## abgedunkelt im Medaillon, damit die Leiste ruhig wirkt. Das gemalte Rollenbild gehört nur auf die große Aktionskarte (`role_art`).
 static func role_symbol(role_id: String) -> Texture2D:
+	if IMAGELESS_ROLES.has(role_id):
+		return null
 	var key := image_key(role_id)
 	var emblem := texture("emblems/%s.png" % key)
 	return emblem if emblem != null else _muted_circle(key)
@@ -79,9 +85,13 @@ static func _muted_circle(key: String) -> Texture2D:
 
 ## Rollenbild der Aktionskarte (vorläufig laut PILOT-STATUS) oder null.
 static func role_art(role_id: String) -> Texture2D:
+	if IMAGELESS_ROLES.has(role_id):
+		return null
 	return texture("role-art/%s.webp" % image_key(role_id))
 
 
 ## Ob die Datei eines Rollensymbols als Emblem (nicht als Kreisbild) vorliegt.
 static func has_emblem(role_id: String) -> bool:
+	if IMAGELESS_ROLES.has(role_id):
+		return false
 	return ResourceLoader.exists(ROOT + "emblems/%s.png" % role_id)
