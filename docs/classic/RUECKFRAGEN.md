@@ -121,3 +121,6 @@ Erwartet: `godot/assets/night/role-circle/classic-urwolf.webp` und `classic-weis
 
 ## Ritter, neu festgelegt (Markus, 14.10.2026)
 Die Tetanus-Lesart oben ist ersetzt: Stirbt der Ritter nachts durch die Werwölfe, wählt die Spielleitung am Morgen nach der Todesmeldung Links oder Rechts, der nächste lebende Wolf in dieser Richtung stirbt sofort (siehe FAEHIGKEITEN.md, Nr. 14). Offen geblieben: Bei nur einem lebenden Wolf entfällt die Frage und er stirbt (gewählt statt zwei gleicher Knöpfe).
+
+## Überlange Listen scrollen (Markus, 14.10.2026, Block F)
+Abweichung von der Dauerregel "nie scrollen müssen": Die Seiten bleiben so geschnitten, dass sie normalerweise passen und blättern ("Davor/Danach"). Ist eine Seite trotzdem höher als der Platz (Handy hochkant, lange Namen), scrollt sie, statt unten abgeschnitten zu enden. Die Tests des Regelbuchs prüfen deshalb "Ende erreichbar" statt "kein Scrollbereich".

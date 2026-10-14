@@ -124,13 +124,16 @@ static func _list_row(node_name: String) -> PanelContainer:
 	return row
 
 
-## Seitenweise Liste ohne Scrollen: baut nur die sichtbare Seite aus den Daten, „Davor“ und „Danach“ blättern.
+## Seitenweise Liste: baut nur die sichtbare Seite aus den Daten, „Davor“ und „Danach“ blättern. Die Seitenhöhe ist nur geschätzt;
+## ragt eine Seite trotzdem über den Platz, scrollt sie (Finger und Mausrad), unten mit Abstand und dem „mehr“-Hinweis (Block F).
 class Pager extends VBoxContainer:
 	var _items: Array = []
 	var _build: Callable
 	var _pages: Array = []  ## je Seite die Indizes der Einträge
 	var _index: int = 0
 	var _body: VBoxContainer = null
+	var _scroll: ScrollContainer = null
+	var _room: float = 0.0
 	var _prev: GrimmButton = null
 	var _next: GrimmButton = null
 	var _status: GrimmLabel = null
@@ -141,6 +144,7 @@ class Pager extends VBoxContainer:
 		name = "Pager"
 		_items = items
 		_build = build
+		_room = room
 		size_flags_vertical = Control.SIZE_EXPAND_FILL
 		add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 		var page: Array = []
@@ -163,8 +167,22 @@ class Pager extends VBoxContainer:
 		_body = VBoxContainer.new()
 		_body.name = "PageBody"
 		_body.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
-		_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		add_child(_body)
+		_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_scroll = ScrollContainer.new()
+		_scroll.name = "PageScroll"
+		_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		add_child(_scroll)
+		var pad := MarginContainer.new()
+		pad.name = "PagePad"
+		pad.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_scroll.add_child(pad)
+		pad.add_child(_body)
+		var hint := ScrollHint.new()
+		hint.bind(_scroll)
+		add_child(hint)
+		pad.minimum_size_changed.connect(_fit_scroll)
+		_scroll.resized.connect(_fit_scroll)
 		if _pages.size() > 1:
 			var bar := HBoxContainer.new()
 			bar.name = "PageBar"
@@ -180,6 +198,14 @@ class Pager extends VBoxContainer:
 			bar.add_child(_next)
 			add_child(bar)
 		show_page(_pages.size() - 1 if last else 0)
+
+	## Der Scrollbereich füllt den freien Platz des Fensters; nur ein kleines Mindestmaß bleibt, damit er nie auf null fällt und das Fenster nie
+	## über den Bildschirm wächst.
+	func _fit_scroll() -> void:
+		var pad := _body.get_parent() as MarginContainer
+		var wanted: float = _body.get_combined_minimum_size().y
+		pad.add_theme_constant_override(&"margin_bottom", ThemeTokens.SPACE_L if wanted > _scroll.size.y + 1.0 else 0)  # Luft unter der letzten Zeile nur beim Scrollen
+		_scroll.custom_minimum_size.y = minf(wanted, minf(_room, 3.0 * LIST_ROW_HEIGHT))
 
 	func page_count() -> int:
 		return _pages.size()
@@ -210,7 +236,9 @@ class Pager extends VBoxContainer:
 			_next.disabled = _index == _pages.size() - 1
 			_status.format_values = {"page": _index + 1, "total": _pages.size()}
 			_status.text_key = "ui.cockpit.log.page"
+		_scroll.scroll_vertical = 0
 		GroveWindow.dress(self)
+		_fit_scroll.call_deferred()
 
 
 ## Teamsymbol vor einem gezeigten Ergebnis (DA-101): Zahl der Wölfe, Wolf ja/nein, Einzelsieg.

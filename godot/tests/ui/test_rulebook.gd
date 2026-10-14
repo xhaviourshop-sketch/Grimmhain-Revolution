@@ -196,7 +196,14 @@ func _check_chapter_layout(book: RuleBook, label: String) -> void:
 	var viewport := Rect2(Vector2.ZERO, Vector2(tree.root.size))
 	var host := find_node(book, "RulebookChapterHost") as Control
 	assert_true(inside(rect_of(book), viewport), "%s: Regelbuch im Fenster (%s)" % [label, rect_of(book)])
-	assert_true(host.find_children("*", "ScrollContainer", true, false).is_empty(), "%s: nichts scrollt" % label)
+	for scroll: Node in host.find_children("*", "ScrollContainer", true, false):  # Block F: zu hohe Seiten scrollen, das Ende ist erreichbar
+		var s := scroll as ScrollContainer
+		s.scroll_vertical = int(s.get_v_scroll_bar().max_value)
+		await frames(2)
+		var last := (s.get_child(0).get_child(0) as Control).get_child(-1) as Control
+		assert_true(last.get_global_rect().end.y <= s.get_global_rect().end.y + 1.0, "%s: Ende der Seite erreichbar" % label)
+		s.scroll_vertical = 0
+		await frames(2)
 	for name: String in ["RulebookBackToTocButton", "RulebookLanguageButton", "RulebookPrevButton", "RulebookNextButton", "RulebookPositionLabel"]:
 		var c := find_node(book, name) as Control
 		assert_true(c != null and c.is_visible_in_tree() and inside(rect_of(c), viewport), "%s: %s sichtbar im Fenster" % [label, name])
@@ -257,7 +264,6 @@ func test_longest_chapter_is_longer_than_the_area() -> void:
 	book.open_chapter(longest)
 	await frames(3)
 	assert_true(book.page_count() > 1, "langes Kapitel %d braucht mehrere Seiten (%d)" % [longest + 1, book.page_count()])
-	assert_true(find_node(book, "RulebookChapterHost").find_children("*", "ScrollContainer", true, false).is_empty(), "keine Scrollfläche")
 
 
 # --- Cockpit -------------------------------------------------------------------------------------------------------
