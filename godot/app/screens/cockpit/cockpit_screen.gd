@@ -1282,11 +1282,7 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"begin_step":
 			_submit(s.begin_next_step)
 		&"show_notice":
-			var notice_id := int(payload.get("notice_id", -1))
-			open_layer(&"notice")
-			_after_close = func() -> void:
-				if _answer_chain([s.ack_notice.bind(notice_id)], false):
-					_card.show_undo()
+			_show_notice(int(payload.get("notice_id", -1)))
 		&"show_roles":
 			open_layer(&"roles")
 		&"undo_last":
@@ -1507,7 +1503,18 @@ func _run_chain(actions: Array[Callable], with_undo: bool) -> bool:
 	if with_undo:
 		_card.show_undo()
 	_auto_advance()
+	var after: Dictionary = context.session.cockpit_view().get("next", {})
+	if str(after.get("kind")) == "notice" and str(after.get("notice_kind")) == NoticeRules.LOKI_BOND:
+		_show_notice.call_deferred(int(after.get("notice_id", -1)))  # die Hinweiskarte der Liebenden oder Rivalen öffnet sich nach der Bestätigung von selbst
 	return true
+
+
+## Zeigt die Hinweiskarte; Schließen bestätigt den Hinweis.
+func _show_notice(notice_id: int) -> void:
+	open_layer(&"notice")
+	_after_close = func() -> void:
+		if _answer_chain([context.session.ack_notice.bind(notice_id)], false):
+			_card.show_undo()
 
 
 func _witch_summary_open() -> bool:

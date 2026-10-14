@@ -168,6 +168,9 @@ func step(plan: Dictionary) -> bool:
 			plan_loki_mode = bool(plan.get("loki/mode", false))
 			return await answer(plan.get(plan_key(n)))
 		"notice":
+			await frames(2)
+			if find_node(shell, "CloseLayerButton") != null:  # die Hinweiskarte der Bindung öffnet sich nach der Antwort von selbst
+				return await tap_button("CloseLayerButton", shell)
 			return await show_and_close("ShowNoticeButton")
 		"end_night":
 			return await tap_button("EndNightButton")

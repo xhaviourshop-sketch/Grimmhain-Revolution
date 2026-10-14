@@ -78,6 +78,8 @@ func _act(shell: Control) -> bool:
 		return true
 	var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 	if str(next["kind"]) == "notice":
+		if await _tap(shell, "CloseLayerButton"):
+			return true  # die Hinweiskarte der Bindung hat sich nach der Antwort von selbst geöffnet
 		return await _tap(shell, "ShowNoticeButton") and await _tap(shell, "CloseLayerButton")  # Schließen bestätigt den Hinweis
 	# Bei einer Ja/Nein-Frage (Waldhexe: Opfer als Karte) ist „Karte zeigen“ nur eine Zusatzoption, nicht der nötige Schritt.
 	if str(next.get("answer", "")) != "choice" and await _tap(shell, "ShowCardButton"):

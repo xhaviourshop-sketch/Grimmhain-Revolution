@@ -156,7 +156,7 @@ func test_unconfirmed_notice_stays_reachable_and_confirmed_one_is_not_asked_agai
 		return
 	assert_true(await run({"loki/targets": [3, 5], "loki/mode": true}, until_kind("notice")), "bis zum ersten Hinweis")
 	var first := int(next()["notice_id"])
-	await tap_button("ShowNoticeButton")
+	await frames(3)  # die Hinweiskarte der Bindung öffnet sich nach der Antwort von selbst
 	assert_true(find_node(screen(), "NoticeLayer") != null or screen().get("_layer") != null, "Hinweiskarte offen")
 	var before := await restart()
 	assert_true(find_node(screen(), "NoticeLayer") == null, "private Karte nach dem Neustart nicht offen")
