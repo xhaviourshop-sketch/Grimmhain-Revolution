@@ -57,6 +57,10 @@ func _main_action_on_left(shell: Control) -> bool:
 	return action < _rect(shell, "InstructionCard").get_center().x
 
 
+func _main_action_x(shell: Control) -> float:
+	return rect_of(find_node(_screen(shell), "ActionCard").call("primary_button") as Control).get_center().x
+
+
 func _seat_rects(shell: Control) -> Array[Rect2]:
 	var out: Array[Rect2] = []
 	for t: Variant in find_node(_screen(shell), "SeatRing").call("tokens"):
@@ -167,7 +171,7 @@ func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> voi
 	var state_before := str(session_of(shell).call("state_hash"))
 	var ring_before := _rect(shell, "SeatRingArea")
 	var seats_before := _seat_rects(shell)
-	assert_false(_main_action_on_left(shell), "rechtshändig: Hauptaktion rechts")
+	var action_x := _main_action_x(shell)  # Block B: Antworten stehen mittig im Fenster, die Hand verschiebt sie nicht mehr
 	assert_true(find_node(_screen(shell), "SideColumn") == null, "keine dauerhafte Seitenspalte")
 	var texts_before := {}
 	for c: Control in text_controls(_screen(shell)):
@@ -175,7 +179,7 @@ func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> voi
 			texts_before[str(c.get_path())] = text_of(c)
 	settings_of(shell).call("set_left_handed", true)
 	await frames(3)
-	assert_true(_main_action_on_left(shell), "linkshändig: Hauptaktion links")
+	assert_eq(_main_action_x(shell), action_x, "linkshändig: Antwortreihe bleibt mittig an derselben Stelle")
 	assert_eq(_rect(shell, "SeatRingArea"), ring_before, "Sitzkreisfläche unverändert")
 	assert_eq(_seat_rects(shell), seats_before, "Sitzkreis nicht gespiegelt: jeder Platz an derselben Stelle")
 	var ids_after: Array = (session_of(shell).call("cockpit_view") as Dictionary)["seats"].map(func(s: Dictionary) -> Variant: return s["person_id"])
@@ -188,10 +192,10 @@ func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> voi
 	# Zurück: gleiche Ausgangsgeometrie, kein doppeltes Umschalten.
 	settings_of(shell).call("set_left_handed", true)
 	await frames(2)
-	assert_true(_main_action_on_left(shell), "gleicher Wert ohne Wirkung")
+	assert_eq(_main_action_x(shell), action_x, "gleicher Wert ohne Wirkung")
 	settings_of(shell).call("set_left_handed", false)
 	await frames(3)
-	assert_false(_main_action_on_left(shell), "zurück auf rechts")
+	assert_eq(_main_action_x(shell), action_x, "zurück auf rechts: unverändert")
 	assert_eq(_seat_rects(shell), seats_before, "Plätze nach dem Rückwechsel unverändert")
 
 
