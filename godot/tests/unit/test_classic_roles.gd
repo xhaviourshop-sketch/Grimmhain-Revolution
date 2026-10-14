@@ -57,7 +57,9 @@ func test_amor_binds_lovers_without_asking_the_kind() -> void:
 	assert_true(s.pending_prompt == null, "keine Frage nach der Bindungsart")
 
 
-func test_witch_heal_reveals_no_role() -> void:
+## Nachtauftrag 14.10.2026: Die Classic-Hexe sieht das Opfer wie die Waldhexe als Rollenkarte (ersetzt „erfährt die Rolle nicht“).
+## Vor der Entscheidung steht nur die Rolle zum Zeigen (ohne Namen), nach der Rettung zusätzlich der Name.
+func test_witch_sees_the_victim_card_and_the_name_after_healing() -> void:
 	var s := _night_one()
 	var witch_index := s.night_plan.find(&"waldhexe:5")
 	while s.next_night_step < witch_index or s.pending_prompt != null:
@@ -70,9 +72,16 @@ func test_witch_heal_reveals_no_role() -> void:
 		if s == null:
 			return
 	s = _apply(s, Command.begin_step(StepQueue.next_step_id(s)))
+	var heal_view := PromptView.build(s, s.pending_prompt)
+	var shown: Array = heal_view["show"]
+	assert_eq(shown.size(), 1, "vor der Entscheidung genau eine Zeile zum Zeigen")
+	assert_eq(str(shown[0]["kind"]), "role", "die Rolle des Opfers")
+	assert_eq(str(shown[0]["value"]), "classic-jaeger", "Opfer ist der Jäger")
 	s = _apply(s, Command.answer_choice(s.pending_prompt.id, "heal", true))
-	assert_false(s.pending_prompt.partial.has("victim_role"), "keine Rolle des Opfers")
-	assert_ne(String(s.pending_prompt.stage), "reveal", "keine Offenlegung")
+	assert_eq(String(s.pending_prompt.stage), "reveal", "nach der Rettung die Offenlegung")
+	assert_eq(String(s.pending_prompt.partial["victim_role"]), "classic-jaeger", "Rolle des Opfers")
+	var kinds: Array = PromptView.build(s, s.pending_prompt)["show"].map(func(l: Dictionary) -> String: return str(l["kind"]))
+	assert_true(kinds.has("person") and kinds.has("role"), "Name und Karte zum Zeigen")
 
 
 ## Kurzer Durchlauf (Phase 1): Vorbereitung mit Akt Classic und Empfehlung, Start über die Anwendungsschicht, Nacht 1 bis zur ersten

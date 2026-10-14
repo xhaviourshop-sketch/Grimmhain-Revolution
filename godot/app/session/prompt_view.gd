@@ -161,6 +161,10 @@ static func info_lines(s: GameState, p: PendingPrompt) -> Array:
 
 ## Positivliste für die gezeigte Karte; leer, wenn in dieser Stufe nichts zu zeigen ist.
 static func show_lines(s: GameState, p: PendingPrompt) -> Array:
+	if p.owner == PendingPrompt.OWNER_WITCH and p.stage == &"heal":
+		# Das Rudelopfer als Rollenkarte, noch ohne Namen: erst mit der Rettung erfährt die Hexe, wer es ist (Nachtauftrag 14.10.2026).
+		var victim := DictRead.get_int(p.partial, "victim_id", GameState.NO_TARGET)
+		return [_line(s, "victim_role", String(s.players[victim].role_id))] if s.players.has(victim) else []
 	var shown_stage := p.stage == &"shown" or (p.owner == PendingPrompt.OWNER_WITCH and p.stage == &"reveal")
 	if not shown_stage or not SHOW_KEYS.has(p.owner):
 		return []

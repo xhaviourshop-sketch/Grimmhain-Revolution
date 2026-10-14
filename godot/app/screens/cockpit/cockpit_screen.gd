@@ -1521,7 +1521,7 @@ func open_layer(kind: StringName) -> void:
 			_layer = CockpitLayers.log_drawer(context.session.log_lines())
 		&"show":
 			var next: Dictionary = _view.get("next", {})
-			_layer = CockpitLayers.show_card(str(next.get("role_id", "")), next.get("show", []))
+			_layer = CockpitLayers.show_card(str(next.get("role_id", "")), next.get("show", []), str(next.get("owner", "")) == "waldhexe")
 			_layout.visible = false  # die gezeigte Karte ersetzt das Cockpit vollständig
 		&"roles":
 			_layer = CockpitLayers.role_list(context.session.role_show_list())

@@ -610,6 +610,9 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 			var equal := owner == "loki" and stage == "mode"
 			buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, stage), GrimmButton.Kind.SECONDARY if equal else GrimmButton.Kind.PRIMARY, &"choice", {"choice": true}))
 			buttons.append(_button("NoButton", CockpitText.action_key("no", owner, stage), GrimmButton.Kind.SECONDARY, &"choice", {"choice": false}))
+			if owner == "waldhexe" and stage == "heal" and not (next.get("show", []) as Array).is_empty():
+				# Das Rudelopfer als Rollenkarte für die Hexe (ohne Namen), vor der Entscheidung.
+				buttons.append(_button("ShowCardButton", "ui.cockpit.action.show_card", GrimmButton.Kind.SECONDARY, &"show_card"))
 		"ack":
 			if not (next.get("show", []) as Array).is_empty() and not OPEN_GROUP_OWNERS.has(owner):
 				buttons.append(_button("ShowCardButton", "ui.cockpit.action.show_card", GrimmButton.Kind.PRIMARY, &"show_card"))

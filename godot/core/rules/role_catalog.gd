@@ -342,7 +342,7 @@ const CLASSIC_FLOETENSPIELER := &"classic-floetenspieler"
 const CLASSIC_BAERENFUEHRER := &"classic-baerenfuehrer"
 
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
-##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers
+##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers (kein Eintrag mehr in Gebrauch; Classic zeigt die Rolle wie das Grundspiel)
 ##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
 ##   curse_forever Classic-Alte: Lynch lässt alle Dorf-Personen ihre Fähigkeiten dauerhaft verlieren (Bogen: „verlieren alle aus Gram ihre Fähigkeiten“), keine Dauerfrage
 ##   true_role     Classic-Seherin: erfährt die tatsächliche Rolle auch bei Wölfen (Bogen: „wahre Identität“)
@@ -363,7 +363,7 @@ const CLASSIC_ROLES := {
 	CLASSIC_DORFBEWOHNER: {"mechanic": DORFBEWOHNER, "max_copies": UNLIMITED},
 	CLASSIC_WERWOLF: {"mechanic": WERWOLF},
 	CLASSIC_SEHERIN: {"mechanic": ORAKEL, "true_role": true},
-	CLASSIC_HEXE: {"mechanic": WALDHEXE, "witch_reveal": false},
+	CLASSIC_HEXE: {"mechanic": WALDHEXE},  # sieht das Opfer wie die Waldhexe als Rollenkarte (Nachtauftrag 14.10.2026, ersetzt witch_reveal=false)
 	CLASSIC_JAEGER: {"mechanic": SENSENTRAEGER, "optional_shot": true},
 	CLASSIC_ENGEL: {"mechanic": SCHUTZENGEL},
 	CLASSIC_MAEDCHEN: {"mechanic": DORFBEWOHNER},

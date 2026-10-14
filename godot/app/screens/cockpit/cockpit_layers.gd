@@ -216,6 +216,7 @@ class Pager extends VBoxContainer:
 ## Teamsymbol vor einem gezeigten Ergebnis (DA-101): Zahl der Wölfe, Wolf ja/nein, Einzelsieg.
 const SHOW_TEAMS := {"wolf_count": &"wolves", "is_wolf": &"wolves", "solo_count": &"solo", "solo": &"solo"}
 const BARE_BUTTON_HEIGHT := 48.0  ## „Fertig“ unter der fensterlosen Karte: niedrig, damit das Bild rund 90 % der Höhe bekommt
+const BELOW_NAME_SIZE := 44  ## Name unter der Karte (Hexe nach der Rettung): groß, die Karte gibt dafür etwas Höhe ab
 const BARE_NAME_SIZE := 22  ## Name über der fensterlosen Karte: klein, das Bild nimmt die Höhe
 const SHOW_ICON := 96.0
 const SHOW_MARK := 112.0
@@ -241,12 +242,12 @@ class ResultMark extends Control:
 ## Karte für die handelnde Person: Titel (Rolle der Handelnden) und ausschließlich die freigegebenen Werte. Erhält nur
 ## diese beiden Angaben, nie den ganzen Prompt (Wahrheit, Teilantworten). Scrollt nie: Namen und Titel passen ihre Schrift an,
 ## das Rollenbild nimmt den übrigen Platz, Zeichen und Zahlen stehen in einer Reihe.
-static func show_card(role_id: String, lines: Array) -> Control:
+static func show_card(role_id: String, lines: Array, name_below: bool = false) -> Control:
 	if lines.is_empty():
 		return null
 	var tall := lines.any(func(line: Dictionary) -> bool: return str(line["kind"]) == "role")
 	if tall:
-		return _bare_show_card(lines)
+		return _bare_show_card(lines, name_below)
 	var layer := _window_layer("ShowLayer", 600.0, tall)
 	var root: Control = layer[0]
 	var column: VBoxContainer = layer[1]
@@ -262,7 +263,7 @@ static func show_card(role_id: String, lines: Array) -> Control:
 
 ## Karte mit Rollenbild ohne Fenster (Ausnahme von der Fensterregel, MARKE.md): Nachtgrund, oben klein der Name der Person, das Kartenbild
 ## nimmt fast die ganze Höhe, darunter nur „Fertig“.
-static func _bare_show_card(lines: Array) -> Control:
+static func _bare_show_card(lines: Array, name_below: bool = false) -> Control:
 	var root := _full_rect("ShowLayer")
 	root.add_child(BlurBackdrop.new())
 	var margin := MarginContainer.new()
@@ -274,14 +275,14 @@ static func _bare_show_card(lines: Array) -> Control:
 	column.name = "BareContent"
 	column.add_theme_constant_override(&"separation", 2)
 	margin.add_child(column)
-	var order := ["person", "persons", "role"]
+	var order := ["role", "person", "persons"] if name_below else ["person", "persons", "role"]  # Hexe: der Name steht groß unter der Karte
 	var sorted: Array = lines.duplicate()
 	sorted.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		var ia := order.find(str(a["kind"]))
 		var ib := order.find(str(b["kind"]))
 		return (ia if ia >= 0 else order.size()) < (ib if ib >= 0 else order.size()))
 	for line: Dictionary in sorted:
-		_show_line(column, line, BARE_NAME_SIZE)
+		_show_line(column, line, BELOW_NAME_SIZE if name_below else BARE_NAME_SIZE)
 	var done := _button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY)
 	done.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	done.custom_minimum_size.y = BARE_BUTTON_HEIGHT
@@ -305,6 +306,10 @@ static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int =
 				_fit_label(column, "ui.cockpit.show.value", {"value": entry}, &"ShowValueLabel", name_size).name = "ShowName"
 			return
 		"role":
+			if not ResourceLoader.exists(RoleCardImage.path_for(str(line["value"]))):
+				# Kein Kartenbild für diese Rolle: der Rollenname als Text (Rückfall).
+				_fit_label(column, CockpitText.role_name(str(line["value"])), {}, &"ShowValueLabel", name_size).name = "ShowRoleName"
+				return
 			var card := RoleCardImage.new()
 			card.name = "ShowRoleCard"
 			card.role_id = str(line["value"])
