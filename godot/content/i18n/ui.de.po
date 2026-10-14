@@ -10068,3 +10068,6 @@ msgstr "{names} sind verflucht"
 
 msgid "ui.cockpit.card.wolves_marked"
 msgstr "Werwölfe tragen den Feuerring."
+
+msgid "ui.cockpit.confirm.mode_targets"
+msgstr "{mode}: {names}"

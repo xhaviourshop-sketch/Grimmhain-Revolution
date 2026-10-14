@@ -30,9 +30,9 @@ func test_new_charm_through_the_cockpit() -> void:
 		return
 	assert_true(await run({}, _until_step("rattenfaenger")), "bis zum Rattenfänger")
 	assert_true(find_node(screen(), "DecoyLine") == null, "echter Aufruf, kein Tarnaufruf")
+	await tap_button("PipeTwoButton")  # erst „Wie viele verzaubern?“, dann gilt die feste Anzahl sofort
 	await tap_seat(4)
 	await tap_seat(5)
-	await tap_button("ConfirmTargetsButton")  # 1 bis 2 Personen: erst „Weiter“
 	assert_eq(str(next().get("notice_kind")), "piper_new", "zuerst der Hinweis an die neu Verzauberten")
 	await show_and_close("ShowNoticeButton")  # Karte zeigen, Schließen bestätigt den Hinweis
 	var n := next()

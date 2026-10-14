@@ -255,7 +255,9 @@ func _render_once(combo: String, next: Dictionary) -> void:
 	match str(next["answer"]):
 		"targets":
 			# Feste Anzahl wird beim Tippen sofort übernommen (kein Bestätigen); Verzicht nur, wo die Anzahl 0 zulässt.
-			if not CockpitText.auto_commit(next):
+			if CockpitText.asks_pipe_count(next):
+				expected = ["PipeOneButton", "PipeTwoButton"]  # Flötenspieler: erst „1 oder 2“
+			elif not CockpitText.auto_commit(next):
 				expected = ["ConfirmTargetsButton"]
 			if (next["counts"] as Array).has(0):
 				expected.append("DeclineButton")

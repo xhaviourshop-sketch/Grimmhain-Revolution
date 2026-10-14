@@ -1113,7 +1113,7 @@ func _on_seat_tapped(person_id: int) -> void:
 		if not _ensure_begun():
 			return
 		next = _view.get("next", {})
-		eff = next
+		eff = _effective(next)
 	var high := int(eff.get("max", 0))
 	if _selection.has(person_id):
 		_selection.erase(person_id)
@@ -1416,7 +1416,7 @@ func _ask_answer_confirm(answer: Dictionary, on_confirm: Callable) -> void:
 		"targets":
 			text = CockpitText.names_of(answer["ids"], seats)
 			if answer.has("mode"):
-				text = "%s: %s" % [tr(CockpitText.action_key("yes" if bool(answer["mode"]) else "no", owner, "mode", str(eff.get("role_id", "")))), text]
+				text = tr("ui.cockpit.confirm.mode_targets").format({"mode": tr(CockpitText.action_key("yes" if bool(answer["mode"]) else "no", owner, "mode", str(eff.get("role_id", "")))), "names": text})
 		"decline":
 			text = tr(CockpitText.action_key("decline", owner, stage))
 		"choice":

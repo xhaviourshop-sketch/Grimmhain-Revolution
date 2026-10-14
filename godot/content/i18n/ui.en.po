@@ -10068,3 +10068,6 @@ msgstr "{names} are cursed"
 
 msgid "ui.cockpit.card.wolves_marked"
 msgstr "Werewolves wear the fire ring."
+
+msgid "ui.cockpit.confirm.mode_targets"
+msgstr "{mode}: {names}"
