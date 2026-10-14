@@ -852,7 +852,7 @@ func _render() -> void:
 	elif kind == "day" and _day_mode != "":
 		_mark_day_mode(next)
 	elif str(eff.get("kind")) == "prompt" and str(eff.get("answer")) == "targets":
-		_ring.set_marking(true, eff.get("allowed_ids", []), _selection, eff.get("actor_ids", []))
+		_ring.set_marking(true, _knight_dir_ids(eff) if eff.has("knight_dirs") else eff.get("allowed_ids", []), _selection, eff.get("actor_ids", []))
 	elif kind == "prompt" or kind == "begin_step":
 		_ring.set_marking(false, [], [], next.get("actor_ids", []))
 	else:
@@ -1070,6 +1070,11 @@ func _same_set(a: Array, b: Variant) -> bool:
 	return a.all(func(x: Variant) -> bool: return (b as Array).has(x))
 
 
+func _knight_dir_ids(eff: Dictionary) -> Array:
+	var dirs: Dictionary = eff["knight_dirs"]
+	return [int(dirs["left"]), int(dirs["right"])]
+
+
 func _on_seat_tapped(person_id: int) -> void:
 	if person_id == _committed_seat and Time.get_ticks_msec() < _committed_until:
 		return  # Doppeltippen auf die eben übernommene Person wählt nicht schon im nächsten Schritt
@@ -1104,6 +1109,11 @@ func _on_seat_tapped(person_id: int) -> void:
 	if str(eff.get("kind")) != "prompt" or str(eff.get("answer")) != "targets":
 		if str(_view.get("phase", "")) != "NIGHT":
 			_peek_marks(person_id)  # S-05: tagsüber zeigt ein Tipp die Abzeichen der Person kurz
+		return
+	if eff.has("knight_dirs"):
+		# Classic-Ritter: nur der Wolf links und der Wolf rechts sind wählbar, ein Tipp darauf ist dasselbe wie der Links-/Rechts-Knopf.
+		if _knight_dir_ids(eff).has(person_id):
+			_answer_chain([context.session.answer_targets.bind([person_id])], true, {"kind": "targets", "ids": [person_id]})
 		return
 	if CockpitText.asks_bond_mode(eff) and _loki_mode == null:
 		return  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
