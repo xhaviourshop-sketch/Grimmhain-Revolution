@@ -101,9 +101,7 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	assert_true(_texts(shell).contains("Cara klagt an"), "Nominierende Person gewählt")
 	assert_true(_seat(shell, 3).disabled, "Cara kann sich nicht selbst nominieren")
 	await press(_seat(shell, 1))
-	var confirm := find_button(current_screen(shell), "ConfirmNominationButton")
-	confirm.pressed.emit()
-	confirm.pressed.emit()
+	assert_true(find_node(current_screen(shell), "ConfirmNominationButton") == null, "kein Zwischenknopf: der Tipp auf die angeklagte Person führt aus (hier ohne Rückfrage)")
 	await frames(3)
 	var noms: Array = _view(shell)["next"]["nominations"]
 	assert_eq(noms.size(), 1, "genau eine Nominierung trotz Doppeltippen")
@@ -117,10 +115,8 @@ func test_nomination_execution_end_day_and_next_night() -> void:
 	await _press(shell, "CancelModeButton")
 	await _press(shell, "ExecuteButton")
 	assert_true(_seat(shell, 2).disabled, "nicht Nominierte nicht wählbar")
-	await press(_seat(shell, 1))
-	assert_true(find_node(current_screen(shell), "RevealButton") == null, "Prüfkarte ohne Verdecken (Fenster-Diät)")
-	assert_true(_texts(shell).contains("Keine Besonderheit: Anna stirbt"), "Vorschau des Regelkerns")
-	await _press(shell, "ConfirmExecutionButton")  # ohne Rückfrage: die Wahl ist schon getroffen
+	await press(_seat(shell, 1))  # ohne Besonderheit: der Tipp führt aus (hier ohne Rückfrage), keine Prüfkarte mit „Hinrichten“
+	assert_true(find_node(current_screen(shell), "ConfirmExecutionButton") == null, "kein Zwischenknopf")
 	assert_false(_seat(shell, 1).get("alive"), "Anna hingerichtet")
 	assert_true(_texts(shell).contains("„Heute gestorben: Anna (Werwolf).“"), "Runde ohne Wiederbelebung: Ansage mit Rolle (DI-01)")
 	await _press(shell, "EndDayButton")
@@ -141,7 +137,6 @@ func test_accused_may_accuse_back_by_tapping() -> void:
 	await press(_seat(shell, 1))
 	assert_false(_seat(shell, 3).disabled, "die Anklägerin steht wieder zur Wahl")
 	await press(_seat(shell, 3))
-	await _press(shell, "ConfirmNominationButton")
 	await frames(3)
 	assert_eq((_view(shell)["next"]["nominations"] as Array).size(), 2, "beide Anklagen stehen")
 
@@ -268,10 +263,10 @@ func test_undo_drops_open_execution_check() -> void:
 	if shell == null:
 		return
 	await _quiet_night(shell)
-	assert_true((session_of(shell).call("nominate", 3, 1) as CommandResult).ok, "Nominierung")
+	assert_true((session_of(shell).call("nominate", 3, 8) as CommandResult).ok, "Nominierung")
 	await frames(2)
 	await _press(shell, "ExecuteButton")
-	await press(_seat(shell, 1))
+	await press(_seat(shell, 8))  # Der Weise: Pflichtfrage, also bleibt die Prüfkarte
 	assert_true(find_button(current_screen(shell), "ConfirmExecutionButton").is_visible_in_tree(), "Prüfkarte offen")
 	await _press(shell, "GmButton")
 	await _press(shell, "UndoButton")
@@ -291,7 +286,6 @@ func test_dock_undo_is_visible_after_nomination() -> void:
 	await _press(shell, "NominateButton")
 	await press(_seat(shell, 3))
 	await press(_seat(shell, 1))
-	await _press(shell, "ConfirmNominationButton")
 	await frames(3)
 	var dock := find_node(shell, "DockUndoButton") as Control
 	var bar := find_node(shell, "UndoBar") as Control

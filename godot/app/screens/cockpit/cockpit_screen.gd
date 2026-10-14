@@ -944,8 +944,38 @@ func _seat_ids_where(flag: String) -> Array:
 func _select_execution_target(person_id: int) -> void:
 	_reset_day_mode()
 	_preview = context.session.execution_preview(person_id)
+	if not _gm_execute and _execution_is_plain(_preview):
+		# Nichts zu warnen oder zu fragen: der Tipp öffnet gleich die eine Rückfrage, keine Prüfkarte mit „Hinrichten“ davor.
+		var plain_target := person_id
+		_preview = {}
+		_day_mode = "execute"
+		_render()
+		_day_confirm("ui.cockpit.confirm.execute", {"name": CockpitText.names_of([plain_target], _view.get("seats", []))},
+			func() -> void:
+				_reset_day_mode()
+				_submit(context.session.decide_execution.bind(plain_target, {})))
+		return
 	_day_mode = "execution_check"
 	_render()
+
+
+## Hinrichtung ohne Warnung, Pflichtfrage oder Kartenwirkung (Gegenstück: Prüfkarte mit „Hinrichten“).
+static func _execution_is_plain(preview: Dictionary) -> bool:
+	for key: String in ["redirected", "needs_cerberus", "needs_sage", "card_reveal", "card_runner_up", "card_shifted", "card_random_wolf"]:
+		if bool(preview.get(key, false)):
+			return false
+	return true
+
+
+## Anklage übernehmen: die Auswahl ist die angeklagte Person; die eine Rückfrage „X klagt Y an?“ führt aus.
+func _confirm_nomination() -> void:
+	var nominee := int(_selection[0])
+	var from := _nominator
+	var seats: Array = _view.get("seats", [])
+	_day_confirm("ui.cockpit.confirm.nominate", {"from": CockpitText.names_of([from], seats), "to": CockpitText.names_of([nominee], seats)},
+		func() -> void:
+			_reset_day_mode()
+			_submit(context.session.nominate.bind(from, nominee)))
 
 
 ## Die Zielperson darf gewechselt werden, solange nichts enthüllt oder abgefragt wurde und es keine Spielleiterkorrektur ist.
@@ -1092,7 +1122,11 @@ func _on_seat_tapped(person_id: int) -> void:
 			"execute":
 				_select_execution_target(person_id)
 				return
-			"nominate_to", "name_wolf", "card_report":
+			"nominate_to":
+				_selection = [person_id]
+				_confirm_nomination()  # der Tipp auf die angeklagte Person öffnet gleich die eine Rückfrage
+				return
+			"name_wolf", "card_report":
 				_selection = [] if _selection.has(person_id) else [person_id]
 			"execution_check":
 				if bool(_preview.get("card_runner_up", false)) and not _exec_extra.has("runner_up_id"):
@@ -1175,13 +1209,7 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"gm_field":
 			_ask_status_field(int(payload["index"]))
 		&"confirm_nomination":
-			var nominee := int(_selection[0])
-			var from := _nominator
-			var seats: Array = _view.get("seats", [])
-			_day_confirm("ui.cockpit.confirm.nominate", {"from": CockpitText.names_of([from], seats), "to": CockpitText.names_of([nominee], seats)},
-				func() -> void:
-					_reset_day_mode()
-					_submit(s.nominate.bind(from, nominee)))
+			_confirm_nomination()
 		&"exec_extra":
 			_exec_extra[str(payload["field"])] = payload["value"]
 			_render()
@@ -1233,10 +1261,9 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"confirm_execution":
 			var target := int(_preview.get("target_id", -1))
 			var extra := _exec_extra.duplicate()
-			_day_confirm("ui.cockpit.confirm.execute", {"name": CockpitText.names_of([target], _view.get("seats", []))},
-				func() -> void:
-					_reset_day_mode()
-					_submit(s.decide_execution.bind(target, extra)))
+			# Der Knopf der Prüfkarte (mit Warnung oder Pflichtfrage) ist hier schon die eine Bestätigung, keine zweite Rückfrage.
+			_reset_day_mode()
+			_submit(s.decide_execution.bind(target, extra))
 		&"no_execution":
 			_day_confirm("ui.cockpit.confirm.no_execution", {}, func() -> void:
 				_reset_day_mode()

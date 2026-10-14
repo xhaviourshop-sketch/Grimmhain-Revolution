@@ -255,13 +255,15 @@ func day(plan: Dictionary) -> bool:
 			await tap_button("CerberusDefend%s" % ("Yes" if bool(plan["cerberus"]) else "No"))
 		if plan.has("sage"):
 			await tap_button("SageCurse%d" % int(plan["sage"]))
+		if live("ConfirmExecutionButton") == null:
+			return true  # ohne Besonderheit führt der Tipp auf die Person schon aus
 		return await tap_button("ConfirmExecutionButton")
 	var pair: Array = plan.get("nominate", [])
 	if not pair.is_empty() and not (n.get("nominations", []) as Array).any(func(x: Dictionary) -> bool: return int(x["nominee_id"]) == int(pair[1])):
 		await tap_button("NominateButton")
 		await tap_seat(int(pair[0]))
 		await tap_seat(int(pair[1]))
-		return await tap_button("ConfirmNominationButton")
+		return true  # der Tipp auf die angeklagte Person führt aus (Rückfrage nur bei eingeschalteter zweiter Bestätigung)
 	return await tap_button("NoExecutionButton")
 
 

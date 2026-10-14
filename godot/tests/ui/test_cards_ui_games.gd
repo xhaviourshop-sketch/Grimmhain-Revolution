@@ -125,7 +125,7 @@ func _play_day(shell: Control, next: Dictionary) -> bool:
 		if tapped == 0:
 			return false
 		await _tap_seats(shell, 1)
-		return await _tap(shell, "ConfirmNominationButton")
+		return true  # der Tipp auf die angeklagte Person führt aus
 	if not await _tap(shell, "ExecuteButton"):
 		return await _tap(shell, "NoExecutionButton")
 	await _tap_seats(shell, 1)

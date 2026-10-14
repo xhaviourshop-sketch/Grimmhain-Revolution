@@ -953,12 +953,7 @@ func _day_nominate(context: Dictionary) -> void:
 		_actions([_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
 		return
 	_text("ui.cockpit.card.day.nominate.to", {"nominator": CockpitText.names_of([from], seats)}, &"SectionLabel")
-	var selection: Array = context.get("selection", [])
-	if not selection.is_empty():
-		_text("ui.cockpit.card.day.nominate.summary", {"nominator": CockpitText.names_of([from], seats), "nominee": CockpitText.names_of(selection, seats)}, &"SectionLabel")
-	var confirm := _button("ConfirmNominationButton", "ui.cockpit.action.confirm_nomination", GrimmButton.Kind.PRIMARY, &"confirm_nomination")
-	confirm.disabled = selection.is_empty()
-	_actions([confirm, _button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
+	_actions([_button("CancelModeButton", "ui.common.cancel", GrimmButton.Kind.SECONDARY, &"cancel_mode")])
 
 
 func _day_pick(context: Dictionary, heading: String, instruction: String, confirm_name: String, confirm_key: String, action: StringName) -> void:

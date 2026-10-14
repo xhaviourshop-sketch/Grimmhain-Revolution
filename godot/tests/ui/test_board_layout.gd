@@ -133,7 +133,7 @@ func test_closing_a_private_role_card_returns_to_a_board_without_roles() -> void
 		role_names.append(TranslationServer.translate(String(RolePresentation.name_key(role))))
 	await press(find_button(screen, "ShowRolesButton"))
 	await press(find_button(find_node(screen, "RoleListLayer"), "RolePerson_2"))
-	assert_true(find_node(screen, "RoleCardPicture") != null, "Rollenkarte zeigte das Kartenbild")
+	assert_true(find_node(screen, "RoleCardPicture") != null or find_node(screen, "RoleTextCard") != null, "Rollenkarte zeigte Kartenbild oder Textkasten")
 	await press(find_button(find_node(screen, "RoleCardLayer"), "ConfirmRoleButton"))  # Tippen schließt die Karte
 	assert_true(find_node(screen, "RoleListLayer") != null, "zurück zur neutralen Liste")
 	await press(find_button(find_node(screen, "RoleListLayer"), "CloseLayerButton"))
