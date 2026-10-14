@@ -21,6 +21,8 @@ var _last_view: Dictionary = {}
 var _bar_person: int = 0
 
 var _proposal: GrimmButton
+var _applied_hint: GrimmLabel  ## „Empfehlung übernommen“, solange die Auswahl der Empfehlung entspricht
+var _auto_applied: bool = false  ## die Empfehlung kam von selbst beim Öffnen und wurde noch nicht angefasst
 var _tabs: HBoxContainer
 var _tabs_host: HBoxContainer  ## Träger der Reiter in der Kopfzeile des Hosts
 var _header_row: Control
@@ -70,6 +72,9 @@ func _notification(what: int) -> void:
 
 func entered() -> void:
 	_show_page(Page.POOL)
+	# Die Empfehlung ist beim Öffnen schon gewählt (leere oder unangetastete automatische Auswahl); eigene Änderungen bleiben.
+	if int(_setup.view()["roles"]["total"]) == 0 or _auto_applied:
+		_auto_applied = _setup.apply_suggestion().ok
 	_render(_setup.view())
 
 
@@ -138,9 +143,13 @@ func _header() -> Control:
 	var row := HBoxContainer.new()
 	row.name = "RolesHeader"
 	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_L)
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(spacer)
+	_applied_hint = GrimmLabel.new()
+	_applied_hint.name = "AppliedHintLabel"
+	_applied_hint.text_key = "ui.prep.roles.applied"
+	_applied_hint.theme_type_variation = &"MutedLabel"
+	_applied_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_applied_hint.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(_applied_hint)
 	_proposal = GrimmButton.new()
 	_proposal.name = "ProposalButton"
 	_proposal.kind = GrimmButton.Kind.SECONDARY
@@ -303,6 +312,7 @@ func _build_bar() -> PanelContainer:
 
 func _render(view: Dictionary) -> void:
 	_last_view = view
+	_applied_hint.visible = bool((view["roles"] as Dictionary).get("is_suggestion", false))
 	var roles: Dictionary = view["roles"]
 	var manual := is_manual()
 	_tabs.visible = manual
@@ -388,6 +398,7 @@ func _show_page(page_id: Page) -> void:
 
 ## Kachel angetippen: gewählte Rolle ganz abwählen (alle Kopien, ausdrücklich ohne Rückfrage), sonst eine Kopie wählen.
 func _on_role_toggled(role: StringName) -> void:
+	_auto_applied = false
 	var count := int(_last_view["roles"]["counts"][String(role)])
 	if count <= 0:
 		_setup.add_role(role)
@@ -398,6 +409,7 @@ func _on_role_toggled(role: StringName) -> void:
 
 ## − oder + an einer Kachel mit Zähler; − bei einer Kopie wählt die Rolle ab.
 func _on_count_step(role: StringName, delta: int) -> void:
+	_auto_applied = false
 	if delta > 0:
 		_setup.add_role(role)
 	else:

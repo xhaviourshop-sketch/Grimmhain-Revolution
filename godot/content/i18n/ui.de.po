@@ -10119,3 +10119,6 @@ msgstr "Keine gespeicherte Partie vorhanden."
 
 msgid "ui.menu.hint.no_game"
 msgstr "Das Cockpit gibt es erst, wenn eine Partie läuft."
+
+msgid "ui.prep.roles.applied"
+msgstr "Empfehlung übernommen. Ändere nur, was nicht passt."

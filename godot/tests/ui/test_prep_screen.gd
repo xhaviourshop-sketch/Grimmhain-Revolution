@@ -120,7 +120,16 @@ func test_role_tiles_start_empty_toggle_count_and_recommendation_fills() -> void
 	await frames(2)
 	await press(_next(screen))
 	var target := int((setup.call("view") as Dictionary)["player_count"])
-	assert_eq(int((setup.call("view") as Dictionary)["roles"]["total"]), 0, "0 Rollen beim Öffnen")
+	assert_eq(int((setup.call("view") as Dictionary)["roles"]["total"]), target, "Empfehlung beim Öffnen schon gewählt (F-03)")
+	assert_true(bool((setup.call("view") as Dictionary)["roles"]["is_suggestion"]), "Auswahl = Empfehlung")
+	assert_true((find_node(screen, "AppliedHintLabel") as Control).is_visible_in_tree(), "Hinweis: Empfehlung übernommen")
+	var chosen: Dictionary = (setup.call("view") as Dictionary)["roles"]["counts"]
+	for id: String in chosen:
+		for i: int in int(chosen[id]):
+			setup.call("remove_role", StringName(id))
+	await frames(2)
+	assert_false((find_node(screen, "AppliedHintLabel") as Control).is_visible_in_tree(), "Hinweis weg, wenn die Auswahl nicht mehr die Empfehlung ist")
+	assert_eq(int((setup.call("view") as Dictionary)["roles"]["total"]), 0, "danach leer für die Einzeltests")
 	assert_eq((find_node(screen, "SelectedCount") as Label).text, "0 / %d Rollen gewählt" % target, "Kopfzeile")
 	assert_eq(find_node(screen, "Warnings").get("visible"), false, "keine Warnungen ohne Rolle")
 	assert_true(find_node(screen, "Tile_dorfbewohner") == null, "kein Dorfbewohner als Kachel")
