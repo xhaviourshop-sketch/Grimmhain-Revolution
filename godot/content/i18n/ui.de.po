@@ -10125,3 +10125,9 @@ msgstr "Empfehlung übernommen. Ändere nur, was nicht passt."
 
 msgid "ui.cockpit.notice.tap_close"
 msgstr "Tippen zum Schließen"
+
+msgid "ui.cockpit.card.white_wolf_rests"
+msgstr "Heute ruht der Weiße Wolf: kein Wolf zum Reißen."
+
+msgid "ui.cockpit.card.group_wake"
+msgstr "Gruppe jetzt wecken, danach „Weiter“."

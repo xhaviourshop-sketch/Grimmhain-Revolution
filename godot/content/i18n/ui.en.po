@@ -10125,3 +10125,9 @@ msgstr "Recommendation applied. Change only what does not fit."
 
 msgid "ui.cockpit.notice.tap_close"
 msgstr "Tap to close"
+
+msgid "ui.cockpit.card.white_wolf_rests"
+msgstr "The White Wolf rests today: no wolf to take."
+
+msgid "ui.cockpit.card.group_wake"
+msgstr "Wake the group now, then Continue."
