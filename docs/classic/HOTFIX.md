@@ -12,3 +12,5 @@ Ja. `main` und Build `da31507` haben denselben Code. Die Korrektur ist eine Zeil
 
 ## So wurde es gefunden
 Im Browser (Chrome, Vorschau) nachgespielt: Abbruch auch ohne jeden Klick, nur durch Warten in der Nacht. Eingegrenzt durch Abschalten von Heulen, Musik und Schwarm: erst ohne Schwarm lief die Nacht über 4 Minuten stabil.
+
+Geprüft nach der Korrektur: Vorschau 3983624 im Chrome, 5 Minuten Nacht ohne Eingriff, keine Fehlermeldung in der Konsole. Vorher brach dieselbe Lage nach 35 bis 85 Sekunden ab. Der Test `test_village_flock_night` schlägt ohne die Korrektur fehl (Zugriff außerhalb des Bereichs) und läuft mit ihr durch.
