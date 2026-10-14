@@ -51,6 +51,7 @@ var _undo_bar: HBoxContainer = null  ## „Übernommen. Rückgängig“ für wen
 var _undo_button: GrimmButton = null
 var _undo_serial: int = 0  ## unterscheidet das laufende vom früheren Einblenden (der Ablauf des alten Timers blendet nichts aus)
 var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel beginnen“ (der Cockpit-Rahmen blendet den Kartenrahmen aus)
+var _window_actions: bool = false  ## Antwortschritt im Cockpit: alle Antworten stehen als mittig zentrierte Reihe im Fenster, im Dock bleibt nur „Rückgängig“
 var _compact: bool = false  ## Mini-Nachtkarte (DA-101): schmal, ohne Scrollen, nur Zeile, Warnungen und Knöpfe
 var _mini_row: HBoxContainer = null  ## obere Zeile der Mini-Karte; dort steht auch der „i“-Knopf
 var _day_card: bool = false  ## Tageskarte nach Inhalt (breiter als die Nachtkarte): lässt die Nominierungsbänder des Rings sichtbar
@@ -68,6 +69,7 @@ const FIT_STEPS: Array[Vector2] = [Vector2(1.0, 104.0), Vector2(0.92, 104.0), Ve
 const COMPACT_SHRINK_STEPS := 2  ## Tageskarte: so viele Schriftschritte, danach fallen Nominierungszeilen weg
 const FIT_MIN_FONT := 12  ## kleinste Schrift des Kartentexts (logische Einheiten)
 const BEGIN_BUTTON_SIZE := Vector2(460.0, 96.0)  ## „Spiel beginnen“: großer Hauptknopf statt der Startkarte (epischer Knopf, `EpicButton`)
+const WINDOW_BUTTON_HEIGHT := 64.0  ## Antworten im Fenster: gleich hoch, auch wenn eine Beschriftung auf zwei Zeilen umbricht
 const CARD_ACTION_MIN_WIDTH := 140.0  ## Nebenaktionen im Cockpit (Schrift kleiner), damit zwei nebeneinander passen
 const STRIP_LINE_FONT := 17  ## Anklagezeilen in der Tagesleiste: klein, damit mehrere untereinander passen
 const STRIP_BUTTON_FONT := 16
@@ -190,6 +192,7 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_slot.visible = false
 	_bare = false
 	_compact = false
+	_window_actions = false
 	_mini_row = null
 	_day_card = false
 	_strip = false
@@ -350,9 +353,9 @@ func action_buttons() -> Array[BaseButton]:
 		for b: Node in secondary_host.get_children():
 			if b is BaseButton and not b.is_queued_for_deletion():
 				out.append(b as BaseButton)
-	if not _left_handed:
+	if not _left_handed and not _window_actions:
 		out.reverse()
-	if _primary != null and is_instance_valid(_primary) and not _primary.is_queued_for_deletion():
+	if _primary != null and is_instance_valid(_primary) and not _primary.is_queued_for_deletion() and not out.has(_primary):
 		out.push_front(_primary)
 	return out
 
@@ -369,6 +372,9 @@ func primary_button() -> GrimmButton:
 
 ## Rechtshänder: Hauptaktion am rechten Ende, also Reihenfolge der Bauart umgekehrt; Linkshänder: wie gebaut.
 func _apply_hand(reorder: bool) -> void:
+	if _window_actions:
+		_actions_box.alignment = FlowContainer.ALIGNMENT_CENTER  # Antworten im Fenster: mittig, in Bauart-Reihenfolge, unabhängig von der Hand
+		return
 	_actions_box.alignment = FlowContainer.ALIGNMENT_BEGIN if _left_handed else FlowContainer.ALIGNMENT_END
 	if reorder:
 		var children := _actions_box.get_children()
@@ -554,6 +560,7 @@ func _begin_step(next: Dictionary, context: Dictionary) -> void:
 
 
 func _prompt(next: Dictionary, context: Dictionary) -> void:
+	_window_actions = primary_host != null
 	if str(next.get("owner")) == "card":
 		_card_prompt(next, context)
 	else:
@@ -1331,7 +1338,9 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 		# Cockpit (Nachtbrett, P5): Hauptaktion rot, Nebenaktionen dunkel, beide im Hain-Rahmen; Nebenaktionen zwei je Reihe.
 		b.custom_minimum_size = Vector2(DAY_ACTION_MIN_WIDTH if _day_card else CARD_ACTION_MIN_WIDTH, ThemeTokens.TOUCH_MIN)
 		GroveSkin.skin_button(b, kind == GrimmButton.Kind.PRIMARY)
-		if kind != GrimmButton.Kind.PRIMARY:
+		if _window_actions:
+			b.custom_minimum_size = Vector2(CARD_ACTION_MIN_WIDTH, WINDOW_BUTTON_HEIGHT)  # alle Antworten gleich hoch, die Hauptantwort bleibt rot hervorgehoben
+		elif kind != GrimmButton.Kind.PRIMARY:
 			b.custom_minimum_size.y = ThemeTokens.TOUCH_MIN  # Nebenaktionen auf der Karte: 48 hoch, zwei Zeilen Schrift passen; spart Platz für den Text
 	else:
 		b.custom_minimum_size.x = maxf(b.custom_minimum_size.x, ACTION_MIN_WIDTH)
@@ -1340,12 +1349,15 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 
 
 func _actions(buttons: Array[Control], all_in_card: bool = false) -> void:
+	all_in_card = all_in_card or _window_actions
 	var in_bar := _strip and secondary_host != null  # Tageskarte ohne Tafel: Nebenknöpfe stehen unten in der Leiste
 	for b: Control in buttons:
 		if (in_bar or not all_in_card) and primary_host != null and _primary == null and b is GrimmButton and (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY:
 			_primary = b as GrimmButton
 			primary_host.add_child(b)
 			continue
+		if _window_actions and _primary == null and b is GrimmButton and (b as GrimmButton).kind == GrimmButton.Kind.PRIMARY:
+			_primary = b as GrimmButton  # Hauptantwort (Fokus), bleibt aber in der Reihe im Fenster
 		if in_bar:
 			if b is GrimmButton:
 				(b as GrimmButton).kind = GrimmButton.Kind.COMPACT  # schmalere Enden und kleinere Schrift als der Standardknopf

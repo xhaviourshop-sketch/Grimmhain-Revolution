@@ -28,7 +28,7 @@ Das Cockpit ist ein Nachtbrett im Stil von `Spielfeld.png` und Mockup V3 (`docs/
 | Nachtleiste | oben, Rollensymbole in Aufrufreihenfolge (`GameSession.night_order`). Auf 4:3 eingeklappt als Chip, ab 16:10 voll; Pfeile blättern |
 | Laschen | links Protokoll, rechts Optionen (Tippfläche 52 px breit). Darunter am rechten Rand „Verbergen“ (Auge) und „Sichtschutz“ (Schloss) |
 | Optionen | Werkzeuge Privat, Rollen zeigen, Spielleitung, Lexikon, Regelbuch, Timer-Einstellungen, „Nacht-Timer anzeigen“, Einstellungen |
-| Aktionskarte | Variante A in der Tischmitte: Rollenbild (nur Nacht), Titel, Anweisung, Zielplatz mit Pfeilen, Nebenaktionen, „i“ für Details. Die Hauptaktion steht als roter Knopf unten rechts („Nächster Schritt“ bzw. die Aktion selbst, z. B. „Auswahl bestätigen“) |
+| Aktionskarte | Variante A in der Tischmitte: Rollenbild (nur Nacht), Titel, Anweisung, Zielplatz mit Pfeilen, Nebenaktionen, „i“ für Details. Bei Antwortschritten stehen alle Antworten als mittig zentrierte Reihe gleich hoher Knöpfe im Fenster, die Hauptantwort rot hervorgehoben; unten bleibt nur „Rückgängig“. Nur Schritte ohne Antwort („Nächster Schritt“) haben den roten Knopf unten rechts |
 | Unten | links Phase und Timer, rechts Rückgängig und Hauptaktion; im Linkshändermodus vertauscht. Ecke oben links: Zurück, Nachtfortschritt, Lebende, Speicherstand |
 
 **Verbergen** blendet alle geheimen Zustände aus: Abzeichen, Statusringe, Hervorhebung der handelnden Person, Nachtleiste und Rollenbild der Karte. Es bleiben Namen, Porträts und tot oder lebendig. Der Zustand ist nur Bedienzustand, wird nicht gespeichert und schaltet die Regeln nicht. **Sichtschutz** (früher „Verbergen“) blendet weiter das ganze Cockpit aus.
