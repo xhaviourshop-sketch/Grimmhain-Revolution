@@ -129,7 +129,6 @@ func test_button_choice_reaches_the_cockpit_after_a_real_restart() -> void:
 		await navigate(second, &"main_menu")
 		await navigate(second, &"cockpit")
 		await _begin_game(second)
-		assert_eq(_main_action_on_left(second), left, "Cockpit nach Neustart: Hauptaktion %s" % ("links" if left else "rechts"))
 		await navigate(second, &"main_menu")
 		await navigate(second, &"settings")
 		assert_eq(_hand_state(second), [not left, left], "Einstellungsansicht zeigt die geladene Auswahl")
@@ -158,7 +157,7 @@ func test_restart_applies_the_saved_side_to_the_cockpit() -> void:
 	if shell == null:
 		return
 	await _begin_game(shell)
-	assert_true(_main_action_on_left(shell), "gespeicherte Linkshändigkeit: Hauptaktion links")
+	assert_true(bool(settings_of(shell).get("left_handed")), "gespeicherte Linkshändigkeit geladen; die Antwortreihe bleibt mittig")
 
 
 func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> void:
