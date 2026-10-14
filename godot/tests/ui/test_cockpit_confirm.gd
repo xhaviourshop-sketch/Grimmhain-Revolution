@@ -73,10 +73,28 @@ func test_yes_no_choice_names_the_answer() -> void:
 		await press(find_node(dialog, "ConfirmButton") as BaseButton)
 		await wait_seconds(0.7)  # Sperre nach „Bestätigen“
 	var before := _count(shell)
-	await press(find_button(screen, "NoButton"))
-	assert_true(dialog.call("is_open"), "auch Ja oder Nein wird zusammengefasst")
+	await press(find_button(screen, "YesButton"))
+	assert_true(dialog.call("is_open"), "Ja wird zusammengefasst")
 	assert_eq(_count(shell), before, "noch nichts gesendet")
 	var message := find_node(dialog, "MessageLabel") as Label
-	assert_true(message.text.contains(tr("ui.cockpit.action.no.waldhexe.heal")), "die gewählte Antwort steht dort: %s" % message.text)
+	assert_true(message.text.contains(tr("ui.cockpit.action.yes.waldhexe.heal")), "die gewählte Antwort steht dort: %s" % message.text)
 	await press(find_node(dialog, "ConfirmButton") as BaseButton)
 	assert_true(_count(shell) > before, "Bestätigen sendet die Antwort")
+
+
+func test_declining_answer_needs_no_confirmation() -> void:
+	var shell := await _shell()
+	if shell == null:
+		return
+	var screen := current_screen(shell)
+	var ring := find_node(screen, "SeatRing")
+	var dialog := shell.call("get_dialog") as Control
+	await press(find_button(screen, "StartNightButton"))
+	for seat: int in [7, 6]:  # Schutz, dann Rudelopfer; jede Wahl braucht ihr Bestätigen
+		await press(ring.call("token_for", seat) as BaseButton)
+		await press(find_node(dialog, "ConfirmButton") as BaseButton)
+		await wait_seconds(0.7)  # Sperre nach „Bestätigen“
+	var before := _count(shell)
+	await press(find_button(screen, "NoButton"))
+	assert_true(not dialog.call("is_open"), "Ablehnen braucht kein Fenster")
+	assert_true(_count(shell) > before, "Ablehnen gilt mit einem Tipp")

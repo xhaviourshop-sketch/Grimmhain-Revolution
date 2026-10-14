@@ -1415,12 +1415,23 @@ func _commit_selection(eff: Dictionary) -> void:
 ## Antwort auf einen Prompt: der Schritt beginnt bei Bedarf, die Befehle der Kette gehen nacheinander an den Kern. Eine Zusammenfassung
 ## der Waldhexe wird gleich mitbestätigt (jede Antwort gilt sofort). Danach 3 Sekunden „Rückgängig“ (`with_undo`).
 func _answer_chain(actions: Array[Callable], with_undo: bool = true, answer: Dictionary = {}) -> bool:
-	if not answer.is_empty() and confirm_actions and not (str(answer["kind"]) == "choice" and str(_effective(_view.get("next", {})).get("answer")) == "ack"):
+	if not answer.is_empty() and confirm_actions and not _declines(answer) and not (str(answer["kind"]) == "choice" and str(_effective(_view.get("next", {})).get("answer")) == "ack"):
 		if Time.get_ticks_msec() < _confirm_until:
 			return false  # eben bestätigt: ein zweiter Tipp rutscht nicht durch
 		_ask_answer_confirm(answer, func() -> void: _run_chain(actions, with_undo))
 		return false
 	return _run_chain(actions, with_undo)
+
+
+## Ablehnende Antworten („Nicht vergiften“, „Nicht jetzt“, „Kein Schuss“) ändern nichts am Spiel: ein Tipp genügt, Rückgängig bleibt. Die Wahl der
+## Bindungsart (Loki, Amor: „Rivalen“, „Hass“) lehnt nichts ab und wird mit den Personen bestätigt.
+func _declines(answer: Dictionary) -> bool:
+	match str(answer["kind"]):
+		"decline":
+			return true
+		"choice":
+			return not bool(answer["value"]) and str(_effective(_view.get("next", {})).get("stage", "")) != "mode"
+	return false
 
 
 ## Die zweite Bestätigung: Zusammenfassung der Wahl, „Bestätigen“ führt aus, „Zurück“ verwirft die Auswahl. Danach kurz gesperrt.
