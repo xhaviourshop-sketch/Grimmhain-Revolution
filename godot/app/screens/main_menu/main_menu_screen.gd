@@ -8,7 +8,7 @@ extends BaseScreen
 @onready var _quit: GrimmButton = %QuitButton
 
 const LOGO := "res://assets/brand/wortmarke.webp"
-const LOGO_HEIGHT := 84.0
+const LOGO_HEIGHT := 44.0
 const LOGO_SHADE_ALPHA := 0.75
 const LOGO_SHADE_SPREAD := Vector2(110.0, 60.0)
 
@@ -46,6 +46,8 @@ func _setup() -> void:
 	_dim_unavailable()
 	_quit.visible = AppPlatform.can_quit_from_menu()
 	(%QuitGroup as Control).visible = _quit.visible
+	($Center/Column/Actions as VBoxContainer).add_theme_constant_override(&"separation", ThemeTokens.SPACE_XS)
+	(%QuitGroup as VBoxContainer).add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)  # enger, damit das Menü mit Erklärsatz in 1024×768 passt
 	_quit.pressed.connect(quit_requested.emit)
 	for node: Node in find_children("*", "GrimmButton", true, false):
 		var button := node as GrimmButton
