@@ -57,6 +57,9 @@ var _mini_row: HBoxContainer = null  ## obere Zeile der Mini-Karte; dort steht a
 var _day_card: bool = false  ## Tageskarte nach Inhalt (breiter als die Nachtkarte): lässt die Nominierungsbänder des Rings sichtbar
 var _strip: bool = false  ## Tageskarte als schmale Leiste oben ohne Tafel; die Knöpfe stehen unten in `secondary_host` bzw. im Dock
 var _max_height: float = 0.0  ## Höchsthöhe der kompakten Karte (freie Ringmitte); 0 = unbegrenzt
+var _morn_key: String = ""  ## Morgenbericht, der gerade in Seiten steht (Nacht und Inhalt); neuer Bericht beginnt wieder auf Seite 1
+var _morn_per_page: int = 0  ## Zeilen je Seite des Morgenberichts, 0 = alles auf einer Seite; sinkt, wenn die kleinste Schrift nicht reicht
+var _morn_page: int = 0
 var _nom_lines: int = MAX_NOMINATION_LINES  ## Nominierungszeilen der Tageskarte; sinkt, wenn die Karte sonst nicht in die Ringmitte passt
 var _nom_count: int = -1
 var _info_gap: bool = true  ## Titel lässt rechts Platz für das „i“ (nur Karten mit Kontexthilfe)
@@ -277,6 +280,14 @@ func _process(_delta: float) -> void:
 	if _compact and _day_card and _nom_lines > 1 and _fit_index >= (FIT_STEPS.size() - 1 if _strip else COMPACT_SHRINK_STEPS):
 		set_process(false)  # Tageskarte: lieber eine Nominierungszeile weniger (die Bänder am Ring zeigen alle) als winzige Schrift
 		_nom_lines -= 1
+		render.call_deferred(_last_next, _last_context)
+		return
+	if _fit_index >= FIT_STEPS.size() - 1 and str(_last_next.get("kind")) == "morning" and _morning_item_count(_last_next) > 1:
+		set_process(false)  # Morgenbericht: lieber in Seiten teilen als scrollen
+		var total := _morning_item_count(_last_next)
+		_morn_per_page = ceili(float(_morn_per_page if _morn_per_page > 0 else total) / 2.0)
+		_morn_page = 0
+		_fit_step = 0
 		render.call_deferred(_last_next, _last_context)
 		return
 	if _fit_index >= FIT_STEPS.size() - 1:
@@ -826,16 +837,55 @@ func _morning(next: Dictionary) -> void:
 	_window_actions = primary_host != null
 	_decoys(next)
 	_caption("ui.cockpit.card.morning.caption", {"number": int(next.get("night_number", 0))})
-	_heading("ui.cockpit.card.morning.village").name = "MorningVillage"
+	var items := _morning_items(next)
+	var key := "%d:%d" % [int(next.get("night_number", 0)), items.size()]
+	if key != _morn_key:
+		_morn_key = key
+		_morn_per_page = 0
+		_morn_page = 0
+	var per := _morn_per_page if _morn_per_page > 0 else items.size()
+	var pages := maxi(1, ceili(float(items.size()) / float(per)))
+	_morn_page = clampi(_morn_page, 0, pages - 1)
+	for item: Dictionary in items.slice(_morn_page * per, (_morn_page + 1) * per):
+		match str(item["type"]):
+			"village":
+				_heading("ui.cockpit.card.morning.village").name = "MorningVillage"
+			"private":
+				_heading("ui.cockpit.card.morning.private").name = "MorningPrivate"
+			"read":
+				_text(str(item["key"]), item["values"], &"ReadAloudLabel")
+			"nothing":
+				_text("ui.morning.private.nothing", {}, &"MutedLabel")
+			"own":
+				_text(str(item["key"]), item["values"], &"SectionLabel").add_to_group(&"morning_private")
+	var buttons: Array[Control] = []
+	if pages > 1:
+		_text("ui.cockpit.log.page", {"page": _morn_page + 1, "total": pages}, &"CaptionLabel").name = "MorningPageLabel"
+		if _morn_page > 0:
+			buttons.append(_button("MorningPrevPageButton", "ui.common.back", GrimmButton.Kind.SECONDARY, &"morning_page", {"step": -1}))
+	if _morn_page < pages - 1:
+		buttons.append(_button("MorningNextPageButton", "ui.cockpit.action.continue_day", GrimmButton.Kind.PRIMARY, &"morning_page", {"step": 1}))
+	else:
+		buttons.append(_button("ContinueDayButton", "ui.cockpit.action.continue_day", GrimmButton.Kind.PRIMARY, &"continue_day"))
+	_actions(buttons)
+
+
+## Zeilen des Morgenberichts als flache Liste, damit sie bei Platzmangel auf Seiten verteilt werden können (nichts wird abgeschnitten).
+func _morning_items(next: Dictionary) -> Array[Dictionary]:
+	var out: Array[Dictionary] = [{"type": "village"}]
 	for line: Dictionary in CockpitText.morning_lines(next.get("public", {})):
-		_text(str(line["key"]), line["values"], &"ReadAloudLabel")
+		out.append({"type": "read", "key": str(line["key"]), "values": line["values"]})
+	out.append({"type": "private"})
 	var own := CockpitText.private_lines(next.get("private", []))
-	_heading("ui.cockpit.card.morning.private").name = "MorningPrivate"
 	if own.is_empty():
-		_text("ui.morning.private.nothing", {}, &"MutedLabel")
+		out.append({"type": "nothing"})
 	for line: Dictionary in own:
-		_text(str(line["key"]), line["values"], &"SectionLabel").add_to_group(&"morning_private")
-	_actions([_button("ContinueDayButton", "ui.cockpit.action.continue_day", GrimmButton.Kind.PRIMARY, &"continue_day")])
+		out.append({"type": "own", "key": str(line["key"]), "values": line["values"]})
+	return out
+
+
+func _morning_item_count(next: Dictionary) -> int:
+	return _morning_items(next).size()
 
 
 ## Tag: Nominierungen (öffentlich), heutige Tode, Aktionen. Unterzustände der Bedienung kommen aus
@@ -1380,6 +1430,10 @@ func _actions(buttons: Array[Control], all_in_card: bool = false) -> void:
 ## Ein Tippen zählt nur auf einem Button der aktuellen Karte, solange sie nicht gesperrt ist.
 func _emit(action: StringName, payload: Dictionary, source: BaseButton) -> void:
 	if _busy or source.disabled or source.is_queued_for_deletion() or not (is_ancestor_of(source) or source == _primary or source == _info or (secondary_host != null and secondary_host.is_ancestor_of(source))):
+		return
+	if action == &"morning_page":
+		_morn_page = maxi(0, _morn_page + int(payload["step"]))  # Seitenwechsel des Morgenberichts bleibt in der Karte (kein Befehl)
+		render.call_deferred(_last_next, _last_context)
 		return
 	requested.emit(action, payload)
 
