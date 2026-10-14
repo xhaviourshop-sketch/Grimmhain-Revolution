@@ -28,6 +28,7 @@ var _import_result: SetupResult = null
 var _review_result: SetupResult = null
 var _group_actions: GroupActions = null
 var _plates: Array[NamePlate] = []
+var _ghost: NamePlate = null
 
 var _side: VBoxContainer
 var _list_col: VBoxContainer
@@ -402,6 +403,8 @@ func _build_plates(view: Dictionary) -> void:
 		var plate := NamePlate.new()
 		plate.name = "NamePlate_%d" % (_plates.size() + 1)  # nach Platz, nicht nach Person: Umordnen benennt nichts um
 		plate.pressed.connect(_on_plate_pressed.bind(plate))
+		plate.drag_moved.connect(_on_plate_drag_moved)
+		plate.drag_released.connect(_on_plate_drag_released)
 		_grid.add_child(plate)
 		_plates.append(plate)
 	while _plates.size() > slots:
@@ -542,9 +545,52 @@ func _index_of(person_id: int) -> int:
 
 
 func _on_plate_pressed(plate: NamePlate) -> void:
-	if plate.empty:
+	if plate.empty or plate.was_dragged:
 		return
 	_select(0 if plate.person_id == _selected_id else plate.person_id)
+
+
+## Ziehen: eine Kopie der Zeile folgt dem Finger, die Zeile darunter ist als Ziel hervorgehoben.
+func _on_plate_drag_moved(plate: NamePlate, global_point: Vector2) -> void:
+	if _ghost == null:
+		_ghost = NamePlate.new()
+		_ghost.name = "DragGhost"
+		_ghost.top_level = true
+		_ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ghost.focus_mode = Control.FOCUS_NONE
+		add_child(_ghost)
+		_ghost.show_person({"person_id": plate.person_id, "number": plate.number, "name": plate.person_name})
+		_ghost.size = plate.size
+		plate.lifted = true
+	_ghost.global_position = global_point - _ghost.size * 0.5
+	var target := _plate_at(global_point, plate)
+	for other: NamePlate in _plates:
+		other.drop_target = other == target
+
+
+## Loslassen auf einer anderen besetzten Zeile tauscht beide Plätze, sonst ändert sich nichts.
+func _on_plate_drag_released(plate: NamePlate, global_point: Vector2) -> void:
+	var target := _plate_at(global_point, plate)
+	_end_drag(plate)
+	if target != null:
+		_setup.swap_persons(plate.person_id, target.person_id)
+
+
+func _end_drag(plate: NamePlate) -> void:
+	if _ghost != null:
+		remove_child(_ghost)
+		_ghost.queue_free()
+		_ghost = null
+	plate.lifted = false
+	for other: NamePlate in _plates:
+		other.drop_target = false
+
+
+func _plate_at(global_point: Vector2, except: NamePlate) -> NamePlate:
+	for other: NamePlate in _plates:
+		if other != except and not other.empty and other.is_visible_in_tree() and other.get_global_rect().has_point(global_point):
+			return other
+	return null
 
 
 func _select(person_id: int) -> void:

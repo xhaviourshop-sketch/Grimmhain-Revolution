@@ -177,6 +177,22 @@ func move_person(person_id: int, delta: int) -> SetupResult:
 	return _commit(ids, [])
 
 
+## Tauscht die Plätze zweier Personen (Ziehen auf einen anderen Namen). Die Personen bleiben unverändert, nur die Stellung in der
+## Reihenfolge wechselt; die Nummern folgen dem Platz.
+func swap_persons(first_id: int, second_id: int) -> SetupResult:
+	var a := _draft.index_of(first_id)
+	var b := _draft.index_of(second_id)
+	var ids: Array[int] = [first_id, second_id]
+	if a == -1 or b == -1:
+		return SetupResult.failure(&"unknown_person", view(), {"person_id": first_id if a == -1 else second_id})
+	if a == b:
+		return SetupResult.success(view(), ids)
+	var person := _draft.persons[a]
+	_draft.persons[a] = _draft.persons[b]
+	_draft.persons[b] = person
+	return _commit(ids, [])
+
+
 ## Mischt die Namensreihenfolge. Zufall nur über den gespeicherten Generator: Der erste Aufruf legt den Seed über `seed_source` an,
 ## jeder weitere mischt mit dem nächsten abgeleiteten Seed (gleiche Eingabe und gleicher Seed ergeben dieselbe Reihenfolge).
 func shuffle_persons() -> SetupResult:

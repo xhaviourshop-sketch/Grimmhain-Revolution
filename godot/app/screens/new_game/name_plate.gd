@@ -4,7 +4,8 @@ extends GrimmButton
 ## die Sitzordnung im Uhrzeigersinn, sie zeigt sich nur durch die Stellung. Ein freier Platz steht gedämpft mit „noch frei“; die gewählte
 ## Person trägt den glühenden Rubinstein der Haut (aktiv) rechts, ein doppelter Name ein „!“. Lange Namen verkleinern die Schrift, statt
 ## gekürzt zu werden. Der Button-Text ist Bedienungshilfe, Tooltip und Testanker und wird nicht gezeichnet. Antippen wählt (`pressed`);
-## was folgt, entscheidet der Schritt.
+## was folgt, entscheidet der Schritt. Zieht man eine Zeile mehr als `DRAG_THRESHOLD` Pixel (Finger oder Maus), meldet sie `drag_moved`
+## und beim Loslassen `drag_released`; der Schritt tauscht dann die Plätze. Darunter bleibt es ein Tippen.
 
 const MIN_HEIGHT := 36.0
 const MAX_ROW_HEIGHT := 52.0   ## höhere Flächen zeichnen die Zeile mittig in dieser Höhe, die Tippfläche bleibt ganz
@@ -12,6 +13,10 @@ const TEXT_LEFT := 26.0
 const MARKER_WIDTH := 40.0     ## Platz für Rubinstein oder „!“ rechts
 const STONE_SIZE := 26.0
 const FIT_MIN_FONT := 12
+const DRAG_THRESHOLD := 12.0   ## ab dieser Strecke (Pixel) ist es ein Ziehen, darunter ein Tippen
+
+signal drag_moved(plate: NamePlate, global_point: Vector2)
+signal drag_released(plate: NamePlate, global_point: Vector2)
 
 var person_id: int = 0
 var number: int = 0  ## Platz in der Reihenfolge (intern), wird nie angezeigt
@@ -22,6 +27,18 @@ var selected: bool = false:
 		selected = value
 		queue_redraw()
 var duplicate: bool = false
+var drop_target: bool = false:  ## hier würde der Tausch landen
+	set(value):
+		drop_target = value
+		queue_redraw()
+var lifted: bool = false:  ## diese Zeile wird gerade gezogen
+	set(value):
+		lifted = value
+		queue_redraw()
+var dragging: bool = false
+var was_dragged: bool = false  ## das letzte Loslassen beendete ein Ziehen, kein Tippen
+var _press_point := Vector2.ZERO
+var _pressing: bool = false
 
 
 func _init() -> void:
@@ -65,18 +82,53 @@ func show_empty(p_number: int) -> void:
 	queue_redraw()
 
 
+func _gui_input(event: InputEvent) -> void:
+	if empty:
+		return
+	if event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		var button := event as InputEventMouseButton
+		if button.pressed:
+			_pressing = true
+			dragging = false
+			was_dragged = false
+			_press_point = _to_global(button.position)
+		else:
+			var was_dragging := dragging
+			_pressing = false
+			dragging = false
+			if was_dragging:
+				was_dragged = true
+				accept_event()
+				drag_released.emit(self, _to_global(button.position))
+				return
+	elif event is InputEventMouseMotion and _pressing:
+		var point := _to_global((event as InputEventMouseMotion).position)
+		if not dragging and point.distance_to(_press_point) >= DRAG_THRESHOLD:
+			dragging = true
+		if dragging:
+			accept_event()
+			drag_moved.emit(self, point)
+			return
+
+
+func _to_global(local_point: Vector2) -> Vector2:
+	return get_global_transform() * local_point
+
+
 func _draw() -> void:
 	var row_height := minf(size.y, MAX_ROW_HEIGHT)
 	var row := Rect2(0.0, (size.y - row_height) * 0.5, size.x, row_height)
 	var tint := ThemeTokens.TINT_NONE
 	if empty:
 		tint = ThemeTokens.TINT_DEAD
-	elif is_hovered():
+	elif lifted:
+		tint = ThemeTokens.TINT_DISABLED
+	elif is_hovered() or drop_target:
 		tint = ThemeTokens.TINT_HOVER
 	var box := SkinArt.row_box(tint)
 	if box.texture != null:
 		draw_style_box(box, row)
-		if has_focus(true):
+		if has_focus(true) or drop_target:
 			draw_style_box(SkinArt.row_box(SkinArt.TINT_FOCUS), row)
 	var marker := MARKER_WIDTH if duplicate or selected else 0.0
 	var text := tr("ui.prep.names.plate_free") if empty else person_name
