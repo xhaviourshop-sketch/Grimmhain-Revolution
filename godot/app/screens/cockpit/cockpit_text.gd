@@ -62,7 +62,7 @@ static func help_role(next: Dictionary) -> String:
 
 ## true, wenn die Spielleitung bei dieser Karte erst die Art der Bindung wählt (Loki). Amor (Classic, nur Liebende) fragt nie danach (DA-108).
 static func asks_bond_mode(next: Dictionary) -> bool:
-	return str(next.get("owner")) == "loki" and str(next.get("stage")) == "targets" 		and not bool(RoleCatalog.param(StringName(str(next.get("role_id", ""))), "lovers_only", false))
+	return str(next.get("owner")) == "loki" and str(next.get("stage")) == "targets" 		and not RoleCatalog.lovers_only(StringName(str(next.get("role_id", ""))))
 
 
 ## true, wenn die Spielleitung bei dieser Karte zuerst die Zahl wählt („Wie viele verzaubern?“): Flötenspieler und Rattenfänger mit mindestens zwei Verzauberbaren.
@@ -99,7 +99,11 @@ static func night_short_key(next: Dictionary) -> String:
 
 ## Beschriftung einer Aktion mit rollenspezifischer Variante, z. B. Loki „Liebende“ statt „Ja“:
 ## ui.cockpit.action.<aktion>.<besitzer>.<stufe>, sonst ui.cockpit.action.<aktion>.
-static func action_key(action: String, owner: String, stage: String) -> String:
+static func action_key(action: String, owner: String, stage: String, role_id: String = "") -> String:
+	if role_id != "" and RoleCatalog.is_classic(StringName(role_id)):  # Classic-Rolle mit eigener Beschriftung (Amor: „Liebe“ und „Hass“)
+		var own := "ui.cockpit.action.%s.%s.%s" % [action, key_part(role_id), stage if stage != "" else "pick"]
+		if has_key(own):
+			return own
 	var key := "ui.cockpit.action.%s.%s.%s" % [action, key_part(owner), stage if stage != "" else "pick"]
 	return key if has_key(key) else "ui.cockpit.action.%s" % action
 

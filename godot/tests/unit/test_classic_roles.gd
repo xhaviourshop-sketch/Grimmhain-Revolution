@@ -24,6 +24,8 @@ func _apply(s: GameState, c: Command) -> GameState:
 func _targets(p: PendingPrompt, ids: Array) -> Command:
 	if p.stage == &"shown":
 		return Command.answer_choice(p.id, "shown", true)
+	if p.stage == &"mode":
+		return Command.answer_choice(p.id, "mode", true)  # Amor: Liebe (Nachtauftrag 14.10.2026: Amor fragt nach Liebe oder Hass)
 	return Command.answer_prompt(p.id, ids) if String(p.stage) == "" else Command.answer_stage_targets(p.id, String(p.stage), ids)
 
 
@@ -48,13 +50,14 @@ func test_incomplete_group_is_rejected() -> void:
 	assert_eq(String(r.error), "role_group_incomplete", "Grund")
 
 
-func test_amor_binds_lovers_without_asking_the_kind() -> void:
+func test_amor_binds_two_and_asks_love_or_hate() -> void:
 	var s := _night_one()
 	assert_eq(s.pending_prompt.owner, PendingPrompt.OWNER_LOKI, "Amor ist der erste Schritt")
-	s = _apply(s, _targets(s.pending_prompt, [1, 4]))
+	s = _apply(s, Command.answer_prompt(s.pending_prompt.id, [1, 4]) if String(s.pending_prompt.stage) == "" else Command.answer_stage_targets(s.pending_prompt.id, String(s.pending_prompt.stage), [1, 4]))
+	assert_eq(String(s.pending_prompt.stage), "mode", "danach die Frage nach der Art")
+	s = _apply(s, _targets(s.pending_prompt, []))
 	assert_eq(s.loki_pairs.size(), 1, "ein Paar")
-	assert_eq(str(s.loki_pairs[0]["kind"]), "love", "immer Liebende")
-	assert_true(s.pending_prompt == null, "keine Frage nach der Bindungsart")
+	assert_eq(str(s.loki_pairs[0]["kind"]), "love", "Liebe gewählt")
 
 
 ## Nachtauftrag 14.10.2026: Die Classic-Hexe sieht das Opfer wie die Waldhexe als Rollenkarte (ersetzt „erfährt die Rolle nicht“).
@@ -152,13 +155,14 @@ func test_night_bar_and_decoys_use_classic_ids() -> void:
 		assert_false(["loki", "schutzengel", "waldhexe", "das-orakel"].has(String(role)), "Tarnaufruf nennt die Mechanik: %s" % role)
 
 
-## Block 1: Schrittkarte und Vorschau tragen die Classic-ID; Amor fragt nie nach Liebenden oder Rivalen.
+## Block 1: Schrittkarte und Vorschau tragen die Classic-ID; Amor fragt nach Liebe oder Hass (Nachtauftrag 14.10.2026).
 func test_step_card_names_the_classic_role() -> void:
 	var s := _night_one()
 	var first := PromptView.build(s, s.pending_prompt)  # Nacht 1 öffnet den Amor-Schritt gleich
 	assert_eq(str(first["role_id"]), "classic-amor", "Amor-Karte")
-	assert_false(CockpitText.asks_bond_mode(first), "keine Frage nach der Bindungsart")
+	assert_true(CockpitText.asks_bond_mode(first), "Amor fragt nach der Art: Liebe oder Hass")
 	s = _apply(s, _targets(s.pending_prompt, [1, 4]))
+	s = _apply(s, _targets(s.pending_prompt, []))
 	var group := CockpitView.step_announcement(s, StepQueue.next_step_id(s))
 	assert_eq(str(group["preview"]["role_id"]), "classic-drei-brueder", "Brüder-Karte nennt die Gruppe, nicht die Gebundenen")
 

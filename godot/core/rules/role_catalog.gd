@@ -343,7 +343,7 @@ const CLASSIC_BAERENFUEHRER := &"classic-baerenfuehrer"
 
 ## Felder wie in `ROLES`; fehlende Felder erbt der Eintrag von seiner Mechanik, `appears_as` ist die eigene ID.
 ##   witch_reveal  false: die Hexe erfährt nach einer Rettung nicht die Rolle des Opfers (kein Eintrag mehr in Gebrauch; Classic zeigt die Rolle wie das Grundspiel)
-##   lovers_only   true: Amor bindet immer als Liebende (keine Rivalen)
+##   amor_hate_option  Classic-Amor: true (Standard) fragt wie Loki zuerst nach Liebe oder Hass (Liebende oder Feinde), false bindet immer als Liebende (Bogenwortlaut)
 ##   curse_forever Classic-Alte: Lynch lässt alle Dorf-Personen ihre Fähigkeiten dauerhaft verlieren (Bogen: „verlieren alle aus Gram ihre Fähigkeiten“), keine Dauerfrage
 ##   true_role     Classic-Seherin: erfährt die tatsächliche Rolle auch bei Wölfen (Bogen: „wahre Identität“)
 ##   optional_shot Classic-Jäger: der Schuss bei seinem Tod ist freiwillig (Bogen: „kann“), Verzicht erlaubt
@@ -367,7 +367,7 @@ const CLASSIC_ROLES := {
 	CLASSIC_ENGEL: {"mechanic": SCHUTZENGEL},
 	CLASSIC_MAEDCHEN: {"mechanic": DORFBEWOHNER},
 	CLASSIC_ALTE: {"mechanic": DER_WEISE, "curse_forever": true},
-	CLASSIC_AMOR: {"mechanic": LOKI, "lovers_only": true},
+	CLASSIC_AMOR: {"mechanic": LOKI, "amor_hate_option": true},  # Schalter: false = nur Liebende wie im Bogen (Nachtauftrag 14.10.2026: Standard an)
 	CLASSIC_DREI_BRUEDER: {"mechanic": DIE_GEBUNDENEN, "group_size": 3, "max_copies": 3},
 	CLASSIC_ZWEI_SCHWESTERN: {"mechanic": DIE_GEBUNDENEN, "group_size": 2, "max_copies": 2},
 	CLASSIC_SELBSTMOERDER: {"mechanic": SELBSTMOERDER},
@@ -396,6 +396,11 @@ static func is_classic(role_id: StringName) -> bool:
 ## Parameter einer Rolle (Classic-Abweichung) oder `default`.
 static func param(role_id: StringName, key: String, default: Variant) -> Variant:
 	return (CLASSIC_ROLES[role_id] as Dictionary).get(key, default) if CLASSIC_ROLES.has(role_id) else default
+
+
+## true, wenn diese Classic-Amor-Besetzung immer Liebende bindet (Schalter `amor_hate_option` aus).
+static func lovers_only(role_id: StringName) -> bool:
+	return is_classic(role_id) and mech(role_id) == LOKI and not bool(param(role_id, "amor_hate_option", true))
 
 
 ## Größe einer Gruppenrolle oder 0.

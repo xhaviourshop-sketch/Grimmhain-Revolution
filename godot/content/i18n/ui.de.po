@@ -9477,7 +9477,7 @@ msgid "ui.role.classic_amor.name"
 msgstr "Amor"
 
 msgid "ui.role.classic_amor.short"
-msgstr "Verliebt in der ersten Nacht zwei Personen ineinander."
+msgstr "Verbindet in der ersten Nacht zwei Personen durch Liebe oder Hass."
 
 msgid "ui.role.classic_amor.lex.night"
 msgstr "nur Nacht 1, als erster"
@@ -9486,7 +9486,7 @@ msgid "ui.role.classic_amor.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.classic_amor.lex.ability"
-msgstr "Zeigt auf zwei Personen, auch sich selbst. Sie verlieben sich. Stirbt eine, stirbt die andere aus Liebeskummer."
+msgstr "Zeigt auf zwei Personen, auch sich selbst. Er wählt zuerst Liebe oder Hass. Verliebte sterben zusammen aus Liebeskummer, Feinde können nicht gewinnen, solange der andere lebt."
 
 msgid "ui.role.classic_amor.lex.timing"
 msgstr "Nur in Nacht 1."
@@ -9495,7 +9495,7 @@ msgid "ui.role.classic_amor.lex.targets"
 msgstr "Zwei verschiedene lebende Personen, Amor selbst ist erlaubt."
 
 msgid "ui.role.classic_amor.lex.exceptions"
-msgstr "Es sind immer Verliebte."
+msgstr "Bei Hass sind es Feinde: Keiner von beiden gewinnt, solange der andere lebt."
 
 msgid "ui.role.classic_amor.lex.win"
 msgstr "Mit dem Dorf."
@@ -9504,10 +9504,10 @@ msgid "ui.role.classic_amor.lex.example"
 msgstr "Amor wählt Anna und Ben. Ben wird gehängt, Anna stirbt aus Liebeskummer."
 
 msgid "ui.role.classic_amor.lex.act"
-msgstr "Aufruf: Lies vor: „Amor, erwache. Zeige auf zwei Personen, die sich verlieben.“\nAuswählen oder ablesen: Tippe beide Personen an und bestätige.\nVorlesen oder zeigen: Wecke die Verliebten kurz, damit sie sich sehen.\nBeenden: Tippe „Auswahl bestätigen“."
+msgstr "Aufruf: Lies vor: „Amor, erwache. Zeige auf zwei Personen, die sich verlieben.“\nAuswählen oder ablesen: Wähle „Liebe“ oder „Hass“, tippe beide Personen an und bestätige.\nVorlesen oder zeigen: Wecke die beiden kurz, damit sie sich sehen.\nBeenden: Tippe „Auswahl bestätigen“."
 
 msgid "ui.role.classic_amor.lex.gm"
-msgstr "Es sind immer Verliebte, die App fragt nicht nach der Art."
+msgstr "Die App fragt zuerst nach der Art: Liebe oder Hass (Abweichung vom Bogen, abschaltbar)."
 
 msgid "ui.role.classic_drei_brueder.name"
 msgstr "Die drei Brüder"
@@ -10026,3 +10026,21 @@ msgstr "Eine Person"
 
 msgid "ui.cockpit.action.pipe_two"
 msgstr "Zwei Personen"
+
+msgid "ui.night.classic_amor.mode.title"
+msgstr "Amor wählt: Liebe oder Hass."
+
+msgid "ui.night.classic_amor.mode.help"
+msgstr "Liebe oder Hass?"
+
+msgid "ui.night.classic_amor.mode.short"
+msgstr "Liebe oder Hass"
+
+msgid "ui.cockpit.action.yes.classic_amor.mode"
+msgstr "Liebe"
+
+msgid "ui.cockpit.action.no.classic_amor.mode"
+msgstr "Hass"
+
+msgid "ui.notice.loki_bond.classic.rival"
+msgstr "Ihr seid Feinde. Keiner von euch kann gewinnen, solange der andere lebt."

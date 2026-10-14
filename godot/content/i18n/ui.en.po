@@ -9477,7 +9477,7 @@ msgid "ui.role.classic_amor.name"
 msgstr "Cupid"
 
 msgid "ui.role.classic_amor.short"
-msgstr "Makes two people fall in love in the first night."
+msgstr "Bonds two people by love or hate in the first night."
 
 msgid "ui.role.classic_amor.lex.night"
 msgstr "night 1 only, first"
@@ -9486,7 +9486,7 @@ msgid "ui.role.classic_amor.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.classic_amor.lex.ability"
-msgstr "Points at two people, himself included. They fall in love. If one dies, the other dies of heartbreak."
+msgstr "Points at two people, himself included. He first chooses love or hate. Lovers die together of heartbreak, enemies cannot win while the other lives."
 
 msgid "ui.role.classic_amor.lex.timing"
 msgstr "Night 1 only."
@@ -9495,7 +9495,7 @@ msgid "ui.role.classic_amor.lex.targets"
 msgstr "Two different living people, Cupid himself is allowed."
 
 msgid "ui.role.classic_amor.lex.exceptions"
-msgstr "They are always lovers."
+msgstr "With hate they are enemies: neither can win while the other lives."
 
 msgid "ui.role.classic_amor.lex.win"
 msgstr "With the village."
@@ -9504,10 +9504,10 @@ msgid "ui.role.classic_amor.lex.example"
 msgstr "Cupid chooses Anna and Ben. Ben is hanged, Anna dies of heartbreak."
 
 msgid "ui.role.classic_amor.lex.act"
-msgstr "Call: Read out: “Cupid, wake up. Point to two people who fall in love.”\nSelect or read: Tap both people and confirm.\nRead out or show: Wake the lovers briefly so they see each other.\nFinish: Tap “Confirm choice”."
+msgstr "Call: Read out: “Cupid, wake up. Point to two people who fall in love.”\nSelect or read: Choose “Love” or “Hate”, tap both people and confirm.\nRead out or show: Wake the two briefly so they see each other.\nFinish: Tap “Confirm choice”."
 
 msgid "ui.role.classic_amor.lex.gm"
-msgstr "They are always lovers, the app does not ask for the kind."
+msgstr "The app first asks for the kind: love or hate (deviation from the sheet, can be switched off)."
 
 msgid "ui.role.classic_drei_brueder.name"
 msgstr "The Three Brothers"
@@ -10026,3 +10026,21 @@ msgstr "One person"
 
 msgid "ui.cockpit.action.pipe_two"
 msgstr "Two people"
+
+msgid "ui.night.classic_amor.mode.title"
+msgstr "Cupid chooses: love or hate."
+
+msgid "ui.night.classic_amor.mode.help"
+msgstr "Love or hate?"
+
+msgid "ui.night.classic_amor.mode.short"
+msgstr "Love or hate"
+
+msgid "ui.cockpit.action.yes.classic_amor.mode"
+msgstr "Love"
+
+msgid "ui.cockpit.action.no.classic_amor.mode"
+msgstr "Hate"
+
+msgid "ui.notice.loki_bond.classic.rival"
+msgstr "You are enemies. Neither of you can win while the other lives."

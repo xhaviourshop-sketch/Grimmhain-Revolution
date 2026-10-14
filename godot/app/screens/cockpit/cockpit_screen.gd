@@ -1414,7 +1414,7 @@ func _ask_answer_confirm(answer: Dictionary, on_confirm: Callable) -> void:
 		"targets":
 			text = CockpitText.names_of(answer["ids"], seats)
 			if answer.has("mode"):
-				text = "%s: %s" % [tr(CockpitText.action_key("yes" if bool(answer["mode"]) else "no", owner, "mode")), text]
+				text = "%s: %s" % [tr(CockpitText.action_key("yes" if bool(answer["mode"]) else "no", owner, "mode", str(eff.get("role_id", "")))), text]
 		"decline":
 			text = tr(CockpitText.action_key("decline", owner, stage))
 		"choice":
