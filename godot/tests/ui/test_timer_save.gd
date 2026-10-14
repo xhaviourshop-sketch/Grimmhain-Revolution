@@ -163,8 +163,9 @@ func test_night_timer_can_be_hidden_in_the_options_and_the_choice_is_saved() -> 
 	await navigate(shell, &"cockpit")
 	var screen := current_screen(shell)
 	await press(find_button(screen, "StartNightButton"))
+	await press(find_button(screen, "TimerNightPlusButton"))  # ohne Dauer gibt es keine Anzeige
 	var button := find_button(screen, "TimerButton")
-	assert_true(button.is_visible_in_tree(), "Nacht-Timer standardmäßig sichtbar")
+	assert_true(button.is_visible_in_tree(), "Nacht-Timer mit Dauer standardmäßig sichtbar")
 	var toggle := find_node(screen, "NightTimerToggle") as BaseButton
 	assert_true(toggle.button_pressed, "Schalter an")
 	await press(toggle)
@@ -182,3 +183,18 @@ func test_night_timer_can_be_hidden_in_the_options_and_the_choice_is_saved() -> 
 	var fresh := AppSettings.new()
 	SettingsStore.new(path.get_base_dir().path_join("none.json")).load_into(fresh)
 	assert_true(fresh.show_night_timer, "ohne Datei: Standard an")
+
+
+## F-13: Ohne eingestellte Dauer bleibt die Zeitanzeige weg, mit Dauer erscheint sie.
+func test_timer_display_hidden_until_a_duration_is_set() -> void:
+	var shell := await spawn_shell(SIZE_16_10, "de")
+	if shell == null:
+		return
+	session_of(shell).call("submit", Fixtures.start_roles(Fixtures.unique_roles(7), 1))
+	await navigate(shell, &"main_menu")
+	await navigate(shell, &"cockpit")
+	var screen := current_screen(shell)
+	await press(find_button(screen, "StartNightButton"))
+	assert_false((find_node(screen, "TimerButton") as Control).is_visible_in_tree(), "ohne Dauer keine Anzeige")
+	await press(find_button(screen, "TimerNightPlusButton"))
+	assert_true((find_node(screen, "TimerButton") as Control).is_visible_in_tree(), "mit Dauer sichtbar")

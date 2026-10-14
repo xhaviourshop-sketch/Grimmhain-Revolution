@@ -773,7 +773,7 @@ func _refresh_timer() -> void:
 		return
 	var t := context.timer
 	var active := bool(_view.get("has_game", false)) and t.group != &""
-	_timer_button.visible = active and (t.group != DisplayTimer.GROUP_NIGHT or context.settings.show_night_timer)
+	_timer_button.visible = active and t.is_set() and (t.group != DisplayTimer.GROUP_NIGHT or context.settings.show_night_timer)  # ohne eingestellte Dauer nichts anzeigen
 	_timer_button.show_time(t.remaining, t.running, t.is_set(), t.is_expired())
 	_timer_button.tooltip_text = tr("ui.cockpit.timer.tooltip_pause") if t.running else tr("ui.cockpit.timer.tooltip_start")
 	for group: String in _timer_labels:
