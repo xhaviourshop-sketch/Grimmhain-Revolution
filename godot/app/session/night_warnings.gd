@@ -62,7 +62,7 @@ static func build(s: GameState, next: Dictionary, selection: Array) -> Array:
 					out.append({"key": "ui.warn.lovers", "values": {"a": _name(s, target), "b": _name(s, partner)}})
 		if INFOS.has(combo) and s.players[target].cursed:
 			out.append({"key": "ui.warn.cursed", "values": {"name": _name(s, target)}})
-	return out.slice(0, MAX_LINES)
+	return LineGroups.merge(out).slice(0, MAX_LINES)  # „Anna, Ben sind geschützt“ statt je Person eine Zeile
 
 
 ## Warnungsarten, die bei der Rolle auftreten können (Rollen-Vorschau „Sonderfall“, docs/audit/NACHT-WARNUNGEN.md); ohne `repeat`, das jede

@@ -268,7 +268,7 @@ static func private_lines(lines: Array) -> Array:
 		if line.has("drop"):
 			values["drop"] = drop_key(str(line["drop"]))
 		out.append({"key": str(line["key"]), "values": values})
-	return out
+	return LineGroups.merge(out)  # gleiche Wirkungen auf mehrere Personen: eine Zeile („Anna, Ben sind verzaubert“)
 
 
 ## Angesagter Todeseffekt (DI-03) als {key, values}: Effekt und Rolle zum Ereigniszeitpunkt, Namen ohne Platznummer.
