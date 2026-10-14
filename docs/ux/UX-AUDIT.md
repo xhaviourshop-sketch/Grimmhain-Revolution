@@ -120,3 +120,6 @@ Bereits umgesetzt (Commits 21278d6, 4a3191f, 6bcec1f, cf50dee, F-04, F-09): F-01
 
 ## Nächster Schritt
 Ein Durchlauf mit echtem Touch auf dem Tablet (Browser mit Touch-Emulation) für die Hauptabläufe, dazu Ritter, Jäger, Spielende, Speichern/Fortsetzen und Sitzordnung. Für den Bot lohnt ein kleiner Hilfsmodus mit festen Antworten; der Skript-Weg über `UiGame.step` reicht dafür nicht, weil der Antwortschlüssel für die Wölfe nicht griff.
+
+## Umsetzungsstand 15.10.
+Umgesetzt: F-17, F-18, F-11, F-05, F-21, F-19, F-20, F-07 (Amor), F-08, F-22, F-24. F-23 geklaert: kein rollen- oder umgebungsabhaengiger Zweig im Code; der Browser-Lauf mit einem Tipp stammte vermutlich von einem Build vor der zentralen Bestaetigung. Offen: englische Akt-Untertitel in der deutschen Oberflaeche (F-08), F-25.
