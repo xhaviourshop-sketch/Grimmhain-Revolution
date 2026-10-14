@@ -261,9 +261,9 @@ func test_piper_flow_resumes_at_every_interruption_point() -> void:
 	assert_true(await run({}, until_prompt("rattenfaenger")), "vor dem Rattenfänger")
 	var before := await restart()
 	assert_eq(str(next()["role_id"]), "rattenfaenger", "Rattenfänger steht weiter an")
+	await tap_button("PipeTwoButton")  # erst „Wie viele verzaubern?“, danach gilt die feste Anzahl sofort
 	await tap_seat(4)
 	await tap_seat(5)
-	await tap_button("ConfirmTargetsButton")  # Anzahl 1 bis 2: bestätigt die Spielleitung
 	assert_one_effect(before, "Rattenfänger", 2)  # Schritt beginnen und Auswahl übernehmen
 	assert_eq(str(next().get("notice_kind")), "piper_new", "nach der Aktion: Hinweis offen")
 	await tap_button("ShowNoticeButton")

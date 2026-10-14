@@ -368,6 +368,15 @@ func test_language_switch_keeps_report_and_version() -> void:
 	assert_true(text.contains("Final report (game master version)") and text.contains("Night 1") and text.contains("Winner: Werewolves"), "englischer Text: %s" % text.left(80))
 
 
+## Der Blätterer hat immer einen Scrollbereich als Sicherheitsnetz (Block F); der Bericht darf ihn nie brauchen: Der Inhalt passt hinein.
+func _fits_without_scrolling(host: Control) -> bool:
+	for sc: Node in host.find_children("*", "ScrollContainer", true, false):
+		var scroll := sc as ScrollContainer
+		if scroll.get_child(0).get_combined_minimum_size().y > scroll.size.y + 1.0:
+			return false
+	return true
+
+
 func test_report_fits_and_pages_at_1024x768() -> void:
 	for lang: String in ["de", "en"]:
 		var made := await _shell_with_finished_game(SIZE_4_3, lang)
@@ -386,14 +395,15 @@ func test_report_fits_and_pages_at_1024x768() -> void:
 			var c := find_node(screen, name) as Control
 			assert_true(c != null and c.is_visible_in_tree() and inside(rect_of(c), viewport), "%s: %s im Fenster" % [lang, name])
 			assert_true(c.size.x >= 47.5 and c.size.y >= 47.5, "%s: %s mindestens 48×48" % [lang, name])
-		assert_true(find_node(screen, "HistoryReportHost").find_children("*", "ScrollContainer", true, false).is_empty(), "%s: keine Scrollleiste" % lang)
 		var host := find_node(screen, "HistoryReportHost") as Control
+		assert_true(_fits_without_scrolling(host), "%s: Seite 1 braucht kein Scrollen" % lang)
 		var next := find_button(screen, "NextPageButton")
 		assert_true(next != null, "%s: der Bericht blättert" % lang)
 		var guard := 0
 		while next != null and not next.disabled and guard < 20:
 			await press(next)
 			guard += 1
+			assert_true(_fits_without_scrolling(host), "%s: Seite %d braucht kein Scrollen" % [lang, guard + 1])
 		var page := find_node(screen, "PageBody") as Control
 		var last := page.get_child(page.get_child_count() - 1) as Control
 		assert_true(inside(rect_of(last), rect_of(host), 1.0), "%s: letzte Zeile auf der letzten Seite sichtbar" % lang)

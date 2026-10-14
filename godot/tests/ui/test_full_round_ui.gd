@@ -79,7 +79,8 @@ func _act(shell: Control) -> bool:
 	var next: Dictionary = effective_of((session_of(shell).call("cockpit_view") as Dictionary)["next"])
 	if str(next["kind"]) == "notice":
 		return await _tap(shell, "ShowNoticeButton") and await _tap(shell, "CloseLayerButton")  # Schließen bestätigt den Hinweis
-	if await _tap(shell, "ShowCardButton"):
+	# Bei einer Ja/Nein-Frage (Waldhexe: Opfer als Karte) ist „Karte zeigen“ nur eine Zusatzoption, nicht der nötige Schritt.
+	if str(next.get("answer", "")) != "choice" and await _tap(shell, "ShowCardButton"):
 		return await _tap(shell, "CloseLayerButton")  # Schließen erledigt die Auskunft
 	for name: String in ["RevealButton", "StartNightButton", "BeginStepButton", "ContinueDayButton", "EndNightButton", "EndDayButton", "AckButton"]:
 		if await _tap(shell, name):
