@@ -607,3 +607,84 @@ func test_urwolf_asks_only_once_per_game() -> void:
 				break
 			await step({"pack/": [3]})
 		assert_true(asked, "%s: ein Verzicht verbraucht die Fähigkeit nicht, die Frage kommt in der nächsten Nacht wieder" % loc))
+
+
+func test_two_win_candidates_ask_the_game_master() -> void:
+	await _locales(func(loc: String) -> void:
+		# Nur Flötenspieler 1, Wolf 2 und Dorf 3 leben: Nach der Nacht stehen Wolfsparität und Flötensieg gleichzeitig an.
+		if not await begin([C + "floetenspieler", W, D, D, D, D], loc, [4, 5, 6]):
+			return
+		assert_true(await run({"pack/": [3], "rattenfaenger/": [2]}, until_kind("win_decision")), "%s: Siegvorschlag" % loc)
+		var cands: Array = next()["candidates"]
+		assert_eq(cands.size(), 2, "%s: zwei Siegkandidaten" % loc)
+		assert_true(live("RejectWinButton") != null, "%s: Ablehnen ist möglich" % loc)
+		for c: Dictionary in cands:
+			assert_true(live("ConfirmWinButton_%d" % int(c["id"])) != null, "Bestätigen je Kandidat")
+		_note("sieg-zwei-kandidaten", loc)
+		var piper_id := 0
+		for c: Dictionary in cands:
+			if str(c["kind"]) == "solo":
+				piper_id = int(c["id"])
+		assert_true(piper_id != 0, "der Flötenspieler ist Kandidat")
+		await tap_button("ConfirmWinButton_%d" % piper_id)
+		await frames(3)
+		assert_true(_over(), "%s: Spielende" % loc)
+		assert_eq(str(_data("WinConfirmed").get("winner", {}).get("kind")), "solo", "Flötenspieler bestätigt"))
+	_assert_translated("sieg-zwei-kandidaten")
+
+
+func test_rejecting_all_win_candidates_continues_the_game() -> void:
+	await _locales(func(loc: String) -> void:
+		if not await begin([C + "floetenspieler", W, D, D, D, D], loc, [4, 5, 6]):
+			return
+		assert_true(await run({"pack/": [3], "rattenfaenger/": [2]}, until_kind("win_decision")), "%s: Siegvorschlag" % loc)
+		await tap_button("RejectWinButton")
+		assert_true(await confirm_dialog("Test: Tisch ist anderer Meinung"), "Begründung eingegeben und bestätigt")
+		await frames(3)
+		assert_false(_over(), "%s: die Partie läuft weiter" % loc)
+		assert_true(has_event("WinRejected") or str(raw_next().get("kind")) != "win_decision", "Vorschlag abgelehnt"))
+
+
+# --- Wechselwirkungen (Regelstellen aus FAEHIGKEITEN.md Nr. 5, 14, 19) -------------------------------------------------------------
+
+func test_knight_swings_only_when_the_pack_really_kills_him() -> void:
+	await _locales(func(loc: String) -> void:
+		# Von der Hexe gerettet: er stirbt nicht, also kein Schwerthieb.
+		if not await begin([W, C + "ritter", C + "hexe", D, D, D, D, D], loc):
+			return
+		await run({"pack/": [2], "waldhexe/heal": true, "waldhexe/poison": false}, until_night_end())
+		assert_false(_died(2) or has_event("ReactionQueued"), "%s: gerettet, kein Hieb" % loc))
+	await _locales(func(loc: String) -> void:
+		# Vom Engel geschützt: ebenso.
+		if not await begin([W, C + "ritter", C + "engel", D, D, D, D, D], loc):
+			return
+		await run({"pack/": [2], "schutzengel/": [2]}, until_night_end())
+		assert_false(_died(2) or has_event("ReactionQueued"), "%s: geschützt, kein Hieb" % loc))
+	await _locales(func(loc: String) -> void:
+		# Vom Weißen Wolf getötet: unaufhaltsam und ohne Ritter-Wirkung (Nacht 2).
+		if not await begin([W, C + "weisser-wolf", C + "ritter", D, D, D, D, D], loc):
+			return
+		await _night({"pack/": [8]})
+		await _night({"pack/": [7], "rachsuechtiger-wolf/": [3]})
+		assert_true(_died_by(3, "LONE_WOLF_KILL"), "%s: der Ritter stirbt durch den Weißen Wolf" % loc)
+		assert_false(has_event("ReactionQueued"), "kein Hieb nach dem Einzelschlag"))
+
+
+func test_hunter_shoots_when_poisoned_or_struck_by_the_white_wolf() -> void:
+	await _locales(func(loc: String) -> void:
+		if not await begin([W, C + "hexe", C + "jaeger", D, D, D, D, D], loc):
+			return
+		var plan := {"pack/": [8], "waldhexe/heal": false, "waldhexe/poison": true, "waldhexe/poison_target": [3], "reaction/curse": [4]}
+		await run(plan, until_event("ReactionResolved"))
+		assert_true(_died_by(3, "WITCH_POISON"), "%s: Jäger vergiftet" % loc)
+		assert_eq(str(_data("ReactionResolved").get("outcome")), "cursed", "%s: er darf noch schießen" % loc)
+		assert_true(_died(4), "Schuss trifft Person 4"))
+	await _locales(func(loc: String) -> void:
+		if not await begin([W, C + "weisser-wolf", C + "jaeger", D, D, D, D, D], loc):
+			return
+		await _night({"pack/": [8]})
+		var plan := {"pack/": [7], "rachsuechtiger-wolf/": [3], "reaction/curse": [1]}
+		await _night(plan)
+		await run(plan, until_event("ReactionResolved"))
+		assert_true(_died(3), "%s: Jäger vom Weißen Wolf getötet" % loc)
+		assert_true(has_event("ReactionResolved") and _died(1), "%s: der Jäger nimmt den Wolf mit" % loc))
