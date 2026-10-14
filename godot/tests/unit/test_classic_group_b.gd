@@ -61,13 +61,13 @@ func test_fox_asks_about_the_trio_and_loses_the_gift_without_a_wolf() -> void:
 	assert_eq(wrap["partial"]["target_ids"], [1, 2, 8], "Nachbarn über die Tischkante")
 
 
-func test_flute_enchants_exactly_two_and_wins_without_all_enchanted_step() -> void:
+func test_flute_enchants_one_or_two_and_wins_without_all_enchanted_step() -> void:
 	var s := _night(["classic-floetenspieler", W, D, D, D, D])
 	assert_false(s.night_plan.has(StepQueue.PIPER_ALL), "kein Schritt „Alle Verzauberten“")
 	s = _to_prompt(s, PendingPrompt.OWNER_PIPER)
 	var p := s.pending_prompt
-	assert_eq([p.min_count, p.max_count], [2, 2], "genau zwei pro Nacht")
-	assert_false(RulesEngine.apply(s, Command.answer_prompt(p.id, [3])).ok, "eine Person reicht nicht")
+	assert_eq([p.min_count, p.max_count], [1, 2], "eine oder zwei pro Nacht (die Spielleitung fragt zuerst die Zahl, Nachtauftrag 14.10.2026)")
+	assert_false(RulesEngine.apply(s, Command.answer_prompt(p.id, [3, 4, 5])).ok, "drei sind zu viel")
 	s = _apply(s, Command.answer_prompt(p.id, [3, 4]))
 	assert_eq(SoloRules.charmed_living(s), [3, 4], "zwei verzaubert")
 	assert_false(SoloRules.piper_wins(s, 1), "noch nicht alle")

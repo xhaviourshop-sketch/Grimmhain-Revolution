@@ -485,9 +485,7 @@ static func begin(ctx: RuleContext, step_id: String) -> void:
 			RoleCatalog.RATTENFAENGER:  # 1 oder 2 noch unverzauberte andere Lebende
 				prompt.allowed_ids = SoloRules.charm_targets(s, solo_actor)
 				prompt.min_count = 1
-				prompt.max_count = mini(2, prompt.allowed_ids.size())
-				if RoleCatalog.param(s.players[solo_actor].role_id, "pipe_two", false):
-					prompt.min_count = prompt.max_count  # Bogen: in jeder Nacht zwei Spieler
+				prompt.max_count = mini(2, prompt.allowed_ids.size())  # die Spielleitung fragt zuerst „1 oder 2“ (Cockpit), der Kern lässt beides zu
 			RoleCatalog.PESTBRINGERIN:  # eine noch gesunde andere Lebende
 				prompt.allowed_ids = SoloRules.pest_targets(s, solo_actor)
 				prompt.min_count = 1

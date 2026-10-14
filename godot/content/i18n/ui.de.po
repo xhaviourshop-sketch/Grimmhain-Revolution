@@ -9866,7 +9866,7 @@ msgid "ui.role.classic_floetenspieler.name"
 msgstr "Der Flötenspieler"
 
 msgid "ui.role.classic_floetenspieler.short"
-msgstr "Verzaubert jede Nacht zwei Personen. Gewinnt, wenn alle verzaubert sind."
+msgstr "Verzaubert jede Nacht eine oder zwei Personen. Gewinnt, wenn alle verzaubert sind."
 
 msgid "ui.role.classic_floetenspieler.lex.night"
 msgstr "jede Nacht"
@@ -9875,13 +9875,13 @@ msgid "ui.role.classic_floetenspieler.lex.wolf"
 msgstr "nein"
 
 msgid "ui.role.classic_floetenspieler.lex.ability"
-msgstr "Verzaubert in jeder Nacht zwei Personen."
+msgstr "Verzaubert in jeder Nacht eine oder zwei Personen."
 
 msgid "ui.role.classic_floetenspieler.lex.timing"
 msgstr "Jede Nacht. Die Verzauberung bleibt."
 
 msgid "ui.role.classic_floetenspieler.lex.targets"
-msgstr "Zwei lebende Personen, die noch nicht verzaubert sind. Bleibt nur eine übrig, wählt er diese."
+msgstr "Eine oder zwei lebende Personen, die noch nicht verzaubert sind. Die Spielleitung fragt zuerst, wie viele. Bleibt nur eine übrig, entfällt die Frage."
 
 msgid "ui.role.classic_floetenspieler.lex.exceptions"
 msgstr "Er gewinnt allein, sobald alle anderen Lebenden verzaubert sind."
@@ -9893,7 +9893,7 @@ msgid "ui.role.classic_floetenspieler.lex.example"
 msgstr "Der Flötenspieler verzaubert Anna und Ben. Sind am Ende alle verzaubert, gewinnt er."
 
 msgid "ui.role.classic_floetenspieler.lex.act"
-msgstr "Aufruf: Lies vor: „Flötenspieler, erwache. Zeige auf zwei Personen, die du verzaubern willst.“\nAuswählen oder ablesen: Tippe zwei Personen an und bestätige.\nVorlesen oder zeigen: Die Verzauberten erfahren es durch eine Karte.\nBeenden: Bestätige die Wahl."
+msgstr "Aufruf: Lies vor: „Flötenspieler, erwache. Zeige auf eine oder zwei Personen, die du verzaubern willst.“\nAuswählen oder ablesen: Wähle zuerst „Eine Person“ oder „Zwei Personen“, dann tippe sie an.\nVorlesen oder zeigen: Die Verzauberten erfahren es durch eine Karte.\nBeenden: Bestätige die Wahl."
 
 msgid "ui.role.classic_floetenspieler.lex.gm"
 msgstr "Die App prüft nach jeder Wahl, ob alle verzaubert sind."
@@ -10014,3 +10014,15 @@ msgstr "Als Wolf benannt: {name}."
 
 msgid "ui.cockpit.confirm.card_report"
 msgstr "Gemeldet: {name}."
+
+msgid "ui.night.rattenfaenger.count.short"
+msgstr "Wie viele verzaubern?"
+
+msgid "ui.night.classic_floetenspieler.count.short"
+msgstr "Wie viele verzaubern?"
+
+msgid "ui.cockpit.action.pipe_one"
+msgstr "Eine Person"
+
+msgid "ui.cockpit.action.pipe_two"
+msgstr "Zwei Personen"

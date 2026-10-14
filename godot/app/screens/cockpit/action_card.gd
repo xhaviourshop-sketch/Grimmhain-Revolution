@@ -569,9 +569,12 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	var anonymous := bool(next.get("anonymous_asker", false))
 	# Loki entscheidet zuerst Liebende oder Rivalen, dann folgen die zwei Personen (die Antwort geht gemeinsam an den Kern).
 	var pre_mode := CockpitText.asks_bond_mode(next) and context.get("pre_choice") == null
+	var pre_count := CockpitText.asks_pipe_count(next)  # Flötenspieler: zuerst „1 oder 2“ (nach der Wahl hat die Karte genau eine Zahl)
 	var texts := next.duplicate()
 	if pre_mode:
 		texts["stage"] = "mode"
+	elif pre_count:
+		texts["stage"] = "count"
 	_compact = true
 	# Zuflucht (DI-05): die gefragte Person steht auf der Karte, die fragende Person und die Rolle nicht.
 	var short := CockpitText.night_short_key(texts)
@@ -599,6 +602,12 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		# Beide Antworten stehen in der Karte (nicht die erste im Dock unten rechts).
 		buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, "mode"), GrimmButton.Kind.SECONDARY, &"loki_mode", {"choice": true}))
 		buttons.append(_button("NoButton", CockpitText.action_key("no", owner, "mode"), GrimmButton.Kind.SECONDARY, &"loki_mode", {"choice": false}))
+		_help(next, buttons)
+		_actions(buttons)
+		return
+	if pre_count:
+		buttons.append(_button("PipeOneButton", "ui.cockpit.action.pipe_one", GrimmButton.Kind.SECONDARY, &"pipe_count", {"count": 1}))
+		buttons.append(_button("PipeTwoButton", "ui.cockpit.action.pipe_two", GrimmButton.Kind.SECONDARY, &"pipe_count", {"count": 2}))
 		_help(next, buttons)
 		_actions(buttons)
 		return

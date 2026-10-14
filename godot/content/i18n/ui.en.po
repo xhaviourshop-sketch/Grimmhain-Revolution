@@ -9866,7 +9866,7 @@ msgid "ui.role.classic_floetenspieler.name"
 msgstr "The Pipe"
 
 msgid "ui.role.classic_floetenspieler.short"
-msgstr "Enchants two people every night. Wins when all are enchanted."
+msgstr "Enchants one or two people every night. Wins when all are enchanted."
 
 msgid "ui.role.classic_floetenspieler.lex.night"
 msgstr "every night"
@@ -9875,13 +9875,13 @@ msgid "ui.role.classic_floetenspieler.lex.wolf"
 msgstr "no"
 
 msgid "ui.role.classic_floetenspieler.lex.ability"
-msgstr "Enchants two people every night."
+msgstr "Enchants one or two people every night."
 
 msgid "ui.role.classic_floetenspieler.lex.timing"
 msgstr "Every night. The enchantment stays."
 
 msgid "ui.role.classic_floetenspieler.lex.targets"
-msgstr "Two living people who are not yet enchanted. If only one is left, he chooses that one."
+msgstr "One or two living people who are not yet enchanted. The host asks how many first. If only one is left, the question is skipped."
 
 msgid "ui.role.classic_floetenspieler.lex.exceptions"
 msgstr "He wins alone as soon as all other living people are enchanted."
@@ -9893,7 +9893,7 @@ msgid "ui.role.classic_floetenspieler.lex.example"
 msgstr "The Pipe enchants Anna and Ben. If everyone is enchanted in the end, he wins."
 
 msgid "ui.role.classic_floetenspieler.lex.act"
-msgstr "Call: Read aloud: “Pipe, wake up. Point to two people you want to enchant.”\nChoose or read: Tap two people and confirm.\nRead or show: The enchanted learn it from a card.\nFinish: Confirm the choice."
+msgstr "Call: Read aloud: “Pipe, wake up. Point to one or two people you want to enchant.”\nChoose or read: First choose “One person” or “Two people”, then tap them.\nRead or show: The enchanted learn it from a card.\nFinish: Confirm the choice."
 
 msgid "ui.role.classic_floetenspieler.lex.gm"
 msgstr "The app checks after every choice whether all are enchanted."
@@ -10014,3 +10014,15 @@ msgstr "Named as wolf: {name}."
 
 msgid "ui.cockpit.confirm.card_report"
 msgstr "Reported: {name}."
+
+msgid "ui.night.rattenfaenger.count.short"
+msgstr "How many to charm?"
+
+msgid "ui.night.classic_floetenspieler.count.short"
+msgstr "How many to charm?"
+
+msgid "ui.cockpit.action.pipe_one"
+msgstr "One person"
+
+msgid "ui.cockpit.action.pipe_two"
+msgstr "Two people"

@@ -356,7 +356,6 @@ const CLASSIC_BAERENFUEHRER := &"classic-baerenfuehrer"
 ##   lone_any      Weißer Wolf: Opfer ist jede andere lebende Person, nicht nur ein Wolf
 ##   sole_win      Weißer Wolf: gewinnt nur, wenn er als einzige Person lebt
 ##   fox           Fuchs: wählt eine Person, geprüft wird sie mit ihren beiden Nachbarn auf einen Werwolf (Bogen)
-##   pipe_two      Flötenspieler: verzaubert in jeder Nacht genau zwei (bei nur einer übrigen Person diese)
 ##   piper_all     false: kein Schritt „Alle Verzauberten“ (der Bogen kennt ihn nicht)
 ##   bear          Bärenführer: knurrt jeden Morgen, wenn ein Werwolf unmittelbar neben ihm sitzt
 const CLASSIC_ROLES := {
@@ -377,7 +376,7 @@ const CLASSIC_ROLES := {
 	CLASSIC_URWOLF: {"mechanic": WERWOLF, "transform": true},
 	CLASSIC_WEISSER_WOLF: {"mechanic": RACHSUECHTIGER_WOLF, "every": 2, "lone_any": true, "sole_win": true},
 	CLASSIC_FUCHS: {"mechanic": SPUERHUND, "fox": true},
-	CLASSIC_FLOETENSPIELER: {"mechanic": RATTENFAENGER, "pipe_two": true, "piper_all": false},
+	CLASSIC_FLOETENSPIELER: {"mechanic": RATTENFAENGER, "piper_all": false},
 	CLASSIC_BAERENFUEHRER: {"mechanic": DORFBEWOHNER, "bear": true},
 }
 

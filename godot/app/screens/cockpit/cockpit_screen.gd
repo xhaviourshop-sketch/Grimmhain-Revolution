@@ -40,6 +40,8 @@ var _view: Dictionary = {}
 var _next_id: String = ""
 var _selection: Array = []
 var _random: Variant = null  ## Zufallsvorschlag (Personen) der offenen Spielleiterwahl; nur bis zur nächsten Änderung
+var _pipe_step: String = ""
+var _pipe_count: int = 0  ## Flötenspieler/Rattenfänger: gewählte Anzahl (1 oder 2) vor der Zielwahl, 0 = noch nicht gewählt (nur Bedienzustand)
 var _loki_mode: Variant = null  ## Loki: gewählte Art der Bindung (true = Liebende) vor der Wahl der zwei Personen (nur Bedienzustand)
 var _confirm_until: int = 0  ## bis hierhin (Millisekunden) nimmt die Spielleitung nach „Bestätigen“ nichts Neues an
 var _committed_seat: int = -1  ## zuletzt automatisch übernommene Person (Schutz vor Doppeltippen)
@@ -235,6 +237,10 @@ func _refresh() -> void:
 	var next: Dictionary = _view.get("next", {})
 	if str(_effective(next).get("owner")) != "loki":
 		_loki_mode = null
+	var step_key := str(next.get("step_id", ""))
+	if str(_effective(next).get("owner")) != "rattenfaenger" or step_key != _pipe_step:
+		_pipe_count = 0  # neue Nacht oder anderer Schritt: die Zahl wird neu gefragt
+	_pipe_step = step_key
 	var identity := _identity(next)
 	if identity != _next_id:
 		_next_id = identity
@@ -821,6 +827,11 @@ func _render() -> void:
 		_card.role_art().show_role("")
 		return
 	var kind := str(next.get("kind"))
+	if kind == "begin_step" and not (next.get("preview", {}) as Dictionary).is_empty():
+		next = next.duplicate()
+		next["preview"] = _pipe_adjusted(next["preview"])
+	else:
+		next = _pipe_adjusted(next)
 	if _gm_mode != "":
 		next = {"kind": "gm", "secret": false}
 		kind = "gm"
@@ -1096,6 +1107,8 @@ func _on_seat_tapped(person_id: int) -> void:
 		return
 	if CockpitText.asks_bond_mode(eff) and _loki_mode == null:
 		return  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
+	if CockpitText.asks_pipe_count(eff):
+		return  # Flötenspieler: erst „1 oder 2“, dann die Personen
 	if str(next.get("kind")) == "begin_step":
 		if not _ensure_begun():
 			return
@@ -1246,6 +1259,10 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 		&"loki_mode":
 			_loki_mode = bool(payload["choice"])
 			_render()
+		&"pipe_count":
+			_pipe_count = int(payload["count"])
+			_selection.clear()
+			_render()
 		&"cancel_prompt":
 			_ask_reason("ui.cockpit.dialog.cancel.title", "ui.cockpit.dialog.cancel.message", "ui.cockpit.dialog.cancel.confirm",
 				func(reason: String) -> void: _submit(s.cancel_prompt.bind(reason)))
@@ -1316,8 +1333,19 @@ func _hunt_ids(eff: Dictionary, kind: String) -> Array:
 
 func _effective(next: Dictionary) -> Dictionary:
 	if str(next.get("kind")) == "begin_step" and not (next.get("preview", {}) as Dictionary).is_empty():
-		return next["preview"]
-	return next
+		return _pipe_adjusted(next["preview"])
+	return _pipe_adjusted(next)
+
+
+## Nach der Wahl „1 oder 2“ gilt für die Zielwahl genau diese Zahl (die Karte und die Antippregeln nutzen sie); der Kern lässt weiter 1 bis 2 zu.
+func _pipe_adjusted(prompt: Dictionary) -> Dictionary:
+	if _pipe_count <= 0 or not CockpitText.asks_pipe_count(prompt):
+		return prompt
+	var copy := prompt.duplicate()
+	copy["counts"] = [_pipe_count]
+	copy["min"] = _pipe_count
+	copy["max"] = _pipe_count
+	return copy
 
 
 ## Beginnt den angekündigten Schritt, wenn die Karte seinen Prompt nur als Vorschau zeigt (die erste Handlung beginnt ihn).

@@ -65,6 +65,12 @@ static func asks_bond_mode(next: Dictionary) -> bool:
 	return str(next.get("owner")) == "loki" and str(next.get("stage")) == "targets" 		and not bool(RoleCatalog.param(StringName(str(next.get("role_id", ""))), "lovers_only", false))
 
 
+## true, wenn die Spielleitung bei dieser Karte zuerst die Zahl wählt („Wie viele verzaubern?“): Flötenspieler und Rattenfänger mit mindestens zwei Verzauberbaren.
+## Bleibt nur eine Person übrig, entfällt die Frage (die Anzahl ist dann 1).
+static func asks_pipe_count(next: Dictionary) -> bool:
+	return str(next.get("owner")) == "rattenfaenger" and str(next.get("answer")) == "targets" and (next.get("counts", []) as Array) == [1, 2]
+
+
 static func call_key(role_id: String) -> String:
 	var key := "ui.call.%s" % key_part(role_id)
 	return key if has_key(key) else "ui.call.generic"
