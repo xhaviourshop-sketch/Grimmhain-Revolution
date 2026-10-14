@@ -21,7 +21,8 @@ func test_random_mode_goes_from_round_to_cockpit_in_three_steps() -> void:
 	await frames(3)
 	assert_eq(String(current_id(shell)), "cockpit", "Cockpit nach dem Start")
 	var commands: Array = session_of(shell).call("commands")
-	assert_eq(commands.size(), 1, "genau ein StartGame")
+	assert_eq(commands.size(), 2, "StartGame und direkt die erste Nacht")
+	assert_eq(commands[0].type, Command.START_GAME, "genau ein StartGame zuerst")
 	assert_eq(commands[0].payload["players"].size(), 9, "neun Personen")
 
 

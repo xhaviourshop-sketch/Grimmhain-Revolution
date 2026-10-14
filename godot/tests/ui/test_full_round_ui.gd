@@ -175,7 +175,9 @@ func _new_game_through_buttons(shell: Control, count: int, act: StringName = &"a
 func _check_started_game(shell: Control, details: Dictionary, count: int) -> void:
 	var session := session_of(shell) as GameSession
 	var commands := session.commands()
-	assert_eq(commands.size(), 1, "%d: genau ein StartGame" % count)
+	assert_eq(commands.size(), 2, "%d: ein StartGame, danach die erste Nacht in einem Zug" % count)
+	assert_eq(commands.filter(func(c: Command) -> bool: return c.type == Command.START_GAME).size(), 1, "%d: genau ein StartGame" % count)
+	assert_eq(commands[1].type, Command.START_NIGHT, "%d: Spiel starten beginnt direkt die Nacht" % count)
 	var payload := commands[0].payload
 	assert_eq(payload["roles"], details["roles"], "%d: dieselben Rollen je Personen-ID" % count)
 	assert_eq(payload["seat_order"], details["seat_order"], "%d: dieselbe Sitzordnung" % count)

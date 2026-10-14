@@ -11,6 +11,7 @@ const TITLE_KEY := "ui.prep.title"
 const FOOTER_BUTTON_MIN_WIDTH := 190  ## breit genug, dass kurze Texte frei von den Dornen-Enden stehen
 
 var _shown_step: StringName = &""
+var _starting: bool = false  ## Spielstart läuft: ein zweiter Tipp wird ignoriert
 var _steps: Dictionary[StringName, PrepStep] = {}
 var _header_extras: Dictionary[StringName, Control] = {}  ## Kopfzeilen-Elemente der Schritte (z. B. Reiter der Rollen), nur beim eigenen Schritt sichtbar
 var _medallions: StepMedallions = null
@@ -264,11 +265,15 @@ func _discard_and_leave() -> void:
 
 
 func _on_start_requested() -> void:
+	if _starting:
+		return  # Doppeltippen startet nichts doppelt
+	_starting = true
 	if context.session.is_over():
 		context.autosave()  # Spielstand und Abschlussbericht sind gesichert, bevor die beendete Partie der neuen weicht
 		context.sync_history()
 	var result := GameStart.start(context.session, context.setup)
 	if not bool(result["ok"]):
+		_starting = false
 		var error := StringName(result["error"])
 		var reason := "other"
 		if error == &"game_already_started" or error == &"game_over":
@@ -279,5 +284,6 @@ func _on_start_requested() -> void:
 		_hint.format_values = {}
 		_hint.text_key = "ui.setup.seating.status.start_failed.%s" % reason
 		return
+	context.session.start_night()  # „Spiel starten“ beginnt direkt die erste Nacht; „Rollen zeigen“ bleibt im Werkzeugmenü des Cockpits
 	status_message_requested.emit("ui.setup.seating.toast.started")
 	navigate_requested.emit(ScreenIds.COCKPIT)
