@@ -1335,6 +1335,8 @@ func _button(node_name: String, key: String, kind: GrimmButton.Kind, action: Str
 		GroveSkin.skin_button(b, kind == GrimmButton.Kind.PRIMARY)
 		if _window_actions:
 			b.custom_minimum_size = Vector2(CARD_ACTION_MIN_WIDTH, WINDOW_BUTTON_HEIGHT)  # alle Antworten gleich hoch, die Hauptantwort bleibt rot hervorgehoben
+			b.add_theme_font_size_override(&"font_size", ThemeTokens.FONT_BUTTON)  # eine Schriftgröße für die ganze Reihe; die Hauptantwort hebt sich nur durch Farbe und Rand ab
+			b.wrap = false  # kein Umbruch in zwei Zeilen: der Knopf wird bei Bedarf breiter
 		elif kind != GrimmButton.Kind.PRIMARY:
 			b.custom_minimum_size.y = ThemeTokens.TOUCH_MIN  # Nebenaktionen auf der Karte: 48 hoch, zwei Zeilen Schrift passen; spart Platz für den Text
 	else:
