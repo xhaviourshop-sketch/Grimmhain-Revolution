@@ -72,6 +72,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_update_safe_area)
 	_update_safe_area()
 	_apply_window_limits()
+	add_child(PortraitHint.new())  # oberste Ebene, auch über Dialog und Hinweisen
 	_router.navigate(ScreenIds.START)
 
 

@@ -10101,3 +10101,12 @@ msgstr "The Knight picks a direction: Left or Right."
 
 msgid "ui.night.classic_ritter.knight.help"
 msgstr "The next werewolf in that direction dies. Tap Left or Right."
+
+msgid "ui.portrait.title"
+msgstr "Please rotate your device"
+
+msgid "ui.portrait.text"
+msgstr "Grimmhain is played in landscape. Turn your device sideways."
+
+msgid "ui.portrait.continue"
+msgstr "Continue anyway"
