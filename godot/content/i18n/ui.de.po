@@ -9988,6 +9988,21 @@ msgstr "Tippe zwei Personen."
 msgid "ui.night.classic_amor.targets.short"
 msgstr "verliebt zwei"
 
+msgid "ui.night.classic_amor.targets_hate.title"
+msgstr "Amor macht zwei Personen zu Feinden."
+
+msgid "ui.night.classic_amor.targets_hate.help"
+msgstr "Tippe zwei Personen."
+
+msgid "ui.night.classic_amor.targets_hate.short"
+msgstr "verfeindet zwei"
+
+msgid "ui.morning.private.classic_lovers"
+msgstr "{name} und {target} sind Verliebte."
+
+msgid "ui.morning.private.classic_rivals"
+msgstr "{name} und {target} sind Feinde."
+
 msgid "ui.cockpit.action.decline.reaction.pick"
 msgstr "Kein Schuss"
 

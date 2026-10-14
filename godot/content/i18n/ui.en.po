@@ -9988,6 +9988,21 @@ msgstr "Tap two people."
 msgid "ui.night.classic_amor.targets.short"
 msgstr "enamors two"
 
+msgid "ui.night.classic_amor.targets_hate.title"
+msgstr "Cupid makes two people enemies."
+
+msgid "ui.night.classic_amor.targets_hate.help"
+msgstr "Tap two people."
+
+msgid "ui.night.classic_amor.targets_hate.short"
+msgstr "makes two enemies"
+
+msgid "ui.morning.private.classic_lovers"
+msgstr "{name} and {target} are in love."
+
+msgid "ui.morning.private.classic_rivals"
+msgstr "{name} and {target} are enemies."
+
 msgid "ui.cockpit.action.decline.reaction.pick"
 msgstr "No shot"
 

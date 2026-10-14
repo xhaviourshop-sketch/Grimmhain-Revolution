@@ -65,3 +65,32 @@ func test_classic_amor_texts_have_no_loki_wording_and_name_the_choice() -> void:
 		var mentions := String(TranslationServer.translate("ui.role.classic_amor.lex.gm")) + String(TranslationServer.translate("ui.night.classic_amor.mode.short"))
 		assert_true(mentions.contains("Hass") or mentions.contains("hate") or mentions.contains("Hate"), "die Texte nennen die Wahl (%s)" % locale)
 	TranslationServer.set_locale("de")
+
+
+func _bond_report(kind_is_love: bool) -> Array:
+	var s := _night_one()
+	var r := _apply(s, Command.answer_stage_targets(s.pending_prompt.id, String(s.pending_prompt.stage), [1, 4]))
+	r = _apply(r.state, Command.answer_choice(r.state.pending_prompt.id, "mode", kind_is_love))
+	return MorningReport.private_of(r.state, r.events)
+
+
+func test_classic_amor_texts_follow_the_choice() -> void:
+	var step := {"owner": "loki", "stage": "targets", "answer": "targets", "role_id": "classic-amor"}
+	var hate_step := step.duplicate()
+	hate_step["bond_hate"] = true
+	assert_eq(CockpitText.night_short_key(step), "ui.night.classic_amor.targets.short", "Liebe: verliebt zwei")
+	assert_eq(CockpitText.night_short_key(hate_step), "ui.night.classic_amor.targets_hate.short", "Hass: verfeindet zwei")
+	var loki_step := {"owner": "loki", "stage": "targets", "answer": "targets", "role_id": "loki", "bond_hate": true}
+	assert_eq(CockpitText.night_short_key(loki_step), "ui.night.loki.targets.short", "Loki bleibt bei seinem Text")
+	assert_eq(_bond_report(true)[0]["key"], "ui.morning.private.classic_lovers", "Morgenmeldung Liebe")
+	assert_eq(_bond_report(false)[0]["key"], "ui.morning.private.classic_rivals", "Morgenmeldung Hass")
+	var expected := {"de": ["verfeindet zwei", "sind Feinde"], "en": ["makes two enemies", "are enemies"]}
+	for locale: String in ["de", "en"]:
+		TranslationServer.set_locale(locale)
+		var hate_texts := String(TranslationServer.translate("ui.night.classic_amor.targets_hate.short")) + "|" + String(TranslationServer.translate("ui.morning.private.classic_rivals")) \
+			+ "|" + String(TranslationServer.translate("ui.night.classic_amor.targets_hate.title")) + "|" + String(TranslationServer.translate("ui.night.classic_amor.targets_hate.help"))
+		for word: String in expected[locale]:
+			assert_true(hate_texts.contains(word), "%s nennt %s" % [locale, word])
+		for banned: String in ["verlieb", "Verlieb", "Liebe", "Liebende", "in love", "lover", "enamor", "Loki", "Rival", "rival"]:
+			assert_false(hate_texts.contains(banned), "Hass-Text (%s) nennt nicht %s" % [locale, banned])
+	TranslationServer.set_locale("de")

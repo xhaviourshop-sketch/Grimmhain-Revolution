@@ -571,6 +571,7 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	var pre_mode := CockpitText.asks_bond_mode(next) and context.get("pre_choice") == null
 	var pre_count := CockpitText.asks_pipe_count(next)  # Flötenspieler: zuerst „1 oder 2“ (nach der Wahl hat die Karte genau eine Zahl)
 	var texts := next.duplicate()
+	texts["bond_hate"] = CockpitText.asks_bond_mode(next) and context.get("pre_choice") == false
 	if pre_mode:
 		texts["stage"] = "mode"
 	elif pre_count:

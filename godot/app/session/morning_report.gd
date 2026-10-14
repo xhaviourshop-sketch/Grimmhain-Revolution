@@ -197,7 +197,9 @@ static func _private(s: GameState, span: Array[GameEvent]) -> Array:
 				out.append({"key": "ui.morning.private.step_dropped", "role_id": "pack", "drop": str(d["reason"])})
 			GameEvent.LOKI_BOUND:
 				var pair: Array = d["target_ids"]
-				out.append({"key": "ui.morning.private.lovers" if str(d["kind"]) == "love" else "ui.morning.private.rivals",
+				var classic := s.players.has(int(d["loki_id"])) and RoleCatalog.is_classic(s.players[int(d["loki_id"])].role_id)
+				var bond_key := "ui.morning.private.%s" % ("lovers" if str(d["kind"]) == "love" else "rivals")
+				out.append({"key": bond_key.replace("private.", "private.classic_") if classic else bond_key,
 					"person": _person(s, int(pair[0])), "target": _person(s, int(pair[1]))})
 			GameEvent.CHARMED:
 				for id: Variant in d["target_ids"]:

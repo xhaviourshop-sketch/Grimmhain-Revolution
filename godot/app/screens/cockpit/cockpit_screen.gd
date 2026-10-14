@@ -1432,7 +1432,9 @@ func _ask_answer_confirm(answer: Dictionary, on_confirm: Callable) -> void:
 		"prediction":
 			text = tr("ui.cockpit.card.prediction.value").format({"when": tr("ui.cockpit.card.prediction.%s" % str(answer["pkind"])), "number": int(answer["number"])})
 	var role := str(eff.get("role_id", ""))
-	var head := tr(CockpitText.night_short_key(eff))
+	var head_step := eff.duplicate()
+	head_step["bond_hate"] = answer.has("mode") and not bool(answer["mode"])
+	var head := tr(CockpitText.night_short_key(head_step))
 	if role != "" and not bool(eff.get("anonymous_asker", false)):
 		head = "%s · %s" % [tr(CockpitText.role_name(role)), head]
 	_ask_confirm("ui.cockpit.confirm.message", {"what": head, "answer": text}, on_confirm)
