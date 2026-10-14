@@ -144,7 +144,6 @@ func _init() -> void:
 			hide_undo()
 			requested.emit(&"undo_last", {}))
 	_undo_bar.add_child(_undo_button)
-	add_child(_undo_bar)
 	_lower = BoxContainer.new()
 	_lower.name = "Lower"
 	_lower.vertical = true
@@ -160,6 +159,7 @@ func _init() -> void:
 	_actions_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_actions_box.size_flags_stretch_ratio = 1.0
 	_lower.add_child(_actions_box)
+	add_child(_undo_bar)  # „Rückgängig“ steht unter den Antworten, nie darüber (F-19)
 	resized.connect(func() -> void: _lower.vertical = size.x < SIDE_BY_SIDE_WIDTH)
 
 
@@ -526,6 +526,7 @@ func _decoys(next: Dictionary) -> void:
 ## Hinweis an betroffene Personen (DI-04, DI-06, DI-07): „Karte zeigen“ genau einmal; das Schließen der Karte bestätigt den Hinweis.
 func _notice(next: Dictionary) -> void:
 	_compact = true
+	_window_actions = primary_host != null  # die Antwortreihe steht überall im Fenster
 	var names: Array = (next.get("viewers", []) as Array).map(func(v: Variant) -> String: return str((v as Dictionary).get("name", "")))
 	_mini_line(CockpitText.help_role(next), ", ".join(names), "ui.night.notice.short").name = "NoticeTitle"
 	var buttons: Array[Control] = [_button("ShowNoticeButton", "ui.cockpit.action.show_notice", GrimmButton.Kind.PRIMARY, &"show_notice", {"notice_id": int(next.get("notice_id", -1))})]
@@ -548,6 +549,7 @@ func _begin_step(next: Dictionary, context: Dictionary) -> void:
 		return
 	var role := str(next.get("role_id"))
 	_compact = true
+	_window_actions = primary_host != null
 	_role_head(role, role, next, context, "ui.night.generic.short.step").name = "NightTitle"
 	if str(next.get("step_kind")) != "reaction":
 		_call_line(role, context)
@@ -809,6 +811,7 @@ func _prediction_part(next: Dictionary, context: Dictionary, buttons: Array[Cont
 
 
 func _end_night(next: Dictionary) -> void:
+	_window_actions = primary_host != null
 	_decoys(next)
 	_heading("ui.cockpit.card.end_night.heading")
 	if int(next.get("skipped", 0)) > 0:
@@ -820,6 +823,7 @@ func _end_night(next: Dictionary) -> void:
 ## Morgenbericht in zwei Teilen (Markus 05.10.2026): „Fürs Dorf“ zum Vorlesen, „Für dich“ nur für die Spielleitung, je ein Satz mit
 ## Namen. Tarnaufrufe nach dem letzten Nachtschritt stehen davor, weil die Nacht ohne eigene Karte endet.
 func _morning(next: Dictionary) -> void:
+	_window_actions = primary_host != null
 	_decoys(next)
 	_caption("ui.cockpit.card.morning.caption", {"number": int(next.get("night_number", 0))})
 	_heading("ui.cockpit.card.morning.village").name = "MorningVillage"
