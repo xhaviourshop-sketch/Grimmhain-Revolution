@@ -143,3 +143,63 @@ func test_role_tiles_start_empty_toggle_count_and_recommendation_fills() -> void
 	await press(find_button(screen, "ProposalButton"))
 	assert_eq(int((setup.call("view") as Dictionary)["roles"]["total"]), target, "Empfehlung füllt auf die Personenzahl")
 	assert_true(bool((setup.call("view") as Dictionary)["roles"]["is_suggestion"]), "Auswahl = Empfehlung")
+
+
+func _mouse(plate: Control, pressed: bool, global_point: Vector2) -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = pressed
+	event.position = global_point - plate.global_position
+	plate._gui_input(event)
+
+
+func _motion(plate: Control, global_point: Vector2) -> void:
+	var event := InputEventMouseMotion.new()
+	event.position = global_point - plate.global_position
+	plate._gui_input(event)
+
+
+func _order(setup: Object) -> Array:
+	return (setup.call("view") as Dictionary)["persons"].map(func(p: Dictionary) -> int: return int(p["person_id"]))
+
+
+func test_dragging_a_name_onto_another_swaps_the_two_seats() -> void:
+	var shell := await spawn_shell(SIZE_4_3)
+	if shell == null:
+		return
+	var screen := await open_new_game(shell)
+	var setup := setup_of(shell)
+	await press(find_button(screen, "NextButton"))
+	var count := int((setup.call("view") as Dictionary)["player_count"])
+	for i: int in count:
+		setup.call("add_person", "Person %d" % (i + 1))
+	await frames(3)
+	var ids := _order(setup)
+	var first := find_button(screen, "NamePlate_1")
+	var third := find_button(screen, "NamePlate_3")
+	var start := first.global_position + first.size * 0.5
+	var aim := third.global_position + third.size * 0.5
+	# Tippen (Bewegung unter der Schwelle): wählt aus, tauscht nichts.
+	await press(first)
+	await frames(2)
+	assert_eq(_order(setup), ids, "Tippen tauscht nicht")
+	assert_eq(int(find_node(screen, "NamesStep").call("selected_person")), ids[0], "Tippen wählt die Person")
+	# Loslassen außerhalb jeder Zeile bricht ab.
+	_mouse(first, true, start)
+	_motion(first, start + Vector2(40.0, 0.0))
+	_motion(first, Vector2(2.0, 2.0))
+	_mouse(first, false, Vector2(2.0, 2.0))
+	await frames(2)
+	assert_eq(_order(setup), ids, "Loslassen daneben ändert nichts")
+	assert_true(find_node(screen, "DragGhost") == null,"die Zugkopie ist weg")
+	# Loslassen auf Zeile 3 tauscht Platz 1 und 3.
+	_mouse(first, true, start)
+	_motion(first, aim)
+	assert_true(third.drop_target, "Zielzeile hervorgehoben")
+	_mouse(first, false, aim)
+	await frames(2)
+	var swapped := ids.duplicate()
+	swapped[0] = ids[2]
+	swapped[2] = ids[0]
+	assert_eq(_order(setup), swapped, "Plätze 1 und 3 getauscht, alle anderen bleiben")
+	assert_eq(((setup.call("view") as Dictionary)["persons"] as Array).map(func(p: Dictionary) -> int: return int(p["number"])).slice(0, 3), [1, 2, 3], "Nummern folgen dem Platz")
