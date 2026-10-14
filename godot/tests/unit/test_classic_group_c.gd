@@ -93,3 +93,22 @@ func test_white_wolf_prompt_marks_every_wolf_including_the_urwolf() -> void:
 	assert_eq(view["wolf_ids"], [2, 3], "Werwolf und Urwolf sind markiert")
 	assert_eq(view["allowed_ids"], [2, 3, 4, 5, 6], "Ziel bleibt jede andere lebende Person")
 	assert_false(RoleCatalog.param(RoleCatalog.CLASSIC_WERWOLF, "lone_any", false), "andere Rollen bekommen keine Markierung")
+
+
+## F-24: Der Weiße Wolf bekommt nur in den Nächten 2, 4, 6 einen Schritt; ohne anderen Wolf bleibt die Zielwahl offen, die Markierung ist leer.
+func test_white_wolf_step_only_in_even_nights_and_empty_marks_without_other_wolf() -> void:
+	var r := RulesEngine.replay([Fixtures.start_roles([WW, D, D, D, D, D]), Command.start_night()])
+	assert_true(r.ok, "Start %s" % r.error)
+	var s := r.state
+	var expected := {1: false, 2: true, 3: false, 4: true, 6: true}
+	for night: int in expected:
+		s.night_number = night
+		var has_step := StepQueue.build_night_plan(s).any(func(k: StringName) -> bool: return StepQueue.step_role(str(k)) == RoleCatalog.RACHSUECHTIGER_WOLF)
+		assert_eq(has_step, expected[night], "Nacht %d: Schritt des Weißen Wolfs" % night)
+	var prompt := PendingPrompt.new()
+	prompt.owner = RoleCatalog.RACHSUECHTIGER_WOLF
+	prompt.actor_id = 1
+	prompt.allowed_ids = SoloRules.lone_targets(s, 1)
+	var view := PromptView.build(s, prompt)
+	assert_true(view.has("wolf_ids") and (view["wolf_ids"] as Array).is_empty(), "kein anderer Wolf: Markierung leer, aber vorhanden")
+	assert_eq(view["allowed_ids"], [2, 3, 4, 5, 6], "Ziel bleibt jede andere lebende Person")

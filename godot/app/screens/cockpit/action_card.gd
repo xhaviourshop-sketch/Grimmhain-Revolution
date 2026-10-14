@@ -617,7 +617,7 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	if not (next.get("wolf_ids", []) as Array).is_empty():
 		_text("ui.cockpit.card.wolves_marked", {}, &"WarningLabel").name = "WolvesMarkedLabel"  # Weißer Wolf: Hinweis zum Feuerring um die Werwölfe
 	elif next.has("wolf_ids"):
-		_text("ui.cockpit.card.white_wolf_rests", {}, &"WarningLabel").name = "WhiteWolfRestsLabel"  # kein Wolf zum Reißen: der Weiße Wolf ruht heute
+		_text("ui.cockpit.card.white_wolf_no_wolf", {}, &"WarningLabel").name = "WhiteWolfNoWolfLabel"  # Weißer Wolf darf heute (Nacht 2, 4 …), aber kein anderer Wolf lebt; jede andere Person bleibt wählbar
 	if OPEN_GROUP_OWNERS.has(owner) and answer == "ack":
 		_text("ui.cockpit.card.group_wake", {}, &"MutedLabel").name = "GroupWakeLabel"  # F-22: erst wecken, dann „Weiter“
 	if role == "kriegerin-des-lichts" and str(context.get("victim_names", "")) != "" and not anonymous:
