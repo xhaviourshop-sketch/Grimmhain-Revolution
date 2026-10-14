@@ -85,9 +85,16 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 		out["reaction_kind"] = String(s.reactions[0].kind)
 	if p.owner == PendingPrompt.OWNER_ORACLE and p.stage == OracleStep.STAGE_SHOWN:
 		out["can_override_shown"] = true
+	if p.owner == RoleCatalog.RACHSUECHTIGER_WOLF and s.players.has(p.actor_id) and RoleCatalog.param(s.players[p.actor_id].role_id, "lone_any", false):
+		out["wolf_ids"] = wolf_ids(s, p)  # Weißer Wolf (Classic): die Wölfe unter den Zielen, damit die Spielleitung sie am Sitzkreis erkennt
 	if answer == "prediction":
 		out["prediction_min"] = {"night": s.night_number + 1, "day": s.night_number}
 	return out
+
+
+## Wölfe unter den wählbaren Personen (Weißer Wolf: auch ein Urwolf). Nur für die Spielleitung.
+static func wolf_ids(s: GameState, p: PendingPrompt) -> Array:
+	return p.allowed_ids.filter(func(id: int) -> bool: return s.players.has(id) and s.players[id].counts_as_wolf)
 
 
 static func answer_type(owner: StringName, stage: StringName) -> String:

@@ -1328,6 +1328,8 @@ func _hunt_ids(eff: Dictionary, kind: String) -> Array:
 		return eff.get("actor_ids", [])
 	if str(eff.get("owner")) == "koenig-lykaon" and str(eff.get("stage")) == "ally":
 		return eff.get("allowed_ids", [])
+	if eff.has("wolf_ids"):
+		return eff.get("wolf_ids", [])  # Weißer Wolf: alle Werwölfe unter den Zielen tragen den Feuerring
 	return []
 
 

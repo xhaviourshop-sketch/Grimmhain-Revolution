@@ -10065,3 +10065,6 @@ msgstr "{names} are protected"
 
 msgid "ui.warn.cursed.many"
 msgstr "{names} are cursed"
+
+msgid "ui.cockpit.card.wolves_marked"
+msgstr "Werewolves wear the fire ring."

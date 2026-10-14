@@ -10065,3 +10065,6 @@ msgstr "{names} sind geschützt"
 
 msgid "ui.warn.cursed.many"
 msgstr "{names} sind verflucht"
+
+msgid "ui.cockpit.card.wolves_marked"
+msgstr "Werwölfe tragen den Feuerring."

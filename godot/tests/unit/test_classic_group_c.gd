@@ -78,3 +78,18 @@ func test_white_wolf_strikes_every_second_night_and_wins_only_alone() -> void:
 	var wins := s.open_candidates().filter(func(c: WinCandidate) -> bool: return c.reason_key == WinCandidate.REASON_LONE_WOLF)
 	assert_eq(wins.size(), 1, "allein: Einzelsieg wird vorgeschlagen")
 	assert_eq(wins[0].beneficiary_ids, [1], "Weißer Wolf gewinnt")
+
+
+## Nachtauftrag 14.10.2026: Beim Weißen Wolf zeigt die Zielwahl der Spielleitung alle Werwölfe (auch den Urwolf) deutlich an; das Ziel bleibt jede andere lebende Person.
+func test_white_wolf_prompt_marks_every_wolf_including_the_urwolf() -> void:
+	var r := RulesEngine.replay([Fixtures.start_roles([WW, W, UW, D, D, D]), Command.start_night()])
+	assert_true(r.ok, "Start %s" % r.error)
+	var s := r.state
+	var prompt := PendingPrompt.new()
+	prompt.owner = RoleCatalog.RACHSUECHTIGER_WOLF
+	prompt.actor_id = 1
+	prompt.allowed_ids = SoloRules.lone_targets(s, 1)
+	var view := PromptView.build(s, prompt)
+	assert_eq(view["wolf_ids"], [2, 3], "Werwolf und Urwolf sind markiert")
+	assert_eq(view["allowed_ids"], [2, 3, 4, 5, 6], "Ziel bleibt jede andere lebende Person")
+	assert_false(RoleCatalog.param(RoleCatalog.CLASSIC_WERWOLF, "lone_any", false), "andere Rollen bekommen keine Markierung")
