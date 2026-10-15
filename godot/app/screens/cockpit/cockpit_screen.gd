@@ -643,10 +643,14 @@ func _style_plate() -> void:
 ## Gemalte Zeile als Grund eines Labels (Haut, `SkinArt.row_box`), mit Innenabstand für den Text.
 func _row_plate(label: Label, side: float, vertical: float) -> void:
 	var back := SkinArt.row_box()
-	back.content_margin_left = side
-	back.content_margin_right = side
-	back.content_margin_top = vertical
-	back.content_margin_bottom = vertical
+	var font_size := label.get_theme_font_size(&"font_size", label.theme_type_variation if label.theme_type_variation != &"" else &"Label")
+	var line := label.get_theme_font(&"font").get_height(font_size)
+	var pad := maxf(vertical, SkinArt.row_padding_y(line))
+	var ends := ceilf(SkinArt.ROW_END * (line + pad * 2.0) / SkinArt.ROW_FIT_HEIGHT * ThemeFactory.BUTTON_END_SHARE)  # die Dornen-Enden wachsen mit der Zeilenhöhe
+	back.content_margin_left = maxf(side, ends)
+	back.content_margin_right = maxf(side, ends)
+	back.content_margin_top = pad
+	back.content_margin_bottom = pad
 	label.add_theme_stylebox_override("normal", back)
 
 

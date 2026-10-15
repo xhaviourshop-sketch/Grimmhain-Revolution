@@ -10,6 +10,7 @@ const BUTTON_FIT_HEIGHT := 100.0 ## Bildpixel, die der Knopfhöhe entsprechen (L
 const BUTTON_MAX_HEIGHT := 64.0  ## höhere Knöpfe zeichnen die Leiste nicht größer (Enden und Text kämen sich sonst in die Quere)
 const ROW_END := 48.0            ## Enden der Listenzeile
 const ROW_FIT_HEIGHT := 58.0
+const ROW_BAND_SHARE := 0.62      ## Anteil der Zeilenhöhe, den der deckende Innenbereich der Listenzeile einnimmt (gemessen 37 von 58 Bildpixeln)
 const FRAME_MARGINS := Vector4(150.0, 165.0, 150.0, 180.0)  ## Ecken-Ornamente des Rahmens in Bildpixeln (gemessen am Alpha)
 const FRAME_GROUND_INSET := Vector4(30.0, 37.0, 31.0, 56.0)  ## Innenkante der Rahmenlinie in Bildpixeln (links, oben, rechts, unten)
 const FRAME_SCALE := 0.38        ## Rahmenbild je logische Einheit
@@ -57,6 +58,11 @@ static func button_box(state: String, tint: Color = Color.WHITE) -> SkinBarBox:
 	var box := SkinBarBox.make(texture("knopf_" + state), BUTTON_END, BUTTON_FIT_HEIGHT, tint)
 	box.max_height = BUTTON_MAX_HEIGHT
 	return box
+
+
+## Senkrechter Innenabstand, bei dem eine Textzeile samt Unterlängen (plus `slack`) im deckenden Innenbereich der Listenzeile sitzt; die Zeile wächst mit dem Text.
+static func row_padding_y(line_height: float, slack: float = 4.0) -> float:
+	return maxf(0.0, ((line_height + slack) / ROW_BAND_SHARE - line_height) * 0.5)
 
 
 static func row_box(tint: Color = Color.WHITE) -> SkinBarBox:
