@@ -1,8 +1,10 @@
 class_name PerfMode
 extends RefCounted
 ## Leicht-Modus für schwache Touch-Geräte (iPad/Safari): weniger Zierwerk, kleinere Renderfläche. Auf dem PC (Maus) bleibt alles wie es ist.
-## An: Touch-Gerät, übersteuerbar mit `?leicht=1` / `?leicht=0` (Web) oder Umgebungsvariable `GRIMMHAIN_LEICHT` (Desktop). Die Renderauflösung
-## begrenzt `web/shell.html` (Pixelverhältnis höchstens 1), weil die Engine sie beim Start liest.
+## An: Touch-Gerät (`DisplayServer.is_touchscreen_available()`), ganz ohne Einstellung durch den Nutzer. Versteckte Entwickler-Übersteuerung:
+## `?leicht=1` / `?leicht=0` (Web) oder Umgebungsvariable `GRIMMHAIN_LEICHT` (Desktop).
+## Die Renderauflösung begrenzt `apply_render_scale`: im Web rendert die Engine sonst in voller Gerätauflösung (iPad Retina 2360x1640, Pixelverhältnis 2),
+## im Leicht-Modus nur noch in der logischen Größe (Skalierungsmodus „Ansicht“), der Browser skaliert das Bild hoch.
 ## Zum Messen schaltet `?aus=fledermaus,leben,feuer,schatten,partikel` (Web) oder `GRIMMHAIN_AUS` einzelne Teile ab; nur zur Fehlersuche.
 
 ## Teile, die im Leicht-Modus aus sind (Messung 15.10., siehe PROGRESS.md).
@@ -22,17 +24,22 @@ static func _query(key: String) -> String:
 
 static func light() -> bool:
 	if _light < 0:
-		if OS.has_feature("web"):  # entschieden von web/shell.html, damit Auflösung und Rest übereinstimmen
-			_light = 1 if bool(JavaScriptBridge.eval("!!window.grimmhainLight", true)) else 0
-		else:
-			match _query("leicht"):
-				"1":
-					_light = 1
-				"0":
-					_light = 0
-				_:
-					_light = 1 if DisplayServer.is_touchscreen_available() else 0
+		match _query("leicht"):
+			"1":
+				_light = 1
+			"0":
+				_light = 0
+			_:
+				_light = 1 if DisplayServer.is_touchscreen_available() else 0
 	return _light == 1
+
+
+## Rendert im Leicht-Modus in der logischen Größe statt in voller Gerätauflösung. Nur im Web (dort ist die Gerätauflösung die Last) oder bei
+## ausdrücklichem `leicht=1` (Messung am PC); der Desktop mit Touchbildschirm bleibt scharf. Das Seitenverhältnis und damit der Aufbau bleiben gleich.
+static func apply_render_scale(window: Window) -> void:
+	if not light() or not (OS.has_feature("web") or _query("leicht") == "1"):
+		return
+	window.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 
 
 ## Ob dieser Zierwerk abgeschaltet ist (Leicht-Modus oder Messschalter `aus`).

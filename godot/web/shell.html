@@ -183,18 +183,6 @@ body {
 	probe.src = 'ladebild.webp';
 })();
 		</script>
-		<script>
-// Leicht-Modus (PerfMode): auf Touch-Geräten höchstens die logische Größe rendern (Pixelverhältnis 1 statt 2 oder 3), übersteuerbar mit ?leicht=1 / ?leicht=0.
-// Die Engine liest das Pixelverhältnis beim Start, deshalb hier vor dem Engine-Skript.
-(function () {
-	const q = new URLSearchParams(window.location.search).get('leicht');
-	const touch = navigator.maxTouchPoints > 0 && window.matchMedia('(pointer: coarse)').matches;
-	window.grimmhainLight = q === '1' || (q !== '0' && touch);
-	if (window.grimmhainLight) {
-		Object.defineProperty(window, 'devicePixelRatio', { get: function () { return 1; }, configurable: true });
-	}
-})();
-		</script>
 		<script src="$GODOT_URL"></script>
 		<script>
 const GODOT_CONFIG = $GODOT_CONFIG;

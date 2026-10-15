@@ -35,8 +35,12 @@ func _process(_delta: float) -> void:
 	var bar := _scroll.get_v_scroll_bar()
 	var more := bar.max_value - bar.page > 1.0 and bar.value < bar.max_value - bar.page - 1.0
 	var rect := _scroll.get_global_rect()
-	global_position = Vector2(rect.position.x, rect.end.y - HEIGHT)
-	size = Vector2(rect.size.x, HEIGHT)
+	var at := Vector2(rect.position.x, rect.end.y - HEIGHT)
+	var extent := Vector2(rect.size.x, HEIGHT)
+	if global_position != at:  # nur bei Änderung setzen: sonst löst es jedes Bild Layout und Neuzeichnen aus
+		global_position = at
+	if size != extent:
+		size = extent
 	if more != _more or visible != more:
 		_more = more
 		visible = more

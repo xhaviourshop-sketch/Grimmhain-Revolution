@@ -49,7 +49,7 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
-	PerfMode.light()  # Leicht-Modus früh festlegen
+	PerfMode.apply_render_scale(get_window())  # Leicht-Modus früh festlegen und Renderauflösung begrenzen
 	theme = ThemeFactory.build()
 	get_tree().set_auto_accept_quit(false)  # Fenster schließen läuft über _notification (Warnung bei ungespeichertem Stand)
 	app_context.settings.changed.connect(_on_settings_changed)
@@ -73,6 +73,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_update_safe_area)
 	_update_safe_area()
 	_apply_window_limits()
+	add_child(PerfOverlay.new())  # verstecktes Messfeld (drei Finger oder langer Druck links oben)
 	add_child(PortraitHint.new())  # oberste Ebene, auch über Dialog und Hinweisen
 	_router.navigate(ScreenIds.START)
 

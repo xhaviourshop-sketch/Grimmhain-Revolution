@@ -1039,3 +1039,50 @@ Deploy: Web-Export neu auf `grimmhain-ipad-test` (Produktion), `index.pck` 39772
 Block G und H (classic-akt): Dorfbewohner und Classic-Dorfbewohner zeigen einen Textkasten statt des Kartenbilds (`NightArt.TEXT_CARD_ROLES`, RUECKFRAGEN.md); Hochformat-Hinweis `PortraitHint` im AppShell. Gezielte Tests grün (`test-changed`), i18n grün. Vorschau Build 202610142040-c5d3754 (`index.pck` 23 474 808 Byte), https://grimmhain-classic-preview.vercel.app; Produktion unberührt. Chrome: 412x915 Hinweis sichtbar, 1180x820 keiner, Wechsel live geprüft. Nicht geprüft: echtes Touch/Safari/iPad, „Trotzdem weiter“ nur im Test, nicht im Browser; Text im Hinweis wirkt auf dem Handy klein.
 
 UX-Umsetzung aus docs/ux/UX-AUDIT.md (classic-akt): umgesetzt F-01 Anklage (4 Tipps, nur das Fenster), F-02 Hinrichtung ohne Besonderheit (nur das Fenster; mit Warnung oder Pflichtfrage bleibt die Prüfkarte, ihr Knopf ist dann die eine Bestätigung), F-03 Empfehlung beim Öffnen übernommen mit Hinweis, F-04 Namen direkt (Prüfliste nur bei Doppelname, Platzmangel), F-09 Hinweiskarte schließt mit einem Tipp, F-13 Zeitanzeige nur mit Dauer, F-14 Menü ausgegraut mit Satz, F-08 nur Teil (Akt wird in der Sitzung gemerkt). Nicht umgesetzt: F-05 (Knöpfe unter der Karte, Layoutlogik von Dock, Antwortreihe und Hand nicht ohne Sichtprüfung angefasst), F-08 Optik (Classic als gleiche Karte), F-11 (Startseite zusammenlegen: fast alle Tests und der Weg zu "Rollen zeigen" hängen daran), Amor-Ziel 4 Tipps (6 Tipps = Liebe/Hass, 2 Ziele, Bestätigen, Karte zeigen, Hinweis schließen; die letzten zwei sind die Hinweisanzeige, nicht überflüssig). Tests: test-changed grün; bereits vor diesen Änderungen rot (auch auf HEAD 0a80df7+Block G/H): test_full_round_ui (2), test_resume_scenarios::piper, test_game_history::report_fits.
+
+## iPad-Leistung: Auflösung in Godot, Texturen, Dauerarbeit (15.10., Branch ux-texte)
+
+Nicht auf einem iPad gemessen. Der PC-Test mit Software-GL sagt nichts über das Gerät; Ablesen mit dem neuen Messfeld (unten).
+
+**Geändert**
+- Auflösung: `web/shell.html` setzt `devicePixelRatio` nicht mehr. Stattdessen schaltet `PerfMode.apply_render_scale` (aus `AppShell._ready`) das Fenster auf Skalierungsmodus „Ansicht“ (`CONTENT_SCALE_MODE_VIEWPORT`), wenn Leicht-Modus an ist und die App im Web läuft. Gerendert wird dann in der logischen Größe (iPad ca. 1105 x 768 statt 2360 x 1640), der Browser skaliert hoch. PC (Maus) unverändert scharf.
+- Warum nicht `allow_hidpi`: Die Engine liest es nur beim Start, nicht pro Gerät. `allow_hidpi=false` fürs Web würde auch Retina-PCs weich machen.
+- Leicht-Modus: `PerfMode.light()` nutzt `DisplayServer.is_touchscreen_available()`, ohne URL. `?leicht=1|0` und `?aus=...` bleiben als Entwickler-Übersteuerung.
+- Messfeld `app/widgets/perf_overlay.gd`: drei Finger gleichzeitig oder 1,2 s Druck links oben (90 x 90 Punkte). Zeigt Bilder pro Sekunde, Bildzeit, schlechteste Bildzeit, Zeichenaufrufe, Texturspeicher, Renderfläche. Texte in `ui.perf.report` (DE/EN).
+- Dauerarbeit entschärft: `TimerButton.show_time` baut Text, Farben und Zeichnung nur noch bei Änderung (vorher jedes Bild); `ScrollHint._process` setzt Position und Größe nur bei Änderung.
+
+**Texturen** (Pixel x 4 Byte, Mipmaps sind überall aus, also kein +33 %)
+
+| Rang | Datei | Größe | MB |
+|---|---|---|---|
+| 1 | village/village-night.webp | 1672x941 | 6,0 |
+| 2 | village/village-day.webp | 1672x941 | 6,0 |
+| 3 | start/start-hintergrund.webp | 1536x1024 | 6,0 |
+| 4 | night/bg/village-night.webp | 1536x1024 | 6,0 |
+| 5 | start/start-nebel.webp | 1972x519 | 3,9 |
+| 6 | brand/wortmarke.webp | 1600x618 | 3,8 |
+| 7 | start/start-logo.webp | 1600x410 | 2,5 |
+| 8 | cards/<de,en>/<rolle>.webp | 613x1024 | 2,4 je Karte |
+| 9 | ui/epic_button_mid.webp | 900x475 | 1,6 |
+| 10 | village/crowd.webp | 768x512 | 1,5 |
+
+- Gesamt aller exportierten Bilder ohne Karten: 155,6 MB (role-art 72, emblems 18, village 15, start 12, skin 7). Karten: 2 x 272 MB mit Mipmaps-Rechnung, real aber nur die gerade gezeigte Karte, nur eine Sprache. Start plus Cockpit lädt nur einen Teil davon, die Summe liegt damit weit unter 250 MB. Vorher und nachher gleich, weil nichts verkleinert wurde.
+- Nichts über 2048 px Kante (größtes 1972 x 519). Kartenbilder sind 613 x 1024, nicht 512, und gehören Markus: nicht angefasst.
+- Das GPU-Format ist unkomprimiert (RGBA8), weil `import_etc2_astc` nicht an ist und `vram_texture_compression/for_mobile=false`. Nicht geändert: Mobile-Kompression importiert alle Bilder neu, kann gemalte Flächen sichtbar verändern und ist ohne iPad-Abnahme riskant. Empfehlung nur nach Sichtprüfung.
+
+**Fünf teuerste Kandidaten (Dauerarbeit)**
+1. `app/widgets/blur_backdrop.gdshader:4` liest die Bildschirmtextur (`hint_screen_texture`), im Leicht-Modus schon aus (`schatten`).
+2. `app/widgets/village/village_lights.gd:199` `_process` jedes Bild, setzt Farbe und Flackern aller Lichtpunkte. Nicht geändert (Aussehen).
+3. `app/screens/cockpit/cockpit_screen.gd:798` `_process` jedes Bild: Karten-Mindestgröße prüfen und Timer-Knopf setzen. Timer-Knopf entschärft (siehe oben), Mindestgrößenprüfung nur bei verankerter Karte.
+4. `app/widgets/night/scroll_hint.gd:31` jedes Bild Position und Größe gesetzt. Entschärft.
+5. `app/widgets/fire_glow.gd:159` bis 40 Funken (`CPUParticles2D`) je Sitz plus Rauch; `app/widgets/village/village_life.gd:395` Gedränge-Sprites jedes Bild. Beide nicht geändert, im Leicht-Modus über `?aus=partikel,leben` schaltbar zum Messen.
+Schon gedrosselt: Sitzpuls 15 Mal pro Sekunde (`game_seat_token.gd:41`), Sternstaub 12 Mal pro Sekunde (`star_dust.gd:9`).
+
+**Export-Preset Web / Renderer**
+- Renderer: `gl_compatibility` (auch für Mobile). Passt.
+- Threads aus (`variant/thread_support=false`): für iOS-Safari richtig, braucht keine Cross-Origin-Isolation. Header-Option bleibt gesetzt, schadet nicht.
+- Texturformat: nur Desktop-Kompression (`for_desktop=true`, `for_mobile=false`). Abweichung vom Empfohlenen für Mobile (ETC2/ASTC), bewusst nicht geändert, siehe oben.
+- `canvas_resize_policy=2` (anpassend), PWA an, Orientierung Querformat.
+
+**Geprüft**: `node tools/test-changed` 1405 Tests grün, `check-godot-i18n.js` grün, `git diff --check` ohne Fund, Start mit `GRIMMHAIN_LEICHT=1` ohne Fehler (Ausgang 0).
+**Nicht geprüft**: Aussehen im Skalierungsmodus „Ansicht“ (Schärfe der Schrift), Messfeld mit echtem Dreifinger-Tipp, Verhalten auf dem iPad. Markus: neuen Web-Export auf dem iPad öffnen, Messfeld mit drei Fingern öffnen, Werte (Bilder pro Sekunde, Bildzeit, Zeichenaufrufe) im Cockpit nachts ablesen. Ist die Schrift zu weich, bleibt als Rückweg `?leicht=0`.

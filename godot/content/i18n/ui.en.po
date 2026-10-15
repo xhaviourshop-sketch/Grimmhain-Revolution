@@ -10152,3 +10152,6 @@ msgstr "Nobody died."
 
 msgid "ui.morning.card.revived"
 msgstr "Back among the living: {names}."
+
+msgid "ui.perf.report"
+msgstr "{fps} frames per second / Frame time {ms} ms (worst {worst} ms) / Draw calls {calls} / Texture memory {mem} MB / Size {w} x {h}"

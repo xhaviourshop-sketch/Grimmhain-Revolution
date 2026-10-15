@@ -22,10 +22,13 @@ func _init() -> void:
 
 ## Zeigt Restzeit (Sekunden), Laufzustand und ob eine Dauer eingestellt ist. Ohne Dauer steht „–:––“ statt einer Zeit.
 func show_time(remaining: float, running: bool, is_set: bool, expired: bool) -> void:
+	var shown := DisplayTimer.format_seconds(remaining) if is_set else tr("ui.cockpit.timer.unset")
+	if shown == text and running == _running and (not is_set) == _unset and expired == _expired:
+		return  # läuft jedes Bild an, ändert sich aber nur einmal pro Sekunde: kein Neuaufbau von Text, Farben und Zeichnung
 	_running = running
 	_unset = not is_set
 	_expired = expired
-	text = DisplayTimer.format_seconds(remaining) if is_set else tr("ui.cockpit.timer.unset")
+	text = shown
 	add_theme_color_override("font_color", ThemeTokens.DANGER_TEXT if expired else (ThemeTokens.MOON_SILVER_BRIGHT if running else ThemeTokens.TEXT_PRIMARY))
 	add_theme_color_override("font_hover_color", ThemeTokens.MOON_SILVER_BRIGHT)
 	queue_redraw()
