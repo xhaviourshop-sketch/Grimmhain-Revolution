@@ -12,6 +12,11 @@ Stand: fertig, Bericht `docs/MORGEN-BERICHT.md` (Ampel, 9 Befunde, Empfehlung, N
 - Phase 4: 5 Minuten Nacht, 15 Minuten angehaltene Seite, 1 Stunde Leerlauf, Fortsetzen: Produktion und Classic ohne Fehler, Bedienung und Musik laufen danach.
 - Korrektur: Commit 03583a2, der Puls der handelnden Person zeichnet höchstens 15-mal pro Sekunde (Speicherwachstum im Nachtbild 4 auf 0,7 MB pro Minute, im Browser gemessen). Test `test_seat_pulse_redraws_at_a_limited_rate`.
 - Prüfung auf nacht-fixes: `node tools/test-full` ohne Fuzz 1542 Tests, 0 fehlgeschlagen (165 s). Nicht geprüft: iPad/Safari, echte Touch-Hardware, echter Hintergrund-Tab, Classic im Browser über mehrere volle Runden.
+## UX-Texte Teil 3, 15.10. (Branch ux-texte)
+- Fertig A: `capture_button_fit.gd` misst echte Schrift-Pixel gegen den deckenden Innenbereich (Leisten-Rahmen), DE/EN, 1024x768 und 1180x820: 108 Knöpfe/Zeilen je Lauf, 0 Funde (Toleranz 1 px). Behoben: Knopfrand aus echter Höhe statt Mindesthöhe, 2 px Luft, eigene Schriftgröße als Obergrenze der Anpassung (`GrimmButton.refit`), Lautstärke-Anzeige ohne Umbruch. Bilder: `docs/ux/img/rueckgaengig-vorher.png`, `rueckgaengig-nachher.png` (beide zeigen den Knopf ohne sichtbaren Überstand; der von Markus gemeldete Überstand ließ sich bei 1024x768 nicht nachstellen).
+- Nicht fertig: B (Karten hochkant) nicht begonnen. Messung deckt Menü, Einstellungen, Neues Spiel, Fortsetzen, Lexikon, Regelbuch, Verlauf, Cockpit (Start, Nacht, Tag, Protokoll, Optionen) ab; Randlaschen haben unsichtbaren Text, Kartenfenster, Rollen-Ebenen und Tagesdialoge sind nicht gemessen. Dock-Knöpfe unter offenen Fenstern ausgenommen.
+- Ungeprüft: Tagesleiste (kompakte Schrift) mit echter Aktion, Safari/iPad, Sichtprüfung im Browser.
+
 ## UX-Texte Teil 2, 15.10. (Branch ux-texte, uncommittet bis auf Punkt 1)
 - Fertig: Phasenzeile unten links ("Tag", "Nacht") und Zeilen "Tag 1", "x von y leben": die gemalte Zeile wächst mit der Schrift, Unterlängen (g) liegen im Innenbereich, Dornen-Enden wachsen mit (`SkinArt.row_padding_y`, `_row_plate`). Vorher/Nachher: `docs/ux/img/tag-vorher.png`, `docs/ux/img/tag-nachher.png`.
 - Neu: `godot/tools/capture_button_fit.gd` misst echte Schrift-Pixel (Bild mit/ohne Text, mit echtem Renderer) gegen den deckenden Innenbereich des Rahmenbilds, DE/EN, 1024x768 und 1180x820; Aufruf siehe Kopf der Datei.

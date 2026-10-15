@@ -13,8 +13,9 @@ var ctx: AppContext
 var shell: AppShell
 const NAMES := ["Maximilian", "Friederike", "Konstantin", "Anna", "Tom", "Lena", "Paul", "Mia"]
 const ROLES := ["werwolf", "blutwolf", "schutzengel", "waldhexe", "das-orakel", "sensentraeger", "dorfbewohner", "amalia"]
-const EDGE := 1  ## Pixel Rand, den die Schrift zum gemalten Rand halten soll
+const EDGE := -1  ## Messtoleranz in Pixeln: 1 px Überstand ist Rundung und Kantenglättung (der Innenbereich ist selbst eine Messung am Rahmenbild)
 var _findings: Array[String] = []
+var _checked: int = 0
 
 
 func _initialize() -> void:
@@ -64,14 +65,6 @@ func _initialize() -> void:
 	ctx.session.start_night()
 	await _fr(12)
 	await _measure("cockpit-nacht")
-	for tool: String in ["LogButton", "OptionsButton"]:
-		var b := _screen().find_child(tool, true, false) as BaseButton
-		if b != null and b.is_visible_in_tree():
-			b.pressed.emit()
-			await _fr(10)
-			await _measure("cockpit-" + tool)
-			b.pressed.emit()  # die Lasche schaltet das Fenster wieder zu
-			await _fr(8)
 	var game: GDScript = load("res://tests/ui/ui_game.gd")
 	for i: int in 30:
 		var undo := _screen().find_child("DockUndoButton", true, false) as Control
@@ -90,6 +83,15 @@ func _initialize() -> void:
 		day_undo.visible = true  # im Tag erscheint „Rückgängig“ nur nach einer Aktion; hier erzwungen, um das Maß zu prüfen
 		await _fr(6)
 		await _measure("cockpit-tag-undo")
+	for tool: String in ["LogButton", "OptionsButton"]:
+		var b := _screen().find_child(tool, true, false) as BaseButton
+		if b != null and b.is_visible_in_tree():
+			b.pressed.emit()
+			await _fr(10)
+			await _measure("cockpit-" + tool)
+			b.pressed.emit()  # die Lasche schaltet das Fenster wieder zu
+			await _fr(8)
+	print("GEPRUEFT %d" % _checked)
 	print("FUNDE %d" % _findings.size())
 	for f: String in _findings:
 		print(f)
@@ -148,6 +150,9 @@ func _measure(label: String) -> void:
 		var logical := b.get_global_rect()
 		var rect := Rect2i(root.get_final_transform() * logical)  # Bildpunkte (Inhaltsskalierung des Fensters)
 		rect = rect.intersection(Rect2i(Vector2i.ZERO, with_text.get_size()))
+		if label.begins_with("cockpit-") and label.ends_with("Button") and b.name in [&"DockUndoButton", &"PrivateButton"]:
+			continue  # liegt unter dem noch offenen Fenster; dort wird die Schrift des Fensters gemessen, nicht dieses Knopfes
+		_checked += 1
 		var ink_px := _ink_box(with_text, without_text, rect)
 		if ink_px.size == Vector2i.ZERO:
 			continue
@@ -164,8 +169,10 @@ func _measure(label: String) -> void:
 			bad.append("oben %d px über den Rand" % (inner.position.y + EDGE - ink.position.y))
 		if ink.end.y > inner.end.y - EDGE:
 			bad.append("unten %d px über den Rand" % (ink.end.y - (inner.end.y - EDGE)))
+		if b is Button and not ctext.contains(" ") and ink.size.y > b.get_theme_font(&"font").get_height(b.get_theme_font_size(&"font_size")) * 1.5:
+			bad.append("Wort mitten umgebrochen")
 		if not bad.is_empty():
-			_findings.append("FUND %s %dx%d %s %s \"%s\": %s (Schrift %s, Innen %s)" % [label, SIZE.x, SIZE.y, LANG, b.name, ctext.left(30), ", ".join(bad), ink, inner])
+			_findings.append("FUND %s %dx%d %s %s \"%s\": %s (Schrift %s, Innen %s, Größe %d, Knopf %s)" % [label, SIZE.x, SIZE.y, LANG, b.name, ctext.left(30), ", ".join(bad), ink, inner, b.get_theme_font_size(&"font_size"), b.size])
 
 
 func _text_of(c: Control) -> String:

@@ -418,6 +418,8 @@ static func tighten_button(button: BaseButton) -> void:
 		box.content_margin_bottom = ThemeFactory.BUTTON_MARGIN_Y
 		button.add_theme_stylebox_override(state, box)
 	button.add_theme_font_size_override(&"font_size", STRIP_BUTTON_FONT)
+	if button is GrimmButton:
+		(button as GrimmButton).refit()
 
 
 static func loosen_button(button: BaseButton) -> void:

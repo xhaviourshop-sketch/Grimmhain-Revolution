@@ -11,6 +11,7 @@ extends Button
 ## Alle Knopfgrafiken kommen aus dem Theme (Variation je Art, für Umschalter der „…Toggle“-Zwilling).
 
 const MIN_FONT := 14
+const FIT_SLACK := 2.0  ## Luft links und rechts, damit die Schrift den gemalten Rand nicht berührt (Messung echter Glyphen-Pixel)
 
 enum Kind { PRIMARY, SECONDARY, DANGER, COMPACT }
 
@@ -81,12 +82,26 @@ func refresh_text() -> void:
 		var new_text := translated.format(GrimmLabel.translated_values(self, format_values)) if not format_values.is_empty() else translated
 		if new_text != text and has_meta(&"fit_font"):  # neuer Text: wieder von der Themegröße aus anpassen
 			remove_meta(&"fit_font")
-			remove_theme_font_size_override(&"font_size")
+			if has_meta(&"fit_base"):
+				add_theme_font_size_override(&"font_size", int(get_meta(&"fit_base")))
+			else:
+				remove_theme_font_size_override(&"font_size")
 		text = new_text
 		_fit_changes = 0
 		if not _fit_queued:
 			_fit_queued = true
 			_fit_font.call_deferred()
+
+
+## Nach einer von außen gesetzten Schriftgröße oder Rahmenänderung: Anpassung neu ausrechnen (die gesetzte Größe ist die Obergrenze).
+func refit() -> void:
+	for key: StringName in [&"fit_font", &"fit_base"]:
+		if has_meta(key):
+			remove_meta(key)
+	_fit_changes = 0
+	if not _fit_queued:
+		_fit_queued = true
+		_fit_font.call_deferred()
 
 
 func _apply_kind(reset_main: bool = true) -> void:
@@ -128,12 +143,18 @@ func _fit_font() -> void:
 	_fit_queued = false
 	if not is_inside_tree() or autowrap_mode == TextServer.AUTOWRAP_OFF or size.x <= 0.0 or text == "" or (get_script() as Script).get_global_name() != &"GrimmButton":
 		return
-	if has_theme_font_size_override(&"font_size") and not has_meta(&"fit_font"):
-		return
+	if has_theme_font_size_override(&"font_size") and not has_meta(&"fit_font") and not has_meta(&"fit_base"):
+		set_meta(&"fit_base", get_theme_font_size(&"font_size"))  # eigene Schriftgröße (z. B. Tagesleiste) gilt als Obergrenze, die Anpassung darf nur darunter
 	var type := theme_type_variation if theme_type_variation != &"" else &"Button"
 	var font := get_theme_font(&"font", type)
-	var base := get_theme_font_size(&"font_size", type)
-	var room := size.x - get_theme_stylebox(&"normal").get_minimum_size().x
+	var base: int = int(get_meta(&"fit_base")) if has_meta(&"fit_base") else get_theme_font_size(&"font_size", type)
+	var box := get_theme_stylebox(&"normal")
+	var margins := box.get_minimum_size().x
+	if box is SkinBarBox:  # die gemalten Enden wachsen mit der echten Höhe, nicht mit der Mindesthöhe, nach der das Theme die Ränder bemisst
+		var bar := box as SkinBarBox
+		var drawn := minf(size.y, bar.max_height) if bar.max_height > 0.0 else size.y
+		margins = maxf(margins, 2.0 * ceilf(bar.end_width * drawn / bar.fit_height * ThemeFactory.BUTTON_END_SHARE))
+	var room := size.x - margins - FIT_SLACK
 	if icon != null:
 		room -= icon.get_width() + get_theme_constant(&"h_separation", type)
 	var longest := ""
@@ -141,6 +162,9 @@ func _fit_font() -> void:
 		if word.length() > longest.length():
 			longest = word
 	var chosen := FitLabel.best_size(font, longest, Vector2(room, 0.0), base, MIN_FONT, false)
+	var needed := font.get_string_size(longest, HORIZONTAL_ALIGNMENT_LEFT, -1, chosen).x + size.x - room  # reicht auch die Mindestgröße nicht, wächst der Knopf
+	if chosen < base and needed > size.x:
+		custom_minimum_size.x = maxf(custom_minimum_size.x, ceilf(needed))
 	var current := get_theme_font_size(&"font_size")
 	if chosen == current:
 		return
@@ -150,9 +174,9 @@ func _fit_font() -> void:
 		_fit_changes += 1
 		set_meta(&"fit_font", true)
 		add_theme_font_size_override(&"font_size", chosen)
-		var needed := font.get_string_size(longest, HORIZONTAL_ALIGNMENT_LEFT, -1, chosen).x + size.x - room
-		if needed > size.x:
-			custom_minimum_size.x = maxf(custom_minimum_size.x, ceilf(needed))
 	elif has_meta(&"fit_font"):
 		remove_meta(&"fit_font")
-		remove_theme_font_size_override(&"font_size")
+		if has_meta(&"fit_base"):
+			add_theme_font_size_override(&"font_size", base)
+		else:
+			remove_theme_font_size_override(&"font_size")
