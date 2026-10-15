@@ -32,6 +32,12 @@ func test_victim_card_before_and_name_beside_after_healing() -> void:
 	layer = find_node(screen, "ShowLayer")
 	var card := find_node(layer, "ShowRoleCard") as Control
 	var shown_name := find_node(layer, "ShowName") as Control
-	assert_true(card != null and shown_name != null and shown_name.global_position.x >= card.global_position.x + card.size.x - 1.0, "Name steht neben der Karte")
+	assert_true(card != null and shown_name != null, "Karte und Name da")
+	if CockpitLayers.card_rotated():  # gedreht: der Streifen mit dem Namen liegt am Bildschirm links von der Karte
+		var name_mid := shown_name.get_global_transform() * (shown_name.size * 0.5)
+		var card_mid := card.get_global_transform() * (card.size * 0.5)
+		assert_true(name_mid.x < card_mid.x, "Name steht im Streifen links der gedrehten Karte")
+	else:
+		assert_true(shown_name.global_position.x >= card.global_position.x + card.size.x - 1.0, "Name steht neben der Karte")
 	assert_true(card.size.y > card.size.x, "Karte hochkant")
 	assert_true(text_of(find_node(layer, "ShowName") as Control).contains("Berta"), "Name des Opfers")

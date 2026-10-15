@@ -246,6 +246,7 @@ const SHOW_TEAMS := {"wolf_count": &"wolves", "is_wolf": &"wolves", "solo_count"
 const BARE_BUTTON_HEIGHT := 72.0  ## „Fertig“ neben der fensterlosen Karte
 const CARD_SIDE_NAME_SIZE := 44  ## Name neben der Karte: groß, der Platz rechts ist frei
 const CARD_COLUMN_RATIO := 5.0  ## Karte hochkant (613 x 1024) bei fast voller Höhe: Breitenanteil links
+const CARD_STRIP_HEIGHT := 76.0  ## gedrehte Karte: Streifen mit Name und „Fertig“ (am Bildschirm links)
 const CARD_SIDE_RATIO := 6.0  ## Breitenanteil von Text und Knöpfen rechts
 const SHOW_ICON := 96.0
 const SHOW_MARK := 112.0
@@ -290,36 +291,74 @@ static func show_card(role_id: String, lines: Array, name_below: bool = false) -
 	return root
 
 
+## Ob die Karte um 90 Grad gedreht gezeigt wird: auf Touch-Geräten ja (die Spielleitung dreht das Tablet und zeigt die Karte aufrecht), am PC nein.
+## Zum Ansehen am PC: Web `?karte=dreh` oder `?karte=hoch`, sonst Umgebungsvariable `GRIMMHAIN_KARTE` (`dreh` oder `hoch`).
+static func card_rotated() -> bool:
+	var choice := ""
+	if OS.has_feature("web"):
+		choice = str(JavaScriptBridge.eval("new URLSearchParams(window.location.search).get('karte') || ''", true))
+	else:
+		choice = OS.get_environment("GRIMMHAIN_KARTE")
+	if choice == "dreh":
+		return true
+	if choice == "hoch":
+		return false
+	return DisplayServer.is_touchscreen_available()
+
+
 ## Gemeinsames Kartenlayout (Ausnahme von der Fensterregel, MARKE.md): Nachtgrund, links die Karte hochkant fast in voller Fensterhöhe,
-## rechts Text und Knöpfe. Liefert [Wurzel, Kartenfläche links, Seite rechts]; `margin_px` ist der Rand ums Ganze.
+## rechts Text und Knöpfe. Auf Touch-Geräten (`card_rotated`) steht dasselbe Layout aufrecht in einem um 90 Grad gedrehten Feld: Kartenoberseite
+## am rechten Rand, Name und Knopf im schmalen Streifen am linken Rand. Liefert [Wurzel, Kartenfläche, Seite]; `margin_px` ist der Rand ums Ganze.
 static func card_layout(root_name: String, margin_px: int) -> Array:
 	var root := _full_rect(root_name)
 	root.add_child(BlurBackdrop.new())
+	var rotated := card_rotated()
+	var host: Control = root
+	if rotated:
+		var rotor := Control.new()
+		rotor.name = "CardRotor"
+		rotor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		rotor.pivot_offset = Vector2.ZERO
+		rotor.rotation = PI * 0.5
+		var fit := func() -> void:
+			rotor.size = Vector2(root.size.y, root.size.x)
+			rotor.position = Vector2(root.size.x, 0.0)
+		root.resized.connect(fit)
+		root.add_child(rotor)
+		fit.call()
+		host = rotor
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for side: String in ["left", "top", "right", "bottom"]:
-		margin.add_theme_constant_override("margin_%s" % side, margin_px)
+	for side_name: String in ["left", "top", "right", "bottom"]:
+		margin.add_theme_constant_override("margin_%s" % side_name, margin_px)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(margin)
-	var row := HBoxContainer.new()
+	host.add_child(margin)
+	var row: BoxContainer = VBoxContainer.new() if rotated else HBoxContainer.new()
 	row.name = "BareContent"
 	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margin.add_child(row)
 	var card_area := VBoxContainer.new()
 	card_area.name = "CardArea"
-	card_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	card_area.size_flags_stretch_ratio = CARD_COLUMN_RATIO
 	card_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(card_area)
-	var side := VBoxContainer.new()
+	var side: BoxContainer = HBoxContainer.new() if rotated else VBoxContainer.new()
 	side.name = "CardSide"
 	side.alignment = BoxContainer.ALIGNMENT_CENTER
-	side.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	side.size_flags_stretch_ratio = CARD_SIDE_RATIO
 	side.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
 	side.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(side)
+	if rotated:
+		card_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		side.custom_minimum_size.y = CARD_STRIP_HEIGHT
+		side.child_entered_tree.connect(func(child: Node) -> void:
+			if child is FitLabel:
+				(child as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL)
+	else:
+		card_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card_area.size_flags_stretch_ratio = CARD_COLUMN_RATIO
+		side.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		side.size_flags_stretch_ratio = CARD_SIDE_RATIO
 	return [root, card_area, side]
 
 
@@ -327,7 +366,7 @@ static func card_layout(root_name: String, margin_px: int) -> Array:
 static func _bare_show_card(lines: Array, _name_below: bool = false) -> Control:
 	var layout := card_layout("ShowLayer", 4)
 	var card_area: VBoxContainer = layout[1]
-	var side: VBoxContainer = layout[2]
+	var side: BoxContainer = layout[2]
 	var order := ["person", "persons", "role"]
 	var sorted: Array = lines.duplicate()
 	sorted.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -346,7 +385,7 @@ static func _bare_show_card(lines: Array, _name_below: bool = false) -> Control:
 
 
 ## Eine freigegebene Zeile: Namen als Text, Rolle als Kartenbild, Ja/Nein als Zeichen, Zahlen neben ihrem Teamsymbol.
-static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int = ThemeTokens.FONT_SHOW, card_parent: VBoxContainer = null) -> void:
+static func _show_line(column: BoxContainer, line: Dictionary, name_size: int = ThemeTokens.FONT_SHOW, card_parent: VBoxContainer = null) -> void:
 	var key := str(line["key"])
 	var kind := str(line["kind"])
 	match kind:
@@ -562,7 +601,7 @@ static func role_card(card: Dictionary) -> Control:
 	var layout := card_layout("RoleCardLayer", ThemeTokens.SAFE_MARGIN)  # Grund der Vollbildkarte: das Dorf dahinter, abgedunkelt und leicht unscharf
 	var root: Control = layout[0]
 	var card_area: VBoxContainer = layout[1]
-	var side: VBoxContainer = layout[2]
+	var side: BoxContainer = layout[2]
 	var person := _fit_label(side, "ui.cockpit.show.value", {"value": str(card.get("name", ""))}, &"ShowValueLabel", CARD_SIDE_NAME_SIZE)
 	person.name = "ShowName"
 	person.mouse_filter = Control.MOUSE_FILTER_IGNORE
