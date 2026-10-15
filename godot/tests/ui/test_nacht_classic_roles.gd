@@ -591,7 +591,7 @@ func test_angel_protects_against_the_pack_but_not_against_poison() -> void:
 		assert_false(_died_by(4, "NIGHT_KILL"), "Rudelangriff wurde abgewehrt"))
 
 
-func test_urwolf_asks_only_once_per_game() -> void:
+func test_urwolf_declining_does_not_use_up_the_power() -> void:
 	await _locales(func(loc: String) -> void:
 		if not await begin([C + "urwolf", D, D, D, D, D, D, D], loc):
 			return
