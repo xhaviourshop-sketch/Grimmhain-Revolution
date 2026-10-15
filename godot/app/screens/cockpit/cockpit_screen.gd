@@ -399,11 +399,13 @@ func _style_backdrop() -> void:
 	_ambience.configure(_backdrop_art, _backdrop_day, _village_layer)
 	_ambience.set_reduced_motion(context.settings.reduced_motion)
 	_ambience.set_enabled(context.settings.effects_enabled, false)
-	if not PerfMode.off(&"schatten"):
+	if PerfMode.off(&"schatten"):
+		_backdrop_shade.color = ThemeTokens.INVISIBLE  # ohne Shader wäre die Fläche weiß
+	else:
 		var shade := ShaderMaterial.new()
 		shade.shader = load("res://app/theme/night_vignette.gdshader") as Shader
 		_backdrop_shade.material = shade
-	_backdrop_shade.color = ThemeTokens.TINT_NONE
+		_backdrop_shade.color = ThemeTokens.TINT_NONE
 
 
 func _update_status(active: bool) -> void:

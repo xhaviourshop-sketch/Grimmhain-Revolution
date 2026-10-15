@@ -4,6 +4,47 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Leicht-Modus weißer Hintergrund, 15.10. (Branch ux-texte, KLEIN)
+
+Ursache: Im Leicht-Modus bleibt bei den abgeschalteten Vollbild-Durchgängen (`PerfMode.off(&"schatten")`) der Shader weg, die Fläche selbst aber stehen. Ein `ColorRect` ohne Shader malt seine Farbe, und die war Weiß: `HainBackdrop` (Nebel, Randdämpfung; Namens-Seite) hatte die Standardfarbe Weiß, im Cockpit setzte `_style_backdrop` `BackdropShade` ausdrücklich auf `TINT_NONE` (Weiß). Beide deckten das Dorf zu. `apply_render_scale` und die Clear-Farbe waren nicht die Ursache (Clear-Farbe war aber nicht gesetzt).
+Fix: ohne Shader werden diese Flächen unsichtbar (`ThemeTokens.INVISIBLE`) in `godot/app/widgets/hain_backdrop.gd` und `godot/app/screens/cockpit/cockpit_screen.gd`; zusätzlich `rendering/environment/defaults/default_clear_color` = `#0a1022` in `godot/project.godot` (Ausfall wird dunkel statt weiß).
+Geprüft: Desktop-Render (OpenGL, 1180x820, `GRIMMHAIN_LEICHT=1` und `=0`): Namens-Seite und Cockpit zeigen das dunkle Dorf, Leicht und Normal gleich bis auf Nebel/Vignette. Bilder: `docs/ux/img/leicht-hintergrund-namen.png`, `leicht-hintergrund-cockpit.png`. i18n-Check grün.
+Tests: `node tools/test-changed` 1405 Tests, 1 rot: `test_cockpit_polish::test_card_fades_in_and_new_render_cancels` (Zeile 50, Zeitabhängigkeit). Rot auch auf unverändertem HEAD (4 von 4 Läufen mit altem `cockpit_screen.gd`), also nicht von dieser Änderung; nicht abgeschwächt.
+Ungeprüft: echtes iPad/Safari (Web-Export, `?leicht=1` im Browser, Konsole/Shader-Fehler), Vorher-Bild des Fehlers (nicht am PC reproduziert, Ursache durch Code und Standardfarbe belegt), Neue-Partie-Schritt 2 (Namen) direkt.
+
+## Ordnergröße, 15.10. (nur gemessen, nichts gelöscht oder verschoben)
+
+Ergebnis: Die 15,1 GB (Explorer, GiB; 16,3 GB dezimal) sind zu 94 % Agent-Worktrees. `.claude/worktrees/` hat 46 Ordner mit je 0,3 bis 0,4 GB (zusammen 15,33 GB, ca. 163.600 der 183.562 Dateien). Jeder Ordner ist eine volle Kopie des Projekts (Assets 130 MB, davon Nachtmusik.mp3 58 MB, plus `godot/.godot` ca. 130 MB). Das echte Projekt ohne Worktrees hat nur 0,98 GB und 19.853 Dateien.
+
+| Block | Größe | Dateien | Was | Neu erzeugbar | Git |
+|---|---|---|---|---|---|
+| `.claude/worktrees/` (46 Ordner) | 15,33 GB | ca. 163.600 | Arbeitskopien der Entwickler-Agenten, je eigener Zweig | Nein als Ordner; Inhalt steht in den Zweigen (Ausnahmen unten) | Ordner ignoriert; Zweige liegen im Git |
+| `.git` | 0,37 GB | 12.868 | Verlauf, geteilt mit allen Worktrees | Nein | ist das Git |
+| `app/` (Legacy) | 0,28 GB | 3.020 | davon `dist` 106 MB, `public` 105 MB, `node_modules` 67 MB | `dist` und `node_modules` ja (Build, npm install); `public` nein | `public` getrackt (73 Dateien), `dist`, `node_modules` nicht |
+| `assets/` | 0,13 GB | 189 | Musik 59 MB, Icons 42 MB, Karten 23 MB | Nein | getrackt |
+| `godot/` | 0,07 GB | 3.191 | Projekt; `godot/.godot` 26 MB | `.godot` ja (Import beim Öffnen) | `.godot` nicht getrackt |
+| `docs/` | 0,06 GB | 362 | Doku, `docs/ux/img` 17 MB (12 Dateien) | Nein | getrackt |
+| `.playwright-mcp/` | 0,05 GB | 68 | Browser-Testprotokolle und Screenshots | Ja | nicht getrackt |
+| `Grimmhain-Visual-Roadmap/` | 0,01 GB | 5 | Roadmap-Material | Nein | nicht getrackt |
+| `Claude outputs/` | 2 MB | 2 | Übergabedateien | Nein | nicht getrackt |
+| `tools/__pycache__/` | 36 KB | 2 | Python-Cache | Ja | nicht getrackt |
+
+Nicht vorhanden: `.godot` im Wurzelordner, `godot/build`, `web`, `export`, `stage`, `dist` im Wurzelordner. `node_modules` gibt es nur in `app/` (67 MB, 2.457 Dateien).
+
+Größte Einzeldateien: `assets/sounds/Nachtmusik.mp3` mit 57,7 MB; die 14 weiteren der Top 15 sind Kopien derselben Datei in Worktrees.
+
+Worktree-Zustand (für die Aufräum-Entscheidung): 46 Ordner, davon 30 mit uncommittierten Änderungen (1 bis 8 Dateien je Ordner), 2 mit Zweigen, die weder in `ux-texte` noch in `main` enthalten sind (`block-d-touch` in agent-a1a3ab4779b8ac8e0, `block-e-dragdrop` in agent-a907251391e9f5775). Zusätzlich 4 Git-Worktrees außerhalb des Ordners (`../grimmhain-audit-72-roles`, `-content-drafts`, `-integration-20260927`, `-night-ui`, zusammen ca. 0,84 GB), gehören nicht zu den 15,1 GB.
+
+Vorschlag (nichts ausgeführt, jede Löschung braucht deine Freigabe):
+1. Worktrees ohne Änderungen und mit eingearbeitetem Zweig entfernen mit `git worktree remove` (nicht von Hand löschen): 15 von 46 Ordnern, Gewinn ca. 5 GB, kein Risiko.
+2. Worktrees mit uncommittierten Änderungen erst ansehen (`git -C <ordner> status`, `git diff`), dann entfernen oder die Änderungen sichern: ca. 30 Ordner, Gewinn ca. 9 bis 10 GB. Die zwei nicht eingearbeiteten Zweige vorher klären.
+3. Danach `git worktree prune` und, wenn alle weg sind, die erledigten `team/*`-Zweige löschen (35 sind in `ux-texte` enthalten); Gewinn im `.git` gering.
+4. Künftig: Worktrees nach dem Merge sofort entfernen; ein Worktree kostet je ca. 0,35 GB.
+5. Klein und gefahrlos: `.playwright-mcp/` leeren (ca. 0,05 GB), `app/dist` (0,1 GB) und `tools/__pycache__` (0 GB) bei Bedarf neu erzeugbar. `app/node_modules` (0,07 GB) nur, wenn Legacy nicht mehr gebaut wird.
+Geschätzter Gesamtgewinn: bis ca. 14,5 bis 15 GB (Ordner danach ca. 0,9 bis 1,1 GB). Ohne die Fälle mit Änderungen nur ca. 5 GB.
+
+Hinweis zur Schätzung: Die Zahl 15 ist: 46 Ordner, 30 mit Änderungen, 1 weiterer mit nicht eingearbeitetem Zweig (block-e-dragdrop); Größen je Worktree liegen zwischen 0,31 und 0,40 GB (Mittel ca. 0,33 GB).
+
 ## Karten hochkant, 15.10. (Branch ux-texte)
 - Fertig: ein gemeinsames Kartenlayout `CockpitLayers.card_layout` (Karte hochkant links, Name, Angaben und Knopf rechts). Aufrufer von `RoleCardImage`: `cockpit_layers.gd` `_show_line` (Karte zeigen, Hexe/Waldhexe-Opfer, Seherin und alle anderen Zeigekarten über `show_card`) und `role_card` (Rollenanzeige einer Person): beide umgestellt. `notice_card` zeigt kein Rollenbild (Bund-Bild), unverändert. Textfenster ohne Karte unverändert. Test `test_witch_card` an das neue Layout angepasst (Name neben der Karte).
 - Screenshot: `docs/ux/img/karte-hochkant-rolle.png` (1180x820; 1024x768 ebenfalls gesehen, nichts abgeschnitten). Werkzeug: `godot/tools/capture_card_portrait.gd`.

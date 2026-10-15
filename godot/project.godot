@@ -44,3 +44,4 @@ locale/translations=PackedStringArray("res://content/i18n/ui.de.po", "res://cont
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.0392157, 0.0627451, 0.133333, 1)

@@ -30,7 +30,9 @@ func _ready() -> void:
 	_fog.name = "BackdropFog"
 	var fog := ShaderMaterial.new()
 	fog.shader = load("res://app/theme/night_fog.gdshader") as Shader
-	if not PerfMode.off(&"schatten"):
+	if PerfMode.off(&"schatten"):
+		_fog.color = ThemeTokens.INVISIBLE  # ohne Shader wäre die Fläche weiß
+	else:
 		_fog.material = fog
 	_fill(_fog)
 	var shade := ColorRect.new()
@@ -41,7 +43,9 @@ func _ready() -> void:
 	vignette.name = "BackdropVignette"
 	var edge := ShaderMaterial.new()
 	edge.shader = load("res://app/theme/night_vignette.gdshader") as Shader
-	if not PerfMode.off(&"schatten"):
+	if PerfMode.off(&"schatten"):
+		vignette.color = ThemeTokens.INVISIBLE
+	else:
 		vignette.material = edge
 	_fill(vignette)
 
