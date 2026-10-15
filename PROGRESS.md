@@ -4,6 +4,62 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Vercel aufräumen, 15.10.
+
+Alle Deployments sind Status Ready, Umgebung Production. Kennung = Teil der Adresse. Löschung nur einzeln per `vercel remove`.
+
+### grimmhain-ipad-test (15 Deployments)
+
+| Kennung | Alter | Build | Rolle | Aktion |
+|---|---|---|---|---|
+| ddb8qp627 | 1d | 202610141539-24b58f5 | aktuelle Produktion (Alias grimmhain-ipad-test.vercel.app), neuestes | BEHALTEN |
+| g65x2omkd | 1d | 202610141539-24b58f5 |  | LÖSCHEN |
+| eqku22fnp | 8d | 202610072342-da31507 | Rollback-Ziel da31507 | BEHALTEN |
+| fo8hk7akq | 8d | 202610072326-2aa33c4 |  | LÖSCHEN |
+| iu9ajlapj | 8d | 202610072304-18ba01c |  | LÖSCHEN |
+| pjfhrudnw | 8d | 202610071656-b47d097 |  | LÖSCHEN |
+| ll385p3gd | 8d | 202610071656-b47d097 |  | LÖSCHEN |
+| 7gswiwpp0 | 9d | 202610071026-04b9725 |  | LÖSCHEN |
+| ek6slnetl | 9d | 202610071016-21f2ab8 |  | LÖSCHEN |
+| koei2vwx2 | 9d | 202610070935-5fb56f2 |  | LÖSCHEN |
+| 9qj74gdai | 9d | 202610062248-86ddd6e |  | LÖSCHEN |
+| 8j7dnd85l | 9d | 202610062025-4c33a94 |  | LÖSCHEN |
+| 12f6ccdep | 9d | 202610061654-6264aa5 |  | LÖSCHEN |
+| 1lg2bnl8p | 9d | 202610061543-cc5bdc3 |  | LÖSCHEN |
+| o4sp5z6xo | 9d | 202610061451-ba0e4f8 |  | LÖSCHEN |
+
+### grimmhain-classic-preview (24 Deployments)
+
+| Kennung | Alter | Rolle | Aktion |
+|---|---|---|---|
+| ptks775dq | 2h | aktuelles Alias-Ziel (Build 202610152122-14e89a5) | BEHALTEN |
+| mbeid3oad | 2h | direkter Vorgänger | BEHALTEN |
+| 8bm5qzgkl | 5h |  | LÖSCHEN |
+| 7ntb3jh72 | 7h |  | LÖSCHEN |
+| b1kbtf9vo | 8h |  | LÖSCHEN |
+| li4ppx6l6 | 9h |  | LÖSCHEN |
+| bngozkpsw | 10h |  | LÖSCHEN |
+| mee35f6oa | 12h |  | LÖSCHEN |
+| pfbl4mbeu | 12h |  | LÖSCHEN |
+| cykxohufn | 23h |  | LÖSCHEN |
+| 1abcyncsl | 23h |  | LÖSCHEN |
+| coaoyukx1 | 1d |  | LÖSCHEN |
+| e10iiqpgi | 1d |  | LÖSCHEN |
+| 9tphi3sg8 | 1d |  | LÖSCHEN |
+| balmpl9gz | 1d |  | LÖSCHEN |
+| 5pjlnb4m6 | 1d |  | LÖSCHEN |
+| bje7z9fkr | 1d |  | LÖSCHEN |
+| b8u6zys9s | 1d |  | LÖSCHEN |
+| ow1ngln83 | 1d |  | LÖSCHEN |
+| 8ptm8tnwt | 2d |  | LÖSCHEN |
+| okgbl08uf | 2d |  | LÖSCHEN |
+| itu358ody | 2d |  | LÖSCHEN |
+| q408ke3p9 | 2d |  | LÖSCHEN |
+| 6seje3vkt | 2d |  | LÖSCHEN |
+
+Hinweis: Zum Lesen der geschützten Build-Kennungen erzeugte `vercel curl` automatisch einen Deployment-Protection-Bypass-Token im Projekt grimmhain-ipad-test (Nebenwirkung, in den Vercel-Projekteinstellungen unter Deployment Protection entfernbar).
+
+
 ## Leicht-Modus weißer Hintergrund, 15.10. (Branch ux-texte, KLEIN)
 
 Ursache: Im Leicht-Modus bleibt bei den abgeschalteten Vollbild-Durchgängen (`PerfMode.off(&"schatten")`) der Shader weg, die Fläche selbst aber stehen. Ein `ColorRect` ohne Shader malt seine Farbe, und die war Weiß: `HainBackdrop` (Nebel, Randdämpfung; Namens-Seite) hatte die Standardfarbe Weiß, im Cockpit setzte `_style_backdrop` `BackdropShade` ausdrücklich auf `TINT_NONE` (Weiß). Beide deckten das Dorf zu. `apply_render_scale` und die Clear-Farbe waren nicht die Ursache (Clear-Farbe war aber nicht gesetzt).
