@@ -243,9 +243,10 @@ class Pager extends VBoxContainer:
 
 ## Teamsymbol vor einem gezeigten Ergebnis (DA-101): Zahl der Wölfe, Wolf ja/nein, Einzelsieg.
 const SHOW_TEAMS := {"wolf_count": &"wolves", "is_wolf": &"wolves", "solo_count": &"solo", "solo": &"solo"}
-const BARE_BUTTON_HEIGHT := 48.0  ## „Fertig“ unter der fensterlosen Karte: niedrig, damit das Bild rund 90 % der Höhe bekommt
-const BELOW_NAME_SIZE := 44  ## Name unter der Karte (Hexe nach der Rettung): groß, die Karte gibt dafür etwas Höhe ab
-const BARE_NAME_SIZE := 22  ## Name über der fensterlosen Karte: klein, das Bild nimmt die Höhe
+const BARE_BUTTON_HEIGHT := 72.0  ## „Fertig“ neben der fensterlosen Karte
+const CARD_SIDE_NAME_SIZE := 44  ## Name neben der Karte: groß, der Platz rechts ist frei
+const CARD_COLUMN_RATIO := 5.0  ## Karte hochkant (613 x 1024) bei fast voller Höhe: Breitenanteil links
+const CARD_SIDE_RATIO := 6.0  ## Breitenanteil von Text und Knöpfen rechts
 const SHOW_ICON := 96.0
 const SHOW_MARK := 112.0
 const SHOW_NO_CAPTION: Array[String] = ["hit", "is_wolf"]  ## Ergebnisse, die ohne Beschriftung eindeutig sind (Treffer: Haken oder Kreuz)
@@ -289,37 +290,63 @@ static func show_card(role_id: String, lines: Array, name_below: bool = false) -
 	return root
 
 
-## Karte mit Rollenbild ohne Fenster (Ausnahme von der Fensterregel, MARKE.md): Nachtgrund, oben klein der Name der Person, das Kartenbild
-## nimmt fast die ganze Höhe, darunter nur „Fertig“.
-static func _bare_show_card(lines: Array, name_below: bool = false) -> Control:
-	var root := _full_rect("ShowLayer")
+## Gemeinsames Kartenlayout (Ausnahme von der Fensterregel, MARKE.md): Nachtgrund, links die Karte hochkant fast in voller Fensterhöhe,
+## rechts Text und Knöpfe. Liefert [Wurzel, Kartenfläche links, Seite rechts]; `margin_px` ist der Rand ums Ganze.
+static func card_layout(root_name: String, margin_px: int) -> Array:
+	var root := _full_rect(root_name)
 	root.add_child(BlurBackdrop.new())
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left", "top", "right", "bottom"]:
-		margin.add_theme_constant_override("margin_%s" % side, 4)
+		margin.add_theme_constant_override("margin_%s" % side, margin_px)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(margin)
-	var column := VBoxContainer.new()
-	column.name = "BareContent"
-	column.add_theme_constant_override(&"separation", 2)
-	margin.add_child(column)
-	var order := ["role", "person", "persons"] if name_below else ["person", "persons", "role"]  # Hexe: der Name steht groß unter der Karte
+	var row := HBoxContainer.new()
+	row.name = "BareContent"
+	row.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_child(row)
+	var card_area := VBoxContainer.new()
+	card_area.name = "CardArea"
+	card_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card_area.size_flags_stretch_ratio = CARD_COLUMN_RATIO
+	card_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(card_area)
+	var side := VBoxContainer.new()
+	side.name = "CardSide"
+	side.alignment = BoxContainer.ALIGNMENT_CENTER
+	side.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	side.size_flags_stretch_ratio = CARD_SIDE_RATIO
+	side.add_theme_constant_override(&"separation", ThemeTokens.SPACE_M)
+	side.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(side)
+	return [root, card_area, side]
+
+
+## Karte mit Rollenbild ohne Fenster: Karte links, rechts der Name der Person, weitere Angaben und „Fertig“.
+static func _bare_show_card(lines: Array, _name_below: bool = false) -> Control:
+	var layout := card_layout("ShowLayer", 4)
+	var card_area: VBoxContainer = layout[1]
+	var side: VBoxContainer = layout[2]
+	var order := ["person", "persons", "role"]
 	var sorted: Array = lines.duplicate()
 	sorted.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		var ia := order.find(str(a["kind"]))
 		var ib := order.find(str(b["kind"]))
 		return (ia if ia >= 0 else order.size()) < (ib if ib >= 0 else order.size()))
 	for line: Dictionary in sorted:
-		_show_line(column, line, BELOW_NAME_SIZE if name_below else BARE_NAME_SIZE)
+		_show_line(side, line, CARD_SIDE_NAME_SIZE, card_area)
+	if card_area.get_child_count() == 0:  # kein Kartenbild für diese Rolle: der Text nimmt die ganze Breite
+		card_area.queue_free()
 	var done := _button("CloseLayerButton", "ui.cockpit.show.close", GrimmButton.Kind.PRIMARY)
 	done.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	done.custom_minimum_size.y = BARE_BUTTON_HEIGHT
-	column.add_child(done)
-	return root
+	side.add_child(done)
+	return layout[0]
 
 
 ## Eine freigegebene Zeile: Namen als Text, Rolle als Kartenbild, Ja/Nein als Zeichen, Zahlen neben ihrem Teamsymbol.
-static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int = ThemeTokens.FONT_SHOW) -> void:
+static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int = ThemeTokens.FONT_SHOW, card_parent: VBoxContainer = null) -> void:
 	var key := str(line["key"])
 	var kind := str(line["kind"])
 	match kind:
@@ -338,7 +365,7 @@ static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int =
 				var box := role_text_card(str(line["value"]), name_size)
 				box.name = "ShowRoleTextCard"
 				box.size_flags_vertical = Control.SIZE_EXPAND_FILL
-				column.add_child(box)
+				(card_parent if card_parent != null else column).add_child(box)
 				return
 			if not ResourceLoader.exists(RoleCardImage.path_for(str(line["value"]))):
 				# Kein Kartenbild für diese Rolle: der Rollenname als Text (Rückfall).
@@ -348,7 +375,7 @@ static func _show_line(column: VBoxContainer, line: Dictionary, name_size: int =
 			card.name = "ShowRoleCard"
 			card.role_id = str(line["value"])
 			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			column.add_child(card)
+			(card_parent if card_parent != null else column).add_child(card)
 			return
 	var team: StringName = SHOW_TEAMS.get(key, &"")
 	if team == &"" and not SHOW_NO_CAPTION.has(key):
@@ -532,34 +559,28 @@ static func _name_row(person_id: int, person_name: String, done: bool, is_next: 
 ## schließt die Karte; war die Rolle noch nicht gesehen (`confirmed` false), gilt das Schließen als „gesehen“ (`ConfirmRoleButton`),
 ## sonst schließt `CloseRoleButton` nur.
 static func role_card(card: Dictionary) -> Control:
-	var root := _full_rect("RoleCardLayer")
-	root.add_child(BlurBackdrop.new())  # Grund der Vollbildkarte: das Dorf dahinter, abgedunkelt und leicht unscharf
-	var margin := MarginContainer.new()
-	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for side: String in ["left", "top", "right", "bottom"]:
-		margin.add_theme_constant_override("margin_%s" % side, ThemeTokens.SAFE_MARGIN)
-	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(margin)
-	var column := VBoxContainer.new()
-	column.add_theme_constant_override(&"separation", 2)
-	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(column)
-	var person := _fit_label(column, "ui.cockpit.show.value", {"value": str(card.get("name", ""))}, &"ShowValueLabel", BARE_NAME_SIZE)
+	var layout := card_layout("RoleCardLayer", ThemeTokens.SAFE_MARGIN)  # Grund der Vollbildkarte: das Dorf dahinter, abgedunkelt und leicht unscharf
+	var root: Control = layout[0]
+	var card_area: VBoxContainer = layout[1]
+	var side: VBoxContainer = layout[2]
+	var person := _fit_label(side, "ui.cockpit.show.value", {"value": str(card.get("name", ""))}, &"ShowValueLabel", CARD_SIDE_NAME_SIZE)
 	person.name = "ShowName"
 	person.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	person.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	person.custom_minimum_size.y = 120.0
 	if NightArt.TEXT_CARD_ROLES.has(str(card["role_id"])):
 		var text_card := role_text_card(str(card["role_id"]), ThemeTokens.FONT_SHOW)
 		text_card.name = "RoleTextCard"
 		text_card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		text_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		column.add_child(text_card)
+		card_area.add_child(text_card)
 	else:
 		var image := RoleCardImage.new()
 		image.name = "RoleCardPicture"
 		image.role_id = str(card["role_id"])
 		image.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		image.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		column.add_child(image)
+		card_area.add_child(image)
 	var tap := _button("CloseRoleButton" if bool(card.get("confirmed", false)) else "ConfirmRoleButton", "", GrimmButton.Kind.SECONDARY)
 	tap.set_meta(&"grove_skinned", true)
 	tap.accessibility_name = TranslationServer.translate("ui.cockpit.roles.close")

@@ -1,11 +1,11 @@
 extends UiTestCase
-## Waldhexe und Classic-Hexe sehen das Rudelopfer als große Rollenkarte; nach der Rettung steht der Name groß unter der Karte.
+## Waldhexe und Classic-Hexe sehen das Rudelopfer als große Rollenkarte; nach der Rettung steht der Name groß neben der Karte.
 
 const ROLES := ["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "das-orakel", "sensentraeger", "kutscher"]
 const SEATS: Array[int] = [3, 1, 4, 7, 2, 6, 5]
 
 
-func test_victim_card_before_and_name_below_after_healing() -> void:
+func test_victim_card_before_and_name_beside_after_healing() -> void:
 	var map := {}
 	for i: int in ROLES.size():
 		map[str(i + 1)] = ROLES[i]
@@ -30,9 +30,8 @@ func test_victim_card_before_and_name_below_after_healing() -> void:
 	await press(find_button(screen, "YesButton"))
 	await press(find_button(screen, "ShowCardButton"))
 	layer = find_node(screen, "ShowLayer")
-	var column := find_node(layer, "BareContent")
-	var names: Array[String] = []
-	for child: Node in column.get_children():
-		names.append(String(child.name))
-	assert_true(names.find("ShowRoleCard") >= 0 and names.find("ShowName") > names.find("ShowRoleCard"), "Name steht unter der Karte: %s" % str(names))
+	var card := find_node(layer, "ShowRoleCard") as Control
+	var shown_name := find_node(layer, "ShowName") as Control
+	assert_true(card != null and shown_name != null and shown_name.global_position.x >= card.global_position.x + card.size.x - 1.0, "Name steht neben der Karte")
+	assert_true(card.size.y > card.size.x, "Karte hochkant")
 	assert_true(text_of(find_node(layer, "ShowName") as Control).contains("Berta"), "Name des Opfers")

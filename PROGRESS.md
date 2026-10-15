@@ -4,6 +4,11 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Karten hochkant, 15.10. (Branch ux-texte)
+- Fertig: ein gemeinsames Kartenlayout `CockpitLayers.card_layout` (Karte hochkant links, Name, Angaben und Knopf rechts). Aufrufer von `RoleCardImage`: `cockpit_layers.gd` `_show_line` (Karte zeigen, Hexe/Waldhexe-Opfer, Seherin und alle anderen Zeigekarten über `show_card`) und `role_card` (Rollenanzeige einer Person): beide umgestellt. `notice_card` zeigt kein Rollenbild (Bund-Bild), unverändert. Textfenster ohne Karte unverändert. Test `test_witch_card` an das neue Layout angepasst (Name neben der Karte).
+- Screenshot: `docs/ux/img/karte-hochkant-rolle.png` (1180x820; 1024x768 ebenfalls gesehen, nichts abgeschnitten). Werkzeug: `godot/tools/capture_card_portrait.gd`.
+- Nicht fertig: Screenshots für Karte zeigen, Hexe und Seherin fehlen (Capture-Skript kommt nicht bis zur Karte, drei Versuche, dann gestoppt). Classic-Vorschau nicht neu gebaut und nicht deployt.
+- Ungeprüft: Karte zeigen, Hexe und Seherin optisch (nur per Tests, die dieselbe Funktion nutzen); Textkarte des Dorfbewohners im neuen Layout; Tablet.
 ## Nachtlauf 15.10. (Branch nacht-fixes, von classic-akt bfbd8b8 abgezweigt; kein Deploy, kein Merge, kein Push)
 Stand: fertig, Bericht `docs/MORGEN-BERICHT.md` (Ampel, 9 Befunde, Empfehlung, Nicht-geprüft-Liste). Belege: `C:/Users/Marku/Downloads/Grimmhain/Screenshots/Nachtlauf-15-10/`, Skripte `Vorbereitung/nachtlauf-skripte/`.
 - Phase 1: `node tools/test-full --merge` auf classic-akt: 1514 Tests, 0 fehlgeschlagen, 304 s, mit Fuzz, Exit 0. Nichts zu sortieren.
