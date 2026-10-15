@@ -288,10 +288,7 @@ func test_dock_undo_is_visible_after_nomination() -> void:
 	await press(_seat(shell, 1))
 	await frames(3)
 	var dock := find_node(shell, "DockUndoButton") as Control
-	var bar := find_node(shell, "UndoBar") as Control
-	assert_true(dock.is_visible_in_tree() or (bar != null and bar.is_visible_in_tree()), "Rückgängig sofort erreichbar (Dock oder Leiste)")
-	await wait_seconds(3.4)
-	assert_true(dock.is_visible_in_tree(), "Rückgängig im Dock nach Ablauf der Leiste")
+	assert_true(dock.is_visible_in_tree(), "Rückgängig sofort im Dock erreichbar")
 
 
 ## Die Tageskarte schrumpft nach dem ersten Schritt der Anklage wieder auf ihren Inhalt (sie blieb zuvor als hoher Streifen stehen).

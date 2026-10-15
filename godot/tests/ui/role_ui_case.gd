@@ -219,6 +219,8 @@ func answer(action: Variant) -> bool:
 				return await tap_button("DeclineButton")
 			if str(n.get("owner")) == "loki" and str(n.get("stage")) == "targets":
 				await tap_button("YesButton" if bool(plan_loki_mode) else "NoButton")  # erst Liebende oder Rivalen
+			if CockpitText.asks_shot(n):
+				await tap_button("ShootButton")  # Classic-Jäger: erst „Schuss“, dann das Ziel
 			var counted := CockpitText.asks_pipe_count(n)
 			if counted:
 				await tap_button("PipeTwoButton" if picks.size() >= 2 else "PipeOneButton")  # Flötenspieler/Rattenfänger: erst „1 oder 2“

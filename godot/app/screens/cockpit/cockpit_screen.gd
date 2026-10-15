@@ -41,6 +41,7 @@ var _next_id: String = ""
 var _selection: Array = []
 var _random: Variant = null  ## Zufallsvorschlag (Personen) der offenen Spielleiterwahl; nur bis zur nächsten Änderung
 var _pipe_step: String = ""
+var _shot_chosen: bool = false  ## Classic-Jäger: „Schuss“ gewählt, jetzt das Ziel (nur Bedienzustand)
 var _pipe_count: int = 0  ## Flötenspieler/Rattenfänger: gewählte Anzahl (1 oder 2) vor der Zielwahl, 0 = noch nicht gewählt (nur Bedienzustand)
 var _loki_mode: Variant = null  ## Loki: gewählte Art der Bindung (true = Liebende) vor der Wahl der zwei Personen (nur Bedienzustand)
 var _confirm_until: int = 0  ## bis hierhin (Millisekunden) nimmt die Spielleitung nach „Bestätigen“ nichts Neues an
@@ -160,7 +161,6 @@ func _setup() -> void:
 	_retry_save.pressed.connect(context.autosave)
 	_ring.seat_tapped.connect(_on_seat_tapped)
 	_card.requested.connect(_on_card_requested)
-	_card.undo_changed.connect(_update_dock_undo)
 	for tool: GrimmButton in [%PrivateButton, %RolesButton, %GmButton, %LexiconButton, %RulebookButton]:
 		tool.custom_minimum_size.x = MENU_WIDTH - 2.0 * ThemeTokens.SPACE_S
 	(%LogButton as GrimmButton).pressed.connect(open_layer.bind(&"log"))
@@ -241,6 +241,8 @@ func _refresh() -> void:
 	if str(_effective(next).get("owner")) != "rattenfaenger" or step_key != _pipe_step:
 		_pipe_count = 0  # neue Nacht oder anderer Schritt: die Zahl wird neu gefragt
 	_pipe_step = step_key
+	if not CockpitText.asks_shot(_effective(next)):
+		_shot_chosen = false
 	var identity := _identity(next)
 	if identity != _next_id:
 		_next_id = identity
@@ -266,7 +268,7 @@ func _update_dock_undo() -> void:
 		var commands := context.session.commands()
 		chosen = not commands.is_empty() and not NO_CHOICE_COMMANDS.has(commands.back().type)
 	_dock_undo.disabled = not can
-	_dock_undo.visible = chosen and not _card.undo_visible()
+	_dock_undo.visible = chosen
 	_arrange()
 
 
@@ -874,7 +876,7 @@ func _render() -> void:
 		"random_available": bool(next.get("random", false)) and context.session.random_proposal() != null,
 		"night_number": int(_view.get("night_number", 0)), "prediction_kind": _prediction["kind"],
 		"prediction_number": _prediction["number"], "error_key": _error_key,
-		"pre_choice": _loki_mode, "call_step": _call_step,
+		"pre_choice": _loki_mode, "shot_chosen": _shot_chosen, "call_step": _call_step,
 		"gm_mode": _gm_mode, "gm_effects": _gm_effects, "gm_role": _gm_role,
 		"status_fields": context.session.status_fields(int(_selection[0])) if _gm_mode == "status" and not _selection.is_empty() else [],
 		"day_number": int(_view.get("day_number", 0)), "day_mode": _day_mode, "nominator": _nominator,
@@ -1151,6 +1153,8 @@ func _on_seat_tapped(person_id: int) -> void:
 		return
 	if CockpitText.asks_bond_mode(eff) and _loki_mode == null:
 		return  # Loki: erst Liebende oder Rivalen, dann die zwei Personen
+	if CockpitText.asks_shot(eff) and not _shot_chosen:
+		return  # Classic-Jäger: erst „Schuss“, dann das Ziel
 	if CockpitText.asks_pipe_count(eff):
 		return  # Flötenspieler: erst „1 oder 2“, dann die Personen
 	if str(next.get("kind")) == "begin_step":
@@ -1285,12 +1289,11 @@ func _on_card_requested(action: StringName, payload: Dictionary) -> void:
 			_show_notice(int(payload.get("notice_id", -1)))
 		&"show_roles":
 			open_layer(&"roles")
-		&"undo_last":
-			_card.hide_undo()
-			if s.undo():
-				status_message_requested.emit("ui.cockpit.status.undone")
 		&"loki_mode":
 			_loki_mode = bool(payload["choice"])
+			_render()
+		&"shoot":
+			_shot_chosen = true
 			_render()
 		&"pipe_count":
 			_pipe_count = int(payload["count"])
@@ -1500,8 +1503,6 @@ func _run_chain(actions: Array[Callable], with_undo: bool) -> bool:
 		var confirmed: CommandResult = context.session.answer_choice(true)
 		if confirmed == null or not confirmed.ok:
 			break
-	if with_undo:
-		_card.show_undo()
 	_auto_advance()
 	var after: Dictionary = context.session.cockpit_view().get("next", {})
 	if str(after.get("kind")) == "notice" and str(after.get("notice_kind")) == NoticeRules.LOKI_BOND:
@@ -1513,8 +1514,7 @@ func _run_chain(actions: Array[Callable], with_undo: bool) -> bool:
 func _show_notice(notice_id: int) -> void:
 	open_layer(&"notice")
 	_after_close = func() -> void:
-		if _answer_chain([context.session.ack_notice.bind(notice_id)], false):
-			_card.show_undo()
+		_answer_chain([context.session.ack_notice.bind(notice_id)], false)
 
 
 func _witch_summary_open() -> bool:
@@ -1554,10 +1554,14 @@ func _submit(action: Callable) -> void:
 ## Nur nach eigenen Befehlen, nie nach Rückgängig oder Laden: dort bleiben die Karten „Nacht abschließen“ und „Mögliches Spielende“.
 func _auto_advance() -> void:
 	var s := context.session
-	for guard: int in 3:
+	for guard: int in 24:
 		var next: Dictionary = s.cockpit_view().get("next", {})
 		var result: CommandResult = null
 		match str(next.get("kind")):
+			# Reine Ansage ohne Entscheidung (kein Prompt, keine Tarnaufrufe): der Schritt beginnt von selbst, die Spielleitung sieht ihn nicht.
+			"begin_step" when (next.get("preview", {}) as Dictionary).is_empty() and (next.get("decoys", []) as Array).is_empty() \
+					and str(next.get("step_kind")) != "reaction":
+				result = s.begin_next_step()
 			"end_night":
 				_dawn_decoys = next.get("decoys", [])
 				result = s.end_night()

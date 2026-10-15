@@ -313,6 +313,7 @@ func _build_mic() -> void:
 	_name_input.add_child(_mic)
 	_voice = VoiceName.new()
 	_voice.finished.connect(_on_voice_finished)
+	_voice.partial.connect(_on_voice_partial)
 
 
 func _on_mic_toggled(on: bool) -> void:
@@ -320,6 +321,12 @@ func _on_mic_toggled(on: bool) -> void:
 		_voice.start()
 	else:
 		_voice.stop()
+
+
+func _on_voice_partial(spoken: String) -> void:
+	if spoken != "":
+		_set_name_text(spoken)
+		_update_controls(_last_view)
 
 
 func _on_voice_finished(spoken: String, error: String) -> void:

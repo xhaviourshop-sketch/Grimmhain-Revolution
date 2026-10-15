@@ -124,7 +124,7 @@ func test_first_night_through_buttons() -> void:
 	assert_true(find_node(_screen(shell), "SkipStepButton") == null, "kein Überspringen auf der Karte")
 	assert_true(_seat(shell, 3).disabled, "Schutzengel kann sich nicht selbst wählen (nicht antippbar)")
 	await _tap_seat(shell, 7)  # eine feste Anzahl gilt sofort; 3 Sekunden Rückgängig
-	assert_true(find_node(_screen(shell), "UndoBarButton") != null, "Rückgängig-Leiste nach der Antwort")
+	assert_true(find_node(_screen(shell), "UndoBarButton") == null, "keine Rückgängig-Leiste in der Karte")
 	assert_eq(str(_next(shell)["kind"]), "begin_step", "Rudel angekündigt, seine Aktion steht schon auf der Karte")
 	assert_true(_visible_texts(shell).contains("Werwölfe"), "Rudel auf der Karte")
 	await _tap_seat(shell, 6)
@@ -257,22 +257,6 @@ func test_show_card_contains_only_positive_list() -> void:
 
 # --- Bedienung ----------------------------------------------------------------------------------------
 
-func test_undo_bar_takes_back_the_last_answer() -> void:
-	var shell := await _cockpit()
-	if shell == null:
-		return
-	var s := session_of(shell)
-	s.call("start_night")
-	await frames(2)
-	assert_true(find_node(_screen(shell), "SkipStepButton") == null, "kein Überspringen für Spielleitung auf der Karte")
-	var before := int((s.call("view") as Dictionary)["command_count"])
-	await _tap_seat(shell, 7)
-	assert_eq(int((s.call("view") as Dictionary)["command_count"]), before + 1, "Antwort sofort angenommen")
-	await _press(shell, "UndoBarButton")
-	assert_eq(int((s.call("view") as Dictionary)["command_count"]), before, "Rückgängig nimmt die Antwort zurück")
-	assert_eq(str(_next(shell)["owner"]), "schutzengel", "Prompt wieder offen")
-
-
 func test_double_tap_sends_one_command() -> void:
 	var shell := await _cockpit()
 	if shell == null:
@@ -388,18 +372,14 @@ func test_morning_report_public_and_private_parts() -> void:
 	var screen := _screen(shell)
 	assert_eq(str((session_of(shell).call("view") as Dictionary)["phase"]), "DAY", "Tag")
 	assert_true(find_button(screen, "ContinueDayButton").is_visible_in_tree(), "Morgenbericht vor den Tagesaktionen")
-	# Zwei Teile auf einer Karte (Markus 05.10.2026): „Fürs Dorf“ zum Vorlesen ohne Ursache, darunter „Für dich“ mit Ursache und Rettung.
+	# Eine Seite (Markus 15.10.2026): die Tote mit Rolle und Ursache in einer Zeile, darunter Rettung; keine Überschriften, keine Einleitung.
 	var card := find_node(screen, "ActionCard") as Control
-	var village := find_node(card, "MorningVillage") as Control
-	var own := find_node(card, "MorningPrivate") as Control
-	var labels := card.find_children("*", "Label", true, false)
-	assert_true(village != null and own != null and labels.find(village) < labels.find(own), "erst fürs Dorf, dann für dich")
-	var public_text := "\n".join(labels.slice(labels.find(village), labels.find(own)).map(func(l: Label) -> String: return l.text))
-	assert_true(public_text.contains("In dieser Nacht ist gestorben: E."), "Vorlesetext nennt die Tote: %s" % public_text)
-	assert_false(public_text.contains("Gift") or public_text.contains("gerettet"), "Dorfteil ohne Ursache und Rettung")
-	var private_text := "\n".join((Engine.get_main_loop() as SceneTree).get_nodes_in_group(&"morning_private").map(func(l: Label) -> String: return l.text))
-	assert_true(private_text.contains("Gifttrank der Hexe"), "private Ursache: %s" % private_text)
-	assert_true(private_text.contains("gerettet: Schutzengel"), "private Rettung: %s" % private_text)
+	assert_true(find_node(card, "MorningVillage") == null and find_node(card, "MorningPrivate") == null, "keine Überschriften")
+	var text := "
+".join(card.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text))
+	assert_true(text.contains("E: ") and text.contains("Gifttrank der Hexe"), "Tote mit Ursache in einer Zeile: %s" % text)
+	assert_true(text.contains("gerettet: Schutzengel"), "Rettung: %s" % text)
+	assert_false(text.contains("Die Sonne geht auf") or text.contains("Fürs Dorf") or text.contains("Für dich"), "keine Floskeln: %s" % text)
 	assert_true(find_node(screen, "ShowAnnouncementButton") == null and find_node(screen, "MorningDetailsButton") == null, "keine Zusatzfenster")
 	await _press(shell, "ContinueDayButton")
 	assert_true(find_node(screen, "ContinueDayButton") == null, "Tagesaktionen nach dem Morgenbericht")
@@ -414,15 +394,7 @@ func test_morning_report_reveals_role_only_in_rounds_without_revival() -> void:
 	await navigate(shell, &"main_menu")
 	await navigate(shell, &"cockpit")
 	await _night_with_poison(shell)
-	assert_true(_visible_texts(shell).contains("E (Das Orakel)"), "Rolle der Toten öffentlich: %s" % _visible_texts(shell))
-	# Der Teil „Fürs Dorf“ nennt nur die Rolle der Toten; „Für dich“ (nur Spielleitung) darf Ursachen und Retter nennen.
-	var card := find_node(_screen(shell), "ActionCard") as Control
-	var labels := card.find_children("*", "Label", true, false)
-	var village: Array = labels.slice(labels.find(find_node(card, "MorningVillage")), labels.find(find_node(card, "MorningPrivate")))
-	assert_false(village.is_empty(), "Teil „Fürs Dorf“ vorhanden")
-	for l: Label in village:
-		for name: String in _role_names(["werwolf", "trugbilderwolf", "schutzengel", "waldhexe", "sensentraeger"]):
-			assert_false(l.text.contains(name), "nur die Rolle der Toten: %s" % l.text)
+	assert_true(_visible_texts(shell).contains("E: Das Orakel"), "Tote mit Rolle in einer Zeile: %s" % _visible_texts(shell))
 
 
 func test_log_uses_readable_labels() -> void:

@@ -198,7 +198,6 @@ func test_fixed_count_step_hides_the_target_slot_and_commits_on_tap() -> void:
 	var sent: Array = session_of(shell).call("commands")
 	assert_eq(sent.size(), commands_before + 1, "Tipp übernimmt die Wahl sofort")
 	assert_eq((sent.back() as Command).payload["targets"], [int(allowed[0])], "die getippte Person")
-	assert_true(bool(find_node(screen, "ActionCard").call("undo_visible")), "Rückgängig-Leiste sichtbar")
 
 
 # --- Verbergen -----------------------------------------------------------------------------------------

@@ -71,6 +71,12 @@ static func asks_pipe_count(next: Dictionary) -> bool:
 	return str(next.get("owner")) == "rattenfaenger" and str(next.get("answer")) == "targets" and (next.get("counts", []) as Array) == [1, 2]
 
 
+## true, wenn der Classic-Jäger (freiwilliger Schuss) zuerst „Schuss“ oder „Kein Schuss“ wählt und erst danach das Ziel.
+static func asks_shot(next: Dictionary) -> bool:
+	var role := StringName(str(next.get("role_id", "")))
+	return str(next.get("owner")) == "reaction" and str(next.get("answer")) == "targets" and (next.get("counts", []) as Array).has(0) 			and int(next.get("max", 0)) > 0 and RoleCatalog.has_role(role) and bool(RoleCatalog.param(role, "optional_shot", false))
+
+
 static func call_key(role_id: String) -> String:
 	var key := "ui.call.%s" % key_part(role_id)
 	return key if has_key(key) else "ui.call.generic"
@@ -247,6 +253,53 @@ static func morning_lines(pub: Dictionary) -> Array:
 		out.append(effect_line(e))
 	out.append_array(card_lines(pub.get("cards", [])))
 	return out
+
+
+## Zeilen der einen Morgenseite für die Spielleitung [{key, values}]: zuerst die Toten mit Rolle und Ursache (eine Zeile je Person), dann die
+## Wirkungen, die sie wissen muss. Keine Einleitung, keine Überschriften; Ansagen, die eine andere Zeile schon nennt (Reaktionen, Todeseffekte
+## mit Todeszeile), und übersprungene Schritte entfallen. Gleiche Zeilen stehen nur einmal.
+const _COVERED_EFFECTS: Array[String] = ["reaper_curse", "knight_strike", "possessed_drag"]
+const _HIDDEN_PRIVATE: Array[String] = ["ui.morning.private.step_skipped", "ui.morning.private.step_dropped", "ui.morning.private.reaction.declined", "ui.morning.private.reaction.killed"]
+
+
+static func morning_page_lines(report: Dictionary) -> Array:
+	var pub: Dictionary = report.get("public", {})
+	var raw: Array = report.get("private", [])
+	var out: Array = []
+	var deaths: Array = []
+	var rest: Array = []
+	for line: Dictionary in raw:
+		if str(line.get("key", "")) == "ui.morning.private.death":
+			deaths.append({"key": "ui.morning.card.death", "values": {"name": str((line["person"] as Dictionary).get("name", "")),
+				"role": role_name(str(line.get("role_id", ""))), "cause": StringName("ui.cause.%s" % str(line.get("cause", "")).to_lower())}})
+		elif not _HIDDEN_PRIVATE.has(str(line.get("key", ""))):
+			rest.append(line)
+	if deaths.is_empty():
+		out.append({"key": "ui.morning.card.nobody", "values": {}})
+	out.append_array(deaths)
+	var revived: Array = pub.get("revived", [])
+	if not revived.is_empty():
+		out.append({"key": "ui.morning.card.revived", "values": {"names": spoken_names(revived)}})
+	for n: Dictionary in pub.get("notices", []):
+		var values := {}
+		if n.has("person"):
+			values["name"] = str((n["person"] as Dictionary).get("name", ""))
+		if n.has("direction"):
+			values["direction"] = StringName("ui.prompt.direction.%s" % str(n["direction"]))
+		out.append({"key": str(n["key"]), "values": values})
+	for e: Dictionary in pub.get("effects", []):
+		if not (_COVERED_EFFECTS.has(str(e.get("effect", ""))) and not deaths.is_empty()):
+			out.append(effect_line(e))
+	out.append_array(card_lines(pub.get("cards", [])))
+	out.append_array(private_lines(rest))
+	var seen := {}
+	var unique: Array = []
+	for line: Dictionary in out:
+		var id := "%s|%s" % [line["key"], str(line["values"])]
+		if not seen.has(id):
+			seen[id] = true
+			unique.append(line)
+	return unique
 
 
 ## Zeilen „Für dich“ des Morgenberichts [{key, values}]: ein Satz je Punkt mit Namen (ohne Platznummer). Einträge ohne Schlüssel

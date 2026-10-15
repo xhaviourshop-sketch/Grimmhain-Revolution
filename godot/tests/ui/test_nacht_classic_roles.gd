@@ -198,7 +198,9 @@ func test_hunter_shot() -> void:
 		assert_eq(str(n.get("role_id")), "classic-jaeger", "Fenster gehört dem Jäger")
 		assert_eq(n.get("counts"), [0, 1], "ein Schuss oder keiner")
 		assert_true(live("DeclineButton") != null, "%s: „Kein Schuss“ ist wählbar" % loc)
+		assert_true(live("ShootButton") != null, "%s: „Schuss“ ist wählbar" % loc)
 		if loc == "de":
+			assert_true(_btn_text("ShootButton") == "Schuss" and not _text().contains("Seele"), "Schuss-Knopf und kein Seelen-Text: %s" % _text())
 			assert_true(_btn_text("DeclineButton").contains("Kein Schuss"), "Knopf heißt Kein Schuss: %s" % _btn_text("DeclineButton"))
 		_note("jaeger-schuss", loc)
 		await run(plan, until_event("ReactionResolved"))

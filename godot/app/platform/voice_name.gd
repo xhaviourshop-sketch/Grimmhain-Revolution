@@ -9,6 +9,9 @@ extends RefCounted
 ## („not-allowed“ = Mikrofon verweigert, leer = kein Fehler).
 signal finished(name: String, error: String)
 
+## Zwischenergebnis während des Sprechens: `name` ist der bereits erkannte, bereinigte Text.
+signal partial(name: String)
+
 const JS_SETUP := """
 (function () {
 	if (window.grimmhainVoice) { return; }
@@ -16,15 +19,24 @@ const JS_SETUP := """
 	window.grimmhainVoice = {
 		supported: !!R,
 		rec: null,
-		start: function (lang, done) {
+		start: function (lang, done, progress) {
 			var g = window.grimmhainVoice;
 			if (g.rec) { try { g.rec.abort(); } catch (e) {} }
 			var r = new R();
-			var text = '', err = '';
-			r.lang = lang; r.interimResults = false; r.maxAlternatives = 1; r.continuous = false;
-			r.onresult = function (e) { if (e.results && e.results.length) { text = e.results[0][0].transcript; } };
+			var text = '', err = '', quiet = null;
+			r.lang = lang; r.interimResults = true; r.maxAlternatives = 1; r.continuous = false;
+			r.onresult = function (e) {
+				var t = '';
+				for (var i = 0; i < e.results.length; i++) { t += e.results[i][0].transcript; }
+				if (t === text) { return; }
+				text = t;
+				progress(text);
+				// Do not wait for the browser's end-of-speech silence: a short pause after the last change ends the recording.
+				if (quiet) { clearTimeout(quiet); }
+				quiet = setTimeout(function () { try { r.stop(); } catch (x) {} }, 600);
+			};
 			r.onerror = function (e) { err = e.error || 'error'; };
-			r.onend = function () { if (g.rec === r) { g.rec = null; } done(text, err); };
+			r.onend = function () { if (quiet) { clearTimeout(quiet); } if (g.rec === r) { g.rec = null; } done(text, err); };
 			g.rec = r;
 			try { r.start(); } catch (e) { g.rec = null; done('', 'start-failed'); }
 		},
@@ -36,6 +48,7 @@ const JS_SETUP := """
 static var _override: int = -1  ## -1 = echt prüfen, 0 = nicht unterstützt, 1 = unterstützt (Tests, Screenshots)
 
 var _callback: JavaScriptObject = null
+var _progress_callback: JavaScriptObject = null
 
 
 static func set_override(value: int) -> void:
@@ -59,7 +72,8 @@ func start() -> void:
 	var voice := JavaScriptBridge.get_interface("grimmhainVoice")
 	_callback = JavaScriptBridge.create_callback(_on_done)
 	var lang := "en-US" if TranslationServer.get_locale().begins_with("en") else "de-DE"
-	voice.call("start", lang, _callback)  # dynamischer Aufruf: JavaScriptObject kennt die Methoden der Seite nicht statisch
+	_progress_callback = JavaScriptBridge.create_callback(_on_partial)
+	voice.call("start", lang, _callback, _progress_callback)  # dynamischer Aufruf: JavaScriptObject kennt die Methoden der Seite nicht statisch
 
 
 func stop() -> void:
@@ -67,6 +81,10 @@ func stop() -> void:
 		var voice := JavaScriptBridge.get_interface("grimmhainVoice")
 		if voice != null:
 			voice.call("stop")
+
+
+func _on_partial(args: Array) -> void:
+	partial.emit(clean(str(args[0])))
 
 
 func _on_done(args: Array) -> void:

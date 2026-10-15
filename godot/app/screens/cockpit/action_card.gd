@@ -13,7 +13,7 @@ extends VBoxContainer
 ## Knöpfe. Regeltext nur hinter dem „i“. Die Karte ist schmal (`is_compact`), das Cockpit setzt sie in die Mitte der freien Ringmitte. Die Tageskarte (`is_day_card`) ist ebenso eine Karte nach Inhalt, ohne Regelzeilen,
 ## damit die Nominierungsbänder des Rings erkennbar bleiben. Ansage und Aktion stehen auf
 ## demselben Bildschirm (ein Schritt ohne Prompt-Vorschau zeigt nur „Weiter“). Eine feste Anzahl wird vom Cockpit sofort übernommen
-## (`CockpitText.auto_commit`), dann zeigt die Karte 3 Sekunden „Rückgängig“ (`show_undo`). Verzichten gibt es nur, wo die Karte es
+## (`CockpitText.auto_commit`), Verzichten gibt es nur, wo die Karte es
 ## vorsieht (ein Knopf, „Nicht heute“). Karte zeigen genau einmal: Das Schließen der gezeigten Karte erledigt den Schritt.
 ##
 ## Aufbau: oben `Scroll` mit dem Text (`Content`), darunter der feste Bereich `Actions` mit allen Aktionsbuttons.
@@ -21,7 +21,6 @@ extends VBoxContainer
 ## (rechts: Hauptaktion am rechten Ende, links: am linken); der Inhalt bleibt unverändert.
 
 signal requested(action: StringName, payload: Dictionary)
-signal undo_changed  ## „Rückgängig“ in der Karte erscheint oder verschwindet (das Cockpit zeigt den Knopf im Dock nur, solange die Karte ihn nicht zeigt)
 
 var _busy: bool = false
 var _last_next: Dictionary = {}
@@ -47,9 +46,6 @@ var info_host: Control = null
 var secondary_host: Control = null  ## Leiste unten zwischen Timer und Rückgängig: Nebenknöpfe der Tageskarte (nur im Cockpit)
 var _primary: GrimmButton = null
 var _info: GrimmButton = null
-var _undo_bar: HBoxContainer = null  ## „Übernommen. Rückgängig“ für wenige Sekunden nach einer sofort übernommenen Auswahl
-var _undo_button: GrimmButton = null
-var _undo_serial: int = 0  ## unterscheidet das laufende vom früheren Einblenden (der Ablauf des alten Timers blendet nichts aus)
 var _bare: bool = false  ## Karte ohne Text: nur der große Knopf „Spiel beginnen“ (der Cockpit-Rahmen blendet den Kartenrahmen aus)
 var _window_actions: bool = false  ## Antwortschritt im Cockpit: alle Antworten stehen als mittig zentrierte Reihe im Fenster, im Dock bleibt nur „Rückgängig“
 var _compact: bool = false  ## Mini-Nachtkarte (DA-101): schmal, ohne Scrollen, nur Zeile, Warnungen und Knöpfe
@@ -89,7 +85,6 @@ const FIT_MAX := {&"HeadingLabel": ThemeTokens.FONT_HEADING, &"SectionLabel": Th
 	&"NightActionLabel": ThemeTokens.FONT_BODY}
 const STRIP_MAX_NOMINATIONS := 3  ## Tagesleiste: die letzten Anklagen in einer Zeile (die Bänder am Ring zeigen alle)
 const MAX_NOMINATION_LINES := 4  ## Tageskarte: die letzten Nominierungen als Zeilen (die Bänder am Ring zeigen alle)
-const UNDO_SECONDS := 3.0  ## so lange bleibt „Rückgängig“ nach einer sofort übernommenen Auswahl sichtbar
 ## Gruppenrufe ohne geheime Auskunft: ein Bildschirm mit Namen und „Weiter“, kein „Karte zeigen“ (die Beteiligten sehen einander).
 const OPEN_GROUP_OWNERS: Array[String] = ["die-gebundenen", "piper-all"]
 
@@ -122,31 +117,6 @@ func _init() -> void:
 	_slot = TargetSlot.new()
 	_slot.visible = false
 	_slot.stepped.connect(func(direction: int) -> void: requested.emit(&"cycle_target", {"direction": direction}))
-	_undo_bar = HBoxContainer.new()
-	_undo_bar.name = "UndoBar"
-	_undo_bar.visible = false
-	_undo_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL  # volle Breite, einzeilig: Text links, „Rückgängig“ rechts
-	_undo_bar.size_flags_vertical = Control.SIZE_SHRINK_END
-	_undo_bar.add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
-	var undo_label := GrimmLabel.new()
-	undo_label.name = "UndoLabel"
-	undo_label.text_key = "ui.night.undo.done"
-	undo_label.theme_type_variation = &"MutedLabel"
-	undo_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	undo_label.wrap = false
-	undo_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	_undo_bar.add_child(undo_label)
-	_undo_button = GrimmButton.new()
-	_undo_button.name = "UndoBarButton"
-	_undo_button.kind = GrimmButton.Kind.COMPACT
-	_undo_button.custom_minimum_size.x = 140.0  # sonst bricht der Text Zeichen für Zeichen um und die Leiste wird hoch
-	_undo_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_undo_button.text_key = "ui.night.undo.button"
-	_undo_button.pressed.connect(func() -> void:
-		if _undo_bar.visible and not _undo_button.disabled:
-			hide_undo()
-			requested.emit(&"undo_last", {}))
-	_undo_bar.add_child(_undo_button)
 	_lower = BoxContainer.new()
 	_lower.name = "Lower"
 	_lower.vertical = true
@@ -162,7 +132,6 @@ func _init() -> void:
 	_actions_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_actions_box.size_flags_stretch_ratio = 1.0
 	_lower.add_child(_actions_box)
-	add_child(_undo_bar)  # „Rückgängig“ steht unter den Antworten, nie darüber (F-19)
 	resized.connect(func() -> void: _lower.vertical = size.x < SIDE_BY_SIDE_WIDTH)
 
 
@@ -204,7 +173,6 @@ func render(next: Dictionary, context: Dictionary) -> void:
 	_content.alignment = BoxContainer.ALIGNMENT_BEGIN
 	for arrow: Node in _slot.find_children("*", "BaseButton", true, false):
 		(arrow as BaseButton).disabled = false  # `lock` sperrt auch den Zielplatz bis zur nächsten Karte
-	_undo_button.disabled = false
 	for box: Node in [_content, _actions_box, secondary_host]:
 		if box == null:
 			continue
@@ -245,10 +213,8 @@ func render(next: Dictionary, context: Dictionary) -> void:
 			_text("ui.cockpit.instruction.no_game", {}, &"MutedLabel")
 		_:
 			_heading("ui.cockpit.card.none")
-	# Mini-Karte: ohne Scrollen, damit die Karte so hoch wird wie ihr Inhalt (das Cockpit setzt die Größe); in der schmalen Karte steht nur
-	# der Knopf „Rückgängig“, ohne „Übernommen.“.
+	# Mini-Karte: ohne Scrollen, damit die Karte so hoch wird wie ihr Inhalt (das Cockpit setzt die Größe).
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED if _compact else ScrollContainer.SCROLL_MODE_AUTO
-	(_undo_bar.get_node("UndoLabel") as Control).visible = not _compact
 	_lower.visible = not _strip  # die Leiste oben hat keinen Aktionsbereich (die Knöpfe stehen unten); sein Abstand würde sie nur höher machen
 
 
@@ -401,33 +367,11 @@ func lock() -> void:
 	if secondary_host != null:
 		buttons.append_array(secondary_host.find_children("*", "BaseButton", true, false))
 	for b: Node in buttons:
-		if b != _undo_button:
-			(b as BaseButton).disabled = true
+		(b as BaseButton).disabled = true
 	if _primary != null and is_instance_valid(_primary):
 		_primary.disabled = true
 	if _info != null and is_instance_valid(_info):
 		_info.disabled = true
-
-
-## Blendet „Übernommen. Rückgängig“ für `UNDO_SECONDS` ein; ein erneutes Einblenden startet die Zeit neu.
-func show_undo(seconds: float = UNDO_SECONDS) -> void:
-	_undo_serial += 1
-	var serial := _undo_serial
-	_undo_bar.visible = true
-	_undo_button.disabled = false
-	undo_changed.emit()
-	if not is_inside_tree():
-		return
-	get_tree().create_timer(seconds).timeout.connect(func() -> void:
-		if serial == _undo_serial:
-			hide_undo())
-
-
-func hide_undo() -> void:
-	_undo_serial += 1
-	if _undo_bar != null and _undo_bar.visible:
-		_undo_bar.visible = false
-		undo_changed.emit()
 
 
 ## Solange eine Ebene (Protokoll, Schublade, Karte) offen ist, liegt kein „mehr“-Hinweis der Aktionskarte darüber.
@@ -436,10 +380,6 @@ func set_hint_suspended(suspended: bool) -> void:
 		_hint.set_process(not suspended)
 		if suspended:
 			_hint.visible = false
-
-
-func undo_visible() -> bool:
-	return _undo_bar != null and _undo_bar.visible
 
 
 # --- Kartenarten ------------------------------------------------------------------------------------
@@ -589,6 +529,7 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 	var anonymous := bool(next.get("anonymous_asker", false))
 	# Loki entscheidet zuerst Liebende oder Rivalen, dann folgen die zwei Personen (die Antwort geht gemeinsam an den Kern).
 	var pre_mode := CockpitText.asks_bond_mode(next) and context.get("pre_choice") == null
+	var pre_shot := CockpitText.asks_shot(next) and not bool(context.get("shot_chosen", false))
 	var pre_count := CockpitText.asks_pipe_count(next)  # Flötenspieler: zuerst „1 oder 2“ (nach der Wahl hat die Karte genau eine Zahl)
 	var texts := next.duplicate()
 	texts["bond_hate"] = CockpitText.asks_bond_mode(next) and context.get("pre_choice") == false
@@ -629,6 +570,12 @@ func _night_prompt(next: Dictionary, context: Dictionary) -> void:
 		# Beide Antworten stehen in der Karte (nicht die erste im Dock unten rechts).
 		buttons.append(_button("YesButton", CockpitText.action_key("yes", owner, "mode", role), GrimmButton.Kind.SECONDARY, &"loki_mode", {"choice": true}))
 		buttons.append(_button("NoButton", CockpitText.action_key("no", owner, "mode", role), GrimmButton.Kind.SECONDARY, &"loki_mode", {"choice": false}))
+		_help(next, buttons)
+		_actions(buttons)
+		return
+	if pre_shot:
+		buttons.append(_button("ShootButton", "ui.cockpit.action.shoot", GrimmButton.Kind.PRIMARY, &"shoot"))
+		buttons.append(_button("DeclineButton", CockpitText.action_key("decline", owner, stage), GrimmButton.Kind.SECONDARY, &"decline"))
 		_help(next, buttons)
 		_actions(buttons)
 		return
@@ -835,8 +782,8 @@ func _end_night(next: Dictionary) -> void:
 	_actions([_button("EndNightButton", "ui.cockpit.action.end_night", GrimmButton.Kind.PRIMARY, &"end_night")])
 
 
-## Morgenbericht in zwei Teilen (Markus 05.10.2026): „Fürs Dorf“ zum Vorlesen, „Für dich“ nur für die Spielleitung, je ein Satz mit
-## Namen. Tarnaufrufe nach dem letzten Nachtschritt stehen davor, weil die Nacht ohne eigene Karte endet.
+## Morgenbericht als eine Seite (Markus 15.10.2026): Tote mit Rolle und Ursache, darunter die Wirkungen, die die Spielleitung wissen
+## muss (`CockpitText.morning_page_lines`); passt es nicht, wird in so wenige Seiten wie möglich geteilt. Tarnaufrufe nach dem letzten Nachtschritt stehen davor, weil die Nacht ohne eigene Karte endet.
 func _morning(next: Dictionary) -> void:
 	_window_actions = primary_host != null
 	_decoys(next)
@@ -851,22 +798,10 @@ func _morning(next: Dictionary) -> void:
 	var pages := maxi(1, ceili(float(items.size()) / float(per)))
 	_morn_page = clampi(_morn_page, 0, pages - 1)
 	for item: Dictionary in items.slice(_morn_page * per, (_morn_page + 1) * per):
-		match str(item["type"]):
-			"village":
-				_heading("ui.cockpit.card.morning.village").name = "MorningVillage"
-			"private":
-				_heading("ui.cockpit.card.morning.private").name = "MorningPrivate"
-			"read":
-				_text(str(item["key"]), item["values"], &"ReadAloudLabel")
-			"nothing":
-				_text("ui.morning.private.nothing", {}, &"MutedLabel")
-			"own":
-				_text(str(item["key"]), item["values"], &"SectionLabel").add_to_group(&"morning_private")
+		_text(str(item["key"]), item["values"], &"SectionLabel")
 	var buttons: Array[Control] = []
 	if pages > 1:
 		_text("ui.cockpit.log.page", {"page": _morn_page + 1, "total": pages}, &"CaptionLabel").name = "MorningPageLabel"
-		if _morn_page > 0:
-			buttons.append(_button("MorningPrevPageButton", "ui.common.back", GrimmButton.Kind.SECONDARY, &"morning_page", {"step": -1}))
 	if _morn_page < pages - 1:
 		buttons.append(_button("MorningNextPageButton", "ui.cockpit.action.continue_day", GrimmButton.Kind.PRIMARY, &"morning_page", {"step": 1}))
 	else:
@@ -876,15 +811,9 @@ func _morning(next: Dictionary) -> void:
 
 ## Zeilen des Morgenberichts als flache Liste, damit sie bei Platzmangel auf Seiten verteilt werden können (nichts wird abgeschnitten).
 func _morning_items(next: Dictionary) -> Array[Dictionary]:
-	var out: Array[Dictionary] = [{"type": "village"}]
-	for line: Dictionary in CockpitText.morning_lines(next.get("public", {})):
-		out.append({"type": "read", "key": str(line["key"]), "values": line["values"]})
-	out.append({"type": "private"})
-	var own := CockpitText.private_lines(next.get("private", []))
-	if own.is_empty():
-		out.append({"type": "nothing"})
-	for line: Dictionary in own:
-		out.append({"type": "own", "key": str(line["key"]), "values": line["values"]})
+	var out: Array[Dictionary] = []
+	for line: Dictionary in CockpitText.morning_page_lines({"public": next.get("public", {}), "private": next.get("private", [])}):
+		out.append({"type": "line", "key": str(line["key"]), "values": line["values"]})
 	return out
 
 

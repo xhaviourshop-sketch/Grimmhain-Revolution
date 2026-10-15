@@ -7,7 +7,7 @@ const ROLES := ["werwolf", "blutwolf", "schutzengel", "waldhexe", "das-orakel", 
 func _morning(lines: int) -> Dictionary:
 	var notices: Array = []
 	for i: int in lines:
-		notices.append({"key": "ui.morning.read.intro"})
+		notices.append({"key": "ui.morning.notice.judge", "person": {"name": "Person%d" % i}})
 	return {"kind": "morning", "night_number": 1, "secret": false, "public": {"deaths": [], "notices": notices}, "private": []}
 
 

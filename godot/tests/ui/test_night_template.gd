@@ -25,41 +25,18 @@ func test_auto_commit_applies_only_to_fixed_counts() -> void:
 	assert_false(_auto([1], 1, {"answer": "choice"}), "keine Zielfrage")
 
 
-## Rudel: genau eine Person, sofort übernommen, kein Verzicht („Kein Opfer“); die Rückgängig-Leiste nimmt die Wahl zurück.
-func test_pack_has_no_decline_and_undo_bar_takes_the_choice_back() -> void:
-	if not await start(PACK_ROLES):
-		return
-	assert_true(await run({}, until_prompt("pack")), "bis zum Rudel")
-	await begin_open_step()
-	assert_true(live("DeclineButton") == null, "kein Verzicht beim Rudel")
-	assert_false(_texts_of_card().contains("Kein Opfer"), "kein „Kein Opfer“ auf der Karte")
-	var card := find_node(screen(), "ActionCard")
-	card.call("hide_undo")  # die Leiste vom vorigen Schritt stört nicht
-	var before := session().commands().size()
-	await tap_seat(5)
-	assert_eq(session().commands().size(), before + 1, "feste Anzahl sofort übernommen, ohne Bestätigen")
-	assert_true(bool(card.call("undo_visible")), "Rückgängig-Leiste nach der Übernahme")
-	await tap_button("UndoBarButton")
-	assert_eq(session().commands().size(), before, "Rückgängig nimmt die Wahl zurück")
-	assert_eq(str(next().get("owner")), "pack", "Rudel wieder offen")
-
-
-## „Rückgängig“ gibt es nur einmal sichtbar und erst nach einer Auswahl: vorher nicht, danach erst in der Karte, dann im Dock.
+## „Rückgängig“ steht nur im Dock und erst nach einer Auswahl.
 func test_dock_undo_shows_once_and_only_after_a_choice() -> void:
 	if not await start(PACK_ROLES):
 		return
 	assert_true(await run({}, until_prompt("pack")), "bis zum Rudel")
 	await begin_open_step()
 	var dock := find_node(screen(), "DockUndoButton") as Control
-	var card := find_node(screen(), "ActionCard")
-	card.call("hide_undo")
 	await frames(2)
 	assert_false(dock.visible, "vor einer Auswahl kein Rückgängig im Dock")
 	await tap_seat(5)
-	assert_true(bool(card.call("undo_visible")) and not dock.visible, "gleich nach der Wahl zeigt nur die Karte Rückgängig")
-	card.call("hide_undo")
 	await frames(2)
-	assert_true(dock.visible, "danach steht es im Dock")
+	assert_true(dock.visible, "nach der Wahl steht es im Dock")
 
 
 ## Warnungen der Mini-Nachtkarte (DA-101) kommen aus dem Kernzustand: vor der Wahl nennt die Karte das geschützte mögliche Rudelopfer
@@ -74,18 +51,6 @@ func test_night_warnings_follow_core_state() -> void:
 	assert_false((keys.call([5]) as Array).has("ui.warn.protected"), "ungeschütztes Ziel nicht")
 	assert_false(shell.get_tree().get_nodes_in_group(&"night_warning").is_empty(), "rote Zeile auf der Karte")
 	assert_true(_texts_of_card().contains("ist geschützt"), "Text der Warnung: %s" % _texts_of_card())
-
-
-## Die Leiste verschwindet nach der eingestellten Zeit von selbst (Standard 3 s, hier verkürzt).
-func test_undo_bar_disappears_after_its_time() -> void:
-	if not await start(PACK_ROLES):
-		return
-	assert_eq(ActionCard.UNDO_SECONDS, 3.0, "Standardzeit 3 Sekunden")
-	var card := find_node(screen(), "ActionCard")
-	card.call("show_undo", 0.1)
-	assert_true(bool(card.call("undo_visible")), "Leiste sichtbar")
-	await shell.get_tree().create_timer(0.4).timeout
-	assert_false(bool(card.call("undo_visible")), "Leiste nach Ablauf weg")
 
 
 ## Loki: erst Liebende oder Rivalen (Ja/Nein), dann die zwei Personen. Vorher zählt kein Sitzplatz.

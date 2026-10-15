@@ -198,36 +198,6 @@ func test_cockpit_never_mirrors_the_ring_and_only_moves_the_main_action() -> voi
 	assert_eq(_seat_rects(shell), seats_before, "Plätze nach dem Rückwechsel unverändert")
 
 
-## Feste Zielwahl wird sofort übernommen (Rückgängig-Leiste); ein Seitenwechsel dabei sendet nichts und lässt die Leiste stehen.
-func test_side_change_during_undo_bar_sends_nothing_and_keeps_the_bar() -> void:
-	var shell := await _cockpit(SIZE_16_10, "de", Fixtures.unique_roles(7))
-	if shell == null:
-		return
-	await press(find_button(_screen(shell), "StartNightButton"))  # erster Schritt: Zielwahl des Schutzengels
-	var ring := find_node(_screen(shell), "SeatRing")
-	var next2: Dictionary = (session_of(shell).call("cockpit_view") as Dictionary).get("next", {})
-	assert_eq(str(next2.get("answer")), "targets", "offene Zielwahl")
-	var allowed: Array = next2.get("allowed_ids", [])
-	assert_false(allowed.is_empty(), "erlaubte Ziele vorhanden")
-	var target := int(allowed[0])
-	var commands_before := (session_of(shell).call("commands") as Array).size()
-	await press(ring.call("token_for", target) as BaseButton)
-	var sent: Array = (session_of(shell).call("commands") as Array)
-	assert_eq(sent.size(), commands_before + 1, "feste Anzahl erreicht: genau ein Befehl")
-	assert_eq((sent.back() as Command).payload["targets"], [target], "das gewählte Ziel")
-	var card := find_node(_screen(shell), "ActionCard")
-	assert_true(bool(card.call("undo_visible")), "Rückgängig-Leiste sichtbar")
-	var state_before := str(session_of(shell).call("state_hash"))
-	settings_of(shell).call("set_left_handed", true)
-	await frames(3)
-	assert_eq((session_of(shell).call("commands") as Array).size(), commands_before + 1, "Wechsel sendet keinen Befehl")
-	assert_eq(str(session_of(shell).call("state_hash")), state_before, "Zustand unverändert")
-	assert_true(bool(find_node(_screen(shell), "ActionCard").call("undo_visible")), "Leiste bleibt nach dem Wechsel")
-	settings_of(shell).call("set_left_handed", false)
-	await frames(2)
-	assert_eq((session_of(shell).call("commands") as Array).size(), commands_before + 1, "zweiter Wechsel sendet nichts")
-
-
 ## Spieler-Zeigekarte („Rollen zeigen“): Ein Seitenwechsel bei geöffneter Karte schließt sie nicht, verändert nichts und die Bestätigung
 ## wird genau einmal gesendet.
 func test_open_role_card_survives_a_side_change_and_confirms_once() -> void:

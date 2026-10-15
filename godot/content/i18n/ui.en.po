@@ -10131,3 +10131,24 @@ msgstr "No other wolf is alive."
 
 msgid "ui.cockpit.card.group_wake"
 msgstr "Wake the group now, then Continue."
+
+msgid "ui.night.classic_jaeger.curse.short"
+msgstr "shoots now"
+
+msgid "ui.night.classic_jaeger.curse.title"
+msgstr "The Hunter has died and shoots now."
+
+msgid "ui.night.classic_jaeger.curse.help"
+msgstr "Tap Shoot and then the person, or No shot."
+
+msgid "ui.cockpit.action.shoot"
+msgstr "Shoot"
+
+msgid "ui.morning.card.death"
+msgstr "{name}: {role}, {cause}"
+
+msgid "ui.morning.card.nobody"
+msgstr "Nobody died."
+
+msgid "ui.morning.card.revived"
+msgstr "Back among the living: {names}."

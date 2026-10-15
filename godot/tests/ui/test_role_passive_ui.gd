@@ -35,11 +35,8 @@ func _winner_kind(n: Dictionary) -> String:
 func _village_text() -> String:
 	var card := find_node(screen(), "ActionCard")
 	var labels := card.find_children("*", "Label", true, false)
-	var start := labels.find(find_node(card, "MorningVillage"))
-	var stop := labels.find(find_node(card, "MorningPrivate"))
-	if start == -1 or stop == -1:
-		return ""
-	return "\n".join(labels.slice(start, stop).map(func(l: Label) -> String: return l.text))
+	return "
+".join(labels.map(func(l: Label) -> String: return l.text))
 
 
 func test_siegreicher_wolf_counts_double_for_parity() -> void:
