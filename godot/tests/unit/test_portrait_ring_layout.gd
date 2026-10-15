@@ -191,3 +191,17 @@ func test_long_names_at_24_persons_are_never_cut() -> void:
 			var lines := GameSeatToken.plate_lines(LONG_NAMES[i], font, float((result["plate_widths"] as Array)[i]) - rim, int((result["plate_lines"] as Array)[i]))
 			for line: String in lines:
 				assert_false(line.ends_with("…"), "%s bei %s: nicht gekürzt (%s)" % [LONG_NAMES[i], str(area), str(lines)])
+
+
+## Der Puls der aktiven Person und der Feuerring zeichnen höchstens 15-mal pro Sekunde neu (Nachtlauf 15.10.: jedes Neuzeichnen
+## legt im Web-Export neue Zeichenpuffer an, bei 60 Bildern pro Sekunde wuchs der Speicher im Nachtbild um rund 4 MB pro Minute).
+func test_seat_pulse_redraws_at_a_limited_rate() -> void:
+	var token := GameSeatToken.new()
+	for i: int in 3:
+		token._process(0.016)
+	assert_eq(token._hunt_time, 0.0, "drei kurze Bilder: noch kein Neuzeichnen")
+	token._process(0.02)
+	assert_true(absf(token._hunt_time - 0.068) < 0.001, "danach rückt die Pulszeit um die ganze verstrichene Zeit vor (%s)" % str(token._hunt_time))
+	token._process(0.016)
+	assert_true(absf(token._hunt_time - 0.068) < 0.001, "und wartet wieder")
+	token.free()

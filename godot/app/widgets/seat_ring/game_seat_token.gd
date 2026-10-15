@@ -38,6 +38,7 @@ const RING_OVERLAY_SCALE := 0.95  ## Kantenlänge der Statusring-Bilder relativ 
 const GLOW_ACTIVE := ThemeTokens.BLOOD_GLOW  ## blutroter Schein am Ring der handelnden Person
 const HUNT_PULSE_SPEED := 3.4  ## Pulse je Sekunde im Bogenmaß
 const ACTIVE_PULSE_SPEED := 2.1  ## langsames Auf und Ab der aktiven Person (rund drei Sekunden je Zug)
+const PULSE_REDRAW_STEP := 1.0 / 15.0  ## Der Puls zeichnet höchstens 15-mal pro Sekunde neu: jedes Neuzeichnen legt im Web-Export neue Zeichenpuffer an, deren Kennungen wachsen (Nachtlauf 15.10.: bei 60 Bildern pro Sekunde rund 4 MB Speicher pro Minute)
 const HUNT_ARCS := 10  ## Bögen des Feuerscheins um den Ring
 ## Statusringe gibt es nur für Gift, Stille und Schutz. Das Fadenkreuz (Opfer, Markierung) bleibt ein Abzeichen: Ein roter Ring heißt am Platz
 ## nur „nominiert“ (Tag) oder „gewählt“ (Zuordnung), nie ein Opfer der Nacht (Feedback 8, L3/L11).
@@ -103,6 +104,7 @@ var active: bool = false:  ## handelnde Person: Bildrahmen und Namensschild leuc
 		_apply_hunt_motion()
 		queue_redraw()
 var _hunt_time: float = 0.0
+var _pulse_wait: float = 0.0  ## seit dem letzten Neuzeichnen verstrichene Zeit
 var _lines_key: String = ""  ## Zwischenspeicher für `_plate_lines` (die Berechnung ist aufwendig, `plate_rect` fragt sie bei jedem Tippen)
 var _lines_cache: Array[String] = []
 var _needs_key: String = ""
@@ -388,7 +390,11 @@ func _apply_hunt_motion() -> void:
 
 
 func _process(delta: float) -> void:
-	_hunt_time += delta
+	_pulse_wait += delta
+	if _pulse_wait < PULSE_REDRAW_STEP:
+		return
+	_hunt_time += _pulse_wait
+	_pulse_wait = 0.0
 	queue_redraw()
 
 
