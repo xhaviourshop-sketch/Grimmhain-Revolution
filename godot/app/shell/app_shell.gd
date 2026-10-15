@@ -49,6 +49,7 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
+	PerfMode.light()  # Leicht-Modus früh festlegen
 	theme = ThemeFactory.build()
 	get_tree().set_auto_accept_quit(false)  # Fenster schließen läuft über _notification (Warnung bei ungespeichertem Stand)
 	app_context.settings.changed.connect(_on_settings_changed)

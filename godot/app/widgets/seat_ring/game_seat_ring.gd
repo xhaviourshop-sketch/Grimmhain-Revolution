@@ -125,7 +125,7 @@ func set_chosen(person_id: int) -> void:
 ## Wölfe mit Feuerring (Werwolf-Phase, König Lykaon), unabhängig vom Auswahlmodus; leer = keiner.
 func set_hunt(ids: Array, animated: bool = true) -> void:
 	_hunt = ids.duplicate()
-	_hunt_animated = animated
+	_hunt_animated = animated and not PerfMode.off(&"feuer")
 	_apply_states()
 
 

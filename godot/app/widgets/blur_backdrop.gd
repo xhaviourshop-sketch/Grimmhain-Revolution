@@ -10,6 +10,10 @@ func _init() -> void:
 	name = "Dim"
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if PerfMode.off(&"schatten"):  # kein Lesen der Bildschirmtextur: schlichte dunkle Fläche
+		color = ThemeTokens.NIGHT_BACKDROP
+		modulate.a = 0.92
+		return
 	var mat := ShaderMaterial.new()
 	mat.shader = SHADER
 	mat.set_shader_parameter("radius", ThemeTokens.CARD_BACKDROP_BLUR)

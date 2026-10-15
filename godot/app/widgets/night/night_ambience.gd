@@ -23,19 +23,23 @@ var _day_tween: Tween = null
 
 ## Verbindet Nacht- und Tagbild und Dorf-Ebene (`layer`, volle Fläche hinter allen Bedienflächen) und legt die drei Ebenen an.
 func configure(night_art: TextureRect, day_art: TextureRect, layer: Control) -> void:
-	_tone = ShaderMaterial.new()
-	_tone.shader = load("res://app/theme/village_light_tone.gdshader") as Shader
-	_tone.set_shader_parameter("cold_color", ThemeTokens.FIRE_GHOST_FLAME[2])
-	night_art.material = _tone
+	if not PerfMode.off(&"schatten"):
+		_tone = ShaderMaterial.new()
+		_tone.shader = load("res://app/theme/village_light_tone.gdshader") as Shader
+		_tone.set_shader_parameter("cold_color", ThemeTokens.FIRE_GHOST_FLAME[2])
+		night_art.material = _tone
 	_day_art = day_art
 	_day_art.modulate.a = 0.0
-	for part: VillagePart in [VillageLights.new(), VillageMotion.new(), VillageLife.new()]:
+	var made: Array[VillagePart] = [VillageLights.new()]
+	if not PerfMode.off(&"leben"):
+		made.append(VillageMotion.new())
+		made.append(VillageLife.new())
+	var names := ["Lights", "Motion", "Life"]
+	for part: VillagePart in made:
 		part.map = _map
+		part.name = names[_parts.size()]
 		layer.add_child(part)
 		_parts.append(part)
-	_parts[0].name = "Lights"
-	_parts[1].name = "Motion"
-	_parts[2].name = "Life"
 	layer.resized.connect(_on_resized.bind(layer))
 	_on_resized(layer)
 

@@ -30,7 +30,8 @@ func _ready() -> void:
 	_fog.name = "BackdropFog"
 	var fog := ShaderMaterial.new()
 	fog.shader = load("res://app/theme/night_fog.gdshader") as Shader
-	_fog.material = fog
+	if not PerfMode.off(&"schatten"):
+		_fog.material = fog
 	_fill(_fog)
 	var shade := ColorRect.new()
 	shade.name = "BackdropShade"
@@ -40,13 +41,14 @@ func _ready() -> void:
 	vignette.name = "BackdropVignette"
 	var edge := ShaderMaterial.new()
 	edge.shader = load("res://app/theme/night_vignette.gdshader") as Shader
-	vignette.material = edge
+	if not PerfMode.off(&"schatten"):
+		vignette.material = edge
 	_fill(vignette)
 
 
 ## Nebel ziehen lassen (true) oder stehen lassen (reduzierte Bewegung).
 func set_animated(animated: bool) -> void:
-	if _fog != null:
+	if _fog != null and _fog.material != null:
 		(_fog.material as ShaderMaterial).set_shader_parameter("animate", 1.0 if animated else 0.0)
 
 

@@ -83,7 +83,7 @@ var _smoke: CPUParticles2D = null
 static func set_on(host: Control, part: String, margins: Vector4, on: bool, p_level: int, p_animated: bool = true) -> void:
 	var fire := host.get_node_or_null("FireGlow") as FireGlow
 	if fire == null:
-		if not on:
+		if not on or PerfMode.off(&"feuer"):
 			return
 		fire = create(part, margins, p_level)
 		host.add_child(fire)
@@ -154,7 +154,7 @@ func _draw() -> void:
 
 func _build_sparks(params: Dictionary) -> void:
 	var count := mini(int(params["sparks"]), MAX_SPARKS)
-	if count <= 0:
+	if count <= 0 or PerfMode.off(&"partikel"):
 		return
 	_sparks = CPUParticles2D.new()
 	_sparks.name = "Sparks"

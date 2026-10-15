@@ -276,7 +276,7 @@ func _after_fade() -> void:
 # ---------- Schwarm ----------
 
 func _update_flock_schedule() -> void:
-	var allowed := enabled and not reduced and (night or day)
+	var allowed := enabled and not reduced and (night or day) and not PerfMode.off(&"fledermaus")
 	if not allowed:
 		_timer.stop()
 		_end_flock()
@@ -288,7 +288,7 @@ func _update_flock_schedule() -> void:
 
 
 func _on_timer() -> void:
-	if enabled and not reduced and (night or day):
+	if enabled and not reduced and (night or day) and not PerfMode.off(&"fledermaus"):
 		_build()  # nachts kommt der erste Schwarm vor jeder Tagesansicht: Flugwurzel und Bilder müssen existieren
 		_start_flock()
 		_update_process()
