@@ -480,7 +480,7 @@ static func ability_of(role_id: StringName) -> StringName:
 static func stealable(role_id: StringName) -> bool:
 	if not has_role(role_id) or not has_night_step(role_id) or first_night_only(role_id):
 		return false
-	return not [PROPHET, SCHICKSALSWOLF, SCHUTZGEIST, WOLFSKIND, LEHRLING, GRABRAEUBER, KARTENSCHLUCKER].has(role_id)
+	return not [PROPHET, SCHICKSALSWOLF, SCHUTZGEIST, WOLFSKIND, LEHRLING, GRABRAEUBER, KARTENSCHLUCKER].has(mech(role_id))
 
 
 ## true, wenn jede Instanz der Rolle eine vom Spielleiter festgelegte Scheinrolle braucht.

@@ -69,3 +69,10 @@ func test_a_card_granting_a_classic_role_stores_its_mechanic() -> void:
 	assert_eq(String(abilities[0]["role_id"]) if not abilities.is_empty() else "", "das-orakel", "gespeichert unter der Mechanik")
 	assert_true(SoloRules.acts_as(s, 2, RoleCatalog.ORAKEL), "die Person handelt als Orakel")
 	assert_true(GameState.from_dict(s.to_dict()) != null, "Zustand ladbar")
+
+
+## Wie das Wolfskind des Grundspiels kann auch das wilde Kind (Mechanik Wolfskind) nicht gestohlen oder geliehen werden:
+## seine Fähigkeit ist ein eigener Rollenwechsel in Nacht 1.
+func test_the_wild_child_cannot_be_stolen_like_the_base_game_wolf_child() -> void:
+	assert_false(RoleCatalog.stealable(RoleCatalog.WOLFSKIND), "Wolfskind des Grundspiels")
+	assert_false(RoleCatalog.stealable(RoleCatalog.CLASSIC_WILDES_KIND), "wildes Kind")
