@@ -651,8 +651,8 @@ static func from_dict(d: Dictionary) -> GameState:
 		var night := DictRead.get_int(item, "night", -1) if item is Dictionary else -1
 		if not s.players.has(necro) or night != s.night_number or night < 1:
 			return null
-		if not s.players[necro].alive or not SoloRules.has_ability(s, necro, RoleCatalog.NEKROMANT):
-			return null  # E-27: nur ein lebender Nekromant hält einen Schild
+		if not s.players[necro].alive or not (SoloRules.has_ability(s, necro, RoleCatalog.NEKROMANT) or s.death_cards):
+			return null  # E-27: nur ein lebender Nekromant hält einen Schild (mit Totenreichkarten auch ein für diese Nacht geliehener)
 		s.necro_shields.append({"necro_id": necro, "night": night})
 	var named := DictRead.get_dict(d, "necro_named")
 	for key: Variant in named:
