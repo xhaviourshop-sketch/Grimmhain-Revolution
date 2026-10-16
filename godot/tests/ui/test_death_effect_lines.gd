@@ -1,7 +1,7 @@
 extends UiTestCase
 ## DI-03 in der Oberfläche: Angesagte Todeseffekte stehen im öffentlichen Teil des Morgenberichts und bei den
-## Tagestoden, mit Effekt und Rolle zum Ereigniszeitpunkt (auch in Wiederbelebungsrunden, wo die Karten der Toten
-## sonst verdeckt bleiben). Der öffentliche Teil enthält nur die Positivliste; Ursachen, Schutz und Markierungen
+## Tagestoden, mit Effekt und Rolle zum Ereigniszeitpunkt. Die Ein-Seiten-Morgenkarte (15.10.2026) zeigt Tote mit Rolle und
+## Ursache in einer Zeile; Ritterschlag, Sensenträger-Fluch und Besessenen-Zug stehen dort als Ursache statt als eigener Satz. Der öffentliche Teil enthält nur die Positivliste; Ursachen, Schutz und Markierungen
 ## erscheinen nie. Save/Load und Replay erzeugen dieselben Ansagen.
 
 const UiGame := preload("res://tests/ui/ui_game.gd")
@@ -25,8 +25,8 @@ func _cockpit(roles: Array, locale: String = "de") -> Control:
 
 func _card_text(shell: Control) -> String:
 	var out: Array[String] = []
-	for c: Control in text_controls(find_node(current_screen(shell), "ActionCard")):
-		out.append(text_of(c))
+	for l: Node in find_node(current_screen(shell), "ActionCard").find_children("*", "Label", true, false):
+		out.append((l as Label).text)
 	return "\n".join(out)
 
 
@@ -49,8 +49,8 @@ func test_morning_card_announces_the_knight_effect_with_role_in_german() -> void
 	_knight_morning(s)
 	await frames(3)
 	var text := _card_text(shell)
-	assert_true(text.contains("„B war Ritter und reißt A mit in den Tod.“"), "Ansage mit Effekt und Rolle: %s" % text)
-	assert_true(text.contains("A (Werwolf)") and text.contains("B (Ritter)"), "Runde ohne Wiederbelebung: Tote mit Rolle")
+	assert_true(text.contains("B: Ritter, Rudelangriff") and text.contains("A: Werwolf, Schlag des sterbenden Ritters"), "Tote mit Rolle und Ursache, der Ritterschlag steht als Ursache: %s" % text)
+	assert_false(text.contains("reißt A mit in den Tod"), "der Ritterschlag steht nicht noch einmal als eigener Satz (Ein-Seiten-Morgenkarte)")
 
 
 func test_morning_card_announces_the_knight_effect_in_english() -> void:
@@ -59,19 +59,19 @@ func test_morning_card_announces_the_knight_effect_in_english() -> void:
 		return
 	_knight_morning(session_of(shell) as GameSession)
 	await frames(3)
-	assert_true(_card_text(shell).contains("“B was Knight and takes A down too.”"), "englische Ansage: %s" % _card_text(shell))
+	var text := _card_text(shell)
+	assert_true(text.contains("B: Knight, pack attack") and text.contains("A: Werewolf, strike of the dying Knight"), "englische Zeilen mit Rolle und Ursache: %s" % text)
 
 
-func test_revival_round_hides_death_roles_but_the_effect_names_the_role() -> void:
+func test_revival_round_card_names_role_and_cause_of_the_effect() -> void:
 	var shell := await _cockpit(_knight_roles(true))
 	if shell == null:
 		return
 	_knight_morning(session_of(shell) as GameSession)
 	await frames(3)
 	var text := _card_text(shell)
-	assert_true(text.contains("„B war Ritter und reißt A mit in den Tod.“"), "Effekt nennt die Rolle bewusst: %s" % text)
-	assert_false(text.contains("A (Werwolf)") or text.contains("B (Ritter)"), "gewöhnliche Todesansage ohne Rollen (DI-01)")
-	assert_true(text.contains("A, B") or text.contains("B, A"), "Namen der Toten ohne Rolle: %s" % text)
+	# Die Ein-Seiten-Morgenkarte der Spielleitung nennt Rolle und Ursache auch in Wiederbelebungsrunden (offene Regelfrage DI-01 in PROGRESS).
+	assert_true(text.contains("B: Ritter, Rudelangriff") and text.contains("A: Werwolf, Schlag des sterbenden Ritters"), "Rolle und Ursache stehen auf der Karte: %s" % text)
 
 
 func test_public_part_contains_only_the_positive_list() -> void:
