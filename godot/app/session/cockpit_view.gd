@@ -352,7 +352,7 @@ static func status_fields(s: GameState, id: int) -> Array:
 	var out: Array = []
 	out.append({"field": "ever_nominated", "kind": "set_ever_nominated", "fields": {"target_id": id}, "value_key": "value",
 		"current": p.ever_nominated, "type": "bool"})
-	if p.role_id == RoleCatalog.WALDHEXE:
+	if p.mech_role() == RoleCatalog.WALDHEXE:
 		for potion: String in WitchStep.POTIONS:
 			out.append({"field": "potion_%s" % potion, "kind": "set_witch_potion", "fields": {"witch_id": id, "potion": potion},
 				"value_key": "available", "current": WitchStep.potion_available(p, potion), "type": "bool"})
