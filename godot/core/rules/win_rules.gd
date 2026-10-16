@@ -111,8 +111,20 @@ static func evaluate(state: GameState) -> Array:
 	var devils := SoloRules.fire_co_winners(state)
 	if not devils.is_empty():
 		for result: Dictionary in results:
-			result["co_winner_ids"] = devils.duplicate()
+			var co := _fire_co_of(devils, result["beneficiary_ids"])
+			if not co.is_empty():
+				result["co_winner_ids"] = co
 	return results
+
+
+## Feuerteufel als Mitsieger eines Siegs: alle lebenden außer den Begünstigten selbst (Totenreichkarte Familienbande kann einen
+## Feuerteufel begünstigen; niemand steht in beiden Listen).
+static func _fire_co_of(devils: Array[int], beneficiaries: Array) -> Array[int]:
+	var out: Array[int] = []
+	for id: int in devils:
+		if not beneficiaries.has(id):
+			out.append(id)
+	return out
 
 
 ## Personen, die mit dem Kandidaten gewinnen (Begünstigte, Mitglieder der siegenden Seite), aufsteigend nach Personen-ID.
@@ -278,7 +290,7 @@ static func state_is_consistent(s: GameState) -> bool:
 		if (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			var expected: Array[int] = []
 			if c.reason_key != WinCandidate.REASON_GM_DECLARED:
-				expected = SoloRules.fire_co_winners(s)
+				expected = _fire_co_of(SoloRules.fire_co_winners(s), c.beneficiary_ids)
 			if c.co_winner_ids != expected:
 				return false
 		if c.status == WinCandidate.STATUS_CONFIRMED:
