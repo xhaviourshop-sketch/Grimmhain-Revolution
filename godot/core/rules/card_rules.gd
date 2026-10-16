@@ -665,6 +665,9 @@ static func begin_night(ctx: RuleContext) -> void:
 	for mark: Dictionary in s.fire_marks.duplicate():  # RM-DR-131.7: eine nur per Karte geliehene Fähigkeit endet, die Markierung mit ihr
 		if not SoloRules.acts_as(s, int(mark["devil_id"]), RoleCatalog.FEUERTEUFEL):
 			SoloRules.drop_fire_mark(s, int(mark["devil_id"]))
+	for doll: Dictionary in s.voodoo_dolls.duplicate():  # RM-DR-132.8: eine nur per Karte geliehene Fähigkeit endet, die Puppe mit ihr
+		if not SoloRules.acts_as(s, int(doll["priest_id"]), RoleCatalog.VOODOO):
+			SoloRules.drop_priest_doll(s, int(doll["priest_id"]))
 	s.cardsys["pack_extra"] = []
 	CardEffects.on_night_start(ctx)
 	# Geblendetes Rudel (Schattenmantel, Dorf): ein zufälliges Opfer, auch ein Wolf, ersetzt die Zielwahl des Rudels (KS-107).

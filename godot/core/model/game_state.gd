@@ -715,7 +715,8 @@ static func from_dict(d: Dictionary) -> GameState:
 		# E-13, E-14, E-22: lebender Priester mit der Rolle, lebende andere Puppe, eine je Priester, aufsteigend.
 		if not s.players.has(priest) or not s.players.has(doll) or priest == doll:
 			return null
-		if not s.players[priest].alive or not SoloRules.has_ability(s, priest, RoleCatalog.VOODOO) or not s.players[doll].alive:
+		# Mit Totenreichkarten kann die Fähigkeit auch eine für diese Nacht geliehene sein (cardsys wird erst später geladen).
+		if not s.players[priest].alive or not (SoloRules.has_ability(s, priest, RoleCatalog.VOODOO) or s.death_cards) or not s.players[doll].alive:
 			return null
 		if not s.voodoo_dolls.is_empty() and int(s.voodoo_dolls[-1]["priest_id"]) >= priest:
 			return null
