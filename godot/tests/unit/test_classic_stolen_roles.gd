@@ -76,3 +76,18 @@ func test_a_card_granting_a_classic_role_stores_its_mechanic() -> void:
 func test_the_wild_child_cannot_be_stolen_like_the_base_game_wolf_child() -> void:
 	assert_false(RoleCatalog.stealable(RoleCatalog.WOLFSKIND), "Wolfskind des Grundspiels")
 	assert_false(RoleCatalog.stealable(RoleCatalog.CLASSIC_WILDES_KIND), "wildes Kind")
+
+
+## Nachtlauf Regeln: Die gestohlene Classic-Seherin sieht wie die eigene die wahre Rolle, auch bei Sonderwölfen (nicht die Scheinrolle).
+func test_a_robber_of_the_classic_seer_sees_the_true_role() -> void:
+	var r := RulesEngine.apply(GameState.new(), Fixtures.start_roles(["werwolf", "grabraeuber", "classic-seherin", "classic-urwolf", "amalia", "detektiv", "nachtwaechter", "waechter-am-tor"]))
+	assert_true(r.ok, "Start (%s)" % r.error)
+	if not r.ok:
+		return
+	var s: GameState = r.state
+	var urwolf := s.players[4]
+	assert_eq(InformationRules.determine_role(urwolf, s.players[2], s), RoleCatalog.WERWOLF, "vor dem Diebstahl: Scheinrolle Werwolf")
+	s = _robbed_state("classic-seherin")
+	s.players[1].role_id = &"classic-urwolf"
+	assert_eq(InformationRules.determine_role(s.players[1], s.players[2], s), &"classic-urwolf", "Grabräuber mit Seherin sieht die wahre Rolle")
+	assert_eq(InformationRules.determine_role(s.players[1], s.players[4], s), RoleCatalog.WERWOLF, "andere Personen sehen weiter die Scheinrolle")

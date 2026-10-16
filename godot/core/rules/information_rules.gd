@@ -14,14 +14,23 @@ extends RefCounted
 ## `appears_as` wird beim Spielaufbau und bei `set_role` mit der Katalog-Erscheinung
 ## belegt, die derzeit für jede Rolle gleich der Rolle ist; dann greift Stufe 2 oder 3.
 ## Mit `seer` (die fragende Person): Hat ihre Rolle den Classic-Parameter `true_role` (Seherin: „wahre Identität“), zeigt die Auskunft
-## die tatsächliche Rolle auch bei Wölfen und Sonderwölfen.
-static func determine_role(target: Player, seer: Player = null) -> StringName:
+## die tatsächliche Rolle auch bei Wölfen und Sonderwölfen. Mit `s` gilt das auch für einen Grabräuber, der die Classic-Seherin gestohlen hat.
+static func determine_role(target: Player, seer: Player = null, s: GameState = null) -> StringName:
 	if target.cursed:
 		return RoleCatalog.WERWOLF  # Fluch des Dämonischen Wolfs (V-02): nur Rollenauskünfte
-	if seer != null and RoleCatalog.param(seer.role_id, "true_role", false):
+	if seer != null and (RoleCatalog.param(seer.role_id, "true_role", false) or (s != null and _stole_true_role(s, seer))):
 		return target.role_id
 	if target.appears_as != &"" and target.appears_as != target.role_id:
 		return target.appears_as
 	if target.counts_as_wolf:
 		return RoleCatalog.WERWOLF
 	return target.role_id
+
+
+## true, wenn die Person als Grabräuber eine Rolle mit `true_role` (Classic-Seherin) gestohlen hat.
+static func _stole_true_role(s: GameState, seer: Player) -> bool:
+	for theft: Dictionary in s.grave_thefts:
+		if int(theft["robber_id"]) == seer.id:
+			var victim: Player = s.players.get(int(theft["target_id"]))
+			return victim != null and RoleCatalog.param(victim.role_id, "true_role", false)
+	return false
