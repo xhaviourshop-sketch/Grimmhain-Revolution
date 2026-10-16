@@ -46,6 +46,10 @@ static func evaluate(state: GameState) -> Array:
 			non_wolves += 1
 	var args := {"wolves": wolves, "non_wolves": non_wolves}
 	var results: Array = []
+	var lovers := mixed_lovers_last(state)
+	if not lovers.is_empty():
+		# Gemischtes Liebespaar als Letzte: eigene Partei statt Wolfsparität (Nachtauftrag 16.10.2026, Markus).
+		results.append({"kind": String(Faction.LOVERS), "reason_key": String(WinCandidate.REASON_LOVERS), "reason_args": {"living": alive.size()}, "beneficiary_ids": lovers})
 	if living_wolves == 0:
 		# RM-DR-155.3: Lebt ein Doppelspion, wird statt des Dorfsiegs nur sein Sieg je Person vorgeschlagen.
 		# Freigeschaltete Propheten (E-03) ersetzen den Dorfsieg wie der Doppelspion.
@@ -59,7 +63,7 @@ static func evaluate(state: GameState) -> Array:
 			results.append({"kind": String(Faction.VILLAGE), "reason_key": String(WinCandidate.REASON_NO_WOLVES_ALIVE), "reason_args": args.duplicate(), "beneficiary_ids": []})
 		for agent: Array in agents:
 			results.append({"kind": String(Faction.SOLO), "reason_key": String(agent[1]), "reason_args": {"living": alive.size()}, "beneficiary_ids": [agent[0]]})
-	if wolves >= non_wolves:
+	if wolves >= non_wolves and lovers.is_empty():
 		# E-35: Ist der einzige lebende Wolf ein Rachsüchtiger Wolf, ersetzt sein Alleinsieg den Wolfssieg; leben nur
 		# Rachsüchtige Wölfe (mehrere), gewinnt noch niemand (DA-18); sonst gewinnen die Werwölfe ohne sie.
 		var lone: Array[int] = alive.filter(func(id: int) -> bool: return state.players[id].counts_as_wolf and state.players[id].mech_role() == RoleCatalog.RACHSUECHTIGER_WOLF)
@@ -115,6 +119,25 @@ static func evaluate(state: GameState) -> Array:
 			if not co.is_empty():
 				result["co_winner_ids"] = co
 	return results
+
+
+## Das Liebespaar (Loki oder Amor, Bindungsart Liebe), wenn genau diese zwei Personen leben und eine davon als Wolf zählt, die
+## andere nicht; sonst leer. Aufsteigend nach Personen-ID.
+static func mixed_lovers_last(state: GameState) -> Array[int]:
+	var alive := effective_alive_ids(state)
+	var out: Array[int] = []
+	if alive.size() != 2 or state.alive_ids().size() != 2:
+		return out
+	if state.players[alive[0]].counts_as_wolf == state.players[alive[1]].counts_as_wolf:
+		return out
+	for pair: Dictionary in state.loki_pairs:
+		if bool(pair["ended"]) or pair["kind"] != "love":
+			continue
+		var ids: Array[int] = [int(pair["a"]), int(pair["b"])]
+		ids.sort()
+		if ids == alive:
+			return ids
+	return out
 
 
 ## Feuerteufel als Mitsieger eines Siegs: alle lebenden außer den Begünstigten selbst (Totenreichkarte Familienbande kann einen
@@ -312,6 +335,9 @@ static func state_is_consistent(s: GameState) -> bool:
 				return false
 		if [WinCandidate.REASON_PIED_PIPER, WinCandidate.REASON_PLAGUE, WinCandidate.REASON_PROPHET, WinCandidate.REASON_DEATH_PREACHER, WinCandidate.REASON_VOODOO, WinCandidate.REASON_NECROMANCER, WinCandidate.REASON_HADES, WinCandidate.REASON_GRAVE_ROBBER, WinCandidate.REASON_LONE_WOLF, WinCandidate.REASON_SWALLOWER, WinCandidate.REASON_FAMILY_BOND].has(c.reason_key) 				and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not _solo_holds(s, c.reason_key, c.beneficiary_ids[0]):
+				return false
+		if c.reason_key == WinCandidate.REASON_LOVERS and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
+			if c.kind != Faction.LOVERS or c.beneficiary_ids != mixed_lovers_last(s):
 				return false
 		if c.reason_key == WinCandidate.REASON_DOUBLE_AGENT and (c.status == WinCandidate.STATUS_OPEN or c.status == WinCandidate.STATUS_CONFIRMED):
 			if c.kind != Faction.SOLO or not _beneficiaries_ok(s, c) or not double_agent_wins(s, c.beneficiary_ids[0]):

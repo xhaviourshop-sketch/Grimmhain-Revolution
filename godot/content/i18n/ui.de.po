@@ -1496,6 +1496,9 @@ msgstr "Werwölfe"
 msgid "ui.cockpit.win.kind.solo"
 msgstr "Einzelsieg"
 
+msgid "ui.cockpit.win.kind.lovers"
+msgstr "Die Liebenden"
+
 msgid "ui.cockpit.win.kind.none"
 msgstr "Kein Sieger"
 
@@ -1549,6 +1552,9 @@ msgstr "Höchstens drei leben und der Grabräuber lebt."
 
 msgid "ui.cockpit.win.reason.lone_wolf_last_wolf"
 msgstr "Wolfsparität und der Rachsüchtige Wolf ist der einzige lebende Wolf."
+
+msgid "ui.cockpit.win.reason.lovers_last_two"
+msgstr "Nur das Liebespaar aus Wolf und Dorfperson lebt noch."
 
 msgid "ui.cockpit.private.heading"
 msgstr "Rollen · nur Spielleitung"

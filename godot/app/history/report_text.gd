@@ -195,7 +195,7 @@ static func _cause_key(cause: String) -> StringName:
 
 
 static func _side_key(side: String) -> String:
-	return "ui.cockpit.win.kind.%s" % (side if ["village", "wolves", "solo", "none"].has(side) else "none")
+	return "ui.cockpit.win.kind.%s" % (side if ["village", "wolves", "solo", "lovers", "none"].has(side) else "none")
 
 
 static func _reason_key(reason: String) -> String:

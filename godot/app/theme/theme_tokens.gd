@@ -212,6 +212,6 @@ static func team_read_color(team: StringName) -> Color:
 	match team:
 		Faction.WOLVES:
 			return TEAM_READ_WOLVES
-		Faction.SOLO:
+		Faction.SOLO, Faction.LOVERS:
 			return TEAM_READ_SOLO
 	return TEAM_READ_VILLAGE

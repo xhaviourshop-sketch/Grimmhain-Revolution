@@ -5,3 +5,4 @@ extends RefCounted
 const VILLAGE := &"village"
 const WOLVES := &"wolves"
 const SOLO := &"solo"
+const LOVERS := &"lovers"  ## gemischtes Liebespaar (Wolf und Dorfperson) als Letzte

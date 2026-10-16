@@ -1496,6 +1496,9 @@ msgstr "Werewolves"
 msgid "ui.cockpit.win.kind.solo"
 msgstr "Solo win"
 
+msgid "ui.cockpit.win.kind.lovers"
+msgstr "The lovers"
+
 msgid "ui.cockpit.win.kind.none"
 msgstr "No winner"
 
@@ -1549,6 +1552,9 @@ msgstr "At most three are alive and the Grave Robber is alive."
 
 msgid "ui.cockpit.win.reason.lone_wolf_last_wolf"
 msgstr "Wolf parity and the Vengeful Wolf is the only living wolf."
+
+msgid "ui.cockpit.win.reason.lovers_last_two"
+msgstr "Only the pair of lovers, one wolf and one villager, is still alive."
 
 msgid "ui.cockpit.private.heading"
 msgstr "Roles · game master only"

@@ -153,7 +153,7 @@ static func _sentence(type: String, d: Dictionary, s: GameState) -> String:
 			return text_of("ui.log.line.wolf_child", {"name": _name(s, d, "child_id")})
 		GameEvent.WIN_CONFIRMED:
 			var side := str((d.get("winner", {}) as Dictionary).get("kind", "none"))
-			return text_of("ui.log.line.win_confirmed", {"side": StringName("ui.cockpit.win.kind.%s" % (side if ["village", "wolves", "solo"].has(side) else "none"))})
+			return text_of("ui.log.line.win_confirmed", {"side": StringName("ui.cockpit.win.kind.%s" % (side if ["village", "wolves", "solo", "lovers"].has(side) else "none"))})
 		GameEvent.WIN_REJECTED:
 			return text_of("ui.log.line.win_rejected")
 		GameEvent.GM_CORRECTED:
