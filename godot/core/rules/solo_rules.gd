@@ -487,7 +487,7 @@ static func grave_steal(ctx: RuleContext, robber_id: int, target_id: int) -> voi
 	var role := s.players[target_id].role_id
 	s.players[robber_id].ability_uses[GRAVE_USE_KEY] = 1
 	grave_drop(s, robber_id)
-	s.grave_thefts.append({"robber_id": robber_id, "target_id": target_id, "role_id": String(role)})
+	s.grave_thefts.append({"robber_id": robber_id, "target_id": target_id, "role_id": String(RoleCatalog.ability_of(role))})
 	s.grave_thefts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["robber_id"]) < int(b["robber_id"]))
 	ctx.emit(GameEvent.GRAVE_ROBBED, Visibility.GM, {"robber_id": robber_id, "target_id": target_id, "role_id": String(role), "night": s.night_number})
 	ctx.emit(GameEvent.GRAVE_ROBBER_NOTICE, Visibility.ACTOR, {"role_id": String(role)}, robber_id)

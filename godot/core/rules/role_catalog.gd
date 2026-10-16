@@ -467,6 +467,13 @@ static func first_night_only(role_id: StringName) -> bool:
 	return _entry(role_id).get("first_night_only", false)
 
 
+## Rolle, unter der eine gestohlene oder geliehene Fähigkeit läuft: bei Classic-Rollen die Mechanik (Nachtplan, Abfragen und
+## Fähigkeitsprüfungen kennen nur sie, wie bei der eigenen Classic-Rolle über `Player.mech_role`); sonst die Rolle selbst.
+static func ability_of(role_id: StringName) -> StringName:
+	var m := mech(role_id)
+	return m if m != role_id and stealable(m) else role_id
+
+
 ## Grabräuber (E-34, abgeleitet): Rollen mit wiederkehrendem eigenem Nachtschritt einer lebenden Person. Nicht:
 ## Nur-Nacht-1-Rollen, Prophet und Schicksalswolf (markieren nur in Nacht 1), Schutzgeist (handelt nur tot), Wolfskind und Lehrling
 ## (ihre Fähigkeit ist ein eigener Rollenwechsel) und der Grabräuber selbst.

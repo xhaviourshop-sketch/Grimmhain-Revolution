@@ -168,6 +168,8 @@ static func grant_extra_use(ctx: RuleContext, rec: Dictionary, person_id: int, n
 ## Verleiht eine zusätzliche Nachtfähigkeit einer anderen Rolle für `night` (frische Einsätze). Gleiche Rolle: wie ein weiterer Einsatz.
 static func grant_role(ctx: RuleContext, rec: Dictionary, person_id: int, role: StringName, night: int) -> void:
 	var s := ctx.state
+	var shown := role
+	role = RoleCatalog.ability_of(role)  # Classic-Rolle: die Fähigkeit läuft über ihre Mechanik
 	if SoloRules.ability_role(s, person_id) == role or not RoleCatalog.stealable(role):
 		grant_extra_use(ctx, rec, person_id, night)
 		return
@@ -176,8 +178,8 @@ static func grant_role(ctx: RuleContext, rec: Dictionary, person_id: int, role: 
 		if key.begins_with("%s:" % role):
 			p.ability_uses.erase(key)
 	(s.cardsys["abilities"] as Array).append({"player_id": person_id, "role_id": String(role), "night": night})
-	ctx.emit(GameEvent.CARD_NOTICE, Visibility.ACTOR, {"card_id": rec["card"], "role_id": String(role)}, person_id)
-	ctx.emit(GameEvent.CARD_EFFECT_NOTE, Visibility.GM, {"card_id": rec["card"], "granted_id": person_id, "role_id": String(role), "night": night})
+	ctx.emit(GameEvent.CARD_NOTICE, Visibility.ACTOR, {"card_id": rec["card"], "role_id": String(shown)}, person_id)
+	ctx.emit(GameEvent.CARD_EFFECT_NOTE, Visibility.GM, {"card_id": rec["card"], "granted_id": person_id, "role_id": String(shown), "night": night})
 
 
 ## Rolle der zuletzt verstorbenen Person der Fraktion (Todesreihenfolge), deren Fähigkeit übertragbar ist; &"" ohne sie.
