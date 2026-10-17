@@ -4,6 +4,19 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Nachtlauf 2 (17.10.2026, Branch `nacht-fixes2` von `ux-texte` b69354f)
+
+Auftrag: Arbeitsliste aus `docs/AUDIT-EHRLICH.md`. Kein Deploy, Push, Merge. Start 15:10, harte Grenze 17:15.
+
+**Deploy-Stand (gelesen am 17.10. 14:20 aus `version.json`, ersetzt ältere Angaben unten):**
+- Produktion `grimmhain-ipad-test`: Build `202610141539-24b58f5` (Commit nur auf `hotfix-freeze`, nicht auf `main`; ohne Speicher-Fix 03583a2).
+- Vorschau `grimmhain-classic-preview`: Build `202610161155-b69354f` (= `ux-texte`/`nacht-regeln` HEAD, deployt 16.10. 11:55; die Tabelle „Vercel aufräumen“ unten nennt noch 14e89a5, das ist veraltet).
+- `main` = 019d70a (07.10.), entspricht keinem Live-Stand.
+
+### Protokoll
+
+- 15:10 Zweig angelegt. Punkt 1 (Deploy-Stand) erledigt.
+
 ## Nachtlauf Regeln (16.10.2026, Branch `nacht-regeln` von `ux-texte` 67ad87d)
 
 Auftrag: Fehler im Regelkern und bei Rolleninteraktionen finden. Kein Deploy, Push, Merge. Start 00:53, harte Grenze 05:53.
