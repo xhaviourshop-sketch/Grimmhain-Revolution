@@ -121,6 +121,15 @@ static func evaluate(state: GameState) -> Array:
 	return results
 
 
+## Weißer Wolf ohne Dorf (Markus 17.10.2026): Es leben nur noch Wölfe, darunter einer, der nur allein gewinnt (`sole_win`), und
+## mindestens ein weiterer. Niemand gewinnt von selbst; nur ein Hinweis für die Spielleitung, keine Wirkung auf den Zustand.
+static func sole_wolf_standoff(state: GameState) -> bool:
+	var alive := effective_alive_ids(state)
+	if alive.size() < 2 or not alive.all(func(id: int) -> bool: return state.players[id].counts_as_wolf):
+		return false
+	return alive.any(func(id: int) -> bool: return RoleCatalog.param(state.players[id].role_id, "sole_win", false))
+
+
 ## Das Liebespaar (Loki oder Amor, Bindungsart Liebe), wenn genau diese zwei Personen leben und eine davon als Wolf zählt, die
 ## andere nicht; sonst leer. Aufsteigend nach Personen-ID.
 static func mixed_lovers_last(state: GameState) -> Array[int]:

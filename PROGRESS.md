@@ -33,6 +33,8 @@ Auftrag: Arbeitsliste aus `docs/AUDIT-EHRLICH.md`. Kein Deploy, Push, Merge. Sta
   6. Grabräuber kann befristete Schritte stehlen (Lykaon nach Nacht 3, Seelentauscher, Schattenwanderer, Dorfschmied), widerspricht der Begründung von DA-06.
   7. Kopfgeldjäger-Liste überdauert Tod und Wiederbelebung (`role_transition.gd:50-56`).
   8. Rudelvater-Zusatzopfer mit Schmiedewaffe überlebt trotz Durchdringung (`kill_pipeline.gd:204`); Giftwolf darf dieselbe Person zweimal treffen.
+- Punkt 8a Notanker: auf Zweig `vorschau-sonntag` NICHT enthalten (Commit 803b1a1 bleibt auf `nacht-fixes2`).
+- Punkt 8b Weißer Wolf ohne Dorf: Siegregel unverändert (niemand gewinnt von selbst, Bogen wörtlich); neu `WinRules.sole_wolf_standoff` (nur Abfrage) und in jeder Nachtkarte der Hinweis „Nur noch Wölfe leben. Der Weiße Wolf gewinnt erst allein. Spielt weiter oder erkläre den Sieg unter Spielleitung.“ (DE/EN). Test in `test_classic_bogen.gd` (erst nicht ladbar, dann grün). Keine Aufnahme des Hinweises gemacht (Zeit).
   - Veraltete Doku/Kommentare (kein Spielverhalten): `rules-register.md` (Waldhexe, Sensenträger, Lehrling, Wolfskind), Audit 02 (Spürhund, Schattenhund, Albtraumwolf), Kommentare `role_catalog.gd:352` (Tetanus), `reaction.gd:7-11`, `bond_steps.gd:248`.
 
 ## Nachtlauf Regeln (16.10.2026, Branch `nacht-regeln` von `ux-texte` 67ad87d)

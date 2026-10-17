@@ -10135,6 +10135,9 @@ msgstr "Tap to close"
 msgid "ui.cockpit.card.white_wolf_no_wolf"
 msgstr "No other wolf is alive."
 
+msgid "ui.cockpit.card.sole_wolf_standoff"
+msgstr "Only wolves are alive. The White Wolf only wins alone. Play on or declare the winner under Game master."
+
 msgid "ui.cockpit.card.group_wake"
 msgstr "Wake the group now, then Continue."
 
