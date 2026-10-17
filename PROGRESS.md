@@ -4,6 +4,15 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## iOS/Mac (18.10.2026, Branch `apk-test`)
+
+- Voreinstellung „iOS“ in `godot/export_presets.cfg` angehängt (Web und Android unverändert): Bundle-ID `com.grimmhain.app.test`, nur iPad (`targeted_device_family=1`), arm64, `export_project_only=true` (Godot erzeugt ein Xcode-Projekt, Xcode signiert und installiert), Team-ID leer. Querformat und `gl_compatibility` kommen aus `project.godot` (`window/handheld/orientation=4`, `rendering_method.mobile`), dort nichts geändert. Ausschlussliste wie Android.
+- Probe auf Windows (Scratchpad, Vorlage `ios.zip` 4.7.2 lokal vorhanden): ohne Team-ID bricht der Export mit „App-Store-Team-ID nicht angegeben“ ab (erwartet); mit Platzhalter-ID entsteht `Grimmhain.xcodeproj` mit `PRODUCT_BUNDLE_IDENTIFIER = com.grimmhain.app.test`, `TARGETED_DEVICE_FAMILY = "2"` (iPad), Anzeigename „Grimmhain“, nur `LandscapeLeft/Right`. Platzhalter danach aus Sicherung zurückgespielt. Eine `.ipa` baut nur macOS/Xcode.
+- Nur-Web-Code: alle 10 `JavaScriptBridge`-Aufrufe stehen hinter `OS.has_feature("web")` (wie im Android-Abschnitt), auf nativem iOS also inaktiv. Keine Änderung.
+- Git LFS: nicht genutzt (keine `filter=lfs` in `.gitattributes`, `git lfs ls-files` leer).
+- Mac-Paket `C:/Users/Marku/Desktop/Grimmhain-Mac/`: `grimmhain-apk-test.bundle` (Zweig `apk-test`, volle Geschichte, nach diesem Commit erzeugt), `grimmhain-arbeitsordner.zip` (ohne `.git`, `.claude/worktrees`, `.godot`, `node_modules`, `.env*`, Export- und Build-Ordner), `MAC-ANLEITUNG.txt`.
+- Offen / nicht geprüft: kein Mac und kein iPad getestet (Xcode-Bau, Signierung, Start, Touch, Bildschirmtastatur, Leistung, Musik). Auf dem Mac fehlen Xcode, Godot 4.7.2 mit Exportvorlagen, Apple-ID im Xcode und die Team-ID. App-Symbol: kein eigenes 1024er-Bild, Godot nimmt das Projektsymbol (512 px, hochskaliert).
+
 ## Totenreichkarten in jedem Akt, APK 2 (18.10.2026, Branch `apk-test`)
 
 - Commits: a916414 Cherry-pick von 803b1a1 (Notanker-Todesfolgen; Konflikt nur in DECISION-LOG.md, beide Seiten behalten), 9f5ff2d Schalter „Totenreichkarten“ / „Underworld cards“ unter „Besonderes“ in Akt I bis IV und Classic, Standard aus. Regelkern unverändert, er hängt nur an der Option `death_cards`, nicht am Kartenschlucker.
