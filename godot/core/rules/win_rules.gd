@@ -126,7 +126,7 @@ static func evaluate(state: GameState) -> Array:
 static func mixed_lovers_last(state: GameState) -> Array[int]:
 	var alive := effective_alive_ids(state)
 	var out: Array[int] = []
-	if alive.size() != 2 or state.alive_ids().size() != 2:
+	if alive.size() != 2:  # aufgeschobene Tote (Notanker) zählen wie überall schon als tot
 		return out
 	if state.players[alive[0]].counts_as_wolf == state.players[alive[1]].counts_as_wolf:
 		return out

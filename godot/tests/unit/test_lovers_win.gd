@@ -3,6 +3,7 @@ extends TestCase
 ## statt der Wölfe nach Parität.
 
 
+const Audit := preload("res://tests/audit_fixture.gd")
 const ROLES := ["werwolf", "dorfbewohner", "loki", "detektiv", "amalia", "nachtwaechter"]
 
 
@@ -56,3 +57,25 @@ func test_other_constellations_keep_the_faction_rules() -> void:
 	assert_eq(_reasons(ROLES, [1, 2, 4]), [], "drei Lebende: noch kein Sieg")
 	assert_eq(_reasons(["dorfbewohner", "amalia", "loki", "detektiv", "nachtwaechter", "werwolf"], [1, 2]), ["village:no_wolves_alive"], "zwei Dörfler: Dorfsieg")
 	assert_eq(_reasons(["werwolf", "werwolf", "loki", "detektiv", "amalia", "nachtwaechter"], [1, 2]), ["wolves:wolf_parity"], "zwei Wölfe: Wolfssieg")
+
+
+## Notanker (wende_05): Eine aufgeschobene Person zählt für alle Siege schon als tot, also auch hier (Audit 17.10., win_rules.gd).
+func test_mixed_pair_wins_when_the_third_living_person_has_a_deferred_death() -> void:
+	var s := Audit.start(self, ROLES, true)
+	s.loki_pairs.append({"loki_id": 3, "a": 1, "b": 2, "kind": "love", "ended": false})
+	var d := s.to_dict()
+	var sys: Dictionary = d["cardsys"]
+	(sys["effects"] as Array).append({"id": int(sys["next_effect"]), "card": "wende_05", "variant": "village", "owner": 4,
+		"kind": "deferred_death", "from": 0, "to": 999999, "data": {"person_id": 4, "due_day": 3, "cause": "night_kill", "source_kind": "pack", "source_id": -1}})
+	sys["next_effect"] = int(sys["next_effect"]) + 1
+	s = GameState.from_dict(d)
+	assert_true(s != null, "Stand mit Notanker ladbar")
+	if s == null:
+		return
+	for id: int in [3, 5, 6]:
+		s = Audit.ok(self, s, Audit.gm("kill", {"target_id": id, "trigger_effects": false}), "kill %d" % id)
+	var kinds: Array = []
+	for c: WinCandidate in s.win_candidates:
+		kinds.append("%s:%s" % [c.kind, c.reason_key])
+	assert_eq(kinds, ["lovers:lovers_last_two"], "die Liebenden gewinnen, kein Wolfssieg")
+	assert_true(Audit.reloads(s), "Stand mit Kandidat ladbar")
