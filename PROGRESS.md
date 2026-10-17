@@ -4,6 +4,13 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Vorschau-Deploy Sonntag (17.10.2026, Branch `vorschau-sonntag` von `ux-texte` b69354f)
+
+- Deploy `grimmhain-classic-preview` 17:16: Build `202610171716-04f3245`, Deployment `dpl_8k3Sd8aq3c8qm4fKdbB4Wsb1kTrw` (grimmhain-classic-preview-dpwdptbtu), Commit 04f3245, `index.pck` 23 495 588 Byte. Geprüft: Adresse 200, `version.json` neue Kennung, `index.pck` 200 mit gleicher Länge, `/.env.local` 404, Ladebilder 200. Produktion `grimmhain-ipad-test` unverändert 24b58f5, `grimmhain` nicht angefasst.
+- Rücksprungziel: Deployment `HFPd7MJM2XJAH2A3AoF8eDusGQV7` (Build 202610161155-b69354f), nicht gelöscht.
+- Enthalten (Cherry-picks aus `nacht-fixes2`): a9a87fe Optionsfenster, df821e6/3a8cc5a/6821f6a Doku und Register, 3463067 Selbstmörder-Lexikon, 83f010e Lehrling/Lykaon-Texte, afc1160 Liebespaar plus Notanker, c2c4177 Weißer-Wolf-Hinweis. NICHT enthalten: 803b1a1 Notanker-Todesfolgen. Konflikte nur in PROGRESS.md und DECISION-LOG.md, beide Seiten behalten, Notanker-Eintrag entfernt.
+- Tests: `node tools/check-godot-i18n.js` grün; `node tools/test-changed` erster Lauf 1426/1 rot (`test_rulebook::test_catalog_matches_translations_in_both_languages`, einzeln 11/0 grün), zweiter Lauf 1426/0. Keine Vollsuite auf diesem Zweig. Nicht geprüft: Safari/iPad, Sichtprüfung im Browser.
+
 ## Nachtlauf 2 (17.10.2026, Branch `nacht-fixes2` von `ux-texte` b69354f)
 
 Auftrag: Arbeitsliste aus `docs/AUDIT-EHRLICH.md`. Kein Deploy, Push, Merge. Start 15:10, harte Grenze 17:15.
