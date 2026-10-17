@@ -4895,7 +4895,7 @@ msgid "ui.role.selbstmoerder.lex.gm"
 msgstr "Decided is a public sound as soon as the fifth person is dead, only if a Death Seeker is in the game. It reveals that the role is in the game, not who holds it (a chosen exception to secrecy). The win is announced publicly only after you confirm it."
 
 msgid "ui.role.selbstmoerder.lex.open"
-msgstr "The sound is not yet implemented in the app. Not settled is whether “in the game” means the role at the start of the game or a living person holding it."
+msgstr "The cue is built in and only fires when a living person holds the role. The sound file is still missing, so it stays silent until then."
 
 msgid "ui.role.parasit.lex.night"
 msgstr "every night"

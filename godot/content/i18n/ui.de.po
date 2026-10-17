@@ -4895,7 +4895,7 @@ msgid "ui.role.selbstmoerder.lex.gm"
 msgstr "Entschieden ist ein öffentlicher Ton, sobald die fünfte Person tot ist, nur wenn ein Selbstmörder in der Partie ist. Er legt offen, dass die Rolle in der Partie ist, nicht wer sie hat (gewählte Ausnahme zur Geheimhaltung). Öffentlich wird der Sieg erst nach deiner Bestätigung verkündet."
 
 msgid "ui.role.selbstmoerder.lex.open"
-msgstr "Der Ton ist in der App noch nicht umgesetzt. Nicht geklärt ist, ob „in der Partie“ die Rolle zu Spielbeginn oder eine lebende Person mit dieser Rolle meint."
+msgstr "Der Hinweis ist eingebaut und kommt nur, wenn eine lebende Person die Rolle hat. Die Tondatei fehlt noch, bis dahin bleibt er stumm."
 
 msgid "ui.role.parasit.lex.night"
 msgstr "jede Nacht"
