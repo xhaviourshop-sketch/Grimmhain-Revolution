@@ -1364,8 +1364,11 @@ Regelversion `grimmhain-core-0.20`.
 4. Bärenführer: jeden Morgen (Text des Bogens), nicht nur am ersten (Symbol).
 5. Tests: während der Arbeit `test-changed`, am Ende jeder Phase eine Vollsuite ohne Fuzz.
 
-## 17.10.2026: Weißer Wolf (Markus, Auftrag Nachtlauf 2)
+## 17.10.2026: Notanker und Weißer Wolf (Markus, Auftrag Nachtlauf 2)
 
-1. **Weißer Wolf ohne Dorf:** Leben nur noch Wölfe mit dem Weißen Wolf, gewinnt weiter niemand von selbst (Bogen wörtlich). Das Spiel bleibt nicht unbemerkt stehen: Jede Nachtkarte zeigt der Spielleitung einen Hinweis, sie spielt weiter oder erklärt den Sieg unter Spielleitung. Schließt PROGRESS-Frage 3 vom 16.10.
+1. **Notanker (`wende_05`), Vollstreckung:** Der aufgeschobene Tod löst bei der Vollstreckung die vollen Todesfolgen aus (Jäger schießt, Liebespartner stirbt mit, Totenreichkarte). Wolfskind-Verwandlung und Lehrling-Erbe bleiben beim Aufschub und kommen nicht ein zweites Mal (KS-63, 4B). Schließt PROGRESS-Frage 2 vom 16.10.
+
+2. **Weißer Wolf ohne Dorf:** Leben nur noch Wölfe mit dem Weißen Wolf, gewinnt weiter niemand von selbst (Bogen wörtlich). Das Spiel bleibt nicht unbemerkt stehen: Jede Nachtkarte zeigt der Spielleitung einen Hinweis, sie spielt weiter oder erklärt den Sieg unter Spielleitung. Schließt PROGRESS-Frage 3 vom 16.10.
 
 Hinweis Zweig `vorschau-sonntag`: Die Notanker-Todesfolgen (Commit 803b1a1, Zweig `nacht-fixes2`) sind auf diesem Zweig nicht enthalten.
+Zweig `apk-test`: 803b1a1 am 18.10.2026 per cherry-pick übernommen.

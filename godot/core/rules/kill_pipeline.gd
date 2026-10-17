@@ -16,7 +16,8 @@ extends RefCounted
 
 ## `pierce`: Angriff durchdringt Schutzengel, Waldhexenrettung und Dorfwache (RM-DR-005), keine Schilde.
 ## `chain`: bereits betroffene Personen dieser Umlenkungskette (E-20: jede Person höchstens einmal).
-static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true, pierce: bool = false, chain: Array[int] = [], shadow: bool = false) -> KillEvent:
+## `deferred`: Vollstreckung eines Notanker-Aufschubs; Wolfskind-Verwandlung und Lehrling-Erbe geschahen schon beim Aufschub.
+static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, source_kind: StringName, source_id: int = -1, trigger_effects: bool = true, pierce: bool = false, chain: Array[int] = [], shadow: bool = false, deferred: bool = false) -> KillEvent:
 	var s := ctx.state
 	var target: Player = s.players.get(target_id)
 	if target == null or not target.alive:
@@ -80,8 +81,9 @@ static func request_kill(ctx: RuleContext, target_id: int, cause: StringName, so
 		CardRules.on_death(ctx, target)  # Totenreichkarte ziehen (1A); eine Korrektur ohne Todesfolgen gibt keine Karte
 	ApprenticeRules.on_own_death(s, target_id)
 	if trigger_effects:
-		WolfChildRules.on_death(ctx, record)
-		ApprenticeRules.on_master_death(ctx, record)
+		if not deferred:
+			WolfChildRules.on_death(ctx, record)
+			ApprenticeRules.on_master_death(ctx, record)
 		_bounty_credit(ctx, target, record)
 		_detective_hint(ctx, target)
 		_queue_reaction(ctx, target, record, s.players.size() - dead_before)
