@@ -247,3 +247,15 @@ func test_last_chosen_act_is_remembered_within_the_session() -> void:
 	await navigate(shell, &"main_menu")
 	screen = await open_new_game(shell)
 	assert_eq(str((setup_of(shell).call("view") as Dictionary)["act"]), "classic", "neue Partie öffnet mit dem zuletzt gewählten Modus")
+
+
+## Totenreichkarten in jedem Akt (Markus 18.10.2026): der Schalter steht auch in Classic unter „Besonderes“ und ist anfangs aus.
+func test_classic_shows_the_card_toggle_off_by_default() -> void:
+	var shell := await spawn_shell(SIZE_4_3)
+	if shell == null:
+		return
+	var screen := await prepare_through_buttons(shell, 8, &"classic", SEED)
+	var toggle := find_node(screen, "DeathCardsToggle") as BaseButton
+	assert_true(toggle != null and toggle.is_visible_in_tree(), "Schalter in Classic sichtbar")
+	assert_false(toggle.button_pressed, "Standard aus")
+	assert_false(bool((setup_of(shell).call("view") as Dictionary)["roles"]["death_cards"]), "Partie ohne Karten")

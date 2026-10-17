@@ -7960,7 +7960,7 @@ msgid "ui.prep.roles.decoy.change"
 msgstr "ändern"
 
 msgid "ui.prep.roles.cards"
-msgstr "Totenreichkarten verwenden"
+msgstr "Totenreichkarten"
 
 msgid "ui.prep.roles.cards.hint"
 msgstr "Der Kartenschlucker spielt nur mit Totenreichkarten."

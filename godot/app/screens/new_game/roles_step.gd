@@ -324,17 +324,10 @@ func _render(view: Dictionary) -> void:
 	_assign_tab.disabled = not (view["blockers"] as Array).is_empty()
 	if not (view["blockers"] as Array).is_empty() and _page == Page.ASSIGN:
 		_show_page(Page.POOL)
-	_pool.show_roles(roles, int(view["player_count"]), _act_has_cards(str(view["act"])))
+	_pool.show_roles(roles, int(view["player_count"]))
 	_render_warnings(view)
 	_render_assign(view)
 	footer_changed.emit()
-
-
-func _act_has_cards(act: String) -> bool:
-	for role: StringName in ActCatalog.roles(StringName(act)):
-		if RoleCatalog.requires_cards(role):
-			return true
-	return false
 
 
 func _render_warnings(view: Dictionary) -> void:

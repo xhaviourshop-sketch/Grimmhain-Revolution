@@ -56,6 +56,17 @@ func test_a_night_death_draws_a_card_and_the_draw_is_reproducible() -> void:
 	assert_true(first.reload_equals() and first.replay_equals(), "Speichern, Laden und Replay")
 
 
+## Totenreichkarten in jedem Akt (Markus 18.10.2026): eine reine Classic-Besetzung zieht Karten und bleibt lad- und wiederholbar.
+func test_classic_cast_with_cards_draws_and_reloads() -> void:
+	var classic := {"1": "classic-werwolf", "2": "classic-seherin", "3": "classic-hexe", "4": "classic-jaeger", "5": "classic-ritter", "6": "classic-alte"}
+	var g := CardGame.started(self, 6, [1], 5, classic)
+	assert_true(g.state.death_cards, "Classic mit Karten gestartet")
+	g.night(2)
+	g.settle()
+	assert_false(CardRules.held_of(g.state, 2).is_empty(), "Person 2 hat nach dem Tod eine Karte")
+	assert_true(g.reload_equals() and g.replay_equals(), "Speichern, Laden und Replay")
+
+
 func test_gm_correction_without_effects_gives_no_card_but_with_effects_does() -> void:
 	var g := CardGame.started(self, 6, [1], 2)
 	g.gm_kill(3, false)

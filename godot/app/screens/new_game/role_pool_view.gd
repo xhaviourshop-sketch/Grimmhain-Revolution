@@ -3,8 +3,8 @@ extends VBoxContainer
 ## Rollenwahl des Aktes als Kachelraster (DA-91). Kopfzeile: „x / N Rollen gewählt“ groß, daneben die Zähler Dorf, Wölfe, Einzelgänger der
 ## tatsächlichen Auswahl. Darunter alle Rollen des Aktes als `RoleTile`, nach Team gruppiert. Antippen schaltet an oder aus, Werwolf und
 ## Die Gebundenen tragen gewählt „×N“ mit − und +, langes Drücken zeigt die Rollenbeschreibung. Darunter „Besonderes“ in einfacher Sprache:
-## Der Trugbilderwolf täuscht bei einer Prüfung eine andere Rolle vor (Zeile mit „ändern“) und der Schalter „Totenreichkarten“ (nötig für
-## den Kartenschlucker). Reine Darstellung der Sicht `roles`; baut bei jeder Änderung neu auf und gibt den Fokus an dieselbe Kachel zurück.
+## Der Trugbilderwolf täuscht bei einer Prüfung eine andere Rolle vor (Zeile mit „ändern“) und der Schalter „Totenreichkarten“ (in jedem
+## Akt, nötig für den Kartenschlucker). Reine Darstellung der Sicht `roles`; baut bei jeder Änderung neu auf und gibt den Fokus an dieselbe Kachel zurück.
 
 signal role_toggled(role: StringName)
 signal count_step(role: StringName, delta: int)
@@ -23,9 +23,8 @@ func _init() -> void:
 	add_theme_constant_override(&"separation", ThemeTokens.SPACE_S)
 
 
-## `roles`: Sicht von PlayerSetup (counts, limits, decoys, death_cards, act_roles, …), `target`: Zielzahl der Runde,
-## `act_has_cards`: Der Akt kennt Rollen mit Totenreichkarten.
-func show_roles(roles: Dictionary, target: int, act_has_cards: bool) -> void:
+## `roles`: Sicht von PlayerSetup (counts, limits, decoys, death_cards, act_roles, …), `target`: Zielzahl der Runde.
+func show_roles(roles: Dictionary, target: int) -> void:
 	_remember_focus()
 	for child: Node in get_children():
 		remove_child(child)
@@ -46,8 +45,7 @@ func show_roles(roles: Dictionary, target: int, act_has_cards: bool) -> void:
 		if group != null:
 			add_child(group)
 	var decoys: Array = roles.get("decoys", [])
-	if not decoys.is_empty() or act_has_cards or cards_on:
-		add_child(_specials(decoys, cards_on))
+	add_child(_specials(decoys, cards_on))  # Totenreichkarten in jedem Akt wählbar (Markus 18.10.2026)
 	_restore_focus.call_deferred()
 
 

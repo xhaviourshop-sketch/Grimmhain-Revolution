@@ -7960,7 +7960,7 @@ msgid "ui.prep.roles.decoy.change"
 msgstr "change"
 
 msgid "ui.prep.roles.cards"
-msgstr "Use realm-of-the-dead cards"
+msgstr "Underworld cards"
 
 msgid "ui.prep.roles.cards.hint"
 msgstr "The card swallower only plays with underworld cards."
