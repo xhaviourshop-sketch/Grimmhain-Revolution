@@ -24,6 +24,16 @@ Auftrag: Arbeitsliste aus `docs/AUDIT-EHRLICH.md`. Kein Deploy, Push, Merge. Sta
   - Wirklich nicht gebaut: Kutscher und Frankenstein, Bedingung mit Totenreichkarte (RM-DR-141.4, DECISION-LOG W-01); Schwarze Witwe ohne Loki, keine Setup-Prüfung (vertagt); Tondatei für den Fünf-Tote-Hinweis.
   - Gebaut, aber nur technisch abgeleitet und nicht bestätigt (Bestätigung genügt): Blutpriester (Zufallsvorschlag Wolfsmenge), Der Weise (Ansage ohne Fluchlänge), Zeitwächter (einmal je Leben, im Fluch), Rachsüchtiger Wolf (Rhythmus, mehrere), Schicksalswolf (Zeitfenster, erste drei Tote), Hades (Reihenfolge Tötung, Barriere, Lichter), Grabräuber (was stehlbar ist).
   - Nur am Gerät prüfbar: Fährtenleser und Detektiv, ob „links“ am Tablet dem Uhrzeigersinn am Tisch entspricht.
+- Punkt 7 (Fähigkeiten gegen Doku, drei Lese-Agenten, Classic zuerst; Fuzz einmal grün, siehe Punkt 5). Classic: 18 von 19 wie `docs/classic/FAEHIGKEITEN.md`, keine Grundspiel-Extras schlagen durch. Basis: keine eindeutige Regelabweichung im Code. Behoben (Textfehler gegen gefallene Entscheidung, DE/EN): Lexikon-Ablauf Lehrling (direkte Meisterwahl statt Drei-Rollen-Auswahl, DECISION-LOG:1263) und König Lykaon (Nächte 1 bis 3, in Nacht 3 Pflicht, DECISION-LOG:1266). Nur Agenten-Durchsicht, nicht jede Rolle Zeile für Zeile (Amalia, Detektiv, Der Weise, Doppelspion nur überflogen). **Fragen für Markus:**
+  1. Classic-Urwolf hat keine Höchstzahl (erbt „beliebig viele“ vom Werwolf, `role_catalog.gd:376`); zwei Urwölfe verwandeln zweimal. Einer je Partie (`max_copies: 1`)?
+  2. Fluch der Alten beginnt erst am Folgetag (`guard_roles.gd:77`): Ein Liebespartner-Jäger, der durch ihre Hinrichtung stirbt, darf noch schießen; ein Wildes Kind mit ihr als Vorbild verwandelt sich noch. Gewollt?
+  3. Wächter am Tor blockiert nicht die Urwolf-Verwandlung (`classic_wolf_rules.gd:55`) und nicht die Totenkarte „Projektion“ (`card_fx_solo.gd:192`). Fallen beide unter „jeder Weg zum Wolf“ (RM-DR-149)?
+  4. Nekromant: Legt eine Karte das Rudel ans Nachtende, kommt sein Umlenkungsangebot vermutlich zu früh (`step_queue.gd:220`, `solo_rules.gd:251`). Ungetestet, nur Kartenmodus.
+  5. Rattenfänger/Pestbringerin als einzige Lebende: Code verlangt eine weitere lebende Person, sonst Dorfsieg der Toten (`solo_rules.gd:45`, `:55`).
+  6. Grabräuber kann befristete Schritte stehlen (Lykaon nach Nacht 3, Seelentauscher, Schattenwanderer, Dorfschmied), widerspricht der Begründung von DA-06.
+  7. Kopfgeldjäger-Liste überdauert Tod und Wiederbelebung (`role_transition.gd:50-56`).
+  8. Rudelvater-Zusatzopfer mit Schmiedewaffe überlebt trotz Durchdringung (`kill_pipeline.gd:204`); Giftwolf darf dieselbe Person zweimal treffen.
+  - Veraltete Doku/Kommentare (kein Spielverhalten): `rules-register.md` (Waldhexe, Sensenträger, Lehrling, Wolfskind), Audit 02 (Spürhund, Schattenhund, Albtraumwolf), Kommentare `role_catalog.gd:352` (Tetanus), `reaction.gd:7-11`, `bond_steps.gd:248`.
 
 ## Nachtlauf Regeln (16.10.2026, Branch `nacht-regeln` von `ux-texte` 67ad87d)
 
