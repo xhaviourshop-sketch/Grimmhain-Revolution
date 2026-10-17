@@ -4,6 +4,13 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Totenreichkarten in jedem Akt, APK 2 (18.10.2026, Branch `apk-test`)
+
+- Commits: a916414 Cherry-pick von 803b1a1 (Notanker-Todesfolgen; Konflikt nur in DECISION-LOG.md, beide Seiten behalten), 9f5ff2d Schalter „Totenreichkarten“ / „Underworld cards“ unter „Besonderes“ in Akt I bis IV und Classic, Standard aus. Regelkern unverändert, er hängt nur an der Option `death_cards`, nicht am Kartenschlucker.
+- APK: `C:/Users/Marku/Desktop/Grimmhain-APK/Grimmhain-test-9f5ff2d.apk`, 50 912 168 Byte, SHA256 dfe351ed1260da33664623ede463fe6cdafd13ba2c0d529201aa9dd085a33762. Paket `com.grimmhain.app.test`, gleiches Debug-Zertifikat (installiert über die alte). Alte APK 42d9b36 bleibt liegen.
+- Tests: neu `test_classic_shows_the_card_toggle_off_by_default` (UI) und `test_classic_cast_with_cards_draws_and_reloads`; `node tools/test-changed --base=378abba` 1090/0; `node tools/test-full` 1555/0 ohne Fuzz (Regelkern durch Cherry-pick); `check-godot-i18n` grün; Fuzz-Kopie nur Classic plus Karten, 38 Partien (6 bis 16 Personen), grün, danach gelöscht.
+- Offen: Rollenschritt Classic (8 Personen) braucht Scrollen bis zum Schalter: Überhang 211 px bei 1024x768, 145 px bei 1180x820 (Aufnahmen `C:/Users/Marku/Downloads/Grimmhain/Screenshots/Totenreich-Classic/`). Hinweistext neben dem Schalter nennt weiter nur den Kartenschlucker, passt in Classic nicht. Kein Gerätetest.
+
 ## Android-APK (17.10.2026, Branch `apk-test` von `vorschau-sonntag` 1bea78d)
 
 Ganze App wie die Vorschau (alle Akte inkl. Classic), kein Classic-only-Schalter.
