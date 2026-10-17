@@ -92,6 +92,8 @@ static func build(s: GameState, p: PendingPrompt) -> Dictionary:
 		out["wolf_ids"] = wolf_ids(s, p)  # Weißer Wolf (Classic): die Wölfe unter den Zielen, damit die Spielleitung sie am Sitzkreis erkennt
 	if answer == "prediction":
 		out["prediction_min"] = {"night": s.night_number + 1, "day": s.night_number}
+	if WinRules.sole_wolf_standoff(s):
+		out["sole_wolf_standoff"] = true  # nur Wölfe leben, der Weiße Wolf gewinnt erst allein: Hinweis an die Spielleitung
 	return out
 
 

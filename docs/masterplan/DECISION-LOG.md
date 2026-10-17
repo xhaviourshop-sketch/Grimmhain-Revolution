@@ -1367,3 +1367,4 @@ Regelversion `grimmhain-core-0.20`.
 ## 17.10.2026: Notanker und Weißer Wolf (Markus, Auftrag Nachtlauf 2)
 
 1. **Notanker (`wende_05`), Vollstreckung:** Der aufgeschobene Tod löst bei der Vollstreckung die vollen Todesfolgen aus (Jäger schießt, Liebespartner stirbt mit, Totenreichkarte). Wolfskind-Verwandlung und Lehrling-Erbe bleiben beim Aufschub und kommen nicht ein zweites Mal (KS-63, 4B). Schließt PROGRESS-Frage 2 vom 16.10.
+2. **Weißer Wolf ohne Dorf:** Leben nur noch Wölfe mit dem Weißen Wolf, gewinnt weiter niemand von selbst (Bogen wörtlich). Das Spiel bleibt nicht unbemerkt stehen: Jede Nachtkarte zeigt der Spielleitung einen Hinweis, sie spielt weiter oder erklärt den Sieg unter Spielleitung. Schließt PROGRESS-Frage 3 vom 16.10.

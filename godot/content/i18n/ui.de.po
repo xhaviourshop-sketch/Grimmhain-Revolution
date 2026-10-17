@@ -10135,6 +10135,9 @@ msgstr "Tippen zum Schließen"
 msgid "ui.cockpit.card.white_wolf_no_wolf"
 msgstr "Kein anderer Wolf lebt mehr."
 
+msgid "ui.cockpit.card.sole_wolf_standoff"
+msgstr "Nur noch Wölfe leben. Der Weiße Wolf gewinnt erst allein. Spielt weiter oder erkläre den Sieg unter Spielleitung."
+
 msgid "ui.cockpit.card.group_wake"
 msgstr "Gruppe jetzt wecken, danach „Weiter“."
 

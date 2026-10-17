@@ -134,3 +134,16 @@ func test_hunter_shot_is_optional() -> void:
 	s = _apply(s, Command.answer_prompt(prompt.id, []))
 	assert_false(StepQueue.reactions_due(s), "Reaktion erledigt ohne Schuss")
 	assert_false(RoleCatalog.param(RoleCatalog.SENSENTRAEGER, "optional_shot", false), "Grundspiel: Schuss bleibt Pflicht")
+
+
+## Weißer Wolf ohne Dorf (Markus 17.10.2026): Leben nur noch Wölfe, gewinnt niemand von selbst; die Spielleitung bekommt in jeder
+## Nachtkarte einen Hinweis, damit das Spiel nicht unbemerkt stehen bleibt (PromptView-Wert `sole_wolf_standoff`).
+func test_white_wolf_with_only_wolves_left_flags_a_standoff_for_the_game_master() -> void:
+	var s := Fixtures.play([Fixtures.start_roles(["classic-weisser-wolf", "classic-werwolf", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner", "classic-dorfbewohner"])])
+	assert_false(WinRules.sole_wolf_standoff(s), "Dorf lebt: kein Stillstand")
+	for id: int in [3, 4, 5, 6]:
+		s.players[id].alive = false
+	assert_true(WinRules.evaluate(s).is_empty(), "kein Sieg, solange der Weiße Wolf und ein anderer Wolf leben")
+	assert_true(WinRules.sole_wolf_standoff(s), "nur Wölfe mit dem Weißen Wolf: Stillstand")
+	s.players[2].alive = false
+	assert_false(WinRules.sole_wolf_standoff(s), "allein: Alleinsieg statt Stillstand")
