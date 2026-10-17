@@ -517,6 +517,7 @@ func _arrange() -> void:
 		_save_row.size = Vector2(_phase_area.size.x, _save_row.get_combined_minimum_size().y)
 		_save_row.position = Vector2(_phase_area.position.x + 4.0, _phase_area.position.y - _save_row.size.y - 2.0)
 	_arrange_day_bar(free_left, free_right, h)
+	_fit_menu(h)
 	_tools_menu.size = _tools_menu.get_combined_minimum_size()
 	_tools_menu.position = Vector2(w - TAB_WIDTH - _tools_menu.size.x - 4.0, clampf(tab_y, TOP_MARGIN, maxf(TOP_MARGIN, h - _tools_menu.size.y - TOP_MARGIN)))
 	_place_backdrop_art(_ring.position + _ring.size * 0.5)
@@ -676,6 +677,19 @@ func _toggle_menu() -> void:
 	_arrange()
 	_tools_menu.visible = true
 	_arrange()
+
+
+## Das Optionenmenü liegt immer ganz im Bild (nie scrollen): Ist es zu hoch, rücken die Zeilen enger zusammen, höchstens bis SPACE_XS.
+func _fit_menu(h: float) -> void:
+	_menu_column.remove_theme_constant_override(&"separation")
+	var gap := _menu_column.get_theme_constant(&"separation")
+	var rows := 0
+	for c: Node in _menu_column.get_children():
+		if (c as Control).visible:
+			rows += 1
+	var over := _tools_menu.get_combined_minimum_size().y - (h - 2.0 * TOP_MARGIN)
+	if over > 0.0 and rows > 1:
+		_menu_column.add_theme_constant_override(&"separation", maxi(ThemeTokens.SPACE_XS, gap - ceili(over / float(rows - 1))))
 
 
 func _input(event: InputEvent) -> void:
