@@ -58,7 +58,7 @@ Der Code ist in sich gesund: Die Vollsuite ist heute grün (1550/0), alle 91 Rol
 | C3 | Toter Zweig `if record.cause == CAUSE_LYNCH: pass` | `core/rules/card_fx_solo.gd:230` | offen | GRÜN |
 | C4 | 13 Rollen haben im Lexikon einen Eintrag „noch nicht umgesetzt“ (`ui.role.*.lex.open`): faehrtenleser, blutpriester, detektiv, der_weise, zeitwaechter, kutscher, dr_victor_frankenstein, schwarze_witwe, rachsuechtiger_wolf, schicksalswolf, selbstmoerder, hades, grabraeuber | `content/i18n/ui.de.po`, `role_presentation.gd:55` | offen (Inhalt nicht einzeln geprüft) | GELB |
 | C5 | Rollenbilder und Porträts als „vorläufig“ markiert | `role_card_art.gd:3`, `portrait_assignment.gd:3` | offen | GRÜN |
-| C6 | Asset-Register rot: 14 Mediendateien nicht registriert (z. B. `docs/ux/img/tag-vorher.png`, `urwolf.png`); 224 Einträge „ungeklärt“ | `node tools/check-asset-register.js` Exit 1 | kaputt | GRÜN |
+| C6 | Asset-Register rot: 14 Mediendateien nicht registriert (z. B. `docs/screenshots/ux/tag-vorher.png`, `urwolf.png`); 224 Einträge „ungeklärt“ | `node tools/check-asset-register.js` Exit 1 | kaputt | GRÜN |
 | C7 | Keine übersprungenen Tests im Code. Der Fuzz (3 Tests) läuft nur mit `--merge` | `tools/test-full:15` | verifiziert | GRÜN |
 
 ## 4 Rollen (72 Basis, 19 Classic)
