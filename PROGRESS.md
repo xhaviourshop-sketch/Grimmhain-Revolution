@@ -4,6 +4,20 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Android-APK (17.10.2026, Branch `apk-test` von `vorschau-sonntag` 1bea78d)
+
+Ganze App wie die Vorschau (alle Akte inkl. Classic), kein Classic-only-Schalter.
+
+- APK: `C:/Users/Marku/Desktop/Grimmhain-APK/Grimmhain-test-42d9b36.apk`, 50 912 168 Byte, SHA256 53062018bfdc27eb87c8483d07b0296c33457939873114b0bb7f5fc09889eb2e (Datei `.sha256` und `README.txt` daneben). Release-Export, signiert mit lokalem Debug-Schlüssel.
+- aapt: Paket `com.grimmhain.app.test`, Name „Grimmhain“, versionName 0.1.0, minSdk 24, targetSdk 36, nur arm64-v8a, 0 Berechtigungen, Querformat (screenOrientation userLandscape aus `window/handheld/orientation=4`). apksigner: gültig, Zertifikat „CN=Android Debug“. Keine Ordner tests/, tools/, asset_lab/, web/ in der APK.
+- Commits: ee39827 Voreinstellung „Android“ (nur angehängt, Web-Voreinstellung Zeilen 1 bis 43 identisch zu vorschau-sonntag); 42d9b36 `textures/vram_compression/import_etc2_astc=true` (vom Android-Exporter verlangt; 0 von 555 Texturen nutzen VRAM-Kompression, Neuimport änderte keine .import-Datei).
+- Web unverändert: Diff der Web-Voreinstellung leer; Probe-Web-Export (Scratchpad) `index.wasm` 39 514 754 Byte wie live, `index.pck` 23 495 652 statt 23 495 588 Byte (+64 Byte = neuer Eintrag in project.godot).
+- Nur-Web-Code: keine Änderung nötig. Alle `JavaScriptBridge`-Aufrufe stehen hinter `OS.has_feature("web")` (`voice_name.gd:61,69,80`, `perf_mode.gd:20`, `app_platform.gd:37`, `cockpit_layers.gd:298`, `names_step.gd:685`); Sprachknopf versteckt (`names_step.gd:306`, `VoiceName.supported()` false außerhalb des Webs); Leicht-Modus an bei Touch (`perf_mode.gd`, `is_touchscreen_available`), ohne Render-Skalierung (nur Web). Spielstände, Gruppen, Verlauf über `user://`.
+- Werkzeuge (außerhalb des Repos, `C:/Users/Marku/Android/`): Temurin JDK 17.0.20 (`jdk-17`), Android-SDK (`Sdk`: cmdline-tools 16111833, platform-tools 37.0.1, build-tools 36.1.0, platforms android-36; Lizenzen per `yes` bestätigt), Godot-Android-Vorlagen 4.7.2 (aus dem offiziellen tpz, SHA512 geprüft) in `%APPDATA%/Godot/export_templates/4.7.2.stable`. Godot-Editor-Einstellungen: `java_sdk_path` und `android_sdk_path` gesetzt, Sicherung `C:/Users/Marku/Android/editor_settings-4.7.backup.tres`. Debug-Schlüssel `C:/Users/Marku/Android/keys/grimmhain-debug.keystore` (nicht im Repo).
+- Exportbefehl (in `godot/`, vorher `build_info.json` schreiben, danach löschen): `GODOT_ANDROID_KEYSTORE_RELEASE_PATH=C:/Users/Marku/Android/keys/grimmhain-debug.keystore GODOT_ANDROID_KEYSTORE_RELEASE_USER=androiddebugkey GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=android godot --headless --path . --export-release "Android" <ziel.apk>`.
+- Tests: `node tools/check-godot-i18n.js` grün, `node tools/test-changed` 1426/0.
+- Offen / nicht geprüft: kein echtes Gerät und kein Emulator (Start, Touch, Tastatur nach „Hinzufügen“, Leistung, Musik); Bildschirmtastatur auf Android (im Web öffnet `edit()` sie, auf Android nur `grab_focus()`); Seitenverhältnisse von Handys; Akku/Wärme.
+
 ## Vorschau-Deploy Sonntag (17.10.2026, Branch `vorschau-sonntag` von `ux-texte` b69354f)
 
 - Deploy `grimmhain-classic-preview` 17:16: Build `202610171716-04f3245`, Deployment `dpl_8k3Sd8aq3c8qm4fKdbB4Wsb1kTrw` (grimmhain-classic-preview-dpwdptbtu), Commit 04f3245, `index.pck` 23 495 588 Byte. Geprüft: Adresse 200, `version.json` neue Kennung, `index.pck` 200 mit gleicher Länge, `/.env.local` 404, Ladebilder 200. Produktion `grimmhain-ipad-test` unverändert 24b58f5, `grimmhain` nicht angefasst.
