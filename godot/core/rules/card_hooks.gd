@@ -169,16 +169,17 @@ static func _defer(ctx: RuleContext, target: Player, cause: StringName, source_k
 	s.win_check_pending = true
 
 
-## Tagesbeginn: fällige aufgeschobene Tode werden vollstreckt.
+## Tagesbeginn: fällige aufgeschobene Tode werden mit vollen Todesfolgen vollstreckt (Jägerschuss, Liebeskummer, Totenreichkarte;
+## Entscheidung Markus 17.10.2026). Die Wirkung fällt erst danach weg, damit kein zweiter Notanker denselben Tod erneut aufschiebt.
 static func execute_due_deferrals(ctx: RuleContext) -> void:
 	var s := ctx.state
 	for e: Dictionary in CardEffects.effects(s, "deferred_death"):
 		if int(e["data"]["due_day"]) > s.day_number:
 			continue
-		CardEffects.remove_effect(s, int(e["id"]))
 		var id := int(e["data"]["person_id"])
 		if s.players[id].alive:
-			KillPipeline.request_kill(ctx, id, StringName(e["data"]["cause"]), StringName(e["data"]["source_kind"]), int(e["data"]["source_id"]), false)
+			KillPipeline.request_kill(ctx, id, StringName(e["data"]["cause"]), StringName(e["data"]["source_kind"]), int(e["data"]["source_id"]), true, false, [], false, true)
+		CardEffects.remove_effect(s, int(e["id"]))
 
 
 # --- Folgen eines Todes ---------------------------------------------------------------------------------------------

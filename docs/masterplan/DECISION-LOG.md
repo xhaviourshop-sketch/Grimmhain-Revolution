@@ -1363,3 +1363,7 @@ Regelversion `grimmhain-core-0.20`.
 3. Der Alte: wie Der Weise (überlebt einmal das Rudel; sein Lynch lässt 0 bis 3 Nächte und Tage die Fähigkeiten der Dorfpersonen ruhen).
 4. Bärenführer: jeden Morgen (Text des Bogens), nicht nur am ersten (Symbol).
 5. Tests: während der Arbeit `test-changed`, am Ende jeder Phase eine Vollsuite ohne Fuzz.
+
+## 17.10.2026: Notanker und Weißer Wolf (Markus, Auftrag Nachtlauf 2)
+
+1. **Notanker (`wende_05`), Vollstreckung:** Der aufgeschobene Tod löst bei der Vollstreckung die vollen Todesfolgen aus (Jäger schießt, Liebespartner stirbt mit, Totenreichkarte). Wolfskind-Verwandlung und Lehrling-Erbe bleiben beim Aufschub und kommen nicht ein zweites Mal (KS-63, 4B). Schließt PROGRESS-Frage 2 vom 16.10.
