@@ -16,6 +16,9 @@ var history_focus: String = ""  ## Partie-ID, die die Historienansicht beim näc
 var settings_store: SettingsStore = null  ## null = Einstellungen nur im Speicher (Tests, Screenshot-Werkzeug)
 var timer: DisplayTimer  ## Anzeige-Timer der laufenden Partie (reine Anzeige, Zahlen im Block `ui` der Speicherdatei)
 var _timer_round: String = ""  ## Partie, zu der der Timer gehört; ein Wechsel setzt ihn zurück
+## Schilder im Sitzkreis zeigen Rollen statt Namen (Cockpit-Schalter); Bedienzustand der laufenden Partie im Block `ui` der Speicherdatei,
+## eine andere Partie beginnt mit Namen.
+var role_labels: bool = false
 
 
 func _init(p_settings: AppSettings = null, p_session: GameSession = null) -> void:
@@ -63,6 +66,7 @@ func _sync_timer_round() -> void:
 	if id != _timer_round:
 		_timer_round = id
 		timer.clear()
+		role_labels = false
 
 
 func _on_events_applied(_events: Array[GameEvent]) -> void:
@@ -73,7 +77,10 @@ func _on_events_applied(_events: Array[GameEvent]) -> void:
 func autosave() -> Dictionary:
 	if session.round_id() == "":
 		return {}
-	return saves.save(session.round_id(), session.save_text(), session.summary(), timer.to_dict())
+	var ui := timer.to_dict()
+	if role_labels:
+		ui["role_labels"] = true
+	return saves.save(session.round_id(), session.save_text(), session.summary(), ui)
 
 
 ## Hält die Partiehistorie zur aktiven Partie aktuell: Ein bestätigter Sieg speichert den Abschlussbericht (idempotent über die
@@ -100,6 +107,8 @@ func resume(round_id: String) -> Dictionary:
 	if error != &"":
 		return {"ok": false, "error": String(error)}
 	_timer_round = session.round_id()
-	if not timer.from_dict(loaded.get("ui", {}) as Dictionary):
+	var ui: Dictionary = loaded.get("ui", {})
+	if not timer.from_dict(ui):
 		timer.clear()  # ungültiger Block: Timer leer, die Partie bleibt unberührt
+	role_labels = ui.get("role_labels") == true
 	return loaded

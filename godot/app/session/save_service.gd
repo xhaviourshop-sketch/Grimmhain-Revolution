@@ -7,7 +7,7 @@ extends RefCounted
 ##   {format, version, app_version, saved_at, summary, core[, ui]}
 ## `summary` enthält nur öffentliche Angaben für die Liste (Namen, Phase, Zähler), nie Rollen; `core` ist
 ## der unveränderte StateCodec-Text. `ui` (optional) trägt Bedienzustand außerhalb des Regelkerns, derzeit die Zahlen des
-## Anzeige-Timers (DisplayTimer): keine Rollen, keine Namen, nie Teil von `core`; fehlt er, ist die Hülle wie zuvor. Geladen wird immer über StateCodec.decode (Integrität, Replay).
+## Anzeige-Timers (DisplayTimer) und `role_labels` (Cockpit-Schilder zeigen Rollen, nur wenn an): keine Rollen, keine Namen, nie Teil von `core`; fehlt er, ist die Hülle wie zuvor. Geladen wird immer über StateCodec.decode (Integrität, Replay).
 ##
 ## Sicheres Schreiben (jeder Schritt einzeln prüfbar):
 ##   0. liegt noch eine vollständige `.tmp` aus einem abgebrochenen Speichern vor, wird sie zuerst eingesetzt

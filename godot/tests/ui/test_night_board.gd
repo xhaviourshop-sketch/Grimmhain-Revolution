@@ -109,6 +109,7 @@ func test_card_dock_plate_and_tabs_leave_every_seat_free() -> void:
 				"Optionen": _grect(find_node(screen, "OptionsButton") as Control),
 				"Verbergen": _grect(find_node(screen, "HideButton") as Control),
 				"Sichtschutz": _grect(find_node(screen, "CoverButton") as Control),
+				"Rollen": _grect(find_node(screen, "SeatLabelButton") as Control),
 			}
 			var bar := find_node(screen, "OrderBar") as Control
 			if bar.is_visible_in_tree():

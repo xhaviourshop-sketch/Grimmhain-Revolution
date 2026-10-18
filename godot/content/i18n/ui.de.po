@@ -7700,6 +7700,12 @@ msgstr "{mark}† {name}"
 msgid "ui.cockpit.seat.plate.nominated"
 msgstr "{mark}{name}"
 
+msgid "ui.cockpit.seat_labels.roles"
+msgstr "Rollen"
+
+msgid "ui.cockpit.seat_labels.names"
+msgstr "Namen"
+
 msgid "ui.cockpit.tools.options"
 msgstr "Optionen"
 

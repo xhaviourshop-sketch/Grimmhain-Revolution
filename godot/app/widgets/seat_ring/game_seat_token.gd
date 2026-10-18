@@ -162,12 +162,13 @@ func portrait_texture() -> Texture2D:
 	return _portrait
 
 
-## Öffentliche Sitzdaten: {seat, name, alive, nominated_today}.
+## Öffentliche Sitzdaten: {seat, name, alive, nominated_today}; mit `role_key` (nur Spielleitung, Schalter „Rollen“) zeigt das Schild
+## den Rollennamen statt des Spielernamens.
 func show_seat(seat: Dictionary) -> void:
 	alive = bool(seat.get("alive", true))
 	_nominated = bool(seat.get("nominated_today", false))
 	_seat = seat
-	tooltip_text = str(seat["name"])
+	tooltip_text = _label_text()
 	_show()
 	queue_redraw()
 
@@ -175,7 +176,7 @@ func show_seat(seat: Dictionary) -> void:
 func _show() -> void:
 	if _seat.is_empty():
 		return
-	format_values = {"mark": STATE_MARKS.get(state, ""), "name": str(_seat["name"])}
+	format_values = {"mark": STATE_MARKS.get(state, ""), "name": _label_text()}
 	var key := "ui.cockpit.seat.alive"
 	if not alive:
 		key = "ui.cockpit.seat.dead"
@@ -278,7 +279,12 @@ func _plate_text() -> String:
 		key = "ui.cockpit.seat.plate.dead"
 	elif _nominated:
 		key = "ui.cockpit.seat.plate.nominated"
-	return tr(key).format({"mark": PLATE_MARKS.get(state, ""), "name": str(_seat["name"])})
+	return tr(key).format({"mark": PLATE_MARKS.get(state, ""), "name": _label_text()})
+
+
+## Text des Schilds: Rollenname, wenn die Sitzdaten einen tragen, sonst der Spielername.
+func _label_text() -> String:
+	return tr(StringName(_seat["role_key"])) if _seat.has("role_key") else str(_seat["name"])
 
 
 func _plate_font() -> Font:

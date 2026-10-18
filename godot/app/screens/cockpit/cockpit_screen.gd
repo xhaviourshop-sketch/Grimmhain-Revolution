@@ -9,7 +9,8 @@ extends BaseScreen
 ## Bausteine; eigene Zustände sind nur flüchtige Bedienzustände (Auswahl, aufgedeckte Karte, Verbergen, Menü).
 ##
 ## Geheimhaltung:
-##   - Sitzkreis und Phasenanzeige zeigen nie Rollen. Zustandsabzeichen, Statusringe, handelnde Person, Nachtleiste und Rollenbild
+##   - Sitzkreis und Phasenanzeige zeigen keine Rollen, außer die Spielleitung schaltet die Schilder mit „Rollen“ ausdrücklich auf
+##     Rollennamen (wahre Rolle, je Partie gemerkt); auch sie verschwinden mit „Verbergen“ und dem Sichtschutz. Zustandsabzeichen, Statusringe, handelnde Person, Nachtleiste und Rollenbild
 ##     der Karte sind für die Spielleitung gedacht und verschwinden mit „Verbergen“ (nur Namen, Porträts, tot oder lebendig).
 ##   - Geheime Karten (Schritte, Prompts, Siegkandidaten) erscheinen außerhalb der Nacht verdeckt
 ##     und erst nach „Anzeigen“; mit der nächsten Handlung sind sie wieder verdeckt.
@@ -32,6 +33,7 @@ const CORNER_WIDTH := 176.0
 const PLATE_SIZE := Vector2(200.0, 52.0)
 const PLAZA_CENTER_UV := Vector2(0.508, 0.508)  ## Mitte des Dorfplatzes im Hintergrundbild (Nachtszene v2)
 const BACKDROP_OVERSCAN := 1.05                 ## etwas größer als „cover“, damit sich die Platzmitte auf die Ringmitte schieben lässt
+const LABEL_BUTTON_SIZE := Vector2(100.0, 48.0)  ## „Rollen“/„Namen“ oben rechts: so schmal, dass Nachtleiste und Tagesleiste daneben Platz behalten
 
 static var confirm_actions: bool = true  ## zweite Bestätigung vor jeder Entscheidung der Spielleitung; Tests schalten sie ab, außer in den Tests der Bestätigung selbst
 static var double_tap_msec: int = 400  ## Sperre für die eben übernommene Person (feste Anzahl gilt sofort); Tests schalten sie ab
@@ -116,6 +118,7 @@ var _timer_labels: Dictionary = {}  ## Wertanzeigen der Timer-Dauern im Menü ("
 @onready var _options_tab: NightTab = %OptionsButton
 @onready var _hide_button: GlyphButton = %HideButton
 @onready var _cover_button: GlyphButton = %CoverButton
+@onready var _labels_button: GrimmButton = %SeatLabelButton  ## Schilder im Sitzkreis: Namen oder Rollen (immer sichtbar während einer Partie)
 @onready var _timer_button: TimerButton = %TimerButton
 @onready var _dock: Control = %ActionsArea
 @onready var _dock_undo: GrimmButton = %DockUndoButton
@@ -173,6 +176,9 @@ func _setup() -> void:
 	_options_tab.pressed.connect(_toggle_menu)
 	_hide_button.toggled.connect(_on_hide_toggled)
 	_dock_undo.pressed.connect(_ask_undo)
+	ActionCard.tighten_button(_labels_button)
+	_labels_button.custom_minimum_size = LABEL_BUTTON_SIZE
+	_labels_button.pressed.connect(_toggle_role_labels)
 	_timer_button.pressed.connect(_on_timer_pressed)
 	_order_bar.expand_toggled.connect(_on_order_toggled)
 	_build_menu_extras()
@@ -250,7 +256,10 @@ func _refresh() -> void:
 		_random = null
 		_prediction = {"kind": "night", "number": 0}
 	_update_status(active)
-	_ring.show_seats(_view.get("seats", []))
+	_labels_button.visible = active
+	_labels_button.disabled = _hidden  # „Verbergen“ zeigt nur Namen
+	_labels_button.text_key = "ui.cockpit.seat_labels.names" if _role_labels_on() else "ui.cockpit.seat_labels.roles"  # nennt, wohin umgeschaltet wird
+	_ring.show_seats(_ring_seats())
 	_apply_marks(active)
 	_ring.set_secrets_visible(not _hidden)
 	_update_order(active)
@@ -338,6 +347,34 @@ func _on_order_toggled(expanded: bool) -> void:
 	_bar_expanded = expanded
 	_update_order(bool(_view.get("has_game", false)))
 	_arrange()
+
+
+## „Rollen“ gilt nur für die laufende Partie (AppContext.role_labels, im Spielstand gespeichert); eine neue Partie startet mit Namen.
+func _role_labels_on() -> bool:
+	return context.role_labels and context.session.round_id() != ""
+
+
+func _toggle_role_labels() -> void:
+	context.role_labels = not context.role_labels
+	context.autosave()
+	_refresh()
+
+
+## Sitzdaten für den Ring: mit „Rollen“ trägt jeder Platz den Namen seiner wahren Rolle (`role_key`), sonst unverändert.
+func _ring_seats() -> Array:
+	var seats: Array = _view.get("seats", [])
+	if _hidden or not _role_labels_on():
+		return seats
+	var roles := {}
+	for p: Dictionary in context.session.private_seats():
+		roles[int(p["person_id"])] = CockpitText.role_name(str(p["role_id"]))
+	var out: Array = []
+	for seat: Dictionary in seats:
+		var copy := seat.duplicate()
+		if roles.has(int(seat["person_id"])):
+			copy["role_key"] = roles[int(seat["person_id"])]
+		out.append(copy)
+	return out
 
 
 func _on_hide_toggled(on: bool) -> void:
@@ -461,7 +498,8 @@ func _arrange() -> void:
 		return
 	var left_handed := context.settings.left_handed
 	var full := _bar_is_full()
-	var bar_w := minf(w - 2.0 * BAR_SIDE, BAR_MAX_WIDTH) if full else NightOrderBar.CHIP_SIZE.x
+	var side := _top_side()
+	var bar_w := minf(w - 2.0 * side, BAR_MAX_WIDTH) if full else NightOrderBar.CHIP_SIZE.x
 	var bar_h := NightOrderBar.FULL_HEIGHT if full else NightOrderBar.CHIP_SIZE.y
 	_order_bar.size = Vector2(bar_w, bar_h)
 	_order_bar.position = Vector2((w - bar_w) * 0.5, TOP_MARGIN)
@@ -473,7 +511,9 @@ func _arrange() -> void:
 	_corner.position = Vector2(TOP_MARGIN, TOP_MARGIN)
 	_badge.size = _badge.get_combined_minimum_size()
 	_badge.position = Vector2(w - _badge.size.x - TOP_MARGIN, TOP_MARGIN)
-	_status_strip.size = Vector2(minf(w - 2.0 * BAR_SIDE, BAR_MAX_WIDTH), _status_strip.get_combined_minimum_size().y)
+	_labels_button.size = _labels_button.get_combined_minimum_size()
+	_labels_button.position = Vector2(w - _labels_button.size.x - TOP_MARGIN, TOP_MARGIN)
+	_status_strip.size = Vector2(minf(w - 2.0 * side, BAR_MAX_WIDTH), _status_strip.get_combined_minimum_size().y)
 	_status_strip.position = Vector2((w - _status_strip.size.x) * 0.5, TOP_MARGIN + 16.0)  # dort, wo sonst die Nachtleiste steht
 	var tab_h := minf(TAB_MAX_HEIGHT, h * 0.42)
 	var tab_y := h * 0.5 + 20.0 - tab_h * 0.5
@@ -522,6 +562,13 @@ func _arrange() -> void:
 	_tools_menu.position = Vector2(w - TAB_WIDTH - _tools_menu.size.x - 4.0, clampf(tab_y, TOP_MARGIN, maxf(TOP_MARGIN, h - _tools_menu.size.y - TOP_MARGIN)))
 	_place_backdrop_art(_ring.position + _ring.size * 0.5)
 	_place_card()
+
+
+## Randabstand der Leisten oben: daneben steht rechts der Knopf „Rollen“/„Namen“.
+func _top_side() -> float:
+	if not _labels_button.visible:
+		return BAR_SIDE
+	return maxf(BAR_SIDE, _labels_button.get_combined_minimum_size().x + TOP_MARGIN + 6.0)
 
 
 func _day_bar_shown() -> bool:
@@ -573,7 +620,7 @@ func _place_card() -> void:
 ## Tagesleiste: schmal und durchscheinend oben in der Mitte über den obersten Porträts. Die Ringmitte bleibt frei, alle Bänder sind zu sehen.
 func _place_strip(panel: PanelContainer) -> void:
 	_card.set_max_height(STRIP_MAX_HEIGHT)
-	var width := minf(size.x - 2.0 * BAR_SIDE, STRIP_MAX_WIDTH)
+	var width := minf(size.x - 2.0 * _top_side(), STRIP_MAX_WIDTH)
 	var origin := _ring.position + _ring.center().position  # Ringmitte in Bildschirmkoordinaten (die Karte hängt an ihr)
 	panel.anchor_left = 0.0
 	panel.anchor_right = 0.0
@@ -1109,7 +1156,7 @@ func _send_seat_rects() -> void:
 		if token.visible:
 			out.append(token.get_global_rect().grow(8.0))
 	for c: Control in [_order_bar, _phase_area, _round, _alive, _save_row, _status_strip, _log_tab, _options_tab, _hide_button,
-			_cover_button, _timer_button, _dock, _day_bar, header.back_button()]:
+			_cover_button, _labels_button, _timer_button, _dock, _day_bar, header.back_button()]:
 		if c != null and c.is_visible_in_tree():
 			out.append(c.get_global_rect().grow(6.0))
 	_ambience.set_seat_rects(out, _village_layer)

@@ -249,6 +249,15 @@ script = ExtResource("10_glyph")
 text_key = "ui.cockpit.tools.cover"
 glyph = "cover"
 
+[node name="SeatLabelButton" type="Button" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("2_button")
+text_key = "ui.cockpit.seat_labels.roles"
+kind = 3
+wrap = false
+
 [node name="PhaseArea" type="PanelContainer" parent="Layout"]
 unique_name_in_owner = true
 layout_mode = 3
