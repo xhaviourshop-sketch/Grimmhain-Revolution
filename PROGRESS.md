@@ -4,6 +4,17 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Knopf „Rollen“/„Namen“ im Cockpit, APK 3 (18.10.2026, Branch `apk-test`)
+
+- Commit 01366a6: Knopf oben rechts in der festen Leiste des Cockpits (GrimmButton, gemalt, 100x48), während jeder Partie sichtbar, Tag und Nacht, alle Akte inklusive Classic. Ein Tipp schaltet alle Schilder im Sitzkreis zwischen Spielername und wahrer Rolle (`private_seats().role_id`, also nicht die Scheinrolle); Tote behalten „†“ und das graue Porträt. Beschriftung nennt das Ziel: DE „Rollen“/„Namen“, EN „Roles“/„Names“. Nachtleiste und Tagesleiste rücken rechts so weit ein, dass der Knopf frei bleibt.
+- Gemerkt wird die Wahl je Partie im Block `ui` der Speicherdatei (`role_labels`, nur wenn an; `AppContext.role_labels`), nicht in `settings.json`: dort verbietet `test_settings_file_holds_no_game_data_and_game_untouched` Partiedaten. Neue oder andere Partie startet mit Namen, Fortsetzen stellt die Wahl wieder her. Regelkern und Spielstandformat (`core`) unverändert.
+- Eigene Entscheidung: „Verbergen“ zeigt weiter nur Namen und schaltet den Knopf so lange inaktiv (die Schilder wären sonst ein Geheimnis vor den Spielern).
+- Tests: neu `tests/ui/test_seat_labels.gd` (Knopf in Nacht und Tag, Umschalten, Fortsetzen, Verbergen, neue Partie mit Namen), `test_night_board` prüft zusätzlich, dass der Knopf keinen Platz verdeckt. `node tools/test-changed --base=HEAD` 201/0; gezielt `settings_persistence`, `timer_save`, `resume_scenarios`, `process_restart`, `cards_resume` grün; `check-godot-i18n` grün. Versehentlich lief einmal `node tools/test-full` (ohne Fuzz): 1556 Tests, 2 rot, beide aus dem verworfenen ersten Ansatz (Einstellung) bzw. dem eigenen Testhelfer, danach behoben und gezielt grün.
+- Aufnahmen `C:/Users/Marku/Downloads/Grimmhain/Screenshots/Rollen-Namen/` (Werkzeug `godot/tools/capture_seat_labels.gd`): Nacht und Tag, je Namen und Rollen, 1024x768 und 1180x820, DE. Leicht-Modus (`GRIMMHAIN_LEICHT=1`) einmal am PC aufgenommen, Knopf gleich.
+- APK: `C:/Users/Marku/Desktop/Grimmhain-APK/Grimmhain-test-01366a6.apk`, 50 912 168 Byte, SHA256 6de3ce48dd78fbec315eee37cecea2ab9fde7948ae5467c750d89967cc59f5f6, Paket `com.grimmhain.app.test`, gleiches Debug-Zertifikat (SHA-256 89330dc4…), README.txt auf den neuen Namen. Alte APKs bleiben.
+- Mac-Paket `C:/Users/Marku/Desktop/Grimmhain-Mac-01366a6/` (Bundle von `apk-test` und Zip, nach dem PROGRESS-Commit erzeugt; `MAC-ANLEITUNG.txt` nennt den HEAD). Altes Paket `Grimmhain-Mac/` bleibt.
+- Offen: kein Gerätetest (Touch auf Tablet/Android, gedrehte Karte). Touch und Maus laufen über denselben Button-Druck wie alle Cockpit-Knöpfe.
+
 ## iOS/Mac (18.10.2026, Branch `apk-test`)
 
 - Voreinstellung „iOS“ in `godot/export_presets.cfg` angehängt (Web und Android unverändert): Bundle-ID `com.grimmhain.app.test`, nur iPad (`targeted_device_family=1`), arm64, `export_project_only=true` (Godot erzeugt ein Xcode-Projekt, Xcode signiert und installiert), Team-ID leer. Querformat und `gl_compatibility` kommen aus `project.godot` (`window/handheld/orientation=4`, `rendering_method.mobile`), dort nichts geändert. Ausschlussliste wie Android.
