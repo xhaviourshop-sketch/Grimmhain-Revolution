@@ -6,9 +6,11 @@ Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
 ## Aufräumen und Vorschau-Deploy (20.10.2026, Branch `main`)
 
+- **Projekt gelöscht am 20.10.2026:** `grimmhain-classic-preview` (`prj_zO9rbqqQ4sZRr8z633a9IeFBYXzt`) wurde auf Auftrag von Markus wieder gelöscht (Test-Projekt fürs Event, die Löschung am 07:13 war Absicht). Alle Erwähnungen von `grimmhain-classic-preview` und der Adresse `grimmhain-classic-preview.vercel.app` in dieser Datei sind damit historisch; die Adresse liefert 404. Bestehen bleiben `grimmhain-ipad-test` und `grimmhain`.
+
 - Aufgeräumt nach `Desktop/AUFRAEUM-PLAN.md` (Abschnitt 7): `main` = alter `apk-test`, Zweige und Arbeitskopien entfernt, Sicherung in `Desktop/Grimmhain-Archiv-2026-10` (Bundles, Zips; Tags `archiv/<name>` auf GitHub). Auf GitHub bleiben `main` und 3 Doku-Zweige (`claude/admiring-albattani-e0lh76`, `claude/happy-bell-dhgkod`, `content/rolebook-and-guide`), die nicht vollständig in `main` stecken.
-- Vorschau `grimmhain-classic-preview`: Das Vercel-Projekt war am 20.10.2026 um 07:13 im Konto gelöscht worden (Ereignis `project-delete`), deshalb 404. Es wurde mit `vercel link --yes --project grimmhain-classic-preview` neu angelegt (neue Projekt-ID `prj_zO9rbqqQ4sZRr8z633a9IeFBYXzt`, alte Deployments und Einstellungen sind weg).
-- Deploy `grimmhain-classic-preview`: Build `202610200929-8f76e44`, Deployment `dpl_CMGCFiRHSAtdmzP53ZRBsAViBKjW`, Commit 8f76e44, `index.pck` 23 496 740 Byte, Export mit `tools/export-web.js` von `main` (sauber, kein `*`). Geprüft: Adresse 200, `version.json` nennt `8f76e44`, `index.pck` 200 mit gleicher Länge wie lokal, Ladebilder 200, `/.env.local` 404, `index.html`, Service Worker und Manifest mit `no-cache`. Produktion `grimmhain-ipad-test` unverändert auf `24b58f5`.
+- Vorschau `grimmhain-classic-preview` (Projekt gelöscht am 20.10.): Das Vercel-Projekt war am 20.10.2026 um 07:13 im Konto gelöscht worden (Ereignis `project-delete`), deshalb 404. Es wurde mit `vercel link --yes --project grimmhain-classic-preview` neu angelegt (neue Projekt-ID `prj_zO9rbqqQ4sZRr8z633a9IeFBYXzt`, alte Deployments und Einstellungen sind weg).
+- Deploy `grimmhain-classic-preview` (Projekt gelöscht am 20.10.): Build `202610200929-8f76e44`, Deployment `dpl_CMGCFiRHSAtdmzP53ZRBsAViBKjW`, Commit 8f76e44, `index.pck` 23 496 740 Byte, Export mit `tools/export-web.js` von `main` (sauber, kein `*`). Geprüft: Adresse 200, `version.json` nennt `8f76e44`, `index.pck` 200 mit gleicher Länge wie lokal, Ladebilder 200, `/.env.local` 404, `index.html`, Service Worker und Manifest mit `no-cache`. Produktion `grimmhain-ipad-test` unverändert auf `24b58f5`.
 - Beim Verknüpfen legt die Vercel-CLI eine `.env.local` mit Zugriffsschlüssel in den Staging-Ordner. Sie wurde vor dem Deploy gelöscht (Staging-Ordner im Scratchpad, nicht im Repo).
 - Nicht geprüft: Safari/iPad, Start der Engine im Browser (nur Dateiabruf per HTTP), Verhalten mit altem Service-Worker-Stand.
 
@@ -149,7 +151,7 @@ Alle Deployments sind Status Ready, Umgebung Production. Kennung = Teil der Adre
 | 1lg2bnl8p | 9d | 202610061543-cc5bdc3 |  | LÖSCHEN |
 | o4sp5z6xo | 9d | 202610061451-ba0e4f8 |  | LÖSCHEN |
 
-### grimmhain-classic-preview (24 Deployments)
+### grimmhain-classic-preview (24 Deployments, Projekt gelöscht am 20.10.)
 
 | Kennung | Alter | Rolle | Aktion |
 |---|---|---|---|
