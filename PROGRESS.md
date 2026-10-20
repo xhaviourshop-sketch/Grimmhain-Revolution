@@ -4,6 +4,14 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
+## Aufräumen und Vorschau-Deploy (20.10.2026, Branch `main`)
+
+- Aufgeräumt nach `Desktop/AUFRAEUM-PLAN.md` (Abschnitt 7): `main` = alter `apk-test`, Zweige und Arbeitskopien entfernt, Sicherung in `Desktop/Grimmhain-Archiv-2026-10` (Bundles, Zips; Tags `archiv/<name>` auf GitHub). Auf GitHub bleiben `main` und 3 Doku-Zweige (`claude/admiring-albattani-e0lh76`, `claude/happy-bell-dhgkod`, `content/rolebook-and-guide`), die nicht vollständig in `main` stecken.
+- Vorschau `grimmhain-classic-preview`: Das Vercel-Projekt war am 20.10.2026 um 07:13 im Konto gelöscht worden (Ereignis `project-delete`), deshalb 404. Es wurde mit `vercel link --yes --project grimmhain-classic-preview` neu angelegt (neue Projekt-ID `prj_zO9rbqqQ4sZRr8z633a9IeFBYXzt`, alte Deployments und Einstellungen sind weg).
+- Deploy `grimmhain-classic-preview`: Build `202610200929-8f76e44`, Deployment `dpl_CMGCFiRHSAtdmzP53ZRBsAViBKjW`, Commit 8f76e44, `index.pck` 23 496 740 Byte, Export mit `tools/export-web.js` von `main` (sauber, kein `*`). Geprüft: Adresse 200, `version.json` nennt `8f76e44`, `index.pck` 200 mit gleicher Länge wie lokal, Ladebilder 200, `/.env.local` 404, `index.html`, Service Worker und Manifest mit `no-cache`. Produktion `grimmhain-ipad-test` unverändert auf `24b58f5`.
+- Beim Verknüpfen legt die Vercel-CLI eine `.env.local` mit Zugriffsschlüssel in den Staging-Ordner. Sie wurde vor dem Deploy gelöscht (Staging-Ordner im Scratchpad, nicht im Repo).
+- Nicht geprüft: Safari/iPad, Start der Engine im Browser (nur Dateiabruf per HTTP), Verhalten mit altem Service-Worker-Stand.
+
 ## Knopf „Rollen“/„Namen“ im Cockpit, APK 3 (18.10.2026, Branch `main`, früher `apk-test`)
 
 - Commit 01366a6: Knopf oben rechts in der festen Leiste des Cockpits (GrimmButton, gemalt, 100x48), während jeder Partie sichtbar, Tag und Nacht, alle Akte inklusive Classic. Ein Tipp schaltet alle Schilder im Sitzkreis zwischen Spielername und wahrer Rolle (`private_seats().role_id`, also nicht die Scheinrolle); Tote behalten „†“ und das graue Porträt. Beschriftung nennt das Ziel: DE „Rollen“/„Namen“, EN „Roles“/„Names“. Nachtleiste und Tagesleiste rücken rechts so weit ein, dass der Knopf frei bleibt.
