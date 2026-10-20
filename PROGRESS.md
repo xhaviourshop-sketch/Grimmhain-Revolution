@@ -4,7 +4,7 @@ Arbeitsregeln: additiv, bevorzugt React/Adapter. Vanilla-Engine (`js/core`, `js/
 nur lesen, Engine-Fix nur als begründete Ausnahme. Commit/Push/Deploy NUR an
 Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 
-## Knopf „Rollen“/„Namen“ im Cockpit, APK 3 (18.10.2026, Branch `apk-test`)
+## Knopf „Rollen“/„Namen“ im Cockpit, APK 3 (18.10.2026, Branch `main`, früher `apk-test`)
 
 - Commit 01366a6: Knopf oben rechts in der festen Leiste des Cockpits (GrimmButton, gemalt, 100x48), während jeder Partie sichtbar, Tag und Nacht, alle Akte inklusive Classic. Ein Tipp schaltet alle Schilder im Sitzkreis zwischen Spielername und wahrer Rolle (`private_seats().role_id`, also nicht die Scheinrolle); Tote behalten „†“ und das graue Porträt. Beschriftung nennt das Ziel: DE „Rollen“/„Namen“, EN „Roles“/„Names“. Nachtleiste und Tagesleiste rücken rechts so weit ein, dass der Knopf frei bleibt.
 - Gemerkt wird die Wahl je Partie im Block `ui` der Speicherdatei (`role_labels`, nur wenn an; `AppContext.role_labels`), nicht in `settings.json`: dort verbietet `test_settings_file_holds_no_game_data_and_game_untouched` Partiedaten. Neue oder andere Partie startet mit Namen, Fortsetzen stellt die Wahl wieder her. Regelkern und Spielstandformat (`core`) unverändert.
@@ -12,26 +12,26 @@ Phasen-Gates. Verifikation mit echten Klicks (DE+EN).
 - Tests: neu `tests/ui/test_seat_labels.gd` (Knopf in Nacht und Tag, Umschalten, Fortsetzen, Verbergen, neue Partie mit Namen), `test_night_board` prüft zusätzlich, dass der Knopf keinen Platz verdeckt. `node tools/test-changed --base=HEAD` 201/0; gezielt `settings_persistence`, `timer_save`, `resume_scenarios`, `process_restart`, `cards_resume` grün; `check-godot-i18n` grün. Versehentlich lief einmal `node tools/test-full` (ohne Fuzz): 1556 Tests, 2 rot, beide aus dem verworfenen ersten Ansatz (Einstellung) bzw. dem eigenen Testhelfer, danach behoben und gezielt grün.
 - Aufnahmen `C:/Users/Marku/Downloads/Grimmhain/Screenshots/Rollen-Namen/` (Werkzeug `godot/tools/capture_seat_labels.gd`): Nacht und Tag, je Namen und Rollen, 1024x768 und 1180x820, DE. Leicht-Modus (`GRIMMHAIN_LEICHT=1`) einmal am PC aufgenommen, Knopf gleich.
 - APK: `C:/Users/Marku/Desktop/Grimmhain-APK/Grimmhain-test-01366a6.apk`, 50 912 168 Byte, SHA256 6de3ce48dd78fbec315eee37cecea2ab9fde7948ae5467c750d89967cc59f5f6, Paket `com.grimmhain.app.test`, gleiches Debug-Zertifikat (SHA-256 89330dc4…), README.txt auf den neuen Namen. Alte APKs bleiben.
-- Mac-Paket `C:/Users/Marku/Desktop/Grimmhain-Mac-01366a6/` (Bundle von `apk-test` und Zip, nach dem PROGRESS-Commit erzeugt; `MAC-ANLEITUNG.txt` nennt den HEAD). Altes Paket `Grimmhain-Mac/` bleibt.
+- Mac-Paket `C:/Users/Marku/Desktop/Grimmhain-Mac-01366a6/` (Bundle von `main`, früher `apk-test`, und Zip, nach dem PROGRESS-Commit erzeugt; `MAC-ANLEITUNG.txt` nennt den HEAD). Altes Paket `Grimmhain-Mac/` bleibt.
 - Offen: kein Gerätetest (Touch auf Tablet/Android, gedrehte Karte). Touch und Maus laufen über denselben Button-Druck wie alle Cockpit-Knöpfe.
 
-## iOS/Mac (18.10.2026, Branch `apk-test`)
+## iOS/Mac (18.10.2026, Branch `main`, früher `apk-test`)
 
 - Voreinstellung „iOS“ in `godot/export_presets.cfg` angehängt (Web und Android unverändert): Bundle-ID `com.grimmhain.app.test`, nur iPad (`targeted_device_family=1`), arm64, `export_project_only=true` (Godot erzeugt ein Xcode-Projekt, Xcode signiert und installiert), Team-ID leer. Querformat und `gl_compatibility` kommen aus `project.godot` (`window/handheld/orientation=4`, `rendering_method.mobile`), dort nichts geändert. Ausschlussliste wie Android.
 - Probe auf Windows (Scratchpad, Vorlage `ios.zip` 4.7.2 lokal vorhanden): ohne Team-ID bricht der Export mit „App-Store-Team-ID nicht angegeben“ ab (erwartet); mit Platzhalter-ID entsteht `Grimmhain.xcodeproj` mit `PRODUCT_BUNDLE_IDENTIFIER = com.grimmhain.app.test`, `TARGETED_DEVICE_FAMILY = "2"` (iPad), Anzeigename „Grimmhain“, nur `LandscapeLeft/Right`. Platzhalter danach aus Sicherung zurückgespielt. Eine `.ipa` baut nur macOS/Xcode.
 - Nur-Web-Code: alle 10 `JavaScriptBridge`-Aufrufe stehen hinter `OS.has_feature("web")` (wie im Android-Abschnitt), auf nativem iOS also inaktiv. Keine Änderung.
 - Git LFS: nicht genutzt (keine `filter=lfs` in `.gitattributes`, `git lfs ls-files` leer).
-- Mac-Paket `C:/Users/Marku/Desktop/Grimmhain-Mac/`: `grimmhain-apk-test.bundle` (Zweig `apk-test`, volle Geschichte, nach diesem Commit erzeugt), `grimmhain-arbeitsordner.zip` (ohne `.git`, `.claude/worktrees`, `.godot`, `node_modules`, `.env*`, Export- und Build-Ordner), `MAC-ANLEITUNG.txt`.
+- Mac-Paket `C:/Users/Marku/Desktop/Grimmhain-Mac/`: `grimmhain-apk-test.bundle` (Zweig `main`, früher `apk-test`, volle Geschichte, nach diesem Commit erzeugt), `grimmhain-arbeitsordner.zip` (ohne `.git`, `.claude/worktrees`, `.godot`, `node_modules`, `.env*`, Export- und Build-Ordner), `MAC-ANLEITUNG.txt`.
 - Offen / nicht geprüft: kein Mac und kein iPad getestet (Xcode-Bau, Signierung, Start, Touch, Bildschirmtastatur, Leistung, Musik). Auf dem Mac fehlen Xcode, Godot 4.7.2 mit Exportvorlagen, Apple-ID im Xcode und die Team-ID. App-Symbol: kein eigenes 1024er-Bild, Godot nimmt das Projektsymbol (512 px, hochskaliert).
 
-## Totenreichkarten in jedem Akt, APK 2 (18.10.2026, Branch `apk-test`)
+## Totenreichkarten in jedem Akt, APK 2 (18.10.2026, Branch `main`, früher `apk-test`)
 
 - Commits: a916414 Cherry-pick von 803b1a1 (Notanker-Todesfolgen; Konflikt nur in DECISION-LOG.md, beide Seiten behalten), 9f5ff2d Schalter „Totenreichkarten“ / „Underworld cards“ unter „Besonderes“ in Akt I bis IV und Classic, Standard aus. Regelkern unverändert, er hängt nur an der Option `death_cards`, nicht am Kartenschlucker.
 - APK: `C:/Users/Marku/Desktop/Grimmhain-APK/Grimmhain-test-9f5ff2d.apk`, 50 912 168 Byte, SHA256 dfe351ed1260da33664623ede463fe6cdafd13ba2c0d529201aa9dd085a33762. Paket `com.grimmhain.app.test`, gleiches Debug-Zertifikat (installiert über die alte). Alte APK 42d9b36 bleibt liegen.
 - Tests: neu `test_classic_shows_the_card_toggle_off_by_default` (UI) und `test_classic_cast_with_cards_draws_and_reloads`; `node tools/test-changed --base=378abba` 1090/0; `node tools/test-full` 1555/0 ohne Fuzz (Regelkern durch Cherry-pick); `check-godot-i18n` grün; Fuzz-Kopie nur Classic plus Karten, 38 Partien (6 bis 16 Personen), grün, danach gelöscht.
 - Offen: Rollenschritt Classic (8 Personen) braucht Scrollen bis zum Schalter: Überhang 211 px bei 1024x768, 145 px bei 1180x820 (Aufnahmen `C:/Users/Marku/Downloads/Grimmhain/Screenshots/Totenreich-Classic/`). Hinweistext neben dem Schalter nennt weiter nur den Kartenschlucker, passt in Classic nicht. Kein Gerätetest.
 
-## Android-APK (17.10.2026, Branch `apk-test` von `vorschau-sonntag` 1bea78d)
+## Android-APK (17.10.2026, Branch `main`, früher `apk-test`, von `vorschau-sonntag` 1bea78d)
 
 Ganze App wie die Vorschau (alle Akte inkl. Classic), kein Classic-only-Schalter.
 

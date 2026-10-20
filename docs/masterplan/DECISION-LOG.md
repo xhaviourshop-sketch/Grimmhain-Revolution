@@ -1371,7 +1371,7 @@ Regelversion `grimmhain-core-0.20`.
 2. **Weißer Wolf ohne Dorf:** Leben nur noch Wölfe mit dem Weißen Wolf, gewinnt weiter niemand von selbst (Bogen wörtlich). Das Spiel bleibt nicht unbemerkt stehen: Jede Nachtkarte zeigt der Spielleitung einen Hinweis, sie spielt weiter oder erklärt den Sieg unter Spielleitung. Schließt PROGRESS-Frage 3 vom 16.10.
 
 Hinweis Zweig `vorschau-sonntag`: Die Notanker-Todesfolgen (Commit 803b1a1, Zweig `nacht-fixes2`) sind auf diesem Zweig nicht enthalten.
-Zweig `apk-test`: 803b1a1 am 18.10.2026 per cherry-pick übernommen.
+Zweig `main` (früher `apk-test`): 803b1a1 am 18.10.2026 per cherry-pick übernommen.
 ## Rollenmigration K1 · Siegreicher Wolf, Doppelspion, Selbstmörder · 3. Oktober 2026
 
 Antworten des Product Owners auf `../role-migration/10-next-decisions.md` (Stand 27. September 2026). Spezifikation: `../specs/k1a-siegreicher-wolf-doppelspion/` und `../specs/k1b-selbstmoerder/`. Eine Rolle gilt erst nach Umsetzung und Tests als Produktionsrolle.
